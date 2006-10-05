@@ -1,0 +1,6 @@
+<Menu>
+	<Title>Site management</Title>
+	<Order>2</Order>
+	<Controller>backend.language</Controller>
+	<Action>index</Action>
+</Menu>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<router>
+	<route pattern=":controller/">
+		<assign>
+			<variable name="action" value="index"/>
+		</assign>
+	</route>
+	
+	<route pattern=":controller/:action/:id">
+		<assign>
+			<variable name="id" value="1"/>
+		</assign>
+		<require>
+			<token name="id" pattern="[0-9]*"/>
+		</require>
+	</route>
+	
+	<route pattern=":language/:controller/:action/:id">	
+		<require>
+			<token name="language" pattern="[]*"/>
+		</require>
+		<assign>
+			<variable name="id" value="1"/>
+		</assign>		
+	</route>
+	
+</router>

@@ -1,0 +1,6 @@
+<Menu>
+	<Title>Store management</Title>
+	<Order>1</Order>
+	<Controller>backend.catalog</Controller>
+	<Action>index</Action>
+</Menu>

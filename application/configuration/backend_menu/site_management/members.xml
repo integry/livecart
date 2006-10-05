@@ -1,0 +1,29 @@
+<Menu>
+	<Title>Members</Title>	
+	<Controller>backend.user</Controller>
+	<Action>index</Action>
+	<Items>
+		<Menu>
+			<Title>Member groups</Title>			
+			<Controller>backend.rolegroup</Controller>
+			<Action>index</Action>		
+		</Menu>	
+		<Menu>
+			<Title>Members</Title>
+			<Controller>backend.user</Controller>
+			<Action>index</Action>
+			<Items>
+				<Menu>
+					<Title>JUST FOR TEST</Title>				
+					<Controller></Controller>
+					<Action></Action>	
+				</Menu>
+				<Menu>
+					<Title>JUST FOR TEST</Title>
+					<Controller></Controller>
+					<Action></Action>	
+				</Menu>
+			</Items>		
+		</Menu>			
+	</Items>
+</Menu>

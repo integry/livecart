@@ -1,0 +1,46 @@
+_hello_world=Hello World
+_information=Information
+_home=Home
+_save=Save
+_cancel=Cancel
+
+_succeeded=Succeeded
+
+_all=All
+_defined=Defined
+_not_defined=Not defined
+
+_default=Default
+_second=Second
+
+_description=Description
+_shortDescription=Short description
+_fullDescription=Full description
+
+_title=Title
+_uploadAnImage=Upload an image
+_URL=URL
+
+_available=Available
+_not_avaible=Not available
+_disabled=Disabled
+
+_images=Images   	 
+_options=Options
+
+#main menu
+_storeManagement=Store management
+_siteManagement=Site management
+_payments=Payments
+_currencies=Currencies
+_configuration=Configuration
+_memberGroups=Member groups
+
+_records=Records
+_search=Search
+_limit=Limit
+_offset=Offset
+
+_name=Name
+_contains=Contains
+
