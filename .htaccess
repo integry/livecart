@@ -1,0 +1,14 @@
+RewriteEngine on
+
+# we skip all files with .something
+#RewriteCond %{REQUEST_URI} \..+$
+#RewriteRule .* - [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# if no rule matched the url, we redirect to our front web controller
+RewriteRule ^(.*)$ public/index.php?route=$1 [QSA,L]
+
+# big crash from our front web controller
+ErrorDocument 500 "<h2>Application error</h2>Application failed to start properly"
