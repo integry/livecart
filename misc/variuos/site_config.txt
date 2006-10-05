@@ -1,0 +1,96 @@
+Konfiguracinis failiukas yra
+"application/configuration/config_values.config.xml"
+
+<Config>
+	<Key>productImagesDir</Key>			
+	<Value>upload/images/products/</Value>
+	<Category>default</Category>
+	<Type></Type>			
+</Config>
+
+Kiekviena konfiguracinis elementas turi "key", "value", "type", "category", "description".
+"Type" apibûdina konfiguracinio elemento tipà. Gali bûti: "string", "numeric", "integer", "bool" ir "list". Priklausomai nuo "type" Configuration kontroleryje parenkamas formos elementas, tai pat atintinkami validatoriai ir filtrai. Jei tipas list, tai parenkama ið selecto. Jo reiksmes aprasomos taip:
+<Items>
+	<Item>Vienas</Item>
+	<Item>Du</Item>
+	<Item>Trys</Item>
+	<Item>Keturi</Item>			
+</Items>
+
+"category" reikalinga configuration kontroleryje formos kurimui, kad elementai bûtø sugrupuoti. 
+
+Config gavimas programiskai:
+<?php
+
+	Configuration::getInstance->getValue("raktas");
+
+?>
+
+Jei kaþkas neaiðku þiûrëti ConfigurationController.
+
+Config.xml pavizdys:
+
+<ConfigFile>
+	<Config>
+		<Key>productImagesDir</Key>			
+		<Value>upload/images/products/</Value>
+		<Category>default</Category>	
+		<Type>string</Type>	
+		<Description></Description>	
+	</Config>
+	<Config>
+		<Key>listTest</Key>			
+		<Value>Du</Value>
+		<Items>
+			<Item>Vienas</Item>
+			<Item>Du</Item>
+			<Item>Trys</Item>
+			<Item>Keturi</Item>			
+		</Items>
+		<Category>product</Category>	
+		<Type>list</Type>
+		<Description></Description>		
+	</Config>
+	<Config>
+		<Key>maxProductImagesCount</Key>			
+		<Value>5</Value>
+		<Category>product</Category>	
+		<Type>integer</Type>
+		<Description>Maximal count of images of product</Description>		
+	</Config>
+	<Config>
+		<Key>boolTest</Key>			
+		<Value>1</Value>
+		<Category>product</Category>	
+		<Type>bool</Type>
+		<Description>Test</Description>
+	</Config>
+</ConfigFile>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
