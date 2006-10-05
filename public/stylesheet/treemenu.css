@@ -1,0 +1,14 @@
+.treeMenuNode {      	                    
+    font-size: 10pt; 			
+}            
+.treeMenuNode a {
+   color: #005599; 		  	
+}
+.treeMenuNodeSelected {      	              
+   
+	font-size: 10pt;         	
+}
+.treeMenuNodeSelected a {
+   background-color:#aaaaaa; 
+   color: #874A33;		  	
+}

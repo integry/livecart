@@ -1,0 +1,31 @@
+html> body {
+	height: 100%;
+}
+body {
+	font-size: 14px;
+	font-family: "Trebuchet MS", Verdana, Arial;
+	color: #333333;
+	background-color: #BABAAB;
+}
+#page {
+	background-color: #FFF;
+	width: 80%;
+	padding: 15px;
+	height: 80%;
+}
+#nav {
+	background-color: #F1F1F1;
+	float: left;
+	width: 170px;
+	height: 200px;
+	padding: 10px;
+	height: 100%;
+}
+#content {
+	margin-left: 210px;
+}
+#footer {
+	clear: both;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}

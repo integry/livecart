@@ -1,0 +1,7 @@
+/* Tab control */
+.tabpage {
+	border: inset 1pt; background-color: #66BB66; padding: 3px;
+}
+.tabpageselected {
+	border: inset 1pt; cursor: pointer; background-color: #FFDDDD; padding: 3px;
+}
