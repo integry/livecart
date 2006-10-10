@@ -7,7 +7,8 @@ ClassLoader::import("application.controller.BaseController");
  *
  * @package application.controller
  */
-abstract class FrontendController extends BaseController {
+abstract class FrontendController extends BaseController 
+{
 }
 
 ?>

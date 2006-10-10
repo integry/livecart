@@ -13,7 +13,8 @@ ClassLoader::import("application.model.user.User");
  * @package application.controller
  * @author Saulius Rupainis <saulius@integry.net>
  */
-abstract class BaseController extends Controller {
+abstract class BaseController extends Controller 
+{
 
 	/**
 	 * Request creator
@@ -31,14 +32,18 @@ abstract class BaseController extends Controller {
 	 * @param Request $request
 	 * @throws AccessDeniedExeption
 	 */
-	public function __construct(Request $request) {
+	public function __construct(Request $request) 
+	{
 		parent::__construct($request);
 		
 		$this->session = new Session();
 		$user = $this->session->getValue("user");
-		if (!empty($user)) {
+		if (!empty($user)) 
+		{
 			$this->user = unserialize($user);
-		} else {
+		} 
+		else 
+		{
 			$this->user = User::getInstanceByID(User::ANONYMOUS_USER_ID);
 		}
 		$this->router = Router::getInstance();

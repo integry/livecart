@@ -8,28 +8,33 @@ ClassLoader::import("framework.ApplicationException");
  * @package application.model
  * @author Saulius Rupainis <saulius@integry.net>
  */
-class AccessDeniedException extends ApplicationException {
-	
+class AccessDeniedException extends ApplicationException
+{
+
 	private $user = null;
 	private $actionName = "";
 	private $controllerName = "";
-	
-	public function __construct(User $user, $controllerName, $actionName) {
-		parent::__construct("Access denied to action $controllerName.$actionName for user " . $user->getID());
+
+	public function __construct(User $user, $controllerName, $actionName)
+	{
+		parent::__construct("Access denied to action $controllerName.$actionName for user ".$user->getID());
 		$this->user = $user;
 		$this->controllerName = $controllerName;
 		$this->actionName = $actionName;
 	}
-	
-	public function getUser() {
+
+	public function getUser()
+	{
 		return $this->user;
 	}
-	
-	public function getActionName() {
+
+	public function getActionName()
+	{
 		return $this->actionName;
 	}
-	
-	public function getContrllerName() {
+
+	public function getContrllerName()
+	{
 		return $this->controllerName;
 	}
 }

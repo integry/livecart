@@ -1,9 +1,15 @@
 <?php
+
+	/**
+	 * livecart application controller
+	 * 
+	 * @author Saulius Rupainis <saulius.r>
+	 */
+
+	require_once(".." . DIRECTORY_SEPARATOR . "framework" . DIRECTORY_SEPARATOR . "ClassLoader.php");
 	
-	require_once("c:\\projects\\framework\\ClassLoader.php");
-	
-	ClassLoader::mountPath(".", "C:\\projects\k-shop\\");
-	ClassLoader::mountPath("framework", "C:\\projects\\framework\\");
+	ClassLoader::mountPath(".", ".." . DIRECTORY_SEPARATOR);
+	//ClassLoader::mountPath("framework", "C:\\projects\\framework\\");
 	
 	ClassLoader::import("library.stat.Stat");
 	$stat = new Stat(true);
@@ -18,7 +24,7 @@
 	
 	ClassLoader::import("application.configuration.route.backend");
 	
-	Router::$baseDir = "k-shop";
+	//Router::$baseDir = "k-shop";
 	
 	TemplateRenderer::setCompileDir(ClassLoader::getRealPath("cache.templates_c"));
 	$app = Application::getInstance();

@@ -8,13 +8,14 @@ ClassLoader::import("application.model.product.SpecFieldValueLangData");
  *
  * @package application.model.product
  */
-class SpecFieldValue extends MultilingualDataObject {
-		
-	public static function defineSchema($className = __CLASS__) {
-		
+class SpecFieldValue extends MultilingualDataObject
+{
+
+	public static function defineSchema($className = __CLASS__)
+	{
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("SpecFieldValue");
-		
+
 		$schema->registerField(new ARPrimaryKeyField("ID", Integer::instance()));
 		$schema->registerField(new ARField("translate", Integer::instance(1)));
 	}

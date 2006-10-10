@@ -8,15 +8,15 @@ ClassLoader::import("framework.controller.Controller");
  * @package application.controller
  * @author Saulius Rupainis <saulius@integry.net>
  */
-class AuthController extends Controller {
-	
+class AuthController extends Controller 
+{
 	/**
 	 * Action for displaying login form
 	 *
 	 * @return ActionResponse
 	 */
-	public function index() {
-	
+	public function index() 
+	{
 		$response = new ActionResponse();
 		
 		$loginForm = $this->createLoginForm();
@@ -31,7 +31,8 @@ class AuthController extends Controller {
 	 *
 	 * @return Form
 	 */
-	private function createLoginForm() {
+	private function createLoginForm() 
+	{
 		ClassLoader::import("library.form.Form");
 		$form = new Form("loginFrm");
 		
@@ -62,7 +63,8 @@ class AuthController extends Controller {
 	 *
 	 * @return ActionRedirectResponse
 	 */
-	public function login() {
+	public function login() 
+	{
 		// pseudo login
 		ClassLoader::import("application.model.user.User");
 		
@@ -78,13 +80,15 @@ class AuthController extends Controller {
 	 * 
 	 * @return ActionRedirectResponse
 	 */
-	public function logout() {
+	public function logout()
+	{
 		session_destroy();
 		unset($_SESSION);
 		return new ActionRedirectResponse("index", "index");
 	}
 	
-	public function test() {
+	public function test() 
+	{
 		//echo "<pre>"; print_r($_SERVER); echo "</pre>";
 		return new ActionResponse();
 	}

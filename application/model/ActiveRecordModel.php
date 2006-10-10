@@ -15,7 +15,8 @@ ActiveRecord::setDSN("mysql://root@localhost/K-shop");
  *
  * @package application.model
  */
-abstract class ActiveRecordModel extends ActiveRecord {
+abstract class ActiveRecordModel extends ActiveRecord 
+{
 }
 
 ?>

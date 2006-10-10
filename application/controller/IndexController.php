@@ -7,10 +7,10 @@ ClassLoader::import("application.controller.FrontendController");
  *
  * @package application.controller
  */
-class IndexController extends FrontendController {
-	
-	public function index() {
-		
+class IndexController extends FrontendController 
+{
+	public function index() 
+	{
 		return new ActionResponse();
 	}
 }
