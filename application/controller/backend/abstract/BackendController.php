@@ -27,24 +27,29 @@ abstract class BackendController extends BaseController {
 	public function __construct(Request $request) {
 		parent::__construct($request);
 		
-		if (!$this->user->hasAccess($this->getRoleName())) {
-		
+		if (!$this->user->hasAccess($this->getRoleName())) {	
 			//throw new AccessDeniedException($this->user, $this->request->getControllerName(), $this->request->getActionName());
 		}
 		
-		if($this->request->isValueSet("language")) {
-
+		/*
+		if($this->request->isValueSet("language"))
+		{
 			$this->locale =	Locale::getInstance($this->request->getValue("language"));	
 			$this->localeName = $this->request->getValue("language");			
-		} else {
-	  	
+		}
+		else
+		{
 	  		$lang = Language::getDefaultLanguage();
 	  		$this->localeName = $lang->getId();
 			$this->locale =	Locale::getInstance($lang->getId());	
-		}			
+		}
+		*/	
 		// for smarty helper, datagrid ant others
+		
+		/*
 		Locale::setCurrentLocale($this->localeName);		
-		$app = Application::getInstance();					
+		$app = Application::getInstance();
+		*/
 	}
 	
 	public function init() {

@@ -29,6 +29,7 @@ class SpecFieldController extends StoreManagementController
 	 */
 	public function form()
 	{
+		/*
 		$form = $this->createForm();
 
 		if ($this->request->isValueSet("id"))
@@ -45,6 +46,14 @@ class SpecFieldController extends StoreManagementController
 
 		$response = new ActionResponse();
 		$response->setValue("form", $form);
+		return $response;
+		*/
+		ClassLoader::import("framework.request.validator.*");
+		$form = new Form($this->buildValidator());
+		$systemLangList = array("lt" => "Lietuvių", "de" => "Deutch");
+		
+		$response = new ActionResponse();
+		$response->setValue("specFieldForm", $form);
 		return $response;
 	}
 
@@ -96,10 +105,6 @@ class SpecFieldController extends StoreManagementController
 		}
 	}
 
-	public function reorder()
-  {
-	}
-
 
 	/**
 	 * Removes a specification field and returns back to a field list
@@ -120,6 +125,7 @@ class SpecFieldController extends StoreManagementController
 	 *
 	 * @return LangForm
 	 */
+	/*
 	private function createForm()
 	{
 		ClassLoader::import("application.model.LangForm");
@@ -162,10 +168,14 @@ class SpecFieldController extends StoreManagementController
 
 		return $form;
 	}
+	*/
 
-	public function testForm()
+	public function buildValidator()
 	{
-		return new ActionResponse();
+		$validator = new RequestValidator("specField", $this->request);
+		$validator->addCheck("name", new IsNotEmptyCheck("You must enter your name"));
+		
+		return $validator;
 	}
 }
 
