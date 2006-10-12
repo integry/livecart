@@ -8,7 +8,7 @@
 
 	require_once(".." . DIRECTORY_SEPARATOR . "framework" . DIRECTORY_SEPARATOR . "ClassLoader.php");
 	
-	ClassLoader::mountPath(".", ".." . DIRECTORY_SEPARATOR);
+	ClassLoader::mountPath(".", "C:/projects/livecart" . DIRECTORY_SEPARATOR);
 	//ClassLoader::mountPath("framework", "C:\\projects\\framework\\");
 	
 	ClassLoader::import("library.stat.Stat");
@@ -42,9 +42,5 @@
 		echo "<pre>"; print_r($e); echo "</pre>";
 	}
 	
-	//echo "<pre>"; 
-	//print_r($app->getRequest());
-	//print_r($_SERVER); 
-	//echo "</pre>";
 	$stat->display();
 ?>
