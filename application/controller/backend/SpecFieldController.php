@@ -32,6 +32,7 @@ class SpecFieldController extends StoreManagementController
 		ClassLoader::import("framework.request.validator.*");
 		$systemLangList = array("lt" => "Lietuvių", "de" => "Deutch");
 		$specFieldTypeList = array("1" => "Text Field", "2" => "Checkbox", "3" => "Select field");
+		$form = new Form($this->buildValidator());
 		
 		if ($this->request->isValueSet("id"))
 		{
@@ -41,7 +42,7 @@ class SpecFieldController extends StoreManagementController
 		}
 		else
 		{
-			$form = new Form($this->buildValidator());
+			//
 		}
 		
 		$response = new ActionResponse();
