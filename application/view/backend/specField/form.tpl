@@ -1,4 +1,4 @@
-{form handle=$specFieldForm}
+{form handle=$specFieldForm action="controller=backend.specField action=save" method="post"}
 <fieldset>
 	<legend>Add new field</legend>
 	<div>
@@ -8,12 +8,12 @@
 	
 	<div>
 		Field handle: <br/>
-		{textfield name="handle"}
+		{textfield name="handle" style="padding: 5px;"}
 	</div>
 	
 	<div>
 		Field type:<br/>
-		{selectfield name="type"}
+		{selectfield name="type" options=$typeList}
 	</div>
 	
 	<input type="submit" value="Add field &raquo;"/>

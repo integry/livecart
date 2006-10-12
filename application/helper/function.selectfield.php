@@ -28,9 +28,17 @@ function smarty_function_selectfield($params, $smarty)
 	}
 	$content .= '>\n';
 	
+	$fieldValue = $handle->getValue($params['name']);
 	foreach ($options as $value => $title)
 	{
-		$content .= "\t" . '<option value="' . $value . '">' . $title . '</option>' . "\n";
+		if ($fieldValue == $value)
+		{
+			$content .= "\t" . '<option value="' . $value . '" selected>' . $title . '</option>' . "\n";
+		}
+		else
+		{
+			$content .= "\t" . '<option value="' . $value . '">' . $title . '</option>' . "\n";
+		}
 	}
 	$content .= "</select>";
 	
