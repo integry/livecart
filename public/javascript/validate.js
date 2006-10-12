@@ -2,72 +2,67 @@
  * Validates form.
  * @return bool
  */ 
-function validateForm(form) {
-
-  	for (k = 0; k < form.elements.length; k++) {
-		
+function validateForm(form)
+{
+  	for (k = 0; k < form.elements.length; k++)
+  	{	
 		var formElement = form.elements[k];		
-		
-		//filter
 		var filter = '';
 						
-		if (formElement.getAttribute('filter')) { 
-	    	
+		if (formElement.getAttribute('filter'))
+		{ 
 			filter = formElement.getAttribute('filter').parseJSON();	    	
 		}
 		
-		if (filter != '') {
-	    	
-	    	for (var func in filter) {
-			
-				if (func == "toJSONString") {
-				 
+		if (filter != '')
+		{
+	    	for (var func in filter)
+	    	{
+				if (func == "toJSONString")
+				{ 
 				   continue;
 				} 
-				
 				eval('func_exists = window.' + func + ';');
 	
-				if (!func_exists) {
-
+				if (!func_exists)
+				{
 					alert('No filter function defined: ' + func + '!');
 				  	continue;
 				}
-
 				eval(func + '(formElement);');
 			}
 		}
 		
-		//validate
 		var validator = '';
-		
-		if (formElement.getAttribute('validate')) { 
-	    
+		if (formElement.getAttribute('validate'))
+		{ 
 			validator = formElement.getAttribute('validate').parseJSON();	    	
 		}		
 	    
-	    if (validator != '') {			
-			for (var i in validator) {				
-				//denisas
-				if (i == "toJSONString") {
+	    if (validator != '')
+	    {			
+			for (var i in validator)
+			{				
+				if (i == "toJSONString")
+				{
 				   continue;
 				}
-				
 				var constraint = validator[i]['constraint'];
-				
 				// Check if validation function exists 
 				func = i;
 				eval('func_exists = window.' + func + ';');
 	
-				if (!func_exists) {
+				if (!func_exists)
+				{
 					alert('No validation function defined: ' + func + '!');
 				  	break;
 				}
 				
-				// Validate 
 				ev = 'var is_valid = ' + func + '(formElement, constraint);';
 			  	eval(ev);
-	
-			  	if (!is_valid) {
+
+			  	if (!is_valid)
+			  	{
 				    alert(validator[i]['err']);
 				   	formElement.focus();				
 					return false;
@@ -75,99 +70,95 @@ function validateForm(form) {
 			}
 	    }
 	}
-
 	return true;  	
 }
 
-// Variuos functions
-function trim( strValue ) {
-
+function trim(strValue)
+{
  	var objRegExp = /^(\s*)$/;
-
     //check for all spaces
-    if(objRegExp.test(strValue)) {
-    
+    if(objRegExp.test(strValue))
+    {
 		strValue = strValue.replace(objRegExp, '');
        	if( strValue.length == 0)
+       	{
         	return strValue;
+       	}
     }
-
    	//check for leading & trailing spaces
    	objRegExp = /^(\s*)([\W\w]*)(\b\s*$)/;
-   	if(objRegExp.test(strValue)) {
-     
+   	if(objRegExp.test(strValue))
+   	{ 
        //remove leading and trailing whitespace characters
        strValue = strValue.replace(objRegExp, '$2');
     }
   	return strValue;
 }
 
-
 // Filter functions
-function TrimFilter(element) {
-  
+function TrimFilter(element)
+{  
   	element.value = trim(element.value);	
 }
 
-function NumericFilter(element) {
-  	
+function NumericFilter(element)
+{
   	element.value = trim(element.value.replace(",", "."));  	
 }
 
 // Validate functions
-function RequiredValueCheck(element, constraint) {
+function RequiredValueCheck(element, constraint)
+{
 	if (element.getAttribute("type") == "checkbox") {
 		return element.checked;
 	}
 	return (element.value.length > 0);
 }
 
-function MinLengthCheck(element, constraint) {
-	
+function MinLengthCheck(element, constraint)
+{
 	return (element.value.length >= constraint.minLength);
 }
 
-function EmailCheck(element, constraint) {
-	
+function EmailCheck(element, constraint)
+{
 	re = new RegExp(/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/);
 	return (re.exec(element.value));
 }
 
-function UploadImageCheck(element, constraint) {
-	
+function UploadImageCheck(element, constraint)
+{	
 	re = new RegExp(/^.*(\.(gif|jpg|png))$/i);
 	return (re.exec(element.value));
 }
 
-function IsNumericCheck(element, constraint) {
-  	
-  	if (constraint.letEmptyString && element.value == '') {  	
-  	  
+function IsNumericCheck(element, constraint)
+{  	
+  	if (constraint.letEmptyString && element.value == '')
+  	{  
   		return true;
   	} 
-  	
 	re = new RegExp(/(^-?\d+\.\d+$)|(^-?\d+$)|(^-?\.\d+$)/);	
 	return(re.exec(element.value));
 }
 
-function IsIntegerCheck(element, constraint) {
-
-  	if (constraint.letEmptyString && element.value == '') {  	
-  	  
+function IsIntegerCheck(element, constraint)
+{
+  	if (constraint.letEmptyString && element.value == '')
+  	{	  
   		return true;
   	} 	
-  	
 	re = new RegExp(/^-?\d+$/);	
 	return(re.exec(element.value));	 	
 }
 
-function MinValueCheck(element, constraint) {
-    
+function MinValueCheck(element, constraint)
+{
   	return element.value >= constraint.minValue || element.value == '';
 }
 
-function MaxValueCheck(element, constraint) {
-  
+function MaxValueCheck(element, constraint)
+{  
   	return element.value <= constraint.maxValue || element.value == '';
 }
 
