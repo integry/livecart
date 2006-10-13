@@ -12,6 +12,11 @@ ClassLoader::import("application.controller.backend.abstract.BackendController")
  * @role admin.store
  */
 class StoreManagementController extends BackendController {
+	
+	public function init()
+	{
+		$this->setLayout("devLayout");
+	}
 }
 
 ?>

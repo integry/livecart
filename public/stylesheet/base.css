@@ -1,0 +1,60 @@
+body {
+	font-family: arial, verdana;
+	font-size: 14px;
+	color: #333;
+	background-color: #ccc;
+	margin: 0px;
+}
+#container {
+	background-color: #eee;
+	width: 780px;
+	margin-left: auto;
+	margin-right: auto;
+	border: 5px solid #aaa;
+}
+#menu {
+	background-color: #aaa;
+	color: #fff;
+	font-size: 12px;
+}
+fieldset {
+	margin: 15px;
+	padding: 15px;
+	background-color: #fff;
+	border: 3px solid #e0e0e0;
+}
+legend {
+	font-size: 18px;
+	color: #000;
+	background-color: #ccffff;
+}
+
+/* Stat info styling */
+
+#stat {
+	background-color: #000;
+	border: 2px solid #fff;
+	font-family: "Courier new";
+}
+#stat li {
+	font-size: 12px;
+	color: #ccc;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+#stat .label {
+	font-size: 16px;
+	font-weight: bold;
+	color: yellow;
+}
+#stat table {
+	width: 100%;
+}
+#stat td {
+	padding: 5px;
+	border-top: 1px solid #333;
+}
+#statButton {
+	background-color: #ccffff;
+	padding: 5px;
+}

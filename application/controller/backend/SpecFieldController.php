@@ -33,16 +33,12 @@ class SpecFieldController extends StoreManagementController
 		$systemLangList = array("lt" => "Lietuvių", "de" => "Deutch");
 		$specFieldTypeList = array("1" => "Text Field", "2" => "Checkbox", "3" => "Select field");
 		$form = new Form($this->buildValidator());
-		
+
 		if ($this->request->isValueSet("id"))
 		{
 			ClassLoader::import("application.model.product.SpecField");
 			$specField = SpecField::getInstanceByID($this->request->getValue("id"), SpecField::LOAD_DATA);
 			$form->setData($specField->toArray());
-		}
-		else
-		{
-			//
 		}
 		
 		$response = new ActionResponse();
