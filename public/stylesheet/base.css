@@ -17,6 +17,17 @@ body {
 	color: #fff;
 	font-size: 12px;
 }
+#menu ul {
+	list-style: none;
+	margin:0px;
+	padding: 0px;
+}
+#menu ul li {
+	padding: 5px;
+	float: left;
+	margin-left: 5px;
+	border-right: 5px solid #ccc;
+}
 fieldset {
 	margin: 15px;
 	padding: 15px;
@@ -26,7 +37,29 @@ fieldset {
 legend {
 	font-size: 18px;
 	color: #000;
-	background-color: #ccffff;
+	background-color: #ffffcc;
+}
+
+/* Form styling */
+.formContainer {
+	width: 100%;
+}
+.formContainer input,  .formContainer textarea, .formContainer select {
+	font-size: 14px;
+	padding: 3px;
+	font-family: arial, verdana;
+}
+.formContainer .submit {
+	background-color:  #009933;
+	color: #fff;
+	text-transform: uppercase;
+	font-size: 10px;
+}
+.labelContainer {
+	padding: 5px;
+}
+.fieldContainer {
+	padding: 5px;
 }
 
 /* Stat info styling */
@@ -55,6 +88,11 @@ legend {
 	border-top: 1px solid #333;
 }
 #statButton {
-	background-color: #ccffff;
+	background-color: #ffffcc;
 	padding: 5px;
+}
+
+.error {
+	background-color: red;
+	color: #fff;
 }

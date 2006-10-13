@@ -29,7 +29,7 @@ class SpecFieldController extends StoreManagementController
 	 */
 	public function form()
 	{
-		ClassLoader::import("framework.request.validator.*");
+		ClassLoader::import("framework.request.validator.Form");
 		$systemLangList = array("lt" => "Lietuvių", "de" => "Deutch");
 		$specFieldTypeList = array("1" => "Text Field", "2" => "Checkbox", "3" => "Select field");
 		$form = new Form($this->buildValidator());
@@ -57,7 +57,7 @@ class SpecFieldController extends StoreManagementController
 	{
 		$validator = $this->buildValidator();
 		$validator->execute();
-		if ($validator->hasErrors())
+		if ($validator->hasFailed())
 		{
 			$validator->saveState();
 			return new ActionRedirectResponse("backend.specField", "form");
@@ -103,8 +103,12 @@ class SpecFieldController extends StoreManagementController
 
 	private function buildValidator()
 	{
+		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("specField", $this->request);
+		
 		$validator->addCheck("name", new IsNotEmptyCheck("You must enter your name"));
+		$validator->addCheck("name", new MaxLengthCheck("Field name must not exceed 40 chars", 40));
+		$validator->addCheck("type", new IsNotEmptyCheck("You must set a field type"));
 		
 		return $validator;
 	}

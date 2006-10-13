@@ -5,7 +5,7 @@
 
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-	<title>LiveCart</title>
+	<title>LiveCart DEV</title>
 	<!-- Css includes -->
 	{$STYLESHEET}
 	<!-- JavaScript includes -->
@@ -15,9 +15,10 @@
 
 <div id="container">
 <div id="menu">
-	<div class="menuSection">
-	Category:
-		<li>New Spec Field</li>
-		<li>Some test</li>
-	</div>
+	<ul>
+		<li>Product categories</li>
+		<li>Products</li>
+		<li>Orders</li>
+	</ul>
+	<div style="clear: both"></div>
 </div>
