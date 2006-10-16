@@ -31,7 +31,7 @@
 					</tr>
 				</table>				
 			</td>
-			<td style="background-image:url({$ROOT}/image/backend/header_shade_stretch.png);">
+			<td style="background-image:url(/livecart/public/image/backend/header_shade_stretch.png); background-repeat: repeat-x;">
 				<table width="100%">
 					<tr>
 						<td id="systemMenu">History | Bookmarks | Help | Change Language</td>
