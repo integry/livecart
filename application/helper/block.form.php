@@ -40,7 +40,9 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 		$formAttributes .= $param . '="' . $value . '"';
 	}
 	
+	$validatorName = $handle->getValidator()->getName();
 	$form = '<form action="'.$actionURL.'" '.$formAttributes.'>';
+	$form .= '<input type="hidden" name="_validator" value=""/>';
 	$form .= $content;
 	$form .= "</form>";
 	return $form;

@@ -37,6 +37,18 @@
 			<td>{selectfield name="type" options=$typeList}</td>
 		</tr>
 		<tr>
+			<td>Language field:</td>
+			<td>{checkbox name="language_field" value="yes"}</td>
+		</tr>
+		<tr>
+			<td>Radio button test:</td>
+			<td>
+				{radio name="test" value="1"} Red<br/>
+				{radio name="test" value="3"} Greed<br/>
+				{radio name="test" value="5"} Blue
+			</td>
+		</tr>
+		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" class="submit" value="Add field &raquo;"/></td>
 		</tr>
