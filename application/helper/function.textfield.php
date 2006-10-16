@@ -20,7 +20,7 @@ function smarty_function_textfield($params, $smarty)
 	foreach ($params as $name => $param) {
 		$content .= ' ' . $name . '="' . $param . '"'; 
 	}
-	$content .= ' validate="' . $handle->getValidator()->getJSValidatorParams($fieldName) . '"'; 
+	//$content .= ' validate="' . $handle->getValidator()->getJSValidatorParams($fieldName) . '"'; 
 	$content .= ' value="' . $handle->getValue($fieldName) . '"';
 	$content .= '/>';
 	

@@ -20,7 +20,7 @@ function smarty_function_textarea($params, $smarty)
 	foreach ($params as $name => $param) {
 		$content .= ' ' . $name . '="' . $param . '"'; 
 	}
-	$content .= ' validate="' . $handle->getValidator()->getJSValidatorParams($fieldName) . '"'; 
+	//$content .= ' validate="' . $handle->getValidator()->getJSValidatorParams($fieldName) . '"'; 
 	$content .= '>' . $handle->getValue($fieldName) . '</textarea>';
 	
 	return $content;

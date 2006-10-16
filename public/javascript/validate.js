@@ -1,76 +1,43 @@
-/**
- * Validates form.
- * @return bool
- */ 
+
 function validateForm(form)
 {
-  	for (k = 0; k < form.elements.length; k++)
-  	{	
-		var formElement = form.elements[k];		
-		var filter = '';
-						
-		if (formElement.getAttribute('filter'))
-		{ 
-			filter = formElement.getAttribute('filter').parseJSON();	    	
-		}
-		
-		if (filter != '')
-		{
-	    	for (var func in filter)
-	    	{
-				if (func == "toJSONString")
-				{ 
-				   continue;
-				} 
-				eval('func_exists = window.' + func + ';');
-	
-				if (!func_exists)
-				{
-					alert('No filter function defined: ' + func + '!');
-				  	continue;
-				}
-				eval(func + '(formElement);');
-			}
-		}
-		
-		var validator = '';
-		if (formElement.getAttribute('validate'))
-		{ 
-			validator = formElement.getAttribute('validate').parseJSON();	    	
-		}		
-	    
-	    if (validator != '')
-	    {			
-			for (var i in validator)
-			{				
-				if (i == "toJSONString")
-				{
-				   continue;
-				}
-				var constraint = validator[i]['constraint'];
-				// Check if validation function exists 
-				func = i;
-				eval('func_exists = window.' + func + ';');
-	
-				if (!func_exists)
-				{
-					alert('No validation function defined: ' + func + '!');
-				  	break;
-				}
-				
-				ev = 'var is_valid = ' + func + '(formElement, constraint);';
-			  	eval(ev);
+	var validatorData = form._validator.value;
+	validator = validatorData.parseJSON();
 
-			  	if (!is_valid)
-			  	{
-				    alert(validator[i]['err']);
-				   	formElement.focus();				
-					return false;
-				}
+	for (var fieldName in validator)
+	{
+		if (fieldName == "toJSONString")
+		{
+			continue;
+		}
+		var formElement = form[fieldName];
+		for (var functionName in  validator[fieldName])
+		{
+			if (functionName == "toJSONString")
+			{
+				continue;
 			}
-	    }
+			var params = validator[fieldName][functionName]['param'];
+			var errorMsg = validator[fieldName][functionName]['error'];
+			//alert(functionName + params + errorMsg);
+			
+			eval('var functionExists = window.' + functionName + ';');
+			if (!functionExists)
+			{
+				alert('No validation function defined: ' + functionName + '!');
+				break;
+			}
+				
+			eval('var isFieldValid = ' + functionName + '(formElement, params);');
+			if (!isFieldValid)
+			{
+				alert(errorMsg);
+				formElement.focus();				
+				return false;
+			}
+		}
 	}
-	return true;  	
+	return true;
 }
 
 function trim(strValue)
@@ -107,7 +74,7 @@ function NumericFilter(element)
 }
 
 // Validate functions
-function RequiredValueCheck(element, constraint)
+function IsNotEmptyCheck(element, constraint)
 {
 	if (element.getAttribute("type") == "checkbox") {
 		return element.checked;

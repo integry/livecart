@@ -40,9 +40,19 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 		$formAttributes .= $param . '="' . $value . '"';
 	}
 	
-	$validatorName = $handle->getValidator()->getName();
-	$form = '<form action="'.$actionURL.'" '.$formAttributes.'>';
-	$form .= '<input type="hidden" name="_validator" value=""/>';
+	$onSumbmit = "";
+	$validatorField = "";
+	if ($handle->isClientSideValidationEnabled())
+	{
+		$onSumbmit = ' onsubmit="validateForm(this); return false"';
+		
+		require_once("function.includeJs.php");
+		smarty_function_includeJs(array("file" => "validate.js"), $smarty);
+		
+		$validatorField = '<input type="hidden" name="_validator" value="' . $handle->getValidator()->getJSValidatorParams() . '"/>';
+	}
+	$form = '<form action="'.$actionURL.'" '.$formAttributes.' ' . $onSumbmit .'>' . "\n";
+	$form .= $validatorField;
 	$form .= $content;
 	$form .= "</form>";
 	return $form;
