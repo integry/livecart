@@ -2,9 +2,87 @@ body {
 	font-family: arial, verdana;
 	font-size: 14px;
 	color: #333;
-	background-color: #ccc;
+	background-color: #d4e9ff;
 	margin: 0px;
 }
+table {
+  	border-collapse: collapse;  
+}
+td {
+  	padding: 0px;  
+}
+
+/* Page header */
+#pageTop {
+  	background-color: #30a0f9;
+	border-bottom: 1px solid #0097ff;
+}
+#topAuthInfo {
+  	color: #FFFFFF; 
+	text-align: right; 
+	padding-right: 20px; 
+	font-size: 10px;  
+}
+#topBorder {
+  	background-color: #FFFFFF; 
+	height: 1px;
+	margin-bottom:4px;
+}
+#headerUserName {
+  	font-weight: 900;
+  	font-size: 11px;
+}
+#homeButtonWrapper {
+  	background-repeat: no-repeat; 
+	vertical-align: middle; 
+	width: 129px; 
+	height: 32px; 
+	text-align: left; 
+	padding-left: 20px; 
+	padding-top: 10px; 
+	color: #FFFFFF; 
+	font-size: 10px;  
+}
+#headerShade {
+  	background-repeat: repeat-x; 
+	vertical-align:top;
+	text-align: right;
+	width: 1005px;
+}
+#systemMenu {
+ 	font-size: 11px; 
+	text-align: right;	  
+	padding-top: 3px;
+	padding-right: 5px;
+}
+#logo {
+	vertical-align: middle; 
+	padding-right: 15px; 
+	padding-top:20px; 
+	padding-bottom: 10px;
+	text-align: right;
+}
+
+/* Work area content */
+#workAreaContainer {
+	background-color:#E6E6E6;
+	padding-top:10px;
+	padding-left:20px;
+	padding-right:10px;
+	padding-bottom:20px;
+}
+
+#pageTitle {
+  	font-weight: bold;
+	font-size: 14px;  
+	margin-bottom:5px;
+}
+
+#workArea {
+  	background-color: #FFFFFF;
+	padding: 10px;  
+}
+
 #container {
 	background-color: #eee;
 	width: 780px;
