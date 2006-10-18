@@ -2,17 +2,19 @@
 
 /**
  * Class for working with language DataObject
+ * @author Denis Slaveckij 
+ * @author Rinalds Uzkalns
  * @package application.model.locale 
  */
-class Language extends ActiveRecordModel {
-      
-  	/**
+class Language extends ActiveRecordModel 
+{
+   	/**
 	 * Languages schema definition
 	 * @param string $className
 	 * @todo code must be Unique
 	 */
-	 public static function defineSchema($className = __CLASS__) {
-		
+	public static function defineSchema($className = __CLASS__) 
+	{		
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("Language");
 		
@@ -22,28 +24,30 @@ class Language extends ActiveRecordModel {
 	}
 			
 	/**
+	 * Gets language by it's id.
+	 * @param string(2) $ID
+	 * @return Language
+	 */
+	public static function getInstanceByID($ID) 
+	{		
+		return ActiveRecord::getInstanceByID("Language", $ID, true);	
+	}			
+			
+	/**
 	 * Gets languages RecordSet.
 	 * @param integer $active Possible values
-	 * 	0 => all, 1=>active languages, 2=> not active languages
+	 * 	0 => all, 1 => active (enabled) languages, 2 => inactive languages
 	 * @return RecordSet
 	 */	 
-	public static function getLanguages($active = 0) {
-	  	
+	public static function getLanguages($active = 0) 
+	{	  	
 	  	$filter = new ArSelectFilter();
 	
-	  	switch ($active) {
-		 			
-			case 1:
-				
-				$filter->setCondition(new EqualsCond(new ArFieldHandle("Language", "isEnabled"), 1));	
-			break;
-			
-			case 2:
-			
-				$filter->setCondition(new EqualsCond(new ArFieldHandle("Language", "isEnabled"), 0));
-			break;  
+		if ($active > 0)
+		{		  
+			$filter->setCondition(new EqualsCond(new ArFieldHandle("Language", "isEnabled"), ($active == 1 ? 1 : 0)));			 	 
 		}
-	  	  	
+	
 		return ActiveRecord::getRecordSet("Language", $filter);	
 	}
 	
@@ -51,8 +55,8 @@ class Language extends ActiveRecordModel {
 	 * Gets default Language.
 	 * @return ActiveRecord
 	 */	
-	public static function getDefaultLanguage() {
-
+	public static function getDefaultLanguage() 
+	{
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("Language", "isDefault"), 1));
 		
@@ -71,10 +75,10 @@ class Language extends ActiveRecordModel {
 	 * @param string(2) $ID Language id
 	 * @param bool $enabled If 1 enables language, if 0 disables
 	 */
-	public static function setEnabled($ID, $enabled) {
-	  	  
+	public static function setEnabled($ID, $enabled) 
+	{	  	  
 		$lang = ActiveRecord::getInstanceByID("Language", $ID);
-		$lang->isEnabled->set($enabled);
+		$lang->isEnabled->set((bool)$enabled);
 		$lang->save();	
 	}
 	
@@ -82,8 +86,8 @@ class Language extends ActiveRecordModel {
 	 * Sets default language.
 	 * @param string(2) $ID Language id
 	 */
-	public static function setDefault($ID) {
-	  
+	public static function setDefault($ID) 
+	{	  
 	  	$filter = new ARUpdateFilter();
 	  	$filter->addModifier("isDefault", 0);
 		ActiveRecord::updateRecordSet("Language", $filter);
@@ -93,49 +97,55 @@ class Language extends ActiveRecordModel {
 		$filter->setCondition(new EqualsCond(new ArFieldHandle("Language", "ID"), $ID));		
 		ActiveRecord::updateRecordSet("Language", $filter);	
 	}
-	
-	/**
-	 * Gets language by it's id.
-	 * @param string(2) $ID
-	 * @return Language
-	 */
-	public static function getInstanceByID($ID) {
-		
-		return ActiveRecord::getInstanceByID("Language", $ID, true);	
-	}
-		
+			
 	/**
 	 * Adds new language to database
 	 * @param string(2) $ID
 	 */
-	public static function add($ID) {
-			
-		$dataEn = ActiveRecord::getInstanceByID("InterfaceTranslation", array("ID" => "en"), true);				
-		$defs = unserialize($dataEn->interfaceData->Get());
-		
-		foreach ($defs as $key => $value) {
-		  
-		  	$defs[$key][Locale::value] = "";
-		}	
-		
+	public static function add($ID) 
+	{			
 	  	$lang = ActiveRecord::getNewInstance("Language");											
 		$lang->setID($ID);
 		$lang->isEnabled->set(0);
 		$lang->isDefault->set(0);
 		$lang->save(self::PERFORM_INSERT);  
 		
+		// create empty referenced record for interface translation
 		$data = ActiveRecord::getNewInstance("InterfaceTranslation");
 		$data->setID($lang);
-		$data->interfaceData->Set(addslashes(serialize($defs)));			
 		$data->save(self::PERFORM_INSERT);
 		
 		return true;	
-	}	
-		
+	}		
 	
-	
+	/**
+	 * Checks whether the language is systems default language
+	 * @return bool
+	 */
+	public function isDefault()
+	{
+	  	return $this->isDefault->get();
+	}
 		
-}
+	/**
+	 * Changes default language status
+	 * @param bool $isDefault (sets as default if true, unsets default status if false)
+	 */
+	public function setAsDefault($isDefault = 1)
+	{
+	  	$this->isDefault->set($isDefault == 1 ? 1 : 0);
+	  	return true;
+	}
 
+	/**
+	 * Changes language status to enabled or disabled
+	 * @param bool $isEnabled (sets as enabled if true, unsets enabled status if false)
+	 */
+	public function setAsEnabled($isEnabled = 1)
+	{
+	  	$this->isEnabled->set($isEnabled == 1 ? 1 : 0);
+	  	return true;
+	}
+}
 
 ?>

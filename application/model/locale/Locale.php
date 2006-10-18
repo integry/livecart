@@ -3,11 +3,11 @@
 ClassLoader::import("library.*");
 
 /**
- * Class for locale support. Gets defined translating values. Also gets languages, countries, currencies and of locale.
+ * Class for locale support. Gets defined translation values. Also gets languages, countries, currencies and of locale.
  * Depends on Language, InterfaceTranslation, I18Nv2.
  *
  * <code>
- *  // using of Locale class
+ *  // usage of Locale class
  *	$locale = Locale::getInstance("lt");
  *	echo $locale->translate('hello_world');
  *  echo $locale->getCountry('ru')."<br>";
@@ -23,6 +23,9 @@ class Locale {
   	
   	protected static $instanceMap;
   	
+  	/**
+  	* Locale ID (en, lt, ru, ...)
+  	*/
   	private $locale;  	
   	
   	private $definitions = array();
@@ -32,62 +35,67 @@ class Locale {
 	private $language;
 	
 	private $currency;
-	  
-	/**
-	 * Constructs locale.
-	 * @param string $locale E.g. "en", "lt", "ru"
-	 */
-	public function __construct($locale) {
-		
-		$this->locale = $locale;		
-		
-		//gets translation definitions
-		try {
-
-			$data = ActiveRecord::getInstanceById("InterfaceTranslation", array("ID" => $this->locale), true, true);		
-		} catch (Exception $ex) {
-			
-			$this->definitions = array();
-			return;
-		}
-				
-		if (empty($data) || !$data->interfaceData->get()) {
-		  
-			$this->definitions = array();  
-		  	return;
-		}	
-	//	echo (string)$data->interfaceData->get();
-		$this->definitions = unserialize((string)$data->interfaceData->get());					
 	
-		//print_r($this->definitions);
-		foreach ($this->definitions as $key => $value) {
-		  
-		  	$this->definitions[$key][Locale::value] = stripslashes($value[Locale::value]);
-		}		
-	}
+	private $mylocale_make;
 	
+	private static $currentLocale = false;	
+		  
 	/**
-	 * Gets locale. Flyweight pattern is used, to get load data just once.
+	 * Gets locale. Flyweight pattern is used, to load data just once.
 	 * @param $locale	
 	 */
-	public static function getInstance($locale) {
-	  			
-	  	if(empty(self::$instanceMap[$locale])) {
-	  	
-		  	$instance = new Locale($locale);  	  	
-			self::$instanceMap[$locale] = $instance;
-			
-			if (empty($locale)) {
-			  
-				self::$instanceMap[$locale] = $instance;  	
+	public static function getInstance($locale) 
+	{	  			
+	  	if(empty(self::$instanceMap[$locale])) 
+		{	  	
+		  	$instance = Locale::create($locale);  	  	
+		  	if (!$instance)
+		  	{
+			    return false;
 			}
-		}
-				
+			
+			self::$instanceMap[$locale] = $instance;			
+		}				
+		
 		return self::$instanceMap[$locale];	  	
 	}
 	
-	private static $currentLocale;
+	/**
+	 * Creates locale by locale ID.
+	 * @param string $locale E.g. "en", "lt", "ru"
+	 */
+	protected static function create($locale) 
+	{		
+		// gets translation definitions
+		try 
+		{
+			$data = ActiveRecord::getInstanceById("InterfaceTranslation", array("ID" => $locale), true, true);		
+		} 
+		catch (Exception $ex) 
+		{
+			return false;
+		}
+
+		$instance = new Locale($locale);	
+
+		$instance->definitions = unserialize((string)$data->interfaceData->get());					
+	
+		foreach ($instance->definitions as $key => $value) 
+		{		  
+		  	$instance->definitions[$key][Locale::value] = stripslashes($value[Locale::value]);
+		}	
 		
+		return $instance;	
+	}
+		
+	/**
+	 * Do not allow to call constructor directly as we need to verify that such locale exists first
+	 */
+	private function __construct($locale)
+	{
+		$this->locale = $locale;	  
+	}
+	
 	/**
 	 * Sets current locale
 	 * @param string $locale.
@@ -107,7 +115,7 @@ class Locale {
 	}
 	
 	/**
-	 * Traslates text to current locale.
+	 * Translates text to current locale.
 	 * @param string $key
 	 * @return string
 	 */
@@ -162,7 +170,7 @@ class Locale {
 	/**
 	 * Gets all definitions.
 	 */
-	public function &getFullDefinitionsArray() {
+	public function /*&*/getFullDefinitionsArray() {
 	  
 	  	return $this->definitions;
 	}
@@ -192,9 +200,6 @@ class Locale {
 		
 		return $defs;
 	}
-	
-	
-	private $mylocale_make;
 	
 	protected function getLocaleMakeTextInstance() {
 	  
