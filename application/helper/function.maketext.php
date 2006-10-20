@@ -12,7 +12,7 @@
 function smarty_function_maketext($params, $smarty) {
 	
 	$locale = Locale::getCurrentLocale();		
-	return	$locale->makeText($params['text'], $params['params']);
+	return	$locale->translator()->makeText($params['text'], $params['params']);
 }
 
 ?>
