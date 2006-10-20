@@ -39,7 +39,7 @@ class TigraMenuHelper {
 			}
 			
 			$locale = Locale::getCurrentLocale();		
-		  	$javascript .= "['".$locale->translate($item['title'])."', ".$url.", null,";
+		  	$javascript .= "['".$locale->translator()->translate($item['title'])."', ".$url.", null,";
 		  	//$javascript .= "['".$item['title']."', ".$url.", null,";
 			 
 			if (!empty($item['items']) && count($item['items']) > 0) {
