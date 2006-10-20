@@ -15,7 +15,7 @@ class StoreManagementController extends BackendController {
 	
 	public function init()
 	{
-		$this->setLayout("devLayout");
+		$this->setLayout("mainLayout");
 	}
 }
 

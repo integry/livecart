@@ -5,7 +5,7 @@
 
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-	<title>LiveCart DEV</title>
+	<title>{$TITLE}</title>
 	<!-- Css includes -->
 	{$STYLESHEET}
 	<!-- JavaScript includes -->
@@ -55,7 +55,7 @@
 
 <!-- <div id="container"> -->
 
-	<div id="pageTitle">{$PAGE_TITLE}Temporary Page Title</div>
+	<div id="pageTitle">{$TITLE}</div>
 
 	<table style="width: 100%;">
 		<tr>

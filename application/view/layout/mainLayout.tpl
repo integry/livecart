@@ -1,7 +1,7 @@
-{include file="layout/devheader.tpl"}
+{include file="layout/header.tpl"}
 
 	<div>
 		{$ACTION_VIEW}
 	</div>
 	
-{include file="layout/devFooter.tpl"}
+{include file="layout/footer.tpl"}

@@ -1,0 +1,32 @@
+#stat {
+	background-color: #000;
+	border: 2px solid #fff;
+	font-family: "Courier new";
+}
+#stat li {
+	font-size: 12px;
+	color: #ccc;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+#stat .label {
+	font-size: 16px;
+	font-weight: bold;
+	color: yellow;
+}
+#stat table {
+	width: 100%;
+}
+#stat td {
+	padding: 5px;
+	border-top: 1px solid #333;
+}
+#statButton {
+	background-color: #ffffcc;
+	padding: 5px;
+}
+
+.error {
+	background-color: red;
+	color: #fff;
+}

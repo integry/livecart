@@ -52,10 +52,12 @@ abstract class BackendController extends BaseController {
 		*/
 	}
 	
-	public function init() {
-
+	public function init()
+	{
+		/*
 		$this->setLayout("main");		
-		$this->addBlock('MENU', 'menuSection');			
+		$this->addBlock('MENU', 'menuSection');	
+		*/	
 	}
 	
 	protected function menuSectionBlock() {
@@ -89,11 +91,12 @@ abstract class BackendController extends BaseController {
 	 * @return string
 	 * @todo default action and controller name should be defined in one place accessible by all framework parts
 	 */
-	private final function getRoleName() {
-		
+	private final function getRoleName()
+	{	
 		$controllerClassName = get_class($this);
 		$actionName = $this->request->getActionName();
-		if (empty($actionName)) {
+		if (empty($actionName))
+		{
 			$actionName = "index";
 		}
 		
@@ -111,16 +114,17 @@ abstract class BackendController extends BaseController {
 		
 		$roleValue = "";
 		
-		if (!empty($classRoleMatches)) {
+		if (!empty($classRoleMatches))
+		{
 			$roleValue = trim(substr($classRoleMatches[0], strlen($roleTag), strlen($classRoleMatches[0])));
 		}
-		if (!empty($actionRoleMatches)) {
+		if (!empty($actionRoleMatches))
+		{
 			$roleValue .= "." . trim(substr($actionRoleMatches[0], strlen($roleTag), strlen($actionRoleMatches[0])));
 		}
 		
 		return $roleValue;
 	}	
-	
 }
 
 ?>

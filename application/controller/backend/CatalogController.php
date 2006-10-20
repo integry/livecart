@@ -23,6 +23,7 @@ class CatalogController extends StoreManagementController
 	 */
 	public function init()
 	{
+		/*
 		parent::init();
 
 		$this->addBlock("NAV", "treeSection");
@@ -32,6 +33,7 @@ class CatalogController extends StoreManagementController
 
 		//js sources
 		$app = Application::getInstance();
+		*/
 	}
 
 	/**
@@ -168,6 +170,15 @@ class CatalogController extends StoreManagementController
 	 */
 	public function index()
 	{
+		$this->setLayout("categoryManager");
+		ClassLoader::import("framework.request.validator.Form");
+		
+		$form = new Form(new RequestValidator("catalog", $this->request));
+		$response = new ActionResponse();
+		$response->setValue("catalogForm", $form);
+		return $response;
+		
+		/*
 		if ($this->request->isValueSet("id"))
 		{
 			//languages
@@ -210,6 +221,7 @@ class CatalogController extends StoreManagementController
 		{
 			return new ActionResponse();
 		}
+		*/
 	}
 
 	/**
