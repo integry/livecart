@@ -37,121 +37,165 @@ class LanguageController extends SiteManagementController
 	 */
 	public function update()
 	{
-		$path = ClassLoader::getRealPath("application.language_definitions")."\\";
+		$path = ClassLoader::getRealPath("application.language_definitions.en");
 
-		$setup = new LanguageSetup($path);
-		$setup->updateFromFiles();
+		$enLocale = Locale::getInstance('en');
+		$enLocale->translationManager()->setDefinitionFileDir($path);
+		$enLocale->translationManager()->updateDefinitions();
 
-		$response = new ActionResponse();
-		return $response;
+		return new ActionRedirectResponse($this->request->getControllerName(), 'edit', array('id' => 'en'));
 	}
 
 	/**
-	 * Displays definitions editing page.
+	 * Displays definitions edit page.
 	 */
 	public function edit()
 	{
-		$en_locale = Locale::getInstance("en");
+		// get locale instance for the language being translated
+		$editLocaleName = $this->request->getValue('id');
+		$editLocale = Locale::getInstance($editLocaleName);
 
-		$edit_locale_name = $this->request->getValue("id");
-		$edit_locale = Locale::getInstance($edit_locale_name);
+		// get all English configuration files
+		$enLocale = Locale::getInstance('en');
+		$fileDir = ClassLoader::getRealPath('application.language_definitions.en');
+		$files = $enLocale->translationManager()->getDefinitionFiles($fileDir);
 
-		$files = $edit_locale->getDefinitionFiles(".lng");
+		// determine which definition belongs to which file
+		$fileDefs = array();
+		foreach ($files as $file)
+		{
+		  	$filePath = $fileDir . '/' . $file;
+		  	$unsorted = $enLocale->translationManager()->getFileDefs($filePath);
+		  	foreach ($unsorted as $key => $value)
+		  	{
+				$fileDefs[$key] = $file;
+			}
+		}
 
-		$selected_all = '';
-		$selected_defined = '';
-		$selected_not_defined = '';
-		if ($this->request->isValueSet("file"))
+		// get currently translated definitions
+		$unsorted = $editLocale->translationManager()->getTranslatedDefinitions($editLocale->getLocaleCode(), false);
+		
+		// sort definitions by files
+		$translated = array();
+		foreach ($unsorted as $key => $value)
+		{		 	
+		  	$file = isset($fileDefs[$key]) ? $fileDefs[$key] : '';
+			$translated[$file][$key] = $value;
+		}
+
+		echo $this->request->getValue("file");
+
+		// modifying a single file definitions only
+		if ($this->request->isValueSet('file'))
 		{
 			$file = $this->request->getValue("file");
-			switch ($this->request->getValue("show"))
-			{
-				case 'all':
-					$selected_all = 'checked';
-				break;
+			$toTranslate = $translated[$file];
+			$translate = array();
+			$translate[$file] = $toTranslate;
+		}		
 
-				case 'defined':
-					$selected_defined = 'checked';
-				break;
+		// determine which definitions should be displayed (All, defined, undefined)
+		$selectedAll = '';
+		$selectedDefined = '';
+		$selectedNotDefined = '';
 
-				case 'not_defined':
-					$selected_not_defined = 'checked';
-				break;
-			}
-		}
-		else
+		switch ($this->request->getValue("show"))
 		{
-			$file = key($files);
-			$selected_all = 'checked';
-		}
+			case 'all':
+				$selectedAll = 'checked';
+			break;
 
-		$definitions = $edit_locale->getDefinitionsFromFile($file);
-		$definitions_shown = array();
-		foreach($definitions as $key => $value)
-		{
-			if ($selected_all || $selected_defined && !empty($value) || $selected_not_defined && empty($value[$key]))
-			{
-				$definitions_shown[$key] = $value;
-			}
+			case 'defined':
+				$selectedDefined = 'checked';
+			break;
+
+			case 'not_defined':
+				$selectedNotDefined = 'checked';
+			break;
+			
+			default:
+				$selectedAll = 'checked';
+			break;
 		}
 
-		//  Saving
-		if ($this->request->isValueSet("event") && $this->request->getValue("event") == "save")
+		// remove definitions that do not need to be displayed
+		if ($selectedDefined || $selectedNotDefined)
 		{
-			$full = &$edit_locale->getFullDefinitionsArray();
-
-			foreach($definitions_shown as $key => $value)
+			foreach ($translate as $file => &$values)
 			{
-				//magic_quotes_gpc = On
-				$full[$key][Locale::value] = stripslashes($this->request->getValue("lang_".$key));
-				//magic_quotes_gpc = Off
-				//$full[$key][Locale::value] = ($this->request->getValue("lang_".$key));
-			}
-
-			/*$lang = interfaceTranslation::getInstanceByCode($edit_locale_name);
-			$lang->defs->Set(addslashes(serialize($full)));
-			$lang->Save();	*/
-			$data = interfaceTranslation::getInstanceById("interfaceTranslation", array("ID" => $edit_locale_name));
-			$data->interfaceData->set(addslashes(serialize($full)));
-			$data->save();
-
-			$definitions = $edit_locale->getDefinitionsFromFile($file);
-			$definitions_shown = array();
-			foreach($definitions as $key => $value)
-			{
-				if ($selected_all || $selected_defined && !empty($value) || $selected_not_defined && empty($value[$key]))
-				{
-					$definitions_shown[$key] = $value;
+			  	foreach ($values as $key => $value)
+			  	{
+				    if (($selectedDefined && '' == $value) || ($selectedNotDefined && '' != $value))
+				    {
+					  	unset($values[$key]);
+					}
 				}
-			}
+				
+				if (0 == count($values))
+				{
+				  	unset($translate[$file]);
+				}
+			}  
 		}
+		
 
 		$response = new ActionResponse();
 		$response->SetValue("language", $this->request->getValue("language"));
-		$response->setValue("id", $edit_locale_name);
+		$response->SetValue("edit_language", $editLocale->info()->getLanguageName($editLocaleName));
+		$response->setValue("id", $editLocaleName);
 
-		//	$response->setValue("edit_language", $this->locale->getLanguage($edit_locale_name));
+		$files = array_merge(array('' => $this->locale->translator()->translate('allFiles')), $files);
 		$response->setValue("files", $files);
 		$response->setValue("file", $file);
 
-		$response->setValue("en_definitions", $en_locale->getDefinitionsFromFile($file));
-		$response->setValue("definitions", $definitions_shown);
+		$response->setValue("en_definitions", $enLocale->translationManager()->getTranslatedDefinitions('en'));
+		$response->setValue("definitions", $translated);
 
-		//	echo $selected_all;
 		$response->setValue("selected_all", $selected_all);
 		$response->setValue("selected_defined", $selected_defined);
 		$response->setValue("selected_not_defined", $selected_not_defined);
+		$response->setValue("show", $this->request->getValue("show"));				
 
 		return $response;
 	}
 
+	public function save()
+	{
+		// get locale instance
+		$localeCode = $this->request->getValue("id");		
+		$editLocale = Locale::getInstance($localeCode);
+		
+		if (!$editLocale)
+		{
+		  	throw new ApplicationException('Locale "' . $localeCode .'" not found');
+		}
+		
+		// get submited translation data
+		$submitedLang = $this->request->getValue("lang");
+		if (!is_array($submitedLang))
+		{
+		  	$submitedLang = array();
+		}
+		
+		// get existing translation data
+		$existing = $editLocale->translationManager()->getTranslatedDefinitions($localeCode, false);
+		
+		// merge together
+		$langData = array_merge($existing, $submitedLang);
+		
+		// save translations
+		$editLocale->translationManager()->saveDefinitions($langData);
+		
+		return new ActionRedirectResponse($this->request->getControllerName(), 'edit', array('id' => $localeCode));
+	}
+	
 	/**
 	 * Displays main admin page.
 	 */
 	public function index()
 	{
 
-		$languages_select = $this->locale->getLanguages();
+		$languages_select = $this->locale->info()->getAllLanguages();
 
 		$list = Language::getLanguages()->toArray();
 		$count_active = 0;
@@ -162,7 +206,7 @@ class LanguageController extends SiteManagementController
 				$count_active++;
 			}
 			//unset($languages_select[$value['code']]);
-			$list[$key]['name'] = $this->locale->getLanguage($value['ID']);
+			$list[$key]['name'] = $this->locale->info()->getLanguageName($value['ID']);
 		}
 
 		$response = new ActionResponse();
@@ -191,9 +235,9 @@ class LanguageController extends SiteManagementController
 		$response = new ActionResponse();
 
 		//$masyvas["I18Nv2::getInfo()"] = I18Nv2::getInfo();
-		$masyvas["\$locale->GetCountries()"] = $locale->GetCountries();
-		$masyvas["\$locale->GetLanguages()"] = $locale->GetLanguages();
-		$masyvas["\$locale->GetCurrencies()"] = $locale->GetCurrencies();
+		$masyvas["\$locale->GetCountries()"] = $locale->info()->GetAllCountries();
+		$masyvas["\$locale->GetLanguages()"] = $locale->info()->GetAllLanguages();
+		$masyvas["\$locale->GetCurrencies()"] = $locale->info()->GetAllCurrencies();
 
 		$response->SetValue("masyvas", $masyvas);
 		return $response;
