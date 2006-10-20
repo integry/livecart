@@ -1,9 +1,11 @@
 <?php
 
 ClassLoader::import("application.controller.BaseController");
-ClassLoader::import("library.Locale.*");
 
 ClassLoader::import("application.model.locale.*");
+ClassLoader::import("library.locale.*");
+ClassLoader::import("library.*");
+
 ClassLoader::import("application.model.menu.*");
 ClassLoader::import("application.helper.*");
 
@@ -31,31 +33,31 @@ abstract class BackendController extends BaseController {
 			//throw new AccessDeniedException($this->user, $this->request->getControllerName(), $this->request->getActionName());
 		}
 		
-		/*
+
 		if($this->request->isValueSet("language"))
 		{
-			$this->locale =	Locale::getInstance($this->request->getValue("language"));	
 			$this->localeName = $this->request->getValue("language");			
 		}
 		else
 		{
-	  		$lang = Language::getDefaultLanguage();
+	  		$lang = Language::getDefaultLanguage();	  		
 	  		$this->localeName = $lang->getId();
-			$this->locale =	Locale::getInstance($lang->getId());	
 		}
-		*/	
+
+		$this->locale =	Locale::getInstance($this->localeName);	
+
 		// for smarty helper, datagrid ant others
 		
-		/*
+
 		Locale::setCurrentLocale($this->localeName);		
 		$app = Application::getInstance();
-		*/
+
 	}
 	
 	public function init()
 	{
 		/*
-		$this->setLayout("main");		
+		$this->setLayout("mainLayout");		
 		$this->addBlock('MENU', 'menuSection');	
 		*/	
 	}
