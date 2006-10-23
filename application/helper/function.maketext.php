@@ -9,8 +9,8 @@
  * 
  * @package application.helper
  */
-function smarty_function_maketext($params, $smarty) {
-	
+function smarty_function_maketext($params, $smarty) 
+{	
 	$locale = Locale::getCurrentLocale();		
 	return	$locale->translator()->makeText($params['text'], $params['params']);
 }
