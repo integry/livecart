@@ -17,33 +17,33 @@ class MenuLoader {
 	/**
      * Reads menu structure from files of directorie or from cache. Store if neccesary structure in cache.
 	 */
-	public function __construct() {
+	public function __construct() 
+	{	  
+	  	$cache_file = ClassLoader::getRealPath("cache.configuration.backend_menu");
 	  
-	  	$cache_file = ClassLoader::getRealPath("cache.configuration.backend_menu") . "/backend_menu";
-	  
-	  	if ($this->reload || !file_exists($cache_file)) {
+	  	if ($this->reload || !file_exists($cache_file)) 
+		{
 	    	
-		  	MenuLoader::createFromDir(&$this->mainMenu, ClassLoader::getBaseDir().'application\configuration\backend_menu\\');	  
+		  	MenuLoader::createFromDir(&$this->mainMenu, ClassLoader::getRealPath("application.configuration.backend_menu"));	  
 			$this->sortMenu();			
 			file_put_contents($cache_file, serialize($this->mainMenu));		
 		} else {
 		  			  	
 			$this->mainMenu = unserialize(file_get_contents($cache_file));
 		}	
-		
 	}
   
     /**
      */
   	public function sortMenu() {
 	  	
-	    uasort($this->mainMenu, 'CompareOrders');       
+	    uasort($this->mainMenu, array($this, 'CompareOrders'));       
 
 	    foreach ($this->mainMenu as $key => $value) {
 		  
 			if (!empty($this->mainMenu[$key]['items']) && is_array($this->mainMenu[$key]['items'])) {
 
-				uasort($this->mainMenu[$key]['items'], 'CompareOrders');
+				uasort($this->mainMenu[$key]['items'], array($this, 'CompareOrders'));
 			}			
 		}
 	}
@@ -145,7 +145,9 @@ class MenuLoader {
   	 *
   	 */
   	private static function createFromDir(&$father_menu, $path) {
-	  							  	  	
+
+		$path .= '/';
+
 	  	$iter = new DirectoryIterator($path);	  	
 	  	$xml_files = array();
 	  	foreach ($iter as $value) {		    
@@ -188,17 +190,17 @@ class MenuLoader {
 			}				  	
 		}
 	}
-}
 
-function CompareOrders($a, $b) 
-{   
-    	   
-	if ($a['order'] == $b['order']) {
-	  
-        return 0;
-    } 	
-  	
-	return ($a['order'] < $b['order']) ? -1 : 1;
+	private function CompareOrders($a, $b) 
+	{   
+	    	   
+		if ($a['order'] == $b['order']) {
+		  
+	        return 0;
+	    } 	
+	  	
+		return ($a['order'] < $b['order']) ? -1 : 1;
+	}
 }
 
 ?>
