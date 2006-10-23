@@ -45,10 +45,6 @@ abstract class BackendController extends BaseController {
 		}
 
 		$this->locale =	Locale::getInstance($this->localeName);	
-
-		// for smarty helper, datagrid ant others
-		
-
 		Locale::setCurrentLocale($this->localeName);		
 		$app = Application::getInstance();
 
@@ -56,36 +52,31 @@ abstract class BackendController extends BaseController {
 	
 	public function init()
 	{
-		/*
 		$this->setLayout("mainLayout");		
 		$this->addBlock('MENU', 'menuSection');	
-		*/	
+		Application::getInstance()->getRenderer()->setValue('BASE_URL', Router::getBaseUrl());
 	}
 	
-	protected function menuSectionBlock() {
-				
-		$app = Application::getInstance();	
-		$app->getRenderer()->appendValue("JAVASCRIPT", Router::getInstance()->getBaseDir()."/public/javascript/document.js");
-		$app->getRenderer()->appendValue("JAVASCRIPT", Router::getInstance()->getBaseDir()."/public/javascript/validate.js");	
-		$app->getRenderer()->appendValue("JAVASCRIPT", Router::getInstance()->getBaseDir()."/public/javascript/menu.js");
-		$app->getRenderer()->appendValue("JAVASCRIPT", Router::getInstance()->getBaseDir()."/public/javascript/menu_tpl.js");	
-					
-		$menu_loader = new MenuLoader();		
-		$structure = $menu_loader->getCurrentHierarchy($this->request->getControllerName(),	$this->request->getActionName());
+	protected function menuSectionBlock() 
+	{			
+		$menuLoader = new MenuLoader();		
+		$structure = $menuLoader->getCurrentHierarchy($this->request->getControllerName(),	$this->request->getActionName());
 		
 		$response =	new BlockResponse();		
-		$response->setValue("menuCSS", Router::getInstance()->getBaseDir()."/public/stylesheet/menu.css");
-		$response->setValue("topList", $menu_loader->getTopList());	
-		$response->setValue("menu_javascript", TigraMenuHelper::formatJsMenuArray(&$structure));	
+		$response->setValue("topList", $menuLoader->getTopList());	
+		$response->setValue("menu_javascript", TigraMenuHelper::formatJsMenuArray($structure));	
+
 		return $response;
 	}
 	
+	/*
 	protected function renderAjaxJsFiles(Response $response) {
 	
 		$response->appendValue("JAVASCRIPT", array(Router::getInstance()->getBaseDir()."/public/javascript/document.js", 
 		 											Router::getInstance()->getBaseDir()."/public/javascript/ajax.js",
 													Router::getInstance()->getBaseDir()."/public/javascript/TreeMenuAjax.js" ));
 	}
+	*/
 	
 	/**
 	 * Gets a @role tag value in a class and method comments

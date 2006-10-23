@@ -4,11 +4,17 @@ ClassLoader::import("application.controller.backend.abstract.SiteManagementContr
 ClassLoader::import("application.model.*");
 ClassLoader::import("application.model.Locale.*");
 /**
+ * Language management
+ * Handles adding languages, modifying language definitions (translations), activating and deactivating languages
  *
  * @package application.controller.backend
+ * @author Rinalds Uzkalns <rinalds@integry.net>
+ * @role admin.site.language
  */
 class LanguageController extends SiteManagementController
 {
+	
+	const langFileExt = 'lng';
 
 	protected function languageSectionBlock()
 	{
@@ -48,6 +54,7 @@ class LanguageController extends SiteManagementController
 
 	/**
 	 * Displays definitions edit page.
+	 * @return ActionResponse	 
 	 */
 	public function edit()
 	{
@@ -83,15 +90,13 @@ class LanguageController extends SiteManagementController
 			$translated[$file][$key] = $value;
 		}
 
-		echo $this->request->getValue("file");
-
 		// modifying a single file definitions only
 		if ($this->request->isValueSet('file'))
 		{
 			$file = $this->request->getValue("file");
 			$toTranslate = $translated[$file];
-			$translate = array();
-			$translate[$file] = $toTranslate;
+			$translated = array();
+			$translated[$file] = $toTranslate;
 		}		
 
 		// determine which definitions should be displayed (All, defined, undefined)
@@ -109,7 +114,7 @@ class LanguageController extends SiteManagementController
 				$selectedDefined = 'checked';
 			break;
 
-			case 'not_defined':
+			case 'notDefined':
 				$selectedNotDefined = 'checked';
 			break;
 			
@@ -121,7 +126,7 @@ class LanguageController extends SiteManagementController
 		// remove definitions that do not need to be displayed
 		if ($selectedDefined || $selectedNotDefined)
 		{
-			foreach ($translate as $file => &$values)
+			foreach ($translated as $file => &$values)
 			{
 			  	foreach ($values as $key => $value)
 			  	{
@@ -136,29 +141,39 @@ class LanguageController extends SiteManagementController
 				  	unset($translate[$file]);
 				}
 			}  
-		}
-		
+		}		
 
 		$response = new ActionResponse();
 		$response->SetValue("language", $this->request->getValue("language"));
 		$response->SetValue("edit_language", $editLocale->info()->getLanguageName($editLocaleName));
 		$response->setValue("id", $editLocaleName);
 
-		$files = array_merge(array('' => $this->locale->translator()->translate('allFiles')), $files);
+		$nfiles = array();
+		foreach ($files as $key => $value)
+		{
+			$nfiles[$value] = ucfirst(basename($value, '.' . self::langFileExt));
+		}	
+	
+		$files = array_merge(array('' => $this->locale->translator()->translate('_allFiles')), $nfiles);
+		
 		$response->setValue("files", $files);
 		$response->setValue("file", $file);
 
 		$response->setValue("en_definitions", $enLocale->translationManager()->getTranslatedDefinitions('en'));
 		$response->setValue("definitions", $translated);
 
-		$response->setValue("selected_all", $selected_all);
-		$response->setValue("selected_defined", $selected_defined);
-		$response->setValue("selected_not_defined", $selected_not_defined);
+		$response->setValue("selected_all", $selectedAll);
+		$response->setValue("selected_defined", $selectedDefined);
+		$response->setValue("selected_not_defined", $selectedNotDefined);
 		$response->setValue("show", $this->request->getValue("show"));				
 
 		return $response;
 	}
 
+	/**
+	 * Saves translations
+	 * @return ActionRedirectResponse
+	 */
 	public function save()
 	{
 		// get locale instance
@@ -191,37 +206,31 @@ class LanguageController extends SiteManagementController
 	
 	/**
 	 * Displays main admin page.
+	 * @return ActionResponse
 	 */
 	public function index()
 	{
 
-		$languages_select = $this->locale->info()->getAllLanguages();
+		$languagesSelect = $this->locale->info()->getAllLanguages();
 
 		$list = Language::getLanguages()->toArray();
-		$count_active = 0;
+		$countActive = 0;
 		foreach($list as $key => $value)
 		{
 			if ($value["isEnabled"] == 1)
 			{
-				$count_active++;
+				$countActive++;
 			}
-			//unset($languages_select[$value['code']]);
 			$list[$key]['name'] = $this->locale->info()->getLanguageName($value['ID']);
 		}
 
 		$response = new ActionResponse();
 		$response->SetValue("language", $this->request->getValue("language"));
 		$response->SetValue("languagesList", $list);
-		$response->SetValue("languages_select", $languages_select);
+		$response->SetValue("languages_select", $languagesSelect);
 		$response->SetValue("count_all", count($list));
-		$response->SetValue("count_active", $count_active);
+		$response->SetValue("count_active", $countActive);
 
-		/*for ($i = 1; $i < 200; $i ++) {
-
-		$number[] = $i;
-		}*/
-
-		//$response->SetValue("number", $number);
 		return $response;
 	}
 
