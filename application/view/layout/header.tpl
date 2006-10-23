@@ -63,13 +63,8 @@
 
 	<div id="pageTitle">{$PAGE_TITLE}</div>
 
-<<<<<<< .mine
-=======
-<!-- <div id="container"> -->
-
 	<div id="pageTitle">{$TITLE}</div>
 
->>>>>>> .r688
 	<table style="width: 100%;">
 		<tr>
 			<td>	
