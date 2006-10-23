@@ -73,8 +73,4 @@
 	</tr>	
 {/foreach}
 </table>
-{maketext text="_statistic_languages_full" params="$count_all,$count_active"}.<br>
-<br>Just for benchmark<br>
-{foreach from=$number item=item}
-	{maketext text="_statistic_languages" params="$item"}<br>
-{/foreach}
+{maketext text="_statistic_languages_full" params="$count_all,$count_active"}.

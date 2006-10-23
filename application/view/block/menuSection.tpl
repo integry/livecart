@@ -1,7 +1,7 @@
-{literal}
-<link href="{/literal}{$menuCSS}{literal}" media="screen" rel="stylesheet" type="text/css"/>
-{/literal}
+{includeJs file=document.js}
+{includeJs file=validate.js}
+{includeJs file=backend/menu/menu_tpl.js}
+{includeJs file=backend/menu/menu.js}
+{includeCss file=backend/menu.css}
+
 {$menu_javascript}
-{foreach from=$topList item=item}
- &nbsp; &nbsp; <a href="{link controller=$item.controller action=$item.action}">{translate text=$item.title}</a>
-{/foreach}
