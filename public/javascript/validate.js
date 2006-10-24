@@ -1,6 +1,8 @@
 
 function validateForm(form)
 {
+	window.event.preventDefault();
+	
 	var validatorData = form._validator.value;
 	validator = validatorData.parseJSON();
 
@@ -21,14 +23,16 @@ function validateForm(form)
 			var errorMsg = validator[fieldName][functionName]['error'];
 			//alert(functionName + params + errorMsg);
 			
-			eval('var functionExists = window.' + functionName + ';');
+			var functionExists = false;
+			eval('functionExists = window.' + functionName + ';');
 			if (!functionExists)
 			{
 				alert('No validation function defined: ' + functionName + '!');
 				break;
 			}
 				
-			eval('var isFieldValid = ' + functionName + '(formElement, params);');
+			var isFieldValid = false;
+			eval('isFieldValid = ' + functionName + '(formElement, params);');
 			if (!isFieldValid)
 			{
 				alert(errorMsg);
@@ -37,7 +41,8 @@ function validateForm(form)
 			}
 		}
 	}
-	return true;
+	
+	form.submit();
 }
 
 function trim(strValue)

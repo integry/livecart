@@ -44,7 +44,7 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 	$validatorField = "";
 	if ($handle->isClientSideValidationEnabled())
 	{
-		$onSumbmit = ' onsubmit="validateForm(this); return false"';
+		$onSumbmit = ' onsubmit="validateForm(this);"';
 		
 		require_once("function.includeJs.php");
 		smarty_function_includeJs(array("file" => "validate.js"), $smarty);
