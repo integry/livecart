@@ -13,7 +13,7 @@
 function smarty_function_includeCss($params, $smarty) 
 {
 	$fileName = $params['file'];
-	$code = '<link href="/livecart/public/stylesheet/' . $fileName . '" media="screen" rel="Stylesheet" type="text/css"/>' . "\n";
+	$code = '<link href="stylesheet/' . $fileName . '" media="screen" rel="Stylesheet" type="text/css"/>' . "\n";
 	$currentContent = $smarty->get_template_vars("STYLESHEET");
 	$smarty->assign("STYLESHEET", $currentContent . $code);
 }
