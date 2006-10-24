@@ -2,7 +2,7 @@
 
 function smarty_prefilter_config($tplSource, $smarty)
 {
-	return preg_replace_callback('/{t (.+?)}/', '_translate_to_locale', $tpl_source);
+	return preg_replace_callback('/{t (.+?)}/', '_translate_to_locale', $tplSource);
 }
 
 function _translate_to_locale( $key )
