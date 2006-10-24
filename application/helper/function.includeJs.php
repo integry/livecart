@@ -16,7 +16,7 @@ function smarty_function_includeJs($params, $smarty)
 	$currentContent = $smarty->get_template_vars("JAVASCRIPT");
 	if (strpos($currentContent, $fileName) === false)
 	{
-		$code = '<script src="/livecart/public/javascript/' . $fileName . '" type="text/javascript"></script>' . "\n";
+		$code = '<script src="javascript/' . $fileName . '" type="text/javascript"></script>' . "\n";
 		$smarty->assign("JAVASCRIPT", $currentContent . $code);
 	}
 }
