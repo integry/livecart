@@ -2,12 +2,15 @@
 
 function smarty_prefilter_config($tplSource, $smarty)
 {
-	return preg_replace_callback('/{t (.+?)}/', '_translate_to_locale', $tplSource);
+	return preg_replace_callback('/{t(::(\w+)){0,1} (.+?)}/', '_translate_to_locale', $tplSource);
 }
 
 function _translate_to_locale( $key )
 {
+	$word = isset($key[3]) ? $key[3] : '';
+	$controller = !empty($key[2]) ? $key[2] : false;
+	
 	$locale = Locale::getCurrentLocale();
-	return $locale->translator()->translate(isset($key[1]) ? $key[1] : '');
+	return ($controller ? "$controller => " : '') . $locale->translator()->translate($word);
 }
 ?>
