@@ -14,7 +14,7 @@ ClassLoader::import("application.helper.*");
  *
  * @package application.controller
  */
-abstract class BackendController extends BaseController {
+abstract class BackendController extends BaseController implements LCiTranslator {
 	
 	protected $locale = null;
 	
@@ -26,6 +26,9 @@ abstract class BackendController extends BaseController {
     
     //protected $thumbsDir = "/public/upload/images/products/thumbs/";
 	
+	/*
+	* @todo Lazy loading for Locale
+	*/
 	public function __construct(Request $request) {
 		parent::__construct($request);
 		
@@ -46,9 +49,28 @@ abstract class BackendController extends BaseController {
 
 		$this->locale =	Locale::getInstance($this->localeName);	
 		Locale::setCurrentLocale($this->localeName);		
-		$app = Application::getInstance();
-
 	}
+	
+	/**
+	 * Translates text using Locale::LCInterfaceTranslator
+	 * @param string $key
+	 * @return string
+	 */
+	public function translate($key) 
+	{
+		return $this->locale->translator()->translate($key);
+	}	
+
+	/**
+	 * Performs MakeText translation using Locale::LCInterfaceTranslator
+	 * @param string $key
+	 * @param array $params
+	 * @return string
+	 */
+	public function makeText($key, $params) 
+	{	  	  		  
+		return $this->locale->translator()->makeText($key, $params);
+	}	
 	
 	public function init()
 	{
