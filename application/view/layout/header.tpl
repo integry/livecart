@@ -4,6 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
+	<base href="{$BASE_URL}" />
+	
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 	<title>{$TITLE}</title>
 	<!-- Css includes -->
@@ -13,7 +15,6 @@
 	<!-- JavaScript includes -->
 	{$JAVASCRIPT}
 	
-	<base href="{$BASE_URL}" />
 </head>
 <body style="">
 
