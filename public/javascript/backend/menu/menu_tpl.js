@@ -11,10 +11,10 @@ var MENU_POS = [{
 	// menu block offset from the origin:
 	//	for root level origin is upper left corner of the page
 	//	for other levels origin is upper left corner of parent item
-	'block_top': 30,
-	'block_left': 20,
+	'block_top': 60,
+	'block_left': 60,
 	'position':'relative',
-	// offsets between items of the same level
+	/* offsets between items of the same level */
 	'top': 0,
 	'left': 131,
 	// time in milliseconds before menu is hidden after cursor has gone out

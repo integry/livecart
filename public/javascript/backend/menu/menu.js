@@ -43,9 +43,9 @@ function menu (a_items, a_tpl) {
 	// default level scope description structure 
 	this.a_tpl_def = {
 		'block_top'  : 16,
-		'block_left' : 16,
+		'block_left' : 116,
 		'top'        : 20,
-		'left'       : 4,
+		'left'       : 124,
 		'width'      : 120,
 		'height'     : 22,
 		'hide_delay' : 0,
