@@ -7,7 +7,7 @@ ClassLoader::import("application.model.locale.*");
 ActiveRecord::$creolePath = ClassLoader::getRealPath("library.creole");
 
 //ActiveRecord::setDSN("mysql://root@192.168.1.6/K-shop");
-ActiveRecord::setDSN("mysql://root@localhost/K-shop");
+ActiveRecord::setDSN("mysql://root@server/K-shop");
 
 /**
  * Base class for all ActiveRecord based models of application (single entry point in 
