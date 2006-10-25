@@ -8,17 +8,26 @@ LiveCart.AjaxUpdater.prototype = {
 	indicatorContainerId: null,
 	
 	/**
-	 *
+	 * 
 	 */
-	initialize: function(formToSubmit, containerId, indicatorId, insertionPosition)
+	initialize: function(formOrUrl, containerId, indicatorId, insertionPosition, params)
 	{
+		var url = "";
+		var method = "";
+		var params = "";
+		if (typeof formOrUrl == "object")
+		{
+			var form = formOrUrl;
+			url = form.action;
+			method = form.method;
+			params = Form.serialize(form);
+		}
 		LiveCart.ajaxUpdaterInstance = this;
 		this.indicatorContainerId = indicatorId;
 		Element.show(this.indicatorContainerId);
-		paramStr = Form.serialize(formToSubmit);
 		
-		var updaterOptions = { method: formToSubmit.method, 
-							   parameters: paramStr,
+		var updaterOptions = { method: method, 
+							   parameters: params,
 							   onComplete: this.hideIndicator,
 							   onFailure: this.reportError};
 		
@@ -49,7 +58,7 @@ LiveCart.AjaxUpdater.prototype = {
 		
 
 		new Ajax.Updater({success: containerId},
-						 formToSubmit.action, 
+						 url, 
 						 updaterOptions);
 	},
 	
