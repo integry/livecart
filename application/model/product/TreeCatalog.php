@@ -93,6 +93,11 @@ class TreeCatalog extends Tree {
 		$this->catalog->save();	  
 	}
 	
+	public static function delete($tree)
+	{
+		parent::delete(__CLASS__, $tree);
+	}
+	
 }
 
 ?>
