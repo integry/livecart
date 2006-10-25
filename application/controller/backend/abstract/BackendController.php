@@ -31,24 +31,55 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	*/
 	public function __construct(Request $request) {
 		parent::__construct($request);
-		
+			
 		if (!$this->user->hasAccess($this->getRoleName())) {	
 			//throw new AccessDeniedException($this->user, $this->request->getControllerName(), $this->request->getActionName());
 		}
 		
-
 		if($this->request->isValueSet("language"))
 		{
 			$this->localeName = $this->request->getValue("language");			
 		}
 		else
 		{
+		//$st = microtime(true);
 	  		$lang = Language::getDefaultLanguage();	  		
+		//echo microtime(true) - $st;
 	  		$this->localeName = $lang->getId();
 		}
 
 		$this->locale =	Locale::getInstance($this->localeName);	
-		Locale::setCurrentLocale($this->localeName);		
+		$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('cache.language'));
+		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('application.configuration.language'));
+		$this->loadLanguageFiles();	
+		Locale::setCurrentLocale($this->localeName);	
+		
+	}
+	
+	private function loadLanguageFiles()
+	{
+		// get all inherited controller classes
+		$class = get_class($this);
+		$classes = array();
+		while ($class != $lastClass)
+		{
+		  	$lastClass = $class;
+		 	$classes[] = $class;
+		 	$class = get_parent_class($class);
+		}
+		
+		// get class file paths (to be mapped with language file paths) and load language files
+		$included = array();
+		$controllerRoot = Classloader::getRealPath('application.controller');
+		foreach (array_reverse(get_included_files()) as $file)
+		{
+			$class = basename($file,'.php');
+			if (class_exists($class, false) && is_subclass_of($class, 'Controller'))
+			{
+				$file = substr($file, strlen($controllerRoot), -14);			  
+				$this->locale->translationManager()->loadFile($file);
+			}
+		}
 	}
 	
 	/**

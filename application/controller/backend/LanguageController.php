@@ -43,13 +43,10 @@ class LanguageController extends SiteManagementController
 	 */
 	public function update()
 	{
-		$path = ClassLoader::getRealPath("application.language_definitions.en");
-
 		$enLocale = Locale::getInstance('en');
-		$enLocale->translationManager()->setDefinitionFileDir($path);
 		$enLocale->translationManager()->updateDefinitions();
 
-		return new ActionRedirectResponse($this->request->getControllerName(), 'edit', array('id' => 'en'));
+		return new ActionRedirectResponse($this->request->getControllerName(), 'index');
 	}
 
 	/**
@@ -64,30 +61,34 @@ class LanguageController extends SiteManagementController
 
 		// get all English configuration files
 		$enLocale = Locale::getInstance('en');
-		$fileDir = ClassLoader::getRealPath('application.language_definitions.en');
+		$fileDir = ClassLoader::getRealPath('application.configuration.language.en');
 		$files = $enLocale->translationManager()->getDefinitionFiles($fileDir);
 
-		// determine which definition belongs to which file
-		$fileDefs = array();
+		// get currently translated definitions
+		$translated = array();
+		$enDefs = array();
 		foreach ($files as $file)
 		{
-		  	$filePath = $fileDir . '/' . $file;
-		  	$unsorted = $enLocale->translationManager()->getFileDefs($filePath);
-		  	foreach ($unsorted as $key => $value)
-		  	{
-				$fileDefs[$key] = $file;
-			}
-		}
+			$relPath = substr($file, strlen($fileDir));
+			
+			// get default English definitions (to get all definition keys)
+			$keys = $enLocale->translationManager()->getFileDefs($file);
 
-		// get currently translated definitions
-		$unsorted = $editLocale->translationManager()->getTranslatedDefinitions($editLocale->getLocaleCode(), false);
-		
-		// sort definitions by files
-		$translated = array();
-		foreach ($unsorted as $key => $value)
-		{		 	
-		  	$file = isset($fileDefs[$key]) ? $fileDefs[$key] : '';
-			$translated[$file][$key] = $value;
+			$enDefs[$relPath] = $keys;
+
+		  	foreach ($keys as $key => $value)
+		  	{
+			    $keys[$key] = '';
+			}
+				  		  			
+			// get language default definitions
+			$default = $editLocale->translationManager()->getFileDefs($relPath, true);
+			
+			// get translated definitions
+			$transl = $editLocale->translationManager()->getCacheDefs($relPath, true);
+			
+			// put all definitions together
+			$translated[$relPath] = array_merge($keys, $default, $transl);	
 		}
 
 		// modifying a single file definitions only
@@ -159,7 +160,7 @@ class LanguageController extends SiteManagementController
 		$response->setValue("files", $files);
 		$response->setValue("file", $file);
 
-		$response->setValue("en_definitions", $enLocale->translationManager()->getTranslatedDefinitions('en'));
+		$response->setValue("en_definitions", $enDefs);
 		$response->setValue("definitions", $translated);
 
 		$response->setValue("selected_all", $selectedAll);
@@ -192,15 +193,15 @@ class LanguageController extends SiteManagementController
 		  	$submitedLang = array();
 		}
 		
-		// get existing translation data
-		$existing = $editLocale->translationManager()->getTranslatedDefinitions($localeCode, false);
-		
-		// merge together
-		$langData = array_merge($existing, $submitedLang);
-		
-		// save translations
-		$editLocale->translationManager()->saveDefinitions($langData);
-		
+		// walk through all files and update definitions
+		foreach ($submitedLang as $file => $data)
+		{
+		  	$file = substr($file, 0, -4);
+			$existing = $editLocale->translationManager()->getCacheDefs($file . '.php', true);				
+		  	$data = array_merge($existing, $data);
+		  	$editLocale->translationManager()->saveCacheData($localeCode . '/' . $file, $data);
+		}
+			
 		return new ActionRedirectResponse($this->request->getControllerName(), 'edit', array('id' => $localeCode));
 	}
 	
@@ -210,9 +211,10 @@ class LanguageController extends SiteManagementController
 	 */
 	public function index()
 	{
-
+		// get all Locale languages
 		$languagesSelect = $this->locale->info()->getAllLanguages();
 
+		// get all system languages
 		$list = Language::getLanguages()->toArray();
 		$countActive = 0;
 		foreach($list as $key => $value)
@@ -222,7 +224,13 @@ class LanguageController extends SiteManagementController
 				$countActive++;
 			}
 			$list[$key]['name'] = $this->locale->info()->getLanguageName($value['ID']);
+			
+			// remove already added languages from Locale language list
+			unset($languagesSelect[$value['ID']]);			
 		}
+
+		// sort Locale language list
+		asort($languagesSelect);
 
 		$response = new ActionResponse();
 		$response->SetValue("language", $this->request->getValue("language"));
