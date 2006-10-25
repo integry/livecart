@@ -1,6 +1,7 @@
+{includeJs file="library/livecart.js"}
+
 {includeCss file="base.css"}
 {includeCss file="stat.css"}
-{includeJs file="categoryManager.js"}
 
 {assign var="TITLE" value="Product Category Management"}
 

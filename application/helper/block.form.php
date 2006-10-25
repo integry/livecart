@@ -34,6 +34,12 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 	$router = Router::getInstance();
 	$actionURL = $router->createURL($URLVars);
 	
+	if (!empty($params['onsubmit']))
+	{
+		$customOnSubmit = $params['onsubmit'];
+		unset($params['onsubmit']);
+	}
+	
 	$formAttributes ="";
 	foreach ($params as $param => $value)
 	{
@@ -44,13 +50,25 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 	$validatorField = "";
 	if ($handle->isClientSideValidationEnabled())
 	{
-		$onSumbmit = ' onsubmit="validateForm(this);"';
+		if (!empty($customOnSubmit))
+		{
+			$onSumbmit = ' onsubmit="if (!validateForm(this)) { return false; } ' . $customOnSubmit . '"';
+		}
+		else
+		{
+			$onSumbmit = ' onsubmit="return validateForm(this);"';
+		}
 		
 		require_once("function.includeJs.php");
 		smarty_function_includeJs(array("file" => "validate.js"), $smarty);
 		
 		$validatorField = '<input type="hidden" name="_validator" value="' . $handle->getValidator()->getJSValidatorParams() . '"/>';
 	}
+	else
+	{
+		$onSumbmit = $customOnSubmit;
+	}
+
 	$form = '<form action="'.$actionURL.'" '.$formAttributes.' ' . $onSumbmit .'>' . "\n";
 	$form .= $validatorField;
 	$form .= $content;

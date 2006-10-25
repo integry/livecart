@@ -1,7 +1,9 @@
-{includeJs file="library/prototype.js"}
+{includeJs file="library/prototype/prototype.js"}
+{includeJs file="library/livecart.js"}
+
 {includeCss file="base.css"}
 
-{form handle=$specFieldForm action="controller=backend.specField action=save" method="post"}
+{form handle=$specFieldForm action="controller=backend.specField action=add" method="post" onsubmit="new LiveCart.AjaxUpdater(this, 'output', 'indicator', 'top'); return false;"}
 <fieldset>
 	<legend>Add new category field</legend>
 	{error}
@@ -50,10 +52,20 @@
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" class="submit" value="Add field &raquo;"/></td>
+			<td>
+				<div id="indicator" style="display: none">Processing...</div>
+				<input type="submit" class="submit" value="Add field &raquo;"/>
+			</td>
 		</tr>
 	</table>
 </fieldset>
+
+<div id="output">
+	{foreach from=$specFieldList item=specField}
+	{include file="backend/specField/item.tpl"}
+	{/foreach}
+</div>
+
 <fieldset>
 	<legend>Category field list</legend>
 </fieldset>

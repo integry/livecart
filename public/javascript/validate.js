@@ -67,7 +67,7 @@ function trim(strValue)
   	return strValue;
 }
 
-// Filter functions
+/*
 function TrimFilter(element)
 {  
   	element.value = trim(element.value);	
@@ -77,9 +77,10 @@ function NumericFilter(element)
 {
   	element.value = trim(element.value.replace(",", "."));  	
 }
+*/
 
-// Validate functions
-function IsNotEmptyCheck(element, constraint)
+
+function IsNotEmptyCheck(element, params)
 {
 	if (element.getAttribute("type") == "checkbox") {
 		return element.checked;
@@ -87,21 +88,25 @@ function IsNotEmptyCheck(element, constraint)
 	return (element.value.length > 0);
 }
 
-function MinLengthCheck(element, constraint)
+function MinLengthCheck(element, params)
 {
-	return (element.value.length >= constraint.minLength);
+	return (element.value.length >= params.minLength);
 }
 
-function EmailCheck(element, constraint)
+function MaxLengthCheck(element, params)
+{
+	return (element.value.length <= params.maxLength);
+}
+
+function IsValidEmailCheck(element, params)
 {
 	re = new RegExp(/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/);
 	return (re.exec(element.value));
 }
 
-function UploadImageCheck(element, constraint)
-{	
-	re = new RegExp(/^.*(\.(gif|jpg|png))$/i);
-	return (re.exec(element.value));
+function IsValueInSetCheck(element, params)
+{
+	
 }
 
 function IsNumericCheck(element, constraint)
@@ -135,8 +140,8 @@ function MaxValueCheck(element, constraint)
 }
 
 /*
-    json.js
-*/
+ * JSON parser
+ */
 (function () {
     var m = {
             '\b': '\\b',

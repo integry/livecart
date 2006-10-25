@@ -41,7 +41,12 @@ class SpecFieldController extends StoreManagementController
 			$form->setData($specField->toArray());
 		}
 		
+		$specFieldList = array(array("name" => "test", "description" => "test"), array("name" => "another item", "description" => "one more..."));
+		
 		$response = new ActionResponse();
+		
+		$response->setValue("specFieldList", $specFieldList);
+		
 		$response->setValue("specFieldForm", $form);
 		$response->setValue("systemLangList", $systemLangList);
 		$response->setValue("typeList", $specFieldTypeList);
@@ -111,6 +116,16 @@ class SpecFieldController extends StoreManagementController
 		$validator->addCheck("type", new IsNotEmptyCheck("You must set a field type"));
 		
 		return $validator;
+	}
+	
+	public function add()
+	{
+		$this->removeLayout();
+		$specField = array("name" => $this->request->getValue("name"), "description" => $this->request->getValue("description"));
+		
+		$response = new ActionResponse();
+		$response->setValue("specField", $specField);
+		return $response;
 	}
 }
 
