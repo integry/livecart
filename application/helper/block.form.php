@@ -60,7 +60,7 @@ function smarty_block_form($params, $content, $smarty, &$repeat)
 		}
 		
 		require_once("function.includeJs.php");
-		smarty_function_includeJs(array("file" => "validate.js"), $smarty);
+		smarty_function_includeJs(array("file" => "library/formvalidator.js"), $smarty);
 		
 		$validatorField = '<input type="hidden" name="_validator" value="' . $handle->getValidator()->getJSValidatorParams() . '"/>';
 	}
