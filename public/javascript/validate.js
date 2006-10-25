@@ -1,8 +1,6 @@
 
 function validateForm(form)
 {
-	window.event.preventDefault();
-	
 	var validatorData = form._validator.value;
 	validator = validatorData.parseJSON();
 
@@ -41,8 +39,7 @@ function validateForm(form)
 			}
 		}
 	}
-	
-	form.submit();
+	return true;
 }
 
 function trim(strValue)
