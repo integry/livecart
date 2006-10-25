@@ -42,9 +42,9 @@
 					<td width="10">
 					</td>
 					<td>
-						<input type="text" style="width:450px" name="lang[{$key}]" value="{$item|escape:"quotes"}">
+						<input type="text" style="width:450px" name="lang[{$file}][{$key}]" value="{$item|escape:"quotes"}">
 						<br/>
-						<small><span style="color:#CCCCCC">{$en_definitions.$key}</span></small>
+						<small><span style="color:#CCCCCC">{$en_definitions.$file.$key}</span></small>
 					</td>
 				<tr>
 
@@ -52,7 +52,7 @@
 
 		{/foreach}
 	</table>
-	<input type="submit" value="{translate text=_save}">
+	<input type="submit" value="{t _save}">
 </form>
 
 	

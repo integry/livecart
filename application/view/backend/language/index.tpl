@@ -1,3 +1,5 @@
+{pageTitle}{translate text=_admin_languages}{/pageTitle}
+
 {literal}
 <script language="javascript">	
 	function eventsetEnabled(change_active, change_to) {
@@ -15,10 +17,27 @@
 	}		
 </script>
 {/literal}
-<h1>{translate text=_admin_languages}</h1>
 <a href="{link language=$language controller=backend.language action=update}">
-	{translate text=_update_from_files}
+	{t _update_from_files}
 </a>
+
+{pageMenu}
+	{menuItem}
+		{menuCaption}{t _update_from_files}!!!{/menuCaption}
+{*		{menuAction}{link language=$language controller=backend.language action=update}{/menuAction} *}
+	{/menuItem}
+	{menuItem}
+{*		{caption}{t _add_language}{/caption}
+		{pageAction}showAddForm("addLang"){/pageAction}
+*} item 2	{/menuItem}
+{/pageMenu}
+
+{*
+{addForm id=addLang}
+	FORM CONTENT
+{/quickAddForm}
+*}
+
 <br><br>
 <form name="addform" method="post" action="{link language=$language controller=backend.language action=add}">
 	<select name="new_language" style="width: 200px">
@@ -33,6 +52,35 @@
 <form name="currentform" method="post" action="{link language=$language controller=backend.language action=setDefault}">	
 	<input type="hidden" name="change_to">
 </form>
+
+{literal}
+<style>
+.enabled_0 {color: #CCCCCC;}
+</style>
+{/literal}
+
+{*
+{list sortable=true editable=true deleteable=true}
+{foreach from=$languagesList item=item}
+	{listItem}
+		{$item.ID|upper} ({$item.name})	
+	{/listItem}
+{/foreach}
+{/list}
+*}
+
+<ul>
+{foreach from=$languagesList item=item}
+	<li>
+		{$item.ID|upper} ({$item.name})<br />
+		<a href="{link language=$language controller=backend.language action=edit id=$item.ID}" class="listLink">
+			{translate text=_edit_definitions}
+		</a>
+	</li>
+{/foreach}
+</ul>
+
+
 <table style="border-collapse: collapse;">
 	<tr >
 		<td width=50 style=" border-width: 1px 1px 1px 1px;	border-color: black black black black; border-style: inset inset inset inset;">{translate text=_code}
