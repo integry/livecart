@@ -20,6 +20,8 @@ class TestLocale extends UnitTest
 		Locale::setCurrentLocale('en');
 		$current = Locale::getCurrentLocale();
 		$this->assertIdentical($current, $locale);
+		
+		//
 
 
 	}
