@@ -1,5 +1,4 @@
 <?php
-
 ClassLoader::import("application.model.MultilingualDataObject");
 ClassLoader::import("application.model.product.CatalogLangData");
 //ClassLoader::import("application.model.Tree");
@@ -9,34 +8,62 @@ ClassLoader::import("application.model.product.CatalogLangData");
  *
  * @package application.model.product
  */
-class TreeCatalog extends Tree {	
+class TreeCatalog extends Tree 
+{	
 
+	/**
+	 * Enter description here...
+	 *
+	 * @var unknown_type
+	 */
 	private $catalog;
 	
-	private $tree_loaded = false;
+	/**
+	 * Shows if catalog tree is loaded
+	 *
+	 * @var bool
+	 */
+	private $treeLoaded = false;
 	
-	public static function defineSchema($className = __CLASS__) {
-		
+	/**
+	 * Define database schema used by this active record instance
+	 *
+	 * @param string $className Schema name
+	 */
+	public static function defineSchema($className = __CLASS__) 
+	{
 		$schema = self::getSchemaInstance($className);
 		Tree::defineSchema($className);
 		$schema->setName("Catalog");	
 	}
 	
-	public static function getNewTreeInstance($parent = null) {
-	 
-	 	$tree_catalog = parent::getNewTreeInstance("TreeCatalog", $parent); 	 		 	
-	 	$tree_catalog->catalog = Catalog::getNewInstance("Catalog");
-	 	return $tree_catalog;	 	
+	/**
+	 * Get catalog tree
+	 *
+	 * @param null|int|Tree Parent tree or it's id. If null, has no parent.
+	 * @return TreeCatalog
+	 */
+	public static function getNewTreeInstance($parent = null) 
+	{
+	 	$treeCatalog = parent::getNewTreeInstance("TreeCatalog", $parent); 	 		 	
+	 	$treeCatalog->catalog = Catalog::getNewInstance("Catalog");
+	 	return $treeCatalog;	 	
 	}
-	
-	public static function getTreeInstanceById($id) {
-	 
-	 	$tree_catalog = parent::getTreeInstanceById("TreeCatalog", $id); 	 		 	 	
-		
-		if (empty($tree_catalog->catalog)) {
 
-			$lft =$tree_catalog->lft->get();
-			$rgt =$tree_catalog->rgt->get();
+	/**
+	 * Get catalog tree
+	 *
+	 * @param int $id Root tree node
+	 * @return TreeCatalog
+	 */
+	public static function getTreeInstanceById($id) 
+	{
+	 	$treeCatalog = parent::getTreeInstanceById("TreeCatalog", $id); 	 		 	 	
+		
+		if (empty($treeCatalog->catalog)) 
+		{
+			$lft =$treeCatalog->lft->get();
+			$rgt =$treeCatalog->rgt->get();
 				
 			$cond = new OperatorCond(new ARFieldHandle("Catalog", "lft"), $lft, ">=");
 			$cond->addAND(new OperatorCond(new ARFieldHandle("Catalog", "rgt"), $rgt, "<="));
@@ -45,59 +72,78 @@ class TreeCatalog extends Tree {
 			$filter->setCondition($cond);
 			Catalog::getRecordSet("Catalog", $filter, true);
 	
-			//All this components a
-		 	$tree_catalog->setCatalogRecursive();			
+		 	$treeCatalog->setCatalogRecursive();			
 		}
 	
-	 	return $tree_catalog;	 	
+	 	return $treeCatalog;	 	
 	}
-	
-	public static function getAllTree() {
-	
-		$tree_catalog = parent::getAllTree("TreeCatalog");   
-		if (!$tree_catalog->tree_loaded) {
-			
+
+	/**
+	 * Get whole catalog tree tree
+	 *
+	 * @param int $id Root tree node
+	 * @return TreeCatalog
+	 */
+	public static function getAllTree() 
+	{
+		$treeCatalog = parent::getAllTree("TreeCatalog");   
+		if (!$treeCatalog->treeLoaded) 
+		{
 			Catalog::getRecordSet("Catalog", new ARSelectFilter(), true);
 				
-			//All this components a
-		 	$tree_catalog->setCatalogRecursive();	
+		 	$treeCatalog->setCatalogRecursive();	
 		}
 			
-		return $tree_catalog;
+		return $treeCatalog;
 	}
 	
-	private function setCatalogRecursive() {
-  	
-  		$this->tree_loaded = true;  		
-  		if ($this->getId()) {
-
+	private function setCatalogRecursive() 
+	{
+  		$this->treeLoaded = true;  		
+  		if ($this->getId()) 
+  		{
 		  	$this->catalog = Catalog::getInstanceById($this->getId(), true, true);	  	
 		} 
 		
-	  	foreach ($this as $child) {
-		    			
+	  	foreach ($this as $child) 
+	  	{
 			$child->setCatalogRecursive();
 		}	  	
 	}
 		
-	public function lang($lang_code) {
-		
-	  	return $this->catalog->lang($lang_code);
+	/**
+	 * Get CatalogLangData object
+	 *
+	 * @param string $langCode Language code
+	 * @return CatalogLangData
+	 */
+	public function lang($langCode) 
+	{
+	  	return $this->catalog->lang($langCode);
 	}
 	
-	public function save() {
-	  
+	/**
+	 * Save changes to object
+	 *
+	 */
+	public function save() 
+	{
 	  	parent::save();		  		  	
 	  	
 	  	$this->catalog->setId($this->getId());
 		$this->catalog->save();	  
 	}
-	
-	public static function delete($tree)
+
+	/**
+	 * Deletes tree from database. Updates instances map 
+	 * 
+	 * @param string $className Class name
+	 * @param int|Tree Tree or it's id
+	 */
+	public static function delete($className = __CLASS__, $tree)
 	{
 		parent::delete(__CLASS__, $tree);
 	}
-	
 }
 
 ?>
