@@ -34,6 +34,7 @@ class TreeCatalog extends Tree
 	{
 		$schema = self::getSchemaInstance($className);
 		Tree::defineSchema($className);
+		
 		$schema->setName("Catalog");	
 	}
 	
@@ -45,7 +46,7 @@ class TreeCatalog extends Tree
 	 */
 	public static function getNewTreeInstance($parent = null) 
 	{
-	 	$treeCatalog = parent::getNewTreeInstance("TreeCatalog", $parent); 	 		 	
+	 	$treeCatalog = parent::getNewTreeInstance(__CLASS__, $parent); 	 		 	
 	 	$treeCatalog->catalog = Catalog::getNewInstance("Catalog");
 	 	return $treeCatalog;	 	
 	}
@@ -132,17 +133,6 @@ class TreeCatalog extends Tree
 	  	
 	  	$this->catalog->setId($this->getId());
 		$this->catalog->save();	  
-	}
-
-	/**
-	 * Deletes tree from database. Updates instances map 
-	 * 
-	 * @param string $className Class name
-	 * @param int|Tree Tree or it's id
-	 */
-	public static function delete($className = __CLASS__, $tree)
-	{
-		parent::delete(__CLASS__, $tree);
 	}
 }
 
