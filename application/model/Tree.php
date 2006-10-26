@@ -12,7 +12,7 @@ abstract class Tree extends ActiveRecord implements IteratorAggregate
 	
 	private static $instancesMap = array();
 
-	private $class_name;
+	private $className;
 		
 	/**
 	 * Define database schema used by this active record instance
@@ -42,7 +42,7 @@ abstract class Tree extends ActiveRecord implements IteratorAggregate
 	public static function getNewTreeInstance($className, $parent = null) 
 	{
 	  	$tree = ActiveRecord::GetNewInstance($className);	
-		$tree->class_name = $className;	  	
+		$tree->className = $className;	  	
 	  	if ($parent != null) 
 	  	{ 	  	
 			if (is_Object($parent)) 
@@ -65,7 +65,7 @@ abstract class Tree extends ActiveRecord implements IteratorAggregate
 	 */	
 	protected function getTableName() 
 	{
-	  	$schema = self::getSchemaInstance($this->class_name);
+	  	$schema = self::getSchemaInstance($this->className);
 		return $schema->getName();
 	}
 	
