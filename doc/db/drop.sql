@@ -5,7 +5,7 @@
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database drop script                            #
-# Created on:            2006-10-19 11:44                                #
+# Created on:            2006-10-26 13:19                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -18,6 +18,8 @@ ALTER TABLE Product DROP FOREIGN KEY Catalog_Product;
 ALTER TABLE Product DROP FOREIGN KEY Manufacturer_Product;
 
 ALTER TABLE Product DROP FOREIGN KEY ProductImage_Product;
+
+ALTER TABLE Catalog DROP FOREIGN KEY Catalog_Catalog;
 
 ALTER TABLE ProductLangData DROP FOREIGN KEY Product_ProductLangData;
 
@@ -115,7 +117,15 @@ DROP TABLE Product;
 
 # Drop constraints #
 
+ALTER TABLE Catalog ALTER COLUMN isActive DROP DEFAULT;
+
+ALTER TABLE Catalog ALTER COLUMN position DROP DEFAULT;
+
 ALTER TABLE Catalog DROP PRIMARY KEY;
+
+# Drop indexes #
+
+DROP INDEX IDX_Catalog_1 ON Catalog;
 
 # Drop table #
 
@@ -176,6 +186,8 @@ DROP TABLE Specification;
 # ---------------------------------------------------------------------- #
 
 # Drop constraints #
+
+ALTER TABLE SpecField ALTER COLUMN position DROP DEFAULT;
 
 ALTER TABLE SpecField DROP PRIMARY KEY;
 

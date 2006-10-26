@@ -5,7 +5,7 @@
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database creation script                        #
-# Created on:            2006-10-19 11:44                                #
+# Created on:            2006-10-26 13:19                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -19,7 +19,7 @@
 
 CREATE TABLE Product (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Number of times product has been viewed by customers',
-    catalogID INTEGER UNSIGNED,
+    catalogID INTEGER UNSIGNED NOT NULL,
     manufacturerID INTEGER UNSIGNED,
     defaultImageID INTEGER UNSIGNED,
     SKU VARCHAR(20),
@@ -29,9 +29,9 @@ CREATE TABLE Product (
     URL TINYTEXT,
     isBestSeller BOOL DEFAULT 0,
     type TINYINT UNSIGNED DEFAULT 0 COMMENT '1 - intangible 0 - tangible',
-    voteSum INTEGER DEFAULT 0,
-    voteCount INTEGER DEFAULT 0,
-    hits INTEGER DEFAULT 0,
+    voteSum INTEGER UNSIGNED DEFAULT 0,
+    voteCount INTEGER UNSIGNED DEFAULT 0,
+    hits INTEGER UNSIGNED DEFAULT 0 COMMENT 'Number of times product has been viewed by customers',
     shippingHeight NUMERIC(5,2),
     shippingWidth NUMERIC(5,2),
     shippingLength NUMERIC(5,2),
@@ -42,7 +42,7 @@ CREATE TABLE Product (
     isFreeShipping BOOL,
     unitsType TINYINT NOT NULL DEFAULT 0 COMMENT '0- metric 1- english',
     CONSTRAINT PK_Product PRIMARY KEY (ID)
-) COMMENT = 'Number of times product has been viewed by customers';
+);
 
 CREATE INDEX IDX_Product_1 ON Product (catalogID);
 
@@ -54,11 +54,16 @@ CREATE INDEX IDX_Product_2 ON Product (SKU);
 
 CREATE TABLE Catalog (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    parent INTEGER,
+    parentNodeID INTEGER UNSIGNED,
     lft INTEGER,
     rgt INTEGER,
+    isActive BOOL DEFAULT 1,
+    position INTEGER UNSIGNED DEFAULT 0,
+    handle VARCHAR(40),
     CONSTRAINT PK_Catalog PRIMARY KEY (ID)
 );
+
+CREATE UNIQUE INDEX IDX_Catalog_1 ON Catalog (handle);
 
 # ---------------------------------------------------------------------- #
 # Add table "Language"                                                   #
@@ -112,8 +117,9 @@ CREATE TABLE SpecField (
     catalogID INTEGER UNSIGNED,
     type SMALLINT COMMENT 'Field data type. Available types: 1. text field 2. drop down list (select one item from a list) 3. select multiple items from a list',
     dataType SMALLINT COMMENT '0. default (mixed) 1. numeric 2. date/time',
-    position INTEGER COMMENT 'Order number (position relative to other fields)',
+    position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Order number (position relative to other fields)',
     handle VARCHAR(40),
+    isMultilingual BOOL,
     CONSTRAINT PK_SpecField PRIMARY KEY (ID)
 ) COMMENT = 'Field data type. Available types: 1. text field 2. drop down list (select one item from a list) 3. select multiple items from a list';
 
@@ -128,6 +134,7 @@ CREATE TABLE CatalogLangData (
     languageID CHAR(2) NOT NULL,
     name VARCHAR(100),
     description TEXT,
+    keywords VARCHAR(200),
     CONSTRAINT PK_CatalogLangData PRIMARY KEY (catalogID, languageID)
 );
 
@@ -158,7 +165,6 @@ CREATE INDEX IDX_SpecFieldLang_2 ON SpecFieldLangData (languageID);
 CREATE TABLE SpecFieldValue (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     specFieldID INTEGER UNSIGNED,
-    translate BOOL COMMENT 'Is there a need to translate this field to diferent languages?',
     CONSTRAINT PK_SpecFieldValue PRIMARY KEY (ID)
 ) COMMENT = 'Is there a need to translate this field to diferent languages?';
 
@@ -200,7 +206,7 @@ CREATE TABLE Filter (
 CREATE TABLE FilterGroup (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     specFieldID INTEGER UNSIGNED NOT NULL,
-    position INTEGER DEFAULT 0,
+    position INTEGER UNSIGNED DEFAULT 0,
     isEnabled BOOL,
     CONSTRAINT PK_FilterGroup PRIMARY KEY (ID)
 );
@@ -221,10 +227,10 @@ CREATE TABLE FilterLangData (
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE FilterGroupLangData (
-    languageID CHAR(2) NOT NULL,
     filterGroupID INTEGER UNSIGNED NOT NULL,
+    languageID CHAR(2) NOT NULL,
     name VARCHAR(40),
-    CONSTRAINT PK_FilterGroupLangData PRIMARY KEY (languageID, filterGroupID)
+    CONSTRAINT PK_FilterGroupLangData PRIMARY KEY (filterGroupID, languageID)
 );
 
 # ---------------------------------------------------------------------- #
@@ -277,7 +283,7 @@ CREATE TABLE Manufacturer (
 CREATE TABLE ProductImage (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     productID INTEGER UNSIGNED NOT NULL,
-    position INTEGER DEFAULT 0,
+    position INTEGER UNSIGNED DEFAULT 0,
     CONSTRAINT PK_ProductImage PRIMARY KEY (ID)
 );
 
@@ -286,10 +292,10 @@ CREATE TABLE ProductImage (
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE ProductImageLangData (
-    languageID CHAR(2) NOT NULL,
     productImageID INTEGER UNSIGNED NOT NULL,
+    languageID CHAR(2) NOT NULL,
     title VARCHAR(100) NOT NULL,
-    CONSTRAINT PK_ProductImageLangData PRIMARY KEY (languageID, productImageID)
+    CONSTRAINT PK_ProductImageLangData PRIMARY KEY (productImageID, languageID)
 );
 
 # ---------------------------------------------------------------------- #
@@ -312,7 +318,7 @@ CREATE TABLE ProductFile (
 
 CREATE TABLE FileType (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'File extension',
-    extension VARCHAR(10),
+    extension CHAR(4),
     name VARCHAR(60),
     contentType VARCHAR(60),
     iconFileName VARCHAR(40),
@@ -344,6 +350,9 @@ ALTER TABLE Product ADD CONSTRAINT Manufacturer_Product
 
 ALTER TABLE Product ADD CONSTRAINT ProductImage_Product 
     FOREIGN KEY (defaultImageID) REFERENCES ProductImage (ID);
+
+ALTER TABLE Catalog ADD CONSTRAINT Catalog_Catalog 
+    FOREIGN KEY (parentNodeID) REFERENCES Catalog (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductLangData ADD CONSTRAINT Product_ProductLangData 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
