@@ -8,7 +8,7 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
  * @package application.controller.backend
  * @author Saulius Rupainis <saulius@integry.net>
  */
-class CatalogController extends StoreManagementController
+class CategoryController extends StoreManagementController
 {
 	
 	public function index()
@@ -65,7 +65,7 @@ class CatalogController extends StoreManagementController
 		
 		if ($this->request->isValueSet("id"))
 		{
-			$catalog = ActiveRecord::getInstanceById('CatalogLangData', array('catalogID' => $this->request->getValue("id"), 'languageID' => $this->multi_language), true);
+			$catalog = ActiveRecord::getInstanceById('CategoryLangData', array('catalogID' => $this->request->getValue("id"), 'languageID' => $this->multi_language), true);
 			$data = $catalog->toArray();
 				
 			$form->setData(array(

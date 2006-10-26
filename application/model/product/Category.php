@@ -1,13 +1,13 @@
 <?php
 ClassLoader::import("application.model.MultilingualDataObject");
-ClassLoader::import("application.model.product.CatalogLangData");
+ClassLoader::import("application.model.product.CategoryLangData");
 
 /**
  * Just for TEST purposes.
  *
  * @package application.model.product
  */
-class Catalog extends MultiLingualDataObject
+class Category extends MultiLingualDataObject
 {
 	/**
 	 * Define database schema used by this active record instance
@@ -19,7 +19,7 @@ class Catalog extends MultiLingualDataObject
 		$schema = self::getSchemaInstance($className);
 		Tree::defineSchema($className);
 
-		$schema->setName("Catalog");
+		$schema->setName("Category");
 	}
 
 	/**
@@ -39,7 +39,7 @@ class Catalog extends MultiLingualDataObject
 	{
 		$filter = new ARSelectFilter();
 		$filter->setOrder(new ARFieldHandle("SpecField", "position"));
-		$filter->setCondition(new EqualsCond(new ARFieldHandle("SpecField", "catalogID"), $this->getID()));
+		$filter->setCondition(new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $this->getID()));
 
 		return SpecField::getRecordSetArray($filter);
 	}
