@@ -12,9 +12,9 @@ class TreeCatalog extends Tree
 {	
 
 	/**
-	 * Enter description here...
+	 * Catalog instance
 	 *
-	 * @var unknown_type
+	 * @var Catalog
 	 */
 	private $catalog;
 	
