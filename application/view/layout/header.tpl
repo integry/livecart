@@ -10,6 +10,7 @@
 	
 	<!-- Css includes -->
 	{includeCss file=base.css}
+	{includeCss file="form.css"}
 	{$STYLESHEET}
 	
 	<!-- JavaScript includes -->
