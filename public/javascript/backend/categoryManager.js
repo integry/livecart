@@ -14,9 +14,9 @@ LiveCart.CategoryManager = {
 	initCategoryBrowser: function()
 	{
 		var tree = new dhtmlXTreeObject("categoryBrowser","100%","100%", 0);
-		tabbar.setImagePath("/livecart/public/image/backend/dhtmlxtree/");
+		tree.setImagePath("/livecart/public/image/backend/dhtmlxtree/");
 		
-		tree.insertNewItem(0,1,"Some Root Node",0,0,0,0,"SELECT");
+		tree.insertNewItem(0,1,"Electronics",0,0,0,0,"SELECT");
 		tree.insertNewItem(0,2,"New Node zero",0,0,0,0,"SELECT");
 		tree.insertNewItem(1,3,"New Node one",0,0,0,0,"SELECT");
 		tree.insertNewItem(1,4,"New Node two",0,0,0,0,"SELECT");
@@ -35,8 +35,8 @@ LiveCart.CategoryManager = {
 		tabbar.addTab("permissionContent","Permissions", "100px");
 		tabbar.addTab("imageContent","Images", "100px");
 		tabbar.addTab("articleContent","Articles", "100px");
-
 		
-		tabbar.setContentHTML("mainContent", "this is content of main details");
+		tabbar.setContent("mainContent", "mainDetailsSection");
+		tabbar.setTabActive("mainContent");
 	}
 }

@@ -61,6 +61,8 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		// get all inherited controller classes
 		$class = get_class($this);
 		$classes = array();
+		$lastClass = "";
+		
 		while ($class != $lastClass)
 		{
 		  	$lastClass = $class;

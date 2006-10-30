@@ -1,5 +1,12 @@
-This is output of backend.catalog.index action
+<div style="font-size: 18px;">Modify category details</div>
+<hr/>
 {form handle=$catalogForm action="controller=backend.catalog action=save"}
-	Name: {textfield name="name"}<br/>
-	Handle: {textfield name="handle"}
+<label for="name">Category name:</label> 
+{textfield name="name" id="name"}
+
+<label for="details">Details:</label> 
+{textarea name="name" id="details"}
+
+<label for="handle">Handle:</label> 
+{textfield name="name" id="handle"}
 {/form}
