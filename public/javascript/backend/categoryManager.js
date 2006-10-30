@@ -14,7 +14,7 @@ LiveCart.CategoryManager = {
 	initCategoryBrowser: function()
 	{
 		var tree = new dhtmlXTreeObject("categoryBrowser","100%","100%", 0);
-		tree.setImagePath("/livecart/public/image/backend/dhtmlxtree/");
+		tree.setImagePath("image/backend/dhtmlxtree/");
 		
 		tree.insertNewItem(0,1,"Electronics",0,0,0,0,"SELECT");
 		tree.insertNewItem(0,2,"New Node zero",0,0,0,0,"SELECT");
@@ -26,7 +26,7 @@ LiveCart.CategoryManager = {
 	initTabs: function()
 	{
 		var tabbar = new dhtmlXTabBar("managerContainer","top");
-		tabbar.setImagePath("/livecart/public/image/backend/dhtmlxtabbar/");
+		tabbar.setImagePath("image/backend/dhtmlxtabbar/");
 		
 		tabbar.addTab("mainContent","Main Details", "100px");
 		tabbar.addTab("fieldContent","Fields", "100px");
