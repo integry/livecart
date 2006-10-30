@@ -46,4 +46,38 @@ class Category extends MultiLingualDataObject
 
 }
 
+
+class MultilingualCategory extends MultilingualDataObject
+{
+	public static function defineSchema($className = __CLASS__)
+	{
+		
+	}
+}
+
+class Category extends ARTreeNode
+{
+	private $multilingualCategory = null;
+	
+	protected function __construct()
+	{
+		$this->multilingualCategory = MultilingualCategory::getInstanceByID();
+	}
+	
+	public function lang($langCode)
+	{
+		return $this->multilingualCategory->lang($langCode);
+	}
+	
+	public static function getRecordSet($filter)
+	{
+		$recordSet = parent::getRecordSet(__CLASS__);
+	}
+	
+	public static function defineSchema()
+	{
+		
+	}
+}
+
 ?>
