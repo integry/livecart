@@ -42,5 +42,8 @@
 		echo "<pre>"; print_r($e); echo "</pre>";
 	}
 	
-	$stat->display();
+	if (!empty($_GET['stat']))
+	{
+		$stat->display();
+	}
 ?>
