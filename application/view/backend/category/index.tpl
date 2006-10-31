@@ -1,12 +1,24 @@
-<div style="font-size: 18px;">Modify category details</div>
-<hr/>
-{form handle=$catalogForm action="controller=backend.catalog action=save"}
-<label for="name">Category name:</label> 
-{textfield name="name" id="name"}
+<!-- {form handle=$catalogForm action="controller=backend.catalog action=save" method="post"} -->
+<form>
+<fieldset style="width: 100%">
+<legend>Modify category details</legend>
 
-<label for="details">Details:</label> 
-{textarea name="name" id="details"}
+		<label for="name">Category name:</label> 
+		{textfield name="name" id="name"}
 
-<label for="handle">Handle:</label> 
-{textfield name="name" id="handle"}
-{/form}
+		<br/>
+		<label for="details">Details:</label> 
+		{textarea name="details" id="details"}
+		<br/>
+		
+		<label for="handle">Handle:</label> 
+		{textfield name="handle" id="handle"}
+		<br/>
+		
+		<label for="submit"> </label> 
+		<input type="submit" class="submit" id="submit" value="Update details"/>
+
+</fieldset>
+</form>
+
+<!--{/form}-->
