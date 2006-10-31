@@ -17,7 +17,7 @@
 	{$JAVASCRIPT}
 	
 </head>
-<body style="">
+<body style="height: 100&">
 
 <div id="pageTop">
 	<div id="topAuthInfo">
@@ -61,13 +61,13 @@
 
 <div id="topBorder"></div>
 
-<div id="workAreaContainer">
+<div id="workAreaContainer" style="height: 100%">
 
 	<div id="pageTitle">{$PAGE_TITLE}</div>
 
 	<div id="pageTitle">{$TITLE}</div>
 
-	<table style="width: 100%;">
+	<table style="width: 100%;" style="height: 100%">
 		<tr>
 			<td>	
-				<div id="workArea">
+				<div id="workArea" style="height: 100%">

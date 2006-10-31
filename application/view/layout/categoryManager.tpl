@@ -11,8 +11,11 @@
 {includeCss file="backend/dhtmlxtree/dhtmlXTree.css"}
 
 {assign var="TITLE" value="Product Category Management"}
-
 {include file="layout/header.tpl"}
+
+<script>
+	var specFieldUrl = '{link controller=backend.specField action=index}';
+</script>
 
 	<div id="catgegoryContainer" style="float:left; width: 260px;">
 		<div id="categoryBrowser" style="padding: 10px; border: 1px solid #ccc; background-color: #f1f1f1;">
@@ -25,10 +28,13 @@
 		</div>
 	</div>
 
-	<div id="managerContainer" style="margin-left: 270px; height: 400px;">
+	<div id="managerContainer" style="margin-left: 270px; height: 300px ">
 	</div>
 	
 <script type="text/javascript">
 	LiveCart.CategoryManager.init();
 </script>
+
+<div id="specFieldSection"></div>
+
 {include file="layout/footer.tpl"}

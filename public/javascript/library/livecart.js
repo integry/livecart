@@ -10,7 +10,7 @@ LiveCart.AjaxUpdater.prototype = {
 	/**
 	 * 
 	 */
-	initialize: function(formOrUrl, containerId, indicatorId, insertionPosition, params)
+	initialize: function(formOrUrl, containerId, indicatorId, insertionPosition)
 	{
 		var url = "";
 		var method = "";
@@ -21,6 +21,11 @@ LiveCart.AjaxUpdater.prototype = {
 			url = form.action;
 			method = form.method;
 			params = Form.serialize(form);
+		}
+		else
+		{
+			url = formOrUrl;
+			method = "post";
 		}
 		LiveCart.ajaxUpdaterInstance = this;
 		this.indicatorContainerId = indicatorId;
@@ -55,19 +60,18 @@ LiveCart.AjaxUpdater.prototype = {
 				break;
 			}
 		}
-		
 
 		new Ajax.Updater({success: containerId},
 						 url, 
 						 updaterOptions);
 	},
 	
-	hideIndicator: function()
+	hideIndicator: function(response)
 	{
 		Element.hide(LiveCart.ajaxUpdaterInstance.indicatorContainerId);
 	},
 	
-	reportError: function(response)
+	reportError: function(response) 
 	{
 		alert('Error!\n\n' + response.responseText);
 	}

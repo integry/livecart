@@ -39,6 +39,8 @@ function validateForm(form)
 			}
 		}
 	}
+	// Unseting validator value, so it will not be transfered
+	form._validator.value = '';
 	return true;
 }
 
@@ -63,18 +65,6 @@ function trim(strValue)
     }
   	return strValue;
 }
-
-/*
-function TrimFilter(element)
-{  
-  	element.value = trim(element.value);	
-}
-
-function NumericFilter(element)
-{
-  	element.value = trim(element.value.replace(",", "."));  	
-}
-*/
 
 
 function IsNotEmptyCheck(element, params)
