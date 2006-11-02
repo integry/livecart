@@ -4,24 +4,40 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
 ClassLoader::import("application.model.product.SpecField");
 
 /**
- * Catalog specification field ("extra field") controller
+ * Category specification field ("extra field") controller
  *
  * @package application.controller.backend
  * @author Saulius Rupainis <saulius@integry.net>
- * @role admin.store.catalog
+ * @role admin.store.category
  */
 class SpecFieldController extends StoreManagementController
 {
 	public function index()
 	{
-		$catalog = Catalog::getInstanceByID(1);
-		$recordSet = $catalog->getSpecFieldList();
+		header('Content-Type: text/xml; charset=utf-8');
+//		$category = Category::getInstanceByID(1);
+//		$recordSet = $category->getSpecFieldList();
 
 		$response = new ActionResponse();
-		$response->setValue("fieldList", $recordSet);
+//		$response->setValue("fieldList", $recordSet);
+
+		$response->setValue('random1', rand(1, 100));
+		$response->setValue('random2', rand(1, 100));
+		$response->setValue('random3', rand(1, 100));
+
 		return $response;
 	}
 
+	public function add()
+	{
+//		$this->setLayout("categoryManager");
+		$this->removeLayout();
+//		$specField = array("name" => $this->request->getValue("name"), "description" => $this->request->getValue("description"));
+		
+		$response = new ActionResponse();
+//		$response->setValue("specField", $specField);
+		return $response;
+	}
 	/**
 	 * Displays form for creating a new or editing existing one product group specification field
 	 *
@@ -79,11 +95,11 @@ class SpecFieldController extends StoreManagementController
 			}
 
 			$langCode = $this->user->getActiveLang()->getID();
-			$catalog = Catalog::getInstanceByID($this->request->getValue("catalogID"));
+			$category = Category::getInstanceByID($this->request->getValue("categoryID"));
 
 			$specField->lang($langCode)->name->set($form->getFieldValue('name'));
 			$specField->lang($langCode)->description->set($form->getFieldValue('description'));
-			$specField->catalog->set($catalog);
+			$specField->category->set($category);
 			$specField->type->set($this->request->getValue("type"));
 			$specField->dataType->set($this->request->getValue("dataType"));
 			$specField->handle->set($this->request->getValue("handle"));
@@ -116,16 +132,6 @@ class SpecFieldController extends StoreManagementController
 		$validator->addCheck("type", new IsNotEmptyCheck("You must set a field type"));
 		
 		return $validator;
-	}
-	
-	public function add()
-	{
-		$this->removeLayout();
-		$specField = array("name" => $this->request->getValue("name"), "description" => $this->request->getValue("description"));
-		
-		$response = new ActionResponse();
-		$response->setValue("specField", $specField);
-		return $response;
 	}
 }
 
