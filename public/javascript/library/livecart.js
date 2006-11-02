@@ -70,7 +70,8 @@ LiveCart.AjaxUpdater.prototype = {
 	hideIndicator: function(response)
 	{
 		// It would better if i could use something like "this" here
-//		LiveCart.ajaxUpdaterInstance.updateHead(response);
+		LiveCart.ajaxUpdaterInstance.updateHead(response);
+		LiveCart.ajaxUpdaterInstance.runJavaScripts(response);
 		
 		Element.hide(LiveCart.ajaxUpdaterInstance.indicatorContainerId);
 	},
@@ -105,6 +106,11 @@ LiveCart.AjaxUpdater.prototype = {
 		
 		var oldHeadElements = document.getElementsByTagName("head")[0];
 	
+		var oldTitle = oldHeadElements.getElementsByTagName("title")[0];
+		if(oldTitle)
+		{
+			document.title = oldTitle.firstChild.nodeValue; 
+		}
 		
 		for(var i = 0; i < newHeadElements.length; i++) 
 		{
@@ -128,7 +134,7 @@ LiveCart.AjaxUpdater.prototype = {
 			for(var j = 0; j < similarElements.length; j++)
 			{
 				// Delete old element
-				switch(element.tagName)
+				switch(element.tagName.toLowerCase())
 				{
 					case 'script':
 						if(similarElements[j].src = element.src) 
@@ -153,6 +159,16 @@ LiveCart.AjaxUpdater.prototype = {
 					break;
 				}
 			}
+		}
+	},
+	
+	runJavaScripts: function(response)
+	{
+		var scripts = response.responseText.match(/<script.*?>([\s\S]*?)<\/script>/igm);
+		for(var i = 0; i < scripts.length; i++)
+		{
+			var code = scripts[i].replace(/<\/?script.*>/img, "");
+			if(code.length > 0) eval(code);
 		}
 	}
 }
