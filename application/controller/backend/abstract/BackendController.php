@@ -1,30 +1,21 @@
 <?php
 
 ClassLoader::import("application.controller.BaseController");
-
-ClassLoader::import("application.model.locale.*");
-ClassLoader::import("library.locale.*");
-ClassLoader::import("library.*");
-
-ClassLoader::import("application.model.menu.*");
 ClassLoader::import("application.helper.*");
+ClassLoader::import("application.model.system.Language");
+ClassLoader::import("library.locale.*");
 
 /**
  * Generic backend controller for administrative tools (actions, modules etc.)
  *
  * @package application.controller
  */
-abstract class BackendController extends BaseController implements LCiTranslator {
-	
+abstract class BackendController extends BaseController implements LCiTranslator 
+{	
 	protected $locale = null;
-	
 	protected $localeName;
-	
 	protected $rootDirectory = "";//"/k-shop";
-	
-	protected $uploadDir = "upload/images/products/";	  
-    
-    //protected $thumbsDir = "/public/upload/images/products/thumbs/";
+	protected $uploadDir = "upload/images/products/";
 	
 	/*
 	* @todo Lazy loading for Locale
@@ -124,14 +115,6 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		return $response;
 	}
 	
-	/*
-	protected function renderAjaxJsFiles(Response $response) {
-	
-		$response->appendValue("JAVASCRIPT", array(Router::getInstance()->getBaseDir()."/public/javascript/document.js", 
-		 											Router::getInstance()->getBaseDir()."/public/javascript/ajax.js",
-													Router::getInstance()->getBaseDir()."/public/javascript/TreeMenuAjax.js" ));
-	}
-	*/
 	
 	/**
 	 * Gets a @role tag value in a class and method comments

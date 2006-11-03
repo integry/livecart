@@ -20,6 +20,9 @@
 	<div id="catgegoryContainer" style="float:left; width: 260px;">
 		<div id="categoryBrowser" style="padding: 10px; border: 1px solid #ccc; background-color: #f1f1f1;">
 		</div>
+		<div>
+			<a href="">Create a new category</a>
+		</div>
 	</div>
 	
 	<div id="initialContent" style="display: none;">
