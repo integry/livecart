@@ -21,6 +21,7 @@ class Language extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryKeyField("ID", 	Char::instance(2)));		
 		$schema->registerField(new ARField("isEnabled", Bool::instance()));
 		$schema->registerField(new ARField("isDefault", Bool::instance()));
+		$schema->registerField(new ARField("position", Integer::instance()));
 	}
 			
 	/**
@@ -42,10 +43,11 @@ class Language extends ActiveRecordModel
 	public static function getLanguages($active = 0) 
 	{	  	
 	  	$filter = new ArSelectFilter();
+	  	$filter->setOrder(new ArFieldHandle("Language", "position"), ArSelectFilter::ORDER_ASC);
 	
 		if ($active > 0)
 		{		  
-			$filter->setCondition(new EqualsCond(new ArFieldHandle("Language", "isEnabled"), ($active == 1 ? 1 : 0)));			 	 
+			$filter->setCondition(new EqualsCond(new ArFieldHandle("Language", "isEnabled"), ($active == 1 ? 1 : 0)));						 	 
 		}
 	
 		return ActiveRecord::getRecordSet("Language", $filter);	
@@ -104,16 +106,19 @@ class Language extends ActiveRecordModel
 	 */
 	public static function add($ID) 
 	{			
+	  	// get max position
+	  	$f = new ARSelectFilter();
+	  	$f->setOrder(new ARFieldHandle('Language', 'position'), 'DESC');
+	  	$f->setLimit(1);
+	  	$rec = ActiveRecord::getRecordSetArray('Language', $f);	  
+		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
+			  	
 	  	$lang = ActiveRecord::getNewInstance("Language");											
 		$lang->setID($ID);
 		$lang->isEnabled->set(0);
 		$lang->isDefault->set(0);
+		$lang->position->set($position);
 		$lang->save(self::PERFORM_INSERT);  
-		
-		// create empty referenced record for interface translation
-		$data = ActiveRecord::getNewInstance("InterfaceTranslation");
-		$data->setID($lang);
-		$data->save(self::PERFORM_INSERT);
 		
 		return true;	
 	}		
