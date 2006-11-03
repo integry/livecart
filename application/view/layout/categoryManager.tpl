@@ -2,13 +2,12 @@
 {includeJs file="library/livecart.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
-{includeJs file="library/dhtmlxtabbar/dhtmlXTabbar.js"}
 {includeJs file="backend/categoryManager.js"}
+{includeJs file="library/tabControll.js"}
 
 {includeCss file="base.css"}
 {includeCss file="stat.css"}
 {includeCss file="form.css"}
-<!--{includeCss file="backend/dhtmlxtabbar/dhtmlXTabbar.css"}-->
 {includeCss file="tabControll.css"}
 {includeCss file="backend/dhtmlxtree/dhtmlXTree.css"}
 
@@ -27,26 +26,18 @@
 			<a href="">Create a new category</a>
 		</div>
 	</div>
-	
-	<!--
-	<div id="initialContent" style="display: none;">
-		<div id="mainDetailsSection" style="padding: 20px">
-		{* {$ACTION_VIEW} *}
-		</div>
-	</div>
-	-->
 
 	<div id="managerContainer" style="margin-left: 270px; height: 100%;">
 		<div id="tabContainer">
 			<ul>
-				<li id="tabMainDetails" class="active">Main Details</li>
-				<li id="tabFields" class="inactive" onclick="new LiveCart.AjaxUpdater('{link controller=backend.specField action=index}', 'sectionFields', 'tabFieldsIndicator');"> <img src="image/indicator.gif" id="tabFieldsIndicator" style="display: none;"/> Fields</li>
-				<li class="inactive">Filters</li>
+				<li id="tabMainDetails" class="active" onmouseover="this.className='hover'">Main Details</li>
+				<li id="tabFields" class="inactive" onmouseover="this.className='hover'" onclick="new LiveCart.AjaxUpdater('{link controller=backend.specField action=index}', 'sectionFields', 'tabFieldsIndicator');"> <img src="image/indicator.gif" id="tabFieldsIndicator" style="display: none;"/> Fields</li>
+				<li class="inactive" onmouseover="this.className='hover'">Filters</li>
 			</ul>
 		</div>
 		<div id="sectionContainer">
-			<div id="sectionMainDetails">{$ACTION_VIEW}</div>
-			<div id="sectionFields"></div>
+			<div class="tabSection" id="sectionMainDetails">{$ACTION_VIEW}</div>
+			<div class="tabSection" id="sectionFields"></div>
 		</div>
 	</div>
 
