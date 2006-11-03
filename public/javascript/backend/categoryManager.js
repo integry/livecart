@@ -10,7 +10,7 @@ LiveCart.CategoryManager = {
 	init: function() 
 	{
 		this.initCategoryBrowser();
-		this.initTabs();
+		//this.initTabs();
 	},
 	
 	initCategoryBrowser: function()

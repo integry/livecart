@@ -242,19 +242,9 @@ html>body #minHeight{ /*safari wrapper */
 	padding: 10px;  
 }
 
-fieldset {
-	margin: 15px;
-	padding: 15px;
-	background-color: #fff;
-	border: 3px solid #e0e0e0;
-}
-legend {
-	font-size: 18px;
-	color: #000;
-	background-color: #ffffcc;
-}
 
 /* Form styling */
+/*
 .formContainer {
 	width: 100%;
 }
@@ -275,25 +265,7 @@ legend {
 .fieldContainer {
 	padding: 5px;
 }
-
-/* Category manager styling */
-ul#tabContainer {
-	list-style: none;
-	margin:0px;
-	padding: 0px;
-	height: 28px;
-}
-ul#tabContainer li {
-	padding: 5px 15px 5px 15px;
-	float: left;
-	margin-left: 2px;
-	border: 1px solid #ccc;
-	border-bottom: 0px;
-}
-#sectionContainer {
-	padding: 20px 10px 10px 10px; 
-	border: 1px solid #ccc;
-}
+*/
 
 /* Needed for IE, but doesn't seem to affect Mozilla */
 * html #outer{	height:100%;}

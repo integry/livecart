@@ -1,6 +1,6 @@
 <?php
 ClassLoader::import("application.model.MultilingualDataObject");
-ClassLoader::import("application.model.product.CategoryLangData");
+ClassLoader::import("application.model.category.CategoryLangData");
 
 /**
  * Just for TEST purposes.
@@ -46,7 +46,7 @@ class Category extends MultiLingualDataObject
 
 }
 
-
+/*
 class MultilingualCategory extends MultilingualDataObject
 {
 	public static function defineSchema($className = __CLASS__)
@@ -80,5 +80,5 @@ class Category extends ARTreeNode
 		
 	}
 }
-
+*/
 ?>

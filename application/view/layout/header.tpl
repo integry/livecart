@@ -6,15 +6,13 @@
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 	<title>{$TITLE}</title>
-
+	<base href="{$BASE_URL}" /> 
 	<!-- Css includes -->
 	{includeCss file=base.css}
 	{$STYLESHEET}
 	
 	<!-- JavaScript includes -->
-	{$JAVASCRIPT}
-	
-	<base href="{$BASE_URL}" />  
+	{$JAVASCRIPT} 
 
 </head>
 <body>

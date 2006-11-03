@@ -18,6 +18,11 @@ form br
 	clear: left;
 }
 
+form .hidden 
+{
+	display: none;
+}
+
 form div.input-group
 {
 	margin-left: 150px;
@@ -31,4 +36,15 @@ form div.input-group *
 	width: auto;
 	float: none;
 	margin: 2px;
+}
+form fieldset {
+	border: 1px solid #ccc;
+	margin: 5px;
+	padding: 15px;
+}
+
+legend 
+{
+	font-size: 18px;
+	color: #333;
 }

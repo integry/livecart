@@ -33,7 +33,7 @@ LiveCart.AjaxUpdater.prototype = {
 		
 		var updaterOptions = { method: method, 
 							   parameters: params,
-							   onComplete: this.hideIndicator,
+							   onComplete: this.postProcessResponse,
 							   onFailure: this.reportError};
 		
 		if (insertionPosition != undefined)
@@ -67,7 +67,7 @@ LiveCart.AjaxUpdater.prototype = {
 	},
 	
 	
-	hideIndicator: function(response)
+	postProcessResponse: function(response)
 	{
 		// It would better if i could use something like "this" here
 		LiveCart.ajaxUpdaterInstance.updateHead(response);
