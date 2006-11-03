@@ -96,7 +96,7 @@ LiveCart.AjaxUpdater.prototype = {
 	 * @param responce object
 	 */
 	updateHead: function(response)
-	{
+	{		
 		var headTag = "</head>";
 		
 		if(response.responseText.indexOf(headTag) === -1) return;
