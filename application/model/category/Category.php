@@ -51,7 +51,8 @@ class MultilingualCategory extends MultilingualDataObject
 {
 	public static function defineSchema($className = __CLASS__)
 	{
-		
+		$schema = self::getSchemaInstance("Category");
+		$schema->setName("Category");
 	}
 }
 

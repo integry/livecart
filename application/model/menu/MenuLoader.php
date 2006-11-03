@@ -2,16 +2,13 @@
 
 /**
  * Class for creating menu from backend_menu directory.
- * Also has static functions for creating js array of Tigra menu (@see ). 
+ * Also has static functions for creating js array of Tigra menu 
  */
 class MenuLoader {
   
 	private	$mainMenu = array();
-	
 	private $currentTopKey;
-	
 	private $indexTopKey;
-	
 	private $reload = true;
 	
 	/**
@@ -23,26 +20,25 @@ class MenuLoader {
 	  
 	  	if ($this->reload || !file_exists($cache_file)) 
 		{
-	    	
 		  	MenuLoader::createFromDir(&$this->mainMenu, ClassLoader::getRealPath("application.configuration.backend_menu"));	  
 			$this->sortMenu();			
 			file_put_contents($cache_file, serialize($this->mainMenu));		
-		} else {
-		  			  	
+		} 
+		else
+		{  			  	
 			$this->mainMenu = unserialize(file_get_contents($cache_file));
 		}	
 	}
   
     /**
      */
-  	public function sortMenu() {
-	  	
+  	public function sortMenu()
+  	{
 	    uasort($this->mainMenu, array($this, 'CompareOrders'));       
-
-	    foreach ($this->mainMenu as $key => $value) {
-		  
-			if (!empty($this->mainMenu[$key]['items']) && is_array($this->mainMenu[$key]['items'])) {
-
+	    foreach ($this->mainMenu as $key => $value) 
+	    {
+			if (!empty($this->mainMenu[$key]['items']) && is_array($this->mainMenu[$key]['items']))
+			{
 				uasort($this->mainMenu[$key]['items'], array($this, 'CompareOrders'));
 			}			
 		}
@@ -51,28 +47,26 @@ class MenuLoader {
   	/**
   	 * Returns all menu hierarchy.
   	 */
-  	public function &getAllHierarchy() {
-	    
+  	public function &getAllHierarchy()
+  	{
 	    return $this->mainMenu;
 	}
 	
 	/**
      *
      */
-  	public function getTopList() {
-		
+  	public function getTopList()
+  	{
 		$array = array();
-		
 	    $i = 0;
-	    foreach ($this->mainMenu as $menu) {
-		  
+	    foreach ($this->mainMenu as $menu)
+	    {
 		  	$array[$i]['title'] = $menu['title'];		  	
 			$array[$i]['order'] = $menu['order'];	
 			$array[$i]['controller'] = $menu['controller'];
 			$array[$i]['action'] = $menu['action'];
 			$i ++;
 		}
-				
 		return $array;
 	}
 	
@@ -81,111 +75,97 @@ class MenuLoader {
 	 * @param string $controller Name of controller
 	 * @param string $action Name of action
 	 */	
-	public function &getCurrentHierarchy($controller, $action) {
-	  
-	  	if (!empty($this->currentTopKey)) {
-	  	  
+	public function &getCurrentHierarchy($controller, $action)
+	{
+	  	if (!empty($this->currentTopKey))
+	  	{
 			unset($this->currentTopKey);	  
 		}
 		
-		if (!empty($this->indexTopKey)) {
-	  	  
+		if (!empty($this->indexTopKey))
+		{
 			unset($this->indexTopKey);	  
 		}
 		
 	  	$this->findCurrentHierarchy($controller, $action);	 
 			
-		if (!empty($this->currentTopKey)) {
-		  
+		if (!empty($this->currentTopKey))
+		{
 			return $this->mainMenu[$this->currentTopKey];  	
-		} else {
-		
+		}
+		else
+		{
 	  		return $this->mainMenu[$this->indexTopKey];
 	  	}
 	}
 
-	
-	/**
-	 *
-	 */
-	private function findCurrentHierarchy($controller, $action, &$menu = null, $currentTop = 0) {
-	  			  	  	
-	  	if ($menu == null) {		    		    
+	private function findCurrentHierarchy($controller, $action, &$menu = null, $currentTop = 0)
+	{  			  	  	
+	  	if ($menu == null)
+	  	{		    		    
 		    $menu = &$this->mainMenu;		    		    
 		    $level = 1;
 		} 
 	  	
-	  	foreach ($menu as $key  => $child) {
-	  	  
-	  	  	if (!empty($level)) {
-				
+	  	foreach ($menu as $key  => $child)
+	  	{
+	  	  	if (!empty($level))
+	  	  	{
 				$currentTop = $key; 				
 			} 
 		    
-		    if ($child['controller'] == $controller &&
-					$child['action'] == $action) {
-					
+		    if ($child['controller'] == $controller && $child['action'] == $action) 
+			{
 				$this->currentTopKey = $currentTop;				
 			}
 			
-			if ($child['controller'] == $controller &&
-					$child['action'] == 'index') {
-					
+			if ($child['controller'] == $controller && $child['action'] == 'index')
+			{	
 				$this->indexTopKey = $currentTop;				
 			}
 				  
-			if (!empty($child['items']) && count($child['items']) > 0) {
-					
+			if (!empty($child['items']) && count($child['items']) > 0)
+			{
 				$this->findCurrentHierarchy($controller, $action, &$child['items'], $currentTop);				
 			} 
 		}	
 	}    
   
-  	/**
-  	 *
-  	 */
-  	private static function createFromDir(&$father_menu, $path) {
-
+  	private static function createFromDir(&$father_menu, $path)
+  	{
 		$path .= '/';
 
 	  	$iter = new DirectoryIterator($path);	  	
 	  	$xml_files = array();
-	  	foreach ($iter as $value) {		    
-		    
-		    if ($value->isFile() && strtolower(substr($value->getFileName(), -4)) == ".xml") { 			 	
-			 					
+	  	foreach ($iter as $value)
+	  	{		    
+		    if ($value->isFile() && strtolower(substr($value->getFileName(), -4)) == ".xml")
+		    { 			 					
 				// gets simple xml stucture
-				$struct = simplexml_load_file($path.$value->getFileName());
-														
-				MenuLoader::createFromXML(&$father_menu, $struct);
-														
+				$struct = simplexml_load_file($path.$value->getFileName());								
+				MenuLoader::createFromXML(&$father_menu, $struct);								
 				$dir_name = $path.substr($value->getFileName(), 0, -4).'\\';
-				
-				if (file_exists($dir_name)) {
-				  						
-	  				//$father_menu[count($father_menu)]['items'] = array();	  				
+				if (file_exists($dir_name))
+				{				
 					MenuLoader::createFromDir(&$father_menu[count($father_menu)]['items'], $dir_name);				
 				}					
 			}
 		}						
 	}  
 	
-	/**
-	 *
-	 */
-	private static function createFromXML(&$father_menu, $struct) {
-	  
+
+	private static function createFromXML(&$father_menu, $struct)
+	{
 	  	$i = count($father_menu) + 1;
 	  	$father_menu[$i]['title'] = (string)$struct->Title;
 	  	$father_menu[$i]['order'] = (string)$struct->Order;
 	  	$father_menu[$i]['controller'] = (string)$struct->Controller;
 	  	$father_menu[$i]['action'] = (string)$struct->Action;
-	  	//$father_menu[$i]['items'] = array();
 	  
-	  	if ($struct->Items) {				  
-
-		  	foreach($struct->Items->Menu as $value) {
-								
+	  	if ($struct->Items)
+	  	{				  
+		  	foreach($struct->Items->Menu as $value)
+		  	{					
 				MenuLoader::createFromXML(&$father_menu[$i]['items'], $value);											    
 			}				  	
 		}
@@ -193,12 +173,10 @@ class MenuLoader {
 
 	private function CompareOrders($a, $b) 
 	{   
-	    	   
-		if ($a['order'] == $b['order']) {
-		  
+		if ($a['order'] == $b['order'])
+		{
 	        return 0;
 	    } 	
-	  	
 		return ($a['order'] < $b['order']) ? -1 : 1;
 	}
 }

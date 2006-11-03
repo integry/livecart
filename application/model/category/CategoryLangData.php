@@ -14,10 +14,10 @@ class CategoryLangData extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("CategoryLangData");
 
-		$schema->registerField(new ARPrimaryForeignKeyField("categoryID", "Category", "ID", null, Integer::instance()));
-		$schema->registerField(new ARPrimaryForeignKeyField("languageID", "Language", "ID", null, Char::instance(2)));
-		$schema->registerField(new ARField("name", Varchar::instance(100)));
-		$schema->registerField(new ARField("description", Varchar::instance(1024)));
+		$schema->registerField(new ARPrimaryForeignKeyField("categoryID", "Category", "ID", null, ARInteger::instance()));
+		$schema->registerField(new ARPrimaryForeignKeyField("languageID", "Language", "ID", null, ARChar::instance(2)));
+		$schema->registerField(new ARField("name", ARVarchar::instance(100)));
+		$schema->registerField(new ARField("description", ARVarchar::instance(1024)));
 	}
 }
 

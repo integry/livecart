@@ -18,10 +18,10 @@ class Language extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("Language");
 		
-		$schema->registerField(new ARPrimaryKeyField("ID", 	Char::instance(2)));		
-		$schema->registerField(new ARField("isEnabled", Bool::instance()));
-		$schema->registerField(new ARField("isDefault", Bool::instance()));
-		$schema->registerField(new ARField("position", Integer::instance()));
+		$schema->registerField(new ARPrimaryKeyField("ID", ARChar::instance(2)));		
+		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
+		$schema->registerField(new ARField("isDefault", ARBool::instance()));
+		$schema->registerField(new ARField("position", ARInteger::instance()));
 	}
 			
 	/**

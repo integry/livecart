@@ -194,16 +194,16 @@ class User extends ActiveRecordModel
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("User");
 
-		$schema->registerField(new ARPrimaryKeyField("ID", Integer::instance()));
-		$schema->registerField(new ARField("email", Varchar::instance(60)));
-		$schema->registerField(new ARField("password", Varchar::instance(16)));
-		$schema->registerField(new ARField("firstName", Varchar::instance(20)));
-		$schema->registerField(new ARField("middleName", Varchar::instance(20)));
-		$schema->registerField(new ARField("lastName", Varchar::instance(20)));
-		$schema->registerField(new ARField("fullName", Varchar::instance(60)));
-		$schema->registerField(new ARField("nickName", Varchar::instance(20)));
-		$schema->registerField(new ARField("creationDate", DateTime::instance()));
-		$schema->registerField(new ARField("isActive", Bool::instance()));
+		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema->registerField(new ARField("email", ARVarchar::instance(60)));
+		$schema->registerField(new ARField("password", ARVarchar::instance(16)));
+		$schema->registerField(new ARField("firstName", ARVarchar::instance(20)));
+		$schema->registerField(new ARField("middleName", ARVarchar::instance(20)));
+		$schema->registerField(new ARField("lastName", ARVarchar::instance(20)));
+		$schema->registerField(new ARField("fullName", ARVarchar::instance(60)));
+		$schema->registerField(new ARField("nickName", ARVarchar::instance(20)));
+		$schema->registerField(new ARField("creationDate", ARDateTime::instance()));
+		$schema->registerField(new ARField("isActive", ARBool::instance()));
 	}
 }
 

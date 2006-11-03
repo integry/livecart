@@ -16,11 +16,11 @@ class FilterGroup extends MultilingualDataObject
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("FilterGroup");
 
-		$schema->registerField(new ARPrimaryKeyField("ID", Integer::instance()));
-		$schema->registerField(new ARForeignKeyField("catalogID", "Catalog", "ID", "Catalog", Integer::instance()));
-		$schema->registerField(new ARForeignKeyField("specFieldID", "SpecField", "ID", "SpecField", Integer::instance()));
-		$schema->registerField(new ARField("position", Integer::instance()));
-		$schema->registerField(new ARField("isEnabled", Integer::instance(1)));
+		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("catalogID", "Catalog", "ID", "Catalog", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("specFieldID", "SpecField", "ID", "SpecField", ARInteger::instance()));
+		$schema->registerField(new ARField("position", ARInteger::instance()));
+		$schema->registerField(new ARField("isEnabled", ARInteger::instance(1)));
 	}
 
 	public function addFilter(Filter $filter)

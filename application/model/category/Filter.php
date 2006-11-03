@@ -10,14 +10,14 @@ class Filter extends MultilingualDataObject
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("Filter");
 
-		$schema->registerField(new ARPrimaryKeyField("ID", Integer::instance()));
-		$schema->registerField(new ARForeignKeyField("filterGroupID", "FilterGroup", "ID", "FilterGroup", Integer::instance()));
+		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("filterGroupID", "FilterGroup", "ID", "FilterGroup", ARInteger::instance()));
 
-		$schema->registerField(new ARField("position", Integer::instance(2)));
-		$schema->registerField(new ARField("type", Integer::instance(2)));
+		$schema->registerField(new ARField("position", ARInteger::instance(2)));
+		$schema->registerField(new ARField("type", ARInteger::instance(2)));
 
-		$schema->registerField(new ARField("rangeStart", Float::instance(2)));
-		$schema->registerField(new ARField("rangeEnd", Float::instance(40)));
+		$schema->registerField(new ARField("rangeStart", ARFloat::instance(2)));
+		$schema->registerField(new ARField("rangeEnd", ARFloat::instance(40)));
 	}
 
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
