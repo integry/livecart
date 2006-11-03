@@ -79,6 +79,8 @@
 </style>
 {/literal}
 
+<br />
+
 <div id="addLang" class="slideForm" style="display:none;" onkeydown="{literal}if (getPressedKey(event) == KEY_ESC) {restoreMenu('addLang', 'pageMenu');} {/literal} return true;" onFocus="document.getElementById('addLang-sel').focus();" tabIndex=1>
 	<div onFocus="">	
 		<form name="addform" method="post" action="{link language=$language controller=backend.language action=add}">
@@ -161,6 +163,6 @@
 	{/foreach}
 {/activeList}
 
-{maketext text="_statistic_languages_full" params="$count_all,$count_active"}.
+<!-- {maketext text="_statistic_languages_full" params="$count_all,$count_active"}. -->
 
 <div id="log"></div>
