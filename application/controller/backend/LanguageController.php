@@ -241,6 +241,64 @@ class LanguageController extends SiteManagementController
 
 		return $response;
 	}
+	
+	public function delete()
+	{  	
+		$langId = $this->request->getValue('id');
+		
+		try
+	  	{
+			// make sure the language record exists
+			$inst = Language::getInstanceById($langId);
+			
+			$success = $langId;
+			
+			// make sure it's not the default language
+			if (true == $inst->isDefault->get())
+				$success = false;
+			
+			// remove it
+			if ($success)
+			{
+				ActiveRecord::deleteByID('Language', $langId);
+			}
+
+		}
+		catch (Exception $exc)
+		{			  	
+		  	$success = false;
+		}
+		  
+		$resp = new RawResponse();
+	  	$resp->setContent($success);
+		return $resp;
+	}
+
+	public function saveOrder()
+	{
+	  	$order = $this->request->getValue('languageList');
+		foreach ($order as $key => $value)
+		{
+			$update = new ARUpdateFilter();
+			$update->setCondition(new EqualsCond(new ARFieldHandle('Language', 'ID'), $value));
+			$update->addModifier('position', $key);
+			ActiveRecord::updateRecordSet('Language', $update);  	
+		}
+
+		$resp = new RawResponse();
+	  	$resp->setContent($this->request->getValue('draggedId'));
+		return $resp;		  	
+	}
+
+	/**
+	 * Sets default language.
+	 * @return ActionRedirectResponse
+	 */
+	function setDefault()
+	{
+		Language::setDefault($this->request->getValue("id"));  	
+		return new ActionRedirectResponse($this->request->getControllerName(), "index");		
+	}
 
 	/**
 	 * Displays variuos information.
@@ -279,37 +337,18 @@ class LanguageController extends SiteManagementController
 	 */
 	public function setEnabled()
 	{
-		if ($this->request->isValueSet("change_active"))
-		{
-			Language::setEnabled($this->request->getValue("change_active"), $this->request->getValue("change_to"));
-		}
+		$id = $this->request->getValue('id');		
+		Language::setEnabled($id, $this->request->getValue("status"));
+		
+		$this->setLayout('empty');		
+		$response = new ActionResponse();
+		$item = Language::getInstanceById($id)->toArray();
+		$item['name'] = $this->locale->info()->getLanguageName($item['ID']);
+		$response->setValue('item', $item);
 
-		$array = array("id" => 0);
-		if ($this->request->isValueSet("language"))
-		{
-			$array["language"] = $this->request->getValue("language");
-		}
-		return new ActionRedirectResponse($this->request->getControllerName(), "index", $array);
+		return $response;		
 	}
 
-	/**
-	 * Sets default language.
-	 * @return ActionRedirectResponse
-	 */
-	public function setDefault()
-	{
-		if ($this->request->isValueSet("change_to"))
-		{
-			Language::setDefault($this->request->getValue("change_to"));
-		}
-
-		$array = array("id" => 0);
-		if ($this->request->isValueSet("language"))
-		{
-			$array["language"] = $this->request->getValue("language");
-		}
-		return new ActionRedirectResponse($this->request->getControllerName(), "index", $array);
-	}
 }
 
 ?>
