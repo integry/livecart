@@ -1,34 +1,87 @@
-			</div>
-		</td>
-		<td style="background-image:url(/livecart/public/image/backend/workarea_shade_vertical.png); background-repeat: repeat-y; background-position: 0px 50px; vertical-align: top;">
-			<div style="background-color:#E6E6E6;">
-				<img src="/livecart/public/image/backend/workarea_shade_vertical_top.png">			
-			</div>
-		</td>			
-	</tr>
-	<tr>
-		<td style="background-image:url(/livecart/public/image/backend/workarea_shade_horizontal.png); background-repeat: repeat-x; vertical-align: top; ">
-			<div style="background-color:#E6E6E6; width:12px;">
-				<img src="/livecart/public/image/backend/workarea_shade_horizontal_left.png">			
-			</div>
-		</td>	
-		<td style='width: 6px; vertical-align: top;'>
-			<img src="/livecart/public/image/backend/workarea_shade_corner.png">
-		</td>			
-	</tr>
-</table>
+		</div>
+	</div>
+	<div id="clearfooter"></div>
+</div>
+<!-- end outer div -->
+
+<div id="footer">
+
+	<table id="workareaBottomShadeContainer">
+		<tr>
+			<td>
+				<img src="image/backend/layout/spacer.gif" id="workareaBottomShadeLeft">
+			</td>
+			<td id="workareaBottomShade">
+				&nbsp;
+			</td>
+			<td id="workareaShadeCorner">
+				<img src="image/backend/layout/workarea_shade_corner.jpg" id="workareaShadeCornerImage">
+			</td>
+		</tr>
+	</table>
+
+	<table id="footerContainer">
+		<tr>
+			<td id="footerLeft">
+				(C) UAB "Integry Systems", 2006
+			</td>
+			<td id="footerStretch">
+				&nbsp;
+			</td>
+		</tr>
+	</table>
+
 </div>
 
-<table width="100%" style="border-collapse:	collapse; height: 44px; margin-bottom: 3px;" cellpadding=0>
-	<tr>
-		<td width="834px" style="background-image:url(/livecart/public/image/backend/footer.png);">
-			(C) UAB "Integry Systems", 2006
-		</td>
-		<td style="background-image:url(/livecart/public/image/backend/footer_stretch.png);">
-			&nbsp;
-		</td>
-	</tr>
-</table>
+<div id="headerContainer">
+
+	<div id="pageTop">
+		<div id="topAuthInfo">
+			Logged in as: <span id="headerUserName">rinalds</span> <a href="/logout">(logout)</a>
+		</div>
+	
+		<div id="topBackground">
+			<div id="topBackgroundLeft">
+				&nbsp; 	 
+			</div> 
+		<div id="topLogoContainer">
+		 	<img src="image/backend/layout/logo.jpg" id="topLogoImage">
+		</div> 
+	</div>
+
+	<table id="headerContent">
+		<tr>
+			<td id="headerMenuContainer">
+				<table style="width: 100%;">
+					<tr>	
+						<td id="homeButtonWrapper">
+							<img src="image/backend/layout/top_home_button.jpg" id="homeButton"> Home
+						</td>
+						<td id="headerTopMenuContainer">							
+							
+							{foreach from=$topList item=item}
+							 &nbsp; &nbsp; <a href="{link controller=$item.controller action=$item.action}">{translate text=$item.title}</a>
+							{/foreach}							
+							
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							{foreach from=$MENU item=block}{$block}{/foreach}
+						</td>
+				</table>				
+			</td>
+			<td id="systemMenu">
+				History | Bookmarks | Help | Change Language
+			</td>
+		</tr>	
+	</table>
+
+<div id="pageTitle">{$PAGE_TITLE}</div>
+
+
+</div>
+
 
 </body>
 </html>
