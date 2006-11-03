@@ -2,8 +2,11 @@ body {
 	font-family: arial, verdana;
 	font-size: 14px;
 	color: #333;
-	background-color: #d4e9ff;
 	margin: 0px;
+	background-color:#E6E6E6;
+	background-image:url(../image/backend/layout/workarea_shade_vertical_wide.jpg);
+	background-position: right 200px;
+	background-repeat: repeat-y;
 }
 table {
   	border-collapse: collapse;  
@@ -12,10 +15,92 @@ td {
   	padding: 0px;  
 }
 
+/* Layout */
+* {margin:0;padding:0}
+
+/* commented backslash hack v2 \*/ 
+html, body{height:100%;} 
+/* end hack */ 
+
+html>body #minHeight{ /*safari wrapper */
+  	float:right;
+	width:0px;
+	height:100%;
+	/*margin-bottom:-60px; */
+	margin-bottom:-40px;
+} 
+
+#outer {
+	margin-left:20px;
+	margin-right:20px;
+	background:#FFFFFF;
+	/*margin-bottom:-102px; */
+	margin-bottom:-60px;
+	min-height:100%
+}
+
+#headerContainer {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:140px;
+	overflow:hidden;
+}
+
+#clearheader{
+  	height:141px; /*needed to make room for header*/
+}
+#left {
+	position: relative;/*ie needs this to show float */
+	width: 20px;
+	float: left;
+	margin-left: -19px;/*must be 1px less than width otherwise won't push footer down */
+	z-index: 100;
+	left: -1px;
+}
+
+#right {
+	position:relative;/*ie needs this to show float */
+	width:20px;
+	float:right;
+	margin-right:-19px;/*must be 1px less than width otherwise won't push footer down */
+	left:1px
+}
+
+#footer {
+	width:100%;
+	clear:both;
+	height:60px;
+	background-color:#E6E6E6;
+	text-align:center;
+	position:relative;
+}
+
+#clearfooter{
+  	clear:both;
+	height:60px; /*needed to make room for footer*/
+}
+
+* > html #clearfooter { /* ie mac styles */
+  	float:left;
+	width:100%;
+}
+
+#centrecontent {
+	width:100%;
+	float:left;
+	position:relative;
+	z-index:1;
+	margin:0 -1px;/* moz fix*/
+	background-color: #FFFFFF;
+}
+
 /* Page header */
 #pageTop {
   	background-color: #30a0f9;
 	border-bottom: 1px solid #0097ff;
+	height: 108px;
 }
 #topAuthInfo {
   	color: #FFFFFF; 
@@ -23,9 +108,37 @@ td {
 	padding-right: 20px; 
 	font-size: 10px;  
 }
-#headerContainer {
+#topBackground {
+	position: absolute; 
+	top: 13px;
+	background-image: url(../image/backend/layout/top_bg.jpg); 
+	width: 100%; 
+	height: 108px;
+	background-repeat: repeat-x;  
+}
+#topBackgroundLeft {
+  	position: absolute; 
+	top: 0px;
+	background-image:url(../image/backend/layout/top_bg_left.jpg); 
+	width: 420px; 
+	height: 83px;
+	background-repeat: no-repeat;
+}
+#topLogoContainer {
+	position: absolute; 
+	top: 0px;
+	width: 100%; 
+	text-align: right; 
+	padding-top: 35px;
+}
+#topLogoImage {
+  	margin-right: 10px;
+}
+#headerContent {
+	position: absolute; 
   	width: 100%;
 	height: 44px;
+	top: 13px;
 }
 #topBorder {
   	background-color: #FFFFFF; 
@@ -46,46 +159,82 @@ td {
 	padding-top: 10px; 
 	color: #FFFFFF; 
 	font-size: 10px;  
-	background-image:url(../image/backend/header_home_button_wrapper.png);
 }
-#headerShade {
-  	background-repeat: repeat-x; 
+#homeButton {
+	vertical-align:middle;
+}
+
+#headerMenuContainer {
 	vertical-align:top;
 	text-align: right;
 	width: 1005px;
-	background-image: url(../image/backend/header_shade.png);
 }
-#headerShadeStretch {
-  	background-image: url(../image/backend/header_shade_stretch.png); 
-    background-repeat: repeat-x;
+
+#headerTopMenuContainer {
+	text-align:left;  
 }
+
 #systemMenu {
  	font-size: 11px; 
 	text-align: right;	  
 	padding-top: 3px;
 	padding-right: 5px;
+	width: 400px;
+	vertical-align: top;
 }
-#logo {
-	vertical-align: middle; 
-	padding-right: 15px; 
-	padding-top:20px; 
-	padding-bottom: 10px;
-	text-align: right;
+
+/* Page footer */
+#footerContainer {
+  	width: 100%; 
+	border-collapse: collapse; 
+	height: 44px;
+}
+#footerLeft {
+  	width: 834px;
+	background-image:url(../image/backend/layout/footer.png);
+}
+#footerStretch {
+  	background-image:url(../image/backend/layout/footer_stretch.png);
+}
+
+/* Work area styling */
+#rightWorkareaShadeTop {
+	background-color: #E6E6E6;
+	margin-top: -3px;
+	top: -2px;
+	height: 10px;
+}
+#workareaBottomShadeLeft {
+  	width: 30px;
+	height: 2px;
+}
+#workareaBottomShade {
+  	width: 100%;
+	background-image:url(../image/backend/layout/workarea_shade_horizontal.jpg); 
+	background-repeat: repeat-x;
+}
+#workareaShadeCorner {
+  	width: 20px;
+	vertical-align: top;
+	padding-right: 12px;
+}
+#workareaShadeCornerImage {
+	vertical-align: top;  
+}
+#workareaBottomShadeContainer {
+  	width: 100%;
 }
 
 /* Work area content */
-#workAreaContainer {
-	background-color:#E6E6E6;
-	padding-top:10px;
-	padding-left:20px;
-	padding-right:10px;
-	padding-bottom:20px;
-}
-
 #pageTitle {
   	font-weight: bold;
-	font-size: 14px;  
-	margin-bottom:5px;
+	height:20px;
+	background-color: #E6E6E6;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	padding-top: 5px;
+	padding-left: 20px;
 }
 
 #workArea {
@@ -93,16 +242,6 @@ td {
 	padding: 10px;  
 }
 
-/*
-#container {
-	background-color: #eee;
-	width: 780px;
-	margin-left: auto;
-	margin-right: auto;
-	border: 5px solid #aaa;
-}
-
-*/
 fieldset {
 	margin: 15px;
 	padding: 15px;
@@ -138,7 +277,6 @@ legend {
 }
 
 /* Category manager styling */
-
 ul#tabContainer {
 	list-style: none;
 	margin:0px;
@@ -156,3 +294,10 @@ ul#tabContainer li {
 	padding: 20px 10px 10px 10px; 
 	border: 1px solid #ccc;
 }
+
+/* Needed for IE, but doesn't seem to affect Mozilla */
+* html #outer{	height:100%;}
+#minHeight {display:none}
+#left {margin-right:-3px;}/*3px jog */
+#right {margin-left:-3px;}/*3px jog */
+#centrecontent {margin:0}
