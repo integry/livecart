@@ -33,9 +33,7 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		}
 		else
 		{
-		//$st = microtime(true);
-	  		$lang = Language::getDefaultLanguage();	  		
-		//echo microtime(true) - $st;
+	  		$lang = Language::getDefaultLanguage();
 	  		$this->localeName = $lang->getId();
 		}
 
@@ -96,6 +94,7 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		return $this->locale->translator()->makeText($key, $params);
 	}	
 	
+	/*
 	public function init()
 	{
 		$this->setLayout("mainLayout");		
@@ -114,6 +113,7 @@ abstract class BackendController extends BaseController implements LCiTranslator
 
 		return $response;
 	}
+	*/
 	
 	
 	/**

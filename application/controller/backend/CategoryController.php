@@ -12,7 +12,7 @@ class CategoryController extends StoreManagementController
 {
 	
 	public function index()
-	{
+	{		
 		$this->setLayout("categoryManager");
 		ClassLoader::import("framework.request.validator.Form");
 
