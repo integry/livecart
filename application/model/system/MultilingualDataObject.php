@@ -1,7 +1,7 @@
 <?php
 
 ClassLoader::import("application.model.ActiveRecordModel");
-ClassLoader::import("application.model.locale.Language");
+ClassLoader::import("application.model.system.Language");
 
 /**
  * ORM class for data objects that have to be translated to many different languages
