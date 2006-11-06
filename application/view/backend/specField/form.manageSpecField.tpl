@@ -1,6 +1,6 @@
 <form>
 <fieldset>
-<legend>{t add new category field}</legend>
+<legend class="specField-title">Field</legend>
 
 	<a href="#step-main" class="change-state" >Main</a>
 	<a href="#step-values" class="change-state" >Values</a>
@@ -52,13 +52,20 @@
 			<a href="#add" class="add-field">Enter more values</a>
 			<br />
 		</div>
+		
+		<label>Can select multiple entries</label>
+		<input type="checkbox" value="1" name="multipleSelector" class="specField-form-multipleSelector" />
 	</fieldset>
 	
 	<!-- STEP 3 -->
 	<fieldset class="step-lev1 step-translations">
 		<legend>Step 3 (Translations)</legend>
 		
-		<fieldset class="step-translations-language dom-template">
+		<div class="specFields-form-values-translations-language-links">
+			<div class="dom-template"><a href="#step-translations-language-">language</a></div>		
+		</div>
+		
+		<fieldset class="step-translations-language dom-template step-translations-language-">
 			<legend></legend>
 			
 			<label>{t title}</label>
