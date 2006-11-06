@@ -29,15 +29,16 @@
 
 	<div id="managerContainer" style="margin-left: 270px; height: 100%;">
 		<div id="tabContainer">
-			<ul>
-				<li id="tabMainDetails" class="active" onmouseover="this.className='hover'">Main Details</li>
-				<li id="tabFields" class="inactive" onmouseover="this.className='hover'" onclick="new LiveCart.AjaxUpdater('{link controller=backend.specField action=index}', 'sectionFields', 'tabFieldsIndicator');"> <img src="image/indicator.gif" id="tabFieldsIndicator" style="display: none;"/> Fields</li>
-				<li class="inactive" onmouseover="this.className='hover'">Filters</li>
+			<ul id="tabList">
+				<li id="tabMainDetails" class="tab active">Main Details</li>
+				<li id="tabFields" class="tab inactive" onclick="new LiveCart.AjaxUpdater('{link controller=backend.specField action=index}', 'tabFieldsContent', 'tabFieldsIndicator');"> <img src="image/indicator.gif" id="tabFieldsIndicator" style="display: none;"/> Fields</li>
+				<li id="tabFilters" class="tab inactive">Filters</li>
 			</ul>
 		</div>
 		<div id="sectionContainer">
-			<div class="tabSection" id="sectionMainDetails">{$ACTION_VIEW}</div>
-			<div class="tabSection" id="sectionFields"></div>
+			<div id="tabMainDetailsContent">{$ACTION_VIEW}</div>
+			<div id="tabFieldsContent"></div>
+			<div id="tabFiltersContent"></div>
 		</div>
 	</div>
 
