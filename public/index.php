@@ -29,15 +29,28 @@
 	TemplateRenderer::setCompileDir(ClassLoader::getRealPath("cache.templates_c"));
 	$app = Application::getInstance();
 	
-	try {
+	try 
+	{
 		$app->run();
-	} catch (ControllerNotFoundException $e) {
+	} 
+	catch (ControllerNotFoundException $e) 
+	{
 		include("404.html");
-		
-	} catch (ApplicationException $e) {
+	} 
+	catch (ClassLoaderException $e) 
+	{
+		echo "<br/><strong>CLASS LOADER ERROR:</strong> " . $e->getMessage(); 
+		echo "<br /><strong>FILE TRACE:</strong><br />";
+		echo $e->getFileTrace();
+	}
+	catch (ApplicationException $e) 
+	{
 		echo "<br/><strong>APPLICATION ERROR:</strong> " . $e->getMessage();
-		
-	} catch (Exception $e) {
+		echo "<br /><strong>FILE TRACE:</strong><br />";
+		echo $e->getFileTrace();
+	} 
+	catch (Exception $e) 
+	{
 		echo "<br/>\n<strong>UNKNOWN ERROR:</strong> " . $e->getMessage();
 		echo "<pre>"; print_r($e); echo "</pre>";
 	}
