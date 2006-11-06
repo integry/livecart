@@ -9,11 +9,13 @@
 	<base href="{$BASE_URL}" /> 
 	<!-- Css includes -->
 	{includeCss file=base.css}
+	
 	{$STYLESHEET}
 	
 	<!-- JavaScript includes -->
 	{$JAVASCRIPT} 
 
+	<script src="http://livecart/public/javascript/backend/specFieldManager.js" type="text/javascript"></script>
 </head>
 <body>
 
