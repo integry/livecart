@@ -1,50 +1,103 @@
-form label, form input, form select, form textarea
+fieldset
 {
-	display: block;
-	width: 300px;
-	float: left;
-	margin-bottom: 10px;
+    margin: 1em 0;
+    padding: 1em;
+    border: 1px solid #ccc;
+    background: #f8f8f8;
 }
 
-form label 
+legend
 {
-	text-align: right;
-	width: 150px;
-	padding-right: 20px;
+    font-weight: bold;
 }
 
-form br 
+label
 {
-	clear: left;
+    float: left;
+    width: 10em;
 }
 
-form .hidden 
+input, textarea, select
 {
-	display: none;
+    border: 1px solid #aaa;
 }
 
-form div.input-group
+input, select, form .other
 {
-	margin-left: 150px;
-	padding-left: 20px;
-	display: block;
+    width: 20em;
 }
 
-form div.input-group * 
+textarea
 {
-	display: inline;
-	width: auto;
-	float: none;
-	margin: 2px;
-}
-form fieldset {
-	border: 1px solid #ccc;
-	margin: 5px;
-	padding: 15px;
+    width: 30em;
+    height: 10em;
 }
 
-legend 
+input.radio, input.checkbox, input.submit
 {
-	font-size: 18px;
-	color: #333;
+    width: auto;
+}
+
+input.radio, input.checkbox
+{
+    float: left;
+    margin-right: 1em;
+    border: 0px none;
+}
+
+input:focus, textarea:focus, select:focus
+{
+    background: #ffc;
+}
+
+
+input.required, textarea.required, select.required
+{
+    border: 1px solid red;
+}
+
+form em.required
+{
+    color: red;
+    border: 0px none;
+}
+
+label, input, select, form .other, textarea
+{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+label.radio
+{
+    width: 6em;
+}
+
+
+/* Multicolumn groups */
+fieldset.group
+{
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+}
+
+fieldset.group h2
+{
+    width: 10em;
+    float: left;
+    font-size: 1em;
+    font-weight: normal;
+}
+
+fieldset.group div
+{
+    width: 8em;
+    float: left;
+}
+
+fieldset.group p
+{
+    margin 0.3em 0;
 }

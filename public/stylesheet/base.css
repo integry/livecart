@@ -1,6 +1,11 @@
+html
+{
+    font-size: 67.5%;
+}
+
 body {
 	font-family: arial, verdana;
-	font-size: 14px;
+	font-size: 1.4em;
 	color: #333;
 	margin: 0px;
 	background-color:#E6E6E6;
@@ -9,18 +14,18 @@ body {
 	background-repeat: repeat-y;
 }
 table {
-  	border-collapse: collapse;  
+  	border-collapse: collapse;
 }
 td {
-  	padding: 0px;  
+  	padding: 0px;
 }
 
 /* Layout */
 * {margin:0;padding:0}
 
-/* commented backslash hack v2 \*/ 
-html, body{height:100%;} 
-/* end hack */ 
+/* commented backslash hack v2 \*/
+html, body{height:100%;}
+/* end hack */
 
 html>body #minHeight{ /*safari wrapper */
   	float:right;
@@ -28,7 +33,7 @@ html>body #minHeight{ /*safari wrapper */
 	height:100%;
 	/*margin-bottom:-60px; */
 	margin-bottom:-40px;
-} 
+}
 
 #outer {
 	margin-left:20px;
@@ -103,45 +108,45 @@ html>body #minHeight{ /*safari wrapper */
 	height: 108px;
 }
 #topAuthInfo {
-  	color: #FFFFFF; 
-	text-align: right; 
-	padding-right: 20px; 
-	font-size: 10px;  
+  	color: #FFFFFF;
+	text-align: right;
+	padding-right: 20px;
+	font-size: 10px;
 }
 #topBackground {
-	position: absolute; 
+	position: absolute;
 	top: 13px;
-	background-image: url(../image/backend/layout/top_bg.jpg); 
-	width: 100%; 
+	background-image: url(../image/backend/layout/top_bg.jpg);
+	width: 100%;
 	height: 108px;
-	background-repeat: repeat-x;  
+	background-repeat: repeat-x;
 }
 #topBackgroundLeft {
-  	position: absolute; 
+  	position: absolute;
 	top: 0px;
-	background-image:url(../image/backend/layout/top_bg_left.jpg); 
-	width: 420px; 
+	background-image:url(../image/backend/layout/top_bg_left.jpg);
+	width: 420px;
 	height: 83px;
 	background-repeat: no-repeat;
 }
 #topLogoContainer {
-	position: absolute; 
+	position: absolute;
 	top: 0px;
-	width: 100%; 
-	text-align: right; 
+	width: 100%;
+	text-align: right;
 	padding-top: 35px;
 }
 #topLogoImage {
   	margin-right: 10px;
 }
 #headerContent {
-	position: absolute; 
+	position: absolute;
   	width: 100%;
 	height: 44px;
 	top: 13px;
 }
 #topBorder {
-  	background-color: #FFFFFF; 
+  	background-color: #FFFFFF;
 	height: 1px;
 	margin-bottom:4px;
 }
@@ -150,15 +155,15 @@ html>body #minHeight{ /*safari wrapper */
   	font-size: 11px;
 }
 #homeButtonWrapper {
-  	background-repeat: no-repeat; 
-	vertical-align: middle; 
-	width: 129px; 
-	height: 32px; 
-	text-align: left; 
-	padding-left: 20px; 
-	padding-top: 10px; 
-	color: #FFFFFF; 
-	font-size: 10px;  
+  	background-repeat: no-repeat;
+	vertical-align: middle;
+	width: 129px;
+	height: 32px;
+	text-align: left;
+	padding-left: 20px;
+	padding-top: 10px;
+	color: #FFFFFF;
+	font-size: 10px;
 }
 #homeButton {
 	vertical-align:middle;
@@ -171,12 +176,12 @@ html>body #minHeight{ /*safari wrapper */
 }
 
 #headerTopMenuContainer {
-	text-align:left;  
+	text-align:left;
 }
 
 #systemMenu {
- 	font-size: 11px; 
-	text-align: right;	  
+ 	font-size: 11px;
+	text-align: right;
 	padding-top: 3px;
 	padding-right: 5px;
 	width: 400px;
@@ -185,8 +190,8 @@ html>body #minHeight{ /*safari wrapper */
 
 /* Page footer */
 #footerContainer {
-  	width: 100%; 
-	border-collapse: collapse; 
+  	width: 100%;
+	border-collapse: collapse;
 	height: 44px;
 }
 #footerLeft {
@@ -210,7 +215,7 @@ html>body #minHeight{ /*safari wrapper */
 }
 #workareaBottomShade {
   	width: 100%;
-	background-image:url(../image/backend/layout/workarea_shade_horizontal.jpg); 
+	background-image:url(../image/backend/layout/workarea_shade_horizontal.jpg);
 	background-repeat: repeat-x;
 }
 #workareaShadeCorner {
@@ -219,7 +224,7 @@ html>body #minHeight{ /*safari wrapper */
 	padding-right: 12px;
 }
 #workareaShadeCornerImage {
-	vertical-align: top;  
+	vertical-align: top;
 }
 #workareaBottomShadeContainer {
   	width: 100%;
@@ -239,7 +244,7 @@ html>body #minHeight{ /*safari wrapper */
 
 #workArea {
   	background-color: #FFFFFF;
-	padding: 10px;  
+	padding: 10px;
 }
 
 
@@ -273,3 +278,24 @@ html>body #minHeight{ /*safari wrapper */
 #left {margin-right:-3px;}/*3px jog */
 #right {margin-left:-3px;}/*3px jog */
 #centrecontent {margin:0}
+
+/* handy classes */
+br.clear
+{
+    clear: both;
+}
+
+.dom-template
+{
+	display: none ! important;
+}
+
+.center
+{
+	text-align: center;
+}
+
+.nowrap
+{
+	white-space: nowrap;
+}
