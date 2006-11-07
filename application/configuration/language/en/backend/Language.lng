@@ -1,0 +1,18 @@
+_languages=Languages	
+_languages_section=Languages Section
+
+_add_language=Add new language
+_admin_languages=Admin languages
+
+_update_from_files=Update language definitions from files
+
+_language_definitons=Language definitions
+_edit_definitions=Edit definitions
+
+_show_words=Show words
+
+_statistic_languages=Statistics: [quant,_1,language,languages,no languages]
+_statistic_languages_full=Statistics: [quant,_1,language,languages,no languages], active [quant,_2,language,languages,no languages]
+
+_currentLanguage=Current language
+_selectLanguage=Select language
