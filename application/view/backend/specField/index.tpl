@@ -1,3 +1,4 @@
+{*
 <head><!--
 	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
 	<script type="text/javascript" src="javascript/library/scriptaculous/builder.js"></script>
@@ -77,12 +78,18 @@ ul#specField-items-list, ul#specField-items-list ul
 {/literal}
 </script>
 
+{activeList id="languageList" sortable=true deletable=true handlerClass=langListHandler}
+	{foreach from=$languagesList item=item}
+		{include file="backend/language/listItem.tpl"}
+	{/foreach}
+{/activeList}
 
 
 
+{activeList id="languageList" sortable=true deletable=true handlerClass=langListHandler}
+	{foreach from=$languagesList item=item}
 <ul id="specField-items-list">
     <li id="specField-item-96">
-    <div class="sortable-drag-handler-for-fields">D</div>
 
     	{include file="backend/specField/item.tpl" class="specField-item"}
 
@@ -257,8 +264,10 @@ Sortable.create('specField-items-list',
    dropOnEmpty: true,
    containment: ['specField-items-list'],
    constraint: false,
-   handler: "sortable-drag-handler-for-fields",
-   onChange: updateField
+   handler: "sortable-drag-handler-for-fields"
 });
 </script>
 {/literal}
+*}
+
+{$configuration}
