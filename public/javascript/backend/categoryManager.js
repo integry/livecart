@@ -10,7 +10,7 @@ LiveCart.CategoryManager = {
 	init: function() 
 	{
 		this.initCategoryBrowser();
-		var tabControll = new TabControll('tabList');
+		var tabControll = new TabControll('tabList', '', 'image/indicator.gif');
 	},
 	
 	initCategoryBrowser: function()

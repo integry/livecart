@@ -3,15 +3,33 @@ var TabControll = Class.create();
 TabControll.prototype = {
 	
 	activeTab: null,
+	indicatorImageName: null,
 	
-	initialize: function(tabContainerName, sectionContainerName) {
+	initialize: function(tabContainerName, sectionContainerName, indicatorImageName) 
+	{
+		if (indicatorImageName != undefined)
+		{
+			this.indicatorImageName = indicatorImageName;
+		}
+		
 		var tabList = document.getElementsByClassName("tab");
 		for (var i = 0; i < tabList.length; i++)
 		{
-			//tabList[i].onclick = this.handleTabClick.bindAsEventListener(this);
-			//tabList[i].onmouseover = this.handleTabMouseOver.bindAsEventListener(this);
-			//tabList[i].onmouseout = this.handleTabMouseOut.bindAsEventListener(this);
-			tabList[i].tabControll = this;
+			tabList[i].onclick = this.handleTabClick.bindAsEventListener(this);
+			tabList[i].onmouseover = this.handleTabMouseOver.bindAsEventListener(this);
+			tabList[i].onmouseout = this.handleTabMouseOut.bindAsEventListener(this);
+
+			aElementList = tabList[i].getElementsByTagName('a');
+			if (aElementList.length > 0)
+			{
+				// Getting an URL that tab is pointing to by analysing "A" element
+				tabList[i].url = aElementList[0].href;
+				new Insertion.After(aElementList[0], aElementList[0].innerHTML);
+				// inserting indicator element which will be show on tab activation
+				new Insertion.Before(aElementList[0], '<img src="' + this.indicatorImageName + '" class="tabIndicator" id="' + tabList[i].id + 'Indicator" alt="Tab indicator" style="display:none"/> ');
+				Element.remove(aElementList[0]);
+			}
+			
 			if (tabList[i].id == '')
 			{
 				tabList[i].id = 'tab' + i;
@@ -26,41 +44,59 @@ TabControll.prototype = {
 				Element.hide(tabList[i].id + 'Content');
 			}
 			
-			Element.observe(tabList[i], 'click', this.handleTabClick);
-			Element.observe(tabList[i], 'mouseover', this.handleTabMouseOver);
-			Element.observe(tabList[i], 'mouseout', this.handleTabMouseOut);
+			//Element.observe(tabList[i], 'click', this.handleTabClick);
+			//Element.observe(tabList[i], 'mouseover', this.handleTabMouseOver);
+			//Element.observe(tabList[i], 'mouseout', this.handleTabMouseOut);
 		}
 	},
 
-	handleTabMouseOver: function(evt) {
-		
-		if (this.tabControll.activeTab != evt.target)
+	handleTabMouseOver: function(evt) 
+	{	
+		if (this.activeTab != evt.target)
 		{
 			Element.removeClassName(evt.target, 'inactive');
 			Element.addClassName(evt.target, 'hover');
 		}
 	},
 
-	handleTabMouseOut: function(evt) {
-		if (this.tabControll.activeTab != evt.target)
+	handleTabMouseOut: function(evt) 
+	{
+		if (this.activeTab != evt.target)
 		{
 			Element.removeClassName(evt.target, 'hover');
 			Element.addClassName(evt.target, 'inactive');
 		}
 	},
 	
-	handleTabClick: function(evt) {
-
-		if (this.tabControll.activeTab != evt.target) 
+	handleTabClick: function(evt) 
+	{
+		if (this.activeTab != evt.target) 
 		{
-			Element.removeClassName(this.tabControll.activeTab, 'active');
-			Element.addClassName(this.tabControll.activeTab, 'inactive');
-			Element.hide(this.tabControll.activeTab.id + 'Content');
+			Element.removeClassName(this.activeTab, 'active');
+			Element.addClassName(this.activeTab, 'inactive');
+			Element.hide(this.activeTab.id + 'Content');
 			
-			this.tabControll.activeTab = evt.target;
+			this.activeTab = evt.target;
 			Element.removeClassName(evt.target, 'hover');
-			Element.addClassName(this.tabControll.activeTab, 'active');
-			Element.show(this.tabControll.activeTab.id + 'Content');
+			Element.addClassName(this.activeTab, 'active');
+			Element.show(this.activeTab.id + 'Content');
+			
+			var indicatorId = this.activeTab.id + 'Indicator';
+			var contentId = this.activeTab.id + 'Content'
+			
+			if (Element.empty(contentId))
+			{
+				new LiveCart.AjaxUpdater(evt.target.url, contentId, indicatorId);
+			}
 		}
+	},
+	
+	/**
+	 * Reset content related to a given tab. When tab will be activated content must 
+	 * be resent
+	 */
+	resetContent: function(tabId)
+	{
+		$(tabId + 'Content').innerHTML = '';
 	}
 }

@@ -30,8 +30,8 @@
 	<div id="managerContainer" style="margin-left: 270px; height: 100%;">
 		<div id="tabContainer">
 			<ul id="tabList">
-				<li id="tabMainDetails" class="tab active">Main Details</li>
-				<li id="tabFields" class="tab inactive" onclick="new LiveCart.AjaxUpdater('{link controller=backend.specField action=index}', 'tabFieldsContent', 'tabFieldsIndicator');"> <img src="image/indicator.gif" id="tabFieldsIndicator" style="display: none;"/> Fields</li>
+				<li id="tabMainDetails" class="tab active"><a href="{link controller=backend.category action=index}">Main Details</a></li>
+				<li id="tabFields" class="tab inactive"><a href="{link controller=backend.specField action=index}">Fields</a></li>
 				<li id="tabFilters" class="tab inactive">Filters</li>
 			</ul>
 		</div>
