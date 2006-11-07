@@ -4,14 +4,14 @@ if (LiveCart == undefined)
 }
 
 LiveCart.SpecFieldManager = Class.create();
-LiveCart.SpecFieldManager.prototype = {	
+LiveCart.SpecFieldManager.prototype = {
 	/**
 	 * Constructor
 	 *
 	 * @var types Hash of options (where hash key is value type and value is array of Option objects)
 	 */
-	initialize: function(specField) 
-	{				
+	initialize: function(specField)
+	{
 		this.id = specField.id;
 		this.type = specField.type;
 		this.values = specField.values;
@@ -19,15 +19,12 @@ LiveCart.SpecFieldManager.prototype = {
 		this.multipleSelector = specField.multipleSelector;
 		this.valueType = specField.valueType;
 		this.translations = specField.translations;
-				
+
 		this.findUsedNodes();
 		this.bindFields();
-		
-		var typeNode = (this.nodes && this.nodes.type) ? this.nodes.type : 'fuck';
-		var test = '';
 	},
-	
-	
+
+
 	/**
 	 * Find ussed nodes
 	 *
@@ -35,15 +32,15 @@ LiveCart.SpecFieldManager.prototype = {
 	findUsedNodes: function()
 	{
 		if(!this.nodes) this.nodes = [];
-		
+
 		this.nodes.parent = document.getElementById("specField-item-"+this.id);
-		
+
 		this.nodes.valueType 			= document.getElementsByClassName("specField-form-valueType", this.nodes.parent)[0].getElementsByTagName("input");
 		this.nodes.type 				= document.getElementsByClassName("specField-form-type", this.nodes.parent)[0];
 		this.nodes.stateLinks 			= document.getElementsByClassName("change-state", this.nodes.parent);
 		this.nodes.stepTranslations 	= document.getElementsByClassName("step-translations", this.nodes.parent)[0];
 		this.nodes.stepMain 			= document.getElementsByClassName("step-main", this.nodes.parent)[0];
-		
+
 		this.nodes.stepLevOne 			= document.getElementsByClassName("step-lev1", this.nodes.parent);
 		this.nodes.mainTitle 			= document.getElementsByClassName("specField-title", this.nodes.parent)[0];
 		this.nodes.id 					= document.getElementsByClassName("specField-form-id", this.nodes.parent)[0];
@@ -55,14 +52,14 @@ LiveCart.SpecFieldManager.prototype = {
 		this.nodes.translationsLinks 	= document.getElementsByClassName("specFields-form-values-translations-language-links", this.nodes.parent)[0];
 		this.nodes.valuesAddFieldLink 	= this.nodes.valuesDefaultGroup.getElementsByClassName("add-field", this.nodes.parent)[0];
 	},
-	
+
 	bindTranslationValues: function()
 	{
 		this.nodes.translatedValues = document.getElementsByClassName("specField-form-values-translations", this.nodes.parent);
 	},
-	
-	
-	
+
+
+
 	/**
 	 * Binds fields to some events
 	 *
@@ -73,7 +70,7 @@ LiveCart.SpecFieldManager.prototype = {
 		{
 			this.nodes.valueType[i].onclick = this.valueTypeChangedAction.bind(this);
 		}
-		
+
 		for(var i = 0; i < this.nodes.stateLinks.length; i++)
 		{
 			this.nodes.stateLinks[i].onclick = this.changeStateAction.bind(this);
@@ -82,18 +79,18 @@ LiveCart.SpecFieldManager.prototype = {
 		this.nodes.title.onkeyup = this.generateHandleAndTitleAction.bind(this);
 		this.nodes.valuesAddFieldLink.onclick = this.addValueFieldAction.bind(this);
 		this.nodes.type.onchange = this.typeWasChangedAction.bind(this);
-		
+
 		// Some actions must be executed on load. Also be aware of the order in which those actions are called
 		this.loadLanguagesAction();
 		this.createLanguagesLinks();
 		this.loadSpecFieldAction();
 		this.loadValueFieldsAction();
-		this.bindTranslationValues();		
+		this.bindTranslationValues();
 		this.valueTypeChangedAction();
 		this.loadTypes();
-		this.typeWasChangedAction();	
+		this.typeWasChangedAction();
 	},
-	
+
 	loadTypes: function()
 	{
 		if(this.type)
@@ -106,16 +103,16 @@ LiveCart.SpecFieldManager.prototype = {
 					break;
 				}
 			}
-		}	
+		}
 	},
-	
+
 	typeWasChangedAction: function()
 	{
 		// if selected type is a selector type then show selector options fields (aka step 2)
 		if(this.selectorValueTypes.indexOf(this.nodes.type.value) === -1)
 		{
 			this.nodes.stateLinks[1].style.display = 'none';
-			for(var i = 0; i < this.nodes.translatedValues.length; i++) 
+			for(var i = 0; i < this.nodes.translatedValues.length; i++)
 			{
 				this.nodes.translatedValues[i].style.display = 'none';
 			}
@@ -123,17 +120,17 @@ LiveCart.SpecFieldManager.prototype = {
 		else
 		{
 			this.nodes.stateLinks[1].style.display = 'inline';
-			for(var i = 0; i < this.nodes.translatedValues.length; i++) 
+			for(var i = 0; i < this.nodes.translatedValues.length; i++)
 			{
 				this.nodes.translatedValues[i].style.display = (this.doNotTranslateTheseValueTypes.indexOf(this.valueType) === -1) ? 'block' : 'none';
 			}
 		}
 	},
-	
-	
+
+
 	/**
 	 * Find all delete value links (this function is needed because we need to refresh links list when new value is added or removed)
-	 * 
+	 *
 	 */
 	bindDeleteLinks: function()
 	{
@@ -143,34 +140,42 @@ LiveCart.SpecFieldManager.prototype = {
 			deleteValueLinks[i].onclick = this.deleteValueFieldAction.bind(this);
 		}
 	},
-	
-	
+
+
 	bindDefaultFields: function()
 	{
 		var self = this;
-		$A(this.nodes.valuesDefaultGroup.getElementsByTagName("input")).each(function(input) 
+		$A(this.nodes.valuesDefaultGroup.getElementsByTagName("input")).each(function(input)
 		{
 			input.onkeyup = self.mainValueFieldChangedAction.bind(self);
 		});
+
+        Sortable.create(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0].id,
+        {
+           dropOnEmpty: true,
+           containment: [this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0].id],
+           constraint: false,
+           handler: "sortable-drag-handler"
+        });
 	},
-	
-	
+
+
 	loadSpecFieldAction: function()
-	{	
-		// Default language		
+	{
+		// Default language
 		this.nodes.id.value = this.id;
 		this.nodes.handle.value = this.handle;
-		
+
 		this.nodes.title.value = this.translations[this.languageCodes[0]].title;
 		this.nodes.title.name = "translations[" + this.languageCodes[0] + "][title]";
-		
+
 		this.nodes.multipleSelector.checked = this.multipleSelector ? true : false;
-		
+
 		this.nodes.mainTitle.firstChild.nodeValue = this.nodes.title.value;
-		
+
 		this.nodes.description.value = this.translations[this.languageCodes[0]].description;
 		this.nodes.description.name = "translations[" + this.languageCodes[0] + "][description]";
-				
+
 		// select valueType (or first)
 		if(this.valueType)
 		{
@@ -187,8 +192,8 @@ LiveCart.SpecFieldManager.prototype = {
 		{
 			this.nodes.valueType[0].checked = true;
 		}
-		
-		
+
+
 		// Translations
 		var translations = document.getElementsByClassName("step-translations-language", this.nodes.stepTranslations);
 		// we should have a template to continue
@@ -200,11 +205,11 @@ LiveCart.SpecFieldManager.prototype = {
 				// copy template class
 				var newTranslation = translations[0].cloneNode(true);
 				Element.removeClassName(newTranslation, "dom-template");
-				
+
 				newTranslation.className += this.languageCodes[i];
-				
+
 				newTranslation.getElementsByTagName("legend")[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
-				
+
 				var inputFields = newTranslation.getElementsByTagName('input');
 				for(var j = 0; j < inputFields.length; j++)
 				{
@@ -221,17 +226,17 @@ LiveCart.SpecFieldManager.prototype = {
 						textareaFields[j].name = "translations[" + this.languageCodes[i] + "][" + textareaFields[j].name + "]";
 					}
 				}
-				
+
 				this.nodes.stepTranslations.appendChild(newTranslation);
-				
+
 				// add to nodes list
-				
+
 				this.nodes.translations[this.languageCodes[i]] = newTranslation;
 			}
 		}
 	},
-	
-	
+
+
 	/**
 	 * Load values when page is loaded
 	 *
@@ -239,72 +244,72 @@ LiveCart.SpecFieldManager.prototype = {
 	loadValueFieldsAction: function()
 	{
 		var self = this;
-		
+
 		if(this.values)
 		{
 			$H(this.values).each(function(value) {
 				self.addField(value.value, value.key)
 			});
 		}
-		
+
 		this.bindDeleteLinks();
 	},
-	
-	
+
+
 	/**
 	 * Load languages
-	 * 
+	 *
 	 */
 	loadLanguagesAction: function()
 	{
 		var self = this;
 		if(!this.languageCodes) this.languageCodes = [];
-		
+
 		$H(this.languages).each(function(language) {
 			self.languageCodes[self.languageCodes.length] = language.key;
 		});
 	},
-	
+
 	createLanguagesLinks: function()
 	{
 		var languageTemplateLink = document.getElementsByClassName("dom-template", this.nodes.translationsLinks)[0];
-		
+
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
 			var languageLinkDiv = languageTemplateLink.cloneNode(true);
 			Element.removeClassName(languageLinkDiv, "dom-template");
-			
+
 			var languageLink = languageLinkDiv.getElementsByTagName("a")[0];
 			languageLink.hash += this.languageCodes[i];
 			var test = this.languages[this.languageCodes[i]];
 			languageLink.firstChild.nodeValue = this.languages[this.languageCodes[i]];
-			
+
 			this.nodes.translationsLinks.appendChild(languageLinkDiv);
-			
+
 			// bind it
 			languageLinkDiv.onclick = this.changeTranslationLanguageAction.bind(this);
 		}
 	},
-	
+
 	changeTranslationLanguageAction: function(e)
 	{
 		if(!e)
 		{
 			e = window.event;
 			e.target = e.srcElement;
-		}		
-		
+		}
+
 		Event.stop(e);
-		
+
 		var currentLanguageClass = e.target.hash.substring(1);
 		var translationsNodes = document.getElementsByClassName("step-translations-language", this.nodes.stepTranslations);
-		
+
 		for(var i = 0; i < translationsNodes.length; i++)
 		{
 			translationsNodes[i].style.display = (translationsNodes[i].className.split(' ').indexOf(currentLanguageClass) === -1 || translationsNodes[i].style.display == 'block') ? 'none' : 'block';
 		}
 	},
-	
+
 	/**
 	 * Add new field to values
 	 *
@@ -316,183 +321,196 @@ LiveCart.SpecFieldManager.prototype = {
 			e = window.event;
 			e.target = e.srcElement;
 		}
-		
+
 		Event.stop(e);
-				
+
 		this.addField(null, "new-" + this.countNewValues);
 		this.countNewValues++;
-		
+
 		this.bindDeleteLinks();
 	},
-	
-	
+
+
 	/**
 	 * Delete field
 	 *
 	 */
 	deleteValueFieldAction: function(e)
 	{
-		if(confirm(this.messages.deleteField)) 
+		if(confirm(this.messages.deleteField))
 		{
 			if(!e)
 			{
 				e = window.event;
 				e.target = e.srcElement;
 			}
-			
+
 			Event.stop(e);
-					
+
 			var splitedHref = e.target.parentNode.id.split("-");
 			var isNew = splitedHref[splitedHref.length - 2] == 'new' ? true : false;
 			var id = (isNew ? 'new-' : '') + splitedHref[splitedHref.length - 1];
-			
+
 			for(var i = 0; i < this.languageCodes.length; i++)
 			{
 				var translatedValue = document.getElementById("specField-form-values-" + this.languageCodes[i] + "-" + id);
-				Element.remove(translatedValue);
+
+				// if new or not main language
+				if(isNew || i > 0)
+    			{
+    				Element.remove(translatedValue);
+    			}
+    			else
+    			{
+    			    translatedValue.id += '-deleted';
+    			    var input = translatedValue.getElementsByTagName('input')[0];
+    			    input.name = input.name.replace(/\[\w+\]\[([\d]+)\]/, "[deleted][$1]");
+    			    translatedValue.style.display = 'none';
+    			}
 			}
-			
-			if(!isNew)
-			{
-				// send AJAX request to remove field from database
-			}
-			
+
+
+
 			this.bindDeleteLinks();
 		}
 	},
-	
-	
+
+
 	/**
 	 * This callback is executed when user change the value type
 	 *
 	 */
-	valueTypeChangedAction: function(e) 
+	valueTypeChangedAction: function(e)
 	{
 		this.nodes.type.length = 0;
 		for(var i = 0; i < this.nodes.valueType.length; i++)
 		{
-			if(this.nodes.valueType[i].checked) 
+			if(this.nodes.valueType[i].checked)
 			{
 				for(var j = 0; j < this.types[this.nodes.valueType[i].value].length; j++)
 				{
 					this.nodes.type.options[j] = this.types[this.nodes.valueType[i].value][j].cloneNode(true);
 				}
-				
+
 				this.valueType = this.nodes.valueType[i].value;
 			}
 		}
-		
-		
-		this.typeWasChangedAction();		
+
+
+		this.typeWasChangedAction();
 	},
-	
-	
+
+
 	/**
 	 * This callback is executed when user changes the state. When user change the state all other
 	 * states are hidden and only current state s shown
 	 *
 	 */
 	changeStateAction: function(e)
-	{		
+	{
 		if(!e)
 		{
 			e = window.event;
 			e.target = e.srcElement;
-		}		
-		
+		}
+
 		Event.stop(e);
-		
+
 		var currentStep = e.target.hash.substring(1);
 		for(var i = 0; i < this.nodes.stepLevOne.length; i++)
 		{
 			this.nodes.stepLevOne[i].style.display = (this.nodes.stepLevOne[i].className.split(' ').indexOf(currentStep) === -1 || this.nodes.stepLevOne[i].style.display == 'block') ? 'none' : 'block';
 		}
 	},
-	
-	
+
+
 	mainValueFieldChangedAction: function(e)
 	{
 		if(!e)
 		{
 			e = window.event;
 			e.target = e.srcElement;
-		}		
-		
+		}
+
 		Event.stop(e);
 
 		var splitedHref = e.target.parentNode.id.split("-");
 		var isNew = splitedHref[splitedHref.length - 2] == 'new' ? true : false;
 		var id = (isNew ? 'new-' : '') + splitedHref[splitedHref.length - 1];
-		
+
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
 			$("specField-form-values-" +  this.languageCodes[i] + "-" + id).getElementsByTagName("label")[0].firstChild.nodeValue = e.target.value;
 		}
 	},
-	
-	
+
+
 	/**
-	 * Automatically generates field name from title 
+	 * Automatically generates field name from title
 	 *
 	 */
 	generateHandleAndTitleAction: function(e)
 	{
 		// generate handle
 		var handle = this.nodes.title.value;
-		
+
 		handle = handle.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,""); // trim
 		handle = handle.replace(/[^a-zA-Z_\d ]/g, ""); // remove all illegal simbols
 		handle = handle.replace(/^[\d\_]+/g, "_"); // replace first digits with "_"
 		handle = handle.replace(/ /g, "_"); // reokace spaces with "_"
 		handle = handle.toLowerCase();
-		
+
 		this.nodes.handle.value = handle;
-		
+
 		this.nodes.mainTitle.firstChild.nodeValue = this.nodes.title.value;
-	},	
-	
-	
+	},
+
+
 	/**
-	 * Add new value field 
+	 * Add new value field
 	 *
 	 */
 	addField: function(value, id)
 	{
-		var values = document.getElementsByClassName("specField-form-values-value", this.nodes.valuesDefaultGroup);
-		
+	    var values = document.getElementsByClassName("specField-form-values-value", this.nodes.valuesDefaultGroup);
+
 		// If we have a template class then copy it
-		if(values.length > 0 && values[0].className.split(' ').indexOf('dom-template') !== -1) 
+		if(values.length > 0 && values[0].className.split(' ').indexOf('dom-template') !== -1)
 		{
 			var newValue = values[0].cloneNode(true);
 			Element.removeClassName(newValue, "dom-template");
-			
+
 			newValue.id = newValue.id + this.languageCodes[0] + "-" + id;
-					
+
 			var input = newValue.getElementsByTagName("input")[0];
 			input.name = "values[" + this.languageCodes[0] + "]" + (id ? "["+id+"]" : '[new][]');
 			input.value = (value && value[this.languageCodes[0]]) ? value[this.languageCodes[0]] : '' ;
-			
-			this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0].appendChild(newValue);
-			
+
+			var ul = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
+			ul.id = 'specField-form-'+this.id+'-values-'+this.languageCodes[0];
+			ul.appendChild(newValue);
+
 			// now insert all translation fields
 			for(var i = 1; i < this.languageCodes.length; i++)
 			{
 				var newValueTranslation = document.getElementsByClassName("specField-form-values-value", this.nodes.translations[this.languageCodes[i]])[0].cloneNode(true);
 				Element.removeClassName(newValueTranslation, "dom-template");
-				
+
 				newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "-" + id;
-				
+
 				var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
 				inputTranslation.name = "values[" + this.languageCodes[i] + "]" + (id ? "["+id+"]" : '[new][]');
 				inputTranslation.value = (value && value[this.languageCodes[i]]) ? value[this.languageCodes[i]] : '' ;
-				
+
 				var label = newValueTranslation.getElementsByTagName("label")[0];
 				label.appendChild(document.createTextNode(input.value));
-				
+
 				// add to node tree
-				document.getElementsByClassName("specField-form-values-translations", this.nodes.translations[this.languageCodes[i]])[0].appendChild(newValueTranslation);
+				var translationsUl = document.getElementsByClassName("specField-form-values-translations", this.nodes.translations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
+				translationsUl.id = 'specField-form-'+this.id+'-values-'+this.languageCodes[i];
+				translationsUl.appendChild(newValueTranslation);
 			}
-			
+
 			this.bindDeleteLinks();
 			this.bindDefaultFields();
 		}
