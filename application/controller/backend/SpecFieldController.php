@@ -1,5 +1,4 @@
 <?php
-
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.product.SpecField");
 
@@ -14,7 +13,6 @@ class SpecFieldController extends StoreManagementController
 {
 	public function index()
 	{
-		header('Content-Type: text/xml; charset=utf-8');
 //		$category = Category::getInstanceByID(1);
 //		$recordSet = $category->getSpecFieldList();
 
@@ -33,7 +31,7 @@ class SpecFieldController extends StoreManagementController
 //		$this->setLayout("categoryManager");
 		$this->removeLayout();
 //		$specField = array("name" => $this->request->getValue("name"), "description" => $this->request->getValue("description"));
-		
+
 		$response = new ActionResponse();
 //		$response->setValue("specField", $specField);
 		return $response;
@@ -56,13 +54,13 @@ class SpecFieldController extends StoreManagementController
 			$specField = SpecField::getInstanceByID($this->request->getValue("id"), SpecField::LOAD_DATA);
 			$form->setData($specField->toArray());
 		}
-		
+
 		$specFieldList = array(array("name" => "test", "description" => "test"), array("name" => "another item", "description" => "one more..."));
-		
+
 		$response = new ActionResponse();
-		
+
 		$response->setValue("specFieldList", $specFieldList);
-		
+
 		$response->setValue("specFieldForm", $form);
 		$response->setValue("systemLangList", $systemLangList);
 		$response->setValue("typeList", $specFieldTypeList);
@@ -83,7 +81,7 @@ class SpecFieldController extends StoreManagementController
 			$validator->saveState();
 			return new ActionRedirectResponse("backend.specField", "form");
 		}
-		else 
+		else
 		{
 			if ($this->request->isValueSet("id"))
 			{
@@ -126,11 +124,11 @@ class SpecFieldController extends StoreManagementController
 	{
 		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("specField", $this->request);
-		
+
 		$validator->addCheck("name", new IsNotEmptyCheck("You must enter your name"));
 		$validator->addCheck("name", new MaxLengthCheck("Field name must not exceed 40 chars", 40));
 		$validator->addCheck("type", new IsNotEmptyCheck("You must set a field type"));
-		
+
 		return $validator;
 	}
 }
