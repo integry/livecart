@@ -3,6 +3,7 @@
 ClassLoader::import("application.controller.backend.abstract.SiteManagementController");
 ClassLoader::import("application.model.*");
 ClassLoader::import("application.model.Locale.*");
+ClassLoader::import("library.*");
 /**
  * Language management
  * Handles adding languages, modifying language definitions (translations), activating and deactivating languages
@@ -35,6 +36,7 @@ class LanguageController extends SiteManagementController
 	{
 		parent::init();
 		$this->addBlock("NAV", "languageSection");
+		$this->setLayout("mainLayout");
 	}
 
 	/**

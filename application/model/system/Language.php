@@ -80,7 +80,7 @@ class Language extends ActiveRecordModel
 	public static function setEnabled($ID, $enabled) 
 	{	  	  
 		$lang = ActiveRecord::getInstanceByID("Language", $ID);
-		$lang->isEnabled->set((bool)$enabled);
+		$lang->isEnabled->set((int)$enabled);
 		$lang->save();	
 	}
 	

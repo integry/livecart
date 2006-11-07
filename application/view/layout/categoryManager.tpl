@@ -10,20 +10,15 @@
 {includeCss file="form.css"}
 {includeCss file="tabControll.css"}
 {includeCss file="backend/dhtmlxtree/dhtmlXTree.css"}
-
-{assign var="TITLE" value="Product Category Management"}
-
 {include file="layout/header.tpl"}
-
-<script>
-	var specFieldUrl = '{link controller=backend.specField action=index}';
-</script>
 
 	<div id="catgegoryContainer" style="float:left; width: 260px;">
 		<div id="categoryBrowser" style="padding: 10px; border: 1px solid #ccc; background-color: #f1f1f1;">
 		</div>
 		<div>
 			<a href="">Create a new category</a>
+			<br/>
+			<a href="{link controller=backend.category action=remove}">Remove selected category</a>
 		</div>
 	</div>
 

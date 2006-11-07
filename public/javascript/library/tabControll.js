@@ -43,10 +43,6 @@ TabControll.prototype = {
 			{
 				Element.hide(tabList[i].id + 'Content');
 			}
-			
-			//Element.observe(tabList[i], 'click', this.handleTabClick);
-			//Element.observe(tabList[i], 'mouseover', this.handleTabMouseOver);
-			//Element.observe(tabList[i], 'mouseout', this.handleTabMouseOut);
 		}
 	},
 
@@ -70,24 +66,32 @@ TabControll.prototype = {
 	
 	handleTabClick: function(evt) 
 	{
-		if (this.activeTab != evt.target) 
+		var targetTab = evt.target;
+		this.activateTab(targetTab);
+	},
+	
+	activateTab: function(targetTab)
+	{
+		if (this.activeTab == targetTab && !Element.empty(contentId)) 
 		{
-			Element.removeClassName(this.activeTab, 'active');
-			Element.addClassName(this.activeTab, 'inactive');
-			Element.hide(this.activeTab.id + 'Content');
+			return;
+		}
+		
+		Element.removeClassName(this.activeTab, 'active');
+		Element.addClassName(this.activeTab, 'inactive');
+		Element.hide(this.activeTab.id + 'Content');
 			
-			this.activeTab = evt.target;
-			Element.removeClassName(evt.target, 'hover');
-			Element.addClassName(this.activeTab, 'active');
-			Element.show(this.activeTab.id + 'Content');
+		this.activeTab = targetTab;
+		Element.removeClassName(targetTab, 'hover');
+		Element.addClassName(this.activeTab, 'active');			
+		Element.show(this.activeTab.id + 'Content');
 			
-			var indicatorId = this.activeTab.id + 'Indicator';
-			var contentId = this.activeTab.id + 'Content'
-			
-			if (Element.empty(contentId))
-			{
-				new LiveCart.AjaxUpdater(evt.target.url, contentId, indicatorId);
-			}
+		var indicatorId = this.activeTab.id + 'Indicator';
+		var contentId = this.activeTab.id + 'Content'
+		
+		if (Element.empty(contentId))
+		{
+			new LiveCart.AjaxUpdater(targetTab.url, contentId, indicatorId);
 		}
 	},
 	
@@ -95,8 +99,8 @@ TabControll.prototype = {
 	 * Reset content related to a given tab. When tab will be activated content must 
 	 * be resent
 	 */
-	resetContent: function(tabId)
+	resetContent: function(tabObj)
 	{
-		$(tabId + 'Content').innerHTML = '';
+		tabObj.innerHTML = '';
 	}
 }

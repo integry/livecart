@@ -1,7 +1,9 @@
+{pageTitle}Category manager. Modifying: <span id="activeCategoryPath">ROOT > Electronics ></span> <span id="activeCategoryName">New Category</span>{/pageTitle}
+
 {form handle=$catalogForm action="controller=backend.catalog action=save" method="post"}
 
 	<fieldset>
-		<legend>Modify category details</legend>
+		<legend>Category details</legend>
 	
 		<label for="name">Category name:</label> 
 		{textfield name="name" id="name"}
@@ -18,6 +20,11 @@
 		<label for="submit"> </label> 
 		<input type="submit" class="submit" id="submit" value="Update details"/>
 	
+	</fieldset>
+	
+	<fieldset>
+		<legend>Translate Catalog Details</legend>
+		
 	</fieldset>
 
 {/form}

@@ -5,54 +5,48 @@ if (LiveCart == undefined)
 
 LiveCart.CategoryManager = {
 	
-	tabbar: null,
+	tabControll: null,
+	activeCategoryId: null,
+	treeBrowser: null,
 	
 	init: function() 
 	{
 		this.initCategoryBrowser();
-		var tabControll = new TabControll('tabList', '', 'image/indicator.gif');
+		this.initTabs();
 	},
 	
 	initCategoryBrowser: function()
 	{
-		var tree = new dhtmlXTreeObject("categoryBrowser","100%","100%", 0);
-		tree.setImagePath("image/backend/dhtmlxtree/");
+		this.treeBrowser = new dhtmlXTreeObject("categoryBrowser","100%","100%", 0);
+		this.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
+		this.treeBrowser.setOnClickHandler(this.activateCategory);
+		this.treeBrowser.enableDragAndDrop(1);
 		
-		tree.insertNewItem(0,1,"Electronics",0,0,0,0,"SELECT");
-		tree.insertNewItem(0,2,"New Node zero",0,0,0,0,"SELECT");
-		tree.insertNewItem(1,3,"New Node one",0,0,0,0,"SELECT");
-		tree.insertNewItem(1,4,"New Node two",0,0,0,0,"SELECT");
-		tree.insertNewNext(1,5,"New Node three",0,0,0,0,"SELECT");
+		this.treeBrowser.insertNewItem(0,1,"Electronics",0,0,0,0, "CHILD");
+		this.treeBrowser.insertNewItem(0,2,"Computers",0,0,0,0, "CHILD");
+		this.treeBrowser.insertNewItem(0,3,"Cars & Motorsports",0,0,0,0, "CHILD");
+		this.treeBrowser.insertNewItem(0,4,"Cameras & Photo",0,0,0,0, "CHILD");
+		
+		this.treeBrowser.insertNewItem(1,10,"Camcorders",0,0,0,0, "CHILD");
+		this.treeBrowser.insertNewItem(1,11,"Televisions",0,0,0,0, "CHILD");
+		this.treeBrowser.insertNewItem(1,12,"DVD",0,0,0,0, "SELECT");
+		this.treeBrowser.insertNewItem(1,12,"MP3",0,0,0,0, "CHILD");
+		this.treeBrowser.insertNewItem(1,12,"GPS",0,0,0,0, "CHILD");
+		
+		this.treeBrowser.insertNewItem(2,21,"Laptops",0,0,0,0, "CHILD");
+		this.treeBrowser.insertNewItem(2,21,"Desktops",0,0,0,0, "CHILD");
+		this.treeBrowser.insertNewItem(2,21,"Software",0,0,0,0, "CHILD");
+		this.treeBrowser.insertNewItem(2,21,"PDAs",0,0,0,0, "CHILD");
+	},
+	
+	activateCategory: function(categoryNodeId) 
+	{
+		var categoryName = LiveCart.CategoryManager.treeBrowser.getItemText(categoryNodeId);
+		alert('Activated:' + categoryName);
 	},
 	
 	initTabs: function()
 	{
-		var tabbar = new dhtmlXTabBar("managerContainer","top");
-		this.tabbar = tabbar;
-		tabbar.setImagePath("image/backend/dhtmlxtabbar/");
-		
-		tabbar.addTab("mainContent",'<img id="mainContentTabInd" style="display:none" src="image/indicator.gif" align="absmiddle"/> Main Details', "100px");
-		tabbar.addTab("fieldContent",'<img id="fieldContentTabInd" style="display:none" src="image/indicator.gif" align="absmiddle"/> Fields', "100px");
-		tabbar.addTab("filterContent","Filters", "100px");
-		tabbar.addTab("subcategoryOrderContent","Subcategory Order", "100px");
-		tabbar.addTab("permissionContent","Permissions", "100px");
-		tabbar.addTab("imageContent","Images", "100px");
-		tabbar.addTab("articleContent","Articles", "100px");
-		
-		tabbar.setOnSelectHandler(LiveCart.CategoryManager.handleTabActivation);
-		tabbar.setContent("mainContent", "mainDetailsSection");
-		tabbar.setTabActive("mainContent");
+		this.tabControll = new TabControll('tabList', '', 'image/indicator.gif');
 	},
-	
-	handleTabActivation: function(containerId, ido)
-	{
-		switch(containerId)
-		{
-			case 'fieldContent':
-				new LiveCart.AjaxUpdater(specFieldUrl, 'specFieldSection', 'fieldContentTabInd');
-				LiveCart.CategoryManager.tabbar.setContent('fieldContent', 'specFieldSection');
-			break;
-		}
-		return true;
-	}
 }
