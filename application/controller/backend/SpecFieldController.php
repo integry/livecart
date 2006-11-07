@@ -1,6 +1,6 @@
 <?php
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.product.SpecField");
+//ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
+//ClassLoader::import("application.model.product.SpecField");
 
 /**
  * Category specification field ("extra field") controller
@@ -16,13 +16,49 @@ class SpecFieldController extends StoreManagementController
 //		$category = Category::getInstanceByID(1);
 //		$recordSet = $category->getSpecFieldList();
 
-		$response = new ActionResponse();
+//		$response = new ActionResponse();
+//
+//		$configuration = array(
+//    		'languages' => array (
+//        		'en' => 'English',
+//        		'lt' => 'Lithuanian',
+//        		'de' => 'German'
+//    		),
+//
+//    		'types' => array(
+//        		'numbers' => array(
+//    		          array('Selector', 'selector'),
+//    		          array('Numbers', 'numbers')
+//
+//
+//		);
+//
+//
+//
+//	LiveCart.SpecFieldManager.prototype.types =
+//	{
+//		numbers:
+//		[
+//			new Option('Selector', 'selector'),
+//			new Option('Numbers', 'numbers')
+//		],
+//		text:
+//		[
+//			new Option('Text', 'text'),
+//			new Option('Word processer', 'wordProcesser'),
+//			new Option('{t _selector}', '_selector'),
+//			new Option('Date', 'date')
+//		]
+//	}
+//
+//	LiveCart.SpecFieldManager.prototype.messages = { deleteField: 'delete field'	}
+//	LiveCart.SpecFieldManager.prototype.selectorValueTypes = ['_selector', 'selector'];
+//	LiveCart.SpecFieldManager.prototype.doNotTranslateTheseValueTypes = ['numbers'];
+//	LiveCart.SpecFieldManager.prototype.countNewValues = 0;
+
 //		$response->setValue("fieldList", $recordSet);
 
-		$response->setValue('random1', rand(1, 100));
-		$response->setValue('random2', rand(1, 100));
-		$response->setValue('random3', rand(1, 100));
-
+//Json
 		return $response;
 	}
 
