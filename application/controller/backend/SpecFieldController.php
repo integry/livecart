@@ -1,6 +1,6 @@
 <?php
-//ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-//ClassLoader::import("application.model.product.SpecField");
+ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
+ClassLoader::import("application.model.category.SpecField");
 
 /**
  * Category specification field ("extra field") controller
