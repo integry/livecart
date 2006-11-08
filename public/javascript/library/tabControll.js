@@ -72,17 +72,19 @@ TabControll.prototype = {
 	
 	activateTab: function(targetTab)
 	{
-		if (this.activeTab == targetTab && !Element.empty(contentId)) 
+		if (this.activeTab == targetTab && !Element.empty(targetTab.id + 'Content')) 
 		{
 			return;
 		}
 		
-		Element.removeClassName(this.activeTab, 'active');
-		Element.addClassName(this.activeTab, 'inactive');
-		Element.hide(this.activeTab.id + 'Content');
-			
+		if (this.activeTab != null)
+		{
+			Element.removeClassName(this.activeTab, 'active');
+			Element.addClassName(this.activeTab, 'inactive');
+			Element.hide(this.activeTab.id + 'Content');
+		}	
 		this.activeTab = targetTab;
-		Element.removeClassName(targetTab, 'hover');
+		Element.removeClassName(this.activeTab, 'hover');
 		Element.addClassName(this.activeTab, 'active');			
 		Element.show(this.activeTab.id + 'Content');
 			
