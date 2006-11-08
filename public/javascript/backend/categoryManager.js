@@ -11,8 +11,8 @@ LiveCart.CategoryManager = {
 	
 	init: function() 
 	{
-		this.initCategoryBrowser();
 		this.initTabs();
+		this.initCategoryBrowser();
 	},
 	
 	initCategoryBrowser: function()
@@ -41,12 +41,30 @@ LiveCart.CategoryManager = {
 	
 	activateCategory: function(categoryNodeId) 
 	{
-		var categoryName = LiveCart.CategoryManager.treeBrowser.getItemText(categoryNodeId);
-		alert('Activated:' + categoryName);
+		Element.update('activeCategoryPath', LiveCart.CategoryManager.getPath(categoryNodeId));
+		LiveCart.CategoryManager.tabControll.reloadActiveTab();
 	},
 	
 	initTabs: function()
 	{
 		this.tabControll = new TabControll('tabList', '', 'image/indicator.gif');
 	},
+	
+	getPath: function(nodeId) 
+	{
+		var path = new Array();
+		var parentId = nodeId;
+		var nodeStr = '';
+		do
+		{
+			nodeStr = LiveCart.CategoryManager.treeBrowser.getItemText(parentId)
+			path.push(nodeStr);
+			parentId = this.treeBrowser.getParentId(parentId)
+		}
+		while(parentId != 0)
+		
+		path = path.reverse();
+		var pathStr = path.join(' > ');
+		return pathStr;
+	}
 }

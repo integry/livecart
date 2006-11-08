@@ -101,6 +101,18 @@ TabControll.prototype = {
 	 */
 	resetContent: function(tabObj)
 	{
-		tabObj.innerHTML = '';
+		var contentId = tabObj.id + 'Content';
+		$(contentId).innerHTML = '';
+	},
+	
+	reloadActiveTab: function() 
+	{
+		this.resetContent(this.activeTab);
+		this.activateTab(this.activeTab);
+	},
+	
+	setTabUrl: function(tabId, url)
+	{
+		$('tabId').url = url;
 	}
 }

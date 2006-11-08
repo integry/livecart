@@ -1,4 +1,4 @@
-{pageTitle}Category manager. Modifying: <span id="activeCategoryPath">ROOT > Electronics ></span> <span id="activeCategoryName">New Category</span>{/pageTitle}
+{pageTitle}Category manager. Selected: <span id="activeCategoryPath" style="font-weight: normal">Electronics > New Category</span>{/pageTitle}
 
 {form handle=$catalogForm action="controller=backend.catalog action=save" method="post"}
 

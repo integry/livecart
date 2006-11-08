@@ -25,7 +25,7 @@
 	<div id="managerContainer" style="margin-left: 270px; height: 100%;">
 		<div id="tabContainer">
 			<ul id="tabList">
-				<li id="tabMainDetails" class="tab active"><a href="{link controller=backend.category action=index}">Main Details</a></li>
+				<li id="tabMainDetails" class="tab active"><a href="{link controller=backend.category action=form}">Main Details</a></li>
 				<li id="tabFields" class="tab inactive"><a href="{link controller=backend.specField action=index}">Fields</a></li>
 				<li id="tabFilters" class="tab inactive">Filters</li>
 			</ul>
