@@ -3,6 +3,19 @@ if (LiveCart == undefined)
 	var LiveCart = {}
 }
 
+/*
+var CategoryTabControll = Class.create();
+
+CategoryTabControll.prototype = {
+	tabControll: null,
+	
+	initialize: function() {
+		this.tabControll = new TabControll();
+	},
+	
+}
+*/
+
 LiveCart.CategoryManager = {
 	
 	tabControll: null,
@@ -34,14 +47,21 @@ LiveCart.CategoryManager = {
 		this.treeBrowser.insertNewItem(1,12,"GPS",0,0,0,0, "CHILD");
 		
 		this.treeBrowser.insertNewItem(2,21,"Laptops",0,0,0,0, "CHILD");
-		this.treeBrowser.insertNewItem(2,21,"Desktops",0,0,0,0, "CHILD");
-		this.treeBrowser.insertNewItem(2,21,"Software",0,0,0,0, "CHILD");
-		this.treeBrowser.insertNewItem(2,21,"PDAs",0,0,0,0, "CHILD");
+		this.treeBrowser.insertNewItem(2,22,"Desktops",0,0,0,0, "CHILD");
+		this.treeBrowser.insertNewItem(2,23,"Software",0,0,0,0, "CHILD");
+		this.treeBrowser.insertNewItem(2,24,"PDAs",0,0,0,0, "CHILD");
 	},
 	
 	activateCategory: function(categoryNodeId) 
 	{
+		
 		Element.update('activeCategoryPath', LiveCart.CategoryManager.getPath(categoryNodeId));
+		var tab = LiveCart.CategoryManager.tabControll.getActiveTab();
+		if (tab.urlPattern == undefined)
+		{
+			tab.urlPattern = new String(tab.url);
+		}
+		tab.url = tab.urlPattern.replace('%id%', categoryNodeId);
 		LiveCart.CategoryManager.tabControll.reloadActiveTab();
 	},
 	

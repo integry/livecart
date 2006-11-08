@@ -5,7 +5,7 @@
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database drop script                            #
-# Created on:            2006-10-26 13:19                                #
+# Created on:            2006-11-08 17:52                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -13,13 +13,13 @@
 # Drop foreign key constraints                                           #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE Product DROP FOREIGN KEY Catalog_Product;
+ALTER TABLE Product DROP FOREIGN KEY Category_Product;
 
 ALTER TABLE Product DROP FOREIGN KEY Manufacturer_Product;
 
 ALTER TABLE Product DROP FOREIGN KEY ProductImage_Product;
 
-ALTER TABLE Catalog DROP FOREIGN KEY Catalog_Catalog;
+ALTER TABLE Category DROP FOREIGN KEY Category_Category;
 
 ALTER TABLE ProductLangData DROP FOREIGN KEY Product_ProductLangData;
 
@@ -31,11 +31,11 @@ ALTER TABLE Specification DROP FOREIGN KEY Product_Specification;
 
 ALTER TABLE Specification DROP FOREIGN KEY SpecField_Specification;
 
-ALTER TABLE SpecField DROP FOREIGN KEY Catalog_SpecField;
+ALTER TABLE SpecField DROP FOREIGN KEY Category_SpecField;
 
-ALTER TABLE CatalogLangData DROP FOREIGN KEY Language_CatalogLangData;
+ALTER TABLE CategoryLangData DROP FOREIGN KEY Language_CategoryLangData;
 
-ALTER TABLE CatalogLangData DROP FOREIGN KEY Catalog_CatalogLangData;
+ALTER TABLE CategoryLangData DROP FOREIGN KEY Category_CategoryLangData;
 
 ALTER TABLE SpecFieldLangData DROP FOREIGN KEY SpecField_SpecFieldLangData;
 
@@ -112,24 +112,24 @@ DROP INDEX IDX_Product_2 ON Product;
 DROP TABLE Product;
 
 # ---------------------------------------------------------------------- #
-# Drop table "Catalog"                                                   #
+# Drop table "Category"                                                  #
 # ---------------------------------------------------------------------- #
 
 # Drop constraints #
 
-ALTER TABLE Catalog ALTER COLUMN isActive DROP DEFAULT;
+ALTER TABLE Category ALTER COLUMN isActive DROP DEFAULT;
 
-ALTER TABLE Catalog ALTER COLUMN position DROP DEFAULT;
+ALTER TABLE Category ALTER COLUMN position DROP DEFAULT;
 
-ALTER TABLE Catalog DROP PRIMARY KEY;
+ALTER TABLE Category DROP PRIMARY KEY;
 
 # Drop indexes #
 
-DROP INDEX IDX_Catalog_1 ON Catalog;
+DROP INDEX IDX_Category_1 ON Category;
 
 # Drop table #
 
-DROP TABLE Catalog;
+DROP TABLE Category;
 
 # ---------------------------------------------------------------------- #
 # Drop table "Language"                                                  #
@@ -200,22 +200,22 @@ DROP INDEX IDX_SpecField_1 ON SpecField;
 DROP TABLE SpecField;
 
 # ---------------------------------------------------------------------- #
-# Drop table "CatalogLangData"                                           #
+# Drop table "CategoryLangData"                                          #
 # ---------------------------------------------------------------------- #
 
 # Drop constraints #
 
-ALTER TABLE CatalogLangData DROP PRIMARY KEY;
+ALTER TABLE CategoryLangData DROP PRIMARY KEY;
 
 # Drop indexes #
 
-DROP INDEX IDX_CatalogLang_1 ON CatalogLangData;
+DROP INDEX IDX_CatalogLang_1 ON CategoryLangData;
 
-DROP INDEX IDX_CatalogLang_2 ON CatalogLangData;
+DROP INDEX IDX_CatalogLang_2 ON CategoryLangData;
 
 # Drop table #
 
-DROP TABLE CatalogLangData;
+DROP TABLE CategoryLangData;
 
 # ---------------------------------------------------------------------- #
 # Drop table "SpecFieldLangData"                                         #

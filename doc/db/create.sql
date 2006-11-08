@@ -5,7 +5,7 @@
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database creation script                        #
-# Created on:            2006-10-26 13:19                                #
+# Created on:            2006-11-08 17:52                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -19,7 +19,7 @@
 
 CREATE TABLE Product (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Number of times product has been viewed by customers',
-    catalogID INTEGER UNSIGNED NOT NULL,
+    categoryID INTEGER UNSIGNED NOT NULL,
     manufacturerID INTEGER UNSIGNED,
     defaultImageID INTEGER UNSIGNED,
     SKU VARCHAR(20),
@@ -44,15 +44,15 @@ CREATE TABLE Product (
     CONSTRAINT PK_Product PRIMARY KEY (ID)
 );
 
-CREATE INDEX IDX_Product_1 ON Product (catalogID);
+CREATE INDEX IDX_Product_1 ON Product (categoryID);
 
 CREATE INDEX IDX_Product_2 ON Product (SKU);
 
 # ---------------------------------------------------------------------- #
-# Add table "Catalog"                                                    #
+# Add table "Category"                                                   #
 # ---------------------------------------------------------------------- #
 
-CREATE TABLE Catalog (
+CREATE TABLE Category (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     parentNodeID INTEGER UNSIGNED,
     lft INTEGER,
@@ -60,10 +60,10 @@ CREATE TABLE Catalog (
     isActive BOOL DEFAULT 1,
     position INTEGER UNSIGNED DEFAULT 0,
     handle VARCHAR(40),
-    CONSTRAINT PK_Catalog PRIMARY KEY (ID)
+    CONSTRAINT PK_Category PRIMARY KEY (ID)
 );
 
-CREATE UNIQUE INDEX IDX_Catalog_1 ON Catalog (handle);
+CREATE UNIQUE INDEX IDX_Category_1 ON Category (handle);
 
 # ---------------------------------------------------------------------- #
 # Add table "Language"                                                   #
@@ -114,7 +114,7 @@ CREATE INDEX IDX_Specification_2 ON Specification (productID);
 
 CREATE TABLE SpecField (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    catalogID INTEGER UNSIGNED,
+    categoryID INTEGER UNSIGNED,
     type SMALLINT COMMENT 'Field data type. Available types: 1. text field 2. drop down list (select one item from a list) 3. select multiple items from a list',
     dataType SMALLINT COMMENT '0. default (mixed) 1. numeric 2. date/time',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Order number (position relative to other fields)',
@@ -123,24 +123,24 @@ CREATE TABLE SpecField (
     CONSTRAINT PK_SpecField PRIMARY KEY (ID)
 ) COMMENT = 'Field data type. Available types: 1. text field 2. drop down list (select one item from a list) 3. select multiple items from a list';
 
-CREATE INDEX IDX_SpecField_1 ON SpecField (catalogID);
+CREATE INDEX IDX_SpecField_1 ON SpecField (categoryID);
 
 # ---------------------------------------------------------------------- #
-# Add table "CatalogLangData"                                            #
+# Add table "CategoryLangData"                                           #
 # ---------------------------------------------------------------------- #
 
-CREATE TABLE CatalogLangData (
-    catalogID INTEGER UNSIGNED NOT NULL,
+CREATE TABLE CategoryLangData (
+    categoryID INTEGER UNSIGNED NOT NULL,
     languageID CHAR(2) NOT NULL,
     name VARCHAR(100),
     description TEXT,
     keywords VARCHAR(200),
-    CONSTRAINT PK_CatalogLangData PRIMARY KEY (catalogID, languageID)
+    CONSTRAINT PK_CategoryLangData PRIMARY KEY (categoryID, languageID)
 );
 
-CREATE INDEX IDX_CatalogLang_1 ON CatalogLangData (languageID);
+CREATE INDEX IDX_CatalogLang_1 ON CategoryLangData (languageID);
 
-CREATE INDEX IDX_CatalogLang_2 ON CatalogLangData (catalogID);
+CREATE INDEX IDX_CatalogLang_2 ON CategoryLangData (categoryID);
 
 # ---------------------------------------------------------------------- #
 # Add table "SpecFieldLangData"                                          #
@@ -342,8 +342,8 @@ CREATE TABLE Discount (
 # Foreign key constraints                                                #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE Product ADD CONSTRAINT Catalog_Product 
-    FOREIGN KEY (catalogID) REFERENCES Catalog (ID);
+ALTER TABLE Product ADD CONSTRAINT Category_Product 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID);
 
 ALTER TABLE Product ADD CONSTRAINT Manufacturer_Product 
     FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID);
@@ -351,8 +351,8 @@ ALTER TABLE Product ADD CONSTRAINT Manufacturer_Product
 ALTER TABLE Product ADD CONSTRAINT ProductImage_Product 
     FOREIGN KEY (defaultImageID) REFERENCES ProductImage (ID);
 
-ALTER TABLE Catalog ADD CONSTRAINT Catalog_Catalog 
-    FOREIGN KEY (parentNodeID) REFERENCES Catalog (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE Category ADD CONSTRAINT Category_Category 
+    FOREIGN KEY (parentNodeID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductLangData ADD CONSTRAINT Product_ProductLangData 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -369,14 +369,14 @@ ALTER TABLE Specification ADD CONSTRAINT Product_Specification
 ALTER TABLE Specification ADD CONSTRAINT SpecField_Specification 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID);
 
-ALTER TABLE SpecField ADD CONSTRAINT Catalog_SpecField 
-    FOREIGN KEY (catalogID) REFERENCES Catalog (ID);
+ALTER TABLE SpecField ADD CONSTRAINT Category_SpecField 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID);
 
-ALTER TABLE CatalogLangData ADD CONSTRAINT Language_CatalogLangData 
+ALTER TABLE CategoryLangData ADD CONSTRAINT Language_CategoryLangData 
     FOREIGN KEY (languageID) REFERENCES Language (ID) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-ALTER TABLE CatalogLangData ADD CONSTRAINT Catalog_CatalogLangData 
-    FOREIGN KEY (catalogID) REFERENCES Catalog (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE CategoryLangData ADD CONSTRAINT Category_CategoryLangData 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE SpecFieldLangData ADD CONSTRAINT SpecField_SpecFieldLangData 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID);

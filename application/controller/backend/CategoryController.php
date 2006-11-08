@@ -23,6 +23,7 @@ class CategoryController extends StoreManagementController
 
 		$response = new ActionResponse();
 		$response->setValue("catalogForm", $this->createCatalogForm());
+		$response->setValue("ID", $this->request->getValue("id"));
 		return $response;
 	}
 	
@@ -70,14 +71,16 @@ class CategoryController extends StoreManagementController
 		
 		if ($this->request->isValueSet("id"))
 		{
-			$catalog = ActiveRecord::getInstanceById('CategoryLangData', array('catalogID' => $this->request->getValue("id"), 'languageID' => $this->multi_language), true);
-			$data = $catalog->toArray();
+			ClassLoader::import("application.model.category.Category");
+			ClassLoader::import("application.model.category.CategoryLangData");
+			$category = ActiveRecord::getInstanceById('CategoryLangData', array('categoryID' => $this->request->getValue("id"), 'languageID' => 'en'), true);
+			$data = $category->toArray();
 				
 			$form->setData(array(
 				'name' => $data['name'],
-				'description' => 'description'
+				'description' => $data['description']
 			));
-		} 
+		}
 		else if($this->request->isValueSet('parent')) 
 		{
 			$form->setValue('parent', $this->request->getValue('parent'));

@@ -1,7 +1,6 @@
 {form handle=$catalogForm action="controller=backend.catalog action=save" method="post"}
-
 	<fieldset>
-		<legend>Category details</legend>
+		<legend>Category details {$ID}</legend>
 	
 		<label for="name">Category name:</label> 
 		{textfield name="name" id="name"}

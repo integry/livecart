@@ -1,13 +1,14 @@
 <?php
 ClassLoader::import("application.model.system.MultilingualDataObject");
 ClassLoader::import("application.model.category.CategoryLangData");
-
+ClassLoader::import("library.activerecord.util.tree.ARTreeNode");
 /**
  * Just for TEST purposes.
  *
  * @package application.model.product
  */
-class Category extends MultiLingualDataObject
+//class Category extends MultiLingualDataObject
+class Category extends ARTreeNode 
 {
 	/**
 	 * Define database schema used by this active record instance
@@ -17,9 +18,8 @@ class Category extends MultiLingualDataObject
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-		Tree::defineSchema($className);
-
 		$schema->setName("Category");
+		parent::defineSchema($className);
 	}
 
 	/**
@@ -55,7 +55,9 @@ class MultilingualCategory extends MultilingualDataObject
 		$schema->setName("Category");
 	}
 }
+*/
 
+/*
 class Category extends ARTreeNode
 {
 	private $multilingualCategory = null;
@@ -81,4 +83,5 @@ class Category extends ARTreeNode
 	}
 }
 */
+
 ?>

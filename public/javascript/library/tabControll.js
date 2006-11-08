@@ -113,6 +113,11 @@ TabControll.prototype = {
 		this.activateTab(this.activeTab);
 	},
 	
+	getActiveTab: function()
+	{
+		return this.activeTab;
+	},
+	
 	setTabUrl: function(tabId, url)
 	{
 		$('tabId').url = url;
