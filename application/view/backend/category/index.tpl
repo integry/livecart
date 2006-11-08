@@ -30,15 +30,20 @@
 				<li id="tabMainDetails" class="tab active"><a href="{link controller=backend.category action=form}">Main Details</a></li>
 				<li id="tabFields" class="tab inactive"><a href="{link controller=backend.specField action=index}">Fields</a></li>
 				<li id="tabFilters" class="tab inactive">Filters</li>
+				<li id="tabPermissions" class="tab inactive">Permissions</li>
+				<li id="tabImages" class="tab inactive">Images</li>
+				<li id="tabArticles" class="tab inactive">Articles</li>
 			</ul>
 		</div>
 		<div id="sectionContainer">
 			<div id="tabMainDetailsContent"></div>
 			<div id="tabFieldsContent"></div>
 			<div id="tabFiltersContent"></div>
+			<div id="tabPermissionsContent"></div>
+			<div id="tabImagesContent"></div>
+			<div id="tabArticlesContent"></div>
 		</div>
 	</div>
-
 
 <script type="text/javascript">
 	LiveCart.CategoryManager.init();

@@ -71,7 +71,7 @@ LiveCart.AjaxUpdater.prototype = {
 	{
 		// It would better if i could use something like "this" here
 		LiveCart.ajaxUpdaterInstance.updateHead(response);
-		LiveCart.ajaxUpdaterInstance.runJavaScripts(response);
+		//LiveCart.ajaxUpdaterInstance.runJavaScripts(response);
 		
 		Element.hide(LiveCart.ajaxUpdaterInstance.indicatorContainerId);
 	},

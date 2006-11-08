@@ -12,8 +12,13 @@ class CategoryController extends StoreManagementController
 {
 	
 	public function index()
+	{
+		$response = new ActionResponse();
+		return $response;
+	}
+	
+	public function form()
 	{		
-		$this->setLayout("categoryManager");
 		ClassLoader::import("framework.request.validator.Form");
 
 		$response = new ActionResponse();
