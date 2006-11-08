@@ -31,7 +31,7 @@
 			</ul>
 		</div>
 		<div id="sectionContainer">
-			<div id="tabMainDetailsContent">{$ACTION_VIEW}</div>
+			<div id="tabMainDetailsContent"></div>
 			<div id="tabFieldsContent"></div>
 			<div id="tabFiltersContent"></div>
 		</div>
