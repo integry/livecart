@@ -12,6 +12,8 @@
 {includeCss file="backend/dhtmlxtree/dhtmlXTree.css"}
 {include file="layout/header.tpl"}
 
+{pageTitle}Category manager. Selected: <span id="activeCategoryPath" style="font-weight: normal">Electronics > New Category</span>{/pageTitle}
+
 	<div id="catgegoryContainer" style="float:left; width: 260px;">
 		<div id="categoryBrowser" style="padding: 10px; border: 1px solid #ccc; background-color: #f1f1f1;">
 		</div>

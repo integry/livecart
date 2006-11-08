@@ -1,5 +1,3 @@
-{pageTitle}Category manager. Selected: <span id="activeCategoryPath" style="font-weight: normal">Electronics > New Category</span>{/pageTitle}
-
 {form handle=$catalogForm action="controller=backend.catalog action=save" method="post"}
 
 	<fieldset>
