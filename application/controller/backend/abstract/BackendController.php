@@ -3,6 +3,7 @@
 ClassLoader::import("application.controller.BaseController");
 ClassLoader::import("application.helper.*");
 ClassLoader::import("application.model.system.Language");
+ClassLoader::import("application.model.menu.*");
 ClassLoader::import("library.locale.*");
 
 /**
@@ -94,7 +95,7 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		return $this->locale->translator()->makeText($key, $params);
 	}	
 	
-	/*
+
 	public function init()
 	{
 		$this->setLayout("mainLayout");		
@@ -104,17 +105,19 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	
 	protected function menuSectionBlock() 
 	{			
+
 		$menuLoader = new MenuLoader();		
 		$structure = $menuLoader->getCurrentHierarchy($this->request->getControllerName(),	$this->request->getActionName());
-		
+	/*		
 		$response =	new BlockResponse();		
 		$response->setValue("topList", $menuLoader->getTopList());	
 		$response->setValue("menu_javascript", TigraMenuHelper::formatJsMenuArray($structure));	
-
-		return $response;
+*/
+		$response =	new BlockResponse();		
+		$response->setValue('items', $structure['items']);
+		return $response;	
 	}
-	*/
-	
+
 	
 	/**
 	 * Gets a @role tag value in a class and method comments

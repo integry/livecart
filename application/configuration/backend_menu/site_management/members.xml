@@ -12,18 +12,12 @@
 			<Title>Members</Title>
 			<Controller>backend.user</Controller>
 			<Action>index</Action>
-			<Items>
-				<Menu>
-					<Title>JUST FOR TEST</Title>				
-					<Controller></Controller>
-					<Action></Action>	
-				</Menu>
-				<Menu>
-					<Title>JUST FOR TEST</Title>
-					<Controller></Controller>
-					<Action></Action>	
-				</Menu>
-			</Items>		
 		</Menu>			
+		<Menu>
+			<Title>Another Item</Title>
+			<Controller>backend.user</Controller>
+			<Action>index</Action>
+		</Menu>			
+
 	</Items>
 </Menu>

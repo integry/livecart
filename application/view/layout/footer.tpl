@@ -58,10 +58,7 @@
 							<img src="image/backend/layout/top_home_button.jpg" id="homeButton"> Home
 						</td>
 						<td id="headerTopMenuContainer">							
-							
-							{foreach from=$topList item=item}
-							 &nbsp; &nbsp; <a href="{link controller=$item.controller action=$item.action}">{translate text=$item.title}</a>
-							{/foreach}							
+											
 							
 						</td>
 					</tr>
@@ -77,11 +74,11 @@
 		</tr>	
 	</table>
 
-<div id="pageTitle">{$PAGE_TITLE}</div>
-
+	<div id="pageTitleContainer">
+		<div id="pageTitle">{$PAGE_TITLE}</div>
+	</div>
 
 </div>
-
 
 </body>
 </html>

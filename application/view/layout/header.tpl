@@ -16,6 +16,10 @@
 	{$JAVASCRIPT} 
 
 	<script src="http://livecart/public/javascript/backend/specFieldManager.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		window.onload = startList;
+	</script>	
+	
 </head>
 <body>
 
