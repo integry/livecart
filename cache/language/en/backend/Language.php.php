@@ -1,0 +1,18 @@
+<?php $languageDefs = array (
+  '_languages' => 'Languages',
+  '_add_language' => 'Add new language',
+  '_admin_languages' => 'Manage Languages',
+  '_update_from_files' => 'Update language translations from files',
+  '_language_definitons' => 'Language translations',
+  '_edit_definitions' => 'Edit definitions',
+  '_set_as_default' => 'Set as default',
+  '_show_words' => 'Show translations',
+  '_statistic_languages' => 'Statistics: [quant,_1,language,languages,no languages]',
+  '_statistic_languages_full' => 'Statistics: [quant,_1,language,languages,no languages], active [quant,_2,language,languages,no languages]',
+  '_currentLanguage' => 'Current language',
+  '_selectLanguage' => 'Select language',
+  '_default_language' => 'Default language',
+  '_all' => 'All',
+  '_not_defined' => 'Translated',
+  '_defined' => 'Not translated',
+); ?>

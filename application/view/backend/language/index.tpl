@@ -1,7 +1,8 @@
 {loadScriptaculous}
 {includeJs file=backend/activeList.js}
+{includeJs file=backend/keyboard.js}
 
-{pageTitle}{translate text=_admin_languages}{/pageTitle}
+{pageTitle}{t _admin_languages}{/pageTitle}
 
 {literal}
 <script language="javascript">	
@@ -79,20 +80,19 @@
 </style>
 {/literal}
 
-<br />
-
 <div id="addLang" class="slideForm" style="display:none;" onkeydown="{literal}if (getPressedKey(event) == KEY_ESC) {restoreMenu('addLang', 'pageMenu');} {/literal} return true;" onFocus="document.getElementById('addLang-sel').focus();" tabIndex=1>
 	<div onFocus="">	
 		<form name="addform" method="post" action="{link language=$language controller=backend.language action=add}">
 			<select name="new_language" id="addLang-sel" style="width: 200px" tabIndex=3 onKeyDown="{literal}if (getPressedKey(event) == KEY_ENTER) {this.form.submit();} {/literal} return true;">
 			   {html_options options=$languages_select}
 			</select>
-			<input type="submit" value="{t _add_language}" style="width: 120px" name="sm" tabIndex=4>
-			or <a href="#" onClick="restoreMenu('addLang', 'pageMenu'); return false;">Cancel</a>
+			<input type="submit" value="{t _add_language}" name="sm" tabIndex=4>
+			{t _or} <a href="#" onClick="restoreMenu('addLang', 'pageMenu'); return false;">{t _cancel}</a>
 		</form>	
 	</div>
 </div>
 
+<br />
 
 <form name="activeform" method="post" action="{link language=$language controller=backend.language action=setEnabled}">
 	<input type="hidden" name="change_active">
@@ -108,53 +108,6 @@
 .enabled_1 {}
 .listSortHover {background-color: #DDDDDD;}
 </style>
-{/literal}
-
-{literal}
-<script>
-
-	function addlog(info)
-	{
-		document.getElementById('log').innerHTML += info + '<br />';  
-	}
-
-	function deselectText() 
-	{
-		if (document.selection)
-		{
-			document.selection.empty();
-		}
-		else if (window.getSelection)
-		{
-		    window.getSelection().removeAllRanges();
-		}
-	}
-
-	var KEY_ENTER = 13;
-	var KEY_ESC   = 27;
-	var KEY_UP    = 38;	
-	var KEY_DOWN  = 40;	
-	var KEY_DEL   = 46;
-
-	function getPressedKey(e)
-	{
-	    // IE
-		if (window.event) 
-	    {
-	    	keynum = e.keyCode;
-	    }
-
-	    // Netscape/Firefox/Opera
-		else if (e.which) 
-	    {
-	    	keynum = e.which;
-	    }	  	
-	    
-	    return keynum;
-	}
-
-</script>
-
 {/literal}
 
 {activeList id="languageList" sortable=true deletable=true handlerClass=langListHandler}

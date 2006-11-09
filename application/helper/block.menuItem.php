@@ -34,22 +34,19 @@ function smarty_block_menuItem($params, $content, Smarty $smarty, &$repeat)
 	}
 	else 
 	{
-		$onClick = '';
-		$href = '';
+		$item = new HtmlElement('a');
 		if ($smarty->get_template_vars('menuAction'))
 		{
-		  	$onClick = '';
 		  	$href = $smarty->get_template_vars('menuAction');
 		}
 		else if ($smarty->get_template_vars('menuPageAction'))
 		{
 		  	$onClick = $smarty->get_template_vars('menuPageAction');
 		  	$href = '#';
+			$item->setAttribute('onClick', $onClick  . '; return false;');
 		}
 
-		$item = new HtmlElement('a');
 		$item->setAttribute('href', $href);
-		$item->setAttribute('onClick', $onClick  . '; return false;');
 
 		// EXPERIMENTAL - set access key for menu item
 		$caption = $smarty->get_template_vars('menuCaption');

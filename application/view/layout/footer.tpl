@@ -80,5 +80,15 @@
 
 </div>
 
+<div id="log"></div>
+{literal}
+<script>
+	function addlog(info)
+	{
+		document.getElementById('log').innerHTML += info + '<br />';  
+	}
+</script>
+{/literal}
+
 </body>
 </html>

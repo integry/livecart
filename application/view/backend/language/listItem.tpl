@@ -3,10 +3,10 @@
 
 	<img src="image/localeflag/{$item.ID}.png" />
 
-	<span class="enabled_{$item.isEnabled}">{$item.name} ({$item.ID})</span> 
+	<span class="enabled_{$item.isEnabled}">{$item.name}</span> 
 
 	{if !$item.isEnabled}
-	(inactive)
+	({t _inactive})
 	{/if}
 		
 	<br />
