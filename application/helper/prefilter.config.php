@@ -2,9 +2,10 @@
 
 function smarty_prefilter_config($tplSource, $smarty)
 {
-	return preg_replace_callback('/{t(::(\w+)){0,1} (.+?)}/', '_translate_to_locale', $tplSource);
+	return preg_replace('/{t (.+?)}/', '{translate text=$1}', $tplSource);	
+//	return preg_replace_callback('/{t(::(\w+)){0,1} (.+?)}/', '_translate_to_locale', $tplSource);
 }
-
+/*
 function _translate_to_locale( $key )
 {
 	$word = isset($key[3]) ? $key[3] : '';
@@ -13,4 +14,5 @@ function _translate_to_locale( $key )
 	$locale = Locale::getCurrentLocale();
 	return ($controller ? "$controller => " : '') . $locale->translator()->translate($word);
 }
+*/
 ?>
