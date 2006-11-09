@@ -2,8 +2,9 @@
 
 ClassLoader::import("application.controller.backend.abstract.SiteManagementController");
 ClassLoader::import("application.model.*");
-ClassLoader::import("application.model.Locale.*");
+ClassLoader::import("application.model.system.*");
 ClassLoader::import("library.*");
+
 /**
  * Language management
  * Handles adding languages, modifying language definitions (translations), activating and deactivating languages
@@ -36,7 +37,6 @@ class LanguageController extends SiteManagementController
 	{
 		parent::init();
 		$this->addBlock("NAV", "languageSection");
-		$this->setLayout("mainLayout");
 	}
 
 	/**
@@ -71,7 +71,7 @@ class LanguageController extends SiteManagementController
 		$enDefs = array();
 		foreach ($files as $file)
 		{
-			$relPath = substr($file, strlen($fileDir));
+			$relPath = substr($file, strlen($fileDir) + 1);
 			
 			// get default English definitions (to get all definition keys)
 			$keys = $enLocale->translationManager()->getFileDefs($file);
@@ -85,10 +85,14 @@ class LanguageController extends SiteManagementController
 				  		  			
 			// get language default definitions
 			$default = $editLocale->translationManager()->getFileDefs($relPath, true);
+			if (!is_array($default))
+			{
+				$default = array();
+			}
 			
 			// get translated definitions
 			$transl = $editLocale->translationManager()->getCacheDefs($relPath, true);
-			
+						
 			// put all definitions together
 			$translated[$relPath] = array_merge($keys, $default, $transl);	
 		}
@@ -154,13 +158,14 @@ class LanguageController extends SiteManagementController
 		$nfiles = array();
 		foreach ($files as $key => $value)
 		{
+			$value = substr($value, strlen($fileDir) + 1);
 			$nfiles[$value] = ucfirst(basename($value, '.' . self::langFileExt));
 		}	
-	
-		$files = array_merge(array('' => $this->locale->translator()->translate('_allFiles')), $nfiles);
+		
+		$files = array_merge(array('' => $this->translate('_allFiles')), $nfiles);
 		
 		$response->setValue("files", $files);
-		$response->setValue("file", $file);
+		$response->setValue("file", $this->request->getValue("file"));
 
 		$response->setValue("en_definitions", $enDefs);
 		$response->setValue("definitions", $translated);
@@ -296,10 +301,28 @@ class LanguageController extends SiteManagementController
 	 * Sets default language.
 	 * @return ActionRedirectResponse
 	 */
-	function setDefault()
+	public function setDefault()
 	{
 		Language::setDefault($this->request->getValue("id"));  	
 		return new ActionRedirectResponse($this->request->getControllerName(), "index");		
+	}
+
+	/**
+	 * Sets if language is enabled
+	 * @return ActionResponse
+	 */
+	public function setEnabled()
+	{
+		$id = $this->request->getValue('id');		
+		Language::setEnabled($id, $this->request->getValue("status"));
+		
+		$this->setLayout('empty');		
+		$response = new ActionResponse();
+		$item = Language::getInstanceById($id)->toArray();
+		$item['name'] = $this->locale->info()->getLanguageName($item['ID']);
+		$response->setValue('item', $item);
+
+		return $response;		
 	}
 
 	/**
@@ -332,25 +355,6 @@ class LanguageController extends SiteManagementController
 
 		return new ActionRedirectResponse($this->request->getControllerName(), "index", array());
 	}
-
-	/**
-	 * Sets if language is enabled
-	 * @return ActionRedirectResponse
-	 */
-	public function setEnabled()
-	{
-		$id = $this->request->getValue('id');		
-		Language::setEnabled($id, $this->request->getValue("status"));
-		
-		$this->setLayout('empty');		
-		$response = new ActionResponse();
-		$item = Language::getInstanceById($id)->toArray();
-		$item['name'] = $this->locale->info()->getLanguageName($item['ID']);
-		$response->setValue('item', $item);
-
-		return $response;		
-	}
-
 }
 
 ?>
