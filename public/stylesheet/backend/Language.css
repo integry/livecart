@@ -1,0 +1,45 @@
+input label {
+  background-color: green;
+}
+
+.langTranslations {
+	width: 700px;  	
+	margin-bottom: 20px;
+}
+
+.langTranslations caption {
+	text-align: left;
+	font-weight: bold;  
+}  
+
+.langTranslations tbody {
+
+}  
+
+.langTranslations td {
+	padding: 3px;
+	padding-top: 5px;
+}  
+
+.langTranslations input {
+	width: 445px;
+}  
+
+.langTranslations img {
+  	vertical-align: middle;
+  	margin-right: 5px;
+}
+
+.lang-key {
+  	width: 250px;
+}
+
+.lang-translation {
+  	width: 450px;
+  	padding-right: 5px;
+}
+
+.lang-translation span {
+	color: #CCCCCC;
+	font-size: smaller;
+}
