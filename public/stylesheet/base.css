@@ -369,6 +369,11 @@ html>body #minHeight{ /*safari wrapper */
 	padding: 10px;
 }
 
+/* Common classes */
+.altrow { /* used for styling "zebra" tables */
+  	background-color: #EEEEEE;
+}
+
 
 /* Form styling */
 /*
