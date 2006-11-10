@@ -16,4 +16,7 @@
   '_defined' => 'Not translated',
   '_default_language' => 'Default language',
   '_allFiles ' => ' All files',
+  '_or' => 'or',
+  '_cancel' => 'Cancel',
+  '_inactive' => 'Inactive',
 ); ?>

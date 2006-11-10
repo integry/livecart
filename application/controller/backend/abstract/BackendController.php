@@ -41,12 +41,13 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		$this->locale =	Locale::getInstance($this->localeName);	
 		$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('cache.language'));
 		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('application.configuration.language'));
-		$this->loadLanguageFiles();	
 		Locale::setCurrentLocale($this->localeName);	
-		
+
+		// automatically preload language, JS and CSS files
+		$this->autoPreloadFiles();
 	}
 	
-	private function loadLanguageFiles()
+	private function autoPreloadFiles()
 	{
 		// get all inherited controller classes
 		$class = get_class($this);
@@ -63,15 +64,28 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		// get class file paths (to be mapped with language file paths) and load language files
 		$included = array();
 		$controllerRoot = Classloader::getRealPath('application.controller');
+		$renderer = Application::getInstance()->getRenderer()->getSmartyInstance();
+		
+		require_once('function.includeJs.php');
+		require_once('function.includeCss.php');
+				
 		foreach (array_reverse(get_included_files()) as $file)
 		{
 			$class = basename($file,'.php');
 			if (class_exists($class, false) && is_subclass_of($class, 'Controller'))
 			{
-				$file = substr($file, strlen($controllerRoot), -14);			  
+				$file = substr($file, strlen($controllerRoot) + 1, -14);			  
+							
+				// language file
 				$this->locale->translationManager()->loadFile($file);
+				
+				// JavaScript
+				smarty_function_includeJs(array('file' => $file . '.js'), $renderer);
+				
+				// CSS
+				smarty_function_includeCss(array('file' => $file . '.css'), $renderer);
 			}
-		}
+		}	  	
 	}
 	
 	/**
@@ -108,11 +122,7 @@ abstract class BackendController extends BaseController implements LCiTranslator
 
 		$menuLoader = new MenuLoader();		
 		$structure = $menuLoader->getCurrentHierarchy($this->request->getControllerName(),	$this->request->getActionName());
-	/*		
-		$response =	new BlockResponse();		
-		$response->setValue("topList", $menuLoader->getTopList());	
-		$response->setValue("menu_javascript", TigraMenuHelper::formatJsMenuArray($structure));	
-*/
+
 		$response =	new BlockResponse();		
 		$response->setValue('items', $structure['items']);
 		return $response;	

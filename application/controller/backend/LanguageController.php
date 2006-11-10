@@ -56,7 +56,7 @@ class LanguageController extends SiteManagementController
 	 * @return ActionResponse	 
 	 */
 	public function edit()
-	{
+	{		
 		// get locale instance for the language being translated
 		$editLocaleName = $this->request->getValue('id');
 		$editLocale = Locale::getInstance($editLocaleName);
@@ -137,7 +137,7 @@ class LanguageController extends SiteManagementController
 			{
 			  	foreach ($values as $key => $value)
 			  	{
-				    if (($selectedDefined && '' == $value) || ($selectedNotDefined && '' != $value))
+				    if (($selectedDefined && '' != $value) || ($selectedNotDefined && '' == $value))
 				    {
 					  	unset($values[$key]);
 					}
@@ -149,6 +149,17 @@ class LanguageController extends SiteManagementController
 				}
 			}  
 		}		
+		
+		// do not show files with no displayable definitions
+		foreach ($translated as $file => $values)
+		{
+		  	if (count($values) == 0)
+		  	{
+			    unset($translated[$file]);
+			}
+		}
+
+//		echo strlen(json_encode($translated));exit;
 
 		$response = new ActionResponse();
 		$response->SetValue("language", $this->request->getValue("language"));

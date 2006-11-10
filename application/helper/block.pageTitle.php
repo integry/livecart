@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Form field error message block
+ * Set page title
  *
  * @package application.helper
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Rinalds Uzkalns <rinalds@integry.net>
  */
 function smarty_block_pageTitle($params, $content, $smarty, &$repeat) 
 {

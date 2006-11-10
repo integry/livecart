@@ -13,6 +13,16 @@
 function smarty_function_includeJs($params, $smarty) 
 {
 	$fileName = $params['file'];
+	
+	// fix slashes
+	$fileName = str_replace(chr(92),'/', $fileName);
+	
+	// check if file exists
+	if (!file_exists(ClassLoader::getRealPath('public.javascript.') . $fileName))
+	{
+		return false; 	
+	}
+	
 	$currentContent = $smarty->get_template_vars("JAVASCRIPT");
 	if (strpos($currentContent, $fileName) === false)
 	{

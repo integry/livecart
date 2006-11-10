@@ -7,15 +7,16 @@
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 	<title>{$TITLE}</title>
 	<base href="{$BASE_URL}" /> 
-	<!-- Css includes -->
-	{includeCss file=base.css}
 	
+	<!-- Css includes -->
+	{includeCss file=base.css}	
 	{$STYLESHEET}
 	
 	<!-- JavaScript includes -->
+	{includeJs file=backend/keyboard.js}
+	{includeJs file=json.js}
 	{$JAVASCRIPT} 
 
-	<script src="http://livecart/public/javascript/backend/specFieldManager.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		window.onload = startList;
 	</script>	

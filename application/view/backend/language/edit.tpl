@@ -1,109 +1,82 @@
-{pageTitle}{translate text=_language_definitons} ({$edit_language}){/pageTitle}
+{pageTitle}{translate text=_language_definitons} (<img src="image/localeflag/{$id}.png" /> {$edit_language}){/pageTitle}
 
-{literal}
-<script language="javascript">	
-	function eventFileChanged(file, show) 
-	{	  		
-{/literal}
-		document.location.href = '{link language=$language controller=backend.language action=edit id=$id}?show=' +show + '&file=' + file;
-{literal}
-	}		
-</script>
-
-<style>
-input label {
-  background-color: green;
-}
-
-.langTranslations {
-	width: 650px;  	
-	margin-bottom: 20px;
-}
-
-.langTranslations caption {
-	text-align: left;
-	font-weight: bold;  
-}  
-
-.langTranslations tbody {
-	border: 1px solid #777777;	
-}  
-
-.langTranslations td {
-	padding: 3px;
-}  
-
-.langTranslations input {
-	width: 100%;
-}  
-
-.lang-key {
-  	width: 200px;
-}
-
-.lang-translation {
-  	width: 450px;
-}
-
-</style>
-
-<script>
-function langToggleVisibility(tableInstance)
-{
-	tbody = tableInstance.getElementsByTagName('tbody')[0];
-
-	if ('none' == tbody.style.display)
-	{
-		tbody.style.display = '';
-	}
-	else 
-	{
-		tbody.style.display = 'none';	  
-	}
-	  
-}
+{*
+{literal} 	
+<script type="text/javascript"> 
+	var translations = {/literal}{$translations}{literal}
+	var translations = {/literal}{$translations}{literal}
 </script>
 {/literal}
+*}
 
-<form name="editLang" method="post" action="{link language=$language controller=backend.language action=save id=$id}">
-	<select name="file" style="width: 200px" onChange="eventFileChanged(this.value);">
-	   {html_options options=$files selected=$file}
-	</select>
-	<br /><br />
-	<strong>{t _show_words}</b><br />
+<form id="navLang" method="post" style="margin-bottom: 10px;" action="{link controller=backend.language action=edit id=$id}">
+	<input type="hidden" name="langFileSel" />
+
+	<strong>{t _show_words}:</strong> 
 	
-	<input type="radio" name="show" value="all" id="show-all" {$selected_all} onclick="eventFileChanged('{$file}', this.value)">
+	<input type="radio" name="show" value="all" id="show-all" {$selected_all} onclick="this.form.submit()">
 		<label for="show-all">{t _all}</label>
 	</input>
 
-	<input type="radio" name="show" value="notDefined" id="show-undefined" {$selected_not_defined} onclick="eventFileChanged('{$file}', this.value)">
+	<input type="radio" name="show" value="notDefined" id="show-undefined" {$selected_not_defined} onclick="this.form.submit()">
 		<label for="show-undefined">{t _not_defined}</label>
 	</input>
 	
-	<input type="radio" name="show" value="defined" id="show-defined" {$selected_defined} onclick="eventFileChanged('{$file}', this.value)">
+	<input type="radio" name="show" value="defined" id="show-defined" {$selected_defined} onclick="this.form.submit()">
 		<label for="show-defined">{t _defined}</label>
 	</input>
+</form>
+
+<form name="editLang" method="post" action="{link controller=backend.language action=save id=$id}">
 	
-	<br><br>
+	<input type="hidden" name="langFileSel" />
+	<input type="hidden" name="show" />
+	
+{*
+	<table class="langTranslations dom-template">
+		<caption>
+			<img src="image/backend/icon/collapse.gif">
+			<a href="#" onkeydown="{literal}if (getPressedKey(event) != KEY_TAB && getPressedKey(event) != KEY_SHIFT) {langToggleVisibility(this.parentNode.parentNode, '{$file}');}{/literal}" onClick="return false;">{$file}</a>
+		</caption>
+		<tbody style="display: none;">	
+			{foreach from=$values key=key item=item name=trans}
+				<tr{zebraRow}>
+					<td class="lang-key">
+						{$key}	
+					</td>
+
+					<td class="lang-translation">
+						<input type="text" name="lang[{$file}][{$key}]" value="{$item|escape:"quotes"}">
+						<span>{$en_definitions.$file.$key}</span>
+					</td>
+				<tr>	
+			{/foreach}
+		</tbody>	
+	</table>
+*}	
+
 	{foreach from=$definitions key=file item=values}
 		<table class="langTranslations">	
-			<caption onClick="langToggleVisibility(this.parentNode);">{$file}</caption>
+			<caption onClick="langToggleVisibility(this.parentNode, '{$file}');">
+				<img src="image/backend/icon/collapse.gif">
+				<a href="#" onkeydown="{literal}if (getPressedKey(event) != KEY_TAB && getPressedKey(event) != KEY_SHIFT) {langToggleVisibility(this.parentNode.parentNode, '{$file}');}{/literal}" onClick="return false;">{$file}</a>
+			</caption>
 			<tbody style="display: none;">	
-				{foreach from=$values key=key item=item}
-					<tr>
+				{foreach from=$values key=key item=item name=trans}
+					<tr{zebraRow}>
 						<td class="lang-key">
 							{$key}	
 						</td>
 
 						<td class="lang-translation">
 							<input type="text" name="lang[{$file}][{$key}]" value="{$item|escape:"quotes"}">
-							<br/>
-							<small><span style="color:#CCCCCC">{$en_definitions.$file.$key}</span></small>
+							<span>{$en_definitions.$file.$key}</span>
 						</td>
 					<tr>	
 				{/foreach}
 			</tbody>
 		</table>
 	{/foreach}
+
 	<input type="submit" value="{t _save}">
 </form>
