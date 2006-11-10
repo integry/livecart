@@ -1,6 +1,6 @@
 <?php
-ClassLoader::import("application.model.system.MultilingualDataObject");
-ClassLoader::import("application.model.category.CategoryLangData");
+//ClassLoader::import("application.model.system.MultilingualDataObject");
+//ClassLoader::import("application.model.category.CategoryLangData");
 ClassLoader::import("library.activerecord.util.tree.ARTreeNode");
 /**
  * Just for TEST purposes.
@@ -20,6 +20,12 @@ class Category extends ARTreeNode
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("Category");
 		parent::defineSchema($className);
+		
+		$schema->registerField(new ARField("name", ARArray::instance()));
+		$schema->registerField(new ARField("description", ARArray::instance()));
+		$schema->registerField(new ARField("keywords", ARArray::instance()));
+		$schema->registerField(new ARField("isActive", ARBool::instance()));
+		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
 	}
 
 	/**

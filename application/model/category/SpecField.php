@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import("application.model.system.MultilingualDataObject");
+ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.category.SpecFieldLangData");
 ClassLoader::import("application.model.category.Category");
 
@@ -9,7 +9,7 @@ ClassLoader::import("application.model.category.Category");
  *
  * @package application.model.product
  */
-class SpecField extends MultilingualDataObject
+class SpecField extends MultilingualObject
 {
 
 	public static function defineSchema($className = __CLASS__)
@@ -17,12 +17,15 @@ class SpecField extends MultilingualDataObject
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("SpecField");
 
-		$schema->registerField(new ARPrimaryKeyField("ID", Integer::instance()));
-		$schema->registerField(new ARForeignKeyField("catalogID", "Catalog", "ID", "Catalog", Integer::instance()));
-		$schema->registerField(new ARField("type", Integer::instance(2)));
-		$schema->registerField(new ARField("dataType", Integer::instance(2)));
-		$schema->registerField(new ARField("position", Integer::instance(2)));
-		$schema->registerField(new ARField("handle", Varchar::instance(40)));
+		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("catalogID", "Catalog", "ID", "Catalog", ARInteger::instance()));
+		
+		$schema->registerField(new ARField("name", ARArray::instance()));
+		$schema->registerField(new ARField("description", ARArray::instance()));
+		$schema->registerField(new ARField("type", ARInteger::instance(2)));
+		$schema->registerField(new ARField("dataType", ARInteger::instance(2)));
+		$schema->registerField(new ARField("position", ARInteger::instance(2)));
+		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
 	}
 
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)

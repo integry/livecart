@@ -1,14 +1,13 @@
 <?php
 
-ClassLoader::import("application.model.MultilingualDataObject");
-ClassLoader::import("application.model.product.FilterGroupLangData");
+ClassLoader::import("application.model.system.MultilingualObject");
 
 /**
  * Filter group model
  *
  * @package application.model.product
  */
-class FilterGroup extends MultilingualDataObject
+class FilterGroup extends MultilingualObject
 {
 
 	public static function defineSchema($className = __CLASS__)
@@ -19,6 +18,8 @@ class FilterGroup extends MultilingualDataObject
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("catalogID", "Catalog", "ID", "Catalog", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("specFieldID", "SpecField", "ID", "SpecField", ARInteger::instance()));
+		
+		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance()));
 		$schema->registerField(new ARField("isEnabled", ARInteger::instance(1)));
 	}
