@@ -1,14 +1,13 @@
 <?php
-//ClassLoader::import("application.model.system.MultilingualDataObject");
-//ClassLoader::import("application.model.category.CategoryLangData");
-ClassLoader::import("library.activerecord.util.tree.ARTreeNode");
+
+ClassLoader::import("application.model.system.ActiveTreeNode");
+
 /**
- * Just for TEST purposes.
+ * ...
  *
- * @package application.model.product
+ * @package application.model.category
  */
-//class Category extends MultiLingualDataObject
-class Category extends ARTreeNode 
+class Category extends ActiveTreeNode 
 {
 	/**
 	 * Define database schema used by this active record instance

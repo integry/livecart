@@ -11,7 +11,7 @@ class Store
 {
 
 	/**
-	 * K-Shop operates on a single store object
+	 * LiveCart operates on a single store object
 	 *
 	 * @var Store
 	 */

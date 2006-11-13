@@ -13,12 +13,6 @@ ClassLoader::import("application.controller.backend.abstract.BackendController")
  */
 class StoreManagementController extends BackendController 
 {
-	/*
-	public function init()
-	{
-		$this->setLayout("mainLayout");
-	}
-	*/
 }
 
 ?>

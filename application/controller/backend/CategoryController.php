@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
+ClassLoader::import("application.model.category.Category");
 
 /**
  * Controller for catalog (product category) related actions
@@ -17,90 +18,93 @@ class CategoryController extends StoreManagementController
 		return $response;
 	}
 	
+	/**
+	 * Displays category form (for creating a new category or modifying an existing one)
+	 *
+	 * @return ActionResponse
+	 */
 	public function form()
 	{		
 		ClassLoader::import("framework.request.validator.Form");
 
 		$response = new ActionResponse();
-		$response->setValue("catalogForm", $this->createCatalogForm());
-		$response->setValue("ID", $this->request->getValue("id"));
+		$form = $this->buildForm();
+		$response->setValue("catalogForm", $form);
+		
+		if ($this->request->getValue("mode") != "create" && $this->request->isValueSet("id"))
+		{
+			$category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
+			$form->setData($category->toArray());
+		}
+		$response->setValue("mode", $this->request->getValue("mode"));
+
 		return $response;
 	}
 	
 	/**
-	 * Add catalog form
+	 * Create a new category
+	 * @return ActionRedirectResponse
 	 */
-	public function add()
-	{		
-		$response = new ActionResponse();
-		$response->setValue("catalogForm", $this->createCatalogForm());
+	public function create()
+	{
+		$parentId = $this->request->getValue("id", 0);
+		$defaultLang = "en";
+		$validator = $this->buildValidator();
 		
-		return $response;
+		if ($validator->isValid())
+		{
+			$parent = ActiveTreeNode::getInstanceByID("Category", $parentId);
+			$categoryNode = ActiveTreeNode::getNewInstance("Category", $parent);
+			
+			$categoryNode->setValueByLang($defaultLang, $this->request->getValue("name"));
+			$categoryNode->setValueByLang($defaultLang, $this->request->getValue("description"));
+			$categoryNode->setValueByLang($defaultLang, $this->request->getValue("keywords"));
+			$categoryNode->isActive($this->request->getValue("isActive"));
+			
+			$categoryNode->save();
+		}
+		else
+		{
+			return new ActionRedirectResponse($this->request->getControllerName(), "form");
+		}
 	}
 	
 	public function update()
 	{
-		if($id = $this->request->getValue('id', false))
+		$validator = $this->buildValidator();
+		
+		if($validator->isValid())
 		{			
 			$response = new ActionResponse();
-			$response->setValue("catalogForm", $this->createCatalogForm());
-			$response->setValue('id', $id);
+			$categoryNode = ActiveTreeNode::getInstanceByID("Category", $this->request->getValue("id"));
 			
-			return $response;
+			return new ActionRedirectResponse("backend.category", "index");
 		}
 		else 
 		{
-			return new ActionRedirectResponse($this->request->getControllerName(), "index");
+			return new ActionRedirectResponse($this->request->getControllerName(), "form");
 		}
 	}
-
 	
-	/**
-	 * Creates form object and defines validation rules
-	 * 
-	 * @return Form
-	 */
-	private function createCatalogForm()
+	public function viewTree()
 	{
-		ClassLoader::import("framework.request.validator.*");
+		$rootNode = ActiveTreeNode::getRootNode("Category", true);
+		$rootNode->load();
 		
-		$validator = new RequestValidator("catalogForm", $this->request);
-		$validator->addCheck("name", new MinLengthCheck($this->translate("Name must be at least two chars length"), 2));
-		
-		$form = new Form($validator);
-		
-		if ($this->request->isValueSet("id"))
-		{
-			ClassLoader::import("application.model.category.Category");
-			ClassLoader::import("application.model.category.CategoryLangData");
-			$category = ActiveRecord::getInstanceById('CategoryLangData', array('categoryID' => $this->request->getValue("id"), 'languageID' => 'en'), true);
-			$data = $category->toArray();
-				
-			$form->setData(array(
-				'name' => $data['name'],
-				'description' => $data['description']
-			));
-		}
-		else if($this->request->isValueSet('parent')) 
-		{
-			$form->setValue('parent', $this->request->getValue('parent'));
-		}
+		echo "<pre>"; print_r($rootNode->toArray()); echo "</pre>";
+	}
+
+	private function buildValidator()
+	{
+		$validator = new RequestValidator("category", $this->request);
+		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("Catgory name should not be empty")));
+		return $validator;
+	}
 	
-		return $form; 
-	}
-
-	public function fields()
+	private function buildForm()
 	{
-		$response = new ActionResponse();
-		$response->setValue("action", "fields");
-		return $response;
-	}
-
-	public function filters()
-	{
-		$response = new ActionResponse();
-		$response->setValue("action", "filters");
-		return $response;
+		$form = new Form($this->buildValidator());
+		return $form;
 	}
 }
 
