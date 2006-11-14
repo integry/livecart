@@ -64,8 +64,8 @@ class Language extends ActiveRecordModel
 		
 		$languages = Language::getRecordSet("Language", $filter, true);
 		
-		if (count($languages->getIterator()) == 0) {
-			
+		if (count($languages->getIterator()) == 0)
+		{	
 			return false;			
 		}
 		
@@ -103,6 +103,8 @@ class Language extends ActiveRecordModel
 	/**
 	 * Adds new language to database
 	 * @param string(2) $ID
+	 * 
+	 * @deprecated
 	 */
 	public static function add($ID) 
 	{			
@@ -121,7 +123,8 @@ class Language extends ActiveRecordModel
 		$lang->save(self::PERFORM_INSERT);  
 		
 		return true;	
-	}		
+	}
+	
 	
 	/**
 	 * Checks whether the language is systems default language
@@ -129,7 +132,7 @@ class Language extends ActiveRecordModel
 	 */
 	public function isDefault()
 	{
-	  	return $this->isDefault->get();
+	  	return (bool)$this->isDefault->get();
 	}
 		
 	/**

@@ -4,8 +4,9 @@ ClassLoader::import("application.model.system.ActiveTreeNode");
 ClassLoader::import("application.model.system.MultilingualObjectInterface");
 
 /**
- * ...
+ * Product category model
  *
+ * @author Saulius Rupainis <saulius@integry.net>
  * @package application.model.category
  */
 class Category extends ActiveTreeNode implements MultilingualObjectInterface
@@ -50,6 +51,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return SpecField::getRecordSetArray($filter);
 	}
 	
+	public function createHandleString()
+	{
+	}
 	
 	public function setValueByLang($fieldName, $langCode, $value)
 	{

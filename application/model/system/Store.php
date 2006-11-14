@@ -9,7 +9,8 @@
  */
 class Store
 {
-
+	private $languageList = null;
+	
 	/**
 	 * LiveCart operates on a single store object
 	 *
@@ -27,18 +28,60 @@ class Store
 	}
 
 	/**
-	 * Gets a list of languages that are being used in a store
+	 * Gets a record set of installed languages
 	 *
-	 * @return array
+	 * @return ARSet
 	 */
 	public function getLanguageList()
 	{
-		ClassLoader::import("application.model.Language");
-
-		$langFilter = new ARSelectFilter();
-		$langFilter->setCondition(new EqualsCond(new ARFieldHandle("Language", "isEnabled"), 1));
-		$languageList = ActiveRecord::getRecordSetArray("Language", $langFilter);
-		return $languageList;
+		if ($this->languageList == null)
+		{
+			ClassLoader::import("application.model.system.Language");
+	
+			$langFilter = new ARSelectFilter();
+			$langFilter->setCondition(new EqualsCond(new ARFieldHandle("Language", "isEnabled"), 1));
+			$this->languageList = ActiveRecordModel::getRecordSet("Language", $langFilter);
+		}
+		return $this->languageList;
+	}
+	
+	/**
+	 * Gets an installed language code array
+	 * 
+	 * @return array
+	 */
+	public function getLanguageArray($includeDefaultLanguage = false)
+	{
+		$langList = $this->getLanguageList();
+		$langArray = array();
+		$defaultLangCode = $this->getDefaultLanguageCode();
+		foreach ($langList as $lang)
+		{
+			if ($defaultLangCode != $lang->getID() || $includeDefaultLanguage)
+			{
+				$langArray[] = $lang->getID();
+			}
+		}
+		return $langArray;
+	}
+	
+	/**
+	 * Gets a code of default store language
+	 *
+	 * @return string
+	 */
+	public function getDefaultLanguageCode()
+	{
+		$langList = $this->getLanguageList();
+		$langArray = array();
+		foreach ($langList as $lang)
+		{
+			if ($lang->isDefault())
+			{
+				return $lang->getID();
+			}
+		}
+		return false;
 	}
 }
 

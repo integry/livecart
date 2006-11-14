@@ -4,7 +4,7 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
 ClassLoader::import("application.model.category.Category");
 
 /**
- * Controller for catalog (product category) related actions
+ * Product Category controller
  *
  * @package application.controller.backend
  * @author Saulius Rupainis <saulius@integry.net>
@@ -36,34 +36,33 @@ class CategoryController extends StoreManagementController
 			$category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
 			$form->setData($category->toArray());
 		}
+		
+		$response->setValue("languageList", $this->store->getLanguageArray());
 		$response->setValue("mode", $this->request->getValue("mode"));
 
 		return $response;
 	}
 	
 	/**
-	 * Create a new category
+	 * Creates a new category record
+	 * 
 	 * @return ActionRedirectResponse
 	 */
 	public function create()
 	{
-		$parentId = $this->request->getValue("id", 0);
-		$defaultLang = "en";
-		$validator = $this->buildValidator();
-		
+		$validator = $this->buildValidator();	
 		if ($validator->isValid())
 		{
+			$parentId = $this->request->getValue("id", 0);	
 			$parent = ActiveTreeNode::getInstanceByID("Category", $parentId);
 			$categoryNode = ActiveTreeNode::getNewInstance("Category", $parent);
 			
 			$multilingualFields = array("name", "description", "keywords");
-			$langArray = array("en", "lt", "lv");
-			$categoryNode->setValueArrayByLang($multilingualFields, $defaultLang, $langArray, $this->request);
-			//$categoryNode->setValueByLang("name", $defaultLang, $this->request->getValue("name"));
-			//$categoryNode->setValueByLang("description", $defaultLang, $this->request->getValue("description"));
-			//$categoryNode->setValueByLang("keywords", $defaultLang, $this->request->getValue("keywords"));
-			$categoryNode->isActive->set($this->request->getValue("isActive"));
+			$defaultLang = $this->store->getDefaultLanguageCode();
+			$langArray = $this->store->getLanguageArray();
 			
+			$categoryNode->setValueArrayByLang($multilingualFields, $defaultLang, $langArray, $this->request);
+			$categoryNode->isActive->set($this->request->getValue("isActive"));
 			$categoryNode->save();
 		}
 		else
@@ -72,13 +71,16 @@ class CategoryController extends StoreManagementController
 		}
 	}
 	
+	/**
+	 * Updates a category record
+	 *
+	 * @return ActionRedirectResponse
+	 */
 	public function update()
 	{
 		$validator = $this->buildValidator();
-		
 		if($validator->isValid())
 		{			
-			$response = new ActionResponse();
 			$categoryNode = ActiveTreeNode::getInstanceByID("Category", $this->request->getValue("id"));
 			
 			return new ActionRedirectResponse("backend.category", "index");

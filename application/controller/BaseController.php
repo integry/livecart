@@ -17,12 +17,24 @@ abstract class BaseController extends Controller
 {
 
 	/**
-	 * Request creator
+	 * System user
 	 *
 	 * @var User
 	 */
 	protected $user = null;
+	
+	/**
+	 * Session instance
+	 *
+	 * @var Session
+	 */
 	protected $session = null;
+	
+	/**
+	 * Router instance
+	 *
+	 * @var Router
+	 */
 	protected $router = null;
 	
 	/**

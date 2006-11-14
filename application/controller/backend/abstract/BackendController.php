@@ -10,14 +10,24 @@ ClassLoader::import("application.model.system.Store");
 /**
  * Generic backend controller for administrative tools (actions, modules etc.)
  *
- * @package application.controller
+ * @package application.backend.controller.abstract
  */
 abstract class BackendController extends BaseController implements LCiTranslator 
 {	
+	/**
+	 * Locale instance that application operates on
+	 *
+	 * @var Locale
+	 */
 	protected $locale = null;
 	protected $localeName;
-	protected $rootDirectory = "";//"/k-shop";
-	//protected $uploadDir = "upload/images/products/";
+	protected $rootDirectory = "";
+	
+	/**
+	 * Store instance
+	 *
+	 * @var Store
+	 */
 	protected $store = null;
 	
 	/*
@@ -45,11 +55,13 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('application.configuration.language'));
 		Locale::setCurrentLocale($this->localeName);	
 		$this->store = Store::getInstance();
-
-		// automatically preload language, JS and CSS files
 		$this->autoPreloadFiles();
 	}
 	
+	/**
+	 * 	Automatically preloads language, JS and CSS files
+	 *
+	 */
 	private function autoPreloadFiles()
 	{
 		// get all inherited controller classes
@@ -78,14 +90,11 @@ abstract class BackendController extends BaseController implements LCiTranslator
 			if (class_exists($class, false) && is_subclass_of($class, 'Controller'))
 			{
 				$file = substr($file, strlen($controllerRoot) + 1, -14);			  
-							
+	
 				// language file
 				$this->locale->translationManager()->loadFile($file);
 				
-				// JavaScript
 				smarty_function_includeJs(array('file' => $file . '.js'), $renderer);
-				
-				// CSS
 				smarty_function_includeCss(array('file' => $file . '.css'), $renderer);
 			}
 		}	  	

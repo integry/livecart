@@ -21,14 +21,28 @@
 		<label for="isActive"> </label> 
 		{checkbox name="isActive"} Category is activated
 		<br/>
-			
-		<label for="submit"> </label> 
-		<input type="submit" class="submit" id="submit" value="save"/>
 	
 	</fieldset>
+	
+	{foreach from=$languageList item=lang}
+	<fieldset>
+		<legend>Translate to: {$lang}</legend>
+			<label>Category name:</label> 
+			{textfield name="name_$lang"}
+			<br/>
+				
+			<label>Details:</label> 
+			{textarea name="details_$lang"}
+			<br/>
+				
+			<label>Keywords:</label> 
+			{textarea name="keywords_$lang"}
+			<br/>
+	</fieldset>
+	{/foreach}
 	
 	<fieldset>
-		<legend>Translate to: </legend>
+		<label for="submit"> </label> 
+		<input type="submit" class="submit" id="submit" value="save"/>
 	</fieldset>
-
 {/form}
