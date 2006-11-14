@@ -1,13 +1,14 @@
 <?php
 
 ClassLoader::import("application.model.system.ActiveTreeNode");
+ClassLoader::import("application.model.system.MultilingualObjectInterface");
 
 /**
  * ...
  *
  * @package application.model.category
  */
-class Category extends ActiveTreeNode 
+class Category extends ActiveTreeNode implements MultilingualObjectInterface
 {
 	/**
 	 * Define database schema used by this active record instance
@@ -48,45 +49,46 @@ class Category extends ActiveTreeNode
 
 		return SpecField::getRecordSetArray($filter);
 	}
+	
+	
+	public function setValueByLang($fieldName, $langCode, $value)
+	{
+		$valueArray = $this->getFieldValue($fieldName);
+		if (!is_array($valueArray)) {
+			$valueArray = array();
+		}
+		$valueArray[$langCode] = $value;
+		$this->setFieldValue($fieldName, $valueArray);
+	}
+
+	public function getValueByLang($fieldName, $langCode, $returnDefaultIfEmpty = true)
+	{
+		$valueArray = $this->getFieldValue($fieldName);
+		return $valueArray[$langCode];
+	}
+	
+	public function setValueArrayByLang($fieldNameArray, $defaultLangCode, $langCodeArray, Request $request)
+	{
+		foreach ($fieldNameArray as $fieldName)
+		{
+			foreach ($langCodeArray as $langCode)
+			{
+				if ($langCode == $defaultLangCode)
+				{
+					$requestVarName = $fieldName;
+				}
+				else 
+				{
+					$requestVarName = $fieldName . "_" . $langCode;
+				}
+				if ($request->isValueSet($requestVarName))
+				{
+					$this->setValueByLang($fieldName, $langCode, $request->getValue($requestVarName));
+				}
+			}
+		}
+	}
 
 }
-
-/*
-class MultilingualCategory extends MultilingualDataObject
-{
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance("Category");
-		$schema->setName("Category");
-	}
-}
-*/
-
-/*
-class Category extends ARTreeNode
-{
-	private $multilingualCategory = null;
-	
-	protected function __construct()
-	{
-		$this->multilingualCategory = MultilingualCategory::getInstanceByID();
-	}
-	
-	public function lang($langCode)
-	{
-		return $this->multilingualCategory->lang($langCode);
-	}
-	
-	public static function getRecordSet($filter)
-	{
-		$recordSet = parent::getRecordSet(__CLASS__);
-	}
-	
-	public static function defineSchema()
-	{
-		
-	}
-}
-*/
 
 ?>

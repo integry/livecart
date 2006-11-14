@@ -56,10 +56,13 @@ class CategoryController extends StoreManagementController
 			$parent = ActiveTreeNode::getInstanceByID("Category", $parentId);
 			$categoryNode = ActiveTreeNode::getNewInstance("Category", $parent);
 			
-			$categoryNode->setValueByLang($defaultLang, $this->request->getValue("name"));
-			$categoryNode->setValueByLang($defaultLang, $this->request->getValue("description"));
-			$categoryNode->setValueByLang($defaultLang, $this->request->getValue("keywords"));
-			$categoryNode->isActive($this->request->getValue("isActive"));
+			$multilingualFields = array("name", "description", "keywords");
+			$langArray = array("en", "lt", "lv");
+			$categoryNode->setValueArrayByLang($multilingualFields, $defaultLang, $langArray, $this->request);
+			//$categoryNode->setValueByLang("name", $defaultLang, $this->request->getValue("name"));
+			//$categoryNode->setValueByLang("description", $defaultLang, $this->request->getValue("description"));
+			//$categoryNode->setValueByLang("keywords", $defaultLang, $this->request->getValue("keywords"));
+			$categoryNode->isActive->set($this->request->getValue("isActive"));
 			
 			$categoryNode->save();
 		}
@@ -96,6 +99,8 @@ class CategoryController extends StoreManagementController
 
 	private function buildValidator()
 	{
+		ClassLoader::import("framework.request.validator.RequestValidator");
+		
 		$validator = new RequestValidator("category", $this->request);
 		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("Catgory name should not be empty")));
 		return $validator;
