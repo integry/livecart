@@ -89,14 +89,33 @@ class CategoryController extends StoreManagementController
 		}
 	}
 	
+	/**
+	 * Debug method: outputs category tree structure
+	 *
+	 */
 	public function viewTree()
 	{
-		$rootNode = ActiveTreeNode::getRootNode("Category", true);
-		$rootNode->load();
+		$rootNode = ActiveTreeNode::getRootNode("Category");
+		//$rootNode->loadSubTree();
+		//echo "<pre>"; print_r($rootNode->toArray()); echo "</pre>";
 		
-		echo "<pre>"; print_r($rootNode->toArray()); echo "</pre>";
+		$recordSet = $rootNode->getChildNodes(false, true);
+		echo "<pre>"; print_r($recordSet->toArray()); echo "</pre>";
+	}
+	
+	/**
+	 * Changes node position at a branch level
+	 *
+	 */
+	public function reorder()
+	{
 	}
 
+	/**
+	 * Builds a category form validator
+	 *
+	 * @return RequestValidator
+	 */
 	private function buildValidator()
 	{
 		ClassLoader::import("framework.request.validator.RequestValidator");
@@ -106,6 +125,11 @@ class CategoryController extends StoreManagementController
 		return $validator;
 	}
 	
+	/**
+	 * Builds a category form instance
+	 *
+	 * @return Form
+	 */
 	private function buildForm()
 	{
 		$form = new Form($this->buildValidator());
