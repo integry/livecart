@@ -24,6 +24,17 @@
 </head>
 <body>
 
+<div id="log" style="position: absolute; top: 0; left: 0; z-index: 10000; background-color: white;"></div>
+{literal}
+<script>
+	function addlog(info)
+	{
+		document.getElementById('log').innerHTML += info + '<br />';  
+	}
+</script>
+{/literal}
+
+
 <div id="minHeight"></div>
 <div id="outer" style="">	
 

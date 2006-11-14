@@ -1,16 +1,16 @@
 {pageTitle}{translate text=_language_definitons} (<img src="image/localeflag/{$id}.png" /> {$edit_language}){/pageTitle}
+{includeJs file=library/json.js}
+{loadScriptaculous}
 
-{*
 {literal} 	
 <script type="text/javascript"> 
 	var translations = {/literal}{$translations}{literal}
-	var translations = {/literal}{$translations}{literal}
+	var english = {/literal}{$english}{literal}
 </script>
 {/literal}
-*}
 
 <form id="navLang" method="post" style="margin-bottom: 10px;" action="{link controller=backend.language action=edit id=$id}">
-	<input type="hidden" name="langFileSel" />
+	<input type="hidden" name="langFileSel" value="{$langFileSel}" />
 
 	<strong>{t _show_words}:</strong> 
 	
@@ -27,56 +27,39 @@
 	</input>
 </form>
 
-<form name="editLang" method="post" action="{link controller=backend.language action=save id=$id}">
+<div id="langSearch">
+	Search for translations: <input type="text" name="filter" onkeyup="langGenerateTranslationForm(this.value);">
+</div>
+
+<form name="editLang" method="post" action="{link controller=backend.language action=save id=$id}" onSubmit="langPassDisplaySettings(this);">
 	
 	<input type="hidden" name="langFileSel" />
 	<input type="hidden" name="show" />
 	
-{*
-	<table class="langTranslations dom-template">
+	<table class="langTranslations lang-template" style="display: none;">
 		<caption>
 			<img src="image/backend/icon/collapse.gif">
-			<a href="#" onkeydown="{literal}if (getPressedKey(event) != KEY_TAB && getPressedKey(event) != KEY_SHIFT) {langToggleVisibility(this.parentNode.parentNode, '{$file}');}{/literal}" onClick="return false;">{$file}</a>
+			<a href="#" onClick="return false;"></a>
 		</caption>
 		<tbody style="display: none;">	
-			{foreach from=$values key=key item=item name=trans}
-				<tr{zebraRow}>
-					<td class="lang-key">
-						{$key}	
-					</td>
-
-					<td class="lang-translation">
-						<input type="text" name="lang[{$file}][{$key}]" value="{$item|escape:"quotes"}">
-						<span>{$en_definitions.$file.$key}</span>
-					</td>
-				<tr>	
-			{/foreach}
+			<tr class="lang-trans-template" style="display: none;">
+				<td class="lang-key"></td>
+				<td class="lang-translation">
+					<input type="text">
+					<span></span>
+				</td>
+			<tr>	
 		</tbody>	
 	</table>
-*}	
 
-	{foreach from=$definitions key=file item=values}
-		<table class="langTranslations">	
-			<caption onClick="langToggleVisibility(this.parentNode, '{$file}');">
-				<img src="image/backend/icon/collapse.gif">
-				<a href="#" onkeydown="{literal}if (getPressedKey(event) != KEY_TAB && getPressedKey(event) != KEY_SHIFT) {langToggleVisibility(this.parentNode.parentNode, '{$file}');}{/literal}" onClick="return false;">{$file}</a>
-			</caption>
-			<tbody style="display: none;">	
-				{foreach from=$values key=key item=item name=trans}
-					<tr{zebraRow}>
-						<td class="lang-key">
-							{$key}	
-						</td>
+	<div id="translations"> </div>
 
-						<td class="lang-translation">
-							<input type="text" name="lang[{$file}][{$key}]" value="{$item|escape:"quotes"}">
-							<span>{$en_definitions.$file.$key}</span>
-						</td>
-					<tr>	
-				{/foreach}
-			</tbody>
-		</table>
-	{/foreach}
+{literal}
+<script type="text/javascript">
+	langGenerateTranslationForm();
+</script>
+{/literal}
 
 	<input type="submit" value="{t _save}">
+	
 </form>

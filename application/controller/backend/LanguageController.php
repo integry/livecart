@@ -97,6 +97,7 @@ class LanguageController extends SiteManagementController
 			$translated[$relPath] = array_merge($keys, $default, $transl);	
 		}
 
+/*
 		// modifying a single file definitions only
 		if ($this->request->isValueSet('file'))
 		{
@@ -105,6 +106,7 @@ class LanguageController extends SiteManagementController
 			$translated = array();
 			$translated[$file] = $toTranslate;
 		}		
+*/
 
 		// determine which definitions should be displayed (All, defined, undefined)
 		$selectedAll = '';
@@ -159,33 +161,27 @@ class LanguageController extends SiteManagementController
 			}
 		}
 
-//		echo strlen(json_encode($translated));exit;
-
 		$response = new ActionResponse();
-		$response->SetValue("language", $this->request->getValue("language"));
-		$response->SetValue("edit_language", $editLocale->info()->getLanguageName($editLocaleName));
 		$response->setValue("id", $editLocaleName);
+		$response->SetValue("language", $this->request->getValue("language"));
+		$response->SetValue("edit_language", $editLocale->info()->getLanguageName($editLocaleName));		
 
-		$nfiles = array();
-		foreach ($files as $key => $value)
-		{
-			$value = substr($value, strlen($fileDir) + 1);
-			$nfiles[$value] = ucfirst(basename($value, '.' . self::langFileExt));
-		}	
-		
-		$files = array_merge(array('' => $this->translate('_allFiles')), $nfiles);
-		
-		$response->setValue("files", $files);
-		$response->setValue("file", $this->request->getValue("file"));
-
-		$response->setValue("en_definitions", $enDefs);
-		$response->setValue("definitions", $translated);
-
+		$response->setValue("translations", json_encode($translated));
+		$response->setValue("english", json_encode($enDefs));
+	
+		// navigation
 		$response->setValue("selected_all", $selectedAll);
 		$response->setValue("selected_defined", $selectedDefined);
 		$response->setValue("selected_not_defined", $selectedNotDefined);
 		$response->setValue("show", $this->request->getValue("show"));				
-
+		
+		$langFileSel = base64_decode($this->request->getValue('langFileSel'));
+		if (!$langFileSel)
+		{
+		  	$langFileSel = '{}';
+		}
+		$response->setValue("langFileSel", $langFileSel);
+		
 		return $response;
 	}
 
@@ -220,7 +216,7 @@ class LanguageController extends SiteManagementController
 		  	$editLocale->translationManager()->saveCacheData($localeCode . '/' . $file, $data);
 		}
 			
-		return new ActionRedirectResponse($this->request->getControllerName(), 'edit', array('id' => $localeCode));
+		return new ActionRedirectResponse($this->request->getControllerName(), 'edit', array('id' => $localeCode, 'langFileSel' => base64_encode($this->request->getValue('langFileSel'))));
 	}
 	
 	/**
