@@ -91,7 +91,9 @@ Object.prototype.toJSONString = function () {
         if (b) {
             a.push(',');
         }
-        a.push(i.toJSONString(), ':', s);
+// "Too much recursion" error...
+//        a.push(i.toJSONString(), ':', s);
+        a.push('"' + i + '"', ':', s);
         b = true;
     }
 
