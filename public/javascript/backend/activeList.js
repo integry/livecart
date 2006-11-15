@@ -1,440 +1,649 @@
 /**
- * KeyboardEvent's task is to provide cross-browser suport for handling keyboard
- * events. It provides function to get current button code and char, shift status, etc
+ * Sortable list
  *
- * @todo Caps lock support
+ * @example
+ * <code>
+ * <ul id="specField_items_list" class="activeList_add_sort activeList_add_edit activeList_add_delete">
+ *    <li id="specField_items_list_96" class="">Item 1</li>
+ *    <li id="specField_items_list_95"  class="">Item 2</li>
+ *    <li id="specField_items_list_100" class="activeList_remove_sort">Item 3</li>
+ *    <li id="specField_items_list_101" class="">Item 4</li>
+ *    <li id="specField_items_list_102" class="">Item 5</li>
+ * </ul>
+ *
+ * <script type="text/javascript">
+ *     new LiveCart.ActiveList('specField_items_list', {
+ *         beforeEdit:     function(li)
+ *         {
+ *             if(this.isContainerEmpty()) return 'edit.php?id='+this.getRecordId(li)
+ *             else his.toggleContainer()
+ *         },
+ *         beforeSort:     function(li, order) { return 'sort.php?' + order },
+ *         beforeDelete:   function(li)
+ *         {
+ *             if(confirm('Are you sure you wish to remove record #' + this.getRecordId(li) + '?')) return 'delete.php?id='+this.getRecordId(li)
+ *         },
+ *         afterEdit:      function(li, response) { this.getContainer().innerHTML = response; this.toggleContainer();  },
+ *         afterSort:      function(li, response) { alert( 'Record #' + this.getRecordId(li) + ' changed position'); },
+ *         afterDelete:    function(li, response)  { Element.remove(li); }
+ *     });
+ * </script>
+ * </code>
+ *
+ * First argument passed to active list constructor is list id, and the second is hash object of callbacks
+ * Events in active list will automatically call two actions one before ajax request to server and one after.
+ * Those callbacks which are called before the request hase "before" prefix. Those which will be called after - "after".
+ *
+ * Functions which are called before request must return a link or a false value. If a link returned then
+ * request to that link is made. On the other hand if false is returned then no request is send and "after" function
+ * is not called. This is useful for caching.
+ *
+ * Note that there are some usefful function you can use inside your callbacks
+ * this.isContainerEmpty() - Returns if container is empty
+ * this.getRecordId(li) - Get real item's id (used to identify that item in database)
+ * this.getContainer() - Get items container. Also every action has it's own container
+ *
+ * There are also some usefull variables available to you in callback
+ * this - A reference to ActiveList object.
+ * li - Current item
+ * order - Serialized order
+ * response - Ajax response text
  *
  * @version 1.1
  * @author Sergej Andrejev, Rinalds Uzkalns
  *
  */
-function copyPrototype(descendant, parent) {
-    var sConstructor = parent.toString();
-    var aMatch = sConstructor.match( /\s*function (.*)\(/ );
-    if ( aMatch != null )
-	{
-	  	descendant.prototype[aMatch[1]] = parent;
-	}
-    for (var m in parent.prototype)
-	{
-        descendant.prototype[m] = parent.prototype[m];
-    }
-};
-
-function activeList()
+if (LiveCart == undefined)
 {
-
+    var LiveCart = {}
 }
 
-activeList.prototype.create = function (listIdParam)
-{
+LiveCart.ActiveList = Class.create();
+LiveCart.ActiveList.prototype = {
+    /**
+     * Item icons which will apear in top left corner on each item of the list
+     *
+     * @var Hash
+     */
+    icons: {
+        'sort':     "image/backend/list/move.png",
+        'edit':     "image/backend/list/trash.png",
+        'delete':   "image/backend/list/trash.png",
+        'progress': "image/backend/list/indicator_bar_small.gif"
+    },
 
-	/**
-	 * List identification string (e.g. languageList)
-	 */
-	this.listId = listIdParam;
+    /**
+     * Icon size [width, height].
+     * All icons except progress bar are resize to fit this size
+     *
+     * @var Array
+     */
+    iconSize: ['16px', '16px'],
 
-	/**
-	 * ID of the last (currently) dragged item
-	 */
-	this.draggedId = 0;
+    /**
+     * User obligated to pass this callbacks to constructor when he creates
+     * new active list.
+     *
+     * @var array
+     */
+    requiredCallbacks: ['sort', 'delete', 'edit'],
 
-	/**
-	 * HTML code of the dragged item (needs to be cached as feedback graphics element is displayed when reordering)
-	 */
-	this.draggedItemHtml = new Array();
+    /**
+     * When active list is created it depends on automatically generated html
+     * content.That means that active list uses class names to find icons and
+     * containers in list. Be sure you are using unique prefix
+     *
+     * @var string
+     */
+    cssPrefix: 'activeList_',
 
-	this.createSortable();
+    /**
+     * List order is send back only if last sort accured more then M milliseconds ago.
+     * M is that value
+     *
+     * @var int
+     */
+    keyboardSortTimeout: 1000,
 
-}
+    /**
+     * Tab index of every active list element. Most of the time this value is not important
+     * so any would work fine
+     *
+     * @var int
+     */
+    tabIndex: 666,
 
-activeList.prototype.getDeleteUrl = function (id)
-{
-	alert('getDeleteUrl() must be implemented');
-}
-
-activeList.prototype.getEditUrl = function (id)
-{
-	alert('getEditUrl() must be implemented');
-}
-
-activeList.prototype.getSortUpdateUrl = function(order)
-{
-	alert('getSortUpdateUrl() must be implemented');
-}
-
-/* All methods below are considered as final */
-
-/**
- * Initialize Scriptaculous Sortable on the list
- */
-activeList.prototype.createSortable = function ()
-{
-	handler = this.getInstanceName();
-
-	Sortable.create(this.listId,
-					{
-				// the object context mystically dissapears when onComplete function is called,
-				// so the only way I could make it work is this
-					  onChange: function(param) { eval("inst = " + handler +";"); inst.registerDraggedItem(param);},
-					  onUpdate: function(param) { eval("inst = " + handler +";"); inst.saveSortOrder(param);}
-					}
-					);
-}
-
-/**
- * Initiates item order (position) saving action
- *
- * @param string id Record ID
- * @access public
- */
-activeList.prototype.saveSortOrder = function()
-{
-	var item = this.draggedId;
-
-	// there may be more than one dragging operation in progress, so save the item only once
-	if (false == this.draggedItemHtml[item] || undefined == this.draggedItemHtml[item])
-	{
-		this.draggedItemHtml[item] = document.getElementById(this.getFullId(item)).innerHTML;
-	}
-
-	// display feedback
-	this.displayProgress(item);
-
-	order = Sortable.serialize(this.listId);
-	url = this.getSortUpdateUrl(order);
-
-	// execute the action
-	handler = this.getInstanceName();
-	var sortSaveAction = new Ajax.Request(
-			url,
-			{
-				method: 'get',
-				// the object context mystically dissapears when onComplete function is called,
-				// so the only way I could make it work is this
-				onComplete: function(param) { eval("inst = " + handler +";"); inst.restoreDraggedItem(param);}
-			});
-
-	deselectText();
-}
-
-/**
- * Initiates item removal action
- *
- * @param string id Record ID
- * @access public
- */
-activeList.prototype.deleteItem = function(id)
-{
-
-	function doRemove (param)
-	{
-
-		  inst = this.getInstance();
-	  	alert('went');
-		inst.removeListItem(param);
-	  	alert('ok');
-	}
-
-	if (!confirm('Are you sure you wish to remove this language?'))
-		return false;
-
-	// get delete action URL
-	url = this.getDeleteUrl(id);
-
-	// display feedback
-	this.displayProgress(id);
-
-	// execute the action
-	handler = this.getInstanceName();
-	var delAction = new Ajax.Request(
-			url,
-			{
-				method: 'get',
-
-				// the object context mystically dissapears when onComplete function is called,
-				// so the only way I could make it work is this
-				onComplete: function(param) { eval("inst = " + handler +";"); inst.removeListItem(param);}
-			});
-}
-
-/**
- * Returns instance variable name
- *
- * @return string Instance name
- * @access private
- */
-activeList.prototype.getInstanceName = function()
-{
-	return this.listId + "HandlerInstance";
-}
-
-/**
- * Registers which item is currently being dragged
- *
- * @param HTMLElement element
- * @access public
- */
-activeList.prototype.registerDraggedItem = function(elementObj)
-{
-	this.draggedId = this.getRecordId(elementObj.id);
-}
-
-/**
- * Displays list item menu (and hides other list item menus)
- *
- * @param HTMLElement element
- * @access public
- */
-activeList.prototype.showMenu = function(element)
-{
-    // first hide all other menus
-	for (k = 0; k < element.parentNode.childNodes.length; k++)
-	{
-		this.hideMenu(element.parentNode.childNodes.item(k));
-	}
-
-	// now show the needed menu
-	element.firstChild.style.visibility = 'visible';
-}
-
-/**
- * Hides list item menu
- *
- * @param HTMLElement element
- * @access public
- */
-activeList.prototype.hideMenu = function(element)
-{
-  	element.firstChild.style.visibility = 'hidden';
-}
-
-/**
- * Removes item from list after receiving AJAX response
- * (responseText is expected to contain record ID on success or blank on failure)
- *
- * @param XMLHttpRequest ajaxRequest
- * @access private
- */
-activeList.prototype.removeListItem = function(ajaxRequest)
-{
-	id = ajaxRequest.responseText;
-	if ('' == id)
-	{
-	  	return false;
-	}
-
-	itemId = this.listId + '_' + id;
-
-	// @todo - add effect
-	document.getElementById(itemId).remove();
-}
-
-/**
- * Keyboard access functionality
- * 	- navigate list using up/down arrow keys
- * 	- move items up/down using Shift + up/down arrow keys
- * 	- delete items with Del key
- * 	- drop focus ("exit" list) with Esc key
- *
- * @param e Event
- * @param sender HTMLElement
- * @access public
- * @todo Edit items with Enter key
- */
-activeList.prototype.navigate = function(e, sender)
-{
-    // IE
-	if (window.event)
+    /**
+     * Constructor
+     *
+     * @param string|ElementUl ul List id field or an actual reference to list
+     * @param Hash callbacks Function which will be executed on various events (like sorting, deleting editing)
+     *
+     * @access public
+     */
+    initialize: function(ul, callbacks)
     {
-    	keynum = e.keyCode;
-    }
 
-    // Netscape/Firefox/Opera
-	else if (e.which)
-    {
-    	keynum = e.which;
-    }
+        this.ul = typeof(ul) == 'string' ? $(ul) : ul;
 
-    // determine if Shift key is pressed
-	isShift = e.shiftKey;
-
-    // move/navigate up
-	if (KEY_UP == keynum)
-    {
-        this.getPrevSibling(sender).focus();
-
-        if (isShift)
+        // Check if ul has an id
+        if(!this.ul.id)
         {
-            prev = this.getPrevSibling(sender);
+            alert('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
+            return false;
+        }
 
-            if (prev == prev.parentNode.lastChild)
-            {
-			  	insSib = null;
-			}
-			else
-			{
-			  	insSib = prev;
-			}
-
-			this.moveNode(sender, insSib);
-		}
-    }
-
-	// move/navigate down
-	else if (KEY_DOWN == keynum)
-    {
-        this.getNextSibling(sender).focus();
-
-        if (isShift)
+        // Check if all required callbacks are passed
+        var missedCallbacks = [];
+        for(var i = 0; i < this.requiredCallbacks.length; i++)
         {
-            next = this.getNextSibling(sender);
+            var before = ('before-' + this.requiredCallbacks[i]).camelize();
+            var after = ('after-' + this.requiredCallbacks[i]).camelize();
 
-            if (next == next.parentNode.firstChild)
+            if(!callbacks[before]) missedCallbacks[missedCallbacks.length] = before;
+            if(!callbacks[after]) missedCallbacks[missedCallbacks.length] = after;
+        }
+        if(missedCallbacks.length > 0)
+        {
+                alert('Callback' + (missedCallbacks.length > 1 ? 's' : '') + ' are missing (' + missedCallbacks.join(', ') +')' );
+                return false;
+        }
+
+        this.callbacks = callbacks;
+        this.dragged = false;
+
+        this.createSortable();
+    },
+
+    /**
+     * Toggle item container On/Off
+     *
+     * @param HtmlElementLi A reference to item element. Default is current item
+     * @param string action Every action has its own container. You could toggle another action container, but default is to toggle current action's container
+     *
+     * @access public
+     */
+    toggleContainer: function(li, action)
+    {
+        Element.toggle(this.getContainer(li ? li : false, action ? action : this.getAction(this.toggleContainer.caller)));
+    },
+
+    /**
+     * Check if item container is empty
+     *
+     * @param HtmlElementLi A reference to item element. Default is current item
+     * @param string action Every action has its own container. You could toggle another action container, but default is to toggle current action's container
+     *
+     * @access public
+     *
+     * @return bool
+     */
+    isContainerEmpty: function(li, action)
+    {
+        return this.getContainer(li ? li : false, action ? action : this.getAction(this.isContainerEmpty.caller)).firstChild ? false : true;
+    },
+
+    /**
+     * Get item container
+     *
+     * @param HtmlElementLi A reference to item element. Default is current item
+     * @param string action Every action has its own container. You could toggle another action container, but default is to toggle current action's container
+     *
+     * @access private
+     *
+     * @return ElementDiv A refference to container node
+     */
+    getContainer: function(li, action)
+    {
+        if(!li) li = this._currentLi;
+        if(!action) action = this.getAction(this.getContainer.caller); // if this function was called from user then we could try to auto-detect action
+
+        return document.getElementsByClassName(this.cssPrefix + action + 'Container' , li)[0];
+    },
+
+    /**
+     * Get item's id. Not as a dom element but real id, which is used id database
+     *
+     * @param HtmlElementLi li A reference to item element
+     *
+     * @access public
+     *
+     * @return string element id
+     */
+    getRecordId: function(li)
+    {
+        return li.id.substring(this.ul.id.length+1);
+    },
+
+    /**
+     * Rebind all icons in item
+     *
+     * @param HtmlElementLi li A reference to item element
+     *
+     * @access public
+     */
+    rebindIcons: function(li)
+    {
+        var self = this;
+
+        $H(this.icons).each(function(icon)
+        {
+            li[icon.key] = document.getElementsByClassName(self.cssPrefix+icon.key, li)[0];
+            if(icon.key != 'progress' && icon.key != 'sort')
             {
-			  	insSib = next;
-			}
-			else
-			{
-			  	insSib = next.nextSibling;
-			}
+                li[icon.key].onclick = function() { self.bindAction(li, icon.key) }
+                li[icon.key + 'Container'] = document.getElementsByClassName(self.cssPrefix + icon.key + 'Container', li)[0];
+            }
+        });
+    },
 
-			this.moveNode(sender, insSib);
-		}
+
+
+
+
+
+
+
+    /***************************************************************************
+    /*           Private methods                                               *
+    /***************************************************************************
+
+    /**
+     * Go throug all list elements and decorate them with icons, containers, etc
+     *
+     * @access private
+     */
+    decorateItems: function()
+    {
+        var liArray = this.ul.getElementsByTagName("li");
+
+        for(var i = 0; i < liArray.length; i++)
+        {
+            this.decorateLi(liArray[i]);
+        }
+    },
+
+    /**
+     * Decorate list element with icons, progress bar, container, tabIndex, etc
+     *
+     * @param HtmlElementLi Element to decorate
+     *
+     * @access private
+     */
+    decorateLi: function(li)
+    {
+        var self = this;
+
+        // Bind events
+        li.onmouseover    = function() { if(!self.dragged) self.showMenu(li) }
+        li.onmouseout     = function() { if(!self.dragged) self.hideMenu(li) }
+        li.onkeydown      = function(e) { self.navigate(new KeyboardEvent(e), li) }
+        li.onclick        = li.focus();
+
+        // Add tab index
+        li.tabIndex       = this.tabIndex;
+
+        // Create icons container. All icons will be placed incide it
+        var iconsDiv = document.createElement('div');
+        Element.addClassName(iconsDiv, self.cssPrefix + 'icons');
+        li.insertBefore(iconsDiv, li.firstChild);
+
+        // add all icons
+        $H(this.icons).each(function(icon)
+        {
+            // If icon is not progress and it was added to a whole list or only this item then put that icon into container
+            if(!icon.key == 'progress' || (Element.hasClassName(self.ul, self.cssPrefix + 'add_' + icon.key)) || Element.hasClassName(self.ul, self.cssPrefix + 'add_' + icon.key))
+            {
+                var iconImage = document.createElement('div');
+                iconImage.style.background = "url("+icon.value+") no-repeat";
+                iconImage.style.width = self.iconSize[0];
+                iconImage.style.height = self.iconSize[1];
+                iconImage.style.visibility = 'hidden';
+                Element.addClassName(iconImage, self.cssPrefix + icon.key);
+
+                // If icon is removed from this item than do not display the icon
+                if(Element.hasClassName(li, self.cssPrefix + 'remove_' + icon.key))
+                {
+                    iconImage.style.display = 'none';
+                }
+
+                // Show icon
+                iconsDiv.appendChild(iconImage);
+
+                // create shortcut
+                li[icon.key] = iconImage;
+
+                // all icons except sort has onclick event handler defined by user
+                if(icon.key != 'sort')
+                {
+                    iconImage.onclick = function() { self.bindAction(li, icon.key) }
+
+                    var container = document.createElement('div');
+                    container.style.display = 'none';
+                    Element.addClassName(container, self.cssPrefix + icon.key + 'Container');
+                    li.appendChild(container);
+                    li.container = container;
+                }
+            }
+
+        });
+
+        // progress is not a div like all other icons. It has no fixed size and is not clickable.
+        // This is done to properly handle animated images because i am not sure if all browsers will
+        // handle animated backgrounds in the same way. Also differently from icons progress icon
+        // can vary in size while all other icons are always the same size
+        var iconProgress = document.createElement('img');
+        iconProgress.src = this.icons.progress
+        iconProgress.style.visibility = 'hidden';
+        Element.addClassName(iconProgress, self.cssPrefix + 'progress');
+        iconsDiv.appendChild(iconProgress);
+        li.progress = iconProgress;
+
+    },
+
+    /**
+     * Get action associated with user specified callback
+     *
+     * @param callback Callback to user defined action handler function
+     *
+     * @access private
+     *
+     * @return string action Action associated with callback
+     */
+    getAction: function(caller)
+    {
+        var action = '';
+        for(key in this.callbacks)
+        {
+            if(this.callbacks[key] == caller)
+            {
+                action = key.replace(/^(after|before)/, '').toLowerCase();
+                break;
+            }
+        }
+
+        return action;
+    },
+
+    /**
+     * This function executes user specified callback. For example if action was
+     * 'delete' then the beforeDelete function will be called
+     * which should return a valud url adress. After that when AJAX response has
+     * arrived the afterDelete function will be called
+     *
+     * @param HtmlElementLi A reference to item element
+     * @param string action Action
+     *
+     * @access private
+     */
+    bindAction: function(li, action)
+    {
+        this.rebindIcons(li);
+
+        this._currentLi = li;
+        var url = this.callbacks[('before-'+action).camelize()].call(this, li);
+
+        if(!url) return false;
+
+        var self = this;
+        // display feedback
+        this.toggleProgress(li);
+
+        // execute the action
+        new Ajax.Request(
+                url,
+                {
+                    method: 'get',
+
+                    // the object context mystically dissapears when onComplete function is called,
+                    // so the only way I could make it work is this
+                    onComplete: function(param) { self.callUserCallback(action, param, li) }
+                });
+    },
+
+    /**
+     * Toggle progress bar on list element
+     *
+     * @param HtmlElementLi A reference to item element
+     *
+     * @access private
+     */
+    toggleProgress: function(li)
+    {
+        li.progress.style.visibility = (li.progress.style.visibility == 'visible') ? 'hidden' : 'visible';
+    },
+
+    /**
+     * Call a user defined callback function
+     *
+     * @param string action Action
+     * @param XMLHttpRequest response An AJAX response object
+     * @param HtmlElementLi A reference to item element. Default is current item
+     *
+     * @access private
+     */
+    callUserCallback: function(action, response, li)
+    {
+        this._currentLi = li;
+        this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
+        this.toggleProgress(li);
+    },
+
+    /**
+     * Initialize Scriptaculous Sortable on the list
+     *
+     * @access private
+     */
+    createSortable: function ()
+    {
+        var self = this;
+
+        this.decorateItems();
+
+        Element.addClassName(this.ul, this.cssPrefix.substr(0, this.cssPrefix.length-1));
+        Sortable.create(this.ul.id,
+        {
+            dropOnEmpty:true,
+            constraint: false,
+            handle:     this.cssPrefix + 'sort',
+            // the object context mystically dissapears when onComplete function is called,
+            // so the only way I could make it work is this
+            onChange: function(elementObj) { self.dragged = elementObj },
+            onUpdate: function() { self.saveSortOrder() }
+        });
+
+    },
+
+    /**
+     * Display list item's menu. Show all item icons except progress
+     *
+     * @param HtmlElementLi li A reference to item element
+     *
+     * @access private
+     */
+    showMenu: function(li)
+    {
+        $H(this.icons).each(function(icon)
+        {
+            if(li[icon.key] && icon.key != 'progress') li[icon.key].style.visibility = 'visible';
+        });
+    },
+
+    /**
+     * Hides list item's menu
+     *
+     * @param HtmlElementLi li A reference to item element
+     *
+     * @access private
+     */
+    hideMenu: function(li)
+    {
+        $H(this.icons).each(function(icon)
+        {
+            if(li[icon.key] && icon.key != 'progress')
+            {
+                li[icon.key].style.visibility = 'hidden';
+            }
+        });
+    },
+
+    /**
+     * Initiates item order (position) saving action
+     *
+     * @access private
+     */
+    saveSortOrder: function()
+    {
+        var self = this;
+
+        // display feedback
+        this.toggleProgress(this.dragged);
+
+        // execute the action
+        this._currentLi = this.dragged;
+        new Ajax.Request(this.callbacks.beforeSort.call(this, this.dragged, Sortable.serialize(this.ul.id)),
+        {
+            method: 'get',
+
+            // the object context mystically dissapears when onComplete function is called,
+            // so the only way I could make it work is this
+            onComplete: function(param) { self.restoreDraggedItem(param) }
+        });
+    },
+
+
+    /**
+     * This function is called when sort response arives
+     *
+     * @param XMLHttpRequest originalRequest Ajax request object
+     *
+     * @access private
+     */
+    restoreDraggedItem: function(originalRequest)
+    {
+        item = originalRequest.responseText;
+
+        this.rebindIcons(this.dragged);
+        this.hideMenu(this.dragged);
+
+        this._currentLi = this.dragged;
+        var url = this.callbacks.afterSort.call(this, this.dragged, originalRequest.responseText);
+        this.toggleProgress(this.dragged);
+
+        this.dragged = false;
+    },
+
+    /**
+     * Keyboard access functionality
+     *     - navigate list using up/down arrow keys
+     *     - move items up/down using Shift + up/down arrow keys
+     *     - delete items with Del key
+     *     - drop focus ("exit" list) with Esc key
+     *
+     * @param KeyboardEvent keyboard KeyboardEvent object
+     * @param HtmlElementLi li A reference to item element
+     *
+     * @access private
+     *
+     * @todo Edit items with Enter key
+     */
+    navigate: function(keyboard, li)
+    {
+        switch(keyboard.getKey())
+        {
+            case keyboard.KEY_UP: // sort/navigate up
+                this.getPrevSibling(li).focus();
+
+                if (keyboard.isShift())
+                {
+                    prev = this.getPrevSibling(li);
+
+                    prev = (prev == prev.parentNode.lastChild) ? null : prev;
+
+                    this.moveNode(li, prev);
+                }
+            break;
+
+            case keyboard.KEY_DOWN: // sort/navigate down
+                this.getNextSibling(li).focus();
+
+                if (keyboard.isShift())
+                {
+                    var next = this.getNextSibling(li);
+                    if (next != next.parentNode.firstChild) next = next.nextSibling;
+
+                    this.moveNode(li, next);
+                }
+            break;
+
+            case keyboard.KEY_DEL: // delete
+                this.getPrevSibling(li).focus();
+                if(this.icons['delete']) this.bindAction(li, 'delete');
+            break;
+
+            case keyboard.KEY_ESC:  // escape - lose focus
+                li.blur();
+            break;
+        }
+
+        keyboard.deselectText();
+    },
+
+    /**
+     * Moves list node
+     *
+     * @param HtmlElementLi li A reference to item element
+     * @param HtmlElementLi beforeNode A reference to item element
+     *
+     * @access private
+     */
+    moveNode: function(li, beforeNode)
+    {
+        var self = this;
+
+        this.dragged = li;
+
+        li.parentNode.insertBefore(this.dragged, beforeNode);
+        this.dragged.focus();
+
+        this.sortTimerStart = (new Date()).getTime();
+        setTimeout(function(e)
+        {
+            if((new Date()).getTime() - self.sortTimerStart >= 1000)
+            {
+                self.saveSortOrder();
+            }
+        }, this.keyboardSortTimeout);
+    },
+
+    /**
+     * Gets next sibling for element in node list.
+     * If the element is the last node, the first node is being returned
+     *
+     * @param HtmlElementLi li A reference to item element
+     *
+     * @access private
+     *
+     * @return HtmlElementLi Next sibling
+     */
+    getNextSibling: function(element)
+    {
+        return element.nextSibling ? element.nextSibling : element.parentNode.firstChild;
+    },
+
+    /**
+     * Gets previous sibling for element in node list.
+     * If the element is the first node, the last node is being returned
+     *
+     * @param HtmlElementLi li A reference to item element
+     *
+     * @access private
+     *
+     * @return Node Previous sibling
+     */
+    getPrevSibling: function(element)
+    {
+        return !element.previousSibling ? element.parentNode.lastChild : element.previousSibling;
     }
 
-    // delete
-	else if (KEY_DEL == keynum)
-    {
-		this.getPrevSibling(sender).focus();
-		this.deleteItem(this.getRecordId(sender.id));
-    }
-
-    // escape - lose focus
-	else if (KEY_ESC == keynum)
-    {
-        sender.blur();
-    }
-    else
-    {
-
-    //alert(keynum);
-
-  }
-
-	deselectText();
-//	this.createSortable();
-}
-
-/**
- * Moves list node
- *
- * @param Node node Node being moved
- * @param Node beforeNode Inserted before this node
- * @access private
- */
-activeList.prototype.moveNode = function(node, beforeNode)
-{
-    this.registerDraggedItem(node);
-    node.parentNode.insertBefore(node, beforeNode);
-    node.focus();
-	this.saveSortOrder();
-}
-
-/**
- * Gets next sibling for element in node list.
- * If the element is the last node, the first node is being returned
- *
- * @param Node element Element instance
- * @return Node Next sibling
- * @access private
- */
-activeList.prototype.getNextSibling = function(element)
-{
-  	if (!element.nextSibling)
-  	{
-	    return element.parentNode.firstChild;
-	}
-	else
-	{
-	  	return element.nextSibling;
-	}
-}
-
-/**
- * Gets previous sibling for element in node list.
- * If the element is the first node, the last node is being returned
- *
- * @param Node element Element instance
- * @return Node Previous sibling
- * @access private
- */
-activeList.prototype.getPrevSibling = function(element)
-{
-  	if (!element.previousSibling)
-  	{
-	    return element.parentNode.lastChild;
-	}
-	else
-	{
-	  	return element.previousSibling;
-	}
-}
-
-/**
- * @param string id Record ID (e.g. 1)
- * @return string Element ID (e.g. record_1)
- * @access private
- */
-activeList.prototype.getFullId = function(id)
-{
-	return this.listId + '_' + id;
-}
-
-/**
- * Displays progress indicator bar for list element
- * @param string id Record ID (e.g. 1)
- * @access private
- */
-activeList.prototype.displayProgress = function(id)
-{
-	progressIndicatorId = this.listId + '_progress_' + id;
-	document.getElementById(progressIndicatorId).innerHTML = '<img src="image/backend/list/indicator_bar_small.gif" />';
-}
-
-/**
- * Returns record ID from element ID
- *
- * @param string fullId
- * @return string Record ID
- * @access private
- */
-activeList.prototype.getRecordId = function(fullId)
-{
-	return fullId.substr(this.listId.length + 1, this.listId.length);
-}
-
-/**
- * Restore dragged item to initial state after saving the order
- *
- * @param XMLHttpRequest originalRequest
- * @access private
- */
-activeList.prototype.restoreDraggedItem = function(originalRequest)
-{
-	item = originalRequest.responseText;
-
-	// there may be more than one dragging operation in progress, so restore the item only once
-	if (false != this.draggedItemHtml[item])
-	{
-		document.getElementById(this.getFullId(item)).innerHTML = this.draggedItemHtml[item];
-		this.draggedItemHtml[item] = false;
-	}
-
-	// sometimes text gets selected when items are dragged around - perhaps there are nicer ways to handle this
-	deselectText();
-
-	// items are restored with their menus, so to avoid several menus
-	// being displayed at once, we'll redraw the menu (and so hide the other menus)
-	this.showMenu(document.getElementById(this.getFullId(item)));
 }
