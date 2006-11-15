@@ -1,21 +1,29 @@
-//alert('OK');
-
-function copyPrototype(descendant, parent) { 
-    var sConstructor = parent.toString(); 
-    var aMatch = sConstructor.match( /\s*function (.*)\(/ ); 
-    if ( aMatch != null ) 
-	{ 
-	  	descendant.prototype[aMatch[1]] = parent; 
-	} 
-    for (var m in parent.prototype) 
-	{ 
-        descendant.prototype[m] = parent.prototype[m]; 
-    } 
-}; 
+/**
+ * KeyboardEvent's task is to provide cross-browser suport for handling keyboard
+ * events. It provides function to get current button code and char, shift status, etc
+ *
+ * @todo Caps lock support
+ *
+ * @version 1.1
+ * @author Sergej Andrejev, Rinalds Uzkalns
+ *
+ */
+function copyPrototype(descendant, parent) {
+    var sConstructor = parent.toString();
+    var aMatch = sConstructor.match( /\s*function (.*)\(/ );
+    if ( aMatch != null )
+	{
+	  	descendant.prototype[aMatch[1]] = parent;
+	}
+    for (var m in parent.prototype)
+	{
+        descendant.prototype[m] = parent.prototype[m];
+    }
+};
 
 function activeList()
 {
-	
+
 }
 
 activeList.prototype.create = function (listIdParam)
@@ -23,55 +31,55 @@ activeList.prototype.create = function (listIdParam)
 
 	/**
 	 * List identification string (e.g. languageList)
-	 */ 
+	 */
 	this.listId = listIdParam;
 
 	/**
 	 * ID of the last (currently) dragged item
-	 */ 
+	 */
 	this.draggedId = 0;
-	
+
 	/**
 	 * HTML code of the dragged item (needs to be cached as feedback graphics element is displayed when reordering)
-	 */ 
+	 */
 	this.draggedItemHtml = new Array();
 
-	this.createSortable();  
-  
+	this.createSortable();
+
 }
 
 activeList.prototype.getDeleteUrl = function (id)
-{	  
+{
 	alert('getDeleteUrl() must be implemented');
-}  
+}
 
 activeList.prototype.getEditUrl = function (id)
-{	  
+{
 	alert('getEditUrl() must be implemented');
-}  
-  
-activeList.prototype.getSortUpdateUrl = function(order)
-{	  
-	alert('getSortUpdateUrl() must be implemented');
-}  
+}
 
-/* All methods below are considered as final */		 
+activeList.prototype.getSortUpdateUrl = function(order)
+{
+	alert('getSortUpdateUrl() must be implemented');
+}
+
+/* All methods below are considered as final */
 
 /**
  * Initialize Scriptaculous Sortable on the list
- */ 
+ */
 activeList.prototype.createSortable = function ()
 {
 	handler = this.getInstanceName();
-	
-	Sortable.create(this.listId, 
+
+	Sortable.create(this.listId,
 					{
 				// the object context mystically dissapears when onComplete function is called,
 				// so the only way I could make it work is this
 					  onChange: function(param) { eval("inst = " + handler +";"); inst.registerDraggedItem(param);},
 					  onUpdate: function(param) { eval("inst = " + handler +";"); inst.saveSortOrder(param);}
 					}
-					);	  
+					);
 }
 
 /**
@@ -81,32 +89,32 @@ activeList.prototype.createSortable = function ()
  * @access public
  */
 activeList.prototype.saveSortOrder = function()
-{			
+{
 	var item = this.draggedId;
-	
+
 	// there may be more than one dragging operation in progress, so save the item only once
 	if (false == this.draggedItemHtml[item] || undefined == this.draggedItemHtml[item])
 	{
 		this.draggedItemHtml[item] = document.getElementById(this.getFullId(item)).innerHTML;
 	}
-	
+
 	// display feedback
-	this.displayProgress(item);			
+	this.displayProgress(item);
 
 	order = Sortable.serialize(this.listId);
-	url = this.getSortUpdateUrl(order);						
-				
+	url = this.getSortUpdateUrl(order);
+
 	// execute the action
 	handler = this.getInstanceName();
 	var sortSaveAction = new Ajax.Request(
-			url, 
+			url,
 			{
-				method: 'get', 
+				method: 'get',
 				// the object context mystically dissapears when onComplete function is called,
 				// so the only way I could make it work is this
 				onComplete: function(param) { eval("inst = " + handler +";"); inst.restoreDraggedItem(param);}
 			});
-	
+
 	deselectText();
 }
 
@@ -118,7 +126,7 @@ activeList.prototype.saveSortOrder = function()
  */
 activeList.prototype.deleteItem = function(id)
 {
-	
+
 	function doRemove (param)
 	{
 
@@ -126,12 +134,12 @@ activeList.prototype.deleteItem = function(id)
 	  	alert('went');
 		inst.removeListItem(param);
 	  	alert('ok');
-	}	
-	
+	}
+
 	if (!confirm('Are you sure you wish to remove this language?'))
 		return false;
-	
-	// get delete action URL	  	
+
+	// get delete action URL
 	url = this.getDeleteUrl(id);
 
 	// display feedback
@@ -140,9 +148,9 @@ activeList.prototype.deleteItem = function(id)
 	// execute the action
 	handler = this.getInstanceName();
 	var delAction = new Ajax.Request(
-			url, 
+			url,
 			{
-				method: 'get', 
+				method: 'get',
 
 				// the object context mystically dissapears when onComplete function is called,
 				// so the only way I could make it work is this
@@ -168,10 +176,10 @@ activeList.prototype.getInstanceName = function()
  * @access public
  */
 activeList.prototype.registerDraggedItem = function(elementObj)
-{	
-	this.draggedId = this.getRecordId(elementObj.id);	
-}		
-		
+{
+	this.draggedId = this.getRecordId(elementObj.id);
+}
+
 /**
  * Displays list item menu (and hides other list item menus)
  *
@@ -202,7 +210,7 @@ activeList.prototype.hideMenu = function(element)
 }
 
 /**
- * Removes item from list after receiving AJAX response 
+ * Removes item from list after receiving AJAX response
  * (responseText is expected to contain record ID on success or blank on failure)
  *
  * @param XMLHttpRequest ajaxRequest
@@ -215,15 +223,15 @@ activeList.prototype.removeListItem = function(ajaxRequest)
 	{
 	  	return false;
 	}
-	
+
 	itemId = this.listId + '_' + id;
-	
+
 	// @todo - add effect
 	document.getElementById(itemId).remove();
 }
 
 /**
- * Keyboard access functionality 
+ * Keyboard access functionality
  * 	- navigate list using up/down arrow keys
  * 	- move items up/down using Shift + up/down arrow keys
  * 	- delete items with Del key
@@ -231,26 +239,26 @@ activeList.prototype.removeListItem = function(ajaxRequest)
  *
  * @param e Event
  * @param sender HTMLElement
- * @access public		 
+ * @access public
  * @todo Edit items with Enter key
  */
 activeList.prototype.navigate = function(e, sender)
 {
     // IE
-	if (window.event) 
+	if (window.event)
     {
     	keynum = e.keyCode;
     }
 
     // Netscape/Firefox/Opera
-	else if (e.which) 
+	else if (e.which)
     {
     	keynum = e.which;
     }
-    
+
     // determine if Shift key is pressed
 	isShift = e.shiftKey;
-    
+
     // move/navigate up
 	if (KEY_UP == keynum)
     {
@@ -259,7 +267,7 @@ activeList.prototype.navigate = function(e, sender)
         if (isShift)
         {
             prev = this.getPrevSibling(sender);
-            
+
             if (prev == prev.parentNode.lastChild)
             {
 			  	insSib = null;
@@ -268,11 +276,11 @@ activeList.prototype.navigate = function(e, sender)
 			{
 			  	insSib = prev;
 			}
-            
-			this.moveNode(sender, insSib);		        
+
+			this.moveNode(sender, insSib);
 		}
     }
-    
+
 	// move/navigate down
 	else if (KEY_DOWN == keynum)
     {
@@ -281,16 +289,16 @@ activeList.prototype.navigate = function(e, sender)
         if (isShift)
         {
             next = this.getNextSibling(sender);
-            
+
             if (next == next.parentNode.firstChild)
             {
-			  	insSib = next;					  
+			  	insSib = next;
 			}
 			else
 			{
 			  	insSib = next.nextSibling;
 			}
-        	
+
 			this.moveNode(sender, insSib);
 		}
     }
@@ -299,9 +307,9 @@ activeList.prototype.navigate = function(e, sender)
 	else if (KEY_DEL == keynum)
     {
 		this.getPrevSibling(sender).focus();
-		this.deleteItem(this.getRecordId(sender.id));      
+		this.deleteItem(this.getRecordId(sender.id));
     }
-    
+
     // escape - lose focus
 	else if (KEY_ESC == keynum)
     {
@@ -309,13 +317,13 @@ activeList.prototype.navigate = function(e, sender)
     }
     else
     {
-    
+
     //alert(keynum);
-    
+
   }
 
 	deselectText();
-//	this.createSortable();    
+//	this.createSortable();
 }
 
 /**
@@ -346,8 +354,8 @@ activeList.prototype.getNextSibling = function(element)
   	if (!element.nextSibling)
   	{
 	    return element.parentNode.firstChild;
-	}			
-	else 
+	}
+	else
 	{
 	  	return element.nextSibling;
 	}
@@ -366,8 +374,8 @@ activeList.prototype.getPrevSibling = function(element)
   	if (!element.previousSibling)
   	{
 	    return element.parentNode.lastChild;
-	}			
-	else 
+	}
+	else
 	{
 	  	return element.previousSibling;
 	}
@@ -403,11 +411,11 @@ activeList.prototype.displayProgress = function(id)
  */
 activeList.prototype.getRecordId = function(fullId)
 {
-	return fullId.substr(this.listId.length + 1, this.listId.length);  
-}	
+	return fullId.substr(this.listId.length + 1, this.listId.length);
+}
 
 /**
- * Restore dragged item to initial state after saving the order 
+ * Restore dragged item to initial state after saving the order
  *
  * @param XMLHttpRequest originalRequest
  * @access private
@@ -415,18 +423,18 @@ activeList.prototype.getRecordId = function(fullId)
 activeList.prototype.restoreDraggedItem = function(originalRequest)
 {
 	item = originalRequest.responseText;
-	
+
 	// there may be more than one dragging operation in progress, so restore the item only once
 	if (false != this.draggedItemHtml[item])
 	{
 		document.getElementById(this.getFullId(item)).innerHTML = this.draggedItemHtml[item];
 		this.draggedItemHtml[item] = false;
 	}
-	
+
 	// sometimes text gets selected when items are dragged around - perhaps there are nicer ways to handle this
 	deselectText();
 
-	// items are restored with their menus, so to avoid several menus 
+	// items are restored with their menus, so to avoid several menus
 	// being displayed at once, we'll redraw the menu (and so hide the other menus)
 	this.showMenu(document.getElementById(this.getFullId(item)));
 }
