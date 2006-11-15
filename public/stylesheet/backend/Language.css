@@ -1,5 +1,15 @@
-input label {
-  background-color: green;
+label {
+  background-color: yellow;
+}
+
+.menuFieldSet table td {
+  	vertical-align: middle;
+	padding: 5px;
+}
+
+#langNotFound {
+  	display: none;
+  	margin-bottom: 20px;
 }
 
 .langTranslations {
@@ -21,9 +31,13 @@ input label {
 	padding-top: 5px;
 }  
 
-.langTranslations input {
+.langTranslations input, .langTranslations textarea {
 	width: 445px;
 }  
+
+.langTranslations textarea {
+	height: 150px;  
+}
 
 .langTranslations img {
   	vertical-align: middle;

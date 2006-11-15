@@ -69,7 +69,7 @@
 				</table>				
 			</td>
 			<td id="systemMenu">
-				History | Bookmarks | Help | Change Language
+				Bookmarks | Help | Change Language
 			</td>
 		</tr>	
 	</table>

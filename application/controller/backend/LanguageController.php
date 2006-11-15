@@ -175,7 +175,7 @@ class LanguageController extends SiteManagementController
 		$response->setValue("selected_not_defined", $selectedNotDefined);
 		$response->setValue("show", $this->request->getValue("show"));				
 		
-		$langFileSel = base64_decode($this->request->getValue('langFileSel'));
+		$langFileSel = $this->request->getValue('langFileSel');
 		if (!$langFileSel)
 		{
 		  	$langFileSel = '{}';
@@ -216,7 +216,7 @@ class LanguageController extends SiteManagementController
 		  	$editLocale->translationManager()->saveCacheData($localeCode . '/' . $file, $data);
 		}
 			
-		return new ActionRedirectResponse($this->request->getControllerName(), 'edit', array('id' => $localeCode, 'langFileSel' => base64_encode($this->request->getValue('langFileSel'))));
+		return new ActionRedirectResponse($this->request->getControllerName(), 'edit', array('id' => $localeCode, 'langFileSel' => $this->request->getValue('langFileSel')));
 	}
 	
 	/**

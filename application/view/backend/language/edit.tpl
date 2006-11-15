@@ -9,27 +9,44 @@
 </script>
 {/literal}
 
-<form id="navLang" method="post" style="margin-bottom: 10px;" action="{link controller=backend.language action=edit id=$id}">
-	<input type="hidden" name="langFileSel" value="{$langFileSel}" />
+<fieldset class="inlineHelp">
+	<legend>{t _editing_translations}</legend>
+	{translate|nl2br text="_help"}
+</fieldset>
 
-	<strong>{t _show_words}:</strong> 
-	
-	<input type="radio" name="show" value="all" id="show-all" {$selected_all} onclick="this.form.submit()">
-		<label for="show-all">{t _all}</label>
-	</input>
+<fieldset class="menuFieldSet">
+	<legend>{t _translation_filter}</legend>
+	<form id="navLang" method="post" style="margin-bottom: 10px;" action="{link controller=backend.language action=edit id=$id}">
+	<table>
+		<tr>
+			<td>
+				{t _show_words}: 
+			</td>
+			<td>
+				<input type="hidden" name="langFileSel" value='{$langFileSel|escape:"quotes"}' />
 
-	<input type="radio" name="show" value="notDefined" id="show-undefined" {$selected_not_defined} onclick="this.form.submit()">
-		<label for="show-undefined">{t _not_defined}</label>
-	</input>
-	
-	<input type="radio" name="show" value="defined" id="show-defined" {$selected_defined} onclick="this.form.submit()">
-		<label for="show-defined">{t _defined}</label>
-	</input>
-</form>
-
-<div id="langSearch">
-	Search for translations: <input type="text" name="filter" onkeyup="langGenerateTranslationForm(this.value);">
-</div>
+				<input type="radio" name="show" value="all" id="show-all" {$selected_all} onclick="this.form.submit()" />
+					<label for="show-all">{t _all}</label>
+			
+				<input type="radio" name="show" value="notDefined" id="show-undefined" {$selected_not_defined} onclick="this.form.submit()" />
+					<label for="show-undefined">{t _not_defined}</label>
+				
+				<input type="radio" name="show" value="defined" id="show-defined" {$selected_defined} onclick="this.form.submit()" />
+					<label for="show-defined">{t _defined}</label>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				{t _search_trans}:
+			</td>
+			<td>
+				<input type="text" name="filter" onkeyup="langSearch(this.value);">			
+			</td>
+		</tr>
+	</table>
+	</form>	
+</fieldset>
+<br /><br />
 
 <form name="editLang" method="post" action="{link controller=backend.language action=save id=$id}" onSubmit="langPassDisplaySettings(this);">
 	
@@ -45,7 +62,7 @@
 			<tr class="lang-trans-template" style="display: none;">
 				<td class="lang-key"></td>
 				<td class="lang-translation">
-					<input type="text">
+					<input type="text"><br />
 					<span></span>
 				</td>
 			<tr>	
@@ -60,6 +77,8 @@
 </script>
 {/literal}
 
+	<div id="langNotFound">{t _no_translations_found}</div>
+	
 	<input type="submit" value="{t _save}">
 	
 </form>

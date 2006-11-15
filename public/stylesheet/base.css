@@ -374,6 +374,30 @@ html>body #minHeight{ /*safari wrapper */
   	background-color: #EEEEEE;
 }
 
+.inlineHelp {
+  	background-color: yellow; 
+	float: right; 
+	display: inline; 
+	width: auto; 
+	width: 300px; 
+	padding: 10px;
+	border: 1px solid grey;  
+}
+
+.inlineHelp legend {
+  	background-color: yellow;
+	padding: 3px;  	
+}
+
+.menuFieldSet {
+  	display: inline;
+  	width: auto;
+  	padding: 10px;
+}
+
+.menuFieldSet legend {
+	padding: 3px;  
+}
 
 /* Form styling */
 /*

@@ -1,3 +1,5 @@
+# index
+
 _languages=Languages	
 
 _add_language=Add new language
@@ -9,12 +11,10 @@ _admin_languages=Manage Languages
 _update_from_files=Update language translations from files
 
 _language_definitons=Language translations
-_edit_definitions=Edit definitions
 
+_edit_definitions=Edit translations
 _set_as_default=Set as default
-_inactive=Inactive
-
-_show_words=Show translations
+_inactive=inactive
 
 _statistic_languages=Statistics: [quant,_1,language,languages,no languages]
 _statistic_languages_full=Statistics: [quant,_1,language,languages,no languages], active [quant,_2,language,languages,no languages]
@@ -23,8 +23,20 @@ _currentLanguage=Current language
 _selectLanguage=Select language
 _default_language=Default language
 
+_help_index=help on managing languages
+_help_index_title=Manage Languages
+
+# edit
+
+_translation_filter=Translation Filter
+_show_words=Show translations
+_search_trans=Search for translations
 _all=All
 _not_defined=Translated
 _defined=Not translated
 
-_allFiles = All files
+_no_translations_found=No translations found
+_save=Save translations
+
+_editing_translations=Editing Translations
+_help=Here goes some helpful information.

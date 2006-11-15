@@ -4,9 +4,13 @@
 
 {pageTitle}{t _admin_languages}{/pageTitle}
 
-{literal}
-<script language="javascript">	
+<fieldset class="inlineHelp">
+	<legend>{t _help_index_title}</legend>
+	{translate|nl2br text="_help_index"}
+</fieldset>
 
+
+{*
 	function langListHandler(listId)
 	{
 		this.create(listId);
@@ -27,6 +31,12 @@
 	{	  
 		return {/literal}"{link controller=backend.language action=saveorder}?draggedId=" + this.draggedId + "&" + order;{literal}
 	}  
+*}
+
+{literal}
+<script language="javascript">	
+
+
 
 	function setEnabled(langId, status) 
 	{
@@ -66,6 +76,17 @@
 		{menuAction}{link language=$language controller=backend.language action=update}{/menuAction} 
 	{/menuItem}
 {/pageMenu}
+
+{*
+<ul id="pageMenu">
+	<li>
+		<a onClick="slideForm('addLang', 'pageMenu')">{t _add_language}</a>
+	</li>
+	<li>
+		<a href="{link language=$language controller=backend.language action=update}">{t _update_from_files}</a>
+	</li>
+</ul>
+*}
 
 {literal}
 <style>
@@ -110,11 +131,27 @@
 </style>
 {/literal}
 
-{activeList id="languageList" sortable=true deletable=true handlerClass=langListHandler}
-	{foreach from=$languagesList item=item}
-		{include file="backend/language/listItem.tpl"}
-	{/foreach}
-{/activeList}
+<ul id="languageList" class="activeList_add_sort activeList_add_edit activeList_add_delete">
+{foreach from=$languagesList item=item}
+	{include file="backend/language/listItem.tpl"}
+{/foreach}
+</ul>
+
+{literal}
+<script type="text/javacript">
+     new LiveCart.ActiveList('languageList', {
+         beforeEdit:     function(li) { return 'sort.php?' },
+         beforeSort:     function(li, order) { return 'sort.php?' + order },
+         beforeDelete:   function(li)
+         {
+             if(confirm('Are you sure you wish to remove record #' + this.getRecordId(li) + '?')) return 'delete.php?id='+this.getRecordId(li)
+         },
+         afterEdit:      function(li, response) { alert( 'Record #' + this.getRecordId(li) + ' changed position'); },
+         afterSort:      function(li, response) { alert( 'Record #' + this.getRecordId(li) + ' changed position'); },
+         afterDelete:    function(li, response)  { Element.remove(li); }
+     });
+</script>
+{/literal}
 
 <!-- {maketext text="_statistic_languages_full" params="$count_all,$count_active"}. -->
 
