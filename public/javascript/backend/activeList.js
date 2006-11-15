@@ -292,7 +292,7 @@ LiveCart.ActiveList.prototype = {
         $H(this.icons).each(function(icon)
         {
             // If icon is not progress and it was added to a whole list or only this item then put that icon into container
-            if(!icon.key == 'progress' || (Element.hasClassName(self.ul, self.cssPrefix + 'add_' + icon.key)) || Element.hasClassName(self.ul, self.cssPrefix + 'add_' + icon.key))
+            if(icon.key != 'progress')
             {
                 var iconImage = document.createElement('div');
                 iconImage.style.background = "url("+icon.value+") no-repeat";
@@ -302,7 +302,7 @@ LiveCart.ActiveList.prototype = {
                 Element.addClassName(iconImage, self.cssPrefix + icon.key);
 
                 // If icon is removed from this item than do not display the icon
-                if(Element.hasClassName(li, self.cssPrefix + 'remove_' + icon.key))
+                if((Element.hasClassName(li, self.cssPrefix + 'remove_' + icon.key) || !Element.hasClassName(self.ul, self.cssPrefix + 'add_' + icon.key)) && !Element.hasClassName(li, self.cssPrefix + 'add_' + icon.key))
                 {
                     iconImage.style.display = 'none';
                 }
