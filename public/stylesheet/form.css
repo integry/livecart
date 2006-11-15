@@ -19,7 +19,7 @@ label
 
 input, textarea, select
 {
-    border: 1px solid #aaa;
+   /* border: 1px solid #aaa;*/
 }
 
 input, select, form .other

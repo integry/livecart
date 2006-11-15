@@ -2,7 +2,7 @@
 
 {assign var="action" value="create"}
 
-{form handle=$catalogForm action="controller=backend.catalog action=$action" method="post"}
+{form handle=$catalogForm action="controller=backend.catalog action=$action id=0" method="post"}
 	<fieldset>
 		<legend>Category details {$ID}</legend>
 	
