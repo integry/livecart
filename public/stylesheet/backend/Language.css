@@ -7,6 +7,16 @@ label {
 	padding: 5px;
 }
 
+#languageList {
+  	width: 300px;
+  	float: left;
+}
+
+#languageList li {
+	float: left;
+	margin-bottom: 10px;
+}
+
 #langNotFound {
   	display: none;
   	margin-bottom: 20px;

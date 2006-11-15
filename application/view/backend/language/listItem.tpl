@@ -1,4 +1,5 @@
-<li id="languageList_{$item.ID}" class="">
+<li id="languageList_{$item.ID}" class="activeList_add_sort">
+	<div>
 	<input type="checkbox" id="languageList_enable_{$item.ID}" {if $item.isEnabled}checked{/if} {if $item.isDefault}disabled{/if} onclick="setEnabled('{$item.ID}', 1 - {$item.isEnabled});">
 
 	<img src="image/localeflag/{$item.ID}.png" />
@@ -26,4 +27,6 @@
 		</small>
 			
 	</span>	
+	
+	</div>
 </li>

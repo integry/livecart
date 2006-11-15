@@ -12,6 +12,7 @@
 	{includeCss file=base.css}	
 	{$STYLESHEET}
 	
+	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
 	<!-- JavaScript includes -->
 	{includeJs file=backend/keyboard.js}
 	{includeJs file=json.js}
@@ -20,7 +21,6 @@
 	<script type="text/javascript">
 		window.onload = startList;
 	</script>	
-	
 </head>
 <body>
 

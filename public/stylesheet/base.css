@@ -375,13 +375,15 @@ html>body #minHeight{ /*safari wrapper */
 }
 
 .inlineHelp {
-  	background-color: yellow; 
+  	position: relative;
+	background-color: yellow; 
 	float: right; 
 	display: inline; 
 	width: auto; 
 	width: 300px; 
 	padding: 10px;
 	border: 1px solid grey;  
+	clear: none;
 }
 
 .inlineHelp legend {

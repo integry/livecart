@@ -18,7 +18,6 @@
 function smarty_function_loadScriptaculous($params, $smarty) 
 {
 	require_once('function.includeJs.php');
-	smarty_function_includeJs(array('file' => 'library/prototype/prototype.js'), $smarty);
 	smarty_function_includeJs(array('file' => 'library/scriptaculous/scriptaculous.js'), $smarty);
 }
 

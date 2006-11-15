@@ -7,6 +7,7 @@
 <fieldset class="inlineHelp">
 	<legend>{t _help_index_title}</legend>
 	{translate|nl2br text="_help_index"}
+	<Br><Br><br>
 </fieldset>
 
 
@@ -90,6 +91,17 @@
 
 {literal}
 <style>
+.activeList_icons {
+  	float: left;  	
+/*  	display: table-cell; */
+  	vertical-align: top;
+  	display: block;
+}
+.activeList li {
+  	clear: both;
+  	list-style: none;
+}
+
 .slideForm {
 	padding: 10px;
 	background-color: #E6E6E6;	  
@@ -131,25 +143,28 @@
 </style>
 {/literal}
 
-<ul id="languageList" class="activeList_add_sort activeList_add_edit activeList_add_delete">
+
+<ul id="languageList" class="activeList_add_delete">
 {foreach from=$languagesList item=item}
 	{include file="backend/language/listItem.tpl"}
 {/foreach}
 </ul>
 
 {literal}
-<script type="text/javacript">
+<script type="text/javascript">
+
      new LiveCart.ActiveList('languageList', {
          beforeEdit:     function(li) { return 'sort.php?' },
-         beforeSort:     function(li, order) { return 'sort.php?' + order },
+         beforeSort:     function(li, order) { return '{/literal}{link controller=backend.language action=saveorder}{literal}?draggedId=' + this.getRecordId(li) + '&' + order },
          beforeDelete:   function(li)
          {
-             if(confirm('Are you sure you wish to remove record #' + this.getRecordId(li) + '?')) return 'delete.php?id='+this.getRecordId(li)
+             if(confirm('{/literal}{translate text=_confirm_delete}{literal}')) return '{/literal}{link controller=backend.language action=delete}{literal}' + this.getRecordId(li)
          },
-         afterEdit:      function(li, response) { alert( 'Record #' + this.getRecordId(li) + ' changed position'); },
-         afterSort:      function(li, response) { alert( 'Record #' + this.getRecordId(li) + ' changed position'); },
+         afterEdit:      function(li, response) {  },
+         afterSort:      function(li, response) { alert('test'); },
          afterDelete:    function(li, response)  { Element.remove(li); }
      });
+
 </script>
 {/literal}
 
