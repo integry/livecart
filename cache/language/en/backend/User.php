@@ -8,7 +8,7 @@
   '_assignSelectedUserToGroup' => 'Assign selected users to group',
   '_backToUsersList' => 'Back to users list',
   '_user' => 'User',
-  '_nickName' => 'Nick name',
+  '_nickName' => 'Nickname',
   '_firstName' => 'First name',
   '_lastName' => 'Last name',
   '_creationDate' => 'Creation date',
