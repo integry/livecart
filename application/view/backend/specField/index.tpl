@@ -1,36 +1,54 @@
-{*
-<head><!--
-	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
-	<script type="text/javascript" src="javascript/library/scriptaculous/builder.js"></script>
-	<script type="text/javascript" src="javascript/backend/specFieldManager.js"></script>-->
-	<title>Fields</title>
-</head>
+{includeJs file=library/prototype/prototype.js}
+{includeJs file=library/livecart.js}
+{includeJs file=backend/keyboard.js}
+{includeJs file=library/scriptaculous/scriptaculous.js}
+{includeJs file=backend/activeList.js}
+{includeJs file=backend/specFieldManager.js}
+{includeJs file=library/trace/jsTrace.js}
+{includeJs file=library/trace/dom-drag.js}
+<script type="text/javascript">
+    require_once('library/prototype/prototype.js');
+    require_once('library/livecart.js');
+    require_once('backend/keyboard.js');
+    require_once('library/scriptaculous/scriptaculous.js');
+    require_once('backend/activeList.js');
+    require_once('backend/specFieldManager.js');
+    require_once('library/trace/jsTrace.js');
+    require_once('library/trace/dom-drag.js');
+</script>
+
+
 
 <h2>Laptop</h2>
 
 
 {literal}
 <style type="text/css">
-.step-translations-language
+.activeList_icons
+{
+    float: left;
+}
+
+.activeList li
+{
+    clear: both;
+}
+
+.step_translations_language
 {
 	display: none;
 }
-fieldset.step-main, fieldset.step-values, fieldset.step-translations
+fieldset.step_main,  fieldset.step_values, fieldset.step_translations
 {
 	display: none;
 }
 
-.specField-form-values-group div
+.specField_form_values_group div input
 {
-    width: 20em  !important ;
+    width: 10em;
 }
 
-.specField-form-values-group div input
-{
-    width: 10em  !important ;
-}
-
-.sortable-drag-handler, .sortable-drag-handler-for-fields {
+.sortable_drag_handler, .sortable_drag_handler_for_fields {
 	cursor: pointer;
 	cursor: hand;
     background: yellow;
@@ -38,236 +56,102 @@ fieldset.step-main, fieldset.step-values, fieldset.step-translations
     float: left;
 }
 
-ul#specField-items-list, ul#specField-items-list ul
+ul#specField_items_list, ul#specField_items_list ul
 {
-    list-style: none;
+    list_style: none;
 }
 
+
+li
+{
+    display: block;
+}
 </style>
 {/literal}
 
-<script type="text/javascript">
+
 {literal}
-	LiveCart.SpecFieldManager.prototype.languages =
-	{
-		en: 'English',
-		lt: 'Lithuanian',
-		de: 'German'
-	}
+<script type="text/javascript">
 
-	LiveCart.SpecFieldManager.prototype.types =
+	function createTypesOptions(types)
 	{
-		numbers:
-		[
-			new Option('Selector', 'selector'),
-			new Option('Numbers', 'numbers')
-		],
-		text:
-		[
-			new Option('Text', 'text'),
-			new Option('Word processer', 'wordProcesser'),
-			new Option('{t _selector}', '_selector'),
-			new Option('Date', 'date')
-		]
-	}
+	   var typesOptions = {};
+	   $H(types).each(function(value) {
+	       var options = [];
 
-	LiveCart.SpecFieldManager.prototype.messages = { deleteField: 'delete field'	}
-	LiveCart.SpecFieldManager.prototype.selectorValueTypes = ['_selector', 'selector'];
-	LiveCart.SpecFieldManager.prototype.doNotTranslateTheseValueTypes = ['numbers'];
-	LiveCart.SpecFieldManager.prototype.countNewValues = 0;
+	       $H(value.value).each(function(option) {
+	           options[options.length] = new Option(option.value, option.key);
+	       });
+
+	       typesOptions[value.key] = options;
+		});
+
+		return typesOptions;
+	}
 {/literal}
+
+{foreach from=$configuration item="configItem" key="configKey"}
+    {if $configKey == 'types'}
+        LiveCart.SpecFieldManager.prototype.{$configKey} = createTypesOptions({json array=$configItem});
+    {else}
+        LiveCart.SpecFieldManager.prototype.{$configKey} = {json array=$configItem};
+    {/if}
+{/foreach}
+{literal}
 </script>
-
-{activeList id="languageList" sortable=true deletable=true handlerClass=langListHandler}
-	{foreach from=$languagesList item=item}
-		{include file="backend/language/listItem.tpl"}
-	{/foreach}
-{/activeList}
+{/literal}
 
 
-
-{activeList id="languageList" sortable=true deletable=true handlerClass=langListHandler}
-	{foreach from=$languagesList item=item}
-<ul id="specField-items-list">
-    <li id="specField-item-96">
-
-    	{include file="backend/specField/item.tpl" class="specField-item"}
-
-    	{literal}
-    	<script type="text/javascript">
-    	var specField = {
-    		id: 96,
-    		handle: 	'field1',
-
-    		type: 		'_selector',
-    		valueType: 	'text',
-    		multipleSelector: true,
-
-    		translations: {
-    			en: {title: 'WiFi',		description: 'Wireless internet'},
-    			lt: {title: 'WiFi',		description: 'Bevivielis internetas'},
-    			de: {title: 'WiFi',		description: 'Wirelichtinterneten'}
-    		},
-
-    		values: {
-    			1: {en: 'Yes', lt: 'Yra', de: 'Ya'},
-    			2: {en: 'No', lt: 'Nera', de: 'Nicht'}
-    		}
-    	}
-
-    	new LiveCart.SpecFieldManager(specField);
-    	</script>
-    	{/literal}
-    </li>
-
-
-    <li id="specField-item-95">
-    <div class="sortable-drag-handler-for-fields">D</div>
-    	{include file="backend/specField/item.tpl" class="specField-item"}
-
-    	{literal}
-    	<script type="text/javascript">
-    	var specField = {
-    		id: 95,
-    		handle: 	'manufacter',
-
-    		valueType: 	'text',
-    		type: 		'text',
-
-    		translations: {
-    			en: {title: 'Manufacter',		description: 'Apple, Assus, Lenovo etc'},
-    			lt: {title: 'Gamyntojas',		description: 'Apple, Assus, Lenovo ir kiti'},
-    			de: {title: 'Machtengiher',		description: 'Apple, Assus, Lenovo und fuhr'}
-    		}
-    	}
-
-    	new LiveCart.SpecFieldManager(specField);
-    	</script>
-    	{/literal}
-    </li>
-
-
-
-
-    <li id="specField-item-100">
-    <div class="sortable-drag-handler-for-fields">D</div>
-
-    	{include file="backend/specField/item.tpl" class="specField-item"}
-
-    	{literal}
-    	<script type="text/javascript">
-    	var specField = {
-    		id: 100,
-    		handle: 	'field1',
-
-    		type: 		'text',
-    		valueType: 	'text',
-
-    		translations: {
-    			en: {title: 'Other features',		description: 'Other features'},
-    			lt: {title: 'Kiti navorotai',		description: 'Kiti navorotai'},
-    			de: {title: 'Blachen fileich',		description: 'Blachen fileich'}
-    		}
-    	}
-
-    	new LiveCart.SpecFieldManager(specField);
-    	</script>
-    	{/literal}
-    </li>
-
-    <li id="specField-item-101">
-    <div class="sortable-drag-handler-for-fields">D</div>
-
-    	{include file="backend/specField/item.tpl" class="specField-item"}
-
-    	{literal}
-    	<script type="text/javascript">
-    	var specField = {
-    		id: 101,
-    		handle: 	'field1',
-
-    		type: 		'selector',
-    		valueType: 	'numbers',
-
-    		translations: {
-    			en: {title: 'Waranty',		description: 'Years waranty'},
-    			lt: {title: 'Garantija',	description: 'Garantija metais'},
-    			de: {title: 'Gharanty',		description: 'Gharanty yahr'}
-    		},
-
-    		values: {
-    			12: {en: 1},
-    			13: {en: 2},
-    			3: {en: 3},
-    			4: {en: 4},
-    			5: {en: 5},
-    			6: {en: 6},
-    			7: {en: 7},
-    			8: {en: 8},
-    			9: {en: 9},
-    			10: {en: 10},
-    			11: {en: 100}
-    		}
-    	}
-
-    	new LiveCart.SpecFieldManager(specField);
-    	</script>
-    	{/literal}
-    </li>
-
-
-
-    <li id="specField-item-102">
-    <div class="sortable-drag-handler-for-fields">D</div>
-
-    	{include file="backend/specField/item.tpl" class="specField-item"}
-
-    	{literal}
-    	<script type="text/javascript">
-    	var specField = {
-    		id: 102,
-    		handle: 	'field1',
-
-    		type: 		'_selector',
-    		valueType: 	'text',
-
-    		translations: {
-    			en: {title: 'Pressent',		description: 'You will get a pressent when you buy this product'},
-    			lt: {title: 'Dovana',		description: 'Gausite dovana perkant si produkta'},
-    			de: {title: 'Preshentwirdshihtceit',		description: 'Present mit bhot das kein!'}
-    		},
-
-
-    		values: {
-    			45: {en: 'TV tunner', lt: 'TV tuneris', 	 de: 'TV thuner'},
-    			46: {en: 'Ultraslim', lt: 'Super plonas', de: 'Shicht'},
-    			47: {en: 'Life time waranty', lt: 'Amzina garantiha', de: 'Das gluklich garantee'}
-    		}
-    	}
-
-    	new LiveCart.SpecFieldManager(specField);
-    	</script>
-    	{/literal}
-    </li>
+<ul id="specField_items_list" class="activeList_add_sort activeList_add_edit activeList_add_delete">
+	<li id="specField_items_list_96"  class="">Item 1</li>
+	<li id="specField_items_list_95"  class="">Item 2</li>
+	<li id="specField_items_list_100" class="activeList_remove_sort">Item 3</li>
+	<li id="specField_items_list_101" class="">Item 4</li>
+	<li id="specField_items_list_102" class="">Item 5</li>
 </ul>
 
+
+
 {literal}
 <script type="text/javascript">
-function updateField()
-{
-    alert('sada');
-//    alert(Sortable.serialize('specField-items-list'));
-}
-
-Sortable.create('specField-items-list',
-{
-   dropOnEmpty: true,
-   containment: ['specField-items-list'],
-   constraint: false,
-   handler: "sortable-drag-handler-for-fields"
-});
+    new LiveCart.ActiveList('specField_items_list', {
+        beforeEdit:     function(li)
+        {
+            if(this.isContainerEmpty())
+            {
+                return '{/literal}{link controller=backend.specField action=item}{literal}'+this.getRecordId(li)
+            }
+            else
+            {
+                this.toggleContainer()
+            }
+        },
+        beforeSort:     function(li, order)
+        {
+            return 'someurl.php?' + order
+        },
+        beforeDelete:   function(li)
+        {
+            if(confirm('Are you sure you wish to remove record #' + this.getRecordId(li) + '?'))
+            {
+                return '{/literal}{link controller=backend.specField action=delete}{literal}?id='+this.getRecordId(li)
+            }
+        },
+        afterEdit:      function(li, response)
+        {
+             this.toggleContainer();
+             this.getContainer(li).innerHTML = response;
+             LiveCart.AjaxUpdater.prototype.runJavaScripts(response);
+        },
+        afterSort:      function(li, response)
+        {
+            jsTrace.send( 'Record #' + this.getRecordId(li) + ' changed position');
+        },
+        afterDelete:    function(li, response)
+        {
+            Element.remove(li);
+            jsTrace.send('Record #' + this.getRecordId(li) + ' was deleted');
+        }
+    });
 </script>
 {/literal}
-*}
-
-{$configuration}
