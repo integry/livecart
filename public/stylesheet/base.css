@@ -224,8 +224,8 @@ html>body #minHeight{ /*safari wrapper */
 #nav {
   	height: 46px;
   	z-index: 100000;
-	position: relative; 
-	left: 50px; 
+	position: relative;
+	left: 50px;
 	top: 10px;
 }
 
@@ -235,11 +235,11 @@ html>body #minHeight{ /*safari wrapper */
 
 #nav li {
 	height: 100%;
-	background-repeat: repeat-x;	
+	background-repeat: repeat-x;
 	padding-left:10px;
 	padding-bottom:3px;
 	#width: 20px; /* IE hack */
-  	background-image: url(../image/backend/menu/menu_bg.jpg); 
+  	background-image: url(../image/backend/menu/menu_bg.jpg);
 }
 
 #nav li div {
@@ -287,8 +287,8 @@ html>body #minHeight{ /*safari wrapper */
 	width: 100%;
   	#width: 200px; /* IE hack */
   	min-width: 150px;
-  	text-align: left; 
-	background-image: none; 	
+  	text-align: left;
+	background-image: none;
 	border-bottom: 1px dotted #999999;
 	padding: 2px;
 		z-index:100000;
@@ -301,12 +301,12 @@ html>body #minHeight{ /*safari wrapper */
 
 
 #nav li ul li:hover, .menuCommandHover {
-	background: #3981E7;  
+	background: #3981E7;
 	border: 1px solid #3981E7;
 }
 
 #nav li ul li:hover a, .menuCommandHover a {
-	color: #FFFFFF;	
+	color: #FFFFFF;
 }
 
 /* Page footer */
@@ -361,7 +361,7 @@ html>body #minHeight{ /*safari wrapper */
 }
 #pageTitle {
   	font-weight: bold;
-	padding-left: 20px;  	
+	padding-left: 20px;
 }
 
 #workArea {
@@ -376,19 +376,19 @@ html>body #minHeight{ /*safari wrapper */
 
 .inlineHelp {
   	position: relative;
-	background-color: yellow; 
-	float: right; 
-	display: inline; 
-	width: auto; 
-	width: 300px; 
+	background-color: yellow;
+	float: right;
+	display: inline;
+	width: auto;
+	width: 300px;
 	padding: 10px;
-	border: 1px solid grey;  
+	border: 1px solid grey;
 	clear: none;
 }
 
 .inlineHelp legend {
   	background-color: yellow;
-	padding: 3px;  	
+	padding: 3px;
 }
 
 .menuFieldSet {
@@ -398,7 +398,7 @@ html>body #minHeight{ /*safari wrapper */
 }
 
 .menuFieldSet legend {
-	padding: 3px;  
+	padding: 3px;
 }
 
 /* Form styling */
@@ -438,7 +438,7 @@ br.clear
     clear: both;
 }
 
-.dom-template
+.dom_template
 {
 	display: none ! important;
 }
