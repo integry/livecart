@@ -212,6 +212,7 @@ LiveCart.ActiveList.prototype = {
      */
     getRecordId: function(li)
     {
+        if(!li) li = this._currentLi;
         return li.id.substring(this.ul.id.length+1);
     },
 
@@ -284,9 +285,13 @@ LiveCart.ActiveList.prototype = {
         li.tabIndex       = this.tabIndex;
 
         // Create icons container. All icons will be placed incide it
-        var iconsDiv = document.createElement('div');
-        Element.addClassName(iconsDiv, self.cssPrefix + 'icons');
-        li.insertBefore(iconsDiv, li.firstChild);
+        var iconsDiv = document.getElementsByClassName(self.cssPrefix + 'icons', li)[0];
+        if(!iconsDiv)
+        {
+            iconsDiv = document.createElement('div');
+            Element.addClassName(iconsDiv, self.cssPrefix + 'icons');
+            li.insertBefore(iconsDiv, li.firstChild);
+        }
 
         // add all icons
         $H(this.icons).each(function(icon)
@@ -294,21 +299,27 @@ LiveCart.ActiveList.prototype = {
             // If icon is not progress and it was added to a whole list or only this item then put that icon into container
             if(icon.key != 'progress')
             {
-                var iconImage = document.createElement('div');
-                iconImage.style.background = "url("+icon.value+") no-repeat";
-                iconImage.style.width = self.iconSize[0];
-                iconImage.style.height = self.iconSize[1];
-                iconImage.style.visibility = 'hidden';
-                Element.addClassName(iconImage, self.cssPrefix + icon.key);
+                var iconImage = document.getElementsByClassName(self.cssPrefix + icon.key, li)[0];
 
-                // If icon is removed from this item than do not display the icon
-                if((Element.hasClassName(li, self.cssPrefix + 'remove_' + icon.key) || !Element.hasClassName(self.ul, self.cssPrefix + 'add_' + icon.key)) && !Element.hasClassName(li, self.cssPrefix + 'add_' + icon.key))
+                if(!iconImage)
                 {
-                    iconImage.style.display = 'none';
+                    iconImage = document.createElement('div');
+                    iconImage.style.background = "url("+icon.value+") no-repeat";
+                    iconImage.style.width = self.iconSize[0];
+                    iconImage.style.height = self.iconSize[1];
+                    iconImage.style.visibility = 'hidden';
+                    Element.addClassName(iconImage, self.cssPrefix + icon.key);
+
+                    // If icon is removed from this item than do not display the icon
+                    if((Element.hasClassName(li, self.cssPrefix + 'remove_' + icon.key) || !Element.hasClassName(self.ul, self.cssPrefix + 'add_' + icon.key)) && !Element.hasClassName(li, self.cssPrefix + 'add_' + icon.key))
+                    {
+                        iconImage.style.display = 'none';
+                    }
+
+                    // Show icon
+                    iconsDiv.appendChild(iconImage);
                 }
 
-                // Show icon
-                iconsDiv.appendChild(iconImage);
 
                 // create shortcut
                 li[icon.key] = iconImage;
@@ -316,13 +327,14 @@ LiveCart.ActiveList.prototype = {
                 // all icons except sort has onclick event handler defined by user
                 if(icon.key != 'sort')
                 {
+                    var test = li;
                     iconImage.onclick = function() { self.bindAction(li, icon.key) }
 
                     var container = document.createElement('div');
                     container.style.display = 'none';
                     Element.addClassName(container, self.cssPrefix + icon.key + 'Container');
                     li.appendChild(container);
-                    li.container = container;
+                    li[icon.key + 'Container'] = container;
                 }
             }
 
@@ -332,11 +344,16 @@ LiveCart.ActiveList.prototype = {
         // This is done to properly handle animated images because i am not sure if all browsers will
         // handle animated backgrounds in the same way. Also differently from icons progress icon
         // can vary in size while all other icons are always the same size
-        var iconProgress = document.createElement('img');
-        iconProgress.src = this.icons.progress
-        iconProgress.style.visibility = 'hidden';
-        Element.addClassName(iconProgress, self.cssPrefix + 'progress');
-        iconsDiv.appendChild(iconProgress);
+        var iconProgress = document.getElementsByClassName(self.cssPrefix + 'progress', li)[0];
+        if(!iconProgress)
+        {
+            iconProgress = document.createElement('img');
+            iconProgress.src = this.icons.progress
+            iconProgress.style.visibility = 'hidden';
+            Element.addClassName(iconProgress, self.cssPrefix + 'progress');
+            iconsDiv.appendChild(iconProgress);
+        }
+
         li.progress = iconProgress;
 
     },
@@ -507,7 +524,7 @@ LiveCart.ActiveList.prototype = {
 
             // the object context mystically dissapears when onComplete function is called,
             // so the only way I could make it work is this
-            onComplete: function(param) { self.restoreDraggedItem(param) }
+            onComplete: function(param) { self.restoreDraggedItem(param); }
         });
     },
 
