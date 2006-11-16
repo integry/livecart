@@ -12,7 +12,8 @@ LiveCart.SpecFieldManager.prototype = {
 	 */
 	initialize: function(specField)
 	{
-		this.id = specField.id;
+	    this.id = specField.id;
+	    this.rootId = specField.rootId ? specField.rootId : 'specField_item';
 		this.type = specField.type;
 		this.values = specField.values;
 		this.handle = specField.handle;
@@ -33,29 +34,29 @@ LiveCart.SpecFieldManager.prototype = {
 	{
 		if(!this.nodes) this.nodes = [];
 
-		this.nodes.parent = document.getElementById("specField-item-"+this.id);
+		this.nodes.parent = document.getElementById(this.rootId);
 
-		this.nodes.valueType 			= document.getElementsByClassName("specField-form-valueType", this.nodes.parent)[0].getElementsByTagName("input");
-		this.nodes.type 				= document.getElementsByClassName("specField-form-type", this.nodes.parent)[0];
-		this.nodes.stateLinks 			= document.getElementsByClassName("change-state", this.nodes.parent);
-		this.nodes.stepTranslations 	= document.getElementsByClassName("step-translations", this.nodes.parent)[0];
-		this.nodes.stepMain 			= document.getElementsByClassName("step-main", this.nodes.parent)[0];
+		this.nodes.valueType 			= document.getElementsByClassName("specField_form_valueType", this.nodes.parent)[0].getElementsByTagName("input");
+		this.nodes.type 				= document.getElementsByClassName("specField_form_type", this.nodes.parent)[0];
+		this.nodes.stateLinks 			= document.getElementsByClassName("change_state", this.nodes.parent);
+		this.nodes.stepTranslations 	= document.getElementsByClassName("step_translations", this.nodes.parent)[0];
+		this.nodes.stepMain 			= document.getElementsByClassName("step_main", this.nodes.parent)[0];
 
-		this.nodes.stepLevOne 			= document.getElementsByClassName("step-lev1", this.nodes.parent);
-		this.nodes.mainTitle 			= document.getElementsByClassName("specField-title", this.nodes.parent)[0];
-		this.nodes.id 					= document.getElementsByClassName("specField-form-id", this.nodes.parent)[0];
-		this.nodes.description 			= document.getElementsByClassName("specField-form-description", this.nodes.parent)[0];
-		this.nodes.multipleSelector 	= document.getElementsByClassName("specField-form-multipleSelector", this.nodes.parent)[0];
-		this.nodes.handle 				= document.getElementsByClassName("specField-form-handle", this.nodes.parent)[0];
-		this.nodes.title 				= document.getElementsByClassName("specField-form-title", this.nodes.parent)[0];
-		this.nodes.valuesDefaultGroup 	= document.getElementsByClassName("specField-form-values-group", this.nodes.parent)[0];
-		this.nodes.translationsLinks 	= document.getElementsByClassName("specFields-form-values-translations-language-links", this.nodes.parent)[0];
-		this.nodes.valuesAddFieldLink 	= this.nodes.valuesDefaultGroup.getElementsByClassName("add-field", this.nodes.parent)[0];
+		this.nodes.stepLevOne 			= document.getElementsByClassName("step_lev1", this.nodes.parent);
+		this.nodes.mainTitle 			= document.getElementsByClassName("specField_title", this.nodes.parent)[0];
+		this.nodes.id 					= document.getElementsByClassName("specField_form_id", this.nodes.parent)[0];
+		this.nodes.description 			= document.getElementsByClassName("specField_form_description", this.nodes.parent)[0];
+		this.nodes.multipleSelector 	= document.getElementsByClassName("specField_form_multipleSelector", this.nodes.parent)[0];
+		this.nodes.handle 				= document.getElementsByClassName("specField_form_handle", this.nodes.parent)[0];
+		this.nodes.title 				= document.getElementsByClassName("specField_form_title", this.nodes.parent)[0];
+		this.nodes.valuesDefaultGroup 	= document.getElementsByClassName("specField_form_values_group", this.nodes.parent)[0];
+		this.nodes.translationsLinks 	= document.getElementsByClassName("specFields_form_values_translations_language_links", this.nodes.parent)[0];
+		this.nodes.valuesAddFieldLink 	= this.nodes.valuesDefaultGroup.getElementsByClassName("add_field", this.nodes.parent)[0];
 	},
 
 	bindTranslationValues: function()
 	{
-		this.nodes.translatedValues = document.getElementsByClassName("specField-form-values-translations", this.nodes.parent);
+		this.nodes.translatedValues = document.getElementsByClassName("specField_form_values_translations", this.nodes.parent);
 	},
 
 
@@ -128,20 +129,6 @@ LiveCart.SpecFieldManager.prototype = {
 	},
 
 
-	/**
-	 * Find all delete value links (this function is needed because we need to refresh links list when new value is added or removed)
-	 *
-	 */
-	bindDeleteLinks: function()
-	{
-		var deleteValueLinks = document.getElementsByClassName("delete-value", this.nodes.valuesDefaultGroup);
-		for(var i = 0; i < deleteValueLinks.length; i++)
-		{
-			deleteValueLinks[i].onclick = this.deleteValueFieldAction.bind(this);
-		}
-	},
-
-
 	bindDefaultFields: function()
 	{
 		var self = this;
@@ -150,13 +137,15 @@ LiveCart.SpecFieldManager.prototype = {
 			input.onkeyup = self.mainValueFieldChangedAction.bind(self);
 		});
 
-        Sortable.create(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0].id,
-        {
-           dropOnEmpty: true,
-           containment: [this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0].id],
-           constraint: false,
-           handler: "sortable-drag-handler"
-        });
+		require_once('backend/activeList.js');
+	    new LiveCart.ActiveList(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0], {
+	        beforeSort: function(li, order){ return 'sort.php?'+order},
+	        afterSort: function(li, response){ },
+	        beforeEdit: function(li){ },
+	        afterEdit: function(li, response){ },
+	        beforeDelete: function(li){ if(confirm('Are you realy want to delete this item?')) return 'delete.php?id='+this.getRecordId(); },
+	        afterDelete: function(li, response){ Element.remove(li) }
+	    });
 	},
 
 
@@ -195,16 +184,16 @@ LiveCart.SpecFieldManager.prototype = {
 
 
 		// Translations
-		var translations = document.getElementsByClassName("step-translations-language", this.nodes.stepTranslations);
+		var translations = document.getElementsByClassName("step_translations_language", this.nodes.stepTranslations);
 		// we should have a template to continue
-		if(translations.length > 0 && translations[0].className.split(' ').indexOf('dom-template') !== -1)
+		if(translations.length > 0 && translations[0].className.split(' ').indexOf('dom_template') !== -1)
 		{
 			this.nodes.translations = new Array();
 			for(var i = 1; i < this.languageCodes.length; i++)
 			{
 				// copy template class
 				var newTranslation = translations[0].cloneNode(true);
-				Element.removeClassName(newTranslation, "dom-template");
+				Element.removeClassName(newTranslation, "dom_template");
 
 				newTranslation.className += this.languageCodes[i];
 
@@ -251,8 +240,6 @@ LiveCart.SpecFieldManager.prototype = {
 				self.addField(value.value, value.key)
 			});
 		}
-
-		this.bindDeleteLinks();
 	},
 
 
@@ -272,12 +259,12 @@ LiveCart.SpecFieldManager.prototype = {
 
 	createLanguagesLinks: function()
 	{
-		var languageTemplateLink = document.getElementsByClassName("dom-template", this.nodes.translationsLinks)[0];
+		var languageTemplateLink = document.getElementsByClassName("dom_template", this.nodes.translationsLinks)[0];
 
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
 			var languageLinkDiv = languageTemplateLink.cloneNode(true);
-			Element.removeClassName(languageLinkDiv, "dom-template");
+			Element.removeClassName(languageLinkDiv, "dom_template");
 
 			var languageLink = languageLinkDiv.getElementsByTagName("a")[0];
 			languageLink.hash += this.languageCodes[i];
@@ -302,7 +289,7 @@ LiveCart.SpecFieldManager.prototype = {
 		Event.stop(e);
 
 		var currentLanguageClass = e.target.hash.substring(1);
-		var translationsNodes = document.getElementsByClassName("step-translations-language", this.nodes.stepTranslations);
+		var translationsNodes = document.getElementsByClassName("step_translations_language", this.nodes.stepTranslations);
 
 		for(var i = 0; i < translationsNodes.length; i++)
 		{
@@ -324,10 +311,8 @@ LiveCart.SpecFieldManager.prototype = {
 
 		Event.stop(e);
 
-		this.addField(null, "new-" + this.countNewValues);
+		this.addField(null, "new_" + this.countNewValues);
 		this.countNewValues++;
-
-		this.bindDeleteLinks();
 	},
 
 
@@ -347,13 +332,13 @@ LiveCart.SpecFieldManager.prototype = {
 
 			Event.stop(e);
 
-			var splitedHref = e.target.parentNode.id.split("-");
+			var splitedHref = e.target.parentNode.id.split("_");
 			var isNew = splitedHref[splitedHref.length - 2] == 'new' ? true : false;
-			var id = (isNew ? 'new-' : '') + splitedHref[splitedHref.length - 1];
+			var id = (isNew ? 'new_' : '') + splitedHref[splitedHref.length - 1];
 
 			for(var i = 0; i < this.languageCodes.length; i++)
 			{
-				var translatedValue = document.getElementById("specField-form-values-" + this.languageCodes[i] + "-" + id);
+				var translatedValue = document.getElementById("specField_form_values_" + this.languageCodes[i] + "_" + id);
 
 				// if new or not main language
 				if(isNew || i > 0)
@@ -362,16 +347,12 @@ LiveCart.SpecFieldManager.prototype = {
     			}
     			else
     			{
-    			    translatedValue.id += '-deleted';
+    			    translatedValue.id += '_deleted';
     			    var input = translatedValue.getElementsByTagName('input')[0];
     			    input.name = input.name.replace(/\[\w+\]\[([\d]+)\]/, "[deleted][$1]");
     			    translatedValue.style.display = 'none';
     			}
 			}
-
-
-
-			this.bindDeleteLinks();
 		}
 	},
 
@@ -434,13 +415,13 @@ LiveCart.SpecFieldManager.prototype = {
 
 		Event.stop(e);
 
-		var splitedHref = e.target.parentNode.id.split("-");
+		var splitedHref = e.target.parentNode.id.split("_");
 		var isNew = splitedHref[splitedHref.length - 2] == 'new' ? true : false;
-		var id = (isNew ? 'new-' : '') + splitedHref[splitedHref.length - 1];
+		var id = (isNew ? 'new_' : '') + splitedHref[splitedHref.length - 1];
 
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
-			$("specField-form-values-" +  this.languageCodes[i] + "-" + id).getElementsByTagName("label")[0].firstChild.nodeValue = e.target.value;
+			$("specField_form_values_" +  this.languageCodes[i] + "_" + id).getElementsByTagName("label")[0].firstChild.nodeValue = e.target.value;
 		}
 	},
 
@@ -472,31 +453,31 @@ LiveCart.SpecFieldManager.prototype = {
 	 */
 	addField: function(value, id)
 	{
-	    var values = document.getElementsByClassName("specField-form-values-value", this.nodes.valuesDefaultGroup);
+	    var values = document.getElementsByClassName("specField_form_values_value", this.nodes.valuesDefaultGroup);
 
 		// If we have a template class then copy it
-		if(values.length > 0 && values[0].className.split(' ').indexOf('dom-template') !== -1)
+		if(values.length > 0 && values[0].className.split(' ').indexOf('dom_template') !== -1)
 		{
 			var newValue = values[0].cloneNode(true);
-			Element.removeClassName(newValue, "dom-template");
+			Element.removeClassName(newValue, "dom_template");
 
-			newValue.id = newValue.id + this.languageCodes[0] + "-" + id;
+			newValue.id = newValue.id + this.languageCodes[0] + "_" + id;
 
 			var input = newValue.getElementsByTagName("input")[0];
 			input.name = "values[" + this.languageCodes[0] + "]" + (id ? "["+id+"]" : '[new][]');
 			input.value = (value && value[this.languageCodes[0]]) ? value[this.languageCodes[0]] : '' ;
 
 			var ul = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
-			ul.id = 'specField-form-'+this.id+'-values-'+this.languageCodes[0];
+			ul.id = 'specField_form_'+this.id+'_values_'+this.languageCodes[0];
 			ul.appendChild(newValue);
 
 			// now insert all translation fields
 			for(var i = 1; i < this.languageCodes.length; i++)
 			{
-				var newValueTranslation = document.getElementsByClassName("specField-form-values-value", this.nodes.translations[this.languageCodes[i]])[0].cloneNode(true);
-				Element.removeClassName(newValueTranslation, "dom-template");
+				var newValueTranslation = document.getElementsByClassName("specField_form_values_value", this.nodes.translations[this.languageCodes[i]])[0].cloneNode(true);
+				Element.removeClassName(newValueTranslation, "dom_template");
 
-				newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "-" + id;
+				newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "_" + id;
 
 				var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
 				inputTranslation.name = "values[" + this.languageCodes[i] + "]" + (id ? "["+id+"]" : '[new][]');
@@ -506,12 +487,11 @@ LiveCart.SpecFieldManager.prototype = {
 				label.appendChild(document.createTextNode(input.value));
 
 				// add to node tree
-				var translationsUl = document.getElementsByClassName("specField-form-values-translations", this.nodes.translations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
-				translationsUl.id = 'specField-form-'+this.id+'-values-'+this.languageCodes[i];
+				var translationsUl = document.getElementsByClassName("specField_form_values_translations", this.nodes.translations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
+				translationsUl.id = 'specField_form_'+this.id+'_values_'+this.languageCodes[i];
 				translationsUl.appendChild(newValueTranslation);
 			}
 
-			this.bindDeleteLinks();
 			this.bindDefaultFields();
 		}
 		else
