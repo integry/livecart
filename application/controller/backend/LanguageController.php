@@ -213,6 +213,9 @@ class LanguageController extends SiteManagementController
 	 */
 	public function save()
 	{
+		// preload current locale
+		$this->locale;
+
 		// get locale instance
 		$localeCode = $this->request->getValue("id");		
 		$editLocale = Locale::getInstance($localeCode);
