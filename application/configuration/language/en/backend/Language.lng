@@ -35,6 +35,9 @@ _all=All
 _not_defined=Translated
 _defined=Not translated
 
+_collapse_all=Collapse all
+_expand_all=Expand all
+
 _no_translations_found=No translations found
 _save=Save translations
 

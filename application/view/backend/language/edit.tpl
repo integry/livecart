@@ -53,6 +53,11 @@
 	<input type="hidden" name="langFileSel" />
 	<input type="hidden" name="show" />
 	
+	<div id="expandCollapse">
+		<a href="#" onClick="langExpandAll('translations', true); return false;">Expand all</a> 
+		<a href="#" onClick="langExpandAll('translations', false); return false;">Collapse all</a>
+	</div>
+	
 	<fieldset class="langTranslations lang-template" style="display: none;">
 		<legend>
 			<img src="image/backend/Language/hor_line.gif" class="langTreeLine" />
@@ -77,7 +82,6 @@
 
 {literal}
 <script type="text/javascript">
-//	langGenerateTranslationForm();
 	new LiveCart.Language(translations, english, document.getElementById('translations'));
 </script>
 {/literal}

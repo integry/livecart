@@ -45,7 +45,9 @@
 				&nbsp; 	 
 			</div> 
 		<div id="topLogoContainer">
-		 	<img src="image/backend/layout/logo.jpg" id="topLogoImage">
+		 	<a href="{link controller=backend.index action=index}">
+			 	<img src="image/backend/layout/logo.jpg" id="topLogoImage">
+			</a>
 		</div> 
 	</div>
 
@@ -55,7 +57,12 @@
 				<table style="width: 100%;">
 					<tr>	
 						<td id="homeButtonWrapper">
-							<img src="image/backend/layout/top_home_button.jpg" id="homeButton"> Home
+							<a href="{link controller=backend.index action=index}">
+								<img src="image/backend/layout/top_home_button.jpg" id="homeButton"> 
+							</a>
+							<a href="{link controller=backend.index action=index}">
+								{t _home}
+							</a>
 						</td>
 						<td id="headerTopMenuContainer">							
 											
@@ -69,7 +76,7 @@
 				</table>				
 			</td>
 			<td id="systemMenu">
-				Bookmarks | Help | Change Language
+				{t _base_help} | {t _base_change_language}
 			</td>
 		</tr>	
 	</table>

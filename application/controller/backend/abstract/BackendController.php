@@ -29,35 +29,23 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	 */
 	protected $store = null;
 	
-	/*
-	* @todo Lazy loading for Locale
-	*/
-	public function __construct(Request $request) {
+	private $languageFiles = array();
+	
+	public function __construct(Request $request) 
+	{
 		parent::__construct($request);
-			
+		
+		// unset locale variables to make use of lazy loading
+		unset($this->locale);
+		unset($this->localeName);
+		$this->autoPreloadFiles();		
+									
 		if (!$this->user->hasAccess($this->getRoleName())) {	
 			//throw new AccessDeniedException($this->user, $this->request->getControllerName(), $this->request->getActionName());
 		}
 		
-		if($this->request->isValueSet("language"))
-		{
-			$this->localeName = $this->request->getValue("language");			
-		}
-		else
-		{
-	  		$lang = Language::getDefaultLanguage();
-	  		$this->localeName = $lang->getId();
-		}
-
-		$this->locale =	Locale::getInstance($this->localeName);	
-		$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('cache.language'));
-		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('application.configuration.language'));
-		Locale::setCurrentLocale($this->localeName);	
 		$this->store = Store::getInstance();
-		$this->autoPreloadFiles();
 		
-		// load language file for menu
-		$this->locale->translationManager()->loadCachedFile('menu/menu');		
 	}
 	
 	/**
@@ -94,7 +82,7 @@ abstract class BackendController extends BaseController implements LCiTranslator
 				$file = substr($file, strlen($controllerRoot) + 1, -14);			  
 	
 				// language file
-				$this->locale->translationManager()->loadFile($file);
+				$this->languageFiles[] = $file;
 				
 				smarty_function_includeJs(array('file' => $file . '.js'), $renderer);
 				smarty_function_includeCss(array('file' => $file . '.css'), $renderer);
@@ -121,8 +109,7 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	public function makeText($key, $params) 
 	{	  	  		  
 		return $this->locale->translator()->makeText($key, $params);
-	}	
-	
+	}		
 
 	public function init()
 	{
@@ -133,6 +120,9 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	
 	protected function menuSectionBlock() 
 	{			
+		// load language file for menu
+		$this->locale->translationManager()->loadCachedFile('menu/menu');		
+
 		$menuLoader = new MenuLoader();		
 		$structure = $menuLoader->getCurrentHierarchy($this->request->getControllerName(),	$this->request->getActionName());
 
@@ -181,6 +171,54 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		
 		return $roleValue;
 	}	
+	
+	private function loadLocale()
+	{
+		$this->locale =	Locale::getInstance($this->localeName);	
+		$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('cache.language'));
+		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('application.configuration.language'));
+		Locale::setCurrentLocale($this->localeName);	
+		
+		foreach ($this->languageFiles as $file)
+		{
+			$this->locale->translationManager()->loadFile($file);
+		}	
+		
+		return $this->locale;		  	
+	}
+	
+	private function loadLocaleName()
+	{
+		if ($this->request->isValueSet("language"))
+		{
+			$this->localeName = $this->request->getValue("language");			
+		}
+		else
+		{
+	  		$lang = Language::getDefaultLanguage();
+	  		$this->localeName = $lang->getId();
+		}
+		
+		return $this->localeName;
+	}
+
+	private function __get($name)
+	{
+		switch ($name)
+	  	{
+		    case 'locale':
+		    	return $this->loadLocale();	
+		    break;
+
+		    case 'localeName':
+		    	return $this->loadLocaleName();	
+		    break;
+		    
+			default:
+		    break;		    
+		}
+	}
+	
 }
 
 ?>

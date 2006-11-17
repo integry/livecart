@@ -15,7 +15,7 @@
 
 	function setEnabled(langId, status) 
 	{
-		url = {/literal}"{link controller=backend.language action=setEnabled}" + langId + "?status=" + status;{literal}  
+		url = {/literal}"{link controller=backend.language action=setEnabled}/" + langId + "?status=" + status;{literal}  
 
 		img = document.createElement('img');
 		img.src = "image/backend/list/indicator.gif";
@@ -60,7 +60,6 @@
 <style>
 .activeList_icons {
   	float: left;  	
-/*  	display: table-cell; */
   	vertical-align: top;
   	display: block;
 }

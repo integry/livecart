@@ -51,6 +51,9 @@ class LanguageController extends SiteManagementController
 	 */
 	public function edit()
 	{		
+		// preload current locale
+		$this->locale;
+		
 		// get locale instance for the language being translated
 		$editLocaleName = $this->request->getValue('id');
 		$editLocale = Locale::getInstance($editLocaleName);
@@ -248,7 +251,7 @@ class LanguageController extends SiteManagementController
 		
 		$editLocale->translationManager()->saveCacheData($localeCode . '/' .'menu/menu', $menuTranslations);
 			
-		return new ActionRedirectResponse($this->request->getControllerName(), 'edit', array('id' => $localeCode, 'langFileSel' => $this->request->getValue('langFileSel')));
+		return new ActionRedirectResponse($this->request->getControllerName(), 'edit', array('id' => $localeCode, 'query' => 'langFileSel='.$this->request->getValue('langFileSel')));
 	}
 	
 	/**
