@@ -23,17 +23,95 @@ label {
 }
 
 .langTranslations {
-	width: 700px;  	
-	margin-bottom: 20px;
+	width: 850px;  	
+	border: 0px;
+	position: relative;
+	background-color: #FFFFFF;
 }
 
-.langTranslations caption {
-	text-align: left;
-	font-weight: bold;  
+.langTreeLine {
+  	clear: none; 
+	height: 1px; 
+	position: relative; 
+	left: -10px; 
+	margin-right: 0px;
+}
+
+.langTreeControl {
+  	clear: none; 
+	position: relative; 
+	left: -13px;
+}
+
+.langTreeSpacer {
+  	float: left; 
+	width:5px; 
+	height: 10px; 
+	position: absolute; 
+	left: -12px; 
+	top: -7px;
+	visibility: hidden;  	
+}
+
+.transValuesLast .langTreeSpacer {
+	visibility: visible;  
+}
+
+.transContainer {
+  	margin-bottom: 20px;
+}
+
+.transValues .langTreeControl { 
+  	left: -28px;
+}
+
+
+.transContainer table {
+	margin-top: 20px;
+	width: 700px;
+}
+.transContainer .langTreeLine {
+  	visibility: hidden;
+  	width: 7px;
+}
+
+.transValues div {
+	position: relative;	
+}
+
+.transValuesLast div {
+	position: relative;
+	left: -40px;
+}
+
+.transValuesLast table {
+	margin-left: 40px;  
+}
+
+.transValues .langTreeLine {
+	visibility: visible;
+	width: 22px; 
 }  
 
-.langTranslations tbody {
+.langTranslations legend {
+	text-align: left;
+	font-weight: bold;  
+	padding-top: 10px;
+}  
 
+.transContainer legend a {
+	position: relative;
+	left: -10px;	  
+}
+.transValues legend a {
+	position: relative;
+	left: -25px;	  
+}
+
+.langTranslations div {
+	background-color: #FFFFFF;
+	padding-left: 10px;
+	margin-left: 10px;
 }  
 
 .langTranslations td {

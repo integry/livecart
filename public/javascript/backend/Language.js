@@ -36,12 +36,12 @@ function print_r(input, _indent)
 function langToggleVisibility(tableInstance, file)
 {
 	// toggle translation input visibility
-	tbody = tableInstance.getElementsByTagName('tbody')[0];
+	tbody = tableInstance.getElementsByTagName('div')[0];
 	tbody.style.display = ('none' == tbody.style.display) ? '' : 'none';
 	
 	// toggle collapse/expand images
-	img = tableInstance.getElementsByTagName('img')[0];
-	img.src = 'image/backend/icon/' + (('none' == tbody.style.display) ? 'collapse.gif' : 'expand.gif');
+	img = tableInstance.getElementsByTagName('img')[1];
+	img.src = 'image/backend/icon/' + (('none' == tbody.style.display) ? 'expand.gif' : 'collapse.gif');
 	
 	// save explode/collapse status in form variable
 	sel = document.getElementById('navLang').elements.namedItem('langFileSel');
@@ -71,130 +71,210 @@ function langPassDisplaySettings(form)
 	form.show.value = nav.elements.namedItem('show').value;
 }
 
-function langGenerateTranslationForm()
+if (LiveCart == undefined)
 {
-	container = document.getElementById('translations');
-	while (container.firstChild)
-	{
-	  	container.removeChild(container.firstChild);
-	}
+    var LiveCart = {}
+}
+
+LiveCart.Language = Class.create();
+LiveCart.Language.prototype = 
+{		
+	templ: false,
 	
-	expandedFiles = document.getElementById('navLang').elements.namedItem('langFileSel').value.parseJSON();	
+	row: false,
 	
-	templ = document.getElementsByClassName('lang-template')[0];
-	row = templ.getElementsByClassName('lang-trans-template')[0];
-	for (var file in translations)
+	expandedFiles: false,
+	
+	english: false,
+	
+	initialize: function(translations, english, container)
 	{
-		if ('object' == typeof translations[file])
-		{
-			t = templ.cloneNode(true);
-			transcont = t.getElementsByTagName('tbody')[0];
-			t.style.display = '';
-			t.file = file;
-			t.id = 'cont-' + file;
-			
-			// set caption
-			t.getElementsByTagName('caption')[0].getElementsByTagName('a')[0].innerHTML = file;
-			t.getElementsByTagName('caption')[0].onclick = 
-				function () 
-				{
-	  				langToggleVisibility(this.parentNode, this.getElementsByTagName('a')[0].innerHTML);
-	  			}
-			
-			t.getElementsByTagName('caption')[0].getElementsByTagName('a')[0].onkeydown = 			
-				function (event)
-				{
-					if (getPressedKey(event) != KEY_TAB && getPressedKey(event) != KEY_SHIFT) 
-					{
-					  	langToggleVisibility(this.parentNode.parentNode, this.innerHTML);
-					}									  	
-				}			 
-				
+		this.templ = document.getElementsByClassName('lang-template')[0];
+		this.row   = this.templ.getElementsByClassName('lang-trans-template')[0];  			
+		this.expandedFiles =  document.getElementById('navLang').elements.namedItem('langFileSel').value.parseJSON();	
 		
+		this.english = english;
+		
+		this.generateForm(translations, container);
+		
+	},
+	
+	generateForm: function(translations, container, fileName)
+	{
+		// create container
+		var t = this.templ.cloneNode(true);
+		transcont = t.getElementsByTagName('table')[0];
+		t.style.display = '';
+		t.file = fileName;
+
+		t.id = 'cont-' + fileName;
+		
+		if ('translations' == container.id)
+		{
+		  	t.className += ' transContainer';
+		}
+		else 
+		{
+		  	t.className += ' transValues';	
+		}
+		
+		if (fileName)
+		{
+			// set caption
+			var caption = fileName;
 			
-			// set visibility
-			if (expandedFiles[file])
+			// remove file extension
+			if (caption.indexOf('.lng') > 0)
 			{
-			  	transcont.style.display = '';
+			  	caption = caption.substr(0, caption.indexOf('.lng'));
 			}
 			
-			// set translations
-			zebra = 0;
-			for (var k in translations[file])
+			// remove directory path
+			temp = caption.split('/');
+			if (temp.length > 1)
 			{
-				if ('function' != typeof translations[file][k])
-				{
-					r = row.cloneNode(true);
-					r.style.display = '';
-					r.id = 'cont-' + file + '-' + k;
-					if (++zebra % 2 == 1)
-					{
-					  	r.className += ' altrow';
-					}
-					r.getElementsByClassName('lang-key')[0].innerHTML = k;
-					r.getElementsByClassName('lang-translation')[0].getElementsByTagName('span')[0].innerHTML = english[file][k];
-					
-					try 
-					{
-						inp = r.getElementsByClassName('lang-translation')[0].getElementsByTagName('input')[0];
-					}
-					catch (e) 
-					{
-						inp = r.getElementsByClassName('lang-translation')[0].getElementsByTagName('textarea')[0];  	
-					}
-									
-					inp.value = translations[file][k];
-					inp.name = "lang[" + file + "][" + k + "]";
-					
-					inp.onkeydown = 
-							function(e) 
-							{ 
-								key = new KeyboardEvent(e); 
-								if(key.getKey() == key.KEY_DOWN)
-								{
-									langReplaceInputWithTextarea(this);
-								} 
-							}
-					
-					if (inp.value.indexOf("\n") > -1)
-					{
-					  	langReplaceInputWithTextarea(inp);
-					}
-					
-					transcont.appendChild(r);
-	
-				}
-			}						
-						
-			// no translations to display for this file
-			if (3 == transcont.childNodes.length)
-			{
-			  	continue;
+			  	caption = temp[temp.length - 1];
 			}			
-									
-			document.getElementById('translations').appendChild(t);					
-		}	  
+			
+			// capitalize
+			caption = caption.substring(0,1).toUpperCase() + caption.substring(1, caption.length);
+			
+		  
+		  
+		}
+		
+		t.getElementsByTagName('legend')[0].getElementsByTagName('a')[0].innerHTML = caption;
+		t.getElementsByTagName('legend')[0].onclick = 
+			function () 
+			{
+				langToggleVisibility(this.parentNode, this.parentNode.file);
+  			}
+		
+		t.getElementsByTagName('legend')[0].getElementsByTagName('a')[0].onkeydown = 			
+			function (event)
+			{
+				if (getPressedKey(event) != KEY_TAB && getPressedKey(event) != KEY_SHIFT) 
+				{
+				  	langToggleVisibility(this.parentNode.parentNode, this.parentNode.parentNode.file);
+				}									  	
+			}					
+		
+		// set visibility
+		if (this.expandedFiles[fileName])
+		{
+		  	t.getElementsByTagName('div')[0].style.display = '';
+			img = t.getElementsByTagName('img')[1];
+			img.src = 'image/backend/icon/collapse.gif';  	
+		}		
+
+		// generate container content
+		zebra = 0;
+
+		for (var file in translations)
+		{
+			if ('object' == typeof translations[file])
+			{
+				var cont = (undefined == fileName ? container : t.getElementsByTagName('div')[0]);
+				this.generateForm(translations[file], cont, file);
+			}
+			else if ('function' != typeof translations[file])
+			{
+				k = file;
+				r = this.row.cloneNode(true);
+				r.style.display = '';
+				r.id = 'cont-' + fileName + '-' + k;
+
+				if (++zebra % 2 == 1)
+				{
+				  	r.className += ' altrow';
+				}
+				r.getElementsByClassName('lang-key')[0].innerHTML = k;
+				r.getElementsByClassName('lang-translation')[0].getElementsByTagName('span')[0].innerHTML = this.english[fileName][k];
+				
+				try 
+				{
+					inp = r.getElementsByClassName('lang-translation')[0].getElementsByTagName('input')[0];
+				}
+				catch (e) 
+				{
+					inp = r.getElementsByClassName('lang-translation')[0].getElementsByTagName('textarea')[0];  	
+				}
+								
+				inp.value = translations[k];
+				inp.name = "lang[" + fileName + "][" + k + "]";
+				
+				inp.onkeydown = 
+						function(e) 
+						{ 
+							key = new KeyboardEvent(e); 
+							if(key.getKey() == key.KEY_DOWN)
+							{
+								langReplaceInputWithTextarea(this);
+							} 
+						}
+				
+				if (inp.value.indexOf("\n") > -1)
+				{
+				  	langReplaceInputWithTextarea(inp);
+				}
+				
+				transcont.appendChild(r);
+				
+				t.getElementsByTagName('div')[0].style.borderLeft = '0px'; 
+				transcont.style.display = 'table';
+			}
+		}
+
+		// no translations to display for this file
+		if (3 == transcont.childNodes.length && 0 == container.childNodes.length)
+		{
+		//  	continue;
+		}			
+								
+		if (undefined != fileName)
+		{
+			container.appendChild(t);	
+		}
+ 
+		cont = t.getElementsByTagName('div')[0];
+		subCont = cont.getElementsByTagName('fieldset');
+		if (subCont.length > 0)
+		{
+		  	subCont[subCont.length - 1].className += " transValuesLast";
+		}
+	
 	}  
+  
 }
 
 function langSearch(query)
 {
-	if (query != undefined)
-	{
-		query = query.toLowerCase();  
-	}	
-	
-	found = false;
+	query = query.toLowerCase();  
+	found = langFileSearch(query, translations);
+	document.getElementById('langNotFound').style.display = (found) ? 'none' : 'block';  	
+}
+
+function langFileSearch(query, translations, file)
+{	
+	var found = false;
 		
-	for (var file in translations)
-	{		
-		showFile = false;
-		
-		for (var k in translations[file])
-		{			
+	var showFile = false;
+
+	for (var k in translations)
+	{			
+		if ('object' == typeof translations[k])
+		{
+		  	if (langFileSearch(query, translations[k], k))
+			{
+			  	showFile = true;
+			}			  	
+		}
+		else
+		{		
 			matchIndex = (k.toLowerCase().indexOf(query) > -1);
 			
 			valueInput = document.getElementById('cont-' + file + '-' + k);
+//			addlog(valueInput);
 			if (!valueInput)
 			{
 			  	continue;
@@ -214,31 +294,39 @@ function langSearch(query)
 			{
 				matchEnValue = (english[file][k].toLowerCase().indexOf(query) > -1);						
 			}
-			
+
 			valueInput.style.display = (!matchIndex && !matchValue && !matchEnValue) ? 'none' : '';					
 			if ('' == valueInput.style.display)
 			{
 			  	showFile = true;
 			}
 		}
-		
-		container = document.getElementById('cont-' + file);
-		
-		if (container)
-		{
-			container.style.display =  (showFile) ? '' : 'none';
-		
-			// make the files visible
-			container.getElementsByTagName('tbody')[0].style.display = '';					
-		}
-		
-		if (showFile)
-		{
-		  	found = true;
-		}					
-	}  
+	}
+	
+	container = document.getElementById('cont-' + file);
+	
+	if (container)
+	{
+		langSetVisibility(container, showFile)
+	}
+	
+	if (showFile)
+	{
+	  	found = true;
+	}	
+	
+//	addlog(file + ' - ' + found);	
+	
+	return found;				
+	
+}
 
-	document.getElementById('langNotFound').style.display = (found) ? 'none' : 'block';
+function langSetVisibility(container, visibility)
+{
+	container.style.display =  (visibility) ? '' : 'none';
+	container.getElementsByTagName('div')[0].style.display = '';
+	img = container.getElementsByTagName('img')[1];
+	img.src = 'image/backend/icon/' + (visibility ? 'collapse.gif' : 'expand.gif');						  	
 }
 
 function langReplaceInputWithTextarea(element)
