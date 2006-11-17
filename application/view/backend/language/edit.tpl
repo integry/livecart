@@ -53,27 +53,32 @@
 	<input type="hidden" name="langFileSel" />
 	<input type="hidden" name="show" />
 	
-	<table class="langTranslations lang-template" style="display: none;">
-		<caption>
-			<img src="image/backend/icon/collapse.gif">
+	<fieldset class="langTranslations lang-template" style="display: none;">
+		<legend>
+			<img src="image/backend/Language/hor_line.gif" class="langTreeLine" />
+			<img src="image/backend/icon/expand.gif" class="langTreeControl" />
+			<img src="image/backend/Language/spacer.gif" class="langTreeSpacer" />
 			<a href="#" onClick="return false;"></a>
-		</caption>
-		<tbody style="display: none;">	
-			<tr class="lang-trans-template" style="display: none;">
-				<td class="lang-key"></td>
-				<td class="lang-translation">
-					<input type="text"><br />
-					<span></span>
-				</td>
-			<tr>	
-		</tbody>	
-	</table>
+		</legend>
+		<div style="display: none; border-left: 1px solid black;">
+			<table style="display: none;">	
+				<tr class="lang-trans-template" style="display: none;">
+					<td class="lang-key"></td>
+					<td class="lang-translation">
+						<input type="text"><br />
+						<span></span>
+					</td>
+				<tr>	
+			</table>	
+		</div>
+	</fieldset>
 
-	<div id="translations"> </div>
+	<div id="translations" style="display: block;"></div>
 
 {literal}
 <script type="text/javascript">
-	langGenerateTranslationForm();
+//	langGenerateTranslationForm();
+	new LiveCart.Language(translations, english, document.getElementById('translations'));
 </script>
 {/literal}
 

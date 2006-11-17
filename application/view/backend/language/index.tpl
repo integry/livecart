@@ -10,34 +10,8 @@
 	<Br><Br><br>
 </fieldset>
 
-
-{*
-	function langListHandler(listId)
-	{
-		this.create(listId);
-	}
-	
-	langListHandler.prototype = new activeList();
-	
-	langListHandler.prototype.getDeleteUrl = function(id)
-	{	  
-		return {/literal}"{link controller=backend.language action=delete}" + id;{literal}
-	}  
-
-	langListHandler.prototype.getEditUrl = function (id)
-	{	  
-	}  
-  
-	langListHandler.prototype.getSortUpdateUrl = function (order)
-	{	  
-		return {/literal}"{link controller=backend.language action=saveorder}?draggedId=" + this.draggedId + "&" + order;{literal}
-	}  
-*}
-
 {literal}
 <script language="javascript">	
-
-
 
 	function setEnabled(langId, status) 
 	{
@@ -49,7 +23,7 @@
 		checkBox = document.getElementById('languageList_enable_' + langId);
 		checkBox.parentNode.replaceChild(img, checkBox);
 		
-		var updater = new Ajax.Updater('languageList_' + langId, url);
+		var updater = new Ajax.Updater('languageList_container_' + langId, url);
 	}
 	
 	function slideForm(id, menuId)
@@ -72,19 +46,12 @@
 		{menuCaption}{t _add_language}{/menuCaption}
 		{pageAction}slideForm('addLang', 'pageMenu'){/pageAction}
  	{/menuItem}
-	{menuItem}
-		{menuCaption}{t _update_from_files}{/menuCaption}
-		{menuAction}{link language=$language controller=backend.language action=update}{/menuAction} 
-	{/menuItem}
 {/pageMenu}
 
 {*
 <ul id="pageMenu">
 	<li>
 		<a onClick="slideForm('addLang', 'pageMenu')">{t _add_language}</a>
-	</li>
-	<li>
-		<a href="{link language=$language controller=backend.language action=update}">{t _update_from_files}</a>
 	</li>
 </ul>
 *}
@@ -146,22 +113,29 @@
 
 <ul id="languageList" class="activeList_add_delete">
 {foreach from=$languagesList item=item}
+<li id="languageList_{$item.ID}" class="activeList_add_sort">
 	{include file="backend/language/listItem.tpl"}
+</li>
 {/foreach}
 </ul>
 
 {literal}
 <script type="text/javascript">
-
+	
+	
      new LiveCart.ActiveList('languageList', {
          beforeEdit:     function(li) { return 'sort.php?' },
-         beforeSort:     function(li, order) { return '{/literal}{link controller=backend.language action=saveorder}{literal}?draggedId=' + this.getRecordId(li) + '&' + order },
+         beforeSort:     function(li, order) 
+		 { 
+		   /* li.progress.style.display = 'none';  */
+		   return '{/literal}{link controller=backend.language action=saveorder}{literal}?draggedId=' + this.getRecordId(li) + '&' + order 
+		   },
          beforeDelete:   function(li)
          {
              if(confirm('{/literal}{translate text=_confirm_delete}{literal}')) return '{/literal}{link controller=backend.language action=delete}{literal}' + this.getRecordId(li)
          },
          afterEdit:      function(li, response) {  },
-         afterSort:      function(li, response) { alert('test'); },
+         afterSort:      function(li, response) {  },
          afterDelete:    function(li, response)  { Element.remove(li); }
      });
 
@@ -169,5 +143,3 @@
 {/literal}
 
 <!-- {maketext text="_statistic_languages_full" params="$count_all,$count_active"}. -->
-
-<div id="log"></div>

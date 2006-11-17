@@ -8,10 +8,10 @@
 		<div>
 			<div>
 				<div>
-					<a href="{link controller=$item.controller action=$item.action}">{$item.title}</a>
+					<a href="{link controller=$item.controller action=$item.action}">{t $item.title}</a>
 					<ul>
 						{foreach from=$item.items item=command}
-						<li><a href="{link controller=$command.controller action=$command.action}">{$command.title}</a></li>
+						<li><a href="{link controller=$command.controller action=$command.action}">{t $command.title}</a></li>
 						{/foreach}
 					</ul>
 				</div>
