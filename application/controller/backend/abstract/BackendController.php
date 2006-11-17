@@ -3,9 +3,8 @@
 ClassLoader::import("application.controller.BaseController");
 ClassLoader::import("application.helper.*");
 ClassLoader::import("application.model.system.Language");
-ClassLoader::import("application.model.menu.*");
-ClassLoader::import("library.locale.*");
 ClassLoader::import("application.model.system.Store");
+ClassLoader::import("library.locale.*");
 
 /**
  * Generic backend controller for administrative tools (actions, modules etc.)
@@ -56,6 +55,9 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		Locale::setCurrentLocale($this->localeName);	
 		$this->store = Store::getInstance();
 		$this->autoPreloadFiles();
+		
+		// load language file for menu
+		$this->locale->translationManager()->loadCachedFile('menu/menu');		
 	}
 	
 	/**
@@ -131,7 +133,6 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	
 	protected function menuSectionBlock() 
 	{			
-
 		$menuLoader = new MenuLoader();		
 		$structure = $menuLoader->getCurrentHierarchy($this->request->getControllerName(),	$this->request->getActionName());
 
@@ -139,7 +140,6 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		$response->setValue('items', $structure['items']);
 		return $response;	
 	}
-
 	
 	/**
 	 * Gets a @role tag value in a class and method comments

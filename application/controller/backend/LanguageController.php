@@ -33,12 +33,6 @@ class LanguageController extends SiteManagementController
 		return $response;
 	}
 
-	public function init()
-	{
-		parent::init();
-		$this->addBlock("NAV", "languageSection");
-	}
-
 	/**
 	 * Gets definitions from project files and updates them in database.
 	 * @return ActionResponse
@@ -65,6 +59,9 @@ class LanguageController extends SiteManagementController
 		$enLocale = Locale::getInstance('en');
 		$fileDir = ClassLoader::getRealPath('application.configuration.language.en');
 		$files = $enLocale->translationManager()->getDefinitionFiles($fileDir);
+
+		// sort files
+		usort($files, array($this, 'translationSort'));
 
 		// get currently translated definitions
 		$translated = array();
@@ -161,12 +158,34 @@ class LanguageController extends SiteManagementController
 			}
 		}
 
+		// arrange files into a hierarchical structure
+		$hierarchical = array();
+		foreach ($translated as $file => $values)
+		{
+		  	$file = str_replace(chr(92), '/', $file);
+			$path = explode('/', $file);
+		  	
+			// remove file name from path
+			array_pop($path);
+		  	
+			$last = &$hierarchical;
+			foreach ($path as $part)
+		  	{
+				if (!$last[$part])
+				{
+					$last[$part] = array();
+				}
+				$last = &$last[$part];
+			}
+			$last[$file] = $values;			
+		}
+		
 		$response = new ActionResponse();
 		$response->setValue("id", $editLocaleName);
 		$response->SetValue("language", $this->request->getValue("language"));
 		$response->SetValue("edit_language", $editLocale->info()->getLanguageName($editLocaleName));		
 
-		$response->setValue("translations", json_encode($translated));
+		$response->setValue("translations", json_encode($hierarchical));
 		$response->setValue("english", json_encode($enDefs));
 	
 		// navigation
@@ -215,6 +234,19 @@ class LanguageController extends SiteManagementController
 		  	$data = array_merge($existing, $data);
 		  	$editLocale->translationManager()->saveCacheData($localeCode . '/' . $file, $data);
 		}
+		
+		// create a common language file for menu
+		$menuTranslations = array();
+		foreach ($submitedLang as $file => $data)
+		{
+			if (substr($file, 0, 4) == 'menu')
+			{
+				$d = $editLocale->translationManager()->getCacheDefs($file, true);
+				$menuTranslations = array_merge($menuTranslations, $d);
+			}			
+		}
+		
+		$editLocale->translationManager()->saveCacheData($localeCode . '/' .'menu/menu', $menuTranslations);
 			
 		return new ActionRedirectResponse($this->request->getControllerName(), 'edit', array('id' => $localeCode, 'langFileSel' => $this->request->getValue('langFileSel')));
 	}
@@ -361,6 +393,21 @@ class LanguageController extends SiteManagementController
 		}
 
 		return new ActionRedirectResponse($this->request->getControllerName(), "index", array());
+	}
+	
+	private function translationSort($a, $b)
+	{
+		if ($b == 'menu')
+	    {
+		  	return -1;
+		}
+
+		if ($a == $b) 
+		{
+			return 0;		  
+		}
+
+	    return ($a > $b) ? -1 : 1;
 	}
 }
 
