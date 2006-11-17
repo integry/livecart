@@ -9,6 +9,7 @@
 	require_once(".." . DIRECTORY_SEPARATOR . "framework" . DIRECTORY_SEPARATOR . "ClassLoader.php");
 	
 	ClassLoader::mountPath(".", dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+	//ClassLoader::mountPath("framework", "C:/projects/framework/");
 
 	ClassLoader::import("library.stat.Stat");
 	$stat = new Stat(true);
@@ -55,4 +56,5 @@
 	{
 		$stat->display();
 	}
+
 ?>

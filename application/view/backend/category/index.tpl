@@ -27,12 +27,12 @@
 	<div id="managerContainer" style="margin-left: 270px; height: 100%;">
 		<div id="tabContainer">
 			<ul id="tabList">
-				<li id="tabMainDetails" class="tab active"><a href="{link controller=backend.category action=form id=%id%}" onclick="alert('test');">Main Details</a></li>
-				<li id="tabFields" class="tab inactive"><a href="{link controller=backend.specField action=index id=%id%}">Fields</a></li>
-				<li id="tabFilters" class="tab inactive"><a href="{link controller=backend.filter action=index id=%id%}">Filters</a></li>
-				<li id="tabPermissions" class="tab inactive"><a href="{link controller=backend.permission id=%id% action=index}">Permissions</a></li>
-				<li id="tabImages" class="tab inactive"><a href="{link controller=backend.image action=index id=%id%}">Images</a></li>
-				<li id="tabArticles" class="tab inactive"><a href="{link controller=backend.image action=index id=%id%}">Articles</a></li>
+				<li id="tabMainDetails" class="tab active"><a href="{link controller=backend.category action=form id=1}" onclick="alert('test');">Main Details</a></li>
+				<li id="tabFields" class="tab inactive"><a href="{link controller=backend.specField action=index id=1}">Fields</a></li>
+				<li id="tabFilters" class="tab inactive"><a href="{link controller=backend.filter action=index id=1}">Filters</a></li>
+				<li id="tabPermissions" class="tab inactive"><a href="{link controller=backend.permission id=1 action=index}">Permissions</a></li>
+				<li id="tabImages" class="tab inactive"><a href="{link controller=backend.image action=index id=1}">Images</a></li>
+				<li id="tabArticles" class="tab inactive"><a href="{link controller=backend.image action=index id=1}">Articles</a></li>
 			</ul>
 		</div>
 		<div id="sectionContainer">
