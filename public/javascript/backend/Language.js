@@ -30,18 +30,15 @@ function print_r(input, _indent)
     return output;
 }
 
-/**
- * Toggles visibility for
- */
-function langToggleVisibility(tableInstance, file)
+function langSetVisibility(container, visibility)
 {
 	// toggle translation input visibility
-	tbody = tableInstance.getElementsByTagName('div')[0];
-	tbody.style.display = ('none' == tbody.style.display) ? '' : 'none';
-	
+	transCont = container.getElementsByTagName('div')[0];
+	transCont.style.display = (visibility ? '' : 'none');
+
 	// toggle collapse/expand images
-	img = tableInstance.getElementsByTagName('img')[1];
-	img.src = 'image/backend/icon/' + (('none' == tbody.style.display) ? 'expand.gif' : 'collapse.gif');
+	img = container.getElementsByTagName('img')[1];
+	img.src = 'image/backend/icon/' + (visibility ? 'collapse.gif' : 'expand.gif');
 	
 	// save explode/collapse status in form variable
 	sel = document.getElementById('navLang').elements.namedItem('langFileSel');
@@ -55,10 +52,22 @@ function langToggleVisibility(tableInstance, file)
 		var arr = new Object();  	
 	}
 		
-	arr[file] = ('' == tbody.style.display);
+	arr[container.file] = visibility;
 
 	sel.value = arr.toJSONString();	
-	
+}
+
+/**
+ * Toggles visibility for lang file
+ */
+function langToggleVisibility(container)
+{
+	langSetVisibility(container, 1 - (container.getElementsByTagName('div')[0].style.display != 'none'))
+}
+
+function langContainerVisibility(container, visibility)
+{
+	container.style.display = (visibility ? '' : 'none');  	
 }
 
 /**
@@ -147,7 +156,7 @@ LiveCart.Language.prototype =
 		t.getElementsByTagName('legend')[0].onclick = 
 			function () 
 			{
-				langToggleVisibility(this.parentNode, this.parentNode.file);
+				langToggleVisibility(this.parentNode);
   			}
 		
 		t.getElementsByTagName('legend')[0].getElementsByTagName('a')[0].onkeydown = 			
@@ -155,7 +164,7 @@ LiveCart.Language.prototype =
 			{
 				if (getPressedKey(event) != KEY_TAB && getPressedKey(event) != KEY_SHIFT) 
 				{
-				  	langToggleVisibility(this.parentNode.parentNode, this.parentNode.parentNode.file);
+				  	langToggleVisibility(this.parentNode.parentNode);
 				}									  	
 			}					
 		
@@ -252,6 +261,7 @@ function langSearch(query)
 	query = query.toLowerCase();  
 	found = langFileSearch(query, translations);
 	document.getElementById('langNotFound').style.display = (found) ? 'none' : 'block';  	
+	langExpandAll('translations', true);
 }
 
 function langFileSearch(query, translations, file)
@@ -274,14 +284,14 @@ function langFileSearch(query, translations, file)
 			matchIndex = (k.toLowerCase().indexOf(query) > -1);
 			
 			valueInput = document.getElementById('cont-' + file + '-' + k);
-//			addlog(valueInput);
+
 			if (!valueInput)
 			{
 			  	continue;
 			}
 			
 			inp = valueInput.getElementsByTagName('input');
-//			addlog(k + ' - ' + inp.length);
+
 			if (0 == inp.length) 
 			{				
 				inp = valueInput.getElementsByTagName('textarea');  	
@@ -307,26 +317,16 @@ function langFileSearch(query, translations, file)
 	
 	if (container)
 	{
-		langSetVisibility(container, showFile)
-	}
+		langContainerVisibility(container, showFile);  
+	}	
 	
 	if (showFile)
 	{
 	  	found = true;
 	}	
 	
-//	addlog(file + ' - ' + found);	
-	
 	return found;				
 	
-}
-
-function langSetVisibility(container, visibility)
-{
-	container.style.display =  (visibility) ? '' : 'none';
-	container.getElementsByTagName('div')[0].style.display = '';
-	img = container.getElementsByTagName('img')[1];
-	img.src = 'image/backend/icon/' + (visibility ? 'collapse.gif' : 'expand.gif');						  	
 }
 
 function langReplaceInputWithTextarea(element)
@@ -336,4 +336,13 @@ function langReplaceInputWithTextarea(element)
 	textarea.value = element.value;
 	textarea.name = element.name;
 	textarea.focus();								  	
+}
+
+function langExpandAll(containerId, expand)
+{
+	containers = document.getElementById(containerId).getElementsByTagName('fieldset');
+	for (k = 0; k < containers.length; k++)
+	{
+	  	langSetVisibility(containers[k], expand);
+	}
 }

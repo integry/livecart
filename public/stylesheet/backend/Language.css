@@ -7,6 +7,8 @@ label {
 	padding: 5px;
 }
 
+/* index */
+
 #languageList {
   	width: 300px;
   	float: left;
@@ -17,9 +19,16 @@ label {
 	margin-bottom: 10px;
 }
 
+/* edit */
+
 #langNotFound {
   	display: none;
   	margin-bottom: 20px;
+  	margin-top: 20px;
+}
+
+#expandCollapse {
+  	font-size: smaller;
 }
 
 .langTranslations {
