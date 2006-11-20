@@ -137,15 +137,22 @@ LiveCart.SpecFieldManager.prototype = {
 			input.onkeyup = self.mainValueFieldChangedAction.bind(self);
 		});
 
-		require_once('backend/activeList.js');
-	    new LiveCart.ActiveList(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0], {
-	        beforeSort: function(li, order){ return 'sort.php?'+order},
-	        afterSort: function(li, response){ },
-	        beforeEdit: function(li){ },
-	        afterEdit: function(li, response){ },
-	        beforeDelete: function(li){ if(confirm('Are you realy want to delete this item?')) return 'delete.php?id='+this.getRecordId(); },
-	        afterDelete: function(li, response){ Element.remove(li) }
-	    });
+		try
+		{
+    		require_once('backend/activeList.js');
+    	    new LiveCart.ActiveList(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0], {
+    	        beforeSort: function(li, order){ return 'sort.php?'+order},
+    	        afterSort: function(li, response){ },
+    	        beforeEdit: function(li){ },
+    	        afterEdit: function(li, response){ },
+    	        beforeDelete: function(li){ if(confirm('Are you realy want to delete this item?')) return 'delete.php?id='+this.getRecordId(); },
+    	        afterDelete: function(li, response){ Element.remove(li) }
+    	    });
+		}
+		catch(e)
+		{
+		    jsTrace.debug(e)
+		}
 	},
 
 

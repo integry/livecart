@@ -66,19 +66,12 @@ LiveCart.ActiveList.prototype = {
      * @var Hash
      */
     icons: {
-        'sort':     "image/backend/list/move.png",
-        'edit':     "image/backend/list/trash.png",
-        'delete':   "image/backend/list/trash.png",
-        'progress': "image/backend/list/indicator_bar_small.gif"
+        'sort':     "image/silk/page_go.png",
+        'edit':     "image/silk/page_edit.png",
+        'delete':   "image/silk/page_delete.png",
+        'view':     "image/silk/page.png",
+        'progress': "image/silk/additional/animated_progress_brown.gif"
     },
-
-    /**
-     * Icon size [width, height].
-     * All icons except progress bar are resize to fit this size
-     *
-     * @var Array
-     */
-    iconSize: ['16px', '16px'],
 
     /**
      * User obligated to pass this callbacks to constructor when he creates
@@ -227,22 +220,29 @@ LiveCart.ActiveList.prototype = {
     {
         var self = this;
 
-        $H(this.icons).each(function(icon)
+
+        $A(this.ul.className.split(' ')).each(function(className)
         {
-            li[icon.key] = document.getElementsByClassName(self.cssPrefix+icon.key, li)[0];
-            if(icon.key != 'progress' && icon.key != 'sort')
-            {
-                li[icon.key].onclick = function() { self.bindAction(li, icon.key) }
-                li[icon.key + 'Container'] = document.getElementsByClassName(self.cssPrefix + icon.key + 'Container', li)[0];
-            }
+            var container = document.getElementsByClassName(self.cssPrefix + 'icons', li)[0];
+
+            var regex = new RegExp('^' + self.cssPrefix + '(add|remove)_(\\w+)(_(before|after)_(\\w+))*');
+            var tmp = regex.exec(className);
+
+            if(!tmp) return;
+
+            var icon = {};
+            icon.type = tmp[1];
+            icon.action = tmp[2];
+            icon.image = self.icons[icon.action];
+            icon.position = tmp[4];
+            icon.sibling = tmp[5];
+
+            var test = li;
+            var test2 = icon.key
+            li[icon.action].onclick = function() { self.bindAction(li, icon.action) }
+            li[icon.action + 'Container'] = document.getElementsByClassName(self.cssPrefix + icon.action + 'Container', li)[0];
         });
     },
-
-
-
-
-
-
 
 
     /***************************************************************************
@@ -294,50 +294,15 @@ LiveCart.ActiveList.prototype = {
         }
 
         // add all icons
-        $H(this.icons).each(function(icon)
+
+
+
+
+        $A(this.ul.className.split(' ')).each(function(className)
         {
             // If icon is not progress and it was added to a whole list or only this item then put that icon into container
-            if(icon.key != 'progress')
-            {
-                var iconImage = document.getElementsByClassName(self.cssPrefix + icon.key, li)[0];
-
-                if(!iconImage)
-                {
-                    iconImage = document.createElement('div');
-                    iconImage.style.background = "url("+icon.value+") no-repeat";
-                    iconImage.style.width = self.iconSize[0];
-                    iconImage.style.height = self.iconSize[1];
-                    iconImage.style.visibility = 'hidden';
-                    Element.addClassName(iconImage, self.cssPrefix + icon.key);
-
-                    // If icon is removed from this item than do not display the icon
-                    if((Element.hasClassName(li, self.cssPrefix + 'remove_' + icon.key) || !Element.hasClassName(self.ul, self.cssPrefix + 'add_' + icon.key)) && !Element.hasClassName(li, self.cssPrefix + 'add_' + icon.key))
-                    {
-                        iconImage.style.display = 'none';
-                    }
-
-                    // Show icon
-                    iconsDiv.appendChild(iconImage);
-                }
-
-
-                // create shortcut
-                li[icon.key] = iconImage;
-
-                // all icons except sort has onclick event handler defined by user
-                if(icon.key != 'sort')
-                {
-                    var test = li;
-                    iconImage.onclick = function() { self.bindAction(li, icon.key) }
-
-                    var container = document.createElement('div');
-                    container.style.display = 'none';
-                    Element.addClassName(container, self.cssPrefix + icon.key + 'Container');
-                    li.appendChild(container);
-                    li[icon.key + 'Container'] = container;
-                }
-            }
-
+            var test = self;
+            self.addIconToContainer(li, className);
         });
 
         // progress is not a div like all other icons. It has no fixed size and is not clickable.
@@ -355,7 +320,60 @@ LiveCart.ActiveList.prototype = {
         }
 
         li.progress = iconProgress;
+    },
 
+    addIconToContainer: function(li, className)
+    {
+        var container = document.getElementsByClassName(this.cssPrefix + 'icons', li)[0];
+
+        var regex = new RegExp('^' + this.cssPrefix + '(add|remove)_(\\w+)(_(before|after)_(\\w+))*');
+        var tmp = regex.exec(className);
+
+        if(!tmp) return;
+
+        var icon = {};
+
+        icon.type = tmp[1];
+        icon.action = tmp[2];
+        icon.image = this.icons[icon.action];
+        icon.position = tmp[4];
+        icon.sibling = tmp[5];
+
+        var iconImage = document.getElementsByClassName(this.cssPrefix + icon.action, li)[0];
+        if(!iconImage)
+        {
+            iconImage = document.createElement('div');
+            iconImage.style.background = "url("+icon.image+") no-repeat";
+            iconImage.style.visibility = 'hidden';
+            Element.addClassName(iconImage, this.cssPrefix + icon.action);
+            Element.addClassName(iconImage, this.cssPrefix + 'icons_container');
+
+            // If icon is removed from this item than do not display the icon
+            if((Element.hasClassName(li, this.cssPrefix + 'remove_' + icon.action) || !Element.hasClassName(this.ul, this.cssPrefix + 'add_' + icon.action)) && !Element.hasClassName(li, this.cssPrefix + 'add_' + icon.action))
+            {
+                iconImage.style.display = 'none';
+            }
+
+            // Show icon
+            container.appendChild(iconImage);
+        }
+
+
+        // create shortcut
+        li[icon.action] = iconImage;
+
+        // all icons except sort has onclick event handler defined by user
+        if(icon.action != 'sort')
+        {
+            var self = this;
+            iconImage.onclick = function() { self.bindAction(li, icon.action) }
+
+            var container = document.createElement('div');
+            container.style.display = 'none';
+            Element.addClassName(container, self.cssPrefix + icon.action + 'Container');
+            li.appendChild(container);
+            li[icon.action + 'Container'] = container;
+        }
     },
 
     /**
@@ -442,7 +460,15 @@ LiveCart.ActiveList.prototype = {
     callUserCallback: function(action, response, li)
     {
         this._currentLi = li;
-        this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
+        try
+        {
+            this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
+        }
+        catch(e)
+        {
+            var test1 = e;
+            jsTrace.debug(e);
+        }
         this.toggleProgress(li);
     },
 
@@ -518,6 +544,9 @@ LiveCart.ActiveList.prototype = {
 
         // execute the action
         this._currentLi = this.dragged;
+
+        try
+        {
         new Ajax.Request(this.callbacks.beforeSort.call(this, this.dragged, Sortable.serialize(this.ul.id)),
         {
             method: 'get',
@@ -526,6 +555,11 @@ LiveCart.ActiveList.prototype = {
             // so the only way I could make it work is this
             onComplete: function(param) { self.restoreDraggedItem(param); }
         });
+        }
+         catch(e)
+        {
+            jsTrace.debug(e);
+        }
     },
 
 
