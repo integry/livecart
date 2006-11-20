@@ -389,6 +389,43 @@ class LanguageController extends SiteManagementController
 	}
 
 	/**
+	 * Displays system menu for switching active language
+	 * @return ActionResponse
+	 */
+	public function langSwitchMenu()
+	{
+		$this->setLayout('empty');		
+		$response = new ActionResponse();
+
+		// get all system languages
+		$list = Language::getLanguages()->toArray();
+
+		foreach($list as $key => $value)
+		{
+			$list[$key]['name'] = $this->locale->info()->getLanguageName($value['ID']);
+		}
+		
+		$response->setValue('returnRoute', $this->request->getValue('returnRoute'));
+		$response->setValue('languages', $list);
+		return $response;
+	}
+
+	public function changeLanguage() 
+	{
+		$lang = $this->request->getValue('id');
+		$langInst = Language::getInstanceById($lang);
+		if ($langInst)
+		{
+			$_SESSION['lang'] = $lang;	 
+		}
+		
+		$returnRoute = base64_decode($this->request->getValue('returnRoute'));
+		$url = Router::getInstance()->createUrlFromRoute($returnRoute);
+		
+		return new RedirectResponse($url);			
+	}
+
+	/**
 	 * @todo Perdaryti siuo metu neveikia
 	 */
 	public function add()

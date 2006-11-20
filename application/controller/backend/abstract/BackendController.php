@@ -115,7 +115,17 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	{
 		$this->setLayout("mainLayout");
 		$this->addBlock('MENU', 'menuSection');	
+		$this->addBlock('langMenu', 'langMenu');	
 		Application::getInstance()->getRenderer()->setValue('BASE_URL', Router::getBaseUrl());
+	}
+	
+
+	protected function langMenuBlock() 
+	{
+		$response =	new BlockResponse();
+	  	$router = Router::getInstance();
+	  	$response->setValue('returnRoute', base64_encode($router->getRequestedRoute()));
+		return $response;	  	
 	}
 	
 	protected function menuSectionBlock() 
@@ -199,6 +209,10 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		if ($this->request->isValueSet("language"))
 		{
 			$this->localeName = $this->request->getValue("language");			
+		}
+		else if (isset($_SESSION['lang']))
+		{
+			$this->localeName = $_SESSION['lang'];
 		}
 		else
 		{

@@ -273,7 +273,6 @@ html>body #minHeight{ /*safari wrapper */
 }
 
 #nav li ul {
-  	background: white;
   	top: 48px;
   	left: 10px;
   	border:1px solid #999999;
@@ -323,6 +322,46 @@ html>body #minHeight{ /*safari wrapper */
 }
 #footerStretch {
   	background-image:url(../image/backend/layout/footer_stretch.png);
+}
+
+/* Language switch menu */
+#langMenuContainer {
+  	position: relative; 
+	display: none; 
+	z-index: 20; 
+	float: right; 
+	width: auto;  	
+}
+
+#langMenuIndicator {
+	border: 1px solid black;
+	background-color: white;
+	padding: 5px;
+}
+
+#langMenu {
+	padding: 5px;
+	text-align: left;
+  	background-image: url(../image/backend/menu/menu_commands_bg.jpg);
+  	background-position: bottom left;
+  	background-repeat: repeat-x;
+  	background-color: #CDD9EE;
+  	font-size: larger;
+ 	border:1px solid #999999;
+}
+
+#langMenu div {
+	margin-bottom: 5px;  
+}
+
+#langMenu div div {
+	margin: 0; 
+	padding: 5px; 
+  	cursor: pointer;
+}
+
+.langMenuHover {
+	background: #3981E7;
 }
 
 /* Work area styling */

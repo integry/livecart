@@ -75,8 +75,10 @@
 						</td>
 				</table>				
 			</td>
+
 			<td id="systemMenu">
-				{t _base_help} | {t _base_change_language}
+				{t _base_help} | <a href="#" onClick="showLangMenu(true);return false;">{t _change_language}</a>
+				{foreach from=$langMenu item=block}{$block}{/foreach}				
 			</td>
 		</tr>	
 	</table>
