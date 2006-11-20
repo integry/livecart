@@ -6,21 +6,22 @@
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 	<title>{$TITLE}</title>
-	<base href="{$BASE_URL}" /> 
-	
+	<base href="{$BASE_URL}" />
+
 	<!-- Css includes -->
-	{includeCss file=base.css}	
+	{includeCss file=base.css}
 	{$STYLESHEET}
-	
+
 	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
+	<script type="text/javascript" src="javascript/library/ClassLoader.js"></script>
 	<!-- JavaScript includes -->
 	{includeJs file=backend/keyboard.js}
 	{includeJs file=json.js}
-	{$JAVASCRIPT} 
+	{$JAVASCRIPT}
 
 	<script type="text/javascript">
 		window.onload = startList;
-	</script>	
+	</script>
 </head>
 <body>
 
@@ -29,14 +30,14 @@
 <script>
 	function addlog(info)
 	{
-		document.getElementById('log').innerHTML += info + '<br />';  
+		document.getElementById('log').innerHTML += info + '<br />';
 	}
 </script>
 {/literal}
 
 
 <div id="minHeight"></div>
-<div id="outer" style="">	
+<div id="outer" style="">
 
 	<div id="clearheader"></div>
 
@@ -44,8 +45,8 @@
 	</div>
 
 	<div id="right">
-		<div id="rightWorkareaShadeTop">&nbsp;</div>		
+		<div id="rightWorkareaShadeTop">&nbsp;</div>
 	</div>
 
-	<div id="centrecontent">	
+	<div id="centrecontent">
 		<div id="workArea">
