@@ -149,8 +149,15 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		$class = new ReflectionClass($controllerClassName);
 		$classDocComment = $class->getDocComment();
 		
-		$method = new ReflectionMethod($controllerClassName, $actionName);
-		$actionDocComment = $method->getDocComment();
+		try 
+		{
+			$method = new ReflectionMethod($controllerClassName, $actionName);
+			$actionDocComment = $method->getDocComment();
+		}
+		catch (ReflectionException $e)
+		{
+			throw new ActionNotFoundException($controllerClassName, $actionName);
+		}
 		
 		$roleTag = " @role";
 		$classRoleMatches = array();

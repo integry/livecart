@@ -11,6 +11,11 @@ ClassLoader::import("application.model.category.Category");
  */
 class CategoryController extends StoreManagementController
 {
+	public function init()
+	{
+		parent::init();
+		$this->removeLayout();
+	}
 	
 	public function index()
 	{

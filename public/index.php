@@ -1,9 +1,10 @@
 <?php
 
 	/**
-	 * livecart application controller
+	 * livecart front controller
 	 * 
 	 * @author Saulius Rupainis <saulius@integry.net>
+	 * @package application
 	 */
 
 	require_once(".." . DIRECTORY_SEPARATOR . "framework" . DIRECTORY_SEPARATOR . "ClassLoader.php");
@@ -21,7 +22,9 @@
 	ClassLoader::import("framework.controller.*");
 	ClassLoader::import("framework.response.*");
 	ClassLoader::import("application.controller.*");
+	ClassLoader::import("application.model.system.*");
 
+	// LiveCart request routing rules
 	ClassLoader::import("application.configuration.route.backend");
 	TemplateRenderer::setCompileDir(ClassLoader::getRealPath("cache.templates_c"));
 	$app = Application::getInstance();
@@ -29,11 +32,15 @@
 	try 
 	{
 		$app->run();
+	}
+	catch (ActionNotFoundException $e)
+	{
+		include("404.php");
 	} 
 	catch (ControllerNotFoundException $e) 
 	{
-		include("404.html");
-	} 
+		include("404.php");
+	}
 	catch (ClassLoaderException $e) 
 	{
 		echo "<br/><strong>CLASS LOADER ERROR:</strong> " . $e->getMessage(); 
@@ -56,5 +63,6 @@
 	{
 		$stat->display();
 	}
-
+	
+	//echo "<pre>"; print_r($_SERVER); echo "</pre>";
 ?>
