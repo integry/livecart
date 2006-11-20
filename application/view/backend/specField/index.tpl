@@ -24,6 +24,7 @@
 
 {literal}
 <style type="text/css">
+
 .activeList_icons
 {
     float: left;
@@ -66,6 +67,38 @@ li
 {
     display: block;
 }
+
+
+.activeList_icons_container
+{
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+}
+
+.activeList_icons_container
+{
+	cursor: pointer;
+	cursor: hand;
+}
+
+
+.activeList_shader
+{
+    position: absolute;
+    background: transparent;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+}
+/*
+.activeList_progress
+{
+    position: absolute;
+    padding: 20px;
+}*/
+
 </style>
 {/literal}
 
@@ -102,10 +135,10 @@ li
 {/literal}
 
 
-<ul id="specField_items_list" class="activeList_add_sort activeList_add_edit activeList_add_delete">
-	<li id="specField_items_list_96"  class="">Item 1</li>
+<ul id="specField_items_list" class="activeList_add_sort activeList_add_edit activeList_add_view activeList_add_delete">
+	<li id="specField_items_list_96"  class="activeList_add_fuck_before_edit">Item 1</li>
 	<li id="specField_items_list_95"  class="">Item 2</li>
-	<li id="specField_items_list_100" class="activeList_remove_sort">Item 3</li>
+	<li id="specField_items_list_100" class="activeList_remove_sort activeList_remove_edit">Item 3</li>
 	<li id="specField_items_list_101" class="">Item 4</li>
 	<li id="specField_items_list_102" class="">Item 5</li>
 </ul>

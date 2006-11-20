@@ -63,8 +63,8 @@
     		<h2>t values</h2>
     		<div>
                 <p>
-        			<ul>
-        				<li class="dom_template activeList_add_sort activeList_add_delete specField_form_values_value" id="specField_form_values_">
+        			<ul class="activeList_add_sort activeList_add_delete">
+        				<li class="dom_template specField_form_values_value" id="specField_form_values_">
         					<input type="text" class="sortable_drag_handle" />
         				</li>
         			</ul>
