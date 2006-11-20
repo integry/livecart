@@ -1,11 +1,10 @@
 RewriteEngine on
 
-# we skip all files with .something
-#RewriteCond %{REQUEST_URI} \..+$
-#RewriteRule .* - [L]
+#RewriteBase /livecart/public
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+
 
 # if no rule matched the url, we redirect to our front web controller
 RewriteRule ^(.*)$ public/index.php?route=$1 [QSA,L]

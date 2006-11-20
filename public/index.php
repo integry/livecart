@@ -2,13 +2,13 @@
 
 	/**
 	 * livecart front controller
-	 * 
+	 *
 	 * @author Saulius Rupainis <saulius@integry.net>
 	 * @package application
 	 */
 
 	require_once(".." . DIRECTORY_SEPARATOR . "framework" . DIRECTORY_SEPARATOR . "ClassLoader.php");
-	
+
 	ClassLoader::mountPath(".", dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
 	//ClassLoader::mountPath("framework", "C:/projects/framework/");
 
@@ -28,41 +28,42 @@
 	ClassLoader::import("application.configuration.route.backend");
 	TemplateRenderer::setCompileDir(ClassLoader::getRealPath("cache.templates_c"));
 	$app = Application::getInstance();
-	
-	try 
+
+	try
 	{
 		$app->run();
 	}
 	catch (ActionNotFoundException $e)
 	{
 		include("404.php");
-	} 
-	catch (ControllerNotFoundException $e) 
+	}
+	catch (ControllerNotFoundException $e)
 	{
 		include("404.php");
 	}
-	catch (ClassLoaderException $e) 
+	catch (ClassLoaderException $e)
 	{
-		echo "<br/><strong>CLASS LOADER ERROR:</strong> " . $e->getMessage(); 
+		echo "<br/><strong>CLASS LOADER ERROR:</strong> " . $e->getMessage();
 		echo "<br /><strong>FILE TRACE:</strong><br />";
 		echo $e->getFileTrace();
 	}
-	catch (ApplicationException $e) 
+	catch (ApplicationException $e)
 	{
+		echo "<pre>"; print_r($_SERVER); echo "</pre>";
 		echo "<br/><strong>APPLICATION ERROR:</strong> " . $e->getMessage();
 		echo "<br /><strong>FILE TRACE:</strong><br />";
 		echo $e->getFileTrace();
-	} 
-	catch (Exception $e) 
+	}
+	catch (Exception $e)
 	{
 		echo "<br/>\n<strong>UNKNOWN ERROR:</strong> " . $e->getMessage();
 		echo "<pre>"; print_r($e); echo "</pre>";
 	}
-	
+
 	if (!empty($_GET['stat']))
 	{
 		$stat->display();
 	}
-	
-	//echo "<pre>"; print_r($_SERVER); echo "</pre>";
+
+	echo "<pre>"; print_r($_SERVER); echo "</pre>";
 ?>
