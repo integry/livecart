@@ -169,6 +169,7 @@ LiveCart.AjaxUpdater.prototype = {
         {
             innerScripts.each(function(innerScript)
             {
+                var test = innerScript.replace(/\<\/?script[^\>]*\>/img, "");
                 eval(innerScript.replace(/\<\/?script[^\>]*\>/img, ""));
             });
         }
