@@ -112,12 +112,13 @@ LiveCart.Language.prototype =
 	{
 		// create container
 		var t = this.templ.cloneNode(true);
-		transcont = t.getElementsByTagName('table')[0];
+		transcont = t.getElementsByTagName('table')[0].getElementsByTagName('tbody')[0];
+
 		t.style.display = '';
 		t.file = fileName;
 
 		t.id = 'cont-' + fileName;
-		
+
 		if ('translations' == container.id)
 		{
 		  	t.className += ' transContainer';
@@ -147,9 +148,7 @@ LiveCart.Language.prototype =
 			
 			// capitalize
 			caption = caption.substring(0,1).toUpperCase() + caption.substring(1, caption.length);
-			
-		  
-		  
+			  
 		}
 		
 		t.getElementsByTagName('legend')[0].getElementsByTagName('a')[0].innerHTML = caption;
@@ -191,12 +190,14 @@ LiveCart.Language.prototype =
 				k = file;
 				r = this.row.cloneNode(true);
 				r.style.display = '';
+
 				r.id = 'cont-' + fileName + '-' + k;
 
 				if (++zebra % 2 == 1)
 				{
 				  	r.className += ' altrow';
 				}
+				
 				r.getElementsByClassName('lang-key')[0].innerHTML = k;
 				r.getElementsByClassName('lang-translation')[0].getElementsByTagName('span')[0].innerHTML = this.english[fileName][k];
 				
@@ -226,11 +227,12 @@ LiveCart.Language.prototype =
 				{
 				  	langReplaceInputWithTextarea(inp);
 				}
-				
+
 				transcont.appendChild(r);
 				
 				t.getElementsByTagName('div')[0].style.borderLeft = '0px'; 
-				transcont.style.display = 'table';
+				transcont.style.display = '';
+				transcont.parentNode.style.display = '';
 			}
 		}
 
@@ -318,6 +320,7 @@ function langFileSearch(query, translations, file)
 	if (container)
 	{
 		langContainerVisibility(container, showFile);  
+//		langContainerVisibility(container, true);  
 	}	
 	
 	if (showFile)

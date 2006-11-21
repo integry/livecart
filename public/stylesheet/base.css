@@ -330,7 +330,7 @@ html>body #minHeight{ /*safari wrapper */
 	display: none; 
 	z-index: 20; 
 	float: right; 
-	width: auto;  	
+	width: auto; 
 }
 
 #langMenuIndicator {
@@ -342,10 +342,10 @@ html>body #minHeight{ /*safari wrapper */
 #langMenu {
 	padding: 5px;
 	text-align: left;
+  	background-color: #CDD9EE;
   	background-image: url(../image/backend/menu/menu_commands_bg.jpg);
   	background-position: bottom left;
   	background-repeat: repeat-x;
-  	background-color: #CDD9EE;
   	font-size: larger;
  	border:1px solid #999999;
 }
