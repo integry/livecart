@@ -12,13 +12,17 @@ LiveCart.SpecFieldManager.prototype = {
 	 */
 	initialize: function(specField)
 	{
-	    this.id = specField.id;
+	    this.id = specField.ID;
 	    this.rootId = specField.rootId ? specField.rootId : 'specField_item';
 		this.type = specField.type;
 		this.values = specField.values;
+
+		this.name = specField.name;
+		this.description = specField.description;
+
 		this.handle = specField.handle;
 		this.multipleSelector = specField.multipleSelector;
-		this.valueType = specField.valueType;
+		this.dataType = specField.dataType;
 		this.translations = specField.translations;
 
 		this.findUsedNodes();
@@ -36,7 +40,7 @@ LiveCart.SpecFieldManager.prototype = {
 
 		this.nodes.parent = document.getElementById(this.rootId);
 
-		this.nodes.valueType 			= document.getElementsByClassName("specField_form_valueType", this.nodes.parent)[0].getElementsByTagName("input");
+		this.nodes.dataType 			= document.getElementsByClassName("specField_form_dataType", this.nodes.parent)[0].getElementsByTagName("input");
 		this.nodes.type 				= document.getElementsByClassName("specField_form_type", this.nodes.parent)[0];
 		this.nodes.stateLinks 			= document.getElementsByClassName("change_state", this.nodes.parent);
 		this.nodes.stepTranslations 	= document.getElementsByClassName("step_translations", this.nodes.parent)[0];
@@ -48,7 +52,7 @@ LiveCart.SpecFieldManager.prototype = {
 		this.nodes.description 			= document.getElementsByClassName("specField_form_description", this.nodes.parent)[0];
 		this.nodes.multipleSelector 	= document.getElementsByClassName("specField_form_multipleSelector", this.nodes.parent)[0];
 		this.nodes.handle 				= document.getElementsByClassName("specField_form_handle", this.nodes.parent)[0];
-		this.nodes.title 				= document.getElementsByClassName("specField_form_title", this.nodes.parent)[0];
+		this.nodes.title 				= document.getElementsByClassName("specField_form_name", this.nodes.parent)[0];
 		this.nodes.valuesDefaultGroup 	= document.getElementsByClassName("specField_form_values_group", this.nodes.parent)[0];
 		this.nodes.translationsLinks 	= document.getElementsByClassName("specFields_form_values_translations_language_links", this.nodes.parent)[0];
 		this.nodes.valuesAddFieldLink 	= this.nodes.valuesDefaultGroup.getElementsByClassName("add_field", this.nodes.parent)[0];
@@ -67,9 +71,9 @@ LiveCart.SpecFieldManager.prototype = {
 	 */
 	bindFields: function()
 	{
-		for(var i = 0; i < this.nodes.valueType.length; i++)
+		for(var i = 0; i < this.nodes.dataType.length; i++)
 		{
-			this.nodes.valueType[i].onclick = this.valueTypeChangedAction.bind(this);
+			this.nodes.dataType[i].onclick = this.dataTypeChangedAction.bind(this);
 		}
 
 		for(var i = 0; i < this.nodes.stateLinks.length; i++)
@@ -87,7 +91,7 @@ LiveCart.SpecFieldManager.prototype = {
 		this.loadSpecFieldAction();
 		this.loadValueFieldsAction();
 		this.bindTranslationValues();
-		this.valueTypeChangedAction();
+		this.dataTypeChangedAction();
 		this.loadTypes();
 		this.typeWasChangedAction();
 	},
@@ -123,7 +127,7 @@ LiveCart.SpecFieldManager.prototype = {
 			this.nodes.stateLinks[1].style.display = 'inline';
 			for(var i = 0; i < this.nodes.translatedValues.length; i++)
 			{
-				this.nodes.translatedValues[i].style.display = (this.doNotTranslateTheseValueTypes.indexOf(this.valueType) === -1) ? 'block' : 'none';
+				this.nodes.translatedValues[i].style.display = (this.doNotTranslateTheseValueTypes.indexOf(this.dataType) === -1) ? 'block' : 'none';
 			}
 		}
 	},
@@ -158,35 +162,37 @@ LiveCart.SpecFieldManager.prototype = {
 
 	loadSpecFieldAction: function()
 	{
-		// Default language
+        var self = this;
+
+	    // Default language
 		this.nodes.id.value = this.id;
 		this.nodes.handle.value = this.handle;
 
-		this.nodes.title.value = this.translations[this.languageCodes[0]].title;
-		this.nodes.title.name = "translations[" + this.languageCodes[0] + "][title]";
+		this.nodes.title.value = this.name[this.languageCodes[0]];
+		this.nodes.title.name = "name[" + this.languageCodes[0] + "]";
 
 		this.nodes.multipleSelector.checked = this.multipleSelector ? true : false;
 
 		this.nodes.mainTitle.firstChild.nodeValue = this.nodes.title.value;
 
-		this.nodes.description.value = this.translations[this.languageCodes[0]].description;
-		this.nodes.description.name = "translations[" + this.languageCodes[0] + "][description]";
+		this.nodes.description.value = this.description[this.languageCodes[0]];
+		this.nodes.description.name = "description[" + this.languageCodes[0] + "]";
 
-		// select valueType (or first)
-		if(this.valueType)
+		// select dataType (or first)
+		if(this.dataType)
 		{
-			for(var i = 0; i < this.nodes.valueType.length; i++)
+			for(var i = 0; i < this.nodes.dataType.length; i++)
 			{
-				if(this.nodes.valueType[i].value == this.valueType)
+				if(this.nodes.dataType[i].value == this.dataType)
 				{
-					this.nodes.valueType[i].checked = true;
+					this.nodes.dataType[i].checked = true;
 					break;
 				}
 			}
 		}
-		else if(this.nodes.valueType.length > 0)
+		else if(this.nodes.dataType.length > 0)
 		{
-			this.nodes.valueType[0].checked = true;
+			this.nodes.dataType[0].checked = true;
 		}
 
 
@@ -206,21 +212,21 @@ LiveCart.SpecFieldManager.prototype = {
 
 				newTranslation.getElementsByTagName("legend")[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
 
-				var inputFields = newTranslation.getElementsByTagName('input');
-				for(var j = 0; j < inputFields.length; j++)
+				var inputFields = $A(newTranslation.getElementsByTagName('input'));
+				var textAreas = newTranslation.getElementsByTagName('textarea');
+				for(var j = 0; j < textAreas.length; j++)
 				{
-					inputFields[j].value = (this.translations[this.languageCodes[i]] && this.translations[this.languageCodes[i]][inputFields[j].name]) ? this.translations[this.languageCodes[i]][inputFields[j].name] : '';
-					inputFields[j].name = "translations[" + this.languageCodes[i] + "][" + inputFields[j].name + "]";
+				    inputFields[inputFields.length] = textAreas[j];
 				}
 
-				var textareaFields = newTranslation.getElementsByTagName('textarea');
-				for(var j = 0; j < textareaFields.length; j++)
+				for(var j = 0; j < inputFields.length; j++)
 				{
-					if(textareaFields[j].parrentNode = newTranslation)
-					{
-						textareaFields[j].value = (this.translations[this.languageCodes[i]] && this.translations[this.languageCodes[i]][textareaFields[j].name]) ? this.translations[this.languageCodes[i]][textareaFields[j].name] : '';
-						textareaFields[j].name = "translations[" + this.languageCodes[i] + "][" + textareaFields[j].name + "]";
-					}
+                    if(Element.hasClassName(inputFields[j].parentNode, 'step_translations_language'))
+                    {
+    				    jsTrace.send("inputFields[j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];");
+    				    eval("inputFields[j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];");
+    					inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
+                    }
 				}
 
 				this.nodes.stepTranslations.appendChild(newTranslation);
@@ -230,6 +236,9 @@ LiveCart.SpecFieldManager.prototype = {
 				this.nodes.translations[this.languageCodes[i]] = newTranslation;
 			}
 		}
+
+		// Delete language template, so that included in that template variables would not be sent to server
+		Element.remove(document.getElementsByClassName("step_translations_language", this.nodes.stepTranslations)[0]);
 	},
 
 
@@ -368,19 +377,19 @@ LiveCart.SpecFieldManager.prototype = {
 	 * This callback is executed when user change the value type
 	 *
 	 */
-	valueTypeChangedAction: function(e)
+	dataTypeChangedAction: function(e)
 	{
 		this.nodes.type.length = 0;
-		for(var i = 0; i < this.nodes.valueType.length; i++)
+		for(var i = 0; i < this.nodes.dataType.length; i++)
 		{
-			if(this.nodes.valueType[i].checked)
+			if(this.nodes.dataType[i].checked)
 			{
-				for(var j = 0; j < this.types[this.nodes.valueType[i].value].length; j++)
+				for(var j = 0; j < this.types[this.nodes.dataType[i].value].length; j++)
 				{
-					this.nodes.type.options[j] = this.types[this.nodes.valueType[i].value][j].cloneNode(true);
+					this.nodes.type.options[j] = this.types[this.nodes.dataType[i].value][j].cloneNode(true);
 				}
 
-				this.valueType = this.nodes.valueType[i].value;
+				this.dataType = this.nodes.dataType[i].value;
 			}
 		}
 
