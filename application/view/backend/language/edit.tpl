@@ -67,13 +67,15 @@
 		</legend>
 		<div style="display: none; border-left: 1px solid black;">
 			<table style="display: none;">	
-				<tr class="lang-trans-template" style="display: none;">
-					<td class="lang-key"></td>
-					<td class="lang-translation">
-						<input type="text"><br />
-						<span></span>
-					</td>
-				<tr>	
+				<tbody style="display: none;">
+					<tr class="lang-trans-template" style="display: none;">
+						<td class="lang-key"></td>
+						<td class="lang-translation">
+							<input type="text"><br />
+							<span></span>
+						</td>
+					<tr>	
+				</tbody>
 			</table>	
 		</div>
 	</fieldset>

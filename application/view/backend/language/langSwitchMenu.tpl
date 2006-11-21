@@ -1,9 +1,9 @@
 <div id="langMenu">
 	<div>
 		{foreach from=$languages item=item}
-		<div onMouseOver="this.addClassName('langMenuHover');" onMouseOut="this.removeClassName('langMenuHover');" onClick="window.location.href = '{link controller=backend.language action=changeLanguage id=$item.ID query="returnRoute=$returnRoute"}'">
+		<div class="" onMouseOver="this.className = 'langMenuHover';" onMouseOut="Element.removeClassName(this, 'langMenuHover');" onClick="window.location.href = '{link controller=backend.language action=changeLanguage id=$item.ID query="returnRoute=$returnRoute"}'">
 			<img src="image/localeflag/{$item.ID}.png" />
-			<span class="enabled_{$item.isEnabled}">{$item.name}</span> 
+			<span>{$item.name}</span> 
 		</div>
 		{/foreach}
 	</div>

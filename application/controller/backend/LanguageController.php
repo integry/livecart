@@ -398,7 +398,7 @@ class LanguageController extends SiteManagementController
 		$response = new ActionResponse();
 
 		// get all system languages
-		$list = Language::getLanguages()->toArray();
+		$list = Language::getLanguages(true)->toArray();
 
 		foreach($list as $key => $value)
 		{
