@@ -116,7 +116,7 @@ LiveCart.ActiveList.prototype = {
      */
     initialize: function(ul, callbacks)
     {
-
+      var test = 'asdsa';
         this.ul = typeof(ul) == 'string' ? $(ul) : ul;
 
         // Check if ul has an id
@@ -508,7 +508,11 @@ LiveCart.ActiveList.prototype = {
     {
         $H(this.icons).each(function(icon)
         {
-            if(li[icon.key] && icon.key != 'progress') li[icon.key].style.visibility = 'visible';
+            if(li[icon.key] && icon.key != 'progress') 
+			{
+			 li[icon.key].style.visibility = 'visible';
+			 //addlog(' ---- ' + li[icon.key]); 
+			}
         });
     },
 

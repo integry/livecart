@@ -19,6 +19,10 @@ label {
 	margin-bottom: 10px;
 }
 
+#addLangFeedback {
+  	display: none;
+}
+
 /* edit */
 
 #langNotFound {

@@ -85,8 +85,82 @@ if (LiveCart == undefined)
     var LiveCart = {}
 }
 
-LiveCart.Language = Class.create();
-LiveCart.Language.prototype = 
+LiveCart.LanguageIndex = Class.create();
+LiveCart.LanguageIndex.prototype = 
+{		
+	addUrl: false,
+	
+	initialize: function()
+	{
+	  
+	},
+	
+	add: function(langCode)
+	{
+	  	// deactivate submit button and display feedback
+	  	button = document.getElementById('addLang').getElementsByTagName('input')[0];
+	  	button.disabled = true;
+
+		document.getElementById('addLangFeedback').style.display = 'inline';
+		  
+		new Ajax.Request(
+		  			this.addUrl,
+					{
+					  method: 'get',
+					  parameters: 'id=' + langCode,
+					  onComplete: this.addToList
+					}	  										  
+					);
+
+	},
+	
+	addToList: function(request)
+	{
+		// activate button and hide feedback
+	  	button = document.getElementById('addLang').getElementsByTagName('input')[0];
+	  	button.disabled = false;
+
+		addlog(document);
+		
+		xml2Dom(request.responseXML.firstChild);
+
+		document.getElementById('addLangFeedback').style.display = 'none';
+		list = document.getElementById('languageList');
+
+		list.appendChild(li);
+		
+		addlog(li);
+		new Effect.Highlight(li.id, {startcolor:'#ff99ff', endcolor:'#999999'})
+	},
+	
+	setAddUrl: function(url)
+	{
+	  	this.addUrl = url;
+	}
+}
+
+function xml2Dom(xml)
+{
+	addlog(xml.nodeName);
+	if (xml.childNodes.length > 0)
+	{
+		for (k = 0; k < xml.childNodes.length; k++)
+		{
+		 	xml2Dom(xml.childNodes[k]);
+		}  		  
+	} 
+	else 
+	{
+		el = document.createElement(xml.nodeName);
+		el.attributes = xml.attributes;
+		el.value = el.value;
+		return el;
+	}
+}
+
+
+LiveCart.LanguageEdit = Class.create();
+LiveCart.LanguageEdit.prototype = 
 {		
 	templ: false,
 	
