@@ -51,7 +51,7 @@
 {*
 <ul id="pageMenu">
 	<li>
-		<a onClick="slideForm('addLang', 'pageMenu')">{t _add_language}</a>
+		<a onClick="slideForm('addLang', 'pageMenu')">{t _add_lang_button}</a>
 	</li>
 </ul>
 *}
@@ -79,13 +79,19 @@
 </style>
 {/literal}
 
+<script type="text/javascript">
+	var lng = new LiveCart.LanguageIndex();	
+	lng.setAddUrl('{link controller=backend.language action=add}');
+</script>
+
 <div id="addLang" class="slideForm" style="display:none;" onkeydown="{literal}if (getPressedKey(event) == KEY_ESC) {restoreMenu('addLang', 'pageMenu');} {/literal} return true;" onFocus="document.getElementById('addLang-sel').focus();" tabIndex=1>
-	<div onFocus="">	
-		<form name="addform" method="post" action="{link language=$language controller=backend.language action=add}">
+	<div>	
+		<form onSubmit="lng.add(this.getElementsByTagName('select')[0].value); return false;" action="">
 			<select name="new_language" id="addLang-sel" style="width: 200px" tabIndex=3 onKeyDown="{literal}if (getPressedKey(event) == KEY_ENTER) {this.form.submit();} {/literal} return true;">
 			   {html_options options=$languages_select}
 			</select>
-			<input type="submit" value="{t _add_language}" name="sm" tabIndex=4>
+			<img src="image/indicator.gif" id="addLangFeedback">
+			<input type="submit" value="{t _add_lang_button}" name="sm" tabIndex=4>
 			{t _or} <a href="#" onClick="restoreMenu('addLang', 'pageMenu'); return false;">{t _cancel}</a>
 		</form>	
 	</div>
@@ -93,51 +99,55 @@
 
 <br />
 
-<form name="activeform" method="post" action="{link language=$language controller=backend.language action=setEnabled}">
-	<input type="hidden" name="change_active">
-	<input type="hidden" name="change_to">
-</form>
-<form name="currentform" method="post" action="{link language=$language controller=backend.language action=setDefault}">	
-	<input type="hidden" name="change_to">
-</form>
-
 {literal}
 <style>
 .enabled_0 {color: #AAAAAA;}
 .enabled_1 {}
 .listSortHover {background-color: #DDDDDD;}
+
+.activeList_icons_container {
+  	width: 16px;
+  	height: 16px;
+}
 </style>
 {/literal}
 
 
-<ul id="languageList" class="activeList_add_delete">
+<ul id="languageList" class="activeList_add_delete activeList_add_flag">
 {foreach from=$languagesList item=item}
-<li id="languageList_{$item.ID}" class="activeList_add_sort">
-	{include file="backend/language/listItem.tpl"}
-</li>
+	{include file="backend/language/listItem.tpl" showContainer=true}
 {/foreach}
 </ul>
 
 {literal}
 <script type="text/javascript">
 	
+	try
+	{
+	LiveCart.ActiveList.prototype.icons['flag'] = 'image/localeflag/lt.png';
 	
      new LiveCart.ActiveList('languageList', {
          beforeEdit:     function(li) { return 'sort.php?' },
          beforeSort:     function(li, order) 
 		 { 
-		   /* li.progress.style.display = 'none';  */
-		   return '{/literal}{link controller=backend.language action=saveorder}{literal}?draggedId=' + this.getRecordId(li) + '&' + order 
+			 return '{/literal}{link controller=backend.language action=saveorder}{literal}?draggedId=' + this.getRecordId(li) + '&' + order 
 		   },
          beforeDelete:   function(li)
          {
-             if(confirm('{/literal}{translate text=_confirm_delete}{literal}')) return '{/literal}{link controller=backend.language action=delete}{literal}' + this.getRecordId(li)
+             if(confirm('{/literal}{translate text=_confirm_delete}{literal}')) return '{/literal}{link controller=backend.language action=delete}{literal}/' + this.getRecordId(li)
          },
          afterEdit:      function(li, response) {  },
          afterSort:      function(li, response) {  },
-         afterDelete:    function(li, response)  { Element.remove(li); }
-     });
+         afterDelete:    function(li, response)  { Element.remove(li); },
 
+         beforeFlag:      function(li) {  alert('1') },
+         afterFlag:      function(li, response) {  alert('2') }
+     });
+		}catch(e)
+		{
+		  var test = e;
+		  alert(e)
+		}
 </script>
 {/literal}
 

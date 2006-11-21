@@ -430,12 +430,21 @@ class LanguageController extends SiteManagementController
 	 */
 	public function add()
 	{
-		if ($this->request->isValueSet("new_language"))
+		if ($this->request->isValueSet("id"))
 		{
-			Language::add($this->request->getValue("new_language"));
-		}
+			$id = $this->request->getValue("id");
+			Language::add($id);
 
-		return new ActionRedirectResponse($this->request->getControllerName(), "index", array());
+			$this->setLayout('empty');		
+			$response = new ActionResponse();
+			$item = Language::getInstanceById($id)->toArray();
+			$item['name'] = $this->locale->info()->getLanguageName($item['ID']);
+			$response->setValue('item', $item);			
+			
+			$response->setHeader('Content-type', 'application/xml');
+			
+			return $response;
+		}
 	}
 	
 	private function translationSort($a, $b)
