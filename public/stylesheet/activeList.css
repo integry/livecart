@@ -1,0 +1,25 @@
+.activeList_icons
+{
+    float: left;
+    width: 80px;
+}
+
+.activeList_icons_container
+{
+    float: left;
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+	cursor: pointer;
+	cursor: hand;
+}
+
+.activeList ul
+{
+    list-style: none;
+}
+
+.activeList li
+{
+    clear: left;
+}
