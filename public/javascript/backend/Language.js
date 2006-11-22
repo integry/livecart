@@ -80,11 +80,6 @@ function langPassDisplaySettings(form)
 	form.show.value = nav.elements.namedItem('show').value;
 }
 
-if (LiveCart == undefined)
-{
-    var LiveCart = {}
-}
-
 LiveCart.LanguageIndex = Class.create();
 LiveCart.LanguageIndex.prototype = 
 {		
@@ -116,21 +111,24 @@ LiveCart.LanguageIndex.prototype =
 	
 	addToList: function(request)
 	{
-		// activate button and hide feedback
+		// activate submit button and hide feedback
 	  	button = document.getElementById('addLang').getElementsByTagName('input')[0];
 	  	button.disabled = false;
 
-		addlog(document);
-		
-		xml2Dom(request.responseXML.firstChild);
+		// hide menu
+
+		// add language to list
+		item = xml2HtmlElement(request.responseXML.firstChild);
 
 		document.getElementById('addLangFeedback').style.display = 'none';
 		list = document.getElementById('languageList');
 
-		list.appendChild(li);
-		
-		addlog(li);
-		new Effect.Highlight(li.id, {startcolor:'#ff99ff', endcolor:'#999999'})
+		item.style.display = 'none';
+		list.appendChild(item);
+		initLangList();
+		item.style.display = '';
+				
+		new Effect.Highlight(item.id, {startcolor:'#FBFF85', endcolor:'#FFFFFF'})
 	},
 	
 	setAddUrl: function(url)
@@ -138,26 +136,6 @@ LiveCart.LanguageIndex.prototype =
 	  	this.addUrl = url;
 	}
 }
-
-function xml2Dom(xml)
-{
-	addlog(xml.nodeName);
-	if (xml.childNodes.length > 0)
-	{
-		for (k = 0; k < xml.childNodes.length; k++)
-		{
-		 	xml2Dom(xml.childNodes[k]);
-		}  		  
-	} 
-	else 
-	{
-		el = document.createElement(xml.nodeName);
-		el.attributes = xml.attributes;
-		el.value = el.value;
-		return el;
-	}
-}
-
 
 LiveCart.LanguageEdit = Class.create();
 LiveCart.LanguageEdit.prototype = 
