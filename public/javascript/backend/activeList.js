@@ -116,7 +116,7 @@ LiveCart.ActiveList.prototype = {
      */
     initialize: function(ul, callbacks)
     {
-      var test = 'asdsa';
+
         this.ul = typeof(ul) == 'string' ? $(ul) : ul;
 
         // Check if ul has an id
@@ -158,7 +158,16 @@ LiveCart.ActiveList.prototype = {
      */
     toggleContainer: function(li, action)
     {
-        Element.toggle(this.getContainer(li ? li : false, action ? action : this.getAction(this.toggleContainer.caller)));
+        var container = this.getContainer(li ? li : false, action ? action : this.getAction(this.toggleContainer.caller));
+
+        if(container.style.display == 'none')
+        {
+            setTimeout("Effect.BlindDown('"+container.id+"', {duration: 0.5})", 50);
+        }
+        else
+        {
+            setTimeout("Effect.BlindUp('"+container.id+"', {duration: 0.5})", 50);
+        }
     },
 
     /**
@@ -371,6 +380,7 @@ LiveCart.ActiveList.prototype = {
             var container = document.createElement('div');
             container.style.display = 'none';
             Element.addClassName(container, self.cssPrefix + icon.action + 'Container');
+            container.id = self.cssPrefix + icon.action + 'Container_' + li.id;
             li.appendChild(container);
             li[icon.action + 'Container'] = container;
         }
@@ -460,15 +470,7 @@ LiveCart.ActiveList.prototype = {
     callUserCallback: function(action, response, li)
     {
         this._currentLi = li;
-        try
-        {
-            this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
-        }
-        catch(e)
-        {
-            var test1 = e;
-            jsTrace.debug(e);
-        }
+        this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
         this.toggleProgress(li);
     },
 
@@ -508,11 +510,7 @@ LiveCart.ActiveList.prototype = {
     {
         $H(this.icons).each(function(icon)
         {
-            if(li[icon.key] && icon.key != 'progress') 
-			{
-			 li[icon.key].style.visibility = 'visible';
-			 //addlog(' ---- ' + li[icon.key]); 
-			}
+            if(li[icon.key] && icon.key != 'progress') li[icon.key].style.visibility = 'visible';
         });
     },
 
@@ -549,8 +547,6 @@ LiveCart.ActiveList.prototype = {
         // execute the action
         this._currentLi = this.dragged;
 
-        try
-        {
         new Ajax.Request(this.callbacks.beforeSort.call(this, this.dragged, Sortable.serialize(this.ul.id)),
         {
             method: 'get',
@@ -559,11 +555,6 @@ LiveCart.ActiveList.prototype = {
             // so the only way I could make it work is this
             onComplete: function(param) { self.restoreDraggedItem(param); }
         });
-        }
-         catch(e)
-        {
-            jsTrace.debug(e);
-        }
     },
 
 
