@@ -27,8 +27,8 @@ label {
 
 #langNotFound {
   	display: none;
-  	margin-bottom: 20px;
-  	margin-top: 20px;
+  	margin-top: 5px;
+  	color: red;
 }
 
 #expandCollapse {
@@ -115,12 +115,16 @@ label {
 .transContainer legend a {
 	position: relative;
 	left: -10px;	  
+	text-decoration: none;
 }
 .transValues legend a {
 	position: relative;
 	left: -25px;	  
 }
-
+.transContainer legend a:hover {
+	text-decoration: underline;  
+}
+  
 .langTranslations div {
 	background-color: #FFFFFF;
 	padding-left: 10px;

@@ -30,46 +30,6 @@ function print_r(input, _indent)
     return output;
 }
 
-function langSetVisibility(container, visibility)
-{
-	// toggle translation input visibility
-	transCont = container.getElementsByTagName('div')[0];
-	transCont.style.display = (visibility ? '' : 'none');
-
-	// toggle collapse/expand images
-	img = container.getElementsByTagName('img')[1];
-	img.src = 'image/backend/icon/' + (visibility ? 'collapse.gif' : 'expand.gif');
-	
-	// save explode/collapse status in form variable
-	sel = document.getElementById('navLang').elements.namedItem('langFileSel');
-
-	try 
-	{
-		var arr = sel.value.parseJSON();
-	}
-	catch (e)
-	{
-		var arr = new Object();  	
-	}
-		
-	arr[container.file] = visibility;
-
-	sel.value = arr.toJSONString();	
-}
-
-/**
- * Toggles visibility for lang file
- */
-function langToggleVisibility(container)
-{
-	langSetVisibility(container, 1 - (container.getElementsByTagName('div')[0].style.display != 'none'))
-}
-
-function langContainerVisibility(container, visibility)
-{
-	container.style.display = (visibility ? '' : 'none');  	
-}
-
 /**
  * Passes language display settings from navigation form to translation modification form
  */
@@ -116,6 +76,7 @@ LiveCart.LanguageIndex.prototype =
 	  	button.disabled = false;
 
 		// hide menu
+		restoreMenu('addLang', 'pageMenu');
 
 		// add language to list
 		item = xml2HtmlElement(request.responseXML.firstChild);
@@ -158,6 +119,11 @@ LiveCart.LanguageEdit.prototype =
 		
 		this.generateForm(translations, container);
 		
+	},
+	
+	langContainerVisibility: function (container, visibility)
+	{
+		container.style.display = (visibility ? '' : 'none');  	
 	},
 	
 	generateForm: function(translations, container, fileName)
@@ -207,7 +173,7 @@ LiveCart.LanguageEdit.prototype =
 		t.getElementsByTagName('legend')[0].onclick = 
 			function () 
 			{
-				langToggleVisibility(this.parentNode);
+				langEdit.langToggleVisibility(this.parentNode);
   			}
 		
 		t.getElementsByTagName('legend')[0].getElementsByTagName('a')[0].onkeydown = 			
@@ -215,7 +181,7 @@ LiveCart.LanguageEdit.prototype =
 			{
 				if (getPressedKey(event) != KEY_TAB && getPressedKey(event) != KEY_SHIFT) 
 				{
-				  	langToggleVisibility(this.parentNode.parentNode);
+				  	langEdit.langToggleVisibility(this.parentNode.parentNode);
 				}									  	
 			}					
 		
@@ -306,98 +272,189 @@ LiveCart.LanguageEdit.prototype =
 		  	subCont[subCont.length - 1].className += " transValuesLast";
 		}
 	
-	}  
-  
-}
-
-function langSearch(query)
-{
-	query = query.toLowerCase();  
-	found = langFileSearch(query, translations);
-	document.getElementById('langNotFound').style.display = (found) ? 'none' : 'block';  	
-	langExpandAll('translations', true);
-}
-
-function langFileSearch(query, translations, file)
-{	
-	var found = false;
+	},
+	
+	langFileSearch: function(query, translations, file, display)
+	{	
+		var found = false;
+			
+		var showFile = false;
+			
+		for (var k in translations)
+		{			
+			if ('object' == typeof translations[k])
+			{
+			  	if (this.langFileSearch(query, translations[k], k, display))
+				{
+				  	showFile = true;
+				}			  	
+			}
+			else
+			{		
+				matchIndex = (k.toLowerCase().indexOf(query) > -1);
+				
+				valueInput = document.getElementById('cont-' + file + '-' + k);
+	
+				if (!valueInput)
+				{
+				  	continue;
+				}
+				
+				inp = valueInput.getElementsByTagName('input');
+	
+				if (0 == inp.length) 
+				{				
+					inp = valueInput.getElementsByTagName('textarea');  	
+				}
+				inp = inp[0];
+				
+				matchValue = (inp.value.toLowerCase().indexOf(query) > -1);
+				
+				if (english[file][k])
+				{
+					matchEnValue = (english[file][k].toLowerCase().indexOf(query) > -1);						
+				}				
+	
+				valueInput.style.display = (!matchIndex && !matchValue && !matchEnValue) ? 'none' : '';					
+				
+				// filter by translated/untranslated radio buttons
+				if ((display > 0) && ('none' != valueInput.style.display))
+				{
+					if (1 == display)
+				  	{
+						d = ('' == inp.value);
+					}
+					else if (2 == display)
+					{
+						d = ('' != inp.value);							  
+					}
+				
+					if (d)
+					{
+						valueInput.style.display = 'none';  
+					}					
+				}
+				
+				if ('' == valueInput.style.display)
+				{
+				  	showFile = true;
+				}
+			}
+		}
 		
-	var showFile = false;
-
-	for (var k in translations)
-	{			
-		if ('object' == typeof translations[k])
+		container = document.getElementById('cont-' + file);
+		
+		if (container)
 		{
-		  	if (langFileSearch(query, translations[k], k))
-			{
-			  	showFile = true;
-			}			  	
+			this.langContainerVisibility(container, showFile);  
+		}	
+		
+		if (showFile)
+		{
+		  	found = true;
+		}	
+		
+		return found;				
+		
+	},
+	
+	langSearch: function(query, display, expand)
+	{
+		query = query.toLowerCase();  
+		found = this.langFileSearch(query, translations, '', display);
+		document.getElementById('langNotFound').style.display = (found) ? 'none' : 'block';  	
+		document.getElementById('editLang').style.display = (found) ? 'block' : 'none';  			
+		
+		if (expand)
+		{
+			this.langExpandAll('translations', true);
 		}
-		else
-		{		
-			matchIndex = (k.toLowerCase().indexOf(query) > -1);
-			
-			valueInput = document.getElementById('cont-' + file + '-' + k);
-
-			if (!valueInput)
-			{
-			  	continue;
-			}
-			
-			inp = valueInput.getElementsByTagName('input');
-
-			if (0 == inp.length) 
-			{				
-				inp = valueInput.getElementsByTagName('textarea');  	
-			}
-			inp = inp[0];
-			
-			matchValue = (inp.value.toLowerCase().indexOf(query) > -1);
-			
-			if (english[file][k])
-			{
-				matchEnValue = (english[file][k].toLowerCase().indexOf(query) > -1);						
-			}
-
-			valueInput.style.display = (!matchIndex && !matchValue && !matchEnValue) ? 'none' : '';					
-			if ('' == valueInput.style.display)
-			{
-			  	showFile = true;
-			}
+	},
+	
+	langReplaceInputWithTextarea: function(element)
+	{
+		textarea = document.createElement('textarea');  	
+		element.parentNode.replaceChild(textarea, element);
+		textarea.value = element.value;
+		textarea.name = element.name;
+		textarea.focus();								  	
+	},
+	
+	langExpandAll: function(containerId, expand)
+	{
+		containers = document.getElementById(containerId).getElementsByTagName('fieldset');
+		for (k = 0; k < containers.length; k++)
+		{
+		  	this.langSetVisibility(containers[k], expand);
 		}
+	},
+	
+	langSetVisibility: function(container, visibility)
+	{
+		// toggle translation input visibility
+		transCont = container.getElementsByTagName('div')[0];
+		transCont.style.display = (visibility ? '' : 'none');
+	
+		// toggle collapse/expand images
+		img = container.getElementsByTagName('img')[1];
+		img.src = 'image/backend/icon/' + (visibility ? 'collapse.gif' : 'expand.gif');
+		
+		// save explode/collapse status in form variable
+		sel = document.getElementById('navLang').elements.namedItem('langFileSel');
+	
+		try 
+		{
+			var arr = sel.value.parseJSON();
+		}
+		catch (e)
+		{
+			var arr = new Object();  	
+		}
+			
+		arr[container.file] = visibility;
+	
+		sel.value = arr.toJSONString();	
+	},
+	
+	/**
+	 * Toggles visibility for lang file
+	 */
+	langToggleVisibility: function(container)
+	{
+		this.langSetVisibility(container, 1 - (container.getElementsByTagName('div')[0].style.display != 'none'))
+	},
+	
+	preFilter: function()
+	{
+		this.langSearch('', this.getDisplayFilter(), false);	  
+	},
+	
+	displayFilter: function(display)
+	{
+		// get search query
+		var query = document.getElementById('filter').value;
+		
+		this.langSearch(query, display, true);
+	},
+	
+	getDisplayFilter: function()
+	{
+	  	var filter = 0;
+		if (document.getElementById('show-all').checked)
+	  	{
+			filter = 0;    
+		}
+		else if(document.getElementById('show-undefined').checked)
+		{
+		  	filter = 1;
+		}
+		else if(document.getElementById('show-defined').checked)
+		{
+		  	filter = 2;
+		}
+		
+		return filter;
 	}
 	
-	container = document.getElementById('cont-' + file);
-	
-	if (container)
-	{
-		langContainerVisibility(container, showFile);  
-//		langContainerVisibility(container, true);  
-	}	
-	
-	if (showFile)
-	{
-	  	found = true;
-	}	
-	
-	return found;				
-	
-}
-
-function langReplaceInputWithTextarea(element)
-{
-	textarea = document.createElement('textarea');  	
-	element.parentNode.replaceChild(textarea, element);
-	textarea.value = element.value;
-	textarea.name = element.name;
-	textarea.focus();								  	
-}
-
-function langExpandAll(containerId, expand)
-{
-	containers = document.getElementById(containerId).getElementsByTagName('fieldset');
-	for (k = 0; k < containers.length; k++)
-	{
-	  	langSetVisibility(containers[k], expand);
-	}
+  
 }

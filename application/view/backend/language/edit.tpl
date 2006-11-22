@@ -25,14 +25,14 @@
 			<td>
 				<input type="hidden" name="langFileSel" value='{$langFileSel|escape:"quotes"}' />
 
-				<input type="radio" name="show" value="all" id="show-all" {$selected_all} onclick="this.form.submit()" />
-					<label for="show-all">{t _all}</label>
+				<input type="radio" name="show" value="all" id="show-all" {$selected_all} onclick="langEdit.displayFilter(0)" />
+				<label for="show-all">{t _all}</label>
 			
-				<input type="radio" name="show" value="notDefined" id="show-undefined" {$selected_not_defined} onclick="this.form.submit()" />
-					<label for="show-undefined">{t _not_defined}</label>
+				<input type="radio" name="show" value="notDefined" id="show-undefined" {$selected_not_defined} onclick="langEdit.displayFilter(1)" />
+				<label for="show-undefined">{t _not_defined}</label>
 				
-				<input type="radio" name="show" value="defined" id="show-defined" {$selected_defined} onclick="this.form.submit()" />
-					<label for="show-defined">{t _defined}</label>
+				<input type="radio" name="show" value="defined" id="show-defined" {$selected_defined} onclick="langEdit.displayFilter(2)" />
+				<label for="show-defined">{t _defined}</label>
 			</td>
 		</tr>
 		<tr>
@@ -40,7 +40,8 @@
 				{t _search_trans}:
 			</td>
 			<td>
-				<input type="text" name="filter" onkeyup="langSearch(this.value);">			
+				<input type="text" id="filter" onkeyup="langEdit.langSearch(this.value, langEdit.getDisplayFilter(), true);">			
+				<div id="langNotFound">{t _no_translations_found}</div>
 			</td>
 		</tr>
 	</table>
@@ -48,14 +49,14 @@
 </fieldset>
 <br /><br />
 
-<form name="editLang" method="post" action="{link controller=backend.language action=save id=$id}" onSubmit="langPassDisplaySettings(this);">
+<form id="editLang" method="post" action="{link controller=backend.language action=save id=$id}" onSubmit="langPassDisplaySettings(this);">
 	
 	<input type="hidden" name="langFileSel" />
 	<input type="hidden" name="show" />
 	
 	<div id="expandCollapse">
-		<a href="#" onClick="langExpandAll('translations', true); return false;">Expand all</a> 
-		<a href="#" onClick="langExpandAll('translations', false); return false;">Collapse all</a>
+		<a href="#" onClick="langEdit.langExpandAll('translations', true); return false;">Expand all</a> 
+		<a href="#" onClick="langEdit.langExpandAll('translations', false); return false;">Collapse all</a>
 	</div>
 	
 	<fieldset class="langTranslations lang-template" style="display: none;">
@@ -84,12 +85,11 @@
 
 {literal}
 <script type="text/javascript">
-	new LiveCart.LanguageEdit(translations, english, document.getElementById('translations'));
+	var langEdit = new LiveCart.LanguageEdit(translations, english, document.getElementById('translations'));
+	langEdit.preFilter();
 </script>
 {/literal}
 
-	<div id="langNotFound">{t _no_translations_found}</div>
-	
 	<input type="submit" value="{t _save}">
 	
 </form>

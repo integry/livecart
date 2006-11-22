@@ -132,35 +132,6 @@ class LanguageController extends SiteManagementController
 			break;
 		}
 
-		// remove definitions that do not need to be displayed
-		if ($selectedDefined || $selectedNotDefined)
-		{
-			foreach ($translated as $file => &$values)
-			{
-			  	foreach ($values as $key => $value)
-			  	{
-				    if (($selectedDefined && '' != $value) || ($selectedNotDefined && '' == $value))
-				    {
-					  	unset($values[$key]);
-					}
-				}
-				
-				if (0 == count($values))
-				{
-				  	unset($translate[$file]);
-				}
-			}  
-		}		
-		
-		// do not show files with no displayable definitions
-		foreach ($translated as $file => $values)
-		{
-		  	if (count($values) == 0)
-		  	{
-			    unset($translated[$file]);
-			}
-		}
-
 		// arrange files into a hierarchical structure
 		$hierarchical = array();
 		foreach ($translated as $file => $values)
