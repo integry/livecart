@@ -84,7 +84,7 @@
 
 {literal}
 <script type="text/javascript">
-	new LiveCart.Language(translations, english, document.getElementById('translations'));
+	new LiveCart.LanguageEdit(translations, english, document.getElementById('translations'));
 </script>
 {/literal}
 

@@ -121,33 +121,24 @@
 
 {literal}
 <script type="text/javascript">
-	
-	try
-	{
-	LiveCart.ActiveList.prototype.icons['flag'] = 'image/localeflag/lt.png';
-	
-     new LiveCart.ActiveList('languageList', {
-         beforeEdit:     function(li) { return 'sort.php?' },
-         beforeSort:     function(li, order) 
-		 { 
-			 return '{/literal}{link controller=backend.language action=saveorder}{literal}?draggedId=' + this.getRecordId(li) + '&' + order 
-		   },
-         beforeDelete:   function(li)
-         {
-             if(confirm('{/literal}{translate text=_confirm_delete}{literal}')) return '{/literal}{link controller=backend.language action=delete}{literal}/' + this.getRecordId(li)
-         },
-         afterEdit:      function(li, response) {  },
-         afterSort:      function(li, response) {  },
-         afterDelete:    function(li, response)  { Element.remove(li); },
-
-         beforeFlag:      function(li) {  alert('1') },
-         afterFlag:      function(li, response) {  alert('2') }
-     });
-		}catch(e)
-		{
-		  var test = e;
-		  alert(e)
-		}
+    function initLangList()
+    {	
+		new LiveCart.ActiveList('languageList', {
+	         beforeEdit:     function(li) { return 'sort.php?' },
+	         beforeSort:     function(li, order) 
+			 { 
+				 return '{/literal}{link controller=backend.language action=saveorder}{literal}?draggedId=' + this.getRecordId(li) + '&' + order 
+			   },
+	         beforeDelete:   function(li)
+	         {
+	             if(confirm('{/literal}{t _confirm_delete}{literal}')) return '{/literal}{link controller=backend.language action=delete}{literal}/' + this.getRecordId(li)
+	         },
+	         afterEdit:      function(li, response) {  },
+	         afterSort:      function(li, response) {  },
+	         afterDelete:    function(li, response)  { Element.remove(li); },
+	     });
+	}	
+	initLangList();
 </script>
 {/literal}
 

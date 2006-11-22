@@ -13,10 +13,12 @@
 	{$STYLESHEET}
 
 	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
+	<script type="text/javascript" src="javascript/library/livecart.js"></script>
 	<script type="text/javascript" src="javascript/library/ClassLoader.js"></script>
 	<!-- JavaScript includes -->
 	{includeJs file=backend/keyboard.js}
 	{includeJs file=json.js}
+
 	{$JAVASCRIPT}
 
 	<script type="text/javascript">
