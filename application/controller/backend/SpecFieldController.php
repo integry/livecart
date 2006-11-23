@@ -1,6 +1,6 @@
 <?php
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-//ClassLoader::import("application.model.product.SpecField");
+ClassLoader::import("application.model.category.*");
 
 /**
  * Category specification field ("extra field") controller
@@ -18,12 +18,29 @@ class SpecFieldController extends StoreManagementController
 
         $defaultLanguage = $this->locale->getCurrentLocale();
 
-        ClassLoader::import("application.model.category.*");
+
+
         $category = Category::getInstanceByID(8);
         $response->setValue('specFields', $category->getSpecFieldList());
 
+        $defaultSpecFieldValues = array
+        (
+            'ID' => 'new',
+            'name' => array(),
+            'description' => array(),
+            'handle' => '',
+            'values' => Array(),
+            'rootId' => 'specField_item_new',
+            'type' => 5,
+            'dataType' => 2
+        );
+        $response->setValue('specFieldsList', $defaultSpecFieldValues);
 
-
+        /**
+         * Types:
+         * 1 - numbers
+         * 2 - text
+         */
         $configuration = array(
             'languages' => array (
                 'en' => 'English',
@@ -33,17 +50,17 @@ class SpecFieldController extends StoreManagementController
 
             'types' => array
             (
-                'numbers' => array
+                2 => array
                 (
-                    'selector' => 'Selector',
-                    'numbers' => 'Numbers'
+                    1 => 'Selector',
+                    2 => 'Numbers'
                 ),
-                'text' => array
+                1 => array
                 (
-                    'text' => 'Text',
-                    'wordProcesser' => 'Word processer',
-                    'selector' => 'selector',
-                    'date' => 'Date'
+                    3 => 'Text',
+                    4 => 'Word processer',
+                    5 => 'selector',
+                    6 => 'Date'
                 )
             ),
 
@@ -52,119 +69,10 @@ class SpecFieldController extends StoreManagementController
                 'deleteField' => 'delete field'
             ),
 
-            'selectorValueTypes' => array ('_selector', 'selector'),
-            'doNotTranslateTheseValueTypes' => array('numbers'),
+            'selectorValueTypes' => array (1, 5),
+            'doNotTranslateTheseValueTypes' => array(2),
             'countNewValues' => 0
         );
-//
-//
-//
-//        $specFieldsList[96] = array
-//        (
-//            'id'                => 96,
-//            'rootId'         => 'specField_items_list_96',
-//            'handle'            => 'field1',
-//
-//            'type'              => '_selector',
-//            'valueType'         => 'text',
-//            'multipleSelector'  => true,
-//
-//            'translations'      => array
-//            (
-//                'en' => array('title' => 'WiFi', 'description' => 'Wireless internet'),
-//                'lt' => array('title' => 'WiFi', 'description' => 'Bevivielis internetas'),
-//                'de' => array('title' => 'WiFi', 'description' => 'Wirelichtinterneten')
-//            ),
-//
-//            'values' => array
-//            (
-//                '1' => array('en' => 'Yes', 'lt' => 'Yra',  'de' => 'Ya'),
-//                '2' => array('en' => 'No',  'lt' => 'Nera', 'de' => 'Nicht')
-//            )
-//        );
-//
-//    	$specFieldsList[95] = array
-//    	(
-//    		'id'              => 95,
-//            'rootId'       => 'specField_items_list_95',
-//    		'handle'          =>'manufacter',
-//
-//    		'valueType'       => 'text',
-//    		'type'            => 'text',
-//
-//    		'translations' => array(
-//    			'en' => array('title' => 'Manufacter',		'description' => 'Apple, Assus, Lenovo etc'),
-//    			'lt' => array('title' => 'Gamyntojas',		'description' => 'Apple, Assus, Lenovo ir kiti'),
-//    			'de' => array('title' => 'Machtengiher',		'description' => 'Apple, Assus, Lenovo und fuhr')
-//    		)
-//    	);
-//
-//    	$specFieldsList[100] = array
-//    	(
-//    		'id'              => 100,
-//            'rootId'       => 'specField_items_list_100',
-//    		'handle'          =>'field1',
-//
-//    		'type'            =>'text',
-//    		'valueType'       =>'text',
-//
-//    		'translations' => array(
-//    			'en' => array('title' => 'Other features',		'description' => 'Other features'),
-//    			'lt' => array('title' => 'Kiti navorotai',		'description' => 'Kiti navorotai'),
-//    			'de' => array('title' => 'Blachen fileich',		'description' => 'Blachen fileich')
-//    		)
-//    	);
-//
-//    	$specFieldsList[102] = array
-//    	(
-//            'id'            => 102,
-//            'rootId'     => 'specField_items_list_102',
-//            'handle'        => 'field1',
-//
-//            'type'          => '_selector',
-//            'valueType'     => 'text',
-//
-//            'translations'  => array(
-//            	'en' => array('title' => 'Pressent',               'description' => 'You will get a pressent when you buy this product'),
-//            	'lt' => array('title' => 'Dovana',                 'description' => 'Gausite dovana perkant si produkta'),
-//            	'de' => array('title' => 'Preshentwirdshihtceit',  'description' => 'Present mit bhot das kein!')
-//            ),
-//
-//            'values' => array(
-//            	'45' => array('en' => 'TV tunner',         'lt' => 'TV tuneris',       'de' => 'TV thuner'),
-//            	'46' => array('en' => 'Ultraslim',         'lt' => 'Super plonas',     'de' => 'Shicht'),
-//            	'47' => array('en' => 'Life time waranty', 'lt' => 'Amzina garantiha', 'de' => 'Das gluklich garantee')
-//            )
-//    	);
-//
-//
-//
-//
-//    	foreach ($specFieldsList as $f)
-//    	{
-//    	    foreach(array('en', 'lt', 'de') as $ln)
-//    	    {
-//    	        $name[$ln] = $f['translations'][$ln]['title'];
-//    	        $description[$ln] = $f['translations'][$ln]['description'];
-//    	    }
-//
-////    	    echo "INSERT INTO SpecField (`id`, `handle`, `type`, `dataType`, `name`, `description`) VALUES({$f['id']}, '{$f['handle']}', '{$f['type']}', '{$f['valueType']}', '".addslashes(serialize($name))."', '".addslashes(serialize($description))."');<br />";
-//
-//            if(isset($f['values']))
-//            {
-//        	    foreach($f['values'] as $id => $v)
-//        	    {
-//        	        $values = array();
-//            	    foreach(array('en', 'lt', 'de') as $ln)
-//            	    {
-//            	        $values[$ln] = $v[$ln];
-//            	    }
-//
-////        	        echo "INSERT INTO SpecFieldValue (id, specFieldID, `value`) VALUES($id, {$f['id']}, '".addslashes(serialize($values))."');<br />";
-//        	    }
-//            }
-//    	}
-
 
        $response->setValue('configuration', $configuration);
 
@@ -194,32 +102,18 @@ class SpecFieldController extends StoreManagementController
         $this->setLayout("empty");
 
        $response = new ActionResponse();
-       echo "<pre>".print_r(SpecField::getInstanceByID($this->request->getValue('id'), true)->toArray(), true)."</pre>";
-       $response->setValue('specFieldsList', SpecField::getInstanceByID($this->request->getValue('id'))->toArray());
-       return $response;
+       $specFieldList = SpecField::getInstanceByID($this->request->getValue('id'), true, true)->toArray();
 
-//        ClassLoader::import("framework.request.validator.Form");
-//        $systemLangList = array("lt" => "Lietuvių", "de" => "Deutch");
-//        $specFieldTypeList = array("1" => "Text Field", "2" => "Checkbox", "3" => "Select field");
-//        $form = new Form($this->buildValidator());
-//
-//        if ($this->request->isValueSet("id"))
-//        {
-//            ClassLoader::import("application.model.product.SpecField");
-//            $specField = SpecField::getInstanceByID($this->request->getValue("id"), SpecField::LOAD_DATA);
-//            $form->setData($specField->toArray());
-//        }
-//
-//        $specFieldList = array(array("name" => "test", "description" => "test"), array("name" => "another item", "description" => "one more..."));
-//
-//        $response = new ActionResponse();
-//
-//        $response->setValue("specFieldList", $specFieldList);
-//
-//        $response->setValue("specFieldForm", $form);
-//        $response->setValue("systemLangList", $systemLangList);
-//        $response->setValue("typeList", $specFieldTypeList);
-//        return $response;
+       foreach(SpecFieldValue::getRecordSetArray($specFieldList['ID']) as $value)
+       {
+           $specFieldList['values'][$value['ID']] = $value['value'];
+       }
+
+       $specFieldList['rootId'] = "specField_items_list_".$specFieldList['ID'];
+
+       $response->setValue('specFieldsList', $specFieldList);
+
+       return $response;
     }
 
     /**
@@ -229,35 +123,83 @@ class SpecFieldController extends StoreManagementController
      */
     public function save()
     {
-        $validator = $this->buildValidator();
-        $validator->execute();
-        if ($validator->hasFailed())
+        $defaultLocale = 'en';
+
+        if($this->request->getValue('ID') == 'new')
         {
-            $validator->saveState();
-            return new ActionRedirectResponse("backend.specField", "form");
+            $specField = SpecField::getNewInstance();
         }
         else
         {
-            if ($this->request->isValueSet("id"))
-            {
-                $specField = SpecField::getInstanceByID($this->request->getValue("id"));
-            }
-            else
-            {
-                $specField = SpecField::getNewInstance();
-            }
-
-            $langCode = $this->user->getActiveLang()->getID();
-            $category = Category::getInstanceByID($this->request->getValue("categoryID"));
-
-            $specField->lang($langCode)->name->set($form->getFieldValue('name'));
-            $specField->lang($langCode)->description->set($form->getFieldValue('description'));
-            $specField->category->set($category);
-            $specField->type->set($this->request->getValue("type"));
-            $specField->dataType->set($this->request->getValue("dataType"));
-            $specField->handle->set($this->request->getValue("handle"));
-            return new ActionRedirectResponse("backend.specField", "form", array("id" => $this->request->getValue('id')));
+            $specField = SpecField::getInstanceByID((int)$this->request->getValue('ID'));
         }
+
+
+/*        $specField->getSchemaInstance('SpecField');*/
+
+        $dataType = $this->request->getValue('dataType');
+        $type = $this->request->getValue('type');
+        $description = $this->request->getValue('description');
+        $name = $this->request->getValue('name');
+        $handle = $this->request->getValue('handle');
+
+
+        if(count($errors = array('handle' => 'blablabla') /*$this->validateSpecField($specField, $dataType, $type, $description, $name, $handle) */) == 0)
+        {
+            $htmlspecialcharsUtf_8 = create_function('$val', 'return htmlspecialchars($val, null, "UTF-8");');
+
+            $specField->setFieldValue('dataType', (int)$this->request->getValue('dataType'));
+            $specField->setFieldValue('type', (int)$this->request->getValue('type'));
+            $specField->setFieldValue('handle', preg_replace('[^\w\d_]', '_', $this->request->getValue('handle')));
+            $specField->setLanguageField('description', @array_map($htmlspecialcharsUtf_8, $description), array('en', 'lt', 'de'));
+            $specField->setLanguageField('name',        @array_map($htmlspecialcharsUtf_8, $name),        array('en', 'lt', 'de'));
+
+            $specField->save();
+
+            return new RawResponse("<pre>".print_r($_POST, true)."</pre>");
+        }
+        else
+        {
+            return new JSONResponse($errors);
+        }
+
+
+
+    }
+
+
+
+    private function validateSpecField($specField, $values = array())
+    {
+        $errors = array();
+        $schema = $specField->getSchemaInstance('SpecField');
+        $validTypes = array(
+                1 => array(3, 4, 5, 6),
+                2 => array(1, 2)
+        );
+
+
+        if(!isset($values['dataType']) || !isset($validTypes[$values['dataType']]) || !in_array($values['type'], $validTypes[$values['dataType']]))
+        {
+            $errors['type'] = 'invalid data type';
+        }
+
+        if(!isset($values['handle']) || strlen($values['handle']) > $schema->getField('handle')->getDataType()->getLength())
+        {
+             $errors['handle'] = 'Handle is too long';
+        }
+
+        if(!isset($values['name']) || strlen($values['name']) > $schema->getField('name')->getDataType()->getLength())
+        {
+             $errors['name'] = 'Name is too long';
+        }
+
+        if(!isset($values['description']) || strlen($values['description']) > $schema->getField('description')->getDataType()->getLength())
+        {
+             $errors['description'] = 'Description is too long';
+        }
+
+        return $errors;
     }
 
 
@@ -292,5 +234,37 @@ class SpecFieldController extends StoreManagementController
         return new RawResponse('1');
     }
 }
+
+
+
+//        $validator = $this->buildValidator();
+//        $validator->execute();
+//        if ($validator->hasFailed())
+//        {
+//            $validator->saveState();
+//            return new ActionRedirectResponse("backend.specField", "form");
+//        }
+//        else
+//        {
+//            if ($this->request->isValueSet("id"))
+//            {
+//                $specField = SpecField::getInstanceByID($this->request->getValue("id"));
+//            }
+//            else
+//            {
+//                $specField = SpecField::getNewInstance();
+//            }
+//
+//            $langCode = $this->user->getActiveLang()->getID();
+//            $category = Category::getInstanceByID($this->request->getValue("categoryID"));
+//
+//            $specField->lang($langCode)->name->set($form->getFieldValue('name'));
+//            $specField->lang($langCode)->description->set($form->getFieldValue('description'));
+//            $specField->category->set($category);
+//            $specField->type->set($this->request->getValue("type"));
+//            $specField->dataType->set($this->request->getValue("dataType"));
+//            $specField->handle->set($this->request->getValue("handle"));
+//            return new ActionRedirectResponse("backend.specField", "form", array("id" => $this->request->getValue('id')));
+//        }
 
 ?>
