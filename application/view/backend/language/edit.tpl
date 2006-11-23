@@ -83,12 +83,12 @@
 
 	<div id="translations" style="display: block;"></div>
 
-{literal}
-<script type="text/javascript">
-	var langEdit = new LiveCart.LanguageEdit(translations, english, document.getElementById('translations'));
-	langEdit.preFilter();
-</script>
-{/literal}
+	{literal}
+	<script type="text/javascript">
+		var langEdit = new LiveCart.LanguageEdit(translations, english, document.getElementById('translations'));
+		langEdit.preFilter();
+	</script>
+	{/literal}
 
 	<input type="submit" value="{t _save}">
 	

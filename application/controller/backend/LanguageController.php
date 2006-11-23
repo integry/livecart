@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.SiteManagementController");
+ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.*");
 ClassLoader::import("application.model.system.*");
 ClassLoader::import("library.*");
@@ -13,7 +13,7 @@ ClassLoader::import("library.*");
  * @author Rinalds Uzkalns <rinalds@integry.net>
  * @role admin.site.language
  */
-class LanguageController extends SiteManagementController
+class LanguageController extends StoreManagementController
 {
 	
 	const langFileExt = 'lng';
@@ -216,13 +216,13 @@ class LanguageController extends SiteManagementController
 		$menuTranslations = array();
 		foreach ($submitedLang as $file => $data)
 		{
-			if (substr($file, 0, 4) == 'menu')
+			if (substr($file, 0, 12) == 'backend/menu')
 			{
 				$d = $editLocale->translationManager()->getCacheDefs($file, true);
 				$menuTranslations = array_merge($menuTranslations, $d);
 			}			
 		}
-		
+
 		$editLocale->translationManager()->saveCacheData($localeCode . '/' .'menu/menu', $menuTranslations);
 			
 		return new ActionRedirectResponse($this->request->getControllerName(), 'edit', array('id' => $localeCode, 'query' => 'langFileSel='.$this->request->getValue('langFileSel')));

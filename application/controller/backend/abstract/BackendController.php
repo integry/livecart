@@ -131,7 +131,9 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	protected function menuSectionBlock() 
 	{			
 		// load language file for menu
-		$this->locale->translationManager()->loadCachedFile('menu/menu');		
+		$res = $this->locale->translationManager()->loadCachedFile($this->localeName . '/menu/menu');		
+//		die('!'.(int)$res);
+//print_r($this->locale);
 
 		$menuLoader = new MenuLoader();		
 		$structure = $menuLoader->getCurrentHierarchy($this->request->getControllerName(),	$this->request->getActionName());

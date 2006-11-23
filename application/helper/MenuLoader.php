@@ -21,13 +21,14 @@ class MenuLoader {
 	  	if ($this->reload || !file_exists($cache_file)) 
 		{
 		  	MenuLoader::createFromDir(&$this->mainMenu, ClassLoader::getRealPath("application.configuration.backend_menu"));	  
-			$this->sortMenu();			
+//			$this->sortMenu();			
 			file_put_contents($cache_file, serialize($this->mainMenu));		
 		} 
 		else
 		{  			  	
 			$this->mainMenu = unserialize(file_get_contents($cache_file));
 		}	
+		
 	}
   
     /**
@@ -133,23 +134,29 @@ class MenuLoader {
   
   	private static function createFromDir(&$father_menu, $path)
   	{
-		$path .= '/';
 
-	  	$iter = new DirectoryIterator($path);	  	
-	  	$xml_files = array();
+		$iter = new DirectoryIterator($path);	  	
+	  	$files = array();
 	  	foreach ($iter as $value)
 	  	{		    
-		    if ($value->isFile() && strtolower(substr($value->getFileName(), -4)) == ".xml")
-		    { 			 					
-				// gets simple xml stucture
-				$struct = simplexml_load_file($path.$value->getFileName());								
-				MenuLoader::createFromXML(&$father_menu, $struct);								
-				$dir_name = $path.substr($value->getFileName(), 0, -4).'\\';
-				if (file_exists($dir_name))
-				{				
-					MenuLoader::createFromDir(&$father_menu[count($father_menu)]['items'], $dir_name);				
-				}					
-			}
+		    if (($value->isFile()) && (".xml" == strtolower(substr($value->getFileName(), -4))))
+		    { 			 				
+				$files[] = $value->getFileName();
+			}	
+		}
+
+		asort($files);		
+
+	  	foreach ($files as $file)
+	  	{		    
+			// gets simple xml stucture
+			$struct = simplexml_load_file($path.'/'.$file);								
+			MenuLoader::createFromXML(&$father_menu, $struct);								
+			$subDir = $path.'/'.substr($file, 0, -4);
+			if (file_exists($subDir))
+			{				
+				MenuLoader::createFromDir(&$father_menu[count($father_menu)]['items'], $subDir);				
+			}					
 		}						
 	}  
 	
@@ -161,6 +168,11 @@ class MenuLoader {
 	  	$father_menu[$i]['order'] = (string)$struct->Order;
 	  	$father_menu[$i]['controller'] = (string)$struct->Controller;
 	  	$father_menu[$i]['action'] = (string)$struct->Action;
+	  
+	  	if (empty($father_menu[$i]['action']))
+	  	{
+			$father_menu[$i]['action'] = 'index';    
+		}
 	  
 	  	if ($struct->Items)
 	  	{				  
