@@ -1,3 +1,5 @@
+@import "activeList.css";
+
 html
 {
     font-size: 67.5%;
@@ -329,11 +331,11 @@ html>body #minHeight{ /*safari wrapper */
 
 /* Language switch menu */
 #langMenuContainer {
-  	position: relative; 
-	display: none; 
-	z-index: 20; 
-	float: right; 
-	width: auto; 
+  	position: relative;
+	display: none;
+	z-index: 20;
+	float: right;
+	width: auto;
 }
 
 #langMenuIndicator {
@@ -354,12 +356,12 @@ html>body #minHeight{ /*safari wrapper */
 }
 
 #langMenu div {
-	margin-bottom: 5px;  
+	margin-bottom: 5px;
 }
 
 #langMenu div div {
-	margin: 0; 
-	padding: 5px; 
+	margin: 0;
+	padding: 5px;
   	cursor: pointer;
 }
 
