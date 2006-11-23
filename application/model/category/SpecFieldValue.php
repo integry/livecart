@@ -15,10 +15,21 @@ class SpecFieldValue extends MultilingualObject
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("SpecFieldValue");
 
+		$schema->registerField(new ARForeignKeyField("specFieldID", "SpecField", "ID", "SpecField", ARInteger::instance()));
+
 		$schema->registerField(new ARField("value", ARArray::instance()));
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARField("translate", ARInteger::instance(1)));
+
 	}
+
+	public static function getRecordSetArray($specFieldId)
+	{
+        $filter = new ARSelectFilter();
+        $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'specFieldID'), $specFieldId));
+
+        return parent::getRecordSetArray(__CLASS__, $filter, false);
+	}
+
 }
 
 ?>
