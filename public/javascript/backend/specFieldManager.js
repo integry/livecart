@@ -597,6 +597,13 @@ LiveCart.SpecFieldManager.prototype = {
 		}
 	},
 
+	/**
+	 * Making sure that user won't enter invalid number
+	 *
+	 * @var Event e Event
+	 *
+	 * @access private
+	 */
 	mainValueFieldChangedAction: function(e)
 	{
 		if(!e)
@@ -607,17 +614,19 @@ LiveCart.SpecFieldManager.prototype = {
 
 		keyboard = new KeyboardEvent(e);
 
-		if(!(
-		    // you can use +/- as the first character
-    		(keyboard.getCursorPosition() == 0 && !e.target.value.match('[\-\+]') && (keyboard.getKey() == 109 || keyboard.getKey() == 107 || (keyboard.isShift() && keyboard.getKey() == 61))) ||
-    		// You even can use dots or commas, but only once and not as the first symbol
-    		(e.target.value != '' && !e.target.value.match('[\.\,]') && [110, 188, 190].indexOf(keyboard.getKey()) >= 0) ||
-    		// at last but not the least i have implemanted such a great feature, that you can use digits to create numbers. [applause]
-    		([48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105].indexOf(keyboard.getKey()) > 0) ||
-    		// special chars
-    		([46, 8, 17, 16, 37, 38, 39, 40].indexOf(keyboard.getKey()) >= 0)
-		))
-		{
+		if(
+            this.dataType == 2 && // if it is a number
+    		!(
+    		    // you can use +/- as the first character
+        		(keyboard.getCursorPosition() == 0 && !e.target.value.match('[\-\+]') && (keyboard.getKey() == 109 || keyboard.getKey() == 107 || (keyboard.isShift() && keyboard.getKey() == 61))) ||
+        		// You even can use dots or commas, but only once and not as the first symbol
+        		(e.target.value != '' && !e.target.value.match('[\.\,]') && [110, 188, 190].indexOf(keyboard.getKey()) >= 0) ||
+        		// at last but not the least i have implemanted such a great feature, that you can use digits to create numbers. [applause]
+        		([48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105].indexOf(keyboard.getKey()) > 0) ||
+        		// special chars
+        		([46, 8, 17, 16, 37, 38, 39, 40].indexOf(keyboard.getKey()) >= 0)
+    		)
+		){
 		    Event.stop(e);
 		}
 	},
