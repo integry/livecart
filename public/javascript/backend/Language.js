@@ -176,6 +176,12 @@ LiveCart.LanguageEdit.prototype =
 				langEdit.langToggleVisibility(this.parentNode);
   			}
 		
+		t.getElementsByTagName('legend')[0].getElementsByTagName('img')[1].onclick = 
+			function () 
+			{
+				langEdit.langExpandAll(this.parentNode.parentNode.id, 1 - langEdit.isContainerVisible(this.parentNode.parentNode.parentNode));
+  			}
+
 		t.getElementsByTagName('legend')[0].getElementsByTagName('a')[0].onkeydown = 			
 			function (event)
 			{
@@ -421,7 +427,12 @@ LiveCart.LanguageEdit.prototype =
 	 */
 	langToggleVisibility: function(container)
 	{
-		this.langSetVisibility(container, 1 - (container.getElementsByTagName('div')[0].style.display != 'none'))
+		this.langSetVisibility(container, 1 - this.isContainerVisible(container));
+	},
+	
+	isContainerVisible: function(container)
+	{
+		return container.getElementsByTagName('div')[0].style.display != 'none';  	
 	},
 	
 	preFilter: function()
