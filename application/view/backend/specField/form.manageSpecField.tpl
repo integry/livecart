@@ -1,20 +1,19 @@
-<form>
-<fieldset>
-<legend class="specField_title">Field</legend>
+<a href="#step_main" class="change_state" >Main</a>
+<a href="#step_values" class="change_state" >Values</a>
+<a href="#step_translations" class="change_state">Translations</a>
 
-	<a href="#step_main" class="change_state" >Main</a>
-	<a href="#step_values" class="change_state" >Values</a>
-	<a href="#step_translations" class="change_state">Translations</a>
+<input type="button" class="specField_save" value="Save" />
 
+<form action="/backend.specField/save" method="post">
 	<!-- STEP 1 -->
 	<fieldset class="step_lev1 step_main">
 		<legend>Step 1 (Main language _ English)</legend>
 
-		<input type="hidden" name="id" class="hidden specField_form_id" />
+		<input type="hidden" name="ID" class="hidden specField_form_id" />
 
 		<p>
     		<label>t title <em class="required">*</em></label>
-    		<input type="text" name="title" class="required specField_form_title" />
+    		<input type="text" name="name" class="required specField_form_name" />
 		</p>
 
 		<p>
@@ -28,17 +27,17 @@
 		</p>
 
 		<p>
-		<fieldset class="group specField_form_valueType">
+		<fieldset class="group specField_form_dataType">
     		<h2>t value type</h2>
     		<div>
                 <p>
-        			<input type="radio" name="valueType" value="text" class="radio" />
+        			<input type="radio" name="dataType" value="1" class="radio" />
         		    <label class="radio">Text</label>
                 </p>
             </div>
             <div>
                 <p>
-        			<input type="radio" name="valueType" value="numbers" class="radio" />
+        			<input type="radio" name="dataType" value="2" class="radio" />
         			<label class="radio">Numbers</label>
                 </p>
 			</div>
@@ -78,7 +77,7 @@
 		</fieldset>
 		</p>
 
-		<label style="display: none">Can select multiple entries</label>
+		<label>Can select multiple entries</label>
 		<input type="checkbox" value="1" name="multipleSelector" class="checkbox specField_form_multipleSelector" />
 	</fieldset>
 
@@ -94,7 +93,7 @@
 			<legend></legend>
 
 			<label>t title</label>
-			<input type="text" name="title" />
+			<input type="text" name="name" />
 			<br />
 
 			<label>t description</label>
@@ -113,6 +112,6 @@
 			</fieldset>
 		</fieldset>
 	</fieldset>
-</fieldset>
 </form>
+
 <script type="text/javascript">new LiveCart.SpecFieldManager({json array=$specFieldsList});</script>
