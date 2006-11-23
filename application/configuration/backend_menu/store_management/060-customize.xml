@@ -1,0 +1,21 @@
+<Menu>
+	<Title>_menu_customize</Title>		
+	<Controller>backend.customize</Controller>
+	<Items>
+		<Menu>
+			<Title>_menu_customization_mode</Title>
+			<Controller>backend.customize</Controller>
+			<Action>toggleMode</Action>	
+		</Menu>
+		<Menu>
+			<Title>_menu_edit_templates</Title>
+			<Controller>backend.customize</Controller>
+			<Action>editTemplate</Action>	
+		</Menu>
+		<Menu>
+			<Title>_menu_manage_skinks</Title>
+			<Controller>backend.customize</Controller>
+			<Action>skins</Action>	
+		</Menu>
+	</Items>
+</Menu>

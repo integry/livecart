@@ -1,0 +1,26 @@
+<Menu>
+	<Title>_menu_orders</Title>		
+	<Controller>backend.order</Controller>
+	<Items>
+		<Menu>
+			<Title>_menu_manage_orders</Title>
+			<Controller>backend.order</Controller>
+		</Menu>
+		<Menu>
+			<Title>_menu_payments</Title>
+			<Controller>backend.payments</Controller>
+		</Menu>
+		<Menu>
+			<Title>_menu_shipments</Title>
+			<Controller>backend.shipments</Controller>
+		</Menu>
+		<Menu>
+			<Title>--</Title>
+		</Menu>
+		<Menu>
+			<Title>_menu_create_order</Title>
+			<Controller>backend.order</Controller>
+			<Action>create</Action>
+		</Menu>
+	</Items>
+</Menu>

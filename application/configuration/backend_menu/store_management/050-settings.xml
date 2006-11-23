@@ -1,0 +1,4 @@
+<Menu>
+	<Title>_menu_settings</Title>	
+	<Controller>backend.settings</Controller>
+</Menu>

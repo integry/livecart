@@ -1,0 +1,4 @@
+<Menu>
+	<Title>_menu_content</Title>	
+	<Controller>backend.content</Controller>
+</Menu>

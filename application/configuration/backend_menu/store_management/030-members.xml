@@ -1,0 +1,4 @@
+<Menu>
+	<Title>_menu_users</Title>	
+	<Controller>backend.user</Controller>
+</Menu>
