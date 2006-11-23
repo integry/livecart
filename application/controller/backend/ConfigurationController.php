@@ -3,7 +3,6 @@
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.product.*");
 ClassLoader::import("library.AJAX_TreeMenu.*");
-ClassLoader::import("application.helper.json.*");
 ClassLoader::import("library.DataGrid.*");
 
 /**

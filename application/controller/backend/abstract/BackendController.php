@@ -5,6 +5,7 @@ ClassLoader::import("application.helper.*");
 ClassLoader::import("application.model.system.Language");
 ClassLoader::import("application.model.system.Store");
 ClassLoader::import("library.locale.*");
+ClassLoader::import("library.json.json");
 
 /**
  * Generic backend controller for administrative tools (actions, modules etc.)

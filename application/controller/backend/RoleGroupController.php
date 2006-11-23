@@ -3,7 +3,6 @@
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.controller.backend.*");
 ClassLoader::import("application.model.user.*");
-ClassLoader::import("library.json.*");
 ClassLoader::import("library.AJAX_TreeMenu.*");
 
 /**
@@ -174,9 +173,7 @@ class RoleGroupController extends StoreManagementController
 			$app = Application::getInstance();
 			$output = $app->render("backend/rolegroup", "moveForm", $response);
 
-			require_once("JSON.php");
-			$json = new Services_JSON();
-			echo $json->encode(array('output' => $output, 'javascript' => $javascript));
+			echo json_encode(array('output' => $output, 'javascript' => $javascript));
 			exit();
 		}
 		else

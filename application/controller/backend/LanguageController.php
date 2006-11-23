@@ -18,21 +18,6 @@ class LanguageController extends StoreManagementController
 	
 	const langFileExt = 'lng';
 
-	protected function languageSectionBlock()
-	{
-		$list = Language::getLanguages(1);
-
-		$response = new BlockResponse();
-		$response->SetValue("languagesList", $list->toArray());
-
-		$response->SetValue("language", $this->request->getValue("language"));
-		$response->SetValue("controller", $this->request->getValue("controller"));
-		$response->SetValue("action", $this->request->getValue("action"));
-		$response->SetValue("id", $this->request->getValue("id"));
-
-		return $response;
-	}
-
 	/**
 	 * Gets definitions from project files and updates them in database.
 	 * @return ActionResponse
