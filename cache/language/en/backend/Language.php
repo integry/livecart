@@ -19,12 +19,23 @@
   '_or' => 'or',
   '_cancel' => 'Cancel',
   '_inactive' => 'Inactive',
-  '_help_index' => 'help on managing languages',
+  '_help_index' => 'This section is used for managing the languages active in your site. You can add, remove, enable and disable languages, as well as switch the default language. You can also edit language translations from here.
+
+Learn how to:
+<ul>
+    <li><a href="">Add a new language</a></li><li><a href="">Edit translations</a></li><li><a href="">Suspend a language</a></li>
+</ul>
+
+Learn to use this page: <img src="image/backend/doc/Language.jpg">',
   '_help_index_title' => 'Manage Languages',
   '_translation_filter' => 'Translation Filter',
   '_search_trans' => 'Search for translations',
   '_no_translations_found' => 'No translations found',
   '_save' => 'Save',
   '_editing_translations' => 'Editing Translations',
-  '_help' => 'Here goes some helpful information.',
+  '_help' => 'This section',
+  '_add_lang_button' => 'Add',
+  '_confirm_delete' => 'Are you sure you wish to delete this language?',
+  '_collapse_all' => 'Collapse all',
+  '_expand_all' => 'Expand all',
 ); ?>
