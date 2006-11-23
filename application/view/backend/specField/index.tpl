@@ -1,11 +1,3 @@
-{includeJs file=library/prototype/prototype.js}
-{includeJs file=library/livecart.js}
-{includeJs file=backend/keyboard.js}
-{includeJs file=library/scriptaculous/scriptaculous.js}
-{includeJs file=backend/activeList.js}
-{includeJs file=backend/specFieldManager.js}
-{includeJs file=library/trace/jsTrace.js}
-{includeJs file=library/trace/dom-drag.js}
 <script type="text/javascript">
     require_once('library/prototype/prototype.js');
     require_once('library/livecart.js');
@@ -17,95 +9,13 @@
     require_once('library/trace/dom-drag.js');
 </script>
 
-
-
 <h2>Laptop</h2>
 
 
-{literal}
-<style type="text/css">
-
-.activeList_icons
-{
-    float: left;
-}
-
-.activeList li
-{
-    clear: both;
-}
-
-.step_translations_language
-{
-	display: none;
-}
-fieldset.step_main,  fieldset.step_values, fieldset.step_translations
-{
-	display: none;
-}
-
-.specField_form_values_group div input
-{
-    width: 10em;
-}
-
-.sortable_drag_handler, .sortable_drag_handler_for_fields {
-	cursor: pointer;
-	cursor: hand;
-    background: yellow;
-    color: black;
-    float: left;
-}
-
-ul#specField_items_list, ul#specField_items_list ul
-{
-    list_style: none;
-}
 
 
-li
-{
-    display: block;
-}
 
-
-.activeList_icons_container
-{
-    width: 16px;
-    height: 16px;
-    margin: 2px;
-}
-
-.activeList_icons_container
-{
-	cursor: pointer;
-	cursor: hand;
-}
-
-
-.activeList_shader
-{
-    position: absolute;
-    background: transparent;
-    top: 0px;
-    left: 0px;
-    height: 100%;
-    width: 100%;
-}
-/*
-.activeList_progress
-{
-    position: absolute;
-    padding: 20px;
-}*/
-
-</style>
-{/literal}
-
-
-{literal}
-<script type="text/javascript">
-
+<script type="text/javascript">{literal}
 	function createTypesOptions(types)
 	{
 	   var typesOptions = {};
@@ -121,8 +31,8 @@ li
 
 		return typesOptions;
 	}
-{/literal}
 
+{/literal}
 {foreach from=$configuration item="configItem" key="configKey"}
     {if $configKey == 'types'}
         LiveCart.SpecFieldManager.prototype.{$configKey} = createTypesOptions({json array=$configItem});
@@ -130,34 +40,119 @@ li
         LiveCart.SpecFieldManager.prototype.{$configKey} = {json array=$configItem};
     {/if}
 {/foreach}
-{literal}
 </script>
+
+
+
+{literal}
+<style type="text/css">
+.specField_form_values_group div input
+{
+    width: 10em;
+}
+
+fieldset.step_main,  fieldset.step_values, fieldset.step_translations, .step_translations_language
+{
+	display: none;
+}
+
+.change_state
+{
+    float: left;
+    padding: 0 5px;
+}
+
+.specField_save
+{
+	display: none;
+	clear: right;
+}
+
+#specField_item_new
+{
+    background: #cccccc;
+    display: none;
+}
+
+</style>
 {/literal}
 
-
-<ul id="specField_items_list" class="activeList_add_sort activeList_add_edit activeList_add_view activeList_add_delete">
-	<li id="specField_items_list_96"  class="activeList_add_fuck_before_edit">Item 1</li>
-	<li id="specField_items_list_95"  class="">Item 2</li>
-	<li id="specField_items_list_100" class="activeList_remove_sort activeList_remove_edit">Item 3</li>
-	<li id="specField_items_list_101" class="">Item 4</li>
-	<li id="specField_items_list_102" class="">Item 5</li>
+<ul id="specField_items_list" class="activeList_add_delete activeList_add_edit activeList_add_sort">
+{foreach item="field" from=$specFields}
+	<li id="specField_items_list_{$field.ID}">
+    	<div class="specField_title">{$field.name.en}</div>
+	</li>
+{/foreach}
 </ul>
 
 
+<div>
+    <a href="#new" id="specField_item_new_show">Add new spec field</a>
+    <div id="specField_item_new">
+    {include file="backend/specField/form.manageSpecField.tpl"}
+    </div>
+</div>
 
 {literal}
+<script type="text/javascript">
+    function showNewSpecField(e)
+    {
+        Event.stop(e);
+		$("specField_item_new").style.display = 'block';
+
+        var saveButton = document.getElementsByClassName("specField_save", $("specField_item_new"))[0];
+        saveButton.style.display = (saveButton.style.display = 'none') ? 'block' : 'none';
+	}
+
+	function saveSpecField(form)
+	{
+        new Ajax.Request(
+            form.action,
+            {
+                method: form.method,
+                postBody: Form.serialize(form),
+                onComplete: function(param) { jsTrace.send("Data sent") }
+            }
+        );
+	}
+
+
+	document.getElementsByClassName('specField_save', $("specField_item_new"))[0].onclick = function(e)
+	{
+//	    $("specField_item_new").getElementsByTagName("form")[0].submit();
+	    saveSpecField($("specField_item_new").getElementsByTagName("form")[0])
+	}
+
+    $("specField_item_new_show").onclick = function(e) { if(!e){ e = window.event; e.target = e.srcElement; } showNewSpecField(e) }
+
+</script>
+
+
+
 <script type="text/javascript">
     new LiveCart.ActiveList('specField_items_list', {
         beforeEdit:     function(li)
         {
-            if(this.isContainerEmpty())
+            if(this.isContainerEmpty(li, 'edit'))
             {
-                return '{/literal}{link controller=backend.specField action=item}{literal}'+this.getRecordId(li)
+                return '{/literal}/backend.specField/item/{literal}'+this.getRecordId(li)
             }
             else
             {
-                this.toggleContainer()
+                this.toggleContainer(li, 'edit');
+
+                var saveButton = document.getElementsByClassName("specField_save", li)[0];
+                saveButton.style.display = (saveButton.style.display = 'none') ? 'block' : 'none';
             }
+        },
+        afterEdit:      function(li, response)
+        {
+             this.toggleContainer(li, 'edit');
+             this.getContainer(li, 'edit').innerHTML = response;
+             LiveCart.AjaxUpdater.prototype.runJavaScripts(response);
+
+            var saveButton = document.getElementsByClassName("specField_save", li)[0];
+            saveButton.style.display = (saveButton.style.display = 'none') ? 'block' : 'none';
         },
         beforeSort:     function(li, order)
         {
@@ -170,20 +165,14 @@ li
                 return '{/literal}{link controller=backend.specField action=delete}{literal}?id='+this.getRecordId(li)
             }
         },
-        afterEdit:      function(li, response)
-        {
-             this.toggleContainer();
-             this.getContainer(li).innerHTML = response;
-             LiveCart.AjaxUpdater.prototype.runJavaScripts(response);
-        },
         afterSort:      function(li, response)
         {
-            jsTrace.send( 'Record #' + this.getRecordId(li) + ' changed position');
+            jsTrace.send( 'Record #' + this.getRecordId(li, 'edit') + ' changed position');
         },
         afterDelete:    function(li, response)
         {
             Element.remove(li);
-            jsTrace.send('Record #' + this.getRecordId(li) + ' was deleted');
+            jsTrace.send('Record #' + this.getRecordId(li, 'edit') + ' was deleted');
         }
     });
 </script>
