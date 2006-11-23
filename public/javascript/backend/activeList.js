@@ -289,8 +289,10 @@ LiveCart.ActiveList.prototype = {
         // Bind events
         li.onmouseover    = function() { if(!self.dragged) self.showMenu(li) }
         li.onmouseout     = function() { if(!self.dragged) self.hideMenu(li) }
-        li.onkeydown      = function(e) { self.navigate(new KeyboardEvent(e), li) }
-        li.onclick        = li.focus();
+
+        // KEYBOARD NAVIGATION BREAKS FORM FIELDS
+//        li.onkeydown      = function(e) { self.navigate(new KeyboardEvent(e), li) }
+//        li.onclick        = li.focus();
 
         // Add tab index
         li.tabIndex       = this.tabIndex;
