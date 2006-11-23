@@ -2,47 +2,47 @@
 
 {assign var="action" value="create"}
 
-{form handle=$catalogForm action="controller=backend.catalog action=$action id=0" method="post"}
+{form handle=$catalogForm action="controller=backend.catalog action=$action id=1" method="post"}
 	<fieldset>
 		<legend>Category details {$ID}</legend>
-	
-		<label for="name">Category name:</label> 
+
+		<label for="name">Category name:</label>
 		{textfield name="name" id="name"}
 		<br/>
-		
-		<label for="details">Details:</label> 
+
+		<label for="details">Details:</label>
 		{textarea name="details" id="details"}
 		<br/>
-		
-		<label for="keywords">Keywords:</label> 
+
+		<label for="keywords">Keywords:</label>
 		{textarea name="keywords" id="keywords"}
 		<br/>
-			
-		<label for="isActive"> </label> 
+
+		<label for="isActive"> </label>
 		{checkbox name="isActive"} Category is activated
 		<br/>
-	
+
 	</fieldset>
-	
+
 	{foreach from=$languageList item=lang}
 	<fieldset>
 		<legend>Translate to: {$lang}</legend>
-			<label>Category name:</label> 
+			<label>Category name:</label>
 			{textfield name="name_$lang"}
 			<br/>
-				
-			<label>Details:</label> 
+
+			<label>Details:</label>
 			{textarea name="details_$lang"}
 			<br/>
-				
-			<label>Keywords:</label> 
+
+			<label>Keywords:</label>
 			{textarea name="keywords_$lang"}
 			<br/>
 	</fieldset>
 	{/foreach}
-	
+
 	<fieldset>
-		<label for="submit"> </label> 
+		<label for="submit"> </label>
 		<input type="submit" class="submit" id="submit" value="save"/>
 	</fieldset>
 {/form}

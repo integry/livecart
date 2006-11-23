@@ -4,7 +4,7 @@ ClassLoader::import("application.model.ActiveRecordModel");
 
 /**
  * A node of a hierarchial database record structure (preorder tree traversal implementation)
- * 
+ *
  * <code>
  * //Defining a new class for some table
  * class Catalog
@@ -12,39 +12,39 @@ ClassLoader::import("application.model.ActiveRecordModel");
  *    public static function defineSchema($className = __CLASS__)
  *    {
  *        // <strog>Note:</strong> The folowing methods must be called in an exact order as shown in example.
- *        // 1. Get a schema instance, 
- *        // 2. set a schema name, 
+ *        // 1. Get a schema instance,
+ *        // 2. set a schema name,
  *        // 3. call a parent::defineSchema() to register schema fields needed for a hierarchial data structure
  *        // 4. Add your own fields if needed
  *        $schema = self::getSchemaInstance($className);
  *		  $schema->setName("Catalog");
- *		  
+ *
  *		  parent::defineSchema($className);
  *		  $schema->registerField(new ARField("name", Varchar::instance(40)));
  *		  $schema->registerField(new ARField("description", Varchar::instance(200)));
  *    }
  * }
- * 
+ *
  * // Retrieving a subtree
  * $catalog = ARTreeNode::getRootNode("Catalog");
  * $catalog->loadChildNodes();
- * 
+ *
  * // or...
  * $catalog = ARTreeNode::getInstanceByID("Catalog", $catalogNodeID);
  * $catalog->loadChildNodes();
- * 
+ *
  * $childList = $catalog->getChildNodes();
- * 
+ *
  * // Inserting a new node
  * $parent = getParentNodeFromSomewhere();
  * $catalogNode = ARTreeNode::getNewInstance("Catalog", $parent);
  * $catalogNode->name->set("This is my new catalog node!");
  * $catalogNode->name->set("This node will be created as child for a gived $parent instance");
  * $catalogNode->save();
- * 
+ *
  * // Deleting a node and all its childs
  * ARTreeNode::deleteByID("Catalog", $catalogNodeID);
- * 
+ *
  * </code>
  *
  * @link http://www.sitepoint.com/article/hierarchical-data-database/
@@ -58,39 +58,39 @@ class ActiveTreeNode extends ActiveRecordModel
 	 *
 	 */
 	const LEFT_NODE_FIELD_NAME = 'lft';
-	
+
 	/**
 	 * Table field name for right value container of tree traversal order
 	 *
 	 */
 	const RIGHT_NODE_FIELD_NAME = 'rgt';
-	
+
 	/**
 	 * The name of table field that represents a parent node ID
 	 *
 	 */
 	const PARENT_NODE_FIELD_NAME = 'parentNodeID';
-	
+
 	/**
 	 * Root node ID
 	 *
 	 */
 	const ROOT_ID = 0;
-	
+
 	/**
 	 * Child node container
 	 *
 	 * @var ARTreeNode[]
 	 */
 	private $childList = null;
-	
+
 	/**
 	 * Indicator wheather child nodes are loaded or not for this node
 	 *
 	 * @var bool
 	 */
 	//private $isChildNodeListLoaded = false;
-	
+
 	/**
 	 * Gets a persisted record object
 	 *
@@ -106,53 +106,53 @@ class ActiveTreeNode extends ActiveRecordModel
 		$instance = parent::getInstanceByID($className, $recordID, $loadRecordData, $loadReferencedRecords);
 		return $instance;
 	}
-	
+
 	public static function getNewInstance($className, ActiveTreeNode $parentNode)
 	{
 		$instance = parent::getNewInstance($className);
 		$instance->setParentNode($parentNode);
 		return $instance;
 	}
-	
+
 	/**
 	 * Loads a list of child records for this node
 	 *
 	 * @param bool $loadReferencedRecords
 	 * @param bool $loadOnlyDirectChildren
 	 * @return ARSet
-	 * 
+	 *
 	 * @see self::getDirectChildNodes()
 	 */
 	public function getChildNodes($loadReferencedRecords = false, $loadOnlyDirectChildren = false)
 	{
 		$this->load();
 		$className = get_class($this);
-		
+
 		$nodeFilter = new ARSelectFilter();
 		$cond = new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME)->get(), ">");
 		$cond->addAND(new OperatorCond(new ArFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $this->getField(self::RIGHT_NODE_FIELD_NAME)->get(), "<"));
-		
+
 		if ($loadOnlyDirectChildren)
 		{
 			$cond->addAND(new EqualsCond(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME), $this->getID()));
 		}
-		
+
 		$nodeFilter->setCondition($cond);
 		$nodeFilter->setOrder(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME));
-		
+
 		$childList = ActiveRecord::getRecordSet($className, $nodeFilter, $loadReferencedRecords);
 		return $childList;
 	}
-	
+
 	public function getDirectChildNodes($loadReferencedRecords = false)
 	{
 		$this->getChildNodes($loadReferencedRecords, false);
 	}
-	
+
 	/**
 	 * Loads and builds a hierarchial subtree for this node
 	 * (loads a list of child records and then builds a hierarchial structure)
-	 * 
+	 *
 	 * @param bool $loadReferencedRecords
 	 */
 	public function loadSubTree($loadReferencedRecords = false)
@@ -160,7 +160,7 @@ class ActiveTreeNode extends ActiveRecordModel
 		$childList = $this->getChildNodes($loadReferencedRecords);
 		$indexedNodeList = array();
 		$indexedNodeList[$this->getID()] = $this;
-			
+
 		foreach ($childList as $child)
 		{
 			$nodeId = $child->getID();
@@ -172,9 +172,9 @@ class ActiveTreeNode extends ActiveRecordModel
 			$indexedNodeList[$parentId]->registerChildNode($child);
 		}
 	}
-	
+
 	/**
-	 * Loads from database and builds a hierarchial record tree 
+	 * Loads from database and builds a hierarchial record tree
 	 *
 	 * @param string $className
 	 * @param bool $loadReferencedRecords
@@ -184,8 +184,8 @@ class ActiveTreeNode extends ActiveRecordModel
 		$root = self::getRootNode($className);
 		$root->loadSubTree($loadReferencedRecords);
 	}
-	
-	
+
+
 	public function save()
 	{
 		if (!$this->hasID())
@@ -196,33 +196,33 @@ class ActiveTreeNode extends ActiveRecordModel
 			$parentRightValue = $parentNode->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
 			$nodeLeftValue = $parentRightValue;
 			$nodeRightValue = $nodeLeftValue + 1;
-		
+
 			$tableName = self::getSchemaInstance(get_class($this))->getName();
-			$db = self::getDBConnection();	
+			$db = self::getDBConnection();
 			$db->executeUpdate("UPDATE " . $tableName . " SET " . self::RIGHT_NODE_FIELD_NAME . " = "  . self::RIGHT_NODE_FIELD_NAME . " + 2 WHERE "  . self::RIGHT_NODE_FIELD_NAME . ">=" . $parentRightValue);
 			$db->executeUpdate("UPDATE " . $tableName . " SET " . self::LEFT_NODE_FIELD_NAME . " = "  . self::LEFT_NODE_FIELD_NAME . " + 2 WHERE "  . self::LEFT_NODE_FIELD_NAME . ">=" . $parentRightValue);
-			
+
 			$this->getField(self::RIGHT_NODE_FIELD_NAME)->set($nodeRightValue);
 			$this->getField(self::LEFT_NODE_FIELD_NAME)->set($nodeLeftValue);
 		}
 		parent::save();
 	}
-	
+
 	public static function deleteByID($className, $recordID)
 	{
 		$node = self::getInstanceByID($className, $recordID, self::LOAD_DATA);
 		$nodeRightValue = $node->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
-		
+
 		$result = parent::deleteByID($className, $recordID);
-		
+
 		$tableName = self::getSchemaInstance($className)->getName();
 		$db = self::getDBConnection();
 		$db->executeUpdate("UPDATE " . $tableName . " SET " . self::RIGHT_NODE_FIELD_NAME . " = "  . self::RIGHT_NODE_FIELD_NAME . " - 2 WHERE "  . self::RIGHT_NODE_FIELD_NAME . ">=" . $nodeRightValue);
 		$db->executeUpdate("UPDATE " . $tableName . " SET " . self::LEFT_NODE_FIELD_NAME . " = "  . self::LEFT_NODE_FIELD_NAME . " - 2 WHERE "  . self::LEFT_NODE_FIELD_NAME . ">=" . $nodeRightValue);
-		
+
 		return $result;
 	}
-	
+
 	/**
 	 * Adds (registers) a child node to this node
 	 *
@@ -236,7 +236,7 @@ class ActiveTreeNode extends ActiveRecordModel
 		}
 		$this->childList->add($childNode);
 	}
-	
+
 	/**
 	 * Sets a parent node
 	 *
@@ -246,7 +246,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	{
 		$this->getField(self::PARENT_NODE_FIELD_NAME)->set($parentNode);
 	}
-	
+
 	/**
 	 * Gets a parent node
 	 *
@@ -256,7 +256,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	{
 		return $this->getField(self::PARENT_NODE_FIELD_NAME)->get();
 	}
-	
+
 	/**
 	 * Gets a tree root node
 	 *
@@ -268,10 +268,10 @@ class ActiveTreeNode extends ActiveRecordModel
 	{
 		return self::getInstanceByID($className, self::ROOT_ID, false, false);
 	}
-	
+
 	/**
 	 * Gets a hierarchial path to a given tree node
-	 * 
+	 *
 	 * The result is a sequence of record starting from a root node
 	 * E.x. Consider a tree branch: Electronics -> Computers -> Laptops
 	 * The path of "Laptops" will be a record set (ARSet) with a following order of records:
@@ -288,13 +288,13 @@ class ActiveTreeNode extends ActiveRecordModel
 		$this->load();
 		$leftValue = $this->getFieldValue(self::LEFT_NODE_FIELD_NAME);
 		$rightValue = $this->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
-		
+
 		$filter = new ARSelectFilter();
 		$cond = new OperatorCond(new ARFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $leftValue, "<");
 		$cond->addAND(new OperatorCond(new ARFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $rightValue, ">"));
 		$filter->setCondition($cond);
 		$filter->setOrder(new ARFieldHandle($className, self::LEFT_NODE_FIELD_NAME), ARSelectFilter::ORDER_ASC);
-		
+
 		$recordSet = self::getRecordSet($className, $filter, $loadReferencedRecords);
 		return $recordSet;
 	}
@@ -319,31 +319,31 @@ class ActiveTreeNode extends ActiveRecordModel
 			}
 		}
 		$childArray = array();
-		
+
 		if ($this->childList != null)
 		{
 			foreach ($this->childList as $child)
 			{
-				$childArray[] = $child->toArray();	
+				$childArray[] = $child->toArray();
 			}
+			$data['children'] = $childArray;
 		}
-		$data['children'] = $childArray;
 		return $data;
 	}
-	
+
 	/**
 	 * Partial schema definition for a hierarchial data storage in a database
 	 *
 	 * @param string $className
 	 */
-	public static function defineSchema($className = __CLASS__) 
-	{			
+	public static function defineSchema($className = __CLASS__)
+	{
 		$schema = self::getSchemaInstance($className);
-		$tableName = $schema->getName();		
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));	
-		$schema->registerField(new ARForeignKeyField(self::PARENT_NODE_FIELD_NAME, $tableName, "ID",$className, ARInteger::instance()));					
+		$tableName = $schema->getName();
+		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField(self::PARENT_NODE_FIELD_NAME, $tableName, "ID",$className, ARInteger::instance()));
 		$schema->registerField(new ARField(self::LEFT_NODE_FIELD_NAME, ARInteger::instance()));
-		$schema->registerField(new ARField(self::RIGHT_NODE_FIELD_NAME, ARInteger::instance()));		
+		$schema->registerField(new ARField(self::RIGHT_NODE_FIELD_NAME, ARInteger::instance()));
 	}
 }
 

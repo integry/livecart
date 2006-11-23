@@ -4,7 +4,9 @@ ClassLoader::import("application.model.system.ActiveTreeNode");
 ClassLoader::import("application.model.system.MultilingualObjectInterface");
 
 /**
- * Product category model
+ * Product category model class
+ *
+ * Product categories are organized and stored as a tree in a database
  *
  * @author Saulius Rupainis <saulius@integry.net>
  * @package application.model.category
@@ -21,7 +23,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("Category");
 		parent::defineSchema($className);
-		
+
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("description", ARArray::instance()));
 		$schema->registerField(new ARField("keywords", ARArray::instance()));
@@ -42,6 +44,11 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
 
+	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
+	{
+		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+	}
+
 	public function getSpecFieldList()
 	{
 		$filter = new ARSelectFilter();
@@ -50,11 +57,11 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 		return SpecField::getRecordSetArray($filter);
 	}
-	
+
 	public function createHandleString()
 	{
 	}
-	
+
 	public function setValueByLang($fieldName, $langCode, $value)
 	{
 		$valueArray = $this->getFieldValue($fieldName);
@@ -70,7 +77,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$valueArray = $this->getFieldValue($fieldName);
 		return $valueArray[$langCode];
 	}
-	
+
 	public function setValueArrayByLang($fieldNameArray, $defaultLangCode, $langCodeArray, Request $request)
 	{
 		foreach ($fieldNameArray as $fieldName)
@@ -81,7 +88,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 				{
 					$requestVarName = $fieldName;
 				}
-				else 
+				else
 				{
 					$requestVarName = $fieldName . "_" . $langCode;
 				}
@@ -93,6 +100,40 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		}
 	}
 
+	public function toArray()
+	{
+		$store = Store::getInstance();
+		$defaultLangCode = $store->getDefaultLanguageCode();
+
+		$data = parent::toArray();
+		$transformedData = array();
+		$schema = self::getSchemaInstance(get_class($this));
+		foreach ($data as $name => $value)
+		{
+			if (is_array($value))
+			{
+				if ($schema->getField($name)->getDataType() instanceof ARArray)
+				{
+					foreach ($value as $langCode => $multilingualValue)
+					{
+						if ($langCode != $defaultLangCode)
+						{
+							$transformedData[$name . "_" . $langCode] = $multilingualValue;
+						}
+						else
+						{
+							$transformedData[$name] = $multilingualValue;
+						}
+					}
+				}
+			}
+			else
+			{
+				$transformedData[$name] = $value;
+			}
+		}
+		return $transformedData;
+	}
 }
 
 ?>

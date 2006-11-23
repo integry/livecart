@@ -10,7 +10,7 @@
 class Store
 {
 	private $languageList = null;
-	
+
 	/**
 	 * LiveCart operates on a single store object
 	 *
@@ -37,17 +37,17 @@ class Store
 		if ($this->languageList == null)
 		{
 			ClassLoader::import("application.model.system.Language");
-	
+
 			$langFilter = new ARSelectFilter();
 			$langFilter->setCondition(new EqualsCond(new ARFieldHandle("Language", "isEnabled"), 1));
 			$this->languageList = ActiveRecordModel::getRecordSet("Language", $langFilter);
 		}
 		return $this->languageList;
 	}
-	
+
 	/**
 	 * Gets an installed language code array
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getLanguageArray($includeDefaultLanguage = false)
@@ -64,7 +64,7 @@ class Store
 		}
 		return $langArray;
 	}
-	
+
 	/**
 	 * Gets a code of default store language
 	 *
@@ -82,6 +82,20 @@ class Store
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Creates a handle string that is usually used as part of URL to uniquely
+	 * identify some record
+	 * Example:
+	 * @param string $str
+	 * @return unknown
+	 */
+	public function createHandleString($str)
+	{
+		$str = strtolower(trim(strip_tags(stripslashes($str))));
+		$str = str_replace(" ", "_", $str);
+		return $str;
 	}
 }
 
