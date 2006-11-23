@@ -1,4 +1,6 @@
 /**
+ * LiveCart.ActiveList
+ *
  * Sortable list
  *
  * @example
