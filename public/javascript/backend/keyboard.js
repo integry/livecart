@@ -82,7 +82,11 @@ KeyboardEvent.prototype = {
      */
     initialize: function(e)
     {
-        if (!e && window.event) e = window.event; // IE
+        if (!e && window.event)
+        {
+            e = window.event; // IE
+            e.target = e.srcElement;
+        }
 
         this.event = e;
     },
@@ -112,8 +116,6 @@ KeyboardEvent.prototype = {
      */
     getChar: function()
     {
-        jsTrace.send(this.getKey());
-
         var string = String.fromCharCode(this.getKey());
 
         if(!this.isShift()) string = string.toLowerCase();
@@ -156,6 +158,28 @@ KeyboardEvent.prototype = {
         {
             window.getSelection().removeAllRanges();
         }
+    },
+
+    /**
+     * Get cursor position in the text
+     *
+     * @access public
+     */
+    getCursorPosition: function()
+    {
+        if(document.selection)
+        {
+            return document.selection;
+        }
+        else if(this.event.target.selectionStart)
+        {
+            return this.event.target.selectionStart;
+        }
+		else
+		{
+		    return false;
+		}
+
     }
 }
 
