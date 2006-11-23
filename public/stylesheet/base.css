@@ -292,7 +292,7 @@ html>body #minHeight{ /*safari wrapper */
 	background-image: none;
 	border-bottom: 1px dotted #999999;
 	padding: 2px;
-		z-index:100000;
+	z-index:100000;
 }
 
 #nav li ul li a {
@@ -300,6 +300,9 @@ html>body #minHeight{ /*safari wrapper */
 	color: #1249A4;
 }
 
+#nav li a:hover {
+	text-decoration: underline;  
+}
 
 #nav li ul li:hover, .menuCommandHover {
 	background: #3981E7;
