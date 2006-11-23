@@ -243,13 +243,13 @@ LiveCart.LanguageEdit.prototype =
 							key = new KeyboardEvent(e); 
 							if(key.getKey() == key.KEY_DOWN)
 							{
-								langReplaceInputWithTextarea(this);
+								langEdit.replaceInputWithTextarea(this);
 							} 
 						}
 				
 				if (inp.value.indexOf("\n") > -1)
 				{
-				  	langReplaceInputWithTextarea(inp);
+				  	this.replaceInputWithTextarea(inp);
 				}
 
 				transcont.appendChild(r);
@@ -377,7 +377,7 @@ LiveCart.LanguageEdit.prototype =
 		}
 	},
 	
-	langReplaceInputWithTextarea: function(element)
+	replaceInputWithTextarea: function(element)
 	{
 		textarea = document.createElement('textarea');  	
 		element.parentNode.replaceChild(textarea, element);
