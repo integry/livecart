@@ -15,9 +15,8 @@ function smarty_function_json($params, $smarty)
 	$array = $params['array'];
 	$assign = isset($params['assign']) ? $params['assign'] : false;
 
-    ClassLoader::import('library.json.JSON');
-    $json = new Services_JSON();
-    $javaObject = $json->encode($array);
+    ClassLoader::import('library.json.json');
+    $javaObject = json_encode($array);
 
     if(!$assign)
     {
