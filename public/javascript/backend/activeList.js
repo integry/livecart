@@ -165,10 +165,11 @@ LiveCart.ActiveList.prototype = {
         if(container.style.display == 'none')
         {
             setTimeout("Effect.BlindDown('"+container.id+"', {duration: 0.5})", 50);
+            setTimeout("Effect.Appear('"+container.id+"', {duration: 1.0})", 50);
         }
         else
         {
-            setTimeout("Effect.BlindUp('"+container.id+"', {duration: 0.5})", 50);
+            Effect.BlindUp(container.id, {duration: 0.2});
         }
     },
 
