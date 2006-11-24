@@ -59,6 +59,7 @@ LiveCart.SpecFieldManager.prototype = {
 	initialize: function(specField)
 	{
 	    this.id = specField.ID;
+	    this.categoryID = specField.categoryID;
 	    this.rootId = specField.rootId ? specField.rootId : 'specField_item';
 		this.type = specField.type;
 		this.values = specField.values;
@@ -106,6 +107,7 @@ LiveCart.SpecFieldManager.prototype = {
 
 		this.nodes.mainTitle 			= document.getElementsByClassName("specField_title", this.nodes.parent)[0];
 		this.nodes.id 					= document.getElementsByClassName("specField_form_id", this.nodes.parent)[0];
+		this.nodes.categoryID 			= document.getElementsByClassName("specField_form_categoryID", this.nodes.parent)[0];
 		this.nodes.description 			= document.getElementsByClassName("specField_form_description", this.nodes.parent)[0];
 		this.nodes.multipleSelector 	= document.getElementsByClassName("specField_form_multipleSelector", this.nodes.parent)[0];
 		this.nodes.handle 				= document.getElementsByClassName("specField_form_handle", this.nodes.parent)[0];
@@ -224,8 +226,12 @@ LiveCart.SpecFieldManager.prototype = {
 		var self = this;
 		$A(this.nodes.valuesDefaultGroup.getElementsByTagName("input")).each(function(input)
 		{
-			input.onkeyup = self.mainValueFieldChangedAction.bind(self);
-			input.onkeydown = self.mainValueFieldChangedAction.bind(self);
+            jsTrace.send(input.type);
+		    if(input.type == 'text')
+            {
+                input.onkeyup = self.mainValueFieldChangedAction.bind(self);
+    			input.onkeydown = self.mainValueFilterKeysAction.bind(self);
+            }
 		});
 
 		require_once('backend/activeList.js');
@@ -251,8 +257,9 @@ LiveCart.SpecFieldManager.prototype = {
         var self = this;
 
 	    // Default language
-		if(this.id) this.nodes.id.value = this.id;
-		if(this.handle) this.nodes.handle.value = this.handle;
+		if(this.id) this.nodes.id.value           = this.id;
+		if(this.categoryID) this.nodes.categoryID.value   = this.categoryID;
+		if(this.handle) this.nodes.handle.value   = this.handle;
 
 		if(this.name[this.languageCodes[0]]) this.nodes.title.value = this.name[this.languageCodes[0]];
 		this.nodes.title.name = "name[" + this.languageCodes[0] + "]";
@@ -446,7 +453,7 @@ LiveCart.SpecFieldManager.prototype = {
 
 		Event.stop(e);
 
-		this.addField(null, "new_" + this.countNewValues);
+		this.addField(null, "new_" + this.countNewValues, true);
 		this.countNewValues++;
 	},
 
@@ -604,7 +611,7 @@ LiveCart.SpecFieldManager.prototype = {
 	 *
 	 * @access private
 	 */
-	mainValueFieldChangedAction: function(e)
+	mainValueFilterKeysAction: function(e)
 	{
 		if(!e)
 		{
@@ -667,7 +674,7 @@ LiveCart.SpecFieldManager.prototype = {
 	 * @access private
 	 *
 	 */
-	addField: function(value, id)
+	addField: function(value, id, isDefault)
 	{
 	    var values = document.getElementsByClassName("specField_form_values_value", this.nodes.valuesDefaultGroup);
 
@@ -679,9 +686,15 @@ LiveCart.SpecFieldManager.prototype = {
 
 			newValue.id = newValue.id + this.languageCodes[0] + "_" + id;
 
+			// The field itself
 			var input = newValue.getElementsByTagName("input")[0];
-			input.name = "values[" + this.languageCodes[0] + "]" + (id ? "["+id+"]" : '[new][]');
+			input.name = "values[" + id + "]["+this.languageCodes[0]+"]";
 			input.value = (value && value[this.languageCodes[0]]) ? value[this.languageCodes[0]] : '' ;
+
+			// Defautl checkbox
+//			var checkbox = newValue.getElementsByTagName("input")[1];
+//			checkbox.name = "isDefault[" + id + "]";
+//			checkbox.checked = isDefault;
 
 
 			var ul = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
@@ -697,7 +710,7 @@ LiveCart.SpecFieldManager.prototype = {
 				newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "_" + id;
 
 				var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
-				inputTranslation.name = "values[" + this.languageCodes[i] + "]" + (id ? "["+id+"]" : '[new][]');
+				inputTranslation.name = "values[" + id + "][" + this.languageCodes[i] + "]";
 				inputTranslation.value = (value && value[this.languageCodes[i]]) ? value[this.languageCodes[i]] : '' ;
 
 				var label = newValueTranslation.getElementsByTagName("label")[0];
@@ -715,5 +728,22 @@ LiveCart.SpecFieldManager.prototype = {
 		{
 			return false;
 		}
-	}
+	},
+
+
+    createTypesOptions: function(types)
+    {
+       var typesOptions = {};
+       $H(types).each(function(value) {
+           var options = [];
+
+           $H(value.value).each(function(option) {
+               options[options.length] = new Option(option.value, option.key);
+           });
+
+           typesOptions[value.key] = options;
+    	});
+
+    	return typesOptions;
+    }
 }
