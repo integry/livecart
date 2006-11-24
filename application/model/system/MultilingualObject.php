@@ -58,7 +58,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	 *
 	 * @param unknown_type $includeLangData
 	 */
-	public function toArray()
+	public function toArray($convertToUnderscope=true)
 	{
 		$store = Store::getInstance();
 		$defaultLangCode = $store->getDefaultLanguageCode();
@@ -68,20 +68,17 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 		$schema = self::getSchemaInstance(get_class($this));
 		foreach ($data as $name => $value)
 		{
-			if (is_array($value))
+			if ($convertToUnderscope && is_array($value) && $schema->getField($name)->getDataType() instanceof ARArray)
 			{
-				if ($schema->getField($name)->getDataType() instanceof ARArray)
+				foreach ($value as $langCode => $multilingualValue)
 				{
-					foreach ($value as $langCode => $multilingualValue)
+					if ($langCode != $defaultLangCode)
 					{
-						if ($langCode != $defaultLangCode)
-						{
-							$transformedData[$name . "_" . $langCode] = $multilingualValue;
-						}
-						else
-						{
-							$transformedData[$name] = $multilingualValue;
-						}
+						$transformedData[$name . "_" . $langCode] = $multilingualValue;
+					}
+					else
+					{
+						$transformedData[$name] = $multilingualValue;
 					}
 				}
 			}
