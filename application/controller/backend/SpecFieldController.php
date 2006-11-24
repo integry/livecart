@@ -11,16 +11,16 @@ ClassLoader::import("application.model.category.*");
  */
 class SpecFieldController extends StoreManagementController
 {
+    private $specFieldLocalesArray = array('en', 'lt', 'de');
+
     public function index()
     {
         $response = new ActionResponse();
 //		$this->setLayout("empty");
 
-        $defaultLanguage = $this->locale->getCurrentLocale();
 
-
-
-        $category = Category::getInstanceByID(8);
+        $categoryID = 8;
+        $category = Category::getInstanceByID($categoryID);
         $response->setValue('specFields', $category->getSpecFieldList());
 
         $defaultSpecFieldValues = array
@@ -31,8 +31,9 @@ class SpecFieldController extends StoreManagementController
             'handle' => '',
             'values' => Array(),
             'rootId' => 'specField_item_new',
-            'type' => 5,
-            'dataType' => 2
+            'type' => 3,
+            'dataType' => 1,
+            'categoryID' => $categoryID
         );
         $response->setValue('specFieldsList', $defaultSpecFieldValues);
 
@@ -102,7 +103,7 @@ class SpecFieldController extends StoreManagementController
         $this->setLayout("empty");
 
        $response = new ActionResponse();
-       $specFieldList = SpecField::getInstanceByID($this->request->getValue('id'), true, true)->toArray();
+       $specFieldList = SpecField::getInstanceByID($this->request->getValue('id'), true, true)->toArray(false);
 
        foreach(SpecFieldValue::getRecordSetArray($specFieldList['ID']) as $value)
        {
@@ -123,11 +124,14 @@ class SpecFieldController extends StoreManagementController
      */
     public function save()
     {
-        $defaultLocale = 'en';
-
         if($this->request->getValue('ID') == 'new')
         {
             $specField = SpecField::getNewInstance();
+
+            if($categoryID = $this->request->getValue('categoryID', false))
+            {
+                $specField->setFieldValue('categoryID', Category::getInstanceByID((int)$categoryID));
+            }
         }
         else
         {
@@ -135,27 +139,62 @@ class SpecFieldController extends StoreManagementController
         }
 
 
-/*        $specField->getSchemaInstance('SpecField');*/
+        $dataType = (int)$this->request->getValue('dataType');
+        $type = (int)$this->request->getValue('type');
+        $categoryID = (int)$this->request->getValue('categoryID');
 
-        $dataType = $this->request->getValue('dataType');
-        $type = $this->request->getValue('type');
         $description = $this->request->getValue('description');
         $name = $this->request->getValue('name');
         $handle = $this->request->getValue('handle');
+        $values = $this->request->getValue('values');
 
-
-        if(count($errors = array('handle' => 'blablabla') /*$this->validateSpecField($specField, $dataType, $type, $description, $name, $handle) */) == 0)
+        if(count($errors = $this->validateSpecField($specField, $this->request->getValueArray(array('handle', 'values')))) == 0)
         {
             $htmlspecialcharsUtf_8 = create_function('$val', 'return htmlspecialchars($val, null, "UTF-8");');
 
-            $specField->setFieldValue('dataType', (int)$this->request->getValue('dataType'));
-            $specField->setFieldValue('type', (int)$this->request->getValue('type'));
-            $specField->setFieldValue('handle', preg_replace('[^\w\d_]', '_', $this->request->getValue('handle')));
-            $specField->setLanguageField('description', @array_map($htmlspecialcharsUtf_8, $description), array('en', 'lt', 'de'));
-            $specField->setLanguageField('name',        @array_map($htmlspecialcharsUtf_8, $name),        array('en', 'lt', 'de'));
+            $specField->setFieldValue('dataType',       $dataType);
+            $specField->setFieldValue('type',           $type);
+            $specField->setFieldValue('handle',         $handle);
+            $specField->setLanguageField('description', @array_map($htmlspecialcharsUtf_8, $description), $this->specFieldLocalesArray);
+            $specField->setLanguageField('name',        @array_map($htmlspecialcharsUtf_8, $name),        $this->specFieldLocalesArray);
 
             $specField->save();
 
+            $specFieldID = $specField->getID();
+
+            if(!empty($values))
+            {
+                $position = 0;
+                foreach ($values as $key => $value)
+                {
+                    if(preg_match('/^new_/', $key))
+                    {
+                        $specFieldValues = SpecFieldValue::getNewInstance();
+                    }
+                    else
+                    {
+                       $specFieldValues = SpecFieldValue::getInstanceByID((int)$key);
+                    }
+
+                    if($type == 1)
+                    {
+                        $specFieldValues->setFieldValue('value', $value);
+                    }
+                    else
+                    {
+                        $specFieldValues->setLanguageField('value', @array_map($htmlspecialcharsUtf_8, $name), $this->specFieldLocalesArray);
+                    }
+
+
+//                    $specFieldValues->setFieldValue('position', $position);
+                    $specFieldValues->setFieldValue('specFieldID', $specField[$this->specFieldLocalesArray[0]]);
+
+                    $specFieldValues->save();
+                    $position++;
+                }
+            }
+
+//            return new RawResponse('1');
             return new RawResponse("<pre>".print_r($_POST, true)."</pre>");
         }
         else
@@ -172,33 +211,22 @@ class SpecFieldController extends StoreManagementController
     private function validateSpecField($specField, $values = array())
     {
         $errors = array();
-        $schema = $specField->getSchemaInstance('SpecField');
-        $validTypes = array(
-                1 => array(3, 4, 5, 6),
-                2 => array(1, 2)
-        );
 
-
-        if(!isset($values['dataType']) || !isset($validTypes[$values['dataType']]) || !in_array($values['type'], $validTypes[$values['dataType']]))
+        if(preg_match('/[^\w\d_]/', $values['handle']))
         {
-            $errors['type'] = 'invalid data type';
+            $errors['handle'] = 'Handle contains invalid symbols';
         }
 
-        if(!isset($values['handle']) || strlen($values['handle']) > $schema->getField('handle')->getDataType()->getLength())
+        if(!isset($values['values']) && !empty($values['values']))
         {
-             $errors['handle'] = 'Handle is too long';
+            foreach ($values['values'] as $key => $value)
+            {
+                if(!isset($value[$this->specFieldLocalesArray[0]]) || !is_numeric($value[$this->specFieldLocalesArray[0]]))
+                {
+                    $errors['values'][$key] = 'Field value should be a valid number';
+                }
+            }
         }
-
-        if(!isset($values['name']) || strlen($values['name']) > $schema->getField('name')->getDataType()->getLength())
-        {
-             $errors['name'] = 'Name is too long';
-        }
-
-        if(!isset($values['description']) || strlen($values['description']) > $schema->getField('description')->getDataType()->getLength())
-        {
-             $errors['description'] = 'Description is too long';
-        }
-
         return $errors;
     }
 
