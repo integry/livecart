@@ -1,107 +1,47 @@
-<script type="text/javascript">
-    require_once('library/prototype/prototype.js');
-    require_once('library/livecart.js');
-    require_once('backend/keyboard.js');
-    require_once('library/scriptaculous/scriptaculous.js');
-    require_once('backend/activeList.js');
-    require_once('backend/specFieldManager.js');
-    require_once('library/trace/jsTrace.js');
-    require_once('library/trace/dom-drag.js');
-</script>
-
-<h2>Laptop</h2>
-
-
-
-
-
-<script type="text/javascript">{literal}
-	function createTypesOptions(types)
-	{
-	   var typesOptions = {};
-	   $H(types).each(function(value) {
-	       var options = [];
-
-	       $H(value.value).each(function(option) {
-	           options[options.length] = new Option(option.value, option.key);
-	       });
-
-	       typesOptions[value.key] = options;
-		});
-
-		return typesOptions;
-	}
-
-{/literal}
-{foreach from=$configuration item="configItem" key="configKey"}
-    {if $configKey == 'types'}
-        LiveCart.SpecFieldManager.prototype.{$configKey} = createTypesOptions({json array=$configItem});
-    {else}
-        LiveCart.SpecFieldManager.prototype.{$configKey} = {json array=$configItem};
-    {/if}
-{/foreach}
-</script>
-
-
-
-{literal}
-<style type="text/css">
-.specField_form_values_group div input
-{
-    width: 10em;
-}
-
-fieldset.step_main,  fieldset.step_values, fieldset.step_translations, .step_translations_language
-{
-	display: none;
-}
-
-.change_state
-{
-    float: left;
-    padding: 0 5px;
-}
-
-.specField_save
-{
-	display: none;
-	clear: right;
-}
-
-#specField_item_new
-{
-    background: #cccccc;
-    display: none;
-}
-
-</style>
-{/literal}
-
-<ul id="specField_items_list" class="activeList_add_delete activeList_add_edit activeList_add_sort">
-{foreach item="field" from=$specFields}
-	<li id="specField_items_list_{$field.ID}">
-    	<div class="specField_title">{$field.name.en}</div>
-	</li>
-{/foreach}
-</ul>
-
-
-<div>
-    <a href="#new" id="specField_item_new_show">Add new spec field</a>
-    <div id="specField_item_new">
-    {include file="backend/specField/form.manageSpecField.tpl"}
-    </div>
-</div>
+{includeJs file=library/scriptaculous/scriptaculous.js}
+{includeJs file=backend/keyboard.js}
+{includeJs file=library/livecart.js}
+{includeJs file=backend/activeList.js}
+{includeJs file=backend/specFieldManager.js}
+{includeJs file=library/trace/jsTrace.js}
+{includeJs file=library/trace/dom-drag.js}
 
 {literal}
 <script type="text/javascript">
-    function showNewSpecField(e)
+//<[!CDATA[
+    function toggleNewSpecField(e)
     {
-        Event.stop(e);
-		$("specField_item_new").style.display = 'block';
+        if(!e){
+            e = window.event;
+            e.target = e.srcElement;
+        }
 
-        var saveButton = document.getElementsByClassName("specField_save", $("specField_item_new"))[0];
-        saveButton.style.display = (saveButton.style.display = 'none') ? 'block' : 'none';
+        Event.stop(e);
+
+        jsTrace.send($("specField_item_new_form").style.display);
+
+        var saveButton = document.getElementsByClassName('specField_save', $("specField_item_new_form"))[0];
+        saveButton.style.specField_controls = (saveButton.style.specField_controls = 'none') ? 'inline' : 'none';
+//        if($("specField_item_new_form").style.display = 'none')
+//        {
+//            $('specField_item_new_show').style.display = 'none';
+
+//		    Effect.BlindDown("specField_item_new_form", {duration: 0.3});
+//		    Effect.Appear("specField_item_new_form", {duration: 0.66});
+
+            setTimeout("Effect.BlindDown('specField_item_new_form', {duration: 0.5})", 50);
+            setTimeout("Effect.Appear('specField_item_new_form', {duration: 0.5})", 50);
+		    $("specField_item_new_form").style.display = 'block';
+
+//        }
+//        else
+//        {
+//            $('specField_item_new_show').style.display = 'block';
+//            Effect.BlindUp("specField_item_new_form", {duration: 0.15});
+//            Effect.Fade("specField_item_new_form", {duration: 0.15});
+//            $("specField_item_new_form").style.display = 'none'
+//        }
+
 	}
 
 	function saveSpecField(form)
@@ -117,20 +57,23 @@ fieldset.step_main,  fieldset.step_values, fieldset.step_translations, .step_tra
 	}
 
 
-	document.getElementsByClassName('specField_save', $("specField_item_new"))[0].onclick = function(e)
-	{
-//	    $("specField_item_new").getElementsByTagName("form")[0].submit();
-	    saveSpecField($("specField_item_new").getElementsByTagName("form")[0])
-	}
 
-    $("specField_item_new_show").onclick = function(e) { if(!e){ e = window.event; e.target = e.srcElement; } showNewSpecField(e) }
+    /**
+     * Create spec field prototype. Some fields are always the same
+     * so we define them in
+     */
+    {/literal}
+    {foreach from=$configuration item="configItem" key="configKey"}
+        {if $configKey == 'types'}
+            LiveCart.SpecFieldManager.prototype.{$configKey} = LiveCart.SpecFieldManager.prototype.createTypesOptions({json array=$configItem});
+        {else}
+            LiveCart.SpecFieldManager.prototype.{$configKey} = {json array=$configItem};
+        {/if}
+    {/foreach}
+    {literal}
 
-</script>
 
-
-
-<script type="text/javascript">
-    new LiveCart.ActiveList('specField_items_list', {
+    specFieldListCallbacks = {
         beforeEdit:     function(li)
         {
             if(this.isContainerEmpty(li, 'edit'))
@@ -142,7 +85,7 @@ fieldset.step_main,  fieldset.step_values, fieldset.step_translations, .step_tra
                 this.toggleContainer(li, 'edit');
 
                 var saveButton = document.getElementsByClassName("specField_save", li)[0];
-                saveButton.style.display = (saveButton.style.display = 'none') ? 'block' : 'none';
+                saveButton.style.specField_controls = (saveButton.style.specField_controls = 'none') ? 'inline' : 'none';
             }
         },
         afterEdit:      function(li, response)
@@ -152,7 +95,7 @@ fieldset.step_main,  fieldset.step_values, fieldset.step_translations, .step_tra
              LiveCart.AjaxUpdater.prototype.runJavaScripts(response);
 
             var saveButton = document.getElementsByClassName("specField_save", li)[0];
-            saveButton.style.display = (saveButton.style.display = 'none') ? 'block' : 'none';
+            saveButton.style.specField_controls = (saveButton.style.specField_controls = 'none') ? 'inline' : 'none';
         },
         beforeSort:     function(li, order)
         {
@@ -174,6 +117,51 @@ fieldset.step_main,  fieldset.step_values, fieldset.step_translations, .step_tra
             Element.remove(li);
             jsTrace.send('Record #' + this.getRecordId(li, 'edit') + ' was deleted');
         }
-    });
+    };
+
+
+// ]!]>
+</script>
+{/literal}
+
+
+
+
+
+<!-- Spec field title -->
+<h2>Laptop</h2>
+
+<!-- Form for creating new spec field -->
+<div style="vertical-align: middle;">
+    <a href="#new" id="specField_item_new_show">Add new spec field</a>
+    <div id="specField_item_new_form">
+        {include file="backend/specField/form.manageSpecField.tpl"}
+    </div>
+</div>
+
+<br />
+
+<!-- List of all spec fields -->
+<ul id="specField_items_list" class="activeList_add_delete activeList_add_edit activeList_add_sort">
+{foreach item="field" from=$specFields}
+	<li id="specField_items_list_{$field.ID}">
+    	<div class="specField_title">{$field.name.en}</div>
+	</li>
+{/foreach}
+</ul>
+
+
+{literal}
+<script type="text/javascript">
+    $("specField_item_new_show").onclick = function(e) { toggleNewSpecField(e) }
+    document.getElementsByClassName("specField_cancel", $("specField_item_new_form"))[0].onclick = function(e) { toggleNewSpecField(e) }
+
+	document.getElementsByClassName('specField_save', $("specField_item_new_form"))[0].onclick = function(e)
+	{
+//	    $("specField_item_new_form").getElementsByTagName("form")[0].submit();
+	    saveSpecField($("specField_item_new_form").getElementsByTagName("form")[0])
+	}
+
+    new LiveCart.ActiveList('specField_items_list', specFieldListCallbacks);
 </script>
 {/literal}
