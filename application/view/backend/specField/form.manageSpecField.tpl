@@ -2,7 +2,11 @@
 <a href="#step_values" class="change_state" >Values</a>
 <a href="#step_translations" class="change_state">Translations</a>
 
+<div style="display: inline;" class="specField_controls">
+==>
 <input type="button" class="specField_save" value="Save" />
+or <a href="#cancel" class="specField_cancel">Cancel</a>
+</div>
 
 <form action="/backend.specField/save" method="post">
 	<!-- STEP 1 -->
@@ -10,6 +14,7 @@
 		<legend>Step 1 (Main language _ English)</legend>
 
 		<input type="hidden" name="ID" class="hidden specField_form_id" />
+		<input type="hidden" name="categoryID" class="hidden specField_form_categoryID" />
 
 		<p>
     		<label>t title <em class="required">*</em></label>
@@ -64,7 +69,8 @@
                 <p>
         			<ul class="activeList_add_sort activeList_add_delete">
         				<li class="dom_template specField_form_values_value" id="specField_form_values_">
-        					<input type="text" class="sortable_drag_handle" />
+        					<input type="text"  />
+        					{* <input type="checkbox" value="1" class="specField_form_values_default_checkbox" /> *}
         				</li>
         			</ul>
                 </p>
