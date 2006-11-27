@@ -162,7 +162,7 @@ html>body #minHeight{ /*safari wrapper */
 }
 #homeButtonWrapper {
 	vertical-align: middle;
-/*	width: 129px; 
+/*	width: 129px;
 	height: 32px;*/
 	text-align: left;
 	padding-left: 30px;
@@ -254,7 +254,7 @@ html>body #minHeight{ /*safari wrapper */
 
 #nav li div div {
 	display: table;
-  	background-image: url(../image/backend/menu/menu_item_right.gif); 
+  	background-image: url(../image/backend/menu/menu_item_right.gif);
   	background-repeat: no-repeat;
 	background-position: right 0px;
 }
@@ -527,14 +527,25 @@ br.clear
     width: 10em;
 }
 
-fieldset.step_main,  fieldset.step_values, fieldset.step_translations, .step_translations_language
+.specField_step_main,  .specField_step_values, .specField_step_translations, .specField_step_translations_language
 {
 	display: none;
 }
 
-.change_state
+.specField_language_link
+{
+    display: inline;
+    padding: 0 5px;
+}
+
+.specField_change_state
 {
     padding: 0 5px;
+}
+
+.specField_change_state_active
+{
+    background: yellow;
 }
 
 .specField_form_values_value .specField_form_values_default_checkbox
@@ -552,6 +563,5 @@ fieldset.step_main,  fieldset.step_values, fieldset.step_translations, .step_tra
 {
     background: #cccccc;
     padding: 5px;
-    display: none;
 }
 /* END SpecialField. */
