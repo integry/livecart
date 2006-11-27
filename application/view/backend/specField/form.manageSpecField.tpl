@@ -1,6 +1,6 @@
-<a href="#step_main" class="change_state" >Main</a>
-<a href="#step_values" class="change_state" >Values</a>
-<a href="#step_translations" class="change_state">Translations</a>
+<a href="#step_main" class="specField_change_state" >Main</a>
+<a href="#step_values" class="specField_change_state" >Values</a>
+<a href="#step_translations" class="specField_change_state">Translations</a>
 
 <div style="display: inline;" class="specField_controls">
 ==>
@@ -10,7 +10,7 @@ or <a href="#cancel" class="specField_cancel">Cancel</a>
 
 <form action="/backend.specField/save" method="post">
 	<!-- STEP 1 -->
-	<fieldset class="step_lev1 step_main">
+	<fieldset class="specField_step_lev1 specField_step_main">
 		<legend>Step 1 (Main language _ English)</legend>
 
 		<input type="hidden" name="ID" class="hidden specField_form_id" />
@@ -58,7 +58,7 @@ or <a href="#cancel" class="specField_cancel">Cancel</a>
 	</fieldset>
 
 	<!-- STEP 2 -->
-	<fieldset class="step_lev1 step_values">
+	<fieldset class="specField_step_lev1 specField_step_values">
 		<legend>Step 2 (Values)</legend>
 
 
@@ -75,7 +75,7 @@ or <a href="#cancel" class="specField_cancel">Cancel</a>
         			</ul>
                 </p>
                 <p>
-                    <a href="#add" class="add_field" s>Enter more values</a>
+                    <a href="#add" class="specField_add_field" s>Enter more values</a>
                 </p>
 			</div>
 
@@ -88,14 +88,14 @@ or <a href="#cancel" class="specField_cancel">Cancel</a>
 	</fieldset>
 
 	<!-- STEP 3 -->
-	<fieldset class="step_lev1 step_translations">
+	<fieldset class="specField_step_lev1 specField_step_translations">
 		<legend>Step 3 (Translations)</legend>
 
-		<div class="specFields_form_values_translations_language_links">
-			<div class="dom_template"><a href="#step_translations_language_">language</a></div>
+		<div class="specField_form_values_translations_language_links">
+			<div class="dom_template specField_language_link"><a href="#step_translations_language_">language</a></div>
 		</div>
 
-		<fieldset class="step_translations_language dom_template step_translations_language_">
+		<fieldset class="specField_step_translations_language dom_template specField_step_translations_language_">
 			<legend></legend>
 
 			<label>t title</label>

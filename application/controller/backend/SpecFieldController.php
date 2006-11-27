@@ -30,7 +30,7 @@ class SpecFieldController extends StoreManagementController
             'description' => array(),
             'handle' => '',
             'values' => Array(),
-            'rootId' => 'specField_item_new',
+            'rootId' => 'specField_item_new_form',
             'type' => 3,
             'dataType' => 1,
             'categoryID' => $categoryID
@@ -135,21 +135,31 @@ class SpecFieldController extends StoreManagementController
         }
         else
         {
-            $specField = SpecField::getInstanceByID((int)$this->request->getValue('ID'));
+
+            if(SpecField::exists((int)$this->request->getValue('ID')))
+            {
+                $specField = SpecField::getInstanceByID((int)$this->request->getValue('ID'));
+            }
+            else
+            {
+                return new JSONResponse(array('errors' => array('ID' => 'Record with such id does not exist'), 'status' => 'failure'));
+            }
         }
 
-
-        $dataType = (int)$this->request->getValue('dataType');
-        $type = (int)$this->request->getValue('type');
-        $categoryID = (int)$this->request->getValue('categoryID');
-
-        $description = $this->request->getValue('description');
-        $name = $this->request->getValue('name');
-        $handle = $this->request->getValue('handle');
-        $values = $this->request->getValue('values');
-
-        if(count($errors = $this->validateSpecField($specField, $this->request->getValueArray(array('handle', 'values')))) == 0)
+        if(count($errors = $this->validateSpecField($specField, $this->request->getValueArray(array('handle', 'values', 'name')))) == 0)
         {
+            $dataType = (int)$this->request->getValue('dataType');
+            $type = (int)$this->request->getValue('type');
+            $categoryID = (int)$this->request->getValue('categoryID');
+
+            $description = $this->request->getValue('description');
+            $name = $this->request->getValue('name');
+            $handle = $this->request->getValue('handle');
+            $values = $this->request->getValue('values');
+
+            echo "<pre>".print_r($_POST, true)."</pre>";
+            echo "<hr />";
+
             $htmlspecialcharsUtf_8 = create_function('$val', 'return htmlspecialchars($val, null, "UTF-8");');
 
             $specField->setFieldValue('dataType',       $dataType);
@@ -186,7 +196,6 @@ class SpecFieldController extends StoreManagementController
                     }
 
 
-//                    $specFieldValues->setFieldValue('position', $position);
                     $specFieldValues->setFieldValue('specFieldID', $specField[$this->specFieldLocalesArray[0]]);
 
                     $specFieldValues->save();
@@ -194,12 +203,11 @@ class SpecFieldController extends StoreManagementController
                 }
             }
 
-//            return new RawResponse('1');
-            return new RawResponse("<pre>".print_r($_POST, true)."</pre>");
+            return new JSONResponse(array('status' => 'success'));
         }
         else
         {
-            return new JSONResponse($errors);
+            return new JSONResponse(array('errors' => $errors, 'status' => 'failure'));
         }
 
 
@@ -211,6 +219,16 @@ class SpecFieldController extends StoreManagementController
     private function validateSpecField($specField, $values = array())
     {
         $errors = array();
+
+        if(empty($values['name'][$this->specFieldLocalesArray[0]]))
+        {
+            $errors['name'] = 'Name empty';
+        }
+
+        if(empty($values['handle']))
+        {
+            $errors['handle'] = 'Handle empty';
+        }
 
         if(preg_match('/[^\w\d_]/', $values['handle']))
         {

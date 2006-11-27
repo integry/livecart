@@ -97,6 +97,17 @@ class SpecField extends MultilingualObject
 	        $this->setValueByLang($fieldName, $lang, isset($fieldValue[$lang]) ? $fieldValue[$lang] : '');
 	    }
 	}
+
+	/**
+	 * This method is checking if SpecField record with passed id exist in the database
+	 *
+	 * @param int $id Record id
+	 * @return bool
+	 */
+	public static function exists($id)
+	{
+	    return ActiveRecord::objectExists(__CLASS__, (int)$id);
+	}
 }
 
 ?>

@@ -9,53 +9,6 @@
 {literal}
 <script type="text/javascript">
 //<[!CDATA[
-    function toggleNewSpecField(e)
-    {
-        if(!e){
-            e = window.event;
-            e.target = e.srcElement;
-        }
-
-        Event.stop(e);
-
-        jsTrace.send($("specField_item_new_form").style.display);
-
-        var saveButton = document.getElementsByClassName('specField_save', $("specField_item_new_form"))[0];
-        saveButton.style.specField_controls = (saveButton.style.specField_controls = 'none') ? 'inline' : 'none';
-//        if($("specField_item_new_form").style.display = 'none')
-//        {
-//            $('specField_item_new_show').style.display = 'none';
-
-//		    Effect.BlindDown("specField_item_new_form", {duration: 0.3});
-//		    Effect.Appear("specField_item_new_form", {duration: 0.66});
-
-            setTimeout("Effect.BlindDown('specField_item_new_form', {duration: 0.5})", 50);
-            setTimeout("Effect.Appear('specField_item_new_form', {duration: 0.5})", 50);
-		    $("specField_item_new_form").style.display = 'block';
-
-//        }
-//        else
-//        {
-//            $('specField_item_new_show').style.display = 'block';
-//            Effect.BlindUp("specField_item_new_form", {duration: 0.15});
-//            Effect.Fade("specField_item_new_form", {duration: 0.15});
-//            $("specField_item_new_form").style.display = 'none'
-//        }
-
-	}
-
-	function saveSpecField(form)
-	{
-        new Ajax.Request(
-            form.action,
-            {
-                method: form.method,
-                postBody: Form.serialize(form),
-                onComplete: function(param) { jsTrace.send("Data sent") }
-            }
-        );
-	}
-
 
 
     /**
@@ -82,25 +35,42 @@
             }
             else
             {
-                this.toggleContainer(li, 'edit');
+                var controls = document.getElementsByClassName("specField_controls", li)[0];
+                controls.style.display = (controls.style.display = 'none') ? 'inline' : 'none';
 
-                var saveButton = document.getElementsByClassName("specField_save", li)[0];
-                saveButton.style.specField_controls = (saveButton.style.specField_controls = 'none') ? 'inline' : 'none';
+                this.toggleContainer(li, 'edit');
             }
         },
         afterEdit:      function(li, response)
         {
-             this.toggleContainer(li, 'edit');
-             this.getContainer(li, 'edit').innerHTML = response;
-             LiveCart.AjaxUpdater.prototype.runJavaScripts(response);
 
-            var saveButton = document.getElementsByClassName("specField_save", li)[0];
-            saveButton.style.specField_controls = (saveButton.style.specField_controls = 'none') ? 'inline' : 'none';
+            this.getContainer(li, 'edit').innerHTML = response;
+            LiveCart.AjaxUpdater.prototype.runJavaScripts(response);
+
+//            this.getContainer(li, 'edit').innerHTML = 'test';
+
+            var controls = document.getElementsByClassName("specField_controls", li)[0];
+            controls.style.display = (controls.style.display = 'none') ? 'inline' : 'none';
+
+            jsTrace.send("afterEdit()");
+
+            this.rebindIcons(li);
+            this.createSortable();
+
+            this.toggleContainer(li, 'edit');
         },
+
+
         beforeSort:     function(li, order)
         {
             return 'someurl.php?' + order
         },
+        afterSort:      function(li, response)
+        {
+//            alert( 'Record #' + this.getRecordId(li, 'edit') + ' changed position');
+        },
+
+
         beforeDelete:   function(li)
         {
             if(confirm('Are you sure you wish to remove record #' + this.getRecordId(li) + '?'))
@@ -108,14 +78,10 @@
                 return '{/literal}{link controller=backend.specField action=delete}{literal}?id='+this.getRecordId(li)
             }
         },
-        afterSort:      function(li, response)
-        {
-            jsTrace.send( 'Record #' + this.getRecordId(li, 'edit') + ' changed position');
-        },
         afterDelete:    function(li, response)
         {
             Element.remove(li);
-            jsTrace.send('Record #' + this.getRecordId(li, 'edit') + ' was deleted');
+            alert('Record #' + this.getRecordId(li, 'edit') + ' was deleted');
         }
     };
 
@@ -132,9 +98,9 @@
 <h2>Laptop</h2>
 
 <!-- Form for creating new spec field -->
-<div style="vertical-align: middle;">
+<div id="specField_item_new">
     <a href="#new" id="specField_item_new_show">Add new spec field</a>
-    <div id="specField_item_new_form">
+    <div id="specField_item_new_form" style="display: none;">
         {include file="backend/specField/form.manageSpecField.tpl"}
     </div>
 </div>
@@ -153,15 +119,7 @@
 
 {literal}
 <script type="text/javascript">
-    $("specField_item_new_show").onclick = function(e) { toggleNewSpecField(e) }
-    document.getElementsByClassName("specField_cancel", $("specField_item_new_form"))[0].onclick = function(e) { toggleNewSpecField(e) }
-
-	document.getElementsByClassName('specField_save', $("specField_item_new_form"))[0].onclick = function(e)
-	{
-//	    $("specField_item_new_form").getElementsByTagName("form")[0].submit();
-	    saveSpecField($("specField_item_new_form").getElementsByTagName("form")[0])
-	}
-
-    new LiveCart.ActiveList('specField_items_list', specFieldListCallbacks);
+    $("specField_item_new_show").onclick = function(e) { LiveCart.SpecFieldManager.prototype.createNewAction(e) }
+    window.activeSpecFieldsList = new LiveCart.ActiveList('specField_items_list', specFieldListCallbacks);
 </script>
 {/literal}
