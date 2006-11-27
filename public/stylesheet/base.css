@@ -54,12 +54,11 @@ html>body #minHeight{ /*safari wrapper */
 	top:0;
 	left:0;
 	width:100%;
-	height:140px;
 	/* overflow: hidden; */
 }
 
 #clearheader{
-  	height:141px; /*needed to make room for header*/
+  	height:100px; /*needed to make room for header*/
 }
 #left {
 	position: relative;/*ie needs this to show float */
@@ -110,7 +109,8 @@ html>body #minHeight{ /*safari wrapper */
 #pageTop {
   	background-color: #30a0f9;
 	border-bottom: 1px solid #0097ff;
-	height: 108px;
+	height: 98px;
+	vertical-align: bottom;
 }
 #topAuthInfo {
   	color: #FFFFFF;
@@ -123,7 +123,6 @@ html>body #minHeight{ /*safari wrapper */
 	top: 13px;
 	background-image: url(../image/backend/layout/top_bg.jpg);
 	width: 100%;
-	height: 108px;
 	background-repeat: repeat-x;
 }
 #topBackgroundLeft {
@@ -131,14 +130,17 @@ html>body #minHeight{ /*safari wrapper */
 	top: 0px;
 	background-image:url(../image/backend/layout/top_bg_left.jpg);
 	width: 420px;
-	height: 83px;
+	height: 81px;
 	background-repeat: no-repeat;
+	z-index: 0;
 }
 #topLogoContainer {
 	position: relative;
-	margin-top: 35px;
-	z-index: 1;
+	margin-top: 11px;
+	z-index: 15;
 	float: right;
+	top:0;
+	left:0;
 }
 #topLogoImage {
   	margin-right: 10px;
@@ -159,15 +161,15 @@ html>body #minHeight{ /*safari wrapper */
   	font-size: 11px;
 }
 #homeButtonWrapper {
-  	background-repeat: no-repeat;
 	vertical-align: middle;
-	width: 129px;
-	height: 32px;
+/*	width: 129px; 
+	height: 32px;*/
 	text-align: left;
-	padding-left: 20px;
+	padding-left: 30px;
 	padding-top: 10px;
 	color: #FFFFFF;
 	font-size: 10px;
+	position: relative;
 }
 #homeButton {
 	vertical-align:middle;
@@ -188,7 +190,7 @@ html>body #minHeight{ /*safari wrapper */
 	text-align: right;
 	padding-top: 3px;
 	padding-right: 5px;
-	width: 400px;
+/*	width: 400px; */
 	vertical-align: top;
 }
 
@@ -207,9 +209,8 @@ html>body #minHeight{ /*safari wrapper */
 #nav li ul { /* second-level lists */
 	display: none;
 	position: absolute;
-	top: 1em;
 	left: 0;
-
+	z-index: 50000;
 }
 
 #nav li>ul { /* to override top and left in browsers other than IE, which will position to the top right of the containing li, rather than bottom left */
@@ -226,59 +227,69 @@ html>body #minHeight{ /*safari wrapper */
 }
 
 #nav {
-  	height: 46px;
-  	z-index: 100000;
+	z-index: 10000;
 	position: relative;
-	left: 50px;
-	top: 10px;
+	top: 1px;
 }
 
 #nav a {
   	text-decoration: none;
+  	color: #0000FF;
+  	font-weight: bold;
 }
 
 #nav li {
-	height: 100%;
 	background-repeat: repeat-x;
 	padding-left:10px;
-	padding-bottom:3px;
 	#width: 20px; /* IE hack */
-  	background-image: url(../image/backend/menu/menu_bg.jpg);
+	white-space: nowrap;
 }
 
 #nav li div {
 	display: table;
   	background-image: url(../image/backend/menu/menu_item_middle.jpg);
 	background-repeat: repeat-x;
-	background-position: right 16px;
-	height: 21px;
+	background-position: right 0px;
 }
 
 #nav li div div {
 	display: table;
-  	background-image: url(../image/backend/menu/menu_item_right.jpg);
+  	background-image: url(../image/backend/menu/menu_item_right.gif); 
   	background-repeat: no-repeat;
-	background-position: right 16px;
+	background-position: right 0px;
 }
 
 #nav li div div div {
-  	background-image: url(../image/backend/menu/menu_item_left.jpg);
+  	background-image: url(../image/backend/menu/menu_item_left.gif);
   	background-repeat: no-repeat;
-	background-position: 0px 16px;
+	background-position: 0px 0px;
 	display: table-cell;
-	padding-top:23px;
 	text-align: center;
-	padding-bottom: 7px;
-	#padding-bottom: 3px; /* IE hack */
+	padding: 5px;
 	padding-left: 10px;
 	padding-right: 10px;
 }
 
+#navSelected div {
+  	background-image: url(../image/backend/menu/menu_item_middle_active.gif) !important;
+}
+
+#navSelected div div {
+  	background-image: url(../image/backend/menu/menu_item_right_active.gif) !important;
+}
+
+#navSelected div div div {
+  	background-image: url(../image/backend/menu/menu_item_left_active.gif) !important;
+}
+
+#navSelected div a {
+	color: #0093DD;
+}
+
 #nav li ul {
-  	top: 48px;
+  	margin-top: 5px;
   	left: 10px;
-  	border:1px solid #999999;
-  	border-top:0px;
+  	border: 1px solid #999999;
   	background-image: url(../image/backend/menu/menu_commands_bg.jpg);
   	background-position: bottom left;
   	background-repeat: repeat-x;
@@ -331,11 +342,13 @@ html>body #minHeight{ /*safari wrapper */
 
 /* Language switch menu */
 #langMenuContainer {
-  	position: relative;
+  	position: absolute;
 	display: none;
 	z-index: 20;
 	float: right;
 	width: auto;
+	left: 70px;
+	padding-top: 6px;
 }
 
 #langMenuIndicator {
@@ -404,6 +417,7 @@ html>body #minHeight{ /*safari wrapper */
 	bottom: 0;
 	width: 100%;
 	padding-top: 5px;
+	z-index: 10;
 }
 #pageTitle {
   	font-weight: bold;
