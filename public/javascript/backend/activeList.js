@@ -160,16 +160,25 @@ LiveCart.ActiveList.prototype = {
      */
     toggleContainer: function(li, action)
     {
-        var container = this.getContainer(li ? li : false, action ? action : this.getAction(this.toggleContainer.caller));
+        try
+        {
+            var container = this.getContainer(li ? li : false, action ? action : this.getAction(this.toggleContainer.caller));
 
-        if(container.style.display == 'none')
-        {
-            setTimeout("Effect.BlindDown('"+container.id+"', {duration: 0.5})", 50);
-            setTimeout("Effect.Appear('"+container.id+"', {duration: 1.0})", 50);
+            if(container.style.display == 'none')
+            {
+                Effect.BlindDown(container.id, {duration: 0.5});
+                Effect.Appear(container.id, {duration: 1.0});
+                setTimeout(function() { container.style.display = 'block'; container.style.height = 'auto'}, 300);
+            }
+            else
+            {
+                Effect.BlindUp(container.id, {duration: 0.2});
+                setTimeout(function() { container.style.display = 'none'}, 40);
+            }
         }
-        else
+        catch(e)
         {
-            Effect.BlindUp(container.id, {duration: 0.2});
+            jsTrace.debug(e);
         }
     },
 
@@ -428,27 +437,41 @@ LiveCart.ActiveList.prototype = {
      */
     bindAction: function(li, action)
     {
-        this.rebindIcons(li);
+        try
+        {
+            this.rebindIcons(li);
 
-        this._currentLi = li;
-        var url = this.callbacks[('before-'+action).camelize()].call(this, li);
+            if(action != 'sort')
+            {
+                this._currentLi = li;
+                var url = this.callbacks[('before-'+action).camelize()].call(this, li);
 
-        if(!url) return false;
+                if(!url) return false;
 
-        var self = this;
-        // display feedback
-        this.toggleProgress(li);
+                var self = this;
+                // display feedback
+                this.toggleProgress(li);
 
-        // execute the action
-        new Ajax.Request(
-                url,
-                {
-                    method: 'get',
+                // execute the action
+                new Ajax.Request(
+                        url,
+                        {
+                            method: 'get',
 
-                    // the object context mystically dissapears when onComplete function is called,
-                    // so the only way I could make it work is this
-                    onComplete: function(param) { self.callUserCallback(action, param, li) }
-                });
+                            // the object context mystically dissapears when onComplete function is called,
+                            // so the only way I could make it work is this
+                            onComplete: function(param)
+                            {
+                                jsTrace.send("self.callUserCallback(" + action + ", " + param + ", " + li +")");
+                                self.callUserCallback(action, param, li);
+                            }
+                        });
+            }
+        }
+        catch (e)
+        {
+            jsTrace.send(e);
+        }
     },
 
     /**
@@ -474,9 +497,17 @@ LiveCart.ActiveList.prototype = {
      */
     callUserCallback: function(action, response, li)
     {
-        this._currentLi = li;
-        this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
-        this.toggleProgress(li);
+        try
+        {
+            this._currentLi = li;
+            this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
+            jsTrace.send('turn off progress');
+            this.toggleProgress(li);
+        }
+        catch(e)
+        {
+            jsTrace.debug(e);
+        }
     },
 
     /**
@@ -486,22 +517,26 @@ LiveCart.ActiveList.prototype = {
      */
     createSortable: function ()
     {
-        var self = this;
-
-        this.decorateItems();
-
-        Element.addClassName(this.ul, this.cssPrefix.substr(0, this.cssPrefix.length-1));
-        Sortable.create(this.ul.id,
+        try
         {
-            dropOnEmpty:true,
-            constraint: false,
-            handle:     this.cssPrefix + 'sort',
-            // the object context mystically dissapears when onComplete function is called,
-            // so the only way I could make it work is this
-            onChange: function(elementObj) { self.dragged = elementObj },
-            onUpdate: function() { self.saveSortOrder() }
-        });
+            var self = this;
 
+            this.decorateItems();
+
+            Element.addClassName(this.ul, this.cssPrefix.substr(0, this.cssPrefix.length-1));
+            Sortable.create(this.ul.id,
+            {
+                dropOnEmpty:true,
+                constraint: false,
+                handle:     this.cssPrefix + 'sort',
+                // the object context mystically dissapears when onComplete function is called,
+                // so the only way I could make it work is this
+                onChange: function(elementObj) { jsTrace.send("moving..."); self.dragged = elementObj; },
+                onUpdate: function() { self.saveSortOrder(); }
+            });
+        } catch (e) {
+            jsTrace.debug(e);
+        }
     },
 
     /**
@@ -546,20 +581,26 @@ LiveCart.ActiveList.prototype = {
     {
         var self = this;
 
-        // display feedback
-        this.toggleProgress(this.dragged);
+        var order = Sortable.serialize(this.ul.id);
 
-        // execute the action
-        this._currentLi = this.dragged;
-
-        new Ajax.Request(this.callbacks.beforeSort.call(this, this.dragged, Sortable.serialize(this.ul.id)),
+        if(order)
         {
-            method: 'get',
+            // display feedback
+            this.toggleProgress(this.dragged);
 
-            // the object context mystically dissapears when onComplete function is called,
-            // so the only way I could make it work is this
-            onComplete: function(param) { self.restoreDraggedItem(param); }
-        });
+            // execute the action
+            this._currentLi = this.dragged;
+
+            var url = this.callbacks.beforeSort.call(this, this.dragged, order);
+            new Ajax.Request(url,
+            {
+                method: 'get',
+
+                // the object context mystically dissapears when onComplete function is called,
+                // so the only way I could make it work is this
+                onComplete: function(param) { this.dragged = false; self.restoreDraggedItem(param); }
+            });
+        }
     },
 
 
