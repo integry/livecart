@@ -45,12 +45,34 @@
 				&nbsp; 	 
 			</div> 
 		<div id="topLogoContainer">
+			<div>
+				<div style="float: right;">
+					{foreach from=$langMenu item=block}{$block}{/foreach}								
+				</div>			
+			</div>
 		 	<a href="{link controller=backend.index action=index}">
-			 	<img src="image/backend/layout/logo.jpg" id="topLogoImage">
+			 	<img src="image/backend/layout/logo_tr.png" id="topLogoImage">
 			</a>
 		</div> 
 	</div>
 
+	<div style="width: 100%;">
+		<div style="float: left;">
+			<div id="homeButtonWrapper">
+				<a href="{link controller=backend.index action=index}">
+					<img src="image/backend/layout/top_home_button.jpg" id="homeButton"> 
+				</a>
+			</div>		
+			<div style="padding-left: 70px; position: relative;">
+				{foreach from=$MENU item=block}{$block}{/foreach}			
+			</div>
+		</div>
+		<div id="systemMenu" style="float: right; position: relative; z-index: 100;">
+				{t _base_help} | <a href="#" onClick="showLangMenu(true);return false;">{t _change_language}</a>
+		</div>	
+	</div>
+
+{*
 	<table id="headerContent">
 		<tr>
 			<td id="headerMenuContainer">
@@ -64,13 +86,9 @@
 								{t _home}
 							</a>
 						</td>
-						<td id="headerTopMenuContainer">							
-											
-							
-						</td>
 					</tr>
 					<tr>
-						<td colspan="2">
+						<td>
 							{foreach from=$MENU item=block}{$block}{/foreach}
 						</td>
 				</table>				
@@ -82,6 +100,7 @@
 			</td>
 		</tr>	
 	</table>
+*}
 
 	<div id="pageTitleContainer">
 		<div id="pageTitle">{$PAGE_TITLE}</div>

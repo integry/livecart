@@ -113,7 +113,7 @@
 {/literal}
 
 
-<ul id="languageList" class="activeList_add_delete activeList_add_flag">
+<ul id="languageList" class="activeList_add_delete">
 {foreach from=$languagesList item=item}
 	{include file="backend/language/listItem.tpl" showContainer=true}
 {/foreach}

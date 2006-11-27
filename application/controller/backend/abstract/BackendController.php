@@ -133,14 +133,53 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	{			
 		// load language file for menu
 		$res = $this->locale->translationManager()->loadCachedFile($this->localeName . '/menu/menu');		
-//		die('!'.(int)$res);
-//print_r($this->locale);
 
 		$menuLoader = new MenuLoader();		
 		$structure = $menuLoader->getCurrentHierarchy($this->request->getControllerName(),	$this->request->getActionName());
 
+		$controller = $this->request->getControllerName();
+		$action = $this->request->getActionName();
+		$index = 0;
+		//print_r($structure);
+		foreach($structure['items'] as $topIndex => $topValue)
+		{
+		    if ($controller == $topValue['controller'] && $action == $topValue['action'])
+		    {
+			  	$index = $topIndex;
+			  	break;
+			}
+			else if ($controller == $topValue['controller'])
+			{
+			  	$index = $topIndex;
+			}		
+
+		  	$match = false;
+			if (is_array($topValue['items']))
+			{
+				foreach ($topValue['items'] as $subIndex => $subValue)
+			  	{
+				    if ($controller == $subValue['controller'] && $action == $subValue['action'])
+				    {
+					  	$index = $topIndex;
+					  	$match = true;
+					  	break;
+					}	
+					else if ($controller == $subValue['controller'])
+					{
+					  	$index = $topIndex;
+					}		
+				}
+				
+				if ($match)
+				{
+				  	break;
+				}
+			}			
+		}
+
 		$response =	new BlockResponse();		
 		$response->setValue('items', $structure['items']);
+		$response->setValue('itemIndex', $index);
 		return $response;	
 	}
 	
