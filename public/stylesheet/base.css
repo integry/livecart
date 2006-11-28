@@ -1,6 +1,4 @@
 @import "activeList.css";
-@import "specField.css";
-@import "form.css";
 
 html
 {
@@ -126,6 +124,7 @@ html>body #minHeight{ /*safari wrapper */
 	background-image: url(../image/backend/layout/top_bg.jpg);
 	width: 100%;
 	background-repeat: repeat-x;
+	height: 81px;
 }
 #topBackgroundLeft {
   	position: absolute;
@@ -137,15 +136,12 @@ html>body #minHeight{ /*safari wrapper */
 	z-index: 0;
 }
 #topLogoContainer {
-	position: relative;
-	margin-top: 11px;
-	z-index: 15;
 	float: right;
-	top:0;
-	left:0;
+	width: 184px;
 }
 #topLogoImage {
   	margin-right: 10px;
+  	margin-top: 25px;
 }
 #headerContent {
 	position: absolute;
@@ -164,14 +160,13 @@ html>body #minHeight{ /*safari wrapper */
 }
 #homeButtonWrapper {
 	vertical-align: middle;
-/*	width: 129px;
-	height: 32px;*/
 	text-align: left;
 	padding-left: 30px;
 	padding-top: 10px;
 	color: #FFFFFF;
 	font-size: 10px;
 	position: relative;
+	z-index: 1500;
 }
 #homeButton {
 	vertical-align:middle;
@@ -192,11 +187,30 @@ html>body #minHeight{ /*safari wrapper */
 	text-align: right;
 	padding-top: 3px;
 	padding-right: 5px;
-/*	width: 400px; */
 	vertical-align: top;
+	z-index: 7000;
+	position: relative;
+	float: right;
 }
 
 /* Navigation menu */
+#navContainer {
+	position: absolute; 
+	top: 0; 
+	left: 0; 
+	width: 100%; 
+	z-index: 1000;
+}
+
+#navContainer table {
+	height: 65px;
+}
+
+#navContainer table td {
+  	vertical-align: bottom;
+	padding-left: 70px; 
+}
+
 #nav li ul, #nav { /* all lists */
 	padding: 0;
 	margin: 0;
@@ -212,7 +226,6 @@ html>body #minHeight{ /*safari wrapper */
 	display: none;
 	position: absolute;
 	left: 0;
-	z-index: 50000;
 }
 
 #nav li>ul { /* to override top and left in browsers other than IE, which will position to the top right of the containing li, rather than bottom left */
@@ -229,15 +242,15 @@ html>body #minHeight{ /*safari wrapper */
 }
 
 #nav {
-	z-index: 10000;
 	position: relative;
-	top: 1px;
+	z-index: 1000;
 }
 
 #nav a {
   	text-decoration: none;
   	color: #0000FF;
   	font-weight: bold;
+  	font-size: 15px;
 }
 
 #nav li {
@@ -245,6 +258,7 @@ html>body #minHeight{ /*safari wrapper */
 	padding-left:10px;
 	#width: 20px; /* IE hack */
 	white-space: nowrap;
+	height: 18px;
 }
 
 #nav li div {
@@ -256,7 +270,7 @@ html>body #minHeight{ /*safari wrapper */
 
 #nav li div div {
 	display: table;
-  	background-image: url(../image/backend/menu/menu_item_right.gif);
+  	background-image: url(../image/backend/menu/menu_item_right.gif); 
   	background-repeat: no-repeat;
 	background-position: right 0px;
 }
@@ -265,11 +279,11 @@ html>body #minHeight{ /*safari wrapper */
   	background-image: url(../image/backend/menu/menu_item_left.gif);
   	background-repeat: no-repeat;
 	background-position: 0px 0px;
-	display: table-cell;
 	text-align: center;
-	padding: 5px;
+	padding: 5px; 
 	padding-left: 10px;
 	padding-right: 10px;
+	display: table-cell;
 }
 
 #navSelected div {
@@ -307,7 +321,6 @@ html>body #minHeight{ /*safari wrapper */
 	background-image: none;
 	border-bottom: 1px dotted #999999;
 	padding: 2px;
-	z-index:100000;
 }
 
 #nav li ul li a {
@@ -349,7 +362,6 @@ html>body #minHeight{ /*safari wrapper */
 	z-index: 20;
 	float: right;
 	width: auto;
-	left: 70px;
 	padding-top: 6px;
 }
 
@@ -420,6 +432,7 @@ html>body #minHeight{ /*safari wrapper */
 	width: 100%;
 	padding-top: 5px;
 	z-index: 10;
+	margin-bottom: -1px;
 }
 #pageTitle {
   	font-weight: bold;
@@ -520,3 +533,40 @@ br.clear
 {
 	white-space: nowrap;
 }
+
+
+
+/* BEGIN SpecialField: */
+.specField_form_values_group div input
+{
+    width: 10em;
+}
+
+fieldset.step_main,  fieldset.step_values, fieldset.step_translations, .step_translations_language
+{
+	display: none;
+}
+
+.change_state
+{
+    padding: 0 5px;
+}
+
+.specField_form_values_value .specField_form_values_default_checkbox
+{
+    width: auto;
+}
+
+.specField_controls
+{
+	display: none;
+
+}
+
+#specField_item_new_form
+{
+    background: #cccccc;
+    padding: 5px;
+    display: none;
+}
+/* END SpecialField. */
