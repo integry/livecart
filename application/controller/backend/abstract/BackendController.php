@@ -14,15 +14,10 @@ ClassLoader::import("library.json.json");
  */
 abstract class BackendController extends BaseController implements LCiTranslator 
 {	
-	/**
-	 * Locale instance that application operates on
-	 *
-	 * @var Locale
-	 */
-	protected $locale = null;
-	protected $localeName;
 	protected $rootDirectory = "";
-	
+
+	protected $locale = null;	
+
 	/**
 	 * Store instance
 	 *
@@ -33,17 +28,15 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	public function __construct(Request $request) 
 	{
 		parent::__construct($request);
-		
-		// unset locale variables to make use of lazy loading
-		unset($this->locale);
-		unset($this->localeName);
-									
+										
 		if (!$this->user->hasAccess($this->getRoleName())) {	
 			//throw new AccessDeniedException($this->user, $this->request->getControllerName(), $this->request->getActionName());
 		}
 		
 		$this->store = Store::getInstance();
+		$this->loadLanguageFiles();
 		
+		unset($this->locale);
 	}
 	
 	/**
@@ -66,20 +59,10 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	{	  	  		  
 		return $this->locale->translator()->makeText($key, $params);
 	}		
-
+	
 	public function init()
 	{
-		$this->addBlock('langMenu', 'langMenu');	
 		Application::getInstance()->getRenderer()->setValue('BASE_URL', Router::getBaseUrl());
-	}
-	
-
-	protected function langMenuBlock() 
-	{
-		$response =	new BlockResponse();
-	  	$router = Router::getInstance();
-	  	$response->setValue('returnRoute', base64_encode($router->getRequestedRoute()));
-		return $response;	  	
 	}
 	
 	/**
@@ -152,63 +135,28 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		$included = array();
 		$controllerRoot = Classloader::getRealPath('application.controller');
 
+		$langFiles = array();
 		foreach (array_reverse(get_included_files()) as $file)
 		{
 			$class = basename($file,'.php');
 			if (class_exists($class, false) && is_subclass_of($class, 'Controller'))
 			{
 				$file = substr($file, strlen($controllerRoot) + 1, -14);			  
-				
-//				echo $file."\n";
-				
-				// language file
-				$this->locale->translationManager()->loadFile($file);
+				$langFiles[] = $file;
 			}
 		}
-//		exit;	  	
+		
+		$this->store->setLanguageFiles($langFiles);
 	}	
 	
-	private function loadLocale()
-	{
-		$this->locale =	Locale::getInstance($this->localeName);	
-		$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('cache.language'));
-		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('application.configuration.language'));
-		Locale::setCurrentLocale($this->localeName);	
-		
-		$this->loadLanguageFiles();		
-	
-		return $this->locale;		  	
-	}
-	
-	private function loadLocaleName()
-	{
-		if ($this->request->isValueSet("language"))
-		{
-			$this->localeName = $this->request->getValue("language");			
-		}
-		else if (isset($_SESSION['lang']))
-		{
-			$this->localeName = $_SESSION['lang'];
-		}
-		else
-		{
-	  		$lang = Language::getDefaultLanguage();
-	  		$this->localeName = $lang->getId();
-		}
-		
-		return $this->localeName;
-	}
-
 	private function __get($name)
 	{
 		switch ($name)
 	  	{
 		    case 'locale':
-		    	return $this->loadLocale();	
-		    break;
-
-		    case 'localeName':
-		    	return $this->loadLocaleName();	
+		    	$this->locale = $this->store->getLocaleInstance();
+		    	$this->loadLanguageFiles();
+				return $this->locale;
 		    break;
 		    
 			default:

@@ -10,9 +10,8 @@
  * @package application.helper
  */
 function smarty_function_translate($params, Smarty $smarty) 
-{
-	$locale = Locale::getCurrentLocale();
-	return $locale->translator()->translate($params['text']);
+{	
+	return Store::getInstance()->translate($params['text']);
 }
 
 ?>

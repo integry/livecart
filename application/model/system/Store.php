@@ -9,7 +9,18 @@
  */
 class Store
 {
+  	/**
+	 * Locale instance that application operates on
+	 *
+	 * @var Locale
+	 */
+	protected $locale = null;
+
+	protected $localeName;
+  
 	private $languageList = null;
+	
+	private $languageFiles = array();
 
 	/**
 	 * LiveCart operates on a single store object
@@ -17,6 +28,13 @@ class Store
 	 * @var Store
 	 */
 	private static $instance = null;
+
+	private function __construct()
+	{
+		// unset locale variables to make use of lazy loading
+		unset($this->locale);
+		unset($this->localeName);
+	}
 
 	public static function getInstance()
 	{
@@ -27,6 +45,11 @@ class Store
 		return self::$instance;
 	}
 
+	public function getLocaleInstance()
+	{
+	  	return $this->locale;	  
+	}
+	
 	/**
 	 * Gets a record set of installed languages
 	 *
@@ -85,6 +108,27 @@ class Store
 	}
 
 	/**
+	 * Translates text using Locale::LCInterfaceTranslator
+	 * @param string $key
+	 * @return string
+	 */
+	public function translate($key) 
+	{
+		return $this->locale->translator()->translate($key);
+	}	
+
+	/**
+	 * Performs MakeText translation using Locale::LCInterfaceTranslator
+	 * @param string $key
+	 * @param array $params
+	 * @return string
+	 */
+	public function makeText($key, $params) 
+	{	  	  		  
+		return $this->locale->translator()->makeText($key, $params);
+	}	
+
+	/**
 	 * Creates a handle string that is usually used as part of URL to uniquely
 	 * identify some record
 	 * Example:
@@ -97,6 +141,67 @@ class Store
 		$str = str_replace(" ", "_", $str);
 		return $str;
 	}
+	
+	public function setLanguageFiles($fileArray)
+	{
+	  	$this->languageFiles = $fileArray;
+	}
+	
+	private function loadLanguageFiles()
+	{
+		foreach ($this->languageFiles as $file)
+		{
+			$this->locale->translationManager()->loadFile($file);					  		  
+		}
+	}
+	
+	private function loadLocale()
+	{
+		$this->locale =	Locale::getInstance($this->localeName);	
+		$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('cache.language'));
+		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('application.configuration.language'));
+		Locale::setCurrentLocale($this->localeName);	
+		
+		$this->loadLanguageFiles();		
+	
+		return $this->locale;		  	
+	}
+	
+	private function loadLocaleName()
+	{
+		if ($_REQUEST["language"])
+		{
+			$this->localeName = $_REQUEST["language"];			
+		}
+		else if (isset($_SESSION['lang']))
+		{
+			$this->localeName = $_SESSION['lang'];
+		}
+		else
+		{
+	  		$this->localeName = $this->getDefaultLanguageCode();
+		}
+		
+		return $this->localeName;
+	}
+
+	private function __get($name)
+	{
+		switch ($name)
+	  	{
+		    case 'locale':
+		    	return $this->loadLocale();	
+		    break;
+
+		    case 'localeName':
+		    	return $this->loadLocaleName();	
+		    break;
+		    
+			default:
+		    break;		    
+		}
+	}
+		
 }
 
 ?>

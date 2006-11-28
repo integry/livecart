@@ -11,8 +11,7 @@
  */
 function smarty_function_maketext($params, $smarty) 
 {	
-	$locale = Locale::getCurrentLocale();		
-	return	$locale->translator()->makeText($params['text'], $params['params']);
+	return Store::getInstance()->makeText($params['text'], $params['params']);
 }
 
 ?>

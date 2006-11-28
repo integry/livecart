@@ -3,11 +3,13 @@
 {includeJs file=backend/keyboard.js}
 {includeJs file=backend/Language.js}
 {includeCss file=backend/Language.css}
-{pageTitle}{t _admin_languages}{/pageTitle}
+{pageTitle}{t _admin_languages} 
+<a href=""><img src="image/silk/help.png" onClick="showHelp('{link controller=backend.help action=view id=language.index}'); return false;" /></a>
+{/pageTitle}
 
 {include file="layout/header.tpl"}
 
-<fieldset class="inlineHelp">
+<fieldset id="help" class="inlineHelp" style="display: none;">
 	<legend>{t _help_index_title}</legend>
 	{translate|nl2br text="_help_index"}
 	<Br><Br><br>
@@ -15,6 +17,18 @@
 
 {literal}
 <script language="javascript">	
+
+	function showHelp(url)
+	{
+	  	window.open(url, 'helpWin', 'width=400, height=700, resizable, scrollbars');
+	  	return false;
+		help = document.getElementById('help');
+	  	help.style.position = 'absolute';
+	  	help.style.left = 100;
+	  	help.style.top = 100;
+	  	help.style.zIndex = 10000;
+	  	help.style.display = 'block';
+	}
 
 	function setEnabled(langId, status) 
 	{
@@ -50,14 +64,6 @@
 		{pageAction}slideForm('addLang', 'pageMenu'){/pageAction}
  	{/menuItem}
 {/pageMenu}
-
-{*
-<ul id="pageMenu">
-	<li>
-		<a onClick="slideForm('addLang', 'pageMenu')">{t _add_lang_button}</a>
-	</li>
-</ul>
-*}
 
 {literal}
 <style>
@@ -107,11 +113,6 @@
 .enabled_0 {color: #AAAAAA;}
 .enabled_1 {}
 .listSortHover {background-color: #DDDDDD;}
-
-.activeList_icons_container {
-  	width: 16px;
-  	height: 16px;
-}
 </style>
 {/literal}
 
@@ -145,6 +146,8 @@
 </script>
 {/literal}
 
+{*
 <!-- {maketext text="_statistic_languages_full" params="$count_all,$count_active"}. -->
+*}
 
 {include file="layout/footer.tpl"}

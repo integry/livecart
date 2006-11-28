@@ -11,7 +11,7 @@
  */
 function smarty_function_backendMenu($params, Smarty $smarty) 
 {
-	$locale = Locale::getCurrentLocale();
+	$locale = Store::getInstance()->getLocaleInstance();
 	$controller = $smarty->_tpl_vars['request']['controller'];
 	$action = $smarty->_tpl_vars['request']['action'];
 	

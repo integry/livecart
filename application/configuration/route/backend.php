@@ -9,6 +9,8 @@
 
 $router = Router::getInstance();
 
+$router->connect("backend.help/:id", array('controller' => 'backend.help', 'action' => 'view'));
+
 $router->connect(":controller", array("action" => "index"));
 $router->connect(":controller/:action");
 $router->connect(":controller/:action/:id", array(), array("id" => "[0-9]+"));
@@ -18,6 +20,5 @@ $router->connect(":controller/:action/:id", array(), array("id" => "[a-zA-Z]+"))
 
 $router->connect(":controller/:action/:id", array(), array("id" => "%id%"));
 $router->connect(":controller/:action/:mode/:id", array(), array("id" => "[0-9]+", "mode" => "create|modify"));
-
 
 ?>
