@@ -23,7 +23,7 @@ function smarty_function_backendMenu($params, Smarty $smarty)
 	$structure = $menuLoader->getCurrentHierarchy($controller, $action);
 
 	$index = 0;
-	//print_r($structure);
+
 	foreach($structure['items'] as $topIndex => $topValue)
 	{
 	    if ($controller == $topValue['controller'] && $action == $topValue['action'])
@@ -60,11 +60,9 @@ function smarty_function_backendMenu($params, Smarty $smarty)
 		}			
 	}
 	
-	$menu = new Smarty();
 	$smarty->assign('items', $structure['items']);
 	$smarty->assign('itemIndex', $index);
-	return $smarty->display('block/backendMenu.tpl');
-	
+	return $smarty->display('block/backendMenu.tpl');	
 }
 
 ?>
