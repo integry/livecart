@@ -44,67 +44,46 @@
 			<div id="topBackgroundLeft">
 				&nbsp; 	 
 			</div> 
-		<div id="topLogoContainer">
-			<div>
-				<div style="float: right;">
-					{foreach from=$langMenu item=block}{$block}{/foreach}								
-				</div>			
-			</div>
-		 	<a href="{link controller=backend.index action=index}">
-			 	<img src="image/backend/layout/logo_tr.png" id="topLogoImage">
-			</a>
-		</div> 
-	</div>
-
-	<div style="width: 100%;">
-		<div style="float: left;">
-			<div id="homeButtonWrapper">
-				<a href="{link controller=backend.index action=index}">
-					<img src="image/backend/layout/top_home_button.jpg" id="homeButton"> 
-				</a>
-			</div>		
-			<div style="padding-left: 70px; position: relative;">
-				{foreach from=$MENU item=block}{$block}{/foreach}			
-			</div>
 		</div>
-		<div id="systemMenu" style="float: right; position: relative; z-index: 100;">
-				{t _base_help} | <a href="#" onClick="showLangMenu(true);return false;">{t _change_language}</a>
-		</div>	
-	</div>
 
-{*
-	<table id="headerContent">
-		<tr>
-			<td id="headerMenuContainer">
-				<table style="width: 100%;">
-					<tr>	
-						<td id="homeButtonWrapper">
-							<a href="{link controller=backend.index action=index}">
-								<img src="image/backend/layout/top_home_button.jpg" id="homeButton"> 
-							</a>
-							<a href="{link controller=backend.index action=index}">
-								{t _home}
-							</a>
-						</td>
-					</tr>
+		<div id="navContainer">			
+			<div style="float: left;">
+				<table>
 					<tr>
 						<td>
-							{foreach from=$MENU item=block}{$block}{/foreach}
+							{backendMenu} &nbsp;			
 						</td>
-				</table>				
-			</td>
+					</tr>
+				</table>			
+			</div>
 
-			<td id="systemMenu">
-				{t _base_help} | <a href="#" onClick="showLangMenu(true);return false;">{t _change_language}</a>
-				{foreach from=$langMenu item=block}{$block}{/foreach}				
-			</td>
-		</tr>	
-	</table>
-*}
+			<div id="topLogoContainer">
+				<div style="float: right;">
+				 	<a href="{link controller=backend.index action=index}">
+					 	<img src="image/backend/layout/logo_tr.png" id="topLogoImage">
+					</a>
+				</div>			
+			</div>			
+		</div>
+		
+		<div style="width: 100%;">
+			<div style="float: left;">
+				<div id="homeButtonWrapper">
+					<a href="{link controller=backend.index action=index}">
+						<img src="image/backend/layout/top_home_button.jpg" id="homeButton"> 
+					</a>
+				</div>		
+			</div>
+			<div id="systemMenu">
+					{t _base_help} | <a href="#" onClick="showLangMenu(true);return false;">{t _change_language}</a>
+					{backendLangMenu}								
+			</div>	
+		</div>
 
-	<div id="pageTitleContainer">
-		<div id="pageTitle">{$PAGE_TITLE}</div>
-	</div>
+
+		<div id="pageTitleContainer">
+			<div id="pageTitle">{$PAGE_TITLE}</div>
+		</div>
 
 </div>
 

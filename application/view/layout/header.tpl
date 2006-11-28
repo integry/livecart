@@ -11,11 +11,17 @@
 	<!-- Css includes -->
 	{includeCss file=base.css}
 	{$STYLESHEET}
+	{literal}
+	<!--[if IE]>
+		<link href="stylesheet/baseIE.css" media="screen" rel="Stylesheet" type="text/css"/>	
+	<![endif]-->
+	{/literal}
 
 	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
 	<script type="text/javascript" src="javascript/library/livecart.js"></script>
 	<script type="text/javascript" src="javascript/library/ClassLoader.js"></script>
 	<!-- JavaScript includes -->
+	{includeJs file=backend/menu/menu.js}
 	{includeJs file=backend/keyboard.js}
 	{includeJs file=json.js}
 

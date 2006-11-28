@@ -1,8 +1,11 @@
 {loadScriptaculous}
 {includeJs file=backend/activeList.js}
 {includeJs file=backend/keyboard.js}
-
+{includeJs file=backend/Language.js}
+{includeCss file=backend/Language.css}
 {pageTitle}{t _admin_languages}{/pageTitle}
+
+{include file="layout/header.tpl"}
 
 <fieldset class="inlineHelp">
 	<legend>{t _help_index_title}</legend>
@@ -143,3 +146,5 @@
 {/literal}
 
 <!-- {maketext text="_statistic_languages_full" params="$count_all,$count_active"}. -->
+
+{include file="layout/footer.tpl"}

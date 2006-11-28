@@ -30,8 +30,6 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	 */
 	protected $store = null;
 	
-	private $languageFiles = array();
-	
 	public function __construct(Request $request) 
 	{
 		parent::__construct($request);
@@ -39,7 +37,6 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		// unset locale variables to make use of lazy loading
 		unset($this->locale);
 		unset($this->localeName);
-		$this->autoPreloadFiles();		
 									
 		if (!$this->user->hasAccess($this->getRoleName())) {	
 			//throw new AccessDeniedException($this->user, $this->request->getControllerName(), $this->request->getActionName());
@@ -47,48 +44,6 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		
 		$this->store = Store::getInstance();
 		
-	}
-	
-	/**
-	 * 	Automatically preloads language, JS and CSS files
-	 *
-	 */
-	private function autoPreloadFiles()
-	{
-		// get all inherited controller classes
-		$class = get_class($this);
-		$classes = array();
-		$lastClass = "";
-		
-		while ($class != $lastClass)
-		{
-		  	$lastClass = $class;
-		 	$classes[] = $class;
-		 	$class = get_parent_class($class);
-		}
-		
-		// get class file paths (to be mapped with language file paths) and load language files
-		$included = array();
-		$controllerRoot = Classloader::getRealPath('application.controller');
-		$renderer = Application::getInstance()->getRenderer()->getSmartyInstance();
-		
-		require_once('function.includeJs.php');
-		require_once('function.includeCss.php');
-				
-		foreach (array_reverse(get_included_files()) as $file)
-		{
-			$class = basename($file,'.php');
-			if (class_exists($class, false) && is_subclass_of($class, 'Controller'))
-			{
-				$file = substr($file, strlen($controllerRoot) + 1, -14);			  
-	
-				// language file
-				$this->languageFiles[] = $file;
-				
-				smarty_function_includeJs(array('file' => $file . '.js'), $renderer);
-				smarty_function_includeCss(array('file' => $file . '.css'), $renderer);
-			}
-		}	  	
 	}
 	
 	/**
@@ -114,8 +69,6 @@ abstract class BackendController extends BaseController implements LCiTranslator
 
 	public function init()
 	{
-		$this->setLayout("mainLayout");
-		$this->addBlock('MENU', 'menuSection');	
 		$this->addBlock('langMenu', 'langMenu');	
 		Application::getInstance()->getRenderer()->setValue('BASE_URL', Router::getBaseUrl());
 	}
@@ -127,60 +80,6 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	  	$router = Router::getInstance();
 	  	$response->setValue('returnRoute', base64_encode($router->getRequestedRoute()));
 		return $response;	  	
-	}
-	
-	protected function menuSectionBlock() 
-	{			
-		// load language file for menu
-		$res = $this->locale->translationManager()->loadCachedFile($this->localeName . '/menu/menu');		
-
-		$menuLoader = new MenuLoader();		
-		$structure = $menuLoader->getCurrentHierarchy($this->request->getControllerName(),	$this->request->getActionName());
-
-		$controller = $this->request->getControllerName();
-		$action = $this->request->getActionName();
-		$index = 0;
-		//print_r($structure);
-		foreach($structure['items'] as $topIndex => $topValue)
-		{
-		    if ($controller == $topValue['controller'] && $action == $topValue['action'])
-		    {
-			  	$index = $topIndex;
-			  	break;
-			}
-			else if ($controller == $topValue['controller'])
-			{
-			  	$index = $topIndex;
-			}		
-
-		  	$match = false;
-			if (is_array($topValue['items']))
-			{
-				foreach ($topValue['items'] as $subIndex => $subValue)
-			  	{
-				    if ($controller == $subValue['controller'] && $action == $subValue['action'])
-				    {
-					  	$index = $topIndex;
-					  	$match = true;
-					  	break;
-					}	
-					else if ($controller == $subValue['controller'])
-					{
-					  	$index = $topIndex;
-					}		
-				}
-				
-				if ($match)
-				{
-				  	break;
-				}
-			}			
-		}
-
-		$response =	new BlockResponse();		
-		$response->setValue('items', $structure['items']);
-		$response->setValue('itemIndex', $index);
-		return $response;	
 	}
 	
 	/**
@@ -231,6 +130,44 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		return $roleValue;
 	}	
 	
+	/**
+	 * 	Automatically preloads language files
+	 *
+	 */
+	private function loadLanguageFiles()
+	{
+		// get all inherited controller classes
+		$class = get_class($this);
+		$classes = array();
+		$lastClass = "";
+		
+		while ($class != $lastClass)
+		{
+		  	$lastClass = $class;
+		 	$classes[] = $class;
+		 	$class = get_parent_class($class);
+		}
+		
+		// get class file paths (to be mapped with language file paths) and load language files
+		$included = array();
+		$controllerRoot = Classloader::getRealPath('application.controller');
+
+		foreach (array_reverse(get_included_files()) as $file)
+		{
+			$class = basename($file,'.php');
+			if (class_exists($class, false) && is_subclass_of($class, 'Controller'))
+			{
+				$file = substr($file, strlen($controllerRoot) + 1, -14);			  
+				
+//				echo $file."\n";
+				
+				// language file
+				$this->locale->translationManager()->loadFile($file);
+			}
+		}
+//		exit;	  	
+	}	
+	
 	private function loadLocale()
 	{
 		$this->locale =	Locale::getInstance($this->localeName);	
@@ -238,11 +175,8 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('application.configuration.language'));
 		Locale::setCurrentLocale($this->localeName);	
 		
-		foreach ($this->languageFiles as $file)
-		{
-			$this->locale->translationManager()->loadFile($file);
-		}	
-		
+		$this->loadLanguageFiles();		
+	
 		return $this->locale;		  	
 	}
 	

@@ -1,20 +1,20 @@
 <Menu>
 	<Title>_menu_products</Title>		
-	<Controller>backend.catalog</Controller>
+	<Controller>backend.category</Controller>
 	<Items>
 		<Menu>
 			<Title>_menu_find_product</Title>
-			<Controller>backend.catalog</Controller>
+			<Controller>backend.category</Controller>
 			<Action>findProduct</Action>	
 		</Menu>
 		<Menu>
 			<Title>_menu_add_product</Title>
-			<Controller>backend.catalog</Controller>
+			<Controller>backend.category</Controller>
 			<Action>addProduct</Action>	
 		</Menu>
 		<Menu>
 			<Title>_menu_import_data</Title>
-			<Controller>backend.catalog</Controller>
+			<Controller>backend.category</Controller>
 			<Action>import</Action>	
 		</Menu>
 	</Items>

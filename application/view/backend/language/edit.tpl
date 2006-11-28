@@ -1,6 +1,12 @@
 {pageTitle}{translate text=_language_definitons} (<img src="image/localeflag/{$id}.png" /> {$edit_language}){/pageTitle}
+
 {includeJs file=library/json.js}
+{includeJs file=backend/Language.js}
 {loadScriptaculous}
+
+{includeCss file=backend/Language.css}
+
+{include file="layout/header.tpl"}
 
 {literal} 	
 <script type="text/javascript"> 
@@ -93,3 +99,5 @@
 	<input type="submit" value="{t _save}">
 	
 </form>
+
+{include file="layout/footer.tpl"}
