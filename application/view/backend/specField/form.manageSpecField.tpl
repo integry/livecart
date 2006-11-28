@@ -3,9 +3,9 @@
 <a href="#step_translations" class="specField_change_state">Translations</a>
 
 <div style="display: inline;" class="specField_controls">
-==>
-<input type="button" class="specField_save" value="Save" />
-or <a href="#cancel" class="specField_cancel">Cancel</a>
+    <input type="button" class="specField_save button" value="Save" />
+    or
+    <a href="#cancel" class="specField_cancel">Cancel</a>
 </div>
 
 <form action="/backend.specField/save" method="post">
@@ -17,23 +17,26 @@ or <a href="#cancel" class="specField_cancel">Cancel</a>
 		<input type="hidden" name="categoryID" class="hidden specField_form_categoryID" />
 
 		<p>
-    		<label>t title <em class="required">*</em></label>
+    		<label>Title <em class="required">*</em></label>
     		<input type="text" name="name" class="required specField_form_name" />
-		</p>
+    		<span class="feedback">feedback</span>
+    	</p>
 
 		<p>
-    		<label>t handle</label>
+    		<label>Handle</label>
     		<input type="text" name="handle" class="specField_form_handle" />
+    		<span class="feedback">feedback</span>
 		</p>
 
 		<p>
-    		<label>t description</label>
+    		<label>Description</label>
     		<textarea name="description" class="specField_form_description" rows="5" cols="40"></textarea>
+    		<span class="feedback_textarea">feedback</span>
 		</p>
 
 		<p>
 		<fieldset class="group specField_form_dataType">
-    		<h2>t value type</h2>
+    		<h2>Value type</h2>
     		<div>
                 <p>
         			<input type="radio" name="dataType" value="1" class="radio" />
@@ -47,12 +50,14 @@ or <a href="#cancel" class="specField_cancel">Cancel</a>
                 </p>
 			</div>
 
+    		<span class="feedback">feedback</span>
 			<br class="clear" />
 		</fieldset>
 		</p>
 
 		<p>
-    		<label>t type</label>
+    		<label>Type</label>
+    		<span class="feedback">feedback</span>
     		<select name="type" class="specField_form_type"></select>
 		</p>
 	</fieldset>

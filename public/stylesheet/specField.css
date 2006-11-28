@@ -1,0 +1,52 @@
+.specField_form_values_group div input
+{
+    width: 10em;
+}
+
+.specField_step_main, .specField_step_values, .specField_step_translations, .specField_step_translations_language
+{
+	display: none;
+}
+
+.specField_language_link
+{
+    display: inline;
+    padding: 0 5px;
+}
+
+.specField_change_state
+{
+    padding: 0 5px;
+}
+
+.specField_change_state_active
+{
+    background: yellow;
+}
+
+.specField_form_values_value .specField_form_values_default_checkbox
+{
+    width: auto;
+}
+
+.specField_controls
+{
+	display: none;
+
+}
+
+#specField_item_new_form
+{
+    background: #cccccc;
+    padding: 5px;
+}
+
+.specField_controls
+{
+    padding-left: 2em;
+}
+
+.specField_save
+{
+    margin: 0;
+}

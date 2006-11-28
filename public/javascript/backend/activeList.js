@@ -168,7 +168,7 @@ LiveCart.ActiveList.prototype = {
             {
                 Effect.BlindDown(container.id, {duration: 0.5});
                 Effect.Appear(container.id, {duration: 1.0});
-                setTimeout(function() { container.style.display = 'block'; container.style.height = 'auto'}, 300);
+                setTimeout(function() { container.style.height = 'auto'; container.style.display = 'block'}, 300);
             }
             else
             {

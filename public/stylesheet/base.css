@@ -1,4 +1,6 @@
 @import "activeList.css";
+@import "form.css";
+@import "specField.css";
 
 html
 {
@@ -195,10 +197,10 @@ html>body #minHeight{ /*safari wrapper */
 
 /* Navigation menu */
 #navContainer {
-	position: absolute; 
-	top: 0; 
-	left: 0; 
-	width: 100%; 
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
 	z-index: 1000;
 }
 
@@ -208,7 +210,7 @@ html>body #minHeight{ /*safari wrapper */
 
 #navContainer table td {
   	vertical-align: bottom;
-	padding-left: 70px; 
+	padding-left: 70px;
 }
 
 #nav li ul, #nav { /* all lists */
@@ -270,7 +272,7 @@ html>body #minHeight{ /*safari wrapper */
 
 #nav li div div {
 	display: table;
-  	background-image: url(../image/backend/menu/menu_item_right.gif); 
+  	background-image: url(../image/backend/menu/menu_item_right.gif);
   	background-repeat: no-repeat;
 	background-position: right 0px;
 }
@@ -280,7 +282,7 @@ html>body #minHeight{ /*safari wrapper */
   	background-repeat: no-repeat;
 	background-position: 0px 0px;
 	text-align: center;
-	padding: 5px; 
+	padding: 5px;
 	padding-left: 10px;
 	padding-right: 10px;
 	display: table-cell;

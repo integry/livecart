@@ -88,11 +88,13 @@
 
 // ]!]>
 </script>
+
+
+
+<style>
+
+</style>
 {/literal}
-
-
-
-
 
 <!-- Spec field title -->
 <h2>Laptop</h2>
