@@ -50,3 +50,42 @@
 {
     margin: 0;
 }
+
+
+.specField_add_field
+{
+    padding-left: 5em;
+    width: 10em;
+    white-space: nowrap;
+}
+
+/* START Values active list*/
+fieldset.specField_step_values  .specField_form_values_value
+{
+    width: 18em;
+}
+
+fieldset.specField_step_values .activeList_icons_container
+{
+    float: right;
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+    cursor: pointer;
+    cursor: hand;
+}
+
+fieldset.specField_step_values  .activeList_icons
+{
+    width: 77px;
+}
+
+fieldset.group h2
+{
+    width: 6em;
+    float: left;
+    font-size: 1em;
+    font-weight: normal;
+}
+
+/* END Values active list */
