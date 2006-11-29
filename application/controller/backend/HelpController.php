@@ -11,11 +11,9 @@ class HelpController extends StoreManagementController
 	}
 	
 	function index()
-	{
-	  	
+	{	  	
 	  	echo 'Ljaa ljaa';
-	  	exit;
-	  
+	  	exit;	  
 	}
 	
 	function view()
@@ -23,13 +21,13 @@ class HelpController extends StoreManagementController
 	  	$id = $this->request->getValue('id');
 	  	$lang = $this->request->getValue('language');
 	  	
-	  	echo $lang;
-		  	  	
+		$lang = 'en';		  	  	  	
+		  	  	  	
 	  	// get help template file
-	  	$helpTemplate = str_replace('.', '/', $id) . '.tpl';
+	  	$helpTemplate = 'backend/help/' . $lang . '/' . str_replace('.', '/', $id) . '.tpl';
 	  	
 	  	$response = new ActionResponse();
-	  	$response->setValue('id', $id);
+	  	$response->setValue('helpTemplate', $helpTemplate);
 	  	return $response;
 	}
   

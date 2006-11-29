@@ -1,1 +1,2 @@
 {$id}
+{include file=$helpTemplate}
