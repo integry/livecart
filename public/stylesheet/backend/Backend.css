@@ -508,6 +508,7 @@ br.clear
 	white-space: nowrap;
 }
 
+
 /* Form styling */
 
 form p
@@ -515,34 +516,23 @@ form p
     position: relative;
 }
 
-form fieldset.group
+
+.standart_form .feedback, .standart_form .feedback_textarea
+{
+   position: absolute;
+   vertical-align: middle;
+   margin-left: 10px;
+   padding-left: 20px;
+   background: url(/public/image/silk/error.png) no-repeat left center;
+}
+
+
+.standart_form fieldset.group
 {
     position: relative;
 }
 
-p .feedback, p .feedback_textarea, form fieldset.group .feedback
-{
-    position: absolute;
-    right: 0px;
-    padding-left: 20px;
-    background: url(../../image/silk/error.png) no-repeat left top;
-}
-
-p .feedback, form fieldset.group .feedback
-{
-    left: 15em;
-    top: 20%;
-    margin-left: 15em;
-}
-
-p .feedback_textarea
-{
-    left: 19em;
-    margin-left: 19em;
-    top: 45%;
-}
-
-fieldset
+.standart_form fieldset
 {
     margin: 1em 0;
     padding: 1em;
@@ -551,75 +541,74 @@ fieldset
     margin: auto 0;
 }
 
-legend
+.standart_form legend
 {
     font-weight: bold;
 }
 
-label
+.standart_form label
 {
     float: left;
     width: 11em;
 }
 
-input, select, form .other
+.standart_form input, .standart_form select, form.standart_form .other
 {
-    width: 20em;
+    width: 10em;
 }
 
-textarea
+.standart_form textarea
 {
     width: 30em;
     height: 10em;
 }
+.standart_form .feedback_textarea
+{
+   line-height: 10em;
+}
 
-input.radio, input.checkbox, input.submit, input.button
+.standart_form input.radio, .standart_form input.checkbox, .standart_form input.submit, .standart_form input.button
 {
     width: auto;
 }
 
-input.radio, input.checkbox
+.standart_form input.radio, .standart_form input.checkbox
 {
     float: left;
     margin-right: 1em;
     border: 0px none;
 }
 
-input:focus, textarea:focus, select:focus
+.standart_form input:focus, .standart_form textarea:focus, .standart_form select:focus
 {
     background: #ffc;
 }
 
 
-input.required, textarea.required, select.required
+.standart_form input.required, .standart_form textarea.required, .standart_form select.required
 {
     border: 1px solid red;
 }
 
-form em.required
+form.standart_form em.required
 {
     color: red;
     border: 0px none;
 }
 
-label, input, select, form .other, textarea
+.standart_form label, .standart_form input, .standart_form select, .standart_form form .other, .standart_form textarea
 {
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-label.radio
+.standart_form label.radio
 {
     width: 6em;
 }
 
-.feedback
-{
-    position: absolute;
-    right: 0px;
-    margin-left: 11em;
-    left: 200px;
-}
+
+
 
 
 
