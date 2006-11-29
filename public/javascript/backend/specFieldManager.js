@@ -53,7 +53,7 @@ LiveCart.SpecFieldManager.prototype = {
     /**
 	 * Constructor
 	 *
-	 * @var specFields Spec Field values
+	 * @param specFields Spec Field values
 	 *
 	 * @access public
 	 *
@@ -93,6 +93,8 @@ LiveCart.SpecFieldManager.prototype = {
 
 		this.nodes.parent = document.getElementById(this.rootId);
 
+		this.nodes.form 			    = this.nodes.parent.getElementsByTagName("form")[0];
+
 		this.nodes.dataType 			= document.getElementsByClassName(this.cssPrefix + "form_dataType", this.nodes.parent)[0].getElementsByTagName("input");
 		this.nodes.type 				= document.getElementsByClassName(this.cssPrefix + "form_type", this.nodes.parent)[0];
 		this.nodes.stateLinks 			= document.getElementsByClassName(this.cssPrefix + "change_state", this.nodes.parent);
@@ -114,7 +116,7 @@ LiveCart.SpecFieldManager.prototype = {
 		this.nodes.description 			= document.getElementsByClassName(this.cssPrefix + "form_description", this.nodes.parent)[0];
 		this.nodes.multipleSelector 	= document.getElementsByClassName(this.cssPrefix + "form_multipleSelector", this.nodes.parent)[0];
 		this.nodes.handle 				= document.getElementsByClassName(this.cssPrefix + "form_handle", this.nodes.parent)[0];
-		this.nodes.title 				= document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
+		this.nodes.name 				= document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
 		this.nodes.valuesDefaultGroup 	= document.getElementsByClassName(this.cssPrefix + "form_values_group", this.nodes.parent)[0];
 
 		this.nodes.cancel 	            = document.getElementsByClassName(this.cssPrefix + "cancel", this.nodes.parent)[0];
@@ -145,7 +147,9 @@ LiveCart.SpecFieldManager.prototype = {
 	 */
 	bindFields: function()
 	{
-		for(var i = 0; i < this.nodes.dataType.length; i++)
+		var self = this;
+
+	    for(var i = 0; i < this.nodes.dataType.length; i++)
 		{
 			this.nodes.dataType[i].onclick = this.dataTypeChangedAction.bind(this);
 		}
@@ -155,7 +159,7 @@ LiveCart.SpecFieldManager.prototype = {
 			this.nodes.stateLinks[i].onclick = this.changeStateAction.bind(this);
 		}
 
-		this.nodes.title.onkeyup = this.generateHandleAndTitleAction.bind(this);
+		this.nodes.name.onkeyup = this.generateHandleAndTitleAction.bind(this);
 		this.nodes.valuesAddFieldLink.onclick = this.addValueFieldAction.bind(this);
 		this.nodes.type.onchange = this.typeWasChangedAction.bind(this);
 
@@ -171,6 +175,7 @@ LiveCart.SpecFieldManager.prototype = {
 		this.dataTypeChangedAction();
 		this.loadTypes();
 		this.typeWasChangedAction();
+
 	},
 
 	/**
@@ -270,8 +275,8 @@ LiveCart.SpecFieldManager.prototype = {
 		if(this.categoryID) this.nodes.categoryID.value = this.categoryID;
 		if(this.handle) this.nodes.handle.value = this.handle;
 
-		if(this.name[this.languageCodes[0]]) this.nodes.title.value = this.name[this.languageCodes[0]];
-		this.nodes.title.name = "name[" + this.languageCodes[0] + "]";
+		if(this.name[this.languageCodes[0]]) this.nodes.name.value = this.name[this.languageCodes[0]];
+		this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
 
 		this.nodes.multipleSelector.checked = this.multipleSelector ? true : false;
 
@@ -279,11 +284,11 @@ LiveCart.SpecFieldManager.prototype = {
 		{
 		    if(this.nodes.mainTitle.firstChild)
 		    {
-		        this.nodes.mainTitle.firstChild.nodeValue = this.nodes.title.value;
+		        this.nodes.mainTitle.firstChild.nodeValue = this.nodes.name.value;
 		    }
 		    else
 		    {
-		        this.nodes.mainTitle.appendChild(document.createTextNode(this.nodes.title.value));
+		        this.nodes.mainTitle.appendChild(document.createTextNode(this.nodes.name.value));
 		    }
 		}
 
@@ -319,6 +324,11 @@ LiveCart.SpecFieldManager.prototype = {
 				// copy template class
 				var newTranslation = translations[0].cloneNode(true);
 				Element.removeClassName(newTranslation, "dom_template");
+
+				if(i == 1)
+				{
+				    newTranslation.style.display = 'block';
+				}
 
 				newTranslation.className += this.languageCodes[i];
 
@@ -413,6 +423,12 @@ LiveCart.SpecFieldManager.prototype = {
 			var test = this.languages[this.languageCodes[i]];
 			languageLink.firstChild.nodeValue = this.languages[this.languageCodes[i]];
 
+			// First link is active
+			if(i == 1)
+			{
+			    Element.addClassName(languageLink, this.cssPrefix + "step_translations_language_active");
+			}
+
 			this.nodes.translationsLinks.appendChild(languageLinkDiv);
 
 			// bind it
@@ -420,11 +436,15 @@ LiveCart.SpecFieldManager.prototype = {
 		}
 	},
 
+
+
+
+
 	/**
 	 * Programm should change language section if we have click on a link meaning different language. If we click current
 	 * language it will callapse (not the programme of course =)
 	 *
-	 * @var Event e Event
+	 * @param Event e Event
 	 *
 	 * @access private
 	 *
@@ -453,7 +473,7 @@ LiveCart.SpecFieldManager.prototype = {
 			    for(var j = 0; j < classes.length; j++)
 			    {
 			        var node = document.getElementsByClassName(classes[j] + "_link", this.nodes.parent)[0];
-			        if(node) Element.removeClassName(node, this.cssPrefix + "change_state_active")
+			        if(node) Element.removeClassName(node, this.cssPrefix + "step_translations_language_active")
 			    }
 			}
 			else
@@ -463,7 +483,7 @@ LiveCart.SpecFieldManager.prototype = {
 			    for(var j = 0; j < classes.length; j++)
 			    {
 			        var node = document.getElementsByClassName(classes[j] + "_link", this.nodes.parent)[0];
-			        if(node) Element.addClassName(node, this.cssPrefix + "change_state_active")
+			        if(node) Element.addClassName(node, this.cssPrefix + "step_translations_language_active")
 			    }
 			}
 		}
@@ -475,7 +495,7 @@ LiveCart.SpecFieldManager.prototype = {
 	 * we are calling for addField method to do the job. The only usefull thing we are doing here is
 	 * generating an id for new field
 	 *
-	 * @var Event e Event
+	 * @param Event e Event
 	 *
 	 * @access private
 	 *
@@ -499,7 +519,7 @@ LiveCart.SpecFieldManager.prototype = {
 	 * This one is easy. When we click on delete value from "Values" step we delete the value and it's
 	 * translation in "Translations" step
 	 *
-	 * @var Event e Event
+	 * @param Event e Event
 	 *
 	 * @access private
 	 *
@@ -533,7 +553,7 @@ LiveCart.SpecFieldManager.prototype = {
 	/**
 	 * This callback is executed when user change the value type
 	 *
-	 * @var Event e Event
+	 * @param Event e Event
 	 *
 	 * @access private
 	 *
@@ -564,7 +584,7 @@ LiveCart.SpecFieldManager.prototype = {
 	 * states are hidden and only current state shown or if the user was so stupid to click on current
 	 * state whe whole thing will crash (or the current step will collapse. I don't realy remember)
 	 *
-	 * @var Event e Event
+	 * @param Event e Event
 	 *
 	 * @access private
 	 *
@@ -619,7 +639,7 @@ LiveCart.SpecFieldManager.prototype = {
 	 * One:   |Einz      |   * I don't realy know how to write one in germat and also tooday i am to lazy to google for it :(
 	 *        ------------
 	 *
-	 * @var Event e Event
+	 * @param Event e Event
 	 *
 	 * @access private
 	 */
@@ -646,7 +666,7 @@ LiveCart.SpecFieldManager.prototype = {
 	/**
 	 * Making sure that user won't enter invalid number
 	 *
-	 * @var Event e Event
+	 * @param Event e Event
 	 *
 	 * @access private
 	 */
@@ -682,7 +702,7 @@ LiveCart.SpecFieldManager.prototype = {
 	 * on the top of the form. Handle is actuali a stripped version of spec field name with all spec
 	 * symbols changed to "_" (underscope)
 	 *
-	 * @var Event e Event
+	 * @param Event e Event
 	 *
 	 * @access private
 	 *
@@ -690,7 +710,7 @@ LiveCart.SpecFieldManager.prototype = {
 	generateHandleAndTitleAction: function(e)
 	{
 		// generate handle
-		var handle = this.nodes.title.value;
+		var handle = this.nodes.name.value;
 
 		handle = handle.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,""); // trim
 		handle = handle.replace(/[^a-zA-Z_\d ]/g, ""); // remove all illegal simbols
@@ -704,11 +724,11 @@ LiveCart.SpecFieldManager.prototype = {
 		{
 		    if(this.nodes.mainTitle.firstChild)
 		    {
-		        this.nodes.mainTitle.firstChild.nodeValue = this.nodes.title.value;
+		        this.nodes.mainTitle.firstChild.nodeValue = this.nodes.name.value;
 		    }
 		    else
 		    {
-		        this.nodes.mainTitle.appendChild(document.createTextNode(this.nodes.title.value));
+		        this.nodes.mainTitle.appendChild(document.createTextNode(this.nodes.name.value));
 		    }
 		}
 	},
@@ -717,8 +737,8 @@ LiveCart.SpecFieldManager.prototype = {
 	/**
 	 * Here we are adding new field to values list in "Values" step and "Translations" step.
 	 *
-	 * @var hash value Value of newly created field. The value is a hash array with value for every language {'en': "One", 'lt': "Vienas", 'de': "Einz"}
-	 * @var int id Id of a newly created field
+	 * @param hash value Value of newly created field. The value is a hash array with value for every language {'en': "One", 'lt': "Vienas", 'de': "Einz"}
+	 * @param int id Id of a newly created field
 	 *
 	 * @access private
 	 *
@@ -783,7 +803,7 @@ LiveCart.SpecFieldManager.prototype = {
     /**
      * This method is called when user click on cancel link. It resets all fields to its defaults and closes form
      *
-	 * @var Event e Event
+	 * @param Event e Event
 	 *
 	 * @access public
 	 *
@@ -812,11 +832,47 @@ LiveCart.SpecFieldManager.prototype = {
     },
 
 
+    /**
+     * Set feedback message near the field
+     *
+     * @param HTMLInputElement|HTMLSelectElement|HTMLTextareaElement field
+     * @param string value Feedback message
+     *
+     */
+	setFeedback: function(field, value)
+	{
+	    var feedback = document.getElementsByClassName('feedback', field.parentNode)[0];
+
+	    try
+	    {
+	       feedback.firstChild.nodeValue = value;
+	    }
+	    catch(e)
+	    {
+	        feedback.appendChild(document.createTextNode(value))
+	    }
+	},
+
+
+    /**
+     * Clears all feedback messages in current spec field
+     *
+     */
+	clearAllFeedBack: function()
+	{
+	    var feedback = document.getElementsByClassName('feedback', this.nodes.parent);
+
+	    for(var i = 0; i < feedback.length; i++)
+	    {
+	        feedback[i].firstChild.nodeValue = ' ';
+	    }
+	},
+
 
     /**
      * This method is called when user clicks on save button. It saves form values, and does i don't know what (i guess it should close the form)
      *
-	 * @var Event e Event
+	 * @param Event e Event
 	 *
 	 * @access public
 	 *
@@ -832,27 +888,105 @@ LiveCart.SpecFieldManager.prototype = {
 
 		Event.stop(e);
 
-		var form = this.nodes.parent.getElementsByTagName("form")[0];
+		// Toggle progress won't work on new form
+		try
+		{
+		    window.activeSpecFieldsList.toggleProgress(self.nodes.parent);
+		}
+		catch (e)
+		{
+		    jsTrace.send("Oh, well..")
+		}
 
         new Ajax.Request(
-            form.action,
+            this.nodes.form.action,
             {
-                method: form.method,
-                postBody: Form.serialize(form),
-                onComplete: function(param) { window.activeSpecFieldsList.toggleProgress(self.nodes.parent) }
+                method: this.nodes.form.method,
+                postBody: Form.serialize(this.nodes.form),
+                onComplete: function(param) { self.afterSaveAction(param.responseText) }
             }
         );
+    },
 
-        if(this.nodes.parent.tagName.toLowerCase() == 'li')
+
+    /**
+     * This action is executed after server response with possible errors in entered
+     * spec field fields
+     *
+     */
+    afterSaveAction: function(jsonResponseString)
+    {
+        jsTrace.send(jsonResponseString);
+
+        this.clearAllFeedBack();
+
+        try
         {
-            window.activeSpecFieldsList.toggleProgress(this.nodes.parent);
-            window.activeSpecFieldsList.toggleContainer(this.nodes.parent, 'edit');
+            var jsonResponse = eval("("+jsonResponseString+")");
+        }
+        catch(e)
+        {
+            jsTrace.debug(e);
+        }
+
+        jsTrace.send(jsonResponse);
+        if(jsonResponse.status == 'success')
+        {
+            Form.backup(this.nodes.form);
+
+            if(this.nodes.parent.tagName.toLowerCase() == 'li')
+            {
+                window.activeSpecFieldsList.toggleContainer(this.nodes.parent, 'edit');
+            }
+            else
+            {
+                this.hideNewSpecFieldAction();
+            }
         }
         else
         {
-            this.hideNewSpecFieldAction();
+            try
+            {
+                Form.backup(this.nodes.form);
+                Form.reset(this.nodes.form);
+                Form.restore(this.nodes.form);
+            }
+            catch(e)
+            {
+                jsTrace.debug(e);
+            }
+
+            if(jsonResponse.errors)
+            {
+                for(var fieldName in jsonResponse.errors)
+                {
+                    if(fieldName == 'values')
+                    {
+                        for(var valueId in jsonResponse.errors[fieldName])
+                        {
+                            this.setFeedback($(this.cssPrefix + "form_values_" + this.languageCodes[0] + "_" + valueId).getElementsByTagName("input")[0], jsonResponse.errors[fieldName][valueId]);
+                        }
+                    }
+                    else
+                    {
+                        this.setFeedback(this.nodes[fieldName], jsonResponse.errors[fieldName]);
+                    }
+                }
+            }
         }
+
+
+		// Toggle progress won't work on new form
+		try
+		{
+		    window.activeSpecFieldsList.toggleProgress(this.nodes.parent);
+		}
+		catch (e)
+		{
+		    jsTrace.send("Oh, well..")
+		}
     },
+
 
     /**
      * All Your Base Are Belong To Us! A mystery function.
@@ -917,7 +1051,7 @@ LiveCart.SpecFieldManager.prototype = {
      *
      * @see LiveCart.ActiveList
      *
-     * @var HTMLElement parent form node (it should have "create new entry" and an empty spec field form inside it)
+     * @param HTMLElement parent form node (it should have "create new entry" and an empty spec field form inside it)
      *
      * @static
      *
