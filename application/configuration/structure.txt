@@ -1,4 +1,0 @@
-Configuration directory structure:
-
-language  [Application interface translation to multiple languages]
-route	  [Routing rules]

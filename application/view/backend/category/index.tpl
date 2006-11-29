@@ -27,7 +27,8 @@
 	<div id="managerContainer" style="margin-left: 270px; height: 100%;">
 		<div id="tabContainer">
 			<ul id="tabList">
-				<li id="tabMainDetails" class="tab active"><a href="{link controller=backend.category action=form id=%id%}" onclick="alert('test');">Main Details</a></li>
+				<li id="tabMainDetails" class="tab active"><a href="{link controller=backend.category action=form id=%id%}">Products</a></li>
+				<li id="tabMainDetails" class="tab inactive"><a href="{link controller=backend.category action=form id=%id%}">Category Details</a></li>
 				<li id="tabFields" class="tab inactive"><a href="{link controller=backend.specField action=index id=%id%}">Fields</a></li>
 				<li id="tabFilters" class="tab inactive"><a href="{link controller=backend.filter action=index id=%id%}">Filters</a></li>
 				<li id="tabPermissions" class="tab inactive"><a href="{link controller=backend.permission id=%id% action=index}">Permissions</a></li>
