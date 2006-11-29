@@ -483,6 +483,7 @@ LiveCart.ActiveList.prototype = {
      */
     toggleProgress: function(li)
     {
+        jsTrace.send(li.progress.style.visibility);
         li.progress.style.visibility = (li.progress.style.visibility == 'visible') ? 'hidden' : 'visible';
     },
 
@@ -644,7 +645,7 @@ LiveCart.ActiveList.prototype = {
         switch(keyboard.getKey())
         {
             case keyboard.KEY_UP: // sort/navigate up
-                this.getPrevSibling(li).focus();
+//                this.getPrevSibling(li).focus();
 
                 if (keyboard.isShift())
                 {
@@ -657,7 +658,7 @@ LiveCart.ActiveList.prototype = {
             break;
 
             case keyboard.KEY_DOWN: // sort/navigate down
-                this.getNextSibling(li).focus();
+//                this.getNextSibling(li).focus();
 
                 if (keyboard.isShift())
                 {
@@ -669,7 +670,7 @@ LiveCart.ActiveList.prototype = {
             break;
 
             case keyboard.KEY_DEL: // delete
-                this.getPrevSibling(li).focus();
+//                this.getPrevSibling(li).focus();
                 if(this.icons['delete']) this.bindAction(li, 'delete');
             break;
 
@@ -696,7 +697,7 @@ LiveCart.ActiveList.prototype = {
         this.dragged = li;
 
         li.parentNode.insertBefore(this.dragged, beforeNode);
-        this.dragged.focus();
+//        this.dragged.focus();
 
         this.sortTimerStart = (new Date()).getTime();
         setTimeout(function(e)
