@@ -40,10 +40,12 @@ function langPassDisplaySettings(form)
 	form.show.value = nav.elements.namedItem('show').value;
 }
 
-LiveCart.LanguageIndex = Class.create();
-LiveCart.LanguageIndex.prototype = 
+Backend.LanguageIndex = Class.create();
+Backend.LanguageIndex.prototype = 
 {		
 	addUrl: false,
+
+	statusUrl: false,
 	
 	initialize: function()
 	{
@@ -92,14 +94,32 @@ LiveCart.LanguageIndex.prototype =
 		new Effect.Highlight(item.id, {startcolor:'#FBFF85', endcolor:'#FFFFFF'})
 	},
 	
+	setEnabled: function(langId, status) 
+	{
+		url = this.statusUrl + langId + "?status=" + status;
+
+		img = document.createElement('img');
+		img.src = "image/backend/list/indicator.gif";
+				
+		checkBox = document.getElementById('languageList_enable_' + langId);
+		checkBox.parentNode.replaceChild(img, checkBox);
+		
+		var updater = new Ajax.Updater('languageList_container_' + langId, url);
+	},
+		
 	setAddUrl: function(url)
 	{
 	  	this.addUrl = url;
+	},
+
+	setStatusUrl: function(url)
+	{
+	  	this.statusUrl = url;
 	}
 }
 
-LiveCart.LanguageEdit = Class.create();
-LiveCart.LanguageEdit.prototype = 
+Backend.LanguageEdit = Class.create();
+Backend.LanguageEdit.prototype = 
 {		
 	templ: false,
 	

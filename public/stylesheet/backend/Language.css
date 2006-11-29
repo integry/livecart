@@ -23,6 +23,10 @@ label {
   	display: none;
 }
 
+.activeList_icons {
+	width: 20px;  
+}
+
 /* edit */
 
 #langNotFound {
