@@ -1,5 +1,5 @@
 /**
- * LiveCart.SpecFieldManager
+ * Backend.SpecField
  *
  * Script for managing spec field form
  *
@@ -9,7 +9,7 @@
  * To use this class you should simply pass specFIelds values to it like so
  * @example
  * <code>
- *     new LiveCart.SpecFieldManager({
+ *     new Backend.SpecField({
  *        "ID":"new",
  *        "name":"a:2:{s:2:\"en\";s:11:\"Electronics\";s:2:\"lt\";s:11:\"Elektronika\";}",
  *        "description":[],
@@ -29,25 +29,25 @@
  *
  * @example
  * <code>
- *     LiveCart.SpecFieldManager.prototype.languages = {"en":"English","lt":"Lithuanian","de":"German"};
- *     LiveCart.SpecFieldManager.prototype.types = createTypesOptions({"2":{"1":"Selector","2":"Numbers"},"1":{"3":"Text","4":"Word processer","5":"selector","6":"Date"}});
- *     LiveCart.SpecFieldManager.prototype.messages = {"deleteField":"delete field"};
- *     LiveCart.SpecFieldManager.prototype.selectorValueTypes = [1,5];
- *     LiveCart.SpecFieldManager.prototype.doNotTranslateTheseValueTypes = [2];
- *     LiveCart.SpecFieldManager.prototype.countNewValues = 0;
+ *     Backend.SpecFieldManager.prototype.languages = {"en":"English","lt":"Lithuanian","de":"German"};
+ *     Backend.SpecFieldManager.prototype.types = createTypesOptions({"2":{"1":"Selector","2":"Numbers"},"1":{"3":"Text","4":"Word processer","5":"selector","6":"Date"}});
+ *     Backend.SpecFieldManager.prototype.messages = {"deleteField":"delete field"};
+ *     Backend.SpecFieldManager.prototype.selectorValueTypes = [1,5];
+ *     Backend.SpecFieldManager.prototype.doNotTranslateTheseValueTypes = [2];
+ *     Backend.SpecFieldManager.prototype.countNewValues = 0;
  * </code>
  *
  * @version 1.0
  * @author Sergej Andrejev
  */
 
-if (LiveCart == undefined)
+if (Backend == undefined)
 {
-	var LiveCart = {}
+	var Backend = {}
 }
 
-LiveCart.SpecFieldManager = Class.create();
-LiveCart.SpecFieldManager.prototype = {
+Backend.SpecFieldManager = Class.create();
+Backend.SpecFieldManager.prototype = {
 	cssPrefix: "specField_",
 
     /**
@@ -248,8 +248,7 @@ LiveCart.SpecFieldManager.prototype = {
             }
 		});
 
-		require_once('backend/activeList.js');
-	    new LiveCart.ActiveList(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0], {
+	    new ActiveList(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0], {
 	        beforeSort: function(li, order){ return 'sort.php?'+order},
 	        afterSort: function(li, response){ },
 	        beforeEdit: function(li){ },
@@ -820,7 +819,7 @@ LiveCart.SpecFieldManager.prototype = {
 
 		// Use Active list toggleContainer() method if this specField is inside Active list
 		// Note that if it is inside a list we are showing and hidding form with the same action,
-		// butt =] when dealing with new form showing form action is handled by LiveCart.SpecFieldManager::createNewAction()
+		// butt =] when dealing with new form showing form action is handled by Backend.SpecField::createNewAction()
         if(this.nodes.parent.tagName.toLowerCase() == 'li')
         {
             window.activeSpecFieldsList.toggleContainer(this.nodes.parent, 'edit');
@@ -1047,9 +1046,9 @@ LiveCart.SpecFieldManager.prototype = {
 
     /**
      * This method unfolds "Create new Spec Field entry" form. Items from existing spec fields list are unfolded using
-     * LiveCart.ActiveList methods
+     * ActiveList methods
      *
-     * @see LiveCart.ActiveList
+     * @see ActiveList
      *
      * @param HTMLElement parent form node (it should have "create new entry" and an empty spec field form inside it)
      *

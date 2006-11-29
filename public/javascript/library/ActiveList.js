@@ -1,5 +1,5 @@
 /**
- * LiveCart.ActiveList
+ * ActiveList
  *
  * Sortable list
  *
@@ -14,7 +14,7 @@
  * </ul>
  *
  * <script type="text/javascript">
- *     new LiveCart.ActiveList('specField_items_list', {
+ *     new ActiveList('specField_items_list', {
  *         beforeEdit:     function(li)
  *         {
  *             if(this.isContainerEmpty()) return 'edit.php?id='+this.getRecordId(li)
@@ -60,8 +60,8 @@ if (LiveCart == undefined)
     var LiveCart = {}
 }
 
-LiveCart.ActiveList = Class.create();
-LiveCart.ActiveList.prototype = {
+ActiveList = Class.create();
+ActiveList.prototype = {
     /**
      * Item icons which will apear in top left corner on each item of the list
      *
