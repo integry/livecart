@@ -3,7 +3,7 @@ if (Form == undefined)
 	var Form = {}
 }
 
-Form.Backup = {
+Form.State = {
     backups: [],
     counter: 0,
 
@@ -57,11 +57,18 @@ Form.Backup = {
             var elements = Form.getElements(form);
             for(var i = 0; i < elements.length; i++)
             {
-                var value = this.backups[form.backupId][elements[i].name][0];
+                if(elements[i].name == '') continue;
 
-                var test2 = elements[i].name;
-                var test0 = this.backups[form.backupId][elements[i].name][0];
-                var test1 = value;
+                jsTrace.send(elements[i].name);
+                jsTrace.send("--");
+
+
+
+                var test1 = elements[i].name;
+                var test2 = this.backups[form.backupId][elements[i].name][0];
+
+
+                var value = this.backups[form.backupId][elements[i].name][0];
 
                 if(value)
                 {
@@ -84,4 +91,4 @@ Form.Backup = {
     }
 }
 
-Object.extend(Form, Form.Backup);
+Object.extend(Form, Form.State);
