@@ -1,16 +1,15 @@
 {includeJs file=library/scriptaculous/scriptaculous.js}
-{includeJs file=backend/keyboard.js}
-{includeJs file=library/livecart.js}
-{includeJs file=backend/activeList.js}
-{includeJs file=backend/specFieldManager.js}
 {includeJs file=library/trace/jsTrace.js}
 {includeJs file=library/trace/dom-drag.js}
-{includeJs file=backend/formBackup.js}
+{includeJs file=library/KeyboardEvent.js}
+{includeJs file=library/livecart.js}
+{includeJs file=library/ActiveList.js}
+{includeJs file=library/form/State.js}
 
+{includeJs file=backend/SpecField.js}
 
-{includeCss file="form.css"}D
-{includeCss file="activeList.css"}
-{includeCss file="specField.css"}
+{includeCss file="library/ActiveList.css"}
+{includeCss file="backend/SpecField.css"}
 
 {literal}
 <script type="text/javascript">
@@ -24,9 +23,9 @@
     {/literal}
     {foreach from=$configuration item="configItem" key="configKey"}
         {if $configKey == 'types'}
-            LiveCart.SpecFieldManager.prototype.{$configKey} = LiveCart.SpecFieldManager.prototype.createTypesOptions({json array=$configItem});
+            Backend.SpecField.prototype.{$configKey} = Backend.SpecField.prototype.createTypesOptions({json array=$configItem});
         {else}
-            LiveCart.SpecFieldManager.prototype.{$configKey} = {json array=$configItem};
+            Backend.SpecField.prototype.{$configKey} = {json array=$configItem};
         {/if}
     {/foreach}
     {literal}
@@ -127,7 +126,7 @@
 
 {literal}
 <script type="text/javascript">
-    $("specField_item_new_show").onclick = function(e) { LiveCart.SpecFieldManager.prototype.createNewAction(e) }
-    window.activeSpecFieldsList = new LiveCart.ActiveList('specField_items_list', specFieldListCallbacks);
+    $("specField_item_new_show").onclick = function(e) { Backend.SpecField.prototype.createNewAction(e) }
+    window.activeSpecFieldsList = new ActiveList('specField_items_list', specFieldListCallbacks);
 </script>
 {/literal}

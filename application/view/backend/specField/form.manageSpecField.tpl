@@ -125,4 +125,4 @@
 	</fieldset>
 </form>
 
-<script type="text/javascript">new LiveCart.SpecFieldManager({json array=$specFieldsList});</script>
+<script type="text/javascript">new Backend.SpecField({json array=$specFieldsList});</script>
