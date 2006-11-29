@@ -1,4 +1,10 @@
-startList = function() {
+function showHelp(url)
+{
+  	window.open(url, 'helpWin', 'width=400, height=700, resizable, scrollbars');
+  	return false;
+}
+
+function initializeNavigationMenu() {
 	if (document.all&&document.getElementById) {
 		navRoot = document.getElementById("nav");
 		for (i=0; i<navRoot.childNodes.length; i++) {

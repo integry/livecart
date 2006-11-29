@@ -21,14 +21,14 @@
 	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
 
 	<!-- JavaScript includes -->
-	{includeJs file=backend/menu/menu.js}
 	{includeJs file=library/KeyboardEvent.js}
-	{includeJs file=json.js}
-
+	{includeJs file=library/json.js}
+	{includeJs file=backend/Backend.js}
+	
 	{$JAVASCRIPT}
 
 	<script type="text/javascript">
-		window.onload = startList;
+		window.onload = initializeNavigationMenu;
 	</script>
 </head>
 <body>

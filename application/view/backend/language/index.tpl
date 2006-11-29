@@ -1,11 +1,10 @@
 {loadScriptaculous}
-{includeJs file=backend/activeList.js}
-{includeJs file=backend/keyboard.js}
+{includeJs file=library/ActiveList.js}
+{includeJs file=library/KeyboardEvent.js}
 {includeJs file=backend/Language.js}
 {includeCss file=backend/Language.css}
-{pageTitle}{t _admin_languages} 
-<a href=""><img src="image/silk/help.png" onClick="showHelp('{link controller=backend.help action=view id=language.index}'); return false;" /></a>
-{/pageTitle}
+{includeCss file=library/ActiveList.css}
+{pageTitle help="language.index"}{t _admin_languages}{/pageTitle}
 
 {include file="layout/header.tpl"}
 
@@ -17,18 +16,6 @@
 
 {literal}
 <script language="javascript">	
-
-	function showHelp(url)
-	{
-	  	window.open(url, 'helpWin', 'width=400, height=700, resizable, scrollbars');
-	  	return false;
-		help = document.getElementById('help');
-	  	help.style.position = 'absolute';
-	  	help.style.left = 100;
-	  	help.style.top = 100;
-	  	help.style.zIndex = 10000;
-	  	help.style.display = 'block';
-	}
 
 	function setEnabled(langId, status) 
 	{
@@ -67,15 +54,6 @@
 
 {literal}
 <style>
-.activeList_icons {
-  	float: left;  	
-  	vertical-align: top;
-  	display: block;
-}
-.activeList li {
-  	clear: both;
-  	list-style: none;
-}
 
 .slideForm {
 	padding: 10px;

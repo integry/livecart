@@ -2,6 +2,8 @@
 {
     float: left;
     width: 80px;
+  	vertical-align: top;
+  	display: block;
 }
 
 .activeList_icons_container
@@ -22,4 +24,5 @@
 .activeList li
 {
     clear: both;
+  	list-style: none;
 }
