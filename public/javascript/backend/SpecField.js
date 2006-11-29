@@ -29,12 +29,12 @@
  *
  * @example
  * <code>
- *     Backend.SpecFieldManager.prototype.languages = {"en":"English","lt":"Lithuanian","de":"German"};
- *     Backend.SpecFieldManager.prototype.types = createTypesOptions({"2":{"1":"Selector","2":"Numbers"},"1":{"3":"Text","4":"Word processer","5":"selector","6":"Date"}});
- *     Backend.SpecFieldManager.prototype.messages = {"deleteField":"delete field"};
- *     Backend.SpecFieldManager.prototype.selectorValueTypes = [1,5];
- *     Backend.SpecFieldManager.prototype.doNotTranslateTheseValueTypes = [2];
- *     Backend.SpecFieldManager.prototype.countNewValues = 0;
+ *     Backend.SpecField.prototype.languages = {"en":"English","lt":"Lithuanian","de":"German"};
+ *     Backend.SpecField.prototype.types = createTypesOptions({"2":{"1":"Selector","2":"Numbers"},"1":{"3":"Text","4":"Word processer","5":"selector","6":"Date"}});
+ *     Backend.SpecField.prototype.messages = {"deleteField":"delete field"};
+ *     Backend.SpecField.prototype.selectorValueTypes = [1,5];
+ *     Backend.SpecField.prototype.doNotTranslateTheseValueTypes = [2];
+ *     Backend.SpecField.prototype.countNewValues = 0;
  * </code>
  *
  * @version 1.0
@@ -46,8 +46,8 @@ if (Backend == undefined)
 	var Backend = {}
 }
 
-Backend.SpecFieldManager = Class.create();
-Backend.SpecFieldManager.prototype = {
+Backend.SpecField = Class.create();
+Backend.SpecField.prototype = {
 	cssPrefix: "specField_",
 
     /**
