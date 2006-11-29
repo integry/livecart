@@ -1,9 +1,9 @@
-if (LiveCart == undefined)
+if (Backend == undefined)
 {
-	var LiveCart = {}
+	var Backend = {}
 }
 
-LiveCart.CategoryManager = {
+Backend.CategoryManager = {
 
 	tabControll: null,
 	activeCategoryId: null,
@@ -21,38 +21,20 @@ LiveCart.CategoryManager = {
 		this.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
 		this.treeBrowser.setOnClickHandler(this.activateCategory);
 		this.treeBrowser.enableDragAndDrop(1);
-
-		/*
-		this.treeBrowser.insertNewItem(0,1,"Electronics",0,0,0,0, "CHILD");
-		this.treeBrowser.insertNewItem(0,2,"Computers",0,0,0,0, "CHILD");
-		this.treeBrowser.insertNewItem(0,3,"Cars & Motorsports",0,0,0,0, "CHILD");
-		this.treeBrowser.insertNewItem(0,4,"Cameras & Photo",0,0,0,0, "CHILD");
-
-		this.treeBrowser.insertNewItem(1,10,"Camcorders",0,0,0,0, "CHILD");
-		this.treeBrowser.insertNewItem(1,11,"Televisions",0,0,0,0, "CHILD");
-		this.treeBrowser.insertNewItem(1,12,"DVD",0,0,0,0, "SELECT");
-		this.treeBrowser.insertNewItem(1,12,"MP3",0,0,0,0, "CHILD");
-		this.treeBrowser.insertNewItem(1,12,"GPS",0,0,0,0, "CHILD");
-
-		this.treeBrowser.insertNewItem(2,21,"Laptops",0,0,0,0, "CHILD");
-		this.treeBrowser.insertNewItem(2,22,"Desktops",0,0,0,0, "CHILD");
-		this.treeBrowser.insertNewItem(2,23,"Software",0,0,0,0, "CHILD");
-		this.treeBrowser.insertNewItem(2,24,"PDAs",0,0,0,0, "CHILD");
-		*/
 	},
 
 	activateCategory: function(categoryNodeId)
 	{
 
-		Element.update('activeCategoryPath', LiveCart.CategoryManager.getPath(categoryNodeId));
-		var tab = LiveCart.CategoryManager.tabControll.getActiveTab();
+		Element.update('activeCategoryPath', Backend.CategoryManager.getPath(categoryNodeId));
+		var tab = Backend.CategoryManager.tabControll.getActiveTab();
 		if (tab.urlPattern == undefined)
 		{
 			tab.urlPattern = new String(tab.url);
 		}
 		tab.url = tab.urlPattern.replace('%id%', categoryNodeId);
 		alert(tab.url);
-		LiveCart.CategoryManager.tabControll.reloadActiveTab();
+		Backend.CategoryManager.tabControll.reloadActiveTab();
 	},
 
 	initTabs: function()
@@ -67,7 +49,7 @@ LiveCart.CategoryManager = {
 		var nodeStr = '';
 		do
 		{
-			nodeStr = LiveCart.CategoryManager.treeBrowser.getItemText(parentId)
+			nodeStr = Backend.CategoryManager.treeBrowser.getItemText(parentId)
 			path.push(nodeStr);
 			parentId = this.treeBrowser.getParentId(parentId)
 		}

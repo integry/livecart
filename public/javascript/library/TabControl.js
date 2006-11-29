@@ -1,17 +1,17 @@
-var TabControll = Class.create();
+var TabControl = Class.create();
 
-TabControll.prototype = {
-	
+TabControl.prototype = {
+
 	activeTab: null,
 	indicatorImageName: null,
-	
-	initialize: function(tabContainerName, sectionContainerName, indicatorImageName) 
+
+	initialize: function(tabContainerName, sectionContainerName, indicatorImageName)
 	{
 		if (indicatorImageName != undefined)
 		{
 			this.indicatorImageName = indicatorImageName;
 		}
-		
+
 		var tabList = document.getElementsByClassName("tab");
 		for (var i = 0; i < tabList.length; i++)
 		{
@@ -29,7 +29,7 @@ TabControll.prototype = {
 				new Insertion.Before(aElementList[0], '<img src="' + this.indicatorImageName + '" class="tabIndicator" id="' + tabList[i].id + 'Indicator" alt="Tab indicator" style="display:none"/> ');
 				Element.remove(aElementList[0]);
 			}
-			
+
 			if (tabList[i].id == '')
 			{
 				tabList[i].id = 'tab' + i;
@@ -46,8 +46,8 @@ TabControll.prototype = {
 		}
 	},
 
-	handleTabMouseOver: function(evt) 
-	{	
+	handleTabMouseOver: function(evt)
+	{
 		if (this.activeTab != evt.target)
 		{
 			Element.removeClassName(evt.target, 'inactive');
@@ -55,7 +55,7 @@ TabControll.prototype = {
 		}
 	},
 
-	handleTabMouseOut: function(evt) 
+	handleTabMouseOut: function(evt)
 	{
 		if (this.activeTab != evt.target)
 		{
@@ -63,42 +63,42 @@ TabControll.prototype = {
 			Element.addClassName(evt.target, 'inactive');
 		}
 	},
-	
-	handleTabClick: function(evt) 
+
+	handleTabClick: function(evt)
 	{
 		var targetTab = evt.target;
 		this.activateTab(targetTab);
 	},
-	
+
 	activateTab: function(targetTab)
 	{
-		if (this.activeTab == targetTab && !Element.empty(targetTab.id + 'Content')) 
+		if (this.activeTab == targetTab && !Element.empty(targetTab.id + 'Content'))
 		{
 			return;
 		}
-		
+
 		if (this.activeTab != null)
 		{
 			Element.removeClassName(this.activeTab, 'active');
 			Element.addClassName(this.activeTab, 'inactive');
 			Element.hide(this.activeTab.id + 'Content');
-		}	
+		}
 		this.activeTab = targetTab;
 		Element.removeClassName(this.activeTab, 'hover');
-		Element.addClassName(this.activeTab, 'active');			
+		Element.addClassName(this.activeTab, 'active');
 		Element.show(this.activeTab.id + 'Content');
-			
+
 		var indicatorId = this.activeTab.id + 'Indicator';
 		var contentId = this.activeTab.id + 'Content'
-		
+
 		if (Element.empty(contentId))
 		{
 			new LiveCart.AjaxUpdater(targetTab.url, contentId, indicatorId);
 		}
 	},
-	
+
 	/**
-	 * Reset content related to a given tab. When tab will be activated content must 
+	 * Reset content related to a given tab. When tab will be activated content must
 	 * be resent
 	 */
 	resetContent: function(tabObj)
@@ -106,18 +106,18 @@ TabControll.prototype = {
 		var contentId = tabObj.id + 'Content';
 		$(contentId).innerHTML = '';
 	},
-	
-	reloadActiveTab: function() 
+
+	reloadActiveTab: function()
 	{
 		this.resetContent(this.activeTab);
 		this.activateTab(this.activeTab);
 	},
-	
+
 	getActiveTab: function()
 	{
 		return this.activeTab;
 	},
-	
+
 	setTabUrl: function(tabId, url)
 	{
 		$('tabId').url = url;
