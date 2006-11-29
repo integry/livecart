@@ -2,14 +2,11 @@
 {includeJs file="library/livecart.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
-{includeJs file="backend/categoryManager.js"}
-{includeJs file="library/tabControll.js"}
+{includeJs file="backend/Category.js"}
+{includeJs file="library/TabControl.js"}
 
-{includeCss file="base.css"}
-{includeCss file="stat.css"}
-{includeCss file="form.css"}
-{includeCss file="tabControll.css"}
-{includeCss file="backend/dhtmlxtree/dhtmlXTree.css"}
+{includeCss file="library/TabControl.css"}
+{includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {include file="layout/header.tpl"}
 
 {pageTitle}Category manager. Selected: <span id="activeCategoryPath" style="font-weight: normal">Electronics > New Category</span>{/pageTitle}

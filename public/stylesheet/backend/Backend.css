@@ -9,7 +9,7 @@ body {
 	color: #333;
 	margin: 0px;
 	background-color:#E6E6E6;
-	background-image:url(../image/backend/layout/workarea_shade_vertical_wide.jpg);
+	background-image:url(../../image/backend/layout/workarea_shade_vertical_wide.jpg);
 	background-position: right 200px;
 	background-repeat: repeat-y;
 }
@@ -157,7 +157,7 @@ html>body #minHeight{ /*safari wrapper */
 #topBackground {
 	position: absolute;
 	top: 13px;
-	background-image: url(../image/backend/layout/top_bg.jpg);
+	background-image: url(../../image/backend/layout/top_bg.jpg);
 	width: 100%;
 	background-repeat: repeat-x;
 	height: 81px;
@@ -165,7 +165,7 @@ html>body #minHeight{ /*safari wrapper */
 #topBackgroundLeft {
   	position: absolute;
 	top: 0px;
-	background-image:url(../image/backend/layout/top_bg_left.jpg);
+	background-image:url(../../image/backend/layout/top_bg_left.jpg);
 	width: 420px;
 	height: 81px;
 	background-repeat: no-repeat;
@@ -231,10 +231,10 @@ html>body #minHeight{ /*safari wrapper */
 
 /* Navigation menu */
 #navContainer {
-	position: absolute; 
-	top: 0; 
-	left: 0; 
-	width: 100%; 
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
 	z-index: 1000;
 }
 
@@ -244,7 +244,7 @@ html>body #minHeight{ /*safari wrapper */
 
 #navContainer table td {
   	vertical-align: bottom;
-	padding-left: 70px; 
+	padding-left: 70px;
 }
 
 #nav li ul, #nav { /* all lists */
@@ -299,39 +299,39 @@ html>body #minHeight{ /*safari wrapper */
 
 #nav li div {
 	display: table;
-  	background-image: url(../image/backend/menu/menu_item_middle.jpg);
+  	background-image: url(../../image/backend/menu/menu_item_middle.jpg);
 	background-repeat: repeat-x;
 	background-position: right 0px;
 }
 
 #nav li div div {
 	display: table;
-  	background-image: url(../image/backend/menu/menu_item_right.gif); 
+  	background-image: url(../../image/backend/menu/menu_item_right.gif);
   	background-repeat: no-repeat;
 	background-position: right 0px;
 }
 
 #nav li div div div {
-  	background-image: url(../image/backend/menu/menu_item_left.gif);
+  	background-image: url(../../image/backend/menu/menu_item_left.gif);
   	background-repeat: no-repeat;
 	background-position: 0px 0px;
 	text-align: center;
-	padding: 5px; 
+	padding: 5px;
 	padding-left: 10px;
 	padding-right: 10px;
 	display: table-cell;
 }
 
 #navSelected div {
-  	background-image: url(../image/backend/menu/menu_item_middle_active.gif) !important;
+  	background-image: url(../../image/backend/menu/menu_item_middle_active.gif) !important;
 }
 
 #navSelected div div {
-  	background-image: url(../image/backend/menu/menu_item_right_active.gif) !important;
+  	background-image: url(../../image/backend/menu/menu_item_right_active.gif) !important;
 }
 
 #navSelected div div div {
-  	background-image: url(../image/backend/menu/menu_item_left_active.gif) !important;
+  	background-image: url(../../image/backend/menu/menu_item_left_active.gif) !important;
 }
 
 #navSelected div a {
@@ -342,7 +342,7 @@ html>body #minHeight{ /*safari wrapper */
   	margin-top: 5px;
   	left: 10px;
   	border: 1px solid #999999;
-  	background-image: url(../image/backend/menu/menu_commands_bg.jpg);
+  	background-image: url(../../image/backend/menu/menu_commands_bg.jpg);
   	background-position: bottom left;
   	background-repeat: repeat-x;
   	background-color: #CDD9EE;
@@ -385,10 +385,10 @@ html>body #minHeight{ /*safari wrapper */
 }
 #footerLeft {
   	width: 834px;
-	background-image:url(../image/backend/layout/footer.png);
+	background-image:url(../../image/backend/layout/footer.png);
 }
 #footerStretch {
-  	background-image:url(../image/backend/layout/footer_stretch.png);
+  	background-image:url(../../image/backend/layout/footer_stretch.png);
 }
 
 /* Language switch menu */
@@ -411,7 +411,7 @@ html>body #minHeight{ /*safari wrapper */
 	padding: 5px;
 	text-align: left;
   	background-color: #CDD9EE;
-  	background-image: url(../image/backend/menu/menu_commands_bg.jpg);
+  	background-image: url(../../image/backend/menu/menu_commands_bg.jpg);
   	background-position: bottom left;
   	background-repeat: repeat-x;
   	font-size: larger;
@@ -444,7 +444,7 @@ html>body #minHeight{ /*safari wrapper */
 }
 #workareaBottomShade {
   	width: 100%;
-	background-image:url(../image/backend/layout/workarea_shade_horizontal.jpg);
+	background-image:url(../../image/backend/layout/workarea_shade_horizontal.jpg);
 	background-repeat: repeat-x;
 }
 #workareaShadeCorner {
@@ -525,7 +525,7 @@ p .feedback, p .feedback_textarea, form fieldset.group .feedback
     position: absolute;
     right: 0px;
     padding-left: 20px;
-    background: url(../image/silk/error.png) no-repeat left top;
+    background: url(../../image/silk/error.png) no-repeat left top;
 }
 
 p .feedback, form fieldset.group .feedback
