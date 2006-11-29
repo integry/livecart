@@ -23,11 +23,29 @@ class HelpController extends StoreManagementController
 	  	
 		$lang = 'en';		  	  	  	
 		  	  	  	
+		$path = explode('.', $id);
+		if (count($path) == 1)
+		{
+		 	$path[] = $path[0];
+		}
+		  	  	  	
 	  	// get help template file
-	  	$helpTemplate = 'backend/help/' . $lang . '/' . str_replace('.', '/', $id) . '.tpl';
+	  	$helpTemplate = 'backend/help/' . $lang . '/' . implode('/', $path) . '.tpl';
 	  	
+	  	// get breadcrumb path
+	  	$currentPath = ClassLoader::getRealPath('application.view') . '/backend/help/' . $lang . '/';
+	  	$breadCrumb = array();
+		$helpId = '';
+		foreach ($path as $dir)
+	  	{
+			$breadCrumb[$helpId] = file_get_contents($currentPath . 'path.txt');
+			$helpId .= ('' != $helpId ? '.' : '') . $dir;
+			$currentPath .= $dir . '/';
+		}
+	  	  	
 	  	$response = new ActionResponse();
 	  	$response->setValue('helpTemplate', $helpTemplate);
+	  	$response->setValue('breadCrumb', $breadCrumb);
 	  	return $response;
 	}
   

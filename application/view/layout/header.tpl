@@ -9,7 +9,7 @@
 	<base href="{$BASE_URL}" />
 
 	<!-- Css includes -->
-	{includeCss file=backend/Backend.css}
+	<link href="stylesheet/backend/Backend.css" media="screen" rel="Stylesheet" type="text/css"/>
 	{includeCss file="backend/stat.css"}
 	{$STYLESHEET}
 	{literal}
@@ -19,11 +19,11 @@
 	{/literal}
 
 	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
-
+	<script type="text/javascript" src="javascript/backend/Backend.js"></script>
+	
 	<!-- JavaScript includes -->
 	{includeJs file=library/KeyboardEvent.js}
 	{includeJs file=library/json.js}
-	{includeJs file=backend/Backend.js}
 	
 	{$JAVASCRIPT}
 
@@ -34,15 +34,6 @@
 <body>
 
 <div id="log" style="position: absolute; top: 0; left: 0; z-index: 10000; background-color: white;"></div>
-{literal}
-<script>
-	function addlog(info)
-	{
-		document.getElementById('log').innerHTML += info + '<br />';
-	}
-</script>
-{/literal}
-
 
 <div id="minHeight"></div>
 <div id="outer" style="">

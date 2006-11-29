@@ -2,48 +2,11 @@
 {includeJs file=library/ActiveList.js}
 {includeJs file=library/KeyboardEvent.js}
 {includeJs file=backend/Language.js}
-{includeCss file=backend/Language.css}
 {includeCss file=library/ActiveList.css}
-{pageTitle help="language.index"}{t _admin_languages}{/pageTitle}
+{includeCss file=backend/Language.css}
+{pageTitle help="language"}{t _admin_languages}{/pageTitle}
 
 {include file="layout/header.tpl"}
-
-<fieldset id="help" class="inlineHelp" style="display: none;">
-	<legend>{t _help_index_title}</legend>
-	{translate|nl2br text="_help_index"}
-	<Br><Br><br>
-</fieldset>
-
-{literal}
-<script language="javascript">	
-
-	function setEnabled(langId, status) 
-	{
-		url = {/literal}"{link controller=backend.language action=setEnabled}/" + langId + "?status=" + status;{literal}  
-
-		img = document.createElement('img');
-		img.src = "image/backend/list/indicator.gif";
-				
-		checkBox = document.getElementById('languageList_enable_' + langId);
-		checkBox.parentNode.replaceChild(img, checkBox);
-		
-		var updater = new Ajax.Updater('languageList_container_' + langId, url);
-	}
-	
-	function slideForm(id, menuId)
-	{
-		Effect.Appear(id, {duration: 0.15});	  	
-		document.getElementById(menuId).style.display = 'none';
-		setTimeout('document.getElementById("' +  id + '").focus()', 100);
-	}
-
-	function restoreMenu(blockId, menuId)
-	{
-		Effect.Fade(blockId, {duration: 0.15});	  	
-		document.getElementById(menuId).style.display = 'block'; 	
-	}
-</script>
-{/literal}
 
 {pageMenu id=pageMenu}
 	{menuItem}
@@ -52,29 +15,16 @@
  	{/menuItem}
 {/pageMenu}
 
-{literal}
-<style>
-
-.slideForm {
-	padding: 10px;
-	background-color: #E6E6E6;	  
-}
-.accessKey {
-  	color: red;
-  	border-bottom: 1px solid red;
-}
-</style>
-{/literal}
-
 <script type="text/javascript">
-	var lng = new LiveCart.LanguageIndex();	
+	var lng = new Backend.LanguageIndex();	
 	lng.setAddUrl('{link controller=backend.language action=add}');
+	lng.setStatusUrl("{link controller=backend.language action=setEnabled}/");
 </script>
 
-<div id="addLang" class="slideForm" style="display:none;" onkeydown="{literal}if (getPressedKey(event) == KEY_ESC) {restoreMenu('addLang', 'pageMenu');} {/literal} return true;" onFocus="document.getElementById('addLang-sel').focus();" tabIndex=1>
+<div id="addLang" class="slideForm" style="display:none;"onFocus="document.getElementById('addLang-sel').focus();">
 	<div>	
 		<form onSubmit="lng.add(this.getElementsByTagName('select')[0].value); return false;" action="">
-			<select name="new_language" id="addLang-sel" style="width: 200px" tabIndex=3 onKeyDown="{literal}if (getPressedKey(event) == KEY_ENTER) {this.form.submit();} {/literal} return true;">
+			<select name="new_language" id="addLang-sel" style="width: 200px" tabIndex=3 onKeyDown="{literal}key = new KeyboardEvent(event); if (key.getKey() == key.KEY_ENTER) {this.form.submit();} {/literal} return false;">
 			   {html_options options=$languages_select}
 			</select>
 			<img src="image/indicator.gif" id="addLangFeedback">
@@ -93,7 +43,6 @@
 .listSortHover {background-color: #DDDDDD;}
 </style>
 {/literal}
-
 
 <ul id="languageList" class="activeList_add_delete">
 {foreach from=$languagesList item=item}

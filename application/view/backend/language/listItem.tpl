@@ -3,7 +3,7 @@
 {/if}
 
 	<div id="languageList_container_{$item.ID}">
-		<input type="checkbox" id="languageList_enable_{$item.ID}" {if $item.isEnabled}checked{/if} {if $item.isDefault}disabled{/if} onclick="setEnabled('{$item.ID}', 1 - {$item.isEnabled});" />
+		<input type="checkbox" id="languageList_enable_{$item.ID}" {if $item.isEnabled}checked{/if} {if $item.isDefault}disabled{/if} onclick="lng.setEnabled('{$item.ID}', 1 - {$item.isEnabled});" />
 	
 		<img src="image/localeflag/{$item.ID}.png" />
 	

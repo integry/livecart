@@ -1,4 +1,4 @@
-{pageTitle}{translate text=_language_definitons} (<img src="image/localeflag/{$id}.png" /> {$edit_language}){/pageTitle}
+{pageTitle help="language.edit"}{translate text=_language_definitons} (<img src="image/localeflag/{$id}.png" /> {$edit_language}){/pageTitle}
 
 {includeJs file=library/json.js}
 {includeJs file=backend/Language.js}
@@ -15,14 +15,9 @@
 </script>
 {/literal}
 
-<fieldset class="inlineHelp">
-	<legend>{t _editing_translations}</legend>
-	{translate|nl2br text="_help"}
-</fieldset>
-
 <fieldset class="menuFieldSet">
 	<legend>{t _translation_filter}</legend>
-	<form id="navLang" method="post" style="margin-bottom: 10px;" action="{link controller=backend.language action=edit id=$id}">
+	<form id="navLang" method="post" style="margin-bottom: 10px;" action="{link controller=backend.language action=edit id=$id}" class="">
 	<table>
 		<tr>
 			<td>
@@ -91,7 +86,7 @@
 
 	{literal}
 	<script type="text/javascript">
-		var langEdit = new LiveCart.LanguageEdit(translations, english, document.getElementById('translations'));
+		var langEdit = new Backend.LanguageEdit(translations, english, document.getElementById('translations'));
 		langEdit.preFilter();
 	</script>
 	{/literal}
