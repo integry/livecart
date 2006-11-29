@@ -13,36 +13,14 @@ class SpecFieldController extends StoreManagementController
 {
     private $specFieldLocalesArray = array('en', 'lt', 'de');
 
-    public function index()
+    /**
+     * Types:
+     * 1 - numbers
+     * 2 - text
+     */
+    private function getSpecFieldConfig()
     {
-        $response = new ActionResponse();
-//		$this->setLayout("empty");
-
-
-        $categoryID = 8;
-        $category = Category::getInstanceByID($categoryID);
-        $response->setValue('specFields', $category->getSpecFieldList());
-
-        $defaultSpecFieldValues = array
-        (
-            'ID' => 'new',
-            'name' => array(),
-            'description' => array(),
-            'handle' => '',
-            'values' => Array(),
-            'rootId' => 'specField_item_new_form',
-            'type' => 3,
-            'dataType' => 1,
-            'categoryID' => $categoryID
-        );
-        $response->setValue('specFieldsList', $defaultSpecFieldValues);
-
-        /**
-         * Types:
-         * 1 - numbers
-         * 2 - text
-         */
-        $configuration = array(
+        return array(
             'languages' => array (
                 'en' => 'English',
                 'lt' => 'Lithuanian',
@@ -74,23 +52,37 @@ class SpecFieldController extends StoreManagementController
             'doNotTranslateTheseValueTypes' => array(2),
             'countNewValues' => 0
         );
-
-       $response->setValue('configuration', $configuration);
-
-
-        return $response;
     }
 
-    public function add()
+    public function index()
     {
-//        $this->setLayout("categoryManager");
-        $this->removeLayout();
-//        $specField = array("name" => $this->request->getValue("name"), "description" => $this->request->getValue("description"));
-
         $response = new ActionResponse();
-//        $response->setValue("specField", $specField);
+//		$this->setLayout("empty");
+
+
+        $categoryID = 8;
+        $category = Category::getInstanceByID($categoryID);
+        $response->setValue('specFields', $category->getSpecFieldList());
+
+        $defaultSpecFieldValues = array
+        (
+            'ID' => 'new',
+            'name' => array(),
+            'description' => array(),
+            'handle' => '',
+            'values' => Array(),
+            'rootId' => 'specField_item_new_form',
+            'type' => 3,
+            'dataType' => 1,
+            'categoryID' => $categoryID
+        );
+
+        $response->setValue('specFieldsList', $defaultSpecFieldValues);
+        $response->setValue('configuration', $this->getSpecFieldConfig());
+
         return $response;
     }
+
     /**
      * Displays form for creating a new or editing existing one product group specification field
      *
@@ -146,7 +138,7 @@ class SpecFieldController extends StoreManagementController
             }
         }
 
-        if(count($errors = $this->validateSpecField($specField, $this->request->getValueArray(array('handle', 'values', 'name')))) == 0)
+        if(count($errors = $this->validateSpecField($specField, $this->request->getValueArray(array('handle', 'values', 'name', 'type', 'dataType')))) == 0)
         {
             $dataType = (int)$this->request->getValue('dataType');
             $type = (int)$this->request->getValue('type');
@@ -156,9 +148,6 @@ class SpecFieldController extends StoreManagementController
             $name = $this->request->getValue('name');
             $handle = $this->request->getValue('handle');
             $values = $this->request->getValue('values');
-
-            echo "<pre>".print_r($_POST, true)."</pre>";
-            echo "<hr />";
 
             $htmlspecialcharsUtf_8 = create_function('$val', 'return htmlspecialchars($val, null, "UTF-8");');
 
@@ -196,7 +185,7 @@ class SpecFieldController extends StoreManagementController
                     }
 
 
-                    $specFieldValues->setFieldValue('specFieldID', $specField[$this->specFieldLocalesArray[0]]);
+                    $specFieldValues->setFieldValue('specFieldID', $specField);
 
                     $specFieldValues->save();
                     $position++;
@@ -209,37 +198,38 @@ class SpecFieldController extends StoreManagementController
         {
             return new JSONResponse(array('errors' => $errors, 'status' => 'failure'));
         }
-
-
-
     }
-
-
 
     private function validateSpecField($specField, $values = array())
     {
+        $config = $this->getSpecFieldConfig();
         $errors = array();
 
-        if(empty($values['name'][$this->specFieldLocalesArray[0]]))
+        if(!isset($values['name']) || empty($values['name'][$this->specFieldLocalesArray[0]]))
         {
             $errors['name'] = 'Name empty';
         }
 
-        if(empty($values['handle']))
-        {
-            $errors['handle'] = 'Handle empty';
-        }
-
-        if(preg_match('/[^\w\d_]/', $values['handle']))
+        if(!isset($values['handle']) || preg_match('/[^\w\d_]/', $values['handle']))
         {
             $errors['handle'] = 'Handle contains invalid symbols';
         }
 
-        if(!isset($values['values']) && !empty($values['values']))
+        if(!isset($values['handle']) || empty($values['handle']))
+        {
+            $errors['handle'] = 'Handle empty';
+        }
+
+        if(in_array($values['type'], $config['selectorValueTypes']) && is_array($values['values']))
         {
             foreach ($values['values'] as $key => $value)
             {
-                if(!isset($value[$this->specFieldLocalesArray[0]]) || !is_numeric($value[$this->specFieldLocalesArray[0]]))
+                if(empty($value[$this->specFieldLocalesArray[0]]))
+                {
+                    $errors['values'][$key] = 'You are required to fill this field';
+                }
+
+                if($values['dataType'] == 2 && !is_numeric($value[$this->specFieldLocalesArray[0]]))
                 {
                     $errors['values'][$key] = 'Field value should be a valid number';
                 }
@@ -247,7 +237,6 @@ class SpecFieldController extends StoreManagementController
         }
         return $errors;
     }
-
 
     /**
      * Removes a specification field and returns back to a field list
@@ -263,18 +252,6 @@ class SpecFieldController extends StoreManagementController
         return new ActionRedirectResponse("specField", "index");
     }
 
-    private function buildValidator()
-    {
-        ClassLoader::import("framework.request.validator.RequestValidator");
-        $validator = new RequestValidator("specField", $this->request);
-
-        $validator->addCheck("name", new IsNotEmptyCheck("You must enter your name"));
-        $validator->addCheck("name", new MaxLengthCheck("Field name must not exceed 40 chars", 40));
-        $validator->addCheck("type", new IsNotEmptyCheck("You must set a field type"));
-
-        return $validator;
-    }
-
     public function delete()
     {
         return new RawResponse('1');
@@ -282,35 +259,51 @@ class SpecFieldController extends StoreManagementController
 }
 
 
+/**
+ *
+ *
+ *   private function buildValidator()
+ *   {
+ *       ClassLoader::import("framework.request.validator.RequestValidator");
+ *       $validator = new RequestValidator("specField", $this->request);
+ *
+ *       $validator->addCheck("name", new IsNotEmptyCheck("You must enter your name"));
+ *       $validator->addCheck("name", new MaxLengthCheck("Field name must not exceed 40 chars", 40));
+ *       $validator->addCheck("type", new IsNotEmptyCheck("You must set a field type"));
+ *
+ *       return $validator;
+ *   }
+ *
 
-//        $validator = $this->buildValidator();
-//        $validator->execute();
-//        if ($validator->hasFailed())
-//        {
-//            $validator->saveState();
-//            return new ActionRedirectResponse("backend.specField", "form");
-//        }
-//        else
-//        {
-//            if ($this->request->isValueSet("id"))
-//            {
-//                $specField = SpecField::getInstanceByID($this->request->getValue("id"));
-//            }
-//            else
-//            {
-//                $specField = SpecField::getNewInstance();
-//            }
-//
-//            $langCode = $this->user->getActiveLang()->getID();
-//            $category = Category::getInstanceByID($this->request->getValue("categoryID"));
-//
-//            $specField->lang($langCode)->name->set($form->getFieldValue('name'));
-//            $specField->lang($langCode)->description->set($form->getFieldValue('description'));
-//            $specField->category->set($category);
-//            $specField->type->set($this->request->getValue("type"));
-//            $specField->dataType->set($this->request->getValue("dataType"));
-//            $specField->handle->set($this->request->getValue("handle"));
-//            return new ActionRedirectResponse("backend.specField", "form", array("id" => $this->request->getValue('id')));
-//        }
-
+ *
+ *       $validator = $this->buildValidator();
+ *       $validator->execute();
+ *       if ($validator->hasFailed())
+ *       {
+ *           $validator->saveState();
+ *           return new ActionRedirectResponse("backend.specField", "form");
+ *       }
+ *       else
+ *       {
+ *           if ($this->request->isValueSet("id"))
+ *           {
+ *               $specField = SpecField::getInstanceByID($this->request->getValue("id"));
+ *           }
+ *           else
+ *           {
+ *               $specField = SpecField::getNewInstance();
+ *           }
+ *
+ *           $langCode = $this->user->getActiveLang()->getID();
+ *           $category = Category::getInstanceByID($this->request->getValue("categoryID"));
+ *
+ *           $specField->lang($langCode)->name->set($form->getFieldValue('name'));
+ *           $specField->lang($langCode)->description->set($form->getFieldValue('description'));
+ *           $specField->category->set($category);
+ *           $specField->type->set($this->request->getValue("type"));
+ *           $specField->dataType->set($this->request->getValue("dataType"));
+ *           $specField->handle->set($this->request->getValue("handle"));
+ *           return new ActionRedirectResponse("backend.specField", "form", array("id" => $this->request->getValue('id')));
+ *       }
+ */
 ?>
