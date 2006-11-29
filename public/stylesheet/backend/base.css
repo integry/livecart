@@ -1,5 +1,3 @@
-@import "activeList.css";
-
 html
 {
     font-size: 67.5%;
@@ -23,6 +21,44 @@ td {
 }
 a img {
   	border: 0;
+}
+
+/* Common classes */
+.altrow { /* used for styling "zebra" tables */
+  	background-color: #EEEEEE;
+}
+
+.inlineHelp {
+  	position: relative;
+	background-color: #FBFF85;
+	float: right;
+	display: inline;
+	width: auto;
+	width: 300px;
+	padding: 10px;
+	border: 1px solid grey;
+	clear: none;
+}
+
+.inlineHelp ul {
+
+	margin-left: 15px;
+
+}
+
+.inlineHelp legend {
+  	background-color: yellow;
+	padding: 3px;
+}
+
+.menuFieldSet {
+  	display: inline;
+  	width: auto;
+  	padding: 10px;
+}
+
+.menuFieldSet legend {
+	padding: 3px;
 }
 
 /* Layout */
@@ -444,68 +480,6 @@ html>body #minHeight{ /*safari wrapper */
 	padding: 10px;
 }
 
-/* Common classes */
-.altrow { /* used for styling "zebra" tables */
-  	background-color: #EEEEEE;
-}
-
-.inlineHelp {
-  	position: relative;
-	background-color: #FBFF85;
-	float: right;
-	display: inline;
-	width: auto;
-	width: 300px;
-	padding: 10px;
-	border: 1px solid grey;
-	clear: none;
-}
-
-.inlineHelp ul {
-
-	margin-left: 15px;
-
-}
-
-.inlineHelp legend {
-  	background-color: yellow;
-	padding: 3px;
-}
-
-.menuFieldSet {
-  	display: inline;
-  	width: auto;
-  	padding: 10px;
-}
-
-.menuFieldSet legend {
-	padding: 3px;
-}
-
-/* Form styling */
-/*
-.formContainer {
-	width: 100%;
-}
-.formContainer input,  .formContainer textarea, .formContainer select {
-	font-size: 14px;
-	padding: 3px;
-	font-family: arial, verdana;
-}
-.formContainer .submit {
-	background-color:  #009933;
-	color: #fff;
-	text-transform: uppercase;
-	font-size: 10px;
-}
-.labelContainer {
-	padding: 5px;
-}
-.fieldContainer {
-	padding: 5px;
-}
-*/
-
 /* Needed for IE, but doesn't seem to affect Mozilla */
 * html #outer{	height:100%;}
 #minHeight {display:none}
@@ -533,3 +507,147 @@ br.clear
 {
 	white-space: nowrap;
 }
+
+/* Form styling */
+
+form p
+{
+    position: relative;
+}
+
+form fieldset.group
+{
+    position: relative;
+}
+
+p .feedback, p .feedback_textarea, form fieldset.group .feedback
+{
+    position: absolute;
+    right: 0px;
+    padding-left: 20px;
+    background: url(../image/silk/error.png) no-repeat left top;
+}
+
+p .feedback, form fieldset.group .feedback
+{
+    left: 15em;
+    top: 20%;
+    margin-left: 15em;
+}
+
+p .feedback_textarea
+{
+    left: 19em;
+    margin-left: 19em;
+    top: 45%;
+}
+
+fieldset
+{
+    margin: 1em 0;
+    padding: 1em;
+    border: 1px solid #ccc;
+    background: #f8f8f8;
+    margin: auto 0;
+}
+
+legend
+{
+    font-weight: bold;
+}
+
+label
+{
+    float: left;
+    width: 11em;
+}
+
+input, select, form .other
+{
+    width: 20em;
+}
+
+textarea
+{
+    width: 30em;
+    height: 10em;
+}
+
+input.radio, input.checkbox, input.submit, input.button
+{
+    width: auto;
+}
+
+input.radio, input.checkbox
+{
+    float: left;
+    margin-right: 1em;
+    border: 0px none;
+}
+
+input:focus, textarea:focus, select:focus
+{
+    background: #ffc;
+}
+
+
+input.required, textarea.required, select.required
+{
+    border: 1px solid red;
+}
+
+form em.required
+{
+    color: red;
+    border: 0px none;
+}
+
+label, input, select, form .other, textarea
+{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+label.radio
+{
+    width: 6em;
+}
+
+.feedback
+{
+    position: absolute;
+    right: 0px;
+    margin-left: 11em;
+    left: 200px;
+}
+
+
+
+/* START Multicolumn groups */
+    fieldset.group
+    {
+        margin: 0;
+        padding: 0;
+        border: none;
+        background: transparent;
+    }
+
+    fieldset.group h2
+    {
+        width: 10em;
+        float: left;
+        font-size: 1em;
+        font-weight: normal;
+    }
+
+    fieldset.group div
+    {
+        width: 8em;
+        float: left;
+    }
+
+    fieldset.group p
+    {
+        margin: 0.3em 0;
+    }
+/* END Multicolumn groups */
