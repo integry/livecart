@@ -3,7 +3,7 @@
     width: 10em;
 }
 
-.specField_step_main, .specField_step_values, .specField_step_translations, .specField_step_translations_language
+.specField_step_values, .specField_step_translations, .specField_step_translations_language
 {
 	display: none;
 }
@@ -19,7 +19,7 @@
     padding: 0 5px;
 }
 
-.specField_change_state_active
+.specField_change_state_active, .specField_step_translations_language_active
 {
     background: yellow;
 }
@@ -54,13 +54,28 @@
 
 .specField_add_field
 {
-    padding-left: 5em;
-    width: 10em;
     white-space: nowrap;
+    margin-left: 77px;
 }
 
+.specField_values
+{
+    width: auto !important;
+}
+
+
 /* START Values active list*/
-fieldset.specField_step_values  .specField_form_values_value
+
+.specField_step_values  .feedback
+{
+    width: 100%;
+    left: 0em ! important;
+    padding-left: 20px;
+    background: url(/public/image/silk/error.png) no-repeat left top;
+}
+
+
+fieldset.specField_step_values  .feedback
 {
     width: 18em;
 }
