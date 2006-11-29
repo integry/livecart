@@ -5,6 +5,12 @@
 {includeJs file=backend/specFieldManager.js}
 {includeJs file=library/trace/jsTrace.js}
 {includeJs file=library/trace/dom-drag.js}
+{includeJs file=backend/formBackup.js}
+
+
+{includeCss file="form.css"}D
+{includeCss file="activeList.css"}
+{includeCss file="specField.css"}
 
 {literal}
 <script type="text/javascript">

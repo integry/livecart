@@ -1,4 +1,4 @@
-<a href="#step_main" class="specField_change_state" >Main</a>
+<a href="#step_main" class="specField_change_state specField_change_state_active" >Main</a>
 <a href="#step_values" class="specField_change_state" >Values</a>
 <a href="#step_translations" class="specField_change_state">Translations</a>
 
@@ -19,19 +19,19 @@
 		<p>
     		<label>Title <em class="required">*</em></label>
     		<input type="text" name="name" class="required specField_form_name" />
-    		<span class="feedback">feedback</span>
+    		<span class="feedback"> </span>
     	</p>
 
 		<p>
     		<label>Handle</label>
     		<input type="text" name="handle" class="specField_form_handle" />
-    		<span class="feedback">feedback</span>
+    		<span class="feedback"> </span>
 		</p>
 
 		<p>
     		<label>Description</label>
     		<textarea name="description" class="specField_form_description" rows="5" cols="40"></textarea>
-    		<span class="feedback_textarea">feedback</span>
+    		<span class="feedback_textarea"> </span>
 		</p>
 
 		<p>
@@ -50,14 +50,14 @@
                 </p>
 			</div>
 
-    		<span class="feedback">feedback</span>
+    		<span class="feedback"> </span>
 			<br class="clear" />
 		</fieldset>
 		</p>
 
 		<p>
     		<label>Type</label>
-    		<span class="feedback">feedback</span>
+    		<span class="feedback"> </span>
     		<select name="type" class="specField_form_type"></select>
 		</p>
 	</fieldset>
@@ -69,18 +69,18 @@
 
 		<p>
 		<fieldset class="group specField_form_values_group">
-    		<h2>t values</h2>
-    		<div>
+    		<h2 class="specField_values_title">Values</h2>
+    		<div class="specField_values">
                 <p>
-        			<ul class="activeList_add_sort activeList_add_delete">
+        			<ul class="activeList_add_delete activeList_add_edit activeList_add_sort">
         				<li class="dom_template specField_form_values_value" id="specField_form_values_">
+                    		<span class="feedback"> </span>
         					<input type="text"  />
-        					{* <input type="checkbox" value="1" class="specField_form_values_default_checkbox" /> *}
         				</li>
         			</ul>
                 </p>
                 <p>
-                    <a href="#add" class="specField_add_field" s>Enter more values</a>
+                    <a href="#add" class="specField_add_field">Enter more values</a>
                 </p>
 			</div>
 
