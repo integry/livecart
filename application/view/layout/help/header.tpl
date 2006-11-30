@@ -26,14 +26,31 @@
 <style>
 body {
 	background-image: none;  
+	background-color: #EEEEEE;
 }
 p {
   	margin-bottom: 10px;
 }
+ul, ol {
+  	margin-left: 20px;
+  	margin-bottom: 10px;
+}
+h1 {
+	font-size: largest; 
+	font-weight: bold;
+	margin: 0px;
+	padding-top: 5px;
+	padding-left: 5px;
+}
+h2 {
+	margin-bottom: 5px;  
+}
+
 #helpHeader {
 	padding: 10px; 
 	background-color: yellow;
 	position: relative;
+	height: 60px;
 }
 #helpTitle {
   	font-size: 20px;
@@ -49,6 +66,10 @@ p {
 #helpContent {
   	padding: 10px;
 }
+#breadCrumbLast {
+  	font-weight: bold;
+}
+
 </style>
 {/literal}
 
@@ -56,13 +77,12 @@ p {
 <body>
 	
 	<div id="helpHeader">
-		<img src="image/backend/layout/logo_tr.png" style="margin-right: 10px;">
-		<span id="helpTitle">Help</span>
+		<div style="float: left;">
+			<img src="image/backend/layout/logo_tr.png" style="margin-right: 10px;">
+			<span id="helpTitle">Help</span>
+		</div>
+		<div style="float: right; text-align: right;">
+			<input type="text" name="search"><br />
+			<input type="submit" value="Search">
+		</div>
 	</div>
-	
-	<div>
-		{$ACTION_VIEW}
-	</div>
-	
-</body>
-</html>

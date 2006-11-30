@@ -54,7 +54,7 @@
 <script type="text/javascript">
     function initLangList()
     {	
-		new LiveCart.ActiveList('languageList', {
+		new ActiveList('languageList', {
 	         beforeEdit:     function(li) { return 'sort.php?' },
 	         beforeSort:     function(li, order) 
 			 { 

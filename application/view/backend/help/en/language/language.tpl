@@ -5,9 +5,9 @@
 <p>
 	Learn how to:
 	<ul>
-	    <li><a href="">Add a new language</a></li>
-		<li><a href="">Edit translations</a></li>
-		<li><a href="">Suspend a language</a></li>
+	    <li><a href="{help language.add}">Add a new language</a></li>
+		<li><a href="{help language.edit}">Edit translations</a></li>
+		<li><a href="{help language.suspend}">Suspend a language</a></li>
 	</ul>
 </p>
 

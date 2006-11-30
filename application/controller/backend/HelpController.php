@@ -4,12 +4,6 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
 
 class HelpController extends StoreManagementController
 {  
-	function __construct($request)
-	{
-		parent::__construct($request);
-		$this->setLayout('help');  
-	}
-	
 	function index()
 	{	  	
 	  	echo 'Ljaa ljaa';
@@ -18,13 +12,14 @@ class HelpController extends StoreManagementController
 	
 	function view()
 	{
+		$this->setLayout('help/view');  
 	  	$id = $this->request->getValue('id');
 	  	$lang = $this->request->getValue('language');
 	  	
 		$lang = 'en';		  	  	  	
 		  	  	  	
 		$path = explode('.', $id);
-		if (count($path) == 1)
+		if ((count($path) == 1) && ('index' != $id))
 		{
 		 	$path[] = $path[0];
 		}
@@ -38,7 +33,7 @@ class HelpController extends StoreManagementController
 		$helpId = '';
 		foreach ($path as $dir)
 	  	{
-			$breadCrumb[$helpId] = file_get_contents($currentPath . 'path.txt');
+			$breadCrumb[$helpId == '' ? 'index' : $helpId] = file_get_contents($currentPath . 'path.txt');
 			$helpId .= ('' != $helpId ? '.' : '') . $dir;
 			$currentPath .= $dir . '/';
 		}
