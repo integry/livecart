@@ -16,6 +16,11 @@ Backend.Category = {
 	treeBrowser: null,
 
 	/**
+	 * Id of currenty selected category. Used for category tab content switching
+	 */
+	activeCategoryId: null,
+
+	/**
 	 * Category module initialization
 	 */
 	init: function()
@@ -35,21 +40,21 @@ Backend.Category = {
 		this.treeBrowser.enableDragAndDrop(1);
 	},
 
-	activateCategory: function(categoryNodeId)
-	{
-		Element.update('activeCategoryPath', Backend.Category.getPath(categoryNodeId));
-		var tab = Backend.Category.tabControl.getActiveTab();
-		if (tab.urlPattern == undefined)
-		{
-			tab.urlPattern = new String(tab.url);
-		}
-
-		Backend.Category.tabControl.reloadActiveTab();
-	},
-
 	initTabs: function()
 	{
-		this.tabControl = new CategoryTabControl(this.treeBrowser, 'tabList', '', 'image/indicator.gif');
+		this.tabControl = new CategoryTabControl(this.treeBrowser, 'tabList', 'sectionContainer', 'image/indicator.gif');
+	},
+
+	/**
+	 * Tree browser onClick handler. Activates selected category by realoading active
+	 *  tab with category specific data
+	 */
+	activateCategory: function(categoryId)
+	{
+		Element.update('activeCategoryPath', Backend.Category.getPath(categoryId));
+
+		Backend.Category.tabControl.switchCategory(categoryId, Backend.Category.activeCategoryId);
+		Backend.Category.activeCategoryId = categoryId;
 	},
 
 	getPath: function(nodeId)
@@ -71,16 +76,22 @@ Backend.Category = {
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
 var CategoryTabControl = Class.create();
 CategoryTabControl.prototype = {
 
 	activeTab: null,
 	indicatorImageName: null,
 	treeBrowser: null,
+	sectionContainerName: null,
 
 	initialize: function(treeBrowser, tabContainerName, sectionContainerName, indicatorImageName)
 	{
 		this.treeBrowser = treeBrowser;
+		this.sectionContainerName = sectionContainerName;
+
 		if (indicatorImageName != undefined)
 		{
 			this.indicatorImageName = indicatorImageName;
@@ -111,11 +122,15 @@ CategoryTabControl.prototype = {
 			if (Element.hasClassName(tabList[i], 'active'))
 			{
 				this.activeTab = tabList[i];
-				Element.show(tabList[i].id + 'Content');
+				var containerId = this.getContainerId(tabList[i].id, treeBrowser.getSelectedItemId());
+				if ($(containerId) != undefined)
+				{
+					Element.show(containerId);
+				}
 			}
 			else
 			{
-				Element.hide(tabList[i].id + 'Content');
+				//Element.hide(this.getContainerId(tabList[i].id, treeBrowser.getSelectedItemId()));
 			}
 		}
 	},
@@ -138,49 +153,69 @@ CategoryTabControl.prototype = {
 		}
 	},
 
+	/**
+	 * Tab click event handler (performs tab styling and content activation)
+	 */
 	handleTabClick: function(evt)
 	{
 		var targetTab = evt.target;
 		this.activateTab(targetTab);
 	},
 
+	/**
+	 * Activates a given tab of currenty selected category
+	 */
 	activateTab: function(targetTab)
 	{
 		var categoryId = this.treeBrowser.getSelectedItemId();
 		var tabId = targetTab.id;
 
-		if (this.activeTab == targetTab && !Element.empty(this.getContainerId(targetTab.id, categoryId)))
+		if (this.activeTab == targetTab)
 		{
-			return;
+			var containerId = this.getContainerId(targetTab.id, categoryId)
+			if ($(containerId) != undefined)
+			{
+				if (!Element.empty(containerId))
+				{
+					Element.show(this.getContainerId(targetTab.id, categoryId));
+					return;
+				}
+			}
 		}
 
 		if (this.activeTab != null)
 		{
 			Element.removeClassName(this.activeTab, 'active');
 			Element.addClassName(this.activeTab, 'inactive');
-			Element.hide(this.getContainerId(this.activeTab.id, categoryId));
+			var activeContainerId = this.getContainerId(this.activeTab.id, categoryId);
+			if ($(activeContainerId) != undefined)
+			{
+				Element.hide(activeContainerId);
+			}
 		}
+
 		this.activeTab = targetTab;
 		Element.removeClassName(this.activeTab, 'hover');
 		Element.addClassName(this.activeTab, 'active');
-		Element.show(this.getContainerId(this.activeTab.id, categoryId));
 
-		if (Element.empty(contentId))
+		this.loadTabContent(tabId, categoryId);
+		Element.show(this.getContainerId(this.activeTab.id, categoryId));
+	},
+
+	loadTabContent: function(tabId, categoryId)
+	{
+		var containerId = this.getContainerId(tabId, categoryId);
+
+		if ($(containerId) == undefined)
+		{
+			new Insertion.Bottom(this.sectionContainerName, '<div id="' + containerId + '"></div>');
+		}
+		if (Element.empty(containerId))
 		{
 			new LiveCart.AjaxUpdater(this.getTabUrl(tabId, categoryId),
 									 this.getContainerId(tabId, categoryId),
 									 this.getIndicatorId(tabId));
 		}
-	},
-
-	showTabContent: function()
-	{
-
-	},
-
-	hideTabContent: function()
-	{
-
 	},
 
 	getIndicatorId: function(tabName)
@@ -205,8 +240,12 @@ CategoryTabControl.prototype = {
 	 */
 	resetContent: function(tabObj, categoryId)
 	{
-		var contentContainerId = this.getTabUrl(tabObj.id, categoryId);
-		$(contentContainerId).innerHTML = '';
+		var contentContainerId = this.getContainerId(tabObj.id, categoryId);
+		if ($(contentContainerId) != undefined)
+		{
+			$(contentContainerId).innerHTML = '';
+			Element.hide(contentContainerId);
+		}
 	},
 
 	reloadActiveTab: function()
@@ -214,6 +253,20 @@ CategoryTabControl.prototype = {
 		categoryId = this.treeBrowser.getSelectedItemId();
 		this.resetContent(this.activeTab, categoryId);
 		this.activateTab(this.activeTab, categoryId);
+	},
+
+	switchCategory: function(currentCategory, previousActiveCategoryId)
+	{
+		//alert('switching category: from' + currentCategory + ' to ' + previousActiveCategoryId);
+		if (previousActiveCategoryId != null)
+		{
+			prevContainer = this.getContainerId(this.activeTab.id, previousActiveCategoryId);
+			if ($(prevContainer) != undefined)
+			{
+				Element.hide(prevContainer);
+			}
+		}
+		this.activateTab(this.activeTab, currentCategory);
 	},
 
 	getActiveTab: function()

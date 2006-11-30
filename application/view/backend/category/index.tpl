@@ -24,7 +24,7 @@
 	<div id="managerContainer" style="margin-left: 270px; height: 100%;">
 		<div id="tabContainer">
 			<ul id="tabList">
-				<li id="tabMainDetails" class="tab active"><a href="{link controller=backend.category action=form id=%id%}">Products</a></li>
+				<li id="tabProducts" class="tab active"><a href="{link controller=backend.product action=index id=%id%}">Products</a></li>
 				<li id="tabMainDetails" class="tab inactive"><a href="{link controller=backend.category action=form id=%id%}">Category Details</a></li>
 				<li id="tabFields" class="tab inactive"><a href="{link controller=backend.specField action=index id=%id%}">Fields</a></li>
 				<li id="tabFilters" class="tab inactive"><a href="{link controller=backend.filter action=index id=%id%}">Filters</a></li>
@@ -33,12 +33,14 @@
 			</ul>
 		</div>
 		<div id="sectionContainer">
+			<!--
 			<div id="tabMainDetailsContent"></div>
 			<div id="tabFieldsContent"></div>
 			<div id="tabFiltersContent"></div>
 			<div id="tabPermissionsContent"></div>
 			<div id="tabImagesContent"></div>
 			<div id="tabArticlesContent"></div>
+			-->
 		</div>
 	</div>
 
@@ -47,7 +49,6 @@
 {foreach from=$categoryList item=category}
 	Backend.Category.treeBrowser.insertNewItem({$category.parent},{$category.ID} , '{$category.name}', 0, 0, 0, 0, "SELECT");
 {/foreach}
-	alert(Backend.Category.treeBrowser.getSelectedItemId());
 </script>
 
 <div id="specFieldSection"></div>
