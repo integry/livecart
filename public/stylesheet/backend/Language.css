@@ -1,5 +1,6 @@
-label {
-  background-color: yellow;
+label, label.radio {
+	width: auto;  
+	float: auto;
 }
 
 .menuFieldSet table td {
@@ -28,6 +29,11 @@ label {
 }
 
 /* edit */
+
+#translations fieldset {
+  	padding: 0;
+  	margin: 0;
+}
 
 #langNotFound {
   	display: none;
