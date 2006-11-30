@@ -49,6 +49,11 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
+	public static function getNewInstance(ActiveTreeNode $parent)
+	{
+		return parent::getNewInstance(__CLASS__, $parent);
+	}
+
 	public function getSpecFieldList()
 	{
 		$filter = new ARSelectFilter();

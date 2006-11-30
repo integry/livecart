@@ -37,7 +37,6 @@ class CategoryController extends StoreManagementController
 	 */
 	public function form()
 	{
-		//$this->setLayout("mainLayout");
 		ClassLoader::import("framework.request.validator.Form");
 
 		$response = new ActionResponse();
@@ -63,6 +62,17 @@ class CategoryController extends StoreManagementController
 	 */
 	public function create()
 	{
+		$parentNodeId = $this->request->getValue("id");
+		if ($parentNodeId)
+		{
+			$parent = Category::getInstanceByID($parentNodeId);
+			$categoryNode = Category::getNewInstance($parent);
+			$categoryNode->setValueByLang("name", $this->store->getDefaultLanguageCode(), "New Category...");
+			$categoryNode->save();
+
+			return new JSONResponse($categoryNode->toArray());
+		}
+		/*
 		$validator = $this->buildValidator();
 		if ($validator->isValid())
 		{
@@ -82,6 +92,7 @@ class CategoryController extends StoreManagementController
 		{
 			return new ActionRedirectResponse($this->request->getControllerName(), "form");
 		}
+		*/
 	}
 
 	/**

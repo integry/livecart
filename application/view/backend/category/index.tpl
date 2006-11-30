@@ -3,7 +3,7 @@
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
 {includeJs file="backend/Category.js"}
-{includeJs file="library/TabControl.js"}
+{includeJs file="library/SectionExpander.js"}
 
 {includeCss file="library/TabControl.css"}
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}

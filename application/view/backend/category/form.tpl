@@ -40,6 +40,9 @@
 			<br/>
 	</fieldset>
 	{/foreach}
+	<script type="text/javascript">
+		var expander = new SectionExpander();
+	</script>
 
 	<fieldset>
 		<label for="submit"> </label>

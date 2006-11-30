@@ -17,9 +17,9 @@ class Store
 	protected $locale = null;
 
 	protected $localeName;
-  
+
 	private $languageList = null;
-	
+
 	private $languageFiles = array();
 
 	/**
@@ -47,9 +47,9 @@ class Store
 
 	public function getLocaleInstance()
 	{
-	  	return $this->locale;	  
+	  	return $this->locale;
 	}
-	
+
 	/**
 	 * Gets a record set of installed languages
 	 *
@@ -112,10 +112,10 @@ class Store
 	 * @param string $key
 	 * @return string
 	 */
-	public function translate($key) 
+	public function translate($key)
 	{
 		return $this->locale->translator()->translate($key);
-	}	
+	}
 
 	/**
 	 * Performs MakeText translation using Locale::LCInterfaceTranslator
@@ -123,10 +123,10 @@ class Store
 	 * @param array $params
 	 * @return string
 	 */
-	public function makeText($key, $params) 
-	{	  	  		  
+	public function makeText($key, $params)
+	{
 		return $this->locale->translator()->makeText($key, $params);
-	}	
+	}
 
 	/**
 	 * Creates a handle string that is usually used as part of URL to uniquely
@@ -141,37 +141,37 @@ class Store
 		$str = str_replace(" ", "_", $str);
 		return $str;
 	}
-	
+
 	public function setLanguageFiles($fileArray)
 	{
 	  	$this->languageFiles = $fileArray;
 	}
-	
+
 	private function loadLanguageFiles()
 	{
 		foreach ($this->languageFiles as $file)
 		{
-			$this->locale->translationManager()->loadFile($file);					  		  
+			$this->locale->translationManager()->loadFile($file);
 		}
 	}
-	
+
 	private function loadLocale()
 	{
-		$this->locale =	Locale::getInstance($this->localeName);	
+		$this->locale =	Locale::getInstance($this->localeName);
 		$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('cache.language'));
 		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('application.configuration.language'));
-		Locale::setCurrentLocale($this->localeName);	
-		
-		$this->loadLanguageFiles();		
-	
-		return $this->locale;		  	
+		Locale::setCurrentLocale($this->localeName);
+
+		$this->loadLanguageFiles();
+
+		return $this->locale;
 	}
-	
+
 	private function loadLocaleName()
 	{
-		if ($_REQUEST["language"])
+		if (!empty($_REQUEST["language"]))
 		{
-			$this->localeName = $_REQUEST["language"];			
+			$this->localeName = $_REQUEST["language"];
 		}
 		else if (isset($_SESSION['lang']))
 		{
@@ -181,7 +181,7 @@ class Store
 		{
 	  		$this->localeName = $this->getDefaultLanguageCode();
 		}
-		
+
 		return $this->localeName;
 	}
 
@@ -190,18 +190,18 @@ class Store
 		switch ($name)
 	  	{
 		    case 'locale':
-		    	return $this->loadLocale();	
+		    	return $this->loadLocale();
 		    break;
 
 		    case 'localeName':
-		    	return $this->loadLocaleName();	
+		    	return $this->loadLocaleName();
 		    break;
-		    
+
 			default:
-		    break;		    
+		    break;
 		}
 	}
-		
+
 }
 
 ?>
