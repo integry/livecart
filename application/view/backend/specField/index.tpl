@@ -20,6 +20,7 @@
      * Create spec field prototype. Some fields are always the same
      * so we define them in
      */
+
     {/literal}
     {foreach from=$configuration item="configItem" key="configKey"}
         {if $configKey == 'types'}
@@ -48,11 +49,7 @@
         },
         afterEdit:      function(li, response)
         {
-
-            this.getContainer(li, 'edit').innerHTML = response;
-            LiveCart.AjaxUpdater.prototype.runJavaScripts(response);
-
-//            this.getContainer(li, 'edit').innerHTML = 'test';
+            new Backend.SpecField(response);
 
             var controls = document.getElementsByClassName("specField_controls", li)[0];
             controls.style.display = (controls.style.display = 'none') ? 'inline' : 'none';
@@ -93,22 +90,21 @@
 
 // ]!]>
 </script>
-
-
-
-<style>
-
-</style>
 {/literal}
 
 <!-- Spec field title -->
 <h2>Laptop</h2>
 
+
+<div id="specField_item_blank" class="dom_template">
+    {include file="backend/specField/form.manageSpecFieldBlank.tpl"}
+</div>
+
 <!-- Form for creating new spec field -->
 <div id="specField_item_new">
     <a href="#new" id="specField_item_new_show">Add new spec field</a>
     <div id="specField_item_new_form" style="display: none;">
-        {include file="backend/specField/form.manageSpecField.tpl"}
+        <script type="text/javascript">new Backend.SpecField('{json array=$specFieldsList}');</script>
     </div>
 </div>
 

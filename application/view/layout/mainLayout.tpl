@@ -3,5 +3,5 @@
 	<div>
 		{$ACTION_VIEW}
 	</div>
-	
+
 {include file="layout/footer.tpl"}

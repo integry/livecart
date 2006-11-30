@@ -65,6 +65,11 @@
 
 
 /* START Values active list*/
+.specField_form_values_group .specField_values
+{
+    border: 2px solid green;
+}
+
 fieldset.specField_step_values .activeList_icons_container
 {
     float: right;

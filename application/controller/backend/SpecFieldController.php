@@ -56,6 +56,9 @@ class SpecFieldController extends StoreManagementController
 
     public function index()
     {
+
+        $this->setLayout("mainLayout");
+
         $response = new ActionResponse();
 //		$this->setLayout("empty");
 
@@ -104,9 +107,7 @@ class SpecFieldController extends StoreManagementController
 
        $specFieldList['rootId'] = "specField_items_list_".$specFieldList['ID'];
 
-       $response->setValue('specFieldsList', $specFieldList);
-
-       return $response;
+       return new JSONResponse($specFieldList);
     }
 
     /**
@@ -122,7 +123,7 @@ class SpecFieldController extends StoreManagementController
 
             if($categoryID = $this->request->getValue('categoryID', false))
             {
-                $specField->setFieldValue('categoryID', Category::getInstanceByID((int)$categoryID));
+                $specField->setFieldValue('categoryID', (int)$categoryID);
             }
         }
         else
@@ -181,13 +182,14 @@ class SpecFieldController extends StoreManagementController
                     }
                     else
                     {
-                        $specFieldValues->setLanguageField('value', @array_map($htmlspecialcharsUtf_8, $name), $this->specFieldLocalesArray);
+                        $specFieldValues->setLanguageField('value', @array_map($htmlspecialcharsUtf_8, $value), $this->specFieldLocalesArray);
                     }
 
 
                     $specFieldValues->setFieldValue('specFieldID', $specField);
 
                     $specFieldValues->save();
+
                     $position++;
                 }
             }
@@ -199,7 +201,6 @@ class SpecFieldController extends StoreManagementController
             return new JSONResponse(array('errors' => $errors, 'status' => 'failure'));
         }
     }
-
     private function validateSpecField($specField, $values = array())
     {
         $config = $this->getSpecFieldConfig();
@@ -220,16 +221,16 @@ class SpecFieldController extends StoreManagementController
             $errors['handle'] = 'Handle empty';
         }
 
-        if(in_array($values['type'], $config['selectorValueTypes']) && is_array($values['values']))
+        if(in_array($values['type'], $config['selectorValueTypes']) && isset($values['values']) && is_array($values['values']))
         {
-            foreach ($values['values'] as $key => $value)
+            foreach ($values['values'] as $key => $v)
             {
-                if(empty($value[$this->specFieldLocalesArray[0]]))
+                if(empty($v[$this->specFieldLocalesArray[0]]))
                 {
                     $errors['values'][$key] = 'You are required to fill this field';
                 }
 
-                if($values['dataType'] == 2 && !is_numeric($value[$this->specFieldLocalesArray[0]]))
+                if($values['dataType'] == 2 && !is_numeric($v[$this->specFieldLocalesArray[0]]))
                 {
                     $errors['values'][$key] = 'Field value should be a valid number';
                 }
