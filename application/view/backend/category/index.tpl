@@ -43,10 +43,11 @@
 	</div>
 
 <script type="text/javascript">
-	LiveCart.CategoryManager.init();
+	Backend.Category.init();
 {foreach from=$categoryList item=category}
-	LiveCart.CategoryManager.treeBrowser.insertNewItem({$category.parent},{$category.ID} , '{$category.name}', 0, 0, 0, 0, "CHILD");
+	Backend.Category.treeBrowser.insertNewItem({$category.parent},{$category.ID} , '{$category.name}', 0, 0, 0, 0, "SELECT");
 {/foreach}
+	alert(Backend.Category.treeBrowser.getSelectedItemId());
 </script>
 
 <div id="specFieldSection"></div>
