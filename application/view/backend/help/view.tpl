@@ -16,6 +16,24 @@
 
 <div id="helpContent">
 	{include file=$helpTemplate}
+
+	<div id="helpRelated">
+		Related topics
+	</div>
+</div>
+
+<div id="helpFooter">
+	<div id="helpFooterContent">
+		{if '' != $prevId}
+			<a href="{help $prevId}">&lt; {$prevTitle}</a>
+			{if '' != $nextId}
+			:
+			{/if}
+		{/if}
+		{if '' != $nextId}
+			<a href="{help $nextId}">{$nextTitle} &gt; </a>
+		{/if}
+	</div>
 </div>
 
 {include file=layout/help/footer.tpl}

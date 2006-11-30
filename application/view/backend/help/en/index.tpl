@@ -15,7 +15,13 @@
 	<li><a href="{help language}">Languages</a></li>
 </ol>
 
+{*
+
+{subTopics}
+
 {related}
 #add
 test.delete
 {/related}
+
+*}

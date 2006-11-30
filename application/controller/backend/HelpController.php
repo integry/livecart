@@ -21,10 +21,28 @@ class HelpController extends StoreManagementController
 		    	
 		// get page title
 		$title = end($breadCrumb);
-			    	
+			    
+		// get next and previous topics
+		$nextId = $help->getNextTopic($id);
+		$prevId = $help->getPreviousTopic($id);
+
+		if ($nextId !== FALSE)
+		{
+		  	$nextTitle = $help->getName($nextId);
+		}
+							
+		if ($prevId !== FALSE)
+		{
+		  	$prevTitle = $help->getName($prevId);
+		}
+
 	  	$response = new ActionResponse();
 	  	$response->setValue('helpTemplate', $helpTemplate);
 	  	$response->setValue('breadCrumb', $breadCrumb);
+	  	$response->setValue('nextId', $nextId);
+	  	$response->setValue('prevId', $prevId);
+	  	$response->setValue('nextTitle', $nextTitle);
+	  	$response->setValue('prevTitle', $prevTitle);
 	  	$response->setValue('PAGE_TITLE', $title);
 	  	return $response;
 	}  
@@ -79,7 +97,11 @@ class HelpTopic
 			$fullPath = $currentPath . ('' != $currentPath ? '.' : '') . $id;
 						
 		  	$currentTopic[$tabCount] = $fullPath;
-		  	$this->topics[$fullPath] = $name;				
+		  	if ('' == $fullPath)
+		  	{
+			    $fullPath = 'index';
+			}
+			$this->topics[$fullPath] = $name;				
 		}			  
 	}
 	
@@ -88,7 +110,7 @@ class HelpTopic
 		$path = explode('.', $topicId);
 		$currentPath = '';
 		$result = array();
-		$result['index'] = $this->topics[''];
+		$result['index'] = $this->topics['index'];
 		foreach ($path as $value)
 		{
 			$currentPath .= ('' != $currentPath ? '.' : '') . $value;			
@@ -114,14 +136,30 @@ class HelpTopic
 
 	public function getNextTopic($topicId)
 	{
-	  
+		$this->setTopicArrayPointer($topicId);
+		next($this->topics);
+		$ret = key($this->topics);
+		reset($this->topics);
+		return $ret;
 	}  
 
 	public function getPreviousTopic($topicId)
 	{
-	  
-	}  
-  	
+		reset($this->topics);
+		$this->setTopicArrayPointer($topicId);
+		prev($this->topics);
+		$ret = key($this->topics);
+		reset($this->topics);
+		return $ret;
+	}    
+	
+	private function setTopicArrayPointer($topicId)	
+	{
+		while ((key($this->topics) != $topicId) && (current($this->topics) !== FALSE))
+		{
+		  	next($this->topics);
+		}		
+	}
 }
 
 ?>
