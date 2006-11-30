@@ -473,8 +473,13 @@ html>body #minHeight{ /*safari wrapper */
 #pageTitle {
   	font-weight: bold;
 	padding-left: 20px;
+	margin-top: -2px;
 }
-
+#titleHelpButton {
+	position: relative;
+	top: 1px;
+	margin-left: 5px;  
+}
 #workArea {
   	background-color: #FFFFFF;
 	padding: 10px;
