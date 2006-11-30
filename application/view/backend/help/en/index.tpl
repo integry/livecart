@@ -14,3 +14,8 @@
 	<li><a href="{help skins}">Skins</a></li>
 	<li><a href="{help language}">Languages</a></li>
 </ol>
+
+{related}
+#add
+test.delete
+{/related}

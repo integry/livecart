@@ -26,14 +26,15 @@
 			<td>
 				<input type="hidden" name="langFileSel" value='{$langFileSel|escape:"quotes"}' />
 
-				<input type="radio" name="show" value="all" id="show-all" {$selected_all} onclick="langEdit.displayFilter(0)" />
-				<label for="show-all">{t _all}</label>
-			
-				<input type="radio" name="show" value="notDefined" id="show-undefined" {$selected_not_defined} onclick="langEdit.displayFilter(1)" />
-				<label for="show-undefined">{t _not_defined}</label>
+				<input type="radio" class="radio" name="show" value="all" id="show-all" {$selected_all} onclick="langEdit.displayFilter(0)" />
+				<label class="radio" for="show-all">{t _all}</label>
 				
-				<input type="radio" name="show" value="defined" id="show-defined" {$selected_defined} onclick="langEdit.displayFilter(2)" />
-				<label for="show-defined">{t _defined}</label>
+			
+				<input type="radio" class="radio" name="show" value="notDefined" id="show-undefined" {$selected_not_defined} onclick="langEdit.displayFilter(1)" />
+				<label class="radio" for="show-undefined">{t _not_defined}</label>
+				
+				<input type="radio" class="radio" name="show" value="defined" id="show-defined" {$selected_defined} onclick="langEdit.displayFilter(2)" />
+				<label class="radio" for="show-defined">{t _defined}</label>
 			</td>
 		</tr>
 		<tr>
