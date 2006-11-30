@@ -139,7 +139,7 @@ class SpecFieldController extends StoreManagementController
             }
         }
 
-        if(count($errors = $this->validateSpecField($specField, $this->request->getValueArray(array('handle', 'values', 'name', 'type', 'dataType')))) == 0)
+        if(count($errors = $this->validateSpecField($this->request->getValueArray(array('handle', 'values', 'name', 'type', 'dataType')))) == 0)
         {
             $dataType = (int)$this->request->getValue('dataType');
             $type = (int)$this->request->getValue('type');
@@ -201,7 +201,14 @@ class SpecFieldController extends StoreManagementController
             return new JSONResponse(array('errors' => $errors, 'status' => 'failure'));
         }
     }
-    private function validateSpecField($specField, $values = array())
+
+    /**
+     * Validates spec field form
+     *
+     * @param array $values List of values to validate.
+     * @return array List of all errors
+     */
+    private function validateSpecField($values = array())
     {
         $config = $this->getSpecFieldConfig();
         $errors = array();
@@ -239,25 +246,21 @@ class SpecFieldController extends StoreManagementController
         return $errors;
     }
 
-    /**
-     * Removes a specification field and returns back to a field list
-     *
-     * @return ActionRedirectResponse
-     */
-    public function remove()
-    {
-        if ($this->request->isValueSet("id"))
-        {
-            SpecField::deleteByID($this->request->getValue("id"));
-        }
-        return new ActionRedirectResponse("specField", "index");
-    }
-
     public function delete()
     {
-        return new RawResponse('1');
+        if($id = $this->request->getValue("id", false))
+        {
+//            SpecField::delete($id);
+            return new JSONResponse(array('status' => 'success'));
+        }
+        else
+        {
+            return new JSONResponse(array('status' => 'failure'));
+        }
     }
 }
+
+
 
 
 /**

@@ -35,6 +35,7 @@
     specFieldListCallbacks = {
         beforeEdit:     function(li)
         {
+                this.toggleContainer(li, 'edit');
             if(this.isContainerEmpty(li, 'edit'))
             {
                 return '{/literal}/backend.specField/item/{literal}'+this.getRecordId(li)
@@ -44,7 +45,6 @@
                 var controls = document.getElementsByClassName("specField_controls", li)[0];
                 controls.style.display = (controls.style.display = 'none') ? 'inline' : 'none';
 
-                this.toggleContainer(li, 'edit');
             }
         },
         afterEdit:      function(li, response)
@@ -54,12 +54,34 @@
             var controls = document.getElementsByClassName("specField_controls", li)[0];
             controls.style.display = (controls.style.display = 'none') ? 'inline' : 'none';
 
-            jsTrace.send("afterEdit()");
-
             this.rebindIcons(li);
             this.createSortable();
 
             this.toggleContainer(li, 'edit');
+        },
+        beforeDelete:   function(li)
+        {
+            if(confirm('Are you sure you wish to remove record #' + this.getRecordId(li) + '?'))
+            {
+                return '{/literal}{link controller=backend.specField action=delete}{literal}?id='+this.getRecordId(li)
+            }
+        },
+        afterDelete:    function(li, jsonResponse)
+        {
+            try
+            {
+                var response = eval("("+jsonResponse+")");
+
+                if(response.status == 'success')
+                {
+                    Effect.SwitchOff(li, {duration: 1});
+                    setTimeout(function() { Element.remove(li); }, 10000);
+                }
+            }
+            catch(e)
+            {
+                alert("json error");
+            }
         },
 
 
@@ -70,20 +92,6 @@
         afterSort:      function(li, response)
         {
 //            alert( 'Record #' + this.getRecordId(li, 'edit') + ' changed position');
-        },
-
-
-        beforeDelete:   function(li)
-        {
-            if(confirm('Are you sure you wish to remove record #' + this.getRecordId(li) + '?'))
-            {
-                return '{/literal}{link controller=backend.specField action=delete}{literal}?id='+this.getRecordId(li)
-            }
-        },
-        afterDelete:    function(li, response)
-        {
-            Element.remove(li);
-            alert('Record #' + this.getRecordId(li, 'edit') + ' was deleted');
         }
     };
 

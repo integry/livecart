@@ -3,7 +3,7 @@
     width: 10em;
 }
 
-.specField_step_values, .specField_step_translations, .specField_step_translations_language
+/*.specField_step_values, */.specField_step_translations, .specField_step_translations_language
 {
 	display: none;
 }

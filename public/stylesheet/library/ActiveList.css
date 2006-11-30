@@ -16,7 +16,7 @@
 	cursor: hand;
 }
 
-.activeList ul
+ul.activeList
 {
     list-style: none;
 }

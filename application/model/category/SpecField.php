@@ -108,6 +108,14 @@ class SpecField extends MultilingualObject
 	{
 	    return ActiveRecord::objectExists(__CLASS__, (int)$id);
 	}
+
+	/**
+	 * Delete spec field from database
+	 */
+	public static function delete($id)
+	{
+	    parent::deleteByID(__CLASS__, (int)$id);
+	}
 }
 
 ?>
