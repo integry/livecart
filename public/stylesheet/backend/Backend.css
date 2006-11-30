@@ -478,7 +478,7 @@ html>body #minHeight{ /*safari wrapper */
 #titleHelpButton {
 	position: relative;
 	top: 1px;
-	margin-left: 5px;  
+	margin-left: 5px;
 }
 #workArea {
   	background-color: #FFFFFF;
@@ -514,6 +514,8 @@ br.clear
 }
 
 
+
+
 /* Form styling */
 
 form p
@@ -522,92 +524,89 @@ form p
 }
 
 
-.standart_form .feedback, .standart_form .feedback_textarea
+.feedback, .feedback_textarea
 {
    position: absolute;
    vertical-align: middle;
    margin-left: 10px;
    padding-left: 20px;
-   background: url(../../image/silk/error.png) no-repeat left center;
+   background: url(/public/image/silk/error.png) no-repeat left center;
 }
 
 
-.standart_form fieldset.group
+fieldset.group
 {
     position: relative;
 }
 
-.standart_form fieldset
+fieldset
 {
     margin: 1em 0;
     padding: 1em;
-    border: 1px solid #ccc;
     background: #f8f8f8;
     margin: auto 0;
 }
 
-.standart_form legend
+legend
 {
     font-weight: bold;
 }
 
-.standart_form label
+label
 {
     float: left;
     width: 11em;
 }
 
-.standart_form input, .standart_form select, form.standart_form .other
+input, select, form.other
 {
     width: 10em;
 }
 
-.standart_form textarea
+textarea
 {
     width: 30em;
     height: 10em;
 }
-.standart_form .feedback_textarea
+.feedback_textarea
 {
    line-height: 10em;
 }
 
-.standart_form input.radio, .standart_form input.checkbox, .standart_form input.submit, .standart_form input.button
+input.radio, input.checkbox, input.submit, input.button
 {
     width: auto;
 }
 
-.standart_form input.radio, .standart_form input.checkbox
+input.radio, input.checkbox
 {
     float: left;
     margin-right: 1em;
-    border: 0px none;
 }
 
-.standart_form input:focus, .standart_form textarea:focus, .standart_form select:focus
+input:focus, textarea:focus, select:focus
 {
     background: #ffc;
 }
 
 
-.standart_form input.required, .standart_form textarea.required, .standart_form select.required
+input.required, textarea.required, select.required
 {
-    border: 1px solid red;
+    border-color: red;
 }
 
-form.standart_form em.required
+formem.required
 {
     color: red;
-    border: 0px none;
 }
 
-.standart_form label, .standart_form input, .standart_form select, .standart_form form .other, .standart_form textarea
+label, input, select, form .other, textarea
 {
     margin-top: 5px;
     margin-bottom: 5px;
 }
 
-.standart_form label.radio
+label.radio
 {
     width: 6em;
 }
@@ -615,33 +614,31 @@ form.standart_form em.required
 
 
 
-
-
 /* START Multicolumn groups */
-    fieldset.group
-    {
-        margin: 0;
-        padding: 0;
-        border: none;
-        background: transparent;
-    }
+fieldset.group
+{
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+}
 
-    fieldset.group h2
-    {
-        width: 10em;
-        float: left;
-        font-size: 1em;
-        font-weight: normal;
-    }
+fieldset.group h2
+{
+    width: 10em;
+    float: left;
+    font-size: 1em;
+    font-weight: normal;
+}
 
-    fieldset.group div
-    {
-        width: 8em;
-        float: left;
-    }
+fieldset.group div
+{
+    width: 8em;
+    float: left;
+}
 
-    fieldset.group p
-    {
-        margin: 0.3em 0;
-    }
+fieldset.group p
+{
+    margin: 0.3em 0;
+}
 /* END Multicolumn groups */
