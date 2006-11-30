@@ -1,0 +1,74 @@
+/* Layout positioning */
+html,body {
+	margin:0;
+	padding:0;
+	height:100%; /* needed for container min-height */
+}
+
+div#helpContainer {
+	position:relative; /* needed for footer positioning*/
+	margin:0 auto; /* center, not in IE5 */
+	height:auto !important; /* real browsers */
+	height:100%; /* IE6: treaded as min-height*/
+	min-height:100%; /* real browsers */
+}
+
+div#helpFooter {
+	position:absolute;
+	width:100%;
+	bottom:0; /* stick to bottom */
+}
+
+/* Formatting */
+body {
+	background-image: none;  
+	background-color: #EEEEEE;
+}
+p {
+  	margin-bottom: 10px;
+}
+ul, ol {
+  	margin-left: 20px;
+  	margin-bottom: 10px;
+}
+h1 {
+	font-size: largest; 
+	font-weight: bold;
+	margin: 0px;
+	padding-top: 5px;
+	padding-left: 5px;
+}
+h2 {
+	margin-bottom: 5px;  
+}
+
+#helpHeader {
+	padding: 10px; 
+	background-color: yellow;
+	height: 60px;
+}
+#helpTitle {
+  	font-size: 20px;
+  	font-weight: bold;
+  	position: absolute;
+  	top: 55px;
+  	left: 150px;
+}
+#helpNav {
+  	background-color: white;
+  	padding: 4px;
+}
+#helpContent {
+  	padding: 10px;
+}
+#breadCrumbLast {
+  	font-weight: bold;
+}
+#helpFooter {
+	border-top: 1px solid #AAAAAA;  
+	background-color: #DDDDDD;
+}
+#helpFooterContent {
+	text-align: center;
+	padding: 5px;
+}
