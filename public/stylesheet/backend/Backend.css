@@ -545,11 +545,16 @@ fieldset
     padding: 1em;
     background: #f8f8f8;
     margin: auto 0;
+    border: 2px solid #ddd;
+    margin-bottom: 10px;
 }
 
 legend
 {
-    font-weight: bold;
+	font-size: 18px;
+	color: #30A0F9;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 label
@@ -642,3 +647,15 @@ fieldset.group p
     margin: 0.3em 0;
 }
 /* END Multicolumn groups */
+
+.expandingSection
+{
+	background-color: #e0e0e0;
+}
+.expandingSection legend
+{
+	corsor: pointer;
+}
+.expandingSectionContent
+{
+}

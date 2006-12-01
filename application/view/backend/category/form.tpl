@@ -3,7 +3,7 @@
 {assign var="action" value="create"}
 
 {form handle=$catalogForm action="controller=backend.catalog action=$action id=1" method="post"}
-	<fieldset>
+	<fieldset id="mainFieldset">
 		<legend>Category details {$ID}</legend>
 
 		<label for="name">Category name:</label>
@@ -25,8 +25,9 @@
 	</fieldset>
 
 	{foreach from=$languageList item=lang}
-	<fieldset>
+	<fieldset class="expandingSection">
 		<legend>Translate to: {$lang}</legend>
+		<div class="expandingSectionContent">
 			<label>Category name:</label>
 			{textfield name="name_$lang"}
 			<br/>
@@ -38,6 +39,7 @@
 			<label>Keywords:</label>
 			{textarea name="keywords_$lang"}
 			<br/>
+		</div>
 	</fieldset>
 	{/foreach}
 	<script type="text/javascript">
