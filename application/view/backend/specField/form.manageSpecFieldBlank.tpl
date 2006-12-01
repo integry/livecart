@@ -72,7 +72,7 @@
     		<h2 class="specField_values_title">Values</h2>
     		<div class="specField_values">
                 <p>
-        			<ul class="activeList_add_delete activeList_add_edit activeList_add_sort">
+        			<ul class="activeList_add_delete activeList_add_sort">
         				<li class="dom_template specField_form_values_value" id="specField_form_values_">
         					<input type="text"  />
                     		<span class="feedback"> </span>

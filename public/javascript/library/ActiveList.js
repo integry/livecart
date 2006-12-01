@@ -27,7 +27,7 @@
  *         },
  *         afterEdit:      function(li, response) { this.getContainer().innerHTML = response; this.toggleContainer();  },
  *         afterSort:      function(li, response) { alert( 'Record #' + this.getRecordId(li) + ' changed position'); },
- *         afterDelete:    function(li, response)  { Element.remove(li); }
+ *         afterDelete:    function(li, response)  { this.remove(li); }
  *     });
  * </script>
  * </code>
@@ -68,10 +68,10 @@ ActiveList.prototype = {
      * @var Hash
      */
     icons: {
-        'sort':     "image/silk/page_go.png",
-        'edit':     "image/silk/page_edit.png",
-        'delete':   "image/silk/page_delete.png",
-        'view':     "image/silk/page.png",
+        'sort':     "image/silk/arrow_switch.png",
+        'edit':     "image/silk/pencil.png",
+        'delete':   "image/silk/cancel.png",
+        'view':     "image/silk/zoom.png",
         'progress': "image/silk/additional/animated_progress_brown.gif"
     },
 
@@ -81,7 +81,7 @@ ActiveList.prototype = {
      *
      * @var array
      */
-    requiredCallbacks: ['sort', 'delete', 'edit'],
+    requiredCallbacks: [],
 
     /**
      * When active list is created it depends on automatically generated html
@@ -120,6 +120,9 @@ ActiveList.prototype = {
     {
 
         this.ul = typeof(ul) == 'string' ? $(ul) : ul;
+
+        Element.addClassName(this.ul, this.ul.id);
+
 
         // Check if ul has an id
         if(!this.ul.id)
@@ -160,25 +163,18 @@ ActiveList.prototype = {
      */
     toggleContainer: function(li, action)
     {
-        try
-        {
-            var container = this.getContainer(li ? li : false, action ? action : this.getAction(this.toggleContainer.caller));
+        var container = this.getContainer(li ? li : false, action ? action : this.getAction(this.toggleContainer.caller));
 
-            if(container.style.display == 'none')
-            {
-                Effect.BlindDown(container.id, {duration: 0.5});
-                Effect.Appear(container.id, {duration: 1.0});
-                setTimeout(function() { container.style.height = 'auto'; container.style.display = 'block'}, 300);
-            }
-            else
-            {
-                Effect.BlindUp(container.id, {duration: 0.2});
-                setTimeout(function() { container.style.display = 'none'}, 40);
-            }
-        }
-        catch(e)
+        if(container.style.display == 'none')
         {
-            jsTrace.debug(e);
+            Effect.BlindDown(container.id, {duration: 0.5});
+            Effect.Appear(container.id, {duration: 1.0});
+            setTimeout(function() { container.style.height = 'auto'; container.style.display = 'block'}, 300);
+        }
+        else
+        {
+            Effect.BlindUp(container.id, {duration: 0.2});
+            setTimeout(function() { container.style.display = 'none'}, 40);
         }
     },
 
@@ -266,6 +262,30 @@ ActiveList.prototype = {
     },
 
 
+    addRecord: function(id, dom, position)
+    {
+        var li = document.createElement('li');
+        li.id = this.ul.id + "_" + id;
+
+        if (!(dom.constructor.toString().indexOf("Array") == -1))
+        {
+            for(var i = 0; i < dom.length; i++)
+            {
+                li.appendChild(dom[i]);
+            }
+        }
+        else
+        {
+            li.appendChild(dom);
+        }
+
+        this.ul.appendChild(li);
+        this.decorateLi(li);
+        this.rebindIcons(li);
+        this.createSortable();
+    },
+
+
     /***************************************************************************
     /*           Private methods                                               *
     /***************************************************************************
@@ -281,7 +301,7 @@ ActiveList.prototype = {
 
         for(var i = 0; i < liArray.length; i++)
         {
-            this.decorateLi(liArray[i]);
+            if(this.ul == liArray[i].parentNode) this.decorateLi(liArray[i]);
         }
     },
 
@@ -437,40 +457,32 @@ ActiveList.prototype = {
      */
     bindAction: function(li, action)
     {
-        try
+        this.rebindIcons(li);
+
+        if(action != 'sort')
         {
-            this.rebindIcons(li);
+            this._currentLi = li;
+            var url = this.callbacks[('before-'+action).camelize()].call(this, li);
 
-            if(action != 'sort')
-            {
-                this._currentLi = li;
-                var url = this.callbacks[('before-'+action).camelize()].call(this, li);
+            if(!url) return false;
 
-                if(!url) return false;
+            var self = this;
+            // display feedback
+            this.toggleProgress(li);
 
-                var self = this;
-                // display feedback
-                this.toggleProgress(li);
+            // execute the action
+            new Ajax.Request(
+                    url,
+                    {
+                        method: 'get',
 
-                // execute the action
-                new Ajax.Request(
-                        url,
+                        // the object context mystically dissapears when onComplete function is called,
+                        // so the only way I could make it work is this
+                        onComplete: function(param)
                         {
-                            method: 'get',
-
-                            // the object context mystically dissapears when onComplete function is called,
-                            // so the only way I could make it work is this
-                            onComplete: function(param)
-                            {
-                                jsTrace.send("self.callUserCallback(" + action + ", " + param + ", " + li +")");
-                                self.callUserCallback(action, param, li);
-                            }
-                        });
-            }
-        }
-        catch (e)
-        {
-            jsTrace.send(e);
+                            self.callUserCallback(action, param, li);
+                        }
+                    });
         }
     },
 
@@ -483,7 +495,6 @@ ActiveList.prototype = {
      */
     toggleProgress: function(li)
     {
-        jsTrace.send(li.progress.style.visibility);
         li.progress.style.visibility = (li.progress.style.visibility == 'visible') ? 'hidden' : 'visible';
     },
 
@@ -498,17 +509,9 @@ ActiveList.prototype = {
      */
     callUserCallback: function(action, response, li)
     {
-        try
-        {
-            this._currentLi = li;
-            this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
-            jsTrace.send('turn off progress');
-            this.toggleProgress(li);
-        }
-        catch(e)
-        {
-            jsTrace.debug(e);
-        }
+        this._currentLi = li;
+        this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
+        this.toggleProgress(li);
     },
 
     /**
@@ -518,26 +521,22 @@ ActiveList.prototype = {
      */
     createSortable: function ()
     {
-        try
+        var self = this;
+
+        this.decorateItems();
+
+        Element.addClassName(this.ul, this.cssPrefix.substr(0, this.cssPrefix.length-1));
+        Sortable.create(this.ul.id,
         {
-            var self = this;
+            dropOnEmpty:   true,
+            constraint:    false,
+            handle:        this.cssPrefix + 'sort',
 
-            this.decorateItems();
-
-            Element.addClassName(this.ul, this.cssPrefix.substr(0, this.cssPrefix.length-1));
-            Sortable.create(this.ul.id,
-            {
-                dropOnEmpty:true,
-                constraint: false,
-                handle:     this.cssPrefix + 'sort',
-                // the object context mystically dissapears when onComplete function is called,
-                // so the only way I could make it work is this
-                onChange: function(elementObj) { jsTrace.send("moving..."); self.dragged = elementObj; },
-                onUpdate: function() { self.saveSortOrder(); }
-            });
-        } catch (e) {
-            jsTrace.debug(e);
-        }
+                           // the object context mystically dissapears when onComplete function is called,
+                           // so the only way I could make it work is this
+            onChange:      function(elementObj) { self.dragged = elementObj; },
+            onUpdate:      function() { self.saveSortOrder(); }
+        });
     },
 
     /**
@@ -737,6 +736,13 @@ ActiveList.prototype = {
     getPrevSibling: function(element)
     {
         return !element.previousSibling ? element.parentNode.lastChild : element.previousSibling;
+    },
+
+
+    remove: function(li)
+    {
+        Effect.SwitchOff(li, {duration: 1});
+        setTimeout(function() { Element.remove(li); }, 10000);
     }
 
 }

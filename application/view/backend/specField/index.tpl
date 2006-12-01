@@ -20,6 +20,14 @@
      * Create spec field prototype. Some fields are always the same
      * so we define them in
      */
+    Backend.SpecField.prototype.links = {};
+    Backend.SpecField.prototype.links.deleteField = {/literal}'{link controller=backend.specField action=delete}/'{literal};
+    Backend.SpecField.prototype.links.editField = {/literal}'{link controller=backend.specField action=item}/'{literal};
+    Backend.SpecField.prototype.links.sortField = {/literal}'{link controller=backend.specField action=sort}/'{literal};
+
+    Backend.SpecField.prototype.links.deleteValue = {/literal}'{link controller=backend.specField action=deleteValue}/'{literal};
+    Backend.SpecField.prototype.links.sortValues = {/literal}'{link controller=backend.specField action=sortValues}/'{literal};
+
 
     {/literal}
     {foreach from=$configuration item="configItem" key="configKey"}
@@ -35,16 +43,16 @@
     specFieldListCallbacks = {
         beforeEdit:     function(li)
         {
-                this.toggleContainer(li, 'edit');
             if(this.isContainerEmpty(li, 'edit'))
             {
-                return '{/literal}/backend.specField/item/{literal}'+this.getRecordId(li)
+                return Backend.SpecField.prototype.links.editField + this.getRecordId(li)
             }
             else
             {
                 var controls = document.getElementsByClassName("specField_controls", li)[0];
                 controls.style.display = (controls.style.display = 'none') ? 'inline' : 'none';
 
+                this.toggleContainer(li, 'edit');
             }
         },
         afterEdit:      function(li, response)
@@ -63,7 +71,7 @@
         {
             if(confirm('Are you sure you wish to remove record #' + this.getRecordId(li) + '?'))
             {
-                return '{/literal}{link controller=backend.specField action=delete}{literal}?id='+this.getRecordId(li)
+                return Backend.SpecField.prototype.links.deleteField + this.getRecordId(li)
             }
         },
         afterDelete:    function(li, jsonResponse)
@@ -74,8 +82,7 @@
 
                 if(response.status == 'success')
                 {
-                    Effect.SwitchOff(li, {duration: 1});
-                    setTimeout(function() { Element.remove(li); }, 10000);
+                    this.remove(li);
                 }
             }
             catch(e)
@@ -87,7 +94,7 @@
 
         beforeSort:     function(li, order)
         {
-            return 'someurl.php?' + order
+            return Backend.SpecField.prototype.links.sortField + '?' + order
         },
         afterSort:      function(li, response)
         {

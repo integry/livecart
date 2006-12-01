@@ -40,7 +40,6 @@
  * @version 1.0
  * @author Sergej Andrejev
  */
-
 if (Backend == undefined)
 {
 	var Backend = {}
@@ -53,31 +52,87 @@ Backend.SpecField.prototype = {
     /**
 	 * Constructor
 	 *
-	 * @param specFields Spec Field values
+	 * @param specFieldsJson Spec Field values
+	 * @param hash If true the passed specField is an object. If hash is not passed or false then specFieldJson will be parsed as json string
 	 *
 	 * @access public
 	 *
 	 */
-	initialize: function(specField)
+	initialize: function(specFieldJson, hash)
 	{
-	    this.id = specField.ID;
-	    this.categoryID = specField.categoryID;
-	    this.rootId = specField.rootId ? specField.rootId : this.cssPrefix + "item";
-		this.type = specField.type;
-		this.values = specField.values;
+	    try
+	    {
+    	    this.specField = !hash ? eval("(" + specFieldJson + ")" ) : specFieldJson;
+    	    this.cloneForm('specField_item_blank', this.specField.rootId);
 
-		this.name = specField.name;
-		this.description = specField.description;
+    	    this.id = this.specField.ID;
+    	    this.categoryID = this.specField.categoryID;
+    	    this.rootId = this.specField.rootId;
 
-		this.handle = specField.handle;
-		this.multipleSelector = specField.multipleSelector;
-		this.dataType = specField.dataType;
-		this.translations = specField.translations;
+    		this.type = this.specField.type;
+    		this.values = this.specField.values;
 
-		this.isNew = specField.isNew;
+    		this.name = this.specField.name;
+    		this.description = this.specField.description;
 
-		this.findUsedNodes();
-		this.bindFields();
+    		this.handle = this.specField.handle;
+    		this.multipleSelector = this.specField.multipleSelector;
+    		this.dataType = this.specField.dataType;
+    		this.translations = this.specField.translations;
+
+    		this.isNew = this.specField.isNew;
+
+    		this.findUsedNodes();
+    		this.bindFields();
+	    }
+	    catch(e)
+	    {
+	        alert(e.fileName + ":" + e.lineNumber + "\n" + e.message);
+	    }
+	},
+
+    /**
+	 * This function destroys the old spec field form, then clones the prototype and then calls constructor once again
+	 *
+	 * @param specFields Spec Field values
+	 * @param hash If true the passed specField is an object. If hash is not passed or false then specFieldJson will be parsed as json string
+	 *
+	 * @access public
+	 *
+	 */
+	recreate: function(specFieldJson, hash)
+	{
+	    var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ?  window.activeSpecFieldsList.getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
+        root.innerHTML = '';
+        $H(this).each(function(el)
+        {
+            el = false;
+        });
+	    this.initialize(specFieldJson, hash);
+	},
+
+
+	/**
+	 * Instead of sending spec field form we store form prototype which is cloned every time new spec field data is being recieved.
+	 *
+	 * @param prototypeId Id of root prototype element
+	 * @param rootId Id of root element where the copy of prototype will be copied
+	 *
+	 * @access private
+	 */
+	cloneForm: function(prototypeId, rootId)
+	{
+	    var blankForm = $(prototypeId);
+        var blankFormValues = blankForm.getElementsByTagName("*");
+        var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ?  window.activeSpecFieldsList.getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
+
+        for(var i = 0; i < blankFormValues.length; i++)
+        {
+            if(blankFormValues[i] && blankFormValues[i].parentNode == blankForm)
+            {
+                root.appendChild(blankFormValues[i].cloneNode(true));
+            }
+        }
 	},
 
 
@@ -176,6 +231,8 @@ Backend.SpecField.prototype = {
 		this.loadTypes();
 		this.typeWasChangedAction();
 
+		new Form.EventObserver(this.nodes.form, function() { self.formChanged = true; } );
+		Form.backup(this.nodes.form);
 	},
 
 	/**
@@ -249,14 +306,28 @@ Backend.SpecField.prototype = {
 		});
 
 	    new ActiveList(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0], {
-	        beforeSort: function(li, order){ return 'sort.php?'+order},
+	        beforeSort: function(li, order)
+	        {
+	            return self.links.sortValues + '?target=' + this.ul.id + '&' + order;
+	        },
 	        afterSort: function(li, response){ },
-	        beforeEdit: function(li){ },
-	        afterEdit: function(li, response){ },
-	        beforeDelete: function(li){ if(confirm('Are you realy want to delete this item?')) return 'delete.php?id='+this.getRecordId(); },
-	        afterDelete: function(li, response){ self.deleteValueFieldAction(li) }
+	        beforeDelete: function(li){
+	            if(confirm('Are you realy want to delete this item?'))
+	            {
+	                if(this.getRecordId(li).match(/^new/))
+	                {
+	                    self.deleteValueFieldAction(li, this);
+	                }
+	                else
+	                {
+	                    return Backend.SpecField.prototype.links.deleteValue + this.getRecordId(li);
+	                }
+	            }
+	        },
+	        afterDelete: function(li, response){ self.deleteValueFieldAction(li, this) }
 	    });
 	},
+
 
 
 	/**
@@ -392,7 +463,7 @@ Backend.SpecField.prototype = {
 	loadLanguagesAction: function()
 	{
 		var self = this;
-		if(!this.languageCodes) this.languageCodes = [];
+		this.languageCodes = [];
 
 		$H(this.languages).each(function(language) {
 			self.languageCodes[self.languageCodes.length] = language.key;
@@ -490,7 +561,7 @@ Backend.SpecField.prototype = {
 
 	/**
 	 * When we add new value "Values" step we are also adding it to "Translations" step. Field name
-	 * will have new_3 (or any other number) in its name. We are not realy creating a field here. Instead
+	 * will have new3 (or any other number) in its name. We are not realy creating a field here. Instead
 	 * we are calling for addField method to do the job. The only usefull thing we are doing here is
 	 * generating an id for new field
 	 *
@@ -509,7 +580,7 @@ Backend.SpecField.prototype = {
 
 		Event.stop(e);
 
-		this.addField(null, "new_" + this.countNewValues, true);
+		this.addField(null, "new" + this.countNewValues, true);
 		this.countNewValues++;
 	},
 
@@ -523,13 +594,15 @@ Backend.SpecField.prototype = {
 	 * @access private
 	 *
 	 */
-	deleteValueFieldAction: function(li)
+	deleteValueFieldAction: function(li, activeList)
 	{
 		var splitedHref = li.id.split("_");
 		var isNew = splitedHref[splitedHref.length - 2] == 'new' ? true : false;
-		var id = (isNew ? 'new_' : '') + splitedHref[splitedHref.length - 1];
+		var id = (isNew ? 'new' : '') + splitedHref[splitedHref.length - 1];
 
-		for(var i = 0; i < this.languageCodes.length; i++)
+        activeList.remove(li);
+
+		for(var i = 1; i < this.languageCodes.length; i++)
 		{
 			var translatedValue = document.getElementById(this.cssPrefix + "form_values_" + this.languageCodes[i] + "_" + id);
 
@@ -654,7 +727,7 @@ Backend.SpecField.prototype = {
 
 		var splitedHref = e.target.parentNode.id.split("_");
 		var isNew = splitedHref[splitedHref.length - 2] == 'new' ? true : false;
-		var id = (isNew ? 'new_' : '') + splitedHref[splitedHref.length - 1];
+		var id = (isNew ? 'new' : '') + splitedHref[splitedHref.length - 1];
 
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
@@ -749,15 +822,19 @@ Backend.SpecField.prototype = {
 		// If we have a template class then copy it
 		if(values.length > 0 && values[0].className.split(' ').indexOf('dom_template') !== -1)
 		{
+
+			var ul = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
+			ul.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[0];
+
 			var newValue = values[0].cloneNode(true);
 			Element.removeClassName(newValue, "dom_template");
-
-			newValue.id = newValue.id + this.languageCodes[0] + "_" + id;
+			newValue.id = ul.id +  "_" + id;
 
 			// The field itself
 			var input = newValue.getElementsByTagName("input")[0];
 			input.name = "values[" + id + "]["+this.languageCodes[0]+"]";
 			input.value = (value && value[this.languageCodes[0]]) ? value[this.languageCodes[0]] : '' ;
+
 
 			// Defautl checkbox
 //			var checkbox = newValue.getElementsByTagName("input")[1];
@@ -765,8 +842,6 @@ Backend.SpecField.prototype = {
 //			checkbox.checked = isDefault;
 
 
-			var ul = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
-			ul.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[0];
 			ul.appendChild(newValue);
 
 			// now insert all translation fields
@@ -817,6 +892,16 @@ Backend.SpecField.prototype = {
 
 		Event.stop(e);
 
+		// first cancel all modifications if they took place
+		if(this.id == 'new')
+		{
+		    this.recreate(this.specField, true);
+		}
+		else if(Form.hasBackup(this.nodes.form) && this.formChanged)
+		{
+            Form.restore(this.nodes.form);
+		}
+
 		// Use Active list toggleContainer() method if this specField is inside Active list
 		// Note that if it is inside a list we are showing and hidding form with the same action,
 		// butt =] when dealing with new form showing form action is handled by Backend.SpecField::createNewAction()
@@ -844,7 +929,7 @@ Backend.SpecField.prototype = {
 
 	    try
 	    {
-	       feedback.firstChild.nodeValue = value;
+	        feedback.firstChild.nodeValue = value;
 	    }
 	    catch(e)
 	    {
@@ -894,7 +979,7 @@ Backend.SpecField.prototype = {
 		}
 		catch (e)
 		{
-		    jsTrace.send("Oh, well..")
+		    // New item has no pr06r3s5 indicator
 		}
 
         new Ajax.Request(
@@ -915,8 +1000,6 @@ Backend.SpecField.prototype = {
      */
     afterSaveAction: function(jsonResponseString)
     {
-        jsTrace.send(jsonResponseString);
-
         this.clearAllFeedBack();
 
         try
@@ -925,10 +1008,9 @@ Backend.SpecField.prototype = {
         }
         catch(e)
         {
-            jsTrace.debug(e);
+            alert("json error");
         }
 
-        jsTrace.send(jsonResponse);
         if(jsonResponse.status == 'success')
         {
             Form.backup(this.nodes.form);
@@ -939,22 +1021,13 @@ Backend.SpecField.prototype = {
             }
             else
             {
+                window.activeSpecFieldsList.addRecord(jsonResponse.id, document.createTextNode(this.nodes.name.value));
                 this.hideNewSpecFieldAction();
+    		    this.recreate(this.specField, true);
             }
         }
         else
         {
-            try
-            {
-                Form.backup(this.nodes.form);
-                Form.reset(this.nodes.form);
-                Form.restore(this.nodes.form);
-            }
-            catch(e)
-            {
-                jsTrace.debug(e);
-            }
-
             if(jsonResponse.errors)
             {
                 for(var fieldName in jsonResponse.errors)
@@ -982,7 +1055,7 @@ Backend.SpecField.prototype = {
 		}
 		catch (e)
 		{
-		    jsTrace.send("Oh, well..")
+		    // new item has no progress indicator
 		}
     },
 
@@ -1057,7 +1130,8 @@ Backend.SpecField.prototype = {
      */
     createNewAction: function(e)
     {
-        if(!e){
+        if(!e)
+        {
             e = window.event;
             e.target = e.srcElement;
         }

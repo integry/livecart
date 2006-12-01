@@ -17,15 +17,17 @@ class SpecFieldValue extends MultilingualObject
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("specFieldID", "SpecField", "ID", "SpecField", ARInteger::instance()));
+		$schema->registerField(new ARField("position", ARInteger::instance(2)));
 
 		$schema->registerField(new ARField("value", ARArray::instance()));
-//		$schema->registerField(new ARField("position", ARInteger::instance()));
+		$schema->registerField(new ARField("position", ARInteger::instance(2)));
 
 	}
 
 	public static function getRecordSetArray($specFieldId)
 	{
         $filter = new ARSelectFilter();
+		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"));
         $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'specFieldID'), $specFieldId));
 
         return parent::getRecordSetArray(__CLASS__, $filter, false);
@@ -73,6 +75,14 @@ class SpecFieldValue extends MultilingualObject
 	    {
 	        $this->setValueByLang($fieldName, $lang, isset($fieldValue[$lang]) ? $fieldValue[$lang] : '');
 	    }
+	}
+
+	/**
+	 * Delete spec field from database
+	 */
+	public static function delete($id)
+	{
+	    parent::deleteByID(__CLASS__, (int)$id);
 	}
 }
 

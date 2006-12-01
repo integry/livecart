@@ -63,7 +63,7 @@ class SpecFieldController extends StoreManagementController
 //		$this->setLayout("empty");
 
 
-        $categoryID = 8;
+        $categoryID = (int)$this->request->getValue('id');
         $category = Category::getInstanceByID($categoryID);
         $response->setValue('specFields', $category->getSpecFieldList());
 
@@ -164,10 +164,10 @@ class SpecFieldController extends StoreManagementController
 
             if(!empty($values))
             {
-                $position = 0;
+                $position = 1;
                 foreach ($values as $key => $value)
                 {
-                    if(preg_match('/^new_/', $key))
+                    if(preg_match('/^new/', $key))
                     {
                         $specFieldValues = SpecFieldValue::getNewInstance();
                     }
@@ -187,6 +187,7 @@ class SpecFieldController extends StoreManagementController
 
 
                     $specFieldValues->setFieldValue('specFieldID', $specField);
+                    $specFieldValues->setFieldValue('position', $position);
 
                     $specFieldValues->save();
 
@@ -194,7 +195,7 @@ class SpecFieldController extends StoreManagementController
                 }
             }
 
-            return new JSONResponse(array('status' => 'success'));
+            return new JSONResponse(array('status' => 'success', 'id' => $specFieldID));
         }
         else
         {
@@ -250,7 +251,7 @@ class SpecFieldController extends StoreManagementController
     {
         if($id = $this->request->getValue("id", false))
         {
-//            SpecField::delete($id);
+            SpecField::delete($id);
             return new JSONResponse(array('status' => 'success'));
         }
         else
@@ -258,56 +259,47 @@ class SpecFieldController extends StoreManagementController
             return new JSONResponse(array('status' => 'failure'));
         }
     }
+
+    public function sort()
+    {
+        foreach($this->request->getValue('specField_items_list') as $position => $key)
+        {
+            if(!empty($key))
+            {
+                $specField = SpecField::getInstanceByID((int)$key);
+                $specField->setFieldValue('position', (int)$position);
+                $specField->save();
+            }
+        }
+    }
+
+
+    public function deleteValue()
+    {
+        if($id = $this->request->getValue("id", false))
+        {
+            SpecFieldValue::delete($id);
+            return new JSONResponse(array('status' => 'success'));
+        }
+        else
+        {
+            return new JSONResponse(array('status' => 'failure'));
+        }
+    }
+
+
+    public function sortValues()
+    {
+        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        {
+            // Except new fields, because they are not yet in database
+            if(!empty($key) && !preg_match('/^new/', $key))
+            {
+                $specField = SpecFieldValue::getInstanceByID((int)$key);
+                $specField->setFieldValue('position', (int)$position);
+                $specField->save();
+            }
+        }
+    }
+
 }
-
-
-
-
-/**
- *
- *
- *   private function buildValidator()
- *   {
- *       ClassLoader::import("framework.request.validator.RequestValidator");
- *       $validator = new RequestValidator("specField", $this->request);
- *
- *       $validator->addCheck("name", new IsNotEmptyCheck("You must enter your name"));
- *       $validator->addCheck("name", new MaxLengthCheck("Field name must not exceed 40 chars", 40));
- *       $validator->addCheck("type", new IsNotEmptyCheck("You must set a field type"));
- *
- *       return $validator;
- *   }
- *
-
- *
- *       $validator = $this->buildValidator();
- *       $validator->execute();
- *       if ($validator->hasFailed())
- *       {
- *           $validator->saveState();
- *           return new ActionRedirectResponse("backend.specField", "form");
- *       }
- *       else
- *       {
- *           if ($this->request->isValueSet("id"))
- *           {
- *               $specField = SpecField::getInstanceByID($this->request->getValue("id"));
- *           }
- *           else
- *           {
- *               $specField = SpecField::getNewInstance();
- *           }
- *
- *           $langCode = $this->user->getActiveLang()->getID();
- *           $category = Category::getInstanceByID($this->request->getValue("categoryID"));
- *
- *           $specField->lang($langCode)->name->set($form->getFieldValue('name'));
- *           $specField->lang($langCode)->description->set($form->getFieldValue('description'));
- *           $specField->category->set($category);
- *           $specField->type->set($this->request->getValue("type"));
- *           $specField->dataType->set($this->request->getValue("dataType"));
- *           $specField->handle->set($this->request->getValue("handle"));
- *           return new ActionRedirectResponse("backend.specField", "form", array("id" => $this->request->getValue('id')));
- *       }
- */
-?>
