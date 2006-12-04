@@ -72,27 +72,6 @@ class CategoryController extends StoreManagementController
 
 			return new JSONResponse($categoryNode->toArray());
 		}
-		/*
-		$validator = $this->buildValidator();
-		if ($validator->isValid())
-		{
-			$parentId = $this->request->getValue("id", 0);
-			$parent = ActiveTreeNode::getInstanceByID("Category", $parentId);
-			$categoryNode = ActiveTreeNode::getNewInstance("Category", $parent);
-
-			$multilingualFields = array("name", "description", "keywords");
-			$defaultLang = $this->store->getDefaultLanguageCode();
-			$langArray = $this->store->getLanguageArray();
-
-			$categoryNode->setValueArrayByLang($multilingualFields, $defaultLang, $langArray, $this->request);
-			$categoryNode->isActive->set($this->request->getValue("isActive"));
-			$categoryNode->save();
-		}
-		else
-		{
-			return new ActionRedirectResponse($this->request->getControllerName(), "form");
-		}
-		*/
 	}
 
 	/**
