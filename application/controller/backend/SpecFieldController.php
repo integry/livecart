@@ -56,7 +56,6 @@ class SpecFieldController extends StoreManagementController
 
     public function index()
     {
-
         $this->setLayout("mainLayout");
 
         $response = new ActionResponse();
@@ -271,6 +270,8 @@ class SpecFieldController extends StoreManagementController
                 $specField->save();
             }
         }
+
+        return new JSONResponse(array('status' => 'success'));
     }
 
 
@@ -300,6 +301,8 @@ class SpecFieldController extends StoreManagementController
                 $specField->save();
             }
         }
+
+        return new JSONResponse(array('status' => 'success'));
     }
 
 }

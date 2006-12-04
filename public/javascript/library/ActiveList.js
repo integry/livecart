@@ -118,7 +118,6 @@ ActiveList.prototype = {
      */
     initialize: function(ul, callbacks)
     {
-
         this.ul = typeof(ul) == 'string' ? $(ul) : ul;
 
         Element.addClassName(this.ul, this.ul.id);
@@ -299,9 +298,25 @@ ActiveList.prototype = {
     {
         var liArray = this.ul.getElementsByTagName("li");
 
+        // This fixes some strange explorer bug/"my stypidity"
+        // Basically, what is happening is thet when I push edit button (pencil)
+        // on first element, everything just dissapears. All other elements
+        // are fine though. To fix this I am adding an hidden first element
+        if(this.ul.firstChild && this.ul.firstChild.className != 'ignore')
+        {
+            var fix = document.createElement('li');
+            fix.appendChild(document.createTextNode('fix'));
+            fix.style.visibility = 'hidden';
+            fix.style.height = '0px';
+            fix.className = "ignore";
+
+            if(this.ul.firstChild) this.ul.insertBefore(fix, this.ul.firstChild);
+            else this.ul.appendChild(fix);
+        }
+
         for(var i = 0; i < liArray.length; i++)
         {
-            if(this.ul == liArray[i].parentNode) this.decorateLi(liArray[i]);
+            if(this.ul == liArray[i].parentNode && liArray[i].className != 'ignore') this.decorateLi(liArray[i]);
         }
     },
 
@@ -327,6 +342,7 @@ ActiveList.prototype = {
         // Add tab index
         li.tabIndex       = this.tabIndex;
 
+
         // Create icons container. All icons will be placed incide it
         var iconsDiv = document.getElementsByClassName(self.cssPrefix + 'icons', li)[0];
         if(!iconsDiv)
@@ -337,14 +353,9 @@ ActiveList.prototype = {
         }
 
         // add all icons
-
-
-
-
         $A(this.ul.className.split(' ')).each(function(className)
         {
             // If icon is not progress and it was added to a whole list or only this item then put that icon into container
-            var test = self;
             self.addIconToContainer(li, className);
         });
 
@@ -385,11 +396,13 @@ ActiveList.prototype = {
         var iconImage = document.getElementsByClassName(this.cssPrefix + icon.action, li)[0];
         if(!iconImage)
         {
-            iconImage = document.createElement('div');
-            iconImage.style.background = "url("+icon.image+") no-repeat";
+            iconImage = document.createElement('img');
+            iconImage.src = icon.image;
             iconImage.style.visibility = 'hidden';
             Element.addClassName(iconImage, this.cssPrefix + icon.action);
             Element.addClassName(iconImage, this.cssPrefix + 'icons_container');
+
+
 
             // If icon is removed from this item than do not display the icon
             if((Element.hasClassName(li, this.cssPrefix + 'remove_' + icon.action) || !Element.hasClassName(this.ul, this.cssPrefix + 'add_' + icon.action)) && !Element.hasClassName(li, this.cssPrefix + 'add_' + icon.action))
@@ -409,7 +422,7 @@ ActiveList.prototype = {
         if(icon.action != 'sort')
         {
             var self = this;
-            iconImage.onclick = function() { self.bindAction(li, icon.action) }
+            iconImage.onclick = function() {  self.bindAction(li, icon.action) }
 
             var container = document.createElement('div');
             container.style.display = 'none';
@@ -598,7 +611,10 @@ ActiveList.prototype = {
 
                 // the object context mystically dissapears when onComplete function is called,
                 // so the only way I could make it work is this
-                onComplete: function(param) { this.dragged = false; self.restoreDraggedItem(param); }
+                onComplete: function(param)
+                {
+                    self.restoreDraggedItem(param.responseText);
+                }
             });
         }
     },
@@ -611,15 +627,13 @@ ActiveList.prototype = {
      *
      * @access private
      */
-    restoreDraggedItem: function(originalRequest)
+    restoreDraggedItem: function(item)
     {
-        item = originalRequest.responseText;
-
         this.rebindIcons(this.dragged);
         this.hideMenu(this.dragged);
 
         this._currentLi = this.dragged;
-        var url = this.callbacks.afterSort.call(this, this.dragged, originalRequest.responseText);
+        var url = this.callbacks.afterSort.call(this, this.dragged, item);
         this.toggleProgress(this.dragged);
 
         this.dragged = false;
@@ -678,7 +692,7 @@ ActiveList.prototype = {
             break;
         }
 
-        keyboard.deselectText();
+//        keyboard.deselectText();
     },
 
     /**

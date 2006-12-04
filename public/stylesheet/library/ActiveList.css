@@ -26,3 +26,12 @@ ul.activeList
     clear: both;
   	list-style: none;
 }
+
+
+/*
+ * Do not delete this rule as it fixes bug in explorer version.
+ * For more details ActiveList::decorateLi() function in ActiveList.js
+ */
+.activeList .ignore *
+{
+}

@@ -109,6 +109,7 @@ Backend.SpecField.prototype = {
             el = false;
         });
 	    this.initialize(specFieldJson, hash);
+	    this.clearAllFeedBack();
 	},
 
 
@@ -160,10 +161,8 @@ Backend.SpecField.prototype = {
 
 		for(var i = 0; i < this.nodes.stepLevOne.length; i++)
 		{
-            var test = this.nodes.stepLevOne[i];
 		    if(!this.nodes.stepLevOne[i].id) this.nodes.stepLevOne[i].id = this.nodes.stepLevOne[i].className.replace(/ /, "_") + "_" + this.id;
 		}
-
 
 		this.nodes.mainTitle 			= document.getElementsByClassName(this.cssPrefix + "title", this.nodes.parent)[0];
 		this.nodes.id 					= document.getElementsByClassName(this.cssPrefix + "form_id", this.nodes.parent)[0];
@@ -521,42 +520,35 @@ Backend.SpecField.prototype = {
 	 */
 	changeTranslationLanguageAction: function(e)
 	{
-		if(!e)
+	    if(!e)
 		{
 			e = window.event;
 			e.target = e.srcElement;
 		}
 
-		Event.stop(e);
+        Event.stop(e);
 
-		var currentLanguageClass = this.cssPrefix + e.target.hash.substring(1);
+		var	currentLanguageClass = this.cssPrefix + e.target.hash.replace(/^#+/, '');
+
 		var translationsNodes = document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations);
+		var translationsLinks = document.getElementsByClassName(this.cssPrefix + "translations_links", this.nodes.stepTranslations);
+
+		var same = e.target.hasClassName(this.cssPrefix + "step_translations_language_active");
 
 		for(var i = 0; i < translationsNodes.length; i++)
 		{
-			var classes = translationsNodes[i].className.split(/ /);
-
-		    if(!Element.hasClassName(translationsNodes[i], currentLanguageClass) || translationsNodes[i].style.display == 'block')
-			{
-			    translationsNodes[i].style.display = 'none';
-
-			    for(var j = 0; j < classes.length; j++)
-			    {
-			        var node = document.getElementsByClassName(classes[j] + "_link", this.nodes.parent)[0];
-			        if(node) Element.removeClassName(node, this.cssPrefix + "step_translations_language_active")
-			    }
-			}
-			else
-			{
-			    translationsNodes[i].style.display = 'block';
-
-			    for(var j = 0; j < classes.length; j++)
-			    {
-			        var node = document.getElementsByClassName(classes[j] + "_link", this.nodes.parent)[0];
-			        if(node) Element.addClassName(node, this.cssPrefix + "step_translations_language_active")
-			    }
-			}
+		    translationsNodes[i].style.display = 'none';
 		}
+
+		if(!same) document.getElementsByClassName(currentLanguageClass, this.nodes.stepTranslations)[0].style.display = 'block';
+
+		for(var i = 0; i < translationsLinks.length; i++)
+		{
+		    Element.removeClassName(translationsLinks[i], this.cssPrefix + "step_translations_language_active");
+		}
+
+		if(!same) Element.addClassName(e.target, this.cssPrefix + "step_translations_language_active");
+
 	},
 
 	/**
@@ -639,7 +631,7 @@ Backend.SpecField.prototype = {
 			{
 				for(var j = 0; j < this.types[this.nodes.dataType[i].value].length; j++)
 				{
-					this.nodes.type.options[j] = this.types[this.nodes.dataType[i].value][j].cloneNode(true);
+					this.nodes.type.options[j] = new Option(this.types[this.nodes.dataType[i].value][j][1], this.types[this.nodes.dataType[i].value][j][0]);
 				}
 
 				this.dataType = this.nodes.dataType[i].value;
@@ -925,7 +917,7 @@ Backend.SpecField.prototype = {
      */
 	setFeedback: function(field, value)
 	{
-	    var feedback = document.getElementsByClassName('feedback', field.parentNode)[0];
+	     var feedback = document.getElementsByClassName('feedback', field.parentNode)[0];
 
 	    try
 	    {
@@ -935,6 +927,8 @@ Backend.SpecField.prototype = {
 	    {
 	        feedback.appendChild(document.createTextNode(value))
 	    }
+
+        feedback.style.visibility = 'visible';
 	},
 
 
@@ -946,10 +940,10 @@ Backend.SpecField.prototype = {
 	{
 	    var feedback = document.getElementsByClassName('feedback', this.nodes.parent);
 
-	    for(var i = 0; i < feedback.length; i++)
+	    $A(feedback).each(function(field)
 	    {
-	        feedback[i].firstChild.nodeValue = ' ';
-	    }
+            field.style.visibility = 'hidden';
+	    });
 	},
 
 
@@ -982,14 +976,18 @@ Backend.SpecField.prototype = {
 		    // New item has no pr06r3s5 indicator
 		}
 
+		this.clearAllFeedBack();
         new Ajax.Request(
             this.nodes.form.action,
             {
                 method: this.nodes.form.method,
                 postBody: Form.serialize(this.nodes.form),
-                onComplete: function(param) { self.afterSaveAction(param.responseText) }
+                onComplete: function(param) {
+                    self.afterSaveAction(param.responseText)
+                }
             }
         );
+
     },
 
 
@@ -1000,8 +998,6 @@ Backend.SpecField.prototype = {
      */
     afterSaveAction: function(jsonResponseString)
     {
-        this.clearAllFeedBack();
-
         try
         {
             var jsonResponse = eval("("+jsonResponseString+")");
@@ -1108,7 +1104,7 @@ Backend.SpecField.prototype = {
            var options = [];
 
            $H(value.value).each(function(option) {
-               options[options.length] = new Option(option.value, option.key);
+               options[options.length] = [option.key, option.value];
            });
 
            typesOptions[value.key] = options;

@@ -8,7 +8,7 @@
     <a href="#cancel" class="specField_cancel">Cancel</a>
 </div>
 
-<form action="/backend.specField/save" method="post">
+<form action="/backend.specField/save" method="post" class="specField">
 	<!-- STEP 1 -->
 	<fieldset class="specField_step_lev1 specField_step_main">
 		<legend>Step 1 (Main language _ English)</legend>
@@ -97,7 +97,7 @@
 		<legend>Step 3 (Translations)</legend>
 
 		<div class="specField_form_values_translations_language_links">
-			<div class="dom_template specField_language_link"><a href="#step_translations_language_">language</a></div>
+			<div class="dom_template specField_language_link"><a href="#step_translations_language_" class="specField_translations_links">language</a></div>
 		</div>
 
 		<fieldset class="specField_step_translations_language dom_template specField_step_translations_language_">
