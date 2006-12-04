@@ -282,7 +282,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	 * @return ARSet
 	 * @see ARSet
 	 */
-	public function getPathNodes($loadReferencedRecords = false)
+	public function getPathNodes($includeRootNode = false, $loadReferencedRecords = false)
 	{
 		$className = get_class($this);
 		$this->load();
@@ -292,6 +292,12 @@ class ActiveTreeNode extends ActiveRecordModel
 		$filter = new ARSelectFilter();
 		$cond = new OperatorCond(new ARFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $leftValue, "<");
 		$cond->addAND(new OperatorCond(new ARFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $rightValue, ">"));
+
+		if (!$includeRootNode)
+		{
+			$cond->addAND(new OperatorCond(new ARFieldHandle($className, "ID"), self::ROOT_ID, "<>"));
+		}
+
 		$filter->setCondition($cond);
 		$filter->setOrder(new ARFieldHandle($className, self::LEFT_NODE_FIELD_NAME), ARSelectFilter::ORDER_ASC);
 

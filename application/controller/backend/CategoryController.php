@@ -122,8 +122,6 @@ class CategoryController extends StoreManagementController
 	public function viewTree()
 	{
 		$rootNode = ActiveTreeNode::getRootNode("Category");
-		//$rootNode->loadSubTree();
-		//echo "<pre>"; print_r($rootNode->toArray()); echo "</pre>";
 
 		$recordSet = $rootNode->getChildNodes(false, true);
 		echo "<pre>"; print_r($recordSet->toArray()); echo "</pre>";
@@ -133,8 +131,13 @@ class CategoryController extends StoreManagementController
 	 * Changes node position at a branch level
 	 *
 	 */
-	public function reorder()
+	public function remove()
 	{
+		$nodeId = $this->request->getValue("id");
+		if ($nodeId)
+		{
+			ActiveRecord::deleteByID("Category", $nodeId);
+		}
 	}
 
 	/**
@@ -160,14 +163,6 @@ class CategoryController extends StoreManagementController
 	{
 		$form = new Form($this->buildValidator());
 		return $form;
-	}
-
-	public function test()
-	{
-		$filter = new ARSelectFilter();
-		$filter->setCondition(new OperatorCond(new ARFieldHandle("Category", "ID"), "0", "<>"));
-		$recordSet = Category::getRecordSet($filter);
-		echo "<pre>"; print_r($recordSet->toArray()); echo "</pre>";
 	}
 
 }

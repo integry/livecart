@@ -1,44 +1,44 @@
 {literal}
 <style>
 .datagrid_table {
-  
-  	border-collapse: collapse;  	  	
+
+  	border-collapse: collapse;
 }
 .datagrid_head {
-  
-  	background-color: #ffeeee;  
+
+  	background-color: #ffeeee;
 }
 .datagrid_row {
-  
-  	background-color: #eeffee;  
+
+  	background-color: #eeffee;
 }
 .datagrid_head_col {
-  
- 	border: inset 1pt; 	 
- 	text-decoration: underline; 
+
+ 	border: inset 1pt;
+ 	text-decoration: underline;
 }
 a.datagrid_hrefs {
-  	
+
 	color: #DD8800;
 }
 .datagrid_row_col {
 
- 	border: inset 1pt; 	
+ 	border: inset 1pt;
 }
-/* Tree menu part*/	
-.treeMenuNode {      	                    
-    font-size: 10pt; 	   	    
-}            
-.treeMenuNodeSelected {      	              
-   
-	font-size: 10pt;         	
+/* Tree menu part*/
+.treeMenuNode {
+    font-size: 10pt;
+}
+.treeMenuNodeSelected {
+
+	font-size: 10pt;
 }
 .treeMenuNodeSelected a {
-   background-color:#aaaaaa; 		  	
+   background-color:#aaaaaa;
 }
 /* Tab control */
 .tabcontrol {
-	height: 235px; width: 500px; border: 1px solid #000000;  
+	height: 235px; width: 500px; border: 1px solid #000000;
 }
 .tabpage {
 	border: inset 1pt; background-color: #66BB66; padding: 3px;
@@ -51,3 +51,6 @@ a.datagrid_hrefs {
 {$filter}
 {$grid}
 {$paging}
+
+<h1>This is products section for:</h1>
+<h3>{foreach from=$path item=category}{$category}: {/foreach}</h3>

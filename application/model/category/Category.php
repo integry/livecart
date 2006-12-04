@@ -105,6 +105,27 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		}
 	}
 
+	/**
+	 * Gets path to a current node (including current node)
+	 *
+	 * Overloads parent method
+	 * @return array
+	 */
+	public function getPathNodes()
+	{
+		$path = array();
+		$pathNodes = parent::getPathNodes();
+
+		// Adding current node to the path
+		$pathNodes->add($this);
+		foreach ($pathNodes as $node)
+		{
+			$nodeArr = $node->toArray();
+			$path[] = $nodeArr['name'];
+		}
+		return $path;
+	}
+
 	public function toArray()
 	{
 		$store = Store::getInstance();

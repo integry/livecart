@@ -15,9 +15,9 @@
 		<div id="categoryBrowser" style="padding: 10px; border: 1px solid #ccc; background-color: #f1f1f1;">
 		</div>
 		<div>
-			<a href="">Create a new category</a>
+			<a href="javascript:Backend.Category.createNewBranch();">Create a new sub-category</a>
 			<br/>
-			<a href="{link controller=backend.category action=remove}">Remove selected category</a>
+			<a href="#" onclick="if (confirm('Are you sure you want to remove this category?')) Backend.Category.removeBranch(); return false;">Remove selected category</a>
 		</div>
 	</div>
 
@@ -49,6 +49,13 @@
 {foreach from=$categoryList item=category}
 	Backend.Category.treeBrowser.insertNewItem({$category.parent},{$category.ID} , '{$category.name}', 0, 0, 0, 0, "SELECT");
 {/foreach}
+
+	/**
+	 * URL assisgment for internal javascript requests
+	 */
+	var newNodeUrl = '{link controller=backend.category action=create id=%id%}';
+	var removeNodeUrl = '{link controller=backend.category action=remove id=%id%}';
+
 </script>
 
 <div id="specFieldSection"></div>

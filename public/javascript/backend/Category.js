@@ -73,7 +73,63 @@ Backend.Category = {
 		path = path.reverse();
 		var pathStr = path.join(' > ');
 		return pathStr;
+	},
+
+	createNewBranch: function()
+	{
+		var url = this.getUrlForNewNode(this.treeBrowser.getSelectedItemId());
+		var ajaxRequest = new Ajax.Request(
+			url,
+			{
+				method: 'post',
+				parameters: '',
+				onComplete: this.afterNewBranchCreated
+			});
+	},
+
+	afterNewBranchCreated: function(response)
+	{
+		eval('var newCategory = ' + response.responseText);
+		alert(newCategory.ID);
+		var parentCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
+		Backend.Category.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
+		Backend.Category.tabControl.activateTab($('tabMainDetails'), newCategory.ID);
+	},
+
+	/**
+	 * Gets an URL for creating a new node (uses a globaly defined variable "newNodeUrl")
+	 */
+	getUrlForNewNode: function(parentNodeId)
+	{
+		return this.buildUrl(newNodeUrl, parentNodeId);
+	},
+
+	getUrlForNodeRemoval: function(nodeId)
+	{
+		return this.buildUrl(removeNodeUrl, nodeId);
+	},
+
+	buildUrl: function(urlPattern, id)
+	{
+		return urlPattern.replace('%id%', id);
+	},
+
+	removeBranch: function()
+	{
+		var nodeIdToRemove = this.treeBrowser.getSelectedItemId();
+		parentNodeId = this.treeBrowser.getParentId(nodeIdToRemove);
+
+		var url = this.getUrlForNodeRemoval(nodeIdToRemove);
+		var ajaxRequest = new Ajax.Request(
+			url,
+			{
+				method: 'post'
+			});
+
+		this.treeBrowser.deleteItem(nodeIdToRemove, true);
+		this.activateCategory(parentNodeId);
 	}
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -165,9 +221,17 @@ CategoryTabControl.prototype = {
 	/**
 	 * Activates a given tab of currenty selected category
 	 */
-	activateTab: function(targetTab)
+	activateTab: function(targetTab, categoryIdToActivate)
 	{
-		var categoryId = this.treeBrowser.getSelectedItemId();
+		//alert('activating: ' + targetTab.ID + " " + categoryIdToActivate);
+		if (categoryIdToActivate == undefined)
+		{
+			var categoryId = this.treeBrowser.getSelectedItemId();
+		}
+		else
+		{
+			var categoryId = categoryIdToActivate;
+		}
 		var tabId = targetTab.id;
 
 		if (this.activeTab == targetTab)

@@ -4,14 +4,19 @@ SectionExpander.prototype = {
 
 	expandingFieldsetClassName: 'expandingSection',
 	expandingContentClassName: 'expandingSectionContent',
+	expandIconClassName: 'expandIcon',
 
+	/**
+	 * SectionExpander constructor
+	 */
 	initialize: function()
 	{
 		var sectionList = document.getElementsByClassName('expandingSection');
 		for (var i = 0; i < sectionList.length; i++)
 		{
 			var legendList = sectionList[i].getElementsByTagName('legend');
-			if (legendList[0] != undefined)
+			var expandIcon = document.getElementsByClassName('expandIcon', sectionList[i]);
+			if (legendList[0] != undefined && expandIcon[0] == undefined)
 			{
 				var legend = legendList[0];
 				legend.innerHTML = '<span class="expandIcon">' + this.getToggleIconContent(false) + '</span> ' + legend.innerHTML;
@@ -26,6 +31,10 @@ SectionExpander.prototype = {
 		}
 	},
 
+	/**
+	 * Legend element click handler
+	 * Toggles fieldsets content visibility
+	 */
 	handleLegendClick: function(evt)
 	{
 		var fieldset = evt.target.parentNode;
@@ -54,11 +63,11 @@ SectionExpander.prototype = {
 	{
 		if (isSectionOpened)
 		{
-			return '-';
+			return '[-]';
 		}
 		else
 		{
-			return '+';
+			return '[+]';
 		}
 	}
 
