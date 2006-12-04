@@ -1,3 +1,6 @@
+.transMode:hover {
+  	color: red;
+}
 html
 {
     font-size: 67.5%;
@@ -483,6 +486,18 @@ html>body #minHeight{ /*safari wrapper */
 #workArea {
   	background-color: #FFFFFF;
 	padding: 10px;
+}
+
+/* Menus */
+.menuLoadIndicator {
+	border: 1px solid black;
+	background-color: white;
+	padding: 5px;
+	width: 20px;
+	height: 20px;
+	background-image: url(../../image/indicator.gif);
+	background-position: center center;
+	background-repeat: no-repeat;
 }
 
 /* Needed for IE, but doesn't seem to affect Mozilla */

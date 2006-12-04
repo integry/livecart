@@ -1,6 +1,8 @@
-label, label.radio {
+label.radio {
 	width: auto;  
 	float: auto;
+	margin-right: 10px;
+	margin-left: -10px;
 }
 
 .menuFieldSet table td {
@@ -26,6 +28,9 @@ label, label.radio {
 
 .activeList_icons {
 	width: 20px;  
+}
+
+.activateIndicator {
 }
 
 /* edit */

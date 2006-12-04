@@ -1,35 +1,3 @@
-function print_r(input, _indent)
-{
-    if(typeof(_indent) == 'string') {
-        var indent = _indent + '    ';
-        var paren_indent = _indent + '  ';
-    } else {
-        var indent = '    ';
-        var paren_indent = '';
-    }
-    switch(typeof(input)) {
-        case 'boolean':
-            var output = (input ? 'true' : 'false') + "\n";
-            break;
-        case 'object':
-            if ( input===null ) {
-                var output = "null\n";
-                break;
-            }
-            var output = ((input.reverse) ? 'Array' : 'Object') + " (\n";
-            for(var i in input) {
-                output += indent + "[" + i + "] => " + print_r(input[i], indent);
-            }
-            output += paren_indent + ")\n";
-            break;
-        case 'number':
-        case 'string':
-        default:
-            var output = "" + input  + "\n";
-    }
-    return output;
-}
-
 /**
  * Passes language display settings from navigation form to translation modification form
  */
@@ -99,8 +67,9 @@ Backend.LanguageIndex.prototype =
 		url = this.statusUrl + langId + "?status=" + status;
 
 		img = document.createElement('img');
-		img.src = "image/backend/list/indicator.gif";
-				
+		img.src = 'image/backend/list/indicator.gif';
+		img.className = 'activateIndicator';
+										
 		checkBox = document.getElementById('languageList_enable_' + langId);
 		checkBox.parentNode.replaceChild(img, checkBox);
 		
