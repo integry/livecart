@@ -34,6 +34,11 @@ class Store
 		// unset locale variables to make use of lazy loading
 		unset($this->locale);
 		unset($this->localeName);
+		
+		// get current (request) language
+		$router = Router::getInstance();
+//		$router->addStaticUrlParam('language', $this->localeName);
+		
 	}
 
 	public static function getInstance()
@@ -106,7 +111,7 @@ class Store
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Translates text using Locale::LCInterfaceTranslator
 	 * @param string $key

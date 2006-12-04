@@ -35,6 +35,26 @@ class Language extends ActiveRecordModel
 		return ActiveRecord::getInstanceByID("Language", $ID, true);
 	}
 
+	public static function getNewInstance($ID)
+	{
+		$inst = ActiveRecord::getNewInstance('Language');
+		$inst->setID($ID);
+		
+	  	// get max position
+	  	$f = new ARSelectFilter();
+	  	$f->setOrder(new ARFieldHandle('Language', 'position'), 'DESC');
+	  	$f->setLimit(1);
+	  	$rec = ActiveRecord::getRecordSetArray('Language', $f);
+		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
+
+		// default new language state
+		$inst->setAsEnabled(0);
+		$inst->setAsDefault(0);
+		$inst->position->set($position);
+		
+		return $inst;
+	}
+
 	/**
 	 * Gets languages RecordSet.
 	 * @param integer $active Possible values
@@ -74,18 +94,6 @@ class Language extends ActiveRecordModel
 	}
 
 	/**
-	 * Enables or disables language.
-	 * @param string(2) $ID Language id
-	 * @param bool $enabled If 1 enables language, if 0 disables
-	 */
-	public static function setEnabled($ID, $enabled)
-	{
-		$lang = ActiveRecord::getInstanceByID("Language", $ID);
-		$lang->isEnabled->set((int)$enabled);
-		$lang->save();
-	}
-
-	/**
 	 * Sets default language.
 	 * @param string(2) $ID Language id
 	 */
@@ -100,32 +108,6 @@ class Language extends ActiveRecordModel
 		$filter->setCondition(new EqualsCond(new ArFieldHandle("Language", "ID"), $ID));
 		ActiveRecord::updateRecordSet("Language", $filter);
 	}
-
-	/**
-	 * Adds new language to database
-	 * @param string(2) $ID
-	 *
-	 * @deprecated
-	 */
-	public static function add($ID)
-	{
-	  	// get max position
-	  	$f = new ARSelectFilter();
-	  	$f->setOrder(new ARFieldHandle('Language', 'position'), 'DESC');
-	  	$f->setLimit(1);
-	  	$rec = ActiveRecord::getRecordSetArray('Language', $f);
-		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
-
-	  	$lang = ActiveRecord::getNewInstance("Language");
-		$lang->setID($ID);
-		$lang->isEnabled->set(0);
-		$lang->isDefault->set(0);
-		$lang->position->set($position);
-		$lang->save(self::PERFORM_INSERT);
-
-		return true;
-	}
-
 
 	/**
 	 * Checks whether the language is systems default language

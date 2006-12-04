@@ -3,7 +3,5 @@
 </script>
 
 <div id="langMenuContainer">
-	<div id="langMenuIndicator">
-		<img src="image/indicator.gif">
-	</div>
+	<div id="langMenuIndicator" class="menuLoadIndicator"></div>
 </div>

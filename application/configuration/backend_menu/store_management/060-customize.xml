@@ -5,7 +5,6 @@
 		<Menu>
 			<Title>_menu_customization_mode</Title>
 			<Controller>backend.customize</Controller>
-			<Action>toggleMode</Action>	
 		</Menu>
 		<Menu>
 			<Title>_menu_edit_templates</Title>

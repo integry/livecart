@@ -3,20 +3,20 @@
 {/if}
 
 	<div id="languageList_container_{$item.ID}">
-		<input type="checkbox" id="languageList_enable_{$item.ID}" {if $item.isEnabled}checked{/if} {if $item.isDefault}disabled{/if} onclick="lng.setEnabled('{$item.ID}', 1 - {$item.isEnabled});" />
-	
-		<img src="image/localeflag/{$item.ID}.png" />
-	
-		<span class="enabled_{$item.isEnabled}">{$item.name}</span> 
-	
-		{if !$item.isEnabled}
-		({t _inactive})
-		{/if}
+		<div style="float: left; height: 30px; width: 22px;">
+			<input type="checkbox" class="checkbox" id="languageList_enable_{$item.ID}" {if $item.isEnabled}checked{/if} {if $item.isDefault}disabled{/if} onclick="lng.setEnabled('{$item.ID}', 1 - {$item.isEnabled});" />
+		</div>	
+		<div>
+			<div>
+				<img src="image/localeflag/{$item.ID}.png" />
 			
-		<br />
-	
-		<div class="progress">
-			<div></div>
+				<span class="enabled_{$item.isEnabled}">{$item.name}</span> 
+			
+				{if !$item.isEnabled}
+				({t _inactive})
+				{/if}
+			</div>
+				
 			<div>
 				<small><a href="{link controller=backend.language action=edit id=$item.ID}" class="listLink">{t _edit_definitions}</a>
 		
@@ -30,7 +30,7 @@
 					{/if}
 				</small>
 			</div>
-		</div>		
+		</div>
 	</div>
 
 {if $showContainer}

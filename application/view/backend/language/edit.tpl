@@ -18,35 +18,28 @@
 <fieldset class="menuFieldSet">
 	<legend>{t _translation_filter}</legend>
 	<form id="navLang" method="post" style="margin-bottom: 10px;" action="{link controller=backend.language action=edit id=$id}" class="">
-	<table>
-		<tr>
-			<td>
-				{t _show_words}: 
-			</td>
-			<td>
-				<input type="hidden" name="langFileSel" value='{$langFileSel|escape:"quotes"}' />
 
-				<input type="radio" class="radio" name="show" value="all" id="show-all" {$selected_all} onclick="langEdit.displayFilter(0)" />
-				<label class="radio" for="show-all">{t _all}</label>
-				
+			<label>{t _show_words}:</label>
+		
+			<input type="hidden" name="langFileSel" value='{$langFileSel|escape:"quotes"}' />
+
+			<input type="radio" class="radio" name="show" value="all" id="show-all" {$selected_all} onclick="langEdit.displayFilter(0)" />
+			<label class="radio" for="show-all">{t _all}</label>
+						
+			<input type="radio" class="radio" name="show" value="notDefined" id="show-undefined" {$selected_not_defined} onclick="langEdit.displayFilter(1)" />
+			<label class="radio" for="show-undefined">{t _not_defined}</label>
 			
-				<input type="radio" class="radio" name="show" value="notDefined" id="show-undefined" {$selected_not_defined} onclick="langEdit.displayFilter(1)" />
-				<label class="radio" for="show-undefined">{t _not_defined}</label>
-				
-				<input type="radio" class="radio" name="show" value="defined" id="show-defined" {$selected_defined} onclick="langEdit.displayFilter(2)" />
-				<label class="radio" for="show-defined">{t _defined}</label>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				{t _search_trans}:
-			</td>
-			<td>
-				<input type="text" id="filter" onkeyup="langEdit.langSearch(this.value, langEdit.getDisplayFilter(), true);">			
-				<div id="langNotFound">{t _no_translations_found}</div>
-			</td>
-		</tr>
-	</table>
+			<input type="radio" class="radio" name="show" value="defined" id="show-defined" {$selected_defined} onclick="langEdit.displayFilter(2)" />
+			<label class="radio" for="show-defined">{t _defined}</label>
+
+			<br />			
+			<br />
+
+			<label>{t _search_trans}:</label>
+
+			<input type="text" id="filter" onkeyup="langEdit.langSearch(this.value, langEdit.getDisplayFilter(), true);">			
+			<div id="langNotFound">{t _no_translations_found}</div>
+
 	</form>	
 </fieldset>
 <br /><br />
@@ -83,7 +76,7 @@
 		</div>
 	</fieldset>
 
-	<div id="translations" style="display: block;"></div>
+	<div id="translations" style="display: block; margin-bottom: 15px;"></div>
 
 	{literal}
 	<script type="text/javascript">
@@ -92,7 +85,7 @@
 	</script>
 	{/literal}
 
-	<input type="submit" value="{t _save}">
+	<input type="submit" class="submit" value="{t _save}">
 	
 </form>
 

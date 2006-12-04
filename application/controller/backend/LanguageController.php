@@ -250,6 +250,10 @@ class LanguageController extends StoreManagementController
 		return $response;
 	}
 	
+	/**
+	 * Remove a language
+	 * @return RawResponse
+	 */
 	public function delete()
 	{  	
 		$langId = $this->request->getValue('id');
@@ -282,6 +286,10 @@ class LanguageController extends StoreManagementController
 		return $resp;
 	}
 
+	/**
+	 * Save language order
+	 * @return RawResponse
+	 */
 	public function saveOrder()
 	{
 	  	$order = $this->request->getValue('languageList');
@@ -315,15 +323,39 @@ class LanguageController extends StoreManagementController
 	public function setEnabled()
 	{
 		$id = $this->request->getValue('id');		
-		Language::setEnabled($id, $this->request->getValue("status"));
+		$lang = Language::getInstanceById($id);
+		$lang->setAsEnabled($this->request->getValue("status"));
+		$lang->save();
 		
-		$this->setLayout('empty');		
 		$response = new ActionResponse();
-		$item = Language::getInstanceById($id)->toArray();
+		$item = $lang->toArray();
 		$item['name'] = $this->locale->info()->getLanguageName($item['ID']);
 		$response->setValue('item', $item);
 
 		return $response;		
+	}
+
+	/**
+	 * Add new language
+	 * @return ActionResponse
+	 */
+	public function add()
+	{
+		if ($this->request->isValueSet("id"))
+		{
+			$id = $this->request->getValue("id");
+			$lang = Language::getNewInstance($id);
+			$lang->save(ActiveRecord::PERFORM_INSERT);
+
+			$response = new ActionResponse();
+			$item = $lang->toArray();
+			$item['name'] = $this->locale->info()->getLanguageName($item['ID']);
+			$response->setValue('item', $item);			
+			
+			$response->setHeader('Content-type', 'application/xml');
+			
+			return $response;
+		}
 	}
 
 	/**
@@ -350,7 +382,6 @@ class LanguageController extends StoreManagementController
 	 */
 	public function langSwitchMenu()
 	{
-		$this->setLayout('empty');		
 		$response = new ActionResponse();
 
 		// get all system languages
@@ -366,6 +397,11 @@ class LanguageController extends StoreManagementController
 		return $response;
 	}
 
+	/**
+	 * Changes active language
+	 * @return RedirectResponse
+	 * @todo Instead of setting the active language via session, pass it via URL's
+	 */
 	public function changeLanguage() 
 	{
 		$lang = $this->request->getValue('id');
@@ -382,25 +418,37 @@ class LanguageController extends StoreManagementController
 	}
 
 	/**
-	 * @todo Perdaryti siuo metu neveikia
+	 * Displays translation dialog menu for Live Translations
+	 * @return ActionResponse
 	 */
-	public function add()
+	public function translationDialog()
 	{
-		if ($this->request->isValueSet("id"))
-		{
-			$id = $this->request->getValue("id");
-			Language::add($id);
+	  	$id = $this->request->getValue('id');
+	  	$file = base64_decode($this->request->getValue('file'));
+	  	$translation = $this->locale->translationManager()->getValue($file, $id);
+	  	
+//	  	print_r($this->locale->translationManager());
+	  	
+	  	$response = new ActionResponse();
+	  	$response->setValue('id', $id);
+	  	$response->setValue('file', $file);
+	  	$response->setValue('translation', $translation);
+	  	return $response;
+	}
+	
+	/**
+	 * Saves a single translation entry from Live Translations dialog menu
+	 * @return ActionResponse
+	 */
+	public function saveTranslationDialog()
+	{
+	  	$id = $this->request->getValue('id');
+	  	$file = $this->request->getValue('file');
+	  	$translation = $this->request->getValue('translation');
 
-			$this->setLayout('empty');		
-			$response = new ActionResponse();
-			$item = Language::getInstanceById($id)->toArray();
-			$item['name'] = $this->locale->info()->getLanguageName($item['ID']);
-			$response->setValue('item', $item);			
-			
-			$response->setHeader('Content-type', 'application/xml');
-			
-			return $response;
-		}
+	  	$res = $this->locale->translationManager()->updateValue($file, $id, $translation);
+	  	
+	  	return new RawResponse();
 	}
 	
 	private function translationSort($a, $b)
