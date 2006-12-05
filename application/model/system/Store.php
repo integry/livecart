@@ -18,6 +18,8 @@ class Store
 
 	protected $localeName;
 
+	private $requestLanguage;
+	
 	private $languageList = null;
 
 	private $languageFiles = array();
@@ -152,6 +154,12 @@ class Store
 	  	$this->languageFiles = $fileArray;
 	}
 
+	public function setRequestLanguage($langCode)
+	{
+	  	$this->requestLanguage = $langCode;
+	  	//die($langCode);
+	}
+
 	private function loadLanguageFiles()
 	{
 		foreach ($this->languageFiles as $file)
@@ -174,9 +182,9 @@ class Store
 
 	private function loadLocaleName()
 	{
-		if (!empty($_REQUEST["language"]))
+		if ($this->requestLanguage)
 		{
-			$this->localeName = $_REQUEST["language"];
+			$this->localeName = $this->requestLanguage;
 		}
 		else if (isset($_SESSION['lang']))
 		{

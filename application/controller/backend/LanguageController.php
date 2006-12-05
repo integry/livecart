@@ -364,7 +364,8 @@ class LanguageController extends StoreManagementController
 	 */
 	public function information()
 	{
-		$locale = Locale::GetInstance($this->localeName);
+		$locale = Store::getLocaleInstance();
+		
 		$response = new ActionResponse();
 
 		//$masyvas["I18Nv2::getInfo()"] = I18Nv2::getInfo();
@@ -400,20 +401,28 @@ class LanguageController extends StoreManagementController
 	/**
 	 * Changes active language
 	 * @return RedirectResponse
-	 * @todo Instead of setting the active language via session, pass it via URL's
+	 * @todo Save language preference in User Settings, so the language would be selected automatically for subsequent visits
 	 */
 	public function changeLanguage() 
 	{
+		$returnRoute = base64_decode($this->request->getValue('returnRoute'));
+		
 		$lang = $this->request->getValue('id');
 		$langInst = Language::getInstanceById($lang);
 		if ($langInst)
 		{
-			$_SESSION['lang'] = $lang;	 
-		}
-		
-		$returnRoute = base64_decode($this->request->getValue('returnRoute'));
+			if ('/' == substr($returnRoute, 2, 1))
+			{
+			  	$returnRoute = $lang . '/' . substr($returnRoute, 3);
+			}
+			else
+			{
+			  	$returnRoute = $lang . '/' . $returnRoute;			  
+			}
+		}		
+				
 		$url = Router::getInstance()->createUrlFromRoute($returnRoute);
-		
+			
 		return new RedirectResponse($url);			
 	}
 
@@ -426,9 +435,7 @@ class LanguageController extends StoreManagementController
 	  	$id = $this->request->getValue('id');
 	  	$file = base64_decode($this->request->getValue('file'));
 	  	$translation = $this->locale->translationManager()->getValue($file, $id);
-	  	
-//	  	print_r($this->locale->translationManager());
-	  	
+	  		  	
 	  	$response = new ActionResponse();
 	  	$response->setValue('id', $id);
 	  	$response->setValue('file', $file);

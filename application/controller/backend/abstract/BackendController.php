@@ -34,9 +34,12 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		}
 		
 		$this->store = Store::getInstance();
+		$this->store->setRequestLanguage($this->request->getValue('requestLanguage'));
 		$this->loadLanguageFiles();
 		
 		unset($this->locale);
+		
+		Router::setAutoAppendVariables(array('requestLanguage' => $this->request->getValue('requestLanguage')));
 	}
 	
 	/**

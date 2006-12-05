@@ -7,18 +7,24 @@
  * @author Saulius Rupainis <saulius@integry.net>
  */
 
+$routes = array(
+					array("backend.help/:id", array('controller' => 'backend.help', 'action' => 'view'), array()),
+					array(":controller", array("action" => "index"), array()),
+					array(":controller/:action", array(), array()),
+					array(":controller/:action/:id", array(), array("id" => "[0-9]+")),
+					array(":controller/:action/:id", array(), array("id" => "%id%")),
+					array(":controller/:action/:mode/:id", array(), array("id" => "[0-9]+", "mode" => "create|modify")),
+
+					// special case for passing a language code as an ID 
+					array(":controller/:action/:id", array(), array('id' => "[a-zA-Z]{2}"))					
+  			   );
+
 $router = Router::getInstance();
-
-$router->connect("backend.help/:id", array('controller' => 'backend.help', 'action' => 'view'));
-
-$router->connect(":controller", array("action" => "index"));
-$router->connect(":controller/:action");
-$router->connect(":controller/:action/:id", array(), array("id" => "[0-9]+"));
-
-/** special case for passing a language code as an ID **/
-$router->connect(":controller/:action/:id", array(), array("id" => "[a-zA-Z]+"));
-
-$router->connect(":controller/:action/:id", array(), array("id" => "%id%"));
-$router->connect(":controller/:action/:mode/:id", array(), array("id" => "[0-9]+", "mode" => "create|modify"));
+foreach ($routes as $route)
+{
+	$router->connect($route[0], $route[1], $route[2]);
+  	$route[2]['requestLanguage'] = "[a-zA-Z]{2}";
+  	$router->connect(':requestLanguage/' . $route[0], $route[1], $route[2]);  	
+}
 
 ?>
