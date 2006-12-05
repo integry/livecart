@@ -45,3 +45,7 @@ _save=Save translations
 
 _editing_translations=Editing Translations
 _help=Here goes some helpful information.
+
+# live translation
+
+_live_translate=Translate

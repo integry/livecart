@@ -2,7 +2,6 @@
 
 {includeJs file=library/json.js}
 {includeJs file=backend/Language.js}
-{loadScriptaculous}
 
 {includeCss file=backend/Language.css}
 

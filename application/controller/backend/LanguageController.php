@@ -453,7 +453,9 @@ class LanguageController extends StoreManagementController
 	  	$file = $this->request->getValue('file');
 	  	$translation = $this->request->getValue('translation');
 
-	  	$res = $this->locale->translationManager()->updateValue($file, $id, $translation);
+	  	$this->locale->translationManager()->loadCachedFile($this->locale->getLocaleCode() . '/' . $file);
+
+		$res = $this->locale->translationManager()->updateValue($file, $id, $translation);
 	  	
 	  	return new RawResponse();
 	}

@@ -93,7 +93,7 @@
 	</div>
 </div>
 
-<div id="transDialogMenu" style="position: absolute;z-index: 10000; display: none; background-color: yellow; border: 1px solid black; padding: 3px;"><a href="#" onClick="cust.translationMenuClick(event); return false;">Translate</a></div>
+<div id="transDialogMenu" style="position: absolute;z-index: 10000; display: none; background-color: yellow; border: 1px solid black; padding: 3px;"><a href="#" onClick="cust.translationMenuClick(event); return false;">{t _live_translate notranslate=true}</a></div>
 
 <script type="text/javascript">
 	var cust = new Backend.Customize();

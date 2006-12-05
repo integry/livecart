@@ -1,4 +1,3 @@
-{loadScriptaculous}
 {includeJs file=library/ActiveList.js}
 {includeJs file=library/KeyboardEvent.js}
 {includeJs file=backend/Language.js}
