@@ -1,13 +1,27 @@
-{includeJs file="library/prototype/prototype.js"}
 {includeJs file="library/livecart.js"}
+{includeJs file="library/KeyboardEvent.js"}
+{includeJs file="library/ActiveList.js"}
+{includeJs file="library/form/State.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
-{includeJs file="backend/Category.js"}
 {includeJs file="library/SectionExpander.js"}
 
+{includeJs file="backend/Category.js"}
+{includeJs file="backend/SpecField.js"}
+
+{includeCss file="library/ActiveList.css"}
+{includeCss file="backend/SpecField.css"}
 {includeCss file="library/TabControl.css"}
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
+
+
 {include file="layout/header.tpl"}
+
+
+<div id="specField_item_blank" class="dom_template">
+    {include file="backend/specField/form.manageSpecFieldBlank.tpl"}
+</div>
+
 
 {pageTitle}Category manager. Selected: <span id="activeCategoryPath" style="font-weight: normal">Electronics > New Category</span>{/pageTitle}
 
