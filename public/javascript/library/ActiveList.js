@@ -266,7 +266,7 @@ ActiveList.prototype = {
         var li = document.createElement('li');
         li.id = this.ul.id + "_" + id;
 
-        if (!(dom.constructor.toString().indexOf("Array") == -1))
+        if (dom[0])
         {
             for(var i = 0; i < dom.length; i++)
             {
@@ -282,6 +282,8 @@ ActiveList.prototype = {
         this.decorateLi(li);
         this.rebindIcons(li);
         this.createSortable();
+
+        return li;
     },
 
 
@@ -302,21 +304,21 @@ ActiveList.prototype = {
         // Basically, what is happening is thet when I push edit button (pencil)
         // on first element, everything just dissapears. All other elements
         // are fine though. To fix this I am adding an hidden first element
-        if(this.ul.firstChild && this.ul.firstChild.className != 'ignore')
-        {
-            var fix = document.createElement('li');
-            fix.appendChild(document.createTextNode('fix'));
-            fix.style.visibility = 'hidden';
-            fix.style.height = '0px';
-            fix.className = "ignore";
-
-            if(this.ul.firstChild) this.ul.insertBefore(fix, this.ul.firstChild);
-            else this.ul.appendChild(fix);
-        }
+//        if(this.ul.firstChild && this.ul.firstChild.className != 'ignore')
+//        {
+//            var fix = document.createElement('li');
+//            var div = document.createElement('div')
+//            div.appendChild(document.createTextNode('fix'));
+//            fix.appendChild(div);
+//            fix.className = "ignore";
+//
+//            if(this.ul.firstChild) this.ul.insertBefore(fix, this.ul.firstChild);
+//            else this.ul.appendChild(fix);
+//        }
 
         for(var i = 0; i < liArray.length; i++)
         {
-            if(this.ul == liArray[i].parentNode && liArray[i].className != 'ignore') this.decorateLi(liArray[i]);
+            if(this.ul == liArray[i].parentNode && !Element.hasClassName(liArray[i], 'ignore') && !Element.hasClassName(liArray[i], 'dom_template')) this.decorateLi(liArray[i]);
         }
     },
 
@@ -347,7 +349,7 @@ ActiveList.prototype = {
         var iconsDiv = document.getElementsByClassName(self.cssPrefix + 'icons', li)[0];
         if(!iconsDiv)
         {
-            iconsDiv = document.createElement('div');
+            iconsDiv = document.createElement('span');
             Element.addClassName(iconsDiv, self.cssPrefix + 'icons');
             li.insertBefore(iconsDiv, li.firstChild);
         }
@@ -413,7 +415,6 @@ ActiveList.prototype = {
             // Show icon
             container.appendChild(iconImage);
         }
-
 
         // create shortcut
         li[icon.action] = iconImage;

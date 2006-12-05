@@ -60,35 +60,29 @@ Backend.SpecField.prototype = {
 	 */
 	initialize: function(specFieldJson, hash)
 	{
-	    try
-	    {
-    	    this.specField = !hash ? eval("(" + specFieldJson + ")" ) : specFieldJson;
-    	    this.cloneForm('specField_item_blank', this.specField.rootId);
+	    this.specField = !hash ? eval("(" + specFieldJson + ")" ) : specFieldJson;
+	    this.cloneForm('specField_item_blank', this.specField.rootId);
 
-    	    this.id = this.specField.ID;
-    	    this.categoryID = this.specField.categoryID;
-    	    this.rootId = this.specField.rootId;
+	    this.id = this.specField.ID;
+	    this.categoryID = this.specField.categoryID;
+	    this.rootId = this.specField.rootId;
 
-    		this.type = this.specField.type;
-    		this.values = this.specField.values;
+		this.type = this.specField.type;
+		this.values = this.specField.values;
 
-    		this.name = this.specField.name;
-    		this.description = this.specField.description;
+		this.name = this.specField.name;
+		this.description = this.specField.description;
 
-    		this.handle = this.specField.handle;
-    		this.multipleSelector = this.specField.multipleSelector;
-    		this.dataType = this.specField.dataType;
-    		this.translations = this.specField.translations;
+		this.handle = this.specField.handle;
+		this.multipleSelector = this.specField.multipleSelector;
+		this.dataType = this.specField.dataType;
+		this.translations = this.specField.translations;
 
-    		this.isNew = this.specField.isNew;
+		this.isNew = this.specField.isNew;
 
-    		this.findUsedNodes();
-    		this.bindFields();
-	    }
-	    catch(e)
-	    {
-	        alert(e.fileName + ":" + e.lineNumber + "\n" + e.message);
-	    }
+		this.loadLanguagesAction();
+		this.findUsedNodes();
+		this.bindFields();
 	},
 
     /**
@@ -178,6 +172,10 @@ Backend.SpecField.prototype = {
 
 		this.nodes.translationsLinks 	= document.getElementsByClassName(this.cssPrefix + "form_values_translations_language_links", this.nodes.parent)[0];
 		this.nodes.valuesAddFieldLink 	= this.nodes.valuesDefaultGroup.getElementsByClassName(this.cssPrefix + "add_field", this.nodes.parent)[0];
+
+		var ul = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
+		ul.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[0];
+
 	},
 
 	/**
@@ -221,14 +219,16 @@ Backend.SpecField.prototype = {
 		this.nodes.save.onclick = this.saveAction.bind(this);
 
 		// Also some actions must be executed on load. Be aware of the order in which those actions are called
-		this.loadLanguagesAction();
 		this.createLanguagesLinks();
 		this.loadSpecFieldAction();
+
 		this.loadValueFieldsAction();
+
 		this.bindTranslationValues();
 		this.dataTypeChangedAction();
 		this.loadTypes();
 		this.typeWasChangedAction();
+
 
 		new Form.EventObserver(this.nodes.form, function() { self.formChanged = true; } );
 		Form.backup(this.nodes.form);
@@ -304,12 +304,15 @@ Backend.SpecField.prototype = {
             }
 		});
 
-	    new ActiveList(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0], {
+
+
+	    this.fieldsList = new ActiveList(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0], {
 	        beforeSort: function(li, order)
 	        {
 	            return self.links.sortValues + '?target=' + this.ul.id + '&' + order;
 	        },
-	        afterSort: function(li, response){ },
+	        afterSort: function(li, response){    },
+
 	        beforeDelete: function(li){
 	            if(confirm('Are you realy want to delete this item?'))
 	            {
@@ -445,8 +448,11 @@ Backend.SpecField.prototype = {
 		if(this.values)
 		{
 			$H(this.values).each(function(value) {
-				self.addField(value.value, value.key)
+				self.addField(value.value, value.key);
+
 			});
+
+            this.bindDefaultFields();
 		}
 	},
 
@@ -573,6 +579,7 @@ Backend.SpecField.prototype = {
 		Event.stop(e);
 
 		this.addField(null, "new" + this.countNewValues, true);
+        this.bindDefaultFields();
 		this.countNewValues++;
 	},
 
@@ -811,30 +818,29 @@ Backend.SpecField.prototype = {
 	{
 	    var values = document.getElementsByClassName(this.cssPrefix + "form_values_value", this.nodes.valuesDefaultGroup);
 
-		// If we have a template class then copy it
+		var ul = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
+
 		if(values.length > 0 && values[0].className.split(' ').indexOf('dom_template') !== -1)
 		{
-
-			var ul = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
-			ul.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[0];
-
 			var newValue = values[0].cloneNode(true);
 			Element.removeClassName(newValue, "dom_template");
-			newValue.id = ul.id +  "_" + id;
+
+            if(!this.fieldsList) this.bindDefaultFields();
+
+            var li = this.fieldsList.addRecord(id, newValue.getElementsByTagName("*"));
 
 			// The field itself
-			var input = newValue.getElementsByTagName("input")[0];
+			var input = li.getElementsByTagName("input")[0];
 			input.name = "values[" + id + "]["+this.languageCodes[0]+"]";
 			input.value = (value && value[this.languageCodes[0]]) ? value[this.languageCodes[0]] : '' ;
 
-
 			// Defautl checkbox
-//			var checkbox = newValue.getElementsByTagName("input")[1];
+//			var checkbox = li.getElementsByTagName("input")[1];
 //			checkbox.name = "isDefault[" + id + "]";
 //			checkbox.checked = isDefault;
 
 
-			ul.appendChild(newValue);
+			ul.appendChild(li);
 
 			// now insert all translation fields
 			for(var i = 1; i < this.languageCodes.length; i++)
@@ -856,8 +862,6 @@ Backend.SpecField.prototype = {
 				translationsUl.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[i];
 				translationsUl.appendChild(newValueTranslation);
 			}
-
-			this.bindDefaultFields();
 		}
 		else
 		{
@@ -903,7 +907,7 @@ Backend.SpecField.prototype = {
         }
         else
         {
-            this.hideNewSpecFieldAction();
+            this.hideNewSpecFieldAction(this.categoryID);
         }
     },
 
@@ -1017,8 +1021,12 @@ Backend.SpecField.prototype = {
             }
             else
             {
-                window.activeSpecFieldsList.addRecord(jsonResponse.id, document.createTextNode(this.nodes.name.value));
-                this.hideNewSpecFieldAction();
+
+                var div = document.createElement('span');
+                Element.addClassName(div, 'specField_title');
+                div.appendChild(document.createTextNode(this.nodes.name.value));
+                window.activeSpecFieldsList.addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
+                this.hideNewSpecFieldAction(this.categoryID);
     		    this.recreate(this.specField, true);
             }
         }
@@ -1062,11 +1070,11 @@ Backend.SpecField.prototype = {
      *
      * @static
      */
-    hideNewSpecFieldAction: function()
+    hideNewSpecFieldAction: function(categoryID)
     {
-        var controls = document.getElementsByClassName(this.cssPrefix + "save", $(this.cssPrefix + "item_new"))[0];
-        var link = $(this.cssPrefix + "item_new_show");
-        var form = $(this.cssPrefix + "item_new_form");
+        var controls = document.getElementsByClassName(this.cssPrefix + "save", $(this.cssPrefix + "item_new"+categoryID))[0];
+        var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
+        var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");
 
         Effect.Fade(form.id, {duration: 0.2});
         Effect.BlindUp(form.id, {duration: 0.3});
@@ -1124,7 +1132,7 @@ Backend.SpecField.prototype = {
      * @static
      *
      */
-    createNewAction: function(e)
+    createNewAction: function(e, categoryID)
     {
         if(!e)
         {
@@ -1134,9 +1142,9 @@ Backend.SpecField.prototype = {
 
         Event.stop(e);
 
-        var controls = document.getElementsByClassName(this.cssPrefix + "save", $(this.cssPrefix + "item_new"))[0];
-        var link = $(this.cssPrefix + "item_new_show");
-        var form = $(this.cssPrefix + "item_new_form");
+        var controls = document.getElementsByClassName(this.cssPrefix + "controls", $(this.cssPrefix + "item_new_"+categoryID))[0];
+        var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
+        var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");
 
         Effect.BlindDown(form.id, {duration: 0.3});
 	    Effect.Appear(form.id, {duration: 0.66});

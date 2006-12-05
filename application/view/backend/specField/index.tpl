@@ -1,21 +1,6 @@
-{includeJs file=library/scriptaculous/scriptaculous.js}
-{includeJs file=library/trace/jsTrace.js}
-{includeJs file=library/trace/dom-drag.js}
-{includeJs file=library/KeyboardEvent.js}
-{includeJs file=library/livecart.js}
-{includeJs file=library/ActiveList.js}
-{includeJs file=library/form/State.js}
-
-{includeJs file=backend/SpecField.js}
-
-{includeCss file="library/ActiveList.css"}
-{includeCss file="backend/SpecField.css"}
-
 {literal}
 <script type="text/javascript">
 //<[!CDATA[
-
-
     /**
      * Create spec field prototype. Some fields are always the same
      * so we define them in
@@ -24,7 +9,6 @@
     Backend.SpecField.prototype.links.deleteField = {/literal}'{link controller=backend.specField action=delete}/'{literal};
     Backend.SpecField.prototype.links.editField = {/literal}'{link controller=backend.specField action=item}/'{literal};
     Backend.SpecField.prototype.links.sortField = {/literal}'{link controller=backend.specField action=sort}/'{literal};
-
     Backend.SpecField.prototype.links.deleteValue = {/literal}'{link controller=backend.specField action=deleteValue}/'{literal};
     Backend.SpecField.prototype.links.sortValues = {/literal}'{link controller=backend.specField action=sortValues}/'{literal};
 
@@ -57,6 +41,8 @@
         },
         afterEdit:      function(li, response)
         {
+            try
+            {
             new Backend.SpecField(response);
 
             var controls = document.getElementsByClassName("specField_controls", li)[0];
@@ -66,6 +52,12 @@
             this.createSortable();
 
             this.toggleContainer(li, 'edit');
+
+            }
+            catch(e)
+            {
+                jsTrace.debug(e);
+            }
         },
         beforeDelete:   function(li)
         {
@@ -101,43 +93,33 @@
 //            alert( 'Record #' + this.getRecordId(li, 'edit') + ' changed position');
         }
     };
-
-
 // ]!]>
 </script>
 {/literal}
 
-<!-- Spec field title -->
-<h2>Laptop</h2>
-
-
-<div id="specField_item_blank" class="dom_template">
-    {include file="backend/specField/form.manageSpecFieldBlank.tpl"}
-</div>
-
-<!-- Form for creating new spec field -->
 <div id="specField_item_new">
-    <a href="#new" id="specField_item_new_show">Add new spec field</a>
-    <div id="specField_item_new_form" style="display: none;">
-        <script type="text/javascript">new Backend.SpecField('{json array=$specFieldsList}');</script>
+    <a href="#new" id="specField_item_new_{$categoryID}_show">Add new spec field</a>
+    <div id="specField_item_new_{$categoryID}_form" style="display: none; ">
+        <script type="text/javascript">
+        new Backend.SpecField('{json array=$specFieldsList}');
+        </script>
     </div>
 </div>
-
 <br />
-
-<!-- List of all spec fields -->
-<ul id="specField_items_list" class="activeList_add_delete activeList_add_edit activeList_add_sort">
+<div>
+<ul id="specField_items_list_{$categoryID}" class="activeList_add_delete activeList_add_edit activeList_add_sort">
 {foreach item="field" from=$specFields}
-	<li id="specField_items_list_{$field.ID}">
-    	<div class="specField_title">{$field.name.en}</div>
+	<li id="specField_items_list_{$categoryID}_{$field.ID}">
+    	<span class="specField_title">{$field.name.en}</span>
 	</li>
 {/foreach}
+
 </ul>
 
 
 {literal}
 <script type="text/javascript">
-    $("specField_item_new_show").onclick = function(e) { Backend.SpecField.prototype.createNewAction(e) }
-    window.activeSpecFieldsList = new ActiveList('specField_items_list', specFieldListCallbacks);
+     $("specField_item_new_{/literal}{$categoryID}{literal}_show").onclick = function(e) { Backend.SpecField.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') }
+     window.activeSpecFieldsList = new ActiveList('specField_items_list_{/literal}{$categoryID}{literal}', specFieldListCallbacks);
 </script>
 {/literal}

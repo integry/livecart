@@ -64,16 +64,9 @@
 }
 
 
-/* START Values active list*/
-fieldset.specField_step_values .activeList_icons_container
-{
-    float: right;
-    width: 16px;
-    height: 16px;
-    margin: 2px;
-    cursor: pointer;
-    cursor: hand;
-}
+/* START Values active list */
+
+
 
 fieldset.specField_step_values  .activeList_icons
 {
@@ -87,9 +80,14 @@ fieldset.group h2
     font-size: 1em;
     font-weight: normal;
 }
+
 /* END Values active list */
 
 
+.specField .feedback, .specField .feedback_textarea
+{
+    visibility: hidden;
+}
 
 
 

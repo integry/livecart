@@ -56,7 +56,7 @@ class SpecFieldController extends StoreManagementController
 
     public function index()
     {
-        $this->setLayout("mainLayout");
+//        $this->setLayout("mainLayout");
 
         $response = new ActionResponse();
 //		$this->setLayout("empty");
@@ -73,12 +73,13 @@ class SpecFieldController extends StoreManagementController
             'description' => array(),
             'handle' => '',
             'values' => Array(),
-            'rootId' => 'specField_item_new_form',
+            'rootId' => 'specField_item_new_'.$categoryID.'_form',
             'type' => 3,
             'dataType' => 1,
             'categoryID' => $categoryID
         );
 
+        $response->setValue('categoryID', $categoryID);
         $response->setValue('specFieldsList', $defaultSpecFieldValues);
         $response->setValue('configuration', $this->getSpecFieldConfig());
 
@@ -104,7 +105,7 @@ class SpecFieldController extends StoreManagementController
            $specFieldList['values'][$value['ID']] = $value['value'];
        }
 
-       $specFieldList['rootId'] = "specField_items_list_".$specFieldList['ID'];
+       $specFieldList['rootId'] = "specField_items_list_".$specFieldList['categoryID']."_".$specFieldList['ID'];
 
        return new JSONResponse($specFieldList);
     }
@@ -267,13 +268,12 @@ class SpecFieldController extends StoreManagementController
             {
                 $specField = SpecField::getInstanceByID((int)$key);
                 $specField->setFieldValue('position', (int)$position);
-                $specField->save();
+//                $specField->save();
             }
         }
 
         return new JSONResponse(array('status' => 'success'));
     }
-
 
     public function deleteValue()
     {
@@ -288,7 +288,6 @@ class SpecFieldController extends StoreManagementController
         }
     }
 
-
     public function sortValues()
     {
         foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
@@ -298,7 +297,7 @@ class SpecFieldController extends StoreManagementController
             {
                 $specField = SpecFieldValue::getInstanceByID((int)$key);
                 $specField->setFieldValue('position', (int)$position);
-                $specField->save();
+//                $specField->save();
             }
         }
 

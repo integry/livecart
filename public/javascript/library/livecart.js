@@ -169,7 +169,6 @@ LiveCart.AjaxUpdater.prototype = {
         {
             innerScripts.each(function(innerScript)
             {
-                    var test = innerScript.replace(/\<\/?script[^\>]*\>/img, "");
                     eval(innerScript.replace(/\<\/?script[^\>]*\>/img, ""));
             });
         }
@@ -179,7 +178,7 @@ LiveCart.AjaxUpdater.prototype = {
 /**
  * Converts an XMLDocument into HTMLElement
  *
- * Useful when receiving partial page content as XML via AJAX, which can be transformed to 
+ * Useful when receiving partial page content as XML via AJAX, which can be transformed to
  * inserted into document as HTMLElement.
  *
  * <code>
@@ -193,15 +192,15 @@ LiveCart.AjaxUpdater.prototype = {
 function xml2HtmlElement(xml)
 {
 	var k = 0;
-	var a = 0; 
+	var a = 0;
 	var el = 0;
 	var child = 0;
-	
+
 	if ('#text' == xml.nodeName)
 	{
 		el = document.createTextNode(xml.nodeValue);
 	}
-	else 
+	else
 	{
 	  	el = document.createElement(xml.nodeName);
 		el.nodeValue = xml.nodeValue;
@@ -211,17 +210,17 @@ function xml2HtmlElement(xml)
 		  	{
 			    att = xml.attributes[a];
 				el.setAttribute(att.name, att.value);
-			}		  	
+			}
 		}
-		if (xml.childNodes.length > 0)		
+		if (xml.childNodes.length > 0)
 		{
 			for (k = 0; k < xml.childNodes.length; k++)
 			{
 				child = xml2HtmlElement(xml.childNodes[k]);
 				el.appendChild(child);
-			}  		  
-		} 
+			}
+		}
 	}
-	
+
 	return el;
 }
