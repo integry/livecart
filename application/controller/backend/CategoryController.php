@@ -65,7 +65,7 @@ class CategoryController extends StoreManagementController
 		{
 			$parent = Category::getInstanceByID($parentNodeId);
 			$categoryNode = Category::getNewInstance($parent);
-			$categoryNode->setValueByLang("name", $this->store->getDefaultLanguageCode(), "New Category...");
+			$categoryNode->setValueByLang("name", $this->store->getDefaultLanguageCode(), "New Category");
 			$categoryNode->save();
 
 			return new JSONResponse($categoryNode->toArray());
@@ -83,7 +83,10 @@ class CategoryController extends StoreManagementController
 		if($validator->isValid())
 		{
 			$categoryNode = ActiveTreeNode::getInstanceByID("Category", $this->request->getValue("id"));
-
+			$multilingualFields = array("name", "description", "keywords");
+			$categoryNode->setValueArrayByLang($multilingualFields, $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true), $this->request);
+			$categoryNode->save();
+			echo "</pre>"; print_r($categoryNode->toArray()); echo "</pre>";
 			return new JSONResponse($categoryNode->toArray());
 		}
 	}
