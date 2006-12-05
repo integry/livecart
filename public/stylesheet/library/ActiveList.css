@@ -1,14 +1,10 @@
 .activeList_icons
 {
-    float: left;
-    width: 80px;
-  	vertical-align: top;
-  	display: block;
+    width: 90px;
 }
 
 .activeList_icons_container
 {
-    float: right;
     width: 16px;
     height: 16px;
     margin: 2px;
@@ -21,17 +17,8 @@ ul.activeList
     list-style: none;
 }
 
+
 .activeList li
 {
-    clear: both;
   	list-style: none;
-}
-
-
-/*
- * Do not delete this rule as it fixes bug in explorer version.
- * For more details ActiveList::decorateLi() function in ActiveList.js
- */
-.activeList .ignore *
-{
 }
