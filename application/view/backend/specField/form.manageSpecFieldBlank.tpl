@@ -8,7 +8,7 @@
     <a href="#cancel" class="specField_cancel">Cancel</a>
 </div>
 
-<form action="/backend.specField/save" method="post" class="specField">
+<form action="{link controller=backend.specField action=save}" method="post" class="specField">
 	<!-- STEP 1 -->
 	<fieldset class="specField_step_lev1 specField_step_main">
 		<legend>Step 1 (Main language _ English)</legend>
