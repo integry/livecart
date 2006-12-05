@@ -580,22 +580,43 @@ label
 
 input, select, form.other
 {
-    width: 10em;
+    width: 15em;
+    font-size: 16px;
+    padding: 2px;
 }
 
 textarea
 {
+	padding: 2px;
     width: 30em;
-    height: 10em;
+    height: 6em;
+    font-size: 14px;
+    font-family: arial, verdana;
+    color: #333;
 }
 .feedback_textarea
 {
    line-height: 10em;
 }
 
-input.radio, input.checkbox, input.submit, input.button
+input.radio, input.checkbox, input.submit, input.button, input.reset
 {
     width: auto;
+}
+input.submit, input.reset {
+	text-transform: uppercase;
+	font-size: 10px;
+	padding: 4px;
+}
+input.submit {
+	background-color: #008cff;
+	color: #fff;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+input.reset {
+	background-color: #ddd;
+	color: #666;
 }
 
 input.radio, input.checkbox

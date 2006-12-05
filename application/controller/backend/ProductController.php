@@ -3,8 +3,6 @@
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.product.Product");
 
-//ClassLoader::import("library.DataGrid.*");
-
 /**
  * Controller for handling product based actions performed by store administrators
  *
@@ -23,6 +21,7 @@ class ProductController extends StoreManagementController {
 
 		$response = new ActionResponse();
 		$response->setValue("path", $path);
+
 		return $response;
 	}
 }

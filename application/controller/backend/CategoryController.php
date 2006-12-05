@@ -43,14 +43,12 @@ class CategoryController extends StoreManagementController
 		$form = $this->buildForm();
 		$response->setValue("catalogForm", $form);
 
-		if ($this->request->getValue("mode") != "create" && $this->request->isValueSet("id"))
-		{
-			$category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
-			$form->setData($category->toArray());
-		}
+		$category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
+		$categoryArr = $category->toArray();
+		$form->setData($categoryArr);
 
+		$response->setValue("categoryId", $categoryArr['ID']);
 		$response->setValue("languageList", $this->store->getLanguageArray());
-		$response->setValue("mode", $this->request->getValue("mode"));
 
 		return $response;
 	}
@@ -86,11 +84,7 @@ class CategoryController extends StoreManagementController
 		{
 			$categoryNode = ActiveTreeNode::getInstanceByID("Category", $this->request->getValue("id"));
 
-			return new ActionRedirectResponse("backend.category", "index");
-		}
-		else
-		{
-			return new ActionRedirectResponse($this->request->getControllerName(), "form");
+			return new JSONResponse($categoryNode->toArray());
 		}
 	}
 

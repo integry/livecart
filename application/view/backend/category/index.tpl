@@ -33,14 +33,7 @@
 			</ul>
 		</div>
 		<div id="sectionContainer">
-			<!--
-			<div id="tabMainDetailsContent"></div>
-			<div id="tabFieldsContent"></div>
-			<div id="tabFiltersContent"></div>
-			<div id="tabPermissionsContent"></div>
-			<div id="tabImagesContent"></div>
-			<div id="tabArticlesContent"></div>
-			-->
+
 		</div>
 	</div>
 
@@ -49,6 +42,7 @@
 {foreach from=$categoryList item=category}
 	Backend.Category.treeBrowser.insertNewItem({$category.parent},{$category.ID} , '{$category.name}', 0, 0, 0, 0, "SELECT");
 {/foreach}
+	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
 
 	/**
 	 * URL assisgment for internal javascript requests

@@ -51,6 +51,7 @@ Backend.Category = {
 	 */
 	activateCategory: function(categoryId)
 	{
+		//alert('activating category: ' + categoryId);
 		Element.update('activeCategoryPath', Backend.Category.getPath(categoryId));
 
 		Backend.Category.tabControl.switchCategory(categoryId, Backend.Category.activeCategoryId);
@@ -90,7 +91,6 @@ Backend.Category = {
 	afterNewBranchCreated: function(response)
 	{
 		eval('var newCategory = ' + response.responseText);
-		alert(newCategory.ID);
 		var parentCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
 		Backend.Category.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
 		Backend.Category.tabControl.activateTab($('tabMainDetails'), newCategory.ID);
@@ -114,6 +114,9 @@ Backend.Category = {
 		return urlPattern.replace('%id%', id);
 	},
 
+	/**
+	 * Removes a selected category (including sub-trees) from a store
+	 */
 	removeBranch: function()
 	{
 		var nodeIdToRemove = this.treeBrowser.getSelectedItemId();
@@ -223,7 +226,7 @@ CategoryTabControl.prototype = {
 	 */
 	activateTab: function(targetTab, categoryIdToActivate)
 	{
-		//alert('activating: ' + targetTab.ID + " " + categoryIdToActivate);
+		//alert('activating: ' + targetTab.id + " " + categoryIdToActivate);
 		if (categoryIdToActivate == undefined)
 		{
 			var categoryId = this.treeBrowser.getSelectedItemId();
@@ -321,7 +324,7 @@ CategoryTabControl.prototype = {
 
 	switchCategory: function(currentCategory, previousActiveCategoryId)
 	{
-		//alert('switching category: from' + currentCategory + ' to ' + previousActiveCategoryId);
+		//alert('switching category: from' + previousActiveCategoryId + ' to ' +  currentCategory);
 		if (previousActiveCategoryId != null)
 		{
 			prevContainer = this.getContainerId(this.activeTab.id, previousActiveCategoryId);
