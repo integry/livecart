@@ -12,11 +12,11 @@ $routes = array(
 					array(":controller", array("action" => "index"), array()),
 					array(":controller/:action", array(), array()),
 					array(":controller/:action/:id", array(), array("id" => "[0-9]+")),
-					array(":controller/:action/:id", array(), array("id" => "%id%")),
 					array(":controller/:action/:mode/:id", array(), array("id" => "[0-9]+", "mode" => "create|modify")),
-
+					
 					// special case for passing a language code as an ID 
-					array(":controller/:action/:id", array(), array('id' => "[a-zA-Z]{2}"))					
+					array(":controller/:action/:id", array(), array('id' => "[a-zA-Z]{2}")),					
+					array(":controller/:action/:id", array(), array("id" => "%id%")),
   			   );
 
 $router = Router::getInstance();
