@@ -5,6 +5,7 @@
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
 {includeJs file="library/SectionExpander.js"}
+{includeJs file="library/form/Validator.js"}
 
 {includeJs file="backend/Category.js"}
 {includeJs file="backend/SpecField.js"}

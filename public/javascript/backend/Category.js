@@ -93,7 +93,13 @@ Backend.Category = {
 		eval('var newCategory = ' + response.responseText);
 		var parentCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
 		Backend.Category.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
+
 		Backend.Category.tabControl.activateTab($('tabMainDetails'), newCategory.ID);
+	},
+
+	updateBranch: function()
+	{
+
 	},
 
 	/**
