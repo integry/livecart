@@ -19,15 +19,16 @@
 	{/literal}
 
 	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
+	<script type="text/javascript" src="javascript/library/scriptaculous/scriptaculous.js"></script>
 	<script type="text/javascript" src="javascript/backend/Backend.js"></script>
-	
+
 	<!-- JavaScript includes -->
 	{includeJs file=library/KeyboardEvent.js}
 	{includeJs file=library/json.js}
 	{includeJs file=library/livecart.js}
-	
+
 	{includeJs file=backend/Customize.js}
-	
+
 	{$JAVASCRIPT}
 
 	<script type="text/javascript">
