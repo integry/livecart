@@ -57,7 +57,7 @@ Backend.Customize.prototype =
 		url = this.controllerUrl + '/translationDialog?id=' + id + '&file=' + file;
 
 		dialog = document.getElementById('transDialogBox');
-		
+				
 		xPos = e.pageX;
 		yPos = e.pageY;
 		
@@ -84,6 +84,7 @@ Backend.Customize.prototype =
 
 	saveTranslationDialog: function(form)
 	{
+		form.elements.namedItem('translation').value = document.getElementById('trans').value;
 		this.showTranslationSaveIndicator(); 
 		this.updateDocumentTranslations(form.elements.namedItem('id').value, form.elements.namedItem('translation').value);
 		new LiveCart.AjaxUpdater(form, 'translationDialog', 'transSaveIndicator'); 
