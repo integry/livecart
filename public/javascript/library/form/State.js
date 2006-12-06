@@ -132,7 +132,7 @@ Form.State = {
         if(!this.hasBackup(form)) return;
 
         var occurencies = {};
-        var elements = Form.getElements(form);
+        var elements = $A(Form.getElements(form));
         for(var i = 0; i < elements.length; i++)
         {
             if(elements[i].name == '' || !this.backups[form.backupId][elements[i].name]) continue;
