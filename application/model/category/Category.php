@@ -37,23 +37,42 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 * @param int|array $recordID Record id
 	 * @param bool $loadRecordData If true loads record's structure and data
 	 * @param bool $loadReferencedRecords If true loads all referenced records
-	 * @return Catalog
+	 * @return Category
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
 
+	/**
+	 * Loads a set of Category active records
+	 *
+	 * @param ARSelectFilter $filter
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
+	/**
+	 * Get new Category active record instance
+	 *
+	 * @param ActiveTreeNode $parent
+	 * @return Category
+	 */
 	public static function getNewInstance(ActiveTreeNode $parent)
 	{
 		return parent::getNewInstance(__CLASS__, $parent);
 	}
 
+	/**
+	 * Loads a set of spec field records in current category
+	 *
+	 * @return ARSet
+	 */
 	public function getSpecFieldList()
 	{
 		$filter = new ARSelectFilter();
