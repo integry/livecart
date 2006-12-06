@@ -270,7 +270,11 @@ ActiveList.prototype = {
         {
             for(var i = 0; i < dom.length; i++)
             {
-                li.appendChild(dom[i]);
+                // Sory for cloning, but JS just sucks hard at dom :''(
+                // I just hope that every boy will use it in such situations where cloning is OK
+                // Please forgive me if you will create links to elements you want to add and they will just not work
+                // My suggestion is to create those links after you have added new record to list
+                li.appendChild(dom[i].cloneNode(true));
             }
         }
         else
