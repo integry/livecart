@@ -71,6 +71,8 @@ Backend.SpecField.prototype = {
 		this.values = this.specField.values;
 
 		this.name = this.specField.name;
+		this.backupName = this.name;
+
 		this.description = this.specField.description;
 
 		this.handle = this.specField.handle;
@@ -331,6 +333,21 @@ Backend.SpecField.prototype = {
 	},
 
 
+	changeMainTitleAction: function(newTitle)
+	{
+		if(this.nodes.mainTitle)
+		{
+		    if(this.nodes.mainTitle.firstChild)
+		    {
+		        this.nodes.mainTitle.firstChild.nodeValue = newTitle;
+		    }
+		    else
+		    {
+		        this.nodes.mainTitle.appendChild(document.createTextNode(newTitle));
+		    }
+		}
+	},
+
 
 	/**
 	 * Here we fill "Main" step field values like name, handle, input type and value type
@@ -352,17 +369,7 @@ Backend.SpecField.prototype = {
 
 		this.nodes.multipleSelector.checked = this.multipleSelector ? true : false;
 
-		if(this.nodes.mainTitle)
-		{
-		    if(this.nodes.mainTitle.firstChild)
-		    {
-		        this.nodes.mainTitle.firstChild.nodeValue = this.nodes.name.value;
-		    }
-		    else
-		    {
-		        this.nodes.mainTitle.appendChild(document.createTextNode(this.nodes.name.value));
-		    }
-		}
+        this.changeMainTitleAction(this.nodes.name.value);
 
 		if(this.description[this.languageCodes[0]]) this.nodes.description.value = this.description[this.languageCodes[0]];
 		this.nodes.description.name = "description[" + this.languageCodes[0] + "]";
@@ -789,7 +796,11 @@ Backend.SpecField.prototype = {
 		handle = handle.replace(/ /g, "_"); // reokace spaces with "_"
 		handle = handle.toLowerCase();
 
-		this.nodes.handle.value = handle;
+		if(this.id == 'new')
+		{
+		    this.nodes.handle.value = handle;
+		}
+
 
 		if(this.nodes.mainTitle)
 		{
@@ -896,6 +907,8 @@ Backend.SpecField.prototype = {
 		else if(Form.hasBackup(this.nodes.form) && this.formChanged)
 		{
             Form.restore(this.nodes.form);
+
+            this.changeMainTitleAction(this.nodes.name.value);
 		}
 
 		// Use Active list toggleContainer() method if this specField is inside Active list
@@ -1014,6 +1027,7 @@ Backend.SpecField.prototype = {
         if(jsonResponse.status == 'success')
         {
             Form.backup(this.nodes.form);
+            this.backupName = this.nodes.name.value;
 
             if(this.nodes.parent.tagName.toLowerCase() == 'li')
             {

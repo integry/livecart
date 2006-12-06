@@ -139,7 +139,7 @@ class SpecFieldController extends StoreManagementController
             }
         }
 
-        if(count($errors = $this->validateSpecField($this->request->getValueArray(array('handle', 'values', 'name', 'type', 'dataType')))) == 0)
+        if(count($errors = $this->validateSpecField($this->request->getValueArray(array('handle', 'values', 'name', 'type', 'dataType', 'categoryID', 'ID')))) == 0)
         {
             $dataType = (int)$this->request->getValue('dataType');
             $type = (int)$this->request->getValue('type');
@@ -223,6 +223,19 @@ class SpecFieldController extends StoreManagementController
         {
             $errors['handle'] = 'Handle contains invalid symbols';
         }
+        else
+        {
+            $values['ID'] = !isset($values['ID']) ? -1 : $values['ID'];
+            $filter = new ARSelectFilter();
+                $handleCond = new EqualsCond(new ARFieldHandle('SpecField', 'handle'), $values['handle']);
+                $handleCond->addAND(new EqualsCond(new ARFieldHandle('SpecField', 'categoryID'), (int)$values['categoryID']));
+                $handleCond->addAND(new NotEqualsCond(new ARFieldHandle('SpecField', 'ID'), (int)$values['ID']));
+            $filter->setCondition($handleCond);
+            if(count(SpecField::getRecordSetArray($filter)) > 0)
+            {
+                $errors['handle'] = 'Such handle already exists in current category';
+            }
+        }
 
         if(!isset($values['handle']) || empty($values['handle']))
         {
@@ -244,6 +257,8 @@ class SpecFieldController extends StoreManagementController
                 }
             }
         }
+
+
         return $errors;
     }
 
