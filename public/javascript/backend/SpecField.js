@@ -1015,6 +1015,8 @@ Backend.SpecField.prototype = {
      */
     afterSaveAction: function(jsonResponseString)
     {
+        var self = this;
+
         try
         {
             var jsonResponse = eval("("+jsonResponseString+")");
@@ -1046,22 +1048,33 @@ Backend.SpecField.prototype = {
         }
         else
         {
+            try
+            {
             if(jsonResponse.errors)
             {
                 for(var fieldName in jsonResponse.errors)
                 {
                     if(fieldName == 'values')
                     {
-                        for(var valueId in jsonResponse.errors[fieldName])
+                        $H(jsonResponse.errors[fieldName]).each(function(value)
                         {
-                            this.setFeedback($(this.cssPrefix + "form_values_" + this.languageCodes[0] + "_" + valueId).getElementsByTagName("input")[0], jsonResponse.errors[fieldName][valueId]);
-                        }
+                            var test1 = self.cssPrefix + "form_" + self.id + "_values_" + self.languageCodes[0] + "_" + value.key;
+                            var test2 = $(self.cssPrefix + "form_" + self.id + "_values_" + self.languageCodes[0] + "_" + value.key);
+                            var test3 = $(self.cssPrefix + "form_" + self.id + "_values_" + self.languageCodes[0] + "_" + value.key).getElementsByTagName("input")[0];
+
+                            self.setFeedback($(self.cssPrefix + "form_" + self.id + "_values_" + self.languageCodes[0] + "_" + value.key).getElementsByTagName("input")[0], value.value);
+                        });
                     }
                     else
                     {
                         this.setFeedback(this.nodes[fieldName], jsonResponse.errors[fieldName]);
                     }
                 }
+            }
+            }
+            catch(e)
+            {
+                alert(e.fileName + ':' + e.lineNumber + '\n' + e.message);
             }
         }
 
@@ -1086,7 +1099,6 @@ Backend.SpecField.prototype = {
      */
     hideNewSpecFieldAction: function(categoryID)
     {
-        var controls = document.getElementsByClassName(this.cssPrefix + "save", $(this.cssPrefix + "item_new"+categoryID))[0];
         var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
         var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");
 
@@ -1094,7 +1106,6 @@ Backend.SpecField.prototype = {
         Effect.BlindUp(form.id, {duration: 0.3});
 
         setTimeout(function() { link.style.display = 'block'; }, 0.3);
-        controls.style.display = 'none';
     },
 
 
@@ -1156,7 +1167,6 @@ Backend.SpecField.prototype = {
 
         Event.stop(e);
 
-        var controls = document.getElementsByClassName(this.cssPrefix + "controls", $(this.cssPrefix + "item_new_"+categoryID))[0];
         var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
         var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");
 
@@ -1165,6 +1175,5 @@ Backend.SpecField.prototype = {
 
 	    link.style.display = 'none';
 	    setTimeout(function() {  form.style.height = 'auto'; }, 0.7);
-	    controls.style.display = 'inline';
     }
 }

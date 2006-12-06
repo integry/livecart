@@ -33,31 +33,17 @@
             }
             else
             {
-                var controls = document.getElementsByClassName("specField_controls", li)[0];
-                controls.style.display = (controls.style.display = 'none') ? 'inline' : 'none';
-
                 this.toggleContainer(li, 'edit');
             }
         },
         afterEdit:      function(li, response)
         {
-            try
-            {
             new Backend.SpecField(response);
-
-            var controls = document.getElementsByClassName("specField_controls", li)[0];
-            controls.style.display = (controls.style.display = 'none') ? 'inline' : 'none';
 
             this.rebindIcons(li);
             this.createSortable();
 
             this.toggleContainer(li, 'edit');
-
-            }
-            catch(e)
-            {
-                jsTrace.debug(e);
-            }
         },
         beforeDelete:   function(li)
         {
@@ -68,18 +54,11 @@
         },
         afterDelete:    function(li, jsonResponse)
         {
-            try
-            {
-                var response = eval("("+jsonResponse+")");
+            var response = eval("("+jsonResponse+")");
 
-                if(response.status == 'success')
-                {
-                    this.remove(li);
-                }
-            }
-            catch(e)
+            if(response.status == 'success')
             {
-                alert("json error");
+                this.remove(li);
             }
         },
 
@@ -98,7 +77,7 @@
 {/literal}
 
 <div id="specField_item_new">
-    <a href="#new" id="specField_item_new_{$categoryID}_show">Add new spec field</a>
+    <a href="#new" id="specField_item_new_{$categoryID}_show">{t _add_new_field}</a>
     <div id="specField_item_new_{$categoryID}_form" style="display: none; ">
         <script type="text/javascript">
         new Backend.SpecField('{json array=$specFieldsList}');
@@ -110,7 +89,7 @@
 <ul id="specField_items_list_{$categoryID}" class="activeList_add_delete activeList_add_edit activeList_add_sort">
 {foreach item="field" from=$specFields}
 	<li id="specField_items_list_{$categoryID}_{$field.ID}">
-    	<span class="specField_title">{$field.name.en}</span>
+    	<span class="specField_title">{$field.name[$defaultLangCode]}</span>
 	</li>
 {/foreach}
 

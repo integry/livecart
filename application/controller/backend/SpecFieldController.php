@@ -1,6 +1,7 @@
 <?php
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.category.*");
+ClassLoader::import("library.*");
 
 /**
  * Category specification field ("extra field") controller
@@ -11,21 +12,32 @@ ClassLoader::import("application.model.category.*");
  */
 class SpecFieldController extends StoreManagementController
 {
-    private $specFieldLocalesArray = array('en', 'lt', 'de');
+    protected $specFieldConfig = array();
+
+    public function __construct(Request $request)
+    {
+        parent::__construct($request);
+        $this->createSpecFieldConfig();
+    }
 
     /**
      * Types:
      * 1 - numbers
      * 2 - text
      */
-    private function getSpecFieldConfig()
+    private function createSpecFieldConfig()
     {
-        return array(
-            'languages' => array (
-                'en' => 'English',
-                'lt' => 'Lithuanian',
-                'de' => 'German'
-            ),
+        $languages[$this->store->getDefaultLanguageCode()] =  $this->locale->info()->getLanguageName($this->store->getDefaultLanguageCode());
+        foreach ($this->store->getLanguageList()->toArray() as $lang)
+        {
+            if($lang['isEnabled']==1 && $lang['isDefault'] != 1)
+            {
+                $languages[$lang['ID']] = $this->locale->info()->getLanguageName($lang['ID']);
+            }
+        }
+
+        $this->specFieldConfig = array(
+            'languages' => $languages,
 
             'types' => array
             (
@@ -56,11 +68,7 @@ class SpecFieldController extends StoreManagementController
 
     public function index()
     {
-//        $this->setLayout("mainLayout");
-
         $response = new ActionResponse();
-//		$this->setLayout("empty");
-
 
         $categoryID = (int)$this->request->getValue('id');
         $category = Category::getInstanceByID($categoryID);
@@ -81,7 +89,8 @@ class SpecFieldController extends StoreManagementController
 
         $response->setValue('categoryID', $categoryID);
         $response->setValue('specFieldsList', $defaultSpecFieldValues);
-        $response->setValue('configuration', $this->getSpecFieldConfig());
+        $response->setValue('configuration', $this->specFieldConfig);
+        $response->setValue('defaultLangCode', $this->store->getDefaultLanguageCode());
 
         return $response;
     }
@@ -155,8 +164,8 @@ class SpecFieldController extends StoreManagementController
             $specField->setFieldValue('dataType',       $dataType);
             $specField->setFieldValue('type',           $type);
             $specField->setFieldValue('handle',         $handle);
-            $specField->setLanguageField('description', @array_map($htmlspecialcharsUtf_8, $description), $this->specFieldLocalesArray);
-            $specField->setLanguageField('name',        @array_map($htmlspecialcharsUtf_8, $name),        $this->specFieldLocalesArray);
+            $specField->setLanguageField('description', @array_map($htmlspecialcharsUtf_8, $description), array_keys($this->specFieldConfig['languages']));
+            $specField->setLanguageField('name',        @array_map($htmlspecialcharsUtf_8, $name),        array_keys($this->specFieldConfig['languages']));
 
             $specField->save();
 
@@ -182,7 +191,7 @@ class SpecFieldController extends StoreManagementController
                     }
                     else
                     {
-                        $specFieldValues->setLanguageField('value', @array_map($htmlspecialcharsUtf_8, $value), $this->specFieldLocalesArray);
+                        $specFieldValues->setLanguageField('value', @array_map($htmlspecialcharsUtf_8, $value), array_keys($this->specFieldConfig['languages']));
                     }
 
 
@@ -211,17 +220,20 @@ class SpecFieldController extends StoreManagementController
      */
     private function validateSpecField($values = array())
     {
-        $config = $this->getSpecFieldConfig();
+//        print_r($_POST);
+
         $errors = array();
 
-        if(!isset($values['name']) || empty($values['name'][$this->specFieldLocalesArray[0]]))
+        $languageCodes = array_keys($this->specFieldConfig['languages']);
+
+        if(!isset($values['name']) || empty($values['name'][$languageCodes[0]]))
         {
             $errors['name'] = 'Name empty';
         }
 
         if(!isset($values['handle']) || preg_match('/[^\w\d_]/', $values['handle']))
         {
-            $errors['handle'] = 'Handle contains invalid symbols';
+            $errors['handle'] = $this->translate('_error_handle_invalid');
         }
         else
         {
@@ -233,27 +245,27 @@ class SpecFieldController extends StoreManagementController
             $filter->setCondition($handleCond);
             if(count(SpecField::getRecordSetArray($filter)) > 0)
             {
-                $errors['handle'] = 'Such handle already exists in current category';
+                $errors['handle'] =  $this->translate('_error_handle_exists');
             }
         }
 
         if(!isset($values['handle']) || empty($values['handle']))
         {
-            $errors['handle'] = 'Handle empty';
+            $errors['handle'] = $this->translate('_error_handle_empty');
         }
 
-        if(in_array($values['type'], $config['selectorValueTypes']) && isset($values['values']) && is_array($values['values']))
+        if(in_array($values['type'], $this->specFieldConfig['selectorValueTypes']) && isset($values['values']) && is_array($values['values']))
         {
             foreach ($values['values'] as $key => $v)
             {
-                if(empty($v[$this->specFieldLocalesArray[0]]))
+                if(empty($v[$languageCodes[0]]))
                 {
-                    $errors['values'][$key] = 'You are required to fill this field';
+                    $errors['values'][$key] = $this->translate('_error_value_empty');
                 }
 
-                if($values['dataType'] == 2 && !is_numeric($v[$this->specFieldLocalesArray[0]]))
+                if($values['dataType'] == 2 && !is_numeric($v[$languageCodes[0]]))
                 {
-                    $errors['values'][$key] = 'Field value should be a valid number';
+                    $errors['values'][$key] = $this->translate('_error_value_is_not_a_number');
                 }
             }
         }

@@ -87,6 +87,7 @@ fieldset.group h2
 .specField .feedback, .specField .feedback_textarea
 {
     visibility: hidden;
+    white-space: nowrap;
 }
 
 
