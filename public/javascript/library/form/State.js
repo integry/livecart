@@ -130,36 +130,37 @@ Form.State = {
     restore: function(form)
     {
         if(!this.hasBackup(form)) return;
+        self = this;
 
         var occurencies = {};
         var elements = $A(Form.getElements(form));
-        for(var i = 0; i < elements.length; i++)
+        $A(Form.getElements(form)).each(function(element)
         {
-            if(elements[i].name == '' || !this.backups[form.backupId][elements[i].name]) continue;
+            if(element.name == '' || !self.backups[form.backupId][element.name]) return;
 
-            occurencies[elements[i].name] = (occurencies[elements[i].name] == undefined) ? 0 : occurencies[elements[i].name] + 1;
+            occurencies[element.name] = (occurencies[element.name] == undefined) ? 0 : occurencies[element.name] + 1;
 
-            var value = this.backups[form.backupId][elements[i].name][occurencies[elements[i].name]];
+            var value = self.backups[form.backupId][element.name][occurencies[element.name]];
 
             if(value)
             {
-                elements[i].value = value.value;
-                elements[i].checked = value.checked;
+                element.value = value.value;
+                element.checked = value.checked;
 
-                if(elements[i].options && value.options)
+                if(element.options && value.options)
                 {
-                    elements[i].options.length = 0;
+                    element.options.length = 0;
                     for(var oval in value.options)
                     {
-                        elements[i].options[elements[i].options.length] = new Option(value.options[oval], oval);
+                        element.options[element.options.length] = new Option(value.options[oval], oval);
                     }
 
-                    var test = elements[i].options;
+                    var test = element.options;
                 }
 
-                elements[i].selectedIndex = value.selectedIndex;
+                element.selectedIndex = value.selectedIndex;
             }
-        }
+        });
     }
 }
 
