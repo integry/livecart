@@ -128,8 +128,16 @@ html, body{height:100%;}
 	float: right;
 }
 
+/* Navigation menu */
+
 #navContainer {
   	padding-left: 70px;
+}
+
+#nav {
+	position: relative;
+	z-index: 1;
+	top: -1px;
 }
 
 #nav li ul, #nav { /* all lists */
@@ -158,15 +166,6 @@ html, body{height:100%;}
 	display: block;
 }
 
-#content {
-	clear: left;
-}
-
-#nav {
-	position: relative;
-	z-index: 1000;
-}
-
 #nav a {
   	text-decoration: none;
   	color: #0000FF;
@@ -175,23 +174,19 @@ html, body{height:100%;}
 }
 
 #nav li {
-	background-repeat: repeat-x;
 	padding-left:10px;
-	#width: 20px; /* IE hack */
 	white-space: nowrap;
 	height: 18px;
 }
 
 #nav li div {
-	display: table;
-  	background-image: url(../../image/backend/menu/menu_item_middle.jpg);
+  	background-image: url(../../image/backend/menu/menu_item_middle.jpg); 
 	background-repeat: repeat-x;
 	background-position: right 0px;
 }
 
 #nav li div div {
-	display: table;
-  	background-image: url(../../image/backend/menu/menu_item_right.gif);
+ 	background-image: url(../../image/backend/menu/menu_item_right.gif); 
   	background-repeat: no-repeat;
 	background-position: right 0px;
 }
@@ -204,7 +199,6 @@ html, body{height:100%;}
 	padding: 5px;
 	padding-left: 10px;
 	padding-right: 10px;
-	display: table-cell;
 }
 
 #navSelected div {

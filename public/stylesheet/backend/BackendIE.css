@@ -1,0 +1,17 @@
+/* Navigation menu */
+
+#nav {
+	top: 0;	  
+}
+
+#nav li {
+	width: 20px;
+}
+
+#nav li div {
+	width: 20px;
+}
+
+#nav li ul {
+  	top: 23px;
+}

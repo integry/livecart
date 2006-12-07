@@ -43,3 +43,8 @@
 #sectionContainer .tabSection
 {
 }
+
+.tab 
+{
+  	cursor: pointer;
+}
