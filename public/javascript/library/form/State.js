@@ -105,6 +105,50 @@ Form.State = {
 
 
     /**
+     * Create form backup from json object.
+     *
+     * @param HTMLElementForm Form node
+     * @param Object Backup data. This object should be organized so that keys would be form fields names (not ids)
+     *        and values vould be arrays of field values
+     *
+     * @example
+     *        json = {
+     *              id: [{ value: 15}],
+     *            name: [{ value: test}],
+     *           radio: [
+     *                      {value: 1, checked: false },
+     *                      {value: 2, checked: true },
+     *                      {value: 3, checked: false },
+     *                  ],
+     *          select: [
+     *                      {
+     *                                value: 5,
+     *                        selectedIndex: 2, // you should precalculate it yourself
+     *                              options: { // keys here are values and values are the text which appears in dropdown box
+     *                                 3: "text",
+     *                                 4: "processor",
+     *                                 5: "selector",
+     *                                 6: "date"
+     *                               }
+     *                      }
+     *                  ]
+     *             }
+     *
+     */
+    backupFromJson: function(form, json)
+    {
+        if(!form.backupId)
+        {
+            form.backupId = this.counter;
+        }
+
+        this.backups[++form.backupId] = {};
+
+        this.backups[form.backupId] = json;
+    },
+
+
+    /**
      * Check if form has a backup
      *
      * @param HtmlFormElement form Form node
@@ -127,8 +171,10 @@ Form.State = {
      * @access public
      * @static
      */
-    restore: function(form)
+    restore: function(form, json)
     {
+        if(json) this.backupFromJson(form, json);
+
         if(!this.hasBackup(form)) return;
         self = this;
 
