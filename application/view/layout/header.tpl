@@ -11,6 +11,7 @@
 	<!-- Css includes -->
 	<link href="stylesheet/backend/Backend.css" media="screen" rel="Stylesheet" type="text/css"/>
 	{includeCss file="backend/stat.css"}
+	
 	{$STYLESHEET}
 	{literal}
 	<!--[if IE]>
@@ -39,17 +40,63 @@
 
 <div id="log" style="position: absolute; top: 0; left: 0; z-index: 10000; background-color: white;"></div>
 
-<div id="minHeight"></div>
-<div id="outer" style="">
-
-	<div id="clearheader"></div>
-
-	<div id="left">
+<div style="position: absolute; width: 100%; height:100%; background-color: white;">
+	<div style="float: left; width: 15px; height: 100%; background-color: #E6E6E6;"></div>
+	<div style="float: right; width: 20px; height: 100%; background-image:url(image/backend/layout/workarea_shade_vertical_wide.jpg);
+	background-position: -8px 0px; background-repeat: repeat-y;  background-color: #E6E6E6;">
+		<div style="height:110px; width: 20px; background-color: #E6E6E6;"></div>
 	</div>
+</div>
 
-	<div id="right">
-		<div id="rightWorkareaShadeTop">&nbsp;</div>
+<div id="pageContainer">
+	
+	<div id="pageHeader" style="height: 75px;">
+				
+		<div id="topAuthInfo">
+			Logged in as: <span id="headerUserName">rinalds</span> <a href="/logout">(logout)</a>
+		</div>
+	
+		<div id="topBackground" style="height: 40px;">
+			<div id="topBackgroundLeft" style="width: 100%;">
+				
+				<div style="float: left;">
+					<div id="homeButtonWrapper">
+						<a href="{link controller=backend.index action=index}">
+							<img src="image/backend/layout/top_home_button.jpg" id="homeButton"> 
+						</a>
+					</div>		
+
+					<div id="navContainer">
+						{backendMenu}			 
+					</div>
+				</div>
+	
+				<div id="topLogoContainer">
+
+					<div id="systemMenu">
+							{t _base_help} | <a href="#" onClick="showLangMenu(true);return false;">{t _change_language}</a>
+							{backendLangMenu}								
+					</div>	
+
+					<div style="float: right;">
+					 	<a href="{link controller=backend.index action=index}">
+						 	<img src="image/backend/layout/logo_tr.png" id="topLogoImage">
+						</a>
+					</div>									
+
+				</div>			
+				
+			</div>					 	 						
+			
+		</div>
+	
 	</div>
-
-	<div id="centrecontent">
-		<div id="workArea">
+		
+	<div id="pageContentContainer" style="padding-bottom:62px; position: relative;">
+	
+		<div id="pageTitleContainer">
+			<div id="pageTitle">{$PAGE_TITLE}</div>
+		</div>
+			
+		<div style="background-color: white; margin-left:15px; margin-right:20px; padding: 10px;">	
+	
