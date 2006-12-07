@@ -1,6 +1,6 @@
 <ul id="nav">
 	{foreach from=$items item=item name=menu}
-	<li{if $itemIndex == $smarty.foreach.menu.iteration} id="navSelected"{/if}>
+	<li{if $itemIndex == $smarty.foreach.menu.iteration} id="navSelected"{/if}> 
 		<div>
 			<div>
 				<div>
