@@ -1,6 +1,13 @@
+
+function showPosition(e) {
+//	alert("Your mouse is at " + Event.pointerX(e) + "px");
+}
+
+Event.observe(document, "mousedown", showPosition, false);
+
 Backend.Customize = Class.create();
-Backend.Customize.prototype = 
-{		
+Backend.Customize.prototype = {		
+  
 	controllerUrl: false,
 	
 	currentElement: false,
@@ -20,30 +27,37 @@ Backend.Customize.prototype =
 		elements = document.getElementsByClassName('transMode');  
 		for (k in elements)
 		{
-		  	elements[k].onmousemove = function(e) {cust.showTranslationMenu(this, e);}
+		  	Event.observe(elements[k], 'mousemove', function(e) {cust.showTranslationMenu(this, e);}, false);
 		}
 	},
 	
 	showTranslationMenu: function(element, e)
 	{
 		dialog = document.getElementById('transDialogMenu');
-		
-		xPos = e.pageX + 5;
-		yPos = e.pageY;
+
+		xPos = Event.pointerX(e) + 5;
+		yPos = Event.pointerY(e);
 		
 		// make sure the dialog is not being displayed outside window boundaries
-		mh = new PopupMenuHandler(xPos, yPos, 100, 50);
+		mh = new PopupMenuHandler(xPos, yPos, 100, 30);
 		dialog.style.left = mh.x + 'px';
 		dialog.style.top = mh.y + 'px';
 		dialog.style.display = 'block';	
-		
+//		addlog(dialog.style.left);
 		this.currentElement = element;			
+		Event.observe(document, 'click', cust.hideTranslationMenu, true);
 	},
 	
+	hideTranslationMenu: function()
+	{
+		document.getElementById('transDialogMenu').style.display = 'none';
+	},
+
 	translationMenuClick: function(e)
 	{
+		addlog(Event.pointerX(e));
 		this.showTranslationDialog(this.currentElement, e);  	
-		document.getElementById('transDialogMenu').style.display = 'none';
+		this.hideTranslationMenu();
 	},
 	
 	showTranslationDialog: function(element, e)
@@ -58,8 +72,8 @@ Backend.Customize.prototype =
 
 		dialog = document.getElementById('transDialogBox');
 				
-		xPos = e.pageX;
-		yPos = e.pageY;
+		xPos = Event.pointerX(e);
+		yPos = Event.pointerY(e);
 		
 		// make sure the dialog is not being displayed outside window boundaries
 		mh = new PopupMenuHandler(xPos, yPos, 300, 77);
@@ -97,6 +111,17 @@ Backend.Customize.prototype =
 		button.parentNode.replaceChild(indicator, button);
 	},
 	
+	previewTranslations: function(transKey, translation)
+	{
+	  	elements = document.getElementsByClassName('__trans_' + transKey);
+		for (k = 0; k < elements.length; k++)
+	  	{
+			elements[k].innerHTML = translation;
+	//		new Effect.Highlight(elements[k], {startcolor:'#FBFF85', endcolor:'#FFFFFF'})
+		
+		}
+	},
+	
 	updateDocumentTranslations: function(transKey, translation)
 	{
 	  	elements = document.getElementsByClassName('__trans_' + transKey);
@@ -116,6 +141,5 @@ Backend.Customize.prototype =
 	stopTransCancel: function(e)
 	{
         Event.stop(e);
-	},
-	
+	}	
 }

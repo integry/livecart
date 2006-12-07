@@ -14,11 +14,9 @@ label.radio {
 
 #languageList {
   	width: 300px;
-  	float: left;
 }
 
 #languageList li {
-	float: left;
 	margin-bottom: 10px;
 }
 
@@ -123,8 +121,9 @@ label.radio {
 
 .langTranslations legend {
 	text-align: left;
-	font-weight: bold;  
+	font-weight: bold;   
 	padding-top: 10px;
+	padding-left: 0px;
 }  
 
 .transContainer legend a {
