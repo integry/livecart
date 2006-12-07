@@ -424,7 +424,8 @@ Backend.SpecField.prototype = {
 				{
                     if(Element.hasClassName(inputFields[j].parentNode, this.cssPrefix + 'step_translations_language'))
                     {
-    				    eval("if(self."+inputFields[j].name+"['"+self.languageCodes[i]+"']) [j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];");
+    				    var test1 = "if(self."+inputFields[j].name+"['"+self.languageCodes[i]+"']) inputFields[j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];";
+                        eval("if(self."+inputFields[j].name+"['"+self.languageCodes[i]+"']) inputFields[j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];");
     					inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
                     }
 				}
