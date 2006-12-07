@@ -2,7 +2,8 @@
 function validateForm(form)
 {
 	var validatorData = form._validator.value;
-	validator = validatorData.parseJSON();
+	var validator = validatorData.parseJSON();
+
 
 	for (var fieldName in validator)
 	{
@@ -20,7 +21,7 @@ function validateForm(form)
 			var params = validator[fieldName][functionName]['param'];
 			var errorMsg = validator[fieldName][functionName]['error'];
 			//alert(functionName + params + errorMsg);
-			
+
 			var functionExists = false;
 			eval('functionExists = window.' + functionName + ';');
 			if (!functionExists)
@@ -28,19 +29,19 @@ function validateForm(form)
 				alert('No validation function defined: ' + functionName + '!');
 				break;
 			}
-				
+
 			var isFieldValid = false;
 			eval('isFieldValid = ' + functionName + '(formElement, params);');
 			if (!isFieldValid)
 			{
 				alert(errorMsg);
-				formElement.focus();				
+				formElement.focus();
 				return false;
 			}
 		}
 	}
 	// Unseting validator value, so it will not be transfered
-	form._validator.value = '';
+//	form._validator.value = '';
 	return true;
 }
 
@@ -59,7 +60,7 @@ function trim(strValue)
    	//check for leading & trailing spaces
    	objRegExp = /^(\s*)([\W\w]*)(\b\s*$)/;
    	if(objRegExp.test(strValue))
-   	{ 
+   	{
        //remove leading and trailing whitespace characters
        strValue = strValue.replace(objRegExp, '$2');
     }
@@ -93,27 +94,27 @@ function IsValidEmailCheck(element, params)
 
 function IsValueInSetCheck(element, params)
 {
-	
+
 }
 
 function IsNumericCheck(element, constraint)
-{  	
+{
   	if (constraint.letEmptyString && element.value == '')
-  	{  
+  	{
   		return true;
-  	} 
-	re = new RegExp(/(^-?\d+\.\d+$)|(^-?\d+$)|(^-?\.\d+$)/);	
+  	}
+	re = new RegExp(/(^-?\d+\.\d+$)|(^-?\d+$)|(^-?\.\d+$)/);
 	return(re.exec(element.value));
 }
 
 function IsIntegerCheck(element, constraint)
 {
   	if (constraint.letEmptyString && element.value == '')
-  	{	  
+  	{
   		return true;
-  	} 	
-	re = new RegExp(/^-?\d+$/);	
-	return(re.exec(element.value));	 	
+  	}
+	re = new RegExp(/^-?\d+$/);
+	return(re.exec(element.value));
 }
 
 function MinValueCheck(element, constraint)
@@ -122,7 +123,7 @@ function MinValueCheck(element, constraint)
 }
 
 function MaxValueCheck(element, constraint)
-{  
+{
   	return element.value <= constraint.maxValue || element.value == '';
 }
 
