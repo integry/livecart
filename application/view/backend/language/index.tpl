@@ -61,11 +61,11 @@
 			   },
 	         beforeDelete:   function(li)
 	         {
-	             if(confirm('{/literal}{t _confirm_delete}{literal}')) return '{/literal}{link controller=backend.language action=delete}{literal}/' + this.getRecordId(li)
+	             if(confirm('{/literal}{tn _confirm_delete}{literal}')) return '{/literal}{link controller=backend.language action=delete}{literal}/' + this.getRecordId(li)
 	         },
 	         afterEdit:      function(li, response) {  },
 	         afterSort:      function(li, response) {  },
-	         afterDelete:    function(li, response)  { Element.remove(li); },
+	         afterDelete:    function(li, response)  { Element.remove(li); }
 	     });
 	}	
 	initLangList();
