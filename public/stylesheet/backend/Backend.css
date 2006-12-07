@@ -31,29 +31,6 @@ a img {
   	background-color: #EEEEEE;
 }
 
-.inlineHelp {
-  	position: relative;
-	background-color: #FBFF85;
-	float: right;
-	display: inline;
-	width: auto;
-	width: 300px;
-	padding: 10px;
-	border: 1px solid grey;
-	clear: none;
-}
-
-.inlineHelp ul {
-
-	margin-left: 15px;
-
-}
-
-.inlineHelp legend {
-  	background-color: yellow;
-	padding: 3px;
-}
-
 .menuFieldSet {
   	display: inline;
   	width: auto;
@@ -71,85 +48,27 @@ a img {
 html, body{height:100%;}
 /* end hack */
 
-html>body #minHeight{ /*safari wrapper */
-  	float:right;
-	width:0px;
-	height:100%;
-	/*margin-bottom:-60px; */
-	margin-bottom:-40px;
+/* Layout positioning */
+#pageContainer {
+	position:relative; /* needed for footer positioning*/
+	margin:0 auto; /* center, not in IE5 */
+	height:auto !important; /* real browsers */
+	height:100%; /* IE6: treaded as min-height*/
+	min-height:100%; /* real browsers */
 }
 
-#outer {
-	margin-left:20px;
-	margin-right:20px;
-	background:#FFFFFF;
-	/*margin-bottom:-102px; */
-	margin-bottom:-60px;
-	min-height:100%
-}
-
-#headerContainer {
-	position:absolute;
-	top:0;
-	left:0;
-	width:100%;
-	/* overflow: hidden; */
-}
-
-#clearheader{
-  	height:100px; /*needed to make room for header*/
-}
-#left {
-	position: relative;/*ie needs this to show float */
-	width: 20px;
-	float: left;
-	margin-left: -19px;/*must be 1px less than width otherwise won't push footer down */
-	z-index: 100;
-	left: -1px;
-}
-
-#right {
-	position:relative;/*ie needs this to show float */
-	width:20px;
-	float:right;
-	margin-right:-19px;/*must be 1px less than width otherwise won't push footer down */
-	left:1px
-}
-
-#footer {
-	width:100%;
-	clear:both;
-	height:60px;
-	background-color:#E6E6E6;
-	text-align:center;
-	position:relative;
-}
-
-#clearfooter{
-  	clear:both;
-	height:60px; /*needed to make room for footer*/
-}
-
-* > html #clearfooter { /* ie mac styles */
-  	float:left;
-	width:100%;
-}
-
-#centrecontent {
-	width:100%;
-	float:left;
-	position:relative;
-	z-index:10;
-	margin:0 -1px;/* moz fix*/
-	background-color: #FFFFFF;
+#pageFooter {
+	position: absolute;
+	width: 100%;
+	bottom: 0; /* stick to bottom */
 }
 
 /* Page header */
-#pageTop {
+#pageHeader {
   	background-color: #30a0f9;
-	border-bottom: 1px solid #0097ff;
-	height: 98px;
-	vertical-align: bottom;
+}
+#headerContainer {
+  	height: 55px;
 }
 #topAuthInfo {
   	color: #FFFFFF;
@@ -158,40 +77,28 @@ html>body #minHeight{ /*safari wrapper */
 	font-size: 10px;
 }
 #topBackground {
-	position: absolute;
-	top: 13px;
-	background-image: url(../../image/backend/layout/top_bg.jpg);
+	background-image: url(../../image/backend/layout/top_bg.jpg); 
 	width: 100%;
 	background-repeat: repeat-x;
-	height: 81px;
 }
 #topBackgroundLeft {
-  	position: absolute;
-	top: 0px;
-	background-image:url(../../image/backend/layout/top_bg_left.jpg);
-	width: 420px;
-	height: 81px;
+	background-image:url(../../image/backend/layout/top_bg_left.jpg); 
+	height: 61px; 
 	background-repeat: no-repeat;
-	z-index: 0;
 }
 #topLogoContainer {
 	float: right;
-	width: 184px;
+	width: 200px;
+	height: 40px;
+	position: relative;
+	z-index: 1;
 }
 #topLogoImage {
   	margin-right: 10px;
-  	margin-top: 25px;
-}
-#headerContent {
+  	margin-top: -5px; 
 	position: absolute;
-  	width: 100%;
-	height: 44px;
-	top: 13px;
-}
-#topBorder {
-  	background-color: #FFFFFF;
-	height: 1px;
-	margin-bottom:4px;
+	top: 15px;
+	left: 0;
 }
 #headerUserName {
   	font-weight: 900;
@@ -210,17 +117,6 @@ html>body #minHeight{ /*safari wrapper */
 #homeButton {
 	vertical-align:middle;
 }
-
-#headerMenuContainer {
-	vertical-align:top;
-	text-align: right;
-	width: 1005px;
-}
-
-#headerTopMenuContainer {
-	text-align:left;
-}
-
 #systemMenu {
  	font-size: 11px;
 	text-align: right;
@@ -232,22 +128,8 @@ html>body #minHeight{ /*safari wrapper */
 	float: right;
 }
 
-/* Navigation menu */
 #navContainer {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	z-index: 1000;
-}
-
-#navContainer table {
-	height: 65px;
-}
-
-#navContainer table td {
-  	vertical-align: bottom;
-	padding-left: 70px;
+  	padding-left: 70px;
 }
 
 #nav li ul, #nav { /* all lists */
@@ -466,11 +348,10 @@ html>body #minHeight{ /*safari wrapper */
 #pageTitleContainer {
 	height:20px;
 	background-color: #E6E6E6;
-	position: absolute;
+/*	position: absolute; */
 	bottom: 0;
 	width: 100%;
 	padding-top: 5px;
-	z-index: 10;
 	margin-bottom: -1px;
 }
 #pageTitle {
