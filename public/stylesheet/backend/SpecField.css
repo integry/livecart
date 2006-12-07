@@ -1,3 +1,8 @@
+.specFieldList .activeList_container
+{
+   padding-left: 80px;
+}
+
 .specField_form_values_group div input
 {
     width: 10em;
@@ -55,12 +60,20 @@
 .specField_add_field
 {
     white-space: nowrap;
-    margin-left: 77px;
+    margin-left: 56px;
 }
 
 .specField_values
 {
     width: auto !important;
+    padding-bottom: 10px;
+}
+
+
+
+h2.specField_values_title
+{
+   width: 7em ! important;
 }
 
 
@@ -75,8 +88,6 @@ fieldset.specField_step_values  .activeList_icons
 
 fieldset.group h2
 {
-    width: 6em;
-    float: left;
     font-size: 1em;
     font-weight: normal;
 }

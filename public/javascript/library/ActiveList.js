@@ -432,6 +432,7 @@ ActiveList.prototype = {
             var container = document.createElement('div');
             container.style.display = 'none';
             Element.addClassName(container, self.cssPrefix + icon.action + 'Container');
+            Element.addClassName(container, self.cssPrefix + 'container');
             container.id = self.cssPrefix + icon.action + 'Container_' + li.id;
             li.appendChild(container);
             li[icon.action + 'Container'] = container;

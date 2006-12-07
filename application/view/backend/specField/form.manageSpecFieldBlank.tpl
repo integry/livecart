@@ -17,24 +17,6 @@
 		<input type="hidden" name="categoryID" class="hidden specField_form_categoryID" />
 
 		<p>
-    		<label>{t _SpecField_title}<em class="required">*</em></label>
-    		<input type="text" name="name" class="required specField_form_name" />
-    		<span class="feedback"> </span>
-    	</p>
-
-		<p>
-    		<label>{t _SpecField_handle}</label>
-    		<input type="text" name="handle" class="specField_form_handle" />
-    		<span class="feedback"> </span>
-		</p>
-
-		<p>
-    		<label>{t _SpecField_description}</label>
-    		<textarea name="description" class="specField_form_description" rows="5" cols="40"></textarea>
-    		<span class="feedback_textarea"> </span>
-		</p>
-
-		<p>
 		<fieldset class="group specField_form_dataType">
     		<h2>{t _SpecField_value_type}</h2>
     		<div>
@@ -60,6 +42,25 @@
     		<select name="type" class="specField_form_type"></select>
     		<span class="feedback"> </span>
 		</p>
+
+		<p>
+    		<label>{t _SpecField_title}<em class="required">*</em></label>
+    		<input type="text" name="name" class="required specField_form_name" />
+    		<span class="feedback"> </span>
+    	</p>
+
+		<p>
+    		<label>{t _SpecField_handle}</label>
+    		<input type="text" name="handle" class="specField_form_handle" />
+    		<span class="feedback"> </span>
+		</p>
+
+		<p>
+    		<label>{t _SpecField_description}</label>
+    		<textarea name="description" class="specField_form_description" rows="5" cols="40"></textarea>
+    		<span class="feedback_textarea"> </span>
+		</p>
+
 	</fieldset>
 
 	<!-- STEP 2 -->
@@ -72,9 +73,9 @@
     		<h2 class="specField_values_title">{t _SpecField_values}</h2>
     		<div class="specField_values">
                 <p>
-        			<ul class="activeList_add_delete activeList_add_sort">
+        			<ul class="activeList_add_sort activeList_add_delete">
         				<li class="dom_template specField_form_values_value" id="specField_form_values_">
-        					<input type="text"  />
+        					<input type="text" />
                     		<span class="feedback"> </span>
         				</li>
         			</ul>
@@ -88,8 +89,10 @@
 		</fieldset>
 		</p>
 
-		<label>{t _SpecField_select_multiple}</label>
-		<input type="checkbox" value="1" name="multipleSelector" class="checkbox specField_form_multipleSelector" />
+		<p class="checkbox">
+    		<input type="checkbox" value="1" name="multipleSelector" class="checkbox specField_form_multipleSelector" />
+    		<label>{t _SpecField_select_multiple}</label>
+		</p>
 	</fieldset>
 
 	<!-- STEP 3 -->

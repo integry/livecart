@@ -86,7 +86,7 @@
 </div>
 <br />
 <div>
-<ul id="specField_items_list_{$categoryID}" class="activeList_add_delete activeList_add_edit activeList_add_sort">
+<ul id="specField_items_list_{$categoryID}" class="specFieldList  activeList_add_sort activeList_add_edit activeList_add_delete">
 {foreach item="field" from=$specFields}
 	<li id="specField_items_list_{$categoryID}_{$field.ID}">
     	<span class="specField_title">{$field.name[$defaultLangCode]}</span>

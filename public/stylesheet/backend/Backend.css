@@ -578,6 +578,16 @@ label
     width: 11em;
 }
 
+p.radio, p.checkbox
+{
+   padding-left: 11em;
+}
+
+p.radio label, p.checkbox label
+{
+    white-space: nowrap;
+}
+
 input, select, form.other
 {
     width: 15em;
@@ -666,7 +676,7 @@ fieldset.group
 
 fieldset.group h2
 {
-    width: 10em;
+    width: 11em;
     float: left;
     font-size: 1em;
     font-weight: normal;
