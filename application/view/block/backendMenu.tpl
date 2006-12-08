@@ -7,8 +7,12 @@
 					<a href="{link controller=$item.controller action=$item.action}">{t $item.title notranslate=true}</a>
 					{if count($item.items) > 0}
 						<ul>
-							{foreach from=$item.items item=command}
-								<li><a href="{link controller=$command.controller action=$command.action}">{t $command.title notranslate=true}</a></li>
+							{foreach from=$item.items item=command name=submenu}
+								<li{if ($subItemIndex == $smarty.foreach.submenu.iteration) && ($itemIndex == $smarty.foreach.menu.iteration)} id="navSubSelected"{/if}>
+									<div><div><div>
+										<a href="{link controller=$command.controller action=$command.action}">{t $command.title notranslate=true}</a>
+									</div></div></div>
+								</li>
 							{/foreach}
 						</ul>
 					{/if}
@@ -18,3 +22,4 @@
 	</li>		
 	{/foreach}
 </ul>
+!!!{$subItemIndex} !!!{$itemIndex}

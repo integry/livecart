@@ -24,6 +24,7 @@ function smarty_function_backendMenu($params, Smarty $smarty)
 
 	$index = 0;
 
+	// find active menu item
 	foreach($structure['items'] as $topIndex => $topValue)
 	{
 	    if ($controller == $topValue['controller'] && $action == $topValue['action'])
@@ -44,11 +45,13 @@ function smarty_function_backendMenu($params, Smarty $smarty)
 			    if ($controller == $subValue['controller'] && $action == $subValue['action'])
 			    {
 				  	$index = $topIndex;
+				  	$subItemIndex = $subIndex;
 				  	$match = true;
 				  	break;
 				}	
 				else if ($controller == $subValue['controller'])
 				{
+				  	$subItemIndex = $subIndex;
 				  	$index = $topIndex;
 				}		
 			}
@@ -62,6 +65,7 @@ function smarty_function_backendMenu($params, Smarty $smarty)
 	
 	$smarty->assign('items', $structure['items']);
 	$smarty->assign('itemIndex', $index);
+	$smarty->assign('subItemIndex', $subItemIndex);
 	return $smarty->display('block/backendMenu.tpl');	
 }
 

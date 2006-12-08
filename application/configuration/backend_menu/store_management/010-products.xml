@@ -3,6 +3,11 @@
 	<Controller>backend.category</Controller>
 	<Items>
 		<Menu>
+			<Title>_menu_products_manage</Title>
+			<Controller>backend.category</Controller>
+			<Action>index</Action>	
+		</Menu>
+		<Menu>
 			<Title>_menu_find_product</Title>
 			<Controller>backend.category</Controller>
 			<Action>findProduct</Action>	
