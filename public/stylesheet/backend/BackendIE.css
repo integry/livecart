@@ -15,3 +15,7 @@
 #nav li ul {
   	top: 23px;
 }
+
+#nav li ul li {
+  	width: 200px;
+}  	
