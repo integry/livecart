@@ -1,9 +1,20 @@
-
-function showPosition(e) {
-//	alert("Your mouse is at " + Event.pointerX(e) + "px");
+var TranslationMenuEvent = Class.create();
+TranslationMenuEvent.prototype = 
+{  
+  	element: false,
+  	
+	initialize: function(element)
+  	{
+		this.element = element;
+		this.eventMouseMove = this.move.bindAsEventListener(this);
+		Event.observe(this.element, 'mousemove', this.eventMouseMove);
+	},
+	
+	move: function(e)
+	{
+		cust.showTranslationMenu(this.element, e);
+	}
 }
-
-Event.observe(document, "mousedown", showPosition, false);
 
 Backend.Customize = Class.create();
 Backend.Customize.prototype = {		
@@ -27,7 +38,7 @@ Backend.Customize.prototype = {
 		elements = document.getElementsByClassName('transMode');  
 		for (k in elements)
 		{
-		  	Event.observe(elements[k], 'mousemove', function(e) {cust.showTranslationMenu(this, e);}, false);
+		  	new TranslationMenuEvent(elements[k]);
 		}
 	},
 	
@@ -43,8 +54,7 @@ Backend.Customize.prototype = {
 		dialog.style.left = mh.x + 'px';
 		dialog.style.top = mh.y + 'px';
 		dialog.style.display = 'block';	
-//		addlog(dialog.style.left);
-		this.currentElement = element;			
+		cust.currentElement = element;			
 		Event.observe(document, 'click', cust.hideTranslationMenu, true);
 	},
 	
@@ -55,9 +65,9 @@ Backend.Customize.prototype = {
 
 	translationMenuClick: function(e)
 	{
-		addlog(Event.pointerX(e));
-		this.showTranslationDialog(this.currentElement, e);  	
-		this.hideTranslationMenu();
+		cust.showTranslationDialog(cust.currentElement, e);  	
+		cust.hideTranslationMenu();
+		Event.stop(e);
 	},
 	
 	showTranslationDialog: function(element, e)
@@ -71,21 +81,21 @@ Backend.Customize.prototype = {
 		url = this.controllerUrl + '/translationDialog?id=' + id + '&file=' + file;
 
 		dialog = document.getElementById('transDialogBox');
-				
+
 		xPos = Event.pointerX(e);
 		yPos = Event.pointerY(e);
-		
+
 		// make sure the dialog is not being displayed outside window boundaries
 		mh = new PopupMenuHandler(xPos, yPos, 300, 77);
+
 		dialog.style.left = mh.x + 'px';
 		dialog.style.top = mh.y + 'px';
 		dialog.style.display = 'block';
-		
+
 		document.getElementById('transDialogContent').style.display = 'none';
 		document.getElementById('transDialogIndicator').style.display = 'block';
-				
-		self = this;
-		new Ajax.Updater('transDialogContent', url, {onComplete: self.displayDialogContent});
+
+		new Ajax.Updater('transDialogContent', url, {onComplete: this.displayDialogContent});
 		
 		Event.observe(document, 'mousedown', cust.cancelTransDialog, false);
 	},
@@ -111,14 +121,15 @@ Backend.Customize.prototype = {
 		button.parentNode.replaceChild(indicator, button);
 	},
 	
+	/**
+	 * @todo disable for IE (too slow)
+	 **/
 	previewTranslations: function(transKey, translation)
 	{
-	  	elements = document.getElementsByClassName('__trans_' + transKey);
+		elements = document.getElementsByClassName('__trans_' + transKey);  		
 		for (k = 0; k < elements.length; k++)
 	  	{
-			elements[k].innerHTML = translation;
-	//		new Effect.Highlight(elements[k], {startcolor:'#FBFF85', endcolor:'#FFFFFF'})
-		
+			elements[k].innerHTML = translation;	
 		}
 	},
 	
