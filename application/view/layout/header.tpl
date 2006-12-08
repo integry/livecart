@@ -27,7 +27,8 @@
 	{includeJs file=library/KeyboardEvent.js}
 	{includeJs file=library/json.js}
 	{includeJs file=library/livecart.js}
-
+	{includeJs file=library/Debug.js}
+	
 	{includeJs file=backend/Customize.js}
 
 	{$JAVASCRIPT}

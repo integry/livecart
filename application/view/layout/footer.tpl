@@ -33,15 +33,13 @@
 	</div>	
 	
 	
-	{*
-	
 <div id="transDialogBox" style="position: absolute;z-index: 10000; display: none;">
 	<div class="menuLoadIndicator" id="transDialogIndicator"></div>
 	<div id="transDialogContent">
 	</div>
 </div>
 
-<div id="transDialogMenu" style="display:none;position: absolute;z-index: 60000; background-color: yellow; border: 1px solid black; padding: 3px;"><a href="#" onClick="cust.translationMenuClick(event); return false;">{t _live_translate notranslate=true}</a></div>
+<div id="transDialogMenu" style="display:none;position: absolute;z-index: 60000; background-color: yellow; border: 1px solid black; padding: 3px;"><a href="#" id="transLink">{t _live_translate notranslate=true}</a></div>
 
 <script type="text/javascript">
 	var cust = new Backend.Customize();
@@ -49,9 +47,8 @@
 	cust.initLang();
 	new Draggable('transDialogBox');
 	Event.observe('transDialogBox', 'mousedown', cust.stopTransCancel, false);
+	Event.observe('transLink', 'click', cust.translationMenuClick, false);
 </script>
-	
-*}
 	
 </body>
 </html>
