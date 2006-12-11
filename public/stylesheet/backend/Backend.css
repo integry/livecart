@@ -304,7 +304,6 @@ html, body{height:100%;}
 }
 
 #nav #navSelected #navSubSelected div div div a {
-    color: #FDC245;    
     text-decoration: none;
 }
 
@@ -324,7 +323,6 @@ html, body{height:100%;}
 }
 
 #nav li ul li:hover a, .menuCommandHover a {
-	color: #FFFFFF;
 }
 
 /* Page footer */

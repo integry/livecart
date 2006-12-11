@@ -1,49 +1,126 @@
 var Backend = {};
 
-/* Debugger functions */
-
-function print_r(input, _indent)
-{
-    if(typeof(_indent) == 'string') {
-        var indent = _indent + '    ';
-        var paren_indent = _indent + '  ';
-    } else {
-        var indent = '    ';
-        var paren_indent = '';
-    }
-    switch(typeof(input)) {
-        case 'boolean':
-            var output = (input ? 'true' : 'false') + "\n";
-            break;
-        case 'object':
-            if ( input===null ) {
-                var output = "null\n";
-                break;
-            }
-            var output = ((input.reverse) ? 'Array' : 'Object') + " (\n";
-            for(var i in input) {
-                output += indent + "[" + i + "] => " + print_r(input[i], indent);
-            }
-            output += paren_indent + ")\n";
-            break;
-        case 'number':
-        case 'string':
-        default:
-            var output = "" + input  + "\n";
-    }
-    return output;
-}
-
-function addlog(info)
-{
-	document.getElementById('log').innerHTML += info + '<br />';
-}
-
 function showHelp(url)
 {
   	return window.open(url, 'helpWin', 'width=400, height=700, resizable, scrollbars, location=no');
 }
 
+/* Backend menu */
+
+Backend.NavMenu = Class.create();
+
+/**
+ * Builds navigation menu from passed JSON array
+ **/
+Backend.NavMenu.prototype = 
+{
+	initialize: function(menuArray, controller, action)
+	{	
+		var index = 0;
+		var subIndex = 0;
+		var match = false;
+		
+		// find current menu items
+		for (topIndex in menuArray)
+		{
+		  	if('object' == typeof menuArray[topIndex])
+		  	{
+				item = menuArray[topIndex];
+				
+				if (item['controller'] == controller)
+				{
+				  	index = topIndex;
+				}
+				
+				match = false;
+				
+				if ('object' == typeof item['items'])
+				{
+				  	for (subIndex in item['items'])
+					{
+					  	subItem = item['items'][subIndex];
+					  	
+					  	if (subItem['controller'] == controller && subItem['action'] == action)
+					  	{
+							index = topIndex;
+							subItemIndex = subIndex;
+							match = true;
+							break;    
+						}
+						else if (controller == subItem['controller'])
+						{
+							index = topIndex;
+							subItemIndex = subIndex;						  
+						}						
+					}
+					
+					if (match)
+					{
+					  	break;
+					}	
+				}
+			}
+		}
+
+		// build menu
+		var topItem = document.getElementById('navTopItem-template');
+		var subItem = document.getElementById('navSubItem-template');
+		
+		navCont = document.getElementById('nav');
+		
+		for (topIndex in menuArray)
+		{
+		  	if('object' == typeof menuArray[topIndex])
+		  	{
+				item = menuArray[topIndex];
+				
+				menuItem = topItem.cloneNode(true);
+				
+				menuItem.getElementsByTagName('a')[0].href = item['url'];
+				menuItem.getElementsByTagName('a')[0].innerHTML = item['title'];
+				menuItem.style.display = 'block';
+								
+				if (topIndex == index)
+				{
+				  	menuItem.id = 'navSelected';
+				}
+
+				ul = menuItem.getElementsByTagName('ul')[0];
+
+				if ('object' == typeof item['items'])
+				{
+				  	for (subIndex in item['items'])
+					{
+					  	sub = item['items'][subIndex];
+
+						if ('object' == typeof sub)
+						{
+						  	subNode = subItem.cloneNode(true);
+						  	
+						  	subNode.getElementsByTagName('a')[0].href = sub['url'];
+						  	subNode.getElementsByTagName('a')[0].innerHTML = sub['title'];
+							
+							if ((topIndex == index) && (subIndex == subItemIndex))
+							{
+							  	subNode.id = 'navSubSelected';
+							}
+							
+							ul.appendChild(subNode);						  					  	
+						}
+					}					
+				}
+				else 				
+				{
+				  	// no subitems
+				  	ul.parentNode.removeChild(ul);
+				}
+			
+				navCont.appendChild(menuItem);
+			}
+		}
+	}	
+}
+	
 function initializeNavigationMenu() {
 	if (document.all&&document.getElementById) {
 		navRoot = document.getElementById("nav");
