@@ -57,6 +57,11 @@
     		<span class="feedback_textarea"> </span>
 		</p>
 
+		<p class="checkbox">
+    		<input type="checkbox" value="1" name="createFilter" class="checkbox" checked="checked" />
+    		<label>{t _create_filter}</label>
+		</p>
+
 	</fieldset>
 
 	<!-- STEP 2 -->
