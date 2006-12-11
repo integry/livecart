@@ -23,7 +23,7 @@ class CategoryController extends StoreManagementController
 
 		$filter = new ARSelectFilter();
 		// Removing tree ROOT node from results
-		$filter->setCondition(new OperatorCond(new ARFieldHandle("Category", "ID"), "0", "<>"));
+		$filter->setCondition(new OperatorCond(new ARFieldHandle("Category", "ID"), Category::ROOT_ID, "<>"));
 		$categoryList = Category::getRecordSet($filter);
 		$response->setValue("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
 

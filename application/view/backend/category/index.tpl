@@ -16,15 +16,12 @@
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 
 
+{pageTitle}Category manager. Selected: <span id="activeCategoryPath" style="font-weight: normal"></span>{/pageTitle}
 {include file="layout/header.tpl"}
-
 
 <div id="specField_item_blank" class="dom_template">
     {include file="backend/specField/form.manageSpecFieldBlank.tpl"}
 </div>
-
-
-{pageTitle}Category manager. Selected: <span id="activeCategoryPath" style="font-weight: normal">Electronics > New Category</span>{/pageTitle}
 
 	<div id="catgegoryContainer" style="float:left; width: 260px;">
 		<div id="categoryBrowser" style="padding: 10px; border: 1px solid #ccc; background-color: #f1f1f1;">
@@ -54,6 +51,7 @@
 
 <script type="text/javascript">
 	Backend.Category.init();
+	Backend.Category.treeBrowser.insertNewItem(0, 1, 'LiveCart', 0, 0, 0, 0, "");
 {foreach from=$categoryList item=category}
 	Backend.Category.treeBrowser.insertNewItem({$category.parent},{$category.ID} , '{$category.name}', 0, 0, 0, 0, "SELECT");
 {/foreach}

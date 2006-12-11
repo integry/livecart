@@ -75,7 +75,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	 * Root node ID
 	 *
 	 */
-	const ROOT_ID = 0;
+	const ROOT_ID = 1;
 
 	/**
 	 * Child node container
@@ -303,6 +303,16 @@ class ActiveTreeNode extends ActiveRecordModel
 
 		$recordSet = self::getRecordSet($className, $filter, $loadReferencedRecords);
 		return $recordSet;
+	}
+
+	/**
+	 * @todo Implementation
+	 *
+	 * @param ActiveTreeNode $parentNode
+	 */
+	public function moveNodeTo(ActiveTreeNode $parentNode)
+	{
+
 	}
 
 	/**
