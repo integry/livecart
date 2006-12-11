@@ -124,8 +124,8 @@
 	</fieldset>
 </form>
 
-<div style="display: inline;" class="specField_controls">
+<fieldset class="specField_controls">
     <input type="button" class="specField_save button" value="{translate text=_save}" />
     {t _or}
     <a href="#cancel" class="specField_cancel">{t _cancel}</a>
-</div>
+</fieldset>

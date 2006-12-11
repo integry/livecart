@@ -553,6 +553,8 @@ Backend.SpecField.prototype = {
 
         Event.stop(e);
 
+        if(e.target.tagName.toLowerCase() != 'a') return;
+
 		var	currentLanguageClass = this.cssPrefix + e.target.hash.replace(/^#+/, '');
 
 		var translationsNodes = document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations);
