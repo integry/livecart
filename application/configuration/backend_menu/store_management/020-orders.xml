@@ -15,9 +15,6 @@
 			<Controller>backend.shipments</Controller>
 		</Menu>
 		<Menu>
-			<Title>--</Title>
-		</Menu>
-		<Menu>
 			<Title>_menu_create_order</Title>
 			<Controller>backend.order</Controller>
 			<Action>create</Action>

@@ -68,7 +68,8 @@
 					</div>		
 
 					<div id="navContainer">
-						{backendMenu}			 
+						<div id="nav"></div>			 
+						{backendMenu}
 					</div>
 				</div>
 	

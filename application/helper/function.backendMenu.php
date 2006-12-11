@@ -21,50 +21,28 @@ function smarty_function_backendMenu($params, Smarty $smarty)
 
 	$menuLoader = new MenuLoader();		
 	$structure = $menuLoader->getCurrentHierarchy($controller, $action);
-
-	$index = 0;
-
-	// find active menu item
-	foreach($structure['items'] as $topIndex => $topValue)
+	$router = Router::getInstance();
+	
+	// get translations and generate URL's
+	foreach($structure['items'] as &$topValue)
 	{
-	    if ($controller == $topValue['controller'] && $action == $topValue['action'])
-	    {
-		  	$index = $topIndex;
-		}
-		else if ($controller == $topValue['controller'])
-		{
-		  	$index = $topIndex;
-		}		
-
-	  	$match = false;
+	 	$topValue['title'] = $locale->translator()->translate($topValue['title']);
+	    $topValue['url'] = $router->createUrl(array('controller' => $topValue['controller'], 'action' => $topValue['action']));
+	
 		if (is_array($topValue['items']))
 		{
-			foreach ($topValue['items'] as $subIndex => $subValue)
+			foreach ($topValue['items'] as &$subValue)
 		  	{
-			    if ($controller == $subValue['controller'] && $action == $subValue['action'])
-			    {
-				  	$index = $topIndex;
-				  	$subItemIndex = $subIndex;
-				  	$match = true;
-				  	break;
-				}	
-				else if ($controller == $subValue['controller'])
-				{
-				  	$subItemIndex = $subIndex;
-				  	$index = $topIndex;
-				}		
-			}
-			
-			if ($match)
-			{
-			  	break;
-			}
+			    $subValue['title'] = $locale->translator()->translate($subValue['title']);
+			 	$subValue['url'] = $router->createUrl(array('controller' => $subValue['controller'], 'action' => $subValue['action']));
+			}		
 		}			
 	}
 	
-	$smarty->assign('items', $structure['items']);
-	$smarty->assign('itemIndex', $index);
-	$smarty->assign('subItemIndex', $subItemIndex);
+	$smarty->assign('menuArray', json_encode($structure['items']));
+	$smarty->assign('controller', $controller);
+	$smarty->assign('action', $action);
+	
 	return $smarty->display('block/backendMenu.tpl');	
 }
 

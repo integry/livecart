@@ -29,7 +29,7 @@ class LanguageController extends StoreManagementController
 
 		return new ActionRedirectResponse($this->request->getControllerName(), 'index');
 	}
-public function test() { return new ActionResponse();}
+
 	/**
 	 * Displays definitions edit page.
 	 * @return ActionResponse	 
