@@ -76,9 +76,9 @@
 </script>
 {/literal}
 
-<div id="specField_item_new">
+<div>
     <a href="#new" id="specField_item_new_{$categoryID}_show">{t _add_new_field}</a>
-    <div id="specField_item_new_{$categoryID}_form" style="display: none; ">
+    <div id="specField_item_new_{$categoryID}_form" style="display: none;">
         <script type="text/javascript">
         new Backend.SpecField('{json array=$specFieldsList}');
         </script>

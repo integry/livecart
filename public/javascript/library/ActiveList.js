@@ -122,7 +122,6 @@ ActiveList.prototype = {
 
         Element.addClassName(this.ul, this.ul.id);
 
-
         // Check if ul has an id
         if(!this.ul.id)
         {
@@ -151,6 +150,39 @@ ActiveList.prototype = {
 
         this.createSortable();
     },
+
+
+    colorizeItems: function()
+    {
+        var liArray = this.ul.getElementsByTagName("li");
+
+        var k = 0;
+        for(var i = 0; i < liArray.length; i++)
+        {
+            if(this.ul == liArray[i].parentNode && !Element.hasClassName(liArray[i], 'ignore') && !Element.hasClassName(liArray[i], 'dom_template'))
+            {
+                this.colorizeItem(liArray[i], k);
+                k++;
+            }
+        }
+    },
+
+
+
+    colorizeItem: function(li, position)
+    {
+        if(position % 2 == 0)
+        {
+            Element.removeClassName(li, this.cssPrefix + "odd");
+            Element.addClassName(li, this.cssPrefix + "even");
+        }
+        else
+        {
+            Element.removeClassName(li, this.cssPrefix + "even");
+            Element.addClassName(li, this.cssPrefix + "odd");
+        }
+    },
+
 
     /**
      * Toggle item container On/Off
@@ -308,21 +340,16 @@ ActiveList.prototype = {
         // Basically, what is happening is thet when I push edit button (pencil)
         // on first element, everything just dissapears. All other elements
         // are fine though. To fix this I am adding an hidden first element
-//        if(this.ul.firstChild && this.ul.firstChild.className != 'ignore')
-//        {
-//            var fix = document.createElement('li');
-//            var div = document.createElement('div')
-//            div.appendChild(document.createTextNode('fix'));
-//            fix.appendChild(div);
-//            fix.className = "ignore";
-//
-//            if(this.ul.firstChild) this.ul.insertBefore(fix, this.ul.firstChild);
-//            else this.ul.appendChild(fix);
-//        }
 
+        var k = 0;
         for(var i = 0; i < liArray.length; i++)
         {
-            if(this.ul == liArray[i].parentNode && !Element.hasClassName(liArray[i], 'ignore') && !Element.hasClassName(liArray[i], 'dom_template')) this.decorateLi(liArray[i]);
+            if(this.ul == liArray[i].parentNode && !Element.hasClassName(liArray[i], 'ignore') && !Element.hasClassName(liArray[i], 'dom_template'))
+            {
+                this.decorateLi(liArray[i]);
+                this.colorizeItem(liArray[i], k);
+                k++;
+            }
         }
     },
 
@@ -640,6 +667,7 @@ ActiveList.prototype = {
 
         this._currentLi = this.dragged;
         var url = this.callbacks.afterSort.call(this, this.dragged, item);
+        this.colorizeItems();
         this.toggleProgress(this.dragged);
 
         this.dragged = false;

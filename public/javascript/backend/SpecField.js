@@ -60,6 +60,8 @@ Backend.SpecField.prototype = {
 	 */
 	initialize: function(specFieldJson, hash)
 	{
+	    try
+	    {
 	    this.specField = !hash ? eval("(" + specFieldJson + ")" ) : specFieldJson;
 	    this.cloneForm('specField_item_blank', this.specField.rootId);
 
@@ -85,6 +87,12 @@ Backend.SpecField.prototype = {
 		this.loadLanguagesAction();
 		this.findUsedNodes();
 		this.bindFields();
+	    }
+	    catch(e)
+	    {
+            jsTrace.debug(e);
+	    }
+
 	},
 
     /**
@@ -270,6 +278,7 @@ Backend.SpecField.prototype = {
 		// if selected type is a selector type then show selector options fields (aka step 2)
 		if(this.selectorValueTypes.indexOf(this.nodes.type.value) === -1)
 		{
+			this.nodes.stateLinks[1].parentNode.style.display = 'none';
 			this.nodes.stateLinks[1].style.display = 'none';
 			for(var i = 0; i < this.nodes.translatedValues.length; i++)
 			{
@@ -278,6 +287,7 @@ Backend.SpecField.prototype = {
 		}
 		else
 		{
+			this.nodes.stateLinks[1].parentNode.style.display = 'inline';
 			this.nodes.stateLinks[1].style.display = 'inline';
 			for(var i = 0; i < this.nodes.translatedValues.length; i++)
 			{
@@ -510,6 +520,7 @@ Backend.SpecField.prototype = {
 			if(i == 1)
 			{
 			    Element.addClassName(languageLink, this.cssPrefix + "step_translations_language_active");
+			    Element.addClassName(languageLink.parentNode, "active");
 			}
 
 			this.nodes.translationsLinks.appendChild(languageLinkDiv);
@@ -559,9 +570,14 @@ Backend.SpecField.prototype = {
 		for(var i = 0; i < translationsLinks.length; i++)
 		{
 		    Element.removeClassName(translationsLinks[i], this.cssPrefix + "step_translations_language_active");
+		    Element.removeClassName(translationsLinks[i].parentNode, "active");
 		}
 
-		if(!same) Element.addClassName(e.target, this.cssPrefix + "step_translations_language_active");
+		if(!same)
+		{
+		    Element.addClassName(e.target, this.cssPrefix + "step_translations_language_active");
+		    Element.addClassName(e.target.parentNode, "active");
+		}
 
 	},
 
@@ -687,11 +703,13 @@ Backend.SpecField.prototype = {
 			{
 			    this.nodes.stepLevOne[i].style.display = 'none';
 			    Element.removeClassName(this.nodes.stateLinks[i], this.cssPrefix + "change_state_active");
+			    Element.removeClassName(this.nodes.stateLinks[i].parentNode, 'active');
 			}
 			else
 			{
 			    this.nodes.stepLevOne[i].style.display = 'block';
 			    Element.addClassName(this.nodes.stateLinks[i], this.cssPrefix + "change_state_active");
+			    Element.addClassName(this.nodes.stateLinks[i].parentNode, 'active');
 			}
 		}
 	},

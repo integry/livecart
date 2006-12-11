@@ -1,3 +1,20 @@
+.specField legend
+{
+    display: none;
+}
+
+.specField fieldset
+{
+    background: #fff;
+    margin-right: 1em;
+}
+
+.specField_title
+{
+   font-size: 200%;
+}
+
+
 .specFieldList .activeList_container
 {
    padding-left: 80px;
@@ -24,20 +41,11 @@
     padding: 0 5px;
 }
 
-.specField_change_state_active, .specField_step_translations_language_active
-{
-    background: yellow;
-}
+
 
 .specField_form_values_value .specField_form_values_default_checkbox
 {
     width: auto;
-}
-
-.specField_controls
-{
-	display: none;
-
 }
 
 #specField_item_new_form
@@ -101,6 +109,7 @@ fieldset.group h2
     white-space: nowrap;
 }
 
-
-
-
+.specField ul
+{
+    list-style: none;
+}

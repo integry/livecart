@@ -1,17 +1,13 @@
-<a href="#step_main" class="specField_change_state specField_change_state_active" >{t _SpecField_main}</a>
-<a href="#step_values" class="specField_change_state" >{t _SpecField_values}</a>
-<a href="#step_translations" class="specField_change_state">{t _SpecField_translations}</a>
-
-<div style="display: inline;" class="specField_controls">
-    <input type="button" class="specField_save button" value="{translate text=_save}" />
-    {t _or}
-    <a href="#cancel" class="specField_cancel">{t _cancel}</a>
-</div>
+<ul class="tabs">
+    <li class="active"><a href="#step_main" class="specField_change_state" >{t _SpecField_main}</a></li>
+    <li><a href="#step_values" class="specField_change_state" >{t _SpecField_values}</a></li>
+    <li><a href="#step_translations" class="specField_change_state">{t _SpecField_translations}</a></li>
+</ul>
 
 <form action="{link controller=backend.specField action=save}" method="post" class="specField">
 	<!-- STEP 1 -->
 	<fieldset class="specField_step_lev1 specField_step_main">
-		<legend>{t _SpecField_step_one}</legend>
+    <legend>{t _SpecField_step_one}</legend>
 
 		<input type="hidden" name="ID" class="hidden specField_form_id" />
 		<input type="hidden" name="categoryID" class="hidden specField_form_categoryID" />
@@ -65,7 +61,7 @@
 
 	<!-- STEP 2 -->
 	<fieldset class="specField_step_lev1 specField_step_values">
-		<legend>{t _SpecField_step_two}</legend>
+    <legend>{t _SpecField_step_two}</legend>
 
 
 		<p>
@@ -97,11 +93,11 @@
 
 	<!-- STEP 3 -->
 	<fieldset class="specField_step_lev1 specField_step_translations">
-		<legend>{t _SpecField_step_three}</legend>
+    <legend>{t _SpecField_step_three}</legend>
 
-		<div class="specField_form_values_translations_language_links">
-			<div class="dom_template specField_language_link"><a href="#step_translations_language_" class="specField_translations_links">language</a></div>
-		</div>
+		<ul class="specField_form_values_translations_language_links tabs">
+			<li class="dom_template specField_language_link"><a href="#step_translations_language_" class="specField_translations_links">language</a></li>
+		</ul>
 
 		<fieldset class="specField_step_translations_language dom_template specField_step_translations_language_">
 			<legend></legend>
@@ -127,3 +123,9 @@
 		</fieldset>
 	</fieldset>
 </form>
+
+<div style="display: inline;" class="specField_controls">
+    <input type="button" class="specField_save button" value="{translate text=_save}" />
+    {t _or}
+    <a href="#cancel" class="specField_cancel">{t _cancel}</a>
+</div>

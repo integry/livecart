@@ -17,8 +17,19 @@ ul.activeList
     list-style: none;
 }
 
-
-.activeList li
+li.activeList_odd, .activeList_even
 {
-  	list-style: none;
+    list-style: none;
+    border: 1px solid #b3d4ef;
+    margin-top: 2px;
+}
+
+li.activeList_odd
+{
+    background: #F0F0FF;
+}
+
+.activeList_even
+{
+    background: #EFF4F6;
 }
