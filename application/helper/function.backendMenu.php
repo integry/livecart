@@ -30,7 +30,6 @@ function smarty_function_backendMenu($params, Smarty $smarty)
 	    if ($controller == $topValue['controller'] && $action == $topValue['action'])
 	    {
 		  	$index = $topIndex;
-		  	break;
 		}
 		else if ($controller == $topValue['controller'])
 		{

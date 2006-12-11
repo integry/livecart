@@ -22,4 +22,3 @@
 	</li>		
 	{/foreach}
 </ul>
-!!!{$subItemIndex} !!!{$itemIndex}
