@@ -253,7 +253,7 @@ html, body{height:100%;}
 	padding: 2px;
 */
 	float: left;
-	padding-top: 3px;
+	padding-top: 4px;
 	font-size: 11px;
 }
 
@@ -271,7 +271,6 @@ html, body{height:100%;}
 }
 
 #nav li ul li div {
-    margin-top: 1px;
 	background-image: url(../../image/backend/menu/subitem_middle_inactive.gif) !important;
 	background-repeat: repeat-x;   
 }
