@@ -1,11 +1,11 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v4.1.2                     #
+# Script generated with: DeZign for Databases v4.1.3                     #
 # Target DBMS:           MySQL 4                                         #
-# Project file:          LiveCart-no-lang-tbl.dez                        #
+# Project file:          LiveCart.dez                                    #
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database creation script                        #
-# Created on:            2006-11-17 15:34                                #
+# Created on:            2006-12-12 16:03                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -125,6 +125,7 @@ CREATE TABLE SpecFieldValue (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     specFieldID INTEGER UNSIGNED,
     value TEXT,
+    position INTEGER UNSIGNED DEFAULT 0,
     CONSTRAINT PK_SpecFieldValue PRIMARY KEY (ID)
 ) COMMENT = 'Is there a need to translate this field to diferent languages?';
 
@@ -258,7 +259,7 @@ CREATE TABLE Discount (
 # ---------------------------------------------------------------------- #
 
 ALTER TABLE Product ADD CONSTRAINT Category_Product 
-    FOREIGN KEY (categoryID) REFERENCES Category (ID);
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Product ADD CONSTRAINT Manufacturer_Product 
     FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID);
@@ -279,16 +280,16 @@ ALTER TABLE Specification ADD CONSTRAINT SpecField_Specification
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID);
 
 ALTER TABLE SpecField ADD CONSTRAINT Category_SpecField 
-    FOREIGN KEY (categoryID) REFERENCES Category (ID);
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE SpecFieldValue ADD CONSTRAINT SpecField_SpecFieldValue 
-    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID);
+    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Filter ADD CONSTRAINT FilterGroup_Filter 
-    FOREIGN KEY (filterGroupID) REFERENCES FilterGroup (ID);
+    FOREIGN KEY (filterGroupID) REFERENCES FilterGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE FilterGroup ADD CONSTRAINT SpecField_FilterGroup 
-    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID);
+    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE RelatedProduct ADD CONSTRAINT Product_RelatedProduct_ 
     FOREIGN KEY (ProductID) REFERENCES Product (ID);

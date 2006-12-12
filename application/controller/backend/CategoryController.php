@@ -104,7 +104,7 @@ class CategoryController extends StoreManagementController
 	}
 
 	/**
-	 * Changes node position at a branch level
+	 * Removes node from a category
 	 *
 	 */
 	public function remove()
@@ -114,6 +114,20 @@ class CategoryController extends StoreManagementController
 		{
 			ActiveRecord::deleteByID("Category", $nodeId);
 		}
+	}
+
+	/**
+	 * Enter description here...
+	 *
+	 */
+	public function reorder()
+	{
+		$targetNodeId = $this->request->getValue("targetId");
+		$parentNodeId = $this->request->getValue("parentId");
+
+		$targetNode = Category::getInstanceByID($targetNodeId);
+		$parentNode = Category::getInstanceByID($parentNodeId);
+		$targetNode->moveTo($parentNode);
 	}
 
 	/**

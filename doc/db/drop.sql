@@ -1,11 +1,11 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v4.1.2                     #
+# Script generated with: DeZign for Databases v4.1.3                     #
 # Target DBMS:           MySQL 4                                         #
-# Project file:          LiveCart-no-lang-tbl.dez                        #
+# Project file:          LiveCart.dez                                    #
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database drop script                            #
-# Created on:            2006-11-17 15:34                                #
+# Created on:            2006-12-12 16:03                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -73,12 +73,6 @@ ALTER TABLE Product ALTER COLUMN unitsType DROP DEFAULT;
 
 ALTER TABLE Product DROP PRIMARY KEY;
 
-# Drop indexes #
-
-DROP INDEX IDX_Product_1 ON Product;
-
-DROP INDEX IDX_Product_2 ON Product;
-
 # Drop table #
 
 DROP TABLE Product;
@@ -94,10 +88,6 @@ ALTER TABLE Category ALTER COLUMN isActive DROP DEFAULT;
 ALTER TABLE Category ALTER COLUMN position DROP DEFAULT;
 
 ALTER TABLE Category DROP PRIMARY KEY;
-
-# Drop indexes #
-
-DROP INDEX IDX_Category_1 ON Category;
 
 # Drop table #
 
@@ -127,12 +117,6 @@ DROP TABLE Language;
 
 ALTER TABLE Specification DROP PRIMARY KEY;
 
-# Drop indexes #
-
-DROP INDEX IDX_Specification_1 ON Specification;
-
-DROP INDEX IDX_Specification_2 ON Specification;
-
 # Drop table #
 
 DROP TABLE Specification;
@@ -147,10 +131,6 @@ ALTER TABLE SpecField ALTER COLUMN position DROP DEFAULT;
 
 ALTER TABLE SpecField DROP PRIMARY KEY;
 
-# Drop indexes #
-
-DROP INDEX IDX_SpecField_1 ON SpecField;
-
 # Drop table #
 
 DROP TABLE SpecField;
@@ -161,11 +141,9 @@ DROP TABLE SpecField;
 
 # Drop constraints #
 
+ALTER TABLE SpecFieldValue ALTER COLUMN position DROP DEFAULT;
+
 ALTER TABLE SpecFieldValue DROP PRIMARY KEY;
-
-# Drop indexes #
-
-DROP INDEX IDX_SpecFieldValue_1 ON SpecFieldValue;
 
 # Drop table #
 

@@ -309,10 +309,77 @@ class ActiveTreeNode extends ActiveRecordModel
 	 * @todo Implementation
 	 *
 	 * @param ActiveTreeNode $parentNode
+	 * @return bool True on success
 	 */
-	public function moveNodeTo(ActiveTreeNode $parentNode)
+	public function moveTo(ActiveTreeNode $parentNode)
 	{
+		$this->load();
+		$previousParent = $this->getParentNode();
+		$previousParent->load();
+		$parentNode->load();
 
+		$this->setParentNode($parentNode);
+		$subtreeNodeCount = ($this->rgt->get() - $this->lft->get() - 1) / 2 + 1;
+		$lftDiff = $parentNode->lft->get() - $this->lft->get();
+
+		$tableName = self::getSchemaInstance(get_class($this))->getName();
+		$db = ActiveRecord::getDBConnection();
+		ActiveRecord::beginTransaction();
+		try
+		{
+			/*
+			$leftShiftFilter = new ARUpdateFilter();
+			$leftShiftFilter->addModifier("lft", "lft + " . ($subtreeNodeCount * 2 + 1));
+			$leftShiftFilter->addModifier("rgt", "rgt + " . ($subtreeNodeCount * 2 + 1));
+			$leftShiftFilter->setCondition(new OperatorCond(new ARFieldHandle("Category", "lft"), $parentNode->lft->get(), ">"));
+			ActiveRecord::updateRecordSet("Category", $leftShiftFilter);
+			*/
+			$leftShitDiff = ($subtreeNodeCount * 2 + 1);
+			$leftShiftUpdateQuery = "UPDATE " . $tableName . " SET " . self::LEFT_NODE_FIELD_NAME  . " = " . self::LEFT_NODE_FIELD_NAME  . " + " . $leftShitDiff . "," .
+																	   self::RIGHT_NODE_FIELD_NAME  . " = " . self::RIGHT_NODE_FIELD_NAME . " + " . $leftShitDiff .
+														     " WHERE " . self::LEFT_NODE_FIELD_NAME . " > " . $parentNode->lft->get();
+
+			self::getLogger()->logQuery($leftShiftUpdateQuery);
+			$db->executeUpdate($leftShiftUpdateQuery);
+
+			/*
+			$subtreeFixFilter = new ARUpdateFilter();
+			$subtreeFixFilter->addModifier("lft", "lft + " . ($lftDiff + 1));
+			$subtreeFixFilter->addModifier("rgt", "rgt + " . ($lftDiff + 1));
+			$lftFixCond = new OperatorCond(new ARFieldHandle("Category", "lft"), $this->lft->get(), ">=");
+			$rgtFixCont = new OperatorCond(new ARFieldHandle("Category", "rgt"), $this->rgt->get(), "<=");
+			$lftFixCond->addAND($rgtFixCont);
+			$subtreeFixFilter->setCondition($lftFixCond);
+			ActiveRecord::updateRecordSet("Category", $subtreeFixFilter);
+			*/
+			$subtreeFixQuery = "UPDATE " . $tableName . " SET " . self::LEFT_NODE_FIELD_NAME  . " = " . self::LEFT_NODE_FIELD_NAME . " + " . ($lftDiff + 1) . ", " .
+																  self::RIGHT_NODE_FIELD_NAME  . " = " . self::RIGHT_NODE_FIELD_NAME . " + " . ($lftDiff + 1) .
+												    " WHERE " . self::LEFT_NODE_FIELD_NAME  . " >= " . $this->lft->get() . " AND " . self::RIGHT_NODE_FIELD_NAME  . " <= " . $this->rgt->get();
+			self::getLogger()->logQuery($subtreeFixQuery);
+			$db->executeUpdate($subtreeFixQuery);
+
+			/*
+			$treeFixFilter = new ARUpdateFilter();
+			$treeFixFilter->addModifier("rgt", "rgt - " . ($subtreeNodeCount * 2));
+			$treeFixFilter->addModifier("lft", "lft - " . ($subtreeNodeCount * 2));
+			$treeFixFilter->setCondition(new OperatorCond(new ARFieldHandle("Category", "rgt"), $this->rgt->get(), ">="));
+			ActiveRecord::updateRecordSet("Category", $treeFixFilter);
+			*/
+
+			$treeFixQuery = "UPDATE " . $tableName . " SET " . self::RIGHT_NODE_FIELD_NAME . " = " . self::RIGHT_NODE_FIELD_NAME . " - " . ($subtreeNodeCount * 2) . ", " .
+															   self::LEFT_NODE_FIELD_NAME . " = " . self::LEFT_NODE_FIELD_NAME . " - " . ($subtreeNodeCount * 2) .
+													 " WHERE " . self::RIGHT_NODE_FIELD_NAME . " >= " . $previousParent->rgt->get();
+			self::getLogger()->logQuery($treeFixQuery);
+			$db->executeUpdate($treeFixQuery);
+
+			ActiveRecord::commit();
+			return true;
+		}
+		catch (Exception $e)
+		{
+			ActiveRecord::rollback();
+			return false;
+		}
 	}
 
 	/**
