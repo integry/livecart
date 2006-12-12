@@ -1,6 +1,3 @@
-.transMode:hover {
-  	color: red;
-}
 html
 {
     font-size: 67.5%;
@@ -16,14 +13,25 @@ body {
 	background-position: right 200px;
 	background-repeat: repeat-y;
 }
-table {
+
+table 
+{
   	border-collapse: collapse;
 }
-td {
+
+td 
+{
   	padding: 0px;
 }
-a img {
+
+a img 
+{
   	border: 0;
+}
+
+a, a:visited
+{
+  	color: blue;
 }
 
 /*************************** 
@@ -695,4 +703,11 @@ fieldset.group p
 .tabs .active
 {
     background-color: yellow;
+}
+
+/*************************** 
+	Live Translation mode
+***************************/
+.transMode:hover {
+  	color: red;
 }
