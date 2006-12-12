@@ -9,8 +9,13 @@
 			<img src="image/backend/icon/translate.gif" style="vertical-align: absmiddle;">
 		</td>
 		<td>
-			<a href="">Translate</a>
-			Translate menus and captions to other languages
+			<a href="{link controller=backend.customize action=translationMode}">Live Translation Mode</a>
+			{if $isTranslationModeEnabled}
+				(on)
+			{else}
+				(off)
+			{/if}
+			Translate menus and captions to other languages directly from <s>user interface</s>.
 		</td>
 	</tr>
 

@@ -13,8 +13,24 @@ class CustomizeController extends StoreManagementController
 {
 	public function index()
 	{
-		return new ActionResponse();		  	
+		$response = new ActionResponse();		
+		$response->setValue('isTranslationModeEnabled', isset($_SESSION['translationMode']));
+		return $response;
 	}	
+	
+	public function translationMode()
+	{
+	  	if (isset($_SESSION['translationMode']))
+	  	{
+			unset($_SESSION['translationMode']);
+		}
+		else
+		{
+			$_SESSION['translationMode'] = true;  
+		}
+		
+		return new ActionRedirectResponse('backend.customize', 'index');
+	}
 }
 
 ?>

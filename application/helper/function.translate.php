@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ...
+ * Translates interface text to current locale language
  *
  * @param array $params
  * @param Smarty $smarty
@@ -11,7 +11,7 @@
  */
 function smarty_function_translate($params, Smarty $smarty)
 {
-	$liveTranslation = false;
+	$liveTranslation = isset($_SESSION['translationMode']);
 
 	if (!$liveTranslation || isset($params['notranslate']))
 	{
