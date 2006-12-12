@@ -27,21 +27,13 @@
 			   {html_options options=$languages_select}
 			</select>
 			<img src="image/indicator.gif" id="addLangFeedback">
-			<input type="submit" value="{t _add_lang_button}" name="sm" tabIndex=4>
-			{t _or} <a href="#" onClick="restoreMenu('addLang', 'pageMenu'); return false;">{t _cancel}</a>
+			<input type="submit" value="{t _add_lang_button}" name="sm" class="submit" tabIndex=4>
+			{t _or} <a href="#" class="cancel" onClick="restoreMenu('addLang', 'pageMenu'); return false;">{t _cancel}</a>
 		</form>	
 	</div>
 </div>
 
 <br />
-
-{literal}
-<style>
-.enabled_0 {color: #AAAAAA;}
-.enabled_1 {}
-.listSortHover {background-color: #DDDDDD;}
-</style>
-{/literal}
 
 <ul id="languageList" class="activeList_add_delete">
 {foreach from=$languagesList item=item}

@@ -390,11 +390,12 @@ class LanguageController extends StoreManagementController
 
 		foreach($list as $key => $value)
 		{
-			$list[$key]['name'] = $this->locale->info()->getLanguageName($value['ID']);
+			$list[$key]['name'] = $this->locale->info()->getOriginalLanguageName($value['ID']);
 		}
 		
 		$response->setValue('returnRoute', $this->request->getValue('returnRoute'));
 		$response->setValue('languages', $list);
+		$response->setValue('currentLanguage', $this->locale->getLocaleCode());
 		return $response;
 	}
 

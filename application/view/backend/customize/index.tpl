@@ -1,14 +1,37 @@
-{include file=layout/header.tpl}
 {pageTitle}{t _live_customization}{/pageTitle}
+{includeCss file=backend/Customize.css}
 
-Turn OFF Live Customization mode
-<hr />
+{include file=layout/header.tpl}
 
-Modify:
+<table id="customizeMenu">
+	<tr>
+		<td>
+			<img src="image/backend/icon/translate.gif" style="vertical-align: absmiddle;">
+		</td>
+		<td>
+			<a href="">Translate</a>
+			Translate menus and captions to other languages
+		</td>
+	</tr>
 
-<ul>
-	<li> Language translations</li>
-	<li> Page layout</li>
-</ul>
+	<tr>
+		<td>
+			<img src="image/backend/icon/customize.gif" style="vertical-align: absmiddle;">
+		</td>
+		<td>
+			<a href="">Customize Layout</a>
+			Move page blocks around in drag & drop mode
+		</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<img src="image/backend/icon/templates.gif" style="vertical-align: absmiddle;">
+		</td>
+		<td>
+			<a href="">Edit Templates</a>
+			Locate and modify individual page blocks
+		</td>
+</table>
 
 {include file=layout/footer.tpl}
