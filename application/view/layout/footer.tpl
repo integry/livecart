@@ -21,10 +21,10 @@
 			<table id="footerContainer">
 				<tr>
 					<td id="footerLeft">
-						(C) UAB "Integry Systems", 2006
+						(C) <a href="http://integry.net" target="_blank">UAB "Integry Systems"</a>, 2006
 					</td>
 					<td id="footerStretch">
-						&nbsp;
+						&nbsp; 
 					</td>
 				</tr>
 			</table>

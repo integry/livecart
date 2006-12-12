@@ -17,15 +17,17 @@
 			<label for="keywords_{$categoryId}">Keywords:</label>
 			{textarea name="keywords" id="keywords_$categoryId" style="height: 3em;"}
 		</p>
-		<p>
-			<label> </label>
-			{checkbox name="isActive" style="width: auto;"} Active
+
+		<p class="checkbox">			
+			{checkbox name="isActive" id="isActive_$categoryId" class="checkbox" style="width: auto;"} <label for="isActive_{$categoryId}">Active</label>
 		</p>
 
+		<br /><br />
+						
 		<p>
-			{foreach from=$languageList item=lang}
+			{foreach from=$languageList key=lang item=langName}
 			<fieldset class="expandingSection">
-				<legend>Translate to: {$lang}</legend>
+				<legend>Translate to: {$langName}</legend>
 				<div class="expandingSectionContent">
 					<p>
 						<label>Category name:</label>
@@ -50,7 +52,7 @@
 		<p>
 			<label for="submit"> </label>
 			<input type="submit" class="submit" id="submit" value="save"/> or
-			<input type="reset" class="reset" value="Cancel"/>
+			<a href="#" class="cancel" onClick="this.parentNode.parentNode.parentNode.reset(); return false;">{t _cancel}</a>
 		</p>
 
 	</fieldset>

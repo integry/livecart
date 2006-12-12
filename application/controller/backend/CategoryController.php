@@ -46,9 +46,15 @@ class CategoryController extends StoreManagementController
 		$category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
 		$categoryArr = $category->toArray();
 		$form->setData($categoryArr);
+		
+		$languages = array();
+		foreach ($this->store->getLanguageArray() as $lang)
+		{
+			$languages[$lang] = $this->locale->info()->getOriginalLanguageName($lang);	  	
+		}
 
 		$response->setValue("categoryId", $categoryArr['ID']);
-		$response->setValue("languageList", $this->store->getLanguageArray());
+		$response->setValue("languageList", $languages);
 
 		return $response;
 	}
