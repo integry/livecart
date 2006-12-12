@@ -20,7 +20,7 @@
 {include file="layout/header.tpl"}
 
 <div id="specField_item_blank" class="dom_template">
-    {include file="backend/specField/form.manageSpecFieldBlank.tpl"}
+    {include file="backend/specField/form.tpl"}
 </div>
 
 	<div id="catgegoryContainer" style="float:left; width: 260px;">
