@@ -32,10 +32,6 @@
 	{includeJs file=backend/Customize.js}
 
 	{$JAVASCRIPT}
-
-	<script type="text/javascript">
-		window.onload = initializeNavigationMenu;
-	</script>
 </head>
 <body>
 
