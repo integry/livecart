@@ -131,7 +131,7 @@ html, body{height:100%;}
 /* Navigation menu */
 
 #navContainer {
-  	padding-left: 70px;
+  	padding-left: 110px;
 }
 
 #nav {
@@ -235,7 +235,8 @@ html, body{height:100%;}
 	width: 500px;
 	padding-left: 15px;
   	background-color: #E6E6E6;
-  	left: 200px;
+  	height: 24px;
+/*  	left: 200px; */
 
 }
 
