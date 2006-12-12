@@ -1,0 +1,19 @@
+#customizeMenu td {
+  	padding: 5px;
+  	vertical-align: top;
+}
+
+#customizeMenu img {
+	margin-top: 5px; 
+}
+
+#customizeMenu a {
+	text-decoration: none;  
+	font-size: x-large;
+	font-weight: bold;
+	display: block;
+}
+
+#customizeMenu a:hover {
+	text-decoration: underline;  
+}

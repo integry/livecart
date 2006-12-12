@@ -374,6 +374,10 @@ html, body{
 	background: #3981E7;
 }
 
+#langMenuCurrent {
+  	font-weight: bold;
+}
+
 /*************************** 
 	Work area styling 
 ***************************/
@@ -600,6 +604,11 @@ label, input, select, form .other, textarea
 label.radio
 {
     width: 6em;
+}
+
+a.cancel 
+{
+  	color: red;
 }
 
 /*************************** 
