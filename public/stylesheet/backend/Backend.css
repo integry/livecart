@@ -146,8 +146,16 @@ html, body{
 	height: 44px;
 }
 #footerLeft {
-  	width: 834px;
+  	width: 824px;
 	background-image:url(../../image/backend/layout/footer.png);
+	color: #FFFFFF;
+	font-size: x-small;
+	padding-left: 10px;
+	padding-bottom: 10px;
+	vertical-align: bottom;
+}
+#footerLeft a {
+	color: #FFFFFF;  
 }
 #footerStretch {
   	background-image:url(../../image/backend/layout/footer_stretch.png);
@@ -520,6 +528,7 @@ label
 {
     float: left;
     width: 11em;
+    cursor: pointer;
 }
 
 p.radio, p.checkbox
