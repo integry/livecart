@@ -27,12 +27,12 @@ class SpecFieldController extends StoreManagementController
      */
     private function createSpecFieldConfig()
     {
-        $languages[$this->store->getDefaultLanguageCode()] =  $this->locale->info()->getLanguageName($this->store->getDefaultLanguageCode());
+        $languages[$this->store->getDefaultLanguageCode()] =  $this->locale->info()->getOriginalLanguageName($this->store->getDefaultLanguageCode());
         foreach ($this->store->getLanguageList()->toArray() as $lang)
         {
             if($lang['isEnabled']==1 && $lang['isDefault'] != 1)
             {
-                $languages[$lang['ID']] = $this->locale->info()->getLanguageName($lang['ID']);
+                $languages[$lang['ID']] = $this->locale->info()->getOriginalLanguageName($lang['ID']);
             }
         }
 
