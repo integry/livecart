@@ -162,38 +162,14 @@ function showLangMenu(display) {
 	{
 		menu.style.display = 'block';
 		new Ajax.Updater('langMenuContainer', langMenuUrl);
-		
-		try 
-		{
-			// Mozilla
-			document.addEventListener('click', hideLangMenu, true);
-		} 
-		catch (e)
-		{
-		  	// IE...
-			setTimeout(ieHideLangMenu, 500);
-		}
+				
+		setTimeout("Event.observe(document, 'click', hideLangMenu, true);", 500);
 	}
 	else
 	{
 	  	menu.style.display = 'none';
-
-		try 
-		{
-			// Mozilla
-			document.removeEventListener('click', hideLangMenu, false);
-		} 
-		catch (e)
-		{
-		  	// IE...
-			document.detachEvent('onclick', hideLangMenu); 	 	
-		}
+		Event.stopObserving(document, 'click', hideLangMenu, true);
 	}
-}
-
-function ieHideLangMenu()
-{
-	document.attachEvent('onclick', hideLangMenu); 	 	
 }
 
 function hideLangMenu()

@@ -26,7 +26,9 @@ a img {
   	border: 0;
 }
 
-/* Common classes */
+/*************************** 
+	Common classes 
+***************************/
 .altrow { /* used for styling "zebra" tables */
   	background-color: #EEEEEE;
 }
@@ -41,14 +43,19 @@ a img {
 	padding: 3px;
 }
 
-/* Layout */
-* {margin:0;padding:0}
+/*************************** 
+	Layout 
+***************************/
+* {
+  	margin:0;padding:0
+}
 
 /* commented backslash hack v2 \*/
-html, body{height:100%;}
+html, body{
+  	height:100%;
+}
 /* end hack */
 
-/* Layout positioning */
 #pageContainer {
 	position:relative; /* needed for footer positioning*/
 	margin:0 auto; /* center, not in IE5 */
@@ -63,7 +70,9 @@ html, body{height:100%;}
 	bottom: 0; /* stick to bottom */
 }
 
-/* Page header */
+/*************************** 
+	Page header 
+***************************/
 #pageHeader {
   	background-color: #30a0f9;
 }
@@ -128,8 +137,25 @@ html, body{height:100%;}
 	float: right;
 }
 
-/* Navigation menu */
+/***************************
+	Page footer
+***************************/
+#footerContainer {
+  	width: 100%;
+	border-collapse: collapse;
+	height: 44px;
+}
+#footerLeft {
+  	width: 834px;
+	background-image:url(../../image/backend/layout/footer.png);
+}
+#footerStretch {
+  	background-image:url(../../image/backend/layout/footer_stretch.png);
+}
 
+/*************************** 
+ 	Navigation menu 
+****************************/
 #navContainer {
   	padding-left: 110px;
 }
@@ -222,22 +248,11 @@ html, body{height:100%;}
 }
 
 #nav li ul {
-/*  margin-top: 5px;
-  	left: 10px;
-  	border: 1px solid #999999;
-  	background-image: url(../../image/backend/menu/menu_commands_bg.jpg);
-  	background-position: bottom left;
-  	background-repeat: repeat-x;
-  	background-color: #CDD9EE;
-  	padding: 5px;
-*/
 	top: 28px;
 	width: 500px;
 	padding-left: 15px;
   	background-color: #E6E6E6;
   	height: 24px;
-/*  	left: 200px; */
-
 }
 
 #navSelected ul {
@@ -245,13 +260,6 @@ html, body{height:100%;}
 }
 
 #nav li ul li {
-/*	width: 100%;
-  	min-width: 150px; 
-  	text-align: left;
-	background-image: none;
-	border-bottom: 1px dotted #999999;
-	padding: 2px;
-*/
 	float: left;
 	padding-top: 4px;
 	font-size: 11px;
@@ -317,36 +325,22 @@ html, body{height:100%;}
 }
 
 #nav li ul li:hover, .menuCommandHover {
-/*	background: #3981E7;
-	border: 1px solid #3981E7;
-*/
 }
 
 #nav li ul li:hover a, .menuCommandHover a {
 }
 
-/* Page footer */
-#footerContainer {
-  	width: 100%;
-	border-collapse: collapse;
-	height: 44px;
-}
-#footerLeft {
-  	width: 834px;
-	background-image:url(../../image/backend/layout/footer.png);
-}
-#footerStretch {
-  	background-image:url(../../image/backend/layout/footer_stretch.png);
-}
-
-/* Language switch menu */
+/*************************** 
+	Language switch menu 
+***************************/
 #langMenuContainer {
   	position: absolute;
 	display: none;
 	z-index: 20;
-	float: right;
 	width: auto;
 	padding-top: 6px;
+	left: 0px;
+	top: 13px;
 }
 
 #langMenuIndicator {
@@ -380,7 +374,9 @@ html, body{height:100%;}
 	background: #3981E7;
 }
 
-/* Work area styling */
+/*************************** 
+	Work area styling 
+***************************/
 #rightWorkareaShadeTop {
 	background-color: #E6E6E6;
 	margin-top: -3px;
@@ -407,7 +403,9 @@ html, body{height:100%;}
   	width: 100%;
 }
 
-/* Work area content */
+/*************************** 
+	Work area content 
+***************************/
 #pageTitleContainer {
 	height:20px;
 	background-color: #E6E6E6;
@@ -432,7 +430,9 @@ html, body{height:100%;}
 	padding: 10px;
 }
 
-/* Menus */
+/*************************** 
+	Menus 
+***************************/
 .menuLoadIndicator {
 	border: 1px solid black;
 	background-color: white;
@@ -444,14 +444,9 @@ html, body{height:100%;}
 	background-repeat: no-repeat;
 }
 
-/* Needed for IE, but doesn't seem to affect Mozilla */
-* html #outer{	height:100%;}
-#minHeight {display:none}
-#left {margin-right:-3px;}/*3px jog */
-#right {margin-left:-3px;}/*3px jog */
-#centrecontent {margin:0}
-
-/* handy classes */
+/*************************** 
+	Handy classes
+***************************/
 br.clear
 {
     clear: both;
@@ -472,16 +467,13 @@ br.clear
 	white-space: nowrap;
 }
 
-
-
-
-/* Form styling */
-
+/*************************** 
+	Form styling
+***************************/
 form p
 {
     position: relative;
 }
-
 
 .feedback, .feedback_textarea
 {
@@ -491,7 +483,6 @@ form p
    padding-left: 20px;
    background: url(/public/image/silk/error.png) no-repeat left center;
 }
-
 
 fieldset.group
 {
@@ -611,10 +602,9 @@ label.radio
     width: 6em;
 }
 
-
-
-
-/* START Multicolumn groups */
+/*************************** 
+	Multicolumn groups
+***************************/
 fieldset.group
 {
     margin: 0;
@@ -641,23 +631,25 @@ fieldset.group p
 {
     margin: 0.3em 0;
 }
-/* END Multicolumn groups */
 
+/*************************** 
+	Expanding sections
+***************************/
 .expandingSection
 {
 	background-color: #e0e0e0;
 }
 .expandingSection legend
 {
-	corsor: pointer;
+	cursor: pointer;
 }
 .expandingSectionContent
 {
 }
 
-
-
-/* TABS */
+/*************************** 
+	Tabs
+***************************/
 .tabs
 {
     list-style: none;
@@ -685,17 +677,4 @@ fieldset.group p
 .tabs .active
 {
     background-color: yellow;
-}
-/* END TABS */
-
-.expandingSection
-{
-	background-color: #e0e0e0;
-}
-.expandingSection legend
-{
-	corsor: pointer;
-}
-.expandingSectionContent
-{
 }
