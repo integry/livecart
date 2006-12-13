@@ -127,6 +127,7 @@ class FilterController extends StoreManagementController
         {
             $htmlspecialcharsUtf_8 = create_function('$val', 'return htmlspecialchars($val, null, "UTF-8");');
             $name = $this->request->getValue('name');
+            $filters = $this->request->getValue('filters', false);
             $specFieldID = SpecField::getInstanceByID((int)$this->request->getValue('specFieldID'));
 
             $filterGroup->setLanguageField('name',        @array_map($htmlspecialcharsUtf_8, $name),        array_keys($this->config['languages']));
@@ -135,38 +136,31 @@ class FilterController extends StoreManagementController
             $filterGroup->save();
             $filterGroupID = $filterGroup->getID();
 
-//            if(!empty($values))
-//            {
-//                $position = 1;
-//                foreach ($values as $key => $value)
-//                {
-//                    if(preg_match('/^new/', $key))
-//                    {
-//                        $specFieldValues = SpecFieldValue::getNewInstance();
-//                    }
-//                    else
-//                    {
-//                       $specFieldValues = SpecFieldValue::getInstanceByID((int)$key);
-//                    }
-//
-//                    if($type == 1)
-//                    {
-//                        $specFieldValues->setFieldValue('value', $value);
-//                    }
-//                    else
-//                    {
-//                        $specFieldValues->setLanguageField('value', @array_map($htmlspecialcharsUtf_8, $value), array_keys($this->specFieldConfig['languages']));
-//                    }
-//
-//
-//                    $specFieldValues->setFieldValue('specFieldID', $specField);
-//                    $specFieldValues->setFieldValue('position', $position);
-//
-//                    $specFieldValues->save();
-//
-//                    $position++;
-//                }
-//            }
+            if(!empty($filters))
+            {
+                $position = 1;
+                foreach ($filters as $key => $value)
+                {
+                    if(preg_match('/^new/', $key))
+                    {
+                        $filter = Filter::getNewInstance();
+                    }
+                    else
+                    {
+                       $filter = Filter::getInstanceByID((int)$key);
+                    }
+
+                    $filter->setLanguageField('name', @array_map($htmlspecialcharsUtf_8, $value['name']),  array_keys($this->config['languages']));
+                    $filter->setFieldValue('rangeStart', $value['rangeStart']);
+                    $filter->setFieldValue('rangeEnd', $value['rangeEnd']);
+                    $filter->setFieldValue('filterGroupID', $filterGroup);
+                    $filter->setFieldValue('position', $position);
+
+                    $filter->save();
+
+                    $position++;
+                }
+            }
 
             return new JSONResponse(array('status' => 'success', 'id' => $filterGroupID));
         }

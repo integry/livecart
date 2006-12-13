@@ -557,7 +557,7 @@ Backend.Filter.prototype = {
             translationsNodes[i].style.display = 'none';
         }
 
-        if(!same) document.getElementsByClassName(currentLanguageClass, this.nodes.stepTranslations)[0].style.display = 'block';
+        document.getElementsByClassName(currentLanguageClass, this.nodes.stepTranslations)[0].style.display = 'block';
 
         for(var i = 0; i < translationsLinks.length; i++)
         {
@@ -565,11 +565,10 @@ Backend.Filter.prototype = {
             Element.removeClassName(translationsLinks[i].parentNode, "active");
         }
 
-        if(!same)
-        {
-            Element.addClassName(e.target, this.cssPrefix + "step_translations_language_active");
-            Element.addClassName(e.target.parentNode, "active");
-        }
+
+        Element.addClassName(e.target, this.cssPrefix + "step_translations_language_active");
+        Element.addClassName(e.target.parentNode, "active");
+
 
     },
 
@@ -662,7 +661,7 @@ Backend.Filter.prototype = {
         {
             this.nodes.stateLinks[i].id = this.cssPrefix + 'change_state' + this.id;
 
-            if(this.nodes.stepLevOne[i].className.split(' ').indexOf(currentStep) === -1 || this.nodes.stepLevOne[i].style.display == 'block')
+            if(this.nodes.stepLevOne[i].className.split(' ').indexOf(currentStep) === -1)
             {
                 this.nodes.stepLevOne[i].style.display = 'none';
                 Element.removeClassName(this.nodes.stateLinks[i], this.cssPrefix + "change_state_active");
