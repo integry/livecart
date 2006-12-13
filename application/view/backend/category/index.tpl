@@ -9,9 +9,11 @@
 
 {includeJs file="backend/Category.js"}
 {includeJs file="backend/SpecField.js"}
+{includeJs file="backend/Filter.js"}
 
 {includeCss file="library/ActiveList.css"}
 {includeCss file="backend/SpecField.css"}
+{includeCss file="backend/Filter.css"}
 {includeCss file="library/TabControl.css"}
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 
@@ -19,19 +21,31 @@
 {pageTitle}Category manager. Selected: <span id="activeCategoryPath" style="font-weight: normal"></span>{/pageTitle}
 {include file="layout/header.tpl"}
 
-<div id="specField_item_blank" class="dom_template">
-    {include file="backend/specField/form.tpl"}
+<div id="specField_item_blank" class="dom_template">{include file="backend/specField/form.tpl"}</div>
+<div id="filter_item_blank" class="dom_template">{include file="backend/filter/form.tpl"}</div>
+
+<div id="catgegoryContainer" style="float:left; width: 260px;">
+	<div id="categoryBrowser" style="padding: 10px; border: 1px solid #ccc; background-color: #f1f1f1;">
+	</div>
+	<div>
+		<a href="javascript:Backend.Category.createNewBranch();">Create a new sub-category</a>
+		<br/>
+		<a href="#" onclick="if (confirm('Are you sure you want to remove this category?')) Backend.Category.removeBranch(); return false;">Remove selected category</a>
+	</div>
 </div>
 
-	<div id="catgegoryContainer" style="float:left; width: 260px;">
-		<div id="categoryBrowser" style="padding: 10px; border: 1px solid #ccc; background-color: #f1f1f1;">
-		</div>
-		<div>
-			<a href="javascript:Backend.Category.createNewBranch();">Create a new sub-category</a>
-			<br/>
-			<a href="#" onclick="if (confirm('Are you sure you want to remove this category?')) Backend.Category.removeBranch(); return false;">Remove selected category</a>
-		</div>
+<div id="managerContainer" style="margin-left: 270px; height: 100%;">
+	<div id="tabContainer">
+		<ul id="tabList">
+			<li id="tabProducts" class="tab active"><a href="{link controller=backend.product action=index id=%id%}">Products</a></li>
+			<li id="tabMainDetails" class="tab inactive"><a href="{link controller=backend.category action=form id=%id%}">Category Details</a></li>
+			<li id="tabFields" class="tab inactive"><a href="{link controller=backend.specField action=index id=%id%}">Fields</a></li>
+			<li id="tabFilters" class="tab inactive"><a href="{link controller=backend.filter action=index id=%id%}">Filters</a></li>
+			<li id="tabImages" class="tab inactive"><a href="{link controller=backend.image action=index id=%id%}">Images</a></li>
+			<li id="tabArticles" class="tab inactive"><a href="{link controller=backend.image action=index id=%id%}">Articles</a></li>
+		</ul>
 	</div>
+	<div id="sectionContainer">
 
 	<div id="managerContainer" style="margin-left: 270px; height: 100%;">
 		<div id="tabContainer">
@@ -48,6 +62,7 @@
 
 		</div>
 	</div>
+</div>
 
 <script type="text/javascript">
 	Backend.Category.init();
