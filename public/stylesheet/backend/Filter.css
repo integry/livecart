@@ -1,0 +1,30 @@
+.filter_range input
+{
+    width: 3em;
+}
+
+.filter legend
+{
+    display: none;
+}
+
+.filter_step_filters, .filter_step_translations, .filter_step_translations_language
+{
+	display: none;
+}
+
+.filter_step_filters li input
+{
+   margin: 0px;
+}
+
+.filter_step_filters li p
+{
+   padding: 1px;
+   margin: 1px;
+}
+
+.filter_title
+{
+   font-size: 200%;
+}

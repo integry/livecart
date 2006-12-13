@@ -80,9 +80,6 @@ Backend.SpecField.prototype = {
 		this.handle = this.specField.handle;
 		this.multipleSelector = this.specField.multipleSelector;
 		this.dataType = this.specField.dataType;
-		this.translations = this.specField.translations;
-
-		this.isNew = this.specField.isNew;
 
 		this.loadLanguagesAction();
 		this.findUsedNodes();
@@ -865,14 +862,6 @@ Backend.SpecField.prototype = {
 			var input = li.getElementsByTagName("input")[0];
 			input.name = "values[" + id + "]["+this.languageCodes[0]+"]";
 			input.value = (value && value[this.languageCodes[0]]) ? value[this.languageCodes[0]] : '' ;
-
-			// Defautl checkbox
-//			var checkbox = li.getElementsByTagName("input")[1];
-//			checkbox.name = "isDefault[" + id + "]";
-//			checkbox.checked = isDefault;
-
-
-			ul.appendChild(li);
 
 			// now insert all translation fields
 			for(var i = 1; i < this.languageCodes.length; i++)

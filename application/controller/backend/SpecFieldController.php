@@ -102,10 +102,6 @@ class SpecFieldController extends StoreManagementController
      */
     public function item()
     {
-        ClassLoader::import("application.model.category.*");
-
-        $this->setLayout("empty");
-
        $response = new ActionResponse();
        $specFieldList = SpecField::getInstanceByID($this->request->getValue('id'), true, true)->toArray(false);
 

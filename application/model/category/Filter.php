@@ -29,6 +29,11 @@ class Filter extends MultilingualObject
 	{
 		return parent::getNewInstance(__CLASS__);
 	}
+
+	public static function getRecordSetArray(ARSelectFilter $filter)
+	{
+	    return parent::getRecordSetArray(__CLASS__, $filter);
+	}
 }
 
 ?>

@@ -98,6 +98,16 @@ class SpecField extends MultilingualObject
 	    }
 	}
 
+	public function getFiltersGroupsList()
+	{
+		$filter = new ARSelectFilter();
+		$filter->setOrder(new ARFieldHandle("FilterGroup", "position"));
+		$filter->setCondition(new EqualsCond(new ARFieldHandle("FilterGroup", "specFieldID"), $this->getID()));
+
+		return FilterGroup::getRecordSetArray($filter);
+	}
+
+
 	/**
 	 * This method is checking if SpecField record with passed id exist in the database
 	 *

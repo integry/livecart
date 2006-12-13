@@ -5,100 +5,89 @@
      * Create spec field prototype. Some fields are always the same
      * so we define them in
      */
-    Backend.SpecField.prototype.links = {};
-    Backend.SpecField.prototype.links.deleteField = {/literal}'{link controller=backend.specField action=delete}/'{literal};
-    Backend.SpecField.prototype.links.editField = {/literal}'{link controller=backend.specField action=item}/'{literal};
-    Backend.SpecField.prototype.links.sortField = {/literal}'{link controller=backend.specField action=sort}/'{literal};
-    Backend.SpecField.prototype.links.deleteValue = {/literal}'{link controller=backend.specField action=deleteValue}/'{literal};
-    Backend.SpecField.prototype.links.sortValues = {/literal}'{link controller=backend.specField action=sortValues}/'{literal};
+    Backend.Filter.prototype.links = {};
+    Backend.Filter.prototype.links.deleteGroup = {/literal}'{link controller=backend.filter action=delete}/'{literal};
+    Backend.Filter.prototype.links.editGroup = {/literal}'{link controller=backend.filter action=item}/'{literal};
+    Backend.Filter.prototype.links.sortGroup = {/literal}'{link controller=backend.filter action=sort}/'{literal};
+    Backend.Filter.prototype.links.deleteFilter = {/literal}'{link controller=backend.filter action=deleteFilter}/'{literal};
+    Backend.Filter.prototype.links.sortFilter = {/literal}'{link controller=backend.filter action=sortFilter}/'{literal};
 
 
     {/literal}
     {foreach from=$configuration item="configItem" key="configKey"}
         {if $configKey == 'types'}
-            Backend.SpecField.prototype.{$configKey} = Backend.SpecField.prototype.createTypesOptions({json array=$configItem});
+            Backend.Filter.prototype.{$configKey} = Backend.Filter.prototype.createTypesOptions({json array=$configItem});
         {else}
-            Backend.SpecField.prototype.{$configKey} = {json array=$configItem};
+            Backend.Filter.prototype.{$configKey} = {json array=$configItem};
         {/if}
     {/foreach}
     {literal}
 
 
-    specFieldListCallbacks = {
+    filterListCallbacks = {
         beforeEdit:     function(li)
         {
-            if(this.isContainerEmpty(li, 'edit'))
-            {
-                return Backend.SpecField.prototype.links.editField + this.getRecordId(li)
-            }
-            else
-            {
-                this.toggleContainer(li, 'edit');
-            }
+            if(this.isContainerEmpty(li, 'edit')) return Backend.Filter.prototype.links.editGroup + this.getRecordId(li)
+            else this.toggleContainer(li, 'edit');
         },
+
+
         afterEdit:      function(li, response)
         {
-            new Backend.SpecField(response);
+            new Backend.Filter(response);
 
             this.rebindIcons(li);
             this.createSortable();
 
             this.toggleContainer(li, 'edit');
         },
+
         beforeDelete:   function(li)
         {
-            if(confirm('Are you sure you wish to remove record #' + this.getRecordId(li) + '?'))
-            {
-                return Backend.SpecField.prototype.links.deleteField + this.getRecordId(li)
-            }
+            if(confirm('Are you sure you wish to remove record #' + this.getRecordId(li) + '?'))  return Backend.Filter.prototype.links.deleteGroup + this.getRecordId(li)
         },
+
+
         afterDelete:    function(li, jsonResponse)
         {
             var response = eval("("+jsonResponse+")");
 
-            if(response.status == 'success')
-            {
-                this.remove(li);
-            }
+            if(response.status == 'success') this.remove(li);
         },
 
 
         beforeSort:     function(li, order)
         {
-            return Backend.SpecField.prototype.links.sortField + '?' + order
+            return Backend.Filter.prototype.links.sortGroup + '?' + order
         },
-        afterSort:      function(li, response)
-        {
-//            alert( 'Record #' + this.getRecordId(li, 'edit') + ' changed position');
-        }
+
+
+        afterSort:      function(li, response) { }
     };
 // ]!]>
 </script>
 {/literal}
 
 <div>
-    <a href="#new" id="specField_item_new_{$categoryID}_show">{t _add_new_field}</a>
-    <div id="specField_item_new_{$categoryID}_form" style="display: none;">
-        <script type="text/javascript">
-        new Backend.SpecField('{json array=$specFieldsList}');
-        </script>
+    <a href="#new" id="filter_item_new_{$categoryID}_show">{t _add_new_group}</a>
+    <div id="filter_item_new_{$categoryID}_form" style="display: none;">
+        <script type="text/javascript"> new Backend.Filter('{json array=$blankFilter}');</script>
     </div>
 </div>
+
 <br />
-<div>
-<ul id="specField_items_list_{$categoryID}" class="specFieldList  activeList_add_sort activeList_add_edit activeList_add_delete">
-{foreach item="field" from=$specFields}
-	<li id="specField_items_list_{$categoryID}_{$field.ID}">
-    	<span class="specField_title">{$field.name[$defaultLangCode]}</span>
+
+<ul id="filter_items_list_{$categoryID}" class="filterList activeList_add_sort activeList_add_edit activeList_add_delete">
+{foreach item="filter" from=$filters}
+	<li id="filter_items_list_{$categoryID}_{$filter.ID}">
+    	<span class="filter_title">{$filter.name[$defaultLangCode]}</span>
 	</li>
 {/foreach}
-
 </ul>
-
 
 {literal}
 <script type="text/javascript">
-     $("specField_item_new_{/literal}{$categoryID}{literal}_show").onclick = function(e) { Backend.SpecField.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') }
-     window.activeSpecFieldsList = new ActiveList('specField_items_list_{/literal}{$categoryID}{literal}', specFieldListCallbacks);
+     $("filter_item_new_{/literal}{$categoryID}{literal}_show").onclick = function(e) { Backend.Filter.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') }
+     window.activeFiltersList = new ActiveList('filter_items_list_{/literal}{$categoryID}{literal}', filterListCallbacks);
 </script>
 {/literal}

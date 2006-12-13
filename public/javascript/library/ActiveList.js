@@ -293,7 +293,19 @@ ActiveList.prototype = {
     },
 
 
-    addRecord: function(id, dom, position)
+    /**
+     * Add new item to Active Record. You have 3 choices. Either to add whole element, add array of elements or add all elements
+     * inside given dom element
+     *
+     * @param int id Id of new element (Same ID which is stored in database)
+     * @param HTMLElement|array dom Any HTML Dom element or array array of Dom elements
+     * @param bool insights Use elements inside of given node
+     *
+     * @access public
+     *
+     * @return HTMLElementLi Reference to new active list record
+     */
+    addRecord: function(id, dom, insights)
     {
         var li = document.createElement('li');
         li.id = this.ul.id + "_" + id;
@@ -311,7 +323,22 @@ ActiveList.prototype = {
         }
         else
         {
-            li.appendChild(dom);
+            if(insights)
+            {
+                var elements = dom.getElementsByTagName("*");
+                while(elements.length > 0)
+                {
+                    if(dom == elements[0].parentNode)
+                    {
+                        var test = elements[0];
+                        li.appendChild(elements[0]);
+                    }
+                }
+            }
+            else
+            {
+                li.appendChild(dom);
+            }
         }
 
         this.ul.appendChild(li);

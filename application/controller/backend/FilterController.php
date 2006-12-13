@@ -1,23 +1,181 @@
 <?php
-
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.category.Filter");
+ClassLoader::import("application.model.category.*");
+ClassLoader::import("library.*");
+
 /**
  * ...
  *
  * @package application.controller.backend
  * @author Saulius Rupainis <saulius@integry.net>
- * 
+ *
  * @role admin.store.catalog
  */
 class FilterController extends StoreManagementController
 {
+    private $config = array();
+
+    function __construct($request)
+    {
+        parent::__construct($request);
+        $this->createConfig();
+    }
+
 	public function index()
 	{
-		$filterList = ActiveRecordModel::getRecordSetArray("Filter", new ARSelectFilter());
-		echo "<pre>"; print_r($filterList); echo "</pre>";
+        $response = new ActionResponse();
+
+        $categoryID = (int)$this->request->getValue('id');
+        $category = Category::getInstanceByID($categoryID);
+        $specFieldsList = $category->getSpecFieldList();
+
+        $filters = array();
+        foreach($specFieldsList as $specField)
+        {
+            $specFieldObj = SpecField::getInstanceByID($specField['ID']);
+            $filters = array_merge($filters, $specFieldObj->getFiltersGroupsList());
+        }
+
+        $specFieldOptions = array();
+        foreach ($specFieldsList as $field)
+        {
+            $specFieldOptions[] = array(
+                'ID' => $field['ID'],
+                'type' => $field['type'],
+                'dataType' => $field['dataType'],
+                'name' => isset($field['name'][$_lng = $this->store->getDefaultLanguageCode()]) ? $field['name'][$_lng] : ''
+            );
+        }
+
+        $blankFilter = array
+        (
+            'ID' => 'new',
+            'name' => array('en' => 'blasdas', 'lt' => 'asdasdad', 'lv' => 'sdfsdfsd'),
+            'values' => Array(),
+            'rootId' => 'filter_item_new_'.$categoryID.'_form',
+            'categoryID' => $categoryID,
+            'specFields' => $specFieldOptions
+        );
+
+
+
+
+        $response->setValue('filters', $filters);
+        $response->setValue('blankFilter', $blankFilter);
+        $response->setValue('categoryID', $categoryID);
+        $response->setValue('configuration', $this->config);
+        $response->setValue('defaultLangCode', $this->store->getDefaultLanguageCode());
+
+        return $response;
 	}
-	
+
+    private function createConfig()
+    {
+        $languages[$this->store->getDefaultLanguageCode()] =  $this->locale->info()->getLanguageName($this->store->getDefaultLanguageCode());
+        foreach ($this->store->getLanguageList()->toArray() as $lang)
+        {
+            if($lang['isEnabled']==1 && $lang['isDefault'] != 1)
+            {
+                $languages[$lang['ID']] = $this->locale->info()->getLanguageName($lang['ID']);
+            }
+        }
+
+        $this->config = array (
+            'languages' => $languages,
+
+            'messages' => array (
+                'deleteField' => 'delete field'
+            ),
+
+            'selectorValueTypes' => array (1, 5),
+            'doNotTranslateTheseValueTypes' => array(2),
+            'countNewFilters' => 0
+        );
+    }
+
+    /**
+     * Creates a new or modifies an exisitng specification field (according to a passed parameters)
+     *
+     * @return ActionRedirectResponse Redirects back to a form if validation fails or to a field list
+     */
+    public function save()
+    {
+        if($this->request->getValue('ID') == 'new')
+        {
+            $filterGroup = FilterGroup::getNewInstance();
+
+            if($specFieldID = $this->request->getValue('specFieldID', false))
+            {
+                $filterGroup->setFieldValue('specFieldID', SpecField::getInstanceByID((int)$specFieldID));
+            }
+
+        }
+        else
+        {
+
+            if(FilterGroup::exists((int)$this->request->getValue('ID')))
+            {
+                $filterGroup = FilterGroup::getInstanceByID((int)$this->request->getValue('ID'));
+            }
+            else
+            {
+                return new JSONResponse(array('errors' => array('ID' => 'Record with such id does not exist'), 'status' => 'failure'));
+            }
+        }
+
+        if(count($errors = $this->validate($this->request->getValueArray(array('name', 'filters', 'specFieldID', 'ID')))) == 0)
+        {
+            $htmlspecialcharsUtf_8 = create_function('$val', 'return htmlspecialchars($val, null, "UTF-8");');
+            $name = $this->request->getValue('name');
+            $specFieldID = SpecField::getInstanceByID((int)$this->request->getValue('specFieldID'));
+
+            $filterGroup->setLanguageField('name',        @array_map($htmlspecialcharsUtf_8, $name),        array_keys($this->config['languages']));
+            $filterGroup->setFieldValue('specFieldID', $specFieldID);
+
+            $filterGroup->save();
+            $filterGroupID = $filterGroup->getID();
+
+//            if(!empty($values))
+//            {
+//                $position = 1;
+//                foreach ($values as $key => $value)
+//                {
+//                    if(preg_match('/^new/', $key))
+//                    {
+//                        $specFieldValues = SpecFieldValue::getNewInstance();
+//                    }
+//                    else
+//                    {
+//                       $specFieldValues = SpecFieldValue::getInstanceByID((int)$key);
+//                    }
+//
+//                    if($type == 1)
+//                    {
+//                        $specFieldValues->setFieldValue('value', $value);
+//                    }
+//                    else
+//                    {
+//                        $specFieldValues->setLanguageField('value', @array_map($htmlspecialcharsUtf_8, $value), array_keys($this->specFieldConfig['languages']));
+//                    }
+//
+//
+//                    $specFieldValues->setFieldValue('specFieldID', $specField);
+//                    $specFieldValues->setFieldValue('position', $position);
+//
+//                    $specFieldValues->save();
+//
+//                    $position++;
+//                }
+//            }
+
+            return new JSONResponse(array('status' => 'success', 'id' => $filterGroupID));
+        }
+        else
+        {
+            return new JSONResponse(array('errors' => $errors, 'status' => 'failure'));
+        }
+    }
+
 	public function create()
 	{
 		$filter = ActiveRecordModel::getNewInstance("Filter");
@@ -27,6 +185,63 @@ class FilterController extends StoreManagementController
 		$filter->rangeEnd->set(rand());
 		$filter->save();
 	}
+
+
+    /**
+     * Validates spec field form
+     *
+     * @param array $values List of values to validate.
+     * @return array List of all errors
+     */
+    private function validate($values = array())
+    {
+        $errors = array();
+
+        $languageCodes = array_keys($this->config['languages']);
+
+        if(!isset($values['name']) || empty($values['name'][$languageCodes[0]]))
+        {
+            $errors['name'] = 'Name empty';
+        }
+
+        return $errors;
+    }
+
+
+    /**
+     * Displays form for creating a new or editing existing one product group specification field
+     *
+     * @return ActionResponse
+     */
+    public function item()
+    {
+        $response = new ActionResponse();
+        $filterGroup = FilterGroup::getInstanceByID($this->request->getValue('id'), true, true);
+        $filterGroupArray = $filterGroup->toArray(false);
+
+
+        foreach($filterGroup->getFiltersList() as $filter)
+        {
+            $filterGroupArray['filters'][$filter['ID']] = $filter;
+        }
+
+        $filterGroupArray['rootId'] = "filter_items_list_".$filterGroupArray['SpecField']['categoryID']."_".$filterGroupArray['ID'];
+        $filterGroupArray['categoryID'] = $filterGroupArray['SpecField']['categoryID'];
+
+        $filterGroupArray['specFields'] = array();
+        foreach ($specFieldsList = Category::getInstanceByID($filterGroupArray['categoryID'])->getSpecFieldList() as $field)
+        {
+            $filterGroupArray['specFields'][] = array(
+                'ID' => $field['ID'],
+                'type' => $field['type'],
+                'dataType' => $field['dataType'],
+                'name' => isset($field['name'][$_lng = $this->store->getDefaultLanguageCode()]) ? $field['name'][$_lng] : ''
+            );
+        }
+
+        return new JSONResponse($filterGroupArray);
+    }
+
 }
 
 ?>
