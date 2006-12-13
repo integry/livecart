@@ -66,10 +66,12 @@ Backend.Filter.prototype = {
             this.cloneForm('filter_item_blank', this.filter.rootId);
 
             this.id = this.filter.ID;
+            
             this.categoryID = this.filter.categoryID;
             this.rootId = this.filter.rootId;
             this.specFields = this.filter.specFields;
             this.name = this.filter.name;
+            this.filters = this.filter.filters;
             this.backupName = this.name;
 
             this.loadLanguagesAction();
@@ -100,6 +102,7 @@ Backend.Filter.prototype = {
         {
             el = false;
         });
+        
         this.initialize(filterJson, hash);
         this.clearAllFeedBack();
     },
@@ -160,8 +163,8 @@ Backend.Filter.prototype = {
 
 		this.nodes.stateLinks 			= document.getElementsByClassName(this.cssPrefix + "change_state", this.nodes.parent);
 
-		this.nodes.cancel 	            = document.getElementsByClassName(this.cssPrefix + "cancel", this.nodes.parent)[0];
-		this.nodes.save 	            = document.getElementsByClassName(this.cssPrefix + "save", this.nodes.parent)[0];
+		this.nodes.cancel                 = document.getElementsByClassName(this.cssPrefix + "cancel", this.nodes.parent)[0];
+		this.nodes.save                   = document.getElementsByClassName(this.cssPrefix + "save", this.nodes.parent)[0];
 
 		this.nodes.translationsLinks 	= document.getElementsByClassName(this.cssPrefix + "form_filters_translations_language_links", this.nodes.parent)[0];
 		this.nodes.filtersDefaultGroup 	= document.getElementsByClassName(this.cssPrefix + "form_filters_group", this.nodes.parent)[0];
