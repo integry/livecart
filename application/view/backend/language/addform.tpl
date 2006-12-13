@@ -1,23 +1,11 @@
-<h1>ADD LANGUAGE</h1>
-<hr/>
-<form name="Form" method="post" action="{link controller=backend.language action=add id=0}">
-	<p>
-		Code:<br/>
-		<input style="width: 120px;" type="text" name="code" value="" maxlenght="10"/><br/>
-	</p>
-	<p>
-		Abbreviature:<br/>
-		<input style="width: 120px;" type="text" name="abbr" value="" maxlength="10"/><br/>
-	</p>
-	<p>
-		Name:<br/>
-		<input style="width: 240px;" type="text" name="name" value="" maxlength="255"/><br/>
-	</p>
-	<p>
-		Active:<br/>
-		<input type="checkbox" name="active" checked/><br/>
-	</p>	
-	<p>
-		<input type="submit" value="Add"/>
-	</p>
-<hr/>
+<div>	
+	<form onSubmit="lng.add(this.getElementsByTagName('select')[0].value); return false;" action="">
+		<select name="new_language" class="select" id="addLang-sel">
+		   {html_options options=$languages_select}
+		</select>
+		<img src="image/indicator.gif" id="addLangFeedback" />
+		<input type="submit" value="{t _add_lang_button}" name="sm" class="submit" />
+		<span>{t _or} </span>
+		<a href="#" class="cancel" onClick="restoreMenu('addLang', 'langPageMenu'); return false;">{t _cancel}</a>
+	</form>	
+</div>

@@ -7,31 +7,19 @@
 
 {include file="layout/header.tpl"}
 
-{pageMenu id=pageMenu}
-	{menuItem}
-		{menuCaption}{t _add_language}{/menuCaption}
-		{pageAction}slideForm('addLang', 'pageMenu'){/pageAction}
- 	{/menuItem}
-{/pageMenu}
-
 <script type="text/javascript">
 	var lng = new Backend.LanguageIndex();	
+	lng.setFormUrl('{link controller=backend.language action=addForm}');
 	lng.setAddUrl('{link controller=backend.language action=add}');
 	lng.setStatusUrl("{link controller=backend.language action=setEnabled}/");
 </script>
 
-<div id="addLang" class="slideForm" style="display:none;"onFocus="document.getElementById('addLang-sel').focus();">
-	<div>	
-		<form onSubmit="lng.add(this.getElementsByTagName('select')[0].value); return false;" action="">
-			<select name="new_language" id="addLang-sel" style="width: 200px" tabIndex=3 onKeyDown="{literal}key = new KeyboardEvent(event); if (key.getKey() == key.KEY_ENTER) {this.form.submit();} {/literal} return false;">
-			   {html_options options=$languages_select}
-			</select>
-			<img src="image/indicator.gif" id="addLangFeedback">
-			<input type="submit" value="{t _add_lang_button}" name="sm" class="submit" tabIndex=4>
-			{t _or} <a href="#" class="cancel" onClick="restoreMenu('addLang', 'pageMenu'); return false;">{t _cancel}</a>
-		</form>	
-	</div>
-</div>
+<ul class="menu" id="langPageMenu">
+	<li><a href="#" onClick="lng.showAddForm(); return false;">{t _add_language}</a></li>
+</ul>
+
+<div class="menuLoadIndicator" id="langAddMenuLoadIndicator"></div>
+<div id="addLang" class="slideForm"></div>
 
 <br />
 

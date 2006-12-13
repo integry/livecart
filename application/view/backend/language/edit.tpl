@@ -14,6 +14,12 @@
 </script>
 {/literal}
 
+{if $saved}
+<div class="saveConfirmation" >
+	<div>Translations were saved successfuly</div>
+</div>
+{/if}
+
 <fieldset class="menuFieldSet">
 	<legend>{t _translation_filter}</legend>
 	<form id="navLang" method="post" style="margin-bottom: 10px;" action="{link controller=backend.language action=edit id=$id}" class="">
@@ -41,9 +47,10 @@
 
 	</form>	
 </fieldset>
+
 <br /><br />
 
-<form id="editLang" method="post" action="{link controller=backend.language action=save id=$id}" onSubmit="langPassDisplaySettings(this);">
+<form id="editLang" method="post" action="{link controller=backend.language action=save id=$id}" onSubmit="langPassDisplaySettings(this); document.getElementById('saveProgress').style.display = 'inline';">
 	
 	<input type="hidden" name="langFileSel" />
 	<input type="hidden" name="show" />
@@ -81,10 +88,11 @@
 	<script type="text/javascript">
 		var langEdit = new Backend.LanguageEdit(translations, english, document.getElementById('translations'));
 		langEdit.preFilter();
+		langEdit.hideSaveConfirmation();
 	</script>
 	{/literal}
 
-	<input type="submit" class="submit" value="{t _save}">
+	<img id="saveProgress" src="image/indicator.gif" style="display: none;"> <input type="submit" class="submit" value="{t _save}"> {t _or} <a href="#" onClick="window.location.reload(); return false;" class="cancel">{t _cancel}</a>
 	
 </form>
 

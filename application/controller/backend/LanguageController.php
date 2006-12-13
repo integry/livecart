@@ -143,6 +143,10 @@ class LanguageController extends StoreManagementController
 		$response->setValue("id", $editLocaleName);
 		$response->SetValue("language", $this->request->getValue("language"));
 		$response->SetValue("edit_language", $editLocale->info()->getLanguageName($editLocaleName));		
+		if ($this->request->isValueSet('saved'))
+		{
+			$response->SetValue("saved", $editLocale->info()->getLanguageName($editLocaleName));		
+		}
 
 		$response->setValue("translations", json_encode($hierarchical));
 		$response->setValue("english", json_encode($enDefs));
@@ -210,7 +214,7 @@ class LanguageController extends StoreManagementController
 
 		$editLocale->translationManager()->saveCacheData($localeCode . '/' .'menu/menu', $menuTranslations);
 			
-		return new ActionRedirectResponse($this->request->getControllerName(), 'edit', array('id' => $localeCode, 'query' => 'langFileSel='.$this->request->getValue('langFileSel')));
+		return new ActionRedirectResponse($this->request->getControllerName(), 'edit', array('id' => $localeCode, 'query' => 'langFileSel='.$this->request->getValue('langFileSel').'&saved=true'));
 	}
 	
 	/**
@@ -219,9 +223,6 @@ class LanguageController extends StoreManagementController
 	 */
 	public function index()
 	{
-		// get all Locale languages
-		$languagesSelect = $this->locale->info()->getAllLanguages();
-
 		// get all system languages
 		$list = Language::getLanguages()->toArray();
 		$countActive = 0;
@@ -232,22 +233,35 @@ class LanguageController extends StoreManagementController
 				$countActive++;
 			}
 			$list[$key]['name'] = $this->locale->info()->getLanguageName($value['ID']);
-			
-			// remove already added languages from Locale language list
-			unset($languagesSelect[$value['ID']]);			
 		}
-
-		// sort Locale language list
-		asort($languagesSelect);
 
 		$response = new ActionResponse();
 		$response->SetValue("language", $this->request->getValue("language"));
 		$response->SetValue("languagesList", $list);
-		$response->SetValue("languages_select", $languagesSelect);
 		$response->SetValue("count_all", count($list));
 		$response->SetValue("count_active", $countActive);
 
 		return $response;
+	}
+	
+	public function addForm()
+	{
+		// get all Locale languages
+		$languagesSelect = $this->locale->info()->getAllLanguages();
+
+		// get all system languages	and remove already added languages from Locale language list
+		$list = Language::getLanguages()->toArray();
+		foreach($list as $key => $value)
+		{
+			unset($languagesSelect[$value['ID']]);			
+		}
+
+		// sort Locale language list
+		asort($languagesSelect);	  	
+
+		$response = new ActionResponse();
+		$response->SetValue("languages_select", $languagesSelect);
+		return $response;				
 	}
 	
 	/**
