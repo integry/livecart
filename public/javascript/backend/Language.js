@@ -15,6 +15,8 @@ Backend.LanguageIndex.prototype =
 
 	statusUrl: false,
 	
+	formUrl: false,
+	
 	initialize: function()
 	{
 	  

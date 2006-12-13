@@ -278,6 +278,11 @@ LiveCart.AjaxUpdater.prototype = {
  *		document.getElementById('someList').appendChild(item);
  * </code>
  *
+ * Don't forget to set the correct Content-type header before sending the content:
+ * <code>
+ *      $response->setHeader('Content-type', 'application/xml');
+ * </code>
+ *
  * @param xml Element
  * @return HTMLElement
  */

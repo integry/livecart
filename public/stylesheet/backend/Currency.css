@@ -1,0 +1,43 @@
+#currAddMenuLoadIndicator, #addCurrIndicator
+{
+  	display: none;
+}
+
+#currencyList {
+  	width: 300px;
+}
+
+#currencyList li {
+	margin-bottom: 10px;
+}
+
+.activeList_icons {
+	height: 50px;
+	clear: none;
+}
+
+.enabled_0 {
+  	color: #AAAAAA;
+}
+
+.enabled_1 {
+  
+}
+
+.currTitle {
+  	font-weight: bold;
+}
+
+#currencyList .checkbox {
+  	margin: 0; 
+	margin-left: 2px; 
+	float: none;
+}
+
+#currencyList div {
+  	padding-left: 59px;
+}
+
+#currDefault {
+  	font-weight: bold;
+}
