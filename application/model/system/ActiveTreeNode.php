@@ -212,14 +212,22 @@ class ActiveTreeNode extends ActiveRecordModel
 	{
 		$node = self::getInstanceByID($className, $recordID, self::LOAD_DATA);
 		$nodeRightValue = $node->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
-
-		$result = parent::deleteByID($className, $recordID);
-
 		$tableName = self::getSchemaInstance($className)->getName();
-		$db = self::getDBConnection();
-		$db->executeUpdate("UPDATE " . $tableName . " SET " . self::RIGHT_NODE_FIELD_NAME . " = "  . self::RIGHT_NODE_FIELD_NAME . " - 2 WHERE "  . self::RIGHT_NODE_FIELD_NAME . ">=" . $nodeRightValue);
-		$db->executeUpdate("UPDATE " . $tableName . " SET " . self::LEFT_NODE_FIELD_NAME . " = "  . self::LEFT_NODE_FIELD_NAME . " - 2 WHERE "  . self::LEFT_NODE_FIELD_NAME . ">=" . $nodeRightValue);
 
+		ActiveRecord::beginTransaction();
+		try
+		{
+			$result = parent::deleteByID($className, $recordID);
+			$treeFixQuery = "UPDATE " . $tableName . " SET " . self::RIGHT_NODE_FIELD_NAME . " = "  . self::RIGHT_NODE_FIELD_NAME . " - 2," . self::LEFT_NODE_FIELD_NAME . " = "  . self::LEFT_NODE_FIELD_NAME . " - 2 WHERE "  . self::RIGHT_NODE_FIELD_NAME . ">=" . $nodeRightValue;
+
+			self::getLogger()->logQuery($treeFixQuery);
+			self::getDBConnection()->executeUpdate($treeFixQuery);
+		}
+		catch (Exception $e)
+		{
+			ActiveRecord::rollback();
+			throw $e;
+		}
 		return $result;
 	}
 
@@ -380,6 +388,10 @@ class ActiveTreeNode extends ActiveRecordModel
 			ActiveRecord::rollback();
 			return false;
 		}
+	}
+
+	public function buildTree()
+	{
 	}
 
 	/**

@@ -2,7 +2,7 @@
 
 {assign var="action" value="create"}
 
-{form handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="Backend.Category.updateBranch(); return false;"}
+{form handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="new LiveCart.AjaxUpdater(this, '', '');"}
 	<fieldset id="mainFieldset">
 		<legend>Category details</legend>
 		<p>
@@ -18,12 +18,12 @@
 			{textarea name="keywords" id="keywords_$categoryId" style="height: 3em;"}
 		</p>
 
-		<p class="checkbox">			
+		<p class="checkbox">
 			{checkbox name="isActive" id="isActive_$categoryId" class="checkbox" style="width: auto;"} <label for="isActive_{$categoryId}">Active</label>
 		</p>
 
 		<br /><br />
-						
+
 		<p>
 			{foreach from=$languageList key=lang item=langName}
 			<fieldset class="expandingSection">

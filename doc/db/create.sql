@@ -5,7 +5,7 @@
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database creation script                        #
-# Created on:            2006-12-12 16:03                                #
+# Created on:            2006-12-13 12:20                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -262,7 +262,7 @@ ALTER TABLE Product ADD CONSTRAINT Category_Product
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Product ADD CONSTRAINT Manufacturer_Product 
-    FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID);
+    FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE Product ADD CONSTRAINT ProductImage_Product 
     FOREIGN KEY (defaultImageID) REFERENCES ProductImage (ID);
@@ -271,13 +271,13 @@ ALTER TABLE Category ADD CONSTRAINT Category_Category
     FOREIGN KEY (parentNodeID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Specification ADD CONSTRAINT SpecFieldValue_Specification 
-    FOREIGN KEY (specFieldValueID) REFERENCES SpecFieldValue (ID);
+    FOREIGN KEY (specFieldValueID) REFERENCES SpecFieldValue (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Specification ADD CONSTRAINT Product_Specification 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Specification ADD CONSTRAINT SpecField_Specification 
-    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID);
+    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE SpecField ADD CONSTRAINT Category_SpecField 
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -292,25 +292,25 @@ ALTER TABLE FilterGroup ADD CONSTRAINT SpecField_FilterGroup
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE RelatedProduct ADD CONSTRAINT Product_RelatedProduct_ 
-    FOREIGN KEY (ProductID) REFERENCES Product (ID);
+    FOREIGN KEY (ProductID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE RelatedProduct ADD CONSTRAINT Product_RelatedProduct 
-    FOREIGN KEY (relatedProductID) REFERENCES Product (ID);
+    FOREIGN KEY (relatedProductID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductPrice ADD CONSTRAINT Product_ProductPrice 
-    FOREIGN KEY (productID) REFERENCES Product (ID);
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductPrice ADD CONSTRAINT Currency_ProductPrice 
-    FOREIGN KEY (currencyID) REFERENCES Currency (ID);
+    FOREIGN KEY (currencyID) REFERENCES Currency (ID) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE ProductImage ADD CONSTRAINT Product_ProductImage 
     FOREIGN KEY (productID) REFERENCES Product (ID);
 
 ALTER TABLE ProductFile ADD CONSTRAINT Product_ProductFile 
-    FOREIGN KEY (productID) REFERENCES Product (ID);
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductFile ADD CONSTRAINT FileType_ProductFile 
-    FOREIGN KEY (fileTypeID) REFERENCES FileType (ID);
+    FOREIGN KEY (fileTypeID) REFERENCES FileType (ID) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 ALTER TABLE Discount ADD CONSTRAINT Product_Discount 
-    FOREIGN KEY (ID) REFERENCES Product (ID);
+    FOREIGN KEY (ID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;

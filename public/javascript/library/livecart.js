@@ -2,14 +2,98 @@ var LiveCart = {
     ajaxUpdaterInstance: null
 }
 
+LiveCart.AjaxRequest = Class.create();
+LiveCart.AjaxRequest.prototype = {
+
+}
+
 LiveCart.AjaxUpdater = Class.create();
 LiveCart.AjaxUpdater.prototype = {
 
     indicatorContainerId: null,
 
     /**
+     * AjaxUpdater constructor
      *
+     * @param formOrUrl mixed Form object or URL string
+     * @param options assoc array Option container.
+     * Available options:
+   	 * containerId:
+   	 * indicatorId:
+   	 * insertion:
+   	 * onComplete:
      */
+    /*
+    initialize: function(formOrUrl, options)
+    {
+    	LiveCart.ajaxUpdaterInstance = this;
+    	var url = "";
+        var method = "";
+        var params = "";
+        if (typeof formOrUrl == "object")
+        {
+            var form = formOrUrl;
+            url = form.action;
+            method = form.method;
+            params = Form.serialize(form);
+        }
+        else
+        {
+            url = formOrUrl;
+            method = "post";
+        }
+
+        var updaterOptions = { method: method,
+						       parameters: params,
+							   onFailure: this.reportError};
+        if (options != undefined)
+        {
+			if (option.indicatorId != undefined)
+			{
+        		this.indicatorContainerId = indicatorId;
+        		this.showIndicator();
+			}
+			if (options.onComplete != undefined)
+			{
+				updaterOptions.onComplete = options.onComplete;
+			}
+			else
+			{
+				updaterOptions.onComplete = this.postProcessResponse;
+			}
+
+	        if (options.insertion != undefined)
+	        {
+	            switch(options.insertion)
+	            {
+	                case 'top':
+	                    updaterOptions.insertion = Insertion.Top;
+	                break;
+
+	                case 'bottom':
+	                    updaterOptions.insertion = Insertion.Bottom;
+	                break;
+
+	                case 'before':
+	                    updaterOptions.insertion = Insertion.Before;
+	                break;
+
+	                case 'after':
+	                    updaterOptions.insertion = Insertion.After;
+	                break;
+
+	                default:
+	                    alert('Invalid insertion position value in AjaxUpdater');
+	                break;
+	            }
+	        }
+        }
+		new Ajax.Updater({success: containerId},
+                         url,
+                         updaterOptions);
+    },
+    */
+
     initialize: function(formOrUrl, containerId, indicatorId, insertionPosition)
     {
         var url = "";
@@ -38,7 +122,8 @@ LiveCart.AjaxUpdater.prototype = {
 
         if (insertionPosition != undefined)
         {
-            switch(insertionPosition) {
+            switch(insertionPosition)
+            {
                 case 'top':
                     updaterOptions.insertion = Insertion.Top;
                 break;
@@ -67,21 +152,28 @@ LiveCart.AjaxUpdater.prototype = {
     },
 
 
+	hideIndicator: function()
+	{
+		Element.hide(LiveCart.ajaxUpdaterInstance.indicatorContainerId);
+	},
+
+	showIndocator: function()
+	{
+		Element.show(this.indicatorContainerId);
+	},
+
     postProcessResponse: function(response)
     {
+		LiveCart.hideIndicator();
         // It would better if i could use something like "this" here
         LiveCart.ajaxUpdaterInstance.updateHead(response);
         LiveCart.ajaxUpdaterInstance.runJavaScripts(response.responseText);
-
-        Element.hide(LiveCart.ajaxUpdaterInstance.indicatorContainerId);
     },
-
 
     reportError: function(response)
     {
         alert('Error!\n\n' + response.responseText);
     },
-
 
     /**
      * Update HTML head with HTTPXMLRequest (static method, scary :D)
@@ -221,6 +313,5 @@ function xml2HtmlElement(xml)
 			}
 		}
 	}
-
 	return el;
 }
