@@ -17,6 +17,11 @@ ul.activeList
     list-style: none;
 }
 
+ul.activeList li
+{
+  	padding: 3px;
+}
+
 li.activeList_odd, .activeList_even
 {
     list-style: none;
