@@ -51,6 +51,21 @@ a, a:visited
 	padding: 3px;
 }
 
+div.saveConfirmation {
+	height: 50px;
+}
+
+div.saveConfirmation div {
+	border: 2px solid yellow;
+	padding: 10px;
+	font-weight: bold;  	
+	width: auto;
+	float: left;
+	clear: both;
+	white-space: nowrap;
+}
+
+
 /*************************** 
 	Layout 
 ***************************/
@@ -464,6 +479,14 @@ html, body{
 	background-repeat: no-repeat;
 }
 
+ul.menu li {
+  	list-style: none;
+}
+
+ul.menu a {
+  	color: red;  	
+}
+
 /*************************** 
 	Handy classes
 ***************************/
@@ -601,6 +624,10 @@ input:focus, textarea:focus, select:focus
     background: #ffc;
 }
 
+input.submit:focus 
+{
+	color: #008cff;
+}
 
 input.required, textarea.required, select.required
 {

@@ -20,6 +20,26 @@ Backend.LanguageIndex.prototype =
 	  
 	},
 	
+	showAddForm: function()
+	{
+		document.getElementById('langAddMenuLoadIndicator').style.display = 'block';
+		new Ajax.Request(
+		  			this.formUrl,
+					{
+					  method: 'get',
+					  onComplete: this.doShowAddForm
+					}	  										  
+					);
+	},
+	
+	doShowAddForm: function(request)
+	{
+		document.getElementById('langAddMenuLoadIndicator').style.display = 'none';
+		cont = document.getElementById('addLang');
+		cont.innerHTML = request.responseText;
+		slideForm('addLang', 'langPageMenu');	  	
+	},
+	
 	add: function(langCode)
 	{
 	  	// deactivate submit button and display feedback
@@ -46,7 +66,7 @@ Backend.LanguageIndex.prototype =
 	  	button.disabled = false;
 
 		// hide menu
-		restoreMenu('addLang', 'pageMenu');
+		restoreMenu('addLang', 'langPageMenu');
 
 		// add language to list
 		item = xml2HtmlElement(request.responseXML.firstChild);
@@ -59,7 +79,7 @@ Backend.LanguageIndex.prototype =
 		initLangList();
 		item.style.display = '';
 				
-		new Effect.Highlight(item.id, {startcolor:'#FBFF85', endcolor:'#FFFFFF'})
+		new Effect.Highlight(item.id, {startcolor:'#FBFF85', endcolor:'#EFF4F6'})
 	},
 	
 	setEnabled: function(langId, status) 
@@ -76,6 +96,11 @@ Backend.LanguageIndex.prototype =
 		var updater = new Ajax.Updater('languageList_container_' + langId, url);
 	},
 		
+	setFormUrl: function(url)
+	{
+	  	this.formUrl = url;
+	},
+
 	setAddUrl: function(url)
 	{
 	  	this.addUrl = url;
@@ -454,7 +479,31 @@ Backend.LanguageEdit.prototype =
 		}
 		
 		return filter;
-	}
+	},
 	
-  
+	hideSaveConfirmation: function()	
+	{
+		conf = document.getElementsByClassName('saveConfirmation');
+		for (k in conf)
+		{
+			if (conf[k].getElementsByTagName)
+			{
+				new SaveConfirmationMessage(conf[k].getElementsByTagName('div')[0]);
+			}
+		}
+	}	  
+}
+
+SaveConfirmationMessage = Class.create();
+SaveConfirmationMessage.prototype = 
+{
+	initialize: function(element)
+  	{
+		new Effect.Highlight(element, {duration: 2.5, afterFinish: this.hide});
+	},
+	
+	hide: function(obj)
+	{
+		new Effect.SlideUp(obj.element.parentNode);	  
+	}
 }

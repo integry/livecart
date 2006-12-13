@@ -12,6 +12,12 @@ label.radio {
 
 /* index */
 
+#langAddMenuLoadIndicator {
+	display: none; 
+	position: absolute;
+	z-index: 1;
+}
+
 #languageList {
   	width: 300px;
 }
@@ -25,10 +31,8 @@ label.radio {
 }
 
 .activeList_icons {
-	width: 20px;  
-}
-
-.activateIndicator {
+	height: 50px;
+	clear: none;
 }
 
 .enabled_0 {
@@ -39,6 +43,23 @@ label.radio {
   
 }
 
+.langTitle {
+  	font-weight: bold;
+}
+
+#languageList .checkbox {
+  	margin: 0; 
+	margin-left: 2px; 
+	float: none;
+}
+
+#languageList div {
+  	padding-left: 59px;
+}
+
+#langDefault {
+  	font-weight: bold;
+}
 
 /* edit */
 
