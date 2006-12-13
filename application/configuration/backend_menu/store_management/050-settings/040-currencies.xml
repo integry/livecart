@@ -1,0 +1,5 @@
+<Menu>
+	<Title>_menu_currencies</Title>	
+	<Controller>backend.currency</Controller>
+	<Action>index</Action>
+</Menu>
