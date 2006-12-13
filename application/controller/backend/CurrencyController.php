@@ -1,5 +1,6 @@
 <?php
 
+ClassLoader::import("library.*");
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 
 /**
@@ -13,7 +14,7 @@ class CurrencyController extends StoreManagementController
 	private $currData;
 	
 	/**
-	 * Main currencies action.
+	 * List all system currencies
 	 * @return ActionResponse
 	 */
 	public function index()
@@ -23,19 +24,78 @@ class CurrencyController extends StoreManagementController
 
 		$currSet = ActiveRecord::getRecordSet("Currency", $filter, true);
 
-		///	$locale = Locale::getCurrentLocale();
-
 		$curr = $currSet->toArray();
 		foreach($curr as $key => $value)
 		{
-			$curr[$key]['currName'] = $this->locale->getCurrency($value["ID"]);
+			$curr[$key]['name'] = $this->locale->info()->getCurrencyName($value["ID"]);
 		}
 
 		$response = new ActionResponse();
-		$response->setValue("curr", $curr);
-		$response->setValue("action", "index");
-		$response->setValue("tabPanelFile", "tabpanel.index.tpl");
+		$response->setValue("currencies", $curr);
 
+		return $response;
+	}
+
+	/**
+	 * Displays form for adding new currency
+	 * @return ActionRedirectResponse
+	 */
+	public function addForm()
+	{
+		$currencies = $this->locale->info()->getAllCurrencies();  	
+		
+		foreach ($currencies as $key => $currency)
+		{
+		  	$currencies[$key] = $key . ' - ' . $currency;
+		}
+		
+		$response = new ActionResponse();
+		$response->setValue('currencies', $currencies);
+		return $response;
+	}
+
+	public function add()
+	{
+		$id = $this->request->getValue('id');
+		
+	  	// check if the currency hasn't been added already
+		$filter = new ArSelectFilter();
+		$filter->setCondition(new EqualsCond(new ArFieldHandle('Currency', 'ID'), $id));
+		$r = ActiveRecord::getRecordSet('Currency', $filter);
+		if ($r->getTotalRecordCount() > 0)
+		{
+			return new RawResponse(0);  	
+		}
+	
+	  	// check if default currency exists
+		$filter = new ArSelectFilter();
+		$filter->setCondition(new EqualsCond(new ArFieldHandle('Currency', 'isDefault'), 1));
+		
+		$r = ActiveRecord::getRecordSet('Currency', $filter);
+		$isDefault = ($r->getTotalRecordCount() == 0);
+
+	  	// get max position
+		$filter = new ArSelectFilter();
+		$filter->setOrder(new ArFieldHandle('Currency', 'position'), 'DESC');
+		$filter->setLimit(1);
+		
+		$r = ActiveRecord::getRecordSet('Currency', $filter);
+		
+		  
+		// create new record
+		$newCurrency = ActiveRecord::getNewInstance('Currency');
+	  	$newCurrency->setId($id);
+		
+		// set position ...
+		
+		$newCurrency->save(ActiveRecord::PERFORM_INSERT);	  	
+		
+		$arr = $newCurrency->toArray();
+		$arr['name'] = $this->locale->info()->getCurrencyName($id);
+		
+		$response = new ActionResponse();
+		$response->setValue('item', $arr);
+		$response->setHeader('Content-type', 'application/xml');
 		return $response;
 	}
 

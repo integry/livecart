@@ -14,11 +14,11 @@ class Currency extends ActiveRecord
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("Currency");
 
-		$schema->registerField(new ARPrimaryKeyField("ID", Char::instance(3)));
+		$schema->registerField(new ARPrimaryKeyField("ID", ArChar::instance(3)));
 
-		$schema->registerField(new ARField("rate", Float::instance(16)));
-		$schema->registerField(new ARField("lastUpdated", DateTime::instance()));
-		$schema->registerField(new ARField("isDefault", Bool::instance()));
+		$schema->registerField(new ARField("rate", ArFloat::instance(16)));
+		$schema->registerField(new ARField("lastUpdated", ArDateTime::instance()));
+		$schema->registerField(new ARField("isDefault", ArBool::instance()));
 	}
 
 	public static function getCurrencies()
