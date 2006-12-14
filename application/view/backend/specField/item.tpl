@@ -1,1 +1,0 @@
-{include file="backend/specField/form.manageSpecField.tpl"}

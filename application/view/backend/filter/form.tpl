@@ -18,7 +18,7 @@
     	</p>
 
 		<p>
-    		<label>{t _Filter_name}</label>
+    		<label>{t _Filter_associated_field}</label>
     		<select name="specFieldID" class="filter_form_specFieldID"></select>
     		<span class="feedback"> </span>
 		</p>
@@ -38,22 +38,27 @@
         				<li class="dom_template filter_form_filters_value" id="filter_form_filters_">
             				<span>
             					<p>
-                					<label>Name</label>
+                					<label>{t _Filter_name}</label>
                 				    <input type="text" />
                             		<span class="feedback"> </span>
             				    </p>
             					<p class="filter_range">
-                					<label>Range</label>
+                					<label>{t _Filter_range}</label>
                 					<input type="text" /> - <input type="text" />
                             		<span class="feedback"> </span>
             				    </p>
+                                <p class="filter_selector">
+                                    <label>{t _Filter_value}</label>
+                                    <select type="text" ></select>
+                                    <span class="feedback"> </span>
+                                </p>
             				    <br />
             				</span>
         				</li>
         			</ul>
                 </p>
                 <p>
-                    <a href="#add" class="filter_add_filter">{t _Filter_add_filters}</a>
+                    <a href="#add" class="filter_add_filter">{t _Filter_add_filter}</a>
                 </p>
 			</div>
 
@@ -73,7 +78,7 @@
 		<fieldset class="filter_step_translations_language dom_template filter_step_translations_language_">
 			<legend></legend>
 
-			<label>{t _Filter_title}</label>
+			<label>{t _Filter_name}</label>
 			<input type="text" name="name" />
 			<br />
 

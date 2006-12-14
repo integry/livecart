@@ -65,7 +65,8 @@
 
         beforeSort:     function(li, order)
         {
-            return Backend.SpecField.prototype.links.sortField + '?' + order
+        
+            return Backend.SpecField.prototype.links.sortField + "?target=specField_items_list_{/literal}{$categoryID}{literal}&" + order
         },
         afterSort:      function(li, response)
         {

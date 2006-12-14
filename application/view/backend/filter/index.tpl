@@ -58,7 +58,7 @@
 
         beforeSort:     function(li, order)
         {
-            return Backend.Filter.prototype.links.sortGroup + '?' + order
+            return Backend.Filter.prototype.links.sortGroup + '?target=' + "filter_items_list_{/literal}{$categoryID}{literal}&" + order
         },
 
 
@@ -69,7 +69,7 @@
 {/literal}
 
 <div>
-    <a href="#new" id="filter_item_new_{$categoryID}_show">{t _add_new_group}</a>
+    <a href="#new" id="filter_item_new_{$categoryID}_show">{t _add_new_filter}</a>
     <div id="filter_item_new_{$categoryID}_form" style="display: none;">
         <script type="text/javascript"> new Backend.Filter('{json array=$blankFilter}');</script>
     </div>
