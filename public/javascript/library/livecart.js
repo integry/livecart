@@ -164,10 +164,9 @@ LiveCart.AjaxUpdater.prototype = {
 
     postProcessResponse: function(response)
     {
-		LiveCart.hideIndicator();
-        // It would better if i could use something like "this" here
         LiveCart.ajaxUpdaterInstance.updateHead(response);
         LiveCart.ajaxUpdaterInstance.runJavaScripts(response.responseText);
+        LiveCart.ajaxUpdaterInstance.hideIndicator();
     },
 
     reportError: function(response)

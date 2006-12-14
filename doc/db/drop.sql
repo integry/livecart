@@ -5,7 +5,7 @@
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database drop script                            #
-# Created on:            2006-12-13 12:20                                #
+# Created on:            2006-12-14 17:00                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -32,6 +32,8 @@ ALTER TABLE SpecField DROP FOREIGN KEY Category_SpecField;
 ALTER TABLE SpecFieldValue DROP FOREIGN KEY SpecField_SpecFieldValue;
 
 ALTER TABLE Filter DROP FOREIGN KEY FilterGroup_Filter;
+
+ALTER TABLE Filter DROP FOREIGN KEY SpecFieldValue_Filter;
 
 ALTER TABLE FilterGroup DROP FOREIGN KEY SpecField_FilterGroup;
 
@@ -206,6 +208,8 @@ DROP TABLE ProductPrice;
 # Drop constraints #
 
 ALTER TABLE Currency ALTER COLUMN isDefault DROP DEFAULT;
+
+ALTER TABLE Currency ALTER COLUMN position DROP DEFAULT;
 
 ALTER TABLE Currency DROP PRIMARY KEY;
 

@@ -1,7 +1,6 @@
 <?php
 
 ClassLoader::import("application.model.system.Language");
-//ClassLoader::import("application.model.product.ProductLangData");
 
 /**
  * Store product (item)
@@ -17,7 +16,7 @@ class Product extends MultilingualObject
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("catalogID", "Catalog", "ID", "Catalog", ARInteger::instance()));
-		//todo shopinstance
+
 		$schema->registerField(new ARField("sku", ARVarchar::instance(20)));
 
 		$schema->registerField(new ARField("dateCreated", ARDateTime::instance()));

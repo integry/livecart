@@ -5,7 +5,7 @@
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database creation script                        #
-# Created on:            2006-12-13 12:20                                #
+# Created on:            2006-12-14 17:00                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -138,6 +138,7 @@ CREATE INDEX IDX_SpecFieldValue_1 ON SpecFieldValue (specFieldID);
 CREATE TABLE Filter (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     filterGroupID INTEGER UNSIGNED,
+    specFieldValueID INTEGER UNSIGNED,
     name TEXT,
     position INTEGER,
     type INTEGER,
@@ -189,6 +190,7 @@ CREATE TABLE Currency (
     rate FLOAT(10,5),
     lastUpdated TIMESTAMP,
     isDefault BOOL DEFAULT 0,
+    position INTEGER UNSIGNED DEFAULT 0,
     CONSTRAINT PK_Currency PRIMARY KEY (ID)
 );
 
@@ -287,6 +289,9 @@ ALTER TABLE SpecFieldValue ADD CONSTRAINT SpecField_SpecFieldValue
 
 ALTER TABLE Filter ADD CONSTRAINT FilterGroup_Filter 
     FOREIGN KEY (filterGroupID) REFERENCES FilterGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE Filter ADD CONSTRAINT SpecFieldValue_Filter 
+    FOREIGN KEY (specFieldValueID) REFERENCES SpecFieldValue (ID) ON DELETE SET NULL;
 
 ALTER TABLE FilterGroup ADD CONSTRAINT SpecField_FilterGroup 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;

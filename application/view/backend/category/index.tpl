@@ -27,10 +27,10 @@
 <div id="catgegoryContainer" style="float:left; width: 260px;">
 	<div id="categoryBrowser" style="padding: 10px; border: 1px solid #ccc; background-color: #f1f1f1;">
 	</div>
-	<div>
-		<a href="javascript:Backend.Category.createNewBranch();">Create a new sub-category</a>
+	<div style="margin-left: 15px; margin-top: 15px;">
+		- <a href="javascript:Backend.Category.createNewBranch();">Create a new sub-category</a>
 		<br/>
-		<a href="#" onclick="if (confirm('Are you sure you want to remove this category?')) Backend.Category.removeBranch(); return false;">Remove selected category</a>
+		- <a href="#" onclick="if (confirm('Are you sure you want to remove this category?')) Backend.Category.removeBranch(); return false;">Remove selected category</a>
 	</div>
 </div>
 
