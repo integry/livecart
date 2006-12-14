@@ -714,22 +714,28 @@ fieldset.group p
 {
     display: inline;
     background: #eee;
-    padding: 6px 15px 6px 15px;
+    padding: 6px 15px 7px 15px ! important;
     margin: 0 2px;
     border: 1px solid #ccc;
     border-bottom: 0px ! important;
 }
 
+.tabs li a
+{
+    text-decoration: none;
+    color: black;
+}
+
+.tabs li.active a
+{
+    font-weight: bold;
+}
+
 .tabs li.active
 {
     background: #fff;
-    padding: 7px 17px 7px 17px;
+    padding: 6px 17px 8px 17px ! important;
     border-top: 2px solid red;
-}
-
-.tabs .active
-{
-    background-color: yellow;
 }
 
 /*************************** 

@@ -28,3 +28,9 @@
 {
    font-size: 200%;
 }
+
+
+.filter ul
+{
+    list-style: none;
+}
