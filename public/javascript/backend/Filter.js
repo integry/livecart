@@ -77,12 +77,10 @@ Backend.Filter.prototype = {
             this.loadLanguagesAction();
             this.findUsedNodes();
             this.bindFields();
-        }
-        catch(e)
+        } catch(e)
         {
             jsTrace.debug(e);
         }
-
     },
 
     /**
@@ -140,38 +138,36 @@ Backend.Filter.prototype = {
      */
     findUsedNodes: function()
     {
-		if(!this.nodes) this.nodes = [];
+        if(!this.nodes) this.nodes = [];
 
-		this.nodes.parent = document.getElementById(this.rootId);
+        this.nodes.parent = document.getElementById(this.rootId);
 
-		this.nodes.form 			    = this.nodes.parent.getElementsByTagName("form")[0];
+        this.nodes.form                           = this.nodes.parent.getElementsByTagName("form")[0];
 
-		this.nodes.id 					= document.getElementsByClassName(this.cssPrefix + "form_id", this.nodes.parent)[0];
-		this.nodes.name 				= document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
-		this.nodes.specFieldID 	        = document.getElementsByClassName(this.cssPrefix + "form_specFieldID", this.nodes.parent)[0];
+        this.nodes.id                               = document.getElementsByClassName(this.cssPrefix + "form_id", this.nodes.parent)[0];
+        this.nodes.name                = document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
+        this.nodes.specFieldID             = document.getElementsByClassName(this.cssPrefix + "form_specFieldID", this.nodes.parent)[0];
 
-		this.nodes.stepTranslations 	= document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
-		this.nodes.stepMain 			= document.getElementsByClassName(this.cssPrefix + "step_main", this.nodes.parent)[0];
-		this.nodes.stepLevOne 			= document.getElementsByClassName(this.cssPrefix + "step_lev1", this.nodes.parent);
+        this.nodes.stepTranslations     = document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
+        this.nodes.stepMain                  = document.getElementsByClassName(this.cssPrefix + "step_main", this.nodes.parent)[0];
+        this.nodes.stepLevOne             = document.getElementsByClassName(this.cssPrefix + "step_lev1", this.nodes.parent);
 
-		for(var i = 0; i < this.nodes.stepLevOne.length; i++)
-		{
-		    if(!this.nodes.stepLevOne[i].id) this.nodes.stepLevOne[i].id = this.nodes.stepLevOne[i].className.replace(/ /, "_") + "_" + this.id;
-		}
+        for(var i = 0; i < this.nodes.stepLevOne.length; i++)
+        {
+            if(!this.nodes.stepLevOne[i].id) this.nodes.stepLevOne[i].id = this.nodes.stepLevOne[i].className.replace(/ /, "_") + "_" + this.id;
+        }
 
-		this.nodes.mainTitle 			= document.getElementsByClassName(this.cssPrefix + "title", this.nodes.parent)[0];
+        this.nodes.mainTitle               = document.getElementsByClassName(this.cssPrefix + "title", this.nodes.parent)[0];
+        this.nodes.stateLinks             = document.getElementsByClassName(this.cssPrefix + "change_state", this.nodes.parent);
+        this.nodes.cancel                    = document.getElementsByClassName(this.cssPrefix + "cancel", this.nodes.parent)[0];
+        this.nodes.save                       = document.getElementsByClassName(this.cssPrefix + "save", this.nodes.parent)[0];
 
-		this.nodes.stateLinks 			= document.getElementsByClassName(this.cssPrefix + "change_state", this.nodes.parent);
+        this.nodes.translationsLinks     = document.getElementsByClassName(this.cssPrefix + "form_filters_translations_language_links", this.nodes.parent)[0];
+        this.nodes.filtersDefaultGroup     = document.getElementsByClassName(this.cssPrefix + "form_filters_group", this.nodes.parent)[0];
+        this.nodes.addFilterLink         = this.nodes.filtersDefaultGroup.getElementsByClassName(this.cssPrefix + "add_filter", this.nodes.parent)[0];
 
-		this.nodes.cancel                 = document.getElementsByClassName(this.cssPrefix + "cancel", this.nodes.parent)[0];
-		this.nodes.save                   = document.getElementsByClassName(this.cssPrefix + "save", this.nodes.parent)[0];
-
-		this.nodes.translationsLinks 	= document.getElementsByClassName(this.cssPrefix + "form_filters_translations_language_links", this.nodes.parent)[0];
-		this.nodes.filtersDefaultGroup 	= document.getElementsByClassName(this.cssPrefix + "form_filters_group", this.nodes.parent)[0];
-		this.nodes.addFilterLink 	    = this.nodes.filtersDefaultGroup.getElementsByClassName(this.cssPrefix + "add_filter", this.nodes.parent)[0];
-
-		var ul = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0];
-		ul.id = this.cssPrefix + "form_"+this.id+'_filters_'+this.languageCodes[0];
+        var ul = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0];
+        ul.id = this.cssPrefix + "form_"+this.id+'_filters_'+this.languageCodes[0];
 
     },
 
@@ -216,11 +212,11 @@ Backend.Filter.prototype = {
         this.createLanguagesLinks();
         this.loadFilterAction();
 
+        this.specFieldIDWasChangedAction();
         this.loadValueFieldsAction();
 
         this.bindTranslationFilters();
         this.loadTypes();
-        this.specFieldIDWasChangedAction();
 
 
         new Form.EventObserver(this.nodes.form, function() { self.formChanged = true; } );
@@ -271,23 +267,40 @@ Backend.Filter.prototype = {
      */
     specFieldIDWasChangedAction: function()
     {
-        // if selected type is a selector type then show selector options fields (aka step 2)
-//        if(this.selectorValueTypes.indexOf(this.nodes.specFieldID.value) === -1)
-//        {
-//            for(var i = 0; i < this.nodes.translatedFilters.length; i++)
-//            {
-//                this.nodes.translatedFilters[i].style.display = 'none';
-//            }
-//        }
-//        else
-//        {
-//            for(var i = 0; i < this.nodes.translatedFilters.length; i++)
-//            {
-//                this.nodes.translatedFilters[i].style.display = 'block';
-//            }
-//        }
+        var self = this;
+        try
+        {
+            for(var i = 0; i < this.specFields.length; i++)
+            {
+                 if(this.specFields[i].ID == this.nodes.specFieldID.value)
+                 {
+                    $A(this.nodes.filtersDefaultGroup.getElementsByTagName("li")).each(function(li)
+                    {
+                          document.getElementsByClassName('filter_range', li)[0].style.display = (self.selectorValueTypes.indexOf(self.specFields[i].type) === -1) ? 'block' : 'none';
+                          
+                          
+                          
+                          if(self.selectorValueTypes.indexOf(self.specFields[i].type) !== -1)
+                          {
+                              var select = document.getElementsByClassName('filter_selector', li)[0].getElementsByTagName("select")[0];
+                              select.options.length = 0;
+                              for(var j = 0; j < self.specFields[i].values.length; j++)
+                              {
+                                  select.options[select.options.length] = new Option(self.specFields[i].values[j].value[self.languageCodes[0]], self.specFields[i].values[j].ID);
+                              }
+                              
+                          }                          
+                          
+                          document.getElementsByClassName('filter_selector', li)[0].style.display = (self.selectorValueTypes.indexOf(self.specFields[i].type) === -1) ? 'none' : 'block';
+                    });
+                     return;
+                 }
+            }
+        } catch(e)
+        {
+            jsTrace.debug(e);
+        }
     },
-
 
     /**
      * This method binds all default filters (those which are field in "Filters" step) and create new fields in "Translations"
@@ -311,7 +324,7 @@ Backend.Filter.prototype = {
         this.fieldsList = new ActiveList(this.nodes.filtersDefaultGroup.getElementsByTagName("ul")[0], {
             beforeSort: function(li, order)
             {
-                return self.links.sortFilters + '?target=' + this.ul.id + '&' + order;
+                return self.links.sortFilter + '?target=' + this.ul.id + '&' + order;
             },
             afterSort: function(li, response){    },
 
@@ -324,7 +337,7 @@ Backend.Filter.prototype = {
                     }
                     else
                     {
-                        return Backend.Filter.prototype.links.deleteValue + this.getRecordId(li);
+                        return Backend.Filter.prototype.links.deleteFilter + this.getRecordId(li);
                     }
                 }
             },
@@ -334,28 +347,28 @@ Backend.Filter.prototype = {
 
     rangeChangedAction: function(e)
     {
-		if(!e)
-		{
-			e = window.event;
-			e.target = e.srcElement;
-		}
+        if(!e)
+        {
+            e = window.event;
+            e.target = e.srcElement;
+        }
 
-		keyboard = new KeyboardEvent(e);
+        keyboard = new KeyboardEvent(e);
 
-		if(
-    		!(
-    		    // you can use +/- as the first character
-        		(keyboard.getCursorPosition() == 0 && !e.target.value.match('[\-\+]') && (keyboard.getKey() == 109 || keyboard.getKey() == 107 || (keyboard.isShift() && keyboard.getKey() == 61))) ||
-        		// You even can use dots or commas, but only once and not as the first symbol
-        		(e.target.value != '' && !e.target.value.match('[\.\,]') && [110, 188, 190].indexOf(keyboard.getKey()) >= 0) ||
-        		// at last but not the least i have implemanted such a great feature, that you can use digits to create numbers. [applause]
-        		([48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105].indexOf(keyboard.getKey()) > 0) ||
-        		// special chars
-        		([46, 8, 17, 16, 37, 38, 39, 40].indexOf(keyboard.getKey()) >= 0)
-    		)
-		){
-		    Event.stop(e);
-		}
+        if(
+            !(
+                // you can use +/- as the first character
+                (keyboard.getCursorPosition() == 0 && !e.target.value.match('[\-\+]') && (keyboard.getKey() == 109 || keyboard.getKey() == 107 || (keyboard.isShift() && keyboard.getKey() == 61))) ||
+                // You even can use dots or commas, but only once and not as the first symbol
+                (e.target.value != '' && !e.target.value.match('[\.\,]') && [110, 188, 190].indexOf(keyboard.getKey()) >= 0) ||
+                // at last but not the least i have implemanted such a great feature, that you can use digits to create numbers. [applause]
+                ([48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105].indexOf(keyboard.getKey()) > 0) ||
+                // special chars
+                ([46, 8, 17, 16, 37, 38, 39, 40].indexOf(keyboard.getKey()) >= 0)
+            )
+        ){
+            Event.stop(e);
+        }
     },
 
 
@@ -715,9 +728,8 @@ Backend.Filter.prototype = {
 
         Event.stop(e);
 
-        var splitedHref  = e.target.parentNode.parentNode.parentNode.id.match(/new(\d+)$/); //    splitedHref[splitedHref.length - 2] == 'new' ? true : false;
-        var isNew = splitedHref.length > 0;
-        var id = (isNew ? 'new' : '') + splitedHref[1];
+        var splitedHref  = e.target.parentNode.parentNode.parentNode.id.match(/(new)*(\d+)$/); //    splitedHref[splitedHref.length - 2] == 'new' ? true : false;
+        var id = splitedHref[0];
 
         for(var i = 1; i < this.languageCodes.length; i++)
         {
@@ -779,16 +791,19 @@ Backend.Filter.prototype = {
             // The field itself
             var input = li.getElementsByTagName("input")[0];
             input.name = "filters[" + id + "][name]["+this.languageCodes[0]+"]";
-            input.value = (value && value[this.languageCodes[0]]) ? value[this.languageCodes[0]] : '' ;
+            input.value = (value && value.name && value.name[this.languageCodes[0]]) ? value.name[this.languageCodes[0]] : '' ;
 
             var rangeStartInput = li.getElementsByTagName("input")[1];
             rangeStartInput.name = "filters[" + id + "][rangeStart]";
-            rangeStartInput.value = '1234567890';
-
+            rangeStartInput.value = (value && value.rangeStart) ? value.rangeStart : '' ;
+            
             var rangeEndInput = li.getElementsByTagName("input")[2];
             rangeEndInput.name = "filters[" + id + "][rangeEnd]";
-            rangeEndInput.value = '1234567890';
-
+            rangeEndInput.value = (value && value.rangeEnd) ? value.rangeEnd : '' ;
+            
+            var specFieldValueIDInput = li.getElementsByTagName("select")[0];
+            specFieldValueIDInput.name = "filters[" + id + "][specFieldValueID]";
+            specFieldValueIDInput.value = (value && value.specFieldValueID) ? value.specFieldValueID : '' ;
 
             // now insert all translation fields
             for(var i = 1; i < this.languageCodes.length; i++)
@@ -800,7 +815,7 @@ Backend.Filter.prototype = {
 
                 var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
                 inputTranslation.name = "filters[" + id + "][name][" + this.languageCodes[i] + "]";
-                inputTranslation.value = (value && value[this.languageCodes[i]]) ? value[this.languageCodes[i]] : '' ;
+                inputTranslation.value = (value && value.name && value.name[this.languageCodes[i]]) ? value.name[this.languageCodes[i]] : '' ;
 
                 var label = newValueTranslation.getElementsByTagName("label")[0];
                 label.appendChild(document.createTextNode(input.value));
