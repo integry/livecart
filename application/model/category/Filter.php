@@ -11,6 +11,7 @@ class Filter extends MultilingualObject
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("filterGroupID", "FilterGroup", "ID", "FilterGroup", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("specFieldValueID", "SpecFieldValue", "ID", "SpecFieldValue", ARInteger::instance()));
 
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance(2)));
@@ -51,6 +52,14 @@ class Filter extends MultilingualObject
 	    {
 	        $this->setValueByLang($fieldName, $lang, isset($fieldValue[$lang]) ? $fieldValue[$lang] : '');
 	    }
+	}
+	
+	/**
+	 * Delete spec field from database
+	 */
+	public static function delete($id)
+	{
+	    parent::deleteByID(__CLASS__, (int)$id);
 	}
 }
 

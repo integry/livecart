@@ -126,6 +126,17 @@ class SpecField extends MultilingualObject
 	{
 	    parent::deleteByID(__CLASS__, (int)$id);
 	}
+
+	/**
+	 * Loads a set of spec field records in current category
+	 *
+	 * @return ARSet
+	 */
+	public function getValuesList()
+	{
+		return SpecFieldValue::getRecordSetArray($this->getID());
+	}
+	
 }
 
 ?>
