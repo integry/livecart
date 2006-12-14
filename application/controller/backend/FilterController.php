@@ -43,7 +43,8 @@ class FilterController extends StoreManagementController
                 'ID' => $field['ID'],
                 'type' => $field['type'],
                 'dataType' => $field['dataType'],
-                'name' => isset($field['name'][$_lng = $this->store->getDefaultLanguageCode()]) ? $field['name'][$_lng] : ''
+                'name' => isset($field['name'][$_lng = $this->store->getDefaultLanguageCode()]) ? $field['name'][$_lng] : '',
+                'values' => SpecField::getInstanceByID($field['ID'])->getValuesList()
             );
         }
 
@@ -51,14 +52,11 @@ class FilterController extends StoreManagementController
         (
             'ID' => 'new',
             'name' => array('en' => 'blasdas', 'lt' => 'asdasdad', 'lv' => 'sdfsdfsd'),
-            'values' => Array(),
+            'values' => array(),
             'rootId' => 'filter_item_new_'.$categoryID.'_form',
             'categoryID' => $categoryID,
             'specFields' => $specFieldOptions
         );
-
-
-
 
         $response->setValue('filters', $filters);
         $response->setValue('blankFilter', $blankFilter);
@@ -153,6 +151,7 @@ class FilterController extends StoreManagementController
                     $filter->setLanguageField('name', @array_map($htmlspecialcharsUtf_8, $value['name']),  array_keys($this->config['languages']));
                     $filter->setFieldValue('rangeStart', $value['rangeStart']);
                     $filter->setFieldValue('rangeEnd', $value['rangeEnd']);
+                    $filter->setFieldValue('specFieldValueID', SpecFieldValue::getInstanceByID((int)$value['specFieldValueID']));
                     $filter->setFieldValue('filterGroupID', $filterGroup);
                     $filter->setFieldValue('position', $position);
 
@@ -195,7 +194,7 @@ class FilterController extends StoreManagementController
 
         if(!isset($values['name']) || empty($values['name'][$languageCodes[0]]))
         {
-            $errors['name'] = 'Name empty';
+            $errors['name'] = $this->translate('_error_name_empty');
         }
 
         return $errors;
@@ -224,18 +223,78 @@ class FilterController extends StoreManagementController
 
         $filterGroupArray['specFields'] = array();
         foreach ($specFieldsList = Category::getInstanceByID($filterGroupArray['categoryID'])->getSpecFieldList() as $field)
-        {
+        {                      
             $filterGroupArray['specFields'][] = array(
                 'ID' => $field['ID'],
                 'type' => $field['type'],
                 'dataType' => $field['dataType'],
-                'name' => isset($field['name'][$_lng = $this->store->getDefaultLanguageCode()]) ? $field['name'][$_lng] : ''
+                'name' => isset($field['name'][$_lng = $this->store->getDefaultLanguageCode()]) ? $field['name'][$_lng] : '',
+                'values' => SpecField::getInstanceByID($field['ID'])->getValuesList()
             );
         }
 
         return new JSONResponse($filterGroupArray);
     }
 
+    
+    public function deleteFilter()
+    {
+        if($id = $this->request->getValue("id", false))
+        {
+            Filter::delete($id);
+            return new JSONResponse(array('status' => 'success'));
+        }
+        else
+        {
+            return new JSONResponse(array('status' => 'failure'));
+        }
+    }
+    
+
+    public function delete()
+    {
+        if($id = $this->request->getValue("id", false))
+        {
+            SpecField::delete($id);
+            return new JSONResponse(array('status' => 'success'));
+        }
+        else
+        {
+            return new JSONResponse(array('status' => 'failure'));
+        }
+    }
+
+    public function sort()
+    {
+        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        {
+            if(!empty($key))
+            {
+                $group = FilterGroup::getInstanceByID((int)$key);
+                $group->setFieldValue('position', (int)$position);
+                $group->save();
+            }
+        }
+
+        return new JSONResponse(array('status' => 'success'));
+    }
+
+
+    public function sortFilter()
+    {
+        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        {
+            // Except new fields, because they are not yet in database
+            if(!empty($key) && !preg_match('/^new/', $key))
+            {
+                $filter = Filter::getInstanceByID((int)$key);
+                $filter->setFieldValue('position', (int)$position);
+                $filter->save();
+            }
+        }
+
+        return new JSONResponse(array('status' => 'success'));
+    }
 }
 
 ?>

@@ -224,7 +224,7 @@ class SpecFieldController extends StoreManagementController
 
         if(!isset($values['name']) || empty($values['name'][$languageCodes[0]]))
         {
-            $errors['name'] = 'Name empty';
+            $errors['name'] =$this->translate('_error_name_empty');
         }
 
         if(!isset($values['handle']) || preg_match('/[^\w\d_]/', $values['handle']))
@@ -285,13 +285,13 @@ class SpecFieldController extends StoreManagementController
 
     public function sort()
     {
-        foreach($this->request->getValue('specField_items_list') as $position => $key)
+        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
         {
             if(!empty($key))
             {
                 $specField = SpecField::getInstanceByID((int)$key);
                 $specField->setFieldValue('position', (int)$position);
-//                $specField->save();
+                $specField->save();
             }
         }
 
@@ -320,7 +320,7 @@ class SpecFieldController extends StoreManagementController
             {
                 $specField = SpecFieldValue::getInstanceByID((int)$key);
                 $specField->setFieldValue('position', (int)$position);
-//                $specField->save();
+                $specField->save();
             }
         }
 
