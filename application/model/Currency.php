@@ -19,6 +19,12 @@ class Currency extends ActiveRecord
 		$schema->registerField(new ARField("rate", ArFloat::instance(16)));
 		$schema->registerField(new ARField("lastUpdated", ArDateTime::instance()));
 		$schema->registerField(new ARField("isDefault", ArBool::instance()));
+		$schema->registerField(new ARField("position", ARInteger::instance()));
+	}
+
+	public function setAsDefault($default = true)
+	{
+	  	$this->isDefault->set((bool)$default);
 	}
 
 	public static function getCurrencies()
@@ -58,39 +64,6 @@ class Currency extends ActiveRecord
 			{
 				return $value;
 			}
-		}
-	}
-
-	/**
-	 * Sets default currency.
-	 * @param string $ID currency id
-	 */
-	public static function setDefault($ID)
-	{
-		$currSet = ActiveRecord::getRecordSet("Currency", new ArSelectFilter(), true);
-
-		$default = Currency::getDefaultCurrencyFromSet($currSet);
-		$new = ActiveRecord::getInstanceById("Currency", $ID, true);
-
-		$rate = $new->rate->get();
-
-		foreach($currSet as $record)
-		{
-			if ($record->getId() == $ID)
-			{
-				$record->rate->setNull();
-				$record->isDefault->set(1);
-			}
-			else if ($record->getId() == $default->getId())
-			{
-				$record->rate->set(1 / $rate);
-				$record->isDefault->set(0);
-			}
-			else
-			{
-				$record->rate->set($record->rate->get() / $rate);
-			}
-			$record->save();
 		}
 	}
 }

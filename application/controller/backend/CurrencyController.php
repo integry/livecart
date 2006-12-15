@@ -20,7 +20,8 @@ class CurrencyController extends StoreManagementController
 	public function index()
 	{
 		$filter = new ArSelectFilter();
-		$filter->setOrder(new ArFieldHandle("Currency", "isDefault"), ArSelectFilter::ORDER_DESC);
+		$filter->setOrder(new ArFieldHandle('Currency', 'position'), 'DESC');
+//		$filter->setOrder(new ArFieldHandle("Currency", "isDefault"), ArSelectFilter::ORDER_DESC);
 
 		$currSet = ActiveRecord::getRecordSet("Currency", $filter, true);
 
@@ -29,6 +30,8 @@ class CurrencyController extends StoreManagementController
 		{
 			$curr[$key]['name'] = $this->locale->info()->getCurrencyName($value["ID"]);
 		}
+
+		
 
 		$response = new ActionResponse();
 		$response->setValue("currencies", $curr);
@@ -80,14 +83,17 @@ class CurrencyController extends StoreManagementController
 		$filter->setLimit(1);
 		
 		$r = ActiveRecord::getRecordSet('Currency', $filter);
+		$max = $r->get(0);
 		
+		$position = $max->position->get() + 1;		
 		  
 		// create new record
 		$newCurrency = ActiveRecord::getNewInstance('Currency');
 	  	$newCurrency->setId($id);
 		
-		// set position ...
-		
+		$newCurrency->position->set($position);
+		$newCurrency->isDefault->set($isDefault);
+				
 		$newCurrency->save(ActiveRecord::PERFORM_INSERT);	  	
 		
 		$arr = $newCurrency->toArray();
@@ -105,10 +111,30 @@ class CurrencyController extends StoreManagementController
 	 */
 	public function setDefault()
 	{
-		Currency::setDefault($this->request->getValue("id"));
-		return new ActionRedirectResponse($this->request->getControllerName(), 
-                                      "index", 
-                                      array("id" => $this->request->getValue("id")));
+		$r = ActiveRecord::getInstanceByID('Currency', $this->request->getValue('id'), true);
+		
+		if (!$r->isExistingRecord())
+		{
+		  	
+			return new RawResponse(0);
+		}		
+		
+		echo $this->request->getValue('id');
+		
+		exit;
+		
+		ActiveRecord::beginTransaction();
+
+		$update = new ArUpdateFilter();
+		$update->addModifier('isDefault', 0);
+		ActiveRecord::updateRecordSet('Currency', $update);
+
+		$r->setAsDefault(true);
+		$r->save();
+
+		ActiveRecord::commit();
+
+		return new ActionRedirectResponse('backend.currency', 'index');
 	}
 
 	/**
