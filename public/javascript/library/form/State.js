@@ -101,6 +101,8 @@ Form.State = {
                 this.backups[form.backupId][elements[i].name][this.backups[form.backupId][elements[i].name].length] = value;
             }
         }
+        
+        var test = this.backups[form.backupId];
     },
 
 
@@ -196,10 +198,10 @@ Form.State = {
                 if(element.options && value.options)
                 {
                     element.options.length = 0;
-                    for(var oval in value.options)
-                    {
-                        element.options[element.options.length] = new Option(value.options[oval], oval);
-                    }
+                    $H(value.options).each(function(option) {
+                        element.options[element.options.length] = new Option(option.value, option.key);
+                    });
+
 
                     var test = element.options;
                 }
