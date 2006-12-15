@@ -1,13 +1,29 @@
-{includeJs file=library/ActiveList.js}
-{includeJs file=library/KeyboardEvent.js}
-{includeJs file=backend/Currency.js}
-{includeJs file=library/Debug.js}
+{includeJs file="library/ActiveList.js"}
+{includeJs file="library/KeyboardEvent.js"}
+{includeJs file="library/TabControl.js"}
+{includeJs file="backend/Currency.js"}
+
+{includeCss file="library/TabControl.css"}
+
 {includeCss file=library/ActiveList.css}
 {includeCss file=backend/Currency.css}
 
 {pageTitle}{t _currencies}{/pageTitle}
 {include file=layout/header.tpl}
 
+<div id="tabContainer">
+	<ul id="tabList">
+		<li id="tabManage" class="tab active"><a href="{link controller=backend.currency action=list}">Manage</a></li>
+		<li id="tabRates" class="tab inactive"><a href="{link controller=backend.currency action=rates}">Adjust Rates</a></li>
+		<li id="tabOptions" class="tab inactive"><a href="{link controller=backend.currency action=options}">Options</a></li>
+	</ul>
+	<div id="sectionContainer">
+		<div id="tabManageContent"></div>
+		<div id="tabRatesContent"></div>
+		<div id="tabOptionsContent"></div>
+	</div>
+</div>
+	
 <ul class="menu" id="currPageMenu">
 	<li><a href="#" onClick="curr.showAddForm(); return false;">{t _add_currency}</a></li>
 </ul>
@@ -49,6 +65,9 @@
 	     });
 	}	
 	initCurrencyList();
+	
+	new TabControl('tabContainer', 'sectionContainer');
+
 </script>
 {/literal}
 
