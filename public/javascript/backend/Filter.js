@@ -861,6 +861,7 @@ Backend.Filter.prototype = {
             Form.restore(this.nodes.form);
 
             this.changeMainTitleAction(this.nodes.name.value);
+            this.specFieldIDWasChangedAction();
         }
 
         // Use Active list toggleContainer() method if this filter is inside Active list

@@ -917,6 +917,7 @@ Backend.SpecField.prototype = {
 		{
             Form.restore(this.nodes.form);
 
+            this.typeWasChangedAction();
             this.changeMainTitleAction(this.nodes.name.value);
 		}
 
