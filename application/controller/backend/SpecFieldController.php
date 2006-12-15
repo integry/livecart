@@ -60,7 +60,7 @@ class SpecFieldController extends StoreManagementController
                 'deleteField' => 'delete field'
             ),
 
-            'selectorValueTypes' => array (1, 5),
+            'selectorValueTypes' => SpecField::getSelectorValueTypes(),
             'doNotTranslateTheseValueTypes' => array(2),
             'countNewValues' => 0
         );
@@ -125,6 +125,7 @@ class SpecFieldController extends StoreManagementController
         if($this->request->getValue('ID') == 'new')
         {
             $specField = SpecField::getNewInstance();
+            $specField->setFieldValue('position', 100000);
 
             if($categoryID = $this->request->getValue('categoryID', false))
             {
@@ -175,6 +176,7 @@ class SpecFieldController extends StoreManagementController
                     if(preg_match('/^new/', $key))
                     {
                         $specFieldValues = SpecFieldValue::getNewInstance();
+                        $specFieldValues->setFieldValue('position', 100000);
                     }
                     else
                     {
@@ -216,15 +218,13 @@ class SpecFieldController extends StoreManagementController
      */
     private function validateSpecField($values = array())
     {
-//        print_r($_POST);
-
         $errors = array();
 
         $languageCodes = array_keys($this->specFieldConfig['languages']);
 
-        if(!isset($values['name']) || empty($values['name'][$languageCodes[0]]))
+        if(!isset($values['name']) || $values['name'][$languageCodes[0]] == '')
         {
-            $errors['name'] =$this->translate('_error_name_empty');
+            $errors['name'] = $this->translate('_error_name_empty');
         }
 
         if(!isset($values['handle']) || preg_match('/[^\w\d_]/', $values['handle']))
@@ -245,7 +245,7 @@ class SpecFieldController extends StoreManagementController
             }
         }
 
-        if(!isset($values['handle']) || empty($values['handle']))
+        if(!isset($values['handle']) || $values['handle'] == '')
         {
             $errors['handle'] = $this->translate('_error_handle_empty');
         }

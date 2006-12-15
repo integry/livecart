@@ -21,8 +21,8 @@ class FilterController extends StoreManagementController
         $this->createConfig();
     }
 
-	public function index()
-	{
+    public function index()
+    {
         $response = new ActionResponse();
 
         $categoryID = (int)$this->request->getValue('id');
@@ -51,7 +51,7 @@ class FilterController extends StoreManagementController
         $blankFilter = array
         (
             'ID' => 'new',
-            'name' => array('en' => 'blasdas', 'lt' => 'asdasdad', 'lv' => 'sdfsdfsd'),
+            'name' => array(),
             'values' => array(),
             'rootId' => 'filter_item_new_'.$categoryID.'_form',
             'categoryID' => $categoryID,
@@ -65,7 +65,7 @@ class FilterController extends StoreManagementController
         $response->setValue('defaultLangCode', $this->store->getDefaultLanguageCode());
 
         return $response;
-	}
+    }
 
     private function createConfig()
     {
@@ -79,16 +79,15 @@ class FilterController extends StoreManagementController
         }
 
         $this->config = array (
-            'languages' => $languages,
+            'languages'=> $languages,
 
             'messages' => array (
                 'deleteField' => 'delete field'
-            ),
+                ),
 
-            'selectorValueTypes' => array (1, 5),
-            'doNotTranslateTheseValueTypes' => array(2),
+            'selectorValueTypes' => SpecField::getSelectorValueTypes(),
             'countNewFilters' => 0
-        );
+            );
     }
 
     /**
@@ -101,12 +100,13 @@ class FilterController extends StoreManagementController
         if($this->request->getValue('ID') == 'new')
         {
             $filterGroup = FilterGroup::getNewInstance();
+            $filterGroup->setFieldValue('position', 100000); // Now new group will appear last in active list.
 
             if($specFieldID = $this->request->getValue('specFieldID', false))
             {
                 $filterGroup->setFieldValue('specFieldID', SpecField::getInstanceByID((int)$specFieldID));
-            }
 
+            }
         }
         else
         {
@@ -132,7 +132,12 @@ class FilterController extends StoreManagementController
             $filterGroup->setFieldValue('specFieldID', $specFieldID);
 
             $filterGroup->save();
+            
             $filterGroupID = $filterGroup->getID();
+            
+            $specField = $filterGroup->getFieldValue('specFieldID');
+            $specField->load();
+            $specFieldType = $specField->getFieldValue('type');
 
             if(!empty($filters))
             {
@@ -142,16 +147,26 @@ class FilterController extends StoreManagementController
                     if(preg_match('/^new/', $key))
                     {
                         $filter = Filter::getNewInstance();
+                        $filter->setFieldValue('position', 100000); // Now new filter will appear last in active list.
                     }
                     else
                     {
-                       $filter = Filter::getInstanceByID((int)$key);
+                        $filter = Filter::getInstanceByID((int)$key);
                     }
 
                     $filter->setLanguageField('name', @array_map($htmlspecialcharsUtf_8, $value['name']),  array_keys($this->config['languages']));
-                    $filter->setFieldValue('rangeStart', $value['rangeStart']);
-                    $filter->setFieldValue('rangeEnd', $value['rangeEnd']);
-                    $filter->setFieldValue('specFieldValueID', SpecFieldValue::getInstanceByID((int)$value['specFieldValueID']));
+                    
+                    if(!in_array($specFieldType, $this->config['selectorValueTypes']))
+                    {
+                        $filter->setFieldValue('rangeStart', $value['rangeStart']);
+                        $filter->setFieldValue('rangeEnd', $value['rangeEnd']);
+                    }
+                    else
+                    {
+                        $filter->setFieldValue('specFieldValueID', SpecFieldValue::getInstanceByID((int)$value['specFieldValueID']));
+                    }
+                    
+                    
                     $filter->setFieldValue('filterGroupID', $filterGroup);
                     $filter->setFieldValue('position', $position);
 
@@ -169,15 +184,15 @@ class FilterController extends StoreManagementController
         }
     }
 
-	public function create()
-	{
-		$filter = ActiveRecordModel::getNewInstance("Filter");
-		srand();
-		$filter->setValueByLang("name", "en", "This is my test filter " . rand());
-		$filter->rangeStart->set(rand());
-		$filter->rangeEnd->set(rand());
-		$filter->save();
-	}
+    public function create()
+    {
+        $filter = ActiveRecordModel::getNewInstance("Filter");
+        srand();
+        $filter->setValueByLang("name", "en", "This is my test filter " . rand());
+        $filter->rangeStart->set(rand());
+        $filter->rangeEnd->set(rand());
+        $filter->save();
+    }
 
 
     /**
@@ -192,7 +207,7 @@ class FilterController extends StoreManagementController
 
         $languageCodes = array_keys($this->config['languages']);
 
-        if(!isset($values['name']) || empty($values['name'][$languageCodes[0]]))
+        if(!isset($values['name']) || $values['name'][$languageCodes[0]] == '')
         {
             $errors['name'] = $this->translate('_error_name_empty');
         }
@@ -223,20 +238,20 @@ class FilterController extends StoreManagementController
 
         $filterGroupArray['specFields'] = array();
         foreach ($specFieldsList = Category::getInstanceByID($filterGroupArray['categoryID'])->getSpecFieldList() as $field)
-        {                      
+        {
             $filterGroupArray['specFields'][] = array(
                 'ID' => $field['ID'],
                 'type' => $field['type'],
                 'dataType' => $field['dataType'],
                 'name' => isset($field['name'][$_lng = $this->store->getDefaultLanguageCode()]) ? $field['name'][$_lng] : '',
                 'values' => SpecField::getInstanceByID($field['ID'])->getValuesList()
-            );
+                );
         }
 
         return new JSONResponse($filterGroupArray);
     }
 
-    
+
     public function deleteFilter()
     {
         if($id = $this->request->getValue("id", false))
@@ -249,13 +264,13 @@ class FilterController extends StoreManagementController
             return new JSONResponse(array('status' => 'failure'));
         }
     }
-    
+
 
     public function delete()
     {
         if($id = $this->request->getValue("id", false))
         {
-            SpecField::delete($id);
+            FilterGroup::delete($id);
             return new JSONResponse(array('status' => 'success'));
         }
         else
