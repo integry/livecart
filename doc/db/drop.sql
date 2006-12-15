@@ -5,7 +5,7 @@
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database drop script                            #
-# Created on:            2006-12-14 17:00                                #
+# Created on:            2006-12-15 17:11                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -85,7 +85,7 @@ DROP TABLE Product;
 
 # Drop constraints #
 
-ALTER TABLE Category ALTER COLUMN isActive DROP DEFAULT;
+ALTER TABLE Category ALTER COLUMN isEnabled DROP DEFAULT;
 
 ALTER TABLE Category ALTER COLUMN position DROP DEFAULT;
 
@@ -208,6 +208,8 @@ DROP TABLE ProductPrice;
 # Drop constraints #
 
 ALTER TABLE Currency ALTER COLUMN isDefault DROP DEFAULT;
+
+ALTER TABLE Currency ALTER COLUMN isEnabled DROP DEFAULT;
 
 ALTER TABLE Currency ALTER COLUMN position DROP DEFAULT;
 

@@ -58,7 +58,7 @@
 	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
 
 	/**
-	 * URL assisgment for internal javascript requests
+	 * URL assigment for internal javascript requests
 	 */
 	var newNodeUrl = '{link controller=backend.category action=create id=%id%}';
 	var removeNodeUrl = '{link controller=backend.category action=remove id=%id%}';

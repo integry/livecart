@@ -5,7 +5,7 @@
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database creation script                        #
-# Created on:            2006-12-14 17:00                                #
+# Created on:            2006-12-15 17:11                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -61,7 +61,8 @@ CREATE TABLE Category (
     name TEXT,
     description TEXT,
     keywords TEXT,
-    isActive BOOL DEFAULT 1,
+    productCount INTEGER UNSIGNED,
+    isEnabled BOOL DEFAULT 1,
     handle VARCHAR(40),
     position INTEGER UNSIGNED DEFAULT 0,
     lft INTEGER,
@@ -190,6 +191,7 @@ CREATE TABLE Currency (
     rate FLOAT(10,5),
     lastUpdated TIMESTAMP,
     isDefault BOOL DEFAULT 0,
+    isEnabled BOOL DEFAULT 0,
     position INTEGER UNSIGNED DEFAULT 0,
     CONSTRAINT PK_Currency PRIMARY KEY (ID)
 );
