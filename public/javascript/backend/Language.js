@@ -89,7 +89,7 @@ Backend.LanguageIndex.prototype =
 		url = this.statusUrl + langId + "?status=" + status;
 
 		img = document.createElement('img');
-		img.src = 'image/backend/list/indicator.gif';
+		img.src = 'image/indicator.gif';
 		img.className = 'activateIndicator';
 										
 		checkBox = document.getElementById('languageList_enable_' + langId);

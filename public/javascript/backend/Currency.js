@@ -72,8 +72,21 @@ Backend.Currency.prototype =
 		item.style.display = '';
 								
 		new Effect.Highlight(item, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
-		addlog(item);
 	},	
+	
+	setEnabled: function(id, status) 
+	{
+		url = this.statusUrl + "?id=" + id + "&status=" + status;
+
+		img = document.createElement('img');
+		img.src = 'image/indicator.gif';
+		img.className = 'activateIndicator';
+										
+		checkBox = document.getElementById('currencyList_enable_' + id);
+		checkBox.parentNode.replaceChild(img, checkBox);
+		
+		var updater = new Ajax.Updater('currencyList_container_' + id, url);
+	},			
 	
 	setFormUrl: function(url)
 	{

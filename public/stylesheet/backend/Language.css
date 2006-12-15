@@ -55,6 +55,7 @@ label.radio {
 
 #languageList div {
   	padding-left: 59px;
+	font-size: smaller;
 }
 
 #langDefault {
