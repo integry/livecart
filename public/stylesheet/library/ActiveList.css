@@ -29,12 +29,12 @@ li.activeList_odd, .activeList_even
     margin-top: 2px;
 }
 
-li.activeList_odd
+ul li.activeList_odd
 {
     background: #F0F0FF;
 }
 
-.activeList_even
+ul li.activeList_even
 {
     background: #EFF4F6;
 }

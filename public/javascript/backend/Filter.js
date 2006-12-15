@@ -142,29 +142,30 @@ Backend.Filter.prototype = {
 
         this.nodes.parent = document.getElementById(this.rootId);
 
-        this.nodes.form                           = this.nodes.parent.getElementsByTagName("form")[0];
+        this.nodes.form                   = this.nodes.parent.getElementsByTagName("form")[0];
 
-        this.nodes.id                               = document.getElementsByClassName(this.cssPrefix + "form_id", this.nodes.parent)[0];
-        this.nodes.name                = document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
-        this.nodes.specFieldID             = document.getElementsByClassName(this.cssPrefix + "form_specFieldID", this.nodes.parent)[0];
+        this.nodes.id                     = document.getElementsByClassName(this.cssPrefix + "form_id", this.nodes.parent)[0];
+        this.nodes.name                   = document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
+        this.nodes.specFieldID            = document.getElementsByClassName(this.cssPrefix + "form_specFieldID", this.nodes.parent)[0];
 
-        this.nodes.stepTranslations     = document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
-        this.nodes.stepMain                  = document.getElementsByClassName(this.cssPrefix + "step_main", this.nodes.parent)[0];
+        this.nodes.stepTranslations       = document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
+        this.nodes.stepMain               = document.getElementsByClassName(this.cssPrefix + "step_main", this.nodes.parent)[0];
         this.nodes.stepLevOne             = document.getElementsByClassName(this.cssPrefix + "step_lev1", this.nodes.parent);
+        this.nodes.generateFiltersLink    = document.getElementsByClassName(this.cssPrefix + "generate_filters", this.nodes.parent)[0];
 
         for(var i = 0; i < this.nodes.stepLevOne.length; i++)
         {
             if(!this.nodes.stepLevOne[i].id) this.nodes.stepLevOne[i].id = this.nodes.stepLevOne[i].className.replace(/ /, "_") + "_" + this.id;
         }
 
-        this.nodes.mainTitle               = document.getElementsByClassName(this.cssPrefix + "title", this.nodes.parent)[0];
+        this.nodes.mainTitle              = document.getElementsByClassName(this.cssPrefix + "title", this.nodes.parent)[0];
         this.nodes.stateLinks             = document.getElementsByClassName(this.cssPrefix + "change_state", this.nodes.parent);
-        this.nodes.cancel                    = document.getElementsByClassName(this.cssPrefix + "cancel", this.nodes.parent)[0];
-        this.nodes.save                       = document.getElementsByClassName(this.cssPrefix + "save", this.nodes.parent)[0];
+        this.nodes.cancel                 = document.getElementsByClassName(this.cssPrefix + "cancel", this.nodes.parent)[0];
+        this.nodes.save                   = document.getElementsByClassName(this.cssPrefix + "save", this.nodes.parent)[0];
 
-        this.nodes.translationsLinks     = document.getElementsByClassName(this.cssPrefix + "form_filters_translations_language_links", this.nodes.parent)[0];
-        this.nodes.filtersDefaultGroup     = document.getElementsByClassName(this.cssPrefix + "form_filters_group", this.nodes.parent)[0];
-        this.nodes.addFilterLink         = this.nodes.filtersDefaultGroup.getElementsByClassName(this.cssPrefix + "add_filter", this.nodes.parent)[0];
+        this.nodes.translationsLinks      = document.getElementsByClassName(this.cssPrefix + "form_filters_translations_language_links", this.nodes.parent)[0];
+        this.nodes.filtersDefaultGroup    = document.getElementsByClassName(this.cssPrefix + "form_filters_group", this.nodes.parent)[0];
+        this.nodes.addFilterLink          = this.nodes.filtersDefaultGroup.getElementsByClassName(this.cssPrefix + "add_filter", this.nodes.parent)[0];
 
         var ul = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0];
         ul.id = this.cssPrefix + "form_"+this.id+'_filters_'+this.languageCodes[0];
@@ -183,6 +184,75 @@ Backend.Filter.prototype = {
     },
 
 
+    generateFiltersAction: function(e)
+    {
+        var self = this;
+    
+        if(!e)
+        {
+            e = window.event;
+            e.target = e.srcElement;
+        }
+
+
+
+        Event.stop(e);
+    
+        // execute the action
+        new Ajax.Request(
+                this.links.generateFilters + "?specFieldID="+this.nodes.specFieldID.value,
+                {
+                    method: 'get',
+                    onComplete: function(param)
+                    {
+                        self.addGeneratedFilters(param.responseText)
+                    }
+                });                
+    },
+    
+    addGeneratedFilters: function(jsonString)
+    {
+        var self = this;
+    
+        try
+        {
+            var jsonResponse = eval("("+jsonString+")");
+                        
+            for(var i = 0; i < this.specFields.length; i++)
+            {
+                 if(this.specFields[i].ID == this.nodes.specFieldID.value)
+                 {
+                    var specField = this.specFields[i];
+                    if(this.selectorValueTypes.indexOf(specField.type) !== -1)
+                    {
+                        jsTrace.send("----");
+                        $A(this.nodes.filtersDefaultGroup.getElementsByTagName("li")).each(function(li)
+                        {
+                            if(!Element.hasClassName(li, 'dom_template'))
+                            {
+                                jsTrace.send(document.getElementsByClassName('filter_selector', li)[0].getElementsByTagName("select")[0].value);
+                                delete jsonResponse.filters[document.getElementsByClassName('filter_selector', li)[0].getElementsByTagName("select")[0].value];
+                            }
+                        });
+                          
+                    }
+            
+                    $H(jsonResponse.filters).each(function(filter) {
+                        self.addFilter({"specFieldID": filter.key}, "new" + this.countNewFilters, true);
+                    });
+                    
+                    return;
+                 }
+            }
+            
+        }
+        catch(e)
+        {
+            jsTrace.debug(e);
+            alert("Json error");
+        }
+    },  
+
 
     /**
      * Binds fields to some events
@@ -194,6 +264,8 @@ Backend.Filter.prototype = {
     {
         var self = this;
 
+    try
+    {
         for(var i = 0; i < this.nodes.stateLinks.length; i++)
         {
             this.nodes.stateLinks[i].onclick = this.changeStateAction.bind(this);
@@ -205,6 +277,8 @@ Backend.Filter.prototype = {
 
         this.nodes.cancel.onclick = this.cancelAction.bind(this);
         this.nodes.save.onclick = this.saveAction.bind(this);
+        
+        this.nodes.generateFiltersLink.onclick = this.generateFiltersAction.bind(this);
 
         // Also some actions must be executed on load. Be aware of the order in which those actions are called
         this.fillSpecFieldsSelect();
@@ -217,7 +291,10 @@ Backend.Filter.prototype = {
 
         this.bindTranslationFilters();
         this.loadTypes();
-
+    } catch(e)
+    {
+        jsTrace.debug(e);
+    }
 
         new Form.EventObserver(this.nodes.form, function() { self.formChanged = true; } );
         Form.backup(this.nodes.form);
@@ -268,37 +345,30 @@ Backend.Filter.prototype = {
     specFieldIDWasChangedAction: function()
     {
         var self = this;
-        try
+        for(var i = 0; i < this.specFields.length; i++)
         {
-            for(var i = 0; i < this.specFields.length; i++)
-            {
-                 if(this.specFields[i].ID == this.nodes.specFieldID.value)
-                 {
-                    $A(this.nodes.filtersDefaultGroup.getElementsByTagName("li")).each(function(li)
+             if(this.specFields[i].ID == this.nodes.specFieldID.value)
+             {
+                $A(this.nodes.filtersDefaultGroup.getElementsByTagName("li")).each(function(li)
+                {
+                    document.getElementsByClassName('filter_range', li)[0].style.display = (self.selectorValueTypes.indexOf(self.specFields[i].type) === -1) ? 'block' : 'none';
+                                                
+                    if(self.selectorValueTypes.indexOf(self.specFields[i].type) !== -1)
                     {
-                          document.getElementsByClassName('filter_range', li)[0].style.display = (self.selectorValueTypes.indexOf(self.specFields[i].type) === -1) ? 'block' : 'none';
-                          
-                          
-                          
-                          if(self.selectorValueTypes.indexOf(self.specFields[i].type) !== -1)
-                          {
-                              var select = document.getElementsByClassName('filter_selector', li)[0].getElementsByTagName("select")[0];
-                              select.options.length = 0;
-                              for(var j = 0; j < self.specFields[i].values.length; j++)
-                              {
-                                  select.options[select.options.length] = new Option(self.specFields[i].values[j].value[self.languageCodes[0]], self.specFields[i].values[j].ID);
-                              }
-                              
-                          }                          
-                          
-                          document.getElementsByClassName('filter_selector', li)[0].style.display = (self.selectorValueTypes.indexOf(self.specFields[i].type) === -1) ? 'none' : 'block';
-                    });
-                     return;
-                 }
-            }
-        } catch(e)
-        {
-            jsTrace.debug(e);
+                        var select = document.getElementsByClassName('filter_selector', li)[0].getElementsByTagName("select")[0];
+                        select.options.length = 0;
+                        for(var j = 0; j < self.specFields[i].values.length; j++)
+                        {
+                           select.options[select.options.length] = new Option(self.specFields[i].values[j].value[self.languageCodes[0]], self.specFields[i].values[j].ID);
+                        } 
+                    }                          
+                    
+                    document.getElementsByClassName('filter_selector', li)[0].style.display = (self.selectorValueTypes.indexOf(self.specFields[i].type) === -1) ? 'none' : 'block';
+                });
+                
+                
+                return;
+             }
         }
     },
 

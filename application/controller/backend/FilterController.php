@@ -310,6 +310,16 @@ class FilterController extends StoreManagementController
 
         return new JSONResponse(array('status' => 'success'));
     }
+    
+    public function generateFilters()
+    {        
+        $specFieldValues = SpecField::getInstanceByID((int)$this->request->getValue('specFieldID'), true)->getValuesList();        
+        
+        $return = array();
+        foreach($specFieldValues as $value) $return[$value['ID']] = $value['ID'];
+        
+        return new JSONResponse(array("status" => "success", "filters" => $return));
+    }
 }
 
 ?>

@@ -59,6 +59,7 @@
                 </p>
                 <p>
                     <a href="#add" class="filter_add_filter">{t _Filter_add_filter}</a>
+                    <a href="#generate" class="filter_generate_filters">{t _Filter_generate_filters}</a>
                 </p>
 			</div>
 

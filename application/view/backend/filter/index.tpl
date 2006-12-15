@@ -11,6 +11,7 @@
     Backend.Filter.prototype.links.sortGroup = {/literal}'{link controller=backend.filter action=sort}/'{literal};
     Backend.Filter.prototype.links.deleteFilter = {/literal}'{link controller=backend.filter action=deleteFilter}/'{literal};
     Backend.Filter.prototype.links.sortFilter = {/literal}'{link controller=backend.filter action=sortFilter}/'{literal};
+    Backend.Filter.prototype.links.generateFilters = {/literal}'{link controller=backend.filter action=generateFilters}/'{literal};
 
 
     {/literal}
