@@ -20,7 +20,7 @@ class CurrencyController extends StoreManagementController
 	public function index()
 	{
 		$filter = new ArSelectFilter();
-		$filter->setOrder(new ArFieldHandle('Currency', 'position'), 'DESC');
+		$filter->setOrder(new ArFieldHandle('Currency', 'position'), 'ASC');
 //		$filter->setOrder(new ArFieldHandle("Currency", "isDefault"), ArSelectFilter::ORDER_DESC);
 
 		$currSet = ActiveRecord::getRecordSet("Currency", $filter, true);
@@ -29,9 +29,7 @@ class CurrencyController extends StoreManagementController
 		foreach($curr as $key => $value)
 		{
 			$curr[$key]['name'] = $this->locale->info()->getCurrencyName($value["ID"]);
-		}
-
-		
+		}		
 
 		$response = new ActionResponse();
 		$response->setValue("currencies", $curr);
@@ -111,18 +109,15 @@ class CurrencyController extends StoreManagementController
 	 */
 	public function setDefault()
 	{
-		$r = ActiveRecord::getInstanceByID('Currency', $this->request->getValue('id'), true);
-		
-		if (!$r->isExistingRecord())
+		try 
 		{
-		  	
-			return new RawResponse(0);
-		}		
-		
-		echo $this->request->getValue('id');
-		
-		exit;
-		
+			$r = ActiveRecord::getInstanceByID('Currency', $this->request->getValue('id'), true);
+		}
+		catch (ArNotFoundException $e)
+		{
+			return new RawResponse(0);  	
+		}
+			
 		ActiveRecord::beginTransaction();
 
 		$update = new ArUpdateFilter();
@@ -135,6 +130,83 @@ class CurrencyController extends StoreManagementController
 		ActiveRecord::commit();
 
 		return new ActionRedirectResponse('backend.currency', 'index');
+	}
+
+	/**
+	 * Save currency order
+	 * @return RawResponse
+	 */
+	public function saveOrder()
+	{
+	  	$order = $this->request->getValue('currencyList');
+		foreach ($order as $key => $value)
+		{
+			$update = new ARUpdateFilter();
+			$update->setCondition(new EqualsCond(new ARFieldHandle('Currency', 'ID'), $value));
+			$update->addModifier('position', $key);
+			ActiveRecord::updateRecordSet('Currency', $update);  	
+		}
+
+		$resp = new RawResponse();
+	  	$resp->setContent($this->request->getValue('draggedId'));
+		return $resp;		  	
+	}
+
+	/**
+	 * Sets if currency is enabled
+	 * @return ActionResponse
+	 */
+	public function setEnabled()
+	{
+		$id = $this->request->getValue('id');		
+		$curr = ActiveRecord::getInstanceById('Currency', $id, true);
+		$curr->isEnabled->set((int)(bool)$this->request->getValue("status"));
+		$curr->save();
+		
+		$response = new ActionResponse();
+		$item = $curr->toArray();
+		$item['name'] = $this->locale->info()->getCurrencyName($item['ID']);
+		$response->setValue('item', $item);
+
+		return $response;		
+	}
+
+	/**
+	 * Remove a currency
+	 * @return RawResponse
+	 */
+	public function delete()
+	{  	
+		$id = $this->request->getValue('id');
+		
+		try
+	  	{
+			// make sure the currency record exists
+			$inst = ActiveRecord::getInstanceById('Currency', $id, true);
+			
+			$success = $id;
+			
+			// make sure it's not the default currency
+			if (true == $inst->isDefault->get())			
+			{
+				$success = false;
+			}
+			
+			// remove it
+			if ($success)
+			{
+				ActiveRecord::deleteByID('Currency', $id);
+			}
+
+		}
+		catch (Exception $exc)
+		{			  	
+		  	$success = false;
+		}
+		  
+		$resp = new RawResponse();
+	  	$resp->setContent($success);
+		return $resp;
 	}
 
 	/**

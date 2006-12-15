@@ -23,7 +23,7 @@
 
 <br />
 
-<ul id="languageList" class="activeList_add_delete">
+<ul id="languageList" class="activeList_add_delete activeList_add_edit">
 {foreach from=$languagesList item=item}
 	{include file="backend/language/listItem.tpl" showContainer=true}
 {/foreach}
@@ -34,7 +34,7 @@
     function initLangList()
     {	
 		new ActiveList('languageList', {
-	         beforeEdit:     function(li) { return 'sort.php?' },
+	         beforeEdit:     function(li) { window.location.href = '{/literal}{link controller=backend.language action=edit}{literal}/' +  this.getRecordId(li); },
 	         beforeSort:     function(li, order) 
 			 { 
 				 return '{/literal}{link controller=backend.language action=saveorder}{literal}?draggedId=' + this.getRecordId(li) + '&' + order 

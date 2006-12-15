@@ -17,17 +17,13 @@
 		</span>
 		
 		<div>
-			<small><a href="{link controller=backend.language action=edit id=$item.ID}" class="listLink">{t _edit_definitions}</a>
-	
-				{if $item.isEnabled}		
-			 | 
+			{if $item.isEnabled}
 				{if !$item.isDefault}
 			<a href="{link controller=backend.language action=setDefault id=$item.ID}" class="listLink">{t _set_as_default}</a>
 				{else}
 					<span id="langDefault">{t _default_language}</span>
 				{/if}
-				{/if}
-			</small>
+			{/if}
 		</div>
 	</span>			
 {if $showContainer}</li>{/if}

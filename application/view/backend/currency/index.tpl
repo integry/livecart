@@ -30,7 +30,7 @@
 	curr = new Backend.Currency();
 	curr.setFormUrl('{/literal}{link controller=backend.currency action=addForm}{literal}');
 	curr.setAddUrl('{/literal}{link controller=backend.currency action=add}{literal}');
-	curr.setStatusUrl('{/literal}{link controller=backend.currency action=enable}{literal}');
+	curr.setStatusUrl('{/literal}{link controller=backend.currency action=setEnabled}{literal}');
     function initCurrencyList()
     {	
 		new ActiveList('currencyList', {
@@ -41,7 +41,7 @@
 			   },
 	         beforeDelete:   function(li)
 	         {
-	             if(confirm('{/literal}{tn _confirm_delete}{literal}')) return '{/literal}{link controller=backend.currency action=delete}{literal}/' + this.getRecordId(li)
+	             if(confirm('{/literal}{tn _confirm_delete}{literal}')) return '{/literal}{link controller=backend.currency action=delete}{literal}?id=' + this.getRecordId(li)
 	         },
 	         afterEdit:      function(li, response) {  },
 	         afterSort:      function(li, response) {  },

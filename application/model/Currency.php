@@ -19,6 +19,7 @@ class Currency extends ActiveRecord
 		$schema->registerField(new ARField("rate", ArFloat::instance(16)));
 		$schema->registerField(new ARField("lastUpdated", ArDateTime::instance()));
 		$schema->registerField(new ARField("isDefault", ArBool::instance()));
+		$schema->registerField(new ARField("isEnabled", ArBool::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance()));
 	}
 
