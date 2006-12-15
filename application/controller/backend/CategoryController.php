@@ -160,7 +160,6 @@ class CategoryController extends StoreManagementController
 		$form = new Form($this->buildValidator());
 		return $form;
 	}
-
 }
 
 ?>
