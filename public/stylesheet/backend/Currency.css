@@ -11,17 +11,10 @@
 	margin-bottom: 10px;
 }
 
-.activeList_icons {
-	height: 50px;
-	clear: none;
-}
-
-.enabled_0 {
-  	color: #AAAAAA;
-}
-
-.enabled_1 {
-  
+#currencyList .activeList_icons {
+	position: absolute;
+	left: 0px;
+	width: auto;
 }
 
 .currTitle {
@@ -34,10 +27,14 @@
 	float: none;
 }
 
-#currencyList div {
-  	padding-left: 59px;
+#currencyList .currListMenu {
+
 }
 
 #currDefault {
   	font-weight: bold;
+}
+
+.currListContainer {
+  	padding-left: 40px;
 }

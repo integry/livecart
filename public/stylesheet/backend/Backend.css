@@ -37,8 +37,8 @@ a, a:visited
 /*************************** 
 	Common classes 
 ***************************/
-.altrow { /* used for styling "zebra" tables */
-  	background-color: #EEEEEE;
+.disabled {
+  	color: #AAAAAA;
 }
 
 .menuFieldSet {

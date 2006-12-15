@@ -29,6 +29,7 @@ li.activeList_odd, .activeList_even
     margin-top: 2px;
 }
 
+/*
 ul li.activeList_odd
 {
     background: #F0F0FF;
@@ -38,6 +39,7 @@ ul li.activeList_even
 {
     background: #EFF4F6;
 }
+*/
 
 li.activeList_even, li.activeList_odd {
   	border: 2px solid #EEEEEE;

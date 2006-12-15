@@ -30,17 +30,10 @@ label.radio {
   	display: none;
 }
 
-.activeList_icons {
-	height: 50px;
-	clear: none;
-}
-
-.enabled_0 {
-  	color: #AAAAAA;
-}
-
-.enabled_1 {
-  
+#languageList .activeList_icons {
+	position: absolute;
+	left: 0px;
+	width: auto;
 }
 
 .langTitle {
@@ -53,13 +46,16 @@ label.radio {
 	float: none;
 }
 
-#languageList div {
-  	padding-left: 59px;
+#languageList .langListMenu {
 	font-size: smaller;
 }
 
 #langDefault {
   	font-weight: bold;
+}
+
+.langListContainer {
+  	padding-left: 60px;
 }
 
 /* edit */
