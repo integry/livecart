@@ -1,0 +1,1 @@
+{include file=backend/currency/listItem.tpl showContainer=true}
