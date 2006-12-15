@@ -29,6 +29,11 @@ class FilterGroup extends MultilingualObject
 		$filter->save();
 	}
 
+	/**
+	 * Get new instance of FilterGroup record
+	 *
+	 * @return ActiveRecord
+	 */
 	public static function getNewInstance()
 	{
 		return parent::getNewInstance(__CLASS__);
@@ -66,6 +71,10 @@ class FilterGroup extends MultilingualObject
 	    return parent::getRecordSetArray(__CLASS__, $filter);
 	}
 
+	public static function delete($id)
+	{
+	    return parent::deleteByID(__CLASS__, $id);
+	}
 
 	/**
 	 * Loads a set of spec field records in current category
