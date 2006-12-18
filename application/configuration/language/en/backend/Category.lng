@@ -29,3 +29,21 @@ _Filter_add_filter=Add filter
 _Filter_value=Value
 _Filter_generate_filters=Generate filters
 _Filter_date_range=Date between
+
+#index
+_products=Products
+_category_details=Category Details
+_attributes=Attributes
+_filters=Filters
+_images=Images
+_articles=Articles
+_create_subcategory=Create a new sub-category
+_remove_category=Remove selected category
+
+#form
+_category_name=Category Name
+_details=Details
+_keywords=Keywords
+_save=Save
+_cancel=Cancel
+_active=Active

@@ -38,4 +38,5 @@ Learn to use this page: <img src="image/backend/doc/Language.jpg">',
   '_confirm_delete' => 'Are you sure you wish to delete this language?',
   '_collapse_all' => 'Collapse all',
   '_expand_all' => 'Expand all',
+  '_live_translate' => 'Translate',
 ); ?>

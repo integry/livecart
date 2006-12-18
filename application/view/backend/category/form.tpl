@@ -2,15 +2,15 @@
 
 {assign var="action" value="create"}
 
-{form handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="new LiveCart.AjaxUpdater(this, '', '');"}
+{form id="categoryForm_$categoryId" handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="new Ajax.Request()"}
 	<fieldset id="mainFieldset">
-		<legend>Category details</legend>
+		<legend>{t _category_details}</legend>
 		<p>
-			<label for="name_{$categoryId}">Category name:</label>
+			<label for="name_{$categoryId}">{t _category_name}:</label>
 			{textfield name="name" id="name_$categoryId"}
 		</p>
 		<p>
-			<label for="details_{$categoryId}">Details:</label>
+			<label for="details_{$categoryId}">{t _details}:</label>
 			{textarea name="details" id="details_$categoryId"}
 		</p>
 		<p>
@@ -19,7 +19,7 @@
 		</p>
 
 		<p class="checkbox">
-			{checkbox name="isActive" id="isActive_$categoryId" class="checkbox" style="width: auto;"} <label for="isActive_{$categoryId}">Active</label>
+			{checkbox name="isActive" id="isActive_$categoryId" class="checkbox" style="width: auto;"} <label for="isActive_{$categoryId}">{t _active}</label>
 		</p>
 
 		<br /><br />
@@ -30,15 +30,15 @@
 				<legend>Translate to: {$langName}</legend>
 				<div class="expandingSectionContent">
 					<p>
-						<label>Category name:</label>
+						<label>{t _category_name}:</label>
 						{textfield name="name_$lang"}
 					</p>
 					<p>
-						<label>Details:</label>
+						<label>{t _details}:</label>
 						{textarea name="details_$lang"}
 					</p>
 					<p>
-						<label>Keywords:</label>
+						<label>{t _keywords}:</label>
 						{textarea name="keywords_$lang" style="height: 3em;"}
 					</p>
 				</div>
@@ -51,8 +51,8 @@
 		</p>
 		<p>
 			<label for="submit"> </label>
-			<input type="submit" class="submit" id="submit" value="save"/> or
-			<a href="#" class="cancel" onClick="this.parentNode.parentNode.parentNode.reset(); return false;">{t _cancel}</a>
+			<input type="submit" class="submit" id="submit" value="{t _save}"/> or
+			<a href="#" class="cancel" onClick="$('categoryForm_{$categoryId}').reset(); return false;">{t _cancel}</a>
 		</p>
 
 	</fieldset>

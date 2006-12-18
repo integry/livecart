@@ -100,6 +100,19 @@ Backend.Category = {
 
 	updateBranch: function()
 	{
+		var params = Form.serialize();
+
+		var myAjax = new Ajax.Request(
+					url,
+					{
+						method: 'get',
+						parameters: pars,
+						onComplete: showResponse
+					});
+	},
+
+	afterBranchUpdate: function(response)
+	{
 
 	},
 

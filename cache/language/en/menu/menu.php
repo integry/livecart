@@ -1,5 +1,6 @@
 <?php $languageDefs = array (
   '_menu_languages' => 'Languages',
+  '_menu_currencies' => 'Currencies',
   '_menu_articles' => 'Articles',
   '_menu_users' => 'Users',
   '_menu_settings' => 'Settings',
@@ -7,6 +8,7 @@
   '_menu_find_product' => 'Find a Product',
   '_menu_add_product' => 'Add a Product',
   '_menu_import_data' => 'Import Data',
+  '_menu_products_manage' => 'Manage',
   '_menu_orders' => 'Orders',
   '_menu_manage_orders' => 'Orders',
   '_menu_payments' => 'Payments',

@@ -38,21 +38,21 @@
 	<div id="categoryBrowser" style="padding: 10px; border: 1px solid #ccc; background-color: #f1f1f1;">
 	</div>
 	<div style="margin-left: 15px; margin-top: 15px;">
-		- <a href="javascript:Backend.Category.createNewBranch();">Create a new sub-category</a>
+		- <a href="javascript:Backend.Category.createNewBranch();">{t _create_subcategory}</a>
 		<br/>
-		- <a href="#" onclick="if (confirm('Are you sure you want to remove this category?')) Backend.Category.removeBranch(); return false;">Remove selected category</a>
+		- <a href="#" onclick="if (confirm('Are you sure you want to remove this category?')) Backend.Category.removeBranch(); return false;">{t _remove_category}</a>
 	</div>
 </div>
 
 <div id="managerContainer" style="margin-left: 270px; height: 100%;">
 	<div id="tabContainer">
 		<ul id="tabList">
-			<li id="tabProducts" class="tab active"><a href="{link controller=backend.product action=index id=%id%}">Products</a></li>
-			<li id="tabMainDetails" class="tab inactive"><a href="{link controller=backend.category action=form id=%id%}">Category Details</a></li>
-			<li id="tabFields" class="tab inactive"><a href="{link controller=backend.specField action=index id=%id%}">Attributes</a></li>
-			<li id="tabFilters" class="tab inactive"><a href="{link controller=backend.filter action=index id=%id%}">Filters</a></li>
-			<li id="tabImages" class="tab inactive"><a href="{link controller=backend.image action=index id=%id%}">Images</a></li>
-			<li id="tabArticles" class="tab inactive"><a href="{link controller=backend.image action=index id=%id%}">Articles</a></li>
+			<li id="tabProducts" class="tab active"><a href="{link controller=backend.product action=index id=%id%}">{t _products}</a></li>
+			<li id="tabMainDetails" class="tab inactive"><a href="{link controller=backend.category action=form id=%id%}">{t _category_details}</a></li>
+			<li id="tabFields" class="tab inactive"><a href="{link controller=backend.specField action=index id=%id%}">{t _attributes}</a></li>
+			<li id="tabFilters" class="tab inactive"><a href="{link controller=backend.filter action=index id=%id%}">{t _filters}</a></li>
+			<li id="tabImages" class="tab inactive"><a href="{link controller=backend.image action=index id=%id%}">{t _images}</a></li>
+			<li id="tabArticles" class="tab inactive"><a href="{link controller=backend.image action=index id=%id%}">{t _articles}</a></li>
 		</ul>
 	</div>
 	<div id="sectionContainer">
