@@ -11,7 +11,18 @@ ClassLoader::import("application.model.category.Category");
  */
 class SpecField extends MultilingualObject
 {
-
+    const DATATYPE_TEXT = 1;
+    const DATATYPE_NUMBERS = 2;
+    
+    const TYPE_NUMBERS_SELECTOR = 1;
+    const TYPE_NUMBERS_SIMPLE = 2;
+        
+    const TYPE_TEXT_SIMPLE = 3;
+    const TYPE_TEXT_ADVANCED = 4;
+    const TYPE_TEXT_SELECTOR = 5;
+    const TYPE_TEXT_DATE = 6;
+    
+    
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -139,7 +150,7 @@ class SpecField extends MultilingualObject
 	
 	public static function getSelectorValueTypes()
 	{
-	    return array (1, 5);
+	    return array (self::TYPE_NUMBERS_SELECTOR, Specfield::TYPE_TEXT_SELECTOR);
 	}
 }
 

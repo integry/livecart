@@ -39,15 +39,19 @@ class FilterController extends StoreManagementController
         $specFieldOptions = array();
         foreach ($specFieldsList as $field)
         {
-            $specFieldOptions[] = array(
-                'ID' => $field['ID'],
-                'type' => $field['type'],
-                'dataType' => $field['dataType'],
-                'name' => isset($field['name'][$_lng = $this->store->getDefaultLanguageCode()]) ? $field['name'][$_lng] : '',
-                'values' => SpecField::getInstanceByID($field['ID'])->getValuesList()
-            );
+            if(!in_array($field['type'], array(SpecField::TYPE_TEXT_SIMPLE, SpecField::TYPE_TEXT_ADVANCED)))
+            {
+                $specFieldOptions[] = array(
+                    'ID' => $field['ID'],
+                    'type' => $field['type'],
+                    'dataType' => $field['dataType'],
+                    'name' => isset($field['name'][$_lng = $this->store->getDefaultLanguageCode()]) ? $field['name'][$_lng] : '',
+                    'values' => SpecField::getInstanceByID($field['ID'])->getValuesList()
+                );
+            }
         }
 
+        
         $blankFilter = array
         (
             'ID' => 'new',
@@ -86,7 +90,8 @@ class FilterController extends StoreManagementController
                 ),
 
             'selectorValueTypes' => SpecField::getSelectorValueTypes(),
-            'countNewFilters' => 0
+            'countNewFilters' => 0,
+            'typesWithNoFiltering' => array()
             );
     }
 
@@ -316,7 +321,8 @@ class FilterController extends StoreManagementController
         $specFieldValues = SpecField::getInstanceByID((int)$this->request->getValue('specFieldID'), true)->getValuesList();        
         
         $return = array();
-        foreach($specFieldValues as $value) $return[$value['ID']] = $value['ID'];
+                
+        foreach($specFieldValues as $value) $return[$value['ID']] = array('name' => $value['value'], 'specFieldValueID' => $value['ID']);
         
         return new JSONResponse(array("status" => "success", "filters" => $return));
     }

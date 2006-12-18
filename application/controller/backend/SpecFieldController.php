@@ -82,8 +82,8 @@ class SpecFieldController extends StoreManagementController
             'handle' => '',
             'values' => Array(),
             'rootId' => 'specField_item_new_'.$categoryID.'_form',
-            'type' => 3,
-            'dataType' => 1,
+            'type' => SpecField::TYPE_TEXT_SIMPLE,
+            'dataType' => SpecField::DATATYPE_TEXT,
             'categoryID' => $categoryID
         );
 
@@ -183,7 +183,7 @@ class SpecFieldController extends StoreManagementController
                        $specFieldValues = SpecFieldValue::getInstanceByID((int)$key);
                     }
 
-                    if($type == 1)
+                    if($type == Specfield::TYPE_NUMBERS_SELECTOR)
                     {
                         $specFieldValues->setFieldValue('value', $value);
                     }

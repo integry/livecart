@@ -47,6 +47,17 @@ if (Backend == undefined)
 
 Backend.SpecField = Class.create();
 Backend.SpecField.prototype = {
+    DATATYPE_TEXT: 1,
+    DATATYPE_NUMBERS: 2,
+    
+    TYPE_NUMBERS_SELECTOR: 1,
+    TYPE_NUMBERS_SIMPLE: 2,
+        
+    TYPE_TEXT_SIMPLE, 3,
+    TYPE_TEXT_ADVANCED: 4,
+    TYPE_TEXT_SELECTOR: 5,
+    TYPE_TEXT_DATE: 6,
+
 	cssPrefix: "specField_",
 
     /**
@@ -62,27 +73,27 @@ Backend.SpecField.prototype = {
 	{
 	    try
 	    {
-	    this.specField = !hash ? eval("(" + specFieldJson + ")" ) : specFieldJson;
-	    this.cloneForm('specField_item_blank', this.specField.rootId);
-
-	    this.id = this.specField.ID;
-	    this.categoryID = this.specField.categoryID;
-	    this.rootId = this.specField.rootId;
-
-		this.type = this.specField.type;
-		this.values = this.specField.values;
-
-		this.name = this.specField.name;
-		this.backupName = this.name;
-
-		this.description = this.specField.description;
-
-		this.handle = this.specField.handle;
-		this.multipleSelector = this.specField.multipleSelector;
-		this.dataType = this.specField.dataType;
-
-		this.loadLanguagesAction();
-		this.findUsedNodes();
+    	    this.specField = !hash ? eval("(" + specFieldJson + ")" ) : specFieldJson;
+    	    this.cloneForm('specField_item_blank', this.specField.rootId);
+    
+    	    this.id = this.specField.ID;
+    	    this.categoryID = this.specField.categoryID;
+    	    this.rootId = this.specField.rootId;
+    
+    		this.type = this.specField.type;
+    		this.values = this.specField.values;
+    
+    		this.name = this.specField.name;
+    		this.backupName = this.name;
+    
+    		this.description = this.specField.description;
+    
+    		this.handle = this.specField.handle;
+    		this.multipleSelector = this.specField.multipleSelector;
+    		this.dataType = this.specField.dataType;
+    
+    		this.loadLanguagesAction();
+    		this.findUsedNodes();
 		this.bindFields();
 	    }
 	    catch(e)
@@ -431,8 +442,7 @@ Backend.SpecField.prototype = {
 				{
                     if(Element.hasClassName(inputFields[j].parentNode, this.cssPrefix + 'step_translations_language'))
                     {
-    				    var test1 = "if(self."+inputFields[j].name+"['"+self.languageCodes[i]+"']) inputFields[j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];";
-                        eval("if(self."+inputFields[j].name+"['"+self.languageCodes[i]+"']) inputFields[j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];");
+    				    eval("if(self."+inputFields[j].name+"['"+self.languageCodes[i]+"']) inputFields[j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];");
     					inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
                     }
 				}
@@ -510,7 +520,7 @@ Backend.SpecField.prototype = {
 			var languageLink = languageLinkDiv.getElementsByTagName("a")[0];
 			languageLink.hash += this.languageCodes[i];
 			Element.addClassName(languageLink, this.cssPrefix + languageLink.hash.substring(1) + "_link");
-			var test = this.languages[this.languageCodes[i]];
+
 			languageLink.firstChild.nodeValue = this.languages[this.languageCodes[i]];
 
 			// First link is active
@@ -776,7 +786,7 @@ Backend.SpecField.prototype = {
 		keyboard = new KeyboardEvent(e);
 
 		if(
-            this.dataType == 2 && // if it is a number
+            this.dataType == this.DATATYPE_NUMBERS && // if it is a number
     		!(
     		    // you can use +/- as the first character
         		(keyboard.getCursorPosition() == 0 && !e.target.value.match('[\-\+]') && (keyboard.getKey() == 109 || keyboard.getKey() == 107 || (keyboard.isShift() && keyboard.getKey() == 61))) ||
@@ -1068,10 +1078,6 @@ Backend.SpecField.prototype = {
                     {
                         $H(jsonResponse.errors[fieldName]).each(function(value)
                         {
-                            var test1 = self.cssPrefix + "form_" + self.id + "_values_" + self.languageCodes[0] + "_" + value.key;
-                            var test2 = $(self.cssPrefix + "form_" + self.id + "_values_" + self.languageCodes[0] + "_" + value.key);
-                            var test3 = $(self.cssPrefix + "form_" + self.id + "_values_" + self.languageCodes[0] + "_" + value.key).getElementsByTagName("input")[0];
-
                             self.setFeedback($(self.cssPrefix + "form_" + self.id + "_values_" + self.languageCodes[0] + "_" + value.key).getElementsByTagName("input")[0], value.value);
                         });
                     }

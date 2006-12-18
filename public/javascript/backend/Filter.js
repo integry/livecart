@@ -238,7 +238,7 @@ Backend.Filter.prototype = {
                     }
             
                     $H(jsonResponse.filters).each(function(filter) {
-                        self.addFilter({"specFieldID": filter.key}, "new" + this.countNewFilters, true);
+                        self.addFilter(filter.value, "new" + self.countNewFilters, true);
                     });
                     
                     return;
@@ -510,7 +510,6 @@ Backend.Filter.prototype = {
                 {
                     if(Element.hasClassName(inputFields[j].parentNode, this.cssPrefix + 'step_translations_language'))
                     {
-                        var test1 = "if(self."+inputFields[j].name+"['"+self.languageCodes[i]+"']) inputFields[j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];";
                         eval("if(self."+inputFields[j].name+"['"+self.languageCodes[i]+"']) inputFields[j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];");
                         inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
                     }
@@ -588,8 +587,8 @@ Backend.Filter.prototype = {
 
             var languageLink = languageLinkDiv.getElementsByTagName("a")[0];
             languageLink.hash += this.languageCodes[i];
-            Element.addClassName(languageLink, this.cssPrefix + languageLink.hash.substring(1) + "_link");
-            var test = this.languages[this.languageCodes[i]];
+            Element.addClassName(languageLink, this.cssPrefix + languageLink.hash.substring(1) + "_link"); 
+            
             languageLink.firstChild.nodeValue = this.languages[this.languageCodes[i]];
 
             // First link is active
@@ -1081,10 +1080,6 @@ Backend.Filter.prototype = {
                     {
                         $H(jsonResponse.errors[fieldName]).each(function(value)
                         {
-                            var test1 = self.cssPrefix + "form_" + self.id + "_filters_" + self.languageCodes[0] + "_" + value.key;
-                            var test2 = $(self.cssPrefix + "form_" + self.id + "_filters_" + self.languageCodes[0] + "_" + value.key);
-                            var test3 = $(self.cssPrefix + "form_" + self.id + "_filters_" + self.languageCodes[0] + "_" + value.key).getElementsByTagName("input")[0];
-
                             self.setFeedback($(self.cssPrefix + "form_" + self.id + "_filters_" + self.languageCodes[0] + "_" + value.key).getElementsByTagName("input")[0], value.value);
                         });
                     }
