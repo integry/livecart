@@ -7,9 +7,18 @@
 {includeJs file="library/SectionExpander.js"}
 {includeJs file="library/form/Validator.js"}
 
+
+
 {includeJs file="backend/Category.js"}
 {includeJs file="backend/SpecField.js"}
 {includeJs file="backend/Filter.js"}
+
+{* Calendar *}
+{includeJs file="library/dhtmlCalendar/calendar.js"}
+{includeJs file="library/dhtmlCalendar/lang/calendar-`$curLanguageCode`.js"}
+{includeJs file="library/dhtmlCalendar/calendar-setup.js"}
+{includeCss file="library/dhtmlCalendar/calendar-win2k-cold-2.css"}
+
 
 {includeCss file="library/ActiveList.css"}
 {includeCss file="backend/SpecField.css"}
@@ -20,6 +29,7 @@
 
 {pageTitle}Category manager. Selected: <span id="activeCategoryPath" style="font-weight: normal"></span>{/pageTitle}
 {include file="layout/header.tpl"}
+
 
 <div id="specField_item_blank" class="dom_template">{include file="backend/specField/form.tpl"}</div>
 <div id="filter_item_blank" class="dom_template">{include file="backend/filter/form.tpl"}</div>

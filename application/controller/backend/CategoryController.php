@@ -26,6 +26,8 @@ class CategoryController extends StoreManagementController
 		$filter->setCondition(new OperatorCond(new ARFieldHandle("Category", "ID"), Category::ROOT_ID, "<>"));
 		$categoryList = Category::getRecordSet($filter);
 		$response->setValue("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
+		
+        $response->setValue('curLanguageCode',$this->locale->getLocaleCode());
 
 		return $response;
 	}
@@ -52,7 +54,8 @@ class CategoryController extends StoreManagementController
 		{
 			$languages[$lang] = $this->locale->info()->getOriginalLanguageName($lang);	  	
 		}
-
+		
+		
 		$response->setValue("categoryId", $categoryArr['ID']);
 		$response->setValue("languageList", $languages);
 
