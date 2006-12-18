@@ -52,6 +52,11 @@
                                     <select type="text" ></select>
                                     <span class="feedback"> </span>
                                 </p>
+                                <p class="filter_date_range">
+                                    <label>{t _Filter_date_range}</label>
+                                    <input type="text" /> <img src="image/silk/calendar.png" class="calendar_button" /> - <input type="text" /> <img src="image/silk/calendar.png" class="calendar_button" />
+                                    <span class="feedback"> </span>
+                                </p>
             				    <br />
             				</span>
         				</li>

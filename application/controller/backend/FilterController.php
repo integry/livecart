@@ -23,6 +23,8 @@ class FilterController extends StoreManagementController
 
     public function index()
     {
+        echo $this->locale->info()->getDateFormat();
+        
         $response = new ActionResponse();
 
         $categoryID = (int)$this->request->getValue('id');
@@ -237,7 +239,7 @@ class FilterController extends StoreManagementController
         {
             $filterGroupArray['filters'][$filter['ID']] = $filter;
         }
-
+        
         $filterGroupArray['rootId'] = "filter_items_list_".$filterGroupArray['SpecField']['categoryID']."_".$filterGroupArray['ID'];
         $filterGroupArray['categoryID'] = $filterGroupArray['SpecField']['categoryID'];
 

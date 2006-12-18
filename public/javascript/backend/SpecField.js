@@ -53,7 +53,7 @@ Backend.SpecField.prototype = {
     TYPE_NUMBERS_SELECTOR: 1,
     TYPE_NUMBERS_SIMPLE: 2,
         
-    TYPE_TEXT_SIMPLE, 3,
+    TYPE_TEXT_SIMPLE: 3,
     TYPE_TEXT_ADVANCED: 4,
     TYPE_TEXT_SELECTOR: 5,
     TYPE_TEXT_DATE: 6,

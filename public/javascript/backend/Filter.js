@@ -351,7 +351,7 @@ Backend.Filter.prototype = {
              {
                 $A(this.nodes.filtersDefaultGroup.getElementsByTagName("li")).each(function(li)
                 {
-                    document.getElementsByClassName('filter_range', li)[0].style.display = (self.selectorValueTypes.indexOf(self.specFields[i].type) === -1) ? 'block' : 'none';
+                    document.getElementsByClassName('filter_range', li)[0].style.display = (self.selectorValueTypes.indexOf(self.specFields[i].type) === -1 && self.specFields[i].type != Backend.SpecField.prototype.TYPE_TEXT_DATE) ? 'block' : 'none';
                                                 
                     if(self.selectorValueTypes.indexOf(self.specFields[i].type) !== -1)
                     {
@@ -363,7 +363,9 @@ Backend.Filter.prototype = {
                         } 
                     }                          
                     
-                    document.getElementsByClassName('filter_selector', li)[0].style.display = (self.selectorValueTypes.indexOf(self.specFields[i].type) === -1) ? 'none' : 'block';
+
+                        document.getElementsByClassName('filter_selector', li)[0].style.display = (self.selectorValueTypes.indexOf(self.specFields[i].type) === -1 || self.specFields[i].type == Backend.SpecField.prototype.TYPE_TEXT_DATE) ? 'none' : 'block';
+                        document.getElementsByClassName('filter_date_range', li)[0].style.display = (self.specFields[i].type == Backend.SpecField.prototype.TYPE_TEXT_DATE) ? 'block' : 'none'; 
                 });
                 
                 
@@ -873,6 +875,38 @@ Backend.Filter.prototype = {
             var specFieldValueIDInput = li.getElementsByTagName("select")[0];
             specFieldValueIDInput.name = "filters[" + id + "][specFieldValueID]";
             specFieldValueIDInput.value = (value && value.specFieldValueID) ? value.specFieldValueID : '' ;
+            
+            var dateParagraph = document.getElementsByClassName("filter_date_range", li)[0];
+            var rangeDateStart = dateParagraph.getElementsByTagName("input")[0];
+            var rangeDateEnd = dateParagraph.getElementsByTagName("input")[1];
+            
+            var rangeDateStartButton = document.getElementsByClassName("calendar_button", dateParagraph)[0];
+            var rangeDateEndButton = document.getElementsByClassName("calendar_button", dateParagraph)[1];
+            
+            rangeDateStart.name = "filters[" + id + "][rangeDateStart]";
+            rangeDateEnd.name   = "filters[" + id + "][rangeDateEnd]";
+            
+            rangeDateStart.id   = this.cssPrefix + "rangeDateStart_" + id;
+            rangeDateEnd.id     = this.cssPrefix + "rangeDateEnd_" + id;
+
+            rangeDateStartButton.id = rangeDateStart.id + "_button";
+            rangeDateEndButton.id = rangeDateEnd.id + "_button";
+            
+            Calendar.setup({
+                inputField:     rangeDateStart.id,
+                ifFormat:       "%d-%m-%Y", 
+                button:         rangeDateStartButton.id,
+                align:          "BR",
+                singleClick:    true
+            });
+            
+            Calendar.setup({
+                inputField:     rangeDateEnd.id,
+                ifFormat:       "%d-%m-%Y", 
+                button:         rangeDateEndButton.id,
+                align:          "BR",
+                singleClick:    true
+            });
 
             // now insert all translation fields
             for(var i = 1; i < this.languageCodes.length; i++)
