@@ -1,8 +1,12 @@
 {includeCss file="form.css"}
 
 {assign var="action" value="create"}
+<div class="actionConfirmation" id="categoryMsg_{$categoryId}" style="display: none;">
+	Details were successfuly updated!
+</div>
 
-{form id="categoryForm_$categoryId" handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="new Ajax.Request()"}
+</div>
+{form id="categoryForm_$categoryId" handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="Backend.Category.updateBranch($('categoryForm_$categoryId')); return false;"}
 	<fieldset id="mainFieldset">
 		<legend>{t _category_details}</legend>
 		<p>

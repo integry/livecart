@@ -98,22 +98,24 @@ Backend.Category = {
 		Backend.Category.tabControl.activateTab($('tabMainDetails'), newCategory.ID);
 	},
 
-	updateBranch: function()
+	updateBranch: function(formObj)
 	{
-		var params = Form.serialize();
-
+		var params = Form.serialize(formObj);
 		var myAjax = new Ajax.Request(
-					url,
+					formObj.action,
 					{
-						method: 'get',
-						parameters: pars,
-						onComplete: showResponse
+						method: formObj.method,
+						parameters: params,
+						onComplete: this.afterBranchUpdate
 					});
 	},
 
 	afterBranchUpdate: function(response)
 	{
+		eval('var categoryData = ' + response.responseText);
 
+		Backend.Category.treeBrowser.setItemText(categoryData.ID, categoryData.name);
+		Element.show('categoryMsg_' + categoryData.ID);
 	},
 
 	/**

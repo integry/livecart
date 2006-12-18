@@ -26,7 +26,7 @@ class CategoryController extends StoreManagementController
 		$filter->setCondition(new OperatorCond(new ARFieldHandle("Category", "ID"), Category::ROOT_ID, "<>"));
 		$categoryList = Category::getRecordSet($filter);
 		$response->setValue("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
-		
+
         $response->setValue('curLanguageCode',$this->locale->getLocaleCode());
 
 		return $response;
@@ -48,14 +48,14 @@ class CategoryController extends StoreManagementController
 		$category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
 		$categoryArr = $category->toArray();
 		$form->setData($categoryArr);
-		
+
 		$languages = array();
 		foreach ($this->store->getLanguageArray() as $lang)
 		{
-			$languages[$lang] = $this->locale->info()->getOriginalLanguageName($lang);	  	
+			$languages[$lang] = $this->locale->info()->getOriginalLanguageName($lang);
 		}
-		
-		
+
+
 		$response->setValue("categoryId", $categoryArr['ID']);
 		$response->setValue("languageList", $languages);
 
@@ -95,7 +95,8 @@ class CategoryController extends StoreManagementController
 			$multilingualFields = array("name", "description", "keywords");
 			$categoryNode->setValueArrayByLang($multilingualFields, $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true), $this->request);
 			$categoryNode->save();
-			echo "</pre>"; print_r($categoryNode->toArray()); echo "</pre>";
+			//echo "</pre>"; print_r($categoryNode->toArray()); echo "</pre>";
+
 			return new JSONResponse($categoryNode->toArray());
 		}
 	}
