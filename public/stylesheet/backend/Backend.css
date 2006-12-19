@@ -331,6 +331,23 @@ html, body{
 }
 
 /*************************** 
+	Breadcrumb navigation
+***************************/
+#breadcrumb {
+	position: absolute; 
+	left: 350px; 
+	top: 0px;
+	font-size: smaller;
+	font-size: smaller;
+	height: 20px;
+	padding-top: 5px;
+} 
+
+#breadcrumbLast {
+  	font-weight: bold;
+}
+
+/*************************** 
 	Language switch menu 
 ***************************/
 #langMenuContainer {

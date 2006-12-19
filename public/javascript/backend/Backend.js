@@ -6,19 +6,30 @@ function showHelp(url)
 }
 
 /*************************************************
-	Layout
+	Layout Control
 **************************************************/
 Backend.LayoutManager = Class.create();
 
+/**
+ * Manage 100% heights
+ *
+ * IE does this pretty good natively, however FF won't handle cascading 100% heights
+ * unless it's quirks mode.
+ *
+ * You can specify a block to take 100% height by assigning a "maxHeight" CSS class to it
+ * This class also simulates an "extension" of CSS, that allows to add or substract some height
+ * in pixels from percentage defined height (for example 100% minus 40px). This will often be needed
+ * to compensate for parent elements padding. For example, if the parent element has a top and bottom
+ * padding of 10px, you'll have to substract 20px from child block size. This will also be needed when
+ * there are other siblings that consume some known height.
+ */
 Backend.LayoutManager.prototype = 
 {
 	initialize: function()
 	{	  	
 		window.onresize = this.onresize.bindAsEventListener(this);
 		this.onresize();	
-	},
-
-	
+	},	
 	
 	collapseAll: function(cont)
 	{
@@ -110,6 +121,65 @@ Backend.LayoutManager.prototype =
 }
 
 /*************************************************
+	Breadcrumb navigation
+**************************************************/
+Backend.Breadcrumb = Class.create();
+
+/**
+ * Builds breadcrumb navigation menu
+ */
+Backend.Breadcrumb.prototype = 
+{
+	items: new Array(),
+	
+	initialize: function()	
+	{
+		window.onload = this.display.bindAsEventListener(this);	  
+	},
+	
+	addItem: function(title, url)
+	{
+		this.items[this.items.length] = {"title": title, "url": url}		
+	},
+	
+	display: function()
+	{
+		// there must be at least 2 items added for the breadcrumb to be displayed
+		if (this.items.length < 2)
+		{
+			return false;  
+		}
+	
+		cont = document.getElementById('breadcrumb');
+		itemTemplate = document.getElementById('breadcrumb_item');
+		sepTemplate = document.getElementById('breadcrumb_separator');
+		lastItemTemplate = document.getElementById('breadcrumb_lastItem');
+										
+		for (k = 0; k < this.items.length; k++)
+		{
+			if (k + 1 < this.items.length)
+			{
+				it = itemTemplate.cloneNode(true);
+				it.firstChild.href = this.items[k].url;
+				it.firstChild.innerHTML = this.items[k].title;			  
+								
+				it.appendChild(sepTemplate.cloneNode(true));				
+			} 
+			else
+			{
+				it = lastItemTemplate.cloneNode(true);
+				it.innerHTML = this.items[k].title;			  
+				it.id = 'breadcrumbLast';
+			}
+			
+			cont.appendChild(it);	 	
+		}  
+	}
+}
+
+var breadcrumb = new Backend.Breadcrumb();
+
+/*************************************************
 	Backend menu 
 **************************************************/
 Backend.NavMenu = Class.create();
@@ -137,6 +207,14 @@ Backend.NavMenu.prototype =
 				  	index = topIndex;
 				}
 				
+				if (mItem['controller'] == controller && mItem['action'] == action)				
+				{
+				  	index = topIndex;
+					subItemIndex = 0;
+					match = true;
+					break;    
+				}
+
 				match = false;
 				
 				if ('object' == typeof mItem['items'])
@@ -165,6 +243,14 @@ Backend.NavMenu.prototype =
 					}	
 				}
 			}
+		}
+
+		// add current menu items to breadcrumb
+		breadcrumb.addItem(menuArray[index]['title'], menuArray[index]['url']);
+		if (subItemIndex > 0)
+		{
+			breadcrumb.addItem(menuArray[index]['items'][subItemIndex]['title'], 
+					     	   menuArray[index]['items'][subItemIndex]['url']);							
 		}
 
 		// build menu
@@ -254,8 +340,9 @@ Backend.NavMenu.prototype =
 	}
 }
 	
-/* Language switch menu */
-
+/*************************************************
+	Language switch menu
+*************************************************/
 function showLangMenu(display) {		
 	menu = document.getElementById('langMenuContainer');
 	if (display)
@@ -277,6 +364,9 @@ function hideLangMenu()
 	showLangMenu(false);
 }
 
+/*************************************************
+	Popup Menu Handler
+*************************************************/
 /** 
  * Popup menu (absolutely positioned DIV's) position handling
  * This class calculates the optimal menu position, so that the 
@@ -398,6 +488,11 @@ PopupMenuHandler.prototype =
 		return myHeight;
 	}
 }
+
+
+/*************************************************
+	Browser detector
+*************************************************/
 
 /**
  * Browser detector
