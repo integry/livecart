@@ -193,7 +193,7 @@ html, body{
 #nav {
 	position: relative;
 	z-index: 1;
-	top: -1px;
+	top: -2px;
 }
 
 #nav li ul, #nav { /* all lists */
@@ -278,21 +278,24 @@ html, body{
 }
 
 #nav li ul {
-	top: 28px;
-	width: 500px;
-	padding-left: 15px;
-  	background-color: #E6E6E6;
-  	height: 24px;
-}
-
-#navSelected ul {
-  	display: block !important;
+  	margin-top: 5px;
+  	left: 10px;
+  	border: 1px solid #999999;
+  	background-image: url(../../image/backend/menu/menu_commands_bg.jpg);
+  	background-position: bottom left;
+  	background-repeat: repeat-x;
+  	background-color: #CDD9EE;
+  	padding: 5px;
 }
 
 #nav li ul li {
-	float: left;
-	padding-top: 4px;
-	font-size: 11px;
+	width: 100%;
+  	#width: 200px; /* IE hack */
+  	min-width: 150px;
+  	text-align: left;
+	background-image: none;
+	border-bottom: 1px dotted #999999;
+	padding: 2px;
 }
 
 #nav li ul li div {
@@ -304,45 +307,12 @@ html, body{
   	padding-top: 4px;
 }
 
+#navSubSelected a {
+  	color: #000000 !important;
+}
+
 #nav #navSelected li {
   	padding-left: 5px;
-}
-
-#nav li ul li div {
-	background-image: url(../../image/backend/menu/subitem_middle_inactive.gif) !important;
-	background-repeat: repeat-x;   
-}
-
-#nav li ul li div div {
- 	background-image: url(../../image/backend/menu/subitem_right_inactive.gif) !important; 
-  	background-repeat: no-repeat;
-	background-position: right 0px;
-}
-
-#nav li ul li div div div {
-  	background-image: url(../../image/backend/menu/subitem_left_inactive.gif) !important;
-  	background-repeat: no-repeat;
-	background-position: 0px 0px;
-	text-align: center;
-	padding-left: 10px;
-	padding-right: 10px;
-    padding-top: 2px;
-}
-
-#nav #navSelected #navSubSelected div {
-	background-image: url(../../image/backend/menu/menu_subitem_middle_active.gif) !important;
-}
-
-#nav #navSelected #navSubSelected div div {
- 	background-image: url(../../image/backend/menu/menu_subitem_right_active.gif) !important; 
-}
-
-#nav #navSelected #navSubSelected div div div {
-  	background-image: url(../../image/backend/menu/menu_subitem_left_active.gif) !important;
-}
-
-#nav #navSelected #navSubSelected div div div a {
-    text-decoration: none;
 }
 
 #nav li ul li a {
@@ -369,7 +339,7 @@ html, body{
 	z-index: 20;
 	width: auto;
 	padding-top: 6px;
-	left: 0px;
+	left: 20px;
 	top: 13px;
 }
 

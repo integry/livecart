@@ -210,11 +210,6 @@ Backend.NavMenu.prototype =
 				// submenu container
 				ul = menuItem.getElementsByTagName('ul')[0];
 
-				if (1 == topIndex) 
-				{
-				  	ul.style.left = '150px';
-				}
-
 				if ('object' == typeof mItem['items'])
 				{
 				  	for (subIndex in mItem['items'])
