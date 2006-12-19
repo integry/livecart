@@ -17,8 +17,13 @@ class Filter extends MultilingualObject
 		$schema->registerField(new ARField("position", ARInteger::instance(2)));
 		$schema->registerField(new ARField("type", ARInteger::instance(2)));
 
-		$schema->registerField(new ARField("rangeStart", ARFloat::instance(2)));
+		$schema->registerField(new ARField("rangeStart", ARFloat::instance(40)));
 		$schema->registerField(new ARField("rangeEnd", ARFloat::instance(40)));
+		
+
+		$schema->registerField(new ARField("rangeDateStart", ARDate::instance()));
+		$schema->registerField(new ARField("rangeDateEnd", ARDate::instance()));
+		
 	}
 
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
