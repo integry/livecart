@@ -27,33 +27,34 @@
  *
  *  The "params" is a single object that can have the following properties:
  *
- *    prop. name   | description
+ *    prop. name    | description
  *  -------------------------------------------------------------------------------------------------
- *   inputField    | the ID of an input field to store the date
- *   displayArea   | the ID of a DIV or other element to show the date
- *   button        | ID of a button or other element that will trigger the calendar
- *   eventName     | event that will trigger the calendar, without the "on" prefix (default: "click")
- *   ifFormat      | date format that will be stored in the input field
- *   daFormat      | the date format that will be used to display the date in displayArea
- *   singleClick   | (true/false) wether the calendar is in single click mode or not (default: true)
- *   firstDay      | numeric: 0 to 6.  "0" means display Sunday first, "1" means display Monday first, etc.
- *   align         | alignment (default: "Br"); if you don't know what's this see the calendar documentation
- *   range         | array with 2 elements.  Default: [1900, 2999] -- the range of years available
- *   weekNumbers   | (true/false) if it's true (default) the calendar will display week numbers
- *   flat          | null or element ID; if not null the calendar will be a flat calendar having the parent with the given ID
- *   flatCallback  | function that receives a JS Date object and returns an URL to point the browser to (for flat calendar)
- *   disableFunc   | function that receives a JS Date object and should return true if that date has to be disabled in the calendar
- *   onSelect      | function that gets called when a date is selected.  You don't _have_ to supply this (the default is generally okay)
- *   onClose       | function that gets called when the calendar is closed.  [default]
- *   onUpdate      | function that gets called after the date is updated in the input field.  Receives a reference to the calendar.
- *   date          | the date that the calendar will be initially displayed to
- *   showsTime     | default: false; if true the calendar will include a time selector
- *   timeFormat    | the time format; can be "12" or "24", default is "12"
- *   electric      | if true (default) then given fields/date areas are updated for each move; otherwise they're updated only on close
- *   step          | configures the step of the years in drop-down boxes; default: 2
- *   position      | configures the calendar absolute position; default: null
- *   cache         | if "true" (but default: "false") it will reuse the same calendar object, where possible
- *   showOthers    | if "true" (but default: "false") it will show days from other months too
+ *   inputField     | the ID of an input field to store the date
+ *   inputFieldReal | the ID of an input field where real date is stored (real date can be used later to insert into ex. Mysql database). The difference between it and inputField is that input field is formated in current locale while inputFieldReal is always formated in en default locale
+ *   displayArea    | the ID of a DIV or other element to show the date
+ *   button         | ID of a button or other element that will trigger the calendar
+ *   eventName      | event that will trigger the calendar, without the "on" prefix (default: "click")
+ *   ifFormat       | date format that will be stored in the input field
+ *   daFormat       | the date format that will be used to display the date in displayArea
+ *   singleClick    | (true/false) wether the calendar is in single click mode or not (default: true)
+ *   firstDay       | numeric: 0 to 6.  "0" means display Sunday first, "1" means display Monday first, etc.
+ *   align          | alignment (default: "Br"); if you don't know what's this see the calendar documentation
+ *   range          | array with 2 elements.  Default: [1900, 2999] -- the range of years available
+ *   weekNumbers    | (true/false) if it's true (default) the calendar will display week numbers
+ *   flat           | null or element ID; if not null the calendar will be a flat calendar having the parent with the given ID
+ *   flatCallback   | function that receives a JS Date object and returns an URL to point the browser to (for flat calendar)
+ *   disableFunc    | function that receives a JS Date object and should return true if that date has to be disabled in the calendar
+ *   onSelect       | function that gets called when a date is selected.  You don't _have_ to supply this (the default is generally okay)
+ *   onClose        | function that gets called when the calendar is closed.  [default]
+ *   onUpdate       | function that gets called after the date is updated in the input field.  Receives a reference to the calendar.
+ *   date           | the date that the calendar will be initially displayed to
+ *   showsTime      | default: false; if true the calendar will include a time selector
+ *   timeFormat     | the time format; can be "12" or "24", default is "12"
+ *   electric       | if true (default) then given fields/date areas are updated for each move; otherwise they're updated only on close
+ *   step           | configures the step of the years in drop-down boxes; default: 2
+ *   position       | configures the calendar absolute position; default: null
+ *   cache          | if "true" (but default: "false") it will reuse the same calendar object, where possible
+ *   showOthers     | if "true" (but default: "false") it will show days from other months too
  *
  *  None of them is required, they all have default values.  However, if you
  *  pass none of "inputField", "displayArea" or "button" you'll get a warning
@@ -63,6 +64,7 @@ Calendar.setup = function (params) {
 	function param_default(pname, def) { if (typeof params[pname] == "undefined") { params[pname] = def; } };
 
 	param_default("inputField",     null);
+	param_default("inputFieldReal", null);
 	param_default("displayArea",    null);
 	param_default("button",         null);
 	param_default("eventName",      "click");
@@ -91,7 +93,7 @@ Calendar.setup = function (params) {
 	param_default("showOthers",     false);
 	param_default("multiple",       null);
 
-	var tmp = ["inputField", "displayArea", "button"];
+	var tmp = ["inputField", "displayArea", "button", "inputFieldReal"];
 	for (var i in tmp) {
 		if (typeof params[tmp[i]] == "string") {
 			params[tmp[i]] = document.getElementById(params[tmp[i]]);
@@ -105,8 +107,9 @@ Calendar.setup = function (params) {
 	function onSelect(cal) {
 		var p = cal.params;
 		var update = (cal.dateClicked || p.electric);
-		if (update && p.inputField) {
+		if (update && p.inputField) {            
 			p.inputField.value = cal.date.print(p.ifFormat);
+            if(p.inputFieldReal) p.inputFieldReal.value = cal.date.getFullYear() + "-" + (cal.date.getMonth() + 1) + "-" + cal.date.getDate();
 			if (typeof p.inputField.onchange == "function")
 				p.inputField.onchange();
 		}
@@ -143,6 +146,7 @@ Calendar.setup = function (params) {
 		}
 		if (params.inputField && typeof params.inputField.value == "string") {
 			cal.parseDate(params.inputField.value);
+            params.inputField.value = cal.date.print(cal.params.ifFormat);
 		}
 		cal.create(params.flat);
 		cal.show();
@@ -150,13 +154,14 @@ Calendar.setup = function (params) {
 	}
 
 	var triggerEl = params.button || params.displayArea || params.inputField;
+    
 	triggerEl["on" + params.eventName] = function() {
 		var dateEl = params.inputField || params.displayArea;
 		var dateFmt = params.inputField ? params.ifFormat : params.daFormat;
 		var mustCreate = false;
 		var cal = window.calendar;
 		if (dateEl)
-			params.date = Date.parseDate(dateEl.value || dateEl.innerHTML, dateFmt);
+			 params.date = Date.parseDate(dateEl.value || dateEl.innerHTML || params.date , dateFmt);
 		if (!(cal && params.cache)) {
 			window.calendar = cal = new Calendar(params.firstDay,
 							     params.date,
@@ -195,6 +200,16 @@ Calendar.setup = function (params) {
 			cal.showAt(params.position[0], params.position[1]);
 		return false;
 	};
+
+
+    if(!cal)
+    {
+        cal = new Calendar();
+        cal.create();
+        cal.setDateFormat(params.ifFormat);
+        cal.parseDate(params.inputFieldReal.value);
+        params.inputField.value = cal.date.print(params.ifFormat);
+    }
 
 	return cal;
 };

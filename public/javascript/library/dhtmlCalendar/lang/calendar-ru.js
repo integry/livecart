@@ -74,7 +74,6 @@ Calendar._SMN = new Array
  "дек");
 
 // tooltips
-Calendar._TT = {};
 Calendar._TT["INFO"] = "О календаре...";
 
 Calendar._TT["ABOUT"] =

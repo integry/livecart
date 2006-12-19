@@ -73,13 +73,15 @@ Backend.Filter.prototype = {
             this.name = this.filter.name;
             this.filters = this.filter.filters;
             this.backupName = this.name;
+            
+            this.filterCalendars = {};
 
             this.loadLanguagesAction();
             this.findUsedNodes();
             this.bindFields();
         } catch(e)
         {
-            jsTrace.debug(e);
+            alert(e);
         }
     },
 
@@ -225,12 +227,10 @@ Backend.Filter.prototype = {
                     var specField = this.specFields[i];
                     if(this.selectorValueTypes.indexOf(specField.type) !== -1)
                     {
-                        jsTrace.send("----");
                         $A(this.nodes.filtersDefaultGroup.getElementsByTagName("li")).each(function(li)
                         {
                             if(!Element.hasClassName(li, 'dom_template'))
                             {
-                                jsTrace.send(document.getElementsByClassName('filter_selector', li)[0].getElementsByTagName("select")[0].value);
                                 delete jsonResponse.filters[document.getElementsByClassName('filter_selector', li)[0].getElementsByTagName("select")[0].value];
                             }
                         });
@@ -248,7 +248,6 @@ Backend.Filter.prototype = {
         }
         catch(e)
         {
-            jsTrace.debug(e);
             alert("Json error");
         }
     },  
@@ -282,7 +281,8 @@ Backend.Filter.prototype = {
 
         // Also some actions must be executed on load. Be aware of the order in which those actions are called
         this.fillSpecFieldsSelect();
-
+        if(this.filter.SpecField) this.nodes.specFieldID.value = this.filter.SpecField.ID;
+        
         this.createLanguagesLinks();
         this.loadFilterAction();
 
@@ -291,9 +291,10 @@ Backend.Filter.prototype = {
 
         this.bindTranslationFilters();
         this.loadTypes();
-    } catch(e)
+    } 
+    catch(e)
     {
-        jsTrace.debug(e);
+        alert(e);
     }
 
         new Form.EventObserver(this.nodes.form, function() { self.formChanged = true; } );
@@ -881,32 +882,48 @@ Backend.Filter.prototype = {
             var rangeDateEnd = dateParagraph.getElementsByTagName("input")[1];
             
             var rangeDateStartButton = document.getElementsByClassName("calendar_button", dateParagraph)[0];
-            var rangeDateEndButton = document.getElementsByClassName("calendar_button", dateParagraph)[1];
+            var rangeDateEndButton   = document.getElementsByClassName("calendar_button", dateParagraph)[1];
             
-            rangeDateStart.name = "filters[" + id + "][rangeDateStart]";
-            rangeDateEnd.name   = "filters[" + id + "][rangeDateEnd]";
+            var rangeDateStartReal   = document.getElementsByClassName(this.cssPrefix + "date_start_real", dateParagraph)[0];
+            var rangeDateEndReal     = document.getElementsByClassName(this.cssPrefix + "date_end_real", dateParagraph)[0];
             
-            rangeDateStart.id   = this.cssPrefix + "rangeDateStart_" + id;
-            rangeDateEnd.id     = this.cssPrefix + "rangeDateEnd_" + id;
-
-            rangeDateStartButton.id = rangeDateStart.id + "_button";
-            rangeDateEndButton.id = rangeDateEnd.id + "_button";
+            rangeDateStart.id         = this.cssPrefix + "rangeDateStart_" + id;
+            rangeDateEnd.id           = this.cssPrefix + "rangeDateEnd_" + id;
+            rangeDateStartReal.id     = rangeDateStart.id + "_real";
+            rangeDateEndReal.id       = rangeDateEnd.id + "_real";
+            rangeDateStartButton.id   = rangeDateStart.id + "_button";
+            rangeDateEndButton.id     = rangeDateEnd.id + "_button";      
             
-            Calendar.setup({
-                inputField:     rangeDateStart.id,
-                ifFormat:       "%d-%m-%Y", 
-                button:         rangeDateStartButton.id,
-                align:          "BR",
-                singleClick:    true
+            
+            rangeDateStart.name       = "filters[" + id + "][rangeDateStart_show]";
+            rangeDateEnd.name         = "filters[" + id + "][rangeDateEnd_show]";
+            rangeDateStartReal.name   = "filters[" + id + "][rangeDateStart]";
+            rangeDateEndReal.name     = "filters[" + id + "][rangeDateEnd]";
+                  
+                  
+            rangeDateStartReal.value  = (value && value.rangeDateStart) ? value.rangeDateStart : '' ;
+            rangeDateEndReal.value    = (value && value.rangeDateEnd) ? value.rangeDateEnd : '' ;
+            
+            rangeDateStart.value  = rangeDateStartReal.value;
+            rangeDateEnd.value    = rangeDateEndReal.value ;
+                       
+            var calDateStart = Calendar.setup({
+                inputField:       rangeDateStart.id,
+                inputFieldReal:   rangeDateStartReal.id,
+                ifFormat:         this.dateFormat, 
+                button:           rangeDateStartButton.id,
             });
             
-            Calendar.setup({
-                inputField:     rangeDateEnd.id,
-                ifFormat:       "%d-%m-%Y", 
-                button:         rangeDateEndButton.id,
-                align:          "BR",
-                singleClick:    true
+            
+            var calDateEnd = Calendar.setup({
+                inputField:       rangeDateEnd.id,
+                inputFieldReal:   rangeDateEndReal.id,
+                ifFormat:         this.dateFormat, 
+                button:           rangeDateEndButton.id,
             });
+            
+            
+            
 
             // now insert all translation fields
             for(var i = 1; i < this.languageCodes.length; i++)

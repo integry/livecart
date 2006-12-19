@@ -269,16 +269,3 @@
   background-color: #000;
   color: #0f0;
 }
-
-
-.calendar_button
-{
-    margin-left: 0.5em;
-    cursor: pointer; 
-    border: 0px none;   
-}
-
-.calendar_button_hover
-{
-    background: red;
-}
