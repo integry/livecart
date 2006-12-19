@@ -11,35 +11,36 @@
 {pageTitle}{t _currencies}{/pageTitle}
 {include file=layout/header.tpl}
 
-<div id="tabContainer">
+<div id="tabContainer" style="height: 100%;">
 	<ul id="tabList">
 		<li id="tabManage" class="tab active"><a href="{link controller=backend.currency action=list}">Manage</a></li>
 		<li id="tabRates" class="tab inactive"><a href="{link controller=backend.currency action=rates}">Adjust Rates</a></li>
 		<li id="tabOptions" class="tab inactive"><a href="{link controller=backend.currency action=options}">Options</a></li>
 	</ul>
-	<div id="sectionContainer">
-		<div id="tabManageContent"></div>
+	<div id="sectionContainer" style="height: 95%; border: 2px solid red;">
+		<div id="tabManageContent">
+		
+			<ul class="menu" id="currPageMenu">
+				<li><a href="#" onClick="curr.showAddForm(); return false;">{t _add_currency}</a></li>
+			</ul>
+			
+			<div class="menuLoadIndicator" id="currAddMenuLoadIndicator"></div>
+			<div id="addCurr" class="slideForm"></div>
+			
+			<br />
+			
+			<ul id="currencyList" class="activeList_add_delete">
+			{foreach from=$currencies item=item}
+				{include file="backend/currency/listItem.tpl" showContainer=true}	
+			{foreachelse}		
+				No currencies found	
+			{/foreach}
+			</ul>		
+		</div>
 		<div id="tabRatesContent"></div>
 		<div id="tabOptionsContent"></div>
 	</div>
 </div>
-	
-<ul class="menu" id="currPageMenu">
-	<li><a href="#" onClick="curr.showAddForm(); return false;">{t _add_currency}</a></li>
-</ul>
-
-<div class="menuLoadIndicator" id="currAddMenuLoadIndicator"></div>
-<div id="addCurr" class="slideForm"></div>
-
-<br />
-
-<ul id="currencyList" class="activeList_add_delete">
-{foreach from=$currencies item=item}
-	{include file="backend/currency/listItem.tpl" showContainer=true}	
-{foreachelse}		
-	No currencies found	
-{/foreach}
-</ul>
 
 {literal}
 <script type="text/javascript">
@@ -70,6 +71,5 @@
 
 </script>
 {/literal}
-
-
+	
 {include file=layout/footer.tpl}
