@@ -89,11 +89,13 @@
 		</div>
 	
 		<div id="pageTitleContainer">
-<!--			 -->
 			<div id="pageTitle" style="float: left;">{$PAGE_TITLE}</div>
-			<div style="position: absolute; left: 250px; padding-top: 2px;">
-				<small><a href="">Settings</a> &gt; <a href="">Languages</a> &gt; <strong>English</strong></small>
+			<div id="breadcrumb_template" class="dom_template">
+				<span id="breadcrumb_item"><a href=""></a></span>
+				<span id="breadcrumb_separator"> &gt; </span>
+				<span id="breadcrumb_lastItem"></span>								
 			</div>
+			<div id="breadcrumb"></div>
 		</div>
 		
 	</div>

@@ -1,4 +1,6 @@
-{pageTitle help="language.edit"}{translate text=_language_definitons} (<img src="image/localeflag/{$id}.png" /> {$edit_language}){/pageTitle}
+{pageTitle help="language.edit"}
+	{translate text=_language_definitons} (<img src="image/localeflag/{$id}.png" /> {$edit_language})
+{/pageTitle}
 
 {includeJs file=library/json.js}
 {includeJs file=backend/Language.js}
@@ -86,11 +88,12 @@
 
 	{literal}
 	<script type="text/javascript">
+	{/literal}
 		var langEdit = new Backend.LanguageEdit(translations, english, document.getElementById('translations'));
 		langEdit.preFilter();
 		langEdit.hideSaveConfirmation();
+		breadcrumb.addItem('{$edit_language}', '');
 	</script>
-	{/literal}
 
 	<img id="saveProgress" src="image/indicator.gif" style="display: none;"> <input type="submit" class="submit" value="{t _save}"> {t _or} <a href="#" onClick="window.location.reload(); return false;" class="cancel">{t _cancel}</a>
 	
