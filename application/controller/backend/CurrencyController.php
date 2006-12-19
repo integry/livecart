@@ -210,33 +210,69 @@ class CurrencyController extends StoreManagementController
 	}
 
 	/**
-	 * Currencies rates action.
+	 * Adjust currency rates
 	 * @return ActionResponse
 	 */
-	public function ratesForm()
+	public function rates()
 	{
-		$this->formatCurrencyData();
-		$form = $this->createRatesForm();
-		$form->setAction(Router::getInstance()->createUrl(array("controller" => $this->request->getControllerName(), "action" => "saveRates")));
-		if ($form->validationFailed())
+		// get currency list and names
+		$filter = new ArSelectFilter();
+		$filter->setCondition(new NotEqualsCond(new ArFieldHandle("Currency", "isDefault"), 1));
+		$filter->setOrder(new ArFieldHandle("Currency", "isEnabled"), 'DESC');
+		$filter->setOrder(new ArFieldHandle("Currency", "position"), 'ASC');
+		$currencies = ActiveRecord::getRecordSet('Currency', $filter)->toArray();
+
+		foreach ($currencies as &$currency)
 		{
-			$form->restore();
-		}
-		else
-		{
-			$form->setData($this->currData);
+		  	$currency['name'] = $this->locale->info()->getCurrencyName($currency['ID']);
 		}
 
-		//response
+		// build form
+		$form = $this->buildForm();
+
 		$response = new ActionResponse();
-		$response->setValue("action", "ratesForm");
-		$response->setValue("tabPanelFile", "tabpanel.ratesForm.tpl");
+		$response->setValue('currencies', $currencies);
+		$response->setValue('rateForm', $form);
+//		$response->setValue('defaultCurrency', Store::getInstance()->getDefaultCurrency());		
+		return $response;
+	}
 
-		$response->setValue("defaultId", $this->defaultId);
-		$response->setValue("defaultName", $this->locale->getCurrency($this->defaultId));
-		$response->setValue("form", @$form->render());
+	/**
+	 * Change currency options
+	 * @return ActionResponse
+	 */
+	public function options()
+	{
+		
+
+		$response = new ActionResponse();
 
 		return $response;
+	}
+
+	/**
+	 * Builds a currency form validator
+	 *
+	 * @return RequestValidator
+	 */
+	private function buildValidator()
+	{
+		ClassLoader::import("framework.request.validator.RequestValidator");
+
+		$validator = new RequestValidator("rate", $this->request);
+		$validator->addCheck("rate", new IsNotEmptyCheck($this->translate("Please enter the rate")));
+		return $validator;
+	}
+
+	/**
+	 * Builds a currency form instance
+	 *
+	 * @return Form
+	 */
+	private function buildForm()
+	{
+		ClassLoader::import("framework.request.validator.Form");
+		return new Form($this->buildValidator());		
 	}
 
 	/**
@@ -274,24 +310,6 @@ class CurrencyController extends StoreManagementController
 			$form->saveState();
 		}
 		return new ActionRedirectResponse($this->request->getControllerName(), "ratesForm");
-	}
-
-	private function formatCurrencyData()
-	{
-		unset($this->currData);
-		$currSet = ActiveRecord::getRecordSet("Currency", new ArSelectFilter(), true);
-
-		foreach($currSet->toArray()as $value)
-		{
-			if ($value['isDefault'] == 1)
-			{
-				$this->defaultId = $value['ID'];
-			}
-			else
-			{
-				$this->currData[$value['ID']] = $value['rate'];
-			}
-		}
 	}
 
 	private function createRatesForm()

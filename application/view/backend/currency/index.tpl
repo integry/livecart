@@ -17,7 +17,7 @@
 		<li id="tabRates" class="tab inactive"><a href="{link controller=backend.currency action=rates}">Adjust Rates</a></li>
 		<li id="tabOptions" class="tab inactive"><a href="{link controller=backend.currency action=options}">Options</a></li>
 	</ul>
-	<div id="sectionContainer" class="maxHeight h--100">
+	<div id="sectionContainer" class="maxHeight h--95">
 		<div id="tabManageContent" class="maxHeight">
 		
 			<ul class="menu" id="currPageMenu">
