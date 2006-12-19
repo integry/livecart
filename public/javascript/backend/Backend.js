@@ -5,13 +5,118 @@ function showHelp(url)
   	return window.open(url, 'helpWin', 'width=400, height=700, resizable, scrollbars, location=no');
 }
 
-/* Backend menu */
+/*************************************************
+	Layout
+**************************************************/
+Backend.LayoutManager = Class.create();
 
+Backend.LayoutManager.prototype = 
+{
+	initialize: function()
+	{	  	
+		window.onresize = this.onresize.bindAsEventListener(this);
+		this.onresize();	
+	},
+
+	
+	
+	collapseAll: function(cont)
+	{
+		el = document.getElementsByClassName("maxHeight", document);
+
+		for (k = 0; k < el.length; k++)
+		{
+			el[k].style.minHeight = '0px';
+
+			if (document.all) 
+			{
+				el[k].style.height = '0px';
+			}
+			else
+			{
+				el[k].style.minHeight = '0px';
+			}
+
+		}
+	},
+
+	/**
+	 * @todo Figure out why IE needs additional 2px offset
+	 */
+	onresize: function(stop)
+	{
+		// calculate content area height
+		ph = new PopupMenuHandler();
+		w = ph.getWindowHeight();
+		h = w - 99 - 61 - (document.all ? 2 : 0);
+		
+		cont = document.getElementById('pageContentContainer');
+
+		// IE	
+		if (document.all)
+		{
+			try {
+				cont.style.height = h + 'px';	
+			}
+			catch (e)
+			{
+				cont.style.height = '0px';				  	
+			}
+			
+			// force re-render for IE
+			document.getElementById('pageContainer').style.display = 'none';
+			document.getElementById('pageContainer').style.display = 'block';
+			document.getElementById('nav').style.display = 'none';
+			document.getElementById('nav').style.display = 'block';
+
+			if (!stop)
+			{
+			  	this.onresize(true);
+			}	  		  
+
+		}
+		
+		// FF, etc.
+		else
+		{
+			cont.style.minHeight = h + 'px';		  
+
+			this.collapseAll(cont);
+			this.setMaxHeight(cont);
+		}
+	},
+
+	setMaxHeight: function(parent)
+	{
+	  	el = document.getElementsByClassName('maxHeight', parent);
+	  	for (k = 0; k < el.length; k++)
+		{
+			var parentHeight = el[k].parentNode.offsetHeight;
+
+			offset = 0;
+			if (el[k].className.indexOf(' h-') > 0)
+			{
+			  	offset = el[k].className.substr(el[k].className.indexOf(' h-') + 3, 10);
+			  	if (offset.indexOf(' ') > 0)
+			  	{
+			  		offset = offset.substr(0, offset.indexOf(' '));
+			  	}				  	
+			}  
+			offset = parseInt(offset);
+ 			newHeight = parentHeight + offset;
+			el[k].style.minHeight = newHeight + 'px';				    
+		}
+	}	
+}
+
+/*************************************************
+	Backend menu 
+**************************************************/
 Backend.NavMenu = Class.create();
 
 /**
  * Builds navigation menu from passed JSON array
- **/
+ */
 Backend.NavMenu.prototype = 
 {
 	initialize: function(menuArray, controller, action)

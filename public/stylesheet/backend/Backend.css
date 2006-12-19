@@ -81,16 +81,14 @@ html, body{
 
 #pageContainer {
 	position:relative; /* needed for footer positioning*/
-	margin:0 auto; /* center, not in IE5 */
-	height:auto !important; /* real browsers */
-	height:100%; /* IE6: treaded as min-height*/
-	min-height:100%; /* real browsers */
 }
 
 #pageFooter {
-	position: absolute;
-	width: 100%;
-	bottom: 0; /* stick to bottom */
+	position: relative;
+}
+
+.maxHeight {
+  	height: 95%; 
 }
 
 /*************************** 
@@ -167,6 +165,7 @@ html, body{
   	width: 100%;
 	border-collapse: collapse;
 	height: 44px;
+	clear: both;
 }
 #footerLeft {
   	width: 824px;
@@ -443,17 +442,15 @@ html, body{
 ***************************/
 #pageTitleContainer {
 	height:20px;
-	background-color: #E6E6E6;
-/*	position: absolute; */
-	bottom: 0;
-	width: 100%;
 	padding-top: 5px;
-	margin-bottom: -1px;
+	background-color: #E6E6E6;
+	position: relative;
+	width: 100%;
+	clear: both;
 }
 #pageTitle {
   	font-weight: bold;
 	padding-left: 20px;
-	margin-top: -2px;
 }
 #titleHelpButton {
 	position: relative;
@@ -617,6 +614,7 @@ input.radio, input.checkbox
 {
     float: left;
     margin-right: 1em;
+    cursor: pointer;
 }
 
 input:focus, textarea:focus, select:focus
