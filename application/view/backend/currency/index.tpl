@@ -11,14 +11,14 @@
 {pageTitle}{t _currencies}{/pageTitle}
 {include file=layout/header.tpl}
 
-<div id="tabContainer" style="height: 100%;">
+<div id="tabContainer" class="maxHeight">
 	<ul id="tabList">
 		<li id="tabManage" class="tab active"><a href="{link controller=backend.currency action=list}">Manage</a></li>
 		<li id="tabRates" class="tab inactive"><a href="{link controller=backend.currency action=rates}">Adjust Rates</a></li>
 		<li id="tabOptions" class="tab inactive"><a href="{link controller=backend.currency action=options}">Options</a></li>
 	</ul>
-	<div id="sectionContainer" style="height: 95%; border: 2px solid red;">
-		<div id="tabManageContent">
+	<div id="sectionContainer" class="maxHeight h--50">
+		<div id="tabManageContent" class="maxHeight">
 		
 			<ul class="menu" id="currPageMenu">
 				<li><a href="#" onClick="curr.showAddForm(); return false;">{t _add_currency}</a></li>

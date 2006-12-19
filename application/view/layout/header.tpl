@@ -47,13 +47,13 @@
 
 <div id="pageContainer">
 	
-	<div id="pageHeader" style="height: 75px;">
+	<div id="pageHeader" style="height: 99px;">
 				
 		<div id="topAuthInfo">
 			Logged in as: <span id="headerUserName">rinalds</span> <a href="/logout">(logout)</a>
 		</div>
 	
-		<div id="topBackground" style="height: 40px;">
+		<div id="topBackground" style="height: 60px;">
 			<div id="topBackgroundLeft" style="width: 100%;">
 				
 				<div style="float: left;">
@@ -88,13 +88,13 @@
 			
 		</div>
 	
-	</div>
-		
-	<div id="pageContentContainer" style="padding-bottom:62px; position: relative;">
-	
 		<div id="pageTitleContainer">
 			<div id="pageTitle">{$PAGE_TITLE}</div>
 		</div>
+		
+	</div>
+		
+	<div id="pageContentContainer" style="position: relative;">
 			
-		<div style="background-color: white; margin-left:15px; margin-right:20px; padding: 10px;">	
+		<div style="background-color: white; margin-left:15px; margin-right:20px; padding: 10px;" class="maxHeight h--20">	
 	

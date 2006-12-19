@@ -48,6 +48,8 @@
 	new Draggable('transDialogBox');
 	Event.observe('transDialogBox', 'mousedown', cust.stopTransCancel, false);
 	Event.observe('transLink', 'click', cust.translationMenuClick, false);
+	
+	new Backend.LayoutManager();
 </script>
 	
 </body>
