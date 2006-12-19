@@ -11,13 +11,7 @@
 		</div>
 	</li>		
 	<li id="navSubItem-template">
-		<div>
-			<div>
-				<div>
-					<a href=""></a>
-				</div>
-			</div>
-		</div>
+		<a href=""></a>
 	</li>		
 </ul>
 

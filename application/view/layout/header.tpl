@@ -89,7 +89,11 @@
 		</div>
 	
 		<div id="pageTitleContainer">
-			<div id="pageTitle">{$PAGE_TITLE}</div>
+<!--			 -->
+			<div id="pageTitle" style="float: left;">{$PAGE_TITLE}</div>
+			<div style="position: absolute; left: 250px; padding-top: 2px;">
+				<small><a href="">Settings</a> &gt; <a href="">Languages</a> &gt; <strong>English</strong></small>
+			</div>
 		</div>
 		
 	</div>

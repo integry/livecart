@@ -27,7 +27,7 @@
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 
 
-{pageTitle}Category manager. Selected: <span id="activeCategoryPath" style="font-weight: normal"></span>{/pageTitle}
+{pageTitle}Products and Categories{/pageTitle}
 {include file="layout/header.tpl"}
 
 
@@ -44,7 +44,9 @@
 	</div>
 </div>
 
-<div id="managerContainer" style="margin-left: 270px; height: 100%;">
+<div id="activeCategoryPath" style="font-weight: normal; padding-bottom: 5px; padding-left: 275px;"></div>
+
+<div id="managerContainer" style="margin-left: 270px;" class="maxHeight h--60">
 	<div id="tabContainer">
 		<ul id="tabList">
 			<li id="tabProducts" class="tab active"><a href="{link controller=backend.product action=index id=%id%}">{t _products}</a></li>
@@ -55,7 +57,7 @@
 			<li id="tabArticles" class="tab inactive"><a href="{link controller=backend.image action=index id=%id%}">{t _articles}</a></li>
 		</ul>
 	</div>
-	<div id="sectionContainer">
+	<div id="sectionContainer" class="maxHeight  h--50">
 	</div>
 </div>
 
