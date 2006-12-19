@@ -22,9 +22,7 @@ class FilterController extends StoreManagementController
     }
 
     public function index()
-    {
-        echo $this->locale->info()->getDateFormat();
-        
+    {        
         $response = new ActionResponse();
 
         $categoryID = (int)$this->request->getValue('id');
@@ -38,6 +36,28 @@ class FilterController extends StoreManagementController
             $filters = array_merge($filters, $specFieldObj->getFiltersGroupsList());
         }
 
+        
+        $blankFilter = array
+        (
+            'ID' => 'new',
+            'name' => array(),
+            'values' => array(),
+            'rootId' => 'filter_item_new_'.$categoryID.'_form',
+            'categoryID' => $categoryID,
+            'specFields' => $this->getSpecFieldOptions($specFieldsList)
+        );
+
+        $response->setValue('filters', $filters);
+        $response->setValue('blankFilter', $blankFilter);
+        $response->setValue('categoryID', $categoryID);
+        $response->setValue('configuration', $this->config);
+        $response->setValue('defaultLangCode', $this->store->getDefaultLanguageCode());
+
+        return $response;
+    }
+
+    private function getSpecFieldOptions($specFieldsList)
+    {
         $specFieldOptions = array();
         foreach ($specFieldsList as $field)
         {
@@ -52,27 +72,10 @@ class FilterController extends StoreManagementController
                 );
             }
         }
-
         
-        $blankFilter = array
-        (
-            'ID' => 'new',
-            'name' => array(),
-            'values' => array(),
-            'rootId' => 'filter_item_new_'.$categoryID.'_form',
-            'categoryID' => $categoryID,
-            'specFields' => $specFieldOptions
-        );
-
-        $response->setValue('filters', $filters);
-        $response->setValue('blankFilter', $blankFilter);
-        $response->setValue('categoryID', $categoryID);
-        $response->setValue('configuration', $this->config);
-        $response->setValue('defaultLangCode', $this->store->getDefaultLanguageCode());
-
-        return $response;
+        return $specFieldOptions;
     }
-
+    
     private function createConfig()
     {
         $languages[$this->store->getDefaultLanguageCode()] =  $this->locale->info()->getLanguageName($this->store->getDefaultLanguageCode());
@@ -93,7 +96,8 @@ class FilterController extends StoreManagementController
 
             'selectorValueTypes' => SpecField::getSelectorValueTypes(),
             'countNewFilters' => 0,
-            'typesWithNoFiltering' => array()
+            'typesWithNoFiltering' => array(),
+            'dateFormat' => $this->locale->info()->getDateFormat()
             );
     }
 
@@ -134,7 +138,7 @@ class FilterController extends StoreManagementController
             $name = $this->request->getValue('name');
             $filters = $this->request->getValue('filters', false);
             $specFieldID = SpecField::getInstanceByID((int)$this->request->getValue('specFieldID'));
-
+            
             $filterGroup->setLanguageField('name',        @array_map($htmlspecialcharsUtf_8, $name),        array_keys($this->config['languages']));
             $filterGroup->setFieldValue('specFieldID', $specFieldID);
 
@@ -163,7 +167,15 @@ class FilterController extends StoreManagementController
 
                     $filter->setLanguageField('name', @array_map($htmlspecialcharsUtf_8, $value['name']),  array_keys($this->config['languages']));
                     
-                    if(!in_array($specFieldType, $this->config['selectorValueTypes']))
+                    
+                    if($specFieldType == SpecField::TYPE_TEXT_DATE)
+                    {
+                        // Some how php strtotime function is more powerfull than MYSQL one
+                        $filter->setFieldValue('rangeDateStart', date("Y-m-d", strtotime($value['rangeDateStart'])));
+                        $filter->setFieldValue('rangeDateEnd', date("Y-m-d", strtotime($value['rangeDateEnd'])));
+
+                    }
+                    else if(!in_array($specFieldType, $this->config['selectorValueTypes']))
                     {
                         $filter->setFieldValue('rangeStart', $value['rangeStart']);
                         $filter->setFieldValue('rangeEnd', $value['rangeEnd']);
@@ -243,17 +255,7 @@ class FilterController extends StoreManagementController
         $filterGroupArray['rootId'] = "filter_items_list_".$filterGroupArray['SpecField']['categoryID']."_".$filterGroupArray['ID'];
         $filterGroupArray['categoryID'] = $filterGroupArray['SpecField']['categoryID'];
 
-        $filterGroupArray['specFields'] = array();
-        foreach ($specFieldsList = Category::getInstanceByID($filterGroupArray['categoryID'])->getSpecFieldList() as $field)
-        {
-            $filterGroupArray['specFields'][] = array(
-                'ID' => $field['ID'],
-                'type' => $field['type'],
-                'dataType' => $field['dataType'],
-                'name' => isset($field['name'][$_lng = $this->store->getDefaultLanguageCode()]) ? $field['name'][$_lng] : '',
-                'values' => SpecField::getInstanceByID($field['ID'])->getValuesList()
-                );
-        }
+        $filterGroupArray['specFields'] = $this->getSpecFieldOptions(Category::getInstanceByID($filterGroupArray['categoryID'])->getSpecFieldList());           
 
         return new JSONResponse($filterGroupArray);
     }
