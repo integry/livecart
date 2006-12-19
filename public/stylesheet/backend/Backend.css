@@ -637,7 +637,24 @@ label.radio
 
 a.cancel 
 {
-  	color: red;
+ 	color: red;
+}
+
+input.calendar
+{
+    width: 6em;
+}
+
+img.calendar_button
+{
+    margin-left: 0.5em;
+    cursor: pointer; 
+    border: 0px none;   
+}
+
+img.calendar_button_hover
+{
+    background: red;
 }
 
 /*************************** 

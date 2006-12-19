@@ -5,7 +5,7 @@
 
 .filter_date_range input
 {
-    width: 5.2em;
+    width: 6em;
 }
 
 .filter legend, .filter_date_range, .filter_step_filters, .filter_step_translations, .filter_step_translations_language
@@ -28,7 +28,6 @@
 {
    font-size: 200%;
 }
-
 
 .filter ul
 {
