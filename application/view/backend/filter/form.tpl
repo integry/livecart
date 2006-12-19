@@ -19,7 +19,7 @@
 
 		<p>
     		<label>{t _Filter_associated_field}</label>
-    		<select name="specFieldID" class="filter_form_specFieldID"></select>
+ 	<select name="specFieldID" class="filter_form_specFieldID"></select>
     		<span class="feedback"> </span>
 		</p>
 	</fieldset>
@@ -55,6 +55,8 @@
                                 <p class="filter_date_range">
                                     <label>{t _Filter_date_range}</label>
                                     <input type="text" /> <img src="image/silk/calendar.png" class="calendar_button" /> - <input type="text" /> <img src="image/silk/calendar.png" class="calendar_button" />
+                                    <input type="hidden" class="hidden filter_date_start_real" />
+                                    <input type="hidden" class="hidden filter_date_end_real" />
                                     <span class="feedback"> </span>
                                 </p>
             				    <br />
