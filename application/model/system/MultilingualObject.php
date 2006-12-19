@@ -11,6 +11,8 @@ ClassLoader::import("application.model.system.MultilingualObjectInterface");
  */
 abstract class MultilingualObject extends ActiveRecordModel implements MultilingualObjectInterface
 {
+	private static $multilingualFieldList = array();
+
 	public function setValueByLang($fieldName, $langCode, $value)
 	{
 		$valueArray = $this->getFieldValue($fieldName);

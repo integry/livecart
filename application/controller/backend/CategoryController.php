@@ -127,7 +127,7 @@ class CategoryController extends StoreManagementController
 	}
 
 	/**
-	 * Enter description here...
+	 * Reorder category node
 	 *
 	 */
 	public function reorder()

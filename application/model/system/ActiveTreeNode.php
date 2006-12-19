@@ -144,9 +144,15 @@ class ActiveTreeNode extends ActiveRecordModel
 		return $childList;
 	}
 
+	/**
+	 * Gets a list of direct child nodes
+	 *
+	 * @param bool $loadReferencedRecords
+	 * @return ARSet
+	 */
 	public function getDirectChildNodes($loadReferencedRecords = false)
 	{
-		$this->getChildNodes($loadReferencedRecords, false);
+		return $this->getChildNodes($loadReferencedRecords, false);
 	}
 
 	/**
@@ -258,7 +264,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	/**
 	 * Gets a parent node
 	 *
-	 * @return unknown
+	 * @return ARSet
 	 */
 	public function getParentNode()
 	{

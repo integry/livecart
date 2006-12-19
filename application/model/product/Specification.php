@@ -1,9 +1,35 @@
 <?php
 
 ClassLoader::import("application.model.ActiveRecordModel");
+ClassLoader::import("application.model.product.*");
 
-class Specification extends ActiveRecordModel 
+/**
+ * Product specification data container
+ * Contains a relation between specification fields (attributes), assigned values and products
+ * (kind of "feature table")
+ *
+ * @package application.model.product
+ * @author Saulius Rupainis <saulius@integry.net>
+ *
+ */
+class Specification extends ActiveRecordModel
 {
+	public static function defineSchema($className = __CLASS__)
+	{
+		$schema = self::getSchemaInstance($className);
+		$schema->setName("Specification");
+
+		$schema->registerField(new ARPrimaryForeignKeyField("specFieldID", "SpecField", "ID", null, ARInteger::instance()));
+		$schema->registerField(new ARPrimaryForeignKeyField("specFieldValueID", "SpecFieldValue", "ID", "SpecFieldValue", ARInteger::instance()));
+		$schema->registerField(new ARPrimaryForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
+	}
+
+	public static function getNewInstance(Product $product, SpecField $specField, SpecFieldValue $value)
+	{
+		$this->Product = $product;
+		$this->SpecField = $specField;
+		$this->SpecFieldValue = $value;
+	}
 }
 
 ?>

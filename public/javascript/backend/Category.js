@@ -98,6 +98,9 @@ Backend.Category = {
 		Backend.Category.tabControl.activateTab($('tabMainDetails'), newCategory.ID);
 	},
 
+	/**
+	 * Updating category branch via ajax request
+	 */
 	updateBranch: function(formObj)
 	{
 		var params = Form.serialize(formObj);
@@ -110,6 +113,9 @@ Backend.Category = {
 					});
 	},
 
+	/**
+	 * Post-processing request
+	 */
 	afterBranchUpdate: function(response)
 	{
 		eval('var categoryData = ' + response.responseText);

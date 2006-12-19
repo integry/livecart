@@ -82,8 +82,16 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return SpecField::getRecordSetArray($filter);
 	}
 
-	public function createHandleString()
+	/**
+	 * Gets a list of products assigned to this node
+	 *
+	 */
+	public function getProductList()
 	{
+		$this->getID();
+		$productFilter = new ARSelectFilter();
+		$productFilter->setCondition();
+		$products = ActiveRecord::getRecordSet("Product", $productFilter);
 	}
 
 	public function setValueByLang($fieldName, $langCode, $value)
@@ -145,6 +153,11 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return $path;
 	}
 
+	/**
+	 * Creates array representation
+	 *
+	 * @return array
+	 */
 	public function toArray()
 	{
 		$store = Store::getInstance();
