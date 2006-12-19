@@ -13,15 +13,26 @@ Backend.LayoutManager = Class.create();
 /**
  * Manage 100% heights
  *
- * IE does this pretty good natively, however FF won't handle cascading 100% heights
- * unless it's quirks mode.
+ * IE does this pretty good natively (only the main content div height is changed on window resize),
+ * however FF won't handle cascading 100% heights unless the page is being rendered in quirks mode.
  *
  * You can specify a block to take 100% height by assigning a "maxHeight" CSS class to it
  * This class also simulates an "extension" of CSS, that allows to add or substract some height
  * in pixels from percentage defined height (for example 100% minus 40px). This will often be needed
  * to compensate for parent elements padding. For example, if the parent element has a top and bottom
  * padding of 10px, you'll have to substract 20px from child block size. This will also be needed when
- * there are other siblings that consume some known height.
+ * there are other siblings that consume some known height (like TabControl, which contains a
+ * tab bar with known height and content div, which must take 100% of the rest of the available height).
+ *
+ * Example: 
+ * 
+ * <code>
+ * 		<div class="maxHeight h--50">
+ *			This div will take 100% of available space minus 50 pixels		
+ *		</div>
+ * </code>
+ *
+ * @todo automatically substract parent padding
  */
 Backend.LayoutManager.prototype = 
 {
@@ -31,6 +42,10 @@ Backend.LayoutManager.prototype =
 		this.onresize();	
 	},	
 	
+	/**
+	 * Set the minimum possible height to all involved elements, so that 
+	 * their height could be enlarged to necessary size
+	 */
 	collapseAll: function(cont)
 	{
 		el = document.getElementsByClassName("maxHeight", document);
