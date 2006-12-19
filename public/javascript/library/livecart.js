@@ -145,7 +145,9 @@ LiveCart.AjaxUpdater.prototype = {
                 break;
             }
         }
-
+        
+		document.body.style.cursor = 'progress';
+		
         new Ajax.Updater({success: containerId},
                          url,
                          updaterOptions);
@@ -164,6 +166,7 @@ LiveCart.AjaxUpdater.prototype = {
 
     postProcessResponse: function(response)
     {
+		document.body.style.cursor = 'default';
         LiveCart.ajaxUpdaterInstance.updateHead(response);
         LiveCart.ajaxUpdaterInstance.runJavaScripts(response.responseText);
         LiveCart.ajaxUpdaterInstance.hideIndicator();
