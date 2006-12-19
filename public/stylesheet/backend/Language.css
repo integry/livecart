@@ -20,6 +20,7 @@ label.radio {
 
 #languageList {
   	width: 300px;
+  	cursor: move;  	
 }
 
 #languageList li {

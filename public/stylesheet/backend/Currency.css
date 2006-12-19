@@ -5,6 +5,7 @@
 
 #currencyList {
   	width: 300px;
+  	cursor: move;
 }
 
 #currencyList li {
