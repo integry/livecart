@@ -298,19 +298,22 @@ class CurrencyController extends StoreManagementController
 	public function saveRates()
 	{
 		$currencies = $this->getCurrencySet();
-		$form = $this->buildValidator($currencies->toArray());
 
-		if($form->getValidator()->isValid())
+		if($this->buildValidator($currencies->toArray())->isValid())
 		{ 
 			foreach($currencies as &$currency)
 			{
-				echo '!'.$form->getValue('rate_' . $currency->getID());
-				$currency->rate->set($form->getValue('rate_' . $currency->getID()));
+				$currency->rate->set($this->request->getValue('rate_' . $currency->getID()));
 				$currency->save();
 			}
+			$saved = array(query => 'saved=true');
 		}
-		return false;
-		return new ActionRedirectResponse($this->request->getControllerName(), "rates");
+		else 
+		{
+			$saved = array();  
+		}
+
+		return new ActionRedirectResponse($this->request->getControllerName(), 'rates', $saved);
 	}
 }
 
