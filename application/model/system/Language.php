@@ -64,7 +64,7 @@ class Language extends ActiveRecordModel
 	public static function getLanguages($active = 0)
 	{
 	  	$filter = new ARSelectFilter();
-	  	$filter->setOrder(new RFieldHandle("Language", "position"), ArSelectFilter::ORDER_ASC);
+	  	$filter->setOrder(new ARFieldHandle("Language", "position"), ArSelectFilter::ORDER_ASC);
 
 		if ($active > 0)
 		{
