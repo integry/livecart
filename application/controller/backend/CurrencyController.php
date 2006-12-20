@@ -221,6 +221,7 @@ class CurrencyController extends StoreManagementController
 
 		$response = new ActionResponse();
 		$response->setValue('currencies', $currencies->toArray());
+		$response->setValue('saved', $this->request->getValue('saved'));
 		$response->setValue('rateForm', $form);
 		$response->setValue('defaultCurrency', Store::getInstance()->getDefaultCurrency()->getID());		
 		return $response;
