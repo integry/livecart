@@ -51,20 +51,30 @@ a, a:visited
 	padding: 3px;
 }
 
-div.saveConfirmation {
+div.saveConfirmation, div.errorMessage {
 	height: 50px;
+    position: relative;
+}
+
+div.saveConfirmation div, div.errorMessage div {
+	padding: 10px;
+	font-weight: bold;
+	white-space: nowrap;
+    width: auto;
 }
 
 div.saveConfirmation div {
-	border: 2px solid yellow;
-	padding: 10px;
-	font-weight: bold;  	
-	width: auto;
-	float: left;
-	clear: both;
-	white-space: nowrap;
+    border: 2px solid yellow;
 }
 
+div.errorMessage div {
+    border: 2px solid #FF8600;
+    background: #FFDDD5;
+}
+
+div.errorMessage div h3 {
+    padding-bottom: 1em;
+}
 
 /*************************** 
 	Layout 

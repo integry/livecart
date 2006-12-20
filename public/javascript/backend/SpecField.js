@@ -1012,7 +1012,7 @@ Backend.SpecField.prototype = {
 		{
 		    // New item has no pr06r3s5 indicator
 		}
-
+        
 		this.clearAllFeedBack();
         new Ajax.Request(
             this.nodes.form.action,
@@ -1065,6 +1065,10 @@ Backend.SpecField.prototype = {
                 this.hideNewSpecFieldAction(this.categoryID);
     		    this.recreate(this.specField, true);
             }
+            
+            // Reload filters
+            var tc = Backend.Category.tabControl;
+            Element.remove($(tc.getContainerId('tabFilters', tc.treeBrowser.getSelectedItemId())));
         }
         else
         {

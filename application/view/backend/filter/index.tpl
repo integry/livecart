@@ -69,26 +69,36 @@
 </script>
 {/literal}
 
-<div>
-    <a href="#new" id="filter_item_new_{$categoryID}_show">{t _add_new_filter}</a>
-    <div id="filter_item_new_{$categoryID}_form" style="display: none;">
-        <script type="text/javascript"> new Backend.Filter('{json array=$blankFilter}');</script>
+{if $blankFilter.specFields|@count > 0}
+    <div>
+        <a href="#new" id="filter_item_new_{$categoryID}_show">{t _add_new_filter}</a>
+        <div id="filter_item_new_{$categoryID}_form" style="display: none;">
+            <script type="text/javascript"> new Backend.Filter('{json array=$blankFilter}');</script>
+        </div>
     </div>
-</div>
-
-<br />
-
-<ul id="filter_items_list_{$categoryID}" class="filterList activeList_add_sort activeList_add_edit activeList_add_delete">
-{foreach item="filter" from=$filters}
-	<li id="filter_items_list_{$categoryID}_{$filter.ID}">
-    	<span class="filter_title">{$filter.name[$defaultLangCode]}</span>
-	</li>
-{/foreach}
-</ul>
-
-{literal}
-<script type="text/javascript">
-     $("filter_item_new_{/literal}{$categoryID}{literal}_show").onclick = function(e) { Backend.Filter.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') }
-     window.activeFiltersList = new ActiveList('filter_items_list_{/literal}{$categoryID}{literal}', filterListCallbacks);
-</script>
-{/literal}
+    
+    
+    <br />
+    
+    <ul id="filter_items_list_{$categoryID}" class="filterList activeList_add_sort activeList_add_edit activeList_add_delete">
+    {foreach item="filter" from=$filters}
+    	<li id="filter_items_list_{$categoryID}_{$filter.ID}">
+        	<span class="filter_title">{$filter.name[$defaultLangCode]}</span>
+    	</li>
+    {/foreach}
+    </ul>
+    
+    {literal}
+    <script type="text/javascript">
+         $("filter_item_new_{/literal}{$categoryID}{literal}_show").onclick = function(e) { Backend.Filter.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') }
+         window.activeFiltersList = new ActiveList('filter_items_list_{/literal}{$categoryID}{literal}', filterListCallbacks);
+    </script>
+    {/literal}
+{else}
+    <div class="errorMessage">
+        <div>
+        <h3>{t _category_has_no_attr}</h3>
+        <p>{t _add_attr_to_create_filters}</p>
+        </div>
+    </div>
+{/if}

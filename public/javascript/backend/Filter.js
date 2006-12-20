@@ -364,8 +364,17 @@ Backend.Filter.prototype = {
                         } 
                     }                          
                     
-
-                        document.getElementsByClassName('filter_selector', li)[0].style.display = (self.selectorValueTypes.indexOf(self.specFields[i].type) === -1 || self.specFields[i].type == Backend.SpecField.prototype.TYPE_TEXT_DATE) ? 'none' : 'block';
+                        if((self.selectorValueTypes.indexOf(self.specFields[i].type) === -1 || self.specFields[i].type == Backend.SpecField.prototype.TYPE_TEXT_DATE))
+                        {
+                            self.nodes.generateFiltersLink.style.display = 'none';
+                            document.getElementsByClassName('filter_selector', li)[0].style.display = 'none';                            
+                        }
+                        else
+                        {
+                            self.nodes.generateFiltersLink.style.display = 'block';
+                            document.getElementsByClassName('filter_selector', li)[0].style.display = 'block';  
+                        }
+ 
                         document.getElementsByClassName('filter_date_range', li)[0].style.display = (self.specFields[i].type == Backend.SpecField.prototype.TYPE_TEXT_DATE) ? 'block' : 'none'; 
                 });
                 

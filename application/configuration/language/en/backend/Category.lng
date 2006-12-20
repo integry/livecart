@@ -1,3 +1,4 @@
+# SpecField
 _SpecField_main=Main
 _SpecField_values=Values
 _SpecField_translations=Translations
@@ -14,7 +15,7 @@ _SpecField_numbers=Numbers
 _SpecField_add_values=Enter more values
 _SpecField_select_multiple=Can select multiple values
 
-
+# Filter
 _Filter_main=Main
 _Filter_filters=Filters
 _Filter_translations=Translations
