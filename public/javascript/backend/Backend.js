@@ -620,6 +620,35 @@ var BrowserDetect = {
 
 BrowserDetect.init();
 
+/*************************************************
+	Save confirmation message animation
+*************************************************/
+Backend.SaveConfirmationMessage = Class.create();
+Backend.SaveConfirmationMessage.prototype = 
+{
+	initialize: function(element)
+  	{
+		new Effect.Highlight(element, {duration: 2.5, afterFinish: this.hide});
+	},
+	
+	hide: function(obj)
+	{
+		new Effect.SlideUp(obj.element.parentNode);	  
+	}
+}
+
+function hideSaveConfirmation()	
+{
+	conf = document.getElementsByClassName('saveConfirmation');
+	for (k in conf)
+	{
+		if (conf[k].getElementsByTagName)
+		{
+			new Backend.SaveConfirmationMessage(conf[k].getElementsByTagName('div')[0]);
+		}
+	}
+}
+
 function slideForm(id, menuId)
 {
 	Effect.Appear(id, {duration: 0.15});	  	

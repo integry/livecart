@@ -481,31 +481,5 @@ Backend.LanguageEdit.prototype =
 		}
 		
 		return filter;
-	},
-	
-	hideSaveConfirmation: function()	
-	{
-		conf = document.getElementsByClassName('saveConfirmation');
-		for (k in conf)
-		{
-			if (conf[k].getElementsByTagName)
-			{
-				new SaveConfirmationMessage(conf[k].getElementsByTagName('div')[0]);
-			}
-		}
-	}	  
-}
-
-SaveConfirmationMessage = Class.create();
-SaveConfirmationMessage.prototype = 
-{
-	initialize: function(element)
-  	{
-		new Effect.Highlight(element, {duration: 2.5, afterFinish: this.hide});
-	},
-	
-	hide: function(obj)
-	{
-		new Effect.SlideUp(obj.element.parentNode);	  
-	}
+	},  
 }

@@ -47,6 +47,10 @@
 /************************
 	Rates
 ************************/
+#rates, #saveRates {
+	width: 500px;  
+}
+
 #currencyRateList {
   	
 }
@@ -65,4 +69,12 @@
   	width: 70px;
   	vertical-align: middle;
   	padding-top: 3px;
+}
+
+#rates .feedback {
+  	color: red;  	
+}
+
+.defaultCurrency {
+  	vertical-align: middle;
 }

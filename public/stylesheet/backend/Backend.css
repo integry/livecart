@@ -518,7 +518,7 @@ form p
    vertical-align: middle;
    margin-left: 10px;
    padding-left: 20px;
-   background: url(/public/image/silk/error.png) no-repeat left center;
+   background: url(../../image/silk/error.png) no-repeat left center;
 }
 
 fieldset.group
