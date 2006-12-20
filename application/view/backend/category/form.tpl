@@ -1,8 +1,9 @@
 {includeCss file="form.css"}
 
 {assign var="action" value="create"}
-<div class="actionConfirmation" id="categoryMsg_{$categoryId}" style="display: none;">
-	Details were successfuly updated!
+
+<div class="saveConfirmation" id="categoryMsg_{$categoryId}">
+	<div>Details were successfuly updated!</div>
 </div>
 
 </div>

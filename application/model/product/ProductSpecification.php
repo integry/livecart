@@ -19,6 +19,15 @@ class ProductSpecification implements IteratorAggregate
 		$this->product->load();
 	}
 
+	public function setProperty()
+	{
+
+	}
+
+	public function removeProperty()
+	{
+
+	}
 }
 
 ?>
