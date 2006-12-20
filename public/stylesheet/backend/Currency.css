@@ -55,3 +55,14 @@
   	font-weight: bold;
   	font-size: larger;
 }
+
+#currencyRateList input {
+  	width: 100px;
+  	vertical-align: middle;
+}
+
+#currencyRateList label {
+  	width: 70px;
+  	vertical-align: middle;
+  	padding-top: 3px;
+}

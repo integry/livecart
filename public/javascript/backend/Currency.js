@@ -86,7 +86,17 @@ Backend.Currency.prototype =
 		checkBox.parentNode.replaceChild(img, checkBox);
 		
 		var updater = new Ajax.Updater('currencyList_container_' + id, url);
+		this.resetRatesContainer();
 	},			
+	
+	resetRatesContainer: function()
+	{
+		rateCont = document.getElementById('tabRatesContent');
+		while (rateCont.firstChild)
+		{
+			rateCont.removeChild(rateCont.firstChild);  	
+		}  	
+	},
 	
 	setFormUrl: function(url)
 	{

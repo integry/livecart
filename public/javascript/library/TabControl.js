@@ -3,7 +3,7 @@ var TabControl = Class.create();
 TabControl.prototype = {
 
 	activeTab: null,
-	indicatorImageName: null,
+	indicatorImageName: "image/indicator.gif",
 
 	initialize: function(tabContainerName, sectionContainerName, indicatorImageName)
 	{

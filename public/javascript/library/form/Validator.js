@@ -4,7 +4,6 @@ function validateForm(form)
 	var validatorData = form._validator.value;
 	var validator = validatorData.parseJSON();
 
-
 	for (var fieldName in validator)
 	{
 		if (fieldName == "toJSONString")
@@ -45,6 +44,31 @@ function validateForm(form)
 	return true;
 }
 
+function applyFilters(form, ev)
+{	
+	var filterData = form.elements.namedItem('_filter').value;
+	var filter = filterData.parseJSON();
+
+	element = ev.target;	
+	elementFilters = filter[element.id];
+	
+	if ('undefined' == 'elementFilters')
+	{
+	  	return false;
+	}
+
+	for (k in elementFilters)
+	{
+		if(typeof elementFilters[k] == 'object')
+		{
+		  	eval(k + '(element, elementFilters[k]);');
+		}
+	}	
+}
+
+/*********************************************
+	Checks (validators)
+*********************************************/
 function trim(strValue)
 {
  	var objRegExp = /^(\s*)$/;
@@ -125,6 +149,50 @@ function MinValueCheck(element, constraint)
 function MaxValueCheck(element, constraint)
 {
   	return element.value <= constraint.maxValue || element.value == '';
+}
+
+/*********************************************
+	Filters
+*********************************************/
+function NumericFilter(element, params)
+{
+	var value = element.value;
+	value = value.replace(',' , '.');
+	
+	// only keep the last comma
+	parts = value.split('.');
+
+	value = '';
+	for (k = 0; k < parts.length; k++)
+	{
+		value += parts[k] + ((k == (parts.length - 2)) && (parts.length > 1) ? '.' : '');
+	}
+
+	// split digits and decimal part
+	parts = value.split('.');
+	
+	// leading comma (for example: .5 converted to 0.5)
+	if ('' == parts[0] && 2 == parts.length)
+	{
+	  	parts[0] = '0';
+	}
+	
+	//next remove all characters save 0 though 9
+	//in both elements of the array
+	dollars = parts[0].replace(/[^0-9]/gi, '');
+
+	if ('' != dollars)
+	{
+		dollars = parseInt(dollars);	  
+	}
+	
+	if (2 == parts.length)
+	{
+		cents = parts[1].replace(/[^0-9]/gi, '');
+		dollars += '.' + cents;
+	}
+	
+	element.value = dollars;
 }
 
 /*
