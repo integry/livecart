@@ -215,6 +215,30 @@ class CurrencyController extends StoreManagementController
 	 */
 	public function rates()
 	{
+		$currencies = $this->getCurrencies();
+		$form = $this->buildForm($currencies);
+
+		$response = new ActionResponse();
+		$response->setValue('currencies', $currencies);
+		$response->setValue('rateForm', $form);
+		$response->setValue('defaultCurrency', Store::getInstance()->getDefaultCurrency()->getID());		
+		return $response;
+	}
+
+	/**
+	 * Change currency options
+	 * @return ActionResponse
+	 */
+	public function options()
+	{
+		
+		$response = new ActionResponse();
+
+		return $response;
+	}
+
+	private function getCurrencies()
+	{
 		// get currency list and names
 		$filter = new ArSelectFilter();
 		$filter->setCondition(new NotEqualsCond(new ArFieldHandle("Currency", "isDefault"), 1));
@@ -226,28 +250,8 @@ class CurrencyController extends StoreManagementController
 		{
 		  	$currency['name'] = $this->locale->info()->getCurrencyName($currency['ID']);
 		}
-
-		// build form
-		$form = $this->buildForm();
-
-		$response = new ActionResponse();
-		$response->setValue('currencies', $currencies);
-		$response->setValue('rateForm', $form);
-//		$response->setValue('defaultCurrency', Store::getInstance()->getDefaultCurrency());		
-		return $response;
-	}
-
-	/**
-	 * Change currency options
-	 * @return ActionResponse
-	 */
-	public function options()
-	{
 		
-
-		$response = new ActionResponse();
-
-		return $response;
+		return $currencies;			  	
 	}
 
 	/**
@@ -255,12 +259,19 @@ class CurrencyController extends StoreManagementController
 	 *
 	 * @return RequestValidator
 	 */
-	private function buildValidator()
+	private function buildValidator($currencies)
 	{
 		ClassLoader::import("framework.request.validator.RequestValidator");
 
 		$validator = new RequestValidator("rate", $this->request);
-		$validator->addCheck("rate", new IsNotEmptyCheck($this->translate("Please enter the rate")));
+		foreach ($currencies as $currency)
+		{
+			$validator->addCheck('rate_' . $currency['ID'], new IsNotEmptyCheck($this->translate("Please enter the currency rate")));		  
+			$validator->addCheck('rate_' . $currency['ID'], new IsNumericCheck($this->translate("Please enter a numeric value")));		  
+			
+			$validator->addFilter('rate_' . $currency['ID'], new NumericFilter());	
+		}
+
 		return $validator;
 	}
 
@@ -269,10 +280,10 @@ class CurrencyController extends StoreManagementController
 	 *
 	 * @return Form
 	 */
-	private function buildForm()
+	private function buildForm($currencies)
 	{
 		ClassLoader::import("framework.request.validator.Form");
-		return new Form($this->buildValidator());		
+		return new Form($this->buildValidator($currencies));		
 	}
 
 	/**
@@ -281,6 +292,13 @@ class CurrencyController extends StoreManagementController
 	 */
 	public function saveRates()
 	{
+
+		$validator = $this->buildValidator();
+		if($validator->isValid())
+		{
+
+		}
+
 		$this->formatCurrencyData();
 		$form = $this->createRatesForm();
 		$form->setData($this->request->toArray());

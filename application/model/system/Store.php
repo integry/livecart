@@ -23,6 +23,10 @@ class Store
 	private $languageList = null;
 
 	private $languageFiles = array();
+	
+	private $currencies = null;
+	
+	private $defaultCurrency = null;
 
 	/**
 	 * LiveCart operates on a single store object
@@ -36,11 +40,6 @@ class Store
 		// unset locale variables to make use of lazy loading
 		unset($this->locale);
 		unset($this->localeName);
-
-		// get current (request) language
-		$router = Router::getInstance();
-//		$router->addStaticUrlParam('language', $this->localeName);
-
 	}
 
 	/**
@@ -164,9 +163,67 @@ class Store
 	public function setRequestLanguage($langCode)
 	{
 	  	$this->requestLanguage = $langCode;
-	  	//die($langCode);
 	}
 
+	/**
+	 * Returns default currency instance
+	 * @return Currency default currency
+	 */
+	public function getDefaultCurrency()
+	{
+		if (!$this->defaultCurrency)
+		{
+		  	$this->loadCurrencyData();
+		}	  	
+		
+		return $this->defaultCurrency;
+	}
+
+	/**
+	 * Returns array of enabled currency ID's (codes)
+	 * @param bool $includeDefaultCurrency Whether to include default currency in the list
+	 * @return array Enabled currency codes
+	 */
+	public function getCurrencyArray($includeDefaultCurrency = true)
+	{
+		if (!$this->defaultCurrency)
+		{
+		  	$this->loadCurrencyData();
+		}	  	
+
+		$currArray = array();
+		$defCurrency = $this->getDefaultCurrency();	 		
+		foreach ($this->currencies as $currency)
+		{
+			if ($defCurrency != $currency->getID() || $includeDefaultCurrency)
+			{
+				$currArray[] = $curr->getID();
+			}
+		}
+		
+		return $currArray;
+	}
+	
+	/**
+	 * Loads currency data from database
+	 */
+	private function loadCurrencyData()
+	{
+		ClassLoader::import("application.model.Currency");
+
+	  	$filter = new ArSelectFilter();
+	  	$filter->setCondition(new EqualsCond(new ArFieldHandle('Currency', 'isEnabled'), 1));
+	  	$filter->setOrder(new ArFieldHandle('Currency', 'position'), 'ASC');
+	  	$this->currencies = ActiveRecord::getRecordSet('Currency', $filter);
+	  	foreach ($this->currencies as $currency)
+	  	{
+		    if ($currency->isDefault())
+		    {
+			  	$this->defaultCurrency = $currency;
+			}
+		}
+	}
+	
 	private function loadLanguageFiles()
 	{
 		foreach ($this->languageFiles as $file)
@@ -221,7 +278,6 @@ class Store
 		    break;
 		}
 	}
-
 }
 
 ?>

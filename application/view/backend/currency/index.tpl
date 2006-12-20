@@ -3,6 +3,9 @@
 {includeJs file="library/TabControl.js"}
 {includeJs file="backend/Currency.js"}
 
+{includeJs file="library/form/State.js"}
+{includeJs file="library/form/Validator.js"}
+
 {includeCss file="library/TabControl.css"}
 
 {includeCss file=library/ActiveList.css}
@@ -61,8 +64,8 @@
 	             if(confirm('{/literal}{tn _confirm_delete}{literal}')) return '{/literal}{link controller=backend.currency action=delete}{literal}?id=' + this.getRecordId(li)
 	         },
 	         afterEdit:      function(li, response) {  },
-	         afterSort:      function(li, response) {  },
-	         afterDelete:    function(li, response)  { Element.remove(li); }
+	         afterSort:      function(li, response) { curr.resetRatesContainer(); },
+	         afterDelete:    function(li, response)  { Element.remove(li); curr.resetRatesContainer(); }
 	     });
 	}	
 	initCurrencyList();

@@ -8,7 +8,7 @@
 			<div class="title">{$item.name}</div>
 			<p>
 				<label for="rate_{$item.ID}">1 {$item.ID} = </label>
-				{textfield name="rate[$item.ID]" id="name_$categoryId"}
+				{textfield name="rate[`$item.ID`]" id="rate_`$item.ID`"}
 				{$defaultCurrency}
 			</p>
 		</li>

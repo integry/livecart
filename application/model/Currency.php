@@ -1,14 +1,13 @@
 <?php
 
 /**
+ * Currency model
  *
  * @package application.model
- * @author Denis Slaveckij <denis@integry.net>
- *
+ * @author Rinalds Uzkalns <rinalds@integry.net>
  */
 class Currency extends ActiveRecord
 {
-
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -28,44 +27,9 @@ class Currency extends ActiveRecord
 	  	$this->isDefault->set((bool)$default);
 	}
 
-	public static function getCurrencies()
+	public function isDefault()
 	{
-		return ActiveRecord::getRecordSet("Currency", new ArSelectFilter(), true);
-	}
-
-	/**
-	 * Gets default Currency.
-	 * @return ActiveRecord
-	 */
-	public static function getDefaultCurrency()
-	{
-		$filter = new ARSelectFilter();
-		$filter->setCondition(new EqualsCond(new ARFieldHandle("Currency", "isDefault"), 1));
-
-		$set = Currency::getRecordSet("Currency", $filter, true);
-
-		if (count($set->getIterator()) == 0)
-		{
-			return false;
-		}
-
-		return $set->getIterator()->current();
-	}
-
-	/**
-	 * Gets default currency from ArSet.
-	 * @param ArSet $currSet
-	 * @return ActiveRecord
-	 */
-	public static function getDefaultCurrencyFromSet($currSet)
-	{
-		foreach($currSet as $value)
-		{
-			if ($value->isDefault->get() == 1)
-			{
-				return $value;
-			}
-		}
+	  	return $this->isDefault->get();
 	}
 }
 
