@@ -63,12 +63,12 @@ class Language extends ActiveRecordModel
 	 */
 	public static function getLanguages($active = 0)
 	{
-	  	$filter = new ArSelectFilter();
-	  	$filter->setOrder(new ArFieldHandle("Language", "position"), ArSelectFilter::ORDER_ASC);
+	  	$filter = new ARSelectFilter();
+	  	$filter->setOrder(new RFieldHandle("Language", "position"), ArSelectFilter::ORDER_ASC);
 
 		if ($active > 0)
 		{
-			$filter->setCondition(new EqualsCond(new ArFieldHandle("Language", "isEnabled"), ($active == 1 ? 1 : 0)));
+			$filter->setCondition(new EqualsCond(new ARFieldHandle("Language", "isEnabled"), ($active == 1 ? 1 : 0)));
 		}
 
 		return ActiveRecord::getRecordSet("Language", $filter);
@@ -105,7 +105,7 @@ class Language extends ActiveRecordModel
 
 		$filter = new ARUpdateFilter();
 	  	$filter->addModifier("isDefault", 1);
-		$filter->setCondition(new EqualsCond(new ArFieldHandle("Language", "ID"), $ID));
+		$filter->setCondition(new EqualsCond(new ARFieldHandle("Language", "ID"), $ID));
 		ActiveRecord::updateRecordSet("Language", $filter);
 	}
 

@@ -10,9 +10,6 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
 class CurrencyController extends StoreManagementController
 {
 
-	private $defaultId;
-	private $currData;
-	
 	/**
 	 * List all system currencies
 	 * @return ActionResponse
@@ -21,7 +18,6 @@ class CurrencyController extends StoreManagementController
 	{
 		$filter = new ArSelectFilter();
 		$filter->setOrder(new ArFieldHandle('Currency', 'position'), 'ASC');
-//		$filter->setOrder(new ArFieldHandle("Currency", "isDefault"), ArSelectFilter::ORDER_DESC);
 
 		$currSet = ActiveRecord::getRecordSet("Currency", $filter, true);
 
@@ -215,11 +211,16 @@ class CurrencyController extends StoreManagementController
 	 */
 	public function rates()
 	{
-		$currencies = $this->getCurrencies();
-		$form = $this->buildForm($currencies);
+		$currencies = $this->getCurrencySet();
+		$form = $this->buildForm($currencies->toArray());
+
+		foreach ($currencies as $currency)
+		{
+			$form->setValue('rate_' . $currency->getID(), $currency->rate->get());
+		}
 
 		$response = new ActionResponse();
-		$response->setValue('currencies', $currencies);
+		$response->setValue('currencies', $currencies->toArray());
 		$response->setValue('rateForm', $form);
 		$response->setValue('defaultCurrency', Store::getInstance()->getDefaultCurrency()->getID());		
 		return $response;
@@ -237,14 +238,19 @@ class CurrencyController extends StoreManagementController
 		return $response;
 	}
 
-	private function getCurrencies()
+	private function getCurrencySet()
 	{
 		// get currency list and names
 		$filter = new ArSelectFilter();
 		$filter->setCondition(new NotEqualsCond(new ArFieldHandle("Currency", "isDefault"), 1));
 		$filter->setOrder(new ArFieldHandle("Currency", "isEnabled"), 'DESC');
 		$filter->setOrder(new ArFieldHandle("Currency", "position"), 'ASC');
-		$currencies = ActiveRecord::getRecordSet('Currency', $filter)->toArray();
+		return ActiveRecord::getRecordSet('Currency', $filter);
+	}
+
+	private function getCurrencies()
+	{
+		$currencies = $this->getCurrencySet()->toArray();
 
 		foreach ($currencies as &$currency)
 		{
@@ -267,8 +273,7 @@ class CurrencyController extends StoreManagementController
 		foreach ($currencies as $currency)
 		{
 			$validator->addCheck('rate_' . $currency['ID'], new IsNotEmptyCheck($this->translate("Please enter the currency rate")));		  
-			$validator->addCheck('rate_' . $currency['ID'], new IsNumericCheck($this->translate("Please enter a numeric value")));		  
-			
+			$validator->addCheck('rate_' . $currency['ID'], new IsNumericCheck($this->translate("Please enter a numeric value")));		  			
 			$validator->addFilter('rate_' . $currency['ID'], new NumericFilter());	
 		}
 
@@ -287,65 +292,25 @@ class CurrencyController extends StoreManagementController
 	}
 
 	/**
-	 * Saves currencies rates.
+	 * Saves currency rates.
 	 * @return ActionRedirectResponse
 	 */
 	public function saveRates()
 	{
+		$currencies = $this->getCurrencySet();
+		$form = $this->buildValidator($currencies->toArray());
 
-		$validator = $this->buildValidator();
-		if($validator->isValid())
-		{
-
-		}
-
-		$this->formatCurrencyData();
-		$form = $this->createRatesForm();
-		$form->setData($this->request->toArray());
-
-		if ($form->isValid())
-		{
-			foreach($this->currData as $key => $value)
+		if($form->getValidator()->isValid())
+		{ 
+			foreach($currencies as &$currency)
 			{
-				if ($value != $form->getField($key)->getValue())
-				{
-					$curr = ActiveRecord::getInstanceById("Currency", $key);
-
-					if ($form->getField($key)->getValue() == "")
-					{
-						$curr->rate->setNull();
-					}
-					else
-					{
-						$curr->rate->set($form->getField($key)->getValue());
-					}
-					$curr->save();
-				}
+				echo '!'.$form->getValue('rate_' . $currency->getID());
+				$currency->rate->set($form->getValue('rate_' . $currency->getID()));
+				$currency->save();
 			}
 		}
-		else
-		{
-			$form->saveState();
-		}
-		return new ActionRedirectResponse($this->request->getControllerName(), "ratesForm");
-	}
-
-	private function createRatesForm()
-	{
-		ClassLoader::import("library.formhandler.*");
-		ClassLoader::import("library.formhandler.check.numeric.*");
-		ClassLoader::import("library.formhandler.filter.*");
-
-		$form = new Form("ratesForm");
-		foreach($this->currData as $key => $value)
-		{
-			$field = new TextLineField($key, $this->locale->getCurrency($key));
-			$field->addCheck(new IsNumericCheck("Value must be numeric!", true));
-			$field->addFilter(new NumericFilter());
-			$form->addField($field);
-		}
-		$form->addField(new SubmitField("submit", "Save"));
-		return $form;
+		return false;
+		return new ActionRedirectResponse($this->request->getControllerName(), "rates");
 	}
 }
 

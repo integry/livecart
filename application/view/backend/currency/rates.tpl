@@ -1,5 +1,5 @@
 <ul id="currencyRateList">
-{form id="rateForm" handle=$rateForm action="controller=backend.currency action=saveRates" method="post" onsubmit="Backend.Currency.saveRates(); return false;"}
+{form id="rateForm" handle=$rateForm action="controller=backend.currency action=saveRates" method="post" onsubmit="curr.saveRates(this); return false;"}
 
 	<fieldset id="rates">
 	
@@ -8,14 +8,17 @@
 			<div class="title">{$item.name}</div>
 			<p>
 				<label for="rate_{$item.ID}">1 {$item.ID} = </label>
-				{textfield name="rate[`$item.ID`]" id="rate_`$item.ID`"}
+				{textfield name="rate_`$item.ID`" id="rate_`$item.ID`"}
 				{$defaultCurrency}
+				
+				{error for="rate_`$item.ID`" msg=err}<div class="error">{$err}</div>{/error}
+				
 			</p>
 		</li>
 	{/foreach}
 	
 	<label for="submit"> </label>
-	<input type="submit" class="submit" id="submit" value="{t _save}"/> or
+	<span id="rateSaveIndicator" class="progressIndicator" style="display: none;"></span><input type="submit" class="submit" id="submit" value="{t _save}"/> or
 	<a href="#" class="cancel" onClick="$('rateForm').reset(); return false;">{t _cancel}</a>
 	
 	</fieldset>
