@@ -98,6 +98,11 @@ Backend.Currency.prototype =
 		}  	
 	},
 	
+	saveRates: function(form)
+	{
+		new LiveCart.AjaxUpdater(form, 'tabRatesContent', 'rateSaveIndicator');
+	},
+	
 	setFormUrl: function(url)
 	{
 		this.formUrl = url;

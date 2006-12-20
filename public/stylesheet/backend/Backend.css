@@ -667,6 +667,16 @@ img.calendar_button_hover
     background: red;
 }
 
+.progressIndicator {
+	padding: 15px;
+	width: 30px;
+	height: 20px;
+	background-image: url(../../image/indicator.gif);
+	background-position: center center;
+	background-repeat: no-repeat;
+	clear: none;
+}
+
 /*************************** 
 	Multicolumn groups
 ***************************/
