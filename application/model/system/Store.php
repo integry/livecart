@@ -72,9 +72,9 @@ class Store
 		{
 			ClassLoader::import("application.model.system.Language");
 
-    	  	$filter = new ArSelectFilter();
+    	  	$filter = new ARSelectFilter();
 			$langFilter = new ARSelectFilter();
-    	  	$langFilter->setOrder(new ArFieldHandle("Language", "position"), ArSelectFilter::ORDER_ASC);
+    	  	$langFilter->setOrder(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);
 			$langFilter->setCondition(new EqualsCond(new ARFieldHandle("Language", "isEnabled"), 1));
 			$this->languageList = ActiveRecordModel::getRecordSet("Language", $langFilter);
 		}
