@@ -16,7 +16,7 @@ class CurrencyController extends StoreManagementController
 	 */
 	public function index()
 	{
-		$filter = new ArSelectFilter();
+		$filter = new ARSelectFilter();
 		$filter->setOrder(new ArFieldHandle('Currency', 'position'), 'ASC');
 
 		$currSet = ActiveRecord::getRecordSet("Currency", $filter, true);
@@ -56,7 +56,7 @@ class CurrencyController extends StoreManagementController
 		$id = $this->request->getValue('id');
 		
 	  	// check if the currency hasn't been added already
-		$filter = new ArSelectFilter();
+		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ArFieldHandle('Currency', 'ID'), $id));
 		$r = ActiveRecord::getRecordSet('Currency', $filter);
 		if ($r->getTotalRecordCount() > 0)
@@ -65,14 +65,14 @@ class CurrencyController extends StoreManagementController
 		}
 	
 	  	// check if default currency exists
-		$filter = new ArSelectFilter();
+		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ArFieldHandle('Currency', 'isDefault'), 1));
 		
 		$r = ActiveRecord::getRecordSet('Currency', $filter);
 		$isDefault = ($r->getTotalRecordCount() == 0);
 
 	  	// get max position
-		$filter = new ArSelectFilter();
+		$filter = new ARSelectFilter();
 		$filter->setOrder(new ArFieldHandle('Currency', 'position'), 'DESC');
 		$filter->setLimit(1);
 		
@@ -241,7 +241,7 @@ class CurrencyController extends StoreManagementController
 	private function getCurrencySet()
 	{
 		// get currency list and names
-		$filter = new ArSelectFilter();
+		$filter = new ARSelectFilter();
 		$filter->setCondition(new NotEqualsCond(new ArFieldHandle("Currency", "isDefault"), 1));
 		$filter->setOrder(new ArFieldHandle("Currency", "isEnabled"), 'DESC');
 		$filter->setOrder(new ArFieldHandle("Currency", "position"), 'ASC');

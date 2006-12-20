@@ -93,7 +93,7 @@ class UserController extends StoreManagementController
 		//performing search and format grid
 		if ($this->request->isValueSet("group_search_id"))
 		{
-			$filter = new ArSelectFilter();
+			$filter = new ARSelectFilter();
 			$filter->setCondition(new EqualsCond(new ArFieldHandle("UserGroup", "roleGroupID"), $this->request->getValue("group_search_id")));
 
 			$record_set = ActiveRecord::getRecordSet("UserGroup", $filter, true);
@@ -291,7 +291,7 @@ class UserController extends StoreManagementController
 			}
 
 			//checking unique nick name
-			$filter = new ArSelectFilter();
+			$filter = new ARSelectFilter();
 			$filter->setCondition($nick_cond);
 			$arset = ActiveRecord::getRecordSet("User", $filter);
 			if ($arset->size() > 0)
@@ -301,7 +301,7 @@ class UserController extends StoreManagementController
 			}
 
 			//checking unique email
-			$filter = new ArSelectFilter();
+			$filter = new ARSelectFilter();
 			$filter->setCondition($email_cond);
 			$arset = ActiveRecord::getRecordSet("User", $filter);
 			if ($arset->size() > 0)
