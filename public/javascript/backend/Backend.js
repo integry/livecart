@@ -631,6 +631,11 @@ Backend.SaveConfirmationMessage.prototype =
 		new Effect.Highlight(element, {duration: 2.5, afterFinish: this.hide});
 	},
 	
+	show: function(obj)
+	{
+	//	new Effect.SlideUp(obj.element.parentNode);	  
+	},
+
 	hide: function(obj)
 	{
 		new Effect.SlideUp(obj.element.parentNode);	  
@@ -648,6 +653,10 @@ function hideSaveConfirmation()
 		}
 	}
 }
+
+/*************************************************
+	Save confirmation message animation
+*************************************************/
 
 function slideForm(id, menuId)
 {
