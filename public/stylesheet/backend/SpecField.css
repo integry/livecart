@@ -1,6 +1,24 @@
 .specField legend
 {
     display: none;
+    
+}
+
+.specField_language_translation
+{
+   display: none;
+}
+
+.specField_step_translations_language
+{
+   display: block !important;
+}
+
+.specField .specField_step_translations_language legend 
+{
+    cursor: pointer;
+    cursor: hand;
+    display: block;
 }
 
 .specField fieldset
@@ -25,7 +43,7 @@
     width: 10em;
 }
 
-.specField_step_values, .specField_step_translations, .specField_step_translations_language
+.specField_step_values, .specField_step_translations_language fieldset
 {
 	display: none;
 }
@@ -112,4 +130,10 @@ fieldset.group h2
 .specField ul
 {
     list-style: none;
+}
+
+.specField_step_translations_language_active
+{
+    background: yellow;
+    padding: 5px;
 }
