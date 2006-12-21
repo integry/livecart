@@ -3,7 +3,7 @@ TranslationMenuEvent.prototype =
 {  
   	element: false,
   	
-  	translationHandler: false;
+  	translationHandler: false,
   	
 	initialize: function(element, translationHandler)
   	{
