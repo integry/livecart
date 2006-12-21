@@ -25,7 +25,7 @@ class Language extends ActiveRecordModel
 	}
 
 	/**
-	 * Gets language by it's id.
+	 * Gets language by its id.
 	 * @param string(2) $ID
 	 * @return Language
 	 */
@@ -33,14 +33,6 @@ class Language extends ActiveRecordModel
 	{
 		return ActiveRecord::getInstanceByID("Language", $ID, true);
 	}
-
-	/**
-	 * Gets languages RecordSet.
-	 * @param integer $active Possible values
-	 * 	0 => all, 1 => active (enabled) languages, 2 => inactive languages
-	 * @return RecordSet
-	 */
-
 
 	/**
 	 * Checks whether the language is systems default language
