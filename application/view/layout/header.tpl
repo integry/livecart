@@ -17,6 +17,9 @@
 	<!--[if IE]>
 		<link href="stylesheet/backend/BackendIE.css" media="screen" rel="Stylesheet" type="text/css"/>
 	<![endif]-->
+	<!--[if IE6]>
+		<link href="stylesheet/backend/BackendIE6.css" media="screen" rel="Stylesheet" type="text/css"/>
+	<![endif]-->
 	{/literal}
 
 	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
