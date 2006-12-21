@@ -481,5 +481,5 @@ Backend.LanguageEdit.prototype =
 		}
 		
 		return filter;
-	},  
+	}
 }
