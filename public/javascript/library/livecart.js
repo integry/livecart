@@ -5,6 +5,69 @@ var LiveCart = {
 LiveCart.AjaxRequest = Class.create();
 LiveCart.AjaxRequest.prototype = {
 
+	onComplete: false,
+    
+    indicatorContainerId: false,
+    
+	initialize: function(formOrUrl, indicatorId, onComplete)
+    {
+        var url = "";
+        var method = "";
+        var params = "";
+        
+        this.onComplete = onComplete;
+        
+        if (typeof formOrUrl == "object")
+        {
+            var form = formOrUrl;
+            url = form.action;
+            method = form.method;
+            params = Form.serialize(form);
+        }
+        else
+        {
+            url = formOrUrl;
+            method = "post";
+        }
+               
+        this.indicatorContainerId = indicatorId;
+        Element.show(this.indicatorContainerId);
+
+        var updaterOptions = { method: method,
+                               parameters: params,
+                               onComplete: this.postProcessResponse.bind(this),
+                               onFailure: this.reportError};
+       
+		document.body.style.cursor = 'progress';
+		
+        new Ajax.Request(url,
+                         updaterOptions);
+    },
+
+	hideIndicator: function()
+	{
+		Element.hide(this.indicatorContainerId);
+	},
+
+	showIndocator: function()
+	{
+		Element.show(this.indicatorContainerId);
+	},
+
+    postProcessResponse: function(response)
+    {
+		document.body.style.cursor = 'default';
+        if (this.onComplete)
+        {
+		  	this.onComplete(response);
+		}
+		this.hideIndicator();        
+    },
+
+    reportError: function(response)
+    {
+        alert('Error!\n\n' + response.responseText);
+    },
 }
 
 LiveCart.AjaxUpdater = Class.create();

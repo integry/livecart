@@ -100,7 +100,25 @@ Backend.Currency.prototype =
 	
 	saveRates: function(form)
 	{
-		new LiveCart.AjaxUpdater(form, 'tabRatesContent', 'rateSaveIndicator');
+		new LiveCart.AjaxRequest(form, 'rateSaveIndicator', this.updateRatesForm);
+	},
+	
+	updateRatesForm: function(request)
+	{		
+		try 
+		{
+			eval('var rates = ' + request.responseText);
+			for (k in rates)
+			{
+			  	document.getElementById('rate_' + k).value = rates[k];
+			}	
+		}
+		catch (e)
+		{
+			
+		}
+		document.getElementById('rateSaveIndicator').style.display = 'none';	
+		new Backend.SaveConfirmationMessage('rateConf');
 	},
 	
 	setFormUrl: function(url)

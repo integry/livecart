@@ -78,3 +78,7 @@
 .defaultCurrency {
   	vertical-align: middle;
 }
+
+.currListMenu {
+  	font-size: smaller;
+}

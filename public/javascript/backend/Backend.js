@@ -626,36 +626,40 @@ BrowserDetect.init();
 Backend.SaveConfirmationMessage = Class.create();
 Backend.SaveConfirmationMessage.prototype = 
 {
+	element: false,
+	
 	initialize: function(element)
   	{
-		new Effect.Highlight(element, {duration: 2.5, afterFinish: this.hide});
+		if (typeof element != 'object')
+		{
+		  	element = document.getElementById(element);
+		}
+
+		element = element.getElementsByTagName('div')[0];
+		
+		this.element = element;
+		
+		this.show();
 	},
 	
-	show: function(obj)
+	show: function()
 	{
-	//	new Effect.SlideUp(obj.element.parentNode);	  
+		new Effect.SlideDown(this.element.parentNode, {afterFinish: this.highlight.bind(this)});	  
 	},
 
-	hide: function(obj)
+	highlight: function()
 	{
-		new Effect.SlideUp(obj.element.parentNode);	  
-	}
-}
+		new Effect.Highlight(this.element, {duration: 2.5, afterFinish: this.hide.bind(this)});
+	},
 
-function hideSaveConfirmation()	
-{
-	conf = document.getElementsByClassName('saveConfirmation');
-	for (k in conf)
+	hide: function()
 	{
-		if (conf[k].getElementsByTagName)
-		{
-			new Backend.SaveConfirmationMessage(conf[k].getElementsByTagName('div')[0]);
-		}
+		new Effect.SlideUp(this.element.parentNode);	  
 	}
 }
 
 /*************************************************
-	Save confirmation message animation
+	...
 *************************************************/
 
 function slideForm(id, menuId)
