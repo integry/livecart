@@ -17,7 +17,7 @@
 {/literal}
 
 {if $saved}
-<div class="saveConfirmation" >
+<div class="saveConfirmation" id="langSaveConf" style="display: none;">
 	<div>Translations were saved successfuly</div>
 </div>
 {/if}
@@ -91,7 +91,9 @@
 	{/literal}
 		var langEdit = new Backend.LanguageEdit(translations, english, document.getElementById('translations'));
 		langEdit.preFilter();
-		langEdit.hideSaveConfirmation();
+		{if $saved}
+		new Backend.SaveConfirmationMessage('langSaveConf');
+		{/if}
 		breadcrumb.addItem('{$edit_language}', '');
 	</script>
 

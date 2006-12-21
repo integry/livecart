@@ -224,7 +224,7 @@ class LanguageController extends StoreManagementController
 	public function index()
 	{
 		// get all system languages
-		$list = Language::getLanguages()->toArray();
+		$list = $this->getLanguages()->toArray();
 		$countActive = 0;
 		foreach($list as $key => $value)
 		{
@@ -250,7 +250,7 @@ class LanguageController extends StoreManagementController
 		$languagesSelect = $this->locale->info()->getAllLanguages();
 
 		// get all system languages	and remove already added languages from Locale language list
-		$list = Language::getLanguages()->toArray();
+		$list = $this->getLanguages()->toArray();
 		foreach($list as $key => $value)
 		{
 			unset($languagesSelect[$value['ID']]);			
@@ -326,8 +326,27 @@ class LanguageController extends StoreManagementController
 	 */
 	public function setDefault()
 	{
-		Language::setDefault($this->request->getValue("id"));  	
-		return new ActionRedirectResponse($this->request->getControllerName(), "index");		
+		try 
+		{
+			$r = ActiveRecord::getInstanceByID('Language', $this->request->getValue('id'), true);
+		}
+		catch (ARNotFoundException $e)
+		{
+			return new RawResponse(0);  	
+		}
+			
+		ActiveRecord::beginTransaction();
+
+		$update = new ARUpdateFilter();
+		$update->addModifier('isDefault', 0);
+		ActiveRecord::updateRecordSet('Language', $update);
+
+		$r->setAsDefault(true);
+		$r->save();
+
+		ActiveRecord::commit();
+
+		return new ActionRedirectResponse('backend.language', 'index');				
 	}
 
 	/**
@@ -358,7 +377,22 @@ class LanguageController extends StoreManagementController
 		if ($this->request->isValueSet("id"))
 		{
 			$id = $this->request->getValue("id");
-			$lang = Language::getNewInstance($id);
+
+			$lang = ActiveRecord::getNewInstance('Language');
+			$lang->setID($id);
+			
+		  	// get max position
+		  	$f = new ARSelectFilter();
+		  	$f->setOrder(new ARFieldHandle('Language', 'position'), 'DESC');
+		  	$f->setLimit(1);
+		  	$rec = ActiveRecord::getRecordSetArray('Language', $f);
+			$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
+	
+			// default new language state
+			$lang->setAsEnabled(0);
+			$lang->setAsDefault(0);
+			$lang->position->set($position);
+
 			$lang->save(ActiveRecord::PERFORM_INSERT);
 
 			$response = new ActionResponse();
@@ -400,7 +434,7 @@ class LanguageController extends StoreManagementController
 		$response = new ActionResponse();
 
 		// get all system languages
-		$list = Language::getLanguages(true)->toArray();
+		$list = $this->getLanguages(true)->toArray();
 
 		foreach($list as $key => $value)
 		{
@@ -488,6 +522,19 @@ class LanguageController extends StoreManagementController
 		}
 
 	    return ($a > $b) ? -1 : 1;
+	}
+	
+	private function getLanguages($active = 0)
+	{
+	  	$filter = new ARSelectFilter();
+	  	$filter->setOrder(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);
+
+		if ($active > 0)
+		{
+			$filter->setCondition(new EqualsCond(new ARFieldHandle("Language", "isEnabled"), ($active == 1 ? 1 : 0)));
+		}
+
+		return ActiveRecord::getRecordSet("Language", $filter);
 	}
 }
 
