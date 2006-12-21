@@ -1,7 +1,6 @@
 <ul class="tabs">
     <li class="active"><a href="#step_main" class="specField_change_state" >{t _SpecField_main}</a></li>
     <li><a href="#step_values" class="specField_change_state" >{t _SpecField_values}</a></li>
-    <li><a href="#step_translations" class="specField_change_state">{t _SpecField_translations}</a></li>
 </ul>
 
 <form action="{link controller=backend.specField action=save}" method="post" class="specField">
@@ -33,37 +32,51 @@
 		</fieldset>
 		</p>
 
-		<p>
-    		<label>{t _SpecField_type}</label>
-    		<select name="type" class="specField_form_type"></select>
-    		<span class="feedback"> </span>
-		</p>
-
-		<p>
-    		<label>{t _SpecField_title}<em class="required">*</em></label>
-    		<input type="text" name="name" class="required specField_form_name" />
-    		<span class="feedback"> </span>
-    	</p>
-
-		<p>
-    		<label>{t _SpecField_handle}</label>
-    		<input type="text" name="handle" class="specField_form_handle" />
-    		<span class="feedback"> </span>
-		</p>
-
-		<p>
-    		<label>{t _SpecField_description}</label>
-    		<textarea name="description" class="specField_form_description" rows="5" cols="40"></textarea>
-    		<span class="feedback_textarea"> </span>
-		</p>
-
-{* Create filter checkbox *}
-{*
-		<p class="checkbox">
-    		<input type="checkbox" value="1" name="createFilter" class="checkbox" checked="checked" />
-    		<label>{t _create_filter}</label>
-		</p>
-*}
+    		<p>
+        		<label>{t _SpecField_type}</label>
+        		<select name="type" class="specField_form_type"></select>
+        		<span class="feedback"> </span>
+    		</p>
+            
+            <div class="specField_lang_">
+        		<p>
+            		<label>{t _SpecField_title}<em class="required">*</em></label>
+            		<input type="text" name="name" class="required specField_form_name" />
+            		<span class="feedback"> </span>
+            	</p>
+        
+        		<p class="specField_handle">
+            		<label>{t _SpecField_handle}</label>
+            		<input type="text" name="handle" class="specField_form_handle" />
+            		<span class="feedback"> </span>
+        		</p>
+        
+        		<p>
+            		<label>{t _SpecField_description}</label>
+            		<textarea name="description" class="specField_form_description" rows="5" cols="40"></textarea>
+            		<span class="feedback_textarea"> </span>
+        		</p>
+            </div>
+            
+        	<!-- STEP 3 -->
+        	<div class="specField_step_translations">
+        		<fieldset class="dom_template specField_step_translations_language specField_step_translations_language_">
+        			<legend></legend>
+        
+                    <div class="specField_language_translation">
+                        <p>
+                			<label>{t _SpecField_title}</label>
+                			<input type="text" name="name" />
+            			</p>
+            
+                        <p>
+                			<label>{t _SpecField_description}</label>
+                			<textarea name="description" rows="5" cols="40"></textarea>
+            			</p>
+                    </div>
+        		</fieldset>
+        	</div>
+            
 	</fieldset>
 
 	<!-- STEP 2 -->
@@ -85,7 +98,32 @@
                 </p>
                 <p>
                     <a href="#add" class="specField_add_field">{t _SpecField_add_values}</a>
-                </p>
+                </p>   
+                     	
+                        
+                <!-- STEP 3 -->
+            	<div class="specField_step_values_translations">
+            		<fieldset class="dom_template specField_step_translations_language specField_step_translations_language_">
+            			<legend></legend>
+            
+                        <div class="specField_language_translation">
+                            <p>
+                    			<fieldset class="specField_form_values_translations">
+                    				<legend>{t _SpecField_values}</legend>
+                    					<ul>
+                    						<li class="dom_template specField_form_values_value" id="specField_form_values_">
+                    							<label></label>
+                    							<input type="text" />
+                    							<br />
+                    						</li>
+                    					</ul>
+                    			</fieldset>
+                            </p>
+                        </div>
+            		</fieldset>
+            	</div>
+                
+                
 			</div>
 
 			<br class="clear" />
@@ -98,37 +136,6 @@
 		</p>
 	</fieldset>
 
-	<!-- STEP 3 -->
-	<fieldset class="specField_step_lev1 specField_step_translations">
-    <legend>{t _SpecField_step_three}</legend>
-
-		<ul class="specField_form_values_translations_language_links tabs">
-			<li class="dom_template specField_language_link"><a href="#step_translations_language_" class="specField_translations_links">language</a></li>
-		</ul>
-
-		<fieldset class="specField_step_translations_language dom_template specField_step_translations_language_">
-			<legend></legend>
-
-			<label>{t _SpecField_title}</label>
-			<input type="text" name="name" />
-			<br />
-
-			<label>{t _SpecField_description}</label>
-			<textarea name="description" rows="5" cols="40"></textarea>
-			<br />
-
-			<fieldset class="specField_form_values_translations">
-				<legend>{t _SpecField_values}</legend>
-					<ul>
-						<li class="dom_template specField_form_values_value" id="specField_form_values_">
-							<label></label>
-							<input type="text" />
-							<br />
-						</li>
-					</ul>
-			</fieldset>
-		</fieldset>
-	</fieldset>
 </form>
 
 <fieldset class="specField_controls">
