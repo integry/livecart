@@ -23,6 +23,10 @@ Backend.Customize.prototype = {
 	
 	currentElement: false,
 	
+	initialValue: false,
+	
+	currentId: false,
+	
 	initialize: function()
 	{
 	  
@@ -54,8 +58,8 @@ Backend.Customize.prototype = {
 		dialog.style.left = mh.x + 'px';
 		dialog.style.top = mh.y + 'px';
 		dialog.style.display = 'block';	
-		cust.currentElement = element;			
-		Event.observe(document, 'click', cust.hideTranslationMenu, true);
+		this.currentElement = element;			
+		Event.observe(document, 'click', this.hideTranslationMenu.bind(this), true);
 	},
 	
 	hideTranslationMenu: function()
@@ -65,8 +69,8 @@ Backend.Customize.prototype = {
 
 	translationMenuClick: function(e)
 	{
-		cust.showTranslationDialog(cust.currentElement, e);  	
-		cust.hideTranslationMenu();
+		this.showTranslationDialog(this.currentElement, e);  	
+		this.hideTranslationMenu();
 		Event.stop(e);
 	},
 	
@@ -74,6 +78,8 @@ Backend.Customize.prototype = {
 	{
 		id = element.className.split(' ')[1];
 		id = id.substr(8, id.length);
+		
+		this.currentId = id;
 
 		file = element.className.split(' ')[2];
 		file = file.substr(6, file.length);
@@ -95,15 +101,18 @@ Backend.Customize.prototype = {
 		document.getElementById('transDialogContent').style.display = 'none';
 		document.getElementById('transDialogIndicator').style.display = 'block';
 
-		new Ajax.Updater('transDialogContent', url, {onComplete: this.displayDialogContent});
+		new Ajax.Updater('transDialogContent', url, {onComplete: this.displayDialogContent.bind(this)});
 		
-		Event.observe(document, 'mousedown', cust.cancelTransDialog, false);
+		Event.observe(document, 'mousedown', this.cancelTransDialog.bind(this), false);
 	},
 	
 	displayDialogContent: function()
 	{
 		document.getElementById('transDialogContent').style.display = 'block';
 		document.getElementById('transDialogIndicator').style.display = 'none';
+		
+		this.initialValue = document.getElementById('transDialogIndicator').getElementsByName('translation')[0].value;
+
 	},
 
 	saveTranslationDialog: function(form)
@@ -145,7 +154,8 @@ Backend.Customize.prototype = {
 	
 	cancelTransDialog: function()
 	{
-	  	document.getElementById('translationDialog').style.display = 'none'; 
+	  	this.previewTranslations(this.currentId, this.initialValue);
+		document.getElementById('translationDialog').style.display = 'none'; 
 		return false;
 	},
 	

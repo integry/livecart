@@ -145,10 +145,11 @@ Backend.Breadcrumb = Class.create();
  */
 Backend.Breadcrumb.prototype = 
 {
-	items: new Array(),
+	items: false,
 	
 	initialize: function()	
 	{
+		this.items = new Array();
 		window.onload = this.display.bindAsEventListener(this);	  
 	},
 	
