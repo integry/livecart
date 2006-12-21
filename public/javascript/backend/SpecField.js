@@ -168,6 +168,7 @@ Backend.SpecField.prototype = {
 		this.nodes.stateLinks 			= document.getElementsByClassName(this.cssPrefix + "change_state", this.nodes.parent);
 		this.nodes.stepTranslations 	= document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
 		this.nodes.stepMain 			= document.getElementsByClassName(this.cssPrefix + "step_main", this.nodes.parent)[0];
+		this.nodes.stepValues       	= document.getElementsByClassName(this.cssPrefix + "step_values", this.nodes.parent)[0];
 
 		this.nodes.stepLevOne 			= document.getElementsByClassName(this.cssPrefix + "step_lev1", this.nodes.parent);
 
@@ -190,6 +191,8 @@ Backend.SpecField.prototype = {
 
 		this.nodes.translationsLinks 	= document.getElementsByClassName(this.cssPrefix + "form_values_translations_language_links", this.nodes.parent)[0];
 		this.nodes.valuesAddFieldLink 	= this.nodes.valuesDefaultGroup.getElementsByClassName(this.cssPrefix + "add_field", this.nodes.parent)[0];
+
+        this.nodes.valuesTranslations = {};
 
 		var ul = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
 		ul.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[0];
@@ -237,7 +240,6 @@ Backend.SpecField.prototype = {
 		this.nodes.save.onclick = this.saveAction.bind(this);
 
 		// Also some actions must be executed on load. Be aware of the order in which those actions are called
-		this.createLanguagesLinks();
 		this.loadSpecFieldAction();
 
 		this.loadValueFieldsAction();
@@ -412,23 +414,22 @@ Backend.SpecField.prototype = {
 
 		// Translations
 		var translations = document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations);
-		// we should have a template to continue
-		if(translations.length > 0 && translations[0].className.split(' ').indexOf('dom_template') !== -1)
+		var valuesTranslations = document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepValues);
+        // we should have a template to continue
+		if(translations.length > 0 && Element.hasClassName(translations[0], 'dom_template'))
 		{
 			this.nodes.translations = new Array();
 			for(var i = 1; i < this.languageCodes.length; i++)
 			{
+                // Name, description, etc translations                
 				// copy template class
 				var newTranslation = translations[0].cloneNode(true);
 				Element.removeClassName(newTranslation, "dom_template");
-
-				if(i == 1)
-				{
-				    newTranslation.style.display = 'block';
-				}
-
+    
+    			// bind it
+    			newTranslation.getElementsByTagName("legend")[0].onclick = this.changeTranslationLanguageAction.bind(this);
+    
 				newTranslation.className += this.languageCodes[i];
-
 				newTranslation.getElementsByTagName("legend")[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
 
 				var inputFields = $A(newTranslation.getElementsByTagName('input'));
@@ -440,7 +441,7 @@ Backend.SpecField.prototype = {
 
 				for(var j = 0; j < inputFields.length; j++)
 				{
-                    if(Element.hasClassName(inputFields[j].parentNode, this.cssPrefix + 'step_translations_language'))
+                    if(Element.hasClassName(inputFields[j].parentNode.parentNode, this.cssPrefix + 'language_translation'))
                     {
     				    eval("if(self."+inputFields[j].name+"['"+self.languageCodes[i]+"']) inputFields[j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];");
     					inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
@@ -451,12 +452,22 @@ Backend.SpecField.prototype = {
 
 				// add to nodes list
 				this.nodes.translations[this.languageCodes[i]] = newTranslation;
+                                
+
+                // Create place for values translations
+				var newValueTranslation = valuesTranslations[0].cloneNode(true);
+				Element.removeClassName(newTranslation, "dom_template");
+				newValueTranslation.className += this.languageCodes[i];
+				newValueTranslation.getElementsByTagName("legend")[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
+				valuesTranslations[0].parentNode.appendChild(newValueTranslation);
+                this.nodes.valuesTranslations[this.languageCodes[i]] = newValueTranslation;
 			}
 		}
 
 		// Delete language template, so that included in that template variables would not be sent to server
 		Element.remove(document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations)[0]);
 	},
+    
 
 
 	/**
@@ -500,42 +511,7 @@ Backend.SpecField.prototype = {
 		});
 	},
 
-	/**
-	 * In SpecField form template we not yet know what languages we'll be using so
-	 * what we are doing here is looking at what languages we are using and creating separate
-	 * sections for each language in "Translations" section
-	 *
-	 * @access private
-	 *
-	 */
-	createLanguagesLinks: function()
-	{
-		var languageTemplateLink = document.getElementsByClassName("dom_template", this.nodes.translationsLinks)[0];
 
-		for(var i = 1; i < this.languageCodes.length; i++)
-		{
-			var languageLinkDiv = languageTemplateLink.cloneNode(true);
-			Element.removeClassName(languageLinkDiv, "dom_template");
-
-			var languageLink = languageLinkDiv.getElementsByTagName("a")[0];
-			languageLink.hash += this.languageCodes[i];
-			Element.addClassName(languageLink, this.cssPrefix + languageLink.hash.substring(1) + "_link");
-
-			languageLink.firstChild.nodeValue = this.languages[this.languageCodes[i]];
-
-			// First link is active
-			if(i == 1)
-			{
-			    Element.addClassName(languageLink, this.cssPrefix + "step_translations_language_active");
-			    Element.addClassName(languageLink.parentNode, "active");
-			}
-
-			this.nodes.translationsLinks.appendChild(languageLinkDiv);
-
-			// bind it
-			languageLinkDiv.onclick = this.changeTranslationLanguageAction.bind(this);
-		}
-	},
 
 
 
@@ -559,34 +535,8 @@ Backend.SpecField.prototype = {
 		}
 
         Event.stop(e);
-
-        if(e.target.tagName.toLowerCase() != 'a') return;
-
-		var	currentLanguageClass = this.cssPrefix + e.target.hash.replace(/^#+/, '');
-
-		var translationsNodes = document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations);
-		var translationsLinks = document.getElementsByClassName(this.cssPrefix + "translations_links", this.nodes.stepTranslations);
-
-		var same = e.target.hasClassName(this.cssPrefix + "step_translations_language_active");
-
-		for(var i = 0; i < translationsNodes.length; i++)
-		{
-		    translationsNodes[i].style.display = 'none';
-		}
-
-		document.getElementsByClassName(currentLanguageClass, this.nodes.stepTranslations)[0].style.display = 'block';
-
-		for(var i = 0; i < translationsLinks.length; i++)
-		{
-		    Element.removeClassName(translationsLinks[i], this.cssPrefix + "step_translations_language_active");
-		    Element.removeClassName(translationsLinks[i].parentNode, "active");
-		}
-
-
-	    Element.addClassName(e.target, this.cssPrefix + "step_translations_language_active");
-	    Element.addClassName(e.target.parentNode, "active");
-
-
+        var currentTranslationNode = document.getElementsByClassName(this.cssPrefix + "language_translation", e.target.parentNode)[0];               
+        currentTranslationNode.style.display = (currentTranslationNode.style.display == 'block') ? 'none' : 'block';
 	},
 
 	/**
@@ -707,7 +657,7 @@ Backend.SpecField.prototype = {
 		{
 		    this.nodes.stateLinks[i].id = this.cssPrefix + 'change_state' + this.id;
 
-			if(this.nodes.stepLevOne[i].className.split(' ').indexOf(currentStep) === -1)
+			if(!Element.hasClassName(this.nodes.stepLevOne[i], currentStep))
 			{
 			    this.nodes.stepLevOne[i].style.display = 'none';
 			    Element.removeClassName(this.nodes.stateLinks[i], this.cssPrefix + "change_state_active");
@@ -875,7 +825,7 @@ Backend.SpecField.prototype = {
 			// now insert all translation fields
 			for(var i = 1; i < this.languageCodes.length; i++)
 			{
-				var newValueTranslation = document.getElementsByClassName(this.cssPrefix + "form_values_value", this.nodes.translations[this.languageCodes[i]])[0].cloneNode(true);
+				var newValueTranslation = document.getElementsByClassName(this.cssPrefix + "form_values_value", this.nodes.valuesTranslations[this.languageCodes[i]])[0].cloneNode(true);
 				Element.removeClassName(newValueTranslation, "dom_template");
 
 				newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "_" + id;
@@ -888,7 +838,7 @@ Backend.SpecField.prototype = {
 				label.appendChild(document.createTextNode(input.value));
 
 				// add to node tree
-				var translationsUl = document.getElementsByClassName(this.cssPrefix + "form_values_translations", this.nodes.translations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
+				var translationsUl = document.getElementsByClassName(this.cssPrefix + "form_values_translations", this.nodes.valuesTranslations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
 				translationsUl.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[i];
 				translationsUl.appendChild(newValueTranslation);
 			}
