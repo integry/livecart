@@ -76,6 +76,11 @@ label.radio {
   	font-size: smaller;
 }
 
+.branch {
+	border-left: 1px solid black; 
+	margin-left: 57px;
+}
+
 .langTranslations {
 	width: 850px;  	
 	border: 0px;
@@ -119,13 +124,12 @@ label.radio {
   	left: -28px;
 }
 
-
 .transContainer table {
 	margin-top: 20px;
 	width: 700px;
 }
 .transContainer .langTreeLine {
-  	visibility: hidden;
+	visibility: hidden;
   	width: 7px;
 }
 

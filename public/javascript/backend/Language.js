@@ -409,6 +409,7 @@ Backend.LanguageEdit.prototype =
 		{
 		  	this.langSetVisibility(containers[k], expand);
 		}
+		window.onresize();
 	},
 	
 	langSetVisibility: function(container, visibility)
@@ -444,6 +445,11 @@ Backend.LanguageEdit.prototype =
 	langToggleVisibility: function(container)
 	{
 		this.langSetVisibility(container, 1 - this.isContainerVisible(container));
+		
+		// rerender the document otherwise IE will screw it up
+		document.body.style.display = 'none';
+		document.body.style.display = 'block';
+		window.onresize();
 	},
 	
 	isContainerVisible: function(container)

@@ -2,7 +2,6 @@
  * IE 6 & IE 7 common quirks
  */
 
-
 /*************************** 
  	Navigation menu 
 ****************************/
@@ -13,3 +12,18 @@
 #nav li ul li {
   	padding-top: 5px; 
 }  	
+
+/***************************
+	Translations
+***************************/
+.branch {
+	margin-left: 17px !important; 
+	padding-left: 3px !important;  
+	margin-top: -3px;
+}
+
+.langTreeSpacer {
+	top: 21px;
+	left: -8px;
+	height: 30px;
+}

@@ -68,14 +68,35 @@ Backend.LayoutManager.prototype =
 
 	/**
 	 * @todo Figure out why IE needs additional 2px offset
+	 * @todo Figure out a better way to determine the body height for all browsers
 	 */
 	onresize: function(stop)
 	{
+
+		if (document.all)
+		{
+			document.getElementById('pageContentContainer').style.height = '0px';
+		}
+				
 		// calculate content area height
 		ph = new PopupMenuHandler();
 		w = ph.getWindowHeight();
-		h = w - 99 - 61 - (document.all ? 2 : 0);
+
+		// for IE 7 only
+		if (document.all && (document.documentElement.scrollHeight > w + 140))
+		{
+		  	w = document.documentElement.scrollHeight;		  	
+//		  	addlog('yqp');
+		}
 		
+		h = w - 99 - 61 - (document.all ? 2 : 0);
+
+/*
+		addlog(w);
+		addlog('+ ' + document.documentElement.scrollHeight);
+		addlog('- ' + ph.getWindowHeight());
+		addlog('* ' + document.getElementById('pageContentContainer').style.height);		
+*/		
 		cont = document.getElementById('pageContentContainer');
 
 		// IE	

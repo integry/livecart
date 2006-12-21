@@ -15,7 +15,7 @@ TranslationMenuEvent.prototype =
 	
 	move: function(e)
 	{
-		translationHandler.showTranslationMenu(this.element, e);
+		this.translationHandler.showTranslationMenu(this.element, e);
 	}
 }
 
@@ -26,7 +26,7 @@ Backend.Customize.prototype = {
 	
 	currentElement: false,
 	
-	initialValue: false,
+	initialValue: null,
 	
 	currentId: false,
 	
@@ -78,7 +78,9 @@ Backend.Customize.prototype = {
 	},
 	
 	showTranslationDialog: function(element, e)
-	{
+	{		
+		this.initialValue = null;
+		
 		id = element.className.split(' ')[1];
 		id = id.substr(8, id.length);
 		
@@ -158,7 +160,10 @@ Backend.Customize.prototype = {
 	
 	cancelTransDialog: function()
 	{
-	  	this.previewTranslations(this.currentId, this.initialValue);
+	  	if (null != this.initialValue)
+	  	{
+			this.previewTranslations(this.currentId, this.initialValue);		    
+		}
 		document.getElementById('translationDialog').style.display = 'none'; 
 		return false;
 	},
