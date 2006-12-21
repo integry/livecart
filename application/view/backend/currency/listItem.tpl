@@ -15,13 +15,13 @@
 			</span>
 			
 			<div class="currListMenu">
-				<small>
-					{if !$item.isDefault}
-				<a href="{link controller=backend.currency action=setDefault}?id={$item.ID}" class="listLink">{t _set_as_default}</a>
-					{else}
-						<span id="currDefault">{t _default_currency}</span>
+				{if !$item.isDefault}
+					{if $item.isEnabled}
+					<a href="{link controller=backend.currency action=setDefault}?id={$item.ID}" class="listLink">{t _set_as_default}</a>
 					{/if}
-				</small>
+				{else}
+					<span id="currDefault">{t _default_currency}</span>
+				{/if}
 			</div>
 		</div>
 	</div>			

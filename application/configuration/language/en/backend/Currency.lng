@@ -9,3 +9,9 @@ _inactive=Inactive
 _set_as_default=Set as default currency
 
 _default_currency=Default currency
+
+# rates
+_rate_save_conf=Currency rates were saved successfuly
+
+_err_empty=Please enter the currency rate
+_err_numeric=Please enter a numeric value

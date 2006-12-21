@@ -211,16 +211,16 @@ class CurrencyController extends StoreManagementController
 	 */
 	public function rates()
 	{
-		$currencies = $this->getCurrencySet();
-		$form = $this->buildForm($currencies->toArray());
+		$currencies = $this->getCurrencies();
+		$form = $this->buildForm($currencies);
 
 		foreach ($currencies as $currency)
 		{
-			$form->setValue('rate_' . $currency->getID(), $currency->rate->get());
+			$form->setValue('rate_' . $currency['ID'], $currency['rate']);
 		}
 
 		$response = new ActionResponse();
-		$response->setValue('currencies', $currencies->toArray());
+		$response->setValue('currencies', $currencies);
 		$response->setValue('saved', $this->request->getValue('saved'));
 		$response->setValue('rateForm', $form);
 		$response->setValue('defaultCurrency', Store::getInstance()->getDefaultCurrency()->getID());		
@@ -273,8 +273,8 @@ class CurrencyController extends StoreManagementController
 		$validator = new RequestValidator("rate", $this->request);
 		foreach ($currencies as $currency)
 		{
-			$validator->addCheck('rate_' . $currency['ID'], new IsNotEmptyCheck($this->translate("Please enter the currency rate")));		  
-			$validator->addCheck('rate_' . $currency['ID'], new IsNumericCheck($this->translate("Please enter a numeric value")));		  			
+			$validator->addCheck('rate_' . $currency['ID'], new IsNotEmptyCheck($this->translate('_err_empty')));		  
+			$validator->addCheck('rate_' . $currency['ID'], new IsNumericCheck($this->translate('_err_numeric')));		  			
 			$validator->addFilter('rate_' . $currency['ID'], new NumericFilter());	
 		}
 
@@ -300,23 +300,26 @@ class CurrencyController extends StoreManagementController
 	{		
 		$currencies = $this->getCurrencySet();
 		
+		// save rates
 		if($this->buildValidator($currencies->toArray())->isValid())
 		{ 
-			$values = array();
 			foreach($currencies as &$currency)
 			{
 				$currency->rate->set($this->request->getValue('rate_' . $currency->getID()));
 				$currency->save();
-				$values[$currency->getID()] = $currency->rate->get();
 			}
 		}
-		else 
+
+		// read back from DB
+		$currencies = $this->getCurrencySet();
+		$values = array();
+				
+		foreach($currencies as &$currency)
 		{
-			$saved = array();  
+			$values[$currency->getID()] = $currency->rate->get();
 		}
 
-		$response = new RawResponse();
-		$response->setValue('values', json_encode($values));
+		return new JSONResponse(json_encode($values));		
 	}
 }
 

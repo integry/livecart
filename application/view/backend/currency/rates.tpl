@@ -3,11 +3,9 @@
 
 	<fieldset id="rates">
 	
-	{if $saved}
-		<div class="saveConfirmation" id="rateConf">
-			<div>Currency rates were saved successfuly</div>
-		</div>
-	{/if}
+	<div class="saveConfirmation" id="rateConf" style="display: none;">
+		<div>{t _rate_save_conf}</div>
+	</div>
 
 	{foreach from=$currencies key=key item=item}
 		<p{if $item.isEnabled == 0} class="disabled"{/if}>
@@ -33,7 +31,3 @@
 
 {/form}
 </div>
-
-<script>
-	hideSaveConfirmation();
-</script>
