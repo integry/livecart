@@ -130,7 +130,7 @@ class LanguageController extends StoreManagementController
 			$last = &$hierarchical;
 			foreach ($path as $part)
 		  	{
-				if (!$last[$part])
+				if (!isset($last[$part]))
 				{
 					$last[$part] = array();
 				}
