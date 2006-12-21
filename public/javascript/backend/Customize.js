@@ -3,16 +3,19 @@ TranslationMenuEvent.prototype =
 {  
   	element: false,
   	
-	initialize: function(element)
+  	translationHandler: false;
+  	
+	initialize: function(element, translationHandler)
   	{
 		this.element = element;
+		this.translationHandler = translationHandler;
 		this.eventMouseMove = this.move.bindAsEventListener(this);
 		Event.observe(this.element, 'mousemove', this.eventMouseMove);
 	},
 	
 	move: function(e)
 	{
-		cust.showTranslationMenu(this.element, e);
+		translationHandler.showTranslationMenu(this.element, e);
 	}
 }
 
@@ -42,7 +45,7 @@ Backend.Customize.prototype = {
 		elements = document.getElementsByClassName('transMode');  
 		for (k in elements)
 		{
-		  	new TranslationMenuEvent(elements[k]);
+		  	new TranslationMenuEvent(elements[k], this);
 		}
 	},
 	
@@ -110,9 +113,6 @@ Backend.Customize.prototype = {
 	{
 		document.getElementById('transDialogContent').style.display = 'block';
 		document.getElementById('transDialogIndicator').style.display = 'none';
-		
-		this.initialValue = document.getElementById('transDialogIndicator').getElementsByName('translation')[0].value;
-
 	},
 
 	saveTranslationDialog: function(form)
@@ -138,6 +138,10 @@ Backend.Customize.prototype = {
 		elements = document.getElementsByClassName('__trans_' + transKey);  		
 		for (k = 0; k < elements.length; k++)
 	  	{
+			if (!this.initialValue)
+			{
+			  	this.initialValue = elements[k].innerHTML;
+			}
 			elements[k].innerHTML = translation;	
 		}
 	},

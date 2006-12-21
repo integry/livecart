@@ -1,0 +1,19 @@
+/**
+ * IE 6 quirks
+ */
+
+html
+{
+    font-size: 80%;
+}
+
+/*************************** 
+ 	Navigation menu 
+****************************/
+#nav {
+	top: 0;	  
+}
+
+#nav li div {
+	width: 20px; 
+}

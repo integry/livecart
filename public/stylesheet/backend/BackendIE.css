@@ -1,19 +1,11 @@
-html
-{
-    font-size: 80%;
-}
+/**
+ * IE 6 & IE 7 common quirks
+ */
+
 
 /*************************** 
  	Navigation menu 
 ****************************/
-#nav {
-	top: 0;	  
-}
-
-#nav li div {
-	width: 20px;
-}
-
 #nav li ul {
   	top: 22px; 
 }  	

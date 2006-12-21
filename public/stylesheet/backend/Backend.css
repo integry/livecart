@@ -250,6 +250,7 @@ html, body{
   	background-repeat: no-repeat;
 	background-position: 0px 0px;
 	padding-left: 10px;
+	width: 100%;
 }
 
 #nav li div div {
@@ -302,7 +303,6 @@ html, body{
 
 #nav li ul li {
 	width: 100%;
-  	#width: 200px; /* IE hack */
   	min-width: 150px;
   	text-align: left;
 	background-image: none;
