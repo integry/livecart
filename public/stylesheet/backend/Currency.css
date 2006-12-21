@@ -8,12 +8,12 @@
 
 #currencyList {
   	width: 300px;
-  	cursor: move;
 }
 
 #currencyList li {
 	margin-bottom: 10px;
 	position: static;
+  	cursor: move;
 }
 
 #currencyList .activeList_icons {
@@ -61,7 +61,7 @@
 }
 
 #currencyRateList input {
-  	width: 100px;
+  	width: 120px;
   	vertical-align: middle;
 }
 

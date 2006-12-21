@@ -67,7 +67,7 @@ LiveCart.AjaxRequest.prototype = {
     reportError: function(response)
     {
         alert('Error!\n\n' + response.responseText);
-    },
+    }
 }
 
 LiveCart.AjaxUpdater = Class.create();

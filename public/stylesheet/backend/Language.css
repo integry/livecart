@@ -20,11 +20,11 @@ label.radio {
 
 #languageList {
   	width: 300px;
-  	cursor: move;  	
 }
 
 #languageList li {
 	margin-bottom: 10px;
+  	cursor: move;  	
 }
 
 #addLangFeedback {
