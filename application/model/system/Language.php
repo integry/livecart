@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import("application.model.ActiveRecordModel");
+
 /**
  * Language model
  *

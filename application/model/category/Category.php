@@ -69,15 +69,29 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	}
 
 	/**
-	 * Loads a set of spec field records in current category
+	 * Loads a set of spec field records for a category.
+	 *
+	 * Result includes a list of specification fields from upper category branches
+	 * (specification field inheritance)
+	 * The result is ordered by a category ID (upper level fields go first and
+	 * then by level position)
 	 *
 	 * @return ARSet
 	 */
-	public function getSpecFieldList()
+	public function getSpecificationFields()
 	{
+		$pathArr = parent::getPathNodes(Category::INCLUDE_ROOT_NODE);
+
 		$filter = new ARSelectFilter();
+		$filter->setOrder(new ARFieldHandle("SpecField", "categoryID"));
 		$filter->setOrder(new ARFieldHandle("SpecField", "position"));
-		$filter->setCondition(new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $this->getID()));
+
+		$cond = new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $this->getID());
+		foreach ($pathArr as $node)
+		{
+			$cond->addOR(new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $node->getID()));
+		}
+		$filter->setCondition($cond);
 
 		return SpecField::getRecordSetArray($filter);
 	}

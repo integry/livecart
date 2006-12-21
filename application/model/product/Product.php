@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("application.model.system.Language");
+ClassLoader::import("application.model.system.MultilingualObject");
 
 /**
  * Store product (item)
@@ -17,7 +18,7 @@ class Product extends MultilingualObject
 		$schema->setName("Product");
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("catalogID", "Catalog", "ID", "Catalog", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", null, ARInteger::instance()));
 
 		$schema->registerField(new ARField("sku", ARVarchar::instance(20)));
 
@@ -30,7 +31,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ARField("type", ARInteger::instance(4)));
 
 		$schema->registerField(new ArField("minimumQuantity", ARInteger::instance()));
-		$schema->registerField(new ArField("shippingSurgageAmount", ARFloat::instance(8)));
+		$schema->registerField(new ArField("shippingSurchargeAmount", ARFloat::instance(8)));
 		$schema->registerField(new ArField("isSeparateShipment", ARBool::instance()));
 		$schema->registerField(new ArField("isFreeShipping", ARBool::instance()));
 

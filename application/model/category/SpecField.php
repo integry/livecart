@@ -1,7 +1,6 @@
 <?php
 
 ClassLoader::import("application.model.system.MultilingualObject");
-//ClassLoader::import("application.model.category.SpecFieldLangData");
 ClassLoader::import("application.model.category.Category");
 
 /**
@@ -13,33 +12,27 @@ class SpecField extends MultilingualObject
 {
     const DATATYPE_TEXT = 1;
     const DATATYPE_NUMBERS = 2;
-    
+
     const TYPE_NUMBERS_SELECTOR = 1;
     const TYPE_NUMBERS_SIMPLE = 2;
-        
+
     const TYPE_TEXT_SIMPLE = 3;
     const TYPE_TEXT_ADVANCED = 4;
     const TYPE_TEXT_SELECTOR = 5;
     const TYPE_TEXT_DATE = 6;
-    
-    
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("SpecField");
 
-
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
-
-		$schema->registerField(new ARField("categoryID", ARInteger::instance()));
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("description", ARArray::instance()));
-		$schema->registerField(new ARField("type", ARInteger::instance(2)));
-		$schema->registerField(new ARField("dataType", ARInteger::instance(2)));
-		$schema->registerField(new ARField("position", ARInteger::instance(2)));
-		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
-	}
+    /**
+     * Adds a "choice" value to this field
+     *
+     * @param SpecFieldValue $value
+     *
+     * @todo calculate value position if needed
+     */
+    public function addValue(SpecFieldValue $value)
+    {
+		$value->SpecField->set($this);
+		$value->save();
+    }
 
 	/**
 	 * Get instance SpecField record by id
@@ -147,10 +140,28 @@ class SpecField extends MultilingualObject
 	{
 		return SpecFieldValue::getRecordSetArray($this->getID());
 	}
-	
+
 	public static function getSelectorValueTypes()
 	{
 	    return array (self::TYPE_NUMBERS_SELECTOR, Specfield::TYPE_TEXT_SELECTOR);
+	}
+
+	public static function defineSchema($className = __CLASS__)
+	{
+		$schema = self::getSchemaInstance($className);
+		$schema->setName("SpecField");
+
+
+		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
+
+		$schema->registerField(new ARField("categoryID", ARInteger::instance()));
+		$schema->registerField(new ARField("name", ARArray::instance()));
+		$schema->registerField(new ARField("description", ARArray::instance()));
+		$schema->registerField(new ARField("type", ARInteger::instance(2)));
+		$schema->registerField(new ARField("dataType", ARInteger::instance(2)));
+		$schema->registerField(new ARField("position", ARInteger::instance(2)));
+		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
 	}
 }
 

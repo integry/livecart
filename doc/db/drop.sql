@@ -5,7 +5,7 @@
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database drop script                            #
-# Created on:            2006-12-19 18:31                                #
+# Created on:            2006-12-21 15:18                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -21,11 +21,11 @@ ALTER TABLE Product DROP FOREIGN KEY ProductImage_Product;
 
 ALTER TABLE Category DROP FOREIGN KEY Category_Category;
 
-ALTER TABLE Specification DROP FOREIGN KEY SpecFieldValue_Specification;
+ALTER TABLE SpecificationItem DROP FOREIGN KEY SpecFieldValue_SpecificationItem;
 
-ALTER TABLE Specification DROP FOREIGN KEY Product_Specification;
+ALTER TABLE SpecificationItem DROP FOREIGN KEY Product_SpecificationItem;
 
-ALTER TABLE Specification DROP FOREIGN KEY SpecField_Specification;
+ALTER TABLE SpecificationItem DROP FOREIGN KEY SpecField_SpecificationItem;
 
 ALTER TABLE SpecField DROP FOREIGN KEY Category_SpecField;
 
@@ -112,16 +112,16 @@ ALTER TABLE Language DROP PRIMARY KEY;
 DROP TABLE Language;
 
 # ---------------------------------------------------------------------- #
-# Drop table "Specification"                                             #
+# Drop table "SpecificationItem"                                         #
 # ---------------------------------------------------------------------- #
 
 # Drop constraints #
 
-ALTER TABLE Specification DROP PRIMARY KEY;
+ALTER TABLE SpecificationItem DROP PRIMARY KEY;
 
 # Drop table #
 
-DROP TABLE Specification;
+DROP TABLE SpecificationItem;
 
 # ---------------------------------------------------------------------- #
 # Drop table "SpecField"                                                 #

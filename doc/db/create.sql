@@ -5,7 +5,7 @@
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database creation script                        #
-# Created on:            2006-12-19 18:31                                #
+# Created on:            2006-12-21 15:18                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -85,19 +85,19 @@ CREATE TABLE Language (
 );
 
 # ---------------------------------------------------------------------- #
-# Add table "Specification"                                              #
+# Add table "SpecificationItem"                                          #
 # ---------------------------------------------------------------------- #
 
-CREATE TABLE Specification (
+CREATE TABLE SpecificationItem (
     specFieldValueID INTEGER UNSIGNED NOT NULL,
     productID INTEGER UNSIGNED NOT NULL,
     specFieldID INTEGER UNSIGNED NOT NULL,
-    CONSTRAINT PK_Specification PRIMARY KEY (specFieldValueID, productID, specFieldID)
+    CONSTRAINT PK_SpecificationItem PRIMARY KEY (specFieldValueID, productID, specFieldID)
 ) COMMENT = 'Product specification: maps input field value list to a particular product';
 
-CREATE INDEX IDX_Specification_1 ON Specification (specFieldValueID);
+CREATE INDEX IDX_Specification_1 ON SpecificationItem (specFieldValueID);
 
-CREATE INDEX IDX_Specification_2 ON Specification (productID);
+CREATE INDEX IDX_Specification_2 ON SpecificationItem (productID);
 
 # ---------------------------------------------------------------------- #
 # Add table "SpecField"                                                  #
@@ -145,6 +145,8 @@ CREATE TABLE Filter (
     type INTEGER,
     rangeStart FLOAT,
     rangeEnd FLOAT,
+    rangeDateStart DATE,
+    rangeDateEnd DATE,
     CONSTRAINT PK_Filter PRIMARY KEY (ID)
 );
 
@@ -274,13 +276,13 @@ ALTER TABLE Product ADD CONSTRAINT ProductImage_Product
 ALTER TABLE Category ADD CONSTRAINT Category_Category 
     FOREIGN KEY (parentNodeID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE Specification ADD CONSTRAINT SpecFieldValue_Specification 
+ALTER TABLE SpecificationItem ADD CONSTRAINT SpecFieldValue_SpecificationItem 
     FOREIGN KEY (specFieldValueID) REFERENCES SpecFieldValue (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE Specification ADD CONSTRAINT Product_Specification 
+ALTER TABLE SpecificationItem ADD CONSTRAINT Product_SpecificationItem 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE Specification ADD CONSTRAINT SpecField_Specification 
+ALTER TABLE SpecificationItem ADD CONSTRAINT SpecField_SpecificationItem 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE SpecField ADD CONSTRAINT Category_SpecField 

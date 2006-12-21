@@ -89,7 +89,8 @@ class ActiveTreeNode extends ActiveRecordModel
 	 *
 	 * @var bool
 	 */
-	//private $isChildNodeListLoaded = false;
+
+	const INCLUDE_ROOT_NODE = true;
 
 	/**
 	 * Gets a persisted record object

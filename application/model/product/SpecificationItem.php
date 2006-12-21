@@ -12,12 +12,12 @@ ClassLoader::import("application.model.product.*");
  * @author Saulius Rupainis <saulius@integry.net>
  *
  */
-class Specification extends ActiveRecordModel
+class SpecificationItem extends ActiveRecordModel
 {
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-		$schema->setName("Specification");
+		$schema->setName("SpecificationItem");
 
 		$schema->registerField(new ARPrimaryForeignKeyField("specFieldID", "SpecField", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARPrimaryForeignKeyField("specFieldValueID", "SpecFieldValue", "ID", "SpecFieldValue", ARInteger::instance()));
