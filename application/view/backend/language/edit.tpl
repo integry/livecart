@@ -69,7 +69,7 @@
 			<img src="image/backend/Language/spacer.gif" class="langTreeSpacer" />
 			<a href="#" onClick="return false;"></a>
 		</legend>
-		<div style="display: none; border-left: 1px solid black;">
+		<div class="branch" style="display: none;">
 			<table style="display: none;">	
 				<tbody style="display: none;">
 					<tr class="lang-trans-template" style="display: none;">
