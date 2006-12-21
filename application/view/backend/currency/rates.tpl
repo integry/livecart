@@ -13,9 +13,6 @@
 				<label for="rate_{$item.ID}">1 {$item.ID} = </label>
 				{textfield name="rate_`$item.ID`" id="rate_`$item.ID`"}
 				<span class="defaultCurrency">{$defaultCurrency}</span>
-				
-				{error for="rate_`$item.ID`" msg=err}<span class="feedback">{$err}</span>{/error}
-				
 		</p>
 	{/foreach}
 

@@ -46,8 +46,8 @@
 	cust.setControllerUrl('{link controller=backend.language action=index}');
 	cust.initLang();
 	new Draggable('transDialogBox');
-	Event.observe('transDialogBox', 'mousedown', cust.stopTransCancel, false);
-	Event.observe('transLink', 'click', cust.translationMenuClick, false);
+	Event.observe('transDialogBox', 'mousedown', cust.stopTransCancel.bind(cust), false);
+	Event.observe('transLink', 'click', cust.translationMenuClick.bind(cust), false);
 	
 	new Backend.LayoutManager();
 </script>
