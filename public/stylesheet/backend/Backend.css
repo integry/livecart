@@ -298,10 +298,11 @@ html, body{
   	background-repeat: repeat-x;
   	background-color: #CDD9EE;
   	padding: 5px;
+  	width: 200px;
 }
 
 #nav li ul li {
-	width: 100%;
+	width: 200px;
   	min-width: 150px;
   	text-align: left;
 	background-image: none;

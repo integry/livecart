@@ -83,34 +83,37 @@ Backend.LayoutManager.prototype =
 		w = ph.getWindowHeight();
 
 		// for IE 7 only
-		if (document.all && (document.documentElement.scrollHeight > w + 140))
+		if (document.all && (document.documentElement.scrollHeight > w + 140) && BrowserDetect.version == 7)
 		{
-		  	w = document.documentElement.scrollHeight;		  	
-//		  	addlog('yqp');
+		  	w = document.documentElement.scrollHeight + 60;		  	
 		}
 		
-		h = w - 99 - 61 - (document.all ? 2 : 0);
+		h = w - 99 - 61 - (document.all ? 1 : 0);
 
-/*
-		addlog(w);
-		addlog('+ ' + document.documentElement.scrollHeight);
-		addlog('- ' + ph.getWindowHeight());
-		addlog('* ' + document.getElementById('pageContentContainer').style.height);		
-*/		
+
 		cont = document.getElementById('pageContentContainer');
 
 		// IE	
 		if (document.all)
 		{
 			try {
-				cont.style.height = h + 'px';	
+				if (cont.style.minHeight)
+				{
+					cont.style.minHeight = h + 'px';	
+				}
+				else
+				{
+					cont.style.height = h + 'px';				  
+				}
 			}
 			catch (e)
 			{
+				cont.style.height = h + 'px';
 				cont.style.height = '0px';				  	
 			}
 			
 			// force re-render for IE
+
 			document.getElementById('pageContainer').style.display = 'none';
 			document.getElementById('pageContainer').style.display = 'block';
 			document.getElementById('nav').style.display = 'none';
