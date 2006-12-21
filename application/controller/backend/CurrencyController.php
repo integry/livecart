@@ -2,7 +2,7 @@
 
 ClassLoader::import("library.*");
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-
+ClassLoader::import("application.model.Currency");
 /**
  *
  * @package application.controller.backend
