@@ -42,7 +42,25 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("unitsType", ARInteger::instance()));
 	}
 
+	public function save()
+	{
+		ActiveRecordModel::beginTransaction();
+		try
+		{
+			$category = $this->category->get();
+			$category->productCount->set($category->productCount->get() + 1);
 
+			$category->save();
+			parent::save();
+
+			ActiveRecordModel::commit();
+		}
+		catch (Exception $e)
+		{
+			ActiveRecord::rollback();
+			throw $e;
+		}
+	}
 }
 
 ?>

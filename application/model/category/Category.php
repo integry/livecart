@@ -147,6 +147,18 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	}
 
 	/**
+	 * Gets a subcategory count
+	 *
+	 * @return int
+	 */
+	public function getSubcategoryCount()
+	{
+		$this->load();
+		$productCount = ($this->rgt->get() - $this->lft->get() - 1) / 2;
+		return $productCount;
+	}
+
+	/**
 	 * Gets path to a current node (including current node)
 	 *
 	 * Overloads parent method
