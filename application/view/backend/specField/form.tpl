@@ -112,7 +112,7 @@
                     				<legend>{t _SpecField_values}</legend>
                     					<ul>
                     						<li class="dom_template specField_form_values_value" id="specField_form_values_">
-                    							<label></label>
+                    							<label> </label>
                     							<input type="text" />
                     							<br />
                     						</li>
