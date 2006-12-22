@@ -453,12 +453,17 @@ Backend.SpecField.prototype = {
 				// add to nodes list
 				this.nodes.translations[this.languageCodes[i]] = newTranslation;
                                 
-
                 // Create place for values translations
 				var newValueTranslation = valuesTranslations[0].cloneNode(true);
-				Element.removeClassName(newTranslation, "dom_template");
+				Element.removeClassName(newValueTranslation, "dom_template");
 				newValueTranslation.className += this.languageCodes[i];
-				newValueTranslation.getElementsByTagName("legend")[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
+                
+                var valueTranslationLegend = newValueTranslation.getElementsByTagName("legend")[0];
+				valueTranslationLegend.appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
+                 
+                
+                valueTranslationLegend.onclick = this.toggleValueLanguage.bind(this);
+                
 				valuesTranslations[0].parentNode.appendChild(newValueTranslation);
                 this.nodes.valuesTranslations[this.languageCodes[i]] = newValueTranslation;
 			}
@@ -468,6 +473,17 @@ Backend.SpecField.prototype = {
 		Element.remove(document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations)[0]);
 	},
     
+    toggleValueLanguage: function(e)
+    {
+        if(!e)
+		{
+			e = window.event;
+			e.target = e.srcElement;
+		}
+        
+        var values = document.getElementsByClassName(this.cssPrefix + "language_translation", e.target.parentNode)[0];
+        values.style.display = (values.style.display == 'block') ? 'none' : 'block';
+    },
 
 
 	/**
@@ -510,10 +526,6 @@ Backend.SpecField.prototype = {
 			self.languageCodes[self.languageCodes.length] = language.key;
 		});
 	},
-
-
-
-
 
 
 
@@ -833,14 +845,13 @@ Backend.SpecField.prototype = {
 				var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
 				inputTranslation.name = "values[" + id + "][" + this.languageCodes[i] + "]";
 				inputTranslation.value = (value && value[this.languageCodes[i]]) ? value[this.languageCodes[i]] : '' ;
-
-				var label = newValueTranslation.getElementsByTagName("label")[0];
-				label.appendChild(document.createTextNode(input.value));
-
+                
 				// add to node tree
 				var translationsUl = document.getElementsByClassName(this.cssPrefix + "form_values_translations", this.nodes.valuesTranslations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
 				translationsUl.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[i];
 				translationsUl.appendChild(newValueTranslation);
+
+
 			}
 		}
 		else
