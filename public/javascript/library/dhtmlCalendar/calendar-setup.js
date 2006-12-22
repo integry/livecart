@@ -209,6 +209,8 @@ Calendar.setup = function (params) {
         cal.setDateFormat(params.ifFormat);
         cal.parseDate(params.inputFieldReal.value);
         params.inputField.value = cal.date.print(params.ifFormat);
+	    if(params.inputFieldReal) params.inputFieldReal.value = cal.date.getFullYear() + "-" + (cal.date.getMonth() + 1) + "-" + cal.date.getDate();
+
     }
 
 	return cal;

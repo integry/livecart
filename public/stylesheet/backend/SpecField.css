@@ -1,17 +1,7 @@
-.specField legend
+.specField legend, .specField_step_values, .specField_language_translation
 {
     display: none;
     
-}
-
-.specField_language_translation
-{
-   display: none;
-}
-
-.specField_step_translations_language
-{
-   display: block !important;
 }
 
 .specField .specField_step_translations_language legend 
@@ -25,12 +15,6 @@
 {
     background: #fff;
     margin-right: 1em;
-}
-
-
-.dom_template
-{
-   display: none ! important;
 }
 
 .specField_title
@@ -49,11 +33,6 @@
     width: 10em;
 }
 
-.specField_step_values, .specField_step_translations_language fieldset
-{
-	display: none;
-}
-
 .specField_language_link
 {
     display: inline;
@@ -65,17 +44,9 @@
     padding: 0 5px;
 }
 
-
-
 .specField_form_values_value .specField_form_values_default_checkbox
 {
     width: auto;
-}
-
-#specField_item_new_form
-{
-    background: #cccccc;
-    padding: 5px;
 }
 
 .specField_controls
@@ -88,7 +59,6 @@
     margin: 0;
 }
 
-
 .specField_add_field
 {
     white-space: nowrap;
@@ -100,8 +70,6 @@
     width: auto !important;
     padding-bottom: 10px;
 }
-
-
 
 h2.specField_values_title
 {

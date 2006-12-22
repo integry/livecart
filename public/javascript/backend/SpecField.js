@@ -286,23 +286,19 @@ Backend.SpecField.prototype = {
 	typeWasChangedAction: function()
 	{
 		// if selected type is a selector type then show selector options fields (aka step 2)
+        var valuesTranslations = document.getElementsByClassName(this.cssPrefix + "step_values_translations", this.nodes.stepValues)[0];
 		if(this.selectorValueTypes.indexOf(this.nodes.type.value) === -1)
 		{
 			this.nodes.stateLinks[1].parentNode.style.display = 'none';
 			this.nodes.stateLinks[1].style.display = 'none';
-			for(var i = 0; i < this.nodes.translatedValues.length; i++)
-			{
-				this.nodes.translatedValues[i].style.display = 'none';
-			}
 		}
 		else
 		{
 			this.nodes.stateLinks[1].parentNode.style.display = 'inline';
 			this.nodes.stateLinks[1].style.display = 'inline';
-			for(var i = 0; i < this.nodes.translatedValues.length; i++)
-			{
-				this.nodes.translatedValues[i].style.display = (this.doNotTranslateTheseValueTypes.indexOf(this.dataType) === -1) ? 'block' : 'none';
-			}
+            
+            
+            valuesTranslations.style.display = (this.dataType == this.DATATYPE_NUMBERS) ? 'none' : 'block';
 		}
 	},
 
