@@ -61,7 +61,7 @@
         	<!-- STEP 3 -->
         	<div class="specField_step_translations">
         		<fieldset class="dom_template specField_step_translations_language specField_step_translations_language_">
-        			<legend><span class="expandIcon">[+] </span><span class="specField_legend_text"></span></legend>
+        			<legend><span class="expandIcon">[+]</span><span class="specField_legend_text"></span></legend>
         
                     <div class="specField_language_translation">
                         <p>
@@ -104,7 +104,7 @@
                 <!-- STEP 3 -->
             	<div class="specField_step_values_translations">
             		<fieldset class="dom_template specField_step_translations_language specField_step_translations_language_">
-            			<legend></legend>
+            			<legend><span class="expandIcon">[+]</span><span class="specField_legend_text"></span></legend>
             
                         <div class="specField_form_values_translations specField_language_translation">
                             <p>

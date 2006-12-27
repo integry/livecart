@@ -159,6 +159,8 @@ LiveCart.AjaxUpdater.prototype = {
 
     initialize: function(formOrUrl, containerId, indicatorId, insertionPosition)
     {
+        try
+        {
         var url = "";
         var method = "";
         var params = "";
@@ -214,6 +216,12 @@ LiveCart.AjaxUpdater.prototype = {
         new Ajax.Updater({success: containerId},
                          url,
                          updaterOptions);
+        }
+        catch(e)
+        {
+            alert('asdsad');
+            jsTrace.send(e);
+        }
     },
 
 

@@ -71,8 +71,7 @@ Backend.SpecField.prototype = {
 	 */
 	initialize: function(specFieldJson, hash)
 	{
-	    try
-	    {
+
     	    this.specField = !hash ? eval("(" + specFieldJson + ")" ) : specFieldJson;
     	    this.cloneForm('specField_item_blank', this.specField.rootId);
     
@@ -94,6 +93,8 @@ Backend.SpecField.prototype = {
     
     		this.loadLanguagesAction();
     		this.findUsedNodes();
+            	    try
+	    {
 		this.bindFields();
 	    }
 	    catch(e)
@@ -727,7 +728,9 @@ Backend.SpecField.prototype = {
 
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
-			$(this.cssPrefix + "form_values_" +  this.languageCodes[i] + "_" + id).getElementsByTagName("label")[0].firstChild.nodeValue = e.target.value;
+            var label = $(this.cssPrefix + "form_values_" +  this.languageCodes[i] + "_" + id).getElementsByTagName("label")[0];
+			if(!label.firstChild) label.appendChild(document.createTextNode(e.target.value));
+            else label.firstChild.nodeValue = e.target.value;
 		}
 	},
 
