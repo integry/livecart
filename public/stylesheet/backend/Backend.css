@@ -37,7 +37,7 @@ a, a:visited
 /*************************** 
 	Common classes 
 ***************************/
-.disabled {
+.disabled, .disabled * {
   	color: #AAAAAA;
 }
 
@@ -573,6 +573,7 @@ input, select, form.other
     width: 15em;
     font-size: 16px;
     padding: 2px;
+    vertical-align: middle;
 }
 
 textarea

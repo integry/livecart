@@ -82,3 +82,25 @@
 .currListMenu {
   	font-size: smaller;
 }
+
+/************************
+	Options
+************************/
+#feedOptions label {
+  	width: 30px;
+  	padding-right: 10px;
+  	position: relative;
+}
+
+#feedOptions.disabled {
+  	background: #DDDDDD;
+}
+
+#feedOptions p {
+  	vertical-align: middle;
+  	line-height: 27px;
+}
+
+#freqLabel {
+  	width: 90% !important;
+}

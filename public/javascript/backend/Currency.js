@@ -112,13 +112,43 @@ Backend.Currency.prototype =
 			{
 			  	document.getElementById('rate_' + k).value = rates[k];
 			}	
+
+			document.getElementById('rateSaveIndicator').style.display = 'none';	
+			new Backend.SaveConfirmationMessage('rateConf');
 		}
 		catch (e)
 		{
-			
+
 		}
-		document.getElementById('rateSaveIndicator').style.display = 'none';	
-		new Backend.SaveConfirmationMessage('rateConf');
+	},
+	
+	checkDisabledFields: function(form)
+	{
+		// enable/disable options container
+		cont = document.getElementById('feedOptions');
+		if (form.elements.namedItem('updateCb').checked)
+		{
+			cont.removeClassName('disabled');  	
+		}	  
+		else
+		{
+			cont.addClassName('disabled');  			  
+		}
+		
+		for (k in form.elements)
+		{
+			if (form.elements[k].name && (form.elements[k].name.substr(0, 5) == 'curr_'))
+		  	{
+				if (form.elements[k].checked)
+				{
+					form.elements[k].parentNode.removeClassName('disabled');
+				}
+				else
+				{
+					form.elements[k].parentNode.addClassName('disabled');				  
+				}
+			}
+		}
 	},
 	
 	setFormUrl: function(url)
