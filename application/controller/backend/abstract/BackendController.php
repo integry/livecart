@@ -120,33 +120,20 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	 */
 	private function loadLanguageFiles()
 	{
-		// get all inherited controller classes
-		$class = get_class($this);
-		$classes = array();
-		$lastClass = "";
-
-		while ($class != $lastClass)
-		{
-		  	$lastClass = $class;
-		 	$classes[] = $class;
-		 	$class = get_parent_class($class);
-		}
-
-		// get class file paths (to be mapped with language file paths) and load language files
-		$included = array();
 		$controllerRoot = Classloader::getRealPath('application.controller');
 
-		$langFiles = array();
-		foreach (array_reverse(get_included_files()) as $file)
+		// get all inherited controller classes
+		$class = new ReflectionClass(get_class($this));
+		while ($class)
 		{
-			$class = basename($file,'.php');
-			if (class_exists($class, false) && is_subclass_of($class, 'Controller'))
+			if ($class->getParentClass()) 
 			{
-				$file = substr($file, strlen($controllerRoot) + 1, -14);
-				$langFiles[] = $file;
+				$file = substr($class->getFileName(), strlen($controllerRoot) + 1);
+				$langFiles[] = substr($file, 0, -14);
 			}
+			$class = $class->getParentClass();
 		}
-
+			
 		$this->store->setLanguageFiles($langFiles);
 	}
 
