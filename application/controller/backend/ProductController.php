@@ -17,12 +17,31 @@ class ProductController extends StoreManagementController {
 		ClassLoader::import("application.model.category.Category");
 
 		$category = Category::getInstanceByID($this->request->getValue("id"));
-		$path = $category->getPathNodes();
+		$path = $this->getCategoryPathArray($category);
+		//$path = $category->getPathNodeArray();
 
 		$response = new ActionResponse();
 		$response->setValue("path", $path);
-
 		return $response;
+	}
+
+	/**
+	 * Gets path to a current node (including current node)
+	 *
+	 * Overloads parent method
+	 * @return array
+	 */
+	private function getCategoryPathArray(Category $category)
+	{
+		$path = array();
+		$pathNodes = $category->getPathNodeSet(Category::INCLUDE_ROOT_NODE);
+		$defaultLang = $this->store->getDefaultLanguageCode();
+
+		foreach ($pathNodes as $node)
+		{
+			$path[] = $node->getValueByLang('name', $defaultLang);
+		}
+		return $path;
 	}
 }
 ?>

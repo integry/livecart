@@ -6,15 +6,15 @@
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 	<title>LiveCart Help</title>
-	<base href="{$BASE_URL}" />
+	<base href="{baseUrl}" />
 
 	<!-- Css includes -->
-	<link href="stylesheet/backend/Backend.css" media="screen" rel="Stylesheet" type="text/css"/>	
+	<link href="stylesheet/backend/Backend.css" media="screen" rel="Stylesheet" type="text/css"/>
 	{includeCss file="backend/Help.css"}
 	{$STYLESHEET}
 	{literal}
 	<!--[if IE]>
-		<link href="stylesheet/backend/BackendIE.css" media="screen" rel="Stylesheet" type="text/css"/>	
+		<link href="stylesheet/backend/BackendIE.css" media="screen" rel="Stylesheet" type="text/css"/>
 	<![endif]-->
 	{/literal}
 
@@ -25,7 +25,7 @@
 </head>
 <body>
 	<div id="helpContainer">
-	
+
 		<div id="helpHeader">
 			<div style="float: left;">
 				<img src="image/backend/layout/logo_tr.png" style="margin-right: 10px;">
@@ -36,5 +36,5 @@
 				<input type="submit" value="Search">
 			</div>
 		</div>
-		
+
 		<div id="helpContentContainer">

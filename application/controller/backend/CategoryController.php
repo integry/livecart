@@ -27,7 +27,7 @@ class CategoryController extends StoreManagementController
 		$categoryList = Category::getRecordSet($filter);
 		$response->setValue("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
 
-        $response->setValue('curLanguageCode',$this->locale->getLocaleCode());
+        $response->setValue('curLanguageCode', $this->locale->getLocaleCode());
 
 		return $response;
 	}
@@ -95,7 +95,6 @@ class CategoryController extends StoreManagementController
 			$multilingualFields = array("name", "description", "keywords");
 			$categoryNode->setValueArrayByLang($multilingualFields, $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true), $this->request);
 			$categoryNode->save();
-			//echo "</pre>"; print_r($categoryNode->toArray()); echo "</pre>";
 
 			return new JSONResponse($categoryNode->toArray());
 		}
@@ -122,7 +121,7 @@ class CategoryController extends StoreManagementController
 		$nodeId = $this->request->getValue("id");
 		if ($nodeId)
 		{
-			ActiveRecord::deleteByID("Category", $nodeId);
+			ActiveTreeNode::deleteByID("Category", $nodeId);
 		}
 	}
 
@@ -163,6 +162,11 @@ class CategoryController extends StoreManagementController
 	{
 		$form = new Form($this->buildValidator());
 		return $form;
+	}
+
+	public function debug()
+	{
+		ActiveTreeNode::reindex("Category");
 	}
 }
 

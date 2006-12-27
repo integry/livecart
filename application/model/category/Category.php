@@ -31,42 +31,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
 	}
 
-	/**
-	 * Get catalog item instance
-	 *
-	 * @param int|array $recordID Record id
-	 * @param bool $loadRecordData If true loads record's structure and data
-	 * @param bool $loadReferencedRecords If true loads all referenced records
-	 * @return Category
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
-	}
-
-	/**
-	 * Loads a set of Category active records
-	 *
-	 * @param ARSelectFilter $filter
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return ARSet
-	 */
-	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
-	}
-
-	/**
-	 * Get new Category active record instance
-	 *
-	 * @param ActiveTreeNode $parent
-	 * @return Category
-	 */
-	public static function getNewInstance(ActiveTreeNode $parent)
-	{
-		return parent::getNewInstance(__CLASS__, $parent);
-	}
 
 	/**
 	 * Loads a set of spec field records for a category.
@@ -78,16 +42,16 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 *
 	 * @return ARSet
 	 */
-	public function getSpecificationFields()
+	public function getSpecificationFieldSet($includeParentFields = false)
 	{
-		$pathArr = parent::getPathNodes(Category::INCLUDE_ROOT_NODE);
+		$path = parent::getPathNodeSet(Category::INCLUDE_ROOT_NODE);
 
 		$filter = new ARSelectFilter();
 		$filter->setOrder(new ARFieldHandle("SpecField", "categoryID"));
 		$filter->setOrder(new ARFieldHandle("SpecField", "position"));
 
 		$cond = new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $this->getID());
-		foreach ($pathArr as $node)
+		foreach ($path as $node)
 		{
 			$cond->addOR(new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $node->getID()));
 		}
@@ -100,12 +64,14 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 * Gets a list of products assigned to this node
 	 *
 	 */
-	public function getProductList()
+	public function getProductSet()
 	{
 		$this->getID();
 		$productFilter = new ARSelectFilter();
 		$productFilter->setCondition();
 		$products = ActiveRecord::getRecordSet("Product", $productFilter);
+
+		return $products;
 	}
 
 	public function setValueByLang($fieldName, $langCode, $value)
@@ -159,27 +125,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	}
 
 	/**
-	 * Gets path to a current node (including current node)
-	 *
-	 * Overloads parent method
-	 * @return array
-	 */
-	public function getPathNodes()
-	{
-		$path = array();
-		$pathNodes = parent::getPathNodes();
-
-		// Adding current node to the path
-		$pathNodes->add($this);
-		foreach ($pathNodes as $node)
-		{
-			$nodeArr = $node->toArray();
-			$path[] = $nodeArr['name'];
-		}
-		return $path;
-	}
-
-	/**
 	 * Creates array representation
 	 *
 	 * @return array
@@ -217,6 +162,43 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 			}
 		}
 		return $transformedData;
+	}
+
+	/**
+	 * Get catalog item instance
+	 *
+	 * @param int|array $recordID Record id
+	 * @param bool $loadRecordData If true loads record's structure and data
+	 * @param bool $loadReferencedRecords If true loads all referenced records
+	 * @return Category
+	 */
+	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
+	{
+		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
+	}
+
+	/**
+	 * Loads a set of Category active records
+	 *
+	 * @param ARSelectFilter $filter
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
+	{
+		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+	}
+
+	/**
+	 * Get new Category active record instance
+	 *
+	 * @param ActiveTreeNode $parent
+	 * @return Category
+	 */
+	public static function getNewInstance(ActiveTreeNode $parent)
+	{
+		return parent::getNewInstance(__CLASS__, $parent);
 	}
 }
 

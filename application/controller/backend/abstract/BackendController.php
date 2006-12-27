@@ -14,8 +14,6 @@ ClassLoader::import("library.json.json");
  */
 abstract class BackendController extends BaseController implements LCiTranslator
 {
-	protected $rootDirectory = "";
-
 	/**
 	 * Locale
 	 *
@@ -66,11 +64,6 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	public function makeText($key, $params)
 	{
 		return $this->locale->translator()->makeText($key, $params);
-	}
-
-	public function init()
-	{
-		Application::getInstance()->getRenderer()->setValue('BASE_URL', Router::getBaseUrl());
 	}
 
 	/**

@@ -284,6 +284,15 @@ class ActiveTreeNode extends ActiveRecordModel
 		return self::getInstanceByID($className, self::ROOT_ID, false, false);
 	}
 
+
+	/*
+	public function getPathNodes($includeRootNode = false, $loadReferencedRecords = false)
+	{
+		$recordSet = self::getRecordSet($className, $filter, $loadReferencedRecords);
+		return $recordSet;
+	}
+	*/
+
 	/**
 	 * Gets a hierarchial path to a given tree node
 	 *
@@ -293,11 +302,37 @@ class ActiveTreeNode extends ActiveRecordModel
 	 * 1. Electronics
 	 * 2. Computers
 	 *
+	 * @param bool $includeRootNode
 	 * @param bool $loadReferencedRecords
 	 * @return ARSet
 	 * @see ARSet
 	 */
-	public function getPathNodes($includeRootNode = false, $loadReferencedRecords = false)
+	public function getPathNodeSet($includeRootNode = false, $loadReferencedRecords = false)
+	{
+		$className = get_class($this);
+		return ActiveTreeNode::getRecordSet($className, $this->getPathNodeFilter($includeRootNode), $loadReferencedRecords);
+	}
+
+	/**
+	 * Gets a hierarchial path to a given tree node
+	 *
+	 * The result is a sequence of record starting from a root node
+	 * E.x. Consider a tree branch: Electronics -> Computers -> Laptops
+	 * The path of "Laptops" will be a record set (ARSet) with a following order of records:
+	 * 1. Electronics
+	 * 2. Computers
+	 *
+	 * @param bool $includeRootNode
+	 * @param bool $loadReferencedRecords
+	 * @return array
+	 */
+	public function getPathNodeArray($includeRootNode = false, $loadReferencedRecords = false)
+	{
+		$className = get_class($this);
+		return ActiveTreeNode::getRecordSetArray($className, $this->getPathNodeFilter($includeRootNode), $loadReferencedRecords);
+	}
+
+	private function getPathNodeFilter($includeRootNode)
 	{
 		$className = get_class($this);
 		$this->load();
@@ -316,8 +351,7 @@ class ActiveTreeNode extends ActiveRecordModel
 		$filter->setCondition($cond);
 		$filter->setOrder(new ARFieldHandle($className, self::LEFT_NODE_FIELD_NAME), ARSelectFilter::ORDER_ASC);
 
-		$recordSet = self::getRecordSet($className, $filter, $loadReferencedRecords);
-		return $recordSet;
+		return $filter;
 	}
 
 	/**
@@ -397,8 +431,14 @@ class ActiveTreeNode extends ActiveRecordModel
 		}
 	}
 
-	public function buildTree()
+	public static function reindex($className)
 	{
+		$filter = new ARSelectFilter();
+		$filter->setOrder(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME));
+
+		$nodeSet = ActiveTreeNode::getRecordSet($className, $filter);
+
+		echo "<pre>"; print_r($nodeSet->toArray()); echo "</pre>";
 	}
 
 	/**
