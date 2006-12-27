@@ -11,6 +11,8 @@
     display: block;
 }
 
+
+
 .specField fieldset
 {
     background: #fff;
@@ -42,6 +44,11 @@
 .specField_change_state
 {
     padding: 0 5px;
+}
+
+.specField .specField_step_translations_language
+{
+    background: #ddd;
 }
 
 .specField_form_values_value .specField_form_values_default_checkbox
@@ -111,3 +118,4 @@ fieldset.group h2
     background: yellow;
     padding: 5px;
 }
+

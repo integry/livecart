@@ -313,7 +313,7 @@ Backend.SpecField.prototype = {
 	bindDefaultFields: function()
 	{
 		var self = this;
-		$A(this.nodes.valuesDefaultGroup.getElementsByTagName("input")).each(function(input)
+		$A(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0].getElementsByTagName("input")).each(function(input)
 		{
 		    if(input.type == 'text')
             {
@@ -426,7 +426,8 @@ Backend.SpecField.prototype = {
     			newTranslation.getElementsByTagName("legend")[0].onclick = this.changeTranslationLanguageAction.bind(this);
     
 				newTranslation.className += this.languageCodes[i];
-				newTranslation.getElementsByTagName("legend")[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
+                
+                document.getElementsByClassName(this.cssPrefix + "legend_text", newTranslation.getElementsByTagName("legend")[0])[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
 
 				var inputFields = $A(newTranslation.getElementsByTagName('input'));
 				var textAreas = newTranslation.getElementsByTagName('textarea');
@@ -455,7 +456,8 @@ Backend.SpecField.prototype = {
 				newValueTranslation.className += this.languageCodes[i];
                 
                 var valueTranslationLegend = newValueTranslation.getElementsByTagName("legend")[0];
-				valueTranslationLegend.appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
+                document.getElementsByClassName(this.cssPrefix + "legend_text", valueTranslationLegend)[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
+
                  
                 
                 valueTranslationLegend.onclick = this.toggleValueLanguage.bind(this);
@@ -477,8 +479,10 @@ Backend.SpecField.prototype = {
 			e.target = e.srcElement;
 		}
         
-        var values = document.getElementsByClassName(this.cssPrefix + "language_translation", e.target.parentNode)[0];
+        var values = document.getElementsByClassName(this.cssPrefix + "language_translation", e.target.parentNode.parentNode)[0];
         values.style.display = (values.style.display == 'block') ? 'none' : 'block';
+               
+        document.getElementsByClassName("expandIcon", e.target.parentNode)[0].firstChild.nodeValue = (values.style.display == 'block') ? '[-] ' : '[+] ';
     },
 
 
@@ -527,7 +531,7 @@ Backend.SpecField.prototype = {
 
 	/**
 	 * Programm should change language section if we have click on a link meaning different language. If we click current
-	 * language it will callapse (not the programme of course =)
+	 * language it will callapse
 	 *
 	 * @param Event e Event
 	 *
@@ -543,8 +547,9 @@ Backend.SpecField.prototype = {
 		}
 
         Event.stop(e);
-        var currentTranslationNode = document.getElementsByClassName(this.cssPrefix + "language_translation", e.target.parentNode)[0];               
+        var currentTranslationNode = document.getElementsByClassName(this.cssPrefix + "language_translation", e.target.parentNode.parentNode)[0];               
         currentTranslationNode.style.display = (currentTranslationNode.style.display == 'block') ? 'none' : 'block';
+        document.getElementsByClassName("expandIcon", e.target.parentNode)[0].firstChild.nodeValue = (currentTranslationNode.style.display == 'block') ? '[-] ' : '[+] ';
 	},
 
 	/**
@@ -846,8 +851,6 @@ Backend.SpecField.prototype = {
 				var translationsUl = document.getElementsByClassName(this.cssPrefix + "form_values_translations", this.nodes.valuesTranslations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
 				translationsUl.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[i];
 				translationsUl.appendChild(newValueTranslation);
-
-
 			}
 		}
 		else

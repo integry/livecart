@@ -41,12 +41,11 @@ class FilterController extends StoreManagementController
         (
             'ID' => 'new',
             'name' => array(),
-            'values' => array(),
             'rootId' => 'filter_item_new_'.$categoryID.'_form',
             'categoryID' => $categoryID,
             'specFields' => $this->getSpecFieldOptions($specFieldsList)
         );
-
+        
         $response->setValue('filters', $filters);
         $response->setValue('blankFilter', $blankFilter);
         $response->setValue('categoryID', $categoryID);
@@ -168,25 +167,30 @@ class FilterController extends StoreManagementController
                     $filter->setLanguageField('name', @array_map($htmlspecialcharsUtf_8, $value['name']),  array_keys($this->config['languages']));
                     
                     
-                    $filter->rangeDateStart->setNull();
-                    $filter->rangeDateEnd->setNull();
-                    $filter->rangeStart->setNull();
-                    $filter->rangeEnd->setNull();
-                    $filter->specFieldValue->setNull();
                     
                     if($specFieldType == SpecField::TYPE_TEXT_DATE)
                     {
                         $filter->setFieldValue('rangeDateStart', $value['rangeDateStart']);
                         $filter->setFieldValue('rangeDateEnd', $value['rangeDateEnd']);
+                        $filter->rangeStart->setNull();
+                        $filter->rangeEnd->setNull();
+                        $filter->specFieldValue->setNull();
                     }
                     else if(!in_array($specFieldType, $this->config['selectorValueTypes']))
                     {
                         $filter->setFieldValue('rangeStart', $value['rangeStart']);
                         $filter->setFieldValue('rangeEnd', $value['rangeEnd']);
+                        $filter->rangeDateStart->setNull();
+                        $filter->rangeDateEnd->setNull();
+                        $filter->specFieldValue->setNull();
                     }
                     else
                     {
                         $filter->setFieldValue('specFieldValueID', SpecFieldValue::getInstanceByID((int)$value['specFieldValueID']));
+                        $filter->rangeDateStart->setNull();
+                        $filter->rangeDateEnd->setNull();
+                        $filter->rangeStart->setNull();
+                        $filter->rangeEnd->setNull();
                     }
                     
                     

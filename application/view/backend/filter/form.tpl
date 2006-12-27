@@ -1,7 +1,6 @@
 <ul class="tabs">
     <li class="active"><a href="#step_main" class="filter_change_state" >{t _Filter_main}</a></li>
     <li><a href="#step_filters" class="filter_change_state" >{t _Filter_filters}</a></li>
-    <li><a href="#step_translations" class="filter_change_state">{t _Filter_translations}</a></li>
 </ul>
 
 <form action="{link controller=backend.filter action=save}" method="post" class="filter">
@@ -19,9 +18,23 @@
 
 		<p>
     		<label>{t _Filter_associated_field}</label>
- 	<select name="specFieldID" class="filter_form_specFieldID"></select>
+ 	        <select name="specFieldID" class="filter_form_specFieldID"></select>
     		<span class="feedback"> </span>
 		</p>
+        
+        
+    	<!-- STEP 3 -->
+    	<div class="filter_step_translations">
+            <fieldset class="dom_template filter_step_translations_language filter_step_translations_language_">
+                <legend><span class="expandIcon">[+] </span><span class="filter_legend_text"></span></legend>
+                <div class="filter_language_translation">
+                    <p>
+            			<label>{t _Filter_name}</label>
+            			<input type="text" name="name" />
+        			</p>
+                </div>
+            </fieldset>
+    	</div>
 	</fieldset>
 
 	<!-- STEP 2 -->
@@ -35,7 +48,7 @@
     		<div class="filter_filters">
                 <p>
         			<ul class="activeList_add_sort activeList_add_delete">
-        				<li class="dom_template filter_form_filters_value" id="filter_form_filters_">
+        				<li class="dom_template filter_form_filters_value filter_form_filters_value_main" id="filter_form_filters_">
             				<span>
             					<p>
                 					<label>{t _Filter_name}</label>
@@ -64,43 +77,36 @@
         				</li>
         			</ul>
                 </p>
-                <p>
-                    <a href="#add" class="filter_add_filter">{t _Filter_add_filter}</a>
-                    <a href="#generate" class="filter_generate_filters">{t _Filter_generate_filters}</a>
+                <p class="filter_crate_filters">
+                    <a href="#add" class="filter_add_filter">{t _Filter_add_filter}</a> <a href="#generate" class="filter_generate_filters">{t _Filter_generate_filters}</a>
                 </p>
+                
+                
+                <!-- STEP 3 -->
+            	<div class="filter_step_filters_translations">
+            		<fieldset class="dom_template filter_step_translations_language filter_step_translations_language_">
+            			<legend><span class="expandIcon">[+] </span><span class="filter_legend_text"></span></legend>
+            
+                        <div class="filter_form_language_translation">
+                            <p>
+            					<ul>
+            						<li class="dom_template filter_form_filters_value" id="filter_form_filters_">
+            							<label> </label>
+            							<input type="text" />
+            							<br />
+            						</li>
+            					</ul>
+                            </p>
+                        </div>
+            		</fieldset>
+            	</div>
+                
+                
 			</div>
 
 			<br class="clear" />
 		</fieldset>
 		</p>
-	</fieldset>
-
-	<!-- STEP 3 -->
-	<fieldset class="filter_step_lev1 filter_step_translations">
-    <legend>{t _Filter_step_three}</legend>
-
-		<ul class="filter_form_filters_translations_language_links tabs">
-			<li class="dom_template filter_language_link"><a href="#step_translations_language_" class="filter_translations_links">language</a></li>
-		</ul>
-
-		<fieldset class="filter_step_translations_language dom_template filter_step_translations_language_">
-			<legend></legend>
-
-			<label>{t _Filter_name}</label>
-			<input type="text" name="name" />
-			<br />
-
-			<fieldset class="filter_form_filters_translations">
-				<legend>{t _Filter_filters}</legend>
-					<ul>
-						<li class="dom_template filter_form_filters_value" id="filter_form_filters_">
-							<label></label>
-							<input type="text" />
-							<br />
-						</li>
-					</ul>
-			</fieldset>
-		</fieldset>
 	</fieldset>
 </form>
 

@@ -1,40 +1,38 @@
 /**
  * Backend.Filter
  *
- * Script for managing spec field form
+ * This class manages filters forms
  *
- * The following class manages spec field forms. I have used an separate js file (a class)
- * because there are a lot of thing happening when you are dealing with spec fields forms.
- *
- * To use this class you should simply pass specFIelds filters to it like so
+ * Create object by passing json to constructor
  * @example
  * <code>
  *     new Backend.Filter({
- *        "ID":"new",
- *        "name":"a:2:{s:2:\"en\";s:11:\"Electronics\";s:2:\"lt\";s:11:\"Elektronika\";}",
- *        "description":[],
- *        "handle":"",
- *        "filters":[],
- *        "rootId": "filter_item_new",
- *        "type":5,
- *        "dataType":2
+ *         'ID': 15
+ *         'name': {'lt': 'Pagal dydi'}
+ *         'rootId': 'filter_item_new_41_form'
+ *         'categoryID': 41
+ *         'specFields: { // SpecFieldArray in json // } 
  *     });
  * </code>
  *
- * I hope whoever reads this will figure aut what each value means. Name, description and filters
- * can have multiple filters for each language
- *
- * Also you should know that some filters are not meant to be passed to constructor (it will also
- * work fine... meaby) Here is an example
- *
+ * You should also modify prototype by passing settins to it
+ * 
  * @example
  * <code>
- *     Backend.Filter.prototype.languages = {"en":"English","lt":"Lithuanian","de":"German"};
- *     Backend.Filter.prototype.types = createTypesOptions({"2":{"1":"Selector","2":"Numbers"},"1":{"3":"Text","4":"Word processer","5":"selector","6":"Date"}});
- *     Backend.Filter.prototype.messages = {"deleteGroup":"delete field"};
- *     Backend.Filter.prototype.selectorValueTypes = [1,5];
- *     Backend.Filter.prototype.doNotTranslateTheseValueTypes = [2];
- *     Backend.Filter.prototype.countNewFilters = 0;
+ *   Backend.Filter.prototype.links = {};
+ *   Backend.Filter.prototype.links.deleteGroup = '/en/backend.filter/delete/';
+ *   Backend.Filter.prototype.links.editGroup = '/en/backend.filter/item/';
+ *   Backend.Filter.prototype.links.sortGroup = '/en/backend.filter/sort/';
+ *   Backend.Filter.prototype.links.deleteFilter = '/en/backend.filter/deleteFilter/';
+ *   Backend.Filter.prototype.links.sortFilter = '/en/backend.filter/sortFilter/';
+ *   Backend.Filter.prototype.links.generateFilters = '/en/backend.filter/generateFilters/';
+ *   
+ *   Backend.Filter.prototype.languages = {"en":"English","lt":"Lithuanian","lv":"Latvian"};
+ *   Backend.Filter.prototype.messages = {"deleteField":"delete field"};
+ *   Backend.Filter.prototype.selectorValueTypes = [1,5];
+ *   Backend.Filter.prototype.countNewFilters = 0;
+ *   Backend.Filter.prototype.typesWithNoFiltering = [];
+ *   Backend.Filter.prototype.dateFormat = "%d-%b-%Y";
  * </code>
  *
  * @version 1.0
@@ -53,10 +51,9 @@ Backend.Filter.prototype = {
      * Constructor
      *
      * @param filtersJson Spec Field filters
-     * @param hash If true the passed filter is an object. If hash is not passed or false then filterJson will be parsed as json string
+     * @param hash If true the passed filter is an object. If hash is not passed or false then filterJson will be assumed as a string
      *
      * @access public
-     *
      */
     initialize: function(filterJson, hash)
     {
@@ -86,15 +83,13 @@ Backend.Filter.prototype = {
     },
 
     /**
-     * This function destroys the old spec field form, then clones the prototype and then calls constructor once again
+     * This function destroys the old filter group form, then clones the prototype and then calls constructor once again
      *
-     * @param filters Spec Field filters
-     * @param hash If true the passed filter is an object. If hash is not passed or false then filterJson will be parsed as json string
+     * @param object filterJson Filter group form values
      *
      * @access public
-     *
      */
-    recreate: function(filterJson, hash)
+    recreate: function(filterJson)
     {
         var root = ($(this.filter.rootId).tagName.toLowerCase() == 'li') ?  window.activeFiltersList.getContainer($(this.filter.rootId), 'edit') : $(this.filter.rootId);
         root.innerHTML = '';
@@ -109,7 +104,7 @@ Backend.Filter.prototype = {
 
 
     /**
-     * Instead of sending spec field form we store form prototype which is cloned every time new spec field data is being recieved.
+     * Create a clone of form from prototype form
      *
      * @param prototypeId Id of root prototype element
      * @param rootId Id of root element where the copy of prototype will be copied
@@ -136,7 +131,6 @@ Backend.Filter.prototype = {
      * Find ussed nodes
      *
      * @access private
-     *
      */
     findUsedNodes: function()
     {
@@ -152,6 +146,7 @@ Backend.Filter.prototype = {
 
         this.nodes.stepTranslations       = document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
         this.nodes.stepMain               = document.getElementsByClassName(this.cssPrefix + "step_main", this.nodes.parent)[0];
+        this.nodes.stepValues             = document.getElementsByClassName(this.cssPrefix + "step_filters", this.nodes.parent)[0];
         this.nodes.stepLevOne             = document.getElementsByClassName(this.cssPrefix + "step_lev1", this.nodes.parent);
         this.nodes.generateFiltersLink    = document.getElementsByClassName(this.cssPrefix + "generate_filters", this.nodes.parent)[0];
 
@@ -169,16 +164,17 @@ Backend.Filter.prototype = {
         this.nodes.filtersDefaultGroup    = document.getElementsByClassName(this.cssPrefix + "form_filters_group", this.nodes.parent)[0];
         this.nodes.addFilterLink          = this.nodes.filtersDefaultGroup.getElementsByClassName(this.cssPrefix + "add_filter", this.nodes.parent)[0];
 
+        this.nodes.valuesTranslations = {};
+        
         var ul = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0];
         ul.id = this.cssPrefix + "form_"+this.id+'_filters_'+this.languageCodes[0];
 
     },
 
     /**
-     * Find all translations fields. This is done every time when new field is being added
+     * Find all translations fields. This is done every time when new filter is being added
      *
      * @access private
-     *
      */
     bindTranslationFilters: function()
     {
@@ -186,6 +182,11 @@ Backend.Filter.prototype = {
     },
 
 
+    /**
+     * Generate filters
+     * 
+     * @param Object e
+     */
     generateFiltersAction: function(e)
     {
         var self = this;
@@ -212,6 +213,11 @@ Backend.Filter.prototype = {
                 });                
     },
     
+    /**
+     * Add generated filters to filters list
+     * 
+     * @param Object jsonString
+     */
     addGeneratedFilters: function(jsonString)
     {
         var self = this;
@@ -227,7 +233,7 @@ Backend.Filter.prototype = {
                     var specField = this.specFields[i];
                     if(this.selectorValueTypes.indexOf(specField.type) !== -1)
                     {
-                        $A(this.nodes.filtersDefaultGroup.getElementsByTagName("li")).each(function(li)
+                        $A(this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0].getElementsByTagName("li")).each(function(li)
                         {
                             if(!Element.hasClassName(li, 'dom_template'))
                             {
@@ -248,59 +254,57 @@ Backend.Filter.prototype = {
         }
         catch(e)
         {
-            alert("Json error");
+            jsTrace.debug(e);
         }
     },  
 
 
     /**
      * Binds fields to some events
-     *
-     * @access private
-     *
      */
     bindFields: function()
     {
         var self = this;
 
-    try
-    {
-        for(var i = 0; i < this.nodes.stateLinks.length; i++)
+        try
         {
-            this.nodes.stateLinks[i].onclick = this.changeStateAction.bind(this);
+            for(var i = 0; i < this.nodes.stateLinks.length; i++)
+            {
+                this.nodes.stateLinks[i].onclick = this.changeStateAction.bind(this);
+            }
+    
+            this.nodes.name.onkeyup = this.generateTitleAction.bind(this);
+            this.nodes.addFilterLink.onclick = this.addFilterFieldAction.bind(this);
+            this.nodes.specFieldID.onchange = this.specFieldIDWasChangedAction.bind(this);
+    
+            this.nodes.cancel.onclick = this.cancelAction.bind(this);
+            this.nodes.save.onclick = this.saveAction.bind(this);
+            
+            this.nodes.generateFiltersLink.onclick = this.generateFiltersAction.bind(this);
+    
+            // Also some actions must be executed on load. Be aware of the order in which those actions are called
+            this.fillSpecFieldsSelect();
+            if(this.filter.SpecField) this.nodes.specFieldID.value = this.filter.SpecField.ID;
+            
+            this.loadFilterAction();
+    
+            this.specFieldIDWasChangedAction();
+            this.loadValueFieldsAction();
+    
+            this.bindTranslationFilters();
+        } 
+        catch(e)
+        {
+            alert(e);
         }
-
-        this.nodes.name.onkeyup = this.generateTitleAction.bind(this);
-        this.nodes.addFilterLink.onclick = this.addFilterFieldAction.bind(this);
-        this.nodes.specFieldID.onchange = this.specFieldIDWasChangedAction.bind(this);
-
-        this.nodes.cancel.onclick = this.cancelAction.bind(this);
-        this.nodes.save.onclick = this.saveAction.bind(this);
-        
-        this.nodes.generateFiltersLink.onclick = this.generateFiltersAction.bind(this);
-
-        // Also some actions must be executed on load. Be aware of the order in which those actions are called
-        this.fillSpecFieldsSelect();
-        if(this.filter.SpecField) this.nodes.specFieldID.value = this.filter.SpecField.ID;
-        
-        this.createLanguagesLinks();
-        this.loadFilterAction();
-
-        this.specFieldIDWasChangedAction();
-        this.loadValueFieldsAction();
-
-        this.bindTranslationFilters();
-        this.loadTypes();
-    } 
-    catch(e)
-    {
-        alert(e);
-    }
 
         new Form.EventObserver(this.nodes.form, function() { self.formChanged = true; } );
         Form.backup(this.nodes.form);
     },
 
+    /**
+     * Fill spec field select with options
+     */
     fillSpecFieldsSelect: function()
     {
         var self = this;
@@ -315,33 +319,7 @@ Backend.Filter.prototype = {
 
 
     /**
-     * Whem Mike changes input type from "numbers" to "text" programm should select
-     * appropriate value from types list (like selector, text, date, number, etc)
-     *
-     * @access private
-     *
-     */
-    loadTypes: function()
-    {
-        if(this.type)
-        {
-            for(var i = 0; i < this.nodes.type.options.length; i++)
-            {
-                if(this.nodes.type.options[i].value == this.type)
-                {
-                    this.nodes.type.selectedIndex = i;
-                    break;
-                }
-            }
-        }
-    },
-
-    /**
-     * When the value type changes whe should decide whether show step "Filters" (for selectors) or not,
-     * and whether to show translations or not (show for text, hide for numbers)
-     *
-     * @access private
-     *
+     * When specField is changed show dates, ranges or select in filters tab
      */
     specFieldIDWasChangedAction: function()
     {
@@ -350,8 +328,8 @@ Backend.Filter.prototype = {
         {
              if(this.specFields[i].ID == this.nodes.specFieldID.value)
              {
-                $A(this.nodes.filtersDefaultGroup.getElementsByTagName("li")).each(function(li)
-                {
+                $A(this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0].getElementsByTagName("li")).each(function(li)
+                {                    
                     document.getElementsByClassName('filter_range', li)[0].style.display = (self.selectorValueTypes.indexOf(self.specFields[i].type) === -1 && self.specFields[i].type != Backend.SpecField.prototype.TYPE_TEXT_DATE) ? 'block' : 'none';
                                                 
                     if(self.selectorValueTypes.indexOf(self.specFields[i].type) !== -1)
@@ -364,20 +342,21 @@ Backend.Filter.prototype = {
                         } 
                     }                          
                     
-                        if((self.selectorValueTypes.indexOf(self.specFields[i].type) === -1 || self.specFields[i].type == Backend.SpecField.prototype.TYPE_TEXT_DATE))
-                        {
-                            self.nodes.generateFiltersLink.style.display = 'none';
-                            document.getElementsByClassName('filter_selector', li)[0].style.display = 'none';                            
-                        }
-                        else
-                        {
-                            self.nodes.generateFiltersLink.style.display = 'block';
-                            document.getElementsByClassName('filter_selector', li)[0].style.display = 'block';  
-                        }
+                    if((self.selectorValueTypes.indexOf(self.specFields[i].type) === -1 || self.specFields[i].type == Backend.SpecField.prototype.TYPE_TEXT_DATE))
+                    {
+                        self.nodes.generateFiltersLink.style.display = 'none';
+                        document.getElementsByClassName('filter_selector', li)[0].style.display = 'none';                            
+                    }
+                    else
+                    {
+                        self.nodes.generateFiltersLink.style.display = 'block';
+                        document.getElementsByClassName('filter_selector', li)[0].style.display = 'block';  
+                    }
  
-                        document.getElementsByClassName('filter_date_range', li)[0].style.display = (self.specFields[i].type == Backend.SpecField.prototype.TYPE_TEXT_DATE) ? 'block' : 'none'; 
+                    document.getElementsByClassName('filter_date_range', li)[0].style.display = (self.specFields[i].type == Backend.SpecField.prototype.TYPE_TEXT_DATE) ? 'block' : 'none'; 
                 });
                 
+                document.getElementsByClassName(this.cssPrefix + "step_filters_translations", this.nodes.filtersDefaultGroup)[0].style.display = (Backend.SpecField.prototype.TYPE_TEXT_SELECTOR != self.specFields[i].type) ? 'none' : 'block';
                 
                 return;
              }
@@ -385,23 +364,20 @@ Backend.Filter.prototype = {
     },
 
     /**
-     * This method binds all default filters (those which are field in "Filters" step) and create new fields in "Translations"
-     * step where user can fill translations for those filters
-     *
-     * @access private
-     *
+     * Bind default language filter fields to actions
      */
     bindDefaultFields: function()
     {
         var self = this;
-        $A(this.nodes.filtersDefaultGroup.getElementsByTagName("li")).each(function(li)
+        var liList = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0].getElementsByTagName('li');
+        $A(liList).each(function(li)
         {
+            var test = li.getElementsByTagName("input")[0];
+            var test1 = li;
             li.getElementsByTagName("input")[0].onkeyup = self.mainValueFieldChangedAction.bind(self);
             li.getElementsByTagName("input")[1].onkeydown = self.rangeChangedAction.bind(self);
             li.getElementsByTagName("input")[2].onkeydown = self.rangeChangedAction.bind(self);
         });
-
-
 
         this.fieldsList = new ActiveList(this.nodes.filtersDefaultGroup.getElementsByTagName("ul")[0], {
             beforeSort: function(li, order)
@@ -427,6 +403,10 @@ Backend.Filter.prototype = {
         });
     },
 
+    /**
+     * Check if range values are valid floats
+     * @param Event e
+     */
     rangeChangedAction: function(e)
     {
         if(!e)
@@ -453,7 +433,9 @@ Backend.Filter.prototype = {
         }
     },
 
-
+    /**
+     * @param string newTitle Modify AR title
+     */
     changeMainTitleAction: function(newTitle)
     {
         if(this.nodes.mainTitle)
@@ -469,12 +451,8 @@ Backend.Filter.prototype = {
         }
     },
 
-
     /**
-     * Here we fill "Main" step field filters like name, handle, input type and value type
-     *
-     * @access private
-     *
+     * Fill main filter group values (name and spec field) and create translations for those values
      */
     loadFilterAction: function()
     {
@@ -482,16 +460,15 @@ Backend.Filter.prototype = {
 
         // Default language
         if(this.id) this.nodes.id.value = this.id;
-        if(this.handle) this.nodes.handle.value = this.handle;
 
         if(this.name[this.languageCodes[0]]) this.nodes.name.value = this.name[this.languageCodes[0]];
         this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
 
         this.changeMainTitleAction(this.nodes.name.value);
 
-
         // Translations
         var translations = document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations);
+		var valuesTranslations = document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepValues);
         // we should have a template to continue
         if(translations.length > 0 && translations[0].className.split(' ').indexOf('dom_template') !== -1)
         {
@@ -501,15 +478,12 @@ Backend.Filter.prototype = {
                 // copy template class
                 var newTranslation = translations[0].cloneNode(true);
                 Element.removeClassName(newTranslation, "dom_template");
-
-                if(i == 1)
-                {
-                    newTranslation.style.display = 'block';
-                }
+                
+    			// bind it
+    			newTranslation.getElementsByTagName("legend")[0].onclick = this.changeTranslationLanguageAction.bind(this);
 
                 newTranslation.className += this.languageCodes[i];
-
-                newTranslation.getElementsByTagName("legend")[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
+                document.getElementsByClassName(this.cssPrefix + "legend_text", newTranslation.getElementsByTagName("legend")[0])[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
 
                 var inputFields = $A(newTranslation.getElementsByTagName('input'));
                 var textAreas = newTranslation.getElementsByTagName('textarea');
@@ -531,6 +505,19 @@ Backend.Filter.prototype = {
 
                 // add to nodes list
                 this.nodes.translations[this.languageCodes[i]] = newTranslation;
+                  
+                // Create place for values translations
+				var newValueTranslation = valuesTranslations[0].cloneNode(true);
+				Element.removeClassName(newValueTranslation, "dom_template");
+				newValueTranslation.className += "_" + this.languageCodes[i];
+                
+                var valueTranslationLegend = document.getElementsByClassName(this.cssPrefix + "legend_text", newValueTranslation.getElementsByTagName("legend")[0])[0];
+				valueTranslationLegend.appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
+                
+                valueTranslationLegend.parentNode.onclick = this.toggleValueLanguage.bind(this);
+                
+				valuesTranslations[0].parentNode.appendChild(newValueTranslation);
+                this.nodes.valuesTranslations[this.languageCodes[i]] = newValueTranslation;
             }
         }
 
@@ -539,9 +526,23 @@ Backend.Filter.prototype = {
     },
 
 
+    toggleValueLanguage: function(e)
+    {
+        if(!e)
+		{
+			e = window.event;
+			e.target = e.srcElement;
+		}
+        
+        var values = document.getElementsByClassName(this.cssPrefix + "form_language_translation", e.target.parentNode.parentNode)[0];
+        values.style.display = (values.style.display == 'block') ? 'none' : 'block';
+        document.getElementsByClassName("expandIcon", e.target.parentNode)[0].firstChild.nodeValue = (values.style.display == 'block') ? '[-] ' : '[+] ' ;
+    },
+    
+    
+
     /**
-     * When we create form from JSON string we should create and fill in filters fields (from "Filters" step)
-     * and their translations in "Translations" step if needed
+     * Create filters from json Object
      *
      * @access private
      *
@@ -580,105 +581,35 @@ Backend.Filter.prototype = {
         });
     },
 
-    /**
-     * In Filter form template we not yet know what languages we'll be using so
-     * what we are doing here is looking at what languages we are using and creating separate
-     * sections for each language in "Translations" section
-     *
-     * @access private
-     *
-     */
-    createLanguagesLinks: function()
-    {
-        var languageTemplateLink = document.getElementsByClassName("dom_template", this.nodes.translationsLinks)[0];
-
-        for(var i = 1; i < this.languageCodes.length; i++)
-        {
-            var languageLinkDiv = languageTemplateLink.cloneNode(true);
-            Element.removeClassName(languageLinkDiv, "dom_template");
-
-            var languageLink = languageLinkDiv.getElementsByTagName("a")[0];
-            languageLink.hash += this.languageCodes[i];
-            Element.addClassName(languageLink, this.cssPrefix + languageLink.hash.substring(1) + "_link"); 
-            
-            languageLink.firstChild.nodeValue = this.languages[this.languageCodes[i]];
-
-            // First link is active
-            if(i == 1)
-            {
-                Element.addClassName(languageLink, this.cssPrefix + "step_translations_language_active");
-                Element.addClassName(languageLink.parentNode, "active");
-            }
-
-            this.nodes.translationsLinks.appendChild(languageLinkDiv);
-
-            // bind it
-            languageLinkDiv.onclick = this.changeTranslationLanguageAction.bind(this);
-        }
-    },
-
-
-
-
 
     /**
-     * Programm should change language section if we have click on a link meaning different language. If we click current
-     * language it will callapse (not the programme of course =)
+     * Change translation language tab
      *
      * @param Event e Event
      *
      * @access private
-     *
      */
-    changeTranslationLanguageAction: function(e)
-    {
-        if(!e)
-        {
-            e = window.event;
-            e.target = e.srcElement;
-        }
+	changeTranslationLanguageAction: function(e)
+	{
+	    if(!e)
+		{
+			e = window.event;
+			e.target = e.srcElement;
+		}
 
         Event.stop(e);
-
-        if(e.target.tagName.toLowerCase() != 'a') return;
-
-        var    currentLanguageClass = this.cssPrefix + e.target.hash.replace(/^#+/, '');
-
-        var translationsNodes = document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations);
-        var translationsLinks = document.getElementsByClassName(this.cssPrefix + "translations_links", this.nodes.stepTranslations);
-
-        var same = e.target.hasClassName(this.cssPrefix + "step_translations_language_active");
-
-        for(var i = 0; i < translationsNodes.length; i++)
-        {
-            translationsNodes[i].style.display = 'none';
-        }
-
-        document.getElementsByClassName(currentLanguageClass, this.nodes.stepTranslations)[0].style.display = 'block';
-
-        for(var i = 0; i < translationsLinks.length; i++)
-        {
-            Element.removeClassName(translationsLinks[i], this.cssPrefix + "step_translations_language_active");
-            Element.removeClassName(translationsLinks[i].parentNode, "active");
-        }
-
-
-        Element.addClassName(e.target, this.cssPrefix + "step_translations_language_active");
-        Element.addClassName(e.target.parentNode, "active");
-
-
-    },
+        var currentTranslationNode = document.getElementsByClassName(this.cssPrefix + "language_translation", e.target.parentNode.parentNode)[0];               
+        currentTranslationNode.style.display = (currentTranslationNode.style.display == 'block') ? 'none' : 'block';
+        
+        document.getElementsByClassName("expandIcon", e.target.parentNode)[0].firstChild.nodeValue = (currentTranslationNode.style.display == 'block') ? '[-]' : '[+]';
+	},
 
     /**
-     * When we add new value "Filters" step we are also adding it to "Translations" step. Field name
-     * will have new3 (or any other number) in its name. We are not realy creating a field here. Instead
-     * we are calling for addFilter method to do the job. The only usefull thing we are doing here is
-     * generating an id for new field
+     * Create appropriate fields in translation tab when creating new filter
      *
      * @param Event e Event
      *
      * @access private
-     *
      */
     addFilterFieldAction: function(e)
     {
@@ -697,13 +628,11 @@ Backend.Filter.prototype = {
 
 
     /**
-     * This one is easy. When we click on delete value from "Filters" step we delete the value and it's
-     * translation in "Translations" step
+     * Delete filter
      *
      * @param Event e Event
      *
      * @access private
-     *
      */
     deleteValueFieldAction: function(li, activeList)
     {
@@ -741,7 +670,6 @@ Backend.Filter.prototype = {
      * @param Event e Event
      *
      * @access private
-     *
      */
     changeStateAction: function(e)
     {
@@ -808,6 +736,7 @@ Backend.Filter.prototype = {
         }
 
         Event.stop(e);
+        
 
         var splitedHref  = e.target.parentNode.parentNode.parentNode.id.match(/(new)*(\d+)$/); //    splitedHref[splitedHref.length - 2] == 'new' ? true : false;
         var id = splitedHref[0];
@@ -916,11 +845,15 @@ Backend.Filter.prototype = {
             rangeDateStart.value  = rangeDateStartReal.value;
             rangeDateEnd.value    = rangeDateEndReal.value ;
                        
+            var test3 = rangeDateStartButton;
+            var test4 = rangeDateStart;
+            var test5 = this.dateFormat;
+                       
             var calDateStart = Calendar.setup({
                 inputField:       rangeDateStart.id,
                 inputFieldReal:   rangeDateStartReal.id,
                 ifFormat:         this.dateFormat, 
-                button:           rangeDateStartButton.id,
+                button:           rangeDateStartButton.id
             });
             
             
@@ -928,32 +861,31 @@ Backend.Filter.prototype = {
                 inputField:       rangeDateEnd.id,
                 inputFieldReal:   rangeDateEndReal.id,
                 ifFormat:         this.dateFormat, 
-                button:           rangeDateEndButton.id,
+                button:           rangeDateEndButton.id
             });
             
             
-            
+			// now insert all translation fields
+			for(var i = 1; i < this.languageCodes.length; i++)
+			{
+				var newValueTranslation = document.getElementsByClassName(this.cssPrefix + "form_filters_value", this.nodes.valuesTranslations[this.languageCodes[i]])[0].cloneNode(true);
+				Element.removeClassName(newValueTranslation, "dom_template");
 
-            // now insert all translation fields
-            for(var i = 1; i < this.languageCodes.length; i++)
-            {
-                var newValueTranslation = document.getElementsByClassName(this.cssPrefix + "form_filters_value", this.nodes.translations[this.languageCodes[i]])[0].cloneNode(true);
-                Element.removeClassName(newValueTranslation, "dom_template");
+				newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "_" + id;
 
-                newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "_" + id;
-
-                var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
-                inputTranslation.name = "filters[" + id + "][name][" + this.languageCodes[i] + "]";
-                inputTranslation.value = (value && value.name && value.name[this.languageCodes[i]]) ? value.name[this.languageCodes[i]] : '' ;
+				var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
+				inputTranslation.name = "values[" + id + "][" + this.languageCodes[i] + "]";
+				inputTranslation.value = (value && value[this.languageCodes[i]]) ? value[this.languageCodes[i]] : '' ;
 
                 var label = newValueTranslation.getElementsByTagName("label")[0];
                 label.appendChild(document.createTextNode(input.value));
+                
+				// add to node tree
+				var translationsUl = document.getElementsByClassName(this.cssPrefix + "form_language_translation", this.nodes.valuesTranslations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
+				translationsUl.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[i];
+				translationsUl.appendChild(newValueTranslation);
+			}
 
-                // add to node tree
-                var translationsUl = document.getElementsByClassName(this.cssPrefix + "form_filters_translations", this.nodes.translations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
-                translationsUl.id = this.cssPrefix + "form_"+this.id+'_filters_'+this.languageCodes[i];
-                translationsUl.appendChild(newValueTranslation);
-            }
         }
         else
         {

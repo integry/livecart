@@ -8,14 +8,30 @@
     width: 6em;
 }
 
-.filter legend, .filter_date_range, .filter_step_filters, .filter_step_translations, .filter_step_translations_language
-{
-	display: none;
-}
-
 .filter_step_filters li input
 {
    margin: 0px;
+}
+
+.filter legend, .filter_date_range, .filter_step_filters, .filter_language_translation, .filter_form_language_translation
+{
+	display: none;
+}
+.filter .filter_step_translations_language
+{
+    background: #ccc;
+}
+
+.filter_step_translations_language legend
+{
+    display: block;
+    cursor: pointer;
+	cursor: hand;
+}
+
+.filter_step_filters li label
+{ 
+    cursor: default;
 }
 
 .filter_step_filters li p
@@ -32,4 +48,25 @@
 .filter ul
 {
     list-style: none;
+}
+
+.filter_step_filters_translations li
+{
+   padding: 4px;
+}
+
+
+.filter_add_filter
+{
+   float: left;
+}
+
+.filter_crate_filters *
+{
+   padding: 2px 10px;
+}
+
+.filter_crate_filters
+{
+   clear: both;
 }

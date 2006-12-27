@@ -13,6 +13,8 @@
     Backend.Filter.prototype.links.sortFilter = {/literal}'{link controller=backend.filter action=sortFilter}/'{literal};
     Backend.Filter.prototype.links.generateFilters = {/literal}'{link controller=backend.filter action=generateFilters}/'{literal};
 
+    Backend.Filter.prototype.msg = {};
+    Backend.Filter.prototype.msg.translateTo = {/literal}'{t _translate_to}'{literal};
 
     {/literal}
     {foreach from=$configuration item="configItem" key="configKey"}

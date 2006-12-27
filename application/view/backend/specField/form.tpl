@@ -38,7 +38,7 @@
         		<span class="feedback"> </span>
     		</p>
             
-            <div class="specField_lang_">
+            <div>
         		<p>
             		<label>{t _SpecField_title}<em class="required">*</em></label>
             		<input type="text" name="name" class="required specField_form_name" />
@@ -61,7 +61,7 @@
         	<!-- STEP 3 -->
         	<div class="specField_step_translations">
         		<fieldset class="dom_template specField_step_translations_language specField_step_translations_language_">
-        			<legend></legend>
+        			<legend><span class="expandIcon">[+] </span><span class="specField_legend_text"></span></legend>
         
                     <div class="specField_language_translation">
                         <p>
@@ -106,18 +106,15 @@
             		<fieldset class="dom_template specField_step_translations_language specField_step_translations_language_">
             			<legend></legend>
             
-                        <div class="specField_language_translation">
+                        <div class="specField_form_values_translations specField_language_translation">
                             <p>
-                    			<fieldset class="specField_form_values_translations">
-                    				<legend>{t _SpecField_values}</legend>
-                    					<ul>
-                    						<li class="dom_template specField_form_values_value" id="specField_form_values_">
-                    							<label> </label>
-                    							<input type="text" />
-                    							<br />
-                    						</li>
-                    					</ul>
-                    			</fieldset>
+            					<ul>
+            						<li class="dom_template specField_form_values_value" id="specField_form_values_">
+            							<label> </label>
+            							<input type="text" />
+            							<br />
+            						</li>
+            					</ul>
                             </p>
                         </div>
             		</fieldset>
