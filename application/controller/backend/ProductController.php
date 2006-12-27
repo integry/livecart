@@ -18,7 +18,6 @@ class ProductController extends StoreManagementController {
 
 		$category = Category::getInstanceByID($this->request->getValue("id"));
 		$path = $this->getCategoryPathArray($category);
-		//$path = $category->getPathNodeArray();
 
 		$response = new ActionResponse();
 		$response->setValue("path", $path);

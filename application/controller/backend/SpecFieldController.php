@@ -72,7 +72,7 @@ class SpecFieldController extends StoreManagementController
 
         $categoryID = (int)$this->request->getValue('id');
         $category = Category::getInstanceByID($categoryID);
-        $response->setValue('specFields', $category->getSpecFieldList());
+        $response->setValue('specFields', $category->getSpecificationFieldSet());
 
         $defaultSpecFieldValues = array
         (

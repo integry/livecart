@@ -51,9 +51,13 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$filter->setOrder(new ARFieldHandle("SpecField", "position"));
 
 		$cond = new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $this->getID());
-		foreach ($path as $node)
+
+		if ($includeParentFields)
 		{
-			$cond->addOR(new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $node->getID()));
+			foreach ($path as $node)
+			{
+				$cond->addOR(new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $node->getID()));
+			}
 		}
 		$filter->setCondition($cond);
 

@@ -26,9 +26,9 @@ class SpecificationItem extends ActiveRecordModel
 
 	public static function getNewInstance(Product $product, SpecField $specField, SpecFieldValue $value)
 	{
-		$this->Product = $product;
-		$this->SpecField = $specField;
-		$this->SpecFieldValue = $value;
+		$this->product = $product;
+		$this->specField = $specField;
+		$this->specFieldValue = $value;
 	}
 }
 
