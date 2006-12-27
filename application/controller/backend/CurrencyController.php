@@ -3,9 +3,12 @@
 ClassLoader::import("library.*");
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.Currency");
+
 /**
  *
  * @package application.controller.backend
+ * @author Rinalds Uzkalns <rinalds@integry.net>
+ *
  */
 class CurrencyController extends StoreManagementController
 {
@@ -233,10 +236,84 @@ class CurrencyController extends StoreManagementController
 	 */
 	public function options()
 	{
+//		$this->setConfigValue('another_test', 'a whole different value here');
+//		$this->config->save();
+//		echo $this->config->getValue('another_test');
 		
-		$response = new ActionResponse();
 
+		ClassLoader::import("framework.request.validator.Form");
+		$form = new Form($this->buildOptionsValidator());
+		$form->setValue('updateCb', 'on');
+		
+		// get all feeds
+		$dir = new DirectoryIterator(ClassLoader::getRealPath('application.helper.currency'));
+		foreach ($dir as $file) {
+			$p = pathinfo($file->getFilename());
+			if ($p['extension'] == 'php')
+			{
+				include_once($file->getPathName());		  
+				$className = basename($file->getFilename(), '.php');
+				$classInfo = new ReflectionClass($className);
+				if (!$classInfo->isAbstract())
+				{
+					$feeds[$className] = call_user_func(array($className, 'getName'));
+				}
+			}			
+		}		
+						
+		// get currency settings		
+		$currencies = $this->getCurrencySet()->toArray();
+		
+		$settings = $this->config->getValue('currencyFeeds');
+		
+		foreach ($currencies as $id => &$currency)
+		{
+		  	$currency['feed'] = $settings[$id]['feed'];
+		  	$currency['enabled'] = $settings[$id]['enabled'];
+		}
+		
+		$frequency = array();
+		foreach (array(15, 60, 240, 1440) as $mins)
+		{
+			$frequency[$mins] = $this->translate('_freq_' . $mins);
+		}
+				
+		$response = new ActionResponse();
+		$response->setValue('form', $form);
+		$response->setValue('currencies', $currencies);
+		$response->setValue('frequency', $frequency);
+		$response->setValue('feeds', $feeds);
 		return $response;
+	}
+
+	public function saveOptions()
+	{
+		$val = $this->buildOptionsValidator();
+		
+		// main update setting
+		$this->setConfigValue('currencyAutoUpdate', $val->getValue('updateCb'));
+		
+		// frequency
+		$this->setConfigValue('currencyUpdateFrequency', $val->getValue('frequency'));
+				  	
+		// individual currency settings
+		$setting = $this->config->getValue('currencyUpdate');
+		if (!is_array($setting))
+		{
+		  	$setting = array();
+		}
+		$currencies = $this->getCurrencySet();
+		foreach ($currencies as $currency)
+		{
+			$setting[$currency->getID()] = array('enabled' => $val->getValue('curr_' . $currency->getID()) == 'on',
+												 'feed' => $val->getValue('feed_' . $currency->getID())
+												);  	
+		}
+		$this->setConfigValue('currencyUpdate', $setting);
+		
+		$this->config->save();
+		
+		return new JSONResponse(true);
 	}
 
 	private function getCurrencySet()
@@ -261,6 +338,12 @@ class CurrencyController extends StoreManagementController
 		return $currencies;			  	
 	}
 
+	private function buildOptionsValidator()
+	{
+		ClassLoader::import("framework.request.validator.RequestValidator");
+		return new RequestValidator("currencySettings", $this->request);	
+	}
+
 	/**
 	 * Builds a currency form validator
 	 *
@@ -275,6 +358,7 @@ class CurrencyController extends StoreManagementController
 		{
 			$validator->addCheck('rate_' . $currency['ID'], new IsNotEmptyCheck($this->translate('_err_empty')));		  
 			$validator->addCheck('rate_' . $currency['ID'], new IsNumericCheck($this->translate('_err_numeric')));		  			
+			$validator->addCheck('rate_' . $currency['ID'], new MinValueCheck($this->translate('_err_negative'), 0));
 			$validator->addFilter('rate_' . $currency['ID'], new NumericFilter());	
 		}
 
@@ -294,7 +378,7 @@ class CurrencyController extends StoreManagementController
 
 	/**
 	 * Saves currency rates.
-	 * @return RawResponse
+	 * @return JSONResponse
 	 */
 	public function saveRates()
 	{		
@@ -319,7 +403,7 @@ class CurrencyController extends StoreManagementController
 			$values[$currency->getID()] = $currency->rate->get();
 		}
 
-		return new JSONResponse(json_encode($values));		
+		return new JSONResponse($values);		
 	}
 }
 

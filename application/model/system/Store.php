@@ -18,11 +18,18 @@ class Store
 
 	protected $localeName;
 
+  	/**
+	 * Configuration registry handler instance
+	 *
+	 * @var Locale
+	 */
+	protected $configInstance = null;
+
 	private $requestLanguage;
 
 	private $languageList = null;
 
-	private $languageFiles = array();
+	private $configFiles = array();
 	
 	private $currencies = null;
 	
@@ -40,6 +47,7 @@ class Store
 		// unset locale variables to make use of lazy loading
 		unset($this->locale);
 		unset($this->localeName);
+		unset($this->config);
 	}
 
 	/**
@@ -59,6 +67,11 @@ class Store
 	public function getLocaleInstance()
 	{
 	  	return $this->locale;
+	}
+
+	public function getConfigInstance()
+	{
+	  	return $this->config;
 	}
 
 	/**
@@ -155,9 +168,9 @@ class Store
 		return $str;
 	}
 
-	public function setLanguageFiles($fileArray)
+	public function setConfigFiles($fileArray)
 	{
-	  	$this->languageFiles = $fileArray;
+	  	$this->configFiles = $fileArray;
 	}
 
 	public function setRequestLanguage($langCode)
@@ -226,7 +239,7 @@ class Store
 	
 	private function loadLanguageFiles()
 	{
-		foreach ($this->languageFiles as $file)
+		foreach ($this->configFiles as $file)
 		{
 			$this->locale->translationManager()->loadFile($file);
 		}
@@ -262,6 +275,13 @@ class Store
 		return $this->localeName;
 	}
 
+	private function loadConfig()
+	{
+	  	ClassLoader::import("application.model.system.Config");
+		$this->config = new Config($this->configFiles);
+		return $this->config;
+	}
+
 	private function __get($name)
 	{
 		switch ($name)
@@ -272,6 +292,10 @@ class Store
 
 		    case 'localeName':
 		    	return $this->loadLocaleName();
+		    break;
+
+		    case 'config':
+		    	return $this->loadConfig();
 		    break;
 
 			default:

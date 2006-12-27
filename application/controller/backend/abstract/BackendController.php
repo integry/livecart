@@ -27,6 +27,18 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	 * @var Store
 	 */
 	protected $store = null;
+	
+	/**
+	 * Configuration handler instance
+	 *
+	 * @var Config
+	 */
+	protected $config = null;
+
+	/**
+	 * Configuration files (language, registry)
+	 */
+	protected $configFiles = array();
 
 	public function __construct(Request $request)
 	{
@@ -36,12 +48,15 @@ abstract class BackendController extends BaseController implements LCiTranslator
 			//throw new AccessDeniedException($this->user, $this->request->getControllerName(), $this->request->getActionName());
 		}
 
+		$this->configFiles = $this->getConfigFiles();
+		
 		$this->store = Store::getInstance();
-		$this->store->setRequestLanguage($this->request->getValue('requestLanguage'));
-		$this->loadLanguageFiles();
+		$this->store->setRequestLanguage($this->request->getValue('requestLanguage'));				
+		$this->store->setConfigFiles($this->configFiles);
 
 		unset($this->locale);
-
+		unset($this->config);
+		
 		Router::setAutoAppendVariables(array('requestLanguage' => $this->store->getLocaleInstance()->getLocaleCode()));
 	}
 
@@ -66,6 +81,12 @@ abstract class BackendController extends BaseController implements LCiTranslator
 		return $this->locale->translator()->makeText($key, $params);
 	}
 
+	protected function setConfigValue($key, $value)
+	{
+	  	$file = $this->configFiles[0];
+	  	$this->config->setValue($key, $value, $file);
+	}
+	
 	/**
 	 * Gets a @role tag value in a class and method comments
 	 *
@@ -118,23 +139,22 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	 * 	Automatically preloads language files
 	 *
 	 */
-	private function loadLanguageFiles()
+	private function getConfigFiles()
 	{
 		$controllerRoot = Classloader::getRealPath('application.controller');
 
+		$files = array();
+
 		// get all inherited controller classes
 		$class = new ReflectionClass(get_class($this));
-		while ($class)
+		while ($class->getParentClass())
 		{
-			if ($class->getParentClass()) 
-			{
-				$file = substr($class->getFileName(), strlen($controllerRoot) + 1);
-				$langFiles[] = substr($file, 0, -14);
-			}
+			$file = substr($class->getFileName(), strlen($controllerRoot) + 1);
+			$files[] = substr($file, 0, -14);
 			$class = $class->getParentClass();
 		}
-			
-		$this->store->setLanguageFiles($langFiles);
+
+		return $files;
 	}
 
 	private function __get($name)
@@ -143,8 +163,12 @@ abstract class BackendController extends BaseController implements LCiTranslator
 	  	{
 		    case 'locale':
 		    	$this->locale = $this->store->getLocaleInstance();
-		    	$this->loadLanguageFiles();
 				return $this->locale;
+		    break;
+
+		    case 'config':
+		    	$this->config = $this->store->getConfigInstance();
+				return $this->config;
 		    break;
 
 			default:

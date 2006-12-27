@@ -11,7 +11,21 @@ _set_as_default=Set as default currency
 _default_currency=Default currency
 
 # rates
+
 _rate_save_conf=Currency rates were saved successfuly
 
 _err_empty=Please enter the currency rate
 _err_numeric=Please enter a numeric value
+_err_negative=Currency rate cannot be negative
+
+# options
+
+_update_auto=Update currency rates automatically using currency data feeds
+_update_freq=Update frequency
+_to_update=Currencies to update
+_using=using
+
+_freq_15=Every 15 minutes
+_freq_60=Every hour
+_freq_240=Every 4 hours
+_freq_1440=Daily
