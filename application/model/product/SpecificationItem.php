@@ -8,8 +8,8 @@ ClassLoader::import("application.model.product.*");
  * Contains a relation between specification fields (attributes), assigned values and products
  * (kind of "feature table")
  *
- * @package application.model.product
  * @author Saulius Rupainis <saulius@integry.net>
+ * @package application.model.product
  *
  */
 class SpecificationItem extends ActiveRecordModel

@@ -48,12 +48,12 @@
 <div id="managerContainer" style="margin-left: 270px;" class="maxHeight h--60">
 	<div id="tabContainer">
 		<ul id="tabList">
-			<li id="tabProducts" class="tab active"><a href="{link controller=backend.product action=index id=%id%}">{t _products}</a></li>
-			<li id="tabMainDetails" class="tab inactive"><a href="{link controller=backend.category action=form id=%id%}">{t _category_details}</a></li>
-			<li id="tabFields" class="tab inactive"><a href="{link controller=backend.specField action=index id=%id%}">{t _attributes}</a></li>
-			<li id="tabFilters" class="tab inactive"><a href="{link controller=backend.filter action=index id=%id%}">{t _filters}</a></li>
-			<li id="tabImages" class="tab inactive"><a href="{link controller=backend.image action=index id=%id%}">{t _images}</a></li>
-			<li id="tabArticles" class="tab inactive"><a href="{link controller=backend.image action=index id=%id%}">{t _articles}</a></li>
+			<li id="tabProducts" class="tab active"><a href="{link controller=backend.product action=index id=_id_}">{t _products}</a></li>
+			<li id="tabMainDetails" class="tab inactive"><a href="{link controller=backend.category action=form id=_id_}">{t _category_details}</a></li>
+			<li id="tabFields" class="tab inactive"><a href="{link controller=backend.specField action=index id=_id_}">{t _attributes}</a></li>
+			<li id="tabFilters" class="tab inactive"><a href="{link controller=backend.filter action=index id=_id_}">{t _filters}</a></li>
+			<li id="tabImages" class="tab inactive"><a href="{link controller=backend.image action=index id=_id_}">{t _images}</a></li>
+			<li id="tabArticles" class="tab inactive"><a href="{link controller=backend.image action=index id=_id_}">{t _articles}</a></li>
 		</ul>
 	</div>
 	<div id="sectionContainer" class="maxHeight  h--50">

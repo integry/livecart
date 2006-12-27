@@ -234,19 +234,38 @@ CategoryTabControl.prototype = {
 
 	handleTabMouseOver: function(evt)
 	{
-		if (this.activeTab != evt.target)
+		var target = "";
+		if (evt.target == undefined)
 		{
-			Element.removeClassName(evt.target, 'inactive');
-			Element.addClassName(evt.target, 'hover');
+			target = evt.srcElement;
+		}
+		else
+		{
+			target = evt.target;
+		}
+		if (this.activeTab != target)
+		{
+			Element.removeClassName(target, 'inactive');
+			Element.addClassName(target, 'hover');
 		}
 	},
 
 	handleTabMouseOut: function(evt)
 	{
-		if (this.activeTab != evt.target)
+		var target = "";
+		if (evt.target == undefined)
 		{
-			Element.removeClassName(evt.target, 'hover');
-			Element.addClassName(evt.target, 'inactive');
+			target = evt.srcElement;
+		}
+		else
+		{
+			target = evt.target;
+		}
+
+		if (this.activeTab != target)
+		{
+			Element.removeClassName(target, 'hover');
+			Element.addClassName(target, 'inactive');
 		}
 	},
 
@@ -255,7 +274,16 @@ CategoryTabControl.prototype = {
 	 */
 	handleTabClick: function(evt)
 	{
-		var targetTab = evt.target;
+		var target = "";
+		if (evt.target == undefined)
+		{
+			target = evt.srcElement;
+		}
+		else
+		{
+			target = evt.target;
+		}
+		var targetTab = target;
 		this.activateTab(targetTab);
 	},
 
@@ -335,7 +363,7 @@ CategoryTabControl.prototype = {
 
 	getTabUrl: function(tabName, categoryId)
 	{
-		var url = $(tabName).url.replace('%id%', categoryId);
+		var url = $(tabName).url.replace('_id_', categoryId);
 		return url;
 	},
 

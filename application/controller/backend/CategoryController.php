@@ -8,6 +8,7 @@ ClassLoader::import("application.model.category.Category");
  *
  * @package application.controller.backend
  * @author Saulius Rupainis <saulius@integry.net>
+ *
  */
 class CategoryController extends StoreManagementController
 {
