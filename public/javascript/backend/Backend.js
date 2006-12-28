@@ -73,7 +73,7 @@ Backend.LayoutManager.prototype =
 	onresize: function(stop)
 	{
 
-        return;
+//        return;
 
 		if (document.all)
 		{
@@ -92,7 +92,7 @@ Backend.LayoutManager.prototype =
 		
 		h = w - 99 - 61 - (document.all ? 1 : 0);
 
-        jsTrace.send(h);
+//        jsTrace.send(h);
 
 		cont = document.getElementById('pageContentContainer');
 

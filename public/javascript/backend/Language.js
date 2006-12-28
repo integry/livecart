@@ -376,6 +376,10 @@ Backend.LanguageEdit.prototype =
 		  	found = true;
 		}	
 		
+		// for IE
+		$('filter').focus();		
+		window.setTimeout("$('filter').focus()", 200);
+		
 		return found;				
 		
 	},

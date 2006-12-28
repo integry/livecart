@@ -114,7 +114,10 @@ Backend.Currency.prototype =
 			eval('var rates = ' + request.responseText);
 			for (k in rates)
 			{
-			  	document.getElementById('rate_' + k).value = rates[k];
+			  	if ($('rate_' + k))
+			  	{
+					$('rate_' + k).value = rates[k];
+				}
 			}	
 
 			document.getElementById('rateSaveIndicator').style.display = 'none';	
@@ -122,7 +125,7 @@ Backend.Currency.prototype =
 		}
 		catch (e)
 		{
-
+addlog(e);
 		}
 	},
 	
