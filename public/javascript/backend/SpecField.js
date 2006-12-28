@@ -93,15 +93,8 @@ Backend.SpecField.prototype = {
     
     		this.loadLanguagesAction();
     		this.findUsedNodes();
-            	    try
-	    {
-		this.bindFields();
-	    }
-	    catch(e)
-	    {
-            jsTrace.debug(e);
-	    }
 
+		    this.bindFields();
 	},
 
     /**

@@ -101,13 +101,6 @@ fieldset.group h2
 
 /* END Values active list */
 
-
-.specField .feedback, .specField .feedback_textarea
-{
-    visibility: hidden;
-    white-space: nowrap;
-}
-
 .specField ul
 {
     list-style: none;

@@ -37,6 +37,12 @@ SectionExpander.prototype = {
 	 */
 	handleLegendClick: function(evt)
 	{
+        if(!evt || !evt.target) 
+        { 
+            evt = window.event; 
+            evt.target = evt.srcElement;
+        }
+                
 		var fieldset = evt.target.parentNode;
 		var content = document.getElementsByClassName(this.expandingContentClassName, fieldset);
 		if (content[0] != undefined)

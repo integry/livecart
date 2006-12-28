@@ -1,7 +1,7 @@
 <?php
-
 ClassLoader::import("application.model.system.ActiveTreeNode");
 ClassLoader::import("application.model.system.MultilingualObjectInterface");
+
 
 /**
  * Product category model class

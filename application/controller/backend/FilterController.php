@@ -27,7 +27,7 @@ class FilterController extends StoreManagementController
 
         $categoryID = (int)$this->request->getValue('id');
         $category = Category::getInstanceByID($categoryID);
-        $specFieldsList = $category->getSpecFieldList();
+        $specFieldsList = $category->getSpecificationFieldSet();
 
         $filters = array();
         foreach($specFieldsList as $specField)
@@ -233,7 +233,7 @@ class FilterController extends StoreManagementController
         $errors = array();
 
         $languageCodes = array_keys($this->config['languages']);
-
+        
         if(!isset($values['name']) || $values['name'][$languageCodes[0]] == '')
         {
             $errors['name'] = $this->translate('_error_name_empty');
@@ -263,7 +263,7 @@ class FilterController extends StoreManagementController
         $filterGroupArray['rootId'] = "filter_items_list_".$filterGroupArray['SpecField']['categoryID']."_".$filterGroupArray['ID'];
         $filterGroupArray['categoryID'] = $filterGroupArray['SpecField']['categoryID'];
 
-        $filterGroupArray['specFields'] = $this->getSpecFieldOptions(Category::getInstanceByID($filterGroupArray['categoryID'])->getSpecFieldList());           
+        $filterGroupArray['specFields'] = $this->getSpecFieldOptions(Category::getInstanceByID($filterGroupArray['categoryID'])->getSpecificationFieldSet());           
 
         return new JSONResponse($filterGroupArray);
     }

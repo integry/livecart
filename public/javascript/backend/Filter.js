@@ -78,7 +78,7 @@ Backend.Filter.prototype = {
             this.bindFields();
         } catch(e)
         {
-            alert(e);
+            jsTrace.debug(e);
         }
     },
 
@@ -494,7 +494,9 @@ Backend.Filter.prototype = {
 
                 for(var j = 0; j < inputFields.length; j++)
                 {
-                    if(Element.hasClassName(inputFields[j].parentNode, this.cssPrefix + 'step_translations_language'))
+                    var test1 = inputFields[j];
+                    var test2 = inputFields[j].parentNode.parentNode;
+                    if(Element.hasClassName(inputFields[j].parentNode.parentNode, this.cssPrefix + 'language_translation'))
                     {
                         eval("if(self."+inputFields[j].name+"['"+self.languageCodes[i]+"']) inputFields[j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];");
                         inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
@@ -601,7 +603,7 @@ Backend.Filter.prototype = {
         var currentTranslationNode = document.getElementsByClassName(this.cssPrefix + "language_translation", e.target.parentNode.parentNode)[0];               
         currentTranslationNode.style.display = (currentTranslationNode.style.display == 'block') ? 'none' : 'block';
         
-        document.getElementsByClassName("expandIcon", e.target.parentNode)[0].firstChild.nodeValue = (currentTranslationNode.style.display == 'block') ? '[-]' : '[+]';
+        document.getElementsByClassName("expandIcon", e.target.parentNode)[0].firstChild.nodeValue = (currentTranslationNode.style.display == 'block') ? '[-] ' : '[+] ';
 	},
 
     /**

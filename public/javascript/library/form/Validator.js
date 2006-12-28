@@ -46,6 +46,12 @@ function validateForm(form)
 
 function applyFilters(form, ev)
 {	
+    if(!ev || !ev.target) 
+    { 
+        ev = window.event; 
+        ev.target = ev.srcElement;
+    }
+
 	var filterData = form.elements.namedItem('_filter').value;
 	var filter = filterData.parseJSON();
 
