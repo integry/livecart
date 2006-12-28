@@ -240,11 +240,11 @@ class CurrencyController extends StoreManagementController
 //		$this->config->save();
 //		echo $this->config->getValue('another_test');
 		
-
 		ClassLoader::import("framework.request.validator.Form");
 		$form = new Form($this->buildOptionsValidator());
-		$form->setValue('updateCb', 'on');
-		
+		$form->setValue('updateCb', $this->config->getValue('currencyAutoUpdate'));
+		$form->setValue('frequency', $this->config->getValue('currencyUpdateFrequency'));
+				
 		// get all feeds
 		$dir = new DirectoryIterator(ClassLoader::getRealPath('application.helper.currency'));
 		foreach ($dir as $file) {
@@ -265,13 +265,13 @@ class CurrencyController extends StoreManagementController
 		$currencies = $this->getCurrencySet()->toArray();
 		
 		$settings = $this->config->getValue('currencyFeeds');
-		
+
 		foreach ($currencies as $id => &$currency)
 		{
-		  	$currency['feed'] = $settings[$id]['feed'];
-		  	$currency['enabled'] = $settings[$id]['enabled'];
+		  	$form->setValue('curr_' . $currency['ID'], $settings[$currency['ID']]['enabled']);
+		  	$form->setValue('feed_' . $currency['ID'], $settings[$currency['ID']]['feed']);
 		}
-		
+
 		$frequency = array();
 		foreach (array(15, 60, 240, 1440) as $mins)
 		{
@@ -291,13 +291,13 @@ class CurrencyController extends StoreManagementController
 		$val = $this->buildOptionsValidator();
 		
 		// main update setting
-		$this->setConfigValue('currencyAutoUpdate', $val->getValue('updateCb'));
+		$this->setConfigValue('currencyAutoUpdate', $this->request->getValue('updateCb'));
 		
 		// frequency
-		$this->setConfigValue('currencyUpdateFrequency', $val->getValue('frequency'));
+		$this->setConfigValue('currencyUpdateFrequency', $this->request->getValue('frequency'));
 				  	
 		// individual currency settings
-		$setting = $this->config->getValue('currencyUpdate');
+		$setting = $this->config->getValue('currencyFeeds');
 		if (!is_array($setting))
 		{
 		  	$setting = array();
@@ -305,15 +305,15 @@ class CurrencyController extends StoreManagementController
 		$currencies = $this->getCurrencySet();
 		foreach ($currencies as $currency)
 		{
-			$setting[$currency->getID()] = array('enabled' => $val->getValue('curr_' . $currency->getID()) == 'on',
-												 'feed' => $val->getValue('feed_' . $currency->getID())
+			$setting[$currency->getID()] = array('enabled' => $this->request->getValue('curr_' . $currency->getID()),
+												 'feed' => $this->request->getValue('feed_' . $currency->getID())
 												);  	
 		}
-		$this->setConfigValue('currencyUpdate', $setting);
+		$this->setConfigValue('currencyFeeds', $setting);
 		
 		$this->config->save();
 		
-		return new JSONResponse(true);
+		return new JSONResponse(1);
 	}
 
 	private function getCurrencySet()
