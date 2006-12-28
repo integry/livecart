@@ -16,7 +16,8 @@ class ProductImage extends MultilingualDataObject
 
 		$schema->registerField(new ARPrimaryKeyField("ID", Integer::instance()));
 		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", "Product", Integer::instance()));
-		$schema->registerField(new ARField("position", Varchar::instance(256)));
+		$schema->registerField(new ARField("title", Varchar::instance(256)));
+		$schema->registerField(new ARField("position", Integer::instance()));
 	}
 }
 

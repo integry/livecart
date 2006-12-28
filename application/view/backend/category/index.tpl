@@ -52,7 +52,7 @@
 			<li id="tabMainDetails" class="tab inactive"><a href="{link controller=backend.category action=form id=_id_}">{t _category_details}</a></li>
 			<li id="tabFields" class="tab inactive"><a href="{link controller=backend.specField action=index id=_id_}">{t _attributes}</a></li>
 			<li id="tabFilters" class="tab inactive"><a href="{link controller=backend.filter action=index id=_id_}">{t _filters}</a></li>
-			<li id="tabImages" class="tab inactive"><a href="{link controller=backend.image action=index id=_id_}">{t _images}</a></li>
+			<li id="tabImages" class="tab inactive"><a href="{link controller=backend.categoryImage action=index id=_id_}">{t _images}</a></li>
 			<li id="tabArticles" class="tab inactive"><a href="{link controller=backend.image action=index id=_id_}">{t _articles}</a></li>
 		</ul>
 	</div>

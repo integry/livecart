@@ -22,6 +22,11 @@
 </div>
 {/if}
 
+{tip}
+	{capture assign=tipUrl}{link controller=backend.customize action=index}{/capture}
+	{maketext text="_tip_live_trans" params="$tipUrl"}
+{/tip}
+
 <fieldset class="menuFieldSet">
 	<legend>{t _translation_filter}</legend>
 	<form id="navLang" method="post" style="margin-bottom: 10px;" action="{link controller=backend.language action=edit id=$id}" class="">

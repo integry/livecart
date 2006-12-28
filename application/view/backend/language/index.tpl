@@ -14,6 +14,8 @@
 	lng.setStatusUrl("{link controller=backend.language action=setEnabled}/");
 </script>
 
+{tip}{t _index_tip}{/tip}
+
 <ul class="menu" id="langPageMenu">
 	<li><a href="#" onClick="lng.showAddForm(); return false;">{t _add_language}</a></li>
 </ul>
