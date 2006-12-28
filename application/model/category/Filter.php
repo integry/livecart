@@ -19,11 +19,11 @@ class Filter extends MultilingualObject
 
 		$schema->registerField(new ARField("rangeStart", ARFloat::instance(40)));
 		$schema->registerField(new ARField("rangeEnd", ARFloat::instance(40)));
-		
+
 
 		$schema->registerField(new ARField("rangeDateStart", ARDate::instance()));
 		$schema->registerField(new ARField("rangeDateEnd", ARDate::instance()));
-		
+
 	}
 
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
@@ -58,11 +58,11 @@ class Filter extends MultilingualObject
 	        $this->setValueByLang($fieldName, $lang, isset($fieldValue[$lang]) ? $fieldValue[$lang] : '');
 	    }
 	}
-	
+
 	/**
 	 * Delete spec field from database
 	 */
-	public static function delete($id)
+	public static function deleteByID($id)
 	{
 	    parent::deleteByID(__CLASS__, (int)$id);
 	}

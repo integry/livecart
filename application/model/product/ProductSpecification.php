@@ -28,7 +28,7 @@ class ProductSpecification //implements IteratorAggregate
 	 */
 	public function setProperty(SpecField $field, SpecFieldValue $value)
 	{
-		$specItem = ActiveRecord::getNewInstance("SpecificationItem");
+		$specItem = ActiveRecordModel::getNewInstance("SpecificationItem");
 
 		$specItem->product = $this->product;
 		$specItem->specFieldValue = $value;

@@ -42,7 +42,17 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 *
 	 * @return ARSet
 	 */
-	public function getSpecificationFieldSet($includeParentFields = false)
+	public function getSpecificationFieldSet($includeParentFields = false, $loadReferencedRecords = false)
+	{
+		return SpecField::getRecordSet($this->getSpecificationFilter($includeParentFields), $loadReferencedRecords);
+	}
+
+	public function getSpecificationFieldArray($includeParentFields = false, $loadReferencedRecords = false)
+	{
+		return SpecField::getRecordSetArray($this->getSpecificationFilter($includeParentFields), $loadReferencedRecords);
+	}
+
+	private function getSpecificationFilter($includeParentFields)
 	{
 		$path = parent::getPathNodeSet(Category::INCLUDE_ROOT_NODE);
 
@@ -61,7 +71,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		}
 		$filter->setCondition($cond);
 
-		return SpecField::getRecordSetArray($filter);
+		return $filter;
 	}
 
 	/**

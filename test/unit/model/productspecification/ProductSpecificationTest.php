@@ -10,11 +10,12 @@
 	ClassLoader::import("library.activerecord.ActiveRecord");
 
 	ActiveRecordModel::setDSN("mysql://root@192.168.1.6/livecart_test");
+
 	$product = ActiveRecordModel::getInstanceByID("Product", 1, Product::LOAD_DATA);
 	$prodSpec = new ProductSpecification($product);
 
 	$prodCategory = $product->category->get();
-	$specFields = $prodCategory->getSpecificationFields();
+	$specFields = $prodCategory->getSpecificationFieldSet();
 
 	echo "<pre>"; print_r($specFields); echo "</pre>";
 

@@ -24,11 +24,9 @@ class SpecificationItem extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
 	}
 
-	public static function getNewInstance(Product $product, SpecField $specField, SpecFieldValue $value)
+	public static function getNewInstance()
 	{
-		$this->product = $product;
-		$this->specField = $specField;
-		$this->specFieldValue = $value;
+		return parent::getNewInstance(__CLASS__);
 	}
 }
 

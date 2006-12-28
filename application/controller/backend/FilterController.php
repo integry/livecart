@@ -30,12 +30,11 @@ class FilterController extends StoreManagementController
         $specFieldsList = $category->getSpecificationFieldSet();
 
         $filters = array();
-        foreach($specFieldsList as $specField)
+        foreach($specFieldsList as $specFieldObj)
         {
-            $specFieldObj = SpecField::getInstanceByID($specField['ID']);
+            //$specFieldObj = SpecField::getInstanceByID($specField['ID']);
             $filters = array_merge($filters, $specFieldObj->getFiltersGroupsList());
         }
-
         
         $blankFilter = array
         (
@@ -273,7 +272,7 @@ class FilterController extends StoreManagementController
     {
         if($id = $this->request->getValue("id", false))
         {
-            Filter::delete($id);
+            Filter::deleteByID($id);
             return new JSONResponse(array('status' => 'success'));
         }
         else
