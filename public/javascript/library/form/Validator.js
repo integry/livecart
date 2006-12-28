@@ -25,7 +25,7 @@ function validateForm(form)
 			eval('functionExists = window.' + functionName + ';');
 			if (!functionExists)
 			{
-				alert('No validation function defined: ' + functionName + '!');
+				//alert('No validation function defined: ' + functionName + '!');
 				break;
 			}
 

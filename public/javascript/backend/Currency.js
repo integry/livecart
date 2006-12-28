@@ -98,6 +98,10 @@ Backend.Currency.prototype =
 		}  	
 	},
 	
+/************************************
+	RATES
+*************************************/
+
 	saveRates: function(form)
 	{
 		new LiveCart.AjaxRequest(form, 'rateSaveIndicator', this.updateRatesForm);
@@ -149,6 +153,20 @@ Backend.Currency.prototype =
 				}
 			}
 		}
+	},
+	
+/************************************
+	OPTIONS
+*************************************/
+	
+	saveOptions: function(form)
+	{
+		new LiveCart.AjaxRequest(form, 'optsSaveIndicator', this.optsSaveConfirmation);
+	},
+	
+	optsSaveConfirmation: function()
+	{
+		new Backend.SaveConfirmationMessage('optsConf');	  
 	},
 	
 	setFormUrl: function(url)
