@@ -543,8 +543,8 @@ Backend.SpecField.prototype = {
         Event.stop(e);
         var currentTranslationNode = document.getElementsByClassName(this.cssPrefix + "language_translation", e.target.parentNode.parentNode)[0];               
         currentTranslationNode.style.display = (currentTranslationNode.style.display == 'block') ? 'none' : 'block';
-        document.getElementsByClassName("expandIcon", e.target.parentNode)[0].firstChild.nodeValue = (currentTranslationNode.style.display == 'block') ? '[-] ' : '[+] ';
-	},
+        document.getElementsByClassName("expandIcon", e.target.parentNode)[0].firstChild.nodeValue = (currentTranslationNode.style.display == 'block') ? '[-] ' : '[+] ';    
+    },
 
 	/**
 	 * When we add new value "Values" step we are also adding it to "Translations" step. Field name

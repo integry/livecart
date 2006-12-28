@@ -13,7 +13,7 @@ ClassLoader::import("library.*");
  */
 class FilterController extends StoreManagementController
 {
-    private $config = array();
+    private $filtersConfig = array();
 
     function __construct($request)
     {
@@ -49,7 +49,7 @@ class FilterController extends StoreManagementController
         $response->setValue('filters', $filters);
         $response->setValue('blankFilter', $blankFilter);
         $response->setValue('categoryID', $categoryID);
-        $response->setValue('configuration', $this->config);
+        $response->setValue('configuration', $this->filtersConfig);
         $response->setValue('defaultLangCode', $this->store->getDefaultLanguageCode());
 
         return $response;
@@ -86,7 +86,7 @@ class FilterController extends StoreManagementController
             }
         }
 
-        $this->config = array (
+        $this->filtersConfig = array (
             'languages'=> $languages,
 
             'messages' => array (
@@ -138,7 +138,7 @@ class FilterController extends StoreManagementController
             $filters = $this->request->getValue('filters', false);
             $specFieldID = SpecField::getInstanceByID((int)$this->request->getValue('specFieldID'));
             
-            $filterGroup->setLanguageField('name',        @array_map($htmlspecialcharsUtf_8, $name),        array_keys($this->config['languages']));
+            $filterGroup->setLanguageField('name',        @array_map($htmlspecialcharsUtf_8, $name),        array_keys($this->filtersConfig['languages']));
             $filterGroup->setFieldValue('specFieldID', $specFieldID);
 
             $filterGroup->save();
@@ -164,7 +164,7 @@ class FilterController extends StoreManagementController
                         $filter = Filter::getInstanceByID((int)$key);
                     }
 
-                    $filter->setLanguageField('name', @array_map($htmlspecialcharsUtf_8, $value['name']),  array_keys($this->config['languages']));
+                    $filter->setLanguageField('name', @array_map($htmlspecialcharsUtf_8, $value['name']),  array_keys($this->filtersConfig['languages']));
                     
                     
                     
@@ -176,7 +176,7 @@ class FilterController extends StoreManagementController
                         $filter->rangeEnd->setNull();
                         $filter->specFieldValue->setNull();
                     }
-                    else if(!in_array($specFieldType, $this->config['selectorValueTypes']))
+                    else if(!in_array($specFieldType, $this->filtersConfig['selectorValueTypes']))
                     {
                         $filter->setFieldValue('rangeStart', $value['rangeStart']);
                         $filter->setFieldValue('rangeEnd', $value['rangeEnd']);
@@ -232,7 +232,7 @@ class FilterController extends StoreManagementController
     {
         $errors = array();
 
-        $languageCodes = array_keys($this->config['languages']);
+        $languageCodes = array_keys($this->filtersConfig['languages']);
         
         if(!isset($values['name']) || $values['name'][$languageCodes[0]] == '')
         {

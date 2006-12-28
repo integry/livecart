@@ -73,6 +73,8 @@ Backend.LayoutManager.prototype =
 	onresize: function(stop)
 	{
 
+        return;
+
 		if (document.all)
 		{
 			document.getElementById('pageContentContainer').style.height = '0px';
@@ -90,6 +92,7 @@ Backend.LayoutManager.prototype =
 		
 		h = w - 99 - 61 - (document.all ? 1 : 0);
 
+        jsTrace.send(h);
 
 		cont = document.getElementById('pageContentContainer');
 

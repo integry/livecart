@@ -70,3 +70,10 @@
 {
    clear: both;
 }
+
+
+/* IE */
+.filter_step_translations_language
+{
+    position: relative;
+}

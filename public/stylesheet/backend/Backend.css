@@ -521,6 +521,8 @@ form p
    margin-left: 10px;
    padding-left: 20px;
    background: url(../../image/silk/error.png) no-repeat left center;
+    visibility: hidden;
+    white-space: nowrap;
 }
 
 fieldset.group
