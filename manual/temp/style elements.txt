@@ -1,0 +1,15 @@
+
+ * Headings 
+
+ * Paragraphs
+
+ * Lists (numbered, bulleted, squared)
+
+ * Images
+
+ * Notes (rectangular boxes?)
+
+
+examples:
+
+http://everything.basecamphq.com/archives/000294.php
