@@ -54,10 +54,10 @@ class FilterController extends StoreManagementController
         return $response;
     }
 
-    private function getSpecFieldOptions($specFieldsList)
+    private function getSpecFieldOptions(ARSet $specFieldsList)
     {
         $specFieldOptions = array();
-        foreach ($specFieldsList as $field)
+        foreach ($specFieldsList->toArray() as $field)
         {
             if(!in_array($field['type'], array(SpecField::TYPE_TEXT_SIMPLE, SpecField::TYPE_TEXT_ADVANCED)))
             {
