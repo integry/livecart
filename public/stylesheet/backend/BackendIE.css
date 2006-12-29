@@ -14,7 +14,17 @@
 }  	
 
 /***************************
-	Translations
+	Forms
+***************************/
+input.submit {
+	font-size: small;  	
+	padding: 5px;
+	padding-top: 2px;
+	padding-bottom: 0px;
+}
+
+/***************************
+	Language
 ***************************/
 .branch {
 	margin-left: 17px !important; 

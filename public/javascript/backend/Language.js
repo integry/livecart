@@ -16,10 +16,100 @@ Backend.LanguageIndex.prototype =
 	statusUrl: false,
 	
 	formUrl: false,
+
+	editUrl: false,
+	
+	sortUrl: false,	
+	
+	deleteUrl: false,	
+	
+	delConfirmMsg: false,
 	
 	initialize: function()
 	{
 	  
+	},
+	
+    initLangList: function ()
+    {	
+		new ActiveList('languageList', {
+	         beforeEdit:     function(li) {window.location.href = lng.editUrl + '/' + this.getRecordId(li); },
+	         beforeSort:     function(li, order) 
+			 { 
+				 return lng.sortUrl + '?draggedId=' + this.getRecordId(li) + '&' + order 
+			   },
+	         beforeDelete:   function(li)
+	         {
+	             if(confirm(lng.delConfirmMsg)) return lng.deleteUrl + '/' + this.getRecordId(li)
+	         },
+	         afterEdit:      function(li, response) {  },
+	         afterSort:      function(li, response) {  },
+	         afterDelete:    function(li, response)  { Element.remove(li); }
+	     });
+	},	
+	
+	renderList: function(data)
+	{
+	  	var template = $('languageList_template');
+	  	var list = $('languageList');
+		for (k = 0; k < data.length; k++)
+	  	{
+			var node = template.cloneNode(true);
+			node = this.renderItem(data[k], node);
+			list.appendChild(node);
+		}		 
+	},
+	
+	renderItem: function(itemData, node)
+	{
+		node.id = 'languageList_' + itemData.ID;
+		
+		var checkbox = node.getElementsByTagName('input')[0];
+		
+		if (1 == itemData.isEnabled)
+		{
+		  	node.removeClassName('disabled');
+			node.getElementsByClassName('listLink')[0].href += itemData.ID;
+		}
+		
+		if (0 == itemData.isDefault)
+		{
+		  	node.removeClassName('default');		  
+		  	node.removeClassName('activeList_remove_delete');		  
+		  	checkbox.disabled = false;
+		  	checkbox.onclick = function() {lng.setEnabled(this); }
+		}
+		
+		checkbox.checked = itemData.isEnabled == 1;
+		
+		node.getElementsByClassName('langTitle')[0].innerHTML = itemData.name;
+		
+		var img = node.getElementsByClassName('langData')[0].getElementsByTagName('img')[0];
+		if (itemData.image)
+		{
+			img.src = itemData.image;		
+		} 
+		else
+		{
+			img.parentNode.removeChild(img);  
+		}
+				
+		return node;  
+	},
+	
+	updateItem: function(originalRequest)
+	{
+ 	    eval('var itemData = ' + originalRequest.responseText);
+		
+		var node = $('languageList_' + itemData.ID);
+	  	var template = $('languageList_template');
+		var cl = template.cloneNode(true);
+	  	
+		node.parentNode.replaceChild(cl, node);
+	  	
+		this.renderItem(itemData, cl);
+		this.initLangList();
+		new Effect.Highlight(cl, {startcolor:'#FBFF85', endcolor:'#EFF4F6'})
 	},
 	
 	showAddForm: function()
@@ -55,47 +145,49 @@ Backend.LanguageIndex.prototype =
 					{
 					  method: 'get',
 					  parameters: 'id=' + langCode,
-					  onComplete: this.addToList
+					  onComplete: this.addToList.bind(this)
 					}	  										  
 					);
 
 	},
 	
-	addToList: function(request)
-	{
-		// activate submit button and hide feedback
-	  	button = document.getElementById('addLang').getElementsByTagName('input')[0];
-	  	button.disabled = false;
-
-		// hide menu
-		restoreMenu('addLang', 'langPageMenu');
-
-		// add language to list
-		item = xml2HtmlElement(request.responseXML.firstChild);
-
-		document.getElementById('addLangFeedback').style.display = 'none';
-		list = document.getElementById('languageList');
-
-		item.style.display = 'none';
-		list.appendChild(item);
-		initLangList();
-		item.style.display = '';
+	addToList: function(originalRequest)
+	{		
+ 	    eval('var itemData = ' + originalRequest.responseText);
+		
+	  	var template = $('languageList_template');
+	  	
+	  	var list = $('languageList');
+		var node = template.cloneNode(true);
+		node = this.renderItem(itemData, node);
+		list.appendChild(node);
+  	
+		this.initLangList();
 				
-		new Effect.Highlight(item.id, {startcolor:'#FBFF85', endcolor:'#EFF4F6'})
+		restoreMenu('addLang', 'langPageMenu');
+		document.getElementById('addLangFeedback').style.display = 'none';
+				
+		new Effect.Highlight(node, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
 	},
 	
-	setEnabled: function(langId, status) 
+	setEnabled: function(node) 
 	{
-		url = this.statusUrl + langId + "?status=" + status;
+		p = node;
+		while (p.tagName != 'LI')
+		{
+		  	p = p.parentNode;
+		}
+		langId = p.id.substr(p.id.length - 2, 2);
+		
+		url = this.statusUrl + langId + "?status=" + (node.checked - 1 + 1);
 
 		img = document.createElement('img');
 		img.src = 'image/indicator.gif';
 		img.className = 'activateIndicator';
 										
-		checkBox = document.getElementById('languageList_enable_' + langId);
-		checkBox.parentNode.replaceChild(img, checkBox);
+		node.parentNode.replaceChild(img, node);
 		
-		var updater = new Ajax.Updater('languageList_container_' + langId, url);
+		new LiveCart.AjaxRequest(url, img, this.updateItem.bind(this));
 	},
 		
 	setFormUrl: function(url)
@@ -111,6 +203,26 @@ Backend.LanguageIndex.prototype =
 	setStatusUrl: function(url)
 	{
 	  	this.statusUrl = url;
+	},
+
+	setEditUrl: function(url)
+	{
+	  	this.editUrl = url;
+	},
+
+	setSortUrl: function(url)
+	{
+	  	this.sortUrl = url;
+	},
+
+	setDeleteUrl: function(url)
+	{
+	  	this.deleteUrl = url;
+	},
+	
+	setDelConfirmMsg: function(msg)
+	{
+	  	this.delConfirmMsg = msg;
 	}
 }
 

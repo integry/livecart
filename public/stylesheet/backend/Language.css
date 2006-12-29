@@ -18,6 +18,11 @@ label.radio {
 	z-index: 1;
 }
 
+#languageList_template
+{
+  	display: none;
+}
+
 #languageList {
   	width: 300px;
 }
@@ -51,12 +56,30 @@ label.radio {
 	font-size: smaller;
 }
 
-#langDefault {
+.langDefault {
   	font-weight: bold;
+  	display: none;
 }
 
 .langListContainer {
   	padding-left: 60px;
+}
+
+.langInactive {
+  	display: none;
+}
+
+.setDefault, 
+.default .langDefault, 
+.disabled .langInactive 
+{
+  	display: inline;  
+}
+
+.default .setDefault,
+.disabled .langListMenu
+{
+  	display: none;
 }
 
 /* edit */
