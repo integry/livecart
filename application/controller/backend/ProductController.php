@@ -36,6 +36,9 @@ class ProductController extends StoreManagementController {
 		{
 			$product = Product::getInstanceByID($productId, Product::LOAD_DATA);
 			$category = $product->category->get();
+			$specFieldArray = $category->getSpecificationFieldArray();
+			$response->setValue("specFieldList", $specFieldArray);
+
 			$productSpec = new ProductSpecification($product);
 
 			$form->setData($product->toArray());
