@@ -30,11 +30,33 @@ class SpecField extends MultilingualObject
      */
     public function addValue(SpecFieldValue $value)
     {
-		$value->SpecField->set($this);
+		$value->specField->set($this);
 		$value->save();
     }
 
-	/**
+    /**
+     * Gets a set of values created for this field
+     *
+     * @return ARSet
+     */
+    public function getValueSet()
+    {
+    	return $this->getRelatedRecordSet("SpecFieldValue", new ARSelectFilter());
+    	//return ActiveRecordModel::getRecordSet("SpecFieldValue", $this->getValueFilter());
+    }
+
+    /**
+     * Gets an array of values created for this field
+     *
+     * @return array
+     */
+	public function getValueArray()
+	{
+		return $this->getRelatedRecordSetArray("SpecFieldValue", new ARSelectFilter());
+		//return ActiveRecordModel::getRecordSetArray("SpecFieldValue", $this->getValueFilter());
+	}
+
+    /**
 	 * Get instance SpecField record by id
 	 *
 	 * @param mixred $recordID Id

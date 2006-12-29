@@ -20,6 +20,10 @@ class Product extends MultilingualObject
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", null, ARInteger::instance()));
 
+		$schema->registerField(new ARField("name", ARArray::instance()));
+		$schema->registerField(new ARField("shortDescription", ARArray::instance()));
+		$schema->registerField(new ARField("longDescription", ARArray::instance()));
+
 		$schema->registerField(new ARField("sku", ARVarchar::instance(20)));
 
 		$schema->registerField(new ARField("dateCreated", ARDateTime::instance()));
@@ -60,6 +64,11 @@ class Product extends MultilingualObject
 			ActiveRecord::rollback();
 			throw $e;
 		}
+	}
+
+	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
+	{
+		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
 }
 

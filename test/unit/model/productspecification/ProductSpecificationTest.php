@@ -17,7 +17,13 @@
 	$prodCategory = $product->category->get();
 	$specFields = $prodCategory->getSpecificationFieldSet();
 
-	echo "<pre>"; print_r($specFields); echo "</pre>";
+	$values = $specFields->get(1)->getValueArray();
+	//$prodSpec->setProperty($specFields->get(0), );
+
+	echo "<pre>";
+	print_r($specFields->toArray());
+	print_r($values);
+	echo "</pre>";
 
 
 	echo "Done!";

@@ -65,6 +65,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 		$store = Store::getInstance();
 		$defaultLangCode = $store->getDefaultLanguageCode();
 
+		/*
 		$data = parent::toArray();
 		$transformedData = array();
 		$schema = self::getSchemaInstance(get_class($this));
@@ -90,6 +91,40 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 			}
 		}
 		return $transformedData;
+		*/
+		$data = array();
+		foreach ($this->data as $fieldName => $valueContainer)
+		{
+			$field = $valueContainer->getField();
+			$fieldValue = $valueContainer->get();
+			if ($field instanceof ARForeignKey)
+			{
+				$data[$field->getForeignClassName()] = $valueContainer->get()->toArray();
+			}
+			else
+			{
+				if ($convertToUnderscope && is_array($fieldValue) && $field->getDataType() instanceof ARArray)
+				{
+					foreach ($fieldValue as $langCode => $multilingualValue)
+					{
+						if ($langCode != $defaultLangCode)
+						{
+							$data[$fieldName . "_" . $langCode] = $multilingualValue;
+						}
+						else
+						{
+							$data[$fieldName] = $multilingualValue;
+						}
+					}
+				}
+				else
+				{
+					$data[$fieldName] = $valueContainer->get();
+				}
+			}
+		}
+		print_r($data);
+		return $data;
 	}
 }
 
