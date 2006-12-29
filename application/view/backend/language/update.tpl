@@ -1,1 +1,0 @@
-<h1>{translate text=_succeeded}</h1>
