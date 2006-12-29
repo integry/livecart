@@ -12,6 +12,10 @@
 	lng.setFormUrl('{link controller=backend.language action=addForm}');
 	lng.setAddUrl('{link controller=backend.language action=add}');
 	lng.setStatusUrl("{link controller=backend.language action=setEnabled}/");
+	lng.setEditUrl("{link controller=backend.language action=edit}/");
+	lng.setSortUrl("{link controller=backend.language action=saveorder}/");
+	lng.setDeleteUrl("{link controller=backend.language action=delete}/");
+	lng.setDelConfirmMsg('{t _confirm_delete}');
 </script>
 
 {tip}{t _index_tip}{/tip}
@@ -25,32 +29,38 @@
 
 <br />
 
+<li id="languageList_template" class="activeList_add_sort activeList_remove_delete disabled default">
+	<div>
+		<div class="langListContainer">
+
+			<span class="langCheckBox">
+				<input type="checkbox" class="checkbox" disabled="disabled" onclick="lng.setEnabled(this);" />
+			</span>	
+		
+			<span class="langData">
+				<img src="" />
+				<span class="langTitle"></span> 
+				<span class="langInactive">({t _inactive})</span>
+			</span>
+			
+			<div class="langListMenu">
+				<a href="{link controller=backend.language action=setDefault}/" class="listLink setDefault">
+					{t _set_as_default}
+				</a>
+				<span class="langDefault">{t _default_language}</span>
+			</div>
+			
+		</div>
+	</div>			
+</li>
+
 <ul id="languageList" class="activeList_add_delete activeList_add_edit">
-{foreach from=$languagesList item=item}
-	{include file="backend/language/listItem.tpl" showContainer=true}
-{/foreach}
 </ul>
 
 {literal}
 <script type="text/javascript">
-    function initLangList()
-    {	
-		new ActiveList('languageList', {
-	         beforeEdit:     function(li) { window.location.href = '{/literal}{link controller=backend.language action=edit}{literal}/' +  this.getRecordId(li); },
-	         beforeSort:     function(li, order) 
-			 { 
-				 return '{/literal}{link controller=backend.language action=saveorder}{literal}?draggedId=' + this.getRecordId(li) + '&' + order 
-			   },
-	         beforeDelete:   function(li)
-	         {
-	             if(confirm('{/literal}{tn _confirm_delete}{literal}')) return '{/literal}{link controller=backend.language action=delete}{literal}/' + this.getRecordId(li)
-	         },
-	         afterEdit:      function(li, response) {  },
-	         afterSort:      function(li, response) {  },
-	         afterDelete:    function(li, response)  { Element.remove(li); }
-	     });
-	}	
-	initLangList();
+	lng.renderList({/literal}{$languageArray}{literal});
+	lng.initLangList();
 </script>
 {/literal}
 

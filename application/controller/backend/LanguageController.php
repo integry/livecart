@@ -233,11 +233,16 @@ class LanguageController extends StoreManagementController
 				$countActive++;
 			}
 			$list[$key]['name'] = $this->locale->info()->getLanguageName($value['ID']);
+			
+			if (file_exists('image/localeflag/' . $value['ID'] . '.png'))
+			{
+			  	$list[$key]['image'] = 'image/localeflag/' . $value['ID'] . '.png';
+			}
 		}
 
 		$response = new ActionResponse();
 		$response->SetValue("language", $this->request->getValue("language"));
-		$response->SetValue("languagesList", $list);
+		$response->SetValue("languageArray", json_encode($list));
 		$response->SetValue("count_all", count($list));
 		$response->SetValue("count_active", $countActive);
 
@@ -360,12 +365,10 @@ class LanguageController extends StoreManagementController
 		$lang->setAsEnabled($this->request->getValue("status"));
 		$lang->save();
 		
-		$response = new ActionResponse();
 		$item = $lang->toArray();
 		$item['name'] = $this->locale->info()->getLanguageName($item['ID']);
-		$response->setValue('item', $item);
-
-		return $response;		
+		
+		return new JSONResponse($item);
 	}
 
 	/**
@@ -398,11 +401,8 @@ class LanguageController extends StoreManagementController
 			$response = new ActionResponse();
 			$item = $lang->toArray();
 			$item['name'] = $this->locale->info()->getLanguageName($item['ID']);
-			$response->setValue('item', $item);			
 			
-			$response->setHeader('Content-type', 'application/xml');
-			
-			return $response;
+			return new JSONResponse($item);
 		}
 	}
 

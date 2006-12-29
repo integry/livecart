@@ -1,6 +1,4 @@
-{if $showContainer}
 <li id="languageList_{$item.ID}" class="activeList_add_sort{if $item.isDefault} activeList_remove_delete{/if}">
-{/if}
 	<div id="languageList_container_{$item.ID}">
 		<div class="langListContainer">
 			<span>
@@ -10,22 +8,20 @@
 			<span>
 				<img src="image/localeflag/{$item.ID}.png" />
 			
-				<span class="langTitle{if !$item.isEnabled} disabled{/if}">{$item.name}</span> 
+				<span class="langTitle">{$item.name}</span> 
 			
 				{if !$item.isEnabled}
-				({t _inactive})
+				<span>({t _inactive})</span>
 				{/if}
 			</span>
 			
 			<div class="langListMenu">
-				{if $item.isEnabled}
-					{if !$item.isDefault}
-				<a href="{link controller=backend.language action=setDefault id=$item.ID}" class="listLink">{t _set_as_default}</a>
-					{else}
-						<span id="langDefault">{t _default_language}</span>
-					{/if}
-				{/if}
+				<a href="{link controller=backend.language action=setDefault}/{$item.ID}" class="listLink">
+					{t _set_as_default}
+				</a>
+				<span id="langDefault">{t _default_language}</span>
 			</div>
+			
 		</div>
 	</div>			
-{if $showContainer}</li>{/if}
+</li>
