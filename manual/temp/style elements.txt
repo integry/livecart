@@ -1,15 +1,16 @@
 
- * Headings 
+TO DO:
 
- * Paragraphs
+ * IE support
 
- * Lists (numbered, bulleted, squared)
+ * IMG align=center?!
 
- * Images
+ * IMG text wrapping
 
- * Notes (rectangular boxes?)
+ * Several lists types (numbered, bulleted, squared)
 
 
-examples:
+other:
 
-http://everything.basecamphq.com/archives/000294.php
+cross-reference, internal document reference, external reference
+
