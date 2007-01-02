@@ -31,6 +31,28 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
 	}
 
+	/*
+	public function addProduct(Product $product)
+	{
+		$product->category = $this;
+		$pathNodes = $this->getPathNodeSet(Category::INCLUDE_ROOT_NODE);
+
+		ActiveRecordModel::beginTransaction();
+		try
+		{
+			foreach ($pathNodes as $node)
+			{
+				$node->productCount->set($node->productCount->get() + 1);
+				$node->save();
+			}
+			ActiveRecordModel::commit();
+		}
+		catch (Exception $e)
+		{
+			ActiveRecordModel::rollback();
+		}
+	}
+	*/
 
 	/**
 	 * Loads a set of spec field records for a category.
@@ -78,16 +100,30 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 	/**
 	 * Gets a list of products assigned to this node
+	 * @param bool $loadReferencedRecords
 	 *
+	 * @return ARSet
 	 */
-	public function getProductSet()
+	public function getProductSet($loadReferencedRecords = false)
 	{
-		$this->getID();
-		$productFilter = new ARSelectFilter();
-		$productFilter->setCondition();
-		$products = ActiveRecord::getRecordSet("Product", $productFilter);
+		return $this->getRelatedRecordSet("Product", $this->getProctFilter(), $loadReferencedRecords);
+	}
 
-		return $products;
+	/**
+	 * Gets a list of products assigned to this node
+	 *
+	 * @param bool $loadReferencedRecords
+	 * @return array
+	 */
+	public function getProductArray($loadReferencedRecords = false)
+	{
+		return $this->getRelatedRecordSetArray("Product", $this->getProductFilter(), $loadReferencedRecords);
+	}
+
+	private function getProductFilter()
+	{
+		$filter = new ARSelectFilter();
+		return $filter;
 	}
 
 	public function setValueByLang($fieldName, $langCode, $value)

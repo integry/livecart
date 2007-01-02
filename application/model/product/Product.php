@@ -52,11 +52,14 @@ class Product extends MultilingualObject
 		try
 		{
 			$category = $this->category->get();
-			$category->productCount->set($category->productCount->get() + 1);
+			$categoryPathNodes = $category->getPathNodeSet(Category::INCLUDE_ROOT_NODE);
 
-			$category->save();
+			foreach ($categoryPathNodes as $categoryNode)
+			{
+				$categoryNode->productCount->set($categoryNode->productCount->get() + 1);
+				$categoryNode->save();
+			}
 			parent::save();
-
 			ActiveRecordModel::commit();
 		}
 		catch (Exception $e)
@@ -65,6 +68,23 @@ class Product extends MultilingualObject
 			throw $e;
 		}
 	}
+
+	public function getRelatedProductArray()
+	{
+	}
+
+	public function getRelatedProductSet()
+	{
+	}
+
+	public function getSpecificationDataArray()
+	{
+	}
+
+	public function getSpecificationDataSet()
+	{
+	}
+
 
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{

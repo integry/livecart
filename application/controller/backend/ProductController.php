@@ -22,6 +22,10 @@ class ProductController extends StoreManagementController {
 
 		$response = new ActionResponse();
 		$response->setValue("path", $path);
+
+		$productList = $category->getProductArray();
+		$response->setValue("productList", $productList);
+
 		return $response;
 	}
 
