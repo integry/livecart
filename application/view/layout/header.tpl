@@ -36,13 +36,21 @@
 	{includeJs file=backend/Customize.js}
 
 	{$JAVASCRIPT}
+
+	{literal}
+	<script type="text/javascript">
+	function initHistory()
+	{
+		dhtmlHistory.initialize();
+		dhtmlHistory.addListener(Backend.ajaxNav.handle);
+		dhtmlHistory.handleBookmark();
+	}
+	window.onload = initHistory;
+	</script>
+	{/literal}
+
 </head>
 <body>
-
-<script type="text/javascript">
-	dhtmlHistory.initialize();
-	dhtmlHistory.addListener(Backend.ajaxNav.handle);
-</script>
 
 <div id="log" style="position: absolute; top: 0; left: 0; z-index: 10000; background-color: white;"></div>
 

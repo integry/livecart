@@ -263,8 +263,11 @@ class CurrencyController extends StoreManagementController
 
 		foreach ($currencies as $id => &$currency)
 		{
-		  	$form->setValue('curr_' . $currency['ID'], $settings[$currency['ID']]['enabled']);
-		  	$form->setValue('feed_' . $currency['ID'], $settings[$currency['ID']]['feed']);
+			if (isset($settings[$currency['ID']]))
+			{
+			  	$form->setValue('curr_' . $currency['ID'], $settings[$currency['ID']]['enabled']);
+			  	$form->setValue('feed_' . $currency['ID'], $settings[$currency['ID']]['feed']);
+			}
 		}
 
 		$frequency = array();

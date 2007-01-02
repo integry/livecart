@@ -2,7 +2,7 @@
 	<div>{t _opts_save_conf}</div>
 </div>
 
-{form id="options" handle=$form action="controller=backend.currency action=saveOptions" method="post" onsubmit="curr.saveOptions(this); return false;" onChange="curr.checkDisabledFields(this);"}
+{form id="options" handle=$form action="controller=backend.currency action=saveOptions" method="post" onsubmit="curr.saveOptions(this); return false;" onchange="curr.checkDisabledFields()"}
 
 	<p>
 		{checkbox class="checkbox" id="updateCb" name="updateCb" value="1"} 
@@ -19,13 +19,13 @@
 		
 		<p>{t _to_update}: </p>
 		{foreach from=$currencies item=item}
-		<p>
+		<div>
 			{checkbox class="checkbox" id="curr_`$item.ID`" name="curr_`$item.ID`" value="1"} 
 			<span>
 				<label for="curr_{$item.ID}">{$item.ID}</label> {t _using}
 				{selectfield class="select" options=$feeds id="feed_`$item.ID`" name="feed_`$item.ID`"}
 			</span>
-		</p>
+		</div>
 		{foreachelse}
 			{t _no_currencies}
 		{/foreach}
