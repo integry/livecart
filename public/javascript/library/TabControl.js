@@ -50,6 +50,7 @@ TabControl.prototype = {
 		// register for AJAX browser navigation handler
 		this.activeTab.onclick();
 		//addlog(this.activeTab.id);
+		
 	},
 
 	handleTabMouseOver: function(evt)

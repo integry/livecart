@@ -186,34 +186,48 @@ Backend.Currency.prototype =
 		}
 		catch (e)
 		{
-addlog(e);
+			//addlog(e);
 		}
 	},
 	
-	checkDisabledFields: function(form)
+	checkDisabledFields: function()
 	{
+		form = $('options');
+		
+		if (form.onchange != null)
+		{
+			form.onchange = curr.checkDisabledFields;
+
+			formElements = form.getElementsByTagName('input');
+			for (k = 0; k < formElements.length; k++)
+			{
+			  	formElements[k].onclick = form.onchange;
+			}
+	
+			form.onchange = null;
+		}
+
 		// enable/disable options container
-		cont = document.getElementById('feedOptions');
 		if (form.elements.namedItem('updateCb').checked)
 		{
-			cont.removeClassName('disabled');  	
+			$('feedOptions').removeClassName('disabled');  	
 		}	  
 		else
 		{
-			cont.addClassName('disabled');  			  
+			$('feedOptions').addClassName('disabled');  			  
 		}
 		
-		for (k in form.elements)
+		for (k = 0; k < form.elements.length; k++)
 		{
-			if (form.elements[k].name && (form.elements[k].name.substr(0, 5) == 'curr_'))
+			if ((form.elements[k].name != null) && (form.elements[k].name.substr(0, 5) == 'curr_'))
 		  	{
 				if (form.elements[k].checked)
 				{
-					form.elements[k].parentNode.removeClassName('disabled');
+					Element.removeClassName(form.elements[k].parentNode, 'disabled');
 				}
 				else
 				{
-					form.elements[k].parentNode.addClassName('disabled');				  
+					Element.addClassName(form.elements[k].parentNode, 'disabled');
 				}
 			}
 		}

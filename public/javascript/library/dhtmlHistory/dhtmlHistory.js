@@ -64,6 +64,26 @@ window.dhtmlHistory = {
       }
    },
    
+	/**
+	 * @author Integry Systems
+	 */
+	handleBookmark: function()
+	{
+		hash = window.location.hash.substr(1);
+		if(window.historyStorage.hasKey(hash))
+		{
+			this.fireHistoryEvent(hash);
+		}
+		else
+		{
+		  	elementId = hash.substr(0, hash.length - 2);
+		  	if ($(elementId) && $(elementId).onclick)
+		  	{
+				$(elementId).onclick();    
+			}
+		}
+	},
+   
    /** public */ add: function(newLocation, historyData) {
       // most browsers require that we wait a certain amount of time before changing the
       // location, such as 200 milliseconds; rather than forcing external callers to use
@@ -121,7 +141,7 @@ window.dhtmlHistory = {
          
          // change the hidden iframe's location if on IE
          if (self.isInternetExplorer())
-            self.iframe.src = "javascript/library/dhtmlhistory/blank.html?" + newLocation;
+            self.iframe.src = "javascript/library/dhtmlhistory/history.php?" + newLocation;
             
          // end of atomic location change block
          // for IE
@@ -231,9 +251,9 @@ window.dhtmlHistory = {
       if (this.isInternetExplorer()) {
          document.write("<iframe style='border: 0px; width: 200px;"
                                + "height: 100px; position: absolute; top: 0px; "
-                               + "left: 500px; z-index: 50000; visibility: visible;' "
-                               + "name='DhtmlHistoryFrame' id='DhtmlHistoryFrame' onload='addlog(window.location.hash);' "
-                               + "src='javascript/library/dhtmlhistory/blank.html?" + initialHash + "'>"
+                               + "left: 500px; z-index: 50000; visibility: visible; display: none;' "
+                               + "name='DhtmlHistoryFrame' id='DhtmlHistoryFrame'  onload='window.dhtmlHistory.frameLoad(this);' "
+                               + "src='javascript/library/dhtmlhistory/history.php?" + initialHash + "'>"
                                + "</iframe>");
          // wait 400 milliseconds between history
          // updates on IE, versus 200 on Firefox
@@ -308,9 +328,26 @@ window.dhtmlHistory = {
       var historyData = historyStorage.get(newHash);
 
       // call our listener      
-      this.listener.call(null, newHash, historyData);
+	  if (this.listener)
+	  {
+		  this.listener(newHash, historyData);  
+	  }	  
    },
    
+      /**
+       * @author Integry Systems
+       */
+	  frameLoad: function(frame)
+      {
+		  hash = window.frames[frame.id].document.body.firstChild.nodeValue;
+		  if (window.location.hash == '#' + hash)
+		  {
+  		  	  return false;  
+		  }
+//		  addlog(hash);
+		  window.dhtmlHistory.fireHistoryEvent(hash);
+	  },
+	  
    /** Sees if the browsers has changed location.  This is the primary history mechanism
        for Firefox. For Internet Explorer, we use this to handle an important edge case:
        if a user manually types in a new hash value into their Internet Explorer location
@@ -331,7 +368,7 @@ window.dhtmlHistory = {
           && this.ieAtomicLocationChange == true) {
          return;
       }
-      
+           
       // get hash location
       var hash = this.getCurrentLocation();
       
@@ -348,7 +385,7 @@ window.dhtmlHistory = {
       
       if (this.isInternetExplorer()
           && this.getIFrameHash() != hash) {
-         this.iframe.src = "javascript/library/dhtmlhistory/blank.html?" + hash;
+         this.iframe.src = "javascript/library/dhtmlhistory/history.php?" + hash;
       }
       else if (this.isInternetExplorer()) {
          // the iframe is unchanged
