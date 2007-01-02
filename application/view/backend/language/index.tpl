@@ -12,7 +12,7 @@
 	lng.setFormUrl('{link controller=backend.language action=addForm}');
 	lng.setAddUrl('{link controller=backend.language action=add}');
 	lng.setStatusUrl("{link controller=backend.language action=setEnabled}/");
-	lng.setEditUrl("{link controller=backend.language action=edit}/");
+	lng.setEditUrl("{link controller=backend.language action=edit}");
 	lng.setSortUrl("{link controller=backend.language action=saveorder}/");
 	lng.setDeleteUrl("{link controller=backend.language action=delete}/");
 	lng.setDelConfirmMsg('{t _confirm_delete}');
@@ -29,6 +29,10 @@
 
 <br />
 
+<ul id="languageList" class="activeList_add_delete activeList_add_edit">
+</ul>
+
+<ul>
 <li id="languageList_template" class="activeList_add_sort activeList_remove_delete disabled default">
 	<div>
 		<div class="langListContainer">
@@ -53,8 +57,6 @@
 		</div>
 	</div>			
 </li>
-
-<ul id="languageList" class="activeList_add_delete activeList_add_edit">
 </ul>
 
 {literal}

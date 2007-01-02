@@ -8,12 +8,12 @@
 	</div>
 
 	{foreach from=$currencies key=key item=item}
-		<p{if $item.isEnabled == 0} class="disabled"{/if}>
+		<div{if $item.isEnabled == 0} class="disabled"{/if}>
 			<div class="title">{$item.name}</div>
 				<label for="rate_{$item.ID}">1 {$item.ID} = </label>
 				{textfield name="rate_`$item.ID`" id="rate_`$item.ID`"}
 				<span class="defaultCurrency">{$defaultCurrency}</span>
-		</p>
+		</div>
 	{/foreach}
 
 	</fieldset>	

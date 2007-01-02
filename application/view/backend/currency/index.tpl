@@ -33,12 +33,32 @@
 			<br />
 			
 			<ul id="currencyList" class="activeList_add_delete">
-			{foreach from=$currencies item=item}
-				{include file="backend/currency/listItem.tpl" showContainer=true}	
-			{foreachelse}		
-				No currencies found	
-			{/foreach}
 			</ul>		
+
+			<div id="noCurrencies">No currencies found</div>
+			
+			<ul>
+				<li id="currencyList_template" class="activeList_add_sort activeList_remove_delete disabled default">
+				<div>
+					<div class="currListContainer">
+						<span>
+							<input type="checkbox" class="checkbox" disabled="disabled" />
+						</span>	
+					
+						<span class="currData">	
+							<span class="currTitle"></span> 	
+							<span class="currInactive">({t _inactive})</span>
+						</span>
+						
+						<div class="currListMenu">
+							<a href="{link controller=backend.currency action=setDefault}" class="setDefault listLink">{t _set_as_default}</a>
+							<span class="currDefault">{t _default_currency}</span>
+						</div>
+					</div>
+				</div>			
+				</li>
+			</ul>			
+			
 		</div>
 		<div id="tabRatesContent"></div>
 		<div id="tabOptionsContent"></div>
@@ -68,6 +88,8 @@
 	         afterDelete:    function(li, response)  { Element.remove(li); curr.resetRatesContainer(); }
 	     });
 	}	
+	
+	curr.renderList({/literal}{$currencies}{literal});
 	initCurrencyList();
 	
 	new TabControl('tabContainer', 'sectionContainer');

@@ -31,12 +31,18 @@
 	{includeJs file=library/json.js}
 	{includeJs file=library/livecart.js}
 	{includeJs file=library/Debug.js}
-
+	{includeJs file=library/dhtmlHistory/dhtmlHistory.js}
+	
 	{includeJs file=backend/Customize.js}
 
 	{$JAVASCRIPT}
 </head>
 <body>
+
+<script type="text/javascript">
+	dhtmlHistory.initialize();
+	dhtmlHistory.addListener(Backend.ajaxNav.handle);
+</script>
 
 <div id="log" style="position: absolute; top: 0; left: 0; z-index: 10000; background-color: white;"></div>
 

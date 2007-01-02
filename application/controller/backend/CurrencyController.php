@@ -31,7 +31,7 @@ class CurrencyController extends StoreManagementController
 		}		
 
 		$response = new ActionResponse();
-		$response->setValue("currencies", $curr);
+		$response->setValue("currencies", json_encode($curr));
 
 		return $response;
 	}
@@ -96,10 +96,7 @@ class CurrencyController extends StoreManagementController
 		$arr = $newCurrency->toArray();
 		$arr['name'] = $this->locale->info()->getCurrencyName($id);
 		
-		$response = new ActionResponse();
-		$response->setValue('item', $arr);
-		$response->setHeader('Content-type', 'application/xml');
-		return $response;
+		return new JSONResponse($arr);
 	}
 
 	/**
@@ -161,13 +158,11 @@ class CurrencyController extends StoreManagementController
 		$curr = ActiveRecord::getInstanceById('Currency', $id, true);
 		$curr->isEnabled->set((int)(bool)$this->request->getValue("status"));
 		$curr->save();
-		
-		$response = new ActionResponse();
+				
 		$item = $curr->toArray();
 		$item['name'] = $this->locale->info()->getCurrencyName($item['ID']);
-		$response->setValue('item', $item);
 
-		return $response;		
+		return new JSONResponse($item);
 	}
 
 	/**

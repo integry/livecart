@@ -6,7 +6,7 @@ ClassLoader::import("application.model.locale.*");
 
 ActiveRecord::$creolePath = ClassLoader::getRealPath("library.creole");
 
-ActiveRecord::setDSN("mysql://root@192.168.1.6/livecart_dev");
+ActiveRecord::setDSN("mysql://root@127.0.0.1/livecart_dev");
 ActiveRecord::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DIRECTORY_SEPARATOR . "activerecord.log");
 
 /**
