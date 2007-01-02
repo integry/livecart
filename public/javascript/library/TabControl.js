@@ -15,10 +15,12 @@ TabControl.prototype = {
 		var tabList = document.getElementsByClassName("tab");
 		for (var i = 0; i < tabList.length; i++)
 		{
-			tabList[i].onclick = this.handleTabClick.bindAsEventListener(this);
+			tabList[i].onclick = this.handleTabClick;
 			tabList[i].onmouseover = this.handleTabMouseOver.bindAsEventListener(this);
 			tabList[i].onmouseout = this.handleTabMouseOut.bindAsEventListener(this);
-
+				
+			tabList[i].tabControl = this;
+		
 			aElementList = tabList[i].getElementsByTagName('a');
 			if (aElementList.length > 0)
 			{
@@ -44,6 +46,10 @@ TabControl.prototype = {
 				Element.hide(tabList[i].id + 'Content');
 			}
 		}
+		
+		// register for AJAX browser navigation handler
+		this.activeTab.onclick();
+		//addlog(this.activeTab.id);
 	},
 
 	handleTabMouseOver: function(evt)
@@ -64,10 +70,12 @@ TabControl.prototype = {
 		}
 	},
 
-	handleTabClick: function(evt)
+	handleTabClick: function()
 	{
-		var targetTab = evt.target;
-		this.activateTab(targetTab);
+		this.tabControl.activateTab(this);
+
+		Backend.ajaxNav.add(this.id, this.id);
+				
 	},
 
 	activateTab: function(targetTab)

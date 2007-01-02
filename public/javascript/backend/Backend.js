@@ -1,9 +1,36 @@
-var Backend = {};
-
 function showHelp(url)
 {
   	return window.open(url, 'helpWin', 'width=400, height=700, resizable, scrollbars, location=no');
 }
+
+var Backend = {};
+
+/*************************************************
+	AJAX back/forward navigation
+**************************************************/
+Backend.AjaxNavigationHandler = Class.create();
+Backend.AjaxNavigationHandler.prototype = 
+{
+	initialize: function()
+	{	 	
+	},
+	
+	add: function(element, params)
+	{
+		dhtmlHistory.add(element + '__');		
+	},
+	
+	handle: function(element, params)
+	{
+		elementId = element.substr(0, element.length - 2);
+		if ($(elementId))
+		{
+			$(elementId).onclick();
+		}
+	}	
+}
+
+Backend.ajaxNav = new Backend.AjaxNavigationHandler();
 
 /*************************************************
 	Layout Control

@@ -50,26 +50,31 @@ Backend.LanguageIndex.prototype =
 	
 	renderList: function(data)
 	{
-	  	var template = $('languageList_template');
+	  	t = new TimeTrack();
+		var template = $('languageList_template');
 	  	var list = $('languageList');
+
 		for (k = 0; k < data.length; k++)
-	  	{
-			var node = template.cloneNode(true);
-			node = this.renderItem(data[k], node);
-			list.appendChild(node);
+	  	{			
+			z = template.cloneNode(true);
+			z = this.renderItem(data[k], z);
+			
+			list.appendChild(z);
 		}		 
 	},
 	
 	renderItem: function(itemData, node)
 	{
 		node.id = 'languageList_' + itemData.ID;
+		node.style.display = 'block';
 		
-		var checkbox = node.getElementsByTagName('input')[0];
+		checkbox = node.getElementsByTagName('input')[0];
 		
 		if (1 == itemData.isEnabled)
 		{
 		  	node.removeClassName('disabled');
 			node.getElementsByClassName('listLink')[0].href += itemData.ID;
+			checkbox.checked = true;
 		}
 		
 		if (0 == itemData.isDefault)
@@ -79,8 +84,6 @@ Backend.LanguageIndex.prototype =
 		  	checkbox.disabled = false;
 		  	checkbox.onclick = function() {lng.setEnabled(this); }
 		}
-		
-		checkbox.checked = itemData.isEnabled == 1;
 		
 		node.getElementsByClassName('langTitle')[0].innerHTML = itemData.name;
 		

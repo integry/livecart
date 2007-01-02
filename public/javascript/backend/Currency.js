@@ -32,6 +32,47 @@ Backend.Currency.prototype =
 		slideForm('addCurr', 'currPageMenu');	  	
 	},	
 	
+	renderList: function(data)
+	{
+		var template = $('currencyList_template');
+	  	var list = $('currencyList');
+
+		for (k = 0; k < data.length; k++)
+	  	{			
+			z = template.cloneNode(true);
+			z = this.renderItem(data[k], z);
+			
+			list.appendChild(z);
+		}		 
+	},
+	
+	renderItem: function(itemData, node)
+	{
+		node.id = 'currencyList_' + itemData.ID;
+		node.style.display = 'block';
+		
+		checkbox = node.getElementsByTagName('input')[0];
+		
+		if (1 == itemData.isEnabled)
+		{
+		  	node.removeClassName('disabled');
+			node.getElementsByClassName('listLink')[0].href += itemData.ID;
+			checkbox.checked = true;
+		}
+		
+		if (0 == itemData.isDefault)
+		{
+		  	node.removeClassName('default');		  
+		  	node.removeClassName('activeList_remove_delete');		  
+		  	checkbox.disabled = false;
+		  	checkbox.onclick = function() {curr.setEnabled(this); }
+		}
+		
+		node.getElementsByClassName('currTitle')[0].innerHTML = itemData.name;
+				
+		return node;  
+	},
+	
 	add: function(code)
 	{
 	  	// deactivate submit button and display feedback
@@ -45,13 +86,13 @@ Backend.Currency.prototype =
 					{
 					  method: 'get',
 					  parameters: 'id=' + code,
-					  onComplete: this.addToList
+					  onComplete: this.addToList.bind(this)
 					}	  										  
 					);
 
 	},
 	
-	addToList: function(request)
+	addToList: function(originalRequest)
 	{
 		// activate submit button and hide feedback
 	  	button = document.getElementById('addCurr').getElementsByTagName('input')[0];
@@ -60,33 +101,53 @@ Backend.Currency.prototype =
 		// hide menu
 		restoreMenu('addCurr', 'currPageMenu');
 
-		// add currency to list
-		item = xml2HtmlElement(request.responseXML.firstChild);
-
-		document.getElementById('addCurrIndicator').style.display = 'none';
-		list = document.getElementById('currencyList');
-
-		item.style.display = 'none';
-		list.appendChild(item);
+ 	    eval('var itemData = ' + originalRequest.responseText);
+		
+	  	var template = $('currencyList_template');
+	  	
+	  	var list = $('currencyList');
+		var node = template.cloneNode(true);
+		node = this.renderItem(itemData, node);
+		list.appendChild(node);
+  	
 		initCurrencyList();
-		item.style.display = '';
-								
-		new Effect.Highlight(item, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
+				
+		new Effect.Highlight(node, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
 	},	
 	
-	setEnabled: function(id, status) 
+	updateItem: function(originalRequest)
 	{
-		url = this.statusUrl + "?id=" + id + "&status=" + status;
+ 	    eval('var itemData = ' + originalRequest.responseText);
+		
+		var node = $('currencyList_' + itemData.ID);
+	  	var template = $('currencyList_template');
+		var cl = template.cloneNode(true);
+	  	
+		node.parentNode.replaceChild(cl, node);
+	  	
+		this.renderItem(itemData, cl);
+		initCurrencyList();
+		new Effect.Highlight(cl, {startcolor:'#FBFF85', endcolor:'#EFF4F6'})
+	},
+	
+	setEnabled: function(node) 
+	{
+		p = node;
+		while (p.tagName != 'LI')
+		{
+		  	p = p.parentNode;
+		}
+		currId = p.id.substr(p.id.length - 3, 3);
+		
+		url = this.statusUrl + "?id=" + currId + "&status=" + (node.checked - 1 + 1);
 
 		img = document.createElement('img');
 		img.src = 'image/indicator.gif';
 		img.className = 'activateIndicator';
 										
-		checkBox = document.getElementById('currencyList_enable_' + id);
-		checkBox.parentNode.replaceChild(img, checkBox);
-		
-		var updater = new Ajax.Updater('currencyList_container_' + id, url);
-		this.resetRatesContainer();
+		node.parentNode.replaceChild(img, node);
+
+		new LiveCart.AjaxRequest(url, img, this.updateItem.bind(this));
 	},			
 	
 	resetRatesContainer: function()
