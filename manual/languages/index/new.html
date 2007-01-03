@@ -7,46 +7,91 @@
 </head>
 <body bgcolor="#ffffff">
 
-	<h2>Languages</h2>
+	<h1>Languages</h1>
 	<br />
 
-	<h3>Manage Languages</h3>
+	<h2>Manage Languages</h2>
+
+<del>
 	<p>LiveCart supports multiple languages for the same shop / system, in order to adjust your store for other languages you have to prepare translations.	Translating a language includes interface elements and all the available stock information (description, details, for instance)	(This may seem overhelming at first but as you will see there a couple of handy tools to help you deal with interface translations (see LiveTranslation))</p>
+</del>
 	
 	<p>LiveCart supports multiple languages for the same system, which enables you to adjust your shop for international usage. You can translate both interface information (menus, captions, instructions, etc.), as well as most of the data, which is stored in the system, like product descriptions, category names and others. This may seem overhelming at first but as you will see there a couple of handy tools to help you deal with interface translations (see Live Translation).</p>
 	
 
 	<h3>Things you can DO</h3>
 	<ul>	
-		<li>Add a new language</li>
-		<li>Set (edit) translations</li>
-		<li>Apply language to the interface</li>
-		<li>Sort / Reorder languages</li>
-		<li>Set Active / Inactive</li>
-		<li>Set default language (interface lang. diference)</li>
-		<li>Delete language</li>
+		<li><a href="#change working">Change working language</a> <del>Apply language to the interface</del></li>
+		<li><a href="#add">Add a new language</a></li>
+		<li><a href="#translate">Set (edit) translations</a></li>
+		<li><a href="#reorder">Sort / reorder languages</a></li>
+		<li><a href="#enable or disable">Enable or disable languages</a></li>
+		<li><a href="#change default">Change default language</a><del> (interface lang. diference)</del></li>
+		<li><a href="#remove">Remove language</a></li>
 	</ul>
-	<br />
 
-	<p>Adding a language is a one step task. Simply select language from the list and click ADD. Added languages appear below automatically.</p>
-	<p>To add a language click on Add New Language below Manage Languages heading and select a languages, followed by the Add button.</p>
-	<hr width="80px" align="left">
-	<p>To translate a language proceed to the <a href="../language%20translation/page.html">Language translation</a> page. To do this hover over the language and click a "pen" icon:</p>
-	<img src="pics/image.bmp"/>
-	<hr width="80px" align="left">
-	<p>To apply new language to the interface, click Change Language in the LC's main window and choose a language from the list displayed.</p>
+	<a name="change working" />
+	<h3>Change working language</h3>	
+
+	<p>To change the working (interface) language, click the <del>Change </del>Language link in the LiveCart's main window (top-right corner) and choose a language from the list displayed.</p>
+	
+	<del>
 	<p class="note"><strong>Note:</strong> main language of the interface holds definitions of all the elements (menius, buttons, etc) while the default language defines stock info (details, description, etc.). Thus changing Interface language and Default language impacts interface diferently</p>
 	<p class="note"><font color="red"><strong>Note2:</strong> if the language is not fully translated, ...</font></p>
-	<hr width="80px" align="left">
+	</del>
+
+	<a name="add" />
+	<h3>Add new language</h3>	
+	<p>Adding a language is a one step task. Simply select language from the list and click ADD. Added languages appear below automatically.</p>	
+	<p>To add a language click on Add New Language below Manage Languages heading and select a languages, followed by the Add button.</p>
+
+	<a name="translate" />
+	<h3>Translate</h3>	
+	<p>To translate a language proceed to the <a href="../language%20translation/page.html">Language translation</a> page. To do this hover over the language and click a "pen" icon:</p>
+	<img src="pics/image.bmp"/>
+	<ins>(A circle should be added around that icon)</ins>
+
+	<a name="reorder" />
+	<h3>Reorder Languages</h3>	
+
 	<p>To reorder languages click on any language and drag it around to set the preferred arrangement (items to set the appropriate order) (Language arrangement affects the order in which languages are displayed in language switching menus).</p>
-	<hr width="80px" align="left">
-	<p>All (the newly added) languages are inactive by default. You might want to keep a language inactive while you are still translating it. To activate a language mark it's check_box on the left of the flag icon. (Also) note that only active languages are available in the change iterface language meniu.
+	
+	<ins>(a screenshot would be nice)</ins>
+
+	<a name="enable or disable" />
+	<h3>Enable or disable languages</h3>	
+	
+	<p>All the newly added languages are inactive by default. You might want to keep a language inactive while you are still translating it. To activate a language mark it's check_box on the left of the flag icon. <del>(Also) note that only active languages are available in the change iterface language meniu.</del>
 	To suspend a language clear a check_box by the language you want to deactivate.</p>
-	<hr width="80px" align="left">
-	<p><font color="red"> Defaut language in LC is used to separate stock info from the interface language (with the purpose ...) thus the default language holds your shop's stock info such as category details, descriptions, etc.  </font></p>
-	<hr width="80px" align="left">
+
+	<ins>(a screenshot would be nice)</ins>
+	
+	<p>Also note that the disabled languages will still be active in backend, so you could prepare all the necessary translations before displaying any content in these languages before the translations are completed. When you're done with the translations just activate the language to make it available in site frontend as well.</p>	
+
+	<a name="change default" />
+	<h3>Change default language</h3>	
+
+	<del>Defaut language in LC is used to separate stock info from the interface language (with the purpose ...) thus the default language holds your shop's stock info such as category details, descriptions, etc.</del>
+
+	<p>
+	The default language serves two main purposes:
+	<ul>
+		<li> It is the default language your site visitors see when first visiting the site</li>
+		<li> Any translations that are missing for any other language (interface, product or category information, etc.) are automatically taken from the default language</li>	
+	</ul>
+	</p>
+
+	<p>To change the default language click the <strong>Set as default</strong> link under the language name.</p>
+
+	<ins>(a screenshot would be nice)</ins>
+	
+	<a name="remove" />
+	<h3>Remove a language</h3>	
+
 	<p>To delete a language, hover over it and click the delete icon on the left.</p>
-	<p></p>
+	<ins>(a screenshot would be nice)</ins>
+
+	<p>Note: if you remove a language (accidently or not), none of the translations for this language will be instantly lost. If you removed a language by accident, just add it again and all your translations will still be in place.</p>
 
 	<br />
 	

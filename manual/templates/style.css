@@ -10,6 +10,16 @@ body {
   font-family: verdana, sans-serif;
 }
 
+del, del p {
+  	color: #DDDDDD;
+  	text-decoration: line-through;
+}
+
+ins {
+  	font-weight: bold;
+  	text-decoration: none;
+  	color: rgb(255, 100, 100);
+}
 
 h2 {
 	font-size: 22px;
