@@ -67,7 +67,8 @@
 	Backend.Category.treeBrowser.insertNewItem({$category.parent},{$category.ID} , '{$category.name}', 0, 0, 0, 0, "SELECT");
 {/foreach}
 	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
-
+	Backend.Category.initPage();
+	
 	/**
 	 * URL assigment for internal javascript requests
 	 */
