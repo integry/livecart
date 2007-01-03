@@ -29,6 +29,25 @@ Backend.Category = {
 		this.initTabs();
 	},
 
+	initPage: function()
+	{
+		// check for bookmark
+		if (window.location.hash.length > 0)
+		{
+			var elements = window.location.hash.split('#');
+			if (elements[1].substr(0, 4) == 'cat_')
+			{
+				var parts = elements[1].split('_');
+				var categoryId = parts[1];
+				Backend.Category.treeBrowser.selectItem(categoryId, true, false);
+				window.dhtmlHistory.handleBookmark();
+				return true;		  
+			}
+		}
+
+		$('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode.onclick();			  
+	},
+
 	/**
 	 * Builds category tree browser object (dhtmlxTree) and initializes its params
 	 */
@@ -48,7 +67,10 @@ Backend.Category = {
 
 	/**
 	 * Tree browser onClick handler. Activates selected category by realoading active
-	 *  tab with category specific data
+	 * tab with category specific data
+	 *
+	 * @todo Find some better way to reference/retrieve the DOM nodes from tree by category ID's 
+	 * (automatically assign ID's somehow?). Also necessary for bookmarking (the ID's have to be preassigned).
 	 */
 	activateCategory: function(categoryId)
 	{
@@ -57,6 +79,13 @@ Backend.Category = {
 
 		Backend.Category.tabControl.switchCategory(categoryId, Backend.Category.activeCategoryId);
 		Backend.Category.activeCategoryId = categoryId;
+
+		// set ID for the current tree node element
+		$('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode.id = 'cat_' + categoryId;
+			
+		// and register browser history event to enable backwar/forward navigation
+		//Backend.ajaxNav.add('cat_' + categoryId);
+		Backend.Category.tabControl.activeTab.onclick();
 	},
 
 	getPath: function(nodeId)
@@ -197,10 +226,12 @@ CategoryTabControl.prototype = {
 		var tabList = document.getElementsByClassName("tab");
 		for (var i = 0; i < tabList.length; i++)
 		{
-			tabList[i].onclick = this.handleTabClick.bindAsEventListener(this);
+			tabList[i].onclick = this.handleTabClick;
 			tabList[i].onmouseover = this.handleTabMouseOver.bindAsEventListener(this);
 			tabList[i].onmouseout = this.handleTabMouseOut.bindAsEventListener(this);
 
+			tabList[i].tabControl = this;			
+			
 			aElementList = tabList[i].getElementsByTagName('a');
 			if (aElementList.length > 0)
 			{
@@ -230,6 +261,9 @@ CategoryTabControl.prototype = {
 				//Element.hide(this.getContainerId(tabList[i].id, treeBrowser.getSelectedItemId()));
 			}
 		}
+		
+		// register for AJAX browser navigation handler
+		//this.activeTab.onclick();
 	},
 
 	handleTabMouseOver: function(evt)
@@ -272,19 +306,11 @@ CategoryTabControl.prototype = {
 	/**
 	 * Tab click event handler (performs tab styling and content activation)
 	 */
-	handleTabClick: function(evt)
+	handleTabClick: function()
 	{
-		var target = "";
-		if (evt.target == undefined)
-		{
-			target = evt.srcElement;
-		}
-		else
-		{
-			target = evt.target;
-		}
-		var targetTab = target;
-		this.activateTab(targetTab);
+		this.tabControl.activateTab(this);
+
+		Backend.ajaxNav.add('cat_' + Backend.Category.activeCategoryId + '#' + this.id, this.id);		
 	},
 
 	/**

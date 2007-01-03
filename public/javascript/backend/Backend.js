@@ -11,22 +11,61 @@ var Backend = {};
 Backend.AjaxNavigationHandler = Class.create();
 Backend.AjaxNavigationHandler.prototype = 
 {
+	ignoreNextAdd: false,
+	
 	initialize: function()
 	{	 	
 	},
 	
+	/**
+	 * The AJAX history consists of clicks on certain elements (traditional history uses URL's)
+	 * To register a history event, you only have to pass in an element ID, which was clicked. When
+	 * the user navigates backward or forward using the browser navigation, these clicks are simply 
+	 * repeated by calling the onclick() function for the particular element.
+	 *
+	 * Sometimes it is necessary to perform more than one "click" to return to previous state. In such case
+	 * you can pass in several element ID's delimited with # sign. For example: cat_44#tabImages - would first
+	 * emulate a click on cat_44 element and then on tabImages element. This is also useful for bookmarking,
+	 * which allows to easily reference certain content on complex pages.
+	 *   
+	 * @param element string Element ID, which would be clicked 
+	 * @param params Probably obsolete, but perhaps we'll find some use for it
+	 */
 	add: function(element, params)
 	{
+		if (true == this.ignoreNextAdd)
+		{
+			//addlog('ignoring ' + element);
+			this.ignoreNextAdd = false;
+			return false;
+		}
+		
 		dhtmlHistory.add(element + '__');		
+		return true;
 	},
 	
 	handle: function(element, params)
 	{
 		elementId = element.substr(0, element.length - 2);
-		if ($(elementId))
+		elements = elementId.split('#');
+		for (k = 0; k < elements.length; k++)
 		{
-			$(elementId).onclick();
+			if ($(elements[k]))
+			{
+				// only register the click for the last element
+				if (k < elements.length - 1)
+				{
+					Backend.ajaxNav.ignoreNext();
+				}
+				
+				$(elements[k]).onclick();
+			}		  
 		}
+	},
+	
+	ignoreNext: function()
+	{
+		this.ignoreNextAdd = true;  
 	}	
 }
 

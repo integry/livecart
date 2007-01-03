@@ -76,11 +76,7 @@ window.dhtmlHistory = {
 		}
 		else
 		{
-		  	elementId = hash.substr(0, hash.length - 2);
-		  	if ($(elementId) && $(elementId).onclick)
-		  	{
-				$(elementId).onclick();    
-			}
+			Backend.ajaxNav.handle(hash);
 		}
 	},
    
