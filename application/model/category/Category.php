@@ -10,6 +10,7 @@ ClassLoader::import("application.model.system.MultilingualObjectInterface");
  *
  * @author Saulius Rupainis <saulius@integry.net>
  * @package application.model.category
+ *
  */
 class Category extends ActiveTreeNode implements MultilingualObjectInterface
 {
@@ -30,29 +31,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
 	}
-
-	/*
-	public function addProduct(Product $product)
-	{
-		$product->category = $this;
-		$pathNodes = $this->getPathNodeSet(Category::INCLUDE_ROOT_NODE);
-
-		ActiveRecordModel::beginTransaction();
-		try
-		{
-			foreach ($pathNodes as $node)
-			{
-				$node->productCount->set($node->productCount->get() + 1);
-				$node->save();
-			}
-			ActiveRecordModel::commit();
-		}
-		catch (Exception $e)
-		{
-			ActiveRecordModel::rollback();
-		}
-	}
-	*/
 
 	/**
 	 * Loads a set of spec field records for a category.

@@ -83,6 +83,15 @@ class Product extends MultilingualObject
 
 	public function getSpecificationDataSet()
 	{
+		$itemSet = ActiveRecordModel::getRecordSet("SpecificationItem", $this->getSpecificationFilter(), SpecificationItem::LOAD_REFERENCES);
+		return $itemSet;
+	}
+
+	private function getSpecificationFilter()
+	{
+		$filter = new ARSelectFilter();
+		$filter->setOrder(new ARFieldHandle("SpecField", "position"));
+		return $filter;
 	}
 
 

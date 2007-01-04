@@ -5,7 +5,7 @@
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database creation script                        #
-# Created on:            2006-12-21 15:18                                #
+# Created on:            2007-01-04 13:36                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -61,7 +61,7 @@ CREATE TABLE Category (
     name TEXT,
     description TEXT,
     keywords TEXT,
-    productCount INTEGER UNSIGNED,
+    productCount INTEGER UNSIGNED DEFAULT 0,
     isEnabled BOOL DEFAULT 1,
     handle VARCHAR(40),
     position INTEGER UNSIGNED DEFAULT 0,
@@ -108,8 +108,8 @@ CREATE TABLE SpecField (
     categoryID INTEGER UNSIGNED,
     name TEXT,
     description TEXT,
-    type SMALLINT COMMENT 'Field data type. Available types: 1. text field 2. drop down list (select one item from a list) 3. select multiple items from a list',
-    dataType SMALLINT COMMENT '0. default (mixed) 1. numeric 2. date/time',
+    type SMALLINT DEFAULT 1 COMMENT 'Field data type. Available types: 1. selector (numeric) 2. input (numeric) 3. input (text) 4. editor (text) 5. selector (text) 6. Date',
+    dataType SMALLINT DEFAULT 0 COMMENT '1. text 2. numeric',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Order number (position relative to other fields)',
     handle VARCHAR(40),
     isMultilingual BOOL,
@@ -261,6 +261,18 @@ CREATE TABLE Discount (
 ) COMMENT = '1- % 2- currency';
 
 # ---------------------------------------------------------------------- #
+# Add table "CategoryImage"                                              #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE CategoryImage (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    categoryID INTEGER UNSIGNED,
+    title TEXT,
+    position INTEGER UNSIGNED DEFAULT 0,
+    CONSTRAINT PK_CategoryImage PRIMARY KEY (ID)
+);
+
+# ---------------------------------------------------------------------- #
 # Foreign key constraints                                                #
 # ---------------------------------------------------------------------- #
 
@@ -323,3 +335,6 @@ ALTER TABLE ProductFile ADD CONSTRAINT FileType_ProductFile
 
 ALTER TABLE Discount ADD CONSTRAINT Product_Discount 
     FOREIGN KEY (ID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE CategoryImage ADD CONSTRAINT Category_CategoryImage 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE;

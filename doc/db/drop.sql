@@ -5,7 +5,7 @@
 # Project name:                                                          #
 # Author:                                                                #
 # Script type:           Database drop script                            #
-# Created on:            2006-12-21 15:18                                #
+# Created on:            2007-01-04 13:36                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -53,6 +53,8 @@ ALTER TABLE ProductFile DROP FOREIGN KEY FileType_ProductFile;
 
 ALTER TABLE Discount DROP FOREIGN KEY Product_Discount;
 
+ALTER TABLE CategoryImage DROP FOREIGN KEY Category_CategoryImage;
+
 # ---------------------------------------------------------------------- #
 # Drop table "Product"                                                   #
 # ---------------------------------------------------------------------- #
@@ -84,6 +86,8 @@ DROP TABLE Product;
 # ---------------------------------------------------------------------- #
 
 # Drop constraints #
+
+ALTER TABLE Category ALTER COLUMN productCount DROP DEFAULT;
 
 ALTER TABLE Category ALTER COLUMN isEnabled DROP DEFAULT;
 
@@ -128,6 +132,10 @@ DROP TABLE SpecificationItem;
 # ---------------------------------------------------------------------- #
 
 # Drop constraints #
+
+ALTER TABLE SpecField ALTER COLUMN type DROP DEFAULT;
+
+ALTER TABLE SpecField ALTER COLUMN dataType DROP DEFAULT;
 
 ALTER TABLE SpecField ALTER COLUMN position DROP DEFAULT;
 
@@ -280,3 +288,17 @@ ALTER TABLE Discount DROP PRIMARY KEY;
 # Drop table #
 
 DROP TABLE Discount;
+
+# ---------------------------------------------------------------------- #
+# Drop table "CategoryImage"                                             #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE CategoryImage ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE CategoryImage DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE CategoryImage;
