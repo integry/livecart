@@ -29,7 +29,12 @@ class ProductController extends StoreManagementController {
 		return $response;
 	}
 
-	public function form()
+	/**
+	 * Displays main product information form
+	 *
+	 * @return unknown
+	 */
+	public function mainForm()
 	{
 		$this->setLayout("dev");
 		$response = new ActionResponse();
