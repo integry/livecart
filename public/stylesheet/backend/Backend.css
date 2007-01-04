@@ -391,7 +391,7 @@ html, body{
 	z-index: 20;
 	width: auto;
 	padding-top: 6px;
-	left: 20px;
+	left: -20px;
 	top: 13px;
 }
 

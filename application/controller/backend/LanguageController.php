@@ -434,7 +434,7 @@ class LanguageController extends StoreManagementController
 		$response = new ActionResponse();
 
 		// get all system languages
-		$list = $this->getLanguages(true)->toArray();
+		$list = $this->getLanguages(false)->toArray();
 
 		foreach($list as $key => $value)
 		{

@@ -88,7 +88,7 @@ class Store
     	  	$filter = new ARSelectFilter();
 			$langFilter = new ARSelectFilter();
     	  	$langFilter->setOrder(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);
-			$langFilter->setCondition(new EqualsCond(new ARFieldHandle("Language", "isEnabled"), 1));
+			//$langFilter->setCondition(new EqualsCond(new ARFieldHandle("Language", "isEnabled"), 1));
 			$this->languageList = ActiveRecordModel::getRecordSet("Language", $langFilter);
 		}
 		return $this->languageList;
@@ -99,14 +99,15 @@ class Store
 	 *
 	 * @return array
 	 */
-	public function getLanguageArray($includeDefaultLanguage = false)
+	public function getLanguageArray($includeDefaultLanguage = false, $includeInactiveLanguages = true)
 	{
 		$langList = $this->getLanguageList();
 		$langArray = array();
 		$defaultLangCode = $this->getDefaultLanguageCode();
 		foreach ($langList as $lang)
 		{
-			if ($defaultLangCode != $lang->getID() || $includeDefaultLanguage)
+			if (($defaultLangCode != $lang->getID() || $includeDefaultLanguage) &&
+				(($lang->isEnabled->get() == 1) || $includeInactiveLanguages))
 			{
 				$langArray[] = $lang->getID();
 			}
