@@ -593,7 +593,7 @@ p.radio label, p.checkbox label
     white-space: nowrap;
 }
 
-input, select, form.other
+input, select, file, form.other
 {
     width: 15em;
     font-size: 16px;

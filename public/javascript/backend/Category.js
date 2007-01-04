@@ -39,13 +39,17 @@ Backend.Category = {
 			{
 				var parts = elements[1].split('_');
 				var categoryId = parts[1];
-				Backend.Category.treeBrowser.selectItem(categoryId, true, false);
-				window.dhtmlHistory.handleBookmark();
+				Backend.Category.treeBrowser.selectItem(categoryId, false, false);
+
+//				window.dhtmlHistory.handleBookmark();
+//				throw('rest');
 				return true;		  
 			}
 		}
 
-		$('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode.onclick();			  
+		treeNode = $('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode;
+		treeNode.onclick();	
+		Backend.ajaxNav.add('cat_' + treeNode.parentObject.id + '#tabProducts');		  
 	},
 
 	/**
@@ -85,7 +89,7 @@ Backend.Category = {
 			
 		// and register browser history event to enable backwar/forward navigation
 		//Backend.ajaxNav.add('cat_' + categoryId);
-		Backend.Category.tabControl.activeTab.onclick();
+		//Backend.Category.tabControl.activeTab.onclick();
 	},
 
 	getPath: function(nodeId)

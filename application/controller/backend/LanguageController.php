@@ -82,17 +82,6 @@ class LanguageController extends StoreManagementController
 			$translated[$relPath] = array_merge($keys, $default, $transl);	
 		}
 
-/*
-		// modifying a single file definitions only
-		if ($this->request->isValueSet('file'))
-		{
-			$file = $this->request->getValue("file");
-			$toTranslate = $translated[$file];
-			$translated = array();
-			$translated[$file] = $toTranslate;
-		}		
-*/
-
 		// determine which definitions should be displayed (All, defined, undefined)
 		$selectedAll = '';
 		$selectedDefined = '';
@@ -356,7 +345,7 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Sets if language is enabled
-	 * @return ActionResponse
+	 * @return JSONResponse
 	 */
 	public function setEnabled()
 	{
@@ -373,7 +362,7 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Add new language
-	 * @return ActionResponse
+	 * @return JSONResponse
 	 */
 	public function add()
 	{

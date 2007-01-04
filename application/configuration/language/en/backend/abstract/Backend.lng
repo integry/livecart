@@ -1,0 +1,14 @@
+_home=Home
+_base_help=Help
+_change_language=Language
+
+# Common translations
+
+_or=or
+_cancel=Cancel
+_save=Save
+
+_translate=Translate to: [_1]
+
+# Live Customization
+_live_translate=Translate
