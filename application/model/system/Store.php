@@ -3,7 +3,7 @@
 /**
  * Top-level model class for Store related logic
  *
- * @package application.model
+ * @package application.model.system
  * @author Saulius Rupainis <saulius@integry.net>
  *
  */
@@ -30,9 +30,9 @@ class Store
 	private $languageList = null;
 
 	private $configFiles = array();
-	
+
 	private $currencies = null;
-	
+
 	private $defaultCurrency = null;
 
 	/**
@@ -188,8 +188,8 @@ class Store
 		if (!$this->defaultCurrency)
 		{
 		  	$this->loadCurrencyData();
-		}	  	
-		
+		}
+
 		return $this->defaultCurrency;
 	}
 
@@ -203,10 +203,10 @@ class Store
 		if (!$this->defaultCurrency)
 		{
 		  	$this->loadCurrencyData();
-		}	  	
+		}
 
 		$currArray = array();
-		$defCurrency = $this->getDefaultCurrency();	 		
+		$defCurrency = $this->getDefaultCurrency();
 		foreach ($this->currencies as $currency)
 		{
 			if ($defCurrency != $currency->getID() || $includeDefaultCurrency)
@@ -214,10 +214,10 @@ class Store
 				$currArray[] = $curr->getID();
 			}
 		}
-		
+
 		return $currArray;
 	}
-	
+
 	/**
 	 * Loads currency data from database
 	 */
@@ -237,7 +237,7 @@ class Store
 			}
 		}
 	}
-	
+
 	private function loadLanguageFiles()
 	{
 		foreach ($this->configFiles as $file)

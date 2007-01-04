@@ -6,7 +6,7 @@ ClassLoader::import("application.model.ActiveRecordModel");
  * Language model
  *
  * @author Rinalds Uzkalns
- * @package application.model.language
+ * @package application.model.system
  */
 class Language extends ActiveRecordModel
 {

@@ -46,6 +46,10 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("unitsType", ARInteger::instance()));
 	}
 
+	/**
+	 * Saves product data and increases productCount in related categories
+	 *
+	 */
 	public function save()
 	{
 		ActiveRecordModel::beginTransaction();
@@ -68,32 +72,6 @@ class Product extends MultilingualObject
 			throw $e;
 		}
 	}
-
-	public function getRelatedProductArray()
-	{
-	}
-
-	public function getRelatedProductSet()
-	{
-	}
-
-	public function getSpecificationDataArray()
-	{
-	}
-
-	public function getSpecificationDataSet()
-	{
-		$itemSet = ActiveRecordModel::getRecordSet("SpecificationItem", $this->getSpecificationFilter(), SpecificationItem::LOAD_REFERENCES);
-		return $itemSet;
-	}
-
-	private function getSpecificationFilter()
-	{
-		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle("SpecField", "position"));
-		return $filter;
-	}
-
 
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{

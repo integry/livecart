@@ -6,7 +6,7 @@ ClassLoader::import("application.model.category.Category");
 /**
  * Specification field class
  *
- * @package application.model.product
+ * @package application.model.category
  */
 class SpecField extends MultilingualObject
 {

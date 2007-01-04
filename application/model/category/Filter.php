@@ -2,6 +2,10 @@
 
 ClassLoader::import("application.model.system.MultilingualObject");
 
+/**
+ *
+ * @package application.model.category
+ */
 class Filter extends MultilingualObject
 {
 	public static function defineSchema($className = __CLASS__)

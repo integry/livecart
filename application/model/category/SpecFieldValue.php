@@ -5,7 +5,7 @@ ClassLoader::import("application.model.system.MultilingualObject");
 /**
  * Specification field value class
  *
- * @package application.model.product
+ * @package application.model.catgeory
  */
 class SpecFieldValue extends MultilingualObject
 {

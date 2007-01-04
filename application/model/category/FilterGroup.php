@@ -5,7 +5,7 @@ ClassLoader::import("application.model.system.MultilingualObject");
 /**
  * Filter group model
  *
- * @package application.model.product
+ * @package application.model.category
  */
 class FilterGroup extends MultilingualObject
 {
