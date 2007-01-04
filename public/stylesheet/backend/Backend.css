@@ -678,6 +678,38 @@ a.cancel
  	color: red;
 }
 
+fieldset.error 
+{
+ 	background-color: inherit;
+	padding: 0px;
+	margin: 0px;
+	position: static; 
+	border: 0;
+}
+
+.errorText
+{
+	background-color: red;
+	float: left; 
+	width: auto;
+	margin-bottom: 4px;
+	margin-top: 0px;
+	padding: 3px;
+}
+
+.progressIndicator {
+	padding: 15px;
+	width: 30px;
+	height: 20px;
+	background-image: url(../../image/indicator.gif);
+	background-position: center center;
+	background-repeat: no-repeat;
+	clear: none;
+}
+
+/*************************** 
+	Calendar
+***************************/
 input.calendar
 {
     width: 6em;
@@ -693,16 +725,6 @@ img.calendar_button
 img.calendar_button_hover
 {
     background: red;
-}
-
-.progressIndicator {
-	padding: 15px;
-	width: 30px;
-	height: 20px;
-	background-image: url(../../image/indicator.gif);
-	background-position: center center;
-	background-repeat: no-repeat;
-	clear: none;
 }
 
 /*************************** 

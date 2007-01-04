@@ -1,0 +1,1 @@
+parent.Backend.Category.image.postUpload({$catId}, {$result});

@@ -14,13 +14,19 @@
 </ul>
 
 <div id="catImgAdd_{$catId}" style="display: none;">
-{form handle=$form action="controller=backend.categoryimage action=upload" method="post" onsubmit="catImg.upload(this); return false;"}
+{form handle=$form action="controller=backend.categoryimage action=upload" method="post" onsubmit="Backend.Category.image.upload(this);" target="catImgUpload_`$catId`" method="POST" enctype="multipart/form-data"}
+	
+	<input type="hidden" name="catId" value="{$catId}" />
 	
 	<fieldset>	
 		<legend>{t _add_new}</legend>
 		<p>
 			<label for="image">{t _image_file}</label>
-			{filefield name="image" id="image"}	
+			<fieldset class="error">
+				{filefield name="image" id="image"}
+				<div></div>
+				<div class="errorText" style="display: none;"></div>
+			</fieldset>
 		</p>
 			
 		<p>
@@ -45,10 +51,12 @@
 			</script>
 		</p>		
 		
+			<span id="imgSaveIndicator_{$catId}" class="progressIndicator" style="display: none;"></span>
 			<input type="submit" class="submit" value="{tn _upload}"> {t _or} <a href="#" class="cancel" onclick="restoreMenu('catImgAdd_{$catId}', 'catImgMenu_{$catId}'); return false;">{t _cancel}</a>
 	</fieldset>
 
 {/form}
+<iframe name="catImgUpload_{$catId}" id="catImgUpload_{$catId}"></iframe>
 </div>
 
 <ul id="catImageList_{$catId}"></ul>

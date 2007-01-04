@@ -30,9 +30,41 @@ class CategoryImageController extends StoreManagementController
 		
 		$response = new ActionResponse();
 		$response->setValue('form', $this->buildForm($categoryId));
+		$response->setValue('catId', $categoryId);
 		$response->setValue('images', json_encode($images->toArray()));
 		$response->setValue('languageList', $languages);
 		return $response;		  
+	}
+	
+	public function upload()
+	{
+		$categoryId = $this->request->getValue('catId');	  	
+		$validator = $this->buildValidator($categoryId);
+		
+		if (!$validator->isValid())
+		{
+		  	$errors = $validator->getErrorList();
+			$result = array('error' => $errors['image']);
+		}
+		else
+		{
+		  	// process upload
+		  	$result = array();
+		  	
+		  	// resize image
+		  	
+		  	// create a record in DB
+		  	
+		  	// set image properties in array
+			  		  	
+		}
+		
+		$this->setLayout('iframeJs');
+		
+		$response = new ActionResponse();
+		$response->setValue('catId', $categoryId);		
+		$response->setValue('result', json_encode($result));		
+		return $response;
 	}
 	
 	/**
@@ -45,15 +77,16 @@ class CategoryImageController extends StoreManagementController
 		ClassLoader::import("framework.request.validator.RequestValidator");
 
 		$validator = new RequestValidator("categoryImage_".$catId, $this->request);
-/*
-		foreach ($currencies as $currency)
-		{
-			$validator->addCheck('rate_' . $currency['ID'], new IsNotEmptyCheck($this->translate('_err_empty')));		  
-			$validator->addCheck('rate_' . $currency['ID'], new IsNumericCheck($this->translate('_err_numeric')));		  			
-			$validator->addCheck('rate_' . $currency['ID'], new MinValueCheck($this->translate('_err_negative'), 0));
-			$validator->addFilter('rate_' . $currency['ID'], new NumericFilter());	
-		}
-*/
+
+		$uploadCheck = new IsFileUploadedCheck($this->translate('_err_not_uploaded'));
+		$uploadCheck->setFieldName('image');
+		$validator->addCheck('image', $uploadCheck);
+
+		$imageCheck = new IsImageUploadedCheck($this->translate('_err_not_image'));
+		$imageCheck->setFieldName('image');
+		$imageCheck->setValidTypes(array('JPEG', 'GIF'));
+		$validator->addCheck('image', $imageCheck);
+		
 		return $validator;
 	}
 

@@ -10,6 +10,7 @@
 {includeJs file="backend/Category.js"}
 {includeJs file="backend/SpecField.js"}
 {includeJs file="backend/Filter.js"}
+{includeJs file="backend/CategoryImage.js"}
 
 {* Calendar *}
 {includeJs file="library/dhtmlCalendar/calendar.js"}
@@ -69,6 +70,8 @@
 {/foreach}
 	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
 	Backend.Category.initPage();
+
+	Backend.Category.image = new Backend.CategoryImage();
 	
 	/**
 	 * URL assigment for internal javascript requests
