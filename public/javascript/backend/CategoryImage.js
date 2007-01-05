@@ -63,7 +63,7 @@ Backend.CategoryImage.prototype =
 	
 	addToList: function(categoryId, imageData, highLight)
 	{
-		var templ = $('tabImagesContent_53').getElementsByClassName('catImageTemplate')[0].cloneNode(true);
+		var templ = $('tabImagesContent_' + categoryId).getElementsByClassName('catImageTemplate')[0].cloneNode(true);
 	  		  	
 	  	image = templ.getElementsByTagName('img')[0];
 		image.src = imageData['paths'][0];
