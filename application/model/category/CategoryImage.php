@@ -18,6 +18,13 @@ class CategoryImage extends MultilingualObject
 		$schema->registerField(new ARField("title", ARArray::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance()));
 	}
+	
+	public function getPath($size = 0)
+	{
+		$path = 'upload/categoryimage/' . $this->category->get()->getID() . '-' . $this->getID() . '-' . $size . '.jpg';
+	  	return $path;
+	}
+	
 }
 
 ?>

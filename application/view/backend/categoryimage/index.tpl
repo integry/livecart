@@ -1,6 +1,6 @@
 <ul style="display: none;">
-	<li id="catImageTemplate">
-		<img /> <span class="catImageTitleDefLang"></span>
+	<li class="catImageTemplate">
+		<img src="" /> <span class="catImageTitleDefLang"></span>
 		<div class="catImageTitleAll">
 			<span></span>
 		</div>
@@ -59,4 +59,8 @@
 <iframe name="catImgUpload_{$catId}" id="catImgUpload_{$catId}"></iframe>
 </div>
 
-<ul id="catImageList_{$catId}"></ul>
+<ul id="catImageList_{$catId}" class="catImageList activeList_add_delete activeList_add_edit activeList_add_sort"></ul>
+
+<script type="text/javascript">
+	Backend.Category.image.initList({$catId}, {$images});
+</script>

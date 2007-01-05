@@ -23,6 +23,7 @@
 {includeCss file="library/ActiveList.css"}
 {includeCss file="backend/SpecField.css"}
 {includeCss file="backend/Filter.css"}
+{includeCss file="backend/CategoryImage.css"}
 {includeCss file="library/TabControl.css"}
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 

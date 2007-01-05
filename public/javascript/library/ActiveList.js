@@ -400,7 +400,7 @@ ActiveList.prototype = {
 //        li.onclick        = li.focus();
 
         // Add tab index
-        li.tabIndex       = this.tabIndex;
+//        li.tabIndex       = this.tabIndex;
 
 
         // Create icons container. All icons will be placed incide it
