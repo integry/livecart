@@ -47,10 +47,16 @@
 	}
 	window.onload = initHistory;
 	</script>
+
 	{/literal}
 
 </head>
 <body>
+<script type="text/javascript">
+    /** Initialize all of our objects now. */
+    window.historyStorage.init();
+    window.dhtmlHistory.create();
+</script>
 
 <div id="log" style="position: absolute; top: 0; left: 0; z-index: 10000; background-color: white;"></div>
 

@@ -646,7 +646,3 @@ window.historyStorage = {
       this.storageField.value = serializedHashTable;
    }   
 };
-
-/** Initialize all of our objects now. */
-window.historyStorage.init();
-window.dhtmlHistory.create();
