@@ -1,0 +1,3 @@
+border: 1px solid #cccccc;
+border: 1px dotted #728DC9;
+border: 2px outset #2e8b57;
