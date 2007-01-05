@@ -97,4 +97,5 @@ class ProductController extends StoreManagementController {
 		return $path;
 	}
 }
+
 ?>

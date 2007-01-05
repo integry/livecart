@@ -18,6 +18,25 @@
 			<label>SKU:</label>
 			{textfield name="SKU"}
 		</p>
+		<p>
+			<label>Status</label>
+			{selectfield name="status"}
+		</p>
+		<p>
+			Is bestseller
+			{checkbox name="isBestseller"}
+		</p>
+		<p>
+
+		<fieldset>
+			<legend>Shipping Info</legend>
+			<p>
+				<label>Height:</label>
+				{textfield name="shippingHeight"}
+			</p>
+			<p>
+			</p>
+		</fieldset>
 
 		<hr/>
 		{include file="backend/product/specificationForm.tpl"}

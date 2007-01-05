@@ -3,7 +3,8 @@
 ClassLoader::import("application.model.ActiveRecordModel");
 
 /**
- * Product prices data
+ * Product price class.
+ * Price can be entered in different currencies
  *
  * @package application.model.product
  */

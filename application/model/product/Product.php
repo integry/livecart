@@ -77,6 +77,14 @@ class Product extends MultilingualObject
 	{
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
+
+	public function getImageArray()
+	{
+	}
+
+	public function getImageSet()
+	{
+	}
 }
 
 ?>
