@@ -10,24 +10,33 @@
 	<h1>Languages</h1>
 
 	<h2>Translate languages</h2>
-	<p>Here you can set up translations by supplying keywords with appropriate language definitions.</p>
-	<p>To prepare your language for usage you have to translate appropriate keywords from English to your chosen language.</p>
-
+	<p>LC can support almost all the languages of the world.</p>
+	<p><ins>(1) </ins>To translate your shop's interface to other languages you have to translate certain phrases to their appropriate equivalents</p>
+	<p><ins>(2) </ins>To prepare your language for usage you have to translate appropriate keywords from English to your chosen language.</p>
+	
 	<h3>TO DO list</h3>
 	<ul>	
 		<li><a href="#interface elements">Translate interface elements</a></li>
+		<li><a href="#product info">Translate product info</a></li>
 		<li><a href="#find specific word">Find and translate a specific word or sentence</a></li>
 		<li><a href="#find missing translations">Find missing translations</a></li>
 		<li><a href="#directly from user interface">Translate a word or sentence directly from user interface</a></li>
-		<li><a href="#product info">Translate product info</a></li>
 	</ul>
 	
 	<a name="interface elements" />
 	<h3>Translate interface elements</h3>
 	
 	<p>There are two ways of translating the interface - either by using a keyword tree or <a href="#directly from user interface">Live Translation</a>.</p>
-	<p>The keyword tree is placed below the Translation Filter. All the keywords in the tree are categorized as they appear in the interface layout. Browse the tree to supply translations for appropriate keywords. <ins>Example here?</ins></p>
-	
+	<p>The keyword tree is placed below the Translation Filter. All the keywords in the tree are categorized as they appear in the interface layout. To supply translations for appropriate keywords browse the tree and enter translations in the appropriate text fields. For example:</p>
+	<img src="pics/text_box.bmp"/>
+	where: 
+	<ul>
+		<li><span style="background: #ffff99">text field</span> is a place for translations;</li>
+		<li><span style="background: #ffff99">_menu_users</span> is a variable name; </li>
+		<li><span style="background: #ffff99">Users</span> is a default definition which is used if text area is left empty</li>
+	</ul>
+	<p>Reference: see <a href="#product info">translating product info</a></p>
+
 	<a name="find specific word" />
 	<h3>Find and translate a specific word or sentence</h3>
 
@@ -35,7 +44,7 @@
 
 	<a name="find missing translations"/>
 	<h3>Find missing translations</h3>	
-	<p>You can have keywords filtered by their current status in terms of translation process. You can choose from the following filtering options:</p>
+	<p>You can have keywords filtered by their current status in terms of translation process. The following filtering options are available:</p>
 
 	<img src="pics/translation_filter_blue.bmp"/>
 	<ul>
@@ -47,12 +56,15 @@
 	<a name="directly from user interface" />
 	<h3>Translate a word or sentence directly from user interface</h3>	
 		
-	<p>Live Translation is a LiveCart tool which allows you to translate a word or sentence directly from the page you see it. To use Live Translation, you have to turn it on the Customization Mode... <ins>(not completed yet)</ins></p>
+	<p>Live Translation is a LiveCart tool which allows you to translate a word or sentence directly from the page you see it (in). To use Live Translation, you have to turn it on the Customization Mode... <ins>(not completed yet)</ins></p>
+	<p>Live Translation is a real-time translation tool which enables you to translate any element of the interface  directly in the page you see it in. To do that you have to turn on Live Translation in the ... mode. Any interface phrase can be translated simply clicking "Live Translation" once you hover over an element and a reference pops-up. We highly recommend to use Live Translation when you are not sure about the keyword's exact place in the interface.</p>
+	<p>Reference: see <a href="#interface elements">Translate Interface Elements</a></p>
 	
 	<a name="product info" />
 	<h3>Translate product info</h3>	
 		
 	<p>You can translate products, categories, attributes and other data directly from their management pages, for example, products modification page. The fields for entering translations are typically placed below the main data form.</p>
+	<p>Reference: see <a href="#interface elements">translating interface elements</a></p>
 		
 	<h3>Reference</h3>
 	

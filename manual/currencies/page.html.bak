@@ -59,7 +59,8 @@
 	
 	<a name="tab_adjust_rates" />
 	<h3>Tab -> Adjust Rates</h3>
-	<p>To set rates simply enter currency's value in the field provided. (save). See <a href="#tab_options"> Automatic Adjust</a> for keeping your rates up-to-date.</p>
+	<p>To set rates simply enter currency's value in the field provided. (save) </p>
+	See <a href="#tab_options"> Automatic Adjust</a> for keeping your rates up-to-date.
 
 	<a name="tab_options" />
 	<h3>Tab -> Options</h3>
