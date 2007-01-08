@@ -80,12 +80,18 @@ class CategoryImageController extends StoreManagementController
 			{
 			  	$maxPos = 0;
 			}			  
+				
+			// process upload...
 			
-			// process upload
 		  	ActiveRecord::beginTransaction();
+			
 			$catImage = ActiveRecord::getNewInstance('CategoryImage');
 		  	$catImage->category->set(Category::getInstanceById($categoryId));
-			$catImage->position->set($maxPos);			  					
+			$catImage->position->set($maxPos);			  								
+
+			$multilingualFields = array("title");
+			$catImage->setValueArrayByLang($multilingualFields, $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true), $this->request);			
+			
 			$catImage->save();
 			
 		  	// resize image
@@ -129,6 +135,145 @@ class CategoryImageController extends StoreManagementController
 		$response->setValue('catId', $categoryId);		
 		$response->setValue('result', json_encode($result));		
 		return $response;
+	}
+	
+	public function save()
+	{
+		ActiveRecord::beginTransaction();	  
+		
+	  	try
+		{  
+			$image = ActiveRecord::getInstanceById('CategoryImage', $this->request->GetValue('imageId'), true);
+			
+			$multilingualFields = array("title");
+			$image->setValueArrayByLang($multilingualFields, $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true), $this->request);			
+			$image->save();
+			
+		  	if ($_FILES['image']['tmp_name'])
+		  	{
+				$resizer = new ImageManipulator($_FILES['image']['tmp_name']);
+				
+				if (!$resizer->isValidImage())
+				{
+				  	throw new ImageException();
+				}				
+				
+				if (!$this->resizeImage($image, $resizer))
+				{
+				  	throw new ImageException();
+				}				
+			}
+		}
+		catch (InvalidImageException $exc)
+		{
+			$error = $this->translate('_err_not_image');	  	
+		}  	
+		catch (ImageResizeException $exc)
+		{
+			$error = $this->translate('_err_resize');	  	
+		}  	
+		catch (Exception $exc)
+		{
+			$error = $this->translate('_err_not_found');	  	
+		}
+		
+		$response = new ActionResponse();
+		
+		if (isset($error))
+		{
+		  	ActiveRecord::rollback();
+		  	$result = array('error' => $error);
+		}
+		else
+		{
+			ActiveRecord::commit();
+
+		  	$result = $image->toArray();
+		  	$result['paths'] = array();
+			foreach ($this->imageSizes as $key => $value)
+		  	{
+				$result['paths'][$key] = $image->getPath($key);					
+			}
+		}		
+		
+		$this->setLayout('iframeJs');
+		$response->setValue('catId', $this->request->getValue('catId'));		
+		$response->setValue('imageId', $this->request->getValue('imageId'));		
+	  	$response->setValue('result', json_encode($result));
+		return $response;
+	}
+	
+	/**
+	 * Remove an image
+	 * @return RawResponse
+	 */
+	public function delete()
+	{  	
+		$id = $this->request->getValue('id');
+		
+		try
+	  	{
+			// make sure the record exists
+			$inst = ActiveRecord::getInstanceById('CategoryImage', $id, true);
+			
+			// delete image files
+			foreach ($this->imageSizes as $key => $value)
+		  	{
+				unlink($inst->getPath($key));					
+			}			
+			
+			$success = $id;
+			
+			ActiveRecord::deleteByID('CategoryImage', $id);
+		}
+		catch (Exception $exc)
+		{			  	
+		  	$success = false;
+		}
+		  		  
+		$resp = new RawResponse();
+	  	$resp->setContent($success);
+		return $resp;
+	}	
+	
+	/**
+	 * Save currency order
+	 * @return RawResponse
+	 */
+	public function saveOrder()
+	{
+	  	$categoryId = $this->request->getValue('categoryId');
+	  	
+		$order = $this->request->getValue('catImageList_' . $categoryId);
+			
+		foreach ($order as $key => $value)
+		{
+			$update = new ARUpdateFilter();
+			$update->setCondition(new EqualsCond(new ARFieldHandle('CategoryImage', 'ID'), $value));
+			$update->addModifier('position', $key);
+			ActiveRecord::updateRecordSet('CategoryImage', $update);  	
+		}
+
+		$resp = new RawResponse();
+	  	$resp->setContent($this->request->getValue('draggedId'));
+		return $resp;		  	
+	}	
+	
+	private function resizeImage(CategoryImage $image, $resizer)
+	{
+	  	$publicRoot = ClassLoader::getRealPath('public') . '/';
+		  
+		foreach ($this->imageSizes as $key => $size)
+	  	{
+			$filePath = $publicRoot . $image->getPath($key);
+			$res = $resizer->resize($size[0], $size[1], $filePath);
+			if (!$res)
+			{
+			  	break;
+			}
+		}
+		
+		return $res;	  
 	}
 	
 	/**

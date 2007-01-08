@@ -1,9 +1,9 @@
 <ul style="display: none;">
 	<li class="catImageTemplate">
-		<img src="" /> <span class="catImageTitleDefLang"></span>
-		<div class="catImageTitleAll">
-			<span></span>
-		</div>
+		<img class="catImage" src="" /> <span class="catImageTitleDefLang"></span>
+		<span class="catImageTitle">
+		</span>
+		<div class="catImageEditContainer" style="display: none;"></div>
 	</li>
 </ul>
 
@@ -13,11 +13,12 @@
 	</li>	
 </ul>
 
-<div id="catImgAdd_{$catId}" style="display: none;">
+<div id="catImgAdd_{$catId}" class="catImageEditForm" style="display: none;">
 {form handle=$form action="controller=backend.categoryimage action=upload" method="post" onsubmit="Backend.Category.image.upload(this);" target="catImgUpload_`$catId`" method="POST" enctype="multipart/form-data"}
 	
 	<input type="hidden" name="catId" value="{$catId}" />
-	
+	<input type="hidden" name="imageId" value="" />
+		
 	<fieldset>	
 		<legend>{t _add_new}</legend>
 		<p>
@@ -52,15 +53,29 @@
 		</p>		
 		
 			<span id="imgSaveIndicator_{$catId}" class="progressIndicator" style="display: none;"></span>
-			<input type="submit" class="submit" value="{tn _upload}"> {t _or} <a href="#" class="cancel" onclick="restoreMenu('catImgAdd_{$catId}', 'catImgMenu_{$catId}'); return false;">{t _cancel}</a>
+			<input type="submit" name="upload" class="submit" value="{tn _upload}"> {t _or} <a href="#" class="cancel" onclick="restoreMenu('catImgAdd_{$catId}', 'catImgMenu_{$catId}'); return false;">{t _cancel}</a>
 	</fieldset>
 
 {/form}
 <iframe name="catImgUpload_{$catId}" id="catImgUpload_{$catId}"></iframe>
 </div>
 
-<ul id="catImageList_{$catId}" class="catImageList activeList_add_delete activeList_add_edit activeList_add_sort"></ul>
+<ul id="catImageList_{$catId}" class="catImageList activeList_add_delete activeList_add_edit"></ul>
 
 <script type="text/javascript">
 	Backend.Category.image.initList({$catId}, {$images});
+	Backend.Category.image.setDeleteUrl('{link controller=backend.categoryImage action=delete}');	
+	Backend.Category.image.setSortUrl('{link controller=backend.categoryImage action=saveOrder}');	
+	Backend.Category.image.setEditUrl('{link controller=backend.categoryImage action=edit}');		
+	Backend.Category.image.setSaveUrl('{link controller=backend.categoryImage action=save}');		
+	
+	{capture name=delconf}{t _delete_confirm}{/capture}
+	Backend.Category.image.setDeleteMessage({json array=$smarty.capture.delconf});	
+
+	{capture name=editcapt}{t _edit_image}{/capture}
+	Backend.Category.image.setEditCaption({json array=$smarty.capture.editcapt});	
+
+	{capture name=savecapt}{t _save}{/capture}
+	Backend.Category.image.setSaveCaption({json array=$smarty.capture.savecapt});	
+
 </script>

@@ -1,8 +1,17 @@
+# list
+
 _add_new=Add new image
+_delete_confirm=Are you sure you wish to delete this image?
+
+# add / edit
+
+_edit_image=Edit image details
 
 _image_title=Enter image title:
 _image_file=Select image file:
 _upload=Upload
+_save=Save
 
 _err_not_uploaded=Please select a file
 _err_not_image=This is not a valid image
+_err_resize=Error resizing the image
