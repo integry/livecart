@@ -1,5 +1,7 @@
 <?php
 
+include_once('ImageException.php');
+
 class ImageManipulator
 {
 	private $imagePath;
