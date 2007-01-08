@@ -43,5 +43,4 @@ ul li.activeList_even
 
 li.activeList_even, li.activeList_odd {
   	border: 2px solid #EEEEEE;
-  	background: #EFF4F6;
 }
