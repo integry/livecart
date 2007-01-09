@@ -1,6 +1,7 @@
 {includeJs file="library/livecart.js"}
 {includeJs file="library/KeyboardEvent.js"}
 {includeJs file="library/ActiveList.js"}
+{includeJs file="library/form/ActiveForm.js"}
 {includeJs file="library/form/State.js"}
 {includeJs file="library/form/Validator.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
@@ -32,8 +33,10 @@
 {include file="layout/header.tpl"}
 
 
+{literal}<script type="text/javascript"> window.activeSpecFieldsList = {}; window.activeFiltersList = {}; </script>{/literal}
 <div id="specField_item_blank" class="dom_template">{include file="backend/specField/form.tpl"}</div>
 <div id="filter_item_blank" class="dom_template">{include file="backend/filter/form.tpl"}</div>
+
 
 <div id="catgegoryContainer" style="float:left; width: 260px;">
 	<div id="categoryBrowser" style="padding: 10px; border: 1px solid #ccc; background-color: #f1f1f1;">

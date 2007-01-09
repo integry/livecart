@@ -93,7 +93,7 @@
     {literal}
     <script type="text/javascript">
          $("filter_item_new_{/literal}{$categoryID}{literal}_show").onclick = function(e) { Backend.Filter.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') }
-         window.activeFiltersList = new ActiveList('filter_items_list_{/literal}{$categoryID}{literal}', filterListCallbacks);
+         window.activeFiltersList[{/literal}{$categoryID}{literal}] = new ActiveList('filter_items_list_{/literal}{$categoryID}{literal}', filterListCallbacks);
     </script>
     {/literal}
 {else}

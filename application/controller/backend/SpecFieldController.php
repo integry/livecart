@@ -72,7 +72,7 @@ class SpecFieldController extends StoreManagementController
 
         $categoryID = (int)$this->request->getValue('id');
         $category = Category::getInstanceByID($categoryID);
-        $response->setValue('specFields', $category->getSpecificationFieldSet());
+        $response->setValue('specFields', $category->getSpecificationFieldArray());
 
         $defaultSpecFieldValues = array
         (
@@ -164,45 +164,10 @@ class SpecFieldController extends StoreManagementController
             $specField->setLanguageField('description', @array_map($htmlspecialcharsUtf_8, $description), array_keys($this->specFieldConfig['languages']));
             $specField->setLanguageField('name',        @array_map($htmlspecialcharsUtf_8, $name),        array_keys($this->specFieldConfig['languages']));
 
-            $specField->save();
+            $specField->save();           
+            if(!empty($values)) $specField->saveValues($values, $type, $this->specFieldConfig['languages']);
 
-            $specFieldID = $specField->getID();
-
-            if(!empty($values))
-            {
-                $position = 1;
-                foreach ($values as $key => $value)
-                {
-                    if(preg_match('/^new/', $key))
-                    {
-                        $specFieldValues = SpecFieldValue::getNewInstance();
-                        $specFieldValues->setFieldValue('position', 100000);
-                    }
-                    else
-                    {
-                       $specFieldValues = SpecFieldValue::getInstanceByID((int)$key);
-                    }
-
-                    if($type == Specfield::TYPE_NUMBERS_SELECTOR)
-                    {
-                        $specFieldValues->setFieldValue('value', $value);
-                    }
-                    else
-                    {
-                        $specFieldValues->setLanguageField('value', @array_map($htmlspecialcharsUtf_8, $value), array_keys($this->specFieldConfig['languages']));
-                    }
-
-
-                    $specFieldValues->setFieldValue('specFieldID', $specField);
-                    $specFieldValues->setFieldValue('position', $position);
-
-                    $specFieldValues->save();
-
-                    $position++;
-                }
-            }
-
-            return new JSONResponse(array('status' => 'success', 'id' => $specFieldID));
+            return new JSONResponse(array('status' => 'success', 'id' => $specField->getID()));
         }
         else
         {

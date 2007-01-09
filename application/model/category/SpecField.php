@@ -185,6 +185,38 @@ class SpecField extends MultilingualObject
 		$schema->registerField(new ARField("position", ARInteger::instance(2)));
 		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
 	}
+
+	public function saveValues($values, $type, $languages) {
+        $position = 1;
+        foreach ($values as $key => $value)
+        {
+            if(preg_match('/^new/', $key))
+            {
+                $specFieldValues = SpecFieldValue::getNewInstance();
+                $specFieldValues->setFieldValue('position', 100000);
+            }
+            else
+            {
+               $specFieldValues = SpecFieldValue::getInstanceByID((int)$key);
+            }
+
+            if($type == self::TYPE_NUMBERS_SELECTOR)
+            {
+                $specFieldValues->setFieldValue('value', $value);
+            }
+            else
+            {
+                $specFieldValues->setLanguageField('value', @array_map($htmlspecialcharsUtf_8, $value), array_keys($languages));
+            }
+
+            $specFieldValues->setFieldValue('specFieldID', $this);
+            $specFieldValues->setFieldValue('position', $position);
+
+            $specFieldValues->save();
+
+            $position++;
+        }
+	}
 }
 
 ?>

@@ -148,59 +148,7 @@ class FilterController extends StoreManagementController
             $specField->load();
             $specFieldType = $specField->getFieldValue('type');
 
-            if(!empty($filters))
-            {
-                $position = 1;
-                foreach ($filters as $key => $value)
-                {
-                    if(preg_match('/^new/', $key))
-                    {
-                        $filter = Filter::getNewInstance();
-                        $filter->setFieldValue('position', 100000); // Now new filter will appear last in active list.
-                    }
-                    else
-                    {
-                        $filter = Filter::getInstanceByID((int)$key);
-                    }
-
-                    $filter->setLanguageField('name', @array_map($htmlspecialcharsUtf_8, $value['name']),  array_keys($this->filtersConfig['languages']));
-                    
-                    
-                    
-                    if($specFieldType == SpecField::TYPE_TEXT_DATE)
-                    {
-                        $filter->setFieldValue('rangeDateStart', $value['rangeDateStart']);
-                        $filter->setFieldValue('rangeDateEnd', $value['rangeDateEnd']);
-                        $filter->rangeStart->setNull();
-                        $filter->rangeEnd->setNull();
-                        $filter->specFieldValue->setNull();
-                    }
-                    else if(!in_array($specFieldType, $this->filtersConfig['selectorValueTypes']))
-                    {
-                        $filter->setFieldValue('rangeStart', $value['rangeStart']);
-                        $filter->setFieldValue('rangeEnd', $value['rangeEnd']);
-                        $filter->rangeDateStart->setNull();
-                        $filter->rangeDateEnd->setNull();
-                        $filter->specFieldValue->setNull();
-                    }
-                    else
-                    {
-                        $filter->setFieldValue('specFieldValueID', SpecFieldValue::getInstanceByID((int)$value['specFieldValueID']));
-                        $filter->rangeDateStart->setNull();
-                        $filter->rangeDateEnd->setNull();
-                        $filter->rangeStart->setNull();
-                        $filter->rangeEnd->setNull();
-                    }
-                    
-                    
-                    $filter->setFieldValue('filterGroupID', $filterGroup);
-                    $filter->setFieldValue('position', $position);
-
-                    $filter->save();
-
-                    $position++;
-                }
-            }
+            if(!empty($filters)) $filterGroup->saveFilters($filters, $specFieldType, $this->filtersConfig['languages']);
 
             return new JSONResponse(array('status' => 'success', 'id' => $filterGroupID));
         }

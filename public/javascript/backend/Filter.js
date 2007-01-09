@@ -91,7 +91,7 @@ Backend.Filter.prototype = {
      */
     recreate: function(filterJson)
     {
-        var root = ($(this.filter.rootId).tagName.toLowerCase() == 'li') ?  window.activeFiltersList.getContainer($(this.filter.rootId), 'edit') : $(this.filter.rootId);
+        var root = ($(this.filter.rootId).tagName.toLowerCase() == 'li') ?  window.activeFiltersList[this.categoryID].getContainer($(this.filter.rootId), 'edit') : $(this.filter.rootId);
         root.innerHTML = '';
         $H(this).each(function(el)
         {
@@ -115,7 +115,7 @@ Backend.Filter.prototype = {
     {
         var blankForm = $(prototypeId);
         var blankFormFilters = blankForm.getElementsByTagName("*");
-        var root = ($(this.filter.rootId).tagName.toLowerCase() == 'li') ?  window.activeFiltersList.getContainer($(this.filter.rootId), 'edit') : $(this.filter.rootId);
+        var root = ($(this.filter.rootId).tagName.toLowerCase() == 'li') ?  window.activeFiltersList[this.filter.categoryID].getContainer($(this.filter.rootId), 'edit') : $(this.filter.rootId);
 
         for(var i = 0; i < blankFormFilters.length; i++)
         {
@@ -932,7 +932,7 @@ Backend.Filter.prototype = {
         // butt =] when dealing with new form showing form action is handled by Backend.Filter::createNewAction()
         if(this.nodes.parent.tagName.toLowerCase() == 'li')
         {
-            window.activeFiltersList.toggleContainer(this.nodes.parent, 'edit');
+            window.activeFiltersList[this.categoryID].toggleContainer(this.nodes.parent, 'edit');
         }
         else
         {
@@ -1002,7 +1002,7 @@ Backend.Filter.prototype = {
         // Toggle progress won't work on new form
         try
         {
-            window.activeFiltersList.toggleProgress(self.nodes.parent);
+            window.activeFiltersList[this.categoryID].toggleProgress(self.nodes.parent);
         }
         catch (e)
         {
@@ -1049,7 +1049,7 @@ Backend.Filter.prototype = {
 
             if(this.nodes.parent.tagName.toLowerCase() == 'li')
             {
-                window.activeFiltersList.toggleContainer(this.nodes.parent, 'edit');
+                window.activeFiltersList[this.categoryID].toggleContainer(this.nodes.parent, 'edit');
             }
             else
             {
@@ -1057,7 +1057,7 @@ Backend.Filter.prototype = {
                 var div = document.createElement('span');
                 Element.addClassName(div, 'filter_title');
                 div.appendChild(document.createTextNode(this.nodes.name.value));
-                window.activeFiltersList.addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
+                window.activeFiltersList[this.categoryID].addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
                 this.hideNewFilterAction(this.categoryID);
                 this.recreate(this.filter, true);
             }
@@ -1094,7 +1094,7 @@ Backend.Filter.prototype = {
         // Toggle progress won't work on new form
         try
         {
-            window.activeFiltersList.toggleProgress(this.nodes.parent);
+            window.activeFiltersList[this.categoryID].toggleProgress(this.nodes.parent);
         }
         catch (e)
         {
@@ -1114,19 +1114,7 @@ Backend.Filter.prototype = {
         var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
         var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");
 
-        if(BrowserDetect.browser != 'Explorer')
-        {
-            Effect.Fade(form.id, {duration: 0.2});
-            Effect.BlindUp(form.id, {duration: 0.3});
-    
-            setTimeout(function() { link.style.display = 'block'; }, 0.3);
-        }
-        else
-        {
-            link.style.display = 'block';
-            form.style.display = 'none';
-            window.activeFiltersList.createSortable();
-        }
+        ActiveForm.prototype.hideNewItemForm(link, form);
     },
 
 
@@ -1180,34 +1168,12 @@ Backend.Filter.prototype = {
      */
     createNewAction: function(e, categoryID)
     {
-        if(!e)
-        {
-            e = window.event;
-            e.target = e.srcElement;
-        }
-
+        if(!e) e = window.event;
         Event.stop(e);
 
         var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
-        var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");
-
-        link.style.display = 'none';
+        var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");     
         
-        if(BrowserDetect.browser != 'Explorer')
-        {
-            Effect.BlindDown(form.id, {duration: 0.3});
-            Effect.Appear(form.id, {duration: 0.66});
-    
-                setTimeout(function() {  
-                form.style.height = 'auto'; 
-            }, 0.7);
-        }
-        else
-        {
-            form.style.display = 'block'; 
-            window.activeFiltersList.createSortable();    
-        }
-        
-        
+        ActiveForm.prototype.showNewItemForm(link, form);
     }
 }

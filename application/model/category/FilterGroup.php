@@ -90,6 +90,67 @@ class FilterGroup extends MultilingualObject
 
 		return Filter::getRecordSetArray($filter);
 	}
+
+	/**
+	 * Save group filters in database
+	 *
+	 * @param array $filters
+	 * @param int $specFieldType 
+	 * @param array $languages
+	 */
+    public function saveFilters($filters, $specFieldType, $languages) 
+    {
+        $position = 1;
+        foreach ($filters as $key => $value)
+        {
+            if(preg_match('/^new/', $key))
+            {
+                $filter = Filter::getNewInstance();
+                $filter->setFieldValue('position', 100000); // Now new filter will appear last in active list.
+            }
+            else
+            {
+                $filter = Filter::getInstanceByID((int)$key);
+            }
+
+            $filter->setLanguageField('name', @array_map($htmlspecialcharsUtf_8, $value['name']),  array_keys($languages));
+            
+            
+            
+            if($specFieldType == SpecField::TYPE_TEXT_DATE)
+            {
+                $filter->setFieldValue('rangeDateStart', $value['rangeDateStart']);
+                $filter->setFieldValue('rangeDateEnd', $value['rangeDateEnd']);
+                $filter->rangeStart->setNull();
+                $filter->rangeEnd->setNull();
+                $filter->specFieldValue->setNull();
+            }
+            else if(!in_array($specFieldType, SpecField::getSelectorValueTypes()))
+            {
+                $filter->setFieldValue('rangeStart', $value['rangeStart']);
+                $filter->setFieldValue('rangeEnd', $value['rangeEnd']);
+                $filter->rangeDateStart->setNull();
+                $filter->rangeDateEnd->setNull();
+                $filter->specFieldValue->setNull();
+            }
+            else
+            {
+                $filter->setFieldValue('specFieldValueID', SpecFieldValue::getInstanceByID((int)$value['specFieldValueID']));
+                $filter->rangeDateStart->setNull();
+                $filter->rangeDateEnd->setNull();
+                $filter->rangeStart->setNull();
+                $filter->rangeEnd->setNull();
+            }
+            
+            
+            $filter->setFieldValue('filterGroupID', $this);
+            $filter->setFieldValue('position', $position);
+
+            $filter->save();
+
+            $position++;
+        }
+    }
 }
 
 ?>

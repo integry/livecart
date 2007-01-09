@@ -108,7 +108,7 @@ Backend.SpecField.prototype = {
 	 */
 	recreate: function(specFieldJson, hash)
 	{
-	    var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ?  window.activeSpecFieldsList.getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
+	    var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ?  window.activeSpecFieldsList[this.categoryID].getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
         root.innerHTML = '';
         $H(this).each(function(el)
         {
@@ -130,8 +130,9 @@ Backend.SpecField.prototype = {
 	cloneForm: function(prototypeId, rootId)
 	{
 	    var blankForm = $(prototypeId);
+                
         var blankFormValues = blankForm.getElementsByTagName("*");
-        var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ?  window.activeSpecFieldsList.getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
+        var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ?  window.activeSpecFieldsList[this.specField.categoryID].getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
 
         for(var i = 0; i < blankFormValues.length; i++)
         {
@@ -892,7 +893,7 @@ Backend.SpecField.prototype = {
 		// butt =] when dealing with new form showing form action is handled by Backend.SpecField::createNewAction()
         if(this.nodes.parent.tagName.toLowerCase() == 'li')
         {
-            window.activeSpecFieldsList.toggleContainer(this.nodes.parent, 'edit');
+            window.activeSpecFieldsList[this.categoryID].toggleContainer(this.nodes.parent, 'edit');
         }
         else
         {
@@ -962,7 +963,7 @@ Backend.SpecField.prototype = {
 		// Toggle progress won't work on new form
 		try
 		{
-		    window.activeSpecFieldsList.toggleProgress(self.nodes.parent);
+		    window.activeSpecFieldsList[this.categoryID].toggleProgress(self.nodes.parent);
 		}
 		catch (e)
 		{
@@ -1001,6 +1002,7 @@ Backend.SpecField.prototype = {
         {
             alert("json error");
         }
+		// Toggle progress won't work on new form
 
         if(jsonResponse.status == 'success')
         {
@@ -1009,7 +1011,7 @@ Backend.SpecField.prototype = {
 
             if(this.nodes.parent.tagName.toLowerCase() == 'li')
             {
-                window.activeSpecFieldsList.toggleContainer(this.nodes.parent, 'edit');
+                window.activeSpecFieldsList[this.categoryID].toggleContainer(this.nodes.parent, 'edit');
             }
             else
             {
@@ -1017,19 +1019,17 @@ Backend.SpecField.prototype = {
                 var div = document.createElement('span');
                 Element.addClassName(div, 'specField_title');
                 div.appendChild(document.createTextNode(this.nodes.name.value));
-                window.activeSpecFieldsList.addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
+                window.activeSpecFieldsList[this.categoryID].addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
                 this.hideNewSpecFieldAction(this.categoryID);
     		    this.recreate(this.specField, true);
             }
             
-            // Reload filters
-            var tc = Backend.Category.tabControl;
-            Element.remove($(tc.getContainerId('tabFilters', tc.treeBrowser.getSelectedItemId())));
+            // Reload filters (uncomment when API is frozen)
+            // var tc = Backend.Category.tabControl;
+            // Element.remove($(tc.getContainerId('tabFilters', tc.treeBrowser.getSelectedItemId())));
         }
         else
         {
-            try
-            {
             if(jsonResponse.errors)
             {
                 for(var fieldName in jsonResponse.errors)
@@ -1047,18 +1047,11 @@ Backend.SpecField.prototype = {
                     }
                 }
             }
-            }
-            catch(e)
-            {
-                alert(e.fileName + ':' + e.lineNumber + '\n' + e.message);
-            }
         }
 
-
-		// Toggle progress won't work on new form
 		try
 		{
-		    window.activeSpecFieldsList.toggleProgress(this.nodes.parent);
+		    window.activeSpecFieldsList[this.categoryID].toggleProgress(this.nodes.parent);
 		}
 		catch (e)
 		{
@@ -1078,10 +1071,7 @@ Backend.SpecField.prototype = {
         var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
         var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");
 
-        Effect.Fade(form.id, {duration: 0.2});
-        Effect.BlindUp(form.id, {duration: 0.3});
-
-        setTimeout(function() { link.style.display = 'block'; }, 0.3);
+        ActiveForm.prototype.hideNewItemForm(link, form);
     },
 
 
@@ -1146,10 +1136,6 @@ Backend.SpecField.prototype = {
         var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
         var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");
 
-        Effect.BlindDown(form.id, {duration: 0.3});
-	    Effect.Appear(form.id, {duration: 0.66});
-
-	    link.style.display = 'none';
-	    setTimeout(function() {  form.style.height = 'auto'; }, 0.7);
+        ActiveForm.prototype.showNewItemForm(link, form);
     }
 }

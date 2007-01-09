@@ -11,8 +11,8 @@
     Backend.SpecField.prototype.links.sortField = {/literal}'{link controller=backend.specField action=sort}/'{literal};
     Backend.SpecField.prototype.links.deleteValue = {/literal}'{link controller=backend.specField action=deleteValue}/'{literal};
     Backend.SpecField.prototype.links.sortValues = {/literal}'{link controller=backend.specField action=sortValues}/'{literal};
-    
-    
+
+
     Backend.SpecField.prototype.msg = {};
     Backend.SpecField.prototype.msg.translateTo = {/literal}'{link controller=backend.specField action=sortValues}'{literal};
 
@@ -47,6 +47,7 @@
             this.rebindIcons(li);
             this.createSortable();
 
+
             this.toggleContainer(li, 'edit');
         },
         beforeDelete:   function(li)
@@ -69,7 +70,7 @@
 
         beforeSort:     function(li, order)
         {
-        
+
             return Backend.SpecField.prototype.links.sortField + "?target=specField_items_list_{/literal}{$categoryID}{literal}&" + order
         },
         afterSort:      function(li, response)
@@ -105,6 +106,6 @@
 {literal}
 <script type="text/javascript">
      $("specField_item_new_{/literal}{$categoryID}{literal}_show").onclick = function(e) { Backend.SpecField.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') }
-     window.activeSpecFieldsList = new ActiveList('specField_items_list_{/literal}{$categoryID}{literal}', specFieldListCallbacks);
+     window.activeSpecFieldsList[{/literal}{$categoryID}{literal}] = new ActiveList('specField_items_list_{/literal}{$categoryID}{literal}', specFieldListCallbacks);
 </script>
 {/literal}
