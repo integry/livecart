@@ -59,14 +59,14 @@ Backend.CategoryImage.prototype =
 				 legends = form.getElementsByTagName('legend');
 				 for (k = 0; k < legends.length; k++)
 				 {
-				 	expanderIcon = legends[k].getElementsByClassName('expandIcon');
+				 	expanderIcon = document.getElementsByClassName('expandIcon', legends[k]);
 					if (expanderIcon.length > 0)
 					{
   				    	expanderIcon[0].parentNode.removeChild(expanderIcon[0]);
 					} 
 				 }
 				 
-				 imageData = li.getElementsByClassName('catImage')[0].imageData;
+				 imageData = document.getElementsByClassName('catImage', li)[0].imageData;
 				 for (k in imageData)
 				 {
 					if (k.substr(0, 5) == 'title')
@@ -93,7 +93,7 @@ Backend.CategoryImage.prototype =
 						return false;
 					}
 				 
-				 var editCont = li.getElementsByClassName('catImageEditContainer')[0];
+				 var editCont = document.getElementsByClassName('catImageEditContainer', li)[0];
 				 
 				 while (editCont.firstChild)
 				 {
@@ -105,9 +105,7 @@ Backend.CategoryImage.prototype =
 				 
 				 var expander = new SectionExpander();				 
 				 
-				 Effect.SlideDown(editCont, {duration: 0.2});
-				 
-			   	 //window.location.href = Backend.Category.image.editUrl + '/' + recordId; 
+				 Effect.Appear(editCont, {duration: 0.2});
 			 },
 	         
 			 beforeSort:     function(li, order) 
@@ -148,7 +146,7 @@ Backend.CategoryImage.prototype =
 	
 	createEntry: function(categoryId, imageData)
 	{
-		var templ = $('tabImagesContent_' + categoryId).getElementsByClassName('catImageTemplate')[0].cloneNode(true);
+		var templ = document.getElementsByClassName('catImageTemplate', $('tabImagesContent_' + categoryId))[0].cloneNode(true);
 	  		  	
 	  	image = templ.getElementsByTagName('img')[0];
 		image.src = imageData['paths'][0];
@@ -179,7 +177,7 @@ Backend.CategoryImage.prototype =
 
 		if (imageData['title'])
 		{
-			templ.getElementsByClassName('catImageTitle')[0].innerHTML = imageData['title'];		  
+			document.getElementsByClassName('catImageTitle', templ)[0].innerHTML = imageData['title'];		  
 		}
 		
 		return templ;	  
@@ -219,7 +217,7 @@ Backend.CategoryImage.prototype =
 	upload: function(form)
 	{
 		categoryId = form.elements.namedItem('catId').value;
-		errorElement = $('catImgAdd_' + categoryId).getElementsByClassName('errorText')[0];
+		errorElement = document.getElementsByClassName('errorText', $('catImgAdd_' + categoryId))[0];
 		errorElement.style.display = 'none';		  
 
 		return false;
@@ -227,7 +225,7 @@ Backend.CategoryImage.prototype =
 	
 	postUpload: function(categoryId, result)
 	{
-		errorElement = $('catImgAdd_' + categoryId).getElementsByClassName('errorText')[0];
+		errorElement = document.getElementsByClassName('errorText', $('catImgAdd_' + categoryId))[0];
 		if (result['error'])  	
 		{
 			errorElement.innerHTML = result['error'];
@@ -246,7 +244,7 @@ Backend.CategoryImage.prototype =
 	postSave: function(categoryId, imageId, result)
 	{
 		var entry = $('catImageListItem' + categoryId + '_' + imageData['ID']);
-		errorElement = entry.getElementsByClassName('errorText')[0];
+		errorElement = document.getElementsByClassName('errorText', entry)[0];
 		if (result['error'])  	
 		{
 			errorElement.innerHTML = result['error'];

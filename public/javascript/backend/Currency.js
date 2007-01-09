@@ -163,6 +163,11 @@ Backend.Currency.prototype =
 		}  	
 	},
 	
+	showNoCurrencyMessage: function()
+	{
+		$('noCurrencies').style.display = ($('currencyList').childNodes.length > 0) ? 'none' : 'block';	 	 	  	
+	},
+	
 /************************************
 	RATES
 *************************************/

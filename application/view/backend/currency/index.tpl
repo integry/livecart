@@ -32,12 +32,11 @@
 			
 			<br />
 			
-			<ul id="currencyList" class="activeList_add_delete">
-			</ul>		
-
-			<div id="noCurrencies">No currencies found</div>
-			
-			<ul>
+			<div id="noCurrencies" class="noRecords">
+				<div>{t _no_currencies}</div>
+			</div>
+	
+			<ul style="display: none;">
 				<li id="currencyList_template" class="activeList_add_sort activeList_remove_delete disabled default">
 				<div>
 					<div class="currListContainer">
@@ -51,13 +50,15 @@
 						</span>
 						
 						<div class="currListMenu">
-							<a href="{link controller=backend.currency action=setDefault}" class="setDefault listLink">{t _set_as_default}</a>
+							<a href="{link controller=backend.currency action=setDefault}?id=" class="setDefault listLink">{t _set_as_default}</a>
 							<span class="currDefault">{t _default_currency}</span>
 						</div>
 					</div>
 				</div>			
 				</li>
 			</ul>			
+			
+			<ul id="currencyList" class="activeList_add_delete"></ul>		
 			
 		</div>
 		<div id="tabRatesContent"></div>
@@ -70,9 +71,10 @@
 	curr = new Backend.Currency();
 	curr.setFormUrl('{/literal}{link controller=backend.currency action=addForm}{literal}');
 	curr.setAddUrl('{/literal}{link controller=backend.currency action=add}{literal}');
-	curr.setStatusUrl('{/literal}{link controller=backend.currency action=setEnabled}{literal}');
+	curr.setStatusUrl('{/literal}{link controller=backend.currency action=setEnabled}{literal}/');
     function initCurrencyList()
     {	
+		curr.showNoCurrencyMessage();
 		new ActiveList('currencyList', {
 	         beforeEdit:     function(li) { return 'sort.php?' },
 	         beforeSort:     function(li, order) 

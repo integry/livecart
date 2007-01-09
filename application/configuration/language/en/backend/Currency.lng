@@ -4,6 +4,7 @@ _currencies=Currencies
 
 _add_currency=Add currency
 _add_curr_button=Add currency
+_no_currencies=There are no currencies added yet. You must add at least one currency.
 
 _inactive=Inactive
 _set_as_default=Set as default currency

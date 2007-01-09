@@ -85,6 +85,7 @@ class Currency extends ActiveRecord
 		if ($isDefault)
 		{
 		  	$this->isDefault->set(true);
+		  	$this->isEnabled->set(true);
 		}
 		
 		$this->position->set($position);
