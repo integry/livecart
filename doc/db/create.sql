@@ -2,10 +2,10 @@
 # Script generated with: DeZign for Databases v4.1.3                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
-# Project name:                                                          #
-# Author:                                                                #
+# Project name:          LiveCart                                        #
+# Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2007-01-08 15:19                                #
+# Created on:            2007-01-09 17:04                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -61,7 +61,8 @@ CREATE TABLE Category (
     name TEXT,
     description TEXT,
     keywords TEXT,
-    productCount INTEGER UNSIGNED DEFAULT 0,
+    activeProductCount INTEGER UNSIGNED DEFAULT 0,
+    inactiveProductCount INTEGER,
     isEnabled BOOL DEFAULT 1,
     handle VARCHAR(40),
     position INTEGER UNSIGNED DEFAULT 0,

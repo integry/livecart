@@ -2,10 +2,10 @@
 # Script generated with: DeZign for Databases v4.1.3                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
-# Project name:                                                          #
-# Author:                                                                #
+# Project name:          LiveCart                                        #
+# Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2007-01-08 15:19                                #
+# Created on:            2007-01-09 17:04                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -87,7 +87,7 @@ DROP TABLE Product;
 
 # Drop constraints #
 
-ALTER TABLE Category ALTER COLUMN productCount DROP DEFAULT;
+ALTER TABLE Category ALTER COLUMN activeProductCount DROP DEFAULT;
 
 ALTER TABLE Category ALTER COLUMN isEnabled DROP DEFAULT;
 

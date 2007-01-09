@@ -50,6 +50,7 @@ ClassLoader::import("application.model.ActiveRecordModel");
  * @link http://www.sitepoint.com/article/hierarchical-data-database/
  * @author Saulius Rupainis <saulius@integry.net>
  * @package application.model.system
+ *
  */
 class ActiveTreeNode extends ActiveRecordModel
 {

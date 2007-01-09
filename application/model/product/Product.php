@@ -60,7 +60,7 @@ class Product extends MultilingualObject
 
 			foreach ($categoryPathNodes as $categoryNode)
 			{
-				$categoryNode->productCount->set($categoryNode->productCount->get() + 1);
+				$categoryNode->productCount->set('productCount + 1');
 				$categoryNode->save();
 			}
 			parent::save();
@@ -78,13 +78,33 @@ class Product extends MultilingualObject
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
 
+	/**
+	 * Creates a new product instance
+	 *
+	 * @param Category $category
+	 */
+	public static function getNewInstance(Category $category)
+	{
+		$product = parent::getNewInstance(__CLASS__);
+		$product->category = $category;
+	}
+
+	/**
+	 * @todo implement
+	 *
+	 */
 	public function getImageArray()
 	{
 	}
 
+	/**
+	 * @todo implement
+	 *
+	 */
 	public function getImageSet()
 	{
 	}
+
 }
 
 ?>

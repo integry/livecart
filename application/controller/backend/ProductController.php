@@ -96,6 +96,14 @@ class ProductController extends StoreManagementController {
 		}
 		return $path;
 	}
+
+	public function test()
+	{
+		$product = ActiveRecordModel::getNewInstance("Product");
+		$product->category->set(ActiveTreeNode::getInstanceByID("Category", 53));
+
+		$product->save();
+	}
 }
 
 ?>

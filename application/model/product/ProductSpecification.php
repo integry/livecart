@@ -62,10 +62,18 @@ class ProductSpecification //implements IteratorAggregate
 	{
 	}
 
+	/**
+	 * Gets an array of properties assigned to a product (specification array)
+	 *
+	 */
 	public function getSpecificationDataArray()
 	{
 	}
 
+	/**
+	 * Gets a record set of properties assigned to a product (specification set)
+	 *
+	 */
 	public function getSpecificationDataSet()
 	{
 		$itemSet = ActiveRecordModel::getRecordSet("SpecificationItem", $this->getSpecificationFilter(), SpecificationItem::LOAD_REFERENCES);

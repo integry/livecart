@@ -23,6 +23,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("Category");
+
 		parent::defineSchema($className);
 
 		$schema->registerField(new ARField("name", ARArray::instance()));
@@ -30,6 +31,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$schema->registerField(new ARField("keywords", ARArray::instance()));
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
+		$schema->registerField(new ARField("activeProductCount", ARInteger::instance()));
+		$schema->registerField(new ARField("inactiveProductCount", ARInteger::instance()));
+		//$schema->registerField(new ARField("position", ARInteger::instance()));
 	}
 
 	/**
@@ -230,6 +234,21 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
 		return parent::getNewInstance(__CLASS__, $parent);
 	}
+
+	/*
+	public function save()
+	{
+		if (!$this->isModified())
+		{
+			$create = true;
+		}
+		parent::save();
+
+		$id = $this->getID();
+		$db = parent::getDBConnection();
+		$db->executeQuery();
+	}
+	*/
 }
 
 ?>
