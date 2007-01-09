@@ -104,12 +104,12 @@ class CategoryImageController extends StoreManagementController
 				
 				if (!$resizer->isValidImage())
 				{
-				  	throw new ImageException();
+				  	throw new InvalidImageException();
 				}				
 				
 				if (!$image->resizeImage($resizer))
 				{
-				  	throw new ImageException();
+				  	throw new ImageResizeException();
 				}				
 			}
 		}
@@ -123,7 +123,7 @@ class CategoryImageController extends StoreManagementController
 		}  	
 		catch (Exception $exc)
 		{
-			$error = $this->translate('_err_not_found');	  	
+			$error = $this->translate('_err_not_found ' . get_class($exc));	  	
 		}
 		
 		$response = new ActionResponse();

@@ -99,6 +99,14 @@ div.tip div {
 	margin-right: 10px;
 }
 
+div.noRecords div {
+    border: 2px solid #FF8600;
+    background: #FFDDD5;
+    display: inline;
+    width: auto;
+    padding: 5px;
+}
+
 /*************************** 
 	Layout 
 ***************************/

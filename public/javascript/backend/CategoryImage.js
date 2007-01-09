@@ -33,6 +33,9 @@ Backend.CategoryImage.prototype =
 	initActiveList: function(categoryId)
 	{
 		var id = 'catImageList_' + categoryId;
+		
+		// display message if no images are uploaded
+		this.showNoImagesMessage(categoryId);
 
 		new ActiveList(id, {
 	         
@@ -116,17 +119,31 @@ Backend.CategoryImage.prototype =
 			 },
 	         
 			 beforeDelete:   function(li)
-	         {
+	         {				 	
 				 var recordId = this.getRecordId(li).split('_')[1];	
+				 
 				 if(confirm(Backend.Category.image.delConfirmMsg)) 
 				 {
-				 	 return Backend.Category.image.deleteUrl + '/' + recordId;
+					 return Backend.Category.image.deleteUrl + '/' + recordId;
 				 }
 	         },
 	         afterEdit:      function(li, response) {  },
 	         afterSort:      function(li, response) {  },
-	         afterDelete:    function(li, response)  { Element.remove(li); }
+	         afterDelete:    function(li, response)  
+			 { 
+    	 	 	var categoryId = this.getRecordId(li).split('_')[0];
+    	 	 	
+				Element.remove(li); 
+				
+				Backend.Category.image.showNoImagesMessage(categoryId);			   	
+			 }
 	     });
+	},
+	
+	showNoImagesMessage: function(categoryId)
+	{
+		// display message if no images are uploaded
+		$('catNoImages_' + categoryId).style.display = ($('catImageList_' + categoryId).childNodes.length > 0) ? 'none' : 'block';	 	 
 	},
 	
 	createEntry: function(categoryId, imageData)
@@ -160,7 +177,10 @@ Backend.CategoryImage.prototype =
 
 	  	templ.id = 'catImageListItem' + categoryId + '_' + imageData['ID'];
 
-		templ.getElementsByClassName('catImageTitle')[0].innerHTML = imageData['title'];
+		if (imageData['title'])
+		{
+			templ.getElementsByClassName('catImageTitle')[0].innerHTML = imageData['title'];		  
+		}
 		
 		return templ;	  
 	},

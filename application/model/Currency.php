@@ -40,6 +40,23 @@ class Currency extends ActiveRecord
 		return $array;
 	}
 	
+	public static function deleteById($id)
+	{
+		// make sure the currency record exists
+		$inst = ActiveRecord::getInstanceById('Currency', $id, true);
+		
+		// make sure it's not the default currency
+		if (true != $inst->isDefault->get())			
+		{
+			ActiveRecord::deleteByID('Currency', $id);
+			return true;
+		}
+		else
+		{
+		  	return false;
+		}
+	}
+	
 	protected function insert()
 	{
 	  	// check if default currency exists

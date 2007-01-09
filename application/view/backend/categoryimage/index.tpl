@@ -62,6 +62,10 @@
 
 <ul id="catImageList_{$catId}" class="catImageList activeList_add_delete activeList_add_edit"></ul>
 
+<div id="catNoImages_{$catId}" class="noRecords">
+	<div>{t _no_images}</div>
+</div>
+
 <script type="text/javascript">
 	Backend.Category.image.initList({$catId}, {$images});
 	Backend.Category.image.setDeleteUrl('{link controller=backend.categoryImage action=delete}');	

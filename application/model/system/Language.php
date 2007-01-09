@@ -36,6 +36,37 @@ class Language extends ActiveRecordModel
 		return ActiveRecord::getInstanceByID("Language", $ID, true);
 	}
 
+	public static function deleteById($id)
+	{
+		// make sure the currency record exists
+		$inst = ActiveRecord::getInstanceById('Language', $id, true);
+		
+		// make sure it's not the default currency
+		if (true != $inst->isDefault->get())			
+		{
+			ActiveRecord::deleteByID('Language', $id);
+			return true;
+		}
+		else
+		{
+		  	return false;
+		}
+	}
+
+	public function toArray()
+	{
+	  	$array = parent::toArray();
+	  	$array['name'] = Store::getInstance()->getLocaleInstance()->info()->getLanguageName($array['ID']);
+	  	$array['originalName'] = Store::getInstance()->getLocaleInstance()->info()->getOriginalLanguageName($array['ID']);
+	  	
+		if (file_exists('image/localeflag/' . $array['ID'] . '.png'))
+		{
+		  	$array['image'] = 'image/localeflag/' . $array['ID'] . '.png';
+		}	  	
+		
+		return $array;
+	}
+
 	/**
 	 * Checks whether the language is systems default language
 	 * @return bool
@@ -63,6 +94,23 @@ class Language extends ActiveRecordModel
 	{
 	  	$this->isEnabled->set($isEnabled == 1 ? 1 : 0);
 	  	return true;
+	}
+	
+	protected function insert()
+	{
+	  	// get max position
+	  	$f = new ARSelectFilter();
+	  	$f->setOrder(new ARFieldHandle('Language', 'position'), 'DESC');
+	  	$f->setLimit(1);
+	  	$rec = ActiveRecord::getRecordSetArray('Language', $f);
+		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
+
+		// default new language state
+		$this->setAsEnabled(0);
+		$this->setAsDefault(0);
+		$this->position->set($position);	  	
+		
+		parent::insert();
 	}
 }
 

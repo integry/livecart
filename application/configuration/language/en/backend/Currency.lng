@@ -7,8 +7,9 @@ _add_curr_button=Add currency
 
 _inactive=Inactive
 _set_as_default=Set as default currency
-
 _default_currency=Default currency
+
+_confirm_delete=Are you sure you wish to delete this currency?
 
 # rates
 

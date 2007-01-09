@@ -59,8 +59,12 @@ Backend.Currency.prototype =
 			node.getElementsByClassName('listLink')[0].href += itemData.ID;
 			checkbox.checked = true;
 		}
+		else
+		{
+			checkbox.checked = false;		  
+		}
 		
-		if (0 == itemData.isDefault)
+		if (1 != itemData.isDefault)
 		{
 		  	node.removeClassName('default');		  
 		  	node.removeClassName('activeList_remove_delete');		  

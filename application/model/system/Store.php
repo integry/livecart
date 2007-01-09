@@ -211,7 +211,7 @@ class Store
 		{
 			if ($defCurrency != $currency->getID() || $includeDefaultCurrency)
 			{
-				$currArray[] = $curr->getID();
+				$currArray[] = $currency->getID();
 			}
 		}
 

@@ -43,6 +43,13 @@ class CurrencyController extends StoreManagementController
 		  	$currencies[$key] = $key . ' - ' . $currency;
 		}
 		
+		// remove already added currencies from list
+		$addedCurrencies = $this->getCurrencySet();
+		foreach ($addedCurrencies as $currency)
+		{
+			unset($currencies[$currency->getID()]);  
+		}
+
 		$response = new ActionResponse();
 		$response->setValue('currencies', $currencies);
 		return $response;
@@ -76,7 +83,7 @@ class CurrencyController extends StoreManagementController
 		}
 		catch (ARNotFoundException $e)
 		{
-			return new RawResponse(0);  	
+			return new ActionRedirectResponse('backend.currency', 'index');  
 		}
 			
 		ActiveRecord::beginTransaction();
@@ -124,10 +131,7 @@ class CurrencyController extends StoreManagementController
 		$curr->isEnabled->set((int)(bool)$this->request->getValue("status"));
 		$curr->save();
 				
-		$item = $curr->toArray();
-		$item['name'] = $this->locale->info()->getCurrencyName($item['ID']);
-
-		return new JSONResponse($item);
+		return new JSONResponse($curr->toArray());
 	}
 
 	/**
@@ -136,36 +140,16 @@ class CurrencyController extends StoreManagementController
 	 */
 	public function delete()
 	{  	
-		$id = $this->request->getValue('id');
-		
 		try
 	  	{
-			// make sure the currency record exists
-			$inst = ActiveRecord::getInstanceById('Currency', $id, true);
-			
-			$success = $id;
-			
-			// make sure it's not the default currency
-			if (true == $inst->isDefault->get())			
-			{
-				$success = false;
-			}
-			
-			// remove it
-			if ($success)
-			{
-				ActiveRecord::deleteByID('Currency', $id);
-			}
-
+			$success = Currency::deleteById($this->request->getValue('id'));
 		}
 		catch (Exception $exc)
 		{			  	
 		  	$success = false;
 		}
 		  
-		$resp = new RawResponse();
-	  	$resp->setContent($success);
-		return $resp;
+		return new RawResponse($success);
 	}
 
 	/**
@@ -174,7 +158,7 @@ class CurrencyController extends StoreManagementController
 	 */
 	public function rates()
 	{
-		$currencies = $this->getCurrencies();
+		$currencies = $this->getCurrencySet()->toArray();
 		$form = $this->buildForm($currencies);
 
 		foreach ($currencies as $currency)
@@ -196,10 +180,6 @@ class CurrencyController extends StoreManagementController
 	 */
 	public function options()
 	{
-//		$this->setConfigValue('another_test', 'a whole different value here');
-//		$this->config->save();
-//		echo $this->config->getValue('another_test');
-		
 		ClassLoader::import("framework.request.validator.Form");
 		$form = new Form($this->buildOptionsValidator());
 		$form->setValue('updateCb', $this->config->getValue('currencyAutoUpdate'));
@@ -278,27 +258,44 @@ class CurrencyController extends StoreManagementController
 		
 		return new JSONResponse(1);
 	}
+	
+	/**
+	 * Saves currency rates.
+	 * @return JSONResponse
+	 */
+	public function saveRates()
+	{		
+		$currencies = $this->getCurrencySet();
+		
+		// save rates
+		if($this->buildValidator($currencies->toArray())->isValid())
+		{ 
+			foreach($currencies as &$currency)
+			{
+				$currency->rate->set($this->request->getValue('rate_' . $currency->getID()));
+				$currency->save();
+			}
+		}
+
+		// read back from DB
+		$currencies = $this->getCurrencySet();
+		$values = array();
+				
+		foreach($currencies as &$currency)
+		{
+			$values[$currency->getID()] = $currency->rate->get();
+		}
+
+		return new JSONResponse($values);		
+	}	
 
 	private function getCurrencySet()
 	{
-		// get currency list and names
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new NotEqualsCond(new ARFieldHandle("Currency", "isDefault"), 1));
 		$filter->setOrder(new ARFieldHandle("Currency", "isEnabled"), 'DESC');
 		$filter->setOrder(new ARFieldHandle("Currency", "position"), 'ASC');
 		return ActiveRecord::getRecordSet('Currency', $filter);
-	}
-
-	private function getCurrencies()
-	{
-		$currencies = $this->getCurrencySet()->toArray();
-
-		foreach ($currencies as &$currency)
-		{
-		  	$currency['name'] = $this->locale->info()->getCurrencyName($currency['ID']);
-		}
-		
-		return $currencies;			  	
 	}
 
 	private function buildOptionsValidator()
@@ -337,36 +334,6 @@ class CurrencyController extends StoreManagementController
 	{
 		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildValidator($currencies));		
-	}
-
-	/**
-	 * Saves currency rates.
-	 * @return JSONResponse
-	 */
-	public function saveRates()
-	{		
-		$currencies = $this->getCurrencySet();
-		
-		// save rates
-		if($this->buildValidator($currencies->toArray())->isValid())
-		{ 
-			foreach($currencies as &$currency)
-			{
-				$currency->rate->set($this->request->getValue('rate_' . $currency->getID()));
-				$currency->save();
-			}
-		}
-
-		// read back from DB
-		$currencies = $this->getCurrencySet();
-		$values = array();
-				
-		foreach($currencies as &$currency)
-		{
-			$values[$currency->getID()] = $currency->rate->get();
-		}
-
-		return new JSONResponse($values);		
 	}
 }
 

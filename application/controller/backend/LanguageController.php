@@ -14,8 +14,7 @@ ClassLoader::import("library.*");
  * @role admin.site.language
  */
 class LanguageController extends StoreManagementController
-{
-	
+{	
 	const langFileExt = 'lng';
 
 	/**
@@ -212,29 +211,12 @@ class LanguageController extends StoreManagementController
 	 */
 	public function index()
 	{
-		// get all system languages
+		// get all added languages
 		$list = $this->getLanguages()->toArray();
-		$countActive = 0;
-		foreach($list as $key => $value)
-		{
-			if ($value["isEnabled"] == 1)
-			{
-				$countActive++;
-			}
-			$list[$key]['name'] = $this->locale->info()->getLanguageName($value['ID']);
-			
-			if (file_exists('image/localeflag/' . $value['ID'] . '.png'))
-			{
-			  	$list[$key]['image'] = 'image/localeflag/' . $value['ID'] . '.png';
-			}
-		}
 
 		$response = new ActionResponse();
 		$response->SetValue("language", $this->request->getValue("language"));
 		$response->SetValue("languageArray", json_encode($list));
-		$response->SetValue("count_all", count($list));
-		$response->SetValue("count_active", $countActive);
-
 		return $response;
 	}
 	
@@ -268,30 +250,15 @@ class LanguageController extends StoreManagementController
 		
 		try
 	  	{
-			// make sure the language record exists
-			$inst = Language::getInstanceById($langId);
-			
+			Language::deleteById($langId);			
 			$success = $langId;
-			
-			// make sure it's not the default language
-			if (true == $inst->isDefault->get())
-				$success = false;
-			
-			// remove it
-			if ($success)
-			{
-				ActiveRecord::deleteByID('Language', $langId);
-			}
-
 		}
 		catch (Exception $exc)
 		{			  	
 		  	$success = false;
 		}
 		  
-		$resp = new RawResponse();
-	  	$resp->setContent($success);
-		return $resp;
+		return new RawResponse($success);
 	}
 
 	/**
@@ -354,10 +321,7 @@ class LanguageController extends StoreManagementController
 		$lang->setAsEnabled($this->request->getValue("status"));
 		$lang->save();
 		
-		$item = $lang->toArray();
-		$item['name'] = $this->locale->info()->getLanguageName($item['ID']);
-		
-		return new JSONResponse($item);
+		return new JSONResponse($lang->toArray());
 	}
 
 	/**
@@ -366,33 +330,11 @@ class LanguageController extends StoreManagementController
 	 */
 	public function add()
 	{
-		if ($this->request->isValueSet("id"))
-		{
-			$id = $this->request->getValue("id");
+		$lang = ActiveRecord::getNewInstance('Language');
+		$lang->setID($this->request->getValue("id"));
+		$lang->save(ActiveRecord::PERFORM_INSERT);
 
-			$lang = ActiveRecord::getNewInstance('Language');
-			$lang->setID($id);
-			
-		  	// get max position
-		  	$f = new ARSelectFilter();
-		  	$f->setOrder(new ARFieldHandle('Language', 'position'), 'DESC');
-		  	$f->setLimit(1);
-		  	$rec = ActiveRecord::getRecordSetArray('Language', $f);
-			$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;
-	
-			// default new language state
-			$lang->setAsEnabled(0);
-			$lang->setAsDefault(0);
-			$lang->position->set($position);
-
-			$lang->save(ActiveRecord::PERFORM_INSERT);
-
-			$response = new ActionResponse();
-			$item = $lang->toArray();
-			$item['name'] = $this->locale->info()->getLanguageName($item['ID']);
-			
-			return new JSONResponse($item);
-		}
+		return new JSONResponse($lang->toArray());
 	}
 
 	/**
