@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
 	<link rel="stylesheet"	type="text/css" href="../templates/style.css"/>
-	<title>no title</title>
+	<title>currencies</title>
 </head>
 <body bgcolor="#ffffff">
 
@@ -24,20 +24,18 @@
 		<li><a href="#delete">Delete Currency</a></li>				
 	</ul>
 	
-	<br/>
-
 	<a name="add" />
 	<h3>Add Currency</h3>
-	<p>To add a new currency simply click <i>Add currency</i> and choose a currency from the pulldown menu followed by (the) <strong>ADD</strong> button.</p>
+	<p>To add a new currency simply click <strong>Add currency</strong> and choose a currency from the pulldown menu followed by (the) <strong>ADD</strong> button.</p>
 
 	<a name="set_default" />
 	<h3>Set the Default Currency</h3>
-	<p>The default currency is used as a main currency of your system, that is... For instance, all the other currency rates are calculated in respect with the default currency. To change the default currency click the <i>Set as default</i> link under the currency name.</p>
+	<p>The default currency is used as a main currency of your system, that is... For instance, all the other currency rates are calculated in respect with the default currency. To change the default currency click the <strong>Set as default</strong> link under the <i>currency name</i>.</p>
 	<img src="pics/set_default_currency.bmp">
 
 	<a name="adjust" />
 	<h3>Adjust Rates</h3>
-	<p>To adjust rates of your (active) currencies click on the Adjust Rates tab to proceed to <a href="#tab_adjust_rates">manual rates setting</a>.</p>
+	<p>To adjust rates of your (active) currencies click on the <strong>Adjust Rates</strong> tab to proceed to <a href="#tab_adjust_rates">manual rates setting</a>.</p>
 
 	<a name="adjust_automaticaly" />
 	<h3>Automaticaly Adjust Rates</h3>
@@ -45,7 +43,7 @@
 
 	<a name="enable_disable" />
 	<h3>Enable or Disable Currencies</h3>
-	<p>All the currencies are disabled by default, to enable a currency click it's checkbox by the currency name. Clear the mark to set it inactive.</p>
+	<p>All the currencies are disabled by default, to enable a currency click it's <strong>checkbox</strong> by the <i>currency name</i>. Clear the mark to set it inactive.</p>
 
 	<a name="sort" />
 	<h3>Sort Currencies</h3>
@@ -54,12 +52,13 @@
 
 	<a name="delete" />
 	<h3>Delete</h3>
-	<p>To delete a currency, move your mouse over the language and click "delete" icon on the left.</p>
+	<p>To delete a currency, move your mouse over the currency and click "delete" icon on the left.</p>
+	<p>To delete a currency, move your mouse over the currency and click <strong>delete</strong> icon on the left.</p>
 	<img src="pics/delete.bmp">
 	
 	<a name="tab_adjust_rates" />
 	<h3>Tab -> Adjust Rates</h3>
-	<p>To set rates simply enter currency's value in the appropriate field. For instance, if one Spanish Peseta is worth 1.223 Euros, enter this value and click Save to set the rates. </p>
+	<p>To set rates simply enter currency's value in the appropriate field. For instance, if one Spanish Peseta is worth 1.223 Euros, enter this value and click <strong>Save</strong> to set the rates. </p>
 	<img src="pics/adjust_rates.bmp">
 	<p class="note">Note: rates have to be calculated in relation to the default currency.</p>
 	<p>See <a href="#tab_options"> Automatic Adjust</a> for keeping your rates up-to-date.</p>
@@ -75,7 +74,7 @@
 	</p>
 
 	<h3>Reference</h3>
-	<p><a href="../languages/language%20translation/page.html">Manage translations</a></p>
+	<p><a href="../languages/language%20translation/language translation.html">Manage translations</a></p>
 
 </body>
 </html>

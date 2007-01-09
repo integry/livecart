@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
 	<link rel="stylesheet"	type="text/css" href="../../templates/style.css"/>
-	<title>no title</title>
+	<title>languages</title>
 </head>
 <body bgcolor="#ffffff">
 
@@ -12,7 +12,7 @@
 
 	<h2>Manage Languages</h2>
 
-	<p>LiveCart supports multiple languages for the same system, which enables you to adjust your shop for international usage. You can translate both interface information (menus, captions, instructions, etc.), as well as most of the data, which is stored in the system, like product descriptions, category names and others. This may seem overwhelming at first but as you will see there are a couple of handy tools to help you deal with interface translations (see Live Translation).</p>
+	<p>LiveCart supports multiple languages for the same system, which enables you to adjust your shop for international usage. You can translate both interface information (menus, captions, instructions, etc.), as well as most of the data, which is stored in the system, like product descriptions, category names and others. This may seem overwhelming at first but as you will see there are a couple of handy tools to help you deal with interface translations (see <a href="../language%20translation/language translation.html#directly from user interface">Live Translation</a>).</p>
 	
 
 	<h3>Things you can DO</h3>
@@ -29,16 +29,16 @@
 	<a name="change working" />
 	<h3>Change working (interface) language</h3>	
 
-	<p>To change the working (interface) language, click Language link in the LiveCart's main window's upper right corner and choose a language from the list displayed.</p>
+	<p>To change the working (interface) language, click <strong>Language</strong> link in the LiveCart's main window's upper right corner and choose a language from the list displayed.</p>
 
 	<a name="add" />
 	<h3>Add new language</h3>	
-	<p>Adding a language is a one step task. Click Add New Language and choose one from the language pulldown menu. Click ADD and the language will appear below automatically.</p>	
-	<p>To add a language click on Add New Language below Manage Languages heading and select a language, followed by the Add button.</p>
+	<p>Adding a language is a one step task. Click <strong>Add New Language</strong> and choose one from the language pulldown menu. Click <strong>ADD</strong> and the language will appear below automatically.</p>	
+	<p>To add a language click on <strong>Add New Language</strong>/ below <i>Manage Languages</i> heading and select a language, followed by the <strong>Add</strong> button.</p>
 
 	<a name="translate" />
 	<h3>Translate</h3>	
-	<p>To translate a language proceed to the <a href="../language%20translation/page.html">Language translation</a> page. To do this hover over the language and click a "pen" icon:</p>
+	<p>To translate a language proceed to the <a href="../language%20translation/language translation.html">Language translation</a> page. To do this hover over the language and click a <strong>pen</strong> icon:</p>
 	<img src="pics/pen_icon.bmp"/>
 	<img src="pics/pen_icon_2.bmp"/>
 	<ins>probably "delete" and "edit" icons are placed a bit too close to each other</ins>
@@ -52,7 +52,7 @@
 	<a name="enable or disable" />
 	<h3>Enable or disable languages</h3>	
 	
-	<p>All the newly added languages are inactive by default. You might want to keep a language inactive while its translation is being carried out. To activate a language mark a box on the left of the flag icon.
+	<p>All the newly added languages are inactive by default. You might want to keep a language inactive while its translation is being carried out. To activate a language mark a box on the left of the <i>flag</i> icon.
 	To disable a language simply uncheck the box by the language you want to suspend.</p>
 
 	<img src="pics/enable.bmp"/>
@@ -66,7 +66,7 @@
 	The default language serves two main purposes:
 	<ul>
 		<li>It is the (default) language your site visitors see when first <ins>(second time different language?)</ins> visiting the site</li>
-		<ins>(maybe better smth. like): </ins>All the frontend content is displayed in default language
+		<p><ins>(maybe better smth. like): </ins>All the frontend content is displayed in default language</p>
 		<li> Any translations that are missing for any other language (interface, product or category information, etc.) are automatically taken from the default language</li>	
 	</ul>
 	</p>
@@ -81,13 +81,13 @@
 	<a name="remove" />
 	<h3>Remove a language</h3>	
 
-	<p>To delete a language, hover over it and click the delete icon on the left.</p>
+	<p>To delete a language, hover over it and click the <strong>delete</strong> icon on the left.</p>
 	<img src="pics/delete.bmp"/>
 
 	<p class="note">Note: if you remove a language (accidently or not), none of translations of the interface elements will be lost (for good). If you removed a language by accident, just add it again and all your translations will still be in place.</p>
 	
 	<h3>Reference</h3>
-	<a href="../language%20translation/page.html">Manage translations</a>
+	<a href="../language%20translation/language translation.html">Manage translations</a>
 	<br />
 
 	<p> ... </p>
