@@ -20,7 +20,13 @@
 	<!--[if IE 6]>
 		<link href="stylesheet/backend/BackendIE6.css" media="screen" rel="Stylesheet" type="text/css"/>
 	<![endif]-->
+	<!--[if IE 7]>
+		<link href="stylesheet/backend/BackendIE7.css" media="screen" rel="Stylesheet" type="text/css"/>
+	<![endif]-->
 	{/literal}
+
+	<script type="text/javascript" src="javascript/library/trace/dom-drag.js"></script>
+	<script type="text/javascript" src="javascript/library/trace/jsTrace.js"></script>
 
 	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
 	<script type="text/javascript" src="javascript/library/scriptaculous/scriptaculous.js"></script>
@@ -58,26 +64,25 @@
     window.dhtmlHistory.create();
 </script>
 
-<div id="log" style="position: absolute; top: 0; left: 0; z-index: 10000; background-color: white;"></div>
+<div id="log"></div>
 
-<div style="position: absolute; width: 100%; height:100%; background-color: white;">
-	<div style="float: left; width: 15px; height: 100%; background-color: #E6E6E6;"></div>
-	<div style="float: right; width: 20px; height: 100%; background-image:url(image/backend/layout/workarea_shade_vertical_wide.jpg);
-	background-position: -8px 0px; background-repeat: repeat-y;  background-color: #E6E6E6;">
-		<div style="height:110px; width: 20px; background-color: #E6E6E6;"></div>
+<div id="topShadeContainer">
+	<div id="topShadeContainerLeft"></div>
+	<div id="topShadeContainerRight" style="background-image:url(image/backend/layout/workarea_shade_vertical_wide.jpg);">
+		<div></div>
 	</div>
 </div>
 
 <div id="pageContainer">
 
-	<div id="pageHeader" style="height: 99px;">
+	<div id="pageHeader">
 
 		<div id="topAuthInfo">
 			Logged in as: <span id="headerUserName">rinalds</span> <a href="/logout">(logout)</a>
 		</div>
 
-		<div id="topBackground" style="height: 60px;">
-			<div id="topBackgroundLeft" style="width: 100%;">
+		<div id="topBackground" >
+			<div id="topBackgroundLeft" >
 
 				<div style="float: left;">
 					<div id="homeButtonWrapper">
@@ -99,7 +104,7 @@
 							{backendLangMenu}
 					</div>
 
-					<div style="float: right;">
+					<div id="topLogoImageContainer">
 					 	<a href="{link controller=backend.index action=index}">
 						 	<img src="image/backend/layout/logo_tr.png" id="topLogoImage">
 						</a>
@@ -112,7 +117,7 @@
 		</div>
 
 		<div id="pageTitleContainer">
-			<div id="pageTitle" style="float: left;">{$PAGE_TITLE}</div>
+			<div id="pageTitle">{$PAGE_TITLE}</div>
 			<div id="breadcrumb_template" class="dom_template">
 				<span id="breadcrumb_item"><a href=""></a></span>
 				<span id="breadcrumb_separator"> &gt; </span>
@@ -123,6 +128,6 @@
 
 	</div>
 
-	<div id="pageContentContainer" style="position: relative;">
+	<div id="pageContentContainer">
 
-		<div style="background-color: white; margin-left:15px; margin-right:20px; padding: 10px;" class="maxHeight h--20">
+		<div id="pageContentInnerContainer" class="maxHeight h--20"  >

@@ -15,18 +15,16 @@
 ul.activeList
 {
     list-style: none;
+    position: relative;
 }
 
-ul.activeList li
-{
-  	padding: 3px;
-}
 
 li.activeList_odd, .activeList_even
 {
     list-style: none;
-    border: 1px solid #b3d4ef;
-    margin-top: 2px;
+    margin-top: 0;
+    display: block;
+  	padding: 0;
 }
 
 /*

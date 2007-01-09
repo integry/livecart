@@ -195,17 +195,23 @@ ActiveList.prototype = {
     toggleContainer: function(li, action)
     {
         var container = this.getContainer(li ? li : false, action ? action : this.getAction(this.toggleContainer.caller));
-
-        if(container.style.display == 'none')
+        if(BrowserDetect.browser != 'Explorer')
         {
-            Effect.BlindDown(container.id, {duration: 0.5});
-            Effect.Appear(container.id, {duration: 1.0});
-            setTimeout(function() { container.style.height = 'auto'; container.style.display = 'block'}, 300);
-        }
+            if(container.style.display == 'none')
+            {
+                Effect.BlindDown(container.id, {duration: 0.5});
+                Effect.Appear(container.id, {duration: 1.0});
+                setTimeout(function() { container.style.height = 'auto'; container.style.display = 'block'}, 300);
+            }
+            else
+            {
+                Effect.BlindUp(container.id, {duration: 0.2});
+                setTimeout(function() { container.style.display = 'none'}, 40);
+            }
+        } 
         else
         {
-            Effect.BlindUp(container.id, {duration: 0.2});
-            setTimeout(function() { container.style.display = 'none'}, 40);
+            container.style.display = (container.style.display == 'none') ? 'block' : 'none';
         }
     },
 
@@ -597,7 +603,6 @@ ActiveList.prototype = {
         var self = this;
 
         this.decorateItems();
-
         Element.addClassName(this.ul, this.cssPrefix.substr(0, this.cssPrefix.length-1));
         Sortable.create(this.ul.id,
         {
@@ -816,8 +821,15 @@ ActiveList.prototype = {
 
     remove: function(li)
     {
-        Effect.SwitchOff(li, {duration: 1});
-        setTimeout(function() { Element.remove(li); }, 10000);
+        if(BrowserDetect.browser != 'Explorer')
+        {
+            Effect.SwitchOff(li, {duration: 1});
+            setTimeout(function() { Element.remove(li); }, 10000);
+        }
+        else
+        {
+            Element.remove(li);
+        }
     }
 
 }

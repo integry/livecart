@@ -1,8 +1,9 @@
-		</div>
-	
+
+        </div>
+		
 		</div>
 
-		<div id="pageFooter" style="background-color: #E6E6E6;">
+		<div id="pageFooter">
 		
 			<table id="workareaBottomShadeContainer">
 				<tr>

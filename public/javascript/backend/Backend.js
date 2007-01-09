@@ -138,71 +138,73 @@ Backend.LayoutManager.prototype =
 	 */
 	onresize: function(stop)
 	{
-
-//        return;
-
-		if (document.all)
-		{
-			document.getElementById('pageContentContainer').style.height = '0px';
-		}
-				
-		// calculate content area height
-		ph = new PopupMenuHandler();
-		w = ph.getWindowHeight();
-
-		// for IE 7 only
-		if (document.all && (document.documentElement.scrollHeight > w + 140) && BrowserDetect.version == 7)
-		{
-		  	w = document.documentElement.scrollHeight + 60;		  	
-		}
-		
-		h = w - 99 - 61 - (document.all ? 1 : 0);
-
-//        jsTrace.send(h);
-
-		cont = document.getElementById('pageContentContainer');
-
-		// IE	
-		if (document.all)
-		{
-			try {
-				if (cont.style.minHeight)
-				{
-					cont.style.minHeight = h + 'px';	
-				}
-				else
-				{
-					cont.style.height = h + 'px';				  
-				}
-			}
-			catch (e)
-			{
-				cont.style.height = h + 'px';
-				cont.style.height = '0px';				  	
-			}
-			
-			// force re-render for IE
-
-			document.getElementById('pageContainer').style.display = 'none';
-			document.getElementById('pageContainer').style.display = 'block';
-			document.getElementById('nav').style.display = 'none';
-			document.getElementById('nav').style.display = 'block';
-
-			if (!stop)
-			{
-			  	this.onresize(true);
-			}	  		  
-
-		}
-		
-		// FF, etc.
-		else
-		{
-			cont.style.minHeight = h + 'px';		  
-
-			this.collapseAll(cont);
-			this.setMaxHeight(cont);
-		}
+        if(BrowserDetect.browser == 'Explorer' && BrowserDetect.version == 7) return;
+        
+        var self = this;
+        setTimeout(function() {
+    
+    		if (document.all)
+    		{
+    			document.getElementById('pageContentContainer').style.height = '0px';
+    		}
+    				
+    		// calculate content area height
+    		ph = new PopupMenuHandler();
+    		w = ph.getWindowHeight();
+    
+    		// for IE 7 only
+    		if (document.all && (document.documentElement.scrollHeight > w + 140) && BrowserDetect.version == 7)
+    		{
+    		  	w = document.documentElement.scrollHeight + 60;		  	
+    		}
+    		
+    		h = w - 99 - 61 - (document.all ? 1 : 0);
+    
+    
+    		cont = document.getElementById('pageContentContainer');
+    
+    		// IE	
+    		if (document.all)
+    		{
+    			try {
+    				if (cont.style.minHeight)
+    				{
+    					cont.style.minHeight = h + 'px';	
+    				}
+    				else
+    				{
+    					cont.style.height = h + 'px';				  
+    				}
+    			}
+    			catch (e)
+    			{
+    				cont.style.height = h + 'px';
+    				cont.style.height = '0px';				  	
+    			}
+    			
+    			// force re-render for IE
+    
+    			document.getElementById('pageContainer').style.display = 'none';
+    			document.getElementById('pageContainer').style.display = 'block';
+    			document.getElementById('nav').style.display = 'none';
+    			document.getElementById('nav').style.display = 'block';
+    
+    			if (!stop)
+    			{
+    			  	self.onresize(true);
+    			}	  		  
+    
+    		}
+    		
+    		// FF, etc.
+    		else
+    		{
+    			cont.style.minHeight = h + 'px';		  
+    
+    			self.collapseAll(cont);
+    			self.setMaxHeight(cont);
+    		}
+        }, 10);
 	},
 
 	setMaxHeight: function(parent)

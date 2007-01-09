@@ -8,6 +8,10 @@
     width: 6em;
 }
 
+.filter_step_main p {
+    position: relative;
+}
+
 .filter_step_filters li input
 {
    margin: 0px;

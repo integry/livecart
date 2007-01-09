@@ -116,8 +116,17 @@ html, body{
 	position:relative; /* needed for footer positioning*/
 }
 
-#pageFooter {
-	position: relative;
+
+#pageContentContainer {
+    position: relative;
+    margin: 0 19px 0 15px;
+    background: white;
+	min-height: 100%; /* needed for footer positioning*/
+}
+
+
+#pageContentInnerContainer {
+    padding: 10px;
 }
 
 .maxHeight {
@@ -129,6 +138,7 @@ html, body{
 ***************************/
 #pageHeader {
   	background-color: #30a0f9;
+    height: 99px;
 }
 #headerContainer {
   	height: 55px;
@@ -141,6 +151,7 @@ html, body{
 }
 #topBackground {
 	background-image: url(../../image/backend/layout/top_bg.jpg);
+    height: 60px;
 	width: 100%;
 	background-repeat: repeat-x;
 }
@@ -148,6 +159,7 @@ html, body{
 	background-image:url(../../image/backend/layout/top_bg_left.jpg);
 	height: 61px;
 	background-repeat: no-repeat;
+    width: 100%;
 }
 #topLogoContainer {
 	float: right;
@@ -156,6 +168,10 @@ html, body{
 	position: relative;
 	z-index: 1;
 }
+#topLogoImageContainer {
+    float: right;
+}
+
 #topLogoImage {
   	margin-right: 10px;
   	margin-top: -5px;
@@ -214,6 +230,11 @@ html, body{
 }
 #footerStretch {
   	background-image:url(../../image/backend/layout/footer_stretch.png);
+}
+
+#pageFooter {
+	position: relative;
+    background-color: #E6E6E6;
 }
 
 /*************************** 
@@ -459,6 +480,36 @@ html, body{
   	width: 100%;
 }
 
+#topShadeContainer {
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    background-color: white;
+}
+
+#topShadeContainerLeft {
+    float: left; 
+    width: 15px; 
+    height: 100%; 
+    background-color: #E6E6E6;
+}
+
+#topShadeContainerRight {
+    float: right; 
+    width: 20px; 
+    height: 100%; 
+    background-image:url(image/backend/layout/workarea_shade_vertical_wide.jpg);
+	background-position: -8px 0px; 
+    background-repeat: repeat-y;  
+    background-color: #E6E6E6;
+}
+
+#topShadeContainerRight div {
+    height:110px; 
+    width: 20px; 
+    background-color: #E6E6E6;
+}
+
 /*************************** 
 	Work area content 
 ***************************/
@@ -473,6 +524,7 @@ html, body{
 #pageTitle {
   	font-weight: bold;
 	padding-left: 20px;
+    float: left;
 }
 #titleHelpButton {
 	position: relative;
@@ -816,3 +868,15 @@ fieldset.group p
 .transMode:hover {
   	color: red;
 }
+
+/**************************
+ * Debuging
+ *************************/
+#log { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    z-index: 10000; 
+    background-color: white;
+} 
+
