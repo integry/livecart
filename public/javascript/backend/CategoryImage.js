@@ -178,9 +178,16 @@ Backend.CategoryImage.prototype =
 	
 	updateEntry: function(categoryId, imageData, highLight)
 	{
+	  	// force image reload
+	  	var timeStamp = new Date().getTime();
+		for(k = 0; k < imageData['paths'].length; k++)
+	  	{
+			imageData['paths'][k] += '?' + timeStamp;
+		}
+
 		var templ = this.createEntry(categoryId, imageData);
 		var entry = $('catImageListItem' + categoryId + '_' + imageData['ID']);
-	  	
+	  	  	
 	  	entry.parentNode.replaceChild(templ, entry);
 	  	
 	  	if (highLight)

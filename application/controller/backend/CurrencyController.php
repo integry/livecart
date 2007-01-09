@@ -22,13 +22,7 @@ class CurrencyController extends StoreManagementController
 		$filter = new ARSelectFilter();
 		$filter->setOrder(new ARFieldHandle('Currency', 'position'), 'ASC');
 
-		$currSet = ActiveRecord::getRecordSet("Currency", $filter, true);
-
-		$curr = $currSet->toArray();
-		foreach($curr as $key => $value)
-		{
-			$curr[$key]['name'] = $this->locale->info()->getCurrencyName($value["ID"]);
-		}		
+		$curr = ActiveRecord::getRecordSet("Currency", $filter, true)->toArray();
 
 		$response = new ActionResponse();
 		$response->setValue("currencies", json_encode($curr));
@@ -56,47 +50,18 @@ class CurrencyController extends StoreManagementController
 
 	public function add()
 	{
-		$id = $this->request->getValue('id');
-		
-	  	// check if the currency hasn't been added already
-		$filter = new ARSelectFilter();
-		$filter->setCondition(new EqualsCond(new ARFieldHandle('Currency', 'ID'), $id));
-		$r = ActiveRecord::getRecordSet('Currency', $filter);
-		if ($r->getTotalRecordCount() > 0)
+		try
 		{
-			return new RawResponse(0);  	
-		}
+			$newCurrency = ActiveRecord::getNewInstance('Currency');
+		  	$newCurrency->setId($this->request->getValue('id'));
+			$newCurrency->save(ActiveRecord::PERFORM_INSERT);	  	
 	
-	  	// check if default currency exists
-		$filter = new ARSelectFilter();
-		$filter->setCondition(new EqualsCond(new ARFieldHandle('Currency', 'isDefault'), 1));
-		
-		$r = ActiveRecord::getRecordSet('Currency', $filter);
-		$isDefault = ($r->getTotalRecordCount() == 0);
-
-	  	// get max position
-		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle('Currency', 'position'), 'DESC');
-		$filter->setLimit(1);
-		
-		$r = ActiveRecord::getRecordSet('Currency', $filter);
-		$max = $r->get(0);
-		
-		$position = $max->position->get() + 1;		
-		  
-		// create new record
-		$newCurrency = ActiveRecord::getNewInstance('Currency');
-	  	$newCurrency->setId($id);
-		
-		$newCurrency->position->set($position);
-		$newCurrency->isDefault->set($isDefault);
-				
-		$newCurrency->save(ActiveRecord::PERFORM_INSERT);	  	
-		
-		$arr = $newCurrency->toArray();
-		$arr['name'] = $this->locale->info()->getCurrencyName($id);
-		
-		return new JSONResponse($arr);
+			return new JSONResponse($newCurrency->toArray());
+		}
+		catch (Exception $exc)
+		{
+			return new JSONResponse(0);		  
+		}
 	}
 
 	/**
@@ -204,7 +169,7 @@ class CurrencyController extends StoreManagementController
 	}
 
 	/**
-	 * Adjust currency rates
+	 * Currency rates form
 	 * @return ActionResponse
 	 */
 	public function rates()

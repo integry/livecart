@@ -15,11 +15,6 @@ ClassLoader::import('library.image.ImageManipulator');
  */
 class CategoryImageController extends StoreManagementController
 {
-	private $imageSizes = array(0 => array(50, 80),
-								1 => array(80, 150),
-								2 => array(300, 400),
-								);
-	
 	public function index()
 	{
 		$categoryId = $this->request->getValue('id');
@@ -27,19 +22,8 @@ class CategoryImageController extends StoreManagementController
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle('CategoryImage', 'categoryID'), $categoryId));
 		$filter->setOrder(new ARFieldHandle('CategoryImage', 'position'), 'ASC');
-				
-		$images = ActiveRecord::getRecordSet('CategoryImage', $filter);
-		$imageArray = $images->toArray();
-		
-		foreach ($images as $id => $image)
-		{
-			$imageArray[$id]['paths'] = array();
-			foreach ($this->imageSizes as $key => $value)
-		  	{
-				$imageArray[$id]['paths'][$key] = $image->getPath($key);					
-			}			
-		}
-		
+		$imageArray = ActiveRecord::getRecordSet('CategoryImage', $filter)->toArray();
+
 		$languages = array();
 		foreach ($this->store->getLanguageArray(false) as $langId)
 		{
@@ -56,7 +40,10 @@ class CategoryImageController extends StoreManagementController
 	
 	public function upload()
 	{	
-		$categoryId = $this->request->getValue('catId');	  	
+		$categoryId = $this->request->getValue('catId');
+		
+		$category = Category::getInstanceByID($categoryId);
+			  	
 		$validator = $this->buildValidator($categoryId);
 		
 		if (!$validator->isValid())
@@ -66,28 +53,9 @@ class CategoryImageController extends StoreManagementController
 		}
 		else
 		{
-		  	// get current max image position
-		  	$filter = new ARSelectFilter();
-		  	$filter->setCondition(new EqualsCond(new ARFieldHandle('CategoryImage', 'categoryID'), $categoryId));
-		  	$filter->setOrder(new ARFieldHandle('CategoryImage', 'position'), 'DESC');
-		  	$filter->setLimit(1);
-		  	$maxPosSet = ActiveRecord::getRecordSet('CategoryImage', $filter);
-			if ($maxPosSet->size() > 0)
-			{
-				$maxPos = $maxPosSet->get(0)->position->get() + 1;  	
-			}
-			else
-			{
-			  	$maxPos = 0;
-			}			  
-				
-			// process upload...
-			
 		  	ActiveRecord::beginTransaction();
-			
-			$catImage = ActiveRecord::getNewInstance('CategoryImage');
-		  	$catImage->category->set(Category::getInstanceById($categoryId));
-			$catImage->position->set($maxPos);			  								
+
+			$catImage = CategoryImage::getNewInstance($category);
 
 			$multilingualFields = array("title");
 			$catImage->setValueArrayByLang($multilingualFields, $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true), $this->request);			
@@ -96,35 +64,16 @@ class CategoryImageController extends StoreManagementController
 			
 		  	// resize image
 		  	$resizer = new ImageManipulator($_FILES['image']['tmp_name']);
+		  	$res = $catImage->resizeImage($resizer);
 		  	
-		  	$publicRoot = ClassLoader::getRealPath('public') . '/';
-			  
-			foreach ($this->imageSizes as $key => $size)
-		  	{
-				$filePath = $publicRoot . $catImage->getPath($key);
-				$res = $resizer->resize($size[0], $size[1], $filePath);
-				if (!$res)
-				{
-				  	break;
-				}
-			}
-		  	
-		  	$result = array();
-
 			if ($res)
 			{
 			  	ActiveRecord::commit();
 			  	$result = $catImage->toArray();
-			  	
-			  	$result['paths'] = array();
-				foreach ($this->imageSizes as $key => $value)
-			  	{
-					$result['paths'][$key] = $catImage->getPath($key);					
-				}
 			}
 			else
 			{
-			  	$result['error'] = $this->translate('_err_resize');
+			  	$result = array('error' => $this->translate('_err_resize'));
 				ActiveRecord::rollback();
 			}	  			  		  	
 		}
@@ -158,7 +107,7 @@ class CategoryImageController extends StoreManagementController
 				  	throw new ImageException();
 				}				
 				
-				if (!$this->resizeImage($image, $resizer))
+				if (!$image->resizeImage($resizer))
 				{
 				  	throw new ImageException();
 				}				
@@ -187,13 +136,7 @@ class CategoryImageController extends StoreManagementController
 		else
 		{
 			ActiveRecord::commit();
-
 		  	$result = $image->toArray();
-		  	$result['paths'] = array();
-			foreach ($this->imageSizes as $key => $value)
-		  	{
-				$result['paths'][$key] = $image->getPath($key);					
-			}
 		}		
 		
 		$this->setLayout('iframeJs');
@@ -208,32 +151,18 @@ class CategoryImageController extends StoreManagementController
 	 * @return RawResponse
 	 */
 	public function delete()
-	{  	
-		$id = $this->request->getValue('id');
-		
+	{  					
 		try
-	  	{
-			// make sure the record exists
-			$inst = ActiveRecord::getInstanceById('CategoryImage', $id, true);
-			
-			// delete image files
-			foreach ($this->imageSizes as $key => $value)
-		  	{
-				unlink($inst->getPath($key));					
-			}			
-			
-			$success = $id;
-			
-			ActiveRecord::deleteByID('CategoryImage', $id);
+		{
+		  	CategoryImage::deleteByID($this->request->getValue('id'));
+		  	$success = true;
 		}
-		catch (Exception $exc)
-		{			  	
-		  	$success = false;
+		catch (ARNotFoundException $exc)
+		{
+			$success = false;  
 		}
-		  		  
-		$resp = new RawResponse();
-	  	$resp->setContent($success);
-		return $resp;
+		
+		return new RawResponse($success);
 	}	
 	
 	/**
@@ -258,24 +187,7 @@ class CategoryImageController extends StoreManagementController
 	  	$resp->setContent($this->request->getValue('draggedId'));
 		return $resp;		  	
 	}	
-	
-	private function resizeImage(CategoryImage $image, $resizer)
-	{
-	  	$publicRoot = ClassLoader::getRealPath('public') . '/';
-		  
-		foreach ($this->imageSizes as $key => $size)
-	  	{
-			$filePath = $publicRoot . $image->getPath($key);
-			$res = $resizer->resize($size[0], $size[1], $filePath);
-			if (!$res)
-			{
-			  	break;
-			}
-		}
 		
-		return $res;	  
-	}
-	
 	/**
 	 * Builds a category image form validator
 	 *

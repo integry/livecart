@@ -31,6 +31,49 @@ class Currency extends ActiveRecord
 	{
 	  	return $this->isDefault->get();
 	}
+	
+	public function toArray()
+	{
+	  	$array = parent::toArray();
+		$array['name'] = Store::getInstance()->getLocaleInstance()->info()->getCurrencyName($this->getId());	  	
+		
+		return $array;
+	}
+	
+	protected function insert()
+	{
+	  	// check if default currency exists
+		$filter = new ARSelectFilter();
+		$filter->setCondition(new EqualsCond(new ARFieldHandle('Currency', 'isDefault'), 1));
+		
+		$r = ActiveRecord::getRecordSet('Currency', $filter);
+		$isDefault = ($r->getTotalRecordCount() == 0);
+
+	  	// get max position
+		$filter = new ARSelectFilter();
+		$filter->setOrder(new ARFieldHandle('Currency', 'position'), 'DESC');
+		$filter->setLimit(1);
+		
+		$r = ActiveRecord::getRecordSet('Currency', $filter);
+		if ($r->getTotalRecordCount() > 0)
+		{
+			$max = $r->get(0);			
+			$position = $max->position->get() + 1;		  		  
+		}
+		else
+		{
+		  	$position = 0;
+		}
+		
+		if ($isDefault)
+		{
+		  	$this->isDefault->set(true);
+		}
+		
+		$this->position->set($position);
+		
+		parent::insert();
+	}
 }
 
 ?>

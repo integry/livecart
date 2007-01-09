@@ -3,6 +3,10 @@
   	width: 600px;
 }
 
+.catImageList li {
+	padding: 5px;
+}
+
 .catImageTemplate img {
   	vertical-align: top;	  
 }
