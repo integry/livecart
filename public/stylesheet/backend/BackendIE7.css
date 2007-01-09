@@ -1,0 +1,9 @@
+/* Ancestor selector is needed only when runing both IE 7 and IE 6 on one machine */
+#pageContainer > #pageContentContainer {
+    min-height: expression((document.documentElement.clientHeight - 160) + "px");
+}
+
+/* Ancestor selector is needed only when runing both IE 7 and IE 6 on one machine */
+#managerContainer > #sectionContainer {
+    min-height: expression((document.documentElement.clientHeight - 260) + "px");
+}
