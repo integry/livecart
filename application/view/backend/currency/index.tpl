@@ -16,9 +16,9 @@
 
 <div id="tabContainer" class="maxHeight h--20">
 	<ul id="tabList">
-		<li id="tabManage" class="tab active"><a href="{link controller=backend.currency action=list}">Manage</a></li>
-		<li id="tabRates" class="tab inactive"><a href="{link controller=backend.currency action=rates}">Adjust Rates</a></li>
-		<li id="tabOptions" class="tab inactive"><a href="{link controller=backend.currency action=options}">Options</a></li>
+		<li id="tabManage" class="tab active"><a href="{link controller=backend.currency action=list}">{t _manage}</a></li>
+		<li id="tabRates" class="tab inactive"><a href="{link controller=backend.currency action=rates}">{t _adjust}</a></li>
+		<li id="tabOptions" class="tab inactive"><a href="{link controller=backend.currency action=options}">{t _options}</a></li>
 	</ul>
 	<div id="sectionContainer" class="maxHeight h--95">
 		<div id="tabManageContent" class="maxHeight">
