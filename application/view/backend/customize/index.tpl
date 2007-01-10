@@ -1,7 +1,7 @@
 {pageTitle}{t _live_customization}{/pageTitle}
 {includeCss file=backend/Customize.css}
 
-{include file=layout/header.tpl}
+{include file="layout/backend/header.tpl"}
 
 <table id="customizeMenu">
 	<tr>
@@ -39,4 +39,4 @@
 		</td>
 </table>
 
-{include file=layout/footer.tpl}
+{include file="layout/backend/footer.tpl"}

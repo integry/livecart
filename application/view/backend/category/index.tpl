@@ -30,7 +30,7 @@
 
 
 {pageTitle}Products and Categories{/pageTitle}
-{include file="layout/header.tpl"}
+{include file="layout/backend/header.tpl"}
 
 
 {literal}<script type="text/javascript"> window.activeSpecFieldsList = {}; window.activeFiltersList = {}; </script>{/literal}
@@ -87,4 +87,4 @@
 
 <div id="specFieldSection"></div>
 
-{include file="layout/footer.tpl"}
+{include file="layout/backend/footer.tpl"}

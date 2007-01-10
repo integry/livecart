@@ -2,12 +2,12 @@
 	{translate text=_language_definitons} (<img src="image/localeflag/{$id}.png" /> {$edit_language})
 {/pageTitle}
 
-{includeJs file=library/json.js}
-{includeJs file=backend/Language.js}
+{includeJs file="library/json.js"}
+{includeJs file="backend/Language.js"}
 
-{includeCss file=backend/Language.css}
+{includeCss file="backend/Language.css"}
 
-{include file="layout/header.tpl"}
+{include file="layout/backend/header.tpl"}
 
 {literal} 	
 <script type="text/javascript"> 
@@ -106,4 +106,4 @@
 	
 </form>
 
-{include file="layout/footer.tpl"}
+{include file="layout/backend/footer.tpl"}

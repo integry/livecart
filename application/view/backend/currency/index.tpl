@@ -8,11 +8,11 @@
 
 {includeCss file="library/TabControl.css"}
 
-{includeCss file=library/ActiveList.css}
-{includeCss file=backend/Currency.css}
+{includeCss file="library/ActiveList.css"}
+{includeCss file="backend/Currency.css"}
 
 {pageTitle}{t _currencies}{/pageTitle}
-{include file=layout/header.tpl}
+{include file="layout/backend/header.tpl"}
 
 <div id="tabContainer" class="maxHeight h--20">
 	<ul id="tabList">
@@ -99,4 +99,4 @@
 </script>
 {/literal}
 	
-{include file=layout/footer.tpl}
+{include file="layout/backend/footer.tpl"}

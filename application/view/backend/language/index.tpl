@@ -1,11 +1,11 @@
-{includeJs file=library/ActiveList.js}
-{includeJs file=library/KeyboardEvent.js}
-{includeJs file=backend/Language.js}
-{includeCss file=library/ActiveList.css}
-{includeCss file=backend/Language.css}
+{includeJs file="library/ActiveList.js"}
+{includeJs file="library/KeyboardEvent.js"}
+{includeJs file="backend/Language.js"}
+{includeCss file="library/ActiveList.css"}
+{includeCss file="backend/Language.css"}
 {pageTitle help="language"}{t _admin_languages}{/pageTitle}
 
-{include file="layout/header.tpl"}
+{include file="layout/backend/header.tpl"}
 
 <script type="text/javascript">
 	var lng = new Backend.LanguageIndex();	
@@ -70,4 +70,4 @@
 <!-- {maketext text="_statistic_languages_full" params="$count_all,$count_active"}. -->
 *}
 
-{include file="layout/footer.tpl"}
+{include file="layout/backend/footer.tpl"}
