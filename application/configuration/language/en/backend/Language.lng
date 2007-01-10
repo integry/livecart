@@ -3,6 +3,7 @@
 _languages=Languages	
 
 _index_tip=Move mouse cursor over language list to edit translations or remove language
+_add_language=Add new language
 _add_lang_button=Add
 _or=or
 _cancel=Cancel

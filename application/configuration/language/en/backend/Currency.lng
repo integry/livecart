@@ -1,5 +1,9 @@
 _currencies=Currencies
 
+_manage=Manage
+_adjust=Adjust Exchange Rates
+_options=Options
+
 # index
 
 _add_currency=Add currency
@@ -7,24 +11,24 @@ _add_curr_button=Add currency
 _no_currencies=There are no currencies added yet. You must add at least one currency.
 
 _inactive=Inactive
-_set_as_default=Set as default currency
-_default_currency=Default currency
+_set_as_default=Set as base currency
+_default_currency=Base currency
 
 _confirm_delete=Are you sure you wish to delete this currency?
 
 # rates
 
-_rate_save_conf=Currency rates were saved successfuly
+_rate_save_conf=Currency exchange rates were saved successfuly
 
-_err_empty=Please enter the currency rate
+_err_empty=Please enter the currency exchange rate
 _err_numeric=Please enter a numeric value
-_err_negative=Currency rate cannot be negative
+_err_negative=Currency exchange rate cannot be negative
 
 # options
 
 _opts_save_conf=Currency options were saved successfuly
 
-_update_auto=Update currency rates automatically using currency data feeds
+_update_auto=Update currency exchange rates automatically using currency data feeds
 _update_freq=Update frequency
 _to_update=Currencies to update
 _using=using
