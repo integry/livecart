@@ -291,10 +291,11 @@ ActiveList.prototype = {
             icon.position = tmp[4];
             icon.sibling = tmp[5];
 
-            var test = li;
-            var test2 = icon.key
-            li[icon.action].onclick = function() { self.bindAction(li, icon.action) }
-            li[icon.action + 'Container'] = document.getElementsByClassName(self.cssPrefix + icon.action + 'Container', li)[0];
+            if(icon.action != 'sort') 
+            {
+                li[icon.action].onclick = function() { self.bindAction(li, icon.action) }
+                li[icon.action + 'Container'] = document.getElementsByClassName(self.cssPrefix + icon.action + 'Container', li)[0];
+            }
         });
     },
 
@@ -367,23 +368,18 @@ ActiveList.prototype = {
      */
     decorateItems: function()
     {
-        var liArray = this.ul.getElementsByTagName("li");
 
         // This fixes some strange explorer bug/"my stypidity"
         // Basically, what is happening is thet when I push edit button (pencil)
         // on first element, everything just dissapears. All other elements
         // are fine though. To fix this I am adding an hidden first element
-
-        var k = 0;
+        var liArray = this.getChildList();
         for(var i = 0; i < liArray.length; i++)
         {
-            if(this.ul == liArray[i].parentNode && !Element.hasClassName(liArray[i], 'ignore') && !Element.hasClassName(liArray[i], 'dom_template'))
-            {
                 this.decorateLi(liArray[i]);
-                this.colorizeItem(liArray[i], k);
-                k++;
-            }
+                this.colorizeItem(liArray[i], i);
         }
+        
     },
 
     /**
@@ -398,8 +394,8 @@ ActiveList.prototype = {
         var self = this;
 
         // Bind events
-        li.onmouseover    = function() { if(!self.dragged) self.showMenu(li) }
-        li.onmouseout     = function() { if(!self.dragged) self.hideMenu(li) }
+        li.onmouseover    = function() {self.showMenu(li) }
+        li.onmouseout     = function() {self.hideMenu(li) }
 
         // KEYBOARD NAVIGATION BREAKS FORM FIELDS
 //        li.onkeydown      = function(e) { self.navigate(new KeyboardEvent(e), li) }
@@ -459,33 +455,34 @@ ActiveList.prototype = {
         icon.position = tmp[4];
         icon.sibling = tmp[5];
 
-        var iconImage = document.getElementsByClassName(this.cssPrefix + icon.action, li)[0];
-        if(!iconImage)
-        {
-            iconImage = document.createElement('img');
-            iconImage.src = icon.image;
-            iconImage.style.visibility = 'hidden';
-            Element.addClassName(iconImage, this.cssPrefix + icon.action);
-            Element.addClassName(iconImage, this.cssPrefix + 'icons_container');
-
-
-
-            // If icon is removed from this item than do not display the icon
-            if((Element.hasClassName(li, this.cssPrefix + 'remove_' + icon.action) || !Element.hasClassName(this.ul, this.cssPrefix + 'add_' + icon.action)) && !Element.hasClassName(li, this.cssPrefix + 'add_' + icon.action))
-            {
-                iconImage.style.display = 'none';
-            }
-
-            // Show icon
-            container.appendChild(iconImage);
-        }
-
-        // create shortcut
-        li[icon.action] = iconImage;
-
         // all icons except sort has onclick event handler defined by user
         if(icon.action != 'sort')
         {
+            var iconImage = document.getElementsByClassName(this.cssPrefix + icon.action, li)[0];
+            if(!iconImage)
+            {
+                iconImage = document.createElement('img');
+                iconImage.src = icon.image;
+                iconImage.style.visibility = 'hidden';
+                Element.addClassName(iconImage, this.cssPrefix + icon.action);
+                Element.addClassName(iconImage, this.cssPrefix + 'icons_container');
+    
+    
+    
+                // If icon is removed from this item than do not display the icon
+                if((Element.hasClassName(li, this.cssPrefix + 'remove_' + icon.action) || !Element.hasClassName(this.ul, this.cssPrefix + 'add_' + icon.action)) && !Element.hasClassName(li, this.cssPrefix + 'add_' + icon.action))
+                {
+                    iconImage.style.display = 'none';
+                }
+    
+                // Show icon
+                container.appendChild(iconImage);
+            }
+    
+            // create shortcut
+            li[icon.action] = iconImage;
+
+
             var self = this;
             iconImage.onclick = function() {  self.bindAction(li, icon.action) }
 
@@ -547,7 +544,7 @@ ActiveList.prototype = {
 
             var self = this;
             // display feedback
-            this.toggleProgress(li);
+            this.onProgress(li);
 
             // execute the action
             new Ajax.Request(
@@ -577,6 +574,16 @@ ActiveList.prototype = {
         li.progress.style.visibility = (li.progress.style.visibility == 'visible') ? 'hidden' : 'visible';
     },
 
+    offProgress: function(li)
+    {
+        li.progress.style.visibility = 'hidden';
+    },
+
+    onProgress: function(li)
+    {
+        li.progress.style.visibility = 'visible';
+    },
+
     /**
      * Call a user defined callback function
      *
@@ -590,7 +597,7 @@ ActiveList.prototype = {
     {
         this._currentLi = li;
         this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
-        this.toggleProgress(li);
+        this.offProgress(li);
     },
 
     /**
@@ -604,17 +611,25 @@ ActiveList.prototype = {
 
         this.decorateItems();
         Element.addClassName(this.ul, this.cssPrefix.substr(0, this.cssPrefix.length-1));
-        Sortable.create(this.ul.id,
+        
+        if(Element.hasClassName(this.ul, this.cssPrefix + 'add_sort'))
         {
-            dropOnEmpty:   true,
-            constraint:    false,
-            handle:        this.cssPrefix + 'sort',
-
-                           // the object context mystically dissapears when onComplete function is called,
-                           // so the only way I could make it work is this
-            onChange:      function(elementObj) { self.dragged = elementObj; },
-            onUpdate:      function() { self.saveSortOrder(); }
-        });
+            Sortable.create(this.ul.id,
+            {
+                dropOnEmpty:   true,
+                constraint:    false,
+                constraint:    'vertical',
+                handle:        this.cssPrefix + 'sort',
+                               // the object context mystically dissapears when onComplete function is called,
+                               // so the only way I could make it work is this
+                onChange:      function(elementObj) { 
+                    self.dragged = elementObj; 
+                },
+                onUpdate:      function() { self.saveSortOrder(); }
+            });
+        }
+        
+        
     },
 
     /**
@@ -664,7 +679,7 @@ ActiveList.prototype = {
         if(order)
         {
             // display feedback
-            this.toggleProgress(this.dragged);
+            this.onProgress(this.dragged);
 
             // execute the action
             this._currentLi = this.dragged;
@@ -696,11 +711,12 @@ ActiveList.prototype = {
     {
         this.rebindIcons(this.dragged);
         this.hideMenu(this.dragged);
+        
 
         this._currentLi = this.dragged;
         var url = this.callbacks.afterSort.call(this, this.dragged, item);
         this.colorizeItems();
-        this.toggleProgress(this.dragged);
+        this.offProgress(this.dragged);
 
         this.dragged = false;
     },
@@ -724,8 +740,6 @@ ActiveList.prototype = {
         switch(keyboard.getKey())
         {
             case keyboard.KEY_UP: // sort/navigate up
-//                this.getPrevSibling(li).focus();
-
                 if (keyboard.isShift())
                 {
                     prev = this.getPrevSibling(li);
@@ -830,6 +844,33 @@ ActiveList.prototype = {
         {
             Element.remove(li);
         }
+    },
+    
+    collapseAll: function()
+    {
+        var childList = this.getChildList();
+        
+        for(var i = 0; i < childList.length; i++)
+        {
+            childList[i].style.display = 'none';
+        }
+    },
+    
+    getChildList: function()
+    {
+        
+        var liArray = this.ul.getElementsByTagName("li");
+        var childList = [];
+        
+        for(var i = 0; i < liArray.length; i++)
+        {
+            if(this.ul == liArray[i].parentNode && !Element.hasClassName(liArray[i], 'ignore') && !Element.hasClassName(liArray[i], 'dom_template'))
+            {
+                childList[childList.length] = liArray[i];
+            }
+        }
+        
+        return childList;
     }
 
 }
