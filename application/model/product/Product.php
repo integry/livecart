@@ -50,6 +50,7 @@ class Product extends MultilingualObject
 	 * Saves product data and increases productCount in related categories
 	 *
 	 */
+	/*
 	public function save()
 	{
 		ActiveRecordModel::beginTransaction();
@@ -60,7 +61,7 @@ class Product extends MultilingualObject
 
 			foreach ($categoryPathNodes as $categoryNode)
 			{
-				$categoryNode->productCount->set('productCount + 1');
+				$categoryNode->activeProductCount->set('activeProductCount + 1');
 				$categoryNode->save();
 			}
 			parent::save();
@@ -69,6 +70,104 @@ class Product extends MultilingualObject
 		catch (Exception $e)
 		{
 			ActiveRecord::rollback();
+			throw $e;
+		}
+	}
+	*/
+
+	/**
+	 * Inserts new product record to a database
+	 *
+	 */
+	protected function insert()
+	{
+		ActiveRecordModel::beginTransaction();
+		try
+		{
+			parent::insert();
+
+			$category = $this->category->get();
+			$categoryPathNodes = $category->getPathNodeSet(Category::INCLUDE_ROOT_NODE);
+
+			foreach ($categoryPathNodes as $categoryNode)
+			{
+				$categoryNode->totalProductCount->set('totalProductCount + 1');
+				if ($product->isEnabled->get() == true)
+				{
+					$categoryNode->activeProductCount->set('activeProductCount + 1');
+				}
+				$categoryNode->save();
+			}
+			ActiveRecordModel::commit();
+		}
+		catch (Exception $e)
+		{
+			ActiveRecordModel::rollback();
+			throw $e;
+		}
+	}
+
+	/**
+	 * Updates product record
+	 *
+	 */
+	protected function update()
+	{
+		ActiveRecordModel::beginTransaction();
+		try
+		{
+			parent::update();
+			if ($this->isEnabled->isModified())
+			{
+				if ($this->isEnabled->get() == true)
+				{
+					$productCountStr = 'activeProductCount + 1';
+				}
+				else
+				{
+					$productCountStr = 'activeProductCount - 1';
+				}
+
+				$category = $this->category->get();
+				$categoryPathNodes = $category->getPathNodeSet(Category::INCLUDE_ROOT_NODE);
+
+				foreach ($categoryPathNodes as $categoryNode)
+				{
+					$categoryNode->activeProductCount->set($productCountStr);
+					$categoryNode->save();
+				}
+			}
+			ActiveRecordModel::commit();
+		}
+		catch (Exception $e)
+		{
+			ActiveRecord::rollback();
+			throw $e;
+		}
+	}
+
+	/**
+	 * Removes a product from a database
+	 *
+	 * @param int $recordID
+	 * @return bool
+	 * @throws Exception
+	 */
+	public static function deleteByID($recordID)
+	{
+		ActiveRecordModel::beginTransaction();
+		try
+		{
+			$product = Product::getInstanceByID($recordID, Product::LOAD_DATA);
+			$category = $product->category->get();
+
+			parent::deleteByID(__CLASS__, $recordID);
+			ActiveRecordModel::commit();
+			return true;
+		}
+		catch (Exception $e)
+		{
+			ActiveRecordModel::rollback();
 			throw $e;
 		}
 	}

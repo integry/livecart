@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2007-01-09 17:04                                #
+# Created on:            2007-01-10 17:04                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -88,6 +88,8 @@ DROP TABLE Product;
 # Drop constraints #
 
 ALTER TABLE Category ALTER COLUMN activeProductCount DROP DEFAULT;
+
+ALTER TABLE Category ALTER COLUMN totalProductCount DROP DEFAULT;
 
 ALTER TABLE Category ALTER COLUMN isEnabled DROP DEFAULT;
 

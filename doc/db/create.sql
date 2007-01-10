@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2007-01-09 17:04                                #
+# Created on:            2007-01-10 17:04                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -62,7 +62,7 @@ CREATE TABLE Category (
     description TEXT,
     keywords TEXT,
     activeProductCount INTEGER UNSIGNED DEFAULT 0,
-    inactiveProductCount INTEGER,
+    totalProductCount INTEGER DEFAULT 0,
     isEnabled BOOL DEFAULT 1,
     handle VARCHAR(40),
     position INTEGER UNSIGNED DEFAULT 0,

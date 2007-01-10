@@ -32,7 +32,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("activeProductCount", ARInteger::instance()));
-		// $schema->registerField(new ARField("inactiveProductCount", ARInteger::instance()));
+		$schema->registerField(new ARField("totalProductCount", ARInteger::instance()));
 		//$schema->registerField(new ARField("position", ARInteger::instance()));
 	}
 
@@ -58,6 +58,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return SpecField::getRecordSetArray($this->getSpecificationFilter($includeParentFields), $loadReferencedRecords);
 	}
 
+	/**
+	 * Crates a select filter for specification fields related to category
+	 *
+	 * @param bool $includeParentFields
+	 * @return ARSelectFilter
+	 */
 	private function getSpecificationFilter($includeParentFields)
 	{
 		$path = parent::getPathNodeSet(Category::INCLUDE_ROOT_NODE);
@@ -230,25 +236,35 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 * @param ActiveTreeNode $parent
 	 * @return Category
 	 */
-	public static function getNewInstance(ActiveTreeNode $parent)
+	public static function getNewInstance(Category $parent)
 	{
 		return parent::getNewInstance(__CLASS__, $parent);
 	}
 
-	/*
-	public function save()
+	public function isEnabled()
 	{
-		if (!$this->isModified())
+		$this->load();
+		$isEnabled = $this->isEnabled->get();
+		if ($isEnabled)
 		{
-			$create = true;
+			return true;
 		}
-		parent::save();
-
-		$id = $this->getID();
-		$db = parent::getDBConnection();
-		$db->executeQuery();
+		else
+		{
+			return false;
+		}
 	}
-	*/
+
+	protected function update()
+	{
+		return parent::update();
+	}
+
+	protected function insert()
+	{
+		return parent::insert();
+	}
+
 }
 
 ?>
