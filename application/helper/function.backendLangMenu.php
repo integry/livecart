@@ -13,7 +13,7 @@ function smarty_function_backendLangMenu($params, Smarty $smarty)
 {
   	$router = Router::getInstance();
   	$smarty->assign('returnRoute', base64_encode($router->getRequestedRoute()));
-	return $smarty->display('block/langMenu.tpl');
+	return $smarty->display('block/backend/langMenu.tpl');
 }
 
 ?>

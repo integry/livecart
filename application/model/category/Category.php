@@ -33,7 +33,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("activeProductCount", ARInteger::instance()));
 		$schema->registerField(new ARField("totalProductCount", ARInteger::instance()));
-		//$schema->registerField(new ARField("position", ARInteger::instance()));
+		$schema->registerField(new ARField("position", ARInteger::instance()));
 	}
 
 	/**
@@ -162,6 +162,17 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$this->load();
 		$productCount = ($this->rgt->get() - $this->lft->get() - 1) / 2;
 		return $productCount;
+	}
+
+	public function getSubcategorySet()
+	{
+	  	$filter = new ARSelectFilter();
+	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->getID());
+	  	$cond->addAND(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), 1));
+		$filter->setCondition($cond);
+	  	$filter->setOrder(new ARFieldHandle('Category', 'position'), 'ASC');
+	  	
+	  	return ActiveRecord::getRecordSet('Category', $filter);
 	}
 
 	/**

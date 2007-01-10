@@ -1,0 +1,71 @@
+*
+{
+  	margin: 0;
+  	padding: 0;
+}
+
+/*****************************
+	Layout
+*****************************/
+#container 
+{
+  	margin: 0 auto;
+  	width: 800px;
+}
+
+#header 
+{
+  	border: 1px solid black;
+  	padding: 20px;
+}
+
+#footer 
+{
+  	border: 1px solid black;
+  	padding: 20px;
+}
+
+#leftSide 
+{
+	float:left;
+	width:150px;
+}
+
+#rightSide 
+{
+	float:right;
+	width:150px;
+}
+
+#clearFooter {
+	clear: both;
+	height: 1px;
+}
+
+#content 
+{
+	margin:0 150px;
+	padding: 10px;
+}
+
+/*****************************
+	Boxes
+*****************************/
+div.box
+{
+  	border: 1px solid black;
+}
+
+div.box .title
+{
+  	border-bottom: 1px solid black;
+  	padding: 5px;
+  	background-color: yellow;
+  	text-align: center;
+  	font-weight: bold;
+}
+
+div.box .content
+{
+  	padding: 5px;
+}

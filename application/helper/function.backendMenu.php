@@ -43,7 +43,7 @@ function smarty_function_backendMenu($params, Smarty $smarty)
 	$smarty->assign('controller', $controller);
 	$smarty->assign('action', $action);
 	
-	return $smarty->display('block/backendMenu.tpl');	
+	return $smarty->display('block/backend/backendMenu.tpl');	
 }
 
 ?>

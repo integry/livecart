@@ -11,7 +11,7 @@ function smarty_block_tip($params, $content, $smarty, &$repeat)
 	if (!$repeat)
 	{
 		$smarty->assign('tipContent', $content);
-		return $smarty->display('block/tip.tpl');
+		return $smarty->display('block/backend/tip.tpl');
 	}
 }
 
