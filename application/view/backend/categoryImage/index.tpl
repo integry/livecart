@@ -14,7 +14,7 @@
 </ul>
 
 <div id="catImgAdd_{$catId}" class="catImageEditForm" style="display: none;">
-{form handle=$form action="controller=backend.categoryimage action=upload" method="post" onsubmit="Backend.Category.image.upload(this);" target="catImgUpload_`$catId`" method="POST" enctype="multipart/form-data"}
+{form handle=$form action="controller=backend.categoryImage action=upload" method="post" onsubmit="Backend.Category.image.upload(this);" target="catImgUpload_`$catId`" method="POST" enctype="multipart/form-data"}
 	
 	<input type="hidden" name="catId" value="{$catId}" />
 	<input type="hidden" name="imageId" value="" />
