@@ -845,12 +845,16 @@ fieldset.group p
 .tabs li
 {
     display: inline;
-    background: #eee;
     padding: 6px 15px 7px 15px ! important;
     margin: 0 2px;
     border: 1px solid #ccc;
-    border-bottom: 0px ! important;
+   /* border-bottom: 2px solid !important;*/
 }
+
+.tabs li.active {
+    /*border-bottom: 0px !important;*/
+}
+
 
 .tabs li a
 {
@@ -862,6 +866,7 @@ fieldset.group p
 {
     font-weight: bold;
 }
+
 
 .tabs li.active
 {

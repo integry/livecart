@@ -118,7 +118,7 @@ ActiveList.prototype = {
      */
     initialize: function(ul, callbacks)
     {
-        this.ul = typeof(ul) == 'string' ? $(ul) : ul;
+        this.ul = typeof(ul) == 'string' ? $(ul) : ul;     
 
         Element.addClassName(this.ul, this.ul.id);
 
@@ -195,26 +195,40 @@ ActiveList.prototype = {
     toggleContainer: function(li, action)
     {
         var container = this.getContainer(li ? li : false, action ? action : this.getAction(this.toggleContainer.caller));
+        
+        if(container.style.display == 'none') this.toggleContainerOn(container);
+        else this.toggleContainerOff(container);
+    },
+    
+    toggleContainerOn: function(container)
+    {
+        this.collapseAll();
+        
         if(BrowserDetect.browser != 'Explorer')
         {
-            if(container.style.display == 'none')
-            {
-                Effect.BlindDown(container.id, {duration: 0.5});
-                Effect.Appear(container.id, {duration: 1.0});
-                setTimeout(function() { container.style.height = 'auto'; container.style.display = 'block'}, 300);
-            }
-            else
-            {
-                Effect.BlindUp(container.id, {duration: 0.2});
-                setTimeout(function() { container.style.display = 'none'}, 40);
-            }
+            Effect.BlindDown(container.id, { duration: 0.5 });
+            Effect.Appear(container.id, { duration: 1.0 });
+            setTimeout(function() { container.style.height = 'auto'; container.style.display = 'block'}, 300);
         } 
         else
         {
-            container.style.display = (container.style.display == 'none') ? 'block' : 'none';
+            container.style.display = 'block';
         }
     },
 
+    toggleContainerOff: function(container)
+    {
+        if(BrowserDetect.browser != 'Explorer')
+        {
+            Effect.BlindUp(container.id, {duration: 0.2});
+            setTimeout(function() { container.style.display = 'none'}, 40);
+        } 
+        else
+        {
+            container.style.display = 'none';
+        }
+    },
+    
     /**
      * Check if item container is empty
      *
@@ -538,6 +552,7 @@ ActiveList.prototype = {
         if(action != 'sort')
         {
             this._currentLi = li;
+            
             var url = this.callbacks[('before-'+action).camelize()].call(this, li);
 
             if(!url) return false;
@@ -617,12 +632,10 @@ ActiveList.prototype = {
             Sortable.create(this.ul.id,
             {
                 dropOnEmpty:   true,
-                constraint:    false,
-                constraint:    'vertical',
-                handle:        this.cssPrefix + 'sort',
                                // the object context mystically dissapears when onComplete function is called,
                                // so the only way I could make it work is this
-                onChange:      function(elementObj) { 
+                onChange:      function(elementObj) 
+                { 
                     self.dragged = elementObj; 
                 },
                 onUpdate:      function() { self.saveSortOrder(); }
@@ -683,7 +696,7 @@ ActiveList.prototype = {
 
             // execute the action
             this._currentLi = this.dragged;
-
+          
             var url = this.callbacks.beforeSort.call(this, this.dragged, order);
             new Ajax.Request(url,
             {
@@ -751,7 +764,6 @@ ActiveList.prototype = {
             break;
 
             case keyboard.KEY_DOWN: // sort/navigate down
-//                this.getNextSibling(li).focus();
 
                 if (keyboard.isShift())
                 {
@@ -763,7 +775,6 @@ ActiveList.prototype = {
             break;
 
             case keyboard.KEY_DEL: // delete
-//                this.getPrevSibling(li).focus();
                 if(this.icons['delete']) this.bindAction(li, 'delete');
             break;
 
@@ -771,8 +782,6 @@ ActiveList.prototype = {
                 li.blur();
             break;
         }
-
-//        keyboard.deselectText();
     },
 
     /**
@@ -790,7 +799,6 @@ ActiveList.prototype = {
         this.dragged = li;
 
         li.parentNode.insertBefore(this.dragged, beforeNode);
-//        this.dragged.focus();
 
         this.sortTimerStart = (new Date()).getTime();
         setTimeout(function(e)
@@ -848,11 +856,14 @@ ActiveList.prototype = {
     
     collapseAll: function()
     {
-        var childList = this.getChildList();
+        var containers = document.getElementsByClassName('activeList_container', this.ul);
         
-        for(var i = 0; i < childList.length; i++)
+        for(var i = 0; i < containers.length; i++)
         {
-            childList[i].style.display = 'none';
+            if(containers[i].parentNode.parentNode == this.ul && 'block' == containers[i].style.display) 
+            {  
+                this.toggleContainerOff(containers[i]);
+            }
         }
     },
     
