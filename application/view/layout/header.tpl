@@ -25,6 +25,7 @@
 	<![endif]-->
 	{/literal}
 
+    <script language="javascript" type="text/javascript"   src="firebug/firebug.js"></script>
 
 	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
 	<script type="text/javascript" src="javascript/library/scriptaculous/scriptaculous.js"></script>

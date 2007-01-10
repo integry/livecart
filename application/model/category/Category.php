@@ -32,7 +32,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("activeProductCount", ARInteger::instance()));
-		$schema->registerField(new ARField("inactiveProductCount", ARInteger::instance()));
+		// $schema->registerField(new ARField("inactiveProductCount", ARInteger::instance()));
 		//$schema->registerField(new ARField("position", ARInteger::instance()));
 	}
 
