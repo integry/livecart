@@ -55,8 +55,8 @@
 	<a name="directly from user interface" />
 	<h3>Translate a word or sentence directly from user interface</h3>	
 		
-	<p>Live Translation is a LiveCart tool which allows you to translate a word or sentence directly from the page you see it (in). To use Live Translation, you have to turn it on the Customization Mode... <ins>(not completed yet)</ins></p>
-	<p>Live Translation is a real-time translation tool which enables you to translate any element of the interface  directly in the page you see it in. To do that you have to turn on Live Translation in the ... mode. Any interface phrase can be translated simply by clicking <strong>Live Translation</strong> once you hover over an element and a reference pops-up. We highly recommend to use Live Translation when you are not sure about the keyword's exact place in the interface.</p>
+	<p><ins>Live Translation is a LiveCart tool which allows you to translate a word or sentence directly from the page you see it (in). To use Live Translation, you have to turn it on the Customization Mode... <ins>(not completed yet)</ins></p>
+	<p><strong>Live Translation</strong> is a real-time translation tool which enables you to translate any element of the interface  directly in the page you see it in. To do that you have to turn on Live Translation in the ... mode. Any interface phrase can be translated simply by clicking <strong>Live Translation</strong> once you hover over an element and a reference pops-up. We highly recommend to use <strong>Live Translation</strong> when you are not sure about the keyword's exact place in the interface.</ins></p>
 	<p>Reference: see <a href="#interface elements">Translate Interface Elements</a></p>
 	
 	<a name="product info" />

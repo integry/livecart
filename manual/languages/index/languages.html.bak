@@ -40,8 +40,7 @@
 	<h3>Translate</h3>	
 	<p>To translate a language proceed to the <a href="../language%20translation/language translation.html">Language translation</a> page. To do this hover over the language and click a <strong>pen</strong> icon:</p>
 	<img src="pics/pen_icon.bmp"/>
-	<img src="pics/pen_icon_2.bmp"/>
-	<ins>probably "delete" and "edit" icons are placed a bit too close to each other</ins>
+
 	<a name="reorder" />
 	<h3>Reorder Languages</h3>	
 
@@ -57,7 +56,7 @@
 
 	<img src="pics/enable.bmp"/>
 	
-	<p class="note">Also note that the disabled languages will still be active <ins>(maybe not "active" but <i>available</i> for making translations, because you can stranslate both active and inactive languages)</ins> in backend, so you could prepare all the necessary translations before displaying any content in these languages before the translations are completed. When you're done with the translations just activate the language to make it available in site frontend as well.</p>	
+	<p class="note">Also note that the disabled languages will still be available for making translations in backend, so you could prepare all the necessary translations before displaying any content in these languages (before the translations are completed). When you're done with the translations just activate the language to make it available in the frontend as well.</p>	
 
 	<a name="change default" />
 	<h3>Change default language</h3>	
@@ -65,16 +64,14 @@
 	<p>
 	The default language serves two main purposes:
 	<ul>
-		<li>It is the (default) language your site visitors see when first <ins>(second time different language?)</ins> visiting the site</li>
-		<p><ins>(maybe better smth. like): </ins>All the frontend content is displayed in default language</p>
+		<li>It is the (default) language your site visitors see when first visiting the site</li>
+		<p><ins>All the frontend content is displayed in default language</ins></p>
 		<li> Any translations that are missing for any other language (interface, product or category information, etc.) are automatically taken from the default language</li>	
 	</ul>
 	</p>
 
 	<p>To change the default language click the <strong>Set as default</strong> link under the language name.</p>
 
-	<img src="pics/set_default_red.bmp"/>
-	<img src="pics/set_default_green.bmp"/>
 	<img src="pics/set_default_blue.bmp"/>
 	<ins>blue rect. has a "drop shadow"</ins>
 	
@@ -84,7 +81,7 @@
 	<p>To delete a language, hover over it and click the <strong>delete</strong> icon on the left.</p>
 	<img src="pics/delete.bmp"/>
 
-	<p class="note">Note: if you remove a language (accidently or not), none of translations of the interface elements will be lost (for good). If you removed a language by accident, just add it again and all your translations will still be in place.</p>
+	<p class="note"><strong>Note</strong>: if you remove a language (accidently or not), none of translations of the interface elements will be lost (for good). If you removed a language by accident, just add it again and all your translations will still be in place.</p>
 	
 	<h3>Reference</h3>
 	<a href="../language%20translation/language translation.html">Manage translations</a>
