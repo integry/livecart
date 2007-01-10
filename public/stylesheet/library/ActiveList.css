@@ -27,6 +27,10 @@ li.activeList_odd, .activeList_even
   	padding: 0;
 }
 
+.activeList_add_sort li {
+  	cursor: move;  	
+}
+
 /*
 ul li.activeList_odd
 {

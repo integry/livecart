@@ -599,7 +599,7 @@ form p
 
 .feedback, .feedback_textarea
 {
-   position: absolute;
+   position: absolute ! important;
    vertical-align: middle;
    margin-left: 10px;
    padding-left: 20px;
