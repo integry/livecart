@@ -51,7 +51,7 @@
  * order - Serialized order
  * response - Ajax response text
  *
- * @version 1.1
+ * @version 1.2
  * @author Sergej Andrejev, Rinalds Uzkalns
  *
  */
@@ -69,7 +69,7 @@ ActiveList.prototype = {
      */
     icons: {
         'sort':     "image/silk/arrow_switch.png",
-        'edit':     "image/silk/pencil.png",
+        'edit':     "image/silk/edit.png",
         'delete':   "image/silk/cancel.png",
         'view':     "image/silk/zoom.png",
         'progress': "image/silk/additional/animated_progress_brown.gif"
@@ -107,6 +107,20 @@ ActiveList.prototype = {
      * @var int
      */
     tabIndex: 666,
+    
+    /**
+     * The alpha level of menu when it is hidden
+     * 
+     * @var double [0,1]
+     */
+    visibleMenuOpacity: 1, 
+    
+    /**
+     * The alpha level of menu when it is visible
+     * 
+     * @var double [0,1]
+     */
+    hiddenMenuOpacity: 0.2, 
 
     /**
      * Constructor
@@ -151,7 +165,9 @@ ActiveList.prototype = {
         this.createSortable();
     },
 
-
+    /**
+     * Split list by odd and even active records by adding ActiveList_odd or ActiveList_even to each element
+     */
     colorizeItems: function()
     {
         var liArray = this.ul.getElementsByTagName("li");
@@ -168,7 +184,12 @@ ActiveList.prototype = {
     },
 
 
-
+    /**
+     * Adds classes ActiveList_odd and ActiveList_even to separate odd elements from even
+     * 
+     * @param HtmlElementLi A reference to item element. Default is current item
+     * @param {Object} position Element position in ActiveList
+     */
     colorizeItem: function(li, position)
     {
         if(position % 2 == 0)
@@ -200,6 +221,11 @@ ActiveList.prototype = {
         else this.toggleContainerOff(container);
     },
     
+    /**
+     * Expand data container 
+     * 
+     * @param HTMLElementDiv container Reference to the container
+     */
     toggleContainerOn: function(container)
     {
         this.collapseAll();
@@ -217,6 +243,11 @@ ActiveList.prototype = {
         }
     },
 
+    /**
+     * Collapse data container 
+     * 
+     * @param HTMLElementDiv container Reference to the container
+     */
     toggleContainerOff: function(container)
     {
         if(BrowserDetect.browser != 'Explorer')
@@ -391,8 +422,8 @@ ActiveList.prototype = {
         var liArray = this.getChildList();
         for(var i = 0; i < liArray.length; i++)
         {
-                this.decorateLi(liArray[i]);
-                this.colorizeItem(liArray[i], i);
+            this.decorateLi(liArray[i]);
+            this.colorizeItem(liArray[i], i);
         }
         
     },
@@ -409,7 +440,7 @@ ActiveList.prototype = {
         var self = this;
 
         // Bind events
-        li.onmouseover    = function() {self.showMenu(li) }
+        li.onmouseover    = function() { self.showMenu(li) }
         li.onmouseout     = function() {self.hideMenu(li) }
 
         // KEYBOARD NAVIGATION BREAKS FORM FIELDS
@@ -436,6 +467,7 @@ ActiveList.prototype = {
             self.addIconToContainer(li, className);
         });
 
+
         // progress is not a div like all other icons. It has no fixed size and is not clickable.
         // This is done to properly handle animated images because i am not sure if all browsers will
         // handle animated backgrounds in the same way. Also differently from icons progress icon
@@ -445,7 +477,10 @@ ActiveList.prototype = {
         {
             iconProgress = document.createElement('img');
             iconProgress.src = this.icons.progress
+            
             iconProgress.style.visibility = 'hidden';
+            //iconProgress.setOpacity(0.5);
+            
             Element.addClassName(iconProgress, self.cssPrefix + 'progress');
             iconsDiv.appendChild(iconProgress);
         }
@@ -453,6 +488,12 @@ ActiveList.prototype = {
         li.progress = iconProgress;
     },
 
+    /**
+     * Add icon to container according to active list classes current record classes
+     * 
+     * @param HtmlElementLi Element 
+     * @param string className ActiveList(ul) classes separated by space
+     */
     addIconToContainer: function(li, className)
     {
         var container = document.getElementsByClassName(this.cssPrefix + 'icons', li)[0];
@@ -462,7 +503,7 @@ ActiveList.prototype = {
 
         if(!tmp) return;
 
-        var icon = {};
+        var icon = {};   
 
         icon.type = tmp[1];
         icon.action = tmp[2];
@@ -471,19 +512,20 @@ ActiveList.prototype = {
         icon.sibling = tmp[5];
 
         // all icons except sort has onclick event handler defined by user
+        
         if(icon.action != 'sort')
         {
             var iconImage = document.getElementsByClassName(this.cssPrefix + icon.action, li)[0];
             if(!iconImage)
             {
-                iconImage = document.createElement('img');
+                var iconImage = document.createElement('img');
                 iconImage.src = icon.image;
-                iconImage.style.visibility = 'hidden';
+                
+                
                 Element.addClassName(iconImage, this.cssPrefix + icon.action);
-                Element.addClassName(iconImage, this.cssPrefix + 'icons_container');
-    
-    
-    
+                Element.addClassName(iconImage, this.cssPrefix + 'icons_container');     
+                
+                
                 // If icon is removed from this item than do not display the icon
                 if((Element.hasClassName(li, this.cssPrefix + 'remove_' + icon.action) || !Element.hasClassName(this.ul, this.cssPrefix + 'add_' + icon.action)) && !Element.hasClassName(li, this.cssPrefix + 'add_' + icon.action))
                 {
@@ -492,10 +534,19 @@ ActiveList.prototype = {
     
                 // Show icon
                 container.appendChild(iconImage);
+                
+                
+                
+                try {
+                    iconImage.setOpacity(this.hiddenMenuOpacity);
+                } catch (e) {
+                    iconImage.style.visibility = 'hidden';
+                }
+                
+                li[icon.action] = iconImage;
+                
             }
     
-            // create shortcut
-            li[icon.action] = iconImage;
 
 
             var self = this;
@@ -508,7 +559,7 @@ ActiveList.prototype = {
             container.id = self.cssPrefix + icon.action + 'Container_' + li.id;
             li.appendChild(container);
             li[icon.action + 'Container'] = container;
-        }
+        } 
     },
 
     /**
@@ -587,17 +638,37 @@ ActiveList.prototype = {
      */
     toggleProgress: function(li)
     {
-        li.progress.style.visibility = (li.progress.style.visibility == 'visible') ? 'hidden' : 'visible';
+        //if(li.progress.getOpacity() == this.hiddenMenuOpacity)
+        if(li.progress.style.visibility == 'hidden')
+        {
+            this.onProgress(li);
+        }
+        else
+        {
+            this.offProgress(li);
+        }
     },
 
+    /**
+     * Toggle progress indicator off
+     * 
+     * @param HtmlElementLi li A reference to item element
+     */
     offProgress: function(li)
     {
         li.progress.style.visibility = 'hidden';
+        //li.progress.setOpacity(this.hiddenMenuOpacity);
     },
 
+    /**
+     * Toggle progress indicator on
+     * 
+     * @param HtmlElementLi li A reference to item element
+     */
     onProgress: function(li)
     {
         li.progress.style.visibility = 'visible';
+        //li.progress.setOpacity(this.visibleMenuOpacity);
     },
 
     /**
@@ -655,9 +726,21 @@ ActiveList.prototype = {
      */
     showMenu: function(li)
     {
+        var self = this;    
+        
         $H(this.icons).each(function(icon)
         {
-            if(li[icon.key] && icon.key != 'progress') li[icon.key].style.visibility = 'visible';
+            if(li[icon.key] && icon.key != 'progress') 
+            {
+                try {
+                    console.log(li[icon.key].getOpacity());
+                    li[icon.key].setOpacity(self.visibleMenuOpacity);
+                    console.log(li[icon.key].getOpacity());
+                    
+                } catch(e) {
+                    li[icon.key].style.visibility = 'visible';
+                }
+            }
         });
     },
 
@@ -670,11 +753,17 @@ ActiveList.prototype = {
      */
     hideMenu: function(li)
     {
+        var self = this;    
+    
         $H(this.icons).each(function(icon)
         {
             if(li[icon.key] && icon.key != 'progress')
-            {
-                li[icon.key].style.visibility = 'hidden';
+            { 
+                try {
+                    li[icon.key].setOpacity(self.hiddenMenuOpacity);
+                } catch(e) {
+                    li[icon.key].style.visibility = 'hidden';
+                }
             }
         });
     },
@@ -842,6 +931,11 @@ ActiveList.prototype = {
     },
 
 
+    /**
+     * Remove record from active list
+     * 
+     * @param HtmlElementLi li A reference to item element
+     */
     remove: function(li)
     {
         if(BrowserDetect.browser != 'Explorer')
@@ -855,6 +949,9 @@ ActiveList.prototype = {
         }
     },
     
+    /**
+     * Collapse all opened records
+     */
     collapseAll: function()
     {
         var containers = document.getElementsByClassName('activeList_container', this.ul);
@@ -868,6 +965,9 @@ ActiveList.prototype = {
         }
     },
     
+    /**
+     * Get list of references to all ActiveList ActiveRecords (li)
+     */
     getChildList: function()
     {
         
