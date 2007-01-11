@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2007-01-10 17:04                                #
+# Created on:            2007-01-11 15:55                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -28,7 +28,7 @@ CREATE TABLE Product (
     SKU VARCHAR(20),
     dateCreated TIMESTAMP,
     dateUpdated TIMESTAMP,
-    status TINYINT DEFAULT 1 COMMENT '0- not available 1- available 2- disabled (not visble)',
+    isEnabled BOOL DEFAULT 1 COMMENT '0- not available 1- available 2- disabled (not visble)',
     URL TINYTEXT,
     isBestSeller BOOL DEFAULT 0,
     type TINYINT UNSIGNED DEFAULT 0 COMMENT '1 - intangible 0 - tangible',

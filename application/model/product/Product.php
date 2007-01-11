@@ -29,7 +29,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ARField("dateCreated", ARDateTime::instance()));
 		$schema->registerField(new ARField("dateUpdated", ARDateTime::instance()));
 
-		$schema->registerField(new ARField("status", ARInteger::instance(4)));
+		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("URL", ARVarchar::instance(256)));
 		$schema->registerField(new ARField("isBestSeller", ARBool::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance(4)));
@@ -59,11 +59,13 @@ class Product extends MultilingualObject
 
 			$category = $this->category->get();
 			$categoryPathNodes = $category->getPathNodeSet(Category::INCLUDE_ROOT_NODE);
+			// Adding current category to a record set of path
+			$categoryPathNodes->add($category);
 
 			foreach ($categoryPathNodes as $categoryNode)
 			{
 				$categoryNode->totalProductCount->set('totalProductCount + 1');
-				if ($product->isEnabled->get() == true)
+				if ($this->isEnabled->get() == true)
 				{
 					$categoryNode->activeProductCount->set('activeProductCount + 1');
 				}
@@ -101,6 +103,7 @@ class Product extends MultilingualObject
 
 				$category = $this->category->get();
 				$categoryPathNodes = $category->getPathNodeSet(Category::INCLUDE_ROOT_NODE);
+				$categoryPathNodes->add($category);
 
 				foreach ($categoryPathNodes as $categoryNode)
 				{
@@ -156,7 +159,9 @@ class Product extends MultilingualObject
 	public static function getNewInstance(Category $category)
 	{
 		$product = parent::getNewInstance(__CLASS__);
-		$product->category = $category;
+		$product->category->set($category);
+
+		return $product;
 	}
 
 	/**

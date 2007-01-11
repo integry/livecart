@@ -193,7 +193,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	  	$cond->addAND(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), 1));
 		$filter->setCondition($cond);
 	  	$filter->setOrder(new ARFieldHandle('Category', 'position'), 'ASC');
-	  	
+
 	  	return $filter;
 	}
 
@@ -206,9 +206,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 */
 	public function getSiblingSet($loadSelf = true, $loadReferencedRecords = false)
 	{
-	  	return ActiveRecord::getRecordSet('Category', $this->getSiblingFilter($loadSelf), $loadReferencedRecords);	  
+	  	return ActiveRecord::getRecordSet('Category', $this->getSiblingFilter($loadSelf), $loadReferencedRecords);
 	}
-	
+
 	/**
 	 * Returns an array of siblings (categories with the same parent)
 	 *
@@ -218,7 +218,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 */
 	public function getSiblingArray($loadSelf = true, $loadReferencedRecords = false)
 	{
-	  	return ActiveRecord::getRecordSetArray('Category', $this->getSiblingFilter($loadSelf), $loadReferencedRecords);	  
+	  	return ActiveRecord::getRecordSetArray('Category', $this->getSiblingFilter($loadSelf), $loadReferencedRecords);
 	}
 
 	private function getSiblingFilter($loadSelf)
@@ -226,15 +226,15 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	  	$filter = new ARSelectFilter();
 	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->category->get()->getID());
 	  	$cond->addAND(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), 1));
-		
+
 		if (!$loadSelf)
 		{
-			$cond->addAND(new NotEqualsCond(new ARFieldHandle('Category', 'ID'), $this->getID()));  
+			$cond->addAND(new NotEqualsCond(new ARFieldHandle('Category', 'ID'), $this->getID()));
 		}
-		
+
 		$filter->setCondition($cond);
 	  	$filter->setOrder(new ARFieldHandle('Category', 'position'), 'ASC');
-	  	
+
 	  	return $filter;
 	}
 
@@ -337,6 +337,16 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	protected function insert()
 	{
 		return parent::insert();
+	}
+
+	public static function getRootNode()
+	{
+		return parent::getRootNode(__CLASS__);
+	}
+
+	public static function deleteByID($recordID)
+	{
+		return parent::deleteByID(__CLASS__, $recordID);
 	}
 
 }

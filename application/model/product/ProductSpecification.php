@@ -9,7 +9,7 @@ ClassLoader::import("application.model.product.SpecificationItem");
  * @author Saulius Rupainis <saulius@integry.net>
  * @package application.model.product
  */
-class ProductSpecification //implements IteratorAggregate
+class ProductSpecification
 {
 	private $product = null;
 

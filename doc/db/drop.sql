@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2007-01-10 17:04                                #
+# Created on:            2007-01-11 15:55                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -61,7 +61,7 @@ ALTER TABLE CategoryImage DROP FOREIGN KEY Category_CategoryImage;
 
 # Drop constraints #
 
-ALTER TABLE Product ALTER COLUMN status DROP DEFAULT;
+ALTER TABLE Product ALTER COLUMN isEnabled DROP DEFAULT;
 
 ALTER TABLE Product ALTER COLUMN isBestSeller DROP DEFAULT;
 

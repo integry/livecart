@@ -198,20 +198,38 @@ class ActiveTreeNode extends ActiveRecordModel
 	{
 		if (!$this->hasID())
 		{
-			// Inserting new node
-			$parentNode = $this->getField(self::PARENT_NODE_FIELD_NAME)->get();
-			$parentNode->load();
-			$parentRightValue = $parentNode->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
-			$nodeLeftValue = $parentRightValue;
-			$nodeRightValue = $nodeLeftValue + 1;
+			ActiveRecordModel::beginTransaction();
+			try
+			{
+				// Inserting new node
+				$parentNode = $this->getField(self::PARENT_NODE_FIELD_NAME)->get();
+				$parentNode->load();
+				$parentRightValue = $parentNode->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
+				$nodeLeftValue = $parentRightValue;
+				$nodeRightValue = $nodeLeftValue + 1;
 
-			$tableName = self::getSchemaInstance(get_class($this))->getName();
-			$db = self::getDBConnection();
-			$db->executeUpdate("UPDATE " . $tableName . " SET " . self::RIGHT_NODE_FIELD_NAME . " = "  . self::RIGHT_NODE_FIELD_NAME . " + 2 WHERE "  . self::RIGHT_NODE_FIELD_NAME . ">=" . $parentRightValue);
-			$db->executeUpdate("UPDATE " . $tableName . " SET " . self::LEFT_NODE_FIELD_NAME . " = "  . self::LEFT_NODE_FIELD_NAME . " + 2 WHERE "  . self::LEFT_NODE_FIELD_NAME . ">=" . $parentRightValue);
+				$tableName = self::getSchemaInstance(get_class($this))->getName();
+				$db = self::getDBConnection();
 
-			$this->getField(self::RIGHT_NODE_FIELD_NAME)->set($nodeRightValue);
-			$this->getField(self::LEFT_NODE_FIELD_NAME)->set($nodeLeftValue);
+				$rightUpdateQuery = "UPDATE " . $tableName . " SET " . self::RIGHT_NODE_FIELD_NAME . " = "  . self::RIGHT_NODE_FIELD_NAME . " + 2 WHERE "  . self::RIGHT_NODE_FIELD_NAME . ">=" . $parentRightValue;
+				$leftUpdateQuery = "UPDATE " . $tableName . " SET " . self::LEFT_NODE_FIELD_NAME . " = "  . self::LEFT_NODE_FIELD_NAME . " + 2 WHERE "  . self::LEFT_NODE_FIELD_NAME . ">=" . $parentRightValue;
+
+				self::getLogger()->logQuery($rightUpdateQuery);
+				$db->executeUpdate($rightUpdateQuery);
+
+				self::getLogger()->logQuery($leftUpdateQuery);
+				$db->executeUpdate($leftUpdateQuery);
+
+				$this->getField(self::RIGHT_NODE_FIELD_NAME)->set($nodeRightValue);
+				$this->getField(self::LEFT_NODE_FIELD_NAME)->set($nodeLeftValue);
+
+				ActiveRecordModel::commit();
+			}
+			catch (Exception $e)
+			{
+				ActiveRecordModel::rollback();
+				throw $e;
+			}
 		}
 		parent::save();
 	}
@@ -220,20 +238,24 @@ class ActiveTreeNode extends ActiveRecordModel
 	{
 		$node = self::getInstanceByID($className, $recordID, self::LOAD_DATA);
 		$nodeRightValue = $node->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
+		$nodeLeftValue = $node->getFieldValue(self::LEFT_NODE_FIELD_NAME);
 		$tableName = self::getSchemaInstance($className)->getName();
 
-		ActiveRecord::beginTransaction();
+		ActiveRecordModel::beginTransaction();
 		try
 		{
 			$result = parent::deleteByID($className, $recordID);
-			$treeFixQuery = "UPDATE " . $tableName . " SET " . self::RIGHT_NODE_FIELD_NAME . " = "  . self::RIGHT_NODE_FIELD_NAME . " - 2," . self::LEFT_NODE_FIELD_NAME . " = "  . self::LEFT_NODE_FIELD_NAME . " - 2 WHERE "  . self::RIGHT_NODE_FIELD_NAME . ">=" . $nodeRightValue;
+			$treeFixQuery = "UPDATE " . $tableName . " SET " . self::RIGHT_NODE_FIELD_NAME . " = "  . self::RIGHT_NODE_FIELD_NAME . " - 2  WHERE "  . self::RIGHT_NODE_FIELD_NAME . ">=" . $nodeRightValue;
+			$treeFixQuery = "UPDATE " . $tableName . " SET " . self::LEFT_NODE_FIELD_NAME . " = "  . self::LEFT_NODE_FIELD_NAME . " - 2 WHERE "  . self::LEFT_NODE_FIELD_NAME . ">=" . $nodeLeftValue;
 
 			self::getLogger()->logQuery($treeFixQuery);
 			self::getDBConnection()->executeUpdate($treeFixQuery);
+
+			ActiveRecordModel::commit();
 		}
 		catch (Exception $e)
 		{
-			ActiveRecord::rollback();
+			ActiveRecordModel::rollback();
 			throw $e;
 		}
 		return $result;

@@ -1,5 +1,6 @@
 <?php
 
+echo "<pre>";
 require_once("init.php");
 
 ClassLoader::import("application.model.category.*");
@@ -11,8 +12,11 @@ $productCategory->save();
 
 $product = Product::getNewInstance($productCategory);
 $product->setValueByLang("name", "en", "Test product...");
-$product->setValue("isEnabled", true);
+$product->setFieldValue("isEnabled", true);
 
 $product->save();
+
+echo "OK\n<br/>";
+echo "</pre>";
 
 ?>
