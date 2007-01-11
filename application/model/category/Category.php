@@ -165,6 +165,51 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	}
 
 	/**
+	 * Returns a set of category filters
+	 *
+	 * @param bool $loadReferencedRecords
+	 * @return ARSet
+	 */
+	public function getFilterGroupSet($includeParentFields = true)
+	{
+	  	ClassLoader::import('application.model.category.FilterGroup');
+		$filter = $this->getFilterGroupFilter();
+		if (!$filter)
+		{
+		  	return false;
+		}
+		return ActiveRecord::getRecordSet('FilterGroup', $filter, true);		  	
+	}
+	
+	private function getFilterGroupFilter($includeParentFields = true)
+	{
+		$fields = $this->getSpecificationFieldArray($includeParentFields);
+		$categories = array();
+		$ids = array();
+		foreach ($fields as $field)
+		{
+		  	$ids[$field['ID']] = true;
+		}
+		
+		if (!$ids)
+		{
+		  	return false;
+		}
+		
+		$ids = array_keys($ids);
+		
+		$filter = new ARSelectFilter();
+		$filter->setOrder(new ARFieldHandle("SpecField", "categoryID"));
+		$filter->setOrder(new ARFieldHandle("FilterGroup", "position"));
+
+		$cond = new INCond(new ARFieldHandle("FilterGroup", "specFieldID"), implode(', ', $ids));
+
+		$filter->setCondition($cond);
+
+		return $filter;
+	}
+	
+	/**
 	 * Returns a set of direct subcategories
 	 *
 	 * @param bool $loadReferencedRecords
