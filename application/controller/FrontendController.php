@@ -9,6 +9,8 @@ ClassLoader::import("application.controller.BaseController");
  */
 abstract class FrontendController extends BaseController 
 {
+	protected $categoryID;
+	
 	public function init()
 	{
 	  	$this->setLayout('frontend');
@@ -22,8 +24,15 @@ abstract class FrontendController extends BaseController
 		$rootCategory = Category::getInstanceByID(1);
 		$categories = $rootCategory->getSubcategorySet();
 
+		$currentCategory = Category::getInstanceByID($this->categoryID);		
+		$path = $currentCategory->getPathNodeArray();
+		
+		print_r($path);
+		exit;
+		
 		$response = new BlockResponse();
 		$response->setValue('categories', $categories->toArray());
+		$response->setValue('currentID', $this->categoryID);
 		return $response;
 	}
 }

@@ -11,13 +11,12 @@ class CategoryController extends FrontendController
 {
 	public function index() 
 	{
-		return new ActionResponse();
-	}
-	
-	public function categoryBox()
-	{
-	  
-	}
+		$this->categoryID = $this->request->getValue('id');
+		
+		$response = new ActionResponse();
+		$response->setValue('id', $this->categoryID);
+		return $response;
+	}	
 }
 
 ?>
