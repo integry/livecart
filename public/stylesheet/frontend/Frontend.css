@@ -48,6 +48,11 @@
 	padding: 10px;
 }
 
+ul 
+{
+  	padding-left: 12px;
+}
+
 /*****************************
 	Boxes
 *****************************/
@@ -68,4 +73,9 @@ div.box .title
 div.box .content
 {
   	padding: 5px;
+}
+
+.current 
+{
+	font-weight: bold;
 }

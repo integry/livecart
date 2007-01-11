@@ -21,18 +21,79 @@ abstract class FrontendController extends BaseController
 	{
 		ClassLoader::import('application.model.category.Category');
 		
+		if ($this->categoryID < 1)
+		{
+		  	$this->categoryID = 1;
+		}
+		
+		// get top categories
 		$rootCategory = Category::getInstanceByID(1);
-		$categories = $rootCategory->getSubcategorySet();
+		$topCategories = $rootCategory->getSubcategorySet()->toArray();
+		$currentCategory = Category::getInstanceByID($this->categoryID, true);		
+		
+		// get path of the current category (except for top categories)
+		if (1 < $currentCategory->category->get()->getID())
+		{
+			$path = $currentCategory->getPathNodeSet()->toArray();
+			$path[] = $currentCategory->toArray();
+	
+			$topCategoryId = $path[0]['ID'];
+			unset($path[0]);
+		} 
+		else
+		{
+		  	$topCategoryId = $this->categoryID;
+		}
+					
+		foreach ($topCategories as &$cat)
+		{
+		  	if ($topCategoryId == $cat['ID'])
+		  	{
+			    $current =& $cat;
+			}
+		}		  
 
-		$currentCategory = Category::getInstanceByID($this->categoryID);		
-		$path = $currentCategory->getPathNodeArray();
-		
-		print_r($path);
-		exit;
-		
+		// get sibling (same-level) categories (except for top categories)
+		if (1 < $currentCategory->category->get()->getID())
+		{
+			$siblings = $currentCategory->getSiblingSet()->toArray();
+	
+			foreach ($path as &$node)
+			{
+			  	if ($node['ID'] != $this->categoryID)
+			  	{
+					$current['subCategories'] = array(0 => &$node);			    
+				  	$current =& $node;
+				}
+				else
+				{
+					$current['subCategories'] =& $siblings;
+					foreach ($current['subCategories'] as &$sib)
+					{
+					  	if ($sib['ID'] == $this->categoryID)
+					  	{
+						    $current =& $sib;
+						}
+					}
+				}
+			}		  
+		}
+	
+		// get subcategories of the current category (except for the root category)
+		if ($this->categoryID > 1)
+		{
+			$subcategories = $currentCategory->getSubcategorySet()->toArray();
+	
+			if ($subcategories)
+			{
+				$current['subCategories'] = $subcategories;
+			}									  
+		}
+										
 		$response = new BlockResponse();
-		$response->setValue('categories', $categories->toArray());
-		$response->setValue('currentID', $this->categoryID);
+		$response->setValue('categories', $topCategories);
+		$response->setValue('currentId', $this->categoryID);
+		$response->setValue('lang', 'en');
 		return $response;
 	}
 }

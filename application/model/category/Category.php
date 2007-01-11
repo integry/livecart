@@ -164,7 +164,29 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return $productCount;
 	}
 
-	public function getSubcategorySet()
+	/**
+	 * Returns a set of direct subcategories
+	 *
+	 * @param bool $loadReferencedRecords
+	 * @return ARSet
+	 */
+	public function getSubcategorySet($loadReferencedRecords = false)
+	{
+	  	return ActiveRecord::getRecordSet('Category', $this->getSubcategoryFilter(), $loadReferencedRecords);
+	}
+
+	/**
+	 * Returns an array of direct subcategories
+	 *
+	 * @param bool $loadReferencedRecords
+	 * @return ARSet
+	 */
+	public function getSubcategoryArray($loadReferencedRecords = false)
+	{
+	  	return ActiveRecord::getRecordSetArray('Category', $this->getSubcategoryFilter(), $loadReferencedRecords);
+	}
+
+	private function getSubcategoryFilter()
 	{
 	  	$filter = new ARSelectFilter();
 	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->getID());
@@ -172,7 +194,48 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$filter->setCondition($cond);
 	  	$filter->setOrder(new ARFieldHandle('Category', 'position'), 'ASC');
 	  	
-	  	return ActiveRecord::getRecordSet('Category', $filter);
+	  	return $filter;
+	}
+
+	/**
+	 * Returns a set of siblings (categories with the same parent)
+	 *
+	 * @param bool $loadSelf whether to include own instance
+	 * @param bool $loadReferencedRecords
+	 * @return ARSet
+	 */
+	public function getSiblingSet($loadSelf = true, $loadReferencedRecords = false)
+	{
+	  	return ActiveRecord::getRecordSet('Category', $this->getSiblingFilter($loadSelf), $loadReferencedRecords);	  
+	}
+	
+	/**
+	 * Returns an array of siblings (categories with the same parent)
+	 *
+	 * @param bool $loadSelf whether to include own instance
+	 * @param bool $loadReferencedRecords
+	 * @return ARSet
+	 */
+	public function getSiblingArray($loadSelf = true, $loadReferencedRecords = false)
+	{
+	  	return ActiveRecord::getRecordSetArray('Category', $this->getSiblingFilter($loadSelf), $loadReferencedRecords);	  
+	}
+
+	private function getSiblingFilter($loadSelf)
+	{
+	  	$filter = new ARSelectFilter();
+	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->category->get()->getID());
+	  	$cond->addAND(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), 1));
+		
+		if (!$loadSelf)
+		{
+			$cond->addAND(new NotEqualsCond(new ARFieldHandle('Category', 'ID'), $this->getID()));  
+		}
+		
+		$filter->setCondition($cond);
+	  	$filter->setOrder(new ARFieldHandle('Category', 'position'), 'ASC');
+	  	
+	  	return $filter;
 	}
 
 	/**
