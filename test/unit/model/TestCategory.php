@@ -2,7 +2,7 @@
 
 require_once("init.php");
 
-$result = Category::deleteByID(20);
+$result = Category::deleteByID(23);
 
 var_dump($result);
 

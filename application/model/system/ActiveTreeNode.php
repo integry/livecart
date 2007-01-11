@@ -245,11 +245,14 @@ class ActiveTreeNode extends ActiveRecordModel
 		try
 		{
 			$result = parent::deleteByID($className, $recordID);
-			$treeFixQuery = "UPDATE " . $tableName . " SET " . self::RIGHT_NODE_FIELD_NAME . " = "  . self::RIGHT_NODE_FIELD_NAME . " - 2  WHERE "  . self::RIGHT_NODE_FIELD_NAME . ">=" . $nodeRightValue;
-			$treeFixQuery = "UPDATE " . $tableName . " SET " . self::LEFT_NODE_FIELD_NAME . " = "  . self::LEFT_NODE_FIELD_NAME . " - 2 WHERE "  . self::LEFT_NODE_FIELD_NAME . ">=" . $nodeLeftValue;
+			$treeRightFixQuery = "UPDATE " . $tableName . " SET " . self::RIGHT_NODE_FIELD_NAME . " = "  . self::RIGHT_NODE_FIELD_NAME . " - 2  WHERE "  . self::RIGHT_NODE_FIELD_NAME . ">=" . $nodeRightValue;
+			$treeLeftFixQuery = "UPDATE " . $tableName . " SET " . self::LEFT_NODE_FIELD_NAME . " = "  . self::LEFT_NODE_FIELD_NAME . " - 2 WHERE "  . self::LEFT_NODE_FIELD_NAME . ">=" . $nodeLeftValue;
 
-			self::getLogger()->logQuery($treeFixQuery);
-			self::getDBConnection()->executeUpdate($treeFixQuery);
+			self::getLogger()->logQuery($treeRightFixQuery);
+			self::getDBConnection()->executeUpdate($treeRightFixQuery);
+
+			self::getLogger()->logQuery($treeLeftFixQuery);
+			self::getDBConnection()->executeUpdate($treeLeftFixQuery);
 
 			ActiveRecordModel::commit();
 		}
