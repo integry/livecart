@@ -25,7 +25,6 @@ abstract class FrontendController extends BaseController
 		$response = new BlockResponse();
 		$response->setValue('categories', $categories->toArray());
 		return $response;
-		//return new RawResponse('test');
 	}
 }
 

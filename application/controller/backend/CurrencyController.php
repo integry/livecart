@@ -186,7 +186,7 @@ class CurrencyController extends StoreManagementController
 		$form->setValue('frequency', $this->config->getValue('currencyUpdateFrequency'));
 				
 		// get all feeds
-		$dir = new DirectoryIterator(ClassLoader::getRealPath('application.helper.currency'));
+		$dir = new DirectoryIterator(ClassLoader::getRealPath('library.currency'));
 		foreach ($dir as $file) {
 			$p = pathinfo($file->getFilename());
 			if ($p['extension'] == 'php')

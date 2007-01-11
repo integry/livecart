@@ -5,7 +5,7 @@
 	<div class="content">
 		<ul>
 		{foreach from=$categories item=category}
-			<li> {$category.name}</li>	
+			<li> <a href="{category data=$category}">{$category.name}</a></li>	
 		{/foreach}
 		</ul>
 	</div>
