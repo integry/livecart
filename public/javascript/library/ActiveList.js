@@ -204,6 +204,7 @@ ActiveList.prototype = {
     {
         this.collapseAll();
         
+        
         if(BrowserDetect.browser != 'Explorer')
         {
             Effect.BlindDown(container.id, { duration: 0.5 });

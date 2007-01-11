@@ -1,0 +1,29 @@
+#catgegoryContainer {
+    float: left; 
+    width: 260px;
+}
+
+#categoryBrowser {
+    padding: 10px; 
+    border: 1px solid #ccc; 
+    background: #f1f1f1;
+}
+#categoryBrowserActions {
+    margin-left: 15px; 
+    margin-top: 15px;
+}
+
+#activeCategoryPath {
+    font-weight: normal; 
+    padding-bottom: 5px; 
+    padding-left: 275px;
+}
+
+#managerContainer {
+    margin-left: 270px;
+}
+
+#tabContainer {
+    height: 30px;  
+    overflow: hidden
+}

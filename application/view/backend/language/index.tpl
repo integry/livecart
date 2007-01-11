@@ -29,7 +29,7 @@
 
 <br />
 
-<ul id="languageList" class="activeList_add_delete activeList_add_edit">
+<ul id="languageList" class="activeList_add_sort activeList_add_delete activeList_add_edit">
 </ul>
 
 <ul>

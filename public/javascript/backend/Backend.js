@@ -136,75 +136,38 @@ Backend.LayoutManager.prototype =
 	 * @todo Figure out why IE needs additional 2px offset
 	 * @todo Figure out a better way to determine the body height for all browsers
 	 */
-	onresize: function(stop)
+	onresize: function()
 	{
         if(BrowserDetect.browser == 'Explorer' && BrowserDetect.version == 7) return;
-        
-        var self = this;
-        setTimeout(function() {
-    
-    		if (document.all)
-    		{
-    			document.getElementById('pageContentContainer').style.height = '0px';
-    		}
-    				
-    		// calculate content area height
-    		ph = new PopupMenuHandler();
-    		w = ph.getWindowHeight();
-    
-    		// for IE 7 only
-    		if (document.all && (document.documentElement.scrollHeight > w + 140) && BrowserDetect.version == 7)
-    		{
-    		  	w = document.documentElement.scrollHeight + 60;		  	
-    		}
-    		
-    		h = w - 99 - 61 - (document.all ? 1 : 0);
-    
-    
-    		cont = document.getElementById('pageContentContainer');
-    
-    		// IE	
-    		if (document.all)
-    		{
-    			try {
-    				if (cont.style.minHeight)
-    				{
-    					cont.style.minHeight = h + 'px';	
-    				}
-    				else
-    				{
-    					cont.style.height = h + 'px';				  
-    				}
-    			}
-    			catch (e)
-    			{
-    				cont.style.height = h + 'px';
-    				cont.style.height = '0px';				  	
-    			}
-    			
-    			// force re-render for IE
-    
-    			document.getElementById('pageContainer').style.display = 'none';
-    			document.getElementById('pageContainer').style.display = 'block';
-    			document.getElementById('nav').style.display = 'none';
-    			document.getElementById('nav').style.display = 'block';
-    
-    			if (!stop)
-    			{
-    			  	self.onresize(true);
-    			}	  		  
-    
-    		}
-    		
-    		// FF, etc.
-    		else
-    		{
-    			cont.style.minHeight = h + 'px';		  
-    
-    			self.collapseAll(cont);
-    			self.setMaxHeight(cont);
-    		}
-        }, 10);
+            
+		if (document.all)
+		{
+			document.getElementById('pageContentContainer').style.height = '0px';
+		}
+				
+		// calculate content area height
+		var ph = new PopupMenuHandler();
+		var w = ph.getWindowHeight();
+		var h = w - 160 - (document.all ? 1 : 0);
+		var cont = document.getElementById('pageContentContainer');
+
+		if (BrowserDetect.browser == 'Explorer')
+		{
+			cont.style.height = h + 'px';				  
+			
+			// force re-render for IE
+			document.getElementById('pageContainer').style.display = 'none';
+			document.getElementById('pageContainer').style.display = 'block';
+			document.getElementById('nav').style.display = 'none';
+			document.getElementById('nav').style.display = 'block';
+		}
+		else // Good browsers
+		{
+			cont.style.minHeight = h + 'px';		  
+
+			this.collapseAll(cont);
+			this.setMaxHeight(cont);
+		}
 	},
 
 	setMaxHeight: function(parent)

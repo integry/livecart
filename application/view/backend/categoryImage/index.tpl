@@ -3,7 +3,6 @@
 		<img class="catImage" src="" /> <span class="catImageTitleDefLang"></span>
 		<span class="catImageTitle">
 		</span>
-		<div class="catImageEditContainer" style="display: none;"></div>
 	</li>
 </ul>
 
@@ -60,7 +59,7 @@
 <iframe name="catImgUpload_{$catId}" id="catImgUpload_{$catId}"></iframe>
 </div>
 
-<ul id="catImageList_{$catId}" class="catImageList activeList_add_delete activeList_add_edit"></ul>
+<ul id="catImageList_{$catId}" class="catImageList activeList_add_sort  activeList_add_delete activeList_add_edit"></ul>
 
 <div id="catNoImages_{$catId}" class="noRecords">
 	<div>{t _no_images}</div>

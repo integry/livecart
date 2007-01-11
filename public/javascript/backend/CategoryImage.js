@@ -44,7 +44,6 @@ Backend.CategoryImage.prototype =
 				 var recordId = this.getRecordId(li).split('_')[1];	
 				 var categoryId = this.getRecordId(li).split('_')[0];	
 				 
-				 Backend.Category.image.closeAllEdits(categoryId);
 
 				 var form = $('catImgAdd_' + categoryId).getElementsByTagName('form')[0].cloneNode(true);
 				 
@@ -81,7 +80,7 @@ Backend.CategoryImage.prototype =
 				 form.getElementsByTagName('a')[0].onclick = 
 					function()
 					{
-						formNode = this.parentNode;
+						var formNode = this.parentNode;
 						while (formNode.tagName != 'FORM')
 						{
 							formNode = formNode.parentNode;							  
@@ -93,7 +92,7 @@ Backend.CategoryImage.prototype =
 						return false;
 					}
 				 
-				 var editCont = document.getElementsByClassName('catImageEditContainer', li)[0];
+				 var editCont = document.getElementsByClassName('activeList_editContainer', li)[0];
 				 
 				 while (editCont.firstChild)
 				 {
@@ -105,14 +104,15 @@ Backend.CategoryImage.prototype =
 				 
 				 var expander = new SectionExpander();				 
 				 
-				 Effect.Appear(editCont, {duration: 0.2});
+				// Effect.Appear(editCont, {duration: 0.2});
+                 
+                 this.toggleContainerOn(editCont)
 			 },
 	         
 			 beforeSort:     function(li, order) 
 			 { 
 				 var recordId = this.getRecordId(li).split('_')[1];	
 				 var categoryId = this.getRecordId(li).split('_')[0];	
-				 Backend.Category.image.closeAllEdits(categoryId);
 				 return Backend.Category.image.sortUrl + '?categoryId=' + categoryId + '&draggedId=' + recordId + '&' + order 
 			 },
 	         
@@ -259,14 +259,6 @@ Backend.CategoryImage.prototype =
 		}
 	},
 	
-	closeAllEdits: function(categoryId)
-	{
-		var forms = $('catImageList_' + categoryId).getElementsByTagName('form');
-		for (k = 0; k < forms.length; k++)
-		{
-		  	forms[k].style.display = 'none';
-		}
-	},
 	
 	setSortUrl: function(url)
 	{
