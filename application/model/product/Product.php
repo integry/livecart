@@ -47,35 +47,6 @@ class Product extends MultilingualObject
 	}
 
 	/**
-	 * Saves product data and increases productCount in related categories
-	 *
-	 */
-	/*
-	public function save()
-	{
-		ActiveRecordModel::beginTransaction();
-		try
-		{
-			$category = $this->category->get();
-			$categoryPathNodes = $category->getPathNodeSet(Category::INCLUDE_ROOT_NODE);
-
-			foreach ($categoryPathNodes as $categoryNode)
-			{
-				$categoryNode->activeProductCount->set('activeProductCount + 1');
-				$categoryNode->save();
-			}
-			parent::save();
-			ActiveRecordModel::commit();
-		}
-		catch (Exception $e)
-		{
-			ActiveRecord::rollback();
-			throw $e;
-		}
-	}
-	*/
-
-	/**
 	 * Inserts new product record to a database
 	 *
 	 */
@@ -202,6 +173,17 @@ class Product extends MultilingualObject
 	 */
 	public function getImageSet()
 	{
+	}
+
+	/**
+	 * Gets a product specification instance
+	 *
+	 * @return ProductSpecification
+	 */
+	public function getSpecification()
+	{
+		$specification = new ProductSpecification($this);
+		return $specification;
 	}
 
 }

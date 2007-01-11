@@ -1,4 +1,5 @@
 <?
+
 	require_once("../../../../framework/ClassLoader.php");
 
 	ClassLoader::mountPath(".", "C:\\projects\\livecart\\");

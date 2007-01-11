@@ -71,9 +71,17 @@ class ProductSpecification //implements IteratorAggregate
 	/**
 	 * Gets an array of properties assigned to a product (specification array)
 	 *
+	 * @return array
 	 */
 	public function getSpecificationDataArray()
 	{
+		$filter = new ARSelectFilter();
+		$cond = new OperatorCond(new ARFieldHandle("Product", "ID"), $this->product->getID(), "=");
+		$filter->setCondition($cond);
+		$filter->setOrder(new ARFieldHandle("SpecField", "position"));
+
+		$specDataArray = ActiveRecordModel::getRecordSetArray("SpecificationItem", $filter, SpecificationItem::LOAD_REFERENCES);
+		return $specDataArray;
 	}
 
 	/**
