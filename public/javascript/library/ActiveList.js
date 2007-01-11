@@ -69,7 +69,7 @@ ActiveList.prototype = {
      */
     icons: {
         'sort':     "image/silk/arrow_switch.png",
-        'edit':     "image/silk/edit.png",
+        'edit':     "image/silk/pencil.png",
         'delete':   "image/silk/cancel.png",
         'view':     "image/silk/zoom.png",
         'progress': "image/silk/additional/animated_progress_brown.gif"
