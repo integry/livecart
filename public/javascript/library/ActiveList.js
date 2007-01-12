@@ -230,7 +230,7 @@ ActiveList.prototype = {
     {
         this.collapseAll();
         
-        
+        Sortable.destroy(this.ul);
         if(BrowserDetect.browser != 'Explorer')
         {
             Effect.BlindDown(container.id, { duration: 0.5 });
@@ -250,6 +250,7 @@ ActiveList.prototype = {
      */
     toggleContainerOff: function(container)
     {
+        this.createSortable();
         if(BrowserDetect.browser != 'Explorer')
         {
             Effect.BlindUp(container.id, {duration: 0.2});

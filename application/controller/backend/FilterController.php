@@ -32,7 +32,6 @@ class FilterController extends StoreManagementController
         $filters = array();
         foreach($specFieldsList as $specFieldObj)
         {
-            //$specFieldObj = SpecField::getInstanceByID($specField['ID']);
             $filters = array_merge($filters, $specFieldObj->getFiltersGroupsList());
         }
         
@@ -42,7 +41,7 @@ class FilterController extends StoreManagementController
             'name' => array(),
             'rootId' => 'filter_item_new_'.$categoryID.'_form',
             'categoryID' => $categoryID,
-            'specFields' => $this->getSpecFieldOptions($specFieldsList)
+            'specFields' => $this->getSpecFieldOptions($category->getSpecificationFieldArray())
         );
         
         $response->setValue('filters', $filters);
@@ -54,13 +53,13 @@ class FilterController extends StoreManagementController
         return $response;
     }
 
-    private function getSpecFieldOptions(ARSet $specFieldsList)
+    private function getSpecFieldOptions($specFieldsList)
     {
         $specFieldOptions = array();
-        foreach ($specFieldsList->toArray() as $field)
+        foreach ($specFieldsList as $field)
         {
             if(!in_array($field['type'], array(SpecField::TYPE_TEXT_SIMPLE, SpecField::TYPE_TEXT_ADVANCED)))
-            {
+            {                
                 $specFieldOptions[] = array(
                     'ID' => $field['ID'],
                     'type' => $field['type'],

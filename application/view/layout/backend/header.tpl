@@ -25,8 +25,6 @@
 	<![endif]-->
 	{/literal}
 
-    <script language="javascript" type="text/javascript"   src="firebug/firebug.js"></script>
-
 	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
 	<script type="text/javascript" src="javascript/library/scriptaculous/scriptaculous.js"></script>
 	<script type="text/javascript" src="javascript/backend/Backend.js"></script>
@@ -39,6 +37,7 @@
 	{includeJs file=library/dhtmlHistory/dhtmlHistory.js}
 	
 	{includeJs file=backend/Customize.js}
+    
 
 	{$JAVASCRIPT}
 
