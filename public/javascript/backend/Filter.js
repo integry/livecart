@@ -1070,6 +1070,9 @@ Backend.Filter.prototype = {
             {
                 for(var fieldName in jsonResponse.errors)
                 {
+                    
+                    if(fieldName == 'toJSONString') continue;
+                    
                     if(fieldName == 'filters')
                     {
                         $H(jsonResponse.errors[fieldName]).each(function(value)
