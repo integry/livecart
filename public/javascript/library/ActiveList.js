@@ -399,6 +399,8 @@ ActiveList.prototype = {
         this.decorateLi(li);
         this.rebindIcons(li);
         this.createSortable();
+	  	
+	  	new Effect.Highlight(li, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});		    
 
         return li;
     },

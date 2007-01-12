@@ -14,7 +14,7 @@ Backend.Category = {
 	 * Category tree browser instance
 	 */
 	treeBrowser: null,
-
+    
 	/**
 	 * Id of currenty selected category. Used for category tab content switching
 	 */
@@ -212,6 +212,7 @@ var CategoryTabControl = Class.create();
  */
 CategoryTabControl.prototype = {
 
+    tabItemsCounts: { },
 	activeTab: null,
 	indicatorImageName: null,
 	treeBrowser: null,
@@ -363,6 +364,8 @@ CategoryTabControl.prototype = {
 
 		this.loadTabContent(tabId, categoryId);
 		Element.show(this.getContainerId(this.activeTab.id, categoryId));
+        
+        this.updateTabItemsCount(categoryId);
 	},
 
 	loadTabContent: function(tabId, categoryId)
@@ -421,6 +424,7 @@ CategoryTabControl.prototype = {
 	switchCategory: function(currentCategory, previousActiveCategoryId)
 	{
 		//alert('switching category: from' + previousActiveCategoryId + ' to ' +  currentCategory);
+        
 		if (previousActiveCategoryId != null)
 		{
 			prevContainer = this.getContainerId(this.activeTab.id, previousActiveCategoryId);
@@ -431,6 +435,39 @@ CategoryTabControl.prototype = {
 		}
 		this.activateTab(this.activeTab, currentCategory);
 	},
+    
+    updateTabItemsCount: function(categoryID)
+    {
+        var self = this;
+     
+        if(!this.tabItemsCounts[categoryID])
+        {
+            var myAjax = new Ajax.Request(
+    		'/backend.category/countTabsItems/?categoryID=' + categoryID, 
+    		{
+    			method: 'get', 
+    			onComplete: function(response) { 
+                    self.tabItemsCounts[categoryID] = eval("(" + response.responseText + ")");
+                    self.setTabItemsCount(categoryID); 
+                }
+    		});
+        } else {
+            self.setTabItemsCount(categoryID); 
+        }
+    },
+    
+    setTabItemsCount: function(categoryID)
+    {
+        $H(this.tabItemsCounts[categoryID]).each(function(tab) {
+            $(tab.key).getElementsByTagName('span')[0].firstChild.nodeValue = ' (' + tab.value + ')';
+        });
+    },
+    
+    clearTabItemsCount: function(categoryID)
+    {
+        this.tabItemsCounts[categoryID] = null;
+    },
+    
 
 	getActiveTab: function()
 	{

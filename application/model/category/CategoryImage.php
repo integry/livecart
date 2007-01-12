@@ -104,6 +104,10 @@ class CategoryImage extends MultilingualObject
 		parent::insert();
 	}
 
+	public static function countItems(Category $category)
+	{
+        return $category->getCategoryImagesSet()->getTotalRecordCount();
+	}
 }
 
 ?>

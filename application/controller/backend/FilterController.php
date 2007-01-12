@@ -285,6 +285,7 @@ class FilterController extends StoreManagementController
         
         return new JSONResponse(array("status" => "success", "filters" => $return));
     }
+
 }
 
 ?>

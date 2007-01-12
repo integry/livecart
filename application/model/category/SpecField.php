@@ -217,6 +217,11 @@ class SpecField extends MultilingualObject
             $position++;
         }
 	}
+
+    public static function countItems(Category $category)
+    {
+        return $category->getSpecificationFieldSet()->getTotalRecordCount();
+    }
 }
 
 ?>

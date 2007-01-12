@@ -17,13 +17,9 @@ class CategoryImageController extends StoreManagementController
 {
 	public function index()
 	{
-		$categoryId = $this->request->getValue('id');
+		$category = Category::getInstanceByID((int)$this->request->getValue('id'));
+		$imageArray = $category->getCategoryImagesSet()->toArray();
 		
-		$filter = new ARSelectFilter();
-		$filter->setCondition(new EqualsCond(new ARFieldHandle('CategoryImage', 'categoryID'), $categoryId));
-		$filter->setOrder(new ARFieldHandle('CategoryImage', 'position'), 'ASC');
-		$imageArray = ActiveRecord::getRecordSet('CategoryImage', $filter)->toArray();
-
 		$languages = array();
 		foreach ($this->store->getLanguageArray(false) as $langId)
 		{
@@ -31,8 +27,8 @@ class CategoryImageController extends StoreManagementController
 		}
 		
 		$response = new ActionResponse();
-		$response->setValue('form', $this->buildForm($categoryId));
-		$response->setValue('catId', $categoryId);
+		$response->setValue('form', $this->buildForm($category->getID()));
+		$response->setValue('catId', $category->getID());
 		$response->setValue('images', json_encode($imageArray));
 		$response->setValue('languageList', $languages);
 		return $response;		  

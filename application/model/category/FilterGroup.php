@@ -151,6 +151,11 @@ class FilterGroup extends MultilingualObject
             $position++;
         }
     }
+
+    public static function countItems(Category $category)
+    {
+        return count($category->getFilterGroupSet()->getTotalRecordCount());
+    }
 }
 
 ?>
