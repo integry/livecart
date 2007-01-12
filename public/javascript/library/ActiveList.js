@@ -120,7 +120,7 @@ ActiveList.prototype = {
      * 
      * @var double [0,1]
      */
-    hiddenMenuOpacity: 0.2, 
+    hiddenMenuOpacity: 0.15, 
 
     /**
      * Constructor

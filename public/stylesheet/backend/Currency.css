@@ -1,6 +1,10 @@
 /************************
 	Index
 ************************/
+#addCurr {
+	margin-bottom: 10px;  
+}
+
 #currAddMenuLoadIndicator, #addCurrIndicator
 {
   	display: none;
@@ -13,7 +17,8 @@
 #currencyList li {
 	margin-bottom: 10px;
 	position: static;
-  	cursor: move;
+  	padding: 5px;
+  	background-color: #F7F7F7;
 }
 
 #currencyList .activeList_icons {

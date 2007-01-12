@@ -29,7 +29,8 @@ label.radio {
 
 #languageList li {
 	margin-bottom: 10px;
-  	cursor: move;  	
+  	padding: 5px;
+  	background-color: #F7F7F7;
 }
 
 #addLangFeedback {

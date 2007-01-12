@@ -29,9 +29,7 @@
 			
 			<div class="menuLoadIndicator" id="currAddMenuLoadIndicator"></div>
 			<div id="addCurr" class="slideForm"></div>
-			
-			<br />
-			
+					
 			<div id="noCurrencies" class="noRecords">
 				<div>{t _no_currencies}</div>
 			</div>

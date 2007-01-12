@@ -723,7 +723,7 @@ Backend.SaveConfirmationMessage.prototype =
 
 function slideForm(id, menuId)
 {
-	Effect.Appear(id, {duration: 2});	  	
+	Effect.Appear(id, {duration: 0.50});	  	
 	document.getElementById(menuId).style.display = 'none';
 	setTimeout('document.getElementById("' +  id + '").focus()', 100);
 }
