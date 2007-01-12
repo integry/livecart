@@ -58,6 +58,7 @@ class FilterController extends StoreManagementController
         $specFieldOptions = array();
         foreach ($specFieldsList as $field)
         {
+            
             if(!in_array($field['type'], array(SpecField::TYPE_TEXT_SIMPLE, SpecField::TYPE_TEXT_ADVANCED)))
             {                
                 $specFieldOptions[] = array(
@@ -209,7 +210,7 @@ class FilterController extends StoreManagementController
         $filterGroupArray['rootId'] = "filter_items_list_".$filterGroupArray['SpecField']['categoryID']."_".$filterGroupArray['ID'];
         $filterGroupArray['categoryID'] = $filterGroupArray['SpecField']['categoryID'];
 
-        $filterGroupArray['specFields'] = $this->getSpecFieldOptions(Category::getInstanceByID($filterGroupArray['categoryID'])->getSpecificationFieldSet());           
+        $filterGroupArray['specFields'] = $this->getSpecFieldOptions(Category::getInstanceByID($filterGroupArray['categoryID'])->getSpecificationFieldArray());           
 
         return new JSONResponse($filterGroupArray);
     }
