@@ -21,14 +21,28 @@
 
 .specField_title
 {
-   font-size: 200%;
+	font-size: 200%;
 }
 
 
 .specFieldList .activeList_container
 {
-   padding-left: 80px;
+	padding-left: 80px;
 }
+
+.specFieldList li
+{
+  	padding: 5px;
+  	margin-bottom: 10px;
+  	background-color: #F7F7F7;  	
+  	width: 650px;
+}
+
+.specFieldList li li
+{
+  	width: 100%;
+}
+
 
 .specField_form_values_group div input
 {

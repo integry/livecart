@@ -765,7 +765,7 @@ Backend.SpecField.prototype = {
 	/**
 	 * When we are filling spec field name in "Main" step we are changing it's handle and a title
 	 * on the top of the form. Handle is actuali a stripped version of spec field name with all spec
-	 * symbols changed to "_" (underscope)
+	 * symbols changed to "." (dots)
 	 *
 	 * @param Event e Event
 	 *
@@ -779,8 +779,8 @@ Backend.SpecField.prototype = {
 
 		handle = handle.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,""); // trim
 		handle = handle.replace(/[^a-zA-Z_\d ]/g, ""); // remove all illegal simbols
-		handle = handle.replace(/^[\d\_]+/g, "_"); // replace first digits with "_"
-		handle = handle.replace(/ /g, "_"); // reokace spaces with "_"
+		handle = handle.replace(/^[\d\_]+/g, "."); // replace first digits with "."
+		handle = handle.replace(/ /g, "."); // replace spaces with "."
 		handle = handle.toLowerCase();
 
 		if(this.id == 'new')
