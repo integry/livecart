@@ -733,10 +733,7 @@ ActiveList.prototype = {
             if(li[icon.key] && icon.key != 'progress') 
             {
                 try {
-                    console.log(li[icon.key].getOpacity());
-                    li[icon.key].setOpacity(self.visibleMenuOpacity);
-                    console.log(li[icon.key].getOpacity());
-                    
+                    li[icon.key].setOpacity(self.visibleMenuOpacity);            
                 } catch(e) {
                     li[icon.key].style.visibility = 'visible';
                 }
