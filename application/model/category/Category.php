@@ -4,9 +4,8 @@ ClassLoader::import("application.model.system.MultilingualObjectInterface");
 
 
 /**
- * Product category model class
+ * Hierarchial product category model class
  *
- * Product categories are organized and stored as a tree in a database
  *
  * @author Saulius Rupainis <saulius@integry.net>
  * @package application.model.category
@@ -178,9 +177,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		{
 		  	return false;
 		}
-		return ActiveRecord::getRecordSet('FilterGroup', $filter, true);		  	
+		return ActiveRecord::getRecordSet('FilterGroup', $filter, true);
 	}
-	
+
 	private function getFilterGroupFilter($includeParentFields = true)
 	{
 		$fields = $this->getSpecificationFieldArray($includeParentFields);
@@ -190,14 +189,14 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		{
 		  	$ids[$field['ID']] = true;
 		}
-		
+
 		if (!$ids)
 		{
 		  	return false;
 		}
-		
+
 		$ids = array_keys($ids);
-		
+
 		$filter = new ARSelectFilter();
 		$filter->setOrder(new ARFieldHandle("SpecField", "categoryID"));
 		$filter->setOrder(new ARFieldHandle("FilterGroup", "position"));
@@ -208,7 +207,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 		return $filter;
 	}
-	
+
 	/**
 	 * Returns a set of direct subcategories
 	 *
@@ -381,26 +380,81 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		}
 	}
 
+	/**
+	 *
+	 * @todo fix potential bug: when using $this->load() in method, it might
+	 * overwrite the data that was set during runtime
+	 */
 	protected function update()
 	{
-		return parent::update();
+		ActiveRecordModel::beginTransaction();
+		try
+		{
+			parent::update();
+			$activeProductCount = $this->getFieldValue("activeProductCount");
+			if ($this->isEnabled->isModified())
+			{
+				if ($this->isEnabled())
+				{
+					$activeProductCountUpdateStr = "activeProductCount + " . $activeProductCount;
+				}
+				else
+				{
+					$activeProductCountUpdateStr = "activeProductCount - " . $activeProductCount;
+				}
+				$pathNodes = $this->getPathNodeSet(true);
+				foreach ($pathNodes as $node)
+				{
+					$node->setFieldValue("activeProductCount", $activeProductCountUpdateStr);
+				}
+			}
+			ActiveRecordModel::commit();
+		}
+		catch (Exception $e)
+		{
+			ActiveRecordModel::rollback();
+		}
 	}
 
-	protected function insert()
-	{
-		return parent::insert();
-	}
+	//protected function insert()
+	//{
+	//	return parent::insert();
+	//}
 
 	public static function getRootNode()
 	{
 		return parent::getRootNode(__CLASS__);
 	}
 
+	/**
+	 * Removes category by ID and fixes data in parent categories
+	 * (updates activeProductCount and totalProductCount)
+	 *
+	 * @param int $recordID
+	 */
 	public static function deleteByID($recordID)
 	{
-		return parent::deleteByID(__CLASS__, $recordID);
-	}
+		ActiveRecordModel::beginTransaction();
+		try
+		{
+			$category = Category::getInstanceByID($recordID, Category::LOAD_DATA);
+			$activeProductCount = $category->getFieldValue("activeProductCount");
+			$inactiveProductCount = $category->getFieldValue("inactiveProductCount");
+			parent::deleteByID(__CLASS__, $recordID);
 
+			$pathNodes = $category->getPathNodeSet(true);
+
+			foreach ($pathNodes as $node)
+			{
+				$node->setFieldValue("activeProductCount", "activeProductCount");
+			}
+			ActiveRecordModel::commit();
+		}
+		catch (Exception $e)
+		{
+			ActiveRecordModel::rollback();
+		}
+	}
 }
 
 ?>

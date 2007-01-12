@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2007-01-11 15:55                                #
+# Created on:            2007-01-12 16:05                                #
 # ---------------------------------------------------------------------- #
 
 

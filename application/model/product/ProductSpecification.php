@@ -49,12 +49,6 @@ class ProductSpecification
 	{
 	}
 
-	public function setProperty(SpecField $field, $value)
-	{
-		$specItem = SpecificationItem::getNewInstance($this->product, $field, $value);
-		$specItem->save();
-	}
-
 	private function loadSpecificationItems()
 	{
 		$specItemSet = ActiveRecordModel::getRecordSet("SpecificationItem");
