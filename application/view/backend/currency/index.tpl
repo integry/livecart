@@ -58,7 +58,7 @@
 				</li>
 			</ul>			
 			
-			<ul id="currencyList" class="activeList_add_delete"></ul>		
+			<ul id="currencyList" class="activeList_add_delete activeList_add_sort"></ul>		
 			
 		</div>
 		<div id="tabRatesContent"></div>
