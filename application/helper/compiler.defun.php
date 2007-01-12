@@ -1,6 +1,10 @@
 <?php
 
-/* create code for a function call */
+/**
+ * create code for a function call
+ *
+ * @package application.helper
+ */
 function smarty_compiler_fun($tag_args, &$compiler) {
     $_attrs = $compiler->_parse_attrs($tag_args);
 
@@ -22,7 +26,7 @@ $this->register_compiler_function('fun', 'smarty_compiler_fun');
 
 
 /* create code for a function declaration */
-function smarty_compiler_defun($tag_args, &$compiler) {   
+function smarty_compiler_defun($tag_args, &$compiler) {
     $attrs = $compiler->_parse_attrs($tag_args);
     $func_key = '"' . md5('php-5') . '[[' . md5(uniqid('sucks')) . '";';
     array_push($compiler->_tag_stack, array('defun', $attrs, $tag_args, $func_key));
@@ -33,7 +37,7 @@ function smarty_compiler_defun($tag_args, &$compiler) {
     return $func_key . "if (!function_exists('$func')) { function $func(&\$this, \$params) { \$_fun_tpl_vars = \$this->_tpl_vars; \$this->assign(\$params); ";
 
 }
-    
+
 
 /* create code for closing a function definition and calling said function */
 function smarty_compiler_defun_close($tag_args, &$compiler) {

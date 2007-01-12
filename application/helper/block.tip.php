@@ -5,8 +5,10 @@
  *
  * @package application.helper
  * @author Rinalds Uzkalns <rinalds@integry.net>
+ *
+ * @package application.helper
  */
-function smarty_block_tip($params, $content, $smarty, &$repeat) 
+function smarty_block_tip($params, $content, $smarty, &$repeat)
 {
 	if (!$repeat)
 	{
