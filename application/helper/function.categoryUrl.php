@@ -26,9 +26,11 @@ function smarty_function_categoryUrl($params, Smarty $smarty)
 	}
 	$parts = array_reverse($parts);
 	
-	$handle = implode('.', $parts) . '-' . $category['ID'];
+	$handle = implode('.', $parts);
 	
-	return $router->createUrl(array('controller' => 'category', 'action' => 'index', 'id' => $handle));
+//	return 'test';
+	
+	return $router->createUrl(array('controller' => 'category', 'action' => 'index', 'cathandle' => $handle, 'id' => $category['ID']));
 }
 
 ?>

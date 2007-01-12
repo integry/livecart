@@ -8,7 +8,7 @@
  */
 
 $routes = array(
-					//array("shop/:cathandle-:id", array('controller' => 'category', 'action' => 'browse'), array("cathandle" => "[a-z]","id" => "[0-9]+")),
+					array("shop/:cathandle-:id", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z\.]+","id" => "[0-9]+")),
 					
 					array("backend.help/:id", array('controller' => 'backend.help', 'action' => 'view'), array()),
 					array(":controller", array("action" => "index"), array()),

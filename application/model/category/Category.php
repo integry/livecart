@@ -312,7 +312,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
 		$store = Store::getInstance();
 		$defaultLangCode = $store->getDefaultLanguageCode();
-
+		$currentLangCode = $store->getLocaleCode();
+		
 		$data = parent::toArray();
 		$transformedData = array();
 		$schema = self::getSchemaInstance(get_class($this));
@@ -334,6 +335,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 						}
 					}
 				}
+				
+				// value in active language (default language value is used 
+				// if there's no value in active language)
+				$transformedData[$name . '_lang'] = !empty($transformedData[$name . '_' . $currentLangCode]) ?
+													$transformedData[$name . '_' . $currentLangCode] :
+													!empty($transformedData[$name]) ? $transformedData[$name] : '';					
 			}
 			else
 			{
