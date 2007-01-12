@@ -291,7 +291,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
 		$store = Store::getInstance();
 		$defaultLangCode = $store->getDefaultLanguageCode();
-		$currentLangCode = $store->getLocaleCode();
 
 		$data = parent::toArray();
 		$transformedData = array();
@@ -313,12 +312,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 							$transformedData[$name] = $multilingualValue;
 						}
 					}
-
-					// value in active language (default language value is used 
-					// if there's no value in active language)
-					$transformedData[$name . '_lang'] = !empty($transformedData[$name . '_' . $currentLangCode]) ?
-														$transformedData[$name . '_' . $currentLangCode] :
-														isset($transformedData[$name]) ? $transformedData[$name] : '';			
 				}
 			}
 			else
@@ -406,6 +399,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 				foreach ($pathNodes as $node)
 				{
 					$node->setFieldValue("activeProductCount", $activeProductCountUpdateStr);
+					$node->save();
 				}
 			}
 			ActiveRecordModel::commit();
@@ -435,24 +429,29 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	public static function deleteByID($recordID)
 	{
 		ActiveRecordModel::beginTransaction();
+
 		try
 		{
 			$category = Category::getInstanceByID($recordID, Category::LOAD_DATA);
 			$activeProductCount = $category->getFieldValue("activeProductCount");
-			$inactiveProductCount = $category->getFieldValue("inactiveProductCount");
-			parent::deleteByID(__CLASS__, $recordID);
+			$totalProductCpunt = $category->getFieldValue("totalProductCount");
 
 			$pathNodes = $category->getPathNodeSet(true);
 
 			foreach ($pathNodes as $node)
 			{
-				$node->setFieldValue("activeProductCount", "activeProductCount");
+				$node->setFieldValue("activeProductCount", "activeProductCount - " . $activeProductCount);
+				$node->setFieldValue("totalProductCount", "totalProductCount - " . $totalProductCount);
+
+				$node->save();
 			}
 			ActiveRecordModel::commit();
+			parent::deleteByID(__CLASS__, $recordID);
 		}
 		catch (Exception $e)
 		{
 			ActiveRecordModel::rollback();
+			throw $e;
 		}
 	}
 }
