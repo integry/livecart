@@ -1034,6 +1034,7 @@ Backend.SpecField.prototype = {
             {
                 for(var fieldName in jsonResponse.errors)
                 {
+                    if(fieldName == 'toJSONString') continue;
                     if(fieldName == 'values')
                     {
                         $H(jsonResponse.errors[fieldName]).each(function(value)
@@ -1043,7 +1044,7 @@ Backend.SpecField.prototype = {
                     }
                     else
                     {
-                        this.setFeedback(this.nodes[fieldName], jsonResponse.errors[fieldName]);
+                       this.setFeedback(this.nodes[fieldName], jsonResponse.errors[fieldName]);
                     }
                 }
             }
