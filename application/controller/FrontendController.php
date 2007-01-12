@@ -41,7 +41,8 @@ abstract class FrontendController extends BaseController
 	protected function boxFilterBlock()
 	{
 		ClassLoader::import('application.model.category.Category');	 
-
+		ClassLoader::import('application.model.category.Filter');
+			 		
 		if ($this->categoryID < 1)
 		{
 		  	$this->categoryID = 1;
@@ -50,18 +51,50 @@ abstract class FrontendController extends BaseController
 		// get current category instance
 		$currentCategory = Category::getInstanceByID($this->categoryID, true);	
 		
-		$filterSet = $currentCategory->getFilterGroupSet();
-		if (!$filterSet)
+		// get category filter groups
+		$filterGroupSet = $currentCategory->getFilterGroupSet();
+		if (!$filterGroupSet || (0 == $filterGroupSet->getTotalRecordCount()))
 		{
 		  	return new RawResponse();
+		}		
+		$filterGroups = $filterGroupSet->toArray();
+		
+		// get group filters
+		$ids = array();
+		foreach ($filterGroups as $group)
+		{
+		  	$ids[] = $group['ID'];
+		}		
+
+		if ($ids)
+		{
+			$filterCond = new INCond(new ARFieldHandle('Filter', 'filterGroupID'), $ids);
+			$filterFilter = new ARSelectFilter();
+			$filterFilter->setCondition($filterCond);
+			$filterFilter->setOrder(new ARFieldHandle('Filter', 'filterGroupID'));
+			$filterFilter->setOrder(new ARFieldHandle('Filter', 'position'));
+			
+			$filters = ActiveRecord::getRecordSet('Filter', $filterFilter, true)->toArray();
+					
+			// sort filters by group
+			$sorted = array();
+			foreach ($filters as $filter)
+			{
+				$sorted[$filter['FilterGroup']['ID']][] = $filter;  	
+			}
+			
+			// assign sorted filters to group arrays
+			foreach ($filterGroups as &$group)
+			{
+			  	if (isset($sorted[$group['ID']]))
+			  	{
+				    $group['filters'] = $sorted[$group['ID']];
+				}
+			}
 		}
-		
-		$filters = $filterSet->toArray();
-		
-		print_r($filters);
-		
+
 	 	$response = new BlockResponse();
-		 
+	 	$response->setValue('groups', $filterGroups);		 
 		return $response;	 	
 	}
 	

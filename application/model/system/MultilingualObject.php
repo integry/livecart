@@ -64,6 +64,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	{
 		$store = Store::getInstance();
 		$defaultLangCode = $store->getDefaultLanguageCode();
+		$currentLangCode = $store->getLocaleCode();
 
 		$data = array();
 		foreach ($this->data as $fieldName => $valueContainer)
@@ -82,13 +83,19 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 					{
 						if ($langCode != $defaultLangCode)
 						{
-							$data[$fieldName . "_" . $langCode] = $multilingualValue;
+							$data[$fieldName . '_' . $langCode] = $multilingualValue;
 						}
 						else
 						{
 							$data[$fieldName] = $multilingualValue;
 						}
 					}
+					
+					// value in active language (default language value is used 
+					// if there's no value in active language)
+					$data[$fieldName . '_lang'] = !empty($data[$fieldName . '_' . $currentLangCode]) ?
+														$data[$fieldName . '_' . $currentLangCode] :
+														$data[$fieldName];			
 				}
 				else
 				{

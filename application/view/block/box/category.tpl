@@ -3,7 +3,7 @@
 		<ul>			
 		{foreach from=$node item=category}
 			<li{if $category.ID == $currentId} class="current"{/if}>
-				<a href="{categoryUrl data=$category}">{$category.name}</a>
+				<a href="{categoryUrl data=$category}">{$category.name_lang}</a>
 			</li>	
 			{if $category.subCategories}
 				{fun name="categoryTree" node=$category.subCategories}

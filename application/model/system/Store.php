@@ -16,12 +16,17 @@ class Store
 	 */
 	protected $locale = null;
 
+  	/**
+	 * Current locale code (ex: lt, en, de)
+	 *
+	 * @var string
+	 */
 	protected $localeName;
 
   	/**
 	 * Configuration registry handler instance
 	 *
-	 * @var Locale
+	 * @var Config
 	 */
 	protected $configInstance = null;
 
@@ -133,6 +138,16 @@ class Store
 		}
 		return false;
 	}
+	
+	/**
+	 * Returns active language/locale code (ex: en, lt, de)
+	 *
+	 * @return string
+	 */
+	public function getLocaleCode()
+	{
+	  	return $this->localeName;
+	}
 
 	/**
 	 * Translates text using Locale::LCInterfaceTranslator
@@ -158,14 +173,42 @@ class Store
 	/**
 	 * Creates a handle string that is usually used as part of URL to uniquely
 	 * identify some record
-	 * Example:
+	 * Example: "Some Record TITLE!!!" becomes "some-record-title"
 	 * @param string $str
-	 * @return unknown
+	 * @return string
+	 *
+	 * @todo test with multibyte strings
 	 */
 	public function createHandleString($str)
 	{
 		$str = strtolower(trim(strip_tags(stripslashes($str))));
-		$str = str_replace(" ", "_", $str);
+		
+		// fix accented, etc., characters
+		$repl = array ('A','A','A','A','A','A','A','E','E','E','E','E','I','I','I','I','D','N','O','O','O','O','O','O','O','U','U','U','U','Y','b','b','a','a','a','a','a','a','a','e','e','e','e','e','i','i','i','i','n','n','o','o','o','o','o','o','o','u','u','u','u','y','y','y');		
+        for ($k = 192; $k <= 255; $k++) 
+        {
+			$str = str_replace(chr($k),$repl[$k-192],$str);
+		}
+		
+        // remove any characters that need url-encoding to be used in an url
+		$str = preg_replace('(%..)', '-', rawurlencode(strtolower($str)));
+
+        // remove dashes from beginning and end
+		while ('-' == $str{0}) 
+        {
+			$str = substr($str, 1);
+		}        
+		while ('-' == substr($str, -1)) 
+		{
+			$str = substr($str, 0, -1);
+		}		
+
+        // remove double dashes
+		while (strpos($str,'--') != 0) 
+		{
+			$str = str_replace('--', '-', $str);		  
+		}
+
 		return $str;
 	}
 
