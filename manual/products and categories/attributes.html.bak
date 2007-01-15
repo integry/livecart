@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+	<link rel="stylesheet"	type="text/css" href="../templates/style.css"/>
+	<title>attributes</title>
+</head>
+<body bgcolor="#ffffff">
+
+	<h2>Attributes</h2>
+
+	<h3>Manage Attributes</h3>
+	<p>Product attributes is what allows you to have different types of the same product. For instance, T-Shirts may be available in different colors or sizes so instead of creating separate products for all types of T-shirts you might create an option named shirt's sizes and provide all the necessary sizes (with it). What is more, attributes are used for setting filtering options (...)</p>
+	<p>Fields is what makes it easy for a customer to find exactly he/she is looking for. For instance, ...  Therefore fields are a great way of representing the content of category more effectively.</p>
+	<p class="note"><strong>Note:</strong> Attributes have to be set up for each product individually</p>
+	
+
+	<h3>TO DO list</h3>
+	<ul>	
+		<li><a href="#create_attribute">Create new attribute</a></li>
+		<li><a href="#edit_attribute">Edit attribute</a></li>
+		<li><a href="#delete_attribute">Delete attribute</a></li>
+		<li><a href="#sort_attributes">Sort attributes</a></li>
+	</ul>
+	
+
+	<a name="create_attribute" />
+	<h3>Create Attribute</h3>
+
+
+
+
+	<h3>Reference</h3>
+	
+	<p> ... </p>
+
+</body>
+</html>

@@ -10,7 +10,7 @@
 	<h2>Currencies</h2>
 
 	<h3>Manage Currencies</h3>
-	<p>With LC you can localize your e-store and provide the <ins>product and shipping pricing</ins> in visitor's home currency. That is, you can set multiple currencies and allow users to switch between currencies to view the prices of products and conclude payments in the currency they prefer. For that you have to <ins>set the currencies that your store supports.</ins></p> 	
+	<p>With LC you can localize your e-store and provide the product and shipping pricing in visitor's home currency. That is, you can set multiple currencies and allow users to switch between currencies to view the prices of products and conclude payments in the currency they prefer. For that you have to set the currencies that your store supports</p> 	
 	
 	<h3>TO DO list</h3>
 	<ul>	
@@ -29,16 +29,16 @@
 
 	<a name="set_base" />
 	<h3>Set the Base Currency</h3>
-	<p>The base currency is used as the main currency of your system. All the other currency rates are calculated in respect with the base currency. You can still enter product prices in other currencies as well, however it is not necessary as the prices will be converted automatically anyway. To set the base currency click the <strong>Set as base currency</strong> link under the currency name.</p>
+	<p>The base currency is used as the main currency of your system. All the other currency rates are calculated in respect with the base currency. You can still enter product prices in other currencies, however it is not necessary as the prices will be converted automatically anyway. To set the base currency click the <strong>Set as base currency</strong> link under the currency name.</p>
 	<img src="pics/set_default_currency.bmp">
 
 	<a name="adjust" />
 	<h3>Adjust Exchange Rates</h3>
-	<p>To adjust exchange rates of your (active) currencies click on the <strong>Adjust Exchange Rates</strong> tab to proceed to <a href="#tab_adjust_rates">manual exchange rates </a>setting page.</p>
+	<p>To adjust exchange rates of your (active) currencies click on the <strong>Adjust Exchange Rates</strong> tab to proceed to <a href="#tab_adjust_rates">manual exchange rates</a> setting page.</p>
 
 	<a name="adjust_automaticaly" />
 	<h3>Automaticaly Adjust Exchange Rates</h3>
-	<p>Click <a href="#tab_options">Options</a> tab to (go to) (open) automatic currency updater section.</p>
+	<p>Click <a href="#tab_options">Options</a> tab to open automatic currency updater section.</p>
 
 	<a name="enable_disable" />
 	<h3>Enable or Disable Currencies</h3>

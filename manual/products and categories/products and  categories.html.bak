@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+	<link rel="stylesheet"	type="text/css" href="../templates/style.css"/>
+	<title>products and categories</title>
+</head>
+<body bgcolor="#ffffff">
+
+	<h2>Products and categories</h2>
+	<h3>Manage Products and categories</h3>
+	<p>As in most e-commerce stores, with LC you can manage your products by categories. Categories can also contain subcategories which, in turn, may have their own subcategories. The number of subcategories is unlimited.</p>
+
+	<h3>TO DO list</h3>
+	<ul>	
+		<li><a href="#manage_tree">Manage category tree</a></li>	
+	</ul>
+	
+
+	<a name="manage_tree" />
+	<h3>Category Tree</h3>
+	<p>Category tree represents how all of the categories are arranged. At the top of the tree is the Root category which is a parent category for all the descending categories. In the category tree you can easily manage your categories by selecting one of the options: </p>
+	<ul>
+		<li>Create a new sub-category</li>
+		<li>Remove selected category</li>
+		<li>Viewing content?</li>
+	</ul>
+
+
+
+
+	
+	<a name="remove_category" />
+
+	<h3>Reference</h3>
+	<p><a href="products.html">Products</a></p>
+	<p><a href="category details.html">Category details</a></p>
+	<p><a href="attributes.html">Attributes</a></p>
+	<p><a href="filters.html">Filters</a></p>
+	<p><a href="images.html">Images</a></p>
+
+
+</body>
+</html>

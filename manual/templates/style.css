@@ -15,6 +15,10 @@ del, del p {
   	text-decoration: line-through;
 }
 
+p {
+	margin-top: 20px; 
+}
+
 ins {
   	font-weight: bold;
   	text-decoration: none;
@@ -54,7 +58,7 @@ ul {
 
 
 li {
-	margin-bottom: 10px;
+	margin-bottom: 5px;
 }
 
 img { 
