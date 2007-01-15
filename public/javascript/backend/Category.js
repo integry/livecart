@@ -49,7 +49,7 @@ Backend.Category = {
 
 		treeNode = $('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode;
 		treeNode.onclick();	
-		Backend.ajaxNav.add('cat_' + treeNode.parentObject.id + '#tabProducts');		  
+		Backend.ajaxNav.add('cat_' + treeNode.parentObject.id + '#tabProducts');	  
 	},
 
 	/**
@@ -151,10 +151,10 @@ Backend.Category = {
 	 */
 	afterBranchUpdate: function(response)
 	{
-		eval('var categoryData = ' + response.responseText);
+		var categoryData = eval('(' + response.responseText + ')');
 
 		Backend.Category.treeBrowser.setItemText(categoryData.ID, categoryData.name);
-		Element.show('categoryMsg_' + categoryData.ID);
+        new Backend.SaveConfirmationMessage($('categoryMsg_' + categoryData.ID), { message: categoryData.infoMessage, type: 'yellow' });
 	},
 
 	/**

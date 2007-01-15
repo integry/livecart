@@ -685,35 +685,43 @@ BrowserDetect.init();
 Backend.SaveConfirmationMessage = Class.create();
 Backend.SaveConfirmationMessage.prototype = 
 {
-	element: false,
-	
-	initialize: function(element)
+	initialize: function(element, options)
   	{
-		if (typeof element != 'object')
-		{
-		  	element = document.getElementById(element);
-		}
-
-		element = element.getElementsByTagName('div')[0];
-		
-		this.element = element;
-		
+        this.element = $(element);
+        this.element.style.display = 'none';
+        
+        if(!this.element.getElementsByTagName('div')[0]) this.element.appendChild(document.createElement('div'));
+        this.innerElement = this.element.getElementsByTagName('div')[0];
+        
+        if(options && options.type) Element.addClassName(this.element, options.type + 'Message')
+       
+        try {
+            if(options && options.message) 
+            {
+                if(this.innerElement.firstChild) this.innerElement.firstChild.value = options.message;
+                else this.innerElement.appendChild(document.createTextNode(options.message));
+            }
+        } catch(e) { }
+        
 		this.show();
 	},
 	
 	show: function()
 	{
-		new Effect.SlideDown(this.element.parentNode, {afterFinish: this.highlight.bind(this)});	  
+        new Effect.SlideDown(this.element, {duration: 1, afterFinish: this.highlight.bind(this)});
 	},
 
 	highlight: function()
 	{
-		new Effect.Highlight(this.element, {duration: 2.5, afterFinish: this.hide.bind(this)});
+       var self = this;	
+       new Effect.Highlight(this.innerElement, { duration: 1 });
+       setTimeout(function() { self.hide() }, 4000);
+
 	},
 
 	hide: function()
 	{
-		new Effect.SlideUp(this.element.parentNode);	  
+        Effect.BlindUp(this.element, {duration: 1});
 	}
 }
 

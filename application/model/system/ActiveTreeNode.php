@@ -101,7 +101,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	 * @param bool $loadRecordData
 	 * @param bool $loadReferencedRecords
 	 * @param bool $loadChildRecords
-	 * @return ARTreeNode
+	 * @return ActiveTreeNode
 	 */
 	public static function getInstanceByID($className, $recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
@@ -109,6 +109,13 @@ class ActiveTreeNode extends ActiveRecordModel
 		return $instance;
 	}
 
+	/**
+	 * Create new Active Tree instance
+	 *
+	 * @param string $className 
+	 * @param ActiveTreeNode $parentNode Parent node
+	 * @return ActiveTreeNode
+	 */
 	public static function getNewInstance($className, ActiveTreeNode $parentNode)
 	{
 		$instance = parent::getNewInstance($className);

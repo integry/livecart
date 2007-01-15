@@ -35,5 +35,16 @@ ActiveForm.prototype = {
             link.style.display = 'block';
             form.style.display = 'none';
         }
+    },
+    
+    generateHandle: function(title)
+    {
+		handle = title.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,""); // trim
+		handle = handle.replace(/[^a-zA-Z_\d ]/g, ""); // remove all illegal simbols
+		handle = handle.replace(/^[\d\_]+/g, "."); // replace first digits with "."
+		handle = handle.replace(/ /g, "."); // replace spaces with "."
+		handle = handle.toLowerCase();  
+        
+        return handle;
     }
 }

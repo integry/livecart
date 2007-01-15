@@ -2,9 +2,7 @@
 
 {assign var="action" value="create"}
 
-<div class="saveConfirmation" id="categoryMsg_{$categoryId}">
-	<div>Details were successfuly updated!</div>
-</div>
+<div id="categoryMsg_{$categoryId}"></div>
 
 </div>
 {form id="categoryForm_$categoryId" handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="Backend.Category.updateBranch($('categoryForm_$categoryId')); return false;"}
@@ -13,6 +11,10 @@
 		<p>
 			<label for="name_{$categoryId}">{t _category_name}:</label>
 			{textfield name="name" id="name_$categoryId"}
+		</p>
+		<p>
+			<label for="handle_{$categoryId}">{t _category_handle}:</label>
+			{textfield name="handle" id="handle_$categoryId"}
 		</p>
 		<p>
 			<label for="details_{$categoryId}">{t _details}:</label>

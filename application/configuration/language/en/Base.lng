@@ -1,1 +1,19 @@
 # _home=Home
+
+
+#Menu
+_menu_products=Products
+_menu_find_product=Find prodyct
+_menu_import_data=Import
+_menu_orders=Orders
+_menu_manage_orders=Manage
+_menu_payments=Payments
+_menu_shipments=Shipments
+_menu_create_order=Create Order
+_menu_users=Users
+_menu_content=Content
+_menu_articles=Articles
+_menu_settings=Settins
+_menu_currencies=Currencies
+_menu_languages=Languages
+_menu_customize=Customize

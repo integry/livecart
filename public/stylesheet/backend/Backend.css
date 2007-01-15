@@ -51,30 +51,6 @@ a, a:visited
 	padding: 3px;
 }
 
-div.saveConfirmation, div.errorMessage {
-	height: 50px;
-    position: relative;
-}
-
-div.saveConfirmation div, div.errorMessage div {
-	padding: 10px;
-	font-weight: bold;
-	white-space: nowrap;
-    width: auto;
-}
-
-div.saveConfirmation div {
-    border: 2px solid yellow;
-}
-
-div.errorMessage div {
-    border: 2px solid #FF8600;
-    background: #FFDDD5;
-}
-
-div.errorMessage div h3 {
-    padding-bottom: 1em;
-}
 
 div.tip {
   	padding: 5px;
@@ -106,6 +82,41 @@ div.noRecords div {
     width: auto;
     padding: 5px;
 }
+
+/***************************
+* Messages
+****************************/
+
+div.yellowMessage, div.redMessage {
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+div.yellowMessage div, div.redMessage div {
+	font-weight: bold;
+    border: 4px solid;
+    padding: 10px;
+}
+
+div.yellowMessage {
+    background-color: #FFF6BF;
+}
+
+div.yellowMessage div {
+    border-color: #FFDD00;
+    background-color: #FFEE7F;
+}
+
+div.redMessage {
+    background-color: #FFCFA0;
+}
+
+div.redMessage div {
+    background-color: #FF933A;
+    border-color: #FF4E3A;
+}
+
 
 /*************************** 
 	Layout 
