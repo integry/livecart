@@ -941,7 +941,8 @@ ActiveList.prototype = {
         if(BrowserDetect.browser != 'Explorer')
         {
             Effect.SwitchOff(li, {duration: 1});
-            setTimeout(function() { Element.remove(li); }, 10000);
+            setTimeout(function() { 
+            Element.remove(li); }, 10000);
         }
         else
         {

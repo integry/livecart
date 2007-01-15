@@ -826,6 +826,7 @@ Backend.SpecField.prototype = {
             if(!this.fieldsList) this.bindDefaultFields();
 
             var li = this.fieldsList.addRecord(id, newValue.getElementsByTagName("*"));
+            CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
 
 			// The field itself
 			var input = li.getElementsByTagName("input")[0];

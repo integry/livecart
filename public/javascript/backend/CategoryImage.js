@@ -132,7 +132,8 @@ Backend.CategoryImage.prototype =
     	 	 	var categoryId = this.getRecordId(li).split('_')[0];
     	 	 	
 				Element.remove(li); 
-				
+				CategoryTabControl.prototype.resetTabItemsCount(categoryId);
+                
 				Backend.Category.image.showNoImagesMessage(categoryId);			   	
 			 }
 	     });
@@ -238,6 +239,8 @@ Backend.CategoryImage.prototype =
 			$('catImgAdd_' + categoryId).style.display = 'none';
 			$('catImgMenu_' + categoryId).style.display = 'block';
 			this.initActiveList(categoryId);
+            
+            CategoryTabControl.prototype.resetTabItemsCount(categoryId);
 		}
 	},
 

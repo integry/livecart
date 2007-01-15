@@ -55,7 +55,11 @@
         {
             var response = eval("("+jsonResponse+")");
 
-            if(response.status == 'success') this.remove(li);
+            if(response.status == 'success') 
+            {
+                this.remove(li);
+                CategoryTabControl.prototype.resetTabItemsCount({/literal}{$categoryID}{literal});
+            }
         },
 
 

@@ -437,35 +437,34 @@ CategoryTabControl.prototype = {
 	},
     
     updateTabItemsCount: function(categoryID)
-    {
-        var self = this;
-     
-        if(!this.tabItemsCounts[categoryID])
+    {     
+        if(!CategoryTabControl.prototype.tabItemsCounts[categoryID])
         {
-            var myAjax = new Ajax.Request(
+            new Ajax.Request(
     		'/backend.category/countTabsItems/?categoryID=' + categoryID, 
     		{
     			method: 'get', 
     			onComplete: function(response) { 
-                    self.tabItemsCounts[categoryID] = eval("(" + response.responseText + ")");
-                    self.setTabItemsCount(categoryID); 
+                    CategoryTabControl.prototype.tabItemsCounts[categoryID] = eval("(" + response.responseText + ")");
+                    CategoryTabControl.prototype.setTabItemsCount(categoryID); 
                 }
     		});
         } else {
-            self.setTabItemsCount(categoryID); 
+            CategoryTabControl.prototype.setTabItemsCount(categoryID); 
         }
     },
     
     setTabItemsCount: function(categoryID)
     {
-        $H(this.tabItemsCounts[categoryID]).each(function(tab) {
+        $H(CategoryTabControl.prototype.tabItemsCounts[categoryID]).each(function(tab) {
             $(tab.key).getElementsByTagName('span')[0].firstChild.nodeValue = ' (' + tab.value + ')';
         });
     },
     
-    clearTabItemsCount: function(categoryID)
+    resetTabItemsCount: function(categoryID)
     {
-        this.tabItemsCounts[categoryID] = null;
+        CategoryTabControl.prototype.tabItemsCounts[categoryID] = null;
+        CategoryTabControl.prototype.updateTabItemsCount(categoryID);
     },
     
 

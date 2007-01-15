@@ -174,7 +174,6 @@ class CategoryController extends StoreManagementController
 	  	ClassLoader::import('application.model.category.*');
 	    
 	    $category = Category::getInstanceByID((int)$this->request->getValue('categoryID'));
-	    
 	    return new JSONResponse(array(
 	        'tabFilters' => FilterGroup::countItems($category),
 	        'tabFields' => SpecField::countItems($category),

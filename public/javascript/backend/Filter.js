@@ -8,6 +8,7 @@
  * <code>
  *     new Backend.Filter({
  *         'ID': 15
+ *         'ID': 15
  *         'name': {'lt': 'Pagal dydi'}
  *         'rootId': 'filter_item_new_41_form'
  *         'categoryID': 41
@@ -1058,6 +1059,8 @@ Backend.Filter.prototype = {
                 Element.addClassName(div, 'filter_title');
                 div.appendChild(document.createTextNode(this.nodes.name.value));
                 window.activeFiltersList[this.categoryID].addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
+                CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
+                
                 this.hideNewFilterAction(this.categoryID);
                 this.recreate(this.filter, true);
             }
