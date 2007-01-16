@@ -43,9 +43,9 @@ class Filter extends MultilingualObject
 		return parent::getNewInstance(__CLASS__);
 	}
 
-	public static function getRecordSetArray(ARSelectFilter $filter)
+	public static function getRecordSetArray(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
-	    return parent::getRecordSetArray(__CLASS__, $filter);
+	    return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
