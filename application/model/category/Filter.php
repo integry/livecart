@@ -2,6 +2,7 @@
 
 ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import('application.model.category.SpecFieldValue');
+ClassLoader::import('application.model.category.FilterGroup');
 
 /**
  *
@@ -25,9 +26,10 @@ class Filter extends MultilingualObject
 		$schema->registerField(new ARField("rangeStart", ARFloat::instance(40)));
 		$schema->registerField(new ARField("rangeEnd", ARFloat::instance(40)));
 
-
 		$schema->registerField(new ARField("rangeDateStart", ARDate::instance()));
 		$schema->registerField(new ARField("rangeDateEnd", ARDate::instance()));
+
+		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
 
 	}
 

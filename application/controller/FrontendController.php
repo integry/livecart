@@ -11,6 +11,8 @@ abstract class FrontendController extends BaseController
 {
 	protected $categoryID = 1;
 	
+	protected $filters = array();
+	
 	public function init()
 	{
 	  	$this->setLayout('frontend');
@@ -75,7 +77,7 @@ abstract class FrontendController extends BaseController
 			$filterFilter->setOrder(new ARFieldHandle('Filter', 'position'));
 			
 			$filters = ActiveRecord::getRecordSet('Filter', $filterFilter, true)->toArray();
-					
+								
 			// sort filters by group
 			$sorted = array();
 			foreach ($filters as $filter)
@@ -94,7 +96,10 @@ abstract class FrontendController extends BaseController
 		}
 
 	 	$response = new BlockResponse();
+	 	$response->setValue('category', $currentCategory->toArray());		 
 	 	$response->setValue('groups', $filterGroups);		 
+	 	print_r($this->filters->toArray());
+		 $response->setValue('filters', $this->filters->toArray(true));
 		return $response;	 	
 	}
 	

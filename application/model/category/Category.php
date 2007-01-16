@@ -180,27 +180,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return ActiveRecord::getRecordSet('FilterGroup', $filter, true);
 	}
 
-	/**
-	 * Returns a set of category images
-	 *
-	 * @return ARSet
-	 */
-	public function getCategoryImagesSet()
-	{
-	  	ClassLoader::import('application.model.category.CategoryImage');
-	  			
-		return ActiveRecord::getRecordSet('CategoryImage', $this->getCategoryImagesFilter());
-	}
-	
-	private function getCategoryImagesFilter()
-	{
-		$filter = new ARSelectFilter();
-		$filter->setCondition(new EqualsCond(new ARFieldHandle('CategoryImage', 'categoryID'), $this->getID()));
-		$filter->setOrder(new ARFieldHandle('CategoryImage', 'position'), 'ASC');
-		
-		return $filter;
-	}
-	
 	private function getFilterGroupFilter($includeParentFields = true)
 	{
 		$fields = $this->getSpecificationFieldArray($includeParentFields);
@@ -229,6 +208,27 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return $filter;
 	}
 
+	/**
+	 * Returns a set of category images
+	 *
+	 * @return ARSet
+	 */
+	public function getCategoryImagesSet()
+	{
+	  	ClassLoader::import('application.model.category.CategoryImage');
+	  			
+		return ActiveRecord::getRecordSet('CategoryImage', $this->getCategoryImagesFilter());
+	}
+	
+	private function getCategoryImagesFilter()
+	{
+		$filter = new ARSelectFilter();
+		$filter->setCondition(new EqualsCond(new ARFieldHandle('CategoryImage', 'categoryID'), $this->getID()));
+		$filter->setOrder(new ARFieldHandle('CategoryImage', 'position'), 'ASC');
+		
+		return $filter;
+	}
+	
 	/**
 	 * Returns a set of direct subcategories
 	 *
