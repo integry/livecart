@@ -10,7 +10,7 @@
  * @package application.helper
  */
 function smarty_function_categoryUrl($params, Smarty $smarty)
-{
+{	
 	$category = $params['data'];	
 	$router = Router::getInstance();
 	
@@ -27,19 +27,40 @@ function smarty_function_categoryUrl($params, Smarty $smarty)
 	$parts = array_reverse($parts);	
 	$handle = implode('.', $parts);
 	
-	// get filters
-	if ($params['filters'])
-	{
-//	  	print_r($params['filters']);
-	}
 	$filters = array();
 
-	if ($params['addFilter'])
+	// remove filter (expand search)
+	if (isset($params['removeFilter']))
 	{
-	  	$filterHandle = $params['addFilter']['FilterGroup']['SpecField']['handle'] . '.' . $params['addFilter']['handle'] . '-' . $params['addFilter']['ID'];
-		$filters[] = $filterHandle;
+	  	foreach ($params['filters'] as $key => $filter)
+	  	{
+		    if ($filter['ID'] == $params['removeFilter']['ID'])
+		    {
+				unset($params['filters'][$key]);
+			}
+		}
+	}
+
+	// get filters
+	if (isset($params['filters']))
+	{
+		foreach ($params['filters'] as $filter)
+		{
+		  	$filters[] = filterHandle($filter);
+		}
+	}
+
+	// apply new filter (narrow search)
+	if (isset($params['addFilter']))
+	{
+	  	$filters[] = filterHandle($params['addFilter']);
 	}	
-	
+
+	if (empty($handle))
+	{
+		$handle = '.';
+	}
+
 	$urlParams = array('controller' => 'category', 
 					   'action' => 'index', 
 					   'cathandle' => $handle, 
@@ -49,8 +70,14 @@ function smarty_function_categoryUrl($params, Smarty $smarty)
 	{
 	  	$urlParams['filters'] = implode(',', $filters);
 	}
-	
+//	print_r($urlParams);
+//	return 'test';				
 	return $router->createUrl($urlParams);
+}
+
+function filterHandle($filter)
+{
+	return $filter['FilterGroup']['SpecField']['handle'] . '.' . $filter['handle'] . '-' . $filter['ID'];	  
 }
 
 ?>

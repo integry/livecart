@@ -98,8 +98,11 @@ abstract class FrontendController extends BaseController
 	 	$response = new BlockResponse();
 	 	$response->setValue('category', $currentCategory->toArray());		 
 	 	$response->setValue('groups', $filterGroups);		 
-	 	print_r($this->filters->toArray());
-		 $response->setValue('filters', $this->filters->toArray(true));
+	 	
+	 	if ($this->filters)
+	 	{
+			$response->setValue('filters', $this->filters->toArray(true));		   
+		}
 		return $response;	 	
 	}
 	
