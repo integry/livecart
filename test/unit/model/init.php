@@ -9,6 +9,6 @@
 	ClassLoader::import("application.model.product.*");
 	ClassLoader::import("library.activerecord.ActiveRecord");
 
-	ActiveRecordModel::setDSN("mysql://root@192.168.1.6/livecart_test");
+	ActiveRecordModel::setDSN("mysql://root@192.168.1.6/livecart_dev");
 
 ?>

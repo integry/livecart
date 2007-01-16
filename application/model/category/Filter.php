@@ -48,6 +48,11 @@ class Filter extends MultilingualObject
 	    return parent::getRecordSetArray(__CLASS__, $filter);
 	}
 
+	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
+	{
+		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+	}
+
     /**
      * Set a whole language field at a time. You can allways skip some language, bat as long as it occurs in
      * languages array it will be writen into the database as empty string. I spent 2 hours writing this feature =]

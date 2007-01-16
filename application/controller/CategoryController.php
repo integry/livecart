@@ -7,12 +7,12 @@ ClassLoader::import("application.controller.FrontendController");
  *
  * @package application.controller
  */
-class CategoryController extends FrontendController 
+class CategoryController extends FrontendController
 {
-	public function index() 
+	public function index()
 	{
 		$this->categoryID = $this->request->getValue('id');
-		
+
 		if ($this->request->getValue('filters'))
 		{
 		  	ClassLoader::import('application.model.category.Filter');
@@ -27,18 +27,19 @@ class CategoryController extends FrontendController
 				}
 				$filterIds[] = $pair[1];
 			}
-			
+
 			// get all filters
 			$f = new ARSelectFilter();
 			$c = new INCond(new ARFieldHandle('Filter', 'ID'), $filterIds);
 			$f->setCondition($c);
-			$this->filters = ActiveRecord::getRecordSet('Filter', $f);
+			$this->filters = ActiveRecordModel::getRecordSet('Filter', $f);
+
 		}
-		
+
 		$response = new ActionResponse();
 		$response->setValue('id', $this->categoryID);
 		return $response;
-	}	
+	}
 }
 
 ?>
