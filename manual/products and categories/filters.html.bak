@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
@@ -10,17 +10,21 @@
 	<h2>Filters</h2>
 
 	<h3>Manage Filters</h3>
-	<p>Filters are based on the <a href="/attributes.html">attributes</a> as they form the filtering options. You have to have at least one field to create a filter group.</p>
-	
+	<p>Filters make search easy. Imagine yourself looking for a black-colored 17” LCD monitor with speakers and not more than 8 ms response time, costing less than $200. Where would you start? Samsung, LG? NO! LC introduces common-sence solution, filter based system that allows you to cutomize your search the way YOU need it...</p> 
+	<p>To create filters you have to define attributes first. (Go to the <a href="attributes.html">Attributes</a> section to create attributes).</p>
 
 	<h3>TO DO list</h3>
 	<ul>	
-		<li>thing 1</li>
-		<li>thing 2</li>
-		<li>thing 3...</li>
+		<li><a href="#how">How filters work</a></li>
+		<li><a href="#create">Create filter</a></li>
+		<li><a href="#delete">Delete</a></li>
+		<li><a href="#sort">Sort</a></li>
 	</ul>
 	
 
+	<a name="how" />
+	<h3>How do Filters work?</h3>
+	<p>Each category has a set of filters assigned to it, for example, Monitors have the following filter: screen size, type (LCD/CRT), response time, etc. Each of there filters may be selected by the cutomer in his/her search and combined together. Our solution doesn’t force the customer to select the product in pre-set order, instead – the customer may filter the products by any attribute he likes at any point of the process. For instance, ...</p>
 
 
 	<h3>Reference</h3>
