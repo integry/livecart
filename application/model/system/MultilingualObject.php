@@ -60,7 +60,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	 *
 	 * @param unknown_type $includeLangData
 	 */
-	public function toArray($recursive = false, $convertToUnderscope = true)
+	public function toArray($convertToUnderscope = true, $recursive = false)
 	{
 		$store = Store::getInstance();
 		$defaultLangCode = $store->getDefaultLanguageCode();
@@ -72,18 +72,23 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 			$field = $valueContainer->getField();
 			$fieldValue = $valueContainer->get();
 			if ($field instanceof ARForeignKey)
-			{
+			{			
+				
+				// r1411: $data[$field->getForeignClassName()] = $valueContainer->get()->toArray(true);
+
 				//echo $fieldName;
 				//echo get_class($fieldValue) . "<br/>";
 				//echo $fieldValue->getID();
+
 				if ($recursive)
 				{
 					$data[$field->getForeignClassName()] = $fieldValue->toArray(true);
 				}
 				else
 				{
-					$data[$field->getForeignClassName()] = $fieldValue->getID();
+					$data[$field->getForeignClassName()] = $fieldValue->toArray();
 				}
+
 			}
 			else
 			{
