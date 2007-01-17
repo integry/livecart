@@ -181,7 +181,7 @@ Backend.Category = {
 	removeBranch: function()
 	{
 		var nodeIdToRemove = this.treeBrowser.getSelectedItemId();
-		parentNodeId = this.treeBrowser.getParentId(nodeIdToRemove);
+		var parentNodeId = this.treeBrowser.getParentId(nodeIdToRemove);
 
 		var url = this.getUrlForNodeRemoval(nodeIdToRemove);
 		var ajaxRequest = new Ajax.Request(
@@ -195,16 +195,23 @@ Backend.Category = {
 	},
 
 
-	reorderCategory: function(sourceNodeId, targetNodeId, siblingNodeId)
+	reorderCategory: function(targetId, parentId, siblingNodeId)
 	{
-		//alert("Source node id: " + sourceNodeId);
-		//alert("target id: " + targetNodeId);
+		//alert("Source node id: " + targetId);
+		//alert("target id: " + parentId);
+        var success = false;
+        new Ajax.Request('/backend.category/reorder?targetId='+targetId+'&parentId='+parentId,
+        {
+			method: 'get', 
+            asynchronous: false,
+			onComplete: function(response) 
+            { 
+                success = eval("(" + response.responseText + ")");   
+            }
+    	});
         
-        new Ajax.Request(
-            '/backend.category/reorder?targetID='+targetNodeId+'&parentID='+sourceNodeId
-        );
-        
-		return true;
+        if(!success) alert('Could not move category');
+		return success;
 	}
 }
 

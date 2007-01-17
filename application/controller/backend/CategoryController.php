@@ -25,6 +25,7 @@ class CategoryController extends StoreManagementController
 		$filter = new ARSelectFilter();
 		// Removing tree ROOT node from results
 		$filter->setCondition(new OperatorCond(new ARFieldHandle("Category", "ID"), Category::ROOT_ID, "<>"));
+		$filter->setOrder(new ARFieldHandle("Category", "lft", 'ASC'));
 		$categoryList = Category::getRecordSet($filter);
 		$response->setValue("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
 
@@ -134,12 +135,15 @@ class CategoryController extends StoreManagementController
 	 */
 	public function reorder()
 	{
-		$targetNodeId = $this->request->getValue("targetId");
-		$parentNodeId = $this->request->getValue("parentId");
-
-		$targetNode = Category::getInstanceByID($targetNodeId);
-		$parentNode = Category::getInstanceByID($parentNodeId);
-		$targetNode->moveTo($parentNode);
+		$targetNode = Category::getInstanceByID((int)$this->request->getValue("targetId"));
+		$parentNode = Category::getInstanceByID((int)$this->request->getValue("parentId"));
+		
+		$result = $targetNode->moveTo($parentNode);
+		
+//		$tree = new ActiveTree(Category::getInstanceByID(Category::ROOT_ID));
+//		echo $tree;
+		
+		return new JSONResponse($result);
 	}
 
 	/**

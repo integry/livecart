@@ -54,7 +54,9 @@ ClassLoader::import("application.model.ActiveRecordModel");
  */
 class ActiveTreeNode extends ActiveRecordModel
 {
-	/**
+    protected $level;
+	
+    /**
 	 * Table field name for left value container of tree traversal order
 	 *
 	 */
@@ -138,8 +140,8 @@ class ActiveTreeNode extends ActiveRecordModel
 		$className = get_class($this);
 
 		$nodeFilter = new ARSelectFilter();
-		$cond = new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME)->get(), ">");
-		$cond->addAND(new OperatorCond(new ArFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $this->getField(self::RIGHT_NODE_FIELD_NAME)->get(), "<"));
+		$cond = new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME)->get(), ">=");
+		$cond->addAND(new OperatorCond(new ArFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $this->getField(self::RIGHT_NODE_FIELD_NAME)->get(), "<="));
 
 		if ($loadOnlyDirectChildren)
 		{
@@ -395,72 +397,51 @@ class ActiveTreeNode extends ActiveRecordModel
 	 */
 	public function moveTo(ActiveTreeNode $parentNode)
 	{
-		$this->load();
-		$previousParent = $this->getParentNode();
-		$previousParent->load();
-		$parentNode->load();
-
-		$this->setParentNode($parentNode);
-		$subtreeNodeCount = ($this->rgt->get() - $this->lft->get() - 1) / 2 + 1;
-		$lftDiff = $parentNode->lft->get() - $this->lft->get();
-
-		$tableName = self::getSchemaInstance(get_class($this))->getName();
-		$db = ActiveRecord::getDBConnection();
-		ActiveRecord::beginTransaction();
-		try
-		{
-			/*
-			$leftShiftFilter = new ARUpdateFilter();
-			$leftShiftFilter->addModifier("lft", "lft + " . ($subtreeNodeCount * 2 + 1));
-			$leftShiftFilter->addModifier("rgt", "rgt + " . ($subtreeNodeCount * 2 + 1));
-			$leftShiftFilter->setCondition(new OperatorCond(new ARFieldHandle("Category", "lft"), $parentNode->lft->get(), ">"));
-			ActiveRecord::updateRecordSet("Category", $leftShiftFilter);
-			*/
-			$leftShitDiff = ($subtreeNodeCount * 2 + 1);
-			$leftShiftUpdateQuery = "UPDATE " . $tableName . " SET " . self::LEFT_NODE_FIELD_NAME  . " = " . self::LEFT_NODE_FIELD_NAME  . " + " . $leftShitDiff . "," .
-																	   self::RIGHT_NODE_FIELD_NAME  . " = " . self::RIGHT_NODE_FIELD_NAME . " + " . $leftShitDiff .
-														     " WHERE " . self::LEFT_NODE_FIELD_NAME . " > " . $parentNode->lft->get();
-
-			self::getLogger()->logQuery($leftShiftUpdateQuery);
-			$db->executeUpdate($leftShiftUpdateQuery);
-
-			/*
-			$subtreeFixFilter = new ARUpdateFilter();
-			$subtreeFixFilter->addModifier("lft", "lft + " . ($lftDiff + 1));
-			$subtreeFixFilter->addModifier("rgt", "rgt + " . ($lftDiff + 1));
-			$lftFixCond = new OperatorCond(new ARFieldHandle("Category", "lft"), $this->lft->get(), ">=");
-			$rgtFixCont = new OperatorCond(new ARFieldHandle("Category", "rgt"), $this->rgt->get(), "<=");
-			$lftFixCond->addAND($rgtFixCont);
-			$subtreeFixFilter->setCondition($lftFixCond);
-			ActiveRecord::updateRecordSet("Category", $subtreeFixFilter);
-			*/
-			$subtreeFixQuery = "UPDATE " . $tableName . " SET " . self::LEFT_NODE_FIELD_NAME  . " = " . self::LEFT_NODE_FIELD_NAME . " + " . ($lftDiff + 1) . ", " .
-																  self::RIGHT_NODE_FIELD_NAME  . " = " . self::RIGHT_NODE_FIELD_NAME . " + " . ($lftDiff + 1) .
-												    " WHERE " . self::LEFT_NODE_FIELD_NAME  . " >= " . $this->lft->get() . " AND " . self::RIGHT_NODE_FIELD_NAME  . " <= " . $this->rgt->get();
-			self::getLogger()->logQuery($subtreeFixQuery);
-			$db->executeUpdate($subtreeFixQuery);
-
-			/*
-			$treeFixFilter = new ARUpdateFilter();
-			$treeFixFilter->addModifier("rgt", "rgt - " . ($subtreeNodeCount * 2));
-			$treeFixFilter->addModifier("lft", "lft - " . ($subtreeNodeCount * 2));
-			$treeFixFilter->setCondition(new OperatorCond(new ARFieldHandle("Category", "rgt"), $this->rgt->get(), ">="));
-			ActiveRecord::updateRecordSet("Category", $treeFixFilter);
-			*/
-
-			$treeFixQuery = "UPDATE " . $tableName . " SET " . self::RIGHT_NODE_FIELD_NAME . " = " . self::RIGHT_NODE_FIELD_NAME . " - " . ($subtreeNodeCount * 2) . ", " .
-															   self::LEFT_NODE_FIELD_NAME . " = " . self::LEFT_NODE_FIELD_NAME . " - " . ($subtreeNodeCount * 2) .
-													 " WHERE " . self::RIGHT_NODE_FIELD_NAME . " >= " . $previousParent->rgt->get();
-			self::getLogger()->logQuery($treeFixQuery);
-			$db->executeUpdate($treeFixQuery);
-
-			ActiveRecord::commit();
-			return true;
+        $this->load();
+	    if($this->getFieldValue(self::PARENT_NODE_FIELD_NAME)->getID() == $parentNode->getID()) return true;
+	    
+		$className = get_class($this);
+    	    
+        $db = ActiveRecord::getDBConnection();
+	    try
+	    {
+    	    $this->setFieldValue('parentNodeID', $parentNode);
+    	    $this->save();
+    			
+    	    $parentNode->load();
+    		$t_r = $this->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
+    		$t_l = $this->getFieldValue(self::LEFT_NODE_FIELD_NAME);
+    		$p_r = $parentNode->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
+    		$p_l = $parentNode->getFieldValue(self::LEFT_NODE_FIELD_NAME);
+    		
+    		$width = $t_r - $t_l + 1;
+    		$s = $p_l - $t_l > 0 ? -1 : 0;
+    		
+    		// Step #2: Change target node left and right values to negotive
+    		$queries[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME.", ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME." WHERE ".self::LEFT_NODE_FIELD_NAME." BETWEEN $t_l AND $t_r";
+    		
+    		// Step #3: No that there is no target node decrement all left and right values after target node position
+    		$queries[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." - $width WHERE ".self::RIGHT_NODE_FIELD_NAME." > $t_r";
+            $queries[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." - $width WHERE ".self::LEFT_NODE_FIELD_NAME." > $t_r";
+            
+            // Step #4: Make free space for new node to insert
+            $queries[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." + $width WHERE ".self::RIGHT_NODE_FIELD_NAME." > " . ($p_l + $s * $width);
+            $queries[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." + $width WHERE ".self::LEFT_NODE_FIELD_NAME." > " . ($p_l + $s * $width);
+            
+            
+            // Step #5: Change target node left and right values back to positive and put them to their place
+            $queries[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME."+(" . ($p_l - $t_l + 1 + $s * $width) . "), ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME."+(" . ($p_l - $t_l + 1 + $s * $width) . ") WHERE ".self::LEFT_NODE_FIELD_NAME." < 0";
+            
+            
+            foreach($queries as $query) $db->executeUpdate($query);
+//            foreach($queries as $query) echo $query.";<br />";
+                        
+    		return true;
 		}
 		catch (Exception $e)
 		{
-			ActiveRecord::rollback();
-			return false;
+			echo 'asdasda';
+		    return false;
 		}
 	}
 
@@ -519,6 +500,17 @@ class ActiveTreeNode extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField(self::PARENT_NODE_FIELD_NAME, $tableName, "ID",$className, ARInteger::instance()));
 		$schema->registerField(new ARField(self::LEFT_NODE_FIELD_NAME, ARInteger::instance()));
 		$schema->registerField(new ARField(self::RIGHT_NODE_FIELD_NAME, ARInteger::instance()));
+	}
+	
+	
+	public function setLevel($level)
+	{
+	    $this->level = $level;
+	}
+	
+	public function getLevel()
+	{
+	    return $this->level;
 	}
 }
 
