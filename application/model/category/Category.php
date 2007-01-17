@@ -7,7 +7,7 @@ ClassLoader::import("application.model.system.MultilingualObjectInterface");
  * Hierarchial product category model class
  *
  *
- * @author Saulius Rupainis <saulius@integry.net>, Rev. $id$, $LastChangedDate$
+ * @author Saulius Rupainis <saulius@integry.net>, Rev. $Id: Category.php 1425 2007-01-17 15:18:27Z saulius $, $LastChangedDate: 2007-01-17 17:18:27 +0200 (Wed, 17 Jan 2007) $
  * @package application.model.category
  *
  */
