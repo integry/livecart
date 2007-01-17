@@ -94,7 +94,7 @@ abstract class FrontendController extends BaseController
 				}
 			}
 		}
-
+//print_r($filterGroups);
 	 	$response = new BlockResponse();
 	 	if ($this->filters)
 	 	{
@@ -120,7 +120,7 @@ abstract class FrontendController extends BaseController
 
 	 	$response->setValue('category', $currentCategory->toArray());		 
 	 	$response->setValue('groups', $filterGroups);		 
-	 	
+
 		return $response;	 	
 	}
 	
@@ -196,13 +196,55 @@ abstract class FrontendController extends BaseController
 				$current['subCategories'] = $subcategories;
 			}									  
 		}
-										
+						
+		// apply current filters to suitable categories
+
+		/* @todo get rid of this line (needed to preload all related records) */
+		$filterGroupSet = $currentCategory->getFilterGroupSet();
+		$this->applyFilters($topCategories, $this->filters->toArray(true, true), array());
+//		print_r($topCategories);								
 		$response = new BlockResponse();
+
+	 	if ($this->filters)
+	 	{	
+//			$response->setValue('categoryFilters', $this->filters->toArray(true, true));	
+		}
+
 		$response->setValue('categories', $topCategories);
 		$response->setValue('currentId', $this->categoryID);
 		$response->setValue('lang', 'en');
 		return $response;
 	}
+	
+	/**
+	 *  Recursively applies all selected filters to applicable categories
+	 */
+	private function applyFilters(&$categories, $filters, $parentFilterIds)
+	{
+		//print_r($filters); exit;
+		foreach ($categories as &$category)
+		{
+		  	$categoryFilters = $parentFilterIds;
+			foreach ($filters as $filter)
+		  	{
+			    if ($filter['FilterGroup']['SpecField']['categoryID'] == $category['ID'])
+			    {
+					$categoryFilters[$filter['ID']] = true;
+				}
+
+				if (isset($categoryFilters[$filter['ID']]))
+				{
+					$category['filters'][] = $filter;
+				}
+			}
+			
+			if (isset($category['subCategories']))
+			{
+			  	$this->applyFilters($category['subCategories'], $filters, $categoryFilters);
+			}
+		}  	
+	}
+
 }
 
 ?>

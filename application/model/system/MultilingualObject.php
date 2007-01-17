@@ -86,7 +86,15 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 				}
 				else
 				{
-					$data[$field->getForeignClassName()] = $fieldValue->toArray();
+					/* @todo: why/how would $fieldValue could ever not be an object? */
+					if (!is_object($fieldValue))
+					{
+					  	$data[$field->getForeignClassName()] = false;
+					}
+					else
+					{
+						$data[$field->getForeignClassName()] = $fieldValue->toArray();					  
+					}
 				}
 
 			}

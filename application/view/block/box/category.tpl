@@ -1,10 +1,16 @@
-{defun name="categoryTree" node=false}
+{defun name="categoryTree" node=false filters=false}
 	{if $node}
 		<ul>			
 		{foreach from=$node item=category}
-			<li{if $category.ID == $currentId} class="current"{/if}>
-				<a href="{categoryUrl data=$category}">{$category.name_lang}</a>
-			</li>	
+			{if $category.ID == $currentId}
+				<li class="current">
+					<span>{$category.name_lang}</span>
+				</li>	
+			{else}
+				<li>
+					<a href="{categoryUrl data=$category filters=$category.filters}">{$category.name_lang}</a>
+				</li>	
+			{/if}
 			{if $category.subCategories}
 				{fun name="categoryTree" node=$category.subCategories}
 			{/if}
