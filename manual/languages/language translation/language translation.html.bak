@@ -46,9 +46,9 @@
 
 	<img src="pics/translation_filter_blue.bmp"/>
 	<ul>
-		<li><span style="background: #ffffcc">All</span> – show all the existing words</li>
-		<li><span style="background: #ffffcc">Translated</span> – display only translated items</li>
-		<li><span style="background: #ffffcc">Not translated</span> – show items that have not been translated</li>
+		<li><span style="background: #ffff99">All</span> – show all the existing words</li>
+		<li><span style="background: #ffff99">Translated</span> – display only translated items</li>
+		<li><span style="background: #ffff99">Not translated</span> – show items that have not been translated</li>
 	</ul>
 	
 	<a name="directly from user interface" />

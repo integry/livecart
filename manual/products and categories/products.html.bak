@@ -10,7 +10,7 @@
 	<h2>Products</h2>
 
 	<h3>Manage Products</h3>
-	<p>To start selling goods in your e-store you have to stock up your system with some products first. LiveCart offers you tools that will help you (to) import and keep your product information up-to-date. To add a new product, go to the Add New Product section. </p>
+	<p>To start selling goods in your e-store you have to stock up your system with some products first. LiveCart offers you tools that will help you (to) import and keep your product information up-to-date.</p>
 	
 
 	<h3>TO DO list</h3>
@@ -20,7 +20,9 @@
 		<li>thing 3...</li>
 	</ul>
 	
-	<br/>
+	<a name="add" />
+	<h3>Add products</h3>
+	<p>Categories should be created first to add any products. There are two ways to add products. Either to import multiple data or manually one by one...</p>
 
 	<h3>Reference</h3>
 	
