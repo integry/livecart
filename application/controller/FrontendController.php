@@ -94,7 +94,7 @@ abstract class FrontendController extends BaseController
 				}
 			}
 		}
-//print_r($filterGroups);
+
 	 	$response = new BlockResponse();
 	 	if ($this->filters)
 	 	{
@@ -141,7 +141,7 @@ abstract class FrontendController extends BaseController
 		// get path of the current category (except for top categories)
 		if (1 < $currentCategory->category->get()->getID())
 		{
-			$path = $currentCategory->getPathNodeSet()->toArray();
+			$path = $currentCategory->getPathNodeSet(false)->toArray();
 			$path[] = $currentCategory->toArray();
 	
 			$topCategoryId = $path[0]['ID'];
@@ -161,7 +161,7 @@ abstract class FrontendController extends BaseController
 		}		  
 
 		// get sibling (same-level) categories (except for top categories)
-		if (1 < $currentCategory->category->get()->getID())
+		if ($currentCategory->category->get()->getID() > 1)
 		{
 			$siblings = $currentCategory->getSiblingSet()->toArray();
 	
@@ -197,19 +197,26 @@ abstract class FrontendController extends BaseController
 			}									  
 		}
 						
-		// apply current filters to suitable categories
 
 		/* @todo get rid of this line (needed to preload all related records) */
 		$filterGroupSet = $currentCategory->getFilterGroupSet();
-		$this->applyFilters($topCategories, $this->filters->toArray(true, true), array());
-//		print_r($topCategories);								
-		$response = new BlockResponse();
-
-	 	if ($this->filters)
-	 	{	
-//			$response->setValue('categoryFilters', $this->filters->toArray(true, true));	
+		
+		// apply current filters to suitable categories
+		if ($this->filters)
+		{
+			$filterArray = $this->filters->toArray(true, true);
+			$rootFilters = array();
+			foreach ($filterArray as $filter)
+			{
+			  	if (Category::ROOT_ID == $filter['FilterGroup']['SpecField']['categoryID'])
+			  	{
+					$rootFilters[$filter['ID']] = true;
+				}
+			}
+			$this->applyFilters($topCategories, $filterArray, $rootFilters);		  
 		}
-
+//print_r($topCategories);exit;
+		$response = new BlockResponse();
 		$response->setValue('categories', $topCategories);
 		$response->setValue('currentId', $this->categoryID);
 		$response->setValue('lang', 'en');

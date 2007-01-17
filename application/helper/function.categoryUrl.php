@@ -18,7 +18,7 @@ function smarty_function_categoryUrl($params, Smarty $smarty)
 	$parts = array();
 	$parts[] = $category['handle'];
 	$current = $category['parent'];
-	while ($current != 1)
+	while ($current > 1)
 	{
 	  	$cat = Category::getInstanceByID($current, true);
 	  	$parts[] = $cat->handle->get();
@@ -70,8 +70,7 @@ function smarty_function_categoryUrl($params, Smarty $smarty)
 	{
 	  	$urlParams['filters'] = implode(',', $filters);
 	}
-//	print_r($urlParams);
-//	return 'test';				
+
 	return $router->createUrl($urlParams);
 }
 
