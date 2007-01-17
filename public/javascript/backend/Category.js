@@ -199,6 +199,11 @@ Backend.Category = {
 	{
 		//alert("Source node id: " + sourceNodeId);
 		//alert("target id: " + targetNodeId);
+        
+        new Ajax.Request(
+            '/backend.category/reorder?targetID='+targetNodeId+'&parentID='+sourceNodeId
+        );
+        
 		return true;
 	}
 }
