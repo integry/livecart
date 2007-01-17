@@ -10,7 +10,6 @@ ClassLoader::import("application.model.product.*");
  *
  * @author Saulius Rupainis <saulius@integry.net>
  * @package application.model.product
- *
  */
 class SpecificationItem extends ActiveRecordModel
 {

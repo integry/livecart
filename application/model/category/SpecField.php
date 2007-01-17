@@ -163,6 +163,11 @@ class SpecField extends MultilingualObject
 		return SpecFieldValue::getRecordSetArray($this->getID());
 	}
 
+	/**
+	 *
+	 *
+	 * @return array
+	 */
 	public static function getSelectorValueTypes()
 	{
 	    return array (self::TYPE_NUMBERS_SELECTOR, Specfield::TYPE_TEXT_SELECTOR);

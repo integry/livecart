@@ -10,7 +10,6 @@ ClassLoader::import("framework.ApplicationException");
  */
 class AccessDeniedException extends ApplicationException
 {
-
 	private $user = null;
 	private $actionName = "";
 	private $controllerName = "";

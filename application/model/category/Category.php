@@ -216,19 +216,19 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	public function getCategoryImagesSet()
 	{
 	  	ClassLoader::import('application.model.category.CategoryImage');
-	  			
+
 		return ActiveRecord::getRecordSet('CategoryImage', $this->getCategoryImagesFilter());
 	}
-	
+
 	private function getCategoryImagesFilter()
 	{
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle('CategoryImage', 'categoryID'), $this->getID()));
 		$filter->setOrder(new ARFieldHandle('CategoryImage', 'position'), 'ASC');
-		
+
 		return $filter;
 	}
-	
+
 	/**
 	 * Returns a set of direct subcategories
 	 *
@@ -286,6 +286,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	  	return ActiveRecord::getRecordSetArray('Category', $this->getSiblingFilter($loadSelf), $loadReferencedRecords);
 	}
 
+	/**
+	 *
+	 *
+	 * @param bool $loadSelf
+	 * @return ARSelectFilter
+	 */
 	private function getSiblingFilter($loadSelf)
 	{
 	  	$filter = new ARSelectFilter();
@@ -313,7 +319,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$store = Store::getInstance();
 		$defaultLangCode = $store->getDefaultLanguageCode();
 		$currentLangCode = $store->getLocaleCode();
-		
+
 		$data = parent::toArray();
 		$transformedData = array();
 		$schema = self::getSchemaInstance(get_class($this));
@@ -335,12 +341,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 						}
 					}
 				}
-				
-				// value in active language (default language value is used 
+
+				// value in active language (default language value is used
 				// if there's no value in active language)
 				$transformedData[$name . '_lang'] = !empty($transformedData[$name . '_' . $currentLangCode]) ?
 													$transformedData[$name . '_' . $currentLangCode] :
-													!empty($transformedData[$name]) ? $transformedData[$name] : '';					
+													!empty($transformedData[$name]) ? $transformedData[$name] : '';
 			}
 			else
 			{
@@ -437,11 +443,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 			ActiveRecordModel::rollback();
 		}
 	}
-
-	//protected function insert()
-	//{
-	//	return parent::insert();
-	//}
 
 	public static function getRootNode()
 	{
