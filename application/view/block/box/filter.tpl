@@ -6,7 +6,7 @@
 	<div class="content">
 		<ul>
 		{foreach from=$filters item=filter}		
-			<li><a href="{categoryUrl data=$category filters=$filters removeFilter=$filter}">Remove {$filter.FilterGroup.name_lang} {$filter.name_lang}</a></li>
+			<li><a href="{categoryUrl data=$category filters=$filters removeFilter=$filter}">Remove {$filter.filterGroup.name_lang} {$filter.name_lang}</a></li>
 		{/foreach}
 		</ul>
 	</div>

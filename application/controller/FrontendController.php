@@ -59,8 +59,8 @@ abstract class FrontendController extends BaseController
 		{
 		  	return new RawResponse();
 		}		
-		$filterGroups = $filterGroupSet->toArray();
-		
+		$filterGroups = $filterGroupSet->toArray(true);
+
 		// get group filters
 		$ids = array();
 		foreach ($filterGroups as $group)
@@ -76,7 +76,7 @@ abstract class FrontendController extends BaseController
 			$filterFilter->setOrder(new ARFieldHandle('Filter', 'filterGroupID'));
 			$filterFilter->setOrder(new ARFieldHandle('Filter', 'position'));
 			
-			$filters = ActiveRecord::getRecordSet('Filter', $filterFilter, true)->toArray();
+			$filters = ActiveRecord::getRecordSet('Filter', $filterFilter, true)->toArray(true);
 								
 			// sort filters by group
 			$sorted = array();
@@ -96,13 +96,31 @@ abstract class FrontendController extends BaseController
 		}
 
 	 	$response = new BlockResponse();
+	 	if ($this->filters)
+	 	{
+			$filters = $this->filters->toArray(true);
+			$response->setValue('filters', $filters);	
+
+			// remove already applied filter groups
+			$activeFilterGroups = $filterGroups;
+			foreach ($filters as $key => $filter)
+			{
+			 	$id = $filter['FilterGroup']['ID'];
+			 	
+				foreach ($filterGroups as $k => &$group)
+				{
+					if ($group['ID'] == $id)
+				  	{						
+					    unset($activeFilterGroups[$k]);
+					}
+				} 	
+			}
+			$filterGroups = $activeFilterGroups;	
+		}
+
 	 	$response->setValue('category', $currentCategory->toArray());		 
 	 	$response->setValue('groups', $filterGroups);		 
 	 	
-	 	if ($this->filters)
-	 	{
-			$response->setValue('filters', $this->filters->toArray(true));		   
-		}
 		return $response;	 	
 	}
 	
