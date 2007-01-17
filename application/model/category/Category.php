@@ -7,7 +7,7 @@ ClassLoader::import("application.model.system.MultilingualObjectInterface");
  * Hierarchial product category model class
  *
  *
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Saulius Rupainis <saulius@integry.net>, Rev. $id$, $LastChangedDate$
  * @package application.model.category
  *
  */
