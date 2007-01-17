@@ -6,10 +6,9 @@ ClassLoader::import("application.model.system.MultilingualObjectInterface");
 /**
  * Hierarchial product category model class
  *
+ * $Id: Category.php 1427 2007-01-17 15:21:08Z saulius $, $LastChangedDate: 2007-01-17 17:21:08 +0200 (Wed, 17 Jan 2007) $
  * 
- * @author $Author: saulius $, $Id: Category.php 1426 2007-01-17 15:20:10Z saulius $, $LastChangedDate: 2007-01-17 17:20:10 +0200 (Wed, 17 Jan 2007) $
  * @package application.model.category
- *
  */
 class Category extends ActiveTreeNode implements MultilingualObjectInterface
 {
