@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("application.controller.FrontendController");
+ClassLoader::import('application.model.category.Category');
 
 /**
  * Index controller for frontend
@@ -35,6 +36,11 @@ class CategoryController extends FrontendController
 			$this->filters = ActiveRecordModel::getRecordSet('Filter', $f);
 
 		}
+
+		// get category instance
+		$category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
+
+		$category->testGetProductArray(new ARSelectFilter(), true);
 
 		$response = new ActionResponse();
 		$response->setValue('id', $this->categoryID);

@@ -12,6 +12,8 @@ class Product extends MultilingualObject
 {
 	private static $multilingualFields = array("name", "shortDescription", "longDescription");
 
+	protected $specFieldData = array();
+
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -118,6 +120,24 @@ class Product extends MultilingualObject
 			ActiveRecord::rollback();
 			throw $e;
 		}
+	}
+
+	protected function miscRecordDataHandler($miscRecordDataArray)
+	{
+		foreach ($miscRecordDataArray as $key => $value)
+		{
+			if (substr($key, 0, 10) == 'specField_')
+			{
+			  	$key = substr($key, 10);
+			  	$this->specFieldData[$key] = $value;
+			}
+		}
+	}
+
+	public function toArray()
+	{
+	  	$array = parent::toArray();
+	  	$array['specFieldData'] = $this->specFieldData;
 	}
 
 	/**

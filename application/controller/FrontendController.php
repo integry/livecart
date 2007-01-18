@@ -117,7 +117,7 @@ abstract class FrontendController extends BaseController
 			}
 			$filterGroups = $activeFilterGroups;	
 		}
-print_r($filterGroups);
+
 	 	$response->setValue('category', $currentCategory->toArray());		 
 	 	$response->setValue('groups', $filterGroups);		 
 
@@ -215,7 +215,7 @@ print_r($filterGroups);
 			}
 			$this->applyFilters($topCategories, $filterArray, $rootFilters);		  
 		}
-//print_r($topCategories);exit;
+
 		$response = new BlockResponse();
 		$response->setValue('categories', $topCategories);
 		$response->setValue('currentId', $this->categoryID);

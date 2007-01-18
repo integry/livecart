@@ -6,7 +6,7 @@ ClassLoader::import("application.model.system.MultilingualObjectInterface");
 /**
  * Hierarchial product category model class
  *
- * $Id: Category.php 1434 2007-01-18 13:17:47Z sergej $, $LastChangedDate: 2007-01-18 15:17:47 +0200 (Thu, 18 Jan 2007) $
+ * $Id: Category.php 1436 2007-01-18 13:45:10Z rinalds $, $LastChangedDate: 2007-01-18 15:45:10 +0200 (Thu, 18 Jan 2007) $
  * 
  * @package application.model.category
  */
@@ -82,6 +82,32 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$filter->setCondition($cond);
 
 		return $filter;
+	}
+	
+	public function testGetProductArray(ARSelectFilter $filter, $loadSpecification = false)
+	{
+		// get specification fields
+		if ($loadSpecification)
+		{
+			$specFields = $this->getSpecificationFieldArray(self::LOAD_DATA);	  
+			print_r($specFields);
+			
+			foreach ($specFields as $specField)
+			{
+			  	$aliasTable = 'specTable_' . $specField['ID'];
+			  	$aliasField = 'specField_' . $specField['ID'];
+				$filter->joinTable('Specification', 'Product', 'productID AND ' . $aliasTable . '.SpecFieldID = ' . $specField['ID'], 'ID', $aliasTable);
+			  	$filter->addField('specFieldValueID', $aliasTable, $aliasField);
+			}
+		}	  	
+	
+		ClassLoader::import('application.model.product.Product');
+		
+		$cond = new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->getID());
+		$filter->setCondition($cond);
+	
+		return ActiveRecordModel::getRecordSet('Product', $filter, true, true);
+	
 	}
 
 	/**
