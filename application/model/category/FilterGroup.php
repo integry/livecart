@@ -156,7 +156,7 @@ class FilterGroup extends MultilingualObject
     {
         //echo "<pre >".print_r($category->getFilterGroupSet()->toArray(), true)."</pre>";
 
-        return $category->getFilterGroupSet()->getTotalRecordCount();
+        return $category->getFilterGroupSet(false)->getTotalRecordCount();
     }
 }
 
