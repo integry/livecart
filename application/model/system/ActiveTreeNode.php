@@ -54,47 +54,63 @@ ClassLoader::import("application.model.ActiveRecordModel");
  */
 class ActiveTreeNode extends ActiveRecordModel
 {
-    protected $level;
-	
     /**
 	 * Table field name for left value container of tree traversal order
 	 *
+	 * @var string
 	 */
 	const LEFT_NODE_FIELD_NAME = 'lft';
 
 	/**
 	 * Table field name for right value container of tree traversal order
 	 *
+	 * @var string
 	 */
 	const RIGHT_NODE_FIELD_NAME = 'rgt';
 
 	/**
 	 * The name of table field that represents a parent node ID
 	 *
+	 * @var string
 	 */
 	const PARENT_NODE_FIELD_NAME = 'parentNodeID';
 
 	/**
 	 * Root node ID
 	 *
+	 * @var int
 	 */
 	const ROOT_ID = 1;
-
-	/**
-	 * Child node container
-	 *
-	 * @var ARTreeNode[]
-	 */
-	private $childList = null;
 
 	/**
 	 * Indicator wheather child nodes are loaded or not for this node
 	 *
 	 * @var bool
 	 */
-
 	const INCLUDE_ROOT_NODE = true;
-
+	
+	/**
+	 * Child node container
+	 *
+	 * @var ARTreeNode[]
+	 */
+	private $childList = null;
+	
+	/**
+	 * Partial schema definition for a hierarchial data storage in a database
+	 *
+	 * @param string $className
+	 */
+	public static function defineSchema($className = __CLASS__)
+	{
+		$schema = self::getSchemaInstance($className);
+		$tableName = $schema->getName();
+		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField(self::PARENT_NODE_FIELD_NAME, $tableName, "ID",$className, ARInteger::instance()));
+		$schema->registerField(new ARField(self::LEFT_NODE_FIELD_NAME, ARInteger::instance()));
+		$schema->registerField(new ARField(self::RIGHT_NODE_FIELD_NAME, ARInteger::instance()));
+	}
+	
 	/**
 	 * Gets a persisted record object
 	 *
@@ -140,8 +156,8 @@ class ActiveTreeNode extends ActiveRecordModel
 		$className = get_class($this);
 
 		$nodeFilter = new ARSelectFilter();
-		$cond = new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME)->get(), ">=");
-		$cond->addAND(new OperatorCond(new ArFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $this->getField(self::RIGHT_NODE_FIELD_NAME)->get(), "<="));
+		$cond = new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME)->get(), ">");
+		$cond->addAND(new OperatorCond(new ArFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $this->getField(self::RIGHT_NODE_FIELD_NAME)->get(), "<"));
 
 		if ($loadOnlyDirectChildren)
 		{
@@ -152,6 +168,7 @@ class ActiveTreeNode extends ActiveRecordModel
 		$nodeFilter->setOrder(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME));
 
 		$childList = ActiveRecord::getRecordSet($className, $nodeFilter, $loadReferencedRecords);
+		
 		return $childList;
 	}
 
@@ -202,77 +219,6 @@ class ActiveTreeNode extends ActiveRecordModel
 		$root->loadSubTree($loadReferencedRecords);
 	}
 
-
-	public function save()
-	{
-		if (!$this->hasID())
-		{
-			ActiveRecordModel::beginTransaction();
-			try
-			{
-				// Inserting new node
-				$parentNode = $this->getField(self::PARENT_NODE_FIELD_NAME)->get();
-				$parentNode->load();
-				$parentRightValue = $parentNode->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
-				$nodeLeftValue = $parentRightValue;
-				$nodeRightValue = $nodeLeftValue + 1;
-
-				$tableName = self::getSchemaInstance(get_class($this))->getName();
-				$db = self::getDBConnection();
-
-				$rightUpdateQuery = "UPDATE " . $tableName . " SET " . self::RIGHT_NODE_FIELD_NAME . " = "  . self::RIGHT_NODE_FIELD_NAME . " + 2 WHERE "  . self::RIGHT_NODE_FIELD_NAME . ">=" . $parentRightValue;
-				$leftUpdateQuery = "UPDATE " . $tableName . " SET " . self::LEFT_NODE_FIELD_NAME . " = "  . self::LEFT_NODE_FIELD_NAME . " + 2 WHERE "  . self::LEFT_NODE_FIELD_NAME . ">=" . $parentRightValue;
-
-				self::getLogger()->logQuery($rightUpdateQuery);
-				$db->executeUpdate($rightUpdateQuery);
-
-				self::getLogger()->logQuery($leftUpdateQuery);
-				$db->executeUpdate($leftUpdateQuery);
-
-				$this->getField(self::RIGHT_NODE_FIELD_NAME)->set($nodeRightValue);
-				$this->getField(self::LEFT_NODE_FIELD_NAME)->set($nodeLeftValue);
-
-				ActiveRecordModel::commit();
-			}
-			catch (Exception $e)
-			{
-				ActiveRecordModel::rollback();
-				throw $e;
-			}
-		}
-		parent::save();
-	}
-
-	public static function deleteByID($className, $recordID)
-	{
-		$node = self::getInstanceByID($className, $recordID, self::LOAD_DATA);
-		$nodeRightValue = $node->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
-		$nodeLeftValue = $node->getFieldValue(self::LEFT_NODE_FIELD_NAME);
-		$tableName = self::getSchemaInstance($className)->getName();
-
-		ActiveRecordModel::beginTransaction();
-		try
-		{
-			$result = parent::deleteByID($className, $recordID);
-			$treeRightFixQuery = "UPDATE " . $tableName . " SET " . self::RIGHT_NODE_FIELD_NAME . " = "  . self::RIGHT_NODE_FIELD_NAME . " - 2  WHERE "  . self::RIGHT_NODE_FIELD_NAME . ">=" . $nodeRightValue;
-			$treeLeftFixQuery = "UPDATE " . $tableName . " SET " . self::LEFT_NODE_FIELD_NAME . " = "  . self::LEFT_NODE_FIELD_NAME . " - 2 WHERE "  . self::LEFT_NODE_FIELD_NAME . ">=" . $nodeLeftValue;
-
-			self::getLogger()->logQuery($treeRightFixQuery);
-			self::getDBConnection()->executeUpdate($treeRightFixQuery);
-
-			self::getLogger()->logQuery($treeLeftFixQuery);
-			self::getDBConnection()->executeUpdate($treeLeftFixQuery);
-
-			ActiveRecordModel::commit();
-		}
-		catch (Exception $e)
-		{
-			ActiveRecordModel::rollback();
-			throw $e;
-		}
-		return $result;
-	}
-
 	/**
 	 * Adds (registers) a child node to this node
 	 *
@@ -320,14 +266,6 @@ class ActiveTreeNode extends ActiveRecordModel
 	}
 
 
-	/*
-	public function getPathNodes($includeRootNode = false, $loadReferencedRecords = false)
-	{
-		$recordSet = self::getRecordSet($className, $filter, $loadReferencedRecords);
-		return $recordSet;
-	}
-	*/
-
 	/**
 	 * Gets a hierarchial path to a given tree node
 	 *
@@ -340,6 +278,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	 * @param bool $includeRootNode
 	 * @param bool $loadReferencedRecords
 	 * @return ARSet
+	 * 
 	 * @see ARSet
 	 */
 	public function getPathNodeSet($includeRootNode = false, $loadReferencedRecords = false)
@@ -367,6 +306,9 @@ class ActiveTreeNode extends ActiveRecordModel
 		return ActiveTreeNode::getRecordSetArray($className, $this->getPathNodeFilter($includeRootNode), $loadReferencedRecords);
 	}
 
+	/**
+	 * Return get filter to get all nodes in subtree
+	 */
 	private function getPathNodeFilter($includeRootNode)
 	{
 		$className = get_class($this);
@@ -375,8 +317,8 @@ class ActiveTreeNode extends ActiveRecordModel
 		$rightValue = $this->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
 
 		$filter = new ARSelectFilter();
-		$cond = new OperatorCond(new ARFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $leftValue, "<");
-		$cond->addAND(new OperatorCond(new ARFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $rightValue, ">"));
+		$cond = new OperatorCond(new ARFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $leftValue, "<=");
+		$cond->addAND(new OperatorCond(new ARFieldHandle($className, self::RIGHT_NODE_FIELD_NAME), $rightValue, ">="));
 
 		if (!$includeRootNode)
 		{
@@ -390,10 +332,25 @@ class ActiveTreeNode extends ActiveRecordModel
 	}
 
 	/**
+	 * Get node weight: left + right - 1 
+	 */
+	function getWidth()
+	{
+	    if($this->isLoaded()) $this->load();
+	    
+		$t_r = $this->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
+		$t_l = $this->getFieldValue(self::LEFT_NODE_FIELD_NAME);
+	    
+        return $t_r - $t_l + 1;
+	}
+
+	/**
 	 * @todo Implementation
 	 *
 	 * @param ActiveTreeNode $parentNode
-	 * @return bool True on success
+	 * @return bool
+	 * 
+	 * @throws Exception If failed to commit the transaction
 	 */
 	public function moveTo(ActiveTreeNode $parentNode)
 	{
@@ -405,7 +362,8 @@ class ActiveTreeNode extends ActiveRecordModel
         $db = ActiveRecord::getDBConnection();
 	    try
 	    {
-    	    $this->setFieldValue('parentNodeID', $parentNode);
+    	    # Step #1: Update parentNodeID
+    	    $this->setParentNode($parentNode);
     	    $this->save();
     			
     	    $parentNode->load();
@@ -414,51 +372,144 @@ class ActiveTreeNode extends ActiveRecordModel
     		$p_r = $parentNode->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
     		$p_l = $parentNode->getFieldValue(self::LEFT_NODE_FIELD_NAME);
     		
-    		$width = $t_r - $t_l + 1;
+    		$width = $this->getWidth();
     		$s = $p_l - $t_l > 0 ? -1 : 0;
     		
     		// Step #2: Change target node left and right values to negotive
-    		$queries[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME.", ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME." WHERE ".self::LEFT_NODE_FIELD_NAME." BETWEEN $t_l AND $t_r";
+    		$updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME.", ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME." WHERE ".self::LEFT_NODE_FIELD_NAME." BETWEEN $t_l AND $t_r";
     		
     		// Step #3: No that there is no target node decrement all left and right values after target node position
-    		$queries[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." - $width WHERE ".self::RIGHT_NODE_FIELD_NAME." > $t_r";
-            $queries[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." - $width WHERE ".self::LEFT_NODE_FIELD_NAME." > $t_r";
+    		$updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." - $width WHERE ".self::RIGHT_NODE_FIELD_NAME." > $t_r";
+            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." - $width WHERE ".self::LEFT_NODE_FIELD_NAME." > $t_r";
             
             // Step #4: Make free space for new node to insert
-            $queries[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." + $width WHERE ".self::RIGHT_NODE_FIELD_NAME." > " . ($p_l + $s * $width);
-            $queries[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." + $width WHERE ".self::LEFT_NODE_FIELD_NAME." > " . ($p_l + $s * $width);
-            
+            $updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." + $width WHERE ".self::RIGHT_NODE_FIELD_NAME." > " . ($p_l + $s * $width);
+            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." + $width WHERE ".self::LEFT_NODE_FIELD_NAME." > " . ($p_l + $s * $width);
             
             // Step #5: Change target node left and right values back to positive and put them to their place
-            $queries[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME."+(" . ($p_l - $t_l + 1 + $s * $width) . "), ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME."+(" . ($p_l - $t_l + 1 + $s * $width) . ") WHERE ".self::LEFT_NODE_FIELD_NAME." < 0";
+            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME."+(" . ($p_l - $t_l + 1 + $s * $width) . "), ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME."+(" . ($p_l - $t_l + 1 + $s * $width) . ") WHERE ".self::LEFT_NODE_FIELD_NAME." < 0";
             
-            
-            foreach($queries as $query) $db->executeUpdate($query);
-//            foreach($queries as $query) echo $query.";<br />";
-                        
-    		return true;
+			foreach($updates as $update)
+			{
+				self::getLogger()->logQuery($update);
+				$db->executeUpdate($update);
+			}	
 		}
 		catch (Exception $e)
 		{
-			echo 'asdasda';
-		    return false;
+			ActiveRecordModel::rollback();
+			throw $e;
 		}
+		
+		return true;
 	}
+    
+	/**
+	 * Save ActiveTreeNode data in database
+	 * 
+	 * @return bool
+	 * 
+	 * @throws Exception If failed to commit the transaction
+	 */
+	public function save()
+	{
+		if (!$this->hasID())
+		{
+			ActiveRecordModel::beginTransaction();
+			try
+			{
+				$className = get_class($this);
+				
+			    // Inserting new node
+				$parentNode = $this->getField(self::PARENT_NODE_FIELD_NAME)->get();
+				$parentNode->load();
+				$parentRightValue = $parentNode->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
+				$nodeLeftValue = $parentRightValue;
+				$nodeRightValue = $nodeLeftValue + 1;
 
+				$tableName = self::getSchemaInstance(get_class($this))->getName();
+				$db = self::getDBConnection();
+
+				$updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." + 2 WHERE ".self::RIGHT_NODE_FIELD_NAME." >= $parentRightValue";
+				$updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." + 2 WHERE ".self::LEFT_NODE_FIELD_NAME." >= $parentRightValue";
+
+				foreach($updates as $update)
+				{
+    				self::getLogger()->logQuery($update);
+    				$db->executeUpdate($update);
+				}
+
+				$this->getField(self::RIGHT_NODE_FIELD_NAME)->set($nodeRightValue);
+				$this->getField(self::LEFT_NODE_FIELD_NAME)->set($nodeLeftValue);
+
+				ActiveRecordModel::commit();
+			}
+			catch (Exception $e)
+			{
+				ActiveRecordModel::rollback();
+				throw $e;
+			}
+		}
+		
+		return parent::save();
+	}
+    
+	/**
+	 * Delete this node with subtree
+	 * 
+	 * @return bool
+	 * 
+	 * @throws Exception If failed to commit the transaction
+	 */
+	public function delete()
+	{
+	    $className = get_class($this);
+	    $this->load();
+	    
+		$t_r = $this->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
+		$t_l = $this->getFieldValue(self::LEFT_NODE_FIELD_NAME);
+		
+		$width = $this->getWidth();
+		
+		ActiveRecordModel::beginTransaction();
+		try
+		{
+			$result = parent::deleteByID($className, $this->getID());
+			
+			$updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." - $width  WHERE ".self::RIGHT_NODE_FIELD_NAME." >= $t_r";
+			$updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." - $width WHERE ".self::LEFT_NODE_FIELD_NAME." >= $t_l";
+            
+			foreach($updates as $update)
+			{
+    			self::getLogger()->logQuery($update);
+    			self::getDBConnection()->executeUpdate($update);
+			}
+
+			ActiveRecordModel::commit();
+		}
+		catch (Exception $e)
+		{
+			ActiveRecordModel::rollback();
+			throw $e;
+		}
+		
+		return $result;
+	}
+    
+	/**
+	 * Reindex traversal tree left and right indexes using parentNodesID of the same tree
+	 * 
+	 * @todo This method does nothing
+	 */
 	public static function reindex($className)
 	{
-		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME));
-
-		$nodeSet = ActiveTreeNode::getRecordSet($className, $filter);
-
-		echo "<pre>"; print_r($nodeSet->toArray()); echo "</pre>";
+	    
 	}
 
 	/**
 	 * Creates an array representation of this node
 	 *
-	 * @return unknown
+	 * @return array
 	 */
 	public function toArray()
 	{
@@ -484,33 +535,8 @@ class ActiveTreeNode extends ActiveRecordModel
 			}
 			$data['children'] = $childArray;
 		}
+		
 		return $data;
-	}
-
-	/**
-	 * Partial schema definition for a hierarchial data storage in a database
-	 *
-	 * @param string $className
-	 */
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$tableName = $schema->getName();
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField(self::PARENT_NODE_FIELD_NAME, $tableName, "ID",$className, ARInteger::instance()));
-		$schema->registerField(new ARField(self::LEFT_NODE_FIELD_NAME, ARInteger::instance()));
-		$schema->registerField(new ARField(self::RIGHT_NODE_FIELD_NAME, ARInteger::instance()));
-	}
-	
-	
-	public function setLevel($level)
-	{
-	    $this->level = $level;
-	}
-	
-	public function getLevel()
-	{
-	    return $this->level;
 	}
 }
 

@@ -47,7 +47,7 @@ Backend.Category = {
 			}
 		}
 
-		treeNode = $('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode;
+		var treeNode = $('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode;
 		treeNode.onclick();	
 		Backend.ajaxNav.add('cat_' + treeNode.parentObject.id + '#tabProducts');	  
 	},
@@ -78,11 +78,16 @@ Backend.Category = {
 	 */
 	activateCategory: function(categoryId)
 	{
+        Backend.Category.tabControl.updateTabItemsCount(categoryId);
+        
+        try
+        {
 		//alert('activating category: ' + categoryId);
 		Element.update('activeCategoryPath', Backend.Category.getPath(categoryId));
 
 		Backend.Category.tabControl.switchCategory(categoryId, Backend.Category.activeCategoryId);
 		Backend.Category.activeCategoryId = categoryId;
+        
 
 		// set ID for the current tree node element
 		$('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode.id = 'cat_' + categoryId;
@@ -90,6 +95,9 @@ Backend.Category = {
 		// and register browser history event to enable backwar/forward navigation
 		Backend.ajaxNav.add('cat_' + categoryId);
 		Backend.Category.tabControl.activeTab.onclick();
+        } catch(e) {
+            console.info(e);
+        }
 	},
 
 	getPath: function(nodeId)
@@ -125,9 +133,9 @@ Backend.Category = {
 
 	afterNewBranchCreated: function(response, self)
 	{
-		var newCategory = eval('(' + response.responseText + ')');
-		var parentCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
-		self.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
+        var newCategory = eval('(' + response.responseText + ')');
+        var parentCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
+        self.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
 
         self.activateCategory(newCategory.ID);
 	},
@@ -162,6 +170,11 @@ Backend.Category = {
 	getUrlForNewNode: function(parentNodeId)
 	{
         return this.buildUrl(this.links.create, parentNodeId);
+	},
+    
+	getUrlItemsInTabsCount: function(categoryId)
+	{
+        return this.buildUrl(Backend.Category.links.countTabsItems, categoryId);
 	},
 
 	getUrlForNodeRemoval: function(nodeId)
@@ -212,7 +225,7 @@ Backend.Category = {
             }
     	});
         
-        if(!success) alert('Could not move category');
+        if(!success) alert(Backend.Category.messages._reorder_failed);
 		return success;
 	}
 }
@@ -458,7 +471,7 @@ CategoryTabControl.prototype = {
         if(!CategoryTabControl.prototype.tabItemsCounts[categoryID])
         {
             new Ajax.Request(
-    		'/backend.category/countTabsItems/?categoryID=' + categoryID, 
+            Backend.Category.getUrlItemsInTabsCount(categoryID), 
     		{
     			method: 'get', 
     			onComplete: function(response) { 

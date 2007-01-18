@@ -44,7 +44,7 @@
 	<div id="categoryBrowserActions">
 		- <a href="javascript:Backend.Category.createNewBranch();">{t _create_subcategory}</a>
 		<br/>
-		- <a href="#" onclick="if (confirm('Are you sure you want to remove this category?')) Backend.Category.removeBranch(); return false;">{t _remove_category}</a>
+		- <a href="#" onclick="if (confirm('{t _confirm_category_remove}')) Backend.Category.removeBranch(); return false;">{t _remove_category}</a>
 	</div>
 </div>
 
@@ -67,6 +67,20 @@
 </div>
 
 <script type="text/javascript">
+	/**
+	 * URL assigment for internal javascript requests
+	 */
+    Backend.Category['links'] = {literal}{}{/literal};
+	Backend.Category['links']['create']  = '{link controller=backend.category action=create id=_id_}';
+	Backend.Category['links']['remove']  = '{link controller=backend.category action=remove id=_id_}';
+	Backend.Category['links']['countTabsItems'] = '{link controller=backend.category action=countTabsItems id=_id_}';
+	Backend.Category['links']['reorder'] = '{link controller=backend.category action=reorder id=_id_}/?parentId=_pid_';
+    
+    Backend.Category.messages = {literal}{}{/literal};
+    Backend.Category.messages._reorder_failed = '{t _reorder_failed}';
+
+
+
 	Backend.Category.init();
 	Backend.Category.treeBrowser.insertNewItem(0, 1, 'LiveCart', 0, 0, 0, 0, "");
 {foreach from=$categoryList item=category}
@@ -76,12 +90,6 @@
 	Backend.Category.initPage();
 
 	Backend.Category.image = new Backend.CategoryImage();
-	
-	/**
-	 * URL assigment for internal javascript requests
-	 */
-	var newNodeUrl = '{link controller=backend.category action=create id=%id%}';
-	var removeNodeUrl = '{link controller=backend.category action=remove id=%id%}';
 
 </script>
 

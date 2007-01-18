@@ -70,15 +70,20 @@ class CategoryController extends StoreManagementController
 	 */
 	public function create()
 	{
-		$parentNodeId = $this->request->getValue("id");
-		if ($parentNodeId)
-		{
-			$parent = Category::getInstanceByID($parentNodeId);
-			$categoryNode = Category::getNewInstance($parent);
-			$categoryNode->setValueByLang("name", $this->store->getDefaultLanguageCode(), "New Category");
-			$categoryNode->save();
+		$parent = Category::getInstanceByID((int)$this->request->getValue("id"));
+		
+		$categoryNode = Category::getNewInstance($parent);
+		
+		$categoryNode->setValueByLang("name", $this->store->getDefaultLanguageCode(), $this->translate("_new_category"));
+		$categoryNode->save();
 
+		try 
+		{
 			return new JSONResponse($categoryNode->toArray());
+		}
+		catch(Exception $e)
+		{
+		    return new JSONResponse(false);
 		}
 	}
 
@@ -100,7 +105,7 @@ class CategoryController extends StoreManagementController
 			$categoryNode->setValueArrayByLang($multilingualFields, $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true), $this->request);
 			$categoryNode->save();
 			
-			return new JSONResponse(array_merge($categoryNode->toArray(), array('infoMessage' => $this->translate('_category_succsessfully_saved'))));
+			return new JSONResponse(array_merge($categoryNode->toArray(), array('infoMessage' => $this->translate('_succsessfully_saved'))));
 		}
 	}
 
@@ -122,11 +127,16 @@ class CategoryController extends StoreManagementController
 	 */
 	public function remove()
 	{
-		$nodeId = $this->request->getValue("id");
-		if ($nodeId)
+		$targetNode = Category::getInstanceByID((int)$this->request->getValue("id"));
+	    
+		$status = false;
+		try 
 		{
-			ActiveTreeNode::deleteByID("Category", $nodeId);
-		}
+		    $status = $targetNode->delete();
+		} 
+		catch(Exception $e){}
+		
+		return new JSONResponse($status);
 	}
 
 	/**
@@ -135,15 +145,17 @@ class CategoryController extends StoreManagementController
 	 */
 	public function reorder()
 	{
-		$targetNode = Category::getInstanceByID((int)$this->request->getValue("targetId"));
+		$targetNode = Category::getInstanceByID((int)$this->request->getValue("id"));
 		$parentNode = Category::getInstanceByID((int)$this->request->getValue("parentId"));
 		
-		$result = $targetNode->moveTo($parentNode);
+		$status = false;
+		try 
+		{
+		    $status = $targetNode->moveTo($parentNode);
+		} 
+		catch(Exception $e){}
 		
-//		$tree = new ActiveTree(Category::getInstanceByID(Category::ROOT_ID));
-//		echo $tree;
-		
-		return new JSONResponse($result);
+		return new JSONResponse($status);
 	}
 
 	/**
@@ -179,7 +191,7 @@ class CategoryController extends StoreManagementController
 	public function countTabsItems() {
 	  	ClassLoader::import('application.model.category.*');
 	    
-	    $category = Category::getInstanceByID((int)$this->request->getValue('categoryID'));
+	    $category = Category::getInstanceByID((int)$this->request->getValue('id'));
 	    return new JSONResponse(array(
 	        'tabFilters' => FilterGroup::countItems($category),
 	        'tabFields' => SpecField::countItems($category),

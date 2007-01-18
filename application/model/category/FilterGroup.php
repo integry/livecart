@@ -154,6 +154,7 @@ class FilterGroup extends MultilingualObject
 
     public static function countItems(Category $category)
     {
+        //echo "<pre >".print_r($category->getFilterGroupSet()->toArray(), true)."</pre>";
         return $category->getFilterGroupSet()->getTotalRecordCount();
     }
 }
