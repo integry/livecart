@@ -88,8 +88,8 @@ Backend.Category = {
 		$('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode.id = 'cat_' + categoryId;
 			
 		// and register browser history event to enable backwar/forward navigation
-		//Backend.ajaxNav.add('cat_' + categoryId);
-		//Backend.Category.tabControl.activeTab.onclick();
+		Backend.ajaxNav.add('cat_' + categoryId);
+		Backend.Category.tabControl.activeTab.onclick();
 	},
 
 	getPath: function(nodeId)
@@ -112,23 +112,24 @@ Backend.Category = {
 
 	createNewBranch: function()
 	{
-		var url = this.getUrlForNewNode(this.treeBrowser.getSelectedItemId());
-		var ajaxRequest = new Ajax.Request(
-			url,
+        var self = this;
+        
+		new Ajax.Request(
+			this.getUrlForNewNode(this.treeBrowser.getSelectedItemId()),
 			{
 				method: 'post',
 				parameters: '',
-				onComplete: this.afterNewBranchCreated
+				onComplete: function(response) { self.afterNewBranchCreated(response, self) }
 			});
 	},
 
-	afterNewBranchCreated: function(response)
+	afterNewBranchCreated: function(response, self)
 	{
-		eval('var newCategory = ' + response.responseText);
+		var newCategory = eval('(' + response.responseText + ')');
 		var parentCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
-		Backend.Category.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
+		self.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
 
-		Backend.Category.tabControl.activateTab($('tabMainDetails'), newCategory.ID);
+        self.activateCategory(newCategory.ID);
 	},
 
 	/**
@@ -136,14 +137,12 @@ Backend.Category = {
 	 */
 	updateBranch: function(formObj)
 	{
-		var params = Form.serialize(formObj);
-		var myAjax = new Ajax.Request(
-					formObj.action,
-					{
-						method: formObj.method,
-						parameters: params,
-						onComplete: this.afterBranchUpdate
-					});
+		Ajax.Request(formObj.action,
+		{
+			method: formObj.method,
+			parameters: Form.serialize(formObj),
+			onComplete: this.afterBranchUpdate
+		});
 	},
 
 	/**
@@ -162,17 +161,22 @@ Backend.Category = {
 	 */
 	getUrlForNewNode: function(parentNodeId)
 	{
-		return this.buildUrl(newNodeUrl, parentNodeId);
+        return this.buildUrl(this.links.create, parentNodeId);
 	},
 
 	getUrlForNodeRemoval: function(nodeId)
 	{
-		return this.buildUrl(removeNodeUrl, nodeId);
+		return this.buildUrl(this.links.remove, nodeId);
 	},
+
+    getUrlForNodeReorder: function(id, pid) 
+    {
+		return Backend.Category.links.reorder.replace('_id_', id).replace('_pid_', pid);
+    },
 
 	buildUrl: function(urlPattern, id)
 	{
-		return urlPattern.replace('%id%', id);
+		return urlPattern.replace('_id_', id);
 	},
 
 	/**
@@ -183,9 +187,8 @@ Backend.Category = {
 		var nodeIdToRemove = this.treeBrowser.getSelectedItemId();
 		var parentNodeId = this.treeBrowser.getParentId(nodeIdToRemove);
 
-		var url = this.getUrlForNodeRemoval(nodeIdToRemove);
 		var ajaxRequest = new Ajax.Request(
-			url,
+			this.getUrlForNodeRemoval(nodeIdToRemove),
 			{
 				method: 'post'
 			});
@@ -194,13 +197,12 @@ Backend.Category = {
 		this.activateCategory(parentNodeId);
 	},
 
-
 	reorderCategory: function(targetId, parentId, siblingNodeId)
 	{
 		//alert("Source node id: " + targetId);
 		//alert("target id: " + parentId);
         var success = false;
-        new Ajax.Request('/backend.category/reorder?targetId='+targetId+'&parentId='+parentId,
+        new Ajax.Request(Backend.Category.getUrlForNodeReorder(targetId, parentId),
         {
 			method: 'get', 
             asynchronous: false,
@@ -336,6 +338,9 @@ CategoryTabControl.prototype = {
 	activateTab: function(targetTab, categoryIdToActivate)
 	{
 		//alert('activating: ' + targetTab.id + " " + categoryIdToActivate);
+        
+        var tab = targetTab;
+        var id = categoryIdToActivate;
 		if (categoryIdToActivate == undefined)
 		{
 			var categoryId = this.treeBrowser.getSelectedItemId();
