@@ -70,6 +70,13 @@
 	curr.setFormUrl('{/literal}{link controller=backend.currency action=addForm}{literal}');
 	curr.setAddUrl('{/literal}{link controller=backend.currency action=add}{literal}');
 	curr.setStatusUrl('{/literal}{link controller=backend.currency action=setEnabled}{literal}/');
+    
+    var messages = 
+    { 
+        _activeList_edit:    {/literal}'{t _activeList_edit}'{literal},
+        _activeList_delete:  {/literal}'{t _activeList_delete}'{literal}
+    }
+    
     function initCurrencyList()
     {	
 		curr.showNoCurrencyMessage();
@@ -86,7 +93,7 @@
 	         afterEdit:      function(li, response) {  },
 	         afterSort:      function(li, response) { curr.resetRatesContainer(); },
 	         afterDelete:    function(li, response)  { Element.remove(li); curr.resetRatesContainer(); }
-	     });
+	     }, messages);
 	}	
 	
 	curr.renderList({/literal}{$currencies}{literal});

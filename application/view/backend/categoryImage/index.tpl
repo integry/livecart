@@ -66,12 +66,21 @@
 </div>
 
 <script type="text/javascript">
+    
+    {literal}
+    Backend.Category.image.activeListMessages = 
+    { 
+        _activeList_edit:    {/literal}'{t _activeList_edit}'{literal},
+        _activeList_delete:  {/literal}'{t _activeList_delete}'{literal}
+    }
+    {/literal}
+
 	Backend.Category.image.initList({$catId}, {$images});
 	Backend.Category.image.setDeleteUrl('{link controller=backend.categoryImage action=delete}');	
 	Backend.Category.image.setSortUrl('{link controller=backend.categoryImage action=saveOrder}');	
 	Backend.Category.image.setEditUrl('{link controller=backend.categoryImage action=edit}');		
 	Backend.Category.image.setSaveUrl('{link controller=backend.categoryImage action=save}');		
-	
+	   
 	{capture name=delconf}{t _delete_confirm}{/capture}
 	Backend.Category.image.setDeleteMessage({json array=$smarty.capture.delconf});	
 

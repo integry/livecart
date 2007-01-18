@@ -45,7 +45,7 @@ Backend.LanguageIndex.prototype =
 	         afterEdit:      function(li, response) {  },
 	         afterSort:      function(li, response) {  },
 	         afterDelete:    function(li, response)  { Element.remove(li); }
-	     });
+	     },  this.activeListMessages);
 	},	
 	
 	renderList: function(data)

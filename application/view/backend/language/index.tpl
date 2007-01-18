@@ -9,6 +9,12 @@
 
 <script type="text/javascript">
 	var lng = new Backend.LanguageIndex();	
+    {literal}
+	lng.activeListMessages = { 
+        _activeList_edit:    {/literal}'{t _activeList_edit}'{literal},
+        _activeList_delete:  {/literal}'{t _activeList_delete}'{literal}
+    }
+    {/literal}
 	lng.setFormUrl('{link controller=backend.language action=addForm}');
 	lng.setAddUrl('{link controller=backend.language action=add}');
 	lng.setStatusUrl("{link controller=backend.language action=setEnabled}/");
@@ -16,6 +22,7 @@
 	lng.setSortUrl("{link controller=backend.language action=saveorder}/");
 	lng.setDeleteUrl("{link controller=backend.language action=delete}/");
 	lng.setDelConfirmMsg('{t _confirm_delete}');
+    
 </script>
 
 {tip}{t _index_tip}{/tip}

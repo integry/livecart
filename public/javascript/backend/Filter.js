@@ -401,7 +401,7 @@ Backend.Filter.prototype = {
                 }
             },
             afterDelete: function(li, response){ self.deleteValueFieldAction(li, this) }
-        });
+        }, this.activeListMessages);
     },
 
     /**

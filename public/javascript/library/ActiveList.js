@@ -130,10 +130,12 @@ ActiveList.prototype = {
      *
      * @access public
      */
-    initialize: function(ul, callbacks)
+    initialize: function(ul, callbacks, messages)
     {
         this.ul = typeof(ul) == 'string' ? $(ul) : ul;     
 
+        this.messages = messages;
+        
         Element.addClassName(this.ul, this.ul.id);
 
         // Check if ul has an id
@@ -479,7 +481,12 @@ ActiveList.prototype = {
         if(!iconProgress)
         {
             iconProgress = document.createElement('img');
-            iconProgress.src = this.icons.progress
+            iconProgress.src = this.icons.progress;
+            
+            try{
+                iconImage.title = this.messages._activeList_progress;
+                iconImage.alt = this.messages._activeList_progress;
+            } catch(e) { }    
             
             iconProgress.style.visibility = 'hidden';
             //iconProgress.setOpacity(0.5);
@@ -523,7 +530,10 @@ ActiveList.prototype = {
             {
                 var iconImage = document.createElement('img');
                 iconImage.src = icon.image;
-                
+                try{
+                    iconImage.title = this.messages['_activeList_' + icon.action];
+                    iconImage.alt = this.messages['_activeList_' + icon.action];
+                } catch(e) { }                
                 
                 Element.addClassName(iconImage, this.cssPrefix + icon.action);
                 Element.addClassName(iconImage, this.cssPrefix + 'icons_container');     

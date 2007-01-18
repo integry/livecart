@@ -136,7 +136,10 @@ Backend.CategoryImage.prototype =
                 
 				Backend.Category.image.showNoImagesMessage(categoryId);			   	
 			 }
-	     });
+	     },
+         
+         this.activeListMessages
+         );
 	},
 	
 	showNoImagesMessage: function(categoryId)
