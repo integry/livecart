@@ -6,7 +6,7 @@ ClassLoader::import("application.model.system.MultilingualObjectInterface");
 /**
  * Hierarchial product category model class
  *
- * $Id: Category.php 1436 2007-01-18 13:45:10Z rinalds $, $LastChangedDate: 2007-01-18 15:45:10 +0200 (Thu, 18 Jan 2007) $
+ * $Id: Category.php 1437 2007-01-18 13:47:37Z rinalds $, $LastChangedDate: 2007-01-18 15:47:37 +0200 (Thu, 18 Jan 2007) $
  * 
  * @package application.model.category
  */
@@ -197,7 +197,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	public function getFilterGroupSet($includeParentFields = true)
 	{
 	  	ClassLoader::import('application.model.category.FilterGroup');
-		$filter = $this->getFilterGroupFilter(false);
+		$filter = $this->getFilterGroupFilter($includeParentFields);
 		if (!$filter)
 		{
 		  	return new ARSet(null);
