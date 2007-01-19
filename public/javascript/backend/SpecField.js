@@ -1020,8 +1020,11 @@ Backend.SpecField.prototype = {
             }
             
             // Reload filters (uncomment when API is frozen)
-            // var tc = Backend.Category.tabControl;
-            // Element.remove($(tc.getContainerId('tabFilters', tc.treeBrowser.getSelectedItemId())));
+            
+            try { // try to remove filter container
+                var tc = Backend.Category.tabControl;    
+                Element.remove($(tc.getContainerId('tabFilters', tc.treeBrowser.getSelectedItemId())));
+            } catch (e){ }
         }
         else
         {
