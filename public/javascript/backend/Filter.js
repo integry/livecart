@@ -198,8 +198,6 @@ Backend.Filter.prototype = {
             e.target = e.srcElement;
         }
 
-
-
         Event.stop(e);
     
         // execute the action
@@ -345,12 +343,12 @@ Backend.Filter.prototype = {
                     
                     if((self.selectorValueTypes.indexOf(self.specFields[i].type) === -1 || self.specFields[i].type == Backend.SpecField.prototype.TYPE_TEXT_DATE))
                     {
-                        self.nodes.generateFiltersLink.style.display = 'none';
+                        self.nodes.generateFiltersLink.style.visibility = 'hidden';
                         document.getElementsByClassName('filter_selector', li)[0].style.display = 'none';                            
                     }
                     else
                     {
-                        self.nodes.generateFiltersLink.style.display = 'block';
+                        self.nodes.generateFiltersLink.style.visibility = 'visible';
                         document.getElementsByClassName('filter_selector', li)[0].style.display = 'block';  
                     }
  
@@ -373,11 +371,9 @@ Backend.Filter.prototype = {
         var liList = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0].getElementsByTagName('li');
         $A(liList).each(function(li)
         {
-            var test = li.getElementsByTagName("input")[0];
-            var test1 = li;
-            li.getElementsByTagName("input")[0].onkeyup = self.mainValueFieldChangedAction.bind(self);
-            li.getElementsByTagName("input")[1].onkeydown = self.rangeChangedAction.bind(self);
-            li.getElementsByTagName("input")[2].onkeydown = self.rangeChangedAction.bind(self);
+          //  li.getElementsByTagName("input")[0].onkeyup = self.mainValueFieldChangedAction.bind(self);
+          //  li.getElementsByTagName("input")[1].onkeydown = self.rangeChangedAction.bind(self);
+          //  li.getElementsByTagName("input")[2].onkeydown = self.rangeChangedAction.bind(self);
         });
 
         this.fieldsList = new ActiveList(this.nodes.filtersDefaultGroup.getElementsByTagName("ul")[0], {
@@ -792,7 +788,7 @@ Backend.Filter.prototype = {
 
         var ul = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0];
 
-        if(filters.length > 0 && filters[0].className.split(' ').indexOf('dom_template') !== -1)
+        if(filters.length > 0 && Element.hasClassName(filters[0], 'dom_template'))
         {
             var newValue = filters[0].cloneNode(true);
             Element.removeClassName(newValue, "dom_template");
@@ -848,10 +844,6 @@ Backend.Filter.prototype = {
             rangeDateStart.value  = rangeDateStartReal.value;
             rangeDateEnd.value    = rangeDateEndReal.value ;
                        
-            var test3 = rangeDateStartButton;
-            var test4 = rangeDateStart;
-            var test5 = this.dateFormat;
-                       
             var calDateStart = Calendar.setup({
                 inputField:       rangeDateStart.id,
                 inputFieldReal:   rangeDateStartReal.id,
@@ -866,7 +858,6 @@ Backend.Filter.prototype = {
                 ifFormat:         this.dateFormat, 
                 button:           rangeDateEndButton.id
             });
-            
             
 			// now insert all translation fields
 			for(var i = 1; i < this.languageCodes.length; i++)

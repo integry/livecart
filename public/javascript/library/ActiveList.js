@@ -365,6 +365,7 @@ ActiveList.prototype = {
     {
         var li = document.createElement('li');
         li.id = this.ul.id + "_" + id;
+        this.ul.appendChild(li);
 
         if (dom[0])
         {
@@ -381,23 +382,14 @@ ActiveList.prototype = {
         {
             if(insights)
             {
-                var elements = dom.getElementsByTagName("*");
-                while(elements.length > 0)
-                {
-                    if(dom == elements[0].parentNode)
-                    {
-                        var test = elements[0];
-                        li.appendChild(elements[0]);
-                    }
-                }
+                li.innerHTML = dom.innerHTML;
             }
             else
             {
                 li.appendChild(dom);
             }
         }
-
-        this.ul.appendChild(li);
+                
         this.decorateLi(li);
         this.rebindIcons(li);
         this.createSortable();
