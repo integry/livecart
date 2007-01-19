@@ -70,8 +70,8 @@
     {literal}
     Backend.Category.image.activeListMessages = 
     { 
-        _activeList_edit:    {/literal}'{t _activeList_edit}'{literal},
-        _activeList_delete:  {/literal}'{t _activeList_delete}'{literal}
+        _activeList_edit:    {/literal}'{t _activeList_edit|addslashes}'{literal},
+        _activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
     }
     {/literal}
 
@@ -81,13 +81,8 @@
 	Backend.Category.image.setEditUrl('{link controller=backend.categoryImage action=edit}');		
 	Backend.Category.image.setSaveUrl('{link controller=backend.categoryImage action=save}');		
 	   
-	{capture name=delconf}{t _delete_confirm}{/capture}
-	Backend.Category.image.setDeleteMessage({json array=$smarty.capture.delconf});	
-
-	{capture name=editcapt}{t _edit_image}{/capture}
-	Backend.Category.image.setEditCaption({json array=$smarty.capture.editcapt});	
-
-	{capture name=savecapt}{t _save}{/capture}
-	Backend.Category.image.setSaveCaption({json array=$smarty.capture.savecapt});	
+	Backend.Category.image.setDeleteMessage('{t _delete_confirm|addslashes}');	
+	Backend.Category.image.setEditCaption('{t _edit_image|addslashes}');	
+	Backend.Category.image.setSaveCaption('{t _save|addslashes}');	
 
 </script>

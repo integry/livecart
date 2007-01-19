@@ -44,7 +44,7 @@
 	<div id="categoryBrowserActions">
 		- <a href="javascript:Backend.Category.createNewBranch();">{t _create_subcategory}</a>
 		<br/>
-		- <a href="#" onclick="if (confirm('{t _confirm_category_remove}')) Backend.Category.removeBranch(); return false;">{t _remove_category}</a>
+		- <a href="#" onclick="if (confirm('{t _confirm_category_remove|addslashes}')) Backend.Category.removeBranch(); return false;">{t _remove_category}</a>
 	</div>
 </div>
 
@@ -77,7 +77,7 @@
 	Backend.Category['links']['reorder'] = '{link controller=backend.category action=reorder id=_id_}/?parentId=_pid_';
     
     Backend.Category.messages = {literal}{}{/literal};
-    Backend.Category.messages._reorder_failed = '{t _reorder_failed}';
+    Backend.Category.messages._reorder_failed = '{t _reorder_failed|addslashes}';
 
 
 

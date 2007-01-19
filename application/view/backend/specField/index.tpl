@@ -107,8 +107,8 @@
 <script type="text/javascript">
      Backend.SpecField.prototype.activeListMessages = 
      { 
-         '_activeList_edit':    {/literal}'{t _activeList_edit}'{literal},
-         '_activeList_delete':  {/literal}'{t _activeList_delete}'{literal}
+         '_activeList_edit':    {/literal}'{t _activeList_edit|addslashes}'{literal},
+         '_activeList_delete':  {/literal}'{t _activeList_delete|addslashes}'{literal}
     
      $("specField_item_new_{/literal}{$categoryID}{literal}_show").onclick = function(e) { Backend.SpecField.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') }
      window.activeSpecFieldsList[{/literal}{$categoryID}{literal}] = new ActiveList('specField_items_list_{/literal}{$categoryID}{literal}', specFieldListCallbacks, Backend.SpecField.prototype.activeListMessages);

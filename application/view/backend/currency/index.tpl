@@ -73,8 +73,8 @@
     
     var messages = 
     { 
-        _activeList_edit:    {/literal}'{t _activeList_edit}'{literal},
-        _activeList_delete:  {/literal}'{t _activeList_delete}'{literal}
+        _activeList_edit:    {/literal}'{t _activeList_edit|addslashes}'{literal},
+        _activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
     }
     
     function initCurrencyList()

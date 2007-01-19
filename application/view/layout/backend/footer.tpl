@@ -40,7 +40,7 @@
 	</div>
 </div>
 
-<div id="transDialogMenu" style="display:none;position: absolute;z-index: 60000; background-color: yellow; border: 1px solid black; padding: 3px;"><a href="#" id="transLink">{t _live_translate notranslate=true}</a></div>
+<div id="transDialogMenu" style="display:none;position: absolute;z-index: 60000; background-color: yellow; border: 1px solid black; padding: 3px;"><a href="#" id="transLink">{t _live_translate}</a></div>
 
 <script type="text/javascript">
 	var cust = new Backend.Customize();
