@@ -27,8 +27,7 @@
 	<a name="how" />
 	<h3>Create Filters</h3>
 	<p>To create filters you have to define attributes first. Go to the <a href="attributes.html">Attributes</a> section to create attributes. 
-	Once you have at least on attribute assigned to a category, click "Add new Filter"<ins>...</ins> </p>
-
+	To start creating filters click <ins>...</ins> </p>
 
 	<h3>Reference</h3>
 	<p> ... </p>
