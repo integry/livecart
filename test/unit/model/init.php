@@ -1,8 +1,8 @@
-<?
+<?php
 
-	require_once("../../../../framework/ClassLoader.php");
+	require_once("../../../framework/ClassLoader.php");
 
-	ClassLoader::mountPath(".", "C:\\projects\\livecart\\");
+	ClassLoader::mountPath(".", "C:\\htdocs\\livecart\\");
 	ClassLoader::import("application.model.ActiveRecordModel");
 	ClassLoader::import("application.model.system.*");
 	ClassLoader::import("application.model.category.*");

@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2007-01-12 16:05                                #
+# Created on:            2007-01-19 18:24                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -54,6 +54,18 @@ ALTER TABLE ProductFile DROP FOREIGN KEY FileType_ProductFile;
 ALTER TABLE Discount DROP FOREIGN KEY Product_Discount;
 
 ALTER TABLE CategoryImage DROP FOREIGN KEY Category_CategoryImage;
+
+ALTER TABLE SpecificationNumericValue DROP FOREIGN KEY Product_SpecificationNumericValue;
+
+ALTER TABLE SpecificationNumericValue DROP FOREIGN KEY SpecField_SpecificationNumericValue;
+
+ALTER TABLE SpecificationStringValue DROP FOREIGN KEY Product_SpecificationStringValue;
+
+ALTER TABLE SpecificationStringValue DROP FOREIGN KEY SpecField_SpecificationStringValue;
+
+ALTER TABLE SpecificationDateValue DROP FOREIGN KEY Product_SpecificationDateValue;
+
+ALTER TABLE SpecificationDateValue DROP FOREIGN KEY SpecField_SpecificationDateValue;
 
 # ---------------------------------------------------------------------- #
 # Drop table "Product"                                                   #
@@ -304,3 +316,39 @@ ALTER TABLE CategoryImage DROP PRIMARY KEY;
 # Drop table #
 
 DROP TABLE CategoryImage;
+
+# ---------------------------------------------------------------------- #
+# Drop table "SpecificationNumericValue"                                 #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE SpecificationNumericValue DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE SpecificationNumericValue;
+
+# ---------------------------------------------------------------------- #
+# Drop table "SpecificationStringValue"                                  #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE SpecificationStringValue DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE SpecificationStringValue;
+
+# ---------------------------------------------------------------------- #
+# Drop table "SpecificationDateValue"                                    #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE SpecificationDateValue DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE SpecificationDateValue;

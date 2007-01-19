@@ -34,4 +34,85 @@ class SpecificationItem extends ActiveRecordModel
 	}
 }
 
+/**
+ * Product specification data container
+ * Contains a relation between specification fields (attributes), assigned values and products
+ * (kind of "feature table")
+ *
+ * @author Saulius Rupainis <saulius@integry.net>
+ * @package application.model.product
+ */
+abstract class ValueSpecification extends ActiveRecordModel
+{
+	public static function defineSchema($className = __CLASS__)
+	{
+		$schema = self::getSchemaInstance($className);
+		$schema->setName("ValueSpecification");
+
+		$schema->registerField(new ARPrimaryForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
+		$schema->registerField(new ARPrimaryForeignKeyField("specFieldID", "SpecField", "ID", null, ARInteger::instance()));
+	}
+
+	public static function getNewInstance($class, Product $product, SpecField $field, $value)
+	{
+		$specItem = parent::getNewInstance(__CLASS__);
+		$specItem->product = $product;
+		$specItem->specField = $field;
+		$specItem->value->set($value);
+
+		return $specItem;
+	}
+}
+
+class SpecificationNumericValue extends ValueSpecification
+{
+	public static function defineSchema($className = __CLASS__)
+	{
+		$schema = self::getSchemaInstance($className);
+		$schema->setName("SpecificationNumericValue");
+
+		parent::defineSchema($className);		  	
+		$schema->registerField(new ARField("value", ARInteger::instance()));
+	}
+
+	public static function getNewInstance(Product $product, SpecField $field, $value)
+	{
+	  	return parent::getNewInstance(__CLASS__, $product, $field, $value);
+	}
+}
+
+class SpecificationStringValue extends ValueSpecification
+{
+	public static function defineSchema($className = __CLASS__)
+	{
+		$schema = self::getSchemaInstance($className);
+		$schema->setName("SpecificationStringValue");
+
+		parent::defineSchema($className);		  	
+		$schema->registerField(new ARField("value", ARArray::instance()));
+	}
+
+	public static function getNewInstance(Product $product, SpecField $field, $value)
+	{
+	  	return parent::getNewInstance(__CLASS__, $product, $field, $value);
+	}
+}
+
+class SpecificationDateValue extends ValueSpecification
+{
+	public static function defineSchema($className = __CLASS__)
+	{
+		$schema = self::getSchemaInstance($className);
+		$schema->setName("SpecificationDateValue");
+
+		parent::defineSchema($className);		  	
+		$schema->registerField(new ARField("value", ARDate::instance()));
+	}
+
+	public static function getNewInstance(Product $product, SpecField $field, $value)
+	{
+	  	return parent::getNewInstance(__CLASS__, $product, $field, $value);
+	}
+}
+
 ?>

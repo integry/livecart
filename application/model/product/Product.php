@@ -12,7 +12,26 @@ class Product extends MultilingualObject
 {
 	private static $multilingualFields = array("name", "shortDescription", "longDescription");
 
+	/**
+	 *  An array containing specification field values (specFieldID => value, specFieldID => value)	 
+	 *
+	 *	@var array
+	 */
 	protected $specFieldData = array();
+
+	/**
+	 *  Spec field ID's which values have been modified and must be saved (updated)
+	 *
+	 *	@var array
+	 */
+	protected $modifiedSpecFieldValues = array();
+
+	/**
+	 *  Spec field ID's which values have been newly added and must be inserted in database
+	 *
+	 *	@var array
+	 */
+	protected $addedSpecFieldValues = array();
 
 	public static function defineSchema($className = __CLASS__)
 	{
@@ -55,10 +74,12 @@ class Product extends MultilingualObject
 	protected function insert()
 	{
 		ActiveRecordModel::beginTransaction();
+		
 		try
 		{
 			parent::insert();
 
+			// update category product count numbers
 			$category = $this->category->get();
 			$categoryPathNodes = $category->getPathNodeSet(Category::INCLUDE_ROOT_NODE);
 			// Adding current category to a record set of path
@@ -73,6 +94,10 @@ class Product extends MultilingualObject
 				}
 				$categoryNode->save();
 			}
+
+			// save specification field values
+			$this->saveSpecFields();
+
 			ActiveRecordModel::commit();
 		}
 		catch (Exception $e)
@@ -89,9 +114,12 @@ class Product extends MultilingualObject
 	protected function update()
 	{
 		ActiveRecordModel::beginTransaction();
+				
 		try
 		{
 			parent::update();
+
+			// update category product count numbers
 			if ($this->isEnabled->isModified())
 			{
 				if ($this->isEnabled->get() == true)
@@ -113,11 +141,100 @@ class Product extends MultilingualObject
 					$categoryNode->save();
 				}
 			}
+			
+			// save specification field values
+			$this->saveSpecFields();
+			
 			ActiveRecordModel::commit();
 		}
 		catch (Exception $e)
 		{
-			ActiveRecord::rollback();
+			ActiveRecordModel::rollback();
+			throw $e;
+		}
+	}
+	
+	/**
+	 *	Saves specification field values
+	 *	Note: transaction has to be started already
+	 */
+	protected function saveSpecFields()
+	{
+		$fields = $this->category->getSpecificationFieldSet(Category::INCLUDE_PARENT);
+		
+		// map each field to its value table
+		foreach ($fields as $field)
+		{
+			$tables = array();
+			$tables['SpecificationItem'] = array();
+			$tables['SpecificationNumericValue'] = array();
+			$tables['SpecificationStringValue'] = array();
+			$tables['SpecificationDateValue'] = array();
+									
+			switch ($field->type->get())  
+			{
+			  	case SpecField::TYPE_NUMBERS_SELECTOR:
+			  	case SpecField::TYPE_TEXT_SELECTOR:
+					$tables['SpecificationItem'][] = $field->getID();
+					break;
+
+			  	case SpecField::TYPE_NUMBERS_SIMPLE:
+					$tables['SpecificationNumericValue'][] = $field->getID();
+					break;
+
+			  	case SpecField::TYPE_TEXT_SIMPLE:
+			  	case SpecField::TYPE_TEXT_ADVANCED:			  				  	
+					$tables['SpecificationStringValue'][] = $field->getID();
+					break;
+
+			  	case SpecField::TYPE_TEXT_DATE:
+					$tables['SpecificationDateValue'][] = $field->getID();
+					break;
+					
+				default:
+					throw new Exception('Invalid specField type: ' . $field->type->get());
+			}			
+		}		
+		
+		// get instances for all field values
+		$instances = array();
+		foreach ($tables as $table => $ids)
+		{
+			if (count($ids) > 0)
+			{
+				$cond = new EqualsCond(new ARFieldHandle($table, 'productID'), $this->getID());
+				$cond->addAND(new INCond(new ARFieldHandle($table, 'specFieldID'), $ids));
+				$filter = new ARSelectFilter();
+				$filter->setCondition($cond);
+				$set = ActiveRecordModel::getRecordSet($table, $filter);
+				
+				foreach ($set as $instance)
+				{
+				  	$instances[$instance->specField->getID()] = $instance();
+				}
+				
+				// create missing instances
+				foreach ($ids as $id)
+				{
+					if (!isset($instances[$id]))
+					{
+					  	$instances[$id] = call_user_func(array($table, 'getNewInstance'), $this, $field, $this->specFieldData[$id]);
+					}  	
+					
+					$instances[$id]->value->set($this->specFieldData[$id]);
+				}
+			}
+		}		
+		
+		try
+		{
+			foreach ($instances as $instance)
+			{
+			  	$instance->save();
+			}
+		}
+		catch (Exception $e)
+		{
 			throw $e;
 		}
 	}
@@ -132,6 +249,28 @@ class Product extends MultilingualObject
 			  	$this->specFieldData[$key] = $value;
 			}
 		}
+	}
+
+	public function getSpecFieldValue($id)
+	{
+	  	if (isset($this->specFieldData[$id]))
+	  	{
+		    return $this->specFieldData[$id];
+		}
+	}
+
+	public function setSpecFieldValue($id, $value)
+	{
+	  	if (isset($this->specFieldData[$id]) && !isset($this->addedSpecFieldValues[$id]))
+	  	{
+			$this->modifiedSpecFieldValues[$id] = true;
+		}
+		else
+		{
+			$this->addedSpecFieldValues[$id] = true;		  
+		}
+
+	    $this->specFieldData[$id] = $value;
 	}
 
 	public function toArray()

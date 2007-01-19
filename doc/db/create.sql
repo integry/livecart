@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2007-01-12 16:05                                #
+# Created on:            2007-01-19 18:24                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -25,7 +25,7 @@ CREATE TABLE Product (
     name TEXT,
     shortDescription TEXT,
     longDescription TEXT,
-    SKU VARCHAR(20),
+    sku VARCHAR(20),
     dateCreated TIMESTAMP,
     dateUpdated TIMESTAMP,
     isEnabled BOOL DEFAULT 1 COMMENT '0- not available 1- available 2- disabled (not visble)',
@@ -49,7 +49,7 @@ CREATE TABLE Product (
 
 CREATE INDEX IDX_Product_1 ON Product (categoryID);
 
-CREATE INDEX IDX_Product_2 ON Product (SKU);
+CREATE INDEX IDX_Product_2 ON Product (sku);
 
 # ---------------------------------------------------------------------- #
 # Add table "Category"                                                   #
@@ -274,6 +274,51 @@ CREATE TABLE CategoryImage (
 );
 
 # ---------------------------------------------------------------------- #
+# Add table "SpecificationNumericValue"                                  #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE SpecificationNumericValue (
+    productID INTEGER UNSIGNED NOT NULL,
+    specFieldID INTEGER UNSIGNED NOT NULL,
+    value FLOAT,
+    CONSTRAINT PK_SpecificationNumericValue PRIMARY KEY (productID, specFieldID)
+);
+
+CREATE INDEX IDX_SpecificationNumericValue_1 ON SpecificationNumericValue (value ASC,specFieldID ASC);
+
+CREATE INDEX IDX_SpecificationNumericValue_2 ON SpecificationNumericValue (productID,specFieldID);
+
+# ---------------------------------------------------------------------- #
+# Add table "SpecificationStringValue"                                   #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE SpecificationStringValue (
+    productID INTEGER UNSIGNED NOT NULL,
+    specFieldID INTEGER UNSIGNED NOT NULL,
+    value TEXT,
+    CONSTRAINT PK_SpecificationStringValue PRIMARY KEY (productID, specFieldID)
+);
+
+CREATE INDEX IDX_SpecificationStringValue_1 ON SpecificationStringValue (value,specFieldID);
+
+CREATE INDEX IDX_SpecificationStringValue_2 ON SpecificationStringValue (specFieldID,productID);
+
+# ---------------------------------------------------------------------- #
+# Add table "SpecificationDateValue"                                     #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE SpecificationDateValue (
+    productID INTEGER UNSIGNED NOT NULL,
+    specFieldID INTEGER UNSIGNED NOT NULL,
+    value DATE,
+    CONSTRAINT PK_SpecificationDateValue PRIMARY KEY (productID, specFieldID)
+);
+
+CREATE INDEX IDX_SpecificationDateValue_1 ON SpecificationDateValue (value,specFieldID);
+
+CREATE INDEX IDX_SpecificationDateValue_2 ON SpecificationDateValue (specFieldID,productID);
+
+# ---------------------------------------------------------------------- #
 # Foreign key constraints                                                #
 # ---------------------------------------------------------------------- #
 
@@ -339,3 +384,21 @@ ALTER TABLE Discount ADD CONSTRAINT Product_Discount
 
 ALTER TABLE CategoryImage ADD CONSTRAINT Category_CategoryImage 
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE;
+
+ALTER TABLE SpecificationNumericValue ADD CONSTRAINT Product_SpecificationNumericValue 
+    FOREIGN KEY (productID) REFERENCES Product (ID);
+
+ALTER TABLE SpecificationNumericValue ADD CONSTRAINT SpecField_SpecificationNumericValue 
+    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID);
+
+ALTER TABLE SpecificationStringValue ADD CONSTRAINT Product_SpecificationStringValue 
+    FOREIGN KEY (productID) REFERENCES Product (ID);
+
+ALTER TABLE SpecificationStringValue ADD CONSTRAINT SpecField_SpecificationStringValue 
+    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID);
+
+ALTER TABLE SpecificationDateValue ADD CONSTRAINT Product_SpecificationDateValue 
+    FOREIGN KEY (productID) REFERENCES Product (ID);
+
+ALTER TABLE SpecificationDateValue ADD CONSTRAINT SpecField_SpecificationDateValue 
+    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID);
