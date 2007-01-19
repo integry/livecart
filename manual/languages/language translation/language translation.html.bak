@@ -10,20 +10,19 @@
 	<h1>Languages</h1>
 
 	<h2>Translate languages</h2>
-	<p><ins>(1) </ins>To translate your shop's interface to other languages you have to translate certain phrases to their appropriate equivalents</p>
-	<p><ins>(2) </ins>To prepare your language for usage you have to translate appropriate keywords from English to your chosen language.</p>
+	<p>To prepare your language for usage you have to translate appropriate keywords from English to your chosen language.</p>
 	
 	<h3>TO DO list</h3>
 	<ul>	
-		<li><a href="#interface elements">Translate interface elements</a></li>
+		<li><a href="#user interface">Translate user interface</a></li>
 		<li><a href="#product info">Translate product info</a></li>
 		<li><a href="#find specific word">Find and translate a specific word or sentence</a></li>
 		<li><a href="#find missing translations">Find missing translations</a></li>
 		<li><a href="#directly from user interface">Translate a word or sentence directly from user interface</a></li>
 	</ul>
 	
-	<a name="interface elements" />
-	<h3>Translate interface elements</h3>
+	<a name="user interface" />
+	<h3>Translate user interface</h3>
 	
 	<p>There are two ways of translating the interface - either by using a <strong>keyword tree</strong> or <a href="#directly from user interface">Live Translation</a>.</p>
 	<p>The <strong>keyword tree</strong> is placed below the Translation Filter. All the keywords in the tree are categorized as they appear in the interface layout. To supply translations for appropriate keywords browse the tree and enter corresponding translations. For example:</p>
@@ -33,6 +32,9 @@
 		<li><span style="background: #ffff99">_menu_users</span> is a variable name; </li>
 		<li><span style="background: #ffff99">Users</span> is a default definition which is used if text area is left empty</li>
 	</ul>
+	
+	<p class="note">Note: you can also enter multiple lines of text as translation - just click the down arrow key of your keyboard to switch to multi-line input field.</p>
+	
 	<p>Reference: see <a href="#product info">translating product info</a></p>
 
 	<a name="find specific word" />
@@ -46,16 +48,16 @@
 
 	<img src="pics/translation_filter_blue.bmp"/>
 	<ul>
-		<li><span style="background: #ffff99">All</span> – show all the existing words</li>
-		<li><span style="background: #ffff99">Translated</span> – display only translated items</li>
-		<li><span style="background: #ffff99">Not translated</span> – show items that have not been translated</li>
+		<li><span style="background: #ffffcc">All</span> – show all the existing words</li>
+		<li><span style="background: #ffffcc">Translated</span> – display only translated items</li>
+		<li><span style="background: #ffffcc">Not translated</span> – show items that have not been translated</li>
 	</ul>
 	
 	<a name="directly from user interface" />
 	<h3>Translate a word or sentence directly from user interface</h3>	
 		
 	<p>Live Translation is a LiveCart tool which allows you to translate a word or sentence directly from the page you see it (in). To use Live Translation, you have to turn it on the Customization Mode... <ins>(not completed yet)</ins></p>
-	<p><ins><strong>Live Translation</strong> is a real-time translation tool which enables you to translate any element of the interface  directly in the page you see it in. To do that you have to turn on Live Translation in the ... mode. Any interface phrase can be translated simply by clicking <strong>Live Translation</strong> once you hover over an element and a reference pops-up. We highly recommend to use <strong>Live Translation</strong> when you are not sure about the keyword's exact place in the interface.</ins></p>
+	<p><strong>Live Translation</strong> is a real-time translation tool which enables you to translate any interface text (element) directly in the page you see it in. To do that you have to turn on Live Translation in the ... mode. Any interface phrase can be translated simply by clicking <strong>Live Translation</strong> once you hover <ins> the mouse cursor</ins> over an element and a pop-up menu appears. We highly recommend to use <strong>Live Translation</strong> when you are not sure about the keyword's exact place in the interface.</p>
 	<p>Reference: see <a href="#interface elements">Translate Interface Elements</a></p>
 	
 	<a name="product info" />

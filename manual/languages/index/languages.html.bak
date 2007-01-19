@@ -64,7 +64,7 @@
 	The default language serves two main purposes:
 	<ul>
 		<li>It is the (default) language your site visitors see when first visiting the site.
-		All the frontend content is displayed in default language until the visitor switches to a different language.
+		All the frontend content is displayed in default language <ins>until the visitor switches to a different language</ins>.
 		</li>
 		<li> Any translations that are missing for any other language (interface, product or category information, etc.) are automatically taken from the default language</li>	
 	</ul>
