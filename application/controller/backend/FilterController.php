@@ -178,7 +178,7 @@ class FilterController extends StoreManagementController
     private function validate($values = array())
     {
         $errors = array();
-
+        
         $languageCodes = array_keys($this->filtersConfig['languages']);
         
         if(!isset($values['name']) || $values['name'][$languageCodes[0]] == '')
@@ -186,6 +186,50 @@ class FilterController extends StoreManagementController
             $errors['name'] = $this->translate('_error_name_empty');
         }
 
+        if(isset($values['filters']))
+        {                      
+            $specField = SpecField::getInstanceByID((int)$values['specFieldID']);
+            if(!$specField->isLoaded()) $specField->load();
+                                
+            foreach ($values['filters'] as $key => $v)
+            {                
+                switch($specField->getFieldValue('type'))
+                {
+                    case SpecField::TYPE_NUMBERS_SIMPLE:
+                        if(!isset($v['rangeStart']) || !is_numeric($v['rangeStart']) | !isset($v['rangeEnd']) || !is_numeric($v['rangeEnd']))
+                        {
+                            $errors['filters'][$key] = $this->translate('_error_filter_value_is_not_a_number');
+                        }
+                    break;
+                    case SpecField::TYPE_NUMBERS_SELECTOR: 
+                    case SpecField::TYPE_TEXT_SELECTOR: 
+                        if(!isset($v['specFieldValueID']))
+                        {
+                            $errors['filters'][$key] = $this->translate('_error_spec_field_is_not_selected');
+                        }
+                    break;
+                    case SpecField::TYPE_TEXT_DATE: 
+                        if(
+                                !isset($v['rangeDateStart'])
+                             || !isset($v['rangeDateEnd']) 
+                             || count($sdp = explode('-', $v['rangeDateStart'])) != 3 
+                             || count($edp = explode('-', $v['rangeDateEnd'])) != 3
+                             || !checkdate($edp[1], $edp[2], $edp[0]) 
+                             || !checkdate($sdp[1], $sdp[2], $sdp[0])
+                        ){
+                            $errors['filters'][$key] = $this->translate('_error_illegal_date');
+                        }
+                    break;
+                }
+                
+                if($v['name'][$languageCodes[0]] == '')
+                {
+                    $errors['filters'][$key] = $this->translate('_error_filter_name_empty');
+                }
+            }
+        }
+        
+        
         return $errors;
     }
 

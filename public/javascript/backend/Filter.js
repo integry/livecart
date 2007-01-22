@@ -1060,26 +1060,26 @@ Backend.Filter.prototype = {
         {
             try
             {
-            if(jsonResponse.errors)
-            {
-                for(var fieldName in jsonResponse.errors)
+                if(jsonResponse.errors)
                 {
-                    
-                    if(fieldName == 'toJSONString') continue;
-                    
-                    if(fieldName == 'filters')
+                    for(var fieldName in jsonResponse.errors)
                     {
-                        $H(jsonResponse.errors[fieldName]).each(function(value)
+                        
+                        if(fieldName == 'toJSONString') continue;
+                        
+                        if(fieldName == 'filters')
                         {
-                            self.setFeedback($(self.cssPrefix + "form_" + self.id + "_filters_" + self.languageCodes[0] + "_" + value.key).getElementsByTagName("input")[0], value.value);
-                        });
-                    }
-                    else
-                    {
-                        this.setFeedback(this.nodes[fieldName], jsonResponse.errors[fieldName]);
+                            $H(jsonResponse.errors[fieldName]).each(function(value)
+                            {
+                                self.setFeedback($(self.cssPrefix + "form_" + self.id + "_filters_" + self.languageCodes[0] + "_" + value.key).getElementsByTagName("input")[0], value.value);
+                            });
+                        }
+                        else
+                        {
+                            this.setFeedback(this.nodes[fieldName], jsonResponse.errors[fieldName]);
+                        }
                     }
                 }
-            }
             }
             catch(e)
             {
