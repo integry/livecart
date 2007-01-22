@@ -47,7 +47,7 @@ abstract class ValueSpecification extends ActiveRecordModel
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-		$schema->setName("ValueSpecification");
+		$schema->setName($className);
 
 		$schema->registerField(new ARPrimaryForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARPrimaryForeignKeyField("specFieldID", "SpecField", "ID", null, ARInteger::instance()));
@@ -55,9 +55,9 @@ abstract class ValueSpecification extends ActiveRecordModel
 
 	public static function getNewInstance($class, Product $product, SpecField $field, $value)
 	{
-		$specItem = parent::getNewInstance(__CLASS__);
-		$specItem->product = $product;
-		$specItem->specField = $field;
+		$specItem = parent::getNewInstance($class);
+		$specItem->product->set($product);
+		$specItem->specField->set($field);
 		$specItem->value->set($value);
 
 		return $specItem;
@@ -69,7 +69,6 @@ class SpecificationNumericValue extends ValueSpecification
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-		$schema->setName("SpecificationNumericValue");
 
 		parent::defineSchema($className);		  	
 		$schema->registerField(new ARField("value", ARInteger::instance()));

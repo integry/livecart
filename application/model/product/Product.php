@@ -2,6 +2,7 @@
 
 ClassLoader::import("application.model.system.Language");
 ClassLoader::import("application.model.system.MultilingualObject");
+ClassLoader::import("application.model.product.SpecificationItem");
 
 /**
  * Store product (item)
@@ -153,24 +154,29 @@ class Product extends MultilingualObject
 			throw $e;
 		}
 	}
-	
+
 	/**
 	 *	Saves specification field values
 	 *	Note: transaction has to be started already
 	 */
 	protected function saveSpecFields()
 	{
-		$fields = $this->category->getSpecificationFieldSet(Category::INCLUDE_PARENT);
+		$fields = $this->category->get()->getSpecificationFieldSet(Category::INCLUDE_PARENT);
 		
+		$tables = array();
+		$tables['SpecificationItem'] = array();
+		$tables['SpecificationNumericValue'] = array();
+		$tables['SpecificationStringValue'] = array();
+		$tables['SpecificationDateValue'] = array();
+
 		// map each field to its value table
 		foreach ($fields as $field)
 		{
-			$tables = array();
-			$tables['SpecificationItem'] = array();
-			$tables['SpecificationNumericValue'] = array();
-			$tables['SpecificationStringValue'] = array();
-			$tables['SpecificationDateValue'] = array();
-									
+			if (!isset($this->specFieldData[$field->getID()]))
+			{
+			  	continue;
+			}
+			
 			switch ($field->type->get())  
 			{
 			  	case SpecField::TYPE_NUMBERS_SELECTOR:
@@ -195,7 +201,7 @@ class Product extends MultilingualObject
 					throw new Exception('Invalid specField type: ' . $field->type->get());
 			}			
 		}		
-		
+//		print_r($this->data);
 		// get instances for all field values
 		$instances = array();
 		foreach ($tables as $table => $ids)

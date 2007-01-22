@@ -102,17 +102,19 @@ class SpecFieldController extends StoreManagementController
      */
     public function item()
     {
-       $response = new ActionResponse();
-       $specFieldList = SpecField::getInstanceByID($this->request->getValue('id'), true, true)->toArray(false);
-
-       foreach(SpecFieldValue::getRecordSetArray($specFieldList['ID']) as $value)
-       {
-           $specFieldList['values'][$value['ID']] = $value['value'];
-       }
-
-       $specFieldList['rootId'] = "specField_items_list_".$specFieldList['categoryID']."_".$specFieldList['ID'];
-
-       return new JSONResponse($specFieldList);
+		$response = new ActionResponse();
+		$specFieldList = SpecField::getInstanceByID($this->request->getValue('id'), true, true)->toArray(false);
+		
+		foreach(SpecFieldValue::getRecordSetArray($specFieldList['ID']) as $value)
+		{
+		   $specFieldList['values'][$value['ID']] = $value['value'];
+		}
+		
+		$specFieldList['rootId'] = "specField_items_list_".$specFieldList['Category']['ID']."_".$specFieldList['ID'];
+		$specFieldList['categoryID'] = $specFieldList['Category']['ID'];
+		unset($specFieldList['Category']);
+		
+		return new JSONResponse($specFieldList);
     }
 
     /**
@@ -124,17 +126,11 @@ class SpecFieldController extends StoreManagementController
     {
         if($this->request->getValue('ID') == 'new')
         {
-            $specField = SpecField::getNewInstance();
+            $specField = SpecField::getNewInstance(Category::getInstanceByID($this->request->getValue('categoryID', false)));
             $specField->setFieldValue('position', 100000);
-
-            if($categoryID = $this->request->getValue('categoryID', false))
-            {
-                $specField->setFieldValue('categoryID', (int)$categoryID);
-            }
         }
         else
         {
-
             if(SpecField::exists((int)$this->request->getValue('ID')))
             {
                 $specField = SpecField::getInstanceByID((int)$this->request->getValue('ID'));

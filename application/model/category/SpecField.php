@@ -71,13 +71,26 @@ class SpecField extends MultilingualObject
 	}
 
 	/**
-	 * Get blank SpecField record
+	 * Get a new SpecField instance
+	 *
+	 * @param Category $category Category instance
+	 * @param int $dataType Data type code (ex: self::DATATYPE_TEXT)
+	 * @param int $type Field type code (ex: self::TYPE_TEXT_SIMPLE)
 	 *
 	 * @return  SpecField
 	 */
-	public static function getNewInstance()
+	public static function getNewInstance(Category $category, $dataType = false, $type = false)
 	{
-		return parent::getNewInstance(__CLASS__);
+		$specField = parent::getNewInstance(__CLASS__);
+		$specField->category->set($category);
+
+		if ($dataType)
+		{
+			$specField->dataType->set($dataType);
+			$specField->type->set($type); 
+		}
+
+		return $specField;
 	}
 
 	/**
@@ -150,7 +163,7 @@ class SpecField extends MultilingualObject
 	 */
 	public static function delete($id)
 	{
-	    parent::deleteByID(__CLASS__, (int)$id);
+	    return parent::deleteByID(__CLASS__, (int)$id);
 	}
 
 	/**
@@ -182,7 +195,6 @@ class SpecField extends MultilingualObject
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
 
-		$schema->registerField(new ARField("categoryID", ARInteger::instance()));
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("description", ARArray::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance(2)));
