@@ -47,7 +47,8 @@ if (Backend == undefined)
 Backend.Filter = Class.create();
 Backend.Filter.prototype = {
     cssPrefix: "filter_",
-
+    countNewFilters: 0,
+    
     /**
      * Constructor
      *
@@ -224,6 +225,7 @@ Backend.Filter.prototype = {
         try
         {
             var jsonResponse = eval("("+jsonString+")");
+            
                         
             for(var i = 0; i < this.specFields.length; i++)
             {
@@ -239,11 +241,11 @@ Backend.Filter.prototype = {
                                 delete jsonResponse.filters[document.getElementsByClassName('filter_selector', li)[0].getElementsByTagName("select")[0].value];
                             }
                         });
-                          
                     }
             
                     $H(jsonResponse.filters).each(function(filter) {
                         self.addFilter(filter.value, "new" + self.countNewFilters, true);
+                        self.countNewFilters++;
                     });
                     
                     return;
@@ -371,9 +373,9 @@ Backend.Filter.prototype = {
         var liList = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0].getElementsByTagName('li');
         $A(liList).each(function(li)
         {
-          //  li.getElementsByTagName("input")[0].onkeyup = self.mainValueFieldChangedAction.bind(self);
-          //  li.getElementsByTagName("input")[1].onkeydown = self.rangeChangedAction.bind(self);
-          //  li.getElementsByTagName("input")[2].onkeydown = self.rangeChangedAction.bind(self);
+            li.getElementsByTagName("input")[0].onkeyup = self.mainValueFieldChangedAction.bind(self);
+            li.getElementsByTagName("input")[1].onkeydown = self.rangeChangedAction.bind(self);
+            li.getElementsByTagName("input")[2].onkeydown = self.rangeChangedAction.bind(self);
         });
 
         this.fieldsList = new ActiveList(this.nodes.filtersDefaultGroup.getElementsByTagName("ul")[0], {
@@ -384,16 +386,27 @@ Backend.Filter.prototype = {
             afterSort: function(li, response){    },
 
             beforeDelete: function(li){
-                if(confirm('Are you realy want to delete this item?'))
+                if(this.getRecordId(li).match(/^new/))
                 {
-                    if(this.getRecordId(li).match(/^new/))
+	                var emptyFilters = true;
+                    var inputValues = li.getElementsByTagName("input");
+                    for(var i = 0; i < inputValues.length; i++) 
+                    {
+                        if(!Element.hasClassName('dom_template', inputValues[i]) && inputValues[i].parentNode.style.display != 'none' && inputValues[i].type != 'hidden' && inputValues[i].value != '')
+                        {
+                            emptyFilters =  false;
+                        }
+                    }
+                    
+                    if(emptyFilters || confirm('Are you realy want to delete this item?'))
                     {
                         self.deleteValueFieldAction(li, this);
                     }
-                    else
-                    {
-                        return Backend.Filter.prototype.links.deleteFilter + this.getRecordId(li);
-                    }
+                    
+                }
+                else if(confirm('Are you realy want to delete this item?'))
+                {
+                    return Backend.Filter.prototype.links.deleteFilter + this.getRecordId(li);
                 }
             },
             afterDelete: function(li, response){ self.deleteValueFieldAction(li, this) }
@@ -742,7 +755,7 @@ Backend.Filter.prototype = {
 
         for(var i = 1; i < this.languageCodes.length; i++)
         {
-            $(this.cssPrefix + "form_filters_" +  this.languageCodes[i] + "_" + id).getElementsByTagName("label")[0].firstChild.nodeValue = e.target.value;
+            $(this.cssPrefix + "form_filters_" +  this.languageCodes[i] + "_" + id).getElementsByTagName("label")[0].innerHTML = e.target.value;
         }
     },
 
@@ -871,8 +884,7 @@ Backend.Filter.prototype = {
 				inputTranslation.name = "values[" + id + "][" + this.languageCodes[i] + "]";
 				inputTranslation.value = (value && value[this.languageCodes[i]]) ? value[this.languageCodes[i]] : '' ;
 
-                var label = newValueTranslation.getElementsByTagName("label")[0];
-                label.appendChild(document.createTextNode(input.value));
+                newValueTranslation.getElementsByTagName("label")[0].innerHTML = input.value;
                 
 				// add to node tree
 				var translationsUl = document.getElementsByClassName(this.cssPrefix + "form_language_translation", this.nodes.valuesTranslations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];

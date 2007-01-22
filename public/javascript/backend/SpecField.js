@@ -327,17 +327,27 @@ Backend.SpecField.prototype = {
 	        afterSort: function(li, response){    },
 
 	        beforeDelete: function(li){
-	            if(confirm('Are you realy want to delete this item?'))
-	            {
 	                if(this.getRecordId(li).match(/^new/))
 	                {
-	                    self.deleteValueFieldAction(li, this);
+    	                var emptyFilters = true;
+                        var inputValues = li.getElementsByTagName("input");
+                        for(var i = 0; i < inputValues.length; i++) 
+                        {
+                            if(!Element.hasClassName('dom_template', inputValues[i]) && inputValues[i].style.display != 'none' && inputValues[i].value != '')
+                            {
+                                emptyFilters =  false;
+                            }
+                        }
+                        
+                        if(emptyFilters || confirm('Are you realy want to delete this item?'))
+                        {
+                            self.deleteValueFieldAction(li, this);
+                        }
 	                }
-	                else
+	                else if(confirm('Are you realy want to delete this item?'))
 	                {
 	                    return Backend.SpecField.prototype.links.deleteValue + this.getRecordId(li);
 	                }
-	            }
 	        },
 	        afterDelete: function(li, response){ self.deleteValueFieldAction(li, this) }
 	    }, this.activeListMessages);
@@ -722,9 +732,7 @@ Backend.SpecField.prototype = {
 
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
-            var label = $(this.cssPrefix + "form_values_" +  this.languageCodes[i] + "_" + id).getElementsByTagName("label")[0];
-			if(!label.firstChild) label.appendChild(document.createTextNode(e.target.value));
-            else label.firstChild.nodeValue = e.target.value;
+            $(this.cssPrefix + "form_values_" +  this.languageCodes[i] + "_" + id).getElementsByTagName("label")[0].innerHTML = e.target.value;
 		}
 	},
 
@@ -838,6 +846,8 @@ Backend.SpecField.prototype = {
 				var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
 				inputTranslation.name = "values[" + id + "][" + this.languageCodes[i] + "]";
 				inputTranslation.value = (value && value[this.languageCodes[i]]) ? value[this.languageCodes[i]] : '' ;
+                
+                var label = newValueTranslation.getElementsByTagName("label")[0].innerHTML = input.value;
                 
 				// add to node tree
 				var translationsUl = document.getElementsByClassName(this.cssPrefix + "form_values_translations", this.nodes.valuesTranslations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
