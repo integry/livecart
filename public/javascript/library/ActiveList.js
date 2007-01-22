@@ -944,7 +944,8 @@ ActiveList.prototype = {
         {
             Effect.SwitchOff(li, {duration: 1});
             setTimeout(function() { 
-            Element.remove(li); }, 10000);
+                Element.remove(li); 
+            }, 10);
         }
         else
         {
