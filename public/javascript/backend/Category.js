@@ -39,7 +39,10 @@ Backend.Category = {
 			{
 				var parts = elements[1].split('_');
 				var categoryId = parts[1];
+                
+                Backend.Category.activeCategoryId = categoryId;
 				Backend.Category.treeBrowser.selectItem(categoryId, false, false);
+                
 
 //				window.dhtmlHistory.handleBookmark();
 //				throw('rest');
@@ -82,19 +85,18 @@ Backend.Category = {
         
         try
         {
-		//alert('activating category: ' + categoryId);
-		Element.update('activeCategoryPath', Backend.Category.getPath(categoryId));
-
-		Backend.Category.tabControl.switchCategory(categoryId, Backend.Category.activeCategoryId);
-		Backend.Category.activeCategoryId = categoryId;
-        
-
-		// set ID for the current tree node element
-		$('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode.id = 'cat_' + categoryId;
-			
-		// and register browser history event to enable backwar/forward navigation
-		Backend.ajaxNav.add('cat_' + categoryId);
-		Backend.Category.tabControl.activeTab.onclick();
+    		Element.update('activeCategoryPath', Backend.Category.getPath(categoryId));
+    
+    		Backend.Category.tabControl.switchCategory(categoryId, Backend.Category.activeCategoryId);
+    		Backend.Category.activeCategoryId = categoryId;
+            
+    
+    		// set ID for the current tree node element
+    		$('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode.id = 'cat_' + categoryId;
+    			
+    		// and register browser history event to enable backwar/forward navigation
+    		Backend.ajaxNav.add('cat_' + categoryId);
+    		Backend.Category.tabControl.activeTab.onclick();
         } catch(e) {
             console.info(e);
         }
@@ -453,14 +455,12 @@ CategoryTabControl.prototype = {
 
 	switchCategory: function(currentCategory, previousActiveCategoryId)
 	{
-		//alert('switching category: from' + previousActiveCategoryId + ' to ' +  currentCategory);
-        
 		if (previousActiveCategoryId != null)
 		{
-			prevContainer = this.getContainerId(this.activeTab.id, previousActiveCategoryId);
+			var prevContainer = this.getContainerId(this.activeTab.id, previousActiveCategoryId);
 			if ($(prevContainer) != undefined)
 			{
-				Element.hide(prevContainer);
+                Element.hide(prevContainer);
 			}
 		}
 		this.activateTab(this.activeTab, currentCategory);
