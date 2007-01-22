@@ -164,10 +164,6 @@ class Product extends MultilingualObject
 		$fields = $this->category->get()->getSpecificationFieldSet(Category::INCLUDE_PARENT);
 		
 		$tables = array();
-		$tables['SpecificationItem'] = array();
-		$tables['SpecificationNumericValue'] = array();
-		$tables['SpecificationStringValue'] = array();
-		$tables['SpecificationDateValue'] = array();
 
 		// map each field to its value table
 		foreach ($fields as $field)
@@ -177,31 +173,9 @@ class Product extends MultilingualObject
 			  	continue;
 			}
 			
-			switch ($field->type->get())  
-			{
-			  	case SpecField::TYPE_NUMBERS_SELECTOR:
-			  	case SpecField::TYPE_TEXT_SELECTOR:
-					$tables['SpecificationItem'][] = $field->getID();
-					break;
-
-			  	case SpecField::TYPE_NUMBERS_SIMPLE:
-					$tables['SpecificationNumericValue'][] = $field->getID();
-					break;
-
-			  	case SpecField::TYPE_TEXT_SIMPLE:
-			  	case SpecField::TYPE_TEXT_ADVANCED:			  				  	
-					$tables['SpecificationStringValue'][] = $field->getID();
-					break;
-
-			  	case SpecField::TYPE_TEXT_DATE:
-					$tables['SpecificationDateValue'][] = $field->getID();
-					break;
-					
-				default:
-					throw new Exception('Invalid specField type: ' . $field->type->get());
-			}			
+			$tables[$field->getValueTableName()][] = $field->getID();
 		}		
-//		print_r($this->data);
+		
 		// get instances for all field values
 		$instances = array();
 		foreach ($tables as $table => $ids)
@@ -231,9 +205,11 @@ class Product extends MultilingualObject
 				}
 			}
 		}		
-		
+				
 		try
 		{
+			ActiveRecordModel::beginTransaction();
+			
 			foreach ($instances as $instance)
 			{
 			  	$instance->save();
@@ -241,8 +217,12 @@ class Product extends MultilingualObject
 		}
 		catch (Exception $e)
 		{
+			ActiveRecordModel::rollback();
 			throw $e;
 		}
+
+		ActiveRecordModel::commit();
+
 	}
 
 	protected function miscRecordDataHandler($miscRecordDataArray)

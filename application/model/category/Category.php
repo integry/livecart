@@ -6,7 +6,7 @@ ClassLoader::import("application.model.system.MultilingualObjectInterface");
 /**
  * Hierarchial product category model class
  *
- * $Id: Category.php 1454 2007-01-22 14:40:08Z rinalds $, $LastChangedDate: 2007-01-22 16:40:08 +0200 (Mon, 22 Jan 2007) $
+ * $Id: Category.php 1460 2007-01-22 16:58:53Z rinalds $, $LastChangedDate: 2007-01-22 18:58:53 +0200 (Mon, 22 Jan 2007) $
  * 
  * @package application.model.category
  */
@@ -92,13 +92,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		if ($loadSpecification)
 		{
 			$specFields = $this->getSpecificationFieldArray(self::LOAD_DATA);	  
-			print_r($specFields);
 			
 			foreach ($specFields as $specField)
 			{
 			  	$aliasTable = 'specTable_' . $specField['ID'];
 			  	$aliasField = 'specField_' . $specField['ID'];
-				$filter->joinTable('Specification', 'Product', 'productID AND ' . $aliasTable . '.SpecFieldID = ' . $specField['ID'], 'ID', $aliasTable);
+				$filter->joinTable('SpecificationItem', 'Product', 'productID AND ' . $aliasTable . '.SpecFieldID = ' . $specField['ID'], 'ID', $aliasTable);
 			  	$filter->addField('specFieldValueID', $aliasTable, $aliasField);
 			}
 		}	  	

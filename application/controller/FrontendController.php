@@ -132,7 +132,7 @@ abstract class FrontendController extends BaseController
 		{
 		  	$this->categoryID = 1;
 		}
-		
+
 		// get top categories
 		$rootCategory = Category::getInstanceByID(1);
 		$topCategories = $rootCategory->getSubcategorySet()->toArray();
@@ -142,8 +142,8 @@ abstract class FrontendController extends BaseController
 		if (1 < $currentCategory->category->get()->getID())
 		{
 			$path = $currentCategory->getPathNodeSet(false)->toArray();
-			$path[] = $currentCategory->toArray();
-	
+//			$path[] = $currentCategory->toArray();
+
 			$topCategoryId = $path[0]['ID'];
 			unset($path[0]);
 		} 
@@ -165,6 +165,8 @@ abstract class FrontendController extends BaseController
 		{
 			$siblings = $currentCategory->getSiblingSet()->toArray();
 	
+
+	
 			foreach ($path as &$node)
 			{
 			  	if ($node['ID'] != $this->categoryID)
@@ -182,10 +184,12 @@ abstract class FrontendController extends BaseController
 						    $current =& $sib;
 						}
 					}
+					
+									
 				}
 			}		  
 		}
-	
+			
 		// get subcategories of the current category (except for the root category)
 		if ($this->categoryID > 1)
 		{
@@ -208,7 +212,7 @@ abstract class FrontendController extends BaseController
 			$rootFilters = array();
 			foreach ($filterArray as $filter)
 			{
-			  	if (Category::ROOT_ID == $filter['FilterGroup']['SpecField']['categoryID'])
+			  	if (Category::ROOT_ID == $filter['FilterGroup']['SpecField']['Category']['ID'])
 			  	{
 					$rootFilters[$filter['ID']] = true;
 				}
@@ -228,13 +232,12 @@ abstract class FrontendController extends BaseController
 	 */
 	private function applyFilters(&$categories, $filters, $parentFilterIds)
 	{
-		//print_r($filters); exit;
 		foreach ($categories as &$category)
 		{
 		  	$categoryFilters = $parentFilterIds;
 			foreach ($filters as $filter)
 		  	{
-			    if ($filter['FilterGroup']['SpecField']['categoryID'] == $category['ID'])
+			    if ($filter['FilterGroup']['SpecField']['Category']['ID'] == $category['ID'])
 			    {
 					$categoryFilters[$filter['ID']] = true;
 				}

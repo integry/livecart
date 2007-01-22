@@ -22,41 +22,6 @@ class SpecField extends MultilingualObject
     const TYPE_TEXT_DATE = 6;
 
     /**
-     * Adds a "choice" value to this field
-     *
-     * @param SpecFieldValue $value
-     *
-     * @todo calculate value position if needed
-     */
-    public function addValue(SpecFieldValue $value)
-    {
-		$value->specField->set($this);
-		$value->save();
-    }
-
-    /**
-     * Gets a set of values created for this field
-     *
-     * @return ARSet
-     */
-    public function getValueSet()
-    {
-    	return $this->getRelatedRecordSet("SpecFieldValue", new ARSelectFilter());
-    	//return ActiveRecordModel::getRecordSet("SpecFieldValue", $this->getValueFilter());
-    }
-
-    /**
-     * Gets an array of values created for this field
-     *
-     * @return array
-     */
-	public function getValueArray()
-	{
-		return $this->getRelatedRecordSetArray("SpecFieldValue", new ARSelectFilter());
-		//return ActiveRecordModel::getRecordSetArray("SpecFieldValue", $this->getValueFilter());
-	}
-
-    /**
 	 * Get instance SpecField record by id
 	 *
 	 * @param mixred $recordID Id
@@ -117,6 +82,74 @@ class SpecField extends MultilingualObject
 	public static function getRecordSetArray(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
 		return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
+	}
+
+    /**
+     * Adds a "choice" value to this field
+     *
+     * @param SpecFieldValue $value
+     *
+     * @todo calculate value position if needed
+     */
+    public function addValue(SpecFieldValue $value)
+    {
+		$value->specField->set($this);
+		$value->save();
+    }
+
+    /**
+     * Gets a set of values created for this field
+     *
+     * @return ARSet
+     */
+    public function getValueSet()
+    {
+    	return $this->getRelatedRecordSet("SpecFieldValue", new ARSelectFilter());
+    	//return ActiveRecordModel::getRecordSet("SpecFieldValue", $this->getValueFilter());
+    }
+
+    /**
+     * Gets an array of values created for this field
+     *
+     * @return array
+     */
+	public function getValueArray()
+	{
+		return $this->getRelatedRecordSetArray("SpecFieldValue", new ARSelectFilter());
+		//return ActiveRecordModel::getRecordSetArray("SpecFieldValue", $this->getValueFilter());
+	}
+
+    /**
+     * Gets a related table name, where field values are stored
+     *
+     * @return array
+     */
+	public function getValueTableName()
+	{
+		switch ($this->type->get())  
+		{
+		  	case SpecField::TYPE_NUMBERS_SELECTOR:
+		  	case SpecField::TYPE_TEXT_SELECTOR:
+				return 'SpecificationItem';
+				break;
+
+		  	case SpecField::TYPE_NUMBERS_SIMPLE:
+				return 'SpecificationNumericValue';
+				break;
+
+		  	case SpecField::TYPE_TEXT_SIMPLE:
+		  	case SpecField::TYPE_TEXT_ADVANCED:			  				  	
+				return 'SpecificationStringValue';
+				break;
+
+		  	case SpecField::TYPE_TEXT_DATE:
+				return 'SpecificationDateValue';
+				break;
+				
+			default:
+				throw new Exception('Invalid specField type: ' . $this->type->get());
+		}			
+	  	
 	}
 
     /**
@@ -186,23 +219,6 @@ class SpecField extends MultilingualObject
 	    return array (self::TYPE_NUMBERS_SELECTOR, Specfield::TYPE_TEXT_SELECTOR);
 	}
 
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("SpecField");
-
-
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
-
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("description", ARArray::instance()));
-		$schema->registerField(new ARField("type", ARInteger::instance(2)));
-		$schema->registerField(new ARField("dataType", ARInteger::instance(2)));
-		$schema->registerField(new ARField("position", ARInteger::instance(2)));
-		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
-	}
-
 	public function saveValues($values, $type, $languages) {
         $position = 1;
         foreach ($values as $key => $value)
@@ -239,6 +255,23 @@ class SpecField extends MultilingualObject
     {
         return $category->getSpecificationFieldSet()->getTotalRecordCount();
     }
+    
+	public static function defineSchema($className = __CLASS__)
+	{
+		$schema = self::getSchemaInstance($className);
+		$schema->setName("SpecField");
+
+
+		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
+
+		$schema->registerField(new ARField("name", ARArray::instance()));
+		$schema->registerField(new ARField("description", ARArray::instance()));
+		$schema->registerField(new ARField("type", ARInteger::instance(2)));
+		$schema->registerField(new ARField("dataType", ARInteger::instance(2)));
+		$schema->registerField(new ARField("position", ARInteger::instance(2)));
+		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
+	}    
 }
 
 ?>

@@ -45,6 +45,7 @@ class CategoryController extends FrontendController
 		$response = new ActionResponse();
 		$response->setValue('id', $this->categoryID);
 		return $response;
+
 	}
 }
 
