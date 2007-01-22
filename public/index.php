@@ -68,21 +68,22 @@
 	}
 	catch (ClassLoaderException $e)
 	{
-		echo "<br/><strong>CLASS LOADER ERROR:</strong> " . $e->getMessage();
-		echo "<br /><strong>FILE TRACE:</strong><br />";
-		echo $e->getFileTrace();
+		echo "<br/><strong>CLASS LOADER ERROR:</strong> " . $e->getMessage()."\n\n";
+		echo "<br /><strong>FILE TRACE:</strong><br />\n\n";
+		echo ApplicationException::getFileTrace($e->getTrace());
 	}
 	catch (ApplicationException $e)
 	{
-		echo "<pre>"; print_r($_SERVER); echo "</pre>";
-		echo "<br/><strong>APPLICATION ERROR:</strong> " . $e->getMessage();
-		echo "<br /><strong>FILE TRACE:</strong><br />";
-		echo $e->getFileTrace();
+		echo "<pre>"; print_r($_SERVER); echo "</pre>\n\n";
+		echo "<br/><strong>APPLICATION ERROR:</strong> " . $e->getMessage()."\n\n";
+		echo "<br /><strong>FILE TRACE:</strong><br />\n\n";
+		echo ApplicationException::getFileTrace($e->getTrace());
 	}
 	catch (Exception $e)
 	{
-		echo "<br/>\n<strong>UNKNOWN ERROR:</strong> " . $e->getMessage();
-		echo "<pre>"; print_r($e); echo "</pre>";
+		echo "<br/>\n<strong>UNKNOWN ERROR:</strong> " . $e->getMessage()."\n\n";
+		// echo "<pre>"; print_r($e); echo "</pre>";
+		echo ApplicationException::getFileTrace($e->getTrace());
 	}
 
 	if (!empty($_GET['stat']))
