@@ -249,8 +249,7 @@ class FilterController extends StoreManagementController
         $response = new ActionResponse();
         $filterGroup = FilterGroup::getInstanceByID($this->request->getValue('id'), true, true);
         $filterGroupArray = $filterGroup->toArray(false);
-
-
+        
         foreach($filterGroup->getFiltersList() as $filter)
         {
             $filterGroupArray['filters'][$filter['ID']] = $filter;

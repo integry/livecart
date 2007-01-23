@@ -78,6 +78,7 @@ class Filter extends MultilingualObject
 	{
 	    parent::deleteByID(__CLASS__, (int)$id);
 	}
+
 }
 
 ?>

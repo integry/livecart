@@ -59,29 +59,23 @@ Backend.Filter.prototype = {
      */
     initialize: function(filterJson, hash)
     {
-        try
-        {
-            this.filter = !hash ? eval("(" + filterJson + ")" ) : filterJson;
-            this.cloneForm('filter_item_blank', this.filter.rootId);
+        this.filter = !hash ? eval("(" + filterJson + ")" ) : filterJson;
+        this.cloneForm('filter_item_blank', this.filter.rootId);
 
-            this.id = this.filter.ID;
-            
-            this.categoryID = this.filter.categoryID;
-            this.rootId = this.filter.rootId;
-            this.specFields = this.filter.specFields;
-            this.name = this.filter.name;
-            this.filters = this.filter.filters;
-            this.backupName = this.name;
-            
-            this.filterCalendars = {};
+        this.id = this.filter.ID;
+        
+        this.categoryID = this.filter.categoryID;
+        this.rootId = this.filter.rootId;
+        this.specFields = this.filter.specFields;
+        this.name = this.filter.name;
+        this.filters = this.filter.filters;
+        this.backupName = this.name;
+        
+        this.filterCalendars = {};
 
-            this.loadLanguagesAction();
-            this.findUsedNodes();
-            this.bindFields();
-        } catch(e)
-        {
-            jsTrace.debug(e);
-        }
+        this.loadLanguagesAction();
+        this.findUsedNodes();
+        this.bindFields();
     },
 
     /**
@@ -222,40 +216,31 @@ Backend.Filter.prototype = {
     {
         var self = this;
     
-        try
+        var jsonResponse = eval("("+jsonString+")");
+                                
+        for(var i = 0; i < this.specFields.length; i++)
         {
-            var jsonResponse = eval("("+jsonString+")");
-            
-                        
-            for(var i = 0; i < this.specFields.length; i++)
-            {
-                 if(this.specFields[i].ID == this.nodes.specFieldID.value)
-                 {
-                    var specField = this.specFields[i];
-                    if(this.selectorValueTypes.indexOf(specField.type) !== -1)
+             if(this.specFields[i].ID == this.nodes.specFieldID.value)
+             {
+                var specField = this.specFields[i];
+                if(this.selectorValueTypes.indexOf(specField.type) !== -1)
+                {
+                    $A(this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0].getElementsByTagName("li")).each(function(li)
                     {
-                        $A(this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0].getElementsByTagName("li")).each(function(li)
+                        if(!Element.hasClassName(li, 'dom_template'))
                         {
-                            if(!Element.hasClassName(li, 'dom_template'))
-                            {
-                                delete jsonResponse.filters[document.getElementsByClassName('filter_selector', li)[0].getElementsByTagName("select")[0].value];
-                            }
-                        });
-                    }
-            
-                    $H(jsonResponse.filters).each(function(filter) {
-                        self.addFilter(filter.value, "new" + self.countNewFilters, true);
-                        self.countNewFilters++;
+                            delete jsonResponse.filters[document.getElementsByClassName('filter_selector', li)[0].getElementsByTagName("select")[0].value];
+                        }
                     });
-                    
-                    return;
-                 }
-            }
-            
-        }
-        catch(e)
-        {
-            jsTrace.debug(e);
+                }
+        
+                $H(jsonResponse.filters).each(function(filter) {
+                    self.addFilter(filter.value, "new" + self.countNewFilters, true);
+                    self.countNewFilters++;
+                });
+                
+                return;
+             }
         }
     },  
 
@@ -912,8 +897,9 @@ Backend.Filter.prototype = {
 				newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "_" + id;
 
 				var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
-				inputTranslation.name = "values[" + id + "][" + this.languageCodes[i] + "]";
-				inputTranslation.value = (value && value[this.languageCodes[i]]) ? value[this.languageCodes[i]] : '' ;
+				inputTranslation.name = "filters[" + id + "][name][" + this.languageCodes[i] + "]";
+				inputTranslation.value = (value && value.name && value.name[this.languageCodes[i]]) ? value.name[this.languageCodes[i]] : '' ;
+                
 
                 newValueTranslation.getElementsByTagName("label")[0].innerHTML = input.value;
                 

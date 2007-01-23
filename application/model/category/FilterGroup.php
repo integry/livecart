@@ -40,7 +40,7 @@ class FilterGroup extends MultilingualObject
 	}
 
 	/**
-	 * @return MultilingualObject
+	 * @return FilterGroup
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
@@ -88,8 +88,10 @@ class FilterGroup extends MultilingualObject
 		$filter->setOrder(new ARFieldHandle("Filter", "position"));
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("Filter", "filterGroupID"), $this->getID()));
 
+		
 		return Filter::getRecordSetArray($filter);
 	}
+	
 
 	/**
 	 * Save group filters in database
@@ -102,6 +104,7 @@ class FilterGroup extends MultilingualObject
     {
         $htmlspecialcharsUtf_8 = create_function('$val', 'return htmlspecialchars($val, null, "UTF-8");');
         $position = 1;
+        
         foreach ($filters as $key => $value)
         {
             if(preg_match('/^new/', $key))
