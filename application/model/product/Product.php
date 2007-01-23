@@ -237,6 +237,11 @@ class Product extends MultilingualObject
 		}
 	}
 
+	public function getSpecificationFieldSet()
+	{
+	  	return $this->category->get()->getSpecificationFieldSet(true);
+	}
+
 	public function getSpecFieldValue($id)
 	{
 	  	if (isset($this->specFieldData[$id]))

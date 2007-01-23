@@ -97,6 +97,13 @@ class ActiveTreeNode extends ActiveRecordModel
 	private $childList = null;
 	
 	/**
+	 * Path node container
+	 *
+	 * @var ARSet[]
+	 */
+	private $pathNodes = null;
+
+	/**
 	 * Partial schema definition for a hierarchial data storage in a database
 	 *
 	 * @param string $className
@@ -284,7 +291,30 @@ class ActiveTreeNode extends ActiveRecordModel
 	public function getPathNodeSet($includeRootNode = false, $loadReferencedRecords = false)
 	{
 		$className = get_class($this);
-		return ActiveTreeNode::getRecordSet($className, $this->getPathNodeFilter($includeRootNode), $loadReferencedRecords);
+
+		// cache data if referenced records are not being loaded
+		if (!$loadReferencedRecords)		
+		{
+			if (!$this->pathNodes)
+			{
+			  	$this->pathNodes = ActiveTreeNode::getRecordSet($className, $this->getPathNodeFilter(true), false);
+			}
+									
+			$nodeSet = clone $this->pathNodes;					  	
+			
+			if (!$includeRootNode)
+			{
+				$nodeSet->remove(0);	
+			}
+			
+			return $nodeSet;
+
+		}
+		else
+		{
+		  	return ActiveTreeNode::getRecordSet($className, $this->getPathNodeFilter($includeRootNode), $loadReferencedRecords);
+		  	
+		}
 	}
 
 	/**

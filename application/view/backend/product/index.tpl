@@ -1,5 +1,5 @@
 <ul class="menu">
-	<li><a href="{link controller=backend.product action=form}">Add New Product</a></li>
+	<li><a href="{link controller=backend.product action=add id=$categoryID}">Add New Product</a></li>
 </ul>
 
 <br/>
@@ -7,7 +7,7 @@
 <p>
 {foreach from=$productList item=product}
 	<li>
-		<a href="{link controller=backend.product action=form id=$product.ID}">{$product.name.en}</a>
+		<a href="{link controller=backend.product action=edit id=$product.ID}">{$product.name.en}</a>
 	</li>
 {/foreach}
 </p>

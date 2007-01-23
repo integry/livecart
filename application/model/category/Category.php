@@ -6,7 +6,7 @@ ClassLoader::import("application.model.system.MultilingualObjectInterface");
 /**
  * Hierarchial product category model class
  *
- * $Id: Category.php 1460 2007-01-22 16:58:53Z rinalds $, $LastChangedDate: 2007-01-22 18:58:53 +0200 (Mon, 22 Jan 2007) $
+ * $Id: Category.php 1468 2007-01-23 11:06:00Z rinalds $, $LastChangedDate: 2007-01-23 13:06:00 +0200 (Tue, 23 Jan 2007) $
  * 
  * @package application.model.category
  */
@@ -91,14 +91,28 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		// get specification fields
 		if ($loadSpecification)
 		{
-			$specFields = $this->getSpecificationFieldArray(self::LOAD_DATA);	  
+			$specFields = $this->getSpecificationFieldSet(true);	  
 			
 			foreach ($specFields as $specField)
 			{
-			  	$aliasTable = 'specTable_' . $specField['ID'];
-			  	$aliasField = 'specField_' . $specField['ID'];
-				$filter->joinTable('SpecificationItem', 'Product', 'productID AND ' . $aliasTable . '.SpecFieldID = ' . $specField['ID'], 'ID', $aliasTable);
-			  	$filter->addField('specFieldValueID', $aliasTable, $aliasField);
+			  	$aliasTable = 'specTable_' . $specField->getID();
+			  	$aliasField = 'specField_' . $specField->getID();
+				$table = $specField->getValueTableName();
+				
+				if ('SpecificationItem' != $table)
+				{
+					$filter->joinTable($table, 'Product', 'productID AND ' . $aliasTable . '.SpecFieldID = ' . $specField->getID(), 'ID', $aliasTable);				  	
+				  	$filter->addField('value', $aliasTable, $aliasField);
+				}
+				else
+				{
+				  	$specItemTable = 'specItemTable_' . $specField->getID();
+					$filter->joinTable('SpecificationItem', 'Product', 'productID AND ' . $specItemTable . '.SpecFieldID = ' . $specField->getID(), 'ID', $specItemTable);				  				  
+				  	$filter->addField('specFieldValueID', $specItemTable, 'specFieldValueID_' . $specField->getID());
+
+					$filter->joinTable('SpecFieldValue', $specItemTable, 'ID', 'SpecFieldValueID', $aliasTable);				  				  
+				  	$filter->addField('value', $aliasTable, $aliasField);
+				}
 			}
 		}	  	
 	

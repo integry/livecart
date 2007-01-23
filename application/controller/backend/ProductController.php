@@ -25,7 +25,7 @@ class ProductController extends StoreManagementController {
 
 		$productList = $category->getProductArray();
 		$response->setValue("productList", $productList);
-
+		$response->setValue("categoryID", $this->request->getValue("id"));
 		return $response;
 	}
 
@@ -34,13 +34,24 @@ class ProductController extends StoreManagementController {
 	 *
 	 * @return unknown
 	 */
-	public function mainForm()
+	public function add()
 	{
-		$this->setLayout("dev");
-		$response = new ActionResponse();
-		$productId = $this->request->getValue("id");
-		$form = $this->buildForm();
+		$category = Category::getInstanceByID($this->request->getValue("id"), ActiveRecordModel::LOAD_DATA);
+		$product = Product::getNewInstance($category);
+		
+		return $this->productForm($product);		
+	}
 
+	private function productForm(Product $product)
+	{
+		$specFields = $product->getSpecificationFieldSet();
+				
+		$form = $this->buildForm($product);
+
+//		$form->setData($product->toArray());
+		$response = new ActionResponse();
+
+/*
 		if (!empty($productId))
 		{
 			$product = Product::getInstanceByID($productId, Product::LOAD_DATA);
@@ -49,10 +60,8 @@ class ProductController extends StoreManagementController {
 			$response->setValue("specFieldList", $specFieldArray);
 
 			$productSpec = new ProductSpecification($product);
-
-			$form->setData($product->toArray());
 		}
-
+*/
 		$languages = array();
 		foreach ($this->store->getLanguageArray() as $lang)
 		{
@@ -61,9 +70,11 @@ class ProductController extends StoreManagementController {
 		$response->setValue("languageList", $languages);
 
 		$response->setValue("productForm", $form);
-		return $response;
-	}
 
+		$this->setLayout("dev");
+		return $response; 	
+	}
+	
 	private function buildValidator()
 	{
 		$validator = new RequestValidator("productFormValidator", $this->request);
