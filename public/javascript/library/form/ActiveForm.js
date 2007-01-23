@@ -69,5 +69,5 @@ ActiveForm.prototype = {
         }
 
         feedback.style.visibility = 'visible';
-    },
+    }
 }
