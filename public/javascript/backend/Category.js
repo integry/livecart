@@ -42,7 +42,6 @@ Backend.Category = {
                 
                 Backend.Category.activeCategoryId = categoryId;
 				Backend.Category.treeBrowser.selectItem(categoryId, false, false);
-                
 
 //				window.dhtmlHistory.handleBookmark();
 //				throw('rest');
@@ -81,25 +80,18 @@ Backend.Category = {
 	 */
 	activateCategory: function(categoryId)
 	{
-        Backend.Category.tabControl.updateTabItemsCount(categoryId);
+		Element.update('activeCategoryPath', Backend.Category.getPath(categoryId));
+
+		Backend.Category.tabControl.switchCategory(categoryId, Backend.Category.activeCategoryId);
+		Backend.Category.activeCategoryId = categoryId;
         
-        try
-        {
-    		Element.update('activeCategoryPath', Backend.Category.getPath(categoryId));
-    
-    		Backend.Category.tabControl.switchCategory(categoryId, Backend.Category.activeCategoryId);
-    		Backend.Category.activeCategoryId = categoryId;
-            
-    
-    		// set ID for the current tree node element
-    		$('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode.id = 'cat_' + categoryId;
-    			
-    		// and register browser history event to enable backwar/forward navigation
-    		Backend.ajaxNav.add('cat_' + categoryId);
-    		Backend.Category.tabControl.activeTab.onclick();
-        } catch(e) {
-            console.info(e);
-        }
+
+		// set ID for the current tree node element
+		$('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode.id = 'cat_' + categoryId;
+			
+		// and register browser history event to enable backwar/forward navigation
+		 Backend.ajaxNav.add('cat_' + categoryId);
+		Backend.Category.tabControl.activeTab.onclick();
 	},
 
 	getPath: function(nodeId)
@@ -352,18 +344,13 @@ CategoryTabControl.prototype = {
 	 */
 	activateTab: function(targetTab, categoryIdToActivate)
 	{
-		//alert('activating: ' + targetTab.id + " " + categoryIdToActivate);
-        
         var tab = targetTab;
         var id = categoryIdToActivate;
-		if (categoryIdToActivate == undefined)
-		{
-			var categoryId = this.treeBrowser.getSelectedItemId();
-		}
-		else
-		{
-			var categoryId = categoryIdToActivate;
-		}
+        
+		var categoryId = (categoryIdToActivate == undefined ? this.treeBrowser.getSelectedItemId() : categoryIdToActivate);
+        this.updateTabItemsCount(categoryId);
+
+        
 		var tabId = targetTab.id;
 
 		if (this.activeTab == targetTab)
@@ -396,8 +383,6 @@ CategoryTabControl.prototype = {
 
 		this.loadTabContent(tabId, categoryId);
 		Element.show(this.getContainerId(this.activeTab.id, categoryId));
-        
-        this.updateTabItemsCount(categoryId);
 	},
 
 	loadTabContent: function(tabId, categoryId)
@@ -463,7 +448,7 @@ CategoryTabControl.prototype = {
                 Element.hide(prevContainer);
 			}
 		}
-		this.activateTab(this.activeTab, currentCategory);
+		//this.activateTab(this.activeTab, currentCategory);
 	},
     
     updateTabItemsCount: function(categoryID)
