@@ -95,8 +95,6 @@ class ProductController extends StoreManagementController {
 		{
 			$languages[$lang] = $this->locale->info()->getOriginalLanguageName($lang);
 		}
-
-		$this->setLayout("dev");
 		
 		$response = new ActionResponse();
 		$response->setValue("languageList", $languages);

@@ -1,5 +1,7 @@
 {includeCSS file="backend/Product.css"}
 
+{include file="layout/dev/head.tpl"}
+
 {form handle=$productForm action="controller=backend.product action=save id=`$product.ID`" method="POST"}
 	
 	<input type="hidden" name="categoryID" value="{$product.Category.ID}" />
@@ -109,3 +111,5 @@
 	<input type=submit value="Save">
 	
 {/form}
+
+{include file="layout/dev/foot.tpl"}

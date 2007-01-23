@@ -286,8 +286,7 @@ class SpecField extends MultilingualObject
 	{
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("SpecField");
-
-
+		
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
 
@@ -297,6 +296,7 @@ class SpecField extends MultilingualObject
 		$schema->registerField(new ARField("dataType", ARInteger::instance(2)));
 		$schema->registerField(new ARField("position", ARInteger::instance(2)));
 		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
+		$schema->registerField(new ARField("isMultiValue", ARBool::instance()));
 	}    
 }
 
