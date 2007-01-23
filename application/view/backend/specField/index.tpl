@@ -44,20 +44,10 @@
         },
         afterEdit:      function(li, response)
         {
-            try{
-                console.log('1');
-                new Backend.SpecField(response);
-                console.log('2');
-                this.rebindIcons(li);
-                console.log('3');
-                this.createSortable();
-                console.log('4');
-                this.toggleContainer(li, 'edit');
-                console.log('5');
-            } catch(e) 
-            {
-                console.info(e)
-            }
+            new Backend.SpecField(response);
+            this.rebindIcons(li);
+            this.createSortable();
+            this.toggleContainer(li, 'edit');
         },
         beforeDelete:   function(li)
         {
