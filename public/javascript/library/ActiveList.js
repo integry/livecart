@@ -122,6 +122,8 @@ ActiveList.prototype = {
      */
     hiddenMenuOpacity: 0.15, 
 
+    activeListsUsers: {},
+
     /**
      * Constructor
      *
@@ -165,6 +167,31 @@ ActiveList.prototype = {
         this.dragged = false;
 
         this.createSortable();
+    },
+    
+    getInstance: function(ul, callbacks, messages)
+    {  
+       var ulElement = $(ul);    
+       
+     //  console.info(ul);
+     //  console.info(callbacks);
+     //  console.info(messages);
+       
+       if(!ulElement.id)
+       {
+            alert('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
+            return false;
+       }
+       
+       if(!ActiveList.prototype.activeListsUsers[ulElement.id]) 
+       {
+           this.activeListsUsers[ulElement.id] = new ActiveList(ulElement, callbacks, messages);
+       }
+       
+     //  console.info(this.activeListsUsers[ulElement.id])
+       
+       return this.activeListsUsers[ulElement.id];
+
     },
 
     /**

@@ -37,7 +37,7 @@ Backend.CategoryImage.prototype =
 		// display message if no images are uploaded
 		this.showNoImagesMessage(categoryId);
 
-		new ActiveList(id, {
+		ActiveList.prototype.getInstance(id, {
 	         
 			 beforeEdit:     function(li) 
 			 {

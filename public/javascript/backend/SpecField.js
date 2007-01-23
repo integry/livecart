@@ -319,7 +319,7 @@ Backend.SpecField.prototype = {
 
 
 
-	    this.fieldsList = new ActiveList(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0], {
+	    this.fieldsList = ActiveList.prototype.getInstance(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0], {
 	        beforeSort: function(li, order)
 	        {
 	            return self.links.sortValues + '?target=' + this.ul.id + '&' + order;

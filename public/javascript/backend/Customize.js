@@ -122,7 +122,8 @@ Backend.Customize.prototype = {
 		form.elements.namedItem('translation').value = document.getElementById('trans').value;
 		this.showTranslationSaveIndicator(); 
 		this.updateDocumentTranslations(form.elements.namedItem('id').value, form.elements.namedItem('translation').value);
-		new LiveCart.AjaxUpdater(form, 'translationDialog', 'transSaveIndicator'); 
+		
+        new LiveCart.AjaxUpdater(form, 'translationDialog', 'transSaveIndicator'); 
 	},
 	
 	showTranslationSaveIndicator: function()

@@ -366,7 +366,7 @@ Backend.Filter.prototype = {
             rangeParagraph.getElementsByTagName("input")[1].onkeydown = self.rangeChangedAction.bind(self);
         });
 
-        this.fieldsList = new ActiveList(this.nodes.filtersDefaultGroup.getElementsByTagName("ul")[0], {
+        this.fieldsList = ActiveList.prototype.getInstance(this.nodes.filtersDefaultGroup.getElementsByTagName("ul")[0], {
             beforeSort: function(li, order)
             {
                 return self.links.sortFilter + '?target=' + this.ul.id + '&' + order;

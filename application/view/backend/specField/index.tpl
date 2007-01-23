@@ -110,7 +110,8 @@
          '_activeList_edit':    {/literal}'{t _activeList_edit|addslashes}'{literal},
          '_activeList_delete':  {/literal}'{t _activeList_delete|addslashes}'{literal}
      }
+     
      $("specField_item_new_{/literal}{$categoryID}{literal}_show").onclick = function(e) { Backend.SpecField.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') }
-     window.activeSpecFieldsList[{/literal}{$categoryID}{literal}] = new ActiveList('specField_items_list_{/literal}{$categoryID}{literal}', specFieldListCallbacks, Backend.SpecField.prototype.activeListMessages);
+     window.activeSpecFieldsList[{/literal}{$categoryID}{literal}] = ActiveList.prototype.getInstance('specField_items_list_{/literal}{$categoryID}{literal}', specFieldListCallbacks, Backend.SpecField.prototype.activeListMessages);
 </script>
 {/literal}

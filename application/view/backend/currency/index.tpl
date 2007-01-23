@@ -80,7 +80,7 @@
     function initCurrencyList()
     {	
 		curr.showNoCurrencyMessage();
-		new ActiveList('currencyList', {
+		ActiveList.prototype.getInstance('currencyList', {
 	         beforeEdit:     function(li) { return 'sort.php?' },
 	         beforeSort:     function(li, order) 
 			 { 

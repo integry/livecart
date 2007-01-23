@@ -102,7 +102,7 @@
             _activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
         }
          $("filter_item_new_{/literal}{$categoryID}{literal}_show").onclick = function(e) { Backend.Filter.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') }
-         window.activeFiltersList[{/literal}{$categoryID}{literal}] = new ActiveList('filter_items_list_{/literal}{$categoryID}{literal}', filterListCallbacks, Backend.Filter.prototype.activeListMessages);
+         window.activeFiltersList[{/literal}{$categoryID}{literal}] = ActiveList.prototype.getInstance('filter_items_list_{/literal}{$categoryID}{literal}', filterListCallbacks, Backend.Filter.prototype.activeListMessages);
     </script>
     {/literal}
 {else}

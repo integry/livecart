@@ -32,7 +32,7 @@ Backend.LanguageIndex.prototype =
 	
     initLangList: function ()
     {	
-		new ActiveList('languageList', {
+		ActiveList.prototype.getInstance('languageList', {
 	         beforeEdit:     function(li) {window.location.href = lng.editUrl + '/' + this.getRecordId(li); },
 	         beforeSort:     function(li, order) 
 			 { 
