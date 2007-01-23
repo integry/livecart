@@ -392,7 +392,7 @@ Backend.SpecField.prototype = {
 
         this.changeMainTitleAction(this.nodes.name.value);
 
-		if(this.description[this.languageCodes[0]]) this.nodes.description.value = this.description[this.languageCodes[0]];
+		if(this.description && this.description[this.languageCodes[0]]) this.nodes.description.value = this.description[this.languageCodes[0]];
 		this.nodes.description.name = "description[" + this.languageCodes[0] + "]";
 
 		// select dataType (or first)
@@ -445,7 +445,7 @@ Backend.SpecField.prototype = {
 				{
                     if(Element.hasClassName(inputFields[j].parentNode.parentNode, this.cssPrefix + 'language_translation'))
                     {
-    				    eval("if(self."+inputFields[j].name+"['"+self.languageCodes[i]+"']) inputFields[j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];");
+    				    eval("if(self." + inputFields[j].name + " && self."+inputFields[j].name+"['"+self.languageCodes[i]+"']) inputFields[j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];");
     					inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
                     }
 				}

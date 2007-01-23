@@ -40,10 +40,8 @@
         afterEdit:      function(li, response)
         {
             new Backend.Filter(response);
-
             this.rebindIcons(li);
             this.createSortable();
-
             this.toggleContainer(li, 'edit');
         },
 
