@@ -8,3 +8,4 @@ _error_filter_value_is_not_a_number=Filter value should be a number
 _error_spec_field_is_not_selected=Specification field is not selected
 _error_illegal_date=Illegal date
 _error_filter_name_empty=Filter name is empty
+_error_filter_handle_invalid=Handle is invalid

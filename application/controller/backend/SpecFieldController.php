@@ -188,7 +188,7 @@ class SpecFieldController extends StoreManagementController
             $errors['name'] = $this->translate('_error_name_empty');
         }
 
-        if(!isset($values['handle']) || preg_match('/[^\w\d_.]/', $values['handle']))
+        if(!isset($values['handle']) || $values['handle'] == '' || preg_match('/[^\w\d_.]/', $values['handle']))
         {
             $errors['handle'] = $this->translate('_error_handle_invalid');
         }

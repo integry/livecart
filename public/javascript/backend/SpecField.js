@@ -908,30 +908,6 @@ Backend.SpecField.prototype = {
 
 
     /**
-     * Set feedback message near the field
-     *
-     * @param HTMLInputElement|HTMLSelectElement|HTMLTextareaElement field
-     * @param string value Feedback message
-     *
-     */
-	setFeedback: function(field, value)
-	{
-	     var feedback = document.getElementsByClassName('feedback', field.parentNode)[0];
-
-	    try
-	    {
-	        feedback.firstChild.nodeValue = value;
-	    }
-	    catch(e)
-	    {
-	        feedback.appendChild(document.createTextNode(value))
-	    }
-
-        feedback.style.visibility = 'visible';
-	},
-
-
-    /**
      * Clears all feedback messages in current spec field
      *
      */
@@ -1047,12 +1023,12 @@ Backend.SpecField.prototype = {
                     {
                         $H(jsonResponse.errors[fieldName]).each(function(value)
                         {
-                            self.setFeedback($(self.cssPrefix + "form_" + self.id + "_values_" + self.languageCodes[0] + "_" + value.key).getElementsByTagName("input")[0], value.value);
+                            ActiveForm.prototype.setFeedback($(self.cssPrefix + "form_" + self.id + "_values_" + self.languageCodes[0] + "_" + value.key).getElementsByTagName("input")[0], value.value);
                         });
                     }
                     else
                     {
-                       this.setFeedback(this.nodes[fieldName], jsonResponse.errors[fieldName]);
+                       ActiveForm.prototype.setFeedback(this.nodes[fieldName], jsonResponse.errors[fieldName]);
                     }
                 }
             }

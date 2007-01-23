@@ -46,5 +46,28 @@ ActiveForm.prototype = {
 		handle = handle.toLowerCase();  
         
         return handle;
-    }
+    },
+    
+    /**
+     * Set feedback message near the field
+     *
+     * @param HTMLInputElement|HTMLSelectElement|HTMLTextareaElement field
+     * @param string value Feedback message
+     *
+     */
+    setFeedback: function(field, value)
+    {
+         var feedback = document.getElementsByClassName('feedback', field.parentNode)[0];
+
+        try
+        {
+            feedback.firstChild.nodeValue = value;
+        }
+        catch(e)
+        {
+            feedback.appendChild(document.createTextNode(value))
+        }
+
+        feedback.style.visibility = 'visible';
+    },
 }

@@ -50,8 +50,13 @@
         			<ul class="activeList_add_sort activeList_add_delete">
         				<li class="dom_template filter_form_filters_value filter_form_filters_value_main" id="filter_form_filters_">
             				<span>
-            					<p>
+            					<p class="filter_name">
                 					<label>{t _Filter_name}</label>
+                				    <input type="text" />
+                            		<span class="feedback"> </span>
+            				    </p>
+            					<p class="filter_handle">
+                					<label>{t _Filter_handle}</label>
                 				    <input type="text" />
                             		<span class="feedback"> </span>
             				    </p>

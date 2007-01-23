@@ -100,6 +100,7 @@ class FilterGroup extends MultilingualObject
 	 */
     public function saveFilters($filters, $specFieldType, $languages) 
     {
+        $htmlspecialcharsUtf_8 = create_function('$val', 'return htmlspecialchars($val, null, "UTF-8");');
         $position = 1;
         foreach ($filters as $key => $value)
         {
@@ -114,7 +115,7 @@ class FilterGroup extends MultilingualObject
             }
 
             $filter->setLanguageField('name', @array_map($htmlspecialcharsUtf_8, $value['name']),  array_keys($languages));
-            
+            $filter->setFieldValue('handle', $value['handle']);
             
             
             if($specFieldType == SpecField::TYPE_TEXT_DATE)

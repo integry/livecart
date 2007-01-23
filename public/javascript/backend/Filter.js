@@ -373,9 +373,12 @@ Backend.Filter.prototype = {
         var liList = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0].getElementsByTagName('li');
         $A(liList).each(function(li)
         {
-            li.getElementsByTagName("input")[0].onkeyup = self.mainValueFieldChangedAction.bind(self);
-            li.getElementsByTagName("input")[1].onkeydown = self.rangeChangedAction.bind(self);
-            li.getElementsByTagName("input")[2].onkeydown = self.rangeChangedAction.bind(self);
+            var rangeParagraph = document.getElementsByClassName('filter_range', li)[0];
+            var nameParagraph = document.getElementsByClassName('filter_name', li)[0];
+            
+            nameParagraph.getElementsByTagName("input")[0].onkeyup = self.mainValueFieldChangedAction.bind(self);
+            rangeParagraph.getElementsByTagName("input")[0].onkeydown = self.rangeChangedAction.bind(self);
+            rangeParagraph.getElementsByTagName("input")[1].onkeydown = self.rangeChangedAction.bind(self);
         });
 
         this.fieldsList = new ActiveList(this.nodes.filtersDefaultGroup.getElementsByTagName("ul")[0], {
@@ -412,6 +415,8 @@ Backend.Filter.prototype = {
             afterDelete: function(li, response){ self.deleteValueFieldAction(li, this) }
         }, this.activeListMessages);
     },
+   
+    
 
     /**
      * Check if range values are valid floats
@@ -749,9 +754,16 @@ Backend.Filter.prototype = {
 
         Event.stop(e);
         
-
-        var splitedHref  = e.target.parentNode.parentNode.parentNode.id.match(/(new)*(\d+)$/); //    splitedHref[splitedHref.length - 2] == 'new' ? true : false;
+        var li = e.target.parentNode.parentNode.parentNode;
+        var splitedHref  = li.id.match(/(new)*(\d+)$/); //    splitedHref[splitedHref.length - 2] == 'new' ? true : false;
         var id = splitedHref[0];
+        
+        if(id.match(/^new/))
+        {
+    		// generate handle
+            var handleParagraph = document.getElementsByClassName('filter_handle', li)[0];
+    		handleParagraph.getElementsByTagName('input')[0].value = ActiveForm.prototype.generateHandle(e.target.value);
+        }
 
         for(var i = 1; i < this.languageCodes.length; i++)
         {
@@ -765,7 +777,7 @@ Backend.Filter.prototype = {
      * on the top of the form. Handle is actuali a stripped version of spec field name with all spec
      * symbols changed to "_" (underscope)
      *
-     * @param Event e Event
+     * @param Event e Event 
      *
      * @access private
      *
@@ -810,24 +822,43 @@ Backend.Filter.prototype = {
 
             var li = this.fieldsList.addRecord(id, newValue, true);
 
-            // The field itself
-            var input = li.getElementsByTagName("input")[0];
+            // Filter name
+            var nameParagraph = document.getElementsByClassName('filter_name', li)[0];
+            var input = nameParagraph.getElementsByTagName("input")[0];
             input.name = "filters[" + id + "][name]["+this.languageCodes[0]+"]";
             input.value = (value && value.name && value.name[this.languageCodes[0]]) ? value.name[this.languageCodes[0]] : '' ;
 
-            var rangeStartInput = li.getElementsByTagName("input")[1];
+
+            // Handle name
+            var hanldeParagraph = document.getElementsByClassName('filter_handle', li)[0];
+            var handleInput = hanldeParagraph.getElementsByTagName("input")[0];
+            handleInput.name = "filters[" + id + "][handle]";
+            handleInput.value = (value && value.handle) ? value.handle : '' ;
+            
+
+            // Numeric range
+            var rangeParagraph = document.getElementsByClassName('filter_range', li)[0];
+            
+            var rangeStartInput = rangeParagraph.getElementsByTagName("input")[0];
             rangeStartInput.name = "filters[" + id + "][rangeStart]";
             rangeStartInput.value = (value && value.rangeStart) ? value.rangeStart : '' ;
             
-            var rangeEndInput = li.getElementsByTagName("input")[2];
+            var rangeEndInput = rangeParagraph.getElementsByTagName("input")[1];
             rangeEndInput.name = "filters[" + id + "][rangeEnd]";
             rangeEndInput.value = (value && value.rangeEnd) ? value.rangeEnd : '' ;
             
-            var specFieldValueIDInput = li.getElementsByTagName("select")[0];
+            
+            // Select
+            var specFieldValueParagraph = document.getElementsByClassName('filter_selector', li)[0];
+            
+            var specFieldValueIDInput = specFieldValueParagraph.getElementsByTagName("select")[0];
             specFieldValueIDInput.name = "filters[" + id + "][specFieldValueID]";
             specFieldValueIDInput.value = (value && value.specFieldValueID) ? value.specFieldValueID : '' ;
             
+            
+            // Date range
             var dateParagraph = document.getElementsByClassName("filter_date_range", li)[0];
+            
             var rangeDateStart = dateParagraph.getElementsByTagName("input")[0];
             var rangeDateEnd = dateParagraph.getElementsByTagName("input")[1];
             
@@ -943,31 +974,7 @@ Backend.Filter.prototype = {
             this.hideNewFilterAction(this.categoryID);
         }
     },
-
-
-    /**
-     * Set feedback message near the field
-     *
-     * @param HTMLInputElement|HTMLSelectElement|HTMLTextareaElement field
-     * @param string value Feedback message
-     *
-     */
-    setFeedback: function(field, value)
-    {
-         var feedback = document.getElementsByClassName('feedback', field.parentNode)[0];
-
-        try
-        {
-            feedback.firstChild.nodeValue = value;
-        }
-        catch(e)
-        {
-            feedback.appendChild(document.createTextNode(value))
-        }
-
-        feedback.style.visibility = 'visible';
-    },
-
+    
 
     /**
      * Clears all feedback messages in current spec field
@@ -1083,12 +1090,22 @@ Backend.Filter.prototype = {
                         {
                             $H(jsonResponse.errors[fieldName]).each(function(value)
                             {
-                                self.setFeedback($(self.cssPrefix + "form_" + self.id + "_filters_" + self.languageCodes[0] + "_" + value.key).getElementsByTagName("input")[0], value.value);
+                                var filterLi = $(self.cssPrefix + "form_" + self.id + "_filters_" + self.languageCodes[0] + "_" + value.key);
+                                $H(value.value).each(function(filterField)
+                                {
+                                    var inputParagraph = document.getElementsByClassName('filter_' + filterField.key, filterLi)[0];
+                                    try
+                                    {
+                                        ActiveForm.prototype.setFeedback(inputParagraph.getElementsByTagName('input')[0], filterField.value);
+                                    } catch(e) {
+                                        ActiveForm.prototype.setFeedback(inputParagraph.getElementsByTagName('select')[0], filterField.value);
+                                    }
+                                });
                             });
                         }
                         else
                         {
-                            this.setFeedback(this.nodes[fieldName], jsonResponse.errors[fieldName]);
+                            ActiveForm.prototype.setFeedback(this.nodes[fieldName], jsonResponse.errors[fieldName]);
                         }
                     }
                 }

@@ -24,6 +24,7 @@ _Filter_add_filter=Add filter
 _Filter_value=Value
 _Filter_generate_filters=Generate filters
 _Filter_date_range=Date between
+_Filter_handle=Handle
 
 #index
 _products=Products
