@@ -31,6 +31,8 @@
     specFieldListCallbacks = {
         beforeEdit:     function(li)
         {
+            Backend.SpecField.prototype.hideNewSpecFieldAction({/literal}{$categoryID}{literal});
+            
             if(this.isContainerEmpty(li, 'edit'))
             {
                 return Backend.SpecField.prototype.links.editField + this.getRecordId(li)

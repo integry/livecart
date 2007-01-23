@@ -30,6 +30,8 @@
     filterListCallbacks = {
         beforeEdit:     function(li)
         {
+            Backend.Filter.prototype.hideNewFilterAction({/literal}{$categoryID}{literal});
+            
             if(this.isContainerEmpty(li, 'edit')) return Backend.Filter.prototype.links.editGroup + this.getRecordId(li)
             else this.toggleContainer(li, 'edit');
         },

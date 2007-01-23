@@ -1200,6 +1200,7 @@ Backend.Filter.prototype = {
         var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
         var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");     
         
+        window.activeFiltersList[categoryID].collapseAll();
         ActiveForm.prototype.showNewItemForm(link, form);
     }
 }

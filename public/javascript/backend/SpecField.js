@@ -1120,7 +1120,9 @@ Backend.SpecField.prototype = {
 
         var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
         var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");
-
+        
+        window.activeSpecFieldsList[categoryID].collapseAll();
+        
         ActiveForm.prototype.showNewItemForm(link, form);
     }
 }
