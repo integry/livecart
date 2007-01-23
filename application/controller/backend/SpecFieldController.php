@@ -103,7 +103,7 @@ class SpecFieldController extends StoreManagementController
     public function item()
     {
 		$response = new ActionResponse();
-		$specFieldList = SpecField::getInstanceByID($this->request->getValue('id'), true, true)->toArray(false);
+		$specFieldList = SpecField::getInstanceByID($this->request->getValue('id'), true, true)->toArray(false, false);
 		
 		foreach(SpecFieldValue::getRecordSetArray($specFieldList['ID']) as $value)
 		{

@@ -655,6 +655,11 @@ label
     cursor: pointer;
 }
 
+p.required label
+{
+  	font-weight: bold;
+}
+
 p.radio, p.checkbox
 {
    padding-left: 11em;
@@ -750,7 +755,7 @@ a.cancel
  	color: red;
 }
 
-fieldset.error 
+fieldset.error, div.error
 {
  	background-color: inherit;
 	padding: 0px;
@@ -759,7 +764,7 @@ fieldset.error
 	border: 0;
 }
 
-.errorText
+.errorText, fieldset.error div
 {
 	background-color: red;
 	float: left; 
@@ -767,6 +772,7 @@ fieldset.error
 	margin-bottom: 4px;
 	margin-top: 0px;
 	padding: 3px;
+	color: white;
 }
 
 .progressIndicator {

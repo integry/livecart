@@ -268,6 +268,7 @@ class Product extends MultilingualObject
 	{
 	  	$array = parent::toArray();
 	  	$array['specFieldData'] = $this->specFieldData;
+	  	return $array;
 	}
 
 	/**

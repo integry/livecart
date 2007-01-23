@@ -2,6 +2,7 @@
 
 ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.category.Category");
+ClassLoader::import("application.model.category.SpecFieldValue");
 
 /**
  * Specification field class
@@ -210,13 +211,23 @@ class SpecField extends MultilingualObject
 	}
 
 	/**
+	 * Loads a set of spec field records in current category
+	 *
+	 * @return ARSet
+	 */
+	public function getValuesSet()
+	{
+		return SpecFieldValue::getRecordSet($this->getID());
+	}
+
+	/**
 	 *
 	 *
 	 * @return array
 	 */
 	public static function getSelectorValueTypes()
 	{
-	    return array (self::TYPE_NUMBERS_SELECTOR, Specfield::TYPE_TEXT_SELECTOR);
+	    return array (self::TYPE_NUMBERS_SELECTOR, self::TYPE_TEXT_SELECTOR);
 	}
 
 	public function saveValues($values, $type, $languages) {
@@ -251,9 +262,17 @@ class SpecField extends MultilingualObject
         }
 	}
 
-    public function toArray()
+	/**
+	 * Tranforms data array to a folowing format:
+	 *
+	 * simpleField => value,
+	 * multilingualField_langCode => value,
+	 * multilingualField2_langCode => otherValue, and etc.
+	 *
+	 */
+	public function toArray($recursive = false, $convertToUnderscore = true)
     {
-	  	$array = parent::toArray();
+	  	$array = parent::toArray($recursive, $convertToUnderscore);
 	  	$array['fieldName'] = 'specField_' . $array['ID'];
 	  	return $array;
 	}

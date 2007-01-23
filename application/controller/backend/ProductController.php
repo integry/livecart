@@ -42,23 +42,53 @@ class ProductController extends StoreManagementController {
 		return $this->productForm($product);		
 	}
 
+	public function save()
+	{
+	  	// get Product instance
+		if ($this->request->getValue('id') == 0)
+	  	{
+		    $product = Product::getNewInstance(Category::getInstanceByID($this->request->getValue('categoryID'), ActiveRecordModel::LOAD_DATA));
+		}
+		else
+		{
+		  	$product = Product::getInstanceByID($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA);
+		}
+		
+		$validator = $this->buildValidator($product);
+		
+		if ($validator->isValid())
+		{
+				 	 
+		}
+		else
+		{
+			return new ActionRedirectResponse('backend.product', 'add', array('id' => $this->request->getValue('categoryID')));  	
+		}
+				
+	}
+	
 	private function productForm(Product $product)
 	{
 		$specFields = $product->getSpecificationFieldSet();
 		$specFieldArray = $specFields->toArray();
 				
-		// validate numeric values
+		// set select values
+		$selectors = SpecField::getSelectorValueTypes();
 		foreach ($specFields as $key => $field)
 		{
-		  	if ($field->type->get() == SpecField::TYPE_NUMBERS_SIMPLE)
+		  	if (in_array($field->type->get(), $selectors))
 		  	{
-					    
+				$values = $field->getValuesSet()->toArray();				
+				$specFieldArray[$key]['values'] = array('' => '');
+				foreach ($values as $value)
+				{
+					$specFieldArray[$key]['values'][$value['ID']] = $value['value_lang'];  	
+				}
 			}
 		}
 				
 		$form = $this->buildForm($product);
-
-//		$form->setData($product->toArray());
+		$form->setData($product->toArray());
 
 		$languages = array();
 		foreach ($this->store->getLanguageArray() as $lang)
@@ -70,15 +100,27 @@ class ProductController extends StoreManagementController {
 		
 		$response = new ActionResponse();
 		$response->setValue("languageList", $languages);
-		$response->setValue("specFieldList", $specFields->toArray());
+		$response->setValue("specFieldList", $specFieldArray);
 		$response->setValue("productForm", $form);
+		$productData = $product->toArray();
+		if (empty($productData['ID']))
+		{
+			$productData['ID'] = 0;  	
+		}
+		$response->setValue("product", $productData);
 		return $response; 	
 	}
 	
 	private function buildValidator(Product $product)
 	{
+		ClassLoader::import("framework.request.validator.RequestValidator");
+		
 		$validator = new RequestValidator("productFormValidator", $this->request);
 		
+		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name_empty')));		    
+		$validator->addCheck('sku', new IsNotEmptyCheck($this->translate('_err_sku_empty')));		    
+		
+		// spec field validator
 		$specFields = $product->getSpecificationFieldSet()->toArray();			
 		foreach ($specFields as $key => $field)
 		{
@@ -87,10 +129,11 @@ class ProductController extends StoreManagementController {
 		  	{
 				$validator->addCheck($field['fieldName'], new IsNumericCheck($this->translate('_err_numeric')));		    
 				$validator->addFilter($field['fieldName'], new NumericFilter());		    
-//				$validator->addCheck($field['fieldName'], new IsNotEmptyCheck($this->translate('_err_empty')));		    
 			}
 		}
-
+	
+		$validator->addCheck('test', new IsNotEmptyCheck($this->translate('_err_empty')));		    
+	
 		return $validator;
 	}
 

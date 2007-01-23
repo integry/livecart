@@ -1,31 +1,37 @@
 {includeCSS file="backend/Product.css"}
 
-{form handle=$productForm action="controller=backend.product action=save" method="POST"}
+{form handle=$productForm action="controller=backend.product action=save id=`$product.ID`" method="POST"}
+	
+	<input type="hidden" name="categoryID" value="{$product.Category.ID}" />
+	
 	<fieldset>
 		<legend>Main product information</legend>
 
-		<p>
-			<label>Product name</label>
+		<p class="required">
+			<label>Product name:</label>
+			<fieldset class="error">
 			{textfield name="name"}
+			{error for="name"}<div class="errorText">{$msg}</div>{/error}
+			</fieldset>			
 		</p>
 
-		<p>
+		<p class="required">
 			<label>SKU:</label>
 			{textfield name="SKU"}
 		</p>
 
 		<p>
 			<label>Short description:</label>
-			{textarea name="shortDescription"}
+			{textarea class="shortDescr" name="shortDescription"}
 		</p>
 
 		<p>
-			<label>Short description:</label>
-			{textarea name="longDescription"}
+			<label>Long description:</label>
+			{textarea class="longDescr" name="longDescription"}
 		</p>
 
 		<p>
-			<label>Status</label>
+			<label>Status:</label>
 			{selectfield name="status"}
 		</p>
 
@@ -43,10 +49,10 @@
 		
 		<p>
 		
-			<label>{$field.name_lang}</label>
+			<label>{$field.name_lang}:</label>
 				
 			{if $field.type == 1}
-				{selectfield id=$field.fieldName name=$field.fieldName class="select"}
+				{selectfield id=$field.fieldName name=$field.fieldName options=$field.values class="select"}
 
 			{elseif $field.type == 2}
 				{textfield id=$field.fieldName name=$field.fieldName class="text numeric"}
@@ -58,10 +64,10 @@
 				{textarea id=$field.fieldName name=$field.fieldName }
 
 			{elseif $field.type == 5}
-				{selectfield id=$field.fieldName name=$field.fieldName class="select"}
+				{selectfield id=$field.fieldName name=$field.fieldName options=$field.values class="select"}
 
 			{elseif $field.type == 6}
-				{html_select_date id=$field.fieldName name=$field.fieldName}
+				{calendar id=$field.fieldName name=$field.fieldName}
 			{/if}
 			
 		</p>
