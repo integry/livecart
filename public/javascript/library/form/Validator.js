@@ -129,7 +129,7 @@ function IsValueInSetCheck(element, params)
 
 function IsNumericCheck(element, constraint)
 {
-  	if (constraint.letEmptyString && element.value == '')
+  	if (element.value == '')
   	{
   		return true;
   	}

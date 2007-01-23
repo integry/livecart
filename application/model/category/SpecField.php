@@ -251,6 +251,13 @@ class SpecField extends MultilingualObject
         }
 	}
 
+    public function toArray()
+    {
+	  	$array = parent::toArray();
+	  	$array['fieldName'] = 'specField_' . $array['ID'];
+	  	return $array;
+	}
+
     public static function countItems(Category $category)
     {
         return $category->getSpecificationFieldSet()->getTotalRecordCount();

@@ -24,6 +24,15 @@ class SpecFieldValue extends MultilingualObject
 
 	}
 
+	public static function getRecordSet($specFieldId)
+	{
+        $filter = new ARSelectFilter();
+		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"));
+        $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'specFieldID'), $specFieldId));
+
+        return parent::getRecordSet(__CLASS__, $filter, false);
+	}
+
 	public static function getRecordSetArray($specFieldId)
 	{
         $filter = new ARSelectFilter();

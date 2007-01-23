@@ -59,8 +59,9 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	 * multilingualField2_langCode => otherValue, and etc.
 	 *
 	 * @param unknown_type $includeLangData
+	 * @todo cleanup
 	 */
-	public function toArray($convertToUnderscope = true, $recursive = false)
+	public function toArray($recursive = false, $convertToUnderscope = true)
 	{
 		$store = Store::getInstance();
 		$defaultLangCode = $store->getDefaultLanguageCode();
@@ -128,7 +129,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 					$data[$fieldName] = $valueContainer->get();
 				}
 			}
-		}
+		} 
 		return $data;
 	}
 }

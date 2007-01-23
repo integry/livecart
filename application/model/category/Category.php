@@ -6,7 +6,7 @@ ClassLoader::import("application.model.system.MultilingualObjectInterface");
 /**
  * Hierarchial product category model class
  *
- * $Id: Category.php 1468 2007-01-23 11:06:00Z rinalds $, $LastChangedDate: 2007-01-23 13:06:00 +0200 (Tue, 23 Jan 2007) $
+ * $Id: Category.php 1472 2007-01-23 14:01:50Z rinalds $, $LastChangedDate: 2007-01-23 16:01:50 +0200 (Tue, 23 Jan 2007) $
  * 
  * @package application.model.category
  */
@@ -386,7 +386,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 				// if there's no value in active language)
 				$transformedData[$name . '_lang'] = !empty($transformedData[$name . '_' . $currentLangCode]) ?
 													$transformedData[$name . '_' . $currentLangCode] :
-													!empty($transformedData[$name]) ? $transformedData[$name] : '';
+													(isset($transformedData[$name]) ? $transformedData[$name] : '');
 			}
 			else
 			{

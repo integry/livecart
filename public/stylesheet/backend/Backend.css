@@ -606,15 +606,16 @@ br.clear
 form p
 {
     position: relative;
+    clear: both;
 }
 
 .feedback, .feedback_textarea
 {
-   position: absolute ! important;
-   vertical-align: middle;
-   margin-left: 10px;
-   padding-left: 20px;
-   background: url(../../image/silk/error.png) no-repeat left center;
+    position: absolute ! important;
+    vertical-align: middle;
+    margin-left: 10px;
+    padding-left: 20px;
+    background: url(../../image/silk/error.png) no-repeat left center;
     visibility: hidden;
     white-space: nowrap;
 }

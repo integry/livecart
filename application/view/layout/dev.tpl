@@ -9,6 +9,10 @@
 	<base href="{baseUrl}" />
 
 	<link href="stylesheet/backend/Backend.css" media="screen" rel="Stylesheet" type="text/css"/>
+	<link href="stylesheet/backend/Product.css" media="screen" rel="Stylesheet" type="text/css"/>
+
+	<script type="text/javascript" src="javascript/library/form/Validator.js"></script>
+	
 </head>
 <body>
 	<div style="margin: 20px 20px 20px 20px;">

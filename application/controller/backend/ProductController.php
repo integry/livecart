@@ -45,47 +45,60 @@ class ProductController extends StoreManagementController {
 	private function productForm(Product $product)
 	{
 		$specFields = $product->getSpecificationFieldSet();
+		$specFieldArray = $specFields->toArray();
+				
+		// validate numeric values
+		foreach ($specFields as $key => $field)
+		{
+		  	if ($field->type->get() == SpecField::TYPE_NUMBERS_SIMPLE)
+		  	{
+					    
+			}
+		}
 				
 		$form = $this->buildForm($product);
 
 //		$form->setData($product->toArray());
-		$response = new ActionResponse();
 
-/*
-		if (!empty($productId))
-		{
-			$product = Product::getInstanceByID($productId, Product::LOAD_DATA);
-			$category = $product->category->get();
-			$specFieldArray = $category->getSpecificationFieldArray();
-			$response->setValue("specFieldList", $specFieldArray);
-
-			$productSpec = new ProductSpecification($product);
-		}
-*/
 		$languages = array();
 		foreach ($this->store->getLanguageArray() as $lang)
 		{
 			$languages[$lang] = $this->locale->info()->getOriginalLanguageName($lang);
 		}
-		$response->setValue("languageList", $languages);
-
-		$response->setValue("productForm", $form);
 
 		$this->setLayout("dev");
+		
+		$response = new ActionResponse();
+		$response->setValue("languageList", $languages);
+		$response->setValue("specFieldList", $specFields->toArray());
+		$response->setValue("productForm", $form);
 		return $response; 	
 	}
 	
-	private function buildValidator()
+	private function buildValidator(Product $product)
 	{
 		$validator = new RequestValidator("productFormValidator", $this->request);
+		
+		$specFields = $product->getSpecificationFieldSet()->toArray();			
+		foreach ($specFields as $key => $field)
+		{
+		  	// validate numeric values
+			if (SpecField::TYPE_NUMBERS_SIMPLE == $field['type'])
+		  	{
+				$validator->addCheck($field['fieldName'], new IsNumericCheck($this->translate('_err_numeric')));		    
+				$validator->addFilter($field['fieldName'], new NumericFilter());		    
+//				$validator->addCheck($field['fieldName'], new IsNotEmptyCheck($this->translate('_err_empty')));		    
+			}
+		}
+
 		return $validator;
 	}
 
-	private function buildForm()
+	private function buildForm(Product $product)
 	{
 		ClassLoader::import("framework.request.validator.Form");
 
-		$form = new Form($this->buildValidator());
+		$form = new Form($this->buildValidator($product));
 		return $form;
 	}
 
