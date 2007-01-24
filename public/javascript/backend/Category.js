@@ -206,8 +206,6 @@ Backend.Category = {
 
 	reorderCategory: function(targetId, parentId, siblingNodeId)
 	{
-		//alert("Source node id: " + targetId);
-		//alert("target id: " + parentId);
         var success = false;
         new Ajax.Request(Backend.Category.getUrlForNodeReorder(targetId, parentId),
         {
@@ -448,7 +446,6 @@ CategoryTabControl.prototype = {
                 Element.hide(prevContainer);
 			}
 		}
-		//this.activateTab(this.activeTab, currentCategory);
 	},
     
     updateTabItemsCount: function(categoryID)

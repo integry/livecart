@@ -349,6 +349,17 @@ Backend.Filter.prototype = {
         }
     },
 
+    bindOneFilter: function(li)
+    {
+        var rangeParagraph = document.getElementsByClassName('filter_range', li)[0];
+        var nameParagraph = document.getElementsByClassName('filter_name', li)[0];
+        
+        nameParagraph.getElementsByTagName("input")[0].onkeyup = this.mainValueFieldChangedAction.bind(this);
+        rangeParagraph.getElementsByTagName("input")[0].onkeydown = this.rangeChangedAction.bind(this);
+        rangeParagraph.getElementsByTagName("input")[1].onkeydown = this.rangeChangedAction.bind(this);  
+    },
+
+
     /**
      * Bind default language filter fields to actions
      */
@@ -356,15 +367,6 @@ Backend.Filter.prototype = {
     {
         var self = this;
         var liList = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0].getElementsByTagName('li');
-        $A(liList).each(function(li)
-        {
-            var rangeParagraph = document.getElementsByClassName('filter_range', li)[0];
-            var nameParagraph = document.getElementsByClassName('filter_name', li)[0];
-            
-            nameParagraph.getElementsByTagName("input")[0].onkeyup = self.mainValueFieldChangedAction.bind(self);
-            rangeParagraph.getElementsByTagName("input")[0].onkeydown = self.rangeChangedAction.bind(self);
-            rangeParagraph.getElementsByTagName("input")[1].onkeydown = self.rangeChangedAction.bind(self);
-        });
 
         this.fieldsList = ActiveList.prototype.getInstance(this.nodes.filtersDefaultGroup.getElementsByTagName("ul")[0], {
             beforeSort: function(li, order)
@@ -557,7 +559,6 @@ Backend.Filter.prototype = {
         {
             $H(this.filters).each(function(value) {
                 self.addFilter(value.value, value.key);
-
             });
 
             this.bindDefaultFields();
@@ -887,6 +888,8 @@ Backend.Filter.prototype = {
                 ifFormat:         this.dateFormat, 
                 button:           rangeDateEndButton.id
             });
+            
+            this.bindOneFilter(li);
             
 			// now insert all translation fields
 			for(var i = 1; i < this.languageCodes.length; i++)
