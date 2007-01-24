@@ -219,20 +219,19 @@ Backend.SpecField.prototype = {
 
 	    for(var i = 0; i < this.nodes.dataType.length; i++)
 		{
-			this.nodes.dataType[i].onclick = this.dataTypeChangedAction.bind(this);
+            Event.observe(this.nodes.dataType[i], "click", function(e) { self.dataTypeChangedAction(e) } );
 		}
 
 		for(var i = 0; i < this.nodes.stateLinks.length; i++)
 		{
-			this.nodes.stateLinks[i].onclick = this.changeStateAction.bind(this);
+            Event.observe(this.nodes.stateLinks[i], "click", function(e) { self.changeStateAction(e) } );
 		}
 
-		this.nodes.name.onkeyup = this.generateHandleAndTitleAction.bind(this);
-		this.nodes.valuesAddFieldLink.onclick = this.addValueFieldAction.bind(this);
-		this.nodes.type.onchange = this.typeWasChangedAction.bind(this);
-
-		this.nodes.cancel.onclick = this.cancelAction.bind(this);
-		this.nodes.save.onclick = this.saveAction.bind(this);
+        Event.observe(this.nodes.name, "keyup", function(e) { self.generateHandleAndTitleAction(e) } );
+        Event.observe(this.nodes.valuesAddFieldLink, "click", function(e) { self.addValueFieldAction(e) } );
+        Event.observe(this.nodes.type, "change", function(e) { self.typeWasChangedAction(e) } );
+        Event.observe(this.nodes.cancel, "click", function(e) { self.cancelAction(e) } );
+        Event.observe(this.nodes.save, "click", function(e) { self.saveAction(e) } );
 
 		// Also some actions must be executed on load. Be aware of the order in which those actions are called
 		this.loadSpecFieldAction();
@@ -247,6 +246,12 @@ Backend.SpecField.prototype = {
 
 		new Form.EventObserver(this.nodes.form, function() { self.formChanged = true; } );
 		Form.backup(this.nodes.form);
+        
+
+        var self = this;
+        $A(this.nodes.form.getElementsByTagName("input")).each(function(input) {
+           Event.observe(input, 'keydown', function(e) { self.submitOnEnter(e) }); 
+        });
 	},
 
 	/**
@@ -298,6 +303,18 @@ Backend.SpecField.prototype = {
 	},
 
 
+    bindOneFilter: function(li)
+    {        
+        var self = this;
+	    var input = li.getElementsByTagName("input")[0];
+        if(input.type == 'text')
+        {
+            Event.observe(input, "keyup", function(e) { self.mainValueFieldChangedAction(e) } );
+            Event.observe(input, "keydown", function(e) { self.mainValueFilterKeysAction(e) } );
+            Event.observe(input, 'keydown', function(e) { self.submitOnEnter(e) }); 
+        }   
+    },
+
 	/**
 	 * This method binds all default values (those which are field in "Values" step) and create new fields in "Translations"
 	 * step where user can fill translations for those values
@@ -308,13 +325,9 @@ Backend.SpecField.prototype = {
 	bindDefaultFields: function()
 	{
 		var self = this;
-		$A(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0].getElementsByTagName("input")).each(function(input)
+		$A(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0].getElementsByTagName("li")).each(function(li)
 		{
-		    if(input.type == 'text')
-            {
-                input.onkeyup = self.mainValueFieldChangedAction.bind(self);
-    			input.onkeydown = self.mainValueFilterKeysAction.bind(self);
-            }
+		    self.bindOneFilter(li);
 		});
 
 
@@ -327,27 +340,27 @@ Backend.SpecField.prototype = {
 	        afterSort: function(li, response){    },
 
 	        beforeDelete: function(li){
-	                if(this.getRecordId(li).match(/^new/))
-	                {
-    	                var emptyFilters = true;
-                        var inputValues = li.getElementsByTagName("input");
-                        for(var i = 0; i < inputValues.length; i++) 
+                if(this.getRecordId(li).match(/^new/))
+                {
+	                var emptyFilters = true;
+                    var inputValues = li.getElementsByTagName("input");
+                    for(var i = 0; i < inputValues.length; i++) 
+                    {
+                        if(!Element.hasClassName('dom_template', inputValues[i]) && inputValues[i].style.display != 'none' && inputValues[i].value != '')
                         {
-                            if(!Element.hasClassName('dom_template', inputValues[i]) && inputValues[i].style.display != 'none' && inputValues[i].value != '')
-                            {
-                                emptyFilters =  false;
-                            }
+                            emptyFilters =  false;
                         }
-                        
-                        if(emptyFilters || confirm('Are you realy want to delete this item?'))
-                        {
-                            self.deleteValueFieldAction(li, this);
-                        }
-	                }
-	                else if(confirm('Are you realy want to delete this item?'))
-	                {
-	                    return Backend.SpecField.prototype.links.deleteValue + this.getRecordId(li);
-	                }
+                    }
+                    
+                    if(emptyFilters || confirm('Are you realy want to delete this item?'))
+                    {
+                        self.deleteValueFieldAction(li, this);
+                    }
+                }
+                else if(confirm('Are you realy want to delete this item?'))
+                {
+                    return Backend.SpecField.prototype.links.deleteValue + this.getRecordId(li);
+                }
 	        },
 	        afterDelete: function(li, response){ self.deleteValueFieldAction(li, this) }
 	    }, this.activeListMessages);
@@ -428,7 +441,7 @@ Backend.SpecField.prototype = {
 				Element.removeClassName(newTranslation, "dom_template");
     
     			// bind it
-    			newTranslation.getElementsByTagName("legend")[0].onclick = this.changeTranslationLanguageAction.bind(this);
+                Event.observe(newTranslation.getElementsByTagName("legend")[0], "click", function(e) { self.changeTranslationLanguageAction(e) } );
     
 				newTranslation.className += this.languageCodes[i];
                 
@@ -462,10 +475,8 @@ Backend.SpecField.prototype = {
                 
                 var valueTranslationLegend = newValueTranslation.getElementsByTagName("legend")[0];
                 document.getElementsByClassName(this.cssPrefix + "legend_text", valueTranslationLegend)[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
-
-                 
                 
-                valueTranslationLegend.onclick = this.toggleValueLanguage.bind(this);
+                Event.observe(valueTranslationLegend, "click", function(e) { self.toggleValueLanguage(e) } );
                 
 				valuesTranslations[0].parentNode.appendChild(newValueTranslation);
                 this.nodes.valuesTranslations[this.languageCodes[i]] = newValueTranslation;
@@ -600,6 +611,7 @@ Backend.SpecField.prototype = {
 		var id = (isNew ? 'new' : '') + splitedHref[splitedHref.length - 1];
 
         activeList.remove(li);
+        CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
 
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
@@ -828,7 +840,6 @@ Backend.SpecField.prototype = {
             if(!this.fieldsList) this.bindDefaultFields();
 
             var li = this.fieldsList.addRecord(id, newValue.getElementsByTagName("*"));
-            CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
 
 			// The field itself
 			var input = li.getElementsByTagName("input")[0];
@@ -932,7 +943,6 @@ Backend.SpecField.prototype = {
      */
     saveAction: function(e)
     {
-        var self = this;
         if(!e)
 		{
 			e = window.event;
@@ -940,11 +950,17 @@ Backend.SpecField.prototype = {
 		}
 
 		Event.stop(e);
-
+        
+        this.saveSpecField();
+    },
+    
+    
+    saveSpecField: function()
+    {
 		// Toggle progress won't work on new form
 		try
 		{
-		    window.activeSpecFieldsList[this.categoryID].toggleProgress(self.nodes.parent);
+		    window.activeSpecFieldsList[this.categoryID].toggleProgress(this.nodes.parent);
 		}
 		catch (e)
 		{
@@ -952,6 +968,8 @@ Backend.SpecField.prototype = {
 		}
         
 		this.clearAllFeedBack();
+        
+        var self = this;
         new Ajax.Request(
             this.nodes.form.action,
             {
@@ -962,7 +980,6 @@ Backend.SpecField.prototype = {
                 }
             }
         );
-
     },
 
 
@@ -996,7 +1013,6 @@ Backend.SpecField.prototype = {
             }
             else
             {
-
                 var div = document.createElement('span');
                 Element.addClassName(div, 'specField_title');
                 div.appendChild(document.createTextNode(this.nodes.name.value));
@@ -1004,6 +1020,8 @@ Backend.SpecField.prototype = {
                 this.hideNewSpecFieldAction(this.categoryID);
     		    this.recreate(this.specField, true);
             }
+            
+            CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
             
             // Reload filters (uncomment when API is frozen)
             
@@ -1124,5 +1142,14 @@ Backend.SpecField.prototype = {
         window.activeSpecFieldsList[categoryID].collapseAll();
         
         ActiveForm.prototype.showNewItemForm(link, form);
+    },
+    
+    submitOnEnter: function(e)
+    {
+        keybordEvent = new KeyboardEvent(e);
+        
+        if(keybordEvent.getKey() == KeyboardEvent.prototype.KEY_ENTER) {
+            this.saveSpecField();
+        }
     }
 }

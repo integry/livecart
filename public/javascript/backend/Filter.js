@@ -252,40 +252,37 @@ Backend.Filter.prototype = {
     {
         var self = this;
 
-        try
+        for(var i = 0; i < this.nodes.stateLinks.length; i++)
         {
-            for(var i = 0; i < this.nodes.stateLinks.length; i++)
-            {
-                this.nodes.stateLinks[i].onclick = this.changeStateAction.bind(this);
-            }
-    
-            this.nodes.name.onkeyup = this.generateTitleAction.bind(this);
-            this.nodes.addFilterLink.onclick = this.addFilterFieldAction.bind(this);
-            this.nodes.specFieldID.onchange = this.specFieldIDWasChangedAction.bind(this);
-    
-            this.nodes.cancel.onclick = this.cancelAction.bind(this);
-            this.nodes.save.onclick = this.saveAction.bind(this);
-            
-            this.nodes.generateFiltersLink.onclick = this.generateFiltersAction.bind(this);
-    
-            // Also some actions must be executed on load. Be aware of the order in which those actions are called
-            this.fillSpecFieldsSelect();
-            if(this.filter.SpecField) this.nodes.specFieldID.value = this.filter.SpecField.ID;
-            
-            this.loadFilterAction();
-    
-            this.specFieldIDWasChangedAction();
-            this.loadValueFieldsAction();
-    
-            this.bindTranslationFilters();
-        } 
-        catch(e)
-        {
-            alert(e);
+            Event.observe(this.nodes.stateLinks[i], "click", function(e) { self.changeStateAction(e) });
         }
+
+        Event.observe(this.nodes.name, "keyup", function(e) { self.generateTitleAction(e) });
+        Event.observe(this.nodes.addFilterLink, "click", function(e) { self.addFilterFieldAction(e) });
+        Event.observe(this.nodes.specFieldID, "change", function(e) { self.specFieldIDWasChangedAction(e) });
+        Event.observe(this.nodes.cancel, "click", function(e) { self.cancelAction(e) });
+        Event.observe(this.nodes.save, "click", function(e) { self.saveAction(e) });
+        Event.observe(this.nodes.generateFiltersLink, "click", function(e) { self.generateFiltersAction(e) });
+             
+        
+        // Also some actions must be executed on load. Be aware of the order in which those actions are called
+        this.fillSpecFieldsSelect();
+        if(this.filter.SpecField) this.nodes.specFieldID.value = this.filter.SpecField.ID;
+        
+        this.loadFilterAction();
+
+        this.specFieldIDWasChangedAction();
+        this.loadValueFieldsAction();
+
+        this.bindTranslationFilters();
 
         new Form.EventObserver(this.nodes.form, function() { self.formChanged = true; } );
         Form.backup(this.nodes.form);
+       
+        var self = this;
+        $A(this.nodes.form.getElementsByTagName("input")).each(function(input) {
+           Event.observe(input, 'keydown', function(e) { self.submitOnEnter(e) }); 
+        });
     },
 
     /**
@@ -351,12 +348,23 @@ Backend.Filter.prototype = {
 
     bindOneFilter: function(li)
     {
+        var self = this;
+        
         var rangeParagraph = document.getElementsByClassName('filter_range', li)[0];
         var nameParagraph = document.getElementsByClassName('filter_name', li)[0];
         
-        nameParagraph.getElementsByTagName("input")[0].onkeyup = this.mainValueFieldChangedAction.bind(this);
-        rangeParagraph.getElementsByTagName("input")[0].onkeydown = this.rangeChangedAction.bind(this);
-        rangeParagraph.getElementsByTagName("input")[1].onkeydown = this.rangeChangedAction.bind(this);  
+        var name       = nameParagraph.getElementsByTagName("input")[0];
+        var rangeStart = rangeParagraph.getElementsByTagName("input")[0];
+        var rangeEnd   = rangeParagraph.getElementsByTagName("input")[1];
+        
+        Event.observe(nameParagraph.getElementsByTagName("input")[0], "keyup", function(e) { self.mainValueFieldChangedAction(e) }, false);
+        
+        Event.observe(rangeParagraph.getElementsByTagName("input")[0], "keydown", function(e) { self.rangeChangedAction(e) });
+        Event.observe(rangeParagraph.getElementsByTagName("input")[1], "keydown", function(e) { self.rangeChangedAction(e) });        
+        
+        $A(li.getElementsByTagName("input")).each(function(input) {
+           Event.observe(input, 'keydown', function(e) { self.submitOnEnter(e) }); 
+        });
     },
 
 
@@ -482,7 +490,7 @@ Backend.Filter.prototype = {
                 Element.removeClassName(newTranslation, "dom_template");
                 
     			// bind it
-    			newTranslation.getElementsByTagName("legend")[0].onclick = this.changeTranslationLanguageAction.bind(this);
+                Event.observe(newTranslation.getElementsByTagName("legend")[0], "click", function(e) { self.changeTranslationLanguageAction(e) });
 
                 newTranslation.className += this.languageCodes[i];
                 document.getElementsByClassName(this.cssPrefix + "legend_text", newTranslation.getElementsByTagName("legend")[0])[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
@@ -518,7 +526,7 @@ Backend.Filter.prototype = {
                 var valueTranslationLegend = document.getElementsByClassName(this.cssPrefix + "legend_text", newValueTranslation.getElementsByTagName("legend")[0])[0];
 				valueTranslationLegend.appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
                 
-                valueTranslationLegend.parentNode.onclick = this.toggleValueLanguage.bind(this);
+                Event.observe(valueTranslationLegend.parentNode, "click", function(e) { self.toggleValueLanguage(e) });
                 
 				valuesTranslations[0].parentNode.appendChild(newValueTranslation);
                 this.nodes.valuesTranslations[this.languageCodes[i]] = newValueTranslation;
@@ -990,7 +998,6 @@ Backend.Filter.prototype = {
      */
     saveAction: function(e)
     {
-        var self = this;
         if(!e)
         {
             e = window.event;
@@ -998,11 +1005,16 @@ Backend.Filter.prototype = {
         }
 
         Event.stop(e);
+        
+        this.saveFilterGroup();
+    },
 
+    saveFilterGroup: function()
+    {
         // Toggle progress won't work on new form
         try
         {
-            window.activeFiltersList[this.categoryID].toggleProgress(self.nodes.parent);
+            window.activeFiltersList[this.categoryID].toggleProgress(this.nodes.parent);
         }
         catch (e)
         {
@@ -1010,6 +1022,8 @@ Backend.Filter.prototype = {
         }
 
         this.clearAllFeedBack();
+        
+        var self = this;
         new Ajax.Request(
             this.nodes.form.action,
             {
@@ -1019,10 +1033,9 @@ Backend.Filter.prototype = {
                     self.afterSaveAction(param.responseText)
                 }
             }
-        );
-
+        );  
     },
-
+    
 
     /**
      * This action is executed after server response with possible errors in entered
@@ -1191,5 +1204,14 @@ Backend.Filter.prototype = {
         
         window.activeFiltersList[categoryID].collapseAll();
         ActiveForm.prototype.showNewItemForm(link, form);
+    },
+    
+    submitOnEnter: function(e)
+    {
+        keybordEvent = new KeyboardEvent(e);
+        
+        if(keybordEvent.getKey() == KeyboardEvent.prototype.KEY_ENTER) {
+            this.saveFilterGroup();
+        }
     }
 }

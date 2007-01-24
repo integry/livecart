@@ -185,7 +185,7 @@ ActiveList.prototype = {
        
        if(!ActiveList.prototype.activeListsUsers[ulElement.id]) 
        {
-           this.activeListsUsers[ulElement.id] = new ActiveList(ulElement, callbacks, messages);
+           this.activeListsUsers[ulElement.id] = new ActiveList(ulElement.id, callbacks, messages);
        }
        
      //  console.info(this.activeListsUsers[ulElement.id])

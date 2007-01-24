@@ -23,12 +23,35 @@ Backend.CategoryImage.prototype =
 	
 	initList: function(categoryId, imageList)
 	{
+        $A($("catImgAdd_" + categoryId).getElementsByTagName("input")).each(function(input) {
+            Event.observe(input, "keydown", function(e) { Backend.CategoryImage.prototype.submitOnEnter(e, categoryId) });
+        });
+        
 		for (k = 0; k < imageList.length; k++)
 		{
 		  	this.addToList(categoryId, imageList[k]);
 		}  
 		this.initActiveList(categoryId);
 	},
+    
+        
+    submitOnEnter: function(e, categoryId)
+    {
+        keybordEvent = new KeyboardEvent(e);
+        
+        if(keybordEvent.getKey() == KeyboardEvent.prototype.KEY_ENTER) {
+            if(!e)
+            {
+                e = window.event;
+                e.target = e.srcElement;
+            }
+            
+            if(validateForm(e.target.form))  
+            {
+                this.upload("catImgAdd_" + categoryId + "_form");
+            }
+        }
+    },
 	
 	initActiveList: function(categoryId)
 	{
@@ -37,7 +60,7 @@ Backend.CategoryImage.prototype =
 		// display message if no images are uploaded
 		this.showNoImagesMessage(categoryId);
 
-		ActiveList.prototype.getInstance(id, {
+		new ActiveList(id, {
 	         
 			 beforeEdit:     function(li) 
 			 {
@@ -46,8 +69,11 @@ Backend.CategoryImage.prototype =
 				 
 
 				 var form = $('catImgAdd_' + categoryId).getElementsByTagName('form')[0].cloneNode(true);
+                 
 				 
 				 form.action = Backend.Category.image.saveUrl;
+                 
+                 
 				 
 				 form.elements.namedItem('imageId').value = recordId;
 				 
@@ -184,6 +210,10 @@ Backend.CategoryImage.prototype =
 			document.getElementsByClassName('catImageTitle', templ)[0].innerHTML = imageData['title'];		  
 		}
 		
+        $A(templ.getElementsByTagName("input")).each(function(input) {
+            Event.observe(input, "keydown", function(e) { Backend.CategoryImage.prototype.submitOnEnter(e, categoryId) });
+        });
+        
 		return templ;	  
 	},
 	
