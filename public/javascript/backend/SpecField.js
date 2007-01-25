@@ -108,7 +108,7 @@ Backend.SpecField.prototype = {
 	 */
 	recreate: function(specFieldJson, hash)
 	{
-	    var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ?  window.activeSpecFieldsList[this.categoryID].getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
+	    var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ? ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
         root.innerHTML = '';
         $H(this).each(function(el)
         {
@@ -132,7 +132,7 @@ Backend.SpecField.prototype = {
 	    var blankForm = $(prototypeId);
                 
         var blankFormValues = blankForm.getElementsByTagName("*");
-        var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ?  window.activeSpecFieldsList[this.specField.categoryID].getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
+        var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ?  ActiveList.prototype.getInstance("specField_items_list_" + this.specField.categoryID).getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
 
         for(var i = 0; i < blankFormValues.length; i++)
         {
@@ -247,11 +247,6 @@ Backend.SpecField.prototype = {
 		new Form.EventObserver(this.nodes.form, function() { self.formChanged = true; } );
 		Form.backup(this.nodes.form);
         
-
-        var self = this;
-        $A(this.nodes.form.getElementsByTagName("input")).each(function(input) {
-           Event.observe(input, 'keydown', function(e) { self.submitOnEnter(e) }); 
-        });
 	},
 
 	/**
@@ -311,7 +306,6 @@ Backend.SpecField.prototype = {
         {
             Event.observe(input, "keyup", function(e) { self.mainValueFieldChangedAction(e) } );
             Event.observe(input, "keydown", function(e) { self.mainValueFilterKeysAction(e) } );
-            Event.observe(input, 'keydown', function(e) { self.submitOnEnter(e) }); 
         }   
     },
 
@@ -482,9 +476,8 @@ Backend.SpecField.prototype = {
     
     toggleValueLanguage: function(e)
     {
-        if(!e)
+        if(!e.target)
 		{
-			e = window.event;
 			e.target = e.srcElement;
 		}
         
@@ -549,9 +542,8 @@ Backend.SpecField.prototype = {
 	 */
 	changeTranslationLanguageAction: function(e)
 	{
-	    if(!e)
+        if(!e.target)
 		{
-			e = window.event;
 			e.target = e.srcElement;
 		}
 
@@ -574,17 +566,16 @@ Backend.SpecField.prototype = {
 	 */
 	addValueFieldAction: function(e)
 	{
-		if(!e)
+        if(!e.target)
 		{
-			e = window.event;
 			e.target = e.srcElement;
 		}
 
 		Event.stop(e);
 
-		this.addField(null, "new" + this.countNewValues, true);
+		this.addField(null, "new" + Backend.SpecField.prototype.countNewValues, true);
         this.bindDefaultFields();
-		this.countNewValues++;
+		Backend.SpecField.prototype.countNewValues++;
 	},
 
 
@@ -667,14 +658,14 @@ Backend.SpecField.prototype = {
 	 */
 	changeStateAction: function(e)
 	{
-		if(!e)
+		if(!e.target)
 		{
-			e = window.event;
 			e.target = e.srcElement;
 		}
 
 		Event.stop(e);
-
+ 
+        
 		var currentStep = this.cssPrefix + e.target.hash.substring(1);
 		for(var i = 0; i < this.nodes.stepLevOne.length; i++)
 		{
@@ -723,9 +714,8 @@ Backend.SpecField.prototype = {
 	 */
 	mainValueFieldChangedAction: function(e)
 	{
-		if(!e)
+        if(!e.target)
 		{
-			e = window.event;
 			e.target = e.srcElement;
 		}
 
@@ -750,9 +740,8 @@ Backend.SpecField.prototype = {
 	 */
 	mainValueFilterKeysAction: function(e)
 	{
-		if(!e)
+        if(!e.target)
 		{
-			e = window.event;
 			e.target = e.srcElement;
 		}
 
@@ -790,11 +779,10 @@ Backend.SpecField.prototype = {
 		// generate handle
 		var handle = ActiveForm.prototype.generateHandle(this.nodes.name.value);
 
-		if(this.id == 'new')
+		if(this.id.match(/new$/))
 		{
 		    this.nodes.handle.value = handle;
 		}
-
 
 		if(this.nodes.mainTitle)
 		{
@@ -878,9 +866,8 @@ Backend.SpecField.prototype = {
      */
     cancelAction: function(e)
     {
-        if(!e)
+        if(!e.target)
 		{
-			e = window.event;
 			e.target = e.srcElement;
 		}
 
@@ -904,7 +891,7 @@ Backend.SpecField.prototype = {
 		// butt =] when dealing with new form showing form action is handled by Backend.SpecField::createNewAction()
         if(this.nodes.parent.tagName.toLowerCase() == 'li')
         {
-            window.activeSpecFieldsList[this.categoryID].toggleContainer(this.nodes.parent, 'edit');
+            ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).toggleContainer(this.nodes.parent, 'edit');
         }
         else
         {
@@ -938,9 +925,8 @@ Backend.SpecField.prototype = {
      */
     saveAction: function(e)
     {
-        if(!e)
+        if(!e.target)
 		{
-			e = window.event;
 			e.target = e.srcElement;
 		}
 
@@ -955,7 +941,7 @@ Backend.SpecField.prototype = {
 		// Toggle progress won't work on new form
 		try
 		{
-		    window.activeSpecFieldsList[this.categoryID].toggleProgress(this.nodes.parent);
+		    ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).toggleProgress(this.nodes.parent);
 		}
 		catch (e)
 		{
@@ -1004,14 +990,14 @@ Backend.SpecField.prototype = {
 
             if(this.nodes.parent.tagName.toLowerCase() == 'li')
             {
-                window.activeSpecFieldsList[this.categoryID].toggleContainer(this.nodes.parent, 'edit');
+                ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).toggleContainer(this.nodes.parent, 'edit');
             }
             else
             {
                 var div = document.createElement('span');
                 Element.addClassName(div, 'specField_title');
                 div.appendChild(document.createTextNode(this.nodes.name.value));
-                window.activeSpecFieldsList[this.categoryID].addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
+                ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
                 this.hideNewSpecFieldAction(this.categoryID);
     		    this.recreate(this.specField, true);
             }
@@ -1022,8 +1008,18 @@ Backend.SpecField.prototype = {
             
             try { // try to remove filter container
                 var tc = Backend.Category.tabControl;    
-                Element.remove($(tc.getContainerId('tabFilters', tc.treeBrowser.getSelectedItemId())));
-            } catch (e){ }
+                
+                var tabContent = $(tc.getContainerId('tabFilters', tc.treeBrowser.getSelectedItemId()));
+                $A(tabContent.getElementsByTagName("ul")).each(function(ul) {
+                    try{
+                        console.info(ul)
+                        ActiveList.prototype.destroy(ul);
+                    } catch(e){ }
+                });
+                
+                Element.remove(tabContent);
+            } catch (e){ 
+            }
         }
         else
         {
@@ -1049,7 +1045,7 @@ Backend.SpecField.prototype = {
 
 		try
 		{
-		    window.activeSpecFieldsList[this.categoryID].toggleProgress(this.nodes.parent);
+		    ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).toggleProgress(this.nodes.parent);
 		}
 		catch (e)
 		{
@@ -1123,28 +1119,18 @@ Backend.SpecField.prototype = {
      */
     createNewAction: function(e, categoryID)
     {
-        if(!e)
-        {
-            e = window.event;
-            e.target = e.srcElement;
-        }
+        if(!e.target)
+		{
+			e.target = e.srcElement;
+		}
 
         Event.stop(e);
 
         var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
         var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");
         
-        window.activeSpecFieldsList[categoryID].collapseAll();
+        ActiveList.prototype.getInstance("specField_items_list_" + categoryID).collapseAll();
         
         ActiveForm.prototype.showNewItemForm(link, form);
-    },
-    
-    submitOnEnter: function(e)
-    {
-        keybordEvent = new KeyboardEvent(e);
-        
-        if(keybordEvent.getKey() == KeyboardEvent.prototype.KEY_ENTER) {
-            this.saveSpecField();
-        }
     }
 }

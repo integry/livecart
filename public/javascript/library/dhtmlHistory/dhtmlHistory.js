@@ -335,7 +335,7 @@ window.dhtmlHistory = {
        */
 	  frameLoad: function(frame)
       {
-		  hash = window.frames[frame.id].document.body.firstChild.nodeValue;
+		  var hash = window.frames[frame.id].document.body.firstChild.nodeValue;
 		  if (window.location.hash == '#' + hash)
 		  {
   		  	  return false;  

@@ -81,9 +81,9 @@
         <div id="filter_item_new_{$categoryID}_form" style="display: none;">
             <script type="text/javascript">
                 var newFilterForm = new Backend.Filter('{json array=$blankFilter}');
-                newFilterForm.addFilter(null, "new" + newFilterForm.countNewFilters, true);
+                newFilterForm.addFilter(null, "new" + Backend.Filter.prototype.countNewFilters, true);
                 newFilterForm.bindDefaultFields();
-                newFilterForm.countNewFilters++;
+                Backend.Filter.prototype.countNewFilters++;
             </script>
         </div>
     </div>
@@ -106,8 +106,9 @@
             _activeList_edit:    {/literal}'{t _activeList_edit|addslashes}'{literal},
             _activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
         }
-         $("filter_item_new_{/literal}{$categoryID}{literal}_show").onclick = function(e) { Backend.Filter.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') }
-         window.activeFiltersList[{/literal}{$categoryID}{literal}] = ActiveList.prototype.getInstance('filter_items_list_{/literal}{$categoryID}{literal}', filterListCallbacks, Backend.Filter.prototype.activeListMessages);
+         
+         Event.observe($("filter_item_new_{/literal}{$categoryID}{literal}_show"), "click", function(e) { Backend.Filter.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') });
+         ActiveList.prototype.getInstance('filter_items_list_{/literal}{$categoryID}{literal}', filterListCallbacks, Backend.Filter.prototype.activeListMessages);
     </script>
     {/literal}
 {else}

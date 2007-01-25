@@ -89,7 +89,7 @@ Backend.Filter.prototype = {
      */
     recreate: function(filterJson)
     {
-        var root = ($(this.filter.rootId).tagName.toLowerCase() == 'li') ?  window.activeFiltersList[this.categoryID].getContainer($(this.filter.rootId), 'edit') : $(this.filter.rootId);
+        var root = ($(this.filter.rootId).tagName.toLowerCase() == 'li') ? ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID).getContainer($(this.filter.rootId), 'edit') : $(this.filter.rootId);
         root.innerHTML = '';
         $H(this).each(function(el)
         {
@@ -113,8 +113,10 @@ Backend.Filter.prototype = {
     {
         var blankForm = $(prototypeId);
         var blankFormFilters = blankForm.getElementsByTagName("*");
-        var root = ($(this.filter.rootId).tagName.toLowerCase() == 'li') ?  window.activeFiltersList[this.filter.categoryID].getContainer($(this.filter.rootId), 'edit') : $(this.filter.rootId);
 
+        var root = ($(this.filter.rootId).tagName.toLowerCase() == 'li') ? ActiveList.prototype.getInstance("filter_items_list_" + this.filter.categoryID).getContainer($(this.filter.rootId), 'edit') : $(this.filter.rootId);
+
+        
         for(var i = 0; i < blankFormFilters.length; i++)
         {
             if(blankFormFilters[i] && blankFormFilters[i].parentNode == blankForm)
@@ -187,17 +189,15 @@ Backend.Filter.prototype = {
      */
     generateFiltersAction: function(e)
     {
-        var self = this;
-    
-        if(!e)
-        {
-            e = window.event;
-            e.target = e.srcElement;
-        }
+        if(!e.target)
+		{
+			e.target = e.srcElement;
+		}
 
         Event.stop(e);
     
         // execute the action
+        var self = this;
         new Ajax.Request(
                 this.links.generateFilters + "?specFieldID="+this.nodes.specFieldID.value,
                 {
@@ -237,8 +237,8 @@ Backend.Filter.prototype = {
                 }
         
                 $H(jsonResponse.filters).each(function(filter) {
-                    self.addFilter(filter.value, "new" + self.countNewFilters, true);
-                    self.countNewFilters++;
+                    self.addFilter(filter.value, "new" + self.prototype.countNewFilters, true);
+                    self.prototype.countNewFilters++;
                 });
                 
                 return;
@@ -261,8 +261,8 @@ Backend.Filter.prototype = {
 
         Event.observe(this.nodes.name, "keyup", function(e) { self.generateTitleAction(e) });
         Event.observe(this.nodes.addFilterLink, "click", function(e) { self.addFilterFieldAction(e) });
-        Event.observe(this.nodes.specFieldID, "change", function(e) { self.specFieldIDWasChangedAction(e) });
         
+        Event.observe(this.nodes.specFieldID, "change", function(e) { self.specFieldIDWasChangedAction(e) });        
         Event.observe(this.nodes.specFieldID, "change", function(e) { self.generateTitleFromSpecField(e) });
         
         Event.observe(this.nodes.cancel, "click", function(e) { self.cancelAction(e) });
@@ -284,11 +284,6 @@ Backend.Filter.prototype = {
 
         new Form.EventObserver(this.nodes.form, function() { self.formChanged = true; } );
         Form.backup(this.nodes.form);
-       
-        var self = this;
-        $A(this.nodes.form.getElementsByTagName("input")).each(function(input) {
-           Event.observe(input, 'keydown', function(e) { self.submitOnEnter(e) }); 
-        });
     },
 
     /**
@@ -345,7 +340,7 @@ Backend.Filter.prototype = {
                     document.getElementsByClassName('filter_date_range', li)[0].style.display = (self.specFields[i].type == Backend.SpecField.prototype.TYPE_TEXT_DATE) ? 'block' : 'none'; 
                 });
                 
-                document.getElementsByClassName(this.cssPrefix + "step_filters_translations", this.nodes.filtersDefaultGroup)[0].style.display = (Backend.SpecField.prototype.TYPE_TEXT_SELECTOR != self.specFields[i].type) ? 'none' : 'block';
+                document.getElementsByClassName(this.cssPrefix + "step_filters_translations", this.nodes.filtersDefaultGroup)[0].style.display = (Backend.SpecField.prototype.TYPE_TEXT_SELECTOR != self.specFields[i].type) ? 'block' : 'block';
                 
                 return;
              }
@@ -354,27 +349,20 @@ Backend.Filter.prototype = {
     
     
     generateTitleFromSpecField: function(e)
-    {
-        try
-        {        
-            var self = this;
-            var newTitle = '';
-            var changeTitle = false;
-            
-            this.specFields.each(function(specField) {
-                if(self.nodes.name.value == specField.name) changeTitle = true;
-                if(specField.ID == self.nodes.specFieldID.value) newTitle = specField.name;
-            });
-            
-            if(changeTitle || self.nodes.name.value == '') 
-            {
-                self.nodes.name.value = newTitle;;
-                this.generateTitleAction(e);
-            }
-                
-
-        } catch(e) {
-            console.info(e);
+    {    
+        var self = this;
+        var newTitle = '';
+        var changeTitle = false;
+        
+        this.specFields.each(function(specField) {
+            if(self.nodes.name.value == specField.name) changeTitle = true;
+            if(specField.ID == self.nodes.specFieldID.value) newTitle = specField.name;
+        });
+        
+        if(changeTitle || self.nodes.name.value == '') 
+        {
+            self.nodes.name.value = newTitle;;
+            this.generateTitleAction(e);
         }
     },
 
@@ -391,12 +379,9 @@ Backend.Filter.prototype = {
         
         Event.observe(nameParagraph.getElementsByTagName("input")[0], "keyup", function(e) { self.mainValueFieldChangedAction(e) }, false);
         
-        Event.observe(rangeParagraph.getElementsByTagName("input")[0], "keydown", function(e) { self.rangeChangedAction(e) });
-        Event.observe(rangeParagraph.getElementsByTagName("input")[1], "keydown", function(e) { self.rangeChangedAction(e) });        
-        
-        $A(li.getElementsByTagName("input")).each(function(input) {
-           Event.observe(input, 'keydown', function(e) { self.submitOnEnter(e) }); 
-        });
+        Event.observe(rangeParagraph.getElementsByTagName("input")[0], "keyup", function(e) { self.rangeChangedAction(e) });
+        Event.observe(rangeParagraph.getElementsByTagName("input")[1], "keyup", function(e) { self.rangeChangedAction(e) });        
+
     },
 
 
@@ -451,28 +436,13 @@ Backend.Filter.prototype = {
      */
     rangeChangedAction: function(e)
     {
-        if(!e)
-        {
-            e = window.event;
-            e.target = e.srcElement;
-        }
+        if(!e.target)
+		{
+			e.target = e.srcElement;
+		}
 
-        keyboard = new KeyboardEvent(e);
+        NumericFilter(e.target)
 
-        if(
-            !(
-                // you can use +/- as the first character
-                (keyboard.getCursorPosition() == 0 && !e.target.value.match('[\-\+]') && (keyboard.getKey() == 109 || keyboard.getKey() == 107 || (keyboard.isShift() && keyboard.getKey() == 61))) ||
-                // You even can use dots or commas, but only once and not as the first symbol
-                (e.target.value != '' && !e.target.value.match('[\.\,]') && [110, 188, 190].indexOf(keyboard.getKey()) >= 0) ||
-                // at last but not the least i have implemanted such a great feature, that you can use digits to create numbers. [applause]
-                ([48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105].indexOf(keyboard.getKey()) > 0) ||
-                // special chars
-                ([46, 8, 17, 16, 37, 38, 39, 40].indexOf(keyboard.getKey()) >= 0)
-            )
-        ){
-            Event.stop(e);
-        }
     },
 
     /**
@@ -573,9 +543,8 @@ Backend.Filter.prototype = {
 
     toggleValueLanguage: function(e)
     {
-        if(!e)
+        if(!e.target)
 		{
-			e = window.event;
 			e.target = e.srcElement;
 		}
         
@@ -635,9 +604,8 @@ Backend.Filter.prototype = {
      */
 	changeTranslationLanguageAction: function(e)
 	{
-	    if(!e)
+        if(!e.target)
 		{
-			e = window.event;
 			e.target = e.srcElement;
 		}
 
@@ -657,17 +625,15 @@ Backend.Filter.prototype = {
      */
     addFilterFieldAction: function(e)
     {
-        if(!e)
-        {
-            e = window.event;
-            e.target = e.srcElement;
-        }
+        if(!e.target)
+		{
+			e.target = e.srcElement;
+		}
 
         Event.stop(e);
 
-        this.addFilter(null, "new" + this.countNewFilters, true);
-        this.bindDefaultFields();
-        this.countNewFilters++;
+        this.addFilter(null, "new" + Backend.Filter.prototype.countNewFilters, true);
+        Backend.Filter.prototype.countNewFilters++;
     },
 
 
@@ -717,11 +683,10 @@ Backend.Filter.prototype = {
      */
     changeStateAction: function(e)
     {
-        if(!e)
-        {
-            e = window.event;
-            e.target = e.srcElement;
-        }
+        if(!e.target)
+		{
+			e.target = e.srcElement;
+		}
 
         Event.stop(e);
 
@@ -773,11 +738,10 @@ Backend.Filter.prototype = {
      */
     mainValueFieldChangedAction: function(e)
     {
-        if(!e)
-        {
-            e = window.event;
-            e.target = e.srcElement;
-        }
+        if(!e.target)
+		{
+			e.target = e.srcElement;
+		}
 
         Event.stop(e);
         
@@ -794,6 +758,10 @@ Backend.Filter.prototype = {
 
         for(var i = 1; i < this.languageCodes.length; i++)
         {
+            
+            console.info(this.cssPrefix + "form_filters_" +  this.languageCodes[i] + "_" + id);
+            console.info($(this.cssPrefix + "form_filters_" +  this.languageCodes[i] + "_" + id));
+            console.info($(this.cssPrefix + "form_filters_" +  this.languageCodes[i] + "_" + id).getElementsByTagName("label")[0]);
             $(this.cssPrefix + "form_filters_" +  this.languageCodes[i] + "_" + id).getElementsByTagName("label")[0].innerHTML = e.target.value;
         }
     },
@@ -915,20 +883,27 @@ Backend.Filter.prototype = {
             rangeDateStart.value  = rangeDateStartReal.value;
             rangeDateEnd.value    = rangeDateEndReal.value ;
                        
-            var calDateStart = Calendar.setup({
+            var startCalendar = {
                 inputField:       rangeDateStart.id,
                 inputFieldReal:   rangeDateStartReal.id,
                 ifFormat:         this.dateFormat, 
                 button:           rangeDateStartButton.id
-            });
+            };
             
-            
-            var calDateEnd = Calendar.setup({
+            var endCalendar = {
                 inputField:       rangeDateEnd.id,
                 inputFieldReal:   rangeDateEndReal.id,
                 ifFormat:         this.dateFormat, 
                 button:           rangeDateEndButton.id
-            });
+            };
+                      
+                      
+            var calDateStart = Calendar.setup(startCalendar);
+            var calDateEnd = Calendar.setup(endCalendar);
+                      
+            var calDateStart = Calendar.setup(startCalendar);
+            var calDateEnd = Calendar.setup(endCalendar);
+            
             
             this.bindOneFilter(li);
             
@@ -971,11 +946,10 @@ Backend.Filter.prototype = {
      */
     cancelAction: function(e)
     {
-        if(!e)
-        {
-            e = window.event;
-            e.target = e.srcElement;
-        }
+        if(!e.target)
+		{
+			e.target = e.srcElement;
+		}
 
         Event.stop(e);
 
@@ -997,7 +971,7 @@ Backend.Filter.prototype = {
         // butt =] when dealing with new form showing form action is handled by Backend.Filter::createNewAction()
         if(this.nodes.parent.tagName.toLowerCase() == 'li')
         {
-            window.activeFiltersList[this.categoryID].toggleContainer(this.nodes.parent, 'edit');
+             ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID).toggleContainer(this.nodes.parent, 'edit');
         }
         else
         {
@@ -1031,11 +1005,10 @@ Backend.Filter.prototype = {
      */
     saveAction: function(e)
     {
-        if(!e)
-        {
-            e = window.event;
-            e.target = e.srcElement;
-        }
+        if(!e.target)
+		{
+			e.target = e.srcElement;
+		}
 
         Event.stop(e);
         
@@ -1047,7 +1020,7 @@ Backend.Filter.prototype = {
         // Toggle progress won't work on new form
         try
         {
-            window.activeFiltersList[this.categoryID].toggleProgress(this.nodes.parent);
+             ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID).toggleProgress(this.nodes.parent);
         }
         catch (e)
         {
@@ -1088,6 +1061,7 @@ Backend.Filter.prototype = {
             alert("json error");
         }
 
+        ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID).toggleProgress(this.nodes.parent);
         if(jsonResponse.status == 'success')
         {
             Form.backup(this.nodes.form);
@@ -1095,15 +1069,14 @@ Backend.Filter.prototype = {
 
             if(this.nodes.parent.tagName.toLowerCase() == 'li')
             {
-                window.activeFiltersList[this.categoryID].toggleContainer(this.nodes.parent, 'edit');
+                ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID).toggleContainer(this.nodes.parent, 'edit');
             }
             else
             {
-
                 var div = document.createElement('span');
                 Element.addClassName(div, 'filter_title');
                 div.appendChild(document.createTextNode(this.nodes.name.value));
-                window.activeFiltersList[this.categoryID].addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
+                ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID).addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
                 CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
                 
                 this.hideNewFilterAction(this.categoryID);
@@ -1155,12 +1128,13 @@ Backend.Filter.prototype = {
         // Toggle progress won't work on new form
         try
         {
-            window.activeFiltersList[this.categoryID].toggleProgress(this.nodes.parent);
+            ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID)..toggleProgress(this.nodes.parent);
         }
         catch (e)
         {
             // new item has no progress indicator
         }
+        
     },
 
 
@@ -1229,22 +1203,17 @@ Backend.Filter.prototype = {
      */
     createNewAction: function(e, categoryID)
     {
-        if(!e) e = window.event;
+        if(!e.target)
+		{
+			e.target = e.srcElement;
+		}
+        
         Event.stop(e);
 
         var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
         var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");     
         
-        window.activeFiltersList[categoryID].collapseAll();
+        ActiveList.prototype.getInstance("filter_items_list_" + categoryID).collapseAll();
         ActiveForm.prototype.showNewItemForm(link, form);
-    },
-    
-    submitOnEnter: function(e)
-    {
-        keybordEvent = new KeyboardEvent(e);
-        
-        if(keybordEvent.getKey() == KeyboardEvent.prototype.KEY_ENTER) {
-            this.saveFilterGroup();
-        }
     }
 }

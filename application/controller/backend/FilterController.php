@@ -37,7 +37,7 @@ class FilterController extends StoreManagementController
         
         $blankFilter = array
         (
-            'ID' => 'new',
+            'ID' => $categoryID . '_new',
             'name' => array(),
             'rootId' => 'filter_item_new_'.$categoryID.'_form',
             'categoryID' => $categoryID,
@@ -106,7 +106,7 @@ class FilterController extends StoreManagementController
      */
     public function save()
     {
-        if($this->request->getValue('ID') == 'new')
+        if(preg_match('/new$/', $this->request->getValue('ID')))
         {
             $filterGroup = FilterGroup::getNewInstance();
             $filterGroup->setFieldValue('position', 100000); // Now new group will appear last in active list.

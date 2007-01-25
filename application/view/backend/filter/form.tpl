@@ -113,10 +113,10 @@
 		</fieldset>
 		</p>
 	</fieldset>
-</form>
 
 <fieldset class="filter_controls">
-    <input type="button" class="filter_save button" value="{translate text=_save}" />
+    <input type="submit" class="filter_save button" value="{translate text=_save}" />
     {t _or}
     <a href="#cancel" class="filter_cancel">{t _cancel}</a>
 </fieldset>
+</form>

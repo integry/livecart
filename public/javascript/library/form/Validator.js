@@ -185,11 +185,17 @@ function NumericFilter(element, params)
 	
 	//next remove all characters save 0 though 9
 	//in both elements of the array
-	dollars = parts[0].replace(/[^0-9]-/gi, '');
+	dollars = parts[0].replace(/^-?[^0-9]-/gi, '');
 
-	if ('' != dollars)
+
+	if ('' != dollars && '-' != dollars)
 	{
-		dollars = parseInt(dollars);	  
+        dollars = parseInt(dollars);	  
+        
+
+
+
+        if(!dollars) dollars = 0;
 	}
 	
 	if (2 == parts.length)

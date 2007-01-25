@@ -143,7 +143,7 @@ ActiveList.prototype = {
         // Check if ul has an id
         if(!this.ul.id)
         {
-            alert('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
+            throw Error('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
             return false;
         }
 
@@ -159,7 +159,7 @@ ActiveList.prototype = {
         }
         if(missedCallbacks.length > 0)
         {
-                alert('Callback' + (missedCallbacks.length > 1 ? 's' : '') + ' are missing (' + missedCallbacks.join(', ') +')' );
+                throw Error('Callback' + (missedCallbacks.length > 1 ? 's' : '') + ' are missing (' + missedCallbacks.join(', ') +')' );
                 return false;
         }
 
@@ -172,10 +172,7 @@ ActiveList.prototype = {
     getInstance: function(ul, callbacks, messages)
     {  
        var ulElement = $(ul);    
-       
-     //  console.info(ul);
-     //  console.info(callbacks);
-     //  console.info(messages);
+      
        
        if(!ulElement.id)
        {
@@ -188,10 +185,23 @@ ActiveList.prototype = {
            this.activeListsUsers[ulElement.id] = new ActiveList(ulElement.id, callbacks, messages);
        }
        
-     //  console.info(this.activeListsUsers[ulElement.id])
-       
        return this.activeListsUsers[ulElement.id];
 
+    },
+    
+    destroy: function(ul)
+    {  
+       var ulElement = $(ul);    
+       
+       if(!ulElement.id)
+       {
+            throw Error('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
+       }
+       
+       if(ActiveList.prototype.activeListsUsers[ulElement.id]) 
+       {
+           delete this.activeListsUsers[ulElement.id];
+       }
     },
 
     /**

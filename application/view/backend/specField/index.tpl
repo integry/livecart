@@ -87,9 +87,9 @@
     <div id="specField_item_new_{$categoryID}_form" style="display: none;">
         <script type="text/javascript">
             var newSpecFieldForm = new Backend.SpecField('{json array=$specFieldsList}');
-            newSpecFieldForm.addField(null, "new" + newSpecFieldForm.countNewFilters, true);
+            newSpecFieldForm.addField(null, "new" + Backend.SpecField.prototype.countNewFilters, true);
             newSpecFieldForm.bindDefaultFields();
-            newSpecFieldForm.countNewFilters++;
+            Backend.SpecField.prototype.countNewFilters++;
         </script>
     </div>
 </div>
@@ -114,7 +114,7 @@
          '_activeList_delete':  {/literal}'{t _activeList_delete|addslashes}'{literal}
      }
      
-     $("specField_item_new_{/literal}{$categoryID}{literal}_show").onclick = function(e) { Backend.SpecField.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') }
+     Event.observe($("specField_item_new_{/literal}{$categoryID}{literal}_show"), "click", function(e) { Backend.SpecField.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') });
      window.activeSpecFieldsList[{/literal}{$categoryID}{literal}] = ActiveList.prototype.getInstance('specField_items_list_{/literal}{$categoryID}{literal}', specFieldListCallbacks, Backend.SpecField.prototype.activeListMessages);
 </script>
 {/literal}

@@ -76,7 +76,7 @@ class SpecFieldController extends StoreManagementController
 
         $defaultSpecFieldValues = array
         (
-            'ID' => 'new',
+            'ID' => $categoryID.'_new',
             'name' => array(),
             'description' => array(),
             'handle' => '',
@@ -124,7 +124,7 @@ class SpecFieldController extends StoreManagementController
      */
     public function save()
     {
-        if($this->request->getValue('ID') == 'new')
+        if(preg_match('/new$/', $this->request->getValue('ID')))
         {
             $specField = SpecField::getNewInstance(Category::getInstanceByID($this->request->getValue('categoryID', false)));
             $specField->setFieldValue('position', 100000);
