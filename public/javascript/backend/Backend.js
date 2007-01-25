@@ -5,6 +5,39 @@ function showHelp(url)
 
 var Backend = {};
 
+// set default locale
+Backend.locale = 'en';
+
+/*************************************************
+	onLoad handler
+**************************************************/
+Backend.onLoad = function()
+{
+	// initialize fckEditor (WYSIWYG textareas)
+	var sBasePath = 'javascript/library/fckeditor/';
+	editors = document.getElementsByTagName('textarea');
+	for (k = 0; k < editors.length; k++)
+	{
+		if (Element.hasClassName(editors[k], 'fckEditor'))
+		{
+			var oFCKeditor = new FCKeditor( editors[k].name ) ;
+
+			oFCKeditor.Config["AutoDetectLanguage"]	= false;
+			oFCKeditor.Config["DefaultLanguage"] = Backend.locale;	
+
+			oFCKeditor.BasePath	= sBasePath ;
+			oFCKeditor.ToolbarSet = 'Default';
+			oFCKeditor.Width = '600';
+			oFCKeditor.ReplaceTextarea();	  			  
+		}
+	}	
+
+	// AJAX navigation
+	dhtmlHistory.initialize();
+	dhtmlHistory.addListener(Backend.ajaxNav.handle);
+	dhtmlHistory.handleBookmark();
+}	
+
 /*************************************************
 	AJAX back/forward navigation
 **************************************************/

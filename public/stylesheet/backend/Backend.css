@@ -755,7 +755,7 @@ a.cancel
  	color: red;
 }
 
-fieldset.error, div.error
+fieldset.error, div.error, fieldset.container
 {
  	background-color: inherit;
 	padding: 0px;

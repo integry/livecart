@@ -2,3 +2,10 @@ fieldset.specField .numeric
 {
  	width: 100px; 
 }
+
+.multiValueSelect div
+{
+	clear: both; 	 	
+	margin-bottom: 10px;
+	font-size: smaller;
+}
