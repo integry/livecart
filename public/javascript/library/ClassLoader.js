@@ -29,7 +29,6 @@ require_once = function(file)
         }
     }
 
-    var test = window;
     var handle = ClassLoader.createFileIdentifier(file);
     if(!window.loadedScripts[handle])
     {

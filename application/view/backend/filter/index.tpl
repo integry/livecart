@@ -47,7 +47,7 @@
 
         beforeDelete:   function(li)
         {
-            if(confirm('Are you sure you wish to remove record #' + this.getRecordId(li) + '?'))  return Backend.Filter.prototype.links.deleteGroup + this.getRecordId(li)
+            if(confirm('{/literal}{t _FilterGroup_remove_question|addslashes}{literal}'))  return Backend.Filter.prototype.links.deleteGroup + this.getRecordId(li)
         },
 
 

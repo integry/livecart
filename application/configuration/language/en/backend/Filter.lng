@@ -1,6 +1,9 @@
 _add_new_filter=Add new filter
 _category_has_no_attr=This category has no non-text attributes
 _add_attr_to_create_filters=Please go to attribute tag and add new non-text attribute
+_delete_field=Delete field
+_remove_filter_question=Are you sure you want to remove this filter?
+_FilterGroup_remove_question=Are you sure you want to remove this filter group?
 
 # errors
 _error_name_empty=Name empty=Filter group name is empty
@@ -9,3 +12,4 @@ _error_spec_field_is_not_selected=Specification field is not selected
 _error_illegal_date=Illegal date
 _error_filter_name_empty=Filter name is empty
 _error_filter_handle_invalid=Handle is invalid
+_error_record_id_is_not_unique=Record with such id does not exist

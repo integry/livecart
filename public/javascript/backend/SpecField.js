@@ -88,7 +88,7 @@ Backend.SpecField.prototype = {
     		this.description = this.specField.description;
     
     		this.handle = this.specField.handle;
-    		this.multipleSelector = this.specField.multipleSelector;
+    		this.isMultiValue = this.specField.isMultiValue;
     		this.dataType = this.specField.dataType;
     
     		this.loadLanguagesAction();
@@ -339,12 +339,12 @@ Backend.SpecField.prototype = {
                         }
                     }
                     
-                    if(emptyFilters || confirm('Are you realy want to delete this item?'))
+                    if(emptyFilters || confirm(self.messages.removeFieldQuestion))
                     {
                         self.deleteValueFieldAction(li, this);
                     }
                 }
-                else if(confirm('Are you realy want to delete this item?'))
+                else if(confirm(self.messages.removeFieldQuestion))
                 {
                     return Backend.SpecField.prototype.links.deleteValue + this.getRecordId(li);
                 }
@@ -388,7 +388,7 @@ Backend.SpecField.prototype = {
 		if(this.name[this.languageCodes[0]]) this.nodes.name.value = this.name[this.languageCodes[0]];
 		this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
 
-		this.nodes.multipleSelector.checked = this.multipleSelector ? true : false;
+		this.nodes.multipleSelector.checked = this.isMultiValue ? true : false;
 
         this.changeMainTitleAction(this.nodes.name.value);
 
@@ -973,14 +973,8 @@ Backend.SpecField.prototype = {
     {
         var self = this;
 
-        try
-        {
-            var jsonResponse = eval("("+jsonResponseString+")");
-        }
-        catch(e)
-        {
-            alert("json error");
-        }
+        var jsonResponse = eval("("+jsonResponseString+")");
+        
 		// Toggle progress won't work on new form
 
         if(jsonResponse.status == 'success')
@@ -1011,10 +1005,7 @@ Backend.SpecField.prototype = {
                 
                 var tabContent = $(tc.getContainerId('tabFilters', tc.treeBrowser.getSelectedItemId()));
                 $A(tabContent.getElementsByTagName("ul")).each(function(ul) {
-                    try{
-                        console.info(ul)
-                        ActiveList.prototype.destroy(ul);
-                    } catch(e){ }
+                    try{ ActiveList.prototype.destroy(ul); } catch(e){ }
                 });
                 
                 Element.remove(tabContent);

@@ -43,21 +43,22 @@ class SpecFieldController extends StoreManagementController
             (
                 2 => array
                 (
-                    2 => 'Numbers',
-                    1 => 'Selector'
+                    2 => $this->translate('_type_numbers'),
+                    1 => $this->translate('_type_numbers_selector')
                 ),
                 1 => array
                 (
-                    3 => 'Text',
-                    4 => 'Word processer',
-                    5 => 'selector',
-                    6 => 'Date'
+                    3 => $this->translate('_type_simple_text'),
+                    4 => $this->translate('_type_formatted_text'),
+                    5 => $this->translate('_type_text_selector'),
+                    6 => $this->translate('_type_date')
                 )
             ),
 
             'messages' => array
             (
-                'deleteField' => 'delete field'
+                'deleteField' => $this->translate('_delete_field'),
+                'removeFieldQuestion' => $this->translate('_remove_field_question')
             ),
 
             'selectorValueTypes' => SpecField::getSelectorValueTypes(),
@@ -137,7 +138,7 @@ class SpecFieldController extends StoreManagementController
             }
             else
             {
-                return new JSONResponse(array('errors' => array('ID' => 'Record with such id does not exist'), 'status' => 'failure'));
+                return new JSONResponse(array('errors' => array('ID' => $this->translate('_error_record_id_is_not_valid')), 'status' => 'failure'));
             }
         }
 
@@ -151,12 +152,14 @@ class SpecFieldController extends StoreManagementController
             $name = $this->request->getValue('name');
             $handle = $this->request->getValue('handle');
             $values = $this->request->getValue('values');
+            $isMultiValue = $this->request->getValue('multipleSelector') == 1 ? true : false;
 
             $htmlspecialcharsUtf_8 = create_function('$val', 'return htmlspecialchars($val, null, "UTF-8");');
 
             $specField->setFieldValue('dataType',       $dataType);
             $specField->setFieldValue('type',           $type);
             $specField->setFieldValue('handle',         $handle);
+            $specField->setFieldValue('isMultiValue',   $isMultiValue);
             $specField->setLanguageField('description', @array_map($htmlspecialcharsUtf_8, $description), array_keys($this->specFieldConfig['languages']));
             $specField->setLanguageField('name',        @array_map($htmlspecialcharsUtf_8, $name),        array_keys($this->specFieldConfig['languages']));
 

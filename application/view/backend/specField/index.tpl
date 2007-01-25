@@ -51,7 +51,7 @@
         },
         beforeDelete:   function(li)
         {
-            if(confirm('Are you sure you wish to remove record #' + this.getRecordId(li) + '?'))
+            if(confirm('{/literal}{t _SpecField_remove_question|addslashes}{literal}'))
             {
                 return Backend.SpecField.prototype.links.deleteField + this.getRecordId(li)
             }
@@ -66,16 +66,12 @@
                 CategoryTabControl.prototype.resetTabItemsCount({/literal}{$categoryID}{literal});
             }
         },
-
-
         beforeSort:     function(li, order)
         {
-
             return Backend.SpecField.prototype.links.sortField + "?target=specField_items_list_{/literal}{$categoryID}{literal}&" + order
         },
         afterSort:      function(li, response)
         {
-//            alert( 'Record #' + this.getRecordId(li, 'edit') + ' changed position');
         }
     };
 // ]!]>

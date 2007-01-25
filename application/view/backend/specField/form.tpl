@@ -12,70 +12,75 @@
 		<input type="hidden" name="categoryID" class="hidden specField_form_categoryID" />
 
 		<p>
-		<fieldset class="group specField_form_dataType">
-    		<h2>{t _SpecField_value_type}</h2>
-    		<div>
-                <p>
-        			<input type="radio" name="dataType" value="1" class="radio" />
-        		    <label class="radio">{t _SpecField_text}</label>
-                </p>
-            </div>
-            <div>
-                <p>
-        			<input type="radio" name="dataType" value="2" class="radio" />
-        			<label class="radio">{t _SpecField_numbers}</label>
-                </p>
-			</div>
-
-    		<span class="feedback"> </span>
-			<br class="clear" />
-		</fieldset>
+    		<fieldset class="group specField_form_dataType">
+        		<h2>{t _SpecField_value_type}</h2>
+        		<div>
+                    <p>
+            			<input type="radio" name="dataType" value="1" class="radio" />
+            		    <label class="radio">{t _SpecField_text}</label>
+                    </p>
+                </div>
+                <div>
+                    <p>
+            			<input type="radio" name="dataType" value="2" class="radio" />
+            			<label class="radio">{t _SpecField_numbers}</label>
+                    </p>
+    			</div>
+    
+        		<span class="feedback"> </span>
+    			<br class="clear" />
+    		</fieldset>
 		</p>
 
+		<p>
+    		<label>{t _SpecField_type}</label>
+    		<select name="type" class="specField_form_type"></select>
+    		<span class="feedback"> </span>
+		</p>
+        
+		<p class="checkbox">
+    		<input type="checkbox" value="1" name="multipleSelector" class="checkbox specField_form_multipleSelector" />
+    		<label>{t _SpecField_select_multiple}</label>
+		</p>
+        
+        <div>
     		<p>
-        		<label>{t _SpecField_type}</label>
-        		<select name="type" class="specField_form_type"></select>
+        		<label>{t _SpecField_title}<em class="required">*</em></label>
+        		<input type="text" name="name" class="required specField_form_name" />
+        		<span class="feedback"> </span>
+        	</p>
+    
+    		<p class="specField_handle">
+        		<label>{t _SpecField_handle}</label>
+        		<input type="text" name="handle" class="specField_form_handle" />
         		<span class="feedback"> </span>
     		</p>
-            
-            <div>
-        		<p>
-            		<label>{t _SpecField_title}<em class="required">*</em></label>
-            		<input type="text" name="name" class="required specField_form_name" />
-            		<span class="feedback"> </span>
-            	</p>
+    
+    		<p>
+        		<label>{t _SpecField_description}</label>
+        		<textarea name="description" class="specField_form_description" rows="5" cols="40"></textarea>
+        		<span class="feedback_textarea"> </span>
+    		</p>
+        </div>
         
-        		<p class="specField_handle">
-            		<label>{t _SpecField_handle}</label>
-            		<input type="text" name="handle" class="specField_form_handle" />
-            		<span class="feedback"> </span>
-        		</p>
+    	<!-- STEP 3 -->
+    	<div class="specField_step_translations">
+    		<fieldset class="dom_template specField_step_translations_language specField_step_translations_language_">
+    			<legend><span class="expandIcon">[+]</span><span class="specField_legend_text"></span></legend>
+    
+                <div class="specField_language_translation">
+                    <p>
+            			<label>{t _SpecField_title}</label>
+            			<input type="text" name="name" />
+        			</p>
         
-        		<p>
-            		<label>{t _SpecField_description}</label>
-            		<textarea name="description" class="specField_form_description" rows="5" cols="40"></textarea>
-            		<span class="feedback_textarea"> </span>
-        		</p>
-            </div>
-            
-        	<!-- STEP 3 -->
-        	<div class="specField_step_translations">
-        		<fieldset class="dom_template specField_step_translations_language specField_step_translations_language_">
-        			<legend><span class="expandIcon">[+]</span><span class="specField_legend_text"></span></legend>
-        
-                    <div class="specField_language_translation">
-                        <p>
-                			<label>{t _SpecField_title}</label>
-                			<input type="text" name="name" />
-            			</p>
-            
-                        <p>
-                			<label>{t _SpecField_description}</label>
-                			<textarea name="description" rows="5" cols="40"></textarea>
-            			</p>
-                    </div>
-        		</fieldset>
-        	</div>
+                    <p>
+            			<label>{t _SpecField_description}</label>
+            			<textarea name="description" rows="5" cols="40"></textarea>
+        			</p>
+                </div>
+    		</fieldset>
+    	</div>
             
 	</fieldset>
 
@@ -127,10 +132,6 @@
 		</fieldset>
 		</p>
 
-		<p class="checkbox">
-    		<input type="checkbox" value="1" name="multipleSelector" class="checkbox specField_form_multipleSelector" />
-    		<label>{t _SpecField_select_multiple}</label>
-		</p>
 	</fieldset>
 
 

@@ -413,13 +413,13 @@ Backend.Filter.prototype = {
                         }
                     }
                     
-                    if(emptyFilters || confirm('Are you realy want to delete this item?'))
+                    if(emptyFilters || confirm(self.messages.removeFilter))
                     {
                         self.deleteValueFieldAction(li, this);
                     }
                     
                 }
-                else if(confirm('Are you realy want to delete this item?'))
+                else if(confirm(self.messages.removeFilter))
                 {
                     return Backend.Filter.prototype.links.deleteFilter + this.getRecordId(li);
                 }
@@ -507,8 +507,6 @@ Backend.Filter.prototype = {
 
                 for(var j = 0; j < inputFields.length; j++)
                 {
-                    var test1 = inputFields[j];
-                    var test2 = inputFields[j].parentNode.parentNode;
                     if(Element.hasClassName(inputFields[j].parentNode.parentNode, this.cssPrefix + 'language_translation'))
                     {
                         eval("if(self."+inputFields[j].name+"['"+self.languageCodes[i]+"']) inputFields[j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];");
@@ -758,10 +756,6 @@ Backend.Filter.prototype = {
 
         for(var i = 1; i < this.languageCodes.length; i++)
         {
-            
-            console.info(this.cssPrefix + "form_filters_" +  this.languageCodes[i] + "_" + id);
-            console.info($(this.cssPrefix + "form_filters_" +  this.languageCodes[i] + "_" + id));
-            console.info($(this.cssPrefix + "form_filters_" +  this.languageCodes[i] + "_" + id).getElementsByTagName("label")[0]);
             $(this.cssPrefix + "form_filters_" +  this.languageCodes[i] + "_" + id).getElementsByTagName("label")[0].innerHTML = e.target.value;
         }
     },
@@ -1052,14 +1046,7 @@ Backend.Filter.prototype = {
     {
         var self = this;
 
-        try
-        {
-            var jsonResponse = eval("("+jsonResponseString+")");
-        }
-        catch(e)
-        {
-            alert("json error");
-        }
+        var jsonResponse = eval("("+jsonResponseString+")");
 
         ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID).toggleProgress(this.nodes.parent);
         if(jsonResponse.status == 'success')
@@ -1083,44 +1070,34 @@ Backend.Filter.prototype = {
                 this.recreate(this.filter, true);
             }
         }
-        else
+        else if(jsonResponse.errors)
         {
-            try
+            for(var fieldName in jsonResponse.errors)
             {
-                if(jsonResponse.errors)
+                
+                if(fieldName == 'toJSONString') continue;
+                
+                if(fieldName == 'filters')
                 {
-                    for(var fieldName in jsonResponse.errors)
+                    $H(jsonResponse.errors[fieldName]).each(function(value)
                     {
-                        
-                        if(fieldName == 'toJSONString') continue;
-                        
-                        if(fieldName == 'filters')
+                        var filterLi = $(self.cssPrefix + "form_" + self.id + "_filters_" + self.languageCodes[0] + "_" + value.key);
+                        $H(value.value).each(function(filterField)
                         {
-                            $H(jsonResponse.errors[fieldName]).each(function(value)
+                            var inputParagraph = document.getElementsByClassName('filter_' + filterField.key, filterLi)[0];
+                            try
                             {
-                                var filterLi = $(self.cssPrefix + "form_" + self.id + "_filters_" + self.languageCodes[0] + "_" + value.key);
-                                $H(value.value).each(function(filterField)
-                                {
-                                    var inputParagraph = document.getElementsByClassName('filter_' + filterField.key, filterLi)[0];
-                                    try
-                                    {
-                                        ActiveForm.prototype.setFeedback(inputParagraph.getElementsByTagName('input')[0], filterField.value);
-                                    } catch(e) {
-                                        ActiveForm.prototype.setFeedback(inputParagraph.getElementsByTagName('select')[0], filterField.value);
-                                    }
-                                });
-                            });
-                        }
-                        else
-                        {
-                            ActiveForm.prototype.setFeedback(this.nodes[fieldName], jsonResponse.errors[fieldName]);
-                        }
-                    }
+                                ActiveForm.prototype.setFeedback(inputParagraph.getElementsByTagName('input')[0], filterField.value);
+                            } catch(e) {
+                                ActiveForm.prototype.setFeedback(inputParagraph.getElementsByTagName('select')[0], filterField.value);
+                            }
+                        });
+                    });
                 }
-            }
-            catch(e)
-            {
-                alert(e.fileName + ':' + e.lineNumber + '\n' + e.message);
+                else
+                {
+                    ActiveForm.prototype.setFeedback(this.nodes[fieldName], jsonResponse.errors[fieldName]);
+                }
             }
         }
 

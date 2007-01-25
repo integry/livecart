@@ -87,8 +87,6 @@ Form.State = {
                     var oval = elements[i].options[j].firstChild ? elements[i].options[j].firstChild.nodeValue : elements[i].options[j].value;
                     value.options[elements[i].options[j].value] = oval;
                 }
-
-                var test = value.options[value.options.length];
             }
 
             if(!this.backups[form.backupId][elements[i].name])
@@ -101,8 +99,6 @@ Form.State = {
                 this.backups[form.backupId][elements[i].name][this.backups[form.backupId][elements[i].name].length] = value;
             }
         }
-        
-        var test = this.backups[form.backupId];
     },
 
 
@@ -201,9 +197,6 @@ Form.State = {
                     $H(value.options).each(function(option) {
                         element.options[element.options.length] = new Option(option.value, option.key);
                     });
-
-
-                    var test = element.options;
                 }
 
                 element.selectedIndex = value.selectedIndex;

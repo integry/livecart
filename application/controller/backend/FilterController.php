@@ -89,7 +89,8 @@ class FilterController extends StoreManagementController
             'languages'=> $languages,
 
             'messages' => array (
-                'deleteField' => 'delete field'
+                'deleteField' => $this->translate('_delete_field'),
+                'removeFilter' => $this->translate('_remove_filter_question'),
                 ),
 
             'selectorValueTypes' => SpecField::getSelectorValueTypes(),
@@ -126,7 +127,7 @@ class FilterController extends StoreManagementController
             }
             else
             {
-                return new JSONResponse(array('errors' => array('ID' => 'Record with such id does not exist'), 'status' => 'failure'));
+                return new JSONResponse(array('errors' => array('ID' => $this->translate("_error_record_id_is_not_unique")), 'status' => 'failure'));
             }
         }
 
@@ -157,17 +158,6 @@ class FilterController extends StoreManagementController
             return new JSONResponse(array('errors' => $errors, 'status' => 'failure'));
         }
     }
-
-    public function create()
-    {
-        $filter = ActiveRecordModel::getNewInstance("Filter");
-        srand();
-        $filter->setValueByLang("name", "en", "This is my test filter " . rand());
-        $filter->rangeStart->set(rand());
-        $filter->rangeEnd->set(rand());
-        $filter->save();
-    }
-
 
     /**
      * Validates spec field form

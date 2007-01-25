@@ -785,6 +785,11 @@ fieldset.error, div.error
 	clear: none;
 }
 
+p.checkbox label {
+    float: none;
+    clear: both;
+}
+
 /*************************** 
 	Calendar
 ***************************/
