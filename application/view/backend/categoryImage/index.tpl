@@ -66,7 +66,6 @@
 </div>
 
 <script type="text/javascript">
-    
     {literal}
     Backend.Category.image.activeListMessages = 
     { 
@@ -84,5 +83,6 @@
 	Backend.Category.image.setDeleteMessage('{t _delete_confirm|addslashes}');	
 	Backend.Category.image.setEditCaption('{t _edit_image|addslashes}');	
 	Backend.Category.image.setSaveCaption('{t _save|addslashes}');	
+    
 
 </script>

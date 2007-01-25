@@ -303,7 +303,7 @@ Backend.SpecField.prototype = {
 	},
 
 
-    bindOneFilter: function(li)
+    bindOneValue: function(li)
     {        
         var self = this;
 	    var input = li.getElementsByTagName("input")[0];
@@ -325,13 +325,6 @@ Backend.SpecField.prototype = {
 	bindDefaultFields: function()
 	{
 		var self = this;
-		$A(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0].getElementsByTagName("li")).each(function(li)
-		{
-		    self.bindOneFilter(li);
-		});
-
-
-
 	    this.fieldsList = ActiveList.prototype.getInstance(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0], {
 	        beforeSort: function(li, order)
 	        {
@@ -865,6 +858,8 @@ Backend.SpecField.prototype = {
 				translationsUl.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[i];
 				translationsUl.appendChild(newValueTranslation);
 			}
+            
+            this.bindOneValue(li);
 		}
 		else
 		{
