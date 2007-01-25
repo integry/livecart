@@ -86,7 +86,17 @@ class ProductController extends StoreManagementController {
 				}
 			}
 		}
-				
+		
+		// get multi language spec fields		
+		$multiLingualSpecFields = array();
+		foreach ($specFields as $key => $field)
+		{
+		  	if (in_array($field->type->get(), array(SpecField::TYPE_TEXT_SIMPLE, SpecField::TYPE_TEXT_ADVANCED)))
+		  	{
+				$multiLingualSpecFields[] = $field->toArray();
+			}
+		}
+		
 		$form = $this->buildForm($product);
 		$form->setData($product->toArray());
 
@@ -100,6 +110,7 @@ class ProductController extends StoreManagementController {
 		$response->setValue("languageList", $languages);
 		$response->setValue("specFieldList", $specFieldArray);
 		$response->setValue("productForm", $form);
+		$response->setValue("multiLingualSpecFields", $multiLingualSpecFields);
 		$productData = $product->toArray();
 		if (empty($productData['ID']))
 		{

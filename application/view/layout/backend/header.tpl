@@ -38,20 +38,17 @@
 	
 	{includeJs file=backend/Customize.js}
     
-
 	{$JAVASCRIPT}
 
 	{literal}
 	<script type="text/javascript">
-	function initHistory()
+	function onLoad()
 	{
-		dhtmlHistory.initialize();
-		dhtmlHistory.addListener(Backend.ajaxNav.handle);
-		dhtmlHistory.handleBookmark();
+		Backend.locale = '{/literal}{localeCode}{literal}';
+		Backend.onLoad();
 	}
-	window.onload = initHistory;
+	window.onload = onLoad;
 	</script>
-
 	{/literal}
 
 </head>

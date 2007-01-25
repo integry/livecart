@@ -37,8 +37,18 @@
 	
 	{includeJs file=backend/Customize.js}
     
-
 	{$JAVASCRIPT}
+
+	{literal}
+	<script type="text/javascript">
+	function onLoad()
+	{
+		Backend.locale = '{/literal}{localeCode}{literal}';
+		Backend.onLoad();
+	}
+	window.onload = onLoad;
+	</script>
+	{/literal}
 
 </head>
 <body>
