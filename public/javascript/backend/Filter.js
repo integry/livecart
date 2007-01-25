@@ -64,6 +64,7 @@ Backend.Filter.prototype = {
 
         this.id = this.filter.ID;
         
+        
         this.categoryID = this.filter.categoryID;
         this.rootId = this.filter.rootId;
         this.specFields = this.filter.specFields;
@@ -76,6 +77,7 @@ Backend.Filter.prototype = {
         this.loadLanguagesAction();
         this.findUsedNodes();
         this.bindFields();
+        this.generateTitleFromSpecField();
     },
 
     /**
@@ -260,6 +262,9 @@ Backend.Filter.prototype = {
         Event.observe(this.nodes.name, "keyup", function(e) { self.generateTitleAction(e) });
         Event.observe(this.nodes.addFilterLink, "click", function(e) { self.addFilterFieldAction(e) });
         Event.observe(this.nodes.specFieldID, "change", function(e) { self.specFieldIDWasChangedAction(e) });
+        
+        Event.observe(this.nodes.specFieldID, "change", function(e) { self.generateTitleFromSpecField(e) });
+        
         Event.observe(this.nodes.cancel, "click", function(e) { self.cancelAction(e) });
         Event.observe(this.nodes.save, "click", function(e) { self.saveAction(e) });
         Event.observe(this.nodes.generateFiltersLink, "click", function(e) { self.generateFiltersAction(e) });
@@ -267,6 +272,7 @@ Backend.Filter.prototype = {
         
         // Also some actions must be executed on load. Be aware of the order in which those actions are called
         this.fillSpecFieldsSelect();
+        
         if(this.filter.SpecField) this.nodes.specFieldID.value = this.filter.SpecField.ID;
         
         this.loadFilterAction();
@@ -343,6 +349,32 @@ Backend.Filter.prototype = {
                 
                 return;
              }
+        }
+    },
+    
+    
+    generateTitleFromSpecField: function(e)
+    {
+        try
+        {        
+            var self = this;
+            var newTitle = '';
+            var changeTitle = false;
+            
+            this.specFields.each(function(specField) {
+                if(self.nodes.name.value == specField.name) changeTitle = true;
+                if(specField.ID == self.nodes.specFieldID.value) newTitle = specField.name;
+            });
+            
+            if(changeTitle || self.nodes.name.value == '') 
+            {
+                self.nodes.name.value = newTitle;;
+                this.generateTitleAction(e);
+            }
+                
+
+        } catch(e) {
+            console.info(e);
         }
     },
 
@@ -472,6 +504,7 @@ Backend.Filter.prototype = {
         if(this.id) this.nodes.id.value = this.id;
 
         if(this.name[this.languageCodes[0]]) this.nodes.name.value = this.name[this.languageCodes[0]];
+        
         this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
 
         this.changeMainTitleAction(this.nodes.name.value);

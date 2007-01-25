@@ -72,7 +72,7 @@ ActiveList.prototype = {
         'edit':     "image/silk/pencil.png",
         'delete':   "image/silk/cancel.png",
         'view':     "image/silk/zoom.png",
-        'progress': "image/silk/additional/animated_progress_brown.gif"
+        'progress': "image/indicator.gif"
     },
 
     /**

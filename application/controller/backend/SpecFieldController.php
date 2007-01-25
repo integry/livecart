@@ -43,8 +43,8 @@ class SpecFieldController extends StoreManagementController
             (
                 2 => array
                 (
-                    1 => 'Selector',
-                    2 => 'Numbers'
+                    2 => 'Numbers',
+                    1 => 'Selector'
                 ),
                 1 => array
                 (
