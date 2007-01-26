@@ -102,7 +102,7 @@ Backend.Currency.prototype =
 	  	button = document.getElementById('addCurr').getElementsByTagName('input')[0];
 	  	button.disabled = false;
 
-		// hide menu
+		// hide menu..
 		restoreMenu('addCurr', 'currPageMenu');
 
  	    eval('var itemData = ' + originalRequest.responseText);
