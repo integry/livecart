@@ -310,7 +310,16 @@ Backend.LanguageEdit.prototype =
 		t.getElementsByTagName('legend')[0].getElementsByTagName('img')[1].onclick = 
 			function () 
 			{
-				langEdit.langExpandAll(this.parentNode.parentNode.id, 1 - langEdit.isContainerVisible(this.parentNode.parentNode.parentNode));
+				// shallow collapse
+				if (langEdit.isContainerVisible(this.parentNode.parentNode.parentNode))
+				{
+					langEdit.langToggleVisibility(this.parentNode);	
+				}
+				// full expand
+				else
+				{
+					langEdit.langExpandAll(this.parentNode.parentNode.id, 1 - langEdit.isContainerVisible(this.parentNode.	parentNode.parentNode));				  
+				}
   			}
 
 		t.getElementsByTagName('legend')[0].getElementsByTagName('a')[0].onkeydown = 			
