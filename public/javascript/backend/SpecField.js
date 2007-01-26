@@ -72,29 +72,29 @@ Backend.SpecField.prototype = {
 	initialize: function(specFieldJson, hash)
 	{
 
-    	    this.specField = !hash ? eval("(" + specFieldJson + ")" ) : specFieldJson;
-    	    this.cloneForm('specField_item_blank', this.specField.rootId);
-    
-    	    this.id = this.specField.ID;
-    	    this.categoryID = this.specField.categoryID;
-    	    this.rootId = this.specField.rootId;
-    
-    		this.type = this.specField.type;
-    		this.values = this.specField.values;
-    
-    		this.name = this.specField.name;
-    		this.backupName = this.name;
-    
-    		this.description = this.specField.description;
-    
-    		this.handle = this.specField.handle;
-    		this.isMultiValue = this.specField.isMultiValue;
-    		this.dataType = this.specField.dataType;
-    
-    		this.loadLanguagesAction();
-    		this.findUsedNodes();
+	    this.specField = !hash ? eval("(" + specFieldJson + ")" ) : specFieldJson;
+	    this.cloneForm('specField_item_blank', this.specField.rootId);
 
-		    this.bindFields();
+	    this.id = this.specField.ID;
+	    this.categoryID = this.specField.categoryID;
+	    this.rootId = this.specField.rootId;
+
+		this.type = this.specField.type;
+		this.values = this.specField.values;
+
+		this.name = this.specField.name;
+		this.backupName = this.name;
+
+		this.description = this.specField.description;
+
+		this.handle = this.specField.handle;
+		this.isMultiValue = this.specField.isMultiValue;
+		this.dataType = this.specField.dataType;
+
+		this.loadLanguagesAction();
+		this.findUsedNodes();
+
+	    this.bindFields();
 	},
 
     /**

@@ -3,8 +3,7 @@
   '_add_language' => 'Sukurti naują kalbą',
   '_or' => 'arba',
   '_cancel' => 'Atsisakyti',
-  '_admin_languages' => 'Tvarkyti kalbas
-',
+  '_admin_languages' => 'Tvarkyti kalbas',
   '_update_from_files' => 'Atnaujinti vertimus iš bylų',
   '_language_definitons' => 'Kalbos vertimas',
   '_edit_definitions' => 'Redaguoti vertimą',
@@ -23,7 +22,6 @@
   '_defined' => 'Neišversti',
   '_no_translations_found' => 'Nerasta jokių vertinių',
   '_save' => 'Išsaugoti',
-  '_editing_translations' => 'Apie kalbos redagavimą
-',
+  '_editing_translations' => 'Apie kalbos redagavimą',
   '_help' => 'pagalba...',
 ); ?>

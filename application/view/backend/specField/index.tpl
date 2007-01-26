@@ -111,6 +111,6 @@
      }
      
      Event.observe($("specField_item_new_{/literal}{$categoryID}{literal}_show"), "click", function(e) { Backend.SpecField.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') });
-     window.activeSpecFieldsList[{/literal}{$categoryID}{literal}] = ActiveList.prototype.getInstance('specField_items_list_{/literal}{$categoryID}{literal}', specFieldListCallbacks, Backend.SpecField.prototype.activeListMessages);
+     ActiveList.prototype.getInstance('specField_items_list_{/literal}{$categoryID}{literal}', specFieldListCallbacks, Backend.SpecField.prototype.activeListMessages);
 </script>
 {/literal}

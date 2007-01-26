@@ -189,24 +189,21 @@ Backend.Filter.prototype = {
      */
     generateFiltersAction: function(e)
     {
-        if(!e.target)
-		{
-			e.target = e.srcElement;
-		}
+        if(!e.target) e.target = e.srcElement;
 
         Event.stop(e);
     
         // execute the action
         var self = this;
         new Ajax.Request(
-                this.links.generateFilters + "?specFieldID="+this.nodes.specFieldID.value,
+            this.links.generateFilters + "?specFieldID="+this.nodes.specFieldID.value,
+            {
+                method: 'get',
+                onComplete: function(param)
                 {
-                    method: 'get',
-                    onComplete: function(param)
-                    {
-                        self.addGeneratedFilters(param.responseText)
-                    }
-                });                
+                    self.addGeneratedFilters(param.responseText)
+                }
+        }); 
     },
     
     /**
@@ -216,15 +213,18 @@ Backend.Filter.prototype = {
      */
     addGeneratedFilters: function(jsonString)
     {
+        try 
+        {
         var self = this;
     
         var jsonResponse = eval("("+jsonString+")");
-                                
+                                  
         for(var i = 0; i < this.specFields.length; i++)
         {
              if(this.specFields[i].ID == this.nodes.specFieldID.value)
              {
                 var specField = this.specFields[i];
+                
                 if(this.selectorValueTypes.indexOf(specField.type) !== -1)
                 {
                     $A(this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0].getElementsByTagName("li")).each(function(li)
@@ -235,14 +235,18 @@ Backend.Filter.prototype = {
                         }
                     });
                 }
-        
+                
                 $H(jsonResponse.filters).each(function(filter) {
-                    self.addFilter(filter.value, "new" + self.prototype.countNewFilters, true);
-                    self.prototype.countNewFilters++;
+                    self.addFilter(filter.value, "new" + Backend.Filter.prototype.countNewFilters, true);
+                    Backend.Filter.prototype.countNewFilters++;
                 });
                 
                 return;
              }
+        }
+        } catch(e)
+        {
+            console.info(e)
         }
     },  
 
@@ -267,6 +271,7 @@ Backend.Filter.prototype = {
         
         Event.observe(this.nodes.cancel, "click", function(e) { self.cancelAction(e) });
         Event.observe(this.nodes.save, "click", function(e) { self.saveAction(e) });
+        
         Event.observe(this.nodes.generateFiltersLink, "click", function(e) { self.generateFiltersAction(e) });
              
         
@@ -365,23 +370,50 @@ Backend.Filter.prototype = {
             this.generateTitleAction(e);
         }
     },
+    
+    generateTitleAndHandleFromSpecFieldValue: function(li)
+    {            
+        var self = this;
+        var newTitle = '';
+        var changeTitle = false;
+        
+        var nameParagraph     = document.getElementsByClassName('filter_name', li)[0];
+        var handleParagraph   = document.getElementsByClassName('filter_handle', li)[0];
+        var selectorParagraph = document.getElementsByClassName('filter_selector', li)[0];
+        
+        var name              = nameParagraph.getElementsByTagName("input")[0];
+        var handle            = handleParagraph.getElementsByTagName("input")[0];
+        var select            = selectorParagraph.getElementsByTagName("select")[0];
+        
+        $A(select).each(function(option) {
+            if(name.value == option.text) changeTitle = true;
+            if(option.selected) newTitle = option.text;
+        });
+        
+        if(changeTitle || name.value == '') 
+        {
+            name.value = newTitle;
+            handle.value = ActiveForm.prototype.generateHandle(newTitle);
+        }       
+    },
 
     bindOneFilter: function(li)
     {
         var self = this;
-        
         var rangeParagraph = document.getElementsByClassName('filter_range', li)[0];
-        var nameParagraph = document.getElementsByClassName('filter_name', li)[0];
+        var nameParagraph  = document.getElementsByClassName('filter_name', li)[0];
+        var selectorParagraph  = document.getElementsByClassName('filter_selector', li)[0];
         
         var name       = nameParagraph.getElementsByTagName("input")[0];
         var rangeStart = rangeParagraph.getElementsByTagName("input")[0];
         var rangeEnd   = rangeParagraph.getElementsByTagName("input")[1];
         
         Event.observe(nameParagraph.getElementsByTagName("input")[0], "keyup", function(e) { self.mainValueFieldChangedAction(e) }, false);
-        
         Event.observe(rangeParagraph.getElementsByTagName("input")[0], "keyup", function(e) { self.rangeChangedAction(e) });
         Event.observe(rangeParagraph.getElementsByTagName("input")[1], "keyup", function(e) { self.rangeChangedAction(e) });        
-
+        Event.observe(selectorParagraph.getElementsByTagName("select")[0], "change", function(e) { self.generateTitleAndHandleFromSpecFieldValue(li) });     
+        
+        this.generateTitleAndHandleFromSpecFieldValue(li);
     },
 
 
@@ -436,10 +468,7 @@ Backend.Filter.prototype = {
      */
     rangeChangedAction: function(e)
     {
-        if(!e.target)
-		{
-			e.target = e.srcElement;
-		}
+        if(!e.target) e.target = e.srcElement;
 
         NumericFilter(e.target)
 
@@ -541,10 +570,7 @@ Backend.Filter.prototype = {
 
     toggleValueLanguage: function(e)
     {
-        if(!e.target)
-		{
-			e.target = e.srcElement;
-		}
+        if(!e.target) e.target = e.srcElement;
         
         var values = document.getElementsByClassName(this.cssPrefix + "form_language_translation", e.target.parentNode.parentNode)[0];
         values.style.display = (values.style.display == 'block') ? 'none' : 'block';
@@ -602,10 +628,7 @@ Backend.Filter.prototype = {
      */
 	changeTranslationLanguageAction: function(e)
 	{
-        if(!e.target)
-		{
-			e.target = e.srcElement;
-		}
+        if(!e.target) e.target = e.srcElement;
 
         Event.stop(e);
         var currentTranslationNode = document.getElementsByClassName(this.cssPrefix + "language_translation", e.target.parentNode.parentNode)[0];               
@@ -623,10 +646,7 @@ Backend.Filter.prototype = {
      */
     addFilterFieldAction: function(e)
     {
-        if(!e.target)
-		{
-			e.target = e.srcElement;
-		}
+        if(!e.target) e.target = e.srcElement;
 
         Event.stop(e);
 
@@ -681,10 +701,7 @@ Backend.Filter.prototype = {
      */
     changeStateAction: function(e)
     {
-        if(!e.target)
-		{
-			e.target = e.srcElement;
-		}
+        if(!e.target) e.target = e.srcElement;
 
         Event.stop(e);
 
@@ -736,10 +753,7 @@ Backend.Filter.prototype = {
      */
     mainValueFieldChangedAction: function(e)
     {
-        if(!e.target)
-		{
-			e.target = e.srcElement;
-		}
+        if(!e.target)e.target = e.srcElement;
 
         Event.stop(e);
         
@@ -940,10 +954,7 @@ Backend.Filter.prototype = {
      */
     cancelAction: function(e)
     {
-        if(!e.target)
-		{
-			e.target = e.srcElement;
-		}
+        if(!e.target) e.target = e.srcElement;
 
         Event.stop(e);
 
@@ -999,10 +1010,7 @@ Backend.Filter.prototype = {
      */
     saveAction: function(e)
     {
-        if(!e.target)
-		{
-			e.target = e.srcElement;
-		}
+        if(!e.target) e.target = e.srcElement;
 
         Event.stop(e);
         
@@ -1048,7 +1056,6 @@ Backend.Filter.prototype = {
 
         var jsonResponse = eval("("+jsonResponseString+")");
 
-        ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID).toggleProgress(this.nodes.parent);
         if(jsonResponse.status == 'success')
         {
             Form.backup(this.nodes.form);
@@ -1105,7 +1112,7 @@ Backend.Filter.prototype = {
         // Toggle progress won't work on new form
         try
         {
-            ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID)..toggleProgress(this.nodes.parent);
+            ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID).toggleProgress(this.nodes.parent);
         }
         catch (e)
         {
@@ -1180,10 +1187,7 @@ Backend.Filter.prototype = {
      */
     createNewAction: function(e, categoryID)
     {
-        if(!e.target)
-		{
-			e.target = e.srcElement;
-		}
+        if(!e.target)e.target = e.srcElement;
         
         Event.stop(e);
 
