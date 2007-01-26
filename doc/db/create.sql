@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2007-01-19 18:24                                #
+# Created on:            2007-01-26 12:20                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -107,13 +107,15 @@ CREATE INDEX IDX_Specification_2 ON SpecificationItem (productID);
 CREATE TABLE SpecField (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     categoryID INTEGER UNSIGNED,
+    specFieldGroupID INTEGER,
     name TEXT,
     description TEXT,
     type SMALLINT DEFAULT 1 COMMENT 'Field data type. Available types: 1. selector (numeric) 2. input (numeric) 3. input (text) 4. editor (text) 5. selector (text) 6. Date',
     dataType SMALLINT DEFAULT 0 COMMENT '1. text 2. numeric',
     position INTEGER UNSIGNED DEFAULT 0 COMMENT 'Order number (position relative to other fields)',
     handle VARCHAR(40),
-    isMultilingual BOOL,
+    isMultiValue BOOL,
+    isRequired BOOL,
     CONSTRAINT PK_SpecField PRIMARY KEY (ID)
 ) COMMENT = 'Field data type. Available types: 1. text field 2. drop down list (select one item from a list) 3. select multiple items from a list';
 
@@ -148,6 +150,7 @@ CREATE TABLE Filter (
     rangeEnd FLOAT,
     rangeDateStart DATE,
     rangeDateEnd DATE,
+    handle VARCHAR(40),
     CONSTRAINT PK_Filter PRIMARY KEY (ID)
 );
 
@@ -299,9 +302,7 @@ CREATE TABLE SpecificationStringValue (
     CONSTRAINT PK_SpecificationStringValue PRIMARY KEY (productID, specFieldID)
 );
 
-CREATE INDEX IDX_SpecificationStringValue_1 ON SpecificationStringValue (value,specFieldID);
-
-CREATE INDEX IDX_SpecificationStringValue_2 ON SpecificationStringValue (specFieldID,productID);
+CREATE INDEX IDX_SpecificationStringValue_1 ON SpecificationStringValue (specFieldID,productID);
 
 # ---------------------------------------------------------------------- #
 # Add table "SpecificationDateValue"                                     #
@@ -353,7 +354,7 @@ ALTER TABLE Filter ADD CONSTRAINT FilterGroup_Filter
     FOREIGN KEY (filterGroupID) REFERENCES FilterGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Filter ADD CONSTRAINT SpecFieldValue_Filter 
-    FOREIGN KEY (specFieldValueID) REFERENCES SpecFieldValue (ID) ON DELETE SET NULL;
+    FOREIGN KEY (specFieldValueID) REFERENCES SpecFieldValue (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE FilterGroup ADD CONSTRAINT SpecField_FilterGroup 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -380,25 +381,25 @@ ALTER TABLE ProductFile ADD CONSTRAINT FileType_ProductFile
     FOREIGN KEY (fileTypeID) REFERENCES FileType (ID) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 ALTER TABLE Discount ADD CONSTRAINT Product_Discount 
-    FOREIGN KEY (ID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE CategoryImage ADD CONSTRAINT Category_CategoryImage 
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE;
 
 ALTER TABLE SpecificationNumericValue ADD CONSTRAINT Product_SpecificationNumericValue 
-    FOREIGN KEY (productID) REFERENCES Product (ID);
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE SpecificationNumericValue ADD CONSTRAINT SpecField_SpecificationNumericValue 
-    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID);
+    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE SpecificationStringValue ADD CONSTRAINT Product_SpecificationStringValue 
-    FOREIGN KEY (productID) REFERENCES Product (ID);
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE SpecificationStringValue ADD CONSTRAINT SpecField_SpecificationStringValue 
-    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID);
+    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE SpecificationDateValue ADD CONSTRAINT Product_SpecificationDateValue 
-    FOREIGN KEY (productID) REFERENCES Product (ID);
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE SpecificationDateValue ADD CONSTRAINT SpecField_SpecificationDateValue 
-    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID);
+    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
