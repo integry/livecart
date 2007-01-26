@@ -33,7 +33,6 @@
 {pageTitle}Products and Categories{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
-{literal}<script type="text/javascript"> window.activeSpecFieldsList = {}; window.activeFiltersList = {}; </script>{/literal}
 <div id="specField_item_blank" class="dom_template">{include file="backend/specField/form.tpl"}</div>
 <div id="filter_item_blank" class="dom_template">{include file="backend/filter/form.tpl"}</div>
 
