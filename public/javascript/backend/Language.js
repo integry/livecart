@@ -315,7 +315,7 @@ Backend.LanguageEdit.prototype =
 				{
 					langEdit.langToggleVisibility(this.parentNode);	
 				}
-				// full expand ..advanced stuff..
+				// full expand ..advanced stuff..sss
 				else
 				{
 					langEdit.langExpandAll(this.parentNode.parentNode.id, 1 - langEdit.isContainerVisible(this.parentNode.	parentNode.parentNode));				  
