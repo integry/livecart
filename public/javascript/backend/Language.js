@@ -308,14 +308,14 @@ Backend.LanguageEdit.prototype =
   			}
 		
 		t.getElementsByTagName('legend')[0].getElementsByTagName('img')[1].onclick = 
-			function () 
+			function ()
 			{
 				// shallow collapse
 				if (langEdit.isContainerVisible(this.parentNode.parentNode.parentNode))
 				{
 					langEdit.langToggleVisibility(this.parentNode);	
 				}
-				// full expand ... another test .. still testing ... should work..really..now...hmm.uhh
+				// full expand ... another test .. still testing ... should work..really..now...hmm.uhh..yea
 				else
 				{
 					langEdit.langExpandAll(this.parentNode.parentNode.id, 1 - langEdit.isContainerVisible(this.parentNode.	parentNode.parentNode));				  
