@@ -43,6 +43,11 @@
     		<label>{t _SpecField_select_multiple}</label>
 		</p>
         
+		<p class="checkbox">
+    		<input type="checkbox" value="1" name="isRequired" class="checkbox specField_form_isRequired" />
+    		<label>{t _SpecField_is_required}</label>
+		</p>
+        
         <div>
     		<p>
         		<label>{t _SpecField_title}<em class="required">*</em></label>

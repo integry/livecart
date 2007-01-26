@@ -152,7 +152,8 @@ class SpecFieldController extends StoreManagementController
             $name = $this->request->getValue('name');
             $handle = $this->request->getValue('handle');
             $values = $this->request->getValue('values');
-            $isMultiValue = $this->request->getValue('multipleSelector') == 1 ? true : false;
+            $isMultiValue = $this->request->getValue('multipleSelector') == 1 ? 1 : 0;
+            $isRequired = $this->request->getValue('isRequired') == 1 ? 1 : 0;
 
             $htmlspecialcharsUtf_8 = create_function('$val', 'return htmlspecialchars($val, null, "UTF-8");');
 
@@ -160,6 +161,7 @@ class SpecFieldController extends StoreManagementController
             $specField->setFieldValue('type',           $type);
             $specField->setFieldValue('handle',         $handle);
             $specField->setFieldValue('isMultiValue',   $isMultiValue);
+            $specField->setFieldValue('isRequired',     $isRequired);
             $specField->setLanguageField('description', @array_map($htmlspecialcharsUtf_8, $description), array_keys($this->specFieldConfig['languages']));
             $specField->setLanguageField('name',        @array_map($htmlspecialcharsUtf_8, $name),        array_keys($this->specFieldConfig['languages']));
 

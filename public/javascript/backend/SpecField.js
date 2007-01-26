@@ -89,6 +89,7 @@ Backend.SpecField.prototype = {
 
 		this.handle = this.specField.handle;
 		this.isMultiValue = this.specField.isMultiValue;
+		this.isRequired = this.specField.isRequired;
 		this.dataType = this.specField.dataType;
 
 		this.loadLanguagesAction();
@@ -177,6 +178,7 @@ Backend.SpecField.prototype = {
 		this.nodes.categoryID 			= document.getElementsByClassName(this.cssPrefix + "form_categoryID", this.nodes.parent)[0];
 		this.nodes.description 			= document.getElementsByClassName(this.cssPrefix + "form_description", this.nodes.parent)[0];
 		this.nodes.multipleSelector 	= document.getElementsByClassName(this.cssPrefix + "form_multipleSelector", this.nodes.parent)[0];
+		this.nodes.isRequired          	= document.getElementsByClassName(this.cssPrefix + "form_isRequired", this.nodes.parent)[0];
 		this.nodes.handle 				= document.getElementsByClassName(this.cssPrefix + "form_handle", this.nodes.parent)[0];
 		this.nodes.name 				= document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
 		this.nodes.valuesDefaultGroup 	= document.getElementsByClassName(this.cssPrefix + "form_values_group", this.nodes.parent)[0];
@@ -389,6 +391,7 @@ Backend.SpecField.prototype = {
 		this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
 
 		this.nodes.multipleSelector.checked = this.isMultiValue ? true : false;
+		this.nodes.isRequired.checked = this.isRequired ? true : false;
 
         this.changeMainTitleAction(this.nodes.name.value);
 
