@@ -740,7 +740,6 @@ ActiveList.prototype = {
 
         this.decorateItems();
         Element.addClassName(this.ul, this.cssPrefix.substr(0, this.cssPrefix.length-1));
-        
         if(Element.hasClassName(this.ul, this.cssPrefix + 'add_sort'))
         {
             Sortable.create(this.ul.id,

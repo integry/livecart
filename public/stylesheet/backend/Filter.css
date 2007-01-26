@@ -5,6 +5,11 @@
   	background-color: #F7F7F7;  		
 }
 
+.filterList li.filtergroup_has_no_filters
+{
+  	background-color: #F7E0E0;  		
+}
+
 .filter_step_lev1 {
     background: #fff;
 }
@@ -55,7 +60,7 @@
    margin: 1px;
 }
 
-.filter_title
+.filter_title, .filter_count
 {
    font-size: 200%;
 }

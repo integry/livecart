@@ -171,13 +171,24 @@ class SpecField extends MultilingualObject
 	    }
 	}
 
-	public function getFiltersGroupsList()
+	public function getFiltersGroupsListArray()
 	{
 		$filter = new ARSelectFilter();
 		$filter->setOrder(new ARFieldHandle("FilterGroup", "position"));
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("FilterGroup", "specFieldID"), $this->getID()));
 
-		return FilterGroup::getRecordSetArray($filter);
+		
+        $filterGroups = FilterGroup::getRecordSet($filter);
+        $filterGroupsArray = array();
+        $i = 0;
+        foreach($filterGroups as $filter)
+        {
+            $filterGroupsArray[$i] = $filter->toArray(false, false);
+            $filterGroupsArray[$i]['filtersCount']  = $filter->getFiltersList()->getTotalRecordCount();
+            $i++;
+        }
+        
+		return $filterGroupsArray;
 	}
 
 
@@ -207,7 +218,7 @@ class SpecField extends MultilingualObject
 	 */
 	public function getValuesList()
 	{
-		return SpecFieldValue::getRecordSetArray($this->getID());
+	    return SpecFieldValue::getRecordSetArray($this->getID());
 	}
 
 	/**

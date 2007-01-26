@@ -67,6 +67,7 @@ Backend.Filter.prototype = {
         
         this.categoryID = this.filter.categoryID;
         this.rootId = this.filter.rootId;
+        this.filtersCount = this.filter.filtersCount ? this.filter.filtersCount : 0;
         this.specFields = this.filter.specFields;
         this.name = this.filter.name;
         this.filters = this.filter.filters;
@@ -156,6 +157,7 @@ Backend.Filter.prototype = {
         }
 
         this.nodes.mainTitle              = document.getElementsByClassName(this.cssPrefix + "title", this.nodes.parent)[0];
+        this.nodes.filtersCount           = document.getElementsByClassName(this.cssPrefix + "count", this.nodes.parent)[0];
         this.nodes.stateLinks             = document.getElementsByClassName(this.cssPrefix + "change_state", this.nodes.parent);
         this.nodes.cancel                 = document.getElementsByClassName(this.cssPrefix + "cancel", this.nodes.parent)[0];
         this.nodes.save                   = document.getElementsByClassName(this.cssPrefix + "save", this.nodes.parent)[0];
@@ -213,8 +215,6 @@ Backend.Filter.prototype = {
      */
     addGeneratedFilters: function(jsonString)
     {
-        try 
-        {
         var self = this;
     
         var jsonResponse = eval("("+jsonString+")");
@@ -238,15 +238,12 @@ Backend.Filter.prototype = {
                 
                 $H(jsonResponse.filters).each(function(filter) {
                     self.addFilter(filter.value, "new" + Backend.Filter.prototype.countNewFilters, true);
+                    self.changeFiltersCount(self.filtersCount+1);
                     Backend.Filter.prototype.countNewFilters++;
                 });
                 
                 return;
              }
-        }
-        } catch(e)
-        {
-            console.info(e)
         }
     },  
 
@@ -493,6 +490,22 @@ Backend.Filter.prototype = {
     },
 
     /**
+     * @param string newTitle Modify AR title
+     */
+    changeFiltersCount: function(count)
+    {
+        this.filtersCount = count;
+        if(this.nodes.filtersCount)
+        {
+            if(this.nodes.filtersCount.firstChild) this.nodes.filtersCount.firstChild.nodeValue = "(" + this.filtersCount + ")";
+            else this.nodes.filtersCount.appendChild(document.createTextNode("(" + this.filtersCount + ")"));
+            
+            if(this.filtersCount == 0) Element.addClassName(this.nodes.parent, "filtergroup_has_no_filters");
+            else Element.removeClassName(this.nodes.parent, "filtergroup_has_no_filters");
+        }
+    },
+
+    /**
      * Fill main filter group values (name and spec field) and create translations for those values
      */
     loadFilterAction: function()
@@ -502,11 +515,13 @@ Backend.Filter.prototype = {
         // Default language
         if(this.id) this.nodes.id.value = this.id;
 
-        if(this.name[this.languageCodes[0]]) this.nodes.name.value = this.name[this.languageCodes[0]];
+        if(this.name[this.languageCodes[0]]) this.nodes.name.value = this.name[this.languageCodes[0]];        
         
         this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
 
         this.changeMainTitleAction(this.nodes.name.value);
+        this.changeFiltersCount(this.filtersCount);
+
 
         // Translations
         var translations = document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations);
@@ -651,6 +666,7 @@ Backend.Filter.prototype = {
         Event.stop(e);
 
         this.addFilter(null, "new" + Backend.Filter.prototype.countNewFilters, true);
+        this.changeFiltersCount(this.filtersCount+1);
         Backend.Filter.prototype.countNewFilters++;
     },
 
@@ -669,6 +685,7 @@ Backend.Filter.prototype = {
         var id = (isNew ? 'new' : '') + splitedHref[splitedHref.length - 1];
 
         activeList.remove(li);
+        this.changeFiltersCount(this.filtersCount-1);
 
         for(var i = 1; i < this.languageCodes.length; i++)
         {

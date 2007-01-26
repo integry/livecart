@@ -32,8 +32,9 @@ class FilterController extends StoreManagementController
         $filters = array();
         foreach($specFieldsList as $specFieldObj)
         {
-            $filters = array_merge($filters, $specFieldObj->getFiltersGroupsList());
+            $filters = array_merge($filters, $specFieldObj->getFiltersGroupsListArray());
         }
+        
         
         $blankFilter = array
         (
@@ -43,6 +44,7 @@ class FilterController extends StoreManagementController
             'categoryID' => $categoryID,
             'specFields' => $this->getSpecFieldOptions($category->getSpecificationFieldArray())
         );
+
         
         $response->setValue('filters', $filters);
         $response->setValue('blankFilter', $blankFilter);
@@ -240,11 +242,12 @@ class FilterController extends StoreManagementController
         $filterGroup = FilterGroup::getInstanceByID($this->request->getValue('id'), true, true);
         $filterGroupArray = $filterGroup->toArray(false, false);
         
-        foreach($filterGroup->getFiltersList() as $filter)
+        foreach($filterGroup->getFiltersList()->toArray(false, false) as $filter)
         {
             $filterGroupArray['filters'][$filter['ID']] = $filter;
         }
-                
+        $filterGroupArray['filtersCount'] = isset($filterGroupArray['filters']) ? count($filterGroupArray['filters']) : 0;
+        
         $filterGroupArray['rootId'] = "filter_items_list_".$filterGroupArray['SpecField']['Category']['ID']."_".$filterGroupArray['ID'];
         $filterGroupArray['categoryID'] = $filterGroupArray['SpecField']['Category']['ID'];
 

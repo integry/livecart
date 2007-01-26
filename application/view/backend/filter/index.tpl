@@ -93,8 +93,8 @@
     
     <ul id="filter_items_list_{$categoryID}" class="filterList activeList_add_sort activeList_add_edit activeList_add_delete">
     {foreach item="filter" from=$filters}
-    	<li id="filter_items_list_{$categoryID}_{$filter.ID}">
-        	<span class="filter_title">{$filter.name[$defaultLangCode]}</span>
+    	<li id="filter_items_list_{$categoryID}_{$filter.ID}" {if $filter.filtersCount == 0}class="filtergroup_has_no_filters"{/if}>
+        	<span class="filter_title">{$filter.name[$defaultLangCode]}</span> <span class="filter_count">({$filter.filtersCount})</span>
     	</li>
     {/foreach}
     </ul>

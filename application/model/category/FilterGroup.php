@@ -75,6 +75,11 @@ class FilterGroup extends MultilingualObject
 	{
 	    return parent::deleteByID(__CLASS__, $id);
 	}
+	
+	public static function getRecordSet(ARSelectFilter $filter)
+	{
+	    return parent::getRecordSet(__CLASS__, $filter);
+	}
 
 	/**
 	 * Loads a set of spec field records in current category
@@ -89,7 +94,7 @@ class FilterGroup extends MultilingualObject
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("Filter", "filterGroupID"), $this->getID()));
 
 		
-		return Filter::getRecordSetArray($filter);
+		return Filter::getRecordSet($filter);
 	}
 	
 
