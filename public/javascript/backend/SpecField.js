@@ -288,12 +288,13 @@ Backend.SpecField.prototype = {
 		{
 			this.nodes.stateLinks[1].parentNode.style.display = 'none';
 			this.nodes.stateLinks[1].style.display = 'none';
+            this.nodes.multipleSelector.parentNode.style.display = 'none';
 		}
 		else
 		{
 			this.nodes.stateLinks[1].parentNode.style.display = 'inline';
 			this.nodes.stateLinks[1].style.display = 'inline';
-            
+            this.nodes.multipleSelector.parentNode.style.display = 'block';
             
             valuesTranslations.style.display = (this.dataType == this.DATATYPE_NUMBERS) ? 'none' : 'block';
 		}
