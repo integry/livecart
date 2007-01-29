@@ -242,9 +242,9 @@ class FilterController extends StoreManagementController
         $filterGroup = FilterGroup::getInstanceByID($this->request->getValue('id'), true, true);
         $filterGroupArray = $filterGroup->toArray(false, false);
         
-        foreach($filterGroup->getFiltersList()->toArray(false, false) as $filter)
+        foreach($filterGroup->getFiltersList() as $filter)
         {
-            $filterGroupArray['filters'][$filter['ID']] = $filter;
+            $filterGroupArray['filters'][$filter->getID()] = $filter->toArray(false, false);
         }
         $filterGroupArray['filtersCount'] = isset($filterGroupArray['filters']) ? count($filterGroupArray['filters']) : 0;
         
@@ -253,6 +253,8 @@ class FilterController extends StoreManagementController
 
         $filterGroupArray['specFields'] = $this->getSpecFieldOptions(Category::getInstanceByID($filterGroupArray['categoryID'])->getSpecificationFieldArray());           
 
+        
+        
         return new JSONResponse($filterGroupArray);
     }
 

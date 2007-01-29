@@ -1393,9 +1393,10 @@ Calendar.prototype.showAtElement = function (el, opts) {
 			br.y += document.body.scrollTop;
 			br.x += document.body.scrollLeft;
 		} else {
-			br.y += window.scrollY;
-			br.x += window.scrollX;
+			br.y += window.pageYOffset;
+			br.x += window.pageXOffset;
 		}
+        
 		var tmp = box.x + box.width - br.x;
 		if (tmp > 0) box.x -= tmp;
 		tmp = box.y + box.height - br.y;

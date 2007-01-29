@@ -829,6 +829,8 @@ Backend.Filter.prototype = {
      */
     addFilter: function(value, id, isDefault)
     {
+        var self = this;
+        
         var filters = document.getElementsByClassName(this.cssPrefix + "form_filters_value", this.nodes.filtersDefaultGroup);
 
         var ul = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0];
@@ -848,12 +850,13 @@ Backend.Filter.prototype = {
             input.name = "filters[" + id + "][name]["+this.languageCodes[0]+"]";
             input.value = (value && value.name && value.name[this.languageCodes[0]]) ? value.name[this.languageCodes[0]] : '' ;
 
-
+    
             // Handle name
             var hanldeParagraph = document.getElementsByClassName('filter_handle', li)[0];
             var handleInput = hanldeParagraph.getElementsByTagName("input")[0];
             handleInput.name = "filters[" + id + "][handle]";
             handleInput.value = (value && value.handle) ? value.handle : '' ;
+
             
 
             // Numeric range
@@ -907,28 +910,39 @@ Backend.Filter.prototype = {
             
             rangeDateStart.value  = rangeDateStartReal.value;
             rangeDateEnd.value    = rangeDateEndReal.value ;
+              
+            rangeDateStart.value = Date.parseDate(rangeDateStartReal.value, "%y-%m-%d").print(this.dateFormat);
+            rangeDateEnd.value = Date.parseDate(rangeDateEnd.value, "%y-%m-%d").print(this.dateFormat);
                        
-            var startCalendar = {
-                inputField:       rangeDateStart.id,
-                inputFieldReal:   rangeDateStartReal.id,
-                ifFormat:         this.dateFormat, 
-                button:           rangeDateStartButton.id
-            };
-            
-            var endCalendar = {
-                inputField:       rangeDateEnd.id,
-                inputFieldReal:   rangeDateEndReal.id,
-                ifFormat:         this.dateFormat, 
-                button:           rangeDateEndButton.id
-            };
-                      
-                      
-            var calDateStart = Calendar.setup(startCalendar);
-            var calDateEnd = Calendar.setup(endCalendar);
-                      
-            var calDateStart = Calendar.setup(startCalendar);
-            var calDateEnd = Calendar.setup(endCalendar);
-            
+            Event.observe(rangeDateStartButton, "mousedown", function(e){
+                if(!self.filterCalendars[rangeDateStart.id]) 
+                {
+                    self.filterCalendars[rangeDateStart.id] = true;
+                    Calendar.setup( {
+                        inputField:       rangeDateStart.id,
+                        inputFieldReal:   rangeDateStartReal.id,
+                        ifFormat:         self.dateFormat, 
+                        button:           rangeDateStartButton.id,
+                        eventName:        'mouseup',
+                        cache: true
+                    });
+                }
+            });
+                       
+            Event.observe(rangeDateEndButton, "mousedown", function(e){
+                if(!self.filterCalendars[rangeDateEnd.id])
+                {
+                    self.filterCalendars[rangeDateEnd.id] = true;
+                    Calendar.setup({
+                        inputField:       rangeDateEnd.id,
+                        inputFieldReal:   rangeDateEndReal.id,
+                        ifFormat:         self.dateFormat, 
+                        button:           rangeDateEndButton.id,
+                        eventName:        'mouseup',
+                        cache: true
+                    });
+                }
+            });
             
             this.bindOneFilter(li);
             
