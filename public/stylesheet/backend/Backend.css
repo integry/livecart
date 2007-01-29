@@ -668,6 +668,12 @@ p.radio, p.checkbox
 p.radio label, p.checkbox label
 {
     white-space: nowrap;
+    margin-top: 3px;
+}
+
+label.checkbox
+{
+  	margin-top: 3px;
 }
 
 input, select, file, form.other
@@ -681,8 +687,8 @@ input, select, file, form.other
 textarea
 {
 	padding: 2px;
-    width: 30em;
-    height: 6em;
+    width: 40em;
+    height: 10em;
     font-size: 14px;
     font-family: arial, verdana;
     color: #333;
@@ -788,6 +794,16 @@ fieldset.error, div.error, fieldset.container
 p.checkbox label {
     float: none;
     clear: both;
+}
+
+/* textarea container */
+div.textarea 
+{
+ 	margin-bottom: 7px; 
+}
+
+input.wide {
+  	width: 35em;
 }
 
 /*************************** 

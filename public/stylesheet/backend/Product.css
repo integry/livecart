@@ -9,3 +9,8 @@ fieldset.specField .numeric
 	margin-bottom: 10px;
 	font-size: smaller;
 }
+
+.multiValueSelect label
+{
+
+}

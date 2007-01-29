@@ -1,7 +1,5 @@
 {includeCSS file="backend/Product.css"}
 
-{includeJS file="library/fckeditor/fckeditor.js"}
-
 {include file="layout/dev/head.tpl"}
 
 {defun name="specFieldFactory" field="field" language="language"}
@@ -18,7 +16,7 @@
 			{foreach from=$field.values key="id" item="value"}
 				{if '' != $id}
 					<p>
-						{checkbox name="specItem_`$id`" class="checkbox" value="on"}<label for="specItem_{$id}"> {$value}</label>
+						{checkbox name="specItem_`$id`" class="checkbox" value="on"}<label class="checkbox" for="specItem_{$id}"> {$value}</label>
 					</p>
 				{/if}
 			{/foreach}
@@ -39,10 +37,13 @@
 		{textfield id=$fieldName name=$fieldName class="text"}
 
 	{elseif $field.type == 4}
-		{textarea id=$fieldName name=$fieldName class="fckEditor"}
+		<div class="textarea">
+			{textarea id=$fieldName name=$fieldName}
+		</div>
 
 	{elseif $field.type == 6}
 		{calendar id=$fieldName name=$fieldName}
+
 	{/if}
 {/defun}
 
@@ -56,13 +57,13 @@
 		<p class="required">
 			<label for="name">Product name:</label>
 			<fieldset class="error">
-			{textfield name="name"}
+			{textfield name="name" class="wide"}
 			{error for="name"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>			
 		</p>
 
 		<p class="required">
-			<label for="sku">SKU:</label>
+			<label for="sku">SKU (code):</label>
 			<fieldset class="error">
 			{textfield name="sku"}
 			{error for="sku"}<div class="errorText">{$msg}</div>{/error}
@@ -70,13 +71,22 @@
 		</p>
 
 		<p>
+			<label for="handle">Handle:</label>
+			{textfield name="handle"}
+		</p>
+
+		<p>
 			<label for="shortDescription">Short description:</label>
-			{textarea class="shortDescr fckEditor" name="shortDescription"}
+			<div class="textarea">
+				{textarea class="shortDescr" name="shortDescription"}
+			</div>
 		</p>
 
 		<p>
 			<label for="longDescription">Long description:</label>
-			{textarea class="longDescr fckEditor" name="longDescription"}
+			<div class="textarea">
+				{textarea class="longDescr" name="longDescription"}
+			</div>
 		</p>
 
 		<p>
@@ -85,14 +95,14 @@
 		</p>
 
 		<p>			
-			{checkbox name="isBestseller" class="checkbox"}<label for="isBestseller"> Mark as bestseller</label>
+			<label for=""></label> {checkbox name="isBestseller" class="checkbox"}<label for="isBestseller"> Mark as bestseller</label>
 		</p>
 		<p>
 
 	</fieldset>
 
 	<fieldset class="specField">
-		<legend>Specification Attributes</legend>
+		<legend>Product Specification</legend>
 		{foreach from=$specFieldList item=field}
 		
 		<p>		
@@ -113,7 +123,6 @@
 		</p>
 	</fieldset>
 
-
 	{foreach from=$languageList key=lang item=langName}
 	<fieldset class="expandingSection">
 		<legend>Translate to: {$langName}</legend>
@@ -124,13 +133,18 @@
 			</p>
 			<p>
 				<label>Short description:</label>
-				{textarea class="shortDescr fckEditor" name="shortDescription_$lang"}
+				<div class="textarea">
+					{textarea class="shortDescr" name="shortDescription_$lang"}
+				</div>
 			</p>
 			<p>
 				<label>Long description:</label>
-				{textarea class="longDescr fckEditor" name="longDescription_$lang"}
+				<div class="textarea">
+					{textarea class="longDescr" name="longDescription_$lang"}
+				</div>
 			</p>
 			
+			{if $multiLingualSpecFields.length > 0}
 			<fieldset>
 				<legend>Specification Attributes</legend>
 				{foreach from=$multiLingualSpecFields item="field"}
@@ -140,11 +154,12 @@
 					</p>
 				{/foreach}
 			</fieldset>
+			{/if}
 			
 		</div>
 	</fieldset>
 	{/foreach}
-	
+
 	<input type=submit class="submit" value="Save"> {t _or} <a href="#" onClick="return false;" class="cancel">{t _cancel}</a>
 	
 {/form}
