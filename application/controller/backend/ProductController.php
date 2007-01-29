@@ -12,9 +12,8 @@ ClassLoader::import("application.model.product.ProductSpecification");
  * @package application.controller.backend
  * @role admin.store.product
  */
-class ProductController extends StoreManagementController {
-
-
+class ProductController extends StoreManagementController 
+{
 	public function index()
 	{
 		$category = Category::getInstanceByID($this->request->getValue("id"));
@@ -27,6 +26,11 @@ class ProductController extends StoreManagementController {
 		$response->setValue("productList", $productList);
 		$response->setValue("categoryID", $this->request->getValue("id"));
 		return $response;
+	}
+
+	public function autoComplete()
+	{
+	  	
 	}
 
 	/**
@@ -106,11 +110,19 @@ class ProductController extends StoreManagementController {
 			$languages[$lang] = $this->locale->info()->getOriginalLanguageName($lang);
 		}
 		
+		// product types
+		$types = array(0 => $this->translate('_tangible'),
+					   1 => $this->translate('_intangible'),	
+					  );
+			
 		$response = new ActionResponse();
 		$response->setValue("languageList", $languages);
 		$response->setValue("specFieldList", $specFieldArray);
 		$response->setValue("productForm", $form);
 		$response->setValue("multiLingualSpecFields", $multiLingualSpecFields);
+		$response->setValue("productTypes", $types);
+		$response->setValue("baseCurrency", Store::getInstance()->getDefaultCurrency()->getID());
+		$response->setValue("otherCurrencies", Store::getInstance()->getCurrencyArray(Store::EXCLUDE_DEFAULT_CURRENCY));
 		$productData = $product->toArray();
 		if (empty($productData['ID']))
 		{
@@ -141,6 +153,19 @@ class ProductController extends StoreManagementController {
 			}
 		}
 	
+		// price in base currency
+		$baseCurrency = Store::getInstance()->getDefaultCurrency()->getID();
+		$validator->addCheck('price_' . $baseCurrency, new IsNotEmptyCheck($this->translate('_err_price_empty')));		    		
+
+		// validate price input in all currencies
+		$currencies = Store::getInstance()->getCurrencyArray();
+		foreach ($currencies as $currency)
+		{
+			$validator->addCheck('price_' . $currency, new IsNumericCheck($this->translate('_err_price_invalid')));		  		  	
+			$validator->addCheck('price_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));		  
+			$validator->addFilter('price_' . $currency, new NumericFilter());		    
+		}
+			
 		$validator->addCheck('test', new IsNotEmptyCheck($this->translate('_err_empty')));		    
 	
 		return $validator;

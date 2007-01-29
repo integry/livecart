@@ -1,4 +1,7 @@
 {includeCSS file="backend/Product.css"}
+{includeJS file="library/form/Validator.js"}
+{includeJS file="library/form/ActiveForm.js"}
+{includeJS file="backend/Product.js"}
 
 {include file="layout/dev/head.tpl"}
 
@@ -54,10 +57,15 @@
 	<fieldset>
 		<legend>Main product information</legend>
 
+		<p>			
+			<label for=""></label> {checkbox name="isEnabled" class="checkbox" value="on"}<label for="isEnabled"> Enabled (visible)</label>
+		</p>
+		<p>
+
 		<p class="required">
 			<label for="name">Product name:</label>
 			<fieldset class="error">
-			{textfield name="name" class="wide"}
+			{textfield name="name" class="wide" onkeyup="Backend.Product.generateHandle(this);"}
 			{error for="name"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>			
 		</p>
@@ -90,12 +98,39 @@
 		</p>
 
 		<p>
-			<label for="status">Status:</label>
-			{selectfield name="status"}
+			<label for="type">Product Type:</label>
+			<fieldset class="error">
+				{selectfield options=$productTypes name="type"}
+				{error for="type"}<div class="errorText">{$msg}</div>{/error}
+			</fieldset>			
+		</p>
+
+		<p>
+			<label for="website">Website address:</label>
+			<fieldset class="error">
+				{textfield name="website" class="wide"}
+				{error for="website"}<div class="errorText">{$msg}</div>{/error}
+			</fieldset>			
+		</p>
+
+		<p>
+			<label for="manufacturer">Manufacturer:</label>
+			<fieldset class="error">
+				{textfield name="manufacturer" class="wide" autocomplete="controller=backend.manufacturer field=manufacturer"}
+				{error for="manufacturer"}<div class="errorText">{$msg}</div>{/error}
+			</fieldset>			
+		</p>
+
+		<p>
+			<label for="keywords">Keywords:</label>
+			<fieldset class="error">
+				{textfield name="keywords" class="wide"}
+				{error for="keywords"}<div class="errorText">{$msg}</div>{/error}
+			</fieldset>			
 		</p>
 
 		<p>			
-			<label for=""></label> {checkbox name="isBestseller" class="checkbox"}<label for="isBestseller"> Mark as bestseller</label>
+			<label for=""></label> {checkbox name="isBestseller" class="checkbox" value="on"}<label for="isBestseller"> Mark as bestseller</label>
 		</p>
 		<p>
 
@@ -114,13 +149,57 @@
 	</fieldset>
 	
 	<fieldset>
-		<legend>Shipping Info</legend>
-		<p>
-			<label>Height:</label>
-			{textfield name="shippingHeight"}
+		<legend>Inventory</legend>
+		<p class="required">
+			<label>Items in stock:</label>
+			{textfield name="stockCount" class="number" value="0"}
 		</p>
-		<p>
+	</fieldset>
+
+	<fieldset>
+		<legend>Pricing</legend>
+		<p class="required">
+			<label>Price:</label>
+			{textfield name="price_$baseCurrency" class="money"} {$baseCurrency}
 		</p>
+		{foreach from=$otherCurrencies item="currency"}
+		<p>
+			<label>Price:</label>
+			{textfield name="price_$currency" class="money"} {$currency}
+		</p>		
+		{/foreach}
+	</fieldset>
+
+	<fieldset>
+		<legend>Shipping</legend>
+
+		<p style="color:red;">
+			<label>Shipping Weight:</label>
+			{textfield name="shippingWeight" class="number"}
+		</p>
+
+		<p>
+			<label>Minimum Order Quantity:</label>
+			{textfield name="minimumQuantity" class="number" value="0"}
+		</p>
+
+		<p>
+			<label>Shipping Surcharge:</label>
+			{textfield name="minimumQuantity" class="number"} {$baseCurrency}
+		</p>
+
+		<p>			
+			<label for=""></label> {checkbox name="isSeparateShipment" class="checkbox" value="on"}<label for="isSeparateShipment" class="checkbox"> Requires separate shipment</label>
+		</p>
+
+		<p>			
+			<label for=""></label> {checkbox name="isFreeShipping" class="checkbox" value="on"}<label class="checkbox" for="isFreeShipping"> Qualifies for free shipping</label>
+		</p>
+
+		<p>			
+			<label for=""></label> {checkbox name="isBackorderable" class="checkbox" value="on"}<label for="isBackorderable"> Allow back-ordering</label>
+		</p>
+
 	</fieldset>
 
 	{foreach from=$languageList key=lang item=langName}
@@ -129,7 +208,7 @@
 		<div class="expandingSectionContent">
 			<p>
 				<label>Product name:</label>
-				{textfield name="name_$lang"}
+				{textfield name="name_$lang" class="wide"}
 			</p>
 			<p>
 				<label>Short description:</label>

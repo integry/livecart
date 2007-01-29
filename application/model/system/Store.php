@@ -39,6 +39,8 @@ class Store
 	private $currencies = null;
 
 	private $defaultCurrency = null;
+	
+	const EXCLUDE_DEFAULT_CURRENCY = false;
 
 	/**
 	 * LiveCart operates on a single store object
@@ -249,7 +251,7 @@ class Store
 		}
 
 		$currArray = array();
-		$defCurrency = $this->getDefaultCurrency();
+		$defCurrency = $this->getDefaultCurrency()->getID();
 		foreach ($this->currencies as $currency)
 		{
 			if ($defCurrency != $currency->getID() || $includeDefaultCurrency)

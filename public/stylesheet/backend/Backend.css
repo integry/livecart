@@ -674,6 +674,7 @@ p.radio label, p.checkbox label
 label.checkbox
 {
   	margin-top: 3px;
+  	width: auto;
 }
 
 input, select, file, form.other
@@ -802,8 +803,34 @@ div.textarea
  	margin-bottom: 7px; 
 }
 
-input.wide {
+input.wide 
+{
   	width: 35em;
+}
+
+input.money, input.number 
+{
+  	width: 5em;
+}
+
+/*************************** 
+	Autocomplete
+***************************/
+div.autocomplete
+{
+	border: 1px solid #AAAAAA;
+	background-color: #ffc !important;  
+	color: black !important;
+}
+
+div.autocomplete ul
+{
+  	list-style: none;
+}
+
+div.autocomplete .selected
+{
+  	background-color: yellow;
 }
 
 /*************************** 
