@@ -6,8 +6,6 @@ ClassLoader::import("application.model.system.MultilingualObjectInterface");
 /**
  * Hierarchial product category model class
  *
- * $Id: Category.php 1472 2007-01-23 14:01:50Z rinalds $, $LastChangedDate: 2007-01-23 16:01:50 +0200 (Tue, 23 Jan 2007) $
- * 
  * @package application.model.category
  */
 class Category extends ActiveTreeNode implements MultilingualObjectInterface
@@ -33,7 +31,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("activeProductCount", ARInteger::instance()));
 		$schema->registerField(new ARField("totalProductCount", ARInteger::instance()));
-		$schema->registerField(new ARField("position", ARInteger::instance()));
 	}
 
 	/**
@@ -297,7 +294,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->getID());
 	  	$cond->addAND(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), 1));
 		$filter->setCondition($cond);
-	  	$filter->setOrder(new ARFieldHandle('Category', 'position'), 'ASC');
+	  	$filter->setOrder(new ARFieldHandle('Category', 'lft'), 'ASC');
 
 	  	return $filter;
 	}
@@ -344,7 +341,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		}
 
 		$filter->setCondition($cond);
-	  	$filter->setOrder(new ARFieldHandle('Category', 'position'), 'ASC');
+	  	$filter->setOrder(new ARFieldHandle('Category', 'lft'), 'ASC');
 
 	  	return $filter;
 	}
