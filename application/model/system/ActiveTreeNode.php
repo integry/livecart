@@ -555,6 +555,9 @@ class ActiveTreeNode extends ActiveRecordModel
 				$data[$name] = $field->get();
 			}
 		}
+		$data["childrenCount"] = ($data[self::RIGHT_NODE_FIELD_NAME] - $data[self::LEFT_NODE_FIELD_NAME] - 1) / 2;
+		
+		
 		$childArray = array();
 
 		if ($this->childList != null)
@@ -567,6 +570,32 @@ class ActiveTreeNode extends ActiveRecordModel
 		}
 		
 		return $data;
+	}
+	
+	/**
+	 * This method works similar to ActiveTreeNode::getPathNodeSet
+	 */
+	public function getPathBranchesArray() 
+	{
+	    return $this->buildPathBranchesArray($this->getPathNodeSet()->toArray(), 0);
+	}
+	
+	private function buildPathBranchesArray($path, $level) 
+	{
+	    $branch = array();  
+	    $branch['children'] = Category::getInstanceByID($path[$level]['ID'])->getChildNodes(false, true)->toArray();
+	   
+	    $childrenCount = count($branch['children']);
+	    $pathCount = count($path);
+	    for($i = 0; $i < $childrenCount; $i++) 
+	    {
+	        if(($level + 1) <$pathCount && $branch['children'][$i]['ID'] == $path[$level+1]['ID'])
+	        {
+	            $branch['children'][$i] = array_merge($branch['children'][$i], $this->buildPathBranchesArray($path, $level+1));
+	        }
+	    }
+			        
+        return $branch;
 	}
 }
 

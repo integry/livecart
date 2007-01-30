@@ -21,14 +21,14 @@ class CategoryController extends StoreManagementController
 	public function index()
 	{
 		$response = new ActionResponse();
-
-		$filter = new ARSelectFilter();
-		// Removing tree ROOT node from results
-		$filter->setCondition(new OperatorCond(new ARFieldHandle("Category", "ID"), Category::ROOT_ID, "<>"));
+	    
+        $filter = new ARSelectFilter();
+        $condition = new OperatorCond(new ARFieldHandle("Category", "ID"), Category::ROOT_ID, "=");
+        $condition->addOR(new OperatorCond(new ARFieldHandle("Category", "parentNodeID"), Category::ROOT_ID, "="));
+        $filter->setCondition($condition);
 		$filter->setOrder(new ARFieldHandle("Category", "lft", 'ASC'));
-		$categoryList = Category::getRecordSet($filter);
-		$response->setValue("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
-
+		
+		$response->setValue("categoryList", Category::getRecordSet($filter)->toArray($this->store->getDefaultLanguageCode()));
         $response->setValue('curLanguageCode', $this->locale->getLocaleCode());
 
 		return $response;
@@ -197,6 +197,38 @@ class CategoryController extends StoreManagementController
 	        'tabFields' => SpecField::countItems($category),
 	        'tabImages' => CategoryImage::countItems($category),
 	    ));
+	}
+	
+	public function xmlBranch() 
+	{
+	    $xmlResponse = new XMLResponse();
+	    $rootID = (int)$this->request->getValue("id");
+
+	    if(!in_array($rootID, array(Category::ROOT_ID, 0))) 
+	    {
+	       $category = Category::getInstanceByID($rootID);
+	        
+		   $xmlResponse->setValue("rootID", $rootID);
+           $xmlResponse->setValue("categoryList", $category->getChildNodes(false, true)->toArray($this->store->getDefaultLanguageCode()));
+	    }
+	    
+	    return $xmlResponse;
+	}
+	
+	public function xmlRecursivePath() 
+	{
+	    $xmlResponse = new XMLResponse();
+	    $targetID = (int)$this->request->getValue("id");
+	    
+	    $categoriesList = Category::getInstanceByID($targetID)->getPathBranchesArray();
+	    if(count($categoriesList) > 0) {
+    	    $xmlResponse->setValue("rootID", $categoriesList['children'][0]['parent']);
+    	    $xmlResponse->setValue("categoryList", $categoriesList);
+	    }
+	    
+	    $xmlResponse->setValue("targetID", $targetID);
+	    
+	    return $xmlResponse;
 	}
 }
 

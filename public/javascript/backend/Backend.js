@@ -60,20 +60,21 @@ Backend.AjaxNavigationHandler.prototype =
 	
 	handle: function(element, params)
 	{
-		elementId = element.substr(0, element.length - 2);
-		elements = elementId.split('#');
-		for (k = 0; k < elements.length; k++)
-		{
+		var elementId = element.substr(0, element.length - 2);
+		var elements = elementId.split('#');
+		for (var k = 0; k < elements.length; k++)
+		{           
 			if ($(elements[k]))
 			{
-				// only register the click for the last element
+                // only register the click for the last element
 				if (k < elements.length - 1)
 				{
 					Backend.ajaxNav.ignoreNext();
 				}
 				
 				$(elements[k]).onclick();
-			}		  
+			}	
+              
 		}
 	},
 	

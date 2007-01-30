@@ -74,19 +74,20 @@
 	Backend.Category['links']['remove']  = '{link controller=backend.category action=remove id=_id_}';
 	Backend.Category['links']['countTabsItems'] = '{link controller=backend.category action=countTabsItems id=_id_}';
 	Backend.Category['links']['reorder'] = '{link controller=backend.category action=reorder id=_id_}/?parentId=_pid_';
+	Backend.Category['links']['categoryAutoloading'] = '{link controller=backend.category action=xmlBranch}';
+	Backend.Category['links']['categoryRecursiveAutoloading'] = '{link controller=backend.category action=xmlRecursivePath}';
     
     Backend.Category.messages = {literal}{}{/literal};
     Backend.Category.messages._reorder_failed = '{t _reorder_failed|addslashes}';
 
-
-
-	Backend.Category.init();
-	Backend.Category.treeBrowser.insertNewItem(0, 1, 'LiveCart', 0, 0, 0, 0, "");
-{foreach from=$categoryList item=category}
-	Backend.Category.treeBrowser.insertNewItem({$category.parent},{$category.ID} , '{$category.name}', 0, 0, 0, 0, "SELECT");
-{/foreach}
+	Backend.Category.init();    
+	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading); 
+    Backend.Category.addCategories({json array=$categoryList});
+    
 	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
 	Backend.Category.initPage();
+    
+    Backend.Category.loadBookmarkedCategory();
 
 	Backend.Category.image = new Backend.CategoryImage();
 

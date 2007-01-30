@@ -90,7 +90,7 @@ Backend.Category = {
 		$('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode.id = 'cat_' + categoryId;
 			
 		// and register browser history event to enable backwar/forward navigation
-		 Backend.ajaxNav.add('cat_' + categoryId);
+		Backend.ajaxNav.add('cat_' + categoryId);
 		Backend.Category.tabControl.activeTab.onclick();
 	},
 
@@ -220,6 +220,44 @@ Backend.Category = {
         if(!success) alert(Backend.Category.messages._reorder_failed);
 		return success;
 	}
+    
+,
+    
+    /**
+     * Insert aray of categories into tree
+     * 
+     * @param array categories Array of category objects. Every category object should contain these elements
+     *     parent - Id of parent category
+     *     ID - Id o category
+     *     name - Category name in current language
+     *     options - Advanced options
+     *     childrenCount - Indicates that this node has N childs
+     */
+    addCategories: function(categories) 
+    {
+        $A(categories).each(function(category) {         
+            if(!category.parent || 0 == category.parent) 
+            {
+                category.options = "";
+                category.parent = 0;
+            }
+            else if(!category.option) 
+            {
+                category.options = "SELECT";
+            }
+
+            Backend.Category.treeBrowser.insertNewItem(category.parent,category.ID,category.name, null, 0, 0, 0, category.options, !category.childrenCount ? 0 : category.childrenCount);
+        });
+    },
+    
+    
+    loadBookmarkedCategory: function(categoryID) {
+        var match;
+        if(match = window.location.hash.match(/cat_(\d+)/)) {
+            Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + match[1]);
+        }
+
+    }
 }
 
 

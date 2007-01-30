@@ -521,6 +521,15 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 			throw $e;
 		}
 	}
+
+    public function getBranch() {
+        $filter = new ARSelectFilter();
+        $filter->setOrder(new ARFieldHandle("Category", "lft", 'ASC'));
+        $filter->setCondition(new OperatorCond(new ARFieldHandle("Category", "parentNodeID"), $this->getID(), "="));
+		
+		
+		$categoryList = Category::getRecordSet($filter);
+    }
 }
 
 ?>
