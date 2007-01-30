@@ -6,8 +6,6 @@
 
 </div>
 {form id="categoryForm_$categoryId" handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="Backend.Category.updateBranch($('categoryForm_$categoryId')); return false;"}
-	<fieldset id="mainFieldset">
-		<legend>{t _category_details}</legend>
 		<p>
 			<label for="name_{$categoryId}">{t _category_name}:</label>
 			{textfield name="name" id="name_$categoryId"}
@@ -61,6 +59,4 @@
 			<input type="submit" class="submit" id="submit" value="{t _save}"/> or
 			<a href="#" class="cancel" onClick="$('categoryForm_{$categoryId}').reset(); return false;">{t _cancel}</a>
 		</p>
-
-	</fieldset>
 {/form}

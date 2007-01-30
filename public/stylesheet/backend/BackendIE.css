@@ -23,6 +23,11 @@ input.submit {
 	padding-bottom: 0px;
 }
 
+p.radio label, p.checkbox label, label.checkbox, label.radio
+{
+    margin-top: 0px;
+}
+
 /***************************
 	Language
 ***************************/

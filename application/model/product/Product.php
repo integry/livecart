@@ -56,16 +56,16 @@ class Product extends MultilingualObject
 		$schema->registerField(new ARField("isBestSeller", ARBool::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance(4)));
 
-		$schema->registerField(new ArField("minimumQuantity", ARInteger::instance()));
+		$schema->registerField(new ArField("minimumQuantity", ARFloat::instance(8)));
 		$schema->registerField(new ArField("shippingSurchargeAmount", ARFloat::instance(8)));
 		$schema->registerField(new ArField("isSeparateShipment", ARBool::instance()));
 		$schema->registerField(new ArField("isFreeShipping", ARBool::instance()));
 
-		$schema->registerField(new ArField("shippingWidth", ARFloat::instance(8)));
-		$schema->registerField(new ArField("shippingHeight", ARFloat::instance(8)));
-		$schema->registerField(new ArField("shippingLength", ARFloat::instance(8)));
 		$schema->registerField(new ArField("shippingWeight", ARFloat::instance(8)));
 		$schema->registerField(new ArField("unitsType", ARInteger::instance()));
+
+		$schema->registerField(new ArField("stockCount", ARFloat::instance(8)));
+		$schema->registerField(new ArField("reservedCount", ARFloat::instance(8)));
 	}
 
 	/**

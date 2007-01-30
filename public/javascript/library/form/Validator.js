@@ -11,6 +11,12 @@ function validateForm(form)
 			continue;
 		}
 		var formElement = form[fieldName];
+		
+		if (!formElement)
+		{
+		  	console.log('Cannot find form element with name ' + fieldName);
+		}
+		
 		for (var functionName in  validator[fieldName])
 		{
 			if (functionName == "toJSONString")

@@ -16,20 +16,16 @@ class ProductController extends StoreManagementController
 {
 	public function index()
 	{
-		if($categoryID = (int)$this->request->getValue("id", false))
-		{
-    	    $category = Category::getInstanceByID($categoryID);
-    		$path = $this->getCategoryPathArray($category);
-    		$productList = $category->getProductArray();
-    
-    		$response = new ActionResponse();
-    		$response->setValue("path", $path);    
-    		$response->setValue("productList", $productList);
-    		$response->setValue("categoryID", $categoryID);
-    		return $response;
-		}
-		
-		
+		$category = Category::getInstanceByID($this->request->getValue("id"));
+		$path = $this->getCategoryPathArray($category);
+
+		$response = new ActionResponse();
+		$response->setValue("path", $path);
+
+		$productList = $category->getProductArray();
+		$response->setValue("productList", $productList);
+		$response->setValue("categoryID", $this->request->getValue("id"));
+		return $response;
 	}
 
 	public function autoComplete()
@@ -157,6 +153,11 @@ class ProductController extends StoreManagementController
 			}
 		}
 	
+		// inventory validation
+		$validator->addCheck('stockCount', new IsNumericCheck($this->translate('_err_stock_not_numeric')));		  
+		$validator->addCheck('stockCount', new MinValueCheck($this->translate('_err_stock_negative'), 0));	
+		$validator->addFilter('stockCount', new NumericFilter());		    
+
 		// price in base currency
 		$baseCurrency = Store::getInstance()->getDefaultCurrency()->getID();
 		$validator->addCheck('price_' . $baseCurrency, new IsNotEmptyCheck($this->translate('_err_price_empty')));		    		
@@ -170,8 +171,18 @@ class ProductController extends StoreManagementController
 			$validator->addFilter('price_' . $currency, new NumericFilter());		    
 		}
 			
-		$validator->addCheck('test', new IsNotEmptyCheck($this->translate('_err_empty')));		    
-	
+		// shipping related numeric field validations
+		$validator->addCheck('shippingSurcharge', new IsNumericCheck($this->translate('_err_surcharge_not_numeric')));		  
+		$validator->addFilter('shippingSurcharge', new NumericFilter());		    
+						
+		$validator->addCheck('shippingWeight', new IsNumericCheck($this->translate('_err_weight_not_numeric')));		  
+		$validator->addCheck('shippingWeight', new MinValueCheck($this->translate('_err_weight_negative'), 0));	
+		$validator->addFilter('shippingWeight', new NumericFilter());		    
+
+		$validator->addCheck('minimumQuantity', new IsNumericCheck($this->translate('_err_quantity_not_numeric')));		  
+		$validator->addCheck('minimumQuantity', new MinValueCheck($this->translate('_err_quantity_negative'), 0));	
+		$validator->addFilter('minimumQuantity', new NumericFilter());		    
+				
 		return $validator;
 	}
 
@@ -200,14 +211,6 @@ class ProductController extends StoreManagementController
 			$path[] = $node->getValueByLang('name', $defaultLang);
 		}
 		return $path;
-	}
-
-	public function test()
-	{
-		$product = ActiveRecordModel::getNewInstance("Product");
-		$product->category->set(ActiveTreeNode::getInstanceByID("Category", 53));
-
-		$product->save();
 	}
 }
 

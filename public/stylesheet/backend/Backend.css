@@ -636,8 +636,8 @@ fieldset
     padding: 1em;
     background: #f8f8f8;
     margin: auto 0;
-    border: 1px solid #ddd;
     margin-bottom: 10px;
+    border: 1px solid #DDD;
 }
 
 legend
@@ -646,6 +646,8 @@ legend
 	color: #30A0F9;
 	padding-left: 10px;
 	padding-right: 10px;
+	background-color: #CCC;
+	top: -22px; 
 }
 
 label
@@ -671,7 +673,7 @@ p.radio label, p.checkbox label
     margin-top: 3px;
 }
 
-label.checkbox
+label.checkbox, label.radio
 {
   	margin-top: 3px;
   	width: auto;
@@ -752,11 +754,6 @@ label, input, select, form .other, textarea
     margin-bottom: 5px;
 }
 
-label.radio
-{
-    width: 6em;
-}
-
 a.cancel 
 {
  	color: red;
@@ -764,7 +761,6 @@ a.cancel
 
 fieldset.error, div.error, fieldset.container
 {
- 	background-color: inherit;
 	padding: 0px;
 	margin: 0px;
 	position: static; 
@@ -808,9 +804,14 @@ input.wide
   	width: 35em;
 }
 
-input.money, input.number 
+input.money, input.number
 {
   	width: 5em;
+}
+
+input.date
+{
+  	width: 6em;  
 }
 
 /*************************** 
@@ -889,6 +890,7 @@ fieldset.group p
 .expandingSection
 {
 	background-color: #e0e0e0;
+	margin-bottom: 16px;
 }
 .expandingSection legend
 {

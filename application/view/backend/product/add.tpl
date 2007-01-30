@@ -25,7 +25,7 @@
 			{/foreach}
 
 			<div>
-				<a href="#" onclick="Backend.Product.multiValueSelect(this, true);">Select All</a> | <a href="#" onclick="Backend.Product.multiValueSelect(this, false);">Deselect All</a>
+				<a href="#" onclick="Backend.Product.multiValueSelect(this, true); return false;">Select All</a> | <a href="#" onclick="Backend.Product.multiValueSelect(this, false);  return false;">Deselect All</a>
 			</div>
 
 			</fieldset>
@@ -60,21 +60,20 @@
 		<p>			
 			<label for=""></label> {checkbox name="isEnabled" class="checkbox" value="on"}<label for="isEnabled"> Enabled (visible)</label>
 		</p>
-		<p>
 
 		<p class="required">
 			<label for="name">Product name:</label>
 			<fieldset class="error">
-			{textfield name="name" class="wide" onkeyup="Backend.Product.generateHandle(this);"}
-			{error for="name"}<div class="errorText">{$msg}</div>{/error}
+				{textfield name="name" class="wide" onkeyup="Backend.Product.generateHandle(this);"}
+				{error for="name"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>			
 		</p>
 
 		<p class="required">
 			<label for="sku">SKU (code):</label>
 			<fieldset class="error">
-			{textfield name="sku"}
-			{error for="sku"}<div class="errorText">{$msg}</div>{/error}
+				{textfield name="sku"}
+				{error for="sku"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>			
 		</p>
 
@@ -152,7 +151,10 @@
 		<legend>Inventory</legend>
 		<p class="required">
 			<label>Items in stock:</label>
-			{textfield name="stockCount" class="number" value="0"}
+			<fieldset class="error">			
+				{textfield name="stockCount" class="number"}
+				{error for="stockCount"}<div class="errorText">{$msg}</div>{/error}
+			</fieldset>
 		</p>
 	</fieldset>
 
@@ -160,12 +162,18 @@
 		<legend>Pricing</legend>
 		<p class="required">
 			<label>Price:</label>
-			{textfield name="price_$baseCurrency" class="money"} {$baseCurrency}
+			<fieldset class="error">			
+				{textfield name="price_$baseCurrency" class="money"} {$baseCurrency}
+				{error for="price_$baseCurrency"}<div class="errorText">{$msg}</div>{/error}
+			</fieldset>
 		</p>
 		{foreach from=$otherCurrencies item="currency"}
 		<p>
 			<label>Price:</label>
-			{textfield name="price_$currency" class="money"} {$currency}
+			<fieldset class="error">				
+				{textfield name="price_$currency" class="money"} {$currency}
+				{error for="price_$currency"}<div class="errorText">{$msg}</div>{/error}
+			</fieldset>
 		</p>		
 		{/foreach}
 	</fieldset>
@@ -175,17 +183,26 @@
 
 		<p style="color:red;">
 			<label>Shipping Weight:</label>
-			{textfield name="shippingWeight" class="number"}
+			<fieldset class="error">				
+				{textfield name="shippingWeight" class="number"}
+				{error for="shippingWeight"}<div class="errorText">{$msg}</div>{/error}
+			</fieldset>
 		</p>
 
 		<p>
 			<label>Minimum Order Quantity:</label>
-			{textfield name="minimumQuantity" class="number" value="0"}
+			<fieldset class="error">					
+				{textfield name="minimumQuantity" class="number" value="0"}
+				{error for="minimumQuantity"}<div class="errorText">{$msg}</div>{/error}
+			</fieldset>
 		</p>
 
 		<p>
 			<label>Shipping Surcharge:</label>
-			{textfield name="minimumQuantity" class="number"} {$baseCurrency}
+			<fieldset class="error">	
+				{textfield name="shippingSurcharge" class="number"} {$baseCurrency}
+				{error for="shippingSurcharge"}<div class="errorText">{$msg}</div>{/error}
+			</fieldset>
 		</p>
 
 		<p>			
@@ -239,7 +256,23 @@
 	</fieldset>
 	{/foreach}
 
-	<input type=submit class="submit" value="Save"> {t _or} <a href="#" onClick="return false;" class="cancel">{t _cancel}</a>
+	<fieldset>
+
+		<p>			
+			<label for="">After adding the product:</label> 
+			<fieldset class="container">
+				<div style="clear: both;">
+					{radio name="afterAdding" id="afAd_det" class="radio" value="det"}<label for="afAd_det" class="radio"> Continue with more detailed product configuration (add images, define related products, discounts, etc.)</label>
+				</div>
+				<div style="clear: both;">
+					{radio name="afterAdding" id="afAd_new" class="radio" value="new"}<label for="afAd_new" class="radio"> Add another product</label>
+				</div>
+			</fieldset>	
+		</p>	
+	
+		<input type=submit class="submit" value="Save"> {t _or} <a href="#" onClick="return false;" class="cancel">{t _cancel}</a>
+
+	</fieldset>
 	
 {/form}
 

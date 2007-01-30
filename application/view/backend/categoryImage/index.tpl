@@ -24,7 +24,6 @@
 			<label for="image">{t _image_file}</label>
 			<fieldset class="error">
 				{filefield name="image" id="image"}
-				<div></div>
 				<div class="errorText" style="display: none;"></div>
 			</fieldset>
 		</p>
