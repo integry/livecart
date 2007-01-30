@@ -259,10 +259,10 @@
 	<fieldset>
 
 		<p>			
-			<label for="">After adding the product:</label> 
+			<label for="">When the product is added:</label> 
 			<fieldset class="container">
 				<div style="clear: both;">
-					{radio name="afterAdding" id="afAd_det" class="radio" value="det"}<label for="afAd_det" class="radio"> Continue with more detailed product configuration (add images, define related products, discounts, etc.)</label>
+					{radio name="afterAdding" id="afAd_det" class="radio"}<label for="afAd_det" class="radio"> Continue with more detailed product configuration (add images, define related products, discounts, etc.)</label>
 				</div>
 				<div style="clear: both;">
 					{radio name="afterAdding" id="afAd_new" class="radio" value="new"}<label for="afAd_new" class="radio"> Add another product</label>
