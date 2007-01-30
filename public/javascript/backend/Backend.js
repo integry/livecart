@@ -482,7 +482,6 @@ PopupMenuHandler.prototype =
 		  	xPos = scrollX + 1;
 		}
 
-//		alert((yPos + height) + ' - ' + (this.getWindowHeight()));
 		if ((yPos + height) > (scrollY + this.getWindowHeight()))
 		{
 			yPos = scrollY + this.getWindowHeight() - height - 40;

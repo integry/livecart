@@ -243,7 +243,7 @@ Backend.Category = {
             }
             else if(!category.option) 
             {
-                category.options = "SELECT";
+                category.options = "";
             }
 
             Backend.Category.treeBrowser.insertNewItem(category.parent,category.ID,category.name, null, 0, 0, 0, category.options, !category.childrenCount ? 0 : category.childrenCount);
@@ -251,12 +251,26 @@ Backend.Category = {
     },
     
     
-    loadBookmarkedCategory: function(categoryID) {
+    loadBookmarkedCategory: function(categoryID) 
+    {
         var match;
-        if(match = window.location.hash.match(/cat_(\d+)/)) {
-            Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + match[1]);
+        if(match = window.location.hash.match(/cat_(\d+)/)) 
+        {
+            var alreadyLoaded = false;
+            $A(Backend.Category.treeBrowser._globalIdStorage).each(function(id) 
+            {
+                if(id == match[1]) 
+                {
+                    alreadyLoaded = true;
+                    throw $break;
+                }
+            });
+        
+            if(!alreadyLoaded) 
+            {
+                Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + match[1]);
+            }
         }
-
     }
 }
 

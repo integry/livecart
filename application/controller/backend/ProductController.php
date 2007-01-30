@@ -16,16 +16,20 @@ class ProductController extends StoreManagementController
 {
 	public function index()
 	{
-		$category = Category::getInstanceByID($this->request->getValue("id"));
-		$path = $this->getCategoryPathArray($category);
-
-		$response = new ActionResponse();
-		$response->setValue("path", $path);
-
-		$productList = $category->getProductArray();
-		$response->setValue("productList", $productList);
-		$response->setValue("categoryID", $this->request->getValue("id"));
-		return $response;
+		if($categoryID = (int)$this->request->getValue("id", false))
+		{
+    	    $category = Category::getInstanceByID($categoryID);
+    		$path = $this->getCategoryPathArray($category);
+    		$productList = $category->getProductArray();
+    
+    		$response = new ActionResponse();
+    		$response->setValue("path", $path);    
+    		$response->setValue("productList", $productList);
+    		$response->setValue("categoryID", $categoryID);
+    		return $response;
+		}
+		
+		
 	}
 
 	public function autoComplete()
