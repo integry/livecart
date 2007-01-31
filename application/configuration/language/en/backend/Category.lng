@@ -40,6 +40,8 @@ _succsessfully_saved=Details were successfuly updated!
 _new_category=New Category
 _reorder_failed=Could not move category
 _confirm_category_remove=Are you sure you want to remove this category?
+_move_category_up=Move category up
+_move_category_down=Move category down
 
 #form
 _category_name=Category Name

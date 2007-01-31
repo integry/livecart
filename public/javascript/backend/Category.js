@@ -437,13 +437,13 @@ CategoryTabControl.prototype = {
 
 	loadTabContent: function(tabId, categoryId)
 	{
-		var containerId = this.getContainerId(tabId, categoryId);
+        var containerId = this.getContainerId(tabId, categoryId);
 
 		if ($(containerId) == undefined)
 		{
 			new Insertion.Bottom(this.sectionContainerName, '<div id="' + containerId + '"></div>');
 		}
-		if (Element.empty(containerId))
+		if (categoryId != "" && Element.empty(containerId))
 		{
 			new LiveCart.AjaxUpdater(this.getTabUrl(tabId, categoryId),
 									 this.getContainerId(tabId, categoryId),
@@ -502,7 +502,7 @@ CategoryTabControl.prototype = {
     
     updateTabItemsCount: function(categoryID)
     {     
-        if(!CategoryTabControl.prototype.tabItemsCounts[categoryID])
+        if(categoryID != "" && !CategoryTabControl.prototype.tabItemsCounts[categoryID])
         {
             new Ajax.Request(
             Backend.Category.getUrlItemsInTabsCount(categoryID), 
