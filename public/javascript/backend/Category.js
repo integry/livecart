@@ -90,7 +90,7 @@ Backend.Category = {
 		$('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode.id = 'cat_' + categoryId;
 			
 		// and register browser history event to enable backwar/forward navigation
-		Backend.ajaxNav.add('cat_' + categoryId);
+		// Backend.ajaxNav.add('cat_' + categoryId);
 		Backend.Category.tabControl.activeTab.onclick();
 	},
 

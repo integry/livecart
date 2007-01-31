@@ -326,7 +326,7 @@ window.dhtmlHistory = {
       // call our listener      
 	  if (this.listener)
 	  {
-//		  this.listener(newHash, historyData);  
+		  this.listener(newHash, historyData);  
 	  }	  
    },
    
