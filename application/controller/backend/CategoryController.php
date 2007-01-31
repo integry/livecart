@@ -73,9 +73,12 @@ class CategoryController extends StoreManagementController
 		$parent = Category::getInstanceByID((int)$this->request->getValue("id"));
 		
 		$categoryNode = Category::getNewInstance($parent);
-		
-		$categoryNode->setValueByLang("name", $this->store->getDefaultLanguageCode(), $this->translate("_new_category"));
+		$categoryNode->setValueByLang("name", $this->store->getDefaultLanguageCode(), 'dump' );
 		$categoryNode->save();
+		
+		$categoryNode->setValueByLang("name", $this->store->getDefaultLanguageCode(), $this->translate("_new_category") . " " . $categoryNode->getID() );
+		$categoryNode->setFieldValue("handle", "new.category." . $categoryNode->getID() );
+        $categoryNode->save();
 
 		try 
 		{
@@ -151,7 +154,8 @@ class CategoryController extends StoreManagementController
 		$status = false;
 		try 
 		{
-		    $status = $targetNode->moveTo($parentNode);
+		    $targetNode->moveTo($parentNode);
+		    $status = true;
 		} 
 		catch(Exception $e){}
 		
@@ -207,7 +211,6 @@ class CategoryController extends StoreManagementController
 	    if(!in_array($rootID, array(Category::ROOT_ID, 0))) 
 	    {
 	       $category = Category::getInstanceByID($rootID);
-	        
 		   $xmlResponse->setValue("rootID", $rootID);
            $xmlResponse->setValue("categoryList", $category->getChildNodes(false, true)->toArray($this->store->getDefaultLanguageCode()));
 	    }
@@ -223,7 +226,7 @@ class CategoryController extends StoreManagementController
 	    try 
 	    {
     	    $categoriesList = Category::getInstanceByID($targetID)->getPathBranchesArray();
-    	    if(count($categoriesList) > 0) 
+    	    if(count($categoriesList) > 0 && isset($categoriesList['children'][0]['parent'])) 
     	    {
         	    $xmlResponse->setValue("rootID", $categoriesList['children'][0]['parent']);
         	    $xmlResponse->setValue("categoryList", $categoriesList);

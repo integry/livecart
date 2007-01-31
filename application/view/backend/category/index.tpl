@@ -41,10 +41,10 @@
 	<div id="categoryBrowser">
 	</div>
 	<ul id="categoryBrowserActions">
-		<li><a href="javascript:Backend.Category.createNewBranch();">{t _create_subcategory}</a></li>
-		<li><a href="#" onclick="if (confirm('{t _confirm_category_remove|addslashes}')) Backend.Category.removeBranch(); return false;">{t _remove_category}</a></li>
-		<li><a href="#">{t _move_category_up}</a></li>
-		<li><a href="#">{t _move_category_down}</a></li>
+		<li><a href="#" id="createNewCategoryLink">{t _create_subcategory}</a></li>
+		<li><a href="#" id="removeCategoryLink">{t _remove_category}</a></li>
+		<li><a href="#" id="moveCategoryUp">{t _move_category_up}</a></li>
+		<li><a href="#" id="moveCategoryDown">{t _move_category_down}</a></li>
 	</ul>
 </div>
 
@@ -80,6 +80,7 @@
     
     Backend.Category.messages = {literal}{}{/literal};
     Backend.Category.messages._reorder_failed = '{t _reorder_failed|addslashes}';
+    Backend.Category.messages._confirm_category_remove = '{t _confirm_category_remove|addslashes}';
 
 	Backend.Category.init();    
 	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading); 

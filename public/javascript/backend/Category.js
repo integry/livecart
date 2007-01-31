@@ -26,7 +26,8 @@ Backend.Category = {
 	init: function()
 	{
 		this.initCategoryBrowser();
-		this.initTabs();
+        this.initTabs();
+		this.initTreeControls();
 	},
 
 	initPage: function()
@@ -51,8 +52,34 @@ Backend.Category = {
 
 		var treeNode = $('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode;
 		treeNode.onclick();	
-		Backend.ajaxNav.add('cat_' + treeNode.parentObject.id + '#tabProducts');	  
+		Backend.ajaxNav.add('cat_' + treeNode.parentObject.id + '#tabProducts');
 	},
+    
+    initTreeControls: function() 
+    {
+        Event.observe($("createNewCategoryLink"), "click", function(e) {
+            Event.stop(e);
+            Backend.Category.createNewBranch(); 
+        });
+        
+        Event.observe($("removeCategoryLink"), "click", function(e) {
+            Event.stop(e);
+            if (confirm(Backend.Category.messages._confirm_category_remove)) 
+            {
+                Backend.Category.removeBranch(); 
+            }
+        });
+        
+        Event.observe($("moveCategoryUp"), "click", function(e) {
+            Event.stop(e);
+            console.info("move up");
+        });
+        
+        Event.observe($("moveCategoryDown"), "click", function(e) {
+            Event.stop(e);
+            console.info("move down");
+        });
+    },
 
 	/**
 	 * Builds category tree browser object (dhtmlxTree) and initializes its params

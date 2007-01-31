@@ -370,8 +370,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	    
 		$t_r = $this->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
 		$t_l = $this->getFieldValue(self::LEFT_NODE_FIELD_NAME);
-	    
-        return $t_r - $t_l + 1;
+        return abs($t_r - $t_l) + 1;
 	}
 
 	/**
@@ -382,7 +381,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	 * 
 	 * @throws Exception If failed to commit the transaction
 	 */
-	public function moveTo(ActiveTreeNode $parentNode)
+	public function moveTo(ActiveTreeNode $parentNode, ActiveTreeNode $beforeNode=null)
 	{
         $this->load();
 	    if($this->getFieldValue(self::PARENT_NODE_FIELD_NAME)->getID() == $parentNode->getID()) return true;
@@ -408,16 +407,26 @@ class ActiveTreeNode extends ActiveRecordModel
     		// Step #2: Change target node left and right values to negotive
     		$updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME.", ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME." WHERE ".self::LEFT_NODE_FIELD_NAME." BETWEEN $t_l AND $t_r";
     		
-    		// Step #3: No that there is no target node decrement all left and right values after target node position
+    		// Step #3: Now that there is no target node decrement all left and right values after target node position
     		$updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." - $width WHERE ".self::RIGHT_NODE_FIELD_NAME." > $t_r";
             $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." - $width WHERE ".self::LEFT_NODE_FIELD_NAME." > $t_r";
             
             // Step #4: Make free space for new node to insert
-            $updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." + $width WHERE ".self::RIGHT_NODE_FIELD_NAME." > " . ($p_l + $s * $width);
-            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." + $width WHERE ".self::LEFT_NODE_FIELD_NAME." > " . ($p_l + $s * $width);
+            $updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." + $width WHERE ".self::RIGHT_NODE_FIELD_NAME." >= " . ($p_r + $s * $width);
+            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." + $width WHERE ".self::LEFT_NODE_FIELD_NAME." >= " . ($p_r + $s * $width);
             
             // Step #5: Change target node left and right values back to positive and put them to their place
+            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME."+(" . ($p_r - $t_r + 1 + $s * $width) . "), ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME."+(" . ($p_r - $t_r + 1 + $s * $width) . ") WHERE ".self::LEFT_NODE_FIELD_NAME." < 0";
+
+            /*
+    		$updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME.", ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME." WHERE ".self::LEFT_NODE_FIELD_NAME." BETWEEN $t_l AND $t_r";
+    		$updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." - $width WHERE ".self::RIGHT_NODE_FIELD_NAME." > $t_r";
+            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." - $width WHERE ".self::LEFT_NODE_FIELD_NAME." > $t_r";
+            $updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." + $width WHERE ".self::RIGHT_NODE_FIELD_NAME." > " . ($p_l + $s * $width);
+            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." + $width WHERE ".self::LEFT_NODE_FIELD_NAME." > " . ($p_l + $s * $width);
             $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME."+(" . ($p_l - $t_l + 1 + $s * $width) . "), ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME."+(" . ($p_l - $t_l + 1 + $s * $width) . ") WHERE ".self::LEFT_NODE_FIELD_NAME." < 0";
+            */
+            
             
 			foreach($updates as $update)
 			{
