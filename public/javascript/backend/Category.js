@@ -73,7 +73,6 @@ Backend.Category = {
         Event.observe($("moveCategoryUp"), "click", function(e) {
             Event.stop(e);
             // Backend.Category.treeBrowser.moveItem(Backend.Category.activeCategoryId, 'up');
-            console.info("move up");
         });
         
         Event.observe($("moveCategoryDown"), "click", function(e) {
