@@ -220,10 +220,17 @@ class CategoryController extends StoreManagementController
 	    $xmlResponse = new XMLResponse();
 	    $targetID = (int)$this->request->getValue("id");
 	    
-	    $categoriesList = Category::getInstanceByID($targetID)->getPathBranchesArray();
-	    if(count($categoriesList) > 0) {
-    	    $xmlResponse->setValue("rootID", $categoriesList['children'][0]['parent']);
-    	    $xmlResponse->setValue("categoryList", $categoriesList);
+	    try 
+	    {
+    	    $categoriesList = Category::getInstanceByID($targetID)->getPathBranchesArray();
+    	    if(count($categoriesList) > 0) 
+    	    {
+        	    $xmlResponse->setValue("rootID", $categoriesList['children'][0]['parent']);
+        	    $xmlResponse->setValue("categoryList", $categoriesList);
+    	    }
+	    }
+	    catch(Exception $e) 
+	    {
 	    }
 	    
 	    $xmlResponse->setValue("targetID", $targetID);

@@ -1,10 +1,6 @@
 {literal}
 <script type="text/javascript">
 //<[!CDATA[
-    /**
-     * Create spec field prototype. Some fields are always the same
-     * so we define them in
-     */
     Backend.Filter.prototype.links = {};
     Backend.Filter.prototype.links.deleteGroup = {/literal}'{link controller=backend.filter action=delete}/'{literal};
     Backend.Filter.prototype.links.editGroup = {/literal}'{link controller=backend.filter action=item}/'{literal};

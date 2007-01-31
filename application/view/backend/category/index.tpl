@@ -40,11 +40,10 @@
 <div id="catgegoryContainer">
 	<div id="categoryBrowser">
 	</div>
-	<div id="categoryBrowserActions">
-		- <a href="javascript:Backend.Category.createNewBranch();">{t _create_subcategory}</a>
-		<br/>
-		- <a href="#" onclick="if (confirm('{t _confirm_category_remove|addslashes}')) Backend.Category.removeBranch(); return false;">{t _remove_category}</a>
-	</div>
+	<ul id="categoryBrowserActions">
+		<li><a href="javascript:Backend.Category.createNewBranch();">{t _create_subcategory}</a></li>
+		<li><a href="#" onclick="if (confirm('{t _confirm_category_remove|addslashes}')) Backend.Category.removeBranch(); return false;">{t _remove_category}</a></li>
+	</ul>
 </div>
 
 <div id="activeCategoryPath"></div>

@@ -59,8 +59,8 @@ window.dhtmlHistory = {
       // should not ignore it, fire an event
       // to our new listener now
       if (this.fireOnNewListener == true) {
-         this.fireHistoryEvent(this.currentLocation);
-         this.fireOnNewListener = false;
+         //this.fireHistoryEvent(this.currentLocation);
+         //this.fireOnNewListener = false;
       }
    },
    

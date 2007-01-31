@@ -82,10 +82,10 @@
     <a href="#new" id="specField_item_new_{$categoryID}_show">{t _add_new_field}</a>
     <div id="specField_item_new_{$categoryID}_form" style="display: none;">
         <script type="text/javascript">
-            var newSpecFieldForm = new Backend.SpecField('{json array=$specFieldsList}');
-            newSpecFieldForm.addField(null, "new" + Backend.SpecField.prototype.countNewFilters, true);
-            newSpecFieldForm.bindDefaultFields();
-            Backend.SpecField.prototype.countNewFilters++;
+           var newSpecFieldForm = new Backend.SpecField('{json array=$specFieldsList}');
+           newSpecFieldForm.addField(null, "new" + Backend.SpecField.prototype.countNewFilters, true);
+           newSpecFieldForm.bindDefaultFields();
+           Backend.SpecField.prototype.countNewFilters++;
         </script>
     </div>
 </div>

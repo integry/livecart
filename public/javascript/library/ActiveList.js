@@ -182,10 +182,13 @@ ActiveList.prototype = {
        
        if(!ActiveList.prototype.activeListsUsers[ulElement.id]) 
        {
-           this.activeListsUsers[ulElement.id] = new ActiveList(ulElement.id, callbacks, messages);
+           console.info('init ' + ulElement.id);
+           ActiveList.prototype.activeListsUsers[ulElement.id] = new ActiveList(ulElement.id, callbacks, messages);
        }
        
-       return this.activeListsUsers[ulElement.id];
+       console.info('instance ' + ulElement.id);
+       
+       return ActiveList.prototype.activeListsUsers[ulElement.id];
 
     },
     
