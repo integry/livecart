@@ -6,6 +6,8 @@ require_once("init.php");
 ClassLoader::import("application.model.category.*");
 ClassLoader::import("application.model.product.*");
 
+ActiveRecordModel::beginTransaction();
+
 // create a new category
 $productCategory = Category::getNewInstance(Category::getRootNode());
 $productCategory->setValueByLang("name", "en", "Demo category branch");
@@ -31,8 +33,14 @@ $textField->setValueByLang('name', 'en', 'Here goes some free text');
 $textField->setValueByLang('name', 'lt', 'Cia bet ka galima irasyt');
 $textField->save();
 
+$product->setAttributeValue($numField, 666);
+$product->setAttributeValue($textField, array('en' => 'We`re testing here'));
+
 // assign attribute values for product
-$product->setSpecFieldValue($numField->getID(), 666);
+$product->save();
+
+// modify an attribute
+$product->setAttributeValue($numField, 777);
 $product->save();
 
 /*
@@ -43,6 +51,8 @@ $filterSet = Filter::getRecordSetArray(new ARSelectFilter());
 
 print_r($filterSet);
 */
+
+ActiveRecordModel::commit();
 
 echo "OK\n<br/>";
 echo "</pre>";

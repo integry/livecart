@@ -12,96 +12,90 @@ ClassLoader::import("application.model.product.SpecificationItem");
 class ProductSpecification
 {
 	private $product = null;
+	
+	private $attributes = array();
+	
+	private $removedAttributes = array();
 
-	public function __construct(Product $product)
+	public function __construct(Product $product, $specificationDataArray)
 	{
 		$this->product = $product;
-		$this->product->load();
+		$this->loadSpecificationData($specificationDataArray);
 	}
 
 	/**
-	 * Sets specification property by mapping product, specification field, and
+	 * Sets specification attribute value by mapping product, specification field, and
 	 * assigned value to one record (atomic item)
 	 *
-	 * @param SpecField $field
-	 * @param SpecFieldValue $value
+	 * @param Specification $specification Specification item value
 	 */
-	public function setProperty(SpecField $field, SpecFieldValue $value)
+	public function setAttribute(Specification $specification)
 	{
-		$specItem = ActiveRecordModel::getNewInstance("SpecificationItem");
-
-		$specItem->product = $this->product;
-		$specItem->specFieldValue = $value;
-		$specItem->specField = $field;
-
-		$specItem->save();
+		$this->attributes[$specification->getSpecField()->getID()] = $specification;
 	}
 
 	/**
 	 * Removes persisted product specification property
 	 *
 	 */
-	public function removeProperty(SpecField $field)
+	public function removeAttribute(SpecField $field)
 	{
+		$this->removedAttributes[$field->getID()] = $this->attributes[$field->getID()];
+		unset($this->attributes[$field->getID()]);
 	}
 
-	public function removePropertyValue(SpecFieldValue $value)
+	public function isAttributeSet(SpecField $field)
 	{
+		return isset($this->attributes[$field->getID()]);  
+	}
+	
+	public function getAttribute(SpecField $field)
+	{
+		if (!$this->isAttributeSet($field))
+		{
+		  	$this->attributes[$field->getID()] = $field->getNewSpecificationInstance($this->product, null);
+		  	echo 'creating new <Br>';
+		}
+		else
+		{
+		  	echo 'restoring <Br>';				  
+		}
+
+		return $this->attributes[$field->getID()];  	
 	}
 
-	private function loadSpecificationItems()
+	public function save()
 	{
-		$specItemSet = ActiveRecordModel::getRecordSet("SpecificationItem");
-	}
+		foreach ($this->removedAttributes as $attribute)
+		{
+		  	$attribute->delete();
+		}  
 
-	public function getRelatedProductArray()
-	{
-	}
-
-	public function getRelatedProductSet()
-	{
+		foreach ($this->attributes as $attribute)
+		{
+		  	echo '<hr>saving..<Br>';
+		  	$attribute->save();
+		  	echo (int)$attribute->value->isModified() . '<Br>';
+		}  
 	}
 
 	/**
-	 * Gets an array of properties assigned to a product (specification array)
-	 *
-	 * @return array
+	 * @todo implement
 	 */
-	public function getSpecificationDataArray()
-	{
-		$filter = new ARSelectFilter();
-		$cond = new OperatorCond(new ARFieldHandle("Product", "ID"), $this->product->getID(), "=");
-		$filter->setCondition($cond);
-		$filter->setOrder(new ARFieldHandle("SpecField", "position"));
-
-		$specDataArray = ActiveRecordModel::getRecordSetArray("SpecificationItem", $filter, SpecificationItem::LOAD_REFERENCES);
-		return $specDataArray;
-	}
-
-	/**
-	 * Gets a record set of properties assigned to a product (specification set)
-	 *
-	 */
-	public function getSpecificationDataSet()
-	{
-		$itemSet = ActiveRecordModel::getRecordSet("SpecificationItem", $this->getSpecificationFilter(), SpecificationItem::LOAD_REFERENCES);
-		return $itemSet;
-	}
-
-	private function getSpecificationFilter()
-	{
-		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle("SpecField", "position"));
-		return $filter;
-	}
-
-	public function load()
-	{
-	}
-
 	public function toArray()
 	{
+
 	}
+
+	private function loadSpecificationData($specificationDataArray)
+	{
+		foreach ($specificationDataArray as $specFieldID => $value)
+		{
+		  	$specField = SpecField::getInstanceByID($specFieldID);
+		  	$specification = call_user_func(array($specField, 'getNewSpecificationInstance'), $this->product, $value);
+		  	$this->attributes[$specField->getID()] = $specification;
+		}		  
+	}	
 }
 
 ?>

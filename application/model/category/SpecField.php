@@ -4,6 +4,8 @@ ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.category.Category");
 ClassLoader::import("application.model.category.SpecFieldValue");
 
+ClassLoader::import('application.model.specification.*');
+
 /**
  * Specification field class
  *
@@ -191,6 +193,28 @@ class SpecField extends MultilingualObject
 		return $filterGroupsArray;
 	}
 
+	/**
+	 *  Creates an instance of specification field value depending of field type (a factory)
+	 *  
+	 *	For example, if the field is designated for storing numeric values, 
+	 *  an instance of SpecificationNumericValue will be returned.
+	 *
+	 *  @param Product $product Product instance
+	 *  @value mixed Field value (it may be a number, string, date or SpecFieldValue instance depending on field type)
+	 */
+	public function getNewSpecificationInstance(Product $product, $value)
+	{
+		$specValueClass = $this->getValueTableName();
+		if ('SpecificationItem' == $specValueClass)
+		{
+			if ($this->isMultiValue->get())
+			{
+				$specValueClass = 'MultiValueSpecificationItem';	  	
+			}
+		}
+		
+		return call_user_func(array($specValueClass, 'getNewInstance'), $product, $this, $value);
+	}
 
 	/**
 	 * This method is checking if SpecField record with passed id exist in the database

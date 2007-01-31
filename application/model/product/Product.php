@@ -13,26 +13,14 @@ class Product extends MultilingualObject
 {
 	private static $multilingualFields = array("name", "shortDescription", "longDescription");
 
+	private $specificationInstance = null;
+
 	/**
 	 *  An array containing specification field values (specFieldID => value, specFieldID => value)	 
 	 *
 	 *	@var array
 	 */
-	protected $specFieldData = array();
-
-	/**
-	 *  Spec field ID's which values have been modified and must be saved (updated)
-	 *
-	 *	@var array
-	 */
-	protected $modifiedSpecFieldValues = array();
-
-	/**
-	 *  Spec field ID's which values have been newly added and must be inserted in database
-	 *
-	 *	@var array
-	 */
-	protected $addedSpecFieldValues = array();
+	private $specFieldData = array();
 
 	public static function defineSchema($className = __CLASS__)
 	{
@@ -153,6 +141,13 @@ class Product extends MultilingualObject
 			ActiveRecordModel::rollback();
 			throw $e;
 		}
+	}
+
+	public function save()
+	{
+		parent::save();
+
+		$this->getSpecification()->save();
 	}
 
 	/**
@@ -332,14 +327,41 @@ class Product extends MultilingualObject
 	}
 
 	/**
+	 * Sets specification attribute
+	 *
+	 * @param Specification $specification Specification item value
+	 */
+	public function setAttribute(Specification $specification)
+	{
+		$this->getSpecification()->setAttribute($specification);
+	}
+
+	/**
+	 * Sets specification attribute value
+	 *
+	 * @param SpecField $field Specification field instance
+	 * @param unknown $value Attribute value
+	 */
+	public function setAttributeValue(SpecField $field, $value)
+	{
+		$specification = $this->getSpecification()->getAttribute($field);
+		$specification->setValue($value);
+		$this->setAttribute($specification);
+	}
+
+	/**
 	 * Gets a product specification instance
 	 *
 	 * @return ProductSpecification
 	 */
 	public function getSpecification()
 	{
-		$specification = new ProductSpecification($this);
-		return $specification;
+		if (!$this->specificationInstance)
+		{
+			$this->specificationInstance = new ProductSpecification($this, $this->specFieldData);
+		}
+		
+		return $this->specificationInstance;
 	}
 
 }
