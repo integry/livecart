@@ -150,11 +150,12 @@ class CategoryController extends StoreManagementController
 	{
 		$targetNode = Category::getInstanceByID((int)$this->request->getValue("id"));
 		$parentNode = Category::getInstanceByID((int)$this->request->getValue("parentId"));
+		$beforeNode = Category::getInstanceByID((int)$this->request->getValue("beforeId"));
 		
 		$status = false;
 		try 
 		{
-		    $targetNode->moveTo($parentNode);
+		    $targetNode->moveTo($parentNode, $beforeNode);
 		    $status = true;
 		} 
 		catch(Exception $e){}
