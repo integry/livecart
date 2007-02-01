@@ -1057,7 +1057,7 @@ Backend.Filter.prototype = {
         }
         catch (e)
         {
-            // New item has no pr06r3s5 indicator
+            ActiveForm.prototype.offProgress(this.nodes.form);
         }
 
         this.clearAllFeedBack();
@@ -1147,7 +1147,7 @@ Backend.Filter.prototype = {
         }
         catch (e)
         {
-            // new item has no progress indicator
+            ActiveForm.prototype.offProgress(this.nodes.form);
         }
         
     },

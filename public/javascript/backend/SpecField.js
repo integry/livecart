@@ -111,10 +111,7 @@ Backend.SpecField.prototype = {
 	{
 	    var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ? ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
         root.innerHTML = '';
-        $H(this).each(function(el)
-        {
-            el = false;
-        });
+        $H(this).each(function(el) { el = false; });
 	    this.initialize(specFieldJson, hash);
 	    this.clearAllFeedBack();
 	},
@@ -507,7 +504,6 @@ Backend.SpecField.prototype = {
 		{
 			$H(this.values).each(function(value) {
 				self.addField(value.value, value.key);
-
 			});
 
             this.bindDefaultFields();
@@ -949,7 +945,8 @@ Backend.SpecField.prototype = {
 		}
 		catch (e)
 		{
-		    // New item has no pr06r3s5 indicator
+		    ActiveForm.prototype.onProgress(this.nodes.form);
+            // New item has no pr06r3s5 indicator
 		}
         
 		this.clearAllFeedBack();
@@ -979,8 +976,6 @@ Backend.SpecField.prototype = {
 
         var jsonResponse = eval("("+jsonResponseString+")");
         
-		// Toggle progress won't work on new form
-
         if(jsonResponse.status == 'success')
         {
             Form.backup(this.nodes.form);
@@ -1044,7 +1039,7 @@ Backend.SpecField.prototype = {
 		}
 		catch (e)
 		{
-		    // new item has no progress indicator
+            ActiveForm.prototype.offProgress(this.nodes.form);
 		}
     },
 

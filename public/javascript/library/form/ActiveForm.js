@@ -82,5 +82,29 @@ ActiveForm.prototype = {
         }
 
         feedback.style.visibility = 'visible';
+    },
+    
+    onProgress: function(form) 
+    {
+        var progress = document.getElementsByClassName('activeForm_progress', $(form))[0];
+        
+        var img = progress.getElementsByTagName("img")[0];
+        if(!img) 
+        {
+            img = document.createElement("img");
+            img.src = 'image/indicator.gif';
+            progress.style.paddingRight = "inherit";
+            progress.appendChild(img);
+        }
+        
+        img.style.visibility = "visible";
+    },
+    
+    offProgress: function(form) 
+    {
+        var progress = document.getElementsByClassName('activeForm_progress', $(form))[0];
+        
+        var img = progress.getElementsByTagName("img")[0];      
+        if(img) img.style.visibility = "hidden";
     }
 }

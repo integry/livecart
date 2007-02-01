@@ -961,3 +961,7 @@ fieldset.group p
     background-color: white;
 } 
 
+.activeForm_progress {
+    padding-right: 20px;
+}
+
