@@ -271,7 +271,7 @@ class SpecField extends MultilingualObject
         {
             if(preg_match('/^new/', $key))
             {
-                $specFieldValues = SpecFieldValue::getNewInstance();
+                $specFieldValues = SpecFieldValue::getNewInstance($this);
                 $specFieldValues->setFieldValue('position', 100000);
             }
             else
@@ -288,7 +288,7 @@ class SpecField extends MultilingualObject
                 $specFieldValues->setLanguageField('value', @array_map($htmlspecialcharsUtf_8, $value), array_keys($languages));
             }
 
-            $specFieldValues->setFieldValue('specFieldID', $this);
+//            $specFieldValues->setFieldValue('specFieldID', $this);
             $specFieldValues->setFieldValue('position', $position);
 
             $specFieldValues->save();

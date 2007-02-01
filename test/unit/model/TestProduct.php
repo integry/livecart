@@ -43,6 +43,21 @@ $product->save();
 $product->setAttributeValue($numField, 777);
 $product->save();
 
+// create a single value select attribute
+$singleSel = SpecField::getNewInstance($productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SELECTOR);
+$singleSel->handle->set('single.sel');
+$singleSel->save();
+
+// create some numeric values for the select
+$value1 = SpecFieldValue::getNewInstance($singleSel);
+$value1->value->set('20');
+$value1->save();
+
+$value2 = SpecFieldValue::getNewInstance($singleSel);
+$value2->value->set('30');
+$value2->save();
+
+
 /*
 $productSet = ActiveRecord::getRecordSet("Product", new ARSelectFilter());
 print_r($productSet->toArray());
@@ -53,6 +68,7 @@ print_r($filterSet);
 */
 
 ActiveRecordModel::commit();
+//ActiveRecordModel::rollback();
 
 echo "OK\n<br/>";
 echo "</pre>";
