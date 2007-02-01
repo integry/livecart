@@ -212,7 +212,7 @@ class SpecField extends MultilingualObject
 				$specValueClass = 'MultiValueSpecificationItem';	  	
 			}
 		}
-		
+echo '<b>'		. $specValueClass . '</b>';
 		return call_user_func(array($specValueClass, 'getNewInstance'), $product, $this, $value);
 	}
 
@@ -230,7 +230,7 @@ class SpecField extends MultilingualObject
 	/**
 	 * Delete spec field from database
 	 */
-	public static function delete($id)
+	public static function deleteById($id)
 	{
 	    return parent::deleteByID(__CLASS__, (int)$id);
 	}

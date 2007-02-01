@@ -2,7 +2,6 @@
 
 ClassLoader::import("application.model.system.Language");
 ClassLoader::import("application.model.system.MultilingualObject");
-ClassLoader::import("application.model.product.SpecificationItem");
 
 /**
  * Store product (item)
@@ -329,9 +328,9 @@ class Product extends MultilingualObject
 	/**
 	 * Sets specification attribute
 	 *
-	 * @param Specification $specification Specification item value
+	 * @param iSpecification $specification Specification item value
 	 */
-	public function setAttribute(Specification $specification)
+	public function setAttribute(iSpecification $specification)
 	{
 		$this->getSpecification()->setAttribute($specification);
 	}
@@ -340,14 +339,44 @@ class Product extends MultilingualObject
 	 * Sets specification attribute value
 	 *
 	 * @param SpecField $field Specification field instance
-	 * @param unknown $value Attribute value
+	 * @param mixed $value Attribute value
 	 */
 	public function setAttributeValue(SpecField $field, $value)
 	{
+		if (!is_null($value))
+		{
+			$specification = $this->getSpecification()->getAttribute($field, $value);
+			$specification->setValue($value);
+			$this->setAttribute($specification);		  
+		}
+		else
+		{
+			$this->getSpecification()->removeAttribute($field);	
+		}		
+	}
+
+	/**
+	 * Sets specification String attribute value by language
+	 *
+	 * @param SpecField $field Specification field instance
+	 * @param unknown $value Attribute value
+	 */
+	public function setAttributeValueByLang(SpecField $field, $langCode, $value)
+	{
 		$specification = $this->getSpecification()->getAttribute($field);
-		$specification->setValue($value);
+		$specification->setValueByLang($langCode, $value);
 		$this->setAttribute($specification);
 	}
+
+	/**
+	 * Removes persisted product specification property
+	 *
+	 *	@param SpecField $field SpecField instance
+	 */
+	public function removeAttribute(SpecField $field)
+	{
+		$this->getSpecification()->removeAttribute($field);	  	
+	}	
 
 	/**
 	 * Gets a product specification instance

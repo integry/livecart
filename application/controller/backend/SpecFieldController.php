@@ -240,7 +240,7 @@ class SpecFieldController extends StoreManagementController
     {
         if($id = $this->request->getValue("id", false))
         {
-            SpecField::delete($id);
+            SpecField::deleteById($id);
             return new JSONResponse(array('status' => 'success'));
         }
         else
@@ -268,7 +268,7 @@ class SpecFieldController extends StoreManagementController
     {
         if($id = $this->request->getValue("id", false))
         {
-            SpecFieldValue::delete($id);
+            SpecFieldValue::deleteById($id);
             return new JSONResponse(array('status' => 'success'));
         }
         else

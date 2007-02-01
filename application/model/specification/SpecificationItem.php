@@ -11,7 +11,7 @@ ClassLoader::import("application.model.product.*");
  * @author Saulius Rupainis <saulius@integry.net>
  * @package application.model.product
  */
-class SpecificationItem extends ActiveRecordModel
+class SpecificationItem extends Specification
 {
 	public static function defineSchema($className = __CLASS__)
 	{
@@ -26,11 +26,22 @@ class SpecificationItem extends ActiveRecordModel
 	public static function getNewInstance(Product $product, SpecField $field, SpecFieldValue $value)
 	{
 		$specItem = parent::getNewInstance(__CLASS__);
-		$specItem->product = $product;
-		$specItem->specField = $field;
-		$specItem->specFieldValue = $value;
+		$specItem->product->set($product);
+		$specItem->specField->set($field);
+		$specItem->specFieldValue->set($value);
 
 		return $specItem;
+	}
+	
+	public function setValue(SpecFieldValue $value)
+	{
+	  	// test whether the value belongs to the same field
+		if ($value->specField->get()->getID() != $this->specField->get()->getID())
+	  	{
+		    throw new Exception('Cannot assign SpecField:' . $value->specField->get()->getID() . ' value to SpecField:' . $this->specField->get()->getID());
+		}
+
+		$this->specFieldValue->set($value);
 	}
 }
 

@@ -94,7 +94,7 @@ class SpecFieldValue extends MultilingualObject
 	/**
 	 * Delete value from database
 	 */
-	public static function delete($id)
+	public static function deleteById($id)
 	{
 	    parent::deleteByID(__CLASS__, (int)$id);
 	}

@@ -71,7 +71,7 @@ class FilterGroup extends MultilingualObject
 	    return parent::getRecordSetArray(__CLASS__, $filter);
 	}
 
-	public static function delete($id)
+	public static function deletebyID($id)
 	{
 	    return parent::deleteByID(__CLASS__, $id);
 	}

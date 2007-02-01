@@ -2,7 +2,7 @@
 
 ClassLoader::import('application.model.ActiveRecordModel');
 
-abstract class Specification extends ActiveRecordModel
+abstract class Specification extends ActiveRecordModel implements iSpecification
 {
 	protected $productInstance;
 	
@@ -10,13 +10,14 @@ abstract class Specification extends ActiveRecordModel
 	
 	public function getSpecField()
 	{
-	  	return $this->specField->get();
+	  	echo '<font color=green>' . get_class($this->specField) . ' / ' . get_class($this) .'</font><br>';
+		return $this->specField->get();
 	}
 	
 	public function setValue($value)
 	{
 	  	$this->value->set($value);
-	}
+	}	
 }
 
 ?>

@@ -57,15 +57,76 @@ $value2 = SpecFieldValue::getNewInstance($singleSel);
 $value2->value->set('30');
 $value2->save();
 
+// assign the select value to product
+$product->setAttributeValue($singleSel, $value1);
+$product->save();
 
-/*
-$productSet = ActiveRecord::getRecordSet("Product", new ARSelectFilter());
-print_r($productSet->toArray());
+// assign a different select value
+$product->setAttributeValue($singleSel, $value2);
+$product->save();
 
-$filterSet = Filter::getRecordSetArray(new ARSelectFilter());
+// create yet another single value select attribute
+$anotherSel = SpecField::getNewInstance($productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SELECTOR);
+$anotherSel->save();
 
-print_r($filterSet);
-*/
+// create some numeric values for the select
+$avalue1 = SpecFieldValue::getNewInstance($anotherSel);
+$avalue1->value->set('20');
+$avalue1->save();
+
+// attempt to assign second selectors value to the first selector
+try
+{
+	$product->setAttributeValue($singleSel, $avalue1);  
+}
+catch (Exception $e)
+{
+  	echo 'OK: didn`t let assign value from another selector - ' . $e->getMessage() . '<Br>';
+}
+
+// now play nicely and assign the second selector value to second selector and set the first selector value back
+$product->setAttributeValue($anotherSel, $avalue1);  
+$product->setAttributeValue($singleSel, $value1);
+$product->save();
+
+// assign Lithuanian value for the text field
+$product->setAttributeValueByLang($textField, 'lt', 'Na, kaip, atrodo, veikia!');
+$product->save();
+
+// remove the numeric value altogether
+$product->setAttributeValue($numField, NULL);
+$product->save();
+
+// changed my mind - I want that value back
+$product->setAttributeValue($numField, 222);
+$product->save();
+
+// now lets remove that second select value
+$product->removeAttribute($anotherSel);
+$product->save();
+
+// and set it back immediately
+$product->setAttributeValue($anotherSel, $avalue1);  
+$product->save();
+
+// create a multiple value select attribute
+$multiSel = SpecField::getNewInstance($productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SELECTOR);
+$multiSel->isMultiValue->set(true);
+$multiSel->save();
+
+$values = array();
+for ($k = 0; $k < 5; $k++)
+{
+  	$inst = SpecFieldValue::getNewInstance($multiSel);
+	$inst->value->set($k);
+	$inst->save();
+	$values[] = $inst;
+}
+
+// assign the multiselect values
+$product->setAttributeValue($multiSel, $values[1]);  
+$product->setAttributeValue($multiSel, $values[3]); 
+$product->save();
 
 ActiveRecordModel::commit();
 //ActiveRecordModel::rollback();

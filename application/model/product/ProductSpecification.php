@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import("application.model.product.SpecificationItem");
+ClassLoader::import("application.model.specification.SpecificationItem");
 
 /**
  * Product specification wrapper class
@@ -29,14 +29,16 @@ class ProductSpecification
 	 *
 	 * @param Specification $specification Specification item value
 	 */
-	public function setAttribute(Specification $specification)
+	public function setAttribute(iSpecification $specification)
 	{
 		$this->attributes[$specification->getSpecField()->getID()] = $specification;
+		unset($this->removedAttributes[$specification->getSpecField()->getID()]);
 	}
 
 	/**
 	 * Removes persisted product specification property
 	 *
+	 *	@param SpecField $field SpecField instance
 	 */
 	public function removeAttribute(SpecField $field)
 	{
@@ -49,16 +51,20 @@ class ProductSpecification
 		return isset($this->attributes[$field->getID()]);  
 	}
 	
-	public function getAttribute(SpecField $field)
+	/**
+	 *	Get attribute instance for the particular SpecField.
+	 *	
+	 *	If it is a single value selector a SpecFieldValue instance needs to be passed as well
+	 *
+	 *	@param SpecField $field SpecField instance
+	 *	@param SpecFieldValue $defaultValue SpecFieldValue instance (or nothing if SpecField is not selector)
+	 *
+	 */
+	public function getAttribute(SpecField $field, $defaultValue = null)
 	{
 		if (!$this->isAttributeSet($field))
 		{
-		  	$this->attributes[$field->getID()] = $field->getNewSpecificationInstance($this->product, null);
-		  	echo 'creating new <Br>';
-		}
-		else
-		{
-		  	echo 'restoring <Br>';				  
+		  	$this->attributes[$field->getID()] = $field->getNewSpecificationInstance($this->product, $defaultValue);
 		}
 
 		return $this->attributes[$field->getID()];  	
@@ -69,13 +75,14 @@ class ProductSpecification
 		foreach ($this->removedAttributes as $attribute)
 		{
 		  	$attribute->delete();
+		  	echo '<hr><span color=red>deleting..</span><Br>';
 		}  
+		$this->removedAttributes = array();
 
 		foreach ($this->attributes as $attribute)
 		{
 		  	echo '<hr>saving..<Br>';
 		  	$attribute->save();
-		  	echo (int)$attribute->value->isModified() . '<Br>';
 		}  
 	}
 

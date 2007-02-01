@@ -15,6 +15,18 @@ class SpecificationStringValue extends ValueSpecification
 	{
 	  	return parent::getNewInstance(__CLASS__, $product, $field, $value);
 	}
+	
+	public function setValueByLang($langCode, $value)
+	{
+		$currentValue = $this->value->get();
+		if (!is_array($currentValue))
+		{
+		  	$currentValue = array();
+		}
+		
+		$currentValue[$langCode] = $value;
+		$this->value->set($currentValue);
+	}	
 }
 
 ?>
