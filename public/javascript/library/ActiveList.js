@@ -371,7 +371,7 @@ ActiveList.prototype = {
             var regex = new RegExp('^' + self.cssPrefix + '(add|remove)_(\\w+)(_(before|after)_(\\w+))*');
             var tmp = regex.exec(className);
 
-            if(!tmp) return;
+            if(!tmp) throw $continue;
 
             var icon = {};
             icon.type = tmp[1];
@@ -774,13 +774,12 @@ ActiveList.prototype = {
         
         $H(this.icons).each(function(icon)
         {
-            if(li[icon.key] && icon.key != 'progress') 
-            {
-                try {
-                    li[icon.key].setOpacity(self.visibleMenuOpacity);            
-                } catch(e) {
-                    li[icon.key].style.visibility = 'visible';
-                }
+            if(!li[icon.key] || icon.key == 'progress') throw $continue;
+            
+            try {
+                li[icon.key].setOpacity(self.visibleMenuOpacity);            
+            } catch(e) {
+                li[icon.key].style.visibility = 'visible';
             }
         });
     },
@@ -798,13 +797,12 @@ ActiveList.prototype = {
     
         $H(this.icons).each(function(icon)
         {
-            if(li[icon.key] && icon.key != 'progress')
-            { 
-                try {
-                    li[icon.key].setOpacity(self.hiddenMenuOpacity);
-                } catch(e) {
-                    li[icon.key].style.visibility = 'hidden';
-                }
+            if(!li[icon.key] || icon.key == 'progress') throw $continue;
+            
+            try {
+                li[icon.key].setOpacity(self.hiddenMenuOpacity);
+            } catch(e) {
+                li[icon.key].style.visibility = 'hidden';
             }
         });
     },
