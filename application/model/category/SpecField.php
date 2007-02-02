@@ -3,6 +3,7 @@
 ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.category.Category");
 ClassLoader::import("application.model.category.SpecFieldValue");
+ClassLoader::import("application.model.category.SpecFieldGroup");
 
 ClassLoader::import('application.model.specification.*');
 
@@ -317,7 +318,7 @@ class SpecField extends MultilingualObject
 	}
 
 	/**
-	 * Tranforms data array to a folowing format:
+	 * Tranforms data array to a following format:
 	 *
 	 * simpleField => value,
 	 * multilingualField_langCode => value,
@@ -335,6 +336,50 @@ class SpecField extends MultilingualObject
     {
         return $category->getSpecificationFieldSet()->getTotalRecordCount();
     }
+    
+    /**
+     *	Adds JOIN definition to ARSelectFilter to retrieve product attribute value for the particular SpecField
+     *	
+     *	@param	ARSelectFilter	$filter	Filter instance
+     *	@return	string	Query field alias name
+     */
+	public function defineJoin(ARSelectFilter $filter)
+    {
+	  	$aliasTable = 'specTable_' . $this->getID();
+	  	$aliasField = 'specField_' . $this->getID();
+		$table = $this->getValueTableName();
+		
+		if ('SpecificationItem' != $table)
+		{
+			$filter->joinTable($table, 'Product', 'productID AND ' . $aliasTable . '.SpecFieldID = ' . $this->getID(), 'ID', $aliasTable);				  	
+		}
+		else
+		{
+		  	if ($this->isMultiValue->get())
+		  	{
+				$values = $this->getValuesSet();
+				foreach ($values as $value)
+				{
+				  	$aliasTable = 'specTable_' . $this->getID() . '_' . $value->getID();
+				  	$aliasField = 'multiItem_' . $this->getID() . '_' . $value->getID();
+		
+					$filter->joinTable('SpecFieldValue', 'Product', 'productID AND ' . $aliasTable . '.ID = ' . $value->getID(), 'ID', $aliasTable);				  	
+				}
+			}
+			else
+			{
+				$specItemTable = 'specItemTable_' . $this->getID();
+				$filter->joinTable('SpecificationItem', 'Product', 'productID AND ' . $specItemTable . '.SpecFieldID = ' . $this->getID(), 'ID', $specItemTable);				  				  
+			  	$filter->addField('specFieldValueID', $specItemTable, 'specFieldValueID_' . $this->getID());
+	
+				$filter->joinTable('SpecFieldValue', $specItemTable, 'ID', 'SpecFieldValueID', $aliasTable);				  				  
+		  	}
+		}	  	
+	
+		$filter->addField('value', $aliasTable, $aliasField);
+	
+		return $aliasField;		  	
+	}
 }
 
 ?>

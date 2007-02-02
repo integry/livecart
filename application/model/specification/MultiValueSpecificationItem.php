@@ -114,6 +114,21 @@ class MultiValueSpecificationItem implements iSpecification
 		return $specItem;
 	}
 	
+	public static function restoreInstance(Product $product, SpecField $field, $specValueIds)
+	{
+		$specItem = new MultiValueSpecificationItem($product, $field);
+		
+		if (is_array($specValueIds))
+		{
+			foreach ($specValueIds as $id)
+			{
+				$this->items[$id] = SpecificationItem::restoreInstance($product, $field, SpecFieldValue::getInstanceByID($id))
+			}			
+		}		
+		
+		return $specItem;
+	}
+
 	protected function deleteRemovedValues()
 	{
 	  	foreach ($this->removedItems as $item)

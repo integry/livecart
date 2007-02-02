@@ -1,5 +1,30 @@
 <?php
 
+/* temp */
+class PHPErrorException extends Exception
+{
+   private $context = null;
+   public function __construct
+       ($code, $message, $file, $line, $context = null)
+   {       
+	   parent::__construct($message, $code);
+       $this->file = $file;
+       $this->line = $line;
+       $this->context = $context;
+   }
+};
+
+function error_handler($code, $message, $file, $line) {
+	if ($code > 4)
+   	{
+     	return false;	
+	}
+
+   throw new PHPErrorException($code, $message, $file, $line);
+}
+
+set_error_handler('error_handler');
+
 	/**
 	 * livecart front controller
 	 *

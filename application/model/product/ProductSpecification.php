@@ -112,10 +112,14 @@ class ProductSpecification
 
 	private function loadSpecificationData($specificationDataArray)
 	{
+		// preload all specFields from database
+		$specFieldIds = array_keys($specificationDataArray);
+		$specFields = ActiveRecordModel::getInstanceArray('SpecField', $specFieldIDs);
+		
 		foreach ($specificationDataArray as $specFieldID => $value)
 		{
-		  	$specField = SpecField::getInstanceByID($specFieldID);
-		  	$specification = call_user_func(array($specField, 'getNewSpecificationInstance'), $this->product, $value);
+		  	$specField = $specFields[$specFieldID];
+		  	$specification = call_user_func(array($specField, 'restoreSpecificationInstance'), $this->product, $value);
 		  	$this->attributes[$specField->getID()] = $specification;
 		}		  
 	}	

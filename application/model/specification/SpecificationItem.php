@@ -33,6 +33,13 @@ class SpecificationItem extends Specification
 		return $specItem;
 	}
 	
+	public static function restoreInstance(Product $product, SpecField $field, SpecFieldValue $value)
+	{
+		$instance = self::getNewInstance($product, $field, $value);
+		$instance->resetModifiedStatus();
+
+		return $instance;
+	}
 	public function setValue(SpecFieldValue $value)
 	{
 	  	// test whether the value belongs to the same field

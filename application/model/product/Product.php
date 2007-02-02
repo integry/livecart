@@ -228,6 +228,16 @@ class Product extends MultilingualObject
 			  	$key = substr($key, 10);
 			  	$this->specFieldData[$key] = $value;
 			}
+			else if (substr($key, 0, 15) == 'specMultiValue_')
+			{
+			  	$key = substr($key, 15);
+			  	list($fieldId, $valueId) = explode('_', $key);
+			  	if (!is_array($this->specFieldData[$fieldId]))
+			  	{
+					$this->specFieldData[$fieldId] = array();		    
+				}
+				$this->specFieldData[$fieldId][$valueId] = $value;
+			}
 		}
 	}
 
@@ -261,7 +271,6 @@ class Product extends MultilingualObject
 	public function toArray()
 	{
 	  	$array = parent::toArray();
-//	  	$array['specFieldData'] = $this->specFieldData;
 	  	$array['attributes'] = $this->getSpecification()->toArray();
 	  	return $array;
 	}
