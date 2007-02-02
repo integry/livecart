@@ -4,6 +4,8 @@ class MultiValueSpecificationItem implements iSpecification
 {
 	protected $items = array();
 	
+	protected $removedItems = array();
+	
 	protected $productInstance = null;
 	
 	protected $specFieldInstance = null;
@@ -16,23 +18,42 @@ class MultiValueSpecificationItem implements iSpecification
 	
 	public function setValue(SpecFieldValue $value)
 	{
+	  	// test whether the value belongs to the same field
+		if ($value->specField->get()->getID() != $this->specFieldInstance->getID())
+	  	{
+		    throw new Exception('Cannot assign SpecField:' . $value->specField->get()->getID() . ' value to SpecField:' . $this->specFieldInstance->getID());
+		}
+
 	  	$item = SpecificationItem::getNewInstance($this->productInstance, $this->specFieldInstance, $value);
 		$this->items[$value->getID()] = $item;
-	  	unset($this->removedValues[$value->getID()]);
+	  	unset($this->removedItems[$value->getID()]);
 	}
 	
 	public function removeValue(SpecFieldValue $value)
 	{
-	  	unset($this->values[$value->getID()]);
-	  	$this->removedValues[$value->getID()] = true;
+	  	$this->removedItems[$value->getID()] = $this->items[$value->getID()];
+	  	unset($this->items[$value->getID()]);
 	}
 	
 	public function save()
 	{
-	  	foreach ($this->items as $item)
+	  	$this->deleteRemovedValues();
+	  	
+		foreach ($this->items as $item)
 	  	{
 		    $item->save();
 		}
+	}
+
+	public function delete()
+	{
+	  	$this->deleteRemovedValues();
+	  	
+		foreach ($this->items as $key => $item)
+	  	{
+		    $item->delete();
+		    unset($this->items[$key]);
+		}  
 	}
 
 	public function getSpecField()
@@ -50,6 +71,16 @@ class MultiValueSpecificationItem implements iSpecification
 		}		
 		
 		return $specItem;
+	}
+	
+	protected function deleteRemovedValues()
+	{
+	  	foreach ($this->removedItems as $item)
+	  	{
+		    $item->delete();
+		}
+		
+		$this->removedItems = array();
 	}
 	
 }

@@ -128,6 +128,28 @@ $product->setAttributeValue($multiSel, $values[1]);
 $product->setAttributeValue($multiSel, $values[3]); 
 $product->save();
 
+// assign one more multiselect value
+$product->setAttributeValue($multiSel, $values[2]); 
+$product->save();
+
+// remove the first multiselect value
+$product->removeAttributeValue($multiSel, $values[1]); 
+$product->save();
+
+// try to assign a value from a different selector
+try
+{
+	$product->setAttributeValue($multiSel, $avalue1); 
+}
+catch (Exception $e)
+{
+  	echo 'OK: didn`t let assign multi-value from another selector - ' . $e->getMessage() . '<Br>';
+}
+
+// remove the multiselect value altogether
+$product->removeAttribute($multiSel);
+$product->save();
+
 ActiveRecordModel::commit();
 //ActiveRecordModel::rollback();
 

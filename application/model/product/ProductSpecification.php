@@ -46,6 +46,21 @@ class ProductSpecification
 		unset($this->attributes[$field->getID()]);
 	}
 
+	public function removeAttributeValue(SpecField $field, SpecFieldValue $value)
+	{
+	  	if (!$field->isMultiValue->get())
+	  	{
+		    throw new Exception('Cannot remove a value from non-multivalue select field');
+		}
+		
+		if (!isset($this->attributes[$field->getID()]))
+		{
+		  	return false;
+		}
+		
+		$this->attributes[$field->getID()]->removeValue($value);		
+	}
+
 	public function isAttributeSet(SpecField $field)
 	{
 		return isset($this->attributes[$field->getID()]);  

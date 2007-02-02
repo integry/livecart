@@ -378,6 +378,11 @@ class Product extends MultilingualObject
 		$this->getSpecification()->removeAttribute($field);	  	
 	}	
 
+	public function removeAttributeValue(SpecField $field, SpecFieldValue $value)
+	{
+		$this->getSpecification()->removeAttributeValue($field, $value);		
+	}
+
 	/**
 	 * Gets a product specification instance
 	 *
