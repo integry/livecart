@@ -27,7 +27,6 @@
     {/foreach}
     {literal}
 
-
     specFieldListCallbacks = {
         beforeEdit:     function(li)
         {
@@ -44,7 +43,9 @@
         },
         afterEdit:      function(li, response)
         {
-            new Backend.SpecField(response);
+            var specField = eval("(" + response + ")" );
+            specField.rootId = li.id;
+            new Backend.SpecField(specField, true);
             this.rebindIcons(li);
             this.createSortable();
             this.toggleContainer(li, 'edit');
@@ -65,6 +66,46 @@
                 this.remove(li);
                 CategoryTabControl.prototype.resetTabItemsCount({/literal}{$categoryID}{literal});
             }
+        },
+        beforeSort:     function(li, order)
+        {
+            return Backend.SpecField.prototype.links.sortField + "?target=" + this.ul.id + "&" + order
+        },
+        afterSort:      function(li, response)
+        {
+        }
+    };
+    
+    
+    specFieldGroupCallbacks = {
+        beforeEdit:     function(li)
+        {
+            var groupTitle = document.getElementsByClassName("specField_group_title", li)[0];
+            var input = groupTitle.getElementsByTagName("input")[0];
+            var title = groupTitle.getElementsByTagName("span")[0];
+            if('inline' != input.style.display) 
+            {
+                input.style.display = 'inline';
+                title.style.display = 'none';
+            }
+            else
+            {
+                input.style.display = 'none';
+                title.style.display = 'inline';
+            }
+            
+        },
+        afterEdit:      function(li, response)
+        {
+            console.info("group saved");
+        },
+        beforeDelete:   function(li)
+        {
+            console.info("delete group");
+        },
+        afterDelete:    function(li, jsonResponse)
+        {
+            console.info("group deleted");
         },
         beforeSort:     function(li, order)
         {
@@ -92,25 +133,44 @@
 
 <br />
 
-<ul id="specField_items_list_{$categoryID}" class="specFieldList  activeList_add_sort activeList_add_edit activeList_add_delete">
-{foreach item="field" from=$specFields}
-	<li id="specField_items_list_{$categoryID}_{$field.ID}">
-    	<span class="specField_title">{$field.name[$defaultLangCode]}</span>
-	</li>
-{/foreach}
 
+<ul id="specField_groups_list_{$categoryID}" class="specFieldListGroup activeList_add_sort activeList_add_edit">
+    {foreach item="group" from=$specFieldsGroups}
+    <li id="specField_groups_list_{$categoryID}_{$group.ID}">
+        <span class="specField_group_title">
+            <span>{$group.name[$defaultLangCode]}</span>
+            <input value="{$group.name[$defaultLangCode]}" />
+        </span>
+        
+        <ul id="specField_items_list_{$categoryID}_{$group.ID}" class="specFieldList activeList_accept_specFieldList activeList_add_sort activeList_add_edit activeList_add_delete">
+        {foreach item="field" from=$group.specFields}
+        	<li id="specField_items_list_{$categoryID}_{$group.ID}_{$field.ID}">
+            	<span class="specField_title">{$field.name[$defaultLangCode]}</span>
+        	</li>
+        {/foreach}
+        </ul>
+    </li>
+    {/foreach}
 </ul>
 
 
-{literal}
 <script type="text/javascript">
+    {literal}
      Backend.SpecField.prototype.activeListMessages = 
      { 
          '_activeList_edit':    {/literal}'{t _activeList_edit|addslashes}'{literal},
          '_activeList_delete':  {/literal}'{t _activeList_delete|addslashes}'{literal}
      }
+     {/literal}
      
-     Event.observe($("specField_item_new_{/literal}{$categoryID}{literal}_show"), "click", function(e) { Backend.SpecField.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') });
-     ActiveList.prototype.getInstance('specField_items_list_{/literal}{$categoryID}{literal}', specFieldListCallbacks, Backend.SpecField.prototype.activeListMessages);
+     var groupList = ActiveList.prototype.getInstance('specField_groups_list_{$categoryID}', specFieldGroupCallbacks, Backend.SpecField.prototype.activeListMessages);
+     Event.observe($("specField_item_new_{$categoryID}_show"), "click", function(e) {literal}{{/literal} Backend.SpecField.prototype.createNewAction(e, '{$categoryID}') {literal}}{/literal});
+     
+     {foreach item="group" from=$specFieldsGroups}
+         ActiveList.prototype.getInstance('specField_items_list_{$categoryID}_{$group.ID}', specFieldListCallbacks, Backend.SpecField.prototype.activeListMessages);
+     {/foreach}
+     
+     groupList.createSortable();
 </script>
-{/literal}
+
+

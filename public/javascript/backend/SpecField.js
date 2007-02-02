@@ -71,31 +71,35 @@ Backend.SpecField.prototype = {
 	 */
 	initialize: function(specFieldJson, hash)
 	{
-
-	    this.specField = !hash ? eval("(" + specFieldJson + ")" ) : specFieldJson;
-	    this.cloneForm('specField_item_blank', this.specField.rootId);
-
-	    this.id = this.specField.ID;
-	    this.categoryID = this.specField.categoryID;
-	    this.rootId = this.specField.rootId;
-
-		this.type = this.specField.type;
-		this.values = this.specField.values;
-
-		this.name = this.specField.name;
-		this.backupName = this.name;
-
-		this.description = this.specField.description;
-
-		this.handle = this.specField.handle;
-		this.isMultiValue = this.specField.isMultiValue;
-		this.isRequired = this.specField.isRequired;
-		this.dataType = this.specField.dataType;
-
-		this.loadLanguagesAction();
-		this.findUsedNodes();
-
-	    this.bindFields();
+        try 
+        {
+    	    this.specField = !hash ? eval("(" + specFieldJson + ")" ) : specFieldJson;
+    	    this.cloneForm('specField_item_blank');
+    
+    	    this.id = this.specField.ID;
+    	    this.categoryID = this.specField.categoryID;
+    	    this.rootId = this.specField.rootId;
+    
+    		this.type = this.specField.type;
+    		this.values = this.specField.values;
+    
+    		this.name = this.specField.name;
+    		this.backupName = this.name;
+    
+    		this.description = this.specField.description;
+    
+    		this.handle = this.specField.handle;
+    		this.isMultiValue = this.specField.isMultiValue;
+    		this.isRequired = this.specField.isRequired;
+    		this.dataType = this.specField.dataType;
+    
+    		this.loadLanguagesAction();
+    		this.findUsedNodes();
+    
+    	    this.bindFields();
+        } catch(e) {
+            console.info(e);
+        }
 	},
 
     /**
@@ -125,12 +129,14 @@ Backend.SpecField.prototype = {
 	 *
 	 * @access private
 	 */
-	cloneForm: function(prototypeId, rootId)
+	cloneForm: function(prototypeId)
 	{
 	    var blankForm = $(prototypeId);
                 
         var blankFormValues = blankForm.getElementsByTagName("*");
-        var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ?  ActiveList.prototype.getInstance("specField_items_list_" + this.specField.categoryID).getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
+        var test2 = this.specField.rootId;
+        var test = $(this.specField.rootId);
+        var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ?  ActiveList.prototype.getInstance(this.specField.rootId).getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
 
         for(var i = 0; i < blankFormValues.length; i++)
         {
@@ -172,7 +178,7 @@ Backend.SpecField.prototype = {
 
 		this.nodes.mainTitle 			= document.getElementsByClassName(this.cssPrefix + "title", this.nodes.parent)[0];
 		this.nodes.id 					= document.getElementsByClassName(this.cssPrefix + "form_id", this.nodes.parent)[0];
-		this.nodes.categoryID 			= document.getElementsByClassName(this.cssPrefix + "form_categoryID", this.nodes.parent)[0];
+		this.nodes.categoryID 			= document.getElementsByClassName(this.cssPrefix + "form_categoryID", this.nodes.parent)[0]; 
 		this.nodes.description 			= document.getElementsByClassName(this.cssPrefix + "form_description", this.nodes.parent)[0];
 		this.nodes.multipleSelector 	= document.getElementsByClassName(this.cssPrefix + "form_multipleSelector", this.nodes.parent)[0];
 		this.nodes.isRequired          	= document.getElementsByClassName(this.cssPrefix + "form_isRequired", this.nodes.parent)[0];
@@ -1119,7 +1125,7 @@ Backend.SpecField.prototype = {
         var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
         var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");
         
-        ActiveList.prototype.getInstance("specField_items_list_" + categoryID).collapseAll();
+        ActiveList.prototype.collapseAll();
         
         ActiveForm.prototype.showNewItemForm(link, form);
     }

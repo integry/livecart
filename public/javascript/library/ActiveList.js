@@ -25,7 +25,7 @@
  *         {
  *             if(confirm('Are you sure you wish to remove record #' + this.getRecordId(li) + '?')) return 'delete.php?id='+this.getRecordId(li)
  *         },
- *         afterEdit:      function(li, response) { this.getContainer().innerHTML = response; this.toggleContainer();  },
+ *         afterEdit:      function(li, response) { this.getContainer(li, 'edit').innerHTML = response; this.toggleContainer();  },
  *         afterSort:      function(li, response) { alert( 'Record #' + this.getRecordId(li) + ' changed position'); },
  *         afterDelete:    function(li, response)  { this.remove(li); }
  *     });
@@ -134,41 +134,58 @@ ActiveList.prototype = {
      */
     initialize: function(ul, callbacks, messages)
     {
-        this.ul = typeof(ul) == 'string' ? $(ul) : ul;     
-
-        this.messages = messages;
-        
-        Element.addClassName(this.ul, this.ul.id);
-
-        // Check if ul has an id
-        if(!this.ul.id)
+        try
         {
-            throw Error('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
-            return false;
-        }
-
-        // Check if all required callbacks are passed
-        var missedCallbacks = [];
-        for(var i = 0; i < this.requiredCallbacks.length; i++)
-        {
-            var before = ('before-' + this.requiredCallbacks[i]).camelize();
-            var after = ('after-' + this.requiredCallbacks[i]).camelize();
-
-            if(!callbacks[before]) missedCallbacks[missedCallbacks.length] = before;
-            if(!callbacks[after]) missedCallbacks[missedCallbacks.length] = after;
-        }
-        if(missedCallbacks.length > 0)
-        {
-                throw Error('Callback' + (missedCallbacks.length > 1 ? 's' : '') + ' are missing (' + missedCallbacks.join(', ') +')' );
+            this.ul = $(ul);
+    
+            this.messages = messages;
+            
+            Element.addClassName(this.ul, this.ul.id);
+    
+            // Check if ul has an id
+            if(!this.ul.id)
+            {
+                throw Error('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
                 return false;
+            }
+            
+            console.info(this.ul.id)
+    
+            // Check if all required callbacks are passed
+            var missedCallbacks = [];
+            for(var i = 0; i < this.requiredCallbacks.length; i++)
+            {
+                var before = ('before-' + this.requiredCallbacks[i]).camelize();
+                var after = ('after-' + this.requiredCallbacks[i]).camelize();
+    
+                if(!callbacks[before]) missedCallbacks[missedCallbacks.length] = before;
+                if(!callbacks[after]) missedCallbacks[missedCallbacks.length] = after;
+            }
+            if(missedCallbacks.length > 0)
+            {
+                    throw Error('Callback' + (missedCallbacks.length > 1 ? 's' : '') + ' are missing (' + missedCallbacks.join(', ') +')' );
+                    return false;
+            }
+    
+            this.callbacks = callbacks;
+            this.dragged = false;
+    
+            this.generateAcceptFromArray();
+            this.createSortable();
+        } 
+        catch(e) 
+        {
+            console.info(e);
         }
-
-        this.callbacks = callbacks;
-        this.dragged = false;
-
-        this.createSortable();
     },
     
+    /**
+     * Get active list singleton. If ul list is allready an ActiveList then use it's instance. In other case create new instance
+     * 
+     * @param HTMLUlElement ul
+     * @param object callbacks
+     * @param object messages
+     */
     getInstance: function(ul, callbacks, messages)
     {  
        var ulElement = $(ul);    
@@ -176,22 +193,23 @@ ActiveList.prototype = {
        
        if(!ulElement.id)
        {
-            alert('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
+            throw Error('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
             return false;
        }
        
        if(!ActiveList.prototype.activeListsUsers[ulElement.id]) 
        {
-           console.info('init ' + ulElement.id);
            ActiveList.prototype.activeListsUsers[ulElement.id] = new ActiveList(ulElement.id, callbacks, messages);
        }
        
-       console.info('instance ' + ulElement.id);
-       
        return ActiveList.prototype.activeListsUsers[ulElement.id];
-
     },
-    
+
+    /**
+     * Destroy active list object associated with given list
+     * 
+     * @param HTMLUlElement ul    destroy: function(ul)
+     */    
     destroy: function(ul)
     {  
        var ulElement = $(ul);    
@@ -225,7 +243,6 @@ ActiveList.prototype = {
         }
     },
 
-
     /**
      * Adds classes ActiveList_odd and ActiveList_even to separate odd elements from even
      * 
@@ -246,7 +263,6 @@ ActiveList.prototype = {
         }
     },
 
-
     /**
      * Toggle item container On/Off
      *
@@ -257,7 +273,7 @@ ActiveList.prototype = {
      */
     toggleContainer: function(li, action)
     {
-        var container = this.getContainer(li ? li : false, action ? action : this.getAction(this.toggleContainer.caller));
+        var container = this.getContainer(li, action);
         
         if(container.style.display == 'none') this.toggleContainerOn(container);
         else this.toggleContainerOff(container);
@@ -269,8 +285,8 @@ ActiveList.prototype = {
      * @param HTMLElementDiv container Reference to the container
      */
     toggleContainerOn: function(container)
-    {
-        this.collapseAll();
+    {       
+        ActiveList.prototype.collapseAll();
         
         Sortable.destroy(this.ul);
         if(BrowserDetect.browser != 'Explorer')
@@ -316,7 +332,7 @@ ActiveList.prototype = {
      */
     isContainerEmpty: function(li, action)
     {
-        return this.getContainer(li ? li : false, action ? action : this.getAction(this.isContainerEmpty.caller)).firstChild ? false : true;
+        return this.getContainer(li, action).firstChild ? false : true;
     },
 
     /**
@@ -332,7 +348,6 @@ ActiveList.prototype = {
     getContainer: function(li, action)
     {
         if(!li) li = this._currentLi;
-        if(!action) action = this.getAction(this.getContainer.caller); // if this function was called from user then we could try to auto-detect action
 
         return document.getElementsByClassName(this.cssPrefix + action + 'Container' , li)[0];
     },
@@ -349,7 +364,8 @@ ActiveList.prototype = {
     getRecordId: function(li)
     {
         if(!li) li = this._currentLi;
-        return li.id.substring(this.ul.id.length+1);
+        
+        return li.id.substring(li.parentNode.id.length+1);
     },
 
     /**
@@ -362,7 +378,6 @@ ActiveList.prototype = {
     rebindIcons: function(li)
     {
         var self = this;
-
 
         $A(this.ul.className.split(' ')).each(function(className)
         {
@@ -386,8 +401,9 @@ ActiveList.prototype = {
                 li[icon.action + 'Container'] = document.getElementsByClassName(self.cssPrefix + icon.action + 'Container', li)[0];
             }
         });
+        
+        li.prevParentId = this.ul.id;
     },
-
 
     /**
      * Add new item to Active Record. You have 3 choices. Either to add whole element, add array of elements or add all elements
@@ -481,11 +497,9 @@ ActiveList.prototype = {
         li.onmouseout     = function() {self.hideMenu(li) }
 
         // KEYBOARD NAVIGATION BREAKS FORM FIELDS
-//        li.onkeydown      = function(e) { self.navigate(new KeyboardEvent(e), li) }
-//        li.onclick        = li.focus();
-
-        // Add tab index
-//        li.tabIndex       = this.tabIndex;
+        // li.onkeydown      = function(e) { self.navigate(new KeyboardEvent(e), li) }
+        // li.onclick        = li.focus();
+        // li.tabIndex       = this.tabIndex;
 
 
         // Create icons container. All icons will be placed incide it
@@ -528,6 +542,7 @@ ActiveList.prototype = {
         }
 
         li.progress = iconProgress;
+        li.prevParentId = this.ul.id;
     },
 
     /**
@@ -553,8 +568,8 @@ ActiveList.prototype = {
         icon.position = tmp[4];
         icon.sibling = tmp[5];
 
-        // all icons except sort has onclick event handler defined by user
-        
+        if(icon.action == 'accept') return true;
+
         if(icon.action != 'sort')
         {
             var iconImage = document.getElementsByClassName(this.cssPrefix + icon.action, li)[0];
@@ -580,8 +595,6 @@ ActiveList.prototype = {
                 // Show icon
                 container.appendChild(iconImage);
                 
-                
-                
                 try {
                     iconImage.setOpacity(this.hiddenMenuOpacity);
                 } catch (e) {
@@ -605,30 +618,6 @@ ActiveList.prototype = {
             li.appendChild(container);
             li[icon.action + 'Container'] = container;
         } 
-    },
-
-    /**
-     * Get action associated with user specified callback
-     *
-     * @param callback Callback to user defined action handler function
-     *
-     * @access private
-     *
-     * @return string action Action associated with callback
-     */
-    getAction: function(caller)
-    {
-        var action = '';
-        for(key in this.callbacks)
-        {
-            if(this.callbacks[key] == caller)
-            {
-                action = key.replace(/^(after|before)/, '').toLowerCase();
-                break;
-            }
-        }
-
-        return action;
     },
 
     /**
@@ -683,7 +672,6 @@ ActiveList.prototype = {
      */
     toggleProgress: function(li)
     {
-        //if(li.progress.getOpacity() == this.hiddenMenuOpacity)
         if(li.progress.style.visibility == 'hidden')
         {
             this.onProgress(li);
@@ -733,6 +721,28 @@ ActiveList.prototype = {
     },
 
     /**
+     * Generate array of elements from wich this active list can accept elements.
+     * This array is generated from class name. Example: If this ul had "aciveList_accept_otherALClass"
+     * then the list would accept elements from all active lists with class otherALClass
+     * 
+     */
+    generateAcceptFromArray: function()
+    {
+        var self = this;
+        var regex = new RegExp('^' + self.cssPrefix + 'accept_(\\w+)');
+        
+        this.acceptFromLists = [this.ul];
+        $A(this.ul.className.split(' ')).each(function(className)
+        {
+            var tmp = regex.exec(className);
+            if(!tmp) throw $continue;
+            var allowedClassName = tmp[1];
+            
+            self.acceptFromLists = $$('ul.' + allowedClassName);
+        });
+    },
+
+    /**
      * Initialize Scriptaculous Sortable on the list
      *
      * @access private
@@ -743,22 +753,22 @@ ActiveList.prototype = {
 
         this.decorateItems();
         Element.addClassName(this.ul, this.cssPrefix.substr(0, this.cssPrefix.length-1));
+        
         if(Element.hasClassName(this.ul, this.cssPrefix + 'add_sort'))
         {
             Sortable.create(this.ul.id,
             {
                 dropOnEmpty:   true,
-                               // the object context mystically dissapears when onComplete function is called,
-                               // so the only way I could make it work is this
+                containment:   this.acceptFromLists,
                 onChange:      function(elementObj) 
                 { 
-                    self.dragged = elementObj; 
+                    self.dragged = elementObj;
                 },
-                onUpdate:      function() { self.saveSortOrder(); }
+                onUpdate:      function() { 
+                    self.saveSortOrder(); 
+                }
             });
-        }
-        
-        
+        }        
     },
 
     /**
@@ -815,9 +825,8 @@ ActiveList.prototype = {
     saveSortOrder: function()
     {
         var self = this;
-
+        
         var order = Sortable.serialize(this.ul.id);
-
         if(order)
         {
             // display feedback
@@ -841,7 +850,6 @@ ActiveList.prototype = {
         }
     },
 
-
     /**
      * This function is called when sort response arives
      *
@@ -851,13 +859,20 @@ ActiveList.prototype = {
      */
     restoreDraggedItem: function(item)
     {
+        // if moving elements from one active list to another we should also change the id of the HTMLLElement 
+        if(this.dragged.prevParentId != this.dragged.parentNode.id && this.dragged.parentNode.id == this.ul.id)
+        {
+            this.dragged.id = this.dragged.parentNode.id + "_" + this.dragged.id.substring(this.dragged.prevParentId.length + 1); 
+        }
+        
         this.rebindIcons(this.dragged);
         this.hideMenu(this.dragged);
-        
 
         this._currentLi = this.dragged;
+        
         var url = this.callbacks.afterSort.call(this, this.dragged, item);
         this.colorizeItems();
+        this.dragged.prevParentId = this.ul.id;
         this.offProgress(this.dragged);
 
         this.dragged = false;
@@ -969,7 +984,6 @@ ActiveList.prototype = {
         return !element.previousSibling ? element.parentNode.lastChild : element.previousSibling;
     },
 
-
     /**
      * Remove record from active list
      * 
@@ -992,18 +1006,35 @@ ActiveList.prototype = {
     
     /**
      * Collapse all opened records
+     * 
+     * @param lists You can specify wich lists to collapse
      */
     collapseAll: function()
     {
-        var containers = document.getElementsByClassName('activeList_container', this.ul);
+        var activeLists = {};
         
-        for(var i = 0; i < containers.length; i++)
+        if(!this.ul)
         {
-            if(containers[i].parentNode.parentNode == this.ul && 'block' == containers[i].style.display) 
-            {  
-                this.toggleContainerOff(containers[i]);
-            }
+            activeLists = ActiveList.prototype.activeListsUsers;
         }
+        else
+        {
+            activeLists[this.ul.id] = true;
+        }
+        
+        $H(activeLists).each(function(activeList) 
+        {
+            if(!activeList.value.ul || 0 >= activeList.value.ul.offsetHeight) throw $continue; // if list is invisible there is no need to collapse it
+            
+            var containers = document.getElementsByClassName('activeList_container', activeList.value.ul);
+            
+            for(var i = 0; i < containers.length; i++)
+            {
+                if(0 >= containers[i].offsetHeight) break;
+
+                activeList.value.toggleContainerOff(containers[i]);
+            }
+        });
     },
     
     /**
@@ -1025,5 +1056,4 @@ ActiveList.prototype = {
         
         return childList;
     }
-
 }

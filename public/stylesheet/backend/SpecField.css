@@ -1,134 +1,115 @@
-.specField legend, .specField_step_values, .specField_language_translation
-{
+.specField legend, .specField_step_values, .specField_language_translation {
     display: none;
     
 }
 
-.specField .specField_step_translations_language legend 
-{
+.specField .specField_step_translations_language legend {
     cursor: pointer;
     cursor: hand;
     display: block;
 }
 
-
-
-.specField fieldset
-{
+.specField fieldset {
     background: #fff;
     margin-right: 1em;
 }
 
-.specField_title
-{
+.specField_title, .specField_group_title * {
 	font-size: 200%;
 }
 
+.specField_group_title input {
+    width: 200px;
+    display: none;
+}
 
-.specFieldList .activeList_container
-{
+
+.specFieldList .activeList_container {
 	padding-left: 80px;
 }
 
-.specFieldList li
-{
+.specFieldList li {
   	padding: 5px;
   	margin-bottom: 10px;
   	background-color: #F7F7F7;  	
   	width: 650px;
 }
 
-.specFieldList li li
-{
+.specFieldList li li {
   	width: 100%;
 }
 
 
-.specField_form_values_group div input
-{
+.specField_form_values_group div input {
     width: 10em;
 }
 
-.specField_language_link
-{
+.specField_language_link {
     display: inline;
     padding: 0 5px;
 }
 
-.specField_change_state
-{
+.specField_change_state {
     padding: 0 5px;
 }
 
-.specField .specField_step_translations_language
-{
+.specField .specField_step_translations_language {
     background: #ddd;
 }
 
-.specField_form_values_value .specField_form_values_default_checkbox
-{
+.specField_form_values_value .specField_form_values_default_checkbox {
     width: auto;
 }
 
-.specField_controls
-{
+.specField_controls {
     padding-left: 2em;
 }
 
-.specField_save
-{
+.specField_save {
     margin: 0;
 }
 
-.specField_add_field
-{
+.specField_add_field {
     white-space: nowrap;
     margin-left: 56px;
 }
 
-.specField_values
-{
+.specField_values {
     width: auto !important;
     padding-bottom: 10px;
 }
 
-h2.specField_values_title
-{
+h2.specField_values_title {
    width: 7em ! important;
 }
 
 
 /* START Values active list */
-
-
-
-fieldset.specField_step_values  .activeList_icons
-{
+fieldset.specField_step_values  .activeList_icons {
     width: 77px;
 }
 
-fieldset.group h2
-{
+fieldset.group h2 {
     font-size: 1em;
     font-weight: normal;
 }
-
 /* END Values active list */
 
-.specField ul
-{
+.specField ul {
     list-style: none;
 }
 
-.specField_step_translations_language_active
-{
+.specField_step_translations_language_active {
     background: yellow;
     padding: 5px;
 }
 
+.specFieldList {
+   padding-bottom: 2em;
+}
+
 
 /* IE */
-.specField_step_translations_language
-{
+.specField_step_translations_language {
     position: relative;
 }

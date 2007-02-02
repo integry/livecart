@@ -24,6 +24,25 @@ class SpecField extends MultilingualObject
     const TYPE_TEXT_SELECTOR = 5;
     const TYPE_TEXT_DATE = 6;
 
+	public static function defineSchema($className = __CLASS__)
+	{
+		$schema = self::getSchemaInstance($className);
+		$schema->setName("SpecField");
+		
+		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("specFieldGroupID", "SpecFieldGroup", "ID", "SpecFieldGroup", ARInteger::instance()));
+
+		$schema->registerField(new ARField("name", ARArray::instance()));
+		$schema->registerField(new ARField("description", ARArray::instance()));
+		$schema->registerField(new ARField("type", ARInteger::instance(2)));
+		$schema->registerField(new ARField("dataType", ARInteger::instance(2)));
+		$schema->registerField(new ARField("position", ARInteger::instance(2)));
+		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
+		$schema->registerField(new ARField("isMultiValue", ARBool::instance()));
+		$schema->registerField(new ARField("isRequired", ARBool::instance()));
+	}    
+    
     /**
 	 * Get instance SpecField record by id
 	 *
@@ -316,24 +335,6 @@ echo '<b>'		. $specValueClass . '</b>';
     {
         return $category->getSpecificationFieldSet()->getTotalRecordCount();
     }
-    
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("SpecField");
-		
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
-
-		$schema->registerField(new ARField("name", ARArray::instance()));
-		$schema->registerField(new ARField("description", ARArray::instance()));
-		$schema->registerField(new ARField("type", ARInteger::instance(2)));
-		$schema->registerField(new ARField("dataType", ARInteger::instance(2)));
-		$schema->registerField(new ARField("position", ARInteger::instance(2)));
-		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
-		$schema->registerField(new ARField("isMultiValue", ARBool::instance()));
-		$schema->registerField(new ARField("isRequired", ARBool::instance()));
-	}    
 }
 
 ?>

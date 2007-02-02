@@ -33,55 +33,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$schema->registerField(new ARField("totalProductCount", ARInteger::instance()));
 	}
 
-	/**
-	 * Loads a set of spec field records for a category.
-	 *
-	 * Result includes a list of specification fields from upper category branches
-	 * (specification field inheritance)
-	 * The result is ordered by a category ID (upper level fields go first and
-	 * then by level position)
-	 *
-	 * @return ARSet
-	 */
-	public function getSpecificationFieldSet($includeParentFields = false, $loadReferencedRecords = false)
-	{
-		ClassLoader::import("application.model.category.SpecField");
-		return SpecField::getRecordSet($this->getSpecificationFilter($includeParentFields), $loadReferencedRecords);
-	}
-
-	public function getSpecificationFieldArray($includeParentFields = false, $loadReferencedRecords = false)
-	{
-		ClassLoader::import("application.model.category.SpecField");
-		return SpecField::getRecordSetArray($this->getSpecificationFilter($includeParentFields), $loadReferencedRecords);
-	}
-
-	/**
-	 * Crates a select filter for specification fields related to category
-	 *
-	 * @param bool $includeParentFields
-	 * @return ARSelectFilter
-	 */
-	private function getSpecificationFilter($includeParentFields)
-	{
-		$path = parent::getPathNodeSet(Category::INCLUDE_ROOT_NODE);
-
-		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle("SpecField", "categoryID"));
-		$filter->setOrder(new ARFieldHandle("SpecField", "position"));
-
-		$cond = new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $this->getID());
-
-		if ($includeParentFields)
-		{
-			foreach ($path as $node)
-			{
-				$cond->addOR(new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $node->getID()));
-			}
-		}
-		$filter->setCondition($cond);
-
-		return $filter;
-	}
 	
 	public function testGetProductArray(ARSelectFilter $filter, $loadSpecification = false)
 	{
@@ -530,6 +481,99 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		
 		$categoryList = Category::getRecordSet($filter);
     }
+
+ 	/**
+	 * Creates an array from active record instances of SpecFieldGroup by using a filter
+	 *
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+    public function getSpecificationFieldGroupArray($loadReferencedRecords = false) 
+    {
+		ClassLoader::import("application.model.category.SpecFieldGroup");  
+		
+		return SpecFieldGroup::getRecordSetArray($this->getSpecificationGroupFilter(), $loadReferencedRecords);
+    }
+
+ 	/**
+	 * Loads a set of active record instances of SpecFieldGroup by using a filter
+	 *
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+    public function getSpecificationFieldGroupSet($loadReferencedRecords = false) 
+    {
+		ClassLoader::import("application.model.category.SpecFieldGroup");  
+		
+		return SpecFieldGroup::getRecordSet($this->getSpecificationGroupFilter(), $loadReferencedRecords);
+    }
+    
+	/**
+	 * Loads a set of spec field records for a category.
+	 *
+	 * Result includes a list of specification fields from upper category branches
+	 * (specification field inheritance)
+	 * The result is ordered by a category ID (upper level fields go first and
+	 * then by level position)
+	 *
+	 * @return ARSet
+	 */
+	public function getSpecificationFieldSet($includeParentFields = false, $loadReferencedRecords = false)
+	{
+		ClassLoader::import("application.model.category.SpecField");
+		return SpecField::getRecordSet($this->getSpecificationFilter($includeParentFields), $loadReferencedRecords);
+	}
+
+	public function getSpecificationFieldArray($includeParentFields = false, $loadReferencedRecords = false)
+	{
+		ClassLoader::import("application.model.category.SpecField");
+		return SpecField::getRecordSetArray($this->getSpecificationFilter($includeParentFields), $loadReferencedRecords);
+	}
+	
+	/**
+	 * Crates a select filter for specification fields related to category
+	 *
+	 * @param bool $includeParentFields
+	 * @return ARSelectFilter
+	 */
+	private function getSpecificationFilter($includeParentFields)
+	{
+		$path = parent::getPathNodeSet(Category::INCLUDE_ROOT_NODE);
+
+		$filter = new ARSelectFilter();
+		$filter->setOrder(new ARFieldHandle("SpecField", "categoryID"));
+		$filter->setOrder(new ARFieldHandle("SpecField", "position"));
+
+		$cond = new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $this->getID());
+
+		if ($includeParentFields)
+		{
+			foreach ($path as $node)
+			{
+				$cond->addOR(new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $node->getID()));
+			}
+		}
+		$filter->setCondition($cond);
+
+		return $filter;
+	}
+    
+	/**
+	 * Crates a select filter for specification fields groups related to category
+	 *
+	 * @return ARSelectFilter
+	 */
+	private function getSpecificationGroupFilter()
+	{
+		$filter = new ARSelectFilter();
+		$filter->setOrder(new ARFieldHandle("SpecFieldGroup", "position"));
+        $filter->setCondition(new EqualsCond(new ARFieldHandle("SpecFieldGroup", "categoryID"), $this->getID()));
+
+		return $filter;
+	}
+
 }
 
 ?>

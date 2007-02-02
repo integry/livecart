@@ -74,6 +74,16 @@ class SpecFieldController extends StoreManagementController
         $categoryID = (int)$this->request->getValue('id');
         $category = Category::getInstanceByID($categoryID);
         $response->setValue('specFields', $category->getSpecificationFieldArray());
+        
+        $specFieldsGroups = array(); $i = 0;
+        foreach($category->getSpecificationFieldGroupSet() as $group)
+        {
+            $specFieldsGroups[$i] = $group->toArray(false, false);
+            $specFieldsGroups[$i]['specFields'] = $group->getSpecificationFieldArray();
+            $i++;
+        }
+        $response->setValue('specFieldsGroups', $specFieldsGroups);
+        //  echo "<pre>".print_r($specFieldsGroups, true)."</pre>";
 
         $defaultSpecFieldValues = array
         (
@@ -111,7 +121,6 @@ class SpecFieldController extends StoreManagementController
 		   $specFieldList['values'][$value['ID']] = $value['value'];
 		}
 		
-		$specFieldList['rootId'] = "specField_items_list_".$specFieldList['Category']['ID']."_".$specFieldList['ID'];
 		$specFieldList['categoryID'] = $specFieldList['Category']['ID'];
 		unset($specFieldList['Category']);
 				
@@ -251,12 +260,17 @@ class SpecFieldController extends StoreManagementController
 
     public function sort()
     {
-        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        $target = $this->request->getValue('target');
+        preg_match('/_(\d+)$/', $target, $match); // Get group. 
+        
+        foreach($this->request->getValue($target, array()) as $position => $key)
         {
             if(!empty($key))
             {
                 $specField = SpecField::getInstanceByID((int)$key);
                 $specField->setFieldValue('position', (int)$position);
+                
+                if(isset($match[1])) $specField->setFieldValue('specFieldGroupID', SpecFieldGroup::getInstanceByID((int)$match[1])); // Change group
                 $specField->save();
             }
         }
