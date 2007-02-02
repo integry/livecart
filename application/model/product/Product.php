@@ -261,7 +261,8 @@ class Product extends MultilingualObject
 	public function toArray()
 	{
 	  	$array = parent::toArray();
-	  	$array['specFieldData'] = $this->specFieldData;
+//	  	$array['specFieldData'] = $this->specFieldData;
+	  	$array['attributes'] = $this->getSpecification()->toArray();
 	  	return $array;
 	}
 

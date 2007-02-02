@@ -6,6 +6,7 @@ interface iSpecification
  	public function getSpecField();	  
 	public function save();
 	public function delete();
+	public function toArray();
 }
 
 ?>

@@ -43,6 +43,14 @@ class SpecificationItem extends Specification
 
 		$this->specFieldValue->set($value);
 	}
+	
+	public function toArray()
+	{
+		$ret = $this->specFieldValue->get()->toArray();
+
+		return $ret;
+	}	
+	
 }
 
 ?>

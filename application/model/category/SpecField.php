@@ -231,7 +231,7 @@ class SpecField extends MultilingualObject
 				$specValueClass = 'MultiValueSpecificationItem';	  	
 			}
 		}
-echo '<b>'		. $specValueClass . '</b>';
+
 		return call_user_func(array($specValueClass, 'getNewInstance'), $product, $this, $value);
 	}
 

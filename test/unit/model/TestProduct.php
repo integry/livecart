@@ -46,6 +46,8 @@ $product->save();
 // create a single value select attribute
 $singleSel = SpecField::getNewInstance($productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SELECTOR);
 $singleSel->handle->set('single.sel');
+$singleSel->setValueByLang('name', 'en', 'Select one value');
+$singleSel->setValueByLang('name', 'lt', 'Pasirinkite viena reiksme');
 $singleSel->save();
 
 // create some numeric values for the select
@@ -67,6 +69,8 @@ $product->save();
 
 // create yet another single value select attribute
 $anotherSel = SpecField::getNewInstance($productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SELECTOR);
+$anotherSel->setValueByLang('name', 'en', 'Select another value');
+$anotherSel->setValueByLang('name', 'lt', 'Pasirinkite kita reiksme');
 $anotherSel->save();
 
 // create some numeric values for the select
@@ -112,6 +116,8 @@ $product->save();
 // create a multiple value select attribute
 $multiSel = SpecField::getNewInstance($productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SELECTOR);
 $multiSel->isMultiValue->set(true);
+$multiSel->setValueByLang('name', 'en', 'Select multiple values');
+$multiSel->setValueByLang('name', 'lt', 'Pasirinkite kelias reiksmes');
 $multiSel->save();
 
 $values = array();
@@ -147,11 +153,35 @@ catch (Exception $e)
 }
 
 // remove the multiselect value altogether
-$product->removeAttribute($multiSel);
-$product->save();
+//$product->removeAttribute($multiSel);
+//$product->save();
 
-ActiveRecordModel::commit();
-//ActiveRecordModel::rollback();
+// create a multiple text value select attribute
+$multiText = SpecField::getNewInstance($productCategory, SpecField::DATATYPE_TEXT, SpecField::TYPE_TEXT_SELECTOR);
+$multiText->isMultiValue->set(true);
+$multiText->setValueByLang('name', 'en', 'Select multiple TEXT values');
+$multiText->setValueByLang('name', 'lt', 'Pasirinkite kelias TEKSTO reiksmes');
+$multiText->save();
+
+$inst = SpecFieldValue::getNewInstance($multiText);
+$inst->setValueByLang('value', 'en', 'First value');
+$inst->setValueByLang('value', 'lt', 'Pirma reiksme');
+$inst->save();
+
+$product->setAttributeValue($multiText, $inst); 
+
+$inst = SpecFieldValue::getNewInstance($multiText);
+$inst->setValueByLang('value', 'en', 'Second value');
+$inst->setValueByLang('value', 'lt', 'Antra reiksme');
+$inst->save();
+
+$product->setAttributeValue($multiText, $inst); 
+
+$arr = $product->toArray();
+print_r($arr);
+
+//ActiveRecordModel::commit();
+ActiveRecordModel::rollback();
 
 echo "OK\n<br/>";
 echo "</pre>";

@@ -28,6 +28,14 @@ abstract class ValueSpecification extends Specification
 
 		return $specItem;
 	}
+	
+	public function toArray()
+	{
+		$ret = array();
+		$ret['value'] = $this->value->get();
+		$ret['SpecField'] = $this->specField->get()->toArray(ActiveRecordModel::NON_RECURSIVE);
+		return $ret;
+	}	
 }
 
 ?>

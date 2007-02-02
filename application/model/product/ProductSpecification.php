@@ -90,23 +90,24 @@ class ProductSpecification
 		foreach ($this->removedAttributes as $attribute)
 		{
 		  	$attribute->delete();
-		  	echo '<hr><span color=red>deleting..</span><Br>';
 		}  
 		$this->removedAttributes = array();
 
 		foreach ($this->attributes as $attribute)
 		{
-		  	echo '<hr>saving..<Br>';
 		  	$attribute->save();
 		}  
 	}
 
-	/**
-	 * @todo implement
-	 */
 	public function toArray()
 	{
+		$arr = array();
+		foreach ($this->attributes as $id => $attribute)
+		{
+		 	$arr[$id] = $attribute->toArray(ActiveRecordModel::NON_RECURSIVE);		 	
+		}
 
+		return $arr;
 	}
 
 	private function loadSpecificationData($specificationDataArray)

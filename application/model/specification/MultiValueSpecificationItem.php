@@ -61,6 +61,47 @@ class MultiValueSpecificationItem implements iSpecification
 		return $this->specFieldInstance;  
 	}
 	
+	public function toArray()
+	{
+	  	$ret = array();
+
+	  	$ret['SpecField'] = $this->specFieldInstance->toArray();
+
+		// get value ID's
+		$ids = array();
+		$values = array();
+		$isLanguage = (SpecField::TYPE_TEXT_SELECTOR == $this->specFieldInstance->type->get());
+		foreach ($this->items as $id => $item)
+		{
+		  	$ids[] = $id;
+		  	
+			$value = $item->specFieldValue->get()->toArray(ActiveRecordModel::NON_RECURSIVE);
+			
+			if ($isLanguage)
+			{
+			  	$v = array();
+				foreach ($value as $key => $val)
+			  	{
+				    if (substr($key, 0, 5) == 'value')
+				    {
+						$v[$key] = $val;
+					}
+				}			  
+			}
+			else
+			{
+			  	$v = $value['value'];
+			}
+			
+			$values[] = $v;
+		}
+		
+		$ret['valueIDs'] = $ids;
+		$ret['values'] = $values;		
+			
+		return $ret;
+	}
+	
 	public static function getNewInstance(Product $product, SpecField $field, $value = false)
 	{
 		$specItem = new MultiValueSpecificationItem($product, $field);
