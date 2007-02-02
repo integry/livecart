@@ -12,6 +12,7 @@
     Backend.SpecField.prototype.links.sortField = {/literal}'{link controller=backend.specField action=sort}/'{literal};
     Backend.SpecField.prototype.links.deleteValue = {/literal}'{link controller=backend.specField action=deleteValue}/'{literal};
     Backend.SpecField.prototype.links.sortValues = {/literal}'{link controller=backend.specField action=sortValues}/'{literal};
+    Backend.SpecField.prototype.links.sortGroups = {/literal}'{link controller=backend.specField action=sortGroups}/'{literal};
 
 
     Backend.SpecField.prototype.msg = {};
@@ -99,17 +100,9 @@
         {
             console.info("group saved");
         },
-        beforeDelete:   function(li)
-        {
-            console.info("delete group");
-        },
-        afterDelete:    function(li, jsonResponse)
-        {
-            console.info("group deleted");
-        },
         beforeSort:     function(li, order)
         {
-            return Backend.SpecField.prototype.links.sortField + "?target=specField_items_list_{/literal}{$categoryID}{literal}&" + order
+            return Backend.SpecField.prototype.links.sortGroups + "?target=" + this.ul.id + "&" + order
         },
         afterSort:      function(li, response)
         {

@@ -306,5 +306,18 @@ class SpecFieldController extends StoreManagementController
 
         return new JSONResponse(array('status' => 'success'));
     }
+    
+    public function sortGroups()
+    {
+        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        {
+            // Except new fields, because they are not yet in database
+            $group = SpecFieldGroup::getInstanceByID((int)$key);
+            $group->setFieldValue('position', (int)$position);
+            $group->save();
+        }
+
+        return new JSONResponse(array('status' => 'success'));
+    }
 
 }
