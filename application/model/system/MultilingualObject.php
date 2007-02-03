@@ -122,7 +122,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 					// if there's no value in active language)
 					$data[$fieldName . '_lang'] = !empty($data[$fieldName . '_' . $currentLangCode]) ?
 														$data[$fieldName . '_' . $currentLangCode] :
-														$data[$fieldName];
+														!empty($data[$fieldName]) ? $data[$fieldName] : 'blahh';
 				}
 				else
 				{

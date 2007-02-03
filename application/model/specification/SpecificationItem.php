@@ -3,6 +3,8 @@
 ClassLoader::import("application.model.ActiveRecordModel");
 ClassLoader::import("application.model.product.*");
 
+include_once('Specification.php');
+
 /**
  * Product specification data container
  * Contains a relation between specification fields (attributes), assigned values and products

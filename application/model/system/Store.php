@@ -42,6 +42,8 @@ class Store
 	
 	const EXCLUDE_DEFAULT_CURRENCY = false;
 
+	const INCLUDE_DEFAULT = true;
+
 	/**
 	 * LiveCart operates on a single store object
 	 *

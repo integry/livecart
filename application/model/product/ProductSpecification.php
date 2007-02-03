@@ -17,7 +17,7 @@ class ProductSpecification
 	
 	private $removedAttributes = array();
 
-	public function __construct(Product $product, $specificationDataArray)
+	public function __construct(Product $product, $specificationDataArray = array())
 	{
 		$this->product = $product;
 		$this->loadSpecificationData($specificationDataArray);
@@ -114,7 +114,7 @@ class ProductSpecification
 	{
 		// preload all specFields from database
 		$specFieldIds = array_keys($specificationDataArray);
-		$specFields = ActiveRecordModel::getInstanceArray('SpecField', $specFieldIDs);
+		$specFields = ActiveRecordModel::getInstanceArray('SpecField', $specFieldIds);
 		
 		foreach ($specificationDataArray as $specFieldID => $value)
 		{

@@ -33,7 +33,7 @@ class Manufacturer extends ActiveRecordModel
 		}
 	}
 	
-	protected static function getNewInstance($name)
+	public static function getNewInstance($name)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->name->set($name);

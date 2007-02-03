@@ -3,6 +3,8 @@
 ClassLoader::import("application.model.system.Language");
 ClassLoader::import("application.model.system.MultilingualObject");
 
+ClassLoader::import("application.model.specification.*");
+
 /**
  * Store product (item)
  *

@@ -40,6 +40,11 @@ class Currency extends ActiveRecord
 		return $array;
 	}
 	
+	public static function getInstanceById($id)
+	{
+		return ActiveRecordModel::getInstanceById(__CLASS__, $id);
+	}
+	
 	public static function deleteById($id)
 	{
 		// make sure the currency record exists

@@ -23,7 +23,7 @@ function error_handler($code, $message, $file, $line) {
    throw new PHPErrorException($code, $message, $file, $line);
 }
 
-set_error_handler('error_handler');
+//set_error_handler('error_handler');
 
 	/**
 	 * livecart front controller
@@ -60,12 +60,10 @@ set_error_handler('error_handler');
 	require_once(".." . DIRECTORY_SEPARATOR . "framework" . DIRECTORY_SEPARATOR . "ClassLoader.php");
 
 	ClassLoader::mountPath(".", dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
-	//ClassLoader::mountPath("framework", "C:/projects/framework/");
 
 	ClassLoader::import("library.stat.Stat");
 	$stat = new Stat(true);
 
-	ClassLoader::import("framework.*");
 	ClassLoader::import("framework.request.Request");
 	ClassLoader::import("framework.request.Router");
 	ClassLoader::import("framework.renderer.TemplateRenderer");

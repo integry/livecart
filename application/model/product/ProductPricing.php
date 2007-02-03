@@ -11,9 +11,15 @@ class ProductPricing
 	
 	private $removedPrices = array();
 	
-	public function __construct(Product $product, $prices)
+	public function __construct(Product $product, $prices = array())
 	{
-		$this->product = $product;	
+		$this->product = $product;
+		
+		foreach ($prices as $id => $price)
+		{
+			$inst = ProductPrice::getNewInstance($product, Currency::getInstanceById($id));
+			$inst->markAsLoaded();
+		}
 	}
 	
 	public function setPrice(ProductPrice $price)
@@ -58,6 +64,7 @@ class ProductPricing
 		{
 			$price->delete();
 		}
+		$this->removedPrices = array();
 	}
 	
 	public function toArray()
