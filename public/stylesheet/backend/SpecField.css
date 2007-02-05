@@ -14,8 +14,14 @@
     margin-right: 1em;
 }
 
-.specField_title, .specField_group_title * {
-	font-size: 200%;
+.specField_group_title * {
+    font-size: 300%;
+    color: #a1d458;
+    font-weight: bold;
+}
+
+.specField_title {
+    font-size: 200%;
 }
 
 .specField_group_title input {
@@ -25,18 +31,18 @@
 
 
 .specFieldList .activeList_container {
-	padding-left: 80px;
+    padding-left: 80px;
 }
 
 .specFieldList li {
-  	padding: 5px;
-  	margin-bottom: 10px;
-  	background-color: #F7F7F7;  	
-  	width: 650px;
+    padding: 5px;
+    margin-bottom: 10px;
+    background-color: #F7F7F7;  	
+    width: 650px;
 }
 
 .specFieldList li li {
-  	width: 100%;
+    width: 100%;
 }
 
 

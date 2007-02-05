@@ -148,8 +148,6 @@ ActiveList.prototype = {
                 throw Error('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
                 return false;
             }
-            
-            console.info(this.ul.id)
     
             // Check if all required callbacks are passed
             var missedCallbacks = [];
@@ -188,21 +186,26 @@ ActiveList.prototype = {
      */
     getInstance: function(ul, callbacks, messages)
     {  
-       var ulElement = $(ul);    
-      
-       
-       if(!ulElement.id)
+       try 
        {
-            throw Error('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
-            return false;
+           var ulElement = $(ul);       
+           if(!ulElement.id)
+           {
+                throw Error('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
+                return false;
+           }
+           
+           if(!ActiveList.prototype.activeListsUsers[ulElement.id]) 
+           {
+               ActiveList.prototype.activeListsUsers[ulElement.id] = new ActiveList(ulElement.id, callbacks, messages);
+           }
+           
+           return ActiveList.prototype.activeListsUsers[ulElement.id];
        }
-       
-       if(!ActiveList.prototype.activeListsUsers[ulElement.id]) 
+       catch(e) 
        {
-           ActiveList.prototype.activeListsUsers[ulElement.id] = new ActiveList(ulElement.id, callbacks, messages);
+            console.info(e);
        }
-       
-       return ActiveList.prototype.activeListsUsers[ulElement.id];
     },
 
     /**

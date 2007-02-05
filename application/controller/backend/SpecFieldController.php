@@ -73,7 +73,8 @@ class SpecFieldController extends StoreManagementController
 
         $categoryID = (int)$this->request->getValue('id');
         $category = Category::getInstanceByID($categoryID);
-        $response->setValue('specFields', $category->getSpecificationFieldArray());
+        
+        $response->setValue('specFieldsWithGroups', $category->getSpecificationFieldArray(true, true, true));
 
         $defaultSpecFieldValues = array
         (
@@ -89,7 +90,6 @@ class SpecFieldController extends StoreManagementController
         );
 
         $response->setValue('categoryID', $categoryID);
-        $response->setValue('specFieldsList', $defaultSpecFieldValues);
         $response->setValue('configuration', $this->specFieldConfig);
         $response->setValue('defaultLangCode', $this->store->getDefaultLanguageCode());
 
@@ -111,7 +111,6 @@ class SpecFieldController extends StoreManagementController
 		   $specFieldList['values'][$value['ID']] = $value['value'];
 		}
 		
-		$specFieldList['rootId'] = "specField_items_list_".$specFieldList['Category']['ID']."_".$specFieldList['ID'];
 		$specFieldList['categoryID'] = $specFieldList['Category']['ID'];
 		unset($specFieldList['Category']);
 				
@@ -251,12 +250,19 @@ class SpecFieldController extends StoreManagementController
 
     public function sort()
     {
-        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        $target = $this->request->getValue('target');
+        preg_match('/_(\d+)$/', $target, $match); // Get group. 
+        
+        foreach($this->request->getValue($target, array()) as $position => $key)
         {
             if(!empty($key))
             {
                 $specField = SpecField::getInstanceByID((int)$key);
                 $specField->setFieldValue('position', (int)$position);
+                
+                if(isset($match[1])) $specField->setFieldValue('specFieldGroupID', SpecFieldGroup::getInstanceByID((int)$match[1])); // Change group
+                else $specField->specFieldGroup->setNull();
+                
                 $specField->save();
             }
         }
@@ -288,6 +294,19 @@ class SpecFieldController extends StoreManagementController
                 $specField->setFieldValue('position', (int)$position);
                 $specField->save();
             }
+        }
+
+        return new JSONResponse(array('status' => 'success'));
+    }
+    
+    public function sortGroups()
+    {
+        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        {
+            // Except new fields, because they are not yet in database
+            $group = SpecFieldGroup::getInstanceByID((int)$key);
+            $group->setFieldValue('position', (int)$position);
+            $group->save();
         }
 
         return new JSONResponse(array('status' => 'success'));

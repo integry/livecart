@@ -116,10 +116,10 @@
     <a href="#new" id="specField_item_new_{$categoryID}_show">{t _add_new_field}</a>
     <div id="specField_item_new_{$categoryID}_form" style="display: none;">
         <script type="text/javascript">
-           var newSpecFieldForm = new Backend.SpecField('{json array=$specFieldsList}');
-           newSpecFieldForm.addField(null, "new" + Backend.SpecField.prototype.countNewFilters, true);
-           newSpecFieldForm.bindDefaultFields();
-           Backend.SpecField.prototype.countNewFilters++;
+//           var newSpecFieldForm = new Backend.SpecField('{json array=$specFieldsList}');
+//           newSpecFieldForm.addField(null, "new" + Backend.SpecField.prototype.countNewFilters, true);
+//           newSpecFieldForm.bindDefaultFields();
+//           Backend.SpecField.prototype.countNewFilters++;
         </script>
     </div>
 </div>
@@ -127,23 +127,27 @@
 <br />
 
 
+{assign var="lastSpecFieldGroup" value="-1"}
 <ul id="specField_groups_list_{$categoryID}" class="specFieldListGroup activeList_add_sort activeList_add_edit">
-    {foreach item="group" from=$specFieldsGroups}
-    <li id="specField_groups_list_{$categoryID}_{$group.ID}">
-        <span class="specField_group_title">
-            <span>{$group.name[$defaultLangCode]}</span>
-            <input value="{$group.name[$defaultLangCode]}" />
-        </span>
+{foreach name="specFieldForeach" item="field" from=$specFieldsWithGroups}
+    {if $lastSpecFieldGroup != $field.SpecFieldGroup.ID}
+        {if !$smarty.foreach.specFieldForeach.first}</ul></li>{/if}
+        {assign var="lastSpecFieldGroup" value=$field.SpecFieldGroup.ID}
         
-        <ul id="specField_items_list_{$categoryID}_{$group.ID}" class="specFieldList activeList_accept_specFieldList activeList_add_sort activeList_add_edit activeList_add_delete">
-        {foreach item="field" from=$group.specFields}
-        	<li id="specField_items_list_{$categoryID}_{$group.ID}_{$field.ID}">
-            	<span class="specField_title">{$field.name[$defaultLangCode]}</span>
-        	</li>
-        {/foreach}
-        </ul>
+        <li id="specField_groups_list_{$categoryID}_{$field.SpecFieldGroup.ID}">
+            <span class="specField_group_title">
+                <span>{$field.SpecFieldGroup.name[$defaultLangCode]}</span>
+                <input value="{$field.SpecFieldGroup.name[$defaultLangCode]}" />
+            </span>
+            <ul id="specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}" class="specFieldList activeList_add_sort activeList_add_edit activeList_accept_specFieldList">
+    {/if}
+    
+    {if $field.ID} {* For empty groups *}
+    <li id="specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}_{$field.ID}">
+    	<span class="specField_title">{$field.name[$defaultLangCode]}</span>
     </li>
-    {/foreach}
+    {/if}
+{/foreach}
 </ul>
 
 
@@ -158,10 +162,20 @@
      
      var groupList = ActiveList.prototype.getInstance('specField_groups_list_{$categoryID}', specFieldGroupCallbacks, Backend.SpecField.prototype.activeListMessages);
      Event.observe($("specField_item_new_{$categoryID}_show"), "click", function(e) {literal}{{/literal} Backend.SpecField.prototype.createNewAction(e, '{$categoryID}') {literal}}{/literal});
-     
-     {foreach item="group" from=$specFieldsGroups}
-         ActiveList.prototype.getInstance('specField_items_list_{$categoryID}_{$group.ID}', specFieldListCallbacks, Backend.SpecField.prototype.activeListMessages);
-     {/foreach}
+
+ 
+{assign var="lastSpecFieldGroup" value="-1"}
+{foreach item="field" from=$specFieldsWithGroups}
+    {if $lastSpecFieldGroup != $field.SpecFieldGroup.ID}
+        {if !$smarty.foreach.specFieldForeach.first}
+             ActiveList.prototype.getInstance('specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}', specFieldListCallbacks, Backend.SpecField.prototype.activeListMessages);
+             console.info('specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}');
+             console.info('--');
+        {/if}
+        
+        {assign var="lastSpecFieldGroup" value=$field.SpecFieldGroup.ID}
+    {/if}
+{/foreach}
      
      groupList.createSortable();
 </script>
