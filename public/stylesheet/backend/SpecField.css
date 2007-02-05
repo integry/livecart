@@ -14,10 +14,14 @@
     margin-right: 1em;
 }
 
-.specField_group_title * {
+.specField_group_title {
     font-size: 300%;
     color: #a1d458;
     font-weight: bold;
+}
+
+.specFieldGroup_translations {
+    display: none;
 }
 
 .specField_title {

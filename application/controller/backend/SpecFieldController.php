@@ -91,6 +91,7 @@ class SpecFieldController extends StoreManagementController
 
         $response->setValue('categoryID', $categoryID);
         $response->setValue('configuration', $this->specFieldConfig);
+        $response->setValue('specFieldsList', $defaultSpecFieldValues);
         $response->setValue('defaultLangCode', $this->store->getDefaultLanguageCode());
 
         return $response;

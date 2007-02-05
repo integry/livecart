@@ -134,8 +134,6 @@ Backend.SpecField.prototype = {
 	    var blankForm = $(prototypeId);
                 
         var blankFormValues = blankForm.getElementsByTagName("*");
-        var test2 = this.specField.rootId;
-        var test = $(this.specField.rootId);
         var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ?  ActiveList.prototype.getInstance(this.specField.rootId).getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
 
         for(var i = 0; i < blankFormValues.length; i++)

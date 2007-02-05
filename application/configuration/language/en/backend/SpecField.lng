@@ -19,3 +19,5 @@ _error_value_empty=You are required to fill this field
 _error_value_is_not_a_number=Field value should be a valid number
 _error_name_empty=Name empty
 _error_record_id_is_not_valid=Record with such id does not exist
+
+_not_in_group=Attributes without a group
