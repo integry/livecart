@@ -31,7 +31,9 @@ class Product extends MultilingualObject
 	 *	@var array
 	 */
 	private $priceData = array();
-
+	
+	const DO_NOT_RECALCULATE_PRICE = false;	
+	
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -98,9 +100,6 @@ class Product extends MultilingualObject
 				$categoryNode->save();
 			}
 
-			// save specification field values
-			$this->saveSpecFields();
-
 			ActiveRecordModel::commit();
 		}
 		catch (Exception $e)
@@ -161,16 +160,20 @@ class Product extends MultilingualObject
 
 	public function save()
 	{
-		parent::save();
+		ActiveRecordModel::beginTransaction();
 
+		parent::save();
 		$this->getSpecification()->save();
-		$this->getPricing()->save();
+		$this->getPricingHandler()->save();
+
+		ActiveRecordModel::commit();
 	}
 
 	/**
 	 *	Saves specification field values
 	 *	Note: transaction has to be started already
 	 */
+/*
 	protected function saveSpecFields()
 	{
 		$fields = $this->category->get()->getSpecificationFieldSet(Category::INCLUDE_PARENT);
@@ -236,6 +239,7 @@ class Product extends MultilingualObject
 		ActiveRecordModel::commit();
 
 	}
+	*/
 
 	protected function miscRecordDataHandler($miscRecordDataArray)
 	{
@@ -264,6 +268,7 @@ class Product extends MultilingualObject
 	  	return $this->category->get()->getSpecificationFieldSet(true);
 	}
 
+/*
 	public function getSpecFieldValue($id)
 	{
 	  	if (isset($this->specFieldData[$id]))
@@ -285,6 +290,7 @@ class Product extends MultilingualObject
 
 	    $this->specFieldData[$id] = $value;
 	}
+*/
 
 	public function loadRequestData(Request $request)
 	{
@@ -315,7 +321,7 @@ class Product extends MultilingualObject
 			{
 				if (!$field->isMultiValue->get())
 				{
-				  	
+					  	
 				}
 				else
 				{
@@ -340,12 +346,24 @@ class Product extends MultilingualObject
 			{
 			  	if ($request->isValueSet($field->getFormFieldName()))
 			  	{
-					$this->setAttributeValue($field, $request->getValue($field->getFormFieldName()));				    
+					if ($field->isTextField())
+					{
+						$languages = Store::getInstance()->getLanguageArray(Store::INCLUDE_DEFAULT);
+						foreach ($languages as $language)
+						{
+						  	if ($request->isValueSet($field->getFormFieldName($language)))
+						  	{
+								$this->setAttributeValueByLang($field, $language, $request->getValue($field->getFormFieldName($language)));				  						  							    
+							}
+						}				  
+					}
+					else
+					{
+						$this->setAttributeValue($field, $request->getValue($field->getFormFieldName()));				    					  
+					}
 				}
 			}				
-		}
-
-	  	
+		}  	
 	}
 
 	public function toArray()
@@ -509,12 +527,17 @@ class Product extends MultilingualObject
 	{	  	
 	  	$instance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
 	  	$instance->price->set($price);
+	  	
+	  	if (empty($price))
+	  	{
+		    $this->getPricingHandler()->removePriceByCurrencyCode($currencyCode);
+		}
 	}
 
-	public function getPrice($currencyCode)
+	public function getPrice($currencyCode, $recalculate = true)
 	{
 	  	$instance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
-	  	if (!$instance->price->get())
+	  	if (!$instance->price->get() && $recalculate)
 	  	{
 	  		return $instance->reCalculatePrice();		    
 		}

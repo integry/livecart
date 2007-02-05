@@ -48,6 +48,11 @@ class ProductPricing
 		$this->removedPrices[$currency->getID()] = $currency;
 		unset($this->prices[$currency->getID()]);
 	}
+
+	public function removePriceByCurrencyCode($currencyCode)
+	{
+		unset($this->prices[$currencyCode]);
+	}	
 	
 	public function isPriceSet(Currency $currency)
 	{
@@ -70,21 +75,26 @@ class ProductPricing
 	
 	public function toArray()
 	{
-		$calculated = array();
-		$defined = array();
-		
+
+		$defined = array();		
 		foreach ($this->prices as $inst)
 		{
-			$price = $inst->price->get();
+			$defined[$inst->currency->get()->getID()] = $inst->price->get();
+		}
 
-			$defined[$inst->currency->get()->getID()] = $price;
-		
-			if (is_null($price))
-			{
-				$price = $inst->reCalculatePrice();
+		$calculated = array();
+
+		foreach (Store::getInstance()->getCurrencySet() as $currency)
+		{
+		  	if (!empty($defined[$currency->getID()]))
+		  	{
+			    $calculated[$currency->getID()] = $defined[$currency->getID()];
 			}
-
-			$calculated[$inst->currency->get()->getID()] = $price;
+			else
+			{
+				$price = ProductPrice::getNewInstance($this->product, $currency);
+			    $calculated[$currency->getID()] = $price->reCalculatePrice();
+			}
 		}
 	
 		return array('defined' => $defined,

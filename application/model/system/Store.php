@@ -266,6 +266,31 @@ class Store
 	}
 
 	/**
+	 * Returns array of enabled currency instances
+	 * @param bool $includeDefaultCurrency Whether to include default currency in the list
+	 * @return array Enabled currency codes
+	 */
+	public function getCurrencySet($includeDefaultCurrency = true)
+	{
+		if (!$this->defaultCurrency)
+		{
+		  	$this->loadCurrencyData();
+		}
+
+		$currArray = array();
+		$defCurrency = $this->getDefaultCurrency()->getID();
+		foreach ($this->currencies as $currency)
+		{
+			if ($defCurrency != $currency->getID() || $includeDefaultCurrency)
+			{
+				$currArray[] = $currency;
+			}
+		}
+
+		return $currArray;
+	}
+
+	/**
 	 * Loads currency data from database
 	 */
 	private function loadCurrencyData()

@@ -65,7 +65,11 @@ class ProductController extends StoreManagementController
 			// set data
 			$product->loadRequestData($this->request);
 								
-			
+			ActiveRecordModel::beginTransaction();
+			$product->save();
+			ActiveRecordModel::rollback();
+//			ActiveRecordModel::commit();
+									
 			echo '<pre>';
 			print_r($product->toArray());
 			echo '</pre>';
@@ -106,7 +110,7 @@ class ProductController extends StoreManagementController
 				$multiLingualSpecFields[] = $field->toArray();
 			}
 		}
-		
+
 		$form = $this->buildForm($product);
 		$form->setData($product->toArray());
 
@@ -120,7 +124,7 @@ class ProductController extends StoreManagementController
 		$types = array(0 => $this->translate('_tangible'),
 					   1 => $this->translate('_intangible'),	
 					  );
-			
+
 		$response = new ActionResponse();
 		$response->setValue("languageList", $languages);
 		$response->setValue("specFieldList", $specFieldArray);

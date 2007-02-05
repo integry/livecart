@@ -52,7 +52,7 @@ class ProductPrice extends ActiveRecordModel
 	public function reCalculatePrice()
 	{
 		$defaultCurrency = Store::getInstance()->getDefaultCurrency();
-		$basePrice = $this->product->get()->getPrice($defaultCurrency->getID());
+		$basePrice = $this->product->get()->getPrice($defaultCurrency->getID(), Product::DO_NOT_RECALCULATE_PRICE);
 		
 		if ($this->currency->get()->rate->get())
 		{
@@ -63,7 +63,7 @@ class ProductPrice extends ActiveRecordModel
 			$price = 0;	
 		}
 
-		return $price;
+		return round($price, 2);
 	}
 }
 

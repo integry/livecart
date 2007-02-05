@@ -121,28 +121,6 @@ class SpecField extends MultilingualObject
     }
 
     /**
-     * Gets a set of values created for this field
-     *
-     * @return ARSet
-     */
-    public function getValueSet()
-    {
-    	return $this->getRelatedRecordSet("SpecFieldValue", new ARSelectFilter());
-    	//return ActiveRecordModel::getRecordSet("SpecFieldValue", $this->getValueFilter());
-    }
-
-    /**
-     * Gets an array of values created for this field
-     *
-     * @return array
-     */
-	public function getValueArray()
-	{
-		return $this->getRelatedRecordSetArray("SpecFieldValue", new ARSelectFilter());
-		//return ActiveRecordModel::getRecordSetArray("SpecFieldValue", $this->getValueFilter());
-	}
-
-    /**
      * Gets a related table name, where field values are stored
      *
      * @return array
@@ -270,6 +248,7 @@ class SpecField extends MultilingualObject
 	 *
 	 * @return ARSet
 	 */
+
 	public function getValuesSet()
 	{
 		return SpecFieldValue::getRecordSet($this->getID());
@@ -280,6 +259,11 @@ class SpecField extends MultilingualObject
 		return in_array($this->type->get(), SpecField::getSelectorValueTypes());  
 	}
 	
+	public function isTextField()
+	{
+		return in_array($this->type->get(), array(SpecField::TYPE_TEXT_SIMPLE, SpecField::TYPE_TEXT_ADVANCED));  
+	}
+
 	/**
 	 *
 	 *
@@ -337,9 +321,9 @@ class SpecField extends MultilingualObject
 	  	return $array;
 	}
 
-	public function getFormFieldName()
+	public function getFormFieldName($language = false)
 	{
-	  	return 'specField_' . $this->getID();
+	  	return 'specField_' . $this->getID() . ($language ? '_' . $language : '');
 	}
 
     public static function countItems(Category $category)
