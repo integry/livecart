@@ -99,6 +99,11 @@ class SpecFieldValue extends MultilingualObject
 	    parent::deleteByID(__CLASS__, (int)$id);
 	}
 	
+	public function getFormFieldName()
+	{
+	  	return 'specItem_' . $this->getID();
+	}
+
 	protected function insert()
 	{
 	   	// get current max position

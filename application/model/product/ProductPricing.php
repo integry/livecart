@@ -29,18 +29,19 @@ class ProductPricing
 	
 	public function getPrice(Currency $currency)
 	{
-		if ($this->isPriceSet($currency))
-		{
-			return $this->prices[$currency->getID()];
-		}
-		else
+		if (!$this->isPriceSet($currency))
 		{
 			$inst = ProductPrice::getNewInstance($this->product, $currency);			
-			$inst->price->set($inst->reCalculatePrice());		
-
-			return $inst;
+			$this->prices[$currency->getID()] = $inst;
 		}
+
+		return $this->prices[$currency->getID()];
 	}
+	
+	public function getPriceByCurrencyCode($currencyCode)
+	{
+	  	return $this->getPrice(Currency::getInstanceByID($currencyCode));
+	}	
 	
 	public function removePrice(Currency $currency)
 	{
@@ -76,14 +77,14 @@ class ProductPricing
 		{
 			$price = $inst->price->get();
 
-			$defined[$inst->getID()] = $price;
+			$defined[$inst->currency->get()->getID()] = $price;
 		
 			if (is_null($price))
 			{
 				$price = $inst->reCalculatePrice();
 			}
 
-			$calculated[$inst->getID()] = $price;
+			$calculated[$inst->currency->get()->getID()] = $price;
 		}
 	
 		return array('defined' => $defined,

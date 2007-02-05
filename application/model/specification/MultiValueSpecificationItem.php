@@ -122,7 +122,7 @@ class MultiValueSpecificationItem implements iSpecification
 		{
 			foreach ($specValueIds as $id)
 			{
-				$this->items[$id] = SpecificationItem::restoreInstance($product, $field, SpecFieldValue::getInstanceByID($id))
+				$this->items[$id] = SpecificationItem::restoreInstance($product, $field, SpecFieldValue::getInstanceByID($id));
 			}			
 		}		
 		

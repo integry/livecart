@@ -20,18 +20,39 @@ class ProductPrice extends ActiveRecordModel
 		$schema->registerField(new ARField("price", ARFloat::instance(16)));
 	}
 	
-	public function getNewInstance(Product $product, Currency $currency)
+	public static function getNewInstance(Product $product, Currency $currency)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->product->set($product);
 		$instance->currency->set($currency);	
-		$instance->reCalculatePrice();
+		
+		return $instance;
 	}
 	
+	public static function getInstance(Product $product, Currency $currency)
+	{
+		$filter = new ARSelectFilter();
+		$cond = new EqualsCond(new ARFieldHandle('ProductPrice', 'productID'), $product->getID());
+		$cond->addAND(new EqualsCond(new ARFieldHandle('ProductPrice', 'currencyID'), $currency->getID()));
+		$filter->setCondition($cond);
+		$set = parent::getRecordSet('ProductPrice', $filter);
+		
+		if ($set->size() > 0)
+		{
+		  	$instance = $set->get(0);
+		}
+		else
+		{
+		  	$instance = self::getNewInstance($product, $currency);
+		}
+			
+		return $instance;
+	}
+
 	public function reCalculatePrice()
 	{
 		$defaultCurrency = Store::getInstance()->getDefaultCurrency();
-		$basePrice = $this->product->getPrice($defaultCurrency->getID());
+		$basePrice = $this->product->get()->getPrice($defaultCurrency->getID());
 		
 		if ($this->currency->get()->rate->get())
 		{

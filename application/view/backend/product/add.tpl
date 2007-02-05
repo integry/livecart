@@ -105,10 +105,10 @@
 		</p>
 
 		<p>
-			<label for="website">Website address:</label>
+			<label for="URL">Website address:</label>
 			<fieldset class="error">
-				{textfield name="website" class="wide"}
-				{error for="website"}<div class="errorText">{$msg}</div>{/error}
+				{textfield name="URL" class="wide"}
+				{error for="URL"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>			
 		</p>
 

@@ -275,6 +275,11 @@ class SpecField extends MultilingualObject
 		return SpecFieldValue::getRecordSet($this->getID());
 	}
 
+	public function isSelector()
+	{
+		return in_array($this->type->get(), SpecField::getSelectorValueTypes());  
+	}
+	
 	/**
 	 *
 	 *
@@ -328,8 +333,13 @@ class SpecField extends MultilingualObject
 	public function toArray($recursive = false, $convertToUnderscore = true)
     {
 	  	$array = parent::toArray($recursive, $convertToUnderscore);
-	  	$array['fieldName'] = 'specField_' . $array['ID'];
+	  	$array['fieldName'] = $this->getFormFieldName();
 	  	return $array;
+	}
+
+	public function getFormFieldName()
+	{
+	  	return 'specField_' . $this->getID();
 	}
 
     public static function countItems(Category $category)

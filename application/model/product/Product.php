@@ -16,12 +16,21 @@ class Product extends MultilingualObject
 
 	private $specificationInstance = null;
 
+	private $pricingHandlerInstance = null;
+	
 	/**
 	 *  An array containing specification field values (specFieldID => value, specFieldID => value)	 
 	 *
 	 *	@var array
 	 */
 	private $specFieldData = array();
+
+	/**
+	 *  An array containing product prices (currencyID => price)	 
+	 *
+	 *	@var array
+	 */
+	private $priceData = array();
 
 	public static function defineSchema($className = __CLASS__)
 	{
@@ -30,7 +39,8 @@ class Product extends MultilingualObject
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", null, ARInteger::instance()));
-
+		$schema->registerField(new ARForeignKeyField("manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()));
+		
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("shortDescription", ARArray::instance()));
 		$schema->registerField(new ARField("longDescription", ARArray::instance()));
@@ -154,6 +164,7 @@ class Product extends MultilingualObject
 		parent::save();
 
 		$this->getSpecification()->save();
+		$this->getPricing()->save();
 	}
 
 	/**
@@ -275,10 +286,73 @@ class Product extends MultilingualObject
 	    $this->specFieldData[$id] = $value;
 	}
 
+	public function loadRequestData(Request $request)
+	{
+	  	// basic data
+		parent::loadRequestData($request);
+	  	
+		// set manufacturer
+		if ($request->isValueSet('manufacturer'))
+		{
+			$this->manufacturer->set(Manufacturer::getInstanceByName($request->getValue('manufacturer')));		  
+		}
+		
+		// set prices
+		$currencies = Store::getInstance()->getCurrencyArray();
+		foreach ($currencies as $currency)
+		{
+			if ($request->isValueSet('price_' . $currency))
+			{
+			  	$this->setPrice($currency, $request->getValue('price_' . $currency));			  
+			}
+		}
+
+		// set SpecField's
+		$fields = $this->category->get()->getSpecificationFieldSet(Category::INCLUDE_PARENT);
+		foreach ($fields as $field)
+		{
+			if ($field->isSelector())
+			{
+				if (!$field->isMultiValue->get())
+				{
+				  	
+				}
+				else
+				{
+					$values = $field->getValuesSet();
+					foreach ($values as $value)
+					{
+					  	if ($request->isValueSet($value->getFormFieldName()))
+					  	{
+						  	if ($request->getValue($value->getFormFieldName()))
+						  	{
+								$this->setAttributeValue($field, $value);										    
+							}
+							else
+							{
+								$this->removeAttributeValue($field, $value);											  
+							}	    						    
+						}
+					} 
+				}					  	
+			}
+			else
+			{
+			  	if ($request->isValueSet($field->getFormFieldName()))
+			  	{
+					$this->setAttributeValue($field, $request->getValue($field->getFormFieldName()));				    
+				}
+			}				
+		}
+
+	  	
+	}
+
 	public function toArray()
 	{
 	  	$array = parent::toArray();
 	  	$array['attributes'] = $this->getSpecification()->toArray();
+	  	$array['prices'] = $this->getPricingHandler()->toArray();
 	  	return $array;
 	}
 
@@ -414,6 +488,40 @@ class Product extends MultilingualObject
 		}
 		
 		return $this->specificationInstance;
+	}
+
+	/**
+	 * Gets a product pricing handler instance
+	 *
+	 * @return ProductSpecification
+	 */
+	public function getPricingHandler()
+	{
+		if (!$this->pricingHandlerInstance)
+		{
+			$this->pricingHandlerInstance = new ProductPricing($this, $this->priceData);
+		}
+		
+		return $this->pricingHandlerInstance;
+	}
+	
+	public function setPrice($currencyCode, $price)
+	{	  	
+	  	$instance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
+	  	$instance->price->set($price);
+	}
+
+	public function getPrice($currencyCode)
+	{
+	  	$instance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
+	  	if (!$instance->price->get())
+	  	{
+	  		return $instance->reCalculatePrice();		    
+		}
+		else
+		{
+			return $instance->price->get();  
+		}
 	}
 
 }

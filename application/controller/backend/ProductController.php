@@ -62,8 +62,13 @@ class ProductController extends StoreManagementController
 		
 		if ($validator->isValid())
 		{
+			// set data
 			$product->loadRequestData($this->request);
+								
+			
+			echo '<pre>';
 			print_r($product->toArray());
+			echo '</pre>';
 		}
 		else
 		{

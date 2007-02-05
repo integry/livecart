@@ -39,7 +39,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		// get specification fields
 		if ($loadSpecification)
 		{
-			$specFields = $this->getSpecificationFieldSet(true);	  
+			$specFields = $this->getSpecificationFieldSet(self::INCLUDE_PARENT);	  
 			
 			foreach ($specFields as $specField)
 			{
