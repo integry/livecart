@@ -26,7 +26,7 @@ class CategoryController extends StoreManagementController
         $condition = new OperatorCond(new ARFieldHandle("Category", "ID"), Category::ROOT_ID, "=");
         $condition->addOR(new OperatorCond(new ARFieldHandle("Category", "parentNodeID"), Category::ROOT_ID, "="));
         $filter->setCondition($condition);
-		$filter->setOrder(new ARFieldHandle("Category", "lft", 'ASC'));
+		$filter->setOrder(new ARFieldHandle("Category", "lft"), ARSelectFilter::ORDER_ASC);
 		
 		$response->setValue("categoryList", Category::getRecordSet($filter)->toArray($this->store->getDefaultLanguageCode()));
         $response->setValue('curLanguageCode', $this->locale->getLocaleCode());
