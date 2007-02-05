@@ -65,6 +65,9 @@ class Product extends MultilingualObject
 	{
 		ActiveRecordModel::beginTransaction();
 		
+		$this->dateCreated->set('NOW()');
+		$this->dateUpdated->set('NOW()');
+				
 		try
 		{
 			parent::insert();
@@ -104,6 +107,8 @@ class Product extends MultilingualObject
 	protected function update()
 	{
 		ActiveRecordModel::beginTransaction();
+				
+		$this->dateUpdated->set('NOW()');
 				
 		try
 		{
@@ -280,6 +285,7 @@ class Product extends MultilingualObject
 	/**
 	 * Removes a product from a database
 	 *
+	 * @todo Reduce category product count
 	 * @param int $recordID
 	 * @return bool
 	 * @throws Exception
