@@ -116,10 +116,11 @@
     <a href="#new" id="specField_item_new_{$categoryID}_show">{t _add_new_field}</a>
     <div id="specField_item_new_{$categoryID}_form" style="display: none;">
         <script type="text/javascript">
-//           var newSpecFieldForm = new Backend.SpecField('{json array=$specFieldsList}');
-//           newSpecFieldForm.addField(null, "new" + Backend.SpecField.prototype.countNewFilters, true);
-//           newSpecFieldForm.bindDefaultFields();
-//           Backend.SpecField.prototype.countNewFilters++;
+        console.info({$specFieldsList});
+           var newSpecFieldForm = new Backend.SpecField('{json array=$specFieldsList}');
+           newSpecFieldForm.addField(null, "new" + Backend.SpecField.prototype.countNewFilters, true);
+           newSpecFieldForm.bindDefaultFields();
+           Backend.SpecField.prototype.countNewFilters++;
         </script>
     </div>
 </div>
@@ -127,13 +128,32 @@
 <br />
 
 
+
+<span class="specField_group_title">{t _not_in_group}</span>
+{* No group *}
+<ul id="specField_items_list_{$categoryID}_" class="specFieldList activeList_add_sort activeList_add_edit activeList_accept_specFieldList">
+{assign var="lastSpecFieldGroup" value="-1"}
+{foreach name="specFieldForeach" item="field" from=$specFieldsWithGroups}
+    {if $field.SpecFieldGroup.ID}{php}break;{/php}{/if}
+     
+    {if $field.ID} 
+    <li id="specField_items_list_{$categoryID}__{$field.ID}">
+    	<span class="specField_title">{$field.name[$defaultLangCode]}</span>
+    </li>
+    {/if}
+{/foreach}
+</ul>
+<hr />
+
+
+{* Grouped specification fields *}
 {assign var="lastSpecFieldGroup" value="-1"}
 <ul id="specField_groups_list_{$categoryID}" class="specFieldListGroup activeList_add_sort activeList_add_edit">
 {foreach name="specFieldForeach" item="field" from=$specFieldsWithGroups}
-    {if $lastSpecFieldGroup != $field.SpecFieldGroup.ID}
-        {if !$smarty.foreach.specFieldForeach.first}</ul></li>{/if}
-        {assign var="lastSpecFieldGroup" value=$field.SpecFieldGroup.ID}
-        
+    {if !$field.SpecFieldGroup.ID}{php}continue;{/php}{/if}
+    
+    {if $lastSpecFieldGroup != $field.SpecFieldGroup.ID }
+        {if $lastSpecFieldGroup > 0}</ul></li>{/if}
         <li id="specField_groups_list_{$categoryID}_{$field.SpecFieldGroup.ID}">
             <span class="specField_group_title">
                 <span>{$field.SpecFieldGroup.name[$defaultLangCode]}</span>
@@ -141,12 +161,15 @@
             </span>
             <ul id="specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}" class="specFieldList activeList_add_sort activeList_add_edit activeList_accept_specFieldList">
     {/if}
-    
+
+
     {if $field.ID} {* For empty groups *}
     <li id="specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}_{$field.ID}">
     	<span class="specField_title">{$field.name[$defaultLangCode]}</span>
     </li>
     {/if}
+
+    {assign var="lastSpecFieldGroup" value=$field.SpecFieldGroup.ID}
 {/foreach}
 </ul>
 
