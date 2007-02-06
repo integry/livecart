@@ -54,6 +54,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ARField("dateUpdated", ARDateTime::instance()));
 
 		$schema->registerField(new ARField("URL", ARVarchar::instance(256)));
+		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("isBestSeller", ARBool::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance(4)));
 
@@ -63,7 +64,6 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("isFreeShipping", ARBool::instance()));
 
 		$schema->registerField(new ArField("shippingWeight", ARFloat::instance(8)));
-		$schema->registerField(new ArField("unitsType", ARInteger::instance()));
 
 		$schema->registerField(new ArField("stockCount", ARFloat::instance(8)));
 		$schema->registerField(new ArField("reservedCount", ARFloat::instance(8)));
@@ -146,9 +146,6 @@ class Product extends MultilingualObject
 				}
 			}
 			
-			// save specification field values
-			$this->saveSpecFields();
-			
 			ActiveRecordModel::commit();
 		}
 		catch (Exception $e)
@@ -168,80 +165,31 @@ class Product extends MultilingualObject
 		$this->getSpecification()->save();
 		$this->getPricingHandler()->save();
 
-		ActiveRecordModel::commit();
-	}
-
-	/**
-	 *	Saves specification field values
-	 *	Note: transaction has to be started already
-	 */
-/*
-	protected function saveSpecFields()
-	{
-		$fields = $this->category->get()->getSpecificationFieldSet(Category::INCLUDE_PARENT);
-		
-		$tables = array();
-
-		// map each field to its value table
-		foreach ($fields as $field)
+		// generate SKU automatically if not set
+		if (!$this->sku->get())
 		{
-			if (!isset($this->specFieldData[$field->getID()]))
-			{
-			  	continue;
-			}
+			ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
 			
-			$tables[$field->getValueTableName()][] = $field->getID();
-		}		
-		
-		// get instances for all field values
-		$instances = array();
-		foreach ($tables as $table => $ids)
-		{
-			if (count($ids) > 0)
+			$sku = $this->getID();
+			
+			do
 			{
-				$cond = new EqualsCond(new ARFieldHandle($table, 'productID'), $this->getID());
-				$cond->addAND(new INCond(new ARFieldHandle($table, 'specFieldID'), $ids));
-				$filter = new ARSelectFilter();
-				$filter->setCondition($cond);
-				$set = ActiveRecordModel::getRecordSet($table, $filter);
-				
-				foreach ($set as $instance)
+				$check = new IsUniqueSkuCheck('', $this);
+				$exists = $check->isValid('SKU' . $sku);
+				if (!$exists)
 				{
-				  	$instances[$instance->specField->getID()] = $instance();
-				}
-				
-				// create missing instances
-				foreach ($ids as $id)
-				{
-					if (!isset($instances[$id]))
-					{
-					  	$instances[$id] = call_user_func(array($table, 'getNewInstance'), $this, $field, $this->specFieldData[$id]);
-					}  	
-					
-					$instances[$id]->value->set($this->specFieldData[$id]);
+				  	$sku = '0' . $sku;
 				}
 			}
-		}		
-				
-		try
-		{
-			ActiveRecordModel::beginTransaction();
+			while (!$exists);			
 			
-			foreach ($instances as $instance)
-			{
-			  	$instance->save();
-			}
-		}
-		catch (Exception $e)
-		{
-			ActiveRecordModel::rollback();
-			throw $e;
-		}
+			$this->sku->set('SKU' . $sku);
+			$this->save();
+			echo 'saved';
+		}		
 
 		ActiveRecordModel::commit();
-
 	}
-	*/
 
 	protected function miscRecordDataHandler($miscRecordDataArray)
 	{
@@ -270,30 +218,6 @@ class Product extends MultilingualObject
 	  	return $this->category->get()->getSpecificationFieldSet(true, $loadReferencedRecords);
 	}
 
-/*
-	public function getSpecFieldValue($id)
-	{
-	  	if (isset($this->specFieldData[$id]))
-	  	{
-		    return $this->specFieldData[$id];
-		}
-	}
-
-	public function setSpecFieldValue($id, $value)
-	{
-	  	if (isset($this->specFieldData[$id]) && !isset($this->addedSpecFieldValues[$id]))
-	  	{
-			$this->modifiedSpecFieldValues[$id] = true;
-		}
-		else
-		{
-			$this->addedSpecFieldValues[$id] = true;		  
-		}
-
-	    $this->specFieldData[$id] = $value;
-	}
-*/
-
 	public function loadRequestData(Request $request)
 	{
 	  	// basic data
@@ -303,7 +227,6 @@ class Product extends MultilingualObject
 		if ($request->isValueSet('manufacturer'))
 		{
 			$this->manufacturer->set(Manufacturer::getInstanceByName($request->getValue('manufacturer')));	
-			print_R($this->manufacturer->get());	  
 		}
 		
 		// set prices
@@ -536,7 +459,7 @@ class Product extends MultilingualObject
 	  	$instance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
 	  	$instance->price->set($price);
 	  	
-	  	if (empty($price))
+	  	if (strlen($price) == 0)
 	  	{
 		    $this->getPricingHandler()->removePriceByCurrencyCode($currencyCode);
 		}

@@ -72,9 +72,15 @@
 		<p class="required">
 			<label for="sku">SKU (code):</label>
 			<fieldset class="error">
-				{textfield name="sku"}
+				{textfield name="sku" autocomplete="controller=backend.product field=sku"} 
 				{error for="sku"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>			
+		</p>
+
+		<p>
+			<label for=""></label>
+			{checkbox name="autosku" class="checkbox" value="on"}
+			<label for="autosku" class="checkbox">Generate SKU automatically</label>
 		</p>
 
 		<p>
@@ -198,7 +204,24 @@
 		<p style="color:red;">
 			<label>Shipping Weight:</label>
 			<fieldset class="error">				
-				{textfield name="shippingWeight" class="number"}
+				
+				{textfield name="shippingHiUnit" onkeyup="Backend.Product.updateShippingWeight(this);" class="number"} <span class="shippingUnit_hi">kg</span>
+				{textfield name="shippingLoUnit" onkeyup="Backend.Product.updateShippingWeight(this);" class="number"} <span class="shippingUnit_lo">g</span>
+				
+				<span class="unitSwitch">
+					<span class="unitDef english_title">Switch to English units</span>
+					<span class="unitDef metric_title">Switch to Metric units</span>
+					<span class="unitDef english_hi">kg</span>
+					<span class="unitDef english_lo">g</span>
+					<span class="unitDef metric_hi">pounds</span>
+					<span class="unitDef metric_lo">ounces</span>
+															
+					<a href="#" onclick="Backend.Product.switchUnitTypes(this); return false;">Switch to English units</a>
+				</span>
+				
+				{hidden name="shippingWeight"}
+				{hidden name="unitsType"}
+				
 				{error for="shippingWeight"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>
 		</p>
@@ -284,7 +307,7 @@
 			</fieldset>	
 		</p>	
 	
-		<input type=submit class="submit" value="Save"> {t _or} <a href="#" onClick="return false;" class="cancel">{t _cancel}</a>
+		<input type="submit" name="save" class="submit" value="Save"> {t _or} <a href="#" onClick="return false;" class="cancel">{t _cancel}</a>
 
 	</fieldset>
 	

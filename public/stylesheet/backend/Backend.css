@@ -827,6 +827,7 @@ div.autocomplete
 	border: 1px solid #AAAAAA;
 	background-color: #ffc !important;  
 	color: black !important;
+	z-index: 1;
 }
 
 div.autocomplete ul

@@ -14,3 +14,14 @@ fieldset.specField .numeric
 {
 
 }
+
+.unitSwitch
+{
+	font-size: smaller;
+	margin-left: 20px;  
+}
+
+.unitDef 
+{
+	display: none;  
+}

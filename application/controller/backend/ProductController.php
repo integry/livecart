@@ -30,7 +30,23 @@ class ProductController extends StoreManagementController
 
 	public function autoComplete()
 	{
+	  	$f = new ARSelectFilter();
+		$resp = array();
+				  	
+		if ($this->request->getValue('field') == 'sku')
+		{
+		  	$c = new LikeCond(new ARFieldHandle('Product', 'sku'), $this->request->getValue('sku'));
+		  	$f->setCondition($c);		  	
+		  	
+		  	$results = ActiveRecordModel::getRecordSetArray('Product', $f);
+		  	
+		  	foreach ($results as $value)
+		  	{
+				$resp[] = $value['sku'];
+			}	  			  
+		}
 	  	
+		return new AutoCompleteResponse($resp);
 	}
 
 	/**
@@ -156,8 +172,20 @@ class ProductController extends StoreManagementController
 		$validator = new RequestValidator("productFormValidator", $this->request);
 		
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name_empty')));		    
-		$validator->addCheck('sku', new IsNotEmptyCheck($this->translate('_err_sku_empty')));		    
 		
+		// check if SKU is entered if not autogenerating
+		if (!$this->request->getValue('autosku') && $this->request->getValue('save'))
+		{
+			$validator->addCheck('sku', new IsNotEmptyCheck($this->translate('_err_sku_empty')));		    		  
+		}
+		
+		// check if entered SKU is unique
+		if ($this->request->getValue('sku') && $this->request->getValue('save'))
+		{
+			ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
+			$validator->addCheck('sku', new IsUniqueSkuCheck($this->translate('_err_sku_not_unique'), $product));
+		}
+			
 		// spec field validator
 		$specFields = $product->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES)->toArray();	
 
