@@ -19,6 +19,12 @@ p {
 	margin-top: 20px; 
 }
 
+code {
+	font-family: courier;
+	font-size: 12px;
+}
+
+
 ins {
   	font-weight: bold;
   	text-decoration: none;
