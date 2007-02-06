@@ -12,6 +12,7 @@ _SpecField_numbers=Numbers
 _SpecField_add_values=Enter more values
 _SpecField_select_multiple=Can select multiple values
 _SpecField_is_required=Required
+_specField_group_title=Title
 
 # Filter
 _Filter_main=Main

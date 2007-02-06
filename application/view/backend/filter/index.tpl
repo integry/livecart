@@ -76,10 +76,12 @@
         <a href="#new" id="filter_item_new_{$categoryID}_show">{t _add_new_filter}</a>
         <div id="filter_item_new_{$categoryID}_form" style="display: none;">
             <script type="text/javascript">
-                var newFilterForm = new Backend.Filter('{json array=$blankFilter}');
-                newFilterForm.addFilter(null, "new" + Backend.Filter.prototype.countNewFilters, true);
-                newFilterForm.bindDefaultFields();
-                Backend.Filter.prototype.countNewFilters++;
+               {literal}try{{/literal}
+                    var newFilterForm = new Backend.Filter('{json array=$blankFilter}');
+                    newFilterForm.addFilter(null, "new" + Backend.Filter.prototype.countNewFilters, true);
+                    newFilterForm.bindDefaultFields();
+                    Backend.Filter.prototype.countNewFilters++;
+               {literal}} catch(e) { console.info(e) }{/literal}
             </script>
         </div>
     </div>

@@ -1126,5 +1126,162 @@ Backend.SpecField.prototype = {
         ActiveList.prototype.collapseAll();
         
         ActiveForm.prototype.showNewItemForm(link, form);
+    }    
+}
+
+
+
+Backend.SpecFieldGroup = Class.create();
+Backend.SpecFieldGroup.prototype = {
+     initialize: function(parent, group)
+     {
+         try
+         {
+             this.group = group;
+             this.findNodes(parent);
+             this.generateGroupTranslations();
+             this.bindEvents();
+         }
+         catch(e)
+         {
+             console.info(e);
+         }
+     },
+     
+     findNodes: function(parent)
+     {
+        this.nodes = {};
+        
+        this.nodes.parent              = parent;
+        this.nodes.form                = this.nodes.parent;
+        this.nodes.template            = $('specField_group_blank');
+        this.nodes.translations        = document.getElementsByClassName('specField_group_translations', this.nodes.template)[0].cloneNode(true);
+        this.nodes.controls            = document.getElementsByClassName('specField_group_controls', this.nodes.template)[0].cloneNode(true);
+        this.nodes.translationTemplate = document.getElementsByClassName("specFieldGroup_translations_language_", this.nodes.translations)[0];
+        this.nodes.groupTitle          = document.getElementsByClassName("specField_group_title", this.nodes.parent)[0];
+        this.nodes.mainTitleInput      = this.nodes.groupTitle.getElementsByTagName("input")[0];
+        this.nodes.mainTitle           = this.nodes.groupTitle.getElementsByTagName("span")[0];
+        this.nodes.save                = document.getElementsByClassName('specField_save', this.nodes.controls)[0];
+        this.nodes.cancel              = document.getElementsByClassName('specField_cancel', this.nodes.controls)[0];
+     },
+     
+     bindEvents: function()
+     {
+         var self = this;
+         
+         Event.observe(self.nodes.mainTitleInput, 'keyup', function(e) { self.nodes.mainTitle.innerHTML = self.nodes.mainTitleInput.value });
+         console.info(self.nodes.save);
+         Event.observe(self.nodes.save, 'click', function(e) { Event.stop(e); self.beforeSave() });
+         Event.observe(self.nodes.cancel, 'click', function(e) { Event.stop(e); self.beforeCancel() });
+     },
+     
+    /**
+     * Genereate HTML code from group object
+     * 
+     * @param HTMLElement parent Parent element
+     * @param integer id Group Id
+     */
+    generateGroupTranslations: function(parent, group)
+    {
+        var self = this;
+        Backend.SpecField.prototype.loadLanguagesAction();
+                
+        $H(Backend.SpecField.prototype.languages).each(function(language) {
+            if(language.key == Backend.SpecField.prototype.languageCodes[0]) throw $continue;
+            
+            
+            var languageTranlation = self.nodes.translationTemplate.cloneNode(true);
+            Element.removeClassName(languageTranlation, 'specFieldGroup_translations_language_');
+            Element.addClassName(languageTranlation, 'specFieldGroup_translations_language_' + language.key);
+            
+            
+            var languageName = document.getElementsByClassName('specFieldGroup_translation_language_name', languageTranlation)[0];
+            languageName.innerHTML  = language.value;
+                        
+            var translationInput   = languageTranlation.getElementsByTagName("input")[0];
+            translationInput.name  += '[' + language.key + ']';
+            translationInput.value = self.group.name && self.group.name[language.key] ? self.group.name[language.key] : '';
+            
+            
+            Element.removeClassName(languageTranlation, 'dom_template');
+            self.nodes.translations.appendChild(languageTranlation);
+        });
+        
+        Element.remove(self.nodes.translationTemplate);
+        this.nodes.parent.appendChild(this.nodes.translations);
+        this.nodes.parent.appendChild(this.nodes.controls);
+    },
+    
+    beforeSave: function()
+    {
+		try
+		{
+            ActiveList.prototype.getInstance("specField_groups_list_" + this.group.Category.ID + "_" + this.group.ID).toggleProgress(this.nodes.parent.parentNode);
+		}
+		catch (e)
+		{
+		    ActiveForm.prototype.onProgress(this.nodes.form);
+		}
+        
+        var self = this;
+        new Ajax.Request(
+            this.nodes.form.action,
+            {
+                method: this.nodes.form.method,
+                postBody: Form.serialize(this.nodes.form),
+                onComplete: function(response) { 
+                    self.afterSave(eval("(" + response.responseText + ")")); 
+                }
+            }
+        );
+    },
+    
+    afterSave: function(reponse)
+    {
+		try
+		{
+            ActiveList.prototype.getInstance("specField_groups_list_" + this.group.Category.ID + "_" + this.group.ID).toggleProgress(this.nodes.parent.parentNode);
+		}
+		catch (e)
+		{
+		    ActiveForm.prototype.onProgress(this.nodes.form);
+		}
+        
+        Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.form);
+        console.info(response);
+    },
+    
+    /**
+     * Remove display none from group translations
+     * @param HTMLElement parent
+     */
+    displayGroupTranslations: function(parent)
+    {
+        var groupTitle = document.getElementsByClassName("specField_group_title", parent)[0];
+        
+        groupTitle.getElementsByTagName("input")[0].style.display = 'inline';
+        groupTitle.getElementsByTagName("span")[0].style.display = 'none';
+        document.getElementsByClassName("specField_group_translations", parent)[0].style.display = 'block';   
+        document.getElementsByClassName("specField_group_controls", parent)[0].style.display = 'block';   
+    },
+    
+    
+    /**
+     * Hide group group translations and show group title
+     * @param HTMLElement parent
+     */
+    hideGroupTranslations: function(parent)
+    {
+        var groupTitle = document.getElementsByClassName("specField_group_title", parent)[0];
+        console.info('hide');
+        groupTitle.getElementsByTagName("input")[0].style.display = 'none';
+        groupTitle.getElementsByTagName("span")[0].style.display = 'inline';
+        document.getElementsByClassName("specField_group_translations", parent)[0].style.display = 'none';   
+        document.getElementsByClassName("specField_group_controls", parent)[0].style.display = 'none';   
+    },
+    
+    isGroupTranslated: function(parent)
+    {
+        return document.getElementsByClassName('specField_group_translations', parent).length > 0;
     }
 }

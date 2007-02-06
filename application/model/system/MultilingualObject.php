@@ -132,6 +132,21 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 		} 
 		return $data;
 	}
+	
+	/**
+     * Set a whole language field at a time. You can always skip some language.
+     *
+     * @param string $fieldName Field name in database schema
+     * @param array $fieldValue Field value in different languages
+     * @param array $langCodeArray Language codes
+     */
+	public function setLanguageField($fieldName, $fieldValue, $langCodeArray)
+	{
+	    foreach ($langCodeArray as $lang)
+	    {
+	        $this->setValueByLang($fieldName, $lang, isset($fieldValue[$lang]) ? $fieldValue[$lang] : '');
+	    }
+	}
 }
 
 ?>

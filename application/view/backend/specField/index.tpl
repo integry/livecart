@@ -13,6 +13,7 @@
     Backend.SpecField.prototype.links.deleteValue = {/literal}'{link controller=backend.specField action=deleteValue}/'{literal};
     Backend.SpecField.prototype.links.sortValues = {/literal}'{link controller=backend.specField action=sortValues}/'{literal};
     Backend.SpecField.prototype.links.sortGroups = {/literal}'{link controller=backend.specField action=sortGroups}/'{literal};
+    Backend.SpecField.prototype.links.getGroup = {/literal}'{link controller=backend.specField action=group}/'{literal};
 
 
     Backend.SpecField.prototype.msg = {};
@@ -45,7 +46,7 @@
         },
         beforeDelete:   function(li) {
             if(confirm('{/literal}{t _SpecField_remove_question|addslashes}{literal}'))
-                return Backend.SpecField.prototype.links.deleteField + this.getRecordId(li)
+            return Backend.SpecField.prototype.links.deleteField + this.getRecordId(li)
         },
         afterDelete:    function(li, jsonResponse)
         {
@@ -57,29 +58,52 @@
         },
         beforeSort:     function(li, order) {
             return Backend.SpecField.prototype.links.sortField + "?target=" + this.ul.id + "&" + order
-        }
+        },
+        afterSort:     function(li, order) {    }
     };
     
+    /**
+     * Group
+     */
     specFieldGroupCallbacks = {
-        beforeEdit:     function(li) {
-            var groupTitle = document.getElementsByClassName("specField_group_title", li)[0];
-            var input = groupTitle.getElementsByTagName("input")[0];
-            var title = groupTitle.getElementsByTagName("span")[0];
-            var translations = document.getElementsByClassName("specFieldGroup_translations", li)[0];
-            if('inline' != input.style.display)  {
-                input.style.display = 'inline';
-                title.style.display = 'none';
-                translations.style.display = 'block';
-            } else {
-                input.style.display = 'none';
-                title.style.display = 'inline';
-                translations.style.display = 'none';
+        beforeEdit:     function(li) 
+        {
+            try
+            {
+            var form = document.getElementsByClassName('specField_group_form', li)[0];
+            if(!Backend.SpecFieldGroup.prototype.isGroupTranslated(form))
+            {
+                return Backend.SpecField.prototype.links.getGroup + this.getRecordId(li);
+            }
+            else
+            {
+                if('block' != document.getElementsByClassName('specField_group_translations', form)[0].style.display)
+                {
+                     Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);
+                }
+                else
+                {
+                     Backend.SpecFieldGroup.prototype.hideGroupTranslations(li);
+                }   
+            }
+            } catch(e) {  console.info(e) }
+        },
+        afterEdit:      function(li, response) { 
+            try
+            {
+                var form = document.getElementsByClassName('specField_group_form', li)[0];
+                new Backend.SpecFieldGroup(form, eval("(" + response + ")"));
+                Backend.SpecFieldGroup.prototype.displayGroupTranslations(form);  
+            } 
+            catch(e) 
+            {  
+                console.info(e) 
             }
         },
-        afterEdit:      function(li, response) {     },
         beforeSort:     function(li, order) {
             return Backend.SpecField.prototype.links.sortGroups + "?target=" + this.ul.id + "&" + order
-        }
+        },
+        afterSort:     function(li, order) { }
     };
 // ]!]>
 </script>
@@ -117,7 +141,6 @@
 </ul>
 <hr />
 
-
 {* Grouped specification fields *}
 {assign var="lastSpecFieldGroup" value="-1"}
 <ul id="specField_groups_list_{$categoryID}" class="specFieldListGroup activeList_add_sort activeList_add_edit">
@@ -127,22 +150,12 @@
     {if $lastSpecFieldGroup != $field.SpecFieldGroup.ID }
         {if $lastSpecFieldGroup > 0}</ul></li>{/if}
         <li id="specField_groups_list_{$categoryID}_{$field.SpecFieldGroup.ID}">
-            <span class="specField_group_title">
-                <span>{$field.SpecFieldGroup.name[$defaultLangCode]}</span>
-                <input name="name[{$defaultLangCode}]" value="{$field.SpecFieldGroup.name[$defaultLangCode]}" />
-            </span>    	
-            <div class="specFieldGroup_translations">
-        		<fieldset class="specFieldGroup_translations_language_">
-        			<legend><span class="expandIcon">[+]</span><span class="specFieldGroup_translation_language_name">Lithuanian</span></legend>
-        
-                    <div class="specFieldGrouplanguage_translation">
-                        <p>
-                			<label>{t _group_title}</label>
-                			<input type="text" name="name" />
-            			</p>
-                    </div>
-        		</fieldset>
-    	    </div>
+            <form action="{link controller=backend.specField action=saveGroup id=$field.SpecFieldGroup.ID}" class="specField_group_form" method="post">
+                <span class="specField_group_title">
+                    <span>{$field.SpecFieldGroup.name[$defaultLangCode]}</span>
+                    <input name="name[{$defaultLangCode}]" value="{$field.SpecFieldGroup.name[$defaultLangCode]}" />
+                </span>
+            </form>    	
             <ul id="specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}" class="specFieldList activeList_add_sort activeList_add_edit activeList_accept_specFieldList">
     {/if}
 

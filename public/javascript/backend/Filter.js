@@ -59,6 +59,13 @@ Backend.Filter.prototype = {
      */
     initialize: function(filterJson, hash)
     {
+        try{
+            eval("(" + filterJson + ")" )
+        }
+        catch(e)
+        {
+            console.info(filterJson);
+        }
         this.filter = !hash ? eval("(" + filterJson + ")" ) : filterJson;
         this.cloneForm('filter_item_blank', this.filter.rootId);
 

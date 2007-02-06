@@ -16,6 +16,8 @@ class SpecFieldController extends StoreManagementController
 
     public function __construct(Request $request)
     {
+        $this->htmlspecialcharsUtf_8 = create_function('$val', 'return htmlspecialchars($val, null, "UTF-8");');
+        
         parent::__construct($request);
         $this->createSpecFieldConfig();
     }
@@ -119,9 +121,31 @@ class SpecFieldController extends StoreManagementController
     }
 
     /**
+     * Get group data
+     */
+    public function group()
+    {
+        return new JSONResponse(SpecFieldGroup::getInstanceByID((int)$this->request->getValue('id'), true)->toArray(false, false));
+    }
+    
+    /**
+     * Save group data to the database
+     */
+    public function saveGroup()
+    {        
+        $name = $this->request->getValue('name');
+        
+        $specFieldGroup = SpecFieldGroup::getInstanceByID($this->request->getValue('id'));
+        $specFieldGroup->setLanguageField('name', @array_map($this->htmlspecialcharsUtf_8, $name), array_keys($this->specFieldConfig['languages']));
+        $specFieldGroup->save();
+
+        return new JSONResponse(array('status' => 'success', 'id' => $specFieldGroup->getID()));
+    }
+    
+    /**
      * Creates a new or modifies an exisitng specification field (according to a passed parameters)
      *
-     * @return ActionRedirectResponse Redirects back to a form if validation fails or to a field list
+     * @return JSONResponse Returns success status or failure status with array of erros
      */
     public function save()
     {
@@ -155,15 +179,15 @@ class SpecFieldController extends StoreManagementController
             $isMultiValue = $this->request->getValue('multipleSelector') == 1 ? 1 : 0;
             $isRequired = $this->request->getValue('isRequired') == 1 ? 1 : 0;
 
-            $htmlspecialcharsUtf_8 = create_function('$val', 'return htmlspecialchars($val, null, "UTF-8");');
+            
 
             $specField->setFieldValue('dataType',       $dataType);
             $specField->setFieldValue('type',           $type);
             $specField->setFieldValue('handle',         $handle);
             $specField->setFieldValue('isMultiValue',   $isMultiValue);
             $specField->setFieldValue('isRequired',     $isRequired);
-            $specField->setLanguageField('description', @array_map($htmlspecialcharsUtf_8, $description), array_keys($this->specFieldConfig['languages']));
-            $specField->setLanguageField('name',        @array_map($htmlspecialcharsUtf_8, $name),        array_keys($this->specFieldConfig['languages']));
+            $specField->setLanguageField('description', @array_map($this->htmlspecialcharsUtf_8, $description), array_keys($this->specFieldConfig['languages']));
+            $specField->setLanguageField('name',        @array_map($this->htmlspecialcharsUtf_8, $name),        array_keys($this->specFieldConfig['languages']));
 
             $specField->save();           
             if(!empty($values)) $specField->saveValues($values, $type, $this->specFieldConfig['languages']);

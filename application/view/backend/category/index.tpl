@@ -34,6 +34,7 @@
 {include file="layout/backend/header.tpl"}
 
 <div id="specField_item_blank" class="dom_template">{include file="backend/specField/form.tpl"}</div>
+<div id="specField_group_blank" class="dom_template">{include file="backend/specField/group.tpl"}</div>
 <div id="filter_item_blank" class="dom_template">{include file="backend/filter/form.tpl"}</div>
 
 

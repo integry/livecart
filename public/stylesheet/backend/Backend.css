@@ -603,6 +603,11 @@ br.clear
 /*************************** 
 	Form styling
 ***************************/
+form
+{
+     display: inline;
+}
+
 form p
 {
     position: relative;

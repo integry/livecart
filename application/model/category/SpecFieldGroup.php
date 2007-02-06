@@ -91,6 +91,6 @@ class SpecFieldGroup extends MultilingualObject
 
 		return $filter;
 	}
-}
 
+}
 ?>
