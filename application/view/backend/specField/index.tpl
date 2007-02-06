@@ -27,87 +27,10 @@
             Backend.SpecField.prototype.{$configKey} = {json array=$configItem};
         {/if}
     {/foreach}
-    {literal}
-
-    specFieldListCallbacks = {
-        beforeEdit:     function(li) {
-            Backend.SpecField.prototype.hideNewSpecFieldAction({/literal}{$categoryID}{literal});
-            
-            if(this.isContainerEmpty(li, 'edit')) return Backend.SpecField.prototype.links.editField + this.getRecordId(li)
-            else this.toggleContainer(li, 'edit');
-        },
-        afterEdit:      function(li, response) {
-            var specField = eval("(" + response + ")" );
-            specField.rootId = li.id;
-            new Backend.SpecField(specField, true);
-            this.rebindIcons(li);
-            this.createSortable();
-            this.toggleContainer(li, 'edit');
-        },
-        beforeDelete:   function(li) {
-            if(confirm('{/literal}{t _SpecField_remove_question|addslashes}{literal}'))
-            return Backend.SpecField.prototype.links.deleteField + this.getRecordId(li)
-        },
-        afterDelete:    function(li, jsonResponse)
-        {
-            var response = eval("("+jsonResponse+")");
-            if(response.status == 'success') {
-                this.remove(li);
-                CategoryTabControl.prototype.resetTabItemsCount({/literal}{$categoryID}{literal});
-            }
-        },
-        beforeSort:     function(li, order) {
-            return Backend.SpecField.prototype.links.sortField + "?target=" + this.ul.id + "&" + order
-        },
-        afterSort:     function(li, order) {    }
-    };
     
-    /**
-     * Group
-     */
-    specFieldGroupCallbacks = {
-        beforeEdit:     function(li) 
-        {
-            try
-            {
-            var form = document.getElementsByClassName('specField_group_form', li)[0];
-            if(!Backend.SpecFieldGroup.prototype.isGroupTranslated(form))
-            {
-                return Backend.SpecField.prototype.links.getGroup + this.getRecordId(li);
-            }
-            else
-            {
-                if('block' != document.getElementsByClassName('specField_group_translations', form)[0].style.display)
-                {
-                     Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);
-                }
-                else
-                {
-                     Backend.SpecFieldGroup.prototype.hideGroupTranslations(li);
-                }   
-            }
-            } catch(e) {  console.info(e) }
-        },
-        afterEdit:      function(li, response) { 
-            try
-            {
-                var form = document.getElementsByClassName('specField_group_form', li)[0];
-                new Backend.SpecFieldGroup(form, eval("(" + response + ")"));
-                Backend.SpecFieldGroup.prototype.displayGroupTranslations(form);  
-            } 
-            catch(e) 
-            {  
-                console.info(e) 
-            }
-        },
-        beforeSort:     function(li, order) {
-            return Backend.SpecField.prototype.links.sortGroups + "?target=" + this.ul.id + "&" + order
-        },
-        afterSort:     function(li, order) { }
-    };
 // ]!]>
 </script>
-{/literal}
+
 
 <div>
     <a href="#new" id="specField_item_new_{$categoryID}_show">{t _add_new_field}</a>
@@ -172,7 +95,85 @@
 
 
 <script type="text/javascript">
-    {literal}
+{literal}
+    var specFieldListCallbacks = {
+        beforeEdit:     function(li) {
+            Backend.SpecField.prototype.hideNewSpecFieldAction({/literal}{$categoryID}{literal});
+            
+            if(this.isContainerEmpty(li, 'edit')) return Backend.SpecField.prototype.links.editField + this.getRecordId(li)
+            else this.toggleContainer(li, 'edit');
+        },
+        afterEdit:      function(li, response) {
+            var specField = eval("(" + response + ")" );
+            specField.rootId = li.id;
+            new Backend.SpecField(specField, true);
+            this.rebindIcons(li);
+            this.createSortable();
+            this.toggleContainer(li, 'edit');
+        },
+        beforeDelete:   function(li) {
+            if(confirm('{/literal}{t _SpecField_remove_question|addslashes}{literal}'))
+            return Backend.SpecField.prototype.links.deleteField + this.getRecordId(li)
+        },
+        afterDelete:    function(li, jsonResponse)
+        {
+            var response = eval("("+jsonResponse+")");
+            if(response.status == 'success') {
+                this.remove(li);
+                CategoryTabControl.prototype.resetTabItemsCount({/literal}{$categoryID}{literal});
+            }
+        },
+        beforeSort:     function(li, order) {
+            return Backend.SpecField.prototype.links.sortField + "?target=" + this.ul.id + "&" + order
+        },
+        afterSort:     function(li, order) {    }
+    };
+    
+    /**
+     * Group
+     */
+    var specFieldGroupCallbacks = {
+        beforeEdit:     function(li) 
+        {
+            try
+            {
+            var form = document.getElementsByClassName('specField_group_form', li)[0];
+            if(!Backend.SpecFieldGroup.prototype.isGroupTranslated(form))
+            {
+                return Backend.SpecField.prototype.links.getGroup + this.getRecordId(li);
+            }
+            else
+            {
+                if('block' != document.getElementsByClassName('specField_group_translations', form)[0].style.display)
+                {
+                     Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);
+                }
+                else
+                {
+                     Backend.SpecFieldGroup.prototype.hideGroupTranslations(li);
+                }   
+            }
+            } catch(e) {  console.info(e) }
+        },
+        afterEdit:      function(li, response) { 
+            try
+            {
+                var form = document.getElementsByClassName('specField_group_form', li)[0];
+                new Backend.SpecFieldGroup(form, eval("(" + response + ")"));
+                Backend.SpecFieldGroup.prototype.displayGroupTranslations(form);  
+            } 
+            catch(e) 
+            {  
+                console.info(e) 
+            }
+        },
+        beforeSort:     function(li, order) {
+            return Backend.SpecField.prototype.links.sortGroups + "?target=" + this.ul.id + "&" + order
+        },
+        afterSort:     function(li, order) { }
+    };
+
+
      Backend.SpecField.prototype.activeListMessages = 
      { 
          '_activeList_edit':    {/literal}'{t _activeList_edit|addslashes}'{literal},
