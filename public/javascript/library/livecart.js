@@ -35,7 +35,8 @@ LiveCart.AjaxRequest.prototype = {
         var updaterOptions = { method: method,
                                parameters: params,
                                onComplete: this.postProcessResponse.bind(this),
-                               onFailure: this.reportError};
+                               onFailure: this.reportError
+                               };
        
 		document.body.style.cursor = 'progress';
 		
@@ -98,7 +99,8 @@ LiveCart.AjaxUpdater.prototype = {
         var updaterOptions = { method: method,
                                parameters: params,
                                onComplete: this.postProcessResponse,
-                               onFailure: this.reportError};
+                               onFailure: this.reportError
+                               };
 
         if (insertionPosition != undefined)
         {
@@ -147,26 +149,13 @@ LiveCart.AjaxUpdater.prototype = {
     postProcessResponse: function(response)
     {
 		document.body.style.cursor = 'default';
-        LiveCart.ajaxUpdaterInstance.runJavaScripts(response.responseText);
+        response.responseText.evalScripts();  
         LiveCart.ajaxUpdaterInstance.hideIndicator();
     },
 
     reportError: function(response)
     {
         alert('Error!\n\n' + response.responseText);
-    },
-
-    runJavaScripts: function(response)
-    {
-        var innerScripts = response.match(/\<script.*?\>([\s\S]*?)\<\/script\>/igm);
-        if(innerScripts)
-        {
-            innerScripts.each(function(innerScript)
-            {
-                var scriptText = innerScript.replace(/\<\/?script[^\>]*\>/img, "");
-                eval(scriptText);
-            });
-        }
     }
 }
 
