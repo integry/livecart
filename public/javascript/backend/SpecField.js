@@ -1140,7 +1140,8 @@ Backend.SpecFieldGroup.prototype = {
              this.group = group;
              this.findNodes(parent);
              this.generateGroupTranslations();
-             this.bindEvents();
+             this.bindEvents(); 
+             Form.backup(this.nodes.form);
          }
          catch(e)
          {
@@ -1172,7 +1173,7 @@ Backend.SpecFieldGroup.prototype = {
          Event.observe(self.nodes.mainTitleInput, 'keyup', function(e) { self.nodes.mainTitle.innerHTML = self.nodes.mainTitleInput.value });
          console.info(self.nodes.save);
          Event.observe(self.nodes.save, 'click', function(e) { Event.stop(e); self.beforeSave() });
-         Event.observe(self.nodes.cancel, 'click', function(e) { Event.stop(e); self.beforeCancel() });
+         Event.observe(self.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel() });
      },
      
     /**
@@ -1248,8 +1249,17 @@ Backend.SpecFieldGroup.prototype = {
 		}
         
         Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.form);
-        console.info(response);
+        Form.backup(this.nodes.form);
     },
+    
+    cancel: function()
+    {
+        if(Form.hasBackup(this.nodes.form))
+		{
+            Form.restore(this.nodes.form);
+        }
+    },
+    
     
     /**
      * Remove display none from group translations
