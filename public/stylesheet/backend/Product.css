@@ -3,7 +3,7 @@ fieldset.specField .numeric
  	width: 100px; 
 }
 
-.multiValueSelect div
+.multiValueSelect p.selectMenu
 {
 	clear: both; 	 	
 	margin-bottom: 10px;

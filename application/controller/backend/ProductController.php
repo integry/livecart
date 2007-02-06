@@ -67,8 +67,8 @@ class ProductController extends StoreManagementController
 								
 			ActiveRecordModel::beginTransaction();
 			$product->save();
-			ActiveRecordModel::rollback();
-//			ActiveRecordModel::commit();
+//			ActiveRecordModel::rollback();
+			ActiveRecordModel::commit();
 									
 			echo '<pre>';
 			print_r($product->toArray());
@@ -83,7 +83,7 @@ class ProductController extends StoreManagementController
 	
 	private function productForm(Product $product)
 	{
-		$specFields = $product->getSpecificationFieldSet();
+		$specFields = $product->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES);
 		$specFieldArray = $specFields->toArray();
 				
 		// set select values
@@ -105,7 +105,7 @@ class ProductController extends StoreManagementController
 		$multiLingualSpecFields = array();
 		foreach ($specFields as $key => $field)
 		{
-		  	if (in_array($field->type->get(), array(SpecField::TYPE_TEXT_SIMPLE, SpecField::TYPE_TEXT_ADVANCED)))
+		  	if ($field->isTextField())
 		  	{
 				$multiLingualSpecFields[] = $field->toArray();
 			}
@@ -125,9 +125,16 @@ class ProductController extends StoreManagementController
 					   1 => $this->translate('_intangible'),	
 					  );
 
+		// arrange SpecFields's into groups
+		$specFieldsByGroup = array();
+		foreach ($specFieldArray as $field)
+		{
+			$specFieldsByGroup[$field['SpecFieldGroup']['ID']][] = $field;
+		}
+		
 		$response = new ActionResponse();
 		$response->setValue("languageList", $languages);
-		$response->setValue("specFieldList", $specFieldArray);
+		$response->setValue("specFieldList", $specFieldsByGroup);
 		$response->setValue("productForm", $form);
 		$response->setValue("multiLingualSpecFields", $multiLingualSpecFields);
 		$response->setValue("productTypes", $types);
@@ -152,7 +159,8 @@ class ProductController extends StoreManagementController
 		$validator->addCheck('sku', new IsNotEmptyCheck($this->translate('_err_sku_empty')));		    
 		
 		// spec field validator
-		$specFields = $product->getSpecificationFieldSet()->toArray();			
+		$specFields = $product->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES)->toArray();	
+
 		foreach ($specFields as $key => $field)
 		{
 		  	// validate numeric values
@@ -161,9 +169,16 @@ class ProductController extends StoreManagementController
 				$validator->addCheck($field['fieldName'], new IsNumericCheck($this->translate('_err_numeric')));		    
 				$validator->addFilter($field['fieldName'], new NumericFilter());		    
 			}
+
+		  	// validate required fields
+			if ($field['isRequired'])
+		  	{
+				$validator->addCheck($field['fieldName'], new IsNotEmptyCheck($this->translate('_err_specfield_required')));		    
+			}
 		}
 	
 		// inventory validation
+		$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required')));		    
 		$validator->addCheck('stockCount', new IsNumericCheck($this->translate('_err_stock_not_numeric')));		  
 		$validator->addCheck('stockCount', new MinValueCheck($this->translate('_err_stock_negative'), 0));	
 		$validator->addFilter('stockCount', new NumericFilter());		    

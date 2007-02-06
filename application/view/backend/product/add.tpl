@@ -24,9 +24,9 @@
 				{/if}
 			{/foreach}
 
-			<div>
+			<p class="selectMenu">
 				<a href="#" onclick="Backend.Product.multiValueSelect(this, true); return false;">Select All</a> | <a href="#" onclick="Backend.Product.multiValueSelect(this, false);  return false;">Deselect All</a>
-			</div>
+			</p>
 
 			</fieldset>
 		{else}
@@ -137,13 +137,27 @@
 
 	<fieldset class="specField">
 		<legend>Product Specification</legend>
-		{foreach from=$specFieldList item=field}
+		{foreach from=$specFieldList key=groupID item=fieldList}
 		
-		<p>		
-			<label>{$field.name_lang}:</label>				
-			{fun name="specFieldFactory" field=$field}			
-		</p>
+			{if $groupID}
+				<fieldset>
+					<legend>{$fieldList.0.SpecFieldGroup.name_lang}</legend>
+			{/if}
+			
+			{foreach from=$fieldList item=field}
+			<p{if $field.isRequired} class="required"{/if}>		
+				<label>{$field.name_lang}:</label>				
+				<fieldset class="error">
+					{fun name="specFieldFactory" field=$field}			
+					{error for=$field.fieldName}<div class="errorText">{$msg}</div>{/error}
+				</fieldset>			
+			</p>
+			{/foreach}
 		
+			{if $groupID}
+				</fieldset>
+			{/if}
+
 		{/foreach}		
 	</fieldset>
 	
@@ -240,7 +254,7 @@
 				</div>
 			</p>
 			
-			{if $multiLingualSpecFields.length > 0}
+			{if $multiLingualSpecFields}
 			<fieldset>
 				<legend>Specification Attributes</legend>
 				{foreach from=$multiLingualSpecFields item="field"}

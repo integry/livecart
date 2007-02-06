@@ -323,7 +323,7 @@ class SpecField extends MultilingualObject
 
 	public function getFormFieldName($language = false)
 	{
-	  	return 'specField_' . $this->getID() . ($language ? '_' . $language : '');
+	  	return 'specField_' . $this->getID() . ($language && (Store::getInstance()->getDefaultLanguageCode() != $language) ? '_' . $language : '');
 	}
 
     public static function countItems(Category $category)

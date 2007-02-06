@@ -43,16 +43,16 @@ class Product extends MultilingualObject
 		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("manufacturerID", "Manufacturer", "ID", null, ARInteger::instance()));
 		
+		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
+		$schema->registerField(new ARField("sku", ARVarchar::instance(20)));
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("shortDescription", ARArray::instance()));
 		$schema->registerField(new ARField("longDescription", ARArray::instance()));
-
-		$schema->registerField(new ARField("sku", ARVarchar::instance(20)));
-
+		$schema->registerField(new ARField("keywords", ARText::instance()));
+		
 		$schema->registerField(new ARField("dateCreated", ARDateTime::instance()));
 		$schema->registerField(new ARField("dateUpdated", ARDateTime::instance()));
 
-		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("URL", ARVarchar::instance(256)));
 		$schema->registerField(new ARField("isBestSeller", ARBool::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance(4)));
@@ -161,6 +161,8 @@ class Product extends MultilingualObject
 	public function save()
 	{
 		ActiveRecordModel::beginTransaction();
+		
+		$this->manufacturer->get()->save();
 
 		parent::save();
 		$this->getSpecification()->save();
@@ -263,9 +265,9 @@ class Product extends MultilingualObject
 		}
 	}
 
-	public function getSpecificationFieldSet()
+	public function getSpecificationFieldSet($loadReferencedRecords = false)
 	{
-	  	return $this->category->get()->getSpecificationFieldSet(true);
+	  	return $this->category->get()->getSpecificationFieldSet(true, $loadReferencedRecords);
 	}
 
 /*
@@ -300,7 +302,8 @@ class Product extends MultilingualObject
 		// set manufacturer
 		if ($request->isValueSet('manufacturer'))
 		{
-			$this->manufacturer->set(Manufacturer::getInstanceByName($request->getValue('manufacturer')));		  
+			$this->manufacturer->set(Manufacturer::getInstanceByName($request->getValue('manufacturer')));	
+			print_R($this->manufacturer->get());	  
 		}
 		
 		// set prices
@@ -317,11 +320,16 @@ class Product extends MultilingualObject
 		$fields = $this->category->get()->getSpecificationFieldSet(Category::INCLUDE_PARENT);
 		foreach ($fields as $field)
 		{
+			$fieldName = $field->getFormFieldName();
+			
 			if ($field->isSelector())
 			{
 				if (!$field->isMultiValue->get())
 				{
-					  	
+				  	if ($request->isValueSet($fieldName))
+				  	{
+				  		$this->setAttributeValue($field, SpecFieldValue::getInstanceByID($request->getValue($fieldName), ActiveRecordModel::LOAD_DATA));				  	  
+				  	}						  	
 				}
 				else
 				{
@@ -344,7 +352,7 @@ class Product extends MultilingualObject
 			}
 			else
 			{
-			  	if ($request->isValueSet($field->getFormFieldName()))
+			  	if ($request->isValueSet($fieldName))
 			  	{
 					if ($field->isTextField())
 					{
@@ -359,7 +367,7 @@ class Product extends MultilingualObject
 					}
 					else
 					{
-						$this->setAttributeValue($field, $request->getValue($field->getFormFieldName()));				    					  
+						$this->setAttributeValue($field, $request->getValue($fieldName));				    					  
 					}
 				}
 			}				
