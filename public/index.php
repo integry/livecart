@@ -1,5 +1,4 @@
 <?php
-
 /* temp */
 class PHPErrorException extends Exception
 {
@@ -31,31 +30,6 @@ function error_handler($code, $message, $file, $line) {
 	 * @author Saulius Rupainis <saulius@integry.net>
 	 * @package application
 	 */
-
-	/**
-	 * URL fixing
-	 */
-	if (!empty($_GET['route']))
-	{
-		$uri = "";
-		$query = "";
-		$queryPos = strpos($_SERVER['REQUEST_URI'], "?");
-		if ($queryPos !== false)
-		{
-			$uri = substr($_SERVER['REQUEST_URI'], 0, $queryPos);
-			$query = substr($_SERVER['REQUEST_URI'], $queryPos);
-		}
-		else
-		{
-			$uri = $_SERVER['REQUEST_URI'];
-		}
-		$uriLength = strlen($uri);
-		if (substr($uri, $uriLength - 1, $uriLength) == "/")
-		{
-			header('Location: ' . substr($uri, 0, $uriLength - 1) . $query);
-		}
-	}
-	/* end */
 
 	require_once(".." . DIRECTORY_SEPARATOR . "framework" . DIRECTORY_SEPARATOR . "ClassLoader.php");
 
