@@ -5,7 +5,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 
 # if no rule matched the url, we redirect to our front web controller
 #RewriteRule ^(.*)\/$ %{REQUEST_URI} [R]
-RewriteRule ^(.*)\/{0,1}$ public/index.php?route=$1 [QSA,L]
+RewriteRule ^(.*)(\/|\b)$ public/index.php?route=$1 [QSA,L]
 
 # big crash from our front web controller
 ErrorDocument 500 "<h2>Application error</h2>Application failed to start properly"
