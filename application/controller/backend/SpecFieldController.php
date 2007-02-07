@@ -132,10 +132,20 @@ class SpecFieldController extends StoreManagementController
      * Save group data to the database
      */
     public function saveGroup()
-    {        
-        $name = $this->request->getValue('name');
+    {   
+        if($id = $this->request->getValue('id'))
+        {
+            $specFieldGroup = SpecFieldGroup::getInstanceByID($id);
+        }
+        else
+        {
+            $category = Category::getInstanceByID((int)$this->request->getValue('categoryID'));
+            $specFieldGroup = SpecFieldGroup::getNewInstance();
+            $specFieldGroup->setFieldValue('categoryID', $category);
+            $specFieldGroup->setFieldValue('position', 100000);
+        }
         
-        $specFieldGroup = SpecFieldGroup::getInstanceByID($this->request->getValue('id'));
+        $name = $this->request->getValue('name');
         $specFieldGroup->setLanguageField('name', @array_map($this->htmlspecialcharsUtf_8, $name), array_keys($this->specFieldConfig['languages']));
         $specFieldGroup->save();
 
@@ -162,7 +172,7 @@ class SpecFieldController extends StoreManagementController
             }
             else
             {
-                return new JSONResponse(array('errors' => array('ID' => $this->translate('_error_record_id_is_not_valid')), 'status' => 'failure'));
+                return new JSONResponse(array('errors' => array('ID' => $this->translate('_error_record_id_is_not_valid')), 'status' => 'failure', 'ID' => (int)$this->request->getValue('ID')));
             }
         }
 
@@ -190,8 +200,13 @@ class SpecFieldController extends StoreManagementController
             $specField->setLanguageField('name',        @array_map($this->htmlspecialcharsUtf_8, $name),        array_keys($this->specFieldConfig['languages']));
 
             $specField->save();           
-            if(!empty($values)) $specField->saveValues($values, $type, $this->specFieldConfig['languages']);
-
+            try
+            {
+                $specField->saveValues($values, $type, $this->specFieldConfig['languages']);
+            }
+            catch(Exception $e){ }
+            
+            
             return new JSONResponse(array('status' => 'success', 'id' => $specField->getID()));
         }
         else
@@ -265,6 +280,20 @@ class SpecFieldController extends StoreManagementController
         if($id = $this->request->getValue("id", false))
         {
             SpecField::deleteById($id);
+            return new JSONResponse(array('status' => 'success'));
+        }
+        else
+        {
+            return new JSONResponse(array('status' => 'failure'));
+        }
+    }
+    
+
+    public function deleteGroup()
+    {
+        if($id = $this->request->getValue("id", false))
+        {
+            SpecFieldGroup::deleteById($id);
             return new JSONResponse(array('status' => 'success'));
         }
         else

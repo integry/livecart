@@ -945,7 +945,7 @@ Backend.SpecField.prototype = {
 		// Toggle progress won't work on new form
 		try
 		{
-		    ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).toggleProgress(this.nodes.parent);
+		    ActiveList.prototype.getInstance(this.nodes.parent.parentNode).toggleProgress(this.nodes.parent);
 		}
 		catch (e)
 		{
@@ -976,6 +976,8 @@ Backend.SpecField.prototype = {
      */
     afterSaveAction: function(jsonResponseString)
     {
+        try{
+         
         var self = this;
 
         var jsonResponse = eval("("+jsonResponseString+")");
@@ -987,14 +989,14 @@ Backend.SpecField.prototype = {
 
             if(this.nodes.parent.tagName.toLowerCase() == 'li')
             {
-                ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).toggleContainer(this.nodes.parent, 'edit');
+                ActiveList.prototype.getInstance(this.nodes.parent.parentNode).toggleContainer(this.nodes.parent, 'edit');
             }
             else
             {
                 var div = document.createElement('span');
                 Element.addClassName(div, 'specField_title');
                 div.appendChild(document.createTextNode(this.nodes.name.value));
-                ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
+                ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID + '_').addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
                 this.hideNewSpecFieldAction(this.categoryID);
     		    this.recreate(this.specField, true);
             }
@@ -1035,11 +1037,16 @@ Backend.SpecField.prototype = {
                     }
                 }
             }
+        }   
+        }
+        catch(e)
+        {
+            console.info(e);
         }
 
 		try
 		{
-		    ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).toggleProgress(this.nodes.parent);
+		    ActiveList.prototype.getInstance(this.nodes.parent.parentNode).toggleProgress(this.nodes.parent);
 		}
 		catch (e)
 		{
@@ -1140,8 +1147,10 @@ Backend.SpecFieldGroup.prototype = {
          try
          {
              this.group = group;
+             console.info(parent);
              this.findNodes(parent);
              this.generateGroupTranslations();
+
              this.bindEvents(); 
              Form.backup(this.nodes.form);
          }
@@ -1154,15 +1163,16 @@ Backend.SpecFieldGroup.prototype = {
      findNodes: function(parent)
      {
         this.nodes = {};
-        
+
         this.nodes.parent              = parent;
-        this.nodes.form                = this.nodes.parent;
+        this.nodes.form                = document.getElementsByClassName(this.cssPrefix + 'group_form', this.nodes.template)[0].cloneNode(true);
         this.nodes.template            = $('specField_group_blank');
-        this.nodes.translations        = document.getElementsByClassName(this.cssPrefix + 'group_translations', this.nodes.template)[0].cloneNode(true);
-        this.nodes.controls            = document.getElementsByClassName(this.cssPrefix + 'group_controls', this.nodes.template)[0].cloneNode(true);
+        this.nodes.translations        = document.getElementsByClassName(this.cssPrefix + 'group_translations', this.nodes.form)[0];
+        this.nodes.controls            = document.getElementsByClassName(this.cssPrefix + 'group_controls', this.nodes.form)[0];
         this.nodes.translationTemplate = document.getElementsByClassName(this.cssPrefix + 'group_translations_language_', this.nodes.translations)[0];
-        this.nodes.mainTitleInput      = this.nodes.form.getElementsByTagName("input")[0];
+        this.nodes.mainTitleInput      = document.getElementsByClassName(this.cssPrefix + 'group_default_language', this.nodes.translations)[0].getElementsByTagName("input")[0];
         this.nodes.mainTitle           = document.getElementsByClassName(this.cssPrefix + 'group_title', this.nodes.parent)[0];
+        this.nodes.categoryID          = document.getElementsByClassName(this.cssPrefix + 'group_categoryID', this.nodes.form)[0];
         this.nodes.save                = document.getElementsByClassName(this.cssPrefix + 'save', this.nodes.controls)[0];
         this.nodes.cancel              = document.getElementsByClassName(this.cssPrefix + 'cancel', this.nodes.controls)[0];
      },
@@ -1170,7 +1180,6 @@ Backend.SpecFieldGroup.prototype = {
      bindEvents: function()
      {
          var self = this;
-         
          if(this.nodes.mainTitle) Event.observe(self.nodes.mainTitleInput, 'keyup', function(e) { self.nodes.mainTitle.innerHTML = self.nodes.mainTitleInput.value });
          Event.observe(self.nodes.save, 'click', function(e) { Event.stop(e); self.beforeSave() });
          Event.observe(self.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel() });
@@ -1187,51 +1196,62 @@ Backend.SpecFieldGroup.prototype = {
         var self = this;
         Backend.SpecField.prototype.loadLanguagesAction();
 
+        this.nodes.mainTitleInput.name += "[" + Backend.SpecField.prototype.languageCodes[0] + "]";
+        if(this.group.name && this.group.name[Backend.SpecField.prototype.languageCodes[0]]) 
+        {
+            this.nodes.mainTitleInput.value = this.group.name[Backend.SpecField.prototype.languageCodes[0]];
+        }
+        
+        this.nodes.categoryID.value = this.group.Category.ID;
+        
         $H(Backend.SpecField.prototype.languages).each(function(language) {
             if(language.key == Backend.SpecField.prototype.languageCodes[0]) throw $continue;
-            
             
             var languageTranlation = self.nodes.translationTemplate.cloneNode(true);
             Element.removeClassName(languageTranlation, self.cssPrefix + 'group_translations_language_');
             Element.removeClassName(languageTranlation, 'dom_template');
             Element.addClassName(languageTranlation, self.cssPrefix + 'group_translations_language_' + language.key);
-              
-            
-            var languageName = document.getElementsByClassName(self.cssPrefix + 'group_translation_language_name', languageTranlation)[0];
-            console.info(languageName);
-            
+
+            var languageName = document.getElementsByClassName(self.cssPrefix + 'group_translation_language_name', languageTranlation)[0];           
             languageName.innerHTML  = language.value;
                         
             var translationInput   = languageTranlation.getElementsByTagName("input")[0];
             translationInput.name  += '[' + language.key + ']';
             translationInput.value = self.group.name && self.group.name[language.key] ? self.group.name[language.key] : '';
-            
-            
-            
+
             self.nodes.translations.appendChild(languageTranlation);
         });
         
         Element.remove(self.nodes.translationTemplate);
-        this.nodes.parent.appendChild(this.nodes.translations);
-        this.nodes.parent.appendChild(this.nodes.controls);
+        
+        try
+        {
+            this.nodes.parent.insertBefore(this.nodes.form, this.nodes.mainTitle.nextSibling);
+        }
+        catch(e)
+        {
+            this.nodes.parent.appendChild(this.nodes.form);
+        }
     },
     
     beforeSave: function()
     {
 		try
 		{
-            ActiveList.prototype.getInstance(this.cssPrefix + '_groups_list_' + this.group.Category.ID + "_" + this.group.ID).toggleProgress(this.nodes.parent.parentNode);
+            ActiveList.prototype.getInstance(this.cssPrefix + 'groups_list_' + this.group.Category.ID).toggleProgress(this.nodes.parent);
 		}
 		catch (e)
 		{
-		    ActiveForm.prototype.onProgress(this.nodes.form);
+		    console.info(this.nodes.form);
+            ActiveForm.prototype.onProgress(this.nodes.form);
 		}
-        
+
         var self = this;
+        
         new Ajax.Request(
-            this.nodes.form.action,
+            this.nodes.form.getElementsByTagName('form')[0].action + (this.group.ID ? this.group.ID : ''),
             {
-                method: this.nodes.form.method,
+                method: 'post',
                 postBody: Form.serialize(this.nodes.form),
                 onComplete: function(response) { 
                     self.afterSave(eval("(" + response.responseText + ")")); 
@@ -1240,26 +1260,40 @@ Backend.SpecFieldGroup.prototype = {
         );
     },
     
-    afterSave: function(reponse)
+    afterSave: function(response)
     {
 		try
 		{
-            ActiveList.prototype.getInstance(this.cssPrefix + '_groups_list_' + this.group.Category.ID + "_" + this.group.ID).toggleProgress(this.nodes.parent.parentNode);
+            ActiveList.prototype.getInstance(this.cssPrefix + 'groups_list_' + this.group.Category.ID).toggleProgress(this.nodes.parent);
 		}
 		catch (e)
 		{
-		    ActiveForm.prototype.onProgress(this.nodes.form);
+		    ActiveForm.prototype.offProgress(this.nodes.form);
+            
+            var title = document.createElement('span');
+            Element.addClassName(title, this.cssPrefix + 'group_title');
+            title.appendChild(document.createTextNode(this.nodes.mainTitleInput.value));
+            $(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show").style.display = 'inline';
+            
+            ActiveList.prototype.getInstance(this.cssPrefix + "groups_list_" + this.group.Category.ID).addRecord(response.id, title);
+            Form.restore(this.nodes.form);
 		}
         
-        Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.form);
         Form.backup(this.nodes.form);
+        Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.parent);
     },
     
     cancel: function()
     {
+        console.info(this);
         if(Form.hasBackup(this.nodes.form))
 		{
             Form.restore(this.nodes.form);
+        }
+        
+        if(!this.group || !this.group.ID)
+        {
+            ActiveForm.prototype.hideNewItemForm($(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show"), this.nodes.parent); 
         }
     },
     
@@ -1270,12 +1304,10 @@ Backend.SpecFieldGroup.prototype = {
      */
     displayGroupTranslations: function(parent)
     {
-        var groupTitle = document.getElementsByClassName(this.cssPrefix + 'group_title', parent)[0];
-        
-        groupTitle.getElementsByTagName("input")[0].style.display = 'inline';
-        groupTitle.getElementsByTagName("span")[0].style.display = 'none';
-        document.getElementsByClassName(this.cssPrefix + 'group_translations', parent)[0].style.display = 'block';   
-        document.getElementsByClassName(this.cssPrefix + 'group_controls', parent)[0].style.display = 'block';   
+        ActiveForm.prototype.showNewItemForm(
+            document.getElementsByClassName(this.cssPrefix + 'group_title', parent)[0], 
+            document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0]
+        ); 
     },
     
     
@@ -1285,17 +1317,17 @@ Backend.SpecFieldGroup.prototype = {
      */
     hideGroupTranslations: function(parent)
     {
-        var groupTitle = document.getElementsByClassName(this.cssPrefix + 'group_title', parent)[0];
-        console.info('hide');
-        groupTitle.getElementsByTagName("input")[0].style.display = 'none';
-        groupTitle.getElementsByTagName("span")[0].style.display = 'inline';
-        document.getElementsByClassName(this.cssPrefix + 'group_translations', parent)[0].style.display = 'none';   
-        document.getElementsByClassName(this.cssPrefix + 'group_controls', parent)[0].style.display = 'none';   
+        console.info(document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0]);
+        ActiveForm.prototype.hideNewItemForm(
+            document.getElementsByClassName(this.cssPrefix + 'group_title', parent)[0], 
+            document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0]
+        ); 
     },
     
     isGroupTranslated: function(parent)
     {
-        return document.getElementsByClassName(this.cssPrefix + 'group_translations', parent).length > 0;
+        console.info(parent)
+        return document.getElementsByClassName(this.cssPrefix + 'group_form', parent).length > 0;
     },
 
     /**
@@ -1304,15 +1336,10 @@ Backend.SpecFieldGroup.prototype = {
      */
     createNewAction: function(categoryID)
     {
-        console.info(this.cssPrefix + "group_new_" + categoryID + "_show");
         var link = $(this.cssPrefix + "group_new_" + categoryID + "_show");
         var form = $(this.cssPrefix + "group_new_" + categoryID + "_form");
         
-        console.info(link);
-        console.info(form);
-        
-        ActiveList.prototype.collapseAll();
-        
+        ActiveList.prototype.collapseAll();        
         ActiveForm.prototype.showNewItemForm(link, form);
     }    
 }

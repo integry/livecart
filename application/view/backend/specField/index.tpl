@@ -14,6 +14,7 @@
     Backend.SpecField.prototype.links.sortValues = {/literal}'{link controller=backend.specField action=sortValues}/'{literal};
     Backend.SpecField.prototype.links.sortGroups = {/literal}'{link controller=backend.specField action=sortGroups}/'{literal};
     Backend.SpecField.prototype.links.getGroup = {/literal}'{link controller=backend.specField action=group}/'{literal};
+    Backend.SpecField.prototype.links.deleteGroup = {/literal}'{link controller=backend.specField action=deleteGroup}/'{literal};
 
 
     Backend.SpecField.prototype.msg = {};
@@ -46,10 +47,14 @@
     </div>
     
     <div id="specField_group_new_{$categoryID}_form" class="specField_new_group" style="display: none;">
-        <form action="{link controller=backend.specField action=saveGroup id=$field.SpecFieldGroup.ID}" class="specField_group_form" method="post">
-        </form>    	
         <script type="text/javascript">
-           new Backend.SpecFieldGroup($('specField_group_new_{$categoryID}_form'), '{json array=$specFieldsList}');
+           new Backend.SpecFieldGroup($('specField_group_new_{$categoryID}_form'), {literal}
+               { 
+                   Category:
+                   {
+                       ID: {/literal}{$categoryID}{literal}
+                   }
+               }{/literal});
         </script>
     </div>
 </div>
@@ -60,7 +65,7 @@
 
 {* No group *}
 <span class="specField_group_title">{t _not_in_group}</span>
-<ul id="specField_items_list_{$categoryID}_" class="specFieldList activeList_add_sort activeList_add_edit activeList_accept_specFieldList">
+<ul id="specField_items_list_{$categoryID}_" class="specFieldList activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_specFieldList">
 {assign var="lastSpecFieldGroup" value="-1"}
 {foreach name="specFieldForeach" item="field" from=$specFieldsWithGroups}
     {if $field.SpecFieldGroup.ID}{php}break;{/php}{/if}
@@ -76,17 +81,15 @@
 
 {* Grouped specification fields *}
 {assign var="lastSpecFieldGroup" value="-1"}
-<ul id="specField_groups_list_{$categoryID}" class="specFieldListGroup activeList_add_sort activeList_add_edit">
+<ul id="specField_groups_list_{$categoryID}" class="specFieldListGroup activeList_add_sort activeList_add_edit activeList_add_delete">
 {foreach name="specFieldForeach" item="field" from=$specFieldsWithGroups}
     {if !$field.SpecFieldGroup.ID}{php}continue;{/php}{/if}
     
     {if $lastSpecFieldGroup != $field.SpecFieldGroup.ID }
         {if $lastSpecFieldGroup > 0}</ul></li>{/if}
         <li id="specField_groups_list_{$categoryID}_{$field.SpecFieldGroup.ID}">
-            <form action="{link controller=backend.specField action=saveGroup id=$field.SpecFieldGroup.ID}" class="specField_group_form" method="post">
-                <span class="specField_group_title">{$field.SpecFieldGroup.name[$defaultLangCode]}</span>
-            </form>    	
-            <ul id="specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}" class="specFieldList activeList_add_sort activeList_add_edit activeList_accept_specFieldList">
+            <span class="specField_group_title">{$field.SpecFieldGroup.name[$defaultLangCode]}</span>   	
+            <ul id="specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}" class="specFieldList activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_specFieldList">
     {/if}
 
 
@@ -144,34 +147,51 @@
         {
             try
             {
-            var form = document.getElementsByClassName('specField_group_form', li)[0];
-            if(!Backend.SpecFieldGroup.prototype.isGroupTranslated(form))
-            {
-                return Backend.SpecField.prototype.links.getGroup + this.getRecordId(li);
-            }
-            else
-            {
-                if('block' != document.getElementsByClassName('specField_group_translations', form)[0].style.display)
+                if(!Backend.SpecFieldGroup.prototype.isGroupTranslated(li))
                 {
-                     Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);
+                    return Backend.SpecField.prototype.links.getGroup + this.getRecordId(li);
                 }
                 else
                 {
-                     Backend.SpecFieldGroup.prototype.hideGroupTranslations(li);
-                }   
-            }
-            } catch(e) {  console.info(e) }
-        },
-        afterEdit:      function(li, response) { 
-            try
-            {
-                var form = document.getElementsByClassName('specField_group_form', li)[0];
-                new Backend.SpecFieldGroup(form, eval("(" + response + ")"));
-                Backend.SpecFieldGroup.prototype.displayGroupTranslations(form);  
+                    console.info('ddd', document.getElementsByClassName('specField_group_form', li)[0].style.display);
+                    if('block' != document.getElementsByClassName('specField_group_form', li)[0].style.display)
+                    {
+                         Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);
+                    }
+                    else
+                    {
+                         Backend.SpecFieldGroup.prototype.hideGroupTranslations(li);
+                    }   
+                }
             } 
             catch(e) 
             {  
                 console.info(e) 
+            }
+        },
+        afterEdit:      function(li, response) { 
+            try
+            {
+                console.info('adasd');
+                console.info(li);
+                new Backend.SpecFieldGroup(li, eval("(" + response + ")"));
+                Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);  
+            } 
+            catch(e) 
+            {  
+                console.info(e) 
+            }
+        },
+        beforeDelete:   function(li) {
+            if(confirm('{/literal}{t _SpecFieldGroup_remove_question|addslashes}{literal}'))
+            return Backend.SpecField.prototype.links.deleteGroup + this.getRecordId(li)
+        },
+        afterDelete:    function(li, jsonResponse)
+        {
+            var response = eval("("+jsonResponse+")");
+            if(response.status == 'success') {
+                this.remove(li);
+                CategoryTabControl.prototype.resetTabItemsCount({/literal}{$categoryID}{literal});
             }
         },
         beforeSort:     function(li, order) {

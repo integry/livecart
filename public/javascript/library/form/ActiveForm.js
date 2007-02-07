@@ -3,37 +3,70 @@ ActiveForm.prototype = {
 
     showNewItemForm: function(link, form) 
     {
-        link.style.display = 'none';
+        
+        console.info(link);
+        console.info(form);
+        
+        if(link) link.style.display = 'none';
         
         if(BrowserDetect.browser != 'Explorer')
         {
-            Effect.BlindDown(form.id, {duration: 0.3});
-            Effect.Appear(form.id, {duration: 0.66});
-    
-                setTimeout(function() {  
-                form.style.height = 'auto'; 
-            }, 0.7);
+            try{               
+                if(form) 
+                {
+                    Effect.BlindDown(form, {duration: 0.3});
+                    Effect.Appear(form, {duration: 0.66});
+                    
+                    setTimeout(function() { 
+                        form.style.display = 'block'; 
+                        form.style.height = 'auto';
+                    }, 700);
+                }
+                
+                if(link) 
+                {
+                    setTimeout(function()
+                    { 
+                        link.style.display = 'none';  
+                    }, 700);
+                }
+            } 
+            catch(e)
+            {
+                console.info(e)
+            }
         }
         else
         {
-            form.style.display = 'block'; 
+            if(form) form.style.display = 'block'; 
         }
     },
     
     
     hideNewItemForm: function(link, form)
     {
+        
+        console.info(link);
+        console.info(form);
+        
         if(BrowserDetect.browser != 'Explorer')
         {
-            Effect.Fade(form.id, {duration: 0.2});
-            Effect.BlindUp(form.id, {duration: 0.3});
-    
-            setTimeout(function() { link.style.display = 'block'; }, 0.3);
+            if(form) 
+            {
+                Effect.Fade(form, {duration: 0.2});
+                Effect.BlindUp(form, {duration: 0.3});
+                setTimeout(function() { form.style.display = 'none'; }, 300);   
+            }
+            
+            if(link) 
+            {
+                setTimeout(function() { link.style.display = 'inline'; }, 300);   
+            }
         }
         else
         {
-            link.style.display = 'block';
-            form.style.display = 'none';
+            if(link) link.style.display = 'inline';
+            if(form) form.style.display = 'none';
         }
     },
     

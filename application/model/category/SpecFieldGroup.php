@@ -76,6 +76,16 @@ class SpecFieldGroup extends MultilingualObject
 		ClassLoader::import("application.model.category.SpecField");
 		return SpecField::getRecordSetArray($this->getSpecificationFilter($includeParentFields), $loadReferencedRecords);
 	}
+
+	/**
+	 * Get new SpecFieldGroup active record instance
+	 *
+	 * @return SpecFieldGroup
+	 */
+	public static function getNewInstance()
+	{
+		return parent::getNewInstance(__CLASS__);
+	}
 	
 	/**
 	 * Crates a select filter for specification fields related to group
@@ -92,5 +102,13 @@ class SpecFieldGroup extends MultilingualObject
 		return $filter;
 	}
 
+
+	/**
+	 * Delete spec field group from database
+	 */
+	public static function deleteById($id)
+	{
+	    return parent::deleteByID(__CLASS__, (int)$id);
+	}
 }
 ?>

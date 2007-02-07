@@ -186,26 +186,20 @@ ActiveList.prototype = {
      */
     getInstance: function(ul, callbacks, messages)
     {  
-       try 
-       {
-           var ulElement = $(ul);       
-           if(!ulElement.id)
-           {
-                throw Error('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
-                return false;
-           }
-           
-           if(!ActiveList.prototype.activeListsUsers[ulElement.id]) 
-           {
-               ActiveList.prototype.activeListsUsers[ulElement.id] = new ActiveList(ulElement.id, callbacks, messages);
-           }
-           
-           return ActiveList.prototype.activeListsUsers[ulElement.id];
-       }
-       catch(e) 
-       {
-            console.info(e);
-       }
+        var ulElement = $(ul);       
+        if(!ulElement.id)
+        {
+            throw Error('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
+            return false;
+        }
+       
+        if(!ActiveList.prototype.activeListsUsers[ulElement.id]) 
+        {
+            ActiveList.prototype.activeListsUsers[ulElement.id] = new ActiveList(ulElement.id, callbacks, messages);
+        }
+        
+        return ActiveList.prototype.activeListsUsers[ulElement.id];
+
     },
 
     /**
