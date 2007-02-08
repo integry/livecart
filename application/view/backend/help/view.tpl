@@ -21,19 +21,19 @@
 
 {include file=layout/help/header.tpl}
 
-<div id="helpNav">
-{foreach from=$breadCrumb item=title key=key name=breadCrumb}
+<div id="helpNav" style="background-color: #ABCDEF;">
+{foreach from=$path item=item name=breadCrumb}
 	{if !$smarty.foreach.breadCrumb.last}
-		<a href="{link controller=backend.help action=view id=$key}">{$title}</a> &gt;
+		<a href="{help $item.ID}">{$item.name}</a> &gt;
 	{else}
-		<span id="breadCrumbLast">{$title}</span>
+		<span id="breadCrumbLast">{$item.name}</span>
 	{/if}
 {/foreach}
 </div>
 
 <div id="helpContent">
 
-	<fieldset id="helpTopicTree" style="border: 1px solid black; background-color: white; padding: 5px; float: left; width: 200px;">
+	<fieldset id="helpTopicTree" style="border: 1px solid black; background-color: white; padding: 5px; float: left; width: 200px; background-color: #EEEEEE;">
 		{fun name="topicTree" node=$topicTree}
 	</fieldset>
 
@@ -43,7 +43,9 @@
 			<h1>{$PAGE_TITLE}</h1>
 		{/if}
 
-		{include file=$helpTemplate}
+		<div style="padding-left: 20px; padding-top: 10px;">
+			{include file=$helpTemplate}
+		</div>
 	
 		<div id="helpRelated">
 			Related topics

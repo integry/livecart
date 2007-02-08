@@ -28,7 +28,9 @@
 
 		<div id="helpHeader">
 			<div style="float: left;">
-				<img src="image/backend/layout/logo_tr.png" style="margin-right: 10px;">
+				<a href="{help index}">
+					<img src="image/backend/layout/logo_tr.png" style="margin-right: 10px;">
+				</a>
 				<span id="helpTitle">Help</span>
 			</div>
 			<div style="float: right; text-align: right;">

@@ -1,3 +1,10 @@
+* 
+{
+  	margin: 0;
+  	padding: 0;
+  	border: 0;
+}
+
 /* Layout positioning */
 html,body {
 	margin:0;
@@ -22,10 +29,11 @@ div#helpFooter {
 /* Formatting */
 body {
 	background-image: none;  
-	background-color: #EEEEEE;
+	background-color: #FFFFFF;
 }
 p {
   	margin-bottom: 10px;
+  	padding-left: 20px;
 }
 ul, ol {
   	margin-left: 20px;
@@ -38,8 +46,15 @@ h1 {
 	padding-top: 5px;
 	padding-left: 5px;
 }
+
 h2 {
-	margin-bottom: 5px;  
+	margin-top: 10px;  
+	margin-bottom: 10px;  
+}
+
+h3 {
+	margin-top: 25px;  
+	margin-bottom: 10px;  
 }
 
 #helpHeader {
@@ -71,4 +86,32 @@ h2 {
 #helpFooterContent {
 	text-align: center;
 	padding: 5px;
+}
+
+.tasks, .seeAlso
+{
+	float: left; 
+	width: 97%;
+	margin-top: 25px;
+	margin-bottom: 25px;
+}
+
+.tasks fieldset, .seeAlso fieldset
+{
+  	float: left;
+}
+
+.tasks ul
+{
+}
+
+#helpContent img
+{
+  	border: 1px solid #CCCCCC;
+  	margin: 7px;
+}
+
+.current
+{
+  	font-weight: bold;
 }

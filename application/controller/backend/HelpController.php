@@ -32,8 +32,10 @@ class HelpController extends StoreManagementController
 		
 		$currentTopic = $root->getTopic($id);
 
+		$path = array();
 		foreach ($currentTopic->getPath(true) as $topic)
 		{
+			$path[] = $topic->toArray();
 			if (!isset($current))
 			{
 			  	$current =& $rootTopic;
@@ -79,7 +81,10 @@ class HelpController extends StoreManagementController
 	  	$response->setValue('next', $currentTopic->getNext()->toArray());
 	  	$response->setValue('prev', $currentTopic->getPrevious()->toArray());
 	  	$response->setValue('PAGE_TITLE', $currentTopic->getName());
-	  	
+	  	$response->setValue('path', $path);
+	  	$response->setValue('currentId', $id);
+	  	$response->set('rootTopic', $root);
+		  		  	  	
 /*
 	  	$response->setValue('breadCrumb', $breadCrumb);
 

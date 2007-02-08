@@ -3,13 +3,11 @@
 	cat=Product Categories
 		add=Add New Category
 		attr=Manage Attributes
-
+		
 	product=Products
 		add=Add New Product
 		
 	language=Languages
-		add=Add New Language
 		edit=Edit Translations
-		export=Export
 		
 	order=Orders
