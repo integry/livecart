@@ -4,20 +4,24 @@
 
 <div id="categoryMsg_{$categoryId}"></div>
 
-</div>
 {form id="categoryForm_$categoryId" handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="Backend.Category.updateBranch($('categoryForm_$categoryId')); return false;"}
-		<p>
-			<label for="name_{$categoryId}">{t _category_name}:</label>
-			{textfield name="name" id="name_$categoryId"}
-		</p>
+	<fieldset class="container">
 		<p>
 			<label for="handle_{$categoryId}">{t _category_handle}:</label>
 			{textfield name="handle" id="handle_$categoryId"}
 		</p>
+
+
+		<p>
+			<label for="name_{$categoryId}">{t _category_name}:</label>
+			{textfield name="name" id="name_$categoryId"}
+		</p>
+		
 		<p>
 			<label for="details_{$categoryId}">{t _details}:</label>
 			{textarea name="details" id="details_$categoryId"}
 		</p>
+		
 		<p>
 			<label for="keywords_{$categoryId}">Keywords:</label>
 			{textarea name="keywords" id="keywords_$categoryId" style="height: 3em;"}
@@ -59,4 +63,5 @@
 			<input type="submit" class="submit" id="submit" value="{t _save}"/> or
 			<a href="#" class="cancel" onClick="$('categoryForm_{$categoryId}').reset(); return false;">{t _cancel}</a>
 		</p>
+	</fieldset>		
 {/form}

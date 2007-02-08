@@ -141,6 +141,7 @@
 
 	</fieldset>
 
+	{if $specFieldList}
 	<fieldset class="specField">
 		<legend>Product Specification</legend>
 		{foreach from=$specFieldList key=groupID item=fieldList}
@@ -166,6 +167,7 @@
 
 		{/foreach}		
 	</fieldset>
+	{/if}
 	
 	<fieldset>
 		<legend>Inventory</legend>
