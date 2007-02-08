@@ -770,6 +770,7 @@ fieldset.error, div.error, fieldset.container
 	margin: 0px;
 	position: static; 
 	border: 0;
+	background-color: inherit;
 }
 
 .errorText, fieldset.error div

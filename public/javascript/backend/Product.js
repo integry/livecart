@@ -1,5 +1,41 @@
 Backend.Product = 
 {
+	productTabCopies: new Array(),
+	
+	showAddForm: function(container, categoryID)
+	{
+		this.createProductTabCopy(categoryID, container);
+		var url = Backend.Category.links.addProduct.replace('_id_', categoryID);
+
+		new LiveCart.AjaxUpdater(url, container, document.getElementsByClassName('progressIndicator', container)[0]);
+
+	},
+	
+	cancelAddProduct: function(categoryID, container)
+	{
+		this.restoreProductTab(categoryID, container);  
+	},
+	
+	createProductTabCopy: function(categoryID, container)
+	{
+		this.productTabCopies[categoryID] = container.cloneNode(true);
+	},
+	
+	restoreProductTab: function(categoryID, container)
+	{
+		container.parentNode.replaceChild(this.productTabCopies[categoryID], container);
+	},
+
+	initAddForm: function()
+	{
+		var textareas = document.getElementsByTagName('textarea');
+		for (k = 0; k < textareas.length; k++)
+		{
+			tinyMCE.execCommand('mceAddControl', true, textareas[k].name);
+		}
+		var expander = new SectionExpander();	  
+	},
+
 	generateHandle: function(titleElement)
 	{
 	  	handleElement = titleElement.form.elements.namedItem('handle');

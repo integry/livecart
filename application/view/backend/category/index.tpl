@@ -8,11 +8,6 @@
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
 {includeJs file="library/SectionExpander.js"}
 
-{includeJs file="backend/Category.js"}
-{includeJs file="backend/SpecField.js"}
-{includeJs file="backend/Filter.js"}
-{includeJs file="backend/CategoryImage.js"}
-
 {* Calendar *}
 {includeJs file="library/dhtmlCalendar/calendar.js"}
 {includeJs file="library/dhtmlCalendar/lang/calendar-en.js"}
@@ -20,15 +15,20 @@
 {includeJs file="library/dhtmlCalendar/calendar-setup.js"}
 {includeCss file="library/dhtmlCalendar/calendar-win2k-cold-2.css"}
 
+{includeJs file="backend/Category.js"}
+{includeJs file="backend/SpecField.js"}
+{includeJs file="backend/Filter.js"}
+{includeJs file="backend/CategoryImage.js"}
+{includeJS file="backend/Product.js"}
 
 {includeCss file="library/ActiveList.css"}
 {includeCss file="backend/Category.css"}
+{includeCSS file="backend/Product.css"}
 {includeCss file="backend/SpecField.css"}
 {includeCss file="backend/Filter.css"}
 {includeCss file="backend/CategoryImage.css"}
 {includeCss file="library/TabControl.css"}
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
-
 
 {pageTitle}Products and Categories{/pageTitle}
 {include file="layout/backend/header.tpl"}
@@ -54,13 +54,13 @@
 <div id="managerContainer" class="maxHeight h--60">
 	<div id="tabContainer">
 		<ul id="tabList" class="tabs">
+
 			<li id="tabProducts" class="tab active"><a href="{link controller=backend.product action=index id=_id_}">{t _products}</a><span> </span></li>
 			<li id="tabMainDetails" class="tab inactive"><a href="{link controller=backend.category action=form id=_id_}">{t _category_details}</a><span> </span></li>
 			<li id="tabFields" class="tab inactive"><a href="{link controller=backend.specField action=index id=_id_}">{t _attributes}</a><span> </span></li>
 			<li id="tabFilters" class="tab inactive"><a href="{link controller=backend.filter action=index id=_id_}">{t _filters}</a><span> </span></li>
 			<li id="tabImages" class="tab inactive"><a href="{link controller=backend.categoryImage action=index id=_id_}">{t _images}</a><span> </span></li>
 
-<!--		<li id="tabArticles" class="tab inactive"><a href="{link controller=backend.image action=index id=_id_}">{t _articles}</a><span></span></li> -->
 		</ul>
 	</div>
 	<div id="sectionContainer" class="maxHeight  h--50">
@@ -78,7 +78,8 @@
 	Backend.Category['links']['reorder'] = '{link controller=backend.category action=reorder id=_id_}/?parentId=_pid_';
 	Backend.Category['links']['categoryAutoloading'] = '{link controller=backend.category action=xmlBranch}';
 	Backend.Category['links']['categoryRecursiveAutoloading'] = '{link controller=backend.category action=xmlRecursivePath}';
-    
+	Backend.Category['links']['addProduct']  = '{link controller=backend.product action=add id=_id_}';
+	    
     Backend.Category.messages = {literal}{}{/literal};
     Backend.Category.messages._reorder_failed = '{t _reorder_failed|addslashes}';
     Backend.Category.messages._confirm_category_remove = '{t _confirm_category_remove|addslashes}';

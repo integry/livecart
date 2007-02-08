@@ -228,14 +228,18 @@ class ProductController extends StoreManagementController
 		$validator->addCheck('shippingSurcharge', new IsNumericCheck($this->translate('_err_surcharge_not_numeric')));		  
 		$validator->addFilter('shippingSurcharge', new NumericFilter());		    
 						
-		$validator->addCheck('shippingWeight', new IsNumericCheck($this->translate('_err_weight_not_numeric')));		  
-		$validator->addCheck('shippingWeight', new MinValueCheck($this->translate('_err_weight_negative'), 0));	
-		$validator->addFilter('shippingWeight', new NumericFilter());		    
-
 		$validator->addCheck('minimumQuantity', new IsNumericCheck($this->translate('_err_quantity_not_numeric')));		  
 		$validator->addCheck('minimumQuantity', new MinValueCheck($this->translate('_err_quantity_negative'), 0));	
 		$validator->addFilter('minimumQuantity', new NumericFilter());		    
-				
+
+		$validator->addFilter('shippingHiUnit', new NumericFilter());		    
+		$validator->addCheck('shippingHiUnit', new IsNumericCheck($this->translate('_err_weight_not_numeric')));		  
+		$validator->addCheck('shippingHiUnit', new MinValueCheck($this->translate('_err_weight_negative'), 0));	
+
+		$validator->addFilter('shippingLoUnit', new NumericFilter());				
+		$validator->addCheck('shippingLoUnit', new IsNumericCheck($this->translate('_err_weight_not_numeric')));		  
+		$validator->addCheck('shippingLoUnit', new MinValueCheck($this->translate('_err_weight_negative'), 0));	
+							
 		return $validator;
 	}
 

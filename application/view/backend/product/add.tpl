@@ -1,9 +1,7 @@
-{includeCSS file="backend/Product.css"}
-{includeJS file="library/form/Validator.js"}
-{includeJS file="library/form/ActiveForm.js"}
-{includeJS file="backend/Product.js"}
-
-{include file="layout/dev/head.tpl"}
+<a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}, this.parentNode); return false;">
+	Cancel adding new product
+</a>
+<br /><br />
 
 {defun name="specFieldFactory" field="field" language="language"}
 	
@@ -54,8 +52,7 @@
 	
 	<input type="hidden" name="categoryID" value="{$product.Category.ID}" />
 	
-	<fieldset>
-		<legend>Main product information</legend>
+	<fieldset class="container">
 
 		<p>			
 			<label for=""></label> {checkbox name="isEnabled" class="checkbox" value="on"}<label for="isEnabled"> Enabled (visible)</label>
@@ -142,7 +139,7 @@
 	</fieldset>
 
 	{if $specFieldList}
-	<fieldset class="specField">
+	<fieldset class="specification">
 		<legend>Product Specification</legend>
 		{foreach from=$specFieldList key=groupID item=fieldList}
 		
@@ -315,4 +312,8 @@
 	
 {/form}
 
-{include file="layout/dev/foot.tpl"}
+{literal}
+<script type="text/javascript">
+	Backend.Product.initAddForm();
+</script>
+{/literal}

@@ -21,7 +21,8 @@
 	<fieldset id="saveRates">
 	
 	<label for="submit"> </label>
-	<span id="rateSaveIndicator" class="progressIndicator" style="display: none;"></span><input type="submit" class="submit" id="submit" value="{t _save}"/> or
+	<span id="rateSaveIndicator" class="progressIndicator" style="display: none;"></span>
+	<input type="submit" class="submit" id="submit" value="{t _save}"/> or
 	<a href="#" class="cancel" onClick="$('rateForm').reset(); return false;">{t _cancel}</a>
 	
 	</fieldset>
