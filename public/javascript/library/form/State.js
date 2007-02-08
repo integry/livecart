@@ -49,6 +49,14 @@ Form.State = {
      */
     counter: 0,
 
+    /**
+     * Get new ID for the form
+     */
+    getNewId: function()
+    {
+        return this.counter++;
+    },
+
 
     /**
      * Backup form values
@@ -60,12 +68,12 @@ Form.State = {
      */
     backup: function(form)
     {
-        if(!form.backupId)
+        if(!this.hasBackup(form))
         {
-            form.backupId = this.counter;
+            form.backupId = this.getNewId();
         }
 
-        this.backups[++form.backupId] = {};
+        this.backups[form.backupId] = {};
 
         var elements = Form.getElements(form);
         for(var i = 0; i < elements.length; i++)
@@ -135,13 +143,12 @@ Form.State = {
      */
     backupFromJson: function(form, json)
     {
-        if(!form.backupId)
+        if(!this.hasBackup(form))
         {
-            form.backupId = this.counter;
+            form.backupId = this.getNewId();
         }
 
-        this.backups[++form.backupId] = {};
-
+        this.backups[form.backupId] = {};
         this.backups[form.backupId] = json;
     },
 
@@ -204,6 +211,5 @@ Form.State = {
         });
     }
 }
-
 
 Object.extend(Form, Form.State);
