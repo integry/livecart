@@ -132,9 +132,12 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 		} 
 		return $data;
 	}
-	
+    
 	/**
-     * Set a whole language field at a time. You can always skip some language.
+     * Set a whole language field at a time. You can allways skip some language, bat as long as it occurs in
+     * languages array it will be writen into the database as empty string. I spent 2 hours writing this feature =]
+     *
+     * @example $specField->setLanguageField('name', array('en' => 'Name', 'lt' => 'Vardas', 'de' => 'Name'), array('lt', 'en', 'de'))
      *
      * @param string $fieldName Field name in database schema
      * @param array $fieldValue Field value in different languages

@@ -9,41 +9,23 @@ ClassLoader::import("application.model.system.MultilingualObject");
  */
 class SpecFieldValue extends MultilingualObject
 {
-
-	public static function defineSchema($className = __CLASS__)
+    /**
+     * Define SpecFieldValue schema in database
+     */
+    public static function defineSchema()
 	{
-		$schema = self::getSchemaInstance($className);
+		$schema = self::getSchemaInstance(__CLASS__);
 		$schema->setName("SpecFieldValue");
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("specFieldID", "SpecField", "ID", "SpecField", ARInteger::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance(2)));
-
 		$schema->registerField(new ARField("value", ARArray::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance(2)));
-
-	}
-
-	public static function getRecordSet($specFieldId)
-	{
-        $filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"));
-        $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'specFieldID'), $specFieldId));
-
-        return parent::getRecordSet(__CLASS__, $filter, false);
-	}
-
-	public static function getRecordSetArray($specFieldId)
-	{
-        $filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"));
-        $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'specFieldID'), $specFieldId));
-
-        return parent::getRecordSetArray(__CLASS__, $filter, false);
 	}
 
 	/**
-	 *  Get blank active record instance
+	 *  Get new instance of specification field value
 	 *
 	 *	@param SpecField $field Instance of SpecField (must be a selector field)
 	 *  @return SpecFieldValue
@@ -57,42 +39,57 @@ class SpecFieldValue extends MultilingualObject
 		
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->specField->set($field);
+		
 		return $instance;
 	}
 
 	/**
 	 * Get active record instance
 	 *
-	 * @param unknown_type $recordID
-	 * @param unknown_type $loadRecordData
-	 * @param unknown_type $loadReferencedRecords
+	 * @param integer $recordID
+	 * @param boolean $loadRecordData
+	 * @param boolean $loadReferencedRecords
 	 * @return SpecFieldValue
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
 	    return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
-
-    /**
-     * Set a whole language field at a time. You can allways skip some language, bat as long as it occurs in
-     * languages array it will be writen into the database as empty string. I spent 2 hours writing this feature =]
-     *
-     * @example $specField->setLanguageField('name', array('en' => 'Name', 'lt' => 'Vardas', 'de' => 'Name'), array('lt', 'en', 'de'))
-     *
-     * @param string $fieldName Field name in database schema
-     * @param array $fieldValue Field value in different languages
-     * @param array $langCodeArray Language codes
-     */
-	public function setLanguageField($fieldName, $fieldValue, $langCodeArray)
+	
+	/**
+	 * Loads a record set of specification field values belonging to specification field
+	 *
+	 * @param integer $specFieldId
+	 * @return ARSet
+	 */
+	public static function getRecordSet($specFieldId)
 	{
-	    foreach ($langCodeArray as $lang)
-	    {
-	        $this->setValueByLang($fieldName, $lang, isset($fieldValue[$lang]) ? $fieldValue[$lang] : '');
-	    }
+        $filter = new ARSelectFilter();
+		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"));
+        $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'specFieldID'), $specFieldId));
+
+        return parent::getRecordSet(__CLASS__, $filter, false);
+	}
+
+	/**
+	 * Loads a record set of specification field values belonging to specification field and returns it as array
+	 *
+	 * @param integer $specFieldId
+	 * @return ARSet
+	 */
+	public static function getRecordSetArray($specFieldId)
+	{
+        $filter = new ARSelectFilter();
+		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"));
+        $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'specFieldID'), $specFieldId));
+
+        return parent::getRecordSetArray(__CLASS__, $filter, false);
 	}
 
 	/**
 	 * Delete value from database
+	 * 
+	 * @param integer $id Specifiaction field value's id
 	 */
 	public static function deleteById($id)
 	{
