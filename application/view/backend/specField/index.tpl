@@ -209,8 +209,17 @@
      {/literal}
      
      var groupList = ActiveList.prototype.getInstance('specField_groups_list_{$categoryID}', specFieldGroupCallbacks, Backend.SpecField.prototype.activeListMessages);
-     Event.observe($("specField_item_new_{$categoryID}_show"), "click", function(e) {literal}{{/literal} Backend.SpecField.prototype.createNewAction(e, '{$categoryID}') {literal}}{/literal});
-     Event.observe($("specField_group_new_{$categoryID}_show"), "click", function(e) {literal}{{/literal} Event.stop(e); Backend.SpecFieldGroup.prototype.createNewAction('{$categoryID}') {literal}}{/literal});
+     Event.observe($("specField_item_new_{$categoryID}_show"), "click", function(e) 
+     {ldelim}
+         Event.stop(e);
+         Backend.SpecField.prototype.createNewAction('{$categoryID}') 
+     {rdelim});
+     
+     Event.observe($("specField_group_new_{$categoryID}_show"), "click", function(e) 
+     {ldelim}
+         Event.stop(e); 
+         Backend.SpecFieldGroup.prototype.createNewAction('{$categoryID}') 
+     {rdelim});
 
  
 {assign var="lastSpecFieldGroup" value="-1"}

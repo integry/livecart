@@ -21,30 +21,24 @@ ActiveForm.prototype = {
         if(link) link.style.display = 'none';
         
         if(animate && BrowserDetect.browser != 'Explorer')
-        {
-            try{               
-                if(form) 
-                {
-                    Effect.BlindDown(form, {duration: 0.3});
-                    Effect.Appear(form, {duration: 0.66});
-                    
-                    setTimeout(function() { 
-                        form.style.display = 'block'; 
-                        form.style.height = 'auto';
-                    }, 700);
-                }
-                
-                if(link) 
-                {
-                    setTimeout(function()
-                    { 
-                        link.style.display = 'none';  
-                    }, 700);
-                }
-            } 
-            catch(e)
+        {             
+            if(form) 
             {
-                console.info(e)
+                Effect.BlindDown(form, {duration: 0.3});
+                Effect.Appear(form, {duration: 0.66});
+                
+                setTimeout(function() { 
+                    form.style.display = 'block'; 
+                    form.style.height = 'auto';
+                }, 700);
+            }
+            
+            if(link) 
+            {
+                setTimeout(function()
+                { 
+                    link.style.display = 'none';  
+                }, 700);
             }
         }
         else

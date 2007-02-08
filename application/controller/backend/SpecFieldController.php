@@ -145,11 +145,18 @@ class SpecFieldController extends StoreManagementController
             $specFieldGroup->setFieldValue('position', 100000);
         }
         
-        $name = $this->request->getValue('name');
-        $specFieldGroup->setLanguageField('name', @array_map($this->htmlspecialcharsUtf_8, $name), array_keys($this->specFieldConfig['languages']));
-        $specFieldGroup->save();
-
-        return new JSONResponse(array('status' => 'success', 'id' => $specFieldGroup->getID()));
+        if(count($errors = $this->validateSpecFieldGroup($this->request->getValueArray(array('name')))) == 0)
+        {
+            $name = $this->request->getValue('name');
+            $specFieldGroup->setLanguageField('name', @array_map($this->htmlspecialcharsUtf_8, $name), array_keys($this->specFieldConfig['languages']));
+            $specFieldGroup->save();
+            
+            return new JSONResponse(array('status' => 'success', 'id' => $specFieldGroup->getID()));
+        }
+        else
+        {
+            return new JSONResponse(array('errors' => $errors, 'status' => 'failure'));
+        }
     }
     
     /**
@@ -275,6 +282,18 @@ class SpecFieldController extends StoreManagementController
         return $errors;
     }
 
+    private function validateSpecFieldGroup($values = array())
+    {
+        $errors = array();
+        $languageCodes = array_keys($this->specFieldConfig['languages']);
+        if(!isset($values['name'][$languageCodes[0]]) || $values['name'][$languageCodes[0]] == '')
+        {
+            $errors['name'] = $this->translate('_error_you_should_provide_default_group_name');
+        }
+        
+        return $errors;
+    }
+    
     public function delete()
     {
         if($id = $this->request->getValue("id", false))

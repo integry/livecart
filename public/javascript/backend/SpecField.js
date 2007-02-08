@@ -37,8 +37,8 @@
  *     Backend.SpecField.prototype.countNewValues = 0;
  * </code>
  *
- * @version 1.0
  * @author Sergej Andrejev
+ * @namespace Backend.SpecField
  */
 if (Backend == undefined)
 {
@@ -976,8 +976,6 @@ Backend.SpecField.prototype = {
      */
     afterSaveAction: function(jsonResponseString)
     {
-        try{
-         
         var self = this;
 
         var jsonResponse = eval("("+jsonResponseString+")");
@@ -1037,11 +1035,6 @@ Backend.SpecField.prototype = {
                     }
                 }
             }
-        }   
-        }
-        catch(e)
-        {
-            console.info(e);
         }
 
 		try
@@ -1118,36 +1111,43 @@ Backend.SpecField.prototype = {
      * @static
      *
      */
-    createNewAction: function(e, categoryID)
+    createNewAction: function(categoryID)
     {
-        if(!e.target)
-		{
-			e.target = e.srcElement;
-		}
-
-        Event.stop(e);
-
-        var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
-        var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");
+        var specFieldLink = $(this.cssPrefix + "item_new_"+categoryID+"_show");
+        var specFieldForm = $(this.cssPrefix + "item_new_"+categoryID+"_form");
+        var specFieldGroupLink = $(this.cssPrefix + "group_new_" + categoryID + "_show");
+        var specFieldGroupForm = $(this.cssPrefix + "group_new_" + categoryID + "_form");
         
-        ActiveList.prototype.collapseAll();
-        
-        ActiveForm.prototype.showNewItemForm(link, form);
+        ActiveList.prototype.collapseAll();        
+        ActiveForm.prototype.showNewItemForm(specFieldLink, specFieldForm);        
+        ActiveForm.prototype.hideNewItemForm(specFieldGroupLink, specFieldGroupForm);
     }    
 }
 
 
-
+/**
+ * Backend.SpecFieldGroup manages specification field groups 
+ * 
+ * To create group you should pass parent element (HTMLLiElement if you this group is allready in ActiveList or HTMLDivElement if it's a new group) if it is 
+ * 
+ * @author Sergej Andrejev
+ * @namespace Backend.SpecField
+ */
 Backend.SpecFieldGroup = Class.create();
 Backend.SpecFieldGroup.prototype = {
      cssPrefix: 'specField_',
      
+     /**
+      * Consturctor
+      * 
+      * @param HTMLElement parent Parent node
+      * @param Object group Evaluated group data
+      */
      initialize: function(parent, group)
      {
          try
          {
              this.group = group;
-             console.info(parent);
              this.findNodes(parent);
              this.generateGroupTranslations();
 
@@ -1160,6 +1160,11 @@ Backend.SpecFieldGroup.prototype = {
          }
      },
      
+     /**
+      * Find all nodes used by this object
+      * 
+      * @param HTMLElement parent Parent node
+      */
      findNodes: function(parent)
      {
         this.nodes = {};
@@ -1170,7 +1175,7 @@ Backend.SpecFieldGroup.prototype = {
         this.nodes.translations        = document.getElementsByClassName(this.cssPrefix + 'group_translations', this.nodes.form)[0];
         this.nodes.controls            = document.getElementsByClassName(this.cssPrefix + 'group_controls', this.nodes.form)[0];
         this.nodes.translationTemplate = document.getElementsByClassName(this.cssPrefix + 'group_translations_language_', this.nodes.translations)[0];
-        this.nodes.mainTitleInput      = document.getElementsByClassName(this.cssPrefix + 'group_default_language', this.nodes.translations)[0].getElementsByTagName("input")[0];
+        this.nodes.name                = document.getElementsByClassName(this.cssPrefix + 'group_default_language', this.nodes.translations)[0].getElementsByTagName("input")[0];
         this.nodes.mainTitle           = document.getElementsByClassName(this.cssPrefix + 'group_title', this.nodes.parent)[0];
         this.nodes.categoryID          = document.getElementsByClassName(this.cssPrefix + 'group_categoryID', this.nodes.form)[0];
         this.nodes.save                = document.getElementsByClassName(this.cssPrefix + 'save', this.nodes.controls)[0];
@@ -1180,7 +1185,7 @@ Backend.SpecFieldGroup.prototype = {
      bindEvents: function()
      {
          var self = this;
-         if(this.nodes.mainTitle) Event.observe(self.nodes.mainTitleInput, 'keyup', function(e) { self.nodes.mainTitle.innerHTML = self.nodes.mainTitleInput.value });
+         if(this.nodes.mainTitle) Event.observe(self.nodes.name, 'keyup', function(e) { self.nodes.mainTitle.innerHTML = self.nodes.name.value });
          Event.observe(self.nodes.save, 'click', function(e) { Event.stop(e); self.beforeSave() });
          Event.observe(self.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel() });
      },
@@ -1196,10 +1201,10 @@ Backend.SpecFieldGroup.prototype = {
         var self = this;
         Backend.SpecField.prototype.loadLanguagesAction();
 
-        this.nodes.mainTitleInput.name += "[" + Backend.SpecField.prototype.languageCodes[0] + "]";
+        this.nodes.name.name += "[" + Backend.SpecField.prototype.languageCodes[0] + "]";
         if(this.group.name && this.group.name[Backend.SpecField.prototype.languageCodes[0]]) 
         {
-            this.nodes.mainTitleInput.value = this.group.name[Backend.SpecField.prototype.languageCodes[0]];
+            this.nodes.name.value = this.group.name[Backend.SpecField.prototype.languageCodes[0]];
         }
         
         this.nodes.categoryID.value = this.group.Category.ID;
@@ -1234,6 +1239,9 @@ Backend.SpecFieldGroup.prototype = {
         }
     },
     
+    /**
+     * Run this code before saving group in database
+     */
     beforeSave: function()
     {
 		try
@@ -1242,8 +1250,7 @@ Backend.SpecFieldGroup.prototype = {
 		}
 		catch (e)
 		{
-		    console.info(this.nodes.form);
-            ActiveForm.prototype.onProgress(this.nodes.form);
+		    ActiveForm.prototype.offProgress(this.nodes.form);
 		}
 
         var self = this;
@@ -1260,32 +1267,52 @@ Backend.SpecFieldGroup.prototype = {
         );
     },
     
+    /**
+     * Run this code after trying to save group in database
+     * 
+     * @param Object response Evaluated server response
+     */
     afterSave: function(response)
     {
-		try
-		{
-            ActiveList.prototype.getInstance(this.cssPrefix + 'groups_list_' + this.group.Category.ID).toggleProgress(this.nodes.parent);
-		}
-		catch (e)
-		{
-		    ActiveForm.prototype.offProgress(this.nodes.form);
+        if(response.status == 'success')
+        {
+    		try
+    		{
+                ActiveList.prototype.getInstance(this.cssPrefix + 'groups_list_' + this.group.Category.ID).toggleProgress(this.nodes.parent);
+                Form.backup(this.nodes.form);
+    		}
+    		catch (e)
+    		{
+    		    ActiveForm.prototype.offProgress(this.nodes.form);
+                
+                var title = document.createElement('span');
+                Element.addClassName(title, this.cssPrefix + 'group_title');
+                title.appendChild(document.createTextNode(this.nodes.name.value));
+                $(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show").style.display = 'inline';
+                
+                ActiveList.prototype.getInstance(this.cssPrefix + "groups_list_" + this.group.Category.ID).addRecord(response.id, title);
+                Form.restore(this.nodes.form);
+    		}
             
-            var title = document.createElement('span');
-            Element.addClassName(title, this.cssPrefix + 'group_title');
-            title.appendChild(document.createTextNode(this.nodes.mainTitleInput.value));
-            $(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show").style.display = 'inline';
-            
-            ActiveList.prototype.getInstance(this.cssPrefix + "groups_list_" + this.group.Category.ID).addRecord(response.id, title);
-            Form.restore(this.nodes.form);
-		}
-        
-        Form.backup(this.nodes.form);
-        Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.parent);
+            Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.parent);
+        }
+        else if(response.errors) 
+        {
+            // Show feedback
+            var self = this;
+            $H(response.errors).each(function(error) 
+            {
+                console.info(self.nodes[error.key], error.value);
+                ActiveForm.prototype.setFeedback(self.nodes[error.key], error.value);
+            });
+        }
     },
     
+    /**
+     * This code is executed when you hit on cancel button
+     */
     cancel: function()
     {
-        console.info(this);
         if(Form.hasBackup(this.nodes.form))
 		{
             Form.restore(this.nodes.form);
@@ -1300,46 +1327,54 @@ Backend.SpecFieldGroup.prototype = {
     
     /**
      * Remove display none from group translations
+     * 
      * @param HTMLElement parent
      */
     displayGroupTranslations: function(parent)
     {
         ActiveForm.prototype.showNewItemForm(
             document.getElementsByClassName(this.cssPrefix + 'group_title', parent)[0], 
-            document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0]
+            document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0].parentNode
         ); 
     },
     
     
     /**
      * Hide group group translations and show group title
+     * 
      * @param HTMLElement parent
      */
     hideGroupTranslations: function(parent)
     {
-        console.info(document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0]);
         ActiveForm.prototype.hideNewItemForm(
             document.getElementsByClassName(this.cssPrefix + 'group_title', parent)[0], 
-            document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0]
+            document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0].parentNode
         ); 
     },
     
+    /**
+     * Check if form elements for translating this group are created or not
+     * 
+     * @param HTMLElement parent
+     * @return boolean
+     */
     isGroupTranslated: function(parent)
     {
-        console.info(parent)
         return document.getElementsByClassName(this.cssPrefix + 'group_form', parent).length > 0;
     },
 
     /**
      * This method unfolds "Create new Spec Field group" form. 
-     * 
      */
     createNewAction: function(categoryID)
     {
-        var link = $(this.cssPrefix + "group_new_" + categoryID + "_show");
-        var form = $(this.cssPrefix + "group_new_" + categoryID + "_form");
-        
+        var specFieldLink = $(this.cssPrefix + "item_new_"+categoryID+"_show");
+        var specFieldForm = $(this.cssPrefix + "item_new_"+categoryID+"_form");
+        var specFieldGroupLink = $(this.cssPrefix + "group_new_" + categoryID + "_show");
+        var specFieldGroupForm = $(this.cssPrefix + "group_new_" + categoryID + "_form");
+                
         ActiveList.prototype.collapseAll();        
-        ActiveForm.prototype.showNewItemForm(link, form);
+        ActiveForm.prototype.showNewItemForm(specFieldGroupLink, specFieldGroupForm);        
+        ActiveForm.prototype.hideNewItemForm(specFieldLink, specFieldForm);
     }    
 }
