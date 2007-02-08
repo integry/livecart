@@ -19,11 +19,11 @@
 {includeJs file="backend/SpecField.js"}
 {includeJs file="backend/Filter.js"}
 {includeJs file="backend/CategoryImage.js"}
-{includeJS file="backend/Product.js"}
+{includeJs file="backend/Product.js"}
 
 {includeCss file="library/ActiveList.css"}
 {includeCss file="backend/Category.css"}
-{includeCSS file="backend/Product.css"}
+{includeCss file="backend/Product.css"}
 {includeCss file="backend/SpecField.css"}
 {includeCss file="backend/Filter.css"}
 {includeCss file="backend/CategoryImage.css"}
