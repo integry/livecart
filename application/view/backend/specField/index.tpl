@@ -10,11 +10,11 @@
     Backend.SpecField.prototype.links.deleteField = {/literal}'{link controller=backend.specField action=delete}/'{literal};
     Backend.SpecField.prototype.links.editField = {/literal}'{link controller=backend.specField action=item}/'{literal};
     Backend.SpecField.prototype.links.sortField = {/literal}'{link controller=backend.specField action=sort}/'{literal};
-    Backend.SpecField.prototype.links.deleteValue = {/literal}'{link controller=backend.specField action=deleteValue}/'{literal};
-    Backend.SpecField.prototype.links.sortValues = {/literal}'{link controller=backend.specField action=sortValues}/'{literal};
-    Backend.SpecField.prototype.links.sortGroups = {/literal}'{link controller=backend.specField action=sortGroups}/'{literal};
-    Backend.SpecField.prototype.links.getGroup = {/literal}'{link controller=backend.specField action=group}/'{literal};
-    Backend.SpecField.prototype.links.deleteGroup = {/literal}'{link controller=backend.specField action=deleteGroup}/'{literal};
+    Backend.SpecField.prototype.links.deleteValue = {/literal}'{link controller=backend.specFieldValue action=delete}/'{literal};
+    Backend.SpecField.prototype.links.sortValues = {/literal}'{link controller=backend.specFieldValue action=sort}/'{literal};
+    Backend.SpecField.prototype.links.sortGroups = {/literal}'{link controller=backend.specFieldGroup action=sort}/'{literal};
+    Backend.SpecField.prototype.links.getGroup = {/literal}'{link controller=backend.specFieldGroup action=item}/'{literal};
+    Backend.SpecField.prototype.links.deleteGroup = {/literal}'{link controller=backend.specFieldGroup action=delete}/'{literal};
 
 
     Backend.SpecField.prototype.msg = {};

@@ -374,8 +374,8 @@ ActiveList.prototype = {
      */
     rebindIcons: function(li)
     {
+        console.count('ActiveList::rebindIcons()');
         var self = this;
-
         $A(this.ul.className.split(' ')).each(function(className)
         {
             var container = document.getElementsByClassName(self.cssPrefix + 'icons', li)[0];
@@ -414,7 +414,7 @@ ActiveList.prototype = {
      *
      * @return HTMLElementLi Reference to new active list record
      */
-    addRecord: function(id, dom, insights)
+    addRecord: function(id, dom, touch)
     {
         var li = document.createElement('li');
         li.id = this.ul.id + "_" + id;
@@ -433,20 +433,15 @@ ActiveList.prototype = {
         }
         else
         {
-            if(insights)
-            {
-                li.innerHTML = dom.innerHTML;
-            }
-            else
-            {
-                li.appendChild(dom);
-            }
+            li.innerHTML = dom.innerHTML;
         }
                 
         this.decorateLi(li);
-        this.rebindIcons(li);
-        this.createSortable();
-	  	
+        if(touch)
+        {
+            this.createSortable();
+	  	}
+        
 	  	new Effect.Highlight(li, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});		    
 
         return li;
@@ -746,6 +741,7 @@ ActiveList.prototype = {
      */
     createSortable: function ()
     {
+        console.count('ActiveList::createSortable');
         var self = this;
 
         this.decorateItems();
@@ -1052,5 +1048,13 @@ ActiveList.prototype = {
         }
         
         return childList;
+    },
+    
+    /**
+     * Make list work again
+     */
+    touch: function()
+    {
+        this.createSortable();
     }
 }

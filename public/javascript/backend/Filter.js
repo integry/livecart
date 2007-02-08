@@ -76,7 +76,7 @@ Backend.Filter.prototype = {
             this.backupName = this.name;
             
             this.filterCalendars = {};
-    
+
             this.loadLanguagesAction();
             this.findUsedNodes();
             this.bindFields();
@@ -156,6 +156,7 @@ Backend.Filter.prototype = {
         this.nodes.stepValues             = document.getElementsByClassName(this.cssPrefix + "step_filters", this.nodes.parent)[0];
         this.nodes.stepLevOne             = document.getElementsByClassName(this.cssPrefix + "step_lev1", this.nodes.parent);
         this.nodes.generateFiltersLink    = document.getElementsByClassName(this.cssPrefix + "generate_filters", this.nodes.parent)[0];
+        this.nodes.defaultFiltersList     = document.getElementsByClassName(this.cssPrefix + "form_filters_value", this.nodes.filtersDefaultGroup);
 
         for(var i = 0; i < this.nodes.stepLevOne.length; i++)
         {
@@ -224,32 +225,33 @@ Backend.Filter.prototype = {
         var self = this;
     
         var jsonResponse = eval("("+jsonString+")");
-                                  
+              
         for(var i = 0; i < this.specFields.length; i++)
         {
-             if(this.specFields[i].ID == this.nodes.specFieldID.value)
-             {
-                var specField = this.specFields[i];
-                
-                if(this.selectorValueTypes.indexOf(specField.type) !== -1)
+            if(this.specFields[i].ID != this.nodes.specFieldID.value) continue;
+           
+            var specField = this.specFields[i];
+            if(this.selectorValueTypes.indexOf(specField.type) !== -1)
+            {
+                $A(this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0].getElementsByTagName("li")).each(function(li)
                 {
-                    $A(this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0].getElementsByTagName("li")).each(function(li)
+                    if(!Element.hasClassName(li, 'dom_template'))
                     {
-                        if(!Element.hasClassName(li, 'dom_template'))
-                        {
-                            delete jsonResponse.filters[document.getElementsByClassName('filter_selector', li)[0].getElementsByTagName("select")[0].value];
-                        }
-                    });
-                }
-                
-                $H(jsonResponse.filters).each(function(filter) {
-                    self.addFilter(filter.value, "new" + Backend.Filter.prototype.countNewFilters, true);
-                    self.changeFiltersCount(self.filtersCount+1);
-                    Backend.Filter.prototype.countNewFilters++;
+                        delete jsonResponse.filters[document.getElementsByClassName('filter_selector', li)[0].getElementsByTagName("select")[0].value];
+                    }
                 });
+            }
+            
+            $H(jsonResponse.filters).each(function(filter) {
+                self.addFilter(filter.value, "new" + Backend.Filter.prototype.countNewFilters, true);
+                self.changeFiltersCount(self.filtersCount+1);
+                Backend.Filter.prototype.countNewFilters++;
+            });
+            
+            this.bindDefaultFields();
+            this.filtersList.touch();
                 
-                return;
-             }
+            return;
         }
     },  
 
@@ -283,6 +285,7 @@ Backend.Filter.prototype = {
         
         if(this.filter.SpecField) this.nodes.specFieldID.value = this.filter.SpecField.ID;
         
+        this.bindDefaultFields();
         this.loadFilterAction();
 
         this.specFieldIDWasChangedAction();
@@ -415,8 +418,6 @@ Backend.Filter.prototype = {
         Event.observe(rangeParagraph.getElementsByTagName("input")[0], "keyup", function(e) { self.rangeChangedAction(e) });
         Event.observe(rangeParagraph.getElementsByTagName("input")[1], "keyup", function(e) { self.rangeChangedAction(e) });        
         Event.observe(selectorParagraph.getElementsByTagName("select")[0], "change", function(e) { self.generateTitleAndHandleFromSpecFieldValue(li) });     
-        
-        this.generateTitleAndHandleFromSpecFieldValue(li);
     },
 
 
@@ -428,7 +429,7 @@ Backend.Filter.prototype = {
         var self = this;
         var liList = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0].getElementsByTagName('li');
 
-        this.fieldsList = ActiveList.prototype.getInstance(this.nodes.filtersDefaultGroup.getElementsByTagName("ul")[0], {
+        this.filtersList = ActiveList.prototype.getInstance(this.nodes.filtersDefaultGroup.getElementsByTagName("ul")[0], {
             beforeSort: function(li, order)
             {
                 return self.links.sortFilter + '?target=' + this.ul.id + '&' + order;
@@ -615,7 +616,8 @@ Backend.Filter.prototype = {
             $H(this.filters).each(function(value) {
                 self.addFilter(value.value, value.key);
             });
-
+            
+            this.filtersList.touch();
             this.bindDefaultFields();
         }
     },
@@ -673,6 +675,9 @@ Backend.Filter.prototype = {
 
         this.addFilter(null, "new" + Backend.Filter.prototype.countNewFilters, true);
         this.changeFiltersCount(this.filtersCount+1);
+        this.filtersList.touch();
+        this.bindDefaultFields();
+        
         Backend.Filter.prototype.countNewFilters++;
     },
 
@@ -833,8 +838,8 @@ Backend.Filter.prototype = {
      * @access private
      *
      */
-    addFilter: function(value, id, isDefault)
-    {
+    addFilter: function(value, id, generateTitle)
+    {        
         var self = this;
         
         var filters = document.getElementsByClassName(this.cssPrefix + "form_filters_value", this.nodes.filtersDefaultGroup);
@@ -846,24 +851,19 @@ Backend.Filter.prototype = {
             var newValue = filters[0].cloneNode(true);
             Element.removeClassName(newValue, "dom_template");
 
-            if(!this.fieldsList) this.bindDefaultFields();
-
-            var li = this.fieldsList.addRecord(id, newValue, true);
+            var li = this.filtersList.addRecord(id, newValue);
 
             // Filter name
             var nameParagraph = document.getElementsByClassName('filter_name', li)[0];
             var input = nameParagraph.getElementsByTagName("input")[0];
             input.name = "filters[" + id + "][name]["+this.languageCodes[0]+"]";
             input.value = (value && value.name && value.name[this.languageCodes[0]]) ? value.name[this.languageCodes[0]] : '' ;
-
     
             // Handle name
             var hanldeParagraph = document.getElementsByClassName('filter_handle', li)[0];
             var handleInput = hanldeParagraph.getElementsByTagName("input")[0];
             handleInput.name = "filters[" + id + "][handle]";
             handleInput.value = (value && value.handle) ? value.handle : '' ;
-
-            
 
             // Numeric range
             var rangeParagraph = document.getElementsByClassName('filter_range', li)[0];
@@ -951,6 +951,7 @@ Backend.Filter.prototype = {
             });
             
             this.bindOneFilter(li);
+            if(generateTitle) this.generateTitleAndHandleFromSpecFieldValue(li);
             
 			// now insert all translation fields
 			for(var i = 1; i < this.languageCodes.length; i++)
@@ -1061,6 +1062,7 @@ Backend.Filter.prototype = {
                 method: this.nodes.form.method,
                 postBody: Form.serialize(this.nodes.form),
                 onComplete: function(param) {
+                    console.info(param.responseText);
                     self.afterSaveAction(param.responseText)
                 }
             }

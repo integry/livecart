@@ -913,6 +913,7 @@ Backend.SpecField.prototype = {
                 method: this.nodes.form.method,
                 postBody: Form.serialize(this.nodes.form),
                 onComplete: function(param) {
+                    console.info(param.responseText)
                     self.afterSaveAction(param.responseText)
                 }
             }
@@ -1218,6 +1219,7 @@ Backend.SpecFieldGroup.prototype = {
                 method: 'post',
                 postBody: Form.serialize(this.nodes.form),
                 onComplete: function(response) { 
+                    console.info(response.responseText);
                     self.afterSave(eval("(" + response.responseText + ")")); 
                 }
             }

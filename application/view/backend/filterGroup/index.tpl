@@ -2,12 +2,12 @@
 <script type="text/javascript">
 //<[!CDATA[
     Backend.Filter.prototype.links = {};
-    Backend.Filter.prototype.links.deleteGroup = {/literal}'{link controller=backend.filter action=delete}/'{literal};
-    Backend.Filter.prototype.links.editGroup = {/literal}'{link controller=backend.filter action=item}/'{literal};
-    Backend.Filter.prototype.links.sortGroup = {/literal}'{link controller=backend.filter action=sort}/'{literal};
-    Backend.Filter.prototype.links.deleteFilter = {/literal}'{link controller=backend.filter action=deleteFilter}/'{literal};
-    Backend.Filter.prototype.links.sortFilter = {/literal}'{link controller=backend.filter action=sortFilter}/'{literal};
-    Backend.Filter.prototype.links.generateFilters = {/literal}'{link controller=backend.filter action=generateFilters}/'{literal};
+    Backend.Filter.prototype.links.deleteGroup = {/literal}'{link controller=backend.filterGroup action=delete}/'{literal};
+    Backend.Filter.prototype.links.editGroup = {/literal}'{link controller=backend.filterGroup action=item}/'{literal};
+    Backend.Filter.prototype.links.sortGroup = {/literal}'{link controller=backend.filterGroup action=sort}/'{literal};
+    Backend.Filter.prototype.links.deleteFilter = {/literal}'{link controller=backend.filter action=delete}/'{literal};
+    Backend.Filter.prototype.links.sortFilter = {/literal}'{link controller=backend.filter action=sort}/'{literal};
+    Backend.Filter.prototype.links.generateFilters = {/literal}'{link controller=backend.filter action=generate}/'{literal};
 
     Backend.Filter.prototype.msg = {};
     Backend.Filter.prototype.msg.translateTo = {/literal}'{t _translate_to}'{literal};
