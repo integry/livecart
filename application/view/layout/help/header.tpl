@@ -32,8 +32,8 @@
 				<span id="helpTitle">Help</span>
 			</div>
 			<div style="float: right; text-align: right;">
-				<input type="text" name="search"><br />
-				<input type="submit" value="Search">
+				<input type="text" name="search" style="width: 160px;">
+				<input type="submit" class="submit" value="Search">
 			</div>
 		</div>
 

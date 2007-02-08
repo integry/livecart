@@ -10,5 +10,6 @@
 	language=Languages
 		add=Add New Language
 		edit=Edit Translations
+		export=Export
 		
 	order=Orders
