@@ -114,7 +114,31 @@ abstract class BaseController extends Controller implements LCiTranslator
 	{
 		return $this->locale->translator()->translate($key);
 	}
-
+	
+	/**
+	 * Translate text passed by reference. 
+	 * 
+	 * @see BaseController::translate
+	 * @see BaseController::translateArray
+	 */
+	private function translateByReference(&$text)
+	{
+	    $text = $this->translate($text);
+	}
+	
+	/**
+	 * Translate array recursively
+	 * 
+	 * @see BaseController::translate
+	 * @return array
+	 */
+    public function translateArray($array)
+    {
+        array_walk_recursive($array, array(&$this, 'translateByReference'));
+        
+        return $array;
+    }
+    
 	/**
 	 * Performs MakeText translation using Locale::LCInterfaceTranslator
 	 * @param string $key

@@ -8,27 +8,29 @@ ClassLoader::import("library.*");
  *
  * @package application.controller.backend
  * @author Saulius Rupainis <saulius@integry.net>
+ * @author Sergej Andrejev <sandrejev@gmail.com>
  * @role admin.store.category
  */
 class SpecFieldController extends StoreManagementController
 {
+    /**
+     * Configuration data
+     * 
+     * @see self::getSpecFieldConfig
+     * @var array
+     */
     protected $specFieldConfig = array();
 
-    public function __construct(Request $request)
-    {
-        $this->htmlspecialcharsUtf_8 = create_function('$val', 'return htmlspecialchars($val, null, "UTF-8");');
-        
-        parent::__construct($request);
-        $this->createSpecFieldConfig();
-    }
-
     /**
-     * Types:
-     * 1 - numbers
-     * 2 - text
+     * Create and return configurational data. If configurational data is already created just return the array
+     * 
+     * @see self::$specFieldConfig
+     * @return array
      */
-    private function createSpecFieldConfig()
+    private function getSpecFieldConfig()
     {
+        if(!empty($this->specFieldConfig)) return $this->specFieldConfig;
+        
         $languages[$this->store->getDefaultLanguageCode()] =  $this->locale->info()->getOriginalLanguageName($this->store->getDefaultLanguageCode());
         foreach ($this->store->getLanguageList()->toArray() as $lang)
         {
@@ -40,6 +42,7 @@ class SpecFieldController extends StoreManagementController
 
         $this->specFieldConfig = array(
             'languages' => $languages,
+            'languageCodes' => array_keys($languages),
 
             'types' => array
             (
@@ -67,16 +70,21 @@ class SpecFieldController extends StoreManagementController
             'doNotTranslateTheseValueTypes' => array(2),
             'countNewValues' => 0
         );
+        
+        return $this->specFieldConfig;
     }
 
+    /**
+     * Specification field index page
+     * 
+     * @return ActionResponse
+     */
     public function index()
     {
         $response = new ActionResponse();
 
         $categoryID = (int)$this->request->getValue('id');
         $category = Category::getInstanceByID($categoryID);
-        
-        $response->setValue('specFieldsWithGroups', $category->getSpecificationFieldArray(true, true, true));
 
         $defaultSpecFieldValues = array
         (
@@ -92,9 +100,10 @@ class SpecFieldController extends StoreManagementController
         );
 
         $response->setValue('categoryID', $categoryID);
-        $response->setValue('configuration', $this->specFieldConfig);
+        $response->setValue('configuration', $this->getSpecFieldConfig());
         $response->setValue('specFieldsList', $defaultSpecFieldValues);
         $response->setValue('defaultLangCode', $this->store->getDefaultLanguageCode());
+        $response->setValue('specFieldsWithGroups', $category->getSpecificationFieldArray(true, true, true));
 
         return $response;
     }
@@ -118,45 +127,6 @@ class SpecFieldController extends StoreManagementController
 		unset($specFieldList['Category']);
 				
 		return new JSONResponse($specFieldList);
-    }
-
-    /**
-     * Get group data
-     */
-    public function group()
-    {
-        return new JSONResponse(SpecFieldGroup::getInstanceByID((int)$this->request->getValue('id'), true)->toArray(false, false));
-    }
-    
-    /**
-     * Save group data to the database
-     */
-    public function saveGroup()
-    {   
-        if($id = $this->request->getValue('id'))
-        {
-            $specFieldGroup = SpecFieldGroup::getInstanceByID($id);
-        }
-        else
-        {
-            $category = Category::getInstanceByID((int)$this->request->getValue('categoryID'));
-            $specFieldGroup = SpecFieldGroup::getNewInstance();
-            $specFieldGroup->setFieldValue('categoryID', $category);
-            $specFieldGroup->setFieldValue('position', 100000);
-        }
-        
-        if(count($errors = $this->validateSpecFieldGroup($this->request->getValueArray(array('name')))) == 0)
-        {
-            $name = $this->request->getValue('name');
-            $specFieldGroup->setLanguageField('name', @array_map($this->htmlspecialcharsUtf_8, $name), array_keys($this->specFieldConfig['languages']));
-            $specFieldGroup->save();
-            
-            return new JSONResponse(array('status' => 'success', 'id' => $specFieldGroup->getID()));
-        }
-        else
-        {
-            return new JSONResponse(array('errors' => $errors, 'status' => 'failure'));
-        }
     }
     
     /**
@@ -183,7 +153,8 @@ class SpecFieldController extends StoreManagementController
             }
         }
 
-        if(count($errors = $this->validateSpecField($this->request->getValueArray(array('handle', 'values', 'name', 'type', 'dataType', 'categoryID', 'ID')))) == 0)
+        $this->getSpecFieldConfig();
+        if(count($errors = SpecField::validate($this->request->getValueArray(array('handle', 'values', 'name', 'type', 'dataType', 'categoryID', 'ID')), $this->specFieldConfig['languageCodes'])) == 0)
         {
             $dataType = (int)$this->request->getValue('dataType');
             $type = (int)$this->request->getValue('type');
@@ -196,104 +167,36 @@ class SpecFieldController extends StoreManagementController
             $isMultiValue = $this->request->getValue('multipleSelector') == 1 ? 1 : 0;
             $isRequired = $this->request->getValue('isRequired') == 1 ? 1 : 0;
 
-            
-
             $specField->setFieldValue('dataType',       $dataType);
             $specField->setFieldValue('type',           $type);
             $specField->setFieldValue('handle',         $handle);
             $specField->setFieldValue('isMultiValue',   $isMultiValue);
             $specField->setFieldValue('isRequired',     $isRequired);
-            $specField->setLanguageField('description', @array_map($this->htmlspecialcharsUtf_8, $description), array_keys($this->specFieldConfig['languages']));
-            $specField->setLanguageField('name',        @array_map($this->htmlspecialcharsUtf_8, $name),        array_keys($this->specFieldConfig['languages']));
-
-            $specField->save();           
+            $specField->setLanguageField('description', $description, $this->specFieldConfig['languageCodes']);
+            $specField->setLanguageField('name',        $name,        $this->specFieldConfig['languageCodes']);
+            $specField->save();  
+                     
             try
             {
-                $specField->saveValues($values, $type, $this->specFieldConfig['languages']);
+                $specField->saveValues($values, $type, $this->specFieldConfig['languageCodes']);
             }
-            catch(Exception $e){ }
-            
+            catch(Exception $e)
+            { 
+            }
             
             return new JSONResponse(array('status' => 'success', 'id' => $specField->getID()));
         }
         else
         {
-            return new JSONResponse(array('errors' => $errors, 'status' => 'failure'));
+            return new JSONResponse(array('errors' => $this->translateArray($errors), 'status' => 'failure'));
         }
-    }
-
-    /**
-     * Validates spec field form
-     *
-     * @param array $values List of values to validate.
-     * @return array List of all errors
-     */
-    private function validateSpecField($values = array())
-    {
-        $errors = array();
-
-        $languageCodes = array_keys($this->specFieldConfig['languages']);
-
-        if(!isset($values['name']) || $values['name'][$languageCodes[0]] == '')
-        {
-            $errors['name'] = $this->translate('_error_name_empty');
-        }
-
-        if(!isset($values['handle']) || $values['handle'] == '' || preg_match('/[^\w\d_.]/', $values['handle']))
-        {
-            $errors['handle'] = $this->translate('_error_handle_invalid');
-        }
-        else
-        {
-            $values['ID'] = !isset($values['ID']) ? -1 : $values['ID'];
-            $filter = new ARSelectFilter();
-                $handleCond = new EqualsCond(new ARFieldHandle('SpecField', 'handle'), $values['handle']);
-                $handleCond->addAND(new EqualsCond(new ARFieldHandle('SpecField', 'categoryID'), (int)$values['categoryID']));
-                $handleCond->addAND(new NotEqualsCond(new ARFieldHandle('SpecField', 'ID'), (int)$values['ID']));
-            $filter->setCondition($handleCond);
-            if(count(SpecField::getRecordSetArray($filter)) > 0)
-            {
-                $errors['handle'] =  $this->translate('_error_handle_exists');
-            }
-        }
-
-        if(!isset($values['handle']) || $values['handle'] == '')
-        {
-            $errors['handle'] = $this->translate('_error_handle_empty');
-        }
-
-        if(in_array($values['type'], $this->specFieldConfig['selectorValueTypes']) && isset($values['values']) && is_array($values['values']))
-        {
-            foreach ($values['values'] as $key => $v)
-            {
-                if(empty($v[$languageCodes[0]]))
-                {
-                    $errors['values'][$key] = $this->translate('_error_value_empty');
-                }
-
-                if($values['dataType'] == 2 && !is_numeric($v[$languageCodes[0]]))
-                {
-                    $errors['values'][$key] = $this->translate('_error_value_is_not_a_number');
-                }
-            }
-        }
-
-
-        return $errors;
-    }
-
-    private function validateSpecFieldGroup($values = array())
-    {
-        $errors = array();
-        $languageCodes = array_keys($this->specFieldConfig['languages']);
-        if(!isset($values['name'][$languageCodes[0]]) || $values['name'][$languageCodes[0]] == '')
-        {
-            $errors['name'] = $this->translate('_error_you_should_provide_default_group_name');
-        }
-        
-        return $errors;
     }
     
+    /**
+     * Delete specification field from database
+     * 
+     * @return JSONResponse
+     */
     public function delete()
     {
         if($id = $this->request->getValue("id", false))
@@ -306,21 +209,12 @@ class SpecFieldController extends StoreManagementController
             return new JSONResponse(array('status' => 'failure'));
         }
     }
-    
 
-    public function deleteGroup()
-    {
-        if($id = $this->request->getValue("id", false))
-        {
-            SpecFieldGroup::deleteById($id);
-            return new JSONResponse(array('status' => 'success'));
-        }
-        else
-        {
-            return new JSONResponse(array('status' => 'failure'));
-        }
-    }
-
+    /**
+     * Sort specification fields
+     * 
+     * @return JSONResponse
+     */
     public function sort()
     {
         $target = $this->request->getValue('target');
@@ -342,47 +236,4 @@ class SpecFieldController extends StoreManagementController
 
         return new JSONResponse(array('status' => 'success'));
     }
-
-    public function deleteValue()
-    {
-        if($id = $this->request->getValue("id", false))
-        {
-            SpecFieldValue::deleteById($id);
-            return new JSONResponse(array('status' => 'success'));
-        }
-        else
-        {
-            return new JSONResponse(array('status' => 'failure'));
-        }
-    }
-
-    public function sortValues()
-    {
-        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
-        {
-            // Except new fields, because they are not yet in database
-            if(!empty($key) && !preg_match('/^new/', $key))
-            {
-                $specField = SpecFieldValue::getInstanceByID((int)$key);
-                $specField->setFieldValue('position', (int)$position);
-                $specField->save();
-            }
-        }
-
-        return new JSONResponse(array('status' => 'success'));
-    }
-    
-    public function sortGroups()
-    {
-        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
-        {
-            // Except new fields, because they are not yet in database
-            $group = SpecFieldGroup::getInstanceByID((int)$key);
-            $group->setFieldValue('position', (int)$position);
-            $group->save();
-        }
-
-        return new JSONResponse(array('status' => 'success'));
-    }
-
 }

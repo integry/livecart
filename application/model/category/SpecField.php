@@ -1,10 +1,8 @@
 <?php
-
 ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.category.Category");
 ClassLoader::import("application.model.category.SpecFieldValue");
 ClassLoader::import("application.model.category.SpecFieldGroup");
-
 ClassLoader::import('application.model.specification.*');
 
 /**
@@ -25,6 +23,9 @@ class SpecField extends MultilingualObject
     const TYPE_TEXT_SELECTOR = 5;
     const TYPE_TEXT_DATE = 6;
 
+    /**
+     * Define SpecField database schema
+     */
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -33,7 +34,6 @@ class SpecField extends MultilingualObject
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("specFieldGroupID", "SpecFieldGroup", "ID", "SpecFieldGroup", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
-
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("description", ARArray::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance(2)));
@@ -159,7 +159,6 @@ class SpecField extends MultilingualObject
 		$filter->setOrder(new ARFieldHandle("FilterGroup", "position"));
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("FilterGroup", "specFieldID"), $this->getID()));
 
-		
         $filterGroups = FilterGroup::getRecordSet($filter);
         $filterGroupsArray = array();
         $i = 0;
@@ -230,33 +229,45 @@ class SpecField extends MultilingualObject
 	 *
 	 * @return ARSet
 	 */
-
 	public function getValuesSet()
 	{
 		return SpecFieldValue::getRecordSet($this->getID());
 	}
 
+	/**
+	 * Check if current specification field is selector type
+	 *
+	 * @return boolean
+	 */
 	public function isSelector()
 	{
 		return in_array($this->type->get(), SpecField::getSelectorValueTypes());  
 	}
 	
+	/**
+	 * Check if current specification field is text type
+	 *
+	 * @return boolean
+	 */
 	public function isTextField()
 	{
 		return in_array($this->type->get(), array(SpecField::TYPE_TEXT_SIMPLE, SpecField::TYPE_TEXT_ADVANCED));  
 	}
 
 	/**
-	 *
+	 * Get array of selector types
 	 *
 	 * @return array
 	 */
 	public static function getSelectorValueTypes()
 	{
-	    return array (self::TYPE_NUMBERS_SELECTOR, self::TYPE_TEXT_SELECTOR);
+	    return array(self::TYPE_NUMBERS_SELECTOR, self::TYPE_TEXT_SELECTOR);
 	}
 
-	public function saveValues($values, $type, $languages) {
+	/**
+	 * Save specification field values in database
+	 */
+	public function saveValues($values, $type, $languageCodes) {
         $position = 1;
         foreach ($values as $key => $value)
         {
@@ -276,20 +287,16 @@ class SpecField extends MultilingualObject
             }
             else
             {
-                $specFieldValues->setLanguageField('value', @array_map($htmlspecialcharsUtf_8, $value), array_keys($languages));
+                $specFieldValues->setLanguageField('value', $value, $languageCodes);
             }
 
-//            $specFieldValues->setFieldValue('specFieldID', $this);
-            $specFieldValues->setFieldValue('position', $position);
-
+            $specFieldValues->setFieldValue('position', $position++);
             $specFieldValues->save();
-
-            $position++;
         }
 	}
 
 	/**
-	 * Tranforms data array to a following format:
+	 * Transforms data array to a following format:
 	 *
 	 * simpleField => value,
 	 * multilingualField_langCode => value,
@@ -300,6 +307,7 @@ class SpecField extends MultilingualObject
     {
 	  	$array = parent::toArray($recursive, $convertToUnderscore);
 	  	$array['fieldName'] = $this->getFormFieldName();
+	  	
 	  	return $array;
 	}
 
@@ -308,6 +316,12 @@ class SpecField extends MultilingualObject
 	  	return 'specField_' . $this->getID() . ($language && (Store::getInstance()->getDefaultLanguageCode() != $language) ? '_' . $language : '');
 	}
 
+	/**
+	 * Count specification fields in this category
+	 *
+	 * @param Category $category Category active record
+	 * @return integer
+	 */
     public static function countItems(Category $category)
     {
         return $category->getSpecificationFieldSet()->getTotalRecordCount();
@@ -356,6 +370,63 @@ class SpecField extends MultilingualObject
 	
 		return $aliasField;		  	
 	}
-}
 
+    /**
+     * Validates specification field form
+     *
+     * @param array $values List of values to validate.
+     * @param array $config 
+     * @return array List of all errors
+     */
+    public static function validate($values = array(), $languageCodes)
+    {
+        $errors = array();
+
+        if(!isset($values['name']) || $values['name'][$languageCodes[0]] == '')
+        {
+            $errors['name'] = '_error_name_empty';
+        }
+
+        if(!isset($values['handle']) || $values['handle'] == '' || preg_match('/[^\w\d_.]/', $values['handle']))
+        {
+            $errors['handle'] = '_error_handle_invalid';
+        }
+        else
+        {
+            $values['ID'] = !isset($values['ID']) ? -1 : $values['ID'];
+            $filter = new ARSelectFilter();
+                $handleCond = new EqualsCond(new ARFieldHandle('SpecField', 'handle'), $values['handle']);
+                $handleCond->addAND(new EqualsCond(new ARFieldHandle('SpecField', 'categoryID'), (int)$values['categoryID']));
+                $handleCond->addAND(new NotEqualsCond(new ARFieldHandle('SpecField', 'ID'), (int)$values['ID']));
+            $filter->setCondition($handleCond);
+            if(count(SpecField::getRecordSetArray($filter)) > 0)
+            {
+                $errors['handle'] =  '_error_handle_exists';
+            }
+        }
+
+        if(!isset($values['handle']) || $values['handle'] == '')
+        {
+            $errors['handle'] = '_error_handle_empty';
+        }
+
+        if(in_array($values['type'], self::getSelectorValueTypes()) && isset($values['values']) && is_array($values['values']))
+        {
+            foreach ($values['values'] as $key => $v)
+            {
+                if(empty($v[$languageCodes[0]]))
+                {
+                    $errors['values'][$key] = '_error_value_empty';
+                }
+
+                if($values['dataType'] == 2 && !is_numeric($v[$languageCodes[0]]))
+                {
+                    $errors['values'][$key] = '_error_value_is_not_a_number';
+                }
+            }
+        }
+
+        return $errors;
+    }
+}
 ?>

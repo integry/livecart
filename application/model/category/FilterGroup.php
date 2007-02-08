@@ -1,5 +1,4 @@
 <?php
-
 ClassLoader::import("application.model.system.MultilingualObject");
 
 /**
@@ -9,24 +8,19 @@ ClassLoader::import("application.model.system.MultilingualObject");
  */
 class FilterGroup extends MultilingualObject
 {
-
-	public static function defineSchema($className = __CLASS__)
+    /**
+     * Define FilterGroup database schema
+     */
+	public static function defineSchema()
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("FilterGroup");
+		$schema = self::getSchemaInstance(__CLASS__);
+		$schema->setName(__CLASS__);
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("specFieldID", "SpecField", "ID", "SpecField", ARInteger::instance()));
-
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance()));
 		$schema->registerField(new ARField("isEnabled", ARInteger::instance(1)));
-	}
-
-	public function addFilter(Filter $filter)
-	{
-		$filter->filterGroup->set($this);
-		$filter->save();
 	}
 
 	/**
@@ -40,42 +34,68 @@ class FilterGroup extends MultilingualObject
 	}
 
 	/**
-	 * @return FilterGroup
+	 * Get FilterGroup active record instance
+	 *
+	 * @param integer $recordID
+	 * @param boolean $loadRecordData
+	 * @param boolean $loadReferencedRecords
+	 * @return Filter
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
-
+	
 	/**
 	 * This method is checking if SpecField record with passed id exist in the database
 	 *
 	 * @param int $id Record id
-	 * @return bool
+	 * @return boolean
 	 */
 	public static function exists($id)
 	{
 	    return ActiveRecord::objectExists(__CLASS__, (int)$id);
 	}
-
-	public function setLanguageField($fieldName, $fieldValue, $langCodeArray)
+	
+	/**
+	 * Add new filter to filter group
+	 *
+	 * @param Filter $filter
+	 */
+	public function addFilter(Filter $filter)
 	{
-	    foreach ($langCodeArray as $lang)
-	    {
-	        $this->setValueByLang($fieldName, $lang, isset($fieldValue[$lang]) ? $fieldValue[$lang] : '');
-	    }
+		$filter->filterGroup->set($this);
+		$filter->save();
 	}
 
-	public static function getRecordSetArray(ARSelectFilter $filter)
-	{
-	    return parent::getRecordSetArray(__CLASS__, $filter);
-	}
-
+	/**
+	 * Delete filter group from database by id
+	 *
+	 * @param integer $id
+	 * @return boolean
+	 */
 	public static function deletebyID($id)
 	{
 	    return parent::deleteByID(__CLASS__, $id);
 	}
 	
+	/**
+	 * Get record set of filter groups using select filter 
+	 *
+	 * @param ARSelectFilter $filter
+	 * @return ARSet
+	 */
+	public static function getRecordSetArray(ARSelectFilter $filter)
+	{
+	    return parent::getRecordSetArray(__CLASS__, $filter);
+	}
+
+	/**
+	 * Get record set as array of filter groups using select filter 
+	 *
+	 * @param ARSelectFilter $filter
+	 * @return array
+	 */
 	public static function getRecordSet(ARSelectFilter $filter)
 	{
 	    return parent::getRecordSet(__CLASS__, $filter);
@@ -89,15 +109,12 @@ class FilterGroup extends MultilingualObject
 	public function getFiltersList()
 	{
 		$filter = new ARSelectFilter();
-
 		$filter->setOrder(new ARFieldHandle("Filter", "position"));
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("Filter", "filterGroupID"), $this->getID()));
 
-		
 		return Filter::getRecordSet($filter);
 	}
 	
-
 	/**
 	 * Save group filters in database
 	 *
@@ -105,9 +122,8 @@ class FilterGroup extends MultilingualObject
 	 * @param int $specFieldType 
 	 * @param array $languages
 	 */
-    public function saveFilters($filters, $specFieldType, $languages) 
+    public function saveFilters($filters, $specFieldType, $languageCodes) 
     {
-        $htmlspecialcharsUtf_8 = create_function('$val', 'return htmlspecialchars($val, null, "UTF-8");');
         $position = 1;
         
         foreach ($filters as $key => $value)
@@ -122,9 +138,8 @@ class FilterGroup extends MultilingualObject
                 $filter = Filter::getInstanceByID((int)$key);
             }
 
-            $filter->setLanguageField('name', @array_map($htmlspecialcharsUtf_8, $value['name']),  array_keys($languages));
+            $filter->setLanguageField('name', $value['name'], $languageCodes);
             $filter->setFieldValue('handle', $value['handle']);
-            
             
             if($specFieldType == SpecField::TYPE_TEXT_DATE)
             {
@@ -151,21 +166,87 @@ class FilterGroup extends MultilingualObject
                 $filter->rangeEnd->setNull();
             }
             
-            
             $filter->setFieldValue('filterGroupID', $this);
-            $filter->setFieldValue('position', $position);
-
+            $filter->setFieldValue('position', $position++);
             $filter->save();
-
-            $position++;
         }
     }
 
+	/**
+	 * Count filter groups in this category
+	 *
+	 * @param Category $category Category active record
+	 * @return integer
+	 */
     public static function countItems(Category $category)
     {
-        //echo "<pre >".print_r($category->getFilterGroupSet()->toArray(), true)."</pre>";
-
         return $category->getFilterGroupSet(false)->getTotalRecordCount();
+    }
+
+    /**
+     * Validates filter group form
+     *
+     * @param array $values List of values to validate.
+     * @return array List of all errors
+     */
+    public static function validate($values = array(), $languageCodes)
+    {
+        $errors = array();
+        
+        if(!isset($values['name']) || $values['name'][$languageCodes[0]] == '')
+        {
+            $errors['name'] = $this->translate('_error_name_empty');
+        }
+
+        if(isset($values['filters']))
+        {                      
+            $specField = SpecField::getInstanceByID((int)$values['specFieldID']);
+            if(!$specField->isLoaded()) $specField->load();
+                                
+            foreach ($values['filters'] as $key => $v)
+            {                
+                switch($specField->getFieldValue('type'))
+                {
+                    case SpecField::TYPE_NUMBERS_SIMPLE:
+                        if(!isset($v['rangeStart']) || !is_numeric($v['rangeStart']) | !isset($v['rangeEnd']) || !is_numeric($v['rangeEnd']))
+                        {
+                            $errors['filters'][$key]['range'] = $this->translate('_error_filter_value_is_not_a_number');
+                        }
+                    break;
+                    case SpecField::TYPE_NUMBERS_SELECTOR: 
+                    case SpecField::TYPE_TEXT_SELECTOR: 
+                        if(!isset($v['specFieldValueID']))
+                        {
+                            $errors['filters'][$key]['selector'] = $this->translate('_error_spec_field_is_not_selected');
+                        }
+                    break;
+                    case SpecField::TYPE_TEXT_DATE: 
+                        if(
+                                !isset($v['rangeDateStart'])
+                             || !isset($v['rangeDateEnd']) 
+                             || count($sdp = explode('-', $v['rangeDateStart'])) != 3 
+                             || count($edp = explode('-', $v['rangeDateEnd'])) != 3
+                             || !checkdate($edp[1], $edp[2], $edp[0]) 
+                             || !checkdate($sdp[1], $sdp[2], $sdp[0])
+                        ){
+                            $errors['filters'][$key]['date_range'] = $this->translate('_error_illegal_date');
+                        }
+                    break;
+                }
+                
+                if($v['name'][$languageCodes[0]] == '')
+                {
+                    $errors['filters'][$key]['name'] = $this->translate('_error_filter_name_empty');
+                }        
+                
+                if(!isset($v['handle']) || $v['handle'] == '' || preg_match('/[^\w\d_.]/', $v['handle']))
+                {
+                    $errors['filters'][$key]['handle'] = $this->translate('_error_filter_handle_invalid');
+                }
+            }
+        }
+        
+        return $errors;
     }
 }
 

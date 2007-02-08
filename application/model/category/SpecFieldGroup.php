@@ -10,9 +10,12 @@ ClassLoader::import("application.model.category.Category");
  */
 class SpecFieldGroup extends MultilingualObject
 {
-	public static function defineSchema($className = __CLASS__)
+	/**
+	 * Define SpecFieldGroup database schema
+	 */
+    public static function defineSchema()
 	{
-		$schema = self::getSchemaInstance($className);
+		$schema = self::getSchemaInstance(__CLASS__);
 		$schema->setName(__CLASS__);
 		
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
@@ -26,7 +29,6 @@ class SpecFieldGroup extends MultilingualObject
 	 *
 	 * @param ARSelectFilter $filter
 	 * @param bool $loadReferencedRecords
-	 *
 	 * @return ARSet
 	 */
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
@@ -52,7 +54,6 @@ class SpecFieldGroup extends MultilingualObject
 	 *
 	 * @param ARSelectFilter $filter
 	 * @param bool $loadReferencedRecords Load referenced tables data
-	 *
 	 * @return array
 	 */
 	public static function getRecordSetArray(ARSelectFilter $filter, $loadReferencedRecords = false)
@@ -63,6 +64,8 @@ class SpecFieldGroup extends MultilingualObject
 	/**
 	 * Loads a set of spec field records for a group.
 	 *
+	 * @param boolean $includeParentFields 
+	 * @param boolean $$loadReferencedRecords 
 	 * @return ARSet
 	 */
 	public function getSpecificationFieldSet($includeParentFields = false, $loadReferencedRecords = false)
@@ -71,6 +74,13 @@ class SpecFieldGroup extends MultilingualObject
 		return SpecField::getRecordSet($this->getSpecificationFilter($includeParentFields), $loadReferencedRecords);
 	}
 
+	/**
+	 * Loads a set of spec field records for a group as array.
+	 *
+	 * @param boolean $includeParentFields 
+	 * @param boolean $$loadReferencedRecords 
+	 * @return array
+	 */
 	public function getSpecificationFieldArray($includeParentFields = false, $loadReferencedRecords = false)
 	{
 		ClassLoader::import("application.model.category.SpecField");
@@ -102,13 +112,34 @@ class SpecFieldGroup extends MultilingualObject
 		return $filter;
 	}
 
-
 	/**
 	 * Delete spec field group from database
+	 * 
+	 * @param integer $id Spec field id
+	 * @return boolean status
 	 */
 	public static function deleteById($id)
 	{
 	    return parent::deleteByID(__CLASS__, (int)$id);
 	}
+
+	/**
+	 * Validate submitted specification group
+	 *
+	 * @param unknown_type $values
+	 * @param unknown_type $config
+	 * @return unknown
+	 */
+    public static function validate($values = array(), $languageCodes)
+    {
+        $errors = array();
+        
+        if(!isset($values['name'][$languageCodes[0]]) || $values['name'][$languageCodes[0]] == '')
+        {
+            $errors['name'] = '_error_you_should_provide_default_group_name';
+        }
+        
+        return $errors;
+    }
 }
 ?>

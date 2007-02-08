@@ -10,66 +10,72 @@ ClassLoader::import('application.model.category.FilterGroup');
  */
 class Filter extends MultilingualObject
 {
-	public static function defineSchema($className = __CLASS__)
+    /**
+     * Define filter schema
+     */
+	public static function defineSchema()
 	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("Filter");
+		$schema = self::getSchemaInstance(__CLASS__);
+		$schema->setName(__CLASS__);
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("filterGroupID", "FilterGroup", "ID", "FilterGroup", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("specFieldValueID", "SpecFieldValue", "ID", "SpecFieldValue", ARInteger::instance()));
-
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance(2)));
 		$schema->registerField(new ARField("type", ARInteger::instance(2)));
-
 		$schema->registerField(new ARField("rangeStart", ARFloat::instance(40)));
 		$schema->registerField(new ARField("rangeEnd", ARFloat::instance(40)));
-
 		$schema->registerField(new ARField("rangeDateStart", ARDate::instance()));
 		$schema->registerField(new ARField("rangeDateEnd", ARDate::instance()));
-
 		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
-
 	}
 
+	/**
+	 * Get filter active record instance
+	 *
+	 * @param integer $recordID
+	 * @param boolean $loadRecordData
+	 * @param boolean $loadReferencedRecords
+	 * @return Filter
+	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
 
+	/**
+	 * Get new instance of Filter active record
+	 *
+	 * @return Filter
+	 */
 	public static function getNewInstance()
 	{
 		return parent::getNewInstance(__CLASS__);
 	}
 
+	/**
+	 * Get record set of filters using select filter 
+	 *
+	 * @param ARSelectFilter $filter
+	 * @return ARSet
+	 */
 	public static function getRecordSetArray(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
 	    return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
+	/**
+	 * Get record set as array of filters using select filter 
+	 *
+	 * @param ARSelectFilter $filter
+	 * @return array
+	 */
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
-    /**
-     * Set a whole language field at a time. You can allways skip some language, bat as long as it occurs in
-     * languages array it will be writen into the database as empty string. I spent 2 hours writing this feature =]
-     *
-     * @example $specField->setLanguageField('name', array('en' => 'Name', 'lt' => 'Vardas', 'de' => 'Name'), array('lt', 'en', 'de'))
-     *
-     * @param string $fieldName Field name in database schema
-     * @param array $fieldValue Field value in different languages
-     * @param array $langCodeArray Language codes
-     */
-	public function setLanguageField($fieldName, $fieldValue, $langCodeArray)
-	{
-	    foreach ($langCodeArray as $lang)
-	    {
-	        $this->setValueByLang($fieldName, $lang, isset($fieldValue[$lang]) ? $fieldValue[$lang] : '');
-	    }
-	}
 
 	/**
 	 * Delete spec field from database
