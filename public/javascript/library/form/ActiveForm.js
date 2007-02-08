@@ -132,6 +132,21 @@ ActiveForm.prototype = {
     },
     
     /**
+     * Clears all feedback messages in the form
+     *
+     * @param HTMLFormElement form
+     */
+	clearAllFeedBack: function(form)
+	{
+	    var feedback = document.getElementsByClassName('feedback', form);
+
+	    $A(feedback).each(function(field)
+	    {
+            field.style.visibility = 'hidden';
+	    });
+	},
+    
+    /**
      * Turn on progress indicator in the form.
      * 
      * Note: to use this method you should place empty div/span tag inside your form with class "activeForm_progress"
@@ -167,5 +182,74 @@ ActiveForm.prototype = {
         
         var img = progress.getElementsByTagName("img")[0];      
         if(img) img.style.visibility = "hidden";
+    },
+    
+    
+    /**
+     * Show translations
+     * 
+     * To use this method you must have appropriate HTML structure shown bellow
+     * 
+     * <code>
+     *   <fieldset class="dom_template specField_step_translations_language specField_step_translations_language_">
+     *       <legend>
+     *           <span class="expandIcon">[+]</span>
+     *           <span class="specField_legend_text">Language</span>
+     *       </legend>
+     *       <div class="activeForm_translation_values">
+     *           <p>
+     *               <label>Title</label>
+     *               <input type="text" name="name" />
+     *           </p>
+     *          
+     *           ...
+     *       </div>
+     *   </fieldset>
+     * </code>
+     * 
+     * @param HTMLFieldsetElement fieldst
+     */
+    showTranslations: function(fieldset) 
+    {
+        var values = document.getElementsByClassName("activeForm_translation_values", fieldset)[0];
+        var legend = fieldset.getElementsByTagName('legend')[0];     
+        values.style.display = 'block';
+        document.getElementsByClassName("expandIcon", legend)[0].innerHTML = '[-] ';    
+    },
+    
+    /**
+     * Hide translations
+     * 
+     * To use this method you must have appropriate HTML structure shown bellow
+     * 
+     * @see ActiveForm.prototype.showTranslations
+     * @param HTMLFieldsetElement form
+     */
+    hideTranslations: function(fieldset) 
+    {
+        var values = document.getElementsByClassName("activeForm_translation_values", fieldset)[0];
+        var legend = fieldset.getElementsByTagName('legend')[0];     
+        values.style.display = 'none';
+        document.getElementsByClassName("expandIcon", legend)[0].innerHTML = '[+] ';    
+    },
+    
+    /**
+     * Toggle translations
+     * 
+     * To use this method you must have appropriate HTML structure shown bellow
+     * 
+     * @see ActiveForm.prototype.showTranslations
+     * @param HTMLFieldsetElement form
+     */
+    toggleTranslations: function(fieldset) 
+    {
+        if('block' != document.getElementsByClassName("activeForm_translation_values", fieldset)[0].style.display)
+        {
+            ActiveForm.prototype.showTranslations(fieldset);
+        }
+        else
+        {
+            ActiveForm.prototype.hideTranslations(fieldset);
+        } 
     }
 }

@@ -73,7 +73,7 @@
     		<fieldset class="dom_template specField_step_translations_language specField_step_translations_language_">
     			<legend><span class="expandIcon">[+]</span><span class="specField_legend_text"></span></legend>
     
-                <div class="specField_language_translation">
+                <div class="activeForm_translation_values specField_language_translation">
                     <p>
             			<label>{t _SpecField_title}</label>
             			<input type="text" name="name" />
@@ -116,7 +116,7 @@
             		<fieldset class="dom_template specField_step_translations_language specField_step_translations_language_">
             			<legend><span class="expandIcon">[+]</span><span class="specField_legend_text"></span></legend>
             
-                        <div class="specField_form_values_translations specField_language_translation">
+                        <div class="activeForm_translation_values specField_form_values_translations specField_language_translation">
                             <p>
             					<ul>
             						<li class="dom_template specField_form_values_value" id="specField_form_values_">

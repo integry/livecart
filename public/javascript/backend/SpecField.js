@@ -117,7 +117,6 @@ Backend.SpecField.prototype = {
         root.innerHTML = '';
         $H(this).each(function(el) { el = false; });
 	    this.initialize(specFieldJson, hash);
-	    this.clearAllFeedBack();
 	},
 
 
@@ -433,8 +432,9 @@ Backend.SpecField.prototype = {
 				Element.removeClassName(newTranslation, "dom_template");
     
     			// bind it
-                Event.observe(newTranslation.getElementsByTagName("legend")[0], "click", function(e) { self.changeTranslationLanguageAction(e) } );
-    
+                var legend = newTranslation.getElementsByTagName("legend")[0];
+                Event.observe(legend, "click", function(e) { ActiveForm.prototype.toggleTranslations(legend.parentNode) } );
+                
 				newTranslation.className += this.languageCodes[i];
                 
                 document.getElementsByClassName(this.cssPrefix + "legend_text", newTranslation.getElementsByTagName("legend")[0])[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
@@ -465,10 +465,13 @@ Backend.SpecField.prototype = {
 				Element.removeClassName(newValueTranslation, "dom_template");
 				newValueTranslation.className += this.languageCodes[i];
                 
+                
                 var valueTranslationLegend = newValueTranslation.getElementsByTagName("legend")[0];
+                
                 document.getElementsByClassName(this.cssPrefix + "legend_text", valueTranslationLegend)[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
                 
-                Event.observe(valueTranslationLegend, "click", function(e) { self.toggleValueLanguage(e) } );
+                Event.observe(valueTranslationLegend, "click", function(e) { ActiveForm.prototype.toggleTranslations(e.target.parentNode.parentNode) } );
+                
                 
 				valuesTranslations[0].parentNode.appendChild(newValueTranslation);
                 this.nodes.valuesTranslations[this.languageCodes[i]] = newValueTranslation;
@@ -478,20 +481,6 @@ Backend.SpecField.prototype = {
 		// Delete language template, so that included in that template variables would not be sent to server
 		Element.remove(document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations)[0]);
 	},
-    
-    toggleValueLanguage: function(e)
-    {
-        if(!e.target)
-		{
-			e.target = e.srcElement;
-		}
-        
-        var values = document.getElementsByClassName(this.cssPrefix + "language_translation", e.target.parentNode.parentNode)[0];
-        values.style.display = (values.style.display == 'block') ? 'none' : 'block';
-               
-        document.getElementsByClassName("expandIcon", e.target.parentNode)[0].firstChild.nodeValue = (values.style.display == 'block') ? '[-] ' : '[+] ';
-    },
-
 
 	/**
 	 * When we create form from JSON string we should create and fill in values fields (from "Values" step)
@@ -514,7 +503,6 @@ Backend.SpecField.prototype = {
 		}
 	},
 
-
 	/**
 	 * This method separates language codes from language titles
 	 *
@@ -532,30 +520,6 @@ Backend.SpecField.prototype = {
 			self.languageCodes[self.languageCodes.length] = language.key;
 		});
 	},
-
-
-
-	/**
-	 * Programm should change language section if we have click on a link meaning different language. If we click current
-	 * language it will callapse
-	 *
-	 * @param Event e Event
-	 *
-	 * @access private
-	 *
-	 */
-	changeTranslationLanguageAction: function(e)
-	{
-        if(!e.target)
-		{
-			e.target = e.srcElement;
-		}
-
-        Event.stop(e);
-        var currentTranslationNode = document.getElementsByClassName(this.cssPrefix + "language_translation", e.target.parentNode.parentNode)[0];               
-        currentTranslationNode.style.display = (currentTranslationNode.style.display == 'block') ? 'none' : 'block';
-        document.getElementsByClassName("expandIcon", e.target.parentNode)[0].firstChild.nodeValue = (currentTranslationNode.style.display == 'block') ? '[-] ' : '[+] ';    
-    },
 
 	/**
 	 * When we add new value "Values" step we are also adding it to "Translations" step. Field name
@@ -895,29 +859,15 @@ Backend.SpecField.prototype = {
 		// butt =] when dealing with new form showing form action is handled by Backend.SpecField::createNewAction()
         if(this.nodes.parent.tagName.toLowerCase() == 'li')
         {
-            ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).toggleContainer(this.nodes.parent, 'edit');
+            ActiveList.prototype.getInstance(this.nodes.parent.parentNode).toggleContainer(this.nodes.parent, 'edit');
         }
         else
         {
             this.hideNewSpecFieldAction(this.categoryID);
         }
+        
+        ActiveForm.prototype.clearAllFeedBack(this.nodes.form);
     },
-
-
-    /**
-     * Clears all feedback messages in current spec field
-     *
-     */
-	clearAllFeedBack: function()
-	{
-	    var feedback = document.getElementsByClassName('feedback', this.nodes.parent);
-
-	    $A(feedback).each(function(field)
-	    {
-            field.style.visibility = 'hidden';
-	    });
-	},
-
 
     /**
      * This method is called when user clicks on save button. It saves form values, and does i don't know what (i guess it should close the form)
@@ -925,7 +875,6 @@ Backend.SpecField.prototype = {
 	 * @param Event e Event
 	 *
 	 * @access public
-	 *
      */
     saveAction: function(e)
     {
@@ -939,7 +888,9 @@ Backend.SpecField.prototype = {
         this.saveSpecField();
     },
     
-    
+    /**
+     * This action is executed when saving specification field. THis method will be executed before ajax request to the server is sent
+     */
     saveSpecField: function()
     {
 		// Toggle progress won't work on new form
@@ -953,7 +904,7 @@ Backend.SpecField.prototype = {
             // New item has no pr06r3s5 indicator
 		}
         
-		this.clearAllFeedBack();
+		ActiveForm.prototype.clearAllFeedBack(this.nodes.form);
         
         var self = this;
         new Ajax.Request(
@@ -967,7 +918,6 @@ Backend.SpecField.prototype = {
             }
         );
     },
-
 
     /**
      * This action is executed after server response with possible errors in entered
@@ -1125,6 +1075,8 @@ Backend.SpecField.prototype = {
 }
 
 
+
+
 /**
  * Backend.SpecFieldGroup manages specification field groups 
  * 
@@ -1217,14 +1169,19 @@ Backend.SpecFieldGroup.prototype = {
             Element.removeClassName(languageTranlation, 'dom_template');
             Element.addClassName(languageTranlation, self.cssPrefix + 'group_translations_language_' + language.key);
 
-            var languageName = document.getElementsByClassName(self.cssPrefix + 'group_translation_language_name', languageTranlation)[0];           
+            
+            var legend = languageTranlation.getElementsByTagName('legend')[0];
+            var languageName = document.getElementsByClassName(self.cssPrefix + 'group_translation_language_name', legend)[0];  
             languageName.innerHTML  = language.value;
                         
             var translationInput   = languageTranlation.getElementsByTagName("input")[0];
             translationInput.name  += '[' + language.key + ']';
             translationInput.value = self.group.name && self.group.name[language.key] ? self.group.name[language.key] : '';
+            
+            Event.observe(legend, "click", function(e) { ActiveForm.prototype.toggleTranslations(legend.parentNode) } );
 
             self.nodes.translations.appendChild(languageTranlation);
+            
         });
         
         Element.remove(self.nodes.translationTemplate);
@@ -1294,6 +1251,7 @@ Backend.SpecFieldGroup.prototype = {
                 Form.restore(this.nodes.form);
     		}
             
+            ActiveForm.prototype.clearAllFeedBack(this.nodes.form);
             Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.parent);
         }
         else if(response.errors) 
@@ -1302,7 +1260,6 @@ Backend.SpecFieldGroup.prototype = {
             var self = this;
             $H(response.errors).each(function(error) 
             {
-                console.info(self.nodes[error.key], error.value);
                 ActiveForm.prototype.setFeedback(self.nodes[error.key], error.value);
             });
         }
@@ -1322,6 +1279,12 @@ Backend.SpecFieldGroup.prototype = {
         {
             ActiveForm.prototype.hideNewItemForm($(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show"), this.nodes.parent); 
         }
+        else
+        {
+            Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.parent);
+        }
+        
+        ActiveForm.prototype.clearAllFeedBack(this.nodes.form);
     },
     
     
@@ -1334,7 +1297,7 @@ Backend.SpecFieldGroup.prototype = {
     {
         ActiveForm.prototype.showNewItemForm(
             document.getElementsByClassName(this.cssPrefix + 'group_title', parent)[0], 
-            document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0].parentNode
+            document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0]
         ); 
     },
     
@@ -1348,7 +1311,7 @@ Backend.SpecFieldGroup.prototype = {
     {
         ActiveForm.prototype.hideNewItemForm(
             document.getElementsByClassName(this.cssPrefix + 'group_title', parent)[0], 
-            document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0].parentNode
+            document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0]
         ); 
     },
     

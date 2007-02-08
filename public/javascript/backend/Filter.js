@@ -60,32 +60,32 @@ Backend.Filter.prototype = {
     initialize: function(filterJson, hash)
     {
         try{
-            eval("(" + filterJson + ")" )
+            this.filter = !hash ? eval("(" + filterJson + ")" ) : filterJson;
+            
+            this.cloneForm('filter_item_blank', this.filter.rootId);
+    
+            this.id = this.filter.ID;
+            
+            
+            this.categoryID = this.filter.categoryID;
+            this.rootId = this.filter.rootId;
+            this.filtersCount = this.filter.filtersCount ? this.filter.filtersCount : 0;
+            this.specFields = this.filter.specFields;
+            this.name = this.filter.name;
+            this.filters = this.filter.filters;
+            this.backupName = this.name;
+            
+            this.filterCalendars = {};
+    
+            this.loadLanguagesAction();
+            this.findUsedNodes();
+            this.bindFields();
+            this.generateTitleFromSpecField();
         }
         catch(e)
         {
-            console.info(filterJson);
+            console.info(e);
         }
-        this.filter = !hash ? eval("(" + filterJson + ")" ) : filterJson;
-        this.cloneForm('filter_item_blank', this.filter.rootId);
-
-        this.id = this.filter.ID;
-        
-        
-        this.categoryID = this.filter.categoryID;
-        this.rootId = this.filter.rootId;
-        this.filtersCount = this.filter.filtersCount ? this.filter.filtersCount : 0;
-        this.specFields = this.filter.specFields;
-        this.name = this.filter.name;
-        this.filters = this.filter.filters;
-        this.backupName = this.name;
-        
-        this.filterCalendars = {};
-
-        this.loadLanguagesAction();
-        this.findUsedNodes();
-        this.bindFields();
-        this.generateTitleFromSpecField();
     },
 
     /**
@@ -97,7 +97,7 @@ Backend.Filter.prototype = {
      */
     recreate: function(filterJson)
     {
-        var root = ($(this.filter.rootId).tagName.toLowerCase() == 'li') ? ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID).getContainer($(this.filter.rootId), 'edit') : $(this.filter.rootId);
+        var root = ($(this.filter.rootId).tagName.toLowerCase() == 'li') ? ActiveList.prototype.getInstance(this.nodes.parent.parentNode).getContainer($(this.filter.rootId), 'edit') : $(this.filter.rootId);
         root.innerHTML = '';
         $H(this).each(function(el)
         {
@@ -105,7 +105,6 @@ Backend.Filter.prototype = {
         });
         
         this.initialize(filterJson, hash);
-        this.clearAllFeedBack();
     },
 
 
@@ -1008,35 +1007,21 @@ Backend.Filter.prototype = {
             this.changeMainTitleAction(this.nodes.name.value);
             this.specFieldIDWasChangedAction();
         }
+        
+        ActiveForm.prototype.clearAllFeedBack(this.nodes.form);
 
         // Use Active list toggleContainer() method if this filter is inside Active list
         // Note that if it is inside a list we are showing and hidding form with the same action,
         // butt =] when dealing with new form showing form action is handled by Backend.Filter::createNewAction()
         if(this.nodes.parent.tagName.toLowerCase() == 'li')
         {
-             ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID).toggleContainer(this.nodes.parent, 'edit');
+             ActiveList.prototype.getInstance(this.nodes.parent.parentNode).toggleContainer(this.nodes.parent, 'edit');
         }
         else
         {
             this.hideNewFilterAction(this.categoryID);
         }
     },
-    
-
-    /**
-     * Clears all feedback messages in current spec field
-     *
-     */
-    clearAllFeedBack: function()
-    {
-        var feedback = document.getElementsByClassName('feedback', this.nodes.parent);
-
-        $A(feedback).each(function(field)
-        {
-            field.style.visibility = 'hidden';
-        });
-    },
-
 
     /**
      * This method is called when user clicks on save button. It saves form filters, and does i don't know what (i guess it should close the form)
@@ -1060,14 +1045,14 @@ Backend.Filter.prototype = {
         // Toggle progress won't work on new form
         try
         {
-             ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID).toggleProgress(this.nodes.parent);
+             ActiveList.prototype.getInstance(this.nodes.parent.parentNode).toggleProgress(this.nodes.parent);
         }
         catch (e)
         {
             ActiveForm.prototype.offProgress(this.nodes.form);
         }
 
-        this.clearAllFeedBack();
+        ActiveForm.prototype.clearAllFeedBack(this.nodes.form);
         
         var self = this;
         new Ajax.Request(
@@ -1101,14 +1086,14 @@ Backend.Filter.prototype = {
 
             if(this.nodes.parent.tagName.toLowerCase() == 'li')
             {
-                ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID).toggleContainer(this.nodes.parent, 'edit');
+                ActiveList.prototype.getInstance(this.nodes.parent.parentNode).toggleContainer(this.nodes.parent, 'edit');
             }
             else
             {
                 var div = document.createElement('span');
                 Element.addClassName(div, 'filter_title');
                 div.appendChild(document.createTextNode(this.nodes.name.value));
-                ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID).addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
+                ActiveList.prototype.getInstance(this.nodes.parent.parentNode).addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
                 CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
                 
                 this.hideNewFilterAction(this.categoryID);
@@ -1150,7 +1135,7 @@ Backend.Filter.prototype = {
         // Toggle progress won't work on new form
         try
         {
-            ActiveList.prototype.getInstance("filter_items_list_" + this.categoryID).toggleProgress(this.nodes.parent);
+            ActiveList.prototype.getInstance(this.nodes.parent.parentNode).toggleProgress(this.nodes.parent);
         }
         catch (e)
         {
@@ -1232,7 +1217,7 @@ Backend.Filter.prototype = {
         var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
         var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");     
         
-        ActiveList.prototype.getInstance("filter_items_list_" + categoryID).collapseAll();
+        ActiveList.prototype.getInstance(this.nodes.parent.parentNode).collapseAll();
         ActiveForm.prototype.showNewItemForm(link, form);
     }
 }

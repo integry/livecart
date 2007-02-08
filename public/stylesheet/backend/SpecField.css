@@ -1,4 +1,4 @@
-.specField legend, .specField_step_values, .specField_language_translation {
+.specField legend, .specField_step_values, .specField_language_translation, .specField_group_language_translation {
     display: none;
     
 }

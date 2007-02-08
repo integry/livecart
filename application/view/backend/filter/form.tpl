@@ -27,7 +27,7 @@
     	<div class="filter_step_translations">
             <fieldset class="dom_template filter_step_translations_language filter_step_translations_language_">
                 <legend><span class="expandIcon">[+] </span><span class="filter_legend_text"></span></legend>
-                <div class="filter_language_translation">
+                <div class="activeForm_translation_values filter_language_translation">
                     <p>
             			<label>{t _Filter_name}</label>
             			<input type="text" name="name" />
