@@ -60,6 +60,39 @@ Backend.SpecField.prototype = {
 
 	cssPrefix: "specField_",
 
+    callbacks: {
+        beforeEdit:     function(li) {
+            Backend.SpecField.prototype.hideNewSpecFieldAction(this.getRecordId(li, 3));
+            
+            if(this.isContainerEmpty(li, 'edit')) return Backend.SpecField.prototype.links.editField + this.getRecordId(li)
+            else this.toggleContainer(li, 'edit');
+        },
+        afterEdit:      function(li, response) {
+            var specField = eval("(" + response + ")" );
+            specField.rootId = li.id;
+            new Backend.SpecField(specField, true);
+            this.rebindIcons(li);
+            this.createSortable();
+            this.toggleContainer(li, 'edit');
+        },
+        beforeDelete:   function(li) {
+            if(confirm(Backend.SpecField.prototype.msg.removeFieldQuestion))
+            return Backend.SpecField.prototype.links.deleteField + this.getRecordId(li)
+        },
+        afterDelete:    function(li, jsonResponse)
+        {
+            var response = eval("("+jsonResponse+")");
+            if(response.status == 'success') {
+                this.remove(li);
+                CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 3));
+            }
+        },
+        beforeSort:     function(li, order) {
+            return Backend.SpecField.prototype.links.sortField + "?target=" + this.ul.id + "&" + order
+        },
+        afterSort:     function(li, order) {    }
+    },
+
     /**
 	 * Constructor
 	 *
@@ -353,7 +386,7 @@ Backend.SpecField.prototype = {
                 }
 	        },
 	        afterDelete: function(li, response){ self.deleteValueFieldAction(li, this) }
-	    }, this.activeListMessages);
+	    }, this.msg.activeListMessages);
 	},
 
 
@@ -1090,6 +1123,61 @@ Backend.SpecFieldGroup = Class.create();
 Backend.SpecFieldGroup.prototype = {
      cssPrefix: 'specField_',
      
+     callbacks: {
+        beforeEdit:     function(li) 
+        {
+            try
+            {
+                if(!Backend.SpecFieldGroup.prototype.isGroupTranslated(li))
+                {
+                    return Backend.SpecField.prototype.links.getGroup + this.getRecordId(li);
+                }
+                else
+                {
+                    if('block' != document.getElementsByClassName('specField_group_form', li)[0].style.display)
+                    {
+                         Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);
+                    }
+                    else
+                    {
+                         Backend.SpecFieldGroup.prototype.hideGroupTranslations(li);
+                    }   
+                }
+            } 
+            catch(e) 
+            {  
+                console.info(e) 
+            }
+        },
+        afterEdit:      function(li, response) { 
+            try
+            {
+                new Backend.SpecFieldGroup(li, eval("(" + response + ")"));
+                Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);  
+            } 
+            catch(e) 
+            {  
+                console.info(e) 
+            }
+        },
+        beforeDelete:   function(li) {
+            if(confirm(Backend.SpecField.prototype.msg.removeGroupQuestion))
+            return Backend.SpecField.prototype.links.deleteGroup + this.getRecordId(li)
+        },
+        afterDelete:    function(li, jsonResponse)
+        {
+            var response = eval("("+jsonResponse+")");
+            if(response.status == 'success') {
+                this.remove(li);
+                CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 2));
+            }
+        },
+        beforeSort:     function(li, order) {
+            return Backend.SpecField.prototype.links.sortGroups + "?target=" + this.ul.id + "&" + order
+        },
+        afterSort:     function(li, order) { }
+     },
+     
      /**
       * Consturctor
       * 
@@ -1239,6 +1327,7 @@ Backend.SpecFieldGroup.prototype = {
     		{
                 ActiveList.prototype.getInstance(this.cssPrefix + 'groups_list_' + this.group.Category.ID).toggleProgress(this.nodes.parent);
                 Form.backup(this.nodes.form);
+                Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.parent);
     		}
     		catch (e)
     		{
@@ -1247,14 +1336,31 @@ Backend.SpecFieldGroup.prototype = {
                 var title = document.createElement('span');
                 Element.addClassName(title, this.cssPrefix + 'group_title');
                 title.appendChild(document.createTextNode(this.nodes.name.value));
+                
+                var ul = document.createElement('ul');
+                ul.id = this.cssPrefix + "items_list_" + this.group.Category.ID + "_" + response.id;
+                Element.addClassName(ul, 'specFieldList'); 
+                Element.addClassName(ul, 'activeList_add_sort'); 
+                Element.addClassName(ul, 'activeList_add_edit'); 
+                Element.addClassName(ul, 'activeList_add_delete'); 
+                Element.addClassName(ul, 'activeList_accept_specFieldList'); 
+                Element.addClassName(ul, 'activeList'); 
+                
                 $(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show").style.display = 'inline';
                 
-                ActiveList.prototype.getInstance(this.cssPrefix + "groups_list_" + this.group.Category.ID).addRecord(response.id, title);
+                var groupsList = ActiveList.prototype.getInstance(this.cssPrefix + "groups_list_" + this.group.Category.ID);
+                groupsList.addRecord(response.id, [title, ul]);
+                groupsList.touch();
+                
+                ActiveList.prototype.recreateVisibleLists();
+                ActiveList.prototype.getInstance(ul, Backend.SpecFieldGroup.prototype.specFieldGroupCallbacks, Backend.SpecField.prototype.msg.activeListMessages);
+                
                 Form.restore(this.nodes.form);
+                
+                ActiveForm.prototype.hideNewItemForm($(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show"), this.nodes.parent); 
     		}
             
             ActiveForm.prototype.clearAllFeedBack(this.nodes.form);
-            Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.parent);
         }
         else if(response.errors) 
         {
@@ -1297,6 +1403,7 @@ Backend.SpecFieldGroup.prototype = {
      */
     displayGroupTranslations: function(parent)
     {
+        console.info(document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0]);
         ActiveForm.prototype.showNewItemForm(
             document.getElementsByClassName(this.cssPrefix + 'group_title', parent)[0], 
             document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0]
@@ -1338,8 +1445,13 @@ Backend.SpecFieldGroup.prototype = {
         var specFieldGroupLink = $(this.cssPrefix + "group_new_" + categoryID + "_show");
         var specFieldGroupForm = $(this.cssPrefix + "group_new_" + categoryID + "_form");
                 
+        console.info('show', specFieldGroupLink, specFieldGroupForm);
+                
         ActiveList.prototype.collapseAll();        
         ActiveForm.prototype.showNewItemForm(specFieldGroupLink, specFieldGroupForm);        
         ActiveForm.prototype.hideNewItemForm(specFieldLink, specFieldForm);
+        
+        
+        console.info('show', specFieldGroupLink, specFieldGroupForm);
     }    
 }

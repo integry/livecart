@@ -358,11 +358,13 @@ ActiveList.prototype = {
      *
      * @return string element id
      */
-    getRecordId: function(li)
+    getRecordId: function(li, level)
     {
-        if(!li) li = this._currentLi;
+        if(!level) level = 1;
+        var matches = li.id.match(/_(\d+)(?=(?:_|\b))/g);
         
-        return li.id.substring(li.parentNode.id.length+1);
+        var id = matches[matches.length-level];
+        return id ? id.substr(1) : false;
     },
 
     /**
@@ -1030,6 +1032,16 @@ ActiveList.prototype = {
         });
     },
     
+    
+    recreateVisibleLists: function()
+    {
+        $H(ActiveList.prototype.activeListsUsers).each(function(activeList) 
+        {
+            if(!activeList.value.ul || 0 >= activeList.value.ul.offsetHeight) throw $continue; // if list is invisible there is no need to collapse it
+            ActiveList.prototype.getInstance(activeList.value.ul).touch();
+        });
+    },
+    
     /**
      * Get list of references to all ActiveList ActiveRecords (li)
      */
@@ -1055,6 +1067,7 @@ ActiveList.prototype = {
      */
     touch: function()
     {
+        this.generateAcceptFromArray();
         this.createSortable();
     }
 }

@@ -44,6 +44,8 @@
 
 	{literal}
 	<script language="javascript" type="text/javascript">
+    try
+    {
 		tinyMCE.init({
 			theme : "advanced",
 			mode : "exact",
@@ -58,27 +60,38 @@
 			theme_advanced_buttons2 : "bullist,numlist,separator,outdent,indent,separator,undo,redo,separator,link,unlink,anchor,image,cleanup,separator,code,removeformat,visualaid,separator,sub,sup,separator,charmap",
 			theme_advanced_buttons3 : "",
 			relative_urls : true
-			});
-	</script>
-	{/literal}
+		});
 
-	{literal}
-	<script type="text/javascript">
-	function onLoad()
-	{
-		Backend.locale = '{/literal}{localeCode}{literal}';
-		Backend.onLoad();
-	}
-	window.onload = onLoad;
+    	function onLoad()
+    	{
+    		Backend.locale = '{/literal}{localeCode}{literal}';
+    		Backend.onLoad();
+    	}
+        
+    	window.onload = onLoad;
+    } 
+    catch(e)
+    {
+        console.info(e);
+    }
 	</script>
 	{/literal}
 
 </head>
 <body>
 <script type="text/javascript">
-    /** Initialize all of our objects now. */
-    window.historyStorage.init();
-    window.dhtmlHistory.create();
+{literal}
+    try
+    {
+        /** Initialize all of our objects now. */
+        window.historyStorage.init();
+        window.dhtmlHistory.create();
+    }
+    catch(e)
+    {
+        console.info(e);
+    }
+{/literal}
 </script>
 
 <div id="log"></div>

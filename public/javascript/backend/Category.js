@@ -44,8 +44,8 @@ Backend.Category = {
                 Backend.Category.activeCategoryId = categoryId;
 				Backend.Category.treeBrowser.selectItem(categoryId, false, false);
 
-//				window.dhtmlHistory.handleBookmark();
-//				throw('rest');
+                // window.dhtmlHistory.handleBookmark();
+                // throw('rest');
 				return true;		  
 			}
 		}
@@ -53,6 +53,7 @@ Backend.Category = {
 		var treeNode = $('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode;
 		treeNode.onclick();	
 		Backend.ajaxNav.add('cat_' + treeNode.parentObject.id + '#tabProducts');
+
 	},
     
     initTreeControls: function() 

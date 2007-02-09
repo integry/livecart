@@ -68,33 +68,39 @@
 </div>
 
 <script type="text/javascript">
-	/**
-	 * URL assigment for internal javascript requests
-	 */
-    Backend.Category['links'] = {literal}{}{/literal};
-	Backend.Category['links']['create']  = '{link controller=backend.category action=create id=_id_}';
-	Backend.Category['links']['remove']  = '{link controller=backend.category action=remove id=_id_}';
-	Backend.Category['links']['countTabsItems'] = '{link controller=backend.category action=countTabsItems id=_id_}';
-	Backend.Category['links']['reorder'] = '{link controller=backend.category action=reorder id=_id_}/?parentId=_pid_';
-	Backend.Category['links']['categoryAutoloading'] = '{link controller=backend.category action=xmlBranch}';
-	Backend.Category['links']['categoryRecursiveAutoloading'] = '{link controller=backend.category action=xmlRecursivePath}';
-	Backend.Category['links']['addProduct']  = '{link controller=backend.product action=add id=_id_}';
-	    
-    Backend.Category.messages = {literal}{}{/literal};
-    Backend.Category.messages._reorder_failed = '{t _reorder_failed|addslashes}';
-    Backend.Category.messages._confirm_category_remove = '{t _confirm_category_remove|addslashes}';
-
-	Backend.Category.init();    
-	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading); 
-    Backend.Category.addCategories({json array=$categoryList});
+    try
+    {ldelim}
+    	/**
+    	 * URL assigment for internal javascript requests
+    	 */
+        Backend.Category['links'] = {literal}{}{/literal};
+    	Backend.Category['links']['create']  = '{link controller=backend.category action=create id=_id_}';
+    	Backend.Category['links']['remove']  = '{link controller=backend.category action=remove id=_id_}';
+    	Backend.Category['links']['countTabsItems'] = '{link controller=backend.category action=countTabsItems id=_id_}';
+    	Backend.Category['links']['reorder'] = '{link controller=backend.category action=reorder id=_id_}/?parentId=_pid_';
+    	Backend.Category['links']['categoryAutoloading'] = '{link controller=backend.category action=xmlBranch}';
+    	Backend.Category['links']['categoryRecursiveAutoloading'] = '{link controller=backend.category action=xmlRecursivePath}';
+    	Backend.Category['links']['addProduct']  = '{link controller=backend.product action=add id=_id_}';
+    	    
+        Backend.Category.messages = {literal}{}{/literal};
+        Backend.Category.messages._reorder_failed = '{t _reorder_failed|addslashes}';
+        Backend.Category.messages._confirm_category_remove = '{t _confirm_category_remove|addslashes}';
     
-	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
-	Backend.Category.initPage();
+    	Backend.Category.init();    
+    	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading); 
+        Backend.Category.addCategories({json array=$categoryList});
+        
+    	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
+    	Backend.Category.initPage();
+        
+        Backend.Category.loadBookmarkedCategory();
     
-    Backend.Category.loadBookmarkedCategory();
-
-	Backend.Category.image = new Backend.CategoryImage();
-
+    	Backend.Category.image = new Backend.CategoryImage();
+    {rdelim}
+    catch(e)
+    {ldelim}
+        console.info(e);
+    {rdelim}
 </script>
 
 <div id="specFieldSection"></div>

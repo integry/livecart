@@ -76,7 +76,6 @@ class Filter extends MultilingualObject
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
-
 	/**
 	 * Delete spec field from database
 	 */
@@ -84,7 +83,6 @@ class Filter extends MultilingualObject
 	{
 	    parent::deleteByID(__CLASS__, (int)$id);
 	}
-
 }
 
 ?>
