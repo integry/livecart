@@ -335,7 +335,7 @@
 			</fieldset>	
 		</p>	
 	
-		<input type="submit" name="save" class="submit" value="Save"> {t _or} <a href="#" onClick="return false;" class="cancel">{t _cancel}</a>
+		<input type="submit" name="save" class="submit" value="Save"> {t _or} <a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}, this.parentNode.parentNode.parentNode); return false;">{t _cancel}</a>
 		
 		<input type="reset" name="Reset">
 

@@ -51,6 +51,7 @@
 			mode : "exact",
 			elements : "",
 			auto_reset_designmode : true,
+			theme_advanced_resizing_use_cookie : false,
 			theme_advanced_toolbar_location : "top",
 			theme_advanced_resizing : true,
 			theme_advanced_path_location : "bottom",
