@@ -48,7 +48,7 @@
 		</div>
 	
 		<div id="helpRelated">
-			Related topics
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	
 		</div>
 
 	</div>
