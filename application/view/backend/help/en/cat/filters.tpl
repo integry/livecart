@@ -4,6 +4,8 @@
 
 <p>(Think of as many filters as possible to create an efficient browsing system as users may be interested in many kinds of attributes your products have to offer (some may search for products by particular technical details and some may be interested in shape or color)</p>
 
+<p>To get a beeter idea of how filters are implemented let's take a quick <ins>Tour ...</ins> </p>
+
 <div class="tasks">
 <fieldset>
 <legend>Things you can do</legend>
@@ -15,10 +17,12 @@
 </fieldset>
 </div>
 
-<h3>Create Filters</h3>
+<h3 id="create">Create Filters</h3>
 <p>To create filters you have to define attributes first. Go to the <a href="{help cat.attr}">Attributes</a> section to create attributes. 
 Once you have at least on attribute assigned to a category, click "Add new Filter"<ins>...</ins> </p>
 
 {helpSeeAlso}
+	{see cat.details}
 	{see cat.attr}
+	{see cat.images}
 {/helpSeeAlso}
