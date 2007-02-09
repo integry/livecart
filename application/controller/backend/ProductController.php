@@ -37,6 +37,7 @@ class ProductController extends StoreManagementController
 		{
 		  	$c = new LikeCond(new ARFieldHandle('Product', 'sku'), $this->request->getValue('sku'));
 		  	$f->setCondition($c);		  	
+		  	$f->setOrder(new ARFieldHandle('Product', 'sku'), 'ASC');
 		  	
 		  	$results = ActiveRecordModel::getRecordSetArray('Product', $f);
 		  	
@@ -83,16 +84,22 @@ class ProductController extends StoreManagementController
 								
 			ActiveRecordModel::beginTransaction();
 			$product->save();
-//			ActiveRecordModel::rollback();
 			ActiveRecordModel::commit();
 									
-			echo '<pre>';
-			print_r($product->toArray());
-			echo '</pre>';
+			if ($this->request->getValue('afterAdding') == 'new')
+			{
+				return new JSONResponse(array('addmore' => 1));				  	
+			}
+			else
+			{
+
+			}
+			
+//			echo '<pre>';			print_r($product->toArray());			echo '</pre>';
 		}
 		else
 		{
-			return new ActionRedirectResponse('backend.product', 'add', array('id' => $this->request->getValue('categoryID')));  	
+			return new JSONResponse(array('errors' => $validator->getErrorList()));
 		}
 				
 	}
@@ -199,7 +206,7 @@ class ProductController extends StoreManagementController
 			}
 
 		  	// validate required fields
-			if ($field['isRequired'])
+			if ($field['isRequired'] && !$field['isMultiValue'])
 		  	{
 				$validator->addCheck($field['fieldName'], new IsNotEmptyCheck($this->translate('_err_specfield_required')));		    
 			}

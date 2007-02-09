@@ -251,5 +251,28 @@ ActiveForm.prototype = {
         {
             ActiveForm.prototype.hideTranslations(fieldset);
         } 
-    }
+    },
+    
+    resetErrorMessages: function(form)
+    {
+		var errContainers = document.getElementsByClassName("errorText", form);
+		for (k = 0; k < errContainers.length; k++)
+		{
+		  	errContainers[k].innerHTML = '';
+		  	errContainers[k].style.display = 'none';
+		}  
+	},
+
+    setErrorMessages: function(form, errorMessages)
+    {
+		for (key in errorMessages)
+		{
+			if (form.elements.namedItem(key))
+		  	{
+			    var cont = document.getElementsByClassName("errorText", form.elements.namedItem(key).parentNode)[0];			
+				cont.innerHTML = errorMessages[key];
+				Effect.Appear(cont);
+			}
+		}  	
+	}
 }

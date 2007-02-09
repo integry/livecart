@@ -26,13 +26,14 @@ Backend.Product =
 		container.parentNode.replaceChild(this.productTabCopies[categoryID], container);
 	},
 
-	initAddForm: function()
+	initAddForm: function(categoryID)
 	{
-		var textareas = document.getElementsByTagName('textarea');
+		var textareas = $('tabProductsContent_' + categoryID).getElementsByTagName('textarea');
 		for (k = 0; k < textareas.length; k++)
 		{
-			tinyMCE.execCommand('mceAddControl', true, textareas[k].name);
+			tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
 		}
+
 		var expander = new SectionExpander();	  
 	},
 
@@ -125,6 +126,48 @@ Backend.Product =
 		
 		form.elements.namedItem('shippingHiUnit').value = hiValue;
 		form.elements.namedItem('shippingLoUnit').value = loValue;		
-	}	
+	},
+	
+	saveForm: function(form)
+	{
+	  	tinyMCE.triggerSave();
+		var saveHandler = new Backend.Product.saveHandler(form);
+		new LiveCart.AjaxRequest(form, 'tabProductsIndicator', saveHandler.saveComplete.bind(saveHandler));
+	}
+}
 
+Backend.Product.saveHandler = Class.create();
+Backend.Product.saveHandler.prototype = 
+{
+  	initialize: function(form)
+  	{
+	    this.form = form;
+	},
+	
+	saveComplete: function(originalRequest)
+	{
+	  	ActiveForm.prototype.resetErrorMessages(this.form);
+		eval('var response = ' + originalRequest.responseText);
+	  	
+		if (response.errors)
+		{
+			ActiveForm.prototype.setErrorMessages(this.form, response.errors);  
+		}
+		else
+		{
+			// reset form and add more products
+			if (response.addmore)
+			{
+				console.log('resetting form');
+				this.form.reset();  
+			}
+
+			// product customization content  	
+			else
+			{
+			  
+			}
+			
+		}
+	}
 }

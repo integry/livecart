@@ -15,6 +15,7 @@ function validateForm(form)
 		if (!formElement)
 		{
 		  	console.log('Cannot find form element with name ' + fieldName);
+		  	continue;
 		}
 		
 		for (var functionName in  validator[fieldName])

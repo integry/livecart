@@ -185,7 +185,6 @@ class Product extends MultilingualObject
 			
 			$this->sku->set('SKU' . $sku);
 			$this->save();
-			echo 'saved';
 		}		
 
 		ActiveRecordModel::commit();

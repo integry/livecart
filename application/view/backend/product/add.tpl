@@ -27,6 +27,7 @@
 			</p>
 
 			</fieldset>
+			<input type="hidden" name="{$fieldName}" value="" />
 		{else}
 			{selectfield id=$fieldName name=$fieldName options=$field.values class="select"}		
 		{/if}
@@ -48,7 +49,7 @@
 	{/if}
 {/defun}
 
-{form handle=$productForm action="controller=backend.product action=save id=`$product.ID`" method="POST"}
+{form handle=$productForm action="controller=backend.product action=save id=`$product.ID`" method="POST" onsubmit="Backend.Product.saveForm(this); return false;"}
 	
 	<input type="hidden" name="categoryID" value="{$product.Category.ID}" />
 	
@@ -307,6 +308,8 @@
 		</p>	
 	
 		<input type="submit" name="save" class="submit" value="Save"> {t _or} <a href="#" onClick="return false;" class="cancel">{t _cancel}</a>
+		
+		<input type="reset" name="Reset">
 
 	</fieldset>
 	
@@ -314,6 +317,7 @@
 
 {literal}
 <script type="text/javascript">
-	Backend.Product.initAddForm();
+	Backend.Product.initAddForm({/literal}{$product.Category.ID}{literal});
+	console.log('running');
 </script>
 {/literal}
