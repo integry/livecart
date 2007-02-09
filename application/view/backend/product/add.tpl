@@ -29,22 +29,22 @@
 			</fieldset>
 			<input type="hidden" name="{$fieldName}" value="" />
 		{else}
-			{selectfield id=$fieldName name=$fieldName options=$field.values class="select"}		
+			{selectfield id="`$fieldName`_`$cat`" name=$fieldName options=$field.values class="select"}		
 		{/if}
 
 	{elseif $field.type == 2}
-		{textfield id=$fieldName name=$fieldName class="text numeric"}
+		{textfield id="`$fieldName`_`$cat`" name=$fieldName class="text numeric"}
 
 	{elseif $field.type == 3}
-		{textfield id=$fieldName name=$fieldName class="text"}
+		{textfield id="`$fieldName`_`$cat`" name=$fieldName class="text"}
 
 	{elseif $field.type == 4}
 		<div class="textarea">
-			{textarea id=$fieldName name=$fieldName}
+			{textarea id="`$fieldName`_`$cat`" name=$fieldName}
 		</div>
 
 	{elseif $field.type == 6}
-		{calendar id=$fieldName name=$fieldName}
+		{calendar id="`$fieldName`_`$cat`" name=$fieldName}
 
 	{/if}
 {/defun}
@@ -60,80 +60,104 @@
 		</p>
 
 		<p class="required">
-			<label for="name">Product name:</label>
+			<label for="name_addproduct_{$cat}">
+				Product name:
+			</label>
 			<fieldset class="error">
-				{textfield name="name" class="wide" onkeyup="Backend.Product.generateHandle(this);"}
+				{textfield name="name" id="name_addproduct_`$cat`" class="wide" onkeyup="Backend.Product.generateHandle(this);"}
 				{error for="name"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>			
 		</p>
 
 		<p class="required">
-			<label for="sku">SKU (code):</label>
+			<label for="sku_addproduct_{$cat}">
+				SKU (code):
+			</label>
 			<fieldset class="error">
-				{textfield name="sku" autocomplete="controller=backend.product field=sku"} 
+				{textfield name="sku" id="sku_addproduct_`$cat`" autocomplete="controller=backend.product field=sku"} 
 				{error for="sku"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>			
 		</p>
 
 		<p>
 			<label for=""></label>
-			{checkbox name="autosku" class="checkbox" value="on"}
-			<label for="autosku" class="checkbox">Generate SKU automatically</label>
+			{checkbox name="autosku" id="autosku_addproduct_`$cat`" class="checkbox" value="on"}
+			<label for="autosku_addproduct_{$cat}" class="checkbox">
+				Generate SKU automatically
+			</label>
 		</p>
 
 		<p>
-			<label for="handle">Handle:</label>
-			{textfield name="handle"}
+			<label for="handle_addproduct_{$cat}">
+				Handle:
+			</label>
+			{textfield name="handle" id="handle_addproduct_`$cat`"}
 		</p>
 
 		<p>
-			<label for="shortDescription">Short description:</label>
+			<label for="shortdes_addproduct_{$cat}">
+				Short description:
+			</label>
 			<div class="textarea">
-				{textarea class="shortDescr" name="shortDescription"}
+				{textarea class="shortDescr" id="shortdes_addproduct_`$cat`" name="shortDescription"}
 			</div>
 		</p>
 
 		<p>
-			<label for="longDescription">Long description:</label>
+			<label for="longdes_addproduct_{$cat}">
+				Long description:
+			</label>
 			<div class="textarea">
-				{textarea class="longDescr" name="longDescription"}
+				{textarea class="longDescr" id="longdes_addproduct_`$cat`" name="longDescription"}
 			</div>
 		</p>
 
 		<p>
-			<label for="type">Product Type:</label>
+			<label for="type_addproduct_{$cat}">
+				Product Type:
+			</label>
 			<fieldset class="error">
-				{selectfield options=$productTypes name="type"}
+				{selectfield options=$productTypes name="type" id="type_addproduct_`$cat`"}
 				{error for="type"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>			
 		</p>
 
 		<p>
-			<label for="URL">Website address:</label>
+			<label for="url_addproduct_{$cat}">
+				Website address:
+			</label>
 			<fieldset class="error">
-				{textfield name="URL" class="wide"}
+				{textfield name="URL" class="wide" id="url_addproduct_`$cat`"}
 				{error for="URL"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>			
 		</p>
 
 		<p>
-			<label for="manufacturer">Manufacturer:</label>
+			<label for="manufacturer_addproduct_{$cat}">
+				Manufacturer:
+			</label>
 			<fieldset class="error">
-				{textfield name="manufacturer" class="wide" autocomplete="controller=backend.manufacturer field=manufacturer"}
+				{textfield name="manufacturer" class="wide" autocomplete="controller=backend.manufacturer field=manufacturer" id="manufacturer_addproduct_`$cat`"}
 				{error for="manufacturer"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>			
 		</p>
 
 		<p>
-			<label for="keywords">Keywords:</label>
+			<label for="keywords_addproduct_{$cat}">
+				Keywords:
+			</label>
 			<fieldset class="error">
-				{textfield name="keywords" class="wide"}
+				{textfield name="keywords" class="wide" id="keywords_addproduct_`$cat`"}
 				{error for="keywords"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>			
 		</p>
 
 		<p>			
-			<label for=""></label> {checkbox name="isBestseller" class="checkbox" value="on"}<label for="isBestseller"> Mark as bestseller</label>
+			<label for=""></label> 
+			{checkbox name="isBestseller" class="checkbox" value="on" id="isbestseller_addproduct_`$cat`"}
+			<label for="isbestseller_addproduct_{$cat}"> 
+				Mark as bestseller
+			</label>
 		</p>
 		<p>
 
@@ -151,7 +175,7 @@
 			
 			{foreach from=$fieldList item=field}
 			<p{if $field.isRequired} class="required"{/if}>		
-				<label>{$field.name_lang}:</label>				
+				<label for="{$field.fieldName}_{$cat}">{$field.name_lang}:</label>				
 				<fieldset class="error">
 					{fun name="specFieldFactory" field=$field}			
 					{error for=$field.fieldName}<div class="errorText">{$msg}</div>{/error}
@@ -170,9 +194,9 @@
 	<fieldset>
 		<legend>Inventory</legend>
 		<p class="required">
-			<label>Items in stock:</label>
+			<label for="stock_addproduct_{$cat}">Items in stock:</label>
 			<fieldset class="error">			
-				{textfield name="stockCount" class="number"}
+				{textfield name="stockCount" class="number" id="stock_addproduct_`$cat`"}
 				{error for="stockCount"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>
 		</p>
@@ -181,17 +205,17 @@
 	<fieldset>
 		<legend>Pricing</legend>
 		<p class="required">
-			<label>Price:</label>
+			<label for="pricebase_addproduct_{$cat}">Price:</label>
 			<fieldset class="error">			
-				{textfield name="price_$baseCurrency" class="money"} {$baseCurrency}
+				{textfield name="price_$baseCurrency" class="money" id="pricebase_addproduct_`$cat`"} {$baseCurrency}
 				{error for="price_$baseCurrency"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>
 		</p>
 		{foreach from=$otherCurrencies item="currency"}
 		<p>
-			<label>Price:</label>
+			<label for="pricebase_addproduct_{$currency}_{$cat}">Price:</label>
 			<fieldset class="error">				
-				{textfield name="price_$currency" class="money"} {$currency}
+				{textfield name="price_$currency" class="money" id="pricebase_addproduct_`$currency`_`$cat`"} {$currency}
 				{error for="price_$currency"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>
 		</p>		
@@ -227,27 +251,31 @@
 		</p>
 
 		<p>
-			<label>Minimum Order Quantity:</label>
+			<label for="minq_addproduct_{$cat}">Minimum Order Quantity:</label>
 			<fieldset class="error">					
-				{textfield name="minimumQuantity" class="number" value="0"}
+				{textfield name="minimumQuantity" id="minq_addproduct_`$cat`" class="number" value="0"}
 				{error for="minimumQuantity"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>
 		</p>
 
 		<p>
-			<label>Shipping Surcharge:</label>
+			<label for="surch_addproduct_`$cat`">Shipping Surcharge:</label>
 			<fieldset class="error">	
-				{textfield name="shippingSurcharge" class="number"} {$baseCurrency}
+				{textfield name="shippingSurcharge" id="surch_addproduct_`$cat`" class="number"} {$baseCurrency}
 				{error for="shippingSurcharge"}<div class="errorText">{$msg}</div>{/error}
 			</fieldset>
 		</p>
 
 		<p>			
-			<label for=""></label> {checkbox name="isSeparateShipment" class="checkbox" value="on"}<label for="isSeparateShipment" class="checkbox"> Requires separate shipment</label>
+			<label for=""></label> 
+			{checkbox name="isSeparateShipment" class="checkbox" id="issep_addproduct_`$cat`" value="on"}
+			<label for="issep_addproduct_{$cat}" class="checkbox"> Requires separate shipment</label>
 		</p>
 
 		<p>			
-			<label for=""></label> {checkbox name="isFreeShipping" class="checkbox" value="on"}<label class="checkbox" for="isFreeShipping"> Qualifies for free shipping</label>
+			<label for=""></label> 
+			{checkbox name="isFreeShipping" class="checkbox" id="isfree_addproduct_`$cat`" value="on"}
+			<label class="checkbox" for="isfree_addproduct_{$cat}"> Qualifies for free shipping</label>
 		</p>
 
 		<p>			
@@ -267,13 +295,13 @@
 			<p>
 				<label>Short description:</label>
 				<div class="textarea">
-					{textarea class="shortDescr" name="shortDescription_$lang"}
+					{textarea class="shortDescr" name="shortDescription_$lang" id="shortDescription_`$lang`_`$cat`"}
 				</div>
 			</p>
 			<p>
 				<label>Long description:</label>
 				<div class="textarea">
-					{textarea class="longDescr" name="longDescription_$lang"}
+					{textarea class="longDescr" name="longDescription_$lang" id="longDescription_`$lang`_`$cat`"}
 				</div>
 			</p>
 			

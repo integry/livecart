@@ -156,6 +156,7 @@ class ProductController extends StoreManagementController
 		}
 		
 		$response = new ActionResponse();
+		$response->setValue("cat", $product->category->get()->getID());
 		$response->setValue("languageList", $languages);
 		$response->setValue("specFieldList", $specFieldsByGroup);
 		$response->setValue("productForm", $form);
