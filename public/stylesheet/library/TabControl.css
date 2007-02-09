@@ -1,5 +1,5 @@
-#managerContainer, #managerContainer * {
-    position: relative;
+#managerContainer {
+	position: relative;
 }
 
 /* Category manager styling */
