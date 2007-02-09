@@ -1,9 +1,10 @@
 =LiveCart Help
 
-	cat=Product Categories
+	cat=Categories
+		details=Category Details
 		attr=Attributes
-		filter=Filters
-		image=Images
+		filters=Filters
+		images=Images
 		
 	product=Products
 		add=Add New Product

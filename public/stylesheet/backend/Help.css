@@ -38,6 +38,8 @@ p {
 ul, ol {
   	margin-left: 20px;
   	margin-bottom: 10px;
+	list-style-type: square;
+
 }
 h1 {
 	font-size: largest; 
@@ -103,6 +105,7 @@ h3 {
 
 .tasks ul
 {
+	list-style-type: square;
 }
 
 #helpContent img
@@ -115,3 +118,36 @@ h3 {
 {
   	font-weight: bold;
 }
+
+del, del p {
+  	color: #DDDDDD;
+  	text-decoration: line-through;
+}
+
+code {
+	font-family: courier;
+	font-size: 12px;
+}
+
+
+ins {
+  	font-weight: bold;
+  	text-decoration: none;
+  	color: rgb(255, 100, 100);
+}
+
+
+p.note {
+
+	margin: 5px;
+	margin-top: 20px;
+	margin-bottom: 10px;
+	padding: 5px;
+	font-size: 14px;
+	color: #465584;
+	background-color: #F1F7FF;
+	border: 1px dotted #728DC9;
+	  
+}
+
+
