@@ -1,3 +1,5 @@
+<div>
+
 <ul class="menu">
 	<li>
 		<a href="#" onclick="Backend.Product.showAddForm(this.parentNode.parentNode.parentNode, {$categoryID}); return false;">
@@ -16,3 +18,5 @@
 	</li>
 {/foreach}
 </p>
+
+</div>

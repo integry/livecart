@@ -1,33 +1,56 @@
 Backend.Product = 
 {
 	productTabCopies: new Array(),
+
+	formTabCopies: new Array(),
 	
 	showAddForm: function(container, categoryID)
 	{
-		this.createProductTabCopy(categoryID, container);
-		var url = Backend.Category.links.addProduct.replace('_id_', categoryID);
-
-		new LiveCart.AjaxUpdater(url, container, document.getElementsByClassName('progressIndicator', container)[0]);
-
+		this.productTabCopies[categoryID] = container;
+		console.log(container);
+		
+		tabContainer = container.parentNode;
+		
+		// product form has already been downloaded
+		if (this.formTabCopies[categoryID])
+		{
+			tabContainer.replaceChild(this.formTabCopies[categoryID], container);
+		}
+		
+		// retrieve product form
+		else
+		{
+			var url = Backend.Category.links.addProduct.replace('_id_', categoryID);	
+			new LiveCart.AjaxUpdater(url, container.parentNode, document.getElementsByClassName('progressIndicator', container)[0]);
+		}
+		
+		this.initAddForm(categoryID);
 	},
 	
 	cancelAddProduct: function(categoryID, container)
 	{
-		this.restoreProductTab(categoryID, container);  
-	},
-	
-	createProductTabCopy: function(categoryID, container)
-	{
-		this.productTabCopies[categoryID] = container.cloneNode(true);
-	},
-	
-	restoreProductTab: function(categoryID, container)
-	{
+		var textareas = container.getElementsByTagName('textarea');
+		for (k = 0; k < textareas.length; k++)
+		{
+			tinyMCE.execCommand('mceRemoveControl', true, textareas[k].id);
+		}
+
+		this.formTabCopies[categoryID] = container;	
 		container.parentNode.replaceChild(this.productTabCopies[categoryID], container);
 	},
-
+	
+	resetAddForm: function(form)
+	{
+		textareas = form.getElementsByTagName('textarea'); 
+		for(k = 0; k < textareas.length; k++) 
+		{ 
+			tinyMCE.execInstanceCommand(textareas[k].id, 'mceSetContent', true, '', true); 
+		}		
+	},
+	
 	initAddForm: function(categoryID)
 	{
+		tinyMCE.idCounter = 0;
 		var textareas = $('tabProductsContent_' + categoryID).getElementsByTagName('textarea');
 		for (k = 0; k < textareas.length; k++)
 		{
@@ -158,8 +181,9 @@ Backend.Product.saveHandler.prototype =
 			// reset form and add more products
 			if (response.addmore)
 			{
-				console.log('resetting form');
 				this.form.reset();  
+				this.form.namedItem('name').focus();
+				new Backend.SaveConfirmationMessage(this.form.getElementsByClassName('productSaveConf')[0]);
 			}
 
 			// product customization content  	

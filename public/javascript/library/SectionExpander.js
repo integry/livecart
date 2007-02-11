@@ -63,6 +63,8 @@ SectionExpander.prototype = {
 			}
 
 		}
+		
+		tinyMCE.execCommand("mceResetDesignMode");
 	},
 
 	getToggleIconContent: function(isSectionOpened)

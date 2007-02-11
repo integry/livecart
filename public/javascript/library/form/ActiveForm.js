@@ -260,18 +260,29 @@ ActiveForm.prototype = {
 		{
 		  	errContainers[k].innerHTML = '';
 		  	errContainers[k].style.display = 'none';
+		  	Element.addClassName(errContainers[k], 'hidden');
 		}  
 	},
 
     setErrorMessages: function(form, errorMessages)
     {
+		var focused = false;
+		
 		for (key in errorMessages)
 		{
 			if (form.elements.namedItem(key))
 		  	{
 			    var cont = document.getElementsByClassName("errorText", form.elements.namedItem(key).parentNode)[0];			
 				cont.innerHTML = errorMessages[key];
+			  	Element.removeClassName(cont, 'hidden');
 				Effect.Appear(cont);
+				
+				// set focus to the first form field, which has error
+				if (!focused)
+				{
+					form.elements.namedItem(key).focus();
+					focused = true;	
+				}
 			}
 		}  	
 	}

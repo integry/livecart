@@ -784,6 +784,11 @@ fieldset.error, div.error, fieldset.container
 	color: white;
 }
 
+.hidden 
+{
+	display: none;	
+}
+
 .progressIndicator {
 	padding: 15px;
 	width: 30px;

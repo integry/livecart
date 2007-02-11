@@ -1,3 +1,5 @@
+<div>
+
 <a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}, this.parentNode); return false;">
 	Cancel adding new product
 </a>
@@ -49,7 +51,16 @@
 	{/if}
 {/defun}
 
-{form handle=$productForm action="controller=backend.product action=save id=`$product.ID`" method="POST" onsubmit="Backend.Product.saveForm(this); return false;"}
+{form handle=$productForm action="controller=backend.product action=save id=`$product.ID`" method="POST" onsubmit="Backend.Product.saveForm(this); return false;" onreset="Backend.Product.resetAddForm(this);"}
+	
+	<div class="productSaveConf" style="margin-bottom: 10px; display: none;">
+		<div class="yellowMessage">
+			<div>
+				Product was added successfuly. You may now add another product.
+			</div>
+		</div>
+	</div>
+	
 	
 	<input type="hidden" name="categoryID" value="{$product.Category.ID}" />
 	
@@ -65,7 +76,7 @@
 			</label>
 			<fieldset class="error">
 				{textfield name="name" id="name_addproduct_`$cat`" class="wide" onkeyup="Backend.Product.generateHandle(this);"}
-				{error for="name"}<div class="errorText">{$msg}</div>{/error}
+				<div class="errorText hidden"></div>
 			</fieldset>			
 		</p>
 
@@ -75,7 +86,7 @@
 			</label>
 			<fieldset class="error">
 				{textfield name="sku" id="sku_addproduct_`$cat`" autocomplete="controller=backend.product field=sku"} 
-				{error for="sku"}<div class="errorText">{$msg}</div>{/error}
+				<div class="errorText hidden"></div>
 			</fieldset>			
 		</p>
 
@@ -118,7 +129,7 @@
 			</label>
 			<fieldset class="error">
 				{selectfield options=$productTypes name="type" id="type_addproduct_`$cat`"}
-				{error for="type"}<div class="errorText">{$msg}</div>{/error}
+				<div class="errorText hidden"></div>
 			</fieldset>			
 		</p>
 
@@ -128,7 +139,7 @@
 			</label>
 			<fieldset class="error">
 				{textfield name="URL" class="wide" id="url_addproduct_`$cat`"}
-				{error for="URL"}<div class="errorText">{$msg}</div>{/error}
+				<div class="errorText hidden"></div>
 			</fieldset>			
 		</p>
 
@@ -138,7 +149,7 @@
 			</label>
 			<fieldset class="error">
 				{textfield name="manufacturer" class="wide" autocomplete="controller=backend.manufacturer field=manufacturer" id="manufacturer_addproduct_`$cat`"}
-				{error for="manufacturer"}<div class="errorText">{$msg}</div>{/error}
+				<div class="errorText hidden"></div>
 			</fieldset>			
 		</p>
 
@@ -148,7 +159,7 @@
 			</label>
 			<fieldset class="error">
 				{textfield name="keywords" class="wide" id="keywords_addproduct_`$cat`"}
-				{error for="keywords"}<div class="errorText">{$msg}</div>{/error}
+				<div class="errorText hidden"></div>
 			</fieldset>			
 		</p>
 
@@ -178,7 +189,7 @@
 				<label for="{$field.fieldName}_{$cat}">{$field.name_lang}:</label>				
 				<fieldset class="error">
 					{fun name="specFieldFactory" field=$field}			
-					{error for=$field.fieldName}<div class="errorText">{$msg}</div>{/error}
+					<div class="errorText hidden"></div>
 				</fieldset>			
 			</p>
 			{/foreach}
@@ -197,7 +208,7 @@
 			<label for="stock_addproduct_{$cat}">Items in stock:</label>
 			<fieldset class="error">			
 				{textfield name="stockCount" class="number" id="stock_addproduct_`$cat`"}
-				{error for="stockCount"}<div class="errorText">{$msg}</div>{/error}
+				<div class="errorText hidden"></div>
 			</fieldset>
 		</p>
 	</fieldset>
@@ -208,7 +219,7 @@
 			<label for="pricebase_addproduct_{$cat}">Price:</label>
 			<fieldset class="error">			
 				{textfield name="price_$baseCurrency" class="money" id="pricebase_addproduct_`$cat`"} {$baseCurrency}
-				{error for="price_$baseCurrency"}<div class="errorText">{$msg}</div>{/error}
+				<div class="errorText hidden"></div>
 			</fieldset>
 		</p>
 		{foreach from=$otherCurrencies item="currency"}
@@ -216,7 +227,7 @@
 			<label for="pricebase_addproduct_{$currency}_{$cat}">Price:</label>
 			<fieldset class="error">				
 				{textfield name="price_$currency" class="money" id="pricebase_addproduct_`$currency`_`$cat`"} {$currency}
-				{error for="price_$currency"}<div class="errorText">{$msg}</div>{/error}
+				<div class="errorText hidden"></div>
 			</fieldset>
 		</p>		
 		{/foreach}
@@ -246,7 +257,7 @@
 				{hidden name="shippingWeight"}
 				{hidden name="unitsType"}
 				
-				{error for="shippingWeight"}<div class="errorText">{$msg}</div>{/error}
+				<div class="errorText hidden"></div>
 			</fieldset>
 		</p>
 
@@ -254,7 +265,7 @@
 			<label for="minq_addproduct_{$cat}">Minimum Order Quantity:</label>
 			<fieldset class="error">					
 				{textfield name="minimumQuantity" id="minq_addproduct_`$cat`" class="number" value="0"}
-				{error for="minimumQuantity"}<div class="errorText">{$msg}</div>{/error}
+				<div class="errorText hidden"></div>
 			</fieldset>
 		</p>
 
@@ -262,7 +273,7 @@
 			<label for="surch_addproduct_`$cat`">Shipping Surcharge:</label>
 			<fieldset class="error">	
 				{textfield name="shippingSurcharge" id="surch_addproduct_`$cat`" class="number"} {$baseCurrency}
-				{error for="shippingSurcharge"}<div class="errorText">{$msg}</div>{/error}
+				<div class="errorText hidden"></div>
 			</fieldset>
 		</p>
 
@@ -327,17 +338,15 @@
 			<label for="">When the product is added:</label> 
 			<fieldset class="container">
 				<div style="clear: both;">
-					{radio name="afterAdding" id="afAd_det" class="radio"}<label for="afAd_det" class="radio"> Continue with more detailed product configuration (add images, define related products, discounts, etc.)</label>
+					{radio name="afterAdding" id="afAd_new" class="radio" value="new" checked="checked"}<label for="afAd_new" class="radio"> Add another product</label>
 				</div>
 				<div style="clear: both;">
-					{radio name="afterAdding" id="afAd_new" class="radio" value="new"}<label for="afAd_new" class="radio"> Add another product</label>
+					{radio name="afterAdding" id="afAd_det" class="radio"}<label for="afAd_det" class="radio"> Continue with more detailed product configuration (add images, define related products, discounts, etc.)</label>
 				</div>
 			</fieldset>	
 		</p>	
 	
 		<input type="submit" name="save" class="submit" value="Save"> {t _or} <a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}, this.parentNode.parentNode.parentNode); return false;">{t _cancel}</a>
-		
-		<input type="reset" name="Reset">
 
 	</fieldset>
 	
@@ -349,3 +358,5 @@
 	console.log('running');
 </script>
 {/literal}
+
+</div>

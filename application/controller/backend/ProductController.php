@@ -99,6 +99,9 @@ class ProductController extends StoreManagementController
 		}
 		else
 		{
+			// reset validator data (as we won't need to restore the form)
+			$validator->restore();
+			
 			return new JSONResponse(array('errors' => $validator->getErrorList()));
 		}
 				
