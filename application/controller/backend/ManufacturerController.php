@@ -8,7 +8,7 @@ class ManufacturerController extends StoreManagementController
 	public function autoComplete()
 	{	  	
 	  	$f = new ARSelectFilter();
-	  	$c = new LikeCond(new ARFieldHandle('Manufacturer', 'name'), $this->request->getValue('manufacturer'));
+	  	$c = new LikeCond(new ARFieldHandle('Manufacturer', 'name'), $this->request->getValue('manufacturer') . '%');
 	  	$f->setCondition($c);
 	  	
 	  	$results = ActiveRecordModel::getRecordSetArray('Manufacturer', $f);

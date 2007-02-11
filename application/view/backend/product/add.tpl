@@ -138,7 +138,7 @@
 				Website address:
 			</label>
 			<fieldset class="error">
-				{textfield name="URL" class="wide" id="url_addproduct_`$cat`"}
+				{textfield name="URL" class="wide" id="url_addproduct_`$cat`" autocomplete="controller=backend.product field=URL"}
 				<div class="errorText hidden"></div>
 			</fieldset>			
 		</p>
@@ -158,7 +158,7 @@
 				Keywords:
 			</label>
 			<fieldset class="error">
-				{textfield name="keywords" class="wide" id="keywords_addproduct_`$cat`"}
+				{textfield name="keywords" class="wide" id="keywords_addproduct_`$cat`" autocomplete="controller=backend.product field=keywords"}
 				<div class="errorText hidden"></div>
 			</fieldset>			
 		</p>
@@ -355,7 +355,6 @@
 {literal}
 <script type="text/javascript">
 	Backend.Product.initAddForm({/literal}{$product.Category.ID}{literal});
-	console.log('running');
 </script>
 {/literal}
 

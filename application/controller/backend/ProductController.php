@@ -33,20 +33,22 @@ class ProductController extends StoreManagementController
 	  	$f = new ARSelectFilter();
 		$resp = array();
 				  	
-		if ($this->request->getValue('field') == 'sku')
+		$field = $this->request->getValue('field');
+		
+		if (in_array($field, array('sku', 'URL', 'keywords')))
 		{
-		  	$c = new LikeCond(new ARFieldHandle('Product', 'sku'), $this->request->getValue('sku'));
+		  	$c = new LikeCond(new ARFieldHandle('Product', $field), $this->request->getValue($field) . '%');
 		  	$f->setCondition($c);		  	
-		  	$f->setOrder(new ARFieldHandle('Product', 'sku'), 'ASC');
+		  	$f->setOrder(new ARFieldHandle('Product', $field), 'ASC');
 		  	
 		  	$results = ActiveRecordModel::getRecordSetArray('Product', $f);
 		  	
 		  	foreach ($results as $value)
 		  	{
-				$resp[] = $value['sku'];
+				$resp[] = $value[$field];
 			}	  			  
 		}
-	  	
+		  	
 		return new AutoCompleteResponse($resp);
 	}
 
