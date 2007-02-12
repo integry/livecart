@@ -2,7 +2,6 @@ if(!Backend) var Backend = {};
 if(!Backend.SpecField) Backend.SpecField = {};
 
 
-
 /**
  * Specification field controller
  * @b:controller
@@ -53,8 +52,6 @@ Backend.SpecField.Controller.prototype = {
         this._view.updateTitle(e, $H(args).merge({newDescriptionText: newDescriptionText}));
     },
 }
-
-
 
 
 
