@@ -4,6 +4,7 @@ _delete_field=Delete field
 _remove_field_question=Are you sure you want to remove this field?
 _SpecField_remove_question=Are you sure you want to remove this specification field?
 _SpecFieldGroup_remove_question=Are you sure you want to remove this group?
+_edit_group=Edit attribute group
 
 #types
 _type_numbers=Numbers

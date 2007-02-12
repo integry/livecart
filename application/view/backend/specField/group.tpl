@@ -2,13 +2,13 @@
     <form action="{link controller=backend.specFieldGroup action=save}/" method="post"> 
         <input type="hidden" name="categoryID" class="specField_group_categoryID" />
         <fieldset class="specField_group_translations specField_step_main">
-            <p class="specField_group_default_language">
+			<p class="specField_group_default_language">
         		<label>{t _specField_group_title}</label>
         		<input type="text" name="name" />
                 <span class="feedback"> </span>
         	</p>
         
-        	<fieldset class="dom_template specField_step_translations_language specField_group_translations_language_">
+        	<fieldset class="dom_template expandingSection specField_step_translations_language specField_group_translations_language_">
         		<legend>
                     <span class="expandIcon">[+] </span>
                     <span class="specField_group_translation_language_name"></span>

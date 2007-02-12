@@ -1,13 +1,15 @@
 <div>
 
-<ul class="menu">
-	<li>
-		<a href="#" onclick="Backend.Product.showAddForm(this.parentNode.parentNode.parentNode, {$categoryID}); return false;">
-			Add New Product
-		</a>
-		<span class="progressIndicator" style="display: none;"></span>
-	</li>
-</ul>
+<fieldset class="container">
+	<ul class="menu">
+		<li>
+			<a href="#" onclick="Backend.Product.showAddForm(this.parentNode.parentNode.parentNode, {$categoryID}); return false;">
+				Add New Product
+			</a>
+			<span class="progressIndicator" style="display: none;"></span>
+		</li>
+	</ul>
+</fieldset>
 
 <br/>
 

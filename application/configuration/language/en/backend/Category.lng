@@ -5,7 +5,7 @@ _SpecField_translations=Translations
 _SpecField_title=Title
 _SpecField_handle=Handle
 _SpecField_description=Description
-_SpecField_value_type=Value Type
+_SpecField_value_type=Value type
 _SpecField_type=Type
 _SpecField_text=Text
 _SpecField_numbers=Numbers
@@ -30,7 +30,7 @@ _Filter_handle=Handle
 
 #index
 _products=Products
-_category_details=Category Details
+_category_details=Category details
 _attributes=Attributes
 _filters=Filters
 _images=Images
@@ -45,7 +45,7 @@ _move_category_up=Move category up
 _move_category_down=Move category down
 
 #form
-_category_name=Category Name
+_category_name=Category name
 _category_handle=Handle
 _descr=Description
 _keywords=Keywords

@@ -27,9 +27,11 @@
 
 {tip}{t _index_tip}{/tip}
 
-<ul class="menu" id="langPageMenu">
-	<li><a href="#" onClick="lng.showAddForm(); return false;">{t _add_language}</a></li>
-</ul>
+<fieldset class="container">
+	<ul class="menu" id="langPageMenu">
+		<li><a href="#" onClick="lng.showAddForm(); return false;">{t _add_language}</a></li>
+	</ul>
+</fieldset>
 
 <div class="menuLoadIndicator" id="langAddMenuLoadIndicator"></div>
 <div id="addLang" class="slideForm"></div>

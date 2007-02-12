@@ -7,6 +7,7 @@
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
 {includeJs file="library/SectionExpander.js"}
+{includeJs file="library/rico/rico.js"}
 
 {* Calendar *}
 {includeJs file="library/dhtmlCalendar/calendar.js"}

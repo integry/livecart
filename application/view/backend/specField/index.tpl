@@ -1,7 +1,7 @@
 {literal}
 <script type="text/javascript">
 //<[!CDATA[
-    /**
+    /**<b></b>
      * Create spec field prototype. Some fields are always the same
      * so we define them in
      */
@@ -41,10 +41,14 @@
 </script>
 
 
+<fieldset class="container">
+	<ul class="menu">
+	    <li><a href="#new" id="specField_item_new_{$categoryID}_show">{t _add_new_field}</a></li>
+	    <li><a href="#new" id="specField_group_new_{$categoryID}_show">{t _add_new_group}</a></li>
+	</ul>
+</fieldset>
+
 <div>
-    <a href="#new" id="specField_item_new_{$categoryID}_show">{t _add_new_field}</a>
-    <a href="#new" id="specField_group_new_{$categoryID}_show">{t _add_new_group}</a>
-    
     <div id="specField_item_new_{$categoryID}_form" style="display: none;">
         <script type="text/javascript">
            var newSpecFieldForm = new Backend.SpecField('{json array=$specFieldsList}');
