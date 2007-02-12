@@ -24,19 +24,62 @@
 </div>
 
 <h3 id="create">Create Attribute</h3>
-<p>Here are some examples of a few simple attributes you might find handy<ins>...</ins> Later we will show how thei are actually implemented in the <i>Filters</i> section</p>
+<p>
+	Here are some examples of a few simple attributes you might find handy<ins>...</ins> Later we will show how they are actually implemented in the <i>Filters</i> section.
+	Notice that because attributes specify properties of the products within a specific category they are automatically included in the 
+	<i>Add New Product</i> form. (Therefore in these example we will demonstrate how ...)
+	Suppose you have a category stocked with laptops and for starters you want to group your laptops by their Manufacturer and HDD capacity.
+</p>
+
+<h4>Creating <i>Manufacturer</i> attribute</h4>
+
+<p>
+	Attributes are defined by their <i>type</i> which can be <i>text</i> or <i>numbers</i>. Because manufacturer brands are usually simple text, 
+	we can choose Text (1) or Text selector (2) (Formatted Text is the same as Text type only ...). 
+</p>
+<h4>( 1 )</h4>
+<img src="image/doc/categories/attributes/add_new_attribute.bmp">
+
+	<ul>
+		<li>Type - in our example Text type will generate a text field for entering Laptop's brand.</li>
+		<img src="image/doc/categories/attributes/text_field.bmp">
+		<li>Required - mark the checkbox to make a manufacturer field mandatory</li>
+		<li>Title - a title is displayed as a property of the product,  in our case it is the <strong>Laptop brand</strong></li>
+		<li>Handle - <ins>...</ins></li>
+		<li>Description - <ins>...</ins></li>
+	</ul>
+
+<h4>( 2 )</h4>
+	<ul>
+		<li>Type - Text selector is suitable for creating a predefined list of values which will be displayed as a selection option. To create
+		a value list click <i>Values</i> tab which appears on the right of the <i>Main</i> tab. In the Values section click <i>Enter more values</i>
+		and supply a value in the field provided. In the <i>Add new Product</i> form a value list might look similar to this one:</li>
+		<img src="image/doc/categories/attributes/text_selector.bmp">
+		<br \>
+		(Keep in mind that a long list of values enlarges your <i>Add Product</i> form as well.)
+		<li>Can select multiple values - <ins>...</ins></li>
+		<li>Required - <ins>...</ins></li>
+	</ul>
 
 <h3 id="group">Group attributes</h3>
-<p></p>
+
+<p>
+</p>
 
 <h3 id="edit">Edit attribute</h3>
-<p></p>
+
+<p>
+</p>
 
 <h3 id="delete">Delete attribute</h3>
-<p></p>
+
+<p>
+</p>
 
 <h3 id="sort">Change attribute order</h3>
-<p></p>
+
+<p>
+</p>
 
 {helpSeeAlso}
 	{see cat.details}

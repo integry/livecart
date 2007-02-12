@@ -1,5 +1,5 @@
 ﻿
-<p>Images are usually used to represent categories contents. You can have <ins>2-3?</ins> images for one category.</p>
+<p>Images are usually used to represent category's contents. LC allows you to have <ins>unlimited? </ins> number of images for one category.</p>
 
 <div class="tasks">
 <fieldset>
@@ -13,7 +13,8 @@
 </div>
 
 <h3 id="add">Add an image</h3>
-<p>To add a new image click <i>Add new image</i> and upload it from your hard disk drive <ins>(any other locations worth mentioning?)</ins> and enter its description (if necessary).</p>
+<p>To add a new image click <i>Add new image</i> and browse it from your image resources. <ins>To change original image name, enter image title in the 
+field provided.</ins> Image titles can be supplied in other languages as well. To do that click on Language (if installed) to expand additional fields.</p>
 
 <h3 id="sort">Reorder images</h3>
 <p>Images can be reordered by dragging and dropping them.</p>
