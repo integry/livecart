@@ -18,11 +18,9 @@
     background: #fff;
 }
 
-
-
 .specField_group_title {
     font-size: 300%;
-    color: #a1d458;
+    color: grey;
     font-weight: bold;
 }
 
@@ -48,7 +46,7 @@
     padding-left: 80px;
 }
 
-.specFieldList li {
+.specFieldList li, .specFieldListGroup li {
     padding: 5px;
     margin-bottom: 10px;
     background-color: #F7F7F7;  	
@@ -58,6 +56,10 @@
     width: 100%;
 }
 
+.specFieldList {
+  	padding-bottom: 1em;
+  	padding-top: 1em;
+}
 
 .specField_form_values_group div input {
     width: 10em;
@@ -102,6 +104,9 @@ h2.specField_values_title {
    width: 7em ! important;
 }
 
+.specFieldListGroup > li {
+	border: 2px solid grey;  
+}
 
 /* START Values active list */
 fieldset.specField_step_values  .activeList_icons {
@@ -122,11 +127,6 @@ fieldset.group h2 {
     background: yellow;
     padding: 5px;
 }
-
-.specFieldList {
-   padding-bottom: 2em;
-}
-
 
 /* IE */
 .specField_step_translations_language {

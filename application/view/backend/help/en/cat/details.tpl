@@ -1,14 +1,13 @@
 ﻿
 <p>Category details consist of the following category properties:</p>
-	<ul>
 	<ul>	
+		<li>Is Active - all new categories are inactive by default and to make them visible in your store, tick the checkbox to enable the category</li>
 		<li>Category Name - the actual category name</li>
-		<li>Details - a short category description</li>
-		<li>Keywords - <ins>words that are used in search queries?</ins></li>
-		<li>Is Active - by default all categories are active and visible in the category tree, clear the checkbox to disable category</li>
-		<li>Translate to: multiple languages - if you have more than one language in your system, click on the language reference to expand additional
-		fields below. 
-		<br /><br />You can translate the following category details:
+		<li>Description - a short category description</li>
+		<li>Keywords - words that are used in search queries and Meta tags</li>
+		<li>Translate to: multiple languages - if you have more than one language in your system, click on the language reference to expand additional fields below.</li>
+
+		<br /><p>You can translate the following category details:</p>
 		<ul>
 			<li>Category name</li>
 			<li>Details</li>
@@ -17,9 +16,8 @@
 		</li>
 		</p>
 	</ul>
-	</ul>
 
-	<p class="note"><strong>Note</strong>: By clicking "Translate to: Language" you will force additional fields to expand below, these are the translations for international usage. Read about languages (->...). </p>
+	<p class="note"><strong>Note</strong>: By clicking "Translate to: Language" you will force additional fields to expand below, these are the translations for international usage. Read more about <a href="{help language}">enabling additional languages</a>.</p>
 
 {helpSeeAlso}
 	{see cat.attr}

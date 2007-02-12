@@ -21,8 +21,12 @@
 
 <h3 id="add">Create a new category</h3>
 
-<p>When creating a new category you are actually/always creating a <i>sub-category</i>, for that you have to click on one of the categories in the category 
-tree and click <i>Create new sub-category</i></p>
+<p><del>When creating a new category you are actually/always creating a <i>sub-category</i>, for that you have to click on one of the categories in the category 
+tree and click <i>Create new sub-category</i></del> (<ins>sub-category will be changed to category</ins>)</p>
+
+<ins>
+	Explain step by step - select parent category first (root category if creating a top level category), then click Create new category, which would create an empty category named "New Category" and that category name, descr,etc. can be changed using the form which will open in tab.
+</ins>
 
 <h3 id="remove">Remove a category</h3>
 
@@ -33,9 +37,15 @@ tree and click <i>Create new sub-category</i></p>
 	<li>Click <i>Remove a category</i></li>
 </ul>
 
+<p class="note">Deleting a category will also remove all the products associated with the category.</p>
+
+<h3 id="move">Move category</h3>
+
+	<p>Categories can be moved by dragging them directly in the category tree.</p>
+
 <h3 id="change order">Change category order</h3>
 
-	<p>Category order can be changed by draging them directly in the category tree or using <i>Move-up</i> and <i>Move-down.</i></p>
+	<p>Category order can be changed by using <i>Move-up</i> and <i>Move-down.</i> menu commands.</p>
 
 {helpSeeAlso}
 	{see product}

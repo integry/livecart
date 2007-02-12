@@ -47,7 +47,7 @@ _move_category_down=Move category down
 #form
 _category_name=Category Name
 _category_handle=Handle
-_details=Details
+_descr=Description
 _keywords=Keywords
 _save=Save
 _cancel=Cancel

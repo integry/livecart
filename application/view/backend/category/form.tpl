@@ -6,29 +6,29 @@
 
 {form id="categoryForm_$categoryId" handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="Backend.Category.updateBranch($('categoryForm_$categoryId')); return false;"}
 	<fieldset class="container">
-		<p>
-			<label for="handle_{$categoryId}">{t _category_handle}:</label>
-			{textfield name="handle" id="handle_$categoryId"}
-		</p>
 
+		<p class="checkbox">
+			{checkbox name="isActive" id="isActive_$categoryId" class="checkbox"} <label class="checkbox" for="isActive_{$categoryId}">{t _active}</label>
+		</p>
 
 		<p>
 			<label for="name_{$categoryId}">{t _category_name}:</label>
 			{textfield name="name" id="name_$categoryId"}
 		</p>
+
+		<p>
+			<label for="handle_{$categoryId}">{t _category_handle}:</label>
+			{textfield name="handle" id="handle_$categoryId"}
+		</p>
 		
 		<p>
-			<label for="details_{$categoryId}">{t _details}:</label>
+			<label for="details_{$categoryId}">{t _descr}:</label>
 			{textarea name="details" id="details_$categoryId"}
 		</p>
 		
 		<p>
-			<label for="keywords_{$categoryId}">Keywords:</label>
+			<label for="keywords_{$categoryId}">{t _keywords}:</label>
 			{textarea name="keywords" id="keywords_$categoryId" style="height: 3em;"}
-		</p>
-
-		<p class="checkbox">
-			{checkbox name="isActive" id="isActive_$categoryId" class="checkbox" style="width: auto;"} <label for="isActive_{$categoryId}">{t _active}</label>
 		</p>
 
 		<br /><br />
@@ -43,7 +43,7 @@
 						{textfield name="name_$lang"}
 					</p>
 					<p>
-						<label>{t _details}:</label>
+						<label>{t _descr}:</label>
 						{textarea name="details_$lang"}
 					</p>
 					<p>
