@@ -9,6 +9,8 @@ if(!Backend.SpecField) Backend.SpecField = {};
  */
 Backend.SpecField.Controller = Class.create();
 Backend.SpecField.Controller.prototype = {   
+    namespace: 'SpecField',
+
     /**
      * Create new controller instance
      * 
@@ -61,13 +63,14 @@ Backend.SpecField.Controller.prototype = {
  */
 Backend.SpecField.View = Class.create();
 Backend.SpecField.View.prototype = {
+    namespace: 'SpecField',
+    
     _findNodes: function()
     {
         /**
          * @note: When possible search only inside parrent this.nodes.parent. This will improve efficiency
          * @note: Use tag name on the end of the variable
          */
-        this.nodes.translationsTemplateFieldset = $$("fieldset.translation_template")[0];
         this.nodes.defaultNameInput             = this.nodes.parent.down(".default_name").down("input");
         this.nodes.defaultDescriptionTextarea   = this.nodes.parent.down(".default_description").down("textarea");
         this.nodes.translationsFieldset         = this.nodes.parent.down(".translations");
@@ -83,30 +86,18 @@ Backend.SpecField.View.prototype = {
     
     generateTranslations: function(args)
     {
-        var self = this; 
-        $H(args.languages).each(function(language) 
-        {
-            var clonedTranslationsFieldset = self.nodes.translationsTemplateFieldset.cloneNode(true); // Remember? Use tag name on the end of variable
-            Element.removeClassName(clonedTranslationsFieldset, 'dom_template');
-            Element.removeClassName(clonedTranslationsFieldset, 'translation_template');
-            
-            var languageLegend = clonedTranslationsFieldset.down('legend');
-            var nameInput = clonedTranslationsFieldset.down('.name').down('input');
-            var descriptionInput = clonedTranslationsFieldset.down('.description').down('textarea');
-            
-            languageLegend.update(language.value);
-            nameInput.name += "[" + language.key + "]";  
-            descriptionInput.name += "[" + language.key + "]";
-            
-            /**
-             * Say we want to change description when we change title
-             * 
-             * @note: Note `this` here is element wich triggered the event
-             * @note: We are reusing See we are reusing changeTitle action
-             */
-            Event.observe(nameInput, 'keyup', function(e) { self._controller.changeTitle(e, {'name': this, 'description': descriptionInput}); });
-            
-            self.nodes.translationsFieldset.appendChild(clonedTranslationsFieldset);
+        /**
+         * Render template from internet address
+         * 
+         * @see http://ajax-pages.sourceforge.net/
+         */
+        this.nodes.translationsFieldset.update(this.render('/test/jsMVC/translations.jst', args));
+
+        var self = this;
+        document.getElementsByClassName('translation').each(function(fieldset) {
+            var name = fieldset.down('.name').down('input');
+            var description = fieldset.down('.description').down('textarea');
+            Event.observe(name, 'keyup', function(e) { self._controller.changeTitle(e, {'name': this, 'description': description}); });
         });
     },
     

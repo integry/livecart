@@ -2,29 +2,12 @@
 <html>
 	<head>
 		<title>MVC example</title>
-        <style>
-            .dom_template 
-            { 
-                display: none;
-            }
-        </style>
         <script type="text/javascript" src="/public/javascript/library/prototype/prototype.js"></script>
+        <script type="text/javascript" src="/public/javascript/library/AjaxPages.js"></script>
         <script type="text/javascript" src="/test/jsMVC/mvc.js"></script>
         <script type="text/javascript" src="/test/jsMVC/SpecFIeld.js"></script>
 	</head>
 	<body>
-        <fieldset class="dom_template translation_template translation">
-            <legend>Language</legend>
-            <p class="name">
-                <label>Name:</label>
-                <input name="name" />
-            </p>
-            <p class="description">
-                <label>Description:</label>
-                <textarea name="description"></textarea>
-            </p>
-        </fieldset>
-            
         <div id="specField_5">        
             <form action="somepage.php" method="post">
                 <p class="default_name">

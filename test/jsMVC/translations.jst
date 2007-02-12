@@ -1,0 +1,13 @@
+<% $H(context.languages).each(function(language) { %>
+<fieldset class="translation">
+    <legend><%=language.value%></legend>
+    <p class="name">
+        <label>Name:</label>
+        <input name="name[<%=language.key%>]" />
+    </p>
+    <p class="description">
+        <label>Description:</label>
+        <textarea name="description[<%=language.key%>]"</textarea>
+    </p>
+</fieldset>
+<% }); %>

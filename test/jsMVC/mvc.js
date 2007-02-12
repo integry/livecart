@@ -1,11 +1,31 @@
 var View = Class.create();
 View.prototype = {   
+    _templates: {},
+    _ajaxPages: {},
+
     initialize: function(parentNode)
     {
         this.parent = View.prototype;
         
         this.nodes = {};
         this.nodes.parent = parentNode;
+        
+        View.prototype._templates[this.namespace] = {};
+        View.prototype._ajaxPages[this.namespace] = {};
+    }, 
+    
+    render: function(template, args) 
+    {
+        if(!View.prototype._templates[this.namespace][template])
+        {
+            View.prototype._ajaxPages[this.namespace][template] = new AjaxPages();
+            View.prototype._ajaxPages[this.namespace][template].load(template);
+            View.prototype._templates[this.namespace][template] = View.prototype._ajaxPages[this.namespace][template].getProcessor();
+        }
+        
+        var render = View.prototype._templates[this.namespace][template];
+        
+        return render(args);
     }
 }
 
