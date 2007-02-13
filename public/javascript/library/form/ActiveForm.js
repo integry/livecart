@@ -110,43 +110,6 @@ ActiveForm.prototype = {
     },
     
     /**
-     * Set feedback message near the field
-     *
-     * @param HTMLInputElement|HTMLSelectElement|HTMLTextareaElement field
-     * @param string value Feedback message
-     */
-    setFeedback: function(field, value)
-    {
-         var feedback = document.getElementsByClassName('feedback', field.parentNode)[0];
-
-        try
-        {
-            feedback.firstChild.nodeValue = value;
-        }
-        catch(e)
-        {
-            feedback.appendChild(document.createTextNode(value))
-        }
-
-        feedback.style.visibility = 'visible';
-    },
-    
-    /**
-     * Clears all feedback messages in the form
-     *
-     * @param HTMLFormElement form
-     */
-	clearAllFeedBack: function(form)
-	{
-	    var feedback = document.getElementsByClassName('feedback', form);
-
-	    $A(feedback).each(function(field)
-	    {
-            field.style.visibility = 'hidden';
-	    });
-	},
-    
-    /**
      * Turn on progress indicator in the form.
      * 
      * Note: to use this method you should place empty div/span tag inside your form with class "activeForm_progress"
@@ -255,7 +218,9 @@ ActiveForm.prototype = {
     
     resetErrorMessages: function(form)
     {
-		var errContainers = document.getElementsByClassName("errorText", form);
+		if('form' != form.tagName.toLowerCase()) form = form.down('form');
+        
+        var errContainers = document.getElementsByClassName("errorText", form);
 		for (k = 0; k < errContainers.length; k++)
 		{
 		  	errContainers[k].innerHTML = '';
@@ -266,8 +231,9 @@ ActiveForm.prototype = {
 
     setErrorMessages: function(form, errorMessages)
     {
-		var focused = false;
-		
+        if('form' != form.tagName.toLowerCase()) form = form.down('form');
+        
+        var focused = false
 		for (key in errorMessages)
 		{
 			if (form.elements.namedItem(key))

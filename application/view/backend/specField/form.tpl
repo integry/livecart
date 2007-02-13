@@ -14,57 +14,69 @@
 		<p>
     		<fieldset class="group specField_form_dataType">
         		<h2>{t _SpecField_value_type}</h2>
-        		<div>
-                    <p>
-            			<input type="radio" name="dataType" value="1" class="radio" />
-            		    <label class="radio">{t _SpecField_text}</label>
-                    </p>
-                </div>
-                <div>
-                    <p>
-            			<input type="radio" name="dataType" value="2" class="radio" />
-            			<label class="radio">{t _SpecField_numbers}</label>
-                    </p>
-    			</div>
-    
-        		<span class="feedback"> </span>
+                <fieldset class="error">
+            		<div>
+                        <p>
+                			<input type="radio" name="dataType" value="1" class="radio" />
+                		    <label class="radio">{t _SpecField_text}</label>
+                        </p>
+                    </div>
+                    <div>
+                        <p>
+                			<input type="radio" name="dataType" value="2" class="radio" />
+                			<label class="radio">{t _SpecField_numbers}</label>
+                        </p>
+        			</div>
+        
+            		<span class="errorText hidden"> </span>
+                </fieldset>
     			<br class="clear" />
     		</fieldset>
 		</p>
 
 		<p>
     		<label>{t _SpecField_type}</label>
-    		<select name="type" class="specField_form_type"></select>
-    		<span class="feedback"> </span>
-		</p>
-        
-		<p class="checkbox">
-    		<input type="checkbox" value="1" name="multipleSelector" class="checkbox specField_form_multipleSelector" />
-    		<label>{t _SpecField_select_multiple}</label>
+            <fieldset class="error">
+        		<select name="type" class="specField_form_type"></select>
+        		<span class="errorText hidden"> </span>
+            </fieldset>
 		</p>
         
 		<p class="checkbox">
     		<input type="checkbox" value="1" name="isRequired" class="checkbox specField_form_isRequired" />
     		<label>{t _SpecField_is_required}</label>
 		</p>
+              
+		<p class="checkbox">
+    		<input type="checkbox" value="1" name="multipleSelector" class="checkbox specField_form_multipleSelector" />
+    		<label>{t _SpecField_select_multiple}</label>
+		</p>
+
         
         <div>
     		<p>
         		<label>{t _SpecField_title}<em class="required">*</em></label>
-        		<input type="text" name="name" class="required specField_form_name" />
-        		<span class="feedback"> </span>
+                <fieldset class="error">
+            		<input type="text" name="name" class="required specField_form_name" />
+            		<span class="errorText hidden"> </span>
+                </fieldset>
         	</p>
     
     		<p class="specField_handle">
         		<label>{t _SpecField_handle}</label>
-        		<input type="text" name="handle" class="specField_form_handle" />
-        		<span class="feedback"> </span>
+                <fieldset class="error">
+            		<input type="text" name="handle" class="specField_form_handle" />
+            		<span class="errorText hidden"> </span>
+                </fieldset>
     		</p>
     
     		<p>
         		<label>{t _SpecField_description}</label>
-        		<textarea name="description" class="specField_form_description" rows="5" cols="40"></textarea>
-        		<span class="feedback_textarea"> </span>
+                
+                <fieldset class="error">
+            		<textarea name="description" class="specField_form_description" rows="5" cols="40"></textarea>
+            		<span class="errorText hidden"> </span>
+                </fieldset>
     		</p>
         </div>
         
@@ -100,9 +112,10 @@
     		<div class="specField_values">
                 <p>
         			<ul class="activeList_add_sort activeList_add_delete">
-        				<li class="dom_template specField_form_values_value" id="specField_form_values_">
-        					<input type="text" />
-                    		<span class="feedback"> </span>
+        				<li class="dom_template specField_form_values_value" id="specField_form_values_" style="display: block;">
+                            <input type="text" />
+                    		<span class="errorText hidden"> </span>
+                            <br class="clear" />
         				</li>
         			</ul>
                 </p>

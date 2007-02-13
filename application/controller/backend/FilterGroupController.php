@@ -194,7 +194,7 @@ class FilterGroupController extends StoreManagementController
     {
         if($id = $this->request->getValue("id", false))
         {
-            FilterGroup::delete($id);
+            FilterGroup::deletebyID((int)$id);
             return new JSONResponse(array('status' => 'success'));
         }
         else

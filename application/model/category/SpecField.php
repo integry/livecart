@@ -384,7 +384,7 @@ class SpecField extends MultilingualObject
 
         if(!isset($values['name']) || $values['name'][$languageCodes[0]] == '')
         {
-            $errors['name'] = '_error_name_empty';
+            $errors["name[{$languageCodes[0]}]"] = '_error_name_empty';
         }
 
         if(!isset($values['handle']) || $values['handle'] == '' || preg_match('/[^\w\d_.]/', $values['handle']))
@@ -416,12 +416,12 @@ class SpecField extends MultilingualObject
             {
                 if(empty($v[$languageCodes[0]]))
                 {
-                    $errors['values'][$key] = '_error_value_empty';
+                    $errors["values[$key][{$languageCodes[0]}]"] = '_error_value_empty';
                 }
 
                 if($values['dataType'] == 2 && !is_numeric($v[$languageCodes[0]]))
                 {
-                    $errors['values'][$key] = '_error_value_is_not_a_number';
+                    $errors["values[$key][{$languageCodes[0]}]"] = '_error_value_is_not_a_number';
                 }
             }
         }

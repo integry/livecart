@@ -466,7 +466,7 @@ Backend.SpecField.prototype = {
     
     			// bind it
                 var legend = newTranslation.getElementsByTagName("legend")[0];
-                Event.observe(legend, "click", function(e) { ActiveForm.prototype.toggleTranslations(legend.parentNode) } );
+                Event.observe(legend, "click", function(e) { ActiveForm.prototype.toggleTranslations(this.up('fieldset')) } );
                 
 				newTranslation.className += this.languageCodes[i];
                 
@@ -821,7 +821,7 @@ Backend.SpecField.prototype = {
 
             if(!this.fieldsList) this.bindDefaultFields();
 
-            var li = this.fieldsList.addRecord(id, newValue.getElementsByTagName("*"));
+            var li = this.fieldsList.addRecord(id, newValue.childNodes);
 
 			// The field itself
 			var input = li.getElementsByTagName("input")[0];
@@ -838,7 +838,7 @@ Backend.SpecField.prototype = {
 
 				var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
 				inputTranslation.name = "values[" + id + "][" + this.languageCodes[i] + "]";
-				inputTranslation.value = (value && value[this.languageCodes[i]]) ? value[this.languageCodes[i]] : '' ;
+				inputTranslation.value = (value && value[this.languageCodes[i]]) ? value[this.languageCodes[i]] : '';
                 
                 var label = newValueTranslation.getElementsByTagName("label")[0].innerHTML = input.value;
                 
@@ -899,7 +899,7 @@ Backend.SpecField.prototype = {
             this.hideNewSpecFieldAction(this.categoryID);
         }
         
-        ActiveForm.prototype.clearAllFeedBack(this.nodes.form);
+        ActiveForm.prototype.resetErrorMessages(this.nodes.form);
     },
 
     /**
@@ -937,7 +937,7 @@ Backend.SpecField.prototype = {
             // New item has no pr06r3s5 indicator
 		}
         
-		ActiveForm.prototype.clearAllFeedBack(this.nodes.form);
+		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
         
         var self = this;
         new Ajax.Request(
@@ -999,26 +999,9 @@ Backend.SpecField.prototype = {
             } catch (e){ 
             }
         }
-        else
+        else if(jsonResponse.errors) 
         {
-            if(jsonResponse.errors)
-            {
-                for(var fieldName in jsonResponse.errors)
-                {
-                    if(fieldName == 'toJSONString') continue;
-                    if(fieldName == 'values')
-                    {
-                        $H(jsonResponse.errors[fieldName]).each(function(value)
-                        {
-                            ActiveForm.prototype.setFeedback($(self.cssPrefix + "form_" + self.id + "_values_" + self.languageCodes[0] + "_" + value.key).getElementsByTagName("input")[0], value.value);
-                        });
-                    }
-                    else
-                    {
-                       ActiveForm.prototype.setFeedback(this.nodes[fieldName], jsonResponse.errors[fieldName]);
-                    }
-                }
-            }
+            ActiveForm.prototype.setErrorMessages(this.nodes.form, jsonResponse.errors);
         }
 
 		try
@@ -1216,7 +1199,7 @@ Backend.SpecFieldGroup.prototype = {
         this.nodes.translations        = document.getElementsByClassName(this.cssPrefix + 'group_translations', this.nodes.form)[0];
         this.nodes.controls            = document.getElementsByClassName(this.cssPrefix + 'group_controls', this.nodes.form)[0];
         this.nodes.translationTemplate = document.getElementsByClassName(this.cssPrefix + 'group_translations_language_', this.nodes.translations)[0];
-        this.nodes.name                = document.getElementsByClassName(this.cssPrefix + 'group_default_language', this.nodes.translations)[0].getElementsByTagName("input")[0];
+        this.nodes.name                = document.getElementsByClassName(this.cssPrefix + 'group_default_language', this.nodes.translations)[0].down("input");
         this.nodes.mainTitle           = document.getElementsByClassName(this.cssPrefix + 'group_title', this.nodes.parent)[0];
         this.nodes.categoryID          = document.getElementsByClassName(this.cssPrefix + 'group_categoryID', this.nodes.form)[0];
         this.nodes.save                = document.getElementsByClassName(this.cssPrefix + 'save', this.nodes.controls)[0];
@@ -1360,16 +1343,11 @@ Backend.SpecFieldGroup.prototype = {
                 ActiveForm.prototype.hideNewItemForm($(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show"), this.nodes.parent); 
     		}
             
-            ActiveForm.prototype.clearAllFeedBack(this.nodes.form);
+            ActiveForm.prototype.resetErrorMessages(this.nodes.form);
         }
         else if(response.errors) 
         {
-            // Show feedback
-            var self = this;
-            $H(response.errors).each(function(error) 
-            {
-                ActiveForm.prototype.setFeedback(self.nodes[error.key], error.value);
-            });
+            ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors);
         }
     },
     
@@ -1392,7 +1370,7 @@ Backend.SpecFieldGroup.prototype = {
             Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.parent);
         }
         
-        ActiveForm.prototype.clearAllFeedBack(this.nodes.form);
+        ActiveForm.prototype.resetErrorMessages(this.nodes.form);
     },
     
     

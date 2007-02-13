@@ -775,7 +775,7 @@ fieldset.error, div.error, fieldset.container
 	background-color: inherit;
 }
 
-.errorText, fieldset.error div
+.errorText /* , fieldset.error div */
 {
 	background-color: red;
 	float: left; 

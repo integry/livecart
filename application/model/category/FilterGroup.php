@@ -195,7 +195,7 @@ class FilterGroup extends MultilingualObject
         
         if(!isset($values['name']) || $values['name'][$languageCodes[0]] == '')
         {
-            $errors['name'] = $this->translate('_error_name_empty');
+            $errors['name['.$languageCodes[0].']'] = '_error_name_empty';
         }
 
         if(isset($values['filters']))
@@ -210,14 +210,14 @@ class FilterGroup extends MultilingualObject
                     case SpecField::TYPE_NUMBERS_SIMPLE:
                         if(!isset($v['rangeStart']) || !is_numeric($v['rangeStart']) | !isset($v['rangeEnd']) || !is_numeric($v['rangeEnd']))
                         {
-                            $errors['filters'][$key]['range'] = $this->translate('_error_filter_value_is_not_a_number');
+                            $errors['filters['.$key.'][range]'] = '_error_filter_value_is_not_a_number';
                         }
                     break;
                     case SpecField::TYPE_NUMBERS_SELECTOR: 
                     case SpecField::TYPE_TEXT_SELECTOR: 
                         if(!isset($v['specFieldValueID']))
                         {
-                            $errors['filters'][$key]['selector'] = $this->translate('_error_spec_field_is_not_selected');
+                            $errors['filters['.$key.'][selector]'] = '_error_spec_field_is_not_selected';
                         }
                     break;
                     case SpecField::TYPE_TEXT_DATE: 
@@ -229,19 +229,19 @@ class FilterGroup extends MultilingualObject
                              || !checkdate($edp[1], $edp[2], $edp[0]) 
                              || !checkdate($sdp[1], $sdp[2], $sdp[0])
                         ){
-                            $errors['filters'][$key]['date_range'] = $this->translate('_error_illegal_date');
+                            $errors['filters['.$key.'][date_range]'] = '_error_illegal_date';
                         }
                     break;
                 }
                 
                 if($v['name'][$languageCodes[0]] == '')
                 {
-                    $errors['filters'][$key]['name'] = $this->translate('_error_filter_name_empty');
+                    $errors['filters['.$key.'][name]['.$languageCodes[0].']'] = '_error_filter_name_empty';
                 }        
                 
                 if(!isset($v['handle']) || $v['handle'] == '' || preg_match('/[^\w\d_.]/', $v['handle']))
                 {
-                    $errors['filters'][$key]['handle'] = $this->translate('_error_filter_handle_invalid');
+                    $errors['filters['.$key.'][handle]'] = '_error_filter_handle_invalid';
                 }
             }
         }

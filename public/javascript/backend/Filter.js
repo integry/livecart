@@ -59,7 +59,8 @@ Backend.Filter.prototype = {
      */
     initialize: function(filterJson, hash)
     {
-        try{
+        try
+        {
             this.filter = !hash ? eval("(" + filterJson + ")" ) : filterJson;
             
             this.cloneForm('filter_item_blank', this.filter.rootId);
@@ -122,7 +123,6 @@ Backend.Filter.prototype = {
         var blankFormFilters = blankForm.getElementsByTagName("*");
 
         var root = ($(this.filter.rootId).tagName.toLowerCase() == 'li') ? ActiveList.prototype.getInstance("filter_items_list_" + this.filter.categoryID).getContainer($(this.filter.rootId), 'edit') : $(this.filter.rootId);
-
         
         for(var i = 0; i < blankFormFilters.length; i++)
         {
@@ -1009,7 +1009,7 @@ Backend.Filter.prototype = {
             this.specFieldIDWasChangedAction();
         }
         
-        ActiveForm.prototype.clearAllFeedBack(this.nodes.form);
+        ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 
         // Use Active list toggleContainer() method if this filter is inside Active list
         // Note that if it is inside a list we are showing and hidding form with the same action,
@@ -1053,7 +1053,7 @@ Backend.Filter.prototype = {
             ActiveForm.prototype.offProgress(this.nodes.form);
         }
 
-        ActiveForm.prototype.clearAllFeedBack(this.nodes.form);
+        ActiveForm.prototype.resetErrorMessages(this.nodes.form);
         
         var self = this;
         new Ajax.Request(
@@ -1104,35 +1104,8 @@ Backend.Filter.prototype = {
         }
         else if(jsonResponse.errors)
         {
-            for(var fieldName in jsonResponse.errors)
-            {
-                
-                if(fieldName == 'toJSONString') continue;
-                
-                if(fieldName == 'filters')
-                {
-                    $H(jsonResponse.errors[fieldName]).each(function(value)
-                    {
-                        var filterLi = $(self.cssPrefix + "form_" + self.id + "_filters_" + self.languageCodes[0] + "_" + value.key);
-                        $H(value.value).each(function(filterField)
-                        {
-                            var inputParagraph = document.getElementsByClassName('filter_' + filterField.key, filterLi)[0];
-                            try
-                            {
-                                ActiveForm.prototype.setFeedback(inputParagraph.getElementsByTagName('input')[0], filterField.value);
-                            } catch(e) {
-                                ActiveForm.prototype.setFeedback(inputParagraph.getElementsByTagName('select')[0], filterField.value);
-                            }
-                        });
-                    });
-                }
-                else
-                {
-                    ActiveForm.prototype.setFeedback(this.nodes[fieldName], jsonResponse.errors[fieldName]);
-                }
-            }
+            ActiveForm.prototype.setErrorMessages(this.nodes.form, jsonResponse.errors);
         }
-
 
         // Toggle progress won't work on new form
         try
@@ -1219,7 +1192,7 @@ Backend.Filter.prototype = {
         var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
         var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");     
         
-        ActiveList.prototype.getInstance(this.nodes.parent.parentNode).collapseAll();
+        ActiveList.prototype.getInstance("filter_items_list_" + categoryID).collapseAll();
         ActiveForm.prototype.showNewItemForm(link, form);
     }
 }

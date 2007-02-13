@@ -12,14 +12,18 @@
 
 		<p>
     		<label>{t _Filter_name}<em class="required">*</em></label>
-    		<input type="text" name="name" class="required filter_form_name" />
-    		<span class="feedback"> </span>
+            <fieldset class="error">
+        		<input type="text" name="name" class="required filter_form_name" />
+        		<span class="errorText hidden"> </span>
+            </fieldset>
     	</p>
 
 		<p>
     		<label>{t _Filter_associated_field}</label>
- 	        <select name="specFieldID" class="filter_form_specFieldID"></select>
-    		<span class="feedback"> </span>
+            <fieldset class="error">
+     	        <select name="specFieldID" class="filter_form_specFieldID"></select>
+        		<span class="errorText hidden"> </span>
+            </fieldset>
 		</p>
         
         
@@ -50,33 +54,37 @@
         			<ul class="activeList_add_sort activeList_add_delete">
         				<li class="dom_template filter_form_filters_value filter_form_filters_value_main" id="filter_form_filters_">
             				<span>
-            					<p class="filter_name">
+            					<span class="filter_name">
                 					<label>{t _Filter_name}</label>
-                				    <input type="text" />
-                            		<span class="feedback"> </span>
-            				    </p>
-            					<p class="filter_handle">
+                                    <fieldset class="error">
+                    				    <input type="text" />
+                                		<span class="errorText hidden"> </span>
+                                    </fieldset>
+            				    </span>
+            					<span class="filter_handle">
                 					<label>{t _Filter_handle}</label>
-                				    <input type="text" />
-                            		<span class="feedback"> </span>
-            				    </p>
-            					<p class="filter_range">
+                                    <fieldset class="error">
+                    				    <input type="text" />
+                                		<span class="errorText hidden"> </span>
+                                    </fieldset>
+            				    </span>
+            					<span class="filter_range">
                 					<label>{t _Filter_range}</label>
-                					<input type="text" /> - <input type="text" />
-                            		<span class="feedback"> </span>
-            				    </p>
-                                <p class="filter_selector">
+                    					<input type="text" /> - <input type="text" />
+                                		<span class="errorText hidden"> </span>
+            				    </span>
+                                <span class="filter_selector">
                                     <label>{t _Filter_value}</label>
-                                    <select type="text" ></select>
-                                    <span class="feedback"> </span>
-                                </p>
-                                <p class="filter_date_range">
+                                        <select type="text" ></select>
+                                        <span class="errorText hidden"> </span>
+                                </span>
+                                <span class="filter_date_range">
                                     <label>{t _Filter_date_range}</label>
-                                    <input type="text" /> <img src="image/silk/calendar.png" class="calendar_button" /> - <input type="text" /> <img src="image/silk/calendar.png" class="calendar_button" />
-                                    <input type="hidden" class="hidden filter_date_start_real" />
-                                    <input type="hidden" class="hidden filter_date_end_real" />
-                                    <span class="feedback"> </span>
-                                </p>
+                                        <input type="text" /> <img src="image/silk/calendar.png" class="calendar_button" /> - <input type="text" /> <img src="image/silk/calendar.png" class="calendar_button" />
+                                        <input type="hidden" class="hidden filter_date_start_real" />
+                                        <input type="hidden" class="hidden filter_date_end_real" />
+                                        <span class="errorText hidden"> </span>
+                                </span>
             				    <br />
             				</span>
         				</li>

@@ -136,7 +136,7 @@ class SpecFieldGroup extends MultilingualObject
         
         if(!isset($values['name'][$languageCodes[0]]) || $values['name'][$languageCodes[0]] == '')
         {
-            $errors['name'] = '_error_you_should_provide_default_group_name';
+            $errors["name[{$languageCodes[0]}]"] = '_error_you_should_provide_default_group_name';
         }
         
         return $errors;
