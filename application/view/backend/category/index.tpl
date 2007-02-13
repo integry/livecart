@@ -1,5 +1,6 @@
 {includeJs file="library/livecart.js"}
 {includeJs file="library/KeyboardEvent.js"}
+{includeJs file="library/ActiveGrid.js"}
 {includeJs file="library/ActiveList.js"}
 {includeJs file="library/form/ActiveForm.js"}
 {includeJs file="library/form/State.js"}

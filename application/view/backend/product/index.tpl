@@ -8,7 +8,7 @@
 			</a>
 			<span class="progressIndicator" style="display: none;"></span>
 		</li>
-	</ul>
+	</ul>  
 </fieldset>
 
 <br/>
@@ -16,13 +16,13 @@
 <span id="bookmark"></span>
 
 <div style="width: 98%;">
-<table class="productHead">
+<table class="productHead" id="products_{$categoryID}_header">
 	<tr class="headRow">
 		<th class="cell_cb"></th>
-		<th class="cell_sku">SKU</th>
+		<th class="first cell_sku">SKU</th>
 		<th class="cell_name">Name</th>	
 		<th class="cell_manuf">Manufacturer</th>	
-		<th class="cell_price">Price<br /><small> ({$currency})</small></th>
+		<th class="cell_price">Price <small>({$currency})</small></th>
 		<th class="cell_stock">In stock</th>	
 		<th class="cell_enabled">Enabled</th>	
 	</tr>
@@ -49,7 +49,8 @@
          sortInfo = "&data_grid_sort_col=" + liveGrid.sortCol + "&data_grid_sort_dir=" + liveGrid.sortDir;
       }
    }
+	
+	new ActiveGrid($('products_{/literal}{$categoryID}'), '{link controller=backend.product action=lists}');{literal}
 
-	new Rico.LiveGrid ({/literal}"products_{$categoryID}"{literal}, 15, {/literal}{$totalCount}{literal}, '{/literal}{link controller=backend.product action=lists}{literal}', {prefetchBuffer: true, onscroll: updateHeader});	
 </script>
 {/literal}

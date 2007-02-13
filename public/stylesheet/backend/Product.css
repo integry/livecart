@@ -36,12 +36,12 @@ fieldset.specification .numeric
   	width: 100%;
 }
 
-.productList 
+.productList thead
 {
-
+  	width: 100%;
 }
 
-.productList td 
+.productList td, .productHead th
 {
   	height: 14px;
   	padding: 3px;
@@ -75,7 +75,7 @@ fieldset.specification .numeric
 
 .cell_price
 {
-	width: 30px;  
+	width: 60px;  
 	text-align: center;
 }
 
