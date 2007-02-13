@@ -209,16 +209,11 @@ ActiveList.prototype = {
      */    
     destroy: function(ul)
     {  
-       var ulElement = $(ul);    
+       var id = ul.id ? ul.id : ul;
        
-       if(!ulElement.id)
+       if(ActiveList.prototype.activeListsUsers[id]) 
        {
-            throw Error('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
-       }
-       
-       if(ActiveList.prototype.activeListsUsers[ulElement.id]) 
-       {
-           delete this.activeListsUsers[ulElement.id];
+           delete this.activeListsUsers[id];
        }
     },
 
@@ -430,6 +425,7 @@ ActiveList.prototype = {
                 // I just hope that every boy will use it in such situations where cloning is OK
                 // Please forgive me if you will create links to elements you want to add and they will just not work
                 // My suggestion is to create those links after you have added new record to list
+                console.info(dom[i]);
                 li.appendChild(dom[i].cloneNode(true));
             }
         }

@@ -102,10 +102,19 @@ Backend.Filter.prototype = {
         root.innerHTML = '';
         $H(this).each(function(el)
         {
-            el = false;
+            if(el[1])
+            {
+                if(el[1].ul) 
+                {
+                    ActiveList.prototype.destroy(el[1].ul.id);
+                    console.info(el[1].ul.id);
+                }
+                
+                delete el[1];
+            }
         });
         
-        this.initialize(filterJson, hash);
+        this.initialize(filterJson, true);
     },
 
 
@@ -840,18 +849,27 @@ Backend.Filter.prototype = {
      */
     addFilter: function(value, id, generateTitle)
     {        
+        try
+        {
         var self = this;
         
         var filters = document.getElementsByClassName(this.cssPrefix + "form_filters_value", this.nodes.filtersDefaultGroup);
 
         var ul = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0];
-
         if(filters.length > 0 && Element.hasClassName(filters[0], 'dom_template'))
         {
             var newValue = filters[0].cloneNode(true);
             Element.removeClassName(newValue, "dom_template");
 
-            var li = this.filtersList.addRecord(id, newValue);
+            if(!this.filtersList) 
+            {
+                console.info(':/', this.filtersList);
+                this.bindDefaultFields();
+            }
+            else console.info(this.filtersList);
+            var li = this.filtersList.addRecord(id, [newValue]);
+            
+            Element.addClassName(li, this.cssPrefix + "default_filter_li");
 
             // Filter name
             var nameParagraph = document.getElementsByClassName('filter_name', li)[0];
@@ -876,7 +894,7 @@ Backend.Filter.prototype = {
             rangeEndInput.name = "filters[" + id + "][rangeEnd]";
             rangeEndInput.value = (value && value.rangeEnd) ? value.rangeEnd : '' ;
             
-            
+         
             // Select
             var specFieldValueParagraph = document.getElementsByClassName('filter_selector', li)[0];
             
@@ -896,7 +914,7 @@ Backend.Filter.prototype = {
             
             var rangeDateStartReal   = document.getElementsByClassName(this.cssPrefix + "date_start_real", dateParagraph)[0];
             var rangeDateEndReal     = document.getElementsByClassName(this.cssPrefix + "date_end_real", dateParagraph)[0];
-            
+
             rangeDateStart.id         = this.cssPrefix + "rangeDateStart_" + id;
             rangeDateEnd.id           = this.cssPrefix + "rangeDateEnd_" + id;
             rangeDateStartReal.id     = rangeDateStart.id + "_real";
@@ -910,7 +928,7 @@ Backend.Filter.prototype = {
             rangeDateStartReal.name   = "filters[" + id + "][rangeDateStart]";
             rangeDateEndReal.name     = "filters[" + id + "][rangeDateEnd]";
                   
-                  
+     
             rangeDateStartReal.value  = (value && value.rangeDateStart) ? value.rangeDateStart : '' ;
             rangeDateEndReal.value    = (value && value.rangeDateEnd) ? value.rangeDateEnd : '' ;
             
@@ -934,7 +952,7 @@ Backend.Filter.prototype = {
                     });
                 }
             });
-                       
+      
             Event.observe(rangeDateEndButton, "mousedown", function(e){
                 if(!self.filterCalendars[rangeDateEnd.id])
                 {
@@ -949,7 +967,7 @@ Backend.Filter.prototype = {
                     });
                 }
             });
-            
+
             this.bindOneFilter(li);
             if(generateTitle) this.generateTitleAndHandleFromSpecFieldValue(li);
             
@@ -964,7 +982,6 @@ Backend.Filter.prototype = {
 				var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
 				inputTranslation.name = "filters[" + id + "][name][" + this.languageCodes[i] + "]";
 				inputTranslation.value = (value && value.name && value.name[this.languageCodes[i]]) ? value.name[this.languageCodes[i]] : '' ;
-                
 
                 newValueTranslation.getElementsByTagName("label")[0].innerHTML = input.value;
                 
@@ -978,6 +995,11 @@ Backend.Filter.prototype = {
         else
         {
             return false;
+        }
+        }
+        catch(e)
+        {
+            console.info(e);
         }
     },
 
@@ -1095,11 +1117,22 @@ Backend.Filter.prototype = {
                 var div = document.createElement('span');
                 Element.addClassName(div, 'filter_title');
                 div.appendChild(document.createTextNode(this.nodes.name.value));
-                ActiveList.prototype.getInstance(this.nodes.parent.parentNode).addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
+                
+                var activeList = ActiveList.prototype.getInstance($(this.cssPrefix + "items_list_" + this.categoryID));
+                
+                var filterCount = document.getElementsByClassName(this.cssPrefix + "default_filter_li", this.nodes.filtersDefaultGroup).length;
+                var spanCount = document.createElement('span');
+                Element.addClassName(spanCount, this.cssPrefix + "count");
+                spanCount.update(" (" + filterCount + ")");
+                
+                var li = activeList.addRecord(jsonResponse.id, [div, spanCount]);
+                if(0 == filterCount) Element.addClassName(li, 'filtergroup_has_no_filters');
+                activeList.touch();
+                
                 CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
                 
                 this.hideNewFilterAction(this.categoryID);
-                this.recreate(this.filter, true);
+                this.recreate(this.filter, true);   
             }
         }
         else if(jsonResponse.errors)
