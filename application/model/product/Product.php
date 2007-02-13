@@ -477,6 +477,17 @@ class Product extends MultilingualObject
 		}
 	}
 
+
+	/**
+	 * Count products in category
+	 *
+	 * @param Category $category Category active record
+	 * @return integer
+	 */
+    public static function countItems(Category $category)
+    {
+        return $category->getProductSet(new ARSelectFilter(), false)->getTotalRecordCount();
+    }
 }
 
 ?>

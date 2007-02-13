@@ -195,9 +195,11 @@ class CategoryController extends StoreManagementController
 	
 	public function countTabsItems() {
 	  	ClassLoader::import('application.model.category.*');
+	  	ClassLoader::import('application.model.product.*');
 	    
 	    $category = Category::getInstanceByID((int)$this->request->getValue('id'));
 	    return new JSONResponse(array(
+	        'tabProducts' => Product::countItems($category),
 	        'tabFilters' => FilterGroup::countItems($category),
 	        'tabFields' => SpecField::countItems($category),
 	        'tabImages' => CategoryImage::countItems($category),
