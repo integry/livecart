@@ -87,9 +87,7 @@ class SpecFieldController extends StoreManagementController
         $response->setValue('specFieldsList', $defaultSpecFieldValues);
         $response->setValue('defaultLangCode', $this->store->getDefaultLanguageCode());
 
-        // echo "<pre>" . print_r($category->getSpecificationFieldArray(true, true, true), true). "</pre>";
-        
-        $response->setValue('specFieldsWithGroups', $category->getSpecificationFieldArray(true, true, true));
+        $response->setValue('specFieldsWithGroups', $category->getSpecificationFieldArray(false, true, true));
 
         return $response;
     }

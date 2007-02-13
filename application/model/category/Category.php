@@ -513,8 +513,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	public function getSpecificationFieldArray($includeParentFields = false, $loadReferencedRecords = false, $mergeWithEmptyGroups = false)
 	{
 		ClassLoader::import("application.model.category.SpecField");
+
         $specFields = SpecField::getRecordSetArray($this->getSpecificationFilter($includeParentFields), true);
-        
+
         if($mergeWithEmptyGroups)
         {
             $groups = $this->getSpecificationFieldGroupArray(false, true);
@@ -546,13 +547,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
             $specFieldsWithGroups[] = array('SpecFieldGroup' => array());
         }
         
-        
         while($groupNum < $groupsCount)
         {         
              $specFieldsFound = 0;
-             while(isset($specFields[$specFieldsNum]) && $specFields[$specFieldsNum]['specFieldGroupID'] == $groups[$groupNum]['ID'])
+             while(isset($specFields[$specFieldsNum]) && $specFields[$specFieldsNum]['specFieldGroupID'] <= $groups[$groupNum]['ID'])
              {
-                  $specFieldsWithGroups[] = $specFields[$specFieldsNum++];
+                 $specFieldsWithGroups[] = $specFields[$specFieldsNum++];
                   $specFieldsFound++;
              }
          
@@ -579,7 +579,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$filter = new ARSelectFilter();
 		$filter->joinTable('SpecFieldGroup', 'SpecField', 'ID', 'specFieldGroupID', 'SpecFieldGroup_2');
 		$filter->setOrder(new ARFieldHandle("SpecFieldGroup", "position", "SpecFieldGroup_2"), 'ASC');
-		$filter->setOrder(new ARFieldHandle("SpecField", "position"), 'ASC');
 					
 		$cond = new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $this->getID());
 
@@ -591,7 +590,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 			}
 		}
 		$filter->setCondition($cond);
-
+		
 		return $filter;
 	}
     
