@@ -13,39 +13,47 @@
 <legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#add">Create a new category</a></li>
-	<li><a href="{self}#remove">Remove a category</a></li>
 	<li><a href="{self}#change order">Change category order</a></li>
+	<li><a href="{self}#move">Move category</a></li>
+	<li><a href="{self}#remove">Remove a category</a></li>
+
 </ul>
 </fieldset>
 </div>
 
 <h3 id="add">Create a new category</h3>
 
-<p><del>When creating a new category you are actually/always creating a <i>sub-category</i>, for that you have to click on one of the categories in the category 
-tree and click <i>Create new sub-category</i></del> (<ins>sub-category will be changed to category</ins>)</p>
-
-<ins>
-	Explain step by step - select parent category first (root category if creating a top level category), then click Create new category, which would create an empty category named "New Category" and that category name, descr,etc. can be changed using the form which will open in tab.
-</ins>
-
-<h3 id="remove">Remove a category</h3>
-
-<p>To delete a category: </p>
-
 <ul>
-	<li>Choose a category in the category tree</li>
-	<li>Click <i>Remove a category</i></li>
+	<li>If you want to add a <i>root</i> level category or create the very first category:
+		<ul>
+			<li>select LiveCart in the category tree</li>
+			<li>click <strong>Add new category</strong> at the bottom of the category tree.</li>
+		</ul>
+	</li> 
+	<li>If you want to add a <i>sub-category</i> for any existing category:
+		<ul>
+			<li>click on the desired category in the category tree </li>
+			<li>click <strong>Add new category</strong>. </li>
+		</ul>
 </ul>
+	<p>
+		Notice that Created categories are titled by default, to change category details - proceed to Category Details section by selecting
+		<i>Category Details</i> tab in the main control panel / window.</li>
+	</p>
 
-<p class="note">Deleting a category will also remove all the products associated with the category.</p>
+
+<h3 id="change order">Change category order</h3>
+
+	<p>Category order can be changed by using <i>Move-up</i> and <i>Move-down</i> menu commands.</p>
 
 <h3 id="move">Move category</h3>
 
 	<p>Categories can be moved by dragging them directly in the category tree.</p>
 
-<h3 id="change order">Change category order</h3>
 
-	<p>Category order can be changed by using <i>Move-up</i> and <i>Move-down.</i> menu commands.</p>
+<h3 id="remove">Remove a category</h3>
+
+<p>To remove a category (<strong>including all its subcategories and products</strong>) select a category and click <i>Remove a cetegory</i>.</p>
 
 {helpSeeAlso}
 	{see product}
