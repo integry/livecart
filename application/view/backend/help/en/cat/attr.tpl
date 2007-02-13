@@ -53,9 +53,9 @@
 
 <h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
 
-<p>
 	Attributes are defined by their <i>type</i> which can be text, date or numbers. Because mobile carrier is a simple text and there is (probably)
-	a finite number of carriers we select <i>Text selector</i> as our type. 
+	a finite number of carriers we select <i>Text selector</i> as our type. Text selector is suitable for creating a predefined list of values which
+	will be displayed as a selection option.
 	<ul>
 		<li>We check <i>Required</i> to make the field mandatory since it is an important feature. </li>
 		<li><i>Can select multiple values</i> - we leave this checkbox clear to restrict user's ability to associate cell phone with multiple carriers
@@ -65,30 +65,34 @@
 		<li>Description <ins>...</ins></li> 
 	</ul>
 	The last thing to do is to create Values which will be used as a selection option in the "Add new Product" form. To add values, click Values 
-	tab in the main window and supply values one by one in the field provided. To do that , simply use a text field named Values followed by 
-	"Enter more values". Click save once you are done. Your created attribute will be automatically generated in the "Add new Product" form and
+	tab in the main window and supply values one by one in the field provided. To do that, simply use a text field named Values followed by 
+	"Enter more values". 
+<p>
+	<img src="image/doc/categories/attributes/values.bmp">
+</p>
+	Click <strong>save</strong> once you are done. Your new attribute will be automatically generated in the "Add new Product" form and
 	will look similar to this one:
-	</p>
+<p>
 	<img src="image/doc/categories/attributes/carrier.bmp">
-
+</p>
 
 <h4 id="features">Creating <i>Phone Features</i> attribute</h4>
+
 <p>
 	As in previous example we will use Text Selector because we know that cell phones can have many features (and it more convenient to list them 
 	out than have them entered every time adding a new cell)
 </p>
 	<ul>
-		<li>Type - Text selector is suitable for creating a predefined list of values which will be displayed as a selection option. To create
-		a value list click <i>Values</i> tab which appears on the right of the <i>Main</i> tab. In the Values section click <i>Enter more values</i>
-		and supply a value in the field provided:
-
-		In the <i>Add new Product</i> form a value list might look similar to this one:</li>
-
-		<br \>
-		(Keep in mind that a long list of values enlarges your <i>Add Product</i> form as well.)
-		<li>Can select multiple values - <ins>...</ins></li>
+		<li>Type - Text selector</li>
+		<li>Can select multiple values - we mark the checkbox to allow multiple features assigned to a cell phone</li>
 		<li>Required - <ins>...</ins></li>
 	</ul>
+	To create a value list of mobile's features click <i>Values</i> tab which appears on the right of the <i>Main</i> tab. In the Values section click
+	<i>Enter more values</i> and supply a value in the field provided. The representation of generated your field will be similar to this:
+<p>
+	<img src="image/doc/categories/attributes/features.bmp">
+</p>
+
 
 <h4 id="capacity">Creating <i>Batery Capacity</i> attribute</h4>
 
