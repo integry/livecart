@@ -62,9 +62,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 *
 	 * @return ARSet
 	 */
-	public function getProductSet($loadReferencedRecords = false)
+	public function getProductSet(ArSelectFilter $filter, $loadReferencedRecords = false)
 	{
-		return $this->getRelatedRecordSet("Product", $this->getProctFilter(), $loadReferencedRecords);
+		return $this->getRelatedRecordSet("Product", $this->getProductFilter($filter), $loadReferencedRecords);
 	}
 
 	/**
@@ -75,13 +75,14 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 */
 	public function getProductArray($loadReferencedRecords = false)
 	{
-		return $this->getRelatedRecordSetArray("Product", $this->getProductFilter(), $loadReferencedRecords);
+		return $this->getRelatedRecordSetArray("Product", $this->getProductFilter(new ARSelectFilter()), $loadReferencedRecords);
 	}
 
-	private function getProductFilter()
+	private function getProductFilter(ARSelectFilter $filter)
 	{
-		$filter = new ARSelectFilter();
 		return $filter;
+		//$filter = new ARSelectFilter();
+		//return $filter;
 	}
 
 	public function setValueByLang($fieldName, $langCode, $value)

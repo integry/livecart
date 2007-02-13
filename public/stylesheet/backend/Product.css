@@ -30,3 +30,72 @@ fieldset.specification .numeric
 {
 	display: none;  
 }
+
+.productList, .productHead
+{
+  	width: 100%;
+}
+
+.productList 
+{
+
+}
+
+.productList td 
+{
+  	height: 14px;
+  	padding: 3px;
+  	white-space: nowrap;
+}
+
+.headRow 
+{
+	background-color: yellow;	  
+}
+
+.cell_cb
+{
+	width: 30px;  
+}
+
+.cell_sku
+{
+	width: 40px;  
+}
+
+.cell_name
+{
+	width: 240px;  
+}
+
+.cell_manuf
+{
+	width: 100px;  
+}
+
+.cell_price
+{
+	width: 30px;  
+	text-align: center;
+}
+
+.cell_stock
+{
+	width: 30px;  
+	text-align: center;
+}
+
+.cell_enabled
+{
+	width: 30px;   
+}
+
+.lowStock
+{
+  	color: red;
+}
+
+.notEnabled
+{
+  	color: red;
+}

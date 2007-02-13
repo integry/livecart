@@ -17,15 +17,35 @@ class ProductController extends StoreManagementController
 	public function index()
 	{
 		$category = Category::getInstanceByID($this->request->getValue("id"));
+	
+		$response = $this->productList($category, new ActionResponse());
+
 		$path = $this->getCategoryPathArray($category);
-
-		$response = new ActionResponse();
 		$response->setValue("path", $path);
-
-		$productList = $category->getProductArray();
-		$response->setValue("productList", $productList);
-		$response->setValue("categoryID", $this->request->getValue("id"));
+				
 		return $response;
+	}
+
+	public function lists()
+	{
+		$id = substr($this->request->getValue("id"), 9);
+		return $this->productList(Category::getInstanceByID($id), new XMLResponse());
+	}
+
+	protected function productList(Category $category, ActionResponse $response)
+	{
+		$filter = new ARSelectFilter();
+		$filter->setLimit($this->request->getValue('offset'), $this->request->getValue('page_size'));
+		$productList = $category->getProductSet($filter, Category::LOAD_REFERENCES);
+				
+//				echo '<pre>';print_r($productList->toArray()); exit;
+				
+		$response->setValue("productList", $productList->toArray());
+		$response->setValue("categoryID", $category->getID());
+		$response->setValue("offset", $this->request->getValue('offset'));
+		$response->setValue("totalCount", $productList->getTotalRecordCount());
+		$response->setValue("currency", Store::getInstance()->getDefaultCurrency()->getID());
+		return $response;	  	  	
 	}
 
 	public function autoComplete()

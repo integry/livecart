@@ -828,6 +828,19 @@ input.date
 }
 
 /*************************** 
+	List styling
+***************************/
+.odd
+{
+  	background-color: #EEEEEE;
+}
+
+.even
+{
+  	
+}
+
+/*************************** 
 	Autocomplete
 ***************************/
 div.autocomplete
