@@ -4,7 +4,7 @@
 		<li>Is Active - all new categories are inactive by default and to make them visible in your store, tick the checkbox to enable the category</li>
 		<li>Category Name - the actual category name</li>
 		<li>Description - a short category description</li>
-		<li>Keywords - words that are used in search queries and Meta tags</li>
+		<li>Keywords - words that are used in search queries and <ins>Meta tags</ins></li>
 		<li>Translate to: multiple languages - if you have more than one language in your system, click on the language reference to expand additional fields below.</li>
 
 		<br /><p>You can translate the following category details:</p>
