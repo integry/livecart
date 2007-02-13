@@ -356,7 +356,7 @@ ActiveList.prototype = {
     getRecordId: function(li, level)
     {
         if(!level) level = 1;
-        var matches = li.id.match(/_(\d+)(?=(?:_|\b))/g);
+        var matches = li.id.match(/_([a-zA-Z0-9]+)(?=(?:_|\b))/g);
         
         var id = matches[matches.length-level];
         return id ? id.substr(1) : false;
