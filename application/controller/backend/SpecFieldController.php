@@ -43,23 +43,6 @@ class SpecFieldController extends StoreManagementController
         $this->specFieldConfig = array(
             'languages' => $languages,
             'languageCodes' => array_keys($languages),
-
-            'types' => array
-            (
-                2 => array
-                (
-                    2 => $this->translate('_type_numbers'),
-                    1 => $this->translate('_type_numbers_selector')
-                ),
-                1 => array
-                (
-                    3 => $this->translate('_type_simple_text'),
-                    4 => $this->translate('_type_formatted_text'),
-                    5 => $this->translate('_type_text_selector'),
-                    6 => $this->translate('_type_date')
-                )
-            ),
-
             'messages' => array
             (
                 'deleteField' => $this->translate('_delete_field'),
@@ -103,6 +86,9 @@ class SpecFieldController extends StoreManagementController
         $response->setValue('configuration', $this->getSpecFieldConfig());
         $response->setValue('specFieldsList', $defaultSpecFieldValues);
         $response->setValue('defaultLangCode', $this->store->getDefaultLanguageCode());
+
+        // echo "<pre>" . print_r($category->getSpecificationFieldArray(true, true, true), true). "</pre>";
+        
         $response->setValue('specFieldsWithGroups', $category->getSpecificationFieldArray(true, true, true));
 
         return $response;
@@ -156,8 +142,8 @@ class SpecFieldController extends StoreManagementController
         $this->getSpecFieldConfig();
         if(count($errors = SpecField::validate($this->request->getValueArray(array('handle', 'values', 'name', 'type', 'dataType', 'categoryID', 'ID')), $this->specFieldConfig['languageCodes'])) == 0)
         {
-            $dataType = (int)$this->request->getValue('dataType');
-            $type = (int)$this->request->getValue('type');
+            $type = $this->request->getValue('advancedText') ? SpecField::TYPE_TEXT_ADVANCED : (int)$this->request->getValue('type');
+            $dataType = SpecField::getDataTypeFromType($type);
             $categoryID = (int)$this->request->getValue('categoryID');
 
             $description = $this->request->getValue('description');
@@ -178,7 +164,7 @@ class SpecFieldController extends StoreManagementController
                      
             try
             {
-                $specField->saveValues($values, $type, $this->specFieldConfig['languageCodes']);
+                if(is_array($values)) $specField->saveValues($values, $type, $this->specFieldConfig['languageCodes']);
             }
             catch(Exception $e)
             { 

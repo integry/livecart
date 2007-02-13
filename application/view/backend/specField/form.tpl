@@ -12,32 +12,19 @@
 		<input type="hidden" name="categoryID" class="hidden specField_form_categoryID" />
 
 		<p>
-    		<fieldset class="group specField_form_dataType">
-        		<h2>{t _SpecField_value_type}</h2>
-                <fieldset class="error">
-            		<div>
-                        <p>
-                			<input type="radio" name="dataType" value="1" class="radio" />
-                		    <label class="radio">{t _SpecField_text}</label>
-                        </p>
-                    </div>
-                    <div>
-                        <p>
-                			<input type="radio" name="dataType" value="2" class="radio" />
-                			<label class="radio">{t _SpecField_numbers}</label>
-                        </p>
-        			</div>
-        
-            		<span class="errorText hidden"> </span>
-                </fieldset>
-    			<br class="clear" />
-    		</fieldset>
-		</p>
-
-		<p>
     		<label>{t _SpecField_type}</label>
             <fieldset class="error">
-        		<select name="type" class="specField_form_type"></select>
+        		<select name="type" class="specField_form_type">
+                    <optgroup label="{t _SpecField_text}">
+                        <option value="5">{t _SpecField_type_text_selector}</option>
+                        <option value="3">{t _SpecField_type_simple_text}</option>
+                    </optgroup>
+                    <optgroup label="{t _SpecField_numbers}">
+                        <option value="1">{t _SpecField_type_numbers_selector}</option>
+                        <option value="2">{t _SpecField_type_numbers}</option>
+                    </optgroup>
+                    <option value="6">{t _SpecField_type_date}</option>
+                </select>
         		<span class="errorText hidden"> </span>
             </fieldset>
 		</p>
@@ -51,7 +38,11 @@
     		<input type="checkbox" value="1" name="multipleSelector" class="checkbox specField_form_multipleSelector" />
     		<label>{t _SpecField_select_multiple}</label>
 		</p>
-
+              
+		<p class="checkbox specField_form_advancedText">
+    		<input type="checkbox" value="1" name="advancedText" class="checkbox" />
+    		<label>{t _SpecField_formated_text}</label>
+		</p>
         
         <div>
     		<p>

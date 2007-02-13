@@ -6,14 +6,6 @@ _SpecField_remove_question=Are you sure you want to remove this specification fi
 _SpecFieldGroup_remove_question=Are you sure you want to remove this group?
 _edit_group=Edit attribute group
 
-#types
-_type_numbers=Numbers
-_type_numbers_selector=Number selector
-_type_simple_text=Text
-_type_formatted_text=Formatted text
-_type_text_selector=Text selector
-_type_date=Date
-
 # errors
 _error_handle_exists=Such handle already exists in current category
 _error_handle_empty=Handle empty

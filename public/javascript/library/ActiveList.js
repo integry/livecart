@@ -425,7 +425,6 @@ ActiveList.prototype = {
                 // I just hope that every boy will use it in such situations where cloning is OK
                 // Please forgive me if you will create links to elements you want to add and they will just not work
                 // My suggestion is to create those links after you have added new record to list
-                console.info(dom[i]);
                 li.appendChild(dom[i].cloneNode(true));
             }
         }

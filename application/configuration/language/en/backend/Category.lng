@@ -7,12 +7,22 @@ _SpecField_handle=Handle
 _SpecField_description=Description
 _SpecField_value_type=Value type
 _SpecField_type=Type
-_SpecField_text=Text
-_SpecField_numbers=Numbers
 _SpecField_add_values=Enter more values
 _SpecField_select_multiple=Can select multiple values
 _SpecField_is_required=Required
 _specField_group_title=Title
+_SpecField_formated_text=Formated text
+
+# specification fields types
+_SpecField_text=Text
+_SpecField_numbers=Number
+_SpecField_type_numbers=Field
+_SpecField_type_numbers_selector=Options
+_SpecField_type_simple_text=Field
+_SpecField_type_formatted_text=Advanced
+_SpecField_type_text_selector=Options
+_SpecField_type_date=Date
+
 
 # Filter
 _Filter_main=Main
@@ -28,7 +38,7 @@ _Filter_generate_filters=Generate filters
 _Filter_date_range=Date between
 _Filter_handle=Handle
 
-#index
+# index
 _products=Products
 _category_details=Category details
 _attributes=Attributes

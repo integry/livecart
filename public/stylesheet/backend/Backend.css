@@ -694,9 +694,24 @@ input, select, file, form.other
     vertical-align: middle;
 }
 
+optgroup option 
+{
+   padding-left: 1em;
+   color: black;
+   background-color: white;
+}
+
+optgroup  
+{
+   color: white;
+   background-color: black;
+   font-style: normal;
+   font-weight: bold;
+}
+
 textarea
 {
-	padding: 2px;
+    padding: 2px;
     width: 40em;
     height: 10em;
     font-size: 14px;

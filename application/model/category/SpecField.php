@@ -263,6 +263,22 @@ class SpecField extends MultilingualObject
 	{
 	    return array(self::TYPE_NUMBERS_SELECTOR, self::TYPE_TEXT_SELECTOR);
 	}
+	
+	public static function getNumberTypes()
+	{
+	    return array(self::TYPE_NUMBERS_SELECTOR, self::TYPE_NUMBERS_SIMPLE);
+	}
+	
+	public static function getTextTypes()
+	{
+	    return array(self::TYPE_TEXT_ADVANCED, self::TYPE_TEXT_ADVANCED, self::TYPE_TEXT_SELECTOR, self::TYPE_TEXT_DATE);
+	}
+	
+	public static function getDataTypeFromType($type) 
+	{
+	    if(in_array($type, self::getTextTypes())) return self::DATATYPE_TEXT;
+	    else return self::DATATYPE_NUMBERS;
+	}
 
 	/**
 	 * Save specification field values in database
@@ -419,7 +435,7 @@ class SpecField extends MultilingualObject
                     $errors["values[$key][{$languageCodes[0]}]"] = '_error_value_empty';
                 }
 
-                if($values['dataType'] == 2 && !is_numeric($v[$languageCodes[0]]))
+                if(SpecField::getDataTypeFromType($values['type']) == 2 && !is_numeric($v[$languageCodes[0]]))
                 {
                     $errors["values[$key][{$languageCodes[0]}]"] = '_error_value_is_not_a_number';
                 }

@@ -92,6 +92,11 @@ Backend.SpecField.prototype = {
         },
         afterSort:     function(li, order) {    }
     },
+    
+    isNumber: function(type) 
+    {
+          return type == Backend.SpecField.prototype.TYPE_NUMBERS_SELECTOR || type == Backend.SpecField.prototype.TYPE_NUMBERS_SIMPLE;
+    },
 
     /**
 	 * Constructor
@@ -122,10 +127,8 @@ Backend.SpecField.prototype = {
     		this.description = this.specField.description;
     
     		this.handle = this.specField.handle;
-    		this.isMultiValue = this.specField.isMultiValue;
-    		this.isRequired = this.specField.isRequired;
-    		this.dataType = this.specField.dataType;
-    
+    		this.isMultiValue = this.specField.isMultiValue == 0 ? false : true;
+    		this.isRequired = this.specField.isRequired == 0 ? false : true;
     		this.loadLanguagesAction();
     		this.findUsedNodes();
     
@@ -192,7 +195,6 @@ Backend.SpecField.prototype = {
 
 		this.nodes.form 			    = this.nodes.parent.getElementsByTagName("form")[0];
 
-		this.nodes.dataType 			= document.getElementsByClassName(this.cssPrefix + "form_dataType", this.nodes.parent)[0].getElementsByTagName("input");
 		this.nodes.type 				= document.getElementsByClassName(this.cssPrefix + "form_type", this.nodes.parent)[0];
 		this.nodes.stateLinks 			= document.getElementsByClassName(this.cssPrefix + "change_state", this.nodes.parent);
 		this.nodes.stepTranslations 	= document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
@@ -215,7 +217,8 @@ Backend.SpecField.prototype = {
 		this.nodes.handle 				= document.getElementsByClassName(this.cssPrefix + "form_handle", this.nodes.parent)[0];
 		this.nodes.name 				= document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
 		this.nodes.valuesDefaultGroup 	= document.getElementsByClassName(this.cssPrefix + "form_values_group", this.nodes.parent)[0];
-
+        this.nodes.formatedText        = document.getElementsByClassName(this.cssPrefix + 'form_advancedText', this.nodes.parent)[0];
+        
 		this.nodes.cancel 	            = document.getElementsByClassName(this.cssPrefix + "cancel", this.nodes.parent)[0];
 		this.nodes.save 	            = document.getElementsByClassName(this.cssPrefix + "save", this.nodes.parent)[0];
 
@@ -252,11 +255,6 @@ Backend.SpecField.prototype = {
 	{
 		var self = this;
 
-	    for(var i = 0; i < this.nodes.dataType.length; i++)
-		{
-            Event.observe(this.nodes.dataType[i], "click", function(e) { self.dataTypeChangedAction(e) } );
-		}
-
 		for(var i = 0; i < this.nodes.stateLinks.length; i++)
 		{
             Event.observe(this.nodes.stateLinks[i], "click", function(e) { self.changeStateAction(e) } );
@@ -270,40 +268,13 @@ Backend.SpecField.prototype = {
 
 		// Also some actions must be executed on load. Be aware of the order in which those actions are called
 		this.loadSpecFieldAction();
-
 		this.loadValueFieldsAction();
-
 		this.bindTranslationValues();
-		this.dataTypeChangedAction();
-		this.loadTypes();
 		this.typeWasChangedAction();
-
 
 		new Form.EventObserver(this.nodes.form, function() { self.formChanged = true; } );
 		Form.backup(this.nodes.form);
         
-	},
-
-	/**
-	 * Whem Mike changes input type from "numbers" to "text" programm should select
-	 * appropriate value from types list (like selector, text, date, number, etc)
-	 *
-	 * @access private
-	 *
-	 */
-	loadTypes: function()
-	{
-		if(this.type)
-		{
-			for(var i = 0; i < this.nodes.type.options.length; i++)
-			{
-				if(this.nodes.type.options[i].value == this.type)
-				{
-					this.nodes.type.selectedIndex = i;
-					break;
-				}
-			}
-		}
 	},
 
 	/**
@@ -314,7 +285,9 @@ Backend.SpecField.prototype = {
 	 *
 	 */
 	typeWasChangedAction: function()
-	{
+	{        
+        this.type = this.nodes.type.value;
+    
 		// if selected type is a selector type then show selector options fields (aka step 2)
         var valuesTranslations = document.getElementsByClassName(this.cssPrefix + "step_values_translations", this.nodes.stepValues)[0];
 		if(this.selectorValueTypes.indexOf(this.nodes.type.value) === -1)
@@ -329,8 +302,10 @@ Backend.SpecField.prototype = {
 			this.nodes.stateLinks[1].style.display = 'inline';
             this.nodes.multipleSelector.parentNode.style.display = 'block';
             
-            valuesTranslations.style.display = (this.dataType == this.DATATYPE_NUMBERS) ? 'none' : 'block';
+            valuesTranslations.style.display = this.isNumber(this.type) ? 'none' : 'block';
 		}
+        
+        this.nodes.formatedText.style.display = this.type == Backend.SpecField.prototype.TYPE_TEXT_SIMPLE ? 'block' : 'none';
 	},
 
 
@@ -426,29 +401,22 @@ Backend.SpecField.prototype = {
 
 		this.nodes.multipleSelector.checked = this.isMultiValue ? true : false;
 		this.nodes.isRequired.checked = this.isRequired ? true : false;
+        
+        if(this.type == Backend.SpecField.prototype.TYPE_TEXT_ADVANCED)
+        {
+            this.nodes.type.value = Backend.SpecField.prototype.TYPE_TEXT_SIMPLE;
+            this.nodes.formatedText.down('input').checked = true;
+        }
+        else
+        {
+            this.nodes.type.value = this.type;
+            this.nodes.formatedText.checked = false;
+        }
 
         this.changeMainTitleAction(this.nodes.name.value);
 
 		if(this.description && this.description[this.languageCodes[0]]) this.nodes.description.value = this.description[this.languageCodes[0]];
 		this.nodes.description.name = "description[" + this.languageCodes[0] + "]";
-
-		// select dataType (or first)
-		if(this.dataType)
-		{
-			for(var i = 0; i < this.nodes.dataType.length; i++)
-			{
-				if(this.nodes.dataType[i].value == this.dataType)
-				{
-					this.nodes.dataType[i].checked = true;
-					break;
-				}
-			}
-		}
-		else if(this.nodes.dataType.length > 0)
-		{
-			this.nodes.dataType[0].checked = true;
-		}
-
 
 		// Translations
 		var translations = document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations);
@@ -617,36 +585,6 @@ Backend.SpecField.prototype = {
 		}
 	},
 
-
-	/**
-	 * This callback is executed when user change the value type
-	 *
-	 * @param Event e Event
-	 *
-	 * @access private
-	 *
-	 */
-	dataTypeChangedAction: function(e)
-	{
-		this.nodes.type.length = 0;
-		for(var i = 0; i < this.nodes.dataType.length; i++)
-		{
-			if(this.nodes.dataType[i].checked)
-			{
-				for(var j = 0; j < this.types[this.nodes.dataType[i].value].length; j++)
-				{
-					this.nodes.type.options[j] = new Option(this.types[this.nodes.dataType[i].value][j][1], this.types[this.nodes.dataType[i].value][j][0]);
-				}
-
-				this.dataType = this.nodes.dataType[i].value;
-			}
-		}
-
-
-		this.typeWasChangedAction();
-	},
-
-
 	/**
 	 * This callback is executed when user changes the state. When user change the state all other
 	 * states are hidden and only current state shown or if the user was so stupid to click on current
@@ -746,10 +684,10 @@ Backend.SpecField.prototype = {
 			e.target = e.srcElement;
 		}
 
-		keyboard = new KeyboardEvent(e);
+		var keyboard = new KeyboardEvent(e);
 
 		if(
-            this.dataType == this.DATATYPE_NUMBERS && // if it is a number
+            this.isNumber(this.type) && // if it is a number
     		!(
     		    // you can use +/- as the first character
         		(keyboard.getCursorPosition() == 0 && !e.target.value.match('[\-\+]') && (keyboard.getKey() == 109 || keyboard.getKey() == 107 || (keyboard.isShift() && keyboard.getKey() == 61))) ||
@@ -946,7 +884,6 @@ Backend.SpecField.prototype = {
                 method: this.nodes.form.method,
                 postBody: Form.serialize(this.nodes.form),
                 onComplete: function(param) {
-                    console.info(param.responseText)
                     self.afterSaveAction(param.responseText)
                 }
             }
@@ -978,7 +915,11 @@ Backend.SpecField.prototype = {
                 var div = document.createElement('span');
                 Element.addClassName(div, 'specField_title');
                 div.appendChild(document.createTextNode(this.nodes.name.value));
-                ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID + '_').addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
+                
+                var activeRecord = ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID + '_');
+                activeRecord.addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
+                activeRecord.touch();
+                
                 this.hideNewSpecFieldAction(this.categoryID);
     		    this.recreate(this.specField, true);
             }
@@ -1290,7 +1231,6 @@ Backend.SpecFieldGroup.prototype = {
                 method: 'post',
                 postBody: Form.serialize(this.nodes.form),
                 onComplete: function(response) { 
-                    console.info(response.responseText);
                     self.afterSave(eval("(" + response.responseText + ")")); 
                 }
             }
@@ -1381,7 +1321,6 @@ Backend.SpecFieldGroup.prototype = {
      */
     displayGroupTranslations: function(parent)
     {
-        console.info(document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0]);
         ActiveForm.prototype.showNewItemForm(
             document.getElementsByClassName(this.cssPrefix + 'group_title', parent)[0], 
             document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0]
@@ -1423,13 +1362,8 @@ Backend.SpecFieldGroup.prototype = {
         var specFieldGroupLink = $(this.cssPrefix + "group_new_" + categoryID + "_show");
         var specFieldGroupForm = $(this.cssPrefix + "group_new_" + categoryID + "_form");
                 
-        console.info('show', specFieldGroupLink, specFieldGroupForm);
-                
         ActiveList.prototype.collapseAll();        
         ActiveForm.prototype.showNewItemForm(specFieldGroupLink, specFieldGroupForm);        
         ActiveForm.prototype.hideNewItemForm(specFieldLink, specFieldForm);
-        
-        
-        console.info('show', specFieldGroupLink, specFieldGroupForm);
     }    
 }
