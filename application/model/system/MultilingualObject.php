@@ -13,6 +13,8 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 {
 	private static $multilingualFieldList = array();
 
+	const NO_DEFAULT_VALUE = false;
+
 	public function setValueByLang($fieldName, $langCode, $value)
 	{
 		$valueArray = $this->getFieldValue($fieldName);
@@ -197,6 +199,29 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 		}
 		  
 	  	return new ARExpressionHandle($expression);	  	
+	}
+	
+	/**
+   	 *	Creates an ARExpressionHandle for performing searches over language fields (finding a value in particular language)
+   	 */	
+	public static function getLangSearchHandle(ARFieldHandle $field, $language)
+	{
+		$expression = "
+			SUBSTRING(
+				SUBSTRING_INDEX(" . $field->toString() . ",'\"" . $language . "\";s:',-1), 
+				LOG10(
+					SUBSTRING_INDEX(
+						SUBSTRING_INDEX(" . $field->toString() . ",'\"" . $language . "\";s:',-1), 
+						':',
+						1) + 1
+					) + 4,
+				SUBSTRING_INDEX(
+					SUBSTRING_INDEX(" . $field->toString() . ",'\"" . $language . "\";s:',-1), 
+					':',
+					1)
+				)";
+	 
+	  	return new ARExpressionHandle($expression);	
 	}
 }
 

@@ -110,13 +110,33 @@ class ProductController extends StoreManagementController
 		{
 		  	$c = new LikeCond(new ARFieldHandle('Product', $field), $this->request->getValue($field) . '%');
 		  	$f->setCondition($c);		  	
+
 		  	$f->setOrder(new ARFieldHandle('Product', $field), 'ASC');
 		  	
-		  	$results = ActiveRecordModel::getRecordSetArray('Product', $f);
+		  	$results = ActiveRecordModel::getRecordSet('Product', $f);
 		  	
 		  	foreach ($results as $value)
 		  	{
-				$resp[] = $value[$field];
+				$resp[] = $value->getFieldValue($field);
+			}	  			  
+		}
+		
+		elseif ('name' == $field)
+		{
+		  	$c = new LikeCond(new ARFieldHandle('Product', $field), '%:"' . $this->request->getValue($field) . '%');
+		  	$f->setCondition($c);		  	
+
+			$locale = $this->locale->getLocaleCode();
+			$langCond = new LikeCond(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), $this->request->getValue($field) . '%');
+			$c->addAND($langCond);
+					  	
+		  	$f->setOrder(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), 'ASC');
+		  	
+		  	$results = ActiveRecordModel::getRecordSet('Product', $f);
+		  	
+		  	foreach ($results as $value)
+		  	{
+				$resp[] = $value->getValueByLang('name', $locale, Product::NO_DEFAULT_VALUE);
 			}	  			  
 		}
 		  	

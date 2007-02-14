@@ -75,7 +75,7 @@
 				Product name:
 			</label>
 			<fieldset class="error">
-				{textfield name="name" id="name_addproduct_`$cat`" class="wide" onkeyup="Backend.Product.generateHandle(this);"}
+				{textfield name="name" id="name_addproduct_`$cat`" class="wide" onkeyup="Backend.Product.generateHandle(this);" autocomplete="controller=backend.product field=name"}
 				<div class="errorText hidden"></div>
 			</fieldset>			
 		</p>
