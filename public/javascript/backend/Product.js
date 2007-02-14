@@ -156,7 +156,17 @@ Backend.Product =
 	  	tinyMCE.triggerSave();
 		var saveHandler = new Backend.Product.saveHandler(form);
 		new LiveCart.AjaxRequest(form, 'tabProductsIndicator', saveHandler.saveComplete.bind(saveHandler));
-	}
+	},
+	
+   updateHeader: function ( liveGrid, offset ) {
+      $('bookmark').innerHTML = "Listing products " + (offset+1) + " - " + (offset+liveGrid.metaData.getPageSize()) + " of " + 
+      liveGrid.metaData.getTotalRows();
+      var sortInfo = "";
+      if (liveGrid.sortCol) {
+         sortInfo = "&data_grid_sort_col=" + liveGrid.sortCol + "&data_grid_sort_dir=" + liveGrid.sortDir;
+      }
+   }
+	
 }
 
 Backend.Product.saveHandler = Class.create();

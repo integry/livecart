@@ -36,21 +36,16 @@ fieldset.specification .numeric
   	width: 100%;
 }
 
-.productList thead
-{
-  	width: 100%;
-}
-
 .productList td, .productHead th
 {
   	height: 14px;
-  	padding: 3px;
+  	padding: 2px;
   	white-space: nowrap;
 }
 
 .headRow 
 {
-	background-color: yellow;	  
+	background-color: #DDDDDD;	  
 }
 
 .cell_cb
@@ -60,34 +55,34 @@ fieldset.specification .numeric
 
 .cell_sku
 {
-	width: 40px;  
+	width: 80px;  
 }
 
 .cell_name
 {
-	width: 240px;  
+	width: 300px;  
 }
 
 .cell_manuf
 {
-	width: 100px;  
+	width: 120px;  
 }
 
 .cell_price
 {
-	width: 60px;  
+	width: 100px;  
 	text-align: center;
 }
 
 .cell_stock
 {
-	width: 30px;  
+	width: 80px;  
 	text-align: center;
 }
 
 .cell_enabled
 {
-	width: 30px;   
+	width: 80px;   
 }
 
 .lowStock

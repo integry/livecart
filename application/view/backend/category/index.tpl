@@ -24,6 +24,7 @@
 {includeJs file="backend/Product.js"}
 
 {includeCss file="library/ActiveList.css"}
+{includeCss file="library/ActiveGrid.css"}
 {includeCss file="backend/Category.css"}
 {includeCss file="backend/Product.css"}
 {includeCss file="backend/SpecField.css"}
