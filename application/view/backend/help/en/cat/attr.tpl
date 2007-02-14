@@ -52,11 +52,16 @@
 </p>
 
 <h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
-
-	Attributes are defined by their <i>type</i> which can be text, date or numbers. Because mobile carrier is a simple text and there is (probably)
-	a finite number of carriers we select <i>Text selector</i> as our type. Text selector is suitable for creating a predefined list of values which
-	will be displayed as a selection option.
 	<ul>
+
+		<li>Attributes are defined by their <i>type</i> which can be text, date or numbers. Because mobile carrier is a simple text and there
+		is (probably) a finite number of carriers we select <i>Text selector</i> as our type. </li>
+<p>
+	<img src="image/doc/categories/attributes/type.bmp">
+</p>
+<p>
+	Text selector is suitable for creating a predefined list of values which will be displayed as a selection option. 
+</p>
 		<li>We check <i>Required</i> to make the field mandatory since it is an important feature. </li>
 		<li><i>Can select multiple values</i> - we leave this checkbox clear to restrict user's ability to associate cell phone with multiple carriers
 		(which is not true most of the times).</li> 

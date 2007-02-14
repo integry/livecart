@@ -1,16 +1,20 @@
 <p>
-	As in most e-commerce stores, with LiveCart you can manage your products by categories. Categories can also contain subcategories which, in turn, may have their own subcategories. The number of subcategories and subcategory levels is unlimited.
+	As in most e-commerce stores, with LiveCart you can manage your products by categories. Categories can also contain subcategories which, in turn,
+	may have their own subcategories. The number of subcategories and subcategory levels is unlimited. All the categories are displayed on the left
+	side of the screen in the tree-based structure.
 </p>
 
 <img src="image/doc/categories/category tree.bmp">
 
-<p>
-	Category structure represents how all of the categories are arranged. At the top of the category tree is the Root category which is a parent category for all the descending categories. In the category tree you can easily manage your categories by selecting one of the options: 
+<p>	
+	Category tree structure represents how all of the categories are arranged. At the top of the category tree is the <i>Root</i> category which is a
+	parent category for all the descending categories. (In the Figure above New Category 26 is a root category with one subcategory.) 
+	<ins>categories in the frontend</ins>. In the category tree you can easily manage your categories by selecting one of the options: 
 </p>
 
 <div class="tasks">
 <fieldset>
-<legend>Things you can do</legend>
+<legend>...</legend>
 <ul>	
 	<li><a href="{self}#add">Create a new category</a></li>
 	<li><a href="{self}#change order">Change category order</a></li>
@@ -37,8 +41,8 @@
 		</ul>
 </ul>
 	<p>
-		Notice that Created categories are titled by default, to change category details - proceed to Category Details section by selecting
-		<i>Category Details</i> tab in the main control panel / window.</li>
+		Notice that Created categories are titled by default, to set category details - proceed to <a href="...">Category Details</a> section by 
+		selecting <i>Category Details</i> tab in the main control panel / window.</li>
 	</p>
 
 

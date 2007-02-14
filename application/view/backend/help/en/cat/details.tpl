@@ -1,5 +1,6 @@
 ﻿
 <p>Category details consist of the following category properties:</p>
+<p>Category details can be defined in the Category->Category Details tab.</p>
 	<ul>	
 		<li>Is Active - all new categories are inactive by default and to make them visible in your store, tick the checkbox to enable the category</li>
 		<li>Category Name - the actual category name</li>
@@ -7,7 +8,7 @@
 		<li>Keywords - words that are used in search queries and <ins>Meta tags</ins></li>
 		<li>Translate to: multiple languages - if you have more than one language in your system, click on the language reference to expand additional fields below.</li>
 
-		<br /><p>You can translate the following category details:</p>
+		<br /><p>You can enter the following category details in the selected language:</p>
 		<ul>
 			<li>Category name</li>
 			<li>Details</li>

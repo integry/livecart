@@ -6,7 +6,7 @@
 		filters=Filters
 		images=Images
 		
-	product=Products
+	products=Products
 		add=Add New Product
 		
 	currency=Currencies
