@@ -63,19 +63,43 @@
 	Text selector is suitable for creating a predefined list of values which will be displayed as a selection option. 
 </p>
 		<li>We check <i>Required</i> to make the field mandatory since it is an important feature. </li>
+<p>
+	<img src="image/doc/categories/attributes/required.bmp">
+</p>
 		<li><i>Can select multiple values</i> - we leave this checkbox clear to restrict user's ability to associate cell phone with multiple carriers
 		(which is not true most of the times).</li> 
-		<li>Attribute's <i>title</i> represent its function thus be we enter a meaningful name - <strong>Carrier</strong>. </li>
-		<li>Handle <ins>...</ins></li>
-		<li>Description <ins>...</ins></li> 
+<p>
+	<img src="image/doc/categories/attributes/multiple_values.bmp">
+</p>
+		<li>Attribute's <i>title</i> represent its function thus we enter a meaningful name - <strong>Carrier</strong>. </li>
+<p>
+	<img src="image/doc/categories/attributes/title.bmp">
+</p>
+		<li>Handle - handle is generated<ins>...</ins></li>
+<p>
+	<img src="image/doc/categories/attributes/handle.bmp">
+</p>
+		<li>In the description field we enter a brief description to describe the term "Carrier".</li> 
+<p>
+	<img src="image/doc/categories/attributes/description.bmp">
+</p>
 	</ul>
 	The last thing to do is to create Values which will be used as a selection option in the "Add new Product" form. To add values, click Values 
-	tab in the main window and supply values one by one in the field provided. To do that, simply use a text field named Values followed by 
-	"Enter more values". 
+	tab in the main window -> when switched to the Value window we enter the first Mobile Carrier in the text field provided followed by 
+	"Enter more values" button 
+<p>
+	<img src="image/doc/categories/attributes/enter_values.bmp">
+</p>
+	We keep in this manner until we have a full list of carriers.
 <p>
 	<img src="image/doc/categories/attributes/values.bmp">
 </p>
-	Click <strong>save</strong> once you are done. Your new attribute will be automatically generated in the "Add new Product" form and
+	Make sure to click <strong>Save</strong> to save changes. 
+<p>
+	<img src="image/doc/categories/attributes/save.bmp">
+</p>
+
+	Your new attribute will be automatically generated in the "Add new Product" form and
 	will look similar to this one:
 <p>
 	<img src="image/doc/categories/attributes/carrier.bmp">
@@ -87,13 +111,24 @@
 	As in previous example we will use Text Selector because we know that cell phones can have many features (and it more convenient to list them 
 	out than have them entered every time adding a new cell)
 </p>
+
+<p>
+	<img src="image/doc/categories/attributes/multi.bmp">
+</p>
 	<ul>
-		<li>Type - Text selector</li>
+		<li>Required - we leave the checkbox empty as some phones may don't have additional features (optional field/selection) </li>
+		<br \>
 		<li>Can select multiple values - we mark the checkbox to allow multiple features assigned to a cell phone</li>
-		<li>Required - <ins>...</ins></li>
+		<br \>
+		<li>Title - we enter <strong>Features</strong> to represent attribute's purpose/function.</li>
+		<br \>
+		<li>Handle is generated automatically so we leave the field unaltered</li>
+		<br \>
+		<li>In the description field we enter a few sentences about features attribute.</li>
 	</ul>
-	To create a value list of mobile's features click <i>Values</i> tab which appears on the right of the <i>Main</i> tab. In the Values section click
-	<i>Enter more values</i> and supply a value in the field provided. The representation of generated your field will be similar to this:
+	Next thing to do is create a value list of mobile's features. Click <i>Values</i> tab which appears on the right of the <i>Main</i> tab. 
+	In the Values section we enter all the necessary features and save the attribute.
+	The representation of generated your field could be similar to this:
 <p>
 	<img src="image/doc/categories/attributes/features.bmp">
 </p>
