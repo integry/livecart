@@ -136,6 +136,51 @@
 
 <h4 id="capacity">Creating <i>Batery Capacity</i> attribute</h4>
 
+<p>
+	Battery capacity is expressed in numerical format of mAh, therefore you should consider choosing a <strong>Number</strong> type. When it comes
+	to field or selector it is up to you to decide whether you want to create a single field or a list of possible capacity values. For the sake of
+	simplicity we choose a field type in the following example.
+</p>
+
+	<ul>
+		<li>Required - click the checkbox to make the field required attribute</li>
+		<br \>
+<p>
+	<img src="image/doc/categories/attributes/required.bmp">
+</p>
+		<li>Title - enter <strong>Battery Capacity</strong> to represent attribute's purpose/function.</li>
+		<br \>
+<p>
+	<img src="image/doc/categories/attributes/capacity_title.bmp">
+</p>
+		<li>Handle is generated automatically so we leave the field unaltered</li>
+		<br \>
+<p>
+	<img src="image/doc/categories/attributes/capacity_handle.bmp">
+</p>
+		<li>In the description field provide brief information about the field similar to this</li>
+<p>
+	<img src="image/doc/categories/attributes/capacity_description.bmp">
+</p>
+	</ul>	
+<p>
+	Don't forget to click <strong>Save</strong> at the end.
+</p>
+
+<p>
+	<ins>International title&description </ins>
+</p>
+
+<p>
+	The Battery Capacity attribute should look similar like that:
+</p>
+
+<p>
+	<img src="image/doc/categories/attributes/capacity_generated.bmp">
+</p>
+
+
+	
 <h4 id="bandwidth">Creating <i>Bandwidth</i> attribute</h4>
 
 
