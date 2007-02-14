@@ -5,6 +5,8 @@ _remove_field_question=Are you sure you want to remove this field?
 _SpecField_remove_question=Are you sure you want to remove this specification field?
 _SpecFieldGroup_remove_question=Are you sure you want to remove this group?
 _edit_group=Edit attribute group
+_cancel_adding_new_field=Cancel adding new attribute
+_cancel_adding_new_group=Cancel adding new attribute group
 
 # errors
 _error_handle_exists=Such handle already exists in current category

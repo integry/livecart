@@ -221,6 +221,8 @@ Backend.SpecField.prototype = {
         
 		this.nodes.cancel 	            = document.getElementsByClassName(this.cssPrefix + "cancel", this.nodes.parent)[0];
 		this.nodes.save 	            = document.getElementsByClassName(this.cssPrefix + "save", this.nodes.parent)[0];
+        
+        this.nodes.cancelLink          = $("specField_item_new_" + this.categoryID + "_cancel");
 
 		this.nodes.translationsLinks 	= document.getElementsByClassName(this.cssPrefix + "form_values_translations_language_links", this.nodes.parent)[0];
 		this.nodes.valuesAddFieldLink 	= this.nodes.valuesDefaultGroup.getElementsByClassName(this.cssPrefix + "add_field", this.nodes.parent)[0];
@@ -263,7 +265,8 @@ Backend.SpecField.prototype = {
         Event.observe(this.nodes.name, "keyup", function(e) { self.generateHandleAndTitleAction(e) } );
         Event.observe(this.nodes.valuesAddFieldLink, "click", function(e) { self.addValueFieldAction(e) } );
         Event.observe(this.nodes.type, "change", function(e) { self.typeWasChangedAction(e) } );
-        Event.observe(this.nodes.cancel, "click", function(e) { self.cancelAction(e) } );
+        Event.observe(this.nodes.cancel, "click", function(e) { Event.stop(e); self.cancelAction() } );
+        Event.observe(this.nodes.cancelLink, "click", function(e) { Event.stop(e); self.cancelAction() } );
         Event.observe(this.nodes.save, "click", function(e) { self.saveAction(e) } );
 
 		// Also some actions must be executed on load. Be aware of the order in which those actions are called
@@ -803,15 +806,8 @@ Backend.SpecField.prototype = {
 	 * @access public
 	 *
      */
-    cancelAction: function(e)
+    cancelAction: function()
     {
-        if(!e.target)
-		{
-			e.target = e.srcElement;
-		}
-
-		Event.stop(e);
-
 		// first cancel all modifications if they took place
 		if(this.id == 'new')
 		{
@@ -966,7 +962,9 @@ Backend.SpecField.prototype = {
     {
         var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
         var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");
-
+        
+        Backend.SpecFieldGroup.prototype.hideMenuItems($("specField_menu_" + categoryID), [$("specField_group_new_" + categoryID + "_show"), $("specField_item_new_" + categoryID + "_show")]);
+            
         ActiveForm.prototype.hideNewItemForm(link, form);
     },
 
@@ -1021,14 +1019,9 @@ Backend.SpecField.prototype = {
      */
     createNewAction: function(categoryID)
     {
-        var specFieldLink = $(this.cssPrefix + "item_new_"+categoryID+"_show");
-        var specFieldForm = $(this.cssPrefix + "item_new_"+categoryID+"_form");
-        var specFieldGroupLink = $(this.cssPrefix + "group_new_" + categoryID + "_show");
-        var specFieldGroupForm = $(this.cssPrefix + "group_new_" + categoryID + "_form");
-        
         ActiveList.prototype.collapseAll();        
-        ActiveForm.prototype.showNewItemForm(specFieldLink, specFieldForm);        
-        ActiveForm.prototype.hideNewItemForm(specFieldGroupLink, specFieldGroupForm);
+        ActiveForm.prototype.showNewItemForm($(this.cssPrefix + "item_new_"+categoryID+"_show"), $(this.cssPrefix + "item_new_"+categoryID+"_form"));  
+        Backend.SpecFieldGroup.prototype.hideMenuItems($("specField_menu_" + categoryID), [$(this.cssPrefix + "item_new_" + categoryID + "_cancel")]);
     }    
 }
 
@@ -1145,6 +1138,8 @@ Backend.SpecFieldGroup.prototype = {
         this.nodes.categoryID          = document.getElementsByClassName(this.cssPrefix + 'group_categoryID', this.nodes.form)[0];
         this.nodes.save                = document.getElementsByClassName(this.cssPrefix + 'save', this.nodes.controls)[0];
         this.nodes.cancel              = document.getElementsByClassName(this.cssPrefix + 'cancel', this.nodes.controls)[0];
+        this.nodes.cancelLink          = $("specField_group_new_" + this.group.Category.ID + "_cancel");
+        
      },
      
      bindEvents: function()
@@ -1153,6 +1148,8 @@ Backend.SpecFieldGroup.prototype = {
          if(this.nodes.mainTitle) Event.observe(self.nodes.name, 'keyup', function(e) { self.nodes.mainTitle.innerHTML = self.nodes.name.value });
          Event.observe(self.nodes.save, 'click', function(e) { Event.stop(e); self.beforeSave() });
          Event.observe(self.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel() });
+         console.info(this.nodes.cancelLink);
+         Event.observe(this.nodes.cancelLink, "click", function(e) { Event.stop(e); self.cancel() } );
      },
      
     /**
@@ -1280,6 +1277,7 @@ Backend.SpecFieldGroup.prototype = {
                 
                 Form.restore(this.nodes.form);
                 
+                Backend.SpecFieldGroup.prototype.hideMenuItems($("specField_menu_" + this.group.Category.ID), [$("specField_group_new_" + this.group.Category.ID + "_show"), $("specField_item_new_" + this.group.Category.ID + "_show")]);
                 ActiveForm.prototype.hideNewItemForm($(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show"), this.nodes.parent); 
     		}
             
@@ -1303,6 +1301,7 @@ Backend.SpecFieldGroup.prototype = {
         
         if(!this.group || !this.group.ID)
         {
+            Backend.SpecFieldGroup.prototype.hideMenuItems($("specField_menu_" + this.group.Category.ID), [$("specField_group_new_" + this.group.Category.ID + "_show"), $("specField_item_new_" + this.group.Category.ID + "_show")]);
             ActiveForm.prototype.hideNewItemForm($(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show"), this.nodes.parent); 
         }
         else
@@ -1352,18 +1351,27 @@ Backend.SpecFieldGroup.prototype = {
         return document.getElementsByClassName(this.cssPrefix + 'group_form', parent).length > 0;
     },
 
+    hideMenuItems: function(menu, except)
+    {
+        menu = $(menu);
+        $A(menu.getElementsByTagName('li')).each(function(li) {
+            a = $(li).down('a');
+            a.addClassName('hidden');
+            $A(except).each(function(el) { if(a == $(el)) a.removeClassName('hidden');  });
+        });
+    },
+
     /**
      * This method unfolds "Create new Spec Field group" form. 
      */
     createNewAction: function(categoryID)
-    {
-        var specFieldLink = $(this.cssPrefix + "item_new_"+categoryID+"_show");
-        var specFieldForm = $(this.cssPrefix + "item_new_"+categoryID+"_form");
-        var specFieldGroupLink = $(this.cssPrefix + "group_new_" + categoryID + "_show");
-        var specFieldGroupForm = $(this.cssPrefix + "group_new_" + categoryID + "_form");
-                
+    {                
         ActiveList.prototype.collapseAll();        
-        ActiveForm.prototype.showNewItemForm(specFieldGroupLink, specFieldGroupForm);        
-        ActiveForm.prototype.hideNewItemForm(specFieldLink, specFieldForm);
+        ActiveForm.prototype.showNewItemForm(
+            $(this.cssPrefix + "group_new_" + categoryID + "_show"), 
+            $(this.cssPrefix + "group_new_" + categoryID + "_form")
+        );   
+        
+        Backend.SpecFieldGroup.prototype.hideMenuItems($("specField_menu_" + categoryID), [$(this.cssPrefix + "group_new_" + categoryID + "_cancel")]);
     }    
 }

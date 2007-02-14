@@ -42,9 +42,11 @@
 
 
 <fieldset class="container">
-	<ul class="menu">
+	<ul class="menu" id="specField_menu_{$categoryID}">
 	    <li><a href="#new" id="specField_item_new_{$categoryID}_show">{t _add_new_field}</a></li>
+	    <li><a href="#new" id="specField_item_new_{$categoryID}_cancel" class="hidden">{t _cancel_adding_new_field}</a></li>
 	    <li><a href="#new" id="specField_group_new_{$categoryID}_show">{t _add_new_group}</a></li>
+	    <li><a href="#new" id="specField_group_new_{$categoryID}_cancel" class="hidden">{t _cancel_adding_new_group}</a></li>
 	</ul>
 </fieldset>
 
@@ -108,8 +110,8 @@
 
 <script type="text/javascript">
      var categoryID = {$categoryID};
-
-     var groupList = ActiveList.prototype.getInstance('specField_groups_list_'+categoryID, Backend.SpecFieldGroup.prototype.callbacks, Backend.SpecField.prototype.msg.activeListMessages);
+     var groupList = ActiveList.prototype.getInstance('specField_groups_list_'+categoryID, Backend.SpecFieldGroup.prototype.callbacks, Backend.SpecField.prototype.msg.activeListMessages);  
+     
      Event.observe($("specField_item_new_"+categoryID+"_show"), "click", function(e) 
      {ldelim}
          Event.stop(e);
@@ -121,6 +123,7 @@
          Event.stop(e); 
          Backend.SpecFieldGroup.prototype.createNewAction(categoryID);
      {rdelim});
+ 
  
     {assign var="lastSpecFieldGroup" value="-1"}
     {foreach item="field" from=$specFieldsWithGroups}

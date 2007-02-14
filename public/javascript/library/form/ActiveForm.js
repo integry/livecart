@@ -16,10 +16,10 @@ ActiveForm.prototype = {
      */
     showNewItemForm: function(link, form, animate) 
     {
-        animate = (undefined == animate ? false : animate);
+        animate = animate !== false ? true : animate;
+        console.info(animate);
         
-        if(link) link.style.display = 'none';
-        
+        if(link) $(link).addClassName('hidden');  
         if(animate && BrowserDetect.browser != 'Explorer')
         {             
             if(form) 
@@ -30,14 +30,6 @@ ActiveForm.prototype = {
                 setTimeout(function() { 
                     form.style.display = 'block'; 
                     form.style.height = 'auto';
-                }, 700);
-            }
-            
-            if(link) 
-            {
-                setTimeout(function()
-                { 
-                    link.style.display = 'none';  
                 }, 700);
             }
         }
@@ -56,7 +48,7 @@ ActiveForm.prototype = {
      */
     hideNewItemForm: function(link, form, animate)
     {
-        animate = (undefined == animate ? false : animate);
+        animate = animate !== false ? true : animate;
         
         if(animate && BrowserDetect.browser != 'Explorer')
         {
@@ -69,12 +61,12 @@ ActiveForm.prototype = {
             
             if(link) 
             {
-                setTimeout(function() { link.style.display = 'inline'; }, 300);   
+                setTimeout(function() { $(link).removeClassName('hidden'); }, 300);   
             }
         }
         else
         {
-            if(link) link.style.display = 'inline';
+            if(link) $(link).removeClassName('hidden');
             if(form) form.style.display = 'none';
         }
     },
