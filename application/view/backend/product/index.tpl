@@ -19,12 +19,12 @@
 <table class="productHead" id="products_{$categoryID}_header">
 	<tr class="headRow">
 		<th class="cell_cb"><input type="checkbox" class="checkbox" /></th>
-		<th class="first cell_sku">SKU</th>
-		<th class="cell_name">Name</th>	
-		<th class="cell_manuf">Manufacturer</th>	
-		<th class="cell_price">Price <small>({$currency})</small></th>
-		<th class="cell_stock">In stock</th>	
-		<th class="cell_enabled">Enabled</th>	
+		<th class="first cell_sku"><span>sku_</span>SKU</th>
+		<th class="cell_name"><span>name_</span>Name</th>	
+		<th class="cell_manuf"><span>manufacturer_</span>Manufacturer</th>	
+		<th class="cell_price"><span>price_</span>Price <small>({$currency})</small></th>
+		<th class="cell_stock"><span>stockCount_</span>In stock</th>	
+		<th class="cell_enabled"><span>isEnabled_</span>Enabled</th>	
 	</tr>
 </table>
 </div>

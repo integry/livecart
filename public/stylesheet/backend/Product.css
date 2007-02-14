@@ -43,6 +43,11 @@ fieldset.specification .numeric
   	white-space: nowrap;
 }
 
+.productHead th span
+{
+	display: none;
+}
+
 .headRow 
 {
 	background-color: #DDDDDD;	  

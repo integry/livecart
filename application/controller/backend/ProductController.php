@@ -33,9 +33,27 @@ class ProductController extends StoreManagementController
 	}
 
 	protected function productList(Category $category, ActionResponse $response)
-	{
+	{	
 		$filter = new ARSelectFilter();
 		$filter->setLimit($this->request->getValue('offset'), $this->request->getValue('page_size'));
+	
+		// get sort column
+		if ($this->request->isValueSet('sort_col'))
+		{
+		  	$sort = array_shift(explode('_', $this->request->getValue('sort_col')));		  	
+		  	$order = $this->request->getValue('sort_dir');
+
+			if ('name' == $sort)
+			{
+			  	$handle = Product::getLangOrderHandle(new ARFieldHandle('Product', 'name'));
+			}
+
+			if (isset($handle))
+			{
+			  	$filter->setOrder($handle, $order);
+			}
+		}	
+	
 		$productList = $category->getProductSet($filter, Category::LOAD_REFERENCES);
 				
 //				echo '<pre>';print_r($productList->toArray()); exit;

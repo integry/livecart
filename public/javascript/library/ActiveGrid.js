@@ -106,8 +106,6 @@ ActiveGrid.prototype =
 		this.selectedRows[id] = !this.selectedRows[id];
 		
 		this._selectRow(row);
-
-		console.log(this.selectedRows[id]);
 	},
 
 	/**

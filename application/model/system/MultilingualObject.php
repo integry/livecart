@@ -150,6 +150,54 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	        $this->setValueByLang($fieldName, $lang, isset($fieldValue[$lang]) ? $fieldValue[$lang] : '');
 	    }
 	}
+	
+	/**
+	 *	Creates an ARExpressionHandle for ordering a record set by field value in particular language
+	 *
+	 *	Basically what the SQL expression does, it parses serialized PHP array and returns the value
+	 *	for the particular language. If there's no value entered for the current language, default language
+	 * 	value is returned.
+	 */
+	public static function getLangOrderHandle(ARFieldHandle $field)
+	{
+		$currentLanguage = Store::getInstance()->getLocaleCode();
+		$defaultLanguage = Store::getInstance()->getDefaultLanguageCode();
+		
+		if ($currentLanguage == $defaultLanguage)
+		{
+			$expression = "	  	
+			SUBSTRING_INDEX(
+				SUBSTRING_INDEX(
+					SUBSTRING(
+						" . $field->toString() . ",
+						LOCATE('\"" . $defaultLanguage . "\";s:', " . $field->toString() . ") + 7
+					)
+				,'\";',1)
+			,':\"',-1)		  
+			";			  
+		}
+		else
+		{
+			$expression = "	  	
+			SUBSTRING_INDEX(
+				SUBSTRING_INDEX(
+					SUBSTRING(
+						" . $field->toString() . ",
+						IFNULL(
+							NULLIF(
+								LOCATE('\"" . $currentLanguage . "\";s:', " . $field->toString() . "), LOCATE('\"" . $currentLanguage . "\";s:0:', " . $field->toString() . ")
+							)
+							,
+							LOCATE('\"" . $defaultLanguage . "\";s:', " . $field->toString() . ")
+						) + 7
+					)
+				,'\";',1)
+			,':\"',-1)		  
+			";		  
+		}
+		  
+	  	return new ARExpressionHandle($expression);	  	
+	}
 }
 
 ?>
