@@ -80,9 +80,11 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 	private function getProductFilter(ARSelectFilter $filter)
 	{
+
+		$filter->joinTable('ProductPrice', 'Product', 'productID AND pricetable_EUR.currencyID = "EUR"', 'ID', 'pricetable_EUR');				  	
+	  	$filter->addField('price', 'pricetable_EUR', 'price_EUR');
+
 		return $filter;
-		//$filter = new ARSelectFilter();
-		//return $filter;
 	}
 
 	public function setValueByLang($fieldName, $langCode, $value)

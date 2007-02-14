@@ -194,6 +194,10 @@ class Product extends MultilingualObject
 	{
 		foreach ($miscRecordDataArray as $key => $value)
 		{
+			if (substr($key, 0, 6) == 'price_')
+			{
+			  	$this->priceData[substr($key, 6)] = $value;
+			}
 			if (substr($key, 0, 10) == 'specField_')
 			{
 			  	$key = substr($key, 10);

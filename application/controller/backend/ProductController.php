@@ -43,9 +43,44 @@ class ProductController extends StoreManagementController
 		  	$sort = array_shift(explode('_', $this->request->getValue('sort_col')));		  	
 		  	$order = $this->request->getValue('sort_dir');
 
-			if ('name' == $sort)
+			$sortableLangFields = array(
+									'name' => 'name',
+									'shortdescription' => 'shortDescription',
+									'longdescription' => 'longDescription'
+								);
+			
+			$sortableFields = array(
+									'sku' => 'sku',
+									'isenabled' => 'isEnabled', 
+									'stockcount' => 'stockCount', 
+									'datecreated' => 'dateCreated', 
+									'dateupdated' => 'dateUpdated', 
+									'url' => 'URL',
+									'handle' => 'handle',
+									'isbestseller' => 'isBestSeller',
+									'votesum' => 'voteSum',
+									'votecount' => 'voteCount',
+									'hits' => 'hits',
+									'shippingweight' => 'shippingWeight',
+									'minimumquantity' => 'minimumQuantity',
+									'shippingsurchargeamount' => 'shippingSurchargeAmount',
+									'isseparateshipment' => 'isSeparateShipment',
+									'isfreeshipping' => 'isFreeShipping',
+									'reservedcount' => 'reservedCount',
+									'keywords' => 'keywords'
+							  );
+			
+			if (isset($sortableLangFields[$sort]))
 			{
-			  	$handle = Product::getLangOrderHandle(new ARFieldHandle('Product', 'name'));
+			  	$handle = Product::getLangOrderHandle(new ARFieldHandle('Product', $sortableLangFields[$sort]));
+			}
+			elseif (isset($sortableFields[$sort]))
+			{
+				$handle = new ARFieldHandle('Product', $sortableFields[$sort]);  	
+			}
+			elseif ('manufacturer' == $sort)
+			{
+				$handle = new ARFieldHandle('Manufacturer', 'name');  	
 			}
 
 			if (isset($handle))
@@ -55,8 +90,6 @@ class ProductController extends StoreManagementController
 		}	
 	
 		$productList = $category->getProductSet($filter, Category::LOAD_REFERENCES);
-				
-//				echo '<pre>';print_r($productList->toArray()); exit;
 				
 		$response->setValue("productList", $productList->toArray());
 		$response->setValue("categoryID", $category->getID());

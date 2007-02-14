@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import('application.model.Currency');
+
 /**
  *	A container class containing product prices in all currencies
  */
@@ -14,11 +16,12 @@ class ProductPricing
 	public function __construct(Product $product, $prices = array())
 	{
 		$this->product = $product;
-		
+
 		foreach ($prices as $id => $price)
 		{
-			$inst = ProductPrice::getNewInstance($product, Currency::getInstanceById($id));
-			$inst->markAsLoaded();
+			$this->prices[$id] = ProductPrice::getNewInstance($product, Currency::getInstanceById($id));
+			$this->prices[$id]->price->set($price);
+			$this->prices[$id]->markAsLoaded();			
 		}
 	}
 	

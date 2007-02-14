@@ -60,6 +60,20 @@ Backend.Product =
 		var expander = new SectionExpander();	  
 	},
 
+	toggleSkuField: function(checkbox)
+	{
+	  	var skuField = checkbox.form.elements.namedItem('sku');
+	  	skuField.disabled = checkbox.checked;
+	  	if (checkbox.checked)
+	  	{
+		    skuField.value = '';
+		}
+		else
+		{
+		  	skuField.focus();
+		}
+	},
+
 	generateHandle: function(titleElement)
 	{
 	  	handleElement = titleElement.form.elements.namedItem('handle');

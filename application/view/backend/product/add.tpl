@@ -92,7 +92,7 @@
 
 		<p>
 			<label for=""></label>
-			{checkbox name="autosku" id="autosku_addproduct_`$cat`" class="checkbox" value="on"}
+			{checkbox name="autosku" id="autosku_addproduct_`$cat`" class="checkbox" value="on" onclick="Backend.Product.toggleSkuField(this);"}
 			<label for="autosku_addproduct_{$cat}" class="checkbox">
 				Generate SKU automatically
 			</label>
