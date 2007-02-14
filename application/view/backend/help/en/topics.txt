@@ -1,6 +1,6 @@
 =LiveCart Help
 
-	cat=Categories
+	cat=Product Categories
 		details=Category Details
 		attr=Attributes
 		filters=Filters
@@ -9,9 +9,19 @@
 	products=Products
 		add=Add New Product
 		
+	order=Orders		
+		
+	user=Users		
+		
 	currency=Currencies
 		
 	language=Languages
 		edit=Edit Translations
 		
-	order=Orders
+	cust=Customization
+	
+	installation=Installation
+		
+	dev=Developers Manual
+		soap=SOAP API
+		php=PHP API

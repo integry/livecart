@@ -6,6 +6,10 @@
 
 <img src="image/doc/categories/category tree.bmp">
 
+<p>
+<ins>Example images should contain as real-life like content as possible. Instead of New Category 26, it could be Hardware, etc.</ins>
+</p>
+
 <p>	
 	Category tree structure represents how all of the categories are arranged. At the top of the category tree is the <i>Root</i> category which is a
 	parent category for all the descending categories. (In the Figure above New Category 26 is a root category with one subcategory.) 

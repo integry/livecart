@@ -35,6 +35,13 @@
 </fieldset>
 </div>
 
+<h3>Attribute Types</h3>
+
+<ins>
+<p>LiveCart supports various product attribute types...</p>
+<p>Below you'll find a couple of practical examples on how to choose which attribute type would suit best for describing a particular product property.</p>
+</ins>
+
 <h3 id="create">Create Attribute</h3>
 <p>
 	Here are some examples of a few simple attributes you might find handy<ins>...</ins> Later we will show how they are actually implemented in the <i>Filters</i> section.
@@ -50,6 +57,10 @@
 <p>
 	Standard form <ins>...</ins>
 </p>
+
+<ins>
+	<p>Basic fields - title, type, handle and description - what information they hold/describe, etc.</p>
+</ins>
 
 <h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
 	<ul>
@@ -103,6 +114,7 @@
 	will look similar to this one:
 <p>
 	<img src="image/doc/categories/attributes/carrier.bmp">
+<ins>hgfhf in the background doesn't look too solid :)</ins>
 </p>
 
 <h4 id="features">Creating <i>Phone Features</i> attribute</h4>
