@@ -7,7 +7,6 @@ Backend.Product =
 	showAddForm: function(container, categoryID)
 	{
 		this.productTabCopies[categoryID] = container;
-		console.log(container);
 		
 		tabContainer = container.parentNode;
 		
@@ -58,6 +57,13 @@ Backend.Product =
 		}
 
 		var expander = new SectionExpander();	  
+		
+		// specField entry logic
+		var containers = document.getElementsByClassName('multiValueSelect', $('tabProductsContent_' + categoryID));
+		for (k = 0; k < containers.length; k++)
+		{
+			new Backend.Product.specFieldEntryMultiValue(containers[k]);  
+		}		
 	},
 
 	toggleSkuField: function(checkbox)
@@ -217,5 +223,93 @@ Backend.Product.saveHandler.prototype =
 			}
 			
 		}
+	}
+}
+
+Backend.Product.specFieldEntryMultiValue = Class.create();
+Backend.Product.specFieldEntryMultiValue.prototype = 
+{
+	container: null,
+	
+	isNumeric: false,
+	
+	initialize: function(container)
+	{		
+		Event.observe(container.getElementsByClassName('deselect')[0], 'click', this.reset.bindAsEventListener(this));
+		
+		this.isNumeric = Element.hasClassName(container, 'multiValueNumeric');
+		
+		this.container = document.getElementsByClassName('other', container)[0];
+		var inp = this.container.getElementsByTagName('input')[0];
+		this.bindField(inp);  	
+	},
+	
+	bindField: function(field)
+	{
+		field.onkeyup = this.handleChange.bindAsEventListener(this);  
+		field.onblur = this.handleBlur.bindAsEventListener(this); 
+
+		if (this.isNumeric)
+		{
+			Event.observe(field, 'keyup', this.filterNumeric.bindAsEventListener(this));			  	
+		}
+
+		field.value = ''; 
+	},
+	
+	handleChange: function(e)
+	{
+		var fields = this.container.getElementsByTagName('input');
+		var foundEmpty = false;
+		for (k = 0; k < fields.length; k++)
+		{
+		  	if ('' == fields[k].value)
+		  	{
+			    foundEmpty = true;
+			}
+		}
+		
+		if (!foundEmpty)
+		{
+		  	this.createNewField();
+		}
+	},
+	
+	handleBlur: function(e)
+	{
+		var element = Event.element(e);
+		if (!element.value && this.getFieldCount() > 1)
+		{
+			element.parentNode.parentNode.removeChild(element.parentNode);
+		}  
+	},
+
+	getFieldCount: function()
+	{
+		return this.container.getElementsByTagName('input').length;  
+	},
+		
+	createNewField: function()
+	{
+		var tpl = this.container.getElementsByTagName('p')[0].cloneNode(true);
+		this.bindField(tpl.getElementsByTagName('input')[0]);
+		this.container.appendChild(tpl);
+	},
+
+	reset: function()
+	{
+		var nodes = this.container.getElementsByTagName('p');
+		var ln = nodes.length;
+		for (k = 1; k < ln; k++)
+		{
+		  	nodes[1].parentNode.removeChild(nodes[1]);
+		}
+
+		nodes[0].getElementsByTagName('input')[0].value = '';
+	},
+	
+	filterNumeric: function(e)
+	{
+	  	NumericFilter(Event.element(e));
 	}
 }

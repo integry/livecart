@@ -172,6 +172,27 @@ class ProductController extends StoreManagementController
 		
 		if ($validator->isValid())
 		{
+			// create new specField values
+			$other = $this->request->getValue('other');
+			$needReload = 0;
+			foreach ($other as $fieldID => $values)
+			{
+				$field = SpecField::getInstanceByID($fieldID);
+				
+				foreach ($values as $value)
+				{
+				  	if ($value)
+				  	{
+						$fieldValue = SpecFieldValue::getNewInstance($field);
+					  	$fieldValue->setValueByLang('value', $this->store->getDefaultLanguageCode(), $value);
+					  	$fieldValue->save();
+					  	
+					  	$this->request->setValue('specItem_' . $fieldValue->getID(), 'on');				    
+						$needReload = 1;
+					}
+				}  	
+			}
+			
 			// set data
 			$product->loadRequestData($this->request);
 								
@@ -181,7 +202,7 @@ class ProductController extends StoreManagementController
 									
 			if ($this->request->getValue('afterAdding') == 'new')
 			{
-				return new JSONResponse(array('addmore' => 1));				  	
+				return new JSONResponse(array('addmore' => 1, 'needReload' => $needReload));			  	
 			}
 			else
 			{

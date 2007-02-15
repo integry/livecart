@@ -15,7 +15,7 @@
 	
 	{if $field.type == 1 || $field.type == 5}
 		{if $field.isMultiValue}		
-			<fieldset class="container multiValueSelect">
+			<fieldset class="container multiValueSelect{if $field.type == 1} multiValueNumeric{/if}">
 			{foreach from=$field.values key="id" item="value"}
 				{if '' != $id}
 					<p>
@@ -24,8 +24,15 @@
 				{/if}
 			{/foreach}
 
+			<div class="other">
+				<p>
+					<label> {t _other}:</label>
+					{textfield name="other[`$field.ID`][]"}
+				</p>
+			</div>
+
 			<p class="selectMenu">
-				<a href="#" onclick="Backend.Product.multiValueSelect(this, true); return false;">Select All</a> | <a href="#" onclick="Backend.Product.multiValueSelect(this, false);  return false;">Deselect All</a>
+				<a href="#" onclick="Backend.Product.multiValueSelect(this, true); return false;">Select All</a> | <a href="#" onclick="Backend.Product.multiValueSelect(this, false);  return false;" class="deselect">Deselect All</a>
 			</p>
 
 			</fieldset>

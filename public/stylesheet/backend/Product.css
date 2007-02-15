@@ -1,3 +1,6 @@
+/*************************
+	Product form
+*************************/
 fieldset.specification
 {
   	margin-top: 10px;
@@ -20,6 +23,17 @@ fieldset.specification .numeric
 
 }
 
+.multiValueSelect div.other label
+{
+  	width: auto;
+  	margin-right: 10px;        
+}
+
+.multiValueSelect div.other input
+{
+  	width: 150px;
+}
+
 .unitSwitch
 {
 	font-size: smaller;
@@ -31,6 +45,9 @@ fieldset.specification .numeric
 	display: none;  
 }
 
+/*************************
+	Product list
+*************************/
 .productList, .productHead
 {
   	width: 100%;
