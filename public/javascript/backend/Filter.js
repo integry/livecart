@@ -861,12 +861,7 @@ Backend.Filter.prototype = {
             var newValue = filters[0].cloneNode(true);
             Element.removeClassName(newValue, "dom_template");
 
-            if(!this.filtersList) 
-            {
-                console.info(':/', this.filtersList);
-                this.bindDefaultFields();
-            }
-            else console.info(this.filtersList);
+            if(!this.filtersList) this.bindDefaultFields();
             var li = this.filtersList.addRecord(id, [newValue]);
             
             Element.addClassName(li, this.cssPrefix + "default_filter_li");
