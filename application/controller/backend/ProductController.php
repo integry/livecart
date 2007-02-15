@@ -334,21 +334,32 @@ class ProductController extends StoreManagementController
 		}
 			
 		// spec field validator
-		$specFields = $product->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES)->toArray();	
+		$specFields = $product->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES);	
 
 		foreach ($specFields as $key => $field)
 		{
+			$fieldname = $field->getFormFieldName();
+				
 		  	// validate numeric values
-			if (SpecField::TYPE_NUMBERS_SIMPLE == $field['type'])
+			if (SpecField::TYPE_NUMBERS_SIMPLE == $field->type->get())
 		  	{
-				$validator->addCheck($field['fieldName'], new IsNumericCheck($this->translate('_err_numeric')));		    
-				$validator->addFilter($field['fieldName'], new NumericFilter());		    
+				$validator->addCheck($fieldname, new IsNumericCheck($this->translate('_err_numeric')));		    
+				$validator->addFilter($fieldname, new NumericFilter());		    
 			}
 
 		  	// validate required fields
-			if ($field['isRequired'] && !$field['isMultiValue'])
+			if ($field->isRequired->get())
 		  	{
-				$validator->addCheck($field['fieldName'], new IsNotEmptyCheck($this->translate('_err_specfield_required')));		    
+				if (!$field->isSelector())
+				{
+					$validator->addCheck($fieldname, new IsNotEmptyCheck($this->translate('_err_specfield_required'))); 
+					echo '---'.$field->getValueByLang('name', 'en').'<br>';   				  
+				}
+				else
+				{
+					ClassLoader::import('application.helper.check.SpecFieldIsValueSelectedCheck');					
+					$validator->addCheck($fieldname, new SpecFieldIsValueSelectedCheck($this->translate('_err_specfield_requiredaaaaaaaa'), $field, $this->request));		    
+				}			
 			}
 		}
 	

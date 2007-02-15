@@ -59,7 +59,7 @@
 	{/if}
 {/defun}
 
-{form handle=$productForm action="controller=backend.product action=save id=`$product.ID`" method="POST" onsubmit="Backend.Product.saveForm(this); return false;" onreset="Backend.Product.resetAddForm(this);"}
+{form handle=$productForm action="controller=backend.product action=save id=`$product.ID`" method="POST" prevalidate="tinyMCE.triggerSave();" onsubmit="Backend.Product.saveForm(this); return false;" onreset="Backend.Product.resetAddForm(this);"}
 	
 	<div class="productSaveConf" style="margin-bottom: 10px; display: none;">
 		<div class="yellowMessage">
