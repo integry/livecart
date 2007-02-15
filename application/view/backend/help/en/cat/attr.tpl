@@ -149,8 +149,8 @@
 
 <p>
 	Battery capacity is expressed in numerical format of mAh, therefore you should consider choosing a <strong>Number</strong> type. When it comes
-	to field or selector it is up to you to decide whether you want to create a single field or a list of possible capacity values. For the sake of
-	simplicity we choose a field type in the following example.
+	to field or selector it is up to you to decide whether you want to create a single field or a list of possible capacity values. We choose a field
+	type in the following example.
 </p>
 
 	<ul>
@@ -183,7 +183,7 @@
 </p>
 
 <p>
-	The Battery Capacity attribute should look like similar this:
+	The Battery Capacity attribute:
 </p>
 
 <p>
@@ -194,6 +194,18 @@
 	
 <h4 id="bandwidth">Creating <i>Bandwidth</i> attribute</h4>
 
+<p>
+	Complete the following steps to create a bandwidth attribute.
+</p>
+
+<ul>
+	<li>Type - select Number Options to create a list of possible bandwidth values.</li>
+	<li>Required - mark the checkbox to set the attribute required</li>
+	<li>Can select multiple values - mark the checkbox to allow multiple bandwidth selection </li>
+	<li>Title - enter <strong>Bandwidth</strong></li>
+	<li>Handle - </li>
+	<li>Description - enter description about Bandwidth.</li>
+<ul>
 
 <h3 id="group">Group attributes</h3>
 

@@ -111,12 +111,17 @@ h4 {
 .tasks ul
 {
 	list-style-type: square;
+	margin-left: 30px;
+	line-height: 25px;
+	font-family: georgia;
 }
 
 #helpContent img
 {
   	border: 1px solid #CCCCCC;
-  	margin: 7px;
+  	margin: 20px;
+	margin-left: -20px;
+
 }
 
 .current
@@ -141,14 +146,14 @@ ins {
   	color: rgb(255, 100, 100);
 }
 
-
 p.note {
 
 	margin: 5px;
+	font-family: verdana, sans-serif;
 	margin-top: 20px;
 	margin-bottom: 10px;
 	padding: 5px;
-	font-size: 14px;
+	font-size: 13px;
 	color: #465584;
 	background-color: #F1F7FF;
 	border: 1px dotted #728DC9;
