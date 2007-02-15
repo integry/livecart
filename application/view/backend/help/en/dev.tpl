@@ -1,5 +1,5 @@
 <p>
-	LiveCart supports two methods of integration with other systems and extending it's functionality - SOAP API and PHP API.
+	LiveCart supports two methods of integration with other systems and extending it's functionality - SOAP API and PHP API. LiveCart also supports several types of standard plugins - payment processors, real-time shipping cost calculation, currency rate updates.
 </p>
 
 <h3>SOAP API</h3>
