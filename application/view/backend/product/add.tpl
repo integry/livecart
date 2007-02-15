@@ -39,6 +39,7 @@
 			<input type="hidden" name="{$fieldName}" value="" />
 		{else}
 			{selectfield id="`$fieldName`_`$cat`" name=$fieldName options=$field.values class="select"}		
+			{textfield id="`$fieldName`_other_`$cat`" name="other[`$field.ID`]" options=$field.values style="display: none;"}					
 		{/if}
 
 	{elseif $field.type == 2}

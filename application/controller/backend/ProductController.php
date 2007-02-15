@@ -179,18 +179,35 @@ class ProductController extends StoreManagementController
 			{
 				$field = SpecField::getInstanceByID($fieldID);
 				
-				foreach ($values as $value)
+				if (is_array($values))
 				{
-				  	if ($value)
-				  	{
+					// multiple select
+					foreach ($values as $value)
+					{
+					  	if ($value)
+					  	{
+							$fieldValue = SpecFieldValue::getNewInstance($field);
+						  	$fieldValue->setValueByLang('value', $this->store->getDefaultLanguageCode(), $value);
+						  	$fieldValue->save();
+						  	
+						  	$this->request->setValue('specItem_' . $fieldValue->getID(), 'on');				    
+							$needReload = 1;
+						}
+					}  					  
+				}
+				else
+				{
+					// single select
+					if ('other' == $this->request->getValue('specField_' . $fieldID))
+					{
 						$fieldValue = SpecFieldValue::getNewInstance($field);
-					  	$fieldValue->setValueByLang('value', $this->store->getDefaultLanguageCode(), $value);
+					  	$fieldValue->setValueByLang('value', $this->store->getDefaultLanguageCode(), $values);
 					  	$fieldValue->save();
 					  	
-					  	$this->request->setValue('specItem_' . $fieldValue->getID(), 'on');				    
-						$needReload = 1;
-					}
-				}  	
+					  	$this->request->setValue('specField_' . $fieldID, $fieldValue->getID());    
+						$needReload = 1;					  
+					}					  
+				}
 			}
 			
 			// set data
@@ -237,6 +254,11 @@ class ProductController extends StoreManagementController
 				foreach ($values as $value)
 				{
 					$specFieldArray[$key]['values'][$value['ID']] = $value['value_lang'];  	
+				}
+				
+				if (!$field->isMultiValue->get())
+				{
+					$specFieldArray[$key]['values']['other'] = $this->translate('_enter_other');				  
 				}
 			}
 		}
