@@ -19,11 +19,11 @@
     padding-left: 275px;
 }
 
-#managerContainer {
+.managerContainer {
     margin-left: 270px;
 }
 
-#tabContainer {
+.tabContainer {
     height: 30px;  
     overflow: hidden
 }

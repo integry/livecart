@@ -1,9 +1,9 @@
-#managerContainer {
+.managerContainer {
 	position: relative;
 }
 
 /* Category manager styling */
-#tabContainer ul
+.tabContainer ul
 {
 	list-style: none;
 	margin:0px;
@@ -11,7 +11,7 @@
 	height: 28px;
 }
 
-#tabContainer ul li.inactive, #tabContainer ul li.active, #tabContainer ul li.hover
+.tabContainer ul li.inactive, .tabContainer ul li.active, .tabContainer ul li.hover
 {
 	padding: 5px 15px 5px 15px;
 	float: left;
@@ -20,7 +20,7 @@
 	border: 1px solid #ccc;
 	border-bottom: 0px;
 }
-#tabContainer ul li.active
+.tabContainer ul li.active
 {
 	padding: 7px 17px 7px 17px;
 	background-color: #fff;
@@ -28,16 +28,16 @@
 	margin-left: 0px;
 	margin-right: 0px;
 }
-#tabContainer ul li.hover
+.tabContainer ul li.hover
 {
 	border-top: 2px solid red;
 }
-#tabContainer ul li.hover, #tabContainer ul li.inactive
+.tabContainer ul li.hover, .tabContainer ul li.inactive
 {
 	background-color: #f5f5f5;
 }
 
-#sectionContainer
+.sectionContainer
 {
 	padding: 20px 10px 10px 10px; 
 	border: 1px solid #b3d4ef;

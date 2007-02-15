@@ -394,6 +394,41 @@ class ProductController extends StoreManagementController
 		}
 		return $path;
 	}
+
+	public function basic()
+	{
+	    return new RawResponse('basic id=' . $this->request->getValue('id') . '; category=' . $this->request->getValue('categoryID'));
+	}
+
+	public function inventory()
+	{
+	    return new RawResponse('inventory id=' . $this->request->getValue('id') . '; category=' . $this->request->getValue('categoryID'));
+	}
+
+	public function images()
+	{
+	    return new RawResponse('images id=' . $this->request->getValue('id') . '; category=' . $this->request->getValue('categoryID'));
+	}
+
+	public function relatedProducts()
+	{
+	    return new RawResponse('relatedProducts id=' . $this->request->getValue('id') . '; category=' . $this->request->getValue('categoryID'));
+	}
+
+	public function options()
+	{
+	    return new RawResponse('options id=' . $this->request->getValue('id') . '; category=' . $this->request->getValue('categoryID'));
+	}
+
+	public function discounts()
+	{
+	    return new RawResponse('discounts id=' . $this->request->getValue('id') . '; category=' . $this->request->getValue('categoryID'));
+	}
+
+	public function files()
+	{
+	    return new RawResponse('files id=' . $this->request->getValue('id') . '; category=' . $this->request->getValue('categoryID'));
+	}
 }
 
 ?>

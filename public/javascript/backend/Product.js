@@ -226,6 +226,89 @@ Backend.Product.saveHandler.prototype =
 	}
 }
 
+Backend.Product.Editor = Class.create();
+Backend.Product.Editor.prototype = 
+{    
+    __currentId__: null,
+    __instances__: {},
+    
+    initialize: function(id, url)
+  	{
+	    this.url = url;
+	    this.id = id;
+        
+        this.__nodes__();
+        this.__bind__();
+        this.__init__();
+	},
+	
+	__nodes__: function(parent)
+    {
+        this.nodes = {};
+        this.nodes.categoryManagerContainer = $("managerContainer");
+        this.nodes.productManagerContainer = $("productManagerContainer");
+    },
+    
+    __bind__: function(args)
+    {
+        Backend.Product.Editor.prototype.setCurrentProductId(this.id);
+        this.tabControl = TabControl.prototype.getInstance("productManagerContainer", Backend.Product.Editor.prototype.craftProductUrl);
+    },
+    
+    __init__: function(args)
+    {
+        
+    },
+    
+    craftProductUrl: function(url)
+    {
+        return url.replace(/_categoryID_/, Backend.Category.treeBrowser.getSelectedItemId()).replace(/_id_/, Backend.Product.Editor.prototype.getCurrentProductId());
+    },
+    
+    getCurrentProductId: function()
+    {
+        return Backend.Product.Editor.prototype.__currentId__;
+    },
+    
+    setCurrentProductId: function(id)
+    {
+        Backend.Product.Editor.prototype.__currentId__ = id;
+    },
+    
+    getInstance: function(id, url)
+    {
+        if(!Backend.Product.Editor.prototype.__instances__[id])
+        {
+            Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id, url);
+        }
+        
+        return Backend.Product.Editor.prototype.__instances__[id];
+    },
+    
+    showProductForm: function(args)
+    {
+        Backend.Product.Editor.prototype.setCurrentProductId(this.id);
+        this.hideCategoriesContainer();
+    },
+    
+    hideProductForm: function(args)
+    {
+        this.showCategoriesContainer();
+    },
+    
+    hideCategoriesContainer: function(args)
+    {
+        Element.hide($("managerContainer"));
+        Element.show($("productManagerContainer"));
+    },
+    
+    showCategoriesContainer: function(args)
+    {
+        Element.hide($("productManagerContainer"));
+        Element.show($("managerContainer"));
+    }
+}
+
 Backend.Product.specFieldEntryMultiValue = Class.create();
 Backend.Product.specFieldEntryMultiValue.prototype = 
 {
