@@ -1,108 +1,103 @@
-var TabControl = Class.create();
+Event.fire = function(element, event) 
+{
+   Event.observers.each(function(observer) 
+   {
+        if(observer[1] == event && observer[0] == element)
+        {
+            var func = observer[2];
+            func();
+        }
+   });
+};
 
+
+var TabControl = Class.create();
 TabControl.prototype = {
 
 	activeTab: null,
 	indicatorImageName: "image/indicator.gif",
 
-	initialize: function(tabContainerName, sectionContainerName, indicatorImageName)
+	initialize: function(tabContainerName)
 	{
-		if (indicatorImageName != undefined)
-		{
-			this.indicatorImageName = indicatorImageName;
-		}
+        var self = this;    
+            
+        this.nodes = {};
+        this.nodes.tabContainer = $(tabContainerName);
+		this.nodes.tabList = this.nodes.tabContainer.down(".tabList");
+		this.nodes.tabListElements = document.getElementsByClassName("tab", this.nodes.tabList);
+		this.nodes.sectionContainer = this.nodes.tabContainer.down(".sectionContainer");
+        this.nodes.tabListElements.each(function(li) 
+        {
+			var link = li.down('a');
+            var indicator = '<img src="' + self.indicatorImageName + '" class="tabIndicator hidden" alt="Tab indicator" /> ';
+            
+            Event.observe(link, 'click', function(e) { if(e) Event.stop(e); });
+            Event.observe(li, 'click', function(e) { 
+                if(e) Event.stop(e); 
+                self.handleTabClick({'target': li}) 
+            });
+			Event.observe(li, 'mouseover', function(e) { 
+                if(e) Event.stop(e); 
+                self.handleTabMouseOver({'target': li}) 
+            });
+			Event.observe(li, 'mouseout', function(e) { 
+                if(e) Event.stop(e); 
+                self.handleTabMouseOut({'target': li}) 
+            });
+            
+            li.update(indicator + li.innerHTML);
 
-		var tabList = document.getElementsByClassName("tab");
-		for (var i = 0; i < tabList.length; i++)
-		{
-			tabList[i].onclick = this.handleTabClick;
-			tabList[i].onmouseover = this.handleTabMouseOver.bindAsEventListener(this);
-			tabList[i].onmouseout = this.handleTabMouseOut.bindAsEventListener(this);
-				
-			tabList[i].tabControl = this;
-		
-			aElementList = tabList[i].getElementsByTagName('a');
-			if (aElementList.length > 0)
-			{
-				// Getting an URL that tab is pointing to by analysing "A" element
-				tabList[i].url = aElementList[0].href;
-				new Insertion.After(aElementList[0], aElementList[0].innerHTML);
-				// inserting indicator element which will be show on tab activation
-				new Insertion.Before(aElementList[0], '<img src="' + this.indicatorImageName + '" class="tabIndicator" id="' + tabList[i].id + 'Indicator" alt="Tab indicator" style="display:none"/> ');
-				Element.remove(aElementList[0]);
-			}
-
-			if (tabList[i].id == '')
-			{
-				tabList[i].id = 'tab' + i;
-			}
-			if (Element.hasClassName(tabList[i], 'active'))
-			{
-				this.activeTab = tabList[i];
-				Element.show(tabList[i].id + 'Content');
-			}
-			else
-			{
-				Element.hide(tabList[i].id + 'Content');
-			}
-		}
-		
-		// register for AJAX browser navigation handler
-		this.activeTab.onclick();
-		//addlog(this.activeTab.id);
-		
+			if (Element.hasClassName(li, 'active')) self.activeTab = li;
+		});
+       
+        Event.fire(this.activeTab, 'click');
 	},
 
-	handleTabMouseOver: function(evt)
+	handleTabMouseOver: function(args)
 	{
-		if (this.activeTab != evt.target)
+		if (this.activeTab != args.target)
 		{
-			Element.removeClassName(evt.target, 'inactive');
-			Element.addClassName(evt.target, 'hover');
+			Element.removeClassName(args.target, 'inactive');
+			Element.addClassName(args.target, 'hover');
 		}
 	},
 
-	handleTabMouseOut: function(evt)
+	handleTabMouseOut: function(args)
 	{
-		if (this.activeTab != evt.target)
+		if (this.activeTab != args.target)
 		{
-			Element.removeClassName(evt.target, 'hover');
-			Element.addClassName(evt.target, 'inactive');
+			Element.removeClassName(args.target, 'hover');
+			Element.addClassName(args.target, 'inactive');
 		}
 	},
 
-	handleTabClick: function()
+	handleTabClick: function(args)
 	{
-		this.tabControl.activateTab(this);
-
-		Backend.ajaxNav.add(this.id, this.id);
-				
+        this.activateTab(args.target);
 	},
 
 	activateTab: function(targetTab)
 	{
-		if (this.activeTab == targetTab && !Element.empty(targetTab.id + 'Content'))
-		{
-			return;
-		}
+        var contentId = targetTab.id + 'Content';
+        if(!$(contentId)) new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '"></div>');
+        else if (this.activeTab == targetTab && !Element.empty(contentId)) return;
 
-		if (this.activeTab != null)
+		if(this.activeTab)
 		{
 			Element.removeClassName(this.activeTab, 'active');
 			Element.addClassName(this.activeTab, 'inactive');
 			Element.hide(this.activeTab.id + 'Content');
 		}
+
 		this.activeTab = targetTab;
-		Element.removeClassName(this.activeTab, 'hover');
+        
+        Element.removeClassName(this.activeTab, 'hover');
 		Element.addClassName(this.activeTab, 'active');
-		Element.show(this.activeTab.id + 'Content');
-
-		var indicatorId = this.activeTab.id + 'Indicator';
-		var contentId = this.activeTab.id + 'Content'
-
-		if (Element.empty(contentId))
+		Element.show(contentId);   
+        
+		if (Element.empty($(contentId)))
 		{
-			new LiveCart.AjaxUpdater(targetTab.url, contentId, indicatorId);
+			new LiveCart.AjaxUpdater(targetTab.down('a').href, contentId, targetTab.down('.tabIndicator'));
 		}
 	},
 
@@ -112,8 +107,7 @@ TabControl.prototype = {
 	 */
 	resetContent: function(tabObj)
 	{
-		var contentId = tabObj.id + 'Content';
-		$(contentId).innerHTML = '';
+		$($(tabObj).id + 'Content').update();
 	},
 
 	reloadActiveTab: function()
@@ -129,6 +123,6 @@ TabControl.prototype = {
 
 	setTabUrl: function(tabId, url)
 	{
-		$('tabId').url = url;
+		$(tabId).url = url;
 	}
 }
