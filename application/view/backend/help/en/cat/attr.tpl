@@ -7,6 +7,10 @@
 <p>
 	Attributes allow grouping (filtering) products by their specific properties.
 </p>
+
+<p>
+	Attributes appear in the Add new product form...
+</p>
 <p>
 	For instance, if a customer is shopping for a new laptop and is particularly looking for an AMD processor and you have created a "Processor Type"
 	attribute, the customer will be able to sort the whole list of laptops to display only AMD processor powered laptops with a single click. This 
@@ -37,17 +41,15 @@
 
 <h3>Attribute Types</h3>
 
-<ins>
-<p>LiveCart supports various product attribute types...</p>
+<p>LiveCart supports various product attribute types which can be text, number or date.</p>
 <p>Below you'll find a couple of practical examples on how to choose which attribute type would suit best for describing a particular product property.</p>
-</ins>
 
 <h3 id="create">Create Attribute</h3>
 <p>
 	Here are some examples of a few simple attributes you might find handy<ins>...</ins> Later we will show how they are actually implemented in the <i>Filters</i> section.
 	Notice that because attributes specify properties of the products within a specific category they are automatically included in the 
 	<i>Add New Product</i> form. (Therefore in these example we will demonstrate how ...)
-	Suppose you have a category stocked with cell phomes and you want to create fields for defining/specifying the following properties:
+	Suppose you have a category stocked with cell phones and you want to create fields for defining/specifying the following properties:
 	<a href="{self}#carrier">Carrier</a>, <a href="{self}#features">Phone Features</a>, <a href="{self}#capacity">Batery Capacity</a> and 
 	<a href="{self}#bandwidth">Bandwidth</a>. 
 </p>
@@ -65,14 +67,12 @@
 <h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
 	<ul>
 
-		<li>Attributes are defined by their <i>type</i> which can be text, date or numbers. Because mobile carrier is a simple text and there
-		is (probably) a finite number of carriers we select <i>Text selector</i> as our type. </li>
+		<li>Because mobile carrier is a simple text and there is (probably) a finite number of carriers we select <i>Text selector</i> as our
+		type. Our chosen type is suitable for creating a predefined list of values which will be displayed as a selection option. </li>
 <p>
 	<img src="image/doc/categories/attributes/type.bmp">
 </p>
-<p>
-	Text selector is suitable for creating a predefined list of values which will be displayed as a selection option. 
-</p>
+
 		<li>We check <i>Required</i> to make the field mandatory since it is an important feature. </li>
 <p>
 	<img src="image/doc/categories/attributes/required.bmp">
@@ -114,13 +114,12 @@
 	will look similar to this one:
 <p>
 	<img src="image/doc/categories/attributes/carrier.bmp">
-<ins>hgfhf in the background doesn't look too solid :)</ins>
 </p>
 
 <h4 id="features">Creating <i>Phone Features</i> attribute</h4>
 
 <p>
-	As in previous example we will use Text Selector because we know that cell phones can have many features (and it more convenient to list them 
+	As in previous example we will use Text Selector because we know that cell phones can have many features (and it is more convenient to list them 
 	out than have them entered every time adding a new cell)
 </p>
 
@@ -140,7 +139,7 @@
 	</ul>
 	Next thing to do is create a value list of mobile's features. Click <i>Values</i> tab which appears on the right of the <i>Main</i> tab. 
 	In the Values section we enter all the necessary features and save the attribute.
-	The representation of generated your field could be similar to this:
+	The representation of your generated field could be similar to this:
 <p>
 	<img src="image/doc/categories/attributes/features.bmp">
 </p>
@@ -184,7 +183,7 @@
 </p>
 
 <p>
-	The Battery Capacity attribute should look similar like that:
+	The Battery Capacity attribute should look like similar this:
 </p>
 
 <p>

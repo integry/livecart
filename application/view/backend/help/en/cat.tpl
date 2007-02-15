@@ -7,7 +7,7 @@
 <img src="image/doc/categories/category tree.bmp">
 
 <p>
-<ins>Example images should contain as real-life like content as possible. Instead of New Category 26, it could be Hardware, etc.</ins>
+<ins>Example images and final design issues will be made at the end as probably interface will be altered several times.</ins>
 </p>
 
 <p>	
