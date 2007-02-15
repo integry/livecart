@@ -198,14 +198,41 @@
 	Complete the following steps to create a bandwidth attribute.
 </p>
 
+<p>
+	<img src="image/doc/categories/attributes/bandwidth.bmp">
+</p>
+
 <ul>
 	<li>Type - select Number Options to create a list of possible bandwidth values.</li>
+	<br \>
 	<li>Required - mark the checkbox to set the attribute required</li>
+	<br \>
 	<li>Can select multiple values - mark the checkbox to allow multiple bandwidth selection </li>
+	<br \>
 	<li>Title - enter <strong>Bandwidth</strong></li>
+	<br \>
 	<li>Handle - </li>
+	<br \>
 	<li>Description - enter description about Bandwidth.</li>
-<ul>
+	<br \>
+</ul>
+
+To set values of the Bandwidth options, go to Values section by clicking Values tab 
+
+<p>
+	<img src="image/doc/categories/attributes/values_tab.bmp">
+</p>
+
+Enter necessary values one by one on the Value field followed by the Add more values button.
+
+<p>
+	<img src="image/doc/categories/attributes/bandwidth_values.bmp">
+</p>
+
+Make sure to click <strong>Save</strong> to save changes when you're done. 
+<p>
+	<img src="image/doc/categories/attributes/save.bmp">
+</p>
 
 <h3 id="group">Group attributes</h3>
 
