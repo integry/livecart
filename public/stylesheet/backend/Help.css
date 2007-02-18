@@ -33,13 +33,20 @@ body {
 }
 p {
   	margin-bottom: 10px;
-  	padding-left: 20px;
+  	padding-left: 5px;
 }
 ul, ol {
-  	margin-left: 20px;
+  	padding: 5px;
+  	padding-left: 20px;
+  	padding-top: 15px;
+	margin-left: 20px;
   	margin-bottom: 10px;
 	list-style-type: square;
-
+	width: 60%;
+	background-color: #EEEEEE;
+}
+li	{
+	margin-bottom: 10px;
 }
 h1 {
 	font-size: largest; 
@@ -64,6 +71,17 @@ h4 {
 	margin-bottom: 10px;  
 }
 
+a.external
+{
+	background-image: url(../../image/silk/link_go.png);
+	background-repeat: no-repeat;
+	background-position: right;
+	padding-right: 17px;	
+}
+
+/**************************
+	Header
+**************************/
 #helpHeader {
 	padding: 10px; 
 	background-color: yellow;
@@ -86,6 +104,26 @@ h4 {
 #breadCrumbLast {
   	font-weight: bold;
 }
+
+/**************************
+	Sidebar navigation
+**************************/
+#helpTopicTree ul, .tasks ul, .seeAlso ul
+{
+	padding: 0;
+	margin-left: 20px;
+	width: auto;
+	background-color: inherit;
+}
+
+#helpTopicTree ul li, .tasks ul li, .seeAlso ul li
+{
+	margin-bottom: 3px;
+}
+
+/**************************
+	Footer
+**************************/
 #helpFooter {
 	border-top: 1px solid #AAAAAA;  
 	background-color: #DDDDDD;
@@ -95,6 +133,9 @@ h4 {
 	padding: 5px;
 }
 
+/**************************
+	Content
+**************************/
 .tasks, .seeAlso
 {
 	float: left; 
