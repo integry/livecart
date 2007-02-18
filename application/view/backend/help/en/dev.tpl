@@ -1,23 +1,30 @@
 <p>
-	LiveCart supports two methods of integration with other systems and extending it's functionality - SOAP API and PHP API. LiveCart also supports several types of standard plugins - payment processors, real-time shipping cost calculation, currency rate updates.
+	LiveCart has been developed keeping developers needs in mind. Most of currently available shopping cart programs are a pain to modify, because they lack clear structure, contain a lot of ad-hoc <em>spaghetti</em> code all over the place, do no provide clear interfaces for hooking in your own functionality, no APIs, not to even mention a system documentation or at least well commented code. 
 </p>
 
-<h3>SOAP API</h3>
-
-<ul>
-	<li>Useful when integrating LiveCart into remote business systems like external inventory, product management, accounting and others</li>
-	<li>Basically used to exchange data (create, retrieve, update, delete) with other systems</li>
-</ul>
-
-<h3>PHP API</h3>
-
-<ul>
-	<li>Allows to modify and extend LiveCarts behaviour without changing the underlying code</li>
-	<li>Allows to use LiveCart data model classes, thus providing the ability to perform any native LiveCart data operation</li>
-</ul>
-
-<h3>Combined usage</h3>
-
 <p>
-	The two APIs can be combined and used together, for example, by using a PHP API to catch a system event (incoming order, etc.) and send a SOAP request to 3rd party application.
+	We have attempted to solve this problem for once by creating a truly developer friendly application, with well structured code, which follows strict conventions, providing means to extend or interact with the system without a need to change the underlying code as well as providing as much documentation as possible to make it easier to get around in LiveCart code.
+</p>
+
+<h3>Application</h3>
+<p>
+	If you're looking to do mode complex customizations, you should introduce yourself with <a href="{help .app}">LiveCart architecture and basic principles</a> first.
+</p>
+
+<h3>Plugins</h3>
+<p>
+	LiveCart provides standard interfaces for plugging in new classes for additional payment processor/gateway support, real-time shipping cost calculation and automatic currency rate updates.
+</p>
+
+<h3>APIs</h3>
+<p>
+	LiveCart provides <a href="{help .api}">two APIs</a> to make it easier to integrate with other systems - <a href="{help .api.soap}">SOAP API</a> and <a href="{help .api}">PHP API</a>. SOAP API is useful for exchanging data with remote systems, however PHP API can be used to do system level customizations without modifying original code.
+</p>
+
+<h3>But I only need to modify the look of my pages?</h3>
+<p>
+	Unless you need your store to support some special features or integrate with other systems, you won't need to touch any code or, in fact, write any code.
+</p>
+<p>
+	There are many other ways to customize your LiveCart installation. You'll find more information on this in <a href="{help /cust}">Customization</a> section of this manual.
 </p>

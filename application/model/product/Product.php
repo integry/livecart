@@ -481,7 +481,6 @@ class Product extends MultilingualObject
 		}
 	}
 
-
 	/**
 	 * Count products in category
 	 *

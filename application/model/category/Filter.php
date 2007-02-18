@@ -32,6 +32,79 @@ class Filter extends MultilingualObject
 	}
 
 	/**
+	 * Create an ActiveRecord Condition object to use for product selection
+	 *
+	 * @return Condition
+	 */
+	public function getCondition()
+	{
+		$specField = $this->filterGroup->get()->specField->get();
+		
+		echo $specField->getValueByLang('name', 'en') . ' - ' . $specField->type->get().'<br>';
+		
+		// selector values
+		if ($specField->isSelector())
+		{
+			$valueID = $this->specFieldValue->get()->getID();
+			if ($specField->isMultiValue->get())
+			{
+				$cond = new EqualsCond(new ARExpressionHandle('specItemTable_' . $specField->getID() . '_' . $valueID . '.specFieldValueID'), $valueID);							
+			}
+			else
+			{
+				$cond = new EqualsCond(new ARExpressionHandle('specItemTable_' . $specField->getID() . '.specFieldValueID'), $valueID);			
+			}
+		}
+		
+		// number range
+		elseif ($specField->isSimpleNumbers())
+		{
+			$field = new ARExpressionHandle('specTable_' . $specField->getID() . '.value');
+			
+			$conditions = array();
+			
+			if ($this->rangeStart->get())
+			{
+				$conditions[] = new EqualsOrMoreCond($field, $this->rangeStart->get());
+			}
+			
+			if ($this->rangeEnd->get())
+			{
+				$conditions[] = new EqualsOrLessCond($field, $this->rangeEnd->get());
+			}
+		
+			$cond = Condition::mergeFromArray($conditions);			
+		}
+		
+		// date range
+		elseif ($specField->isDate())
+		{
+			$field = new ARExpressionHandle('specTable_' . $specField->getID() . '.value');
+			
+			$conditions = array();
+			
+			if ($this->rangeDateStart->get())
+			{
+				$conditions[] = new EqualsOrMoreCond($field, $this->rangeDateStart->get());
+			}
+			
+			if ($this->rangeDateEnd->get())
+			{
+				$conditions[] = new EqualsOrLessCond($field, $this->rangeDateEnd->get());
+			}
+		
+			$cond = Condition::mergeFromArray($conditions);			
+		}
+		
+		else
+		{
+			throw new ApplicationException('Filter type not supported');
+		}	
+		
+		return $cond;
+	}
+	
+	/**
 	 * Get filter active record instance
 	 *
 	 * @param integer $recordID

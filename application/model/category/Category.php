@@ -78,9 +78,16 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return $this->getRelatedRecordSetArray("Product", $this->getProductFilter(new ARSelectFilter()), $loadReferencedRecords);
 	}
 
-	private function getProductFilter(ARSelectFilter $filter)
+	public function getProductFilter(ARSelectFilter $filter)
 	{
-
+		// load product specification
+		$specFields = $this->getSpecificationFieldSet(self::INCLUDE_PARENT);	  
+		
+		foreach ($specFields as $specField)
+		{
+		  	$specField->defineJoin($filter);
+		}
+				
 		$filter->joinTable('ProductPrice', 'Product', 'productID AND pricetable_EUR.currencyID = "EUR"', 'ID', 'pricetable_EUR');				  	
 	  	$filter->addField('price', 'pricetable_EUR', 'price_EUR');
 

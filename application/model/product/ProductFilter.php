@@ -7,12 +7,15 @@
  */
 class ProductFilter
 {
+	private $category = null;
 	private $selectFilter = null;
 	private $condition = null;	
 
-	public function __construct()
+	private $filters = array();
+
+	public function __construct(Category $category, ARSelectFilter $filter)
 	{
-		$this->selectFilter = new ARSelectFilter();
+		$this->selectFilter = $filter;
 	}
 	
 	/**
@@ -23,6 +26,7 @@ class ProductFilter
 	 */
 	public function applyFilter(Filter $filter)
 	{
+		$this->addCondition($filter->createCondition());
 	}
 
 	public function searchNameByLang($language, $needle)
@@ -43,6 +47,25 @@ class ProductFilter
 	{
 	  	$this->selectFilter->setCondition($this->condition);
 	  	return $this->selectFilter;
+	}
+	
+	public function getCountByFilters($filters)
+	{
+		$this->selectFilter->removeFieldList();
+		foreach ($filters as $filter)
+		{
+			echo $filter->getCondition()->createChain() . '<br>';
+			$expression = 'SUM(' . $filter->getCondition()->getExpressionHandle()->toString() . ')';
+			$this->selectFilter->addField($expression, null, '_filterCount_' . $filter->getID());	
+		}
+		
+		$query = ActiveRecordModel::createSelectQuery('Product');
+		$query->removeFieldList();
+		$query->getFilter()->merge($this->selectFilter);
+		
+		$data = ActiveRecordModel::fetchDataFromDB($query);
+		
+		return $data;
 	}
 	
 	protected function addCondition(Condition $cond)

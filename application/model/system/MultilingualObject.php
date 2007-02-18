@@ -6,7 +6,7 @@ ClassLoader::import("application.model.system.MultilingualObjectInterface");
 /**
  * Multilingual data object
  *
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  * @package application.model.system
  */
 abstract class MultilingualObject extends ActiveRecordModel implements MultilingualObjectInterface
@@ -54,7 +54,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	}
 
 	/**
-	 * Tranforms data array to a folowing format:
+	 * Tranforms object data to data array in the following format:
 	 *
 	 * simpleField => value,
 	 * multilingualField_langCode => value,
@@ -62,6 +62,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	 *
 	 * @param unknown_type $includeLangData
 	 * @todo cleanup
+	 * @return array
 	 */
 	public function toArray($recursive = false, $convertToUnderscope = true)
 	{
@@ -76,33 +77,19 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 			$fieldValue = $valueContainer->get();
 			if ($field instanceof ARForeignKey)
 			{			
-				
-				// r1411: $data[$field->getForeignClassName()] = $valueContainer->get()->toArray(true);
+//				if ($recursive)
 
-				//echo $fieldName;
-				//echo get_class($fieldValue) . "<br/>";
-				//echo $fieldValue->getID();
+				//$data[$field->getForeignClassName()] = $valueContainer->get()->toArray(true);
+				/* @todo: why/how would $fieldValue could ever not be an object? */
 
-				if ($recursive)
+				if (!is_object($fieldValue))
 				{
-					$data[$field->getForeignClassName()] = $fieldValue->toArray(true);
+				  	$data[$field->getForeignClassName()] = false;
 				}
 				else
 				{
-					//$data[$field->getForeignClassName()] = $valueContainer->get()->toArray(true);
-					/* @todo: why/how would $fieldValue could ever not be an object? */
-
-					if (!is_object($fieldValue))
-					{
-					  	$data[$field->getForeignClassName()] = false;
-					}
-					else
-					{
-						$data[$field->getForeignClassName()] = $fieldValue->toArray();					  
-					}
-
+					$data[$field->getForeignClassName()] = $fieldValue->toArray();					  
 				}
-
 			}
 			else
 			{
@@ -159,6 +146,8 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	 *	Basically what the SQL expression does, it parses serialized PHP array and returns the value
 	 *	for the particular language. If there's no value entered for the current language, default language
 	 * 	value is returned.
+	 *
+	 *	@return ARExpressionHandle
 	 */
 	public static function getLangOrderHandle(ARFieldHandle $field)
 	{
@@ -203,6 +192,8 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	
 	/**
    	 *	Creates an ARExpressionHandle for performing searches over language fields (finding a value in particular language)
+	 *
+	 *	@return ARExpressionHandle  	 
    	 */	
 	public static function getLangSearchHandle(ARFieldHandle $field, $language)
 	{

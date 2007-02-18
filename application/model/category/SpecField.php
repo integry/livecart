@@ -255,6 +255,26 @@ class SpecField extends MultilingualObject
 	}
 
 	/**
+	 * Check if current specification field type is simple numbers
+	 *
+	 * @return boolean
+	 */
+	public function isSimpleNumbers()
+	{
+		return $this->type->get() == SpecField::TYPE_NUMBERS_SIMPLE;  
+	}
+
+	/**
+	 * Check if current specification field type is date
+	 *
+	 * @return boolean
+	 */
+	public function isDate()
+	{
+		return $this->type->get() == SpecField::TYPE_TEXT_DATE;  
+	}
+
+	/**
 	 * Get array of selector types
 	 *
 	 * @return array
@@ -342,8 +362,8 @@ class SpecField extends MultilingualObject
     {
         return $category->getSpecificationFieldSet()->getTotalRecordCount();
     }
-    
-    /**
+	
+	/**
      *	Adds JOIN definition to ARSelectFilter to retrieve product attribute value for the particular SpecField
      *	
      *	@param	ARSelectFilter	$filter	Filter instance
@@ -368,15 +388,17 @@ class SpecField extends MultilingualObject
 				{
 				  	$aliasTable = 'specTable_' . $this->getID() . '_' . $value->getID();
 				  	$aliasField = 'multiItem_' . $this->getID() . '_' . $value->getID();
+
+					$specItemTable = 'specItemTable_' . $this->getID() . '_' . $value->getID();
+					$filter->joinTable('SpecificationItem', 'Product', 'productID AND ' . $specItemTable . '.SpecFieldValueID = ' . $value->getID(), 'ID', $specItemTable);				  				  
 		
-					$filter->joinTable('SpecFieldValue', 'Product', 'productID AND ' . $aliasTable . '.ID = ' . $value->getID(), 'ID', $aliasTable);				  	
+					$filter->joinTable('SpecFieldValue', $specItemTable, 'ID', 'SpecFieldValueID', $aliasTable);				  				  
 				}
 			}
 			else
 			{
 				$specItemTable = 'specItemTable_' . $this->getID();
 				$filter->joinTable('SpecificationItem', 'Product', 'productID AND ' . $specItemTable . '.SpecFieldID = ' . $this->getID(), 'ID', $specItemTable);				  				  
-			  	$filter->addField('specFieldValueID', $specItemTable, 'specFieldValueID_' . $this->getID());
 	
 				$filter->joinTable('SpecFieldValue', $specItemTable, 'ID', 'SpecFieldValueID', $aliasTable);				  				  
 		  	}

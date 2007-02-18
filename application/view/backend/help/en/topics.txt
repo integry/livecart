@@ -1,5 +1,9 @@
 =LiveCart Help
 
+	intro=Introduction
+
+	installation=Installation
+
 	cat=Product Categories
 		details=Category Details
 		attr=Attributes
@@ -19,9 +23,25 @@
 		edit=Edit Translations
 		
 	cust=Customization
-	
-	installation=Installation
+		template=Templates
+		css=CSS
+		skin=Skins
 		
 	dev=Developers Manual
-		soap=SOAP API
-		php=PHP API
+		app=Application
+			model=Models
+			view=Views
+				helper=Helpers
+			controller=Controllers
+			directory=Directories
+			diagram=Diagrams
+				uml=UML Diagrams
+				db=Database Diagram
+			codedoc=Code Documentation
+		plugin=Plugins
+			payment=Payment Processors
+			shipping=Real-time Shipping
+			currency=Currency Rate Update
+		api=APIs
+			soap=SOAP API
+			php=PHP API
