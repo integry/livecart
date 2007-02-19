@@ -28,9 +28,11 @@ class FilterGroup extends MultilingualObject
 	 *
 	 * @return ActiveRecord
 	 */
-	public static function getNewInstance()
+	public static function getNewInstance(SpecField $specField)
 	{
-		return parent::getNewInstance(__CLASS__);
+		$inst = parent::getNewInstance(__CLASS__);
+		$inst->specField->set($specField);
+		return $inst;
 	}
 
 	/**
@@ -130,8 +132,7 @@ class FilterGroup extends MultilingualObject
         {
             if(preg_match('/^new/', $key))
             {
-                $filter = Filter::getNewInstance();
-                $filter->setFieldValue('position', 100000); // Now new filter will appear last in active list.
+                $filter = Filter::getNewInstance($this);
             }
             else
             {
@@ -172,6 +173,12 @@ class FilterGroup extends MultilingualObject
         }
     }
 
+	protected function insert()
+	{
+		$this->position->set(100000);  			
+		return parent::insert();
+	}
+
 	/**
 	 * Count filter groups in this category
 	 *
@@ -181,7 +188,7 @@ class FilterGroup extends MultilingualObject
     public static function countItems(Category $category)
     {
         return $category->getFilterGroupSet(false)->getTotalRecordCount();
-    }
+    }	
 
     /**
      * Validates filter group form

@@ -144,6 +144,31 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return $productCount;
 	}
 
+	public function getFilterSet()
+	{
+		// get group filters
+	  	$groups = $this->getFilterGroupSet();
+
+		$ids = array();
+		foreach ($groups as $group)
+		{
+		  	$ids[] = $group->getID();
+		}		
+		
+		if (!$ids)
+		{
+		  	return false;
+		}
+		
+		$filterCond = new INCond(new ARFieldHandle('Filter', 'filterGroupID'), $ids);
+		$filterFilter = new ARSelectFilter();
+		$filterFilter->setCondition($filterCond);
+		$filterFilter->setOrder(new ARFieldHandle('Filter', 'filterGroupID'));
+		$filterFilter->setOrder(new ARFieldHandle('Filter', 'position'));
+		
+		return ActiveRecord::getRecordSet('Filter', $filterFilter, true);	  	
+	}
+	
 	/**
 	 * Returns a set of category filters
 	 *

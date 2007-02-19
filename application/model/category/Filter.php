@@ -93,6 +93,8 @@ class Filter extends MultilingualObject
 				$conditions[] = new EqualsOrLessCond($field, $this->rangeDateEnd->get());
 			}
 		
+			echo '<b>' . count($conditions) . '</b>';
+		
 			$cond = Condition::mergeFromArray($conditions);			
 		}
 		
@@ -102,6 +104,12 @@ class Filter extends MultilingualObject
 		}	
 		
 		return $cond;
+	}
+
+	protected function insert()
+	{
+		$this->position->set(100000);  	
+		return parent::insert();
 	}
 	
 	/**
@@ -122,9 +130,11 @@ class Filter extends MultilingualObject
 	 *
 	 * @return Filter
 	 */
-	public static function getNewInstance()
+	public static function getNewInstance(FilterGroup $filterGroup)
 	{
-		return parent::getNewInstance(__CLASS__);
+		$inst = parent::getNewInstance(__CLASS__);
+		$inst->filterGroup->set($filterGroup);
+		return $inst;
 	}
 
 	/**
@@ -150,7 +160,7 @@ class Filter extends MultilingualObject
 	}
 
 	/**
-	 * Delete spec field from database
+	 * Delete Filter from database
 	 */
 	public static function deleteByID($id)
 	{

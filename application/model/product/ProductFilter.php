@@ -15,6 +15,7 @@ class ProductFilter
 
 	public function __construct(Category $category, ARSelectFilter $filter)
 	{
+		$this->category = $category;
 		$this->selectFilter = $filter;
 	}
 	
@@ -22,31 +23,25 @@ class ProductFilter
 	 * Applies a filter to a product set
 	 *
 	 * @param Filter $filter
-	 * @todo implement
 	 */
 	public function applyFilter(Filter $filter)
 	{
-		$this->addCondition($filter->createCondition());
+		$this->addCondition($filter->getCondition());
 	}
 
-	public function searchNameByLang($language, $needle)
-	{
-	  	// first we'll filter out all the records containing the needle (for any language)
-		$cond = new LikeCond(new ARFieldHandle('Product', 'name'), $needle);
-	  	
-	  	// and then we'll narrow down the result site by leaving only records 
-		// that contain the needle in the required language
-		$regexp = new RegexpCond(new ARFieldHandle('Product', 'name'), '.*"' . strtolower($language) . '";s:[0-9]+:".*' . $needle . '.*"');
-		
-		$cond->addAND($regexp);
-		
-		$this->addCondition($cond);
-	}
-	
 	public function getSelectFilter()
 	{
-	  	$this->selectFilter->setCondition($this->condition);
+	  	if ($this->condition)
+	  	{
+			$this->selectFilter->setCondition($this->condition);		    
+		}
+
 	  	return $this->selectFilter;
+	}
+	
+	public function getCategory()
+	{
+	  	return $this->category;
 	}
 	
 	public function getCountByFilters($filters)
@@ -79,6 +74,22 @@ class ProductFilter
 			$this->condition->addAND($cond);  	
 		}
 	}
+
+/*
+	public function searchNameByLang($language, $needle)
+	{
+	  	// first we'll filter out all the records containing the needle (for any language)
+		$cond = new LikeCond(new ARFieldHandle('Product', 'name'), $needle);
+	  	
+	  	// and then we'll narrow down the result site by leaving only records 
+		// that contain the needle in the required language
+		$regexp = new RegexpCond(new ARFieldHandle('Product', 'name'), '.*"' . strtolower($language) . '";s:[0-9]+:".*' . $needle . '.*"');
+		
+		$cond->addAND($regexp);
+		
+		$this->addCondition($cond);
+	}
+*/	
 
 }
 

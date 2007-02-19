@@ -122,8 +122,7 @@ class FilterGroupController extends StoreManagementController
     {
         if(preg_match('/new$/', $this->request->getValue('ID')))
         {
-            $filterGroup = FilterGroup::getNewInstance();
-            $filterGroup->setFieldValue('position', 100000); // Now new group will appear last in active list.
+            $filterGroup = FilterGroup::getNewInstance(SpecField::getInstanceByID($this->request->getValue('specFieldID', false)));
 
             if($specFieldID = $this->request->getValue('specFieldID', false))
             {
@@ -136,7 +135,10 @@ class FilterGroupController extends StoreManagementController
         }
 
         $this->getConfig();
-        if(count($errors = FilterGroup::validate($this->request->getValueArray(array('name', 'filters', 'specFieldID', 'ID')), $this->filtersConfig['languageCodes'])) == 0)
+        
+        $errors = FilterGroup::validate($this->request->getValueArray(array('name', 'filters', 'specFieldID', 'ID')), $this->filtersConfig['languageCodes']);
+        
+        if(!$errors)
         {
             $name = $this->request->getValue('name');
             $filters = $this->request->getValue('filters', false);
@@ -146,14 +148,16 @@ class FilterGroupController extends StoreManagementController
             $filterGroup->setFieldValue('specFieldID', $specFieldID);
             $filterGroup->save();
             
-            $filterGroupID = $filterGroup->getID();
             $specField = $filterGroup->getFieldValue('specFieldID');
             $specField->load();
             $specFieldType = $specField->getFieldValue('type');
 
-            if(!empty($filters)) $filterGroup->saveFilters($filters, $specFieldType, $this->filtersConfig['languageCodes']);
+            if(!empty($filters)) 
+            {
+				$filterGroup->saveFilters($filters, $specFieldType, $this->filtersConfig['languageCodes']);
+			}
 
-            return new JSONResponse(array('status' => 'success', 'id' => $filterGroupID));
+            return new JSONResponse(array('status' => 'success', 'id' => $filterGroup->getID()));
         }
         else
         {
