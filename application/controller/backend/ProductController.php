@@ -430,10 +430,10 @@ class ProductController extends StoreManagementController
 	
 	public function basicData()
 	{
-		$product = Product::getInstanceById($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA);
-		
+	    $product = Product::getInstanceById($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA);
+
 		$response = $this->productForm($product);
-		
+
 		return $response;
 	}
 
