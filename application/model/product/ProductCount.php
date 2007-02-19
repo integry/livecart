@@ -20,7 +20,6 @@ class ProductCount
 		$filters = $this->productFilter->getCategory()->getFilterSet();				
 		foreach ($filters as $filter)
 		{
-			echo $filter->getCondition()->createChain() . '<br>';
 			$expression = 'SUM(' . $filter->getCondition()->getExpressionHandle()->toString() . ')';
 			$selectFilter->addField($expression, null, 'cnt_' . $filter->getID());	
 		}

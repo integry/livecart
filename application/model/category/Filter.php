@@ -39,9 +39,7 @@ class Filter extends MultilingualObject
 	public function getCondition()
 	{
 		$specField = $this->filterGroup->get()->specField->get();
-		
-		echo $specField->getValueByLang('name', 'en') . ' - ' . $specField->type->get().'<br>';
-		
+				
 		// selector values
 		if ($specField->isSelector())
 		{
@@ -92,8 +90,6 @@ class Filter extends MultilingualObject
 			{
 				$conditions[] = new EqualsOrLessCond($field, $this->rangeDateEnd->get());
 			}
-		
-			echo '<b>' . count($conditions) . '</b>';
 		
 			$cond = Condition::mergeFromArray($conditions);			
 		}

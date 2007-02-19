@@ -69,6 +69,7 @@ for ($k = 2006; $k <= 2008; $k++)
 
 $products = Product::getRecordSet('Product', new ARSelectFilter());
 
+// set random specification values to products
 foreach ($products as $product)
 {
 	$product->setAttributeValue($rangeField, rand(1, 340));
@@ -86,6 +87,7 @@ foreach ($products as $product)
 	$product->save();	
 }
 
+// get product counts by filters
 $productFilter = new ProductFilter($currentCategory, $currentCategory->getProductFilter(new ARSelectFilter()));
 $productCount = new ProductCount($productFilter);
 

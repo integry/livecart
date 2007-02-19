@@ -44,25 +44,6 @@ class ProductFilter
 	  	return $this->category;
 	}
 	
-	public function getCountByFilters($filters)
-	{
-		$this->selectFilter->removeFieldList();
-		foreach ($filters as $filter)
-		{
-			echo $filter->getCondition()->createChain() . '<br>';
-			$expression = 'SUM(' . $filter->getCondition()->getExpressionHandle()->toString() . ')';
-			$this->selectFilter->addField($expression, null, '_filterCount_' . $filter->getID());	
-		}
-		
-		$query = ActiveRecordModel::createSelectQuery('Product');
-		$query->removeFieldList();
-		$query->getFilter()->merge($this->selectFilter);
-		
-		$data = ActiveRecordModel::fetchDataFromDB($query);
-		
-		return $data;
-	}
-	
 	protected function addCondition(Condition $cond)
 	{
 	  	if (!$this->condition)
@@ -74,23 +55,6 @@ class ProductFilter
 			$this->condition->addAND($cond);  	
 		}
 	}
-
-/*
-	public function searchNameByLang($language, $needle)
-	{
-	  	// first we'll filter out all the records containing the needle (for any language)
-		$cond = new LikeCond(new ARFieldHandle('Product', 'name'), $needle);
-	  	
-	  	// and then we'll narrow down the result site by leaving only records 
-		// that contain the needle in the required language
-		$regexp = new RegexpCond(new ARFieldHandle('Product', 'name'), '.*"' . strtolower($language) . '";s:[0-9]+:".*' . $needle . '.*"');
-		
-		$cond->addAND($regexp);
-		
-		$this->addCondition($cond);
-	}
-*/	
-
 }
 
 ?>

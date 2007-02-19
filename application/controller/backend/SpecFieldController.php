@@ -123,7 +123,6 @@ class SpecFieldController extends StoreManagementController
         if(preg_match('/new$/', $this->request->getValue('ID')))
         {
             $specField = SpecField::getNewInstance(Category::getInstanceByID($this->request->getValue('categoryID', false)));
-            $specField->setFieldValue('position', 100000);
         }
         else
         {
@@ -138,7 +137,9 @@ class SpecFieldController extends StoreManagementController
         }
 
         $this->getSpecFieldConfig();
-        if(count($errors = SpecField::validate($this->request->getValueArray(array('handle', 'values', 'name', 'type', 'dataType', 'categoryID', 'ID')), $this->specFieldConfig['languageCodes'])) == 0)
+		$errors = SpecField::validate($this->request->getValueArray(array('handle', 'values', 'name', 'type', 'dataType', 'categoryID', 'ID')), $this->specFieldConfig['languageCodes']);
+		
+        if(!$errors)
         {
             $type = $this->request->getValue('advancedText') ? SpecField::TYPE_TEXT_ADVANCED : (int)$this->request->getValue('type');
             $dataType = SpecField::getDataTypeFromType($type);
@@ -160,13 +161,34 @@ class SpecFieldController extends StoreManagementController
             $specField->setLanguageField('name',        $name,        $this->specFieldConfig['languageCodes']);
             $specField->save();  
                      
-            try
-            {
-                if(is_array($values)) $specField->saveValues($values, $type, $this->specFieldConfig['languageCodes']);
-            }
-            catch(Exception $e)
-            { 
-            }
+            // save specification field values in database
+			if(is_array($values)) 
+        	{
+		        $position = 1;
+		        foreach ($values as $key => $value)
+		        {
+		            if(preg_match('/^new/', $key))
+		            {
+		                $specFieldValues = SpecFieldValue::getNewInstance($specField);
+		            }
+		            else
+		            {
+		               $specFieldValues = SpecFieldValue::getInstanceByID((int)$key);
+		            }
+		
+		            if(SpecField::TYPE_NUMBERS_SELECTOR == $type)
+		            {
+		                $specFieldValues->setFieldValue('value', $value);
+		            }
+		            else
+		            {
+		                $specFieldValues->setLanguageField('value', $value, $this->specFieldConfig['languageCodes']);
+		            }
+		
+		            $specFieldValues->setFieldValue('position', $position++);
+		            $specFieldValues->save();
+		        }        
+			}
             
             return new JSONResponse(array('status' => 'success', 'id' => $specField->getID()));
         }

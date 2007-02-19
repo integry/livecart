@@ -301,43 +301,9 @@ class SpecField extends MultilingualObject
 	}
 
 	/**
-	 * Save specification field values in database
-	 */
-	public function saveValues($values, $type, $languageCodes) {
-        $position = 1;
-        foreach ($values as $key => $value)
-        {
-            if(preg_match('/^new/', $key))
-            {
-                $specFieldValues = SpecFieldValue::getNewInstance($this);
-                $specFieldValues->setFieldValue('position', 100000);
-            }
-            else
-            {
-               $specFieldValues = SpecFieldValue::getInstanceByID((int)$key);
-            }
-
-            if($type == self::TYPE_NUMBERS_SELECTOR)
-            {
-                $specFieldValues->setFieldValue('value', $value);
-            }
-            else
-            {
-                $specFieldValues->setLanguageField('value', $value, $languageCodes);
-            }
-
-            $specFieldValues->setFieldValue('position', $position++);
-            $specFieldValues->save();
-        }
-	}
-
-	/**
-	 * Transforms data array to a following format:
+	 *	Returns SpecField array representations
 	 *
-	 * simpleField => value,
-	 * multilingualField_langCode => value,
-	 * multilingualField2_langCode => otherValue, and etc.
-	 *
+	 *	@return array
 	 */
 	public function toArray($recursive = false, $convertToUnderscore = true)
     {
