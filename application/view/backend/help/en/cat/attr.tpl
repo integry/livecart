@@ -155,9 +155,9 @@
 </p
 		<li>In the Values section enter all the necessary features one by one followed by the "Add more values" button.</li>
 <p>
-	<img src="image/doc/categories/attributes/add_more_values.bmp">
+	<img src="image/doc/categories/attributes/enter_values.bmp">
 </p
-		<li>save the attribute when done.</li>
+		<li><strong>Save</strong> the attribute when done.</li>
 	</ul>
 	The representation of your generated field could be similar to this:
 <p>
@@ -227,7 +227,7 @@
 	<br \>
 	<li>Title - enter <strong>Bandwidth</strong></li>
 	<br \>
-	<li>Handle - </li>
+	<li>Handle is generated automatically thus you don't need to change it</li>
 	<br \>
 	<li>Description - enter description about Bandwidth.</li>
 	<br \>
