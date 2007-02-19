@@ -9,9 +9,9 @@ SectionExpander.prototype = {
 	/**
 	 * SectionExpander constructor
 	 */
-	initialize: function()
+	initialize: function(parent)
 	{
-		var sectionList = document.getElementsByClassName('expandingSection');
+		var sectionList = document.getElementsByClassName('expandingSection', $(parent));
 		for (var i = 0; i < sectionList.length; i++)
 		{
 			var legendList = sectionList[i].getElementsByTagName('legend');

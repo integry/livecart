@@ -18,17 +18,16 @@ TabControl.prototype = {
 	activeTab: null,
 	indicatorImageName: "image/indicator.gif",
 
-	initialize: function(tabContainerName, urlParserCallback)
+	initialize: function(tabContainerName, urlParserCallback, idParserCallback)
 	{
         try
         {  
             this.tabContainerName = tabContainerName;
             this.urlParserCallback = urlParserCallback;
-            console.info(urlParserCallback);
+            this.idParserCallback = idParserCallback;
             
             this.__nodes__();
             this.__bind__();
-            this.__init__();
         }
         catch(e)
         {
@@ -68,23 +67,23 @@ TabControl.prototype = {
             });
             
             li.update(indicator + li.innerHTML);
-
-			if (Element.hasClassName(li, 'active')) self.activeTab = li;
 		});
     },
     
     __init__: function()
     {
-        Event.fire(this.activeTab, 'click');
+        this.activateTab();
     },
     
-    getInstance: function(tabContainerName, urlParserCallback)
+
+    getInstance: function(tabContainerName, urlParserCallback, idParserCallback)
     {
         if(!TabControl.prototype.__instance__)
         {
-            TabControl.prototype.__instance__ = new TabControl(tabContainerName, urlParserCallback);
+            TabControl.prototype.__instance__ = new TabControl(tabContainerName, urlParserCallback, idParserCallback);
         }
         
+        TabControl.prototype.__instance__.__init__();
         return TabControl.prototype.__instance__;
     },
 
@@ -113,35 +112,31 @@ TabControl.prototype = {
 
 	activateTab: function(targetTab)
 	{
-        var contentId = targetTab.id + '_' + Backend.Category.treeBrowser.getSelectedItemId() + 'Content';
+        if(!targetTab) targetTab = this.nodes.tabListElements[0];
+        else targetTab = $(targetTab);
+                
+        var contentId = this.idParserCallback(targetTab.id);
         if(!$(contentId)) new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '"></div>');
-        else if (this.activeTab == targetTab && !Element.empty(contentId)) 
-        {
-             console.info(this.activeTab + " == " + targetTab + " && !Element.empty(" + contentId + ")["+!Element.empty(contentId)+"]");
-             return;   
-        }
 
 		if(this.activeTab)
 		{
 			Element.removeClassName(this.activeTab, 'active');
 			Element.addClassName(this.activeTab, 'inactive');
-			Element.hide(this.activeTab.id + '_' + Backend.Category.treeBrowser.getSelectedItemId() + 'Content');
+			Element.hide(this.activeContent);
 		}
-
 		this.activeTab = targetTab;
+        this.activeContent = $(contentId);
+        
+        
         
         Element.removeClassName(this.activeTab, 'hover');
 		Element.addClassName(this.activeTab, 'active');
-		Element.show(contentId);   
+		Element.show(contentId);
         
 		if (Element.empty($(contentId)))
 		{
             new LiveCart.AjaxUpdater(this.urlParserCallback(targetTab.down('a').href), contentId, targetTab.down('.tabIndicator'));
 		}
-        else
-        {
-            console.info("Element.empty($(" + $(contentId).id + ")");
-        }
 	},
 
 	/**

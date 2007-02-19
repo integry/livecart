@@ -353,7 +353,6 @@ class ProductController extends StoreManagementController
 				if (!$field->isSelector())
 				{
 					$validator->addCheck($fieldname, new IsNotEmptyCheck($this->translate('_err_specfield_required'))); 
-					echo '---'.$field->getValueByLang('name', 'en').'<br>';   				  
 				}
 				else
 				{
@@ -428,39 +427,34 @@ class ProductController extends StoreManagementController
 		return $path;
 	}
 
-	public function basic()
+	
+	public function basicData()
 	{
-	    return new RawResponse('basic id=' . $this->request->getValue('id') . '; category=' . $this->request->getValue('categoryID'));
+		$product = Product::getInstanceById($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA);
+		
+		$response = $this->productForm($product);
+		
+		return $response;
 	}
 
 	public function inventory()
 	{
-	    return new RawResponse('inventory id=' . $this->request->getValue('id') . '; category=' . $this->request->getValue('categoryID'));
-	}
+	    $response = new ActionResponse();
 
-	public function images()
-	{
-	    return new RawResponse('images id=' . $this->request->getValue('id') . '; category=' . $this->request->getValue('categoryID'));
-	}
-
-	public function relatedProducts()
-	{
-	    return new RawResponse('relatedProducts id=' . $this->request->getValue('id') . '; category=' . $this->request->getValue('categoryID'));
+	    $response->setValue('id', $this->request->getValue('id'));
+	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
+	    
+	    return $response;
 	}
 
 	public function options()
 	{
-	    return new RawResponse('options id=' . $this->request->getValue('id') . '; category=' . $this->request->getValue('categoryID'));
-	}
+	    $response = new ActionResponse();
 
-	public function discounts()
-	{
-	    return new RawResponse('discounts id=' . $this->request->getValue('id') . '; category=' . $this->request->getValue('categoryID'));
-	}
-
-	public function files()
-	{
-	    return new RawResponse('files id=' . $this->request->getValue('id') . '; category=' . $this->request->getValue('categoryID'));
+	    $response->setValue('id', $this->request->getValue('id'));
+	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
+	    
+	    return $response;
 	}
 }
 

@@ -359,33 +359,34 @@ Backend.Product.Editor.prototype =
   	{
 	    this.url = url;
 	    this.id = id;
-        
         this.__nodes__();
         this.__bind__();
-        this.__init__();
 	},
 	
 	__nodes__: function(parent)
     {
         this.nodes = {};
-        this.nodes.categoryManagerContainer = $("managerContainer");
-        this.nodes.productManagerContainer = $("productManagerContainer");
     },
     
     __bind__: function(args)
     {
-        Backend.Product.Editor.prototype.setCurrentProductId(this.id);
-        this.tabControl = TabControl.prototype.getInstance("productManagerContainer", Backend.Product.Editor.prototype.craftProductUrl);
+        
     },
     
     __init__: function(args)
     {
-        
+        Backend.Product.Editor.prototype.setCurrentProductId(this.id);
+        this.tabControl = TabControl.prototype.getInstance("productManagerContainer", Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId);
     },
     
     craftProductUrl: function(url)
     {
         return url.replace(/_categoryID_/, Backend.Category.treeBrowser.getSelectedItemId()).replace(/_id_/, Backend.Product.Editor.prototype.getCurrentProductId());
+    },
+    
+    craftProductId: function(tabId)
+    {
+        return tabId + '_' +  Backend.Product.Editor.prototype.getCurrentProductId() + 'Content'
     },
     
     getCurrentProductId: function()
@@ -405,6 +406,7 @@ Backend.Product.Editor.prototype =
             Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id, url);
         }
         
+        Backend.Product.Editor.prototype.__instances__[id].__init__();
         return Backend.Product.Editor.prototype.__instances__[id];
     },
     
