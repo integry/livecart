@@ -56,7 +56,7 @@
 	<a href="{self}#carrier">Carrier</a>, <a href="{self}#features">Phone Features</a>, <a href="{self}#capacity">Batery Capacity</a> and 
 	<a href="{self}#bandwidth">Bandwidth</a>. 
 </p>
-<hr>
+
 <h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
 	<ul>
 
@@ -88,14 +88,26 @@
 <p>
 	<img src="image/doc/categories/attributes/description.bmp">
 </p>
+
+	<li>International details - if you need to translate attributes in other languages installed in your system, click on the Language to 
+	expand additional fields (which include Title and Details).</li>
+
+<p>
+	<img src="image/doc/categories/attributes/attributes_international_details.bmp">
+</p>
+
 	</ul>
-	The last thing to do is to create Values which will be used as a selection option in the "Add new Product" form. To add values, click Values 
-	tab in the main window -> when switched to the Value window we enter the first Mobile Carrier in the text field provided followed by 
-	"Enter more values" button 
+	The last thing to do is to create Values which will be used as a selection option in the "Add new Product" form. 
+	To add values: 
+	<ul>
+		<li>click Values tab in the main window -> </li>
+		<li>when switched to the Value window enter the first Mobile Carrier in the text field provided.</li>
+		<li>click "Enter more values" for additional fields to appear</li>
+	</ul>
 <p>
 	<img src="image/doc/categories/attributes/enter_values.bmp">
 </p>
-	We keep in this manner until we have a full list of carriers.
+	Keep in this manner until we have a full list of carriers.
 <p>
 	<img src="image/doc/categories/attributes/values.bmp">
 </p>
@@ -121,18 +133,18 @@
 	<img src="image/doc/categories/attributes/multi.bmp">
 </p>
 	<ul>
-		<li>Required - we leave the checkbox empty as some phones may don't have additional features (optional field/selection) </li>
+		<li>Required - leave the checkbox empty as some phones may don't have additional features (optional field/selection) </li>
 		<br \>
-		<li>Can select multiple values - we mark the checkbox to allow multiple features assigned to a cell phone</li>
+		<li>Can select multiple values - mark the checkbox to allow multiple features assigned to a cell phone</li>
 		<br \>
-		<li>Title - we enter <strong>Features</strong> to represent attribute's purpose/function.</li>
+		<li>Title - enter here <strong>Features</strong> to represent attribute's purpose/function.</li>
 		<br \>
-		<li>Handle is generated automatically so we leave the field unaltered</li>
+		<li>Handle is generated automatically therefore you may leave the field as it is</li>
 		<br \>
-		<li>In the description field we enter a few sentences about features attribute.</li>
+		<li>In the description field enter a few sentences about features attribute.</li>
 	</ul>
 	Next thing to do is create a value list of mobile's features. Click <i>Values</i> tab which appears on the right of the <i>Main</i> tab. 
-	In the Values section we enter all the necessary features and save the attribute.
+	In the Values section we enter all the necessary features and save the attribute.(Refer to previuos example for detailed Value management)
 	The representation of your generated field could be similar to this:
 <p>
 	<img src="image/doc/categories/attributes/features.bmp">
@@ -143,8 +155,8 @@
 
 <p>
 	Battery capacity is expressed in numerical format of mAh, therefore you should consider choosing a <strong>Number</strong> type. When it comes
-	to field or selector it is up to you to decide whether you want to create a single field or a list of possible capacity values. We choose a field
-	type in the following example.
+	to field or selector it is up to you to decide whether you want to create a single field for entering a value or a create a pre-defined list of possible capacity values. 
+	We choose a field type in the following example.
 </p>
 
 	<ul>
@@ -170,10 +182,6 @@
 	</ul>	
 <p>
 	Don't forget to click <strong>Save</strong> at the end.
-</p>
-
-<p>
-	<ins>International title&description </ins>
 </p>
 
 <p>
