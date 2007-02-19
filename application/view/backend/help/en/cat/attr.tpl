@@ -9,9 +9,6 @@
 </p>
 
 <p>
-	Attributes appear in the Add new product form...
-</p>
-<p>
 	For instance, if a customer is shopping for a new laptop and is particularly looking for an AMD processor and you have created a "Processor Type"
 	attribute, the customer will be able to sort the whole list of laptops to display only AMD processor powered laptops with a single click. This 
 	way a customer will have an ability to select certain kind of processor without a need to browse through all the available types 
@@ -46,29 +43,26 @@
 
 <h3 id="create">Create Attribute</h3>
 <p>
-	Here are some examples of a few simple attributes you might find handy<ins>...</ins> Later we will show how they are actually implemented in the <i>Filters</i> section.
-	Notice that because attributes specify properties of the products within a specific category they are automatically included in the 
-	<i>Add New Product</i> form. (Therefore in these example we will demonstrate how ...)
-	Suppose you have a category stocked with cell phones and you want to create fields for defining/specifying the following properties:
+	To create an attribute you have to fill out a simple form with a few fields. 
+	
+	Later we will show how they are actually implemented in the <i>Filters</i> section.
+	
+	Notice that because attributes specify properties of the products within a specific category and they are automatically included in the 
+	<i>Add New Product</i> form. Therefore in these example we will demonstrate how attributes are generated in the form.
+
+</p>
+<p>
+	Here are some examples of a few simple attributes you might find handy. Suppose you have a category stocked with cell phones and you want to create fields for defining/specifying the following properties:
 	<a href="{self}#carrier">Carrier</a>, <a href="{self}#features">Phone Features</a>, <a href="{self}#capacity">Batery Capacity</a> and 
 	<a href="{self}#bandwidth">Bandwidth</a>. 
 </p>
-
-<h4 >Creating attribute</h4>
-
-<p>
-	Standard form <ins>...</ins>
-</p>
-
-<ins>
-	<p>Basic fields - title, type, handle and description - what information they hold/describe, etc.</p>
-</ins>
-
+<hr>
 <h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
 	<ul>
 
-		<li>Because mobile carrier is a simple text and there is (probably) a finite number of carriers we select <i>Text selector</i> as our
-		type. Our chosen type is suitable for creating a predefined list of values which will be displayed as a selection option. </li>
+		<li>Because mobile carrier is a simple text and there is (probably) a finite number of carriers click on the type drop-down menu and 
+		select <i>Text selector</i> type from the list. Your chosen type is suitable for creating a predefined list of values which will be 
+		displayed as a selection option.</li>
 <p>
 	<img src="image/doc/categories/attributes/type.bmp">
 </p>
@@ -86,7 +80,7 @@
 <p>
 	<img src="image/doc/categories/attributes/title.bmp">
 </p>
-		<li>Handle - handle is generated<ins>...</ins></li>
+		<li>Handle - handle is generated automatically so you don't need to change it.</li>
 <p>
 	<img src="image/doc/categories/attributes/handle.bmp">
 </p>

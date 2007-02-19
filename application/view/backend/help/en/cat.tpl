@@ -11,9 +11,10 @@
 </p>
 
 <p>	
-	Category tree structure represents how all of the categories are arranged. At the top of the category tree is the <i>Root</i> category which is a
+	Category tree structure represents how all of the categories are arranged. (If a category "LCD monitors" is a subcategory of "Monitors" then 
+	"Monitors" is a <strong>parent</strong> category for "LCD monitors"). At the top of the category tree is the <i>Root</i> category which is a
 	parent category for all the descending categories. (In the Figure above New Category 26 is a root category with one subcategory.) 
-	<ins>categories in the frontend</ins>. In the category tree you can easily manage your categories by selecting one of the options: 
+	In the category tree you can easily manage your categories by selecting one of the options: 
 </p>
 
 <div class="tasks">
