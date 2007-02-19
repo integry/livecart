@@ -125,14 +125,15 @@
 <h4 id="features">Creating <i>Phone Features</i> attribute</h4>
 
 <p>
-	As in previous example we will use Text Selector because we know that cell phones can have many features (and it is more convenient to list them 
-	out than have them entered every time adding a new cell)
+	Cell phones might have a great variety of features therefore it would more convenient to create a list of features than re-enter them
+	every time.
 </p>
 
 <p>
 	<img src="image/doc/categories/attributes/multi.bmp">
 </p>
 	<ul>
+		<li>Type - expand type list and choose Text -> Options as your type </li>
 		<li>Required - leave the checkbox empty as some phones may don't have additional features (optional field/selection) </li>
 		<br \>
 		<li>Can select multiple values - mark the checkbox to allow multiple features assigned to a cell phone</li>
@@ -141,10 +142,23 @@
 		<br \>
 		<li>Handle is generated automatically therefore you may leave the field as it is</li>
 		<br \>
-		<li>In the description field enter a few sentences about features attribute.</li>
+		<li>Description - enter a few sentences about features attribute to set its description.</li>
 	</ul>
-	Next thing to do is create a value list of mobile's features. Click <i>Values</i> tab which appears on the right of the <i>Main</i> tab. 
-	In the Values section we enter all the necessary features and save the attribute.(Refer to previuos example for detailed Value management)
+
+	The next thing to do is to create a value list of mobile's features. 
+	<br \>
+	<br \>
+	<ul>
+		<li>Click <i>Values</i> tab which appears on the right of the <i>Main</i> tab. </li>
+<p>
+	<img src="image/doc/categories/attributes/values_tab.bmp">
+</p
+		<li>In the Values section enter all the necessary features one by one followed by the "Add more values" button.</li>
+<p>
+	<img src="image/doc/categories/attributes/add_more_values.bmp">
+</p
+		<li>save the attribute when done.</li>
+	</ul>
 	The representation of your generated field could be similar to this:
 <p>
 	<img src="image/doc/categories/attributes/features.bmp">
@@ -154,7 +168,7 @@
 <h4 id="capacity">Creating <i>Batery Capacity</i> attribute</h4>
 
 <p>
-	Battery capacity is expressed in numerical format of mAh, therefore you should consider choosing a <strong>Number</strong> type. When it comes
+	Battery capacity is expressed in numeric(al) format of mAh, therefore you should consider choosing a <strong>Number</strong> type. When it comes
 	to field or selector it is up to you to decide whether you want to create a single field for entering a value or a create a pre-defined list of possible capacity values. 
 	We choose a field type in the following example.
 </p>
@@ -180,12 +194,12 @@
 	<img src="image/doc/categories/attributes/capacity_description.bmp">
 </p>
 	</ul>	
-<p>
+<p class="note">
 	Don't forget to click <strong>Save</strong> at the end.
 </p>
 
 <p>
-	The Battery Capacity attribute:
+	Generated Battery Capacity attribute:
 </p>
 
 <p>
