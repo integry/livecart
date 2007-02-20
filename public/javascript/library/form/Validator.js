@@ -1,16 +1,34 @@
-function saveTinyMCEFields()
+function saveTinyMceFields(form)
 {
-    for(k in tinyMCE.instances) 
+    document.getElementsByClassName("mceEditorIframe", form).each(function(mceControl)
     {
-        if((typeof tinyMCE.instances[k]) == 'object') tinyMCE.instances[k].triggerSave();
-    }
+         tinyMCE.getInstanceById(mceControl.id).triggerSave();
+    });
+}
+
+function focusTinyMceField(field)
+{
+    var inst = tinyMCE.getInstanceById(field.nextSibling.down(".mceEditorIframe").id);
+    
+    field.style.height = '80px';
+    field.style.visibility = 'hidden';
+    field.style.display = 'block';
+    field.focus();
+    field.style.display = 'none';
+    
+    tinyMCE.execCommand("mceStartTyping");
+    inst.contentWindow.focus();
+}
+
+function isTinyMceField(field)
+{
+    return Element.hasClassName(field.nextSibling, "mceEditorContainer");
 }
 
 
 function validateForm(form)
 {
-	saveTinyMCEFields();
-    
+	saveTinyMceFields(form);
     
     var validatorData = form._validator.value;
 	var validator = validatorData.parseJSON();
@@ -51,8 +69,11 @@ function validateForm(form)
 			eval('isFieldValid = ' + functionName + '(formElement, params);');
 			if (!isFieldValid)
 			{
-				alert(errorMsg);
-				formElement.focus();
+                alert(errorMsg);
+
+                if(isTinyMceField(formElement)) focusTinyMceField(formElement);
+                else formElement.focus();     
+				
 				return false;
 			}
 		}
