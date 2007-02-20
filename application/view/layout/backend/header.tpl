@@ -60,11 +60,7 @@
 			theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,styleselect,formatselect",
 			theme_advanced_buttons2 : "bullist,numlist,separator,outdent,indent,separator,undo,redo,separator,link,unlink,anchor,image,cleanup,separator,code,removeformat,visualaid,separator,sub,sup,separator,charmap",
 			theme_advanced_buttons3 : "",
-			relative_urls : true,
-            // TinyMCE uses Form.onsubmit to move editor content from iframe to textarea.
-            // Also Form.onsubmit is used by Validator. What happens is that validator prevents 
-            // editor content from moving to textarea and therefore submitting
-            //onchange_callback: function (inst) { inst.triggerSave(); } 
+			relative_urls : true
         });
 
     	function onLoad()

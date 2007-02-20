@@ -1,7 +1,18 @@
+function saveTinyMCEFields()
+{
+    for(k in tinyMCE.instances) 
+    {
+        if((typeof tinyMCE.instances[k]) == 'object') tinyMCE.instances[k].triggerSave();
+    }
+}
+
 
 function validateForm(form)
 {
-	var validatorData = form._validator.value;
+	saveTinyMCEFields();
+    
+    
+    var validatorData = form._validator.value;
 	var validator = validatorData.parseJSON();
 
 	for (var fieldName in validator)
