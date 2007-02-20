@@ -33,21 +33,25 @@ body {
 }
 p {
   	margin-bottom: 10px;
-  	padding-left: 5px;
+  	padding-left: 20px;
 }
 ul, ol {
   	padding: 5px;
   	padding-left: 20px;
-  	padding-top: 25px;
-	margin-left: 10px;
+#  	padding-top: 25px;
+	#margin-left: 15px;
   	margin-bottom: 10px;
 	list-style-type: square;
 	width: 80%;
 #	background-color: #EEEEcc;
 }
+
 li	{
 	margin-bottom: 10px;
+	margin-left: 15px;
+	
 }
+
 h1 {
 	font-size: largest; 
 	font-weight: bold;
@@ -160,8 +164,12 @@ a.external
 #helpContent img
 {
   	border: 1px solid #CCCCCC;
-  	margin: 8px;
-	margin-left: -5px;
+	#text-align: left;
+  	#margin: 8px;
+	display:block;
+	margin-top: 10px;
+	margin-bottom: 20px;
+	margin-left: 20px;
 
 }
 
@@ -192,6 +200,7 @@ p.note {
 	margin: 5px;
 	font-family: verdana, sans-serif;
 	margin-top: 20px;
+	margin-left: 20px;
 	margin-bottom: 10px;
 	padding: 5px;
 	font-size: 13px;
