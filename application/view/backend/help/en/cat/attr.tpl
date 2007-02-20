@@ -96,37 +96,51 @@
 	<img src="image/doc/categories/attributes/attributes_international_details.bmp">
 </p>
 
-	</ul>
+
+<p>
 	The last thing to do is to create Values which will be used as a selection option in the "Add new Product" form. 
 	To add values: 
-	<ul>
+</p>
+
 		<li>click Values tab in the main window -> </li>
 		<li>when switched to the Value window enter the first Mobile Carrier in the text field provided.</li>
 		<li>click "Enter more values" for additional fields to appear</li>
-	</ul>
+	
 <p>
 	<img src="image/doc/categories/attributes/enter_values.bmp">
 </p>
+
+<p>
 	Keep in this manner until we have a full list of carriers.
+</p>
+
 <p>
 	<img src="image/doc/categories/attributes/values.bmp">
 </p>
+
+<p>
 	Make sure to click <strong>Save</strong> to save changes. 
+</p>
+
 <p>
 	<img src="image/doc/categories/attributes/save.bmp">
 </p>
 
-	Your new attribute will be automatically generated in the "Add new Product" form and
-	will look similar to this one:
+<p>
+	Your new attribute will be automatically generated in the "Add new Product" form and will look similar to this one:
+</p>
+
 <p>
 	<img src="image/doc/categories/attributes/carrier.bmp">
 </p>
+	</ul>
+
 
 <h4 id="features">Creating <i>Phone Features</i> attribute</h4>
 
 <p>
 	Cell phones might have a great variety of features therefore it would more convenient to create a list of features than re-enter them
-	every time.
+	every time. The following parameters have to be set:
 </p>
 
 <p>
@@ -135,28 +149,27 @@
 	<ul>
 		<li>Type - expand type list and choose Text -> Options as your type </li>
 		<li>Required - leave the checkbox empty as some phones may don't have additional features (optional field/selection) </li>
-		<br \>
+		
 		<li>Can select multiple values - mark the checkbox to allow multiple features assigned to a cell phone</li>
-		<br \>
+		
 		<li>Title - enter here <strong>Features</strong> to represent attribute's purpose/function.</li>
-		<br \>
+		
 		<li>Handle is generated automatically therefore you may leave the field as it is</li>
-		<br \>
+		
 		<li>Description - enter a few sentences about features attribute to set its description.</li>
 	</ul>
 
 	The next thing to do is to create a value list of mobile's features. 
 	<br \>
-	<br \>
 	<ul>
 		<li>Click <i>Values</i> tab which appears on the right of the <i>Main</i> tab. </li>
-<p>
-	<img src="image/doc/categories/attributes/values_tab.bmp">
-</p
+		<p>
+			<img src="image/doc/categories/attributes/values_tab.bmp">
+		</p>
 		<li>In the Values section enter all the necessary features one by one followed by the "Add more values" button.</li>
-<p>
-	<img src="image/doc/categories/attributes/enter_values.bmp">
-</p
+		<p>
+			<img src="image/doc/categories/attributes/enter_values.bmp">
+		</p>
 		<li><strong>Save</strong> the attribute when done.</li>
 	</ul>
 	The representation of your generated field could be similar to this:
@@ -175,17 +188,14 @@
 
 	<ul>
 		<li>Required - click the checkbox to make the field required attribute</li>
-		<br \>
 <p>
 	<img src="image/doc/categories/attributes/required.bmp">
 </p>
 		<li>Title - enter <strong>Battery Capacity</strong> to represent attribute's purpose/function.</li>
-		<br \>
 <p>
 	<img src="image/doc/categories/attributes/capacity_title.bmp">
 </p>
 		<li>Handle is generated automatically so we leave the field unaltered</li>
-		<br \>
 <p>
 	<img src="image/doc/categories/attributes/capacity_handle.bmp">
 </p>
@@ -220,17 +230,12 @@
 
 <ul>
 	<li>Type - select Number Options to create a list of possible bandwidth values.</li>
-	<br \>
 	<li>Required - mark the checkbox to set the attribute required</li>
-	<br \>
 	<li>Can select multiple values - mark the checkbox to allow multiple bandwidth selection </li>
-	<br \>
 	<li>Title - enter <strong>Bandwidth</strong></li>
-	<br \>
 	<li>Handle is generated automatically thus you don't need to change it</li>
-	<br \>
 	<li>Description - enter description about Bandwidth.</li>
-	<br \>
+
 </ul>
 
 To set values of the Bandwidth options, go to Values section by clicking Values tab 

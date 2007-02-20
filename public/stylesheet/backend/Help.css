@@ -38,11 +38,11 @@ p {
 ul, ol {
   	padding: 5px;
   	padding-left: 20px;
-  	padding-top: 15px;
-	margin-left: 20px;
+  	padding-top: 25px;
+	margin-left: 10px;
   	margin-bottom: 10px;
 	list-style-type: square;
-	width: 60%;
+	width: 80%;
 #	background-color: #EEEEcc;
 }
 li	{
@@ -160,8 +160,8 @@ a.external
 #helpContent img
 {
   	border: 1px solid #CCCCCC;
-  	margin: 20px;
-	margin-left: -20px;
+  	margin: 8px;
+	margin-left: -5px;
 
 }
 
