@@ -246,8 +246,24 @@ Your attribute will be placed in the <i>Add new Product</i> form:
 
 <h3 id="group">Group attributes</h3>
 
-<p>
-</p>
+LC allows you to group your attributes into logical chunks called "groups". To introduce a new group:
+	<ul>
+		<li>Click <storng>Add new group</strong></li>
+		<p><img src="image/doc/categories/attributes/add_new_group.bmp"></p>
+		<li>Enter group (to identify group)</li>
+		<p><img src="image/doc/categories/attributes/group_title.bmp"></p>
+		<li>Supply international translation if necessary (applicable)</li>
+	</ul>
+Attribute groups appear as a rectangle which can contain as many attributes as neccesary. To place attributes into groups, simply drag attributes
+into appropriate groups.
+<p><img src="image/doc/categories/attributes/groups_main.bmp"></p>
+In the image above you see two groups named "Cell Phones" and "Dimensions" and one attribute "Color" what doesn't belong to any group. 
+To change group's name or delete a group click on one of the icons on the left:
+<p><img src="image/doc/categories/attributes/group_edit.bmp"></p>
+<p class="note"><strong>Notice</strong>: deleting a group will cause all of its attributes to be deleted as well. Thus you have to <strong>ungroup
+</strong> attributes that you want to keep.</p>
+
+
 
 <h3 id="edit">Edit attribute</h3>
 
