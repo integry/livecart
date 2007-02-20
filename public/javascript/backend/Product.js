@@ -185,7 +185,6 @@ Backend.Product =
 	
 	saveForm: function(form)
 	{
-	  	tinyMCE.triggerSave();
 		var saveHandler = new Backend.Product.saveHandler(form);
 		new LiveCart.AjaxRequest(form, 'tabProductsIndicator', saveHandler.saveComplete.bind(saveHandler));
 	},

@@ -1,86 +1,30 @@
-function saveTinyMceFields(form)
-{
-    document.getElementsByClassName("mceEditorIframe", form).each(function(mceControl)
-    {
-         tinyMCE.getInstanceById(mceControl.id).triggerSave();
-    });
-}
-
-function focusTinyMceField(field)
-{
-    var inst = tinyMCE.getInstanceById(field.nextSibling.down(".mceEditorIframe").id);
-    
-    field.style.height = '80px';
-    field.style.visibility = 'hidden';
-    field.style.display = 'block';
-    field.focus();
-    field.style.display = 'none';
-    
-    tinyMCE.execCommand("mceStartTyping");
-    inst.contentWindow.focus();
-}
-
-function isTinyMceField(field)
-{
-    return Element.hasClassName(field.nextSibling, "mceEditorContainer");
-}
-
-
 function validateForm(form)
 {
-	saveTinyMceFields(form);
-    
+    Element.saveTinyMceFields(form);
+    ActiveForm.prototype.resetErrorMessages(form);
+
     var validatorData = form._validator.value;
-	var validator = validatorData.parseJSON();
+	var validator = validatorData.parseJSON();   
+    var isFormValid = true;
+    var focus = true;
 
-	for (var fieldName in validator)
+	$H(validator).each(function(field)
 	{
-		if (fieldName == "toJSONString")
-		{
-			continue;
-		}
-		var formElement = form[fieldName];
-		
-		if (!formElement)
-		{
-		  	console.log('Cannot find form element with name ' + fieldName);
-		  	continue;
-		}
-		
-		for (var functionName in  validator[fieldName])
-		{
-			if (functionName == "toJSONString")
+		if (!form[field.key]) throw $continue;
+        
+		var formElement = form[field.key];
+        $H(field.value).each(function(func) 
+		{                
+			if (window[func.key] && !window[func.key](formElement, func.value.param)) // If element is not valid
 			{
-				continue;
+                ActiveForm.prototype.setErrorMessage(formElement, func.value.error, focus);
+				isFormValid = false;
+                focus = false;
 			}
-			var params = validator[fieldName][functionName]['param'];
-			var errorMsg = validator[fieldName][functionName]['error'];
-			//alert(functionName + params + errorMsg);
-
-			var functionExists = false;
-			eval('functionExists = window.' + functionName + ';');
-			if (!functionExists)
-			{
-				//alert('No validation function defined: ' + functionName + '!');
-				break;
-			}
-
-			var isFieldValid = false;
-			eval('isFieldValid = ' + functionName + '(formElement, params);');
-			if (!isFieldValid)
-			{
-                alert(errorMsg);
-
-                if(isTinyMceField(formElement)) focusTinyMceField(formElement);
-                else formElement.focus();     
-				
-				return false;
-			}
-		}
-	}
-	// Unseting validator value, so it will not be transfered
-//	form._validator.value = '';
-	return true;
+	    });
+	});
+    
+	return isFormValid;
 }
 
 function applyFilters(form, ev)

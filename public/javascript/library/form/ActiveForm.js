@@ -225,23 +225,130 @@ ActiveForm.prototype = {
     {
         if('form' != form.tagName.toLowerCase()) form = form.down('form');
         
-        var focused = false
-		for (key in errorMessages)
-		{
-			if (form.elements.namedItem(key))
-		  	{
-			    var cont = document.getElementsByClassName("errorText", form.elements.namedItem(key).parentNode)[0];			
-				cont.innerHTML = errorMessages[key];
-			  	Element.removeClassName(cont, 'hidden');
-				Effect.Appear(cont);
-				
-				// set focus to the first form field, which has error
-				if (!focused)
-				{
-					form.elements.namedItem(key).focus();
-					focused = true;	
-				}
-			}
-		}  	
-	}
+        try
+        {
+            var focus = true;
+    		$H(errorMessages).each(function(error)
+    		{
+    			if (form.elements.namedItem(error.key))
+    		  	{                
+                    var formElement = form.elements.namedItem(error.key);
+                    var errorMessage = error.value;
+                    
+                    ActiveForm.prototype.setErrorMessage(formElement, errorMessage, focus);
+                    focus = false;
+    			}
+    		}); 	
+        } catch(e) {
+            console.info(e);
+        }
+	},
+    
+    setErrorMessage: function(formElement, errorMessage, focus)
+    {
+        try
+        {
+            if (focus) 
+            {
+                alert(errorMessage);
+                Element.focus(formElement);
+            }
+            
+            var errorContainer = document.getElementsByClassName("errorText", formElement.parentNode)[0];		
+            if(errorContainer)	
+            {
+        		errorContainer.innerHTML = errorMessage;
+        	  	Element.removeClassName(errorContainer, 'hidden');
+        		Effect.Appear(errorContainer);
+            }
+            else
+            {
+                console.info("Please add \n...\n <div class=\"errorText hidden\"></div> \n...\n after " + formElement.name);   
+            }
+        } catch(e) {
+            console.info(e);
+        }
+    }    
+}
+
+/**
+ * Extend focus to use it with TinyMce fields. 
+ * 
+ * @example
+ *     <code> Element.focus(element) </code>
+ *     
+ *   This won't work
+ *     <code>
+ *         $(element).focus();
+ *         element.focus();
+ *     </code>
+ * 
+ * @param HTMLElement element
+ */
+Element.focus = function(element)
+{
+    var styleDisplay = element.style.display;
+    var styleHeight = element.style.height;
+    var styleVisibility = element.style.visibility;
+    var elementType = element.type;
+
+    if('none' == element.style.display || "hidden" == element.type)
+    {
+        if(Element.isTinyMce(element)) element.style.height = '80px';
+        
+        element.style.visibility = 'hidden';
+        element.style.display = 'block';
+        element.type = '';
+        element.focus();
+        element.style.display = styleDisplay;
+        element.style.height = styleHeight;
+        element.style.visibility = styleVisibility;
+        element.type = elementType;
+        
+        if(Element.isTinyMce(element)) element.style.height = '1px';
+    }
+    else
+    {
+        element.focus();
+    }
+    
+    if(Element.isTinyMce(element))
+    {
+        var inst = tinyMCE.getInstanceById(element.nextSibling.down(".mceEditorIframe").id);  
+        tinyMCE.execCommand("mceStartTyping");
+        inst.contentWindow.focus();
+    }
+}
+   
+/**
+ * Check if field is tinyMce field
+ * 
+ * @example
+ *     <code> Element.isTinyMce(element) </code>
+ * 
+ * @param HTMLElement element
+ */
+Element.isTinyMce = function(element)
+{
+    return element.nextSibling && element.nextSibling.nodeType != 3 && Element.hasClassName(element.nextSibling, "mceEditorContainer");
+}
+    
+/**
+ * Copies data from TinyMce to textarea. 
+ * 
+ * Normally it would be copied automatically on form submit, but since validator overrides
+ * form.submit() we should submit all fields ourself. Note that I'm calling this funciton
+ * from validation, so most of the time there is no need to worry.
+ * 
+ * @example
+ *     <code> Element.saveTinyMceFields(element) </code>
+ * 
+ * @param HTMLElement element
+ */
+Element.saveTinyMceFields = function(element)
+{
+    document.getElementsByClassName("mceEditorIframe", element).each(function(mceControl)
+    {
+         tinyMCE.getInstanceById(mceControl.id).triggerSave();
+    });
 }
