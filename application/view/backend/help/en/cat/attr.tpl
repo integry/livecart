@@ -103,7 +103,9 @@
 </p>
 
 		<li>click Values tab in the main window -> </li>
+		<p><img src="image/doc/categories/attributes/values_tab.bmp"></p>
 		<li>when switched to the Value window enter the first Mobile Carrier in the text field provided.</li>
+	<p><img src="image/doc/categories/attributes/empty_field.bmp"></p>
 		<li>click "Enter more values" for additional fields to appear</li>
 	
 <p>
@@ -163,13 +165,9 @@
 	<br \>
 	<ul>
 		<li>Click <i>Values</i> tab which appears on the right of the <i>Main</i> tab. </li>
-		<p>
-			<img src="image/doc/categories/attributes/values_tab.bmp">
-		</p>
+		<p><img src="image/doc/categories/attributes/values_tab.bmp"></p>
 		<li>In the Values section enter all the necessary features one by one followed by the "Add more values" button.</li>
-		<p>
-			<img src="image/doc/categories/attributes/enter_values.bmp">
-		</p>
+		<p><img src="image/doc/categories/attributes/enter_values.bmp"></p>
 		<li><strong>Save</strong> the attribute when done.</li>
 	</ul>
 	The representation of your generated field could be similar to this:
@@ -182,34 +180,26 @@
 
 <p>
 	Battery capacity is expressed in numeric(al) format of mAh, therefore you should consider choosing a <strong>Number</strong> type. When it comes
-	to field or selector it is up to you to decide whether you want to create a single field for entering a value or a create a pre-defined list of possible capacity values. 
+	to field or selector it is up to you to decide whether you want to create a single field for entering a value or to create a pre-defined list of possible capacity values. 
 	We choose a field type in the following example.
 </p>
 
-	<ul>
-		<li>Required - click the checkbox to make the field required attribute</li>
-<p>
-	<img src="image/doc/categories/attributes/required.bmp">
-</p>
-		<li>Title - enter <strong>Battery Capacity</strong> to represent attribute's purpose/function.</li>
-<p>
-	<img src="image/doc/categories/attributes/capacity_title.bmp">
-</p>
-		<li>Handle is generated automatically so we leave the field unaltered</li>
-<p>
-	<img src="image/doc/categories/attributes/capacity_handle.bmp">
-</p>
-		<li>In the description field provide brief information about the field similar to this</li>
-<p>
-	<img src="image/doc/categories/attributes/capacity_description.bmp">
-</p>
-	</ul>	
-<p class="note">
-	Don't forget to click <strong>Save</strong> at the end.
-</p>
+<ul>
+	<li>Type - select Nember Field.</li>
+	<li>Required - click the checkbox to make the field required attribute</li>
+	<p><img src="image/doc/categories/attributes/required.bmp"></p>
+	<li>Title - enter <strong>Battery Capacity</strong> to represent attribute's purpose/function.</li>
+	<p><img src="image/doc/categories/attributes/capacity_title.bmp"></p>
+	<li>Handle is generated automatically so we leave the field unaltered</li>
+	<p><img src="image/doc/categories/attributes/capacity_handle.bmp"></p>
+	<li>In the description field provide brief information about the field similar to this</li>
+	<p><img src="image/doc/categories/attributes/capacity_description.bmp"></p>
+</ul>	
 
+<p class="note">Don't forget to click <strong>Save</strong> at the end.</p>
+<br \>
 <p>
-	Generated Battery Capacity attribute:
+	Generated attribute will provide a field for entering battery capacity:
 </p>
 
 <p>
@@ -232,28 +222,27 @@
 	<li>Type - select Number Options to create a list of possible bandwidth values.</li>
 	<li>Required - mark the checkbox to set the attribute required</li>
 	<li>Can select multiple values - mark the checkbox to allow multiple bandwidth selection </li>
-	<li>Title - enter <strong>Bandwidth</strong></li>
+	<li>Title - enter "Bandwidth"</li>
 	<li>Handle is generated automatically thus you don't need to change it</li>
-	<li>Description - enter description about Bandwidth.</li>
+	<li>Description - enter description of Bandwidth.</li>
 
 </ul>
 
-To set values of the Bandwidth options, go to Values section by clicking Values tab 
+To set values of the bandwidth options, go to Values section by clicking <strong>Values</strong> tab 
 
-<p>
-	<img src="image/doc/categories/attributes/values_tab.bmp">
-</p>
+	<p><img src="image/doc/categories/attributes/values_tab.bmp"></p>
 
-Enter necessary values one by one on the Value field followed by the Add more values button.
+Enter necessary values one by one in the Value field followed by the <strong>Add more values</strong> button.
 
-<p>
-	<img src="image/doc/categories/attributes/bandwidth_values.bmp">
-</p>
+	<p><img src="image/doc/categories/attributes/bandwidth_values.bmp"></p>
 
 Make sure to click <strong>Save</strong> to save changes when you're done. 
-<p>
-	<img src="image/doc/categories/attributes/save.bmp">
-</p>
+
+	<p><img src="image/doc/categories/attributes/save.bmp"></p>
+
+Your attribute will be placed in the <i>Add new Product</i> form:
+
+	<p><img src="image/doc/categories/attributes/bandwidth_generated.bmp"></p>
 
 <h3 id="group">Group attributes</h3>
 
