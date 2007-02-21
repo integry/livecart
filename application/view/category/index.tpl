@@ -3,7 +3,7 @@
 {include file="layout/frontend/rightSide.tpl"}
 
 <div id="content">
-	<h1>Some Category ({$id})</h1>
+	<h1>{$category.name_lang}</h1>
 
 	<ul>
 	{foreach from=$products item=product}

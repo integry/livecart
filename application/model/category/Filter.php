@@ -1,8 +1,9 @@
 <?php
 
 ClassLoader::import("application.model.system.MultilingualObject");
-ClassLoader::import('application.model.category.SpecFieldValue');
 ClassLoader::import('application.model.category.FilterGroup');
+ClassLoader::import('application.model.category.SpecField');
+ClassLoader::import('application.model.category.SpecFieldValue');
 
 /**
  *
@@ -39,25 +40,18 @@ class Filter extends MultilingualObject
 	public function getCondition()
 	{
 		$specField = $this->filterGroup->get()->specField->get();
-				
+
 		// selector values
 		if ($specField->isSelector())
 		{
 			$valueID = $this->specFieldValue->get()->getID();
-			if ($specField->isMultiValue->get())
-			{
-				$cond = new EqualsCond(new ARExpressionHandle('specItemTable_' . $specField->getID() . '_' . $valueID . '.specFieldValueID'), $valueID);							
-			}
-			else
-			{
-				$cond = new EqualsCond(new ARExpressionHandle('specItemTable_' . $specField->getID() . '.specFieldValueID'), $valueID);			
-			}
+			$cond = new EqualsCond(new ARExpressionHandle($this->getJoinAlias() . '.SpecFieldValueID'), $valueID);	
 		}
 		
 		// number range
 		elseif ($specField->isSimpleNumbers())
 		{
-			$field = new ARExpressionHandle('specTable_' . $specField->getID() . '.value');
+			$field = new ARExpressionHandle($this->getJoinAlias() . '.value');
 			
 			$conditions = array();
 			
@@ -77,7 +71,7 @@ class Filter extends MultilingualObject
 		// date range
 		elseif ($specField->isDate())
 		{
-			$field = new ARExpressionHandle('specTable_' . $specField->getID() . '.value');
+			$field = new ARExpressionHandle($this->getJoinAlias() . '.value');
 			
 			$conditions = array();
 			
@@ -100,6 +94,43 @@ class Filter extends MultilingualObject
 		}	
 		
 		return $cond;
+	}
+
+	/**
+     *	Adds JOIN definition to ARSelectFilter to retrieve product attribute value for the particular SpecField
+     *	
+     *	@param	ARSelectFilter	$filter	Filter instance
+     *	@return	string	Query field alias name
+     */
+	public function defineJoin(ARSelectFilter $filter)
+    {
+	  	$field = $this->filterGroup->get()->specField->get();
+		 
+		$table = $this->getJoinAlias();
+		  
+		if ($field->isSelector())
+		{
+			$filter->joinTable('SpecificationItem', 'Product', 'productID AND ' . $table . '.SpecFieldValueID = ' . $this->specFieldValue->get()->getID(), 'ID', $table);				  				  		  	
+		}
+		else
+		{
+			$filter->joinTable($field->getValueTableName(), 'Product', 'productID AND ' . $table . '.SpecFieldID = ' . $field->getID(), 'ID', $table);				  	  	
+		}	  	
+	}
+
+	protected function getJoinAlias()
+	{
+	  	$field = $this->filterGroup->get()->specField->get();
+		$aliasTable = 'specField_' . $field->getID();
+		
+		if (!$field->isSelector())
+		{
+			return $aliasTable;				  				  		  	
+		}
+		else
+		{
+			return $aliasTable . '_' . $this->specFieldValue->get()->getID();				  									
+		}	  			 	  	
 	}
 
 	protected function insert()

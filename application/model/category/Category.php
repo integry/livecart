@@ -33,6 +33,20 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$schema->registerField(new ARField("totalProductCount", ARInteger::instance()));
 	}
 
+	public function getProducts(ProductFilter $productFilter)
+	{
+		$filter = $productFilter->getSelectFilter();
+
+		$cond = new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->getID());
+		$filterCond = $filter->getCondition();
+		if ($filterCond)
+		{
+			$cond->addAND($filterCond);		  
+		}
+		$filter->setCondition($cond);
+		
+		return ActiveRecordModel::getRecordSet('Product', $filter);
+	}
 	
 	public function testGetProductArray(ARSelectFilter $filter, $loadSpecification = false)
 	{

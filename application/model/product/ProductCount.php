@@ -18,8 +18,11 @@ class ProductCount
 		$selectFilter->removeFieldList();
 	
 		$filters = $this->productFilter->getCategory()->getFilterSet();				
+
 		foreach ($filters as $filter)
 		{
+			$filter->defineJoin($selectFilter);			  
+
 			$expression = 'SUM(' . $filter->getCondition()->getExpressionHandle()->toString() . ')';
 			$selectFilter->addField($expression, null, 'cnt_' . $filter->getID());	
 		}

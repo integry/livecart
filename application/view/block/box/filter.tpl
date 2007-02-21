@@ -22,7 +22,10 @@
 			<div class="group">{$group.name_lang}</div>
 			<ul>
 				{foreach from=$group.filters item=filter}
-					<li> <a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a></li>
+					<li> 
+						<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a> 
+						<span class="count">({$filter.count})</span>
+					</li>
 				{/foreach}									
 			</ul>
 		{/foreach}

@@ -26,17 +26,36 @@ class ProductFilter
 	 */
 	public function applyFilter(Filter $filter)
 	{
-		$this->addCondition($filter->getCondition());
+		$this->filters[] = $filter;
 	}
 
 	public function getSelectFilter()
 	{
-	  	if ($this->condition)
-	  	{
-			$this->selectFilter->setCondition($this->condition);		    
+		$selectFilter = new ARSelectFilter();
+		$selectFilter->merge($this->selectFilter);
+
+		$cond = $selectFilter->getCondition();
+
+		foreach ($this->filters as $filter)
+		{
+			if (!$cond)
+			{
+			  	$cond = $filter->getCondition();
+			}		  
+			else
+			{
+			  	$cond->addAND($filter->getCondition());
+			}
+		
+			$filter->defineJoin($selectFilter);		
 		}
 
-	  	return $this->selectFilter;
+		if ($cond)
+		{
+			$selectFilter->setCondition($cond);		  
+		}
+
+	  	return $selectFilter;
 	}
 	
 	public function getCategory()
