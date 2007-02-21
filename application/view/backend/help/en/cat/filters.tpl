@@ -27,19 +27,24 @@ have to offer (some may search for products by particular technical details and 
 
 <h3 id="create">Create Filters</h3>
 <p>To create filters you have to define attributes first. Go to the <a href="{help cat.attr}">Attributes</a> section to create attributes. 
-Once you have at least on attribute assigned to a category, click "Add new Filter"<ins>...</ins> </p>
+Once you have at least one attribute assigned to a category, click "Add new Filter"<ins>...</ins> </p>
 
 <ul>
-	<li>First, you have to associate an attribute with a filter, that will implement existing attribute's values.</li>
-	<li>Name - the name of the filter will be displayed for customers to select filtering options.</li>
+	<li>Associate an attribute - select an existing attribute to link them.</li>
+	<li>Name - the actual name of the filter which will be displayed in your e-store</li>
 	<li>Other languages - if you have more than one languages in your system you can supply translations by clicking on the specific Language.</li>
 </ul>
 
-<p>To generate filters, go to Filters section by clicking Filters next to Main tab</p>
+<p>To generate filters, go to Filters section by clicking Filters next to the Main tab. In the Filters section you can generate filters automatically
+or set them manually.</p>
 
 <ul>
-	<li></li>
-	<li></li>
+	<li>To generate filters based on attribute's values, simply click <strong>Generate Filters</strong>. Each filter has three parameters: </li>
+	<ul>
+		<li>Name - the name of the filter </li>
+		<li>Handle</li>
+		<li>Value - a value of the attribute to which filter corresponds</li>
+	</ul>
 	<li></li>
 </ul>
 
