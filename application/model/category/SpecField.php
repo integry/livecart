@@ -42,6 +42,10 @@ class SpecField extends MultilingualObject
 		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("isMultiValue", ARBool::instance()));
 		$schema->registerField(new ARField("isRequired", ARBool::instance()));
+		$schema->registerField(new ARField("isDisplayed", ARBool::instance()));
+		$schema->registerField(new ARField("isDisplayedInList", ARBool::instance()));
+		$schema->registerField(new ARField("valuePrefix", ARArray::instance()));
+		$schema->registerField(new ARField("valueSuffix", ARArray::instance()));
 	}    
     
     /**
