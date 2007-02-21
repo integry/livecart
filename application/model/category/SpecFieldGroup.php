@@ -65,7 +65,7 @@ class SpecFieldGroup extends MultilingualObject
 	 * Loads a set of spec field records for a group.
 	 *
 	 * @param boolean $includeParentFields 
-	 * @param boolean $$loadReferencedRecords 
+	 * @param boolean $loadReferencedRecords 
 	 * @return ARSet
 	 */
 	public function getSpecificationFieldSet($includeParentFields = false, $loadReferencedRecords = false)
@@ -92,9 +92,12 @@ class SpecFieldGroup extends MultilingualObject
 	 *
 	 * @return SpecFieldGroup
 	 */
-	public static function getNewInstance()
+	public static function getNewInstance(Category $category)
 	{
-		return parent::getNewInstance(__CLASS__);
+		$inst = parent::getNewInstance(__CLASS__);
+		$inst->category->set($category);
+
+		return $inst;
 	}
 	
 	/**
@@ -141,5 +144,20 @@ class SpecFieldGroup extends MultilingualObject
         
         return $errors;
     }
+    
+    protected function insert()
+    {
+		// get max position
+	  	$f = new ARSelectFilter();
+	  	$f->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'categoryID'), $this->category->get()->getID()));
+	  	$f->setOrder(new ARFieldHandle(__CLASS__, 'position'), 'DESC');
+	  	$f->setLimit(1);
+	  	$rec = ActiveRecord::getRecordSetArray(__CLASS__, $f);
+		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;	  
+		
+		$this->position->set($position);
+		
+		return parent::insert();
+	}    
 }
 ?>

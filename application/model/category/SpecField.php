@@ -436,5 +436,20 @@ class SpecField extends MultilingualObject
 
         return $errors;
     }
+    
+    protected function insert()
+    {
+		// get max position
+	  	$f = new ARSelectFilter();
+	  	$f->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'categoryID'), $this->category->get()->getID()));
+	  	$f->setOrder(new ARFieldHandle(__CLASS__, 'position'), 'DESC');
+	  	$f->setLimit(1);
+	  	$rec = ActiveRecord::getRecordSetArray(__CLASS__, $f);
+		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;	  
+		
+		$this->position->set($position);
+
+		return parent::insert();
+	}
 }
 ?>

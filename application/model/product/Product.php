@@ -160,7 +160,10 @@ class Product extends MultilingualObject
 	{
 		ActiveRecordModel::beginTransaction();
 		
-		$this->manufacturer->get()->save();
+		if ($this->manufacturer->get())
+		{
+			$this->manufacturer->get()->save();		  
+		}
 
 		parent::save();
 		$this->getSpecification()->save();
