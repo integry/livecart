@@ -133,8 +133,6 @@ The last thing to do is to create Values which will be used as a selection optio
 	</ul>
 
 </p>
-	
-	<p><ins>Also it should be mentioned that values can be reordered by dragging and dropping them</ins></p>
 
 	The representation of your generated field could be similar to this:
 
