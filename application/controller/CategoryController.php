@@ -40,10 +40,13 @@ class CategoryController extends FrontendController
 		// get category instance
 		$category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
 
-		$category->testGetProductArray(new ARSelectFilter(), true);
+		$products = $category->testGetProductArray(new ARSelectFilter(), true)->toArray();
+		
+//		print_r($products);
 
 		$response = new ActionResponse();
 		$response->setValue('id', $this->categoryID);
+		$response->setValue('products', $products);
 		return $response;
 
 	}
