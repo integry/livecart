@@ -18,9 +18,8 @@
 
 		<div class="other">
 			<p>
-				{math equation="rand(x, y)" x=1000000 y=9999999 assign="random"}
-                <label for="product_{$cat}_{$product.ID}_specItem_other_{$random}"> {t _other}:</label>
-				{textfield name="other[`$field.ID`][]" id="product_`$cat`_`$product.ID`_specItem_other_`$random`"}
+                <label for="product_{$cat}_{$product.ID}_specItem_other_{$field.ID}"> {t _other}:</label>
+				{textfield name="other[`$field.ID`][]" id="product_`$cat`_`$product.ID`_specItem_other_`$field.ID`"}
 			</p>
 		</div>
 
@@ -29,9 +28,10 @@
 		</p>
 
 		</fieldset>
-		<input type="hidden" name="{$fieldName}" value="" />
+		<input class="fieldStatus" name="{$fieldName}" value="" style="display: none;" />
 	{else}
-		{selectfield id="product_`$cat`_`$product.ID`_`$fieldName`" name=$fieldName options=$field.values class="select"}		
+		{selectfield id="product_`$cat`_`$product.ID`_`$fieldName`" name=$fieldName options=$field.values class="select"}
+		{textfield name="other[`$field.ID`][]" id="product_`$cat`_`$product.ID`_specItem_other_`$field.ID`" style="display: none"}
 	{/if}
 
 {elseif $field.type == 2}
@@ -48,5 +48,4 @@
 
 {elseif $field.type == 6}
 	{calendar id="product_`$cat`_`$product.ID`_`$fieldName`" name=$fieldName}
-
 {/if}

@@ -225,8 +225,6 @@ class ProductController extends StoreManagementController
 			{
 
 			}
-			
-//			echo '<pre>';			print_r($product->toArray());			echo '</pre>';
 		}
 		else
 		{
@@ -312,6 +310,9 @@ class ProductController extends StoreManagementController
 		return $response; 	
 	}
 	
+	/**
+	 * @return RequestValidator
+	 */
 	private function buildValidator(Product $product)
 	{
 		ClassLoader::import("framework.request.validator.RequestValidator");
@@ -356,7 +357,7 @@ class ProductController extends StoreManagementController
 				}
 				else
 				{
-					ClassLoader::import('application.helper.check.SpecFieldIsValueSelectedCheck');					
+					ClassLoader::import('application.helper.check.SpecFieldIsValueSelectedCheck');
 					$validator->addCheck($fieldname, new SpecFieldIsValueSelectedCheck($this->translate('_err_specfield_requiredaaaaaaaa'), $field, $this->request));		    
 				}			
 			}

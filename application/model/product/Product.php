@@ -257,7 +257,7 @@ class Product extends MultilingualObject
 			{
 				if (!$field->isMultiValue->get())
 				{
-				  	if ($request->isValueSet($fieldName))
+				  	if ($request->isValueSet($fieldName) && '' != $request->getValue($fieldName))
 				  	{
 				  		$this->setAttributeValue($field, SpecFieldValue::getInstanceByID($request->getValue($fieldName), ActiveRecordModel::LOAD_DATA));				  	  
 				  	}						  	

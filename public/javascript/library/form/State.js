@@ -185,30 +185,37 @@ Form.State = {
 
         var occurencies = {};
         var elements = $A(Form.getElements(form));
-        $A(Form.getElements(form)).each(function(element)
+        try
         {
-            if(element.name == '' || !self.backups[form.backupId][element.name]) return;
-
-            occurencies[element.name] = (occurencies[element.name] == undefined) ? 0 : occurencies[element.name] + 1;
-
-            var value = self.backups[form.backupId][element.name][occurencies[element.name]];
-
-            if(value)
+            $A(Form.getElements(form)).each(function(element)
             {
-                element.value = value.value;
-                element.checked = value.checked;
-
-                if(element.options && value.options)
+                if(element.name == '' || !self.backups[form.backupId][element.name]) return;
+    
+                occurencies[element.name] = (occurencies[element.name] == undefined) ? 0 : occurencies[element.name] + 1;
+    
+                var value = self.backups[form.backupId][element.name][occurencies[element.name]];
+    
+                if(value)
                 {
-                    element.options.length = 0;
-                    $H(value.options).each(function(option) {
-                        element.options[element.options.length] = new Option(option.value, option.key);
-                    });
+                    element.value = value.value;
+                    element.checked = value.checked;
+    
+                    if(element.options && value.options)
+                    {
+                        element.options.length = 0;
+                        $H(value.options).each(function(option) {
+                            element.options[element.options.length] = new Option(option.value, option.key);
+                        });
+                    }
+    
+                    element.selectedIndex = value.selectedIndex;
                 }
-
-                element.selectedIndex = value.selectedIndex;
-            }
-        });
+            });
+        }
+        catch(e)
+        {
+            console.info(e);
+        }
     }
 }
 

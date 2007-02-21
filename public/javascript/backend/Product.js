@@ -28,14 +28,23 @@ Backend.Product =
 	
 	cancelAddProduct: function(categoryID, container)
 	{
-		var textareas = container.getElementsByTagName('textarea');
-		for (k = 0; k < textareas.length; k++)
-		{
-			tinyMCE.execCommand('mceRemoveControl', true, textareas[k].id);
-		}
-
-		this.formTabCopies[categoryID] = container;	
-		container.parentNode.replaceChild(this.productTabCopies[categoryID], container);
+		try
+        {
+            var textareas = container.getElementsByTagName('textarea');
+    		for (k = 0; k < textareas.length; k++)
+    		{
+    			tinyMCE.execCommand('mceRemoveControl', true, textareas[k].id);
+    		}
+    
+    		this.formTabCopies[categoryID] = container;	
+            
+            console.info(this.productTabCopies[categoryID], container);
+    		container.parentNode.replaceChild(this.productTabCopies[categoryID], container);
+        }
+        catch(e)
+        {
+            console.info(e);
+        }
 	},
 	
 	resetAddForm: function(form)
@@ -49,7 +58,7 @@ Backend.Product =
 	
 	initAddForm: function(categoryID)
 	{
-		tinyMCE.idCounter = 0;
+        tinyMCE.idCounter = 0;
 		var textareas = $('tabProductsContent_' + categoryID).getElementsByTagName('textarea');
 		for (k = 0; k < textareas.length; k++)
 		{
@@ -60,10 +69,17 @@ Backend.Product =
 		
 		// specField entry logic (multiple value select)
 		var containers = document.getElementsByClassName('multiValueSelect', $('tabProductsContent_' + categoryID));
-		for (k = 0; k < containers.length; k++)
-		{
-			new Backend.Product.specFieldEntryMultiValue(containers[k]);  
-		}		
+        try
+        {
+    		for (k = 0; k < containers.length; k++)
+    		{
+    			new Backend.Product.specFieldEntryMultiValue(containers[k]);  
+    		}	
+        }
+        catch(e)
+        {
+            console.info(e);
+        }	
 		
 		// single value select
 		var specFieldContainer = document.getElementsByClassName('specification', $('tabProductsContent_' + categoryID))[0];
@@ -211,7 +227,7 @@ Backend.Product.saveHandler.prototype =
 	saveComplete: function(originalRequest)
 	{
 	  	ActiveForm.prototype.resetErrorMessages(this.form);
-		eval('var response = ' + originalRequest.responseText);
+		var response = eval('(' + originalRequest.responseText + ")");
 	  	
 		if (response.errors)
 		{
@@ -222,9 +238,19 @@ Backend.Product.saveHandler.prototype =
 			// reset form and add more products
 			if (response.addmore)
 			{
-				this.form.reset();  
-				this.form.namedItem('name').focus();
-				new Backend.SaveConfirmationMessage(this.form.getElementsByClassName('productSaveConf')[0]);
+				this.form.reset();
+                try
+                {
+                    document.getElementsByClassName('product_sku', this.form)[0].disabled = false;
+    				Form.focusFirstElement(this.form);
+                
+                    console.info('product save');
+				    new Backend.SaveConfirmationMessage(this.form.getElementsByClassName('productSaveConf')[0]);
+                }
+                catch(e)
+                {
+                    console.info(e);
+                }
 			}
 
 			// product customization content  	
@@ -251,7 +277,7 @@ Backend.Product.specFieldEntrySingleSelect.prototype =
 	handleChange: function(e)
 	{
 		var otherInput = this.field.parentNode.getElementsByTagName('input')[0];
-		otherInput.style.display = ('other' == this.field.value) ? '' : 'none';
+		otherInput.style.display = ('other' == this.field.value) ? 'block' : 'none';
 		
 		if ('none' != otherInput.style.display)
 		{
@@ -266,21 +292,27 @@ Backend.Product.specFieldEntryMultiValue.prototype =
 	container: null,
 	
 	isNumeric: false,
-	
+    
 	initialize: function(container)
 	{		
 		Event.observe(container.getElementsByClassName('deselect')[0], 'click', this.reset.bindAsEventListener(this));
 		
 		this.isNumeric = Element.hasClassName(container, 'multiValueNumeric');
-		
+        
+        this.fieldStatus = document.getElementsByClassName("fieldStatus", container.parentNode)[0];
 		this.container = document.getElementsByClassName('other', container)[0];
+        
 		var inp = this.container.getElementsByTagName('input')[0];
 		this.bindField(inp);  	
 	},
 	
 	bindField: function(field)
 	{
-		field.onkeyup = this.handleChange.bindAsEventListener(this);  
+		var self = this;
+        Event.observe(field, "keyup", function(e) { self.handleChange(e); }); 
+        Event.observe(field, "blur", function(e) { self.handleBlur(e); }); 
+        
+        field.onkeyup = this.handleChange.bindAsEventListener(this);
 		field.onblur = this.handleBlur.bindAsEventListener(this); 
 
 		if (this.isNumeric)
@@ -308,13 +340,13 @@ Backend.Product.specFieldEntryMultiValue.prototype =
 		  	this.createNewField();
 		}
 	},
-	
+	   
 	handleBlur: function(e)
 	{
 		var element = Event.element(e);
-		if (!element.value && this.getFieldCount() > 1)
+		if (element.parentNode && element.parentNode.parentNode &&!element.value && this.getFieldCount() > 1)
 		{
-			element.parentNode.parentNode.removeChild(element.parentNode);
+			Element.remove(element.parentNode);
 		}  
 	},
 
@@ -354,17 +386,21 @@ Backend.Product.Editor.prototype =
     __currentId__: null,
     __instances__: {},
     
-    initialize: function(id, url)
+    initialize: function(id)
   	{
-	    this.url = url;
-	    this.id = id;
+	    this.id = id;       
+        
         this.__nodes__();
         this.__bind__();
+        
+        Form.State.backup(this.nodes.form);
 	},
 	
-	__nodes__: function(parent)
+	__nodes__: function()
     {
         this.nodes = {};
+        this.nodes.parent = $("productBasic_" + this.id + "Content");
+        this.nodes.form = this.nodes.parent.down("form");
     },
     
     __bind__: function(args)
@@ -375,6 +411,7 @@ Backend.Product.Editor.prototype =
     __init__: function(args)
     {
         Backend.Product.Editor.prototype.setCurrentProductId(this.id);
+        this.showProductForm();
         this.tabControl = TabControl.prototype.getInstance("productManagerContainer", Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId);
     },
     
@@ -398,25 +435,32 @@ Backend.Product.Editor.prototype =
         Backend.Product.Editor.prototype.__currentId__ = id;
     },
     
-    getInstance: function(id, url)
+    getInstance: function(id)
     {
         if(!Backend.Product.Editor.prototype.__instances__[id])
         {
-            Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id, url);
+            Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id);
         }
         
         Backend.Product.Editor.prototype.__instances__[id].__init__();
         return Backend.Product.Editor.prototype.__instances__[id];
     },
     
+    hasInstance: function(id)
+    {
+        return this.__instances__[id] ? true : false;
+    },
+    
     showProductForm: function(args)
     {
-        Backend.Product.Editor.prototype.setCurrentProductId(this.id);
         this.hideCategoriesContainer();
     },
     
-    hideProductForm: function(args)
+    cancelProductForm: function(args)
     {
+        var inst = Backend.Product.Editor.prototype.getInstance(Backend.Product.Editor.prototype.getCurrentProductId());
+        Form.restore(inst.nodes.form);
+        
         this.showCategoriesContainer();
     },
     

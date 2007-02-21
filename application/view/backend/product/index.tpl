@@ -41,7 +41,13 @@
 
 {literal}
 <script type="text/javascript">
-	
+    window.openProduct = function(id) 
+    {
+        Backend.Product.Editor.prototype.setCurrentProductId(id); 
+        TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId); 
+        if(Backend.Product.Editor.prototype.hasInstance(id)) Backend.Product.Editor.prototype.getInstance(id);
+    }
+
 	new ActiveGrid($('products_{/literal}{$categoryID}'), '{link controller=backend.product action=lists}', {$totalCount});{literal}
 
 </script>

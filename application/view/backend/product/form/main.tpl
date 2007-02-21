@@ -19,7 +19,7 @@
     <p class="required">
     	<label for="product_{$cat}_{$product.ID}_sku">SKU (code):</label>
     	<fieldset class="error">
-    		{textfield name="sku" id="product_`$cat`_`$product.ID`_sku" autocomplete="controller=backend.product field=sku"} 
+    		{textfield name="sku" id="product_`$cat`_`$product.ID`_sku" class="product_sku" autocomplete="controller=backend.product field=sku"} 
     		<div class="errorText hidden"></div>
     	</fieldset>			
     </p>

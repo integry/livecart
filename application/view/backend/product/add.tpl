@@ -1,6 +1,6 @@
 <div>
     <p>
-        <a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}, this.parentNode); return false;">Cancel adding new product</a>
+        <a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}, this.parentNode.parentNode); return false;">Cancel adding new product</a>
     </p>
         
     {form handle=$productForm action="controller=backend.product action=save id=`$product.ID`" method="POST" onsubmit="Backend.Product.saveForm(this); return false;" onreset="Backend.Product.resetAddForm(this);"}

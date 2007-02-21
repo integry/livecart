@@ -162,7 +162,7 @@ class SpecFieldController extends StoreManagementController
             $specField->save();  
                      
             // save specification field values in database
-			if(is_array($values)) 
+			if($specField->isSelector() && is_array($values)) 
         	{
 		        $position = 1;
 		        foreach ($values as $key => $value)

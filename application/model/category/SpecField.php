@@ -361,7 +361,6 @@ class SpecField extends MultilingualObject
 
 					$specItemTable = 'specItemTable_' . $this->getID() . '_' . $value->getID();
 					$filter->joinTable('SpecificationItem', 'Product', 'productID AND ' . $specItemTable . '.SpecFieldValueID = ' . $value->getID(), 'ID', $specItemTable);				  				  
-		
 					$filter->joinTable('SpecFieldValue', $specItemTable, 'ID', 'SpecFieldValueID', $aliasTable);				  				  
 				}
 			}
@@ -369,7 +368,6 @@ class SpecField extends MultilingualObject
 			{
 				$specItemTable = 'specItemTable_' . $this->getID();
 				$filter->joinTable('SpecificationItem', 'Product', 'productID AND ' . $specItemTable . '.SpecFieldID = ' . $this->getID(), 'ID', $specItemTable);				  				  
-	
 				$filter->joinTable('SpecFieldValue', $specItemTable, 'ID', 'SpecFieldValueID', $aliasTable);				  				  
 		  	}
 		}	  	

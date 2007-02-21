@@ -298,12 +298,12 @@ Element.focus = function(element)
         
         element.style.visibility = 'hidden';
         element.style.display = 'block';
-        element.type = '';
+        try { element.type = elementType; } catch(e) {}
         element.focus();
         element.style.display = styleDisplay;
         element.style.height = styleHeight;
         element.style.visibility = styleVisibility;
-        element.type = elementType;
+        try { element.type = elementType; } catch(e) {}
         
         if(Element.isTinyMce(element)) element.style.height = '1px';
     }
