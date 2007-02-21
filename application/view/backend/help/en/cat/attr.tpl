@@ -46,7 +46,9 @@ based attribute management system where you can define your own attributes and c
 <p>
 	To create an attribute you have to fill out a short form. Later we will show how attributes are actually implemented in the <i>Filters</i> 
 	section. What is more, attributes are automatically included in the <i>Add New Product</i> form. Therefore in these example we will demonstrate
-	how attributes are generated and placed in the product form.<del>order in the form depends on the attribute order?</del><ins>Yes, as well as group order and arrangement. The same is true for individual product pages.</ins>
+	how attributes are generated and placed in the product form.
+	Notice that the order of attributes in the <i>Add New Product</i> form is determined by the <a href="{self}#sort">arrangement</a> of attribute
+	groups as well as separate attributes.
 
 </p>
 <p>
@@ -64,12 +66,12 @@ based attribute management system where you can define your own attributes and c
 		<img src="image/doc/categories/attributes/type.bmp">
 		<li>We check <i>Required</i> to make the field mandatory since it is an important feature. </li>
 		<img src="image/doc/categories/attributes/required.bmp">
-		<li><i>Can select multiple values</i> - we leave this checkbox clear to <del>restrict user's ability to associate cell phone with multiple carriers
-		(which is not true most of the times).</del><ins> only allow assign one carrier to each phone</ins></li> 
+		<li><i>Can select multiple values</i> - we leave this checkbox clear to allow assigning only one carrier to each phone</li> 
 		<img src="image/doc/categories/attributes/multiple_values.bmp">
 		<li>Attribute's <i>title</i> represent its function thus we enter a meaningful name - <strong>Carrier</strong>. </li>
 		<img src="image/doc/categories/attributes/title.bmp">
-		<li>Handle - handle is generated automatically.<del> so you don't need to change it.</del> Handle is used to represent the attribute in URL's, so you can change it for SEO purposes, if needed.</li>
+		<li>Handle - handle is generated automatically. Handle is used to represent the attribute in URL's, so you can change it for 
+		<a href="explanation">SEO</a> purposes, if needed.</li>
 		<img src="image/doc/categories/attributes/handle.bmp">
 		<li>In the description field we enter a brief description to describe the term "Carrier".</li> 
 		<img src="image/doc/categories/attributes/description.bmp">
@@ -244,8 +246,8 @@ and save changes afterwards. For detailed description of fields, refer to <a hre
 
 <h3 id="sort">Change attribute order</h3>
 
-<p>(In LC sorting of attributes is implemented via drag&drop feature). To change the order of attributes, click on attributes empty space and then drag it
-up or down.</p>
+<p>(In LC sorting of attributes is implemented via drag&drop feature). To change the order of attributes (or attribute groups), click on attributes 
+empty space and then drag it up or down.</p>
 
 {helpSeeAlso}
 	{see cat.details}

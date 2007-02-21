@@ -16,7 +16,7 @@
 	</ul>
 </p>
 
-	<p class="note"><strong>Note</strong>: <del>By clicking "Translate to: Language" you will force additional fields to expand below, these are the translations for international usage.</del> Read more about <a href="{help language}">enabling additional languages</a>.</p>
+	<p class="note"><strong>Note</strong>: read more about <a href="{help language}">enabling additional languages</a>.</p>
 
 {helpSeeAlso}
 	{see cat.attr}
