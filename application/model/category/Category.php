@@ -40,11 +40,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		if ($loadSpecification)
 		{
 			$specFields = $this->getSpecificationFieldSet(self::INCLUDE_PARENT);	  
-			
-			foreach ($specFields as $specField)
-			{
-			  	$specField->defineJoin($filter);
-			}
 		}	  	
 	
 		ClassLoader::import('application.model.product.Product');
@@ -82,12 +77,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
 		// load product specification
 		$specFields = $this->getSpecificationFieldSet(self::INCLUDE_PARENT);	  
-		
-		foreach ($specFields as $specField)
-		{
-		  	$specField->defineJoin($filter);
-		}
-				
+					
 		$filter->joinTable('ProductPrice', 'Product', 'productID AND pricetable_EUR.currencyID = "EUR"', 'ID', 'pricetable_EUR');				  	
 	  	$filter->addField('price', 'pricetable_EUR', 'price_EUR');
 
