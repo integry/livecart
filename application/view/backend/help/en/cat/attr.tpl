@@ -46,7 +46,7 @@ based attribute management system where you can define your own attributes and c
 <p>
 	To create an attribute you have to fill out a short form. Later we will show how attributes are actually implemented in the <i>Filters</i> 
 	section. What is more, attributes are automatically included in the <i>Add New Product</i> form. Therefore in these example we will demonstrate
-	how attributes are generated and placed in the form.<ins>order in the form depends on the attribute order?</ins>
+	how attributes are generated and placed in the product form.<del>order in the form depends on the attribute order?</del><ins>Yes, as well as group order and arrangement. The same is true for individual product pages.</ins>
 
 </p>
 <p>
@@ -64,12 +64,12 @@ based attribute management system where you can define your own attributes and c
 		<img src="image/doc/categories/attributes/type.bmp">
 		<li>We check <i>Required</i> to make the field mandatory since it is an important feature. </li>
 		<img src="image/doc/categories/attributes/required.bmp">
-		<li><i>Can select multiple values</i> - we leave this checkbox clear to restrict user's ability to associate cell phone with multiple carriers
-		(which is not true most of the times).</li> 
+		<li><i>Can select multiple values</i> - we leave this checkbox clear to <del>restrict user's ability to associate cell phone with multiple carriers
+		(which is not true most of the times).</del><ins> only allow assign one carrier to each phone</ins></li> 
 		<img src="image/doc/categories/attributes/multiple_values.bmp">
 		<li>Attribute's <i>title</i> represent its function thus we enter a meaningful name - <strong>Carrier</strong>. </li>
 		<img src="image/doc/categories/attributes/title.bmp">
-		<li>Handle - handle is generated automatically so you don't need to change it.</li>
+		<li>Handle - handle is generated automatically.<del> so you don't need to change it.</del> Handle is used to represent the attribute in URL's, so you can change it for SEO purposes, if needed.</li>
 		<img src="image/doc/categories/attributes/handle.bmp">
 		<li>In the description field we enter a brief description to describe the term "Carrier".</li> 
 		<img src="image/doc/categories/attributes/description.bmp">
@@ -118,9 +118,10 @@ The last thing to do is to create Values which will be used as a selection optio
 		<li>Handle is generated automatically therefore you may leave the field as it is</li>
 		<li>Description - enter a few sentences about features attribute to set its description.</li>
 
-<p>The next thing to do is to create a value list of mobile's features. </p>
+	</ul>
 
-	<br \>
+<p>The next thing to do is to create a value list of mobile's features. 
+
 	<ul>
 		<li>Click <i>Values</i> tab which appears on the right of the <i>Main</i> tab. </li>
 		<img src="image/doc/categories/attributes/values_tab.bmp">
@@ -128,7 +129,9 @@ The last thing to do is to create Values which will be used as a selection optio
 		<img src="image/doc/categories/attributes/enter_values.bmp">
 		<li><strong>Save</strong> the attribute when done.</li>
 	</ul>
-	</ul>
+
+</p>
+
 	The representation of your generated field could be similar to this:
 
 	<img src="image/doc/categories/attributes/features.bmp">
@@ -161,6 +164,8 @@ The last thing to do is to create Values which will be used as a selection optio
 	<img src="image/doc/categories/attributes/capacity_generated.bmp">
 	
 <h4 id="bandwidth">Creating <i>Bandwidth</i> attribute</h4>
+
+<ins>There is also UMTS and CDMA, so this may not be a good example for number selector. On the other hand I cannot figure out what would be a good example and whether a strictly number multiple value selector is needed at all. Also Bandwidth doesn't seem to be a correct name for this attribute.</ins>
 
 <p>
 	Complete the following steps to create a bandwidth attribute.

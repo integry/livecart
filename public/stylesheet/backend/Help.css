@@ -38,12 +38,12 @@ p {
 ul, ol {
   	padding: 5px;
   	padding-left: 20px;
-#  	padding-top: 25px;
-	#margin-left: 15px;
+  	padding-top: 15px;
+	margin-left: 15px;
   	margin-bottom: 10px;
 	list-style-type: square;
 	width: 80%;
-#	background-color: #EEEEcc;
+	background-color: #EEEEEE;
 }
 
 li	{
