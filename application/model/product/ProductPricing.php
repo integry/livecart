@@ -106,7 +106,7 @@ class ProductPricing
 			}
 			else
 			{
-				$price = ProductPrice::getNewInstance($this->product, $currency);
+			    $price = ProductPrice::getNewInstance($this->product, $currency);
 			    $calculated[$currency->getID()] = $price->reCalculatePrice();
 			}
 		}

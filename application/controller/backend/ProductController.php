@@ -272,8 +272,45 @@ class ProductController extends StoreManagementController
 		}
 
 		$form = $this->buildForm($product);
-		$form->setData($product->toArray());
+		
+		$productFormData = $product->toArray();
+		
+		if($product->isLoaded())
+		{
+        	$product->loadSpecification();
+        	foreach($product->getSpecification()->toArray() as $attr)
+        	{
+        	    if(in_array($attr['SpecField']['type'], SpecField::getSelectorValueTypes()))
+        	    {
+        	        if(1 == $attr['SpecField']['isMultiValue'])
+        		    {
+        		        foreach($attr['valueIDs'] as $valueID)
+        		        {
+        		            $productFormData["specItem_$valueID"] = "on";
+        		        }
+        		    }
+        		    else
+        		    {
+        		        $productFormData["{$attr['SpecField']['fieldName']}"] = $attr['ID'];
+        		    }
+        	    } 
+        	    else if(in_array($attr['SpecField']['type'], SpecField::getMultilanguageTypes()))
+        	    {
+        	        $productFormData["{$attr['SpecField']['fieldName']}"] = $attr['value_lang'];
+        	        foreach($attr['value'] as $lang => $translatedValue)
+        	        {
+        	            $productFormData["{$attr['SpecField']['fieldName']}_{$lang}"] = $translatedValue;
+        	        }
+        	    }
+        	    else
+        	    {
+        	        $productFormData["{$attr['SpecField']['fieldName']}"] = $attr['value'];
+        	    }   
+        	}
+		}
 
+        $form->setData($productFormData);
+		
 		$languages = array();
 		foreach ($this->store->getLanguageArray() as $lang)
 		{
@@ -432,7 +469,7 @@ class ProductController extends StoreManagementController
 	public function basicData()
 	{
 	    $product = Product::getInstanceById($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA);
-		$product->loadSpecification();
+		
 		$response = $this->productForm($product);
 
 		return $response;

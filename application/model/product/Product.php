@@ -198,7 +198,6 @@ class Product extends MultilingualObject
 /*
 	protected function miscRecordDataHandler($miscRecordDataArray)
 	{
-print_r($miscRecordDataArray);
 		foreach ($miscRecordDataArray as $key => $value)
 		{
 			if (substr($key, 0, 6) == 'price_')
@@ -244,7 +243,7 @@ print_r($miscRecordDataArray);
 					 	LEFT JOIN SpecFieldValue ON SpecificationItem.specFieldValueID =  SpecFieldValue.ID
 					 WHERE productID = ' . $this->getID();
 
-			$specificationData = self::getDataBySQL($query);			
+			$specificationData = self::getDataBySQL($query);	
 		}
 		
 	  	if (!$pricingData)
@@ -291,9 +290,9 @@ print_r($miscRecordDataArray);
 			{
 				if (!$field->isMultiValue->get())
 				{
-				  	if ($request->isValueSet($fieldName) && '' != $request->getValue($fieldName))
+				  	if ($request->isValueSet($fieldName) && !in_array($request->getValue($fieldName), array('other', '')))
 				  	{
-				  		$this->setAttributeValue($field, SpecFieldValue::getInstanceByID($request->getValue($fieldName), ActiveRecordModel::LOAD_DATA));				  	  
+				  		$this->setAttributeValue($field, SpecFieldValue::getInstanceByID((int)$request->getValue($fieldName), ActiveRecordModel::LOAD_DATA));				  	  
 				  	}						  	
 				}
 				else
@@ -374,9 +373,18 @@ print_r($miscRecordDataArray);
 		}
 	}
 
+	/**
+	 * Get product active record 
+	 * 
+	 * @param mixed $recordID
+	 * @param bool $loadRecordData
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return Product
+	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
+	    return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
 	}
 
 	/**
@@ -529,6 +537,19 @@ print_r($miscRecordDataArray);
     public static function countItems(Category $category)
     {
         return $category->getProductSet(new ARSelectFilter(), false)->getTotalRecordCount();
+    }
+
+    public function getPricesArray()
+    {
+        if(empty($this->priceData))
+        {
+            $this->priceData = array();      
+            foreach(ProductPrice::getProductPricesSet($this)->toArray() as $price)
+            {
+                $this->priceData[$price['Currency']] = $price['price'];
+            }
+        }
+        return $this->priceData;
     }
 }
 

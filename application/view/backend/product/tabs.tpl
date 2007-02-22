@@ -8,7 +8,7 @@
 			<li id="productImages" class="tab inactive"><a href="{link    controller=backend.productImage action=index      id=_id_}?categoryID=_categoryID_">Images</a><span> </span></li>
 			<li id="productRelated" class="tab inactive"><a href="{link   controller=backend.productRelated action=index    id=_id_}?categoryID=_categoryID_">Related products</a><span> </span></li>
 			<li id="productOptions" class="tab inactive"><a href="{link   controller=backend.product action=options         id=_id_}?categoryID=_categoryID_">Options</a><span> </span></li>
-			<li id="productDiscounts" class="tab inactive"><a href="{link controller=backend.productPrice action=discounts  id=_id_}?categoryID=_categoryID_">Discounts</a><span> </span></li>
+			<li id="productDiscounts" class="tab inactive"><a href="{link controller=backend.productPrice action=index      id=_id_}?categoryID=_categoryID_">Prices &amp; Shipping</a><span> </span></li>
 			<li id="productFiles" class="tab inactive"><a href="{link     controller=backend.productFile action=index       id=_id_}?categoryID=_categoryID_">Files</a><span> </span></li>
 		</ul>
 	</div>

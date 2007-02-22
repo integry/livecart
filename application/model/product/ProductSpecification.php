@@ -173,7 +173,8 @@ class ProductSpecification
 	print_r($this->toArray());
 	echo '</pre>';
 */
-	}	
+	}
+
 }
 
 ?>

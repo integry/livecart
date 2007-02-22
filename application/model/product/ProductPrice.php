@@ -29,6 +29,49 @@ class ProductPrice extends ActiveRecordModel
 		
 		return $instance;
 	}
+
+	/**
+	 * Loads a set of active record product price by using a filter
+	 *
+	 * @param ARSelectFilter $filter
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
+	{
+		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+	}
+	
+	/**
+	 * Get record set of product prices
+	 *
+	 * @param Product $product
+	 * 
+	 * @return ARSet
+	 */
+	public static function getProductPricesSet(Product $product)
+	{
+	    $filter = self::getProductPricesFilter($product);
+	    return self::getRecordSet($filter);
+	}
+	
+	/**
+	 * Get product prices filter
+	 *
+	 * @param Product $product
+	 * 
+	 * @return ARSelectFilter
+	 */
+	private static function getProductPricesFilter(Product $product)
+	{
+	    ClassLoader::import("application.model.Currency");
+	    
+	    $filter = new ARSelectFilter();
+	    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
+	    
+	    return $filter;
+	}
 	
 	public static function getInstance(Product $product, Currency $currency)
 	{
@@ -36,6 +79,7 @@ class ProductPrice extends ActiveRecordModel
 		$cond = new EqualsCond(new ARFieldHandle('ProductPrice', 'productID'), $product->getID());
 		$cond->addAND(new EqualsCond(new ARFieldHandle('ProductPrice', 'currencyID'), $currency->getID()));
 		$filter->setCondition($cond);
+
 		$set = parent::getRecordSet('ProductPrice', $filter);
 		
 		if ($set->size() > 0)

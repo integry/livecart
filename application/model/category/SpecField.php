@@ -123,6 +123,16 @@ class SpecField extends MultilingualObject
 		$value->specField->set($this);
 		$value->save();
     }
+    
+    public function save()
+    {
+        if($this->isModified() && !$this->isSelector())
+        {
+            $this->setFieldValue('isMultiValue', 0);
+        }
+        
+        parent::save();
+    }
 
     /**
      * Gets a related table name, where field values are stored
@@ -295,7 +305,12 @@ class SpecField extends MultilingualObject
 	
 	public static function getTextTypes()
 	{
-	    return array(self::TYPE_TEXT_ADVANCED, self::TYPE_TEXT_ADVANCED, self::TYPE_TEXT_SELECTOR, self::TYPE_TEXT_DATE);
+	    return array(self::TYPE_TEXT_SIMPLE, self::TYPE_TEXT_ADVANCED, self::TYPE_TEXT_SELECTOR, self::TYPE_TEXT_DATE);
+	}
+	
+	public static function getMultilanguageTypes()
+	{
+	    return array(self::TYPE_TEXT_SIMPLE, self::TYPE_TEXT_ADVANCED, self::TYPE_TEXT_SELECTOR);
 	}
 	
 	public static function getDataTypeFromType($type) 
