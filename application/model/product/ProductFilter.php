@@ -58,6 +58,17 @@ class ProductFilter
 	  	return $selectFilter;
 	}
 	
+	public function orderByPrice(Currency $currency, $direction = 'ASC')
+	{
+	  	if ('ASC' != $direction)
+	  	{
+		    $direction = 'DESC';
+		}
+		
+		$currency->defineProductJoin($this->selectFilter);
+		$this->selectFilter->setOrder(new ARFieldHandle($currency->getJoinAlias(), 'price'), $direction);
+	}
+	
 	public function getCategory()
 	{
 	  	return $this->category;

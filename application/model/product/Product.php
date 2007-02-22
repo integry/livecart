@@ -195,6 +195,7 @@ class Product extends MultilingualObject
 		ActiveRecordModel::commit();
 	}
 
+/*
 	protected function miscRecordDataHandler($miscRecordDataArray)
 	{
 print_r($miscRecordDataArray);
@@ -221,7 +222,7 @@ print_r($miscRecordDataArray);
 			}
 		}
 	}
-
+*/
 	public function getSpecificationFieldSet($loadReferencedRecords = false)
 	{
 	  	return $this->category->get()->getSpecificationFieldSet(true, $loadReferencedRecords);
