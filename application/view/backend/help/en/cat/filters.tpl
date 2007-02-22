@@ -51,16 +51,41 @@ a range of values for it.</p>
 		<ul>
 			<li>Name - the actual name of the filter</li>
 			<li>Handle - handle is used to represent filter's <a href="">URL</a></li>
-			<li>Value - select or set value of teh filter. Values might be different depending on the attribute's type therefore
-			we will discuss all of them later in examples provided.</li>
+			<li>Value - select or set value of the filter. Values might be different depending on the attribute's type therefore
+			we will discuss all of them later in the examples below.</li>
 		</ul>
 	</ul>
 </ul>
 
 <p>We will guide you through several tutorials and show how to generate filters for your existing attributes. As in examples with 
-<a href="{help /cat.attr}">attributes</a> in the previuos section we will use cell phones for illustration.</p>
+<a href="{help /cat.attr}">attributes</a> in the previuos section we will use cell phones for illustrating <a href="{self}#carrier">Carrier</a>, 
+<a href="{self}#features">Features</a>, <a href="{self}#capacity">Battery Capacity</a> and <a href="{self}#date">Date</a> filters.
+filters.</p>
 
 <h4 id="carrier">Creating <i>Carrier</i> filter</h4>
+<ul>
+	<li>To create a filter you have to associate it with an attribute first. Click <strong>Associate attribute</strong> and select an attribute from the list.</li>
+	<img src="image/doc/categories/filters/main.bmp">
+	<li>The <strong>name</strong> of the filter appears automatically so you can leave it as it is.</li>
+	<li>Also you can enter filter's name in <strong>other languages</strong> supported by your system. Click on the language to supply Filter's name.</li>
+</ul>
+
+<ul>
+	<li>To create carrier filters you can generate them automatically or add one by one.</li>
+	<img src="image/doc/categories/filters/filters.bmp">
+	<li>To generate filters click "Generate filters"</li>
+	<img src="image/doc/categories/filters/filters_generate.bmp">
+	<li>Generated filters appear below representing each attribute's value</li>
+	<img src="image/doc/categories/filters/filters_generated.bmp">
+	<p>How to create filters <strong>manually</strong> will be discussed in the next example.</p>
+	<li>When you are done, click <strong>Save</strong> to hide the filter</li>
+	<img src="image/doc/categories/filters/filters_save.bmp">
+
+</ul>
+
+
+
+
 
 {helpSeeAlso}
 	{see cat.details}
