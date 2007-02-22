@@ -5,9 +5,22 @@
 <div id="content">
 	<h1>{$category.name_lang}</h1>
 
-	<ul>
+	<ul class="productList">
 	{foreach from=$products item=product}
-		<li>{$product.name_lang}</li>
+		<li>			
+			<span class="title">
+				<a href="{productUrl product=$product}">{$product.name_lang}</a>
+			</span>
+			
+			<p class="descr">
+				{$product.shortDescription_lang}
+			</p>
+				
+			<p class="spec">
+				specification
+			</p>
+		
+		</li>
 	{/foreach}
 	</ul>
 

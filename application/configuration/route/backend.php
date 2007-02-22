@@ -20,6 +20,9 @@ $routes = array(
 					// special case for passing a language code as an ID
 					array(":controller/:action/:id", array(), array('id' => "[a-zA-Z]{2}")),
 					array(":controller/:action/:id", array(), array("id" => "_id_")),
+
+					array(":producthandle-:id", array('controller' => 'product', 'action' => 'index'), array("producthandle" => "[a-z0-9\.]+","id" => "[0-9]+")),
+
   			   );
 
 $router = Router::getInstance();

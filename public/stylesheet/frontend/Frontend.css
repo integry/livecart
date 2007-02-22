@@ -79,3 +79,21 @@ div.box .content
 {
 	font-weight: bold;
 }
+
+/*****************************
+	Product list
+*****************************/
+ul.productList
+{
+	list-style: none;		
+}
+
+ul.productList li
+{
+	margin-bottom: 10px;
+}
+
+ul.productList .title
+{
+	display: block;
+}
