@@ -1,5 +1,6 @@
 <?php
 
+ClassLoader::import('application.model.product.ProductPrice');
 ClassLoader::import('application.model.Currency');
 
 /**
@@ -17,11 +18,21 @@ class ProductPricing
 	{
 		$this->product = $product;
 
-		foreach ($prices as $id => $price)
+		if ($prices instanceof ARSet)
 		{
-			$this->prices[$id] = ProductPrice::getNewInstance($product, Currency::getInstanceById($id));
-			$this->prices[$id]->price->set($price);
-			$this->prices[$id]->markAsLoaded();			
+			foreach ($prices as $price)
+			{
+				$this->prices[$price->currency->get()->getID()] = $price;
+			}		   
+		}		
+		else
+		{
+			foreach ($prices as $id => $price)
+			{
+				$this->prices[$id] = ProductPrice::getNewInstance($product, Currency::getInstanceById($id));
+				$this->prices[$id]->price->set($price);
+				$this->prices[$id]->markAsLoaded();			
+			}		  
 		}
 	}
 	

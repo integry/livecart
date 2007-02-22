@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("application.model.ActiveRecordModel");
+ClassLoader::import("application.model.Currency");
 
 /**
  * Product price class

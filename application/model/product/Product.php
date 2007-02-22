@@ -246,7 +246,17 @@ print_r($miscRecordDataArray);
 			$specificationData = self::getDataBySQL($query);			
 		}
 		
+	  	if (!$pricingData)
+	  	{
+			$pricingData = $this->getRelatedRecordSet("ProductPrice", new ARSelectFilter(), ProductPrice::LOAD_REFERENCES); 
+	  	}
+	  	else
+	  	{
+		    $pricingData = array();
+		}
+
 		$this->specificationInstance = new ProductSpecification($this, $specificationData);
+  	  	$this->pricingInstance = new ProductPricing($this, $pricingData);	
 	}
 
 	public function loadRequestData(Request $request)
