@@ -53,8 +53,7 @@ based attribute management system where you can define your own attributes and c
 </p>
 <p>
 	Suppose you have a category stocked with cell phones and you want to create custom fields for defining/specifying the following properties:
-	<a href="{self}#carrier">Carrier</a>, <a href="{self}#features">Phone Features</a>, <a href="{self}#capacity">Batery Capacity</a> and 
-	<a href="{self}#bandwidth">Bandwidth</a>. 
+	<a href="{self}#carrier">Carrier</a>, <a href="{self}#features">Phone Features</a> and <a href="{self}#capacity">Batery Capacity</a>.
 </p>
 
 <h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
@@ -103,12 +102,14 @@ The last thing to do is to create Values which will be used as a selection optio
 	<img src="image/doc/categories/attributes/carrier.bmp">
 	</ul>
 
+<p class="note"><strong>Note</strong>: you might as well create an attribute for number selector type using these instructions. Make sure to change 
+attribute's type to <strong>Number Selector</strong> first.</p>
 
 <h4 id="features">Creating <i>Phone Features</i> attribute</h4>
 
 <p>
-	Cell phones might have a great variety of features therefore it would more convenient to create a list of features than re-enter them
-	every time. The following parameters have to be set:
+	Cell phones usually have a great variety of features therefore it would more convenient to create a list of features than re-enter them
+	every time. To create an attribute for features, the following parameters have to be set:
 </p>
 	<img src="image/doc/categories/attributes/multi.bmp">
 
@@ -138,6 +139,12 @@ The last thing to do is to create Values which will be used as a selection optio
 
 	<img src="image/doc/categories/attributes/features.bmp">
 
+<p class="note"><strong>Note</strong>: to create a corresponding attribute for a numeric selection choose <strong>Number Selector</strong> type followed
+by necessary changes. <ins>Numeric selection will look similar to this:</ins>
+<img src="image/doc/categories/attributes/bandwidth_generated.bmp">
+
+</p>
+
 <h4 id="capacity">Creating <i>Batery Capacity</i> attribute</h4>
 
 <p>
@@ -158,50 +165,15 @@ The last thing to do is to create Values which will be used as a selection optio
 	<img src="image/doc/categories/attributes/capacity_description.bmp">
 </ul>	
 
-<p class="note">Don't forget to click <strong>Save</strong> at the end.</p>
+<p>Don't forget to click <strong>Save</strong> at the end.</p>
 <br \>
 <p>
 	Generated attribute will provide a field for entering battery capacity:
 </p>
 	<img src="image/doc/categories/attributes/capacity_generated.bmp">
 	
-<h4 id="bandwidth">Creating <i>Bandwidth</i> attribute</h4>
+<p class="note"><strong>Note</strong>: to create analogous attribute for Text Field simply change type to <strong>Text Field</strong>.</p>
 
-<ins>There is also UMTS and CDMA, so this may not be a good example for number selector. On the other hand I cannot figure out what would be a good example and whether a strictly number multiple value selector is needed at all. Also Bandwidth doesn't seem to be a correct name for this attribute.</ins>
-
-<p>
-	Complete the following steps to create a bandwidth attribute.
-</p>
-
-
-	<img src="image/doc/categories/attributes/bandwidth.bmp">
-
-
-<ul>
-	<li>Type - select Number Options to create a list of possible bandwidth values.</li>
-	<li>Required - mark the checkbox to set the attribute required</li>
-	<li>Can select multiple values - mark the checkbox to allow multiple bandwidth selection </li>
-	<li>Title - enter "Bandwidth"</li>
-	<li>Handle is generated automatically thus you don't need to change it</li>
-	<li>Description - enter description of Bandwidth.</li>
-
-</ul>
-
-To set values of the bandwidth options, go to Values section by clicking <strong>Values</strong> tab 
-
-	<img src="image/doc/categories/attributes/values_tab.bmp">
-
-Enter necessary values one by one in the Value field followed by the <strong>Add more values</strong> button.
-
-	<img src="image/doc/categories/attributes/bandwidth_values.bmp">
-
-Make sure to click <strong>Save</strong> to save changes when you're done. 
-
-	<img src="image/doc/categories/attributes/save.bmp">
-
-Your attribute will be placed in the <i>Add new Product</i> form:
-
-	<img src="image/doc/categories/attributes/bandwidth_generated.bmp">
 
 <h3 id="group">Group attributes</h3>
 
