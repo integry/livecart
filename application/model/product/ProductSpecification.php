@@ -113,17 +113,65 @@ class ProductSpecification
 	private function loadSpecificationData($specificationDataArray)
 	{
 		// preload all specFields from database
-		$specFieldIds = array_keys($specificationDataArray);
+		$specFieldIds = array();
+
+		$selectors = array();
+		$simpleValues = array();
+		
+		foreach ($specificationDataArray as $value)
+		{
+		  	$specFieldIds[$value['specFieldID']] = $value['specFieldID'];
+		  	if ($value['valueID'])
+		  	{
+				$selectors[$value['specFieldID']][$value['valueID']] = $value;	    
+			}
+			else
+			{
+				$simpleValues[$value['specFieldID']] = $value;  
+			}
+		}
 
 		$specFields = ActiveRecordModel::getInstanceArray('SpecField', $specFieldIds);
-/*
-		foreach ($specificationDataArray as $specFieldID => $value)
+
+		// simple values
+		foreach ($simpleValues as $value)
 		{
-		  	$specField = $specFields[$specFieldID];
-		  	echo get_class($specField);
-		  	$specification = call_user_func(array($specField, 'restoreSpecificationInstance'), $this->product, $value);
+		  	$specField = $specFields[$value['specFieldID']];
+
+		  	$class = $specField->getValueTableName();
+			$specification = call_user_func_array(array($class, 'restoreInstance'), array($class, $this->product, $specField, $value['value']));
+			
 		  	$this->attributes[$specField->getID()] = $specification;
 		}		  
+				
+		// selectors
+		foreach ($selectors as $specFieldId => $value)
+		{
+			$specField = $specFields[$specFieldId];
+		  	if ($specField->isMultiValue->get())
+		  	{
+				$values = array();
+				foreach ($value as $val)
+				{
+					$values[$val['valueID']] = $val['value'];
+				}
+				
+				$specification = MultiValueSpecificationItem::restoreInstance($this->product, $specField, $values);
+			}
+			else
+			{
+			  	$value = array_pop($value);
+				$specFieldValue = SpecFieldValue::restoreInstance($specField, $value['valueID'], $value['value']);
+				$specification = SpecificationItem::restoreInstance($this->product, $specField, $specFieldValue);
+			}
+
+		  	$this->attributes[$specField->getID()] = $specification;
+		}		  
+
+/*
+	echo '<pre>';
+	print_r($this->toArray());
+	echo '</pre>';
 */
 	}	
 }

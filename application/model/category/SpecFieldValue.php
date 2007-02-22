@@ -96,6 +96,16 @@ class SpecFieldValue extends MultilingualObject
 	    parent::deleteByID(__CLASS__, (int)$id);
 	}
 	
+	public static function restoreInstance(SpecField $field, $valueId, $value)
+	{
+		$instance = self::getNewInstance($field);
+		$instance->setID($valueId);
+		$instance->value->set(unserialize($value));
+		$instance->resetModifiedStatus();
+
+		return $instance;
+	}
+	
 	public function getFormFieldName()
 	{
 	  	return 'specItem_' . $this->getID();

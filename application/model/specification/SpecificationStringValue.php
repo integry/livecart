@@ -16,6 +16,16 @@ class SpecificationStringValue extends ValueSpecification
 	  	return parent::getNewInstance(__CLASS__, $product, $field, $value);
 	}
 	
+	public static function restoreInstance($class, Product $product, SpecField $field, $value)
+	{
+		$specItem = parent::restoreInstance($class, $product, $field, $value);
+		$specItem->value->set(unserialize($value));
+		
+		$specItem->resetModifiedStatus();
+
+		return $specItem;
+	}	
+	
 	public function setValueByLang($langCode, $value)
 	{
 		$currentValue = $this->value->get();
@@ -31,6 +41,12 @@ class SpecificationStringValue extends ValueSpecification
 	public function toArray()
 	{
 	  	$ret = parent::toArray();
+
+		if (!is_array($ret['value']))
+		{
+			$ret['value'] = array(Store::getInstance()->getLocaleCode() => $ret['value']);
+		}
+
 	  	$ret['value_lang'] = $ret['value'][Store::getInstance()->getLocaleCode()];
 	  	return $ret;
 	}	

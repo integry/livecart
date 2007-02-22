@@ -29,6 +29,18 @@ abstract class ValueSpecification extends Specification
 		return $specItem;
 	}
 	
+	public static function restoreInstance($class, Product $product, SpecField $field, $value)
+	{
+		$specItem = parent::getNewInstance($class);
+		$specItem->product->set($product);
+		$specItem->specField->set($field);
+		$specItem->value->set($value);
+		
+		$specItem->resetModifiedStatus();
+
+		return $specItem;
+	}
+
 	public function toArray()
 	{
 		$ret = array();

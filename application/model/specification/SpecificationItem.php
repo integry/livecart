@@ -42,6 +42,7 @@ class SpecificationItem extends Specification
 
 		return $instance;
 	}
+
 	public function setValue(SpecFieldValue $value)
 	{
 	  	// test whether the value belongs to the same field
