@@ -75,9 +75,7 @@ to define a range for filter's values.</p>
 <h5>Filters</h5>
 <ul>
 	<li>To create carrier filters you can generate them automatically or add one by one. To generate filters click "Generate filters".</li>
-	<img src="image/doc/categories/filters/filters.bmp">
-	<ins>Circle reference</ins>
-	<br \><br \>
+	<img src="image/doc/categories/filters/filters_.bmp">
 	<li>Generated filters appear below representing each attribute's value</li>
 	<img src="image/doc/categories/filters/filters_generated.bmp">
 	<li>When you are done, click <strong>Save</strong> to hide the filter</li>
