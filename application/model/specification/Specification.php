@@ -1,7 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.ActiveRecordModel');
-ClassLoader::import('application.model.Category.SpecField');
+ClassLoader::import('application.model.category.SpecField');
 
 abstract class Specification extends ActiveRecordModel implements iSpecification
 {
