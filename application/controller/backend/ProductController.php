@@ -405,36 +405,11 @@ class ProductController extends StoreManagementController
 		$validator->addCheck('stockCount', new IsNumericCheck($this->translate('_err_stock_not_numeric')));		  
 		$validator->addCheck('stockCount', new MinValueCheck($this->translate('_err_stock_negative'), 0));	
 		$validator->addFilter('stockCount', new NumericFilter());		    
-
-		// price in base currency
-		$baseCurrency = Store::getInstance()->getDefaultCurrency()->getID();
-		$validator->addCheck('price_' . $baseCurrency, new IsNotEmptyCheck($this->translate('_err_price_empty')));		    		
-
+		
 		// validate price input in all currencies
-		$currencies = Store::getInstance()->getCurrencyArray();
-		foreach ($currencies as $currency)
-		{
-			$validator->addCheck('price_' . $currency, new IsNumericCheck($this->translate('_err_price_invalid')));		  		  	
-			$validator->addCheck('price_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));		  
-			$validator->addFilter('price_' . $currency, new NumericFilter());		    
-		}
-			
-		// shipping related numeric field validations
-		$validator->addCheck('shippingSurcharge', new IsNumericCheck($this->translate('_err_surcharge_not_numeric')));		  
-		$validator->addFilter('shippingSurcharge', new NumericFilter());		    
-						
-		$validator->addCheck('minimumQuantity', new IsNumericCheck($this->translate('_err_quantity_not_numeric')));		  
-		$validator->addCheck('minimumQuantity', new MinValueCheck($this->translate('_err_quantity_negative'), 0));	
-		$validator->addFilter('minimumQuantity', new NumericFilter());		    
-
-		$validator->addFilter('shippingHiUnit', new NumericFilter());		    
-		$validator->addCheck('shippingHiUnit', new IsNumericCheck($this->translate('_err_weight_not_numeric')));		  
-		$validator->addCheck('shippingHiUnit', new MinValueCheck($this->translate('_err_weight_negative'), 0));	
-
-		$validator->addFilter('shippingLoUnit', new NumericFilter());				
-		$validator->addCheck('shippingLoUnit', new IsNumericCheck($this->translate('_err_weight_not_numeric')));		  
-		$validator->addCheck('shippingLoUnit', new MinValueCheck($this->translate('_err_weight_negative'), 0));	
-							
+		ProductPricing::addPricesValidator($validator);
+		ProductPricing::addShippingValidator($validator);
+		
 		return $validator;
 	}
 

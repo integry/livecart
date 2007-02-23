@@ -17,23 +17,26 @@ class ProductPriceController extends StoreManagementController
 	    $response = new ActionResponse();
 	    
 	    $product = Product::getInstanceByID($this->request->getValue('id'), ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
-	    $product->getPricesArray();
-	    $pricing = new ProductPricing($product, $product->getPricesArray());
-	    	    
-	    $pricingForm = $this->buildPricingForm();
-	    $pricingForm->setData($pricing->toArray());
 	    
-	    $response->setValue('product', $product->toArray());
-	    $response->setValue('pricingForm', $pricingForm);
-	    
+	    $pricingForm = $this->buildPricingForm($product);
+
+	    $response->setValue("product", $product->toArray());
+		$response->setValue("otherCurrencies", Store::getInstance()->getCurrencyArray(Store::EXCLUDE_DEFAULT_CURRENCY));
+		$response->setValue("baseCurrency", Store::getInstance()->getDefaultCurrency()->getID());
+		$response->setValue("pricingForm", $pricingForm);
+		
 	    return $response;
 	}
 	
-    private function buildPricingForm()
+    private function buildPricingForm(Product $product)
     {
         ClassLoader::import("framework.request.validator.Form");
         
+        $pricing = new ProductPricing($product, $product->getPricesArray());        
+        
 		$form = new Form($this->buildPricingFormValidator());
+	    $form->setData($product->toArray());
+		
 		return $form;
     }
     
@@ -42,9 +45,8 @@ class ProductPriceController extends StoreManagementController
 		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("pricingFormValidator", $this->request);
 		
-		// price in base currency
-		$baseCurrency = Store::getInstance()->getDefaultCurrency()->getID();
-		$validator->addCheck('price_' . $baseCurrency, new IsNotEmptyCheck($this->translate('_err_price_empty')));
+		ProductPricing::addPricesValidator($validator);
+		ProductPricing::addShippingValidator($validator);
 		
 		return $validator;
     }

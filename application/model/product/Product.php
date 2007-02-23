@@ -64,6 +64,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("shippingSurchargeAmount", ARFloat::instance(8)));
 		$schema->registerField(new ArField("isSeparateShipment", ARBool::instance()));
 		$schema->registerField(new ArField("isFreeShipping", ARBool::instance()));
+		$schema->registerField(new ArField("isBackOrderable", ARBool::instance()));
 
 		$schema->registerField(new ArField("shippingWeight", ARFloat::instance(8)));
 
@@ -343,6 +344,14 @@ class Product extends MultilingualObject
 	  	$array = parent::toArray();
 	  	$array['attributes'] = $this->getSpecification()->toArray();
 	  	$array['prices'] = $this->getPricingHandler()->toArray();
+	  	foreach($array['prices']['calculated'] as $code => $value)
+	  	{
+	  	    $array["price_$code"] = $value;
+	  	}
+	  	
+	  	$array['shippingHiUnit'] = (int)$array['shippingWeight'];
+	  	$array['shippingLoUnit'] = ($array['shippingWeight'] - $array['shippingHiUnit']) * 1000;
+	  	
 	  	return $array;
 	}
 
@@ -543,7 +552,7 @@ class Product extends MultilingualObject
     {
         if(empty($this->priceData))
         {
-            $this->priceData = array();      
+            $this->priceData = array();  
             foreach(ProductPrice::getProductPricesSet($this)->toArray() as $price)
             {
                 $this->priceData[$price['Currency']] = $price['price'];

@@ -476,3 +476,49 @@ Backend.Product.Editor.prototype =
         Element.show($("managerContainer"));
     }
 }
+
+Backend.Product.Prices = Class.create();
+Backend.Product.Prices.prototype = 
+{
+    __instances__: {},
+    
+    initialize: function(parent, product)
+    {
+        this.__nodes__(parent);
+        this.__bind__();
+    },
+
+    getInstance: function(parent, product)
+    {
+        parent = $(parent);
+        if(!Backend.Product.Prices.prototype.__instances__[parent.id])
+        {
+            Backend.Product.Prices.prototype.__instances__[parent.id] = new Backend.Product.Prices.prototype(id);
+        }
+        
+        Backend.Product.Prices.prototype.__instances__[parent.id].__init__();
+        return Backend.Product.Prices.prototype.__instances__[parent.id];
+    },
+
+	__nodes__: function(parent)
+    {
+        this.nodes = {};
+        this.nodes.parent = parent;
+        this.nodes.form = parent;
+        
+        this.nodes.submit = this.nodes.parent.down("input.submit");
+        this.nodes.cancel = this.nodes.parent.down("a.cancel");
+    },
+    
+    __bind__: function(args)
+    {
+        console.info(this.nodes)
+        Event.observe(this.nodes.submit, "click", function(e) { console.info('submit', this); });
+        Event.observe(this.nodes.cancel, "click", function(e) { Event.stop(e); console.info('cancel', this); });
+    },
+    
+    __init__: function(args)
+    {
+    },
+        
+}
