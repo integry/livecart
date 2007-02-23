@@ -43,7 +43,7 @@
 
 
 <div id="catgegoryContainer">
-	<div id="categoryBrowser">
+	<div id="categoryBrowser" class="treeBrowser">
 	</div>
 	<ul id="categoryBrowserActions">
 		<li><a href="#" id="createNewCategoryLink">{t _create_subcategory}</a></li>

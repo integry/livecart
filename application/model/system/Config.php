@@ -27,7 +27,7 @@ class Config
 	 */
 	private $configFileDir = '';
 
-	public function __construct($files)
+	public function __construct($files = array())
 	{
 		$this->configFileDir = ClassLoader::getRealPath('cache.registry') . '/';
 		foreach ($files as $file)
@@ -74,6 +74,72 @@ class Config
 		{
 			$this->saveFile($file);
 		}
+	}
+
+	public function getSection($sectionId)
+	{
+		return parse_ini_file($this->getSectionFile($sectionId));	
+	}
+
+	public function getSectionLayout($sectionId)
+	{
+		$ini = parse_ini_file($this->getSectionFile($sectionId), true);	
+		
+		// remove title section
+		if (count($ini) > 1)
+		{
+			array_shift($ini);  
+		}
+		else
+		{
+		  	$arr = array_shift($ini);
+			$ini = array('' => $arr);
+		}	
+		
+		return $ini;
+	}
+
+	public function getTree($dir = null, $keyPrefix = null)
+	{
+	  	if (!$dir)
+	  	{
+			$dir = ClassLoader::getRealPath('application.configuration.registry') . '/';
+		}
+		
+		$res = array();
+		$d = new DirectoryIterator($dir);
+		foreach ($d as $file)
+		{
+			if ($file->isFile() && 'ini' == substr($file->getFileName(), -3))
+			{
+				$ini = parse_ini_file($file->getPathName(), true);
+				$key = substr($file->getFileName(), -4);
+				
+				$out = array();
+				$out['name'] = key($ini);
+				
+				$subpath = $file->getPath() . '/' . $key;
+				
+				if (file_exists($subpath))
+				{
+				  	$out['subs'] = $this->getTree($subpath, $key);
+				}
+				
+				if ($keyPrefix)
+				{
+				  	$key = $keyPrefix . '.' . $key;
+				}
+				
+				$res[$key] = $out;
+			}  
+		}
+		
+		return $res;
+	}
+
+	private function getSectionFile($sectionId)
+	{
+		return ClassLoader::getRealPath('application.configuration.registry.' . $sectionId) . '.ini';
 	}
 
   	private function loadFile($file)
