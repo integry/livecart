@@ -57,48 +57,6 @@
     
     {literal}
     <script type="text/javascript">
-        var filterListCallbacks = {
-             beforeEdit:     function(li)
-             {
-                 Backend.Filter.prototype.hideNewFilterAction({/literal}{$categoryID}{literal});
-                  
-                 if(this.isContainerEmpty(li, 'edit')) return Backend.Filter.prototype.links.editGroup + this.getRecordId(li)
-                 else this.toggleContainer(li, 'edit');
-             },
-    
-             afterEdit:      function(li, response)
-             {
-                 new Backend.Filter(response);
-                 this.rebindIcons(li);
-                 this.createSortable();
-                 this.toggleContainer(li, 'edit');
-             },
-     
-             beforeDelete:   function(li)
-             {
-                 if(confirm('{/literal}{t _FilterGroup_remove_question|addslashes}{literal}'))  return Backend.Filter.prototype.links.deleteGroup + this.getRecordId(li)
-             },
-       
-             afterDelete:    function(li, jsonResponse)
-             {
-                 var response = eval("("+jsonResponse+")");
-     
-                 if(response.status == 'success') 
-                 {
-                     this.remove(li);
-                     CategoryTabControl.prototype.resetTabItemsCount({/literal}{$categoryID}{literal});
-                 }
-             },   
-    
-             beforeSort:     function(li, order)
-             {
-                 return Backend.Filter.prototype.links.sortGroup + '?target=' + "filter_items_list_{/literal}{$categoryID}{literal}&" + order
-             },
-        
-             afterSort:      function(li, response) { }
-         };
-    
-    
          Backend.Filter.prototype.activeListMessages = 
          { 
              _activeList_edit:    {/literal}'{t _activeList_edit|addslashes}'{literal},
@@ -106,7 +64,7 @@
          }
          
          Event.observe($("filter_item_new_{/literal}{$categoryID}{literal}_show"), "click", function(e) { Backend.Filter.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') });
-         ActiveList.prototype.getInstance('filter_items_list_{/literal}{$categoryID}{literal}', filterListCallbacks, Backend.Filter.prototype.activeListMessages);
+         ActiveList.prototype.getInstance('filter_items_list_{/literal}{$categoryID}{literal}', Backend.Filter.prototype.activeListCallbacks, Backend.Filter.prototype.activeListMessages);
     </script>
     {/literal}
 {else}

@@ -5,7 +5,6 @@
      * Create spec field prototype. Some fields are always the same
      * so we define them in
      */
-        
     Backend.SpecField.prototype.links = {};
     Backend.SpecField.prototype.links.deleteField     = {/literal}'{link controller=backend.specField action=delete}/'{literal};
     Backend.SpecField.prototype.links.editField       = {/literal}'{link controller=backend.specField action=item}/'{literal};
@@ -15,7 +14,6 @@
     Backend.SpecField.prototype.links.sortGroups      = {/literal}'{link controller=backend.specFieldGroup action=sort}/'{literal};
     Backend.SpecField.prototype.links.getGroup        = {/literal}'{link controller=backend.specFieldGroup action=item}/'{literal};
     Backend.SpecField.prototype.links.deleteGroup     = {/literal}'{link controller=backend.specFieldGroup action=delete}/'{literal};
-
 
     Backend.SpecField.prototype.msg = {};
     Backend.SpecField.prototype.msg.removeGroupQuestion  = {/literal}'{t _SpecFieldGroup_remove_question|addslashes}'{literal};
@@ -53,10 +51,17 @@
 <div>
     <div id="specField_item_new_{$categoryID}_form" style="display: none;">
         <script type="text/javascript">
+        try
+        {literal}{{/literal}
            var newSpecFieldForm = new Backend.SpecField('{json array=$specFieldsList}');
            newSpecFieldForm.addField(null, "new" + Backend.SpecField.prototype.countNewFilters, true);
            newSpecFieldForm.bindDefaultFields();
            Backend.SpecField.prototype.countNewFilters++;
+        {literal}}{/literal}
+        catch(e)
+        {literal}{{/literal}
+            console.info(e)
+        {literal}}{/literal}
         </script>
     </div>
     
@@ -109,6 +114,7 @@
 
 
 <script type="text/javascript">
+console.info('asd')
      var categoryID = {$categoryID};
      var groupList = ActiveList.prototype.getInstance('specField_groups_list_'+categoryID, Backend.SpecFieldGroup.prototype.callbacks, Backend.SpecField.prototype.msg.activeListMessages);  
      
@@ -129,6 +135,7 @@
     {foreach item="field" from=$specFieldsWithGroups}
         {if $lastSpecFieldGroup != $field.SpecFieldGroup.ID}
             {if !$smarty.foreach.specFieldForeach.first}
+                 console.count("create list");
                  ActiveList.prototype.getInstance('specField_items_list_'+categoryID+'_{$field.SpecFieldGroup.ID}', Backend.SpecField.prototype.callbacks, Backend.SpecField.prototype.activeListMessages);
             {/if}
             

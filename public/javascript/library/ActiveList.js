@@ -170,6 +170,7 @@ ActiveList.prototype = {
     
             this.generateAcceptFromArray();
             this.createSortable();
+            this.decorateItems();
         } 
         catch(e) 
         {
@@ -425,23 +426,29 @@ ActiveList.prototype = {
                 // I just hope that every boy will use it in such situations where cloning is OK
                 // Please forgive me if you will create links to elements you want to add and they will just not work
                 // My suggestion is to create those links after you have added new record to list
-                li.appendChild(dom[i].cloneNode(true));
+                var cloned_dom = dom[i].cloneNode(true);
+                while(cloned_dom.childNodes.length > 0) li.appendChild(cloned_dom.childNodes[0]);    
             }
         }
         else
         {
-            li.innerHTML = dom.innerHTML;
+            var cloned_dom = dom.cloneNode(true);
+            while(cloned_dom.childNodes.length > 0) li.appendChild(cloned_dom.childNodes[0]);    
         }
-                
-        this.decorateLi(li);
         if(touch)
         {
             this.createSortable();
 	  	}
         
-	  	new Effect.Highlight(li, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});		    
+        this.decorateLi(li);
+        this.colorizeItem(li, this.ul.childNodes.length);		    
 
         return li;
+    },
+    
+    highlight: function(li)
+    {
+        new Effect.Highlight(li, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
     },
 
 
@@ -467,7 +474,6 @@ ActiveList.prototype = {
             this.decorateLi(liArray[i]);
             this.colorizeItem(liArray[i], i);
         }
-        
     },
 
     /**
@@ -480,25 +486,17 @@ ActiveList.prototype = {
     decorateLi: function(li)
     {
         var self = this;
-
+        
+        console.count('decorateLi');
+        
         // Bind events
-        li.onmouseover    = function() { self.showMenu(li) }
-        li.onmouseout     = function() {self.hideMenu(li) }
-
-        // KEYBOARD NAVIGATION BREAKS FORM FIELDS
-        // li.onkeydown      = function(e) { self.navigate(new KeyboardEvent(e), li) }
-        // li.onclick        = li.focus();
-        // li.tabIndex       = this.tabIndex;
-
+        Event.observe(li, "mouseover", function(e) { self.showMenu(this) });
+        Event.observe(li, "mouseout",  function(e) { self.hideMenu(this) });
 
         // Create icons container. All icons will be placed incide it
-        var iconsDiv = document.getElementsByClassName(self.cssPrefix + 'icons', li)[0];
-        if(!iconsDiv)
-        {
-            iconsDiv = document.createElement('span');
-            Element.addClassName(iconsDiv, self.cssPrefix + 'icons');
-            li.insertBefore(iconsDiv, li.firstChild);
-        }
+        var iconsDiv = document.createElement('span');
+        Element.addClassName(iconsDiv, self.cssPrefix + 'icons');
+        li.insertBefore(iconsDiv, li.firstChild);
 
         // add all icons
         $A(this.ul.className.split(' ')).each(function(className)
@@ -507,28 +505,27 @@ ActiveList.prototype = {
             self.addIconToContainer(li, className);
         });
 
-
         // progress is not a div like all other icons. It has no fixed size and is not clickable.
         // This is done to properly handle animated images because i am not sure if all browsers will
         // handle animated backgrounds in the same way. Also differently from icons progress icon
         // can vary in size while all other icons are always the same size
-        var iconProgress = document.getElementsByClassName(self.cssPrefix + 'progress', li)[0];
-        if(!iconProgress)
+        iconProgress = document.createElement('img');
+        iconProgress.src = this.icons.progress;
+        
+        try{
+            iconImage.title = this.messages._activeList_progress;
+            iconImage.alt = this.messages._activeList_progress;
+        } catch(e) { }   
+        if(this.messages && this.messages._activeList_progress)
         {
-            iconProgress = document.createElement('img');
-            iconProgress.src = this.icons.progress;
-            
-            try{
-                iconImage.title = this.messages._activeList_progress;
-                iconImage.alt = this.messages._activeList_progress;
-            } catch(e) { }    
-            
-            iconProgress.style.visibility = 'hidden';
-            //iconProgress.setOpacity(0.5);
-            
-            Element.addClassName(iconProgress, self.cssPrefix + 'progress');
-            iconsDiv.appendChild(iconProgress);
+            iconImage.title = iconImage.alt = this.messages._activeList_progress;            
         }
+        
+        iconProgress.style.visibility = 'hidden';
+        
+        Element.addClassName(iconProgress, self.cssPrefix + 'progress');
+        iconsDiv.appendChild(iconProgress);
+
 
         li.progress = iconProgress;
         li.prevParentId = this.ul.id;
@@ -542,7 +539,7 @@ ActiveList.prototype = {
      */
     addIconToContainer: function(li, className)
     {
-        var container = document.getElementsByClassName(this.cssPrefix + 'icons', li)[0];
+        var container = li.down(this.cssPrefix + 'icons');
 
         var regex = new RegExp('^' + this.cssPrefix + '(add|remove)_(\\w+)(_(before|after)_(\\w+))*');
         var tmp = regex.exec(className);
@@ -558,54 +555,49 @@ ActiveList.prototype = {
         icon.sibling = tmp[5];
 
         if(icon.action == 'accept') return true;
-
+        
+        if(!window.counter) window.counter = 0;
+        window.counter++;
+       // if(window.counter > 5) return
+        
         if(icon.action != 'sort')
         {
-            var iconImage = document.getElementsByClassName(this.cssPrefix + icon.action, li)[0];
-            if(!iconImage)
+            var iconImage = document.createElement('img');
+            
+            iconImage.src = icon.image;
+            if(this.messages && this.messages['_activeList_' + icon.action])
             {
-                var iconImage = document.createElement('img');
-                iconImage.src = icon.image;
-                try{
-                    iconImage.title = this.messages['_activeList_' + icon.action];
-                    iconImage.alt = this.messages['_activeList_' + icon.action];
-                } catch(e) { }                
-                
-                Element.addClassName(iconImage, this.cssPrefix + icon.action);
-                Element.addClassName(iconImage, this.cssPrefix + 'icons_container');     
-                
-                
-                // If icon is removed from this item than do not display the icon
-                if((Element.hasClassName(li, this.cssPrefix + 'remove_' + icon.action) || !Element.hasClassName(this.ul, this.cssPrefix + 'add_' + icon.action)) && !Element.hasClassName(li, this.cssPrefix + 'add_' + icon.action))
-                {
-                    iconImage.style.display = 'none';
-                }
-    
-                // Show icon
-                container.appendChild(iconImage);
-                
-                try {
-                    iconImage.setOpacity(this.hiddenMenuOpacity);
-                } catch (e) {
-                    iconImage.style.visibility = 'hidden';
-                }
-                
-                li[icon.action] = iconImage;
-                
+                iconImage.title = iconImage.alt = this.messages['_activeList_' + icon.action];             
             }
-    
+            
+            Element.addClassName(iconImage, this.cssPrefix + icon.action);
+            Element.addClassName(iconImage, this.cssPrefix + 'icons_container');     
+            
+            // If icon is removed from this item than do not display the icon
+            if((Element.hasClassName(li, this.cssPrefix + 'remove_' + icon.action) || !Element.hasClassName(this.ul, this.cssPrefix + 'add_' + icon.action)) && !Element.hasClassName(li, this.cssPrefix + 'add_' + icon.action))
+            {
+                iconImage.style.display = 'none';
+            }
 
+            // Show icon
+            container.appendChild(iconImage);
+            iconImage.setOpacity(this.hiddenMenuOpacity);
+            li[icon.action] = iconImage;
 
             var self = this;
-            iconImage.onclick = function() {  self.bindAction(li, icon.action) }
+            Event.observe(iconImage, "click", function() { self.bindAction(li, icon.action) });
 
-            var container = document.createElement('div');
-            container.style.display = 'none';
-            Element.addClassName(container, self.cssPrefix + icon.action + 'Container');
-            Element.addClassName(container, self.cssPrefix + 'container');
-            container.id = self.cssPrefix + icon.action + 'Container_' + li.id;
-            li.appendChild(container);
-            li[icon.action + 'Container'] = container;
+            // Append content container
+            if('delete' != icon.action)
+            {
+                var contentContainer = document.createElement('div');
+                contentContainer.style.display = 'none';
+                Element.addClassName(contentContainer, self.cssPrefix + icon.action + 'Container');
+                Element.addClassName(contentContainer, self.cssPrefix + 'container');
+                contentContainer.id = self.cssPrefix + icon.action + 'Container_' + li.id;
+                li.appendChild(contentContainer);
+                li[icon.action + 'Container'] = contentContainer;
+            }
         } 
     },
 
@@ -661,7 +653,7 @@ ActiveList.prototype = {
      */
     toggleProgress: function(li)
     {
-        if(li.progress.style.visibility == 'hidden')
+        if(li.progress && li.progress.style.visibility == 'hidden')
         {
             this.onProgress(li);
         }
@@ -678,8 +670,7 @@ ActiveList.prototype = {
      */
     offProgress: function(li)
     {
-        li.progress.style.visibility = 'hidden';
-        //li.progress.setOpacity(this.hiddenMenuOpacity);
+        if(li.progress) li.progress.style.visibility = 'hidden';
     },
 
     /**
@@ -689,8 +680,7 @@ ActiveList.prototype = {
      */
     onProgress: function(li)
     {
-        li.progress.style.visibility = 'visible';
-        //li.progress.setOpacity(this.visibleMenuOpacity);
+        if(li.progress) li.progress.style.visibility = 'visible';
     },
 
     /**
@@ -741,7 +731,6 @@ ActiveList.prototype = {
         console.count('ActiveList::createSortable');
         var self = this;
 
-        this.decorateItems();
         Element.addClassName(this.ul, this.cssPrefix.substr(0, this.cssPrefix.length-1));
         
         if(Element.hasClassName(this.ul, this.cssPrefix + 'add_sort'))

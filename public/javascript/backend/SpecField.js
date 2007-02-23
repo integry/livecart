@@ -71,7 +71,6 @@ Backend.SpecField.prototype = {
             var specField = eval("(" + response + ")" );
             specField.rootId = li.id;
             new Backend.SpecField(specField, true);
-            this.rebindIcons(li);
             this.createSortable();
             this.toggleContainer(li, 'edit');
         },
@@ -231,7 +230,9 @@ Backend.SpecField.prototype = {
 
 		var ul = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
 		ul.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[0];
-
+        
+        this.nodes.specFieldValuesTemplate = document.getElementsByClassName(this.cssPrefix + "form_values_value", this.nodes.valuesDefaultGroup)[0];
+        this.nodes.specFieldValuesUl       = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
 	},
 
 	/**
@@ -496,7 +497,6 @@ Backend.SpecField.prototype = {
 	loadValueFieldsAction: function()
 	{
 		var self = this;
-
 		if(this.values)
 		{
 			$H(this.values).each(function(value) {
@@ -504,6 +504,7 @@ Backend.SpecField.prototype = {
 			});
 
             this.bindDefaultFields();
+            this.fieldsList.touch();
 		}
 	},
 
@@ -751,50 +752,38 @@ Backend.SpecField.prototype = {
 	 */
 	addField: function(value, id, isDefault)
 	{
-	    var values = document.getElementsByClassName(this.cssPrefix + "form_values_value", this.nodes.valuesDefaultGroup);
+	    var values_template = this.nodes.specFieldValuesTemplate;
+		var ul = this.nodes.specFieldValuesUl;
 
-		var ul = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
+        if(!this.fieldsList) this.bindDefaultFields();
+        var li = this.fieldsList.addRecord(id, values_template);
 
-		if(values.length > 0 && values[0].className.split(' ').indexOf('dom_template') !== -1)
+		// The field itself
+		var input = li.getElementsByTagName("input")[0];
+		input.name = "values[" + id + "]["+this.languageCodes[0]+"]";
+		input.value = (value && value[this.languageCodes[0]]) ? value[this.languageCodes[0]] : '' ;
+
+		// now insert all translation fields
+		for(var i = 1; i < this.languageCodes.length; i++)
 		{
-			var newValue = values[0].cloneNode(true);
-			Element.removeClassName(newValue, "dom_template");
+			var newValueTranslation = document.getElementsByClassName(this.cssPrefix + "form_values_value", this.nodes.valuesTranslations[this.languageCodes[i]])[0].cloneNode(true);
+			Element.removeClassName(newValueTranslation, "dom_template");
 
-            if(!this.fieldsList) this.bindDefaultFields();
+			newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "_" + id;
 
-            var li = this.fieldsList.addRecord(id, newValue.childNodes);
-
-			// The field itself
-			var input = li.getElementsByTagName("input")[0];
-			input.name = "values[" + id + "]["+this.languageCodes[0]+"]";
-			input.value = (value && value[this.languageCodes[0]]) ? value[this.languageCodes[0]] : '' ;
-
-			// now insert all translation fields
-			for(var i = 1; i < this.languageCodes.length; i++)
-			{
-				var newValueTranslation = document.getElementsByClassName(this.cssPrefix + "form_values_value", this.nodes.valuesTranslations[this.languageCodes[i]])[0].cloneNode(true);
-				Element.removeClassName(newValueTranslation, "dom_template");
-
-				newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "_" + id;
-
-				var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
-				inputTranslation.name = "values[" + id + "][" + this.languageCodes[i] + "]";
-				inputTranslation.value = (value && value[this.languageCodes[i]]) ? value[this.languageCodes[i]] : '';
-                
-                var label = newValueTranslation.getElementsByTagName("label")[0].innerHTML = input.value;
-                
-				// add to node tree
-				var translationsUl = document.getElementsByClassName(this.cssPrefix + "form_values_translations", this.nodes.valuesTranslations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
-				translationsUl.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[i];
-				translationsUl.appendChild(newValueTranslation);
-			}
+			var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
+			inputTranslation.name = "values[" + id + "][" + this.languageCodes[i] + "]";
+			inputTranslation.value = (value && value[this.languageCodes[i]]) ? value[this.languageCodes[i]] : '';
             
-            this.bindOneValue(li);
+            var label = newValueTranslation.getElementsByTagName("label")[0].innerHTML = input.value;
+            
+			// add to node tree
+			var translationsUl = document.getElementsByClassName(this.cssPrefix + "form_values_translations", this.nodes.valuesTranslations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
+			translationsUl.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[i];
+			translationsUl.appendChild(newValueTranslation);
 		}
-		else
-		{
-			return false;
-		}
+        
+        this.bindOneValue(li);
 	},
 
 

@@ -19,7 +19,7 @@
  * You should also modify prototype by passing settins to it
  * 
  * @example
- * <code>
+ * <code>highli
  *   Backend.Filter.prototype.links = {};
  *   Backend.Filter.prototype.links.deleteGroup = '/en/backend.filter/delete/';
  *   Backend.Filter.prototype.links.editGroup = '/en/backend.filter/item/';
@@ -48,6 +48,46 @@ Backend.Filter = Class.create();
 Backend.Filter.prototype = {
     cssPrefix: "filter_",
     countNewFilters: 0,
+    
+    activeListCallbacks: {
+         beforeEdit:     function(li)
+         {
+             Backend.Filter.prototype.hideNewFilterAction(this.getRecordId(li, 2));
+              
+             if(this.isContainerEmpty(li, 'edit')) return Backend.Filter.prototype.links.editGroup + this.getRecordId(li)
+             else this.toggleContainer(li, 'edit');
+         },
+
+         afterEdit:      function(li, response)
+         {
+             new Backend.Filter(response);
+             this.toggleContainer(li, 'edit');
+         },
+ 
+         beforeDelete:   function(li)
+         {
+             if(confirm('{/literal}{t _FilterGroup_remove_question|addslashes}{literal}'))  return Backend.Filter.prototype.links.deleteGroup + this.getRecordId(li)
+         },
+   
+         afterDelete:    function(li, jsonResponse)
+         {
+             var response = eval("("+jsonResponse+")");
+ 
+             if(response.status == 'success') 
+             {
+                 this.remove(li);
+                 CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 2));
+             }
+         },   
+
+         beforeSort:     function(li, order)
+         {
+             return Backend.Filter.prototype.links.sortGroup + '?target=' + "filter_items_list_" + this.getRecordId(li, 2) + "&" + order
+         },
+    
+         afterSort:      function(li, response) { }
+     }, 
+    
     
     /**
      * Constructor
@@ -182,7 +222,12 @@ Backend.Filter.prototype = {
         this.nodes.filtersDefaultGroup    = document.getElementsByClassName(this.cssPrefix + "form_filters_group", this.nodes.parent)[0];
         this.nodes.addFilterLink          = this.nodes.filtersDefaultGroup.getElementsByClassName(this.cssPrefix + "add_filter", this.nodes.parent)[0];
 
+        this.nodes.translationsUl = {};
         this.nodes.valuesTranslations = {};
+        this.nodes.translation_templates = {};
+        
+        this.nodes.filterTemplate = this.nodes.filtersDefaultGroup.down("." + this.cssPrefix + "form_filters_value");
+        this.nodes.filtersList = this.nodes.filtersDefaultGroup.down('ul');
         
         var ul = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0];
         ul.id = this.cssPrefix + "form_"+this.id+'_filters_'+this.languageCodes[0];
@@ -412,24 +457,6 @@ Backend.Filter.prototype = {
         }       
     },
 
-    bindOneFilter: function(li)
-    {
-        var self = this;
-        var rangeParagraph = document.getElementsByClassName('filter_range', li)[0];
-        var nameParagraph  = document.getElementsByClassName('filter_name', li)[0];
-        var selectorParagraph  = document.getElementsByClassName('filter_selector', li)[0];
-        
-        var name       = nameParagraph.getElementsByTagName("input")[0];
-        var rangeStart = rangeParagraph.getElementsByTagName("input")[0];
-        var rangeEnd   = rangeParagraph.getElementsByTagName("input")[1];
-        
-        Event.observe(nameParagraph.getElementsByTagName("input")[0], "keyup", function(e) { self.mainValueFieldChangedAction(e) }, false);
-        Event.observe(rangeParagraph.getElementsByTagName("input")[0], "keyup", function(e) { self.rangeChangedAction(e) });
-        Event.observe(rangeParagraph.getElementsByTagName("input")[1], "keyup", function(e) { self.rangeChangedAction(e) });        
-        Event.observe(selectorParagraph.getElementsByTagName("select")[0], "change", function(e) { self.generateTitleAndHandleFromSpecFieldValue(li) });     
-    },
-
-
     /**
      * Bind default language filter fields to actions
      */
@@ -590,7 +617,10 @@ Backend.Filter.prototype = {
                 Event.observe(valueTranslationLegend.parentNode, "click", function(e) { self.toggleValueLanguage(e) });
                 
 				valuesTranslations[0].parentNode.appendChild(newValueTranslation);
+                
                 this.nodes.valuesTranslations[this.languageCodes[i]] = newValueTranslation;
+    			this.nodes.translation_templates[this.languageCodes[i]] = document.getElementsByClassName(this.cssPrefix + "form_filters_value", this.nodes.valuesTranslations[this.languageCodes[i]])[0]
+                this.nodes.translationsUl[this.languageCodes[i]] = document.getElementsByClassName(this.cssPrefix + "form_language_translation", this.nodes.valuesTranslations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
             }
         }
 
@@ -619,13 +649,14 @@ Backend.Filter.prototype = {
     loadValueFieldsAction: function()
     {
         var self = this;
-
+        
         if(this.filters)
         {
+           
             $H(this.filters).each(function(value) {
                 self.addFilter(value.value, value.key);
             });
-            
+
             this.filtersList.touch();
             this.bindDefaultFields();
         }
@@ -682,10 +713,11 @@ Backend.Filter.prototype = {
 
         Event.stop(e);
 
-        this.addFilter(null, "new" + Backend.Filter.prototype.countNewFilters, true);
+        var li = this.addFilter(null, "new" + Backend.Filter.prototype.countNewFilters, true);
         this.changeFiltersCount(this.filtersCount+1);
         this.filtersList.touch();
         this.bindDefaultFields();
+        this.filtersList.highlight(li);
         
         Backend.Filter.prototype.countNewFilters++;
     },
@@ -790,11 +822,11 @@ Backend.Filter.prototype = {
      */
     mainValueFieldChangedAction: function(e)
     {
-        if(!e.target)e.target = e.srcElement;
+        if(!e.target) e.target = e.srcElement;
 
         Event.stop(e);
         
-        var li = e.target.parentNode.parentNode.parentNode;
+        var li = e.target.up('li');
         var splitedHref  = li.id.match(/(new)*(\d+)$/); //    splitedHref[splitedHref.length - 2] == 'new' ? true : false;
         var id = splitedHref[0];
         
@@ -849,153 +881,143 @@ Backend.Filter.prototype = {
      */
     addFilter: function(value, id, generateTitle)
     {        
-        try
-        {
         var self = this;
+        if(!value) value = {}
+        if(!this.filtersList) this.bindDefaultFields();
         
-        var filters = document.getElementsByClassName(this.cssPrefix + "form_filters_value", this.nodes.filtersDefaultGroup);
+        var li = this.filtersList.addRecord(id, this.nodes.filterTemplate);
+        Element.addClassName(li, this.cssPrefix + "default_filter_li");
 
-        var ul = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0];
-        if(filters.length > 0 && Element.hasClassName(filters[0], 'dom_template'))
+        var nameValue = (value.name && value.name[self.languageCodes[0]]) ? value.name[self.languageCodes[0]] : '';
+
+        // Filter name
+        var filter_name_paragraph = li.down('.filter_name');
+        var input = filter_name_paragraph.down("input");
+        input.name = "filters[" + id + "][name][" + self.languageCodes[0] + "]";
+        input.value = nameValue;
+        Event.observe(input, "keyup", function(e) { self.mainValueFieldChangedAction(e) }, false);
+
+        filter_name_paragraph.siblings().each(function(paragraph) 
         {
-            var newValue = filters[0].cloneNode(true);
-            Element.removeClassName(newValue, "dom_template");
-
-            if(!this.filtersList) this.bindDefaultFields();
-            var li = this.filtersList.addRecord(id, [newValue]);
-            
-            Element.addClassName(li, this.cssPrefix + "default_filter_li");
-
-            // Filter name
-            var nameParagraph = document.getElementsByClassName('filter_name', li)[0];
-            var input = nameParagraph.getElementsByTagName("input")[0];
-            input.name = "filters[" + id + "][name]["+this.languageCodes[0]+"]";
-            input.value = (value && value.name && value.name[this.languageCodes[0]]) ? value.name[this.languageCodes[0]] : '' ;
-    
-            // Handle name
-            var hanldeParagraph = document.getElementsByClassName('filter_handle', li)[0];
-            var handleInput = hanldeParagraph.getElementsByTagName("input")[0];
-            handleInput.name = "filters[" + id + "][handle]";
-            handleInput.value = (value && value.handle) ? value.handle : '' ;
-
-            // Numeric range
-            var rangeParagraph = document.getElementsByClassName('filter_range', li)[0];
-            
-            var rangeStartInput = rangeParagraph.getElementsByTagName("input")[0];
-            rangeStartInput.name = "filters[" + id + "][rangeStart]";
-            rangeStartInput.value = (value && value.rangeStart) ? value.rangeStart : '' ;
-            
-            var rangeEndInput = rangeParagraph.getElementsByTagName("input")[1];
-            rangeEndInput.name = "filters[" + id + "][rangeEnd]";
-            rangeEndInput.value = (value && value.rangeEnd) ? value.rangeEnd : '' ;
-            
-         
-            // Select
-            var specFieldValueParagraph = document.getElementsByClassName('filter_selector', li)[0];
-            
-            var specFieldValueIDInput = specFieldValueParagraph.getElementsByTagName("select")[0];
-            specFieldValueIDInput.name = "filters[" + id + "][specFieldValueID]";
-            specFieldValueIDInput.value = (value && value.specFieldValueID) ? value.specFieldValueID : '' ;
-            
-            
-            // Date range
-            var dateParagraph = document.getElementsByClassName("filter_date_range", li)[0];
-            
-            var rangeDateStart = dateParagraph.getElementsByTagName("input")[0];
-            var rangeDateEnd = dateParagraph.getElementsByTagName("input")[1];
-            
-            var rangeDateStartButton = document.getElementsByClassName("calendar_button", dateParagraph)[0];
-            var rangeDateEndButton   = document.getElementsByClassName("calendar_button", dateParagraph)[1];
-            
-            var rangeDateStartReal   = document.getElementsByClassName(this.cssPrefix + "date_start_real", dateParagraph)[0];
-            var rangeDateEndReal     = document.getElementsByClassName(this.cssPrefix + "date_end_real", dateParagraph)[0];
-
-            rangeDateStart.id         = this.cssPrefix + "rangeDateStart_" + id;
-            rangeDateEnd.id           = this.cssPrefix + "rangeDateEnd_" + id;
-            rangeDateStartReal.id     = rangeDateStart.id + "_real";
-            rangeDateEndReal.id       = rangeDateEnd.id + "_real";
-            rangeDateStartButton.id   = rangeDateStart.id + "_button";
-            rangeDateEndButton.id     = rangeDateEnd.id + "_button";      
-            
-            
-            rangeDateStart.name       = "filters[" + id + "][rangeDateStart_show]";
-            rangeDateEnd.name         = "filters[" + id + "][rangeDateEnd_show]";
-            rangeDateStartReal.name   = "filters[" + id + "][rangeDateStart]";
-            rangeDateEndReal.name     = "filters[" + id + "][rangeDateEnd]";
-                  
-     
-            rangeDateStartReal.value  = (value && value.rangeDateStart) ? value.rangeDateStart : '' ;
-            rangeDateEndReal.value    = (value && value.rangeDateEnd) ? value.rangeDateEnd : '' ;
-            
-            rangeDateStart.value  = rangeDateStartReal.value;
-            rangeDateEnd.value    = rangeDateEndReal.value ;
-              
-            rangeDateStart.value = Date.parseDate(rangeDateStartReal.value, "%y-%m-%d").print(this.dateFormat);
-            rangeDateEnd.value = Date.parseDate(rangeDateEnd.value, "%y-%m-%d").print(this.dateFormat);
-                       
-            Event.observe(rangeDateStartButton, "mousedown", function(e){
-                if(!self.filterCalendars[rangeDateStart.id]) 
-                {
-                    self.filterCalendars[rangeDateStart.id] = true;
-                    Calendar.setup( {
-                        inputField:       rangeDateStart.id,
-                        inputFieldReal:   rangeDateStartReal.id,
-                        ifFormat:         self.dateFormat, 
-                        button:           rangeDateStartButton.id,
-                        eventName:        'mouseup',
-                        cache: true
-                    });
-                }
-            });
-      
-            Event.observe(rangeDateEndButton, "mousedown", function(e){
-                if(!self.filterCalendars[rangeDateEnd.id])
-                {
-                    self.filterCalendars[rangeDateEnd.id] = true;
-                    Calendar.setup({
-                        inputField:       rangeDateEnd.id,
-                        inputFieldReal:   rangeDateEndReal.id,
-                        ifFormat:         self.dateFormat, 
-                        button:           rangeDateEndButton.id,
-                        eventName:        'mouseup',
-                        cache: true
-                    });
-                }
-            });
-
-            this.bindOneFilter(li);
-            if(generateTitle) this.generateTitleAndHandleFromSpecFieldValue(li);
-            
-			// now insert all translation fields
-			for(var i = 1; i < this.languageCodes.length; i++)
-			{
-				var newValueTranslation = document.getElementsByClassName(this.cssPrefix + "form_filters_value", this.nodes.valuesTranslations[this.languageCodes[i]])[0].cloneNode(true);
-				Element.removeClassName(newValueTranslation, "dom_template");
-
-				newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "_" + id;
-
-				var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
-				inputTranslation.name = "filters[" + id + "][name][" + this.languageCodes[i] + "]";
-				inputTranslation.value = (value && value.name && value.name[this.languageCodes[i]]) ? value.name[this.languageCodes[i]] : '' ;
-
-                newValueTranslation.getElementsByTagName("label")[0].innerHTML = input.value;
+            if(Element.hasClassName(paragraph, 'filter_handle'))
+            {
+                // Handle name
+                var handleInput = paragraph.down("input");
+                handleInput.name = "filters[" + id + "][handle]";
+                handleInput.value = (value.handle) ? value.handle : '' ;
+            }
+            else if(Element.hasClassName(paragraph, 'filter_range'))
+            {
+                // Numeric range
+                var rangeStartInput = paragraph.down("input");
+                var rangeEndInput = rangeStartInput.next("input");
                 
-				// add to node tree
-				var translationsUl = document.getElementsByClassName(this.cssPrefix + "form_language_translation", this.nodes.valuesTranslations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
-				translationsUl.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[i];
-				translationsUl.appendChild(newValueTranslation);
-			}
+                rangeStartInput.name = "filters[" + id + "][rangeStart]";
+                rangeStartInput.value = (value.rangeStart) ? value.rangeStart : '' ;
+                
+                rangeEndInput.name = "filters[" + id + "][rangeEnd]";
+                rangeEndInput.value = (value.rangeEnd) ? value.rangeEnd : '' ;
+                
+                Event.observe(rangeStartInput, "keyup", function(e) { self.rangeChangedAction(e) });
+                Event.observe(rangeEndInput, "keyup", function(e) { self.rangeChangedAction(e) });      
+            }
+            else if(Element.hasClassName(paragraph, 'filter_selector'))
+            {
+                // Select
+                var specFieldValueIDInput = paragraph.down("select");
+                specFieldValueIDInput.name = "filters[" + id + "][specFieldValueID]";
+                specFieldValueIDInput.value = (value.SpecFieldValue && value.SpecFieldValue.ID) ? value.SpecFieldValue.ID : '' ;
+                Event.observe(specFieldValueIDInput, "change", function(e) { self.generateTitleAndHandleFromSpecFieldValue(li) });    
+            }
+            else if(Element.hasClassName(paragraph, 'filter_date_range'))
+            {
+                // Date range.
+                var rangeDateStart = paragraph.down("input");
+                var rangeDateEnd = rangeDateStart.next("input");
+                
+                var rangeDateStartButton = paragraph.down("img.calendar_button");
+                var rangeDateEndButton   = rangeDateStartButton.next("img.calendar_button");
+                
+                var rangeDateStartReal   = paragraph.down("input." + self.cssPrefix + "date_start_real");
+                var rangeDateEndReal     = paragraph.down("input." + self.cssPrefix + "date_end_real");
+        
+                rangeDateStart.id         = self.cssPrefix + "rangeDateStart_" + id;
+                rangeDateEnd.id           = self.cssPrefix + "rangeDateEnd_" + id;
+                rangeDateStartReal.id     = rangeDateStart.id + "_real";
+                rangeDateEndReal.id       = rangeDateEnd.id + "_real";
+                rangeDateStartButton.id   = rangeDateStart.id + "_button";
+                rangeDateEndButton.id     = rangeDateEnd.id + "_button";      
+                
+                rangeDateStart.name       = "filters[" + id + "][rangeDateStart_show]";
+                rangeDateEnd.name         = "filters[" + id + "][rangeDateEnd_show]";
+                rangeDateStartReal.name   = "filters[" + id + "][rangeDateStart]";
+                rangeDateEndReal.name     = "filters[" + id + "][rangeDateEnd]";
+                      
+                rangeDateStartReal.value  = (value.rangeDateStart) ? value.rangeDateStart : '' ;
+                rangeDateEndReal.value    = (value.rangeDateEnd) ? value.rangeDateEnd : '' ;
+                
+                rangeDateStart.value  = rangeDateStartReal.value;
+                rangeDateEnd.value    = rangeDateEndReal.value ;
+                  
+                rangeDateStart.value = Date.parseDate(rangeDateStartReal.value, "%y-%m-%d").print(self.dateFormat);
+                rangeDateEnd.value = Date.parseDate(rangeDateEnd.value, "%y-%m-%d").print(self.dateFormat);
+                           
+                Event.observe(rangeDateStartButton, "mousedown", function(e){
+                    if(!self.filterCalendars[rangeDateStart.id]) 
+                    {
+                        self.filterCalendars[rangeDateStart.id] = true;
+                        Calendar.setup( {
+                            inputField:       rangeDateStart.id,
+                            inputFieldReal:   rangeDateStartReal.id,
+                            ifFormat:         self.dateFormat, 
+                            button:           rangeDateStartButton.id,
+                            eventName:        'mouseup',
+                            cache: true
+                        });
+                    }
+                });
+          
+                Event.observe(rangeDateEndButton, "mousedown", function(e){
+                    if(!self.filterCalendars[rangeDateEnd.id])
+                    {
+                        self.filterCalendars[rangeDateEnd.id] = true;
+                        Calendar.setup({
+                            inputField:       rangeDateEnd.id,
+                            inputFieldReal:   rangeDateEndReal.id,
+                            ifFormat:         self.dateFormat, 
+                            button:           rangeDateEndButton.id,
+                            eventName:        'mouseup',
+                            cache: true
+                        });
+                    }
+                });
+            }
+ 
+        });
+       
+        if(generateTitle) this.generateTitleAndHandleFromSpecFieldValue(li);
+        
+		// now insert all translation fields
+		for(var i = 1; i < this.languageCodes.length; i++)
+		{
+            var newValueTranslation = this.nodes.translation_templates[this.languageCodes[i]].cloneNode(true);
+            var translationsUl = this.nodes.translationsUl[this.languageCodes[i]];
+            var inputTranslation = newValueTranslation.down("input");
 
-        }
-        else
-        {
-            return false;
-        }
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
+			inputTranslation.name = "filters[" + id + "][name][" + this.languageCodes[i] + "]";
+			inputTranslation.value = (value && value.name && value.name[this.languageCodes[i]]) ? value.name[this.languageCodes[i]] : '' ;
+
+            newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "_" + id;
+            newValueTranslation.down("label").update(nameValue);
+			
+            // add to node tree
+			translationsUl.id = this.cssPrefix + "form_" + this.id + '_values_' + this.languageCodes[i];
+			translationsUl.appendChild(newValueTranslation);
+            
+            Element.removeClassName(newValueTranslation, "dom_template");
+		}
+        
+        return li;
     },
 
 
