@@ -539,8 +539,8 @@ ActiveList.prototype = {
      */
     addIconToContainer: function(li, className)
     {
-        var container = li.down(this.cssPrefix + 'icons');
-
+        var container = li.down("span." + this.cssPrefix + 'icons');
+        
         var regex = new RegExp('^' + this.cssPrefix + '(add|remove)_(\\w+)(_(before|after)_(\\w+))*');
         var tmp = regex.exec(className);
 
@@ -555,10 +555,6 @@ ActiveList.prototype = {
         icon.sibling = tmp[5];
 
         if(icon.action == 'accept') return true;
-        
-        if(!window.counter) window.counter = 0;
-        window.counter++;
-       // if(window.counter > 5) return
         
         if(icon.action != 'sort')
         {

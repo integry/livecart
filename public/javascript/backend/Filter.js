@@ -147,7 +147,6 @@ Backend.Filter.prototype = {
                 if(el[1].ul) 
                 {
                     ActiveList.prototype.destroy(el[1].ul.id);
-                    console.info(el[1].ul.id);
                 }
                 
                 delete el[1];
@@ -1089,7 +1088,7 @@ Backend.Filter.prototype = {
         }
         catch (e)
         {
-            ActiveForm.prototype.offProgress(this.nodes.form);
+             ActiveForm.prototype.offProgress(this.nodes.form);
         }
 
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
@@ -1101,7 +1100,6 @@ Backend.Filter.prototype = {
                 method: this.nodes.form.method,
                 postBody: Form.serialize(this.nodes.form),
                 onComplete: function(param) {
-                    console.info(param.responseText);
                     self.afterSaveAction(param.responseText)
                 }
             }
