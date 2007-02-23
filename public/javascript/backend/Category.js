@@ -252,7 +252,7 @@ Backend.Category = {
 ,
     
     /**
-     * Insert aray of categories into tree
+     * Insert array of categories into tree
      * 
      * @param array categories Array of category objects. Every category object should contain these elements
      *     parent - Id of parent category
