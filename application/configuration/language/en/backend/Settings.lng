@@ -1,0 +1,13 @@
+
+
+_store_loc_add=Store Location Address
+STORE_COUNTRY=Store country
+STORE_STATE=Store state
+STORE_ZIP=Store ZIP code
+STORE_CITY=Store city
+
+_def_cust_addr=Default Customer Address
+DEF_COUNTRY=Default country
+DEF_STATE=Default state
+DEF_ZIP=Default ZIP code
+DEF_CITY=Default city

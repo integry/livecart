@@ -2,7 +2,11 @@
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.system.Config");
-
+ClassLoader::import('framework.request.validator.RequestValidator');
+ClassLoader::import('framework.request.validator.Form');
+ClassLoader::import('framework.request.validator.check.*');
+ClassLoader::import('framework.request.validator.filter.*');
+		
 /**
  * Application settings management
  *
@@ -30,7 +34,6 @@ class SettingsController extends StoreManagementController
 	public function edit()
 	{
 		$sectionId = $this->request->getValue('id');
-		$form = $this->getForm($sectionId);
 		
 		$c = new Config();
 		$section = $c->getSection($sectionId);		
@@ -38,9 +41,11 @@ class SettingsController extends StoreManagementController
 		$values = array();
 		foreach ($section as $key => $value)
 		{
-			if ('on' == $value || 'off' == $value)
+			if ('-' == $value || '+' == $value)
 			{
 			  	$type = 'bool';
+			  	$value = 0 + ('-' == $value);
+				//$value = 1 - ('-' == $value);			  	
 			}  
 			elseif (is_numeric($value))
 			{
@@ -57,8 +62,9 @@ class SettingsController extends StoreManagementController
 			
 			$values[$key] = array('type' => $type, 'value' => $value, 'title' => $key);
 		}		
-		
+				
 		$response = new ActionResponse();
+		$response->set('form', $this->getForm($values));
 		$response->setValue('values', $values);
 		$response->setValue('layout', $c->getSectionLayout($sectionId));		
 		return $response;	
@@ -81,15 +87,24 @@ class SettingsController extends StoreManagementController
 		}
 	}  		  
 	
-	private function getForm($sectionId)
+	private function getForm($settings)
 	{
-		$c = new Config();			  
-		$s = $c->getSection($sectionId);
+		return new Form($this->getValidator($settings));
 	}
 
-	private function getValidator($sectionId)
-	{
-	  
+	private function getValidator($settings)
+	{	
+		$val = new RequestValidator('settings', $this->request);
+		foreach ($settings as $key => $value)
+		{
+			if ('num' == $value['type'])
+			{
+				$val->addCheck($key, new IsNumericCheck($this->translate('_err_numeric')));
+				$val->addFilter($key, new NumericFilter());
+			}	
+		}
+		
+		return $val;	  
 	}
 }
 

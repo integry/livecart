@@ -113,16 +113,16 @@ class Config
 			if ($file->isFile() && 'ini' == substr($file->getFileName(), -3))
 			{
 				$ini = parse_ini_file($file->getPathName(), true);
-				$key = substr($file->getFileName(), -4);
+				$key = substr($file->getFileName(), 0, -4);
 				
 				$out = array();
 				$out['name'] = key($ini);
 				
-				$subpath = $file->getPath() . '/' . $key;
+				$subpath = $file->getPath() . '/' . substr($key, 3);
 				
 				if (file_exists($subpath))
 				{
-				  	$out['subs'] = $this->getTree($subpath, $key);
+				  	$out['subs'] = $this->getTree($subpath, substr($key, 3));
 				}
 				
 				if ($keyPrefix)

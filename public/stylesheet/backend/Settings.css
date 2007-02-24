@@ -1,5 +1,10 @@
 #settingsBrowser
 {
   	float: left;
-  	width: 250px;
+  	width: 200px;
+}
+
+p.checkbox 
+{
+	padding-left: 0px;
 }

@@ -35,6 +35,7 @@ Backend.Settings.prototype =
 		var url = this.urls['edit'];
 		url = url.replace('_id_', test);
 		console.log(url);
+		new LiveCart.AjaxUpdater(url, 'settingsContent', 'settingsIndicator');
 	},
 	
     /**

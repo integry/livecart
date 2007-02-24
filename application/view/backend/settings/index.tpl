@@ -1,5 +1,7 @@
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
+{includeJs file="library/form/Validator.js"}
+{includeJs file="library/form/ActiveForm.js"}
 {includeJs file="backend/Settings.js"}
 
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
@@ -12,7 +14,8 @@
 	<div id="settingsBrowser" class="treeBrowser">
 	</div>
 
-	<div id="settingsContent" class="maxHeight" style="border: 1px solid black; margin-left: 290px;">
+	<span id="settingsIndicator" class="progressIndicator" style="display: none;"></span>
+	<div id="settingsContent" class="maxHeight" style="margin-left: 240px;">
 	test
 	</div>
 
@@ -20,11 +23,10 @@
 
 <div id="activeSettingsPath"></div>
 
-
 {literal}
 <script type="text/javascript">
 	var settings = new Backend.Settings({/literal}{$categories}{literal});
-	settings.urls['edit'] = '{/literal}{link controller=backend.settings action=view}?id=_id_{literal}';
+	settings.urls['edit'] = '{/literal}{link controller=backend.settings action=edit}?id=_id_{literal}';
 	settings.urls['save'] = '{/literal}{link controller=backend.settings action=save}?id=_id_{literal}';
 </script>
 {/literal}
