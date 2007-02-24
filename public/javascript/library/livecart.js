@@ -102,8 +102,8 @@ LiveCart.AjaxUpdater.prototype = {
 
         var updaterOptions = { method: method,
                                parameters: params,
-                               onComplete: this.postProcessResponse,
-                               onFailure: this.reportError
+                               onComplete: this.postProcessResponse.bind(this),
+                               onFailure: this.reportError.bind(this)
                                };
 
         if (insertionPosition != undefined)
@@ -155,6 +155,11 @@ LiveCart.AjaxUpdater.prototype = {
 		document.body.style.cursor = 'default';
         response.responseText.evalScripts();  
         LiveCart.ajaxUpdaterInstance.hideIndicator();
+
+        if (this.onComplete)
+        {
+		  	this.onComplete(response);
+		}        
     },
 
     reportError: function(response)

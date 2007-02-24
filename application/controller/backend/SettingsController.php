@@ -37,23 +37,27 @@ class SettingsController extends StoreManagementController
 		
 		$c = new Config();
 		$section = $c->getSection($sectionId);		
-		
+
 		$values = array();
 		foreach ($section as $key => $value)
 		{
 			if ('-' == $value || '+' == $value)
 			{
 			  	$type = 'bool';
-			  	$value = 0 + ('-' == $value);
-				//$value = 1 - ('-' == $value);			  	
+			  	$value = 0 + ('-' == $value);		  	
 			}  
 			elseif (is_numeric($value))
 			{
 			  	$type = 'num';
 			}
-			elseif ('[' == substr($value, 0, 1) && ']' == substr($value, -1))
+			elseif ('/' == substr($value, 0, 1) && '/' == substr($value, -1))
 			{
-			  	$type = 'array';
+			  	$vl = explode(', ', substr($value, 1, -1));
+			  	$type = array();
+			  	foreach ($vl as $v)
+			  	{
+					$type[$v] = $this->translate($v);	
+				}	
 			}
 			else
 			{
@@ -65,6 +69,7 @@ class SettingsController extends StoreManagementController
 				
 		$response = new ActionResponse();
 		$response->set('form', $this->getForm($values));
+		$response->setValue('title', $this->translate($c->getSectionTitle($sectionId)));
 		$response->setValue('values', $values);
 		$response->setValue('layout', $c->getSectionLayout($sectionId));		
 		return $response;	

@@ -14,7 +14,10 @@
 	<div id="settingsBrowser" class="treeBrowser">
 	</div>
 
-	<span id="settingsIndicator" class="progressIndicator" style="display: none;"></span>
+	<span id="settingsIndicator"></span>
+	
+	<div class="yellowMessage" style="display: none;"><div>{t _save_conf}</div></div>
+	
 	<div id="settingsContent" class="maxHeight" style="margin-left: 240px;">
 	test
 	</div>
@@ -28,6 +31,7 @@
 	var settings = new Backend.Settings({/literal}{$categories}{literal});
 	settings.urls['edit'] = '{/literal}{link controller=backend.settings action=edit}?id=_id_{literal}';
 	settings.urls['save'] = '{/literal}{link controller=backend.settings action=save}?id=_id_{literal}';
+    settings.treeBrowser.selectItem('00-store', true, false);	
 </script>
 {/literal}
 

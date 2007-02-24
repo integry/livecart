@@ -8,9 +8,34 @@ Backend.Settings.prototype =
 	  
 	initialize: function(categories)
 	{
-		this.treeBrowser = new dhtmlXTreeObject("settingsBrowser","","", 0);
+		this.treeBrowser = new dhtmlXTreeObject("settingsBrowser","","", false);
+		
+		this.treeBrowser.def_img_x = 'auto';
+		this.treeBrowser.def_img_y = 'auto';
+				
 		this.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
 		this.treeBrowser.setOnClickHandler(this.activateCategory.bind(this));
+
+		this.treeBrowser.showFeedback = 
+			function(itemId) 
+			{
+				if (!this.iconUrls)
+				{
+					this.iconUrls = new Object();	
+				}
+				
+				this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+				this.setItemImage(itemId, '../../../image/indicator.gif');
+			}
+		
+		this.treeBrowser.hideFeedback = 
+			function()
+			{
+				for (itemId in this.iconUrls)
+				{
+					this.setItemImage(itemId, this.iconUrls[itemId]);	
+				}				
+			}
 
     	this.insertTreeBranch(categories, 0);    
 	},
@@ -21,7 +46,9 @@ Backend.Settings.prototype =
 		{
 		  	if('function' != typeof treeBranch[k])
 		  	{
-		        this.treeBrowser.insertNewItem(rootId, k, treeBranch[k].name, null, 0, 0, 0, '', 1);
+				this.treeBrowser.insertNewItem(rootId, k, treeBranch[k].name, null, 0, 0, 0, '', 1);
+				this.treeBrowser.showItemSign(k, 0);
+				
 				if (treeBranch[k].subs)
 				{
 					this.insertTreeBranch(treeBranch[k].subs, k);
@@ -30,38 +57,44 @@ Backend.Settings.prototype =
 		}  	
 	},
 	
-	activateCategory: function(test)
+	activateCategory: function(id)
 	{
-		var url = this.urls['edit'];
-		url = url.replace('_id_', test);
-		console.log(url);
-		new LiveCart.AjaxUpdater(url, 'settingsContent', 'settingsIndicator');
+		if (!this.treeBrowser.hasChildren(id))
+		{
+			this.treeBrowser.showFeedback(id);
+			var url = this.urls['edit'].replace('_id_', id);
+			var upd = new LiveCart.AjaxUpdater(url, 'settingsContent', 'settingsIndicator');
+			upd.onComplete = this.displayCategory.bind(this);
+		}
 	},
 	
-    /**
-     * Insert array of categories into tree
-     * 
-     * @param array categories Array of category objects. Every category object should contain these elements
-     *     parent - Id of parent category
-     *     ID - Id o category
-     *     name - Category name in current language
-     *     options - Advanced options
-     *     childrenCount - Indicates that this node has N childs
-     */
-    addCategories: function(categories) 
-    {
-        $A(categories).each(function(category) {         
-            if(!category.parent || 0 == category.parent) 
-            {
-                category.options = "";
-                category.parent = 0;
-            }
-            else if(!category.option) 
-            {
-                category.options = "";
-            }
-
-            this.treeBrowser.insertNewItem(category.parent,category.ID,category.name, null, 0, 0, 0, category.options, !category.childrenCount ? 0 : category.childrenCount);
-        });
-    }	
+	displayCategory: function(response)
+	{
+		console.log(response);
+		var cancel = document.getElementsByClassName('cancel', $('settingsContent'))[0];
+		Event.observe(cancel, 'click', this.resetForm.bindAsEventListener(this));
+		this.treeBrowser.hideFeedback();	
+	},
+	
+	resetForm: function(e)
+	{
+		var el = Event.element(e);
+		while (el.tagName != 'FORM')
+		{
+			el = el.parentNode;
+		}
+		
+		el.reset();		
+	},
+	
+	save: function(form)
+	{
+		var indicator = document.getElementsByClassName('progressIndicator', form)[0];
+		new LiveCart.AjaxRequest(form, indicator, this.displaySaveConfirmation.bind(this));	
+	},
+	
+	displaySaveConfirmation: function()
+	{
+		new Backend.SaveConfirmationMessage(document.getElementsByClassName('yellowMessage')[0]);			
+	}
 }

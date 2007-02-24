@@ -1,5 +1,82 @@
+_save_conf=Settings successfuly saved
 
+################ Individual settings #################
 
+_main=Main
+STORE_NAME=Store name
+
+_display=Display
+
+_general=General
+NUM_PRODUCTS_PER_CAT=Number of products per category page
+NUM_PRODUCTS_PER_SEARCH=Number of products per search page
+SORT_ORDER=Default product sort order
+MONTHLY_RANK=Monthly Sales Rank
+WEEKLY_RANK=Weekly Sales Rank
+DAILY_RANK=Daily Sales Rank
+PRODUCT_NAME=Product Name
+PRICE=Price
+MANUFACTURER=Manufacturer
+DISPLAY_NUM_CAT=Display the number of products per category
+DISPLAY_NUM_FILTER=Display the number of products per filter
+DISPLAY_IMAGE_IN_LIST=Display product thumbnail image in product list
+
+_products=Products
+UNIT_SYSTEM=Unit measurement system (for weight, size, etc.)
+METRIC=Metric
+ENGLISH=English
+
+_product_image=Product Image Sizes
+_p_small=Small
+_p_thumb=Thumbnail
+_p_medium=Medium
+_p_large=Large
+
+IMG_P_SMALL_W=Width
+IMG_P_SMALL_H=Height
+IMG_P_SMALL_Q=Quality (0 - 100)
+IMG_P_THM_W=Width
+IMG_P_THM_H=Height
+IMG_P_THM_Q=Quality (0 - 100)
+IMG_P_MEDIUM_W=Width
+IMG_P_MEDIUM_H=Height
+IMG_P_MEDIUM_Q=Quality (0 - 100)
+IMG_P_LARGE_W=Width
+IMG_P_LARGE_H=Height
+IMG_P_LARGE_Q=Quality (0 - 100)
+
+_category_image=Category Image Sizes
+_c_small=Small
+_c_thumb=Thumbnail
+_c_medium=Medium
+_c_large=Large
+
+IMG_C_SMALL_W=Width
+IMG_C_SMALL_H=Height
+IMG_C_SMALL_Q=Quality (0 - 100)
+IMG_C_THM_W=Width
+IMG_C_THM_H=Height
+IMG_C_THM_Q=Quality (0 - 100)
+IMG_C_MEDIUM_W=Width
+IMG_C_MEDIUM_H=Height
+IMG_C_MEDIUM_Q=Quality (0 - 100)
+IMG_C_LARGE_W=Width
+IMG_C_LARGE_H=Height
+IMG_C_LARGE_Q=Quality (0 - 100)
+
+_inventory=Inventory
+DISABLE_INVENTORY=Disable inventory tracking
+DISABLE_NOT_IN_STOCK=Disable products that are out of stock
+
+_checkout=Checkout
+ANONYMOUS_CHECKOUT=Enable anonymous checkout
+
+_purchase=Purchase
+MIN_TOTAL=Minimum order total
+MAX_TOTAL=Maximum order total (0 - no limit)
+MAX_QUANT=Maximum quantity of products per order (0 - no limit)
+
+_shipping=Shipping
 _store_loc_add=Store Location Address
 STORE_COUNTRY=Store country
 STORE_STATE=Store state
@@ -11,3 +88,8 @@ DEF_COUNTRY=Default country
 DEF_STATE=Default state
 DEF_ZIP=Default ZIP code
 DEF_CITY=Default city
+
+_email=Email
+_email_addresses=Email Addresses
+_email_store=Store Administration Notifications
+_email_customer=Customer Notifications

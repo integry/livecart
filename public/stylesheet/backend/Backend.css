@@ -1,3 +1,9 @@
+* 
+{
+  	margin: 0;
+	padding: 0;
+}
+
 html
 {
     font-size: 67.5%;
@@ -19,11 +25,6 @@ table
   	border-collapse: collapse;
 }
 
-td 
-{
-  	padding: 0px;
-}
-
 a img 
 {
   	border: 0;
@@ -32,6 +33,11 @@ a img
 a, a:visited
 {
   	color: blue;
+}
+
+h1
+{
+	margin-bottom: 3px;
 }
 
 /*************************** 
@@ -86,30 +92,24 @@ div.noRecords div {
 /***************************
 * Messages
 ****************************/
-
 div.yellowMessage, div.redMessage {
-    position: relative;
-    margin: 0;
-    padding: 0;
+	margin: 0pt;
+	padding: 10pt;
+	float: none;
 }
 
 div.yellowMessage div, div.redMessage div {
+	border: 4px solid;
 	font-weight: bold;
-    border: 4px solid;
-    padding: 10px;
-}
-
-div.yellowMessage {
-    background-color: #FFF6BF;
+	padding: 7px;
+	width: auto;
+	display: inline;
+	margin-left: 10px;
 }
 
 div.yellowMessage div {
     border-color: #FFDD00;
     background-color: #FFEE7F;
-}
-
-div.redMessage {
-    background-color: #FFCFA0;
 }
 
 div.redMessage div {
@@ -121,10 +121,6 @@ div.redMessage div {
 /*************************** 
 	Layout 
 ***************************/
-* {
-  	margin:0;padding:0
-}
-
 /* commented backslash hack v2 \*/
 html, body{
   	height:100%;

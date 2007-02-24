@@ -722,20 +722,21 @@ Backend.SaveConfirmationMessage.prototype =
 	
 	show: function()
 	{
-        new Effect.SlideDown(this.element, {duration: 1, afterFinish: this.highlight.bind(this)});
+        new Effect.SlideDown(this.element, {duration: 0.4, afterFinish: this.highlight.bind(this)});
 	},
 
 	highlight: function()
 	{
        var self = this;	
-       new Effect.Highlight(this.innerElement, { duration: 1 });
-       setTimeout(function() { self.hide() }, 4000);
+       this.innerElement.focus();
+       new Effect.Highlight(this.innerElement, { duration: 0.4 });
+       setTimeout(function() { self.hide() }, 3000);
 
 	},
 
 	hide: function()
 	{
-        Effect.BlindUp(this.element, {duration: 1});
+        Effect.BlindUp(this.element, {duration: 0.4});
 	}
 }
 

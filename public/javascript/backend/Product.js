@@ -245,7 +245,7 @@ Backend.Product.saveHandler.prototype =
     				Form.focusFirstElement(this.form);
                 
                     console.info('product save');
-				    new Backend.SaveConfirmationMessage(this.form.getElementsByClassName('productSaveConf')[0]);
+				    new Backend.SaveConfirmationMessage(document.getElementsByClassName('productSaveConf', this.form)[0]);
                 }
                 catch(e)
                 {

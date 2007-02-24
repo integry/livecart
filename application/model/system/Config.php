@@ -99,6 +99,13 @@ class Config
 		return $ini;
 	}
 
+	public function getSectionTitle($sectionId)
+	{
+		$ini = parse_ini_file($this->getSectionFile($sectionId), true);	
+		
+		return key($ini);
+	}
+
 	public function getTree($dir = null, $keyPrefix = null)
 	{
 	  	if (!$dir)
@@ -108,6 +115,9 @@ class Config
 		
 		$res = array();
 		$d = new DirectoryIterator($dir);
+		
+		$store = Store::getInstance();
+		
 		foreach ($d as $file)
 		{
 			if ($file->isFile() && 'ini' == substr($file->getFileName(), -3))
@@ -116,7 +126,7 @@ class Config
 				$key = substr($file->getFileName(), 0, -4);
 				
 				$out = array();
-				$out['name'] = key($ini);
+				$out['name'] = $store->translate(key($ini));
 				
 				$subpath = $file->getPath() . '/' . substr($key, 3);
 				
