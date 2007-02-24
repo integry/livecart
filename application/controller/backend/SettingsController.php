@@ -20,11 +20,8 @@ class SettingsController extends StoreManagementController
 	 */
 	public function index()
 	{
-		// get settings tree 
-		$c = new Config();
-		
 		$response = new ActionResponse();
-		$response->setValue('categories', json_encode($c->getTree()));
+		$response->setValue('categories', json_encode(Config::getInstance()->getTree()));
 		return $response;
 	}
 	
@@ -33,44 +30,24 @@ class SettingsController extends StoreManagementController
 	 */
 	public function edit()
 	{
-		$sectionId = $this->request->getValue('id');
-		
-		$c = new Config();
-		$section = $c->getSection($sectionId);		
+		$c = Config::getInstance();
 
-		$values = array();
-		foreach ($section as $key => $value)
+		$sectionId = $this->request->getValue('id');						
+		$values = $c->getSettingsBySection($sectionId);
+		
+		$form = $this->getForm($values);
+		
+		foreach ($values as $key => &$value)
 		{
-			if ('-' == $value || '+' == $value)
-			{
-			  	$type = 'bool';
-			  	$value = 0 + ('-' == $value);		  	
-			}  
-			elseif (is_numeric($value))
-			{
-			  	$type = 'num';
-			}
-			elseif ('/' == substr($value, 0, 1) && '/' == substr($value, -1))
-			{
-			  	$vl = explode(', ', substr($value, 1, -1));
-			  	$type = array();
-			  	foreach ($vl as $v)
-			  	{
-					$type[$v] = $this->translate($v);	
-				}	
-			}
-			else
-			{
-			  	$type = 'string';
-			}
-			
-			$values[$key] = array('type' => $type, 'value' => $value, 'title' => $key);
-		}		
+			$value['value'] = $c->getValue($key);
+			$form->setValue($key, $value['value']);	
+		}
 				
 		$response = new ActionResponse();
-		$response->set('form', $this->getForm($values));
+		$response->set('form', $form);
 		$response->setValue('title', $this->translate($c->getSectionTitle($sectionId)));
 		$response->setValue('values', $values);
+		$response->setValue('id', $sectionId);
 		$response->setValue('layout', $c->getSectionLayout($sectionId));		
 		return $response;	
 	}  		  
@@ -79,8 +56,10 @@ class SettingsController extends StoreManagementController
 	 *	Save settings
 	 */
 	public function save()
-	{
-		$validator = $this->getValidator();
+	{				
+		$c = Config::getInstance();
+		$values = $c->getSettingsBySection($this->request->getValue('id'));
+		$validator = $this->getValidator($values);
 		
 		if (!$validator->isValid())
 		{
@@ -88,7 +67,14 @@ class SettingsController extends StoreManagementController
 		}
 		else
 		{
-		  	return new JSONResponse(array('success' => true));		  	
+			foreach ($values as $key => $value)
+			{
+				$c->setValue($key, $this->request->getValue($key));		
+			}  	
+			
+			$c->save();
+			  
+			return new JSONResponse(array('success' => true));		  	
 		}
 	}  		  
 	

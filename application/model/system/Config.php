@@ -12,68 +12,81 @@ class Config
 	 */
 	private $values = array();
 
-	/**
-	 *  Configuration values mapped to files (  file => (key => value)  )
-	 */
-	private $fileValues = array();
-
-	/**
-	 *  List of files with modified values (to be saved)
-	 */
-	private $changedFiles = array();
-
-	/**
-	 *  Configuration file directory path
-	 */
-	private $configFileDir = '';
-
-	public function __construct($files = array())
+	private function __construct()
 	{
-		$this->configFileDir = ClassLoader::getRealPath('cache.registry') . '/';
-		foreach ($files as $file)
+		$filePath = $this->getFilePath();
+		if (file_exists($filePath))
 		{
-		  	$this->loadFile($file);
+			include $filePath;
+			$this->values = $config;
+		}		
+	}
+
+	public function getInstance()
+	{
+		static $instance;
+		
+		if (!$instance)
+		{
+			$instance = new Config();
 		}
+		
+		return $instance;
 	}
 
 	public function getValue($key)
 	{
+		if (!isset($this->values[$key]))
+		{
+		  	$this->updateSettings();
+		}
+		
 		if (isset($this->values[$key]))
 		{
 		  	return $this->values[$key];
 		}
+		else
+		{
+			throw new ApplicationException('Configuration value ' . $key . ' not found');
+		}
 	}
 
-	public function setValue($key, $value, $file = '')
+	public function setValue($key, $value)
 	{
-		if (!$file)
+		$this->values[$key] = $value;
+	}
+
+	/**
+	 *	Create initial settings cache file or update the cache file with new settings from INI files
+	 */
+	public function updateSettings()
+	{
+		$sections = $this->getAllSections();	
+		foreach ($sections as $section)
 		{
-		  	foreach ($this->fileValues as $configFile => $values)
-		  	{
-			    if (isset($values[$key]))
+			$s = $this->getSettingsBySection($section);
+			
+			foreach ($s as $key => $value)
+			{
+				if (!isset($this->values[$key]))
 				{
-				  	$file = $configFile;
-				  	break;
-				}
+					$this->values[$key] = $value['value'];
+				}	
 			}
 		}
-
-		if (!$file)
-		{
-		  	return false;
-		}
-
-		$this->values[$key] = $value;
-		$this->fileValues[$file][$key] = $value;
-		$this->changedFiles[$file] = true;
+		
+		$this->save();
 	}
 
 	public function save()
-	{
-		foreach ($this->changedFiles as $file => $isChanged)
-		{
-			$this->saveFile($file);
+	{		
+		$content = '<?php $config = ' . var_export($this->values, true) . '; ?>';
+	    $fullPath = $this->getFilePath();
+	    if (!is_dir(dirname($fullPath)))
+	    {
+			mkdir(dirname($fullPath), 0777, true);
 		}
+		file_put_contents($fullPath, $content);
 	}
 
 	public function getSection($sectionId)
@@ -147,44 +160,76 @@ class Config
 		return $res;
 	}
 
+	public function getSettingsBySection($sectionId)
+	{
+		$section = $this->getSection($sectionId);		
+		$store = Store::getInstance();
+
+		$values = array();
+		foreach ($section as $key => $value)
+		{
+			if ('-' == $value || '+' == $value)
+			{
+			  	$type = 'bool';
+			  	$value = 1 - ('-' == $value);		  	
+			}  
+			elseif (is_numeric($value))
+			{
+			  	$type = 'num';
+			}
+			elseif ('/' == substr($value, 0, 1) && '/' == substr($value, -1))
+			{
+			  	$vl = explode(', ', substr($value, 1, -1));
+			  	$type = array();
+			  	foreach ($vl as $v)
+			  	{
+					$type[$v] = $store->translate($v);	
+				}	
+				
+				$value = key($type);
+			}
+			else
+			{
+			  	$type = 'string';
+			}
+			
+			$values[$key] = array('type' => $type, 'value' => $value, 'title' => $key);
+		}		
+		
+		return $values;
+	}
+
+	private function getAllSections($branch = null)
+	{
+		if (!$branch)
+		{
+			$branch = $this->getTree();	
+		}
+		
+		$res = array();
+		
+		foreach ($branch as $key => $sub)
+		{
+			$res[] = $key;
+			if (is_array($sub) && isset($sub['subs']))		
+			{
+				$res = array_merge($res, $this->getAllSections($sub['subs']));	
+			}
+		}
+		
+		return $res;
+	}
+
 	private function getSectionFile($sectionId)
 	{
 		return ClassLoader::getRealPath('application.configuration.registry.' . $sectionId) . '.ini';
 	}
 
-  	private function loadFile($file)
-  	{
-		$filePath = $this->getFullPath($file);
-		if (file_exists($filePath))
-		{
-			include $filePath;
-			$this->values = array_merge($this->values, $config);
-			$this->fileValues[$file] = $config;
-		  	return true;
-		}
-		else
-		{
-		  	return false;
-		}
-	}
-
-  	private function saveFile($file)
-  	{
-	    $content = '<?php $config = ' . var_export($this->fileValues[$file], true) . '; ?>';
-	    $fullPath = $this->getFullPath($file);
-	    if (!is_dir(dirname($fullPath)))
-	    {
-		  	echo dirname($fullPath);
-			  mkdir(dirname($fullPath), 0777, true);
-		}
-		file_put_contents($this->getFullPath($file), $content);
-	    return true;
-	}
-
-	private function getFullPath($file)
+	private function getFilePath()
 	{
-	  	return $this->configFileDir . $file . '.php';
+	  	return ClassLoader::getRealPath('storage.configuration') . '/settings.php';
 	}
+	
 }
 
 ?>
