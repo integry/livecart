@@ -96,12 +96,13 @@ class ProductPrice extends ActiveRecordModel
 
 	public function reCalculatePrice()
 	{
-		$defaultCurrency = Store::getInstance()->getDefaultCurrency();
-		$basePrice = $this->product->get()->getPrice($defaultCurrency->getID(), Product::DO_NOT_RECALCULATE_PRICE);
+		$defaultCurrency = Store::getInstance()->getDefaultCurrencyCode();
+		$basePrice = $this->product->get()->getPrice($defaultCurrency, Product::DO_NOT_RECALCULATE_PRICE);
 		
-		if ($this->currency->get()->rate->get())
+		$rate = $this->currency->get()->rate->get();
+		if ($rate)
 		{
-			$price = $basePrice / $this->currency->get()->rate->get();
+			$price = $basePrice / $rate;
 		}
 		else
 		{
@@ -109,6 +110,27 @@ class ProductPrice extends ActiveRecordModel
 		}
 
 		return round($price, 2);
+	}
+	
+	public static function calculatePrice(Product $product, Currency $currency, $basePrice = null)
+	{
+		if (is_null($basePrice))
+		{
+			$defaultCurrency = Store::getInstance()->getDefaultCurrencyCode();
+			$basePrice = $product->getPrice($defaultCurrency, Product::DO_NOT_RECALCULATE_PRICE);			
+		}
+
+		$rate = $currency->rate->get();
+		if ($rate)
+		{
+			$price = $basePrice / $rate;
+		}
+		else
+		{
+			$price = 0;	
+		}
+
+		return round($price, 2);		
 	}
 }
 

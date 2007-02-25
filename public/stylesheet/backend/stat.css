@@ -1,9 +1,12 @@
 #stat {
+	position: absolute;
+	top: 0;
 	background-color: #000;
 	border: 2px solid #fff;
 	font-family: "Courier new";
+	z-index: 1000;
 }
-#stat li {
+#stat li, #stat td {
 	font-size: 12px;
 	color: #ccc;
 	padding-top: 2px;

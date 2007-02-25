@@ -1,3 +1,5 @@
+_livecart_settings=LiveCart Settings
+
 _save_conf=Settings successfuly saved
 
 ################ Individual settings #################
@@ -32,17 +34,17 @@ _p_thumb=Thumbnail
 _p_medium=Medium
 _p_large=Large
 
-IMG_P_SMALL_W=Width
-IMG_P_SMALL_H=Height
+IMG_P_SMALL_W=Width (pixels)
+IMG_P_SMALL_H=Height (pixels)
 IMG_P_SMALL_Q=Quality (0 - 100)
-IMG_P_THM_W=Width
-IMG_P_THM_H=Height
+IMG_P_THM_W=Width (pixels)
+IMG_P_THM_H=Height (pixels)
 IMG_P_THM_Q=Quality (0 - 100)
-IMG_P_MEDIUM_W=Width
-IMG_P_MEDIUM_H=Height
+IMG_P_MEDIUM_W=Width (pixels)
+IMG_P_MEDIUM_H=Height (pixels)
 IMG_P_MEDIUM_Q=Quality (0 - 100)
-IMG_P_LARGE_W=Width
-IMG_P_LARGE_H=Height
+IMG_P_LARGE_W=Width (pixels)
+IMG_P_LARGE_H=Height (pixels)
 IMG_P_LARGE_Q=Quality (0 - 100)
 
 _category_image=Category Image Sizes
@@ -51,17 +53,17 @@ _c_thumb=Thumbnail
 _c_medium=Medium
 _c_large=Large
 
-IMG_C_SMALL_W=Width
-IMG_C_SMALL_H=Height
+IMG_C_SMALL_W=Width (pixels)
+IMG_C_SMALL_H=Height (pixels)
 IMG_C_SMALL_Q=Quality (0 - 100)
-IMG_C_THM_W=Width
-IMG_C_THM_H=Height
+IMG_C_THM_W=Width (pixels)
+IMG_C_THM_H=Height (pixels)
 IMG_C_THM_Q=Quality (0 - 100)
-IMG_C_MEDIUM_W=Width
-IMG_C_MEDIUM_H=Height
+IMG_C_MEDIUM_W=Width (pixels)
+IMG_C_MEDIUM_H=Height (pixels)
 IMG_C_MEDIUM_Q=Quality (0 - 100)
-IMG_C_LARGE_W=Width
-IMG_C_LARGE_H=Height
+IMG_C_LARGE_W=Width (pixels)
+IMG_C_LARGE_H=Height (pixels)
 IMG_C_LARGE_Q=Quality (0 - 100)
 
 _inventory=Inventory

@@ -4,6 +4,11 @@
   	width: 200px;
 }
 
+#settingsContent
+{
+	margin-left: 240px;	
+}
+
 #settingsContent label.setting 
 {
 	display: block;

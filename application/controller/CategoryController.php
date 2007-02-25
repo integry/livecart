@@ -30,6 +30,7 @@ class CategoryController extends FrontendController
   
 	public function index()
 	{
+		$start = microtime(true);
 		$this->categoryID = $this->request->getValue('id');
 
 		if ($this->request->getValue('filters'))
@@ -79,7 +80,7 @@ class CategoryController extends FrontendController
 		$this->productFilter = $productFilter;
 
 		$products = $this->category->getProducts($productFilter)->toArray();
-		
+
 		$response = new ActionResponse();
 		$response->setValue('id', $this->categoryID);
 		$response->setValue('products', $products);

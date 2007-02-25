@@ -149,12 +149,6 @@ abstract class BaseController extends Controller implements LCiTranslator
 	{
 		return $this->locale->translator()->makeText($key, $params);
 	}
-
-	protected function setConfigValue($key, $value)
-	{
-	  	$file = $this->configFiles[0];
-	  	$this->config->setValue($key, $value, $file);
-	}
 	
 	/**
 	 * Gets a @role tag value in a class and method comments

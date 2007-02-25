@@ -67,12 +67,14 @@ class SettingsController extends StoreManagementController
 		}
 		else
 		{
+			$c->setAutoSave(false);
 			foreach ($values as $key => $value)
 			{
 				$c->setValue($key, $this->request->getValue($key));		
 			}  	
 			
 			$c->save();
+			$c->setAutoSave(true);
 			  
 			return new JSONResponse(array('success' => true));		  	
 		}

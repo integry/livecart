@@ -4,7 +4,7 @@
  * Top-level model class for Store related logic
  *
  * @package application.model.system
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  *
  */
 class Store
@@ -24,6 +24,13 @@ class Store
 	protected $localeName;
 
   	/**
+	 * Default (base) language code/ID (ex: lt, en, de)
+	 *
+	 * @var string
+	 */
+	protected $defaultLanguageID;
+
+  	/**
 	 * Configuration registry handler instance
 	 *
 	 * @var Config
@@ -39,6 +46,12 @@ class Store
 	private $currencies = null;
 
 	private $defaultCurrency = null;
+	
+	private $defaultCurrencyCode = null;
+
+	private $currencyArray;
+	
+	private $currencySet;
 	
 	const EXCLUDE_DEFAULT_CURRENCY = false;
 
@@ -131,16 +144,20 @@ class Store
 	 */
 	public function getDefaultLanguageCode()
 	{
-		$langList = $this->getLanguageList();
-		$langArray = array();
-		foreach ($langList as $lang)
+		if (!$this->defaultLanguageCode)
 		{
-			if ($lang->isDefault())
+			$langList = $this->getLanguageList();
+			$langArray = array();
+			foreach ($langList as $lang)
 			{
-				return $lang->getID();
-			}
+				if ($lang->isDefault())
+				{
+					$this->defaultLanguageCode = $lang->getID();
+				}
+			}			
 		}
-		return false;
+
+		return $this->defaultLanguageCode;
 	}
 	
 	/**
@@ -241,28 +258,36 @@ class Store
 	}
 
 	/**
+	 * Returns default currency code
+	 * @return String Default currency code/ID
+	 */
+	public function getDefaultCurrencyCode()
+	{
+		if (!$this->defaultCurrencyCode)
+		{
+		  	$this->defaultCurrencyCode = $this->getDefaultCurrency()->getID();
+		}
+
+		return $this->defaultCurrencyCode;
+	}
+	
+	/**
 	 * Returns array of enabled currency ID's (codes)
 	 * @param bool $includeDefaultCurrency Whether to include default currency in the list
 	 * @return array Enabled currency codes
 	 */
 	public function getCurrencyArray($includeDefaultCurrency = true)
 	{
-		if (!$this->defaultCurrency)
+		$defaultCurrency = $this->getDefaultCurrencyCode();
+		
+		$currArray = array_flip(array_keys($this->currencies));
+		
+		if (!$includeDefaultCurrency)
 		{
-		  	$this->loadCurrencyData();
+			unset($currArray[$defaultCurrency]);
 		}
-
-		$currArray = array();
-		$defCurrency = $this->getDefaultCurrency()->getID();
-		foreach ($this->currencies as $currency)
-		{
-			if ($defCurrency != $currency->getID() || $includeDefaultCurrency)
-			{
-				$currArray[] = $currency->getID();
-			}
-		}
-
-		return $currArray;
+		
+		return array_flip($currArray);
 	}
 
 	/**
@@ -272,19 +297,13 @@ class Store
 	 */
 	public function getCurrencySet($includeDefaultCurrency = true)
 	{
-		if (!$this->defaultCurrency)
-		{
-		  	$this->loadCurrencyData();
-		}
+		$defaultCurrency = $this->getDefaultCurrencyCode();
+		
+		$currArray = $this->currencies;
 
-		$currArray = array();
-		$defCurrency = $this->getDefaultCurrency()->getID();
-		foreach ($this->currencies as $currency)
+		if (!$includeDefaultCurrency)
 		{
-			if ($defCurrency != $currency->getID() || $includeDefaultCurrency)
-			{
-				$currArray[] = $currency;
-			}
+			unset($currArray[$defaultCurrency]);
 		}
 
 		return $currArray;
@@ -300,13 +319,17 @@ class Store
 	  	$filter = new ArSelectFilter();
 	  	$filter->setCondition(new EqualsCond(new ArFieldHandle('Currency', 'isEnabled'), 1));
 	  	$filter->setOrder(new ArFieldHandle('Currency', 'position'), 'ASC');
-	  	$this->currencies = ActiveRecord::getRecordSet('Currency', $filter);
-	  	foreach ($this->currencies as $currency)
+	  	$currencies = ActiveRecord::getRecordSet('Currency', $filter);
+	  	
+	  	$this->currencies = array();
+	  	foreach ($currencies as $currency)
 	  	{
 		    if ($currency->isDefault())
 		    {
 			  	$this->defaultCurrency = $currency;
 			}
+		
+			$this->currencies[$currency->getID()] = $currency;
 		}
 	}
 
@@ -351,7 +374,7 @@ class Store
 	private function loadConfig()
 	{
 	  	ClassLoader::import("application.model.system.Config");
-		$this->config = new Config($this->configFiles);
+		$this->config = Config::getInstance();
 		return $this->config;
 	}
 

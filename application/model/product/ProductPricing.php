@@ -89,25 +89,26 @@ class ProductPricing
 	
 	public function toArray()
 	{
-
 		$defined = array();		
 		foreach ($this->prices as $inst)
 		{
 			$defined[$inst->currency->get()->getID()] = $inst->price->get();
 		}
-
+		
+		$baseCurrency = Store::getInstance()->getDefaultCurrencyCode();				
+		$basePrice = isset($defined[$baseCurrency]) ? $defined[$baseCurrency] : 0;
+		
 		$calculated = array();
 
-		foreach (Store::getInstance()->getCurrencySet() as $currency)
+		foreach (Store::getInstance()->getCurrencySet() as $id => $currency)
 		{
-		  	if (!empty($defined[$currency->getID()]))
+			if (!empty($defined[$id]))
 		  	{
-			    $calculated[$currency->getID()] = $defined[$currency->getID()];
+			    $calculated[$id] = $defined[$id];
 			}
 			else
 			{
-			    $price = ProductPrice::getNewInstance($this->product, $currency);
-			    $calculated[$currency->getID()] = $price->reCalculatePrice();
+			    $calculated[$id] = ProductPrice::calculatePrice($this->product, $currency, $basePrice);
 			}
 		}
 	

@@ -11,6 +11,8 @@ class Config
 	 *  Configuration value array (key => value)
 	 */
 	private $values = array();
+	
+	private $autoSave = true;
 
 	private function __construct()
 	{
@@ -54,6 +56,11 @@ class Config
 	public function setValue($key, $value)
 	{
 		$this->values[$key] = $value;
+		
+		if ($this->autoSave)
+		{
+			$this->save();
+		}
 	}
 
 	/**
@@ -61,6 +68,9 @@ class Config
 	 */
 	public function updateSettings()
 	{
+		$autoSave = $this->autoSave;
+		$this->setAutoSave(false);
+		
 		$sections = $this->getAllSections();	
 		foreach ($sections as $section)
 		{
@@ -76,6 +86,7 @@ class Config
 		}
 		
 		$this->save();
+		$this->setAutoSave($autoSave);
 	}
 
 	public function save()
@@ -197,6 +208,11 @@ class Config
 		}		
 		
 		return $values;
+	}
+
+	public function setAutoSave($autoSave = true)
+	{
+		$this->autoSave = ($autoSave == true);
 	}
 
 	private function getAllSections($branch = null)
