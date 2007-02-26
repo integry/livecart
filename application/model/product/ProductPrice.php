@@ -20,13 +20,19 @@ class ProductPrice extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryForeignKeyField("currencyID", "Currency", "ID", null, ARChar::instance(3)));
 		$schema->registerField(new ARField("price", ARFloat::instance(16)));
 	}
-	
+
 	public static function getNewInstance(Product $product, Currency $currency)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->product->set($product);
-		$instance->currency->set($currency);	
-		
+		$instance->currency->set($currency);
+		try
+		{
+			$instance->load();
+			$instance->resetModifiedStatus();
+		}
+		catch(Exception $e) {}
+
 		return $instance;
 	}
 
@@ -42,12 +48,12 @@ class ProductPrice extends ActiveRecordModel
 	{
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
-	
+
 	/**
 	 * Get record set of product prices
 	 *
 	 * @param Product $product
-	 * 
+	 *
 	 * @return ARSet
 	 */
 	public static function getProductPricesSet(Product $product)
@@ -55,24 +61,24 @@ class ProductPrice extends ActiveRecordModel
 	    $filter = self::getProductPricesFilter($product);
 	    return self::getRecordSet($filter);
 	}
-	
+
 	/**
 	 * Get product prices filter
 	 *
 	 * @param Product $product
-	 * 
+	 *
 	 * @return ARSelectFilter
 	 */
 	private static function getProductPricesFilter(Product $product)
 	{
 	    ClassLoader::import("application.model.Currency");
-	    
+
 	    $filter = new ARSelectFilter();
 	    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
-	    
+
 	    return $filter;
 	}
-	
+
 	public static function getInstance(Product $product, Currency $currency)
 	{
 		$filter = new ARSelectFilter();
@@ -81,7 +87,7 @@ class ProductPrice extends ActiveRecordModel
 		$filter->setCondition($cond);
 
 		$set = parent::getRecordSet('ProductPrice', $filter);
-		
+
 		if ($set->size() > 0)
 		{
 		  	$instance = $set->get(0);
@@ -90,34 +96,33 @@ class ProductPrice extends ActiveRecordModel
 		{
 		  	$instance = self::getNewInstance($product, $currency);
 		}
-			
+
 		return $instance;
 	}
 
 	public function reCalculatePrice()
 	{
-		$defaultCurrency = Store::getInstance()->getDefaultCurrencyCode();
-		$basePrice = $this->product->get()->getPrice($defaultCurrency, Product::DO_NOT_RECALCULATE_PRICE);
-		
-		$rate = $this->currency->get()->rate->get();
-		if ($rate)
+		$defaultCurrency = Store::getInstance()->getDefaultCurrency();
+		$basePrice = $this->product->get()->getPrice($defaultCurrency->getID(), Product::DO_NOT_RECALCULATE_PRICE);
+
+		if ($this->currency->get()->rate->get())
 		{
-			$price = $basePrice / $rate;
+			$price = $basePrice / $this->currency->get()->rate->get();
 		}
 		else
 		{
-			$price = 0;	
+			$price = 0;
 		}
 
 		return round($price, 2);
 	}
-	
+
 	public static function calculatePrice(Product $product, Currency $currency, $basePrice = null)
 	{
 		if (is_null($basePrice))
 		{
 			$defaultCurrency = Store::getInstance()->getDefaultCurrencyCode();
-			$basePrice = $product->getPrice($defaultCurrency, Product::DO_NOT_RECALCULATE_PRICE);			
+			$basePrice = $product->getPrice($defaultCurrency, Product::DO_NOT_RECALCULATE_PRICE);
 		}
 
 		$rate = $currency->rate->get();
@@ -127,10 +132,10 @@ class ProductPrice extends ActiveRecordModel
 		}
 		else
 		{
-			$price = 0;	
+			$price = 0;
 		}
 
-		return round($price, 2);		
+		return round($price, 2);
 	}
 }
 

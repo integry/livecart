@@ -47,7 +47,7 @@ Form.State = {
      * @access private
      * @static
      */
-    counter: 0,
+    counter: 1,
 
     /**
      * Get new ID for the form
@@ -180,6 +180,7 @@ Form.State = {
     {
         if(json) this.backupFromJson(form, json);
 
+console.info(this.hasBackup(form));
         if(!this.hasBackup(form)) return;
         self = this;
 
@@ -190,16 +191,16 @@ Form.State = {
             $A(Form.getElements(form)).each(function(element)
             {
                 if(element.name == '' || !self.backups[form.backupId][element.name]) return;
-    
+
                 occurencies[element.name] = (occurencies[element.name] == undefined) ? 0 : occurencies[element.name] + 1;
-    
+
                 var value = self.backups[form.backupId][element.name][occurencies[element.name]];
-    
+
                 if(value)
                 {
                     element.value = value.value;
                     element.checked = value.checked;
-    
+
                     if(element.options && value.options)
                     {
                         element.options.length = 0;
@@ -207,7 +208,7 @@ Form.State = {
                             element.options[element.options.length] = new Option(option.value, option.key);
                         });
                     }
-    
+
                     element.selectedIndex = value.selectedIndex;
                 }
             });
