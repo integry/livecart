@@ -320,11 +320,11 @@ class Store
 	  	$filter->setCondition(new EqualsCond(new ArFieldHandle('Currency', 'isEnabled'), 1));
 	  	$filter->setOrder(new ArFieldHandle('Currency', 'position'), 'ASC');
 	  	$currencies = ActiveRecord::getRecordSet('Currency', $filter);
-	  	
+//	  	echo '<font color=green>'; print_r($currencies->toarray()); echo '</font>';
 	  	$this->currencies = array();
 	  	foreach ($currencies as $currency)
 	  	{
-		    if ($currency->isDefault())
+			if ($currency->isDefault())
 		    {
 			  	$this->defaultCurrency = $currency;
 			}

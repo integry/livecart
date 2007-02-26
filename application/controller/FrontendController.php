@@ -49,6 +49,8 @@ abstract class FrontendController extends BaseController
 		$topCategories = $rootCategory->getSubcategorySet()->toArray();
 		$currentCategory = Category::getInstanceByID($this->categoryID, true);		
 		
+		print_r($currentCategory->category);
+		
 		// get path of the current category (except for top categories)
 		if (1 < $currentCategory->category->get()->getID())
 		{
