@@ -1,1 +1,1 @@
-<?php $GLOBALS['dsn'] = 'mysql://root@localhost/livecart_dev'; ?>
+<?php $GLOBALS['dsn'] = 'mysql://root@192.168.1.6/livecart_dev'; ?>
