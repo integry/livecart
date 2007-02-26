@@ -39,8 +39,8 @@
 <h3>Attribute Types</h3>
 
 <p>LC provides a custom based attribute management system which allows you to create and manage attributes in relatively simple manner.
-LiveCart supports various product attribute types which can be text, number or date. Using these base types you can create variuos types of attributes.
-Below you'll find a couple of practical examples on how to choose which attribute type would suit best for describing a particular product property.
+LiveCart supports three base product attribute types which can be <strong>text, number</strong> or <strong>date</strong>. Using these base types you 
+can create variuos types of attributes. Below you'll find a couple of practical examples on how to choose which attribute type would suit best for describing a particular product property.
 </p>
 
 <h3 id="create">Create Attribute</h3>
@@ -49,11 +49,6 @@ Below you'll find a couple of practical examples on how to choose which attribut
 	Because attributes are automatically included in  the <i>Add New Product</i> form, we will demonstrate in our examples how attributes are generated and placed in the product form. 
 	Suppose you have a category stocked with cell phones and you want to create custom fields for specifying the following properties:
 	<a href="{self}#carrier">Carrier</a>, <a href="{self}#features">Phone Features</a> and <a href="{self}#capacity">Batery Capacity</a>.
-</p>
-<p class="note">
-	<strong>Notice</strong> that the order of attributes in the <i>Add New Product</i> form is determined by the <a href="{self}#sort">arrangement</a> of attribute groups as 
-	well as separate attributes.
-</p>
 
 <h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
 <p>To start creating  an attribute follow these steps:</p>
@@ -62,7 +57,7 @@ Below you'll find a couple of practical examples on how to choose which attribut
 		apply to your chosen category and all of its subcategories.</li>
 		<img src="image/doc/categories/attributes/attributes_tab.bmp">
 		<li>In the attributes section click <strong>Add new attributes</strong>:</li>
-		<img src="image/doc/categories/attributes/add_new_attribute_reference.bmp">
+		<!-- <img src="image/doc/categories/attributes/add_new_attribute_reference.bmp">-->
 		<li>Because mobile carrier is a simple text and there is (probably) a finite number of carriers click on the type drop-down menu and 
 		select <i>Text selector</i> type from the list. Your chosen type is suitable for creating a predefined list of values which will be 
 		displayed as a selection option.</li>
@@ -110,7 +105,7 @@ The last thing to do is to create Values which will be used as a selection optio
 attribute's type to <strong>Number Selector</strong> and make all the necessary changes respectively.</p>
 
 <h4 id="features">Creating <i>Phone Features</i> attribute</h4>
-
+<ins>( refer to previuos example...? )</ins><br \><br \>
 <p>
 	Cell phones usually have a great variety of features therefore it would more convenient to create a list of features than re-enter them
 	every time. To create an attribute for features, the following parameters have to be set:
@@ -144,7 +139,7 @@ attribute's type to <strong>Number Selector</strong> and make all the necessary 
 	<img src="image/doc/categories/attributes/features.bmp">
 
 <p class="note"><strong>Note</strong>: to create a corresponding attribute for a numeric selection choose <strong>Number Selector</strong> type followed
-by necessary changes. <ins>Numeric selection will look similar to this:</ins>
+by necessary changes. A numeric attribute will look similar to this:
 <img src="image/doc/categories/attributes/bandwidth_generated.bmp">
 
 </p>
@@ -222,7 +217,9 @@ and save changes afterwards. For detailed description of fields, refer to <a hre
 
 <p>(In LC sorting of attributes is implemented via drag&drop feature). To change the order of attributes (or attribute groups), click on attributes 
 empty space and then drag it up or down.</p>
-
+<p class="note"> <strong>Notice</strong> that the order of attributes in the <i>Add New Product</i> form is determined by the arrangement
+of attribute groups as well as separate attributes.
+</p>
 {helpSeeAlso}
 	{see cat.details}
 	{see cat.filters}
