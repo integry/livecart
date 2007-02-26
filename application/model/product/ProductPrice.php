@@ -57,9 +57,11 @@ class ProductPrice extends ActiveRecordModel
 	 * @return ARSet
 	 */
 	public static function getProductPricesSet(Product $product)
-	{
-	    $filter = self::getProductPricesFilter($product);
-	    return self::getRecordSet($filter);
+	{	    
+		// preload currency data (otherwise prices would have to be loaded with referenced records)
+		Store::getInstance()->getCurrencySet();
+		
+		return self::getRecordSet(self::getProductPricesFilter($product));
 	}
 
 	/**

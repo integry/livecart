@@ -14,7 +14,9 @@ class ProductPriceController extends StoreManagementController
 {
 	public function index()
 	{
+
 	    $product = Product::getInstanceByID($this->request->getValue('id'), ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
+
 	    $pricingForm = $this->buildPricingForm($product);
 
 	    $response = new ActionResponse();

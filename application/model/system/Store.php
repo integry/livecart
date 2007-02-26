@@ -383,10 +383,12 @@ class Store
 		switch ($name)
 	  	{
 		    case 'locale':
+		    	ClassLoader::import('library.locale.Locale');
 		    	return $this->loadLocale();
 		    break;
 
 		    case 'localeName':
+		    	ClassLoader::import('library.locale.Locale');
 		    	return $this->loadLocaleName();
 		    break;
 

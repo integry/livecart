@@ -64,7 +64,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("shippingSurchargeAmount", ARFloat::instance(8)));
 		$schema->registerField(new ArField("isSeparateShipment", ARBool::instance()));
 		$schema->registerField(new ArField("isFreeShipping", ARBool::instance()));
-		$schema->registerField(new ArField("isBackOrderable", ARBool::instance()));
+//		$schema->registerField(new ArField("isBackOrderable", ARBool::instance()));
 
 		$schema->registerField(new ArField("shippingWeight", ARFloat::instance(8)));
 
