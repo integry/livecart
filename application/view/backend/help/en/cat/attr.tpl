@@ -16,7 +16,7 @@
 	(for instance, for size, capacity, price and so on) which will allow users to customize their search in the most effective way. Note that actual
 	filtering options are set in the <a href="{help cat.filter}">Filters</a> section where you use category's attributes to create filters.</p>
 <p class="note">
-	<strong>Note:</strong> Attributes have to be set up for each category individually. You can however set higher level (global) attributes to 
+	<strong>Note:</strong> Attributes have to be set up for each category individually. You can however set higher level (global) attributes for
 	higher level categories when necessary. For example, if the Computers category has two subcategories for Laptops and Desktops, you can define
 	the common attributes like processor type, speed, memory, etc. for the Computers category and Laptop/Desktop specific attributes (for example,
 	battery life) to the respective categories. You can also define truly global attributes, which will be available for all categories by defining
@@ -38,27 +38,31 @@
 
 <h3>Attribute Types</h3>
 
-<p>LiveCart supports various product attribute types which can be text, number or date. Together with a few default attributes LC provides a custom 
-based attribute management system where you can define your own attributes and crate product's specifications.</p>
-<p>Below you'll find a couple of practical examples on how to choose which attribute type would suit best for describing a particular product property.</p>
+<p>LC provides a custom based attribute management system which allows you to create and manage attributes in relatively simple manner.
+LiveCart supports various product attribute types which can be text, number or date. Using these base types you can create variuos types of attributes.
+Below you'll find a couple of practical examples on how to choose which attribute type would suit best for describing a particular product property.
+</p>
 
 <h3 id="create">Create Attribute</h3>
 <p>
-	To create an attribute you have to fill out a short form. Later we will show how attributes are actually implemented in the <i>Filters</i> 
-	section. What is more, attributes are automatically included in the <i>Add New Product</i> form. Therefore in these example we will demonstrate
-	how attributes are generated and placed in the product form.
-	Notice that the order of attributes in the <i>Add New Product</i> form is determined by the <a href="{self}#sort">arrangement</a> of attribute
-	groups as well as separate attributes.
-
-</p>
-<p>
-	Suppose you have a category stocked with cell phones and you want to create custom fields for defining/specifying the following properties:
+	To create an attribute you have to define attributes type, name and its values if necessary. 
+	Because attributes are automatically included in  the <i>Add New Product</i> form, we will demonstrate in our examples how attributes are generated and placed in the product form. 
+	Suppose you have a category stocked with cell phones and you want to create custom fields for specifying the following properties:
 	<a href="{self}#carrier">Carrier</a>, <a href="{self}#features">Phone Features</a> and <a href="{self}#capacity">Batery Capacity</a>.
+</p>
+<p class="note">
+	<strong>Notice</strong> that the order of attributes in the <i>Add New Product</i> form is determined by the <a href="{self}#sort">arrangement</a> of attribute groups as 
+	well as separate attributes.
 </p>
 
 <h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
-	<ul>
-
+<p>To start creating  an attribute follow these steps:</p>
+	<ul>	
+		<li>Select a category in the category tree and click <strong>Attributes</strong> tab. Notice that created attribute will
+		apply to your chosen category and all of its subcategories.</li>
+		<img src="image/doc/categories/attributes/attributes_tab.bmp">
+		<li>In the attributes section click <strong>Add new attributes</strong>:</li>
+		<img src="image/doc/categories/attributes/add_new_attribute_reference.bmp">
 		<li>Because mobile carrier is a simple text and there is (probably) a finite number of carriers click on the type drop-down menu and 
 		select <i>Text selector</i> type from the list. Your chosen type is suitable for creating a predefined list of values which will be 
 		displayed as a selection option.</li>
@@ -102,8 +106,8 @@ The last thing to do is to create Values which will be used as a selection optio
 	<img src="image/doc/categories/attributes/carrier.bmp">
 	</ul>
 
-<p class="note"><strong>Note</strong>: you might as well create an attribute for number selector type using these instructions. Make sure to change 
-attribute's type to <strong>Number Selector</strong> first.</p>
+<p class="note"><strong>Note</strong>: you can also create a similar attribute for number selector type using these instructions. To do that, set
+attribute's type to <strong>Number Selector</strong> and make all the necessary changes respectively.</p>
 
 <h4 id="features">Creating <i>Phone Features</i> attribute</h4>
 
