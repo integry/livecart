@@ -77,18 +77,13 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 			$fieldValue = $valueContainer->get();
 			if ($field instanceof ARForeignKey)
 			{			
-//				if ($recursive)
-
-				//$data[$field->getForeignClassName()] = $valueContainer->get()->toArray(true);
-				/* @todo: why/how would $fieldValue could ever not be an object? */
-
-				if (!is_object($fieldValue))
+				if (is_object($fieldValue))
 				{
-				  	$data[$field->getForeignClassName()] = false;
+				  	$data[$field->getForeignClassName()] = $fieldValue->toArray();					  				  
 				}
 				else
 				{
-					$data[$field->getForeignClassName()] = $fieldValue->toArray();					  
+					$data[$field->getForeignClassName()] = $fieldValue;	
 				}
 			}
 			else
@@ -115,7 +110,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 				}
 				else
 				{
-					$data[$fieldName] = $valueContainer->get();
+					$data[$fieldName] = $fieldValue;
 				}
 			}
 		} 
