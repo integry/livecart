@@ -80,7 +80,12 @@ class CategoryController extends FrontendController
 
 		$this->productFilter = $productFilter;
 
-		$products = $this->category->getProducts($productFilter)->toArray();
+		$products = $this->category->getProducts($productFilter, true)->toArray();
+
+//		$products = $this->category->getProductsArray($productFilter, ActiveRecord::LOAD_REFERENCES);
+
+//$arr = $this->category->getProductsArray($productFilter, true);
+//print_r($arr);
 
 		$response = new ActionResponse();
 		$response->setValue('id', $this->categoryID);

@@ -49,13 +49,10 @@ abstract class FrontendController extends BaseController
 		$topCategories = $rootCategory->getSubcategorySet()->toArray();
 		$currentCategory = Category::getInstanceByID($this->categoryID, true);		
 		
-		print_r($currentCategory->category);
-		
 		// get path of the current category (except for top categories)
-		if (1 < $currentCategory->category->get()->getID())
+		if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->category->get()->getID()))
 		{
 			$path = $currentCategory->getPathNodeSet(false)->toArray();
-//			$path[] = $currentCategory->toArray();
 
 			$topCategoryId = $path[0]['ID'];
 			unset($path[0]);
@@ -74,12 +71,10 @@ abstract class FrontendController extends BaseController
 		}		  
 
 		// get sibling (same-level) categories (except for top categories)
-		if ($currentCategory->category->get()->getID() > 1)
+		if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->category->get()->getID()))
 		{
 			$siblings = $currentCategory->getSiblingSet()->toArray();
-	
-
-	
+		
 			foreach ($path as &$node)
 			{
 			  	if ($node['ID'] != $this->categoryID)

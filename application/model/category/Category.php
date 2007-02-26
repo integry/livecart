@@ -33,7 +33,17 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$schema->registerField(new ARField("totalProductCount", ARInteger::instance()));
 	}
 
-	public function getProducts(ProductFilter $productFilter)
+	public function getProducts(ProductFilter $productFilter, $loadReferencedRecords = false)
+	{
+		return ActiveRecordModel::getRecordSet('Product', $this->getProductsFilter($productFilter), $loadReferencedRecords);
+	}
+	
+	public function getProductsArray(ProductFilter $productFilter, $loadReferencedRecords = false)
+	{
+		return ActiveRecordModel::getRecordSetArray('Product', $this->getProductsFilter($productFilter), $loadReferencedRecords);
+	}
+	
+	protected function getProductsFilter(ProductFilter $productFilter)
 	{
 		$filter = $productFilter->getSelectFilter();
 
@@ -45,7 +55,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		}
 		$filter->setCondition($cond);
 		
-		return ActiveRecordModel::getRecordSet('Product', $filter);
+		return $filter;
 	}
 	
 	public function testGetProductArray(ARSelectFilter $filter, $loadSpecification = false)
