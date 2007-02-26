@@ -52,12 +52,13 @@ class CategoryController extends FrontendController
 			$f = new ARSelectFilter();
 			$c = new INCond(new ARFieldHandle('Filter', 'ID'), $filterIds);
 			$f->setCondition($c);
-			$this->filters = ActiveRecordModel::getRecordSet('Filter', $f, Filter::LOAD_REFERENCES);
+			$this->filters = ActiveRecordModel::getRecordSet('Filter', $f, ActiveRecord::LOAD_REFERENCES);
 			
 			// get specField ID's and load specField data
 			$fields = array();
 			foreach ($this->filters as $filter)
 			{
+//				print_r($filter->filterGroup->get()->specField);
 				$fields[] = $filter->filterGroup->get()->specField->get()->getID();
 			}
 
