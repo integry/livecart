@@ -1,7 +1,6 @@
 <?php
 ClassLoader::import("application.model.system.ActiveTreeNode");
-ClassLoader::import("application.model.system.MultilingualObjectInterface");
-
+ClassLoader::import("application.model.system.MultilingualObject");
 
 /**
  * Hierarchial product category model class
@@ -99,51 +98,29 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 	public function getProductFilter(ARSelectFilter $filter)
 	{
+/*
 		// load product specification
 		$specFields = $this->getSpecificationFieldSet(self::INCLUDE_PARENT);	  
 					
 //		$filter->joinTable('ProductPrice', 'Product', 'productID AND pricetable_EUR.currencyID = "EUR"', 'ID', 'pricetable_EUR');				  	
 //	  	$filter->addField('price', 'pricetable_EUR', 'price_EUR');
-
+*/
 		return $filter;
 	}
 
 	public function setValueByLang($fieldName, $langCode, $value)
 	{
-		$valueArray = $this->getFieldValue($fieldName);
-		if (!is_array($valueArray)) {
-			$valueArray = array();
-		}
-		$valueArray[$langCode] = $value;
-		$this->setFieldValue($fieldName, $valueArray);
+		return MultiLingualObject::setValueByLang($fieldName, $langCode, $value);
 	}
 
 	public function getValueByLang($fieldName, $langCode, $returnDefaultIfEmpty = true)
 	{
-		$valueArray = $this->getFieldValue($fieldName);
-		return $valueArray[$langCode];
+		return MultiLingualObject::getValueByLang($fieldName, $langCode, $returnDefaultIfEmpty);
 	}
 
 	public function setValueArrayByLang($fieldNameArray, $defaultLangCode, $langCodeArray, Request $request)
 	{
-		foreach ($fieldNameArray as $fieldName)
-		{
-			foreach ($langCodeArray as $langCode)
-			{
-				if ($langCode == $defaultLangCode)
-				{
-					$requestVarName = $fieldName;
-				}
-				else
-				{
-					$requestVarName = $fieldName . "_" . $langCode;
-				}
-				if ($request->isValueSet($requestVarName))
-				{
-					$this->setValueByLang($fieldName, $langCode, $request->getValue($requestVarName));
-				}
-			}
-		}
+		return MultiLingualObject::setValueArrayByLang($fieldNameArray, $defaultLangCode, $langCodeArray, $request);
 	}
 
 	/**

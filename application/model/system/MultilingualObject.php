@@ -21,7 +21,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 		if (!is_array($valueArray)) {
 			$valueArray = array();
 		}
-		$valueArray[$langCode] = $value;
+		$valueArray[$langCode] = trim($value);
 		$this->setFieldValue($fieldName, $valueArray);
 	}
 
