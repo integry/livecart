@@ -22,10 +22,9 @@ have to offer (some may search for products by particular technical details and 
 </fieldset>
 </div>
 
-<h3 id="create">Create Filters</h3>
-<p>To create filters you have to define attributes first. Go to the <a href="{help /cat.attr}">Attributes</a> section to create attributes. 
-You can create four types of filters (which correspond to attributes types): 
-
+<h3 id="type">Filter Types</h3>
+<p>
+You can create four types of filters (which correspond to attributes types): </p>
 <ul>
 	<li>Number type which can be either a <i>field</i> or a <i>selector</i></li>
 	<li>Text type can be only <i>selector</i></li>
@@ -35,56 +34,48 @@ You can create four types of filters (which correspond to attributes types):
 to define a range for filter's values.</p>
 </p>
 
-<h4>About filters</h4>
-
-<ul>
-	<li>Each filter has two main parameters: </li>
-	<ul>
-		<li>Name - the name of the filter</li>
-		and<br \><br \>
-		<li>Associated attribute - attribute that will be used to create filter.</li>
-	</ul>
-	<li>In the <strong>Filters</strong> section you can generate filters automatically or add them manually.</li>
-	<ul>
-		<li>To generate filters based on the existing attribute's values, simply click <strong>Generate Filters</strong>. If your attribute
-		has five values of let's say "colors", then after generating filters you will have five filters for each color.</li>
-		<li>To set filters manually:</li>
-		<ul>
-			<li>Name - enter the actual name of the filter</li>
-			<li>Handle - set handle which is used to represent filter's <a href="">URL</a></li>
-			<li>Value - select or set value of the filter. Values might be different depending on the attribute's type therefore
-			we will discuss all of them later in the examples below.</li>
-		</ul>
-	</ul>
-</ul>
-
+<h3 id="create">Create Filter</h3>
 <p>We will guide you through several tutorials and show how to generate filters for your existing attributes. As in examples with 
 <a href="{help /cat.attr}">attributes</a> in the previuos section we will use cell phones for illustrating <a href="{self}#carrier">Carrier</a>, 
-<a href="{self}#features">Features</a>, <a href="{self}#capacity">Battery Capacity</a> and (new / one additional) <a href="{self}#date">Date</a> filter.</p>
+<ins>Features</ins>, <a href="{self}#capacity">Battery Capacity</a> and (new / one additional) <a href="{self}#date">Date</a> filter.</p>
 
 <h4 id="carrier">Creating <i>Carrier</i> filter</h4>
-<h5>Main</h5>
 <ul>
-	<li>To create a filter you have to associate it with an attribute first. Click <strong>Associate attribute</strong> and select carrier attribute 
+	<li>To create filters, select a category from the category tree and click <strong>Filters</strong> tab. </li>
+	<img src="image/doc/categories/filters/filters_tab.bmp">
+	<p>If you see a message "This category has no non-text attributes", go to the <a href="{help /cat.attr}">Attributes </a> section to create 
+	attributes first.</p>
+	<li>On the Filters page, once you have at least one <ins>(type?)</ins> attribute click <strong>Add new filter</strong>.</li>
+	<img src="image/doc/categories/filters/add_new_filter.bmp">
+	<p>Add new filter form appears. </p>
+
+	<li>In the <strong>Main</strong> section you have to associate filter with an attribute first. Click <strong>Associate attribute</strong> and select carrier attribute 
 	from the list.</li>
 	<img src="image/doc/categories/filters/main.bmp">
 	<li>The <strong>name</strong> of the filter appears automatically so you can leave it as it is.</li>
 	<li>Also you can enter filter's name in <strong>other languages</strong> supported by your system. Click on the language to supply Filter's name.</li>
-</ul>
-
-<h5>Filters</h5>
-<ul>
-	<li>To create carrier filters you can generate them automatically or add one by one. To generate filters click "Generate filters".</li>
+	
+	<li>To create carrier filters click <strong>Filters</strong> next to the Main tab. </li>
+	<li>In the Filters section you can generate filters automatically or add them one by one. To generate filters click <strong>Generate filters</strong>.</li>
 	<img src="image/doc/categories/filters/filters_.bmp">
 	<li>Generated filters appear below representing each attribute's value</li>
 	<img src="image/doc/categories/filters/filters_generated.bmp">
-	<li>When you are done, click <strong>Save</strong> to hide the filter</li>
+	<li>If any of the generated filters doesn't seem to be correct you can <strong>edit</strong> each of them individually. There are three filter's parameters: </li>
+	<ul>
+		<li>Name - the name of the filter which will be seen in the frontend</li>
+		<li>Handle - handle is used to for filter's  <a href="">URL</a></li>
+		<li>Value - the value of the attribute which is used as a filtering criterion.</li>
+	</ul>
+	<li>In addition, you can <strong>rearrange</strong> filters to set the order in which filters should be displayed. To do that simply move
+	mouse cursos over existing filter, once "move" icon appears click and hold your mouse button, now you can move your filter up and down to 
+	set the appropriate arrangement.</li>
+	<img src="image/doc/categories/filters/rearrange.bmp">
+	<li>When you are done, click <strong>Save</strong>.</li>
 	<img src="image/doc/categories/filters/filters_save.bmp">
-	<p class="note"><strong>Note:</strong> How to create filters <strong>manually</strong> will be discussed in the next example.</p>
-
+	<p>(<strong>Note:</strong> How to create filters <strong>manually</strong> will be discussed in the next example).</p>
 </ul>
 
-<h4 id="features">Creating <i>Features</i> filter</h4>
+<h4 id="capacity">Creating <i>Battery Capacity</i> filter</h4>
 
 {helpSeeAlso}
 	{see cat.details}

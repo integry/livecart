@@ -106,12 +106,13 @@ The last thing to do is to create Values which will be used as a selection optio
 attribute's type to <strong>Number Selector</strong> and make all the necessary changes respectively.</p>
 
 <h4 id="features">Creating <i>Phone Features</i> attribute</h4>
-<ins>( refer to previuos example...? )</ins><br \><br \>
 <p>
 	Cell phones usually have a great variety of features therefore it would more convenient to create a list of features than re-enter them
-	every time. To create an attribute of features, the following parameters have to be set:
+	every time. To create an attribute of features, open <strong>Add new attribute form</strong> <a href="{self}#carrier"><small>(remind me how)
+	</small></a> 
 </p>
 	<img src="image/doc/categories/attributes/multi.bmp">
+	<p>In the form the following parameters have to be set:</p>
 
 	<ul>
 		<li>Type - expand type list and choose Text -> Options as your type </li>
@@ -154,7 +155,7 @@ by necessary changes. A numeric attribute looks similar to this one:
 </p>
 
 <ul>
-	<li>Open <strong>Add new attribute form</strong> <a href="{self}#create">(remind me how)</a></li>
+	<li>Open <strong>Add new attribute form</strong> <a href="{self}#carrier"><small>(remind me how)</small></a></li>
 	<li>Type - select Nember Field.</li>
 	<li>Required - click the checkbox to make the field required attribute</li>
 	<img src="image/doc/categories/attributes/required.bmp">
