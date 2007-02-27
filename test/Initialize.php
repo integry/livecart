@@ -12,15 +12,19 @@ if (!defined('TEST_INITIALIZED'))
 	require_once('framework/ClassLoader.php');
 
 	// set unittest and simpletest library root directory
-	$libDir = dirname(dirname(__FILE__)) . '/library/';
-	echo $libDir;
+	$libDir = dirname(__FILE__) . '/library/';
+
 	ClassLoader::mountPath('simpletest', realpath($libDir . 'simpletest/'));
 	ClassLoader::mountPath('unittest', realpath($libDir . 'unittest') . '/');
 	ClassLoader::mountPath('testdir', dirname(__FILE__).'/');
 	
-	ClassLoader::mountPath('framework', dirname(dirname(dirname(__file__))).'/framework/');
-	ClassLoader::mountPath('application', dirname(dirname(dirname(__file__))).'/application/');
-	ClassLoader::mountPath('library', dirname(dirname(dirname(__file__))).'/library/');
+	ClassLoader::mountPath('framework', dirname(dirname(__file__)).'/framework/');
+	ClassLoader::mountPath('application', dirname(dirname(__file__)).'/application/');
+	ClassLoader::mountPath('library', dirname(dirname(__file__)).'/library/');
+	ClassLoader::mountPath('storage', dirname(dirname(__file__)).'/storage/');
+	ClassLoader::mountPath('cache', dirname(dirname(__file__)).'/cache/');
+		
+	ClassLoader::import("library.*");
 	ClassLoader::import("framework.*");
 	ClassLoader::import("framework.request.Request");
 	ClassLoader::import("framework.request.Router");
@@ -29,6 +33,7 @@ if (!defined('TEST_INITIALIZED'))
 	ClassLoader::import("framework.response.*");
 	ClassLoader::import("application.controller.*");
 	ClassLoader::import("application.model.*");
+	ClassLoader::import("application.model.system.*");
 	ClassLoader::import("simpletest.*");
 	ClassLoader::import("unittest.*");
 	ClassLoader::import("testdir.*");
