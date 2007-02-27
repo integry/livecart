@@ -60,65 +60,59 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	 * multilingualField_langCode => value,
 	 * multilingualField2_langCode => otherValue, and etc.
 	 *
-	 * @param unknown_type $includeLangData
+	 * @param array $array
 	 * @todo cleanup
 	 * @return array
 	 */
-	public function toArray($recursive = false, $convertToUnderscope = true)
-	{
+    protected static function transformArray($array, $className = __CLASS__)
+    {		
+		$array = parent::transformArray($array);
+
 		$store = Store::getInstance();
 		$defaultLangCode = $store->getDefaultLanguageCode();
 		$currentLangCode = $store->getLocaleCode();
 
-		$data = array();
-		foreach ($this->data as $fieldName => $valueContainer)
+		$schema = ActiveRecordModel::getSchemaInstance($className);
+		foreach ($schema->getFieldList() as $field)
 		{
-			$field = $valueContainer->getField();
-			$fieldValue = $valueContainer->get();
-			if ($field instanceof ARForeignKey)
-			{			
-				if (is_object($fieldValue))
+		  	if ($field->getDataType() instanceof ARArray)
+		  	{
+				$fieldName = $field->getName();
+				if (!empty($array[$fieldName]))
 				{
-				  	$data[$field->getForeignClassName()] = $fieldValue->toArray();					  				  
-				}
-				else
-				{
-					$data[$field->getForeignClassName()] = $fieldValue;	
-				}
-			}
-			else
-			{
-				if ($convertToUnderscope && is_array($fieldValue) && $field->getDataType() instanceof ARArray)
-				{
-					foreach ($fieldValue as $langCode => $multilingualValue)
+					$data = $array[$fieldName];
+					
+					foreach ($data as $lang => $value)
 					{
-						if ($langCode != $defaultLangCode)
-						{
-							$data[$fieldName . '_' . $langCode] = $multilingualValue;
-						}
-						else
-						{
-							$data[$fieldName] = $multilingualValue;
-						}
+					  	$array[$fieldName . '_' . $lang] = $value;					  	
+					}
+					
+					if (!empty($data[$defaultLangCode]))
+					{
+					  	$array[$fieldName] = $data[$defaultLangCode];	
+					}
+					else
+					{
+						$array[$fieldName] = '';  
 					}
 
-					// value in active language (default language value is used
-					// if there's no value in active language)
-					$data[$fieldName . '_lang'] = !empty($data[$fieldName . '_' . $currentLangCode]) ?
-														$data[$fieldName . '_' . $currentLangCode] :
-														!empty($data[$fieldName]) ? $data[$fieldName] : '';
-				}
-				else
-				{
-					$data[$fieldName] = $fieldValue;
-				}
+					if (!empty($data[$currentLangCode]))
+					{
+					  	$array[$fieldName . '_lang'] = $data[$currentLangCode];
+					}
+					else
+					{
+					  	$array[$fieldName . '_lang'] = $data[$defaultLangCode];
+					}
+				}	    
 			}
-		} 
-		return $data;
+		}
+//		print_r($array);exit;
+		return $array;  	
 	}
     
 	/**
-     * Set a whole language field at a time. You can allways skip some language, bat as long as it occurs in
+     * Set a whole language field at a time. You can allways skip some language, but as long as it occurs in
      * languages array it will be writen into the database as empty string. I spent 2 hours writing this feature =]
      *
      * @example $specField->setLanguageField('name', array('en' => 'Name', 'lt' => 'Vardas', 'de' => 'Name'), array('lt', 'en', 'de'))

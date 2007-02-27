@@ -311,47 +311,10 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 *
 	 * @return array
 	 */
-	public function toArray()
+    protected static function transformArray($array, $className = __CLASS__)
 	{
-		$store = Store::getInstance();
-		$defaultLangCode = $store->getDefaultLanguageCode();
-		$currentLangCode = $store->getLocaleCode();
-
-		$data = parent::toArray();
-		$transformedData = array();
-		$schema = self::getSchemaInstance(get_class($this));
-		foreach ($data as $name => $value)
-		{
-			if (is_array($value))
-			{
-				if ($schema->getField($name)->getDataType() instanceof ARArray)
-				{
-					foreach ($value as $langCode => $multilingualValue)
-					{
-						if ($langCode != $defaultLangCode)
-						{
-							$transformedData[$name . "_" . $langCode] = $multilingualValue;
-						}
-						else
-						{
-							$transformedData[$name] = $multilingualValue;
-						}
-					}
-				}
-
-				// value in active language (default language value is used
-				// if there's no value in active language)
-				$transformedData[$name . '_lang'] = !empty($transformedData[$name . '_' . $currentLangCode]) ?
-													$transformedData[$name . '_' . $currentLangCode] :
-													(isset($transformedData[$name]) ? $transformedData[$name] : '');
-			}
-			else
-			{
-				$transformedData[$name] = $value;
-			}
-		}
-		return $transformedData;
-	}
+		return MultiLingualObject::transformArray($array, $className);
+	}	
 
 	/**
 	 * Get catalog item instance

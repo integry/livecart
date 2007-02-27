@@ -551,23 +551,19 @@ class ActiveTreeNode extends ActiveRecordModel
      *
      * @return array
      */
-    public function toArray()
+
+	public function toArray()
     {
-        $data = array();
+        $data = parent::toArray();
         foreach ($this->data as $name => $field)
         {
             if ($name == self::PARENT_NODE_FIELD_NAME && $field->get() != null)
             {
                 $data['parent'] = $field->get()->getID();
             }
-            else
-            {
-                $data[$name] = $field->get();
-            }
         }
         $data["childrenCount"] = ($data[self::RIGHT_NODE_FIELD_NAME] - $data[self::LEFT_NODE_FIELD_NAME] - 1) / 2;
-        
-        
+             
         $childArray = array();
 
         if ($this->childList != null)
