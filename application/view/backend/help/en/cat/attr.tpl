@@ -58,7 +58,8 @@ can create variuos types of attributes. Below you'll find a couple of practical 
 		<img src="image/doc/categories/attributes/attributes_tab.bmp">
 		<li>In the attributes section click <strong>Add new attributes</strong>:</li>
 		<!-- <img src="image/doc/categories/attributes/add_new_attribute_reference.bmp">-->
-		<li>Because mobile carrier is a simple text and there is (probably) a finite number of carriers click on the type drop-down menu and 
+		<p><i>Add new attribute</i> form appears. Fill out the following fields as described below:</p>
+		<li>Type - because mobile carrier is a simple text and there is (probably) a finite number of carriers click on the type drop-down menu and 
 		select <i>Text selector</i> type from the list. Your chosen type is suitable for creating a predefined list of values which will be 
 		displayed as a selection option.</li>
 		<img src="image/doc/categories/attributes/type.bmp">
@@ -97,7 +98,7 @@ The last thing to do is to create Values which will be used as a selection optio
 		<img src="image/doc/categories/attributes/save.bmp">
 	</ul>
 
-	Your new attribute will be automatically generated in the "Add new Product" form and will look similar to this one:
+	Your new attribute is automatically generated in the "Add new Product" form and <ins>will</ins> look similar to this one:
 	<img src="image/doc/categories/attributes/carrier.bmp">
 	</ul>
 
@@ -108,7 +109,7 @@ attribute's type to <strong>Number Selector</strong> and make all the necessary 
 <ins>( refer to previuos example...? )</ins><br \><br \>
 <p>
 	Cell phones usually have a great variety of features therefore it would more convenient to create a list of features than re-enter them
-	every time. To create an attribute for features, the following parameters have to be set:
+	every time. To create an attribute of features, the following parameters have to be set:
 </p>
 	<img src="image/doc/categories/attributes/multi.bmp">
 
@@ -139,7 +140,7 @@ attribute's type to <strong>Number Selector</strong> and make all the necessary 
 	<img src="image/doc/categories/attributes/features.bmp">
 
 <p class="note"><strong>Note</strong>: to create a corresponding attribute for a numeric selection choose <strong>Number Selector</strong> type followed
-by necessary changes. A numeric attribute will look similar to this:
+by necessary changes. A numeric attribute looks similar to this one:
 <img src="image/doc/categories/attributes/bandwidth_generated.bmp">
 
 </p>
@@ -153,6 +154,7 @@ by necessary changes. A numeric attribute will look similar to this:
 </p>
 
 <ul>
+	<li>Open <strong>Add new attribute form</strong> <a href="{self}#create">(remind me how)</a></li>
 	<li>Type - select Nember Field.</li>
 	<li>Required - click the checkbox to make the field required attribute</li>
 	<img src="image/doc/categories/attributes/required.bmp">

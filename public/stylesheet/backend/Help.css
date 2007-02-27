@@ -205,7 +205,8 @@ p.note {
 	padding: 5px;
 	font-size: 13px;
 	color: #465584;
-	background-color: #F1F7FF;
+#BLUE	background-color: #F1F7FF;
+	background-color: #FCFFDB;
 	border: 1px dotted #728DC9;
 	  
 }
