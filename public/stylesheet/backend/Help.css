@@ -35,7 +35,22 @@ p {
   	margin-bottom: 10px;
   	padding-left: 20px;
 }
-ul, ol {
+
+ol {
+	list-style-type: decimal;
+	margin: 0 0 1em 2em;
+	padding: 0; 
+}
+
+ol li {
+
+	margin-left: 15px; 
+	padding-left: 0; 
+
+}
+
+
+ul {
   	padding: 5px;
   	padding-left: 20px;
   	padding-top: 15px;
@@ -169,7 +184,7 @@ a.external
 	display:block;
 	margin-top: 10px;
 	margin-bottom: 20px;
-	margin-left: 20px;
+	margin-left: 15px;
 
 }
 
@@ -205,8 +220,8 @@ p.note {
 	padding: 5px;
 	font-size: 13px;
 	color: #465584;
-#BLUE	background-color: #F1F7FF;
-	background-color: #FCFFDB;
+	background-color: #F1F7FF;
+#yellow	background-color: #FCFFDB;
 	border: 1px dotted #728DC9;
 
 	  

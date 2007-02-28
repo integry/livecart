@@ -55,27 +55,48 @@ to define a range for filter's values.</p>
 	<li>The <strong>name</strong> of the filter appears automatically so you can leave it as it is.</li>
 	<li>Also you can enter filter's name in <strong>other languages</strong> supported by your system. Click on the language to supply Filter's name.</li>
 	
-	<li>To create carrier filters click <strong>Filters</strong> next to the Main tab. </li>
-	<li>In the Filters section you can generate filters automatically or add them one by one. To generate filters click <strong>Generate filters</strong>.</li>
+	<li>To define filter's rule or rules click <strong>Criteria</strong> tab next to the Main tab.</li>
+	<li>In the Criteria section you can generate filter's rules automatically or add them one by one. To generate rules click 
+	<strong>Generate rules</strong>.</li>
 	<img src="image/doc/categories/filters/filters_.bmp">
-	<li>Generated filters appear below representing each attribute's value</li>
+	<li>Generated rules appear below representing all associated attribute's values</li>
 	<img src="image/doc/categories/filters/filters_generated.bmp">
-	<li>If any of the generated filters doesn't seem to be correct you can <strong>edit</strong> each of them individually. There are three filter's parameters: </li>
+	<li>If any of the generated rules doesn't seem to be correct you can <strong>edit</strong> them individually. There are three rule's parameters: </li>
 	<ul>
-		<li>Name - the name of the filter which will be seen in the frontend</li>
-		<li>Handle - handle is used to for filter's  <a href="">URL</a></li>
+		<li>Name - the name of the filter (product attribute) which will be seen in the frontend</li>
+		<li>Handle - handle is used to for rule's  <a href="">URL</a></li>
 		<li>Value - the value of the attribute which is used as a filtering criterion.</li>
 	</ul>
-	<li>In addition, you can <strong>rearrange</strong> filters to set the order in which filters should be displayed. To do that simply move
-	mouse cursos over existing filter, when "move" icon appears click and hold your mouse button, now you can move your filter up and down to 
+	<li>In addition, you can <strong>rearrange</strong> rules to set the order in which they should be displayed. To do that simply move
+	mouse cursor over an existing rule, when "move" icon appears click and hold your mouse button, now you can move your rule up and down to 
 	set the appropriate arrangement.</li>
 	<img src="image/doc/categories/filters/rearrange.bmp">
 	<li>When you are done, click <strong>Save</strong>.</li>
 	<img src="image/doc/categories/filters/filters_save.bmp">
-	<p>(<strong>Note:</strong> How to create filters <strong>manually</strong> will be discussed in the next example).</p>
 </ul>
 
 <h4 id="capacity">Creating <i>Battery Capacity</i> filter</h4>
+
+<p>(Creating Battery Capacity filter is quite different from the previuos example because here you (will) have to create rules manually and set range for 
+each individually). Complete the following steps to create the battery capacity filter:</p>
+
+<ol>
+	<li>Go to Filters section and open New Filter form <a href="{self}#carrier"><small>(remind me how)</small></a></li>
+	<li>Fill out the Main section as follows:</li>
+	<img src="image/doc/categories/filters/main.bmp">
+	<li>Name - </li>
+	<li>Associated attribute - click on the attribute list and select Battery Capacity.</li>
+	<li>Other Languages - to enter filter's names in other languages click on the language to view additional fields.</li>
+	<br \>
+	<li>Go to Criteria section by clicking <strong>Criteria</strong> tab.</li>
+	<img src="image/doc/categories/filters/filters.bmp">
+	<p>Filter's rules section opens.</p>
+	<li>As "Battery Capacity" attribute doesn't have any values set initially you have to define ranges that will specify filtering criteria.
+	Let's say that battery capacity might range from 200 to 5000 mAh, so we create the following rules:</li>
+	<li><ins>...</ins></li>
+	<li>Make sure to click <strong>Save</strong> at the end.</li>
+	<img src="image/doc/categories/filters/filters_save.bmp">
+</ol>
 
 {helpSeeAlso}
 	{see cat.details}
