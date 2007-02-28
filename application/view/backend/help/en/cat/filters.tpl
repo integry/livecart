@@ -141,9 +141,9 @@ be displayed in your e-store.</p>
 	<li>In order to edit a filter, hover mouse pointer over the existing filters and click "Edit" icon next to the filter (name) you want to manage.</li>
 	<img src="image/doc/categories/filters/filters_edit.bmp">
 	<p>Filter's form opens.</p>
-	<li>You can edit any of the filter's property as in the add new filter section. <a href="{self}#carrier"><small>(Remind me how).</small></a></li>
-	<li>Click <strong>Save</strong> button.</li>
-	<img src="image/doc/categories/filters/filters_save.bmp">
+	<li>You can edit any of the filter's property as in the add new filter section. 
+	<a href="{self}#carrier"><small>(Remind me how).</small></a> <strong>Save</strong> the changes you have made. (You can edit existing data
+	or add new values to the filter)</li>
 	<br \>
 	<li>If you want to Delete a filter click "Delete" next to the "edit" icon.</li>
 	<img src="image/doc/categories/filters/filters_delete.bmp">
