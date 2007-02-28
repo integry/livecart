@@ -37,7 +37,7 @@ to define a range for filter's values.</p>
 <h3 id="create">Create Filter</h3>
 <p>We will guide you through several tutorials and show how to generate filters for your existing attributes. As in examples with 
 <a href="{help /cat.attr}">attributes</a> in the previuos section we will use cell phones for illustrating <a href="{self}#carrier">Carrier</a>, 
-<ins>Features</ins>, <a href="{self}#capacity">Battery Capacity</a> and (new / one additional) <a href="{self}#date">Date</a> filter.</p>
+<a href="{self}#capacity">Battery Capacity</a> and additional <a href="{self}#date">Date</a> filter.</p>
 
 <h4 id="carrier">Creating <i>Carrier</i> filter</h4>
 <ul>
@@ -45,7 +45,7 @@ to define a range for filter's values.</p>
 	<img src="image/doc/categories/filters/filters_tab.bmp">
 	<p>If you see a message "This category has no non-text attributes", go to the <a href="{help /cat.attr}">Attributes </a> section to create 
 	attributes first.</p>
-	<li>On the Filters page, once you have at least one <ins>(type?)</ins> attribute click <strong>Add new filter</strong>.</li>
+	<li>On the Filters page click <strong>Add new filter</strong>.</li>
 	<img src="image/doc/categories/filters/add_new_filter.bmp">
 	<p>Add new filter form appears. </p>
 
@@ -67,7 +67,7 @@ to define a range for filter's values.</p>
 		<li>Value - the value of the attribute which is used as a filtering criterion.</li>
 	</ul>
 	<li>In addition, you can <strong>rearrange</strong> filters to set the order in which filters should be displayed. To do that simply move
-	mouse cursos over existing filter, once "move" icon appears click and hold your mouse button, now you can move your filter up and down to 
+	mouse cursos over existing filter, when "move" icon appears click and hold your mouse button, now you can move your filter up and down to 
 	set the appropriate arrangement.</li>
 	<img src="image/doc/categories/filters/rearrange.bmp">
 	<li>When you are done, click <strong>Save</strong>.</li>
