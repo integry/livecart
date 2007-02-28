@@ -157,7 +157,6 @@ class ProductPricing
 	public static function addPricesValidator(RequestValidator $validator)
 	{
 		// price in base currency
-		print_r($baseCurrency = Store::getInstance()->getCurrencyArray());
 		$baseCurrency = Store::getInstance()->getDefaultCurrency()->getID();
 		$validator->addCheck('price_' . $baseCurrency, new IsNotEmptyCheck('_err_price_empty'));
 

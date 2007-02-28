@@ -110,10 +110,11 @@ Backend.Category = {
 	{
 		Element.update('activeCategoryPath', Backend.Category.getPath(categoryId));
 
+		Backend.Product.Editor.prototype.showCategoriesContainer();
+
 		Backend.Category.tabControl.switchCategory(categoryId, Backend.Category.activeCategoryId);
 		Backend.Category.activeCategoryId = categoryId;
         
-
 		// set ID for the current tree node element
 		$('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode.id = 'cat_' + categoryId;
 			

@@ -43,6 +43,10 @@ abstract class ActiveRecordModel extends ActiveRecord
 						break;	
 					}
 				}
+				else if('ARBool' == get_class($field->getDataType()))
+				{
+					if($this->getField($name)) $this->setFieldValue($name, 0);
+				}
 			}
 		}	
 	}

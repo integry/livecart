@@ -166,10 +166,9 @@ class ProductController extends StoreManagementController
 		else
 		{
 		  	$product = Product::getInstanceByID($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA);
+		  	$product->loadSpecification();
 		}
-		
 		$validator = $this->buildValidator($product);
-		
 		if ($validator->isValid())
 		{
 			// create new specField values
@@ -178,7 +177,7 @@ class ProductController extends StoreManagementController
 			foreach ($other as $fieldID => $values)
 			{
 				$field = SpecField::getInstanceByID($fieldID);
-				
+
 				if (is_array($values))
 				{
 					// multiple select
@@ -219,11 +218,11 @@ class ProductController extends StoreManagementController
 									
 			if ($this->request->getValue('afterAdding') == 'new')
 			{
-				return new JSONResponse(array('addmore' => 1, 'needReload' => $needReload));			  	
+				return new JSONResponse(array('status' => 'success', 'addmore' => 1, 'needReload' => $needReload));			  	
 			}
 			else
 			{
-
+				return new JSONResponse(array('status' => 'success'));		
 			}
 		}
 		else
@@ -231,7 +230,7 @@ class ProductController extends StoreManagementController
 			// reset validator data (as we won't need to restore the form)
 			$validator->restore();
 			
-			return new JSONResponse(array('errors' => $validator->getErrorList()));
+			return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
 		}
 				
 	}
@@ -307,8 +306,11 @@ class ProductController extends StoreManagementController
         	        $productFormData["{$attr['SpecField']['fieldName']}"] = $attr['value'];
         	    }   
         	}
+        	
+        	$productFormData['manufacturer'] = $productFormData['Manufacturer']['name'];
+        	
 		}
-
+		
         $form->setData($productFormData);
 		
 		$languages = array();
@@ -359,7 +361,7 @@ class ProductController extends StoreManagementController
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name_empty')));		    
 		
 		// check if SKU is entered if not autogenerating
-		if (!$this->request->getValue('autosku') && $this->request->getValue('save'))
+		if ($this->request->getValue('save') && (($product->isExistingRecord() && $product->getFieldValue('sku') != $this->request->getValue('sku')) || !$this->request->getValue('autosku')))
 		{
 			$validator->addCheck('sku', new IsNotEmptyCheck($this->translate('_err_sku_empty')));		    		  
 		}
@@ -398,17 +400,20 @@ class ProductController extends StoreManagementController
 					$validator->addCheck($fieldname, new SpecFieldIsValueSelectedCheck($this->translate('_err_specfield_requiredaaaaaaaa'), $field, $this->request));		    
 				}			
 			}
-		}
-	
-		// inventory validation
-		$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required')));		    
-		$validator->addCheck('stockCount', new IsNumericCheck($this->translate('_err_stock_not_numeric')));		  
-		$validator->addCheck('stockCount', new MinValueCheck($this->translate('_err_stock_negative'), 0));	
-		$validator->addFilter('stockCount', new NumericFilter());		    
+		}  
 		
 		// validate price input in all currencies
-		ProductPricing::addPricesValidator($validator);
-		ProductPricing::addShippingValidator($validator);
+		if(!$product->isExistingRecord()) 
+		{
+			ProductPricing::addPricesValidator($validator);
+			ProductPricing::addShippingValidator($validator);
+			
+			// inventory validation
+			$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required')));		    
+			$validator->addCheck('stockCount', new IsNumericCheck($this->translate('_err_stock_not_numeric')));		  
+			$validator->addCheck('stockCount', new MinValueCheck($this->translate('_err_stock_negative'), 0));	
+			$validator->addFilter('stockCount', new NumericFilter());	
+		}
 		
 		return $validator;
 	}
@@ -443,7 +448,7 @@ class ProductController extends StoreManagementController
 	
 	public function basicData()
 	{
-	    $product = Product::getInstanceById($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA);
+	    $product = Product::getInstanceById($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
 		
 		$response = $this->productForm($product);
 

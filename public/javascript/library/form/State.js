@@ -180,7 +180,6 @@ Form.State = {
     {
         if(json) this.backupFromJson(form, json);
 
-console.info(this.hasBackup(form));
         if(!this.hasBackup(form)) return;
         self = this;
 

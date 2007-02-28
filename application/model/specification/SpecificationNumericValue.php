@@ -14,6 +14,11 @@ class SpecificationNumericValue extends ValueSpecification
 	{
 	  	return parent::getNewInstance(__CLASS__, $product, $field, $value);
 	}
+
+	public static function restoreInstance(Product $product, SpecField $field, $value)
+	{
+		return parent::restoreInstance(__CLASS__, $product, $field, $value);
+	}
 }
 
 ?>

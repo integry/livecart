@@ -16,9 +16,9 @@ class SpecificationStringValue extends ValueSpecification
 	  	return parent::getNewInstance(__CLASS__, $product, $field, $value);
 	}
 	
-	public static function restoreInstance($class, Product $product, SpecField $field, $value)
+	public static function restoreInstance(Product $product, SpecField $field, $value)
 	{
-		$specItem = parent::restoreInstance($class, $product, $field, $value);
+		$specItem = parent::restoreInstance(__CLASS__, $product, $field, $value);
 		$specItem->value->set(unserialize($value));
 		
 		$specItem->resetModifiedStatus();

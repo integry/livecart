@@ -1,7 +1,7 @@
 <?php
+require_once('../Initialize.php');
 
 echo "<pre>";
-require_once("init.php");
 
 ClassLoader::import("application.model.category.*");
 ClassLoader::import("application.model.product.*");
@@ -52,11 +52,11 @@ $singleSel->save();
 
 // create some numeric values for the select
 $value1 = SpecFieldValue::getNewInstance($singleSel);
-$value1->value->set('20');
+$value1->setValueByLang('value', 'en', '20');
 $value1->save();
 
 $value2 = SpecFieldValue::getNewInstance($singleSel);
-$value2->value->set('30');
+$value2->setValueByLang('value', 'en', '30');
 $value2->save();
 
 // assign the select value to product
@@ -75,7 +75,7 @@ $anotherSel->save();
 
 // create some numeric values for the select
 $avalue1 = SpecFieldValue::getNewInstance($anotherSel);
-$avalue1->value->set('20');
+$avalue1->setValueByLang('value', 'en', '20');
 $avalue1->save();
 
 // attempt to assign second selectors value to the first selector
@@ -124,7 +124,7 @@ $values = array();
 for ($k = 0; $k < 5; $k++)
 {
   	$inst = SpecFieldValue::getNewInstance($multiSel);
-	$inst->value->set($k);
+	$inst->setValueByLang('value', 'en', $k);
 	$inst->save();
 	$values[] = $inst;
 }
@@ -153,8 +153,8 @@ catch (Exception $e)
 }
 
 // remove the multiselect value altogether
-//$product->removeAttribute($multiSel);
-//$product->save();
+$product->removeAttribute($multiSel);
+$product->save();
 
 // create a multiple text value select attribute
 $multiText = SpecField::getNewInstance($productCategory, SpecField::DATATYPE_TEXT, SpecField::TYPE_TEXT_SELECTOR);
@@ -162,6 +162,7 @@ $multiText->isMultiValue->set(true);
 $multiText->setValueByLang('name', 'en', 'Select multiple TEXT values');
 $multiText->setValueByLang('name', 'lt', 'Pasirinkite kelias TEKSTO reiksmes');
 $multiText->save();
+
 
 $inst = SpecFieldValue::getNewInstance($multiText);
 $inst->setValueByLang('value', 'en', 'First value');
@@ -175,15 +176,30 @@ $inst->setValueByLang('value', 'en', 'Second value');
 $inst->setValueByLang('value', 'lt', 'Antra reiksme');
 $inst->save();
 
+
 $product->setAttributeValue($multiText, $inst); 
+
+ActiveRecord::removeFromPool($product);
+
+$product = Product::getInstanceByID($product->getID(), true);
+
+// prices
+$product->loadSpecification();
+foreach (Store::getInstance()->getCurrencyArray() as $currency)
+{
+	$product->setPrice($currency, 111);
+}
+
+
 
 $arr = $product->toArray();
 print_r($arr);
+
 
 //ActiveRecordModel::commit();
 ActiveRecordModel::rollback();
 
 echo "OK\n<br/>";
 echo "</pre>";
-
+exit;
 ?>

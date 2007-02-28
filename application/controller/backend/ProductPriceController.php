@@ -31,11 +31,18 @@ class ProductPriceController extends StoreManagementController
     private function buildPricingForm(Product $product)
     {
         ClassLoader::import("framework.request.validator.Form");
-
+		if(!$product->isLoaded()) $product->load(ActiveRecord::LOAD_REFERENCES);
+		
+		
         $pricing = new ProductPricing($product, $product->getPricesArray());
-
 		$form = new Form($this->buildPricingFormValidator());
-	    $form->setData($product->toArray());
+		
+		$pricesData = $product->toArray();
+		$pricesData['shippingHiUnit'] = (int)$pricesData['shippingWeight'];
+		$pricesData['shippingLoUnit'] = ($pricesData['shippingWeight'] - $pricesData['shippingHiUnit']) * 1000;
+		$pricesData = array_merge($pricesData, $product->getPricesFields());
+
+	    $form->setData($pricesData);
 
 		return $form;
     }

@@ -401,18 +401,21 @@ Backend.Product.Editor.prototype =
         this.nodes = {};
         this.nodes.parent = $("productBasic_" + this.id + "Content");
         this.nodes.form = this.nodes.parent.down("form");
+		this.nodes.cancel = this.nodes.form.down('a.cancel');
+		this.nodes.submit = this.nodes.form.down('input.submit');
     },
 
     __bind__: function(args)
     {
-
+		var self = this;
+		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
     },
 
     __init__: function(args)
     {
         Backend.Product.Editor.prototype.setCurrentProductId(this.id);
         this.showProductForm();
-        this.tabControl = TabControl.prototype.getInstance("productManagerContainer", Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId);
+//        this.tabControl = TabControl.prototype.getInstance("productManagerContainer", Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId);
     },
 
     craftProductUrl: function(url)
@@ -437,13 +440,21 @@ Backend.Product.Editor.prototype =
 
     getInstance: function(id)
     {
-        if(!Backend.Product.Editor.prototype.__instances__[id])
-        {
-            Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id);
-        }
-
-        Backend.Product.Editor.prototype.__instances__[id].__init__();
-        return Backend.Product.Editor.prototype.__instances__[id];
+        try
+		{
+			if(!Backend.Product.Editor.prototype.__instances__[id])
+	        {
+	            Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id);
+	        }
+	
+	        Backend.Product.Editor.prototype.__instances__[id].__init__();
+	        return Backend.Product.Editor.prototype.__instances__[id];
+		}
+		catch(e)
+		{
+			console.info(e);
+			return false;
+		}
     },
 
     hasInstance: function(id)
@@ -453,16 +464,46 @@ Backend.Product.Editor.prototype =
 
     showProductForm: function(args)
     {
-        this.hideCategoriesContainer();
+//        this.hideCategoriesContainer();
     },
 
-    cancelProductForm: function(args)
+    cancelForm: function()
     {
-        var inst = Backend.Product.Editor.prototype.getInstance(Backend.Product.Editor.prototype.getCurrentProductId());
-        Form.restore(inst.nodes.form);
-
-        this.showCategoriesContainer();
+		Form.restore(this.nodes.form);
+        //this.showCategoriesContainer();
     },
+
+    submitForm: function()
+    {
+	    console.info('submit');
+		var self = this;
+		new Ajax.Request(this.nodes.form.action + "/" + this.id,
+		{
+           method: this.nodes.form.method,
+           parameters: Form.serialize(self.nodes.form),
+           onSuccess: function(responseJSON) {
+				ActiveForm.prototype.resetErrorMessages(self.nodes.form);
+				var responseObject = eval("(" + responseJSON.responseText + ")");
+				self.afterSubmitForm(responseObject);
+		   }
+		});
+		
+        //this.showCategoriesContainer();
+    },
+	
+	afterSubmitForm: function(response)
+	{
+		console.info(response);
+		if(!response.errors || 0 == response.errors.length)
+		{
+			new Backend.SaveConfirmationMessage(this.nodes.form.down('.pricesSaveConf'));
+			Form.State.backup(this.nodes.form);
+		}
+		else
+		{
+			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
+		}
+	},
 
     hideCategoriesContainer: function(args)
     {

@@ -34,7 +34,7 @@ class SpecFieldValue extends MultilingualObject
 	{
 	    if (!in_array($field->type->get(), array(SpecField::TYPE_NUMBERS_SELECTOR, SpecField::TYPE_TEXT_SELECTOR)))
 	    {
-		  	throw new Exception('Cannot create a SpecFieldValue for non-selector field!');
+	    	throw new Exception('Cannot create a SpecFieldValue for non-selector field!');
 		}
 		
 		$instance = parent::getNewInstance(__CLASS__);

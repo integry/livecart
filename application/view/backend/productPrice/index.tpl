@@ -1,6 +1,3 @@
-<script type="text/javascript" src="/public/javascript/library/tinymce/tiny_mce.js"></script>
-
-<script type="text/javascript" src="/public/firebug/firebug.js"></script>
 <script type="text/javascript" src="/public/javascript/library/prototype/prototype.js"></script>
 <script type="text/javascript" src="/public/javascript/library/scriptaculous/scriptaculous.js"></script>
 <script type="text/javascript" src="/public/javascript/backend/Backend.js"></script>
@@ -31,10 +28,6 @@
 <script src="/public/javascript/library/Debug.js" type="text/javascript"></script>
 <script src="/public/javascript/library/dhtmlHistory/dhtmlHistory.js" type="text/javascript"></script>
 <script src="/public/javascript/backend/Customize.js" type="text/javascript"></script>
-
-
-
-
 
 
 {form handle=$pricingForm action="controller=backend.productPrice action=save" id="product_form_`$product.ID`_`$product.Category.ID`" method="POST" onsubmit="Backend.Product.Prices.prototype.getInstance(this.id).submitForm(); return false; " onreset="Backend.Product.Prices.prototype.getInstance(this.id).resetForm(this);"}

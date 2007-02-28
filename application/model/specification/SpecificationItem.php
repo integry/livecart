@@ -37,10 +37,7 @@ class SpecificationItem extends Specification
 	
 	public static function restoreInstance(Product $product, SpecField $field, SpecFieldValue $value)
 	{
-		$instance = self::getNewInstance($product, $field, $value);
-		$instance->resetModifiedStatus();
-
-		return $instance;
+		return parent::getInstanceByID(__CLASS__, array('productID' => $product->getID(), 'specFieldID' => $field->getID(), 'specFieldValueID' => $value->getID()));
 	}
 
 	public function setValue(SpecFieldValue $value)
@@ -50,17 +47,14 @@ class SpecificationItem extends Specification
 	  	{
 		    throw new Exception('Cannot assign SpecField:' . $value->specField->get()->getID() . ' value to SpecField:' . $this->specField->get()->getID());
 		}
-
-		$this->specFieldValue->set($value);
+		
+		if($value !== $this->specFieldValue->get()) $this->specFieldValue->set($value);
 	}
 	
-	public function toArray()
+	public function save()
 	{
-		$ret = $this->specFieldValue->get()->toArray();
-
-		return $ret;
-	}	
-	
+		parent::save();
+	}
 }
 
 ?>

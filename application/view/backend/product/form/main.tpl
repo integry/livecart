@@ -2,7 +2,7 @@
     <legend>Main Details</legend>
     
 	<p class="checkbox" class="container">
-		{checkbox name="isEnabled" class="checkbox" id="product_`$cat`_`$product.ID`_isEnabled" class="checkbox"}
+		{checkbox name="isEnabled" class="checkbox" id="product_`$cat`_`$product.ID`_isEnabled" class="checkbox" value="on"}
         <label for="product_{$cat}_{$product.ID}_isEnabled"> Enabled (visible)</label>
 	</p>   
 	<p class="required">
@@ -70,7 +70,7 @@
 	</p>
 
 	<p>
-		{checkbox name="isBestseller" class="checkbox" value="on" id="product_`$cat`_`$product.ID`_isbestseller"}
+		{checkbox name="isBestSeller" class="checkbox" value="on" id="product_`$cat`_`$product.ID`_isbestseller"}
 		<label for="product_{$cat}_{$product.ID}_isbestseller">Mark as bestseller</label>
 	</p>
 </fieldset>

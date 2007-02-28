@@ -33,6 +33,11 @@ class Manufacturer extends ActiveRecordModel
 		}
 	}
 	
+	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
+	{
+		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData = false, $loadReferencedRecords = false);
+	}
+	
 	public static function getNewInstance($name)
 	{
 		$instance = parent::getNewInstance(__CLASS__);

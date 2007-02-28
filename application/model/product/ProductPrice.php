@@ -26,12 +26,16 @@ class ProductPrice extends ActiveRecordModel
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->product->set($product);
 		$instance->currency->set($currency);
-		try
-		{
-			$instance->load();
-			$instance->resetModifiedStatus();
-		}
-		catch(Exception $e) {}
+//		try
+//		{
+//			$instance->load();
+//		}
+//		catch(Exception $e)
+//		{
+//			$instance->product->set($product);
+//			$instance->currency->set($currency);
+//			$instance->resetModifiedStatus();
+//		}
 
 		return $instance;
 	}

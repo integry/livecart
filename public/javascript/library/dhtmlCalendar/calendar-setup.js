@@ -161,11 +161,11 @@ Calendar.setup = function (params) {
 		var mustCreate = false;
 		var cal = window.calendar;
         
-        console.info(dateEl.id)
         var real = document.getElementById(dateEl.id + "_real");
         var realValue = real ? real.value : false;
 		if (dateEl)
 			 params.date = Date.parseDate(dateEl.value || dateEl.innerHTML || realValue || params.date.print("%y-%m-%d"), dateFmt);
+			 
 		if (!(cal && params.cache)) {
 			window.calendar = cal = new Calendar(params.firstDay,
 							     params.date,

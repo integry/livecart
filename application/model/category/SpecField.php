@@ -72,7 +72,7 @@ class SpecField extends MultilingualObject
 	 * @return  SpecField
 	 */
 	public static function getNewInstance(Category $category, $dataType = false, $type = false)
-	{
+	{		
 		$specField = parent::getNewInstance(__CLASS__);
 		$specField->category->set($category);
 
@@ -185,17 +185,8 @@ class SpecField extends MultilingualObject
         
 		return $filterGroupsArray;
 	}
-
-	/**
-	 *  Creates an instance of specification field value depending of field type (a factory)
-	 *  
-	 *	For example, if the field is designated for storing numeric values, 
-	 *  an instance of SpecificationNumericValue will be returned.
-	 *
-	 *  @param Product $product Product instance
-	 *  @value mixed Field value (it may be a number, string, date or SpecFieldValue instance depending on field type)
-	 */
-	public function getNewSpecificationInstance(Product $product, $value)
+	
+	public function getSpecificationFieldClass()
 	{
 		$specValueClass = $this->getValueTableName();
 		if ('SpecificationItem' == $specValueClass)
@@ -205,8 +196,8 @@ class SpecField extends MultilingualObject
 				$specValueClass = 'MultiValueSpecificationItem';	  	
 			}
 		}
-
-		return call_user_func(array($specValueClass, 'getNewInstance'), $product, $this, $value);
+		
+		return $specValueClass;
 	}
 
 	/**

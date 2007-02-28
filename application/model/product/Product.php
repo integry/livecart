@@ -64,7 +64,7 @@ class Product extends MultilingualObject
 		$schema->registerField(new ArField("shippingSurchargeAmount", ARFloat::instance(8)));
 		$schema->registerField(new ArField("isSeparateShipment", ARBool::instance()));
 		$schema->registerField(new ArField("isFreeShipping", ARBool::instance()));
-//		$schema->registerField(new ArField("isBackOrderable", ARBool::instance()));
+		$schema->registerField(new ArField("isBackOrderable", ARBool::instance()));
 
 		$schema->registerField(new ArField("shippingWeight", ARFloat::instance(8)));
 
@@ -168,6 +168,7 @@ class Product extends MultilingualObject
 		}
 
 		parent::save();
+				
 		$this->getSpecification()->save();
 		$this->getPricingHandler()->save();
 
@@ -291,7 +292,7 @@ class Product extends MultilingualObject
 			{
 				if (!$field->isMultiValue->get())
 				{
-				  	if ($request->isValueSet($fieldName) && !in_array($request->getValue($fieldName), array('other', '')))
+					if ($request->isValueSet($fieldName) && !in_array($request->getValue($fieldName), array('other', '')))
 				  	{
 				  		$this->setAttributeValue($field, SpecFieldValue::getInstanceByID((int)$request->getValue($fieldName), ActiveRecordModel::LOAD_DATA));
 				  	}
@@ -299,6 +300,7 @@ class Product extends MultilingualObject
 				else
 				{
 					$values = $field->getValuesSet();
+					
 					foreach ($values as $value)
 					{
 					  	if ($request->isValueSet($value->getFormFieldName()))
@@ -317,9 +319,9 @@ class Product extends MultilingualObject
 			}
 			else
 			{
-			  	if ($request->isValueSet($fieldName))
+				if ($request->isValueSet($fieldName))
 			  	{
-					if ($field->isTextField())
+			  		if ($field->isTextField())
 					{
 						$languages = Store::getInstance()->getLanguageArray(Store::INCLUDE_DEFAULT);
 						foreach ($languages as $language)
@@ -343,9 +345,6 @@ class Product extends MultilingualObject
 	{
 	  	$array = parent::toArray();
 	  	$array['attributes'] = $this->getSpecification()->toArray();
-	  	$array['shippingHiUnit'] = (int)$array['shippingWeight'];
-	  	$array['shippingLoUnit'] = ($array['shippingWeight'] - $array['shippingHiUnit']) * 1000;
-	  	$array = array_merge($array, $this->getPricesFields());
 
 	  	return $array;
 	}
@@ -451,9 +450,10 @@ class Product extends MultilingualObject
 	public function setAttributeValue(SpecField $field, $value)
 	{
 		if (!is_null($value))
-		{
+		{		
 			$specification = $this->getSpecification()->getAttribute($field, $value);
 			$specification->setValue($value);
+		
 			$this->setAttribute($specification);
 		}
 		else
@@ -523,9 +523,6 @@ class Product extends MultilingualObject
 	public function setPrice($currencyCode, $price)
 	{
 	  	$instance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
-
-	  	//print_r($instance->toArray());
-
 	  	if (strlen($price) == 0)
 	  	{
 	  		$this->getPricingHandler()->removePriceByCurrencyCode($currencyCode);

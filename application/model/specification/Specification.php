@@ -12,7 +12,8 @@ abstract class Specification extends ActiveRecordModel implements iSpecification
 	
 	public function setValue($value)
 	{
-	  	$this->value->set($value);
+		$this->value->set($value);
+		$this->save();
 	}	
 }
 
