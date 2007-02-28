@@ -310,7 +310,7 @@ class ProductController extends StoreManagementController
         	$productFormData['manufacturer'] = $productFormData['Manufacturer']['name'];
         	
 		}
-		
+		print_r($productFormData);
         $form->setData($productFormData);
 		
 		$languages = array();

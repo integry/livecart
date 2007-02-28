@@ -55,6 +55,11 @@ class SpecificationItem extends Specification
 	{
 		parent::save();
 	}
+
+	public function toArray()
+	{
+		return $this->specFieldValue->get()->toArray();
+	}
 }
 
 ?>
