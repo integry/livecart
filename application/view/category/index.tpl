@@ -5,7 +5,11 @@
 <div id="content">
 	<h1>{$category.name_lang}</h1>
 
-	<ul class="productList">
+	<div class="resultStats">
+		Showing {$offsetStart} to {$offsetEnd} of {$count} found products.
+	</div>
+
+	<ul class="productList"> 
 	{foreach from=$products item=product}
 		<li>			
 			<span class="title">
@@ -23,6 +27,10 @@
 		</li>
 	{/foreach}
 	</ul>
+
+	<div class="resultPages">
+		Pages: {paginate current=$currentPage count=$count perPage=$perPage url=$url}
+	</div>
 
 </div>		
 {include file="layout/frontend/footer.tpl"}

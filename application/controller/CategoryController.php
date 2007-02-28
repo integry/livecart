@@ -30,7 +30,6 @@ class CategoryController extends FrontendController
   
 	public function index()
 	{
-		$start = microtime(true);
 		$this->categoryID = $this->request->getValue('id');
 
 		if ($this->request->getValue('filters'))
@@ -53,26 +52,24 @@ class CategoryController extends FrontendController
 			$c = new INCond(new ARFieldHandle('Filter', 'ID'), $filterIds);
 			$f->setCondition($c);
 			$this->filters = ActiveRecordModel::getRecordSet('Filter', $f, ActiveRecord::LOAD_REFERENCES);
-			
-			// get specField ID's and load specField data
-			$fields = array();
-			foreach ($this->filters as $filter)
-			{
-//				print_r($filter->filterGroup->get()->specField);
-				$fields[] = $filter->filterGroup->get()->specField->get()->getID();
-			}
-
-			$f = new ARSelectFilter();
-			$c = new INCond(new ARFieldHandle('SpecField', 'ID'), $fields);
-			$f->setCondition($c);
-			ActiveRecordModel::getRecordSet('SpecField', $f);
 		}
 
 		// get category instance
 		$this->category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
 
+		// pagination
+		$currentPage = $this->request->getValue('page') 
+			or $currentPage = 1;
+
+		$perPage = $this->config->getValue('NUM_PRODUCTS_PER_CAT');
+		$offsetStart = (($currentPage - 1) * $perPage) + 1;
+		$offsetEnd = $currentPage * $perPage;
+		
+		$selectFilter = new ARSelectFilter();
+		$selectFilter->setLimit($perPage, $offsetStart - 1);
+
 		// setup ProductFilter
-		$productFilter = new ProductFilter($this->category, new ARSelectFilter());
+		$productFilter = new ProductFilter($this->category, $selectFilter);
 		foreach ($this->filters as $filter)
 		{
 			$productFilter->applyFilter($filter);  
@@ -82,9 +79,29 @@ class CategoryController extends FrontendController
 
 		$products = $this->category->getProductsArray($productFilter, ActiveRecord::LOAD_REFERENCES);
 
+		$count = new ProductCount($this->productFilter);
+		$totalCount = $count->getCategoryProductCount($productFilter);
+		$offsetEnd = min($totalCount, $offsetEnd);
+		
+		$urlParams = array('controller' => 'category', 'action' => 'index', 
+						   'id' => $this->request->getValue('id'),
+						   'cathandle' => $this->request->getValue('cathandle')
+						   );
+		if ($this->request->getValue('filters'))
+		{
+			$urlParams['filters'] = $this->request->getValue('filters');
+		}
+		$url = Router::getInstance()->createURL($urlParams) . '/p';
+		
 		$response = new ActionResponse();
 		$response->setValue('id', $this->categoryID);
+		$response->setValue('url', $url);
 		$response->setValue('products', $products);
+		$response->setValue('count', $totalCount);
+		$response->setValue('offsetStart', $offsetStart);
+		$response->setValue('offsetEnd', $offsetEnd);
+		$response->setValue('perPage', $perPage);
+		$response->setValue('currentPage', $currentPage);
 		$response->setValue('category', $this->category->toArray());
 		return $response;
 	}

@@ -42,6 +42,11 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return ActiveRecordModel::getRecordSetArray('Product', $this->getProductsFilter($productFilter), $loadReferencedRecords);
 	}
 	
+	public function getProductCount(ProductFilter $productFilter)
+	{
+		return ActiveRecordModel::getRecordCount('Product', $this->getProductsFilter($productFilter));
+	}
+
 	protected function getProductsFilter(ProductFilter $productFilter)
 	{
 		$filter = $productFilter->getSelectFilter();

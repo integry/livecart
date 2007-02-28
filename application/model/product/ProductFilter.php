@@ -28,6 +28,16 @@ class ProductFilter
 	{
 		$this->filters[] = $filter;
 	}
+	
+	public function getFilters()
+	{
+		return $this->filters;
+	}
+
+	public function getFilterCount()
+	{
+		return count($this->filters);
+	}
 
 	public function getSelectFilter()
 	{

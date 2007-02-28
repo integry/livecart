@@ -43,6 +43,18 @@ class ProductCount
 		return $ret;
 	}
 	
+	public function getCategoryProductCount()
+	{
+		if (!$this->productFilter->getFilterCount())	
+		{
+			return $this->productFilter->getCategory()->activeProductCount->get();
+		}
+		else
+		{
+			return $this->productFilter->getCategory()->getProductCount($this->productFilter);
+		}
+	}
+	
 	public function getCountByPrices()
 	{
 	  
