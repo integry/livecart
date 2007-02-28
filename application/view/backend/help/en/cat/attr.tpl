@@ -94,7 +94,7 @@ The last thing to do is to create Values which will be used as a selection optio
 		<li>Keep in this manner until we have a full list of carriers.</li>
 		<img src="image/doc/categories/attributes/values.bmp">
 
-		<li>Make sure to click <strong>Save</strong> to save changes. </li>
+		<li>Click the <strong>Save</strong> button to return to the Attributes page. </li>
 		<img src="image/doc/categories/attributes/save.bmp">
 	</ul>
 

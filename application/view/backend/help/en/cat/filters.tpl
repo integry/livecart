@@ -16,8 +16,9 @@ have to offer (some may search for products by particular technical details and 
 <legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#create">Create a filter</a></li>
-	<li><a href="{self}#delete">Delete</a></li>
-	<li><a href="{self}#sort">Sort</a></li>
+	<li><a href="{self}#sort">Arrange Filter order</a></li>
+	<li><a href="{self}#edit">Edit and Delete Filters</a></li>
+
 </ul>
 </fieldset>
 </div>
@@ -97,6 +98,56 @@ each individually). Complete the following steps to create the battery capacity 
 	<li>Make sure to click <strong>Save</strong> at the end.</li>
 	<img src="image/doc/categories/filters/filters_save.bmp">
 </ol>
+
+<h4 id="date">Creating <i>Date</i> filter</h4>
+
+<p>To create a date filter you have to have an attributes wich has a Date type. To create a date filter: </p>
+
+<ul>
+	<li>Open add new filter form.  </li>
+	<li>Select date attribute from the list.</li>
+	<li>Name - enter Filter's name or leave the current name / automatic value.</li>
+	<br \>
+	<li>To set filtering rules click <strong>Add New Rule</strong> at the top of the Main section.</li>
+	<img src="image/doc/categories/filters/filters_add.bmp">
+	<li>Criteria has three parameters: </li>
+	<ul>
+		<li>Name - </li>
+		<li>Handle - </li>
+		<li>Value / Range - </li>
+	</ul>
+	<li><ins>...</ins></li>
+	<li>Click <strong>Save</strong> button to return to filters page.</li>
+	<img src="image/doc/categories/filters/filters_save.bmp">
+</ul>
+
+<h3 id="sort">Changing Filter Order</h3>
+
+<p>When you have more than a few filters the order of your filters can be very important. The way you arrange your filters defines how they will
+be displayed in your e-store.</p>
+
+<ul>
+	<li>To change the filter order go to the filters section. <a href="{self}#carrier"><small>(Remind me how).</small></a></li>
+	<li>Move mouse cursor over the filter, click and hold button when "move" icon appears. You can drag and drop filter to set the appropriate order.</li>
+	<img src="image/doc/categories/filters/rearrange.bmp">
+	<li><strong>Save</strong> your changes afterwards.</li>
+	<img src="image/doc/categories/filters/filters_save.bmp">
+</ul>
+
+<h3 id="edit">Edit and Delete Filters</h3>
+
+<ul>
+	<li>Go to the Filters section <a href="{self}#carrier"><small>(Remind me how).</small></a></li>
+	<li>In order to edit a filter, hover mouse pointer over the existing filters and click "Edit" icon next to the filter (name) you want to manage.</li>
+	<img src="image/doc/categories/filters/filters_edit.bmp">
+	<p>Filter's form opens.</p>
+	<li>You can edit any of the filter's property as in the add new filter section. <a href="{self}#carrier"><small>(Remind me how).</small></a></li>
+	<li>Click <strong>Save</strong> button.</li>
+	<img src="image/doc/categories/filters/filters_save.bmp">
+	<br \>
+	<li>If you want to Delete a filter click "Delete" next to the "edit" icon.</li>
+	<img src="image/doc/categories/filters/filters_delete.bmp">
+</ul>
 
 {helpSeeAlso}
 	{see cat.details}
