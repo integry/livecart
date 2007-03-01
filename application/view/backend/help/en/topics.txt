@@ -4,6 +4,8 @@
 
 	installation=Installation
 
+	temp=Test
+
 	cat=Product Categories
 		details=Category Details
 		attr=Attributes
