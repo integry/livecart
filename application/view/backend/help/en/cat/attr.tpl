@@ -53,8 +53,8 @@ can create variuos types of attributes. Below you'll find a couple of practical 
 <h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
 <p>To start creating  an attribute follow these steps:</p>
 	<ul>	
-		<li>Select a category in the category tree and click <strong>Attributes</strong> tab. Notice that created attribute will
-		apply to your chosen category and all of its subcategories.</li>
+		<li>Select a category in the category tree and click <strong>Attributes</strong> tab. (Notice that created attribute will
+		apply to your chosen category and all of its subcategories).</li>
 		<img src="image/doc/categories/attributes/attributes_tab.bmp">
 		<li>In the attributes section click <strong>Add new attributes</strong>:</li>
 		<!-- <img src="image/doc/categories/attributes/add_new_attribute_reference.bmp">-->
@@ -102,7 +102,10 @@ The last thing to do is to create Values which will be used as a selection optio
 	<img src="image/doc/categories/attributes/carrier.bmp">
 	</ul>
 
-<p class="note"><strong>Note</strong>: you can also create a similar attribute for number selector type using these instructions. To do that, set
+<p class="note"><strong>Note</strong>: In the list there is also <strong>other</strong> value which is designed to supplement values list
+in case a new value is introduced.</p>
+
+<p class="note"><strong>Note 2</strong>: you can also create a similar attribute for number selector type using these instructions. To do that, set
 attribute's type to <strong>Number Selector</strong> and make all the necessary changes respectively.</p>
 
 <h4 id="features">Creating <i>Phone Features</i> attribute</h4>
@@ -143,7 +146,7 @@ attribute's type to <strong>Number Selector</strong> and make all the necessary 
 <p class="note"><strong>Note</strong>: to create a corresponding attribute for a numeric selection choose <strong>Number Selector</strong> type followed
 by necessary changes. A numeric attribute looks similar to this one:
 <img src="image/doc/categories/attributes/bandwidth_generated.bmp">
-
+<strong>Other</strong> value can be used to add more values. Click <strong>other</strong> to add a new value.
 </p>
 
 <h4 id="capacity">Creating <i>Batery Capacity</i> attribute</h4>
