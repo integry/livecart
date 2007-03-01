@@ -54,7 +54,11 @@ class ProductFilter
 			}		  
 			else
 			{
-			  	$cond->addAND($filter->getCondition());
+			  	$filterCond = $filter->getCondition();
+			  	if ($filterCond)
+			  	{
+					$cond->addAND($filterCond);					
+				}
 			}
 		
 			$filter->defineJoin($selectFilter);		

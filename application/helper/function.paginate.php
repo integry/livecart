@@ -34,7 +34,7 @@ function smarty_function_paginate($params, $smarty)
 		}
 	}
 
-	if ($params['current'] < $params['count'])
+	if ($params['current'] < $pages)
 	{
 		$out[] = '<a href="' . $params['url'] . ($params['current'] + 1) . '">' . $store->translate('_next') . '</a>';
 	}

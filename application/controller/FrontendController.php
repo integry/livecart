@@ -47,7 +47,7 @@ abstract class FrontendController extends BaseController
 		// get top categories
 		$rootCategory = Category::getInstanceByID(1);
 		$topCategories = $rootCategory->getSubcategoryArray();
-		$currentCategory = Category::getInstanceByID($this->categoryID, Category::LOAD_DATA);		
+		$currentCategory = Category::getInstanceByID($this->categoryID, Category::LOAD_DATA);	
 		
 		// get path of the current category (except for top categories)
 		if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->category->get()->getID()))
@@ -115,14 +115,14 @@ abstract class FrontendController extends BaseController
 			$filterArray = $this->filters->toArray();
 
 			$rootFilters = array();
-			foreach ($filterArray as $filter)
+			foreach ($this->filters as $filter)
 			{
-			  	if (Category::ROOT_ID == $filter['FilterGroup']['SpecField']['Category']['ID'])
+				if (Category::ROOT_ID == $filter->filterGroup->get()->specField->get()->category->get()->getID())
 			  	{
-					$rootFilters[$filter['ID']] = true;
+					$rootFilters[$filter->getID()] = true;
 				}
 			}
-			$this->applyFilters($topCategories, $filterArray, $rootFilters);		  
+			$this->applyFilters($topCategories, $rootFilters);		  
 		}
 
 		$response = new BlockResponse();
@@ -135,19 +135,19 @@ abstract class FrontendController extends BaseController
 	/**
 	 *  Recursively applies all selected filters to applicable categories
 	 */
-	private function applyFilters(&$categories, $filters, $parentFilterIds)
+	private function applyFilters(&$categories, $parentFilterIds)
 	{
 		foreach ($categories as &$category)
 		{
 		  	$categoryFilters = $parentFilterIds;
-			foreach ($filters as $filter)
+			foreach ($this->filters as $filter)
 		  	{
-			    if ($filter['FilterGroup']['SpecField']['Category']['ID'] == $category['ID'])
+			    if ($filter->filterGroup->get()->specField->get()->category->get()->getID() == $category['ID'])
 			    {
-					$categoryFilters[$filter['ID']] = true;
+					$categoryFilters[$filter->getID()] = true;
 				}
 
-				if (isset($categoryFilters[$filter['ID']]))
+				if (isset($categoryFilters[$filter->getID()]))
 				{
 					$category['filters'][] = $filter;
 				}
@@ -155,7 +155,7 @@ abstract class FrontendController extends BaseController
 			
 			if (isset($category['subCategories']))
 			{
-			  	$this->applyFilters($category['subCategories'], $filters, $categoryFilters);
+			  	$this->applyFilters($category['subCategories'], $categoryFilters);
 			}
 		}  	
 	}

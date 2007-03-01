@@ -37,6 +37,7 @@ class CategoryController extends FrontendController
 		  	ClassLoader::import('application.model.category.Filter');
 			$filterIds = array();
 			$filters = explode(',', $this->request->getValue('filters'));
+
 		  	foreach ($filters as $filter)
 			{
 			  	$pair = explode('-', $filter);
@@ -51,7 +52,7 @@ class CategoryController extends FrontendController
 			$f = new ARSelectFilter();
 			$c = new INCond(new ARFieldHandle('Filter', 'ID'), $filterIds);
 			$f->setCondition($c);
-			$this->filters = ActiveRecordModel::getRecordSet('Filter', $f, ActiveRecord::LOAD_REFERENCES);
+			$this->filters = ActiveRecordModel::getRecordSet('Filter', $f, Filter::LOAD_REFERENCES);
 		}
 
 		// get category instance
