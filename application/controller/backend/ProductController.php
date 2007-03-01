@@ -328,7 +328,12 @@ class ProductController extends StoreManagementController
 		$specFieldsByGroup = array();
 		foreach ($specFieldArray as $field)
 		{
-			$specFieldsByGroup[$field['SpecFieldGroup']['ID']][] = $field;
+			if (!isset($field['SpecFieldGroup']))
+			{
+				$field['SpecFieldGroup'] = 0;
+			}
+
+			$specFieldsByGroup[$field['SpecFieldGroup']][] = $field;				
 		}
 		
 		$response = new ActionResponse();

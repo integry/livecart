@@ -77,7 +77,7 @@ class CategoryController extends FrontendController
 
 		$this->productFilter = $productFilter;
 
-		$products = $this->category->getProductsArray($productFilter, ActiveRecord::LOAD_REFERENCES);
+		$products = $this->category->getProductsArray($productFilter, array('Manufacturer'));
 
 		$count = new ProductCount($this->productFilter);
 		$totalCount = $count->getCategoryProductCount($productFilter);
@@ -91,7 +91,7 @@ class CategoryController extends FrontendController
 		{
 			$urlParams['filters'] = $this->request->getValue('filters');
 		}
-		$url = Router::getInstance()->createURL($urlParams) . '/p';
+		$url = Router::getInstance()->createURL($urlParams) . '/';
 		
 		$response = new ActionResponse();
 		$response->setValue('id', $this->categoryID);
@@ -120,16 +120,15 @@ class CategoryController extends FrontendController
 		$currentCategory = Category::getInstanceByID($this->categoryID, true);	
 		
 		// get category filter groups
-		$filterGroupSet = $currentCategory->getFilterGroupSet();
-		if (!$filterGroupSet || (0 == $filterGroupSet->getTotalRecordCount()))
+		$filterGroups = $currentCategory->getFilterGroupArray();
+		if (!$filterGroups)
 		{
 		  	return new RawResponse();
 		}		
-		$filterGroups = $filterGroupSet->toArray(true);
-
+	
 		// get counts by filters, categories, etc
 		$count = new ProductCount($this->productFilter);
-		$filtercount = $count->getCountByFilters($this->category->getFilterSet());
+		$filtercount = $count->getCountByFilters();
 
 		// get group filters
 		$ids = array();
@@ -146,14 +145,14 @@ class CategoryController extends FrontendController
 			$filterFilter->setOrder(new ARFieldHandle('Filter', 'filterGroupID'));
 			$filterFilter->setOrder(new ARFieldHandle('Filter', 'position'));
 			
-			$filters = ActiveRecord::getRecordSet('Filter', $filterFilter, true)->toArray(true);
-								
+			$filters = ActiveRecord::getRecordSetArray('Filter', $filterFilter);
+
 			// sort filters by group
 			$sorted = array();
 			foreach ($filters as $filter)
 			{
-				$filter['count'] = $filtercount[$filter['ID']];
-				$sorted[$filter['FilterGroup']['ID']][] = $filter;  	
+				$filter['count'] = isset($filtercount[$filter['ID']]) ? $filtercount[$filter['ID']] : 0;
+				$sorted[$filter['filterGroupID']][] = $filter;  	
 			}
 			
 			// assign sorted filters to group arrays

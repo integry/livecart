@@ -11,6 +11,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 {
 	const INCLUDE_PARENT = true;
 	
+	private $specFieldArrayCache = array();
+	private $filterGroupArrayCache = array();
+	
 	/**
 	 * Define database schema used by this active record instance
 	 *
@@ -143,12 +146,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	public function getFilterSet()
 	{
 		// get group filters
-	  	$groups = $this->getFilterGroupSet();
+	  	$groups = $this->getFilterGroupArray();
 
 		$ids = array();
 		foreach ($groups as $group)
 		{
-		  	$ids[] = $group->getID();
+		  	$ids[] = $group['ID'];
 		}		
 		
 		if (!$ids)
@@ -162,7 +165,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$filterFilter->setOrder(new ARFieldHandle('Filter', 'filterGroupID'));
 		$filterFilter->setOrder(new ARFieldHandle('Filter', 'position'));
 		
-		return ActiveRecord::getRecordSet('Filter', $filterFilter, true);	  	
+		return ActiveRecord::getRecordSet('Filter', $filterFilter, array('FilterGroup', 'SpecField'));	  	
 	}
 	
 	/**
@@ -179,15 +182,42 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		{
 		  	return new ARSet(null);
 		}
-		return ActiveRecord::getRecordSet('FilterGroup', $filter, true);
+		return ActiveRecord::getRecordSet('FilterGroup', $filter, array('SpecField'));
+	}
+
+	/**
+	 * Returns a set of category filters
+	 *
+	 * @param bool $loadReferencedRecords
+	 * @return ARSet
+	 */
+	public function getFilterGroupArray()
+	{
+		if (!$this->filterGroupArrayCache)
+		{
+		  	ClassLoader::import('application.model.category.FilterGroup');
+			$filter = $this->getFilterGroupFilter();
+			if (!$filter)
+			{
+			  	return array();
+			}
+			
+			$this->filterGroupArrayCache = ActiveRecord::getRecordSetArray('FilterGroup', $filter, array('SpecField'));			
+		}
+		
+		return $this->filterGroupArrayCache;
 	}
 
 	private function getFilterGroupFilter($includeParentFields = true)
 	{
-		$fields = $this->getSpecificationFieldArray($includeParentFields);
+		if (!$this->specFieldArrayCache)
+		{
+			$this->specFieldArrayCache = $this->getSpecificationFieldArray($includeParentFields);	
+		}		
+		
 		$categories = array();
 		$ids = array();
-		foreach ($fields as $field)
+		foreach ($this->specFieldArrayCache as $field)
 		{
 		  	$ids[$field['ID']] = true;
 		}
@@ -512,7 +542,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
 		ClassLoader::import("application.model.category.SpecField");
 
-        $specFields = SpecField::getRecordSetArray($this->getSpecificationFilter($includeParentFields), true);
+        $specFields = SpecField::getRecordSetArray($this->getSpecificationFilter($includeParentFields), array('SpecFieldGroup'));
 
         if($mergeWithEmptyGroups)
         {

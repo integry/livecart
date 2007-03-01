@@ -183,36 +183,9 @@ class Product extends MultilingualObject
 		ActiveRecordModel::commit();
 	}
 
-/*
-	protected function miscRecordDataHandler($miscRecordDataArray)
-	{
-		foreach ($miscRecordDataArray as $key => $value)
-		{
-			if (substr($key, 0, 6) == 'price_')
-			{
-			  	$this->priceData[substr($key, 6)] = $value;
-			}
-			if (substr($key, 0, 10) == 'specField_')
-			{
-			  	$key = substr($key, 10);
-			  	$this->specFieldData[$key] = $value;
-			}
-			else if (substr($key, 0, 15) == 'specMultiValue_')
-			{
-			  	$key = substr($key, 15);
-			  	list($fieldId, $valueId) = explode('_', $key);
-			  	if (!is_array($this->specFieldData[$fieldId]))
-			  	{
-					$this->specFieldData[$fieldId] = array();
-				}
-				$this->specFieldData[$fieldId][$valueId] = $value;
-			}
-		}
-	}
-*/
 	public function getSpecificationFieldSet($loadReferencedRecords = false)
 	{
-	  	return $this->category->get()->getSpecificationFieldSet(true, $loadReferencedRecords);
+	  	return $this->category->get()->getSpecificationFieldSet(Category::INCLUDE_PARENT, $loadReferencedRecords);
 	}
 
 	public function loadSpecification($specificationData = null, $pricingData = null)

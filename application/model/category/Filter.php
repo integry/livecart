@@ -92,7 +92,7 @@ class Filter extends MultilingualObject
 		{
 			throw new ApplicationException('Filter type not supported');
 		}	
-		
+
 		return $cond;
 	}
 

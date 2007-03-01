@@ -9,10 +9,10 @@
 
 $routes = array(
 					array("shop/:cathandle-:id", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+")),
-					array("shop/:cathandle-:id/p:page", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+","page" => "[0-9]+")),
+					array("shop/:cathandle-:id/:page", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+","page" => "[0-9]+")),
 
-					array("shop/:cathandle-:id/:filters", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+", "filters" => "[0-9A-Za-z\-.,]+")),
-					array("shop/:cathandle-:id/:filters/p:page", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+","page" => "[0-9]+", "filters" => "[0-9A-Za-z\-.,]+")),
+					array("shop/:cathandle-:id/:filters", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+", "filters" => "[0-9A-Za-z.,]+\-[0-9]+")),
+					array("shop/:cathandle-:id/:filters/:page", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+","page" => "[0-9]+", "filters" => "[0-9A-Za-z\-.,]+")),
 					
 					array("backend.help/:id", array('controller' => 'backend.help', 'action' => 'view'), array()),
 					array(":controller", array("action" => "index"), array()),

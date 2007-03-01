@@ -46,8 +46,8 @@ abstract class FrontendController extends BaseController
 
 		// get top categories
 		$rootCategory = Category::getInstanceByID(1);
-		$topCategories = $rootCategory->getSubcategorySet()->toArray();
-		$currentCategory = Category::getInstanceByID($this->categoryID, true);		
+		$topCategories = $rootCategory->getSubcategoryArray();
+		$currentCategory = Category::getInstanceByID($this->categoryID, Category::LOAD_DATA);		
 		
 		// get path of the current category (except for top categories)
 		if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->category->get()->getID()))
@@ -73,7 +73,7 @@ abstract class FrontendController extends BaseController
 		// get sibling (same-level) categories (except for top categories)
 		if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->category->get()->getID()))
 		{
-			$siblings = $currentCategory->getSiblingSet()->toArray();
+			$siblings = $currentCategory->getSiblingArray();
 		
 			foreach ($path as &$node)
 			{
@@ -109,14 +109,11 @@ abstract class FrontendController extends BaseController
 			}									  
 		}
 						
-
-		/* @todo get rid of this line (needed to preload all related records) */
-		$filterGroupSet = $currentCategory->getFilterGroupSet();
-		
 		// apply current filters to suitable categories
 		if ($this->filters)
 		{
-			$filterArray = $this->filters->toArray(true, true);
+			$filterArray = $this->filters->toArray();
+
 			$rootFilters = array();
 			foreach ($filterArray as $filter)
 			{

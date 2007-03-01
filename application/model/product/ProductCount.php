@@ -16,6 +16,7 @@ class ProductCount
 	{		
 		$selectFilter = $this->productFilter->getSelectFilter();		
 		$selectFilter->removeFieldList();
+		$selectFilter->setLimit(0);
 	
 		$filters = $this->productFilter->getCategory()->getFilterSet();				
 
@@ -23,14 +24,20 @@ class ProductCount
 		{
 			$filter->defineJoin($selectFilter);			  
 
-			$expression = 'SUM(' . $filter->getCondition()->getExpressionHandle()->toString() . ')';
+			$cond = $filter->getCondition();
+			if (!is_object($cond))
+			{
+				continue;
+			}
+
+			$expression = 'SUM(' . $cond->getExpressionHandle()->toString() . ')';
 			$selectFilter->addField($expression, null, 'cnt_' . $filter->getID());	
 		}
 		
 		$query = ActiveRecordModel::createSelectQuery('Product');
 		$query->removeFieldList();
 		$query->getFilter()->merge($selectFilter);
-		
+				
 		$res = ActiveRecordModel::fetchDataFromDB($query);
 		$res = $res[0];
 		
