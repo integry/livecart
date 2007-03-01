@@ -90,6 +90,17 @@ h4 {
 	margin-bottom: 10px;  
 }
 
+a {
+	text-decoration: none;
+	
+}
+
+a:hover { 
+
+	text-decoration: underline;
+
+}
+
 a.external
 {
 	background-image: url(../../image/silk/link_go.png);
@@ -228,8 +239,16 @@ p.note {
 }
 
 small {
-
+	
+	color: #247cd4;
 	font-size: 11px;
 	
 }
+
+small:hover {
+	
+	text-decoration: underline;
+
+}
+
 
