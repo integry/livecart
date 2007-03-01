@@ -251,7 +251,7 @@ class Store
 	{
 		if (!$this->defaultCurrency)
 		{
-		  	$this->loadCurrencyData();
+			$this->loadCurrencyData();
 		}
 
 		return $this->defaultCurrency;
@@ -265,7 +265,7 @@ class Store
 	{
 		if (!$this->defaultCurrencyCode)
 		{
-		  	$this->defaultCurrencyCode = $this->getDefaultCurrency()->getID();
+			$this->defaultCurrencyCode = $this->getDefaultCurrency()->getID();
 		}
 
 		return $this->defaultCurrencyCode;
@@ -320,11 +320,11 @@ class Store
 	  	$filter->setCondition(new EqualsCond(new ArFieldHandle('Currency', 'isEnabled'), 1));
 	  	$filter->setOrder(new ArFieldHandle('Currency', 'position'), 'ASC');
 	  	$currencies = ActiveRecord::getRecordSet('Currency', $filter);
-	  	
 	  	$this->currencies = array();
+	  	
 	  	foreach ($currencies as $currency)
 	  	{
-			if ($currency->isDefault())
+	  		if ($currency->isDefault())
 		    {
 			  	$this->defaultCurrency = $currency;
 			}

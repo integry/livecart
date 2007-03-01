@@ -133,7 +133,7 @@ class ProductSpecification
 		$arr = array();
 		foreach ($this->attributes as $id => $attribute)
 		{
-		 	$arr[$id] = $attribute->toArray(ActiveRecordModel::NON_RECURSIVE);		 	
+			$arr[$id] = $attribute->toArray(ActiveRecordModel::NON_RECURSIVE);		 	
 		}
 
 		return $arr;

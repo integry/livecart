@@ -281,7 +281,7 @@ class ProductController extends StoreManagementController
         	{
         	    if(in_array($attr['SpecField']['type'], SpecField::getSelectorValueTypes()))
         	    {
-        	        if(1 == $attr['SpecField']['isMultiValue'])
+        	    	if(1 == $attr['SpecField']['isMultiValue'])
         		    {
         		        foreach($attr['valueIDs'] as $valueID)
         		        {
@@ -303,14 +303,14 @@ class ProductController extends StoreManagementController
         	    }
         	    else
         	    {
-        	        $productFormData["{$attr['SpecField']['fieldName']}"] = $attr['value'];
+        	    	$productFormData[$attr['SpecField']['fieldName']] = $attr['value'];
         	    }   
         	}
         	
         	$productFormData['manufacturer'] = $productFormData['Manufacturer']['name'];
         	
 		}
-		print_r($productFormData);
+		
         $form->setData($productFormData);
 		
 		$languages = array();
@@ -361,13 +361,13 @@ class ProductController extends StoreManagementController
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name_empty')));		    
 		
 		// check if SKU is entered if not autogenerating
-		if ($this->request->getValue('save') && (($product->isExistingRecord() && $product->getFieldValue('sku') != $this->request->getValue('sku')) || !$this->request->getValue('autosku')))
+		if ($this->request->getValue('save') && !$product->isExistingRecord() && !$this->request->getValue('autosku'))
 		{
 			$validator->addCheck('sku', new IsNotEmptyCheck($this->translate('_err_sku_empty')));		    		  
 		}
 		
 		// check if entered SKU is unique
-		if ($this->request->getValue('sku') && $this->request->getValue('save'))
+		if ($this->request->getValue('sku') && $this->request->getValue('save') && (!$product->isExistingRecord() || ($this->request->isValueSet('sku') && $product->getFieldValue('sku') != $this->request->getValue('sku'))))
 		{
 			ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
 			$validator->addCheck('sku', new IsUniqueSkuCheck($this->translate('_err_sku_not_unique'), $product));
