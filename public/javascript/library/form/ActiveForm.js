@@ -17,7 +17,6 @@ ActiveForm.prototype = {
     showNewItemForm: function(link, form, animate) 
     {
         animate = animate !== false ? true : animate;
-        console.info(animate);
         
         if(link) $(link).addClassName('hidden');  
         if(animate && BrowserDetect.browser != 'Explorer')

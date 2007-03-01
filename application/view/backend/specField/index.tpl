@@ -114,7 +114,6 @@
 
 
 <script type="text/javascript">
-console.info('asd')
      var categoryID = {$categoryID};
      var groupList = ActiveList.prototype.getInstance('specField_groups_list_'+categoryID, Backend.SpecFieldGroup.prototype.callbacks, Backend.SpecField.prototype.msg.activeListMessages);  
      

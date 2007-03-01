@@ -208,7 +208,7 @@ class SpecField extends MultilingualObject
 	 */
 	public static function exists($id)
 	{
-	    return ActiveRecord::objectExists(__CLASS__, (int)$id);
+		return ActiveRecord::objectExists(__CLASS__, (int)$id);
 	}
 
 	/**
