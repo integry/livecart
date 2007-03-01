@@ -17,6 +17,6 @@
 <script>
     Event.observe($("cancel_product_edit"), "click", function(e) {ldelim}
         Event.stop(e); 
-        Backend.Product.Editor.prototype.cancelProductForm();
+        Backend.Product.Editor.prototype.showCategoriesContainer();
     {rdelim});
 </script>

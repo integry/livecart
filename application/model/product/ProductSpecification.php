@@ -11,6 +11,11 @@ ClassLoader::import("application.model.specification.SpecificationItem");
  */
 class ProductSpecification
 {
+	/**
+	 * Product instance
+	 *
+	 * @var Product
+	 */
 	private $product = null;
 	
 	private $attributes = array();
@@ -33,7 +38,12 @@ class ProductSpecification
 	{		
 		$specField = $newSpecification->getSpecField();
 
-		if(isset($this->attributes[$newSpecification->getSpecField()->getID()]) && ('SpecificationItem' == $specField->getSpecificationFieldClass() && $newSpecification->specFieldValue->isModified()))
+		if(
+			$this->product->isExistingRecord()   
+			&& isset($this->attributes[$newSpecification->getSpecField()->getID()]) 
+			&& ('SpecificationItem' == $specField->getSpecificationFieldClass() 
+			&& $newSpecification->specFieldValue->isModified())
+		)
 		{
 			// Delete old value
 			ActiveRecord::deleteByID('SpecificationItem', $this->attributes[$specField->getID()]->getID());

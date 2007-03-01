@@ -38,7 +38,6 @@ Backend.Product =
 
     		this.formTabCopies[categoryID] = container;
 
-            console.info(this.productTabCopies[categoryID], container);
     		container.parentNode.replaceChild(this.productTabCopies[categoryID], container);
         }
         catch(e)
@@ -65,7 +64,7 @@ Backend.Product =
 			tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
 		}
 
-		var expander = new SectionExpander();
+		new SectionExpander();
 
 		// specField entry logic (multiple value select)
 		var containers = document.getElementsByClassName('multiValueSelect', $('tabProductsContent_' + categoryID));
@@ -246,7 +245,6 @@ Backend.Product.saveHandler.prototype =
                     document.getElementsByClassName('product_sku', this.form)[0].disabled = false;
     				Form.focusFirstElement(this.form);
 
-                    console.info('product save');
 				    new Backend.SaveConfirmationMessage(this.form.getElementsByClassName('productSaveConf')[0]);
                 }
                 catch(e)
@@ -394,7 +392,8 @@ Backend.Product.Editor.prototype =
 
         this.__nodes__();
         this.__bind__();
-
+        
+		new SectionExpander(this.nodes.parent);
         Form.State.backup(this.nodes.form);
 	},
 
@@ -414,10 +413,16 @@ Backend.Product.Editor.prototype =
     },
 
     __init__: function(args)
-    {
-        Backend.Product.Editor.prototype.setCurrentProductId(this.id);
+    {	
+		Backend.Product.Editor.prototype.setCurrentProductId(this.id);
         this.showProductForm();
         this.tabControl = TabControl.prototype.getInstance("productManagerContainer", Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId);
+
+		var textareas = this.nodes.parent.getElementsByTagName('textarea');
+		for (k = 0; k < textareas.length; k++)
+		{
+			tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
+		}
     },
 
     craftProductUrl: function(url)
@@ -442,7 +447,6 @@ Backend.Product.Editor.prototype =
 
     getInstance: function(id)
     {
-		console.info(id);
 		if(!Backend.Product.Editor.prototype.__instances__[id])
         {
             Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id);
@@ -466,12 +470,10 @@ Backend.Product.Editor.prototype =
     {
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		Form.restore(this.nodes.form);
-        this.showCategoriesContainer();
     },
 
     submitForm: function()
     {
-	    console.info('submit');
 		var self = this;
 		new Ajax.Request(this.nodes.form.action + "/" + this.id,
 		{
@@ -487,12 +489,10 @@ Backend.Product.Editor.prototype =
 	
 	afterSubmitForm: function(response)
 	{
-		console.info(response);
 		if(!response.errors || 0 == response.errors.length)
 		{
 			new Backend.SaveConfirmationMessage(this.nodes.form.down('.pricesSaveConf'));
 			Form.State.backup(this.nodes.form);
-			this.showCategoriesContainer();
 		}
 		else
 		{
@@ -507,7 +507,7 @@ Backend.Product.Editor.prototype =
     },
 
     showCategoriesContainer: function(args)
-    {
+    {       
         Element.hide($("productManagerContainer"));
         Element.show($("managerContainer"));
     }

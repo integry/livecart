@@ -47,13 +47,10 @@ abstract class ValueSpecification extends Specification
 
 	public function toArray()
 	{	
-		// Too deep call walk around
-		return array(
-			'value' => $this->value->get(),
-			'SpecField' => array(
-				'fieldName' => 'specField_' . $this->specField->get()->getID()
-			)
-		);
+		$arr  = parent::toArray(false);
+		$arr['SpecField'] = $this->specField->get()->toArray();
+		
+		return $arr;
 	}	
 
 

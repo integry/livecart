@@ -218,7 +218,9 @@ class Product extends MultilingualObject
 
 	public function loadRequestData(Request $request)
 	{
-	  	// basic data
+	  	if(!$this->isExistingRecord()) $this->save();
+
+		// basic data
 		parent::loadRequestData($request);
 
 		// set manufacturer

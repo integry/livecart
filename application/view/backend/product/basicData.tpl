@@ -21,8 +21,6 @@
     </fieldset>
     
     <script type="text/javascript">
-        new SectionExpander("product_{$cat}_{$product.ID}_form");
-		console.info({$product.ID});
         Backend.Product.Editor.prototype.getInstance({$product.ID});
     </script>
 {/form}

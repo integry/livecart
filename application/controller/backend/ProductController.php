@@ -208,10 +208,9 @@ class ProductController extends StoreManagementController
 					}					  
 				}
 			}
-			
-			// set data
 			$product->loadRequestData($this->request);
-								
+			
+			// set data								
 			ActiveRecordModel::beginTransaction();
 			$product->save();
 			ActiveRecordModel::commit();
@@ -266,10 +265,10 @@ class ProductController extends StoreManagementController
 		{
 		  	if ($field->isTextField())
 		  	{
-				$multiLingualSpecFields[] = $field->toArray();
+		  		$multiLingualSpecFields[] = $field->toArray();
 			}
 		}
-
+		
 		$form = $this->buildForm($product);
 		
 		$productFormData = $product->toArray();
@@ -279,7 +278,7 @@ class ProductController extends StoreManagementController
         	$product->loadSpecification();
         	foreach($product->getSpecification()->toArray() as $attr)
         	{
-        	    if(in_array($attr['SpecField']['type'], SpecField::getSelectorValueTypes()))
+        		if(in_array($attr['SpecField']['type'], SpecField::getSelectorValueTypes()))
         	    {
         	    	if(1 == $attr['SpecField']['isMultiValue'])
         		    {
@@ -326,22 +325,26 @@ class ProductController extends StoreManagementController
 
 		// arrange SpecFields's into groups
 		$specFieldsByGroup = array();
+		$prevGroupID = -6541;
+		ClassLoader::import("application.model.category.FilterGroup");
 		foreach ($specFieldArray as $field)
 		{
-			if (!isset($field['SpecFieldGroup']))
+			$groupID = isset($field['SpecFieldGroup']) ? $field['SpecFieldGroup'] : '';
+			if((int)$groupID && $prevGroupID != $groupID) 
 			{
-				$field['SpecFieldGroup'] = 0;
+				$field['SpecFieldGroupData'] = SpecFieldGroup::getInstanceByID($groupID, ActiveRecord::LOAD_DATA)->toArray();
+				$prevGroupID = $groupID;
 			}
-
-			$specFieldsByGroup[$field['SpecFieldGroup']][] = $field;				
-		}
-		
+			
+			$specFieldsByGroup[$groupID][] = $field;
+		}		
+				
 		$response = new ActionResponse();
 		$response->setValue("cat", $product->category->get()->getID());
 		$response->setValue("languageList", $languages);
 		$response->setValue("specFieldList", $specFieldsByGroup);
 		$response->setValue("productForm", $form);
-		$response->setValue("multiLingualSpecFields", $multiLingualSpecFields);
+		$response->setValue("multiLingualSpecFieldss", $multiLingualSpecFields);
 		$response->setValue("productTypes", $types);
 		$response->setValue("baseCurrency", Store::getInstance()->getDefaultCurrency()->getID());
 		$response->setValue("otherCurrencies", Store::getInstance()->getCurrencyArray(Store::EXCLUDE_DEFAULT_CURRENCY));
@@ -351,6 +354,7 @@ class ProductController extends StoreManagementController
 			$productData['ID'] = 0;  	
 		}
 		$response->setValue("product", $productData);
+		
 		return $response; 	
 	}
 	

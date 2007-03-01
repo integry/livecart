@@ -4,7 +4,7 @@
 	
 		{if $groupID}
 			<fieldset>
-				<legend>{$fieldList.0.SpecFieldGroup.name_lang}</legend>
+				<legend>{$fieldList.0.SpecFieldGroupData.name_lang}</legend>
 		{/if}
 		
 		{foreach from=$fieldList item=field}
