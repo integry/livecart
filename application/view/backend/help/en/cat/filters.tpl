@@ -9,6 +9,8 @@ customer may filter the products by any property he likes at any point of the pr
 <p>(Think of as many filters as possible to create an efficient browsing system as users may be interested in many kinds of attributes your products
 have to offer (some may search for products by particular technical details and some may be interested in shape or color)</p>
 
+<p class="note">(Because attributes are assigned to particular categories, the same way filters define search range only within specific categories)</p>
+
 <p>Let's take a look at a few <strong>examples</strong> to get a better idea how filters work.</p>
 
 <div class="tasks">
@@ -55,7 +57,7 @@ to define a range for filter's values.</p>
 	<img src="image/doc/categories/filters/main.bmp">
 	<li>The <strong>name</strong> of the filter appears automatically so you can leave it as it is.</li>
 	<li>Also you can enter filter's name in <strong>other languages</strong> supported by your system. Click on the language to supply Filter's name.</li>
-	
+	<br \>
 	<li>To define filter's rule or rules click <strong>Criteria</strong> tab next to the Main tab.</li>
 	<li>In the Criteria section you can generate filter's rules automatically or add them one by one. To generate rules click 
 	<strong>Generate rules</strong>.</li>
@@ -69,7 +71,7 @@ to define a range for filter's values.</p>
 		<li>Value - the value of the attribute which is used as a filtering criterion.</li>
 	</ul>
 	<li>In addition, you can <strong>rearrange</strong> rules to set the order in which they should be displayed. To do that simply move
-	mouse cursor over an existing rule, when "move" icon appears click and hold your mouse button, now you can move your rule up and down to 
+	mouse cursor over an existing rule, click and hold your mouse button when "move" icon appears, now you can move your rule up and down to 
 	set the appropriate arrangement.</li>
 	<img src="image/doc/categories/filters/rearrange.bmp">
 	<li>When you are done, click <strong>Save</strong>.</li>
@@ -91,11 +93,28 @@ each individually). Complete the following steps to create the battery capacity 
 	<br \>
 	<li>Go to Criteria section by clicking <strong>Criteria</strong> tab.</li>
 	<img src="image/doc/categories/filters/filters.bmp">
-	<p>Filter's rules section opens.</p>
+	<p>Filter's criteria section opens.</p>
 	<li>As "Battery Capacity" attribute doesn't have any values set initially you have to define ranges that will specify filtering criteria.
-	Let's say that battery capacity might range from 200 to 5000 mAh, so we create the following rules:</li>
-	<li><ins>...</ins></li>
-	<li>Make sure to click <strong>Save</strong> at the end.</li>
+	Let's say that battery capacity might range from 200 to 5000 mAh, therefore we create the following rules:</li>
+	<li>Click <strong>Add Criteria/Rule</strong></li>
+	<img src="image/doc/categories/filters/filters_add_hand.bmp">
+	<li>Complete filter's criteria by entering necessary parameters:</li>
+	<img src="image/doc/categories/filters/filter_criteria.bmp">
+	<ul>
+		<li>Name - the name of the criteria represents criteria's details thus we choose "200-500"</li>
+		<li>Set <a href="{self}#explain what is handle (pop-up?)"><small>handle</small></a></a></li>
+		<li>Range - range defines filtering scope of attribute's values. In our case  </li>
+	</ul>
+	<li>To add another criteria, click Add Criteria for another cirteria to appear.</li>
+	<li>Continue in a similar manner to create a satisfactory list of intervals.</li>
+	<img src="image/doc/categories/filters/criteria_list.bmp">
+	<li>To <strong>edit</strong> any of the criteria's parameters make changes to necessary fields.</li>
+	<li>To <strong>delete</strong> a criteria, click "delete" icon:</li>
+	<img src="image/doc/categories/filters/criteria_delete.bmp">
+	<li><strong>Arrangement</strong> of filter's criteria can be important. To change criteria's order click on criteria's empty space and drag
+	it up or down:</li>
+	<img src="image/doc/categories/filters/criteria_sort.bmp">
+	<li>Make sure to click <strong>Save</strong> changes at the end.</li>
 	<img src="image/doc/categories/filters/filters_save.bmp">
 </ol>
 
