@@ -100,11 +100,13 @@ Backend.Product =
 	  	skuField.disabled = checkbox.checked;
 	  	if (checkbox.checked)
 	  	{
-		    skuField.value = '';
+		    skuField._backedUpValue = skuField.value;
+			skuField.value = '';
 		}
 		else
 		{
-		  	skuField.focus();
+		  	if(skuField._backedUpValue) skuField.value = skuField._backedUpValue;
+			skuField.focus();
 		}
 	},
 
@@ -415,7 +417,7 @@ Backend.Product.Editor.prototype =
     {
         Backend.Product.Editor.prototype.setCurrentProductId(this.id);
         this.showProductForm();
-//        this.tabControl = TabControl.prototype.getInstance("productManagerContainer", Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId);
+        this.tabControl = TabControl.prototype.getInstance("productManagerContainer", Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId);
     },
 
     craftProductUrl: function(url)
@@ -440,21 +442,14 @@ Backend.Product.Editor.prototype =
 
     getInstance: function(id)
     {
-        try
-		{
-			if(!Backend.Product.Editor.prototype.__instances__[id])
-	        {
-	            Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id);
-	        }
-	
-	        Backend.Product.Editor.prototype.__instances__[id].__init__();
-	        return Backend.Product.Editor.prototype.__instances__[id];
-		}
-		catch(e)
-		{
-			console.info(e);
-			return false;
-		}
+		console.info(id);
+		if(!Backend.Product.Editor.prototype.__instances__[id])
+        {
+            Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id);
+        }
+
+        Backend.Product.Editor.prototype.__instances__[id].__init__();
+        return Backend.Product.Editor.prototype.__instances__[id];
     },
 
     hasInstance: function(id)
@@ -464,13 +459,14 @@ Backend.Product.Editor.prototype =
 
     showProductForm: function(args)
     {
-//        this.hideCategoriesContainer();
+        this.hideCategoriesContainer();
     },
 
     cancelForm: function()
     {
+		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		Form.restore(this.nodes.form);
-        //this.showCategoriesContainer();
+        this.showCategoriesContainer();
     },
 
     submitForm: function()
@@ -487,8 +483,6 @@ Backend.Product.Editor.prototype =
 				self.afterSubmitForm(responseObject);
 		   }
 		});
-		
-        //this.showCategoriesContainer();
     },
 	
 	afterSubmitForm: function(response)
@@ -498,6 +492,7 @@ Backend.Product.Editor.prototype =
 		{
 			new Backend.SaveConfirmationMessage(this.nodes.form.down('.pricesSaveConf'));
 			Form.State.backup(this.nodes.form);
+			this.showCategoriesContainer();
 		}
 		else
 		{
