@@ -38,13 +38,22 @@ abstract class ValueSpecification extends Specification
 		return $specItem;
 	}
 
+	public static function transformArray($array, $class = __CLASS__)
+	{
+		unset($array['Product']);
+		unset($array['SpecField']);
+		return MultiLingualObject::transformArray($array, $class);
+	}
+/*
 	public function toArray()
 	{
-		$ret = array();
-		$ret['value'] = $this->value->get();
+		$ret = parent::toArray();
+//		$ret['value'] = $this->value->get();
 		$ret['SpecField'] = $this->specField->get()->toArray(ActiveRecordModel::NON_RECURSIVE);
 		return $ret;
 	}	
+*/
+
 }
 
 ?>

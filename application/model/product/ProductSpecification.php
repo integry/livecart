@@ -6,7 +6,7 @@ ClassLoader::import("application.model.specification.SpecificationItem");
  * Product specification wrapper class
  * Loads/modifies product specification data
  *
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  * @package application.model.product
  */
 class ProductSpecification
@@ -27,7 +27,7 @@ class ProductSpecification
 	 * Sets specification attribute value by mapping product, specification field, and
 	 * assigned value to one record (atomic item)
 	 *
-	 * @param Specification $specification Specification item value
+	 * @param iSpecification $specification Specification item value
 	 */
 	public function setAttribute(iSpecification $newSpecification)
 	{		
@@ -80,6 +80,7 @@ class ProductSpecification
 		}
 		else
 		{
+			// no changes should be made until the save() function is called
 			$this->attributes[$field->getID()]->delete();
 		}
 	}

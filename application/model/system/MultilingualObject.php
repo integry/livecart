@@ -64,7 +64,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	 * @todo cleanup
 	 * @return array
 	 */
-    protected static function transformArray($array, $className = __CLASS__)
+    public static function transformArray($array, $className = __CLASS__)
     {		
 		$array = parent::transformArray($array);
 
@@ -85,6 +85,11 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 					if (!$data)
 					{
 						$data = array($defaultLangCode => '');
+					}
+					
+					if (!isset($data[$defaultLangCode]))
+					{
+						$data[$defaultLangCode] = '';	
 					}
 					
 					if (!is_array($data)) { print_r($array); }

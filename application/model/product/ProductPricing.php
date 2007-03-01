@@ -21,8 +21,8 @@ class ProductPricing
 		if ($prices instanceof ARSet)
 		{
 			foreach ($prices as $price)
-			{
-				$this->prices[$price->currency->get()->getID()] = $price;
+			{				
+				$this->setPrice($price);
 			}
 		}
 		else
@@ -105,12 +105,12 @@ class ProductPricing
 
 	public function toArray()
 	{
-		$defined = array();		
+		$defined = array();	
 		foreach ($this->prices as $inst)
 		{
 			$defined[$inst->currency->get()->getID()] = $inst->price->get();
 		}
-		
+
 		$baseCurrency = Store::getInstance()->getDefaultCurrencyCode();				
 		$basePrice = isset($defined[$baseCurrency]) ? $defined[$baseCurrency] : 0;
 		

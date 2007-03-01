@@ -20,20 +20,6 @@ class Product extends MultilingualObject
 
 	private $pricingHandlerInstance = null;
 
-	/**
-	 *  An array containing specification field values (specFieldID => value, specFieldID => value)
-	 *
-	 *	@var array
-	 */
-	private $specFieldData = array();
-
-	/**
-	 *  An array containing product prices (currencyID => price)
-	 *
-	 *	@var array
-	 */
-	private $priceData = array();
-
 	const DO_NOT_RECALCULATE_PRICE = false;
 
 	public static function defineSchema($className = __CLASS__)
@@ -250,15 +236,11 @@ class Product extends MultilingualObject
 
 	  	if (!$pricingData)
 	  	{
-			$pricingData = $this->getRelatedRecordSet("ProductPrice", new ARSelectFilter(), ProductPrice::LOAD_REFERENCES);
+			$pricingData = $this->getRelatedRecordSet("ProductPrice", new ARSelectFilter());
 	  	}
-	  	else
-	  	{
-		    $pricingData = array();
-		}
 
 		$this->specificationInstance = new ProductSpecification($this, $specificationData);
-  	  	$this->pricingInstance = new ProductPricing($this, $pricingData);
+  	  	$this->pricingHandlerInstance = new ProductPricing($this, $pricingData);
 	}
 
 	public function loadRequestData(Request $request)
@@ -345,7 +327,7 @@ class Product extends MultilingualObject
 	{
 	  	$array = parent::toArray();
 	  	$array['attributes'] = $this->getSpecification()->toArray();
-
+		$array = array_merge($array, $this->getPricesFields());
 	  	return $array;
 	}
 
@@ -499,7 +481,7 @@ class Product extends MultilingualObject
 	{
 		if (!$this->specificationInstance)
 		{
-			$this->specificationInstance = new ProductSpecification($this, $this->specFieldData);
+			$this->specificationInstance = new ProductSpecification($this);
 		}
 
 		return $this->specificationInstance;
@@ -514,7 +496,7 @@ class Product extends MultilingualObject
 	{
 		if (!$this->pricingHandlerInstance)
 		{
-			$this->pricingHandlerInstance = new ProductPricing($this, $this->priceData);
+			$this->pricingHandlerInstance = new ProductPricing($this);
 		}
 
 		return $this->pricingHandlerInstance;
@@ -523,6 +505,7 @@ class Product extends MultilingualObject
 	public function setPrice($currencyCode, $price)
 	{
 	  	$instance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
+
 	  	if (strlen($price) == 0)
 	  	{
 	  		$this->getPricingHandler()->removePriceByCurrencyCode($currencyCode);
@@ -557,6 +540,7 @@ class Product extends MultilingualObject
         return $category->getProductSet(new ARSelectFilter(), false)->getTotalRecordCount();
     }
 
+/*
     public function getPricesArray()
     {
         if(empty($this->priceData))
@@ -569,6 +553,7 @@ class Product extends MultilingualObject
         }
         return $this->priceData;
     }
+*/
 }
 
 ?>

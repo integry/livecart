@@ -37,10 +37,11 @@ class SpecificationStringValue extends ValueSpecification
 		$currentValue[$langCode] = $value;
 		$this->value->set($currentValue);
 	}
-	
+
+/*
 	public function toArray()
 	{
-	  	$ret = parent::toArray();
+		$ret = parent::toArray();
 
 		if (!is_array($ret['value']))
 		{
@@ -50,6 +51,7 @@ class SpecificationStringValue extends ValueSpecification
 	  	$ret['value_lang'] = $ret['value'][Store::getInstance()->getLocaleCode()];
 	  	return $ret;
 	}	
+*/
 }
 
 ?>
