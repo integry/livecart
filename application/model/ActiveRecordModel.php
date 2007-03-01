@@ -35,7 +35,6 @@ abstract class ActiveRecordModel extends ActiveRecord
 						break;
 								
 						case 'ARBool':
-							echo $name . "\n";
 							$this->setFieldValue($name, in_array($request->getValue($name), array('on', 1)));
 						break;
 							
