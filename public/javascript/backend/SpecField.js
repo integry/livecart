@@ -119,8 +119,8 @@ Backend.SpecField.prototype = {
     
     		this.type = this.specField.type;
     		this.values = this.specField.values;
-    
-    		this.name = this.specField.name;
+    console.info(this.specField);
+    		this.name = this.specField.name_lang;
     		this.backupName = this.name;
     
     		this.description = this.specField.description;
@@ -229,7 +229,7 @@ Backend.SpecField.prototype = {
         this.nodes.valuesTranslations = {};
 
 		var ul = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
-		ul.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[0];
+		ul.id = this.cssPrefix + "form_" + this.id + '_values_' + this.languageCodes[0];
         
         this.nodes.specFieldValuesTemplate = document.getElementsByClassName(this.cssPrefix + "form_values_value", this.nodes.valuesDefaultGroup)[0];
         this.nodes.specFieldValuesUl       = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
@@ -400,7 +400,7 @@ Backend.SpecField.prototype = {
 		if(this.categoryID) this.nodes.categoryID.value = this.categoryID;
 		if(this.handle) this.nodes.handle.value = this.handle;
 
-		if(this.name[this.languageCodes[0]]) this.nodes.name.value = this.name[this.languageCodes[0]];
+		if(this.specField.name_lang) this.nodes.name.value = this.specField.name_lang;
 		this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
 
 		this.nodes.multipleSelector.checked = this.isMultiValue ? true : false;
@@ -419,7 +419,7 @@ Backend.SpecField.prototype = {
 
         this.changeMainTitleAction(this.nodes.name.value);
 
-		if(this.description && this.description[this.languageCodes[0]]) this.nodes.description.value = this.description[this.languageCodes[0]];
+		if(this.specField.description_lang) this.nodes.description.value = this.specField.description_lang;
 		this.nodes.description.name = "description[" + this.languageCodes[0] + "]";
 
 		// Translations
@@ -455,8 +455,8 @@ Backend.SpecField.prototype = {
 				{
                     if(Element.hasClassName(inputFields[j].parentNode.parentNode, this.cssPrefix + 'language_translation'))
                     {
-    				    eval("if(self." + inputFields[j].name + " && self."+inputFields[j].name+"['"+self.languageCodes[i]+"']) inputFields[j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];");
-    					inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
+						eval("if(self.specField." + inputFields[j].name + "_" + self.languageCodes[i] + ") inputFields[j].value = self.specField."+inputFields[j].name + "_" + self.languageCodes[i] + ";");
+						inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
                     }
 				}
 
@@ -761,7 +761,7 @@ Backend.SpecField.prototype = {
 		// The field itself
 		var input = li.getElementsByTagName("input")[0];
 		input.name = "values[" + id + "]["+this.languageCodes[0]+"]";
-		input.value = (value && value[this.languageCodes[0]]) ? value[this.languageCodes[0]] : '' ;
+		input.value = value.value_lang ? value.value_lang : '' ;
 
 		// now insert all translation fields
 		for(var i = 1; i < this.languageCodes.length; i++)
@@ -773,7 +773,7 @@ Backend.SpecField.prototype = {
 
 			var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
 			inputTranslation.name = "values[" + id + "][" + this.languageCodes[i] + "]";
-			inputTranslation.value = (value && value[this.languageCodes[i]]) ? value[this.languageCodes[i]] : '';
+			inputTranslation.value = value['value_' + this.languageCodes[i]] ? value['value_' + this.languageCodes[i]] : '';
             
             var label = newValueTranslation.getElementsByTagName("label")[0].innerHTML = input.value;
             

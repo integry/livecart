@@ -86,7 +86,6 @@ class SpecFieldController extends StoreManagementController
         $response->setValue('configuration', $this->getSpecFieldConfig());
         $response->setValue('specFieldsList', $defaultSpecFieldValues);
         $response->setValue('defaultLangCode', $this->store->getDefaultLanguageCode());
-
         $response->setValue('specFieldsWithGroups', $category->getSpecificationFieldArray(false, true, true));
 
         return $response;
@@ -104,12 +103,12 @@ class SpecFieldController extends StoreManagementController
 		
 		foreach(SpecFieldValue::getRecordSetArray($specFieldList['ID']) as $value)
 		{
-		   $specFieldList['values'][$value['ID']] = $value['value'];
+		   $specFieldList['values'][$value['ID']] = $value;
 		}
 		
 		$specFieldList['categoryID'] = $specFieldList['Category']['ID'];
 		unset($specFieldList['Category']);
-				
+        
 		return new JSONResponse($specFieldList);
     }
     

@@ -83,7 +83,7 @@
      
     {if $field.ID} 
     <li id="specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}_{$field.ID}">
-    	<span class="specField_title">{$field.name[$defaultLangCode]}</span>
+    	<span class="specField_title">{$field.name_lang}</span>
     </li>
     {/if}
 {/foreach}
@@ -98,13 +98,13 @@
     {if $lastSpecFieldGroup != $field.SpecFieldGroup.ID }
         {if $lastSpecFieldGroup > 0}</ul></li>{/if}
         <li id="specField_groups_list_{$categoryID}_{$field.SpecFieldGroup.ID}">
-            <span class="specField_group_title">{$field.SpecFieldGroup.name[$defaultLangCode]}</span>   	
+            <span class="specField_group_title">{$field.SpecFieldGroup.name_lang}</span>   	
             <ul id="specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}" class="specFieldList activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_specFieldList">
     {/if}
 
     {if $field.ID} {* For empty groups *}
     <li id="specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}_{$field.ID}">
-    	<span class="specField_title">{$field.name[$defaultLangCode]}</span>
+    	<span class="specField_title">{$field.name_lang}</span>
     </li>
     {/if}
 
