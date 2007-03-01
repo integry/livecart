@@ -52,9 +52,10 @@ Backend.Filter.prototype = {
     activeListCallbacks: {
          beforeEdit:     function(li)
          {
-             Backend.Filter.prototype.hideNewFilterAction(this.getRecordId(li, 2));
+             var categoryID = this.getRecordId(li, 2);
+			 Backend.Filter.prototype.hideNewFilterAction(categoryID);
               
-             if(this.isContainerEmpty(li, 'edit')) return Backend.Filter.prototype.links.editGroup + this.getRecordId(li)
+             if(this.isContainerEmpty(li, 'edit')) return Backend.Filter.prototype.links.editGroup + this.getRecordId(li) + "&categoryID=" + categoryID
              else this.toggleContainer(li, 'edit');
          },
 
@@ -101,7 +102,7 @@ Backend.Filter.prototype = {
     {
         try
         {
-            this.filter = !hash ? eval("(" + filterJson + ")" ) : filterJson;
+			this.filter = !hash ? eval("(" + filterJson + ")" ) : filterJson;
             
             this.cloneForm('filter_item_blank', this.filter.rootId);
     
@@ -229,7 +230,7 @@ Backend.Filter.prototype = {
         this.nodes.filtersList = this.nodes.filtersDefaultGroup.down('ul');
         
         var ul = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0];
-        ul.id = this.cssPrefix + "form_"+this.id+'_filters_'+this.languageCodes[0];
+        ul.id = this.cssPrefix + "form_" + this.id + '_filters_' + this.languageCodes[0];
 
     },
 
@@ -360,7 +361,7 @@ Backend.Filter.prototype = {
         this.nodes.specFieldID.options.length = 0;
         this.specFields.each(function(value)
         {
-            self.nodes.specFieldID.options[self.nodes.specFieldID.options.length] = new Option(value.name, value.ID);
+            self.nodes.specFieldID.options[self.nodes.specFieldID.options.length] = new Option(value.name_lang, value.ID);
         });
 
     },
@@ -386,7 +387,7 @@ Backend.Filter.prototype = {
                         select.options.length = 0;
                         for(var j = 0; j < self.specFields[i].values.length; j++)
                         {
-                           select.options[select.options.length] = new Option(self.specFields[i].values[j].value[self.languageCodes[0]], self.specFields[i].values[j].ID);
+                           select.options[select.options.length] = new Option(self.specFields[i].values[j].value_lang, self.specFields[i].values[j].ID);
                         } 
                     }                          
                     
@@ -557,7 +558,7 @@ Backend.Filter.prototype = {
         // Default language
         if(this.id) this.nodes.id.value = this.id;
 
-        if(this.name[this.languageCodes[0]]) this.nodes.name.value = this.name[this.languageCodes[0]];        
+        if(this.filter.name_lang) this.nodes.name.value = this.filter.name_lang;        
         
         this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
 
@@ -595,8 +596,8 @@ Backend.Filter.prototype = {
                 {
                     if(Element.hasClassName(inputFields[j].parentNode.parentNode, this.cssPrefix + 'language_translation'))
                     {
-                        eval("if(self."+inputFields[j].name+"['"+self.languageCodes[i]+"']) inputFields[j].value = self."+inputFields[j].name+"['"+self.languageCodes[i]+"'];");
-                        inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
+						if(self.filter[inputFields[j].name + "_" + self.languageCodes[i]]) inputFields[j].value = self.filter[inputFields[j].name + "_" + self.languageCodes[i]];
+						inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
                     }
                 }
 
@@ -886,8 +887,7 @@ Backend.Filter.prototype = {
         
         var li = this.filtersList.addRecord(id, this.nodes.filterTemplate);
         Element.addClassName(li, this.cssPrefix + "default_filter_li");
-
-        var nameValue = (value.name && value.name[self.languageCodes[0]]) ? value.name[self.languageCodes[0]] : '';
+        var nameValue = value.name_lang ? value.name_lang : '';
 
         // Filter name
         var filter_name_paragraph = li.down('.filter_name');
@@ -1004,7 +1004,7 @@ Backend.Filter.prototype = {
             var inputTranslation = newValueTranslation.down("input");
 
 			inputTranslation.name = "filters[" + id + "][name][" + this.languageCodes[i] + "]";
-			inputTranslation.value = (value && value.name && value.name[this.languageCodes[i]]) ? value.name[this.languageCodes[i]] : '' ;
+			inputTranslation.value = value["name_" + this.languageCodes[i]] ? value["name_" + this.languageCodes[i]] : '' ;
 
             newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "_" + id;
             newValueTranslation.down("label").update(nameValue);

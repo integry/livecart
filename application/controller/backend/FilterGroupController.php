@@ -68,7 +68,7 @@ class FilterGroupController extends StoreManagementController
                     'ID' => $field['ID'],
                     'type' => $field['type'],
                     'dataType' => $field['dataType'],
-                    'name' => isset($field['name'][$_lng = $this->store->getDefaultLanguageCode()]) ? $field['name'][$_lng] : '',
+                    'name_lang' => $field['name_lang'],
                     'values' => SpecField::getInstanceByID($field['ID'])->getValuesList()
                 );
             }
@@ -172,9 +172,13 @@ class FilterGroupController extends StoreManagementController
      */
     public function item()
     {
-        $response = new ActionResponse();
-        $filterGroup = FilterGroup::getInstanceByID($this->request->getValue('id'), true, true);
-        $filterGroupArray = $filterGroup->toArray(false, false);
+        $groupID = $this->request->getValue('id');
+        $categoryID = $this->request->getValue('categoryID');
+    	
+    	$response = new ActionResponse();
+        $filterGroup = FilterGroup::getInstanceByID($groupID, true, true);
+        $filterGroupArray = $filterGroup->toArray();
+        
         
         foreach($filterGroup->getFiltersList() as $filter)
         {
@@ -182,9 +186,9 @@ class FilterGroupController extends StoreManagementController
         }
         
         $filterGroupArray['filtersCount'] = isset($filterGroupArray['filters']) ? count($filterGroupArray['filters']) : 0;
-        $filterGroupArray['rootId'] = "filter_items_list_".$filterGroupArray['SpecField']['Category']['ID']."_".$filterGroupArray['ID'];
-        $filterGroupArray['categoryID'] = $filterGroupArray['SpecField']['Category']['ID'];
-        $filterGroupArray['specFields'] = $this->getSpecFieldOptions(Category::getInstanceByID($filterGroupArray['categoryID'])->getSpecificationFieldArray());           
+        $filterGroupArray['rootId'] = "filter_items_list_" . $categoryID . "_".$filterGroupArray['ID'];
+        $filterGroupArray['categoryID'] = $categoryID;
+        $filterGroupArray['specFields'] = $this->getSpecFieldOptions(Category::getInstanceByID($categoryID)->getSpecificationFieldArray());           
 
         return new JSONResponse($filterGroupArray);
     }
