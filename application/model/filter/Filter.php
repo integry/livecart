@@ -1,10 +1,10 @@
 <?php
 
 ClassLoader::import("application.model.system.MultilingualObject");
-ClassLoader::import('application.model.category.FilterGroup');
+ClassLoader::import('application.model.filter.SpecificationFilterInterface');
+ClassLoader::import('application.model.filter.FilterGroup');
 ClassLoader::import('application.model.category.SpecField');
 ClassLoader::import('application.model.category.SpecFieldValue');
-ClassLoader::import('application.model.filter.SpecificationFilterInterface');
 
 /**
  *

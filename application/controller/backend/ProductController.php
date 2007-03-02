@@ -3,6 +3,7 @@
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 
 ClassLoader::import("application.model.category.Category");
+ClassLoader::import("application.model.filter.FilterGroup");
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.product.ProductSpecification");
 
@@ -326,7 +327,7 @@ class ProductController extends StoreManagementController
 		// arrange SpecFields's into groups
 		$specFieldsByGroup = array();
 		$prevGroupID = -6541;
-		ClassLoader::import("application.model.category.FilterGroup");
+
 		foreach ($specFieldArray as $field)
 		{
 			$groupID = isset($field['SpecFieldGroup']) ? $field['SpecFieldGroup'] : '';

@@ -210,7 +210,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 */
 	public function getFilterGroupSet($includeParentFields = true)
 	{
-	  	ClassLoader::import('application.model.category.FilterGroup');
+	  	ClassLoader::import('application.model.filter.FilterGroup');
 		$filter = $this->getFilterGroupFilter($includeParentFields);
 		if (!$filter)
 		{
@@ -229,7 +229,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
 		if (!$this->filterGroupArrayCache)
 		{
-		  	ClassLoader::import('application.model.category.FilterGroup');
+		  	ClassLoader::import('application.model.filter.FilterGroup');
 			$filter = $this->getFilterGroupFilter();
 			if (!$filter)
 			{

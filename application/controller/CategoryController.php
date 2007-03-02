@@ -1,9 +1,9 @@
 <?php
 
 ClassLoader::import("application.controller.FrontendController");
-ClassLoader::import('application.model.filter.SelectorFilter');
 ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.category.Filter');
+ClassLoader::import('application.model.filter.Filter');
+ClassLoader::import('application.model.filter.SelectorFilter');
 ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.model.product.ProductFilter');
 ClassLoader::import('application.model.product.ProductCount');
