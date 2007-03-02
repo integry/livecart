@@ -1,3 +1,4 @@
+{if $filters}		
 <div class="box expandResults">
 	<div class="title">
 		<div>Expand Results</div>
@@ -11,7 +12,9 @@
 		</ul>
 	</div>
 </div>
+{/if}
 
+{if $groups}
 <div class="box narrowResults">
 	<div class="title">
 		<div>Narrow Results</div>
@@ -31,3 +34,4 @@
 		{/foreach}
 	</div>
 </div>
+{/if}

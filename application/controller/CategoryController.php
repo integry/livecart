@@ -138,9 +138,6 @@ class CategoryController extends FrontendController
  	/* @todo some defuctoring... */
 	protected function boxFilterBlock()
 	{
-		ClassLoader::import('application.model.category.Category');	 
-		ClassLoader::import('application.model.category.Filter');
-			 		
 		if ($this->categoryID < 1)
 		{
 		  	$this->categoryID = 1;
@@ -188,15 +185,15 @@ class CategoryController extends FrontendController
 			}
 			
 			// assign sorted filters to group arrays
-			foreach ($filterGroups as $key => &$group)
+			foreach ($filterGroups as $key => $group)
 			{
 			  	if (isset($sorted[$group['specFieldID']]))
 			  	{
-				    $group['filters'] = $sorted[$group['specFieldID']];
+				    $filterGroups[$key]['filters'] = $sorted[$group['specFieldID']];
 				}
 			}			
 		}
-
+ 	
 	 	$response = new BlockResponse();
 	 	
 		if ($this->filters)
@@ -209,16 +206,8 @@ class CategoryController extends FrontendController
 			
 			$response->setValue('filters', $filterArray);	
 
-			foreach ($filterGroups as $key => $group)
-			{
-				if (!isset($group['filters']))
-				{
-					unset($filterGroups[$key]);
-				}
-			}
-
 			// remove already applied value filter groups
-			foreach ($filterArray as $key => &$filter)
+			foreach ($filterArray as $key => $filter)
 			{
 			 	// simple value filter
 				if (isset($filter['FilterGroup']))
@@ -234,21 +223,34 @@ class CategoryController extends FrontendController
 					} 						
 				}
 				
+				// selector values
 				else if (isset($filter['SpecField']))
 				{
-					foreach ($filterGroups as &$group)
+					foreach ($filterGroups as $groupkey => $group)
 					{
-						foreach ($group['filters'] as $k => &$flt)
+						if (isset($group['filters']))
 						{
-							if ($flt['ID'] == $filter['ID'])
+							foreach ($group['filters'] as $k => $flt)
 							{
-								unset($group['filters'][$k]);
-							}
-						}	
+								if ($flt['ID'] == $filter['ID'])
+								{
+									unset($filterGroups[$groupkey]['filters'][$k]);
+								}
+							}								
+						}
 					}	
 				}
 			}
 		}
+
+		// remove empty filter groups
+		foreach ($filterGroups as $key => $grp)
+		{
+			if (empty($grp['filters']))
+			{
+				unset($filterGroups[$key]);
+			}
+		}			
 
 	 	$response->setValue('category', $currentCategory->toArray());		 
 	 	$response->setValue('groups', $filterGroups);		 
