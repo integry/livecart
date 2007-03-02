@@ -145,27 +145,61 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 	public function getFilterSet()
 	{
-		// get group filters
+		Classloader::import('application.model.filter.SelectorFilter');
+			
+		// get filter groups
 	  	$groups = $this->getFilterGroupArray();
 
 		$ids = array();
+		$specFields = array();
 		foreach ($groups as $group)
 		{
-		  	$ids[] = $group['ID'];
+			if (in_array($group['SpecField']['type'], 
+			  			 array(SpecField::TYPE_NUMBERS_SELECTOR, SpecField::TYPE_TEXT_SELECTOR)))
+		  	{
+				$specFields = $group['SpecField']['ID'];
+			}
+			else
+			{
+			  	$ids[] = $group['ID'];
+			}
 		}		
 		
-		if (!$ids)
+		$ret = array();
+		
+		if ($ids)
 		{
-		  	return false;
+			// get specification simple value filters
+			$filterCond = new INCond(new ARFieldHandle('Filter', 'filterGroupID'), $ids);
+			$filterFilter = new ARSelectFilter();
+			$filterFilter->setCondition($filterCond);
+			$filterFilter->setOrder(new ARFieldHandle('Filter', 'filterGroupID'));
+			$filterFilter->setOrder(new ARFieldHandle('Filter', 'position'));
+			
+			$valueFilters = ActiveRecord::getRecordSet('Filter', $filterFilter, array('FilterGroup', 'SpecField'));	  	
+			
+			foreach ($valueFilters as $filter)
+			{
+				$ret[] = $filter;
+			}
 		}
 		
-		$filterCond = new INCond(new ARFieldHandle('Filter', 'filterGroupID'), $ids);
-		$filterFilter = new ARSelectFilter();
-		$filterFilter->setCondition($filterCond);
-		$filterFilter->setOrder(new ARFieldHandle('Filter', 'filterGroupID'));
-		$filterFilter->setOrder(new ARFieldHandle('Filter', 'position'));
+		// get specification selector value filters
+		if ($specFields)
+		{					
+			$selectFilter = new ARSelectFilter();
+			$selectFilter->setCondition(new INCond(new ARFieldHandle('SpecFieldValue', 'specFieldID'), $specFields));
+			$selectFilter->setOrder(new ARFieldHandle('SpecFieldValue', 'specFieldID'));
+			$selectFilter->setOrder(new ARFieldHandle('SpecFieldValue', 'position'));
+
+			$specFieldValues = ActiveRecord::getRecordSet('SpecFieldValue', $selectFilter);		
+			foreach ($specFieldValues as $value)
+			{
+				$ret[] = new SelectorFilter($value);
+			}	
+		}
 		
-		return ActiveRecord::getRecordSet('Filter', $filterFilter, array('FilterGroup', 'SpecField'));	  	
+		return $ret;		
 	}
 	
 	/**

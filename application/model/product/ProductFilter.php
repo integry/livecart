@@ -24,7 +24,7 @@ class ProductFilter
 	 *
 	 * @param Filter $filter
 	 */
-	public function applyFilter(Filter $filter)
+	public function applyFilter(FilterInterface $filter)
 	{
 		$this->filters[] = $filter;
 	}

@@ -200,36 +200,33 @@ class Store
 	 *
 	 * @todo test with multibyte strings
 	 */
-	public function createHandleString($str)
+	public static function createHandleString($str)
 	{
-		$str = strtolower(trim(strip_tags(stripslashes($str))));
+		$wordSeparator = '.';
 		
-		// fix accented, etc., characters
+		$str = strtolower(trim(strip_tags(stripslashes($str))));		
+
+		// fix accented characters
+        $from = array();
+		for ($k = 192; $k <= 255; $k++) 
+        {
+			$from[] = chr($k);
+		}
+
 		$repl = array ('A','A','A','A','A','A','A','E','E','E','E','E','I','I','I','I','D','N','O','O','O','O','O','O','O','U','U','U','U','Y','b','b','a','a','a','a','a','a','a','e','e','e','e','e','i','i','i','i','n','n','o','o','o','o','o','o','o','u','u','u','u','y','y','y');		
-        for ($k = 192; $k <= 255; $k++) 
-        {
-			$str = str_replace(chr($k),$repl[$k-192],$str);
-		}
+
+        $str = str_replace($from, $repl, $str);
 		
-        // remove any characters that need url-encoding to be used in an url
-		$str = preg_replace('(%..)', '-', rawurlencode(strtolower($str)));
-
-        // remove dashes from beginning and end
-		while ('-' == $str{0}) 
-        {
-			$str = substr($str, 1);
-		}        
-		while ('-' == substr($str, -1)) 
-		{
-			$str = substr($str, 0, -1);
-		}		
-
-        // remove double dashes
-		while (strpos($str,'--') != 0) 
-		{
-			$str = str_replace('--', '-', $str);		  
-		}
-
+		// non alphanumeric characters
+		$str = preg_replace('/[^a-z0-9]/', $wordSeparator, $str);
+		
+		// double separators
+		$str = preg_replace('/[\\' . $wordSeparator . ']{2,}/', $wordSeparator, $str);
+		
+        // separators from beginning and end
+		$str = preg_replace('/^[\\' . $wordSeparator . ']/', '', $str);
+		$str = preg_replace('/[\\' . $wordSeparator . ']$/', '', $str);
+				        
 		return $str;
 	}
 

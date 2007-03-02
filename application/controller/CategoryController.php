@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("application.controller.FrontendController");
+ClassLoader::import('application.model.filter.SelectorFilter');
 ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.category.Filter');
 ClassLoader::import('application.model.product.Product');
@@ -34,8 +35,8 @@ class CategoryController extends FrontendController
 
 		if ($this->request->getValue('filters'))
 		{
-		  	ClassLoader::import('application.model.category.Filter');
-			$filterIds = array();
+			$valueFilterIds = array();
+			$selectorFilterIds = array();
 			$filters = explode(',', $this->request->getValue('filters'));
 
 		  	foreach ($filters as $filter)
@@ -45,14 +46,41 @@ class CategoryController extends FrontendController
 			  	{
 				    continue;
 				}
-				$filterIds[] = $pair[1];
+				
+				if (substr($pair[1], 0, 1) == 'v')
+				{
+					$selectorFilterIds[] = substr($pair[1], 1);
+				}
+				else
+				{
+					$valueFilterIds[] = $pair[1];	
+				}				
 			}
 
-			// get all filters
-			$f = new ARSelectFilter();
-			$c = new INCond(new ARFieldHandle('Filter', 'ID'), $filterIds);
-			$f->setCondition($c);
-			$this->filters = ActiveRecordModel::getRecordSet('Filter', $f, Filter::LOAD_REFERENCES);
+			// get value filters
+			if ($valueFilterIds)
+			{
+				$f = new ARSelectFilter();
+				$c = new INCond(new ARFieldHandle('Filter', 'ID'), $valueFilterIds);
+				$f->setCondition($c);
+				$filters = ActiveRecordModel::getRecordSet('Filter', $f, Filter::LOAD_REFERENCES);
+				foreach ($filters as $filter)
+				{
+					$this->filters[] = $filter;
+				}
+			}
+			
+			if ($selectorFilterIds)
+			{
+				$f = new ARSelectFilter();
+				$c = new INCond(new ARFieldHandle('SpecFieldValue', 'ID'), $selectorFilterIds);
+				$f->setCondition($c);
+				$filters = ActiveRecordModel::getRecordSet('SpecFieldValue', $f, array('SpecField', 'Category'));
+				foreach ($filters as $filter)
+				{
+					$this->filters[] = new SelectorFilter($filter);
+				}				
+			}			
 		}
 
 		// get category instance
@@ -107,6 +135,7 @@ class CategoryController extends FrontendController
 		return $response;
 	}
 	
+ 	/* @todo some defuctoring... */
 	protected function boxFilterBlock()
 	{
 		ClassLoader::import('application.model.category.Category');	 
@@ -140,53 +169,85 @@ class CategoryController extends FrontendController
 
 		if ($ids)
 		{
-			$filterCond = new INCond(new ARFieldHandle('Filter', 'filterGroupID'), $ids);
-			$filterFilter = new ARSelectFilter();
-			$filterFilter->setCondition($filterCond);
-			$filterFilter->setOrder(new ARFieldHandle('Filter', 'filterGroupID'));
-			$filterFilter->setOrder(new ARFieldHandle('Filter', 'position'));
+			$filters = $currentCategory->getFilterSet();
 			
-			$filters = ActiveRecord::getRecordSetArray('Filter', $filterFilter);
-
 			// sort filters by group
 			$sorted = array();
+			$filterArray = array();
 			foreach ($filters as $filter)
 			{
-				$filter['count'] = isset($filtercount[$filter['ID']]) ? $filtercount[$filter['ID']] : 0;
-				$sorted[$filter['filterGroupID']][] = $filter;  	
+				$array = $filter->toArray();
+				$array['count'] = isset($filtercount[$filter->getID()]) ? $filtercount[$filter->getID()] : 0;
+				if (!$array['count'])
+				{
+					continue;
+				}
+				$specFieldID = $filter instanceof SelectorFilter ? $filter->getSpecField()->getID() : $filter->filterGroup->get()->specField->get()->getID();
+				$sorted[$specFieldID][] = $array;
+				$filterArray[] = $array;
 			}
 			
 			// assign sorted filters to group arrays
-			foreach ($filterGroups as &$group)
+			foreach ($filterGroups as $key => &$group)
 			{
-			  	if (isset($sorted[$group['ID']]))
+			  	if (isset($sorted[$group['specFieldID']]))
 			  	{
-				    $group['filters'] = $sorted[$group['ID']];
+				    $group['filters'] = $sorted[$group['specFieldID']];
 				}
-			}
+			}			
 		}
 
 	 	$response = new BlockResponse();
-	 	if ($this->filters)
+	 	
+		if ($this->filters)
 	 	{
-			$filters = $this->filters->toArray(true);
-			$response->setValue('filters', $filters);	
-
-			// remove already applied filter groups
-			$activeFilterGroups = $filterGroups;
-			foreach ($filters as $key => &$filter)
+			$filterArray = array();
+			foreach ($this->filters as $filter)
 			{
-			 	$id = $filter['FilterGroup']['ID'];
+				$filterArray[] = $filter->toArray();
+			}		
+			
+			$response->setValue('filters', $filterArray);	
 
-				foreach ($filterGroups as $k => &$group)
+			foreach ($filterGroups as $key => $group)
+			{
+				if (!isset($group['filters']))
 				{
-					if ($group['ID'] == $id)
-				  	{						
-					    unset($activeFilterGroups[$k]);
-					}
-				} 	
+					unset($filterGroups[$key]);
+				}
 			}
-			$filterGroups = $activeFilterGroups;	
+
+			// remove already applied value filter groups
+			foreach ($filterArray as $key => &$filter)
+			{
+			 	// simple value filter
+				if (isset($filter['FilterGroup']))
+			 	{
+					$id = $filter['FilterGroup']['ID'];
+	
+					foreach ($filterGroups as $k => $group)
+					{
+						if ($group['ID'] == $id)
+					  	{						
+						    unset($filterGroups[$k]);
+						}
+					} 						
+				}
+				
+				else if (isset($filter['SpecField']))
+				{
+					foreach ($filterGroups as &$group)
+					{
+						foreach ($group['filters'] as $k => &$flt)
+						{
+							if ($flt['ID'] == $filter['ID'])
+							{
+								unset($group['filters'][$k]);
+							}
+						}	
+					}	
+				}
+			}
 		}
 
 	 	$response->setValue('category', $currentCategory->toArray());		 

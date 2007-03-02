@@ -112,12 +112,12 @@ abstract class FrontendController extends BaseController
 		// apply current filters to suitable categories
 		if ($this->filters)
 		{
-			$filterArray = $this->filters->toArray();
+			//$filterArray = $this->filters->toArray();
 
 			$rootFilters = array();
 			foreach ($this->filters as $filter)
 			{
-				if (Category::ROOT_ID == $filter->filterGroup->get()->specField->get()->category->get()->getID())
+				if (Category::ROOT_ID == $filter->getSpecField()->category->get()->getID())
 			  	{
 					$rootFilters[$filter->getID()] = true;
 				}
@@ -142,7 +142,7 @@ abstract class FrontendController extends BaseController
 		  	$categoryFilters = $parentFilterIds;
 			foreach ($this->filters as $filter)
 		  	{
-			    if ($filter->filterGroup->get()->specField->get()->category->get()->getID() == $category['ID'])
+			    if ($filter->getSpecField()->category->get()->getID() == $category['ID'])
 			    {
 					$categoryFilters[$filter->getID()] = true;
 				}

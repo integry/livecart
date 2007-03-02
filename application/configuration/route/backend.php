@@ -4,14 +4,14 @@
  * Application request routing configuration
  *
  * @package application.configuration.route
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 
 $routes = array(
 					array("shop/:cathandle-:id", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+")),
 					array("shop/:cathandle-:id/:page", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+","page" => "[0-9]+")),
 
-					array("shop/:cathandle-:id/:filters", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+", "filters" => "([,]{0,1}[0-9A-Za-z.]+\-[0-9]+)*")),
+					array("shop/:cathandle-:id/:filters", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+", "filters" => "([,]{0,1}[0-9A-Za-z.]+\-[v]{0,1}[0-9]+)*")),
 					array("shop/:cathandle-:id/:filters/:page", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+","page" => "[0-9]+", "filters" => "[0-9A-Za-z\-.,]+")),
 					
 					array("backend.help/:id", array('controller' => 'backend.help', 'action' => 'view'), array()),
