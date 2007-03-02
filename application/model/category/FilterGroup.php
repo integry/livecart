@@ -144,31 +144,21 @@ class FilterGroup extends MultilingualObject
             
             if($specFieldType == SpecField::TYPE_TEXT_DATE)
             {
-                $filter->setFieldValue('rangeDateStart', $value['rangeDateStart']);
-                $filter->setFieldValue('rangeDateEnd', $value['rangeDateEnd']);
+                $filter->rangeDateStart->set($value['rangeDateStart']);
+                $filter->rangeDateEnd->set($value['rangeDateEnd']);
                 $filter->rangeStart->setNull();
                 $filter->rangeEnd->setNull();
-                $filter->specFieldValue->setNull();
-            }
-            else if(!in_array($specFieldType, SpecField::getSelectorValueTypes()))
-            {
-                $filter->setFieldValue('rangeStart', $value['rangeStart']);
-                $filter->setFieldValue('rangeEnd', $value['rangeEnd']);
-                $filter->rangeDateStart->setNull();
-                $filter->rangeDateEnd->setNull();
-                $filter->specFieldValue->setNull();
             }
             else
             {
-                $filter->setFieldValue('specFieldValueID', SpecFieldValue::getInstanceByID((int)$value['specFieldValueID']));
                 $filter->rangeDateStart->setNull();
                 $filter->rangeDateEnd->setNull();
-                $filter->rangeStart->setNull();
-                $filter->rangeEnd->setNull();
+                $filter->rangeStart->set($value['rangeStart']);
+                $filter->rangeEnd->set($value['rangeEnd']);
             }
             
-            $filter->setFieldValue('filterGroupID', $this);
-            $filter->setFieldValue('position', $position++);
+            $filter->filterGroup->set($this);
+            $filter->position->set($position++);
             $filter->save();
         }
     }
@@ -205,11 +195,11 @@ class FilterGroup extends MultilingualObject
             $errors['name['.$languageCodes[0].']'] = '_error_name_empty';
         }
 
-        if(isset($values['filters']))
-        {                      
-            $specField = SpecField::getInstanceByID((int)$values['specFieldID']);
-            if(!$specField->isLoaded()) $specField->load();
-                                
+        $specField = SpecField::getInstanceByID((int)$values['specFieldID']);
+        if(!$specField->isLoaded()) $specField->load();
+        
+        if(isset($values['filters']) && !$specField->isSelector())
+        {                 
             foreach ($values['filters'] as $key => $v)
             {                
                 switch($specField->getFieldValue('type'))
@@ -218,13 +208,6 @@ class FilterGroup extends MultilingualObject
                         if(!isset($v['rangeStart']) || !is_numeric($v['rangeStart']) | !isset($v['rangeEnd']) || !is_numeric($v['rangeEnd']))
                         {
                             $errors['filters['.$key.'][range]'] = '_error_filter_value_is_not_a_number';
-                        }
-                    break;
-                    case SpecField::TYPE_NUMBERS_SELECTOR: 
-                    case SpecField::TYPE_TEXT_SELECTOR: 
-                        if(!isset($v['specFieldValueID']))
-                        {
-                            $errors['filters['.$key.'][selector]'] = '_error_spec_field_is_not_selected';
                         }
                     break;
                     case SpecField::TYPE_TEXT_DATE: 

@@ -68,7 +68,7 @@ class SpecFieldGroupController extends StoreManagementController
         if(count($errors = SpecFieldGroup::validate($this->request->getValueArray(array('name')), $this->languageCodes)) == 0)
         {
             $name = $this->request->getValue('name');
-            $specFieldGroup->setLanguageField('name', @array_map($this->htmlspecialcharsUtf_8, $name), $this->languageCodes);
+            $specFieldGroup->setLanguageField('name', $name, $this->languageCodes);
             $specFieldGroup->save();
             
             return new JSONResponse(array('status' => 'success', 'id' => $specFieldGroup->getID()));

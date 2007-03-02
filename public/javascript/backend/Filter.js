@@ -108,7 +108,6 @@ Backend.Filter.prototype = {
     
             this.id = this.filter.ID;
             
-            
             this.categoryID = this.filter.categoryID;
             this.rootId = this.filter.rootId;
             this.filtersCount = this.filter.filtersCount ? this.filter.filtersCount : 0;
@@ -116,7 +115,6 @@ Backend.Filter.prototype = {
             this.name = this.filter.name;
             this.filters = this.filter.filters;
             this.backupName = this.name;
-            
             this.filterCalendars = {};
 
             this.loadLanguagesAction();
@@ -126,6 +124,7 @@ Backend.Filter.prototype = {
         }
         catch(e)
         {
+            console.trace();
             console.info(e);
         }
     },
@@ -198,8 +197,13 @@ Backend.Filter.prototype = {
 
         this.nodes.id                     = document.getElementsByClassName(this.cssPrefix + "form_id", this.nodes.parent)[0];
         this.nodes.name                   = document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
+        this.nodes.name.value             = '';
         this.nodes.specFieldID            = document.getElementsByClassName(this.cssPrefix + "form_specFieldID", this.nodes.parent)[0];
-
+        
+        this.nodes.tabs                   = this.nodes.parent.down('ul.tabs');
+        this.nodes.tabMain                = this.nodes.tabs.down('li');
+        this.nodes.tabFilters             = this.nodes.tabMain.next('li');
+        
         this.nodes.stepTranslations       = document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
         this.nodes.stepMain               = document.getElementsByClassName(this.cssPrefix + "step_main", this.nodes.parent)[0];
         this.nodes.stepValues             = document.getElementsByClassName(this.cssPrefix + "step_filters", this.nodes.parent)[0];
@@ -244,72 +248,6 @@ Backend.Filter.prototype = {
         this.nodes.translatedFilters = document.getElementsByClassName(this.cssPrefix + "form_filters_translations", this.nodes.parent);
     },
 
-
-    /**
-     * Generate filters
-     * 
-     * @param Object e
-     */
-    generateFiltersAction: function(e)
-    {
-        if(!e.target) e.target = e.srcElement;
-
-        Event.stop(e);
-    
-        // execute the action
-        var self = this;
-        new Ajax.Request(
-            this.links.generateFilters + "?specFieldID="+this.nodes.specFieldID.value,
-            {
-                method: 'get',
-                onComplete: function(param)
-                {
-                    self.addGeneratedFilters(param.responseText)
-                }
-        }); 
-    },
-    
-    /**
-     * Add generated filters to filters list
-     * 
-     * @param Object jsonString
-     */
-    addGeneratedFilters: function(jsonString)
-    {
-        var self = this;
-    
-        var jsonResponse = eval("("+jsonString+")");
-              
-        for(var i = 0; i < this.specFields.length; i++)
-        {
-            if(this.specFields[i].ID != this.nodes.specFieldID.value) continue;
-           
-            var specField = this.specFields[i];
-            if(this.selectorValueTypes.indexOf(specField.type) !== -1)
-            {
-                $A(this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0].getElementsByTagName("li")).each(function(li)
-                {
-                    if(!Element.hasClassName(li, 'dom_template'))
-                    {
-                        delete jsonResponse.filters[document.getElementsByClassName('filter_selector', li)[0].getElementsByTagName("select")[0].value];
-                    }
-                });
-            }
-            
-            $H(jsonResponse.filters).each(function(filter) {
-                self.addFilter(filter.value, "new" + Backend.Filter.prototype.countNewFilters, true);
-                self.changeFiltersCount(self.filtersCount+1);
-                Backend.Filter.prototype.countNewFilters++;
-            });
-            
-            this.bindDefaultFields();
-            this.filtersList.touch();
-                
-            return;
-        }
-    },  
-
-
     /**
      * Binds fields to some events
      */
@@ -331,22 +269,14 @@ Backend.Filter.prototype = {
         Event.observe(this.nodes.cancel, "click", function(e) { self.cancelAction(e) });
         Event.observe(this.nodes.save, "click", function(e) { self.saveAction(e) });
         
-        Event.observe(this.nodes.generateFiltersLink, "click", function(e) { self.generateFiltersAction(e) });
-             
-        
         // Also some actions must be executed on load. Be aware of the order in which those actions are called
         this.fillSpecFieldsSelect();
-        
         if(this.filter.SpecField) this.nodes.specFieldID.value = this.filter.SpecField.ID;
-        
         this.bindDefaultFields();
         this.loadFilterAction();
-
         this.specFieldIDWasChangedAction();
         this.loadValueFieldsAction();
-
         this.bindTranslationFilters();
-
         new Form.EventObserver(this.nodes.form, function() { self.formChanged = true; } );
         Form.backup(this.nodes.form);
     },
@@ -375,40 +305,41 @@ Backend.Filter.prototype = {
         var self = this;
         for(var i = 0; i < this.specFields.length; i++)
         {
-             if(this.specFields[i].ID == this.nodes.specFieldID.value)
-             {
-                $A(this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0].getElementsByTagName("li")).each(function(li)
-                {                    
-                    document.getElementsByClassName('filter_range', li)[0].style.display = (self.selectorValueTypes.indexOf(self.specFields[i].type) === -1 && self.specFields[i].type != Backend.SpecField.prototype.TYPE_TEXT_DATE) ? 'block' : 'none';
-                                                
-                    if(self.selectorValueTypes.indexOf(self.specFields[i].type) !== -1)
-                    {
-                        var select = document.getElementsByClassName('filter_selector', li)[0].getElementsByTagName("select")[0];
-                        select.options.length = 0;
-                        for(var j = 0; j < self.specFields[i].values.length; j++)
-                        {
-                           select.options[select.options.length] = new Option(self.specFields[i].values[j].value_lang, self.specFields[i].values[j].ID);
-                        } 
-                    }                          
-                    
-                    if((self.selectorValueTypes.indexOf(self.specFields[i].type) === -1 || self.specFields[i].type == Backend.SpecField.prototype.TYPE_TEXT_DATE))
-                    {
-                        self.nodes.generateFiltersLink.style.visibility = 'hidden';
-                        document.getElementsByClassName('filter_selector', li)[0].style.display = 'none';                            
-                    }
-                    else
-                    {
-                        self.nodes.generateFiltersLink.style.visibility = 'visible';
-                        document.getElementsByClassName('filter_selector', li)[0].style.display = 'block';  
-                    }
- 
-                    document.getElementsByClassName('filter_date_range', li)[0].style.display = (self.specFields[i].type == Backend.SpecField.prototype.TYPE_TEXT_DATE) ? 'block' : 'none'; 
-                });
-                
-                document.getElementsByClassName(this.cssPrefix + "step_filters_translations", this.nodes.filtersDefaultGroup)[0].style.display = (Backend.SpecField.prototype.TYPE_TEXT_SELECTOR != self.specFields[i].type) ? 'block' : 'block';
-                
+            if(this.specFields[i].ID != this.nodes.specFieldID.value) 
+            {
+                continue;   
+            }
+            else if(self.selectorValueTypes.indexOf(this.specFields[i].type) !== -1)
+            {
+                this.nodes.tabFilters.hide();
                 return;
-             }
+            }
+            
+            this.nodes.tabFilters.show();
+            var specField = this.specFields[i];
+           
+            $A(this.nodes.filtersDefaultGroup.down('ul').getElementsByTagName("li")).each(function(li)
+            {                    
+                if(specField.type == Backend.SpecField.prototype.TYPE_NUMBERS_SIMPLE)
+                {
+                    li.down('.filter_range').show();
+                }
+                else
+                {
+                    li.down('.filter_range').hide();
+                }                      
+ 
+                if (specField.type == Backend.SpecField.prototype.TYPE_TEXT_DATE) 
+                {
+                    li.down('.filter_date_range').style.display = 'block';
+                }
+                else
+                {
+                    li.down('.filter_date_range').style.display = 'none';
+                }
+            });
+
+            return;
         }
     },
     
@@ -420,41 +351,15 @@ Backend.Filter.prototype = {
         var changeTitle = false;
         
         this.specFields.each(function(specField) {
-            if(self.nodes.name.value == specField.name) changeTitle = true;
-            if(specField.ID == self.nodes.specFieldID.value) newTitle = specField.name;
+            if(self.nodes.name.value == specField.name_lang) changeTitle = true;
+            if(specField.ID == self.nodes.specFieldID.value) newTitle = specField.name_lang;
         });
         
         if(changeTitle || self.nodes.name.value == '') 
         {
-            self.nodes.name.value = newTitle;;
+            self.nodes.name.value = newTitle;
             this.generateTitleAction(e);
         }
-    },
-    
-    generateTitleAndHandleFromSpecFieldValue: function(li)
-    {            
-        var self = this;
-        var newTitle = '';
-        var changeTitle = false;
-        
-        var nameParagraph     = document.getElementsByClassName('filter_name', li)[0];
-        var handleParagraph   = document.getElementsByClassName('filter_handle', li)[0];
-        var selectorParagraph = document.getElementsByClassName('filter_selector', li)[0];
-        
-        var name              = nameParagraph.getElementsByTagName("input")[0];
-        var handle            = handleParagraph.getElementsByTagName("input")[0];
-        var select            = selectorParagraph.getElementsByTagName("select")[0];
-        
-        $A(select).each(function(option) {
-            if(name.value == option.text) changeTitle = true;
-            if(option.selected) newTitle = option.text;
-        });
-        
-        if(changeTitle || name.value == '') 
-        {
-            name.value = newTitle;
-            handle.value = ActiveForm.prototype.generateHandle(newTitle);
-        }       
     },
 
     /**
@@ -558,8 +463,7 @@ Backend.Filter.prototype = {
         // Default language
         if(this.id) this.nodes.id.value = this.id;
 
-        if(this.filter.name_lang) this.nodes.name.value = this.filter.name_lang;        
-        
+        this.nodes.name.value = this.filter.name_lang ? this.filter.name_lang : '';     
         this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
 
         this.changeMainTitleAction(this.nodes.name.value);
@@ -920,14 +824,6 @@ Backend.Filter.prototype = {
                 Event.observe(rangeStartInput, "keyup", function(e) { self.rangeChangedAction(e) });
                 Event.observe(rangeEndInput, "keyup", function(e) { self.rangeChangedAction(e) });      
             }
-            else if(Element.hasClassName(paragraph, 'filter_selector'))
-            {
-                // Select
-                var specFieldValueIDInput = paragraph.down("select");
-                specFieldValueIDInput.name = "filters[" + id + "][specFieldValueID]";
-                specFieldValueIDInput.value = (value.SpecFieldValue && value.SpecFieldValue.ID) ? value.SpecFieldValue.ID : '' ;
-                Event.observe(specFieldValueIDInput, "change", function(e) { self.generateTitleAndHandleFromSpecFieldValue(li) });    
-            }
             else if(Element.hasClassName(paragraph, 'filter_date_range'))
             {
                 // Date range.
@@ -952,8 +848,8 @@ Backend.Filter.prototype = {
                 rangeDateStartReal.name   = "filters[" + id + "][rangeDateStart]";
                 rangeDateEndReal.name     = "filters[" + id + "][rangeDateEnd]";
                       
-                rangeDateStartReal.value  = (value.rangeDateStart) ? value.rangeDateStart : '' ;
-                rangeDateEndReal.value    = (value.rangeDateEnd) ? value.rangeDateEnd : '' ;
+                rangeDateStartReal.value  = (value.rangeDateStart) ? value.rangeDateStart : (new Date()).print("%Y-%m-%d");
+                rangeDateEndReal.value    = (value.rangeDateEnd) ? value.rangeDateEnd : (new Date()).print("%y-%m-%d");
                 
                 rangeDateStart.value  = rangeDateStartReal.value;
                 rangeDateEnd.value    = rangeDateEndReal.value ;
@@ -993,9 +889,7 @@ Backend.Filter.prototype = {
             }
  
         });
-       
-        if(generateTitle) this.generateTitleAndHandleFromSpecFieldValue(li);
-        
+               
 		// now insert all translation fields
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
@@ -1134,13 +1028,35 @@ Backend.Filter.prototype = {
                 div.appendChild(document.createTextNode(this.nodes.name.value));
                 
                 var activeList = ActiveList.prototype.getInstance($(this.cssPrefix + "items_list_" + this.categoryID));
+            
+                var specField = {};
+                for(var k = 0; k < this.specFields.length; k++) 
+                {
+                    if(this.specFields[k].ID == this.nodes.specFieldID.value) 
+                    {
+                        var specField = this.specFields[k];
+                        break;
+                    }
+                }
                 
-                var filterCount = document.getElementsByClassName(this.cssPrefix + "default_filter_li", this.nodes.filtersDefaultGroup).length;
+                if(this.selectorValueTypes.indexOf(specField.type) === -1)
+                {
+                    var filterCount = document.getElementsByClassName(this.cssPrefix + "default_filter_li", this.nodes.filtersDefaultGroup).length;
+                }
+                else
+                {
+                    var filterCount = specField.values.length;
+                }
+                
                 var spanCount = document.createElement('span');
                 Element.addClassName(spanCount, this.cssPrefix + "count");
                 spanCount.update(" (" + filterCount + ")");
                 
-                var li = activeList.addRecord(jsonResponse.id, [div, spanCount]);
+                var newRecord = document.createElement('div');
+                newRecord.appendChild(div);
+                newRecord.appendChild(spanCount);
+                
+                var li = activeList.addRecord(jsonResponse.id, newRecord);
                 if(0 == filterCount) Element.addClassName(li, 'filtergroup_has_no_filters');
                 activeList.touch();
                 

@@ -61,23 +61,21 @@
                                 		<span class="errorText hidden"> </span>
                                     </fieldset>
             				    </span>
-            					<span class="filter_handle">
+            					
+                                <span class="filter_handle">
                 					<label>{t _Filter_handle}</label>
                                     <fieldset class="error">
                     				    <input type="text" />
                                 		<span class="errorText hidden"> </span>
                                     </fieldset>
             				    </span>
+                                
             					<span class="filter_range">
                 					<label>{t _Filter_range}</label>
                     					<input type="text" /> - <input type="text" />
                                 		<span class="errorText hidden"> </span>
             				    </span>
-                                <span class="filter_selector">
-                                    <label>{t _Filter_value}</label>
-                                        <select type="text" ></select>
-                                        <span class="errorText hidden"> </span>
-                                </span>
+
                                 <span class="filter_date_range">
                                     <label>{t _Filter_date_range}</label>
                                         <input type="text" /> <img src="image/silk/calendar.png" class="calendar_button" /> - <input type="text" /> <img src="image/silk/calendar.png" class="calendar_button" />
@@ -91,7 +89,7 @@
         			</ul>
                 </p>
                 <p class="filter_crate_filters">
-                    <a href="#add" class="filter_add_filter">{t _Filter_add_filter}</a> <a href="#generate" class="filter_generate_filters">{t _Filter_generate_filters}</a>
+                    <a href="#add" class="filter_add_filter">{t _Filter_add_filter}</a> 
                 </p>
                 
                 

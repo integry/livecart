@@ -399,7 +399,8 @@ Backend.SpecField.prototype = {
 		if(this.categoryID) this.nodes.categoryID.value = this.categoryID;
 		if(this.handle) this.nodes.handle.value = this.handle;
 
-		if(this.specField.name_lang) this.nodes.name.value = this.specField.name_lang;
+		this.nodes.name.value = this.specField.name_lang ? this.specField.name_lang : '';
+        
 		this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
 
 		this.nodes.multipleSelector.checked = this.isMultiValue ? true : false;

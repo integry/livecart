@@ -179,7 +179,14 @@ class SpecField extends MultilingualObject
         foreach($filterGroups as $filter)
         {
             $filterGroupsArray[$i] = $filter->toArray(false, false);
-            $filterGroupsArray[$i]['filtersCount']  = $filter->getFiltersList()->getTotalRecordCount();
+            if($this->isSelector())
+            {
+                $filterGroupsArray[$i]['filtersCount'] = $this->getValuesSet()->getTotalRecordCount();
+            }
+            else
+            {
+                $filterGroupsArray[$i]['filtersCount'] = $filter->getFiltersList()->getTotalRecordCount();
+            }
             $i++;
         }
         
@@ -222,7 +229,7 @@ class SpecField extends MultilingualObject
 	/**
 	 * Loads a set of spec field records in current category
 	 *
-	 * @return ARSet
+	 * @return array
 	 */
 	public function getValuesList()
 	{

@@ -53,7 +53,7 @@ class FilterGroupController extends StoreManagementController
         $response->setValue('categoryID', $categoryID);
         $response->setValue('configuration', $this->getConfig());
         $response->setValue('defaultLangCode', $this->store->getDefaultLanguageCode());
-
+        
         return $response;
     }
 
@@ -142,17 +142,16 @@ class FilterGroupController extends StoreManagementController
         {
             $name = $this->request->getValue('name');
             $filters = $this->request->getValue('filters', false);
-            $specFieldID = SpecField::getInstanceByID((int)$this->request->getValue('specFieldID'));
             
             $filterGroup->setLanguageField('name',  $name, $this->filtersConfig['languageCodes']);
-            $filterGroup->setFieldValue('specFieldID', $specFieldID);
+            $filterGroup->specField->set(SpecField::getInstanceByID((int)$this->request->getValue('specFieldID')));
             $filterGroup->save();
             
-            $specField = $filterGroup->getFieldValue('specFieldID');
+            $specField = $filterGroup->specField->get();
             $specField->load();
-            $specFieldType = $specField->getFieldValue('type');
+            $specFieldType = $specField->type->get();
 
-            if(!empty($filters)) 
+            if(!empty($filters) && !$specField->isSelector()) 
             {
 				$filterGroup->saveFilters($filters, $specFieldType, $this->filtersConfig['languageCodes']);
 			}
@@ -174,10 +173,8 @@ class FilterGroupController extends StoreManagementController
     {
         $groupID = $this->request->getValue('id');
         $categoryID = $this->request->getValue('categoryID');
-    	
         
     	$response = new ActionResponse();
-        //$filterGroup = FilterGroup::getInstanceByID($groupID, true, true);
         $filterGroup = FilterGroup::getInstanceByID($groupID, true, array('SpecField', 'Category'));
         
         $filterGroupArray = $filterGroup->toArray();
@@ -187,7 +184,15 @@ class FilterGroupController extends StoreManagementController
             $filterGroupArray['filters'][$filter->getID()] = $filter->toArray(false, false);
         }
         
-        $filterGroupArray['filtersCount'] = isset($filterGroupArray['filters']) ? count($filterGroupArray['filters']) : 0;
+        if($filterGroup->specField->get()->isSelector())
+        {
+            $filterGroupArray['filtersCount'] = $filterGroup->specField->get()->getValuesSet()->getTotalRecordCount();
+        }
+        else
+        {
+            $filterGroupArray['filtersCount'] = isset($filterGroupArray['filters']) ? count($filterGroupArray['filters']) : 0;
+        }
+            
         $filterGroupArray['rootId'] = "filter_items_list_" . $categoryID . "_".$filterGroupArray['ID'];
         $filterGroupArray['categoryID'] = $categoryID;
         
