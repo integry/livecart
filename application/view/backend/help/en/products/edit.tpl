@@ -16,7 +16,7 @@
 
 
 {helpSeeAlso}
-	{see products.edit}
+	{see products.add}
 	{see products.change}
 	{see products.remove}
 {/helpSeeAlso}
