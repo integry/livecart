@@ -62,7 +62,7 @@
                                     </fieldset>
             				    </span>
             					
-                                <span class="filter_handle">
+                                <span class="filter_handle" style="display: none">
                 					<label>{t _Filter_handle}</label>
                                     <fieldset class="error">
                     				    <input type="text" />
