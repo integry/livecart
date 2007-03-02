@@ -32,8 +32,8 @@ class SpecField extends MultilingualObject
 		$schema->setName("SpecField");
 		
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("specFieldGroupID", "SpecFieldGroup", "ID", "SpecFieldGroup", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("specFieldGroupID", "SpecFieldGroup", "ID", "SpecFieldGroup", ARInteger::instance()));
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("description", ARArray::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance(2)));

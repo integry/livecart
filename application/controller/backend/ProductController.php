@@ -434,7 +434,7 @@ class ProductController extends StoreManagementController
 		$form = new Form($this->buildValidator($product));
 		return $form;
 	}
-
+	
 	/**
 	 * Gets path to a current node (including current node)
 	 *
@@ -468,6 +468,8 @@ class ProductController extends StoreManagementController
 	{
 	    $response = new ActionResponse();
 
+	    $product = Product::getInstanceById($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
+		
 	    $response->setValue('id', $this->request->getValue('id'));
 	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
 	    

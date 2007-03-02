@@ -16,6 +16,8 @@ class ProductRelatedController extends StoreManagementController
 	{
 	    $response = new ActionResponse();
 
+	    
+	    
 	    $response->setValue('id', $this->request->getValue('id'));
 	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
 	    

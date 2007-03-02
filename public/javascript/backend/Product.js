@@ -395,6 +395,16 @@ Backend.Product.Editor.prototype =
         
 		new SectionExpander(this.nodes.parent);
         Form.State.backup(this.nodes.form);
+        
+        var self = this;
+        setTimeout(function() 
+        {
+    		var textareas = self.nodes.parent.getElementsByTagName('textarea');
+    		for (k = 0; k < textareas.length; k++)
+    		{
+    			tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
+    		}
+        }, 1000);
 	},
 
 	__nodes__: function()
@@ -417,12 +427,6 @@ Backend.Product.Editor.prototype =
 		Backend.Product.Editor.prototype.setCurrentProductId(this.id);
         this.showProductForm();
         this.tabControl = TabControl.prototype.getInstance("productManagerContainer", Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId);
-
-		var textareas = this.nodes.parent.getElementsByTagName('textarea');
-		for (k = 0; k < textareas.length; k++)
-		{
-			tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
-		}
     },
 
     craftProductUrl: function(url)
@@ -601,3 +605,4 @@ Backend.Product.Prices.prototype =
 		}
     }
 }
+

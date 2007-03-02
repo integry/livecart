@@ -175,11 +175,13 @@ class FilterGroupController extends StoreManagementController
         $groupID = $this->request->getValue('id');
         $categoryID = $this->request->getValue('categoryID');
     	
+        
     	$response = new ActionResponse();
-        $filterGroup = FilterGroup::getInstanceByID($groupID, true, true);
+        //$filterGroup = FilterGroup::getInstanceByID($groupID, true, true);
+        $filterGroup = FilterGroup::getInstanceByID($groupID, true, array('SpecField', 'Category'));
+        
         $filterGroupArray = $filterGroup->toArray();
-        
-        
+                
         foreach($filterGroup->getFiltersList() as $filter)
         {
             $filterGroupArray['filters'][$filter->getID()] = $filter->toArray(false, false);
@@ -188,7 +190,8 @@ class FilterGroupController extends StoreManagementController
         $filterGroupArray['filtersCount'] = isset($filterGroupArray['filters']) ? count($filterGroupArray['filters']) : 0;
         $filterGroupArray['rootId'] = "filter_items_list_" . $categoryID . "_".$filterGroupArray['ID'];
         $filterGroupArray['categoryID'] = $categoryID;
-        $filterGroupArray['specFields'] = $this->getSpecFieldOptions(Category::getInstanceByID($categoryID)->getSpecificationFieldArray());           
+        
+        $filterGroupArray['specFields'] = $this->getSpecFieldOptions(Category::getInstanceByID($categoryID, ActiveRecord::LOAD_DATA)->getSpecificationFieldArray());           
 
         return new JSONResponse($filterGroupArray);
     }

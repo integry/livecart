@@ -55,7 +55,7 @@ Backend.Filter.prototype = {
              var categoryID = this.getRecordId(li, 2);
 			 Backend.Filter.prototype.hideNewFilterAction(categoryID);
               
-             if(this.isContainerEmpty(li, 'edit')) return Backend.Filter.prototype.links.editGroup + this.getRecordId(li) + "&categoryID=" + categoryID
+             if(this.isContainerEmpty(li, 'edit')) return Backend.Filter.prototype.links.editGroup + this.getRecordId(li) + "/?categoryID=" + categoryID
              else this.toggleContainer(li, 'edit');
          },
 
