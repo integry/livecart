@@ -79,7 +79,7 @@ to define a range for filter's values.</p>
 </ul>
 
 <h4 id="capacity">Creating <i>Battery Capacity</i> filter</h4>
-
+<p align="right"><a href="{self}"><small>Top</small></a></p>
 <p>(Creating Battery Capacity filter is quite different from the previuos example because here you (will) have to create rules manually and set range for 
 each individually). Complete the following steps to create the battery capacity filter:</p>
 
@@ -109,39 +109,46 @@ each individually). Complete the following steps to create the battery capacity 
 	<li>Continue in a similar manner to create a satisfactory list of intervals.</li>
 	<img src="image/doc/categories/filters/criteria_list.bmp">
 	<li>To <strong>edit</strong> any of the criteria's parameters make changes to necessary fields.</li>
-	<li>To <strong>delete</strong> a criteria, click "delete" icon:</li>
-	<img src="image/doc/categories/filters/criteria_delete.bmp">
 	<li><strong>Arrangement</strong> of filter's criteria can be important. To change criteria's order click on criteria's empty space and drag
 	it up or down:</li>
 	<img src="image/doc/categories/filters/criteria_sort.bmp">
+	<li>To <strong>delete</strong> a criteria, click "delete" icon:</li>
+	<img src="image/doc/categories/filters/criteria_delete.bmp">
 	<li>Make sure to click <strong>Save</strong> changes at the end.</li>
 	<img src="image/doc/categories/filters/filters_save.bmp">
 </ol>
 
 <h4 id="date">Creating <i>Date</i> filter</h4>
-
+<p align="right"><a href="{self}"><small>Top</small></a></p>
 <p>To create a date filter you have to have an attributes wich has a Date type. To create a date filter: </p>
 
 <ul>
-	<li>Open add new filter form.  </li>
-	<li>Select date attribute from the list.</li>
+	<li>Open add new filter form.<a href="{self}#carrier"><small>(remind me how)</small></a></li>
+	<img src="image/doc/categories/filters/date_attribute.bmp">
+	<li>Associate date attribute from the  attribute's list.</li>
 	<li>Name - enter Filter's name or leave the current name / automatic value.</li>
 	<br \>
-	<li>To set filtering rules click <strong>Add New Rule</strong> at the top of the Main section.</li>
+	<li>To set filtering rules click <strong>Add New Rule</strong>.</li>
 	<img src="image/doc/categories/filters/filters_add.bmp">
-	<li>Criteria has three parameters: </li>
+	<p>Criteria's form opens.</p>
+	<img src="image/doc/categories/filters/date_form.bmp">
 	<ul>
-		<li>Name - </li>
-		<li>Handle - </li>
-		<li>Value / Range - </li>
+		<li>Name - enter the name of the period you want to define</li>
+		<li>Value / Range - "from" and "to" fields are set automatically, to set / change date click on "calendar" icon next to the appropriate
+		field: </li>
+		<img src="image/doc/categories/filters/date_form_hand.bmp">
+		<p>Date can be changed by choosing alternate date from the calendar:</p>
+		<img src="image/doc/categories/filters/calendar.bmp">
+
 	</ul>
-	<li><ins>...</ins></li>
+	<li>To add more rules, click <strong>Add new Criteria</strong> and follow the steps as above.</li>
+	<li>You can <strong>sort</strong> values to set criterias' arrangement <a href="{self}#carrier"><small>(remind me how)</small></a></li>
 	<li>Click <strong>Save</strong> button to return to filters page.</li>
 	<img src="image/doc/categories/filters/filters_save.bmp">
 </ul>
 
 <h3 id="sort">Changing Filter Order</h3>
-
+<p align="right"><a href="{self}"><small>Top</small></a></p>
 <p>When you have more than a few filters the order of your filters can be very important. The way you arrange your filters defines how they will
 be displayed in your e-store.</p>
 
@@ -154,7 +161,7 @@ be displayed in your e-store.</p>
 </ul>
 
 <h3 id="edit">Edit and Delete Filters</h3>
-
+<p align="right"><a href="{self}"><small>Top</small></a></p>
 <ul>
 	<li>Go to the Filters section <a href="{self}#carrier"><small>(Remind me how).</small></a></li>
 	<li>In order to edit a filter, hover mouse pointer over the existing filters and click "Edit" icon next to the filter (name) you want to manage.</li>
