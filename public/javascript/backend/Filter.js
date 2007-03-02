@@ -205,6 +205,10 @@ Backend.Filter.prototype = {
         this.nodes.tabFilters             = this.nodes.tabMain.next('li');
         
         this.nodes.stepTranslations       = document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
+        this.nodes.stepFiltersTranslations= document.getElementsByClassName(this.cssPrefix + "step_filters_translations", this.nodes.parent)[0];
+        
+        this.nodes.filtersTranslationTemplate = this.nodes.stepTranslations.down("." + this.cssPrefix + "form_filters_value");
+        
         this.nodes.stepMain               = document.getElementsByClassName(this.cssPrefix + "step_main", this.nodes.parent)[0];
         this.nodes.stepValues             = document.getElementsByClassName(this.cssPrefix + "step_filters", this.nodes.parent)[0];
         this.nodes.stepLevOne             = document.getElementsByClassName(this.cssPrefix + "step_lev1", this.nodes.parent);
@@ -469,80 +473,46 @@ Backend.Filter.prototype = {
         this.changeMainTitleAction(this.nodes.name.value);
         this.changeFiltersCount(this.filtersCount);
 
-
         // Translations
-        var translations = document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations);
-		var valuesTranslations = document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepValues);
+        var translations = this.nodes.stepTranslations.down("." + this.cssPrefix + "step_translations_language");
+        
         // we should have a template to continue
-        if(translations.length > 0 && translations[0].className.split(' ').indexOf('dom_template') !== -1)
+        this.nodes.translations = new Array();
+        for(var i = 1; i < this.languageCodes.length; i++)
         {
-            this.nodes.translations = new Array();
-            for(var i = 1; i < this.languageCodes.length; i++)
+            // copy template class
+            var newTranslation = translations.cloneNode(true);
+            Element.removeClassName(newTranslation, "dom_template");
+            
+			// bind it
+            Event.observe(newTranslation.getElementsByTagName("legend")[0], "click", function(e) { self.changeTranslationLanguageAction(e) });
+
+            newTranslation.className += this.languageCodes[i];
+            document.getElementsByClassName(this.cssPrefix + "legend_text", newTranslation.getElementsByTagName("legend")[0])[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
+
+            var inputFields = $A(newTranslation.getElementsByTagName('input'));
+            var textAreas = newTranslation.getElementsByTagName('textarea');
+            for(var j = 0; j < textAreas.length; j++)
             {
-                // copy template class
-                var newTranslation = translations[0].cloneNode(true);
-                Element.removeClassName(newTranslation, "dom_template");
-                
-    			// bind it
-                Event.observe(newTranslation.getElementsByTagName("legend")[0], "click", function(e) { self.changeTranslationLanguageAction(e) });
-
-                newTranslation.className += this.languageCodes[i];
-                document.getElementsByClassName(this.cssPrefix + "legend_text", newTranslation.getElementsByTagName("legend")[0])[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
-
-                var inputFields = $A(newTranslation.getElementsByTagName('input'));
-                var textAreas = newTranslation.getElementsByTagName('textarea');
-                for(var j = 0; j < textAreas.length; j++)
-                {
-                    inputFields[inputFields.length] = textAreas[j];
-                }
-
-                for(var j = 0; j < inputFields.length; j++)
-                {
-                    if(Element.hasClassName(inputFields[j].parentNode.parentNode, this.cssPrefix + 'language_translation'))
-                    {
-						if(self.filter[inputFields[j].name + "_" + self.languageCodes[i]]) inputFields[j].value = self.filter[inputFields[j].name + "_" + self.languageCodes[i]];
-						inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
-                    }
-                }
-
-                this.nodes.stepTranslations.appendChild(newTranslation);
-
-                // add to nodes list
-                this.nodes.translations[this.languageCodes[i]] = newTranslation;
-                  
-                // Create place for values translations
-				var newValueTranslation = valuesTranslations[0].cloneNode(true);
-				Element.removeClassName(newValueTranslation, "dom_template");
-				newValueTranslation.className += "_" + this.languageCodes[i];
-                
-                var valueTranslationLegend = document.getElementsByClassName(this.cssPrefix + "legend_text", newValueTranslation.getElementsByTagName("legend")[0])[0];
-				valueTranslationLegend.appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
-                
-                Event.observe(valueTranslationLegend.parentNode, "click", function(e) { self.toggleValueLanguage(e) });
-                
-				valuesTranslations[0].parentNode.appendChild(newValueTranslation);
-                
-                this.nodes.valuesTranslations[this.languageCodes[i]] = newValueTranslation;
-    			this.nodes.translation_templates[this.languageCodes[i]] = document.getElementsByClassName(this.cssPrefix + "form_filters_value", this.nodes.valuesTranslations[this.languageCodes[i]])[0]
-                this.nodes.translationsUl[this.languageCodes[i]] = document.getElementsByClassName(this.cssPrefix + "form_language_translation", this.nodes.valuesTranslations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
+                inputFields[inputFields.length] = textAreas[j];
             }
+
+            for(var j = 0; j < inputFields.length; j++)
+            {
+                if(Element.hasClassName(inputFields[j].parentNode.parentNode, this.cssPrefix + 'language_translation'))
+                {
+					if(self.filter[inputFields[j].name + "_" + self.languageCodes[i]]) inputFields[j].value = self.filter[inputFields[j].name + "_" + self.languageCodes[i]];
+					inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
+                }
+            }
+
+            this.nodes.stepTranslations.appendChild(newTranslation);
+   			this.nodes.translationsUl[this.languageCodes[i]] = newTranslation.down("." + this.cssPrefix + "form_language_translation").down('ul');
         }
 
         // Delete language template, so that included in that template variables would not be sent to server
         Element.remove(document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations)[0]);
-    },
-
-
-    toggleValueLanguage: function(e)
-    {
-        if(!e.target) e.target = e.srcElement;
-        
-        var values = document.getElementsByClassName(this.cssPrefix + "form_language_translation", e.target.parentNode.parentNode)[0];
-        values.style.display = (values.style.display == 'block') ? 'none' : 'block';
-        document.getElementsByClassName("expandIcon", e.target.parentNode)[0].firstChild.nodeValue = (values.style.display == 'block') ? '[-] ' : '[+] ' ;
-    },
-    
-    
+    },  
 
     /**
      * Create filters from json Object
@@ -889,10 +859,12 @@ Backend.Filter.prototype = {
             }
  
         });
-               
+
+                       
 		// now insert all translation fields
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
+            break;
             var newValueTranslation = this.nodes.translation_templates[this.languageCodes[i]].cloneNode(true);
             var translationsUl = this.nodes.translationsUl[this.languageCodes[i]];
             var inputTranslation = newValueTranslation.down("input");

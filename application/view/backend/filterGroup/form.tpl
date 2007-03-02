@@ -26,78 +26,74 @@
             </fieldset>
 		</p>
         
+    	<!-- STEP 2 -->
+    	<fieldset class="filter_step_lev1 filter_step_filters">
+        <legend>{t _Filter_step_two}</legend>
+    	    <p>
+    		<fieldset class="group filter_form_filters_group">
+        		<h2 class="filter_filters_title">{t _Filter_filters}</h2>
+        		<div class="filter_filters">
+                    <p>
+            			<ul class="activeList_add_sort activeList_add_delete">
+            				<li class="dom_template filter_form_filters_value filter_form_filters_value_main" id="filter_form_filters_">
+                				<span>
+                					<span class="filter_name">
+                    					<label>{t _Filter_name}</label>
+                                        <fieldset class="error">
+                        				    <input type="text" />
+                                    		<span class="errorText hidden"> </span>
+                                        </fieldset>
+                				    </span>
+                					
+                                    <span class="filter_handle" style="display: none">
+                    					<label>{t _Filter_handle}</label>
+                                        <fieldset class="error">
+                        				    <input type="text" />
+                                    		<span class="errorText hidden"> </span>
+                                        </fieldset>
+                				    </span>
+                                    
+                					<span class="filter_range">
+                    					<label>{t _Filter_range}</label>
+                        					<input type="text" /> - <input type="text" />
+                                    		<span class="errorText hidden"> </span>
+                				    </span>
+    
+                                    <span class="filter_date_range">
+                                        <label>{t _Filter_date_range}</label>
+                                            <input type="text" /> <img src="image/silk/calendar.png" class="calendar_button" /> - <input type="text" /> <img src="image/silk/calendar.png" class="calendar_button" />
+                                            <input type="hidden" class="hidden filter_date_start_real" />
+                                            <input type="hidden" class="hidden filter_date_end_real" />
+                                            <span class="errorText hidden"> </span>
+                                    </span>
+                				    <br />
+                				</span>
+            				</li>
+            			</ul>
+                    </p>
+                    <p class="filter_crate_filters">
+                        <a href="#add" class="filter_add_filter">{t _Filter_add_filter}</a> 
+                    </p>
+    			</div>
+    
+    			<br class="clear" />
+    		</fieldset>
+    		</p>
+    	</fieldset>
         
     	<!-- STEP 3 -->
     	<div class="filter_step_translations">
-            <fieldset class="dom_template filter_step_translations_language filter_step_translations_language_">
-                <legend><span class="expandIcon">[+] </span><span class="filter_legend_text"></span></legend>
-                <div class="activeForm_translation_values filter_language_translation">
-                    <p>
-            			<label>{t _Filter_name}</label>
-            			<input type="text" name="name" />
-        			</p>
-                </div>
-            </fieldset>
-    	</div>
-	</fieldset>
-
-	<!-- STEP 2 -->
-	<fieldset class="filter_step_lev1 filter_step_filters">
-    <legend>{t _Filter_step_two}</legend>
-
-
-		<p>
-		<fieldset class="group filter_form_filters_group">
-    		<h2 class="filter_filters_title">{t _Filter_filters}</h2>
-    		<div class="filter_filters">
-                <p>
-        			<ul class="activeList_add_sort activeList_add_delete">
-        				<li class="dom_template filter_form_filters_value filter_form_filters_value_main" id="filter_form_filters_">
-            				<span>
-            					<span class="filter_name">
-                					<label>{t _Filter_name}</label>
-                                    <fieldset class="error">
-                    				    <input type="text" />
-                                		<span class="errorText hidden"> </span>
-                                    </fieldset>
-            				    </span>
-            					
-                                <span class="filter_handle" style="display: none">
-                					<label>{t _Filter_handle}</label>
-                                    <fieldset class="error">
-                    				    <input type="text" />
-                                		<span class="errorText hidden"> </span>
-                                    </fieldset>
-            				    </span>
-                                
-            					<span class="filter_range">
-                					<label>{t _Filter_range}</label>
-                    					<input type="text" /> - <input type="text" />
-                                		<span class="errorText hidden"> </span>
-            				    </span>
-
-                                <span class="filter_date_range">
-                                    <label>{t _Filter_date_range}</label>
-                                        <input type="text" /> <img src="image/silk/calendar.png" class="calendar_button" /> - <input type="text" /> <img src="image/silk/calendar.png" class="calendar_button" />
-                                        <input type="hidden" class="hidden filter_date_start_real" />
-                                        <input type="hidden" class="hidden filter_date_end_real" />
-                                        <span class="errorText hidden"> </span>
-                                </span>
-            				    <br />
-            				</span>
-        				</li>
-        			</ul>
-                </p>
-                <p class="filter_crate_filters">
-                    <a href="#add" class="filter_add_filter">{t _Filter_add_filter}</a> 
-                </p>
-                
-                
-                <!-- STEP 3 -->
-            	<div class="filter_step_filters_translations">
-            		<fieldset class="dom_template filter_step_translations_language filter_step_translations_language_">
-            			<legend><span class="expandIcon">[+] </span><span class="filter_legend_text"></span></legend>
-            
+                <fieldset class="dom_template filter_step_translations_language filter_step_translations_language_">
+                    <legend><span class="expandIcon">[+] </span><span class="filter_legend_text"></span></legend>
+                    <div class="activeForm_translation_values filter_language_translation">
+                        <p>
+                			<label>{t _Filter_name}</label>
+                			<input type="text" name="name" />
+            			</p>
+                    </div>
+                    
+                    <fieldset>
+                        <legend>Filters translations</legend>
                         <div class="filter_form_language_translation">
                             <p>
             					<ul>
@@ -109,21 +105,16 @@
             					</ul>
                             </p>
                         </div>
-            		</fieldset>
-            	</div>
-                
-                
-			</div>
+                    </fieldset>
+                </fieldset>
+    	</div>
+    </fieldset>
 
-			<br class="clear" />
-		</fieldset>
-		</p>
-	</fieldset>
 
-<fieldset class="filter_controls">
-    <span class="activeForm_progress"></span>
-    <input type="submit" class="filter_save button" value="{translate text=_save}" />
-    {t _or}
-    <a href="#cancel" class="filter_cancel">{t _cancel}</a>
-</fieldset>
+    <fieldset class="filter_controls">
+        <span class="activeForm_progress"></span>
+        <input type="submit" class="filter_save button" value="{translate text=_save}" />
+        {t _or}
+        <a href="#cancel" class="filter_cancel">{t _cancel}</a>
+    </fieldset>
 </form>
