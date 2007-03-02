@@ -25,3 +25,8 @@
     height: 30px;  
     overflow: hidden
 }
+
+#categoryBrowser div.containerTableStyle
+{
+    height: 300px;
+}
