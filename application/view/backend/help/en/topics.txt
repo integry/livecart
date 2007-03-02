@@ -14,6 +14,7 @@
 		
 	products=Products
 		add=Add New Product
+		view=View category's products
 		
 	order=Orders		
 		
