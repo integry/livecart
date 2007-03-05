@@ -1,4 +1,4 @@
-
+<h2 id="top"></h2>
 <p>Filters is a tool designed to make product search easy. Instead of browsing product catalog by categories you can create filters that will define 
 specific search criteria and allow users to find products in no time. For instance, a <i>Bluetooth</i> filter in a cell phones catalog
 can view all the phones that have a bluetooth feature no matter their place or any other parameters.</p>
@@ -79,7 +79,7 @@ to define a range for filter's values.</p>
 </ul>
 
 <h4 id="capacity">Creating <i>Battery Capacity</i> filter</h4>
-<p align="right"><a href="{self}"><small>Top</small></a></p>
+<p align="right"><a href="{self}#top"><small>Top</small></a></p>
 <p>(Creating Battery Capacity filter is quite different from the previuos example because here you (will) have to create rules manually and set range for 
 each individually). Complete the following steps to create the battery capacity filter:</p>
 
@@ -119,7 +119,7 @@ each individually). Complete the following steps to create the battery capacity 
 </ol>
 
 <h4 id="date">Creating <i>Date</i> filter</h4>
-<p align="right"><a href="{self}"><small>Top</small></a></p>
+<p align="right"><a href="{self}#top"><small>Top</small></a></p>
 <p>To create a date filter you have to have an attributes wich has a Date type. To create a date filter: </p>
 
 <ul>
@@ -148,7 +148,7 @@ each individually). Complete the following steps to create the battery capacity 
 </ul>
 
 <h3 id="sort">Changing Filter Order</h3>
-<p align="right"><a href="{self}"><small>Top</small></a></p>
+<p align="right"><a href="{self}#top"><small>Top</small></a></p>
 <p>When you have more than a few filters the order of your filters can be very important. The way you arrange your filters defines how they will
 be displayed in your e-store.</p>
 
@@ -161,7 +161,7 @@ be displayed in your e-store.</p>
 </ul>
 
 <h3 id="edit">Edit and Delete Filters</h3>
-<p align="right"><a href="{self}"><small>Top</small></a></p>
+<p align="right"><a href="{self}#top"><small>Top</small></a></p>
 <ul>
 	<li>Go to the Filters section <a href="{self}#carrier"><small>(Remind me how).</small></a></li>
 	<li>In order to edit a filter, hover mouse pointer over the existing filters and click "Edit" icon next to the filter (name) you want to manage.</li>

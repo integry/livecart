@@ -18,7 +18,10 @@
 		change=Sort Products
 		remove=Delete Products
 		
-	order=Orders		
+	orders=Orders		
+		manage=Manage Orders
+		create=Create Order
+		export=Export Orders
 		
 	user=Users		
 		
