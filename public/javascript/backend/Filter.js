@@ -269,7 +269,13 @@ Backend.Filter.prototype = {
         
         var ul = this.nodes.filtersDefaultGroup.getElementsByTagName('ul')[0];
         ul.id = this.cssPrefix + "form_" + this.id + '_filters_' + this.languageCodes[0];
-
+        
+        var self = this;
+        this.nodes.labels = {};  
+        $A(['name', 'specFieldID']).each(function(field)
+        {
+            self.nodes.labels[field] = document.getElementsByClassName(self.cssPrefix + "form_" + field + "_label", self.nodes.parent)[0];
+        });  
     },
 
     hideSpecField: function()
@@ -510,6 +516,8 @@ Backend.Filter.prototype = {
 
         this.nodes.name.value = this.filter.name_lang ? this.filter.name_lang : '';     
         this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
+        this.nodes.labels.name.onclick = function() { self.nodes.name.focus() };
+        this.nodes.labels.specFieldID.onclick = function() { self.nodes.specFieldID.focus() };
 
         this.changeMainTitleAction(this.nodes.name.value);
         this.changeFiltersCount(this.filtersCount);
@@ -538,9 +546,20 @@ Backend.Filter.prototype = {
             for(var j = 0; j < inputFields.length; j++)
             {
                 if(Element.hasClassName(inputFields[j].parentNode.parentNode, this.cssPrefix + 'language_translation'))
-                {
+                {                        
+                    var translationId = this.cssPrefix + this.categoryID + "_" + this.id + "_" + inputFields[j].name + "_" + this.languageCodes[i];
+					var translationLabel = inputFields[j].up().down("label");
+                    translationLabel.for = translationId;
+                    
+                    Event.observe(translationLabel, "click", function(e) { 
+                        console.info(this.for);
+                        $(this.for).focus();
+                    });
+                    
+                    inputFields[j].id = translationId;
 					if(self.filter[inputFields[j].name + "_" + self.languageCodes[i]]) inputFields[j].value = self.filter[inputFields[j].name + "_" + self.languageCodes[i]];
 					inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
+
                 }
             }
 
@@ -744,11 +763,17 @@ Backend.Filter.prototype = {
         input.name = "filters[" + id + "][name][" + self.languageCodes[0] + "]";
         input.value = nameValue;
         Event.observe(input, "keyup", function(e) { self.mainValueFieldChangedAction(e) }, false);
+        var label = filter_name_paragraph.down("label"); 
+        input.id = this.cssPrefix + "filter_filter_" + id + "_name";
+        label['for'] = input.id;
+        label.onclick = function() { $(this["for"]).focus() };
 
         filter_name_paragraph.siblings().each(function(paragraph) 
         {
+            var part = false;
             if(Element.hasClassName(paragraph, 'filter_range'))
             {
+                part = "range";
                 // Numeric range
                 var rangeStartInput = paragraph.down("input");
                 var rangeEndInput = rangeStartInput.next("input");
@@ -764,6 +789,8 @@ Backend.Filter.prototype = {
             }
             else if(Element.hasClassName(paragraph, 'filter_date_range'))
             {
+                part = "date_range";
+                
                 // Date range.
                 var rangeDateStart = paragraph.down("input");
                 var rangeDateEnd = rangeDateStart.next("input");
@@ -823,9 +850,17 @@ Backend.Filter.prototype = {
                             cache: true
                         });
                     }
-                });
+                });                
             }
  
+            if(part)
+            {
+                input = paragraph.down("input");
+                label = paragraph.down("label"); 
+                input.id = this.cssPrefix + "filter_filter_" + id + "_" + part;
+                label['for'] = input.id;
+                label.onclick = function() { $(this["for"]).focus() };
+            }
         });
 
                        
@@ -842,7 +877,12 @@ Backend.Filter.prototype = {
 			inputTranslation.value = value["name_" + this.languageCodes[i]] ? value["name_" + this.languageCodes[i]] : '' ;
 
             newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "_" + id;
-            newValueTranslation.down("label").update(nameValue);
+            var translationLabel = newValueTranslation.down("label");
+            translationLabel.update(nameValue);
+            
+            inputTranslation.id = this.cssPrefix + "filter_filter_" + id + "_name_" + this.languageCodes[i];
+            translationLabel['for'] = inputTranslation.id;
+            translationLabel.onclick = function() { $(this['for']).focus(); }
 			
             // add to node tree
 			translationsUl.id = this.cssPrefix + "form_" + this.id + '_values_' + this.languageCodes[i];

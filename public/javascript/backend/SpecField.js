@@ -422,7 +422,7 @@ Backend.SpecField.prototype = {
 		if(this.categoryID) this.nodes.categoryID.value = this.categoryID;
 		if(this.handle) this.nodes.handle.value = this.handle;
         this.nodes.handle.id = this.cssPrefix + this.categoryID + "_" + this.id + "_handle"; 
-        console.info(this.nodes.name);
+
 		this.nodes.name.value = this.specField.name_lang ? this.specField.name_lang : '';
         this.nodes.valuePrefix.value = this.specField.valuePrefix_lang ? this.specField.valuePrefix_lang : '';        
         this.nodes.valueSuffix.value = this.specField.valueSuffix_lang ? this.specField.valueSuffix_lang : '';
@@ -827,9 +827,11 @@ Backend.SpecField.prototype = {
         var li = this.fieldsList.addRecord(id, values_template);
 
 		// The field itself
-		var input = li.getElementsByTagName("input")[0];
+		var input = li.down("input");
 		input.name = "values[" + id + "]["+this.languageCodes[0]+"]";
 		input.value = value.value_lang ? value.value_lang : '' ;
+        
+        input.id = this.cssPrefix + "field_" + id + "_value_" + this.languageCodes[0];
 
 		// now insert all translation fields
 		for(var i = 1; i < this.languageCodes.length; i++)
@@ -843,12 +845,17 @@ Backend.SpecField.prototype = {
 			inputTranslation.name = "values[" + id + "][" + this.languageCodes[i] + "]";
 			inputTranslation.value = value['value_' + this.languageCodes[i]] ? value['value_' + this.languageCodes[i]] : '';
             
-            var label = newValueTranslation.getElementsByTagName("label")[0].innerHTML = input.value;
+            var translationLabel = newValueTranslation.down("label");
+            translationLabel.update(input.value);
             
 			// add to node tree
 			var translationsUl = document.getElementsByClassName(this.cssPrefix + "form_values_translations", this.nodes.valuesTranslations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
 			translationsUl.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[i];
 			translationsUl.appendChild(newValueTranslation);
+            
+            inputTranslation.id = this.cssPrefix + "field_" + id + "_value_" + this.languageCodes[i];
+            translationLabel['for'] = inputTranslation.id;
+            translationLabel.onclick = function() { $(this['for']).focus(); }
 		}
         
         this.bindOneValue(li);
@@ -1291,7 +1298,6 @@ Backend.SpecFieldGroup.prototype = {
      */
     afterSave: function(response)
     {
-        console.info(response);
 		if(response.status == 'success')
         {
     		try
@@ -1405,10 +1411,7 @@ Backend.SpecFieldGroup.prototype = {
     hideMenuItems: function(menu, except)
     {
         menu = $(menu);
-        try
-        {
-        if(!menu) throw new Error()
-        } catch(e) { console.info(e) }
+        
         $A(menu.getElementsByTagName('li')).each(function(li) {
             a = $(li).down('a');
             a.addClassName('hidden');

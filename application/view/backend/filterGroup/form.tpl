@@ -6,7 +6,7 @@
 		<input type="hidden" name="ID" class="hidden filter_form_id" />
 
 		<p>
-    		<label>{t _Filter_name}<em class="required">*</em></label>
+    		<label class="filter_form_name_label">{t _Filter_name}<em class="required">*</em></label>
             <fieldset class="error">
         		<input type="text" name="name" class="required filter_form_name" />
         		<span class="errorText hidden"> </span>
@@ -14,7 +14,7 @@
     	</p>
 
 		<p class="filter_specField">
-    		<label>{t _Filter_associated_field}</label>
+    		<label class="filter_form_specFieldID_label">{t _Filter_associated_field}</label>
             <fieldset class="error">
      	        <select name="specFieldID" class="filter_form_specFieldID"></select>
                 <div class="filter_form_specFieldText"></div>
