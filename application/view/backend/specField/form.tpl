@@ -39,6 +39,16 @@
     		<label>{t _SpecField_select_multiple}</label>
 		</p>
               
+		<p class="checkbox">
+    		<input type="checkbox" value="1" name="isDisplayed" class="checkbox specField_form_isDisplayed" />
+    		<label>{t _SpecField_displayed_on_front_page}</label>
+		</p>
+              
+		<p class="checkbox">
+    		<input type="checkbox" value="1" name="isDisplayedInList" class="checkbox specField_form_isDisplayedInList" />
+    		<label>{t _SpecField_displayed_in_product_list}</label>
+		</p>
+              
 		<p class="checkbox specField_form_advancedText">
     		<input type="checkbox" value="1" name="advancedText" class="checkbox" />
     		<label>{t _SpecField_formated_text}</label>
@@ -60,7 +70,7 @@
             		<span class="errorText hidden"> </span>
                 </fieldset>
     		</p>
-    
+
     		<p>
         		<label>{t _SpecField_description}</label>
                 

@@ -356,7 +356,7 @@ class SpecField extends MultilingualObject
     public static function validate($values = array(), $languageCodes)
     {
         $errors = array();
-
+        
         if(!isset($values['name']) || $values['name'][$languageCodes[0]] == '')
         {
             $errors["name[{$languageCodes[0]}]"] = '_error_name_empty';

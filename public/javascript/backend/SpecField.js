@@ -113,20 +113,23 @@ Backend.SpecField.prototype = {
     	    this.specField = !hash ? eval("(" + specFieldJson + ")" ) : specFieldJson;
     	    this.cloneForm('specField_item_blank');
     
-    	    this.id = this.specField.ID;
-    	    this.categoryID = this.specField.categoryID;
-    	    this.rootId = this.specField.rootId;
+    	    this.id                    = this.specField.ID;
+    	    this.categoryID            = this.specField.categoryID;
+    	    this.rootId                = this.specField.rootId;
     
-    		this.type = this.specField.type;
-    		this.values = this.specField.values;
-    		this.name = this.specField.name_lang;
-    		this.backupName = this.name;
+    		this.type                  = this.specField.type;
+    		this.values                = this.specField.values;
+    		this.name                  = this.specField.name_lang;
+    		this.backupName            = this.name;
     
-    		this.description = this.specField.description;
+    		this.description           = this.specField.description;
     
-    		this.handle = this.specField.handle;
-    		this.isMultiValue = this.specField.isMultiValue == 0 ? false : true;
-    		this.isRequired = this.specField.isRequired == 0 ? false : true;
+    		this.handle                = this.specField.handle;
+    		this.isMultiValue          = this.specField.isMultiValue == 1 ? true : false;
+    		this.isRequired            = this.specField.isRequired == 1 ? true : false;
+    		this.isDisplayed           = this.specField.isDisplayed == 1 ? true : false;
+    		this.isDisplayedInList     = this.specField.isDisplayedInList == 1 ? true : false;
+            
     		this.loadLanguagesAction();
     		this.findUsedNodes();
     
@@ -210,9 +213,13 @@ Backend.SpecField.prototype = {
 		this.nodes.id 					= document.getElementsByClassName(this.cssPrefix + "form_id", this.nodes.parent)[0];
 		this.nodes.categoryID 			= document.getElementsByClassName(this.cssPrefix + "form_categoryID", this.nodes.parent)[0]; 
 		this.nodes.description 			= document.getElementsByClassName(this.cssPrefix + "form_description", this.nodes.parent)[0];
-		this.nodes.multipleSelector 	= document.getElementsByClassName(this.cssPrefix + "form_multipleSelector", this.nodes.parent)[0];
+		
+        this.nodes.multipleSelector 	= document.getElementsByClassName(this.cssPrefix + "form_multipleSelector", this.nodes.parent)[0];
 		this.nodes.isRequired          	= document.getElementsByClassName(this.cssPrefix + "form_isRequired", this.nodes.parent)[0];
-		this.nodes.handle 				= document.getElementsByClassName(this.cssPrefix + "form_handle", this.nodes.parent)[0];
+		this.nodes.isDisplayed          = document.getElementsByClassName(this.cssPrefix + "form_isDisplayed", this.nodes.parent)[0];
+		this.nodes.isDisplayedInList    = document.getElementsByClassName(this.cssPrefix + "form_isDisplayedInList", this.nodes.parent)[0];
+		
+        this.nodes.handle 				= document.getElementsByClassName(this.cssPrefix + "form_handle", this.nodes.parent)[0];
 		this.nodes.name 				= document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
 		this.nodes.valuesDefaultGroup 	= document.getElementsByClassName(this.cssPrefix + "form_values_group", this.nodes.parent)[0];
         this.nodes.formatedText        = document.getElementsByClassName(this.cssPrefix + 'form_advancedText', this.nodes.parent)[0];
@@ -403,8 +410,10 @@ Backend.SpecField.prototype = {
         
 		this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
 
-		this.nodes.multipleSelector.checked = this.isMultiValue ? true : false;
-		this.nodes.isRequired.checked = this.isRequired ? true : false;
+		this.nodes.multipleSelector.checked = this.isMultiValue;
+		this.nodes.isRequired.checked = this.isRequired;
+		this.nodes.isDisplayed.checked = this.isDisplayed;
+		this.nodes.isDisplayedInList.checked = this.isDisplayedInList;
         
         if(this.type == Backend.SpecField.prototype.TYPE_TEXT_ADVANCED)
         {
@@ -482,7 +491,7 @@ Backend.SpecField.prototype = {
                 this.nodes.valuesTranslations[this.languageCodes[i]] = newValueTranslation;
 			}
 		}
-
+        
 		// Delete language template, so that included in that template variables would not be sent to server
 		Element.remove(document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations)[0]);
 	},
