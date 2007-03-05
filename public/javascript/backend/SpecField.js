@@ -212,6 +212,13 @@ Backend.SpecField.prototype = {
 		    if(!this.nodes.stepLevOne[i].id) this.nodes.stepLevOne[i].id = this.nodes.stepLevOne[i].className.replace(/ /, "_") + "_" + this.id;
 		}
 
+        var self = this;
+        this.nodes.labels = {};  
+        $A(['description', 'handle', 'type', 'name', 'valuePrefix', 'valueSuffix', 'advancedText', 'multipleSelector', 'isRequired', 'isDisplayed', 'isDisplayedInList']).each(function(field)
+        {
+            self.nodes.labels[field] = document.getElementsByClassName(self.cssPrefix + "form_" + field + "_label", self.nodes.parent)[0];
+        });   
+
 		this.nodes.mainTitle 			= document.getElementsByClassName(this.cssPrefix + "title", this.nodes.parent)[0];
 		this.nodes.id 					= document.getElementsByClassName(this.cssPrefix + "form_id", this.nodes.parent)[0];
 		this.nodes.categoryID 			= document.getElementsByClassName(this.cssPrefix + "form_categoryID", this.nodes.parent)[0]; 
@@ -414,19 +421,42 @@ Backend.SpecField.prototype = {
 		if(this.id) this.nodes.id.value = this.id;
 		if(this.categoryID) this.nodes.categoryID.value = this.categoryID;
 		if(this.handle) this.nodes.handle.value = this.handle;
-
+        this.nodes.handle.id = this.cssPrefix + this.categoryID + "_" + this.id + "_handle"; 
+        console.info(this.nodes.name);
 		this.nodes.name.value = this.specField.name_lang ? this.specField.name_lang : '';
-        this.nodes.valuePrefix.value = this.specField.valuePrefix_lang ? this.specField.valuePrefix_lang : '';
+        this.nodes.valuePrefix.value = this.specField.valuePrefix_lang ? this.specField.valuePrefix_lang : '';        
         this.nodes.valueSuffix.value = this.specField.valueSuffix_lang ? this.specField.valueSuffix_lang : '';
+        
+        this.nodes.name.id = this.cssPrefix + this.categoryID + "_" + this.id + "_name_" + this.languageCodes[0]; 
+        this.nodes.valuePrefix.id = this.cssPrefix + this.categoryID + "_" + this.id + "_valuePrefix_" + this.languageCodes[0]; 
+        this.nodes.valueSuffix.id = this.cssPrefix + this.categoryID + "_" + this.id + "_valueSuffix_" + this.languageCodes[0]; 
+        
         
 		this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
 		this.nodes.valuePrefix.name = "valuePrefix[" + this.languageCodes[0] + "]";
 		this.nodes.valueSuffix.name = "valueSuffix[" + this.languageCodes[0] + "]";
-
+                   
 		this.nodes.multipleSelector.checked = this.isMultiValue;
 		this.nodes.isRequired.checked = this.isRequired;
 		this.nodes.isDisplayed.checked = this.isDisplayed;
 		this.nodes.isDisplayedInList.checked = this.isDisplayedInList;
+        
+        this.nodes.multipleSelector.id     = this.cssPrefix + this.categoryID + "_" + this.id + "_multipleSelector"; 
+        this.nodes.isRequired.id           = this.cssPrefix + this.categoryID + "_" + this.id + "_isRequired"; 
+        this.nodes.isDisplayed.id          = this.cssPrefix + this.categoryID + "_" + this.id + "_isDisplayed"; 
+        this.nodes.isDisplayedInList.id    = this.cssPrefix + this.categoryID + "_" + this.id + "_isDisplayedInList"; 
+        
+
+        this.nodes.labels.name.onclick                = function() { self.nodes.name.focus() };
+        this.nodes.labels.valuePrefix.onclick         = function() { self.nodes.valuePrefix.focus() };
+        this.nodes.labels.valueSuffix.onclick         = function() { self.nodes.valueSuffix.focus() };
+        this.nodes.labels.handle.onclick              = function() { self.nodes.handle.focus() };
+        this.nodes.labels.multipleSelector.onclick    = function() { self.nodes.multipleSelector.focus() };
+        this.nodes.labels.isRequired.onclick 	      = function() { self.nodes.isRequired.focus() };
+        this.nodes.labels.isDisplayed.onclick         = function() { self.nodes.isDisplayed.focus() };
+        this.nodes.labels.isDisplayedInList.onclick   = function() { self.nodes.isDisplayedInList.focus() };
+        this.nodes.labels.type.onclick                = function() { self.nodes.type.focus() };
+        this.nodes.labels.description.onclick         = function() { self.nodes.description.focus() };
         
         if(this.type == Backend.SpecField.prototype.TYPE_TEXT_ADVANCED)
         {
@@ -443,6 +473,9 @@ Backend.SpecField.prototype = {
 
 		if(this.specField.description_lang) this.nodes.description.value = this.specField.description_lang;
 		this.nodes.description.name = "description[" + this.languageCodes[0] + "]";
+        
+        this.nodes.description.id = this.cssPrefix + this.categoryID + "_" + this.id + "_description_" + this.languageCodes[0]; 
+        
 
 		// Translations
 		var translations = document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations);
@@ -477,7 +510,18 @@ Backend.SpecField.prototype = {
 				{
                     if(Element.hasClassName(inputFields[j].parentNode.parentNode, this.cssPrefix + 'language_translation'))
                     {
-						eval("if(self.specField." + inputFields[j].name + "_" + self.languageCodes[i] + ") inputFields[j].value = self.specField."+inputFields[j].name + "_" + self.languageCodes[i] + ";");
+                        var translationId = this.cssPrefix + this.categoryID + "_" + this.id + "_" + inputFields[j].name + "_" + this.languageCodes[i];
+						var translationLabel = inputFields[j].up().down("label");
+                        translationLabel.languageCode = this.languageCodes[i];
+                        translationLabel.simpleName = inputFields[j].name;
+                        
+                        var _self_ = this;
+                        Event.observe(translationLabel, "click", function(e) { 
+                            $(_self_.cssPrefix + _self_.categoryID + "_" + _self_.id + "_" + this.simpleName + "_" + this.languageCode).focus();
+                        });
+                        
+                        inputFields[j].id = translationId;
+                        eval("if(self.specField." + inputFields[j].name + "_" + self.languageCodes[i] + ") inputFields[j].value = self.specField."+inputFields[j].name + "_" + self.languageCodes[i] + ";");
 						inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
                     }
 				}
@@ -1149,6 +1193,7 @@ Backend.SpecFieldGroup.prototype = {
         this.nodes.categoryID          = document.getElementsByClassName(this.cssPrefix + 'group_categoryID', this.nodes.form)[0];
         this.nodes.save                = document.getElementsByClassName(this.cssPrefix + 'save', this.nodes.controls)[0];
         this.nodes.cancel              = document.getElementsByClassName(this.cssPrefix + 'cancel', this.nodes.controls)[0];
+        this.nodes.topCancel           = $(this.cssPrefix + 'group_new_' + this.group.Category.ID + '_cancel')
      },
      
      bindEvents: function()
@@ -1157,6 +1202,7 @@ Backend.SpecFieldGroup.prototype = {
 		 if(this.nodes.mainTitle) Event.observe(self.nodes.name, 'keyup', function(e) { self.nodes.mainTitle.innerHTML = self.nodes.name.value });
 		 Event.observe(self.nodes.save, 'click', function(e) { Event.stop(e); self.beforeSave() });
 		 Event.observe(self.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel() });
+		 Event.observe(self.nodes.topCancel, 'click', function(e) { Event.stop(e); self.cancel() });
      },
      
     /**
@@ -1173,7 +1219,7 @@ Backend.SpecFieldGroup.prototype = {
         this.nodes.name.name += "[" + Backend.SpecField.prototype.languageCodes[0] + "]";
         if(this.group.name_lang) this.nodes.name.value = this.group.name_lang;
         
-        this.nodes.categoryID.value = this.group.Category;
+        this.nodes.categoryID.value = this.group.Category.ID;
         
         $H(Backend.SpecField.prototype.languages).each(function(language) {
             if(language.key == Backend.SpecField.prototype.languageCodes[0]) throw $continue;
@@ -1217,7 +1263,7 @@ Backend.SpecFieldGroup.prototype = {
     {
 		try
 		{
-            ActiveList.prototype.getInstance(this.cssPrefix + 'groups_list_' + this.group.Category).toggleProgress(this.nodes.parent);
+            ActiveList.prototype.getInstance(this.cssPrefix + 'groups_list_' + this.group.Category.ID).toggleProgress(this.nodes.parent);
 		}
 		catch (e)
 		{
@@ -1250,7 +1296,7 @@ Backend.SpecFieldGroup.prototype = {
         {
     		try
     		{
-                ActiveList.prototype.getInstance(this.cssPrefix + 'groups_list_' + this.group.Category).toggleProgress(this.nodes.parent);
+                ActiveList.prototype.getInstance(this.cssPrefix + 'groups_list_' + this.group.Category.ID).toggleProgress(this.nodes.parent);
                 Form.backup(this.nodes.form);
                 Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.parent);
     		}
@@ -1263,7 +1309,7 @@ Backend.SpecFieldGroup.prototype = {
                 title.appendChild(document.createTextNode(this.nodes.name.value));
                 
                 var ul = document.createElement('ul');
-                ul.id = this.cssPrefix + "items_list_" + this.group.Category + "_" + response.id;
+                ul.id = this.cssPrefix + "items_list_" + this.group.Category.ID + "_" + response.id;
                 Element.addClassName(ul, 'specFieldList'); 
                 Element.addClassName(ul, 'activeList_add_sort'); 
                 Element.addClassName(ul, 'activeList_add_edit'); 
@@ -1271,9 +1317,9 @@ Backend.SpecFieldGroup.prototype = {
                 Element.addClassName(ul, 'activeList_accept_specFieldList'); 
                 Element.addClassName(ul, 'activeList'); 
                 
-                $(this.cssPrefix + "group_new_" + this.group.Category + "_show").style.display = 'inline';
+                $(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show").style.display = 'inline';
                 
-                var groupsList = ActiveList.prototype.getInstance(this.cssPrefix + "groups_list_" + this.group.Category);
+                var groupsList = ActiveList.prototype.getInstance(this.cssPrefix + "groups_list_" + this.group.Category.ID);
                 groupsList.addRecord(response.id, [title, ul]);
                 groupsList.touch();
                 
@@ -1282,8 +1328,8 @@ Backend.SpecFieldGroup.prototype = {
                 
                 Form.restore(this.nodes.form);
                 
-                Backend.SpecFieldGroup.prototype.hideMenuItems($("specField_menu_" + this.group.Category), [$("specField_group_new_" + this.group.Category + "_show"), $("specField_item_new_" + this.group.Category + "_show")]);
-                ActiveForm.prototype.hideNewItemForm($(this.cssPrefix + "group_new_" + this.group.Category + "_show"), this.nodes.parent); 
+                Backend.SpecFieldGroup.prototype.hideMenuItems($("specField_menu_" + this.group.Category.ID), [$("specField_group_new_" + this.group.Category + "_show"), $("specField_item_new_" + this.group.Category + "_show")]);
+                ActiveForm.prototype.hideNewItemForm($(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show"), this.nodes.parent); 
     		}
             
             ActiveForm.prototype.resetErrorMessages(this.nodes.form);
@@ -1306,8 +1352,8 @@ Backend.SpecFieldGroup.prototype = {
         
         if(!this.group || !this.group.ID)
         {
-            Backend.SpecFieldGroup.prototype.hideMenuItems($("specField_menu_" + this.group.Category), [$("specField_group_new_" + this.group.Category.ID + "_show"), $("specField_item_new_" + this.group.Category.ID + "_show")]);
-            ActiveForm.prototype.hideNewItemForm($(this.cssPrefix + "group_new_" + this.group.Category + "_show"), this.nodes.parent); 
+            Backend.SpecFieldGroup.prototype.hideMenuItems($("specField_menu_" + this.group.Category.ID), [$("specField_group_new_" + this.group.Category.ID + "_show"), $("specField_item_new_" + this.group.Category.ID + "_show")]);
+            ActiveForm.prototype.hideNewItemForm($(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show"), this.nodes.parent); 
         }
         else
         {
@@ -1359,6 +1405,10 @@ Backend.SpecFieldGroup.prototype = {
     hideMenuItems: function(menu, except)
     {
         menu = $(menu);
+        try
+        {
+        if(!menu) throw new Error()
+        } catch(e) { console.info(e) }
         $A(menu.getElementsByTagName('li')).each(function(li) {
             a = $(li).down('a');
             a.addClassName('hidden');
