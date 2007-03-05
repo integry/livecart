@@ -784,6 +784,9 @@ fieldset.error, div.error, fieldset.container
 	position: static; 
 	border: 0;
 	background-color: inherit;
+	background: inherit;
+	/* @todo: let's see how this works for IE */
+	background: none;
 }
 
 .errorText /* , fieldset.error div */

@@ -13,7 +13,7 @@ function smarty_function_translate($params, Smarty $smarty)
 {
 	$liveTranslation = isset($_SESSION['translationMode']);
 
-	if (!$liveTranslation || isset($params['notranslate']))
+	if (!$liveTranslation || isset($params['disableLiveTranslation']))
 	{
 		$translation = Store::getInstance()->translate($params['text']);
 	}

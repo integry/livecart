@@ -33,59 +33,31 @@ class CategoryController extends FrontendController
 	{
 		$this->categoryID = $this->request->getValue('id');
 
-		if ($this->request->getValue('filters'))
-		{
-			$valueFilterIds = array();
-			$selectorFilterIds = array();
-			$filters = explode(',', $this->request->getValue('filters'));
-
-		  	foreach ($filters as $filter)
-			{
-			  	$pair = explode('-', $filter);
-			  	if (count($pair) != 2)
-			  	{
-				    continue;
-				}
-				
-				if (substr($pair[1], 0, 1) == 'v')
-				{
-					$selectorFilterIds[] = substr($pair[1], 1);
-				}
-				else
-				{
-					$valueFilterIds[] = $pair[1];	
-				}				
-			}
-
-			// get value filters
-			if ($valueFilterIds)
-			{
-				$f = new ARSelectFilter();
-				$c = new INCond(new ARFieldHandle('Filter', 'ID'), $valueFilterIds);
-				$f->setCondition($c);
-				$filters = ActiveRecordModel::getRecordSet('Filter', $f, Filter::LOAD_REFERENCES);
-				foreach ($filters as $filter)
-				{
-					$this->filters[] = $filter;
-				}
-			}
-			
-			if ($selectorFilterIds)
-			{
-				$f = new ARSelectFilter();
-				$c = new INCond(new ARFieldHandle('SpecFieldValue', 'ID'), $selectorFilterIds);
-				$f->setCondition($c);
-				$filters = ActiveRecordModel::getRecordSet('SpecFieldValue', $f, array('SpecField', 'Category'));
-				foreach ($filters as $filter)
-				{
-					$this->filters[] = new SelectorFilter($filter);
-				}				
-			}			
-		}
+		$this->getAppliedFilters();
 
 		// get category instance
 		$this->category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
 
+		// get category path for breadcrumb
+		$path = $this->category->getPathNodeSet();
+		include_once(ClassLoader::getRealPath('application.helper') . '/function.categoryUrl.php');
+		foreach ($path as $node)
+		{
+			$nodeArray = $node->toArray();
+			$url = smarty_function_categoryUrl(array('data' => $nodeArray), false);
+			$this->addBreadCrumb($nodeArray['name_lang'], $url);
+		}
+	
+		// add filters to breadcrumb
+		$params = array('data' => $nodeArray, 'filters' => array());
+		foreach ($this->filters as $filter)
+		{
+			$filter = $filter->toArray();
+			$params['filters'][] = $filter;
+			$url = smarty_function_categoryUrl($params, false);
+			$this->addBreadCrumb($filter['name_lang'], $url);
+		}
+	
 		// pagination
 		$currentPage = $this->request->getValue('page') 
 			or $currentPage = 1;
@@ -209,22 +181,8 @@ class CategoryController extends FrontendController
 			// remove already applied value filter groups
 			foreach ($filterArray as $key => $filter)
 			{
-			 	// simple value filter
-				if (isset($filter['FilterGroup']))
-			 	{
-					$id = $filter['FilterGroup']['ID'];
-	
-					foreach ($filterGroups as $k => $group)
-					{
-						if ($group['ID'] == $id)
-					  	{						
-						    unset($filterGroups[$k]);
-						}
-					} 						
-				}
-				
 				// selector values
-				else if (isset($filter['SpecField']))
+				if (isset($filter['SpecField']))
 				{
 					foreach ($filterGroups as $groupkey => $group)
 					{
@@ -240,6 +198,20 @@ class CategoryController extends FrontendController
 						}
 					}	
 				}
+			 	
+				// simple value filter
+				elseif (isset($filter['FilterGroup']))
+			 	{
+					$id = $filter['FilterGroup']['ID'];
+	
+					foreach ($filterGroups as $k => $group)
+					{
+						if ($group['ID'] == $id)
+					  	{						
+						    unset($filterGroups[$k]);
+						}
+					} 						
+				}				
 			}
 		}
 
@@ -257,6 +229,59 @@ class CategoryController extends FrontendController
 
 		return $response;	 	
 	}	
+	
+	private function getAppliedFilters()
+	{
+		if ($this->request->getValue('filters'))
+		{
+			$valueFilterIds = array();
+			$selectorFilterIds = array();
+			$filters = explode(',', $this->request->getValue('filters'));
+
+		  	foreach ($filters as $filter)
+			{
+			  	$pair = explode('-', $filter);
+			  	if (count($pair) != 2)
+			  	{
+				    continue;
+				}
+				
+				if (substr($pair[1], 0, 1) == 'v')
+				{
+					$selectorFilterIds[] = substr($pair[1], 1);
+				}
+				else
+				{
+					$valueFilterIds[] = $pair[1];	
+				}				
+			}
+
+			// get value filters
+			if ($valueFilterIds)
+			{
+				$f = new ARSelectFilter();
+				$c = new INCond(new ARFieldHandle('Filter', 'ID'), $valueFilterIds);
+				$f->setCondition($c);
+				$filters = ActiveRecordModel::getRecordSet('Filter', $f, Filter::LOAD_REFERENCES);
+				foreach ($filters as $filter)
+				{
+					$this->filters[] = $filter;
+				}
+			}
+			
+			if ($selectorFilterIds)
+			{
+				$f = new ARSelectFilter();
+				$c = new INCond(new ARFieldHandle('SpecFieldValue', 'ID'), $selectorFilterIds);
+				$f->setCondition($c);
+				$filters = ActiveRecordModel::getRecordSet('SpecFieldValue', $f, array('SpecField', 'Category'));
+				foreach ($filters as $filter)
+				{
+					$this->filters[] = new SelectorFilter($filter);
+				}				
+			}			
+		}		
+	}
 }
 
 ?>

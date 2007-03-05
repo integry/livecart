@@ -81,6 +81,29 @@ div.box .content
 }
 
 /*****************************
+	Breadcrumb
+*****************************/
+#breadCrumb
+{
+	float: left;
+	width: 100%;
+	padding: 5px;
+}
+
+#breadCrumb ul li
+{
+	float: left;
+	margin-right: 10px;	
+	list-style-type: none;
+}
+
+#breadCrumb ul li span.separator
+{
+	margin-left: 5px;
+	font-weight: bold;
+}
+
+/*****************************
 	Product list
 *****************************/
 ul.productList

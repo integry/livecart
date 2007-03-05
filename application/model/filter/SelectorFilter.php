@@ -38,6 +38,10 @@ class SelectorFilter implements SpecificationFilterInterface
 		$array['name_lang'] = $array['value_lang'];
 		$array['handle'] = Store::createHandleString($array['value_lang']);
 		$array['ID'] = 'v' . $array['ID'];
+		if (!isset($array['FilterGroup']))
+		{
+			$array['FilterGroup']['SpecField'] = $array['SpecField'];	
+		}		
 		return $array;
 	}
 	

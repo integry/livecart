@@ -14,9 +14,7 @@ class HelpController extends StoreManagementController
 	function view()
 	{
 	  	$id = $this->request->getValue('id');
-	  	$lang = $this->request->getValue('language');
-
-		$lang = 'en';
+	  	$lang = $this->store->getLocaleCode();
 
 		// get topic structure
 		$root = HelpTopic::getRootTopic($lang);
@@ -30,6 +28,7 @@ class HelpController extends StoreManagementController
 		$rootTopic = $root->toArray();
 		$rootTopic['sub'] = $tree;
 		
+		// get requested topic
 		$currentTopic = $root->getTopic($id);
 
 		$path = array();
@@ -46,33 +45,11 @@ class HelpController extends StoreManagementController
 			  	$current =& $current['sub'][$topic->getID()];
 			}
 		}
+
+		// get user comments
+		$commentArray = $currentTopic->getCommentArray();		
 		
 		$current['sub'] = $currentTopic->getSubTopicArray();
-		
-//print_r($rootTopic);
-		/*
-		$help = new HelpTopic($lang);
-
-	  	// get breadcrumb path
-		$breadCrumb = $help->getPath($id);
-
-		// get page title
-		$title = end($breadCrumb);
-
-		// get next and previous topics
-		$nextId = $help->getNextTopic($id);
-		$prevId = $help->getPreviousTopic($id);
-
-		if ($nextId !== FALSE)
-		{
-		  	$nextTitle = $help->getName($nextId);
-		}
-
-		if ($prevId !== FALSE)
-		{
-		  	$prevTitle = $help->getName($prevId);
-		}
-	  	*/
 	  	
 	  	$response = new ActionResponse();
 	  	$response->setValue('helpTemplate', $currentTopic->getTemplateFile());
@@ -83,14 +60,61 @@ class HelpController extends StoreManagementController
 	  	$response->setValue('PAGE_TITLE', $currentTopic->getName());
 	  	$response->setValue('path', $path);
 	  	$response->setValue('currentId', $id);
+	  	$response->setValue('comments', $commentArray);
+	  	$response->setValue('commentCount', count($commentArray));
+	  	$response->setValue('commentForm', $this->getCommentForm());
 	  	$response->set('rootTopic', $root);
 		  		  	  	
-/*
-	  	$response->setValue('breadCrumb', $breadCrumb);
-
-*/
 	  	return $response;
+	}
+	
+	public function addComment()
+	{
+		$comment = HelpComment::getNewInstance($this->request->getValue('topicId'));
+		$comment->username->set($this->request->getValue('username'));
+		$comment->text->set($this->request->getValue('text'));
+		$comment->save();
+		
+		ActiveRecordModel::removeFromPool($comment);
+		
+		$comment = ActiveRecordModel::getInstanceById('HelpComment', $comment->getID(), HelpComment::LOAD_DATA);
+		
+		$response = new ActionResponse();
+		$response->setValue('comment', $comment->toArray());
+		return $response;
+	}
+	
+	public function deleteComment()
+	{
+		ActiveRecordModel::deleteByID('HelpComment', $this->request->getValue('id'));
+		return new JSONResponse(1);
+	}
+	
+	public function saveComment()
+	{
+		$comment = ActiveRecordModel::getInstanceByID('HelpComment', $this->request->getValue('id'), HelpComment::LOAD_DATA);
+		$comment->username->set($this->request->getValue('username'));
+		$comment->text->set($this->request->getValue('text'));
+		$comment->save();
+		
+		$response = new ActionResponse();
+		$response->setValue('comment', $comment->toArray());
+		return $response;
+	}
 
+	private function getCommentForm()
+	{
+		ClassLoader::import('framework.request.validator.Form');
+		return new Form($this->getCommentValidator());		
+	}
+
+	private function getCommentValidator()
+	{
+		ClassLoader::import('framework.request.validator.RequestValidator');
+		$validator = new RequestValidator('commentForm', $this->request);
+		$validator->addCheck('username', new IsNotEmptyCheck($this->translate('_err_enter_name')));
+		$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_enter_comment')));
+		return $validator;
 	}
 }
 

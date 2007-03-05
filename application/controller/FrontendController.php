@@ -9,12 +9,20 @@ ClassLoader::import("application.controller.BaseController");
  */
 abstract class FrontendController extends BaseController 
 {	
+	protected $breadCrumb = array();
+	
 	public function init()
 	{
 	  	$this->setLayout('frontend');
 	  	$this->addBlock('CATEGORY_BOX', 'boxCategory', 'block/box/category');
+	  	$this->addBlock('BREADCRUMB', 'boxBreadCrumb', 'block/box/breadcrumb');
 	}
 	
+	protected function addBreadCrumb($title, $url)
+	{
+		$this->breadCrumb[] = array('title' => $title, 'url' => $url);
+	}	
+
 	protected function boxLoginBlock()
 	{
 		/* Returning Users: View your order history & information */
@@ -27,14 +35,18 @@ abstract class FrontendController extends BaseController
 
 	protected function boxLanguageSelectBlock()
 	{
-	  	
+			  	
 	}
 	
-	protected function boxAppliedFiltersBlock()
+	protected function boxBreadCrumbBlock()
 	{
-	  	
-	}
-
+		array_unshift($this->breadCrumb, array('title' => $this->config->getValue('STORE_NAME'), 
+											   'url' => Router::getInstance()->createUrl(array('controller' => 'index'))));
+		$response = new BlockResponse();
+		$response->setValue('breadCrumb', $this->breadCrumb);
+		return $response;
+	}	
+	
 	protected function boxCategoryBlock()
 	{
 		ClassLoader::import('application.model.category.Category');

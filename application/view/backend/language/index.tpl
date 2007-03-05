@@ -75,8 +75,6 @@
 </script>
 {/literal}
 
-{*
 <!-- {maketext text="_statistic_languages_full" params="$count_all,$count_active"}. -->
-*}
 
 {include file="layout/backend/footer.tpl"}

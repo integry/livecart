@@ -9,7 +9,7 @@
  *
  * @package application.helper
  */
-function smarty_function_categoryUrl($params, Smarty $smarty)
+function smarty_function_categoryUrl($params, $smarty)
 {	
 	$category = $params['data'];	
 	$router = Router::getInstance();

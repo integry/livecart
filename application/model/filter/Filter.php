@@ -105,6 +105,13 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 		return $this->filterGroup->get()->specField->get();
 	}
 
+	public static function transformArray($array, $class = __CLASS__)
+	{		
+		$array = parent::transformArray($array, $class);
+		$array['handle'] = Store::createHandleString($array['name_lang']);
+		return $array;
+	}
+
 	protected function getJoinAlias()
 	{
 		return 'specField_' . $this->getSpecField()->getID(); 			 	  	

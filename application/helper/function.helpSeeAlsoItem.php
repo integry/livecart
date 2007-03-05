@@ -15,7 +15,9 @@ function smarty_function_helpSeeAlsoItem($params, Smarty $smarty)
 	
 	$router = Router::getInstance();
 	
-	return '<li><a href="' . $router->createUrl(array('controller' => 'backend.help', 'action' => 'view', 'id' => $params['id'])) . '">' . $topic->getName() . '</a></li>';
+	$name = ($topic instanceof HelpTopic) ? $topic->getName() : '<span style="color:red;font-weight: bold; font-size: larger;">INVALID LINK</span>';
+	
+	return '<li><a href="' . $router->createUrl(array('controller' => 'backend.help', 'action' => 'view', 'id' => $params['id'])) . '">' . $name . '</a></li>';
 }
 
 ?>
