@@ -7,24 +7,29 @@ administrators (of your system). An order usually contains information about goo
 <legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#view">Review Orders</a></li>
-	<li><a href="{self}#searc">Finding Orders</a></li>				
+	<li><a href="{self}#search">Finding Orders</a></li>				
 </ul>
 </legend>
 </div>
 
 <h3 id="view">Reviewing Orders</h3>
 
-<p>
-	Orders are displayed in your system by their status: 
-	<ul>
-		<strong>
-		<li>Queued - </li>
-		<li>Failed - </li>
-		<li>Complete - </li>
-		<li>etc...</li>
-		</strong>
-	</ul>
-</p>
+<p>There are three ways to display orders:</p>
+<ul>
+	<li>By the status of orders</li>
+	<li>By the date they were placed</li>
+	<li>Using Advanced search</li>
+</ul>
+
+<p>Understanding order <strong>status</strong>:</p>
+<ul>
+	<strong>
+	<li>Queued - </li>
+	<li>Failed - </li>
+	<li>Complete - </li>
+	<li>etc...</li>
+	</strong>
+</ul>
 
 {helpSeeAlso}
 	{see orders.manage}
