@@ -33,7 +33,8 @@
    margin: 0px;
 }
 
-.filter legend, .filter_date_range, .filter_language_translation, .filter_form_language_translation
+.filter legend, 
+.filter_date_range
 {
 	display: none;
 }

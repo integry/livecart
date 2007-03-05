@@ -121,11 +121,44 @@ Backend.Filter.prototype = {
             this.findUsedNodes();
             this.bindFields();
             this.generateTitleFromSpecField();
+            
+            this.hideSpecField();
+            this.toggleFilters();
+            
+            new SectionExpander(this.nodes.parent)
         }
         catch(e)
         {
             console.trace();
             console.info(e);
+        }
+    },
+
+    getSpecField: function()
+    {
+        var specField = {};
+        for(var k = 0; k < this.specFields.length; k++) 
+        {
+            if(this.specFields[k].ID == this.nodes.specFieldID.value) 
+            {
+                var specField = this.specFields[k];
+                break;
+            }
+        }
+        
+        return specField;
+    },
+
+    toggleFilters: function()
+    {
+        var specField = this.getSpecField();
+        var showFilters = this.selectorValueTypes.indexOf(specField.type) === -1;
+        
+        if(showFilters) this.nodes.stepFilters.show(); else this.nodes.stepFilters.hide();
+        for(var i = 1; i < this.languageCodes.length; i++)
+        {
+   			var filterTranslations = this.nodes.translationsUl[this.languageCodes[i]].up("fieldset");           
+            if(showFilters) filterTranslations.show(); else filterTranslations.hide();
         }
     },
 
@@ -199,30 +232,18 @@ Backend.Filter.prototype = {
         this.nodes.name                   = document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
         this.nodes.name.value             = '';
         this.nodes.specFieldID            = document.getElementsByClassName(this.cssPrefix + "form_specFieldID", this.nodes.parent)[0];
-        
-        this.nodes.tabs                   = this.nodes.parent.down('ul.tabs');
-        this.nodes.tabMain                = this.nodes.tabs.down('li');
-        this.nodes.tabFilters             = this.nodes.tabMain.next('li');
-        
+        this.nodes.specFieldParagraph     = document.getElementsByClassName(this.cssPrefix + "specField", this.nodes.parent)[0];
+               
         this.nodes.stepTranslations       = document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
         this.nodes.stepFiltersTranslations= document.getElementsByClassName(this.cssPrefix + "step_filters_translations", this.nodes.parent)[0];
+        this.nodes.stepFilters = document.getElementsByClassName(this.cssPrefix + "step_filters", this.nodes.parent)[0];
         
         this.nodes.filtersTranslationTemplate = this.nodes.stepTranslations.down("." + this.cssPrefix + "form_filters_value");
-        
-        this.nodes.stepMain               = document.getElementsByClassName(this.cssPrefix + "step_main", this.nodes.parent)[0];
-        this.nodes.stepValues             = document.getElementsByClassName(this.cssPrefix + "step_filters", this.nodes.parent)[0];
-        this.nodes.stepLevOne             = document.getElementsByClassName(this.cssPrefix + "step_lev1", this.nodes.parent);
         this.nodes.generateFiltersLink    = document.getElementsByClassName(this.cssPrefix + "generate_filters", this.nodes.parent)[0];
         this.nodes.defaultFiltersList     = document.getElementsByClassName(this.cssPrefix + "form_filters_value", this.nodes.filtersDefaultGroup);
 
-        for(var i = 0; i < this.nodes.stepLevOne.length; i++)
-        {
-            if(!this.nodes.stepLevOne[i].id) this.nodes.stepLevOne[i].id = this.nodes.stepLevOne[i].className.replace(/ /, "_") + "_" + this.id;
-        }
-
         this.nodes.mainTitle              = document.getElementsByClassName(this.cssPrefix + "title", this.nodes.parent)[0];
         this.nodes.filtersCount           = document.getElementsByClassName(this.cssPrefix + "count", this.nodes.parent)[0];
-        this.nodes.stateLinks             = document.getElementsByClassName(this.cssPrefix + "change_state", this.nodes.parent);
         this.nodes.cancel                 = document.getElementsByClassName(this.cssPrefix + "cancel", this.nodes.parent)[0];
         this.nodes.save                   = document.getElementsByClassName(this.cssPrefix + "save", this.nodes.parent)[0];
 
@@ -242,6 +263,15 @@ Backend.Filter.prototype = {
 
     },
 
+    hideSpecField: function()
+    {
+        if(!this.id.match(/new/)) 
+        {
+            this.nodes.specFieldID.up().hide();
+            this.nodes.specFieldParagraph.hide();
+        }
+    },
+
     /**
      * Find all translations fields. This is done every time when new filter is being added
      *
@@ -259,16 +289,12 @@ Backend.Filter.prototype = {
     {
         var self = this;
 
-        for(var i = 0; i < this.nodes.stateLinks.length; i++)
-        {
-            Event.observe(this.nodes.stateLinks[i], "click", function(e) { self.changeStateAction(e) });
-        }
-
         Event.observe(this.nodes.name, "keyup", function(e) { self.generateTitleAction(e) });
         Event.observe(this.nodes.addFilterLink, "click", function(e) { self.addFilterFieldAction(e) });
         
         Event.observe(this.nodes.specFieldID, "change", function(e) { self.specFieldIDWasChangedAction(e) });        
         Event.observe(this.nodes.specFieldID, "change", function(e) { self.generateTitleFromSpecField(e) });
+        Event.observe(this.nodes.specFieldID, "change", function(e) { self.toggleFilters(); } );
         
         Event.observe(this.nodes.cancel, "click", function(e) { self.cancelAction(e) });
         Event.observe(this.nodes.save, "click", function(e) { self.saveAction(e) });
@@ -315,11 +341,9 @@ Backend.Filter.prototype = {
             }
             else if(self.selectorValueTypes.indexOf(this.specFields[i].type) !== -1)
             {
-                this.nodes.tabFilters.hide();
                 return;
             }
             
-            this.nodes.tabFilters.show();
             var specField = this.specFields[i];
            
             $A(this.nodes.filtersDefaultGroup.down('ul').getElementsByTagName("li")).each(function(li)
@@ -484,11 +508,8 @@ Backend.Filter.prototype = {
             var newTranslation = translations.cloneNode(true);
             Element.removeClassName(newTranslation, "dom_template");
             
-			// bind it
-            Event.observe(newTranslation.getElementsByTagName("legend")[0], "click", function(e) { self.changeTranslationLanguageAction(e) });
-
             newTranslation.className += this.languageCodes[i];
-            document.getElementsByClassName(this.cssPrefix + "legend_text", newTranslation.getElementsByTagName("legend")[0])[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
+            newTranslation.down("legend").update(this.languages[this.languageCodes[i]]);
 
             var inputFields = $A(newTranslation.getElementsByTagName('input'));
             var textAreas = newTranslation.getElementsByTagName('textarea');
@@ -555,25 +576,6 @@ Backend.Filter.prototype = {
         });
     },
 
-
-    /**
-     * Change translation language tab
-     *
-     * @param Event e Event
-     *
-     * @access private
-     */
-	changeTranslationLanguageAction: function(e)
-	{
-        if(!e.target) e.target = e.srcElement;
-
-        Event.stop(e);
-        var currentTranslationNode = document.getElementsByClassName(this.cssPrefix + "language_translation", e.target.parentNode.parentNode)[0];               
-        currentTranslationNode.style.display = (currentTranslationNode.style.display == 'block') ? 'none' : 'block';
-        
-        document.getElementsByClassName("expandIcon", e.target.parentNode)[0].firstChild.nodeValue = (currentTranslationNode.style.display == 'block') ? '[-] ' : '[+] ';
-	},
-
     /**
      * Create appropriate fields in translation tab when creating new filter
      *
@@ -632,43 +634,6 @@ Backend.Filter.prototype = {
         }
     },
 
-
-    /**
-     * This callback is executed when user changes the state. When user change the state all other
-     * states are hidden and only current state shown or if the user was so stupid to click on current
-     * state whe whole thing will crash (or the current step will collapse. I don't realy remember)
-     *
-     * @param Event e Event
-     *
-     * @access private
-     */
-    changeStateAction: function(e)
-    {
-        if(!e.target) e.target = e.srcElement;
-
-        Event.stop(e);
-
-        var currentStep = this.cssPrefix + e.target.hash.substring(1);
-        for(var i = 0; i < this.nodes.stepLevOne.length; i++)
-        {
-            this.nodes.stateLinks[i].id = this.cssPrefix + 'change_state' + this.id;
-
-            if(this.nodes.stepLevOne[i].className.split(' ').indexOf(currentStep) === -1)
-            {
-                this.nodes.stepLevOne[i].style.display = 'none';
-                Element.removeClassName(this.nodes.stateLinks[i], this.cssPrefix + "change_state_active");
-                Element.removeClassName(this.nodes.stateLinks[i].parentNode, 'active');
-            }
-            else
-            {
-                this.nodes.stepLevOne[i].style.display = 'block';
-                Element.addClassName(this.nodes.stateLinks[i], this.cssPrefix + "change_state_active");
-                Element.addClassName(this.nodes.stateLinks[i].parentNode, 'active');
-            }
-        }
-    },
-
-
     /**
      * When some dumbass creates/modifies value in "Filters" step, we are automatically creating
      * a label for similar field in every language section in "Translations" step.
@@ -703,13 +668,6 @@ Backend.Filter.prototype = {
         var li = e.target.up('li');
         var splitedHref  = li.id.match(/(new)*(\d+)$/); //    splitedHref[splitedHref.length - 2] == 'new' ? true : false;
         var id = splitedHref[0];
-        
-        if(id.match(/^new/))
-        {
-    		// generate handle
-            var handleParagraph = document.getElementsByClassName('filter_handle', li)[0];
-    		handleParagraph.getElementsByTagName('input')[0].value = ActiveForm.prototype.generateHandle(e.target.value);
-        }
 
         for(var i = 1; i < this.languageCodes.length; i++)
         {
@@ -772,14 +730,7 @@ Backend.Filter.prototype = {
 
         filter_name_paragraph.siblings().each(function(paragraph) 
         {
-            if(Element.hasClassName(paragraph, 'filter_handle'))
-            {
-                // Handle name
-                var handleInput = paragraph.down("input");
-                handleInput.name = "filters[" + id + "][handle]";
-                handleInput.value = (value.handle) ? value.handle : '' ;
-            }
-            else if(Element.hasClassName(paragraph, 'filter_range'))
+            if(Element.hasClassName(paragraph, 'filter_range'))
             {
                 // Numeric range
                 var rangeStartInput = paragraph.down("input");
@@ -864,8 +815,9 @@ Backend.Filter.prototype = {
 		// now insert all translation fields
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
-            break;
-            var newValueTranslation = this.nodes.translation_templates[this.languageCodes[i]].cloneNode(true);
+            var newValueTranslation = this.nodes.filtersTranslationTemplate.cloneNode(true);
+            Element.removeClassName(newValueTranslation, "dom_template");
+            
             var translationsUl = this.nodes.translationsUl[this.languageCodes[i]];
             var inputTranslation = newValueTranslation.down("input");
 
@@ -878,8 +830,6 @@ Backend.Filter.prototype = {
             // add to node tree
 			translationsUl.id = this.cssPrefix + "form_" + this.id + '_values_' + this.languageCodes[i];
 			translationsUl.appendChild(newValueTranslation);
-            
-            Element.removeClassName(newValueTranslation, "dom_template");
 		}
         
         return li;
@@ -1001,15 +951,7 @@ Backend.Filter.prototype = {
                 
                 var activeList = ActiveList.prototype.getInstance($(this.cssPrefix + "items_list_" + this.categoryID));
             
-                var specField = {};
-                for(var k = 0; k < this.specFields.length; k++) 
-                {
-                    if(this.specFields[k].ID == this.nodes.specFieldID.value) 
-                    {
-                        var specField = this.specFields[k];
-                        break;
-                    }
-                }
+                var specField = this.getSpecField();
                 
                 if(this.selectorValueTypes.indexOf(specField.type) === -1)
                 {

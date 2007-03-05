@@ -1,8 +1,3 @@
-<ul class="tabs">
-    <li class="active"><a href="#step_main" class="filter_change_state" >{t _Filter_main}</a></li>
-    <li><a href="#step_filters" class="filter_change_state" >{t _Filter_filters}</a></li>
-</ul>
-
 <form action="{link controller=backend.filterGroup action=save}" method="post" class="filter">
 	<!-- STEP 1 -->
 	<fieldset class="filter_step_lev1 filter_step_main">
@@ -18,7 +13,7 @@
             </fieldset>
     	</p>
 
-		<p>
+		<p class="filter_specField">
     		<label>{t _Filter_associated_field}</label>
             <fieldset class="error">
      	        <select name="specFieldID" class="filter_form_specFieldID"></select>
@@ -44,15 +39,7 @@
                                     		<span class="errorText hidden"> </span>
                                         </fieldset>
                 				    </span>
-                					
-                                    <span class="filter_handle" style="display: none">
-                    					<label>{t _Filter_handle}</label>
-                                        <fieldset class="error">
-                        				    <input type="text" />
-                                    		<span class="errorText hidden"> </span>
-                                        </fieldset>
-                				    </span>
-                                    
+
                 					<span class="filter_range">
                     					<label>{t _Filter_range}</label>
                         					<input type="text" /> - <input type="text" />
@@ -82,16 +69,16 @@
     	</fieldset>
         
     	<!-- STEP 3 -->
-    	<div class="filter_step_translations">
-                <fieldset class="dom_template filter_step_translations_language filter_step_translations_language_">
-                    <legend><span class="expandIcon">[+] </span><span class="filter_legend_text"></span></legend>
-                    <div class="activeForm_translation_values filter_language_translation">
+    	<fieldset class="filter_step_translations">
+            <fieldset class="expandingSection dom_template filter_step_translations_language filter_step_translations_language_">
+                <legend></legend>
+                <fieldset class="expandingSectionContent">
+                    <fieldset class="activeForm_translation_values filter_language_translation">
                         <p>
                 			<label>{t _Filter_name}</label>
                 			<input type="text" name="name" />
             			</p>
-                    </div>
-                    
+                    </fieldset>
                     <fieldset>
                         <legend>Filters translations</legend>
                         <div class="filter_form_language_translation">
@@ -107,7 +94,8 @@
                         </div>
                     </fieldset>
                 </fieldset>
-    	</div>
+            </fieldset>
+    	</fieldset>
     </fieldset>
 
 

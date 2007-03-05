@@ -14,15 +14,13 @@ SectionExpander.prototype = {
 		var sectionList = document.getElementsByClassName('expandingSection', $(parent));
 		for (var i = 0; i < sectionList.length; i++)
 		{
-			var legendList = sectionList[i].getElementsByTagName('legend');
-			var expandIcon = document.getElementsByClassName('expandIcon', sectionList[i]);
-			if (legendList[0] != undefined && expandIcon[0] == undefined)
+			var legend = sectionList[i].down('legend');
+			var expandIcon = sectionList[i].down('.expandIcon');
+			if (legend && !expandIcon)
 			{
-				var legend = legendList[0];
 				legend.innerHTML = '<span class="expandIcon">' + this.getToggleIconContent(false) + '</span> ' + legend.innerHTML;
 				legend.onclick = this.handleLegendClick.bindAsEventListener(this);
 			}
-
 		}
 		var sectionContentList = document.getElementsByClassName('expandingSectionContent');
 		for (var i = 0; i < sectionContentList.length; i++)

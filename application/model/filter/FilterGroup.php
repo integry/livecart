@@ -140,7 +140,6 @@ class FilterGroup extends MultilingualObject
             }
 
             $filter->setLanguageField('name', $value['name'], $languageCodes);
-            $filter->setFieldValue('handle', $value['handle']);
             
             if($specFieldType == SpecField::TYPE_TEXT_DATE)
             {
@@ -227,11 +226,6 @@ class FilterGroup extends MultilingualObject
                 if($v['name'][$languageCodes[0]] == '')
                 {
                     $errors['filters['.$key.'][name]['.$languageCodes[0].']'] = '_error_filter_name_empty';
-                }        
-                
-                if(!isset($v['handle']) || $v['handle'] == '' || preg_match('/[^\w\d_.]/', $v['handle']))
-                {
-                    $errors['filters['.$key.'][handle]'] = '_error_filter_handle_invalid';
                 }
             }
         }
