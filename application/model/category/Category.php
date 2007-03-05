@@ -633,14 +633,16 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 *
 	 * @param bool $includeParentFields
 	 * @return ARSelectFilter
+	 * @todo Order by categories (top-level category fields go first)
 	 */
 	private function getSpecificationFilter($includeParentFields)
 	{
 		$path = parent::getPathNodeSet(Category::INCLUDE_ROOT_NODE);
 		$filter = new ARSelectFilter();
-		$filter->joinTable('SpecFieldGroup', 'SpecField', 'ID', 'specFieldGroupID', 'SpecFieldGroup_2');
-		$filter->setOrder(new ARFieldHandle("SpecFieldGroup", "position", "SpecFieldGroup_2"), 'ASC');
-					
+
+		$filter->setOrder(new ARFieldHandle("SpecFieldGroup", "position"), 'ASC');
+		$filter->setOrder(new ARFieldHandle("SpecField", "position"), 'ASC');
+							
 		$cond = new EqualsCond(new ARFieldHandle("SpecField", "categoryID"), $this->getID());
 
 		if ($includeParentFields)

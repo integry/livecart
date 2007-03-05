@@ -330,16 +330,15 @@ class ProductController extends StoreManagementController
 
 		foreach ($specFieldArray as $field)
 		{
-			$groupID = isset($field['SpecFieldGroup']) ? $field['SpecFieldGroup'] : '';
+			$groupID = isset($field['SpecFieldGroup']['ID']) ? $field['SpecFieldGroup']['ID'] : '';
 			if((int)$groupID && $prevGroupID != $groupID) 
 			{
-				$field['SpecFieldGroupData'] = SpecFieldGroup::getInstanceByID($groupID, ActiveRecord::LOAD_DATA)->toArray();
 				$prevGroupID = $groupID;
 			}
 			
 			$specFieldsByGroup[$groupID][] = $field;
 		}		
-				
+							
 		$response = new ActionResponse();
 		$response->setValue("cat", $product->category->get()->getID());
 		$response->setValue("languageList", $languages);

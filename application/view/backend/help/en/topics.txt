@@ -14,16 +14,21 @@
 		
 	products=Products
 		add=Add New Product
-		edit=Edit Products
-		change=Sort Products
-		remove=Delete Products
+		manage=Manage Products
+		edit=Edit Product
+			pricing=Pricing
+			options=Options
+			inventory=Inventory
+			images=Images
+			discounts=Discounts
 		
 	orders=Orders		
-		manage=Manage Orders
 		create=Create Order
 		export=Export Orders
 		
 	user=Users		
+		groups=User Groups
+		add=Create New User
 		
 	currency=Currencies
 		

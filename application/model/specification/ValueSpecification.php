@@ -47,7 +47,7 @@ abstract class ValueSpecification extends Specification
 
 	public function toArray()
 	{	
-		$arr  = parent::toArray(false);
+		$arr  = parent::toFlatArray();
 		$arr['SpecField'] = $this->specField->get()->toArray();
 		
 		return $arr;

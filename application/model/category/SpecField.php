@@ -322,9 +322,9 @@ class SpecField extends MultilingualObject
 	 *
 	 *	@return array
 	 */
-	public function toArray($recursive = true)
+	public function toArray()
     {
-	  	$array = parent::toArray($recursive);
+	  	$array = parent::toArray();
 	  	$array['fieldName'] = $this->getFormFieldName();
 	  	
 	  	return $array;
