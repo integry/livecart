@@ -17,6 +17,7 @@
     		<label>{t _Filter_associated_field}</label>
             <fieldset class="error">
      	        <select name="specFieldID" class="filter_form_specFieldID"></select>
+                <div class="filter_form_specFieldText"></div>
         		<span class="errorText hidden"> </span>
             </fieldset>
 		</p>

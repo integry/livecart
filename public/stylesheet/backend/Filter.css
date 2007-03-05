@@ -81,7 +81,11 @@
    padding: 2px 10px;
 }
 
-
+.filter_form_specFieldText {
+    font-size: 16px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
 
 /* IE */
 .filter_step_translations_language

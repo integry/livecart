@@ -154,7 +154,15 @@ Backend.Filter.prototype = {
         var specField = this.getSpecField();
         var showFilters = this.selectorValueTypes.indexOf(specField.type) === -1;
         
-        if(showFilters) this.nodes.stepFilters.show(); else this.nodes.stepFilters.hide();
+        if(showFilters) 
+        {
+            this.nodes.stepFilters.show(); 
+        }
+        else 
+        {
+            this.nodes.stepFilters.hide();
+        }
+        
         for(var i = 1; i < this.languageCodes.length; i++)
         {
    			var filterTranslations = this.nodes.translationsUl[this.languageCodes[i]].up("fieldset");           
@@ -232,6 +240,7 @@ Backend.Filter.prototype = {
         this.nodes.name                   = document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
         this.nodes.name.value             = '';
         this.nodes.specFieldID            = document.getElementsByClassName(this.cssPrefix + "form_specFieldID", this.nodes.parent)[0];
+        this.nodes.specFieldText          = document.getElementsByClassName(this.cssPrefix + "form_specFieldText", this.nodes.parent)[0];
         this.nodes.specFieldParagraph     = document.getElementsByClassName(this.cssPrefix + "specField", this.nodes.parent)[0];
                
         this.nodes.stepTranslations       = document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
@@ -267,8 +276,16 @@ Backend.Filter.prototype = {
     {
         if(!this.id.match(/new/)) 
         {
-            this.nodes.specFieldID.up().hide();
-            this.nodes.specFieldParagraph.hide();
+            var specField = this.getSpecField();
+            
+            this.nodes.specFieldID.hide();
+            this.nodes.specFieldText.update(specField.name_lang);
+            this.nodes.specFieldText.show();
+        }
+        else
+        {
+            this.nodes.specFieldID.show();
+            this.nodes.specFieldText.hide();
         }
     },
 
