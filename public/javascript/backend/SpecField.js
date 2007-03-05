@@ -121,6 +121,9 @@ Backend.SpecField.prototype = {
     		this.values                = this.specField.values;
     		this.name                  = this.specField.name_lang;
     		this.backupName            = this.name;
+            
+    		this.valuePrefix           = this.specField.valuePrefix ? this.specField.valuePrefix : '';
+    		this.valueSuffix           = this.specField.valueSuffix ? this.specField.valueSuffix : '';
     
     		this.description           = this.specField.description;
     
@@ -221,8 +224,14 @@ Backend.SpecField.prototype = {
 		
         this.nodes.handle 				= document.getElementsByClassName(this.cssPrefix + "form_handle", this.nodes.parent)[0];
 		this.nodes.name 				= document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
+		this.nodes.valueSuffix			= document.getElementsByClassName(this.cssPrefix + "form_valueSuffix", this.nodes.parent)[0];
+		this.nodes.valuePrefix			= document.getElementsByClassName(this.cssPrefix + "form_valuePrefix", this.nodes.parent)[0];
+                
+		this.nodes.valuePrefix          = document.getElementsByClassName(this.cssPrefix + "form_valuePrefix", this.nodes.parent)[0];
+		this.nodes.valueSuffix          = document.getElementsByClassName(this.cssPrefix + "form_valueSuffix", this.nodes.parent)[0];
+        
 		this.nodes.valuesDefaultGroup 	= document.getElementsByClassName(this.cssPrefix + "form_values_group", this.nodes.parent)[0];
-        this.nodes.formatedText        = document.getElementsByClassName(this.cssPrefix + 'form_advancedText', this.nodes.parent)[0];
+        this.nodes.formatedText         = document.getElementsByClassName(this.cssPrefix + 'form_advancedText', this.nodes.parent)[0];
         
 		this.nodes.cancel 	            = document.getElementsByClassName(this.cssPrefix + "cancel", this.nodes.parent)[0];
 		this.nodes.save 	            = document.getElementsByClassName(this.cssPrefix + "save", this.nodes.parent)[0];
@@ -407,8 +416,12 @@ Backend.SpecField.prototype = {
 		if(this.handle) this.nodes.handle.value = this.handle;
 
 		this.nodes.name.value = this.specField.name_lang ? this.specField.name_lang : '';
+        this.nodes.valuePrefix.value = this.specField.valuePrefix_lang ? this.specField.valuePrefix_lang : '';
+        this.nodes.valueSuffix.value = this.specField.valueSuffix_lang ? this.specField.valueSuffix_lang : '';
         
 		this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
+		this.nodes.valuePrefix.name = "valuePrefix[" + this.languageCodes[0] + "]";
+		this.nodes.valueSuffix.name = "valueSuffix[" + this.languageCodes[0] + "]";
 
 		this.nodes.multipleSelector.checked = this.isMultiValue;
 		this.nodes.isRequired.checked = this.isRequired;

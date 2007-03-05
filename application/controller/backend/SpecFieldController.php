@@ -149,23 +149,29 @@ class SpecFieldController extends StoreManagementController
             $handle = $this->request->getValue('handle');
             $values = $this->request->getValue('values');
             
+            
+            $valuePrefix = $this->request->getValue('valuePrefix');
+            $valueSuffix = $this->request->getValue('valueSuffix');
+            
             $isMultiValue = $this->request->getValue('multipleSelector') == 1 ? 1 : 0;
             $isRequired = $this->request->getValue('isRequired') == 1 ? 1 : 0;
             $isDisplayed = $this->request->getValue('isDisplayed') == 1 ? 1 : 0;
             $isDisplayedInList = $this->request->getValue('isDisplayedInList') == 1 ? 1 : 0;
-            
 
-            $specField->setFieldValue('dataType',       $dataType);
-            $specField->setFieldValue('type',           $type);
-            $specField->setFieldValue('handle',         $handle);
+            $specField->setFieldValue('dataType',          $dataType);
+            $specField->setFieldValue('type',              $type);
+            $specField->setFieldValue('handle',            $handle);
             
             $specField->setFieldValue('isMultiValue',      $isMultiValue);
             $specField->setFieldValue('isRequired',        $isRequired);
             $specField->setFieldValue('isDisplayed',       $isDisplayed);
             $specField->setFieldValue('isDisplayedInList', $isDisplayedInList);
             
-            $specField->setLanguageField('description', $description, $this->specFieldConfig['languageCodes']);
-            $specField->setLanguageField('name',        $name,        $this->specFieldConfig['languageCodes']);
+            $specField->setLanguageField('valuePrefix',    $valuePrefix, $this->specFieldConfig['languageCodes']);
+            $specField->setLanguageField('valueSuffix',    $valueSuffix, $this->specFieldConfig['languageCodes']);
+                        
+            $specField->setLanguageField('description',    $description, $this->specFieldConfig['languageCodes']);
+            $specField->setLanguageField('name',           $name,        $this->specFieldConfig['languageCodes']);
             $specField->save();  
                      
             // save specification field values in database

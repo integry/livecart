@@ -84,7 +84,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 					
 					if (!$data)
 					{
-						$data = array($defaultLangCode => '');
+					    $data = array($defaultLangCode => '');
 					}
 					
 					if (!isset($data[$defaultLangCode]))
@@ -92,7 +92,9 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 						$data[$defaultLangCode] = '';	
 					}
 					
-					if (!is_array($data)) { print_r($array); }
+					if (!is_array($data)) { 
+					print_r($array); 
+					}
 					
 					foreach ($data as $lang => $value)
 					{

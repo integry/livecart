@@ -70,6 +70,22 @@
             		<span class="errorText hidden"> </span>
                 </fieldset>
     		</p>
+      
+    		<p>
+        		<label>{t _SpecField_valuePrefix}</label>
+                <fieldset class="error">
+            		<input type="text" name="valuePrefix" class="specField_form_valuePrefix" />
+            		<span class="errorText hidden"> </span>
+                </fieldset>
+    		</p>
+            
+    		<p>
+        		<label>{t _SpecField_valueSuffix}</label>
+                <fieldset class="error">
+            		<input type="text" name="valueSuffix" class="specField_form_valueSuffix" />
+            		<span class="errorText hidden"> </span>
+                </fieldset>
+    		</p>
 
     		<p>
         		<label>{t _SpecField_description}</label>
@@ -91,7 +107,14 @@
             			<label>{t _SpecField_title}</label>
             			<input type="text" name="name" />
         			</p>
-        
+                    <p>
+            			<label>{t _SpecField_valuePrefix}</label>
+            			<input type="text" name="valuePrefix" />
+        			</p>
+                    <p>
+            			<label>{t _SpecField_valueSuffix}</label>
+            			<input type="text" name="valueSuffix" />
+        			</p>
                     <p>
             			<label>{t _SpecField_description}</label>
             			<textarea name="description" rows="5" cols="40"></textarea>
