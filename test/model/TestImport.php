@@ -1,8 +1,13 @@
 <?php
 
+function prexTranslate($text)
+{
+	
+}
+
 echo "<pre>";
-require_once("init.php");
-require_once('../../../../prex/PrexCategory.php');
+require_once("../Initialize.php");
+require_once('../../../prex/PrexCategory.php');
 ClassLoader::import("application.model.category.*");
 ClassLoader::import("application.model.product.*");
 
@@ -99,7 +104,7 @@ foreach ($spec as $groupname => $groupvalues)
 
 			if ($field->isTextField())
 			{
-				$products[$productId]->setAttributeValue($field, $value);  	
+				$products[$productId]->setAttributeValueByLang($field, 'en', $value);  	
 			}
 
 			if ($field->isSelector())

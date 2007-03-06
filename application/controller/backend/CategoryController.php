@@ -130,14 +130,9 @@ class CategoryController extends StoreManagementController
 	 */
 	public function remove()
 	{
-		$targetNode = Category::getInstanceByID((int)$this->request->getValue("id"));
-	    
 		$status = false;
-		try 
-		{
-		    $status = $targetNode->delete();
-		} 
-		catch(Exception $e){}
+		
+		Category::deleteByID((int)$this->request->getValue("id"));
 		
 		return new JSONResponse($status);
 	}

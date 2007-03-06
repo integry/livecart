@@ -142,7 +142,7 @@ class CategoryController extends FrontendController
 		if ($ids)
 		{
 			$filters = $currentCategory->getFilterSet();
-			
+
 			// sort filters by group
 			$sorted = array();
 			$filterArray = array();
@@ -158,7 +158,7 @@ class CategoryController extends FrontendController
 				$sorted[$specFieldID][] = $array;
 				$filterArray[] = $array;
 			}
-			
+
 			// assign sorted filters to group arrays
 			foreach ($filterGroups as $key => $group)
 			{
@@ -168,7 +168,7 @@ class CategoryController extends FrontendController
 				}
 			}			
 		}
- 	
+
 	 	$response = new BlockResponse();
 	 	
 		if ($this->filters)

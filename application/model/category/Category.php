@@ -157,7 +157,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 			if (in_array($group['SpecField']['type'], 
 			  			 array(SpecField::TYPE_NUMBERS_SELECTOR, SpecField::TYPE_TEXT_SELECTOR)))
 		  	{
-				$specFields = $group['SpecField']['ID'];
+				$specFields[] = $group['SpecField']['ID'];
 			}
 			else
 			{
@@ -166,7 +166,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		}		
 		
 		$ret = array();
-		
+
 		if ($ids)
 		{
 			// get specification simple value filters
@@ -183,7 +183,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 				$ret[] = $filter;
 			}
 		}
-		
+
 		// get specification selector value filters
 		if ($specFields)
 		{					
@@ -493,7 +493,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		{
 			$category = Category::getInstanceByID($recordID, Category::LOAD_DATA);
 			$activeProductCount = $category->getFieldValue("activeProductCount");
-			$totalProductCpunt = $category->getFieldValue("totalProductCount");
+			$totalProductCount = $category->getFieldValue("totalProductCount");
 
 			$pathNodes = $category->getPathNodeSet(true);
 
@@ -514,12 +514,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		}
 	}
 
-    public function getBranch() {
+    public function getBranch() 
+	{
         $filter = new ARSelectFilter();
         $filter->setOrder(new ARFieldHandle("Category", "lft", 'ASC'));
         $filter->setCondition(new OperatorCond(new ARFieldHandle("Category", "parentNodeID"), $this->getID(), "="));
-		
-		
+			
 		$categoryList = Category::getRecordSet($filter);
     }
 

@@ -176,7 +176,7 @@ class ProductSpecification
 				 ' . str_replace('ON specFieldID', 'ON SpecificationItem.specFieldID', $cond);
 		
 		$specificationArray = ActiveRecordModel::getDataBySQL($query);
-		$multiLingualFields = array('value', 'name', 'description', 'valuePrefix', 'valueSuffix');
+		$multiLingualFields = array('name', 'description', 'valuePrefix', 'valueSuffix');
 
 		foreach ($specificationArray as &$spec)
 		{
@@ -185,9 +185,15 @@ class ProductSpecification
 			{
 				$spec[$value] = unserialize($spec[$value]);
 			}
+			
+			if (SpecField::DATATYPE_TEXT == $spec['dataType'])
+			{
+				$spec['value'] = unserialize($spec['value']);
+			}
+
 			$spec = MultiLingualObject::transformArray($spec, 'SpecificationStringValue');
 			$spec = MultiLingualObject::transformArray($spec, 'SpecField');
-			
+
 			// append to product array
 			$productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']] = $spec;			
 		}
