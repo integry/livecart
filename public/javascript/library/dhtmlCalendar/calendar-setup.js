@@ -155,6 +155,11 @@ Calendar.setup = function (params) {
 
 	var triggerEl = params.button || params.displayArea || params.inputField;
     
+    if(params.button && params.inputField)
+    {
+        Event.observe(params.button, "click", function() { params.inputField.focus(); });
+    }
+    
 	triggerEl["on" + params.eventName] = function() {
 		var dateEl = params.inputField || params.displayArea;
 		var dateFmt = params.inputField ? params.ifFormat : params.daFormat;
