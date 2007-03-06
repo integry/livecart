@@ -120,3 +120,8 @@ ul.productList .title
 {
 	display: block;
 }
+
+ul.productList .spec
+{
+	font-size: smaller;
+}

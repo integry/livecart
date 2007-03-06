@@ -149,6 +149,50 @@ class ProductSpecification
 		return $arr;
 	}
 
+	public static function loadSpecificationForRecordSetArray(&$productArray)
+	{
+	  	$ids = array();
+		foreach ($productArray as $key => $product)
+	  	{
+			$ids[$product['ID']] = $key;
+		}
+		
+		$cond = '
+		LEFT JOIN 	
+			SpecField ON specFieldID = SpecField.ID 
+		WHERE 
+			productID IN (' . implode(', ', array_flip($ids)) . ') AND SpecField.isDisplayedInList = 1';
+
+	    $query = '
+		SELECT SpecificationDateValue.*, NULL AS specFieldValueID, SpecField.* as valueID FROM SpecificationDateValue ' . $cond . '
+	    UNION
+		SELECT SpecificationStringValue.*, NULL, SpecField.* as valueID FROM SpecificationStringValue ' . $cond . '
+	    UNION
+		SELECT SpecificationNumericValue.*, NULL, SpecField.* as valueID FROM SpecificationNumericValue ' . $cond . '
+	    UNION
+		SELECT SpecificationItem.productID, SpecificationItem.specFieldID, SpecFieldValue.value, SpecFieldValue.ID, SpecField.*
+				 FROM SpecificationItem
+				 	LEFT JOIN SpecFieldValue ON SpecificationItem.specFieldValueID =  SpecFieldValue.ID
+				 ' . str_replace('ON specFieldID', 'ON SpecificationItem.specFieldID', $cond);
+		
+		$specificationArray = ActiveRecordModel::getDataBySQL($query);
+		$multiLingualFields = array('value', 'name', 'description', 'valuePrefix', 'valueSuffix');
+
+		foreach ($specificationArray as &$spec)
+		{
+			// transform array for presentation
+			foreach ($multiLingualFields as $value)
+			{
+				$spec[$value] = unserialize($spec[$value]);
+			}
+			$spec = MultiLingualObject::transformArray($spec, 'SpecificationStringValue');
+			$spec = MultiLingualObject::transformArray($spec, 'SpecField');
+			
+			// append to product array
+			$productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']] = $spec;			
+		}
+	}
+
 	private function loadSpecificationData($specificationDataArray)
 	{	
 		// preload all specFields from database

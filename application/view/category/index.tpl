@@ -21,7 +21,14 @@
 			</p>
 				
 			<p class="spec">
-				specification
+				{if $product.attributes}
+					{foreach from=$product.attributes item="attr" name="attr"}
+						{$attr.valuePrefix_lang}{$attr.value_lang}{$attr.valueSuffix_lang}
+						{if !$smarty.foreach.attr.last}
+						/
+						{/if}
+					{/foreach}
+				{/if}
 			</p>
 		
 		</li>

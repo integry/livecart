@@ -80,6 +80,9 @@ class CategoryController extends FrontendController
 
 		$products = $this->category->getProductsArray($productFilter, array('Manufacturer'));
 
+		// get product specification data
+		ProductSpecification::loadSpecificationForRecordSetArray($products);
+	
 		$count = new ProductCount($this->productFilter);
 		$totalCount = $count->getCategoryProductCount($productFilter);
 		$offsetEnd = min($totalCount, $offsetEnd);
