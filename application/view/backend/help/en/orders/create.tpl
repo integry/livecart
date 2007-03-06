@@ -13,6 +13,6 @@
 
 
 {helpSeeAlso}
-	{see orders.modify}
+	{see orders.edit}
 	{see orders.export}
 {/helpSeeAlso}

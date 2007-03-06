@@ -8,7 +8,7 @@ administrators (of your system). An order usually contains information about goo
 <ul>	
 	<li><a href="{self}#view">Review Orders</a></li>
 	<li><a href="{self}#search">Finding Orders</a></li>				
-	<li><ins><a href="{self}#manage">Multiple orders management</a></ins></li>
+	<li><strong><a href="{self}#manage">Multiple orders management</a></strong></li>
 
 </ul>
 </legend>
