@@ -387,14 +387,20 @@ class SpecField extends MultilingualObject
 
         if(in_array($values['type'], self::getSelectorValueTypes()) && isset($values['values']) && is_array($values['values']))
         {
+            $countValues = count($values['values']);
+            $i = 0;
             foreach ($values['values'] as $key => $v)
             {
-                if(empty($v[$languageCodes[0]]))
+                $i++;
+                if($countValues == $i && preg_match('/new/', $key) && empty($v[$languageCodes[0]]))
+                {
+                    continue;
+                }
+                else if(empty($v[$languageCodes[0]]))
                 {
                     $errors["values[$key][{$languageCodes[0]}]"] = '_error_value_empty';
-                }
-
-                if(SpecField::getDataTypeFromType($values['type']) == 2 && !is_numeric($v[$languageCodes[0]]))
+                } 
+                else if(SpecField::getDataTypeFromType($values['type']) == 2 && !is_numeric($v[$languageCodes[0]]))
                 {
                     $errors["values[$key][{$languageCodes[0]}]"] = '_error_value_is_not_a_number';
                 }

@@ -178,8 +178,18 @@ class SpecFieldController extends StoreManagementController
 			if($specField->isSelector() && is_array($values)) 
         	{
 		        $position = 1;
+		        $countValues = count($values);
+		        $i = 0;
 		        foreach ($values as $key => $value)
 		        {
+		            $i++;
+
+		            // If last new is empty miss it
+	                if($countValues == $i && preg_match('/new/', $key) && empty($value[$this->specFieldConfig['languageCodes'][0]]))
+	                {
+	                    continue;
+	                }
+
 		            if(preg_match('/^new/', $key))
 		            {
 		                $specFieldValues = SpecFieldValue::getNewInstance($specField);

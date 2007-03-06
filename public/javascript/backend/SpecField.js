@@ -286,7 +286,7 @@ Backend.SpecField.prototype = {
 		}
 
         Event.observe(this.nodes.name, "keyup", function(e) { self.generateHandleAndTitleAction(e) } );
-        Event.observe(this.nodes.valuesAddFieldLink, "click", function(e) { self.addValueFieldAction(e) } );
+        Event.observe(this.nodes.valuesAddFieldLink, "click", function(e) { Event.stop(e); self.addValueFieldAction(); } );
         Event.observe(this.nodes.type, "change", function(e) { self.typeWasChangedAction(e) } );
         Event.observe(this.nodes.cancel, "click", function(e) { Event.stop(e); self.cancelAction() } );
         Event.observe(this.nodes.cancelLink, "click", function(e) { Event.stop(e); self.cancelAction() } );
@@ -343,6 +343,9 @@ Backend.SpecField.prototype = {
         {
             Event.observe(input, "keyup", function(e) { self.mainValueFieldChangedAction(e) } );
             Event.observe(input, "keydown", function(e) { self.mainValueFilterKeysAction(e) } );
+            Event.observe(input, "keydown", function(e) {
+                if(!this.up('li').next() && this.value != '') self.addValueFieldAction();
+            });
         }   
     },
 
@@ -598,20 +601,11 @@ Backend.SpecField.prototype = {
 	 * we are calling for addField method to do the job. The only usefull thing we are doing here is
 	 * generating an id for new field
 	 *
-	 * @param Event e Event
-	 *
 	 * @access private
 	 *
 	 */
-	addValueFieldAction: function(e)
+	addValueFieldAction: function()
 	{
-        if(!e.target)
-		{
-			e.target = e.srcElement;
-		}
-
-		Event.stop(e);
-
 		this.addField(null, "new" + Backend.SpecField.prototype.countNewValues, true);
         this.bindDefaultFields();
 		Backend.SpecField.prototype.countNewValues++;
@@ -967,20 +961,24 @@ Backend.SpecField.prototype = {
 
             if(this.nodes.parent.tagName.toLowerCase() == 'li')
             {
-                ActiveList.prototype.getInstance(this.nodes.parent.parentNode).toggleContainer(this.nodes.parent, 'edit');
+                var activeList = ActiveList.prototype.getInstance(this.nodes.parent.parentNode);
+                activeList.toggleContainer(this.nodes.parent, 'edit');
+                activeList.highlight();
             }
             else
             {
-                var div = document.createElement('span');
-                Element.addClassName(div, 'specField_title');
-                div.appendChild(document.createTextNode(this.nodes.name.value));
-                
+                var tempElement = document.createElement('div');
+                $(tempElement).update('<span class="specField_title">' + this.nodes.name.value + '</span>');
+                                
                 var activeRecord = ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID + '_');
-                activeRecord.addRecord(jsonResponse.id, [document.createTextNode(' '), div]);
-                activeRecord.touch();
+             
+                var liElement = activeRecord.addRecord(jsonResponse.id, tempElement);
                 
                 this.hideNewSpecFieldAction(this.categoryID);
     		    this.recreate(this.specField, true);
+                
+                activeRecord.touch();
+                activeRecord.highlight(liElement);
             }
             
             CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
@@ -1201,6 +1199,9 @@ Backend.SpecFieldGroup.prototype = {
         this.nodes.save                = document.getElementsByClassName(this.cssPrefix + 'save', this.nodes.controls)[0];
         this.nodes.cancel              = document.getElementsByClassName(this.cssPrefix + 'cancel', this.nodes.controls)[0];
         this.nodes.topCancel           = $(this.cssPrefix + 'group_new_' + this.group.Category.ID + '_cancel')
+        
+        this.nodes.labels = {};
+        this.nodes.labels.name       = document.getElementsByClassName(this.cssPrefix + "group_name_label", this.nodes.translations)[0];
      },
      
      bindEvents: function()
@@ -1226,6 +1227,8 @@ Backend.SpecFieldGroup.prototype = {
         this.nodes.name.name += "[" + Backend.SpecField.prototype.languageCodes[0] + "]";
         if(this.group.name_lang) this.nodes.name.value = this.group.name_lang;
         
+        this.nodes.labels.name.onclick = function() { self.nodes.name.focus() }
+        
         this.nodes.categoryID.value = this.group.Category.ID;
         
         $H(Backend.SpecField.prototype.languages).each(function(language) {
@@ -1249,6 +1252,12 @@ Backend.SpecFieldGroup.prototype = {
 
             self.nodes.translations.appendChild(languageTranlation);
             
+            var input = languageTranlation.down("input");
+            var label = languageTranlation.down("label"); 
+            console.info(self);
+            input.id = self.cssPrefix + "group_name_" + self.group.ID + "_" + language.key;
+            label['for'] = input.id;
+            label.onclick = function() { $(this["for"]).focus() };
         });
         
         Element.remove(self.nodes.translationTemplate);

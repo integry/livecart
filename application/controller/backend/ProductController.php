@@ -259,7 +259,6 @@ class ProductController extends StoreManagementController
 				}
 			}
 		}
-		
 		// get multi language spec fields		
 		$multiLingualSpecFields = array();
 		foreach ($specFields as $key => $field)
@@ -277,6 +276,8 @@ class ProductController extends StoreManagementController
 		if($product->isLoaded())
 		{
         	$product->loadSpecification();
+        	print_r($product->getSpecification()->toArray());
+		die('ggg');
         	foreach($product->getSpecification()->toArray() as $attr)
         	{
         		if(in_array($attr['SpecField']['type'], SpecField::getSelectorValueTypes()))

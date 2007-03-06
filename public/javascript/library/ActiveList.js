@@ -448,6 +448,9 @@ ActiveList.prototype = {
     
     highlight: function(li)
     {
+        if(!li) li = this._currentLi;
+        li = $(li);
+        
         new Effect.Highlight(li, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
     },
 

@@ -564,7 +564,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	public function getSpecificationFieldSet($includeParentFields = false, $loadReferencedRecords = false)
 	{
 		ClassLoader::import("application.model.category.SpecField");
-		return SpecField::getRecordSet($this->getSpecificationFilter($includeParentFields), $loadReferencedRecords);
+		return SpecField::getRecordSet($this->getSpecificationFilter($includeParentFields), array('SpecField', 'SpecFieldGroup'));
 	}
 
 	public function getProductById($productId)
