@@ -667,9 +667,13 @@ Backend.SpecField.prototype = {
 		}
 
 		Event.stop(e);
- 
-        
+
 		var currentStep = this.cssPrefix + e.target.hash.substring(1);
+        this.showState(currentStep);
+	},
+    
+    showState: function(currentStep)
+    {
 		for(var i = 0; i < this.nodes.stepLevOne.length; i++)
 		{
 		    this.nodes.stateLinks[i].id = this.cssPrefix + 'change_state' + this.id;
@@ -687,7 +691,7 @@ Backend.SpecField.prototype = {
 			    Element.addClassName(this.nodes.stateLinks[i].parentNode, 'active');
 			}
 		}
-	},
+    },
 
 
 	/**
@@ -1002,7 +1006,16 @@ Backend.SpecField.prototype = {
         }
         else if(jsonResponse.errors) 
         {
-            ActiveForm.prototype.setErrorMessages(this.nodes.form, jsonResponse.errors);
+            try
+            {
+                var firstError; for(firstError in jsonResponse.errors) break;               
+                this.showState('specField_step_' + (firstError.match(/^values/) ? 'values' : 'main'));
+                ActiveForm.prototype.setErrorMessages(this.nodes.form, jsonResponse.errors);
+            }
+            catch(e)
+            {
+                console.info(e);
+            }
         }
 
 		try
