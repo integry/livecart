@@ -4,7 +4,7 @@
 
 	installation=Installation
 
-	temp=Test
+	temp=Temp
 
 	cat=Product Categories
 		details=Category Details
@@ -14,7 +14,6 @@
 		
 	products=Products
 		add=Add New Product
-		manage=Manage Products
 		edit=Edit Product
 			pricing=Pricing
 			options=Options
@@ -24,6 +23,13 @@
 		
 	orders=Orders		
 		create=Create Order
+		edit=Modify Order
+			main=Main Info
+			billing=Billing
+			shipping=Shipping
+			anti_fraud=Anti-Fraud
+			returns=Returns
+			communication=Communication
 		export=Export Orders
 		
 	user=Users		

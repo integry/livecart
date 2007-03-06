@@ -70,7 +70,7 @@
 <p>To remove a category (<strong>including all its subcategories and products</strong>) select a category and click <i>Remove a cetegory</i>.</p>
 
 {helpSeeAlso}
-	{see product}
+	{see products}
 	{see cat.details}
 	{see cat.attr}
 	{see cat.filters}

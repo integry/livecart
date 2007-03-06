@@ -37,7 +37,6 @@ import and keep your product information up-to-date. As in most e-stores LC allo
 
 {helpSeeAlso}
 	{see products.add}
-	{see products.change}
-	{see products.remove}
+	{see products.edit}
 {/helpSeeAlso}
 

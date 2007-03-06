@@ -8,6 +8,8 @@ administrators (of your system). An order usually contains information about goo
 <ul>	
 	<li><a href="{self}#view">Review Orders</a></li>
 	<li><a href="{self}#search">Finding Orders</a></li>				
+	<li><ins><a href="{self}#manage">Multiple orders management</a></ins></li>
+
 </ul>
 </legend>
 </div>
@@ -32,7 +34,7 @@ administrators (of your system). An order usually contains information about goo
 </ul>
 
 {helpSeeAlso}
-	{see orders.manage}
+	{see orders.edit}
 	{see orders.create}
 	{see orders.export}
 {/helpSeeAlso}
