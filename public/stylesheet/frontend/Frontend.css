@@ -124,4 +124,5 @@ ul.productList .title
 ul.productList .spec
 {
 	font-size: smaller;
+	font-weight: bold;
 }

@@ -276,8 +276,8 @@ class ProductController extends StoreManagementController
 		if($product->isLoaded())
 		{
         	$product->loadSpecification();
-        	print_r($product->getSpecification()->toArray());
-		die('ggg');
+//        	print_r($product->getSpecification()->toArray());
+//		die('ggg');
         	foreach($product->getSpecification()->toArray() as $attr)
         	{
         		if(in_array($attr['SpecField']['type'], SpecField::getSelectorValueTypes()))
@@ -296,10 +296,13 @@ class ProductController extends StoreManagementController
         	    } 
         	    else if(in_array($attr['SpecField']['type'], SpecField::getMultilanguageTypes()))
         	    {
-        	        $productFormData["{$attr['SpecField']['fieldName']}"] = $attr['value_lang'];
-        	        foreach($attr['value'] as $lang => $translatedValue)
+        	        $productFormData["{$attr['SpecField']['fieldName']}"] = $attr['value'];
+        	        foreach(Store::getInstance()->getLanguageArray() as $lang)
         	        {
-        	            $productFormData["{$attr['SpecField']['fieldName']}_{$lang}"] = $translatedValue;
+        	            if (isset($attr['value_' . $lang]))
+        	            {
+							$productFormData["{$attr['SpecField']['fieldName']}_{$lang}"] = $attr['value_' . $lang];
+						}						
         	        }
         	    }
         	    else
@@ -308,8 +311,10 @@ class ProductController extends StoreManagementController
         	    }   
         	}
         	
-        	$productFormData['manufacturer'] = $productFormData['Manufacturer']['name'];
-        	
+        	if (isset($productFormData['Manufacturer']['name']))
+        	{
+				$productFormData['manufacturer'] = $productFormData['Manufacturer']['name'];
+			}        	
 		}
 		
         $form->setData($productFormData);

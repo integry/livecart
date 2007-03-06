@@ -1,5 +1,5 @@
 <?php $config = array (
-  'STORE_NAME' => 'Our Onl" \' \'\' \' \' " `  ine Store ėęįėįš',
+  'STORE_NAME' => 'LiveCart Test Store',
   'NUM_PRODUCTS_PER_CAT' => '10',
   'NUM_PRODUCTS_PER_SEARCH' => '10',
   'SORT_ORDER' => 'PRODUCT_NAME',

@@ -15,29 +15,33 @@
 			<span class="title">
 				<a href="{productUrl product=$product}">{$product.name_lang}</a>
 			</span>
-			
-			<p class="descr">
-				{$product.shortDescription_lang}
-			</p>
-				
+							
 			<p class="spec">
 				{if $product.attributes}
 					{foreach from=$product.attributes item="attr" name="attr"}
-						{$attr.valuePrefix_lang}{$attr.value_lang}{$attr.valueSuffix_lang}
-						{if !$smarty.foreach.attr.last}
-						/
+						{if $attr.value_lang}
+							{$attr.valuePrefix_lang}{$attr.value_lang}{$attr.valueSuffix_lang}
+							{if !$smarty.foreach.attr.last}
+							/
+							{/if}
 						{/if}
 					{/foreach}
 				{/if}
+			</p>
+		
+			<p class="descr">
+				{$product.shortDescription_lang}
 			</p>
 		
 		</li>
 	{/foreach}
 	</ul>
 
-	<div class="resultPages">
-		Pages: {paginate current=$currentPage count=$count perPage=$perPage url=$url}
-	</div>
-
+	{if $count > $perPage}
+		<div class="resultPages">
+			Pages: {paginate current=$currentPage count=$count perPage=$perPage url=$url}
+		</div>
+	{/if}
+		
 </div>		
 {include file="layout/frontend/footer.tpl"}
