@@ -1,5 +1,5 @@
 
-<p>All the transactions made in your e-store are considered as <i>orders</i> which are placed directly by customers (in the storefront) or by 
+<p>All the transactions made in your e-store are considered as <strong>orders</strong> which are placed directly by customers (in the storefront) or by 
 administrators (of your system). An order usually contains information about goods purchased, amount of money, expected delivery date, etc.</p> 	
 
 <div class="tasks">
