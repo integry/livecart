@@ -811,7 +811,12 @@ Backend.Filter.prototype = {
                 rangeDateEnd.name         = "filters[" + id + "][rangeDateEnd_show]";
                 rangeDateStartReal.name   = "filters[" + id + "][rangeDateStart]";
                 rangeDateEndReal.name     = "filters[" + id + "][rangeDateEnd]";
-                                      
+                           
+                rangeDateStartButton.realInput  = rangeDateStart.realInput  = rangeDateStartReal;
+                rangeDateEndButton.realInput    = rangeDateEnd.realInput    = rangeDateEndReal;
+                rangeDateStartButton.showInput  = rangeDateStart.showInput  = rangeDateStart;
+                rangeDateEndButton.showInput    = rangeDateEnd.showInput    = rangeDateEnd;
+                                               
                 rangeDateStartReal.value  = (value.rangeDateStart) ? value.rangeDateStart : (new Date()).print("%Y-%m-%d");
                 rangeDateEndReal.value    = (value.rangeDateEnd) ? value.rangeDateEnd : (new Date()).print("%y-%m-%d");
                 
@@ -820,7 +825,14 @@ Backend.Filter.prototype = {
                   
                 rangeDateStart.value = Date.parseDate(rangeDateStartReal.value, "%y-%m-%d").print(self.dateFormat);
                 rangeDateEnd.value = Date.parseDate(rangeDateEnd.value, "%y-%m-%d").print(self.dateFormat);
-                           
+                         
+                Event.observe(rangeDateStart,       "keyup",     Calendar.updateDate );
+                Event.observe(rangeDateEnd,         "keyup",     Calendar.updateDate );
+                Event.observe(rangeDateStart,       "blur",      Calendar.updateDate );
+                Event.observe(rangeDateEnd,         "blur",      Calendar.updateDate );
+                Event.observe(rangeDateStartButton, "mousedown", Calendar.updateDate );
+                Event.observe(rangeDateEndButton,   "mousedown", Calendar.updateDate );
+                            
                 Event.observe(rangeDateStartButton, "mousedown", function(e){
                     if(!self.filterCalendars[rangeDateStart.id]) 
                     {
@@ -999,6 +1011,22 @@ Backend.Filter.prototype = {
 
             if(this.nodes.parent.tagName.toLowerCase() == 'li')
             {
+                try
+                {
+                    var specField = this.getSpecField();
+                    if(this.selectorValueTypes.indexOf(specField.type) === -1)
+                    {
+                        var filters = document.getElementsByClassName(this.cssPrefix + "default_filter_li", this.nodes.filtersDefaultGroup);
+                        var filterCount = filters.length;
+                        if(filters[filterCount - 1].down(".filter_name").down("input").value == '') filterCount--;
+                        this.changeFiltersCount(filterCount);
+                    }
+                }
+                catch(e)
+                {
+                    console.info(e);
+                }
+
                 ActiveList.prototype.getInstance(this.nodes.parent.parentNode).toggleContainer(this.nodes.parent, 'edit');
             }
             else
@@ -1011,13 +1039,16 @@ Backend.Filter.prototype = {
             
                 var specField = this.getSpecField();
                 
+                var filterCount = 0;
                 if(this.selectorValueTypes.indexOf(specField.type) === -1)
                 {
-                    var filterCount = document.getElementsByClassName(this.cssPrefix + "default_filter_li", this.nodes.filtersDefaultGroup).length;
+                    var filters = document.getElementsByClassName(this.cssPrefix + "default_filter_li", this.nodes.filtersDefaultGroup);
+                    filterCount = filters.length;
+                    if(filters[filterCount - 1].down(".filter_name").down("input").value == '') filterCount--;
                 }
                 else
                 {
-                    var filterCount = specField.values.length;
+                    filterCount = specField.values.length;
                 }
                                 
                 var spanCount = document.createElement('span');

@@ -224,3 +224,8 @@ Calendar.setup = function (params) {
 
 	return cal;
 };
+
+Calendar.updateDate = function(e) 
+{ 
+    this.realInput.value = Date.parseDate(this.showInput.value, "%d-%b-%Y").print("%Y-%m-%d"); 
+}
