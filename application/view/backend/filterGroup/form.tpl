@@ -31,28 +31,31 @@
         		<div class="filter_filters">
                     <p>
             			<ul class="activeList_add_sort activeList_add_delete">
-            				<li class="dom_template filter_form_filters_value filter_form_filters_value_main" id="filter_form_filters_">
+            				<li class="dom_template filter_form_filters_value filter_form_filters_value_main filter_update" id="filter_form_filters_">
                 				<span>
                 					<span class="filter_name">
-                    					<label>{t _Filter_name}</label>
+                    					<label class="filter_update">{t _Filter_name}</label>
                                         <fieldset class="error">
-                        				    <input type="text" />
+                        				    <input type="text" class="filter_update" />
                                     		<span class="errorText hidden"> </span>
+                                            <br />
                                         </fieldset>
                 				    </span>
 
                 					<span class="filter_range">
-                    					<label>{t _Filter_range}</label>
-                        					<input type="text" /> - <input type="text" />
+                    					<label class="filter_update">{t _Filter_range}</label>
+                        					<input type="text" class="filter_update" /> - <input type="text" class="filter_update" />
                                     		<span class="errorText hidden"> </span>
+                                            <br />
                 				    </span>
     
                                     <span class="filter_date_range">
-                                        <label>{t _Filter_date_range}</label>
-                                            <input type="text" /> <img src="image/silk/calendar.png" class="calendar_button" /> - <input type="text" /> <img src="image/silk/calendar.png" class="calendar_button" />
-                                            <input type="hidden" class="hidden filter_date_start_real" />
-                                            <input type="hidden" class="hidden filter_date_end_real" />
+                                        <label class="filter_update">{t _Filter_date_range}</label>
+                                            <input type="text" class="filter_update" /> <img src="image/silk/calendar.png" class="calendar_button filter_update" /> - <input type="text" class="filter_update" /> <img src="image/silk/calendar.png" class="calendar_button" />
+                                            <input type="hidden" class="hidden filter_date_start_real filter_update" />
+                                            <input type="hidden" class="hidden filter_date_end_real filter_update" />
                                             <span class="errorText hidden"> </span>
+                                            <br />
                                     </span>
                 				    <br />
                 				</span>
@@ -86,8 +89,8 @@
                             <p>
             					<ul>
             						<li class="dom_template filter_form_filters_value" id="filter_form_filters_">
-            							<label> </label>
-            							<input type="text" />
+            							<label class="filter_update"> </label>
+            							<input type="text" class="filter_update" />
             							<br />
             						</li>
             					</ul>

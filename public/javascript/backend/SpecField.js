@@ -956,6 +956,9 @@ Backend.SpecField.prototype = {
         
         if(jsonResponse.status == 'success')
         {
+            ActiveForm.prototype.updateNewFields('specField_update', $H(jsonResponse.newIDs), this.nodes.parent)
+ 
+            
             Form.backup(this.nodes.form);
             this.backupName = this.nodes.name.value;
 

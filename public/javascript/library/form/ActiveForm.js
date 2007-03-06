@@ -267,7 +267,27 @@ ActiveForm.prototype = {
         } catch(e) {
             console.info(e);
         }
-    }    
+    },
+    
+    updateNewFields: function(className, ids, parent)
+    {     
+        ids = $H(ids);
+        ids.each(function(transformation) { transformation.value = new RegExp(transformation.value);   });  
+        var attributes = ['class', 'name', 'id', 'for'];  
+        var attributesLength = attributes.length;
+        var fields = $A(document.getElementsByClassName(className));
+        
+        fields.each(function(element)
+        {
+            for(var a = 0; a < attributesLength; a++)
+            {
+               var attr = attributes[a];
+               ids.each(function(transformation) { 
+                   if(element[attr]) element[attr] = element[attr].replace(transformation.value, transformation.key); 
+               });
+            };
+        });
+    }
 }
 
 /**

@@ -136,8 +136,8 @@
     		<div class="specField_values">
                 <p>
         			<ul class="activeList_add_sort activeList_add_delete">
-        				<li class="dom_template specField_form_values_value" id="specField_form_values_" style="display: block;">
-                            <input type="text" />
+        				<li class="dom_template specField_form_values_value specField_update" id="specField_form_values_" style="display: block;">
+                            <input type="text" class="specField_update" />
                     		<span class="errorText hidden"> </span>
                             <br class="clear" />
         				</li>
@@ -157,8 +157,8 @@
                             <p>
             					<ul>
             						<li class="dom_template specField_form_values_value" id="specField_form_values_">
-            							<label> </label>
-            							<input type="text" />
+            							<label class="specField_update"> </label>
+            							<input class="specField_update" type="text" />
             							<br />
             						</li>
             					</ul>

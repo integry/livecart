@@ -152,12 +152,13 @@ class FilterGroupController extends StoreManagementController
             $specField->load();
             $specFieldType = $specField->type->get();
 
+            $newIDs = array();
             if(!empty($filters) && !$specField->isSelector()) 
             {
-				$filterGroup->saveFilters($filters, $specFieldType, $this->filtersConfig['languageCodes']);
+				$newIDs = $filterGroup->saveFilters($filters, $specFieldType, $this->filtersConfig['languageCodes']);
 			}
 
-            return new JSONResponse(array('status' => 'success', 'id' => $filterGroup->getID()));
+            return new JSONResponse(array('status' => 'success', 'id' => $filterGroup->getID(), 'newIDs' => $newIDs));
         }
         else
         {

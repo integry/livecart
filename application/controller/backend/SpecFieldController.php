@@ -175,6 +175,7 @@ class SpecFieldController extends StoreManagementController
             $specField->save();  
                      
             // save specification field values in database
+            $newIDs = array();
 			if($specField->isSelector() && is_array($values)) 
         	{
 		        $position = 1;
@@ -210,10 +211,15 @@ class SpecFieldController extends StoreManagementController
 		
 		            $specFieldValues->setFieldValue('position', $position++);
 		            $specFieldValues->save();
+		            
+       	            if(preg_match('/^new/', $key))
+		            {
+		                $newIDs[$specFieldValues->getID()] = $key;
+		            }
 		        }        
 			}
             
-            return new JSONResponse(array('status' => 'success', 'id' => $specField->getID()));
+            return new JSONResponse(array('status' => 'success', 'id' => $specField->getID(), 'newIDs' => $newIDs));
         }
         else
         {

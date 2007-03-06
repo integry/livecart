@@ -313,7 +313,7 @@ Backend.Filter.prototype = {
         var self = this;
 
         Event.observe(this.nodes.name, "keyup", function(e) { self.generateTitleAction(e) });
-        Event.observe(this.nodes.addFilterLink, "click", function(e) { self.addFilterFieldAction(e) });
+        Event.observe(this.nodes.addFilterLink, "click", function(e) { Event.stop(e); self.addFilterFieldAction() });
         
         Event.observe(this.nodes.specFieldID, "change", function(e) { self.specFieldIDWasChangedAction(e) });        
         Event.observe(this.nodes.specFieldID, "change", function(e) { self.generateTitleFromSpecField(e) });
@@ -619,12 +619,8 @@ Backend.Filter.prototype = {
      *
      * @access private
      */
-    addFilterFieldAction: function(e)
+    addFilterFieldAction: function()
     {
-        if(!e.target) e.target = e.srcElement;
-
-        Event.stop(e);
-
         var li = this.addFilter(null, "new" + Backend.Filter.prototype.countNewFilters, true);
         this.changeFiltersCount(this.filtersCount+1);
         this.filtersList.touch();
@@ -763,6 +759,9 @@ Backend.Filter.prototype = {
         input.name = "filters[" + id + "][name][" + self.languageCodes[0] + "]";
         input.value = nameValue;
         Event.observe(input, "keyup", function(e) { self.mainValueFieldChangedAction(e) }, false);
+        Event.observe(input, "keyup", function(e) {
+                if(!this.up('li').next() && this.value != '') self.addFilterFieldAction();
+            });
         var label = filter_name_paragraph.down("label"); 
         input.id = this.cssPrefix + "filter_filter_" + id + "_name";
         label['for'] = input.id;
@@ -783,7 +782,7 @@ Backend.Filter.prototype = {
                 
                 rangeEndInput.name = "filters[" + id + "][rangeEnd]";
                 rangeEndInput.value = (value.rangeEnd) ? value.rangeEnd : '' ;
-                
+                                
                 Event.observe(rangeStartInput, "keyup", function(e) { self.rangeChangedAction(e) });
                 Event.observe(rangeEndInput, "keyup", function(e) { self.rangeChangedAction(e) });      
             }
@@ -793,7 +792,7 @@ Backend.Filter.prototype = {
                 
                 // Date range.
                 var rangeDateStart = paragraph.down("input");
-                var rangeDateEnd = rangeDateStart.next("input");
+                var rangeDateEnd = rangeDateStart.next("input");                
                 
                 var rangeDateStartButton = paragraph.down("img.calendar_button");
                 var rangeDateEndButton   = rangeDateStartButton.next("img.calendar_button");
@@ -812,7 +811,7 @@ Backend.Filter.prototype = {
                 rangeDateEnd.name         = "filters[" + id + "][rangeDateEnd_show]";
                 rangeDateStartReal.name   = "filters[" + id + "][rangeDateStart]";
                 rangeDateEndReal.name     = "filters[" + id + "][rangeDateEnd]";
-                      
+                                      
                 rangeDateStartReal.value  = (value.rangeDateStart) ? value.rangeDateStart : (new Date()).print("%Y-%m-%d");
                 rangeDateEndReal.value    = (value.rangeDateEnd) ? value.rangeDateEnd : (new Date()).print("%y-%m-%d");
                 
@@ -857,7 +856,7 @@ Backend.Filter.prototype = {
             {
                 input = paragraph.down("input");
                 label = paragraph.down("label"); 
-                input.id = this.cssPrefix + "filter_filter_" + id + "_" + part;
+                input.id = self.cssPrefix + "filter_filter_" + id + "_" + part;
                 label['for'] = input.id;
                 label.onclick = function() { $(this["for"]).focus() };
             }
@@ -882,8 +881,8 @@ Backend.Filter.prototype = {
             
             inputTranslation.id = this.cssPrefix + "filter_filter_" + id + "_name_" + this.languageCodes[i];
             translationLabel['for'] = inputTranslation.id;
-            translationLabel.onclick = function() { $(this['for']).focus(); }
-			
+            translationLabel.onclick = function() { $(this['for']).focus(); }           
+            
             // add to node tree
 			translationsUl.id = this.cssPrefix + "form_" + this.id + '_values_' + this.languageCodes[i];
 			translationsUl.appendChild(newValueTranslation);
@@ -993,6 +992,8 @@ Backend.Filter.prototype = {
 
         if(jsonResponse.status == 'success')
         {
+            ActiveForm.prototype.updateNewFields('filter_update', $H(jsonResponse.newIDs), this.nodes.parent)
+            
             Form.backup(this.nodes.form);
             this.backupName = this.nodes.name.value;
 
@@ -1018,7 +1019,7 @@ Backend.Filter.prototype = {
                 {
                     var filterCount = specField.values.length;
                 }
-                
+                                
                 var spanCount = document.createElement('span');
                 Element.addClassName(spanCount, this.cssPrefix + "count");
                 spanCount.update(" (" + filterCount + ")");

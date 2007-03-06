@@ -127,9 +127,16 @@ class FilterGroup extends MultilingualObject
     public function saveFilters($filters, $specFieldType, $languageCodes) 
     {
         $position = 1;
-        
+        $filtersCount = count($filters);
+        $i = 0;
+            
+        $newIDs = array();
         foreach ($filters as $key => $value)
         {
+            // Ignore last new empty filter
+            $i++;
+            if($filtersCount == $i && $value['name'][$languageCodes[0]] == '' && preg_match("/new/", $key)) continue;
+            
             if(preg_match('/^new/', $key))
             {
                 $filter = Filter::getNewInstance($this);
@@ -159,7 +166,15 @@ class FilterGroup extends MultilingualObject
             $filter->filterGroup->set($this);
             $filter->position->set($position++);
             $filter->save();
+            
+            if(preg_match('/^new/', $key))
+            {
+                $newIDs[$filter->getID()] = $key;
+            }
+                
         }
+        
+        return $newIDs;
     }
 
 	protected function insert()
@@ -199,14 +214,20 @@ class FilterGroup extends MultilingualObject
         
         if(isset($values['filters']) && !$specField->isSelector())
         {                 
+            $filtersCount = count($values['filters']);
+            $i = 0;
             foreach ($values['filters'] as $key => $v)
             {                
+                $i++;
+                // If emty last new filter, ignore it
+                if($filtersCount == $i && $v['name'][$languageCodes[0]] == '' && preg_match("/new/", $key)) continue;
+
                 switch($specField->getFieldValue('type'))
                 {
                     case SpecField::TYPE_NUMBERS_SIMPLE:
                         if(!isset($v['rangeStart']) || !is_numeric($v['rangeStart']) | !isset($v['rangeEnd']) || !is_numeric($v['rangeEnd']))
                         {
-                            $errors['filters['.$key.'][range]'] = '_error_filter_value_is_not_a_number';
+                            $errors['filters['.$key.'][rangeStart]'] = '_error_filter_value_is_not_a_number';
                         }
                     break;
                     case SpecField::TYPE_TEXT_DATE: 
@@ -222,7 +243,10 @@ class FilterGroup extends MultilingualObject
                         }
                     break;
                 }
-                
+                if(!isset($v['name'][$languageCodes[0]])) {
+                print_r($v);
+                echo $key;
+                }
                 if($v['name'][$languageCodes[0]] == '')
                 {
                     $errors['filters['.$key.'][name]['.$languageCodes[0].']'] = '_error_filter_name_empty';

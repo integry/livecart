@@ -92,3 +92,8 @@
 {
     position: relative;
 }
+
+.filter_range .errorText, filter_date_range .errorText {
+    margin-left: 11em;
+}
+
