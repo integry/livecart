@@ -97,7 +97,7 @@ class CategoryController extends StoreManagementController
 	 */
 	public function update()
 	{
-		$validator = $this->buildValidator();
+	    $validator = $this->buildValidator();
 		if($validator->isValid())
 		{
 			$categoryNode = ActiveTreeNode::getInstanceByID("Category", $this->request->getValue("id"));
@@ -143,9 +143,16 @@ class CategoryController extends StoreManagementController
 	 */
 	public function reorder()
 	{
-		$targetNode = Category::getInstanceByID((int)$this->request->getValue("id"));
+	    $targetNode = Category::getInstanceByID((int)$this->request->getValue("id"));
 		$parentNode = Category::getInstanceByID((int)$this->request->getValue("parentId"));
-		$beforeNode = Category::getInstanceByID((int)$this->request->getValue("beforeId"));
+		
+	    $beforeNode = null;
+		if('up_strict' == $this->request->getValue("direction")) $beforeNode = $targetNode->getPrevSibling();
+		if('down_strict'== $this->request->getValue("direction")) 
+		{
+		    $beforeNode = $targetNode->getNextSibling();
+		    $beforeNode = $beforeNode ? $beforeNode->getNextSibling() : null;
+		}
 		
 		$status = false;
 		try 

@@ -82,6 +82,10 @@ class ActiveTreeNode extends ActiveRecordModel
      */
     const ROOT_ID = 1;
 
+    const DIRECTION_PREV = 'previous';
+    
+    const DIRECTION_NEXT = 'next';
+    
     /**
      * Indicator wheather child nodes are loaded or not for this node
      *
@@ -404,16 +408,23 @@ class ActiveTreeNode extends ActiveRecordModel
             $s = $p_l - $t_l > 0 ? -1 : 0;
             
             $offset = 0;
-            try 
+            if($beforeNode)
             {
-                $beforeNode->load();
-                // You can use $beforeNode only if it and the target node have the same parent (are siblings)
-                if($this->getFieldValue(self::PARENT_NODE_FIELD_NAME)->getID() == $beforeNode->getFieldValue(self::PARENT_NODE_FIELD_NAME)->getID())
-                {
-                    $offset = $p_r - $beforeNode->getFieldValue(self::LEFT_NODE_FIELD_NAME);
-                }
-            } 
-            catch(Exception $e) {}
+	            try 
+	            {
+	                $beforeNode->load();
+	                // You can use $beforeNode only if it and the target node have the same parent (are siblings)
+	                if($this->getFieldValue(self::PARENT_NODE_FIELD_NAME)->getID() == $beforeNode->getFieldValue(self::PARENT_NODE_FIELD_NAME)->getID())
+	                {
+	                    $offset = $p_r - $beforeNode->getFieldValue(self::LEFT_NODE_FIELD_NAME);
+	                }
+	            } 
+	            catch(Exception $e) {}
+            }
+            else
+            {
+                $s = -1;
+            }
             
             // Step #2: Change target node left and right values to negotive
             $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME.", ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME." WHERE ".self::LEFT_NODE_FIELD_NAME." BETWEEN $t_l AND $t_r";
@@ -433,7 +444,32 @@ class ActiveTreeNode extends ActiveRecordModel
             {
                 self::getLogger()->logQuery($update);
                 $db->executeUpdate($update);
-            }    
+            }
+
+   	        foreach(ActiveRecord::retrieveFromPool(get_class($this)) as $instance)
+	        {
+	            if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= $t_l && $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) <= $t_r)
+	            {
+	                $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, -$instance->getFieldValue(self::LEFT_NODE_FIELD_NAME));
+	                $instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, -$instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME));
+	            }
+	            
+	            if($instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) >= $t_r)
+	                $instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) - $width);
+	            if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= $t_r)
+	                $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) - $width);
+
+	            if($instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) >= ($p_r - $offset + $s * $width))
+	                $instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) + $width);
+	            if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= ($p_r - $offset + $s * $width))
+	                $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) + $width);
+
+	        	if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) < 0)
+	            {
+	                $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, -$instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) + ($p_r - $t_r - $offset + 1 + $s * $width));
+	                $instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, -$instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) + ($p_r - $t_r - $offset + 1 + $s * $width));
+	            }
+	        }
         }
         catch (Exception $e)
         {
@@ -453,7 +489,7 @@ class ActiveTreeNode extends ActiveRecordModel
      */
     public function save()
     {
-        if (!$this->hasID())
+        if (!$this->isExistingRecord())
         {
             ActiveRecordModel::beginTransaction();
             try
@@ -478,11 +514,19 @@ class ActiveTreeNode extends ActiveRecordModel
                     self::getLogger()->logQuery($update);
                     $db->executeUpdate($update);
                 }
-
+                
                 $this->getField(self::RIGHT_NODE_FIELD_NAME)->set($nodeRightValue);
                 $this->getField(self::LEFT_NODE_FIELD_NAME)->set($nodeLeftValue);
 
                 ActiveRecordModel::commit();
+                
+                foreach(ActiveRecord::retrieveFromPool(get_class($this)) as $instance)
+                {
+                    if($instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) >= $parentRightValue)
+                        $instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) + 2);
+                    if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= $parentRightValue)
+                        $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) + 2);
+                }
             }
             catch (Exception $e)
             {
@@ -526,6 +570,14 @@ class ActiveTreeNode extends ActiveRecordModel
             }
 
             ActiveRecordModel::commit();
+            
+	        foreach(ActiveRecord::retrieveFromPool(get_class($this)) as $instance)
+	        {
+	            if($instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) >= $t_r)
+	                $instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) - $width);
+	            if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= $t_l)
+	                $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) - $width);
+	        }
         }
         catch (Exception $e)
         {
@@ -603,6 +655,32 @@ class ActiveTreeNode extends ActiveRecordModel
                     
         return $branch;
     }
+	
+	public function getNextSibling($loadReferencedRecords = false)
+	{
+        return $this->getSibling(self::DIRECTION_NEXT, $loadReferencedRecords);
+	}
+
+	public function getPrevSibling($loadReferencedRecords = false)
+	{
+        return $this->getSibling(self::DIRECTION_PREV, $loadReferencedRecords);
+	}
+	
+	private function getSibling($direction = self::DIRECTION_NEXT, $loadReferencedRecords = false)
+	{
+        if(!$this->isLoaded()) $this->load();
+        $className = get_class($this);
+        $filter = new ARSelectFilter();
+        $cond = new EqualsCond(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME), $this->getField(self::PARENT_NODE_FIELD_NAME)->get()->getID());
+        $cond->addAND(new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME)->get(), self::DIRECTION_PREV == $direction ? "<" : ">"));
+        $filter->setCondition($cond);
+        $filter->setOrder(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME));
+        $filter->setLimit(1);
+        
+        $recordSet = ActiveRecord::getRecordSet($className, $filter, $loadReferencedRecords);
+        
+        foreach($recordSet as $record) return $record;
+	}
 }
 
 ?>
