@@ -58,6 +58,8 @@ Backend.Category = {
     
     initTreeControls: function() 
     {
+        var self = this;
+        
         Event.observe($("createNewCategoryLink"), "click", function(e) {
             Event.stop(e);
             Backend.Category.createNewBranch(); 
@@ -73,12 +75,12 @@ Backend.Category = {
         
         Event.observe($("moveCategoryUp"), "click", function(e) {
             Event.stop(e);
-            // Backend.Category.treeBrowser.moveItem(Backend.Category.activeCategoryId, 'up');
+            self.moveCategory(Backend.Category.activeCategoryId, 'up_strict');
         });
         
         Event.observe($("moveCategoryDown"), "click", function(e) {
             Event.stop(e);
-            // Backend.Category.treeBrowser.moveItem(Backend.Category.activeCategoryId, 'down');
+            self.moveCategory(Backend.Category.activeCategoryId, 'down_strict');
         });
     },
 
@@ -154,6 +156,30 @@ Backend.Category = {
 			});
 	},
 
+    moveCategory: function(categoryID, direction)
+    {
+        Backend.Category.treeBrowser._reorderDirection = direction;
+        Backend.Category.treeBrowser.moveItem(categoryID, direction);
+        Backend.Category.treeBrowser._reorderDirection = false;
+        
+        console.info("move category " + categoryID + " " + direction);
+        return;
+        
+        var success = false;
+        new Ajax.Request(Backend.Category.getUrlForNodeReorder(targetId, parentId),
+        {
+			method: 'get', 
+            asynchronous: false,
+			onComplete: function(response) 
+            { 
+                success = eval("(" + response.responseText + ")");   
+            }
+    	});
+        
+        if(!success) alert(Backend.Category.messages._reorder_failed);
+		return success;
+    },
+
 	afterNewBranchCreated: function(response, self)
 	{
         var newCategory = eval('(' + response.responseText + ')');
@@ -205,9 +231,13 @@ Backend.Category = {
 		return this.buildUrl(this.links.remove, nodeId);
 	},
 
-    getUrlForNodeReorder: function(id, pid) 
+    getUrlForNodeReorder: function(id, pid, direction) 
     {
-		return Backend.Category.links.reorder.replace('_id_', id).replace('_pid_', pid);
+		direction = direction || '';
+        return Backend.Category.links.reorder
+                .replace('_id_', id)
+                .replace('_pid_', pid)
+                .replace('_direction_', direction);
     },
 
 	buildUrl: function(urlPattern, id)
@@ -234,9 +264,10 @@ Backend.Category = {
 	},
 
 	reorderCategory: function(targetId, parentId, siblingNodeId)
-	{
+	{        
+     
         var success = false;
-        new Ajax.Request(Backend.Category.getUrlForNodeReorder(targetId, parentId),
+        new Ajax.Request(Backend.Category.getUrlForNodeReorder(targetId, parentId, Backend.Category.treeBrowser._reorderDirection),
         {
 			method: 'get', 
             asynchronous: false,
