@@ -12,7 +12,7 @@
 	<li><a href="{self}#sort">Sort Currencies</a></li>
 	<li><a href="{self}#delete">Delete Currency</a></li>				
 </ul>
-</legend>
+</fieldset>
 </div>
 
 <h3 id="add">Add Currency</h3>
