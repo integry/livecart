@@ -11,7 +11,7 @@ administrators (of your system). An order usually contains information about goo
 	<li><strong><a href="{self}#manage">Multiple orders management</a></strong></li>
 
 </ul>
-</legend>
+</fieldset>
 </div>
 
 <h3 id="view">Reviewing Orders</h3>

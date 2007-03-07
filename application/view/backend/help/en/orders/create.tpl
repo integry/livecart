@@ -7,7 +7,7 @@
 	<li><a href="{self}#add">Add new Currency</a></li>
 	<li><a href="{self}#delete">Delete Currency</a></li>				
 </ul>
-</legend>
+</fieldset>
 </div>
 
 
