@@ -16,6 +16,9 @@
 <p>To add an image click Browse button and specify your image location.</p>
 <p>To add a new image click <i>Add new image</i> and browse it from your image resources. <ins>To change original image name, enter image title in the 
 field provided.</ins> Image titles can be supplied in other languages as well. To do that click on Language (if installed) to expand additional fields.</p>
+<p class="note"><strong>Note:</strong> You can set image dimensions and other details in the <strong>Settings</strong>
+section.</p>
+
 
 <h3 id="sort">Reorder images</h3>
 <p>Images can be reordered by dragging and dropping them.</p>

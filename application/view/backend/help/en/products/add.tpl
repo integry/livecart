@@ -1,5 +1,5 @@
 
-<p>Note that because products may vary in type and may require different types of <a href="{help /cat.attr}">attributes</a> (color, manufacturer or weight)
+<p>Notice that because products may vary in type and may require different types of <a href="{help /cat.attr}">attributes</a> (color, weight etc.)
 you have to set these attributes before adding products.</p>
 
 <div class="tasks">

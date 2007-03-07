@@ -1,9 +1,9 @@
 
-<p>To set category details click a category on the category tree and click <strong>Category details</strong> tab.
+<p>To set category details information, click a category on the category tree and select <strong>Category details</strong> tab.
 <img src="image/doc/categories/details/details_750.bmp"></p>
 
-<p>Category details consist of the following category properties:</p>
-	<ul>	
+<p>Category details consist of the following parameters:</p>
+	<ul>
 		<li>Is Active - all new categories are inactive by default, tick the checkbox to enable the category (to make it visible in your store)</li>
 		<li>Category Name - the actual category name</li>
 		<li>Description - a short category description</li>
