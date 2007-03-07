@@ -24,7 +24,6 @@
 	orders=Orders		
 		create=Create Order
 		edit=Modify Order
-			main=Main Info
 			billing=Billing
 			shipping=Shipping
 			anti_fraud=Anti-Fraud

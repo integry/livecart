@@ -1,6 +1,6 @@
 
 <p>All the transactions made in your e-store are considered as <strong>orders</strong> which are placed directly by customers (in the storefront) or by 
-administrators (of your system). An order usually contains information about goods purchased, amount of money, expected delivery date, etc.</p> 	
+administrators (of your system). An order contains information about goods purchased, amount of money, expected delivery date, etc.</p> 	
 
 <div class="tasks">
 <fieldset>
@@ -16,9 +16,10 @@ administrators (of your system). An order usually contains information about goo
 
 <h3 id="view">Reviewing Orders</h3>
 
-<p>There are three ways to display orders:</p>
+<p>Placed orders are located in the <strong>Orders</strong> section. When you access this section, most recent orders 
+are displayed. There are three ways to display orders:</p>
 <ul>
-	<li>By the status of orders</li>
+	<li>View orders by status </li>
 	<li>By the date they were placed</li>
 	<li>Using Advanced search</li>
 </ul>
