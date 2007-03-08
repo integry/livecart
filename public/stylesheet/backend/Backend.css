@@ -951,19 +951,24 @@ fieldset.group p
     margin-top: 6px;
 }
 
+.tabs li img
+{
+	vertical-align: middle;	
+}
+
 .tabs li
 {
     display: inline;
     padding: 6px 15px 7px 15px ! important;
     margin: 0 2px;
     border: 1px solid #ccc;
+    vertical-align: middle;
    /* border-bottom: 2px solid !important;*/
 }
 
 .tabs li.active {
     /*border-bottom: 0px !important;*/
 }
-
 
 .tabs li a
 {
@@ -982,6 +987,21 @@ fieldset.group p
     background: #fff;
     padding: 6px 17px 8px 17px ! important;
     border-top: 2px solid red;
+}
+
+.tabHelp
+{
+	margin-left: 7px;
+}
+
+li.inactive .tabHelp, li.hover .tabHelp
+{
+	display: none;
+}
+
+li.active .tabHelp
+{
+	display: inline;
 }
 
 /*************************** 

@@ -12,7 +12,7 @@ function smarty_block_pageTitle($params, $content, $smarty, &$repeat)
 	{
 		$router = Router::getInstance();
 		$url = $router->createUrl(array('controller' => 'backend.help', 'action' => 'view', 'id' => $params['help']));
-		$help = '<a id="titleHelpButton" href="#" onClick="var helpWindow = showHelp(\''.$url.'\'); helpWindow.focus(); return false;"><img src="image/silk/help.png"/></a>';
+		$help = '<a target="_blank" id="titleHelpButton" href="' . $url . '"><img src="image/silk/help.png"/></a>';
 		$content .= $help;
 	}
 	$GLOBALS['PAGE_TITLE'] = $content;

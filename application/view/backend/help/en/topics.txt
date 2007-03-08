@@ -4,6 +4,8 @@
 
 	installation=Installation
 
+	config=Configuration
+		
 	temp=Temp
 
 	cat=Product Categories
@@ -16,10 +18,11 @@
 		add=Add New Product
 		edit=Edit Product
 			pricing=Pricing
-			options=Options
 			inventory=Inventory
+			related=Related Products
+			options=Options
 			images=Images
-			discounts=Discounts
+			files=Assigned Files
 		
 	orders=Orders		
 		create=Create Order
