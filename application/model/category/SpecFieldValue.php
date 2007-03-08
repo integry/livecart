@@ -102,7 +102,7 @@ class SpecFieldValue extends MultilingualObject
 		$instance->setID($valueId);
 		$instance->value->set(unserialize($value));
 		$instance->resetModifiedStatus();
-
+		
 		return $instance;
 	}
 	

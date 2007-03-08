@@ -71,11 +71,12 @@ class MultiValueSpecificationItem implements iSpecification
 		$ids = array();
 		$values = array();
 		$isLanguage = (SpecField::TYPE_TEXT_SELECTOR == $this->specFieldInstance->type->get());
-		foreach ($this->items as $id => $item)
+
+        foreach ($this->items as $id => $item)
 		{
 		  	$ids[] = $id;
 		  	
-			$value = $item->specFieldValue->get()->toArray(ActiveRecordModel::NON_RECURSIVE);
+			$value = $item->specFieldValue->get()->toArray();
 			
 			if ($isLanguage)
 			{
@@ -117,7 +118,7 @@ class MultiValueSpecificationItem implements iSpecification
 	public static function restoreInstance(Product $product, SpecField $field, $specValues)
 	{
 		$specItem = new MultiValueSpecificationItem($product, $field);
-		
+
 		if (is_array($specValues))
 		{
 			foreach ($specValues as $id => $value)
@@ -127,13 +128,13 @@ class MultiValueSpecificationItem implements iSpecification
 				$specItem->setItem($item);
 			}			
 		}		
-		
+
 		return $specItem;
 	}
 
 	protected function setItem(SpecificationItem $item)
 	{
-	  	$this->items[$item->specFieldValue->get()->getID()] = $item;
+        $this->items[$item->specFieldValue->get()->getID()] = $item;
 	}
 
 	protected function deleteRemovedValues()

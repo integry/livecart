@@ -37,7 +37,11 @@ class SpecificationItem extends Specification
 	
 	public static function restoreInstance(Product $product, SpecField $field, SpecFieldValue $value)
 	{
-		return parent::getInstanceByID(__CLASS__, array('productID' => $product->getID(), 'specFieldID' => $field->getID(), 'specFieldValueID' => $value->getID()));
+		$inst = parent::getInstanceByID(__CLASS__, array('productID' => $product->getID(), 'specFieldID' => $field->getID(), 'specFieldValueID' => $value->getID()));
+		$inst->specFieldValue->set($value);
+		$inst->resetModifiedStatus();
+		
+		return $inst;
 	}
 
 	public function setValue(SpecFieldValue $value)

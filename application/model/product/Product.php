@@ -192,6 +192,29 @@ class Product extends MultilingualObject
 	{
 	  	if (!$specificationData)
 	  	{
+
+		$cond = '
+		LEFT JOIN 	
+			SpecField ON specFieldID = SpecField.ID 
+		LEFT JOIN 	
+			SpecFieldGroup ON SpecField.specFieldGroupID = SpecFieldGroup.ID 
+		WHERE 
+			productID = ' . $this->getID() . '';
+
+	    $query = '
+		SELECT SpecificationDateValue.*, NULL AS valueID, NULL AS specFieldValuePosition, SpecFieldGroup.position AS SpecFieldGroupPosition, SpecField.* as valueID FROM SpecificationDateValue ' . $cond . '
+	    UNION
+		SELECT SpecificationStringValue.*, NULL, NULL, SpecFieldGroup.position, SpecField.* as valueID FROM SpecificationStringValue ' . $cond . '
+	    UNION
+		SELECT SpecificationNumericValue.*, NULL, NULL, SpecFieldGroup.position, SpecField.* as valueID FROM SpecificationNumericValue ' . $cond . '
+	    UNION
+		SELECT SpecificationItem.productID, SpecificationItem.specFieldID, SpecFieldValue.value, SpecFieldValue.ID, SpecFieldValue.position, SpecFieldGroup.position, SpecField.*
+				 FROM SpecificationItem
+				 	LEFT JOIN SpecFieldValue ON SpecificationItem.specFieldValueID =  SpecFieldValue.ID
+				 ' . str_replace('ON specFieldID', 'ON SpecificationItem.specFieldID', $cond) . 
+                 ' ORDER BY productID, SpecFieldGroupPosition, position, specFieldValuePosition';
+                 
+/*
 		    $query = '
 			SELECT *, NULL as valueID FROM SpecificationDateValue WHERE productID = ' . $this->getID() . '
 		    UNION
@@ -203,6 +226,7 @@ class Product extends MultilingualObject
 					 FROM SpecificationItem
 					 	LEFT JOIN SpecFieldValue ON SpecificationItem.specFieldValueID =  SpecFieldValue.ID
 					 WHERE productID = ' . $this->getID();
+*/
 
 			$specificationData = self::getDataBySQL($query);
 		}

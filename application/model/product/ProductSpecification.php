@@ -143,7 +143,7 @@ class ProductSpecification
 		$arr = array();
 		foreach ($this->attributes as $id => $attribute)
 		{
-			$arr[$id] = $attribute->toArray(ActiveRecordModel::NON_RECURSIVE);		 	
+            $arr[$id] = $attribute->toArray();		 	
 		}
 
 		return $arr;
@@ -160,20 +160,23 @@ class ProductSpecification
 		$cond = '
 		LEFT JOIN 	
 			SpecField ON specFieldID = SpecField.ID 
+		LEFT JOIN 	
+			SpecFieldGroup ON SpecField.specFieldGroupID = SpecFieldGroup.ID 
 		WHERE 
 			productID IN (' . implode(', ', array_flip($ids)) . ') AND SpecField.isDisplayedInList = 1';
 
 	    $query = '
-		SELECT SpecificationDateValue.*, NULL AS specFieldValueID, SpecField.* as valueID FROM SpecificationDateValue ' . $cond . '
+		SELECT SpecificationDateValue.*, NULL AS specFieldValueID, NULL AS specFieldValuePosition, SpecFieldGroup.position AS SpecFieldGroupPosition, SpecField.* as valueID FROM SpecificationDateValue ' . $cond . '
 	    UNION
-		SELECT SpecificationStringValue.*, NULL, SpecField.* as valueID FROM SpecificationStringValue ' . $cond . '
+		SELECT SpecificationStringValue.*, NULL, NULL AS specFieldValuePosition, SpecFieldGroup.position, SpecField.* as valueID FROM SpecificationStringValue ' . $cond . '
 	    UNION
-		SELECT SpecificationNumericValue.*, NULL, SpecField.* as valueID FROM SpecificationNumericValue ' . $cond . '
+		SELECT SpecificationNumericValue.*, NULL, NULL AS specFieldValuePosition, SpecFieldGroup.position, SpecField.* as valueID FROM SpecificationNumericValue ' . $cond . '
 	    UNION
-		SELECT SpecificationItem.productID, SpecificationItem.specFieldID, SpecFieldValue.value, SpecFieldValue.ID, SpecField.*
+		SELECT SpecificationItem.productID, SpecificationItem.specFieldID, SpecFieldValue.value, SpecFieldValue.position, SpecFieldGroup.position, SpecFieldValue.ID, SpecField.*
 				 FROM SpecificationItem
 				 	LEFT JOIN SpecFieldValue ON SpecificationItem.specFieldValueID =  SpecFieldValue.ID
-				 ' . str_replace('ON specFieldID', 'ON SpecificationItem.specFieldID', $cond);
+				 ' . str_replace('ON specFieldID', 'ON SpecificationItem.specFieldID', $cond) . 
+                 ' ORDER BY productID, SpecFieldGroupPosition, position, specFieldValuePosition';
 		
 		$specificationArray = ActiveRecordModel::getDataBySQL($query);
 		$multiLingualFields = array('name', 'description', 'valuePrefix', 'valueSuffix');
@@ -231,7 +234,7 @@ class ProductSpecification
 			$specification = call_user_func_array(array($class, 'restoreInstance'), array($this->product, $specField, $value['value']));
 		  	$this->attributes[$specField->getID()] = $specification;
 		}		  
-				
+
 		// selectors
 		foreach ($selectors as $specFieldId => $value)
 		{
@@ -243,7 +246,6 @@ class ProductSpecification
 				{
 					$values[$val['valueID']] = $val['value'];
 				}
-				
 				$specification = MultiValueSpecificationItem::restoreInstance($this->product, $specField, $values);
 			}
 			else
