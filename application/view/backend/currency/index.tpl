@@ -4,6 +4,7 @@
 {includeJs file="backend/Currency.js"}
 
 {includeJs file="library/form/State.js"}
+{includeJs file="library/form/ActiveForm.js"}
 {includeJs file="library/form/Validator.js"}
 
 {includeCss file="library/TabControl.css"}
@@ -14,13 +15,13 @@
 {pageTitle}{t _currencies}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
-<div id="tabContainer" class="maxHeight h--20">
-	<ul id="tabList">
+<div id="tabContainer" class="tabContainer maxHeight h--20">
+	<ul class="tabList tabs">
 		<li id="tabManage" class="tab active"><a href="{link controller=backend.currency action=list}">{t _manage}</a></li>
 		<li id="tabRates" class="tab inactive"><a href="{link controller=backend.currency action=rates}">{t _adjust}</a></li>
-		<li id="tabOptions" class="tab inactive"><a href="{link controller=backend.currency action=options}">{t _options}</a></li>
+{*		<li id="tabOptions" class="tab inactive"><a href="{link controller=backend.currency action=options}">{t _options}</a></li> *}
 	</ul>
-	<div id="sectionContainer" class="maxHeight h--95">
+	<div class="sectionContainer maxHeight h--95">
 		<div id="tabManageContent" class="maxHeight">
 		
 			<ul class="menu" id="currPageMenu">
@@ -60,7 +61,7 @@
 			
 		</div>
 		<div id="tabRatesContent"></div>
-		<div id="tabOptionsContent"></div>
+		<div id="tabOptionsContent"></div>	
 	</div>
 </div>
 
@@ -99,7 +100,9 @@
 	curr.renderList({/literal}{$currencies}{literal});
 	initCurrencyList();
 	
-	new TabControl('tabContainer', 'sectionContainer');
+	TabControl.prototype.getInstance('tabContainer', Backend.Currency.prototype.getTabUrl, Backend.Currency.prototype.getContentTabId);
+	
+	//new TabControl('tabContainer', 'sectionContainer');
 
 </script>
 {/literal}

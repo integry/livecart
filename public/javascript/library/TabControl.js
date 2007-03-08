@@ -112,11 +112,17 @@ TabControl.prototype = {
 
 	activateTab: function(targetTab)
 	{
-        if(!targetTab) targetTab = this.nodes.tabListElements[0];
-        else targetTab = $(targetTab);
+        if(!targetTab) 
+		{
+			targetTab = this.nodes.tabListElements[0];	
+		}
+        else 
+		{
+			targetTab = $(targetTab);
+		}
                 
-        var contentId = this.idParserCallback(targetTab.id);
-        if(!$(contentId)) new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '"></div>');
+		var contentId = this.idParserCallback(targetTab.id);
+        if(!$(contentId)) new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '"></div>');		
 
 		if(this.activeTab)
 		{

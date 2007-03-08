@@ -12,6 +12,17 @@ Backend.Currency.prototype =
 	  
 	},
 	
+	getTabUrl: function(url)
+	{
+		console.log('!' + url);
+		return url;
+	},
+	
+	getContentTabId: function(id)
+	{		
+		return id + 'Content';
+	},
+
 	showAddForm: function()
 	{
 		document.getElementById('currAddMenuLoadIndicator').style.display = 'block';

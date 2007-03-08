@@ -1,6 +1,6 @@
 function validateForm(form)
 {
-    Element.saveTinyMceFields(form);
+	Element.saveTinyMceFields(form);
     ActiveForm.prototype.resetErrorMessages(form);
 
     var validatorData = form._validator.value;
