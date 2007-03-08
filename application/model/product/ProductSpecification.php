@@ -186,9 +186,9 @@ class ProductSpecification
 				$spec[$value] = unserialize($spec[$value]);
 			}
 			
-			if (SpecField::DATATYPE_TEXT == $spec['dataType'])
+			if (SpecField::DATATYPE_TEXT == $spec['dataType'] && SpecField::TYPE_TEXT_DATE != $spec['type'])
 			{
-				$spec['value'] = unserialize($spec['value']);
+                $spec['value'] = unserialize($spec['value']);
 			}
 
 			$spec = MultiLingualObject::transformArray($spec, 'SpecificationStringValue');

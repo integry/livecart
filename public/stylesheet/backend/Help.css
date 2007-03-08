@@ -240,7 +240,43 @@ p.note {
 }
 
 /**************************
-	Content
+	Glossary
+**************************/
+a.acronym
+{
+    border-bottom: 1px dotted black;    
+    cursor: help;
+    #margin-right: 5px; /* IE */
+    color: black;
+    position: relative;
+}
+
+a.acronym div.acronymFull
+{
+    display: none;
+}
+
+a.acronym:hover
+{
+    display: inline;
+    text-decoration: none;
+}
+
+a.acronym:hover div.acronymFull
+{
+    display: block;
+    position: absolute;
+    background-color: yellow;
+    border: 2px solid gray;
+    padding: 5px;
+    #margin-top: 17px;
+    left: 0px;
+    white-space: nowrap;
+    color: black;
+}
+
+/**************************
+	Comments
 **************************/
 #helpComments
 {

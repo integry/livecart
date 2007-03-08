@@ -8,6 +8,8 @@ import and keep your product information up-to-date. As in most e-stores LC allo
 	<ins>Understanding product's details and info that is displayed to customers.</ins>
 </p>
 
+{glossary}SEO{/glossary} rules...
+
 <div class="tasks">
 <fieldset>
 <legend>Things you can do</legend>
