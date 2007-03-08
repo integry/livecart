@@ -393,11 +393,7 @@ class ActiveTreeNode extends ActiveRecordModel
                    
         $db = ActiveRecord::getDBConnection();
         try
-        {
-            # Step #1: Update parentNodeID
-            $this->setParentNode($parentNode);
-            $this->save();
-                
+        {                
             $parentNode->load();
             $t_r = $this->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
             $t_l = $this->getFieldValue(self::LEFT_NODE_FIELD_NAME);
@@ -405,9 +401,11 @@ class ActiveTreeNode extends ActiveRecordModel
             $p_l = $parentNode->getFieldValue(self::LEFT_NODE_FIELD_NAME);
             
             $width = $this->getWidth();
-            $s = $p_l - $t_l > 0 ? -1 : 0;
+            $s = $p_l > $t_l ? -1 : 0;
             
             $offset = 0;
+            $nullWidth = 0;
+            $s2 = 0;
             if($beforeNode)
             {
 	            try 
@@ -420,25 +418,36 @@ class ActiveTreeNode extends ActiveRecordModel
 	                }
 	            } 
 	            catch(Exception $e) {}
+	            echo "asd";
+            }
+            else if($this->getFieldValue(self::PARENT_NODE_FIELD_NAME)->getID() == $parentNode->getID())
+            {
+                $nullWidth = $p_r * 2 - $width;
+                $s = -1;
             }
             else
             {
-                $s = -1;
+                $s2 = $width;
+                $s = 1;
             }
-            
-            // Step #2: Change target node left and right values to negotive
+
+            // Step #1: Change target node left and right values to negotive
             $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME.", ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME." WHERE ".self::LEFT_NODE_FIELD_NAME." BETWEEN $t_l AND $t_r";
             
-            // Step #3: Now then there is no target node decrement all left and right values after target node position
+            // Step #2: Now then there is no target node decrement all left and right values after target node position
             $updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." - $width WHERE ".self::RIGHT_NODE_FIELD_NAME." > $t_r";
             $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." - $width WHERE ".self::LEFT_NODE_FIELD_NAME." > $t_r";
+
+            // Step #3: Make free space for new node to insert
+            $updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." + $width WHERE ".self::RIGHT_NODE_FIELD_NAME." >= " . ($p_r - $offset + $s * $width - $s2);
+            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." + $width WHERE ".self::LEFT_NODE_FIELD_NAME." >= " . ($p_r - $offset + $s * $width - $s2);
             
-            // Step #4: Make free space for new node to insert
-            $updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." + $width WHERE ".self::RIGHT_NODE_FIELD_NAME." >= " . ($p_r - $offset + $s * $width);
-            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." + $width WHERE ".self::LEFT_NODE_FIELD_NAME." >= " . ($p_r - $offset + $s * $width);
+            // Step #4: Change target node left and right values back to positive and put them to their place
+            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME."-(" . ($t_l - $s * $p_r - $offset - $nullWidth) . "), ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME."-(" . ($t_l - $s * $p_r - $offset - $nullWidth) . ") WHERE ".self::LEFT_NODE_FIELD_NAME." < 0";
             
-            // Step #5: Change target node left and right values back to positive and put them to their place
-            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME."+(" . ($p_r - $t_r - $offset + 1 + $s * $width) . "), ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME."+(" . ($p_r - $t_r - $offset + 1 + $s * $width) . ") WHERE ".self::LEFT_NODE_FIELD_NAME." < 0";
+            # Step #1: Update parentNodeID
+            $this->setParentNode($parentNode);
+            $this->save();
             
             foreach($updates as $update)
             {
@@ -459,15 +468,15 @@ class ActiveTreeNode extends ActiveRecordModel
 	            if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= $t_r)
 	                $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) - $width);
 
-	            if($instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) >= ($p_r - $offset + $s * $width))
+	            if($instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) >= ($p_r - $offset + $s * $width - $s2))
 	                $instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) + $width);
-	            if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= ($p_r - $offset + $s * $width))
+	            if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= ($p_r - $offset + $s * $width - $s2))
 	                $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) + $width);
 
 	        	if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) < 0)
 	            {
-	                $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, -$instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) + ($p_r - $t_r - $offset + 1 + $s * $width));
-	                $instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, -$instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) + ($p_r - $t_r - $offset + 1 + $s * $width));
+	                $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, -$instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) - ($t_l - $s * $p_r - $offset - $nullWidth));
+	                $instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, -$instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) - ($t_l - $s * $p_r - $offset - $nullWidth));
 	            }
 	        }
         }

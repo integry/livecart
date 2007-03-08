@@ -139,15 +139,16 @@ class TestCategory extends UnitTest
 	    
 	    foreach($newCategories as $key => $category)
 	    {
-		    $newCategories[2]->moveTo($this->root, $category);
+//		    if(!$category) continue;
+	        $newCategories[2]->moveTo($this->root, $category);
 		    
 		    // reload root
 		    ActiveRecord::removeFromPool($this->root);
 		    $this->root->load();
 		    
 		    // Make sure one category is last child, root lft and rgt shouldn't change
-		    $this->assertEqual($this->root->rgt->get(), $rootRgt, "Root rgt should be the same when moving category 3 to ".($category ? $key : 'null')." out of 4");
-		    $this->assertEqual($this->root->lft->get(), $rootLft, "Root lft should be the same when moving category 3 to ".($category ? $key : 'null')." out of 4");
+		    $this->assertEqual($this->root->rgt->get(), $rootRgt, "Root rgt should be the same when moving category 3 to ".($category ? $key : 'null')." out of 4 ([".($this->root->rgt->get())."] and [$rootRgt])");
+		    $this->assertEqual($this->root->lft->get(), $rootLft, "Root lft should be the same when moving category 3 to ".($category ? $key : 'null')." out of 4 ([".($this->root->lft->get())."] and [$rootLft])");
 	    }
 	}
 	
@@ -198,7 +199,7 @@ class TestCategory extends UnitTest
 	    $parentCatLft = $newCategories[1]->lft->get();
 	    $targetCatRgt = $newCategories[4]->rgt->get();
 	    $targetCatLft = $newCategories[4]->lft->get();
-   
+	    
 	    // move one branch inside another
 	    $newCategories[4]->moveTo($newCategories[1]);
 	    
@@ -232,8 +233,8 @@ class TestCategory extends UnitTest
 
 	    $this->assertEqual($newCategories[1]->rgt->get(), $parentCatRgt + 6);
 	    $this->assertEqual($newCategories[1]->lft->get(), $parentCatLft );
-	    $this->assertEqual($newCategories[4]->rgt->get(), $parentCatRgt - 1);
-	    $this->assertEqual($newCategories[4]->lft->get(), $parentCatRgt - 6);
+	    $this->assertEqual($newCategories[4]->rgt->get(), $parentCatRgt + 6 - 1);
+	    $this->assertEqual($newCategories[4]->lft->get(), $parentCatRgt);
 	}
 }
 
