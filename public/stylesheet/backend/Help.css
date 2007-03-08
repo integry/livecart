@@ -247,7 +247,7 @@ a.acronym
     border-bottom: 1px dotted black;    
     cursor: help;
     #margin-right: 5px; /* IE */
-    color: black;
+    color: black !important;
     position: relative;
 }
 
