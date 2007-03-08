@@ -388,13 +388,13 @@ class ActiveTreeNode extends ActiveRecordModel
      */
     public function moveTo(ActiveTreeNode $parentNode, ActiveTreeNode $beforeNode=null)
     {
-        $this->load();        
+        if(!$this->isLoaded()) $this->load();        
         $className = get_class($this);
-                   
         $db = ActiveRecord::getDBConnection();
+
         try
         {                
-            $parentNode->load();
+            if(!$parentNode->isLoaded()) $parentNode->load();
             $t_r = $this->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
             $t_l = $this->getFieldValue(self::LEFT_NODE_FIELD_NAME);
             $p_r = $parentNode->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
@@ -404,33 +404,25 @@ class ActiveTreeNode extends ActiveRecordModel
             $s = $p_l > $t_l ? -1 : 0;
             
             $offset = 0;
-            $nullWidth = 0;
             $s2 = 0;
             if($beforeNode)
             {
-	            try 
-	            {
-	                $beforeNode->load();
-	                // You can use $beforeNode only if it and the target node have the same parent (are siblings)
-	                if($this->getFieldValue(self::PARENT_NODE_FIELD_NAME)->getID() == $beforeNode->getFieldValue(self::PARENT_NODE_FIELD_NAME)->getID())
-	                {
-	                    $offset = $p_r - $beforeNode->getFieldValue(self::LEFT_NODE_FIELD_NAME);
-	                }
-	            } 
-	            catch(Exception $e) {}
-	            echo "asd";
+                if(!$beforeNode->isLoaded) $beforeNode->load();
+                $offset = $p_r - $beforeNode->getFieldValue(self::LEFT_NODE_FIELD_NAME);
             }
             else if($this->getFieldValue(self::PARENT_NODE_FIELD_NAME)->getID() == $parentNode->getID())
             {
-                $nullWidth = $p_r * 2 - $width;
                 $s = -1;
             }
             else
             {
                 $s2 = $width;
-                $s = 1;
+                $s = 0 == $s ? 1 : 0;
             }
-
+            
+            $leftPosition = ($p_r - $offset + $s * $width - $s2);
+            $moveDistance = $t_l - $leftPosition;
+            
             // Step #1: Change target node left and right values to negotive
             $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME.", ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME." WHERE ".self::LEFT_NODE_FIELD_NAME." BETWEEN $t_l AND $t_r";
             
@@ -439,44 +431,46 @@ class ActiveTreeNode extends ActiveRecordModel
             $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." - $width WHERE ".self::LEFT_NODE_FIELD_NAME." > $t_r";
 
             // Step #3: Make free space for new node to insert
-            $updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." + $width WHERE ".self::RIGHT_NODE_FIELD_NAME." >= " . ($p_r - $offset + $s * $width - $s2);
-            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." + $width WHERE ".self::LEFT_NODE_FIELD_NAME." >= " . ($p_r - $offset + $s * $width - $s2);
+            $updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." + $width WHERE ".self::RIGHT_NODE_FIELD_NAME." >= " . $leftPosition;
+            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." + $width WHERE ".self::LEFT_NODE_FIELD_NAME." >= " . $leftPosition;
             
             // Step #4: Change target node left and right values back to positive and put them to their place
-            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME."-(" . ($t_l - $s * $p_r - $offset - $nullWidth) . "), ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME."-(" . ($t_l - $s * $p_r - $offset - $nullWidth) . ") WHERE ".self::LEFT_NODE_FIELD_NAME." < 0";
+            $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME."=-".self::LEFT_NODE_FIELD_NAME."-($moveDistance), ".self::RIGHT_NODE_FIELD_NAME."=-".self::RIGHT_NODE_FIELD_NAME."-($moveDistance) WHERE ".self::LEFT_NODE_FIELD_NAME." < 0";
             
             # Step #1: Update parentNodeID
             $this->setParentNode($parentNode);
             $this->save();
+
             
+            if($_POST['SHOW_QUERIES']) echo "$s: ($p_r - $offset + $s * $width - $s2)<Br />";
             foreach($updates as $update)
             {
+                if($_POST['SHOW_QUERIES']) echo "$update;<br />";
                 self::getLogger()->logQuery($update);
                 $db->executeUpdate($update);
             }
 
-   	        foreach(ActiveRecord::retrieveFromPool(get_class($this)) as $instance)
+            $activeTreeNodes = ActiveRecord::retrieveFromPool(get_class($this));
+   	        foreach($activeTreeNodes as $instance)
 	        {
 	            if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= $t_l && $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) <= $t_r)
 	            {
 	                $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, -$instance->getFieldValue(self::LEFT_NODE_FIELD_NAME));
 	                $instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, -$instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME));
 	            }
-	            
 	            if($instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) >= $t_r)
 	                $instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) - $width);
 	            if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= $t_r)
 	                $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) - $width);
-
-	            if($instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) >= ($p_r - $offset + $s * $width - $s2))
+	            if($instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) >= $leftPosition)
 	                $instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, $instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) + $width);
-	            if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= ($p_r - $offset + $s * $width - $s2))
+                if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) >= $leftPosition)
 	                $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, $instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) + $width);
 
 	        	if($instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) < 0)
 	            {
-	                $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, -$instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) - ($t_l - $s * $p_r - $offset - $nullWidth));
-	                $instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, -$instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) - ($t_l - $s * $p_r - $offset - $nullWidth));
+	                $instance->setFieldValue(self::LEFT_NODE_FIELD_NAME, -$instance->getFieldValue(self::LEFT_NODE_FIELD_NAME) - $moveDistance);
+	                $instance->setFieldValue(self::RIGHT_NODE_FIELD_NAME, -$instance->getFieldValue(self::RIGHT_NODE_FIELD_NAME) - $moveDistance);
 	            }
 	        }
         }
@@ -507,7 +501,7 @@ class ActiveTreeNode extends ActiveRecordModel
                 
                 // Inserting new node
                 $parentNode = $this->getField(self::PARENT_NODE_FIELD_NAME)->get();
-                $parentNode->load();
+                if(!$parentNode->isLoaded()) $parentNode->load();
                 $parentRightValue = $parentNode->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
                 $nodeLeftValue = $parentRightValue;
                 $nodeRightValue = $nodeLeftValue + 1;
@@ -689,6 +683,28 @@ class ActiveTreeNode extends ActiveRecordModel
         $recordSet = ActiveRecord::getRecordSet($className, $filter, $loadReferencedRecords);
         
         foreach($recordSet as $record) return $record;
+	}
+	
+	public function debug()
+	{
+	    echo "<pre>";
+	    $this->debugRecursive($this, 0);
+	    echo "</pre>";
+	}
+	
+	private function debugRecursive(ActiveTreeNode $node, $level)
+	{
+	    $node->load();
+	    $parentID = $node->getFieldValue(self::PARENT_NODE_FIELD_NAME) ? $node->getFieldValue(self::PARENT_NODE_FIELD_NAME)->getID() : 'root';
+	    $lft = $node->getFieldValue(self::LEFT_NODE_FIELD_NAME);
+	    $rgt = $node->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
+	    
+	    echo str_repeat(" ", $level * 4) . $node->handle->get() . "(ID=".$node->getID()."; PID=$parentID; LFT=$lft; RGT=$rgt)\n";
+	    $childNodes = $node->getChildNodes(true, true);
+	    foreach($childNodes as $child)
+	    {
+	        $this->debugRecursive($child, $level + 1);
+	    }
 	}
 }
 
