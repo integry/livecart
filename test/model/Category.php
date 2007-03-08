@@ -193,7 +193,6 @@ class TestCategory extends UnitTest
 	        $lastCategory = $newCategories[$i];
 	    }
 
-	    $this->root->debug();
 	    $startingPositions = array();
 	    foreach($newCategories as $category)
 	    {
@@ -342,34 +341,21 @@ class TestCategory extends UnitTest
 	    $this->assertEqual($newCategories[11]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $beforeCatLft);
 	    $this->assertEqual($newCategories[7]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $beforeCatRgt + 4);
 	    $this->assertEqual($newCategories[7]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $beforeCatLft + 4);
-	    
-	    echo "
-		    \$parentCatRgtAfter = $parentCatRgtAfter ".$newCategories[1]->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID()."<br />
-		    \$parentCatLftAfter = $parentCatLftAfter ".$newCategories[1]->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID()."<br />
-		    \$targetCatRgtAfter = $targetCatRgtAfter ".$newCategories[11]->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID()."<br />
-		    \$targetCatLftAfter = $targetCatLftAfter ".$newCategories[11]->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID()."<br />
-		    \$beforeCatRgtAfter = $beforeCatRgtAfter ".$newCategories[7]->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID()."<br />
-		    \$beforeCatLftAfter = $beforeCatLftAfter ".$newCategories[7]->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID()."<br />
-		";
-	    
+
 	    /**
 	     * Put all categories back to their starting positions
 	     */	    
-	    $_POST['SHOW_QUERIES'] = true;
-	    $this->root->debug();
+	    $newCategories[11]->moveTo($newCategories[10]);
 	    $newCategories[4]->moveTo($this->root);
-//	    $newCategories[11]->moveTo($newCategories[10]);
-//	    $this->root->debug();
-//	    $newCategories[7]->moveTo($this->root);
-	    $this->root->debug();
-	    
+	    $newCategories[7]->moveTo($this->root);
+	    $newCategories[10]->moveTo($this->root);    
 	    foreach($newCategories as $category)
 	    {
 	        if(!$category) continue;
 	        
-//	        $this->assertEqual($category->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['lft']);
-//	        $this->assertEqual($category->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['rgt']);
-//	        $this->assertEqual($category->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $startingPositions[$category->getID()]['parent']);
+	        $this->assertEqual($category->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['lft']);
+	        $this->assertEqual($category->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['rgt']);
+	        $this->assertEqual($category->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $startingPositions[$category->getID()]['parent']);
 	    }
 	}
 }

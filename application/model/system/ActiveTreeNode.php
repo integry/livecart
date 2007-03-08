@@ -401,23 +401,40 @@ class ActiveTreeNode extends ActiveRecordModel
             $p_l = $parentNode->getFieldValue(self::LEFT_NODE_FIELD_NAME);
             
             $width = $this->getWidth();
-            $s = $p_l > $t_l ? -1 : 0;
-            
+            $s = 0;
             $offset = 0;
             $s2 = 0;
             if($beforeNode)
             {
                 if(!$beforeNode->isLoaded) $beforeNode->load();
                 $offset = $p_r - $beforeNode->getFieldValue(self::LEFT_NODE_FIELD_NAME);
+	            $b_r = $beforeNode->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
+	            $b_l = $beforeNode->getFieldValue(self::LEFT_NODE_FIELD_NAME);
+	            
+	            $s = $t_l > $b_r ? 0 : -1; 
             }
             else if($this->getFieldValue(self::PARENT_NODE_FIELD_NAME)->getID() == $parentNode->getID())
             {
                 $s = -1;
             }
             else
-            {
-                $s2 = $width;
-                $s = 0 == $s ? 1 : 0;
+            {   
+                if(!($t_l > $p_l && $t_r < $p_r)) 
+                {
+                    if($p_l > $t_r) 
+                    {
+                        $s = -1;
+                    }
+                    else 
+                    {
+                        $s2 = $width;
+                        $s = 1;
+                    }
+                }
+                else
+                {
+                    $s = -1;
+                }
             }
             
             $leftPosition = ($p_r - $offset + $s * $width - $s2);
@@ -441,11 +458,8 @@ class ActiveTreeNode extends ActiveRecordModel
             $this->setParentNode($parentNode);
             $this->save();
 
-            
-            if($_POST['SHOW_QUERIES']) echo "$s: ($p_r - $offset + $s * $width - $s2)<Br />";
             foreach($updates as $update)
             {
-                if($_POST['SHOW_QUERIES']) echo "$update;<br />";
                 self::getLogger()->logQuery($update);
                 $db->executeUpdate($update);
             }
