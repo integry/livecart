@@ -38,9 +38,8 @@ class TestCategory extends UnitTest
 		$newCategory->setValueByLang("name", 'en', "dump");
 		$newCategory->setFieldValue("handle", "dump");
         $newCategory->save();
-        $newCategory->delete();
-        
 	    $this->autoIncrementNumber = $newCategory->getID();
+        $newCategory->delete();
 	}
 	
 	function tearDown()
@@ -63,29 +62,73 @@ class TestCategory extends UnitTest
 	
 	public function testCreateCategory()
 	{
-		$newCategory = Category::getNewInstance($this->root);
-		$newCategory->setValueByLang("name", 'en', 'dump' );
-		$newCategory->save();
-		$categoryID = $newCategory->getID();
-        $this->assertIsA($categoryID, 'integer');
-		
-		$newCategory->setValueByLang("name", 'en', "New Category " . $newCategory->getID() );
-		$newCategory->setFieldValue("handle", "new.category." . $newCategory->getID() );
+	    // Get root node info, before it is modified
+	    $rootLft = $this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
+	    $rootRgt = $this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
+	    $rootID = $this->root->getID();
+	    
+	    // Create new category
+	    $newCategory = Category::getNewInstance($this->root);		
+		$newCategory->setValueByLang("name", 'en', 'TEST ' . rand(1, 1000));
+		$newCategory->setFieldValue("handle", "new.category." . rand(1, 1000));
         $newCategory->save();
         $this->assertTrue($newCategory->isExistingRecord());
+
+		// Check if rgt and lft fields are calculated properly
+		$this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootRgt);
+		$this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt + 1);
+	    $this->assertEqual($this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), 1);
+	    $this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt + 2);
         
-        $newCategory->markAsNotLoaded();
-        $this->assertFalse($newCategory->isLoaded());
-        $newCategory->load();
-        $this->assertTrue($newCategory->isLoaded());
-        
-        $name = $newCategory->name->get();
-        $this->assertEqual($name['en'], "New Category " . $categoryID, "Category's name wasn't properly saved");
-        
-        $handle = $newCategory->handle->get();
-        $this->assertEqual($handle, "new.category." . $categoryID, "Category's handle wasn't properly saved");
+	    // Check parrent id
+	    $this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $rootID);
+	    
+		// Reload and check again
+	    $this->root->markAsNotLoaded();
+	    $this->root->load();
+	    $newCategory->markAsNotLoaded();
+	    $newCategory->load();
+	    
+	    // Check
+		$this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootRgt);
+		$this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt + 1);
+	    $this->assertEqual($this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), 1);
+	    $this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt + 2);
+	    $this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $rootID);
 	}
 
+	public function testDeleteCategory()
+	{
+		$startingPositions = array();
+	    foreach($this->root->getChildNodes(false, true) as $category)
+	    {
+	        $startingPositions[$category->getID()] = array(
+				'lft'     => $category->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME),
+				'rgt'     => $category->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME),
+				'parent'  => $category->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(),
+	        );
+	    }	    
+	    $newCategory = Category::getNewInstance($this->root);
+		$newCategory->setValueByLang("name", 'en', 'TEST ' . rand(1, 1000));
+		$newCategory->setFieldValue("handle", "new.category." . rand(1, 1000));
+		$newCategory->save();
+		
+		$newCategory->delete();
+		
+		$this->assertFalse($newCategory->isExistingRecord());
+		$this->assertFalse($newCategory->isLoaded());
+		
+        $activeTreeNodes = ActiveRecord::retrieveFromPool(get_class($newCategory));
+  	    foreach($activeTreeNodes as $instance)
+        {
+	        if(!$category) continue;
+	        
+	        $this->assertEqual($category->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['lft']);
+	        $this->assertEqual($category->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['rgt']);
+	        $this->assertEqual($category->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $startingPositions[$category->getID()]['parent']);
+	    }
+	}
+	
 	public function testUpdateCategory()
 	{
 	    $newCategory = Category::getNewInstance($this->root);
@@ -357,6 +400,57 @@ class TestCategory extends UnitTest
 	        $this->assertEqual($category->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $startingPositions[$category->getID()]['rgt']);
 	        $this->assertEqual($category->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $startingPositions[$category->getID()]['parent']);
 	    }
+	}
+	
+	public function testMoveCategoryUpAndDown()
+	{
+	    $newCategories = array();
+	    
+	    $newCategories[0] = Category::getNewInstance($this->root);
+		$newCategories[0]->setValueByLang("name", 'en', "New Category " . 0 );
+		$newCategories[0]->setFieldValue("handle", "TEST.CATEGORY." . 0);
+        $newCategories[0]->save();	        
+        
+	    foreach(range(1, 4) as $i)
+	    {
+		    $newCategories[$i] = Category::getNewInstance($newCategories[0]);
+			$newCategories[$i]->setValueByLang("name", 'en', "New Category " . $i );
+			$newCategories[$i]->setFieldValue("handle", "TEST.CATEGORY." . $i);
+	        $newCategories[$i]->save();	        
+	    }
+	    
+	    
+	    $this->root->debug();
+	    
+	    // Move down
+	    $nextNextSibling = $newCategories[2]->getNextSibling(1);
+	    $this->assertEqual($nextNextSibling, $newCategories[4]);
+	    $newCategories[2]->moveTo($newCategories[0], $nextNextSibling);
+	    $this->root->debug();
+	    
+	    // Move down
+	    $nextNextSibling = $newCategories[2]->getNextSibling(1);
+	    $this->assertEqual($nextNextSibling, null);
+	    $newCategories[2]->moveTo($newCategories[0], $nextNextSibling);
+	    $this->root->debug();
+	    
+	    // Move down (Check to see if node could not be moved from it's parent)
+	    $nextNextSibling = $newCategories[2]->getNextSibling(1);
+	    $this->assertEqual($nextNextSibling, null);
+	    $newCategories[2]->moveTo($newCategories[0], $nextNextSibling);
+	    $this->root->debug();
+	     
+	    // Move up
+	    $prevSibling = $newCategories[3]->getPrevSibling();
+	    $this->assertEqual($prevSibling, $newCategories[1]);
+	    $newCategories[3]->moveTo($newCategories[0], $prevSibling);
+	    $this->root->debug();
+	    
+	    // Move up (Check to see if node could not be moved from it's parent)
+	    $prevSibling = $newCategories[3]->getPrevSibling();
+	    $this->assertEqual($prevSibling, $newCategories[1]);
+	    $newCategories[3]->moveTo($newCategories[0], null);
+	    $this->root->debug();
 	}
 }
 

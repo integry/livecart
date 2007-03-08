@@ -602,6 +602,9 @@ class ActiveTreeNode extends ActiveRecordModel
             throw $e;
         }
         
+        $this->setID(false);
+        $this->markAsNotLoaded();
+        
         return $result;
     }
     
@@ -673,17 +676,17 @@ class ActiveTreeNode extends ActiveRecordModel
         return $branch;
     }
 	
-	public function getNextSibling($loadReferencedRecords = false)
+	public function getNextSibling($count = 0, $loadReferencedRecords = false)
 	{
-        return $this->getSibling(self::DIRECTION_NEXT, $loadReferencedRecords);
+        return $this->getSibling($count, self::DIRECTION_NEXT, $loadReferencedRecords);
 	}
 
-	public function getPrevSibling($loadReferencedRecords = false)
+	public function getPrevSibling($count = 0, $loadReferencedRecords = false)
 	{
-        return $this->getSibling(self::DIRECTION_PREV, $loadReferencedRecords);
+        return $this->getSibling($count, self::DIRECTION_PREV, $loadReferencedRecords);
 	}
 	
-	private function getSibling($direction = self::DIRECTION_NEXT, $loadReferencedRecords = false)
+	private function getSibling($count = 0, $direction = self::DIRECTION_NEXT, $loadReferencedRecords = false)
 	{
         if(!$this->isLoaded()) $this->load();
         $className = get_class($this);
@@ -692,11 +695,12 @@ class ActiveTreeNode extends ActiveRecordModel
         $cond->addAND(new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME)->get(), self::DIRECTION_PREV == $direction ? "<" : ">"));
         $filter->setCondition($cond);
         $filter->setOrder(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME));
-        $filter->setLimit(1);
+        $filter->setLimit(1, $count);
         
         $recordSet = ActiveRecord::getRecordSet($className, $filter, $loadReferencedRecords);
         
         foreach($recordSet as $record) return $record;
+        return null;
 	}
 	
 	public function debug()
