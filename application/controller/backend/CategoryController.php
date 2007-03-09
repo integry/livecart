@@ -15,7 +15,7 @@ class CategoryController extends StoreManagementController
 	public function init()
 	{
 		parent::init();
-		$this->removeLayout();
+		$this->removeLayout('productDiscounts', 20);
 	}
 
 	public function index()

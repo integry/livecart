@@ -28,6 +28,8 @@ TabControl.prototype = {
             
             this.__nodes__();
             this.__bind__();
+
+            this.decorateTabs();
         }
         catch(e)
         {
@@ -74,7 +76,15 @@ TabControl.prototype = {
     {
         this.activateTab();
     },
-    
+
+    decorateTabs: function()
+    {
+        document.getElementsByClassName('tab', this.nodes.tabList).each(function(tab)
+        {
+            var firstLink = tab.down('a');
+            new Insertion.After(firstLink, '<span class="tabCounter"> </span>');
+        });  
+    },
 
     getInstance: function(tabContainerName, urlParserCallback, idParserCallback)
     {
@@ -168,5 +178,23 @@ TabControl.prototype = {
 	setTabUrl: function(tabId, url)
 	{
 		$(tabId).url = url;
-	}
+	},
+    
+    setCounter: function(tab, value)
+    {
+        console.info(tab);
+        tab = $(tab);
+        console.info(tab);
+        if(!tab) throw new Error('Could not find tab!');
+        
+        var counter = tab.down('.tabCounter');
+        if(false === value)
+        {
+            counter.update('');
+        }
+        else
+        {
+            counter.update("(" + value + ")");
+        }
+    }
 }
