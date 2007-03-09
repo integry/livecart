@@ -189,7 +189,8 @@ class ProductSpecification
 				$spec[$value] = unserialize($spec[$value]);
 			}
 			
-			if (SpecField::DATATYPE_TEXT == $spec['dataType'] && SpecField::TYPE_TEXT_DATE != $spec['type'])
+			if ((SpecField::DATATYPE_TEXT == $spec['dataType'] && SpecField::TYPE_TEXT_DATE != $spec['type'])
+                || (SpecField::TYPE_NUMBERS_SELECTOR == $spec['type']))
 			{
                 $spec['value'] = unserialize($spec['value']);
 			}

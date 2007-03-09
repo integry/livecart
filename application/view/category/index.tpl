@@ -13,7 +13,7 @@
 	{foreach from=$products item=product}
 		<li>			
 			<span class="title">
-				<a href="{productUrl product=$product}">{$product.name_lang}</a>
+				<a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.name_lang}</a>
 			</span>
 							
 			<p class="spec">

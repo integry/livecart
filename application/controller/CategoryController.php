@@ -33,8 +33,6 @@ class CategoryController extends FrontendController
 	{
 		$this->categoryID = $this->request->getValue('id');
 
-		$this->getAppliedFilters();
-
 		// get category instance
 		$this->category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
 
@@ -48,6 +46,8 @@ class CategoryController extends FrontendController
 			$this->addBreadCrumb($nodeArray['name_lang'], $url);
 		}
 	
+		$this->getAppliedFilters();
+
 		// add filters to breadcrumb
 		$params = array('data' => $nodeArray, 'filters' => array());
 		foreach ($this->filters as $filter)
@@ -57,6 +57,14 @@ class CategoryController extends FrontendController
 			$url = smarty_function_categoryUrl($params, false);
 			$this->addBreadCrumb($filter['name_lang'], $url);
 		}
+	
+	    // get filter chain handle
+        $filterChainHandle = array();
+        foreach ($params['filters'] as $filter)
+	    {
+            $filterChainHandle[] = filterHandle($filter);
+        }
+        $filterChainHandle = implode(',', $filterChainHandle);
 	
 		// pagination
 		$currentPage = $this->request->getValue('page') 
@@ -91,6 +99,7 @@ class CategoryController extends FrontendController
 						   'id' => $this->request->getValue('id'),
 						   'cathandle' => $this->request->getValue('cathandle')
 						   );
+						   
 		if ($this->request->getValue('filters'))
 		{
 			$urlParams['filters'] = $this->request->getValue('filters');
@@ -107,6 +116,7 @@ class CategoryController extends FrontendController
 		$response->setValue('perPage', $perPage);
 		$response->setValue('currentPage', $currentPage);
 		$response->setValue('category', $this->category->toArray());
+		$response->setValue('filterChainHandle', $filterChainHandle);
 		return $response;
 	}
 	
@@ -233,14 +243,13 @@ class CategoryController extends FrontendController
 		return $response;	 	
 	}	
 	
-	private function getAppliedFilters()
+	public function getAppliedFilters()
 	{
 		if ($this->request->getValue('filters'))
 		{
 			$valueFilterIds = array();
 			$selectorFilterIds = array();
 			$filters = explode(',', $this->request->getValue('filters'));
-
 		  	foreach ($filters as $filter)
 			{
 			  	$pair = explode('-', $filter);
@@ -278,11 +287,12 @@ class CategoryController extends FrontendController
 				$c = new INCond(new ARFieldHandle('SpecFieldValue', 'ID'), $selectorFilterIds);
 				$f->setCondition($c);
 				$filters = ActiveRecordModel::getRecordSet('SpecFieldValue', $f, array('SpecField', 'Category'));
-				foreach ($filters as $filter)
+                foreach ($filters as $filter)
 				{
 					$this->filters[] = new SelectorFilter($filter);
 				}				
-			}			
+
+            }			
 		}		
 	}
 }

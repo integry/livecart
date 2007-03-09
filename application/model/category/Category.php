@@ -106,13 +106,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 	public function getProductFilter(ARSelectFilter $filter)
 	{
-/*
-		// load product specification
-		$specFields = $this->getSpecificationFieldSet(self::INCLUDE_PARENT);	  
-					
-//		$filter->joinTable('ProductPrice', 'Product', 'productID AND pricetable_EUR.currencyID = "EUR"', 'ID', 'pricetable_EUR');				  	
-//	  	$filter->addField('price', 'pricetable_EUR', 'price_EUR');
-*/
+        $filter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), 1));
 		return $filter;
 	}
 

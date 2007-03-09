@@ -8,7 +8,9 @@ ClassLoader::import('application.model.product.Product');
  * @package application.controller
  */
 class ProductController extends FrontendController
-{
+{  	
+    public $filters = array();
+  	
 	public function index()
 	{
         $product = Product::getInstanceByID($this->request->getValue('id'), Product::LOAD_DATA);    	
@@ -26,6 +28,18 @@ class ProductController extends FrontendController
 			$this->addBreadCrumb($nodeArray['name_lang'], $url);
 		}
         
+		// add filters to breadcrumb
+		CategoryController::getAppliedFilters();
+
+		$params = array('data' => $nodeArray, 'filters' => array());
+		foreach ($this->filters as $filter)
+		{
+			$f = $filter->toArray();
+			$params['filters'][] = $f;
+			$url = smarty_function_categoryUrl($params, false);
+			$this->addBreadCrumb($f['name_lang'], $url);
+		}
+
         $productArray = $product->toArray();
         
         // add product title to breacrumb

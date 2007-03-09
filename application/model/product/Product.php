@@ -66,9 +66,6 @@ class Product extends MultilingualObject
 	{
 		ActiveRecordModel::beginTransaction();
 
-		$this->dateCreated->set('NOW()');
-		$this->dateUpdated->set('NOW()');
-
 		try
 		{
 			parent::insert();
@@ -89,7 +86,13 @@ class Product extends MultilingualObject
 				$categoryNode->save();
 			}
 
-			ActiveRecordModel::commit();
+    		$update = new ARUpdateFilter();
+    		$update->addModifier('dateUpdated', new ARExpressionHandle('NOW()'));
+    		$update->addModifier('dateCreated', new ARExpressionHandle('NOW()'));
+    		$update->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'ID'), $this->getID()));
+    		ActiveRecordModel::updateRecordSet(__CLASS__, $update);
+            
+            ActiveRecordModel::commit();
 		}
 		catch (Exception $e)
 		{
@@ -105,8 +108,6 @@ class Product extends MultilingualObject
 	protected function update()
 	{
 		ActiveRecordModel::beginTransaction();
-
-		$this->dateUpdated->set('NOW()');
 
 		try
 		{
@@ -135,6 +136,11 @@ class Product extends MultilingualObject
 				}
 			}
 
+    		$update = new ARUpdateFilter();
+    		$update->addModifier('dateUpdated', new ARExpressionHandle('NOW()'));
+    		$update->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'ID'), $this->getID()));
+    		ActiveRecordModel::updateRecordSet(__CLASS__, $update);
+
 			ActiveRecordModel::commit();
 		}
 		catch (Exception $e)
@@ -142,6 +148,7 @@ class Product extends MultilingualObject
 			ActiveRecordModel::rollback();
 			throw $e;
 		}
+
 	}
 
 	public function save()

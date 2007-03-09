@@ -1,11 +1,11 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v4.1.3                     #
+# Script generated with: DeZign for Databases v4.1.2                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2007-01-26 12:20                                #
+# Created on:            2007-03-09 12:35                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -33,8 +33,6 @@ ALTER TABLE SpecFieldValue DROP FOREIGN KEY SpecField_SpecFieldValue;
 
 ALTER TABLE Filter DROP FOREIGN KEY FilterGroup_Filter;
 
-ALTER TABLE Filter DROP FOREIGN KEY SpecFieldValue_Filter;
-
 ALTER TABLE FilterGroup DROP FOREIGN KEY SpecField_FilterGroup;
 
 ALTER TABLE RelatedProduct DROP FOREIGN KEY Product_RelatedProduct_;
@@ -49,8 +47,6 @@ ALTER TABLE ProductImage DROP FOREIGN KEY Product_ProductImage;
 
 ALTER TABLE ProductFile DROP FOREIGN KEY Product_ProductFile;
 
-ALTER TABLE ProductFile DROP FOREIGN KEY FileType_ProductFile;
-
 ALTER TABLE Discount DROP FOREIGN KEY Product_Discount;
 
 ALTER TABLE CategoryImage DROP FOREIGN KEY Category_CategoryImage;
@@ -62,10 +58,6 @@ ALTER TABLE SpecificationNumericValue DROP FOREIGN KEY SpecField_SpecificationNu
 ALTER TABLE SpecificationStringValue DROP FOREIGN KEY Product_SpecificationStringValue;
 
 ALTER TABLE SpecificationStringValue DROP FOREIGN KEY SpecField_SpecificationStringValue;
-
-ALTER TABLE SpecificationDateValue DROP FOREIGN KEY Product_SpecificationDateValue;
-
-ALTER TABLE SpecificationDateValue DROP FOREIGN KEY SpecField_SpecificationDateValue;
 
 # ---------------------------------------------------------------------- #
 # Drop table "Product"                                                   #
@@ -85,9 +77,13 @@ ALTER TABLE Product ALTER COLUMN voteCount DROP DEFAULT;
 
 ALTER TABLE Product ALTER COLUMN hits DROP DEFAULT;
 
-ALTER TABLE Product ALTER COLUMN unitsType DROP DEFAULT;
-
 ALTER TABLE Product DROP PRIMARY KEY;
+
+# Drop indexes #
+
+DROP INDEX IDX_Product_1 ON Product;
+
+DROP INDEX IDX_Product_2 ON Product;
 
 # Drop table #
 
@@ -105,9 +101,11 @@ ALTER TABLE Category ALTER COLUMN totalProductCount DROP DEFAULT;
 
 ALTER TABLE Category ALTER COLUMN isEnabled DROP DEFAULT;
 
-ALTER TABLE Category ALTER COLUMN position DROP DEFAULT;
-
 ALTER TABLE Category DROP PRIMARY KEY;
+
+# Drop indexes #
+
+DROP INDEX IDX_Category_1 ON Category;
 
 # Drop table #
 
@@ -137,6 +135,12 @@ DROP TABLE Language;
 
 ALTER TABLE SpecificationItem DROP PRIMARY KEY;
 
+# Drop indexes #
+
+DROP INDEX IDX_Specification_1 ON SpecificationItem;
+
+DROP INDEX IDX_Specification_2 ON SpecificationItem;
+
 # Drop table #
 
 DROP TABLE SpecificationItem;
@@ -155,6 +159,10 @@ ALTER TABLE SpecField ALTER COLUMN position DROP DEFAULT;
 
 ALTER TABLE SpecField DROP PRIMARY KEY;
 
+# Drop indexes #
+
+DROP INDEX IDX_SpecField_1 ON SpecField;
+
 # Drop table #
 
 DROP TABLE SpecField;
@@ -168,6 +176,10 @@ DROP TABLE SpecField;
 ALTER TABLE SpecFieldValue ALTER COLUMN position DROP DEFAULT;
 
 ALTER TABLE SpecFieldValue DROP PRIMARY KEY;
+
+# Drop indexes #
+
+DROP INDEX IDX_SpecFieldValue_1 ON SpecFieldValue;
 
 # Drop table #
 
@@ -204,6 +216,8 @@ DROP TABLE FilterGroup;
 # ---------------------------------------------------------------------- #
 
 # Drop constraints #
+
+ALTER TABLE RelatedProduct ALTER COLUMN position DROP DEFAULT;
 
 ALTER TABLE RelatedProduct DROP PRIMARY KEY;
 
@@ -273,23 +287,13 @@ DROP TABLE ProductImage;
 
 # Drop constraints #
 
+ALTER TABLE ProductFile ALTER COLUMN position DROP DEFAULT;
+
 ALTER TABLE ProductFile DROP PRIMARY KEY;
 
 # Drop table #
 
 DROP TABLE ProductFile;
-
-# ---------------------------------------------------------------------- #
-# Drop table "FileType"                                                  #
-# ---------------------------------------------------------------------- #
-
-# Drop constraints #
-
-ALTER TABLE FileType DROP PRIMARY KEY;
-
-# Drop table #
-
-DROP TABLE FileType;
 
 # ---------------------------------------------------------------------- #
 # Drop table "Discount"                                                  #
@@ -325,6 +329,12 @@ DROP TABLE CategoryImage;
 
 ALTER TABLE SpecificationNumericValue DROP PRIMARY KEY;
 
+# Drop indexes #
+
+DROP INDEX IDX_SpecificationNumericValue_1 ON SpecificationNumericValue;
+
+DROP INDEX IDX_SpecificationNumericValue_2 ON SpecificationNumericValue;
+
 # Drop table #
 
 DROP TABLE SpecificationNumericValue;
@@ -337,18 +347,10 @@ DROP TABLE SpecificationNumericValue;
 
 ALTER TABLE SpecificationStringValue DROP PRIMARY KEY;
 
+# Drop indexes #
+
+DROP INDEX IDX_SpecificationStringValue_1 ON SpecificationStringValue;
+
 # Drop table #
 
 DROP TABLE SpecificationStringValue;
-
-# ---------------------------------------------------------------------- #
-# Drop table "SpecificationDateValue"                                    #
-# ---------------------------------------------------------------------- #
-
-# Drop constraints #
-
-ALTER TABLE SpecificationDateValue DROP PRIMARY KEY;
-
-# Drop table #
-
-DROP TABLE SpecificationDateValue;

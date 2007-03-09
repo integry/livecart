@@ -1,11 +1,11 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v4.1.3                     #
+# Script generated with: DeZign for Databases v4.1.2                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2007-01-26 12:20                                #
+# Created on:            2007-03-09 12:35                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -22,28 +22,29 @@ CREATE TABLE Product (
     categoryID INTEGER UNSIGNED NOT NULL,
     manufacturerID INTEGER UNSIGNED,
     defaultImageID INTEGER UNSIGNED,
+    isEnabled BOOL DEFAULT 1 COMMENT '0- not available 1- available 2- disabled (not visble)',
+    sku VARCHAR(20),
     name TEXT,
     shortDescription TEXT,
     longDescription TEXT,
-    sku VARCHAR(20),
+    keywords TEXT,
     dateCreated TIMESTAMP,
     dateUpdated TIMESTAMP,
-    isEnabled BOOL DEFAULT 1 COMMENT '0- not available 1- available 2- disabled (not visble)',
     URL TINYTEXT,
+    handle VARCHAR(40),
     isBestSeller BOOL DEFAULT 0,
     type TINYINT UNSIGNED DEFAULT 0 COMMENT '1 - intangible 0 - tangible',
     voteSum INTEGER UNSIGNED DEFAULT 0,
     voteCount INTEGER UNSIGNED DEFAULT 0,
     hits INTEGER UNSIGNED DEFAULT 0 COMMENT 'Number of times product has been viewed by customers',
-    shippingHeight NUMERIC(5,2),
-    shippingWidth NUMERIC(5,2),
-    shippingLength NUMERIC(5,2),
-    shippingWeight NUMERIC(8,3),
-    minimumQuantity INTEGER,
+    minimumQuantity FLOAT,
     shippingSurchargeAmount NUMERIC(12,2),
     isSeparateShipment BOOL,
     isFreeShipping BOOL,
-    unitsType TINYINT NOT NULL DEFAULT 0 COMMENT '0- metric 1- english',
+    isBackOrderable BOOL,
+    shippingWeight NUMERIC(8,3),
+    stockCount FLOAT,
+    reservedCount FLOAT,
     CONSTRAINT PK_Product PRIMARY KEY (ID)
 );
 
@@ -65,7 +66,6 @@ CREATE TABLE Category (
     totalProductCount INTEGER DEFAULT 0,
     isEnabled BOOL DEFAULT 1,
     handle VARCHAR(40),
-    position INTEGER UNSIGNED DEFAULT 0,
     lft INTEGER,
     rgt INTEGER,
     CONSTRAINT PK_Category PRIMARY KEY (ID)
@@ -116,6 +116,10 @@ CREATE TABLE SpecField (
     handle VARCHAR(40),
     isMultiValue BOOL,
     isRequired BOOL,
+    isDisplayed BOOL,
+    isDisplayedInList BOOL,
+    valuePrefix TEXT,
+    valueSuffix TEXT,
     CONSTRAINT PK_SpecField PRIMARY KEY (ID)
 ) COMMENT = 'Field data type. Available types: 1. text field 2. drop down list (select one item from a list) 3. select multiple items from a list';
 
@@ -142,7 +146,6 @@ CREATE INDEX IDX_SpecFieldValue_1 ON SpecFieldValue (specFieldID);
 CREATE TABLE Filter (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     filterGroupID INTEGER UNSIGNED,
-    specFieldValueID INTEGER UNSIGNED,
     name TEXT,
     position INTEGER,
     type INTEGER,
@@ -150,7 +153,6 @@ CREATE TABLE Filter (
     rangeEnd FLOAT,
     rangeDateStart DATE,
     rangeDateEnd DATE,
-    handle VARCHAR(40),
     CONSTRAINT PK_Filter PRIMARY KEY (ID)
 );
 
@@ -173,8 +175,10 @@ CREATE TABLE FilterGroup (
 
 CREATE TABLE RelatedProduct (
     ProductID INTEGER UNSIGNED NOT NULL,
+    relatedProductGroupID INTEGER NOT NULL,
     relatedProductID INTEGER UNSIGNED NOT NULL,
-    CONSTRAINT PK_RelatedProduct PRIMARY KEY (ProductID, relatedProductID)
+    position INTEGER UNSIGNED DEFAULT 0,
+    CONSTRAINT PK_RelatedProduct PRIMARY KEY (ProductID, relatedProductGroupID, relatedProductID)
 );
 
 # ---------------------------------------------------------------------- #
@@ -231,25 +235,14 @@ CREATE TABLE ProductImage (
 CREATE TABLE ProductFile (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     productID INTEGER UNSIGNED,
-    fileTypeID INTEGER UNSIGNED,
     fileSize INTEGER,
     fileContents BLOB,
     fileName VARCHAR(255),
+    name TEXT,
+    description TEXT,
+    position INTEGER UNSIGNED DEFAULT 0,
     CONSTRAINT PK_ProductFile PRIMARY KEY (ID)
 );
-
-# ---------------------------------------------------------------------- #
-# Add table "FileType"                                                   #
-# ---------------------------------------------------------------------- #
-
-CREATE TABLE FileType (
-    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'File extension',
-    extension CHAR(4),
-    name VARCHAR(60),
-    contentType VARCHAR(60),
-    iconFileName VARCHAR(40),
-    CONSTRAINT PK_FileType PRIMARY KEY (ID)
-) COMMENT = 'File extension';
 
 # ---------------------------------------------------------------------- #
 # Add table "Discount"                                                   #
@@ -305,21 +298,6 @@ CREATE TABLE SpecificationStringValue (
 CREATE INDEX IDX_SpecificationStringValue_1 ON SpecificationStringValue (specFieldID,productID);
 
 # ---------------------------------------------------------------------- #
-# Add table "SpecificationDateValue"                                     #
-# ---------------------------------------------------------------------- #
-
-CREATE TABLE SpecificationDateValue (
-    productID INTEGER UNSIGNED NOT NULL,
-    specFieldID INTEGER UNSIGNED NOT NULL,
-    value DATE,
-    CONSTRAINT PK_SpecificationDateValue PRIMARY KEY (productID, specFieldID)
-);
-
-CREATE INDEX IDX_SpecificationDateValue_1 ON SpecificationDateValue (value,specFieldID);
-
-CREATE INDEX IDX_SpecificationDateValue_2 ON SpecificationDateValue (specFieldID,productID);
-
-# ---------------------------------------------------------------------- #
 # Foreign key constraints                                                #
 # ---------------------------------------------------------------------- #
 
@@ -353,9 +331,6 @@ ALTER TABLE SpecFieldValue ADD CONSTRAINT SpecField_SpecFieldValue
 ALTER TABLE Filter ADD CONSTRAINT FilterGroup_Filter 
     FOREIGN KEY (filterGroupID) REFERENCES FilterGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE Filter ADD CONSTRAINT SpecFieldValue_Filter 
-    FOREIGN KEY (specFieldValueID) REFERENCES SpecFieldValue (ID) ON DELETE CASCADE ON UPDATE CASCADE;
-
 ALTER TABLE FilterGroup ADD CONSTRAINT SpecField_FilterGroup 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -377,9 +352,6 @@ ALTER TABLE ProductImage ADD CONSTRAINT Product_ProductImage
 ALTER TABLE ProductFile ADD CONSTRAINT Product_ProductFile 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE ProductFile ADD CONSTRAINT FileType_ProductFile 
-    FOREIGN KEY (fileTypeID) REFERENCES FileType (ID) ON DELETE RESTRICT ON UPDATE CASCADE;
-
 ALTER TABLE Discount ADD CONSTRAINT Product_Discount 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -396,10 +368,4 @@ ALTER TABLE SpecificationStringValue ADD CONSTRAINT Product_SpecificationStringV
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE SpecificationStringValue ADD CONSTRAINT SpecField_SpecificationStringValue 
-    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE SpecificationDateValue ADD CONSTRAINT Product_SpecificationDateValue 
-    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE SpecificationDateValue ADD CONSTRAINT SpecField_SpecificationDateValue 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;

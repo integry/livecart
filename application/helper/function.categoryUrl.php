@@ -76,7 +76,11 @@ function smarty_function_categoryUrl($params, $smarty)
 
 function filterHandle($filter)
 {
-	return $filter['FilterGroup']['SpecField']['handle'] . '.' . $filter['handle'] . '-' . $filter['ID'];	  
+	if (is_object($filter))
+	{
+        $filter = $filter->toArray();
+    }
+    return $filter['FilterGroup']['SpecField']['handle'] . '.' . $filter['handle'] . '-' . $filter['ID'];	  
 }
 
 ?>
