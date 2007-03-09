@@ -5,6 +5,7 @@ ClassLoader::import('application.model.category.Category');
 ClassLoader::import('application.model.filter.Filter');
 ClassLoader::import('application.model.filter.SelectorFilter');
 ClassLoader::import('application.model.filter.ManufacturerFilter');
+ClassLoader::import('application.model.filter.PriceFilter');
 ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.model.product.ProductFilter');
 ClassLoader::import('application.model.product.ProductCount');
@@ -250,10 +251,24 @@ class CategoryController extends FrontendController
         
         if (count($manFilters) > 1)
         {
-            $manGroup = array('filters' => $manFilters);            
-    	 	$response->setValue('manGroup', $manGroup);
+    	 	$response->setValue('manGroup', array('filters' => $manFilters));
         }
         
+        // filter by prices
+        $priceFilters = array();
+        foreach ($count->getCountByPrices() as $filterId => $count)
+        {
+            $pFilter = new PriceFilter($filterId);    
+            $priceFilter = $pFilter->toArray();
+            $priceFilter['count'] = $count;
+            $priceFilters[] = $priceFilter;
+        }
+        
+        if (count($priceFilters) > 1)
+        {
+    	 	$response->setValue('priceGroup', array('filters' => $priceFilters));
+        }
+
 	 	$response->setValue('category', $currentCategory->toArray());
 	 	$response->setValue('groups', $filterGroups);
 	 	
@@ -267,6 +282,7 @@ class CategoryController extends FrontendController
 			$valueFilterIds = array();
 			$selectorFilterIds = array();
 			$manufacturerFilterIds = array();
+			$priceFilterIds = array();
 			
 			$filters = explode(',', $this->request->getValue('filters'));
 		  	foreach ($filters as $filter)
@@ -284,6 +300,10 @@ class CategoryController extends FrontendController
 				else if (substr($pair[1], 0, 1) == 'm')
 				{
 					$manufacturerFilterIds[] = substr($pair[1], 1);
+				}
+				else if (substr($pair[1], 0, 1) == 'p')
+				{
+					$priceFilterIds[] = substr($pair[1], 1);
 				}
 				else
 				{
@@ -325,6 +345,14 @@ class CategoryController extends FrontendController
                 foreach ($manufacturers as $manufacturer)
 				{
 					$this->filters[] = new ManufacturerFilter($manufacturer['ID'], $manufacturer['name']);
+				}                
+            }		
+
+            if ($priceFilterIds)
+            {
+                foreach ($priceFilterIds as $filterId)
+				{
+					$this->filters[] = new PriceFilter($filterId);
 				}                
             }		
 		}		

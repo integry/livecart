@@ -31,6 +31,8 @@ class SettingsController extends StoreManagementController
 	public function edit()
 	{
 		$c = Config::getInstance();
+		$c->updateSettings();
+		
         $defLang = Store::getInstance()->getDefaultLanguageCode();
 		$languages = Store::getInstance()->getLanguageArray(Store::INCLUDE_DEFAULT);
 			

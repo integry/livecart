@@ -31,7 +31,7 @@ class ProductCount
 			$cnt = $this->getCountByFilterSet($set); 
 			$ret = array_merge($ret, $cnt);
 		}
-		
+
 		return $ret;
 	}
 	
@@ -49,7 +49,35 @@ class ProductCount
 	
 	public function getCountByPrices()
 	{
-	  
+        // get price filters
+        $c = Config::getInstance();
+        
+        $k = 0;        
+        $filters = array();
+        while ($c->isValueSet('PRICE_FILTER_NAME_' . ++$k))
+        {
+            $filters[$k] = array($c->getValue('PRICE_FILTER_FROM_' . $k), $c->getValue('PRICE_FILTER_TO_' . $k));
+        }          
+        
+		$selectFilter = $this->productFilter->getSelectFilter();		
+		$selectFilter->removeFieldList();
+		$selectFilter->setLimit(0);
+    
+        $query = new ARSelectQueryBuilder();
+        $query->includeTable('Product');
+        $query->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . Store::getInstance()->getDefaultCurrencyCode() . '")', 'ID');
+
+        foreach ($filters as $key => $filter)
+        {
+            $query->addField('SUM(ProductPrice.price >= ' . $filter[0] . ' AND ProductPrice.price <= ' . $filter[1] . ')', null, $key);  
+        }
+                
+        $query->setFilter($selectFilter);       
+ 
+        $data = ActiveRecordModel::getDataBySQL($query->createString());
+        $data = array_diff($data[0], array(0));
+        
+        return $data;
 	}
 	
 	public function getCountByManufacturers()

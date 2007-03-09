@@ -45,6 +45,18 @@
 			</ul>
 		{/if}
 
+		{if $priceGroup}		
+			<div class="group">{t By Price}</div>
+			<ul>
+				{foreach from=$priceGroup.filters item="filter"}
+					<li> 
+						<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a> 
+						<span class="count">({$filter.count})</span>
+					</li>
+				{/foreach}									
+			</ul>
+		{/if}
+
 	</div>
 </div>
 {/if}

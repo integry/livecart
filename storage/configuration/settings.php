@@ -51,4 +51,94 @@
   'DEF_STATE' => 'NY',
   'DEF_ZIP' => '10001',
   'DEF_CITY' => 'New York',
+  'PRICE_FILTER_NAME_1' => 
+  array (
+    'en' => '0 to 24',
+    'lt' => '',
+    'lv' => '',
+    'ab' => '',
+  ),
+  'PRICE_FILTER_FROM_1' => '0',
+  'PRICE_FILTER_TO_1' => '24',
+  'PRICE_FILTER_NAME_2' => 
+  array (
+    'en' => '25 to 49',
+    'lt' => '',
+    'lv' => '',
+    'ab' => '',
+  ),
+  'PRICE_FILTER_FROM_2' => '25',
+  'PRICE_FILTER_TO_2' => '49',
+  'PRICE_FILTER_NAME_3' => 
+  array (
+    'en' => '50 to 99',
+    'lt' => '',
+    'lv' => '',
+    'ab' => '',
+  ),
+  'PRICE_FILTER_FROM_3' => '50',
+  'PRICE_FILTER_TO_3' => '99',
+  'PRICE_FILTER_NAME_4' => 
+  array (
+    'en' => '100 to 199',
+    'lt' => '',
+    'lv' => '',
+    'ab' => '',
+  ),
+  'PRICE_FILTER_FROM_4' => '100',
+  'PRICE_FILTER_TO_4' => '199',
+  'PRICE_FILTER_NAME_5' => 
+  array (
+    'en' => '200 to 499',
+    'lt' => '',
+    'lv' => '',
+    'ab' => '',
+  ),
+  'PRICE_FILTER_FROM_5' => '200',
+  'PRICE_FILTER_TO_5' => '499',
+  'PRICE_FILTER_NAME_6' => 
+  array (
+    'en' => '500 to 999',
+    'lt' => '',
+    'lv' => '',
+    'ab' => '',
+  ),
+  'PRICE_FILTER_FROM_6' => '500',
+  'PRICE_FILTER_TO_6' => '999',
+  'PRICE_FILTER_NAME_7' => 
+  array (
+    'en' => '1000 to 1999',
+    'lt' => '',
+    'lv' => '',
+    'ab' => '',
+  ),
+  'PRICE_FILTER_FROM_7' => '1000',
+  'PRICE_FILTER_TO_7' => '1999',
+  'PRICE_FILTER_NAME_8' => 
+  array (
+    'en' => '2000 to 4999',
+    'lt' => '',
+    'lv' => '',
+    'ab' => '',
+  ),
+  'PRICE_FILTER_FROM_8' => '2000',
+  'PRICE_FILTER_TO_8' => '4999',
+  'PRICE_FILTER_NAME_9' => 
+  array (
+    'en' => '5000 to 9999',
+    'lt' => '',
+    'lv' => '',
+    'ab' => '',
+  ),
+  'PRICE_FILTER_FROM_9' => '5000',
+  'PRICE_FILTER_TO_9' => '9999',
+  'PRICE_FILTER_NAME_10' => 
+  array (
+    'en' => 'More than 10000',
+    'lt' => 'Labai brangiai',
+    'lv' => '',
+    'ab' => '',
+  ),
+  'PRICE_FILTER_FROM_10' => '10000',
+  'PRICE_FILTER_TO_10' => '10000000000',
 ); ?>

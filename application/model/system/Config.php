@@ -36,6 +36,16 @@ class Config
 		return $instance;
 	}
 
+	public function isValueSet($key)
+	{
+		if (!isset($this->values[$key]))
+		{
+		  	$this->updateSettings();
+		}
+        
+        return isset($this->values[$key]);
+    }
+	
 	public function getValue($key)
 	{
 		if (!isset($this->values[$key]))
@@ -54,7 +64,7 @@ class Config
                 }
                 else
                 {
-                    return $this->values[Store::getInstance()->getDefaultLanguageCode()];
+                    return $this->values[$key][Store::getInstance()->getDefaultLanguageCode()];
                 }                
             }
             else
