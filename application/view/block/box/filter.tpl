@@ -21,10 +21,10 @@
 	</div>
 
 	<div class="content">
-		{foreach from=$groups item=group}		
+		{foreach from=$groups item="group"}		
 			<div class="group">{$group.name_lang}</div>
 			<ul>
-				{foreach from=$group.filters item=filter}
+				{foreach from=$group.filters item="filter"}
 					<li> 
 						<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a> 
 						<span class="count">({$filter.count})</span>
@@ -32,6 +32,19 @@
 				{/foreach}									
 			</ul>
 		{/foreach}
+
+		{if $manGroup}		
+			<div class="group">{t By Brand}</div>
+			<ul>
+				{foreach from=$manGroup.filters item="filter"}
+					<li> 
+						<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a> 
+						<span class="count">({$filter.count})</span>
+					</li>
+				{/foreach}									
+			</ul>
+		{/if}
+
 	</div>
 </div>
 {/if}

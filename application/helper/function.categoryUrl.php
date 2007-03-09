@@ -80,7 +80,7 @@ function filterHandle($filter)
 	{
         $filter = $filter->toArray();
     }
-    return $filter['FilterGroup']['SpecField']['handle'] . '.' . $filter['handle'] . '-' . $filter['ID'];	  
+    return (isset($filter['FilterGroup']) ? $filter['FilterGroup']['SpecField']['handle'] . '.' : '') . $filter['handle'] . '-' . $filter['ID'];	  
 }
 
 ?>

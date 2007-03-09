@@ -54,7 +54,25 @@ class ProductCount
 	
 	public function getCountByManufacturers()
 	{
-	  
+		$selectFilter = $this->productFilter->getSelectFilter();		
+		$selectFilter->removeFieldList();
+		$selectFilter->setLimit(0);
+		$selectFilter->setOrder(new ARExpressionHandle('cnt'), 'DESC');
+        $selectFilter->setGrouping(new ARFieldHandle('Product', 'manufacturerID'));
+        $selectFilter->mergeHavingCondition(new MoreThanCond(new ARExpressionHandle('cnt'), 0));        
+        $selectFilter->mergeHavingCondition(new NotEqualsCond(new ARFieldHandle('Manufacturer', 'name'), ''));        
+                
+        $query = new ARSelectQueryBuilder();
+        $query->includeTable('Product');
+        $query->joinTable('Manufacturer', 'Product', 'ID', 'manufacturerID');
+        $query->addField('COUNT(manufacturerID)', null, 'cnt');
+        $query->addField('ID', 'Manufacturer');
+        $query->addField('name', 'Manufacturer');
+        $query->setFilter($selectFilter);       
+        
+        $data = ActiveRecordModel::getDataBySQL($query->createString());
+        
+        return $data;
 	}
 
 	public function getCountBySubCategories()

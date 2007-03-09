@@ -129,7 +129,8 @@ abstract class FrontendController extends BaseController
 			$rootFilters = array();
 			foreach ($this->filters as $filter)
 			{
-				if (Category::ROOT_ID == $filter->getSpecField()->category->get()->getID())
+				if (!($filter instanceof SpecificationFilterInterface) || 
+                    Category::ROOT_ID == $filter->getSpecField()->category->get()->getID())
 			  	{
 					$rootFilters[$filter->getID()] = true;
 				}
@@ -154,7 +155,8 @@ abstract class FrontendController extends BaseController
 		  	$categoryFilters = $parentFilterIds;
 			foreach ($this->filters as $filter)
 		  	{
-			    if ($filter->getSpecField()->category->get()->getID() == $category['ID'])
+			    if (!($filter instanceof SpecificationFilterInterface) || 
+                    $filter->getSpecField()->category->get()->getID() == $category['ID'])
 			    {
 					$categoryFilters[$filter->getID()] = true;
 				}
