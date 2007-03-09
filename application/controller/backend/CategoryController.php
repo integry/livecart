@@ -132,7 +132,7 @@ class CategoryController extends StoreManagementController
 	{
 		$status = false;
 		
-		Category::deleteByID((int)$this->request->getValue("id"));
+		Category::getInstanceByID((int)$this->request->getValue("id"))->delete();
 		
 		return new JSONResponse($status);
 	}
