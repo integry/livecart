@@ -58,7 +58,7 @@ can create variuos types of attributes. Below you'll find a couple of practical 
 		<li>In the attributes section click <strong>Add new attributes</strong>:</li>
 		<img src="image/doc/categories/attributes/add_new_attribute_reference.bmp">
 		<p><i>Add new attribute</i> form appears. Fill out the following fields as described below:</p>
-		<img src="image/doc/categories/attributes/add_attribute_form.bmp">
+		<img src="image/doc/categories/attributes/add_attribute_form2.bmp">
 		<li><strong>Type</strong> - because mobile carrier is a simple text and there is (probably) a finite number of carriers click on the type drop-down menu and 
 		select <i>Text selector</i> type from the list. Your chosen type is suitable for creating a predefined list of values which will be 
 		displayed as a selection option.</li>
@@ -72,6 +72,7 @@ can create variuos types of attributes. Below you'll find a couple of practical 
 		<li>Prefix and Suffix - we leave these fields empty because carriers don't have any of them.</li> 
 		<li>In the description field we enter a brief description to describe the term "Carrier".</li> 
 		<hr \><br \>
+		<h2>Temp</h2>
 		<li>Select a category in the category tree and click <strong>Attributes</strong> tab.</li>
 		<img src="image/doc/categories/attributes/attributes_tab.bmp">
 		<li>In the attributes section click <strong>Add new attributes</strong>:</li>

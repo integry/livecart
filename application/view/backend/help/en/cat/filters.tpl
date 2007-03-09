@@ -51,18 +51,19 @@ to define a range for filter's values.</p>
 	<li>On the Filters page click <strong>Add new filter</strong>.</li>
 	<img src="image/doc/categories/filters/add_new_filter.bmp">
 	<p>Add new filter form appears. </p>
-
+	<img src="image/doc/categories/filters/main.bmp">
 	<li>In the <strong>Main</strong> section you have to associate filter with an attribute first. Click <strong>Associate attribute</strong> and select carrier attribute 
 	from the list.</li>
-	<img src="image/doc/categories/filters/main.bmp">
 	<li>The <strong>name</strong> of the filter appears automatically so you can leave it as it is.</li>
 	<li>Also you can enter filter's name in <strong>other languages</strong> supported by your system. Click on the language to supply Filter's name.</li>
-	<br \>
-	<li>To define filter's rule or rules click <strong>Criteria</strong> tab next to the Main tab.</li>
-	<li>In the Criteria section you can generate filter's rules automatically or add them one by one. To generate rules click 
-	<strong>Generate rules</strong>.</li>
-	<img src="image/doc/categories/filters/filters_.bmp">
-	<li>Generated rules appear below representing all associated attribute's values</li>
+	<img src="image/doc/categories/filters/filters_name_international.bmp">
+	<li>Click <strong>Save</strong></li>
+	<p class="note"><strong>Note</strong>: Because carrier attribute has already pre-set values, filtering 
+	rules are generated automatically.</p>
+	</ul>
+	<ins>Preview filter function would be a great help</ins>
+	
+<!--<li>Generated rules appear below representing all associated attribute's values</li>
 	<img src="image/doc/categories/filters/filters_generated.bmp">
 	<li>If any of the generated rules doesn't seem to be correct you can <strong>edit</strong> them individually. There are three rule's parameters: </li>
 	<ul>
@@ -76,12 +77,11 @@ to define a range for filter's values.</p>
 	<img src="image/doc/categories/filters/rearrange.bmp">
 	<li>When you are done, click <strong>Save</strong>.</li>
 	<img src="image/doc/categories/filters/filters_save.bmp">
-</ul>
+-->
 
 <h4 id="capacity">Creating <i>Battery Capacity</i> filter</h4>
 <p align="right"><a href="{self}#top"><small>Top</small></a></p>
-<p>(Creating Battery Capacity filter is quite different from the previuos example because here you (will) have to create rules manually and set range for 
-each individually). Complete the following steps to create the battery capacity filter:</p>
+<p>Complete the following steps to create the battery capacity filter:</p>
 
 <ol>
 	<li>Go to Filters section and open New Filter form <a href="{self}#carrier"><small>(remind me how)</small></a></li>
@@ -91,21 +91,15 @@ each individually). Complete the following steps to create the battery capacity 
 	<li>Associated attribute - click on the attribute list and select Battery Capacity.</li>
 	<li>Other Languages - to enter filter's names in other languages click on the language to view additional fields.</li>
 	<br \>
-	<li>Go to Criteria section by clicking <strong>Criteria</strong> tab.</li>
-	<img src="image/doc/categories/filters/filters.bmp">
-	<p>Filter's criteria section opens.</p>
-	<li>As "Battery Capacity" attribute doesn't have any values set initially you have to define ranges that will specify filtering criteria.
+	<li>As "Battery Capacity" attribute doesn't have any values set initially, you have to define ranges that will specify filtering criteria.
 	Let's say that battery capacity might range from 200 to 5000 mAh, therefore we create the following rules:</li>
-	<li>Click <strong>Add Criteria/Rule</strong></li>
-	<img src="image/doc/categories/filters/filters_add_hand.bmp">
-	<li>Complete filter's criteria by entering necessary parameters:</li>
 	<img src="image/doc/categories/filters/filter_criteria.bmp">
 	<ul>
 		<li>Name - the name of the criteria represents criteria's details thus we choose "200-500"</li>
-		<li>Set <a href="{self}#explain what is handle (pop-up?)"><small>handle</small></a></a></li>
-		<li>Range - range defines filtering scope of attribute's values. In our case  </li>
+		<li>{glossary}Handle{/glossary}</li>
+		<li>Range - range defines filtering scope of attribute's values. Thus enter "200" and "500" accordingly.</li>
 	</ul>
-	<li>To add another criteria, click Add Criteria for another cirteria to appear.</li>
+	<p>When you start creating the first rule, an empty rule field opens below.</p>	
 	<li>Continue in a similar manner to create a satisfactory list of intervals.</li>
 	<img src="image/doc/categories/filters/criteria_list.bmp">
 	<li>To <strong>edit</strong> any of the criteria's parameters make changes to necessary fields.</li>
@@ -127,13 +121,14 @@ each individually). Complete the following steps to create the battery capacity 
 	<img src="image/doc/categories/filters/date_attribute.bmp">
 	<li>Associate date attribute from the  attribute's list.</li>
 	<li>Name - enter Filter's name or leave the current name / automatic value.</li>
+	<li>Other languages - if you have more than one language in your system, click on a language to enter 
+	"name" in other language.</li>
 	<br \>
-	<li>To set filtering rules click <strong>Add New Rule</strong>.</li>
-	<img src="image/doc/categories/filters/filters_add.bmp">
-	<p>Criteria's form opens.</p>
+	<li>To set filtering rules:</li>
 	<img src="image/doc/categories/filters/date_form.bmp">
 	<ul>
 		<li>Name - enter the name of the period you want to define</li>
+		<li>{glossary}Handle{/glossary}</li>
 		<li>Value / Range - "from" and "to" fields are set automatically, to set / change date click on "calendar" icon next to the appropriate
 		field: </li>
 		<img src="image/doc/categories/filters/date_form_hand.bmp">
@@ -141,7 +136,7 @@ each individually). Complete the following steps to create the battery capacity 
 		<img src="image/doc/categories/filters/calendar.bmp">
 
 	</ul>
-	<li>To add more rules, click <strong>Add new Criteria</strong> and follow the steps as above.</li>
+	<li>Follow the steps as above to create more rules.</li>
 	<li>You can <strong>sort</strong> values to set criterias' arrangement <a href="{self}#carrier"><small>(remind me how)</small></a></li>
 	<li>Click <strong>Save</strong> button to return to filters page.</li>
 	<img src="image/doc/categories/filters/filters_save.bmp">
