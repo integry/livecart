@@ -51,29 +51,27 @@ can create variuos types of attributes. Below you'll find a couple of practical 
 	<a href="{self}#carrier">Carrier</a>, <a href="{self}#features">Phone Features</a> and <a href="{self}#capacity">Batery Capacity</a>.
 
 <h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
-<p>To start creating  an attribute follow these steps:</p>
+<p>To create an attribute follow these steps:</p>
 	<ul>	
-		<li>Select a category in the category tree and click <strong>Attributes</strong> tab. (Notice that created attribute will
-		apply to your chosen category and all of its subcategories).</li>
+		<li>Select a category in the category tree and click <strong>Attributes</strong> tab.</li>
 		<img src="image/doc/categories/attributes/attributes_tab.bmp">
 		<li>In the attributes section click <strong>Add new attributes</strong>:</li>
-		<!-- <img src="image/doc/categories/attributes/add_new_attribute_reference.bmp">-->
+		<img src="image/doc/categories/attributes/add_new_attribute_reference.bmp">
 		<p><i>Add new attribute</i> form appears. Fill out the following fields as described below:</p>
-		<li>Type - because mobile carrier is a simple text and there is (probably) a finite number of carriers click on the type drop-down menu and 
+		<img src="image/doc/categories/attributes/add_attribute_form.bmp">
+		<li><strong>Type</strong> - because mobile carrier is a simple text and there is (probably) a finite number of carriers click on the type drop-down menu and 
 		select <i>Text selector</i> type from the list. Your chosen type is suitable for creating a predefined list of values which will be 
 		displayed as a selection option.</li>
-		<img src="image/doc/categories/attributes/type.bmp">
-		<li>We check <i>Required</i> to make the field mandatory since it is an important feature. </li>
-		<img src="image/doc/categories/attributes/required.bmp">
-		<li><i>Can select multiple values</i> - we leave this checkbox clear to allow assigning only one carrier to each phone</li> 
-		<img src="image/doc/categories/attributes/multiple_values.bmp">
-		<li>Attribute's <i>title</i> represent its function thus we enter a meaningful name - <strong>Carrier</strong>. </li>
-		<img src="image/doc/categories/attributes/title.bmp">
-		<li>Handle - handle is generated automatically. Handle is used to represent the attribute in URL's, so you can change it for 
-		<a href="explanation">SEO</a> purposes, if needed.</li>
-		<img src="image/doc/categories/attributes/handle.bmp">
+		<li>We check <strong>Required</strong> to make the field mandatory since it is an important feature. </li>
+		<li><strong>Can select multiple values</strong> - we leave this checkbox clear to allow assigning only one carrier to each phone</li> 
+		<li><ins>Field displayed in the product's preview info</ins></li>
+		<li><ins>Field displayed in the product's detailed page</ins></li>
+		<li>Attribute's <strong>title</strong> represent its function thus we enter a meaningful name - <strong>Carrier</strong>. </li>
+		<li><strong>Handle</strong> - handle is generated automatically. Handle is used to represent the attribute in URL's, so you can change it for 
+		{glossary}SEO{/glossary} purposes, if needed.</li>
+		<li>Prefix</li> 
+		<li>Sufix</li> 
 		<li>In the description field we enter a brief description to describe the term "Carrier".</li> 
-		<img src="image/doc/categories/attributes/description.bmp">
 		<li>International details - if you need to translate attributes in other languages installed in your system, click on the Language to 
 		expand additional fields (which include Title and Details).</li>
 
