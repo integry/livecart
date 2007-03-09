@@ -117,6 +117,31 @@ class Store
 	}
 
 	/**
+	 * Returns an array represantion of installed languages
+	 *
+	 * @return array
+	 */
+	public function getLanguageSetArray($includeDefaultLanguage = false)
+	{
+        $ret = $this->languageList->toArray();
+        
+        if (!$includeDefaultLanguage)
+        {
+            $defLang = $this->getDefaultLanguageCode();
+            
+            foreach ($ret as $key => $data)
+            {
+                if ($data['ID'] == $defLang)
+                {
+                    unset($ret[$key]);
+                }
+            }
+        }
+        
+        return $ret;
+    }
+
+	/**
 	 * Gets an installed language code array
 	 *
 	 * @return array

@@ -31,16 +31,30 @@ class SettingsController extends StoreManagementController
 	public function edit()
 	{
 		$c = Config::getInstance();
-
+        $defLang = Store::getInstance()->getDefaultLanguageCode();
+		$languages = Store::getInstance()->getLanguageArray(Store::INCLUDE_DEFAULT);
+			
 		$sectionId = $this->request->getValue('id');						
 		$values = $c->getSettingsBySection($sectionId);
 		
 		$form = $this->getForm($values);
+		$multiLingualValues = array();
 		
 		foreach ($values as $key => &$value)
 		{
-			$value['value'] = $c->getValue($key);
-			$form->setValue($key, $value['value']);	
+    		if ($c->isMultiLingual($key))
+    		{
+                foreach ($languages as $lang)
+                {
+                    $form->setValue($key . ($lang != $defLang ? '_' . $lang : ''), $c->getValueByLang($key, $lang));    
+                }                
+
+                $multiLingualValues[$key] = true;
+            }
+            else
+            {
+                $form->setValue($key, $value['value']);	
+    		}
 		}
 				
 		$response = new ActionResponse();
@@ -49,6 +63,8 @@ class SettingsController extends StoreManagementController
 		$response->setValue('values', $values);
 		$response->setValue('id', $sectionId);
 		$response->setValue('layout', $c->getSectionLayout($sectionId));		
+		$response->setValue('multiLingualValues', $multiLingualValues);
+		$response->setValue('languages', Store::getInstance()->getLanguageSetArray());
 		return $response;	
 	}  		  
 
@@ -67,10 +83,24 @@ class SettingsController extends StoreManagementController
 		}
 		else
 		{
-			$c->setAutoSave(false);
+			$languages = Store::getInstance()->getLanguageArray();
+            $defLang = Store::getInstance()->getDefaultLanguageCode();
+                    
+            $c->setAutoSave(false);
 			foreach ($values as $key => $value)
 			{
-				$c->setValue($key, $this->request->getValue($key));		
+				if ($c->isMultiLingual($key))
+				{
+                    $c->setValueByLang($key, $defLang, $this->request->getValue($key));
+                    foreach ($languages as $lang)
+                    {
+                        $c->setValueByLang($key, $lang, $this->request->getValue($key . '_' . $lang));
+                    }
+                }
+                else
+                {
+                    $c->setValue($key, $this->request->getValue($key));		                    
+                }
 			}  	
 			
 			$c->save();

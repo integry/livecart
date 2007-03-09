@@ -45,7 +45,22 @@ class Config
 		
 		if (isset($this->values[$key]))
 		{
-		  	return $this->values[$key];
+		  	if (is_array($this->values[$key]))
+		  	{
+                $lang = Store::getInstance()->getLocaleCode();
+                if (!empty($this->values[$key][$lang]))       
+                {
+                    return $this->values[$key][$lang];
+                }
+                else
+                {
+                    return $this->values[Store::getInstance()->getDefaultLanguageCode()];
+                }                
+            }
+            else
+            {
+                return $this->values[$key];
+            }
 		}
 		else
 		{
@@ -62,6 +77,34 @@ class Config
 			$this->save();
 		}
 	}
+
+	public function setValueByLang($key, $lang, $value)
+	{
+		if (!is_array($this->values[$key]))
+		{
+            $this->values[$key] = array();    
+        }
+        
+        $this->values[$key][$lang] = $value;
+		
+		if ($this->autoSave)
+		{
+			$this->save();
+		}
+	}
+
+	public function getValueByLang($key, $lang)
+	{
+        if (isset($this->values[$key][$lang]))
+        {
+            return $this->values[$key][$lang];
+        }        
+    }
+
+    public function isMultiLingual($key)
+    {
+        return is_array($this->values[$key]);
+    }
 
 	/**
 	 *	Create initial settings cache file or update the cache file with new settings from INI files
@@ -80,7 +123,13 @@ class Config
 			{
 				if (!isset($this->values[$key]))
 				{
-					$this->values[$key] = $value['value'];
+					// check for multi-lingual values
+                    if (substr($value['value'], 0, 1) == '_')
+					{
+                        $value['value'] = array(Store::getInstance()->getDefaultLanguageCode() => substr($value['value'], 1)); 
+                    }
+                    
+                    $this->values[$key] = $value['value'];
 				}	
 			}
 		}
