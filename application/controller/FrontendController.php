@@ -16,6 +16,7 @@ abstract class FrontendController extends BaseController
 	  	$this->setLayout('frontend');
 	  	$this->addBlock('CATEGORY_BOX', 'boxCategory', 'block/box/category');
 	  	$this->addBlock('BREADCRUMB', 'boxBreadCrumb', 'block/box/breadcrumb');
+	  	$this->addBlock('LANGUAGE', 'boxLanguageSelect', 'block/box/language');
 	}
 	
 	protected function addBreadCrumb($title, $url)
@@ -35,7 +36,32 @@ abstract class FrontendController extends BaseController
 
 	protected function boxLanguageSelectBlock()
 	{
-			  	
+        $response = new BlockResponse();			  	
+        $languages = Store::getInstance()->getLanguageList()->toArray();
+        $current = Store::getInstance()->getLocaleCode();
+        
+        $router = Router::getInstance();
+        $returnRoute = $router->getRequestedRoute();
+        
+    	if ('/' == substr($returnRoute, 2, 1))
+    	{
+    	  	$returnRoute = substr($returnRoute, 2);
+    	}
+        
+        foreach ($languages as $key => $lang)
+        {
+            if ($lang['ID'] == $current)
+            {
+                unset($languages[$key]);
+            }   
+            else
+            {
+                $languages[$key]['url'] = $router->createUrlFromRoute($lang['ID'] . $returnRoute);
+            }
+        }
+
+        $response->setValue('languages', $languages);
+        return $response;
 	}
 	
 	protected function boxBreadCrumbBlock()

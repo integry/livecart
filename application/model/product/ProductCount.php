@@ -59,7 +59,8 @@ class ProductCount
             $filters[$k] = array($c->getValue('PRICE_FILTER_FROM_' . $k), $c->getValue('PRICE_FILTER_TO_' . $k));
         }          
         
-		$selectFilter = $this->productFilter->getSelectFilter();		
+		// get product counts
+        $selectFilter = $this->productFilter->getSelectFilter();		
 		$selectFilter->removeFieldList();
 		$selectFilter->setLimit(0);
     
