@@ -182,6 +182,7 @@ Backend.Category = {
         self.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
 
         self.activateCategory(newCategory.ID);
+        Backend.ajaxNav.add('cat_' + newCategory.ID + '#tabMainDetails');
 	},
 
 	/**
