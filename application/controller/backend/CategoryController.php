@@ -146,21 +146,23 @@ class CategoryController extends StoreManagementController
 	    $targetNode = Category::getInstanceByID((int)$this->request->getValue("id"));
 		$parentNode = Category::getInstanceByID((int)$this->request->getValue("parentId"));
 		
-	    $beforeNode = null;
-		if('up_strict' == $this->request->getValue("direction")) $beforeNode = $targetNode->getPrevSibling();
-		if('down_strict'== $this->request->getValue("direction")) 
+		$status = true;
+		try
 		{
-		    $beforeNode = $targetNode->getNextSibling();
-		    $beforeNode = $beforeNode ? $beforeNode->getNextSibling() : null;
+			if($direction = $this->request->getValue("direction", false))
+			{
+			    if(ActiveTreeNode::DIRECTION_LEFT == $direction) $targetNode->moveLeft(false);
+			    if(ActiveTreeNode::DIRECTION_RIGHT == $direction) $targetNode->moveRight(false);
+			}
+			else
+			{
+			    $targetNode->moveTo($parentNode);
+			}
 		}
-		
-		$status = false;
-		try 
-		{
-		    $targetNode->moveTo($parentNode, $beforeNode);
-		    $status = true;
-		} 
-		catch(Exception $e){}
+		catch(Exception $e)
+	    {
+		    $status = false;
+		}
 		
 		return new JSONResponse($status);
 	}

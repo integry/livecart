@@ -158,26 +158,21 @@ Backend.Category = {
 
     moveCategory: function(categoryID, direction)
     {
-        Backend.Category.treeBrowser._reorderDirection = direction;
+        if('up_strict' == direction)
+        {
+            Backend.Category.treeBrowser._reorderDirection = 'left';
+        }
+        else
+        {
+            Backend.Category.treeBrowser._reorderDirection = 'right';
+        }
+        
         Backend.Category.treeBrowser.moveItem(categoryID, direction);
         Backend.Category.treeBrowser._reorderDirection = false;
         
         console.info("move category " + categoryID + " " + direction);
         return;
-        
-        var success = false;
-        new Ajax.Request(Backend.Category.getUrlForNodeReorder(targetId, parentId),
-        {
-			method: 'get', 
-            asynchronous: false,
-			onComplete: function(response) 
-            { 
-                success = eval("(" + response.responseText + ")");   
-            }
-    	});
-        
-        if(!success) alert(Backend.Category.messages._reorder_failed);
-		return success;
+
     },
 
 	afterNewBranchCreated: function(response, self)

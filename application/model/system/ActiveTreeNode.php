@@ -82,9 +82,15 @@ class ActiveTreeNode extends ActiveRecordModel
      */
     const ROOT_ID = 1;
 
-    const DIRECTION_PREV = 'previous';
+     /**
+     * Shows direction of the move. Move to position before previous sibling
+     */
+    const DIRECTION_LEFT = 'left';
     
-    const DIRECTION_NEXT = 'next';
+    /**
+     * Shows direction of the move. Move to position before second next sibling
+     */
+    const DIRECTION_RIGHT = 'right';
     
     /**
      * Indicator wheather child nodes are loaded or not for this node
@@ -92,6 +98,11 @@ class ActiveTreeNode extends ActiveRecordModel
      * @var bool
      */
     const INCLUDE_ROOT_NODE = true;
+    
+    /**
+     * Move to last position when moving first node to previous position or move to the first position when moving last node to the next position
+     */
+    const MOVE_CIRCLE = true;
     
     /**
      * Child node container
@@ -676,27 +687,26 @@ class ActiveTreeNode extends ActiveRecordModel
         return $branch;
     }
 	
-	public function getNextSibling($count = 0, $loadReferencedRecords = false)
+	public function getLeftSibling($count = 0, $loadReferencedRecords = false)
 	{
-        return $this->getSibling($count, self::DIRECTION_NEXT, $loadReferencedRecords);
+        return $this->getSibling($count, self::DIRECTION_RIGHT, $loadReferencedRecords);
 	}
 
-	public function getPrevSibling($count = 0, $loadReferencedRecords = false)
+	public function getRightSibling($count = 0, $loadReferencedRecords = false)
 	{
-        return $this->getSibling($count, self::DIRECTION_PREV, $loadReferencedRecords);
+        return $this->getSibling($count, self::DIRECTION_LEFT, $loadReferencedRecords);
 	}
 	
-	private function getSibling($count = 0, $direction = self::DIRECTION_NEXT, $loadReferencedRecords = false)
+	private function getSibling($count = 0, $direction = self::DIRECTION_RIGHT, $loadReferencedRecords = false)
 	{
         if(!$this->isLoaded()) $this->load();
         $className = get_class($this);
         $filter = new ARSelectFilter();
         $cond = new EqualsCond(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME), $this->getField(self::PARENT_NODE_FIELD_NAME)->get()->getID());
-        $cond->addAND(new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME)->get(), self::DIRECTION_PREV == $direction ? "<" : ">"));
+        $cond->addAND(new OperatorCond(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), $this->getField(self::LEFT_NODE_FIELD_NAME)->get(), self::DIRECTION_RIGHT == $direction ? "<" : ">"));
         $filter->setCondition($cond);
-        $filter->setOrder(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME));
+        $filter->setOrder(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME), self::DIRECTION_RIGHT == $direction ? ARSelectFilter::ORDER_DESC : ARSelectFilter::ORDER_ASC);
         $filter->setLimit(1, $count);
-        
         $recordSet = ActiveRecord::getRecordSet($className, $filter, $loadReferencedRecords);
         
         foreach($recordSet as $record) return $record;
@@ -705,9 +715,9 @@ class ActiveTreeNode extends ActiveRecordModel
 	
 	public function debug()
 	{
-	    echo "<pre>";
+	    echo "<pre>\n\n";
 	    $this->debugRecursive($this, 0);
-	    echo "</pre>";
+	    echo "\n\n</pre>\n";
 	}
 	
 	private function debugRecursive(ActiveTreeNode $node, $level)
@@ -717,12 +727,51 @@ class ActiveTreeNode extends ActiveRecordModel
 	    $lft = $node->getFieldValue(self::LEFT_NODE_FIELD_NAME);
 	    $rgt = $node->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
 	    
-	    echo str_repeat(" ", $level * 4) . $node->handle->get() . "(ID=".$node->getID()."; PID=$parentID; LFT=$lft; RGT=$rgt)\n";
+	    $name = $node->getFieldValue('name');
+	    $name = isset($name['en']) ? $name['en'] : '';
+	    
+	    echo str_repeat(" ", $level * 4) . $node->handle->get() . "(ID=".$node->getID()."; PID=$parentID; LFT=$lft; RGT=$rgt) - $name\n";
 	    $childNodes = $node->getChildNodes(true, true);
 	    foreach($childNodes as $child)
 	    {
 	        $this->debugRecursive($child, $level + 1);
 	    }
+	}
+
+	public function moveLeft($moveCircle = false)
+	{
+	    $leftSibling = $this->getLeftSibling();
+	    if($leftSibling || $moveCircle)
+	    {
+	        $this->moveTo($this->getFieldValue(self::PARENT_NODE_FIELD_NAME), $leftSibling);
+	    }
+    }
+	
+	public function moveRight($moveCircle = false)
+	{
+	    $rightSibling = $this->getRightSibling(1);
+	    if($moveCircle && !$rightSibling)
+	    {
+	        $rightSibling = $this->getFirstChild();
+	    }
+	    
+        $this->moveTo($this->getFieldValue(self::PARENT_NODE_FIELD_NAME), $rightSibling);
+	}
+	
+	public function getFirstChild($loadReferencedRecords = false)
+	{
+        if(!$this->isLoaded()) $this->load();
+        $className = get_class($this);
+        
+        $filter = new ARSelectFilter();
+        $filter->setCondition(new EqualsCond(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME), $this->getField(self::PARENT_NODE_FIELD_NAME)->get()->getID()));
+        $filter->setOrder(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME));
+        $filter->setLimit(1);
+        
+        $recordSet = ActiveRecord::getRecordSet($className, $filter, $loadReferencedRecords);
+        
+        foreach($recordSet as $record) return $record;
+        return null;
 	}
 }
 
