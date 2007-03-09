@@ -168,6 +168,8 @@ class ProductController extends StoreManagementController
 		{
 		  	$product = Product::getInstanceByID($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA);
 		  	$product->loadSpecification();
+		  	$arr = $product->toArray();
+		  //	print_r($arr['attributes']);
 		}
 		$validator = $this->buildValidator($product);
 		if ($validator->isValid())
@@ -211,10 +213,7 @@ class ProductController extends StoreManagementController
 			}
 			$product->loadRequestData($this->request);
 			
-			// set data								
-			ActiveRecordModel::beginTransaction();
 			$product->save();
-			ActiveRecordModel::commit();
 									
 			if ($this->request->getValue('afterAdding') == 'new')
 			{

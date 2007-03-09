@@ -40,7 +40,7 @@ class SpecificationItem extends Specification
 		$inst = parent::getInstanceByID(__CLASS__, array('productID' => $product->getID(), 'specFieldID' => $field->getID(), 'specFieldValueID' => $value->getID()));
 		$inst->specFieldValue->set($value);
 		$inst->resetModifiedStatus();
-		
+	
 		return $inst;
 	}
 

@@ -24,9 +24,12 @@ class MultiValueSpecificationItem implements iSpecification
 		    throw new Exception('Cannot assign SpecField:' . $value->specField->get()->getID() . ' value to SpecField:' . $this->specFieldInstance->getID());
 		}
 
-	  	$item = SpecificationItem::getNewInstance($this->productInstance, $this->specFieldInstance, $value);
-		$this->items[$value->getID()] = $item;
-	  	unset($this->removedItems[$value->getID()]);
+        if (!isset($this->items[$value->getID()]))
+        {
+    	  	$item = SpecificationItem::getNewInstance($this->productInstance, $this->specFieldInstance, $value);
+    		$this->items[$value->getID()] = $item;
+    	  	unset($this->removedItems[$value->getID()]);            
+        }
 	}
 	
 	public function removeValue(SpecFieldValue $value)
