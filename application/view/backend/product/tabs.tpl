@@ -41,9 +41,21 @@
 	</div>
 	<div class="sectionContainer maxHeight h--50"></div>
 </div>
-<script>
-    Event.observe($("cancel_product_edit"), "click", function(e) {ldelim}
+{literal}
+<script type="text/javascript">
+    Event.observe($("cancel_product_edit"), "click", function(e) {
         Event.stop(e); 
+        var product = Backend.Product.Editor.prototype.getInstance(Backend.Product.Editor.prototype.getCurrentProductId(), false);
+        
+        var textareas = product.nodes.parent.getElementsByTagName('textarea');
+		for (k = 0; k < textareas.length; k++)
+		{
+			tinyMCE.execCommand('mceRemoveControl', true, textareas[k].id);
+		}
+        
+        product.cancelForm();
+        SectionExpander.prototype.unexpand(product.nodes.parent);
         Backend.Product.Editor.prototype.showCategoriesContainer();
-    {rdelim});
+    });
 </script>
+{/literal}

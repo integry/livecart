@@ -393,18 +393,10 @@ Backend.Product.Editor.prototype =
         this.__nodes__();
         this.__bind__();
         
-		new SectionExpander(this.nodes.parent);
         Form.State.backup(this.nodes.form);
         
         var self = this;
-        setTimeout(function() 
-        {
-    		var textareas = self.nodes.parent.getElementsByTagName('textarea');
-    		for (k = 0; k < textareas.length; k++)
-    		{
-    			tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
-    		}
-        }, 1000);
+
 	},
 
 	__nodes__: function()
@@ -427,6 +419,15 @@ Backend.Product.Editor.prototype =
 		Backend.Product.Editor.prototype.setCurrentProductId(this.id);
         this.showProductForm();
         this.tabControl = TabControl.prototype.getInstance("productManagerContainer", Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId);
+
+
+		var textareas = this.nodes.parent.getElementsByTagName('textarea');
+		for (k = 0; k < textareas.length; k++)
+		{
+			tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
+		}
+        
+		new SectionExpander(this.nodes.parent);
     },
 
     craftProductUrl: function(url)
@@ -449,14 +450,15 @@ Backend.Product.Editor.prototype =
         Backend.Product.Editor.prototype.__currentId__ = id;
     },
 
-    getInstance: function(id)
+    getInstance: function(id, doInit)
     {
 		if(!Backend.Product.Editor.prototype.__instances__[id])
         {
             Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id);
         }
 
-        Backend.Product.Editor.prototype.__instances__[id].__init__();
+        if(doInit !== false) Backend.Product.Editor.prototype.__instances__[id].__init__();
+        
         return Backend.Product.Editor.prototype.__instances__[id];
     },
 
@@ -471,8 +473,8 @@ Backend.Product.Editor.prototype =
     },
 
     cancelForm: function()
-    {
-		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+    {      
+        ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		Form.restore(this.nodes.form);
     },
 

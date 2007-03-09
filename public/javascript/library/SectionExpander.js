@@ -22,12 +22,21 @@ SectionExpander.prototype = {
 				legend.onclick = this.handleLegendClick.bindAsEventListener(this);
 			}
 		}
-		var sectionContentList = document.getElementsByClassName('expandingSectionContent');
+		var sectionContentList = document.getElementsByClassName('expandingSectionContent', $(parent));
 		for (var i = 0; i < sectionContentList.length; i++)
 		{
 			Element.hide(sectionContentList[i]);
 		}
 	},
+    
+    unexpand: function(parent)
+    {
+		var sectionContentList = document.getElementsByClassName('expandingSectionContent', $(parent));
+		for (var i = 0; i < sectionContentList.length; i++)
+		{
+			Element.show(sectionContentList[i]);
+		}
+    },
 
 	/**
 	 * Legend element click handler
