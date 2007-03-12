@@ -105,8 +105,8 @@
 
     <fieldset class="filter_controls">
         <span class="activeForm_progress"></span>
-        <input type="submit" class="filter_save button" value="{translate text=_save}" />
+        <input type="submit" class="filter_save button submit" value="{t _save}" />
         {t _or}
-        <a href="#cancel" class="filter_cancel">{t _cancel}</a>
+        <a href="#cancel" class="filter_cancel cancel">{t _cancel}</a>
     </fieldset>
 </form>

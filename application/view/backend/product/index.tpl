@@ -11,8 +11,6 @@
 	</ul>  
 </fieldset>
 
-<br/>
-
 <span id="bookmark"></span>
 
 <div style="width: 98%;">
@@ -41,11 +39,16 @@
 
 {literal}
 <script type="text/javascript">
-    window.openProduct = function(id) 
+    window.openProduct = function(id, e) 
     {
-        Backend.Product.Editor.prototype.setCurrentProductId(id); 
-        TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId); 
-        if(Backend.Product.Editor.prototype.hasInstance(id)) Backend.Product.Editor.prototype.getInstance(id);
+		Backend.Product.Editor.prototype.setCurrentProductId(id); 
+        $('productIndicator_' + id).style.display = '';
+		TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId); 
+        if(Backend.Product.Editor.prototype.hasInstance(id)) 
+		{
+			Backend.Product.Editor.prototype.getInstance(id);			
+		}
+//        Event.stop(e);
     }
 
 	new ActiveGrid($('products_{/literal}{$categoryID}'), '{link controller=backend.product action=lists}', {$totalCount});{literal}

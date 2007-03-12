@@ -1,6 +1,11 @@
 <div id="productManagerContainer" class="managerContainer" style="display: none;">
-    <a href="#cancelEditing" id="cancel_product_edit">Cancel editing product</a>
-
+    
+	<fieldset class="container">
+		<ul class="menu">
+			<li><a href="#cancelEditing" id="cancel_product_edit" class="cancel">{t Cancel editing product}</a></li>
+		</ul>
+	</fieldset>
+	
 	<div class="tabContainer">
 		<ul class="tabList tabs">
 			<li id="productBasic" class="tab active">

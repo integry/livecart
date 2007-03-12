@@ -45,9 +45,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return ActiveRecordModel::getRecordSetArray('Product', $this->getProductsFilter($productFilter), $loadReferencedRecords);
 	}
 	
-	public function getProductCount(ProductFilter $productFilter)
+	public function getProductCount()
 	{
-		return ActiveRecordModel::getRecordCount('Product', $this->getProductsFilter($productFilter));
+		return $this->totalProductCount->get();
 	}
 
 	protected function getProductsFilter(ProductFilter $productFilter)
@@ -419,15 +419,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	public function isEnabled()
 	{
 		$this->load();
-		$isEnabled = $this->isEnabled->get();
-		if ($isEnabled)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return $this->isEnabled->get();
 	}
 
 	/**
@@ -453,10 +445,14 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 					$activeProductCountUpdateStr = "activeProductCount - " . $activeProductCount;
 				}
 				$pathNodes = $this->getPathNodeSet(true);
+
 				foreach ($pathNodes as $node)
 				{
-					$node->setFieldValue("activeProductCount", $activeProductCountUpdateStr);
-					$node->save();
+					if ($node->getID() != $this->getID())
+					{
+						$node->setFieldValue("activeProductCount", $activeProductCountUpdateStr);
+						$node->save();						
+					}
 				}
 			}
 			ActiveRecordModel::commit();

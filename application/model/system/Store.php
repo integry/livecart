@@ -366,7 +366,7 @@ class Store
 	private function loadLocale()
 	{
 		$this->locale =	Locale::getInstance($this->localeName);
-		$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('cache.language'));
+		$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage.language'));
 		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('application.configuration.language'));
 		Locale::setCurrentLocale($this->localeName);
 
@@ -380,10 +380,6 @@ class Store
 		if ($this->requestLanguage)
 		{
 			$this->localeName = $this->requestLanguage;
-		}
-		else if (isset($_SESSION['lang']))
-		{
-			$this->localeName = $_SESSION['lang'];
 		}
 		else
 		{

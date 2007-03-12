@@ -100,15 +100,15 @@ class CategoryController extends StoreManagementController
 	    $validator = $this->buildValidator();
 		if($validator->isValid())
 		{
-			$categoryNode = ActiveTreeNode::getInstanceByID("Category", $this->request->getValue("id"));
-			
+			$categoryNode = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
+			$categoryNode->setFieldValue('isEnabled', $this->request->getValue('isEnabled', 0));
 			$categoryNode->setFieldValue('handle', $this->request->getValue('handle', ''));
 			
 			$multilingualFields = array("name", "description", "keywords");
 			$categoryNode->setValueArrayByLang($multilingualFields, $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true), $this->request);
 			$categoryNode->save();
 			
-			return new JSONResponse(array_merge($categoryNode->toArray(), array('infoMessage' => $this->translate('_succsessfully_saved'))));
+			return new JSONResponse(array_merge($categoryNode->toFlatArray(), array('infoMessage' => $this->translate('_succsessfully_saved'))));
 		}
 	}
 
@@ -202,9 +202,9 @@ class CategoryController extends StoreManagementController
 	  	ClassLoader::import('application.model.filter.*');
 	  	ClassLoader::import('application.model.product.*');
 	    
-	    $category = Category::getInstanceByID((int)$this->request->getValue('id'));
+	    $category = Category::getInstanceByID((int)$this->request->getValue('id'), Category::LOAD_DATA);
 	    return new JSONResponse(array(
-	        'tabProducts' => Product::countItems($category),
+	        'tabProducts' => $category->totalProductCount->get(),
 	        'tabFilters' => FilterGroup::countItems($category),
 	        'tabFields' => SpecField::countItems($category),
 	        'tabImages' => CategoryImage::countItems($category),

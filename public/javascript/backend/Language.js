@@ -117,7 +117,7 @@ Backend.LanguageIndex.prototype =
 	
 	showAddForm: function()
 	{
-		document.getElementById('langAddMenuLoadIndicator').style.display = 'block';
+		document.getElementById('langAddMenuLoadIndicator').style.display = 'inline';
 		new Ajax.Request(
 		  			this.formUrl,
 					{

@@ -565,6 +565,10 @@ html, body{
 	background-repeat: no-repeat;
 }
 
+ul.menu {
+	margin-bottom: 30px;
+}
+
 ul.menu li {
   	list-style: none;
   	float: left;

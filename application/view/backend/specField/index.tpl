@@ -72,9 +72,6 @@
     </div>
 </div>
 
-<br />
-
-
 {* No group *}
 <ul id="specField_items_list_{$categoryID}_" class="specFieldList activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_specFieldList">
 {assign var="lastSpecFieldGroup" value="-1"}

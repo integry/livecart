@@ -28,9 +28,11 @@
 
 {if $blankFilter.specFields|@count > 0}
     <div>
-        <ul class="menu">
-			<li><a href="#new" id="filter_item_new_{$categoryID}_show">{t _add_new_filter}</a></li>
-		</ul>
+        <fieldset class="container">
+			<ul class="menu">
+				<li><a href="#new" id="filter_item_new_{$categoryID}_show">{t _add_new_filter}</a></li>
+			</ul>
+		</fieldset>
 
         <div id="filter_item_new_{$categoryID}_form" style="display: none;">
             <script type="text/javascript">

@@ -17,7 +17,7 @@ class ProductController extends StoreManagementController
 {
 	public function index()
 	{
-		$category = Category::getInstanceByID($this->request->getValue("id"));
+		$category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
 	
 		$response = $this->productList($category, new ActionResponse());
 
@@ -30,7 +30,7 @@ class ProductController extends StoreManagementController
 	public function lists()
 	{
 		$id = substr($this->request->getValue("id"), 9);
-		return $this->productList(Category::getInstanceByID($id), new XMLResponse());
+		return $this->productList(Category::getInstanceByID($id, Category::LOAD_DATA), new XMLResponse());
 	}
 
 	protected function productList(Category $category, ActionResponse $response)
@@ -89,8 +89,14 @@ class ProductController extends StoreManagementController
 			  	$filter->setOrder($handle, $order);
 			}
 		}	
+
+		$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
+		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
+		$filter->setCondition($cond);
+		
+		$productList = ActiveRecordModel::getRecordSet('Product', $filter, Product::LOAD_REFERENCES);
 	
-		$productList = $category->getProductSet($filter, Category::LOAD_REFERENCES);
+		//$productList = $category->getProductSet($filter, Category::LOAD_REFERENCES);
 				
 		$response->setValue("productList", $productList->toArray());
 		$response->setValue("categoryID", $category->getID());
@@ -174,43 +180,48 @@ class ProductController extends StoreManagementController
 		$validator = $this->buildValidator($product);
 		if ($validator->isValid())
 		{
-			// create new specField values
-			$other = $this->request->getValue('other');
 			$needReload = 0;
-			foreach ($other as $fieldID => $values)
+				
+			// create new specField values
+			if ($this->request->isValueSet('other'))
 			{
-				$field = SpecField::getInstanceByID($fieldID);
-
-				if (is_array($values))
+				$other = $this->request->getValue('other');
+				foreach ($other as $fieldID => $values)
 				{
-					// multiple select
-					foreach ($values as $value)
+					$field = SpecField::getInstanceByID($fieldID);
+	
+					if (is_array($values))
 					{
-					  	if ($value)
-					  	{
+						// multiple select
+						foreach ($values as $value)
+						{
+						  	if ($value)
+						  	{
+								$fieldValue = SpecFieldValue::getNewInstance($field);
+							  	$fieldValue->setValueByLang('value', $this->store->getDefaultLanguageCode(), $value);
+							  	$fieldValue->save();
+							  	
+							  	$this->request->setValue('specItem_' . $fieldValue->getID(), 'on');				    
+								$needReload = 1;
+							}
+						}  					  
+					}
+					else
+					{
+						// single select
+						if ('other' == $this->request->getValue('specField_' . $fieldID))
+						{
 							$fieldValue = SpecFieldValue::getNewInstance($field);
-						  	$fieldValue->setValueByLang('value', $this->store->getDefaultLanguageCode(), $value);
+						  	$fieldValue->setValueByLang('value', $this->store->getDefaultLanguageCode(), $values);
 						  	$fieldValue->save();
 						  	
-						  	$this->request->setValue('specItem_' . $fieldValue->getID(), 'on');				    
-							$needReload = 1;
-						}
-					}  					  
-				}
-				else
-				{
-					// single select
-					if ('other' == $this->request->getValue('specField_' . $fieldID))
-					{
-						$fieldValue = SpecFieldValue::getNewInstance($field);
-					  	$fieldValue->setValueByLang('value', $this->store->getDefaultLanguageCode(), $values);
-					  	$fieldValue->save();
-					  	
-					  	$this->request->setValue('specField_' . $fieldID, $fieldValue->getID());    
-						$needReload = 1;					  
-					}					  
-				}
+						  	$this->request->setValue('specField_' . $fieldID, $fieldValue->getID());    
+							$needReload = 1;					  
+						}					  
+					}
+				}				
 			}
+			
 			$product->loadRequestData($this->request);
 			
 			$product->save();

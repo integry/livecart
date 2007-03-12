@@ -29,14 +29,14 @@
 
 <fieldset class="container">
 	<ul class="menu" id="langPageMenu">
-		<li><a href="#" onClick="lng.showAddForm(); return false;">{t _add_language}</a></li>
+		<li>
+			<a href="#" onClick="lng.showAddForm(); return false;">{t _add_language}</a>
+			<span class="progressIndicator" id="langAddMenuLoadIndicator"></span>
+		</li>
 	</ul>
 </fieldset>
 
-<div class="menuLoadIndicator" id="langAddMenuLoadIndicator"></div>
 <div id="addLang" class="slideForm"></div>
-
-<br />
 
 <ul id="languageList" class="activeList_add_sort activeList_add_delete activeList_add_edit">
 </ul>

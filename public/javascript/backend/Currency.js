@@ -14,7 +14,6 @@ Backend.Currency.prototype =
 	
 	getTabUrl: function(url)
 	{
-		console.log('!' + url);
 		return url;
 	},
 	
@@ -25,7 +24,7 @@ Backend.Currency.prototype =
 
 	showAddForm: function()
 	{
-		document.getElementById('currAddMenuLoadIndicator').style.display = 'block';
+		document.getElementById('currAddMenuLoadIndicator').style.display = 'inline';
 		new Ajax.Request(
 		  			this.formUrl,
 					{

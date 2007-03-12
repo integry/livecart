@@ -417,6 +417,7 @@ Backend.Product.Editor.prototype =
     __init__: function(args)
     {	
 		Backend.Product.Editor.prototype.setCurrentProductId(this.id);
+        $('productIndicator_' + id).style.display = 'none';
         this.showProductForm();
         this.tabControl = TabControl.prototype.getInstance("productManagerContainer", Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId);
 
@@ -469,7 +470,7 @@ Backend.Product.Editor.prototype =
 
     showProductForm: function(args)
     {
-        this.hideCategoriesContainer();
+		this.hideCategoriesContainer();
     },
 
     cancelForm: function()

@@ -4,11 +4,11 @@
 
 <div id="categoryMsg_{$categoryId}"></div>
 
-{form id="categoryForm_$categoryId" handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="Backend.Category.updateBranch($('categoryForm_$categoryId')); return false;"}
+{form id="categoryForm_$categoryId" handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="Backend.Category.updateBranch(this); return false;"}
 	<fieldset class="container">
 
 		<p class="checkbox">
-			{checkbox name="isActive" id="isActive_$categoryId" class="checkbox"} <label class="checkbox" for="isActive_{$categoryId}">{t _active}</label>
+			{checkbox name="isEnabled" id="isEnabled_$categoryId" class="checkbox"} <label class="checkbox" for="isEnabled_{$categoryId}">{t _active}</label>
 		</p>
 
 		<p>

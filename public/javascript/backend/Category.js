@@ -190,12 +190,13 @@ Backend.Category = {
 	 */
 	updateBranch: function(formObj)
 	{
-		Ajax.Request(formObj.action,
-		{
-			method: formObj.method,
-			parameters: Form.serialize(formObj),
-			onComplete: this.afterBranchUpdate
-		});
+		new Ajax.Request(formObj.action,
+			{
+				method: formObj.method,
+				parameters: Form.serialize(formObj),
+				onComplete: this.afterBranchUpdate
+			}
+		);
 	},
 
 	/**

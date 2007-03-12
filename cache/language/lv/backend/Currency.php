@@ -1,2 +1,0 @@
-<?php $languageDefs = array (
-); ?>

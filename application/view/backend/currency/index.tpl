@@ -25,10 +25,12 @@
 		<div id="tabManageContent" class="maxHeight">
 		
 			<ul class="menu" id="currPageMenu">
-				<li><a href="#" onClick="curr.showAddForm(); return false;">{t _add_currency}</a></li>
+				<li>
+					<a href="#" onClick="curr.showAddForm(); return false;">{t _add_currency}</a>
+					<span class="progressIndicator" id="currAddMenuLoadIndicator"></span>
+				</li>
 			</ul>
-			
-			<div class="menuLoadIndicator" id="currAddMenuLoadIndicator"></div>
+						
 			<div id="addCurr" class="slideForm"></div>
 					
 			<div id="noCurrencies" class="noRecords">

@@ -23,7 +23,6 @@ _SpecField_type_formatted_text=Advanced
 _SpecField_type_text_selector=Options
 _SpecField_type_date=Date
 
-
 # Filter
 _Filter_main=Main
 _Filter_filters=Filters
@@ -34,7 +33,6 @@ _Filter_name=Name
 _Filter_range=Range
 _Filter_add_filter=Add filter
 _Filter_value=Value
-_Filter_generate_filters=Generate filters
 _Filter_date_range=Date between
 _Filter_handle=Handle
 
@@ -61,4 +59,4 @@ _descr=Description
 _keywords=Keywords
 _save=Save
 _cancel=Cancel
-_active=Active
+_active=Enabled (visible)

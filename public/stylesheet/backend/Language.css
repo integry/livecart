@@ -14,8 +14,6 @@ label.radio {
 
 #langAddMenuLoadIndicator {
 	display: none; 
-	position: absolute;
-	z-index: 1;
 }
 
 #languageList_template
@@ -35,6 +33,10 @@ label.radio {
 
 #addLangFeedback {
   	display: none;
+}
+
+#addLang div {
+	margin-bottom: 10px;
 }
 
 #languageList .activeList_icons {

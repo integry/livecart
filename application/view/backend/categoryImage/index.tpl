@@ -6,11 +6,13 @@
 	</li>
 </ul>
 
-<ul class="menu" id="catImgMenu_{$catId}">
-	<li>
-		<a href="#" onclick="slideForm('catImgAdd_{$catId}', 'catImgMenu_{$catId}'); return false;" class="pageMenu">{t _add_new}</a>
-	</li>	
-</ul>
+<fieldset class="container">
+	<ul class="menu" id="catImgMenu_{$catId}">
+		<li>
+			<a href="#" onclick="slideForm('catImgAdd_{$catId}', 'catImgMenu_{$catId}'); return false;" class="pageMenu">{t _add_new}</a>
+		</li>	
+	</ul>
+</fieldset>
 
 <div id="catImgAdd_{$catId}" class="catImageEditForm" style="display: none;">
 {form handle=$form action="controller=backend.categoryImage action=upload" method="post" onsubmit="Backend.Category.image.upload(this);" target="catImgUpload_`$catId`" method="POST" enctype="multipart/form-data"}
