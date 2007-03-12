@@ -21,11 +21,6 @@
     margin-left: 270px;
 }
 
-.tabContainer {
-    height: 30px;  
-    overflow: hidden
-}
-
 #categoryBrowser div.containerTableStyle
 {
     height: 300px;

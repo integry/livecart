@@ -13,11 +13,26 @@
 
 <span id="bookmark"></span>
 
+{literal}
+<style>
+	.activeGrid_filter_select
+	{
+		font-weight: normal !important;
+		
+	}
+</style>
+
+{/literal}
+
 <div style="width: 98%;">
 <table class="productHead" id="products_{$categoryID}_header">
 	<tr class="headRow">
 		<th class="cell_cb"><input type="checkbox" class="checkbox" /></th>
-		<th class="first cell_sku"><span class="fieldName">sku_</span>SKU</th>
+		<th class="first cell_sku">
+			<span class="fieldName">sku_</span>
+{*			{t SKU}<br /> *}
+			<input type="text" class="text" name="filter_sku" value="SKU" style="width:70%; font-size: smaller; font-weight: bold;" onfocus="ActiveGrid.prototype.filterFocus(this);" onblur="ActiveGrid.prototype.filterBlur(this);" />
+		</th>
 		<th class="cell_name"><span class="fieldName">name_</span>Name</th>	
 		<th class="cell_manuf"><span class="fieldName">manufacturer_</span>Manufacturer</th>	
 		<th class="cell_price"><span class="fieldName">price_</span>Price <small>({$currency})</small></th>

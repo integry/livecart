@@ -442,7 +442,7 @@ CategoryTabControl.prototype = {
 	handleTabClick: function()
 	{
 		this.tabControl.activateTab(this);
-
+		
 		Backend.ajaxNav.add('cat_' + Backend.Category.activeCategoryId + '#' + this.id, this.id);		
 	},
 
@@ -457,7 +457,13 @@ CategoryTabControl.prototype = {
 		var categoryId = (categoryIdToActivate == undefined ? this.treeBrowser.getSelectedItemId() : categoryIdToActivate);
         this.updateTabItemsCount(categoryId);
 
-        
+		// get help context
+		var helpContext = document.getElementsByClassName('tabHelp', targetTab);
+		if (helpContext.length > 0)
+		{
+			Backend.setHelpContext(helpContext[0].firstChild.nodeValue);
+		}
+		        
 		var tabId = targetTab.id;
 
 		if (this.activeTab == targetTab)

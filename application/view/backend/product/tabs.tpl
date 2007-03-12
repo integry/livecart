@@ -10,37 +10,37 @@
 		<ul class="tabList tabs">
 			<li id="productBasic" class="tab active">
 				<a href="{link controller=backend.product action=basicData id=_id_}?categoryID=_categoryID_}">{t Basic data}</a>
-				<a target="_blank" href="{helpUrl help="products.edit"}"><img src="image/silk/help.png" class="tabHelp" /></a>
+				<span class="tabHelp">products.edit</span>
 			</li>
 			
 			<li id="productDiscounts" class="tab inactive">
 				<a href="{link controller=backend.productPrice action=index id=_id_}?categoryID=_categoryID_">{t Prices &amp; Shipping}</a>
-				<a target="_blank" href="{helpUrl help="products.edit.pricing}"><img src="image/silk/help.png" class="tabHelp" /></a>
+				<span class="tabHelp">products.edit.pricing</span>
 			</li>
 
 			<li id="productInventory" class="tab inactive">
 				<a href="{link controller=backend.product action=inventory id=_id_}?categoryID=_categoryID_">{t Inventory}</a>
-				<a target="_blank" href="{helpUrl help="products.edit.inventory"}"><img src="image/silk/help.png" class="tabHelp" /></a>
+				<span class="tabHelp">products.edit.inventory</span>
 			</li>
 			
 			<li id="productImages" class="tab inactive">
 				<a href="{link    controller=backend.productImage action=index id=_id_}?categoryID=_categoryID_">{t Images}</a>
-				<a target="_blank" href="{helpUrl help="products.edit.images"}"><img src="image/silk/help.png" class="tabHelp" /></a>
+				<span class="tabHelp">products.edit.images</span>
 			</li>
 			
 			<li id="productRelated" class="tab inactive">
 				<a href="{link   controller=backend.productRelated action=index id=_id_}?categoryID=_categoryID_">{t Related products}</a>
-				<a target="_blank" href="{helpUrl help="products.edit.related}"><img src="image/silk/help.png" class="tabHelp" /></a>
+				<span class="tabHelp">products.edit.related</span>
 			</li>
 			
 			<li id="productOptions" class="tab inactive">
 				<a href="{link   controller=backend.product action=options id=_id_}?categoryID=_categoryID_">{t Options}</a>
-				<a target="_blank" href="{helpUrl help="products.edit.options}"><img src="image/silk/help.png" class="tabHelp" /></a>
+				<span class="tabHelp">products.edit.options</span>
 			</li>
 						
 			<li id="productFiles" class="tab inactive">
 				<a href="{link controller=backend.productFile action=index id=_id_}?categoryID=_categoryID_">{t Files}</a>
-				<a target="_blank" href="{helpUrl help="products.edit.files}"><img src="image/silk/help.png" class="tabHelp" /></a>
+				<span class="tabHelp">products.edit.files</span>
 			</li>
 		</ul>
 	</div>

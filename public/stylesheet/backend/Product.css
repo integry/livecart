@@ -73,6 +73,7 @@ fieldset.specification .numeric
 .cell_cb
 {
 	width: 30px;  
+	text-align: center;
 }
 
 .cell_sku

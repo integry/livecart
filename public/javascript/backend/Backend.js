@@ -9,6 +9,14 @@ var Backend = {};
 Backend.locale = 'en';
 
 /*************************************************
+	Help context handler
+**************************************************/
+Backend.setHelpContext = function(context)
+{
+	document.getElementById('help').href = 'http://doc.livecart.com/en/' + context;
+}
+
+/*************************************************
 	onLoad handler
 **************************************************/
 Backend.onLoad = function()

@@ -122,7 +122,7 @@ TabControl.prototype = {
 
 	activateTab: function(targetTab)
 	{
-        if(!targetTab) 
+		if(!targetTab) 
 		{
 			targetTab = this.nodes.tabListElements[0];	
 		}
@@ -131,6 +131,13 @@ TabControl.prototype = {
 			targetTab = $(targetTab);
 		}
                 
+		// get help context
+		var helpContext = document.getElementsByClassName('tabHelp', targetTab);
+		if (helpContext.length > 0)
+		{
+			Backend.setHelpContext(helpContext[0].firstChild.nodeValue);
+		}
+		
 		var contentId = this.idParserCallback(targetTab.id);
         if(!$(contentId)) new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '"></div>');		
 

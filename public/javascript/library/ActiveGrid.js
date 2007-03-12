@@ -124,6 +124,34 @@ ActiveGrid.prototype =
 		Element.removeClassName(this._getTargetRow(event), 'activeGrid_highlight');	  
 	},
 	
+	filterFocus: function(element)
+	{
+		if (!element.columnName)
+		{
+			element.columnName = element.value;	
+		}
+		
+		if (element.value == element.columnName)
+		{
+			element.value = '';
+		}
+		
+		Element.addClassName(element, 'activeGrid_filter_select');		
+	},
+
+	filterBlur: function(element)
+	{
+		if ('' == element.value)
+		{
+			element.value = element.columnName;
+		}
+
+		if (element.value == element.columnName)
+		{
+			Element.removeClassName(element, 'activeGrid_filter_select');
+		}
+	},
+
 	_markSelectedRows: function()
 	{
 		var rows = this.tableInstance.getElementsByTagName('tr');

@@ -131,7 +131,7 @@
 				<div id="topLogoContainer">
 
 					<div id="systemMenu">
-							{t _base_help} | <a href="#" onClick="showLangMenu(true);return false;">{t _change_language}</a>
+							<a id="help" href="#" target="_blank">{t _base_help}</a> | <a href="#" onClick="showLangMenu(true);return false;">{t _change_language}</a>
 							{backendLangMenu}
 					</div>
 
