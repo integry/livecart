@@ -17,7 +17,8 @@ class ProductController extends StoreManagementController
 {
 	public function index()
 	{
-		$category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
+		$this->rebuildMenuLangFile();		
+        $category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
 	
 		$response = $this->productList($category, new ActionResponse());
 

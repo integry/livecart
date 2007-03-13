@@ -189,19 +189,9 @@ class LanguageController extends StoreManagementController
 		  	$editLocale->translationManager()->saveCacheData($localeCode . '/' . $file, $data);
 		}
 		
-		// create a common language file for menu
-		$menuTranslations = array();
-		foreach ($submitedLang as $file => $data)
-		{
-			if (substr($file, 0, 12) == 'backend/menu')
-			{
-				$d = $editLocale->translationManager()->getCacheDefs($file, true);
-				$menuTranslations = array_merge($menuTranslations, $d);
-			}			
-		}
-
-		$editLocale->translationManager()->saveCacheData($localeCode . '/' .'menu/menu', $menuTranslations);
-			
+        // create a common language file for menu
+		$this->rebuildMenuLangFile();
+					
 		return new ActionRedirectResponse($this->request->getControllerName(), 'edit', array('id' => $localeCode, 'query' => 'langFileSel='.$this->request->getValue('langFileSel').'&saved=true'));
 	}
 	
