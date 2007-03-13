@@ -132,7 +132,7 @@ in case a new value is introduced.</p>
 	every time. To create an attribute of features, open <strong>Add new attribute form</strong> <a href="{self}#carrier"><small>(remind me how)
 	</small></a> 
 </p>
-	<img src="image/doc/categories/attributes/multi.bmp">
+	<p><img src="image/doc/categories/attributes/multi.bmp"></p>
 	<p>The following parameters have to be set in the form:</p>
 
 	<ul>
@@ -198,30 +198,31 @@ by necessary changes. A numeric attribute looks similar to this one:
 <br \>
 <p>
 	Generated attribute will provide a field for entering battery capacity:
-</p>
+
 	<img src="image/doc/categories/attributes/capacity_generated_mah.bmp">
+</p>
 	
 <p class="note"><strong>Note</strong>: to create analogous attribute for Text Field simply change type to <strong>Text Field</strong>.</p>
 
 
 <h3 id="group">Group attributes</h3>
 
-<p>LC allows you to group your attributes into logical chunks called "groups". To introduce a new group:</p>
+LC allows you to group your attributes into logical chunks called "groups". To introduce a new group:
 	<ul>
 		<li>Click <storng>Add new group</strong></li>
-		<p><img src="image/doc/categories/attributes/add_new_group.bmp"></p>
+		<img src="image/doc/categories/attributes/add_new_group.bmp">
 		<li>Enter group title (to identify group)</li>
-		<p><img src="image/doc/categories/attributes/group_title.bmp"></p>
+		<img src="image/doc/categories/attributes/group_title.bmp">
 		<li>Supply international translation if necessary (applicable)</li>
 	</ul>
-<p>Attribute groups appear as a rectangle which can contain as many attributes as neccesary. To place attributes into groups, simply drag attributes
-into appropriate groups.</p>
+Attribute groups appear as a rectangle which can contain as many attributes as neccesary. To place attributes into groups, simply drag attributes
+into appropriate groups.
 
 <img src="image/doc/categories/attributes/groups_main.bmp">
-<p>
+
 	In the image above you see two groups named "Cell Phones" and "Dimensions" and one attribute "Color" what doesn't belong to any group. 
 	To change group's name or delete a group click on one of the icons on the left:
-</p>
+
 <img src="image/doc/categories/attributes/group_edit.bmp">
 
 <p class="note"><strong>Notice</strong>: deleting a group will cause all of its attributes to be deleted as well. Thus you have to <strong>ungroup
@@ -230,23 +231,23 @@ into appropriate groups.</p>
 
 <h3 id="edit">Edit attribute</h3>
 
-<p>To edit attribute: select an attribute from the list and click on its "pen" icon on the left:</p>
+To edit attribute: select an attribute from the list and click on its "pen" icon on the left:
 
 <img src="image/doc/categories/attributes/edit_attribute.bmp">
 
-<p>Attribute's management form appears with its specification details. To edit any of attribute's fields or values, simply alter existing parameters/values
-and save changes afterwards. For detailed description of fields, refer to <a href="{self}#create">Create new attribute</a> section.</p>
+Attribute's management form appears with its specification details. To edit any of attribute's fields or values, simply alter existing parameters/values
+and save changes afterwards. For detailed description of fields, refer to <a href="{self}#create">Create new attribute</a> section.
 
 <h3 id="delete">Delete attribute</h3>
 
-<p>To delete attribute: select an attribute from the list and click on its "delete" icon on the left:</p>
+To delete attribute: select an attribute from the list and click on its "delete" icon on the left:
 
 <img src="image/doc/categories/attributes/delete_attribute.bmp">
 
 <h3 id="sort">Change attribute order</h3>
 
-<p>(In LC sorting of attributes is implemented via drag&drop feature). To change the order of attributes (or attribute groups), click on attributes 
-empty space and then drag it up or down.</p>
+(In LC sorting of attributes is implemented via drag&drop feature). To change the order of attributes (or attribute groups), click on attributes 
+empty space and then drag it up or down.
 <p class="note"> <strong>Notice</strong> that the order of attributes in the <i>Add New Product</i> form is determined by the arrangement
 of attribute groups as well as separate attributes.
 </p>

@@ -1,7 +1,7 @@
 <p>
 	As in most e-commerce stores, with LiveCart you can organize products into categories. Categories can also contain subcategories which, in turn,
 	may have their own subcategories. The number of subcategories and subcategory levels is unlimited. All the categories are displayed on the left 
-	side of the screen in the <strong>tree-based</strong> structure.
+	side of the screen in the tree-based structure.
 </p>
 
 <img src="image/doc/categories/category tree.bmp">
@@ -15,7 +15,7 @@
 
 <div class="tasks">
 <fieldset>
-<legend>Tasks</legend>
+<legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#add">Create a new category</a></li>
 	<li><a href="{self}#change order">Change category order</a></li>
@@ -31,7 +31,7 @@
 <p>
 	If you want to add a <i>root</i> level category or create the very first category:
 	<ul>
-		<li>select LiveCart in the category tree</li>
+		<li>select LiveCart on the category tree</li>
 		<li>click <strong>Add new category</strong> at the bottom of the category tree.
 	</ul>
 </p>
@@ -49,7 +49,7 @@
 <p>To change category order:</p>
 
 <ul>
-	<li>Select a category in the category tree.</li>
+	<li>Select a category on the category tree.</li>
 	<li>Use "Move category up" and "Move category down" buttons below the category tree:</li>
 	<img src="image/doc/categories/move.bmp">
 </ul>

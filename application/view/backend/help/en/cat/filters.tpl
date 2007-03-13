@@ -1,4 +1,4 @@
-<h2 id="top"></h2>
+<h1 id="top"></h1>
 <p>Filters is a tool designed to make product search easy. Instead of browsing product catalog by categories you can create filters that will define 
 specific search criteria and allow users to find products in no time. For instance, a <i>Bluetooth</i> filter in a cell phones catalog
 can view all the phones that have a bluetooth feature no matter their place or any other parameters.</p>
@@ -81,6 +81,7 @@ to define a range for filter's values.</p>
 
 <h4 id="capacity">Creating <i>Battery Capacity</i> filter</h4>
 <p align="right"><a href="{self}#top"><small>Top</small></a></p>
+
 <p>Complete the following steps to create the battery capacity filter:</p>
 
 <ol>

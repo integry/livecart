@@ -1,16 +1,7 @@
 ﻿
-<p>Images are usually used to represent category's contents. LC allows you to have <ins>unlimited? </ins> number of images for one category.</p>
+<p>Images are used to represent category's contents. LC allows you to have <ins>unlimited? </ins> number of images for one category.</p>
 
-<div class="tasks">
-<fieldset>
-<legend>Things you can do</legend>
-<ul>	
-	<li><a href="{self}#add">Add image</a></li>
-	<li><a href="{self}#sort">Sort</a></li>
-	<li><a href="{self}#delete">Delete</a></li>
-</ul>
-</fieldset>
-</div>
+
 
 <h3 id="add">Add an image</h3>
 <p>To add an image click Browse button and specify your image location.</p>
@@ -21,9 +12,14 @@ section.</p>
 
 
 <h3 id="sort">Reorder images</h3>
-<p>Images can be reordered by dragging and dropping them.</p>
+<p>To change image order:</p>
+<ul>
+	<li>(hover the mouse cursor over) Click and hold an image.</li>
+	<li>Move it up or down to set appropriate arrangement.</li>
+</ul>
 
-<h3 id="delete">Reorder images</h3>
+<h3 id="edit">Edit or Delete images</h3>
+<p>To edit an image<ins>...</ins></p>
 <p>To delete an image<ins>...</ins></p>
 {helpSeeAlso}
 	{see cat.details}

@@ -32,6 +32,8 @@ import and keep your product information up-to-date. As in most e-stores LC allo
 		<li>Product are displayed in the table fashioned similar to this:</li>
 		<img src="image/doc/products/products.bmp"/>
 	</ul>
+	Products are sorted by the default property (which is). To <strong>sort</strong> products differently
+	click on the "arrow" icon next to the product's property.
 </p>
 
 
