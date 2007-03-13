@@ -1,4 +1,6 @@
 <?php
+if(count(debug_backtrace()) == 0) require_once '../../Initialize.php';
+
 ClassLoader::import('library.locale.Locale');
 
 class TestLocale extends UnitTest 

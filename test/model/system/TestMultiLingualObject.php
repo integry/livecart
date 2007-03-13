@@ -1,6 +1,5 @@
 <?php
-
-require_once('../../Initialize.php');
+if(count(debug_backtrace()) == 0) require_once '../../Initialize.php';
 
 ClassLoader::import('application.model.category.Category');
 
