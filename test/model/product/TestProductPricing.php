@@ -52,7 +52,6 @@ class TestProductPricing extends UnitTestCase
     
     public function setUp()
 	{
-		echo "<pre>";
 	    ActiveRecordModel::beginTransaction();	
 		
    		// create a product without attributes
@@ -64,7 +63,6 @@ class TestProductPricing extends UnitTestCase
 	
 	public function tearDown()
 	{
-		echo "</pre>";
 	    ActiveRecordModel::rollback();		
 	    $this->db->executeUpdate("ALTER TABLE Product AUTO_INCREMENT=" . $this->productAutoIncrementNumber);
 	}
