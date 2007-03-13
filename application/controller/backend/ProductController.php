@@ -39,50 +39,47 @@ class ProductController extends StoreManagementController
 		$filter = new ARSelectFilter();
 		$filter->setLimit($this->request->getValue('offset'), $this->request->getValue('page_size'));
 	
+		$sortableLangFields = array(
+								'name' => 'name',
+								'shortdescription' => 'shortDescription',
+								'longdescription' => 'longDescription'
+							);
+		
+		$sortableFields = array(
+								'sku' => 'sku',
+								'isenabled' => 'isEnabled', 
+								'stockcount' => 'stockCount', 
+								'datecreated' => 'dateCreated', 
+								'dateupdated' => 'dateUpdated', 
+								'url' => 'URL',
+								'handle' => 'handle',
+								'isbestseller' => 'isBestSeller',
+								'votesum' => 'voteSum',
+								'votecount' => 'voteCount',
+								'hits' => 'hits',
+								'shippingweight' => 'shippingWeight',
+								'minimumquantity' => 'minimumQuantity',
+								'shippingsurchargeamount' => 'shippingSurchargeAmount',
+								'isseparateshipment' => 'isSeparateShipment',
+								'isfreeshipping' => 'isFreeShipping',
+								'reservedcount' => 'reservedCount',
+								'keywords' => 'keywords',
+								'manufacturer' => 'Manufacturer.name',
+						  );
+		
 		// get sort column
 		if ($this->request->isValueSet('sort_col'))
 		{
 		  	$sort = array_shift(explode('_', $this->request->getValue('sort_col')));		  	
 		  	$order = $this->request->getValue('sort_dir');
 
-			$sortableLangFields = array(
-									'name' => 'name',
-									'shortdescription' => 'shortDescription',
-									'longdescription' => 'longDescription'
-								);
-			
-			$sortableFields = array(
-									'sku' => 'sku',
-									'isenabled' => 'isEnabled', 
-									'stockcount' => 'stockCount', 
-									'datecreated' => 'dateCreated', 
-									'dateupdated' => 'dateUpdated', 
-									'url' => 'URL',
-									'handle' => 'handle',
-									'isbestseller' => 'isBestSeller',
-									'votesum' => 'voteSum',
-									'votecount' => 'voteCount',
-									'hits' => 'hits',
-									'shippingweight' => 'shippingWeight',
-									'minimumquantity' => 'minimumQuantity',
-									'shippingsurchargeamount' => 'shippingSurchargeAmount',
-									'isseparateshipment' => 'isSeparateShipment',
-									'isfreeshipping' => 'isFreeShipping',
-									'reservedcount' => 'reservedCount',
-									'keywords' => 'keywords'
-							  );
-			
-			if (isset($sortableLangFields[$sort]))
+    		if (isset($sortableLangFields[$sort]))
 			{
 			  	$handle = Product::getLangOrderHandle(new ARFieldHandle('Product', $sortableLangFields[$sort]));
 			}
 			elseif (isset($sortableFields[$sort]))
 			{
-				$handle = new ARFieldHandle('Product', $sortableFields[$sort]);  	
-			}
-			elseif ('manufacturer' == $sort)
-			{
-				$handle = new ARFieldHandle('Manufacturer', 'name');  	
+				$handle = new ARExpressionHandle($sortableFields[$sort]);  	
 			}
 
 			if (isset($handle))
@@ -95,9 +92,32 @@ class ProductController extends StoreManagementController
 		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
 		$filter->setCondition($cond);
 		
+		// apply filters
+		$filters = $this->request->getValue('filters', array());
+
+        foreach ($filters as $field => $value)
+		{
+            if (isset($sortableFields[$field]))
+            {
+                $filter->mergeCondition(new LikeCond(new ARExpressionHandle($sortableFields[$field]), '%' . $value . '%'));
+            }
+            elseif (isset($sortableLangFields[$field]))
+            {
+                $handle = MultiLingualObject::getLangSearchHandle(new ARFieldHandle('Product', $field), $this->locale->getLocaleCode());                
+                $cond = new LikeCond($handle, '%' . $value . '%');
+
+                $defLang = Store::getInstance()->getDefaultLanguageCode();
+                if ($this->locale->getLocaleCode() != $defLang)
+                {
+                    $baseLangHandle = MultiLingualObject::getLangSearchHandle(new ARFieldHandle('Product', $field), $defLang);
+                    $cond->addOR(new LikeCond($baseLangHandle, '%' . $value . '%'));  
+                }               
+                
+                $filter->mergeCondition($cond);   
+            }
+        }
+		
 		$productList = ActiveRecordModel::getRecordSet('Product', $filter, Product::LOAD_REFERENCES);
-	
-		//$productList = $category->getProductSet($filter, Category::LOAD_REFERENCES);
 				
 		$response->setValue("productList", $productList->toArray());
 		$response->setValue("categoryID", $category->getID());

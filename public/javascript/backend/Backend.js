@@ -428,12 +428,18 @@ Backend.NavMenu.prototype =
 	
 	hideCurrentSubMenu: function()
 	{
-	  	document.getElementById('navSelected').getElementsByTagName('ul')[0].style.visibility = 'hidden';
+	  	if ($('navSelected').getElementsByTagName('ul')[0])
+	  	{
+            $('navSelected').getElementsByTagName('ul')[0].style.visibility = 'hidden';                
+        }
 	},
 	
 	showCurrentSubMenu: function()
 	{
-	  	document.getElementById('navSelected').getElementsByTagName('ul')[0].style.visibility = 'visible';
+	  	if ($('navSelected').getElementsByTagName('ul')[0])
+	  	{
+    	  	$('navSelected').getElementsByTagName('ul')[0].style.visibility = 'visible';
+    	}
 	}
 }
 	

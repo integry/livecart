@@ -29,12 +29,14 @@ ActiveGrid.prototype =
   	/**
   	 *	Array containing IDs of selected rows
   	 */
-	selectedRows: new Object,
+	selectedRows: {},
 	
   	/**
   	 *	Set to true when Select All is used (so all records are selected by default)
   	 */
 	inverseSelection: false,
+	
+	filters: {},
   	
 	initialize: function(tableInstance, dataUrl, totalCount, options)
   	{
@@ -59,7 +61,7 @@ ActiveGrid.prototype =
 	
 	onScroll: function(liveGrid, offset) 
 	{
-		var rows = this.tableInstance.getElementsByTagName('tr');
+        var rows = this.tableInstance.getElementsByTagName('tr');
 		for (k = 0; k < rows.length; k++)
 		{
 		  	rows[k].onclick = this.selectRow.bindAsEventListener(this);
@@ -77,6 +79,23 @@ ActiveGrid.prototype =
 		
 		this._markSelectedRows();
 	},
+	
+	reloadGrid: function()
+	{
+    	this.ricoGrid.options.requestParameters = [];
+        var i = 0;
+        for (k in this.filters)
+    	{
+            if (k.substr(0, 7) == 'filter_')
+            {
+                this.ricoGrid.options.requestParameters[i++] = 'filters[' + k.substr(7, 1000) + ']' + '=' + this.filters[k];
+            }
+        }
+        this.ricoGrid.buffer.clear();
+        this.ricoGrid.resetContents();
+        this.ricoGrid.requestContentRefresh(0, true);    
+        this.ricoGrid.fetchBuffer(0, false, true);
+    },
 	
 	/**
 	 *	Select all rows
@@ -123,34 +142,11 @@ ActiveGrid.prototype =
 	{
 		Element.removeClassName(this._getTargetRow(event), 'activeGrid_highlight');	  
 	},
-	
-	filterFocus: function(element)
-	{
-		if (!element.columnName)
-		{
-			element.columnName = element.value;	
-		}
-		
-		if (element.value == element.columnName)
-		{
-			element.value = '';
-		}
-		
-		Element.addClassName(element, 'activeGrid_filter_select');		
-	},
 
-	filterBlur: function(element)
-	{
-		if ('' == element.value)
-		{
-			element.value = element.columnName;
-		}
-
-		if (element.value == element.columnName)
-		{
-			Element.removeClassName(element, 'activeGrid_filter_select');
-		}
-	},
+    setFilterValue: function(key, value)
+    {
+        this.filters[key] = value;
+    },
 
 	_markSelectedRows: function()
 	{
@@ -224,4 +220,61 @@ ActiveGrid.prototype =
 	{
 		return $(this.tableInstance.id + '_header').getElementsByTagName('tr')[0];
 	}
+}
+
+ActiveGridFilter = Class.create();
+
+ActiveGridFilter.prototype = 
+{
+    element: null,
+    
+    activeGridInstance: null,
+    
+    initialize: function(element, activeGridInstance)
+    {
+        this.element = element;
+        this.activeGridInstance = activeGridInstance;
+        
+        this.element.onclick = this.filterFocus.bindAsEventListener(this);
+        this.element.onblur = this.filterBlur.bindAsEventListener(this);        
+        this.element.onchange = this.setFilterValue.bindAsEventListener(this);  
+        
+   		Element.addClassName(this.element, 'activeGrid_filter_blur');          
+    },
+
+	filterFocus: function()
+	{
+		if (!this.element.columnName)
+		{
+			this.element.columnName = this.element.value;	
+		}
+		
+		if (this.element.value == this.element.columnName)
+		{
+			this.element.value = '';
+		}
+		
+  		Element.removeClassName(this.element, 'activeGrid_filter_blur');
+		Element.addClassName(this.element, 'activeGrid_filter_select');		
+	},
+
+	filterBlur: function()
+	{
+		if ('' == this.element.value)
+		{
+			this.element.value = this.element.columnName;
+		}
+
+		if (this.element.value == this.element.columnName)
+		{
+    		Element.addClassName(this.element, 'activeGrid_filter_blur');
+			Element.removeClassName(this.element, 'activeGrid_filter_select');
+		}
+	},
+	
+	setFilterValue: function()
+	{
+        this.activeGridInstance.setFilterValue(this.element.id, this.element.value);
+		this.activeGridInstance.reloadGrid();        
+    }
 }

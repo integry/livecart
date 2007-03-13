@@ -22,7 +22,7 @@
 			<table id="footerContainer">
 				<tr>
 					<td id="footerLeft">
-						(C) <a href="http://integry.net" target="_blank">UAB "Integry Systems"</a>, 2006
+						&copy; UAB <a href="http://integry.com" target="_blank">Integry Systems</a>, 2007
 					</td>
 					<td id="footerStretch">
 						&nbsp; 

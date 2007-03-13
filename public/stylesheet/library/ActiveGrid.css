@@ -1,4 +1,38 @@
+.activeGrid
+{
+    table-layout: fixed;    
+}
+
+.activeGrid td div
+{
+    overflow: hidden;
+}
+
+.activeGrid_viewport
+{
+    width: 100%;
+}
+
 .activeGrid_highlight
 {
   	background: lightblue;
+}
+
+.headRow input
+{
+    width:70%; 
+    font-size: smaller; 
+    font-weight: bold;
+    border: 1px solid black;
+}
+
+.activeGrid_filter_blur
+{
+    background-color: #EEEEEE;
+}
+
+.activeGrid_filter_select
+{
+	font-weight: normal !important;
+	
 }

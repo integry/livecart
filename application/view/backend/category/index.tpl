@@ -8,8 +8,11 @@
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
 {includeJs file="library/SectionExpander.js"}
-{includeJs file="library/rico/rico.js"}
+{* includeJs file="library/rico/rico.js" *}
 {includeJs file="library/TabControl.js"}
+
+{includeJs file="library/rico/ricobase.js"}
+{includeJs file="library/rico/ricoLiveGrid.js"}
 
 {* Calendar *}
 {includeJs file="library/dhtmlCalendar/calendar.js"}
