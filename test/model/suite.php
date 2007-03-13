@@ -1,7 +1,12 @@
 <?php
 require_once '../Initialize.php';
 
-$suite = new UTGroupTest('All livecart test');
-$suite->addDir(getcwd());
-$suite->run();
+class Suite extends UTGroupTest
+{
+    public function __construct()
+    {
+        parent::__construct('All Livecart Tests');
+        $this->addDir(getcwd());
+    }
+}
 ?>
