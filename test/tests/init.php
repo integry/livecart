@@ -19,14 +19,14 @@ function backtrace($sError = 'test')
    die();
 }
 
-	require_once("../../../framework/ClassLoader.php");
+require_once dirname(__FILE__) . "../../../framework/ClassLoader.php";
 
-	ClassLoader::mountPath(".", dirname(dirname(dirname(dirname(__file__)))) . '/');
-	ClassLoader::import("application.model.ActiveRecordModel");
-	ClassLoader::import("application.model.system.*");
-	ClassLoader::import("application.model.category.*");
-	ClassLoader::import("application.model.product.*");
-	ClassLoader::import("library.activerecord.ActiveRecord");
+ClassLoader::mountPath(".", dirname(dirname(dirname(dirname(__file__)))) . '/');
+ClassLoader::import("application.model.ActiveRecordModel");
+ClassLoader::import("application.model.system.*");
+ClassLoader::import("application.model.category.*");
+ClassLoader::import("application.model.product.*");
+ClassLoader::import("library.activerecord.ActiveRecord");
 
 //	ActiveRecordModel::setDSN("mysql://root@192.168.1.6/livecart_dev");
 
