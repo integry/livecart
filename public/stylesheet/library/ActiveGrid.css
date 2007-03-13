@@ -29,6 +29,7 @@
 .activeGrid_filter_blur
 {
     background-color: #EEEEEE;
+    border: 0 !important;
 }
 
 .activeGrid_filter_select

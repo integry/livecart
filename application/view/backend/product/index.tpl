@@ -18,20 +18,27 @@
 	<tr class="headRow">
 		<th class="cell_cb"><input type="checkbox" class="checkbox" /></th>
 		<th class="first cell_sku">
-			<span class="fieldName">sku_</span>
-			<input type="text" class="text" id="filter_sku" name="filter_sku" value="{tn SKU}" />
+			<span class="fieldName">Product.sku</span>
+			<input type="text" class="text" id="filter_Product.sku" name="filter_Product.sku" value="{tn SKU}" />
 		</th>
 		<th class="cell_name">
-            <span class="fieldName">name_</span>
-    		<input type="text" class="text" id="filter_name" name="filter_name" value="{tn Name}" />                    
+            <span class="fieldName">Product.name</span>
+    		<input type="text" class="text" id="filter_Product.name" name="filter_Product.name" value="{tn Name}" />                    
         </th>	
 		<th class="cell_manuf">
-            <span class="fieldName">manufacturer_</span>
-    		<input type="text" class="text" id="filter_manufacturer" name="filter_manufacturer" value="{tn Manufacturer}" />  
+            <span class="fieldName">Manufacturer.name</span>
+    		<input type="text" class="text" id="filter_Manufacturer.name" name="filter_Manufacturer.name" value="{tn Manufacturer}" />  
         </th>	
-		<th class="cell_price"><span class="fieldName">price_</span>Price <small>({$currency})</small></th>
-		<th class="cell_stock"><span class="fieldName">stockCount_</span>In stock</th>	
-		<th class="cell_enabled"><span class="fieldName">isEnabled_</span>Enabled</th>	
+		<th class="cell_price">
+            <span class="fieldName">ProductPrice.price</span>Price <small>({$currency})</small>
+        </th>
+		<th class="cell_stock">
+            <span class="fieldName">Product.stockCount</span>
+    		<input type="text" class="text" id="filter_Product.stockCount" name="filter_Product.stockCount" value="{tn In stock}" />   
+        </th>	
+		<th class="cell_enabled">
+            <span class="fieldName">Product.isEnabled</span>{tn Enabled}
+        </th>	
 	</tr>
 </table>
 </div>
@@ -61,8 +68,9 @@
     }
 
 	var grid = new ActiveGrid($('products_{/literal}{$categoryID}'), '{link controller=backend.product action=lists}', {$totalCount});{literal}
-    new ActiveGridFilter($('filter_sku'), grid);
-    new ActiveGridFilter($('filter_name'), grid);
-    new ActiveGridFilter($('filter_manufacturer'), grid);
+    new ActiveGridFilter($('filter_Product.sku'), grid);
+    new ActiveGridFilter($('filter_Product.name'), grid);
+    new ActiveGridFilter($('filter_Manufacturer.name'), grid);
+    new ActiveGridFilter($('filter_Product.stockCount'), grid);
 </script>
 {/literal}

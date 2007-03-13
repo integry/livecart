@@ -6,6 +6,7 @@ ClassLoader::import("application.model.category.Category");
 ClassLoader::import("application.model.filter.FilterGroup");
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.product.ProductSpecification");
+ClassLoader::import("application.helper.ActiveGrid");
 
 /**
  * Controller for handling product based actions performed by store administrators
@@ -37,89 +38,23 @@ class ProductController extends StoreManagementController
 	protected function productList(Category $category, ActionResponse $response)
 	{	
 		$filter = new ARSelectFilter();
-		$filter->setLimit($this->request->getValue('offset'), $this->request->getValue('page_size'));
-	
-		$sortableLangFields = array(
-								'name' => 'name',
-								'shortdescription' => 'shortDescription',
-								'longdescription' => 'longDescription'
-							);
-		
-		$sortableFields = array(
-								'sku' => 'sku',
-								'isenabled' => 'isEnabled', 
-								'stockcount' => 'stockCount', 
-								'datecreated' => 'dateCreated', 
-								'dateupdated' => 'dateUpdated', 
-								'url' => 'URL',
-								'handle' => 'handle',
-								'isbestseller' => 'isBestSeller',
-								'votesum' => 'voteSum',
-								'votecount' => 'voteCount',
-								'hits' => 'hits',
-								'shippingweight' => 'shippingWeight',
-								'minimumquantity' => 'minimumQuantity',
-								'shippingsurchargeamount' => 'shippingSurchargeAmount',
-								'isseparateshipment' => 'isSeparateShipment',
-								'isfreeshipping' => 'isFreeShipping',
-								'reservedcount' => 'reservedCount',
-								'keywords' => 'keywords',
-								'manufacturer' => 'Manufacturer.name',
-						  );
-		
-		// get sort column
-		if ($this->request->isValueSet('sort_col'))
-		{
-		  	$sort = array_shift(explode('_', $this->request->getValue('sort_col')));		  	
-		  	$order = $this->request->getValue('sort_dir');
-
-    		if (isset($sortableLangFields[$sort]))
-			{
-			  	$handle = Product::getLangOrderHandle(new ARFieldHandle('Product', $sortableLangFields[$sort]));
-			}
-			elseif (isset($sortableFields[$sort]))
-			{
-				$handle = new ARExpressionHandle($sortableFields[$sort]);  	
-			}
-
-			if (isset($handle))
-			{
-			  	$filter->setOrder($handle, $order);
-			}
-		}	
 
 		$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
 		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
 		$filter->setCondition($cond);
-		
-		// apply filters
-		$filters = $this->request->getValue('filters', array());
 
-        foreach ($filters as $field => $value)
-		{
-            if (isset($sortableFields[$field]))
-            {
-                $filter->mergeCondition(new LikeCond(new ARExpressionHandle($sortableFields[$field]), '%' . $value . '%'));
-            }
-            elseif (isset($sortableLangFields[$field]))
-            {
-                $handle = MultiLingualObject::getLangSearchHandle(new ARFieldHandle('Product', $field), $this->locale->getLocaleCode());                
-                $cond = new LikeCond($handle, '%' . $value . '%');
-
-                $defLang = Store::getInstance()->getDefaultLanguageCode();
-                if ($this->locale->getLocaleCode() != $defLang)
-                {
-                    $baseLangHandle = MultiLingualObject::getLangSearchHandle(new ARFieldHandle('Product', $field), $defLang);
-                    $cond->addOR(new LikeCond($baseLangHandle, '%' . $value . '%'));  
-                }               
-                
-                $filter->mergeCondition($cond);   
-            }
-        }
+        $filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . Store::getInstance()->getDefaultCurrencyCode() . '")', 'ID');
 		
+        new ActiveGrid($this->request, $filter);
+        					
 		$productList = ActiveRecordModel::getRecordSet('Product', $filter, Product::LOAD_REFERENCES);
-				
-		$response->setValue("productList", $productList->toArray());
+		$productArray = $productList->toArray();
+		
+        // load specification and price data
+        ProductSpecification::loadSpecificationForRecordSetArray($productArray);
+		ProductPrice::loadPricesForRecordSetArray($productArray);
+        				
+		$response->setValue("productList", $productArray);
 		$response->setValue("categoryID", $category->getID());
 		$response->setValue("offset", $this->request->getValue('offset'));
 		$response->setValue("totalCount", $productList->getTotalRecordCount());

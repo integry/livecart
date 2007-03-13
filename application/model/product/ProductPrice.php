@@ -26,16 +26,6 @@ class ProductPrice extends ActiveRecordModel
 		$instance = parent::getNewInstance(__CLASS__);
 		$instance->product->set($product);
 		$instance->currency->set($currency);
-//		try
-//		{
-//			$instance->load();
-//		}
-//		catch(Exception $e)
-//		{
-//			$instance->product->set($product);
-//			$instance->currency->set($currency);
-//			$instance->resetModifiedStatus();
-//		}
 
 		return $instance;
 	}
@@ -131,6 +121,11 @@ class ProductPrice extends ActiveRecordModel
 			$basePrice = $product->getPrice($defaultCurrency, Product::DO_NOT_RECALCULATE_PRICE);
 		}
 
+		return self::convertPrice($currency, $basePrice);
+	}
+	
+	protected static function convertPrice(Currency $currency, $basePrice)
+	{
 		$rate = $currency->rate->get();
 		if ($rate)
 		{
@@ -141,7 +136,52 @@ class ProductPrice extends ActiveRecordModel
 			$price = 0;
 		}
 
-		return round($price, 2);
+		return round($price, 2);       
+    }
+	
+	/**
+	 * Load product pricing data for several products at once
+     */
+	public static function loadPricesForRecordSetArray(&$productArray)
+	{
+	  	$ids = array();
+		foreach ($productArray as $key => $product)
+	  	{
+			$ids[$product['ID']] = $key;
+		}
+	
+        $baseCurrency = Store::getInstance()->getDefaultCurrencyCode();
+        
+        $filter = new ARSelectFilter();
+        $filter->setCondition(new INCond(new ARFieldHandle('ProductPrice', 'productID'), array_keys($ids)));
+        $filter->setOrder(new ARExpressionHandle('currencyID = "' . $baseCurrency . '"'), 'DESC');
+        $prices = ActiveRecordModel::getRecordSetArray('ProductPrice', $filter);
+        
+        // sort by product
+        $productPrices = array();
+        foreach ($prices as $price)
+        {
+            $productPrices[$price['productID']][$price['currencyID']] = $price['price'];
+        }
+        
+        $currencies = Store::getInstance()->getCurrencySet();
+        
+        foreach ($productPrices as $product => $prices)
+        {
+            foreach ($currencies as $id => $currency)
+            {
+                if (!isset($prices[$id]))
+                {
+                    $prices[$id] = self::convertPrice($currency, isset($prices[$baseCurrency]) ? $prices[$baseCurrency] : 0);
+                }
+            }
+
+            foreach ($prices as $id => $price)
+            {
+                $productArray[$ids[$product]]['price_' . $id] = $price;
+            }
+        }
+
 	}
 }
 

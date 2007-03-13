@@ -149,7 +149,10 @@ class ProductSpecification
 		return $arr;
 	}
 
-	public static function loadSpecificationForRecordSetArray(&$productArray)
+	/**
+	 * Load product specification data for several products at once
+     */
+    public static function loadSpecificationForRecordSetArray(&$productArray)
 	{
 	  	$ids = array();
 		foreach ($productArray as $key => $product)
