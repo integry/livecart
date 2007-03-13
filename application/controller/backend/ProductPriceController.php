@@ -20,7 +20,7 @@ class ProductPriceController extends StoreManagementController
 	    $pricingForm = $this->buildPricingForm($product);
 
 	    $response = new ActionResponse();
-	    $response->setValue("product", $product->toArray());
+	    $response->setValue("product", $product->toFlatArray());
 		$response->setValue("otherCurrencies", Store::getInstance()->getCurrencyArray(Store::EXCLUDE_DEFAULT_CURRENCY));
 		$response->setValue("baseCurrency", Store::getInstance()->getDefaultCurrency()->getID());
 		$response->setValue("pricingForm", $pricingForm);
@@ -75,6 +75,8 @@ class ProductPriceController extends StoreManagementController
     		}
 
     		// Save shipping
+    		$product->loadSpecification();
+    		
             $product->setFieldValue('shippingWeight', (float)$this->request->getValue('shippingWeight'));
             $product->setFieldValue('shippingSurchargeAmount', (float)$this->request->getValue('shippingSurchargeAmount'));
             $product->setFieldValue('minimumQuantity', (int)$this->request->getValue('minimumQuantity'));

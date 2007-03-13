@@ -518,7 +518,7 @@ class Product extends MultilingualObject
 		}
 		else
 		{
-			$instance->price->set($price);
+		    $instance->price->set($price);
 		}
 	}
 

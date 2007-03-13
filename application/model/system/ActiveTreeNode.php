@@ -586,7 +586,6 @@ class ActiveTreeNode extends ActiveRecordModel
         ActiveRecordModel::beginTransaction();
         try
         {
-            $result = parent::deleteByID($className, $this->getID());
             
             $updates[] = "UPDATE $className SET ".self::RIGHT_NODE_FIELD_NAME." = ".self::RIGHT_NODE_FIELD_NAME." - $width  WHERE ".self::RIGHT_NODE_FIELD_NAME." >= $t_r";
             $updates[] = "UPDATE $className SET ".self::LEFT_NODE_FIELD_NAME." = ".self::LEFT_NODE_FIELD_NAME." - $width WHERE ".self::LEFT_NODE_FIELD_NAME." >= $t_l";
@@ -596,6 +595,8 @@ class ActiveTreeNode extends ActiveRecordModel
                 self::getLogger()->logQuery($update);
                 self::getDBConnection()->executeUpdate($update);
             }
+            
+            $result = parent::delete();
 
             ActiveRecordModel::commit();
             

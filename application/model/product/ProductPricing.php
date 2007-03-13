@@ -8,7 +8,11 @@ ClassLoader::import('application.model.Currency');
  */
 class ProductPricing
 {
-	private $product;
+	const CALCULATED = 'calculated';
+	const DEFINED = 'defined';
+	const BOTH = 'both';
+    
+    private $product;
 
 	private $prices = array();
 
@@ -92,9 +96,9 @@ class ProductPricing
 
 	public function save()
 	{
-		foreach ($this->prices as $price)
+	    foreach ($this->prices as $price)
 		{
-			$price->save();
+		    $price->save();
 		}
 		foreach ($this->removedPrices as $price)
 		{
@@ -103,12 +107,19 @@ class ProductPricing
 		$this->removedPrices = array();
 	}
 
-	public function toArray()
+	/**
+	 * Convert current product prices to array
+	 * 
+	 * @param string $part Wicht part of array prices you want to get ('defined', 'calculated' or 'both')
+	 */
+	public function toArray($part = null)
 	{
-		$defined = array();	
+		if(!in_array($part, array('defined', 'calculated', 'both'))) $part = 'both';
+	    
+	    $defined = array();	
 		foreach ($this->prices as $inst)
 		{
-			$defined[$inst->currency->get()->getID()] = $inst->price->get();
+		    $defined[$inst->currency->get()->getID()] = $inst->price->get();
 		}
 
 		$baseCurrency = Store::getInstance()->getDefaultCurrencyCode();				
@@ -120,7 +131,7 @@ class ProductPricing
 		{
 			if (!empty($defined[$id]))
 		  	{
-			    $calculated[$id] = $defined[$id];
+		  	    $calculated[$id] = $defined[$id];
 			}
 			else
 			{
@@ -129,8 +140,8 @@ class ProductPricing
 			}
 		}
 
-		return array('defined' => $defined,
-					 'calculated' => $calculated);
+		$return = array('defined' => $defined, 'calculated' => $calculated);
+		return ('both' == $part) ? $return : $return[$part];
 	}
 
 	public static function addShippingValidator(RequestValidator $validator)

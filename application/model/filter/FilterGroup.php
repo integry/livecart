@@ -243,10 +243,7 @@ class FilterGroup extends MultilingualObject
                         }
                     break;
                 }
-                if(!isset($v['name'][$languageCodes[0]])) {
-                print_r($v);
-                echo $key;
-                }
+
                 if($v['name'][$languageCodes[0]] == '')
                 {
                     $errors['filters['.$key.'][name]['.$languageCodes[0].']'] = '_error_filter_name_empty';
