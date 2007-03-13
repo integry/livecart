@@ -1,5 +1,5 @@
 <?php
-if(count(debug_backtrace()) == 0) require_once '../../Initialize.php';
+if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
 ClassLoader::import('application.model.category.Category');
 
@@ -39,7 +39,7 @@ class TestMultiLingualObject extends UnitTest
 		$array = $restored->toArray();
 	
 		$this->assertEqual($testValue, $array['name']);
-
+		
 		// one quote
 		$testValue = 'NX9420 C2D T7400 17" WSXGA+ WVA BRIGHT VIEW 1024MB 120GB DVD+/-RW DL ATI MOBILITY RADEON X1600 256MB WLAN BT TPM XPPKeyb En';
 		

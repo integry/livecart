@@ -1,5 +1,5 @@
 <?php
-if(count(debug_backtrace()) == 0) require_once '../../Initialize.php';
+if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
 ClassLoader::import("application.model.category.*");
 ClassLoader::import("application.model.product.*");
