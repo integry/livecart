@@ -52,8 +52,7 @@ require_once '../Initialize.php';
 //$liveCartTests = new LiveCartTests(dirname(__FILE__));
 //$liveCartTests->run(new HtmlReporter());
 
-class LiveCartAllTests extends UTGroupTest
-{
-    
-}
+$suite = new UTGroupTest('All livecart test');
+$suite->addDir(getcwd());
+$suite->run();
 ?>

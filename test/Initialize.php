@@ -12,8 +12,7 @@ if (!defined('TEST_INITIALIZED'))
 	require_once('framework/ClassLoader.php');
 
 	// set unittest and simpletest library root directory
-	$libDir = dirname(__FILE__) . '/library/';
-
+	$libDir = dirname(__FILE__) . '/_library/';
 	ClassLoader::mountPath('simpletest', realpath($libDir . 'simpletest/'));
 	ClassLoader::mountPath('unittest', realpath($libDir . 'unittest') . '/');
 	ClassLoader::mountPath('testdir', dirname(__FILE__).'/');
