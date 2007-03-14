@@ -14,7 +14,8 @@ import and keep your product information up-to-date. As in most e-stores LC allo
 <ul>	
 	<li><a href="{self}#view">View products</a></li>
 	<li><a href="{self}#search">Search</a></li>
-	<li><a href="{self}#view">Manage multiple products</a></li>
+	<li><a href="{self}#edit">Edit single product</a></li>
+	<li><a href="{self}#multiple">Manage multiple products</a></li>
 
 </ul>
 </fieldset>
@@ -32,10 +33,22 @@ import and keep your product information up-to-date. As in most e-stores LC allo
 		<li>Product are displayed in the table fashioned similar to this:</li>
 		<img src="image/doc/products/products.bmp"/>
 	</ul>
-	Products are sorted by the default property (which is). To <strong>sort</strong> products differently
-	click on the "arrow" icon next to the product's property.
+	By default products are displayed in (xxx) order. LC allows you to change the order by specifying any field
+	in the toolbar (name, manufacturer, price etc.)	You can also set ascending or descending orders by clicking 
+	on the "arrow" icon next to the product's property.
 </p>
 
+<h3 id="search">Search</h3>
+
+<p></p>
+
+<h3 id="edit">Edit product</h3>
+
+<p>To edit product's details click on a product name. This will open product's <a href="/livecart//en/backend.help/products.edit">detailed page</a>.</p>
+
+<h3 id="multiple">Manage multiple products</h3>
+
+<p></p>
 
 {helpSeeAlso}
 	{see products.add}

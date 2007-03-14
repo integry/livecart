@@ -24,8 +24,8 @@ you have to set these attributes before adding products.</p>
 	<li>Select existing category in the category tree or <a href="{help /cat#add}">add new</a> category.</li>
 	<li>Click <strong>Products</strong> tab to open product management section.</li>
 	<li>In the products section click <strong>Add new Product:</strong></li>
-	<img src="image/doc/products/add_new.bmp">
-	<li><i>Add new product</i> main form opens. Fill out the form (see <a href="">Main form details</a> for field specification.) 
+	<img src="image/doc/products/add/add_new.bmp">
+	<li><i>Add new product</i> main form opens. Fill out the form (see <a href="/livecart//en/backend.help/products.edit">product form</a> for field specification.) 
 	and <strong>save</strong> changes.</li>
 	<ins>required fields</ins>
 </ul>

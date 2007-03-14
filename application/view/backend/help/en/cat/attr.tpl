@@ -48,7 +48,8 @@ can create variuos types of attributes. Below you'll find a couple of practical 
 	(To create an attribute you have to define attributes type, name and its values if necessary. 
 	Because attributes are automatically included in  the <i>Add New Product</i> form, we will demonstrate in our examples how attributes are generated and placed in the product form.)
 	Suppose you have a category stocked with cell phones and you want to create custom fields for specifying the following properties:
-	<a href="{self}#carrier">Carrier</a>, <a href="{self}#features">Phone Features</a> and <a href="{self}#capacity">Batery Capacity</a>.
+	<a href="{self}#carrier">Carrier ( select option )</a>, <a href="{self}#features">Phone Features ( select checkboxes)</a>
+	and <a href="{self}#capacity">Batery Capacity ( field option )</a>.
 
 <h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
 <p>To create an attribute follow these steps:</p>
