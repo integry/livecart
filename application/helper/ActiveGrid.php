@@ -5,7 +5,10 @@ class ActiveGrid
     const SORT_HANDLE =   0;
     const FILTER_HANDLE = 1;
     
-    function __construct(Request $request, ARSelectFilter $filter)
+    private $filter;
+    private $request;
+    
+    function __construct(Request $request, ARSelectFilter $filter, $modelClass = false)
     {
         // set recordset boundaries (limits)
         $filter->setLimit($request->getValue('offset'), $request->getValue('page_size'));
@@ -77,7 +80,27 @@ class ActiveGrid
 
                 $filter->mergeCondition($cond);
             }
-        }       	        
+        }       	  
+		
+		// apply IDs to filter
+		if ($modelClass)
+		{
+			$selectedIDs = array_keys((array)json_decode($request->getValue('selectedIDs')));
+			if ($selectedIDs)
+			{
+				if ((bool)$request->getValue('isInverse'))
+				{
+					$idcond = new NotINCond(new ARFieldHandle($modelClass, 'ID'), $selectedIDs);				
+				}	
+				else
+				{
+					$idcond = new INCond(new ARFieldHandle($modelClass, 'ID'), $selectedIDs);						
+				}
+
+		        $filter->mergeCondition($idcond);
+			}
+		}		
+		      
     }
     
     private function getFieldInstance($fieldName)

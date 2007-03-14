@@ -485,14 +485,15 @@ class ProductController extends StoreManagementController
         $filter->setCondition($cond);
         $filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . Store::getInstance()->getDefaultCurrencyCode() . '")', 'ID');
 		
-		$filters = json_decode($this->request->getValue('filters'));
+		$filters = (array)json_decode($this->request->getValue('filters'));
+		$this->request->setValue('filters', $filters);
 		
-        new ActiveGrid($this->request, $filter);
+        $grid = new ActiveGrid($this->request, $filter, 'Product');
+		echo $filter->createString();
         					
         $recordCount = true;
 		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, Product::LOAD_REFERENCES, $recordCount);
-
-
+		return new JSONResponse(1);	
     }	
 }
 

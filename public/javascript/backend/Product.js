@@ -262,14 +262,13 @@ Backend.Product.massActionHandler.prototype =
     {
         this.form.elements.namedItem('filters').value = this.grid.getFilters().toJSONString();
         this.form.elements.namedItem('selectedIDs').value = this.grid.getSelectedIDs().toJSONString();
-        this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection();
-        
+        this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;
         new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('progressIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));
     },
     
     submitCompleted: function()
     {
-        console.log('we`re back!');    
+        this.grid.reloadGrid();   
     }
 }
 

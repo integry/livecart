@@ -56,6 +56,7 @@ ActiveGrid.prototype =
 		this.selectAllInstance = headerRow.getElementsByTagName('input')[0];
 		this.selectAllInstance.onclick = this.selectAll.bindAsEventListener(this); 
 			
+		this.ricoGrid.onUpdate = this.onUpdate.bind(this);
 		this.onScroll(this.ricoGrid, 0);
 	},
 	
@@ -80,6 +81,12 @@ ActiveGrid.prototype =
 		this._markSelectedRows();
 	},
 	
+	onUpdate: function()
+	{
+		console.log('marking');console.log(this);
+		this._markSelectedRows();		
+	},
+	
 	reloadGrid: function()
 	{
     	this.ricoGrid.options.requestParameters = [];
@@ -95,6 +102,8 @@ ActiveGrid.prototype =
         this.ricoGrid.resetContents();
         this.ricoGrid.requestContentRefresh(0, true);    
         this.ricoGrid.fetchBuffer(0, false, true);
+        
+		this._markSelectedRows();        
     },
 	
 	getFilters: function()

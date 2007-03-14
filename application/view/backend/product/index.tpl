@@ -23,7 +23,7 @@
     
     <span style="float: right; text-align: right;" id="productMass_{$categoryID}">
         With selected: 
-        <select name="action" class="select" style="width: auto;">
+        <select name="act" class="select" style="width: auto;">
     
             <option value="enable_isEnabled">Enable</option>
             <option value="disable_isEnabled">Disable</option>
