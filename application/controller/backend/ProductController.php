@@ -473,6 +473,27 @@ class ProductController extends StoreManagementController
 	    
 	    return $response;
 	}
+    
+    public function processMass()
+    {        
+		$filter = new ARSelectFilter();
+		
+        $category = Category::getInstanceByID($this->request->getValue('id'), Category::LOAD_DATA);
+        $cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
+		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
+		
+        $filter->setCondition($cond);
+        $filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . Store::getInstance()->getDefaultCurrencyCode() . '")', 'ID');
+		
+		$filters = json_decode($this->request->getValue('filters'));
+		
+        new ActiveGrid($this->request, $filter);
+        					
+        $recordCount = true;
+		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, Product::LOAD_REFERENCES, $recordCount);
+
+
+    }	
 }
 
 ?>

@@ -1,7 +1,7 @@
 <?php
 
-$output = exec("/home/www/cart/build.sh");
+$output = exec("/usr/home/www/script/build.sh", $out, $res);
 
-header('Location: /cart/build/backend.category');
+header('Location: /livecart/build/backend.category');
 
 ?>
