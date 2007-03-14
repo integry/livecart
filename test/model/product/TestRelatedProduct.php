@@ -73,6 +73,36 @@ class TestRelatedProduct extends UnitTestCase
 	    $this->db->executeUpdate("ALTER TABLE Product AUTO_INCREMENT=" . $this->productAutoIncrementNumber);
 	}
 	
+	public function testInvalidRelationship()
+	{
+	    // valid
+	    try { 
+	        $relationship = RelatedProduct::getNewInstance($this->product1, $this->product2); 
+		    $relationship->save();
+	        $this->pass();
+	    } catch(Exception $e) { 
+	        $this->fail();
+	    }
+	    
+		// invalid
+	    try { 
+	        $relationship = RelatedProduct::getNewInstance($this->product1, $this->product1); 
+		    $relationship->save();
+	        $this->fail();
+	    } catch(Exception $e) { 
+	        $this->pass();
+	    }
+	    
+	    // two identical relationships are also invalid
+	    try {
+		    $relationship = RelatedProduct::getNewInstance($this->product1, $this->product2);
+		    $relationship->save();
+	    	$this->fail();
+	    } catch(Exception $e) { 
+	        $this->pass();
+	    }
+	}
+	
 	public function testCreateNewRelationship()
 	{
 	    // create
@@ -108,5 +138,14 @@ class TestRelatedProduct extends UnitTestCase
 	    $this->assertTrue($relationship->relatedProductGroup->get() === $this->group);
 	}
 
+	public function testDeleteRelationship()
+	{
+	    $relationship = RelatedProduct::getNewInstance($this->product1, $this->product2);
+	    $relationship->save();
+	    $this->assertTrue($relationship->isExistingRecord());
+	    
+	    $relationship->delete();
+	    $this->assertFalse($relationship->isLoaded());
+	}
 }
 ?>

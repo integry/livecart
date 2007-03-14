@@ -1,9 +1,9 @@
 <?php
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
+ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.category.*");
 ClassLoader::import("application.model.product.*");
-ClassLoader::import("application.model.product.Product");
 
 /**
  *	Test Product and Product Specification model for the following scenarios:
@@ -14,30 +14,60 @@ ClassLoader::import("application.model.product.Product");
  */
 class TestProduct extends UnitTest 
 {
+    /**
+     * @var Product
+     */
 	private $product = null;
-	private $productCategory = null;
+	/**
+	 * @var Category
+	 */
+	private $productCategory = null; 
+    /**
+     * Creole database connection wrapper
+     *
+     * @var Connection
+     */
+    private $db = null;
+	private $categoryAutoIncrementNumber = 0;
+	private $productAutoIncrementNumber = 0;
 	
 	function __construct()
 	{
 		parent::__construct('Test Product class');
 		
+	    $this->db = ActiveRecord::getDBConnection();
+	}
+	
+    public function setUp()
+	{
 		ActiveRecordModel::beginTransaction();		
 		
 		// create a new category
 		$this->productCategory = Category::getNewInstance(Category::getRootNode());
 		$this->productCategory->setValueByLang("name", "en", "Demo category branch");
 		$this->productCategory->save();
+		$this->categoryAutoIncrementNumber = $this->productCategory->getID();
 		
 		// create a product without attributes
 		$this->product = Product::getNewInstance($this->productCategory);
 		$this->product->setValueByLang("name", "en", "Test product...");
 		$this->product->setValueByLang("name", "lt", "Bandomasis produktas");
 		$this->product->setFieldValue("isEnabled", true);
-		$this->product->save();			
+		$this->product->save();	
+		$this->productAutoIncrementNumber = $this->product->getID();
+	}
+
+	public function tearDown()
+	{
+	    ActiveRecordModel::rollback();	
+	    	
+	    $this->db->executeUpdate("ALTER TABLE Category AUTO_INCREMENT=" . $this->categoryAutoIncrementNumber);
+	    $this->db->executeUpdate("ALTER TABLE Product AUTO_INCREMENT=" . $this->productAutoIncrementNumber);
 	}
 	
 	function testSimpleValues()
 	{
+	    return;
 		// create some simple value attributes
 		$numField = SpecField::getNewInstance($this->productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SIMPLE);
 		$numField->handle->set('numeric.field');
@@ -76,6 +106,7 @@ class TestProduct extends UnitTest
 	
 	function testSingleSelectValues()
 	{			
+	    return;
 		// create a single value select attribute
 		$singleSel = SpecField::getNewInstance($this->productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SELECTOR);
 		$singleSel->handle->set('single.sel');
@@ -140,6 +171,7 @@ class TestProduct extends UnitTest
 	
 	function testMultipleSelectValues()
 	{
+	    return;
 		// create a multiple value select attribute
 		$multiSel = SpecField::getNewInstance($this->productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SELECTOR);
 		$multiSel->isMultiValue->set(true);
@@ -205,13 +237,7 @@ class TestProduct extends UnitTest
 		// set the values back, so we could test how the data is restored from DB
 		$this->product->setAttributeValue($multiSel, $values[1]); 
 		$this->product->setAttributeValue($multiSel, $values[2]); 
-
-		// set prices
-		foreach (Store::getInstance()->getCurrencyArray() as $currency)
-		{
-			$this->product->setPrice($currency, 111);
-		}
-		
+			
 		$this->product->save();				
 	}
 	
@@ -227,13 +253,19 @@ class TestProduct extends UnitTest
 		try
 		{
 			$this->product->save();
-			$this->assertTrue(1);	
+			$this->pass();	
 		}
 		catch(Exception $e)
 		{
-			$this->assertTrue(0);
-			throw $e;
+			$this->fail();
 		}		
+		
+		// set prices
+		foreach (Store::getInstance()->getCurrencyArray() as $currency)
+		{
+			$this->product->setPrice($currency, 111);
+		}
+		$this->product->save();
 		
 		$arr = $this->product->toArray();
 		foreach (Store::getInstance()->getCurrencyArray() as $currency)
@@ -251,7 +283,110 @@ class TestProduct extends UnitTest
 		ActiveRecordModel::rollback();
 	}
 
+	public function testAddRelatedProducts()
+	{
+	    return;
+	    $otherProducts = array();
+	    foreach(range(1, 5) as $i)
+	    {
+			$otherProducts[$i] = Product::getNewInstance($this->productCategory);
+			$otherProducts[$i]->save();
+			
+		    $this->product->addRelatedProduct($otherProducts[$i]);	
+	    }
 	
+	    $this->assertEqual(5, $this->product->getRelatedProducts()->getTotalRecordCount());
+	    foreach($this->product->getRelatedProducts() as $relatedProduct)
+	    {
+	        $this->assertIsA($relatedProduct, 'Product');
+	    }
+	    
+	    $this->product->markAsNotLoaded();
+	    $this->product->load();
+	    
+	    // All relationships will be lost unless product is saved
+	    $this->assertEqual(0, $this->product->getRelatedProducts()->getTotalRecordCount());
+	    
+	    foreach($otherProducts as $otherProduct) $this->product->addRelatedProduct($otherProduct);
+	    $this->product->save();
+	    
+	    // reload
+	    $this->product->markAsNotLoaded();
+	    $this->product->load();
+	    
+	    // all related products should be here
+	    $this->assertEqual(5, $this->product->getRelatedProducts()->getTotalRecordCount());
+	}
+	
+	public function testGetRelatedProducts()
+	{
+	    return;
+	    $otherProducts = array();
+	    foreach(range(1, 5) as $i)
+	    {
+			$otherProducts[$i] = Product::getNewInstance($this->productCategory);
+			$otherProducts[$i]->save();
+			
+		    $this->product->addRelatedProduct($otherProducts[$i]);	
+	    }
+	    
+	    $i = 1;
+	    $this->assertEqual(5, $this->product->getRelatedProducts()->getTotalRecordCount());
+	    foreach($this->product->getRelatedProducts() as $relatedProduct)
+	    {
+	        $this->assertIsA($relatedProduct, 'Product');
+	        $this->assertTrue($relatedProduct === $otherProducts[$i]);
+	        $i++;
+	    }
+	    
+	    // Save and reload
+	    $this->product->save();
+	    $this->product->markAsNotLoaded();
+	    $this->product->load();
+	    
+	    $i = 1;
+	    $this->assertEqual(5, $this->product->getRelatedProducts()->getTotalRecordCount());
+	    foreach($this->product->getRelatedProducts() as $relatedProduct)
+	    {
+	        $this->assertIsA($relatedProduct, 'Product');
+	        $this->assertTrue($relatedProduct === $otherProducts[$i]);
+	        $i++;
+	    }
+	}
+	
+	public function testRemoveRelationship()
+	{
+	    $otherProducts = array();
+	    foreach(range(1, 5) as $i)
+	    {
+			$otherProducts[$i] = Product::getNewInstance($this->productCategory);
+			$otherProducts[$i]->save();
+		    $this->product->addRelatedProduct($otherProducts[$i]);			
+	    }
+	    $this->product->save();
+	    
+	    foreach($this->product->getRelatedProducts() as $relatedProduct)
+	    {
+	        $this->product->removeFromRelatedProducts($relatedProduct);
+	    }
+	    $this->assertEqual(0, $this->product->getRelatedProducts()->getTotalRecordCount());
+	    
+	    // reload
+	    $this->product->markAsNotLoaded();
+	    $this->product->load();
+	    
+	    // Relationships are not removed from database unless the product is saved
+	    $this->assertEqual(5, $this->product->getRelatedProducts()->getTotalRecordCount());
+	    
+	    $this->product->save();
+	    
+	    // Now they are removed
+	    foreach($this->product->getRelatedProducts() as $relatedProduct)
+	    {
+	        $this->product->removeFromRelatedProducts($relatedProduct);
+	    }
+	    $this->assertEqual(0, $this->product->getRelatedProducts()->getTotalRecordCount());
+	}
 }
 
 ?>

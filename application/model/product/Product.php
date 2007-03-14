@@ -4,8 +4,7 @@ ClassLoader::import("application.model.system.Language");
 ClassLoader::import("application.model.system.MultilingualObject");
 
 ClassLoader::import("application.model.specification.*");
-ClassLoader::import("application.model.product.Manufacturer");
-ClassLoader::import("application.model.product.ProductSpecification");
+ClassLoader::import("application.model.product.*");
 
 /**
  * Store product (item)
@@ -21,6 +20,18 @@ class Product extends MultilingualObject
 	private $pricingHandlerInstance = null;
 
 	const DO_NOT_RECALCULATE_PRICE = false;
+	
+	/**
+	 * Related products
+	 * @return ARSet
+	 */
+	private $relationships = null;
+	
+	/**
+	 * Removed relationships
+	 * @return ARSet
+	 */
+	private $removedRelationships = null;
 
 	public static function defineSchema($className = __CLASS__)
 	{
@@ -187,8 +198,24 @@ class Product extends MultilingualObject
 			$this->save();
 		}
 
+		$this->saveRelationships();
 		ActiveRecordModel::commit();
 	}
+	
+    public function saveRelationships()
+    {
+        if(is_null($this->relationships)) return;
+        
+        foreach($this->getRelationships() as $relationship)
+        {
+            $relationship->save();
+        }
+          
+        foreach($this->getRemovedRelationships() as $relationship)
+        {
+            $relationship->delete();
+        }
+    }
 
 	public function getSpecificationFieldSet($loadReferencedRecords = false)
 	{
@@ -404,6 +431,19 @@ class Product extends MultilingualObject
 	}
 
 	/**
+	 * Get products record set
+	 *
+	 * @param ARSelectFilter $filter
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
+	{
+		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+	}
+	
+	/**
 	 * @todo implement
 	 *
 	 */
@@ -560,6 +600,67 @@ class Product extends MultilingualObject
         return $this->priceData;
     }
 */
+    
+    private function loadRelationships()
+    {       
+        $this->relationships = RelatedProduct::getRelationships($this);
+    }
+    
+    /**
+     * @return ARSet
+     */
+    private function getRelationships()
+    {
+        if(is_null($this->relationships))
+        {
+            $this->loadRelationships();
+        }
+
+        return $this->relationships;
+    }
+    
+    /**
+     * @return ARSet
+     */
+    public function getRelatedProducts()
+    {
+        $relatedProducts = new ARSet();
+        
+        foreach($this->getRelationships() as $relationship)
+        {
+            $relatedProducts->add($relationship->relatedProduct->get());
+        }
+        return $relatedProducts;
+    }
+    
+    public function addRelatedProduct(Product $product)
+    {        
+        $relationship = RelatedProduct::getNewInstance($this, $product);
+        $this->getRelationships()->add($relationship);
+        $this->getRemovedRelationships()->removeRecord($relationship);
+    }
+    
+    public function removeFromRelatedProducts(Product $product)
+    {
+        $relationship = RelatedProduct::getInstance($this, $product);
+        
+        $this->relationships->removeRecord($relationship);
+        
+        $this->getRemovedRelationships()->add($relationship);
+    }
+    
+    public function markAsNotLoaded()
+    {
+        parent::markAsNotLoaded();
+        $this->relationships = null;
+    }
+    
+    private function getRemovedRelationships()
+    {
+        if(is_null($this->removedRelationships)) $this->removedRelationships = new ARSet();
+        
+        return $this->removedRelationships;
+    }
 }
 
 ?>
