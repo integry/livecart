@@ -47,17 +47,16 @@ class ProductController extends StoreManagementController
 		
         new ActiveGrid($this->request, $filter);
         					
-		$productList = ActiveRecordModel::getRecordSet('Product', $filter, Product::LOAD_REFERENCES);
-		$productArray = $productList->toArray();
-		
+		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, Product::LOAD_REFERENCES, $recordCount = true);
+        
         // load specification and price data
         ProductSpecification::loadSpecificationForRecordSetArray($productArray);
-		ProductPrice::loadPricesForRecordSetArray($productArray);
-        				
-		$response->setValue("productList", $productArray);
+    	ProductPrice::loadPricesForRecordSetArray($productArray);
+    	
+        $response->setValue("productList", $productArray);
 		$response->setValue("categoryID", $category->getID());
 		$response->setValue("offset", $this->request->getValue('offset'));
-		$response->setValue("totalCount", $productList->getTotalRecordCount());
+		$response->setValue("totalCount", $recordCount);
 		$response->setValue("currency", Store::getInstance()->getDefaultCurrency()->getID());
 		return $response;	  	  	
 	}
