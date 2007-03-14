@@ -147,5 +147,50 @@ class TestRelatedProduct extends UnitTestCase
 	    $relationship->delete();
 	    $this->assertFalse($relationship->isLoaded());
 	}
+
+	public function testGetRelatedProducts()
+	{
+	    // new product
+		$product = Product::getNewInstance($this->rootCategory);
+		$product->save();	
+	    
+		// groups
+	    $groups = array(0 => null);
+	    foreach(range(1, 2) as $i)
+	    {
+		    $groups[$i] = RelatedProductGroup::getNewInstance($product);
+		    $groups[$i]->position->set($i);
+		    $groups[$i]->setValueByLang('name', 'en', 'TEST_GROUP_' . $i);
+		    $groups[$i]->save();
+	    }
+	    
+		// related products
+	    $relatedProducts = array();
+	    $relationships = array();
+	    foreach(range(1, 9) as $i)
+	    {
+		    $relatedProducts[$i] = Product::getNewInstance($this->rootCategory);
+		    $relatedProducts[$i]->save();
+		    
+		    $relationships[$i] = RelatedProduct::getNewInstance($product, $relatedProducts[$i], $groups[floor(($i - 1) / 3)]);
+		    $relationships[$i]->position->set(9 - $i);
+		    $relationships[$i]->save();
+	    }
+
+	    // test order
+	    $groupPosition = -1;
+	    $productPosition = -1;
+	    foreach(RelatedProduct::getRelationships($product) as $relationship)
+	    {
+	        $currentGroupPosition = $relationship->relatedProductGroup->get() ? $relationship->relatedProductGroup->get()->position->get() : $groupPosition;
+	        $currentProductPosition = $relationship->position->get();
+	        
+	        $this->assertTrue($productPosition <= $currentProductPosition || $groupPosition <= $currentGroupPosition, "$productPosition <= $currentProductPosition || $groupPosition <= $currentGroupPosition");
+
+	        $groupPosition = $currentGroupPosition;
+	        $productPosition = $currentProductPosition;
+	    }
+	    
+	}
 }
 ?>

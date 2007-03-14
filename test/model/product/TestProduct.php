@@ -67,7 +67,6 @@ class TestProduct extends UnitTest
 	
 	function testSimpleValues()
 	{
-	    return;
 		// create some simple value attributes
 		$numField = SpecField::getNewInstance($this->productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SIMPLE);
 		$numField->handle->set('numeric.field');
@@ -106,7 +105,6 @@ class TestProduct extends UnitTest
 	
 	function testSingleSelectValues()
 	{			
-	    return;
 		// create a single value select attribute
 		$singleSel = SpecField::getNewInstance($this->productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SELECTOR);
 		$singleSel->handle->set('single.sel');
@@ -171,7 +169,6 @@ class TestProduct extends UnitTest
 	
 	function testMultipleSelectValues()
 	{
-	    return;
 		// create a multiple value select attribute
 		$multiSel = SpecField::getNewInstance($this->productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SELECTOR);
 		$multiSel->isMultiValue->set(true);
@@ -285,7 +282,6 @@ class TestProduct extends UnitTest
 
 	public function testAddRelatedProducts()
 	{
-	    return;
 	    $otherProducts = array();
 	    foreach(range(1, 5) as $i)
 	    {
@@ -318,9 +314,33 @@ class TestProduct extends UnitTest
 	    $this->assertEqual(5, $this->product->getRelatedProducts()->getTotalRecordCount());
 	}
 	
+	public function testGetRelationships()
+	{
+		$otherProducts = array();
+	    foreach(range(1, 5) as $i)
+	    {
+			$otherProducts[$i] = Product::getNewInstance($this->productCategory);
+			$otherProducts[$i]->save();
+			
+		    $this->product->addRelatedProduct($otherProducts[$i]);	
+	    }
+	    
+	    $this->product->save();
+	    $this->product->markAsNotLoaded();
+	    $this->product->load();
+	    
+	    $i = 1;
+	    $this->assertEqual(5, $this->product->getRelationships()->getTotalRecordCount());
+	    foreach($this->product->getRelationships() as $relationship)
+	    {
+	        $this->assertIsA($relationship, 'RelatedProduct');
+	        $this->assertTrue($relationship->relatedProduct->get() === $otherProducts[$i]);
+	        $i++;
+	    }
+	}
+	
 	public function testGetRelatedProducts()
 	{
-	    return;
 	    $otherProducts = array();
 	    foreach(range(1, 5) as $i)
 	    {

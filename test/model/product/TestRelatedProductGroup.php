@@ -64,6 +64,7 @@ class TestRelatedProductGroup extends UnitTestCase
 	    $group->position->set(5);
 	    $group->setValueByLang('name', 'en', 'TEST_GROUP');
 	    $group->save();
+	    
 	    // Reload
 	    $group->markAsNotLoaded();
 	    $group->load(true);
@@ -74,7 +75,7 @@ class TestRelatedProductGroup extends UnitTestCase
 	    $this->assertEqual($this->product->getID(), $group->product->get()->getID());
 	    $this->assertTrue($this->product === $group->product->get());
 	}
-	
+		
 	public function testDeleteGroup()
 	{
 	    $group = RelatedProductGroup::getNewInstance($this->product);
@@ -83,6 +84,37 @@ class TestRelatedProductGroup extends UnitTestCase
 	    
 	    $group->delete();
 	    $this->assertFalse($group->isLoaded());
+	}
+
+	public function testGetProductGroups()
+	{
+	    // new product
+		$product = Product::getNewInstance($this->rootCategory);
+		$product->save();	
+	    
+	    $groups = array();
+	    foreach(range(1, 3) as $i)
+	    {
+		    $groups[$i] = RelatedProductGroup::getNewInstance($product);
+		    $groups[$i]->position->set($i);
+		    $groups[$i]->setValueByLang('name', 'en', 'TEST_GROUP_' . $i);
+		    $groups[$i]->save();
+	    }
+	    
+	    $this->assertEqual(count($groups), RelatedProductGroup::getProductGroups($product)->getTotalRecordCount());
+	    $i = 1;
+	    foreach(RelatedProductGroup::getProductGroups($product) as $group)
+	    {
+	        $this->assertTrue($groups[$i] === $group);
+	        $i++;
+	    }
+	}
+	
+	public function getRelatedProductGroup(Product $relatedToProduct)
+	{
+	    $relationship = RelatedProductGroup::getInstance($relatedToProduct, $this);
+	    
+	    return $relationship ? $relationship->relatedProductGroup->get() : null;
 	}
 }
 ?>

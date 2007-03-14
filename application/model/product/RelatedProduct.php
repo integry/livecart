@@ -39,7 +39,7 @@ class RelatedProduct extends ActiveRecord
 	 * 
 	 * @return RelatedProduct
 	 */
-	public static function getNewInstance(Product $product, Product $related)
+	public static function getNewInstance(Product $product, Product $related, RelatedProductGroup $group = null)
 	{
 		if(null == $product || null == $related || $product === $related || $product->getID() == $related->getID())
 		{
@@ -50,6 +50,10 @@ class RelatedProduct extends ActiveRecord
 		
 		$relationship->product->set($product);
 		$relationship->relatedProduct->set($related);
+		if(!is_null($group))
+		{
+		    $relationship->relatedProductGroup->set($group);
+		}
 		
 		return $relationship;
 	}
@@ -75,8 +79,18 @@ class RelatedProduct extends ActiveRecord
 	private static function getRelatedProductsSetFilter(Product $product)
 	{
 	    $filter = new ARSelectFilter();
-
-		$filter->setOrder(new ARFieldHandle("RelatedProduct", "position"), 'ASC');
+	/**
+	 * Joins table by using supplied params
+	 *
+	 * @param string $tableName
+	 * @param string $mainTableName
+	 * @param string $tableJoinFieldName
+	 * @param string $mainTableJoinFieldName
+	 * @param string $tableAliasName	Necessary when joining the same table more than one time (LEFT JOIN tablename AS table_1)
+	 */
+		$filter->joinTable('RelatedProductGroup', 'RelatedProduct', 'ID', 'relatedProductGroupID');		
+		$filter->setOrder(new ARFieldHandle("RelatedProductGroup", "position"), 'ASC');			
+		$filter->setOrder(new ARFieldHandle("RelatedProduct", "position"), 'ASC');	
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("RelatedProduct", "productID"), $product->getID()));
 		
 		return $filter;

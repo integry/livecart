@@ -609,7 +609,7 @@ class Product extends MultilingualObject
     /**
      * @return ARSet
      */
-    private function getRelationships()
+    public function getRelationships()
     {
         if(is_null($this->relationships))
         {
