@@ -46,7 +46,7 @@ ol {
   	padding-top: 15px;
 #	margin-left: 15px;
   	margin-bottom: 10px;
-
+	background-color: #F5F5F5;
 }
 
 ol li {
@@ -63,7 +63,7 @@ ul {
   	margin-bottom: 10px;
 	list-style-type: square;
 #	width: 80%;
-#	background-color: #EEEEEE;
+#	background-color: #EFEFEF;
 }
 
 ul li	{
@@ -111,6 +111,14 @@ a.external
 	background-repeat: no-repeat;
 	background-position: right;
 	padding-right: 17px;	
+}
+
+a.note
+{
+	background-image: url(../../image/silk/information.png);
+	background-repeat: no-repeat;
+	background-position: left;
+	padding-left: 20px;	
 }
 
 /**************************

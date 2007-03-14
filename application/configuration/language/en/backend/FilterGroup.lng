@@ -1,6 +1,5 @@
 _add_new_filter=Add new filter
-_category_has_no_attr=This category has no non-text attributes
-_add_attr_to_create_filters=Please go to attribute tag and add new non-text attribute
+_category_has_no_attr=No filterable attributes have yet been created for this category
 _delete_field=Delete field
 _remove_filter_question=Are you sure you want to remove this filter?
 _FilterGroup_remove_question=Are you sure you want to remove this filter group?

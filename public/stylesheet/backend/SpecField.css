@@ -108,6 +108,10 @@ h2.specField_values_title {
 	border: 2px solid grey;  
 }
 
+.specField_step_translations, .specField_step_values_translations {
+    margin-top: 20px;
+}
+
 /* START Values active list */
 fieldset.specField_step_values  .activeList_icons {
     width: 77px;

@@ -3,15 +3,16 @@
 <p>Category details consist of the following parameters:</p>
 <img src="image/doc/categories/details/details_750.bmp">
 	<ul>
-		<li>Is Active - all new categories are inactive by default, tick the checkbox to enable the category (to make it visible in your store)</li>
+		<li>Is Enabled - all new categories are inactive by default, tick the checkbox to enable the category (to make it visible in your store)</li>
 		<li>Category Name - the actual category name</li>
 		<li>Description - a short category description, which is displayed in... </li>
 		<li>Keywords - words that are used in search queries and {glossary}Meta tags{/glossary}</li>
 	</ul>
-<p>(required fields)</p>
+<p>(required fields) - <ins>category name only</ins></p>
 
 <p>
 	If you have more than one language in your system, click on the language reference to expand additional fields below. You can enter the following category details in the selected language:
+<ins>When the screenshots will be redone it would be better to use some of the big languages like Spanish or German and also fill in some text in the fields</ins>
 	<img src="image/doc/categories/details/translate.bmp">
 </p>
 	<ul>

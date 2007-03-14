@@ -71,11 +71,11 @@ div.tip img {
 
 div.tip div {
   	padding: 8px;
-  	padding-left: 25px;
+/* 	padding-left: 25px; */
   	background-color: #FFFD8C;
   	display: inline;
 	width: auto;
-	background-image: url(../../image/backend/icon/information.png);
+/*	background-image: url(../../image/backend/icon/information.png); */
 	background-repeat: no-repeat;
 	background-position: 5px center;
 	margin-right: 10px;

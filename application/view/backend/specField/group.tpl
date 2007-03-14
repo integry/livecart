@@ -17,7 +17,7 @@
                 </legend>
         
                 <div class="activeForm_translation_values specField_group_language_translation">
-                    <p>
+                    <p class="required">
             			<label>{t _specField_group_title}</label>
             			<input type="text" name="name" />
         			</p>
@@ -27,7 +27,7 @@
         
         <fieldset class="specField_group_controls">
         	<span class="activeForm_progress"></span>
-            <input type="submit" class="specField_save button" value="{translate text=_save}" />
+            <input type="submit" class="specField_save button submit" value="{translate text=_save}" />
             {t _or}
             <a href="#cancel" class="specField_cancel cancel">{t _cancel}</a>
         </fieldset>

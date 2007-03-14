@@ -35,7 +35,7 @@
 	{/if}
 
 {elseif $field.type == 2}
-	{textfield id="product_`$cat`_`$product.ID`_`$fieldName`" name=$fieldName class="text numeric"}
+	{$field.valuePrefix_lang}{textfield id="product_`$cat`_`$product.ID`_`$fieldName`" name=$fieldName class="text numeric"}{$field.valueSuffix_lang}
 
 {elseif $field.type == 3}
 	{textfield id="product_`$cat`_`$product.ID`_`$fieldName`" name=$fieldName class="text"}

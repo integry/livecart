@@ -11,7 +11,7 @@
 			{checkbox name="isEnabled" id="isEnabled_$categoryId" class="checkbox"} <label class="checkbox" for="isEnabled_{$categoryId}">{t _active}</label>
 		</p>
 
-		<p>
+		<p class="required">
 			<label for="name_{$categoryId}">{t _category_name}:</label>
 			{textfield name="name" id="name_$categoryId"}
 		</p>

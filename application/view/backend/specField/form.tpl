@@ -55,10 +55,10 @@
 		</p>
         
         <div>
-    		<p>
-        		<label class="specField_form_name_label">{t _SpecField_title}<em class="required">*</em></label>
+    		<p class="required">
+        		<label class="specField_form_name_label">{t _SpecField_title}</label>
                 <fieldset class="error">
-            		<input type="text" name="name" class="required specField_form_name" />
+            		<input type="text" name="name" class="specField_form_name" />
             		<span class="errorText hidden"> </span>
                 </fieldset>
         	</p>
@@ -179,7 +179,7 @@
 
     <fieldset class="specField_controls">
     	<span class="activeForm_progress"></span>
-        <input type="submit" class="specField_save button" value="{translate text=_save}" />
+        <input type="submit" class="specField_save button submit" value="{translate text=_save}" />
         {t _or}
         <a href="#cancel" class="specField_cancel cancel">{t _cancel}</a>
     </fieldset>

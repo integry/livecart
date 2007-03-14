@@ -2,7 +2,7 @@ _add_new_field=Add new attribute
 _add_new_group=Add new group
 _delete_field=Delete field
 _remove_field_question=Are you sure you want to remove this field?
-_SpecField_remove_question=Are you sure you want to remove this specification field?
+_SpecField_remove_question=Are you sure you want to remove this attribute?
 _SpecFieldGroup_remove_question=Are you sure you want to remove this group?
 _edit_group=Edit attribute group
 _cancel_adding_new_field=Cancel adding new attribute
@@ -17,5 +17,3 @@ _error_value_is_not_a_number=Field value should be a valid number
 _error_name_empty=Name empty
 _error_record_id_is_not_valid=Record with such id does not exist
 _error_you_should_provide_default_group_name=Group name should be provided
-
-_not_in_group=Attributes without a group

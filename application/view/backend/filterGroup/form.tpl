@@ -5,8 +5,8 @@
 
 		<input type="hidden" name="ID" class="hidden filter_form_id" />
 
-		<p>
-    		<label class="filter_form_name_label">{t _Filter_name}<em class="required">*</em></label>
+		<p class="required">
+    		<label class="filter_form_name_label">{t _Filter_name}</label>
             <fieldset class="error">
         		<input type="text" name="name" class="required filter_form_name" />
         		<span class="errorText hidden"> </span>
@@ -73,7 +73,7 @@
     	</fieldset>
         
     	<!-- STEP 3 -->
-    	<fieldset class="filter_step_translations">
+    	<fieldset class="filter_step_translations container">
             <fieldset class="expandingSection dom_template filter_step_translations_language filter_step_translations_language_">
                 <legend></legend>
                 <fieldset class="expandingSectionContent">

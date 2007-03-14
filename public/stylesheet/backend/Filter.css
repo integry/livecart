@@ -43,6 +43,11 @@
     background: #ccc;
 }
 
+.filter_step_translations
+{
+    margin-top: 20px !important;
+}
+
 .filter_step_translations_language legend
 {
     display: block;

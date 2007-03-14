@@ -154,7 +154,12 @@ class ProductSpecification
      */
     public static function loadSpecificationForRecordSetArray(&$productArray)
 	{
-	  	$ids = array();
+	  	if (!$productArray)
+	  	{
+            return false;        
+        }
+            
+        $ids = array();
 		foreach ($productArray as $key => $product)
 	  	{
 			$ids[$product['ID']] = $key;

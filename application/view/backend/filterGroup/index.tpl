@@ -70,10 +70,9 @@
     </script>
     {/literal}
 {else}
-    <div class="errorMessage">
+    <div class="noRecords">
         <div>
-        <h3>{t _category_has_no_attr}</h3>
-        <p>{t _add_attr_to_create_filters}</p>
+        {t _category_has_no_attr}
         </div>
     </div>
 {/if}
