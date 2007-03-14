@@ -47,12 +47,14 @@ class ProductController extends StoreManagementController
 		
         new ActiveGrid($this->request, $filter);
         					
-		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, Product::LOAD_REFERENCES, $recordCount = true);
+        $recordCount = true;
+		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, Product::LOAD_REFERENCES, $recordCount);
         
         // load specification and price data
         ProductSpecification::loadSpecificationForRecordSetArray($productArray);
     	ProductPrice::loadPricesForRecordSetArray($productArray);
     	
+        $response->setValue("massForm", $this->getMassForm());
         $response->setValue("productList", $productArray);
 		$response->setValue("categoryID", $category->getID());
 		$response->setValue("offset", $this->request->getValue('offset'));
@@ -60,6 +62,21 @@ class ProductController extends StoreManagementController
 		$response->setValue("currency", Store::getInstance()->getDefaultCurrency()->getID());
 		return $response;	  	  	
 	}
+
+    protected function getMassForm()
+    {
+		ClassLoader::import("framework.request.validator.RequestValidator");
+		ClassLoader::import("framework.request.validator.Form");
+        		
+		$validator = new RequestValidator("productFormValidator", $this->request);
+		
+		$validator->addFilter('set_price', new NumericFilter(''));
+		$validator->addFilter('set_stock', new NumericFilter(''));
+		$validator->addFilter('inc_price', new NumericFilter(''));
+		$validator->addFilter('inc_stock', new NumericFilter(''));
+		
+        return new Form($validator);                
+    }
 
 	public function autoComplete()
 	{

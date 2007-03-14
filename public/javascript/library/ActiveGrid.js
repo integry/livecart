@@ -242,7 +242,7 @@ ActiveGridFilter.prototype =
    		Element.addClassName(this.element, 'activeGrid_filter_blur');          
     },
 
-	filterFocus: function()
+	filterFocus: function(e)
 	{
 		if (!this.element.columnName)
 		{
@@ -256,6 +256,8 @@ ActiveGridFilter.prototype =
 		
   		Element.removeClassName(this.element, 'activeGrid_filter_blur');
 		Element.addClassName(this.element, 'activeGrid_filter_select');		
+		
+		Event.stop(e);
 	},
 
 	filterBlur: function()

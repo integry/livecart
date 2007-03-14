@@ -1011,6 +1011,43 @@ fieldset.group p
 }
 
 /**************************
+	Glossary
+**************************/
+a.acronym
+{
+    border-bottom: 1px dotted black;    
+    cursor: help;
+    #margin-right: 5px; /* IE */
+    color: black !important;
+    position: relative;
+}
+
+a.acronym div
+{
+    display: none;
+	background-color: #EEEFFF;
+}
+
+a.acronym:hover
+{
+    display: inline;
+    text-decoration: none;
+}
+
+a.acronym:hover div
+{
+    display: block;
+    position: absolute;
+#   background-color: yellow;
+    border: 2px solid gray;
+    padding: 5px;
+    #margin-top: 17px;
+    left: 0px;
+    white-space: nowrap;
+    color: black;
+}
+
+/**************************
  * Debuging
  *************************/
 #log { 

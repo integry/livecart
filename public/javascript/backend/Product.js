@@ -217,6 +217,43 @@ Backend.Product =
 
 }
 
+Backend.Product.massActionHandler = Class.create();
+Backend.Product.massActionHandler.prototype = 
+{
+    handlerMenu: null,    
+    actionSelector: null,
+    valueEntryContainer: null,
+    
+    initialize: function(handlerMenu)
+    {
+        this.handlerMenu = handlerMenu;     
+        this.actionSelector = handlerMenu.getElementsByTagName('select')[0];
+        this.valueEntryContainer = document.getElementsByClassName('bulkValues')[0];
+
+        this.actionSelector.onchange = this.actionSelectorChange.bind(this);
+
+        console.log(handlerMenu);
+    },
+    
+    actionSelectorChange: function()
+    {
+        for (k = 0; k < this.valueEntryContainer.childNodes.length; k++)
+        {
+            if (this.valueEntryContainer.childNodes[k].style)
+            {
+                this.valueEntryContainer.childNodes[k].style.display = 'none';                    
+            }
+        }
+        
+        if (this.actionSelector.form.elements.namedItem(this.actionSelector.value))
+        {
+            this.actionSelector.form.elements.namedItem(this.actionSelector.value).style.display = '';            
+        }
+                
+        this.valueEntryContainer.style.display = '';
+    }        
+}
+
 Backend.Product.saveHandler = Class.create();
 Backend.Product.saveHandler.prototype =
 {
