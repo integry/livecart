@@ -15,7 +15,7 @@ you have to set these attributes before adding products.</p>
 </div>
 
 
-<h3 id="add">Create new product</h3>
+<h3 id="add">Add product manually</h3>
 
 <p>To create a new product:</p>
 
@@ -25,7 +25,7 @@ you have to set these attributes before adding products.</p>
 	<li>Click <strong>Products</strong> tab to open product management section.</li>
 	<li>In the products section click <strong>Add new Product:</strong></li>
 	<img src="image/doc/products/add/add_new.bmp">
-	<li><i>Add new product</i> main form opens. Fill out the form (see <a href="/livecart//en/backend.help/products.edit">product form</a> for field specification.) 
+	<li><i>Add new product</i> main form opens. Fill out the form (see <a href="/livecart//en/backend.help/products.edit">edit product</a> page for field specification.) 
 	and <strong>save</strong> changes.</li>
 	<ins>required fields</ins>
 </ul>

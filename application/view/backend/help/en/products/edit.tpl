@@ -12,10 +12,10 @@
 	<li><a href="{self}#specification">Specification</a></li>
 	<li><a href="{self}#pricing_shipping">Pricing and Shipping</a></li>
 	<li><a href="{self}#inventory">Edit Inventory</a></li>
-	<li><a href="{self}#images">Edit Images</a></li>
-	<li><a href="{self}#related">Related Products</a></li>
-	<li><a href="{self}#options">Edit Options</a></li>
-	<li><a href="{self}#files">Edit Files</a></li>
+	<li><i><a href="{self}#images">Edit Images</a></i></li>
+	<li><i><a href="{self}#related">Related Products</a></i></li>
+	<li><i><a href="{self}#options">Edit Options</a></i></li>
+	<li><i><a href="{self}#files">Edit Files</a></i></li>
 	<li><a href="{self}#save">Save changes</a></li>
 </ul>
 </fieldset>

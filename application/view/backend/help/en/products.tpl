@@ -1,7 +1,7 @@
 <p>
 To start selling goods in your e-store you have to stock up your system with some products first. LiveCart offers you tools that will help you (to) 
 import and keep your product information up-to-date. As in most e-stores LC allows you to manage your products by 
-<a href="/livecart//en/backend.help/cat">categories</a>.
+categories.
 </p>
 
 <p>	

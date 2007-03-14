@@ -17,12 +17,6 @@
 	products=Products
 		add=Add New Product
 		edit=Edit Product
-			pricing=Pricing
-			inventory=Inventory
-			related=Related Products
-			options=Options
-			images=Images
-			files=Assigned Files
 		
 	orders=Orders		
 		create=Create Order
