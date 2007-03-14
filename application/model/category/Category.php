@@ -464,6 +464,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		}
 	}
 
+	/**
+	 * @return ActiveTreeNode
+	 */
 	public static function getRootNode()
 	{
 		return parent::getRootNode(__CLASS__);

@@ -50,9 +50,12 @@ Backend.Category = {
 			}
 		}
 
-		var treeNode = $('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode;
-		treeNode.onclick();	
-		Backend.ajaxNav.add('cat_' + treeNode.parentObject.id + '#tabProducts');
+        if($('categoryBrowser').getElementsByClassName('selectedTreeRow')[0])
+        {
+    		var treeNode = $('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode;
+    		treeNode.onclick();	
+    		Backend.ajaxNav.add('cat_' + treeNode.parentObject.id + '#tabProducts');
+        }
 
 	},
     
@@ -60,28 +63,31 @@ Backend.Category = {
     {
         var self = this;
         
-        Event.observe($("createNewCategoryLink"), "click", function(e) {
-            Event.stop(e);
-            Backend.Category.createNewBranch(); 
-        });
-        
-        Event.observe($("removeCategoryLink"), "click", function(e) {
-            Event.stop(e);
-            if (confirm(Backend.Category.messages._confirm_category_remove)) 
-            {
-                Backend.Category.removeBranch(); 
-            }
-        });
-        
-        Event.observe($("moveCategoryUp"), "click", function(e) {
-            Event.stop(e);
-            self.moveCategory(Backend.Category.activeCategoryId, 'up_strict');
-        });
-        
-        Event.observe($("moveCategoryDown"), "click", function(e) {
-            Event.stop(e);
-            self.moveCategory(Backend.Category.activeCategoryId, 'down_strict');
-        });
+        if($("categoryBrowserActions"))
+        {
+            Event.observe($("createNewCategoryLink"), "click", function(e) {
+                Event.stop(e);
+                Backend.Category.createNewBranch(); 
+            });
+            
+            Event.observe($("removeCategoryLink"), "click", function(e) {
+                Event.stop(e);
+                if (confirm(Backend.Category.messages._confirm_category_remove)) 
+                {
+                    Backend.Category.removeBranch(); 
+                }
+            });
+            
+            Event.observe($("moveCategoryUp"), "click", function(e) {
+                Event.stop(e);
+                self.moveCategory(Backend.Category.activeCategoryId, 'up_strict');
+            });
+            
+            Event.observe($("moveCategoryDown"), "click", function(e) {
+                Event.stop(e);
+                self.moveCategory(Backend.Category.activeCategoryId, 'down_strict');
+            });
+        }
     },
 
 	/**
@@ -112,7 +118,7 @@ Backend.Category = {
 	{
 		Element.update('activeCategoryPath', Backend.Category.getPath(categoryId));
 
-		Backend.Product.Editor.prototype.showCategoriesContainer();
+		if(Backend.Product) Backend.Product.Editor.prototype.showCategoriesContainer();
 
 		Backend.Category.tabControl.switchCategory(categoryId, Backend.Category.activeCategoryId);
 		Backend.Category.activeCategoryId = categoryId;
@@ -122,7 +128,7 @@ Backend.Category = {
 			
 		// and register browser history event to enable backwar/forward navigation
 		// Backend.ajaxNav.add('cat_' + categoryId);
-		Backend.Category.tabControl.activeTab.onclick();
+		if(Backend.Category.tabControl.activeTab) Backend.Category.tabControl.activeTab.onclick();
 	},
 
 	getPath: function(nodeId)
@@ -553,7 +559,7 @@ CategoryTabControl.prototype = {
 
 	switchCategory: function(currentCategory, previousActiveCategoryId)
 	{
-		if (previousActiveCategoryId != null)
+		if (previousActiveCategoryId != null && this.activeTab)
 		{
 			var prevContainer = this.getContainerId(this.activeTab.id, previousActiveCategoryId);
 			if ($(prevContainer) != undefined)

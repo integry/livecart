@@ -22,13 +22,9 @@ class CategoryController extends StoreManagementController
 	{
 		$response = new ActionResponse();
 	    
-        $filter = new ARSelectFilter();
-        $condition = new OperatorCond(new ARFieldHandle("Category", "ID"), Category::ROOT_ID, "=");
-        $condition->addOR(new OperatorCond(new ARFieldHandle("Category", "parentNodeID"), Category::ROOT_ID, "="));
-        $filter->setCondition($condition);
-		$filter->setOrder(new ARFieldHandle("Category", "lft"), ARSelectFilter::ORDER_ASC);
-		
-		$response->setValue("categoryList", Category::getRecordSet($filter)->toArray($this->store->getDefaultLanguageCode()));
+		$categoryList = Category::getRootNode()->getDirectChildNodes();
+		$categoryList->unshift(Category::getRootNode());
+		$response->setValue("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
         $response->setValue('curLanguageCode', $this->locale->getLocaleCode());
 
 		return $response;

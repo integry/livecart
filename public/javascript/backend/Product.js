@@ -552,8 +552,8 @@ Backend.Product.Editor.prototype =
 
     showCategoriesContainer: function(args)
     {       
-        Element.hide($("productManagerContainer"));
-        Element.show($("managerContainer"));
+        if($("productManagerContainer")) Element.hide($("productManagerContainer"));
+        if($("managerContainer")) Element.show($("managerContainer"));
     }
 }
 

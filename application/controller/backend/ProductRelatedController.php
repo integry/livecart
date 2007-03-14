@@ -13,15 +13,24 @@ ClassLoader::import("application.model.product.Product");
 class ProductRelatedController extends StoreManagementController 
 {
 	public function index()
-	{
+	{		
 	    $response = new ActionResponse();
 
-	    
-	    
 	    $response->setValue('id', $this->request->getValue('id'));
 	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
 	    
 	    return $response;
+	}
+	
+	public function selectProduct()
+	{
+	    $response = new ActionResponse();
+	    
+		$categoryList = Category::getRootNode()->getDirectChildNodes();
+		$categoryList->unshift(Category::getRootNode());
+		$response->setValue("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
+	    
+		return $response;
 	}
 }
 
