@@ -13,8 +13,12 @@
 
 <fieldset class="container" style="vertical-align: middle;">
     
-    {form action="controller=backend.product action=processMass id=$categoryID" handle=$massForm style="vertical-align: middle;"}
+    {form action="controller=backend.product action=processMass id=$categoryID" handle=$massForm style="vertical-align: middle;" onsubmit="return false;"}
     
+    <input type="hidden" name="filters" value="" />
+    <input type="hidden" name="selectedIDs" value="" />
+    <input type="hidden" name="isInverse" value="" />
+            
     <span id="bookmark" style="margin-top: 15px; float: left;"></span>
     
     <span style="float: right; text-align: right;" id="productMass_{$categoryID}">
@@ -67,6 +71,7 @@
         </span>
         
         <input type="submit" value="{tn _process}" class="submit" />
+        <span class="progressIndicator" style="display: none;"></span>
         
     </span>
     
@@ -80,22 +85,22 @@
 		<th class="cell_cb"><input type="checkbox" class="checkbox" /></th>
 		<th class="first cell_sku">
 			<span class="fieldName">Product.sku</span>
-			<input type="text" class="text" id="filter_Product.sku_{$categoryID}" name="filter_Product.sku" value="{tn SKU}" />
+			<input type="text" class="text" id="filter_Product.sku_{$categoryID}" value="{tn SKU}" />
 		</th>
 		<th class="cell_name">
             <span class="fieldName">Product.name</span>
-    		<input type="text" class="text" id="filter_Product.name_{$categoryID}" name="filter_Product.name" value="{tn Name}" />                    
+    		<input type="text" class="text" id="filter_Product.name_{$categoryID}" value="{tn Name}" />                    
         </th>	
 		<th class="cell_manuf">
             <span class="fieldName">Manufacturer.name</span>
-    		<input type="text" class="text" id="filter_Manufacturer.name_{$categoryID}" name="filter_Manufacturer.name" value="{tn Manufacturer}" />  
+    		<input type="text" class="text" id="filter_Manufacturer.name_{$categoryID}" value="{tn Manufacturer}" />  
         </th>	
 		<th class="cell_price">
             <span class="fieldName">ProductPrice.price</span>Price <small>({$currency})</small>
         </th>
 		<th class="cell_stock">
             <span class="fieldName">Product.stockCount</span>
-    		<input type="text" class="text" id="filter_Product.stockCount_{$categoryID}" name="filter_Product.stockCount" value="{tn In stock}" />   
+    		<input type="text" class="text" id="filter_Product.stockCount_{$categoryID}" value="{tn In stock}" />   
         </th>	
 		<th class="cell_enabled">
             <span class="fieldName">Product.isEnabled</span>{tn Enabled}
@@ -134,5 +139,5 @@
     new ActiveGridFilter($('filter_Manufacturer.name_{$categoryID}'), grid);
     new ActiveGridFilter($('filter_Product.stockCount_{$categoryID}'), grid);
     
-    new Backend.Product.massActionHandler($('productMass_{$categoryID}'));
+    new Backend.Product.massActionHandler($('productMass_{$categoryID}'), grid);
 </script>

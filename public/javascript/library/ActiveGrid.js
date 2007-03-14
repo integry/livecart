@@ -97,6 +97,31 @@ ActiveGrid.prototype =
         this.ricoGrid.fetchBuffer(0, false, true);
     },
 	
+	getFilters: function()
+	{
+        var res = {};
+
+        for (k in this.filters)
+    	{
+            if (k.substr(0, 7) == 'filter_')
+            {
+                res[k.substr(7, 1000)] = this.filters[k];
+            }
+        }        
+
+        return res;
+    },
+    
+    getSelectedIDs: function()
+    {
+        return this.selectedRows;
+    },
+	
+    isInverseSelection: function()
+    {
+        return this.inverseSelection;
+    },
+
 	/**
 	 *	Select all rows
 	 */
@@ -276,7 +301,10 @@ ActiveGridFilter.prototype =
 	
 	setFilterValue: function()
 	{
-        this.activeGridInstance.setFilterValue(this.element.id, this.element.value);
+        var filterName = this.element.id;
+        filterName = filterName.substr(0, filterName.indexOf('_', 7));
+        
+        this.activeGridInstance.setFilterValue(filterName, this.element.value);
 		this.activeGridInstance.reloadGrid();        
     }
 }

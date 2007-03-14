@@ -223,16 +223,21 @@ Backend.Product.massActionHandler.prototype =
     handlerMenu: null,    
     actionSelector: null,
     valueEntryContainer: null,
+    form: null,
+        
+    grid: null,
     
-    initialize: function(handlerMenu)
+    initialize: function(handlerMenu, activeGrid)
     {
         this.handlerMenu = handlerMenu;     
         this.actionSelector = handlerMenu.getElementsByTagName('select')[0];
         this.valueEntryContainer = document.getElementsByClassName('bulkValues')[0];
+        this.form = this.actionSelector.form;
 
         this.actionSelector.onchange = this.actionSelectorChange.bind(this);
-
-        console.log(handlerMenu);
+        Event.observe(this.actionSelector.form, 'submit', this.submit.bind(this));
+            
+        this.grid = activeGrid;
     },
     
     actionSelectorChange: function()
@@ -247,11 +252,25 @@ Backend.Product.massActionHandler.prototype =
         
         if (this.actionSelector.form.elements.namedItem(this.actionSelector.value))
         {
-            this.actionSelector.form.elements.namedItem(this.actionSelector.value).style.display = '';            
+            this.form.elements.namedItem(this.actionSelector.value).style.display = '';            
         }
                 
         this.valueEntryContainer.style.display = '';
-    }        
+    },
+    
+    submit: function()
+    {
+        this.form.elements.namedItem('filters').value = this.grid.getFilters().toJSONString();
+        this.form.elements.namedItem('selectedIDs').value = this.grid.getSelectedIDs().toJSONString();
+        this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection();
+        
+        new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('progressIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));
+    },
+    
+    submitCompleted: function()
+    {
+        console.log('we`re back!');    
+    }
 }
 
 Backend.Product.saveHandler = Class.create();
