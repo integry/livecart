@@ -15,8 +15,8 @@ categories.
 	<li><a href="{self}#view">View products</a></li>
 	<li><a href="{self}#search">Search</a></li>
 	<li><a href="{self}#multiple">Manage multiple products</a></li>
-	<li><a href="{help /products.add}">Add new product</a></li>
-	<li><a href="{self}#edit">Edit single product</a></li>
+	<li>( <a href="{help /products.add}">Add new product</a> )</li>
+	<li>( <a href="{self}#edit">Edit single product</a> )</li>
 </ul>
 </fieldset>
 </div>
