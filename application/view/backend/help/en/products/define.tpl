@@ -1,8 +1,11 @@
 <p>	
-	To modify a single product, locate it in your catalog and click <strong>Edit</strong> icon. Products detailed page
-	opens, you can edit details by choosing appropriate tab indicating details group (main, pricing etc.)
+	The product detail form is devided into eight sections. <ins>add</ins> vs. <ins>edit</ins>.
 </p>
+
+<!--
+You can edit details by choosing appropriate tab indicating details group (main, pricing etc.)
 <img src="image/doc/products/edit/tabs.bmp">
+-->
 
 <div class="tasks">
 <fieldset>

@@ -25,9 +25,8 @@ you have to set these attributes before adding products.</p>
 	<li>Click <strong>Products</strong> tab to open product management section.</li>
 	<li>In the products section click <strong>Add new Product:</strong></li>
 	<img src="image/doc/products/add/add_new.bmp">
-	<li><i>Add new product</i> main form opens. Fill out the form (see <a href="/livecart//en/backend.help/products.edit">edit product</a> page for field specification.) 
-	and <strong>save</strong> changes.</li>
-	<ins>required fields</ins>
+	<li><i>Add new product</i> main form opens. See <a href="{help /products.define}">field specifications</a> for more details.</li> 
+	<ins>save changes</ins>
 </ul>
 
 <h3 id="import">Import Data</h3>
@@ -36,5 +35,5 @@ you have to set these attributes before adding products.</p>
 
 
 {helpSeeAlso}
-	{see products.edit}
+	{see products.define}
 {/helpSeeAlso}

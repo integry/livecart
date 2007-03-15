@@ -14,9 +14,9 @@ categories.
 <ul>	
 	<li><a href="{self}#view">View products</a></li>
 	<li><a href="{self}#search">Search</a></li>
-	<li><a href="{self}#edit">Edit single product</a></li>
 	<li><a href="{self}#multiple">Manage multiple products</a></li>
-
+	<li><a href="{help /products.add}">Add new product</a></li>
+	<li><a href="{self}#edit">Edit single product</a></li>
 </ul>
 </fieldset>
 </div>
@@ -59,7 +59,7 @@ to the customer; describe how the results can be processed; Are there any global
 
 <h3 id="edit">Edit product</h3>
 
-<p>To edit product's details click on a product name. This will open product's <a href="/livecart//en/backend.help/products.edit">detailed page</a>.</p>
+<p>To edit product's details click on a product name. This will open product's <a href="{help /products.define}">detailed page</a>.</p>
 
 <h3 id="multiple">Manage multiple products</h3>
 
@@ -67,6 +67,6 @@ to the customer; describe how the results can be processed; Are there any global
 
 {helpSeeAlso}
 	{see products.add}
-	{see products.edit}
+	{see products.define}
 {/helpSeeAlso}
 
