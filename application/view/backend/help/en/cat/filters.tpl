@@ -1,4 +1,3 @@
-<h1 id="top"></h1>
 <p>Filters is a tool designed to make product search easy. Instead of browsing product catalog by categories you can create filters that will define 
 specific search criteria and allow users to find products in no time. For instance, a <i>Bluetooth</i> filter in a cell phones catalog
 can view all the phones that have a bluetooth feature no matter their place or any other parameters.</p>

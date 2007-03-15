@@ -1,3 +1,5 @@
+<div id="top">
+</div>
 {defun name="topicTree" node=false}
 	{if $node}
 		<ul>			

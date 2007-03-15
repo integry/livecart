@@ -14,7 +14,7 @@
 	way a customer will have an ability to select certain kind of processor without a need to browse through all the available types 
 	(thus restricting his/her search to specific needs). Of course you can (and you probably should) create as many attributes as possible 
 	(for instance, for size, capacity, price and so on) which will allow users to customize their search in the most effective way. Note that actual
-	filtering options are set in the <a href="{help cat.filter}">Filters</a> section where you use category's attributes to create filters.</p>
+	filtering options are set in the <a href="{help /cat.filters}">Filters</a> section where you use category's attributes to create filters.</p>
 <p class="note">
 	<strong>Note:</strong> Attributes have to be set up for each category individually. You can however set higher level (global) attributes for
 	higher level categories when necessary. For example, if the Computers category has two subcategories for Laptops and Desktops, you can define
@@ -210,7 +210,7 @@ by necessary changes. A numeric attribute looks similar to this one:
 
 LC allows you to group your attributes into logical chunks called "groups". To introduce a new group:
 	<ul>
-		<li>Click <storng>Add new group</strong></li>
+		<li>Click <strong>Add new group</strong></li>
 		<img src="image/doc/categories/attributes/add_new_group.bmp">
 		<li>Enter group title (to identify group)</li>
 		<img src="image/doc/categories/attributes/group_title.bmp">
@@ -231,6 +231,7 @@ into appropriate groups.
 
 
 <h3 id="edit">Edit attribute</h3>
+<p align="right"><a href="{self}#top"><small>Top</small></a></p>
 
 To edit attribute: select an attribute from the list and click on its "pen" icon on the left:
 
