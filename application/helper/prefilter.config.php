@@ -11,7 +11,7 @@
  */
 function smarty_prefilter_config($tplSource, $smarty)
 {
-	$source = preg_replace('/{tn (.+?)}/', '{translate text="$1" disableLiveTranslation="true"}', $tplSource);
+	$source = preg_replace('/{tn (.+?)}/', '{translate|escape:"quotes" text="$1" disableLiveTranslation="true"}', $tplSource);
 	
 	$source = preg_replace('/{t ([^\|]+?)}/', '{translate text="$1"}', $source);
 	

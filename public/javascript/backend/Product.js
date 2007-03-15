@@ -261,7 +261,15 @@ Backend.Product.massActionHandler.prototype =
     
     submit: function()
     {
-        this.form.elements.namedItem('filters').value = this.grid.getFilters().toJSONString();
+        if ('delete' == this.actionSelector.value)
+        {
+			if (!confirm(this.deleteConfirmMessage))
+			{
+				return false;
+			}
+		}
+		
+		this.form.elements.namedItem('filters').value = this.grid.getFilters().toJSONString();
         this.form.elements.namedItem('selectedIDs').value = this.grid.getSelectedIDs().toJSONString();
         this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;
         new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('progressIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));

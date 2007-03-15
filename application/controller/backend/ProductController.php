@@ -99,6 +99,18 @@ class ProductController extends StoreManagementController
         $act = $this->request->getValue('act');
 		$field = array_pop(explode('_', $act, 2));
 		
+		if ('manufacturer' == $act)
+		{
+			$manufacturer = Manufacturer::getInstanceByName($this->request->getValue('manufacturer'));
+		}
+		else if ('price' == $act || 'inc_price' == $act)
+		{
+			ProductPrice::loadPricesForRecordSet($products);	
+			$baseCurrency = Store::getInstance()->getDefaultCurrencyCode();
+			$price = $this->request->getValue($act);
+			$currencies = Store::getInstance()->getCurrencySet();
+		}
+
         foreach ($products as $product)
 		{
             if (substr($act, 0, 7) == 'enable_')
@@ -113,8 +125,36 @@ class ProductController extends StoreManagementController
             {
                 $product->setFieldValue($field, $this->request->getValue('set_' . $field));                    
             }
-                    
-            $product->save();
+            else if ('delete' == $act)
+            {
+				$product->delete();
+			}
+			else if ('manufacturer' == $act)
+			{
+				$product->manufacturer->set($manufacturer);
+			}
+			else if ('price' == $act)
+			{
+				$product->setPrice($baseCurrency, $price);
+			}
+			else if ('inc_price' == $act)
+			{
+				$pricing = $product->getPricingHandler();
+				foreach ($currencies as $currency)
+				{
+					if ($pricing->isPriceSet($currency))
+					{
+						$p = $pricing->getPrice($currency);
+						$p->increasePriceByPercent($price);						
+					}	
+				}
+			}
+			else if ('inc_stock' == $act)
+			{
+				$product->stockCount->set($product->stockCount->get() + $this->request->getValue($act));
+			}                    
+            
+			$product->save();
         }		
 		
 		return new JSONResponse($this->request->getValue('act'));	

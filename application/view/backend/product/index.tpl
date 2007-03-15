@@ -139,5 +139,6 @@
     new ActiveGridFilter($('filter_Manufacturer.name_{$categoryID}'), grid);
     new ActiveGridFilter($('filter_Product.stockCount_{$categoryID}'), grid);
     
-    new Backend.Product.massActionHandler($('productMass_{$categoryID}'), grid);
+    var massHandler = new Backend.Product.massActionHandler($('productMass_{$categoryID}'), grid);
+    massHandler.deleteConfirmMessage = '{tn _delete_conf}' ;
 </script>

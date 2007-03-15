@@ -222,7 +222,7 @@ class Product extends MultilingualObject
 	  	return $this->category->get()->getSpecificationFieldSet(Category::INCLUDE_PARENT, $loadReferencedRecords);
 	}
 
-	public function loadSpecification($specificationData = null, $pricingData = null)
+	public function loadSpecification($specificationData = null)
 	{
 	  	if (!$specificationData)
 	  	{
@@ -248,30 +248,20 @@ class Product extends MultilingualObject
 				 ' . str_replace('ON specFieldID', 'ON SpecificationItem.specFieldID', $cond) . 
                  ' ORDER BY productID, SpecFieldGroupPosition, position, specFieldValuePosition';
                  
-/*
-		    $query = '
-			SELECT *, NULL as valueID FROM SpecificationDateValue WHERE productID = ' . $this->getID() . '
-		    UNION
-			SELECT *, NULL as valueID FROM SpecificationStringValue WHERE productID = ' . $this->getID() . '
-		    UNION
-			SELECT *, NULL as valueID FROM SpecificationNumericValue WHERE productID = ' . $this->getID() . '
-		    UNION
-			SELECT SpecificationItem.productID, SpecificationItem.specFieldID, SpecFieldValue.value, SpecFieldValue.ID
-					 FROM SpecificationItem
-					 	LEFT JOIN SpecFieldValue ON SpecificationItem.specFieldValueID =  SpecFieldValue.ID
-					 WHERE productID = ' . $this->getID();
-*/
-
 			$specificationData = self::getDataBySQL($query);
 		}
 
+		$this->specificationInstance = new ProductSpecification($this, $specificationData);
+	}
+
+	public function loadPricing($pricingData = null)
+	{
 	  	if (!$pricingData)
 	  	{
 			$pricingData = $this->getRelatedRecordSet("ProductPrice", new ARSelectFilter());
 	  	}
 
-		$this->specificationInstance = new ProductSpecification($this, $specificationData);
-  	  	$this->pricingHandlerInstance = new ProductPricing($this, $pricingData);
+  	  	$this->pricingHandlerInstance = new ProductPricing($this, $pricingData);		
 	}
 
 	public function loadRequestData(Request $request)

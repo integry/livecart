@@ -150,19 +150,54 @@ class ProductSpecification
 	}
 
 	/**
-	 * Load product specification data for several products at once
+	 * Load product specification data for a whole recordset of products at once
+     */
+    public static function loadSpecificationForRecordSet(ARSet $products)
+	{
+        $ids = array();
+		foreach ($products as $key => $product)
+	  	{
+			$ids[$product['ID']] = $key;
+		}
+
+		$specificationArray = self::fetchSpecificationData(array_flip($ids));
+		
+		foreach ($specificationArray as &$spec)
+		{
+			$product = $products[$ids[$spec['productID']]];
+			$product->loadSpecification($spec);
+		}				
+	}
+
+	/**
+	 * Load product specification data for a whole array of products at once
      */
     public static function loadSpecificationForRecordSetArray(&$productArray)
 	{
-	  	if (!$productArray)
-	  	{
-            return false;        
-        }
-            
         $ids = array();
 		foreach ($productArray as $key => $product)
 	  	{
 			$ids[$product['ID']] = $key;
+		}
+		
+		$specificationArray = self::fetchSpecificationData(array_flip($ids));
+		
+		foreach ($specificationArray as &$spec)
+		{
+			// transform for presentation
+			$spec = MultiLingualObject::transformArray($spec, 'SpecificationStringValue');
+			$spec = MultiLingualObject::transformArray($spec, 'SpecField');
+
+			// append to product array
+			$productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']] = $spec;			
+		}
+	}
+
+	private static function fetchSpecificationData($productIDs)
+	{
+		if (!$productIDs)
+		{
+			return array();
 		}
 		
 		$cond = '
@@ -171,7 +206,7 @@ class ProductSpecification
 		LEFT JOIN 	
 			SpecFieldGroup ON SpecField.specFieldGroupID = SpecFieldGroup.ID 
 		WHERE 
-			productID IN (' . implode(', ', array_flip($ids)) . ') AND SpecField.isDisplayedInList = 1';
+			productID IN (' . implode(', ', $productIDs) . ') AND SpecField.isDisplayedInList = 1';
 
 	    $query = '
 		SELECT SpecificationDateValue.*, NULL AS specFieldValueID, NULL AS specFieldValuePosition, SpecFieldGroup.position AS SpecFieldGroupPosition, SpecField.* as valueID FROM SpecificationDateValue ' . $cond . '
@@ -187,11 +222,12 @@ class ProductSpecification
                  ' ORDER BY productID, SpecFieldGroupPosition, position, specFieldValuePosition';
 		
 		$specificationArray = ActiveRecordModel::getDataBySQL($query);
+		
 		$multiLingualFields = array('name', 'description', 'valuePrefix', 'valueSuffix');
-
+		
 		foreach ($specificationArray as &$spec)
 		{
-			// transform array for presentation
+			// unserialize language field values
 			foreach ($multiLingualFields as $value)
 			{
 				$spec[$value] = unserialize($spec[$value]);
@@ -201,14 +237,10 @@ class ProductSpecification
                 || (SpecField::TYPE_NUMBERS_SELECTOR == $spec['type']))
 			{
                 $spec['value'] = unserialize($spec['value']);
-			}
-
-			$spec = MultiLingualObject::transformArray($spec, 'SpecificationStringValue');
-			$spec = MultiLingualObject::transformArray($spec, 'SpecField');
-
-			// append to product array
-			$productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']] = $spec;			
+			}		
 		}
+		
+		return $specificationArray;				
 	}
 
 	private function loadSpecificationData($specificationDataArray)

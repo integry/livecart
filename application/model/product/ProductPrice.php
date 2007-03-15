@@ -112,6 +112,12 @@ class ProductPrice extends ActiveRecordModel
 
 		return round($price, 2);
 	}
+	
+	public function increasePriceByPercent($percentIncrease)
+	{
+		$multiply = (100 + $percentIncrease) / 100; 
+		$this->price->set($this->price->get() * $multiply);	
+	}
 
 	public static function calculatePrice(Product $product, Currency $currency, $basePrice = null)
 	{
@@ -140,27 +146,43 @@ class ProductPrice extends ActiveRecordModel
     }
 	
 	/**
-	 * Load product pricing data for several products at once
+	 * Load product pricing data for a whole array of products at once
+     */
+	public static function loadPricesForRecordSet(ARSet $products)	
+	{
+        $ids = array();
+		foreach ($products as $key => $product)
+	  	{
+			$ids[$product->getID()] = $key;
+		}
+
+		$priceArray = self::fetchPriceData(array_flip($ids));
+							
+		$pricing = array();
+		foreach ($priceArray as $price)
+		{
+			$pricing[$price['productID']][$price['currencyID']] = $price['price'];
+		}			
+
+		foreach ($pricing as $productID => $productPricing)
+		{
+			$product = $products->get($ids[$productID]);
+			$product->loadPricing($productPricing);
+		}
+	}
+
+	/**
+	 * Load product pricing data for a whole array of products at once
      */
 	public static function loadPricesForRecordSetArray(&$productArray)
 	{
-	  	if (!$productArray)
-	  	{
-            return false;        
-        }
-            
         $ids = array();
 		foreach ($productArray as $key => $product)
 	  	{
 			$ids[$product['ID']] = $key;
 		}
-	
-        $baseCurrency = Store::getInstance()->getDefaultCurrencyCode();
-        
-        $filter = new ARSelectFilter();
-        $filter->setCondition(new INCond(new ARFieldHandle('ProductPrice', 'productID'), array_keys($ids)));
-        $filter->setOrder(new ARExpressionHandle('currencyID = "' . $baseCurrency . '"'), 'DESC');
-        $prices = ActiveRecordModel::getRecordSetArray('ProductPrice', $filter);
+	       
+        $prices = self::fetchPriceData(array_keys($ids));
         
         // sort by product
         $productPrices = array();
@@ -169,6 +191,7 @@ class ProductPrice extends ActiveRecordModel
             $productPrices[$price['productID']][$price['currencyID']] = $price['price'];
         }
         
+        $baseCurrency = Store::getInstance()->getDefaultCurrencyCode();
         $currencies = Store::getInstance()->getCurrencySet();
         
         foreach ($productPrices as $product => $prices)
@@ -186,7 +209,21 @@ class ProductPrice extends ActiveRecordModel
                 $productArray[$ids[$product]]['price_' . $id] = $price;
             }
         }
-
+	}
+	
+	private static function fetchPriceData($productIDs)
+	{
+        if (!$productIDs)
+        {
+			return array();	
+		}
+		
+		$baseCurrency = Store::getInstance()->getDefaultCurrencyCode();
+        
+        $filter = new ARSelectFilter();
+        $filter->setCondition(new INCond(new ARFieldHandle('ProductPrice', 'productID'), $productIDs));
+        $filter->setOrder(new ARExpressionHandle('currencyID = "' . $baseCurrency . '"'), 'DESC');
+        return ActiveRecordModel::getRecordSetArray('ProductPrice', $filter);		
 	}
 }
 

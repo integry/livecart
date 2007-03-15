@@ -35,7 +35,7 @@ class ProductPricing
 			{
 				$this->prices[$id] = ProductPrice::getNewInstance($product, Currency::getInstanceById($id));
 				$this->prices[$id]->price->set($price);
-				$this->prices[$id]->markAsLoaded();
+				$this->prices[$id]->resetModifiedStatus();
 			}
 		}
 	}
