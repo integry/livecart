@@ -18,19 +18,27 @@ class ProductRelatedController extends StoreManagementController
 
 	    $response->setValue('id', $this->request->getValue('id'));
 	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
+		$response->setValue("productID", $this->request->getValue('id'));
 	    
 	    return $response;
 	}
 	
 	public function selectProduct()
 	{
-	    $response = new ActionResponse();
+	    $response = new ActionResponse();	    
 	    
 		$categoryList = Category::getRootNode()->getDirectChildNodes();
 		$categoryList->unshift(Category::getRootNode());
 		$response->setValue("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
-	    
+		
 		return $response;
+	}
+	
+	public function related()
+	{
+	    $response = new ActionResponse();
+	    $response->setValue('product', Product::getInstanceByID((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES)->toArray());
+	    return $response;
 	}
 }
 

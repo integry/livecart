@@ -418,7 +418,11 @@ ActiveList.prototype = {
         li.id = this.ul.id + "_" + id;
         this.ul.appendChild(li);
 
-        if (dom[0])
+        if(typeof dom == 'string')
+        {
+            li.innerHTML = dom;
+        }
+        else if (dom[0])
         {
             for(var i = 0; i < dom.length; i++)
             {

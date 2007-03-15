@@ -1,0 +1,1 @@
+<div>{$product.name_lang}</div>

@@ -4,7 +4,7 @@
 		<td class="cell_sku">{$product.sku}</td>
 		<td class="cell_name">
             <div>
-                <a href="#edit" onclick="window.openProduct({$product.ID}, event); return false;">{$product.name_lang}</a>
+                <a href="#edit" onclick="if(window.selectProductPopup) window.selectProductPopup.getSelectedProduct({$product.ID}); else window.openProduct({$product.ID}, event); return false;">{$product.name_lang}</a>
                 <span class="progressIndicator" id="productIndicator_{$product.ID}" style="display: none;"></span>            
             </div>
         </td>

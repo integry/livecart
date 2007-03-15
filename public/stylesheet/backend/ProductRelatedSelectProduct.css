@@ -1,0 +1,29 @@
+#tabContainer, .container { 
+    display: none; 
+}
+
+#categoryBrowser {
+    height: 360px;
+    padding: 0px;
+    overflow: auto;
+}
+
+#sectionContainer {
+    height: 335px;
+    padding: 0px;
+    margin-right: 10px;
+}
+
+#activeCategoryPath {
+    font-size: 20px;
+    height: 25px;
+}
+
+#topShadeContainerRight {
+    display: none;
+}
+
+body, html {
+    padding: 5px;
+    background-image: none;
+}
