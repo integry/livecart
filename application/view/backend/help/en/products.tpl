@@ -33,14 +33,29 @@ categories.
 		<li>Product are displayed in the table fashioned similar to this:</li>
 		<img src="image/doc/products/products.bmp"/>
 	</ul>
-	By default products are displayed in (xxx) order. LC allows you to change the order by specifying any field
-	in the toolbar (name, manufacturer, price etc.)	You can also set ascending or descending orders by clicking 
-	on the "arrow" icon next to the product's property.
+	By default products are displayed in (xxx) order. LC allows you to view products by specifying product's 
+	property name in the toolbar (SKU, name, manufacturer, price etc.).
+	<ul>
+		<br \>
+		<li>Click a property to activate its field:</li>
+		<img src="image/doc/products/name2.bmp"/>
+		<br \>
+		<br \>
+		<li>Enter a name in the field to display products:</li>
+		<img src="image/doc/products/name_nokia2.bmp"/>
+		Products that match your criteria appear below automatically.
+	</ul>
+	
+	<br \>
+	<p>You can also set ascending or descending order by clicking on the "arrow" icon next to the product's property:</p>
+	<img src="image/doc/products/arrow2.bmp"/>
+	<br \>
 </p>
 
 <h3 id="search">Search</h3>
 
-<p></p>
+<p>Describe Search tools - what is the purpose; describe how to use tools; describe what is displayed
+to the customer; describe how the results can be processed; Are there any global search ways</p>
 
 <h3 id="edit">Edit product</h3>
 
@@ -48,7 +63,7 @@ categories.
 
 <h3 id="multiple">Manage multiple products</h3>
 
-<p></p>
+<p>Describe how to gather products; describe how edit can be applied; Save changes</p>
 
 {helpSeeAlso}
 	{see products.add}
