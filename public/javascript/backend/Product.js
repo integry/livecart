@@ -250,12 +250,13 @@ Backend.Product.massActionHandler.prototype =
             }
         }
         
+        this.valueEntryContainer.style.display = '';
+        
         if (this.actionSelector.form.elements.namedItem(this.actionSelector.value))
         {
             this.form.elements.namedItem(this.actionSelector.value).style.display = '';            
-        }
-                
-        this.valueEntryContainer.style.display = '';
+            this.form.elements.namedItem(this.actionSelector.value).focus();
+        }    
     },
     
     submit: function()

@@ -85,7 +85,7 @@ class ActiveGrid
 		// apply IDs to filter
 		if ($modelClass)
 		{
-			$selectedIDs = array_keys((array)json_decode($request->getValue('selectedIDs')));
+			$selectedIDs = json_decode($request->getValue('selectedIDs'));
 			if ($selectedIDs)
 			{
 				if ((bool)$request->getValue('isInverse'))

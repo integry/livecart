@@ -30,15 +30,15 @@
             <option value="delete">Delete</option>
                 
             <option value="manufacturer">Set manufacturer</option>
-            <option value="keywords">Set keywords</option>
-            <option value="URL">Set website address</option>
+            <option value="set_keywords">Set keywords</option>
+            <option value="set_URL">Set website address</option>
                 
             <optgroup label="Inventory & Pricing">
                 <option value="inc_price">Increase price (percent)</option>
                 <option value="inc_stock">Increase stock (count)</option>
     
                 <option value="price">Set price ({$currency})</option>
-                <option value="stock">Set stock</option>
+                <option value="set_stockCount">Set stock</option>
             </optgroup>
                         
             <optgroup label="Shipping Options">
@@ -63,11 +63,11 @@
         <span class="bulkValues" style="display: none;">
             {textfield class="text number" name="inc_price"}
             {textfield class="text number" name="inc_stock"}
-            {textfield class="text number" name="stock"}
+            {textfield class="text number" name="set_stockCount"}
             {textfield class="text number" name="price"}  
    			{textfield name="manufacturer" class="text" autocomplete="controller=backend.manufacturer field=manufacturer" id="set_manufacturer_`$categoryID`"}
-			{textfield name="keywords" class="text" id="set_keywords_`$categoryID`" autocomplete="controller=backend.product field=keywords"}
-			{textfield name="URL" class="text" id="set_url_`$categoryID`" autocomplete="controller=backend.product field=URL"}
+			{textfield name="set_keywords" class="text" id="set_keywords_`$categoryID`" autocomplete="controller=backend.product field=keywords"}
+			{textfield name="set_URL" class="text" id="set_url_`$categoryID`" autocomplete="controller=backend.product field=URL"}
         </span>
         
         <input type="submit" value="{tn _process}" class="submit" />

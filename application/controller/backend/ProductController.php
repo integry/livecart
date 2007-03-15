@@ -78,6 +78,48 @@ class ProductController extends StoreManagementController
         return new Form($validator);                
     }
 
+    public function processMass()
+    {        
+		$filter = new ARSelectFilter();
+		
+        $category = Category::getInstanceByID($this->request->getValue('id'), Category::LOAD_DATA);
+        $cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
+		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
+		
+        $filter->setCondition($cond);
+        $filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . Store::getInstance()->getDefaultCurrencyCode() . '")', 'ID');
+		
+		$filters = (array)json_decode($this->request->getValue('filters'));
+		$this->request->setValue('filters', $filters);
+		
+        $grid = new ActiveGrid($this->request, $filter, 'Product');
+        					
+		$products = ActiveRecordModel::getRecordSet('Product', $filter, Product::LOAD_REFERENCES);
+		
+        $act = $this->request->getValue('act');
+		$field = array_pop(explode('_', $act, 2));
+		
+        foreach ($products as $product)
+		{
+            if (substr($act, 0, 7) == 'enable_')
+            {
+                $product->setFieldValue($field, 1);    
+            }        
+            else if (substr($act, 0, 8) == 'disable_')
+            {
+                $product->setFieldValue($field, 0);                 
+            }
+            else if (substr($act, 0, 4) == 'set_')
+            {
+                $product->setFieldValue($field, $this->request->getValue('set_' . $field));                    
+            }
+                    
+            $product->save();
+        }		
+		
+		return new JSONResponse($this->request->getValue('act'));	
+    }	
+
 	public function autoComplete()
 	{
 	  	$f = new ARSelectFilter();
@@ -473,28 +515,6 @@ class ProductController extends StoreManagementController
 	    
 	    return $response;
 	}
-    
-    public function processMass()
-    {        
-		$filter = new ARSelectFilter();
-		
-        $category = Category::getInstanceByID($this->request->getValue('id'), Category::LOAD_DATA);
-        $cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
-		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
-		
-        $filter->setCondition($cond);
-        $filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . Store::getInstance()->getDefaultCurrencyCode() . '")', 'ID');
-		
-		$filters = (array)json_decode($this->request->getValue('filters'));
-		$this->request->setValue('filters', $filters);
-		
-        $grid = new ActiveGrid($this->request, $filter, 'Product');
-		echo $filter->createString();
-        					
-        $recordCount = true;
-		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, Product::LOAD_REFERENCES, $recordCount);
-		return new JSONResponse(1);	
-    }	
 }
 
 ?>

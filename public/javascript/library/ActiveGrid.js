@@ -83,7 +83,6 @@ ActiveGrid.prototype =
 	
 	onUpdate: function()
 	{
-		console.log('marking');console.log(this);
 		this._markSelectedRows();		
 	},
 	
@@ -123,7 +122,17 @@ ActiveGrid.prototype =
     
     getSelectedIDs: function()
     {
-        return this.selectedRows;
+        var selected = [];
+        
+        for (k in this.selectedRows)
+        {
+            if (true == this.selectedRows[k])
+            {
+                selected[selected.length] = k;
+            }
+        }
+        
+        return selected;
     },
 	
     isInverseSelection: function()
