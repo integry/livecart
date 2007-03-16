@@ -10,6 +10,10 @@
   	background-color: #F7E0E0;  		
 }
 
+.filter_item_new {
+/*    margin-top: -25px; */
+}
+
 .filter_step_lev1 {
     background: #fff;
 }

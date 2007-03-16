@@ -46,15 +46,18 @@ Backend.CategoryImage.prototype =
                 
     	var firstli = images[0];
     		
-        // move first image under "Main Image"
-        if (mainP.nextSibling == supplementalP)
+        if (firstli)
         {
-            firstli.parentNode.insertBefore(firstli, mainP.nextSibling);            
-        }    
-        
-        while ('LI' == firstli.nextSibling.tagName)
-        {
-            firstli.parentNode.insertBefore(firstli.nextSibling, supplementalP.nextSibling);   
+            // move first image under "Main Image"
+            if (mainP.nextSibling == supplementalP)
+            {
+                firstli.parentNode.insertBefore(firstli, mainP.nextSibling);            
+            }    
+            
+            while ('LI' == firstli.nextSibling.tagName)
+            {
+                firstli.parentNode.insertBefore(firstli.nextSibling, supplementalP.nextSibling);   
+            }            
         }
         
         supplementalP.style.display = images.length < 2 ? 'none' : '';
@@ -227,7 +230,7 @@ Backend.CategoryImage.prototype =
 				this.src = this.imageData['paths'][nextImg];
 			}
 
-	  	templ.id = 'catImageListItem' + categoryId + '_' + imageData['ID'];
+	  	templ.id = 'catImageListItem_' + imageData['ID'];
 
 		if (imageData['title'])
 		{
@@ -262,7 +265,7 @@ Backend.CategoryImage.prototype =
 		}
 
 		var templ = this.createEntry(categoryId, imageData);
-		var entry = $('catImageListItem' + categoryId + '_' + imageData['ID']);
+		var entry = $('catImageListItem_'  + imageData['ID']);
 	  	  	
 	  	entry.parentNode.replaceChild(templ, entry);
 	  	
@@ -303,7 +306,7 @@ Backend.CategoryImage.prototype =
 
 	postSave: function(categoryId, imageId, result)
 	{
-		var entry = $('catImageListItem' + categoryId + '_' + imageData['ID']);
+		var entry = $('catImageListItem_' + imageData['ID']);
 		errorElement = document.getElementsByClassName('errorText', entry)[0];
 		if (result['error'])  	
 		{

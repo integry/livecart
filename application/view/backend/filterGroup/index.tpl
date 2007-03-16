@@ -34,7 +34,7 @@
 			</ul>
 		</fieldset>
 
-        <div id="filter_item_new_{$categoryID}_form" style="display: none;">
+        <div id="filter_item_new_{$categoryID}_form" style="display: none;" class="filter_item_new">
             <script type="text/javascript">
                {literal}try{{/literal}
                     var newFilterForm = new Backend.Filter('{json array=$blankFilter}');
