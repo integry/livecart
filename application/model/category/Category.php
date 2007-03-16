@@ -1,6 +1,7 @@
 <?php
 ClassLoader::import("application.model.system.ActiveTreeNode");
 ClassLoader::import("application.model.system.MultilingualObject");
+ClassLoader::import("application.model.category.CategoryImage");
 
 /**
  * Hierarchial product category model class
@@ -26,11 +27,13 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 		parent::defineSchema($className);
 
+		$schema->registerField(new ARForeignKeyField("defaultImageID", "CategoryImage", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("description", ARArray::instance()));
 		$schema->registerField(new ARField("keywords", ARArray::instance()));
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
+		$schema->registerField(new ARField("availableProductCount", ARInteger::instance()));
 		$schema->registerField(new ARField("activeProductCount", ARInteger::instance()));
 		$schema->registerField(new ARField("totalProductCount", ARInteger::instance()));
 	}

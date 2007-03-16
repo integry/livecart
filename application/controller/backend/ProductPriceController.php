@@ -33,7 +33,7 @@ class ProductPriceController extends StoreManagementController
         ClassLoader::import("framework.request.validator.Form");
 		if(!$product->isLoaded()) $product->load(ActiveRecord::LOAD_REFERENCES);
 		
-		$product->loadSpecification();
+		$product->loadPricing();
         $pricing = $product->getPricingHandler();
 		$form = new Form($this->buildPricingFormValidator());
 		

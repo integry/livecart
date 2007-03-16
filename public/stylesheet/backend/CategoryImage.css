@@ -1,30 +1,68 @@
-.catImageList {
-  	margin-top: 17px;
+.catImageList 
+{
   	width: 600px;
 }
 
-.catImageList li {
+.catImageList li 
+{
 	padding: 5px;
 	margin-bottom: 10px; 
   	background-color: #F7F7F7;  		
 }
 
-.catImageTemplate img {
+.catImageTemplate img 
+{
   	vertical-align: top;	  
 }
 
-.catImageEditForm {
-
+.catImageEditForm iframe
+{
+    display: none;
 }
 
-.catImageEditContainer {
+.catImageEditContainer 
+{
   	margin-top: 10px;
   	padding-left: 60px;
 }
 
-.catImageTitle {
+.catImageTitle 
+{
   	font-weight: bold;
   	font-size: larger;
 	margin-left: 10px;
 	margin-top: 10px;  	
+}
+
+.catImage 
+{
+    cursor: pointer;
+}
+
+.activeList_editContainer fieldset.container  
+{
+    padding: 10px;   
+}
+    
+.activeList_editContainer .container legend 
+{
+    display: none;
+}
+
+.activeList_editContainer .container fieldset legend 
+{
+    display: block;
+}
+
+.activeList_editContainer div.translations 
+{
+    margin-top: 20px;    
+}
+
+p.main, p.supplemental
+{
+    margin: 0;
+    padding: 0;
+    padding-bottom: 10px;
+    font-weight: bold;
 }

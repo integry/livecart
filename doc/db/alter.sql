@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-03-05 01:55                                #
+# Created on:            2007-03-16 15:38                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -49,13 +49,13 @@ ALTER TABLE UserGroup DROP FOREIGN KEY RoleGroup_UserGroup;
 
 ALTER TABLE Filter DROP FOREIGN KEY FilterGroup_Filter;
 
-ALTER TABLE Filter DROP FOREIGN KEY SpecFieldValue_Filter;
-
 ALTER TABLE FilterGroup DROP FOREIGN KEY SpecField_FilterGroup;
 
 ALTER TABLE RelatedProduct DROP FOREIGN KEY Product_RelatedProduct_;
 
 ALTER TABLE RelatedProduct DROP FOREIGN KEY Product_RelatedProduct;
+
+ALTER TABLE RelatedProduct DROP FOREIGN KEY RelatedProductGroup_RelatedProduct;
 
 ALTER TABLE ProductPrice DROP FOREIGN KEY Product_ProductPrice;
 
@@ -64,8 +64,6 @@ ALTER TABLE ProductPrice DROP FOREIGN KEY Currency_ProductPrice;
 ALTER TABLE ProductImage DROP FOREIGN KEY Product_ProductImage;
 
 ALTER TABLE ProductFile DROP FOREIGN KEY Product_ProductFile;
-
-ALTER TABLE ProductFile DROP FOREIGN KEY FileType_ProductFile;
 
 ALTER TABLE Discount DROP FOREIGN KEY Product_Discount;
 
@@ -87,98 +85,23 @@ ALTER TABLE City DROP FOREIGN KEY State_City;
 
 ALTER TABLE SpecFieldGroup DROP FOREIGN KEY Category_SpecFieldGroup;
 
-# ---------------------------------------------------------------------- #
-# Drop table "FileType"                                                  #
-# ---------------------------------------------------------------------- #
-
-# Drop constraints #
-
-ALTER TABLE FileType DROP PRIMARY KEY;
-
-# Drop table #
-
-DROP TABLE FileType;
+ALTER TABLE RelatedProductGroup DROP FOREIGN KEY Product_RelatedProductGroup;
 
 # ---------------------------------------------------------------------- #
-# Modify table "Product"                                                 #
+# Modify table "Category"                                                #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE Product ADD COLUMN isBackOrderable BOOL;
+ALTER TABLE Category ALTER COLUMN isEnabled DROP DEFAULT;
 
-ALTER TABLE Product MODIFY keywords TEXT AFTER longDescription;
+ALTER TABLE Category ADD COLUMN defaultImageID INTEGER;
 
-ALTER TABLE Product MODIFY dateCreated TIMESTAMP AFTER keywords;
+ALTER TABLE Category ADD COLUMN availableProductCount INTEGER;
 
-ALTER TABLE Product MODIFY dateUpdated TIMESTAMP AFTER dateCreated;
+ALTER TABLE Category MODIFY isEnabled BOOL DEFAULT 0;
 
-ALTER TABLE Product MODIFY URL TINYTEXT AFTER dateUpdated;
+ALTER TABLE Category MODIFY defaultImageID INTEGER AFTER parentNodeID;
 
-ALTER TABLE Product MODIFY handle VARCHAR(40) AFTER URL;
-
-ALTER TABLE Product MODIFY isBestSeller BOOL DEFAULT 0 AFTER handle;
-
-ALTER TABLE Product MODIFY type TINYINT UNSIGNED DEFAULT 0 COMMENT '1 - intangible 0 - tangible' AFTER isBestSeller;
-
-ALTER TABLE Product MODIFY voteSum INTEGER UNSIGNED DEFAULT 0 AFTER type;
-
-ALTER TABLE Product MODIFY voteCount INTEGER UNSIGNED DEFAULT 0 AFTER voteSum;
-
-ALTER TABLE Product MODIFY hits INTEGER UNSIGNED DEFAULT 0 COMMENT 'Number of times product has been viewed by customers' AFTER voteCount;
-
-ALTER TABLE Product MODIFY isBackOrderable BOOL AFTER isFreeShipping;
-
-ALTER TABLE Product MODIFY shippingWeight NUMERIC(8,3) AFTER isBackOrderable;
-
-ALTER TABLE Product MODIFY stockCount FLOAT AFTER shippingWeight;
-
-ALTER TABLE Product MODIFY reservedCount FLOAT AFTER stockCount;
-
-# ---------------------------------------------------------------------- #
-# Modify table "Filter"                                                  #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE Filter DROP COLUMN specFieldValueID;
-
-ALTER TABLE Filter DROP COLUMN handle;
-
-# ---------------------------------------------------------------------- #
-# Modify table "RelatedProduct"                                          #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE RelatedProduct ADD COLUMN relatedProductGroupID INTEGER NOT NULL;
-
-ALTER TABLE RelatedProduct ADD COLUMN position INTEGER UNSIGNED DEFAULT 0;
-
-ALTER TABLE RelatedProduct MODIFY relatedProductGroupID INTEGER NOT NULL AFTER ProductID;
-
-# ---------------------------------------------------------------------- #
-# Modify table "ProductFile"                                             #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE ProductFile DROP COLUMN fileTypeID;
-
-ALTER TABLE ProductFile ADD COLUMN name TEXT;
-
-ALTER TABLE ProductFile ADD COLUMN description TEXT;
-
-ALTER TABLE ProductFile ADD COLUMN position INTEGER UNSIGNED DEFAULT 0;
-
-CREATE TABLE RelatedProductGroup (
-    ID INTEGER NOT NULL,
-    ProductID INTEGER,
-    position INTEGER UNSIGNED DEFAULT 0,
-    name TEXT,
-    CONSTRAINT PK_RelatedProductGroup PRIMARY KEY (ID)
-);
-
-CREATE TABLE HelpComment (
-    ID INTEGER NOT NULL AUTO_INCREMENT,
-    topicID VARCHAR(100),
-    username VARCHAR(100),
-    text TEXT,
-    timeAdded DATETIME,
-    CONSTRAINT PK_HelpComment PRIMARY KEY (ID)
-);
+ALTER TABLE Category MODIFY availableProductCount INTEGER AFTER totalProductCount;
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
@@ -195,6 +118,9 @@ ALTER TABLE Product ADD CONSTRAINT ProductImage_Product
 
 ALTER TABLE Category ADD CONSTRAINT Category_Category 
     FOREIGN KEY (parentNodeID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE Category ADD CONSTRAINT CategoryImage_Category 
+    FOREIGN KEY (defaultImageID) REFERENCES CategoryImage (ID);
 
 ALTER TABLE SpecificationItem ADD CONSTRAINT SpecFieldValue_SpecificationItem 
     FOREIGN KEY (specFieldValueID) REFERENCES SpecFieldValue (ID) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -31,9 +31,36 @@ Backend.CategoryImage.prototype =
 		{
 		  	this.addToList(categoryId, imageList[k]);
 		}  
-		this.initActiveList(categoryId);
+		                
+        this.arrangeImages(categoryId);
+                
+        this.initActiveList(categoryId);
 	},
     
+    arrangeImages: function(categoryId)
+    {
+        console.log('arranging');
+        var list = $('catImageList_' + categoryId);	
+        var images = list.getElementsByTagName('li');
+        var mainP = list.getElementsByTagName('p')[0];
+		var supplementalP = list.getElementsByTagName('p')[1];
+                
+    	var firstli = images[0];
+    		
+        // move first image under "Main Image"
+        if (mainP.nextSibling == supplementalP)
+        {
+            firstli.parentNode.insertBefore(firstli, mainP.nextSibling);            
+        }    
+        
+        while ('LI' == firstli.nextSibling.tagName)
+        {
+            firstli.parentNode.insertBefore(firstli.nextSibling, supplementalP.nextSibling);   
+        }
+        
+        supplementalP.style.display = images.length < 2 ? 'none' : '';
+        mainP.style.display = images.length == 0 ? 'none' : '';
+    },    
         
     submitOnEnter: function(e, categoryId)
     {
@@ -64,18 +91,16 @@ Backend.CategoryImage.prototype =
 	         
 			 beforeEdit:     function(li) 
 			 {
-				 var recordId = this.getRecordId(li).split('_')[1];	
-				 var categoryId = this.getRecordId(li).split('_')[0];	
-				 
+				 var recordId = this.getRecordId(li);	
+				 var categoryId = this.getRecordId(li.parentNode);	
 
-				 var form = $('catImgAdd_' + categoryId).getElementsByTagName('form')[0].cloneNode(true);
-                 
+    			 var form = $('catImgAdd_' + categoryId).getElementsByTagName('form')[0].cloneNode(true);            
 				 
 				 form.action = Backend.Category.image.saveUrl;
-                 
-                 
 				 
 				 form.elements.namedItem('imageId').value = recordId;
+				 
+				 Element.addClassName(form.getElementsByTagName('fieldset')[0], 'container');
 				 
 				 form.getElementsByTagName('legend')[0].innerHTML = Backend.Category.image.editCaption;
 				 
@@ -137,14 +162,14 @@ Backend.CategoryImage.prototype =
 	         
 			 beforeSort:     function(li, order) 
 			 { 
-				 var recordId = this.getRecordId(li).split('_')[1];	
-				 var categoryId = this.getRecordId(li).split('_')[0];	
+				 var recordId = this.getRecordId(li);	
+				 var categoryId = this.getRecordId(li.parentNode);	
 				 return Backend.Category.image.sortUrl + '?categoryId=' + categoryId + '&draggedId=' + recordId + '&' + order 
 			 },
 	         
 			 beforeDelete:   function(li)
 	         {				 	
-				 var recordId = this.getRecordId(li).split('_')[1];	
+				 var recordId = this.getRecordId(li);	
 				 
 				 if(confirm(Backend.Category.image.delConfirmMsg)) 
 				 {
@@ -152,10 +177,10 @@ Backend.CategoryImage.prototype =
 				 }
 	         },
 	         afterEdit:      function(li, response) {  },
-	         afterSort:      function(li, response) {  },
+	         afterSort:      function(li, response) { Backend.CategoryImage.prototype.arrangeImages(this.getRecordId(li.parentNode)); },
 	         afterDelete:    function(li, response)  
 			 { 
-    	 	 	var categoryId = this.getRecordId(li).split('_')[0];
+    	 	 	var categoryId = this.getRecordId(li.parentNode);
     	 	 	
 				Element.remove(li); 
 				CategoryTabControl.prototype.resetTabItemsCount(categoryId);
