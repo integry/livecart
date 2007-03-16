@@ -5,7 +5,7 @@
 		<td class="cell_name">
 		    <span><span class="progressIndicator" id="productIndicator_{$product.ID}" style="display: none;"></span></span>
             
-            <a href="#edit" onclick="if(window.selectProductPopup) window.selectProductPopup.getSelectedProduct({$product.ID}); else window.openProduct({$product.ID}, event); return false;">{$product.name_lang}</a>
+            <a href="#edit" onclick="if(window.opener && window.opener.selectProductPopup) window.opener.selectProductPopup.getSelectedProduct({$product.ID}); else window.openProduct({$product.ID}, event); return false;">{$product.name_lang}</a>
         </td>
 		<td class="cell_manuf">{$product.Manufacturer.name}</td>
 		<td class="cell_price">{$product.price_EUR}</td>

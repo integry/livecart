@@ -113,15 +113,7 @@ class RelatedProduct extends ActiveRecord
 	private static function getRelatedProductsSetFilter(Product $product)
 	{
 	    $filter = new ARSelectFilter();
-	/**
-	 * Joins table by using supplied params
-	 *
-	 * @param string $tableName
-	 * @param string $mainTableName
-	 * @param string $tableJoinFieldName
-	 * @param string $mainTableJoinFieldName
-	 * @param string $tableAliasName	Necessary when joining the same table more than one time (LEFT JOIN tablename AS table_1)
-	 */
+
 		$filter->joinTable('RelatedProductGroup', 'RelatedProduct', 'ID', 'relatedProductGroupID');		
 		$filter->setOrder(new ARFieldHandle("RelatedProductGroup", "position"), 'ASC');			
 		$filter->setOrder(new ARFieldHandle("RelatedProduct", "position"), 'ASC');	

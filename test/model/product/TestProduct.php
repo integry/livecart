@@ -70,7 +70,6 @@ class TestProduct extends UnitTest
 	
 	public function testSimpleValues()
 	{
-		return;
 		// create some simple value attributes
 		$numField = SpecField::getNewInstance($this->productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SIMPLE);
 		$numField->handle->set('numeric.field');
@@ -109,7 +108,6 @@ class TestProduct extends UnitTest
 	
 	public function testSingleSelectValues()
 	{			
-		return;
 		// create a single value select attribute
 		$singleSel = SpecField::getNewInstance($this->productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SELECTOR);
 		$singleSel->handle->set('single.sel');
@@ -174,7 +172,6 @@ class TestProduct extends UnitTest
 	
 	public function testMultipleSelectValues()
 	{
-		return;
 		// create a multiple value select attribute
 		$multiSel = SpecField::getNewInstance($this->productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SELECTOR);
 		$multiSel->isMultiValue->set(true);
@@ -246,7 +243,6 @@ class TestProduct extends UnitTest
 	
 	public function testLoadSpecification()
 	{	
-		return;
 	    ActiveRecord::removeFromPool($this->product);
 
 		$this->product = Product::getInstanceByID($this->product->getID(), true);
@@ -289,7 +285,6 @@ class TestProduct extends UnitTest
 
 	public function testAddRelatedProducts()
 	{
-	    return;
 	    $otherProducts = array();
 	    foreach(range(1, 5) as $i)
 	    {
@@ -324,7 +319,6 @@ class TestProduct extends UnitTest
 	
 	public function testGetRelationships()
 	{
-		return;
 	    $otherProducts = array();
 	    foreach(range(1, 5) as $i)
 	    {
@@ -350,7 +344,6 @@ class TestProduct extends UnitTest
 	
 	public function testGetRelatedProducts()
 	{
-	    return;
 	    $otherProducts = array();
 	    foreach(range(1, 5) as $i)
 	    {
@@ -386,7 +379,6 @@ class TestProduct extends UnitTest
 	
 	public function testRemoveRelationship()
 	{
-	    return;
 	    $otherProducts = array();
 	    foreach(range(1, 5) as $i)
 	    {

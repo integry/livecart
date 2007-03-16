@@ -16,9 +16,14 @@ class ProductRelatedController extends StoreManagementController
 	{		
 	    $response = new ActionResponse();
 
-	    $response->setValue('id', $this->request->getValue('id'));
+	    $productID = (int)$this->request->getValue('id');
+	    
 	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
-		$response->setValue("productID", $this->request->getValue('id'));
+		$response->setValue("productID", $productID);
+		
+		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
+		$response->setValue("relationships", $product->getRelationships()->toArray());
+		print_r($product->getRelationships()->toArray());
 	    
 	    return $response;
 	}
@@ -34,14 +39,50 @@ class ProductRelatedController extends StoreManagementController
 		return $response;
 	}
 	
-	public function related()
+	public function addRelated()
 	{
-	    //if()
-	    $response = new ActionResponse();
+	    $productID = (int)$this->request->getValue('id');
+	    $relatedProductID = (int)$this->request->getValue('relatedProductID');
 	    
-	    $response->setValue('product', Product::getInstanceByID((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES)->toArray());
+	    $relatedProduct = Product::getInstanceByID($relatedProductID);
+	    $product = Product::getInstanceByID($productID);
 	    
-	    return $response;
+	    if(!$relatedProduct->isRelatedTo($product))
+	    {
+	        try
+	        {
+		        $product->addRelatedProduct($relatedProduct);
+		        $product->save();
+		        
+			    $response = new ActionResponse();
+			    $response->setValue('product', Product::getInstanceByID($relatedProductID, ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES)->toArray());
+			    return $response;
+	        }
+	        catch(Exception $e)
+	        {
+	            $error = '_trying_add_the_product_itself_to_the_related_products_list';
+	        }
+	    }
+	    else
+	    {
+	        $error = '_product_cannot_have_more_than_one_relationship_with_same_product';
+	    }
+	    
+        return new JSONResponse(array('error' => $this->translate($error)));
+	}
+	
+	public function delete()
+	{
+	    $productID = (int)$this->request->getValue('id');
+	    $relatedProductID = (int)$this->request->getValue('relatedProductID');
+	    
+	    $relatedProduct = Product::getInstanceByID($relatedProductID);
+	    $product = Product::getInstanceByID($productID);	    
+	    
+	    $product->removeFromRelatedProducts($relatedProduct);
+	    $product->save();
+	    
+	    return new JSONResponse(array('status' => 'success'));
 	}
 }
 

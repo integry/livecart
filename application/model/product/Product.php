@@ -633,6 +633,7 @@ class Product extends MultilingualObject
     
     public function removeFromRelatedProducts(Product $product)
     {
+        $this->loadRelationships();
         $relationship = RelatedProduct::getInstance($this, $product);
         
         $this->relationships->removeRecord($relationship);

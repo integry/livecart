@@ -718,18 +718,23 @@ Backend.SaveConfirmationMessage.prototype =
         this.element = $(element);
         this.element.style.display = 'none';
         
-        if(!this.element.getElementsByTagName('div')[0]) this.element.appendChild(document.createElement('div'));
-        this.innerElement = this.element.getElementsByTagName('div')[0];
+        if(!this.element.down('div')) this.element.appendChild(document.createElement('div'));
+        this.innerElement = this.element.down('div');
         
-        if(options && options.type) Element.addClassName(this.element, options.type + 'Message')
-       
+        if(options && options.type) 
+        {
+            Element.addClassName(this.element, options.type + 'Message')
+        }
+        
         try {
             if(options && options.message) 
             {
                 if(this.innerElement.firstChild) this.innerElement.firstChild.value = options.message;
                 else this.innerElement.appendChild(document.createTextNode(options.message));
             }
-        } catch(e) { }
+        } catch(e) { 
+            console.info(e);
+        }
         
 		this.show();
 	},
