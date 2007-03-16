@@ -61,15 +61,15 @@ the necessary details about the product:</p>
 		<img src="image/doc/products/name2.bmp"/>
 		<br \>
 		<br \>
-		<li>Enter a name in the field to display products:</li>
+		<li>Enter a name in the field to search products:</li>
 		<img src="image/doc/products/name_nokia2.bmp"/>
 		Products that match your criteria appear below automatically.
+		<br \>
+		<br \>
+		<p>You can also set ascending or descending order by clicking on the "arrow" icon next to the product's property:</p>
+		<img src="image/doc/products/arrow.bmp"/>
 	</ul>
-	
-	<br \>
-	<p>You can also set ascending or descending order by clicking on the "arrow" icon next to the product's property:</p>
-	<img src="image/doc/products/arrow.bmp"/>
-	<br \>
+
 </p>
 
 <h3 id="search">Search</h3>
