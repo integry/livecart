@@ -179,6 +179,14 @@ class CategoryImageController extends StoreManagementController
 			ActiveRecord::updateRecordSet('CategoryImage', $update);  	
 		}
 
+        // set category main image
+        if (isset($order[0]))
+        {
+            $category = Category::getInstanceByID($categoryId);
+            $category->defaultImage->set(ActiveRecordModel::getInstanceByID('CategoryImage', $order[0]));
+            $category->save();            
+        }
+
 		$resp = new RawResponse();
 	  	$resp->setContent($this->request->getValue('draggedId'));
 		return $resp;		  	

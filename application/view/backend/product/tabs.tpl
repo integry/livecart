@@ -13,14 +13,14 @@
 				<span class="tabHelp">products.edit</span>
 			</li>
 			
-			<li id="productDiscounts" class="tab inactive">
-				<a href="{link controller=backend.productPrice action=index id=_id_}?categoryID=_categoryID_">{t Prices &amp; Shipping}</a>
-				<span class="tabHelp">products.edit.pricing</span>
-			</li>
-
 			<li id="productInventory" class="tab inactive">
 				<a href="{link controller=backend.product action=inventory id=_id_}?categoryID=_categoryID_">{t Inventory}</a>
 				<span class="tabHelp">products.edit.inventory</span>
+			</li>
+
+			<li id="productDiscounts" class="tab inactive">
+				<a href="{link controller=backend.productPrice action=index id=_id_}?categoryID=_categoryID_">{t Prices &amp; Shipping}</a>
+				<span class="tabHelp">products.edit.pricing</span>
 			</li>
 			
 			<li id="productImages" class="tab inactive">

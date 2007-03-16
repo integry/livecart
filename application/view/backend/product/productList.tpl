@@ -9,8 +9,8 @@
         </td>
 		<td class="cell_manuf">{$product.Manufacturer.name}</td>
 		<td class="cell_price">{$product.price_EUR}</td>
-		<td class="cell_stock{if ($product.stockCount lt 5)} lowStock{/if}">{$product.stockCount}</td>
-		<td class="cell_enabled{if ($product.isEnabled == 0)} notEnabled{/if}">{if $product.isEnabled}{t _yes}{else}{t _no}{/if}</td>
+		<td class="cell_stock{if (($product.stockCount) < 5)} lowStock{/if}">{$product.stockCount}</td>
+		<td class="cell_enabled{if (!$product.isEnabled)} notEnabled{/if}">{if $product.isEnabled}{t _yes}{else}{t _no}{/if}</td>
 	</tr>
 {/foreach}
 

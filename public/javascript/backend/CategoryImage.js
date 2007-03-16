@@ -39,7 +39,6 @@ Backend.CategoryImage.prototype =
     
     arrangeImages: function(categoryId)
     {
-        console.log('arranging');
         var list = $('catImageList_' + categoryId);	
         var images = list.getElementsByTagName('li');
         var mainP = list.getElementsByTagName('p')[0];

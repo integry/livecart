@@ -227,6 +227,7 @@ class ProductController extends StoreManagementController
 		else
 		{
 		  	$product = Product::getInstanceByID($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA);
+		  	$product->loadPricing();
 		  	$product->loadSpecification();
 		  	$arr = $product->toArray();
 		  //	print_r($arr['attributes']);

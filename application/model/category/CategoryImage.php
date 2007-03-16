@@ -33,7 +33,12 @@ class CategoryImage extends MultilingualObject
 	
 	public function getPath($size = 0)
 	{
-		$path = 'upload/categoryimage/' . $this->category->get()->getID() . '-' . $this->getID() . '-' . $size . '.jpg';
+		if (!$this->isLoaded)
+		{
+            $this->load();    
+        }
+        
+        $path = 'upload/categoryimage/' . $this->category->get()->getID() . '-' . $this->getID() . '-' . $size . '.jpg';
 	  	return $path;
 	}
 	
@@ -54,7 +59,7 @@ class CategoryImage extends MultilingualObject
 	  	{
 			$array['paths'][$key] = $this->getPath($key);					
 		}
-		
+
 		return $array;	  	
 	}
 

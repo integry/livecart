@@ -27,7 +27,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 		parent::defineSchema($className);
 
-		$schema->registerField(new ARForeignKeyField("defaultImageID", "CategoryImage", "ID", null, ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("defaultImageID", "categoryImage", "ID", null, ARInteger::instance()));
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("description", ARArray::instance()));
 		$schema->registerField(new ARField("keywords", ARArray::instance()));
