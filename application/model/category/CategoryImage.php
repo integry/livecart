@@ -8,7 +8,7 @@ ClassLoader::import("application.model.system.MultilingualObject");
  */
 class CategoryImage extends MultilingualObject
 {
-	public $imageSizes = array(0 => array(50, 80),
+	public static $imageSizes = array(0 => array(50, 80),
 								1 => array(80, 150),
 								2 => array(300, 400),
 								);
@@ -36,10 +36,9 @@ class CategoryImage extends MultilingualObject
 		if (!$this->isLoaded)
 		{
             $this->load();    
-        }
+        }   
         
-        $path = 'upload/categoryimage/' . $this->category->get()->getID() . '-' . $this->getID() . '-' . $size . '.jpg';
-	  	return $path;
+	  	return self::getImagePath($this->getID(), $this->category->get()->getID(), $size);
 	}
 	
 	public function deleteImageFiles()
@@ -50,14 +49,26 @@ class CategoryImage extends MultilingualObject
 		}			
 	}
 	
-	public function toArray()
+	protected static function getImagePath($imageID, $categoryID, $size)
 	{
-	  	$array = parent::toArray();
-	  	
-		$array['paths'] = array();
-		foreach ($this->imageSizes as $key => $value)
+        return 'upload/categoryimage/' . $categoryID. '-' . $imageID . '-' . $size . '.jpg';
+    }
+	
+	public static function transformArray($array)
+	{
+		$array = parent::transformArray($array, __CLASS__);
+        
+        $array['paths'] = array();
+		foreach (self::$imageSizes as $key => $value)
 	  	{
-			$array['paths'][$key] = $this->getPath($key);					
+			$categoryID = isset($array['Category']['ID']) ? $array['Category']['ID'] : (isset($array['categoryID']) ? $array['categoryID'] : false);
+			
+			if (!$categoryID)
+			{
+                break;
+            }
+			
+            $array['paths'][$key] = self::getImagePath($array['ID'], $categoryID, $key);
 		}
 
 		return $array;	  	
