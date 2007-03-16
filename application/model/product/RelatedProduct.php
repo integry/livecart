@@ -70,10 +70,44 @@ class RelatedProduct extends ActiveRecord
 	{
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
+		
+	/**
+	 * Gets an existing relationship instance
+	 *
+	 * @param mixed $recordID
+	 * @param bool $loadRecordData
+	 * @param bool $loadReferencedRecords
+	 * @param array $data	Record data array (may include referenced record data)
+	 *
+	 * @return RelatedProduct
+	 */
+	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
+	{
+	    return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
+	}
 	
+	/**
+	 * Get product relationships
+	 *
+	 * @param Product $product
+	 * @return ARSet
+	 */
 	public static function getRelationships(Product $product)
 	{
-	    return RelatedProduct::getRecordSet(self::getRelatedProductsSetFilter($product), ActiveRecord::LOAD_REFERENCES);
+	    return self::getRecordSet(self::getRelatedProductsSetFilter($product), ActiveRecord::LOAD_REFERENCES);
+	}
+	
+	public static function hasRelationship(Product $product, Product $relatedToProduct)
+	{
+	    $recordID = array(
+			'productID' => $product->getID(), 
+			'relatedProductID' => $relatedToProduct->getID()
+	    );
+	    
+	    if(self::retrieveFromPool(__CLASS__, $recordID)) return true;
+	    if(self::objectExists(__CLASS__, $recordID)) return true;
+	    
+	    return false;
 	}
 	
 	private static function getRelatedProductsSetFilter(Product $product)

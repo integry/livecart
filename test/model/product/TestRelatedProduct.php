@@ -68,7 +68,11 @@ class TestRelatedProduct extends UnitTestCase
 	public function tearDown()
 	{
 	    ActiveRecordModel::rollback();	
-	    	
+
+	    ActiveRecord::removeClassFromPool('Product');
+	    ActiveRecord::removeClassFromPool('RelatedProduct');
+	    ActiveRecord::removeClassFromPool('RelatedProductGroup');
+	    
 	    $this->db->executeUpdate("ALTER TABLE RelatedProductGroup AUTO_INCREMENT=" . $this->groupAutoIncrementNumber);
 	    $this->db->executeUpdate("ALTER TABLE Product AUTO_INCREMENT=" . $this->productAutoIncrementNumber);
 	}
@@ -189,8 +193,32 @@ class TestRelatedProduct extends UnitTestCase
 
 	        $groupPosition = $currentGroupPosition;
 	        $productPosition = $currentProductPosition;
-	    }
-	    
+	    }   
+	}
+	
+	public function testHasRelationship()
+	{
+		$product = array();
+	    foreach(range(1, 3) as $i)
+		{
+			$product[$i] = Product::getNewInstance($this->rootCategory);
+			$product[$i]->save();	
+		}
+		
+		$relationship = RelatedProduct::getNewInstance($product[1], $product[2]);
+		
+		// Check relationship
+		$this->assertFalse(RelatedProduct::hasRelationship($product[1], $product[2]));
+		$this->assertFalse(RelatedProduct::hasRelationship($product[1], $product[3]));
+		
+		// Double check relationship to be sure that it is not being created by previous test
+		$this->assertFalse(RelatedProduct::hasRelationship($product[1], $product[3]));
+		
+		// Save and check again. Has relationship will return true if the record was set
+		$relationship->save();
+		
+		$this->assertTrue(RelatedProduct::hasRelationship($product[1], $product[2]));
+		$this->assertFalse(RelatedProduct::hasRelationship($product[1], $product[3]));
 	}
 }
 ?>

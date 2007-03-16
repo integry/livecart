@@ -17,7 +17,7 @@ Backend.RelatedProduct = {
 
 Backend.RelatedProduct.SelectProductPopup = Class.create();
 Backend.RelatedProduct.SelectProductPopup.prototype = {
-    height: 400,
+    height: 520,
     width:  800,
     onProductSelect: function() {},
     
@@ -41,6 +41,7 @@ Backend.RelatedProduct.SelectProductPopup.prototype = {
     createPopup: function()
     {
         this.popup = window.open(this.link, this.title, 'width=' + this.width + ',height=' + this.height);
+        this.popup.focus();
         this.popup.selectProductPopup = this;
     },
     

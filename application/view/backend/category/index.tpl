@@ -26,6 +26,7 @@
 {includeJs file="backend/Filter.js"}
 {includeJs file="backend/CategoryImage.js"}
 {includeJs file="backend/Product.js"}
+{includeJs file="backend/RelatedProduct.js"}
 
 {includeCss file="library/ActiveList.css"}
 {includeCss file="library/ActiveGrid.css"}

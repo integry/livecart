@@ -79,7 +79,7 @@
     
 </fieldset>
 
-<div style="width: 98%;">
+<div style="width: 100%;">
 <table class="productHead" id="products_{$categoryID}_header">
 	<tr class="headRow">
 		<th class="cell_cb"><input type="checkbox" class="checkbox" /></th>
@@ -103,13 +103,14 @@
     		<input type="text" class="text" id="filter_Product.stockCount_{$categoryID}" value="{tn In stock}" />   
         </th>	
 		<th class="cell_enabled">
-            <span class="fieldName">Product.isEnabled</span>{tn Enabled}
+            <span class="fieldName">Product.isEnabled</span>
+            <span style="overflow: hidden">{tn Enabled}</span>
         </th>	
 	</tr>
 </table>
 </div>
 
-<div style="width: 98%;">
+<div style="width: 100%;">
 <table class="activeGrid productList" id="products_{$categoryID}">
 	<tbody>
 		{include file="backend/product/productList.tpl"}

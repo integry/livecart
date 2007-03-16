@@ -3,13 +3,14 @@
     table-layout: fixed;    
 }
 
-.activeGrid td div
+.activeGrid td
 {
     overflow: hidden;
 }
 
 .activeGrid_viewport
 {
+    margin-right: -17px;
     width: 100%;
 }
 

@@ -651,6 +651,11 @@ class Product extends MultilingualObject
         
         return $this->removedRelationships;
     }
+    
+    public function isRelatedTo(Product $product)
+    {
+        return RelatedProduct::hasRelationship($product, $this);
+    }
 }
 
 ?>

@@ -235,13 +235,15 @@ ActiveGrid.prototype =
 	 */
 	_levelColumns: function(tableRow, headerRow)
 	{
-		tableCells = tableRow.getElementsByTagName('td');  
+		/*
+        tableCells = tableRow.getElementsByTagName('td');  
 		headerCells = headerRow.getElementsByTagName('th'); 
 		
 		for (k = 0; k < tableCells.length; k++)
 		{
 		  	headerCells[k].style.width = tableCells[k].clientWidth + 'px';
 		}
+		*/
 	},
 	
 	/**

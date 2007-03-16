@@ -36,8 +36,11 @@ class ProductRelatedController extends StoreManagementController
 	
 	public function related()
 	{
+	    //if()
 	    $response = new ActionResponse();
+	    
 	    $response->setValue('product', Product::getInstanceByID((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES)->toArray());
+	    
 	    return $response;
 	}
 }

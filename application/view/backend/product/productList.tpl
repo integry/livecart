@@ -3,10 +3,9 @@
 		<td class="cell_cb"><input type="checkbox" class="checkbox" name="product[{$product.ID}]" /></td>
 		<td class="cell_sku">{$product.sku}</td>
 		<td class="cell_name">
-            <div>
-                <a href="#edit" onclick="if(window.selectProductPopup) window.selectProductPopup.getSelectedProduct({$product.ID}); else window.openProduct({$product.ID}, event); return false;">{$product.name_lang}</a>
-                <span class="progressIndicator" id="productIndicator_{$product.ID}" style="display: none;"></span>            
-            </div>
+		    <span><span class="progressIndicator" id="productIndicator_{$product.ID}" style="display: none;"></span></span>
+            
+            <a href="#edit" onclick="if(window.selectProductPopup) window.selectProductPopup.getSelectedProduct({$product.ID}); else window.openProduct({$product.ID}, event); return false;">{$product.name_lang}</a>
         </td>
 		<td class="cell_manuf">{$product.Manufacturer.name}</td>
 		<td class="cell_price">{$product.price_EUR}</td>

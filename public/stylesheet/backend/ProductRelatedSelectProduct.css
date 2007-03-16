@@ -1,15 +1,19 @@
-#tabContainer, .container { 
+#tabContainer, 
+.container,
+.cell_cb,
+.cell_stock
+{ 
     display: none; 
 }
 
 #categoryBrowser {
-    height: 360px;
+    height: 480px;
     padding: 0px;
     overflow: auto;
 }
 
 #sectionContainer {
-    height: 335px;
+    height: 455px;
     padding: 0px;
     margin-right: 10px;
 }

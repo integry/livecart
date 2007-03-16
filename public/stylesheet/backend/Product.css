@@ -70,42 +70,46 @@ fieldset.specification .numeric
 	background-color: #DDDDDD;	  
 }
 
+.productHead th{
+    overflow: hidden;
+}
+
 .cell_cb
 {
-	width: 30px;  
+	width: 4%;  
 	text-align: center;
 }
 
 .cell_sku
 {
-	width: 80px;  
+	width: 10%;  
 }
 
 .cell_name
 {
-	width: 300px;  
+	width: 38%;  
 }
 
 .cell_manuf
 {
-	width: 120px;  
+	width: 15%;  
 }
 
 .cell_price
 {
-	width: 100px;  
+	width: 13%;  
 	text-align: center;
 }
 
 .cell_stock
 {
-	width: 80px;  
+	width: 10%;  
 	text-align: center;
 }
 
 .cell_enabled
 {
-	width: 80px;   
+	width: 10%;   
 }
 
 .lowStock
