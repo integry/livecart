@@ -5,8 +5,28 @@ categories.
 </p>
 
 <p>	
-	<ins>Understanding product's details and info that is displayed to customers.</ins>
+How products are displayed to customers? Customers can view products either browsing your catalog or searching 
+the web. At first customers are displayed <strong>Product List</strong> where products are displayed with 
+the following details:
 </p>
+<img src="image/doc/products/product.bmp"/>
+<ul>
+<li>Name - </li>
+<li>Manufacturer - </li>
+<li>Price - </li>
+<li>In stock - </li>
+</ul>
+<p class="note"><strong>Note</strong>: you can extend the list of features displayed by adding addition 
+attributes in the attributes section(...)</p>
+
+<p>More detailed information is provided in <strong>Product details</strong> page. This page includes all 
+the necessary details about the product:</p>
+<ul>
+<li>Weight - </li>
+<li>Size - </li>
+<li>Taste - </li>
+<li>etc. - </li>
+</ul>
 
 <div class="tasks">
 <fieldset>
@@ -48,7 +68,7 @@ categories.
 	
 	<br \>
 	<p>You can also set ascending or descending order by clicking on the "arrow" icon next to the product's property:</p>
-	<img src="image/doc/products/arrow2.bmp"/>
+	<img src="image/doc/products/arrow.bmp"/>
 	<br \>
 </p>
 
@@ -63,7 +83,17 @@ to the customer; describe how the results can be processed; Are there any global
 
 <h3 id="multiple">Manage multiple products</h3>
 
-<p>Describe how to gather products; describe how edit can be applied; Save changes</p>
+<p>You can quickly manage products by using <strong>multiple edit</strong> tool which allows you to edit
+most of the attributes by applying changes to several products at once.</p>
+<ul>
+<li>Select products by marking a checkbox on the left:</li>
+<img src="image/doc/products/checkboxes.bmp"/>
+<li>Choose an action from the menu:</li>
+<img src="image/doc/products/menu.bmp"/>
+<li>Click <strong>Go</strong> to process.</li>
+<img src="image/doc/products/go.bmp"/>
+</ul>
+
 
 {helpSeeAlso}
 	{see products.add}
