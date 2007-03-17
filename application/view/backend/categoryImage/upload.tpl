@@ -1,1 +1,2 @@
-parent.Backend.Category.image.postUpload({$catId}, {$result});
+parent.document.getElementById('catImageList_{$ownerId}').handler.postUpload({$result});
+parent.document.getElementById('catImageList_{$ownerId}').handler.hideProgressIndicator(parent.document.getElementById('catImageList_{$ownerId}').handler.addForm);

@@ -1,48 +1,53 @@
-Backend.CategoryImage = Class.create();
+Backend.ObjectImage = Class.create();
 
-Backend.CategoryImage.prototype = 
+Backend.ObjectImage.prototype = 
 {
-	sortUrl: false,
-
-	deleteUrl: false,
-
-	editUrl: false,
+	container: null,
+	addForm: null,	
+	addMenu: null,	
+		
+	ownerID: null,
 	
+	sortUrl: false,
+	deleteUrl: false,
+	editUrl: false,
 	saveUrl: false,
 				
 	delConfirmMsg: '',
-
 	editCaption: '',
-	
 	saveCaption: '',
 	
-	initialize: function()
+	prefix: '',
+	
+	initialize: function(container, prefix)
 	{	  
-
+		this.container = container;
+		this.container.handler = this;
+		
+		this.ownerID = ActiveList.prototype.getRecordId(container);
+		this.prefix = prefix;
+		
+		this.addForm = $(this.prefix + 'ImgAdd_' + this.ownerID);
+		this.addMenu = $(this.prefix + 'ImgMenu_' + this.ownerID);
 	},
 	
-	initList: function(categoryId, imageList)
+	initList: function(imageList)
 	{
-        $A($("catImgAdd_" + categoryId).getElementsByTagName("input")).each(function(input) {
-            Event.observe(input, "keydown", function(e) { Backend.CategoryImage.prototype.submitOnEnter(e, categoryId) });
-        });
-        
+		console.log(imageList);
 		for (k = 0; k < imageList.length; k++)
 		{
-		  	this.addToList(categoryId, imageList[k]);
+		  	this.addToList(imageList[k]);
 		}  
 		                
-        this.arrangeImages(categoryId);
-                
-        this.initActiveList(categoryId);
+        this.arrangeImages();                
+        this.initActiveList();
 	},
     
-    arrangeImages: function(categoryId)
+    arrangeImages: function()
     {
-        var list = $('catImageList_' + categoryId);	
-        var images = list.getElementsByTagName('li');
-        var mainP = list.getElementsByTagName('p')[0];
-		var supplementalP = list.getElementsByTagName('p')[1];
+        var images = this.container.getElementsByTagName('li');
+        var mainP = this.container.getElementsByTagName('p')[0];
+		var supplementalP = this.container.getElementsByTagName('p')[1];
                 
     	var firstli = images[0];
     		
@@ -64,49 +69,33 @@ Backend.CategoryImage.prototype =
         mainP.style.display = images.length == 0 ? 'none' : '';
     },    
         
-    submitOnEnter: function(e, categoryId)
-    {
-        keybordEvent = new KeyboardEvent(e);
-        
-        if(keybordEvent.getKey() == KeyboardEvent.prototype.KEY_ENTER) {
-            if(!e)
-            {
-                e = window.event;
-                e.target = e.srcElement;
-            }
-            
-            if(validateForm(e.target.form))  
-            {
-                this.upload("catImgAdd_" + categoryId + "_form");
-            }
-        }
-    },
-	
-	initActiveList: function(categoryId)
+	initActiveList: function()
 	{
-		var id = 'catImageList_' + categoryId;
-		
 		// display message if no images are uploaded
-		this.showNoImagesMessage(categoryId);
+		this.showNoImagesMessage();
 
-		new ActiveList(id, {
+		new ActiveList(this.container, {
 	         
 			 beforeEdit:     function(li) 
 			 {
 				 var recordId = this.getRecordId(li);	
-				 var categoryId = this.getRecordId(li.parentNode);	
-
-    			 var form = $('catImgAdd_' + categoryId).getElementsByTagName('form')[0].cloneNode(true);            
+				 var ownerId = this.getRecordId(li.parentNode);	
+					
+				 var handler = li.parentNode.handler;	
+				
+    			 var form = $(handler.prefix + 'ImgAdd_' + handler.ownerID).getElementsByTagName('form')[0].cloneNode(true);            
 				 
-				 form.action = Backend.Category.image.saveUrl;
+				 form.action = handler.saveUrl;
+				 onsubm = function(e) {var form = Event.element(e); this.showProgressIndicator(form); }
+				 form.onsubmit = onsubm.bindAsEventListener(handler);
 				 
 				 form.elements.namedItem('imageId').value = recordId;
 				 
 				 Element.addClassName(form.getElementsByTagName('fieldset')[0], 'container');
 				 
-				 form.getElementsByTagName('legend')[0].innerHTML = Backend.Category.image.editCaption;
+				 form.getElementsByTagName('legend')[0].innerHTML = handler.editCaption;
 				 
-				 form.elements.namedItem('upload').value = Backend.Category.image.saveCaption;
+				 form.elements.namedItem('upload').value = handler.saveCaption;
 				 
 				 legends = form.getElementsByTagName('legend');
 				 for (k = 0; k < legends.length; k++)
@@ -118,7 +107,7 @@ Backend.CategoryImage.prototype =
 					} 
 				 }
 				 
-				 imageData = document.getElementsByClassName('catImage', li)[0].imageData;
+				 imageData = document.getElementsByClassName('image', li)[0].imageData;
 				 for (k in imageData)
 				 {
 					if (k.substr(0, 5) == 'title')
@@ -165,29 +154,30 @@ Backend.CategoryImage.prototype =
 			 beforeSort:     function(li, order) 
 			 { 
 				 var recordId = this.getRecordId(li);	
-				 var categoryId = this.getRecordId(li.parentNode);	
-				 return Backend.Category.image.sortUrl + '?categoryId=' + categoryId + '&draggedId=' + recordId + '&' + order 
+				 var ownerId = this.getRecordId(li.parentNode);	
+				 return li.parentNode.handler.sortUrl + '?ownerId=' + ownerId + '&draggedId=' + recordId + '&' + order 
 			 },
 	         
 			 beforeDelete:   function(li)
 	         {				 	
 				 var recordId = this.getRecordId(li);	
-				 
-				 if(confirm(Backend.Category.image.delConfirmMsg)) 
+				 if(confirm(li.parentNode.handler.delConfirmMsg)) 
 				 {
-					 return Backend.Category.image.deleteUrl + '/' + recordId;
+					 return li.parentNode.handler.deleteUrl + '/' + recordId;
 				 }
 	         },
 	         afterEdit:      function(li, response) {  },
-	         afterSort:      function(li, response) { Backend.CategoryImage.prototype.arrangeImages(this.getRecordId(li.parentNode)); },
+	         afterSort:      function(li, response) { li.parentNode.handler.arrangeImages(); },
 	         afterDelete:    function(li, response)  
 			 { 
-    	 	 	var categoryId = this.getRecordId(li.parentNode);
     	 	 	
 				Element.remove(li); 
-				CategoryTabControl.prototype.resetTabItemsCount(categoryId);
+				
+				//CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li.parentNode));
                 
-				Backend.Category.image.showNoImagesMessage(categoryId);			   	
+				li.parentNode.handler.showNoImagesMessage();			   	
+				
+				li.parentNode.handler.arrangeImages();		
 			 }
 	     },
          
@@ -195,17 +185,30 @@ Backend.CategoryImage.prototype =
          );
 	},
 	
-	showNoImagesMessage: function(categoryId)
+	showProgressIndicator: function(form)
 	{
-		// display message if no images are uploaded
-		$('catNoImages_' + categoryId).style.display = ($('catImageList_' + categoryId).childNodes.length > 0) ? 'none' : 'block';	 	 
+		var inst = document.getElementsByClassName('progressIndicator', form)[0];
+		Element.show(inst);	
 	},
 	
-	createEntry: function(categoryId, imageData)
+	hideProgressIndicator: function(form)
 	{
-		var templ = document.getElementsByClassName('catImageTemplate', $('tabImagesContent_' + categoryId))[0].cloneNode(true);
+		var inst = document.getElementsByClassName('progressIndicator', form)[0];
+		Element.hide(inst);	
+	},
+
+	showNoImagesMessage: function()
+	{
+		// display message if no images are uploaded
+		document.getElementsByClassName('noRecords', this.container.parentNode)[0].style.display = (this.container.childNodes.length > 0) ? 'none' : 'block';	 	 
+	},
+	
+	createEntry: function(imageData)
+	{
+		var templ = document.getElementsByClassName('imageTemplate', this.container.parentNode)[0].cloneNode(true);
 	  		  	
 	  	image = templ.getElementsByTagName('img')[0];
+		console.log(imageData);
 		image.src = imageData['paths'][0];
 	  	image.imageData = imageData;
 	  	image.onclick = 
@@ -230,24 +233,20 @@ Backend.CategoryImage.prototype =
 				this.src = this.imageData['paths'][nextImg];
 			}
 
-	  	templ.id = 'catImageListItem_' + imageData['ID'];
+	  	templ.id = this.__createElementID(imageData['ID']);
 
 		if (imageData['title'])
 		{
-			document.getElementsByClassName('catImageTitle', templ)[0].innerHTML = imageData['title'];		  
+			document.getElementsByClassName('imageTitle', templ)[0].innerHTML = imageData['title'];		  
 		}
 		
-        $A(templ.getElementsByTagName("input")).each(function(input) {
-            Event.observe(input, "keydown", function(e) { Backend.CategoryImage.prototype.submitOnEnter(e, categoryId) });
-        });
-        
 		return templ;	  
 	},
 	
-	addToList: function(categoryId, imageData, highLight)
+	addToList: function(imageData, highLight)
 	{
-		var templ = this.createEntry(categoryId, imageData);
-		$('catImageList_' + categoryId).appendChild(templ);
+		var templ = this.createEntry(imageData);
+		this.container.appendChild(templ);
 	  	
 	  	if (highLight)
 	  	{
@@ -255,7 +254,7 @@ Backend.CategoryImage.prototype =
 		}
 	},
 	
-	updateEntry: function(categoryId, imageData, highLight)
+	updateEntry: function(imageData, highLight)
 	{
 	  	// force image reload
 	  	var timeStamp = new Date().getTime();
@@ -264,8 +263,8 @@ Backend.CategoryImage.prototype =
 			imageData['paths'][k] += '?' + timeStamp;
 		}
 
-		var templ = this.createEntry(categoryId, imageData);
-		var entry = $('catImageListItem_'  + imageData['ID']);
+		var templ = this.createEntry(imageData);
+		var entry = $(this.__createElementID(imageData['ID']));
 	  	  	
 	  	entry.parentNode.replaceChild(templ, entry);
 	  	
@@ -277,36 +276,39 @@ Backend.CategoryImage.prototype =
 
 	upload: function(form)
 	{
-		categoryId = form.elements.namedItem('catId').value;
-		errorElement = document.getElementsByClassName('errorText', $('catImgAdd_' + categoryId))[0];
-		errorElement.style.display = 'none';		  
-
+		errorElement = document.getElementsByClassName('errorText', this.addForm)[0];
+		errorElement.style.display = 'none';
+		this.showProgressIndicator(this.addForm);
 		return false;
 	},
 	
-	postUpload: function(categoryId, result)
+	postUpload: function(result)
 	{
-		errorElement = document.getElementsByClassName('errorText', $('catImgAdd_' + categoryId))[0];
+		var errorElement = document.getElementsByClassName('errorText', this.addForm)[0];
 		if (result['error'])  	
 		{
 			errorElement.innerHTML = result['error'];
+			Element.removeClassName(errorElement, 'hidden');
 			Effect.Appear(errorElement, {duration: 0.4});
 		}
 		else
 		{
 			errorElement.style.display = 'none';
-			this.addToList(categoryId, result, true);		  
-			$('catImgAdd_' + categoryId).style.display = 'none';
-			$('catImgMenu_' + categoryId).style.display = 'block';
-			this.initActiveList(categoryId);
+			this.addToList(result, true);		  
+			this.addForm.style.display = 'none';
+			this.addMenu.style.display = 'block';
+			this.initActiveList();
             
-            CategoryTabControl.prototype.resetTabItemsCount(categoryId);
+            CategoryTabControl.prototype.resetTabItemsCount(this.ownerID);
+            
+            this.arrangeImages();
 		}
 	},
 
-	postSave: function(categoryId, imageId, result)
+	postSave: function(imageId, result)
 	{
-		var entry = $('catImageListItem_' + imageData['ID']);
+		var entry = $(this.__createElementID(imageData['ID']));
+		this.hideProgressIndicator(entry);
 		errorElement = document.getElementsByClassName('errorText', entry)[0];
 		if (result['error'])  	
 		{
@@ -316,12 +318,16 @@ Backend.CategoryImage.prototype =
 		else
 		{
 			errorElement.style.display = 'none';
-			this.updateEntry(categoryId, result, true);		  
+			this.updateEntry(result, true);		  
 			entry.getElementsByTagName('form')[0].style.display = 'none';
-			this.initActiveList(categoryId);
+			this.initActiveList();
 		}
 	},
 	
+	__createElementID: function(id)
+	{
+		return this.prefix + 'image_' + id;		
+	},
 	
 	setSortUrl: function(url)
 	{

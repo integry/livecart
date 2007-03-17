@@ -1,8 +1,7 @@
 <ul style="display: none;">
-	<li class="catImageTemplate">
-		<img class="catImage" src="" /> <span class="catImageTitleDefLang"></span>
-		<span class="catImageTitle">
-		</span>
+	<li class="imageTemplate">
+		<img class="image" src="" />
+		<span class="imageTitle"></span>
 	</li>
 </ul>
 
@@ -15,9 +14,9 @@
 </fieldset>
 
 <div id="catImgAdd_{$catId}" class="catImageEditForm" style="display: none;">
-{form handle=$form action="controller=backend.categoryImage action=upload" method="post" onsubmit="Backend.Category.image.upload(this);" target="catImgUpload_`$catId`" method="POST" enctype="multipart/form-data"}
+{form handle=$form action="controller=backend.categoryImage action=upload" method="post" onsubmit="$('catImageList_`$catId`').handler.upload(this);" target="catImgUpload_`$catId`" method="POST" enctype="multipart/form-data"}
 	
-	<input type="hidden" name="catId" value="{$catId}" />
+	<input type="hidden" name="ownerId" value="{$catId}" />
 	<input type="hidden" name="imageId" value="" />
 		
 	<fieldset>	
@@ -52,7 +51,7 @@
 			</script>
 		</div>		
 		
-			<span id="imgSaveIndicator_{$catId}" class="progressIndicator" style="display: none;"></span>
+			<span class="progressIndicator" style="display: none;"></span>
 			<input type="submit" name="upload" class="submit" value="{tn _upload}"> {t _or} <a href="#" class="cancel" onclick="restoreMenu('catImgAdd_{$catId}', 'catImgMenu_{$catId}'); return false;">{t _cancel}</a>
 	</fieldset>
 
@@ -64,28 +63,30 @@
     <p class="main">{t _main_image}</p><p class="supplemental">{t _supplemental_images}</p>
 </ul>
 
-<div id="catNoImages_{$catId}" class="noRecords">
+<div class="noRecords">
 	<div>{t _no_images}</div>
 </div>
 
 <script type="text/javascript">
+
+    var handler = new Backend.CategoryImage($("catImageList_{$catId}"), 'cat');    
+	handler.initList({$images});
+	
+	handler.setDeleteUrl('{link controller=backend.categoryImage action=delete}');	
+	handler.setSortUrl('{link controller=backend.categoryImage action=saveOrder}');	
+	handler.setEditUrl('{link controller=backend.categoryImage action=edit}');		
+	handler.setSaveUrl('{link controller=backend.categoryImage action=save}');		
+	   
+	handler.setDeleteMessage('{t _delete_confirm|addslashes}');	
+	handler.setEditCaption('{t _edit_image|addslashes}');	
+	handler.setSaveCaption('{t _save|addslashes}');	
+    
     {literal}
-    Backend.Category.image.activeListMessages = 
+    handler.activeListMessages = 
     { 
         _activeList_edit:    {/literal}'{t _activeList_edit|addslashes}'{literal},
         _activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
     }
     {/literal}
-
-	Backend.Category.image.initList({$catId}, {$images});
-	Backend.Category.image.setDeleteUrl('{link controller=backend.categoryImage action=delete}');	
-	Backend.Category.image.setSortUrl('{link controller=backend.categoryImage action=saveOrder}');	
-	Backend.Category.image.setEditUrl('{link controller=backend.categoryImage action=edit}');		
-	Backend.Category.image.setSaveUrl('{link controller=backend.categoryImage action=save}');		
-	   
-	Backend.Category.image.setDeleteMessage('{t _delete_confirm|addslashes}');	
-	Backend.Category.image.setEditCaption('{t _edit_image|addslashes}');	
-	Backend.Category.image.setSaveCaption('{t _save|addslashes}');	
-    
-
+	
 </script>

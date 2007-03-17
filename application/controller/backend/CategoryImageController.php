@@ -8,7 +8,7 @@ ClassLoader::import("application.model.category.CategoryImage");
  * Product Category Image controller
  *
  * @package application.controller.backend
- * @author Rinalds Uzkalns <rinalds@integry.net>
+ * @author Integry Systems
  *
  */
 class CategoryImageController extends ObjectImageController
@@ -22,6 +22,11 @@ class CategoryImageController extends ObjectImageController
 	{
         return 'Category';
     }
+    
+    protected function getForeignKeyName()
+    {
+		return 'categoryID';
+	}   
     
     public function index()
     {
@@ -42,37 +47,11 @@ class CategoryImageController extends ObjectImageController
 	{
         return parent::delete();
     }
-    
-	/**
-	 * Save currency order
-	 * @return RawResponse
-	 */
+
 	public function saveOrder()
 	{
-	  	$categoryId = $this->request->getValue('categoryId');
-	  	
-		$order = $this->request->getValue('catImageList_' . $categoryId);
-			
-		foreach ($order as $key => $value)
-		{
-			$update = new ARUpdateFilter();
-			$update->setCondition(new EqualsCond(new ARFieldHandle('CategoryImage', 'ID'), $value));
-			$update->addModifier('position', $key);
-			ActiveRecord::updateRecordSet('CategoryImage', $update);  	
-		}
-
-        // set category main image
-        if (isset($order[0]))
-        {
-            $category = Category::getInstanceByID($categoryId);
-            $category->defaultImage->set(ActiveRecordModel::getInstanceByID('CategoryImage', $order[0]));
-            $category->save();            
-        }
-
-		$resp = new RawResponse();
-	  	$resp->setContent($this->request->getValue('draggedId'));
-		return $resp;		  	
-	}				
+        return parent::saveOrder();
+    }    
 }	
 	  
 ?>

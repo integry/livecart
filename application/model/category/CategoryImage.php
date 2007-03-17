@@ -20,6 +20,11 @@ class CategoryImage extends ObjectImage
 								2 => array(300, 400),
 								);   
     }
+    
+    public function getOwner()
+    {
+		return $this->category->get();
+	}
 		
 	public static function getNewInstance(Category $category)
 	{

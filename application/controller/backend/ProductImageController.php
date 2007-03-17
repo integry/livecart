@@ -1,26 +1,57 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.category.Category");
-ClassLoader::import("application.model.product.Product");
+ClassLoader::import("application.controller.backend.abstract.ObjectImageController");
+ClassLoader::import('application.model.product.Product');
+ClassLoader::import("application.model.product.ProductImage");
 
 /**
- * Controller for handling product based actions performed by store administrators
+ * Product Image controller
  *
  * @package application.controller.backend
- * @role admin.store.product
+ * @author Integry Systems
+ *
  */
-class ProductImageController extends StoreManagementController 
+class ProductImageController extends ObjectImageController
 {
-	public function index()
+	protected function getModelClass()
 	{
-	    $response = new ActionResponse();
-
-	    $response->setValue('id', $this->request->getValue('id'));
-	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
-	    
-	    return $response;
+        return 'ProductImage';
+    }
+    
+	protected function getOwnerClass()
+	{
+        return 'Product';
+    }
+    
+    protected function getForeignKeyName()
+    {
+		return 'productID';
 	}
-}
+    
+    public function index()
+    {
+        return parent::index();
+    }
+		
+    public function upload()
+    {
+        return parent::upload();
+    }
 
+	public function save()
+	{
+        return parent::save();
+    }
+	
+	public function delete()
+	{
+        return parent::delete();
+    }
+
+	public function saveOrder()
+	{
+        return parent::saveOrder();
+    }    
+}	
+	  
 ?>

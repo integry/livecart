@@ -24,7 +24,7 @@
 {includeJs file="backend/Category.js"}
 {includeJs file="backend/SpecField.js"}
 {includeJs file="backend/Filter.js"}
-{includeJs file="backend/CategoryImage.js"}
+{includeJs file="backend/ObjectImage.js"}
 {includeJs file="backend/Product.js"}
 {includeJs file="backend/RelatedProduct.js"}
 
@@ -128,7 +128,6 @@
         
         Backend.Category.loadBookmarkedCategory();
     
-    	Backend.Category.image = new Backend.CategoryImage();
     {rdelim}
     catch(e)
     {ldelim}

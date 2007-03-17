@@ -1,1 +1,1 @@
-parent.Backend.Category.image.postSave({$catId}, {$imageId}, {$result});
+parent.document.getElementById('catImageList_{$ownerId}').handler.postSave({$imageId}, {$result});

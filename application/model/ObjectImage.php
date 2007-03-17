@@ -4,8 +4,9 @@ ClassLoader::import("application.model.system.MultilingualObject");
 
 abstract class ObjectImage extends MultilingualObject
 {
-	abstract function getImageSizes();
-	
+	abstract public function getImageSizes();
+	abstract public function getOwner();
+		
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -56,7 +57,7 @@ abstract class ObjectImage extends MultilingualObject
           
         // get current max image position
 	  	$filter = new ARSelectFilter();
-	  	$filter->setCondition(new EqualsCond(new ARFieldHandle($className, $foreignKeyName), $this->category->get()->getID()));
+	  	$filter->setCondition(new EqualsCond(new ARFieldHandle($className, $foreignKeyName), $this->getOwner()->getID()));
 	  	$filter->setOrder(new ARFieldHandle($className, 'position'), 'DESC');
 	  	$filter->setLimit(1);
 	  	$maxPosSet = ActiveRecord::getRecordSet($className, $filter);

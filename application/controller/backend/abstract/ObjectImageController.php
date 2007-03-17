@@ -3,15 +3,25 @@
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import('library.image.ImageManipulator');
 
+/**
+ *	Implements common logic for handling image uploads and management for various business objects
+ *	like products and product categories.
+ */
 abstract class ObjectImageController extends StoreManagementController
 {
     abstract protected function getModelClass();
     abstract protected function getOwnerClass();
-    
+    abstract protected function getForeignKeyName();
+	    
     public function index()
 	{
-		$category = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), (int)$this->request->getValue('id'));
-		$imageArray = $category->getCategoryImagesSet()->toArray();
+		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), (int)$this->request->getValue('id'));
+		
+		$filter = new ARSelectFilter();
+		$filter->setCondition(new EqualsCond(new ARFieldHandle($this->getModelClass(), $this->getForeignKeyName()), $owner->getID()));
+		$filter->setOrder(new ARFieldHandle($this->getModelClass(), 'position'));
+		
+		$imageArray = ActiveRecordModel::getRecordSetArray($this->getModelClass(), $filter);
 		
 		$languages = array();
 		foreach ($this->store->getLanguageArray(false) as $langId)
@@ -20,8 +30,8 @@ abstract class ObjectImageController extends StoreManagementController
 		}
 		
 		$response = new ActionResponse();
-		$response->setValue('form', $this->buildForm($category->getID()));
-		$response->setValue('catId', $category->getID());
+		$response->setValue('form', $this->buildForm($owner->getID()));
+		$response->setValue('ownerId', $owner->getID());
 		$response->setValue('images', json_encode($imageArray));
 		$response->setValue('languageList', $languages);
 		return $response;		  
@@ -29,11 +39,11 @@ abstract class ObjectImageController extends StoreManagementController
 	
 	public function upload()
 	{	
-		$categoryId = $this->request->getValue('catId');
+		$ownerId = $this->request->getValue('ownerId');
 		
-		$category = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), $categoryId);
+		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), $ownerId);
 			  	
-		$validator = $this->buildValidator($categoryId);
+		$validator = $this->buildValidator($ownerId);
 		
 		if (!$validator->isValid())
 		{
@@ -44,7 +54,7 @@ abstract class ObjectImageController extends StoreManagementController
 		{
 		  	ActiveRecord::beginTransaction();
 
-			$catImage = call_user_func_array(array($this->getModelClass(), 'getNewInstance'), array($category));
+			$catImage = call_user_func_array(array($this->getModelClass(), 'getNewInstance'), array($owner));
 
 			$multilingualFields = array("title");
 			$catImage->setValueArrayByLang($multilingualFields, $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true), $this->request);			
@@ -70,7 +80,7 @@ abstract class ObjectImageController extends StoreManagementController
 		$this->setLayout('iframeJs');
 		
 		$response = new ActionResponse();
-		$response->setValue('catId', $categoryId);		
+		$response->setValue('ownerId', $ownerId);		
 		$response->setValue('result', json_encode($result));		
 		return $response;
 	}	
@@ -129,7 +139,7 @@ abstract class ObjectImageController extends StoreManagementController
 		}		
 		
 		$this->setLayout('iframeJs');
-		$response->setValue('catId', $this->request->getValue('catId'));		
+		$response->setValue('ownerId', $this->request->getValue('ownerId'));		
 		$response->setValue('imageId', $this->request->getValue('imageId'));		
 	  	$response->setValue('result', json_encode($result));
 		return $response;
@@ -153,6 +163,37 @@ abstract class ObjectImageController extends StoreManagementController
 		
 		return new RawResponse($success);
 	}		
+	
+	/**
+	 * Save image order
+	 * @return RawResponse
+	 */
+	public function saveOrder()
+	{
+	  	$ownerId = $this->request->getValue('ownerId');
+	  	
+		$order = $this->request->getValue('catImageList_' . $ownerId);
+			
+		foreach ($order as $key => $value)
+		{
+			$update = new ARUpdateFilter();
+			$update->setCondition(new EqualsCond(new ARFieldHandle($this->getModelClass(), 'ID'), $value));
+			$update->addModifier('position', $key);
+			ActiveRecord::updateRecordSet($this->getModelClass(), $update);  	
+		}
+
+        // set owners main image
+        if (isset($order[0]))
+        {
+            $owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), $ownerId);
+            $owner->defaultImage->set(ActiveRecordModel::getInstanceByID($this->getModelClass(), $order[0]));
+            $owner->save();            
+        }
+
+		$resp = new RawResponse();
+	  	$resp->setContent($this->request->getValue('draggedId'));
+		return $resp;		  	
+	}				
 	
 	/**
 	 * Builds an image upload form validator

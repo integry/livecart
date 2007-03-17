@@ -1,0 +1,1 @@
+parent.document.getElementById('prodImageList_{$ownerId}').handler.postSave({$imageId}, {$result});
