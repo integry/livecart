@@ -172,7 +172,7 @@ abstract class ObjectImageController extends StoreManagementController
 	{
 	  	$ownerId = $this->request->getValue('ownerId');
 	  	
-		$order = $this->request->getValue('catImageList_' . $ownerId);
+		$order = $this->request->getValue('catImageList_' . $ownerId, $this->request->getValue('prodImageList_' . $ownerId));
 			
 		foreach ($order as $key => $value)
 		{

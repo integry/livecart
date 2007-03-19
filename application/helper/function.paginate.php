@@ -19,14 +19,14 @@ function smarty_function_paginate($params, $smarty)
 	
 	if ($params['current'] > 1)
 	{
-		$out[] = '<a href="' . $params['url'] . ($params['current'] - 1) . '">' . $store->translate('_previous') . '</a>';
+		$out[] = '<a href="' . str_replace('_page_', $params['current'] - 1, $params['url']) . '">' . $store->translate('_previous') . '</a>';
 	}
 	
 	for ($k = 1; $k <= $pages; $k++)
 	{
 		if ($k != $params['current'])
 		{
-			$out[] = '<a href="' . $params['url'] . $k . '">' . $k . '</a>';			
+			$out[] = '<a href="' . str_replace('_page_', $k, $params['url']) . '">' . $k . '</a>';			
 		}
 		else
 		{
@@ -36,7 +36,7 @@ function smarty_function_paginate($params, $smarty)
 
 	if ($params['current'] < $pages)
 	{
-		$out[] = '<a href="' . $params['url'] . ($params['current'] + 1) . '">' . $store->translate('_next') . '</a>';
+		$out[] = '<a href="' . str_replace('_page_', $params['current'] + 1, $params['url']) . '">' . $store->translate('_next') . '</a>';
 	}
 
 	return implode(' | ', $out);

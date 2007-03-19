@@ -179,6 +179,19 @@ Backend.Currency.prototype =
 	},
 	
 /************************************
+	EDIT
+*************************************/
+    saveFormat: function(form)
+    {
+        new LiveCart.AjaxRequest(form, document.getElementsByClassName('progressIndicator', form)[0], this.completeSaveFormat.bind(form)); 
+    },
+
+    completeSaveFormat: function()
+    {
+        this.parentNode.innerHTML = '';    
+    },
+
+/************************************
 	RATES
 *************************************/
 

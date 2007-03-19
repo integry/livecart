@@ -152,6 +152,32 @@ class CurrencyController extends StoreManagementController
 		return new RawResponse($success);
 	}
 
+    public function edit()
+    {
+        $currency = Currency::getInstanceByID($this->request->getValue('id'), Currency::LOAD_DATA);
+        
+		ClassLoader::import("framework.request.validator.Form");
+		ClassLoader::import("framework.request.validator.RequestValidator");
+
+		$form = new Form(new RequestValidator("currency", $this->request));
+		$form->setData($currency->toArray());
+        
+        $response = new ActionResponse();
+        $response->setValue('form', $form);
+        $response->setValue('id', $this->request->getValue('id'));
+        return $response;          
+    }
+    
+    public function save()
+    {
+        $currency = Currency::getInstanceByID($this->request->getValue('id'), Currency::LOAD_DATA);
+        $currency->pricePrefix->set($this->request->getValue('pricePrefix'));
+        $currency->priceSuffix->set($this->request->getValue('priceSuffix'));
+        $currency->save();        
+
+        return new JSONResponse(1);
+    }
+
 	/**
 	 * Currency rates form
 	 * @return ActionResponse

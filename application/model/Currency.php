@@ -6,7 +6,7 @@
  * @package application.model
  * @author Rinalds Uzkalns <rinalds@integry.net>
  */
-class Currency extends ActiveRecord
+class Currency extends ActiveRecordModel
 {
 	public static function defineSchema($className = __CLASS__)
 	{
@@ -20,6 +20,8 @@ class Currency extends ActiveRecord
 		$schema->registerField(new ARField("isDefault", ArBool::instance()));
 		$schema->registerField(new ARField("isEnabled", ArBool::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance()));
+		$schema->registerField(new ARField("pricePrefix", ARText::instance(20)));
+		$schema->registerField(new ARField("priceSuffix", ARText::instance(20)));
 	}
 
 	public function setAsDefault($default = true)
@@ -40,9 +42,9 @@ class Currency extends ActiveRecord
 		return $array;
 	}
 	
-	public static function getInstanceById($id)
+	public static function getInstanceById($id, $loadData = false)
 	{
-		return ActiveRecordModel::getInstanceById(__CLASS__, $id);
+		return ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);
 	}
 	
 	public static function deleteById($id)

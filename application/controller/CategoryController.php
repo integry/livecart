@@ -88,26 +88,29 @@ class CategoryController extends FrontendController
 
 		$this->productFilter = $productFilter;
 
-		$products = $this->category->getProductsArray($productFilter, array('Manufacturer'));
+		$products = $this->category->getProductsArray($productFilter, array('Manufacturer', 'ProductImage'));
 
-		// get product specification data
+		// get product specification and price data
 		ProductSpecification::loadSpecificationForRecordSetArray($products);
-	
+		ProductPrice::loadPricesForRecordSetArray($products);
+
 		$count = new ProductCount($this->productFilter);
 		$totalCount = $count->getCategoryProductCount($productFilter);
 		$offsetEnd = min($totalCount, $offsetEnd);
 		
 		$urlParams = array('controller' => 'category', 'action' => 'index', 
 						   'id' => $this->request->getValue('id'),
-						   'cathandle' => $this->request->getValue('cathandle')
+						   'cathandle' => $this->request->getValue('cathandle'),
+						   'page' => '_000_',
 						   );
 						   
 		if ($this->request->getValue('filters'))
 		{
 			$urlParams['filters'] = $this->request->getValue('filters');
 		}
-		$url = Router::getInstance()->createURL($urlParams) . '/';
-		
+		$url = Router::getInstance()->createURL($urlParams);
+		$url = str_replace('_000_', '_page_', $url);
+				
 		$response = new ActionResponse();
 		$response->setValue('id', $this->categoryID);
 		$response->setValue('url', $url);
@@ -119,6 +122,7 @@ class CategoryController extends FrontendController
 		$response->setValue('currentPage', $currentPage);
 		$response->setValue('category', $this->category->toArray());
 		$response->setValue('filterChainHandle', $filterChainHandle);
+		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode()));
 		return $response;
 	}
 	

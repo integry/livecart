@@ -4,6 +4,11 @@
   	padding: 0;
 }
 
+a img
+{
+    border: 0;
+}
+
 /*****************************
 	Layout
 *****************************/
@@ -80,6 +85,11 @@ div.box .content
 	font-weight: bold;
 }
 
+fieldset.container
+{
+    border: 0;
+}
+
 /*****************************
 	Breadcrumb
 *****************************/
@@ -119,10 +129,27 @@ ul.productList li
 ul.productList .title
 {
 	display: block;
+	margin-bottom: 3px;
 }
 
 ul.productList .spec
 {
 	font-size: smaller;
 	font-weight: bold;
+}
+
+ul.productList p.descr
+{
+    float: left;
+}
+
+ul.productList p.image
+{
+	float: left; 
+    margin-right: 8px;
+}
+
+ul.productList p.image img
+{
+    vertical-align: top;
 }

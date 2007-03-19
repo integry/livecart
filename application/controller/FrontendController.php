@@ -11,12 +11,22 @@ abstract class FrontendController extends BaseController
 {	
 	protected $breadCrumb = array();
 	
-	public function init()
+	public function __construct($request)
+	{
+        parent::__construct($request);
+        if ($request->isValueSet('currency'))
+        {
+            Router::addAutoAppendQueryVariable('currency', $request->getValue('currency'));
+        }    
+    }
+    
+    public function init()
 	{
 	  	$this->setLayout('frontend');
 	  	$this->addBlock('CATEGORY_BOX', 'boxCategory', 'block/box/category');
 	  	$this->addBlock('BREADCRUMB', 'boxBreadCrumb', 'block/box/breadcrumb');
 	  	$this->addBlock('LANGUAGE', 'boxLanguageSelect', 'block/box/language');
+	  	$this->addBlock('CURRENCY', 'boxSwitchCurrency', 'block/box/currency');
 	}
 	
 	protected function addBreadCrumb($title, $url)
@@ -32,6 +42,20 @@ abstract class FrontendController extends BaseController
 	protected function boxViewBasketBlock()
 	{
 	  	
+	}
+
+	protected function boxSwitchCurrencyBlock()
+	{
+        $currencies = Store::getInstance()->getCurrencySet();        
+        $currencyArray = array();
+        foreach ($currencies as $currency)
+        {
+            $currencyArray[$currency->getID()] = $currency->toArray();
+        }
+
+        $response = new BlockResponse();			  	        
+        $response->setValue('currencies', $currencyArray);        
+        return $response;	  	
 	}
 
 	protected function boxLanguageSelectBlock()
@@ -88,7 +112,7 @@ abstract class FrontendController extends BaseController
 		$currentCategory = Category::getInstanceByID($this->categoryID, Category::LOAD_DATA);	
 		
 		// get path of the current category (except for top categories)
-		if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->category->get()->getID()))
+		if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->parentNode->get()->getID()))
 		{
 			$path = $currentCategory->getPathNodeSet(false)->toArray();
 
@@ -109,7 +133,7 @@ abstract class FrontendController extends BaseController
 		}		  
 
 		// get sibling (same-level) categories (except for top categories)
-		if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->category->get()->getID()))
+		if (!(1 == $currentCategory->getID()) && (1 < $currentCategory->parentNode->get()->getID()))
 		{
 			$siblings = $currentCategory->getSiblingArray();
 		

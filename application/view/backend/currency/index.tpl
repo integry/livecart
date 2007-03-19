@@ -38,7 +38,7 @@
 			</div>
 	
 			<ul style="display: none;">
-				<li id="currencyList_template" class="activeList_add_sort activeList_remove_delete disabled default">
+				<li id="currencyList_template" class="activeList_add_sort activeList_add_edit activeList_remove_delete disabled default">
 				<div>
 					<div class="currListContainer">
 						<span>
@@ -54,12 +54,13 @@
 							<a href="{link controller=backend.currency action=setDefault}?id=" class="setDefault listLink">{t _set_as_default}</a>
 							<span class="currDefault">{t _default_currency}</span>
 						</div>
+						<div class="currEdit"></div>
 					</div>
 				</div>			
 				</li>
 			</ul>			
 			
-			<ul id="currencyList" class="activeList_add_delete activeList_add_sort"></ul>		
+			<ul id="currencyList" class="activeList_add_delete activeList_add_edit activeList_add_sort"></ul>		
 			
 		</div>
 		<div id="tabRatesContent"></div>
@@ -84,7 +85,8 @@
     {	
 		curr.showNoCurrencyMessage();
 		ActiveList.prototype.getInstance('currencyList', {
-	         beforeEdit:     function(li) { return 'sort.php?' },
+	         beforeEdit:     function(li) { return '{/literal}{link controller=backend.currency action=edit}{literal}?id=' + this.getRecordId(li); 
+             },
 	         beforeSort:     function(li, order) 
 			 { 
 				 return '{/literal}{link controller=backend.currency action=saveorder}{literal}?draggedId=' + this.getRecordId(li) + '&' + order 
@@ -93,7 +95,7 @@
 	         {
 	             if(confirm('{/literal}{tn _confirm_delete}{literal}')) return '{/literal}{link controller=backend.currency action=delete}{literal}?id=' + this.getRecordId(li)
 	         },
-	         afterEdit:      function(li, response) {  },
+	         afterEdit:      function(li, response) { document.getElementsByClassName('currEdit', li)[0].innerHTML = response; },
 	         afterSort:      function(li, response) { curr.resetRatesContainer(); },
 	         afterDelete:    function(li, response)  { Element.remove(li); curr.resetRatesContainer(); }
 	     }, messages);
