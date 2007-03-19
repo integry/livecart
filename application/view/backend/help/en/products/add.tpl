@@ -25,8 +25,9 @@ you have to set these attributes before adding products.</p>
 	<li>Click <strong>Products</strong> tab to open product management section.</li>
 	<li>In the products section click <strong>Add new Product:</strong></li>
 	<img src="image/doc/products/add/add_new.bmp">
-	<li><i>Add new product</i> main form opens. See <a href="{help /products.define}">field specifications</a> for more details.</li> 
-	<ins>save changes</ins>
+	<li><i>Add new product</i> main form opens. Fill out the form by supplying necessary fields, see 
+	<a href="{help /products.define}">field specifications</a> for more details.</li> 
+	<li>Save changes to complete adding new product.</li>
 </ul>
 
 <h3 id="import">Import Data</h3>
