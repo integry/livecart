@@ -56,7 +56,7 @@
 	</fieldset>
 
 {/form}
-<iframe name="prodImgUpload_{$ownerId}" id="prodImgUpload_{$ownerId}"></iframe>
+<iframe name="prodImgUpload_{$ownerId}" id="prodImgUpload_{$ownerId}" style="display: block;"></iframe>
 </div>
 
 <ul id="prodImageList_{$ownerId}" class="prodImageList activeList_add_sort activeList_add_delete activeList_add_edit">

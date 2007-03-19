@@ -4,7 +4,7 @@ ClassLoader::import("application.model.system.MultilingualObject");
 
 abstract class ObjectImage extends MultilingualObject
 {
-	abstract public function getImageSizes();
+	abstract public static function getImageSizes();
 	abstract public function getOwner();
 		
 	public static function defineSchema($className = __CLASS__)

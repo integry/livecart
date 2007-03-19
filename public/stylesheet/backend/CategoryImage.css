@@ -17,7 +17,7 @@
 
 .catImageEditForm iframe, .prodImageEditForm iframe
 {
-    display: none;
+/*    display: none; */
 }
 
 .catImageEditContainer, .prodImageEditContainer 

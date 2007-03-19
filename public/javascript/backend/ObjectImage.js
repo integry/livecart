@@ -33,7 +33,6 @@ Backend.ObjectImage.prototype =
 	
 	initList: function(imageList)
 	{
-		console.log(imageList);
 		for (k = 0; k < imageList.length; k++)
 		{
 		  	this.addToList(imageList[k]);
@@ -208,27 +207,25 @@ Backend.ObjectImage.prototype =
 		var templ = document.getElementsByClassName('imageTemplate', this.container.parentNode)[0].cloneNode(true);
 	  		  	
 	  	image = templ.getElementsByTagName('img')[0];
-		console.log(imageData);
-		image.src = imageData['paths'][0];
+		image.src = imageData['paths'][1];
 	  	image.imageData = imageData;
 	  	image.onclick = 
 			function() 
 			{ 
-				for (k = 0; k < this.imageData['paths'].length; k++) 
+                for (k in this.imageData['paths']) 
 				{ 
-					if (this.src.substr(this.src.length - this.imageData['paths'][k].length, this.imageData['paths'][k].length) == this.imageData['paths'][k])
+                    if (this.src.substr(this.src.length - this.imageData['paths'][k].length, this.imageData['paths'][k].length) == this.imageData['paths'][k])
 					{
 						var currentImg = k;
 					}  
-				}
+       			}
 
-				var nextImg = currentImg + 1;
+				var nextImg = parseInt(currentImg) + 1;
 
-				if (nextImg >= this.imageData['paths'].length)
+				if (!this.imageData['paths'][nextImg])
 				{
-					nextImg = 0;  	
+					nextImg = 1;  	
 				} 
-
 
 				this.src = this.imageData['paths'][nextImg];
 			}

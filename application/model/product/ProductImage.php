@@ -12,12 +12,18 @@ class ProductImage extends ObjectImage
 		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
 	}
 		
-	public function getImageSizes()
+	public static function getImageSizes()
 	{
-	   return array(0 => array(50, 80),
-								1 => array(80, 150),
-								2 => array(300, 400),
-								);   
+        $config = Config::getInstance();
+     
+        $sizes = array();
+        $k = 0;
+        while ($config->isValueSet('IMG_P_W_' . ++$k))
+        {
+            $sizes[$k] = array($config->getValue('IMG_P_W_' . $k), $config->getValue('IMG_P_H_' . $k));
+        }
+
+        return $sizes;
     }
 		
     public function getOwner()

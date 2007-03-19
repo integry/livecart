@@ -13,7 +13,7 @@ class CategoryImage extends ObjectImage
 		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
 	}
 		
-	public function getImageSizes()
+	public static function getImageSizes()
 	{
 	   return array(0 => array(50, 80),
 								1 => array(80, 150),
