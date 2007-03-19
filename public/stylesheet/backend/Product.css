@@ -77,7 +77,18 @@ fieldset.specification .numeric
 .cell_cb
 {
 	width: 4%;  
-	text-align: center;
+	text-align: center !important;
+}
+
+.cell_cb input
+{
+	float: none;
+	margin-right: 0;
+}
+
+.headRow .cell_cb span
+{
+	display: none;
 }
 
 .cell_sku
@@ -110,6 +121,7 @@ fieldset.specification .numeric
 .cell_enabled
 {
 	width: 10%;   
+	text-align: center;
 }
 
 .lowStock
@@ -119,5 +131,5 @@ fieldset.specification .numeric
 
 .notEnabled
 {
-  	color: red;
+/*  	color: red;*/
 }

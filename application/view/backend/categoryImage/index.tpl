@@ -69,7 +69,7 @@
 
 <script type="text/javascript">
 
-    var handler = new Backend.CategoryImage($("catImageList_{$catId}"), 'cat');    
+    var handler = new Backend.ObjectImage($("catImageList_{$catId}"), 'cat');    
 	handler.initList({$images});
 	
 	handler.setDeleteUrl('{link controller=backend.categoryImage action=delete}');	

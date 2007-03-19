@@ -37,6 +37,8 @@ ActiveGrid.prototype =
 	inverseSelection: false,
 	
 	filters: {},
+	
+	loadIndicator: null,
   	
 	initialize: function(tableInstance, dataUrl, totalCount, options)
   	{
@@ -57,12 +59,22 @@ ActiveGrid.prototype =
 		this.selectAllInstance.onclick = this.selectAll.bindAsEventListener(this); 
 			
 		this.ricoGrid.onUpdate = this.onUpdate.bind(this);
+		this.ricoGrid.onBeginDataFetch = this.showFetchIndicator.bind(this);
+		this.ricoGrid.options.onRefreshComplete = this.hideFetchIndicator.bind(this);
+				
 		this.onScroll(this.ricoGrid, 0);
 	},
 	
-	onScroll: function(liveGrid, offset) 
+	setLoadIndicator: function(indicatorElement)
 	{
-        var rows = this.tableInstance.getElementsByTagName('tr');
+		this.loadIndicator = $(indicatorElement);	
+	},
+	
+	onScroll: function(liveGrid, offset) 
+	{        	
+		this.ricoGrid.onBeginDataFetch = this.showFetchIndicator.bind(this);	
+	
+		var rows = this.tableInstance.getElementsByTagName('tr');
 		for (k = 0; k < rows.length; k++)
 		{
 		  	rows[k].onclick = this.selectRow.bindAsEventListener(this);
@@ -76,7 +88,7 @@ ActiveGrid.prototype =
 			this._levelColumns(rows[0], this._getHeaderRow());	  
 		}
 		
-		Backend.Product.updateHeader(liveGrid, offset);
+		Backend.Product.updateHeader(this, offset);
 		
 		this._markSelectedRows();
 	},
@@ -191,6 +203,16 @@ ActiveGrid.prototype =
         this.filters[key] = value;
     },
 
+	showFetchIndicator: function()
+	{
+		this.loadIndicator.style.display = '';	
+	},
+
+	hideFetchIndicator: function()
+	{
+		this.loadIndicator.style.display = 'none';	
+	},
+
 	_markSelectedRows: function()
 	{
 		var rows = this.tableInstance.getElementsByTagName('tr');
@@ -289,7 +311,7 @@ ActiveGridFilter.prototype =
 
 	filterFocus: function(e)
 	{
-		if (!this.element.columnName)
+		if (this.element.columnName == undefined)
 		{
 			this.element.columnName = this.element.value;	
 		}
@@ -323,7 +345,6 @@ ActiveGridFilter.prototype =
 	{
         var filterName = this.element.id;
         filterName = filterName.substr(0, filterName.indexOf('_', 7));
-        
         this.activeGridInstance.setFilterValue(filterName, this.element.value);
 		this.activeGridInstance.reloadGrid();        
     }

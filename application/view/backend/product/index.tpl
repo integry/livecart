@@ -19,9 +19,12 @@
     <input type="hidden" name="selectedIDs" value="" />
     <input type="hidden" name="isInverse" value="" />
             
-    <span id="bookmark" style="margin-top: 15px; float: left;"></span>
+    <span id="productCount_{$categoryID}" style="margin-top: 15px; float: right;">
+		<span class="rangeCount">Listing products %from - %to of %count</span>
+		<span class="notFound">No products found</span>
+	</span>
     
-    <span style="float: right; text-align: right;" id="productMass_{$categoryID}">
+    <span style="float: left; text-align: right;" id="productMass_{$categoryID}">
         With selected: 
         <select name="act" class="select" style="width: auto;">
     
@@ -79,7 +82,12 @@
     
 </fieldset>
 
-<div style="width: 100%;">
+<div style="width: 100%; position: relative;">
+<div style="display: none;" class="activeGrid_loadIndicator" id="productLoadIndicator_{$categoryID}">
+	<div>
+		{t Loading data...}<span class="progressIndicator"></span>
+	</div>
+</div>
 <table class="productHead" id="products_{$categoryID}_header">
 	<tr class="headRow">
 		<th class="cell_cb"><input type="checkbox" class="checkbox" /></th>
@@ -96,7 +104,8 @@
     		<input type="text" class="text" id="filter_Manufacturer.name_{$categoryID}" value="{tn Manufacturer}" />  
         </th>	
 		<th class="cell_price">
-            <span class="fieldName">ProductPrice.price</span>Price <small>({$currency})</small>
+            <span class="fieldName">ProductPrice.price</span>
+    		<input type="text" class="text" id="filter_ProductPrice.price_{$currency}" value="{tn Price} ({$currency})" />  			
         </th>
 		<th class="cell_stock">
             <span class="fieldName">Product.stockCount</span>
@@ -104,7 +113,11 @@
         </th>	
 		<th class="cell_enabled">
             <span class="fieldName">Product.isEnabled</span>
-            <span style="overflow: hidden">{tn Enabled}</span>
+    		<select style="width: auto;" id="filter_Product.isEnabled_{$categoryID}">
+				<option value="">{tn Enabled}</option>
+				<option value="1">{tn _yes}</option>
+				<option value="0">{tn _no}</option>
+			</select>
         </th>	
 	</tr>
 </table>
@@ -124,22 +137,34 @@
 <script type="text/javascript">
     window.openProduct = function(id, e) 
     {
-		Backend.Product.Editor.prototype.setCurrentProductId(id); 
-        $('productIndicator_' + id).style.display = '';
-		TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId); 
-        if(Backend.Product.Editor.prototype.hasInstance(id)) 
+		if (window.opener && window.opener.selectProductPopup)
 		{
-			Backend.Product.Editor.prototype.getInstance(id);			
+			window.opener.selectProductPopup.getSelectedProduct(id);	
+		}
+		else
+		{
+			Backend.Product.Editor.prototype.setCurrentProductId(id); 
+	        $('productIndicator_' + id).style.display = '';
+			TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId); 
+	        if(Backend.Product.Editor.prototype.hasInstance(id)) 
+			{
+				Backend.Product.Editor.prototype.getInstance(id);			
+			}			
 		}
 //        Event.stop(e);
     }
 
 	var grid = new ActiveGrid($('products_{/literal}{$categoryID}'), '{link controller=backend.product action=lists}', {$totalCount});
+	grid.setLoadIndicator($("productLoadIndicator_{$categoryID}"));
+	
     new ActiveGridFilter($('filter_Product.sku_{$categoryID}'), grid);
     new ActiveGridFilter($('filter_Product.name_{$categoryID}'), grid);
     new ActiveGridFilter($('filter_Manufacturer.name_{$categoryID}'), grid);
+    new ActiveGridFilter($('filter_ProductPrice.price_{$currency}'), grid);
     new ActiveGridFilter($('filter_Product.stockCount_{$categoryID}'), grid);
     
+	new ActiveGridFilter($('filter_Product.isEnabled_{$categoryID}'), grid);
+		    
     var massHandler = new Backend.Product.massActionHandler($('productMass_{$categoryID}'), grid);
-    massHandler.deleteConfirmMessage = '{tn _delete_conf}' ;
+    massHandler.deleteConfirmMessage = '{t _delete_conf|addslashes}' ;
 </script>

@@ -9,10 +9,10 @@ class ActiveGrid
     private $request;
     
     function __construct(Request $request, ARSelectFilter $filter, $modelClass = false)
-    {
-        // set recordset boundaries (limits)
-        $filter->setLimit($request->getValue('offset'), $request->getValue('page_size'));
-        
+    {        
+		// set recordset boundaries (limits)
+        $filter->setLimit($request->getValue('page_size', 20), $request->getValue('offset', 0));
+
 		// set order
 		if ($request->isValueSet('sort_col'))
 		{
@@ -29,7 +29,7 @@ class ActiveGrid
 
         foreach ($filters as $field => $value)
 		{    		
-            if (!$value)
+            if (!strlen($value))
             {
                 continue;    
             }

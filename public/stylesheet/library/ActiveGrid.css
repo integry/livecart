@@ -3,6 +3,22 @@
     table-layout: fixed;    
 }
 
+.activeGrid_loadIndicator
+{
+	position: absolute; 
+	width: 100%; 
+	padding-top: 150px; 
+	text-align: center;
+}
+
+.activeGrid_loadIndicator div
+{
+	background-color: white; 
+	display: inline;
+	padding: 10px; 
+	border: 1px solid black;
+}
+
 .activeGrid td
 {
     overflow: hidden;
@@ -16,15 +32,20 @@
 
 .activeGrid_highlight
 {
-  	background: lightblue;
+  	background: #CCCCCC;
 }
 
-.headRow input
+.headRow input, .headRow select
 {
     width:70%; 
     font-size: smaller; 
     font-weight: bold;
     border: 1px solid black;
+}
+
+.headRow th
+{
+	text-align: left;
 }
 
 .activeGrid_filter_blur

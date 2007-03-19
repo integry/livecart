@@ -38,7 +38,7 @@ class ProductController extends StoreManagementController
 	protected function productList(Category $category, ActionResponse $response)
 	{	
 		$filter = new ARSelectFilter();
-
+		
 		$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
 		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
 		$filter->setCondition($cond);
@@ -48,6 +48,7 @@ class ProductController extends StoreManagementController
         new ActiveGrid($this->request, $filter);
         					
         $recordCount = true;
+
 		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, Product::LOAD_REFERENCES, $recordCount);
         
         // load specification and price data
@@ -172,13 +173,19 @@ class ProductController extends StoreManagementController
 		  	$c = new LikeCond(new ARFieldHandle('Product', $field), $this->request->getValue($field) . '%');
 		  	$f->setCondition($c);		  	
 
-		  	$f->setOrder(new ARFieldHandle('Product', $field), 'ASC');
+			$f->setOrder(new ARFieldHandle('Product', $field), 'ASC');
+		  	$f->setLimit(20);
 		  	
-		  	$results = ActiveRecordModel::getRecordSet('Product', $f);
+		  	$query = new ARSelectQueryBuilder();
+		  	$query->setFilter($f);
+		  	$query->includeTable('Product');
+		  	$query->addField('DISTINCT(Product.' . $field . ')');
+		  	
+		  	$results = ActiveRecordModel::getDataBySQL($query->createString());
 		  	
 		  	foreach ($results as $value)
 		  	{
-				$resp[] = $value->getFieldValue($field);
+				$resp[] = $value[$field];
 			}	  			  
 		}
 		
@@ -192,13 +199,16 @@ class ProductController extends StoreManagementController
 			$c->addAND($langCond);
 					  	
 		  	$f->setOrder(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), 'ASC');
-		  	
+		  	$f->setLimit(20);
+			  		  	
 		  	$results = ActiveRecordModel::getRecordSet('Product', $f);
 		  	
 		  	foreach ($results as $value)
 		  	{
-				$resp[] = $value->getValueByLang('name', $locale, Product::NO_DEFAULT_VALUE);
-			}	  			  
+				$resp[$value->getValueByLang('name', $locale, Product::NO_DEFAULT_VALUE)] = true;
+			}
+			
+			$resp = array_keys($resp);	  			  
 		}
 		  	
 		return new AutoCompleteResponse($resp);
@@ -230,8 +240,8 @@ class ProductController extends StoreManagementController
 		  	$product->loadPricing();
 		  	$product->loadSpecification();
 		  	$arr = $product->toArray();
-		  //	print_r($arr['attributes']);
 		}
+
 		$validator = $this->buildValidator($product);
 		if ($validator->isValid())
 		{
@@ -341,8 +351,7 @@ class ProductController extends StoreManagementController
 		if($product->isLoaded())
 		{
         	$product->loadSpecification();
-//        	print_r($product->getSpecification()->toArray());
-//		die('ggg');
+
         	foreach($product->getSpecification()->toArray() as $attr)
         	{
         		if(in_array($attr['SpecField']['type'], SpecField::getSelectorValueTypes()))
@@ -381,8 +390,8 @@ class ProductController extends StoreManagementController
 				$productFormData['manufacturer'] = $productFormData['Manufacturer']['name'];
 			}        	
 		}
-		
-        $form->setData($productFormData);
+        
+		$form->setData($productFormData);
 		
 		$languages = array();
 		foreach ($this->store->getLanguageArray() as $lang)
