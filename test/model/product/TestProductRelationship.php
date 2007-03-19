@@ -4,7 +4,7 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 ClassLoader::import("application.model.product.*");
 ClassLoader::import("application.model.category.Category");
 
-class TestRelatedProduct extends UnitTestCase
+class TestProductRelationship extends UnitTestCase
 {
     private $groupAutoIncrementNumber = 0;
     private $productAutoIncrementNumber = 0;
@@ -26,7 +26,7 @@ class TestRelatedProduct extends UnitTestCase
     private $rootCategory = null;
     
     /**
-     * @var TestRelatedProductGroup
+     * @var ProductRelationshipGroup
      */
     private $group = null;
         
@@ -59,7 +59,7 @@ class TestRelatedProduct extends UnitTestCase
 		$this->product2->save();
 		
    		// create new group
-		$this->group = RelatedProductGroup::getNewInstance($this->product1);
+		$this->group = ProductRelationshipGroup::getNewInstance($this->product1);
 		$this->group->position->set(5);
 		$this->group->save();	
 		$this->groupAutoIncrementNumber = $this->group->getID();
@@ -70,10 +70,10 @@ class TestRelatedProduct extends UnitTestCase
 	    ActiveRecordModel::rollback();	
 
 	    ActiveRecord::removeClassFromPool('Product');
-	    ActiveRecord::removeClassFromPool('RelatedProduct');
-	    ActiveRecord::removeClassFromPool('RelatedProductGroup');
+	    ActiveRecord::removeClassFromPool('ProductRelationship');
+	    ActiveRecord::removeClassFromPool('ProductRelationshipGroup');
 	    
-	    $this->db->executeUpdate("ALTER TABLE RelatedProductGroup AUTO_INCREMENT=" . $this->groupAutoIncrementNumber);
+	    $this->db->executeUpdate("ALTER TABLE ProductRelationshipGroup AUTO_INCREMENT=" . $this->groupAutoIncrementNumber);
 	    $this->db->executeUpdate("ALTER TABLE Product AUTO_INCREMENT=" . $this->productAutoIncrementNumber);
 	}
 	
@@ -81,7 +81,7 @@ class TestRelatedProduct extends UnitTestCase
 	{
 	    // valid
 	    try { 
-	        $relationship = RelatedProduct::getNewInstance($this->product1, $this->product2); 
+	        $relationship = ProductRelationship::getNewInstance($this->product1, $this->product2); 
 		    $relationship->save();
 	        $this->pass();
 	    } catch(Exception $e) { 
@@ -90,7 +90,7 @@ class TestRelatedProduct extends UnitTestCase
 	    
 		// invalid
 	    try { 
-	        $relationship = RelatedProduct::getNewInstance($this->product1, $this->product1); 
+	        $relationship = ProductRelationship::getNewInstance($this->product1, $this->product1); 
 		    $relationship->save();
 	        $this->fail();
 	    } catch(Exception $e) { 
@@ -99,7 +99,7 @@ class TestRelatedProduct extends UnitTestCase
 	    
 	    // two identical relationships are also invalid
 	    try {
-		    $relationship = RelatedProduct::getNewInstance($this->product1, $this->product2);
+		    $relationship = ProductRelationship::getNewInstance($this->product1, $this->product2);
 		    $relationship->save();
 	    	$this->fail();
 	    } catch(Exception $e) { 
@@ -110,7 +110,7 @@ class TestRelatedProduct extends UnitTestCase
 	public function testCreateNewRelationship()
 	{
 	    // create
-	    $relationship = RelatedProduct::getNewInstance($this->product1, $this->product2);
+	    $relationship = ProductRelationship::getNewInstance($this->product1, $this->product2);
 	    $relationship->save();
 	    
 	    // reloat
@@ -121,7 +121,7 @@ class TestRelatedProduct extends UnitTestCase
 	    $this->assertNotNull($relationship->product->get());
 	    $this->assertNotNull($relationship->relatedProduct->get());
 	    // Check group
-	    $this->assertNull($relationship->relatedProductGroup->get());
+	    $this->assertNull($relationship->productRelationshipGroup->get());
 	    
 	    // Check if product is product and related product is related
 	    $this->assertTrue($relationship->product->get() === $this->product1);
@@ -131,7 +131,7 @@ class TestRelatedProduct extends UnitTestCase
 	    $this->assertFalse($relationship->product->get() === $relationship->relatedProduct->get());
 	    $this->assertFalse($this->product1 === $this->product2);
 	    
-	    $relationship->relatedProductGroup->set($this->group);
+	    $relationship->productRelationshipGroup->set($this->group);
 	    $relationship->save();
 	    
 	    // reloat
@@ -139,12 +139,12 @@ class TestRelatedProduct extends UnitTestCase
 	    $relationship->load();
 	    
 	    // Check group
-	    $this->assertTrue($relationship->relatedProductGroup->get() === $this->group);
+	    $this->assertTrue($relationship->productRelationshipGroup->get() === $this->group);
 	}
 
 	public function testDeleteRelationship()
 	{
-	    $relationship = RelatedProduct::getNewInstance($this->product1, $this->product2);
+	    $relationship = ProductRelationship::getNewInstance($this->product1, $this->product2);
 	    $relationship->save();
 	    $this->assertTrue($relationship->isExistingRecord());
 	    
@@ -162,7 +162,7 @@ class TestRelatedProduct extends UnitTestCase
 	    $groups = array(0 => null);
 	    foreach(range(1, 2) as $i)
 	    {
-		    $groups[$i] = RelatedProductGroup::getNewInstance($product);
+		    $groups[$i] = ProductRelationshipGroup::getNewInstance($product);
 		    $groups[$i]->position->set($i);
 		    $groups[$i]->setValueByLang('name', 'en', 'TEST_GROUP_' . $i);
 		    $groups[$i]->save();
@@ -176,7 +176,7 @@ class TestRelatedProduct extends UnitTestCase
 		    $relatedProducts[$i] = Product::getNewInstance($this->rootCategory);
 		    $relatedProducts[$i]->save();
 		    
-		    $relationships[$i] = RelatedProduct::getNewInstance($product, $relatedProducts[$i], $groups[floor(($i - 1) / 3)]);
+		    $relationships[$i] = ProductRelationship::getNewInstance($product, $relatedProducts[$i], $groups[floor(($i - 1) / 3)]);
 		    $relationships[$i]->position->set(9 - $i);
 		    $relationships[$i]->save();
 	    }
@@ -184,9 +184,9 @@ class TestRelatedProduct extends UnitTestCase
 	    // test order
 	    $groupPosition = -1;
 	    $productPosition = -1;
-	    foreach(RelatedProduct::getRelationships($product) as $relationship)
+	    foreach(ProductRelationship::getRelationships($product) as $relationship)
 	    {
-	        $currentGroupPosition = $relationship->relatedProductGroup->get() ? $relationship->relatedProductGroup->get()->position->get() : $groupPosition;
+	        $currentGroupPosition = $relationship->productRelationshipGroup->get() ? $relationship->productRelationshipGroup->get()->position->get() : $groupPosition;
 	        $currentProductPosition = $relationship->position->get();
 	        
 	        $this->assertTrue($productPosition <= $currentProductPosition || $groupPosition <= $currentGroupPosition, "$productPosition <= $currentProductPosition || $groupPosition <= $currentGroupPosition");
@@ -205,20 +205,20 @@ class TestRelatedProduct extends UnitTestCase
 			$product[$i]->save();	
 		}
 		
-		$relationship = RelatedProduct::getNewInstance($product[1], $product[2]);
+		$relationship = ProductRelationship::getNewInstance($product[1], $product[2]);
 		
 		// Check relationship
-		$this->assertFalse(RelatedProduct::hasRelationship($product[1], $product[2]));
-		$this->assertFalse(RelatedProduct::hasRelationship($product[1], $product[3]));
+		$this->assertFalse(ProductRelationship::hasRelationship($product[1], $product[2]));
+		$this->assertFalse(ProductRelationship::hasRelationship($product[1], $product[3]));
 		
 		// Double check relationship to be sure that it is not being created by previous test
-		$this->assertFalse(RelatedProduct::hasRelationship($product[1], $product[3]));
+		$this->assertFalse(ProductRelationship::hasRelationship($product[1], $product[3]));
 		
 		// Save and check again. Has relationship will return true if the record was set
 		$relationship->save();
 		
-		$this->assertTrue(RelatedProduct::hasRelationship($product[1], $product[2]));
-		$this->assertFalse(RelatedProduct::hasRelationship($product[1], $product[3]));
+		$this->assertTrue(ProductRelationship::hasRelationship($product[1], $product[2]));
+		$this->assertFalse(ProductRelationship::hasRelationship($product[1], $product[3]));
 	}
 }
 ?>

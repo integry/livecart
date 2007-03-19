@@ -61,8 +61,8 @@ class TestProduct extends UnitTest
 	{
 	    ActiveRecordModel::rollback();
 	    ActiveRecord::removeClassFromPool('Product');
-	    ActiveRecord::removeClassFromPool('RelatedProduct');
-	    ActiveRecord::removeClassFromPool('RelatedProductGroup');	
+	    ActiveRecord::removeClassFromPool('ProductRelationship');
+	    ActiveRecord::removeClassFromPool('ProductRelationshipGroup');	
 	    	
 	    $this->db->executeUpdate("ALTER TABLE Category AUTO_INCREMENT=" . $this->categoryAutoIncrementNumber);
 	    $this->db->executeUpdate("ALTER TABLE Product AUTO_INCREMENT=" . $this->productAutoIncrementNumber);
@@ -336,8 +336,9 @@ class TestProduct extends UnitTest
 	    $this->assertEqual(5, $this->product->getRelationships()->getTotalRecordCount());
 	    foreach($this->product->getRelationships() as $relationship)
 	    {
-	        $this->assertIsA($relationship, 'RelatedProduct');
+	        $this->assertIsA($relationship, 'ProductRelationship');
 	        $this->assertTrue($relationship->relatedProduct->get() === $otherProducts[$i]);
+	        
 	        $i++;
 	    }
 	}
@@ -348,6 +349,7 @@ class TestProduct extends UnitTest
 	    foreach(range(1, 5) as $i)
 	    {
 			$otherProducts[$i] = Product::getNewInstance($this->productCategory);
+			$otherProducts[$i]->setValueByLang("name", "en", "Test");
 			$otherProducts[$i]->save();
 			
 		    $this->product->addRelatedProduct($otherProducts[$i]);	
@@ -359,12 +361,13 @@ class TestProduct extends UnitTest
 	    {
 	        $this->assertIsA($relatedProduct, 'Product');
 	        $this->assertTrue($relatedProduct === $otherProducts[$i]);
+	        	        
 	        $i++;
 	    }
 	    
 	    // Save and reload
 	    $this->product->save();
-	    $this->product->markAsNotLoaded();
+	    ActiveRecord::removeClassFromPool('Product');
 	    $this->product->load();
 	    
 	    $i = 1;
@@ -373,6 +376,10 @@ class TestProduct extends UnitTest
 	    {
 	        $this->assertIsA($relatedProduct, 'Product');
 	        $this->assertTrue($relatedProduct === $otherProducts[$i]);
+	        
+	        $relatedProductName = $relatedProduct->name->get();
+	        $this->assertEqual($relatedProductName['en'], 'Test');
+	        
 	        $i++;
 	    }
 	}
@@ -432,6 +439,7 @@ class TestProduct extends UnitTest
 		// this product is in that product's related products list
 	    $this->assertFalse($this->product->isRelatedTo($otherProducts[1]));
 	}
+
 }
 
 ?>

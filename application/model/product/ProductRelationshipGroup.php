@@ -1,10 +1,10 @@
 <?php
-class RelatedProductGroup extends MultilingualObject
+class ProductRelationshipGroup extends MultilingualObject
 {
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-		$schema->setName("RelatedProductGroup");
+		$schema->setName("ProductRelationshipGroup");
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", null, ARInteger::instance()));
@@ -32,7 +32,7 @@ class RelatedProductGroup extends MultilingualObject
 	 * @param bool $loadRecordData
 	 * @param bool $loadReferencedRecords
 	 *
-	 * @return RelatedProductGroup
+	 * @return ProductRelationshipGroup
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
@@ -44,7 +44,7 @@ class RelatedProductGroup extends MultilingualObject
 	 *
 	 * @param Product $product
 	 * 
-	 * @return RelatedProductGroup
+	 * @return ProductRelationshipGroup
 	 */
 	public static function getNewInstance(Product $product)
 	{
@@ -66,8 +66,8 @@ class RelatedProductGroup extends MultilingualObject
 	{
 	    $filter = new ARSelectFilter();
 
-		$filter->setOrder(new ARFieldHandle("RelatedProductGroup", "position"), 'ASC');
-		$filter->setCondition(new EqualsCond(new ARFieldHandle("RelatedProductGroup", "productID"), $product->getID()));
+		$filter->setOrder(new ARFieldHandle("ProductRelationshipGroup", "position"), 'ASC');
+		$filter->setCondition(new EqualsCond(new ARFieldHandle("ProductRelationshipGroup", "productID"), $product->getID()));
 		
 		return $filter;
 	}

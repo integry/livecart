@@ -1,14 +1,14 @@
 <?php
-class RelatedProduct extends ActiveRecord 
+class ProductRelationship extends ActiveRecord 
 {
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-		$schema->setName("RelatedProduct");
+		$schema->setName("ProductRelationship");
 
 		$schema->registerField(new ARPrimaryForeignKeyField("productID", 		"Product",   	 	   "ID", "Product", ARInteger::instance()));
 		$schema->registerField(new ARPrimaryForeignKeyField("relatedProductID", "Product", 			   "ID", "Product", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("relatedProductGroupID", 	"RelatedProductGroup", "ID", "RelatedProductGroup", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("productRelationshipGroupID", 	"ProductRelationshipGroup", "ID", "ProductRelationshipGroup", ARInteger::instance()));
 		$schema->registerField(new ARField("position",                                                             ARInteger::instance()));
 	}
 	
@@ -19,7 +19,7 @@ class RelatedProduct extends ActiveRecord
 	 * @param bool $loadRecordData
 	 * @param bool $loadReferencedRecords
 	 *
-	 * @return RelatedProductGroup
+	 * @return ProductRelationshipGroup
 	 */
 	public static function getInstance(Product $product, Product $relatedProduct, $loadRecordData = false, $loadReferencedRecords = false)
 	{
@@ -39,7 +39,7 @@ class RelatedProduct extends ActiveRecord
 	 * 
 	 * @return RelatedProduct
 	 */
-	public static function getNewInstance(Product $product, Product $related, RelatedProductGroup $group = null)
+	public static function getNewInstance(Product $product, Product $related, ProductRelationshipGroup $group = null)
 	{
 		if(null == $product || null == $related || $product === $related || $product->getID() == $related->getID())
 		{
@@ -52,7 +52,7 @@ class RelatedProduct extends ActiveRecord
 		$relationship->relatedProduct->set($related);
 		if(!is_null($group))
 		{
-		    $relationship->relatedProductGroup->set($group);
+		    $relationship->productRelationshipGroup->set($group);
 		}
 		
 		return $relationship;
@@ -94,7 +94,7 @@ class RelatedProduct extends ActiveRecord
 	 */
 	public static function getRelationships(Product $product)
 	{
-	    return self::getRecordSet(self::getRelatedProductsSetFilter($product), ActiveRecord::LOAD_REFERENCES);
+	    return self::getRecordSet(self::getRelatedProductsSetFilter($product), true);
 	}
 	
 	public static function hasRelationship(Product $product, Product $relatedToProduct)
@@ -114,10 +114,10 @@ class RelatedProduct extends ActiveRecord
 	{
 	    $filter = new ARSelectFilter();
 
-		$filter->joinTable('RelatedProductGroup', 'RelatedProduct', 'ID', 'relatedProductGroupID');		
-		$filter->setOrder(new ARFieldHandle("RelatedProductGroup", "position"), 'ASC');			
-		$filter->setOrder(new ARFieldHandle("RelatedProduct", "position"), 'ASC');	
-		$filter->setCondition(new EqualsCond(new ARFieldHandle("RelatedProduct", "productID"), $product->getID()));
+		$filter->joinTable('ProductRelationshipGroup', 'ProductRelationship', 'ID', 'productRelationshipGroupID');		
+		$filter->setOrder(new ARFieldHandle("ProductRelationshipGroup", "position"), 'ASC');			
+		$filter->setOrder(new ARFieldHandle("ProductRelationship", "position"), 'ASC');	
+		$filter->setCondition(new EqualsCond(new ARFieldHandle("ProductRelationship", "productID"), $product->getID()));
 		
 		return $filter;
 	}

@@ -594,7 +594,7 @@ class Product extends MultilingualObject
     
     private function loadRelationships()
     {       
-        $this->relationships = RelatedProduct::getRelationships($this);
+        $this->relationships = ProductRelationship::getRelationships($this);
     }
     
     /**
@@ -626,15 +626,15 @@ class Product extends MultilingualObject
     
     public function addRelatedProduct(Product $product)
     {        
-        $relationship = RelatedProduct::getNewInstance($this, $product);
+        $relationship = ProductRelationship::getNewInstance($this, $product);
         $this->getRelationships()->add($relationship);
         $this->getRemovedRelationships()->removeRecord($relationship);
     }
     
     public function removeFromRelatedProducts(Product $product)
     {
-        $this->loadRelationships();
-        $relationship = RelatedProduct::getInstance($this, $product);
+        $this->getRelationships();
+        $relationship = ProductRelationship::getInstance($this, $product);
         
         $this->relationships->removeRecord($relationship);
         
@@ -656,7 +656,7 @@ class Product extends MultilingualObject
     
     public function isRelatedTo(Product $product)
     {
-        return RelatedProduct::hasRelationship($product, $this);
+        return ProductRelationship::hasRelationship($product, $this);
     }
 }
 

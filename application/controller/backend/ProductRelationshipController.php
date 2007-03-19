@@ -10,7 +10,7 @@ ClassLoader::import("application.model.product.Product");
  * @package application.controller.backend
  * @role admin.store.product
  */
-class ProductRelatedController extends StoreManagementController 
+class ProductRelationshipController extends StoreManagementController 
 {
 	public function index()
 	{		
@@ -23,7 +23,12 @@ class ProductRelatedController extends StoreManagementController
 		
 		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
 		$response->setValue("relationships", $product->getRelationships()->toArray());
-		print_r($product->getRelationships()->toArray());
+		//echo "<pre>" . print_r($product->getRelationships()->toArray(), true) . "</pre>";
+		
+		foreach($product->getRelatedProducts() as $product)
+		{
+		    print_r($product->name->get());
+		}
 	    
 	    return $response;
 	}

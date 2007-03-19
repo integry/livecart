@@ -1,11 +1,12 @@
-<div id="relatedProductMsg_{$productID}" style="display: none;"></div>
+<div id="productRelationshipMsg_{$productID}" style="display: none;"></div>
 
 <a href="#selectProduct" id="selectProduct_{$productID}">{t _select_product}</a>
-<ul id="relatedProducts_{$productID}" class="activeList_add_sort activeList_add_delete">
+<ul id="productRelationships_{$productID}" class="activeList_add_sort activeList_add_delete">
     {foreach item="relation" from=$relationships}
-        <li id="relatedProducts_{$productID}_{$relation.RelatedProduct.ID}">
+        <li id="productRelationships_{$productID}_{$relation.RelatedProduct.ID}">
             {assign var="product" value=$relation.RelatedProduct}
-            {include file="backend/productRelated/addRelated.tpl" product=$product}
+            {include file="backend/productRelationship/addRelated.tpl" product=$product}
+            {$relation.RelatedProduct.name_lang}
             {$relation.RelatedProduct.name_lang}
         </li>
     {/foreach}
@@ -16,9 +17,9 @@
     try
     {
         Backend.RelatedProduct.links = {};
-        Backend.RelatedProduct.links.related = '{/literal}{link controller=backend.productRelated action=addRelated}/{$productID}{literal}';
-        Backend.RelatedProduct.links.deleteRelated = '{/literal}{link controller=backend.productRelated action=delete}/{$productID}{literal}';
-        Backend.RelatedProduct.links.selectProduct = '{/literal}{link controller=backend.productRelated action=selectProduct}{literal}';
+        Backend.RelatedProduct.links.related = '{/literal}{link controller=backend.productRelationship action=addRelated}/{$productID}{literal}';
+        Backend.RelatedProduct.links.deleteRelated = '{/literal}{link controller=backend.productRelationship action=delete}/{$productID}{literal}';
+        Backend.RelatedProduct.links.selectProduct = '{/literal}{link controller=backend.productRelationship action=selectProduct}{literal}';
         
         Backend.RelatedProduct.messages = {};
         Backend.RelatedProduct.messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
@@ -35,7 +36,7 @@
             );
         });
         
-        ActiveList.prototype.getInstance($("relatedProducts_{/literal}{$productID}{literal}"), 
+        ActiveList.prototype.getInstance($("productRelationships_{/literal}{$productID}{literal}"), 
         {
             beforeDelete: function(li){ 
                 if(confirm(Backend.RelatedProduct.messages.areYouSureYouWantToDelete)) 

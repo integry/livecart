@@ -4,7 +4,7 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.category.Category");
 
-class TestRelatedProductGroup extends UnitTestCase
+class TestProductRelationshipGroup extends UnitTestCase
 {
     private $groupAutoIncrementNumber = 0;
     private $productAutoIncrementNumber = 0;
@@ -38,7 +38,7 @@ class TestRelatedProductGroup extends UnitTestCase
 	public function tearDown()
 	{
 	    ActiveRecordModel::rollback();		
-	    $this->db->executeUpdate("ALTER TABLE RelatedProductGroup AUTO_INCREMENT=" . $this->groupAutoIncrementNumber);
+	    $this->db->executeUpdate("ALTER TABLE ProductRelationshipGroup AUTO_INCREMENT=" . $this->groupAutoIncrementNumber);
 	    $this->db->executeUpdate("ALTER TABLE Product AUTO_INCREMENT=" . $this->productAutoIncrementNumber);
 	}
 	
@@ -52,7 +52,7 @@ class TestRelatedProductGroup extends UnitTestCase
 		$this->productAutoIncrementNumber = $this->product->getID();
 		
    		// create new group
-		$dump = RelatedProductGroup::getNewInstance($this->product);
+		$dump = ProductRelationshipGroup::getNewInstance($this->product);
 		$dump->save();		
 		
 		$this->groupAutoIncrementNumber = $dump->getID();
@@ -60,7 +60,7 @@ class TestRelatedProductGroup extends UnitTestCase
 	
 	public function testCreateNewGroup()
 	{
-	    $group = RelatedProductGroup::getNewInstance($this->product);
+	    $group = ProductRelationshipGroup::getNewInstance($this->product);
 	    $group->position->set(5);
 	    $group->setValueByLang('name', 'en', 'TEST_GROUP');
 	    $group->save();
@@ -78,7 +78,7 @@ class TestRelatedProductGroup extends UnitTestCase
 		
 	public function testDeleteGroup()
 	{
-	    $group = RelatedProductGroup::getNewInstance($this->product);
+	    $group = ProductRelationshipGroup::getNewInstance($this->product);
 	    $group->save();
 	    $this->assertTrue($group->isExistingRecord());
 	    
@@ -95,26 +95,26 @@ class TestRelatedProductGroup extends UnitTestCase
 	    $groups = array();
 	    foreach(range(1, 3) as $i)
 	    {
-		    $groups[$i] = RelatedProductGroup::getNewInstance($product);
+		    $groups[$i] = ProductRelationshipGroup::getNewInstance($product);
 		    $groups[$i]->position->set($i);
 		    $groups[$i]->setValueByLang('name', 'en', 'TEST_GROUP_' . $i);
 		    $groups[$i]->save();
 	    }
 	    
-	    $this->assertEqual(count($groups), RelatedProductGroup::getProductGroups($product)->getTotalRecordCount());
+	    $this->assertEqual(count($groups), ProductRelationshipGroup::getProductGroups($product)->getTotalRecordCount());
 	    $i = 1;
-	    foreach(RelatedProductGroup::getProductGroups($product) as $group)
+	    foreach(ProductRelationshipGroup::getProductGroups($product) as $group)
 	    {
 	        $this->assertTrue($groups[$i] === $group);
 	        $i++;
 	    }
 	}
 	
-	public function getRelatedProductGroup(Product $relatedToProduct)
+	public function getProductRelationshipGroup(Product $relatedToProduct)
 	{
-	    $relationship = RelatedProductGroup::getInstance($relatedToProduct, $this);
+	    $relationship = ProductRelationshipGroup::getInstance($relatedToProduct, $this);
 	    
-	    return $relationship ? $relationship->relatedProductGroup->get() : null;
+	    return $relationship ? $relationship->productRelationshipGroup->get() : null;
 	}
 }
 ?>

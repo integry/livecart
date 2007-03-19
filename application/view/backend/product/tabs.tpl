@@ -28,8 +28,8 @@
 				<span class="tabHelp">products.edit.images</span>
 			</li>
 			
-			<li id="productRelated" class="tab inactive">
-				<a href="{link   controller=backend.productRelated action=index id=_id_}?categoryID=_categoryID_">{t Related products}</a>
+			<li id="productRelationship" class="tab inactive">
+				<a href="{link   controller=backend.productRelationship action=index id=_id_}?categoryID=_categoryID_">{t Related products}</a>
 				<span class="tabHelp">products.edit.related</span>
 			</li>
 			
