@@ -40,7 +40,7 @@ class ProductImage extends ObjectImage
 	
 	public static function deleteByID($id)
 	{
-        parent::deleteByID(__CLASS__, $id);
+        parent::deleteByID(__CLASS__, $id, 'productID');
     }
 	
     public function getPath($size = 0)

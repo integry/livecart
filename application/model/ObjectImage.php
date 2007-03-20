@@ -27,10 +27,31 @@ abstract class ObjectImage extends MultilingualObject
 		}			
 	}
 
-	public static function deleteByID($className, $id)
+	public static function deleteByID($className, $id, $foreignKeyName)
 	{
-		$inst = ActiveRecord::getInstanceById($className, $id, true);
+		$inst = ActiveRecordModel::getInstanceById($className, $id, ActiveRecordModel::LOAD_DATA, ActiveRecordModel::LOAD_REFERENCES);
 		$inst->deleteImageFiles();
+		
+		// check if main image is being deleted
+		$owner = $inst->getOwner();
+		$owner->load(array(get_class($inst)));
+		if ($owner->defaultImage->get()->getID() == $id)
+		{
+			// set next image (by position) as the main image
+			$f = new ARSelectFilter();
+			$cond = new EqualsCond(new ARFieldHandle(get_class($inst), $foreignKeyName), $owner->getID());
+			$cond->addAND(new NotEqualsCond(new ARFieldHandle(get_class($inst), 'ID'), $inst->getID()));
+			$f->setCondition($cond);
+			$f->setOrder(new ARFieldHandle(get_class($inst), 'position'));
+			$f->setLimit(1);
+			$newDefaultImage = ActiveRecordModel::getRecordSet(get_class($inst), $f);
+			if ($newDefaultImage->size() > 0)
+			{
+			  	$owner->defaultImage->set($newDefaultImage->get(0));
+			  	$owner->save();
+			}
+		}
+		
 		return ActiveRecord::deleteByID($className, $id);
 	}	
 	

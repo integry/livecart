@@ -235,11 +235,24 @@ class CategoryController extends FrontendController
 		}
 
 		// remove empty filter groups
+		$maxCriteria = $this->config->getValue('MAX_FILTER_CRITERIA_COUNT'); 
+		$showAll = $this->request->getValue('showAll');
+		
+		$router = Router::getInstance();
+		$url = $router->createUrlFromRoute($router->getRequestedRoute());
 		foreach ($filterGroups as $key => $grp)
 		{
 			if (empty($grp['filters']))
 			{
 				unset($filterGroups[$key]);
+			}
+			
+			// hide excess criterias (by default only 5 per filter are displayed)
+			else if (($showAll != $grp['ID']) && (count($grp['filters']) > $maxCriteria) && ($maxCriteria > 0))
+			{
+				$chunks = array_chunk($grp['filters'], $maxCriteria);
+				$filterGroups[$key]['filters'] = $chunks[0];
+				$filterGroups[$key]['more'] = Router::setUrlQueryParam($url, 'showAll', $grp['ID']);
 			}
 		}			
     
@@ -252,6 +265,13 @@ class CategoryController extends FrontendController
             $manFilter['count'] = $filterData['cnt'];
             $manFilters[] = $manFilter;
         }
+        
+        if (count($manFilters) > $maxCriteria && $showAll != 'brand' && $maxCriteria > 0)
+        {
+			$chunks = array_chunk($manFilters, $maxCriteria);
+			$manFilters = $chunks[0];
+			$response->setValue('allManufacturers', Router::setUrlQueryParam($url, 'showAll', 'brand'));		  	
+		}
         
         if (count($manFilters) > 1)
         {

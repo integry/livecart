@@ -29,7 +29,10 @@
 						<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a> 
 						<span class="count">({$filter.count})</span>
 					</li>
-				{/foreach}									
+				{/foreach}				
+				{if $group.more}
+					<li class="showAll"><a href="{$group.more}">{t _show_all}</a></li>
+				{/if}					
 			</ul>
 		{/foreach}
 
@@ -41,7 +44,11 @@
 						<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a> 
 						<span class="count">({$filter.count})</span>
 					</li>
-				{/foreach}									
+				{/foreach}	
+				
+				{if $allManufacturers}
+					<li class="showAll"><a href="{$allManufacturers}">{t _show_all}</a></li>
+				{/if}					
 			</ul>
 		{/if}
 

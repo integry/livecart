@@ -35,7 +35,7 @@ class CategoryImage extends ObjectImage
 	
 	public static function deleteByID($id)
 	{
-        parent::deleteByID(__CLASS__, $id);
+        parent::deleteByID(__CLASS__, $id, 'categoryID');
     }
 	
     public function getPath($size = 0)

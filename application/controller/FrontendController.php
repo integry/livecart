@@ -18,6 +18,10 @@ abstract class FrontendController extends BaseController
         {
             Router::addAutoAppendQueryVariable('currency', $request->getValue('currency'));
         }    
+        if ($request->isValueSet('showAll'))
+        {
+            Router::addAutoAppendQueryVariable('showAll', $request->getValue('showAll'));
+        }    
     }
     
     public function init()
