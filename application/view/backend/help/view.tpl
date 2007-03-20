@@ -30,6 +30,11 @@
 {literal}
 <script type="text/javascript">
 
+	function expand(param)
+	{
+	param.style.display=(param.style.display=="none")?"":"none";
+	}
+
 	function addComment(form)
 	{
 		new LiveCart.AjaxUpdater(form, 'commentContainer', 'commentIndicator', 'bottom'); 

@@ -48,8 +48,11 @@ can create variuos types of attributes. Below you'll find a couple of practical 
 	(To create an attribute you have to define attributes type, name and its values if necessary. 
 	Because attributes are automatically included in  the <i>Add New Product</i> form, we will demonstrate in our examples how attributes are generated and placed in the product form.)
 	Suppose you have a category stocked with cell phones and you want to create custom fields for specifying the following properties:
-	<a href="{self}#carrier">Carrier ( select option )</a>, <a href="{self}#features">Phone Features ( select checkboxes)</a>
-	and <a href="{self}#capacity">Batery Capacity ( field option )</a>.
+	<strong>Carrier</strong> ( select option ), <strong>Phone Features</strong> ( select checkboxes)
+	and <strong>Batery Capacity</strong> ( field option ).
+
+<p><a href="javascript:expand(document.getElementById('carrier'))">Carrier attribute</a>
+<div class="dottedBorders" id="carrier" style="display:none">
 
 <h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
 <p>To create an attribute follow these steps:</p>
@@ -127,6 +130,12 @@ The last thing to do is to create Values which will be used as a selection optio
 <p class="note"><strong>Note</strong>: In the list there is also <strong>other</strong> value which is designed to supplement values list
 in case a new value is introduced.</p>
 
+</div>
+</p>
+
+<p><a href="javascript:expand(document.getElementById('features'))">Phone Features</a>
+<div class="dottedBorders" id="features" style="display:none">
+
 <h4 id="features">Creating <i>Phone Features</i> attribute</h4>
 <p>
 	Cell phones usually have a great variety of features therefore it would more convenient to create a list of features than re-enter them
@@ -170,6 +179,12 @@ by necessary changes. A numeric attribute looks similar to this one:
 <strong>Other</strong> value can be used to add more values. Click <strong>other</strong> to add a new value.
 </p>
 
+</div>
+</p>
+
+<p><a href="javascript:expand(document.getElementById('capacity'))">Batery Capacity</a>
+<div class="dottedBorders" id="capacity" style="display:none">
+
 <h4 id="capacity">Creating <i>Batery Capacity</i> attribute</h4>
 
 <p>
@@ -205,6 +220,8 @@ by necessary changes. A numeric attribute looks similar to this one:
 	
 <p class="note"><strong>Note</strong>: to create analogous attribute for Text Field simply change type to <strong>Text Field</strong>.</p>
 
+</div>
+</p>
 
 <h3 id="group">Group attributes</h3>
 

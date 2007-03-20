@@ -16,6 +16,7 @@ the following details:
 <li>Price - </li>
 <li>In stock - </li>
 </ul>
+
 <p class="note"><strong>Note</strong>: you can extend the list of features displayed by adding addition 
 attributes in the attributes section(...)</p>
 
