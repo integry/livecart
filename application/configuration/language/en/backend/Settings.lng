@@ -68,6 +68,10 @@ IMG_C_H_4=Height (pixels)
 IMG_C_Q_4=Quality (0 - 100)
 
 _filters=Product Filters
+
+_general_filter=General Options
+MAX_FILTER_CRITERIA_COUNT=Max number of filter criterias to display without expanding
+
 _price_filters=Price Filters
 _price_filter_1=Price Filter 1
 _price_filter_2=Price Filter 2

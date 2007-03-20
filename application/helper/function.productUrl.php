@@ -26,11 +26,11 @@ function smarty_function_productUrl($params, Smarty $smarty)
 					   'producthandle' => $handle, 
 					   'id' => $product['ID']);
 					   
-	$url = $router->createUrl($urlParams);
+	$url = $router->createUrl($urlParams);	
 
     if (!empty($params['filterChainHandle']))
     {
-        $url .= '?filters=' . $params['filterChainHandle'];
+        $url = Router::setUrlQueryParam($url, 'filters', $params['filterChainHandle']);
     }
     
     return $url;

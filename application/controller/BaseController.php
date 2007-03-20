@@ -101,7 +101,11 @@ abstract class BaseController extends Controller implements LCiTranslator
 		unset($this->locale);
 		unset($this->config);
 		
-		Router::setAutoAppendVariables(array('requestLanguage' => $this->store->getLocaleInstance()->getLocaleCode()));
+		// add language code to URL for non-default languages
+		if ($this->store->getLocaleInstance()->getLocaleCode() != $this->store->getDefaultLanguageCode())
+		{
+			Router::setAutoAppendVariables(array('requestLanguage' => $this->store->getLocaleInstance()->getLocaleCode()));			
+		}
 //		print_r($this->user);
 	}	
 	

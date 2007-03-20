@@ -48,23 +48,51 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return ActiveRecordModel::getRecordSetArray('Product', $this->getProductsFilter($productFilter), $loadReferencedRecords);
 	}
 	
-	public function getProductCount()
+	public function getActiveProductCount()
 	{
-		return $this->totalProductCount->get();
+		$config = Config::getInstance();
+		
+		// all enabled products are available
+		if ($config->getValue('DISABLE_INVENTORY') || !$config->getValue('DISABLE_NOT_IN_STOCK'))
+		{
+			return $this->activeProductCount->get();
+		}
+		
+		// only enabled products that are in stock
+		else
+		{
+			return $this->availableProductCount->get();
+		}
+	}
+	
+	public function getProductCount(ProductFilter $productFilter)
+	{
+		$query = new ARSelectQueryBuilder();
+		$query->includeTable('Product');
+		$query->addField('COUNT(*) AS cnt');
+		$filter = $this->getProductsFilter($productFilter);
+		$filter->setLimit(0);
+		$query->setFilter($filter);		
+		$data = ActiveRecord::getDataBySQL($query->createString());
+		return $data[0]['cnt'];
 	}
 
-	protected function getProductsFilter(ProductFilter $productFilter)
+	/**
+	 *	Create a basic ARSelectFilter object to select category products
+	 */
+	public function getProductsFilter(ProductFilter $productFilter)
 	{
-		$filter = $productFilter->getSelectFilter();
+		$filter = $productFilter->getSelectFilter();		
+		$filter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->getID()));		
 
-		$cond = new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->getID());
-		$filterCond = $filter->getCondition();
-		if ($filterCond)
+		$config = Config::getInstance();
+		if ($config->getValue('DISABLE_NOT_IN_STOCK') && !$config->getValue('DISABLE_INVENTORY'))
 		{
-			$cond->addAND($filterCond);		  
+			$cond = new MoreThanCond(new ARFieldHandle('Product', 'stockCount'), 0);
+			$cond->addOR(new EqualsCond(new ARFieldHandle('Product', 'isBackOrderable'), 1));
+			$filter->mergeCondition($cond);
 		}
-		$filter->setCondition($cond);
-		
+
 		return $filter;
 	}
 	

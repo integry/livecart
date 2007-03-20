@@ -46,13 +46,19 @@ abstract class FrontendController extends BaseController
 
 	protected function boxSwitchCurrencyBlock()
 	{
+        $router = Router::getInstance();
+        $returnRoute = $router->getRequestedRoute();
+		$returnRoute = $router->createUrlFromRoute($returnRoute);		
+		$returnRoute = Router::setUrlQueryParam($returnRoute, 'currency', '_curr_');
+
         $currencies = Store::getInstance()->getCurrencySet();        
         $currencyArray = array();
         foreach ($currencies as $currency)
         {
             $currencyArray[$currency->getID()] = $currency->toArray();
+            $currencyArray[$currency->getID()]['url'] = str_replace('_curr_', $currency->getID(), $returnRoute);            
         }
-
+        
         $response = new BlockResponse();			  	        
         $response->setValue('currencies', $currencyArray);        
         return $response;	  	
@@ -69,7 +75,7 @@ abstract class FrontendController extends BaseController
         
     	if ('/' == substr($returnRoute, 2, 1))
     	{
-    	  	$returnRoute = substr($returnRoute, 2);
+    	  	$returnRoute = substr($returnRoute, 3);
     	}
         
         foreach ($languages as $key => $lang)
@@ -80,7 +86,7 @@ abstract class FrontendController extends BaseController
             }   
             else
             {
-                $languages[$key]['url'] = $router->createUrlFromRoute($lang['ID'] . $returnRoute);
+                $languages[$key]['url'] = $router->createUrlFromRoute($lang['ID'] . '/' . $returnRoute);
             }
         }
 
