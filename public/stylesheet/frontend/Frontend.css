@@ -9,6 +9,22 @@ a img
     border: 0;
 }
 
+h1, h2, h3
+{
+	font-family: Trebuchet MS;
+}
+
+h1
+{
+	font-size: 250%;
+	padding-left: 20px;
+}
+
+h3
+{
+	font-size: 1em;
+}
+
 /*****************************
 	Layout
 *****************************/
@@ -20,8 +36,8 @@ a img
 
 #header 
 {
-  	border: 1px solid black;
   	padding: 20px;
+  	padding-bottom: 10px;
 }
 
 #footer 
@@ -63,14 +79,15 @@ ul
 *****************************/
 div.box
 {
-  	border: 1px solid black;
+	margin-bottom: 5px;
 }
 
 div.box .title
 {
-  	border-bottom: 1px solid black;
-  	padding: 5px;
-  	background-color: yellow;
+  	border-bottom: 1px solid #CCCCCC;
+  	border-top: 1px solid #CCCCCC;
+  	padding: 3px;
+  	background-color: #EEEEEE;
   	text-align: center;
   	font-weight: bold;
 }
@@ -91,7 +108,67 @@ fieldset.container
 }
 
 /*****************************
-	Breadcrumb
+	Quick search
+*****************************/
+.quickSearch
+{
+	float: left;
+}
+
+.quickSearch .searchQuery
+{
+	border: 1px solid #DDDDDD;
+	width: 120px;
+}
+
+.quickSearch .submit
+{
+	border: 1px solid #DDDDDD;	
+}
+
+/*****************************
+	Filters
+*****************************/
+.filterGroup ul
+{
+	padding: 4px;		
+	padding-left: 20px;
+	font-size: 90%;
+	padding-right: 0;
+}
+
+.filterGroup h3
+{
+	margin-top: 3px;
+}
+
+.filterGroup .count 
+{
+	color: #666666;
+}
+
+.filterGroup .showAll
+{
+	list-style: none;
+	font-weight: bold;	
+}
+
+/*****************************
+	Currency switch
+*****************************/
+.box.currency .content
+{
+	font-size: smaller;
+	text-align: center;	
+}
+
+.box.currency .content a
+{
+	margin-left: 3px;
+}
+
+/*****************************
+	Breadcrumbm
 *****************************/
 #breadCrumb
 {
@@ -130,6 +207,7 @@ ul.productList .title
 {
 	display: block;
 	margin-bottom: 3px;
+	font-size: 105%;
 }
 
 ul.productList .spec
