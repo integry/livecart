@@ -1,3 +1,10 @@
+{literal}
+<script type="text/javascript">
+    Backend.Product.Editor.prototype.links = {};
+    Backend.Product.Editor.prototype.links.countTabsItems = '{/literal}{link controller=backend.product action=countTabsItems}{literal}';
+</script>
+{/literal}
+
 <div>
 
 <fieldset class="container">

@@ -593,7 +593,7 @@ class Product extends MultilingualObject
     }
 */
     
-    private function loadRelationships()
+    private function loadRelationships($loadReferencedRecords)
     {       
         $this->relationships = ProductRelationship::getRelationships($this);
     }
@@ -601,11 +601,11 @@ class Product extends MultilingualObject
     /**
      * @return ARSet
      */
-    public function getRelationships()
+    public function getRelationships($loadReferencedRecords = array('RelatedProduct' => 'Product'))
     {
         if(is_null($this->relationships))
         {
-            $this->loadRelationships();
+            $this->loadRelationships($loadReferencedRecords);
         }
 
         return $this->relationships;

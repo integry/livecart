@@ -563,6 +563,17 @@ class ProductController extends StoreManagementController
 	    
 	    return $response;
 	}
+
+	
+	public function countTabsItems() {
+	  	ClassLoader::import('application.model.product.*');
+	  	$product = Product::getInstanceByID((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA);
+	    
+	  	return new JSONResponse(array(
+	        'tabProductRelationship' => $product->getRelationships(false)->getTotalRecordCount(),
+	  	    'end' => 'end'
+	    ));
+	}
 }
 
 ?>

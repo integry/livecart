@@ -8,37 +8,37 @@
 	
 	<div class="tabContainer">
 		<ul class="tabList tabs">
-			<li id="productBasic" class="tab active">
+			<li id="tabProductBasic" class="tab active">
 				<a href="{link controller=backend.product action=basicData id=_id_}?categoryID=_categoryID_}">{t Basic data}</a>
 				<span class="tabHelp">products.edit</span>
 			</li>
 			
-			<li id="productInventory" class="tab inactive">
+			<li id="tabProductInventory" class="tab inactive">
 				<a href="{link controller=backend.product action=inventory id=_id_}?categoryID=_categoryID_">{t Inventory}</a>
 				<span class="tabHelp">products.edit.inventory</span>
 			</li>
 
-			<li id="productDiscounts" class="tab inactive">
+			<li id="tabProductDiscounts" class="tab inactive">
 				<a href="{link controller=backend.productPrice action=index id=_id_}?categoryID=_categoryID_">{t Prices &amp; Shipping}</a>
 				<span class="tabHelp">products.edit.pricing</span>
 			</li>
 			
-			<li id="productImages" class="tab inactive">
+			<li id="tabProductImages" class="tab inactive">
 				<a href="{link    controller=backend.productImage action=index id=_id_}?categoryID=_categoryID_">{t Images}</a>
 				<span class="tabHelp">products.edit.images</span>
 			</li>
 			
-			<li id="productRelationship" class="tab inactive">
+			<li id="tabProductRelationship" class="tab inactive">
 				<a href="{link   controller=backend.productRelationship action=index id=_id_}?categoryID=_categoryID_">{t Related products}</a>
 				<span class="tabHelp">products.edit.related</span>
 			</li>
 			
-			<li id="productOptions" class="tab inactive">
+			<li id="tabProductOptions" class="tab inactive">
 				<a href="{link   controller=backend.product action=options id=_id_}?categoryID=_categoryID_">{t Options}</a>
 				<span class="tabHelp">products.edit.options</span>
 			</li>
 						
-			<li id="productFiles" class="tab inactive">
+			<li id="tabProductFiles" class="tab inactive">
 				<a href="{link controller=backend.productFile action=index id=_id_}?categoryID=_categoryID_">{t Files}</a>
 				<span class="tabHelp">products.edit.files</span>
 			</li>

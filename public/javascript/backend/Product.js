@@ -498,7 +498,7 @@ Backend.Product.Editor.prototype =
 	__nodes__: function()
     {
         this.nodes = {};
-        this.nodes.parent = $("productBasic_" + this.id + "Content");
+        this.nodes.parent = $("tabProductBasic_" + this.id + "Content");
         this.nodes.form = this.nodes.parent.down("form");
 		this.nodes.cancel = this.nodes.form.down('a.cancel');
 		this.nodes.submit = this.nodes.form.down('input.submit');
@@ -516,7 +516,7 @@ Backend.Product.Editor.prototype =
         $('productIndicator_' + id).style.display = 'none';
         this.showProductForm();
         this.tabControl = TabControl.prototype.getInstance("productManagerContainer", Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId);
-
+        this.setTabCounters();
 
 		var textareas = this.nodes.parent.getElementsByTagName('textarea');
 		for (k = 0; k < textareas.length; k++)
@@ -525,6 +525,21 @@ Backend.Product.Editor.prototype =
 		}
         
 		new SectionExpander(this.nodes.parent);
+    },
+    
+    setTabCounters: function()
+    {
+        var self = this;
+        new Ajax.Request(Backend.Product.Editor.prototype.links.countTabsItems + "/" + this.id, {
+           method: 'get',
+           onSuccess: function(reply) {
+               var response = eval("(" + reply.responseText + ")");
+               console.info(response);
+               $H(response).each(function(tab) {
+                   self.tabControl.setCounter(tab[0], tab[1]);
+               });
+           } 
+        });
     },
 
     craftProductUrl: function(url)
