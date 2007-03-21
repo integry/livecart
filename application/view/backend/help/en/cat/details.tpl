@@ -5,7 +5,7 @@
 	<ul>
 		<li>Is Enabled - all new categories are inactive by default, tick the checkbox to enable the category (to make it visible in your store)</li>
 		<li>Category Name - the actual category name</li>
-		<li>Handle - </li>
+		<li>{glossary}Handle{/glossary}</li>
 		<li>Description - a short category description, which is displayed in... </li>
 		<li>Keywords - words that are used in search queries and {glossary}Meta tags{/glossary}</li>
 	</ul>
