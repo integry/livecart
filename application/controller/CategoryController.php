@@ -88,7 +88,7 @@ class CategoryController extends FrontendController
 
 		$this->productFilter = $productFilter;
 
-		$products = $this->category->getProductsArray($productFilter, array('Manufacturer', 'ProductImage'));
+		$products = $this->category->getProductsArray($productFilter, array('Manufacturer', 'DefaultImage' => 'ProductImage'));
 
 		// get product specification and price data
 		ProductSpecification::loadSpecificationForRecordSetArray($products);
