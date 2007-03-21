@@ -21,15 +21,10 @@ class ProductRelationshipController extends StoreManagementController
 	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
 		$response->setValue("productID", $productID);
 		
-		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
+		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA, array('Category'));
 		$response->setValue("relationships", $product->getRelationships()->toArray());
-		//echo "<pre>" . print_r($product->getRelationships()->toArray(), true) . "</pre>";
+
 		
-		foreach($product->getRelatedProducts() as $product)
-		{
-		    print_r($product->name->get());
-		}
-	    
 	    return $response;
 	}
 	
@@ -60,10 +55,10 @@ class ProductRelationshipController extends StoreManagementController
 		        $product->save();
 		        
 			    $response = new ActionResponse();
-			    $response->setValue('product', Product::getInstanceByID($relatedProductID, ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES)->toArray());
+			    $response->setValue('product', Product::getInstanceByID($relatedProductID, ActiveRecord::LOAD_DATA)->toArray());
 			    return $response;
 	        }
-	        catch(Exception $e)
+	        catch(ProductRelationshipException $e)
 	        {
 	            $error = '_trying_add_the_product_itself_to_the_related_products_list';
 	        }

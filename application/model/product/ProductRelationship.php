@@ -1,4 +1,6 @@
 <?php
+class ProductRelationshipException extends ApplicationException { }
+
 class ProductRelationship extends ActiveRecord 
 {
 	public static function defineSchema($className = __CLASS__)
@@ -9,7 +11,7 @@ class ProductRelationship extends ActiveRecord
 		$schema->registerField(new ARPrimaryForeignKeyField("productID", 		"Product",   	 	   "ID", "Product", ARInteger::instance()));
 		$schema->registerField(new ARPrimaryForeignKeyField("relatedProductID", "Product", 			   "ID", "Product", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("productRelationshipGroupID", 	"ProductRelationshipGroup", "ID", "ProductRelationshipGroup", ARInteger::instance()));
-		$schema->registerField(new ARField("position",                                                             ARInteger::instance()));
+		$schema->registerField(new ARField("position",  ARInteger::instance()));
 	}
 	
 	/**
@@ -37,13 +39,13 @@ class ProductRelationship extends ActiveRecord
 	 * @param Product $product
 	 * @param Product $relatedProduct
 	 * 
-	 * @return RelatedProduct
+	 * @return ProductRelationship
 	 */
 	public static function getNewInstance(Product $product, Product $related, ProductRelationshipGroup $group = null)
 	{
 		if(null == $product || null == $related || $product === $related || $product->getID() == $related->getID())
 		{
-		    throw new Exception('Expected two different products when creating a relationship');
+		    throw new ProductRelationshipException('Expected two different products when creating a relationship');
 		}
 		
 	    $relationship = parent::getNewInstance(__CLASS__);
@@ -79,7 +81,7 @@ class ProductRelationship extends ActiveRecord
 	 * @param bool $loadReferencedRecords
 	 * @param array $data	Record data array (may include referenced record data)
 	 *
-	 * @return RelatedProduct
+	 * @return ProductRelationship
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
 	{
@@ -94,7 +96,7 @@ class ProductRelationship extends ActiveRecord
 	 */
 	public static function getRelationships(Product $product)
 	{
-	    return self::getRecordSet(self::getRelatedProductsSetFilter($product), true);
+	    return self::getRecordSet(self::getRelatedProductsSetFilter($product), array('RelatedProduct' => 'Product'));
 	}
 	
 	public static function hasRelationship(Product $product, Product $relatedToProduct)

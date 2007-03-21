@@ -271,8 +271,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
 		if (!$this->specFieldArrayCache)
 		{
-			$this->specFieldArrayCache = $this->getSpecificationFieldArray($includeParentFields);	
-		}		
+			$this->specFieldArrayCache = $this->getSpecificationFieldArray(false);	
+		}
 		
 		$categories = array();
 		$ids = array();
@@ -588,7 +588,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	public function getSpecificationFieldSet($includeParentFields = false, $loadReferencedRecords = false)
 	{
 		ClassLoader::import("application.model.category.SpecField");
-		return SpecField::getRecordSet($this->getSpecificationFilter($includeParentFields), array('SpecField', 'SpecFieldGroup'));
+		return new ARSet();
+		//return SpecField::getRecordSet($this->getSpecificationFilter($includeParentFields), true);
 	}
 
 	public function getProductById($productId)
@@ -599,7 +600,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	public function getSpecificationFieldArray($includeParentFields = false, $loadReferencedRecords = false, $mergeWithEmptyGroups = false)
 	{
 		ClassLoader::import("application.model.category.SpecField");
-
         $specFields = SpecField::getRecordSetArray($this->getSpecificationFilter($includeParentFields), array('SpecFieldGroup'));
 
         if($mergeWithEmptyGroups)

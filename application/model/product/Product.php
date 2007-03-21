@@ -221,7 +221,7 @@ class Product extends MultilingualObject
 
 	public function getSpecificationFieldSet($loadReferencedRecords = false)
 	{
-	  	return $this->category->get()->getSpecificationFieldSet(Category::INCLUDE_PARENT, $loadReferencedRecords);
+	    return $this->category->get()->getSpecificationFieldSet(Category::INCLUDE_PARENT, $loadReferencedRecords);
 	}
 
 	public function loadSpecification($specificationData = null)
@@ -350,7 +350,7 @@ class Product extends MultilingualObject
 
 	public function toArray()
 	{
-	  	$array = parent::toArray();
+	  	$array = parent::toArray(false);
 	  	$array['attributes'] = $this->getSpecification()->toArray();
 		$array = array_merge($array, $this->getPricesFields());
 	  	return $array;

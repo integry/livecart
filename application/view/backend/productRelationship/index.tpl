@@ -6,8 +6,6 @@
         <li id="productRelationships_{$productID}_{$relation.RelatedProduct.ID}">
             {assign var="product" value=$relation.RelatedProduct}
             {include file="backend/productRelationship/addRelated.tpl" product=$product}
-            {$relation.RelatedProduct.name_lang}
-            {$relation.RelatedProduct.name_lang}
         </li>
     {/foreach}
 </ul>

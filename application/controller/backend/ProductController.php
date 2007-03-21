@@ -49,7 +49,7 @@ class ProductController extends StoreManagementController
         					
         $recordCount = true;
 
-		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, Product::LOAD_REFERENCES, $recordCount);
+		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, array('DefaultImage' => 'ProductImage', 'Category'), $recordCount);
         
         // load specification and price data
         ProductSpecification::loadSpecificationForRecordSetArray($productArray);
@@ -537,10 +537,8 @@ class ProductController extends StoreManagementController
 	
 	public function basicData()
 	{
-	    $product = Product::getInstanceById($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
-		
+	    $product = Product::getInstanceById($this->request->getValue('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
 		$response = $this->productForm($product);
-
 		return $response;
 	}
 

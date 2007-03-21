@@ -59,7 +59,7 @@ class ProductRelationshipGroup extends MultilingualObject
 	 */
 	public static function getProductGroups(Product $product)
 	{
-	    return self::getRecordSet(self::getProductGroupsFilter($product), self::LOAD_DATA, self::LOAD_REFERENCES);
+	    return self::getRecordSet(self::getProductGroupsFilter($product), !ActiveRecord::LOAD_REFERENCES);
 	}
 	
 	private static function getProductGroupsFilter(Product $product)

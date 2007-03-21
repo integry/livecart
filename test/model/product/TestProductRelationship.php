@@ -115,7 +115,7 @@ class TestProductRelationship extends UnitTestCase
 	    
 	    // reloat
 	    $relationship->markAsNotLoaded();
-	    $relationship->load(true);
+	    $relationship->load(array('RelatedProduct' => 'Product'));
 	    
 	    // Check if product and related products are not null
 	    $this->assertNotNull($relationship->product->get());
