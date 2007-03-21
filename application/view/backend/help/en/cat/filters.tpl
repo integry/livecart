@@ -158,15 +158,14 @@ be displayed in your e-store.</p>
 <h3 id="edit">Edit and Delete Filters</h3>
 <p align="right"><a href="{self}#top"><small>Top</small></a></p>
 <ul>
-	<li>Go to the Filters section <a href="{self}#carrier"><small>(Remind me how).</small></a></li>
-	<li>In order to edit a filter, hover mouse pointer over the existing filters and click "Edit" icon next to the filter (name) you want to manage.</li>
+	<li>In order to <strong>edit</strong> a filter, go to the Filters section <a href="{self}#carrier"><small>(Remind me how).</small></a></li>
+	<li>Hover mouse pointer over the existing filters and click "Edit" icon next to the filter (name) you want to manage.</li>
 	<img src="image/doc/categories/filters/filters_edit.bmp">
-	<p>Filter's form opens.</p>
-	<li>You can edit any of the filter's property as in the add new filter section. 
-	<a href="{self}#carrier"><small>(Remind me how).</small></a> <strong>Save</strong> the changes you have made. (You can edit existing data
-	or add new values to the filter)</li>
+	<p>Filter's form opens. You can edit any of the filter's property as in the add new filter section. 
+	<a href="{self}#carrier"><small>(Remind me how).</small></a> <strong>Save</strong> the changes you have 
+	made.</p>
 	<br \>
-	<li>If you want to Delete a filter click "Delete" next to the "edit" icon.</li>
+	<li>If you want to <strong>Delete</strong> a filter click "Delete" next to the "edit" icon.</li>
 	<img src="image/doc/categories/filters/filters_delete.bmp">
 </ul>
 

@@ -45,11 +45,12 @@ can create variuos types of attributes. Below you'll find a couple of practical 
 
 <h3 id="create">Create Attribute</h3>
 <p>
-	(To create an attribute you have to define attributes type, name and its values if necessary. 
-	Because attributes are automatically included in  the <i>Add New Product</i> form, we will demonstrate in our examples how attributes are generated and placed in the product form.)
-	Suppose you have a category stocked with cell phones and you want to create custom fields for specifying the following properties:
-	<strong>Carrier</strong> ( select option ), <strong>Phone Features</strong> ( select checkboxes)
-	and <strong>Batery Capacity</strong> ( field option ).
+	Suppose that you have a category stocked with cell phones and you want to create custom fields for specifying the following properties:
+	<strong>Carrier</strong> (select option), <strong>Phone Features</strong> (select checkboxes)
+	and <strong>Batery Capacity</strong> (field option). Because attributes are automatically included in 
+	the <i>Add New Product</i> form, we will demonstrate in our examples how attributes are generated and 
+	placed in the product form.
+</p>
 
 <p><a href="javascript:expand(document.getElementById('carrier'))">Carrier attribute</a>
 <div class="dottedBorders" id="carrier" style="display:none">
@@ -62,43 +63,19 @@ can create variuos types of attributes. Below you'll find a couple of practical 
 		<li>In the attributes section click <strong>Add new attributes</strong>:</li>
 		<img src="image/doc/categories/attributes/add_new_attribute_reference.bmp">
 		<p><i>Add new attribute</i> form appears. Fill out the following fields as described below:</p>
-		<img src="image/doc/categories/attributes/add_attribute_form2.bmp">
+		<img src="image/doc/categories/attributes/add_attribute_form.bmp">
 		<li><strong>Type</strong> - because mobile carrier is a simple text and there is (probably) a finite number of carriers click on the type drop-down menu and 
-		select <i>Text selector</i> type from the list. Your chosen type is suitable for creating a predefined list of values which will be 
-		displayed as a selection option.</li>
-		<li>We check <strong>Required</strong> to make the field mandatory since it is an important feature. </li>
-		<li><strong>Can select multiple values</strong> - we leave this checkbox clear to allow assigning only one carrier to each phone</li> 
-		<li><ins>Field displayed in the product's preview info</ins></li>
-		<li><ins>Field displayed in the product's detailed page</ins></li>
-		<li>Attribute's <strong>title</strong> represent its function thus we enter a meaningful name - <strong>Carrier</strong>. </li>
-		<li><strong>Handle</strong> - handle is generated automatically. Handle is used to represent the attribute in {glossary}URL{/glossary}'s, so you can change it for 
-		{glossary}SEO{/glossary} purposes, if needed.</li>
-		<li>Prefix and Suffix - we leave these fields empty because carriers don't have any of them.</li> 
-		<li>In the description field we enter a brief description to describe the term "Carrier".</li> 
-		<hr \><br \>
-		<h2>Temp</h2>
-		<li>Select a category in the category tree and click <strong>Attributes</strong> tab.</li>
-		<img src="image/doc/categories/attributes/attributes_tab.bmp">
-		<li>In the attributes section click <strong>Add new attributes</strong>:</li>
-		<img src="image/doc/categories/attributes/add_new_attribute_reference.bmp">
-		<p><i>Add new attribute</i> form appears. Fill out the following fields as described below:</p>
-		<img src="image/doc/categories/attributes/type.bmp">
-		<li><strong>Type</strong> - because mobile carrier is a simple text and there is (probably) a finite number of carriers click on the type drop-down menu and 
-		select <i>Text selector</i> type from the list. Your chosen type is suitable for creating a predefined list of values which will be 
-		displayed as a selection option.</li>
-		<br \>
-		<img src="image/doc/categories/attributes/checkboxes.bmp">
+		select <i>Text selector</i> type from the list. (Your chosen type is suitable for creating a predefined list of values which will be 
+		displayed as a selection option).</li>
 		<li>We check <strong>Required</strong> to make the field mandatory since it is an important feature. </li>
 		<li><strong>Can select multiple values</strong> - we leave this checkbox clear to allow assigning only one carrier to each phone</li> 
 		<li>Field displayed in the product's preview info</li>
 		<li>Field displayed in the product's detailed page</li>
-		<br \>
-		<img src="image/doc/categories/attributes/textfields.bmp">
 		<li>Attribute's <strong>title</strong> represent its function thus we enter a meaningful name - <strong>Carrier</strong>. </li>
 		<li><strong>Handle</strong> - handle is generated automatically. Handle is used to represent the attribute in {glossary}URL{/glossary}'s, so you can change it for 
 		{glossary}SEO{/glossary} purposes, if needed.</li>
-		<li>Prefix and Suffix - we leave these fields empty as none of them is applicable.</li> 
-		<hr \>
+		<li>Prefix and Suffix - we leave these fields empty because carriers don't have any of them.</li> 
+		<li>In the description field we enter a brief description to describe the term "Carrier".</li> 	
 		<li>International details - if you need to translate attributes in other languages installed in your system, click on the Language to 
 		expand additional fields (which include Title and Details).</li>
 
@@ -197,17 +174,13 @@ by necessary changes. A numeric attribute looks similar to this one:
 	<li>Open <strong>Add new attribute form</strong> <a href="{self}#carrier"><small>(remind me how)</small></a></li>
 	<li>Type - select Nember Field.</li>
 	<li>Required - click the checkbox to make the field required attribute</li>
-	<img src="image/doc/categories/attributes/required.bmp">
 	<li>Field is displayed in the product overview page - </li>
 	<li>Field is displayed in the product's detail page - </li>
 	<li>Title - enter <strong>Battery Capacity</strong> to represent attribute's purpose/function.</li>
-	<img src="image/doc/categories/attributes/capacity_title.bmp">
 	<li>Handle is generated automatically so we leave the field unaltered</li>
-	<img src="image/doc/categories/attributes/capacity_handle.bmp">
 	<li>Prefix - leave the field empty.</li>			
 	<li>Suffix - enter "mAh" as battery capacity is defined by this symbol.</li>
-	<li>In the description field provide brief information about the field similar to this</li>
-	<img src="image/doc/categories/attributes/capacity_description.bmp">
+	<li>In the description field provide brief information about the attribute.</li>
 </ul>	
 
 <p>Don't forget to click <strong>Save</strong> at the end.</p>
