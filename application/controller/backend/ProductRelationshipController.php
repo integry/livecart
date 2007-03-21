@@ -84,6 +84,26 @@ class ProductRelationshipController extends StoreManagementController
 	    
 	    return new JSONResponse(array('status' => 'success'));
 	}
+
+    /**
+     * Sort specification fields
+     * 
+     * @return JSONResponse
+     */
+    public function sort()
+    {
+        $product = Product::getInstanceByID((int)$this->request->getValue('id'));        
+        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        {
+            if(empty($key)) continue;
+            
+            $relationship = ProductRelationship::getInstance($product, Product::getInstanceByID((int)$key)); 
+            $relationship->position->set((int)$position);
+            $relationship->save();
+        }
+        
+        return new JSONResponse(array('status' => 'success'));
+    }
 }
 
 ?>

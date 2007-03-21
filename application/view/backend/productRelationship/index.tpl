@@ -18,6 +18,7 @@
         Backend.RelatedProduct.links.related = '{/literal}{link controller=backend.productRelationship action=addRelated}/{$productID}{literal}';
         Backend.RelatedProduct.links.deleteRelated = '{/literal}{link controller=backend.productRelationship action=delete}/{$productID}{literal}';
         Backend.RelatedProduct.links.selectProduct = '{/literal}{link controller=backend.productRelationship action=selectProduct}{literal}';
+        Backend.RelatedProduct.links.sort = '{/literal}{link controller=backend.productRelationship action=sort}/{$productID}?target=productRelationships_{$productID}{literal}';
         
         Backend.RelatedProduct.messages = {};
         Backend.RelatedProduct.messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
@@ -47,7 +48,9 @@
                     this.remove(li);
                 }
             },
-            beforeSort: function(li){ console.info('beforeSort') },
+            beforeSort: function(li, order){ 
+                return Backend.RelatedProduct.links.sort + '&' + order;
+            },
             afterSort: function(li, response){ console.info('afterSort') }
         });     
     }
