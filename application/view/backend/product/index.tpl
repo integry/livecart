@@ -152,7 +152,15 @@
 		{
 			Backend.Product.Editor.prototype.setCurrentProductId(id); 
 	        $('productIndicator_' + id).style.display = '';
-			TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId); 
+			TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId, {
+                afterClick: function()
+                {
+                    if(Backend.RelatedProduct.SelectProductPopup.prototype.popup) {
+                        Backend.RelatedProduct.SelectProductPopup.prototype.popup.opener.focus();    
+                        Backend.RelatedProduct.SelectProductPopup.prototype.popup.close();
+                    }
+                }
+            }); 
 	        if(Backend.Product.Editor.prototype.hasInstance(id)) 
 			{
 				Backend.Product.Editor.prototype.getInstance(id);			

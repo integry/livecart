@@ -488,6 +488,7 @@ Backend.Product.Editor.prototype =
 
         this.__nodes__();
         this.__bind__();
+        this.setTabCounters();
         
         Form.State.backup(this.nodes.form);
         
@@ -515,8 +516,15 @@ Backend.Product.Editor.prototype =
 		Backend.Product.Editor.prototype.setCurrentProductId(this.id);
         $('productIndicator_' + id).style.display = 'none';
         this.showProductForm();
-        this.tabControl = TabControl.prototype.getInstance("productManagerContainer", Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId);
-        this.setTabCounters();
+        this.tabControl = TabControl.prototype.getInstance("productManagerContainer", Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId, {
+            afterClick: function()
+            {
+                if(Backend.RelatedProduct.SelectProductPopup.prototype.popup) {
+                    Backend.RelatedProduct.SelectProductPopup.prototype.popup.opener.focus();    
+                    Backend.RelatedProduct.SelectProductPopup.prototype.popup.close();
+                }
+            }
+        });
 
 		var textareas = this.nodes.parent.getElementsByTagName('textarea');
 		for (k = 0; k < textareas.length; k++)

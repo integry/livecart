@@ -328,6 +328,9 @@ Backend.Category = {
                     throw $break;
                 }
             });
+            
+            
+		    Element.update('activeCategoryPath', Backend.Category.getPath(match[1]));
         
             if(!alreadyLoaded) 
             {

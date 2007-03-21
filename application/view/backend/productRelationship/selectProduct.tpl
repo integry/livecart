@@ -24,7 +24,7 @@
 </div>
 <div id="activeCategoryPath"></div>
  
-<div id="managerContainer" class="managerContainer" style="display: none">
+<div id="managerContainer" class="managerContainer">
 	<div id="tabContainer" class="tabContainer">
 	<ul id="tabList" class="tabList tabs">
 

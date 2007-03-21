@@ -18,13 +18,14 @@ TabControl.prototype = {
 	activeTab: null,
 	indicatorImageName: "image/indicator.gif",
 
-	initialize: function(tabContainerName, urlParserCallback, idParserCallback)
+	initialize: function(tabContainerName, urlParserCallback, idParserCallback, callbacks)
 	{
         try
         {  
             this.tabContainerName = tabContainerName;
             this.urlParserCallback = urlParserCallback;
             this.idParserCallback = idParserCallback;
+            this.callbacks = callbacks ? callbacks : {};
             
             this.__nodes__();
             this.__bind__();
@@ -86,14 +87,18 @@ TabControl.prototype = {
         });  
     },
 
-    getInstance: function(tabContainerName, urlParserCallback, idParserCallback)
+    getInstance: function(tabContainerName, urlParserCallback, idParserCallback, callbacks)
     {
         if(!TabControl.prototype.__instance__)
         {
-            TabControl.prototype.__instance__ = new TabControl(tabContainerName, urlParserCallback, idParserCallback);
+            TabControl.prototype.__instance__ = new TabControl(tabContainerName, urlParserCallback, idParserCallback, callbacks);
+            TabControl.prototype.__instance__.__init__();
+        }
+        else if(false !== urlParserCallback)
+        {
+            TabControl.prototype.__instance__.__init__();
         }
         
-        TabControl.prototype.__instance__.__init__();
         return TabControl.prototype.__instance__;
     },
 
@@ -117,7 +122,9 @@ TabControl.prototype = {
 
 	handleTabClick: function(args)
 	{
+        if(this.callbacks.beforeClick) this.callbacks.beforeClick.call(this);
         this.activateTab(args.target);
+        if(this.callbacks.afterClick) this.callbacks.afterClick.call(this);
 	},
 
 	activateTab: function(targetTab)
@@ -189,9 +196,8 @@ TabControl.prototype = {
     
     setCounter: function(tab, value)
     {
-        console.info(tab);
         tab = $(tab);
-        console.info(tab);
+        
         if(!tab) throw new Error('Could not find tab!');
         
         var counter = tab.down('.tabCounter');
@@ -203,5 +209,17 @@ TabControl.prototype = {
         {
             counter.update("(" + value + ")");
         }
+    },
+    
+    
+    getCounter: function(tab, value)
+    {
+        tab = $(tab);
+        
+        if(!tab) throw new Error('Could not find tab!');
+        
+        var counter = tab.down('.tabCounter');      
+        var match = counter.innerHTML.match(/\((\d+)\)/);
+        return match ? parseInt(match[1]) : 0;
     }
 }

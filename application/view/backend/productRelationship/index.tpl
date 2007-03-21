@@ -17,7 +17,7 @@
         Backend.RelatedProduct.links = {};
         Backend.RelatedProduct.links.related = '{/literal}{link controller=backend.productRelationship action=addRelated}/{$productID}{literal}';
         Backend.RelatedProduct.links.deleteRelated = '{/literal}{link controller=backend.productRelationship action=delete}/{$productID}{literal}';
-        Backend.RelatedProduct.links.selectProduct = '{/literal}{link controller=backend.productRelationship action=selectProduct}{literal}';
+        Backend.RelatedProduct.links.selectProduct = '{/literal}{link controller=backend.productRelationship action=selectProduct}#cat_{$categoryID}#tabProducts__{literal}';
         Backend.RelatedProduct.links.sort = '{/literal}{link controller=backend.productRelationship action=sort}/{$productID}?target=productRelationships_{$productID}{literal}';
         
         Backend.RelatedProduct.messages = {};
@@ -35,24 +35,7 @@
             );
         });
         
-        ActiveList.prototype.getInstance($("productRelationships_{/literal}{$productID}{literal}"), 
-        {
-            beforeDelete: function(li){ 
-                if(confirm(Backend.RelatedProduct.messages.areYouSureYouWantToDelete)) 
-                {
-                    return Backend.RelatedProduct.links.deleteRelated + "/?relatedProductID=" + this.getRecordId(li);
-                }
-            },
-            afterDelete: function(li, response){
-                if(!response.error) {
-                    this.remove(li);
-                }
-            },
-            beforeSort: function(li, order){ 
-                return Backend.RelatedProduct.links.sort + '&' + order;
-            },
-            afterSort: function(li, response){ console.info('afterSort') }
-        });     
+        ActiveList.prototype.getInstance($("productRelationships_{/literal}{$productID}{literal}"), Backend.RelatedProduct.activeListCallbacks);     
     }
     catch(e)
     {

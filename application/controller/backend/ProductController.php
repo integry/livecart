@@ -570,8 +570,7 @@ class ProductController extends StoreManagementController
 	  	$product = Product::getInstanceByID((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA);
 	    
 	  	return new JSONResponse(array(
-	        'tabProductRelationship' => $product->getRelationships(false)->getTotalRecordCount(),
-	  	    'end' => 'end'
+	        'tabProductRelationship' => $product->getRelationships(false)->getTotalRecordCount()
 	    ));
 	}
 }
