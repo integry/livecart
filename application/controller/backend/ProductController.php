@@ -38,16 +38,16 @@ class ProductController extends StoreManagementController
 	protected function productList(Category $category, ActionResponse $response)
 	{	
 		// get available columns
-		$productSchema = ActiveRecordModel::getSchema('Product');
+		$productSchema = ActiveRecordModel::getSchemaInstance('Product');
 		
 		$availableColumns = array();
 		foreach ($productSchema->getFieldList() as $field)
 		{
-			if ($field->getType() instanceof ARBool)
+            if ($field->getDataType() instanceof ARBool)
 			{
 			  	$type = 'bool';
 			}	  
-			elseif ($field->getType() instanceof ARNumeric)
+			elseif ($field->getDataType() instanceof ARNumeric)
 			{
 				$type = 'numeric';	  	
 			}
@@ -60,12 +60,12 @@ class ProductController extends StoreManagementController
 		
 		$availableColumns['Manufacturer.name'] = 'text';
 		$availableColumns['ProductPrice.price'] = 'numeric';
-		
+
 		// specField columns
 		
 		// get displayed columns
 		$displayedColumns = array('Product.sku', 'Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');	
-		$displayedColumns = array_intersect(array_reverse($displayedColumns), $availableColumns);	
+		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);	
 				
 		$filter = new ARSelectFilter();
 		
@@ -79,18 +79,52 @@ class ProductController extends StoreManagementController
         					
         $recordCount = true;
 
-		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, array('DefaultImage' => 'ProductImage', 'Category'), $recordCount);
+		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, array('DefaultImage' => 'ProductImage', 'Category', 'Manufacturer'), $recordCount);
         
         // load specification and price data
         ProductSpecification::loadSpecificationForRecordSetArray($productArray);
     	ProductPrice::loadPricesForRecordSetArray($productArray);
     	
+    	$currency = Store::getInstance()->getDefaultCurrency()->getID();
+    	
+    	$data = array();
+        foreach ($productArray as $product)
+    	{
+            $record = array();
+            foreach ($displayedColumns as $column => $type)
+            {
+                list($class, $field) = explode('.', $column, 2);
+                if ('Product' == $class)
+                {
+                    $record[] = $product[$field];
+                }
+                else if ('ProductPrice' == $class)
+                {
+                    $record[] = $product['price_' . $currency];
+                }
+                else
+                {
+                    $record[] = $product[$class][$field];
+                }                
+            }
+            
+            $data[] = $record;
+        }
+    	
+    	$return = array();
+    	$return['columns'] = $displayedColumns;
+    	$return['totalCount'] = $recordCount;
+    	$return['data'] = $data;
+    	
+    	return new JSONResponse($return);
+    	
+        $response->setValue("displayedColumns", $displayedColumns);
         $response->setValue("massForm", $this->getMassForm());
         $response->setValue("productList", $productArray);
 		$response->setValue("categoryID", $category->getID());
 		$response->setValue("offset", $this->request->getValue('offset'));
 		$response->setValue("totalCount", $recordCount);
-		$response->setValue("currency", Store::getInstance()->getDefaultCurrency()->getID());
+		$response->setValue("currency", $currency);
 		return $response;	  	  	
 	}
 
