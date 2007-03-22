@@ -453,7 +453,11 @@ Backend.SpecField.prototype = {
             'multipleSelector', 'isRequired',  'isDisplayed', 
             'isDisplayedInList', 'type', 'description']).each(function(fieldName)
         {
-            self.nodes.labels[fieldName].onclick = function() { self.nodes[fieldName].focus() };
+            self.nodes.labels[fieldName].onclick = function() { 
+                var input = self.nodes[fieldName];
+                if('checkbox' == input.type) input.checked = !input.checked;
+                else input.focus();
+            };
         });
         
         if(this.type == Backend.SpecField.prototype.TYPE_TEXT_ADVANCED)
