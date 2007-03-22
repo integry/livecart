@@ -36,6 +36,11 @@ ActiveGrid.prototype =
   	 */
 	inverseSelection: false,
 	
+  	/**
+  	 *	Object that handles data transformation for presentation
+  	 */
+	dataFormatter: null,
+
 	filters: {},
 	
 	loadIndicator: null,
@@ -52,7 +57,9 @@ ActiveGrid.prototype =
 								  sortAscendImg: 'http://openrico.org/images/sort_asc.gif',
 						          sortDescendImg: 'http://openrico.org/images/sort_desc.gif' 
 								}
-							);		
+							);	
+							
+		this.ricoGrid.activeGrid = this;	
 	
 		var headerRow = this._getHeaderRow();
 		this.selectAllInstance = headerRow.getElementsByTagName('input')[0];
@@ -63,6 +70,35 @@ ActiveGrid.prototype =
 		this.ricoGrid.options.onRefreshComplete = this.hideFetchIndicator.bind(this);
 				
 		this.onScroll(this.ricoGrid, 0);
+	},
+	
+	getRows: function(data)
+	{
+		var HTML = '';
+		var rowHTML = '';
+				
+		var data = eval('(' + data + ')');
+				
+		for(k = 0; k < data['data'].length; k++)
+		{
+			var id = data['data'][k][0];
+			data['data'][k][0] = '<input type="checkbox" name="item[' + id + ']" />';
+			
+			if (this.dataFormatter)
+			{
+				for(i = 0; i < data['data'][k].length; i++)
+				{
+					data['data'][k][i] = this.dataFormatter.formatValue(data['columns'][i], data['data'][k][i], id);
+				}
+			}
+		}
+				
+		return data;
+	},	
+	
+	setDataFormatter: function(dataFormatterInstance)
+	{
+		this.dataFormatter = dataFormatterInstance;
 	},
 	
 	setLoadIndicator: function(indicatorElement)

@@ -21,7 +21,15 @@ class ProductController extends StoreManagementController
 		$this->rebuildMenuLangFile();		
         $category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
 	
-		$response = $this->productList($category, new ActionResponse());
+		//$response = $this->productList($category, new ActionResponse());
+		$response = new ActionResponse();
+        $response->setValue("massForm", $this->getMassForm());
+        $response->setValue("displayedColumns", $this->getDisplayedColumns());
+        $response->setValue("availableColumns", $this->getAvailableColumns());
+		$response->setValue("categoryID", $category->getID());
+		$response->setValue("offset", $this->request->getValue('offset'));
+		$response->setValue("totalCount", '55');
+		$response->setValue("currency", Store::getInstance()->getDefaultCurrency()->getID());
 
 		$path = $this->getCategoryPathArray($category);
 		$response->setValue("path", $path);
@@ -29,14 +37,8 @@ class ProductController extends StoreManagementController
 		return $response;
 	}
 
-	public function lists()
+	protected function getAvailableColumns()
 	{
-		$id = substr($this->request->getValue("id"), 9);
-		return $this->productList(Category::getInstanceByID($id, Category::LOAD_DATA), new XMLResponse());
-	}
-
-	protected function productList(Category $category, ActionResponse $response)
-	{	
 		// get available columns
 		$productSchema = ActiveRecordModel::getSchemaInstance('Product');
 		
@@ -62,11 +64,35 @@ class ProductController extends StoreManagementController
 		$availableColumns['ProductPrice.price'] = 'numeric';
 
 		// specField columns
+
+		return $availableColumns;
+	}
+
+	protected function getDisplayedColumns()
+	{
+		$availableColumns = $this->getAvailableColumns();
 		
 		// get displayed columns
-		$displayedColumns = array('Product.sku', 'Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');	
+		$displayedColumns = array('Product.ID', 'Product.sku', 'Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');	
 		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);	
-				
+
+		// set field type as value
+		foreach ($displayedColumns as $column => $foo)
+		{
+			$displayedColumns[$column] = $availableColumns[$column];	
+		}
+		
+		return $displayedColumns;		
+	}
+	
+	public function lists()
+	{
+		$id = substr($this->request->getValue("id"), 9);
+		return $this->productList(Category::getInstanceByID($id, Category::LOAD_DATA), new XMLResponse());
+	}
+
+	protected function productList(Category $category, ActionResponse $response)
+	{					
 		$filter = new ARSelectFilter();
 		
 		$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
@@ -85,8 +111,10 @@ class ProductController extends StoreManagementController
         ProductSpecification::loadSpecificationForRecordSetArray($productArray);
     	ProductPrice::loadPricesForRecordSetArray($productArray);
     	
+		$displayedColumns = $this->getDisplayedColumns();
+		
     	$currency = Store::getInstance()->getDefaultCurrency()->getID();
-    	
+
     	$data = array();
         foreach ($productArray as $product)
     	{
@@ -96,36 +124,34 @@ class ProductController extends StoreManagementController
                 list($class, $field) = explode('.', $column, 2);
                 if ('Product' == $class)
                 {
-                    $record[] = $product[$field];
+					$value = isset($product[$field]) ? $product[$field] : '';
                 }
                 else if ('ProductPrice' == $class)
                 {
-                    $record[] = $product['price_' . $currency];
+					$value = isset($product['price_' . $currency]) ? $product['price_' . $currency] : 0;
                 }
                 else
                 {
-                    $record[] = $product[$class][$field];
-                }                
+                    $value = $product[$class][$field];
+                }     
+				
+				if ('bool' == $type)
+				{
+					$value = $value ? $this->translate('_yes') : $this->translate('_no');
+				}
+				
+				$record[] = $value;
             }
             
             $data[] = $record;
         }
     	
     	$return = array();
-    	$return['columns'] = $displayedColumns;
+    	$return['columns'] = array_keys($displayedColumns);
     	$return['totalCount'] = $recordCount;
     	$return['data'] = $data;
     	
-    	return new JSONResponse($return);
-    	
-        $response->setValue("displayedColumns", $displayedColumns);
-        $response->setValue("massForm", $this->getMassForm());
-        $response->setValue("productList", $productArray);
-		$response->setValue("categoryID", $category->getID());
-		$response->setValue("offset", $this->request->getValue('offset'));
-		$response->setValue("totalCount", $recordCount);
-		$response->setValue("currency", $currency);
-		return $response;	  	  	
+    	return new JSONResponse($return);	  	  	
 	}
 
     protected function getMassForm()

@@ -249,11 +249,11 @@ Backend.Product =
     
     openProduct: function(id, e) 
     {
-		if (window.opener && window.opener.selectProductPopup)
+		try 
 		{
 			window.opener.selectProductPopup.getSelectedProduct(id);	
 		}
-		else
+		catch (exc)
 		{
 			Backend.Product.Editor.prototype.setCurrentProductId(id); 
 	        $('productIndicator_' + id).style.display = '';
@@ -782,3 +782,20 @@ Backend.Product.Prices.prototype =
     }
 }
 
+Backend.Product.GridFormatter = 
+{
+	getClassName: function(field, value)
+	{
+		
+	},
+	
+	formatValue: function(field, value, id)
+	{
+		if ('Product.name' == field)
+		{
+			value = '<span><span class="progressIndicator" id="productIndicator_' + id + '" style="display: none;"></span></span><a href="#edit" onclick="Backend.Product.openProduct(' + id + ', event); return false;">' + value + '</a>';	
+		}
+		
+		return value;
+	}
+}

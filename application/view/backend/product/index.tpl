@@ -97,43 +97,49 @@
 </div>
 <table class="productHead" id="products_{$categoryID}_header">
 	<tr class="headRow">
+
 		<th class="cell_cb"><input type="checkbox" class="checkbox" /></th>
-		<th class="first cell_sku">
-			<span class="fieldName">Product.sku</span>
-			<input type="text" class="text" id="filter_Product.sku_{$categoryID}" value="{tn SKU}" />
-		</th>
-		<th class="cell_name">
-            <span class="fieldName">Product.name</span>
-    		<input type="text" class="text" id="filter_Product.name_{$categoryID}" value="{tn Name}" />                    
-        </th>	
-		<th class="cell_manuf">
-            <span class="fieldName">Manufacturer.name</span>
-    		<input type="text" class="text" id="filter_Manufacturer.name_{$categoryID}" value="{tn Manufacturer}" />  
-        </th>	
+
+		{foreach from=$displayedColumns item=foo key=column name="columns"}
+			{if !$smarty.foreach.columns.first}
+				<th class="first cell_{$column|replace:'.':'_'}">
+					<span class="fieldName">{$column}</span>
+					{if 'bool' == $availableColumns.$column}
+			    		<select style="width: auto;" id="filter_{$column}_{$categoryID}">
+							<option value="">{tn $column}</option>
+							<option value="1">{tn _yes}</option>
+							<option value="0">{tn _no}</option>
+						</select>					
+					{else}
+					<input type="text" class="text {$availableColumns.$column}" id="filter_{$column}_{$categoryID}" value="{tn $column}" />
+					{/if}
+				</th>		
+			{/if}
+		{/foreach}
+
+{*
 		<th class="cell_price">
             <span class="fieldName">ProductPrice.price</span>
     		<input type="text" class="text" id="filter_ProductPrice.price_{$currency}" value="{tn Price} ({$currency})" />  			
         </th>
-		<th class="cell_stock">
-            <span class="fieldName">Product.stockCount</span>
-    		<input type="text" class="text" id="filter_Product.stockCount_{$categoryID}" value="{tn In stock}" />   
-        </th>	
-		<th class="cell_enabled">
-            <span class="fieldName">Product.isEnabled</span>
-    		<select style="width: auto;" id="filter_Product.isEnabled_{$categoryID}">
-				<option value="">{tn Enabled}</option>
-				<option value="1">{tn _yes}</option>
-				<option value="0">{tn _no}</option>
-			</select>
-        </th>	
+*}
 	</tr>
 </table>
 </div>
 
-<div style="width: 100%;">
-<table class="activeGrid productList" id="products_{$categoryID}">
+<div style="width: 100%;height: 100%;">
+<table class="activeGrid productList" id="products_{$categoryID}" style="height: 100%;">
 	<tbody>
-		{include file="backend/product/productList.tpl"}
+		{section name="createRows" start=0 loop=15}
+			<tr class="{if $smarty.section.createRows.index is even}even{else}odd{/if}">
+				<td class="cell_cb"></td>
+			{foreach from=$displayedColumns key=column item=type name="columns"}
+  			 	{if !$smarty.foreach.columns.first}
+					<td class="cell_{$column|replace:'.':'_'}"></td>		
+				{/if}
+			{/foreach}	
+			</tr>	
+		{/section}
 	</tbody>
 </table>
 </div>
@@ -144,15 +150,14 @@
 <script type="text/javascript">
 	var grid = new ActiveGrid($('products_{/literal}{$categoryID}'), '{link controller=backend.product action=lists}', {$totalCount});
 	grid.setLoadIndicator($("productLoadIndicator_{$categoryID}"));
+	grid.setDataFormatter(Backend.Product.GridFormatter);
 	
-    new ActiveGridFilter($('filter_Product.sku_{$categoryID}'), grid);
-    new ActiveGridFilter($('filter_Product.name_{$categoryID}'), grid);
-    new ActiveGridFilter($('filter_Manufacturer.name_{$categoryID}'), grid);
-    new ActiveGridFilter($('filter_ProductPrice.price_{$currency}'), grid);
-    new ActiveGridFilter($('filter_Product.stockCount_{$categoryID}'), grid);
-    
-	new ActiveGridFilter($('filter_Product.isEnabled_{$categoryID}'), grid);
-		    
+	{foreach from=$displayedColumns item=id key=column name="columns"}
+		{if !$smarty.foreach.columns.first}
+		    new ActiveGridFilter($('filter_{$column}_{$categoryID}'), grid);
+		{/if}
+	{/foreach}
+	    
     var massHandler = new Backend.Product.massActionHandler($('productMass_{$categoryID}'), grid);
     massHandler.deleteConfirmMessage = '{t _delete_conf|addslashes}' ;
 </script>

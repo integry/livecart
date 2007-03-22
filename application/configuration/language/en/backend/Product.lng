@@ -6,3 +6,11 @@ _intangible=Intangible (downloadable)
 
 _process=Save
 _delete_conf=Really delete the selected products?
+
+Product.name=Name
+Product.sku=SKU
+Product.stockCount=In stock
+Product.isEnabled=Enabled
+
+Manufacturer.name=Manufacturer
+ProductPrice.price=Price
