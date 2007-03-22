@@ -28,6 +28,7 @@
 <legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#create">Create a new attribute</a></li>
+	<li><a href="{self}#visible">( Display attribute in the product page )</a></li>
 	<li><a href="{self}#group">Group attributes</a></li>
 	<li><a href="{self}#edit">Edit attribute</a></li>
 	<li><a href="{self}#delete">Delete attribute</a></li>
@@ -52,7 +53,7 @@ can create variuos types of attributes. Below you'll find a couple of practical 
 	placed in the product form.
 </p>
 
-<p><a href="javascript:expand(document.getElementById('carrier'))">Carrier attribute</a>
+<p><a href="javascript:expand(document.getElementById('carrier'))">Create Carrier attribute</a>
 <div class="dottedBorders" id="carrier" style="display:none">
 
 <h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
@@ -110,7 +111,7 @@ in case a new value is introduced.</p>
 </div>
 </p>
 
-<p><a href="javascript:expand(document.getElementById('features'))">Phone Features</a>
+<p><a href="javascript:expand(document.getElementById('features'))">Create Phone Features</a>
 <div class="dottedBorders" id="features" style="display:none">
 
 <h4 id="features">Creating <i>Phone Features</i> attribute</h4>
@@ -159,7 +160,7 @@ by necessary changes. A numeric attribute looks similar to this one:
 </div>
 </p>
 
-<p><a href="javascript:expand(document.getElementById('capacity'))">Batery Capacity</a>
+<p><a href="javascript:expand(document.getElementById('capacity'))">Create Batery Capacity</a>
 <div class="dottedBorders" id="capacity" style="display:none">
 
 <h4 id="capacity">Creating <i>Batery Capacity</i> attribute</h4>

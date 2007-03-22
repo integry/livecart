@@ -39,9 +39,8 @@ should be displayed on the detailed page in the <a href="{help /cat.attr}">attri
 <ul>	
 	<li><a href="{self}#view">View products</a></li>
 	<li><a href="{self}#search">Search</a></li>
-	<li><a href="{self}#multiple">Manage multiple products</a></li>
-	<li>( <a href="{help /products.add}">Add new product</a> )</li>
-	<li>( <a href="{self}#edit">Edit single product</a> )</li>
+	<li><a href="{help /products.add}">Add new product</a></li>
+	<li><a href="{self}#manage">Manage products</a></li>
 </ul>
 </fieldset>
 </div>
@@ -51,7 +50,7 @@ should be displayed on the detailed page in the <a href="{help /cat.attr}">attri
 <p>
 	To display category' products:
 	<ul>
-		<li>Go to <strong>Menu</strong> -> <strong>Products</strong> section.</li>
+		<li>Click <strong>Products</strong> in the main menu.</li>
 		<li>Click a category on the category tree. The Category details tab opens on the right. To view products, 
 		click <strong>Products</strong> tab:</li>
 		<img src="image/doc/products/products_tab.bmp"/>
@@ -82,22 +81,21 @@ should be displayed on the detailed page in the <a href="{help /cat.attr}">attri
 <p>Describe Search tools - what is the purpose; describe how to use tools; describe what is displayed
 to the customer; describe how the results can be processed; Are there any global search ways</p>
 
-<h3 id="edit">Edit product</h3>
 
-<p>To edit product's details click on a product name. This will open product's <a href="{help /products.define}">detailed page</a>.</p>
-
-<h3 id="multiple">Manage multiple products</h3>
+<h3 id="manage">Manage products</h3>
 
 <p>You can quickly manage products by using <strong>multiple edit</strong> tool which allows you to edit
 most of the attributes by applying changes to several products at once.</p>
 <ul>
-<li>Select products by marking a checkbox on the left:</li>
+<li>Select one or more products by marking a checkbox on the left:</li>
 <img src="image/doc/products/checkboxes.bmp"/>
 <li>Choose an action from the menu:</li>
 <img src="image/doc/products/menu.bmp"/>
 <li>Click <strong>Go</strong> to process.</li>
 <img src="image/doc/products/go.bmp"/>
 </ul>
+
+<p>To view all of the product's details, click on a product name. This will open product's <a href="{help /products.define}">detailed page</a>.</p>
 
 
 {helpSeeAlso}

@@ -1,5 +1,5 @@
 <p>	
-	The product detail form is devided into eight sections. <ins>add</ins> vs. <ins>edit</ins>.
+	The product detail form is devided into eight sections. Field specification details are provided below.
 </p>
 
 <!--
@@ -43,8 +43,8 @@ You can edit details by choosing appropriate tab indicating details group (main,
 	<li>Keywords - words or phrases that will be used to help users to find products.</li>
 	<li>Mark as bestseller - mark the checkbox to set the product's status to {glossary}bestseller{/glossary}.</li>
 </ul>
-<img src="image/doc/products/edit/translate.bmp">
 If you have more than one language in your system, you can translate the following details:
+<img src="image/doc/products/edit/translate.bmp">
 <ul>
 	<li>Name</li>
 	<li>Short description</li>
@@ -121,7 +121,9 @@ Go to <a href="{help /currency}">currencies section</a> to configure currencies 
 
 <h3 id="save">Save</h3>
 
-<p></p>
+<p>If you are adding a new product you can choose to save only the main details and add another product immediately
+ or choose to continue with more details:
+ </p>
 <img src="image/doc/products/edit/save.bmp">
 
 
