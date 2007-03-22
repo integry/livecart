@@ -37,6 +37,36 @@ class ProductController extends StoreManagementController
 
 	protected function productList(Category $category, ActionResponse $response)
 	{	
+		// get available columns
+		$productSchema = ActiveRecordModel::getSchema('Product');
+		
+		$availableColumns = array();
+		foreach ($productSchema->getFieldList() as $field)
+		{
+			if ($field->getType() instanceof ARBool)
+			{
+			  	$type = 'bool';
+			}	  
+			elseif ($field->getType() instanceof ARNumeric)
+			{
+				$type = 'numeric';	  	
+			}
+			else
+			{
+			  	$type = 'text';
+			}
+			$availableColumns['Product.' . $field->getName()] = $type;
+		}		
+		
+		$availableColumns['Manufacturer.name'] = 'text';
+		$availableColumns['ProductPrice.price'] = 'numeric';
+		
+		// specField columns
+		
+		// get displayed columns
+		$displayedColumns = array('Product.sku', 'Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');	
+		$displayedColumns = array_intersect(array_reverse($displayedColumns), $availableColumns);	
+				
 		$filter = new ARSelectFilter();
 		
 		$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());

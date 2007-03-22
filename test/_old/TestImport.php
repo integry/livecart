@@ -8,6 +8,9 @@ include('../../../prex/PrexCategory.php');
 ClassLoader::import("application.model.category.*");
 ClassLoader::import("application.model.product.*");
 
+// download all data
+//$prex = new PrexCategory(1); exit;
+
 include cachedir . 'prex_dict.php';
 
 $categoryIDs = array();
@@ -172,22 +175,7 @@ foreach ($categoryIDs as $id)
 			}
 		
 		}  
-	}  
-	
-	// value type adjustments
-	foreach ($spec as $group => $fields)
-	{
-	  	foreach ($fields as $name => $type)
-	  	{
-			if ((count(array_unique($spec[$group][$name])) / count($spec[$group][$name]) < 0.2)
-				&& !$prex->getFieldType($group, $name)
-				)
-			{
-			  	$prex->setFieldType($group, $name, 'singleSelect', $value);
-			}
-		}  					
-	}	
-
+	}  	
 
 	foreach ($prex->fieldTypes as $group => $fields)
 	{
@@ -197,17 +185,18 @@ foreach ($categoryIDs as $id)
 		}  					
 	}
 
-/*
+
 	$sorted = array();
 	foreach ($prex->fieldTypes as $group => $fields)
 	{
-	  	echo '<h2>' . prex_translate($group) . '</h2>';
+//	  	echo '<h2>' . prex_translate($group) . '</h2>';
 	  	
 	  	foreach ($fields as $name => $type)
 	  	{
 			
 			$sorted[$group][$name] = true;
 					
+/*
 			if (in_array(prex_translate($name), $droppedAttributes))
 			{
 				continue;  
@@ -221,9 +210,10 @@ foreach ($categoryIDs as $id)
 				print_r(next($spec[$group][$name]));  
 				echo '&nbsp;&nbsp;&nbsp;&nbsp;';
 			} 			     
+	*/	
 		}  					
 	}
-	
+
 	echo '<h2>== Text Values ==</h2>';
 	  	
 	echo '<div style="background-color: #EEEEEE;">';
@@ -240,6 +230,8 @@ foreach ($categoryIDs as $id)
 			
 		  	echo '<h3>' . prex_translate($name) .'(' . $type . ')</h3>';	
 			  
+			$values = array_diff($values, array(''));
+
 			// sample values
 			for ($k = 0; $k < 5; $k++)
 			{
@@ -250,7 +242,7 @@ foreach ($categoryIDs as $id)
 	}
 	
 	echo '</div>';	
-	*/
+
 	
 }
 
@@ -259,12 +251,19 @@ foreach ($byType as $type => $fields)
   	echo '<h1>' . $type . '</h1>';
   	foreach ($fields as $name => $values)
   	{
+		if (in_array(prex_translate($name), $droppedAttributes))
+		{
+			continue;  
+		}
+
 	    echo '<h2>' . $name . '</h2>';
 	    print_r($values);
 	}
 }
 
+//file_put_contents('values.php', var_export($byType, true));
 
+file_put_contents('prex_dict.php', var_export(array_diff_key(PrexProduct::$translations, $prexDict), true));
 exit;
 
 foreach ($products as $product)
@@ -273,7 +272,6 @@ foreach ($products as $product)
 	$product->save();
 }
 
-//file_put_contents('prex_dict.php', var_export(PrexProduct::$translations, true));
 //print_r(PrexProduct::$translations);
 
 //ActiveRecordModel::commit();
