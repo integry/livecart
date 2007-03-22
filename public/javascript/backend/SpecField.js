@@ -448,18 +448,13 @@ Backend.SpecField.prototype = {
         this.nodes.isRequired.id           = this.cssPrefix + this.categoryID + "_" + this.id + "_isRequired"; 
         this.nodes.isDisplayed.id          = this.cssPrefix + this.categoryID + "_" + this.id + "_isDisplayed"; 
         this.nodes.isDisplayedInList.id    = this.cssPrefix + this.categoryID + "_" + this.id + "_isDisplayedInList"; 
-        
-
-        this.nodes.labels.name.onclick                = function() { self.nodes.name.focus() };
-        this.nodes.labels.valuePrefix.onclick         = function() { self.nodes.valuePrefix.focus() };
-        this.nodes.labels.valueSuffix.onclick         = function() { self.nodes.valueSuffix.focus() };
-        this.nodes.labels.handle.onclick              = function() { self.nodes.handle.focus() };
-        this.nodes.labels.multipleSelector.onclick    = function() { self.nodes.multipleSelector.focus() };
-        this.nodes.labels.isRequired.onclick 	      = function() { self.nodes.isRequired.focus() };
-        this.nodes.labels.isDisplayed.onclick         = function() { self.nodes.isDisplayed.focus() };
-        this.nodes.labels.isDisplayedInList.onclick   = function() { self.nodes.isDisplayedInList.focus() };
-        this.nodes.labels.type.onclick                = function() { self.nodes.type.focus() };
-        this.nodes.labels.description.onclick         = function() { self.nodes.description.focus() };
+                
+        $A(['name', 'valuePrefix', 'valueSuffix', 'handle', 
+            'multipleSelector', 'isRequired',  'isDisplayed', 
+            'isDisplayedInList', 'type', 'description']).each(function(fieldName)
+        {
+            self.nodes.labels[fieldName].onclick = function() { self.nodes[fieldName].focus() };
+        });
         
         if(this.type == Backend.SpecField.prototype.TYPE_TEXT_ADVANCED)
         {
@@ -471,7 +466,11 @@ Backend.SpecField.prototype = {
             this.nodes.type.value = this.type;
             this.nodes.formatedText.checked = false;
         }
-
+        
+		if(!this.id.match(/new$/))
+		{
+		    this.nodes.type.up('fieldset').style.display = this.nodes.labels.type.up('p').style.display = 'none';
+		}
         this.changeMainTitleAction(this.nodes.name.value);
 
 		if(this.specField.description_lang) this.nodes.description.value = this.specField.description_lang;
