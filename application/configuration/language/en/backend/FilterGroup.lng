@@ -3,6 +3,7 @@ _category_has_no_attr=No filterable attributes have yet been created for this ca
 _delete_field=Delete field
 _remove_filter_question=Are you sure you want to remove this filter?
 _FilterGroup_remove_question=Are you sure you want to remove this filter group?
+_cancel_adding_new_filter=Cancel adding new filter group
 
 # errors
 _error_name_empty=Filter group name is empty

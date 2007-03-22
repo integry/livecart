@@ -254,6 +254,7 @@ Backend.Filter.prototype = {
         this.nodes.mainTitle              = document.getElementsByClassName(this.cssPrefix + "title", this.nodes.parent)[0];
         this.nodes.filtersCount           = document.getElementsByClassName(this.cssPrefix + "count", this.nodes.parent)[0];
         this.nodes.cancel                 = document.getElementsByClassName(this.cssPrefix + "cancel", this.nodes.parent)[0];
+        this.nodes.cancelNewItemLink      = $("filter_item_new_" + this.categoryID + "_cancel");
         this.nodes.save                   = document.getElementsByClassName(this.cssPrefix + "save", this.nodes.parent)[0];
 
         this.nodes.translationsLinks      = document.getElementsByClassName(this.cssPrefix + "form_filters_translations_language_links", this.nodes.parent)[0];
@@ -315,12 +316,14 @@ Backend.Filter.prototype = {
         Event.observe(this.nodes.name, "keyup", function(e) { self.generateTitleAction(e) });
         Event.observe(this.nodes.addFilterLink, "click", function(e) { Event.stop(e); self.addFilterFieldAction() });
         
-        Event.observe(this.nodes.specFieldID, "change", function(e) { self.specFieldIDWasChangedAction(e) });        
-        Event.observe(this.nodes.specFieldID, "change", function(e) { self.generateTitleFromSpecField(e) });
+        Event.observe(this.nodes.specFieldID, "change", function(e) { Event.stop(e); self.specFieldIDWasChangedAction() });        
+        Event.observe(this.nodes.specFieldID, "change", function(e) { Event.stop(e); self.generateTitleFromSpecField() });
         Event.observe(this.nodes.specFieldID, "change", function(e) { self.toggleFilters(); } );
         
-        Event.observe(this.nodes.cancel, "click", function(e) { self.cancelAction(e) });
-        Event.observe(this.nodes.save, "click", function(e) { self.saveAction(e) });
+        Event.observe(this.nodes.cancel, "click", function(e) { Event.stop(e); self.cancelAction() });
+        Event.observe(this.nodes.cancelNewItemLink, "click", function(e) { Event.stop(e); self.cancelAction(); });
+        
+        Event.observe(this.nodes.save, "click", function(e) { Event.stop(e); self.saveAction() });
         
         // Also some actions must be executed on load. Be aware of the order in which those actions are called
         this.fillSpecFieldsSelect();
@@ -395,7 +398,7 @@ Backend.Filter.prototype = {
     },
     
     
-    generateTitleFromSpecField: function(e)
+    generateTitleFromSpecField: function()
     {    
         var self = this;
         var newTitle = '';
@@ -912,12 +915,8 @@ Backend.Filter.prototype = {
      * @access public
      *
      */
-    cancelAction: function(e)
+    cancelAction: function()
     {
-        if(!e.target) e.target = e.srcElement;
-
-        Event.stop(e);
-
         // first cancel all modifications if they took place
         if(this.id == 'new')
         {
@@ -954,12 +953,8 @@ Backend.Filter.prototype = {
      * @access public
      *
      */
-    saveAction: function(e)
+    saveAction: function()
     {
-        if(!e.target) e.target = e.srcElement;
-
-        Event.stop(e);
-        
         this.saveFilterGroup();
     },
 
@@ -1099,6 +1094,7 @@ Backend.Filter.prototype = {
         var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");
 
         ActiveForm.prototype.hideNewItemForm(link, form);
+        ActiveForm.prototype.hideMenuItems($(this.cssPrefix + "new_" + categoryID + "_menu"), [$(this.cssPrefix + "item_new_" + categoryID + "_show")]);
     },
 
 
@@ -1150,16 +1146,10 @@ Backend.Filter.prototype = {
      * @static
      *
      */
-    createNewAction: function(e, categoryID)
+    createNewAction: function(categoryID)
     {
-        if(!e.target)e.target = e.srcElement;
-        
-        Event.stop(e);
-
-        var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
-        var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");     
-        
-        ActiveList.prototype.getInstance("filter_items_list_" + categoryID).collapseAll();
-        ActiveForm.prototype.showNewItemForm(link, form);
+        ActiveList.prototype.collapseAll();        
+        ActiveForm.prototype.showNewItemForm($(this.cssPrefix + "item_new_" + categoryID + "_show"), $(this.cssPrefix + "item_new_"+categoryID+"_form"));  
+        ActiveForm.prototype.hideMenuItems($(this.cssPrefix + "new_" + categoryID + "_menu"), [$(this.cssPrefix + "item_new_" + categoryID + "_cancel")]);
     }
 }

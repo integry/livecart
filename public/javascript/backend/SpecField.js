@@ -1043,8 +1043,7 @@ Backend.SpecField.prototype = {
         var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
         var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");
         
-        Backend.SpecFieldGroup.prototype.hideMenuItems($("specField_menu_" + categoryID), [$("specField_group_new_" + categoryID + "_show"), $("specField_item_new_" + categoryID + "_show")]);
-            
+        ActiveForm.prototype.hideMenuItems($("specField_menu_" + categoryID), [$("specField_group_new_" + categoryID + "_show"), $("specField_item_new_" + categoryID + "_show")]);
         ActiveForm.prototype.hideNewItemForm(link, form);
     },
 
@@ -1101,7 +1100,7 @@ Backend.SpecField.prototype = {
     {
         ActiveList.prototype.collapseAll();        
         ActiveForm.prototype.showNewItemForm($(this.cssPrefix + "item_new_"+categoryID+"_show"), $(this.cssPrefix + "item_new_"+categoryID+"_form"));  
-        Backend.SpecFieldGroup.prototype.hideMenuItems($("specField_menu_" + categoryID), [$(this.cssPrefix + "item_new_" + categoryID + "_cancel")]);
+        ActiveForm.prototype.hideMenuItems($("specField_menu_" + categoryID), [$(this.cssPrefix + "item_new_" + categoryID + "_cancel")]);
     }    
 }
 
@@ -1362,7 +1361,7 @@ Backend.SpecFieldGroup.prototype = {
                 
                 Form.restore(this.nodes.form);
                 
-                Backend.SpecFieldGroup.prototype.hideMenuItems($("specField_menu_" + this.group.Category.ID), [$("specField_group_new_" + this.group.Category + "_show"), $("specField_item_new_" + this.group.Category + "_show")]);
+                ActiveForm.prototype.hideMenuItems($("specField_menu_" + this.group.Category.ID), [$("specField_group_new_" + this.group.Category + "_show"), $("specField_item_new_" + this.group.Category + "_show")]);
                 ActiveForm.prototype.hideNewItemForm($(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show"), this.nodes.parent); 
     		}
             
@@ -1386,7 +1385,7 @@ Backend.SpecFieldGroup.prototype = {
         
         if(!this.group || !this.group.ID)
         {
-            Backend.SpecFieldGroup.prototype.hideMenuItems($("specField_menu_" + this.group.Category.ID), [$("specField_group_new_" + this.group.Category.ID + "_show"), $("specField_item_new_" + this.group.Category.ID + "_show")]);
+            ActiveForm.prototype.hideMenuItems($("specField_menu_" + this.group.Category.ID), [$("specField_group_new_" + this.group.Category.ID + "_show"), $("specField_item_new_" + this.group.Category.ID + "_show")]);
             ActiveForm.prototype.hideNewItemForm($(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show"), this.nodes.parent); 
         }
         else
@@ -1436,17 +1435,6 @@ Backend.SpecFieldGroup.prototype = {
         return document.getElementsByClassName(this.cssPrefix + 'group_form', parent).length > 0;
     },
 
-    hideMenuItems: function(menu, except)
-    {
-        menu = $(menu);
-        
-        $A(menu.getElementsByTagName('li')).each(function(li) {
-            a = $(li).down('a');
-            a.addClassName('hidden');
-            $A(except).each(function(el) { if(a == $(el)) a.removeClassName('hidden');  });
-        });
-    },
-
     /**
      * This method unfolds "Create new Spec Field group" form. 
      */
@@ -1458,6 +1446,6 @@ Backend.SpecFieldGroup.prototype = {
             $(this.cssPrefix + "group_new_" + categoryID + "_form")
         );   
         
-        Backend.SpecFieldGroup.prototype.hideMenuItems($("specField_menu_" + categoryID), [$(this.cssPrefix + "group_new_" + categoryID + "_cancel")]);
+        ActiveForm.prototype.hideMenuItems($("specField_menu_" + categoryID), [$(this.cssPrefix + "group_new_" + categoryID + "_cancel")]);
     }    
 }

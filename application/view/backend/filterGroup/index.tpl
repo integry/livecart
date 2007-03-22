@@ -29,8 +29,9 @@
 {if $blankFilter.specFields|@count > 0}
     <div>
         <fieldset class="container">
-			<ul class="menu">
+			<ul class="menu" id="filter_new_{$categoryID}_menu">
 				<li><a href="#new" id="filter_item_new_{$categoryID}_show">{t _add_new_filter}</a></li>
+				<li><a href="#new" id="filter_item_new_{$categoryID}_cancel" class="hidden">{t _cancel_adding_new_filter}</a></li>
 			</ul>
 		</fieldset>
 
@@ -65,7 +66,11 @@
              _activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
          }
          
-         Event.observe($("filter_item_new_{/literal}{$categoryID}{literal}_show"), "click", function(e) { Backend.Filter.prototype.createNewAction(e, '{/literal}{$categoryID}{literal}') });
+         Event.observe($("filter_item_new_{/literal}{$categoryID}{literal}_show"), "click", function(e) 
+         { 
+             Event.stop(e);
+             Backend.Filter.prototype.createNewAction('{/literal}{$categoryID}{literal}') 
+         });
          ActiveList.prototype.getInstance('filter_items_list_{/literal}{$categoryID}{literal}', Backend.Filter.prototype.activeListCallbacks, Backend.Filter.prototype.activeListMessages);
     </script>
     {/literal}
