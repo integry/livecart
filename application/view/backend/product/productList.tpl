@@ -4,7 +4,7 @@
 		<td class="cell_sku">{$product.sku}</td>
 		<td class="cell_name">
 		    <span><span class="progressIndicator" id="productIndicator_{$product.ID}" style="display: none;"></span></span>            
-            <a href="#edit" onclick="window.openProduct({$product.ID}, event); return false;">{$product.name_lang}</a>
+            <a href="#edit" onclick="Backend.Product.openProduct({$product.ID}, event); return false;">{$product.name_lang}</a>
         </td>
 		<td class="cell_manuf">{$product.Manufacturer.name}</td>
 		<td class="cell_price">{$product.price_EUR}</td>

@@ -245,8 +245,34 @@ Backend.Product =
 			notFound.style.display = '';
 			countElement.style.display = 'none';					
 		}
+    },
+    
+    openProduct: function(id, e) 
+    {
+		if (window.opener && window.opener.selectProductPopup)
+		{
+			window.opener.selectProductPopup.getSelectedProduct(id);	
+		}
+		else
+		{
+			Backend.Product.Editor.prototype.setCurrentProductId(id); 
+	        $('productIndicator_' + id).style.display = '';
+			TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId, {
+                afterClick: function()
+                {
+                    if(Backend.RelatedProduct.SelectProductPopup.prototype.popup) {
+                        Backend.RelatedProduct.SelectProductPopup.prototype.popup.opener.focus();    
+                        Backend.RelatedProduct.SelectProductPopup.prototype.popup.close();
+                    }
+                }
+            }); 
+	        if(Backend.Product.Editor.prototype.hasInstance(id)) 
+			{
+				Backend.Product.Editor.prototype.getInstance(id);			
+			}			
+		}
+        Event.stop(e);
     }
-
 }
 
 Backend.Product.massActionHandler = Class.create();
@@ -484,15 +510,21 @@ Backend.Product.Editor.prototype =
 
     initialize: function(id)
   	{
-	    this.id = id;
-
-        this.__nodes__();
-        this.__bind__();
-        this.setTabCounters();
-        
-        Form.State.backup(this.nodes.form);
-        
-        var self = this;
+        try
+        {
+            this.id = id;
+    
+            this.__nodes__();
+            this.__bind__();
+            
+            Form.State.backup(this.nodes.form);
+            
+            var self = this;
+        }
+        catch(e)
+        {
+            console.info(e);
+        }
 
 	},
 
@@ -514,7 +546,7 @@ Backend.Product.Editor.prototype =
     __init__: function(args)
     {	
 		Backend.Product.Editor.prototype.setCurrentProductId(this.id);
-        $('productIndicator_' + id).style.display = 'none';
+        $('productIndicator_' + this.id).style.display = 'none';
         this.showProductForm();
         this.tabControl = TabControl.prototype.getInstance("productManagerContainer", Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId, {
             afterClick: function()
@@ -526,28 +558,32 @@ Backend.Product.Editor.prototype =
             }
         });
 
-		var textareas = this.nodes.parent.getElementsByTagName('textarea');
-		for (k = 0; k < textareas.length; k++)
-		{
-			tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
-		}
+        this.addTinyMce();
+        this.setTabCounters();
         
 		new SectionExpander(this.nodes.parent);
     },
     
     setTabCounters: function()
     {
-        var self = this;
-        new Ajax.Request(Backend.Product.Editor.prototype.links.countTabsItems + "/" + this.id, {
-           method: 'get',
-           onSuccess: function(reply) {
-               var response = eval("(" + reply.responseText + ")");
-               console.info(response);
-               $H(response).each(function(tab) {
-                   self.tabControl.setCounter(tab[0], tab[1]);
-               });
-           } 
-        });
+        try
+        {
+            var $this = this;
+            if(!$this.tabControl.restoreAllCounters($this.id))
+            {
+                new Ajax.Request(Backend.Product.Editor.prototype.links.countTabsItems + "/" + $this.id, {
+                   method: 'get',
+                   onSuccess: function(reply) {
+                       var counters = eval("(" + reply.responseText + ")")
+                       $this.tabControl.setAllCounters(counters, $this.id);
+                   } 
+                });
+            }
+        } 
+        catch(e)
+        {
+            console.info(e);
+        }
     },
 
     craftProductUrl: function(url)
@@ -636,6 +672,24 @@ Backend.Product.Editor.prototype =
     {       
         if($("productManagerContainer")) Element.hide($("productManagerContainer"));
         if($("managerContainer")) Element.show($("managerContainer"));
+    },
+    
+    removeTinyMce: function()
+    {
+        var textareas = this.nodes.parent.getElementsByTagName('textarea');
+		for (k = 0; k < textareas.length; k++)
+		{
+			tinyMCE.execCommand('mceRemoveControl', true, textareas[k].id);
+		}
+    },
+    
+    addTinyMce: function()
+    {
+		var textareas = this.nodes.parent.getElementsByTagName('textarea');
+		for (k = 0; k < textareas.length; k++)
+		{
+			tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
+		}
     }
 }
 

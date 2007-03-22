@@ -31,6 +31,7 @@ TabControl.prototype = {
             this.__bind__();
 
             this.decorateTabs();
+            this.countersCache = {};
         }
         catch(e)
         {
@@ -40,11 +41,11 @@ TabControl.prototype = {
     
     __nodes__: function()
     {
-            this.nodes = {};
-            this.nodes.tabContainer = $(this.tabContainerName);
-    		this.nodes.tabList = this.nodes.tabContainer.down(".tabList");
-    		this.nodes.tabListElements = document.getElementsByClassName("tab", this.nodes.tabList);
-    		this.nodes.sectionContainer = this.nodes.tabContainer.down(".sectionContainer");
+        this.nodes = {};
+        this.nodes.tabContainer = $(this.tabContainerName);
+		this.nodes.tabList = this.nodes.tabContainer.down(".tabList");
+		this.nodes.tabListElements = document.getElementsByClassName("tab", this.nodes.tabList);
+		this.nodes.sectionContainer = this.nodes.tabContainer.down(".sectionContainer");
     },
     
     __bind__: function()
@@ -194,8 +195,10 @@ TabControl.prototype = {
 		$(tabId).url = url;
 	},
     
-    setCounter: function(tab, value)
+    setCounter: function(tab, value, hashId)
     {
+        if(!this.countersCache[hashId]) this.countersCache[hashId] = {};
+        
         tab = $(tab);
         
         if(!tab) throw new Error('Could not find tab!');
@@ -204,15 +207,51 @@ TabControl.prototype = {
         if(false === value)
         {
             counter.update('');
+            delete this.countersCache[hashId][tab.id];
         }
         else
         {
             counter.update("(" + value + ")");
+            this.countersCache[hashId][tab.id] = value;
         }
     },
+        
+    setAllCounters: function(counters, hashId)
+    {     
+        var self = this;
+        $H(counters).each(function(tab) {
+            self.setCounter(tab[0], tab[1], hashId);
+        });
+    },
     
+    restoreCounter: function(tab, hashId)
+    {
+        tab = $(tab);
+
+        if(tab && this.countersCache[hashId][tab.id])
+        {
+            this.setCounter(tab.id, this.countersCache[hashId][tab.id]);
+            return true;
+        }
+        
+        return false;
+    },
     
-    getCounter: function(tab, value)
+    restoreAllCounters: function(hashId)
+    {
+        var self = this;
+        var restored = false;
+        if(this.countersCache[hashId])
+        {
+            $A(this.nodes.tabListElements).each(function(tab) {
+                restored = self.restoreCounter(tab, hashId) ? true : restored;    
+            });
+        }
+        
+        return restored;  
+    },
+    
+    getCounter: function(tab)
     {
         tab = $(tab);
         
