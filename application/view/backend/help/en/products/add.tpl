@@ -27,7 +27,7 @@ you have to set these attributes before adding products.</p>
 	<img src="image/doc/products/add/add_new.bmp">
 	<li><i>Add new product</i> main form opens. Fill out the form by supplying necessary fields, see 
 	<a href="{help /products.define}">field specifications</a> for more details.</li> 
-	<li>Save changes to complete adding new product.</li>
+	<li>Save changes to return to main Products page.</li>
 </ul>
 
 <h3 id="import">Import Data</h3>

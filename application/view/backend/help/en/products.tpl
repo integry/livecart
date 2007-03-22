@@ -11,23 +11,27 @@ the following details:
 </p>
 <img src="image/doc/products/product.bmp"/>
 <ul>
-<li>Name - </li>
-<li>Manufacturer - </li>
-<li>Price - </li>
-<li>In stock - </li>
+<li>The name or the product</li>
+<li>Manufacturer</li>
+<li>Price</li>
+<li>And number in stock</li>
 </ul>
 
-<p class="note"><strong>Note</strong>: you can extend the list of features displayed by adding addition 
-attributes in the attributes section(...)</p>
+<p class="note"><strong>Note</strong>: You can specify what product's attributes 
+should be displayed on the product list page in the <a href="{help /cat.attr}">attributes</a> section.</p>
 
-<p>More detailed information is provided in <strong>Product details</strong> page. This page includes all 
-the necessary details about the product:</p>
+<p>More detailed information is provided in <strong>Product details</strong> page. When a customer click on a 
+particular products, product's detailed page opens. This page includes all the necessary details about the product:</p>
+<img src="image/doc/products/product_details.bmp"/>
 <ul>
-<li>Weight - </li>
-<li>Size - </li>
-<li>Taste - </li>
-<li>etc. - </li>
+<li>Weight</li>
+<li>Size</li>
+<li>Taste</li>
+<li>etc.</li>
 </ul>
+
+<p class="note"><strong>Note</strong>: You can specify what product's attributes 
+should be displayed on the detailed page in the <a href="{help /cat.attr}">attributes</a> section.</p>
 
 <div class="tasks">
 <fieldset>
