@@ -21,7 +21,7 @@ you have to set appropriate attributes before adding products.</p>
 
 <ul>
 	<li>Go to <strong>Products</strong> section.</li>
-	<li>Select existing category in the category tree or <a href="{help /cat#add}">add new</a> category.</li>
+	<li>Select existing category in the category tree (or <a href="{help /cat#add}">add new</a> category).</li>
 	<li>Click <strong>Products</strong> tab to open product management section.</li>
 	<li>In the products section click <strong>Add new Product:</strong></li>
 	<img src="image/doc/products/add/add_new.bmp">
