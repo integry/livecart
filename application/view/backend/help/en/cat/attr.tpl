@@ -39,10 +39,17 @@
 
 
 <h3 id="create">Create Attribute</h3>
-<h4>Attribute Types</h4>
 
 <p>LC provides a custom based attribute management system which allows you to create and manage attributes in relatively simple manner.
-LiveCart supports three base product attribute types which can be <strong>text, number</strong> or <strong>date</strong>. Using these base types you 
+LiveCart supports three base product <strong>attribute types</strong> which can be: 
+
+<ul>
+	<li>Number type which can be either a <i>field</i> or a <i>selector</i></li>
+	<li>Text type can be only <i>selector</i></li>
+	<li>and Date type</li>
+</ul>
+
+Using these base types you 
 can create variuos types of attributes. Below you'll find a couple of practical examples on how to choose which attribute type would suit best for describing a particular product property.
 </p>
 

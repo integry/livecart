@@ -24,7 +24,8 @@ have to offer (some may search for products by particular technical details and 
 </fieldset>
 </div>
 
-<h3 id="type">Filter Types</h3>
+<h3 id="create">Create Filter</h3>
+
 <p>
 You can create four types of filters (which correspond to attributes types): </p>
 <ul>
@@ -36,7 +37,6 @@ You can create four types of filters (which correspond to attributes types): </p
 to define a range for filter's values.</p>
 </p>
 
-<h3 id="create">Create Filter</h3>
 <p>We will guide you through several tutorials and show how to generate filters for your existing attributes. As in examples with 
 <a href="{help /cat.attr}">attributes</a> in the previuos section we will use cell phones for illustrating <a href="{self}#carrier">Carrier</a>, 
 <a href="{self}#capacity">Battery Capacity</a> and additional <a href="{self}#date">Date</a> filter.</p>
