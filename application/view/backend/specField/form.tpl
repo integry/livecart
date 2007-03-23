@@ -128,7 +128,7 @@
 	<!-- STEP 2 -->
 	<fieldset class="specField_step_lev1 specField_step_values">
     <legend>{t _SpecField_step_two}</legend>
-
+        <a href="#mergeValues" class="specField_mergeValuesLink">{t _specField_merge_values}</a>
 
 		<p>
 		<fieldset class="group specField_form_values_group">
@@ -137,7 +137,8 @@
                 <p>
         			<ul class="activeList_add_sort activeList_add_delete">
         				<li class="dom_template specField_form_values_value specField_update" id="specField_form_values_" style="display: block;">
-                            <input type="text" class="specField_update" />
+                            <input type="checkbox" value="1" class="specField_mergeCheckbox checkbox" style="display: none;" />
+                            <input type="text" class="specField_update specField_valueName" />
                     		<span class="errorText hidden"> </span>
                             <br class="clear" />
         				</li>
@@ -145,6 +146,11 @@
                 </p>
                 <p>
                     <a href="#add" class="specField_add_field">{t _SpecField_add_values}</a>
+                    <span class="specField_mergeValuesControls" style="display: none">
+                        <input type="button" class="submit specField_mergeValuesSubmit" value="{tn _specField_merge_values}" />
+                        {t _or}
+                        <a href="#" class="cancel specField_mergeValuesCancel">{t _cancel}</a>
+                    </span>
                 </p>   
                      	
                         

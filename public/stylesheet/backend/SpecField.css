@@ -61,7 +61,7 @@
   	padding-top: 1em;
 }
 
-.specField_form_values_group div input {
+.specField_form_values_group div input.specField_valueName {
     width: 10em;
 }
 
@@ -82,8 +82,23 @@
     width: auto;
 }
 
+.specField .specField_mergeCheckbox 
+{
+   float: none;
+}
+
 .specField_controls {
     padding-left: 2em;
+}
+
+.specField_valueMergedLooser
+{
+    background-color: #FF8990 ! important;
+}
+
+.specField_valueMergedWinner
+{
+    background-color: #BBE5C1 ! important;
 }
 
 .specField_save {

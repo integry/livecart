@@ -50,4 +50,18 @@ class SpecFieldValueController extends StoreManagementController
 
         return new JSONResponse(array('status' => 'success'));
     }
+
+    public function mergeValues()
+    {
+        $mergedIntoValue = SpecFieldValue::getInstanceByID((int)$this->request->getValue('mergeIntoValue'), true);
+        
+        foreach($this->request->getValue('mergedValues') as $mergedValueId)
+        {
+            $mergedValue = SpecFieldValue::getInstanceByID((int)$mergedValueId, true);
+            $mergedIntoValue->mergeWith($mergedValue);
+        }
+
+        $mergedIntoValue->save();
+        return new JSONResponse(array('status' => 'success'));
+    }
 }

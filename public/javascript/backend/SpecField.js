@@ -204,7 +204,13 @@ Backend.SpecField.prototype = {
 		this.nodes.stepTranslations 	= document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
 		this.nodes.stepMain 			= document.getElementsByClassName(this.cssPrefix + "step_main", this.nodes.parent)[0];
 		this.nodes.stepValues       	= document.getElementsByClassName(this.cssPrefix + "step_values", this.nodes.parent)[0];
-
+        
+        this.nodes.mergeValuesLink        = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesLink");
+        this.nodes.mergeValuesControls    = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesControls");
+        this.nodes.mergeValuesSubmit      = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesSubmit");
+        this.nodes.mergeValuesCancel      = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesCancel");
+        
+        
 		this.nodes.stepLevOne 			= document.getElementsByClassName(this.cssPrefix + "step_lev1", this.nodes.parent);
 
 		for(var i = 0; i < this.nodes.stepLevOne.length; i++)
@@ -249,6 +255,8 @@ Backend.SpecField.prototype = {
 		this.nodes.valuesAddFieldLink 	= this.nodes.valuesDefaultGroup.getElementsByClassName(this.cssPrefix + "add_field", this.nodes.parent)[0];
 
         this.nodes.valuesTranslations = {};
+        
+        this.nodes.valuesTranslationsDiv = this.nodes.stepValues.down("." + this.cssPrefix + "step_values_translations");
 
 		var ul = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
 		ul.id = this.cssPrefix + "form_" + this.id + '_values_' + this.languageCodes[0];
@@ -291,7 +299,11 @@ Backend.SpecField.prototype = {
         Event.observe(this.nodes.cancel, "click", function(e) { Event.stop(e); self.cancelAction() } );
         Event.observe(this.nodes.cancelLink, "click", function(e) { Event.stop(e); self.cancelAction() } );
         Event.observe(this.nodes.save, "click", function(e) { self.saveAction(e) } );
-
+        
+        Event.observe(this.nodes.mergeValuesLink, 'click', function(e) { Event.stop(e); self.toggleValuesMerging(); });
+        Event.observe(this.nodes.mergeValuesSubmit, 'click', function(e) { Event.stop(e); self.mergeValues(); });
+        Event.observe(this.nodes.mergeValuesCancel, 'click', function(e) { Event.stop(e); self.toggleValuesMerging(); });
+        
 		// Also some actions must be executed on load. Be aware of the order in which those actions are called
 		this.loadSpecFieldAction();
 		this.loadValueFieldsAction();
@@ -300,7 +312,6 @@ Backend.SpecField.prototype = {
 
 		new Form.EventObserver(this.nodes.form, function() { self.formChanged = true; } );
 		Form.backup(this.nodes.form);
-        
 	},
 
 	/**
@@ -315,7 +326,8 @@ Backend.SpecField.prototype = {
         this.type = this.nodes.type.value;
     
 		// if selected type is a selector type then show selector options fields (aka step 2)
-        var valuesTranslations = document.getElementsByClassName(this.cssPrefix + "step_values_translations", this.nodes.stepValues)[0];
+        
+        var valuesTranslations = this.nodes.valuesTranslationsDiv; 
 		if(this.selectorValueTypes.indexOf(this.nodes.type.value) === -1)
 		{
 			this.nodes.stateLinks[1].parentNode.style.display = 'none';
@@ -362,6 +374,8 @@ Backend.SpecField.prototype = {
 	    this.fieldsList = ActiveList.prototype.getInstance(this.nodes.valuesDefaultGroup.getElementsByTagName("ul")[0], {
 	        beforeSort: function(li, order)
 	        {
+                if(self.mergingMode) self.colorMergedValues();
+                
 	            return self.links.sortValues + '?target=' + this.ul.id + '&' + order;
 	        },
 	        afterSort: function(li, response){    },
@@ -381,7 +395,7 @@ Backend.SpecField.prototype = {
                     
                     if(emptyFilters || confirm(self.messages.removeFieldQuestion))
                     {
-                        self.deleteValueFieldAction(li, this);
+                        self.deleteValueFieldAction(li);
                     }
                 }
                 else if(confirm(self.messages.removeFieldQuestion))
@@ -389,7 +403,7 @@ Backend.SpecField.prototype = {
                     return Backend.SpecField.prototype.links.deleteValue + this.getRecordId(li);
                 }
 	        },
-	        afterDelete: function(li, response){ self.deleteValueFieldAction(li, this) }
+	        afterDelete: function(li, response){ self.deleteValueFieldAction(li) }
 	    }, this.msg.activeListMessages);
 	},
 
@@ -624,8 +638,10 @@ Backend.SpecField.prototype = {
 	 * @access private
 	 *
 	 */
-	deleteValueFieldAction: function(li, activeList)
+	deleteValueFieldAction: function(li)
 	{
+        var activeList = this.fieldsList;
+        
 		var splitedHref = li.id.split("_");
 		var isNew = splitedHref[splitedHref.length - 2] == 'new' ? true : false;
 		var id = (isNew ? 'new' : '') + splitedHref[splitedHref.length - 1];
@@ -828,7 +844,7 @@ Backend.SpecField.prototype = {
         var li = this.fieldsList.addRecord(id, values_template);
 
 		// The field itself
-		var input = li.down("input");
+		var input = li.down("input." + this.cssPrefix + "valueName");
 		input.name = "values[" + id + "]["+this.languageCodes[0]+"]";
 		input.value = value.value_lang ? value.value_lang : '' ;
         
@@ -1101,7 +1117,136 @@ Backend.SpecField.prototype = {
         ActiveList.prototype.collapseAll();        
         ActiveForm.prototype.showNewItemForm($(this.cssPrefix + "item_new_"+categoryID+"_show"), $(this.cssPrefix + "item_new_"+categoryID+"_form"));  
         ActiveForm.prototype.hideMenuItems($("specField_menu_" + categoryID), [$(this.cssPrefix + "item_new_" + categoryID + "_cancel")]);
-    }    
+    },
+    
+    toggleValuesMerging: function()
+    {
+        var self = this;
+        var valuesUl = this.nodes.specFieldValuesUl;
+        
+        this.mergingMode = !this.mergingMode;
+        
+        this.mergedValues = {};
+        if(this.mergingMode)
+        {
+            this.nodes.mergeValuesControls.show();
+            this.nodes.valuesAddFieldLink.hide();
+            this.nodes.valuesTranslationsDiv.hide();
+        }
+        else
+        {
+            this.nodes.mergeValuesControls.hide();
+            this.nodes.valuesAddFieldLink.show();
+            this.nodes.valuesTranslationsDiv.show();
+            this.colorMergedValues();
+        }
+        
+        $A(valuesUl.getElementsByTagName('li')).each(function(li) 
+        { 
+            var checkbox = li.down("." + self.cssPrefix + "mergeCheckbox"); 
+
+            if(self.mergingMode) checkbox.show();
+            else checkbox.hide();
+            
+            if(!self.mergingCheckboxesBinded)
+            {
+                checkbox.li = li;
+                Event.observe(checkbox, 'click', function(e) { 
+                    if(true == this.checked) self.addToMergedValues(this.li);
+                    else self.removeToMergedValues(this.li);
+                    
+                    self.colorMergedValues();
+                });   
+            }
+        });
+        
+        this.mergingCheckboxesBinded = true;
+    },
+    
+    mergeValues: function()
+    {
+        var self = this;
+        var mergedString = "";
+        $H(this.mergedValues).each(function(mergedValue) {
+            if(Element.hasClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner"))
+            {
+                mergeIntoValue = "mergeIntoValue="  + mergedValue.key;
+            }
+            mergedString += ("&mergedValues[]=" + mergedValue.key);
+        });
+        
+        new Ajax.Request(Backend.SpecField.prototype.links.mergeValues + "?" + mergeIntoValue + mergedString,
+        {
+           onSuccess: function(reply)
+           {
+               self.handleMergeValuesResponse(eval("(" + reply.responseText + ")"));               
+           }
+        });
+    },
+    
+    handleMergeValuesResponse: function(response)
+    {
+        if('success' == response.status)
+        {
+            var self = this;
+            $H(this.mergedValues).each(function(mergedValue) {
+                if(Element.hasClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner"))
+                {
+                    Element.removeClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner");
+                    mergedValue.value.down("." + self.cssPrefix + "mergeCheckbox").checked = false;
+                    ActiveList.prototype.highlight(mergedValue.value);
+                }
+                else
+                {
+                    self.deleteValueFieldAction(mergedValue.value);
+                }
+            });
+        }
+        else
+        {
+            alert('Failed to merge values. Not implemented!')
+        }
+    },
+    
+    addToMergedValues: function(li)
+    {
+        this.mergedValues[this.fieldsList.getRecordId(li)] = li;
+    },
+    
+    removeToMergedValues: function(li)
+    {
+        delete this.mergedValues[this.fieldsList.getRecordId(li)];
+    },
+    
+    colorMergedValues: function()
+    {
+        var self = this;
+        var winner = true;
+        var valuesUl = this.nodes.specFieldValuesUl;
+        $A(valuesUl.getElementsByTagName('li')).each(function(li) 
+        { 
+            Element.removeClassName(li, self.cssPrefix + "valueMergedWinner");
+            Element.removeClassName(li, self.cssPrefix + "valueMergedLooser");
+            
+            if(self.mergedValues[self.fieldsList.getRecordId(li)]) 
+            {
+                if(!winner) 
+                {
+                    Element.addClassName(li, self.cssPrefix + "valueMergedLooser");
+                }
+                else 
+                {
+                    Element.addClassName(li, self.cssPrefix + "valueMergedWinner");
+                }
+                
+                winner = false;
+            }
+            else
+            {
+                li.down("." + self.cssPrefix + "mergeCheckbox").checked = false;
+            }
+        });
+    }
 }
 
 
@@ -1447,5 +1592,8 @@ Backend.SpecFieldGroup.prototype = {
         );   
         
         ActiveForm.prototype.hideMenuItems($("specField_menu_" + categoryID), [$(this.cssPrefix + "group_new_" + categoryID + "_cancel")]);
-    }    
+    }
 }
+
+
+
