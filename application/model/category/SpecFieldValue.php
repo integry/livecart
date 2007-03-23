@@ -166,23 +166,26 @@ class SpecFieldValue extends MultilingualObject
 	            break;
             }
         }
-	    
-        
-        
+	            
         $mergedFieldsIDs = array();
         $mergedFieldsIDs[] = $this->getID();
 	    foreach($this->mergedFields as $mergedField) $mergedFieldsIDs[] = $mergedField->getID();
 	    
 	    $mergedValuesFilter = new ARSelectFilter();
-	    $mergedValuesFilter->setCondition(new INCond(new ARFieldHandle('SpecificationItem', $specFieldReferenceFieldName),$mergedFieldsIDs));
+	    $inCondition = new INCond(new ARFieldHandle('SpecificationItem', $specFieldReferenceFieldName),$mergedFieldsIDs);
+	    $mergedValuesFilter->setCondition($inCondition);
+	    
+	    $mergedValuesDeleteFilter = new ARDeleteFilter();
+	    $mergedValuesDeleteFilter->setCondition($inCondition);
 	    
 	    $specificationItems = SpecificationItem::getRecordSet($mergedValuesFilter, false);
 	    $products = array();
 	    foreach($specificationItems as $item)
 	    {
 	        if(!in_array($item->product->get(), $products, true)) $products[] = $item->product->get();
-	        $item->delete();
 	    }
+	    
+	    ActiveRecord::deleteRecordSet('SpecificationItem', $mergedValuesDeleteFilter);
 	    
 	    
 	    foreach($products as $product)
