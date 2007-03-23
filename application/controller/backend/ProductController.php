@@ -21,11 +21,17 @@ class ProductController extends StoreManagementController
 		$this->rebuildMenuLangFile();		
         $category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
 	
+		$availableColumns = $this->getAvailableColumns();
+		$displayedColumns = $this->getDisplayedColumns();
+		
+		// sort available columns by display state (displayed columns first)
+		$displayedAvailable = array_diff...
+	
 		//$response = $this->productList($category, new ActionResponse());
 		$response = new ActionResponse();
         $response->setValue("massForm", $this->getMassForm());
-        $response->setValue("displayedColumns", $this->getDisplayedColumns());
-        $response->setValue("availableColumns", $this->getAvailableColumns());
+        $response->setValue("displayedColumns", $displayedColumns);
+        $response->setValue("availableColumns", $availableColumns);
 		$response->setValue("categoryID", $category->getID());
 		$response->setValue("offset", $this->request->getValue('offset'));
 		$response->setValue("totalCount", '55');
@@ -45,29 +51,45 @@ class ProductController extends StoreManagementController
 		$availableColumns = array();
 		foreach ($productSchema->getFieldList() as $field)
 		{
-            if ($field->getDataType() instanceof ARBool)
+			$fieldType = $field->getDataType();
+			
+			if ($field instanceof ARForeignKeyField)
+			{
+			  	continue;
+			}		            
+			if ($field instanceof ARPrimaryKeyField)
+			{
+			  	continue;
+			}		            
+			elseif ($fieldType instanceof ARBool)
 			{
 			  	$type = 'bool';
 			}	  
-			elseif ($field->getDataType() instanceof ARNumeric)
+			elseif ($fieldType instanceof ARNumeric)
 			{
 				$type = 'numeric';	  	
-			}
+			}			
 			else
 			{
 			  	$type = 'text';
 			}
+			
 			$availableColumns['Product.' . $field->getName()] = $type;
 		}		
 		
 		$availableColumns['Manufacturer.name'] = 'text';
 		$availableColumns['ProductPrice.price'] = 'numeric';
 
+		foreach ($availableColumns as $column => $type)
+		{
+			$availableColumns[$column] = array('name' => $this->translate($column), 'type' => $type);	
+		}
+
 		// specField columns
 
 		return $availableColumns;
 	}
-
+	
 	protected function getDisplayedColumns()
 	{
 		$availableColumns = $this->getAvailableColumns();
@@ -79,7 +101,7 @@ class ProductController extends StoreManagementController
 		// set field type as value
 		foreach ($displayedColumns as $column => $foo)
 		{
-			$displayedColumns[$column] = $availableColumns[$column];	
+			$displayedColumns[$column] = $availableColumns[$column]['type'];	
 		}
 		
 		return $displayedColumns;		

@@ -25,12 +25,7 @@
     <input type="hidden" name="filters" value="" />
     <input type="hidden" name="selectedIDs" value="" />
     <input type="hidden" name="isInverse" value="" />
-            
-    <span id="productCount_{$categoryID}" style="margin-top: 15px; float: right;">
-		<span class="rangeCount">Listing products %from - %to of %count</span>
-		<span class="notFound">No products found</span>
-	</span>
-    
+                
     <span style="float: left; text-align: right;" id="productMass_{$categoryID}">
         With selected: 
         <select name="act" class="select" style="width: auto;">
@@ -84,6 +79,32 @@
         <span class="progressIndicator" style="display: none;"></span>
         
     </span>
+    
+    <span style="margin-top: 15px; float: right; text-align: right; position: relative;">
+		<span id="productCount_{$categoryID}">
+			<span class="rangeCount">Listing products %from - %to of %count</span>
+			<span class="notFound">No products found</span>
+		</span>    
+		<br />
+		<span>Columns</span>
+		<div style="position: absolute; z-index: 5; width: auto;">
+			<div style="background-color: white; border: 1px solid black; float: right; text-align: center; white-space: nowrap; width: 250px;">
+				<div style="padding: 5px; position: static; width: 100%;">
+					<input type="submit" class="submit" name="sm" value="{tn Change columns}" /> {t _or} <a class="cancel" href="#cancel">{t _cancel}</a>
+				</div>
+			    <div style="padding: 10px; background-color: white; max-height: 300px; overflow: auto; text-align: left;">
+					{foreach from=$availableColumns item=item key=column}
+					<p>
+						<input type="checkbox" class="checkbox" id="column_{$column}"{if $displayedColumns.$column}checked="checked"{/if} />
+						<label for="column_{$column}" class="checkbox">
+							{$item.name}
+						</label>
+					</p>
+					{/foreach}
+				</div>
+			</div>
+		</div>
+	</span>
     
     {/form}
     
