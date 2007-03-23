@@ -54,6 +54,19 @@ class SpecificationItem extends Specification
 		
 		if($value !== $this->specFieldValue->get()) $this->specFieldValue->set($value);
 	}
+
+	public static function getRecordCount(ARSelectFilter $filter)
+	{
+	    return parent::getRecordCount(__CLASS__, $filter);
+	}
+
+	/**
+	 * @return ARSet
+	 */
+	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedData = false)
+	{
+	    return parent::getRecordSet(__CLASS__, $filter, $loadReferencedData);
+	}
 	
 	public function save()
 	{
@@ -64,6 +77,7 @@ class SpecificationItem extends Specification
 	{
 		return $this->specFieldValue->get()->toArray();
 	}
+
 }
 
 ?>

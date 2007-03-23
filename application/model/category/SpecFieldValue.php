@@ -9,7 +9,9 @@ ClassLoader::import("application.model.system.MultilingualObject");
  */
 class SpecFieldValue extends MultilingualObject
 {
-    /**
+    private $mergedFields = array();    
+    
+	/**
      * Define SpecFieldValue schema in database
      */
     public static function defineSchema()
@@ -97,7 +99,7 @@ class SpecFieldValue extends MultilingualObject
 	}
 	
 	public static function restoreInstance(SpecField $field, $valueId, $value)
-	{
+	{	    
 		$instance = self::getNewInstance($field);
 		$instance->setID($valueId);
 		$instance->value->set(unserialize($value));
@@ -137,6 +139,68 @@ class SpecFieldValue extends MultilingualObject
 			
 		return parent::insert();		
 	}	
-}
 
+	public function mergeWith(SpecFieldValue $specFieldValue)
+	{
+	    if(!($specFieldValue instanceof SpecFieldValue)) throw new ApplicationException('SpecFieldValue should be an instance of SpecFieldValue');
+	    if(!$specFieldValue->isExistingRecord()) throw new ApplicationException('SpecFieldValue should be an existing record');
+	    if($this === $specFieldValue) return;
+	    
+	    if(!in_array($specFieldValue, $this->mergedFields))
+	    {
+	        $this->mergedFields[] = $specFieldValue;
+	    }
+	}
+	
+	private function mergeFields()
+	{
+        $db = ActiveRecord::getDBConnection();
+	    $specificationItemSchema = self::getSchemaInstance('SpecificationItem');
+	    $foreignKeys = $specificationItemSchema->getForeignKeyList();
+	    $specFieldReferenceFieldName = '';
+        foreach($foreignKeys as $foreignKey)
+        {
+            if($foreignKey->getForeignClassName() == __CLASS__)
+            {
+	            $specFieldReferenceFieldName = $foreignKey->getName();
+	            break;
+            }
+        }
+	    
+        
+        
+        $mergedFieldsIDs = array();
+        $mergedFieldsIDs[] = $this->getID();
+	    foreach($this->mergedFields as $mergedField) $mergedFieldsIDs[] = $mergedField->getID();
+	    
+	    $mergedValuesFilter = new ARSelectFilter();
+	    $mergedValuesFilter->setCondition(new INCond(new ARFieldHandle('SpecificationItem', $specFieldReferenceFieldName),$mergedFieldsIDs));
+	    
+	    $specificationItems = SpecificationItem::getRecordSet($mergedValuesFilter, false);
+	    $products = array();
+	    foreach($specificationItems as $item)
+	    {
+	        if(!in_array($item->product->get(), $products, true)) $products[] = $item->product->get();
+	        $item->delete();
+	    }
+	    
+	    
+	    foreach($products as $product)
+	    {
+	        $newSpecificationItem = SpecificationItem::getNewInstance($product, $this->specField->get(), $this);
+	        $newSpecificationItem->save();
+	    }
+	       
+	    foreach($this->mergedFields as $mergedField)
+	    {
+             $mergedField->delete();
+	    }
+	}
+	
+	public function save($forceOperation = false)
+	{
+	    parent::save($forceOperation);
+	    $this->mergeFields();
+	}
+}
 ?>
