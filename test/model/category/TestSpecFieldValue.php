@@ -4,6 +4,7 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 ClassLoader::import("application.model.category.Category");
 ClassLoader::import("application.model.category.SpecField");
 ClassLoader::import("application.model.category.SpecFieldValue");
+ClassLoader::import("application.model.product.Product");
 
 class testSpecFieldValue extends UnitTest
 {
@@ -91,22 +92,6 @@ class testSpecFieldValue extends UnitTest
 	    } catch (Exception $e) {
 	        $this->fail();
 	    }
-	}
-	
-	public function testDeleteMergeSpecFields()
-	{
-	    $specFieldValues = array();
-	    foreach(range(1, 2) as $i) 
-	    {
-	        $specFieldValues[$i] = SpecFieldValue::getNewInstance($this->specField);
-	        $specFieldValues[$i]->save();
-	    }
-	    
-	    $specFieldValues[1]->mergeWith($specFieldValues[2]);
-	    $specFieldValues[1]->save();
-	    
-	    // All merged loosers should be deleted from database
-	    $this->assertFalse($specFieldValues[2]->isExistingRecord());
 	}
 	
 	public function testMergeValueWithItself()

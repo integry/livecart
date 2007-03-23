@@ -154,6 +154,8 @@ class SpecFieldValue extends MultilingualObject
 	
 	private function mergeFields()
 	{
+	    if(empty($this->mergedFields)) return true;
+	    
         $db = ActiveRecord::getDBConnection();
 	    $specificationItemSchema = self::getSchemaInstance('SpecificationItem');
 	    $foreignKeys = $specificationItemSchema->getForeignKeyList();
@@ -166,38 +168,45 @@ class SpecFieldValue extends MultilingualObject
 	            break;
             }
         }
-	            
+        
+        $thisSchema = self::getSchemaInstance(__CLASS__);
+        $primaryKeyList = $thisSchema->getPrimaryKeyList();
+	    $promaryKey = array_shift($primaryKeyList);
+	    
         $mergedFieldsIDs = array();
-        $mergedFieldsIDs[] = $this->getID();
 	    foreach($this->mergedFields as $mergedField) $mergedFieldsIDs[] = $mergedField->getID();
+	    $inAllItemsExceptThisCondition = new INCond(new ARFieldHandle(__CLASS__, $promaryKey->getName()), $mergedFieldsIDs);
 	    
-	    $mergedValuesFilter = new ARSelectFilter();
-	    $inCondition = new INCond(new ARFieldHandle('SpecificationItem', $specFieldReferenceFieldName),$mergedFieldsIDs);
-	    $mergedValuesFilter->setCondition($inCondition);
+        $mergedFieldsIDs[] = $this->getID();
+	    $inAllItemsCondition = new INCond(new ARFieldHandle('SpecificationItem', $specFieldReferenceFieldName),$mergedFieldsIDs);
 	    
-	    $mergedValuesDeleteFilter = new ARDeleteFilter();
-	    $mergedValuesDeleteFilter->setCondition($inCondition);
+	    // Create filters
+	    $mergedSpecificationItemsFilter = new ARSelectFilter();
+	    $mergedSpecificationItemsFilter->setCondition($inAllItemsCondition);
 	    
-	    $specificationItems = SpecificationItem::getRecordSet($mergedValuesFilter, false);
+	    $mergedSpecificationItemsDeleteFilter = new ARDeleteFilter();
+	    $mergedSpecificationItemsDeleteFilter->setCondition($inAllItemsCondition);
+	    
+	    $mergedSpecFieldValuesDeleteFilter = new ARDeleteFilter();
+	    $mergedSpecFieldValuesDeleteFilter->setCondition($inAllItemsExceptThisCondition);
+	    
+
 	    $products = array();
+	    $specificationItems = SpecificationItem::getRecordSet($mergedSpecificationItemsFilter, false);
 	    foreach($specificationItems as $item)
 	    {
 	        if(!in_array($item->product->get(), $products, true)) $products[] = $item->product->get();
 	    }
 	    
-	    ActiveRecord::deleteRecordSet('SpecificationItem', $mergedValuesDeleteFilter);
-	    
+	    ActiveRecord::deleteRecordSet('SpecificationItem', $mergedSpecificationItemsDeleteFilter);
 	    
 	    foreach($products as $product)
 	    {
 	        $newSpecificationItem = SpecificationItem::getNewInstance($product, $this->specField->get(), $this);
 	        $newSpecificationItem->save();
 	    }
-	       
-	    foreach($this->mergedFields as $mergedField)
-	    {
-             $mergedField->delete();
-	    }
+	    
+	    ActiveRecord::deleteRecordSet('SpecFieldValue', $mergedSpecFieldValuesDeleteFilter);
 	}
 	
 	public function save($forceOperation = false)
