@@ -1,14 +1,32 @@
 
 <p>All the transactions made in your e-store are considered as <strong>orders</strong> which are placed directly by customers (in the storefront) or by 
-administrators (of your system). An order contains information about goods purchased, amount of money, expected delivery date, etc.</p> 	
+administrators (of your system). An order contains information about:</p>
+
+<ul>
+	<li>goods purchased</li>
+	<li>amount of money</li>
+	<li>expected delivery date</li>
+	<li>etc.</li>
+</ul>
+
+Each order is characterized by its <strong>status</strong>:
+
+<ul>
+	<strong>
+	<li>Queued - </li>
+	<li>Failed - </li>
+	<li>Complete - </li>
+	<li>etc...</li>
+	</strong>
+</ul>
 
 <div class="tasks">
 <fieldset>
 <legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#view">Review Orders</a></li>
-	<li><a href="{self}#search">Finding Orders</a></li>				
-	<li><strong><a href="{self}#manage">Multiple orders management</a></strong></li>
+	<li><a href="{self}#search">Find Orders</a></li>				
+	<li><a href="{self}#manage">Multiple orders management</a></li>
 
 </ul>
 </fieldset>
@@ -24,15 +42,10 @@ are displayed. There are three ways to display orders:</p>
 	<li>Using Advanced search</li>
 </ul>
 
-<p>Understanding order <strong>status</strong>:</p>
-<ul>
-	<strong>
-	<li>Queued - </li>
-	<li>Failed - </li>
-	<li>Complete - </li>
-	<li>etc...</li>
-	</strong>
-</ul>
+<h3 id="search">Find Orders</h3>
+
+<h3 id="manage">Manage Orders</h3>
+
 
 {helpSeeAlso}
 	{see orders.edit}
