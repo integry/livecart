@@ -68,6 +68,106 @@ class TestProduct extends UnitTest
 	    $this->db->executeUpdate("ALTER TABLE Product AUTO_INCREMENT=" . $this->productAutoIncrementNumber);
 	}
 	
+	/**
+	 *  Disabled product, with 0 stock - the numbers shouldn't change
+	 */
+    public function testCategoryCountsWhenDisabledProductWithNoStockIsAdded()
+	{
+        $secondCategory = Category::getNewInstance($this->productCategory);
+        $secondCategory->save();
+        
+        $product = Product::getNewInstance($secondCategory);
+        $product->isEnabled->set(0);
+        $product->stockCount->set(0);        
+        $product->save();
+        
+        ActiveRecordModel::removeFromPool($secondCategory);
+        $sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
+        $this->assertEqual($secondCategory->totalProductCount->get() + 1, $sameCategory->totalProductCount->get());
+        $this->assertEqual($secondCategory->activeProductCount->get(), $sameCategory->activeProductCount->get());
+        $this->assertEqual($secondCategory->availableProductCount->get(), $sameCategory->availableProductCount->get());
+    }
+	
+	/**
+	 *  Disabled product, with some stock - the numbers shouldn't change again
+	 */
+    public function testCategoryCountsWhenDisabledProductWithSomeStockIsAdded()
+	{
+        $secondCategory = Category::getNewInstance($this->productCategory);
+        $secondCategory->save();
+        
+        $product = Product::getNewInstance($secondCategory);
+        $product->isEnabled->set(0);
+        $product->stockCount->set(5);        
+        $product->save();
+        
+        ActiveRecordModel::removeFromPool($secondCategory);
+        $sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
+        $this->assertEqual((int)$secondCategory->activeProductCount->get(), (int)$sameCategory->activeProductCount->get());
+        $this->assertEqual((int)$secondCategory->availableProductCount->get(), (int)$sameCategory->availableProductCount->get());
+
+        // enable the product, so available and enabled product counts should INCREASE by one
+        $product->isEnabled->set(1);        
+        $product->save();
+        ActiveRecordModel::removeFromPool($sameCategory);
+        $sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
+        $this->assertEqual((int)$secondCategory->availableProductCount->get() + 1, (int)$sameCategory->availableProductCount->get());
+        $this->assertEqual((int)$secondCategory->activeProductCount->get() + 1, (int)$sameCategory->activeProductCount->get());
+        
+        // disable the product, so available and enabled product counts should DECREASE by one
+        $product->isEnabled->set(0);        
+        $product->save();
+        ActiveRecordModel::removeFromPool($sameCategory);
+        $sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
+        $this->assertEqual((int)$secondCategory->availableProductCount->get(), (int)$sameCategory->availableProductCount->get());
+        $this->assertEqual((int)$secondCategory->activeProductCount->get(), (int)$sameCategory->activeProductCount->get());        
+    }	
+	
+	/**
+	 *  Enabled product, with some stock - the numbers should increase by one
+	 */
+    public function testCategoryCountsWhenEnabledProductWithSomeStockIsAdded()
+	{
+        $secondCategory = Category::getNewInstance($this->productCategory);
+        $secondCategory->save();
+        
+        $product = Product::getNewInstance($secondCategory);
+        $product->isEnabled->set(1);
+        $product->stockCount->set(5);        
+        $product->save();
+        
+        ActiveRecordModel::removeFromPool($secondCategory);
+        $sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
+        $this->assertEqual((int)$secondCategory->activeProductCount->get() + 1, (int)$sameCategory->activeProductCount->get());
+        $this->assertEqual((int)$secondCategory->availableProductCount->get() + 1, (int)$sameCategory->availableProductCount->get());
+    }	
+
+	/**
+	 *  Enabled product, with some stock - the numbers should increase by one
+	 */
+    public function testCategoryCountsWhenEnabledProductWithNoStockIsAdded()
+	{
+        $secondCategory = Category::getNewInstance($this->productCategory);
+        $secondCategory->save();
+        
+        $product = Product::getNewInstance($secondCategory);
+        $product->isEnabled->set(1);
+        $product->stockCount->set(0);        
+        $product->save();
+        
+        ActiveRecordModel::removeFromPool($secondCategory);
+        $sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
+        $this->assertEqual((int)$secondCategory->activeProductCount->get() + 1, (int)$sameCategory->activeProductCount->get());
+        $this->assertEqual((int)$secondCategory->availableProductCount->get(), (int)$sameCategory->availableProductCount->get());
+        
+        // now add some stock, so available product count should increase by one
+        $product->stockCount->set(5);        
+        $product->save();
+        ActiveRecordModel::removeFromPool($sameCategory);
+        $sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
+        $this->assertEqual((int)$secondCategory->availableProductCount->get() + 1, (int)$sameCategory->availableProductCount->get());
+    }
+    
 	public function testSimpleValues()
 	{
 		// create some simple value attributes
