@@ -37,10 +37,15 @@
 
 .headRow input, .headRow select
 {
-    width:70%; 
+    width: 70%; 
     font-size: smaller; 
     font-weight: bold;
     border: 1px solid black;
+}
+
+.headRow select
+{
+	width: 80%;
 }
 
 .headRow th

@@ -55,9 +55,10 @@ fieldset.specification .numeric
 
 .productList td, .productHead th
 {
-  	height: 25px;
+  	height: 23px;
   	padding: 2px;
   	white-space: nowrap;
+  	width: 15%;
 }
 
 .productHead th .fieldName
@@ -76,7 +77,7 @@ fieldset.specification .numeric
 
 .cell_cb
 {
-	width: 4%;  
+	width: 4% !important;  
 	text-align: center !important;
 }
 
@@ -92,36 +93,42 @@ fieldset.specification .numeric
 	display: none;
 }
 
+.cellt_numeric, .cellt_bool
+{
+	width: 10%;
+	text-align: center;
+}
+
 .cell_Product_sku
 {
-	width: 10%;  
+	width: 10% !important;  
 }
 
 .cell_Product_name
 {
-	width: 38%;  
+	width: 38% !important;  
 }
 
 .cell_Manufacturer_name
 {
-	width: 15%;  
+	width: 15% !important;  
 }
 
 .cell_ProductPrice_price
 {
-	width: 13%;  
+	width: 13% !important;  
 	text-align: center;
 }
 
 .cell_Product_stockCount
 {
-	width: 10%;  
+	width: 10% !important;  
 	text-align: center;
 }
 
 .cell_Product_isEnabled
 {
-	width: 10%;   
+	width: 10% !important;   
 	text-align: center;
 }
 

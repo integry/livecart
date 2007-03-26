@@ -45,10 +45,11 @@ ActiveGrid.prototype =
 	
 	loadIndicator: null,
   	
-	initialize: function(tableInstance, dataUrl, totalCount, options)
+	initialize: function(tableInstance, dataUrl, totalCount, loadIndicator)
   	{
 		this.tableInstance = tableInstance;
 		this.dataUrl = dataUrl;
+		this.setLoadIndicator(loadIndicator);
 
 		this.ricoGrid = new Rico.LiveGrid(this.tableInstance.id, 15, totalCount, dataUrl, 
 								{
@@ -70,6 +71,8 @@ ActiveGrid.prototype =
 		this.ricoGrid.options.onRefreshComplete = this.hideFetchIndicator.bind(this);
 				
 		this.onScroll(this.ricoGrid, 0);
+		
+		this.ricoGrid.init();
 	},
 	
 	getRows: function(data)

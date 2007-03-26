@@ -53,6 +53,8 @@ class Store
 	
 	private $currencySet;
 	
+	private $session;
+	
 	const EXCLUDE_DEFAULT_CURRENCY = false;
 
 	const INCLUDE_DEFAULT = true;
@@ -329,6 +331,17 @@ class Store
 		}
 
 		return $currArray;
+	}
+
+	public function getSession()
+	{
+		if (!$this->session)
+		{
+			ClassLoader::import('framework.request.Session');
+			$this->session = new Session();			
+		}
+
+		return $this->session;
 	}
 
 	/**

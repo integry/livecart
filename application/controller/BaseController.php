@@ -154,6 +154,16 @@ abstract class BaseController extends Controller implements LCiTranslator
 		return $this->locale->translator()->makeText($key, $params);
 	}
 	
+	protected function getSessionData($key = '')
+	{
+		return $this->store->getSession()->getControllerData($this, $key);
+	}
+	
+	protected function setSessionData($key, $value)
+	{
+		return $this->store->getSession()->setControllerData($this, $key, $value);
+	}
+		
 	/**
 	 * Gets a @role tag value in a class and method comments
 	 *

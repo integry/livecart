@@ -21,12 +21,14 @@ class ProductController extends StoreManagementController
 		$this->rebuildMenuLangFile();		
         $category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
 	
-		$availableColumns = $this->getAvailableColumns();
-		$displayedColumns = $this->getDisplayedColumns();
+		$availableColumns = $this->getAvailableColumns($category);
+		$displayedColumns = $this->getDisplayedColumns($category);
 		
 		// sort available columns by display state (displayed columns first)
-		$displayedAvailable = array_diff...
-	
+		$displayedAvailable = array_intersect_key($availableColumns, $displayedColumns);
+		$notDisplayedAvailable = array_diff_key($availableColumns, $displayedColumns);		
+		$availableColumns = array_merge($displayedAvailable, $notDisplayedAvailable);
+			
 		//$response = $this->productList($category, new ActionResponse());
 		$response = new ActionResponse();
         $response->setValue("massForm", $this->getMassForm());
@@ -43,7 +45,7 @@ class ProductController extends StoreManagementController
 		return $response;
 	}
 
-	protected function getAvailableColumns()
+	protected function getAvailableColumns(Category $category)
 	{
 		// get available columns
 		$productSchema = ActiveRecordModel::getSchemaInstance('Product');
@@ -86,25 +88,57 @@ class ProductController extends StoreManagementController
 		}
 
 		// specField columns
+		$fields = $category->getSpecificationFieldSet(Category::INCLUDE_PARENT);
+		
+		foreach ($fields as $field)
+		{
+			if (!$field->isMultiValue->get())
+			{				
+				$fieldArray = $field->toArray();
+				$availableColumns['specField.' . $field->getID()] = array
+					(
+						'name' => $fieldArray['name_lang'], 
+						'type' => $field->isSimpleNumbers() ? 'numeric' : 'text'
+					);				
+			}
+		}		
 
 		return $availableColumns;
 	}
 	
-	protected function getDisplayedColumns()
-	{
-		$availableColumns = $this->getAvailableColumns();
-		
+	protected function getDisplayedColumns(Category $category)
+	{	
 		// get displayed columns
-		$displayedColumns = array('Product.ID', 'Product.sku', 'Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');	
+		$displayedColumns = $this->getSessionData('columns');		
+
+		if (!$displayedColumns)
+		{
+			$displayedColumns = array('Product.ID', 'Product.sku', 'Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');				
+		}
+		
+		$availableColumns = $this->getAvailableColumns($category);
 		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);	
 
+		// product ID is always passed as the first column
+		$displayedColumns = array_merge(array('Product.ID' => 'numeric'), $displayedColumns);
+				
 		// set field type as value
 		foreach ($displayedColumns as $column => $foo)
 		{
-			$displayedColumns[$column] = $availableColumns[$column]['type'];	
+			if (is_numeric($displayedColumns[$column]))
+			{
+				$displayedColumns[$column] = $availableColumns[$column]['type'];					
+			}
 		}
-		
+
 		return $displayedColumns;		
+	}
+	
+	public function changeColumns()
+	{		
+		$columns = array_keys($this->request->getValue('col', array()));
+		$this->setSessionData('columns', $columns);
+		return new ActionRedirectResponse('backend.product', 'index', array('id' => $this->request->getValue('category')));
 	}
 	
 	public function lists()
@@ -133,7 +167,7 @@ class ProductController extends StoreManagementController
         ProductSpecification::loadSpecificationForRecordSetArray($productArray);
     	ProductPrice::loadPricesForRecordSetArray($productArray);
     	
-		$displayedColumns = $this->getDisplayedColumns();
+		$displayedColumns = $this->getDisplayedColumns($category);
 		
     	$currency = Store::getInstance()->getDefaultCurrency()->getID();
 
@@ -152,6 +186,10 @@ class ProductController extends StoreManagementController
                 {
 					$value = isset($product['price_' . $currency]) ? $product['price_' . $currency] : 0;
                 }
+                else if ('specField' == $class)
+                {
+					$value = 'test';
+				}
                 else
                 {
                     $value = $product[$class][$field];

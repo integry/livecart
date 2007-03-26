@@ -314,7 +314,7 @@ window.dhtmlHistory = {
       var locationHandler = function() {
          self.checkLocation();
       };
-      setInterval(locationHandler, 100);
+      setInterval(locationHandler, 1000);
    },
    
    /** Notify the listener of new history changes. */
