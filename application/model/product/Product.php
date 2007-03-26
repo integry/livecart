@@ -81,7 +81,13 @@ class Product extends MultilingualObject
 
 		try
 		{
-			parent::insert();
+			// set handle if empty
+			if (!$this->handle->get())
+			{
+                $this->handle->set(Store::createHandleString($this->getValueByLang('name', Store::getInstance()->getDefaultLanguageCode())));    
+            }
+            
+            parent::insert();
 
 			// update category product count numbers
             $catUpdate = new ARUpdateFilter();

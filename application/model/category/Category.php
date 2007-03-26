@@ -453,7 +453,18 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return $this->isEnabled->get();
 	}
 
-	/**
+	protected function insert()
+	{
+		// set handle if empty
+		if (!$this->handle->get())
+		{
+            $this->handle->set(Store::createHandleString($this->getValueByLang('name', Store::getInstance()->getDefaultLanguageCode())));    
+        }
+        
+        return parent::insert();        
+    }
+    
+    /**
 	 *
 	 * @todo fix potential bug: when using $this->load() in method, it might
 	 * overwrite the data that was set during runtime

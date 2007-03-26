@@ -129,7 +129,12 @@ foreach ($categoryIDs as $ccid => $id)
 				  	$sp = $spec;
                     $bendras = array_shift($sp);
 				  	$name = $bendras['Pavadinimas'];                    
-                    $products[$productId]->setValueByLang('name', 'en', $name[$productId]);
+                    $productName = $name[$productId];
+                    if (is_array($productName))
+                    {
+                        $productName = array_shift($productName);
+                    }
+                    $products[$productId]->setValueByLang('name', 'en', $productName);
 					$products[$productId]->sku->set($productId);
 				}  	
 				
