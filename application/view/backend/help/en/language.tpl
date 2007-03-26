@@ -1,4 +1,8 @@
-<p>LiveCart supports multiple languages for the same system, which enables you to adjust your shop for international usage. You can translate both interface information (menus, captions, instructions, etc.), as well as most of the data, which is stored in the system, like product descriptions, category names and others. This may seem overwhelming at first but as you will see there are a couple of handy tools to help you deal with interface translations (see <a href="language%20translation/language translation.html#directly from user interface">Live Translation</a>).</p>
+<p>LiveCart supports multiple languages for the same system, which enables you to adjust your shop for 
+international usage. You can translate both interface information (menus, captions, instructions, etc.), 
+as well as most of the data, which is stored in the system, like product descriptions, category names and 
+others. (This may seem overwhelming at first but as you will see there are a couple of handy tools to help 
+you deal with interface translations (see <a href="{help /language.edit#translate_directly}">Live Translation</a>).)</p>
 
 <div class="tasks">
 <fieldset>
@@ -9,8 +13,8 @@
 	<li><a href="{self}#add">Add a new language</a></li>
 	<li><a href="{self}#translate">Set (edit) translations</a></li>
 	<li><a href="{self}#reorder">Sort / reorder languages</a></li>
-	<li><a href="{self}#enable or disable">Enable or disable languages</a></li>
-	<li><a href="{self}#change default">Change default language</a></li>
+	<li><a href="{self}#enable_disable">Enable or disable languages</a></li>
+	<li><a href="{self}#change_default">Change default language</a></li>
 	<li><a href="{self}#remove">Remove language</a></li>
 </ul>
 </fieldset>
@@ -25,7 +29,7 @@
 <p>Adding a language is a one step task. Click <strong>Add New Language</strong> and choose one from the language pulldown menu. Click <strong>ADD</strong> and the language will appear below in the language list.</p>	
 
 <h3 id="translate">Translate</h3>	
-<p>Proceed to <a href="image/doc/language/language translation.html">Language translation</a> page to translate languages. To do this hover over the language and click the <strong>pen</strong> icon:</p>
+<p>Proceed to <a href="{help /language.edit}">Language translation</a> page to translate languages. To do this hover over the language and click the <strong>pen</strong> icon:</p>
 <img src="image/doc/language/pen_icon.bmp"/>
 
 <h3 id="reorder">Reorder Languages</h3>	
@@ -34,7 +38,7 @@
 
 <img src="image/doc/language/sort_reorder.bmp"/>
 
-<h3 id="enable or disable">Enable or disable languages</h3>	
+<h3 id="enable_disable">Enable or disable languages</h3>	
 
 <p>All the newly added languages are inactive by default. You might want to keep a language inactive while its translation is being carried out. To activate a language mark a box on the left of the <i>flag</i> icon.
 To disable a language simply uncheck the box (by the language you want to suspend).</p>
@@ -43,7 +47,7 @@ To disable a language simply uncheck the box (by the language you want to suspen
 
 <p class="note">Also note that the disabled languages will still be available for making translations in backend, so you could prepare all the necessary translations before displaying any content in these languages (before the translations are completed). When you are done with the translations just activate the language to make it available in the frontend as well.</p>	
 
-<h3 id="change default">Change default language</h3>	
+<h3 id="change_default">Change default language</h3>	
 
 <p>
 The default language serves two main purposes:
@@ -69,5 +73,4 @@ The default language serves two main purposes:
 
 {helpSeeAlso}
 	{see language.edit}
-	{see order}
 {/helpSeeAlso}
