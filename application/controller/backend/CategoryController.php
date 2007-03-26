@@ -26,6 +26,9 @@ class CategoryController extends StoreManagementController
 		$categoryList->unshift(Category::getRootNode());
 		$response->setValue("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
         $response->setValue('curLanguageCode', $this->locale->getLocaleCode());
+        
+//        echo "<pre>" . print_r($categoryList->toArray($this->store->getDefaultLanguageCode()), true) . "</pre>";
+//        die();
 
 		return $response;
 	}

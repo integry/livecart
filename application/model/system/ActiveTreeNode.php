@@ -639,6 +639,7 @@ class ActiveTreeNode extends ActiveRecordModel
 	public function toArray()
     {
         $data = parent::toArray();
+       
         foreach ($this->data as $name => $field)
         {
             if ($name == self::PARENT_NODE_FIELD_NAME && $field->get() != null)
@@ -646,6 +647,7 @@ class ActiveTreeNode extends ActiveRecordModel
                 $data['parent'] = $field->get()->getID();
             }
         }
+   
         $data["childrenCount"] = ($data[self::RIGHT_NODE_FIELD_NAME] - $data[self::LEFT_NODE_FIELD_NAME] - 1) / 2;
              
         $childArray = array();

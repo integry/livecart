@@ -89,7 +89,6 @@ class ProductController extends StoreManagementController
 
 		// specField columns
 		$fields = $category->getSpecificationFieldSet(Category::INCLUDE_PARENT);
-		
 		foreach ($fields as $field)
 		{
 			if (!$field->isMultiValue->get())
