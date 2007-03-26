@@ -170,7 +170,7 @@ foreach ($categoryIDs as $ccid => $id)
                             }
                             
                             $fieldValues[$field->getID()][$selval] = SpecFieldValue::getNewInstance($field);
-							$fieldValues[$field->getID()][$selval]->setValueByLang('value', 'en', $selval);
+							$fieldValues[$field->getID()][$selval]->setValueByLang('value', 'en', $name);
 							$fieldValues[$field->getID()][$selval]->save();
 						}
 	
