@@ -918,8 +918,12 @@ fieldset.group h2
 
 fieldset.group div
 {
-    width: 8em;
-    float: left;
+    padding-left: 8em;
+}
+
+fieldset.group * div
+{
+    padding-left: 0;
 }
 
 fieldset.group p

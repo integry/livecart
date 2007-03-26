@@ -144,7 +144,7 @@
         				</li>
         			</ul>
                 </p>
-                <p>
+                <p class="specField_add_field">
                     <a href="#add" class="specField_add_field">{t _SpecField_add_values}</a>
                     <span class="specField_mergeValuesControls" style="display: none">
                         <input type="button" class="submit specField_mergeValuesSubmit" value="{tn _specField_merge_values}" />

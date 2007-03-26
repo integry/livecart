@@ -147,6 +147,11 @@ fieldset.group h2 {
     padding: 5px;
 }
 
+.specField_add_field
+{
+    padding-bottom: 4em;
+}
+
 /* IE */
 .specField_step_translations_language {
     position: relative;
