@@ -50,13 +50,14 @@ ActiveGrid.prototype =
 		this.tableInstance = tableInstance;
 		this.dataUrl = dataUrl;
 		this.setLoadIndicator(loadIndicator);
+		this.filters = {};
 
 		this.ricoGrid = new Rico.LiveGrid(this.tableInstance.id, 15, totalCount, dataUrl, 
 								{
 								  prefetchBuffer: true, 
 								  onscroll: this.onScroll.bind(this),  
-								  sortAscendImg: 'http://openrico.org/images/sort_asc.gif',
-						          sortDescendImg: 'http://openrico.org/images/sort_desc.gif' 
+								  sortAscendImg: 'image/silk/bullet_arrow_up.png',
+						          sortDescendImg: 'image/silk/bullet_arrow_down.png' 
 								}
 							);	
 							
@@ -73,6 +74,14 @@ ActiveGrid.prototype =
 		this.onScroll(this.ricoGrid, 0);
 		
 		this.ricoGrid.init();
+		
+		var rows = this.tableInstance.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+		for (k = 0; k < rows.length; k++)
+		{
+		  	rows[k].onclick = this.selectRow.bindAsEventListener(this);
+		  	rows[k].onmouseover = this.highlightRow.bindAsEventListener(this);
+		  	rows[k].onmouseout = this.removeRowHighlight.bindAsEventListener(this);
+		}		
 	},
 	
 	getRows: function(data)
@@ -112,21 +121,7 @@ ActiveGrid.prototype =
 	onScroll: function(liveGrid, offset) 
 	{        	
 		this.ricoGrid.onBeginDataFetch = this.showFetchIndicator.bind(this);	
-	
-		var rows = this.tableInstance.getElementsByTagName('tr');
-		for (k = 0; k < rows.length; k++)
-		{
-		  	rows[k].onclick = this.selectRow.bindAsEventListener(this);
-		  	rows[k].onmouseover = this.highlightRow.bindAsEventListener(this);
-		  	rows[k].onmouseout = this.removeRowHighlight.bindAsEventListener(this);
-		}
-		
-		// make header row cells the same width as table cells
-		if (rows.length > 0)
-		{
-			this._levelColumns(rows[0], this._getHeaderRow());	  
-		}
-		
+			
 		Backend.Product.updateHeader(this, offset);
 		
 		this._markSelectedRows();
@@ -141,6 +136,7 @@ ActiveGrid.prototype =
 	{
     	this.ricoGrid.options.requestParameters = [];
         var i = 0;
+        
         for (k in this.filters)
     	{
             if (k.substr(0, 7) == 'filter_')
@@ -239,7 +235,7 @@ ActiveGrid.prototype =
 
     setFilterValue: function(key, value)
     {
-        this.filters[key] = value;
+		this.filters[key] = value;
     },
 
 	showFetchIndicator: function()
@@ -290,31 +286,15 @@ ActiveGrid.prototype =
 		var id = nameParts[nameParts.length - 1];
 		return id.substr(0, id.length - 1);	  
 	},
-	
-	/**
-	 *	Make header and table content columns the same width
-	 */
-	_levelColumns: function(tableRow, headerRow)
-	{
-		/*
-        tableCells = tableRow.getElementsByTagName('td');  
-		headerCells = headerRow.getElementsByTagName('th'); 
 		
-		for (k = 0; k < tableCells.length; k++)
-		{
-		  	headerCells[k].style.width = tableCells[k].clientWidth + 'px';
-		}
-		*/
-	},
-	
 	/**
 	 *	Return event target row element
 	 */
 	_getTargetRow: function(event)
 	{
-		target = Event.element(event);
+		var target = Event.element(event);
 
-		while (target.tagName != 'TR')  
+		while (target.tagName != 'TR' && target)  
 		{
 		  	target = target.parentNode;
 		}

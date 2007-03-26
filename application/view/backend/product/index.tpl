@@ -179,7 +179,7 @@
 		    new ActiveGridFilter($('filter_{$column}_{$categoryID}'), grid);
 		{/if}
 	{/foreach}
-	    
+    
     var massHandler = new Backend.Product.massActionHandler($('productMass_{$categoryID}'), grid);
     massHandler.deleteConfirmMessage = '{t _delete_conf|addslashes}' ;
 </script>

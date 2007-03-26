@@ -143,11 +143,8 @@ class ProductController extends StoreManagementController
 	public function lists()
 	{
 		$id = substr($this->request->getValue("id"), 9);
-		return $this->productList(Category::getInstanceByID($id, Category::LOAD_DATA), new XMLResponse());
-	}
+		$category = Category::getInstanceByID($id, Category::LOAD_DATA);
 
-	protected function productList(Category $category, ActionResponse $response)
-	{					
 		$filter = new ARSelectFilter();
 		
 		$cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
@@ -187,7 +184,7 @@ class ProductController extends StoreManagementController
                 }
                 else if ('specField' == $class)
                 {
-					$value = 'test';
+					$value = $product['attributes'][$field]['value_lang'];
 				}
                 else
                 {

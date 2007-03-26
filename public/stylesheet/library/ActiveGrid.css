@@ -53,6 +53,11 @@
 	text-align: left;
 }
 
+.activeGrid th img
+{
+	vertical-align: middle;
+}
+
 .activeGrid_filter_blur
 {
     background-color: #EEEEEE;
