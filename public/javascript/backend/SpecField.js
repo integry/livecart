@@ -153,10 +153,22 @@ Backend.SpecField.prototype = {
 	 */
 	recreate: function(specFieldJson, hash)
 	{
+        var self = this;
 	    var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ? ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
-        root.innerHTML = '';
-        $H(this).each(function(el) { el = false; });
-	    this.initialize(specFieldJson, hash);
+        
+        $A(this.fieldsList.ul.getElementsByTagName('li')).each(function(li)
+        {
+           if(!Element.hasClassName(li, 'dom_template'))  
+           {
+               self.deleteValueFieldAction(li);
+           }   
+        });
+        
+		this.addField(null, "new" + Backend.SpecField.prototype.countNewValues, true);
+        this.bindDefaultFields();
+		Backend.SpecField.prototype.countNewValues++;
+        
+        Form.restore(this.nodes.form, ['type']);
 	},
 
 
@@ -297,7 +309,7 @@ Backend.SpecField.prototype = {
         Event.observe(this.nodes.valuesAddFieldLink, "click", function(e) { Event.stop(e); self.addValueFieldAction(); } );
         Event.observe(this.nodes.type, "change", function(e) { self.typeWasChangedAction(e) } );
         Event.observe(this.nodes.cancel, "click", function(e) { Event.stop(e); self.cancelAction() } );
-        Event.observe(this.nodes.cancelLink, "click", function(e) { Event.stop(e); self.cancelAction() } );
+        if(this.id.match('new')) Event.observe(this.nodes.cancelLink, "click", function(e) { Event.stop(e); self.cancelAction() } );
         Event.observe(this.nodes.save, "click", function(e) { self.saveAction(e) } );
         
         Event.observe(this.nodes.mergeValuesLink, 'click', function(e) { Event.stop(e); self.toggleValuesMerging(); });
@@ -835,6 +847,7 @@ Backend.SpecField.prototype = {
 	 */
 	addField: function(value, id, isDefault)
 	{
+        var self = this;
 		if(!value) value = {};
 		
 		var values_template = this.nodes.specFieldValuesTemplate;
@@ -842,6 +855,7 @@ Backend.SpecField.prototype = {
 
         if(!this.fieldsList) this.bindDefaultFields();
         var li = this.fieldsList.addRecord(id, values_template);
+        Element.removeClassName(li, 'dom_template');
 
 		// The field itself
 		var input = li.down("input." + this.cssPrefix + "valueName");
@@ -849,6 +863,11 @@ Backend.SpecField.prototype = {
 		input.value = value.value_lang ? value.value_lang : '' ;
         
         input.id = this.cssPrefix + "field_" + id + "_value_" + this.languageCodes[0];
+        
+        Event.observe(input, "keyup", function(e) { self.mainValueFieldChangedAction(e) }, false);
+        Event.observe(input, "keyup", function(e) {
+            if(!this.up('li').next() && this.value != '') self.addValueFieldAction();
+        });
 
 		// now insert all translation fields
 		for(var i = 1; i < this.languageCodes.length; i++)
@@ -890,7 +909,7 @@ Backend.SpecField.prototype = {
     cancelAction: function()
     {
 		// first cancel all modifications if they took place
-		if(this.id == 'new')
+		if(this.id.match('new'))
 		{
 		    this.recreate(this.specField, true);
 		}
@@ -978,15 +997,13 @@ Backend.SpecField.prototype = {
         var jsonResponse = eval("("+jsonResponseString+")");
         
         if(jsonResponse.status == 'success')
-        {
-            ActiveForm.prototype.updateNewFields('specField_update', $H(jsonResponse.newIDs), this.nodes.parent)
- 
-            
-            Form.backup(this.nodes.form);
-            this.backupName = this.nodes.name.value;
-
+        {       
             if(this.nodes.parent.tagName.toLowerCase() == 'li')
             {
+                ActiveForm.prototype.updateNewFields('specField_update', $H(jsonResponse.newIDs), this.nodes.parent);
+                Form.backup(this.nodes.form);
+                this.backupName = this.nodes.name.value;
+                
                 var activeList = ActiveList.prototype.getInstance(this.nodes.parent.parentNode);
                 activeList.toggleContainer(this.nodes.parent, 'edit');
                 activeList.highlight();

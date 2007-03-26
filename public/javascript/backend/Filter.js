@@ -412,7 +412,7 @@ Backend.Filter.prototype = {
         if(changeTitle || self.nodes.name.value == '') 
         {
             self.nodes.name.value = newTitle;
-            this.generateTitleAction(e);
+            this.generateTitleAction();
         }
     },
 
@@ -721,7 +721,7 @@ Backend.Filter.prototype = {
      * @access private
      *
      */
-    generateTitleAction: function(e)
+    generateTitleAction: function()
     {
         if(this.nodes.mainTitle)
         {
@@ -753,6 +753,7 @@ Backend.Filter.prototype = {
         if(!this.filtersList) this.bindDefaultFields();
         
         var li = this.filtersList.addRecord(id, this.nodes.filterTemplate);
+        Element.removeClassName(li, 'dom_template');
         Element.addClassName(li, this.cssPrefix + "default_filter_li");
         var nameValue = value.name_lang ? value.name_lang : '';
 

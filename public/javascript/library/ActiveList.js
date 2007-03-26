@@ -420,7 +420,7 @@ ActiveList.prototype = {
 
         if(typeof dom == 'string')
         {
-            li.innerHTML = dom;
+            li.innerHTML = dom; 
         }
         else if (dom[0])
         {
@@ -437,7 +437,8 @@ ActiveList.prototype = {
         else
         {
             var cloned_dom = dom.cloneNode(true);
-            while(cloned_dom.childNodes.length > 0) li.appendChild(cloned_dom.childNodes[0]);    
+            while(cloned_dom.childNodes.length > 0) li.appendChild(cloned_dom.childNodes[0]);
+            li.className = dom.className;
         }
         if(touch)
         {
@@ -971,9 +972,11 @@ ActiveList.prototype = {
      * 
      * @param HtmlElementLi li A reference to item element
      */
-    remove: function(li)
+    remove: function(li, touch)
     {
-        if(BrowserDetect.browser != 'Explorer')
+        if(touch !== false) touch = true;
+        
+        if(touch && BrowserDetect.browser != 'Explorer')
         {
             Effect.SwitchOff(li, {duration: 1});
             setTimeout(function() { 

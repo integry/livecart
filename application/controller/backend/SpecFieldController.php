@@ -219,6 +219,8 @@ class SpecFieldController extends StoreManagementController
 		        }        
 			}
             
+			
+			
             return new JSONResponse(array('status' => 'success', 'id' => $specField->getID(), 'newIDs' => $newIDs));
         }
         else

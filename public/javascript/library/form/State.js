@@ -176,10 +176,10 @@ Form.State = {
      * @access public
      * @static
      */
-    restore: function(form, json)
+    restore: function(form, ignoreFields)
     {
-        if(json) this.backupFromJson(form, json);
-
+        if(!ignoreFields) ignoreFields = [];
+        ignoreFields = $A(ignoreFields);
         if(!this.hasBackup(form)) return;
         self = this;
 
@@ -189,6 +189,7 @@ Form.State = {
         {
             $A(Form.getElements(form)).each(function(element)
             {
+                if(ignoreFields.member(element.name)) return;
                 if(element.name == '' || !self.backups[form.backupId][element.name]) return;
 
                 occurencies[element.name] = (occurencies[element.name] == undefined) ? 0 : occurencies[element.name] + 1;

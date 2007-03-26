@@ -392,6 +392,7 @@ class SpecField extends MultilingualObject
             foreach ($values['values'] as $key => $v)
             {
                 $i++;
+//                echo "$countValues == $i\n";
                 if($countValues == $i && preg_match('/new/', $key) && empty($v[$languageCodes[0]]))
                 {
                     continue;
