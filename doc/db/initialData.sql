@@ -1,8 +1,8 @@
 #
 # Category root node
 #
-INSERT INTO `Category` ( `ID` , `parentNodeID` , `name` , `description` , `keywords` , `activeProductCount` , `totalProductCount` , `isEnabled` , `handle` , `position` , `lft` , `rgt` )
-VALUES ('1', NULL , 'LiveCart', NULL , NULL , '0', '0', '1', NULL , '0', '1', '2');
+INSERT INTO `Category` ( `ID` , `parentNodeID` , `name` , `description` , `keywords` , `activeProductCount` , `totalProductCount` , `isEnabled` , `handle` , `lft` , `rgt` )
+VALUES ('1', NULL , 'a:1:{s:2:"en";s:8:"LiveCart";}', NULL , NULL , '0', '0', '1', NULL , '1', '2');
 
 #
 # Default system language

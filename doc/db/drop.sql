@@ -1,11 +1,11 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v4.1.2                     #
+# Script generated with: DeZign for Databases v4.1.3                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2007-03-09 12:35                                #
+# Created on:            2007-03-26 13:00                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -21,6 +21,8 @@ ALTER TABLE Product DROP FOREIGN KEY ProductImage_Product;
 
 ALTER TABLE Category DROP FOREIGN KEY Category_Category;
 
+ALTER TABLE Category DROP FOREIGN KEY CategoryImage_Category;
+
 ALTER TABLE SpecificationItem DROP FOREIGN KEY SpecFieldValue_SpecificationItem;
 
 ALTER TABLE SpecificationItem DROP FOREIGN KEY Product_SpecificationItem;
@@ -29,15 +31,19 @@ ALTER TABLE SpecificationItem DROP FOREIGN KEY SpecField_SpecificationItem;
 
 ALTER TABLE SpecField DROP FOREIGN KEY Category_SpecField;
 
+ALTER TABLE SpecField DROP FOREIGN KEY SpecFieldGroup_SpecField;
+
 ALTER TABLE SpecFieldValue DROP FOREIGN KEY SpecField_SpecFieldValue;
 
 ALTER TABLE Filter DROP FOREIGN KEY FilterGroup_Filter;
 
 ALTER TABLE FilterGroup DROP FOREIGN KEY SpecField_FilterGroup;
 
-ALTER TABLE RelatedProduct DROP FOREIGN KEY Product_RelatedProduct_;
+ALTER TABLE ProductRelationship DROP FOREIGN KEY Product_RelatedProduct_;
 
-ALTER TABLE RelatedProduct DROP FOREIGN KEY Product_RelatedProduct;
+ALTER TABLE ProductRelationship DROP FOREIGN KEY Product_ProductRelationship;
+
+ALTER TABLE ProductRelationship DROP FOREIGN KEY ProductRelationshipGroup_ProductRelationship;
 
 ALTER TABLE ProductPrice DROP FOREIGN KEY Product_ProductPrice;
 
@@ -59,6 +65,14 @@ ALTER TABLE SpecificationStringValue DROP FOREIGN KEY Product_SpecificationStrin
 
 ALTER TABLE SpecificationStringValue DROP FOREIGN KEY SpecField_SpecificationStringValue;
 
+ALTER TABLE SpecificationDateValue DROP FOREIGN KEY Product_SpecificationDateValue;
+
+ALTER TABLE SpecificationDateValue DROP FOREIGN KEY SpecField_SpecificationDateValue;
+
+ALTER TABLE SpecFieldGroup DROP FOREIGN KEY Category_SpecFieldGroup;
+
+ALTER TABLE ProductRelationshipGroup DROP FOREIGN KEY Product_ProductRelationshipGroup;
+
 # ---------------------------------------------------------------------- #
 # Drop table "Product"                                                   #
 # ---------------------------------------------------------------------- #
@@ -79,12 +93,6 @@ ALTER TABLE Product ALTER COLUMN hits DROP DEFAULT;
 
 ALTER TABLE Product DROP PRIMARY KEY;
 
-# Drop indexes #
-
-DROP INDEX IDX_Product_1 ON Product;
-
-DROP INDEX IDX_Product_2 ON Product;
-
 # Drop table #
 
 DROP TABLE Product;
@@ -102,10 +110,6 @@ ALTER TABLE Category ALTER COLUMN totalProductCount DROP DEFAULT;
 ALTER TABLE Category ALTER COLUMN isEnabled DROP DEFAULT;
 
 ALTER TABLE Category DROP PRIMARY KEY;
-
-# Drop indexes #
-
-DROP INDEX IDX_Category_1 ON Category;
 
 # Drop table #
 
@@ -135,12 +139,6 @@ DROP TABLE Language;
 
 ALTER TABLE SpecificationItem DROP PRIMARY KEY;
 
-# Drop indexes #
-
-DROP INDEX IDX_Specification_1 ON SpecificationItem;
-
-DROP INDEX IDX_Specification_2 ON SpecificationItem;
-
 # Drop table #
 
 DROP TABLE SpecificationItem;
@@ -159,10 +157,6 @@ ALTER TABLE SpecField ALTER COLUMN position DROP DEFAULT;
 
 ALTER TABLE SpecField DROP PRIMARY KEY;
 
-# Drop indexes #
-
-DROP INDEX IDX_SpecField_1 ON SpecField;
-
 # Drop table #
 
 DROP TABLE SpecField;
@@ -176,10 +170,6 @@ DROP TABLE SpecField;
 ALTER TABLE SpecFieldValue ALTER COLUMN position DROP DEFAULT;
 
 ALTER TABLE SpecFieldValue DROP PRIMARY KEY;
-
-# Drop indexes #
-
-DROP INDEX IDX_SpecFieldValue_1 ON SpecFieldValue;
 
 # Drop table #
 
@@ -212,18 +202,18 @@ ALTER TABLE FilterGroup DROP PRIMARY KEY;
 DROP TABLE FilterGroup;
 
 # ---------------------------------------------------------------------- #
-# Drop table "RelatedProduct"                                            #
+# Drop table "ProductRelationship"                                       #
 # ---------------------------------------------------------------------- #
 
 # Drop constraints #
 
-ALTER TABLE RelatedProduct ALTER COLUMN position DROP DEFAULT;
+ALTER TABLE ProductRelationship ALTER COLUMN position DROP DEFAULT;
 
-ALTER TABLE RelatedProduct DROP PRIMARY KEY;
+ALTER TABLE ProductRelationship DROP PRIMARY KEY;
 
 # Drop table #
 
-DROP TABLE RelatedProduct;
+DROP TABLE ProductRelationship;
 
 # ---------------------------------------------------------------------- #
 # Drop table "ProductPrice"                                              #
@@ -329,12 +319,6 @@ DROP TABLE CategoryImage;
 
 ALTER TABLE SpecificationNumericValue DROP PRIMARY KEY;
 
-# Drop indexes #
-
-DROP INDEX IDX_SpecificationNumericValue_1 ON SpecificationNumericValue;
-
-DROP INDEX IDX_SpecificationNumericValue_2 ON SpecificationNumericValue;
-
 # Drop table #
 
 DROP TABLE SpecificationNumericValue;
@@ -347,10 +331,58 @@ DROP TABLE SpecificationNumericValue;
 
 ALTER TABLE SpecificationStringValue DROP PRIMARY KEY;
 
-# Drop indexes #
-
-DROP INDEX IDX_SpecificationStringValue_1 ON SpecificationStringValue;
-
 # Drop table #
 
 DROP TABLE SpecificationStringValue;
+
+# ---------------------------------------------------------------------- #
+# Drop table "SpecificationDateValue"                                    #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE SpecificationDateValue DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE SpecificationDateValue;
+
+# ---------------------------------------------------------------------- #
+# Drop table "SpecFieldGroup"                                            #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE SpecFieldGroup ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE SpecFieldGroup DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE SpecFieldGroup;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ProductRelationshipGroup"                                  #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ProductRelationshipGroup ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE ProductRelationshipGroup DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ProductRelationshipGroup;
+
+# ---------------------------------------------------------------------- #
+# Drop table "HelpComment"                                               #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE HelpComment DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE HelpComment;

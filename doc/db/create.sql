@@ -1,11 +1,11 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v4.1.2                     #
+# Script generated with: DeZign for Databases v4.1.3                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2007-03-09 12:35                                #
+# Created on:            2007-03-26 13:00                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -59,19 +59,21 @@ CREATE INDEX IDX_Product_2 ON Product (sku);
 CREATE TABLE Category (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     parentNodeID INTEGER UNSIGNED,
+    defaultImageID INTEGER UNSIGNED,
     name TEXT,
     description TEXT,
     keywords TEXT,
     activeProductCount INTEGER UNSIGNED DEFAULT 0,
     totalProductCount INTEGER DEFAULT 0,
-    isEnabled BOOL DEFAULT 1,
+    availableProductCount INTEGER,
+    isEnabled BOOL DEFAULT 0,
     handle VARCHAR(40),
     lft INTEGER,
     rgt INTEGER,
     CONSTRAINT PK_Category PRIMARY KEY (ID)
 );
 
-CREATE UNIQUE INDEX IDX_Category_1 ON Category (handle);
+CREATE INDEX IDX_Category_1 ON Category (defaultImageID);
 
 # ---------------------------------------------------------------------- #
 # Add table "Language"                                                   #
@@ -107,7 +109,7 @@ CREATE INDEX IDX_Specification_2 ON SpecificationItem (productID);
 CREATE TABLE SpecField (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     categoryID INTEGER UNSIGNED,
-    specFieldGroupID INTEGER,
+    specFieldGroupID INTEGER UNSIGNED,
     name TEXT,
     description TEXT,
     type SMALLINT DEFAULT 1 COMMENT 'Field data type. Available types: 1. selector (numeric) 2. input (numeric) 3. input (text) 4. editor (text) 5. selector (text) 6. Date',
@@ -170,15 +172,15 @@ CREATE TABLE FilterGroup (
 );
 
 # ---------------------------------------------------------------------- #
-# Add table "RelatedProduct"                                             #
+# Add table "ProductRelationship"                                        #
 # ---------------------------------------------------------------------- #
 
-CREATE TABLE RelatedProduct (
+CREATE TABLE ProductRelationship (
     ProductID INTEGER UNSIGNED NOT NULL,
-    relatedProductGroupID INTEGER NOT NULL,
+    relatedProductGroupID INTEGER UNSIGNED NOT NULL,
     relatedProductID INTEGER UNSIGNED NOT NULL,
     position INTEGER UNSIGNED DEFAULT 0,
-    CONSTRAINT PK_RelatedProduct PRIMARY KEY (ProductID, relatedProductGroupID, relatedProductID)
+    CONSTRAINT PK_ProductRelationship PRIMARY KEY (ProductID, relatedProductGroupID, relatedProductID)
 );
 
 # ---------------------------------------------------------------------- #
@@ -203,6 +205,8 @@ CREATE TABLE Currency (
     isDefault BOOL DEFAULT 0,
     isEnabled BOOL DEFAULT 0,
     position INTEGER UNSIGNED DEFAULT 0,
+    pricePrefix TEXT,
+    priceSuffix TEXT,
     CONSTRAINT PK_Currency PRIMARY KEY (ID)
 );
 
@@ -269,6 +273,8 @@ CREATE TABLE CategoryImage (
     CONSTRAINT PK_CategoryImage PRIMARY KEY (ID)
 );
 
+CREATE INDEX IDX_CategoryImage_1 ON CategoryImage (categoryID);
+
 # ---------------------------------------------------------------------- #
 # Add table "SpecificationNumericValue"                                  #
 # ---------------------------------------------------------------------- #
@@ -298,6 +304,58 @@ CREATE TABLE SpecificationStringValue (
 CREATE INDEX IDX_SpecificationStringValue_1 ON SpecificationStringValue (specFieldID,productID);
 
 # ---------------------------------------------------------------------- #
+# Add table "SpecificationDateValue"                                     #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE SpecificationDateValue (
+    productID INTEGER UNSIGNED NOT NULL,
+    specFieldID INTEGER UNSIGNED NOT NULL,
+    value DATE,
+    CONSTRAINT PK_SpecificationDateValue PRIMARY KEY (productID, specFieldID)
+);
+
+CREATE INDEX IDX_SpecificationDateValue_1 ON SpecificationDateValue (value,specFieldID);
+
+CREATE INDEX IDX_SpecificationDateValue_2 ON SpecificationDateValue (specFieldID,productID);
+
+# ---------------------------------------------------------------------- #
+# Add table "SpecFieldGroup"                                             #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE SpecFieldGroup (
+    ID INTEGER UNSIGNED NOT NULL,
+    categoryID INTEGER UNSIGNED,
+    name TEXT,
+    position INTEGER UNSIGNED DEFAULT 0,
+    CONSTRAINT PK_SpecFieldGroup PRIMARY KEY (ID)
+);
+
+# ---------------------------------------------------------------------- #
+# Add table "ProductRelationshipGroup"                                   #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ProductRelationshipGroup (
+    ID INTEGER UNSIGNED NOT NULL,
+    ProductID INTEGER UNSIGNED,
+    position INTEGER UNSIGNED DEFAULT 0,
+    name TEXT,
+    CONSTRAINT PK_ProductRelationshipGroup PRIMARY KEY (ID)
+);
+
+# ---------------------------------------------------------------------- #
+# Add table "HelpComment"                                                #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE HelpComment (
+    ID INTEGER NOT NULL AUTO_INCREMENT,
+    topicID VARCHAR(100),
+    username VARCHAR(100),
+    text TEXT,
+    timeAdded DATETIME,
+    CONSTRAINT PK_HelpComment PRIMARY KEY (ID)
+);
+
+# ---------------------------------------------------------------------- #
 # Foreign key constraints                                                #
 # ---------------------------------------------------------------------- #
 
@@ -313,6 +371,9 @@ ALTER TABLE Product ADD CONSTRAINT ProductImage_Product
 ALTER TABLE Category ADD CONSTRAINT Category_Category 
     FOREIGN KEY (parentNodeID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE Category ADD CONSTRAINT CategoryImage_Category 
+    FOREIGN KEY (defaultImageID) REFERENCES CategoryImage (ID);
+
 ALTER TABLE SpecificationItem ADD CONSTRAINT SpecFieldValue_SpecificationItem 
     FOREIGN KEY (specFieldValueID) REFERENCES SpecFieldValue (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -325,6 +386,9 @@ ALTER TABLE SpecificationItem ADD CONSTRAINT SpecField_SpecificationItem
 ALTER TABLE SpecField ADD CONSTRAINT Category_SpecField 
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE SpecField ADD CONSTRAINT SpecFieldGroup_SpecField 
+    FOREIGN KEY (specFieldGroupID) REFERENCES SpecFieldGroup (ID) ON DELETE CASCADE;
+
 ALTER TABLE SpecFieldValue ADD CONSTRAINT SpecField_SpecFieldValue 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -334,11 +398,14 @@ ALTER TABLE Filter ADD CONSTRAINT FilterGroup_Filter
 ALTER TABLE FilterGroup ADD CONSTRAINT SpecField_FilterGroup 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE RelatedProduct ADD CONSTRAINT Product_RelatedProduct_ 
+ALTER TABLE ProductRelationship ADD CONSTRAINT Product_RelatedProduct_ 
     FOREIGN KEY (ProductID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE RelatedProduct ADD CONSTRAINT Product_RelatedProduct 
+ALTER TABLE ProductRelationship ADD CONSTRAINT Product_ProductRelationship 
     FOREIGN KEY (relatedProductID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductRelationship ADD CONSTRAINT ProductRelationshipGroup_ProductRelationship 
+    FOREIGN KEY (relatedProductGroupID) REFERENCES ProductRelationshipGroup (ID) ON DELETE CASCADE;
 
 ALTER TABLE ProductPrice ADD CONSTRAINT Product_ProductPrice 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -369,3 +436,15 @@ ALTER TABLE SpecificationStringValue ADD CONSTRAINT Product_SpecificationStringV
 
 ALTER TABLE SpecificationStringValue ADD CONSTRAINT SpecField_SpecificationStringValue 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE SpecificationDateValue ADD CONSTRAINT Product_SpecificationDateValue 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE SpecificationDateValue ADD CONSTRAINT SpecField_SpecificationDateValue 
+    FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE SpecFieldGroup ADD CONSTRAINT Category_SpecFieldGroup 
+    FOREIGN KEY (categoryID) REFERENCES Category (ID);
+
+ALTER TABLE ProductRelationshipGroup ADD CONSTRAINT Product_ProductRelationshipGroup 
+    FOREIGN KEY (ProductID) REFERENCES Product (ID) ON DELETE CASCADE;
