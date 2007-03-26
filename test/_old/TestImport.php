@@ -159,7 +159,17 @@ foreach ($categoryIDs as $ccid => $id)
 					{
 					  	if (!isset($fieldValues[$field->getID()][$selval]))
 					  	{
-							$fieldValues[$field->getID()][$selval] = SpecFieldValue::getNewInstance($field);
+							$name = $selval;
+                            if ('FALSE' == $name)
+                            {
+                                $name = 'No';
+                            }
+                            else if ('TRUE' == $name)
+                            {
+                                $name = 'Yes';
+                            }
+                            
+                            $fieldValues[$field->getID()][$selval] = SpecFieldValue::getNewInstance($field);
 							$fieldValues[$field->getID()][$selval]->setValueByLang('value', 'en', $selval);
 							$fieldValues[$field->getID()][$selval]->save();
 						}
