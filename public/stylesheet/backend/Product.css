@@ -48,31 +48,9 @@ fieldset.specification .numeric
 /*************************
 	Product list
 *************************/
-.productList, .productHead
+.productList
 {
   	width: 100%;
-}
-
-.productList td, .productHead th
-{
-  	height: 23px;
-  	padding: 2px;
-  	white-space: nowrap;
-  	width: 15%;
-}
-
-.productHead th .fieldName
-{
-	display: none;
-}
-
-.headRow 
-{
-	background-color: #DDDDDD;	  
-}
-
-.productHead th{
-    overflow: hidden;
 }
 
 .cell_cb

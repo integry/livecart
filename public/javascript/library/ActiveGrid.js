@@ -324,7 +324,7 @@ ActiveGrid.prototype =
 	
 	_getHeaderRow: function()
 	{
-		return $(this.tableInstance.id + '_header').getElementsByTagName('tr')[0];
+		return this.tableInstance.getElementsByTagName('tr')[0];
 	}
 }
 

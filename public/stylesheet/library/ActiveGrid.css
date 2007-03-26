@@ -35,7 +35,7 @@
   	background: #CCCCCC;
 }
 
-.headRow input, .headRow select
+.activeGrid th input, .activeGrid th select
 {
     width: 70%; 
     font-size: smaller; 
@@ -43,12 +43,12 @@
     border: 1px solid black;
 }
 
-.headRow select
+.activeGrid th select
 {
 	width: 80%;
 }
 
-.headRow th
+.activeGrid th 
 {
 	text-align: left;
 }
@@ -61,6 +61,24 @@
 
 .activeGrid_filter_select
 {
-	font-weight: normal !important;
-	
+	font-weight: normal !important;	
+}
+
+.activeGrid th, .activeGrid td
+{
+  	height: 23px;
+  	padding: 2px;
+  	white-space: nowrap;
+  	width: 15%;
+}
+
+.activeGrid th .fieldName
+{
+	display: none;
+}
+
+.activeGrid th
+{
+	background-color: #DDDDDD;	  
+    overflow: hidden;
 }

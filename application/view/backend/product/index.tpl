@@ -120,44 +120,37 @@
 </fieldset>
 
 <div style="width: 100%; position: relative;">
-<div style="display: none;" class="activeGrid_loadIndicator" id="productLoadIndicator_{$categoryID}">
-	<div>
-		{t Loading data...}<span class="progressIndicator"></span>
+	<div style="display: none;" class="activeGrid_loadIndicator" id="productLoadIndicator_{$categoryID}">
+		<div>
+			{t Loading data...}<span class="progressIndicator"></span>
+		</div>
 	</div>
-</div>
-<table class="productHead" id="products_{$categoryID}_header">
-	<tr class="headRow">
-
-		<th class="cell_cb"><input type="checkbox" class="checkbox" /></th>
-		{foreach from=$displayedColumns item=type key=column name="columns"}
-			{if !$smarty.foreach.columns.first}
-				<th class="first cellt_{$type} cell_{$column|replace:'.':'_'}">
-					<span class="fieldName">{$column}</span>
-					{if 'bool' == $type}
-			    		<select style="width: auto;" id="filter_{$column}_{$categoryID}">
-							<option value="">{tn $column}</option>
-							<option value="1">{tn _yes}</option>
-							<option value="0">{tn _no}</option>
-						</select>					
-					{else}
-					<input type="text" class="text {$type}" id="filter_{$column}_{$categoryID}" value="{$availableColumns.$column.name|escape}" />
-					{/if}
-				</th>		
-			{/if}
-		{/foreach}
-
-{*
-		<th class="cell_price">
-            <span class="fieldName">ProductPrice.price</span>
-    		<input type="text" class="text" id="filter_ProductPrice.price_{$currency}" value="{tn Price} ({$currency})" />  			
-        </th>
-*}
-	</tr>
-</table>
 </div>
 
 <div style="width: 100%;height: 100%;">
 <table class="activeGrid productList" id="products_{$categoryID}" style="height: 100%;">
+	<thead>
+		<tr class="headRow">
+	
+			<th class="cell_cb"><input type="checkbox" class="checkbox" /></th>
+			{foreach from=$displayedColumns item=type key=column name="columns"}
+				{if !$smarty.foreach.columns.first}
+					<th class="first cellt_{$type} cell_{$column|replace:'.':'_'}">
+						<span class="fieldName">{$column}</span>
+						{if 'bool' == $type}
+				    		<select style="width: auto;" id="filter_{$column}_{$categoryID}">
+								<option value="">{tn $column}</option>
+								<option value="1">{tn _yes}</option>
+								<option value="0">{tn _no}</option>
+							</select>					
+						{else}
+						<input type="text" class="text {$type}" id="filter_{$column}_{$categoryID}" value="{$availableColumns.$column.name|escape}" />
+						{/if}
+					</th>		
+				{/if}
+			{/foreach}
+		</tr>
+	</thead>	
 	<tbody>
 		{section name="createRows" start=0 loop=15}
 			<tr class="{if $smarty.section.createRows.index is even}even{else}odd{/if}">
