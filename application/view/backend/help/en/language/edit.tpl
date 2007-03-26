@@ -1,4 +1,4 @@
-<p>To prepare your language for usage you have to translate appropriate keywords from English to your chosen
+<p>To prepare your language for usage you have to translate appropriate words from English to your chosen
  language.</p>
 
 <div class="tasks">
@@ -15,16 +15,17 @@
 </fieldset>
 </div>
 
+<br \><br \>
 <h3 id="user_interface">Translate user interface</h3>
 
-<p>There are two ways of translating the interface - either by using a <strong>keyword tree</strong> or 
+<p>There are two ways of translating the interface - either by using a <strong>word tree</strong> or 
 <a href="{self}#user_interface">Live Translation</a>.</p>
-<p>The <strong>keyword tree</strong> is placed below the Translation Filter. All the keywords in the tree 
-are categorized as they appear in the interface layout. To supply translations for appropriate keywords 
-browse the tree and enter corresponding translations. For example:</p>
+<p>The <strong>word tree</strong> is placed below the Translation Filter. All the words in the tree 
+are categorized as they appear in the interface layout. To supply translations, browse the tree and enter 
+corresponding translations in the fields provided. For example:</p>
 <img src="image/doc/language/edit/text_box.bmp"/>
 <ul>
-	<li>where <span style="background: #ffff99">text field</span> is a place for translations;</li>
+	<li>where <span style="background: #ffff99">text field</span> is a field for your translations;</li>
 	<li><span style="background: #ffff99">_menu_users</span> is a variable name; </li>
 	<li><span style="background: #ffff99">Users</span> is a default translation which is used if text field
 	 is left empty</li>
@@ -34,14 +35,14 @@ browse the tree and enter corresponding translations. For example:</p>
 (as translation) - just click the <i>down arrow</i> key of your keyboard to switch to multi-line input
 field.</p>
 
-<p>Reference: see <a href="{self}#product_info">translating product info</a></p>
-
+<br \><br \>
 <h3 id="find_specific_word">Find and translate a specific word or sentence</h3>
 
-<p>If you need to find a specific keyword or edit a definition, use a <strong>Search field</strong> in the 
-<i>Translation Filter</i> area. (Translations will also be searched by their value in English as well as
- keyword name).</p>	
+<p>If you need to find a specific word, use a <strong>Search field</strong> in the 
+<i>Translation Filter</i> area. The search is carried out on their default value in English and translations.</p>	
+<img src="image/doc/language/edit/find.bmp"/>
 
+<br \><br \>
 <h3 id="find_missing_translations">Find missing translations</h3>	
 <p>You can have keywords filtered by their current status in terms of translation process. The following 
 filtering options are available:</p>
@@ -54,6 +55,7 @@ filtering options are available:</p>
 	translated</li>
 </ul>
 
+<br \><br \>
 <h3 id="translate_directly">Translate a word or sentence directly from user interface</h3>	
 	
 <p>Live Translation is a LiveCart tool which allows you to translate a word or sentence directly from the
@@ -66,13 +68,13 @@ interface text (element) directly in the page you see it in. To do that you have
    <strong>Live Translation</strong> when you are not sure about the keyword's exact place in the interface.</p>
 <p>Reference: see <a href="{self}#interface_elements">Translate Interface Elements</a></p>
 
-
+<br \><br \>
 <h3 id="product_info">Translate product info</h3>	
 	
 <p>You can translate products, categories, attributes and other data directly from their management pages, 
 for example, products modification page. The fields for entering translations are typically placed below the
  main data form.</p>
-<p>Reference: see <a href="{self}#interface_elements">translating interface elements</a></p>
+
 	
 {helpSeeAlso}
 	{see language}
