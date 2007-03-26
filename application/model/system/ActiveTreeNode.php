@@ -202,7 +202,7 @@ class ActiveTreeNode extends ActiveRecordModel
      */
     public function getDirectChildNodes($loadReferencedRecords = false)
     {
-        return $this->getChildNodes($loadReferencedRecords, false);
+        return $this->getChildNodes($loadReferencedRecords, true);
     }
 
     /**
