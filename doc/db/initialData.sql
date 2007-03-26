@@ -9,3 +9,9 @@ VALUES ('1', NULL , 'a:1:{s:2:"en";s:8:"LiveCart";}', NULL , NULL , '0', '0', '1
 #
 INSERT INTO `Language` ( `ID` , `isEnabled` , `isDefault` , `position` )
 VALUES ('en', '1', '1', '0');
+
+#
+# Default currency
+#
+INSERT INTO `Currency` ( `ID` , `isEnabled` , `isDefault` , `position` , `pricePrefix` )
+VALUES ('USD', '1', '1', '0', '$');

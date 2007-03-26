@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2007-03-26 13:00                                #
+# Created on:            2007-03-26 13:30                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -323,7 +323,7 @@ CREATE INDEX IDX_SpecificationDateValue_2 ON SpecificationDateValue (specFieldID
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE SpecFieldGroup (
-    ID INTEGER UNSIGNED NOT NULL,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     categoryID INTEGER UNSIGNED,
     name TEXT,
     position INTEGER UNSIGNED DEFAULT 0,
@@ -335,7 +335,7 @@ CREATE TABLE SpecFieldGroup (
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE ProductRelationshipGroup (
-    ID INTEGER UNSIGNED NOT NULL,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     ProductID INTEGER UNSIGNED,
     position INTEGER UNSIGNED DEFAULT 0,
     name TEXT,
@@ -444,7 +444,7 @@ ALTER TABLE SpecificationDateValue ADD CONSTRAINT SpecField_SpecificationDateVal
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE SpecFieldGroup ADD CONSTRAINT Category_SpecFieldGroup 
-    FOREIGN KEY (categoryID) REFERENCES Category (ID);
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE;
 
 ALTER TABLE ProductRelationshipGroup ADD CONSTRAINT Product_ProductRelationshipGroup 
     FOREIGN KEY (ProductID) REFERENCES Product (ID) ON DELETE CASCADE;
