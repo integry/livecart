@@ -981,7 +981,7 @@ ActiveList.prototype = {
             Effect.SwitchOff(li, {duration: 1});
             setTimeout(function() { 
                 Element.remove(li); 
-            }, 10);
+            }, 1000);
         }
         else
         {

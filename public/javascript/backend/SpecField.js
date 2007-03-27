@@ -1214,20 +1214,28 @@ Backend.SpecField.prototype = {
     {
         if('success' == response.status)
         {
-            var self = this;
-            $H(this.mergedValues).each(function(mergedValue) {
-                if(Element.hasClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner"))
-                {
-                    Element.removeClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner");
-                    delete this.mergedValues[mergedValue.key];
-                    mergedValue.value.down("." + self.cssPrefix + "mergeCheckbox").checked = false;
-                    ActiveList.prototype.highlight(mergedValue.value);
-                }
-                else
-                {
-                    self.deleteValueFieldAction(mergedValue.value);
-                }
+            try
+            {
+                var self = this;
+                $H(this.mergedValues).each(function(mergedValue) {
+                    if(Element.hasClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner"))
+                    {
+                        Element.removeClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner");
+                        mergedValue.value.down("." + self.cssPrefix + "mergeCheckbox").checked = false;
+                        ActiveList.prototype.highlight(mergedValue.value);
+                    }
+                    else
+                    {
+                        self.deleteValueFieldAction(mergedValue.value);
+                    }
+                    
+                    delete self.mergedValues[mergedValue.key];
             });
+            } 
+            catch(e)
+            {
+                console.info(e);
+            }
         }
         else
         {
@@ -1585,6 +1593,7 @@ Backend.SpecFieldGroup.prototype = {
             document.getElementsByClassName(this.cssPrefix + 'group_title', parent)[0], 
             document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0]
         ); 
+        parent.down('input.specField_group_name_label').focus();
     },
     
     
@@ -1624,6 +1633,11 @@ Backend.SpecFieldGroup.prototype = {
         );   
         
         ActiveForm.prototype.hideMenuItems($("specField_menu_" + categoryID), [$(this.cssPrefix + "group_new_" + categoryID + "_cancel")]);
+        var self = this;
+        setTimeout(function() {
+            $(self.cssPrefix + "group_new_" + categoryID + "_form").down('input.specField_group_name_label').focus();
+        }, 100);
+            
     }
 }
 
