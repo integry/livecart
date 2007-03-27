@@ -22,7 +22,7 @@ function smarty_function_categoryUrl($params, $smarty)
 	{
 	  	$cat = Category::getInstanceByID($current, true);
 	  	$parts[] = $cat->handle->get();
-	  	$current = $cat->category->get()->getID();
+	  	$current = $cat->parentNode->get()->getID();
 	}
 	$parts = array_reverse($parts);	
 	$handle = implode('.', $parts);
