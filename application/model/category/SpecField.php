@@ -178,7 +178,7 @@ class SpecField extends MultilingualObject
         $i = 0;
         foreach($filterGroups as $filter)
         {
-            $filterGroupsArray[$i] = $filter->toArray(false, false);
+            $filterGroupsArray[$i] = $filter->toArray(false);
             if($this->isSelector())
             {
                 $filterGroupsArray[$i]['filtersCount'] = $this->getValuesSet()->getTotalRecordCount();

@@ -183,7 +183,7 @@ class FilterGroupController extends StoreManagementController
                 
         foreach($filterGroup->getFiltersList() as $filter)
         {
-            $filterGroupArray['filters'][$filter->getID()] = $filter->toArray(false, false);
+            $filterGroupArray['filters'][$filter->getID()] = $filter->toArray(false);
         }
         
         if($filterGroup->specField->get()->isSelector())

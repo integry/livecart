@@ -81,7 +81,7 @@ TabControl.prototype = {
 
     decorateTabs: function()
     {
-        document.getElementsByClassName('tab', this.nodes.tabList).each(function(tab)
+        this.nodes.tabListElements.each(function(tab)
         {
             var firstLink = tab.down('a');
             new Insertion.After(firstLink, '<span class="tabCounter"> </span>');
@@ -127,6 +127,21 @@ TabControl.prototype = {
         this.activateTab(args.target);
         if(this.callbacks.afterClick) this.callbacks.afterClick.call(this);
 	},
+    
+    addHistory: function()
+    {
+        var locationHash = "#" + Backend.ajaxNav.getHash();
+        this.nodes.tabListElements.each(function(tab)
+        {
+            if(locationHash.indexOf("#" + tab.id) !== -1)
+            {
+                locationHash = locationHash.substring(0, locationHash.indexOf(tab.id) - 1);
+                throw $break;
+            }
+        });
+        
+		Backend.ajaxNav.add(locationHash.substring(1) + "#" + this.activeTab.id);
+    },
 
 	activateTab: function(targetTab)
 	{
@@ -157,9 +172,7 @@ TabControl.prototype = {
 		}
 		this.activeTab = targetTab;
         this.activeContent = $(contentId);
-        
-        
-        
+                
         Element.removeClassName(this.activeTab, 'hover');
 		Element.addClassName(this.activeTab, 'active');
 		Element.show(contentId);
@@ -168,6 +181,8 @@ TabControl.prototype = {
 		{
             new LiveCart.AjaxUpdater(this.urlParserCallback(targetTab.down('a').href), contentId, targetTab.down('.tabIndicator'));
 		}
+        
+        this.addHistory();
 	},
 
 	/**

@@ -218,6 +218,7 @@ Backend.SpecField.prototype = {
 		this.nodes.stepValues       	= document.getElementsByClassName(this.cssPrefix + "step_values", this.nodes.parent)[0];
         
         this.nodes.mergeValuesLink        = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesLink");
+        this.nodes.mergeValuesCancelLink  = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesCancelLink");
         this.nodes.mergeValuesControls    = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesControls");
         this.nodes.mergeValuesSubmit      = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesSubmit");
         this.nodes.mergeValuesCancel      = this.nodes.stepValues.down("."  + this.cssPrefix + "mergeValuesCancel");
@@ -258,13 +259,14 @@ Backend.SpecField.prototype = {
 		this.nodes.valuesDefaultGroup 	= document.getElementsByClassName(this.cssPrefix + "form_values_group", this.nodes.parent)[0];
         this.nodes.formatedText         = document.getElementsByClassName(this.cssPrefix + 'form_advancedText', this.nodes.parent)[0];
         
-		this.nodes.cancel 	            = document.getElementsByClassName(this.cssPrefix + "cancel", this.nodes.parent)[0];
-		this.nodes.save 	            = document.getElementsByClassName(this.cssPrefix + "save", this.nodes.parent)[0];
+		this.nodes.controls 	        = this.nodes.parent.down("." + this.cssPrefix + "controls");
+		this.nodes.cancel 	            = this.nodes.controls.down("." + this.cssPrefix + "cancel");
+		this.nodes.save 	            = this.nodes.controls.down("." + this.cssPrefix + "save");
         
         this.nodes.cancelLink          = $("specField_item_new_" + this.categoryID + "_cancel");
 
 		this.nodes.translationsLinks 	= document.getElementsByClassName(this.cssPrefix + "form_values_translations_language_links", this.nodes.parent)[0];
-		this.nodes.valuesAddFieldLink 	= this.nodes.valuesDefaultGroup.getElementsByClassName(this.cssPrefix + "add_field", this.nodes.parent)[0];
+		this.nodes.valuesAddFieldLink 	= this.nodes.parent.down("." + this.cssPrefix + "add_field");
 
         this.nodes.valuesTranslations = {};
         
@@ -313,6 +315,7 @@ Backend.SpecField.prototype = {
         Event.observe(this.nodes.save, "click", function(e) { self.saveAction(e) } );
         
         Event.observe(this.nodes.mergeValuesLink, 'click', function(e) { Event.stop(e); self.toggleValuesMerging(); });
+        Event.observe(this.nodes.mergeValuesCancelLink, 'click', function(e) { Event.stop(e); self.toggleValuesMerging(); });
         Event.observe(this.nodes.mergeValuesSubmit, 'click', function(e) { Event.stop(e); self.mergeValues(); });
         Event.observe(this.nodes.mergeValuesCancel, 'click', function(e) { Event.stop(e); self.toggleValuesMerging(); });
         
@@ -1148,6 +1151,9 @@ Backend.SpecField.prototype = {
         {
             this.nodes.mergeValuesControls.show();
             this.nodes.valuesAddFieldLink.hide();
+            this.nodes.controls.hide();
+            this.nodes.mergeValuesCancelLink.show();
+            this.nodes.mergeValuesLink.hide();
             this.nodes.valuesTranslationsDiv.hide();
         }
         else
@@ -1155,6 +1161,9 @@ Backend.SpecField.prototype = {
             this.nodes.mergeValuesControls.hide();
             this.nodes.valuesAddFieldLink.show();
             this.nodes.valuesTranslationsDiv.show();
+            this.nodes.mergeValuesCancelLink.hide();
+            this.nodes.mergeValuesLink.show();
+            this.nodes.controls.show();
             this.colorMergedValues();
         }
         

@@ -129,6 +129,7 @@
 	<fieldset class="specField_step_lev1 specField_step_values">
     <legend>{t _SpecField_step_two}</legend>
         <a href="#mergeValues" class="specField_mergeValuesLink">{t _specField_merge_values}</a>
+        <a href="#mergeValues" class="specField_mergeValuesCancelLink" style="display: none;">{t _specField_cancel_merge_values}</a>
 
 		<p>
 		<fieldset class="group specField_form_values_group">
@@ -144,7 +145,7 @@
         				</li>
         			</ul>
                 </p>
-                <p class="specField_add_field">
+                <p>
                     <a href="#add" class="specField_add_field">{t _SpecField_add_values}</a>
                     <span class="specField_mergeValuesControls" style="display: none">
                         <input type="button" class="submit specField_mergeValuesSubmit" value="{tn _specField_merge_values}" />

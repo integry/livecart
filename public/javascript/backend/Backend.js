@@ -65,12 +65,24 @@ Backend.AjaxNavigationHandler.prototype =
 		dhtmlHistory.add(element + '__');		
 		return true;
 	},
+    
+    getHash: function()
+    {
+        with(document.location)
+        {
+            return ("#" == hash[0]) ? hash.substring(1, hash.length - 2) : hash.substring(0, hash.length - 1);
+        }
+    },
 	
 	handle: function(element, params)
 	{
-		var elementId = element.substr(0, element.length - 2);
+        if(!params) params = {};
+        if(!params.recoverFromIndex) params.recoverFromIndex = 0;
+        
+        var elementId = element.substr(0, element.length - 2);
 		var elements = elementId.split('#');
-		for (var k = 0; k < elements.length; k++)
+		        
+        for (var k = params.recoverFromIndex; k < elements.length; k++)
 		{           
 			if ($(elements[k]))
 			{
@@ -82,9 +94,20 @@ Backend.AjaxNavigationHandler.prototype =
 				
 				$(elements[k]).onclick();
 			}	
-              
+            // This is in case element is not yet loaded. If so we wait for all requests to finish and the continue.
+           /* else if(Ajax.activeRequestCount > 0)
+            {
+                var self = this;
+                setInterval(function() 
+                { 
+                    self.handle(element, { recoverFromIndex: k });
+                }, 10);
+                
+                return;
+            } */
 		}
 	},
+    
 	
 	ignoreNext: function()
 	{
