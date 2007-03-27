@@ -42,7 +42,7 @@ class SpecFieldGroupController extends StoreManagementController
      */
     public function item()
     {
-        return new JSONResponse(SpecFieldGroup::getInstanceByID((int)$this->request->getValue('id'), true)->toArray(false, false));
+        return new JSONResponse(SpecFieldGroup::getInstanceByID((int)$this->request->getValue('id'), true)->toArray(false));
     }
     
     /**
@@ -59,8 +59,7 @@ class SpecFieldGroupController extends StoreManagementController
         else
         {
             $category = Category::getInstanceByID((int)$this->request->getValue('categoryID'));
-            $specFieldGroup = SpecFieldGroup::getNewInstance();
-            $specFieldGroup->setFieldValue('categoryID', $category);
+            $specFieldGroup = SpecFieldGroup::getNewInstance($category);
             $specFieldGroup->setFieldValue('position', 100000);
         }
         

@@ -80,31 +80,31 @@ Backend.AjaxNavigationHandler.prototype =
         if(!params.recoverFromIndex) params.recoverFromIndex = 0;
         
         var elementId = element.substr(0, element.length - 2);
-		var elements = elementId.split('#');
+		var hashElements = elementId.split('#');
 		        
-        for (var k = params.recoverFromIndex; k < elements.length; k++)
+        for (var hashPart = params.recoverFromIndex; hashPart < hashElements.length; hashPart++)
 		{           
-			if ($(elements[k]))
+			if ($(hashElements[hashPart]))
 			{
                 // only register the click for the last element
-				if (k < elements.length - 1)
+				if (hashPart < hashElements.length - 1)
 				{
 					Backend.ajaxNav.ignoreNext();
 				}
 				
-				$(elements[k]).onclick();
+				$(hashElements[hashPart]).onclick();
 			}	
             // This is in case element is not yet loaded. If so we wait for all requests to finish and the continue.
-           /* else if(Ajax.activeRequestCount > 0)
+            else if(Ajax.activeRequestCount > 0)
             {
                 var self = this;
                 setInterval(function() 
                 { 
-                    self.handle(element, { recoverFromIndex: k });
+                    self.handle(element, { recoverFromIndex: hashPart });
                 }, 10);
                 
                 return;
-            } */
+            } 
 		}
 	},
     

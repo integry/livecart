@@ -1219,6 +1219,7 @@ Backend.SpecField.prototype = {
                 if(Element.hasClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner"))
                 {
                     Element.removeClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner");
+                    delete this.mergedValues[mergedValue.key];
                     mergedValue.value.down("." + self.cssPrefix + "mergeCheckbox").checked = false;
                     ActiveList.prototype.highlight(mergedValue.value);
                 }
@@ -1498,19 +1499,22 @@ Backend.SpecFieldGroup.prototype = {
     {
 		if(response.status == 'success')
         {
-    		try
-    		{
+    		if(this.group.ID)
+            {
                 ActiveList.prototype.getInstance(this.cssPrefix + 'groups_list_' + this.group.Category.ID).toggleProgress(this.nodes.parent);
                 Form.backup(this.nodes.form);
                 Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.parent);
     		}
-    		catch (e)
+    		else
     		{
     		    ActiveForm.prototype.offProgress(this.nodes.form);
                 
                 var title = document.createElement('span');
                 Element.addClassName(title, this.cssPrefix + 'group_title');
                 title.appendChild(document.createTextNode(this.nodes.name.value));
+                
+                var titleDiv = document.createElement('div');
+                titleDiv.appendChild(title);
                 
                 var ul = document.createElement('ul');
                 ul.id = this.cssPrefix + "items_list_" + this.group.Category.ID + "_" + response.id;
@@ -1521,10 +1525,12 @@ Backend.SpecFieldGroup.prototype = {
                 Element.addClassName(ul, 'activeList_accept_specFieldList'); 
                 Element.addClassName(ul, 'activeList'); 
                 
+                titleDiv.appendChild(ul);
+                
                 $(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show").style.display = 'inline';
                 
                 var groupsList = ActiveList.prototype.getInstance(this.cssPrefix + "groups_list_" + this.group.Category.ID);
-                groupsList.addRecord(response.id, [title, ul]);
+                groupsList.addRecord(response.id, titleDiv);
                 groupsList.touch();
                 
                 ActiveList.prototype.recreateVisibleLists();
