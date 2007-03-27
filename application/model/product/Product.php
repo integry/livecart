@@ -266,30 +266,45 @@ class Product extends MultilingualObject
 	{
 	  	if (!$specificationData)
 	  	{
-
-		$cond = '
-		LEFT JOIN 	
-			SpecField ON specFieldID = SpecField.ID 
-		LEFT JOIN 	
-			SpecFieldGroup ON SpecField.specFieldGroupID = SpecFieldGroup.ID 
-		WHERE 
-			productID = ' . $this->getID() . '';
-
-	    $query = '
-		SELECT SpecificationDateValue.*, NULL AS valueID, NULL AS specFieldValuePosition, SpecFieldGroup.position AS SpecFieldGroupPosition, SpecField.* as valueID FROM SpecificationDateValue ' . $cond . '
-	    UNION
-		SELECT SpecificationStringValue.*, NULL, NULL, SpecFieldGroup.position, SpecField.* as valueID FROM SpecificationStringValue ' . $cond . '
-	    UNION
-		SELECT SpecificationNumericValue.*, NULL, NULL, SpecFieldGroup.position, SpecField.* as valueID FROM SpecificationNumericValue ' . $cond . '
-	    UNION
-		SELECT SpecificationItem.productID, SpecificationItem.specFieldID, SpecFieldValue.value, SpecFieldValue.ID, SpecFieldValue.position, SpecFieldGroup.position, SpecField.*
-				 FROM SpecificationItem
-				 	LEFT JOIN SpecFieldValue ON SpecificationItem.specFieldValueID =  SpecFieldValue.ID
-				 ' . str_replace('ON specFieldID', 'ON SpecificationItem.specFieldID', $cond) . 
-                 ' ORDER BY productID, SpecFieldGroupPosition, position, specFieldValuePosition';
-                 
-			$specificationData = self::getDataBySQL($query);
-		}
+    		$cond = '
+    		LEFT JOIN 	
+    			SpecField ON specFieldID = SpecField.ID 
+    		LEFT JOIN 	
+    			SpecFieldGroup ON SpecField.specFieldGroupID = SpecFieldGroup.ID 
+    		WHERE 
+    			productID = ' . $this->getID() . '';
+    
+    	    $commonFields = 'SpecFieldGroup.position AS SpecFieldGroupPosition, SpecField.* as valueID, SpecFieldGroup.ID AS SpecFieldGroupID';
+    	    
+            $query = '
+    		(SELECT SpecificationDateValue.*, NULL AS valueID, NULL AS specFieldValuePosition, ' . $commonFields . ' FROM SpecificationDateValue ' . $cond . ')
+    	    UNION
+    		(SELECT SpecificationStringValue.*, NULL, NULL, ' . $commonFields . ' FROM SpecificationStringValue ' . $cond . ')
+    	    UNION
+    		(SELECT SpecificationNumericValue.*, NULL, NULL, ' . $commonFields . ' FROM SpecificationNumericValue ' . $cond . ')
+    	    UNION
+    		(SELECT SpecificationItem.productID, SpecificationItem.specFieldID, SpecFieldValue.value, SpecFieldValue.ID, SpecFieldValue.position, SpecFieldGroup.position, SpecField.*, SpecFieldGroup.ID AS SpecFieldGroupID
+    				 FROM SpecificationItem
+    				 	LEFT JOIN SpecFieldValue ON SpecificationItem.specFieldValueID =  SpecFieldValue.ID
+    				 ' . str_replace('ON specFieldID', 'ON SpecificationItem.specFieldID', $cond) . 
+                     ')
+                     ORDER BY SpecFieldGroupPosition, position, specFieldValuePosition';
+                     
+    		$specificationData = self::getDataBySQL($query);
+    			
+            // preload attribute groups
+            $groups = array();
+            foreach ($specificationData as $spec)
+            {
+                if ($spec['SpecFieldGroupID'])
+                {
+                    $groups[$spec['SpecFieldGroupID']] = true;
+                }
+            }   
+            $groups = array_keys($groups);
+                
+            ActiveRecordModel::getInstanceArray('SpecFieldGroup', $groups);
+        }
 
 		$this->specificationInstance = new ProductSpecification($this, $specificationData);
 	}

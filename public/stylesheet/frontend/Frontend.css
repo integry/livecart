@@ -231,3 +231,17 @@ ul.productList p.image img
 {
     vertical-align: top;
 }
+
+/*****************************
+	Product page
+*****************************/
+#productSpecification td
+{
+    padding: 2px;    
+    vertical-align: top;
+}
+
+tr.specificationGroup
+{
+    font-weight: bold;        
+}

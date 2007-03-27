@@ -5,7 +5,7 @@
 
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-	<title>{$TITLE}</title>
+	<title>{$PAGE_TITLE}</title>
 	<base href="{baseUrl}" />
 
 	<!-- Css includes -->

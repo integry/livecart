@@ -243,7 +243,7 @@ class CategoryController extends FrontendController
 		$url = $router->createUrlFromRoute($router->getRequestedRoute());
 		foreach ($filterGroups as $key => $grp)
 		{
-			if (empty($grp['filters']))
+			if (empty($grp['filters']) || count($grp['filters']) == 1)
 			{
 				unset($filterGroups[$key]);
 			}
