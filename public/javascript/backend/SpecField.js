@@ -1531,14 +1531,14 @@ Backend.SpecFieldGroup.prototype = {
                 
                 var groupsList = ActiveList.prototype.getInstance(this.cssPrefix + "groups_list_" + this.group.Category.ID);
                 groupsList.addRecord(response.id, titleDiv);
-                groupsList.touch();
                 
-                ActiveList.prototype.recreateVisibleLists();
-                ActiveList.prototype.getInstance(ul, Backend.SpecFieldGroup.prototype.specFieldGroupCallbacks, Backend.SpecField.prototype.msg.activeListMessages);
+                //ActiveList.prototype.recreateVisibleLists();
+                ActiveList.prototype.getInstance(ul, Backend.SpecFieldGroup.prototype.callbacks, Backend.SpecField.prototype.msg.activeListMessages);
+                groupsList.touch();
                 
                 Form.restore(this.nodes.form);
                 
-                ActiveForm.prototype.hideMenuItems($("specField_menu_" + this.group.Category.ID), [$("specField_group_new_" + this.group.Category + "_show"), $("specField_item_new_" + this.group.Category + "_show")]);
+                ActiveForm.prototype.hideMenuItems($("specField_menu_" + this.group.Category.ID), [$("specField_group_new_" + this.group.Category.ID + "_show"), $("specField_item_new_" + this.group.Category.ID + "_show")]);
                 ActiveForm.prototype.hideNewItemForm($(this.cssPrefix + "group_new_" + this.group.Category.ID + "_show"), this.nodes.parent); 
     		}
             
