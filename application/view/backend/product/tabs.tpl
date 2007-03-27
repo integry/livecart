@@ -13,13 +13,8 @@
 				<span class="tabHelp">products.edit</span>
 			</li>
 			
-			<li id="tabProductInventory" class="tab inactive">
-				<a href="{link controller=backend.product action=inventory id=_id_}?categoryID=_categoryID_">{t Inventory}</a>
-				<span class="tabHelp">products.edit.inventory</span>
-			</li>
-
 			<li id="tabProductDiscounts" class="tab inactive">
-				<a href="{link controller=backend.productPrice action=index id=_id_}?categoryID=_categoryID_">{t Prices &amp; Shipping}</a>
+				<a href="{link controller=backend.productPrice action=index id=_id_}?categoryID=_categoryID_">{t Stock & Pricing}</a>
 				<span class="tabHelp">products.edit.pricing</span>
 			</li>
 			
@@ -33,15 +28,21 @@
 				<span class="tabHelp">products.edit.related</span>
 			</li>
 			
-			<li id="tabProductOptions" class="tab inactive">
-				<a href="{link   controller=backend.product action=options id=_id_}?categoryID=_categoryID_">{t Options}</a>
-				<span class="tabHelp">products.edit.options</span>
-			</li>
-						
 			<li id="tabProductFiles" class="tab inactive">
 				<a href="{link controller=backend.productFile action=index id=_id_}?categoryID=_categoryID_">{t Files}</a>
 				<span class="tabHelp">products.edit.files</span>
 			</li>
+
+			<li id="tabOperations" class="tab inactive">
+				<a href="{link controller=backend.product action=operation id=_id_}?categoryID=_categoryID_">{t Operations}</a>
+				<span class="tabHelp">products.edit.operations</span>
+			</li>
+
+			<li id="tabInfo" class="tab inactive">
+				<a href="{link controller=backend.product action=info id=_id_}?categoryID=_categoryID_">{t Info}</a>
+				<span class="tabHelp">products.edit.info</span>
+			</li>
+
 		</ul>
 	</div>
 	<div class="sectionContainer maxHeight h--50"></div>
