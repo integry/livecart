@@ -29,7 +29,12 @@ class ProductCount
 		foreach ($filterSets as $set)
 		{
 			$cnt = $this->getCountByFilterSet($set); 
-			$ret = array_merge($ret, $cnt);
+			
+            // array_merge would reindex the numeric keys
+            foreach ($cnt as $key => $value)
+			{
+                $ret[$key] = $value;
+            }
 		}
 
 		return $ret;

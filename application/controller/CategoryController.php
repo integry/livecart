@@ -170,6 +170,7 @@ class CategoryController extends FrontendController
 				{
 					continue;
 				}
+
 				$specFieldID = $filter instanceof SelectorFilter ? $filter->getSpecField()->getID() : $filter->filterGroup->get()->specField->get()->getID();
 				$sorted[$specFieldID][] = $array;
 				$filterArray[] = $array;
