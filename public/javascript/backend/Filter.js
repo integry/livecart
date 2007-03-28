@@ -944,6 +944,8 @@ Backend.Filter.prototype = {
         {
             this.hideNewFilterAction(this.categoryID);
         }
+        
+        this.saving = false;
     },
 
     /**
@@ -961,6 +963,10 @@ Backend.Filter.prototype = {
 
     saveFilterGroup: function()
     {
+        console.info(this.saving);
+        if(this.saving) return false;
+        this.saving = true;
+        
         // Toggle progress won't work on new form
         try
         {
@@ -1024,6 +1030,7 @@ Backend.Filter.prototype = {
                 }
 
                 ActiveList.prototype.getInstance(this.nodes.parent.parentNode).toggleContainer(this.nodes.parent, 'edit');
+                this.saving = false;
             }
             else
             {
@@ -1064,6 +1071,8 @@ Backend.Filter.prototype = {
                 this.hideNewFilterAction(this.categoryID);
                 this.recreate(this.filter, true);   
             }
+            
+            this.saving = false;
         }
         else if(jsonResponse.errors)
         {

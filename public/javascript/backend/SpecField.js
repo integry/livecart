@@ -937,6 +937,8 @@ Backend.SpecField.prototype = {
         }
         
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+        
+        this.saving = false;
     },
 
     /**
@@ -963,6 +965,9 @@ Backend.SpecField.prototype = {
      */
     saveSpecField: function()
     {
+        if(this.saving) return false;
+        this.saving = true;
+
 		// Toggle progress won't work on new form
 		try
 		{
@@ -1065,6 +1070,8 @@ Backend.SpecField.prototype = {
 		{
             ActiveForm.prototype.offProgress(this.nodes.form);
 		}
+        
+        this.saving = false;
     },
 
 
@@ -1475,7 +1482,10 @@ Backend.SpecFieldGroup.prototype = {
      */
     beforeSave: function()
     {
-		try
+		if(this.saving) return false;
+        this.saving = true;
+        
+        try
 		{
             ActiveList.prototype.getInstance(this.cssPrefix + 'groups_list_' + this.group.Category.ID).toggleProgress(this.nodes.parent);
 		}
@@ -1556,6 +1566,8 @@ Backend.SpecFieldGroup.prototype = {
         {
             ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors);
         }
+        
+        this.saving = false;
     },
     
     /**
@@ -1579,6 +1591,8 @@ Backend.SpecFieldGroup.prototype = {
         }
         
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+        
+        this.saving = false;
     },
     
     
