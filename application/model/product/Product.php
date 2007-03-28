@@ -401,9 +401,9 @@ class Product extends MultilingualObject
 		}
 	}
 
-	public function toArray()
+	public function toArray($recursive = true)
 	{
-	  	$array = parent::toArray(false);
+	  	$array = parent::toArray($recursive);
 	  	$array['attributes'] = $this->getSpecification()->toArray();
 		$array = array_merge($array, $this->getPricesFields());
 	  	return $array;

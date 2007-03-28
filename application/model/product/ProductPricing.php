@@ -95,7 +95,7 @@ class ProductPricing
 	}
 
 	public function save()
-	{
+	{	    
 	    foreach ($this->prices as $price)
 		{
 		    $price->save();

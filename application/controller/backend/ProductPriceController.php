@@ -76,7 +76,8 @@ class ProductPriceController extends StoreManagementController
 
     		// Save shipping
     		$product->loadSpecification();
-    		
+    		$product->loadPricing();
+    		$product->setFieldValue('stockCount', (int)$this->request->getValue('stockCount'));
             $product->setFieldValue('shippingWeight', (float)$this->request->getValue('shippingWeight'));
             $product->setFieldValue('shippingSurchargeAmount', (float)$this->request->getValue('shippingSurchargeAmount'));
             $product->setFieldValue('minimumQuantity', (int)$this->request->getValue('minimumQuantity'));

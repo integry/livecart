@@ -129,15 +129,12 @@
  
  
     {assign var="lastSpecFieldGroup" value="-1"}
+    ActiveList.prototype.getInstance('specField_items_list_'+categoryID+'_', Backend.SpecField.prototype.callbacks, Backend.SpecField.prototype.activeListMessages);
     {foreach item="field" from=$specFieldsWithGroups}
-        {if $lastSpecFieldGroup != $field.SpecFieldGroup.ID}
-            {if !$smarty.foreach.specFieldForeach.first}
-                 console.count("create list");
-                 ActiveList.prototype.getInstance('specField_items_list_'+categoryID+'_{$field.SpecFieldGroup.ID}', Backend.SpecField.prototype.callbacks, Backend.SpecField.prototype.activeListMessages);
-            {/if}
-            
-            {assign var="lastSpecFieldGroup" value=$field.SpecFieldGroup.ID}
+        {if $field.SpecFieldGroup && $lastSpecFieldGroupID != $field.SpecFieldGroup.ID}
+             ActiveList.prototype.getInstance('specField_items_list_'+categoryID+'_{$field.SpecFieldGroup.ID}', Backend.SpecField.prototype.callbacks, Backend.SpecField.prototype.activeListMessages);
         {/if}
+        {assign var="lastSpecFieldGroupID" value=$field.SpecFieldGroup.ID}
     {/foreach}
      
      groupList.createSortable();

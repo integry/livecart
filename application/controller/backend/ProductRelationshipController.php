@@ -20,7 +20,6 @@ class ProductRelationshipController extends StoreManagementController
 	    
 	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
 		$response->setValue("productID", $productID);
-				
 		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA, array('Category'));
 		$response->setValue("relationships", $product->getRelationships()->toArray());
 	    return $response;
