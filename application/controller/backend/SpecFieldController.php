@@ -261,6 +261,7 @@ class SpecFieldController extends StoreManagementController
         {
             if(!empty($key))
             {
+                echo $key . "<br />";
                 $specField = SpecField::getInstanceByID((int)$key);
                 $specField->setFieldValue('position', (int)$position);
                 

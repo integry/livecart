@@ -1539,10 +1539,10 @@ Backend.SpecFieldGroup.prototype = {
                 
                 var groupsList = ActiveList.prototype.getInstance(this.cssPrefix + "groups_list_" + this.group.Category.ID);
                 groupsList.addRecord(response.id, titleDiv);
-                
-                //ActiveList.prototype.recreateVisibleLists();
-                ActiveList.prototype.getInstance(ul, Backend.SpecFieldGroup.prototype.callbacks, Backend.SpecField.prototype.msg.activeListMessages);
                 groupsList.touch();
+                
+                var newGroupFieldsList = ActiveList.prototype.getInstance(ul, Backend.SpecField.prototype.callbacks, Backend.SpecField.prototype.msg.activeListMessages);
+                ActiveList.prototype.recreateVisibleLists();
                 
                 Form.restore(this.nodes.form);
                 

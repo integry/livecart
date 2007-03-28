@@ -138,8 +138,14 @@ ActiveList.prototype = {
         {
             this.ul = $(ul);
     
+            if(!this.ul)
+            {
+                throw Error('No list found');
+                return false;
+            }
+    
             this.messages = messages;
-            
+                        
             Element.addClassName(this.ul, this.ul.id);
     
             // Check if ul has an id
@@ -981,7 +987,7 @@ ActiveList.prototype = {
             Effect.SwitchOff(li, {duration: 1});
             setTimeout(function() { 
                 Element.remove(li); 
-            }, 1000);
+            }, 10);
         }
         else
         {
