@@ -755,9 +755,75 @@ ActiveList.prototype = {
                 },
                 onUpdate:      function() { 
                     self.saveSortOrder(); 
-                }
+                },
+                
+                starteffect: function(){ self.scrollStart() },
+                endeffect: function(){ self.scrollEnd() }
             });
         }        
+    },
+
+    getWindowScroll: function() {
+      var T, L, W, H;
+      var w = window;
+      with (w.document) {
+        if (w.document.documentElement && documentElement.scrollTop) {
+          T = documentElement.scrollTop;
+          L = documentElement.scrollLeft;
+        } else if (w.document.body) {
+          T = body.scrollTop;
+          L = body.scrollLeft;
+        }
+        if (w.innerWidth) {
+          W = w.innerWidth;
+          H = w.innerHeight;
+        } else if (w.document.documentElement && documentElement.clientWidth) {
+          W = documentElement.clientWidth;
+          H = documentElement.clientHeight;
+        } else {
+          W = body.offsetWidth;
+          H = body.offsetHeight
+        }
+      }
+      return { top: T, left: L, width: W, height: H };
+    },
+
+    findTopY: function(obj) {
+      var curtop = 0;
+      if (obj.offsetParent) {
+        while (obj.offsetParent) {
+          curtop += obj.offsetTop;
+          obj = obj.offsetParent;
+        }
+      }
+      else if (obj.y)
+        curtop += obj.y;
+      return curtop;
+    },
+    
+    findBottomY: function(obj) {
+      return this.findTopY(obj) + obj.offsetHeight;
+    },
+    
+    scrollSome: function() {
+      var scroller = this.getWindowScroll();
+      var yTop = this.findTopY(this.dragged);
+      var yBottom = this.findBottomY(this.dragged);
+
+      if (yBottom > scroller.top + scroller.height - 20)
+        window.scrollTo(0,scroller.top + 30);
+        else if (yTop < scroller.top + 20)
+        window.scrollTo(0,scroller.top - 30);
+    },
+    
+    scrollStart: function(e) {
+      var $this = this;
+      this.dragged = e;
+      this.scrollPoll = setInterval(function() { $this.scrollSome() } , 10);
+    },
+    
+    scrollEnd: function(e) {
+      clearInterval(this.scrollPoll);
     },
 
     /**
