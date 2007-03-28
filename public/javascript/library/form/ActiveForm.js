@@ -295,8 +295,8 @@ ActiveForm.prototype = {
         
         $A(menu.getElementsByTagName('li')).each(function(li) {
             a = $(li).down('a');
-            a.addClassName('hidden');
-            $A(except).each(function(el) { if(a == $(el)) a.removeClassName('hidden');  });
+            a.hide();
+            $A(except).each(function(el) { if(a == $(el)) a.style.display = 'inline';  });
         });
     }
 }

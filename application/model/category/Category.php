@@ -607,60 +607,14 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	  	
 	}
 
-	public function getSpecificationFieldArray($includeParentFields = false, $loadReferencedRecords = false, $mergeWithEmptyGroups = false)
+	public function getSpecificationFieldArray($includeParentFields = false, $loadReferencedRecords = false)
 	{
 		ClassLoader::import("application.model.category.SpecField");
         $specFields = SpecField::getRecordSetArray($this->getSpecificationFilter($includeParentFields), array('SpecFieldGroup'));
-
-        if($mergeWithEmptyGroups)
-        {
-            $groups = $this->getSpecificationFieldGroupArray(false, true);
-            return $this->mergeWithEmptyGroups($specFields, $groups);
-        }
-        else
-        {
-            return $specFields;
-        }
+            
+        return $specFields;
 	}
 	
-	private function mergeWithEmptyGroups($specFields, $groups)
-	{
-        $specFieldsWithGroups = array();
-        $groupNum = 0;
-        $specFieldsNum = 0;
-        $groupsCount = count($groups);
-                
-        // Specification fields without a group
-        $specFieldsFound = 0;
-        while(isset($specFields[$specFieldsNum]) && ($specFields[$specFieldsNum]['specFieldGroupID'] == ''))
-        {
-             $specFieldsWithGroups[] = $specFields[$specFieldsNum++];
-             $specFieldsFound = 0;
-        }
-        if($specFieldsFound == 0) 
-        {
-            $specFieldsWithGroups[] = array('SpecFieldGroup' => array());
-        }
-        
-        while($groupNum < $groupsCount)
-        {         
-             $specFieldsFound = 0;
-             while(isset($specFields[$specFieldsNum]) && $specFields[$specFieldsNum]['specFieldGroupID'] <= $groups[$groupNum]['ID'])
-             {
-                 $specFieldsWithGroups[] = $specFields[$specFieldsNum++];
-                  $specFieldsFound++;
-             }
-         
-             if($specFieldsFound == 0) 
-             {
-                 $specFieldsWithGroups[] = array('SpecFieldGroup' => $groups[$groupNum]);
-             }
-             
-             $groupNum++;
-        }
-        
-        return $specFieldsWithGroups; 
-	}
 	
 	/**
 	 * Crates a select filter for specification fields related to category
@@ -673,7 +627,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
 		$path = parent::getPathNodeSet(Category::INCLUDE_ROOT_NODE);
 		$filter = new ARSelectFilter();
-
+		
 		$filter->setOrder(new ARFieldHandle("SpecFieldGroup", "position"), 'ASC');
 		$filter->setOrder(new ARFieldHandle("SpecField", "position"), 'ASC');
 							
@@ -693,7 +647,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
     
 	/**
 	 * Crates a select filter for specification fields groups related to category
-	 *$filter->addField('value', $aliasTable, $aliasField);
+	 * 
 	 * @return ARSelectFilter
 	 */
 	private function getSpecificationGroupFilter()

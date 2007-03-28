@@ -81,6 +81,8 @@ class SpecFieldController extends StoreManagementController
             'dataType' => SpecField::DATATYPE_TEXT,
             'categoryID' => $categoryID
         );
+        
+//        echo ("<pre>" . print_r($category->getSpecificationFieldArray(false, true, false), true) . "</pre>");
 
         $response->setValue('categoryID', $categoryID);
         $response->setValue('configuration', $this->getSpecFieldConfig());
