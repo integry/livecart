@@ -177,6 +177,67 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 	{
 	    parent::deleteByID(__CLASS__, (int)$id);
 	}
+
+	public static function createFiltersInGroupsCountArray(ARSet $filtersGroupsSet)
+	{
+	    $filterGroupIds = array();
+	    $filtersGroupsArray = array();
+	    foreach($filtersGroupsSet as $filterGroup)
+	    {
+	        $filterGroupIds[] = $filterGroup->getID();
+	    }
+	    
+		if(!empty($filterGroupIds))
+		{
+		    $db = self::getDBConnection();
+			
+			$filterGroupIdsString = implode(',',  $filterGroupIds);
+			
+			$filtersResultArray = array();
+			$filtersResultSet = $db->executeQuery("SELECT filterGroupID, COUNT(*) AS filtersCount FROM Filter WHERE filterGroupID IN ($filterGroupIdsString) GROUP BY filterGroupID");
+			while ($filtersResultSet->next()) $filtersResultArray[] = $filtersResultSet->getRow();
+			$filtersResultCount = count($filtersResultArray);
+			
+			$specFieldValuesResultArray = array();
+			
+			$specFieldValuesResultSet = $db->executeQuery("SELECT specFieldID, COUNT(specFieldID) AS filtersCount FROM SpecFieldValue WHERE specFieldID IN (SELECT specFieldID FROM FilterGroup WHERE ID in ($filterGroupIdsString)) GROUP BY specFieldID");
+			while ($specFieldValuesResultSet->next()) $specFieldValuesResultArray[] = $specFieldValuesResultSet->getRow();
+			$specFieldValuesResultCount = count($specFieldValuesResultArray);
+	
+		    foreach($filtersGroupsSet as $filterGroup)
+		    {
+	            $filterGroupArray = $filterGroup->toArray();
+	            $filterGroupArray['filtersCount'] = 0;
+	            
+		        if($filterGroup->specField->get()->allowManageFilters())
+		        {
+		            for($i = 0; $i < $filtersResultCount; $i++)
+		            {
+		                if($filtersResultArray[$i]['filterGroupID'] == $filterGroupArray['ID'])
+		                {
+		                    $filterGroupArray['filtersCount'] = $filtersResultArray[$i]['filtersCount'];
+		                }
+		            }
+		        }
+		        else
+		        {
+		            
+	   	            for($i = 0; $i < $specFieldValuesResultCount; $i++)
+		            {
+		                if($specFieldValuesResultArray[$i]['specFieldID'] == $filterGroupArray['SpecField']['ID'])
+		                {
+		                    $filterGroupArray['filtersCount'] = $specFieldValuesResultArray[$i]['filtersCount'];
+		                }
+		            }
+		            
+		        }
+		        
+	            $filtersGroupsArray[] = $filterGroupArray;
+		    }
+		}
+        
+        return $filtersGroupsArray;
+	}
 }
 
 ?>

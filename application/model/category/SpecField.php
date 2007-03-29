@@ -306,6 +306,11 @@ class SpecField extends MultilingualObject
 	    return array(self::TYPE_TEXT_SIMPLE, self::TYPE_TEXT_ADVANCED, self::TYPE_TEXT_SELECTOR, self::TYPE_TEXT_DATE);
 	}
 	
+	public function allowManageFilters()
+	{
+	    return $this->isDate() || $this->isSimpleNumbers();
+	}
+	
 	public static function getMultilanguageTypes()
 	{
 	    return array(self::TYPE_TEXT_SIMPLE, self::TYPE_TEXT_ADVANCED, self::TYPE_TEXT_SELECTOR);
@@ -392,7 +397,6 @@ class SpecField extends MultilingualObject
             foreach ($values['values'] as $key => $v)
             {
                 $i++;
-//                echo "$countValues == $i\n";
                 if($countValues == $i && preg_match('/new/', $key) && empty($v[$languageCodes[0]]))
                 {
                     continue;

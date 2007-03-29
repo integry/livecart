@@ -1,6 +1,16 @@
 <div id="productRelationshipMsg_{$productID}" style="display: none;"></div>
 
-<a href="#selectProduct" id="selectProduct_{$productID}">{t _select_product}</a>
+
+
+<fieldset class="container">
+	<ul class="menu" id="specField_menu_{$categoryID}">
+	    <li><a href="#selectProduct" id="selectProduct_{$productID}">{t _select_product}</a></li>
+	    <li><a href="#cancelSelectProduct" id="selectProduct_{$productID}_cancel" class="hidden">{t _cancel_adding_new_related_product}</a></li>
+	    <li><a href="#new" id="relatedProduct_group_new_{$categoryID}_show">{t _add_new_group}</a></li>
+	    <li><a href="#new" id="relatedProduct_group_new_{$categoryID}_cancel" class="hidden">{t _cancel_adding_new_group}</a></li>
+	</ul>
+</fieldset>
+
 <ul id="productRelationships_{$productID}" class="activeList_add_sort activeList_add_delete">
     {foreach item="relation" from=$relationships}
         <li id="productRelationships_{$productID}_{$relation.RelatedProduct.ID}">

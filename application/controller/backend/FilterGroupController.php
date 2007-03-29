@@ -34,11 +34,7 @@ class FilterGroupController extends StoreManagementController
         $category = Category::getInstanceByID($categoryID);
         $specFieldsList = $category->getSpecificationFieldSet();
 
-        $filters = array();
-        foreach($specFieldsList as $specFieldObj)
-        {
-            $filters = array_merge($filters, $specFieldObj->getFiltersGroupsListArray());
-        }
+        $filters = Filter::createFiltersInGroupsCountArray($category->getFilterGroupSet());
         
         $blankFilter = array
         (
