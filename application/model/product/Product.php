@@ -467,7 +467,32 @@ class Product extends MultilingualObject
 	}
 
 	/**
-	 * Get product active record
+	 * Get product instance by SKU
+	 *
+	 * @param mixed $sku
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return Product
+	 */
+	public static function getInstanceBySKU($sku, $loadReferencedRecords = false)
+	{
+	    $f = new ARSelectFilter();
+	    $f->setCondition(new EqualsCond(new ARFieldHandle('Product', 'sku'), $sku));
+	    $f->setLimit(1);
+	    
+	    $set = self::getRecordSet($f, $loadReferencedRecords);
+	    if (!$set->size())
+	    {
+			return false;
+		}
+		else
+		{
+			return $set->get(0);
+		}
+	}
+	
+	/**
+	 * Get product active record instance
 	 *
 	 * @param mixed $recordID
 	 * @param bool $loadRecordData

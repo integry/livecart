@@ -38,7 +38,8 @@
             <option value="manufacturer">Set manufacturer</option>
             <option value="set_keywords">Set keywords</option>
             <option value="set_URL">Set website address</option>
-                
+            <option value="addRelated">Add related product</option>
+			                
             <optgroup label="Inventory & Pricing">
                 <option value="inc_price">Increase price (percent)</option>
                 <option value="inc_stock">Increase stock (count)</option>
@@ -67,10 +68,15 @@
         </select>
         
         <span class="bulkValues" style="display: none;">
+        	<span class="addRelated">
+	            {t Enter product SKU:} {textfield class="text number" name="related" autocomplete="controller=backend.product field=sku"}
+        	</span>
             {textfield class="text number" name="inc_price"}
             {textfield class="text number" name="inc_stock"}
             {textfield class="text number" name="set_stockCount"}
             {textfield class="text number" name="price"}  
+            {textfield class="text number" name="set_minimumQuantity"}
+            {textfield class="text number" name="set_shippingSurchargeAmount"}
    			{textfield name="manufacturer" class="text" autocomplete="controller=backend.manufacturer field=manufacturer" id="set_manufacturer_`$categoryID`"}
 			{textfield name="set_keywords" class="text" id="set_keywords_`$categoryID`" autocomplete="controller=backend.product field=keywords"}
 			{textfield name="set_URL" class="text" id="set_url_`$categoryID`" autocomplete="controller=backend.product field=URL"}

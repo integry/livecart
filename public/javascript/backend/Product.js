@@ -289,7 +289,7 @@ Backend.Product.massActionHandler.prototype =
     {
         this.handlerMenu = handlerMenu;     
         this.actionSelector = handlerMenu.getElementsByTagName('select')[0];
-        this.valueEntryContainer = document.getElementsByClassName('bulkValues')[0];
+        this.valueEntryContainer = document.getElementsByClassName('bulkValues', handlerMenu)[0];
         this.form = this.actionSelector.form;
 
         this.actionSelector.onchange = this.actionSelectorChange.bind(this);
@@ -300,21 +300,26 @@ Backend.Product.massActionHandler.prototype =
     
     actionSelectorChange: function()
     {
-        for (k = 0; k < this.valueEntryContainer.childNodes.length; k++)
+		for (k = 0; k < this.valueEntryContainer.childNodes.length; k++)
         {
             if (this.valueEntryContainer.childNodes[k].style)
             {
-                this.valueEntryContainer.childNodes[k].style.display = 'none';                    
+                Element.hide(this.valueEntryContainer.childNodes[k]);
             }
         }
         
-        this.valueEntryContainer.style.display = '';
+        Element.show(this.valueEntryContainer);
         
         if (this.actionSelector.form.elements.namedItem(this.actionSelector.value))
         {
-            this.form.elements.namedItem(this.actionSelector.value).style.display = '';            
+            Element.show(this.form.elements.namedItem(this.actionSelector.value));
             this.form.elements.namedItem(this.actionSelector.value).focus();
         }    
+        else if (document.getElementsByClassName(this.actionSelector.value, this.handlerMenu))
+        {
+			var el = document.getElementsByClassName(this.actionSelector.value, this.handlerMenu)[0];
+			Element.show(el);
+		}
     },
     
     submit: function()

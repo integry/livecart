@@ -221,6 +221,8 @@ class ProductController extends StoreManagementController
 		$validator->addFilter('set_stock', new NumericFilter(''));
 		$validator->addFilter('inc_price', new NumericFilter(''));
 		$validator->addFilter('inc_stock', new NumericFilter(''));
+		$validator->addFilter('set_minimumQuantity', new NumericFilter(''));
+		$validator->addFilter('set_shippingSurchargeAmount', new NumericFilter(''));				
 		
         return new Form($validator);                
     }
@@ -257,6 +259,14 @@ class ProductController extends StoreManagementController
 			$price = $this->request->getValue($act);
 			$currencies = Store::getInstance()->getCurrencySet();
 		}
+		else if ('addRelated' == $act)
+		{
+			$relatedProduct = Product::getInstanceBySKU($this->request->getValue('related'));
+			if (!$relatedProduct)
+			{
+				return new JSONResponse(0);
+			}			
+		}            
 
         foreach ($products as $product)
 		{
@@ -299,7 +309,11 @@ class ProductController extends StoreManagementController
 			else if ('inc_stock' == $act)
 			{
 				$product->stockCount->set($product->stockCount->get() + $this->request->getValue($act));
-			}                    
+			}        
+			else if ('addRelated' == $act)
+			{
+				$product->addRelatedProduct($relatedProduct);
+			}            
             
 			$product->save();
         }		
