@@ -386,7 +386,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	private function getSiblingFilter($loadSelf)
 	{
 	  	$filter = new ARSelectFilter();
-	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->category->get()->getID());
+	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->parentNode->get()->getID());
 	  	$cond->addAND(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), 1));
 
 		if (!$loadSelf)
