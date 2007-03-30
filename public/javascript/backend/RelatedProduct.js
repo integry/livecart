@@ -108,6 +108,31 @@ Backend.RelatedProduct.SelectProductPopup.prototype = {
 }
 
 Backend.RelatedProduct.Group = {};
+
+Backend.RelatedProduct.Group.Callbacks =
+{
+    beforeDelete: function(li) { 
+        if(confirm(Backend.RelatedProduct.Group.Messages.areYouSureYouWantToDelete)) 
+        {
+            return Backend.RelatedProduct.Group.Links.remove + "/" + this.getRecordId(li);
+        }
+    },
+    afterDelete: function(li, response) {
+        if(!response.error) {
+            this.remove(li);
+            var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
+            tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') - li.getElementsByTagName('li').length);
+        }
+    },
+    beforeSort: function(li, order) { 
+        return Backend.RelatedProduct.Group.Links.sort + '&' + order;
+    },
+    afterSort: function(li, response) { 
+        console.info('afterSort') 
+    }
+}
+
+
 Backend.RelatedProduct.Group.Model = Class.create();
 Backend.RelatedProduct.Group.Model.prototype = {
     defaultLanguage: false,
@@ -120,8 +145,11 @@ Backend.RelatedProduct.Group.Model.prototype = {
             isDefault: '0'
         }
         
-        this.languages = $H(languages);
         this.store(data || {});
+        
+        if(!this.get('ID', false)) this.isNew = true;
+        
+        this.languages = $H(languages);
     },
     
     getDefaultLanguage: function()
@@ -151,19 +179,22 @@ Backend.RelatedProduct.Group.Model.prototype = {
         var self = this;
         new Ajax.Request(Backend.RelatedProduct.Group.Links.save,
         {
+            method: 'post',
+            postBody: serializedData,
             onSuccess: function(response) 
             {
+                var responseHash = {};
                 try 
                 { 
-                    var responseHash = eval("(" + response.responseText + ")");
-                    self.afterSave(responseHash, callbacks);
-                    self.saving = false;
+                    responseHash = eval("(" + response.responseText + ")");
                 }
                 catch(e)
                 {
-                    self.afterSave({status: 'serverError', responseText: response.responseText })
-                    self.saving = false;
+                    responseHash['status'] = 'serverError';
+                    responseHash['responseText'] = response.responseText;
                 }
+                
+                self.afterSave(responseHash, onSaveResponse);
             }
         });
     },
@@ -174,17 +205,17 @@ Backend.RelatedProduct.Group.Model.prototype = {
         {
             case 'success':
                 this.store('ID', response.ID);
-                callbacks.onSaveResponse.call();
                 break;
             case 'failure':
                 this.errors = response.errors;
-                callbacks.onSaveResponse.call();
                 break;
-            case 'failure':
-                this.errors = response.errors;
-                callbacks.onSaveResponse.call();
+            case 'serverError':
+                this.serverError = response.responseText;
             	break;
         }
+        
+        onSaveResponse.call(this, response.status);
+        this.saving = false;
     }
 }
 
@@ -232,8 +263,9 @@ Backend.RelatedProduct.Group.Controller.prototype = {
     
     onSave: function()
     {        
-        console.info('saving..');
-        this.model.save(Form.serialize(this.view.nodes.root), this.onSaveResponse);
+        var self = this;
+        ActiveForm.prototype.resetErrorMessages(this.view.nodes.root);
+        this.model.save(Form.serialize(this.view.nodes.root), function() { self.onSaveResponse() });
     },
     
     
@@ -242,13 +274,26 @@ Backend.RelatedProduct.Group.Controller.prototype = {
         console.info('canceling..'); 
     },
     
-    onSaveSuccess: function()
+    onSaveResponse: function(status)
     {
-        
-    },
-    
-    onSaveErrors: function()
-    {
+        if('success' == status)
+        {
+            if(this.model.isNew)
+            {
+                this.view.assign('ID', this.model.get('ID'));
+                this.view.assign('productID', this.model.get('productID'));
+                this.view.createNewGroup();
+                this.model.store('ID', false);
+            }
+            else
+            {
+                this.view.collapse();
+            }
+        }
+        else
+        {
+            ActiveForm.prototype.setErrorMessages(this.view.nodes.root, this.model.errors);
+        }
         
     }
 }
@@ -292,11 +337,12 @@ Backend.RelatedProduct.Group.View.prototype = {
         this.nodes.id.value = this.get('ID', '');
         this.nodes.productID.value = this.get('productID', '');
         
-        this.nodes.name.name += '[' + this.get('defaultLanguageID') + ']';
+        this.nodes.name.name += '_' + this.get('defaultLanguageID');
         this.nodes.name.value = this.get('name', '');
         
         this.clear();
     },
+    
     setOtherLanguagesValues: function()
     {
         var defaultLanguageID = this.get('defaultLanguageID');
@@ -311,12 +357,20 @@ Backend.RelatedProduct.Group.View.prototype = {
             translationFieldset.down('legend').update(language.value.name);
             
             var name = translationFieldset.down('.' + self.prefix + 'name');
-            name.name += '[' + language.key + ']';
+            name.name += '_' + language.key;
             name.value = self.get('name_' + language.key , '')
             
             self.nodes.translationsFieldsets[language.value.ID] = translationFieldset;
             self.nodes.translations.appendChild(translationFieldset);
         });
+    }, 
+    
+    createNewGroup: function()
+    {
+        var activeList = ActiveList.prototype.getInstance($("productRelationshipGroups_{/literal}{$productID}{literal}")); 
+        
+        li = activeList.addRecord()
+        
     }
 }
 

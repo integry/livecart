@@ -57,8 +57,10 @@ class FilterGroupController extends StoreManagementController
     private function getSpecFieldOptions($specFieldsList)
     {
         $specFieldOptions = array();
+
         foreach ($specFieldsList as $field)
         {
+            if(!isset($field['type'])) throw new Exception();
             if(!in_array($field['type'], array(SpecField::TYPE_TEXT_SIMPLE, SpecField::TYPE_TEXT_ADVANCED)))
             {                
                 $specFieldOptions[] = array(

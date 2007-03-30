@@ -811,7 +811,6 @@ Backend.RegisterMVC = function(MVC)
     
     MVC.Model.prototype.store = MVC.View.prototype.assign = function(name, value)
     {
-        console.info(arguments, name);
         if(arguments.length == 1)
         {
             this._data = name;

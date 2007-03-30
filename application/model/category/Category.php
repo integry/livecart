@@ -607,17 +607,11 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	  	
 	}
 
-	public function getSpecificationFieldArray($includeParentFields = false, $loadReferencedRecords = false, $mergeWithEmptyGroups = true)
+	public function getSpecificationFieldArray($includeParentFields = false, $loadReferencedRecords = false)
 	{
 		ClassLoader::import("application.model.category.SpecField");
         $specFields = SpecField::getRecordSet($this->getSpecificationFilter($includeParentFields), array('SpecFieldGroup'))->toArray();
 
-        if($mergeWithEmptyGroups)
-        {
-            $groups = $this->getSpecificationFieldGroupArray(false, true);
-            $specFields = $this->mergeWithEmptyGroups($specFields, $groups);
-        }
-        
         return $specFields;
 	}
 	

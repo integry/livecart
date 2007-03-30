@@ -39,7 +39,33 @@
 <link href="/public/stylesheet/library/TabControl.css" media="screen" rel="Stylesheet" type="text/css"/>
 <link href="/public/stylesheet/library/dhtmlxtree/dhtmlXTree.css" media="screen" rel="Stylesheet" type="text/css"/>
 
-
+<script type="text/javascript">
+{literal}
+    with(Backend.RelatedProduct.Group)
+    {
+        Links.save = '{/literal}{link controller=backend.productRelationshipGroup action=save}{literal}';
+        Links.remove = '{/literal}{link controller=backend.productRelationshipGroup action=delete}{literal}';
+        Links.sort = '{/literal}{link controller=backend.productRelationshipGroup action=sort}{literal}';
+        
+        Messages.areYouSureYouWantToDelete = '{/literal}{t _Are_you_sure_you_want_to_delete}{literal}'
+    }
+    
+    
+    Backend.RelatedProduct.links = {};
+    Backend.RelatedProduct.messages = {};
+    with(Backend.RelatedProduct)
+    {
+        links.related = '{/literal}{link controller=backend.productRelationship action=addRelated}/{$productID}{literal}';
+        links.deleteRelated = '{/literal}{link controller=backend.productRelationship action=delete}/{$productID}{literal}';
+        links.selectProduct = '{/literal}{link controller=backend.productRelationship action=selectProduct}#cat_{$categoryID}#tabProducts__{literal}';
+        links.sort = '{/literal}{link controller=backend.productRelationship action=sort}/{$productID}?target=productRelationships_{$productID}{literal}';
+        
+        messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
+        messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_relation|addslashes}{literal}';
+    }
+{/literal}
+</script>
+    
 <div id="productRelationshipMsg_{$productID}" style="display: none;"></div>
 
 <fieldset class="container">
@@ -53,15 +79,9 @@
 
 <fieldset id="relatedProduct_group_new_{$categoryID}_form">
     {include file="backend/productRelationshipGroup/form.tpl"}
+    
     <script type="text/javascript">
     {literal}
-        with(Backend.RelatedProduct.Group)
-        {
-            Links.save = '{/literal}{link controller=backend.productRelationshipGroup action=save}{literal}';
-            Links.remove = '{/literal}{link controller=backend.productRelationshipGroup action=delete}{literal}';
-            Links.sort = '{/literal}{link controller=backend.productRelationshipGroup action=sort}{literal}';
-        }
-        
         var emptyGroupModel = new Backend.RelatedProduct.Group.Model({Product: {ID: {/literal}{$productID}{literal}}}, {/literal}{json array=$languages}{literal});
         new Backend.RelatedProduct.Group.Controller($("relatedProduct_group_new_{/literal}{$categoryID}{literal}_form").down('form'), emptyGroupModel);
     {/literal}
@@ -77,24 +97,14 @@
     {/foreach}
 </ul>
 
+<ul id="productRelationshipGroups_{$productID}" class="activeList_add_sort activeList_add_delete">
+        
+</ul>
+
 {literal}
 <script type="text/javascript">
-     /*
     try
     {
-        with(Backend.RelatedProduct)
-        {
-            links = {};
-            links.related = '{/literal}{link controller=backend.productRelationship action=addRelated}/{$productID}{literal}';
-            links.deleteRelated = '{/literal}{link controller=backend.productRelationship action=delete}/{$productID}{literal}';
-            links.selectProduct = '{/literal}{link controller=backend.productRelationship action=selectProduct}#cat_{$categoryID}#tabProducts__{literal}';
-            links.sort = '{/literal}{link controller=backend.productRelationship action=sort}/{$productID}?target=productRelationships_{$productID}{literal}';
-            
-            messages = {};
-            messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
-            messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_relation|addslashes}{literal}';
-        }
-        
         Event.observe($("selectProduct_{/literal}{$productID}{literal}"), 'click', function(e) {
             Event.stop(e);
             new Backend.RelatedProduct.SelectProductPopup(
@@ -106,12 +116,12 @@
             );
         });
         
-        ActiveList.prototype.getInstance($("productRelationships_{/literal}{$productID}{literal}"), Backend.RelatedProduct.activeListCallbacks);     
+        ActiveList.prototype.getInstance($("productRelationshipGroups_{/literal}{$productID}{literal}"), Backend.RelatedProduct.Group.Callbacks);
+        ActiveList.prototype.getInstance($("productRelationships_{/literal}{$productID}{literal}"), Backend.RelatedProduct.activeListCallbacks);   
     }
     catch(e)
     {
-        console.imfo(e);
+        console.info(e);
     }
-    */
 </script>
 {/literal}
