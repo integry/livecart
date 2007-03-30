@@ -363,14 +363,26 @@ Backend.RelatedProduct.Group.View.prototype = {
             self.nodes.translationsFieldsets[language.value.ID] = translationFieldset;
             self.nodes.translations.appendChild(translationFieldset);
         });
+        
+        this.clear();
     }, 
     
     createNewGroup: function()
     {
-        var activeList = ActiveList.prototype.getInstance($("productRelationshipGroups_{/literal}{$productID}{literal}")); 
+        var activeList = ActiveList.prototype.getInstance($(this.prefix + "groups_{/literal}{$productID}{literal}")); 
         
-        li = activeList.addRecord()
+        var containerDiv = document.createElement('div');
+        containerDiv.update(
+            + '<span class="'+this.prefix+'group_title">' + this.nodes.name + '</span>'
+            + '<ul id="' + this.prefix + 'list" class="' + this.prefix + 'list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_' + this.prefix + 'list">'
+            + '</ul>'
+        );
         
+        li = activeList.addRecord(containerDiv);
+        activeList.highlight(li);
+        activeList.touch();
+        
+        this.clear();
     }
 }
 

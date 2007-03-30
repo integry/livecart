@@ -88,16 +88,16 @@
     </script>
 </fieldset>
 
-<ul id="productRelationships_{$productID}" class="activeList_add_sort activeList_add_delete">
+<ul id="productRelationships_list_{$productID}" class="productRelationshipsList activeList_add_sort activeList_add_delete">
     {foreach item="relation" from=$relationships}
-        <li id="productRelationships_{$productID}_{$relation.RelatedProduct.ID}">
+        <li id="productRelationships_list_{$productID}_{$relation.RelatedProduct.ID}">
             {assign var="product" value=$relation.RelatedProduct}
             {include file="backend/productRelationship/addRelated.tpl" product=$product}
         </li>
     {/foreach}
 </ul>
 
-<ul id="productRelationshipGroups_{$productID}" class="activeList_add_sort activeList_add_delete">
+<ul id="productRelationships_groups_{$productID}" class="activeList_add_sort activeList_add_delete">
         
 </ul>
 
@@ -116,8 +116,8 @@
             );
         });
         
-        ActiveList.prototype.getInstance($("productRelationshipGroups_{/literal}{$productID}{literal}"), Backend.RelatedProduct.Group.Callbacks);
-        ActiveList.prototype.getInstance($("productRelationships_{/literal}{$productID}{literal}"), Backend.RelatedProduct.activeListCallbacks);   
+        ActiveList.prototype.getInstance($("productRelationships_groups_{/literal}{$productID}{literal}"), Backend.RelatedProduct.Group.Callbacks);
+        ActiveList.prototype.getInstance($("productRelationships_list_{/literal}{$productID}{literal}"), Backend.RelatedProduct.activeListCallbacks);   
     }
     catch(e)
     {

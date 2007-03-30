@@ -37,7 +37,7 @@ class ProductController extends StoreManagementController
 		$response->setValue("categoryID", $category->getID());
 		$response->setValue("offset", $this->request->getValue('offset'));
 		$response->setValue("totalCount", '55');
-		$response->setValue("currency", Store::getInstance()->getDefaultCurrency()->getID());
+		$response->setValue("currency", $this->store->getDefaultCurrency()->getID());
 
 		$path = $this->getCategoryPathArray($category);
 		$response->setValue("path", $path);
