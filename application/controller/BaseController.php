@@ -77,7 +77,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 	{
 		parent::__construct($request);
 
-		$this->session = new Session();
+		$this->session = Session::getInstance();
 		$user = $this->session->getValue("user");
 		if (!empty($user)) 
 		{
@@ -156,12 +156,12 @@ abstract class BaseController extends Controller implements LCiTranslator
 	
 	protected function getSessionData($key = '')
 	{
-		return $this->store->getSession()->getControllerData($this, $key);
+		return Session::getInstance()->getControllerData($this, $key);
 	}
 	
 	protected function setSessionData($key, $value)
 	{
-		return $this->store->getSession()->setControllerData($this, $key, $value);
+		return Session::getInstance()->setControllerData($this, $key, $value);
 	}
 		
 	/**

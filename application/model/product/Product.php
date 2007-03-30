@@ -755,6 +755,40 @@ class Product extends MultilingualObject
     {
         return ProductRelationship::hasRelationship($product, $this);
     }
+    
+    /**
+     *  Check if the product is available for purchasing
+     */
+    public function isAvailable()
+    {
+        if (!$this->isLoaded())
+        {
+            $this->load();    
+        }
+        
+        if ($this->isEnabled->get())
+        {
+    		$config = Config::getInstance();
+		
+		    if ($config->getValue('DISABLE_INVENTORY') || !$config->getValue('DISABLE_NOT_IN_STOCK'))
+		    {
+                return true;
+            }
+		
+            if (!$this->stockCount->get() && !$this->allowBackordering->get())
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return false;           
+        } 
+    }
 }
 
 ?>

@@ -18,6 +18,42 @@ class User extends ActiveRecordModel
 	 */
 	const ANONYMOUS_USER_ID = 0;
 
+	public static function defineSchema($className = __CLASS__)
+	{
+		$schema = self::getSchemaInstance($className);
+		$schema->setName("User");
+
+		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
+		$schema->registerField(new ARField("email", ARVarchar::instance(60)));
+		$schema->registerField(new ARField("password", ARVarchar::instance(16)));
+		$schema->registerField(new ARField("firstName", ARVarchar::instance(20)));
+		$schema->registerField(new ARField("middleName", ARVarchar::instance(20)));
+		$schema->registerField(new ARField("lastName", ARVarchar::instance(20)));
+		$schema->registerField(new ARField("fullName", ARVarchar::instance(60)));
+		$schema->registerField(new ARField("nickName", ARVarchar::instance(20)));
+		$schema->registerField(new ARField("creationDate", ARDateTime::instance()));
+		$schema->registerField(new ARField("isActive", ARBool::instance()));
+	}
+
+    public static function getCurrentUser()
+    {
+        $user = Session::getInstance()->getObject('User');
+    
+        if (!$user)
+        {
+            $user = self::getNewInstance();
+        }
+        
+        return $user;
+    }
+
+    public static function getNewInstance()
+    {
+        $instance = parent::getNewInstance(__CLASS__);    
+        
+        return $instance;
+    }
+
 	/**
 	 * Gets an instance of user by using loginn information
 	 *
@@ -189,22 +225,6 @@ class User extends ActiveRecordModel
 		return ActiveRecord::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
-	public static function defineSchema($className = __CLASS__)
-	{
-		$schema = self::getSchemaInstance($className);
-		$schema->setName("User");
-
-		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARField("email", ARVarchar::instance(60)));
-		$schema->registerField(new ARField("password", ARVarchar::instance(16)));
-		$schema->registerField(new ARField("firstName", ARVarchar::instance(20)));
-		$schema->registerField(new ARField("middleName", ARVarchar::instance(20)));
-		$schema->registerField(new ARField("lastName", ARVarchar::instance(20)));
-		$schema->registerField(new ARField("fullName", ARVarchar::instance(60)));
-		$schema->registerField(new ARField("nickName", ARVarchar::instance(20)));
-		$schema->registerField(new ARField("creationDate", ARDateTime::instance()));
-		$schema->registerField(new ARField("isActive", ARBool::instance()));
-	}
 }
 
 ?>

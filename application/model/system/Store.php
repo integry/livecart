@@ -333,17 +333,6 @@ class Store
 		return $currArray;
 	}
 
-	public function getSession()
-	{
-		if (!$this->session)
-		{
-			ClassLoader::import('framework.request.Session');
-			$this->session = new Session();			
-		}
-
-		return $this->session;
-	}
-
 	/**
 	 * Loads currency data from database
 	 */

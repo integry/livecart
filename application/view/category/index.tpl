@@ -43,6 +43,10 @@
         			</p>
             
                 </p>
+                
+                <p class="order">
+                    <a href="{link controller=order action=addToCart id=$product.ID returnPath=true}">{t Add to Cart}</a>                
+                </p>
             
             </fieldset>
 				
