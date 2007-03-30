@@ -278,7 +278,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$ids = array();
 		foreach ($this->specFieldArrayCache as $field)
 		{
-		  	$ids[$field['ID']] = true;
+		  	if(!empty($field['ID'])) $ids[$field['ID']] = true;
 		}
 
 		if (!$ids)

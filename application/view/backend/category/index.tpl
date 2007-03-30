@@ -114,6 +114,8 @@
     	Backend.Category.links.categoryAutoloading = '{link controller=backend.category action=xmlBranch}';
     	Backend.Category.links.categoryRecursiveAutoloading = '{link controller=backend.category action=xmlRecursivePath}';
     	Backend.Category.links.addProduct  = '{link controller=backend.product action=add id=_id_}';
+        
+        Backend.availableLanguages = {json array=$languages};
     	    
         Backend.Category.messages = {literal}{}{/literal};
         Backend.Category.messages._reorder_failed = '{t _reorder_failed|addslashes}';

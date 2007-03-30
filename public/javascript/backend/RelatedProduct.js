@@ -106,3 +106,218 @@ Backend.RelatedProduct.SelectProductPopup.prototype = {
         
     }
 }
+
+Backend.RelatedProduct.Group = {};
+Backend.RelatedProduct.Group.Model = Class.create();
+Backend.RelatedProduct.Group.Model.prototype = {
+    defaultLanguage: false,
+    
+    initialize: function(data, languages)
+    {
+        languages['lt'] = {
+            ID: 'lt',
+            name: 'Lithuanian',
+            isDefault: '0'
+        }
+        
+        this.languages = $H(languages);
+        this.store(data || {});
+    },
+    
+    getDefaultLanguage: function()
+    {
+        if(this.defaultLanguage === false) 
+        {
+            var self = this;
+            this.languages.each(function(language)
+            {
+                if(parseInt(language.value.isDefault))
+                {
+                    self.defaultLanguage = language.value;
+                    throw $break;
+                }   
+            });
+        }
+        
+        return this.defaultLanguage;
+    }, 
+    
+    save: function(serializedData, onSaveResponse)
+    {
+        if(true == this.saving) return;
+        this.saving = true;
+        this.serverError = false;
+        
+        var self = this;
+        new Ajax.Request(Backend.RelatedProduct.Group.Links.save,
+        {
+            onSuccess: function(response) 
+            {
+                try 
+                { 
+                    var responseHash = eval("(" + response.responseText + ")");
+                    self.afterSave(responseHash, callbacks);
+                    self.saving = false;
+                }
+                catch(e)
+                {
+                    self.afterSave({status: 'serverError', responseText: response.responseText })
+                    self.saving = false;
+                }
+            }
+        });
+    },
+    
+    afterSave: function(response, onSaveResponse)
+    {
+        switch(response.status)
+        {
+            case 'success':
+                this.store('ID', response.ID);
+                callbacks.onSaveResponse.call();
+                break;
+            case 'failure':
+                this.errors = response.errors;
+                callbacks.onSaveResponse.call();
+                break;
+            case 'failure':
+                this.errors = response.errors;
+                callbacks.onSaveResponse.call();
+            	break;
+        }
+    }
+}
+
+Backend.RelatedProduct.Group.Controller = Class.create();
+Backend.RelatedProduct.Group.Controller.prototype = {
+    
+    initialize: function(root, model)
+    {        
+        this.model = model;
+        this.view = new Backend.RelatedProduct.Group.View(root)
+        
+        this.setDefaultValues();
+        this.setTranslationValues();
+        
+        this.bindActions()
+    },
+    
+    setDefaultValues: function()
+    {
+        var defaultLanguageID = this.model.getDefaultLanguage()['ID'];
+        
+        this.view.assign('defaultLanguageID', defaultLanguageID);
+        this.view.assign('name', this.model.get('name.' + defaultLanguageID));
+        this.view.assign('ID', this.model.get('ID', ''));
+        this.view.assign('productID', this.model.get('Product.ID', ''));
+        
+        this.view.setDefaultLanguageValues();
+    },
+    
+    setTranslationValues: function()
+    {
+        this.view.assign('defaultLanguageID', this.model.getDefaultLanguage()['ID']);
+        this.view.assign('name', this.model.get('name'));
+        this.view.assign('languages', this.model.languages);
+        this.view.setOtherLanguagesValues(this.model);  
+    },
+    
+    bindActions: function()
+    {
+        var self = this;
+        
+        Event.observe(this.view.nodes.save, 'click', function(e) { Event.stop(e); self.onSave(); });
+        Event.observe(this.view.nodes.cancel, 'click', function(e) { Event.stop(e); self.onCancel(); });
+    },
+    
+    onSave: function()
+    {        
+        console.info('saving..');
+        this.model.save(Form.serialize(this.view.nodes.root), this.onSaveResponse);
+    },
+    
+    
+    onCancel: function()
+    {
+        console.info('canceling..'); 
+    },
+    
+    onSaveSuccess: function()
+    {
+        
+    },
+    
+    onSaveErrors: function()
+    {
+        
+    }
+}
+
+
+Backend.RelatedProduct.Group.View = Class.create();
+Backend.RelatedProduct.Group.View.prototype = {
+    prefix: 'productRelationshipGroup_',
+    
+    initialize: function(root)
+    {
+        this.findNodes(root);
+        this.clear();
+    },
+    
+    findNodes: function(root)
+    {
+        this.nodes = {};
+        this.nodes.root = root;
+        
+        // controls
+        this.nodes.controls = this.nodes.root.down('.' + this.prefix + 'controls');
+        this.nodes.save = this.nodes.controls.down('.' + this.prefix + 'save');
+        this.nodes.cancel = this.nodes.controls.down('.' + this.prefix + 'cancel');
+        
+        this.nodes.id = this.nodes.root.down('.' + this.prefix + 'ID');
+        this.nodes.productID = this.nodes.root.down('.' + this.prefix + 'productID');
+        this.nodes.name = this.nodes.root.down('.' + this.prefix + 'name');
+        
+        
+        this.nodes.translations = this.nodes.root.down('.' + this.prefix + 'translations');
+        this.nodes.translationTemplate = this.nodes.translations.down('.' + this.prefix + 'translations_language');
+        Element.remove(this.nodes.translationTemplate);
+        Element.removeClassName(this.nodes.translationTemplate, 'dom_template');
+        
+        this.nodes.translationsFieldsets = {};
+    },
+    
+    setDefaultLanguageValues: function()
+    {
+        this.nodes.id.value = this.get('ID', '');
+        this.nodes.productID.value = this.get('productID', '');
+        
+        this.nodes.name.name += '[' + this.get('defaultLanguageID') + ']';
+        this.nodes.name.value = this.get('name', '');
+        
+        this.clear();
+    },
+    setOtherLanguagesValues: function()
+    {
+        var defaultLanguageID = this.get('defaultLanguageID');
+        
+        var self = this;
+        this.get('languages', {}).each(function(language)
+        {
+            if(language.value.ID == defaultLanguageID) return;
+            
+            var translationFieldset = self.nodes.translationTemplate.cloneNode(true);
+            
+            translationFieldset.down('legend').update(language.value.name);
+            
+            var name = translationFieldset.down('.' + self.prefix + 'name');
+            name.name += '[' + language.key + ']';
+            name.value = self.get('name_' + language.key , '')
+            
+            self.nodes.translationsFieldsets[language.value.ID] = translationFieldset;
+            self.nodes.translations.appendChild(translationFieldset);
+        });
+    }
+}
+
+Backend.RegisterMVC(Backend.RelatedProduct.Group);

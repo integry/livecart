@@ -798,3 +798,50 @@ function restoreMenu(blockId, menuId)
 	Effect.Fade(blockId, {duration: 0.15});	  	
 	document.getElementById(menuId).style.display = 'block'; 	
 }
+
+
+
+/***************************************************
+ * MVC View
+ **************************************************/
+Backend.RegisterMVC = function(MVC)
+{
+    MVC.Messages = {};
+    MVC.Links = {};
+    
+    MVC.Model.prototype.store = MVC.View.prototype.assign = function(name, value)
+    {
+        console.info(arguments, name);
+        if(arguments.length == 1)
+        {
+            this._data = name;
+        }
+        else
+        {
+            this._data[name] = value;
+        }
+    },
+
+    MVC.Model.prototype.clear = MVC.View.prototype.clear = function()
+    {
+        this._data = {};
+    },
+ 
+    MVC.Model.prototype.get = MVC.View.prototype.get = function(name, defaultValue)
+    {
+        var keys = name.split('.');
+        var destination = this._data;
+        var found = true;
+        $A(keys).each(function(key) 
+        {
+            if(destination[key] === undefined) 
+            {
+                found = false;
+                throw $break;
+            }
+            destination = destination[key];
+        });
+        
+        return found ? destination : defaultValue;
+    }
+}
