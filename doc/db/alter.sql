@@ -1,11 +1,11 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v4.1.2                     #
+# Script generated with: DeZign for Databases v4.1.3                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-03-16 15:38                                #
+# Created on:            2007-03-30 19:23                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -21,6 +21,8 @@ ALTER TABLE Product DROP FOREIGN KEY ProductImage_Product;
 
 ALTER TABLE Category DROP FOREIGN KEY Category_Category;
 
+ALTER TABLE Category DROP FOREIGN KEY CategoryImage_Category;
+
 ALTER TABLE SpecificationItem DROP FOREIGN KEY SpecFieldValue_SpecificationItem;
 
 ALTER TABLE SpecificationItem DROP FOREIGN KEY Product_SpecificationItem;
@@ -29,13 +31,21 @@ ALTER TABLE SpecificationItem DROP FOREIGN KEY SpecField_SpecificationItem;
 
 ALTER TABLE SpecField DROP FOREIGN KEY Category_SpecField;
 
+ALTER TABLE SpecField DROP FOREIGN KEY SpecFieldGroup_SpecField;
+
 ALTER TABLE SpecFieldValue DROP FOREIGN KEY SpecField_SpecFieldValue;
+
+ALTER TABLE CustomerOrder DROP FOREIGN KEY User_CustomerOrder;
 
 ALTER TABLE OrderedItem DROP FOREIGN KEY Product_OrderedItem;
 
 ALTER TABLE OrderedItem DROP FOREIGN KEY CustomerOrder_OrderedItem;
 
-ALTER TABLE UserConfigValue DROP FOREIGN KEY User_UserConfigValue;
+ALTER TABLE OrderedItem DROP FOREIGN KEY Shipment_OrderedItem;
+
+ALTER TABLE User DROP FOREIGN KEY UserBillingAddress_User;
+
+ALTER TABLE User DROP FOREIGN KEY UserShippingAddress_User;
 
 ALTER TABLE AccessControlList DROP FOREIGN KEY User_AccessControlList;
 
@@ -51,11 +61,11 @@ ALTER TABLE Filter DROP FOREIGN KEY FilterGroup_Filter;
 
 ALTER TABLE FilterGroup DROP FOREIGN KEY SpecField_FilterGroup;
 
-ALTER TABLE RelatedProduct DROP FOREIGN KEY Product_RelatedProduct_;
+ALTER TABLE ProductRelationship DROP FOREIGN KEY Product_RelatedProduct_;
 
-ALTER TABLE RelatedProduct DROP FOREIGN KEY Product_RelatedProduct;
+ALTER TABLE ProductRelationship DROP FOREIGN KEY Product_ProductRelationship;
 
-ALTER TABLE RelatedProduct DROP FOREIGN KEY RelatedProductGroup_RelatedProduct;
+ALTER TABLE ProductRelationship DROP FOREIGN KEY ProductRelationshipGroup_ProductRelationship;
 
 ALTER TABLE ProductPrice DROP FOREIGN KEY Product_ProductPrice;
 
@@ -81,27 +91,56 @@ ALTER TABLE SpecificationDateValue DROP FOREIGN KEY Product_SpecificationDateVal
 
 ALTER TABLE SpecificationDateValue DROP FOREIGN KEY SpecField_SpecificationDateValue;
 
-ALTER TABLE City DROP FOREIGN KEY State_City;
-
 ALTER TABLE SpecFieldGroup DROP FOREIGN KEY Category_SpecFieldGroup;
 
-ALTER TABLE RelatedProductGroup DROP FOREIGN KEY Product_RelatedProductGroup;
+ALTER TABLE ProductRelationshipGroup DROP FOREIGN KEY Product_ProductRelationshipGroup;
+
+ALTER TABLE ProductReview DROP FOREIGN KEY Product_ProductReview;
+
+ALTER TABLE ProductReview DROP FOREIGN KEY User_ProductReview;
+
+ALTER TABLE UserBillingAddress DROP FOREIGN KEY User_UserBillingAddress;
+
+ALTER TABLE UserBillingAddress DROP FOREIGN KEY UserAddress_UserBillingAddress;
+
+ALTER TABLE Transaction DROP FOREIGN KEY CustomerOrder_Transaction;
+
+ALTER TABLE Shipment DROP FOREIGN KEY CustomerOrder_Shipment;
+
+ALTER TABLE UserShippingAddress DROP FOREIGN KEY User_UserShippingAddress;
+
+ALTER TABLE UserShippingAddress DROP FOREIGN KEY UserAddress_UserShippingAddress;
+
+ALTER TABLE OrderNote DROP FOREIGN KEY CustomerOrder_OrderNote;
+
+ALTER TABLE OrderNote DROP FOREIGN KEY User_OrderNote;
+
+ALTER TABLE DeliveryZoneCountry DROP FOREIGN KEY DeliveryZone_DeliveryZoneCountry;
+
+ALTER TABLE DeliveryZoneState DROP FOREIGN KEY DeliveryZone_DeliveryZoneState;
+
+ALTER TABLE DeliveryZoneState DROP FOREIGN KEY State_DeliveryZoneState;
+
+ALTER TABLE DeliveryZoneCityMask DROP FOREIGN KEY DeliveryZone_DeliveryZoneCityMask;
+
+ALTER TABLE DeliveryZoneZipMask DROP FOREIGN KEY DeliveryZone_DeliveryZoneZipMask;
+
+ALTER TABLE DeliveryZoneAddressMask DROP FOREIGN KEY DeliveryZone_DeliveryZoneAddressMask;
+
+ALTER TABLE TaxRate DROP FOREIGN KEY TaxType_TaxRate;
+
+ALTER TABLE TaxRate DROP FOREIGN KEY DeliveryZone_TaxRate;
 
 # ---------------------------------------------------------------------- #
-# Modify table "Category"                                                #
+# Modify table "OrderedItem"                                             #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE Category ALTER COLUMN isEnabled DROP DEFAULT;
+ALTER TABLE OrderedItem DROP PRIMARY KEY;
 
-ALTER TABLE Category ADD COLUMN defaultImageID INTEGER;
+ALTER TABLE OrderedItem MODIFY ID INTEGER NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE Category ADD COLUMN availableProductCount INTEGER;
-
-ALTER TABLE Category MODIFY isEnabled BOOL DEFAULT 0;
-
-ALTER TABLE Category MODIFY defaultImageID INTEGER AFTER parentNodeID;
-
-ALTER TABLE Category MODIFY availableProductCount INTEGER AFTER totalProductCount;
+ALTER TABLE OrderedItem ADD CONSTRAINT PK_OrderedItem 
+    PRIMARY KEY (ID);
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
@@ -114,13 +153,13 @@ ALTER TABLE Product ADD CONSTRAINT Manufacturer_Product
     FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE Product ADD CONSTRAINT ProductImage_Product 
-    FOREIGN KEY (defaultImageID) REFERENCES ProductImage (ID);
+    FOREIGN KEY (defaultImageID) REFERENCES ProductImage (ID) ON DELETE SET NULL;
 
 ALTER TABLE Category ADD CONSTRAINT Category_Category 
     FOREIGN KEY (parentNodeID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Category ADD CONSTRAINT CategoryImage_Category 
-    FOREIGN KEY (defaultImageID) REFERENCES CategoryImage (ID);
+    FOREIGN KEY (defaultImageID) REFERENCES CategoryImage (ID) ON DELETE SET NULL;
 
 ALTER TABLE SpecificationItem ADD CONSTRAINT SpecFieldValue_SpecificationItem 
     FOREIGN KEY (specFieldValueID) REFERENCES SpecFieldValue (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -134,17 +173,29 @@ ALTER TABLE SpecificationItem ADD CONSTRAINT SpecField_SpecificationItem
 ALTER TABLE SpecField ADD CONSTRAINT Category_SpecField 
     FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE SpecField ADD CONSTRAINT SpecFieldGroup_SpecField 
+    FOREIGN KEY (specFieldGroupID) REFERENCES SpecFieldGroup (ID) ON DELETE CASCADE;
+
 ALTER TABLE SpecFieldValue ADD CONSTRAINT SpecField_SpecFieldValue 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
+ALTER TABLE CustomerOrder ADD CONSTRAINT User_CustomerOrder 
+    FOREIGN KEY (userID) REFERENCES User (ID);
+
 ALTER TABLE OrderedItem ADD CONSTRAINT Product_OrderedItem 
-    FOREIGN KEY (ProductID) REFERENCES Product (ID);
+    FOREIGN KEY (productID) REFERENCES Product (ID);
 
 ALTER TABLE OrderedItem ADD CONSTRAINT CustomerOrder_OrderedItem 
-    FOREIGN KEY (CustomerOrderID) REFERENCES CustomerOrder (ID);
+    FOREIGN KEY (customerOrderID) REFERENCES CustomerOrder (ID);
 
-ALTER TABLE UserConfigValue ADD CONSTRAINT User_UserConfigValue 
-    FOREIGN KEY (userID) REFERENCES User (ID);
+ALTER TABLE OrderedItem ADD CONSTRAINT Shipment_OrderedItem 
+    FOREIGN KEY (shipmentID) REFERENCES Shipment (ID) ON DELETE SET NULL;
+
+ALTER TABLE User ADD CONSTRAINT UserBillingAddress_User 
+    FOREIGN KEY (defaultBillingAddressID) REFERENCES UserBillingAddress (ID) ON DELETE SET NULL;
+
+ALTER TABLE User ADD CONSTRAINT UserShippingAddress_User 
+    FOREIGN KEY (defaultShippingAddressID) REFERENCES UserShippingAddress (ID) ON DELETE CASCADE;
 
 ALTER TABLE AccessControlList ADD CONSTRAINT User_AccessControlList 
     FOREIGN KEY (UserID) REFERENCES User (ID);
@@ -167,14 +218,14 @@ ALTER TABLE Filter ADD CONSTRAINT FilterGroup_Filter
 ALTER TABLE FilterGroup ADD CONSTRAINT SpecField_FilterGroup 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE RelatedProduct ADD CONSTRAINT Product_RelatedProduct_ 
+ALTER TABLE ProductRelationship ADD CONSTRAINT Product_RelatedProduct_ 
     FOREIGN KEY (ProductID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE RelatedProduct ADD CONSTRAINT Product_RelatedProduct 
+ALTER TABLE ProductRelationship ADD CONSTRAINT Product_ProductRelationship 
     FOREIGN KEY (relatedProductID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE RelatedProduct ADD CONSTRAINT RelatedProductGroup_RelatedProduct 
-    FOREIGN KEY (relatedProductGroupID) REFERENCES RelatedProductGroup (ID) ON DELETE CASCADE;
+ALTER TABLE ProductRelationship ADD CONSTRAINT ProductRelationshipGroup_ProductRelationship 
+    FOREIGN KEY (productRelationshipGroupID) REFERENCES ProductRelationshipGroup (ID) ON DELETE CASCADE;
 
 ALTER TABLE ProductPrice ADD CONSTRAINT Product_ProductPrice 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -212,11 +263,62 @@ ALTER TABLE SpecificationDateValue ADD CONSTRAINT Product_SpecificationDateValue
 ALTER TABLE SpecificationDateValue ADD CONSTRAINT SpecField_SpecificationDateValue 
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE City ADD CONSTRAINT State_City 
-    FOREIGN KEY (countryCode, stateCode) REFERENCES State (countryCode,code);
-
 ALTER TABLE SpecFieldGroup ADD CONSTRAINT Category_SpecFieldGroup 
-    FOREIGN KEY (categoryID) REFERENCES Category (ID);
+    FOREIGN KEY (categoryID) REFERENCES Category (ID) ON DELETE CASCADE;
 
-ALTER TABLE RelatedProductGroup ADD CONSTRAINT Product_RelatedProductGroup 
+ALTER TABLE ProductRelationshipGroup ADD CONSTRAINT Product_ProductRelationshipGroup 
     FOREIGN KEY (ProductID) REFERENCES Product (ID) ON DELETE CASCADE;
+
+ALTER TABLE ProductReview ADD CONSTRAINT Product_ProductReview 
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE;
+
+ALTER TABLE ProductReview ADD CONSTRAINT User_ProductReview 
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
+
+ALTER TABLE UserBillingAddress ADD CONSTRAINT User_UserBillingAddress 
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
+
+ALTER TABLE UserBillingAddress ADD CONSTRAINT UserAddress_UserBillingAddress 
+    FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE;
+
+ALTER TABLE Transaction ADD CONSTRAINT CustomerOrder_Transaction 
+    FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
+
+ALTER TABLE Shipment ADD CONSTRAINT CustomerOrder_Shipment 
+    FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
+
+ALTER TABLE UserShippingAddress ADD CONSTRAINT User_UserShippingAddress 
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
+
+ALTER TABLE UserShippingAddress ADD CONSTRAINT UserAddress_UserShippingAddress 
+    FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE;
+
+ALTER TABLE OrderNote ADD CONSTRAINT CustomerOrder_OrderNote 
+    FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
+
+ALTER TABLE OrderNote ADD CONSTRAINT User_OrderNote 
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
+
+ALTER TABLE DeliveryZoneCountry ADD CONSTRAINT DeliveryZone_DeliveryZoneCountry 
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
+
+ALTER TABLE DeliveryZoneState ADD CONSTRAINT DeliveryZone_DeliveryZoneState 
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
+
+ALTER TABLE DeliveryZoneState ADD CONSTRAINT State_DeliveryZoneState 
+    FOREIGN KEY (stateID) REFERENCES State (ID) ON DELETE CASCADE;
+
+ALTER TABLE DeliveryZoneCityMask ADD CONSTRAINT DeliveryZone_DeliveryZoneCityMask 
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID);
+
+ALTER TABLE DeliveryZoneZipMask ADD CONSTRAINT DeliveryZone_DeliveryZoneZipMask 
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
+
+ALTER TABLE DeliveryZoneAddressMask ADD CONSTRAINT DeliveryZone_DeliveryZoneAddressMask 
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
+
+ALTER TABLE TaxRate ADD CONSTRAINT TaxType_TaxRate 
+    FOREIGN KEY (taxTypeID) REFERENCES TaxType (ID) ON DELETE CASCADE;
+
+ALTER TABLE TaxRate ADD CONSTRAINT DeliveryZone_TaxRate 
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;

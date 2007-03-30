@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2007-03-26 13:30                                #
+# Created on:            2007-03-30 19:19                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -34,6 +34,28 @@ ALTER TABLE SpecField DROP FOREIGN KEY Category_SpecField;
 ALTER TABLE SpecField DROP FOREIGN KEY SpecFieldGroup_SpecField;
 
 ALTER TABLE SpecFieldValue DROP FOREIGN KEY SpecField_SpecFieldValue;
+
+ALTER TABLE CustomerOrder DROP FOREIGN KEY User_CustomerOrder;
+
+ALTER TABLE OrderedItem DROP FOREIGN KEY Product_OrderedItem;
+
+ALTER TABLE OrderedItem DROP FOREIGN KEY CustomerOrder_OrderedItem;
+
+ALTER TABLE OrderedItem DROP FOREIGN KEY Shipment_OrderedItem;
+
+ALTER TABLE User DROP FOREIGN KEY UserBillingAddress_User;
+
+ALTER TABLE User DROP FOREIGN KEY UserShippingAddress_User;
+
+ALTER TABLE AccessControlList DROP FOREIGN KEY User_AccessControlList;
+
+ALTER TABLE AccessControlList DROP FOREIGN KEY RoleGroup_AccessControlList;
+
+ALTER TABLE AccessControlList DROP FOREIGN KEY Role_AccessControlList;
+
+ALTER TABLE UserGroup DROP FOREIGN KEY User_UserGroup;
+
+ALTER TABLE UserGroup DROP FOREIGN KEY RoleGroup_UserGroup;
 
 ALTER TABLE Filter DROP FOREIGN KEY FilterGroup_Filter;
 
@@ -72,6 +94,42 @@ ALTER TABLE SpecificationDateValue DROP FOREIGN KEY SpecField_SpecificationDateV
 ALTER TABLE SpecFieldGroup DROP FOREIGN KEY Category_SpecFieldGroup;
 
 ALTER TABLE ProductRelationshipGroup DROP FOREIGN KEY Product_ProductRelationshipGroup;
+
+ALTER TABLE ProductReview DROP FOREIGN KEY Product_ProductReview;
+
+ALTER TABLE ProductReview DROP FOREIGN KEY User_ProductReview;
+
+ALTER TABLE UserBillingAddress DROP FOREIGN KEY User_UserBillingAddress;
+
+ALTER TABLE UserBillingAddress DROP FOREIGN KEY UserAddress_UserBillingAddress;
+
+ALTER TABLE Transaction DROP FOREIGN KEY CustomerOrder_Transaction;
+
+ALTER TABLE Shipment DROP FOREIGN KEY CustomerOrder_Shipment;
+
+ALTER TABLE UserShippingAddress DROP FOREIGN KEY User_UserShippingAddress;
+
+ALTER TABLE UserShippingAddress DROP FOREIGN KEY UserAddress_UserShippingAddress;
+
+ALTER TABLE OrderNote DROP FOREIGN KEY CustomerOrder_OrderNote;
+
+ALTER TABLE OrderNote DROP FOREIGN KEY User_OrderNote;
+
+ALTER TABLE DeliveryZoneCountry DROP FOREIGN KEY DeliveryZone_DeliveryZoneCountry;
+
+ALTER TABLE DeliveryZoneState DROP FOREIGN KEY DeliveryZone_DeliveryZoneState;
+
+ALTER TABLE DeliveryZoneState DROP FOREIGN KEY State_DeliveryZoneState;
+
+ALTER TABLE DeliveryZoneCityMask DROP FOREIGN KEY DeliveryZone_DeliveryZoneCityMask;
+
+ALTER TABLE DeliveryZoneZipMask DROP FOREIGN KEY DeliveryZone_DeliveryZoneZipMask;
+
+ALTER TABLE DeliveryZoneAddressMask DROP FOREIGN KEY DeliveryZone_DeliveryZoneAddressMask;
+
+ALTER TABLE TaxRate DROP FOREIGN KEY TaxType_TaxRate;
+
+ALTER TABLE TaxRate DROP FOREIGN KEY DeliveryZone_TaxRate;
 
 # ---------------------------------------------------------------------- #
 # Drop table "Product"                                                   #
@@ -176,6 +234,80 @@ ALTER TABLE SpecFieldValue DROP PRIMARY KEY;
 DROP TABLE SpecFieldValue;
 
 # ---------------------------------------------------------------------- #
+# Drop table "CustomerOrder"                                             #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE CustomerOrder DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE CustomerOrder;
+
+# ---------------------------------------------------------------------- #
+# Drop table "OrderedItem"                                               #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE OrderedItem DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE OrderedItem;
+
+# ---------------------------------------------------------------------- #
+# Drop table "User"                                                      #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE User DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE User;
+
+# ---------------------------------------------------------------------- #
+# Drop table "AccessControlList"                                         #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE AccessControlList DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE AccessControlList;
+
+# ---------------------------------------------------------------------- #
+# Drop table "RoleGroup"                                                 #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE RoleGroup ALTER COLUMN parent DROP DEFAULT;
+
+ALTER TABLE RoleGroup DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE RoleGroup;
+
+# ---------------------------------------------------------------------- #
+# Drop table "UserGroup"                                                 #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE UserGroup DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE UserGroup;
+
+# ---------------------------------------------------------------------- #
 # Drop table "Filter"                                                    #
 # ---------------------------------------------------------------------- #
 
@@ -200,6 +332,18 @@ ALTER TABLE FilterGroup DROP PRIMARY KEY;
 # Drop table #
 
 DROP TABLE FilterGroup;
+
+# ---------------------------------------------------------------------- #
+# Drop table "Role"                                                      #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE Role DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE Role;
 
 # ---------------------------------------------------------------------- #
 # Drop table "ProductRelationship"                                       #
@@ -348,6 +492,30 @@ ALTER TABLE SpecificationDateValue DROP PRIMARY KEY;
 DROP TABLE SpecificationDateValue;
 
 # ---------------------------------------------------------------------- #
+# Drop table "State"                                                     #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE State DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE State;
+
+# ---------------------------------------------------------------------- #
+# Drop table "PostalCode"                                                #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE PostalCode DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE PostalCode;
+
+# ---------------------------------------------------------------------- #
 # Drop table "SpecFieldGroup"                                            #
 # ---------------------------------------------------------------------- #
 
@@ -386,3 +554,195 @@ ALTER TABLE HelpComment DROP PRIMARY KEY;
 # Drop table #
 
 DROP TABLE HelpComment;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ProductReview"                                             #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ProductReview DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ProductReview;
+
+# ---------------------------------------------------------------------- #
+# Drop table "UserAddress"                                               #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE UserAddress DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE UserAddress;
+
+# ---------------------------------------------------------------------- #
+# Drop table "UserBillingAddress"                                        #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE UserBillingAddress DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE UserBillingAddress;
+
+# ---------------------------------------------------------------------- #
+# Drop table "Transaction"                                               #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE Transaction DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE Transaction;
+
+# ---------------------------------------------------------------------- #
+# Drop table "Shipment"                                                  #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE Shipment DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE Shipment;
+
+# ---------------------------------------------------------------------- #
+# Drop table "UserShippingAddress"                                       #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE UserShippingAddress DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE UserShippingAddress;
+
+# ---------------------------------------------------------------------- #
+# Drop table "OrderNote"                                                 #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE OrderNote DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE OrderNote;
+
+# ---------------------------------------------------------------------- #
+# Drop table "DeliveryZone"                                              #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE DeliveryZone DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE DeliveryZone;
+
+# ---------------------------------------------------------------------- #
+# Drop table "DeliveryZoneCountry"                                       #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE DeliveryZoneCountry DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE DeliveryZoneCountry;
+
+# ---------------------------------------------------------------------- #
+# Drop table "DeliveryZoneState"                                         #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE DeliveryZoneState DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE DeliveryZoneState;
+
+# ---------------------------------------------------------------------- #
+# Drop table "DeliveryZoneCityMask"                                      #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE DeliveryZoneCityMask DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE DeliveryZoneCityMask;
+
+# ---------------------------------------------------------------------- #
+# Drop table "DeliveryZoneZipMask"                                       #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE DeliveryZoneZipMask DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE DeliveryZoneZipMask;
+
+# ---------------------------------------------------------------------- #
+# Drop table "DeliveryZoneAddressMask"                                   #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE DeliveryZoneAddressMask DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE DeliveryZoneAddressMask;
+
+# ---------------------------------------------------------------------- #
+# Drop table "TaxType"                                                   #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE TaxType DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE TaxType;
+
+# ---------------------------------------------------------------------- #
+# Drop table "TaxRate"                                                   #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE TaxRate DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE TaxRate;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ShippingRate"                                              #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ShippingRate DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ShippingRate;
