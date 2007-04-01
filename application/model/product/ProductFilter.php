@@ -16,7 +16,7 @@ class ProductFilter
 	public function __construct(Category $category, ARSelectFilter $filter)
 	{
 		$this->category = $category;
-		$this->selectFilter = $filter;
+		$this->selectFilter = $this->category->getProductFilter($filter);
 	}
 	
 	/**

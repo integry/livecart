@@ -11,7 +11,7 @@
 
 	<ul class="productList"> 
 	{foreach from=$products item=product}
-		<li style="margin-bottom: 7px;">			
+		<li>			
 			
 		    <fieldset class="container">
             
@@ -20,7 +20,7 @@
     			</span>
     				
                 <p class="image">
-                    <a href="{productUrl product=$product filterChainHandle=$filterChainHandle}"><img src="{$product.ProductImage.paths.2}" /></a>
+                    <a href="{productUrl product=$product filterChainHandle=$filterChainHandle}"><img src="{$product.DefaultImage.paths.2}" /></a>
                 </p>
                     			
     			<p class="descr">
@@ -32,7 +32,7 @@
         			<p class="spec">
         				{if $product.attributes}
         					{foreach from=$product.attributes item="attr" name="attr"}
-        						{if $attr.value_lang}
+        						{if $attr.SpecField.isDisplayed && $attr.value_lang}
         							{$attr.valuePrefix_lang}{$attr.value_lang}{$attr.valueSuffix_lang}
         							{if !$smarty.foreach.attr.last}
         							/
@@ -45,7 +45,11 @@
                 </p>
                 
                 <p class="order">
-                    <a href="{link controller=order action=addToCart id=$product.ID returnPath=true}">{t Add to Cart}</a>                
+                    {if $product.isAvailable}
+					<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}">{t Add to Cart}</a>
+                    : 
+					{/if}
+					<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}">{t Add to Wishlist}</a>					                
                 </p>
             
             </fieldset>

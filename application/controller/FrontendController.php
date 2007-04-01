@@ -101,7 +101,7 @@ abstract class FrontendController extends BaseController
 	protected function boxBreadCrumbBlock()
 	{
 		array_unshift($this->breadCrumb, array('title' => $this->config->getValue('STORE_NAME'), 
-											   'url' => Router::getInstance()->createUrl(array('controller' => 'index'))));
+											   'url' => Router::getInstance()->createUrl(array('controller' => 'index', 'action' => 'index'))));
 		$response = new BlockResponse();
 		$response->setValue('breadCrumb', $this->breadCrumb);
 		return $response;

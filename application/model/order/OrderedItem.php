@@ -40,5 +40,6 @@ class OrderedItem extends ActiveRecordModel
 
         return $instance;
     }
+
 }    
 ?>

@@ -42,6 +42,7 @@ class User extends ActiveRecordModel
         if (!$user)
         {
             $user = self::getNewInstance();
+            $user->setID(self::ANONYMOUS_USER_ID);
         }
         
         return $user;

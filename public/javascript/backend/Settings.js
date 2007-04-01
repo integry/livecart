@@ -36,7 +36,7 @@ Backend.Settings.prototype =
 					this.setItemImage(itemId, this.iconUrls[itemId]);	
 				}				
 			}
-
+		
     	this.insertTreeBranch(categories, 0);    
 	},
 	
@@ -70,10 +70,9 @@ Backend.Settings.prototype =
 	
 	displayCategory: function(response)
 	{
-		console.log(response);
+		this.treeBrowser.hideFeedback();	
 		var cancel = document.getElementsByClassName('cancel', $('settingsContent'))[0];
 		Event.observe(cancel, 'click', this.resetForm.bindAsEventListener(this));
-		this.treeBrowser.hideFeedback();	
 	},
 	
 	resetForm: function(e)

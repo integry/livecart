@@ -47,10 +47,10 @@ class ProductImage extends ObjectImage
 	{
 		if (!$this->isLoaded)
 		{
-            $this->load();    
+            $this->load(array('Product'));    
         }   
         
-	  	return self::getImagePath($this->getID(), $this->product->get()->getID(), $size);
+		return self::getImagePath($this->getID(), $this->product->get()->getID(), $size);
 	}
 		
 	protected static function getImagePath($imageID, $productID, $size)

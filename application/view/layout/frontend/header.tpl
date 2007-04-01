@@ -1,5 +1,7 @@
 <div id="header" style="background-color: #EEEEEE;"> 
 
+	{block LANGUAGE}
+		
 	<span style="font-size: 30px;">LiveCart Demo Store</span>
 
 	<fieldset class="container">
@@ -13,7 +15,11 @@
 		    <input type="submit" class="submit" value="Go!">
 		</form>
 	
-		{block LANGUAGE}
+		<div style="float: right;">
+			<a href="{link controller=order returnPath=true}">{t Shopping Cart}</a> | 
+			<a href="{link controller=checkout returnPath=true}">{t Checkout}</a>
+		</div>
+	
 	</fieldset>
 		
 </div>

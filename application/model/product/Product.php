@@ -401,12 +401,19 @@ class Product extends MultilingualObject
 		}
 	}
 
-	public function toArray($recursive = true)
+	public function toArray()
 	{
-	  	$array = parent::toArray($recursive);
+	  	$array = parent::toArray();
 	  	$array['attributes'] = $this->getSpecification()->toArray();
 		$array = array_merge($array, $this->getPricesFields());
 	  	return $array;
+	}
+	
+	public static function transformArray($array)
+	{
+		$array = parent::transformArray($array, __CLASS__);
+		$array['isAvailable'] = self::isAvailableForOrdering($array['isEnabled'], $array['stockCount'], $array['isBackOrderable']);
+		return $array;
 	}
 
 	public function getPricesFields()
@@ -537,6 +544,9 @@ class Product extends MultilingualObject
 	 */
 	public function getImageArray()
 	{
+		$f = new ARSelectFilter();
+		$f->setCondition(new EqualsCond(new ARFieldHandle('ProductImage', 'productID'), $this->getID()));
+		$f->setOrder(new ARFieldHandle('ProductImage', 'position'));
 	}
 
 	/**
@@ -766,16 +776,21 @@ class Product extends MultilingualObject
             $this->load();    
         }
         
-        if ($this->isEnabled->get())
+    	return self::isAvailableForOrdering($this->isEnabled->get(), $this->stockCount->get(), $this->isBackOrderable->get());
+	}
+    
+    protected static function isAvailableForOrdering($isEnabled, $stockCount, $isBackOrderable)
+    {
+        if ($isEnabled)
         {
     		$config = Config::getInstance();
 		
-		    if ($config->getValue('DISABLE_INVENTORY') || !$config->getValue('DISABLE_NOT_IN_STOCK'))
+		    if ($config->getValue('DISABLE_INVENTORY'))
 		    {
                 return true;
             }
 		
-            if (!$this->stockCount->get() && !$this->allowBackordering->get())
+            if (!$stockCount && !$isBackOrderable)
             {
                 return false;
             }
@@ -787,8 +802,8 @@ class Product extends MultilingualObject
         else
         {
             return false;           
-        } 
-    }
+        } 		
+	}
 }
 
 ?>

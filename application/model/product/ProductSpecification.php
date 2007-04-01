@@ -147,16 +147,25 @@ class ProductSpecification
 		}
 
         uasort($arr, array($this, 'sortAttributeArray'));
-
+						        
 		return $arr;
 	}
 	
 	private function sortAttributeArray($a, $b)
 	{
-        if ((empty($a['SpecField']['SpecFieldGroup']['position']) || empty($b['SpecField']['SpecFieldGroup']['position']))
-            || ($a['SpecField']['SpecFieldGroup']['position'] == $b['SpecField']['SpecFieldGroup']['position']))
+        if (!isset($a['SpecField']['SpecFieldGroup']['position']))
         {
-            return ($a['SpecField']['position'] > $b['SpecField']['position']) ? -1 : 1;
+			$a['SpecField']['SpecFieldGroup']['position'] = -1;	
+		}
+		
+        if (!isset($b['SpecField']['SpecFieldGroup']['position']))
+        {
+			$b['SpecField']['SpecFieldGroup']['position'] = -1;	
+		}
+
+		if (($a['SpecField']['SpecFieldGroup']['position'] == $b['SpecField']['SpecFieldGroup']['position']))
+        {
+			return ($a['SpecField']['position'] < $b['SpecField']['position']) ? -1 : 1;
         }
         
         return ($a['SpecField']['SpecFieldGroup']['position'] < $b['SpecField']['SpecFieldGroup']['position']) ? -1 : 1;

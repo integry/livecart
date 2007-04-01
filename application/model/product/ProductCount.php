@@ -138,6 +138,7 @@ class ProductCount
 		$query->removeFieldList();
 		$query->getFilter()->merge($selectFilter);
 				
+				
 		$res = ActiveRecordModel::fetchDataFromDB($query);
 		$res = $res[0];
 		

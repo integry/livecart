@@ -14,7 +14,8 @@
 	{$STYLESHEET}
 
 	<!-- JavaScript includes -->
-    {**} <script language="javascript" type="text/javascript" src="firebug/firebug.js"></script>
+    {**} <script type="text/javascript" src="firebug/firebug.js"></script>
+	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
 	{$JAVASCRIPT}
 </head>
 

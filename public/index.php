@@ -7,6 +7,9 @@
 	 * @package application
 	 */
 
+	// session cookie expires in 180 days
+	session_set_cookie_params(180 * 60 * 60 * 24);
+
 	require_once(".." . DIRECTORY_SEPARATOR . "framework" . DIRECTORY_SEPARATOR . "ClassLoader.php");
 
 	ClassLoader::mountPath(".", dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);

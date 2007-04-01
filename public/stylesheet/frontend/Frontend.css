@@ -18,11 +18,28 @@ h1
 {
 	font-size: 200%;
 	padding-left: 20px;
+	margin-bottom: 10px;
 }
 
 h3
 {
 	font-size: 1em;
+}
+
+td
+{
+	vertical-align: top;
+}
+
+ul 
+{
+  	padding-left: 12px;
+}
+
+p
+{
+	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 /*****************************
@@ -49,13 +66,14 @@ h3
 #leftSide 
 {
 	float:left;
-	width:150px;
+	width: 170px;
 }
 
 #rightSide 
 {
 	float:right;
 	width:150px;
+	display: none;
 }
 
 #clearFooter {
@@ -65,13 +83,18 @@ h3
 
 #content 
 {
-	margin:0 150px;
+	margin-left: 170px;
 	padding: 10px;
 }
 
-ul 
+#content.left
 {
-  	padding-left: 12px;
+	margin-left: 0px;
+}
+
+#content.right
+{
+	margin-right: 0px;
 }
 
 /*****************************
@@ -135,6 +158,7 @@ fieldset.container
 	padding-left: 20px;
 	font-size: 90%;
 	padding-right: 0;
+	width: 95%;
 }
 
 .filterGroup h3
@@ -200,7 +224,7 @@ ul.productList
 
 ul.productList li
 {
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 }
 
 ul.productList .title
@@ -244,4 +268,64 @@ ul.productList p.image img
 tr.specificationGroup
 {
     font-weight: bold;        
+}
+
+/*****************************
+	Shopping cart
+*****************************/
+#cartStats
+{
+ 	padding-top: 10px;
+ 	padding-bottom: 10px;
+}
+
+.cartListTitle
+{
+	text-align: left;
+}
+
+#cart, #wishList
+{
+	width: 90%;
+}
+
+#cart td, #wishList td
+{
+	overflow: hidden;
+	padding: 3px;
+}
+
+.cartControl
+{
+	width: 120px;
+}
+
+.cartControl a
+{
+	white-space: nowrap;
+	font-size: smaller;
+	margin-bottom: 5px;
+	display: block;
+}
+
+.cartQuant
+{
+	width: 80px;
+	text-align: center;
+}
+
+.cartPrice
+{
+	width: 80px;
+	text-align: center;
+}
+
+.cartName
+{
+	width: auto;
+}
+
+.cartQuant input.text
+{
+	width: 50px;
 }

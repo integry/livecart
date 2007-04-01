@@ -29,22 +29,24 @@ class CustomerOrder extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", "User", ARInteger::instance()));
 
-		$schema->registerField(new ARField("sessionID", ARChar::instance(32)));
+//		$schema->registerField(new ARField("sessionID", ARChar::instance(32)));
 		$schema->registerField(new ARField("dateCreated", ARTimeStamp::instance()));
 		$schema->registerField(new ARField("dateCompleted", ARTimeStamp::instance()));
 		$schema->registerField(new ARField("status", ARInteger::instance(2)));
 	}
-	
-	public static function getNewInstance(Session $session, User $user)	
+		
+	public static function getNewInstance(User $user)	
 	{
         $instance = parent::getNewInstance(__CLASS__);
-        $instance->sessionID->set($session->getID());
-        $instance->user->set($user->getID());     
+		$instance->user->set($user);     
         
         return $instance;   
     }
     
-    public static function getInstance()
+    /**
+     *	Get instance from session
+     */
+	public static function getInstance()
 	{
         if (!self::$instance)
         {
@@ -52,7 +54,7 @@ class CustomerOrder extends ActiveRecordModel
                 
             if (!$instance)
             {
-                $instance = self::getNewInstance(Session::getInstance(), User::getCurrentUser());
+                $instance = self::getNewInstance(User::getCurrentUser());
             }    
             
             self::$instance = $instance;
@@ -61,7 +63,10 @@ class CustomerOrder extends ActiveRecordModel
         return self::$instance;
     }
     
-    public function addProduct(Product $product, $count)
+    /**
+     *	Add a product to shopping basket
+     */
+	public function addProduct(Product $product, $count)
     {
         if ($count < 0)
         {
@@ -83,13 +88,43 @@ class CustomerOrder extends ActiveRecordModel
         }
     }
     
-    public function removeProduct(Product $product)
+    /**
+     *	Add a product to wish list
+     */
+	public function addToWishList(Product $product)
+    {
+        $item = OrderedItem::getNewInstance($this, $product, 1);
+        $item->isSavedForLater->set(true);
+		$this->orderedItems[] = $item;
+    }
+    
+    /**
+     *	Remove a product (all product items) from shopping basket or wish list
+     */
+	public function removeProduct(Product $product)
     {
         $id = $product->getID();
         
         foreach ($this->orderedItems as $key => $item)
         {
             if ($item->product->getID() == $id)
+            {
+                $this->removedItems[] = $item;
+                unset($this->orderedItems[$key]);
+            }
+        }    
+    }
+
+    /**
+     *	Remove an item from shopping basket or wish list
+     */
+	public function removeItem(OrderedItem $orderedItem)
+    {
+        $id = $orderedItem->getID();
+        
+		foreach ($this->orderedItems as $key => $item)
+        {
+            if ($item->getID() == $id)
             {
                 $this->removedItems[] = $item;
                 unset($this->orderedItems[$key]);
@@ -105,7 +140,14 @@ class CustomerOrder extends ActiveRecordModel
             
             foreach ($this->orderedItems as $item)
             {
-                $item->save();
+                if (!$item->count->get())
+                {
+					$this->removeItem($item);
+				}
+				else
+				{
+					$item->save();					
+				}
             }    
     
             foreach ($this->removedItems as $item)
@@ -115,9 +157,13 @@ class CustomerOrder extends ActiveRecordModel
         }
     }    
     
-    public function saveToSession()
+    /**
+     *	Save to database and put in session
+     */
+	public function saveToSession()
     {
-        Session::getInstance()->setObject('CustomerOrder', $this);
+        $this->save();
+		Session::getInstance()->setValue('CustomerOrder', $this);
     }
     
     /**
@@ -125,16 +171,149 @@ class CustomerOrder extends ActiveRecordModel
      */
     public function mergeItems()
     {
-        
+		$byProduct = array();
+		
+		foreach ($this->orderedItems as $item)
+		{
+			$byProduct[$item->product->get()->getID()][$item->isSavedForLater->get()][] = $item;
+		}
+		
+		foreach ($byProduct as $productID => $itemsByStatus)
+		{
+			foreach ($itemsByStatus as $status => $items)
+			{
+				if (count($items) > 1)
+				{
+					$mainItem = array_shift($items);
+					$count = $mainItem->count->get();
+					
+					foreach ($items as $item)
+					{
+						$count += $item->count->get();
+						$this->removeItem($item);
+					}
+					
+					$mainItem->count->set($count);
+				}				
+			}	
+		}        
     }
     
+    public function getShoppingCartItemCount()
+	{
+		$count = 0;
+		foreach ($this->orderedItems as $item)
+		{
+			if (!$item->isSavedForLater->get())
+			{
+				$count += $item->count->get();
+			}
+		}
+		
+		return $count;
+	}    
+    
+    public function getWishListItemCount()
+	{
+		$count = 0;
+		foreach ($this->orderedItems as $item)
+		{
+			if ($item->isSavedForLater->get())
+			{
+				$count++;
+			}
+		}
+		
+		return $count;
+	}    
+
+	public function getOrderedItems()
+	{
+		return $this->orderedItems;
+	}
+
+    /**
+     *  Return OrderedItem instance by ID
+     */
+	public function getItemByID($id)
+	{
+		foreach ($this->orderedItems as $item)
+		{
+			if ($item->getID() == $id)
+			{
+				return $item;
+			}
+		}			
+	}
+
+	public function getSubTotal(Currency $currency)
+	{
+		
+	}
+
     /**
      *  Loads ordered item/product info from database
      */
-    protected function loadOrderedItems()
+    public function loadItemData()
     {
+        $productIDs = array();
         
+        foreach ($this->orderedItems as $item)
+        {
+			$productIDs[] = $item->product->get()->getID();
+		}
+		
+		$products = ActiveRecordModel::getInstanceArray('Product', $productIDs);
+		
+        foreach ($this->orderedItems as $item)
+        {
+			$id = $item->product->get()->getID();
+			
+			if (isset($products[$id]))
+			{
+				$item->product->set($products[$id]);
+			}
+			else
+			{
+				$this->removeProduct($item->product->get());
+			}
+		}		
     }
+	
+	/**
+	 *	Creates an array representation of the shopping cart
+	 */
+	public function toArray()
+	{
+		$array = parent::toArray();
+		
+		if (is_array($array))
+		{
+			$array['cartItems']	= array();
+			$array['wishListItems']	= array();
+					
+			foreach ($this->orderedItems as $item)
+			{
+				if ($item->isSavedForLater->get())
+				{
+					$array['wishListItems'][] = $item->toArray();
+				}
+				else
+				{
+					$array['cartItems'][] = $item->toArray();
+				}
+			}			
+		
+			$array['basketCount'] = $this->getShoppingCartItemCount();
+			$array['wishListCount'] = $this->getWishListItemCount();
+			
+			// subtotal for all currencies
+			
+			// formatted price
+		}	
+		
+		return $array;
+	}
 }
 	
 ?>

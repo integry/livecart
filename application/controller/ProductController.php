@@ -13,7 +13,7 @@ class ProductController extends FrontendController
   	
 	public function index()
 	{
-        $product = Product::getInstanceByID($this->request->getValue('id'), Product::LOAD_DATA);    	
+        $product = Product::getInstanceByID($this->request->getValue('id'), Product::LOAD_DATA, array('DefaultImage' => 'ProductImage'));    	
         $product->loadSpecification();
         
 		$this->category = $product->category->get();
@@ -41,12 +41,16 @@ class ProductController extends FrontendController
 		}
 
         $productArray = $product->toArray();
-        
+
         // add product title to breacrumb
         $this->addBreadCrumb($productArray['name_lang'], '');
         
-        $response = new ActionResponse();
+        // get images
+        $productImages = $product->getImageArray();
+		
+		$response = new ActionResponse();
         $response->setValue('product', $productArray);        
+        $response->setValue('images', $productImages);
         return $response;        
 	} 
 }

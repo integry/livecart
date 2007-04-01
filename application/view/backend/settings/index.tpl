@@ -31,7 +31,7 @@
 <script type="text/javascript">
 	var settings = new Backend.Settings({/literal}{$categories}{literal});
 	settings.urls['edit'] = '{/literal}{link controller=backend.settings action=edit}?id=_id_{literal}';
-    settings.treeBrowser.selectItem('00-store', true, false);	
+	Event.observe(window, 'load', function() {settings.activateCategory('00-store');})
 </script>
 {/literal}
 

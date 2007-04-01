@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("application.model.system.MultilingualObject");
+ClassLoader::import("library.image.ImageManipulator");
 
 abstract class ObjectImage extends MultilingualObject
 {
@@ -29,7 +30,7 @@ abstract class ObjectImage extends MultilingualObject
 
 	public static function deleteByID($className, $id, $foreignKeyName)
 	{
-		$inst = ActiveRecordModel::getInstanceById($className, $id, ActiveRecordModel::LOAD_DATA, ActiveRecordModel::LOAD_REFERENCES);
+		$inst = ActiveRecordModel::getInstanceById($className, $id, ActiveRecordModel::LOAD_DATA, array('Product'));
 		$inst->deleteImageFiles();
 		
 		// check if main image is being deleted
@@ -52,8 +53,13 @@ abstract class ObjectImage extends MultilingualObject
 			}
 		}
 		
-		return ActiveRecord::deleteByID($className, $id);
+		return parent::deleteByID($className, $id);
 	}	
+	
+	public function setFile($file)
+	{
+		return $this->resizeImage(new ImageManipulator($file));
+	}
 	
 	public function resizeImage(ImageManipulator $resizer)
 	{
@@ -88,12 +94,22 @@ abstract class ObjectImage extends MultilingualObject
 		}
 		else
 		{
-		  	$maxPos = 0;
+		  	$maxPos = 0;		  	
 		}			  
 
+			ActiveRecord::$logger->logAction($maxPos);		
+			
 		$this->position->set($maxPos);
-		
-		return parent::insert();
+				
+		parent::insert();
+
+		// set as main image if it's the first image being uploaded
+		if (0 == $maxPos)
+		{
+			$owner = $this->getOwner();
+		  	$owner->defaultImage->set($this);
+		  	$owner->save();	
+		}
 	}	    	
 }
 

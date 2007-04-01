@@ -71,7 +71,6 @@
 
 	<script type="text/javascript">
 		var expander = new SectionExpander();
-		$('name_{$categoryId}').focus();
 	</script>
 {/if}
 

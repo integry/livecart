@@ -110,7 +110,7 @@ class ProductPricing
 	/**
 	 * Convert current product prices to array
 	 * 
-	 * @param string $part Wicht part of array prices you want to get ('defined', 'calculated' or 'both')
+	 * @param string $part Which part of array prices you want to get ('defined', 'calculated' or 'both')
 	 */
 	public function toArray($part = null)
 	{

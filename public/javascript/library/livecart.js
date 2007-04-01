@@ -136,7 +136,7 @@ LiveCart.AjaxUpdater.prototype = {
 		
         new Ajax.Updater({success: containerId},
                          url,
-                         updaterOptions);
+                         updaterOptions); 
     },
 
 

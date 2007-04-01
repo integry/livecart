@@ -6,6 +6,8 @@
 <div id="content" style="margin-left: 0;">
     <h1>{$product.name_lang}</h1>
     
+    <img src="{$product.DefaultImage.paths.3}" />
+    
     <div id="productDescription">
         {$product.longDescription_lang}    
     </div>
@@ -13,7 +15,7 @@
     <div id="productSpecification">
         <table>
             {foreach from=$product.attributes item="attr"}
-                {if $attr.values || $attr.value_lang || $attr.value}
+                {if $attr.SpecField.isDisplayed && ($attr.values || $attr.value_lang || $attr.value)}
                     {if $prevAttr.SpecField.SpecFieldGroup.ID != $attr.SpecField.SpecFieldGroup.ID}
                         <tr class="specificationGroup">
                             <td colspan="2">{$attr.SpecField.SpecFieldGroup.name_lang}</td>
