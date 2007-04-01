@@ -71,9 +71,13 @@ class ImageDriverGD extends ImageDriver
 	
 	private function resample(&$img, $owdt, $ohgt, $maxwdt, $maxhgt, $quality = 1) 
 	{
+		// make sure the image doesn't get enlarged
+		$maxwdt = min($maxwdt, $owdt);
+		$maxhgt = min($maxhgt, $ohgt);
+				
 		if(!$maxwdt) 
 		{
-			$divwdt = 0;  
+			$divwdt = 1;  
 		}
 		else 
 		{
@@ -82,7 +86,7 @@ class ImageDriverGD extends ImageDriver
 		
 		if(!$maxhgt) 
 		{
-			$divhgt = 0;
+			$divhgt = 1;
 		}
 		else 
 		{
@@ -91,15 +95,15 @@ class ImageDriverGD extends ImageDriver
 		
 		if($divwdt >= $divhgt) 
 		{
-			$newwdt = $maxwdt;
+			$newwdt = round($owdt/$divwdt);
 			$newhgt = round($ohgt/$divwdt);
 		} 
 		else 
 		{
-			$newhgt = $maxhgt;
+			$newhgt = round($ohgt/$divhgt);
 			$newwdt = round($owdt/$divhgt);
 		}
-		
+					
 		$tn = imagecreatetruecolor($newwdt,$newhgt);
 		
 		if ($quality)
