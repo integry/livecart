@@ -2,7 +2,7 @@
 
 ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.category.Category");
-ClassLoader::import("application.model.system.ActiveRecordModel");
+ClassLoader::import("application.model.system.ActiveRecordGroup");
 
 /**
  * Specification field class

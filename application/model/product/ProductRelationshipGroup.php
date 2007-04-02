@@ -1,5 +1,5 @@
 <?php
-ClassLoader::import("application.model.system.ActiveRecordModel");
+ClassLoader::import("application.model.system.ActiveRecordGroup");
 ClassLoader::import("application.model.system.MultilingualObject");
 
 class ProductRelationshipGroup extends MultilingualObject 
