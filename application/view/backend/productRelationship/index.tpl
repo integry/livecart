@@ -42,11 +42,14 @@
 
 <script type="text/javascript">
 {literal}
+    Backend.availableLanguages = {/literal}{json array=$languages}{literal};
+
     with(Backend.RelatedProduct.Group)
     {
         Links.save = '{/literal}{link controller=backend.productRelationshipGroup action=save}{literal}';
         Links.remove = '{/literal}{link controller=backend.productRelationshipGroup action=delete}{literal}';
         Links.sort = '{/literal}{link controller=backend.productRelationshipGroup action=sort}{literal}';
+        Links.edit = '{/literal}{link controller=backend.productRelationshipGroup action=edit}{literal}';
         
         Messages.areYouSureYouWantToDelete = '{/literal}{t _Are_you_sure_you_want_to_delete}{literal}'
     }
@@ -103,15 +106,16 @@
 </ul>
 
 
-<ul id="productRelationshipGroup_list_{$productID}" class="activeList_add_sort activeList_add_delete">
+<ul id="productRelationshipGroup_list_{$productID}" class="activeList_add_sort activeList_add_delete activeList_add_edit">
 {foreach item="relationship" from=$relationshipsWithGroups}
     {if !$relationship.ProductRelationshipGroup.ID}{php}continue;{/php}{/if}
     
     {if $lastProductRelationshipGroup != $relationship.ProductRelationshipGroup.ID }
         {if $lastProductRelationshipGroup > 0}</ul></li>{/if}
         <li id="productRelationshipGroup_list_{$productID}_{$relationship.ProductRelationshipGroup.ID}">
-            <span class="productRelationshipGroup_title">{$relationship.ProductRelationshipGroup.name_lang}</span>   	
-            <ul id="productRelationship_list_{$productID}_{$relationship.ProductRelationshipGroup.ID}" class="productRelationship_list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_productRelationship_list">
+            <span class="productRelationshipGroup_title">{$relationship.ProductRelationshipGroup.name_lang}</span>
+            {include file="backend/productRelationshipGroup/form.tpl"}	
+            <ul id="productRelationship_list_{$productID}_{$relationship.ProductRelationshipGroup.ID}" class="productRelationship_list activeList_add_sort activeList_add_delete activeList_accept_productRelationship_list">
     {/if}
     
     {if $relationship.RelatedProduct.ID} {* For empty groups *}

@@ -1,4 +1,4 @@
-<form action="{link controller=backend.productRelationshipGroup action=save}" method="post" style="display: none;">
+<form action="{link controller=backend.productRelationshipGroup action=save}" method="post" style="display: none;" class="productRelationshipGroup_form">
 	<!-- STEP 1 -->
 	<fieldset>
 		<input type="hidden" name="ID" class="hidden productRelationshipGroup_ID" />

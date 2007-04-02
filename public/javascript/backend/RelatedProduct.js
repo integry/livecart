@@ -129,6 +129,38 @@ Backend.RelatedProduct.Group.Callbacks =
     },
     afterSort: function(li, response) { 
         console.info('afterSort') 
+    },
+    
+    beforeEdit:     function(li) 
+    {
+        console.info(li);
+        if(!Backend.RelatedProduct.Group.Controller.prototype.getInstance(li.down('.productRelationshipGroup_form')))
+        {
+            return Backend.RelatedProduct.Group.Links.edit + "/" + this.getRecordId(li);
+        }
+        else
+        {
+            with(Backend.RelatedProduct.Group.Controller.prototype.getInstance($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form")))
+            {
+                if('block' != view.root.style.display) showForm();
+                else hideForm();
+            }
+        }
+    },
+    afterEdit:      function(li, response) 
+    { 
+        try
+        {
+            response = eval("(" + response + ")");
+        }
+        catch(e)
+        {
+            console.info(e);
+        }
+        
+        var model = new Backend.RelatedProduct.Group.Model(response, Backend.availableLanguages);
+        var group = new Backend.RelatedProduct.Group.Controller(li.down('.productRelationshipGroup_form'), model);
+        group.showForm();
     }
 }
 
@@ -285,6 +317,10 @@ Backend.RelatedProduct.Group.Controller.prototype = {
         {
             this.hideNewForm();
         }
+        else
+        {
+            this.hideForm();
+        }
     },
     
     onSaveResponse: function(status)
@@ -302,7 +338,7 @@ Backend.RelatedProduct.Group.Controller.prototype = {
             }
             else
             {
-                this.view.collapse();
+                this.hideForm();
             }
             Form.State.restore(this.view.nodes.root);
         }
@@ -322,7 +358,18 @@ Backend.RelatedProduct.Group.Controller.prototype = {
     {
         ActiveForm.prototype.hideMenuItems($("productRelationship_menu_" + this.model.get('Product.ID')), [$(this.view.prefix + "new_" + this.model.get('Product.ID') + "_cancel"), $("selectProduct_" + this.model.get('Product.ID')) + "_cancel"]);
         ActiveForm.prototype.showNewItemForm($(this.view.prefix + "new_" + this.model.get('Product.ID') + "_show"), this.view.nodes.root); 
+    }, 
+    
+    showForm: function()
+    {
+        this.view.showForm();
+    },
+    
+    hideForm: function()
+    {
+        this.view.hideForm();
     }
+    
 }
 
 
@@ -349,6 +396,8 @@ Backend.RelatedProduct.Group.View.prototype = {
         this.nodes.id = this.nodes.root.down('.' + this.prefix + 'ID');
         this.nodes.productID = this.nodes.root.down('.' + this.prefix + 'productID');
         this.nodes.name = this.nodes.root.down('.' + this.prefix + 'name');
+        
+        this.nodes.title = this.nodes.root.previous('.' + this.prefix + 'title');
         
         
         this.nodes.translations = this.nodes.root.down('.' + this.prefix + 'translations');
@@ -411,7 +460,30 @@ Backend.RelatedProduct.Group.View.prototype = {
         activeList.highlight(li);
         activeList.touch();
         this.clear();
+    },
+    
+    showForm: function()
+    {
+        var li = this.nodes.root.up("li");
+        var activeList = ActiveList.prototype.getInstance(li.up('ul'));
+        
+        this.nodes.title.hide();
+        activeList.toggleContainerOn(li.down('.' + this.prefix + 'form'));
+        
+        this.clear();
+    },
+    
+    hideForm: function()
+    {
+        var li = this.nodes.root.up("li");
+        var activeList = ActiveList.prototype.getInstance(li.up('ul'));
+        
+        this.nodes.title.show();
+        activeList.toggleContainerOff(li.down('.' + this.prefix + 'form'));
+        
+        this.clear();
     }
+    
 }
 
 Backend.RegisterMVC(Backend.RelatedProduct.Group);

@@ -1,4 +1,7 @@
 <?php
+ClassLoader::import("application.model.system.ActiveRecordModel");
+ClassLoader::import("application.model.system.MultilingualObject");
+
 class ProductRelationshipGroup extends MultilingualObject 
 {
 	public static function defineSchema($className = __CLASS__)

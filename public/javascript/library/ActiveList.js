@@ -285,13 +285,14 @@ ActiveList.prototype = {
      */
     toggleContainerOn: function(container)
     {       
+        container = $(container);
         ActiveList.prototype.collapseAll();
         
         Sortable.destroy(this.ul);
         if(BrowserDetect.browser != 'Explorer')
         {
-            Effect.BlindDown(container.id, { duration: 0.5 });
-            Effect.Appear(container.id, { duration: 1.0 });
+            Effect.BlindDown(container, { duration: 0.5 });
+            Effect.Appear(container, { duration: 1.0 });
             setTimeout(function() { container.style.height = 'auto'; container.style.display = 'block'}, 300);
         } 
         else
@@ -307,10 +308,11 @@ ActiveList.prototype = {
      */
     toggleContainerOff: function(container)
     {
+        container = $(container);
         this.createSortable();
         if(BrowserDetect.browser != 'Explorer')
         {
-            Effect.BlindUp(container.id, {duration: 0.2});
+            Effect.BlindUp(container, {duration: 0.2});
             setTimeout(function() { container.style.display = 'none'}, 40);
         } 
         else
