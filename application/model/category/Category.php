@@ -627,46 +627,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
         return $specFields;
 	}
 	
-	private function mergeWithEmptyGroups($specFields, $groups)
+	public function getSpecFieldsWithGroupsArray()
 	{
-        $specFieldsWithGroups = array();
-        $specFieldGroups = array();
-
-        $k = $i = 1;
-        $specFieldsCount = count($specFields);
-        foreach($specFields as $specField)
-        {
-            if(isset($specField['SpecFieldGroup']))
-            {    
-                $shiftGroup = false;
-	            while($group = array_shift($groups))
-	            {
-	                if($group['position'] < $specField['SpecFieldGroup']['position']) 
-	                {
-	                    $shiftGroup = true;
-	                    $specFieldsWithGroups[$i++] = array('SpecFieldGroup' => $group);
-	                }
-	                else
-	                {
-	                    if($group['position'] > $specField['SpecFieldGroup']['position'])
-	                    {
-	                        array_unshift($groups, $group);
-	                    }
-	                    break;
-	                }
-         	    }
-            }
-            
-            $specFieldsWithGroups[$i++] = $specField;
-            $k++;
-       }
-        
-       while($group = array_shift($groups))
-       {
-           $specFieldsWithGroups[$i++] = array('SpecFieldGroup' => $group['position']);
-       }
-	    
-       return $specFieldsWithGroups; 
+	    return SpecFieldGroup::mergeGroupsWithFields($this->getSpecificationFieldGroupArray(), $this->getSpecificationFieldArray(false, true));
 	}
 	
 	/**

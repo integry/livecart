@@ -804,6 +804,19 @@ class Product extends MultilingualObject
             return false;           
         } 		
 	}
+
+	/**
+	 * @return ARSet
+	 */
+	private function getRelationshipGroups()
+	{
+	    return ProductRelationshipGroup::getProductGroups($this);
+	}
+	
+	public function getRelatedProductsWithGroupsArray()
+	{
+	    return ProductRelationshipGroup::mergeGroupsWithFields($this->getRelationshipGroups()->toArray(), $this->getRelationships()->toArray());
+	}
 }
 
 ?>

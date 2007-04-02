@@ -8,7 +8,7 @@ ClassLoader::import("application.model.category.Category");
  *
  * @package application.model.category
  */
-class SpecFieldGroup extends MultilingualObject
+class SpecFieldGroup extends MultilingualObject 
 {
 	/**
 	 * Define SpecFieldGroup database schema
@@ -159,5 +159,10 @@ class SpecFieldGroup extends MultilingualObject
 		
 		return parent::insert();
 	}    
+
+	public static function mergeGroupsWithFields($groups, $fields)
+	{
+	    return ActiveRecordGroup::mergeGroupsWithFields(__CLASS__, $groups, $fields);
+	}
 }
 ?>

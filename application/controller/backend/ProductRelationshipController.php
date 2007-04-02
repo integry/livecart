@@ -26,6 +26,12 @@ class ProductRelationshipController extends StoreManagementController
 	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
 		$response->setValue('productID', $productID);
 		$response->setValue('relationships', $product->getRelationships()->toArray());
+		
+		$response->setValue('relationshipsWithGroups', $product->getRelatedProductsWithGroupsArray());
+		
+//		echo "<pre>" . print_R($product->getRelatedProductsWithGroupsArray(), true) . "</pre>";
+//		die();
+//		
 	    return $response;
 	}
 	
@@ -88,13 +94,20 @@ class ProductRelationshipController extends StoreManagementController
 
     public function sort()
     {
-        $product = Product::getInstanceByID((int)$this->request->getValue('id'));        
+        $product = Product::getInstanceByID((int)$this->request->getValue('id'));    
+        $target = $this->request->getValue('target');    
+        preg_match('/_(\d+)$/', $target, $match); // Get group. 
+
         foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
         {
             if(empty($key)) continue;
             
             $relationship = ProductRelationship::getInstance($product, Product::getInstanceByID((int)$key)); 
             $relationship->position->set((int)$position);
+            
+            if(isset($match[1])) $relationship->productRelationshipGroup->set(ProductRelationshipGroup::getInstanceByID((int)$match[1])); 
+            else $relationship->productRelationshipGroup->setNull();
+            
             $relationship->save();
         }
         

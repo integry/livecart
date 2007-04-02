@@ -1,0 +1,11 @@
+.productRelationshipGroup_title {
+    font-size: 4em;
+    font-weight: bold;
+    color: #cccccc;
+}
+
+
+.productRelationship_list {
+  	padding-bottom: 1em;
+  	padding-top: 1em;
+}

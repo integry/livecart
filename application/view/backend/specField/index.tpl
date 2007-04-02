@@ -51,19 +51,21 @@
 
 <div>
     <div id="specField_item_new_{$categoryID}_form" style="display: none;">
+        {literal}
         <script type="text/javascript">
         try
-        {literal}{{/literal}
-           var newSpecFieldForm = new Backend.SpecField('{json array=$specFieldsList}');
+        {
+           var newSpecFieldForm = new Backend.SpecField('{/literal}{json array=$specFieldsList}{literal}');
            newSpecFieldForm.addField(null, "new" + Backend.SpecField.prototype.countNewFilters, true);
            newSpecFieldForm.bindDefaultFields();
            Backend.SpecField.prototype.countNewFilters++;
-        {literal}}{/literal}
+        }
         catch(e)
-        {literal}{{/literal}
+        {
             console.info(e)
-        {literal}}{/literal}
+        }
         </script>
+        {/literal}
     </div>
     
     <div id="specField_group_new_{$categoryID}_form" class="specField_new_group" style="display: none;">
@@ -113,7 +115,6 @@
 
 <script type="text/javascript">
      var categoryID = {$categoryID};
-     var groupList = ActiveList.prototype.getInstance('specField_groups_list_'+categoryID, Backend.SpecFieldGroup.prototype.callbacks, Backend.SpecField.prototype.msg.activeListMessages);  
      
      Event.observe($("specField_item_new_"+categoryID+"_show"), "click", function(e) 
      {ldelim}
@@ -126,16 +127,17 @@
          Event.stop(e); 
          Backend.SpecFieldGroup.prototype.createNewAction(categoryID);
      {rdelim});
- 
- 
-    {assign var="lastSpecFieldGroup" value="-1"}
-    ActiveList.prototype.getInstance('specField_items_list_'+categoryID+'_', Backend.SpecField.prototype.callbacks, Backend.SpecField.prototype.activeListMessages);
-    {foreach item="field" from=$specFieldsWithGroups}
-        {if $field.SpecFieldGroup && $lastSpecFieldGroupID != $field.SpecFieldGroup.ID}
-             ActiveList.prototype.getInstance('specField_items_list_'+categoryID+'_{$field.SpecFieldGroup.ID}', Backend.SpecField.prototype.callbacks, Backend.SpecField.prototype.activeListMessages);
-        {/if}
-        {assign var="lastSpecFieldGroupID" value=$field.SpecFieldGroup.ID}
-    {/foreach}
+    
+     var groupList = ActiveList.prototype.getInstance('specField_groups_list_'+categoryID, Backend.SpecFieldGroup.prototype.callbacks, Backend.SpecField.prototype.msg.activeListMessages);  
+     ActiveList.prototype.getInstance('specField_items_list_'+categoryID+'_', Backend.SpecField.prototype.callbacks, Backend.SpecField.prototype.activeListMessages);
+    
+     {assign var="lastSpecFieldGroup" value="-1"}
+     {foreach item="field" from=$specFieldsWithGroups}
+         {if $field.SpecFieldGroup && $lastSpecFieldGroupID != $field.SpecFieldGroup.ID}
+              ActiveList.prototype.getInstance('specField_items_list_'+categoryID+'_{$field.SpecFieldGroup.ID}', Backend.SpecField.prototype.callbacks, Backend.SpecField.prototype.activeListMessages);
+         {/if}
+         {assign var="lastSpecFieldGroupID" value=$field.SpecFieldGroup.ID}
+     {/foreach}
      
      groupList.createSortable();
 </script>

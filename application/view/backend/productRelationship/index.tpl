@@ -34,6 +34,7 @@
 <link href="/public/stylesheet/backend/Category.css" media="screen" rel="Stylesheet" type="text/css"/>
 <link href="/public/stylesheet/backend/Product.css" media="screen" rel="Stylesheet" type="text/css"/>
 <link href="/public/stylesheet/backend/SpecField.css" media="screen" rel="Stylesheet" type="text/css"/>
+<link href="/public/stylesheet/backend/ProductRelationship.css" media="screen" rel="Stylesheet" type="text/css"/>
 <link href="/public/stylesheet/backend/Filter.css" media="screen" rel="Stylesheet" type="text/css"/>
 <link href="/public/stylesheet/backend/CategoryImage.css" media="screen" rel="Stylesheet" type="text/css"/>
 <link href="/public/stylesheet/library/TabControl.css" media="screen" rel="Stylesheet" type="text/css"/>
@@ -58,7 +59,7 @@
         links.related = '{/literal}{link controller=backend.productRelationship action=addRelated}/{$productID}{literal}';
         links.deleteRelated = '{/literal}{link controller=backend.productRelationship action=delete}/{$productID}{literal}';
         links.selectProduct = '{/literal}{link controller=backend.productRelationship action=selectProduct}#cat_{$categoryID}#tabProducts__{literal}';
-        links.sort = '{/literal}{link controller=backend.productRelationship action=sort}/{$productID}?target=productRelationships_{$productID}{literal}';
+        links.sort = '{/literal}{link controller=backend.productRelationship action=sort}/{$productID}{literal}';
         
         messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
         messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_relation|addslashes}{literal}';
@@ -69,42 +70,70 @@
 <div id="productRelationshipMsg_{$productID}" style="display: none;"></div>
 
 <fieldset class="container">
-	<ul class="menu" id="specField_menu_{$categoryID}">
+	<ul class="menu" id="productRelationship_menu_{$productID}">
 	    <li><a href="#selectProduct" id="selectProduct_{$productID}">{t _select_product}</a></li>
 	    <li><a href="#cancelSelectProduct" id="selectProduct_{$productID}_cancel" class="hidden">{t _cancel_adding_new_related_product}</a></li>
-	    <li><a href="#new" id="relatedProduct_group_new_{$categoryID}_show">{t _add_new_group}</a></li>
-	    <li><a href="#new" id="relatedProduct_group_new_{$categoryID}_cancel" class="hidden">{t _cancel_adding_new_group}</a></li>
+	    <li><a href="#new" id="productRelationshipGroup_new_{$productID}_show">{t _add_new_group}</a></li>
+	    <li><a href="#new" id="productRelationshipGroup_new_{$productID}_cancel" class="hidden">{t _cancel_adding_new_group}</a></li>
 	</ul>
 </fieldset>
 
-<fieldset id="relatedProduct_group_new_{$categoryID}_form">
+<fieldset id="productRelationshipGroup_new_{$productID}_form">
     {include file="backend/productRelationshipGroup/form.tpl"}
     
     <script type="text/javascript">
     {literal}
         var emptyGroupModel = new Backend.RelatedProduct.Group.Model({Product: {ID: {/literal}{$productID}{literal}}}, {/literal}{json array=$languages}{literal});
-        new Backend.RelatedProduct.Group.Controller($("relatedProduct_group_new_{/literal}{$categoryID}{literal}_form").down('form'), emptyGroupModel);
+        new Backend.RelatedProduct.Group.Controller($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('form'), emptyGroupModel);
     {/literal}
     </script>
 </fieldset>
 
-<ul id="productRelationships_list_{$productID}" class="productRelationshipsList activeList_add_sort activeList_add_delete">
-    {foreach item="relation" from=$relationships}
-        <li id="productRelationships_list_{$productID}_{$relation.RelatedProduct.ID}">
-            {assign var="product" value=$relation.RelatedProduct}
-            {include file="backend/productRelationship/addRelated.tpl" product=$product}
+
+{* No group *}
+<ul id="productRelationship_list_{$productID}_" class="productRelationship_list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_productRelationship_list">
+{foreach item="relationship" from=$relationshipsWithGroups}
+    {if $relationship.ProductRelationshipGroup.ID}{php}break;{/php}{/if}
+    {if $relationship.RelatedProduct.ID} 
+        <li id="productRelationship_list_{$productID}_{$relationship.ProductRelationshipGroup.ID}_{$relationship.RelatedProduct.ID}">
+            {include file="backend/productRelationship/addRelated.tpl" product=$relationship.RelatedProduct}
         </li>
-    {/foreach}
+    {/if}
+{/foreach}
 </ul>
 
-<ul id="productRelationships_groups_{$productID}" class="activeList_add_sort activeList_add_delete">
-        
+
+<ul id="productRelationshipGroup_list_{$productID}" class="activeList_add_sort activeList_add_delete">
+{foreach item="relationship" from=$relationshipsWithGroups}
+    {if !$relationship.ProductRelationshipGroup.ID}{php}continue;{/php}{/if}
+    
+    {if $lastProductRelationshipGroup != $relationship.ProductRelationshipGroup.ID }
+        {if $lastProductRelationshipGroup > 0}</ul></li>{/if}
+        <li id="productRelationshipGroup_list_{$productID}_{$relationship.ProductRelationshipGroup.ID}">
+            <span class="productRelationshipGroup_title">{$relationship.ProductRelationshipGroup.name_lang}</span>   	
+            <ul id="productRelationship_list_{$productID}_{$relationship.ProductRelationshipGroup.ID}" class="productRelationship_list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_productRelationship_list">
+    {/if}
+    
+    {if $relationship.RelatedProduct.ID} {* For empty groups *}
+    <li id="productRelationship_list_{$productID}_{$relationship.ProductRelationshipGroup.ID}_{$relationship.RelatedProduct.ID}">
+    	{include file="backend/productRelationship/addRelated.tpl" product=$relationship.RelatedProduct}
+    </li>
+    {/if}
+
+    {assign var="lastProductRelationshipGroup" value=$relationship.ProductRelationshipGroup.ID}
+{/foreach}
 </ul>
 
 {literal}
 <script type="text/javascript">
     try
     {
+        Event.observe($("productRelationshipGroup_new_{/literal}{$productID}{literal}_show"), "click", function(e) 
+        {
+            Event.stop(e);
+            var newForm = Backend.RelatedProduct.Group.Controller.prototype.getInstance($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('form')).showNewForm();
+        });
+        
         Event.observe($("selectProduct_{/literal}{$productID}{literal}"), 'click', function(e) {
             Event.stop(e);
             new Backend.RelatedProduct.SelectProductPopup(
@@ -114,10 +143,25 @@
                     onProductSelect: function() { Backend.RelatedProduct.addProductToList({/literal}{$productID}{literal}, this.productID) }
                 }
             );
+          
+            Backend.RelatedProduct.Group.Controller.prototype.getInstance($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('form')).hideNewForm();
         });
         
-        ActiveList.prototype.getInstance($("productRelationships_groups_{/literal}{$productID}{literal}"), Backend.RelatedProduct.Group.Callbacks);
-        ActiveList.prototype.getInstance($("productRelationships_list_{/literal}{$productID}{literal}"), Backend.RelatedProduct.activeListCallbacks);   
+
+        {/literal}    
+        var groupList = ActiveList.prototype.getInstance('productRelationshipGroup_list_{$productID}', Backend.RelatedProduct.Group.Callbacks);  
+        ActiveList.prototype.getInstance("productRelationship_list_{$productID}_", Backend.RelatedProduct.activeListCallbacks);
+        
+        {assign var="lastRelationshipGroup" value="-1"}
+        {foreach item="relationship" from=$relationshipsWithGroups}
+            {if $relationship.ProductRelationshipGroup && $lastRelationshipGroup != $relationship.ProductRelationshipGroup.ID}
+                 ActiveList.prototype.getInstance('productRelationship_list_{$productID}_{$relationship.ProductRelationshipGroup.ID}', Backend.RelatedProduct.activeListCallbacks);
+            {/if}
+            {assign var="lastRelationshipGroup" value=$relationship.ProductRelationshipGroup.ID}
+        {/foreach}
+        {literal}
+        
+        groupList.createSortable();
     }
     catch(e)
     {

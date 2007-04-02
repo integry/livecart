@@ -17,7 +17,7 @@ Backend.RelatedProduct = {
             }
         },
         beforeSort: function(li, order){ 
-            return Backend.RelatedProduct.links.sort + '&' + order;
+            return Backend.RelatedProduct.links.sort + "?target=" + this.ul.id + "&" + order
         },
         afterSort: function(li, response){ console.info('afterSort') }
     },
@@ -44,7 +44,7 @@ Backend.RelatedProduct = {
                 {
                     try
                     {
-                        var relatedList = ActiveList.prototype.getInstance($("productRelationships_" + productID));
+                        var relatedList = ActiveList.prototype.getInstance($("productRelationship_list_" + productID + "_"));
                         relatedList.addRecord(relatedProductID, response.responseText, true);
 
                         var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
@@ -139,17 +139,13 @@ Backend.RelatedProduct.Group.Model.prototype = {
     
     initialize: function(data, languages)
     {
-        languages['lt'] = {
-            ID: 'lt',
-            name: 'Lithuanian',
-            isDefault: '0'
-        }
-        
         this.store(data || {});
         
         if(!this.get('ID', false)) this.isNew = true;
         
         this.languages = $H(languages);
+        
+        
     },
     
     getDefaultLanguage: function()
@@ -214,13 +210,14 @@ Backend.RelatedProduct.Group.Model.prototype = {
             	break;
         }
         
-        onSaveResponse.call(this, response.status);
+        onSaveResponse.call(this, response.status, 'aasdasd', 'asdasd', 'asdads');
         this.saving = false;
     }
 }
 
 Backend.RelatedProduct.Group.Controller = Class.create();
 Backend.RelatedProduct.Group.Controller.prototype = {
+    instances: {},
     
     initialize: function(root, model)
     {        
@@ -230,7 +227,16 @@ Backend.RelatedProduct.Group.Controller.prototype = {
         this.setDefaultValues();
         this.setTranslationValues();
         
-        this.bindActions()
+        this.bindActions();
+        
+        Form.State.backup(this.view.nodes.root);
+        
+        Backend.RelatedProduct.Group.Controller.prototype.instances[this.view.nodes.root.id] = this;
+    },
+    
+    getInstance: function(rootNode)
+    {
+        return Backend.RelatedProduct.Group.Controller.prototype.instances[$(rootNode).id];
     },
     
     setDefaultValues: function()
@@ -265,13 +271,20 @@ Backend.RelatedProduct.Group.Controller.prototype = {
     {        
         var self = this;
         ActiveForm.prototype.resetErrorMessages(this.view.nodes.root);
-        this.model.save(Form.serialize(this.view.nodes.root), function() { self.onSaveResponse() });
+        this.model.save(Form.serialize(this.view.nodes.root), function(status) { 
+            self.onSaveResponse(status) ;
+        });
     },
     
     
     onCancel: function()
     {
-        console.info('canceling..'); 
+        Form.State.restore(this.view.nodes.root);
+        
+        if(this.model.isNew)
+        {
+            this.hideNewForm();
+        }
     },
     
     onSaveResponse: function(status)
@@ -281,20 +294,34 @@ Backend.RelatedProduct.Group.Controller.prototype = {
             if(this.model.isNew)
             {
                 this.view.assign('ID', this.model.get('ID'));
-                this.view.assign('productID', this.model.get('productID'));
+                this.view.assign('productID', this.model.get('Product.ID'));
                 this.view.createNewGroup();
                 this.model.store('ID', false);
+                
+                this.hideNewForm();
             }
             else
             {
                 this.view.collapse();
             }
+            Form.State.restore(this.view.nodes.root);
         }
         else
         {
             ActiveForm.prototype.setErrorMessages(this.view.nodes.root, this.model.errors);
         }
-        
+    },
+    
+    hideNewForm: function()
+    {
+        ActiveForm.prototype.hideMenuItems($("productRelationship_menu_" + this.model.get('Product.ID')), [$(this.view.prefix + "new_" +this.model.get('Product.ID') + "_show"), $("selectProduct_" + this.model.get('Product.ID'))]);
+        ActiveForm.prototype.hideNewItemForm($(this.view.prefix + "new_" + this.model.get('Product.ID') + "_show"), this.view.nodes.root); 
+    },
+    
+    showNewForm: function()
+    {
+        ActiveForm.prototype.hideMenuItems($("productRelationship_menu_" + this.model.get('Product.ID')), [$(this.view.prefix + "new_" + this.model.get('Product.ID') + "_cancel"), $("selectProduct_" + this.model.get('Product.ID')) + "_cancel"]);
+        ActiveForm.prototype.showNewItemForm($(this.view.prefix + "new_" + this.model.get('Product.ID') + "_show"), this.view.nodes.root); 
     }
 }
 
@@ -369,19 +396,20 @@ Backend.RelatedProduct.Group.View.prototype = {
     
     createNewGroup: function()
     {
-        var activeList = ActiveList.prototype.getInstance($(this.prefix + "groups_{/literal}{$productID}{literal}")); 
+        var activeList = ActiveList.prototype.getInstance($(this.prefix + "list_" + this.get('productID'))); 
         
         var containerDiv = document.createElement('div');
         containerDiv.update(
-            + '<span class="'+this.prefix+'group_title">' + this.nodes.name + '</span>'
-            + '<ul id="' + this.prefix + 'list" class="' + this.prefix + 'list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_' + this.prefix + 'list">'
+            '<span class="' + this.prefix + 'title">' + this.nodes.name.value + '</span>'
+            + '<ul id="productRelationship_list_' + this.get('productID') + '_' + this.get('ID') + '" class="productRelationship_list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_productRelationship_list">'
             + '</ul>'
         );
         
-        li = activeList.addRecord(containerDiv);
+        li = activeList.addRecord(this.get('ID'), containerDiv);
+        ActiveList.prototype.getInstance($('productRelationship_list_' + this.get('productID') + '_' + this.get('ID')), Backend.RelatedProduct.activeListCallbacks);
+        
         activeList.highlight(li);
         activeList.touch();
-        
         this.clear();
     }
 }

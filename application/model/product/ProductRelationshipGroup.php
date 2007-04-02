@@ -1,5 +1,5 @@
 <?php
-class ProductRelationshipGroup extends MultilingualObject
+class ProductRelationshipGroup extends MultilingualObject 
 {
 	public static function defineSchema($className = __CLASS__)
 	{
@@ -65,11 +65,15 @@ class ProductRelationshipGroup extends MultilingualObject
 	private static function getProductGroupsFilter(Product $product)
 	{
 	    $filter = new ARSelectFilter();
-
 		$filter->setOrder(new ARFieldHandle("ProductRelationshipGroup", "position"), 'ASC');
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("ProductRelationshipGroup", "productID"), $product->getID()));
 		
 		return $filter;
+	}    
+
+	public static function mergeGroupsWithFields($groups, $fields)
+	{
+	    return ActiveRecordGroup::mergeGroupsWithFields(__CLASS__, $groups, $fields);
 	}
 }
 

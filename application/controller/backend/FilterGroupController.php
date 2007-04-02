@@ -33,8 +33,6 @@ class FilterGroupController extends StoreManagementController
         $categoryID = (int)$this->request->getValue('id');
         $category = Category::getInstanceByID($categoryID);
         $specFieldsList = $category->getSpecificationFieldSet();
-
-        $filters = Filter::createFiltersInGroupsCountArray($category->getFilterGroupSet());
         
         $blankFilter = array
         (
@@ -45,7 +43,7 @@ class FilterGroupController extends StoreManagementController
             'specFields' => $this->getSpecFieldOptions($category->getSpecificationFieldArray())
         );
         
-        $response->setValue('filters', $filters);
+        $response->setValue('filters', Filter::createFiltersInGroupsCountArray($category->getFilterGroupSet()));
         $response->setValue('blankFilter', $blankFilter);
         $response->setValue('categoryID', $categoryID);
         $response->setValue('configuration', $this->getConfig());
