@@ -168,7 +168,8 @@ class ProductController extends StoreManagementController
     	$currency = Store::getInstance()->getDefaultCurrency()->getID();
 
     	$data = array();
-        foreach ($productArray as $product)
+$index = 0;
+		foreach ($productArray as $product)
     	{
             $record = array();
             foreach ($displayedColumns as $column => $type)
@@ -181,6 +182,7 @@ class ProductController extends StoreManagementController
                 else if ('ProductPrice' == $class)
                 {
 					$value = isset($product['price_' . $currency]) ? $product['price_' . $currency] : 0;
+$value = ++$index + $this->request->getValue('offset');
                 }
                 else if ('specField' == $class)
                 {
