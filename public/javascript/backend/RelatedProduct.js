@@ -134,15 +134,15 @@ Backend.RelatedProduct.Group.Callbacks =
     beforeEdit:     function(li) 
     {
         console.info(li);
-        if(!Backend.RelatedProduct.Group.Controller.prototype.getInstance(li.down('.productRelationshipGroup_form')))
+        if(!Backend.RelatedProduct.Group.Controller.prototype.getInstance(li.down('form')))
         {
             return Backend.RelatedProduct.Group.Links.edit + "/" + this.getRecordId(li);
         }
         else
         {
-            with(Backend.RelatedProduct.Group.Controller.prototype.getInstance($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form")))
+            with(Backend.RelatedProduct.Group.Controller.prototype.getInstance(li.down('form')))
             {
-                if('block' != view.root.style.display) showForm();
+                if('block' != view.nodes.root.style.display) showForm();
                 else hideForm();
             }
         }
@@ -176,8 +176,6 @@ Backend.RelatedProduct.Group.Model.prototype = {
         if(!this.get('ID', false)) this.isNew = true;
         
         this.languages = $H(languages);
-        
-        
     },
     
     getDefaultLanguage: function()
@@ -254,7 +252,9 @@ Backend.RelatedProduct.Group.Controller.prototype = {
     initialize: function(root, model)
     {        
         this.model = model;
-        this.view = new Backend.RelatedProduct.Group.View(root)
+        this.view = new Backend.RelatedProduct.Group.View(root, this.model.get('Product.ID'));
+        
+        if(!this.view.nodes.root.id) this.view.nodes.root.id = this.view.prefix + 'list_' + this.model.get('Product.ID') + '_' + this.model.get('ID') + '_form';
         
         this.setDefaultValues();
         this.setTranslationValues();
@@ -276,7 +276,7 @@ Backend.RelatedProduct.Group.Controller.prototype = {
         var defaultLanguageID = this.model.getDefaultLanguage()['ID'];
         
         this.view.assign('defaultLanguageID', defaultLanguageID);
-        this.view.assign('name', this.model.get('name.' + defaultLanguageID));
+        this.view.assign('name', this.model.get('name_' + defaultLanguageID));
         this.view.assign('ID', this.model.get('ID', ''));
         this.view.assign('productID', this.model.get('Product.ID', ''));
         
@@ -285,8 +285,16 @@ Backend.RelatedProduct.Group.Controller.prototype = {
     
     setTranslationValues: function()
     {
+        var self = this;
+        
         this.view.assign('defaultLanguageID', this.model.getDefaultLanguage()['ID']);
-        this.view.assign('name', this.model.get('name'));
+        var name = {};
+        this.model.languages.each(function(lang)
+        {
+           name[lang.key] = self.model.get('name_' + lang.key)
+        });
+        
+        this.view.assign('name', name);
         this.view.assign('languages', this.model.languages);
         this.view.setOtherLanguagesValues(this.model);  
     },
@@ -297,6 +305,8 @@ Backend.RelatedProduct.Group.Controller.prototype = {
         
         Event.observe(this.view.nodes.save, 'click', function(e) { Event.stop(e); self.onSave(); });
         Event.observe(this.view.nodes.cancel, 'click', function(e) { Event.stop(e); self.onCancel(); });
+        Event.observe(this.view.nodes.newGroupCancelLink, 'click', function(e) { Event.stop(e); self.onCancel(); });
+        
     },
     
     onSave: function()
@@ -338,6 +348,7 @@ Backend.RelatedProduct.Group.Controller.prototype = {
             }
             else
             {
+                this.view.nodes.title.update(this.view.nodes.name.value);
                 this.hideForm();
             }
             Form.State.restore(this.view.nodes.root);
@@ -377,13 +388,13 @@ Backend.RelatedProduct.Group.View = Class.create();
 Backend.RelatedProduct.Group.View.prototype = {
     prefix: 'productRelationshipGroup_',
     
-    initialize: function(root)
+    initialize: function(root, productID)
     {
-        this.findNodes(root);
+        this.findNodes(root, productID);
         this.clear();
     },
     
-    findNodes: function(root)
+    findNodes: function(root, productID)
     {
         this.nodes = {};
         this.nodes.root = root;
@@ -399,6 +410,7 @@ Backend.RelatedProduct.Group.View.prototype = {
         
         this.nodes.title = this.nodes.root.previous('.' + this.prefix + 'title');
         
+        this.nodes.newGroupCancelLink = $(this.prefix + 'new_' + productID + '_cancel');
         
         this.nodes.translations = this.nodes.root.down('.' + this.prefix + 'translations');
         this.nodes.translationTemplate = this.nodes.translations.down('.' + this.prefix + 'translations_language');
@@ -467,6 +479,7 @@ Backend.RelatedProduct.Group.View.prototype = {
         var li = this.nodes.root.up("li");
         var activeList = ActiveList.prototype.getInstance(li.up('ul'));
         
+        ActiveList.prototype.collapseAll();
         this.nodes.title.hide();
         activeList.toggleContainerOn(li.down('.' + this.prefix + 'form'));
         

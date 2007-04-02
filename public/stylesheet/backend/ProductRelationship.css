@@ -1,11 +1,16 @@
 .productRelationshipGroup_title {
-    font-size: 4em;
-    font-weight: bold;
-    color: #cccccc;
+    color: grey;
+    font-size:300%;
+    font-weight:bold;
 }
 
 
 .productRelationship_list {
   	padding-bottom: 1em;
   	padding-top: 1em;
+}
+
+.productRelationshipGroup_list > li {
+    border: 2px solid grey;
+    margin-bottom: 1em;   
 }
