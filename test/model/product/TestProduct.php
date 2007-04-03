@@ -28,9 +28,9 @@ class TestProduct extends UnitTest
      * @var Connection
      */
     private $db = null;
-	private $categoryAutoIncrementNumber = 0;
-	private $productAutoIncrementNumber = 0;
-	private $productRelationshipGroupAutoIncrementNumber = 0;
+    
+    private $autoincrements = false;
+    private $autoincrementingTables = array('Category', 'Product', 'ProductRelationshipGroup', 'ProductFile', 'ProductFileGroup');
 	
 	public function __construct()
 	{
@@ -43,11 +43,20 @@ class TestProduct extends UnitTest
 	{
 		ActiveRecordModel::beginTransaction();		
 		
+	    if(empty($this->autoincrements))
+	    {
+		    foreach($this->autoincrementingTables as $table)
+		    {
+				$res = $this->db->executeQuery("SHOW TABLE STATUS LIKE '$table'");
+				$res->next();
+				$this->autoincrements[$table] = (int)$res->getInt("Auto_increment");
+		    }
+	    }
+		
 		// create a new category
 		$this->productCategory = Category::getNewInstance(Category::getRootNode());
 		$this->productCategory->setValueByLang("name", "en", "Demo category branch");
 		$this->productCategory->save();
-		$this->categoryAutoIncrementNumber = $this->productCategory->getID();
 		
 		// create a product without attributes
 		$this->product = Product::getNewInstance($this->productCategory);
@@ -55,32 +64,25 @@ class TestProduct extends UnitTest
 		$this->product->setValueByLang("name", "lt", "Bandomasis produktas");
 		$this->product->setFieldValue("isEnabled", true);
 		$this->product->save();	
-		$this->productAutoIncrementNumber = $this->product->getID();
-		
-		$product = Product::getNewInstance($this->productCategory);
-		$product->save();
-		$relationship = ProductRelationshipGroup::getNewInstance($product);
-		$relationship->save();
-		$this->productRelationshipGroupAutoIncrementNumber = $relationship->getID();
-		
 	}
 
 	public function tearDown()
 	{
 	    ActiveRecordModel::rollback();
-	    ActiveRecord::removeClassFromPool('Product');
+
+   	    foreach($this->autoincrementingTables as $table)
+	    {
+	        ActiveRecord::removeClassFromPool($table);
+	        $this->db->executeUpdate("ALTER TABLE $table AUTO_INCREMENT=" . $this->autoincrements[$table]);
+	    }	
+	    
 	    ActiveRecord::removeClassFromPool('ProductRelationship');
-	    ActiveRecord::removeClassFromPool('ProductRelationshipGroup');	
-	    	
-	    $this->db->executeUpdate("ALTER TABLE Category AUTO_INCREMENT=" . $this->categoryAutoIncrementNumber);
-	    $this->db->executeUpdate("ALTER TABLE Product AUTO_INCREMENT=" . $this->productAutoIncrementNumber);
-	    $this->db->executeUpdate("ALTER TABLE ProductRelationshipGroup AUTO_INCREMENT=" . $this->productRelationshipGroupAutoIncrementNumber);
 	}
 	
 	/**
 	 *  Disabled product, with 0 stock - the numbers shouldn't change
 	 */
-    public function xtestCategoryCountsWhenDisabledProductWithNoStockIsAdded()
+    public function testCategoryCountsWhenDisabledProductWithNoStockIsAdded()
 	{
         $secondCategory = Category::getNewInstance($this->productCategory);
         $secondCategory->handle->set(':SECOND_TEST_HANDLE');
@@ -101,7 +103,7 @@ class TestProduct extends UnitTest
 	/**
 	 *  Disabled product, with some stock - the numbers shouldn't change again
 	 */
-    public function xtestCategoryCountsWhenDisabledProductWithSomeStockIsAdded()
+    public function testCategoryCountsWhenDisabledProductWithSomeStockIsAdded()
 	{
         $secondCategory = Category::getNewInstance($this->productCategory);
         $secondCategory->save();
@@ -136,7 +138,7 @@ class TestProduct extends UnitTest
 	/**
 	 *  Enabled product, with some stock - the numbers should increase by one
 	 */
-    public function xtestCategoryCountsWhenEnabledProductWithSomeStockIsAdded()
+    public function testCategoryCountsWhenEnabledProductWithSomeStockIsAdded()
 	{
         $secondCategory = Category::getNewInstance($this->productCategory);
         $secondCategory->handle->set(':SECOND_TEST_HANDLE');
@@ -156,7 +158,7 @@ class TestProduct extends UnitTest
 	/**
 	 *  Enabled product, with some stock - the numbers should increase by one
 	 */
-    public function xtestCategoryCountsWhenEnabledProductWithNoStockIsAdded()
+    public function testCategoryCountsWhenEnabledProductWithNoStockIsAdded()
 	{
         $secondCategory = Category::getNewInstance($this->productCategory);
         $secondCategory->handle->set(':SECOND_TEST_HANDLE');
@@ -180,7 +182,7 @@ class TestProduct extends UnitTest
         $this->assertEqual((int)$secondCategory->availableProductCount->get() + 1, (int)$sameCategory->availableProductCount->get());
     }
     
-	public function xtestSimpleValues()
+	public function testSimpleValues()
 	{
 		// create some simple value attributes
 		$numField = SpecField::getNewInstance($this->productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SIMPLE);
@@ -218,7 +220,7 @@ class TestProduct extends UnitTest
 		$this->assertFalse(isset($array['attributes'][$textField->getID()]));			
 	}
 	
-	public function xtestSingleSelectValues()
+	public function testSingleSelectValues()
 	{			
 		// create a single value select attribute
 		$singleSel = SpecField::getNewInstance($this->productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SELECTOR);
@@ -282,7 +284,7 @@ class TestProduct extends UnitTest
 		
 	}
 	
-	public function xtestMultipleSelectValues()
+	public function testMultipleSelectValues()
 	{
 		// create a multiple value select attribute
 		$multiSel = SpecField::getNewInstance($this->productCategory, SpecField::DATATYPE_NUMBERS, SpecField::TYPE_NUMBERS_SELECTOR);
@@ -353,7 +355,7 @@ class TestProduct extends UnitTest
 		$this->product->save();				
 	}
 	
-	public function xtestLoadSpecification()
+	public function testLoadSpecification()
 	{	
 	    ActiveRecord::removeFromPool($this->product);
 
@@ -395,10 +397,10 @@ class TestProduct extends UnitTest
 		ActiveRecordModel::rollback();
 	}
 
-	public function xtestAddRelatedProducts()
+	public function testAddRelatedProducts()
 	{
 	    $otherProducts = array();
-	    foreach(range(1, 5) as $i)
+	    foreach(range(1, 2) as $i)
 	    {
 			$otherProducts[$i] = Product::getNewInstance($this->productCategory);
 			$otherProducts[$i]->save();
@@ -406,7 +408,7 @@ class TestProduct extends UnitTest
 		    $this->product->addRelatedProduct($otherProducts[$i]);	
 	    }
 	
-	    $this->assertEqual(5, $this->product->getRelatedProducts()->getTotalRecordCount());
+	    $this->assertEqual(2, $this->product->getRelatedProducts()->getTotalRecordCount());
 	    foreach($this->product->getRelatedProducts() as $relatedProduct)
 	    {
 	        $this->assertIsA($relatedProduct, 'Product');
@@ -426,13 +428,13 @@ class TestProduct extends UnitTest
 	    $this->product->load();
 	    
 	    // all related products should be here
-	    $this->assertEqual(5, $this->product->getRelatedProducts()->getTotalRecordCount());
+	    $this->assertEqual(2, $this->product->getRelatedProducts()->getTotalRecordCount());
 	}
 	
-	public function xtestGetRelationships()
+	public function testGetRelationships()
 	{
 	    $otherProducts = array();
-	    foreach(range(1, 5) as $i)
+	    foreach(range(1, 2) as $i)
 	    {
 			$otherProducts[$i] = Product::getNewInstance($this->productCategory);
 			$otherProducts[$i]->save();
@@ -445,7 +447,7 @@ class TestProduct extends UnitTest
 	    $this->product->load();
 	    
 	    $i = 1;
-	    $this->assertEqual(5, $this->product->getRelationships()->getTotalRecordCount());
+	    $this->assertEqual(2, $this->product->getRelationships()->getTotalRecordCount());
 	    foreach($this->product->getRelationships() as $relationship)
 	    {
 	        $this->assertIsA($relationship, 'ProductRelationship');
@@ -455,7 +457,7 @@ class TestProduct extends UnitTest
 	    }
 	}
 	
-	public function xtestGetRelatedProducts()
+	public function testGetRelatedProducts()
 	{
 	    $otherProducts = array();
 	    foreach(range(1, 5) as $i)
@@ -496,10 +498,10 @@ class TestProduct extends UnitTest
 	    }
 	}
 	
-	public function xtestRemoveRelationship()
+	public function testRemoveRelationship()
 	{
 	    $otherProducts = array();
-	    foreach(range(1, 5) as $i)
+	    foreach(range(1, 2) as $i)
 	    {
 			$otherProducts[$i] = Product::getNewInstance($this->productCategory);
 			$otherProducts[$i]->save();
@@ -518,7 +520,7 @@ class TestProduct extends UnitTest
 	    $this->product->load();
 	    
 	    // Relationships are not removed from database unless the product is saved
-	    $this->assertEqual(5, $this->product->getRelatedProducts()->getTotalRecordCount());
+	    $this->assertEqual(2, $this->product->getRelatedProducts()->getTotalRecordCount());
 	    
 	    $this->product->save();
 	    
@@ -530,26 +532,22 @@ class TestProduct extends UnitTest
 	    $this->assertEqual(0, $this->product->getRelatedProducts()->getTotalRecordCount());
 	}
 
-	public function xtestIsRelatedTo()
+	public function testIsRelatedTo()
 	{
-	    $otherProducts = array();
-	    foreach(range(1, 3) as $i)
-	    {
-			$otherProducts[$i] = Product::getNewInstance($this->productCategory);
-			$otherProducts[$i]->save();
-		    if(1 == $i) 
-		    {
-		        $this->product->addRelatedProduct($otherProducts[$i]);			
-		    }
-	    }
+	    $notRelatedProduct = Product::getNewInstance($this->productCategory);
+		$relatedProduct = Product::getNewInstance($this->productCategory);
+	    $notRelatedProduct->save();
+		$relatedProduct->save();
+	    
+		$this->product->addRelatedProduct($relatedProduct);	
 	    $this->product->save();
 	    
-	    $this->assertFalse($otherProducts[2]->isRelatedTo($this->product));
-	    $this->assertTrue($otherProducts[1]->isRelatedTo($this->product));
+	    $this->assertFalse($notRelatedProduct->isRelatedTo($this->product));
+	    $this->assertTrue($relatedProduct->isRelatedTo($this->product));
 	    
 	    // isRelatedTo provide one direction testing is related to means that 
 		// this product is in that product's related products list
-	    $this->assertFalse($this->product->isRelatedTo($otherProducts[1]));
+	    $this->assertFalse($this->product->isRelatedTo($relatedProduct));
 	}
 
 	public function testGetRelationshipGroups()
@@ -561,6 +559,81 @@ class TestProduct extends UnitTest
 	    
 		$relationship->save();
 	    $this->assertEqual($this->product->getRelationshipGroups()->getTotalRecordCount(), 1);
+	}
+	
+	public function testGetFileGroups()
+	{
+	    $this->assertEqual($this->product->getFileGroups()->getTotalRecordCount(), 0);
+	   
+		$fileGroup = ProductFileGroup::getNewInstance($this->product);
+	    $this->assertEqual($this->product->getFileGroups()->getTotalRecordCount(), 0);
+	    
+		$fileGroup->save();
+	    $this->assertEqual($this->product->getFileGroups()->getTotalRecordCount(), 1);
+	}
+
+	public function testGetFiles()
+	{
+	    $productFiles = array();
+	    foreach(range(1, 2) as $i)
+	    {
+		    file_put_contents($productFiles[$i] = md5($i), 'All Your Base Are Belong To Us');
+		    $productFile = ProductFile::getNewInstance($this->product, $productFiles[$i], 'test_file.txt');
+		    $productFile->save();
+	    }	    
+	    
+	    $this->assertEqual($this->product->getFiles()->getTotalRecordCount(), 2);
+	}
+	
+	public function testMergeGroupsWithFIlters()
+	{
+	    // create groups
+	    $productGroup = array();
+	    foreach(range(1, 3) as $i)
+	    {
+		    $productGroup[$i] = ProductFileGroup::getNewInstance($this->product);
+		    $productGroup[$i]->save();
+	    }	
+	    
+	    // create files
+        $productFile = array();
+	    foreach(range(1, 2) as $i)
+	    {
+		    file_put_contents($productFiles[$i] = md5($i), "file $i");
+		    $productFile[$i] = ProductFile::getNewInstance($this->product, $productFiles[$i], "test_file_$i.txt");
+		    $productFile[$i]->save();
+	    }
+	    
+	    $productFile[1]->productFileGroup->set($productGroup[2]);
+	    $productFile[1]->save();
+	    
+	    $this->assertEqual($this->product->getFileGroups()->getTotalRecordCount(), 3);
+	    $this->assertEqual($this->product->getFiles()->getTotalRecordCount(), 2);
+	    
+	    $filesMergedWithGroups = $this->product->getFilesMergedWithGroupsArray();
+	    
+	    $this->assertEqual(count($filesMergedWithGroups), 4);
+	    
+	    // Check files without group    
+	    $this->assertTrue(isset($filesMergedWithGroups[1]['ID']));
+	    $this->assertEqual($filesMergedWithGroups[1]['ID'], $productFile[2]->getID());
+	    $this->assertFalse(isset($filesMergedWithGroups[1]['ProductFileGroup']['ID']));
+	    
+	    // Check first group
+	    $this->assertFalse(isset($filesMergedWithGroups[2]['ID']));
+	    $this->assertTrue(isset($filesMergedWithGroups[2]['ProductFileGroup']['ID']));
+	    $this->assertEqual($filesMergedWithGroups[2]['ProductFileGroup']['ID'], $productGroup[1]->getID());
+	    
+	    // Check second group
+	    $this->assertTrue(isset($filesMergedWithGroups[3]['ID']));
+	    $this->assertEqual($filesMergedWithGroups[3]['ID'], $productFile[1]->getID());
+	    $this->assertTrue(isset($filesMergedWithGroups[3]['ProductFileGroup']['ID']));
+	    $this->assertEqual($filesMergedWithGroups[3]['ProductFileGroup']['ID'], $productGroup[2]->getID());
+	    
+	    // Check second group
+	    $this->assertFalse(isset($filesMergedWithGroups[4]['ID']));
+	    $this->assertTrue(isset($filesMergedWithGroups[4]['ProductFileGroup']['ID']));
+	    $this->assertEqual($filesMergedWithGroups[4]['ProductFileGroup']['ID'], $productGroup[3]->getID());
 	}
 }
 

@@ -1459,7 +1459,7 @@ Backend.SpecFieldGroup.prototype = {
             
             var input = languageTranlation.down("input");
             var label = languageTranlation.down("label"); 
-            console.info(self);
+
             input.id = self.cssPrefix + "group_name_" + self.group.ID + "_" + language.key;
             label['for'] = input.id;
             label.onclick = function() { $(this["for"]).focus() };

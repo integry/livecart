@@ -105,7 +105,7 @@ class ProductRelationship extends ActiveRecord
 			'productID' => $product->getID(), 
 			'relatedProductID' => $relatedToProduct->getID()
 	    );
-	    
+	    	    
 	    if(self::retrieveFromPool(__CLASS__, $recordID)) return true;
 	    if(self::objectExists(__CLASS__, $recordID)) return true;
 	    

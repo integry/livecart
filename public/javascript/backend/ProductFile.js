@@ -1,119 +1,54 @@
 if(!Backend) Backend = {};
-if(!Backend.Product) Backend.Product = {};
-Backend.RelatedProduct = {
-    activeListCallbacks: 
-    {
-        beforeDelete: function(li){ 
-            if(confirm(Backend.RelatedProduct.messages.areYouSureYouWantToDelete)) 
-            {
-                return Backend.RelatedProduct.links.deleteRelated + "/?relatedProductID=" + this.getRecordId(li);
-            }
-        },
-        afterDelete: function(li, response){
-            if(!response.error) {
-                this.remove(li);
-                var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-                tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') - 1);
-            }
-        },
-        beforeSort: function(li, order){ 
-            return Backend.RelatedProduct.links.sort + "?target=" + this.ul.id + "&" + order
-        },
-        afterSort: function(li, response){ }
-    },
-    addProductToList: function(productID, relatedProductID)
-    {
-        var self = this;
-        new Ajax.Request(this.links.related + "/?relatedProductID=" + relatedProductID , {
-           method: 'get',
-           onSuccess: function(response) {
-                var evaluatedResponse;
-                try
-                {
-                    evaluatedResponse = eval("(" + response.responseText + ")");
-                }
-                catch(e) {}
-                
-                if(evaluatedResponse && evaluatedResponse.error && evaluatedResponse.error.length > 0)
-                {
-                    // error
-                    new Backend.SaveConfirmationMessage($('productRelationshipMsg_' + productID), { message: evaluatedResponse.error, type: 'red' });
-                }
-                else
-                {
-                    try
-                    {
-                        var relatedList = ActiveList.prototype.getInstance($("productRelationship_list_" + productID + "_"));
-                        relatedList.addRecord(relatedProductID, response.responseText, true);
-
-                        var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-                        tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') + 1);
-                    } 
-                    catch(e)
-                    {
-                        console.info(e);
-                    }
-                }
-               
-           }
-        });
-    }
-};
+if(!Backend.ProductFile) Backend.ProductFile = {};
 
 
-Backend.RelatedProduct.SelectProductPopup = Class.create();
-Backend.RelatedProduct.SelectProductPopup.prototype = {
-    height: 520,
-    width:  800,
-    onProductSelect: function() {},
-    
-    initialize: function(link, title, options)
-    {
-        try
+/******************************************************************************
+ * Product files
+ * label:files
+ *****************************************************************************/
+Backend.ProductFile.Callbacks = 
+{
+    beforeDelete: function(li){ 
+        if(confirm(Backend.RelatedProduct.messages.areYouSureYouWantToDelete)) 
         {
-            this.link = link;
-            this.title = title;
-            
-            if(options.onProductSelect) this.onProductSelect = options.onProductSelect;
-            
-            this.createPopup();
-        }
-        catch(e)
-        {
-            console.info(e);
+            return Backend.RelatedProduct.links.deleteRelated + "/" + this.getRecordId(li);
         }
     },
-    
-    createPopup: function()
-    {
-        Backend.RelatedProduct.SelectProductPopup.prototype.popup = window.open(this.link, this.title, 'resizable=1,width=' + this.width + ',height=' + this.height);
-        Backend.RelatedProduct.SelectProductPopup.prototype.popup.focus();
-                        
-        Event.observe(window, 'unload', function() { Backend.RelatedProduct.SelectProductPopup.prototype.popup.close(); });
-        
-        window.selectProductPopup = this;
+    afterDelete: function(li, response){
+        if(!response.error) {
+            this.remove(li);
+            var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
+            tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') - 1);
+        }
     },
-    
-    getSelectedProduct: function(productID)
-    {
-        this.productID = productID;
-        // Backend.RelatedProduct.SelectProductPopup.prototype.popup.opener.focus();
-        // Backend.RelatedProduct.SelectProductPopup.prototype.popup.close();
-        
-        var self = this;
-        setTimeout(function() { self.onProductSelect.call(self); }, 100)
-        
-    }
+    beforeSort: function(li, order){ 
+        return Backend.RelatedProduct.links.sort + "?target=" + this.ul.id + "&" + order
+    },
+    afterSort: function(li, response){ console.info('afterSort') }
 }
 
-Backend.RelatedProduct.Group = {};
+Backend.ProductFile.Model = Class.create();
+Backend.ProductFile.Model.prototype = {};
 
-Backend.RelatedProduct.Group.Callbacks =
+Backend.ProductFile.Controller = Class.create();
+Backend.ProductFile.Controller.prototype = {}
+
+Backend.ProductFile.View = Class.create();
+Backend.ProductFile.View.prototype = {}
+
+
+
+/******************************************************************************
+ * Product files group
+ * label:group
+ *****************************************************************************/
+Backend.ProductFile.Group = {};
+Backend.ProductFile.Group.Callbacks =
 {
     beforeDelete: function(li) { 
-        if(confirm(Backend.RelatedProduct.Group.Messages.areYouSureYouWantToDelete)) 
+        if(confirm(Backend.ProductFile.Group.Messages.areYouSureYouWantToDelete)) 
         {
-            return Backend.RelatedProduct.Group.Links.remove + "/" + this.getRecordId(li);
+            return Backend.ProductFile.Group.Links.remove + "/" + this.getRecordId(li);
         }
     },
     afterDelete: function(li, response) {
@@ -124,20 +59,22 @@ Backend.RelatedProduct.Group.Callbacks =
         }
     },
     beforeSort: function(li, order) { 
-        return Backend.RelatedProduct.Group.Links.sort + '&' + order;
+        return Backend.ProductFile.Group.Links.sort + '&' + order;
     },
     afterSort: function(li, response) { 
+        console.info('afterSort') 
     },
     
     beforeEdit:     function(li) 
     {
-        if(!Backend.RelatedProduct.Group.Controller.prototype.getInstance(li.down('.productRelationshipGroup_form')))
+        if(!Backend.ProductFile.Group.Controller.prototype.getInstance(li.down('.productRelationshipGroup_form')))
         {
-            return Backend.RelatedProduct.Group.Links.edit + "/" + this.getRecordId(li);
+            return Backend.ProductFile.Group.Links.edit + "/" + this.getRecordId(li);
         }
         else
         {
-            with(Backend.RelatedProduct.Group.Controller.prototype.getInstance(li.down('.productRelationshipGroup_form')))
+            console.info('asd');
+            with(Backend.ProductFile.Group.Controller.prototype.getInstance(li.down('.productRelationshipGroup_form')))
             {
                 if('block' != view.nodes.root.style.display) showForm();
                 else hideForm();
@@ -155,15 +92,15 @@ Backend.RelatedProduct.Group.Callbacks =
             console.info(e);
         }
         
-        var model = new Backend.RelatedProduct.Group.Model(response, Backend.availableLanguages);
-        var group = new Backend.RelatedProduct.Group.Controller(li.down('.productRelationshipGroup_form'), model);
+        var model = new Backend.ProductFile.Group.Model(response, Backend.availableLanguages);
+        var group = new Backend.ProductFile.Group.Controller(li.down('.productRelationshipGroup_form'), model);
         group.showForm();
     }
 }
 
 
-Backend.RelatedProduct.Group.Model = Class.create();
-Backend.RelatedProduct.Group.Model.prototype = {
+Backend.ProductFile.Group.Model = Class.create();
+Backend.ProductFile.Group.Model.prototype = {
     defaultLanguage: false,
     
     initialize: function(data, languages)
@@ -200,7 +137,7 @@ Backend.RelatedProduct.Group.Model.prototype = {
         this.serverError = false;
         
         var self = this;
-        new Ajax.Request(Backend.RelatedProduct.Group.Links.save,
+        new Ajax.Request(Backend.ProductFile.Group.Links.save,
         {
             method: 'post',
             postBody: serializedData,
@@ -242,14 +179,14 @@ Backend.RelatedProduct.Group.Model.prototype = {
     }
 }
 
-Backend.RelatedProduct.Group.Controller = Class.create();
-Backend.RelatedProduct.Group.Controller.prototype = {
+Backend.ProductFile.Group.Controller = Class.create();
+Backend.ProductFile.Group.Controller.prototype = {
     instances: {},
     
     initialize: function(root, model)
     {        
         this.model = model;
-        this.view = new Backend.RelatedProduct.Group.View(root, this.model.get('Product.ID'));
+        this.view = new Backend.ProductFile.Group.View(root, this.model.get('Product.ID'));
         
         if(!this.view.nodes.root.id) this.view.nodes.root.id = this.view.prefix + 'list_' + this.model.get('Product.ID') + '_' + this.model.get('ID') + '_form';
         
@@ -260,12 +197,12 @@ Backend.RelatedProduct.Group.Controller.prototype = {
         
         Form.State.backup(this.view.nodes.root);
         
-        Backend.RelatedProduct.Group.Controller.prototype.instances[this.view.nodes.root.id] = this;
+        Backend.ProductFile.Group.Controller.prototype.instances[this.view.nodes.root.id] = this;
     },
     
     getInstance: function(rootNode)
     {
-        return Backend.RelatedProduct.Group.Controller.prototype.instances[$(rootNode).id];
+        return Backend.ProductFile.Group.Controller.prototype.instances[$(rootNode).id];
     },
     
     setDefaultValues: function()
@@ -381,8 +318,8 @@ Backend.RelatedProduct.Group.Controller.prototype = {
 }
 
 
-Backend.RelatedProduct.Group.View = Class.create();
-Backend.RelatedProduct.Group.View.prototype = {
+Backend.ProductFile.Group.View = Class.create();
+Backend.ProductFile.Group.View.prototype = {
     prefix: 'productRelationshipGroup_',
     
     initialize: function(root, productID)
@@ -472,7 +409,7 @@ Backend.RelatedProduct.Group.View.prototype = {
         );
         
         li = activeList.addRecord(this.get('ID'), containerDiv);
-        ActiveList.prototype.getInstance($('productRelationship_list_' + this.get('productID') + '_' + this.get('ID')), Backend.RelatedProduct.activeListCallbacks);
+        ActiveList.prototype.getInstance($('productRelationship_list_' + this.get('productID') + '_' + this.get('ID')), Backend.ProductFile.activeListCallbacks);
         Element.addClassName(li, 'productRelationshipGroup_item');
         
         activeList.highlight(li);
@@ -505,4 +442,5 @@ Backend.RelatedProduct.Group.View.prototype = {
     
 }
 
-Backend.RegisterMVC(Backend.RelatedProduct.Group);
+Backend.RegisterMVC(Backend.ProductFile);
+Backend.RegisterMVC(Backend.ProductFile.Group);

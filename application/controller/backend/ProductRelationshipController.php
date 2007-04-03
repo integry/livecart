@@ -29,9 +29,6 @@ class ProductRelationshipController extends StoreManagementController
 		
 		$response->setValue('relationshipsWithGroups', $product->getRelatedProductsWithGroupsArray());
 		
-//		echo "<pre>" . print_R($product->getRelatedProductsWithGroupsArray(), true) . "</pre>";
-//		die();
-		
 	    return $response;
 	}
 	

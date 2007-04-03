@@ -61,7 +61,6 @@ class TestProductRelationshipGroup extends UnitTestCase
 	public function testCreateNewGroup()
 	{
 	    $group = ProductRelationshipGroup::getNewInstance($this->product);
-	    $group->position->set(5);
 	    $group->setValueByLang('name', 'en', 'TEST_GROUP');
 	    $group->save();
 	    
@@ -69,7 +68,7 @@ class TestProductRelationshipGroup extends UnitTestCase
 	    $group->markAsNotLoaded();
 	    $group->load(array('Product'));
 	    
-	    $this->assertEqual($group->position->get(), 5);
+	    $this->assertEqual($group->position->get(), 1);
 	    $name = $group->name->get();
 	    $this->assertEqual($name['en'], 'TEST_GROUP');
 	    $this->assertEqual($this->product->getID(), $group->product->get()->getID());
@@ -108,13 +107,6 @@ class TestProductRelationshipGroup extends UnitTestCase
 	        $this->assertTrue($groups[$i] === $group);
 	        $i++;
 	    }
-	}
-	
-	public function getProductRelationshipGroup(Product $relatedToProduct)
-	{
-	    $relationship = ProductRelationshipGroup::getInstance($relatedToProduct, $this);
-	    
-	    return $relationship ? $relationship->productRelationshipGroup->get() : null;
 	}
 }
 ?>

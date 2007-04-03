@@ -182,7 +182,6 @@ Backend.Category = {
         Backend.Category.treeBrowser.moveItem(categoryID, direction);
         Backend.Category.treeBrowser._reorderDirection = false;
         
-        console.info("move category " + categoryID + " " + direction);
         return;
 
     },

@@ -809,14 +809,37 @@ class Product extends MultilingualObject
 	/**
 	 * @return ARSet
 	 */
-	private function getRelationshipGroups()
+	public function getRelationshipGroups()
 	{
 	    return ProductRelationshipGroup::getProductGroups($this);
 	}
+
 	
 	public function getRelatedProductsWithGroupsArray()
 	{
 	    return ProductRelationshipGroup::mergeGroupsWithFields($this->getRelationshipGroups()->toArray(), $this->getRelationships()->toArray());
+	}
+	
+	/**
+	 * @return ARSet
+	 */
+	public function getFileGroups()
+	{
+	    return ProductFileGroup::getProductGroups($this);
+	}
+	
+	/**
+	 * @return ARSet
+	 */
+	public function getFiles()
+	{
+	    return ProductFile::getFilesByProduct($this);
+	}
+	
+	
+	public function getFilesMergedWithGroupsArray()
+	{
+	    return ProductFileGroup::mergeGroupsWithFields($this->getFileGroups()->toArray(), $this->getFiles()->toArray());
 	}
 }
 

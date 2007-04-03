@@ -1,50 +1,5 @@
-<script type="text/javascript" src="/public/javascript/library/tinymce/tiny_mce.js"></script>
-
-<script type="text/javascript" src="/public/firebug/firebug.js"></script>
-<script type="text/javascript" src="/public/javascript/library/prototype/prototype.js"></script>
-<script type="text/javascript" src="/public/javascript/library/scriptaculous/scriptaculous.js"></script>
-
-<script type="text/javascript" src="/public/javascript/backend/Backend.js"></script>
-
-<script type="text/javascript" src="/public/javascript/library/livecart.js"></script>
-<script type="text/javascript" src="/public/javascript/library/KeyboardEvent.js"></script>
-<script type="text/javascript" src="/public/javascript/library/ActiveGrid.js"></script>
-<script type="text/javascript" src="/public/javascript/library/ActiveList.js"></script>
-<script type="text/javascript" src="/public/javascript/library/form/ActiveForm.js"></script>
-<script type="text/javascript" src="/public/javascript/library/form/State.js"></script>
-<script type="text/javascript" src="/public/javascript/library/form/Validator.js"></script>
-<script type="text/javascript" src="/public/javascript/library/dhtmlxtree/dhtmlXCommon.js"></script>
-<script type="text/javascript" src="/public/javascript/library/dhtmlxtree/dhtmlXTree.js"></script>
-<script type="text/javascript" src="/public/javascript/library/SectionExpander.js"></script>
-<script type="text/javascript" src="/public/javascript/library/TabControl.js"></script>
-
-<script type="text/javascript" src="/public/javascript/library/rico/ricobase.js"></script>
-<script type="text/javascript" src="/public/javascript/library/rico/ricoLiveGrid.js"></script>
-
-<script type="text/javascript" src="/public/javascript/backend/Category.js"></script>
-<script type="text/javascript" src="/public/javascript/backend/SpecField.js"></script>
-<script type="text/javascript" src="/public/javascript/backend/Filter.js"></script>
-<script type="text/javascript" src="/public/javascript/backend/ObjectImage.js"></script>
-<script type="text/javascript" src="/public/javascript/backend/Product.js"></script>
-<script type="text/javascript" src="/public/javascript/backend/RelatedProduct.js"></script>
-
-<link href="/public/stylesheet/backend/Backend.css" media="screen" rel="Stylesheet" type="text/css"/>
-<link href="/public/stylesheet/library/ActiveList.css" media="screen" rel="Stylesheet" type="text/css"/>
-<link href="/public/stylesheet/library/ActiveGrid.css" media="screen" rel="Stylesheet" type="text/css"/>
-<link href="/public/stylesheet/backend/Category.css" media="screen" rel="Stylesheet" type="text/css"/>
-<link href="/public/stylesheet/backend/Product.css" media="screen" rel="Stylesheet" type="text/css"/>
-<link href="/public/stylesheet/backend/SpecField.css" media="screen" rel="Stylesheet" type="text/css"/>
-<link href="/public/stylesheet/backend/ProductRelationship.css" media="screen" rel="Stylesheet" type="text/css"/>
-<link href="/public/stylesheet/backend/Filter.css" media="screen" rel="Stylesheet" type="text/css"/>
-<link href="/public/stylesheet/backend/CategoryImage.css" media="screen" rel="Stylesheet" type="text/css"/>
-<link href="/public/stylesheet/library/TabControl.css" media="screen" rel="Stylesheet" type="text/css"/>
-<link href="/public/stylesheet/library/dhtmlxtree/dhtmlXTree.css" media="screen" rel="Stylesheet" type="text/css"/>
-<div id="productRelationshipGroup_item_blank" class="dom_template">{include file="backend/productRelationshipGroup/form.tpl"}</div>
-
 <script type="text/javascript">
 {literal}
-    Backend.availableLanguages = {/literal}{json array=$languages}{literal};
-
     with(Backend.RelatedProduct.Group)
     {
         Links.save = '{/literal}{link controller=backend.productRelationshipGroup action=save}{literal}';

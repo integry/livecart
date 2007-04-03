@@ -7,8 +7,7 @@ ClassLoader::import("application.model.category.Category");
 
 class TestProductFileGroup extends UnitTestCase
 {
-    private $groupAutoIncrementNumber = 0;
-    private $productAutoIncrementNumber = 0;
+    private $autoincrements = array();
     
     /**
      * @var Product
@@ -35,34 +34,39 @@ class TestProductFileGroup extends UnitTestCase
         $this->rootCategory = Category::getInstanceByID(Category::ROOT_ID);
 	    $this->db = ActiveRecord::getDBConnection();
     }
-	
-	public function tearDown()
-	{
-	    ActiveRecordModel::rollback();		
-	    $this->db->executeUpdate("ALTER TABLE ProductFileGroup AUTO_INCREMENT=" . $this->groupAutoIncrementNumber);
-	    $this->db->executeUpdate("ALTER TABLE Product AUTO_INCREMENT=" . $this->productAutoIncrementNumber);
-	}
-	
+
     public function setUp()
 	{
 	    ActiveRecordModel::beginTransaction();	
-		
-	    // Create some product
+	    
+	    if(empty($this->autoincrements))
+	    {
+		    foreach(array('ProductFile', 'Product', 'ProductFileGroup') as $table)
+		    {
+				$res = $this->db->executeQuery("SHOW TABLE STATUS LIKE '$table'");
+				$res->next();
+				$this->autoincrements[$table] = (int)$res->getInt("Auto_increment");
+		    }
+	    }
+	    
 		$this->product = Product::getNewInstance($this->rootCategory);
 		$this->product->save();
-		$this->productAutoIncrementNumber = $this->product->getID();
-		
-   		// create new group
-		$dump = ProductRelationshipGroup::getNewInstance($this->product);
-		$dump->save();		
-		
-		$this->groupAutoIncrementNumber = $dump->getID();
+	}
+
+	public function tearDown()
+	{
+	    ActiveRecordModel::rollback();	
+
+	    foreach(array('ProductFile', 'Product', 'ProductFileGroup') as $table)
+	    {
+	        ActiveRecord::removeClassFromPool($table);
+	        $this->db->executeUpdate("ALTER TABLE $table AUTO_INCREMENT=" . $this->autoincrements[$table]);
+	    }	    
 	}
 	
 	public function testCreateNewGroup()
 	{
 	    $group = ProductFileGroup::getNewInstance($this->product);
-	    $group->position->set(5);
 	    $group->setValueByLang('name', 'en', 'TEST_GROUP');
 	    $group->save();
 	    
@@ -70,12 +74,60 @@ class TestProductFileGroup extends UnitTestCase
 	    $group->markAsNotLoaded();
 	    $group->load(array('Product'));
 	    
-	    $this->assertEqual($group->position->get(), 5);
+	    $this->assertEqual($group->position->get(), 1);
 	    $name = $group->name->get();
 	    $this->assertEqual($name['en'], 'TEST_GROUP');
 	    $this->assertEqual($this->product->getID(), $group->product->get()->getID());
 	    $this->assertTrue($this->product === $group->product->get());
 	}
-
+	
+	public function testDeleteGroup()
+	{
+	    $group = ProductFileGroup::getNewInstance($this->product);
+	    $group->setNextPosition();
+	    $group->setValueByLang('name', 'en', 'TEST_GROUP');
+	    $group->save();
+	    
+	    $this->assertTrue($group->isExistingRecord());
+	    
+	    $group->delete();
+	    $group->markAsNotLoaded();
+	    
+	    try 
+        { 
+            $group->load(); 
+            $this->fail(); 
+        } 
+        catch(Exception $e) 
+        { 
+            $this->pass(); 
+        }
+	}
+	
+	public function testGetProductGroups()
+	{
+	    // new product
+		$product = Product::getNewInstance($this->rootCategory);
+		$product->save();	
+	    
+	    $groups = array();
+	    foreach(range(1, 3) as $i)
+	    {
+		    $groups[$i] = ProductFileGroup::getNewInstance($product);
+		    $groups[$i]->position->set($i);
+		    $groups[$i]->setValueByLang('name', 'en', 'TEST_GROUP_' . $i);
+		    $groups[$i]->save();
+	    }
+	    
+	    $this->assertEqual(count($groups), ProductFileGroup::getProductGroups($product)->getTotalRecordCount());
+	    $i = 1;
+	    foreach(ProductFileGroup::getProductGroups($product) as $group)
+	    {
+	        $this->assertTrue($groups[$i] === $group);
+	        $i++;
+	    }
+	}
+	
+	
 }
 ?>

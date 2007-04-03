@@ -5,7 +5,6 @@ class ActiveRecordGroup
 	public static function mergeGroupsWithFields($className, $groups, $fields)
 	{
         $fieldsWithGroups = array();
-        
         $k = $i = 1;
         $fieldsCount = count($fields);
         foreach($fields as $field)
@@ -15,6 +14,7 @@ class ActiveRecordGroup
                 $shiftGroup = false;
 	            while($group = array_shift($groups))
 	            {
+	               // echo "{$group['position']} < {$field[$className]['position']}<br />";
 	                if($group['position'] < $field[$className]['position']) 
 	                {
 	                    $shiftGroup = true;
@@ -39,6 +39,8 @@ class ActiveRecordGroup
        {
            $fieldsWithGroups[$i++] = array($className => $group);
        }
+       
+       
        return $fieldsWithGroups; 
 	}
 }

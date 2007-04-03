@@ -555,7 +555,6 @@ Backend.Filter.prototype = {
                     translationLabel.for = translationId;
                     
                     Event.observe(translationLabel, "click", function(e) { 
-                        console.info(this.for);
                         $(this.for).focus();
                     });
                     
@@ -963,7 +962,6 @@ Backend.Filter.prototype = {
 
     saveFilterGroup: function()
     {
-        console.info(this.saving);
         if(this.saving) return false;
         this.saving = true;
         

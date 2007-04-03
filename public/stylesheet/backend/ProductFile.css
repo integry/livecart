@@ -1,23 +1,19 @@
-.productRelationshipGroup_title {
+.productFileGroup_title {
     color: grey;
     font-size:300%;
     font-weight:bold;
 }
 
-li.productRelationshipGroup_item {
+li.productFileGroup_item {
     border: 2px solid grey;
     margin-bottom: 1em;   
 }
 
-li.productRelationshipGroup_item li {
+li.productFileGroup_item li {
  	margin-top: 0.5em;
 }
 
-.productRelationship_title {
+.productFile_title {
     font-size: 1.5em; 
     font-weight: bold;
-}
-
-.productRelationship_list {
-    padding-bottom: 2em;
 }

@@ -1,14 +1,14 @@
 <?php
 ClassLoader::import("application.model.product.ProductParametersGroup");
 
-class ProductRelationshipGroup extends ProductParametersGroup 
+class ProductFileGroup extends ProductParametersGroup
 {
 	private static $nextPosition = false;
-    
-    public static function defineSchema($className = __CLASS__)
+	
+	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = parent::defineSchema($className);
-		$schema->setName("ProductRelationshipGroup");
+		$schema->setName("ProductFileGroup");
 
 		$schema->registerField(new ARField("name", ARArray::instance()));
 	}
@@ -33,7 +33,7 @@ class ProductRelationshipGroup extends ProductParametersGroup
 	 * @param bool $loadRecordData
 	 * @param bool $loadReferencedRecords
 	 *
-	 * @return ProductRelationshipGroup
+	 * @return ProductFileGroup
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
@@ -45,7 +45,7 @@ class ProductRelationshipGroup extends ProductParametersGroup
 	 *
 	 * @param Product $product
 	 * 
-	 * @return ProductRelationshipGroup
+	 * @return ProductFileGroup
 	 */
 	public static function getNewInstance(Product $product)
 	{
@@ -66,12 +66,13 @@ class ProductRelationshipGroup extends ProductParametersGroup
 	private static function getProductGroupsFilter(Product $product)
 	{
 	    $filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle("ProductRelationshipGroup", "position"), 'ASC');
-		$filter->setCondition(new EqualsCond(new ARFieldHandle("ProductRelationshipGroup", "productID"), $product->getID()));
+
+		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"), 'ASC');
+		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "productID"), $product->getID()));
 		
 		return $filter;
-	}    
-
+	}
+	
 	public static function mergeGroupsWithFields($groups, $fields)
 	{
 	    return parent::mergeGroupsWithFields(__CLASS__, $groups, $fields);
