@@ -13,6 +13,8 @@ class Config
 	private $values = array();
 	
 	private $autoSave = true;
+	
+	private $isUpdated = false;
 
 	private function __construct()
 	{
@@ -38,7 +40,7 @@ class Config
 
 	public function isValueSet($key)
 	{
-		if (!isset($this->values[$key]))
+		if (!isset($this->values[$key]) && !$this->isUpdated)
 		{
 		  	$this->updateSettings();
 		}
@@ -48,7 +50,7 @@ class Config
 	
 	public function getValue($key)
 	{
-		if (!isset($this->values[$key]))
+		if (!isset($this->values[$key]) && !$this->isUpdated)
 		{
 		  	$this->updateSettings();
 		}
@@ -146,6 +148,8 @@ class Config
 		
 		$this->save();
 		$this->setAutoSave($autoSave);
+		
+		$this->isUpdated = true;		
 	}
 
 	public function save()

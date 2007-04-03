@@ -157,18 +157,28 @@ class ProductController extends StoreManagementController
         					
         $recordCount = true;
 
-		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, array('DefaultImage' => 'ProductImage', 'Category', 'Manufacturer'), $recordCount);
+		$productArray = ActiveRecordModel::getRecordSetArray('Product', $filter, array('Category', 'Manufacturer'), $recordCount);
         
-        // load specification and price data
-        ProductSpecification::loadSpecificationForRecordSetArray($productArray);
-    	ProductPrice::loadPricesForRecordSetArray($productArray);
-    	
 		$displayedColumns = $this->getDisplayedColumns($category);
+		
+        // load specification data
+        foreach ($displayedColumns as $column => $type)
+        {
+            list($class, $field) = explode('.', $column, 2);
+            if ('specField' == $class)
+            {
+                ProductSpecification::loadSpecificationForRecordSetArray($productArray);                    
+                break;
+            }
+        }
+
+        // load price data
+    	ProductPrice::loadPricesForRecordSetArray($productArray);
 		
     	$currency = Store::getInstance()->getDefaultCurrency()->getID();
 
     	$data = array();
-$index = 0;
+//$index = 0;
 		foreach ($productArray as $product)
     	{
             $record = array();
@@ -182,7 +192,7 @@ $index = 0;
                 else if ('ProductPrice' == $class)
                 {
 					$value = isset($product['price_' . $currency]) ? $product['price_' . $currency] : 0;
-$value = ++$index + $this->request->getValue('offset');
+//$value = ++$index + $this->request->getValue('offset');
                 }
                 else if ('specField' == $class)
                 {

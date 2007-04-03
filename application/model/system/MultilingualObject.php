@@ -74,54 +74,40 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 		$currentLangCode = $store->getLocaleCode();
 
 		$schema = ActiveRecordModel::getSchemaInstance($className);
-		foreach ($schema->getFieldList() as $field)
+
+        foreach ($schema->getArrayFieldList() as $field)
 		{
-		  	if ($field->getDataType() instanceof ARArray)
-		  	{
-				$fieldName = $field->getName();
-				if (!empty($array[$fieldName]))
-				{
-					$data = $array[$fieldName];
-					
-					if (!$data)
-					{
-					    $data = array($defaultLangCode => '');
-					}
-					
-					if (!isset($data[$defaultLangCode]))
-					{
-						$data[$defaultLangCode] = '';	
-					}
-					
-					if (!is_array($data)) 
-					{ 
-						$data = array($defaultLangCode => $data);
-					}
-					
+			$fieldName = $field->getName();
+			if (!empty($array[$fieldName]))
+			{
+				$data = $array[$fieldName];
+				
+                if (is_array($data)) 
+				{ 
 					foreach ($data as $lang => $value)
 					{
 					  	$array[$fieldName . '_' . $lang] = $value;					  	
 					}
-					
-					if (!empty($data[$defaultLangCode]))
-					{
-					  	$array[$fieldName] = $data[$defaultLangCode];	
-					}
-					else
-					{
-						$array[$fieldName] = '';  
-					}
+				}					
+				
+				if (!empty($data[$defaultLangCode]))
+				{
+				  	$array[$fieldName] = $data[$defaultLangCode];	
+				}
+				else
+				{
+					$array[$fieldName] = '';  
+				}
 
-					if (!empty($data[$currentLangCode]))
-					{
-					  	$array[$fieldName . '_lang'] = $data[$currentLangCode];
-					}
-					else
-					{
-					  	$array[$fieldName . '_lang'] = $data[$defaultLangCode];
-					}
-				}	    
-			}
+				if (!empty($data[$currentLangCode]))
+				{
+				  	$array[$fieldName . '_lang'] = $data[$currentLangCode];
+				}
+				else
+				{
+				  	$array[$fieldName . '_lang'] = $array[$fieldName];
+				}  
+			}	    
 		}
 		
 		return $array;  	
