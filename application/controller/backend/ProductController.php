@@ -244,6 +244,7 @@ $value = ++$index + $this->request->getValue('offset');
 		$this->request->setValue('filters', $filters);
 		
         $grid = new ActiveGrid($this->request, $filter, 'Product');
+        $filter->setLimit(0);
         					
 		$products = ActiveRecordModel::getRecordSet('Product', $filter, Product::LOAD_REFERENCES);
 		

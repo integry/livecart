@@ -337,7 +337,7 @@ Backend.Product.massActionHandler.prototype =
         this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;
         new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('progressIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));
 
-        this.grid.selectAll();   
+        this.grid.resetSelection();   
     },
     
     submitCompleted: function()

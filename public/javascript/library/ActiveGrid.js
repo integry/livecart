@@ -248,6 +248,12 @@ ActiveGrid.prototype =
 		this.loadIndicator.style.display = 'none';	
 	},
 
+    resetSelection: function()
+    {
+		this.selectedRows = new Object;		
+		this.inverseSelection = false;	        
+    },
+
 	_markSelectedRows: function()
 	{
 		var rows = this.tableInstance.getElementsByTagName('tr');
