@@ -125,7 +125,7 @@ class ProductPricing
 		$baseCurrency = Store::getInstance()->getDefaultCurrencyCode();				
 		$basePrice = isset($defined[$baseCurrency]) ? $defined[$baseCurrency] : 0;
 		
-		$calculated = array();
+		$formattedPrice = $calculated = array();
 
 		foreach (Store::getInstance()->getCurrencySet() as $id => $currency)
 		{
@@ -136,11 +136,13 @@ class ProductPricing
 			else
 			{
 			    $calculated[$id] = ProductPrice::calculatePrice($this->product, $currency, $basePrice);
-
 			}
+        
+			$formattedPrice[$id] = $currency->pricePrefix->get() . $calculated[$id] . $currency->priceSuffix->get();
+		
 		}
-
-		$return = array('defined' => $defined, 'calculated' => $calculated);
+	
+		$return = array('defined' => $defined, 'calculated' => $calculated, 'formattedPrice' => $formattedPrice);
 		return ('both' == $part) ? $return : $return[$part];
 	}
 

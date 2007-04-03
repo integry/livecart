@@ -418,14 +418,13 @@ class Product extends MultilingualObject
 
 	public function getPricesFields()
 	{
-		$fields = array();
 		$prices = $this->getPricingHandler()->toArray();
 	  	foreach($prices['calculated'] as $code => $value)
 	  	{
-	  	    $fields["price_$code"] = $value;
+	  	    $prices["price_$code"] = $value;
 	  	}
 
-	  	return $fields;
+	  	return $prices;
 	}
 
 	/**
@@ -547,6 +546,8 @@ class Product extends MultilingualObject
 		$f = new ARSelectFilter();
 		$f->setCondition(new EqualsCond(new ARFieldHandle('ProductImage', 'productID'), $this->getID()));
 		$f->setOrder(new ARFieldHandle('ProductImage', 'position'));
+
+		return ActiveRecordModel::getRecordSetArray('ProductImage', $f);
 	}
 
 	/**
@@ -707,7 +708,7 @@ class Product extends MultilingualObject
     /**
      * @return ARSet
      */
-    public function getRelationships($loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage'))
+    public function getRelationships($loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer'))
     {
         if(is_null($this->relationships))
         {

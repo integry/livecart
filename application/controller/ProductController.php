@@ -13,9 +13,10 @@ class ProductController extends FrontendController
   	
 	public function index()
 	{
-        $product = Product::getInstanceByID($this->request->getValue('id'), Product::LOAD_DATA, array('DefaultImage' => 'ProductImage'));    	
+        $product = Product::getInstanceByID($this->request->getValue('id'), Product::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer'));    	
         $product->loadSpecification();
-        
+        $product->loadPricing();
+		        
 		$this->category = $product->category->get();
 		
         // get category path for breadcrumb
@@ -45,12 +46,22 @@ class ProductController extends FrontendController
         // add product title to breacrumb
         $this->addBreadCrumb($productArray['name_lang'], '');
         
-        // get images
-        $productImages = $product->getImageArray();
+		// get related products
+		$related = $product->getRelatedProductsWithGroupsArray();
+		$rel = array();
+		foreach ($related as $r)
+		{
+			$rel[] = $r['RelatedProduct'];	
+		}
+		
+		ProductPrice::loadPricesForRecordSetArray($rel);
 		
 		$response = new ActionResponse();
         $response->setValue('product', $productArray);        
-        $response->setValue('images', $productImages);
+        $response->setValue('images', $product->getImageArray());
+        $response->setValue('related', $rel);
+		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode())); 
+
         return $response;        
 	} 
 }

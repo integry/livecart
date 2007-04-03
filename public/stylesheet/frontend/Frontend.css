@@ -21,6 +21,12 @@ h1
 	margin-bottom: 10px;
 }
 
+h2
+{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
 h3
 {
 	font-size: 1em;
@@ -192,7 +198,7 @@ fieldset.container
 }
 
 /*****************************
-	Breadcrumbm
+	Breadcrumb
 *****************************/
 #breadCrumb
 {
@@ -268,6 +274,39 @@ ul.productList p.image img
 tr.specificationGroup
 {
     font-weight: bold;        
+}
+
+#relatedProducts li
+{
+	margin-bottom: 10px;	
+	list-style: none;
+}
+
+#relatedProducts a.productName
+{
+	display: block;
+}
+
+#moreImages
+{
+	text-align: center;
+}
+
+#moreImages img
+{
+	border: 1px solid black;
+	margin-right: 4px;
+	cursor: pointer;
+}
+
+#cartLinks
+{
+	text-align: center;
+}
+
+#addToCart
+{
+	font-weight: bold;	
 }
 
 /*****************************

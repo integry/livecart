@@ -52,7 +52,7 @@
         Links.sort = '{/literal}{link controller=backend.productRelationshipGroup action=sort}?target=productRelationshipGroup_list_{$productID}{literal}';
         Links.edit = '{/literal}{link controller=backend.productRelationshipGroup action=edit}{literal}';
         
-        Messages.areYouSureYouWantToDelete = '{/literal}{t _Are_you_sure_you_want_to_delete}{literal}'
+        Messages.areYouSureYouWantToDelete = '{/literal}{t _Are_you_sure_you_want_to_delete|addslashes}{literal}'
     }
     
     
@@ -95,7 +95,7 @@
 
 
 {* No group *}
-<ul id="productRelationship_list_{$productID}_" class="productRelationship_list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_productRelationship_list">
+<ul id="productRelationship_list_{$productID}_" class="productRelationship_list activeList_add_sort activeList_add_delete activeList_accept_productRelationship_list">
 {foreach item="relationship" from=$relationshipsWithGroups}
     {if $relationship.ProductRelationshipGroup.ID}{php}break;{/php}{/if}
     {if $relationship.RelatedProduct.ID} 

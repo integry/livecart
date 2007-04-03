@@ -13,5 +13,8 @@ _switch_currency=Switch Currency
 # Shopping basket
 _shopping_basket=Shopping Basket
 
+# Common words
+_or=or
+
 _next=Next
 _previous=Previous
