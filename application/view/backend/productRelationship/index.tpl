@@ -39,6 +39,7 @@
 <link href="/public/stylesheet/backend/CategoryImage.css" media="screen" rel="Stylesheet" type="text/css"/>
 <link href="/public/stylesheet/library/TabControl.css" media="screen" rel="Stylesheet" type="text/css"/>
 <link href="/public/stylesheet/library/dhtmlxtree/dhtmlXTree.css" media="screen" rel="Stylesheet" type="text/css"/>
+<div id="productRelationshipGroup_item_blank" class="dom_template">{include file="backend/productRelationshipGroup/form.tpl"}</div>
 
 <script type="text/javascript">
 {literal}
@@ -48,7 +49,7 @@
     {
         Links.save = '{/literal}{link controller=backend.productRelationshipGroup action=save}{literal}';
         Links.remove = '{/literal}{link controller=backend.productRelationshipGroup action=delete}{literal}';
-        Links.sort = '{/literal}{link controller=backend.productRelationshipGroup action=sort}{literal}';
+        Links.sort = '{/literal}{link controller=backend.productRelationshipGroup action=sort}?target=productRelationshipGroup_list_{$productID}{literal}';
         Links.edit = '{/literal}{link controller=backend.productRelationshipGroup action=edit}{literal}';
         
         Messages.areYouSureYouWantToDelete = '{/literal}{t _Are_you_sure_you_want_to_delete}{literal}'
@@ -81,16 +82,16 @@
 	</ul>
 </fieldset>
 
-<fieldset id="productRelationshipGroup_new_{$productID}_form">
+<div id="productRelationshipGroup_new_{$productID}_form">
     {include file="backend/productRelationshipGroup/form.tpl"}
     
     <script type="text/javascript">
     {literal}
         var emptyGroupModel = new Backend.RelatedProduct.Group.Model({Product: {ID: {/literal}{$productID}{literal}}}, {/literal}{json array=$languages}{literal});
-        new Backend.RelatedProduct.Group.Controller($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('form'), emptyGroupModel);
+        new Backend.RelatedProduct.Group.Controller($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('.productRelationshipGroup_form'), emptyGroupModel);
     {/literal}
     </script>
-</fieldset>
+</div>
 
 
 {* No group *}
@@ -112,7 +113,7 @@
     
     {if $lastProductRelationshipGroup != $relationship.ProductRelationshipGroup.ID }
         {if $lastProductRelationshipGroup > 0}</ul></li>{/if}
-        <li id="productRelationshipGroup_list_{$productID}_{$relationship.ProductRelationshipGroup.ID}">
+        <li id="productRelationshipGroup_list_{$productID}_{$relationship.ProductRelationshipGroup.ID}" class="productRelationshipGroup_item">
             <span class="productRelationshipGroup_title">{$relationship.ProductRelationshipGroup.name_lang}</span>
             {include file="backend/productRelationshipGroup/form.tpl"}	
             <ul id="productRelationship_list_{$productID}_{$relationship.ProductRelationshipGroup.ID}" class="productRelationship_list activeList_add_sort activeList_add_delete activeList_accept_productRelationship_list">
@@ -135,7 +136,7 @@
         Event.observe($("productRelationshipGroup_new_{/literal}{$productID}{literal}_show"), "click", function(e) 
         {
             Event.stop(e);
-            var newForm = Backend.RelatedProduct.Group.Controller.prototype.getInstance($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('form')).showNewForm();
+            var newForm = Backend.RelatedProduct.Group.Controller.prototype.getInstance($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('.productRelationshipGroup_form')).showNewForm();
         });
         
         Event.observe($("selectProduct_{/literal}{$productID}{literal}"), 'click', function(e) {

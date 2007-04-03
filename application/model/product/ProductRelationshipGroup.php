@@ -4,7 +4,9 @@ ClassLoader::import("application.model.system.MultilingualObject");
 
 class ProductRelationshipGroup extends MultilingualObject 
 {
-	public static function defineSchema($className = __CLASS__)
+	private static $nextPosition = false;
+    
+    public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("ProductRelationshipGroup");
@@ -77,6 +79,25 @@ class ProductRelationshipGroup extends MultilingualObject
 	public static function mergeGroupsWithFields($groups, $fields)
 	{
 	    return ActiveRecordGroup::mergeGroupsWithFields(__CLASS__, $groups, $fields);
+	}
+	
+	public function setNextPosition()
+	{
+	    if(!is_integer(self::$nextPosition))
+	    {
+		    $filter = new ARSelectFilter();
+		    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $this->product->get()->getID()));
+		    $filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_DESC);
+		    $filter->setLimit(1);
+		    
+		    self::$nextPosition = 0;
+		    foreach(ProductRelationshipGroup::getRecordSet($filter) as $relatedProductGroup) 
+		    {
+		        self::$nextPosition = $relatedProductGroup->position->get();
+		    }
+	    }
+	    
+	    $this->position->set(++self::$nextPosition);
 	}
 }
 

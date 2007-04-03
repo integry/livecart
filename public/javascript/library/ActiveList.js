@@ -400,7 +400,6 @@ ActiveList.prototype = {
 
             if(icon.action != 'sort') 
             {
-                li[icon.action].onclick = function() { self.bindAction(li, icon.action) }
                 li[icon.action + 'Container'] = document.getElementsByClassName(self.cssPrefix + icon.action + 'Container', li)[0];
             }
         });

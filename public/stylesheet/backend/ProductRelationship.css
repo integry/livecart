@@ -4,13 +4,16 @@
     font-weight:bold;
 }
 
-
-.productRelationship_list {
-  	padding-bottom: 1em;
-  	padding-top: 1em;
-}
-
-.productRelationshipGroup_list > li {
+li.productRelationshipGroup_item {
     border: 2px solid grey;
     margin-bottom: 1em;   
+}
+
+li.productRelationshipGroup_item li {
+ 	margin-top: 0.5em;
+}
+
+.productRelationship_title {
+    font-size: 1.5em; 
+    font-weight: bold;
 }

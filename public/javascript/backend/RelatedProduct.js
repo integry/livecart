@@ -133,14 +133,14 @@ Backend.RelatedProduct.Group.Callbacks =
     
     beforeEdit:     function(li) 
     {
-        console.info(li);
-        if(!Backend.RelatedProduct.Group.Controller.prototype.getInstance(li.down('form')))
+        if(!Backend.RelatedProduct.Group.Controller.prototype.getInstance(li.down('.productRelationshipGroup_form')))
         {
             return Backend.RelatedProduct.Group.Links.edit + "/" + this.getRecordId(li);
         }
         else
         {
-            with(Backend.RelatedProduct.Group.Controller.prototype.getInstance(li.down('form')))
+            console.info('asd');
+            with(Backend.RelatedProduct.Group.Controller.prototype.getInstance(li.down('.productRelationshipGroup_form')))
             {
                 if('block' != view.nodes.root.style.display) showForm();
                 else hideForm();
@@ -398,6 +398,7 @@ Backend.RelatedProduct.Group.View.prototype = {
     {
         this.nodes = {};
         this.nodes.root = root;
+        this.nodes.form = ('FORM' == this.nodes.root.tagName) ? this.nodes.root : this.nodes.root.down('form');
         
         // controls
         this.nodes.controls = this.nodes.root.down('.' + this.prefix + 'controls');
@@ -436,7 +437,9 @@ Backend.RelatedProduct.Group.View.prototype = {
         var defaultLanguageID = this.get('defaultLanguageID');
         
         var self = this;
-        this.get('languages', {}).each(function(language)
+        var languages = this.get('languages', {});
+        altLanguagesCount = 0;
+        languages.each(function(language)
         {
             if(language.value.ID == defaultLanguageID) return;
             
@@ -450,7 +453,11 @@ Backend.RelatedProduct.Group.View.prototype = {
             
             self.nodes.translationsFieldsets[language.value.ID] = translationFieldset;
             self.nodes.translations.appendChild(translationFieldset);
+            
+            altLanguagesCount++;
         });
+        
+        if(altLanguagesCount < 1) this.nodes.translations.hide();
         
         this.clear();
     }, 
@@ -462,12 +469,14 @@ Backend.RelatedProduct.Group.View.prototype = {
         var containerDiv = document.createElement('div');
         containerDiv.update(
             '<span class="' + this.prefix + 'title">' + this.nodes.name.value + '</span>'
+            + $('productRelationshipGroup_item_blank').innerHTML
             + '<ul id="productRelationship_list_' + this.get('productID') + '_' + this.get('ID') + '" class="productRelationship_list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_productRelationship_list">'
             + '</ul>'
         );
         
         li = activeList.addRecord(this.get('ID'), containerDiv);
         ActiveList.prototype.getInstance($('productRelationship_list_' + this.get('productID') + '_' + this.get('ID')), Backend.RelatedProduct.activeListCallbacks);
+        Element.addClassName(li, 'productRelationshipGroup_item');
         
         activeList.highlight(li);
         activeList.touch();
