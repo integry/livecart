@@ -104,9 +104,8 @@ class ActiveGrid
 				if (!(bool)$request->getValue('isInverse'))
                 {
                     $idcond = new EqualsCond(new ARExpressionHandle(1), 2);
+    		        $filter->mergeCondition($idcond);
                 } 
-
-		        $filter->mergeCondition($idcond);
             }
 		}		
 		      
