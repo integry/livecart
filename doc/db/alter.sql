@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-03-30 19:23                                #
+# Created on:            2007-04-04 18:51                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -75,6 +75,8 @@ ALTER TABLE ProductImage DROP FOREIGN KEY Product_ProductImage;
 
 ALTER TABLE ProductFile DROP FOREIGN KEY Product_ProductFile;
 
+ALTER TABLE ProductFile DROP FOREIGN KEY ProductFileGroup_ProductFile;
+
 ALTER TABLE Discount DROP FOREIGN KEY Product_Discount;
 
 ALTER TABLE CategoryImage DROP FOREIGN KEY Category_CategoryImage;
@@ -131,16 +133,13 @@ ALTER TABLE TaxRate DROP FOREIGN KEY TaxType_TaxRate;
 
 ALTER TABLE TaxRate DROP FOREIGN KEY DeliveryZone_TaxRate;
 
+ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
+
 # ---------------------------------------------------------------------- #
-# Modify table "OrderedItem"                                             #
+# Modify table "ProductFile"                                             #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE OrderedItem DROP PRIMARY KEY;
-
-ALTER TABLE OrderedItem MODIFY ID INTEGER NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE OrderedItem ADD CONSTRAINT PK_OrderedItem 
-    PRIMARY KEY (ID);
+ALTER TABLE ProductFile DROP COLUMN fileSize;
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
@@ -180,13 +179,13 @@ ALTER TABLE SpecFieldValue ADD CONSTRAINT SpecField_SpecFieldValue
     FOREIGN KEY (specFieldID) REFERENCES SpecField (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE CustomerOrder ADD CONSTRAINT User_CustomerOrder 
-    FOREIGN KEY (userID) REFERENCES User (ID);
+    FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
 
 ALTER TABLE OrderedItem ADD CONSTRAINT Product_OrderedItem 
     FOREIGN KEY (productID) REFERENCES Product (ID);
 
 ALTER TABLE OrderedItem ADD CONSTRAINT CustomerOrder_OrderedItem 
-    FOREIGN KEY (customerOrderID) REFERENCES CustomerOrder (ID);
+    FOREIGN KEY (customerOrderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
 
 ALTER TABLE OrderedItem ADD CONSTRAINT Shipment_OrderedItem 
     FOREIGN KEY (shipmentID) REFERENCES Shipment (ID) ON DELETE SET NULL;
@@ -231,13 +230,16 @@ ALTER TABLE ProductPrice ADD CONSTRAINT Product_ProductPrice
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductPrice ADD CONSTRAINT Currency_ProductPrice 
-    FOREIGN KEY (currencyID) REFERENCES Currency (ID) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    FOREIGN KEY (currencyID) REFERENCES Currency (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductImage ADD CONSTRAINT Product_ProductImage 
     FOREIGN KEY (productID) REFERENCES Product (ID);
 
 ALTER TABLE ProductFile ADD CONSTRAINT Product_ProductFile 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ProductFile ADD CONSTRAINT ProductFileGroup_ProductFile 
+    FOREIGN KEY (productFileGroupID) REFERENCES ProductFileGroup (ID) ON DELETE CASCADE;
 
 ALTER TABLE Discount ADD CONSTRAINT Product_Discount 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -322,3 +324,6 @@ ALTER TABLE TaxRate ADD CONSTRAINT TaxType_TaxRate
 
 ALTER TABLE TaxRate ADD CONSTRAINT DeliveryZone_TaxRate 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
+
+ALTER TABLE ProductFileGroup ADD CONSTRAINT Product_ProductFileGroup 
+    FOREIGN KEY (productID) REFERENCES Product (ID);

@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2007-03-30 19:19                                #
+# Created on:            2007-04-04 18:35                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -75,6 +75,8 @@ ALTER TABLE ProductImage DROP FOREIGN KEY Product_ProductImage;
 
 ALTER TABLE ProductFile DROP FOREIGN KEY Product_ProductFile;
 
+ALTER TABLE ProductFile DROP FOREIGN KEY ProductFileGroup_ProductFile;
+
 ALTER TABLE Discount DROP FOREIGN KEY Product_Discount;
 
 ALTER TABLE CategoryImage DROP FOREIGN KEY Category_CategoryImage;
@@ -130,6 +132,8 @@ ALTER TABLE DeliveryZoneAddressMask DROP FOREIGN KEY DeliveryZone_DeliveryZoneAd
 ALTER TABLE TaxRate DROP FOREIGN KEY TaxType_TaxRate;
 
 ALTER TABLE TaxRate DROP FOREIGN KEY DeliveryZone_TaxRate;
+
+ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 
 # ---------------------------------------------------------------------- #
 # Drop table "Product"                                                   #
@@ -746,3 +750,17 @@ ALTER TABLE ShippingRate DROP PRIMARY KEY;
 # Drop table #
 
 DROP TABLE ShippingRate;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ProductFileGroup"                                          #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ProductFileGroup ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE ProductFileGroup DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ProductFileGroup;
