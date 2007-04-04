@@ -43,6 +43,7 @@ class ProductFileController extends StoreManagementController
 	        $productFile = ProductFile::getNewInstance($product, $uploadFile['tmp_name'], $uploadFile['name']);
 	    }
 	    
+   		    print_r($_POST);
 	    foreach ($this->store->getLanguageArray(true) as $lang)
    		{
    			if ($this->request->isValueSet('title_' . $lang))

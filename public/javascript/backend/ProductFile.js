@@ -126,13 +126,16 @@ Backend.ProductFile.Controller.prototype = {
         var self = this;
         
         this.view.assign('defaultLanguageID', this.model.getDefaultLanguage()['ID']);
-        var name = {};
+        var description = {};
+        var title = {};
         this.model.languages.each(function(lang)
         {
-           name[lang.key] = self.model.get('name_' + lang.key)
+           description[lang.key] = self.model.get('description_' + lang.key);
+           title[lang.key] = self.model.get('title_' + lang.key);
         });
         
-        this.view.assign('name', name);
+        this.view.assign('title', title);
+        this.view.assign('description', description);
         this.view.assign('languages', this.model.languages);
         this.view.setOtherLanguagesValues(this.model);  
     },
@@ -240,10 +243,9 @@ Backend.ProductFile.View.prototype = {
         this.nodes.id = this.nodes.root.down('.' + this.prefix + 'ID');
         this.nodes.productID = this.nodes.root.down('.' + this.prefix + 'productID');
         this.nodes.description = this.nodes.root.down('.' + this.prefix + 'description');
+        this.nodes.title = this.nodes.root.down('.' + this.prefix + 'title');
         this.nodes.allowDownloadDays = this.nodes.root.down('.' + this.prefix + 'allowDownloadDays');
         this.nodes.uploadFile = this.nodes.root.down('.' + this.prefix + 'uploadFile');
-        
-        this.nodes.title = this.nodes.root.previous('.' + this.prefix + 'title');
         
         this.nodes.newFileCancelLink = $(this.prefix + 'new_' + productID + '_cancel');
         
@@ -275,7 +277,10 @@ Backend.ProductFile.View.prototype = {
         this.nodes.productID.value = this.get('productID', '');
         
         this.nodes.description.name += '_' + this.get('defaultLanguageID');
-        this.nodes.description.value = this.get('name', '');
+        this.nodes.description.value = this.get('description', '');
+        
+        this.nodes.title.name += '_' + this.get('defaultLanguageID');
+        this.nodes.title.value = this.get('title', '');
         
         this.nodes.allowDownloadDays.value = this.get('allowDownloadDays', 0);
         
@@ -297,9 +302,13 @@ Backend.ProductFile.View.prototype = {
             
             translationFieldset.down('legend').update(language.value.name);
             
-            var name = translationFieldset.down('.' + self.prefix + 'name');
-            name.name += '_' + language.key;
-            name.value = self.get('name_' + language.key , '')
+            var description = translationFieldset.down('.' + self.prefix + 'name');
+            description.name += '_' + language.key;
+            description.value = self.get('description.' + language.key , '');
+            
+            var title = translationFieldset.down('.' + self.prefix + 'name');
+            title.name += '_' + language.key;
+            title.value = self.get('title.' + language.key , '');
             
             self.nodes.translationsFieldsets[language.value.ID] = translationFieldset;
             self.nodes.translations.appendChild(translationFieldset);

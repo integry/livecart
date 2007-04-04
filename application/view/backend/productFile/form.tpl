@@ -6,9 +6,15 @@
     		<input type="hidden" name="productID" class="hidden productFile_productID" />
     
     		<fieldset class="productFile_main">
+        		<label class="productFile_title_label">{t _productFile_title}</label>
+                <div class="error">
+            		<input type="text" name="title" class="productFile_title" />
+            		<span class="errorText hidden"> </span>
+                </div>
+                
         		<label class="productFile_description_label">{t _productFile_description}</label>
                 <div class="error">
-            		<input type="text" name="name" class="productFile_description" />
+            		<textarea type="text" name="description" class="productFile_description"></textarea>
             		<span class="errorText hidden"> </span>
                 </div>
                 
@@ -33,8 +39,12 @@
         
                     <div class="productFile_translations_language_values">
                         <div>
+                			<label class="productFile_title_label">{t _productFile_title}</label>
+                			<input type="text" name="title" class="productFile_title" />
+            			</div>
+                        <div>
                 			<label class="productFile_description_label">{t _productFile_description}</label>
-                			<input type="text" name="name" class="productFile_description" />
+                			<input type="text" name="description" class="productFile_description" />
             			</div>
                     </div>
         		</fieldset>
