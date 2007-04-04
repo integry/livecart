@@ -55,9 +55,10 @@
 {* new form *}
 <div id="productFileGroup_new_{$productID}_form">{include file="backend/productFileGroup/form.tpl"}</div>
 <div id="productFile_new_{$productID}_form">{include file="backend/productFile/form.tpl"}</div>
-<div id="productFileGroup_item_blank">{include file="backend/productFileGroup/form.tpl"}</div>
-<div id="productFile_item_blank">{include file="backend/productFile/form.tpl"}</div>
-
+{*
+<div id="productFileGroup_item_blank" class="dom_template">{include file="backend/productFileGroup/form.tpl"}</div>
+<div id="productFile_item_blank" class="dom_template">{include file="backend/productFile/form.tpl"}</div>
+*}
 {* Files with no group *}
 <ul id="productFile_list_{$productID}_" class="productFile_list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_productFile_list">
 {foreach item="productFile" from=$productFilesWithGroups}

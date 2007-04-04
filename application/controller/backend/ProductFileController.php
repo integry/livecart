@@ -27,6 +27,40 @@ class ProductFileController extends StoreManagementController
 	    
 	    return $response;
 	}
+
+	public function save()
+	{
+	    $response = new ActionResponse();
+	    $product = Product::getInstanceByID((int)$this->request->getValue('productID'));
+	        $uploadFile = $this->request->getValue('uploadFile');
+	    
+	    if($id = (int)$this->request->getValue('ID'))
+	    {
+	        echo 'aaaaa';
+	    }
+	    else
+	    {
+	        $productFile = ProductFile::getNewInstance($product, $uploadFile['tmp_name'], $uploadFile['name']);
+	    }
+	    
+	    foreach ($this->store->getLanguageArray(true) as $lang)
+   		{
+   			if ($this->request->isValueSet('title_' . $lang))
+    			$productFile->setValueByLang('title', $lang, $this->request->getValue('title_' . $lang));
+
+   			if ($this->request->isValueSet('description_' . $lang))
+    			$productFile->setValueByLang('description', $lang, $this->request->getValue('description_' . $lang));
+   		}
+   		$productFile->allowDownloadDays->set((int)$this->request->getValue('allowDownloadDays'));
+   		
+   		$productFile->save();
+   		   		
+	    $response->setValue('status', 'failure');
+	    $response->setValue('errors', array('field_1' => 'description_1', 'field_2' => 'description_2'));
+	    $response->setValue('ID', rand(1, 1000));
+	    
+	    return $response;
+	}
 }
 
 ?>

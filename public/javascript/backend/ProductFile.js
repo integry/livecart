@@ -65,25 +65,6 @@ Backend.ProductFile.Model.prototype = {
                 self.afterSave(responseHash, onSaveResponse);
             }
         });
-    },
-    
-    afterSave: function(response, onSaveResponse)
-    {
-        switch(response.status)
-        {
-            case 'success':
-                this.store('ID', response.ID);
-                break;
-            case 'failure':
-                this.errors = response.errors;
-                break;
-            case 'serverError':
-                this.serverError = response.responseText;
-            	break;
-        }
-        
-        onSaveResponse.call(this, response.status);
-        this.saving = false;
     }
 };
 
@@ -98,6 +79,8 @@ Backend.ProductFile.Controller.prototype = {
         
         if(!this.view.nodes.root.id) this.view.nodes.root.id = this.view.prefix + 'list_' + this.model.get('Product.ID') + '_' + this.model.get('ID') + '_form';
         
+        var self = this;
+        this.createUploadIFrame();
         this.setDefaultValues();
         this.setTranslationValues();
         
@@ -111,6 +94,19 @@ Backend.ProductFile.Controller.prototype = {
     getInstance: function(rootNode)
     {
         return Backend.ProductFile.Controller.prototype.instances[$(rootNode).id];
+    },
+    
+    createUploadIFrame: function()
+    {
+        var defaultLanguageID = this.model.getDefaultLanguage()['ID'];
+        
+        this.view.assign('defaultLanguageID', defaultLanguageID);
+        this.view.assign('productID', this.model.get('Product.ID', ''));
+        this.view.assign('ID', this.model.get('ID', ''));
+        this.view.assign('controller', this);
+
+        this.view.createUploadIFrame();
+          
     },
     
     setDefaultValues: function()
@@ -145,21 +141,15 @@ Backend.ProductFile.Controller.prototype = {
     {
         var self = this;
         
-        Event.observe(this.view.nodes.save, 'click', function(e) { Event.stop(e); self.onSave(); });
+        Event.observe(this.view.nodes.save, 'click', function(e) { self.onSave(); });
         Event.observe(this.view.nodes.cancel, 'click', function(e) { Event.stop(e); self.onCancel(); });
         Event.observe(this.view.nodes.newFileCancelLink, 'click', function(e) { Event.stop(e); self.onCancel(); });
-        
     },
     
     onSave: function()
-    {        
-        var self = this;
-        ActiveForm.prototype.resetErrorMessages(this.view.nodes.root);
-        this.model.save(Form.serialize(this.view.nodes.root), function(status) { 
-            self.onSaveResponse(status) ;
-        });
+    {   
+        this.view.nodes.form.action += "/" + this.model.get('ID', '');
     },
-    
     
     onCancel: function()
     {
@@ -177,6 +167,7 @@ Backend.ProductFile.Controller.prototype = {
     
     onSaveResponse: function(status)
     {
+        console.info(status);
         if('success' == status)
         {
             if(this.model.isNew)
@@ -238,6 +229,7 @@ Backend.ProductFile.View.prototype = {
     {
         this.nodes = {};
         this.nodes.root = root;
+        
         this.nodes.form = ('FORM' == this.nodes.root.tagName) ? this.nodes.root : this.nodes.root.down('form');
         
         // controls
@@ -261,6 +253,20 @@ Backend.ProductFile.View.prototype = {
         Element.removeClassName(this.nodes.translationTemplate, 'dom_template');
         
         this.nodes.translationsFieldsets = {};
+    },
+    
+    createUploadIFrame: function()
+    {
+        var iframe = document.createElement('iframe');
+        iframe.name = iframe.id = "productFileUploadIFrame_" + this.get("productID", '') + "_" + this.get("ID", '');
+        this.nodes.root.appendChild(iframe);
+        this.nodes.form.target = iframe.name;
+        
+        this.nodes.iframe = iframe;
+        
+        var controller = this.get('controller', null);
+        this.nodes.iframe.controller = controller;
+        this.nodes.iframe.action = function(status) { controller.onSaveResponse(status) };
     },
     
     setDefaultLanguageValues: function()

@@ -6,17 +6,17 @@
 </ul>
 
 <fieldset class="container">
-	<ul class="menu" id="catImgMenu_{$catId}">
+	<ul class="menu" id="catImgMenu_{$ownerId}">
 		<li>
-			<a href="#" onclick="slideForm('catImgAdd_{$catId}', 'catImgMenu_{$catId}'); return false;" class="pageMenu">{t _add_new}</a>
+			<a href="#" onclick="slideForm('catImgAdd_{$ownerId}', 'catImgMenu_{$ownerId}'); return false;" class="pageMenu">{t _add_new}</a>
 		</li>	
 	</ul>
 </fieldset>
 
-<div id="catImgAdd_{$catId}" class="catImageEditForm" style="display: none;">
-{form handle=$form action="controller=backend.categoryImage action=upload" method="post" onsubmit="$('catImageList_`$catId`').handler.upload(this);" target="catImgUpload_`$catId`" method="POST" enctype="multipart/form-data"}
+<div id="catImgAdd_{$ownerId}" class="catImageEditForm" style="display: none;">
+{form handle=$form action="controller=backend.categoryImage action=upload" method="post" onsubmit="$('catImageList_`$ownerId`').handler.upload(this);" target="catImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data"}
 	
-	<input type="hidden" name="ownerId" value="{$catId}" />
+	<input type="hidden" name="ownerId" value="{$ownerId}" />
 	<input type="hidden" name="imageId" value="" />
 		
 	<fieldset>	
@@ -52,14 +52,15 @@
 		</div>		
 		
 			<span class="progressIndicator" style="display: none;"></span>
-			<input type="submit" name="upload" class="submit" value="{tn _upload}"> {t _or} <a href="#" class="cancel" onclick="restoreMenu('catImgAdd_{$catId}', 'catImgMenu_{$catId}'); return false;">{t _cancel}</a>
+			<input type="submit" name="upload" class="submit" value="{tn _upload}"> {t _or} <a href="#" class="cancel" onclick="restoreMenu('catImgAdd_{$ownerId}', 'catImgMenu_{$ownerId}'); return false;">{t _cancel}</a>
 	</fieldset>
 
 {/form}
-<iframe name="catImgUpload_{$catId}" id="catImgUpload_{$catId}"></iframe>
+<script>console.info('{$ownerId}')</script>
+<iframe name="catImgUpload_{$ownerId}" id="catImgUpload_{$ownerId}"></iframe>
 </div>
 
-<ul id="catImageList_{$catId}" class="catImageList activeList_add_sort activeList_add_delete activeList_add_edit">
+<ul id="catImageList_{$ownerId}" class="catImageList activeList_add_sort activeList_add_delete activeList_add_edit">
     <p class="main">{t _main_image}</p><p class="supplemental">{t _supplemental_images}</p>
 </ul>
 
@@ -69,7 +70,7 @@
 
 <script type="text/javascript">
 
-    var handler = new Backend.ObjectImage($("catImageList_{$catId}"), 'cat');    
+    var handler = new Backend.ObjectImage($("catImageList_{$ownerId}"), 'cat');    
 	handler.initList({$images});
 	
 	handler.setDeleteUrl('{link controller=backend.categoryImage action=delete}');	

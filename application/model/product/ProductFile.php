@@ -1,5 +1,6 @@
 <?php
 
+ClassLoader::import("application.model.ObjectFile");
 /**
  *
  * @package application.model.product
@@ -14,6 +15,7 @@ class ProductFile extends ObjectFile
 		$schema->registerField(new ARField("title", ARInteger::instance()));
 		$schema->registerField(new ARField("description", ARInteger::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance()));
+		$schema->registerField(new ARField("allowDownloadDays", ARInteger::instance()));
 	}
 
 	/**

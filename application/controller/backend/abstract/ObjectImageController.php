@@ -16,7 +16,6 @@ abstract class ObjectImageController extends StoreManagementController
     public function index()
 	{
 		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), (int)$this->request->getValue('id'));
-		
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle($this->getModelClass(), $this->getForeignKeyName()), $owner->getID()));
 		$filter->setOrder(new ARFieldHandle($this->getModelClass(), 'position'));
