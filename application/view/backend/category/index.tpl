@@ -46,6 +46,8 @@
 <div id="specField_group_blank" class="dom_template">{include file="backend/specField/group.tpl"}</div>
 <div id="filter_item_blank" class="dom_template">{include file="backend/filterGroup/form.tpl"}</div>
 <div id="productRelationshipGroup_item_blank" class="dom_template">{include file="backend/productRelationshipGroup/form.tpl"}</div>
+<div id="productFileGroup_item_blank">{include file="backend/productFileGroup/form.tpl"}</div>
+<div id="productFile_item_blank">{include file="backend/productFile/form.tpl"}</div>
 
 <div id="catgegoryContainer">
 	<div id="categoryBrowser" class="treeBrowser">

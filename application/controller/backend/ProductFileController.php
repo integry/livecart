@@ -14,10 +14,16 @@ class ProductFileController extends StoreManagementController
 {
 	public function index()
 	{
+	    $product = Product::getInstanceByID((int)$this->request->getValue('id'));
+	    
 	    $response = new ActionResponse();
-
-	    $response->setValue('id', $this->request->getValue('id'));
-	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
+	    
+		$languages = array();
+		foreach($this->store->getLanguageList()->toArray() as $language) $languages[$language['ID']] = $language;
+		$response->setValue('languages', $languages);
+		
+	    $response->setValue('productID', $product->getID());
+		$response->setValue('productFilesWithGroups', $product->getFilesMergedWithGroupsArray());
 	    
 	    return $response;
 	}

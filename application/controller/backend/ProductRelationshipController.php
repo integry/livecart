@@ -19,10 +19,6 @@ class ProductRelationshipController extends StoreManagementController
 	    
 		$response = new ActionResponse();
 
-		$languages = array();
-		foreach($this->store->getLanguageList()->toArray() as $language) $languages[$language['ID']] = $language;
-		$response->setValue('languages', $languages);
-		
 	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
 		$response->setValue('productID', $productID);
 		$response->setValue('relationships', $product->getRelationships()->toArray());

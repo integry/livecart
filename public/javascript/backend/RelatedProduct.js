@@ -164,8 +164,6 @@ Backend.RelatedProduct.Group.Callbacks =
 
 Backend.RelatedProduct.Group.Model = Class.create();
 Backend.RelatedProduct.Group.Model.prototype = {
-    defaultLanguage: false,
-    
     initialize: function(data, languages)
     {
         this.store(data || {});
@@ -174,24 +172,6 @@ Backend.RelatedProduct.Group.Model.prototype = {
         
         this.languages = $H(languages);
     },
-    
-    getDefaultLanguage: function()
-    {
-        if(this.defaultLanguage === false) 
-        {
-            var self = this;
-            this.languages.each(function(language)
-            {
-                if(parseInt(language.value.isDefault))
-                {
-                    self.defaultLanguage = language.value;
-                    throw $break;
-                }   
-            });
-        }
-        
-        return this.defaultLanguage;
-    }, 
     
     save: function(serializedData, onSaveResponse)
     {
@@ -237,7 +217,7 @@ Backend.RelatedProduct.Group.Model.prototype = {
             	break;
         }
         
-        onSaveResponse.call(this, response.status, 'aasdasd', 'asdasd', 'asdads');
+        onSaveResponse.call(this, response.status);
         this.saving = false;
     }
 }
@@ -377,7 +357,6 @@ Backend.RelatedProduct.Group.Controller.prototype = {
     {
         this.view.hideForm();
     }
-    
 }
 
 

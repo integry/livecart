@@ -809,6 +809,26 @@ Backend.RegisterMVC = function(MVC)
     MVC.Messages = {};
     MVC.Links = {};
     
+    MVC.Model.prototype.defaultLanguage = false;
+    
+    MVC.Model.prototype.getDefaultLanguage = function()
+    {
+        if(this.defaultLanguage === false) 
+        {
+            var self = this;
+            this.languages.each(function(language)
+            {
+                if(parseInt(language.value.isDefault))
+                {
+                    self.defaultLanguage = language.value;
+                    throw $break;
+                }   
+            });
+        }
+        
+        return this.defaultLanguage;
+    }
+    
     MVC.Model.prototype.store = MVC.View.prototype.assign = function(name, value)
     {
         if(arguments.length == 1)
