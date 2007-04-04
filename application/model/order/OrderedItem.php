@@ -40,6 +40,11 @@ class OrderedItem extends ActiveRecordModel
 
         return $instance;
     }
-
+    
+    public function getSubTotal(Currency $currency)
+    {
+        $itemPrice = $this->product->get()->getPrice($currency->getID());
+        return $itemPrice * $this->count->get();    
+    }
 }    
 ?>

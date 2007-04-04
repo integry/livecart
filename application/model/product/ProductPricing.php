@@ -18,11 +18,16 @@ class ProductPricing
 
 	private $removedPrices = array();
 
-	public function __construct(Product $product, $prices = array())
+	public function __construct(Product $product, $prices = null)
 	{
 		$this->product = $product;
+		        
+        if (is_null($prices))
+		{
+            $prices = $product->getRelatedRecordSet("ProductPrice", new ARSelectFilter());            
+        }
 
-		if ($prices instanceof ARSet)
+        if ($prices instanceof ARSet)
 		{
 			foreach ($prices as $price)
 			{				
@@ -37,7 +42,7 @@ class ProductPricing
 				$this->prices[$id]->price->set($price);
 				$this->prices[$id]->resetModifiedStatus();
 			}
-		}
+		}            
 	}
 
 	public function setPrice(ProductPrice $price)
@@ -138,8 +143,7 @@ class ProductPricing
 			    $calculated[$id] = ProductPrice::calculatePrice($this->product, $currency, $basePrice);
 			}
         
-			$formattedPrice[$id] = $currency->pricePrefix->get() . $calculated[$id] . $currency->priceSuffix->get();
-		
+			$formattedPrice[$id] = $currency->getFormattedPrice($calculated[$id]);		
 		}
 	
 		$return = array('defined' => $defined, 'calculated' => $calculated, 'formattedPrice' => $formattedPrice);

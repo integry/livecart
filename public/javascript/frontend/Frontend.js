@@ -7,7 +7,10 @@ Product.ImageHandler.prototype =
 	{
 		imageData.each(function(pair)
 		{
-			new Product.ImageSwitcher(pair.key, pair.value);
+    		if ($('img_' + pair.key))
+    		{
+    			new Product.ImageSwitcher(pair.key, pair.value);
+    		}
 		});
 	}
 }
@@ -20,8 +23,8 @@ Product.ImageSwitcher.prototype =
 	imageData: null,
 	
 	initialize: function(id, imageData)
-	{
-		this.id = id;
+	{        
+        this.id = id;
 		this.imageData = imageData;
 			
 		$('img_' + id).onclick = this.switchImage.bind(this);

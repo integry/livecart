@@ -1,3 +1,5 @@
+{pageTitle}{$category.name_lang}{/pageTitle}
+
 {include file="layout/frontend/header.tpl"}
 {include file="layout/frontend/leftSide.tpl"}
 {include file="layout/frontend/rightSide.tpl"}
@@ -19,10 +21,12 @@
     				<a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.name_lang}</a>
     			</span>
     				
-                <p class="image">
-                    <a href="{productUrl product=$product filterChainHandle=$filterChainHandle}"><img src="{$product.DefaultImage.paths.2}" /></a>
-                </p>
-                    			
+                {if $product.DefaultImage.paths.2}
+                    <p class="image">
+                        <a href="{productUrl product=$product filterChainHandle=$filterChainHandle}"><img src="{$product.DefaultImage.paths.2}" /></a>
+                    </p>
+                {/if}
+                        			
     			<p class="descr">
     				
         			<p class="shortDescr">
@@ -32,11 +36,25 @@
         			<p class="spec">
         				{if $product.attributes}
         					{foreach from=$product.attributes item="attr" name="attr"}
-        						{if $attr.SpecField.isDisplayed && $attr.value_lang}
-        							{$attr.valuePrefix_lang}{$attr.value_lang}{$attr.valueSuffix_lang}
+        						{if $attr.isDisplayedInList}
+
+                                    {if $attr.values}
+                                        {foreach from=$attr.values item="value" name="values"}
+                                            {$value.value_lang}
+                							{if !$smarty.foreach.values.last}
+                							/
+                							{/if}
+                                        {/foreach}
+                                    {elseif $attr.value}
+                                        {$attr.valuePrefix_lang}{$attr.value}{$attr.valueSuffix_lang}
+                                    {elseif $attr.value_lang}
+                                        {$attr.value_lang}
+                                    {/if}
+                                                                
         							{if !$smarty.foreach.attr.last}
         							/
         							{/if}
+
         						{/if}
         					{/foreach}
         				{/if}

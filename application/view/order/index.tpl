@@ -20,6 +20,7 @@
 			<a href="{link route=$return}">{t Continue shopping}</a> or <a href="{link controller=checkout}">{t Checkout}</a>	
 		</p>
 		
+		{if $cart.cartItems}		
 		{form action="controller=order action=update" method="POST" handle=$form}
 		<table id="cart">
 			<thead>
@@ -42,13 +43,19 @@
 						<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
 					</td>
 					<td class="cartPrice">
-						999
+						{$item.Product.formattedPrice.$currency}
 					</td>
 					<td class="cartQuant">
 						{textfield name="item_`$item.ID`" class="text"}
 					</td>
 				</tr>	
 			{/foreach}
+    				<tr>
+    				    <td colspan="2"></td>
+    				    <td>{$orderTotal}</td>
+    				    <td></td>
+    				</tr>
+
 				<tr>
 					<td colspan="3"></td>
 					<td class="cartQuant"><input type="submit" value="{tn Update}" />
@@ -57,6 +64,7 @@
 		</table>
 		<input type="hidden" name="return" value="{$return}" />	
 		{/form}
+        {/if}
 	
 		{if $cart.wishListItems}		
 			<table id="wishList">
@@ -72,14 +80,14 @@
 				{foreach from=$cart.wishListItems item="item"}
 					<tr>
 						<td class="cartControl">
-							<a href="{link controller=order action=moveToCart id=$item.ID query="return=`$return`"}">{t Add to Cart}</a>
+							<a href="{link controller=order action=moveToCart id=$item.ID query="return=`$return`"}">{t Move to Cart}</a>
 							<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t Remove}</a>
 						</td>
 						<td class="cartName">
 							<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
 						</td>
 						<td class="cartPrice">
-							999
+							{$item.Product.formattedPrice.$currency}
 						</td>
 					</tr>				
 				{/foreach}

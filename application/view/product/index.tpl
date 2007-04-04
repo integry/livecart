@@ -9,11 +9,13 @@
 	<fieldset class="container">
 		<div id="imageContainer" style="float: left; text-align: center;">
 			<img src="{$product.DefaultImage.paths.3}" id="mainImage" style="margin: 20px;" />
-			<div id="moreImages">
-				{foreach from=$images item="image"}
-					<img src="{$image.paths.1}" id="img_{$image.ID}" />
-				{/foreach}
-			</div>
+            {if $images|@count > 1}
+    			<div id="moreImages">
+                    {foreach from=$images item="image"}
+    					<img src="{$image.paths.1}" id="img_{$image.ID}" />
+    				{/foreach}
+    			</div>
+    		{/if}
 		</div>
 	    
 	    <div id="mainInfo" style="float: left; clear: right;">

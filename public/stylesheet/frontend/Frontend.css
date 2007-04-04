@@ -54,7 +54,7 @@ p
 #container 
 {
   	margin: 0 auto;
-  	width: 800px;
+  	width: 950px;
 }
 
 #header 
@@ -72,7 +72,7 @@ p
 #leftSide 
 {
 	float:left;
-	width: 170px;
+	width: 190px;
 }
 
 #rightSide 
@@ -89,7 +89,7 @@ p
 
 #content 
 {
-	margin-left: 170px;
+	margin-left: 190px;
 	padding: 10px;
 }
 

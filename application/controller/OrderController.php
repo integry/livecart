@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.order.CustomerOrder');
+ClassLoader::import('application.model.Currency');
 
 class OrderController extends FrontendController
 {
@@ -16,10 +17,14 @@ class OrderController extends FrontendController
 		$order->loadItemData();		
 		//print_r($order);
 		
+		$currency = Currency::getInstanceByID($this->request->getValue('currency', $this->store->getDefaultCurrencyCode()), Currency::LOAD_DATA);       
+        		
 		$response = new ActionResponse();
 		$response->setValue('cart', $order->toArray());
 		$response->setValue('form', $this->buildCartForm($order));
 		$response->setValue('return', $this->request->getValue('return'));				
+		$response->setValue('currency', $currency->getID());
+		$response->setValue('orderTotal', $currency->getFormattedPrice($order->getSubTotal($currency)));
 		return $response;
     }   
     

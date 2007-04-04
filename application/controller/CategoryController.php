@@ -111,6 +111,8 @@ class CategoryController extends FrontendController
 		$url = Router::getInstance()->createURL($urlParams);
 		$url = str_replace('_000_', '_page_', $url);
 				
+//		print_r($products[0]);
+				
 		$response = new ActionResponse();
 		$response->setValue('id', $this->categoryID);
 		$response->setValue('url', $url);

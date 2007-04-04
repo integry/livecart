@@ -311,11 +311,6 @@ class Product extends MultilingualObject
 
 	public function loadPricing($pricingData = null)
 	{
-	  	if (!$pricingData)
-	  	{
-			$pricingData = $this->getRelatedRecordSet("ProductPrice", new ARSelectFilter());
-	  	}
-
   	  	$this->pricingHandlerInstance = new ProductPricing($this, $pricingData);		
 	}
 

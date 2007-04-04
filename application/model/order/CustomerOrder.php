@@ -248,7 +248,13 @@ class CustomerOrder extends ActiveRecordModel
 
 	public function getSubTotal(Currency $currency)
 	{
-		
+        $subTotal = 0;
+        foreach ($this->orderedItems as $item)
+        {
+            $subTotal += $item->getSubTotal($currency);
+        }
+        
+        return $subTotal;	
 	}
 
     /**

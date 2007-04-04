@@ -42,6 +42,35 @@ class Currency extends ActiveRecordModel
 		return $array;
 	}
 	
+	public function getFormattedPrice($price)
+	{
+        $parts = explode('.', $price);                
+        
+        $dollars = $parts[0];
+        
+        if (!isset($parts[1]))
+        {
+            $parts[1] = 0;
+        }
+        
+        if ($parts[1] > 0)
+        {
+            $cents = $parts[1];
+            if (strlen($cents) == 1)
+            {
+                $cents = $cents . '0';
+            }
+            
+            $price = $dollars . '.' . $cents;            
+        }        
+        else
+        {
+            $price = $dollars;
+        }
+        
+        return $this->pricePrefix->get() . $price . $this->priceSuffix->get();
+    }
+	
 	public static function getInstanceById($id, $loadData = false)
 	{
 		return ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);
