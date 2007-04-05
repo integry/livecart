@@ -42,7 +42,7 @@ class SettingsController extends StoreManagementController
 		$form = $this->getForm($values);
 		$multiLingualValues = array();
 		
-		foreach ($values as $key => &$value)
+		foreach ($values as $key => $value)
 		{
     		if ($c->isMultiLingual($key))
     		{
@@ -55,7 +55,7 @@ class SettingsController extends StoreManagementController
             }
             else
             {
-                $form->setValue($key, $value['value']);	
+                $form->setValue($key, $c->getValue($key));	
     		}
 		}
 				
@@ -101,7 +101,7 @@ class SettingsController extends StoreManagementController
                 }
                 else
                 {
-                    $c->setValue($key, $this->request->getValue($key));		                    
+                    $c->setValue($key, $this->request->getValue($key, 'bool' == $value['type'] ? 0 : ''));		                    
                 }
 			}  	
 			

@@ -368,3 +368,244 @@ tr.specificationGroup
 {
 	width: 50px;
 }
+
+/*************************** 
+	Form styling
+***************************/
+form
+{
+     display: inline;
+}
+
+form p
+{
+    position: relative;
+    clear: both;
+}
+
+.feedback, .feedback_textarea
+{
+    position: absolute ! important;
+    vertical-align: middle;
+    margin-left: 10px;
+    padding-left: 20px;
+    background: url(../../image/silk/error.png) no-repeat left center;
+    visibility: hidden;
+    white-space: nowrap;
+}
+
+fieldset.group
+{
+    position: relative;
+}
+
+form fieldset.group div
+{
+    width: auto;
+}
+
+fieldset
+{
+    margin: 1em 0;
+    padding: 1em;
+    background: #f8f8f8;
+    margin: auto 0;
+    margin-bottom: 10px;
+    border: 1px solid #DDD;
+}
+
+legend
+{
+	font-size: 18px;
+	color: #30A0F9;
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: #CCC;
+	top: -22px; 
+}
+
+label
+{
+    float: left;
+    width: 11em;
+    cursor: pointer;
+}
+
+p.required label
+{
+  	font-weight: bold;
+}
+
+p.radio, p.checkbox
+{
+   padding-left: 11em;
+}
+
+p.radio label, p.checkbox label
+{
+    white-space: nowrap;
+    margin-top: 3px;
+}
+
+label.checkbox, label.radio
+{
+  	margin-top: 3px;
+  	width: auto;
+}
+
+input, select, file, form.other
+{
+    width: 15em;
+    font-size: 16px;
+    padding: 2px;
+    vertical-align: middle;
+}
+
+optgroup option 
+{
+   padding-left: 1em;
+   color: black;
+   background-color: #ffc;
+}
+
+optgroup  
+{
+   font-style: normal;
+   font-weight: bold;
+}
+
+textarea
+{
+    padding: 2px;
+    width: 40em;
+    height: 10em;
+    font-size: 14px;
+    font-family: arial, verdana;
+    color: #333;
+}
+.feedback_textarea
+{
+   line-height: 10em;
+}
+
+input.radio, input.checkbox, input.submit, input.button, input.reset
+{
+    width: auto;
+}
+input.submit, input.reset {
+	text-transform: uppercase;
+	font-size: 10px;
+	padding: 4px;
+}
+input.submit {
+	background-color: #008cff;
+	color: #fff;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+input.reset {
+	background-color: #ddd;
+	color: #666;
+}
+
+input.radio, input.checkbox
+{
+    float: left;
+    margin-right: 1em;
+    cursor: pointer;
+}
+
+input:focus, textarea:focus, select:focus
+{
+    background: #ffc;
+}
+
+input.submit:focus 
+{
+	color: #008cff;
+}
+
+input.required, textarea.required, select.required
+{
+    border-color: red;
+}
+
+formem.required
+{
+    color: red;
+}
+
+label, input, select, form .other, textarea
+{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+a.cancel 
+{
+ 	color: red;
+}
+
+fieldset.error, div.error, fieldset.container
+{
+	padding: 0px;
+	margin: 0px;
+	position: static; 
+	border: 0;
+	background-color: inherit;
+	background: inherit;
+	/* @todo: let's see how this works for IE */
+	background: none;
+}
+
+.errorText /* , fieldset.error div */
+{
+	background-color: red;
+	float: left; 
+	width: auto;
+	margin-bottom: 4px;
+	margin-top: 0px;
+	padding: 3px;
+	color: white;
+}
+
+.hidden 
+{
+	display: none;	
+}
+
+.progressIndicator {
+	padding: 15px;
+	width: 30px;
+	height: 20px;
+	background-image: url(../../image/indicator.gif);
+	background-position: center center;
+	background-repeat: no-repeat;
+	clear: none;
+}
+
+p.checkbox label {
+    float: none;
+    clear: both;
+}
+
+/* textarea container */
+div.textarea 
+{
+ 	margin-bottom: 7px; 
+}
+
+input.wide 
+{
+  	width: 35em;
+}
+
+input.money, input.number
+{
+  	width: 5em;
+}
+
+input.date
+{
+  	width: 6em;  
+}

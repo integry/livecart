@@ -26,11 +26,7 @@ class User extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARField("email", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("password", ARVarchar::instance(16)));
-		$schema->registerField(new ARField("firstName", ARVarchar::instance(20)));
-		$schema->registerField(new ARField("middleName", ARVarchar::instance(20)));
-		$schema->registerField(new ARField("lastName", ARVarchar::instance(20)));
-		$schema->registerField(new ARField("fullName", ARVarchar::instance(60)));
-		$schema->registerField(new ARField("nickName", ARVarchar::instance(20)));
+		$schema->registerField(new ARField("name", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("creationDate", ARDateTime::instance()));
 		$schema->registerField(new ARField("isActive", ARBool::instance()));
 	}
@@ -104,6 +100,11 @@ class User extends ActiveRecordModel
 			return false;
 		}
 	}
+
+    public function isLoggedIn()
+    {
+        return ($this->getID() != self::ANONYMOUS_USER_ID);
+    }
 
 	/**
 	 * Gets a user related config value (persisted)

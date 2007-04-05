@@ -155,16 +155,23 @@ if ($_POST)
 				$trusted[$host] = 1;
 			}					
 		
-			try
-			{
-				$image = ProductImage::getNewInstance(Product::getInstanceByID($productID));
-				$image->save();
+			$image = ProductImage::getNewInstance(Product::getInstanceByID($productID));
+			$image->save();
 			
+            try
+			{			
 				$image->setFile($url);		
 			}
 			catch (Exception $e)
 			{
-				$image->delete();
+                try
+    			{			
+				    $image->delete();
+				}
+				catch (Exception $e)
+				{
+                    echo 'Error deleting image...<br>';   
+                }
 			}
 		}
 		

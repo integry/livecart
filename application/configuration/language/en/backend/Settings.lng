@@ -143,3 +143,6 @@ _email=Email
 _email_addresses=Email Addresses
 _email_store=Store Administration Notifications
 _email_customer=Customer Notifications
+
+_customers=Customers
+REQUIRE_PHONE=Require customers to enter phone number on registration
