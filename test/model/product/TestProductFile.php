@@ -27,8 +27,8 @@ class TestProductFile extends UnitTestCase
      * @var ProductFile
      */
     private $file = null;
-    
-    private $tmpFilePath = 'asdasdTsdiagfr7aesdyftwe7';
+    private $tmpFilePath = 'somefile.txt';
+    private $fileBody = 'All your base are belong to us';
         
     /**
      * Creole database connection wrapper
@@ -43,9 +43,6 @@ class TestProductFile extends UnitTestCase
         
         $this->rootCategory = Category::getInstanceByID(Category::ROOT_ID);
 	    $this->db = ActiveRecord::getDBConnection();
-	    
-	    // create temporary file
-	    file_put_contents($this->tmpFilePath, 'All your base are belong to us');
     }
 	
     public function setUp()
@@ -67,6 +64,9 @@ class TestProductFile extends UnitTestCase
 				
 		$this->group = ProductFileGroup::getNewInstance($this->product);
 		$this->group->save();
+		
+	    // create temporary file
+	    file_put_contents($this->tmpFilePath, $this->fileBody);
 	}
 
 	public function tearDown()
@@ -78,6 +78,8 @@ class TestProductFile extends UnitTestCase
 	        ActiveRecord::removeClassFromPool($table);
 	        $this->db->executeUpdate("ALTER TABLE $table AUTO_INCREMENT=" . $this->autoincrements[$table]);
 	    }	    
+	    
+   	    unlink($this->tmpFilePath);
 	}
 	
 	public function testUploadNewFile()
@@ -104,6 +106,8 @@ class TestProductFile extends UnitTestCase
 	    $this->assertEqual($productFile->fileName->get(), 'some_file');
 	    $this->assertEqual($productFile->extension->get(), $extension);
 	    $this->assertEqual($productFile->getPath(), ClassLoader::getRealPath('storage.productfile') . DIRECTORY_SEPARATOR . $productFile->getID() . '.' . $extension);
+
+	    $productFile->delete();
 	}
    	
    	public function testDeleteFile()
@@ -126,15 +130,36 @@ class TestProductFile extends UnitTestCase
    	public function testGetProductFiles()
    	{
 	    $productFiles = array();
+	    $productFilesO = array();
 	    foreach(range(1, 2) as $i)
 	    {
-		    file_put_contents($productFiles[$i] = md5($i), 'All Your Base Are Belong To Us');
-		    $productFile = ProductFile::getNewInstance($this->product, $productFiles[$i], 'test_file.txt');
-		    $productFile->save();
+		    file_put_contents($productFiles[$i] = md5($i), $this->fileBody);
+		    $productFilesO[$i] = ProductFile::getNewInstance($this->product, $productFiles[$i], 'test_file.txt');
+		    $productFilesO[$i]->save();
 	    }	
    	    
    	    $this->assertEqual(ProductFile::getFilesByProduct($this->product)->getTotalRecordCount(), 2);
+   	    
+   	    foreach($productFiles as $file) unlink($file);
+   	    foreach($productFilesO as $pFile) $pFile->delete();
    	}
    	
+   	public function testChangeUploadedFile()
+   	{
+	    $productFile = ProductFile::getNewInstance($this->product, $this->tmpFilePath, 'some_file.txt');
+	    $productFile->save();
+	    
+	    $this->assertEqual(file_get_contents($productFile->getPath()), $this->fileBody);
+	    
+   	    $reuploadedFile = 'reuploaded_file.txt';
+	    file_put_contents($reuploadedFile, $reuploadedFileBody = 'Reupload file');
+	    $productFile->storeFile($reuploadedFile, 'some_file.txt');
+	    $productFile->save();
+	    
+	    $this->assertEqual(file_get_contents($productFile->getPath()), $reuploadedFileBody);
+	    
+	    unlink($reuploadedFile);
+	    $productFile->delete();
+   	}
 }
 ?>

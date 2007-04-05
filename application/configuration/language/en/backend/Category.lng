@@ -43,6 +43,15 @@ _Filter_value=Value
 _Filter_date_range=Date between
 _Filter_handle=Handle
 
+# ProductFileGroup
+_productFileGroup_title=Group title
+
+# ProductFile
+_productFile_change_fileName=File name
+_productFile_allow_download_for=Allow to download for
+_productFile_title=File title
+_productFile_description=File description
+
 # index
 _products=Products
 _category_details=Category details

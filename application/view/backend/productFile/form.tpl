@@ -1,4 +1,4 @@
-<div class="productFile_form"  style="/* display: none; */">
+<div class="productFile_form"  style="display: none;">
     <form action="{link controller=backend.productFile action=save}" method="post" target="productFileUploadIFrame_" enctype="multipart/form-data">
     	<!-- STEP 1 -->
     	<fieldset>
@@ -7,29 +7,40 @@
     
     		<fieldset class="productFile_main">
         		<label class="productFile_title_label">{t _productFile_title}</label>
-                <div class="error">
+                <fieldset  class="error">
             		<input type="text" name="title" class="productFile_title" />
             		<span class="errorText hidden"> </span>
-                </div>
+                </fieldset >
+                <fieldset class="productFile_fileName_div">
+            		<label class="productFile_fileName_label">{t _productFile_change_fileName}</label>
+                    <fieldset class="error">
+                		<div>
+                		    <input type="text" name="fileName" class="productFile_fileName" />
+                		    <span class="productFile_extension">.jpg</span>
+                        </div>
+                		<span class="errorText hidden"> </span>
+                    </fieldset>
+                </fieldset>
                 
         		<label class="productFile_description_label">{t _productFile_description}</label>
-                <div class="error">
+                <fieldset class="error">
             		<textarea type="text" name="description" class="productFile_description"></textarea>
             		<span class="errorText hidden"> </span>
-                </div>
+                </fieldset>
                 
         		<label class="productFile_allowDownloadDays_label">{t _productFile_allow_download_for}</label>
-                <div class="error">
+                <fieldset class="error">
             		<input type="text" name="allowDownloadDays" class="productFile_allowDownloadDays" />
                     {t _days}
             		<span class="errorText hidden"> </span>
-                </div>
+                </fieldset>
                 
         		<label class="productFile_uploadFile_label">{t _productFile_uploadFile}</label>
-                <div class="error">
+                <fieldset class="error">
             		<input type="file" name="uploadFile" class="productFile_uploadFile" />
+                    <a class="productFile_download_link" href="" target="_blank" style="display: none"></a>
             		<span class="errorText hidden"> </span>
-                </div>
+                </fieldset>
     		</fieldset>
             
         	<!-- STEP 3 -->

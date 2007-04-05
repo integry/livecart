@@ -27,6 +27,7 @@
 {includeJs file="backend/ObjectImage.js"}
 {includeJs file="backend/Product.js"}
 {includeJs file="backend/RelatedProduct.js"}
+{includeJs file="backend/ProductFile.js"}
 
 {includeCss file="library/ActiveList.css"}
 {includeCss file="library/ActiveGrid.css"}
@@ -34,6 +35,7 @@
 {includeCss file="backend/Product.css"}
 {includeCss file="backend/SpecField.css"}
 {includeCss file="backend/ProductRelationship.css"}
+{includeCss file="backend/ProductFile.css"}
 {includeCss file="backend/Filter.css"}
 {includeCss file="backend/CategoryImage.css"}
 {includeCss file="library/TabControl.css"}

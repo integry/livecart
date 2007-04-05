@@ -9,7 +9,7 @@ if(!Backend.ProductFile) Backend.ProductFile = {};
 Backend.ProductFile.Callbacks = 
 {
     beforeDelete: function(li){ 
-        if(confirm(Backend.RelatedProduct.messages.areYouSureYouWantToDelete)) 
+        if(confirm(Backend.ProductFile.Messages.areYouSureYouWantToDelete)) 
         {
             return Backend.ProductFile.Links.deleteFile + "/" + this.getRecordId(li);
         }
@@ -18,13 +18,40 @@ Backend.ProductFile.Callbacks =
         if(!response.error) {
             this.remove(li);
             var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-            tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') - 1);
+            tabControl.setCounter('tabProductFile', tabControl.getCounter('tabProductFile') - 1);
         }
     },
     beforeSort: function(li, order){ 
         return Backend.ProductFile.Links.sort + "?target=" + this.ul.id + "&" + order
     },
-    afterSort: function(li, response){ console.info('afterSort') }
+    afterSort: function(li, response){ console.info('afterSort') },
+    
+
+     afterEdit:      function(li, response)
+     {
+         new Backend.Filter(response);
+         this.toggleContainer(li, 'edit');
+     },
+ 
+    
+    beforeEdit: function(li) {
+        
+        if(this.isContainerEmpty(li, 'edit')) {
+            var container  = this.getContainer(li, 'edit');
+            new Insertion.Bottom(container, $('productFile_item_blank').innerHTML);
+            container.down('.productFile_form').show();
+            return Backend.ProductFile.Links.edit + "/" + this.getRecordId(li);
+        }
+        else this.toggleContainer(li, 'edit');
+        
+    },
+    
+    afterEdit: function(li, response) {
+        var model = new Backend.ProductFile.Model(eval("(" + response + ")"), Backend.availableLanguages);
+        new Backend.ProductFile.Controller(li.down('.productFile_form'), model);
+        
+        this.toggleContainer(li, 'edit');
+    }
 }
 
 Backend.ProductFile.Model = Class.create();
@@ -82,11 +109,12 @@ Backend.ProductFile.Controller.prototype = {
         var self = this;
         this.createUploadIFrame();
         this.setDefaultValues();
+        if(!this.model.isNew) this.createDownloadLink();
         this.setTranslationValues();
         
         this.bindActions();
         
-        Form.State.backup(this.view.nodes.root);
+        Form.State.backup(this.view.nodes.form);
         
         Backend.ProductFile.Controller.prototype.instances[this.view.nodes.root.id] = this;
     },
@@ -109,14 +137,27 @@ Backend.ProductFile.Controller.prototype = {
           
     },
     
+    createDownloadLink: function()
+    {
+        this.view.assign('linkText', this.view.nodes.fileName.value + '.' + this.model.get('extension', 'ext'));
+        this.view.assign('ID', this.model.get('ID', 0));
+        
+        this.view.createDownloadLink();
+    },
+    
     setDefaultValues: function()
     {
         var defaultLanguageID = this.model.getDefaultLanguage()['ID'];
         
         this.view.assign('defaultLanguageID', defaultLanguageID);
-        this.view.assign('name', this.model.get('name_' + defaultLanguageID));
+        this.view.assign('title', this.model.get('title_' + defaultLanguageID));
+        this.view.assign('description', this.model.get('description_' + defaultLanguageID));
+        this.view.assign('allowDownloadDays', this.model.get('allowDownloadDays'));
         this.view.assign('ID', this.model.get('ID', ''));
         this.view.assign('productID', this.model.get('Product.ID', ''));
+        this.view.assign('isNew', this.model.isNew);
+        this.view.assign('fileName', this.model.get('fileName'));
+        this.view.assign('extension', this.model.get('extension'));
         
         this.view.setDefaultLanguageValues();
     },
@@ -143,21 +184,20 @@ Backend.ProductFile.Controller.prototype = {
     bindActions: function()
     {
         var self = this;
-        
-        Event.observe(this.view.nodes.save, 'click', function(e) { self.onSave(); });
+        if(!this.model.isNew) 
+        {
+            Event.observe(this.view.nodes.title, 'keyup', function(e) { self.onTitleChange(); });
+        }
+        Event.observe(this.view.nodes.form, 'submit', function(e) { ActiveForm.prototype.resetErrorMessages(self.view.nodes.root); });
         Event.observe(this.view.nodes.cancel, 'click', function(e) { Event.stop(e); self.onCancel(); });
         Event.observe(this.view.nodes.newFileCancelLink, 'click', function(e) { Event.stop(e); self.onCancel(); });
-    },
-    
-    onSave: function()
-    {   
-        this.view.nodes.form.action += "/" + this.model.get('ID', '');
     },
     
     onCancel: function()
     {
         Form.State.restore(this.view.nodes.root);
         
+        ActiveForm.prototype.resetErrorMessages(this.view.nodes.root);
         if(this.model.isNew)
         {
             this.hideNewForm();
@@ -168,9 +208,13 @@ Backend.ProductFile.Controller.prototype = {
         }
     },
     
+    onTitleChange: function()
+    {
+        this.view.nodes.fileHeader.update(this.view.nodes.title.value);
+    },
+    
     onSaveResponse: function(status)
     {
-        console.info(status);
         if('success' == status)
         {
             if(this.model.isNew)
@@ -179,12 +223,16 @@ Backend.ProductFile.Controller.prototype = {
                 this.view.assign('productID', this.model.get('Product.ID'));
                 this.view.createNewFile();
                 this.model.store('ID', false);
-                
                 this.hideNewForm();
+                Form.State.restore(this.view.nodes.form);
+                
+                var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
+                tabControl.setCounter('tabProductFile', tabControl.getCounter('tabProductFile') + 1); 
             }
             else
             {
-                this.view.nodes.title.update('FILE' + this.model.get('ID'));
+                this.view.nodes.fileHeader.update(this.view.nodes.title.value);
+                this.createDownloadLink();
                 this.hideForm();
             }
             Form.State.restore(this.view.nodes.root);
@@ -197,13 +245,13 @@ Backend.ProductFile.Controller.prototype = {
     
     hideNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems($("productRelationship_menu_" + this.model.get('Product.ID')), [$(this.view.prefix + "new_" +this.model.get('Product.ID') + "_show"), $("selectProduct_" + this.model.get('Product.ID'))]);
+        ActiveForm.prototype.hideMenuItems($(this.view.prefix + "menu_" + this.model.get('Product.ID')), [$(this.view.prefix + "new_" +this.model.get('Product.ID') + "_show"), $("productFileGroup_new_" + this.model.get('Product.ID') + "_show")]);
         ActiveForm.prototype.hideNewItemForm($(this.view.prefix + "new_" + this.model.get('Product.ID') + "_show"), this.view.nodes.root); 
     },
     
     showNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems($("productRelationship_menu_" + this.model.get('Product.ID')), [$(this.view.prefix + "new_" + this.model.get('Product.ID') + "_cancel"), $("selectProduct_" + this.model.get('Product.ID')) + "_cancel"]);
+        ActiveForm.prototype.hideMenuItems($(this.view.prefix + "menu_" + this.model.get('Product.ID')), [$(this.view.prefix + "new_" + this.model.get('Product.ID') + "_cancel"), $("selectProduct_" + this.model.get('Product.ID')) + "_cancel"]);
         ActiveForm.prototype.showNewItemForm($(this.view.prefix + "new_" + this.model.get('Product.ID') + "_show"), this.view.nodes.root); 
     }, 
     
@@ -247,6 +295,18 @@ Backend.ProductFile.View.prototype = {
         this.nodes.allowDownloadDays = this.nodes.root.down('.' + this.prefix + 'allowDownloadDays');
         this.nodes.uploadFile = this.nodes.root.down('.' + this.prefix + 'uploadFile');
         
+        this.nodes.extension = this.nodes.root.down('.' + this.prefix + 'extension');
+        
+        if(this.nodes.root.up('li')) 
+        {
+            this.nodes.fileHeader = this.nodes.root.up('li').down('.' + this.prefix + 'item_title');
+        }
+        
+        this.nodes.fileName = this.nodes.root.down('.' + this.prefix + 'fileName');
+        this.nodes.fileNameBlock = this.nodes.root.down('.' + this.prefix + 'fileName_div');
+        
+        this.nodes.downloadLink = this.nodes.root.down('.' + this.prefix + 'download_link');
+        
         this.nodes.newFileCancelLink = $(this.prefix + 'new_' + productID + '_cancel');
         
         this.nodes.translations = this.nodes.root.down('.' + this.prefix + 'translations');
@@ -260,6 +320,7 @@ Backend.ProductFile.View.prototype = {
     createUploadIFrame: function()
     {
         var iframe = document.createElement('iframe');
+        iframe.hide();
         iframe.name = iframe.id = "productFileUploadIFrame_" + this.get("productID", '') + "_" + this.get("ID", '');
         this.nodes.root.appendChild(iframe);
         this.nodes.form.target = iframe.name;
@@ -271,10 +332,29 @@ Backend.ProductFile.View.prototype = {
         this.nodes.iframe.action = function(status) { controller.onSaveResponse(status) };
     },
     
+    createDownloadLink: function()
+    {
+        this.nodes.downloadLink.href = Backend.ProductFile.Links.download + "/" + this.get('ID');
+        this.nodes.downloadLink.update(this.get('linkText'));  
+        this.nodes.downloadLink.show();
+        this.clear();
+    },
+    
     setDefaultLanguageValues: function()
     {
         this.nodes.id.value = this.get('ID', '');
         this.nodes.productID.value = this.get('productID', '');
+        
+        if(this.get('isNew')) 
+        {
+           this.nodes.fileNameBlock.hide(); 
+        }
+        else
+        {
+            this.nodes.fileNameBlock.show();
+            this.nodes.fileName.value = this.get('fileName');
+            this.nodes.extension.update('.' + this.get('extension'));
+        }
         
         this.nodes.description.name += '_' + this.get('defaultLanguageID');
         this.nodes.description.value = this.get('description', '');
@@ -283,6 +363,8 @@ Backend.ProductFile.View.prototype = {
         this.nodes.title.value = this.get('title', '');
         
         this.nodes.allowDownloadDays.value = this.get('allowDownloadDays', 0);
+        
+        this.nodes.form.action += "/" + this.get('ID', '');
         
         this.clear();
     },
@@ -321,22 +403,16 @@ Backend.ProductFile.View.prototype = {
         this.clear();
     }, 
     
-    createNewFilep: function()
+    createNewFile: function()
     {
-        var activeList = ActiveList.prototype.getInstance($(this.prefix + "list_" + this.get('productID'))); 
+        var activeList = ActiveList.prototype.getInstance(this.prefix + 'list_' + this.get('productID') + '_');
         
-        var containerDiv = document.createElement('div');
-        containerDiv.update(
-            '<span class="' + this.prefix + 'title">' + this.nodes.name.value + '</span>'
-            + $('productFile_item_blank').innerHTML
-            + '<ul id="productFIle_list_' + this.get('productID') + '_' + this.get('ID') + '" class="productFIle_list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_productFIle_list">'
-            + '</ul>'
-        );
+        var fileContainer = document.createElement('div');
+        fileContainer.update('<span class="' + this.prefix + 'item_title">' + this.nodes.title.value + '</span>');
         
-        li = activeList.addRecord(this.get('ID'), containerDiv);
-        ActiveList.prototype.getInstance($('productFIle_list_' + this.get('productID') + '_' + this.get('ID')), Backend.ProductFile.Links.Callbacks);
+        var li = activeList.addRecord(this.get('ID'), fileContainer)
         Element.addClassName(li, 'productFile_item');
-        
+                
         activeList.highlight(li);
         activeList.touch();
         this.clear();
@@ -360,7 +436,7 @@ Backend.ProductFile.View.prototype = {
         var activeList = ActiveList.prototype.getInstance(li.up('ul'));
         
         this.nodes.title.show();
-        activeList.toggleContainerOff(li.down('.' + this.prefix + 'form'));
+        activeList.toggleContainer(li, 'edit');
         
         this.clear();
     }   
@@ -385,7 +461,7 @@ Backend.ProductFile.Group.Callbacks =
         if(!response.error) {
             this.remove(li);
             var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-            tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') - li.getElementsByTagName('li').length);
+            tabControl.setCounter('tabProductFile', tabControl.getCounter('tabProductFile') - li.getElementsByTagName('li').length);
         }
     },
     beforeSort: function(li, order) { 
@@ -403,7 +479,6 @@ Backend.ProductFile.Group.Callbacks =
         }
         else
         {
-            console.info('asd');
             with(Backend.ProductFile.Group.Controller.prototype.getInstance(li.down('.productFileGroup_form')))
             {
                 if('block' != view.nodes.root.style.display) showForm();
@@ -568,6 +643,7 @@ Backend.ProductFile.Group.Controller.prototype = {
     onCancel: function()
     {
         Form.State.restore(this.view.nodes.root);
+        ActiveForm.prototype.resetErrorMessages(this.view.nodes.root);
         
         if(this.model.isNew)
         {
@@ -716,12 +792,12 @@ Backend.ProductFile.Group.View.prototype = {
         containerDiv.update(
             '<span class="' + this.prefix + 'title">' + this.nodes.name.value + '</span>'
             + $('productFileGroup_item_blank').innerHTML
-            + '<ul id="productRelationship_list_' + this.get('productID') + '_' + this.get('ID') + '" class="productRelationship_list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_productRelationship_list">'
+            + '<ul id="productFile_list_' + this.get('productID') + '_' + this.get('ID') + '" class="productFile_list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_productFile_list">'
             + '</ul>'
         );
         
         li = activeList.addRecord(this.get('ID'), containerDiv);
-        ActiveList.prototype.getInstance($('productRelationship_list_' + this.get('productID') + '_' + this.get('ID')), Backend.ProductFile.activeListCallbacks);
+        ActiveList.prototype.getInstance($('productFile_list_' + this.get('productID') + '_' + this.get('ID')), Backend.ProductFile.activeListCallbacks);
         Element.addClassName(li, this.prefix  + 'item');
         
         activeList.highlight(li);

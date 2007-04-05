@@ -13,7 +13,15 @@ li.productFileGroup_item li {
  	margin-top: 0.5em;
 }
 
-.productFile_title {
+.productFile_item_title {
     font-size: 1.5em; 
     font-weight: bold;
+}
+
+.productFile_list {
+    padding-bottom: 1em;
+}
+
+.productFile_download_link {
+margin-left: 2em;
 }

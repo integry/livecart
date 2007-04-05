@@ -575,14 +575,16 @@ class TestProduct extends UnitTest
 	public function testGetFiles()
 	{
 	    $productFiles = array();
+	    $productFilesO = array();
 	    foreach(range(1, 2) as $i)
 	    {
 		    file_put_contents($productFiles[$i] = md5($i), 'All Your Base Are Belong To Us');
-		    $productFile = ProductFile::getNewInstance($this->product, $productFiles[$i], 'test_file.txt');
-		    $productFile->save();
+		    $productFilesO[$i] = ProductFile::getNewInstance($this->product, $productFiles[$i], 'test_file.txt');
+		    $productFilesO[$i]->save();
 	    }	    
 	    
 	    $this->assertEqual($this->product->getFiles()->getTotalRecordCount(), 2);
+	    foreach($productFilesO as $file) $file->delete();
 	}
 	
 	public function testMergeGroupsWithFIlters()
@@ -597,6 +599,7 @@ class TestProduct extends UnitTest
 	    
 	    // create files
         $productFile = array();
+        $productFiles = array();
 	    foreach(range(1, 2) as $i)
 	    {
 		    file_put_contents($productFiles[$i] = md5($i), "file $i");
@@ -636,6 +639,7 @@ class TestProduct extends UnitTest
 	    $this->assertEqual($filesMergedWithGroups[4]['ProductFileGroup']['ID'], $productGroup[3]->getID());
 	    
 	    foreach($productFiles as $fileName) unlink($fileName);
+	    foreach($productFile as $file) $file->delete();
 	}
 }
 
