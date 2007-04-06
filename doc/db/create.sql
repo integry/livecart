@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2007-04-04 18:35                                #
+# Created on:            2007-04-06 13:31                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -42,6 +42,7 @@ CREATE TABLE Product (
     isSeparateShipment BOOL,
     isFreeShipping BOOL,
     isBackOrderable BOOL,
+    isFractionUnit BOOL,
     shippingWeight NUMERIC(8,3),
     stockCount FLOAT,
     reservedCount FLOAT,
@@ -166,6 +167,7 @@ CREATE TABLE OrderedItem (
     shipmentID INTEGER,
     priceCurrencyID CHAR(3),
     count FLOAT,
+    reservedProductCount FLOAT,
     dateAdded TIMESTAMP,
     price FLOAT,
     isSavedForLater BOOL,
@@ -344,7 +346,6 @@ CREATE TABLE ProductFile (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     productID INTEGER UNSIGNED,
     productFileGroupID INTEGER UNSIGNED,
-    fileSize INTEGER,
     fileName VARCHAR(255),
     extension VARCHAR(20),
     title TEXT,

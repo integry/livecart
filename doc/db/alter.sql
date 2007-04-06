@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-04-04 18:51                                #
+# Created on:            2007-04-06 14:15                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -136,10 +136,16 @@ ALTER TABLE TaxRate DROP FOREIGN KEY DeliveryZone_TaxRate;
 ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 
 # ---------------------------------------------------------------------- #
-# Modify table "ProductFile"                                             #
+# Modify table "UserAddress"                                             #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE ProductFile DROP COLUMN fileSize;
+ALTER TABLE UserAddress ADD COLUMN stateID INTEGER UNSIGNED;
+
+ALTER TABLE UserAddress CHANGE state stateName VARCHAR(255);
+
+ALTER TABLE UserAddress CHANGE country countryID CHAR(2);
+
+ALTER TABLE UserAddress MODIFY stateID INTEGER UNSIGNED AFTER ID;
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
@@ -276,6 +282,9 @@ ALTER TABLE ProductReview ADD CONSTRAINT Product_ProductReview
 
 ALTER TABLE ProductReview ADD CONSTRAINT User_ProductReview 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
+
+ALTER TABLE UserAddress ADD CONSTRAINT State_UserAddress 
+    FOREIGN KEY (stateID) REFERENCES State (ID) ON DELETE SET NULL;
 
 ALTER TABLE UserBillingAddress ADD CONSTRAINT User_UserBillingAddress 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
