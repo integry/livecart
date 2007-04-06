@@ -104,6 +104,35 @@ class TestProductFileGroup extends UnitTestCase
         }
 	}
 	
+	public function testDeleteFileGroupWithFiles()
+	{
+	    $group = ProductFileGroup::getNewInstance($this->product);
+	    $group->setNextPosition();
+	    $group->setValueByLang('name', 'en', 'TEST_GROUP');
+	    $group->save();
+	    
+	    file_put_contents('blabla', 'asdsad');
+	    $productFile = ProductFile::getNewInstance($this->product, 'blabla', 'movedFile.txt');
+	    $productFile->productFileGroup->set($group);
+	    $productFile->save();
+	    
+	    $productFilePath = $productFile->getPath();
+	    	    
+	    $group->delete();
+	    
+	    try {
+	        $productFile->markAsNotLoaded();
+		    $productFile->load();
+		    $this->fail();
+	    } catch (Exception $e) {
+	        $this->pass();
+	    }
+	    
+        $this->assertFalse(is_file($productFilePath));
+        
+        unlink('blabla');
+	}
+	
 	public function testGetProductGroups()
 	{
 	    // new product

@@ -35,7 +35,9 @@
         {if $lastProductFileGroup > 0}</ul></li>{/if}
         <li id="productFileGroup_list_{$productID}_{$productFile.ProductFileGroup.ID}" class="productFileGroup_item">
             <span class="productFileGroup_title">{$productFile.ProductFileGroup.name_lang}</span>
-            {include file="backend/productFileGroup/form.tpl"}	
+            <div id="activeList_editContainer_productFileGroup_list_{$productID}_{$productFile.ProductFileGroup.ID}" class="activeList_editContainer activeList_container" style="display: none">
+                {include file="backend/productFileGroup/form.tpl"}	
+            </div>
             <ul id="productFile_list_{$productID}_{$productFile.ProductFileGroup.ID}" class="productFile_list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_productFile_list">
     {/if}
     

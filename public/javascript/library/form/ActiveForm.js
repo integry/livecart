@@ -298,7 +298,36 @@ ActiveForm.prototype = {
             a.hide();
             $A(except).each(function(el) { if(a == $(el)) a.style.display = 'inline';  });
         });
-    }
+    },
+    
+    lastTinyMceId: 0,
+    
+    initTinyMceFields: function(container) {
+		var textareas = container.getElementsByTagName('textarea');
+		for (k = 0; k < textareas.length; k++)
+		{
+            if(!textareas[k].id) textareas[k].id = 'tinyMceControll_' + (this.lastTinyMceId++);
+			tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
+		}
+    },
+    
+    destroyTinyMceFields: function(container) {
+        var textareas = container.getElementsByTagName('textarea');
+		for (k = 0; k < textareas.length; k++)
+		{
+            if(!textareas[k].id) textareas[k].id = 'tinyMceControll_' + (this.lastTinyMceId++);
+			tinyMCE.execCommand('mceRemoveControl', true, textareas[k].id);
+		}
+    },
+    
+	resetTinyMceFields: function(container)
+	{
+		var textareas = container.getElementsByTagName('textarea');
+		for(k = 0; k < textareas.length; k++)
+		{
+			tinyMCE.execInstanceCommand(textareas[k].id, 'mceSetContent', true, '', true);
+		}
+	}
 }
 
 /**

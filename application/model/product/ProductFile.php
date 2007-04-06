@@ -55,7 +55,7 @@ class ProductFile extends ObjectFile
 	 */
 	public static function getFilesByProduct(Product $product)
 	{
-	    return self::getRecordSet(__CLASS__, self::getFilesByProductFilter($product));
+	    return self::getRecordSet(self::getFilesByProductFilter($product));
 	}
 	
 	private static function getFilesByProductFilter(Product $product)
@@ -70,7 +70,18 @@ class ProductFile extends ObjectFile
 	    return $filter;
 	}
 	
-	
+	/**
+	 * Loads a set of ProductFile instances
+	 *
+	 * @param ARSelectFilter $filter
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
+	{
+	    return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+	}
 }
 
 ?>

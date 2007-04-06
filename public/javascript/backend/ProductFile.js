@@ -18,39 +18,48 @@ Backend.ProductFile.Callbacks =
         if(!response.error) {
             this.remove(li);
             var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-            tabControl.setCounter('tabProductFile', tabControl.getCounter('tabProductFile') - 1);
+            tabControl.setCounter('tabProductFiles', tabControl.getCounter('tabProductFiles') - 1);
         }
     },
     beforeSort: function(li, order){ 
         return Backend.ProductFile.Links.sort + "?target=" + this.ul.id + "&" + order
     },
     afterSort: function(li, response){ console.info('afterSort') },
-    
 
-     afterEdit:      function(li, response)
-     {
-         new Backend.Filter(response);
-         this.toggleContainer(li, 'edit');
-     },
- 
     
     beforeEdit: function(li) {
-        
+        var container = this.getContainer(li, 'edit');
         if(this.isContainerEmpty(li, 'edit')) {
             var container  = this.getContainer(li, 'edit');
             new Insertion.Bottom(container, $('productFile_item_blank').innerHTML);
             container.down('.productFile_form').show();
             return Backend.ProductFile.Links.edit + "/" + this.getRecordId(li);
         }
-        else this.toggleContainer(li, 'edit');
-        
+        else {
+            if(container.style.display != 'block')
+            {
+                this.toggleContainerOn(container);
+                setTimeout(function() { 
+                    ActiveForm.prototype.initTinyMceFields(li)
+                }, 500);
+            }
+            else
+            {
+                this.toggleContainerOff(container);
+                ActiveForm.prototype.destroyTinyMceFields(li);
+            }
+        }
     },
     
     afterEdit: function(li, response) {
         var model = new Backend.ProductFile.Model(eval("(" + response + ")"), Backend.availableLanguages);
-        new Backend.ProductFile.Controller(li.down('.productFile_form'), model);
+        var controller = new Backend.ProductFile.Controller(li.down('.productFile_form'), model);
         
         this.toggleContainer(li, 'edit');
+        
+        setTimeout(function() { 
+            ActiveForm.prototype.initTinyMceFields(li);
+        }, 500);
     }
 }
 
@@ -109,7 +118,11 @@ Backend.ProductFile.Controller.prototype = {
         var self = this;
         this.createUploadIFrame();
         this.setDefaultValues();
-        if(!this.model.isNew) this.createDownloadLink();
+        
+        if(!this.model.isNew) {
+            this.createDownloadLink();
+        }
+        
         this.setTranslationValues();
         
         this.bindActions();
@@ -191,6 +204,12 @@ Backend.ProductFile.Controller.prototype = {
         Event.observe(this.view.nodes.form, 'submit', function(e) { ActiveForm.prototype.resetErrorMessages(self.view.nodes.root); });
         Event.observe(this.view.nodes.cancel, 'click', function(e) { Event.stop(e); self.onCancel(); });
         Event.observe(this.view.nodes.newFileCancelLink, 'click', function(e) { Event.stop(e); self.onCancel(); });
+        Event.observe(this.view.nodes.save, 'click', function(e) { self.onSave(); });
+    },
+    
+    onSave: function()
+    {
+	    Element.saveTinyMceFields(this.view.nodes.form);  
     },
     
     onCancel: function()
@@ -201,10 +220,12 @@ Backend.ProductFile.Controller.prototype = {
         if(this.model.isNew)
         {
             this.hideNewForm();
+            ActiveForm.prototype.resetTinyMceFields(this.view.nodes.root);
         }
         else
         {
-            this.hideForm();
+            var activeList = ActiveList.prototype.getInstance(this.view.prefix + "list_" + this.model.get('Product.ID', '') + "_" + this.model.get('ProductFileGroup.ID', ''));
+            activeList.toggleContainer(activeList.getContainer(li, 'edit'));
         }
     },
     
@@ -227,13 +248,15 @@ Backend.ProductFile.Controller.prototype = {
                 Form.State.restore(this.view.nodes.form);
                 
                 var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-                tabControl.setCounter('tabProductFile', tabControl.getCounter('tabProductFile') + 1); 
+                tabControl.setCounter('tabProductFiles', tabControl.getCounter('tabProductFiles') + 1); 
             }
             else
             {
                 this.view.nodes.fileHeader.update(this.view.nodes.title.value);
                 this.createDownloadLink();
-                this.hideForm();
+
+                var activeList = ActiveList.prototype.getInstance(this.view.prefix + "list_" + this.model.get('Product.ID', '') + "_" + this.model.get('ProductFileGroup.ID', ''));
+                activeList.toggleContainer(this.view.nodes.root.up("li"), 'edit');
             }
             Form.State.restore(this.view.nodes.root);
         }
@@ -246,24 +269,21 @@ Backend.ProductFile.Controller.prototype = {
     hideNewForm: function()
     {
         ActiveForm.prototype.hideMenuItems($(this.view.prefix + "menu_" + this.model.get('Product.ID')), [$(this.view.prefix + "new_" +this.model.get('Product.ID') + "_show"), $("productFileGroup_new_" + this.model.get('Product.ID') + "_show")]);
-        ActiveForm.prototype.hideNewItemForm($(this.view.prefix + "new_" + this.model.get('Product.ID') + "_show"), this.view.nodes.root); 
+        ActiveForm.prototype.hideNewItemForm($(this.view.prefix + "new_" + this.model.get('Product.ID') + "_show"), this.view.nodes.root);
+        
+        ActiveForm.prototype.destroyTinyMceFields(this.view.nodes.root); 
     },
     
     showNewForm: function()
     {
         ActiveForm.prototype.hideMenuItems($(this.view.prefix + "menu_" + this.model.get('Product.ID')), [$(this.view.prefix + "new_" + this.model.get('Product.ID') + "_cancel"), $("selectProduct_" + this.model.get('Product.ID')) + "_cancel"]);
         ActiveForm.prototype.showNewItemForm($(this.view.prefix + "new_" + this.model.get('Product.ID') + "_show"), this.view.nodes.root); 
-    }, 
-    
-    showForm: function()
-    {
-        this.view.showForm();
-    },
-    
-    hideForm: function()
-    {
-        this.view.hideForm();
-    }   
+        
+        var self = this;
+        setTimeout(function() { 
+            ActiveForm.prototype.initTinyMceFields(self.view.nodes.root); 
+        }, 500);
+    }
 }
 
 Backend.ProductFile.View = Class.create();
@@ -459,9 +479,9 @@ Backend.ProductFile.Group.Callbacks =
     },
     afterDelete: function(li, response) {
         if(!response.error) {
-            this.remove(li);
             var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-            tabControl.setCounter('tabProductFile', tabControl.getCounter('tabProductFile') - li.getElementsByTagName('li').length);
+            tabControl.setCounter('tabProductFiles', tabControl.getCounter('tabProductFiles') - li.getElementsByTagName('li').length);
+            this.remove(li);
         }
     },
     beforeSort: function(li, order) { 
@@ -481,7 +501,7 @@ Backend.ProductFile.Group.Callbacks =
         {
             with(Backend.ProductFile.Group.Controller.prototype.getInstance(li.down('.productFileGroup_form')))
             {
-                if('block' != view.nodes.root.style.display) showForm();
+                if(this.getContainer(li, 'edit').style.display != 'block') showForm();
                 else hideForm();
             }
         }
@@ -627,6 +647,7 @@ Backend.ProductFile.Group.Controller.prototype = {
         Event.observe(this.view.nodes.save, 'click', function(e) { Event.stop(e); self.onSave(); });
         Event.observe(this.view.nodes.cancel, 'click', function(e) { Event.stop(e); self.onCancel(); });
         Event.observe(this.view.nodes.newGroupCancelLink, 'click', function(e) { Event.stop(e); self.onCancel(); });
+        Event.observe(this.view.nodes.name, 'keyup', function(e) { Event.stop(e); self.onNameChange(); });
         
     },
     
@@ -639,6 +660,10 @@ Backend.ProductFile.Group.Controller.prototype = {
         });
     },
     
+    onNameChange: function() 
+    {
+        if(!this.model.isNew) this.view.nodes.title.update(this.view.nodes.name.value); 
+    },    
     
     onCancel: function()
     {
@@ -731,7 +756,7 @@ Backend.ProductFile.Group.View.prototype = {
         this.nodes.productID = this.nodes.root.down('.' + this.prefix + 'productID');
         this.nodes.name = this.nodes.root.down('.' + this.prefix + 'name');
         
-        this.nodes.title = this.nodes.root.previous('.' + this.prefix + 'title');
+        if(this.nodes.root.up('li')) this.nodes.title = this.nodes.root.up('li').down('.' + this.prefix + 'title');
         
         this.nodes.newGroupCancelLink = $(this.prefix + 'new_' + productID + '_cancel');
         
@@ -786,7 +811,7 @@ Backend.ProductFile.Group.View.prototype = {
     
     createNewGroup: function()
     {
-        var activeList = ActiveList.prototype.getInstance($(this.prefix + "list_" + this.get('productID'))); 
+        var activeList = ActiveList.prototype.getInstance($(this.prefix + "list_" + this.get('productID')), Backend.ProductFile.Group.Callbacks, Backend.ProductFile.Group.Messages); 
         
         var containerDiv = document.createElement('div');
         containerDiv.update(
@@ -797,11 +822,14 @@ Backend.ProductFile.Group.View.prototype = {
         );
         
         li = activeList.addRecord(this.get('ID'), containerDiv);
-        ActiveList.prototype.getInstance($('productFile_list_' + this.get('productID') + '_' + this.get('ID')), Backend.ProductFile.activeListCallbacks);
+        ActiveList.prototype.getInstance($('productFile_list_' + this.get('productID') + '_' + this.get('ID')), Backend.ProductFile.Callbacks, Backend.ProductFile.Messages);
         Element.addClassName(li, this.prefix  + 'item');
-        
+                
         activeList.highlight(li);
         activeList.touch();
+        
+        ActiveList.prototype.recreateVisibleLists();
+        
         this.clear();
     },
     
@@ -809,10 +837,10 @@ Backend.ProductFile.Group.View.prototype = {
     {
         var li = this.nodes.root.up("li");
         var activeList = ActiveList.prototype.getInstance(li.up('ul'));
-        
+        li.down('.' + this.prefix + 'form').style.display = 'block';
         ActiveList.prototype.collapseAll();
-        this.nodes.title.hide();
-        activeList.toggleContainerOn(li.down('.' + this.prefix + 'form'));
+
+        activeList.toggleContainerOn(activeList.getContainer(li, 'edit'));
         
         this.clear();
     },
@@ -822,8 +850,7 @@ Backend.ProductFile.Group.View.prototype = {
         var li = this.nodes.root.up("li");
         var activeList = ActiveList.prototype.getInstance(li.up('ul'));
         
-        this.nodes.title.show();
-        activeList.toggleContainerOff(li.down('.' + this.prefix + 'form'));
+        activeList.toggleContainerOff(activeList.getContainer(li, 'edit'));
         
         this.clear();
     }

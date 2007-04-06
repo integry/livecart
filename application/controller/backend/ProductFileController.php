@@ -77,10 +77,17 @@ class ProductFileController extends StoreManagementController
 	   			if ($this->request->isValueSet('description_' . $lang))
 	    			$productFile->setValueByLang('description', $lang, $this->request->getValue('description_' . $lang));
 	   		}
+	   		
+	   		// Use title as description if no description was provided
+	   		$defaultLang = $this->store->getDefaultLanguageCode();
+	   		if(!$this->request->isValueSet('description_' . $defaultLang) || $this->request->getValue('description_' . $defaultLang) == '')
+	   		{
+    			$productFile->setValueByLang('description', $defaultLang, $this->request->getValue('title_' . $defaultLang));
+	   		}
+	   		
 	   		$productFile->allowDownloadDays->set((int)$this->request->getValue('allowDownloadDays'));
 	   		
 	   		$productFile->save();
-	   		
 		    $response->setValue('status', 'success');
 		    $response->setValue('productFile', $productFile->toArray());
 	    }
@@ -103,6 +110,8 @@ class ProductFileController extends StoreManagementController
 	public function delete()
 	{
 	    ProductFile::getInstanceByID((int)$this->request->getValue('id'))->delete();
+	    
+	    return new JSONResponse(array('status' => 'success'));
 	}
 	
 	public function download()

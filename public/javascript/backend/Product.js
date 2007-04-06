@@ -30,12 +30,7 @@ Backend.Product =
 	{
 		try
         {
-            var textareas = container.getElementsByTagName('textarea');
-    		for (k = 0; k < textareas.length; k++)
-    		{
-    			tinyMCE.execCommand('mceRemoveControl', true, textareas[k].id);
-    		}
-
+            ActiveForm.prototype.destroyTinyMceFields(container);
     		this.formTabCopies[categoryID] = container;
 
     		container.parentNode.replaceChild(this.productTabCopies[categoryID], container);
@@ -48,21 +43,13 @@ Backend.Product =
 
 	resetAddForm: function(form)
 	{
-		textareas = form.getElementsByTagName('textarea');
-		for(k = 0; k < textareas.length; k++)
-		{
-			tinyMCE.execInstanceCommand(textareas[k].id, 'mceSetContent', true, '', true);
-		}
+        ActiveForm.prototype.resetTinyMceFields(form);
 	},
 
 	initAddForm: function(categoryID)
 	{
         tinyMCE.idCounter = 0;
-		var textareas = $('tabProductsContent_' + categoryID).getElementsByTagName('textarea');
-		for (k = 0; k < textareas.length; k++)
-		{
-			tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
-		}
+        ActiveForm.prototype.initTinyMceFields($('tabProductsContent_' + categoryID));
 
 		new SectionExpander();
 
@@ -556,7 +543,7 @@ Backend.Product.Editor.prototype =
         $('productIndicator_' + this.id).style.display = 'none';
         this.showProductForm();
 
-
+        this.tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
         this.addTinyMce();
         this.setTabCounters();
         
@@ -675,20 +662,13 @@ Backend.Product.Editor.prototype =
     
     removeTinyMce: function()
     {
-        var textareas = this.nodes.parent.getElementsByTagName('textarea');
-		for (k = 0; k < textareas.length; k++)
-		{
-			tinyMCE.execCommand('mceRemoveControl', true, textareas[k].id);
-		}
+        ActiveForm.prototype.destroyTinyMceFields(this.nodes.parent);
     },
     
     addTinyMce: function()
     {
-		var textareas = this.nodes.parent.getElementsByTagName('textarea');
-		for (k = 0; k < textareas.length; k++)
-		{
-			tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
-		}
+		
+        ActiveForm.prototype.initTinyMceFields(this.nodes.parent);
     }
 }
 

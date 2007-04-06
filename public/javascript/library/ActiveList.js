@@ -820,7 +820,7 @@ ActiveList.prototype = {
     scrollStart: function(e) {
       var $this = this;
       this.dragged = e;
-      this.scrollPoll = setInterval(function() { $this.scrollSome() } , 10);
+  //    this.scrollPoll = setInterval(function() { $this.scrollSome() } , 10);
     },
     
     scrollEnd: function(e) {
@@ -1088,7 +1088,7 @@ ActiveList.prototype = {
             
             for(var i = 0; i < containers.length; i++)
             {
-                if(0 >= containers[i].offsetHeight) break;
+                if(0 >= containers[i].offsetHeight) continue;
 
                 activeList.value.toggleContainerOff(containers[i]);
             }

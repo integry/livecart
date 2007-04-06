@@ -42,10 +42,22 @@ abstract class ObjectFile extends MultilingualObject
 	
 	public function delete()
 	{
-	    unlink($this->getPath());
-	    
+	    $this->deleteFile();
 	    parent::delete();
 	}
+	
+	public function deleteFile()
+	{
+	    $path = $this->getPath();
+	    if(is_file($path)) 
+	    {
+	        return unlink($path);
+	    }
+	    else
+	    {
+	        return false;
+	    }
+    }
     
     public function storeFile($sourceFilePath, $fileName) 
     {

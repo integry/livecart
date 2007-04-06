@@ -77,6 +77,29 @@ class ProductFileGroup extends ProductParametersGroup
 	{
 	    return parent::mergeGroupsWithFields(__CLASS__, $groups, $fields);
 	}
+
+	private function getFilesFilter()
+	{
+	    $filter = new ARSelectFilter();
+
+		$filter->setCondition(new EqualsCond(new ARFieldHandle('ProductFile', "productFileGroupID"), $this->getID()));
+		
+		return $filter;
+	}
+	
+	public function getFiles($loadReferencedRecords = false) {
+	    return ProductFile::getRecordSet($this->getFilesFilter(), $loadReferencedRecords);
+	}
+	
+	public function delete()
+	{
+	    foreach($this->getFiles() as $productFile) 
+        {
+            $productFile->deleteFile();
+        }
+        
+	    return parent::delete();
+	}
 }
 
 ?>
