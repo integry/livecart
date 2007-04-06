@@ -101,7 +101,7 @@ function MaxLengthCheck(element, params)
 
 function IsValidEmailCheck(element, params)
 {
-	re = new RegExp(/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/);
+	re = new RegExp(/^[a-zA-Z0-9][a-zA-Z0-9\._\-]+@[a-zA-Z0-9_\-][a-zA-Z0-9\._\-]+\.[a-zA-Z]{2,}$/);
 	return (re.exec(element.value));
 }
 

@@ -6,3 +6,14 @@ _your_email=Your e-mail address
 _your_phone=Your phone number
 
 _the_same_as_shipping_address=My shipping address is the same as my billing address
+
+# errors
+_err_enter_name=Please enter your name
+_err_enter_email=Please enter your e-mail address
+_err_not_unique_email=The e-mail address you entered is already registered in our system. <br />Please <a href="%1">click here</a> to log in using this e-mail address.
+_err_enter_phone=Please enter your phone number
+_err_enter_address=Please enter your address
+_err_enter_city=Please enter the city name
+_err_select_country=Please select the country
+_err_enter_zip=Please enter your postal code
+_err_select_state=Please select or enter the state/province

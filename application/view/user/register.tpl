@@ -15,24 +15,38 @@
 
             <p class="required">
                 <label for="name">{t _your_name}:</label>
-                {textfield name="name" class="text"}
+                
+        		<fieldset class="error">
+        			{textfield name="name" class="text"}
+        			<div class="errorText hidden{error for="name"} visible{/error}">{error for="name"}{$msg}{/error}</div>
+        		</fieldset>
             </p>
                 
             <p class="required">
                 <label for="email">{t _your_email}:</label>
-                {textfield name="email" class="text"}
+                
+        		<fieldset class="error">
+        			{textfield name="email" class="text"}
+        			<div class="errorText hidden{error for="email"} visible{/error}">{error for="email"}{$msg}{/error}</div>
+        		</fieldset>
             </p>
 
-            <p{if "REQUIRE_PHONE"|config} class="required"{/if}>
+            <p{if $form|isRequired:"phone"} class="required"{/if}>
                 <label for="phone">{t _your_phone}:</label>
-                {textfield name="phone" class="text"}
+        		<fieldset class="error">
+        			{textfield name="phone" class="text"}
+        			<div class="errorText hidden{error for="phone"} visible{/error}">{error for="phone"}{$msg}{/error}</div>
+        		</fieldset>
             </p>
                 
         <h2>{t _billing_address}</h2>
 
             <p class="required">
-                <label for="billing_address_1">{t _address}:</label>
-                {textfield name="billing_address_1" class="text"}
+                <label for="billing_address1">{t _address}:</label>
+        		<fieldset class="error">
+                    {textfield name="billing_address1" class="text"}
+        			<div class="errorText hidden{error for="billing_address1"} visible{/error}">{error for="billing_address1"}{$msg}{/error}</div>
+        		</fieldset>
             </p>
 
             <p>
@@ -42,18 +56,29 @@
         
             <p class="required">
                 <label for="city">{t _city}</label>
-                {textfield name="billing_city" class="text"}
+        		<fieldset class="error">
+                    {textfield name="billing_city" class="text"}
+        			<div class="errorText hidden{error for="billing_city"} visible{/error}">{error for="billing_city"}{$msg}{/error}</div>
+        		</fieldset>
             </p>
             
             <p class="required">
                 <label for="country">{t _country}</label>
-                {selectfield name="billing_country" id="billing_country" options=$countries value="DEF_COUNTRY"|config}
+        		<fieldset class="error">
+                    {selectfield name="billing_country" id="billing_country" options=$countries}
+                    <span class="progressIndicator" style="display: none;"></span>
+        			<div class="errorText hidden{error for="billing_country"} visible{/error}">{error for="billing_country"}{$msg}{/error}</div>
+        		</fieldset>
             </p>
 
             <p class="required">
-                <label for="state">{t _state}</label>
-                {selectfield name="billing_state_select" id="billing_state_select" style="display: none;"}
-                {textfield name="billing_state_text" class="text" value="DEF_STATE"|config}
+                <label for="billing_state_select">{t _state}</label>
+        		<fieldset class="error">
+                    {selectfield name="billing_state_select" id="billing_state_select" style="display: none;" options=$states}
+                    {textfield name="billing_state_text" class="text"}
+        			<div class="errorText hidden{error for="billing_state_select"} visible{/error}">{error for="billing_state_select"}{$msg}{/error}</div>
+        		</fieldset>
+
                 {literal}
                 <script type="text/javascript">
                 {/literal}
@@ -61,12 +86,83 @@
                             '{link controller=user action=states}');       
                 </script>
             </p>
+            
+            <p class="required">
+                <label for="billing_zip">{t _postal_code}</label>
+        		<fieldset class="error">
+                    {textfield name="billing_zip" class="text"}
+        			<div class="errorText hidden{error for="billing_zip"} visible{/error}">{error for="billing_zip"}{$msg}{/error}</div>
+        		</fieldset>
+            </p>            
 
         <h2>{t _shipping_address}</h2>
         
             <p>
-                {checkbox name="sameAsBilling" id="sameAsBilling" checked="checked" class="checkbox"}
+                {checkbox name="sameAsBilling" checked="checked" class="checkbox"}
                 <label for="sameAsBilling" class="checkbox">{t _the_same_as_shipping_address}</label>
+            </p>
+            
+            <div id="shippingForm">
+
+                <p class="required">
+                    <label for="shipping_address1">{t _address}:</label>
+            		<fieldset class="error">
+                        {textfield name="shipping_address1" class="text"}
+            			<div class="errorText hidden{error for="shipping_address1"} visible{/error}">{error for="shipping_address1"}{$msg}{/error}</div>
+            		</fieldset>
+                </p>
+    
+                <p>
+                    <label for="shipping_address_2"></label>
+                    {textfield name="shipping_address_2" class="text"}
+                </p>
+            
+                <p class="required">
+                    <label for="city">{t _city}</label>
+            		<fieldset class="error">
+                        {textfield name="shipping_city" class="text"}
+            			<div class="errorText hidden{error for="shipping_city"} visible{/error}">{error for="shipping_city"}{$msg}{/error}</div>
+            		</fieldset>
+                </p>
+                
+                <p class="required">
+                    <label for="country">{t _country}</label>
+            		<fieldset class="error">
+                        {selectfield name="shipping_country" id="shipping_country" options=$countries}
+            			<span class="progressIndicator" style="display: none;"></span>
+                        <div class="errorText hidden{error for="shipping_country"} visible{/error}">{error for="shipping_country"}{$msg}{/error}</div>
+            		</fieldset>
+                </p>
+    
+                <p class="required">
+                    <label for="shipping_state_select">{t _state}</label>
+            		<fieldset class="error">
+                        {selectfield name="shipping_state_select" id="shipping_state_select" style="display: none;" options=$states}
+                        {textfield name="shipping_state_text" class="text"}
+            			<div class="errorText hidden{error for="shipping_state_select"} visible{/error}">{error for="shipping_state_select"}{$msg}{/error}</div>
+            		</fieldset>
+    
+                    {literal}
+                    <script type="text/javascript">
+                    {/literal}
+                        new User.StateSwitcher($('shipping_country'), $('shipping_state_select'), $('shipping_state_text'),
+                                '{link controller=user action=states}');   
+                        new User.ShippingFormToggler($('sameAsBilling'), $('shippingForm'));
+                    </script>
+                </p>     
+                
+                <p class="required">
+                    <label for="shipping_zip">{t _postal_code}</label>
+            		<fieldset class="error">
+                        {textfield name="shipping_zip" class="text"}
+            			<div class="errorText hidden{error for="shipping_zip"} visible{/error}">{error for="shipping_zip"}{$msg}{/error}</div>
+            		</fieldset>
+                </p>                       
+                
+            </div>
+            
+            <p>            
+                <input type="submit" class="submit" value="{tn Complete Registration}" />
             </p>
     
     {/form}        

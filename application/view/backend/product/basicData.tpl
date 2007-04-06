@@ -3,7 +3,7 @@
    	<div class="pricesSaveConf" style="display: none;">
    		<div class="yellowMessage">
    			<div>
-   				Form was successfuly shaved.
+   				{t Product information was saved successfuly}
    			</div>
    		</div>
    	</div>

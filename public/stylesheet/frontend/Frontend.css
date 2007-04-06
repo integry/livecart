@@ -574,6 +574,11 @@ fieldset.error, div.error, fieldset.container
 	display: none;	
 }
 
+.visible
+{
+	display: block;	
+}
+
 .progressIndicator {
 	padding: 15px;
 	width: 30px;

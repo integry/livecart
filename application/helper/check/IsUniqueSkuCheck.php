@@ -25,11 +25,9 @@ class IsUniqueSkuCheck extends Check
 		{
 		  	$cond->addAND(new NotEqualsCond(new ARFieldHandle('Product', 'ID'), $this->product->getID()));
 		}
-		$filter->setCondition($cond);
+		$filter->setCondition($cond);	
 		
-		$set = ActiveRecordModel::getRecordSet('Product', $filter);
-		
-		return ($set->size() == 0);
+		return (ActiveRecordModel::getRecordCount('Product', $filter) == 0);
 	}
 }
 

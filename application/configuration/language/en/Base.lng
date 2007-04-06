@@ -7,3 +7,4 @@ _address=Address
 _city=City
 _state=State
 _country=Country
+_postal_code=Postal code
