@@ -1,6 +1,8 @@
 <?php
 
-abstract class CreditCardPayment
+include_once('../TransactionPayment.php');
+
+abstract class CreditCardPayment extends TransactionPayment
 {
 	/**
 	 *	Credit card number (without spaces)

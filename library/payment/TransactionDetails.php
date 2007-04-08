@@ -1,5 +1,7 @@
 <?php
 
+include_once('TransactionValueMapper.php');
+
 class TransactionDetails
 {
 	protected $data = array(

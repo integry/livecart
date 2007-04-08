@@ -1,8 +1,10 @@
 <?php
 
+include_once('abstract/CreditCardPayment.php');
+
 class AuthorizeNet extends CreditCardPayment
 {
-	protected $gatewayUrl = "https://secure.authorize.net/gateway/transact.dll"
+	protected $gatewayUrl = 'https://secure.authorize.net/gateway/transact.dll';
 	
 	public function isCreditable()
 	{
@@ -26,6 +28,14 @@ class AuthorizeNet extends CreditCardPayment
 	}
 	
 	/**
+	 *	Credit (a part) of customers payment
+	 */
+	public function credit()
+	{
+		return $this->process('CREDIT');		
+	}
+
+	/**
 	 *	Authorize and capture funds within one transaction
 	 */
 	public function authorizeAndCapture()
@@ -47,8 +57,10 @@ class AuthorizeNet extends CreditCardPayment
 		
 		$ch = curl_init($this->gatewayUrl); 
 		curl_setopt($ch, CURLOPT_HEADER, 0); 
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $passedData); 
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $passedData); 		
 		$response = urldecode(curl_exec($ch)); 
 		
 		if (curl_errno($ch)) 

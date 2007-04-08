@@ -1,5 +1,7 @@
 <?php
 
+include_once('PaymentException.php');
+
 abstract class TransactionPayment
 {		
 	protected $transactionDetails;

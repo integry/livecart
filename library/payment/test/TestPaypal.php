@@ -3,14 +3,14 @@
 include_once('unittest/UTStandalone.php');
 
 include_once('PaymentTest.php');
-include_once('../method/AuthorizeNet.php');
+include_once('../method/Paypal.php');
 
-class TestAuthorizeNet extends PaymentTest
+class TestPaypal extends PaymentTest
 {
 	function testAuthorization()
 	{
 		
-		$payment = new AuthorizeNet($this->details);
+		$payment = new Paypal($this->details);
 		
 		$payment->authorizeAndCapture();
 		
