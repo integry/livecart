@@ -24,12 +24,47 @@ abstract class CreditCardPayment extends TransactionPayment
 	 */
 	protected $cardCode;
 	
+	/**
+	 *	Credit card type (Visa, MasterCard, etc.)
+	 */
+	protected $cardType;
+	
 	public function setCardData($cardNumber, $expiryMonth, $expiryYear, $cardCode = null)
 	{
 		$this->cardNumber = $cardNumber;
 		$this->expiryMonth = $expiryMonth;
 		$this->expiryYear = $expiryYear;
 		$this->cardCode = $cardCode;				
+	}
+	
+	public function setCardType($type)
+	{
+		$this->cardType = $type;	
+	}
+	
+	public function getCardNumber()
+	{
+		return $this->cardNumber;
+	}
+	
+	public function getExpirationMonth()
+	{
+		return $this->expiryMonth;
+	}
+	
+	public function getExpirationYear()
+	{
+		return $this->expiryYear;
+	}
+	
+	public function getCardCode()
+	{
+		return $this->cardCode;
+	}
+	
+	public function getCardType()
+	{
+		return $this->cardType;
 	}
 	
 	/**

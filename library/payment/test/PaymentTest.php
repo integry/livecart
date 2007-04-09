@@ -13,11 +13,11 @@ class PaymentTest extends UnitTest
 		$details = new TransactionDetails();
 		$details->firstName->set('Rinalds');
 		$details->lastName->set('Uzkalns');
-		$details->address->set('Vytenio 50-305');
+		$details->address->set('Taikos 259-55');
 		$details->city->set('Vilnius');
-		$details->state->set('Vilnius');
-		$details->country->set('LT');
-		$details->postalCode->set('LT-05214');								
+		$details->state->set('CA');
+		$details->country->set('US');
+		$details->postalCode->set('90210');								
 
 		$details->shippingFirstName->set('Rinalds');
 		$details->shippingLastName->set('Uzkalns');
@@ -28,14 +28,14 @@ class PaymentTest extends UnitTest
 		$details->shippingPostalCode->set('LT-05214');								
 
 		$details->phone->set('+370-66666666');
-		$details->email->set('LT-05214');								
+		$details->email->set('sandbox@integry.net');								
 				
 		$details->clientID->set('22');
-		$details->ipAddress->set('217.147.38.82');								
-
-		$details->invoiceID->set('666');
+		$details->ipAddress->set($_SERVER['REMOTE_ADDR']);
+		
+		$details->invoiceID->set(rand(1, 10000000));
 				
-		$details->amount->set('123.45');
+		$details->amount->set('21.17');
 		$details->currency->set('USD');
 		$details->description->set('LiveCart Order');								
 

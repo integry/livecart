@@ -45,6 +45,8 @@ class TransactionDetails
 		'amount' => null,
 		'currency' => null,
 		'description' => null,
+
+		'gatewayTransactionID' => null,
 	
 	);
 	
