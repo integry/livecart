@@ -1,22 +1,30 @@
 <?php
 
-include_once('abstract/CreditCardPayment.php');
+include_once('../abstract/CreditCardPayment.php');
 
-class AuthorizeNet extends CreditCardPayment
+class AuthorizeNetPayment extends CreditCardPayment
 {
-	protected $gatewayUrl = 'https://secure.authorize.net/gateway/transact.dll';
-	
-	public function isCreditable()
+	public static function isCreditable()
 	{
 		return true;
 	}
 	
+	public static function isVoidable()
+	{
+		return true;
+	}
+	
+	public static function getSupportedCurrencies()
+	{
+		return array('USD');
+	}
+
 	/**
 	 *	Reserve funds on customers credit card
 	 */
 	public function authorize()
 	{
-		return $this->process('AUTH_ONLY');
+		return $this->processAuth('DoDirectPayment', 'Authorization');
 	}
 	
 	/**
@@ -24,7 +32,7 @@ class AuthorizeNet extends CreditCardPayment
 	 */
 	public function capture()
 	{
-		return $this->process('CAPTURE_ONLY');		
+		return $this->processCapture();
 	}
 	
 	/**
@@ -32,7 +40,15 @@ class AuthorizeNet extends CreditCardPayment
 	 */
 	public function credit()
 	{
-		return $this->process('CREDIT');		
+		return $this->process('');		
+	}
+
+	/**
+	 *	Void the payment (issue full credit)
+	 */
+	public function void()
+	{
+		return $this->processVoid();		
 	}
 
 	/**
@@ -40,95 +56,158 @@ class AuthorizeNet extends CreditCardPayment
 	 */
 	public function authorizeAndCapture()
 	{
-		return $this->process('AUTH_CAPTURE');				
+		return $this->processAuth('DoDirectPayment', 'Sale');
 	}
 	
-	protected function process($type)
-	{
-		$data = $this->getTransactionData();
-		$data['x_type'] = $type;
-		
-		$dataPairs = array();
-		foreach ($data as $key => $value)
+	protected function processAuth($api, $type)
+	{		
+		$paypal = $this->getHandler($api);
+	
+		$address = PayPalTypes::AddressType(
+				
+						$this->details->firstName->get() . ' ' . $this->details->lastName->get(), 
+						$this->details->address->get(), '' /* address 2 */,
+						$this->details->city->get(), $this->details->state->get(),
+						$this->details->postalCode->get(), $this->details->country->get(),
+						$this->details->phone->get()
+				
+					);
+				
+		$personName = PayPalTypes::PersonNameType('', $this->details->firstName->get(), '', $this->details->lastName->get());
+
+		$payerInfo = PayPalTypes::PayerInfoType($this->details->email->get(), $this->details->clientID->get(), 'verified', $personName, $this->details->country->get(), '', $address);
+
+		$creditCardDetails = PayPalTypes::CreditCardDetailsType($this->getCardType(), $this->getCardNumber(), $this->getExpirationMonth(), $this->getExpirationYear(), $payerInfo, $this->getCardCode());
+
+		$paymentDetails = PayPalTypes::PaymentDetailsType($this->details->amount->get(), $this->details->amount->get(), 0, 0, 0, $this->details->description->get(), $this->details->clientID->get(), $this->details->invoiceID->get(), '', 'ipn_notify.php', $address, array(), $this->details->currency->get());
+
+		$paypal->setParams($type, $paymentDetails, $creditCardDetails, $this->details->ipAddress->get(), session_id());
+
+		$paypal->execute($api);
+
+		if ($paypal->success())
 		{
-			$dataPairs[] = $key . '=' . urlencode($value);
-		}
-		$passedData = implode('&', $dataPairs);
-		
-		$ch = curl_init($this->gatewayUrl); 
-		curl_setopt($ch, CURLOPT_HEADER, 0); 
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $passedData); 		
-		$response = urldecode(curl_exec($ch)); 
-		
-		if (curl_errno($ch)) 
-		{
-			throw new PaymentException(curl_error($ch));
+		    $response = $paypal->getAPIResponse();
+		    
+		    if (isset($response->Errors))
+		    {
+				if (isset($response->Errors->LongMessage))
+				{
+					$error = $response->Errors;
+				}
+				else
+				{
+					$error = $response->Errors[0];
+				}
+			
+				return new TransactionError($error->LongMessage, $response);
+			}
+			else
+			{
+				$result = new TransactionResult();
+				$result->gatewayTransactionID->set($response->TransactionID);
+				$result->amount->set($response->Amount->_);
+				$result->currency->set($response->Amount->currencyID);
+				
+				$avs = PaypalCommon::getAVSbyCode($response->AVSCode);
+				$result->AVSaddr->set($avs[0]);
+				$result->AVSzip->set($avs[1]);
+
+				$result->CVVmatch->set(PaypalCommon::getCVVByCode($response->CVV2Code));
+				
+				$result->rawResponse->set($response);
+												
+				return $result;
+			}
 		}
 		else
 		{
-			curl_close($ch);			
-		} 
-	  		
-	  	die($response);	  	
+		    return $paypal->getAPIException();
+		}		
 	}
 	
-	protected function getTransactionData()
+	protected function processCapture()
 	{
-		$dataMap = array(
+		$paypal = $this->getHandler('DoCapture');
+		$paypal->setParams($this->details->gatewayTransactionID->get(), $this->details->amount->get(), $this->details->currency->get(), 'NotComplete', '', $this->details->invoiceID->get());
 		
-			'x_first_name' 	=> 'firstName',
-			'x_last_name' 	=> 'lastName',
-			'x_company' 	=> 'companyName',
-			'x_address' 	=> 'address',
-			'x_city' 		=> 'city',
-			'x_state' 		=> 'state',
-			'x_zip' 		=> 'postalCode',
-			'x_country' 	=> 'country',
-			'x_phone' 		=> 'phone',
-			'x_email'		=> 'email',
-			
-			'x_cust_id' 	=> 'clientID',
-			'x_customer_ip' => 'ipAddress',			
-			
-			'x_invoice_num'	=> 'invoiceID',
-			'x_description'	=> 'description',
-					
-			'x_ship_to_first_name' => 'shippingFirstName',
-			'x_ship_to_last_name' => 'shippingLastName',
-			'x_ship_to_company' => 'shippingCompanyName',
-			'x_ship_to_address' => 'shippingAddress',
-			'x_ship_to_city' => 'shippingCity',
-			'x_ship_to_state' => 'shippingState',
-			'x_ship_to_zip' => 'shippingPostalCode',
-			'x_ship_to_country' => 'shippingCountry',
+		$paypal->execute();
+		
+		if ($paypal->success())
+		{
+		    $response = $paypal->getAPIResponse();
 
-			'x_amount' => 'amount',
-			'x_currency_code' => 'currency',
-		
-		);		
-	
-		$data = array();
-		foreach ($dataMap as $key => $dataKey)
-		{			
-			if ($value = $this->transactionDetails->getValue($dataKey))
+		    if (isset($response->Errors))
+		    {
+				return new TransactionError($response->Errors->LongMessage, $response);
+			}
+			else
 			{
-				$data[$key] = $value;
+				$result = new TransactionResult();
+
+				$details = $response->DoCaptureResponseDetails->PaymentInfo;
+			
+				$result->gatewayTransactionID->set($details->TransactionID);
+				$result->amount->set($details->GrossAmount->_);
+				$result->currency->set($details->GrossAmount->currencyID);
+
+				$result->rawResponse->set($response);
+
+				return $result;
 			}
 		}
-		
-		$data['x_method'] = 'CC';
-		
-		$data['x_delim_data'] = 'TRUE';
-		$data['x_delim_char'] = chr(9);
-		$data['x_delim_data'] = '"';
-		$data['x_relay_response'] = 'FALSE';
-								
-		return $data;
+		else
+		{
+		    return $paypal->getAPIException();
+		}			
 	}
 	
+	protected function processVoid()
+	{
+		$paypal = $this->getHandler('DoVoid');
+		$paypal->setParams($this->details->gatewayTransactionID->get(), '');
+		
+		$paypal->execute();
+		
+		if ($paypal->success())
+		{
+		    $response = $paypal->getAPIResponse();
+
+		    if (isset($response->Errors))
+		    {
+				return new TransactionError($response->Errors->LongMessage, $response);
+			}
+			else
+			{
+				$result = new TransactionResult();
+
+				$result->rawResponse->set($response);
+
+				return $result;
+			}
+		}
+		else
+		{
+		    return $paypal->getAPIException();
+		}		
+	}
+	
+	protected function getHandler($api)
+	{
+		set_time_limit(0);
+		
+		$handler = new WebsitePaymentsPro();
+		
+		$username = 'sandbox_api1.integry.net';		
+		$password = '9AURF7SPQCEYCDXV';		
+		$signature = 'AeQ618dBMNS1kVFZwUIitcve-k.dAT5pnzBekoPUhcIj1J5p65ZAR8Pu';
+		
+		$handler->prepare($username, $password, $signature);		
+		
+		$paypal = $handler->selectOperation($api);
+		
+		return $paypal;		
+	}
 }
 	
 ?>
