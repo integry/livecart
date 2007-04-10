@@ -251,7 +251,10 @@ class CustomerOrder extends ActiveRecordModel
         $subTotal = 0;
         foreach ($this->orderedItems as $item)
         {
-            $subTotal += $item->getSubTotal($currency);
+            if (!$item->isSavedForLater->get())
+            {
+				$subTotal += $item->getSubTotal($currency);				
+			}
         }
         
         return $subTotal;	

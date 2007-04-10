@@ -66,8 +66,7 @@ class CheckoutController extends FrontendController
         }    
         else
         {
-            $this->addBreadCrumb($this->translate('_order_checkout'), '');
-            return new ActionResponse();
+            return new ActionRedirectResponse('user', 'checkout');
         }
     }
     

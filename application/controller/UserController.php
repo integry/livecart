@@ -3,13 +3,14 @@
 ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.Currency');
 ClassLoader::import('application.model.delivery.State');
+ClassLoader::import('application.model.user.*');
 
 /**
  *  Handles user account related logic
  */
 class UserController extends FrontendController
 {
-    public function register()
+    public function checkout()
     {
         $defCountry = $this->config->getValue('DEF_COUNTRY');
         
@@ -67,12 +68,33 @@ class UserController extends FrontendController
         }
 
         // create user billing addresses
-        $billingAddress = UserBillingAddress::getNewInstance($user);
-        $billingAddress->name->set($user->name->get());
-        $billingAddress->address1->set($this->request->getValue('billing_address1'));        
-        $billingAddress->address2->set($this->request->getValue('billing_address2'));        
-                
-        $this->loginUser($user);       
+        $address = UserAddress::getNewInstance();
+        $address->name->set($user->name->get());
+        $address->address1->set($this->request->getValue('billing_address1'));        
+        $address->address2->set($this->request->getValue('billing_address2'));        
+        $address->save();
+        
+		$userBillingAddress = UserBillingAddress::getNewInstance($user, $address);
+        $userBillingAddress->save();
+        
+        // create user shipping address
+        if ($this->request->getValue('sameAsBilling'))
+        {
+			$address = clone $address;
+		}
+		else
+		{
+	        $address = UserAddress::getNewInstance();
+	        $address->name->set($user->name->get());
+	        $address->address1->set($this->request->getValue('shipping_address1'));
+	        $address->address2->set($this->request->getValue('shipping_address2'));
+		}
+
+	    $address->save();
+		$userShippingAddress = UserShippingAddress::getNewInstance($user, $address);
+        $userShippingAddress->save();
+
+        $user->setAsCurrentUser();       
         return new RedirectResponse($this->request->getValue('return'));
     }
     

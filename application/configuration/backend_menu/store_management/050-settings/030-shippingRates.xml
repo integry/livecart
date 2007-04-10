@@ -1,0 +1,5 @@
+<Menu>
+	<Title>_menu_shipping_rate</Title>	
+	<Controller>backend.shippingConfig</Controller>
+	<Action>index</Action>
+</Menu>

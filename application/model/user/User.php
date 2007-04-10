@@ -5,13 +5,12 @@ ClassLoader::import("application.model.ActiveRecordModel");
 /**
  * Store user base class (including frontend and backend)
  *
- * @package application.user.model
- * @author Saulius Rupainis <saulius@integry.net>
+ * @package application.model.user
+ * @author Integry Systems
  *
  */
 class User extends ActiveRecordModel
 {
-
 	/**
 	 * ID of anonymous user that is not authorized
 	 *
@@ -28,7 +27,7 @@ class User extends ActiveRecordModel
 		$schema->registerField(new ARField("password", ARVarchar::instance(16)));
 		$schema->registerField(new ARField("name", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("creationDate", ARDateTime::instance()));
-		$schema->registerField(new ARField("isActive", ARBool::instance()));
+		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 	}
 
     public static function getCurrentUser()
@@ -43,6 +42,11 @@ class User extends ActiveRecordModel
         
         return $user;
     }
+    
+    public function setAsCurrentUser()
+    {
+		Session::getInstance()->setValue('User', $this);
+	}
 
     public static function getNewInstance()
     {

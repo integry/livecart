@@ -1,0 +1,5 @@
+<Menu>
+	<Title>_menu_tax</Title>	
+	<Controller>backend.tax</Controller>
+	<Action>index</Action>
+</Menu>

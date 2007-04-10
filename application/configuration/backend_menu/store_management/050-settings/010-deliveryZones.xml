@@ -1,0 +1,5 @@
+<Menu>
+	<Title>_menu_delivery_zones</Title>	
+	<Controller>backend.deliveryZone</Controller>
+	<Action>index</Action>
+</Menu>

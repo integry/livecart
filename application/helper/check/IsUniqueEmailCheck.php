@@ -16,7 +16,6 @@ class IsUniqueEmailCheck extends Check
 		$filter = new ARSelectFilter();
 		$cond = new EqualsCond(new ARFieldHandle('User', 'email'), $value);
 		$filter->setCondition($cond);
-		return 0;
 		return (ActiveRecordModel::getRecordCount('User', $filter) == 0);
 	}
 }

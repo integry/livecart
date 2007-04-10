@@ -3,7 +3,7 @@
 /**
  * Customer billing or shipping address
  *
- * @package application.model.category
+ * @package application.model.user
  */
 class UserAddress extends ActiveRecordModel
 {
@@ -26,6 +26,11 @@ class UserAddress extends ActiveRecordModel
 		$schema->registerField(new ARField("countryID", ARChar::instance(2)));
 		$schema->registerField(new ARField("phone", ARVarchar::instance(100)));
 	}    
+	
+	public static function getNewInstance()
+	{
+		return parent::getNewInstance(__CLASS__);
+	}
 }
 	
 ?>

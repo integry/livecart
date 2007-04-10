@@ -51,7 +51,7 @@
         			<div class="errorText hidden{error for="name"} visible{/error}">{error for="name"}{$msg}{/error}</div>
         		</fieldset>
             </p>
-                
+            
             <p class="required">
                 <label for="email">{t _your_email}:</label>
                 
@@ -68,7 +68,7 @@
         			<div class="errorText hidden{error for="phone"} visible{/error}">{error for="phone"}{$msg}{/error}</div>
         		</fieldset>
             </p>
-                
+
         <h2>{t _billing_address}</h2>
 
             <p class="required">
@@ -192,31 +192,10 @@
             </div>
             
             <p>            
-                <input type="submit" class="submit" value="{tn Complete Registration}" />
+                <input type="submit" class="submit" value="{tn Continue}" />
             </p>
     
     {/form}   
-
-        {if "ANONYMOUS_CHECKOUT"|config}
-
-            <p>
-                Would you like to register in our store before completing your order?
-            </p>
-        
-            <p>
-                <a href="{link controller=user action="register"}">Yes, I would like to register.</a>
-            <p>
-            
-            <p>
-                <a href="{link controller=checkout action="selectAddress"}">
-                    No, I would like to complete my purchase without registering.
-                </a>
-            </p>
-
-        {else}
-        
-        
-        {/if}
 
 </div>
 

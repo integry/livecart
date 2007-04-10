@@ -11,10 +11,5 @@
 			<Controller>backend.customize</Controller>
 			<Action>editTemplate</Action>	
 		</Menu>
-		<Menu>
-			<Title>_menu_manage_skinks</Title>
-			<Controller>backend.customize</Controller>
-			<Action>skins</Action>	
-		</Menu>
 	</Items>
 </Menu>

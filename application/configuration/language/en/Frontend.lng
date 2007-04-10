@@ -13,6 +13,9 @@ _switch_currency=Switch Currency
 # Shopping basket
 _shopping_basket=Shopping Basket
 
+# Checkout
+_order_checkout=Order Checkout
+
 # Users
 _remind_password=I have forgotten my password
 

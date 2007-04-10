@@ -58,7 +58,7 @@
 
 				<tr>
 					<td colspan="3"></td>
-					<td class="cartQuant"><input type="submit" value="{tn Update}" />
+					<td class="cartQuant"><input type="submit" class="submit" value="{tn Update}" />
 				</tr>
 			</tbody>
 		</table>
