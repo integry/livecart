@@ -75,11 +75,12 @@ LiveCart.AjaxUpdater.prototype = {
 
     indicatorContainerId: null,
 
-    initialize: function(formOrUrl, container, indicator, insertionPosition)
+    initialize: function(formOrUrl, container, indicator, insertionPosition, onComplete)
     {
         var url = "";
         var method = "";
         var params = "";
+        this.onComplete = onComplete;
         
         var containerId = $(container);
         var indicatorId = $(indicator);

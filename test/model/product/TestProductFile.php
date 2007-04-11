@@ -39,7 +39,7 @@ class TestProductFile extends UnitTestCase
     
     public function __construct()
     {
-        parent::__construct('Related product tests');
+        parent::__construct('Product files tests');
         
         $this->rootCategory = Category::getInstanceByID(Category::ROOT_ID);
 	    $this->db = ActiveRecord::getDBConnection();
@@ -105,7 +105,7 @@ class TestProductFile extends UnitTestCase
 	    
 	    $this->assertEqual($productFile->fileName->get(), 'some_file');
 	    $this->assertEqual($productFile->extension->get(), $extension);
-	    $this->assertEqual($productFile->getPath(), ClassLoader::getRealPath('storage.productfile') . DIRECTORY_SEPARATOR . $productFile->getID() . '.' . $extension);
+	    $this->assertEqual($productFile->getPath(), ClassLoader::getRealPath('storage.productfile') . DIRECTORY_SEPARATOR . $productFile->getID());
 
 	    $productFile->delete();
 	}

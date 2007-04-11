@@ -143,15 +143,13 @@ TabControl.prototype = {
 		Backend.ajaxNav.add(locationHash.substring(1) + "#" + this.activeTab.id);
     },
 
-	activateTab: function(targetTab)
+	activateTab: function(targetTab, onComplete)
 	{
+        targetTab = $(targetTab);
+        
 		if(!targetTab) 
 		{
 			targetTab = this.nodes.tabListElements[0];	
-		}
-        else 
-		{
-			targetTab = $(targetTab);
 		}
                 
 		// get help context
@@ -179,8 +177,12 @@ TabControl.prototype = {
         
 		if (Element.empty($(contentId)))
 		{
-            new LiveCart.AjaxUpdater(this.urlParserCallback(targetTab.down('a').href), contentId, targetTab.down('.tabIndicator'));
+            new LiveCart.AjaxUpdater(this.urlParserCallback(targetTab.down('a').href), contentId, targetTab.down('.tabIndicator'), 'bottom',  onComplete);
 		}
+        else
+        {
+            onComplete();
+        }
         
         this.addHistory();
 	},

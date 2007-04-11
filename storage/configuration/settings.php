@@ -166,4 +166,5 @@
   'IMG_C_H_4' => '600',
   'IMG_C_Q_4' => '80',
   'MAX_FILTER_CRITERIA_COUNT' => '5',
+  'REQUIRE_PHONE' => 1,
 ); ?>

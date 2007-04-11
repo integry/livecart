@@ -68,7 +68,6 @@ class TestProductRelationshipGroup extends UnitTestCase
 	    $group->markAsNotLoaded();
 	    $group->load(array('Product'));
 	    
-	    $this->assertEqual($group->position->get(), 1);
 	    $name = $group->name->get();
 	    $this->assertEqual($name['en'], 'TEST_GROUP');
 	    $this->assertEqual($this->product->getID(), $group->product->get()->getID());

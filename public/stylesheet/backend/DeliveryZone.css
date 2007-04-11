@@ -1,0 +1,29 @@
+#deliveryZoneBrowser
+{
+  	float: left;
+  	width: 200px;
+}
+
+#deliveryZoneContent
+{
+	margin-left: 240px;	
+}
+
+#deliveryZoneContent label.setting 
+{
+	display: block;
+	float: auto;
+	float: none;
+	margin-bottom: 0px;
+	width: auto;
+}
+
+p.checkbox 
+{
+	padding-left: 0px;
+}
+
+#deliveryZoneManagerContainer 
+{
+    margin-left: 230px;
+}
