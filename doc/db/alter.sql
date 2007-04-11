@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-04-06 14:15                                #
+# Created on:            2007-04-11 19:20                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -101,6 +101,8 @@ ALTER TABLE ProductReview DROP FOREIGN KEY Product_ProductReview;
 
 ALTER TABLE ProductReview DROP FOREIGN KEY User_ProductReview;
 
+ALTER TABLE UserAddress DROP FOREIGN KEY State_UserAddress;
+
 ALTER TABLE UserBillingAddress DROP FOREIGN KEY User_UserBillingAddress;
 
 ALTER TABLE UserBillingAddress DROP FOREIGN KEY UserAddress_UserBillingAddress;
@@ -136,16 +138,73 @@ ALTER TABLE TaxRate DROP FOREIGN KEY DeliveryZone_TaxRate;
 ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 
 # ---------------------------------------------------------------------- #
-# Modify table "UserAddress"                                             #
+# Modify table "CustomerOrder"                                           #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE UserAddress ADD COLUMN stateID INTEGER UNSIGNED;
+ALTER TABLE CustomerOrder ADD COLUMN billingAddressID INTEGER UNSIGNED;
 
-ALTER TABLE UserAddress CHANGE state stateName VARCHAR(255);
+ALTER TABLE CustomerOrder ADD COLUMN shippingAddressID INTEGER UNSIGNED;
 
-ALTER TABLE UserAddress CHANGE country countryID CHAR(2);
+ALTER TABLE CustomerOrder MODIFY billingAddressID INTEGER UNSIGNED AFTER userID;
 
-ALTER TABLE UserAddress MODIFY stateID INTEGER UNSIGNED AFTER ID;
+ALTER TABLE CustomerOrder MODIFY shippingAddressID INTEGER UNSIGNED AFTER billingAddressID;
+
+# ---------------------------------------------------------------------- #
+# Modify table "User"                                                    #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE User ADD COLUMN lastName VARCHAR(60);
+
+ALTER TABLE User CHANGE name firstName VARCHAR(60);
+
+ALTER TABLE User MODIFY lastName VARCHAR(60) AFTER firstName;
+
+# ---------------------------------------------------------------------- #
+# Modify table "State"                                                   #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE State DROP PRIMARY KEY;
+
+ALTER TABLE State MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE State ADD CONSTRAINT PK_State 
+    PRIMARY KEY (ID);
+
+# ---------------------------------------------------------------------- #
+# Modify table "Transaction"                                             #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE Transaction DROP PRIMARY KEY;
+
+ALTER TABLE Transaction ADD COLUMN parentTransactionID INTEGER UNSIGNED;
+
+ALTER TABLE Transaction ADD COLUMN type TINYINT COMMENT '0 - sale (authorize & capture) 1 - authorize 2 - capture 3 - void';
+
+ALTER TABLE Transaction ADD COLUMN isCompleted BOOL;
+
+ALTER TABLE Transaction MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE Transaction MODIFY parentTransactionID INTEGER UNSIGNED AFTER orderID;
+
+ALTER TABLE Transaction MODIFY type TINYINT COMMENT '0 - sale (authorize & capture) 1 - authorize 2 - capture 3 - void' AFTER gatewayTransactionID;
+
+ALTER TABLE Transaction MODIFY isCompleted BOOL AFTER type;
+
+ALTER TABLE Transaction ADD CONSTRAINT PK_Transaction 
+    PRIMARY KEY (ID);
+
+# ---------------------------------------------------------------------- #
+# Modify table "DeliveryZoneState"                                       #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE DeliveryZoneState DROP PRIMARY KEY;
+
+ALTER TABLE DeliveryZoneState MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE DeliveryZoneState MODIFY stateID INTEGER UNSIGNED;
+
+ALTER TABLE DeliveryZoneState ADD CONSTRAINT PK_DeliveryZoneState 
+    PRIMARY KEY (ID);
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
@@ -186,6 +245,12 @@ ALTER TABLE SpecFieldValue ADD CONSTRAINT SpecField_SpecFieldValue
 
 ALTER TABLE CustomerOrder ADD CONSTRAINT User_CustomerOrder 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
+
+ALTER TABLE CustomerOrder ADD CONSTRAINT UserAddress_CustomerOrder 
+    FOREIGN KEY (billingAddressID) REFERENCES UserAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
+
+ALTER TABLE CustomerOrder ADD CONSTRAINT UserAddress_CustomerOrder_Shipping 
+    FOREIGN KEY (shippingAddressID) REFERENCES UserAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE OrderedItem ADD CONSTRAINT Product_OrderedItem 
     FOREIGN KEY (productID) REFERENCES Product (ID);
@@ -294,6 +359,9 @@ ALTER TABLE UserBillingAddress ADD CONSTRAINT UserAddress_UserBillingAddress
 
 ALTER TABLE Transaction ADD CONSTRAINT CustomerOrder_Transaction 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
+
+ALTER TABLE Transaction ADD CONSTRAINT Transaction_Transaction 
+    FOREIGN KEY (parentTransactionID) REFERENCES Transaction (ID) ON DELETE CASCADE;
 
 ALTER TABLE Shipment ADD CONSTRAINT CustomerOrder_Shipment 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
