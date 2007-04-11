@@ -4,6 +4,60 @@ import and keep your product information up-to-date. As in most e-stores LC allo
 categories.
 </p>
 
+<h3>How to Add a New Product</h3>
+
+<p>
+    Click here for details.
+</p>
+
+<h3 id="view">Manage products</h3>
+
+<p>
+	To display category products:
+	<ul>
+		<li>Click <strong>Products</strong> in the main menu.</li>
+		<li>Click a category on the category tree. The Category details tab opens on the right. To view products, 
+		click <strong>Products</strong> tab:</li>
+		<img src="image/doc/products/products_tab.bmp"/>
+		<li>Product are displayed in the table fashioned similar to this:</li>
+		<img src="image/doc/products/products.bmp"/>
+	</ul>
+	By default products are displayed in the order they were added to your store. LiveCart allows you to sort filter products by specifying product's 
+	property name in the toolbar (SKU, name, manufacturer, price etc.).
+	<ul>
+		<br \>
+		<li>Click a property to activate its field:</li>
+		<img src="image/doc/products/name2.bmp"/>
+		<br \>
+		<br \>
+		<li>Enter a name in the field to search products:</li>
+		<img src="image/doc/products/name_nokia2.bmp"/>
+		Products that match your criteria appear below automatically.
+		<br \>
+		<br \>
+		<p>You can also set ascending or descending order by clicking on the "arrow" icon next to the product's property:</p>
+		<img src="image/doc/products/arrow.bmp"/>
+	</ul>
+
+</p>
+
+<h3 id="manage">Manage products</h3>
+
+<p>You can quickly manage products by using <strong>multiple edit</strong> tool which allows you to edit
+most of the attributes by applying changes to several products at once.</p>
+<ul>
+<li>Select one or more products by marking a checkbox on the left:</li>
+<img src="image/doc/products/checkboxes.bmp"/>
+<li>Choose an action from the menu:</li>
+<img src="image/doc/products/menu.bmp"/>
+<li>Click <strong>Go</strong> to process.</li>
+<img src="image/doc/products/go.bmp"/>
+</ul>
+
+<p>To view all of the product's details, click on a product name. This will open product's <a href="{help /products.define}">detailed page</a>.</p>
+
+<h3>Product representation in store frontend</h3>
+
 <p>	
 How products are displayed to customers? Customers can view products either browsing your catalog or searching 
 the web. At first customers are displayed <strong>Product List</strong> where products are displayed with 
@@ -44,59 +98,6 @@ should be displayed on the detailed page in the <a href="{help /cat.attr}">attri
 </ul>
 </fieldset>
 </div>
-
-<h3 id="view">Viewing category's porducts</h3>
-
-<p>
-	To display category' products:
-	<ul>
-		<li>Click <strong>Products</strong> in the main menu.</li>
-		<li>Click a category on the category tree. The Category details tab opens on the right. To view products, 
-		click <strong>Products</strong> tab:</li>
-		<img src="image/doc/products/products_tab.bmp"/>
-		<li>Product are displayed in the table fashioned similar to this:</li>
-		<img src="image/doc/products/products.bmp"/>
-	</ul>
-	By default products are displayed in (xxx) order. LC allows you to view products by specifying product's 
-	property name in the toolbar (SKU, name, manufacturer, price etc.).
-	<ul>
-		<br \>
-		<li>Click a property to activate its field:</li>
-		<img src="image/doc/products/name2.bmp"/>
-		<br \>
-		<br \>
-		<li>Enter a name in the field to search products:</li>
-		<img src="image/doc/products/name_nokia2.bmp"/>
-		Products that match your criteria appear below automatically.
-		<br \>
-		<br \>
-		<p>You can also set ascending or descending order by clicking on the "arrow" icon next to the product's property:</p>
-		<img src="image/doc/products/arrow.bmp"/>
-	</ul>
-
-</p>
-
-<h3 id="search">Search</h3>
-
-<p>Describe Search tools - what is the purpose; describe how to use tools; describe what is displayed
-to the customer; describe how the results can be processed; Are there any global search ways</p>
-
-
-<h3 id="manage">Manage products</h3>
-
-<p>You can quickly manage products by using <strong>multiple edit</strong> tool which allows you to edit
-most of the attributes by applying changes to several products at once.</p>
-<ul>
-<li>Select one or more products by marking a checkbox on the left:</li>
-<img src="image/doc/products/checkboxes.bmp"/>
-<li>Choose an action from the menu:</li>
-<img src="image/doc/products/menu.bmp"/>
-<li>Click <strong>Go</strong> to process.</li>
-<img src="image/doc/products/go.bmp"/>
-</ul>
-
-<p>To view all of the product's details, click on a product name. This will open product's <a href="{help /products.define}">detailed page</a>.</p>
-
 
 {helpSeeAlso}
 	{see products.add}

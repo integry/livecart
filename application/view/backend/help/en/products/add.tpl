@@ -2,21 +2,6 @@
 <p class="note"><strong>Note</strong>: Because products require different <a href="{help /cat.attr}">attributes</a> (color, weight etc.)
 you have to set appropriate attributes before adding products.</p>
 
-<div class="tasks">
-<fieldset>
-<legend>Things you can do</legend>
-<ul>	
-	<li><a href="{self}#add">Add products mannually</a></li>
-	<li><a href="{self}#add">Clone existing products ( ? )</a></li>
-	<li><a href="{self}#import">Import data</a></li>
-
-</ul>
-</fieldset>
-</div>
-
-
-<h3 id="add">Add product manually</h3>
-
 <p>To create a new product:</p>
 
 <ul>
@@ -29,11 +14,6 @@ you have to set appropriate attributes before adding products.</p>
 	<a href="{help /products.define}">field specifications</a> for more details.</li> 
 	<li>Save changes to return to main Products page.</li>
 </ul>
-
-<h3 id="import">Import Data</h3>
-
-<p>You can import existing data using LC's import tools that allow you to add variuos types of data (.xls, ...)</p>
-
 
 {helpSeeAlso}
 	{see products.define}

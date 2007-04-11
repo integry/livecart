@@ -292,6 +292,7 @@ a.acronym:hover div.acronymFull
     left: 0px;
     white-space: nowrap;
     color: black;
+    z-index: 5;
 }
 
 /**************************
