@@ -1,5 +1,4 @@
 Backend.DeliveryZone = Class.create();
-
 Backend.DeliveryZone.prototype = 
 {
   	Links: {},
@@ -104,4 +103,84 @@ Backend.DeliveryZone.prototype =
 	{
 		new Backend.SaveConfirmationMessage(document.getElementsByClassName('yellowMessage')[0]);			
 	}
+}
+
+Backend.DeliveryZone.CountriesAndStates = Class.create();
+
+Backend.DeliveryZone.CountriesAndStates.prototype = 
+{
+    prefix: 'countriesAndStates_',
+    
+    initialize: function(root) 
+    {
+        this.findNodes(root);
+        this.bindEvents();
+    },
+    
+    findNodes: function(root)
+    {
+        this.nodes = {};
+        this.nodes.root = $(root);
+
+        this.nodes.addCountryButton     = this.nodes.root.down('.' + this.prefix + 'addCountry');
+        this.nodes.removeCountryButton  = this.nodes.root.down('.' + this.prefix + 'removeCountry');
+        this.nodes.addStateButton       = this.nodes.root.down('.' + this.prefix + 'addState');
+        this.nodes.removeStateButton    = this.nodes.root.down('.' + this.prefix + 'removeState');
+        
+        this.nodes.inactiveCountries    = this.nodes.root.down('.' + this.prefix + 'inactiveCountries');
+        this.nodes.activeCountries      = this.nodes.root.down('.' + this.prefix + 'activeCountries');
+        this.nodes.inactiveStates       = this.nodes.root.down('.' + this.prefix + 'inactiveStates');
+        this.nodes.activeStates         = this.nodes.root.down('.' + this.prefix + 'activeStates');
+
+    },
+    
+    bindEvents: function()
+    {
+        var self = this;
+        
+        Event.observe(this.nodes.addCountryButton, 'click', function(e) { Event.stop(e); self.addCountry(); });
+        Event.observe(this.nodes.removeCountryButton, 'click', function(e) { Event.stop(e); self.removeCountry(); });
+        Event.observe(this.nodes.addStateButton, 'click', function(e) { Event.stop(e); self.addState(); });
+        Event.observe(this.nodes.removeStateButton, 'click', function(e) { Event.stop(e); self.removeState(); });
+    },
+    
+    addCountry: function()
+    {
+        var self = this;
+        $A(this.nodes.inactiveCountries.getElementsByTagName('option')).each(function(option) 
+        {
+            if(!option.selected) return;
+            self.nodes.activeCountries.options[self.nodes.activeCountries.length] = option;
+        });
+    },
+    
+    removeCountry: function()
+    {
+        var self = this;
+        $A(this.nodes.activeCountries.getElementsByTagName('option')).each(function(option) 
+        {
+            if(!option.selected) return;
+            self.nodes.inactiveCountries.options[self.nodes.inactiveCountries.length] = option;
+        });
+    },
+    
+    addState: function()
+    {
+        var self = this;
+        $A(this.nodes.inactiveStates.getElementsByTagName('option')).each(function(option) 
+        {
+            if(!option.selected) return;
+            self.nodes.activeStates.options[self.nodes.activeStates.length] = option;
+        });
+    },
+    
+    removeState: function()
+    {
+        var self = this;
+        $A(this.nodes.activeStates.getElementsByTagName('option')).each(function(option) 
+        {
+            if(!option.selected) return;
+            self.nodes.inactiveStates.options[self.nodes.inactiveStates.length] = option;
+        });
+    },
 }

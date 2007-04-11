@@ -759,11 +759,17 @@ Backend.SaveConfirmationMessage.prototype =
             console.info(e);
         }
         
+        
 		this.show();
 	},
 	
 	show: function()
 	{
+        try 
+        {
+            new Effect.ScrollTo(this.element.id, {offset: -24});
+        }
+        catch(e) {}
         new Effect.SlideDown(this.element, {duration: 0.4, afterFinish: this.highlight.bind(this)});
 	},
 

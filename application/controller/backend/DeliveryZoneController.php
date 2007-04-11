@@ -2,6 +2,9 @@
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.delivery.DeliveryZone");
+ClassLoader::import("application.model.delivery.State");
+ClassLoader::import("framework.request.validator.RequestValidator");
+ClassLoader::import("framework.request.validator.Form");
 		
 		
 /**
@@ -32,10 +35,18 @@ class DeliveryZoneController extends StoreManagementController
 	{
 	    if(!($id = (int)$this->request->getValue('id'))) return;
 	    
+	    $localeInfo = $this->locale->info();
+	    $states = array();
+	    foreach(State::getAllStates()->toArray() as $state)
+	    {
+	        $states[$state['ID']] = $localeInfo->getCountryName($state['countryID']) . ":" . $state['name'];
+	    }
+	    
 	    $response = new ActionResponse();
-	    
+	    $response->setValue('form', $this->createCountriesAndStatesForm());
 	    $response->setValue('zoneID', $id);
-	    
+	    $response->setValue('countries', $localeInfo->getAllCountries());
+	    $response->setValue('states', $states);
 	    return $response;
 	}
 	
@@ -52,6 +63,17 @@ class DeliveryZoneController extends StoreManagementController
 	    
 	    return new RawResponse('Tax rates ' . $id);
 	}
+	
+	private function createCountriesAndStatesForm()
+	{
+		return new Form($this->createCountriesAndStatesFormValidator());
+	}
+
+	private function createCountriesAndStatesFormValidator()
+	{	
+		return new RequestValidator('countriesAndStates', $this->request);
+	}
+	
 	
 //	/**
 //	 *	Individual settings section
@@ -140,25 +162,7 @@ class DeliveryZoneController extends StoreManagementController
 //		}
 //	}  		  
 //	
-//	private function getForm($settings)
-//	{
-//		return new Form($this->getValidator($settings));
-//	}
-//
-//	private function getValidator($settings)
-//	{	
-//		$val = new RequestValidator('settings', $this->request);
-//		foreach ($settings as $key => $value)
-//		{
-//			if ('num' == $value['type'])
-//			{
-//				$val->addCheck($key, new IsNumericCheck($this->translate('_err_numeric')));
-//				$val->addFilter($key, new NumericFilter());
-//			}	
-//		}
-//		
-//		return $val;	  
-//	}
+
 //	
 	
 }

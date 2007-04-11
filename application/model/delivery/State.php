@@ -37,6 +37,11 @@ class State extends ActiveRecordModel
         
         return $states;       
     }
+    
+    public static function getAllStates() 
+    { 
+        return ActiveRecordModel::getRecordSet(__CLASS__, new ARSelectFilter());
+    }
 
 	public static function getStateIDByName($countryCode, $name)
 	{

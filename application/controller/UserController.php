@@ -1,5 +1,4 @@
 <?php
-
 ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.Currency');
 ClassLoader::import('application.model.delivery.State');
