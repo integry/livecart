@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-04-11 19:20                                #
+# Created on:            2007-04-12 15:27                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -36,6 +36,10 @@ ALTER TABLE SpecField DROP FOREIGN KEY SpecFieldGroup_SpecField;
 ALTER TABLE SpecFieldValue DROP FOREIGN KEY SpecField_SpecFieldValue;
 
 ALTER TABLE CustomerOrder DROP FOREIGN KEY User_CustomerOrder;
+
+ALTER TABLE CustomerOrder DROP FOREIGN KEY UserAddress_CustomerOrder;
+
+ALTER TABLE CustomerOrder DROP FOREIGN KEY UserAddress_CustomerOrder_Shipping;
 
 ALTER TABLE OrderedItem DROP FOREIGN KEY Product_OrderedItem;
 
@@ -109,6 +113,8 @@ ALTER TABLE UserBillingAddress DROP FOREIGN KEY UserAddress_UserBillingAddress;
 
 ALTER TABLE Transaction DROP FOREIGN KEY CustomerOrder_Transaction;
 
+ALTER TABLE Transaction DROP FOREIGN KEY Transaction_Transaction;
+
 ALTER TABLE Shipment DROP FOREIGN KEY CustomerOrder_Shipment;
 
 ALTER TABLE UserShippingAddress DROP FOREIGN KEY User_UserShippingAddress;
@@ -138,73 +144,35 @@ ALTER TABLE TaxRate DROP FOREIGN KEY DeliveryZone_TaxRate;
 ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 
 # ---------------------------------------------------------------------- #
-# Modify table "CustomerOrder"                                           #
+# Modify table "ShippingRate"                                            #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE CustomerOrder ADD COLUMN billingAddressID INTEGER UNSIGNED;
+ALTER TABLE ShippingRate ADD COLUMN shippingRateGroupID INTEGER;
 
-ALTER TABLE CustomerOrder ADD COLUMN shippingAddressID INTEGER UNSIGNED;
+ALTER TABLE ShippingRate ADD COLUMN weightRangeStart FLOAT;
 
-ALTER TABLE CustomerOrder MODIFY billingAddressID INTEGER UNSIGNED AFTER userID;
+ALTER TABLE ShippingRate ADD COLUMN weightRangeEnd FLOAT;
 
-ALTER TABLE CustomerOrder MODIFY shippingAddressID INTEGER UNSIGNED AFTER billingAddressID;
+ALTER TABLE ShippingRate ADD COLUMN subtotalRangeStart FLOAT;
 
-# ---------------------------------------------------------------------- #
-# Modify table "User"                                                    #
-# ---------------------------------------------------------------------- #
+ALTER TABLE ShippingRate ADD COLUMN subtotalRangeEnd FLOAT;
 
-ALTER TABLE User ADD COLUMN lastName VARCHAR(60);
+ALTER TABLE ShippingRate ADD COLUMN flatCharge FLOAT;
 
-ALTER TABLE User CHANGE name firstName VARCHAR(60);
+ALTER TABLE ShippingRate ADD COLUMN perItemCharge FLOAT;
 
-ALTER TABLE User MODIFY lastName VARCHAR(60) AFTER firstName;
+ALTER TABLE ShippingRate ADD COLUMN subtotalPercentCharge FLOAT;
 
-# ---------------------------------------------------------------------- #
-# Modify table "State"                                                   #
-# ---------------------------------------------------------------------- #
+ALTER TABLE ShippingRate ADD COLUMN perKgCharge FLOAT;
 
-ALTER TABLE State DROP PRIMARY KEY;
-
-ALTER TABLE State MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE State ADD CONSTRAINT PK_State 
-    PRIMARY KEY (ID);
-
-# ---------------------------------------------------------------------- #
-# Modify table "Transaction"                                             #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE Transaction DROP PRIMARY KEY;
-
-ALTER TABLE Transaction ADD COLUMN parentTransactionID INTEGER UNSIGNED;
-
-ALTER TABLE Transaction ADD COLUMN type TINYINT COMMENT '0 - sale (authorize & capture) 1 - authorize 2 - capture 3 - void';
-
-ALTER TABLE Transaction ADD COLUMN isCompleted BOOL;
-
-ALTER TABLE Transaction MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE Transaction MODIFY parentTransactionID INTEGER UNSIGNED AFTER orderID;
-
-ALTER TABLE Transaction MODIFY type TINYINT COMMENT '0 - sale (authorize & capture) 1 - authorize 2 - capture 3 - void' AFTER gatewayTransactionID;
-
-ALTER TABLE Transaction MODIFY isCompleted BOOL AFTER type;
-
-ALTER TABLE Transaction ADD CONSTRAINT PK_Transaction 
-    PRIMARY KEY (ID);
-
-# ---------------------------------------------------------------------- #
-# Modify table "DeliveryZoneState"                                       #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE DeliveryZoneState DROP PRIMARY KEY;
-
-ALTER TABLE DeliveryZoneState MODIFY ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE DeliveryZoneState MODIFY stateID INTEGER UNSIGNED;
-
-ALTER TABLE DeliveryZoneState ADD CONSTRAINT PK_DeliveryZoneState 
-    PRIMARY KEY (ID);
+CREATE TABLE ShippingRateGroup (
+    ID INTEGER NOT NULL,
+    deliveryZoneID INTEGER UNSIGNED,
+    name TEXT,
+    position INTEGER UNSIGNED DEFAULT 0,
+    rangeType TINYINT COMMENT '0 - weight based range 1 - subtotal based range',
+    CONSTRAINT PK_ShippingRateGroup PRIMARY KEY (ID)
+);
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
@@ -402,5 +370,11 @@ ALTER TABLE TaxRate ADD CONSTRAINT TaxType_TaxRate
 ALTER TABLE TaxRate ADD CONSTRAINT DeliveryZone_TaxRate 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
 
+ALTER TABLE ShippingRate ADD CONSTRAINT ShippingRateGroup_ShippingRate 
+    FOREIGN KEY (shippingRateGroupID) REFERENCES ShippingRateGroup (ID) ON DELETE CASCADE;
+
 ALTER TABLE ProductFileGroup ADD CONSTRAINT Product_ProductFileGroup 
     FOREIGN KEY (productID) REFERENCES Product (ID);
+
+ALTER TABLE ShippingRateGroup ADD CONSTRAINT DeliveryZone_ShippingRateGroup 
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
