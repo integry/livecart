@@ -19,27 +19,26 @@
 <h3 id="user_interface">Translate user interface</h3>
 
 <p>There are two ways of translating the interface - either by using a <strong>word tree</strong> or 
-<a href="{self}#user_interface">Live Translation</a>.</p>
+<a href="{self}#user_interface">Live Translation</a> tool.</p>
 <p>The <strong>word tree</strong> is placed below the Translation Filter. All the words in the tree 
 are categorized as they appear in the interface layout. To supply translations, browse the tree and enter 
 corresponding translations in the fields provided. For example:</p>
 <img src="image/doc/language/edit/text_box.bmp"/>
 <ul>
-	<li>where <span style="background: #ffff99">text field</span> is a field for your translations;</li>
-	<li><span style="background: #ffff99">_menu_users</span> is a variable name; </li>
-	<li><span style="background: #ffff99">Users</span> is a default translation which is used if text field
+	<li>where <span style="background: #ffffcc">text field</span> is a field for your translations;</li>
+	<li><span style="background: #ffffcc">_menu_users</span> is a variable name; </li>
+	<li><span style="background: #ffffcc">Users</span> is a default translation which is used if text field
 	 is left empty</li>
 </ul>
 
 <p class="note"><strong>Note</strong>: you can also enter multiple lines of text in the text area 
-(as translation) - just click the <i>down arrow</i> key of your keyboard to switch to multi-line input
-field.</p>
+- just click the <i>down arrow</i> key of your keyboard to switch to multi-line input field.</p>
 
 <br \><br \>
 <h3 id="find_specific_word">Find and translate a specific word or sentence</h3>
 
 <p>If you need to find a specific word, use a <strong>Search field</strong> in the 
-<i>Translation Filter</i> area. The search is carried out on their default value in English and translations.</p>	
+<i>Translation Filter</i> area. The search is carried out on their default values in English and translations.</p>	
 <img src="image/doc/language/edit/find.bmp"/>
 
 <br \><br \>
@@ -66,7 +65,6 @@ interface text (element) directly in the page you see it in. To do that you have
  in the ... mode. Any interface phrase can be translated simply by clicking <strong>Live Translation</strong>
   once you hover the mouse cursor over an element and a pop-up menu appears. We highly recommend to use
    <strong>Live Translation</strong> when you are not sure about the keyword's exact place in the interface.</p>
-<p>Reference: see <a href="{self}#interface_elements">Translate Interface Elements</a></p>
 
 <br \><br \>
 <h3 id="product_info">Translate product info</h3>	
