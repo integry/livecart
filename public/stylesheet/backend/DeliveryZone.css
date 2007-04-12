@@ -1,7 +1,12 @@
-#deliveryZoneBrowser
+
+#deliveryZoneBrowserWithControlls
 {
   	float: left;
   	width: 200px;
+}
+
+#newZoneInput {
+    width: 135px;
 }
 
 #deliveryZoneContent

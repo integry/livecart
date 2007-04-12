@@ -19,6 +19,9 @@ Backend.DeliveryZone.prototype =
 		Backend.DeliveryZone.prototype.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
 		Backend.DeliveryZone.prototype.treeBrowser.setOnClickHandler(this.activateZone.bind(this));
         
+        var self = this;
+        Event.observe($("newZoneInputButton"), 'click', function(e){ Event.stop(e); self.addNewZone(); })
+        
 		this.tabControl = TabControl.prototype.getInstance('deliveryZoneManagerContainer', this.craftTabUrl, this.craftContainerId, {}); 
 
 		Backend.DeliveryZone.prototype.treeBrowser.showFeedback = 
@@ -43,6 +46,26 @@ Backend.DeliveryZone.prototype =
 			}
 		
     	this.insertTreeBranch(zones, 0);    
+	},
+    
+	addNewZone: function()
+	{
+        var self = this;
+        
+		new Ajax.Request(
+			Backend.DeliveryZone.prototype.Links.save,
+			{
+				method: 'post',
+				parameters: 'name=' + $("newZoneInput").value,
+				onComplete: function(response) { self.afterNewZoneAdded(eval("(" + response.responseText + ")")); }
+			});
+	},
+
+	afterNewZoneAdded: function(response)
+	{
+        Backend.DeliveryZone.prototype.treeBrowser.insertNewItem(0, response.ID, $("newZoneInput").value, 0, 0, 0, 0, 'SELECT');
+        $("newZoneInput").value = '';
+        this.activateZone(response.ID);
 	},
     
     craftTabUrl: function(url)
@@ -111,10 +134,38 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 {
     Links: {},
     
-    Callbacks: {
+    CallbacksCity: {
         'beforeDelete': function(li) 
         {
-            return Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteMask + "/" + this.getRecordId(li);
+            return Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteCityMask + "/" + this.getRecordId(li);
+        },
+        'afterDelete': function(li, response)
+        {
+            response = eval('(' + response + ')')
+            
+            if('success' == response.status) {
+                this.remove(li);     
+            }
+        }
+    },
+    CallbacksZip: {
+        'beforeDelete': function(li) 
+        {
+            return Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteZipMask + "/" + this.getRecordId(li);
+        },
+        'afterDelete': function(li, response)
+        {
+            response = eval('(' + response + ')')
+            
+            if('success' == response.status) {
+                this.remove(li);     
+            }
+        }
+    },
+    CallbacksAddress: {
+        'beforeDelete': function(li) 
+        {
+            return Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteAddressMask + "/" + this.getRecordId(li);
         },
         'afterDelete': function(li, response)
         {
@@ -160,6 +211,16 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         this.nodes.cityMaskNew          = this.nodes.cityMasks.down('.' + this.prefix + 'newMask');
         this.nodes.cityMaskNewButton    = this.nodes.cityMasks.down('.' + this.prefix + 'newMaskButton');
         
+        this.nodes.zipMasks            = this.nodes.root.down('.' + this.prefix + 'zipMasks');
+        this.nodes.zipMasksList        = this.nodes.zipMasks.down('.' + this.prefix + 'zipMasksList');
+        this.nodes.zipMaskNew          = this.nodes.zipMasks.down('.' + this.prefix + 'newMask');
+        this.nodes.zipMaskNewButton    = this.nodes.zipMasks.down('.' + this.prefix + 'newMaskButton');
+        
+        this.nodes.addressMasks            = this.nodes.root.down('.' + this.prefix + 'addressMasks');
+        this.nodes.addressMasksList        = this.nodes.addressMasks.down('.' + this.prefix + 'addressMasksList');
+        this.nodes.addressMaskNew          = this.nodes.addressMasks.down('.' + this.prefix + 'newMask');
+        this.nodes.addressMaskNewButton    = this.nodes.addressMasks.down('.' + this.prefix + 'newMaskButton');
+        
         this.nodes.zonesAndUnions       = this.nodes.root.down('.' + this.prefix + 'regionsAndUnions').getElementsByTagName('a');
     },
     
@@ -172,6 +233,8 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         Event.observe(this.nodes.addStateButton, 'click', function(e) { Event.stop(e); self.addState(); });
         Event.observe(this.nodes.removeStateButton, 'click', function(e) { Event.stop(e); self.removeState(); });
         Event.observe(this.nodes.cityMaskNewButton, 'click', function(e) { Event.stop(e); self.addNewCityMask(self.nodes.cityMaskNew.value); });
+        Event.observe(this.nodes.zipMaskNewButton, 'click', function(e) { Event.stop(e); self.addNewZipMask(self.nodes.zipMaskNew.value); });
+        Event.observe(this.nodes.addressMaskNewButton, 'click', function(e) { Event.stop(e); self.addNewAddressMask(self.nodes.addressMaskNew.value); });
 
         $A(this.nodes.zonesAndUnions).each(function(zoneOrUnion) {
             Event.observe(zoneOrUnion, 'click', function(e) { Event.stop(e); self.selectZoneOrUnion(this.hash.substring(0,1) == '#' ? this.hash.substring(1) : this.hash); });
@@ -192,7 +255,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
     addNewCityMask: function(mask)
     {
         var self = this;
-        new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.addMask + "/",
+        new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.addCityMask + "/",
         {
             onSuccess: function(response) 
             {
@@ -201,7 +264,45 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                 {
                     var activeList = ActiveList.prototype.getInstance(self.nodes.cityMasksList);
                     
-                    activeList.addRecord(response.id, '<input type="text" name="cityMask_' + response.id + '" value="' + mask + '" />');
+                    activeList.addRecord(response.ID, '<input type="text" name="cityMask_' + response.ID + '" value="' + mask + '" />');
+                    console.info(mask);
+                }
+            }
+        });
+    },
+    
+    addNewZipMask: function(mask)
+    {
+        var self = this;
+        new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.addZipMask + "/",
+        {
+            onSuccess: function(response) 
+            {
+                response = eval('(' + response.responseText + ')');
+                if('success' == response.status)
+                {
+                    var activeList = ActiveList.prototype.getInstance(self.nodes.zipMasksList);
+                    
+                    activeList.addRecord(response.ID, '<input type="text" name="zipMask_' + response.ID + '" value="' + mask + '" />');
+                    console.info(mask);
+                }
+            }
+        });
+    },
+    
+    addNewAddressMask: function(mask)
+    {
+        var self = this;
+        new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.addAddressMask + "/",
+        {
+            onSuccess: function(response) 
+            {
+                response = eval('(' + response.responseText + ')');
+                if('success' == response.status)
+                {
+                    var activeList = ActiveList.prototype.getInstance(self.nodes.addressMasksList);
+                    
+                    activeList.addRecord(response.ID, '<input type="text" name="addressMask_' + response.ID + '" value="' + mask + '" />');
                     console.info(mask);
                 }
             }

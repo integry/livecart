@@ -77,16 +77,47 @@ class DeliveryZoneController extends StoreManagementController
 		return new RequestValidator('countriesAndStates', $this->request);
 	}
 	
-	public function addMask()
+	public function save()
 	{
-	    return new JSONResponse(array('status' => 'success', 'id' => rand(1, 100000)));
+	    if(($name = $this->request->getValue('name')) != '')
+	    {
+	        $zone = DeliveryZone::getNewInstance();
+	        $zone->setValueByLang('name', $this->store->getDefaultLanguageCode(), $name);
+	        $zone->save();
+	    }
+	    
+	    return new JSONResponse(array('status' => 'success', 'ID' => $zone->getID()));
+	}
+	
+	public function addCityMask()
+	{
+	    return new JSONResponse(array('status' => 'success', 'ID' => rand(1, 100000)));
 	}
 
-	public function deleteMask()
+	public function deleteCityMask()
 	{
 	    return new JSONResponse(array('status' => 'success'));
 	}
 	
+	public function addZipMask()
+	{
+	    return new JSONResponse(array('status' => 'success', 'ID' => rand(1, 100000)));
+	}
+
+	public function deleteZipMask()
+	{
+	    return new JSONResponse(array('status' => 'success'));
+	}
+	
+	public function addAddressMask()
+	{
+	    return new JSONResponse(array('status' => 'success', 'ID' => rand(1, 100000)));
+	}
+
+	public function deleteAddressMask()
+	{
+	    return new JSONResponse(array('status' => 'success'));
+	}
 }
 
 ?>

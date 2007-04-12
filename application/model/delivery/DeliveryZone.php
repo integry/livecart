@@ -2,6 +2,8 @@
 ClassLoader::import("application.model.system.ActiveTreeNode");
 ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.category.CategoryImage");
+ClassLoader::import("application.model.delivery.DeliveryZoneState");
+ClassLoader::import("application.model.delivery.DeliveryZoneCountry");
 
 /**
  * Hierarchial product category model class
@@ -47,6 +49,46 @@ class DeliveryZone extends MultilingualObject
 	    $filter->setCondition(new EqualsCond(new ArFieldHandle(__CLASS__, "isEnabled"), 1));
 	    	    
 	    return self::getRecordSet(__CLASS__, $filter);
+	}
+
+	/**
+	 * @return ARSet
+	 */
+	public function getCountries($loadReferencedRecords = false)
+	{
+	    return DeliveryZoneCountry::getRecordSetByZone($this, $loadReferencedRecords);
+	}
+
+	/**
+	 * @return ARSet
+	 */
+	public function getStates($loadReferencedRecords = false)
+	{
+	    return DeliveryZoneState::getRecordSetByZone($this, $loadReferencedRecords);
+	}
+
+	/**
+	 * @return ARSet
+	 */
+	public function getCityMasks($loadReferencedRecords = false)
+	{
+	    return DeliveryZoneCityMask::getRecordSetByZone($this, $loadReferencedRecords);
+	}
+
+	/**
+	 * @return ARSet
+	 */
+	public function getZipMasks($loadReferencedRecords = false)
+	{
+	    return DeliveryZoneZipMask::getRecordSetByZone($this, $loadReferencedRecords);
+	}
+
+	/**
+	 * @return ARSet
+	 */
+	public function getAddressMasks($loadReferencedRecords = false)
+	{
+	    return DeliveryZoneAddressMask::getRecordSetByZone($this, $loadReferencedRecords);
 	}
 }
 

@@ -31,6 +31,19 @@ class DeliveryZoneState extends MultilingualObject
 	  	
 	  	return $instance;
 	}
+
+	/**
+	 * @param DeliveryZone $zone
+	 * 
+	 * @return ARSet
+	 */
+	public static function getRecordSetByZone(DeliveryZone $zone, $loadReferencedRecords = false)
+	{
+	    $filter = new ARSelectFilter();
+	    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'deliveryZoneID'), $zone->getID()));
+	    
+	    return self::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+	}
 }
 
 ?>
