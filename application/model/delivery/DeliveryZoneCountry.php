@@ -6,7 +6,7 @@ ClassLoader::import("application.model.delivery.DeliveryZone");
  *
  * @package application.model.delivery
  */
-class DeliveryZoneCountry extends MultilingualObject 
+class DeliveryZoneCountry extends ActiveRecordModel 
 {
 	public static function defineSchema($className = __CLASS__)
 	{

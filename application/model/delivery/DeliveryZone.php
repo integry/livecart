@@ -52,6 +52,17 @@ class DeliveryZone extends MultilingualObject
 	}
 
 	/**
+	 * Returns the delivery zone, which matches the required address
+	 *
+     * @return DeliveryZone
+	 * @todo implement
+	 */
+    public static function getZoneByAddress(UserAddress $address)
+    {
+        
+    }
+
+	/**
 	 * @return ARSet
 	 */
 	public function getCountries($loadReferencedRecords = false)

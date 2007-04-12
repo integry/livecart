@@ -1,0 +1,21 @@
+_USPS_MAIN_OPTS=Main Settings
+SHIPPING_METHOD_USPS=Enable USPS as shipping method
+
+_USPS_API_ACCESS=USPS Shipping API Access
+USPS_USERNAME=USPS API username
+USPS_API_URL=USPS API URL
+
+_USPS_DOMESTIC_OPTS=Domestic Shipping Options
+USPS_ENABLED_SERVICES=Enabled mailing services
+USPS_PRIORITY_PACKAGE_TYPE=Priority mail package type
+USPS_IS_MACHINABLE=Package is machinable
+
+_USPS_ITL_OPTS=International Shipping Options
+USPS_INTERNATIONAL_SERVICES=Enabled international mailing services
+
+Express=Express
+Priority=Priority
+Parcel=Parcel Post
+Library=Library Mail
+BPM=Bound Printed Matter
+Media=Media Mail

@@ -38,13 +38,14 @@ class SettingsController extends StoreManagementController
 			
 		$sectionId = $this->request->getValue('id');						
 		$values = $c->getSettingsBySection($sectionId);
+		//print_r($values);
 		
 		$form = $this->getForm($values);
 		$multiLingualValues = array();
 		
 		foreach ($values as $key => $value)
 		{
-    		if ($c->isMultiLingual($key))
+    		if ($c->isMultiLingual($key) && 'string' == $value['type'])
     		{
                 foreach ($languages as $lang)
                 {
@@ -114,7 +115,24 @@ class SettingsController extends StoreManagementController
 	
 	private function getForm($settings)
 	{
-		return new Form($this->getValidator($settings));
+		$form = new Form($this->getValidator($settings));
+		$c = Config::getInstance();
+		
+		// set multi-select values
+		foreach ($settings as $key => $value)
+		{
+            if ('multi' == $value['extra'])
+            {
+                $values = $c->getValue($value['title']);
+
+                foreach ($values as $key => $val)
+                {
+                    $form->setValue($value['title'] . '[' . $key . ']', 1);                    
+                }
+            }   
+        }
+
+		return $form;
 	}
 
 	private function getValidator($settings)

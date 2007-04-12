@@ -1,7 +1,8 @@
 _user_registration=New Account Registration
 
 _contact_info=Contact Information
-_your_name=Your name
+_your_first_name=Your first name
+_your_last_name=Your last name
 _your_email=Your e-mail address
 _your_phone=Your phone number
 _enter_password=Enter password
@@ -10,7 +11,8 @@ _reenter_password=Re-enter password
 _the_same_as_shipping_address=My shipping address is the same as my billing address
 
 # errors
-_err_enter_name=Please enter your name
+_err_enter_first_name=Please enter your first name
+_err_enter_last_name=Please enter your last name
 _err_enter_email=Please enter your e-mail address
 _err_not_unique_email=The e-mail address you entered is already registered in our system. <br />Please <a href="%1">click here</a> to log in using this e-mail address.
 _err_enter_phone=Please enter your phone number

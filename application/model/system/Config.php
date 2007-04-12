@@ -64,9 +64,13 @@ class Config
                 {
                     return $this->values[$key][$lang];
                 }
-                else
+                else if (isset($this->values[$key][Store::getInstance()->getDefaultLanguageCode()]))
                 {
                     return $this->values[$key][Store::getInstance()->getDefaultLanguageCode()];
+                }
+                else
+                {
+                    return $this->values[$key];
                 }                
             }
             else
@@ -136,7 +140,7 @@ class Config
 				if (!isset($this->values[$key]))
 				{
 					// check for multi-lingual values
-                    if (substr($value['value'], 0, 1) == '_')
+                    if (!is_array($value['value']) && substr($value['value'], 0, 1) == '_')
 					{
                         $value['value'] = array(Store::getInstance()->getDefaultLanguageCode() => substr($value['value'], 1)); 
                     }
@@ -242,7 +246,9 @@ class Config
 		$values = array();
 		foreach ($section as $key => $value)
 		{
-			if ('-' == $value || '+' == $value)
+			$extra = '';
+			
+            if ('-' == $value || '+' == $value)
 			{
 			  	$type = 'bool';
 			  	$value = 1 - ('-' == $value);		  	
@@ -251,23 +257,44 @@ class Config
 			{
 			  	$type = 'num';
 			}
-			elseif ('/' == substr($value, 0, 1) && '/' == substr($value, -1))
+			elseif (('/' == substr($value, 0, 1)) || ('+/' == substr($value, 0, 2)) && '/' == substr($value, -1))
 			{
-			  	$vl = explode(', ', substr($value, 1, -1));
+			  	if (substr($value, 0, 1) == '+')
+			  	{
+                    $extra = 'multi';
+                    $value = substr($value, 1);
+                    $multivalues = array();
+                }
+                  
+                $vl = explode(', ', substr($value, 1, -1));
 			  	$type = array();
 			  	foreach ($vl as $v)
 			  	{
-					$type[$v] = $store->translate($v);	
+					if ('multi' == $extra)
+					{
+                        if (substr($v, 0, 1) == '+')
+                        {
+                            $v = substr($v, 1);
+                            $multivalues[$v] = 1;
+                        }                        
+                    }
+                    
+                    $type[$v] = $store->translate($v);	
 				}	
 				
-				$value = key($type);
+                $value = key($type);
+                
+                if ('multi' == $extra)
+                {
+                    $value = $multivalues;    
+                }                
 			}
 			else
 			{
 			  	$type = 'string';
 			}
 			
-			$values[$key] = array('type' => $type, 'value' => $value, 'title' => $key);
+			$values[$key] = array('type' => $type, 'value' => $value, 'title' => $key, 'extra' => $extra);
 		}		
 		
 		return $values;

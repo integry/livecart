@@ -6,7 +6,7 @@ ClassLoader::import("application.model.delivery.DeliveryZone");
  *
  * @package application.model.delivery
  */
-class DeliveryZoneZipMask extends MultilingualObject 
+class DeliveryZoneZipMask extends ActiveRecordModel 
 {
 	public static function defineSchema($className = __CLASS__)
 	{

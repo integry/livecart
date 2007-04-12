@@ -39,19 +39,28 @@
 	
 	<h2>New Customer</h2>
 
-    {form handle=$form action="controller=user action=processRegistration" method="POST"}
+    {form handle=$form action="controller=user action=processCheckoutRegistration" method="POST"}
         
         <h2>{t _contact_info}</h2>               
 
             <p class="required">
-                <label for="name">{t _your_name}:</label>
+                <label for="firstName">{t _your_first_name}:</label>
                 
         		<fieldset class="error">
-        			{textfield name="name" class="text"}
-        			<div class="errorText hidden{error for="name"} visible{/error}">{error for="name"}{$msg}{/error}</div>
+        			{textfield name="firstName" class="text"}
+        			<div class="errorText hidden{error for="firstName"} visible{/error}">{error for="firstName"}{$msg}{/error}</div>
         		</fieldset>
             </p>
             
+            <p class="required">
+                <label for="lastName">{t _your_last_name}:</label>
+                
+        		<fieldset class="error">
+        			{textfield name="lastName" class="text"}
+        			<div class="errorText hidden{error for="lastName"} visible{/error}">{error for="lastName"}{$msg}{/error}</div>
+        		</fieldset>
+            </p>
+
             <p class="required">
                 <label for="email">{t _your_email}:</label>
                 

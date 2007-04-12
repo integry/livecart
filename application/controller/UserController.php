@@ -37,8 +37,10 @@ class UserController extends FrontendController
         return $response;
     }        
     
-    public function processRegistration()
+    public function processCheckoutRegistration()
     {
+        ActiveRecordModel::beginTransaction();
+        
         $validator = $this->buildValidator();
         if (!$validator->isValid())
         {
@@ -47,7 +49,9 @@ class UserController extends FrontendController
 
         // create user account
         $user = User::getNewInstance($this->request->getValue('email'), $this->request->getValue('password'));
-        $user->name->set($this->request->getValue('name'));
+        $user->firstName->set($this->request->getValue('firstName'));
+        $user->lastName->set($this->request->getValue('lastName'));
+        $user->email->set($this->request->getValue('email'));
         $user->isEnabled->set(true);
         $user->save();
         
@@ -68,9 +72,21 @@ class UserController extends FrontendController
 
         // create user billing addresses
         $address = UserAddress::getNewInstance();
-        $address->name->set($user->name->get());
+        $address->name->set($user->getName());
         $address->address1->set($this->request->getValue('billing_address1'));        
         $address->address2->set($this->request->getValue('billing_address2'));        
+        $address->city->set($this->request->getValue('billing_city'));
+        $address->countryID->set($this->request->getValue('billing_country'));
+        $address->postalCode->set($this->request->getValue('billing_zip'));
+        $address->phone->set($this->request->getValue('phone'));
+        if (isset($billingState))
+        {
+            $address->state->set($billingState);
+        }
+        else
+        {
+            $address->stateName->set($this->request->getValue('billing_state_text'));
+        }
         $address->save();
         
 		$userBillingAddress = UserBillingAddress::getNewInstance($user, $address);
@@ -93,7 +109,10 @@ class UserController extends FrontendController
 		$userShippingAddress = UserShippingAddress::getNewInstance($user, $address);
         $userShippingAddress->save();
 
+        ActiveRecordModel::commit();
+        
         $user->setAsCurrentUser();       
+
         return new RedirectResponse($this->request->getValue('return'));
     }
     
@@ -144,7 +163,8 @@ class UserController extends FrontendController
             	
         // validate contact info
         $validator = new RequestValidator("registrationValidator", $this->request);
-    	$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_enter_name')));
+    	$validator->addCheck('firstName', new IsNotEmptyCheck($this->translate('_err_enter_first_name')));
+    	$validator->addCheck('lastName', new IsNotEmptyCheck($this->translate('_err_enter_last_name')));
     	$validator->addCheck('email', new IsNotEmptyCheck($this->translate('_err_enter_email')));    
     	
         $emailErr = $this->translate('_err_not_unique_email');

@@ -31,7 +31,18 @@
 				{checkbox class="checkbox" name="$fieldName" id="$fieldName" value="1"}			
 				<label class="checkbox" for="{$fieldName}">{t `$values.$fieldName.title`}</label>
 			{elseif is_array($values.$fieldName.type)}						
-				{selectfield options=$values.$fieldName.type name="$fieldName" id="$fieldName"}
+				{if 'multi' == $values.$fieldName.extra}
+                    <div class="multi" style="padding: 10px;">
+                    {foreach from=$values.$fieldName.type item="value" key="key"}
+				        <p>
+                        {checkbox name="`$fieldName`[`$key`]" class="checkbox" value=1}
+				        <label for="{$fieldName}[{$key}]" class="checkbox">{$value}</label>
+				        </p>
+				    {/foreach}
+                    </div>
+				{else}
+                    {selectfield options=$values.$fieldName.type name="$fieldName" id="$fieldName"}
+                {/if}
 			{/if}
 			<div class="errorText hidden"></div>
 		</fieldset>
