@@ -17,6 +17,7 @@
 	products=Products
 		add=Add New Product
 		define=Define Product Details
+		store=Products in e-store
 		
 	orders=Orders		
 		create=Create Order
