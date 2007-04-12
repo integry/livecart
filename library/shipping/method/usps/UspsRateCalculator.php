@@ -4,16 +4,26 @@ include_once('../ShippingRateCalculator.php');
 
 class UspsRateCalculator extends ShippingRateCalculator
 {
-    private $userId = '550INTEG8147';
+    private $userId = '';
     
-    private $server = 'http://testing.shippingapis.com/ShippingAPITest.dll';
+    //private $server = 'http://testing.shippingapis.com/ShippingAPITest.dll';
+    
+    private $server = 'http://production.shippingapis.com/ShippingAPI.dll';
+    
+    private $isMachinable = 'True';
+    
+    private $service;
+    
+    private $container;
+    
+    private $size;
     
     public function getRates()
     {
         include_once('lib/usps.php');   
-        include('countries.php'); 
+        include('Countries.php'); 
         
-        $usps = new USPS();
+        $usps = new USPSHandler();
         $usps->setServer($this->server);
         $usps->setUserName($this->userId);
         
@@ -24,16 +34,73 @@ class UspsRateCalculator extends ShippingRateCalculator
         $usps->setCountry($country);
         
         // get weight in pounds/ounces
-        $pounds = floor($this->weight / 453);
-        $ounces = ceil(($this->weight % 453) / 27);
-        $usps->setWeight(3, 2);     
+        $pounds = floor($this->weight / 453.59237);
+        $ounces = ceil(($this->weight % 453.59237) / 28.3495231);
+        $usps->setWeight($pounds, $ounces);     
+
+        $usps->setMachinable($this->isMachinable);                     
+        $usps->setService($this->service);
+        $usps->setSize($this->size);
         
-        $usps->setService('PRIORITY');
-        $usps->setContainer("Flat Rate Box");
-            
+        if ($this->container)
+        {
+            $usps->setContainer($this->container);            
+        }
+                    
         $price = $usps->getPrice();
-        return $price;    
-                
+        
+        // success
+        if (isset($price->list))
+        {
+            $result = new ShippingRateSet();
+            foreach ($price->list as $rate)
+            {
+                $r = new ShippingRateResult();
+                $r->setServiceName($rate->mailservice);
+                $r->setCost($rate->rate, 'USD');                
+                $result->add($r);
+            }
+        }        
+        // error
+        else
+        {
+            $errorMsg = isset($price->error) ? $price->error->description : '';
+            $result = new ShippingRateError($errorMsg);  
+        }
+        
+        $result->setRawResponse($price);
+        
+        return $result;                
+    }
+    
+    public function setMachinable($isMachinable = true)
+    {
+        $this->machinable = $isMachinable ? 'TRUE' : 'FALSE';
+    }
+
+    public function setService($service)
+    {
+        $this->service = $service;
+        
+        if ('Express' == $service)
+        {
+            $this->setContainer('Flat Rate Envelope');    
+        }        
+    }
+    
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+    }
+    
+    public function setContainer($container)
+    {
+        $this->container = $container;
+    }
+
+    public function setSize($size)
+    {
+        $this->size = $size;
     }
 }
 

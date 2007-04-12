@@ -1,6 +1,6 @@
 <?php
 
-class ShippingRateResult
+class ShippingRateResult implements ShippingResultInterface
 {
     protected $serviceName;
     protected $costAmount;

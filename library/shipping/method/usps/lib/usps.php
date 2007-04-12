@@ -1,7 +1,7 @@
 <?php
 require_once("xmlparser.php");
 
-class USPS {
+class USPSHandler {
 
     var $server = "";
     var $user = "";
@@ -82,7 +82,7 @@ class USPS {
             $str .= "<Pounds>" . $this->pounds . "</Pounds><Ounces>" . $this->ounces . "</Ounces>";
             $str .= "<MailType>Package</MailType><Country>".urlencode($this->country)."</Country></Package></IntlRateRequest>";
         }
-        
+
         $ch = curl_init();
         // set URL and other appropriate options
         curl_setopt($ch, CURLOPT_URL, $str);
@@ -96,43 +96,44 @@ class USPS {
         curl_close($ch);
         $xmlParser = new xmlparser();
         $array = $xmlParser->GetXMLTree($ats);
+
         //$xmlParser->printa($array);
-        if(count($array['ERROR'])) { // If it is error
-            $error = new error();
+        if(isset($array['ERROR'])) { // If it is error
+            $error = new UspsError();
             $error->number = $array['ERROR'][0]['NUMBER'][0]['VALUE'];
             $error->source = $array['ERROR'][0]['SOURCE'][0]['VALUE'];
             $error->description = $array['ERROR'][0]['DESCRIPTION'][0]['VALUE'];
             $error->helpcontext = $array['ERROR'][0]['HELPCONTEXT'][0]['VALUE'];
             $error->helpfile = $array['ERROR'][0]['HELPFILE'][0]['VALUE'];
             $this->error = $error;
-        } else if(count($array['RATEV2RESPONSE'][0]['PACKAGE'][0]['ERROR'])) {
-            $error = new error();
+        } else if(isset($array['RATEV2RESPONSE'][0]['PACKAGE'][0]['ERROR'])) {
+            $error = new UspsError();
             $error->number = $array['RATEV2RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['NUMBER'][0]['VALUE'];
             $error->source = $array['RATEV2RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['SOURCE'][0]['VALUE'];
             $error->description = $array['RATEV2RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['DESCRIPTION'][0]['VALUE'];
             $error->helpcontext = $array['RATEV2RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['HELPCONTEXT'][0]['VALUE'];
             $error->helpfile = $array['RATEV2RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['HELPFILE'][0]['VALUE'];
             $this->error = $error;        
-        } else if(count($array['INTLRATERESPONSE'][0]['PACKAGE'][0]['ERROR'])){ //if it is international shipping error
-            $error = new error($array['INTLRATERESPONSE'][0]['PACKAGE'][0]['ERROR']);
+        } else if(isset($array['INTLRATERESPONSE'][0]['PACKAGE'][0]['ERROR'])){ //if it is international shipping error
+            $error = new UspsError($array['INTLRATERESPONSE'][0]['PACKAGE'][0]['ERROR']);
             $error->number = $array['INTLRATERESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['NUMBER'][0]['VALUE'];
             $error->source = $array['INTLRATERESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['SOURCE'][0]['VALUE'];
             $error->description = $array['INTLRATERESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['DESCRIPTION'][0]['VALUE'];
             $error->helpcontext = $array['INTLRATERESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['HELPCONTEXT'][0]['VALUE'];
             $error->helpfile = $array['INTLRATERESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['HELPFILE'][0]['VALUE'];
             $this->error = $error;
-        } else if(count($array['RATEV2RESPONSE'])){ // if everything OK
+        } else if(isset($array['RATEV2RESPONSE'])){ // if everything OK
             //print_r($array['RATEV2RESPONSE']);
             $this->zone = $array['RATEV2RESPONSE'][0]['PACKAGE'][0]['ZONE'][0]['VALUE'];
             foreach ($array['RATEV2RESPONSE'][0]['PACKAGE'][0]['POSTAGE'] as $value){
-                $price = new price();
+                $price = new UspsPrice();
                 $price->mailservice = $value['MAILSERVICE'][0]['VALUE'];
                 $price->rate = $value['RATE'][0]['VALUE'];
                 $this->list[] = $price;
             }
-        } else if (count($array['INTLRATERESPONSE'][0]['PACKAGE'][0]['SERVICE'])) { // if it is international shipping and it is OK
+        } else if (isset($array['INTLRATERESPONSE'][0]['PACKAGE'][0]['SERVICE'])) { // if it is international shipping and it is OK
             foreach($array['INTLRATERESPONSE'][0]['PACKAGE'][0]['SERVICE'] as $value) {
-                $price = new intPrice();
+                $price = new UspsIntPrice();
                 $price->id = $value['ATTRIBUTES']['ID'];
                 $price->pounds = $value['POUNDS'][0]['VALUE'];
                 $price->ounces = $value['OUNCES'][0]['VALUE'];
@@ -151,7 +152,7 @@ class USPS {
         return $this;
     }
 }
-class error
+class UspsError
 {
     var $number;
     var $source;
@@ -159,12 +160,12 @@ class error
     var $helpcontext;
     var $helpfile;
 }
-class price
+class UspsPrice
 {
     var $mailservice;
     var $rate;
 }
-class intPrice
+class UspsIntPrice
 {
     var $id;
     var $rate;

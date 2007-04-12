@@ -1,6 +1,6 @@
 <?php
 
-class ShippingRateError
+class ShippingRateError implements ShippingResultInterface
 {
     protected $rawResponse;
     
@@ -12,7 +12,7 @@ class ShippingRateError
     function getRawResponse()
     {
         return $this->rawResponse;
-    }
+    }   
 }
 
 ?>
