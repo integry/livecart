@@ -22,6 +22,7 @@ class DeliveryZoneController extends StoreManagementController
 	{
 		$zones = array();
 		foreach(DeliveryZone::getAll()->toArray() as $zone) 
+		
 		    $zones[] = array('ID' => $zone['ID'], 'name' => $zone['name']);
 		
 		    
@@ -46,7 +47,9 @@ class DeliveryZoneController extends StoreManagementController
 	    $response->setValue('form', $this->createCountriesAndStatesForm());
 	    $response->setValue('zoneID', $id);
 	    $response->setValue('countries', $localeInfo->getAllCountries());
+	    $response->setValue('countryGroups', $this->locale->info()->getCountryGroups());
 	    $response->setValue('states', $states);
+	    
 	    return $response;
 	}
 	
@@ -74,96 +77,15 @@ class DeliveryZoneController extends StoreManagementController
 		return new RequestValidator('countriesAndStates', $this->request);
 	}
 	
-	
-//	/**
-//	 *	Individual settings section
-//	 */
-//	public function edit()
-//	{
-//		$c = Config::getInstance();
-//		$c->updateSettings();
-//		
-//        $defLang = Store::getInstance()->getDefaultLanguageCode();
-//		$languages = Store::getInstance()->getLanguageArray(Store::INCLUDE_DEFAULT);
-//			
-//		$sectionId = $this->request->getValue('id');						
-//		$values = $c->getSettingsBySection($sectionId);
-//		
-//		$form = $this->getForm($values);
-//		$multiLingualValues = array();
-//		
-//		foreach ($values as $key => $value)
-//		{
-//    		if ($c->isMultiLingual($key))
-//    		{
-//                foreach ($languages as $lang)
-//                {
-//                    $form->setValue($key . ($lang != $defLang ? '_' . $lang : ''), $c->getValueByLang($key, $lang));    
-//                }                
-//
-//                $multiLingualValues[$key] = true;
-//            }
-//            else
-//            {
-//                $form->setValue($key, $c->getValue($key));	
-//    		}
-//		}
-//				
-//		$response = new ActionResponse();
-//		$response->set('form', $form);
-//		$response->setValue('title', $this->translate($c->getSectionTitle($sectionId)));
-//		$response->setValue('values', $values);
-//		$response->setValue('id', $sectionId);
-//		$response->setValue('layout', $c->getSectionLayout($sectionId));		
-//		$response->setValue('multiLingualValues', $multiLingualValues);
-//		$response->setValue('languages', Store::getInstance()->getLanguageSetArray());
-//		return $response;	
-//	}  		  
-//
-//	/**
-//	 *	Save settings
-//	 */
-//	public function save()
-//	{				
-//		$c = Config::getInstance();
-//		$values = $c->getSettingsBySection($this->request->getValue('id'));
-//		$validator = $this->getValidator($values);
-//		
-//		if (!$validator->isValid())
-//		{
-//		  	return new JSONResponse(array('errors' => $validator->getErrorList()));
-//		}
-//		else
-//		{
-//			$languages = Store::getInstance()->getLanguageArray();
-//            $defLang = Store::getInstance()->getDefaultLanguageCode();
-//                    
-//            $c->setAutoSave(false);
-//			foreach ($values as $key => $value)
-//			{
-//				if ($c->isMultiLingual($key))
-//				{
-//                    $c->setValueByLang($key, $defLang, $this->request->getValue($key));
-//                    foreach ($languages as $lang)
-//                    {
-//                        $c->setValueByLang($key, $lang, $this->request->getValue($key . '_' . $lang));
-//                    }
-//                }
-//                else
-//                {
-//                    $c->setValue($key, $this->request->getValue($key, 'bool' == $value['type'] ? 0 : ''));		                    
-//                }
-//			}  	
-//			
-//			$c->save();
-//			$c->setAutoSave(true);
-//			  
-//			return new JSONResponse(array('success' => true));		  	
-//		}
-//	}  		  
-//	
+	public function addMask()
+	{
+	    return new JSONResponse(array('status' => 'success', 'id' => rand(1, 100000)));
+	}
 
-//	
+	public function deleteMask()
+	{
+	    return new JSONResponse(array('status' => 'success'));
+	}
 	
 }
 

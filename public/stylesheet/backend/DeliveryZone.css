@@ -27,3 +27,10 @@ p.checkbox
 {
     margin-left: 230px;
 }
+
+.countriesAndStates_regionsAndUnions  div
+{
+    float: left;
+    width: 25%;
+    text-align: left;
+}

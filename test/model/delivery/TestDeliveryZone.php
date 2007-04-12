@@ -120,5 +120,6 @@ class TestDeliveryZone extends UnitTestCase
 	    
 	    $this->assertEqual(DeliveryZone::getEnabled()->getTotalRecordCount(), $zonesCount + 1);
 	}
+
 }
 ?>

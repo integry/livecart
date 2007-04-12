@@ -109,12 +109,35 @@ Backend.DeliveryZone.CountriesAndStates = Class.create();
 
 Backend.DeliveryZone.CountriesAndStates.prototype = 
 {
+    Links: {},
+    
+    Callbacks: {
+        'beforeDelete': function(li) 
+        {
+            return Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteMask + "/" + this.getRecordId(li);
+        },
+        'afterDelete': function(li, response)
+        {
+            response = eval('(' + response + ')')
+            
+            if('success' == response.status) {
+                this.remove(li);     
+            }
+        }
+    },
+    
+    
     prefix: 'countriesAndStates_',
     
     initialize: function(root) 
     {
         this.findNodes(root);
         this.bindEvents();
+        
+        this.sortSelect(this.nodes.inactiveCountries);
+        this.sortSelect(this.nodes.activeCountries);
+        this.sortSelect(this.nodes.inactiveStates);
+        this.sortSelect(this.nodes.activeStates);
     },
     
     findNodes: function(root)
@@ -131,7 +154,13 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         this.nodes.activeCountries      = this.nodes.root.down('.' + this.prefix + 'activeCountries');
         this.nodes.inactiveStates       = this.nodes.root.down('.' + this.prefix + 'inactiveStates');
         this.nodes.activeStates         = this.nodes.root.down('.' + this.prefix + 'activeStates');
-
+        
+        this.nodes.cityMasks            = this.nodes.root.down('.' + this.prefix + 'cityMasks');
+        this.nodes.cityMasksList        = this.nodes.cityMasks.down('.' + this.prefix + 'cityMasksList');
+        this.nodes.cityMaskNew          = this.nodes.cityMasks.down('.' + this.prefix + 'newMask');
+        this.nodes.cityMaskNewButton    = this.nodes.cityMasks.down('.' + this.prefix + 'newMaskButton');
+        
+        this.nodes.zonesAndUnions       = this.nodes.root.down('.' + this.prefix + 'regionsAndUnions').getElementsByTagName('a');
     },
     
     bindEvents: function()
@@ -142,45 +171,90 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         Event.observe(this.nodes.removeCountryButton, 'click', function(e) { Event.stop(e); self.removeCountry(); });
         Event.observe(this.nodes.addStateButton, 'click', function(e) { Event.stop(e); self.addState(); });
         Event.observe(this.nodes.removeStateButton, 'click', function(e) { Event.stop(e); self.removeState(); });
+        Event.observe(this.nodes.cityMaskNewButton, 'click', function(e) { Event.stop(e); self.addNewCityMask(self.nodes.cityMaskNew.value); });
+
+        $A(this.nodes.zonesAndUnions).each(function(zoneOrUnion) {
+            Event.observe(zoneOrUnion, 'click', function(e) { Event.stop(e); self.selectZoneOrUnion(this.hash.substring(0,1) == '#' ? this.hash.substring(1) : this.hash); });
+        });
+    },
+    
+    selectZoneOrUnion: function(regionName) 
+    {
+        var self = this;
+        includedCountriesCodes = Backend.DeliveryZone.countryGroups[regionName];
+        
+        $A(this.nodes.inactiveCountries.options).each(function(option) 
+        {
+            option.selected = includedCountriesCodes.indexOf(option.value) !== -1 ? true : false;
+        });
+    },
+    
+    addNewCityMask: function(mask)
+    {
+        var self = this;
+        new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.addMask + "/",
+        {
+            onSuccess: function(response) 
+            {
+                response = eval('(' + response.responseText + ')');
+                if('success' == response.status)
+                {
+                    var activeList = ActiveList.prototype.getInstance(self.nodes.cityMasksList);
+                    
+                    activeList.addRecord(response.id, '<input type="text" name="cityMask_' + response.id + '" value="' + mask + '" />');
+                    console.info(mask);
+                }
+            }
+        });
+    },
+    
+    sortSelect: function(select)
+    {
+        var options = [];
+        $A(select.options).each(function(option) { options[options.length] = option; });
+        select.options.length = 0;
+        optionso = options.sort(function(a, b){ return (b.text < a.text) - (a.text < b.text); });
+        $A(options).each(function(option) { select.options[select.options.length] = option; });
+    },
+    
+    moveSelectedOptions: function(fromSelect, toSelect)
+    {
+        var self = this;
+        fromSelectOptions = fromSelect.options;
+        toSelectOptions = toSelect.options;
+        
+        // Deselect options
+        $A(toSelectOptions).each(function(option) { option.selected = false; });
+        
+        // move options to another list
+        $A(fromSelectOptions).each(function(option) 
+        {
+            if(option.selected) 
+            {
+                toSelectOptions[toSelectOptions.length] = option;
+            }
+        });
+        
+        this.sortSelect(toSelect);
     },
     
     addCountry: function()
     {
-        var self = this;
-        $A(this.nodes.inactiveCountries.getElementsByTagName('option')).each(function(option) 
-        {
-            if(!option.selected) return;
-            self.nodes.activeCountries.options[self.nodes.activeCountries.length] = option;
-        });
+        this.moveSelectedOptions(this.nodes.inactiveCountries, this.nodes.activeCountries);
     },
     
     removeCountry: function()
     {
-        var self = this;
-        $A(this.nodes.activeCountries.getElementsByTagName('option')).each(function(option) 
-        {
-            if(!option.selected) return;
-            self.nodes.inactiveCountries.options[self.nodes.inactiveCountries.length] = option;
-        });
+        this.moveSelectedOptions(this.nodes.activeCountries, this.nodes.inactiveCountries);
     },
     
     addState: function()
     {
-        var self = this;
-        $A(this.nodes.inactiveStates.getElementsByTagName('option')).each(function(option) 
-        {
-            if(!option.selected) return;
-            self.nodes.activeStates.options[self.nodes.activeStates.length] = option;
-        });
+        this.moveSelectedOptions(this.nodes.inactiveStates, this.nodes.activeStates);
     },
     
     removeState: function()
     {
-        var self = this;
-        $A(this.nodes.activeStates.getElementsByTagName('option')).each(function(option) 
-        {
-            if(!option.selected) return;
-            self.nodes.inactiveStates.options[self.nodes.inactiveStates.length] = option;
-        });
+        this.moveSelectedOptions(this.nodes.activeStates, this.nodes.inactiveStates);
     },
 }
