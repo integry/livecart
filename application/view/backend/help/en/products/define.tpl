@@ -1,5 +1,7 @@
 <p>	
 	The product detail form is devided into eight sections. Field specification details are provided below.
+	If you are adding a new product -> the form is divided into ...
+	If you are edditing products -> ...
 </p>
 
 <!--

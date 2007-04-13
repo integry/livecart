@@ -18,7 +18,7 @@ the following details:
 should be displayed on the product list page in the <a href="{help /cat.attr}">attributes</a> section.</p>
 
 <p>More detailed information is provided in <strong>Product details</strong> page. When a customer click on a 
-particular products, product's detailed page opens. This page includes all the necessary details about the product:</p>
+particular product, product's detailed page opens. This page includes all the necessary details about the product:</p>
 <img src="image/doc/products/product_details.bmp"/>
 <ul>
 <li>Weight</li>

@@ -62,8 +62,11 @@ categories.
 		<br \>
 		<br \>
 	</ul>
-	
-<p class="note"><strong>Note</strong>: you can as well use logical operators such as "<" - less or ">" - more 
+
+<p class="note"><strong>Note</strong>: product search is carried out only throughout the selected category and its
+subcategories. If you want to search all you product catalog, select the root category in the category tree.</p>
+
+<p class="note"><strong>Tip</strong>: you can as well use logical operators such as "<" - less or ">" - more 
 in your search. For instance, if you want to display products that cost less than 500, simply enter "< 500"
 in the price field.</p>
 
