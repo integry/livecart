@@ -68,6 +68,23 @@ class TestUsps extends ShippingTest
         $rates = $usps->getRates();     
         $this->assertTrue($rates instanceof ShippingRateError);
     }   
+    
+    public function testInternational()
+    {
+        $usps = new UspsRateCalculator();
+        $usps->setUserId('550INTEG8147');
+        $usps->setSourceCountry('US');
+        $usps->setSourceZip('90210');
+        $usps->setDestCountry('LT');
+        $usps->setSize('REGULAR');
+        $usps->setMachinable(true);
+        $usps->setWeight(15000);        
+        $usps->setService('Package');
+                
+        $rates = $usps->getRates();     
+        $this->assertTrue($rates instanceof ShippingRateSet);
+
+    }
 }
 
 ?>

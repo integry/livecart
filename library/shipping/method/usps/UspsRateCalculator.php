@@ -56,7 +56,7 @@ class UspsRateCalculator extends ShippingRateCalculator
             foreach ($price->list as $rate)
             {
                 $r = new ShippingRateResult();
-                $r->setServiceName($rate->mailservice);
+                $r->setServiceName(isset($rate->mailservice) ? $rate->mailservice : $rate->svcdescription . ' ('. $rate->svccommitments .')');
                 $r->setCost($rate->rate, 'USD');                
                 $result->add($r);
             }
