@@ -36,16 +36,16 @@ class DeliveryZoneController extends StoreManagementController
 	{
 	    if(!($id = (int)$this->request->getValue('id'))) return;
 	    
+	    $deliveryZone = DeliveryZone::getInstanceByID($id, true);
 	    $localeInfo = $this->locale->info();
+	    $allCountries = $localeInfo->getAllCountries();
+	    
 	    $allStates = array();
 	    foreach(State::getAllStates()->toArray() as $state)
 	    {
 	        $allStates[$state['ID']] = $localeInfo->getCountryName($state['countryID']) . ":" . $state['name'];
 	    }
 	    
-	    $deliveryZone = DeliveryZone::getInstanceByID($id);
-	    
-	    $allCountries = $localeInfo->getAllCountries();
 	    $selectedCountries = array();
 	    foreach($deliveryZone->getCountries()->toArray() as $country)
 	    {
@@ -60,8 +60,17 @@ class DeliveryZoneController extends StoreManagementController
 	        unset($allStates[$state['State']['ID']]);
 	    }
 	    	    
+		$alternativeLanguagesCodes = array();
+		foreach ($this->store->getLanguageArray() as $lang)
+		{
+			$alternativeLanguagesCodes[$lang] = $this->locale->info()->getOriginalLanguageName($lang);
+		}
+		
+		$form = $this->createCountriesAndStatesForm($deliveryZone);
+		$form->setData($deliveryZone->toArray());
+	    
 	    $response = new ActionResponse();
-	    $response->setValue('form', $this->createCountriesAndStatesForm($deliveryZone));
+	    $response->setValue('form', $form);
 	    $response->setValue('zoneID', $id);
 	    $response->setValue('states', $allStates);
 	    $response->setValue('countries', $allCountries);
@@ -72,7 +81,7 @@ class DeliveryZoneController extends StoreManagementController
 	    $response->setValue('cityMasks', $deliveryZone->getCityMasks()->toArray());
 	    $response->setValue('addressMasks', $deliveryZone->getAddressMasks()->toArray());
 	    $response->setValue('defaultLanguageCode', $this->store->getDefaultLanguageCode());
-	    $response->setValue('alternativeLanguagesCodes', $this->store->getLanguageArray());
+	    $response->setValue('alternativeLanguagesCodes', $alternativeLanguagesCodes);
 	    
 	    return $response;
 	}
@@ -140,28 +149,49 @@ class DeliveryZoneController extends StoreManagementController
 	        $zone = DeliveryZone::getNewInstance();
 	        $zone->setValueByLang('name', $this->store->getDefaultLanguageCode(), $name);
 	        $zone->save();
+	        
+	        return new JSONResponse(array('status' => 'success', 'ID' => $zone->getID()));
+	    }
+	    else
+	    {
+	        $zone = DeliveryZone::getInstanceByID((int)$this->request->getValue('id'));
+	        foreach($this->store->getLanguageArray(true) as $langCode) 
+	        {
+	            $zone->setValueByLang('name', $langCode, $this->request->getValue('name_' . $langCode));
+	        }
+	        
+	        $zone->save();
 	    }
 	    
-	    return new JSONResponse(array('status' => 'success', 'ID' => $zone->getID()));
+	    
+        return new JSONResponse(array('status' => 'success'));
+	    
 	}
 	
 	public function saveCityMask()
 	{
-	    $maskValue = $this->request->getValue('mask');
-	    if($id = (int)$this->request->getValue('id'))
+	    if($this->request->getValue('mask'))
 	    {
-	        $mask = DeliveryZoneCityMask::getInstanceByID($id);
-	        $mask->mask->set($maskValue);
+		    $maskValue = $this->request->getValue('mask');
+		    if($id = (int)$this->request->getValue('id'))
+		    {
+		        $mask = DeliveryZoneCityMask::getInstanceByID($id);
+		        $mask->mask->set($maskValue);
+		    }
+		    else
+		    {
+		        $zone = DeliveryZone::getInstanceByID((int)$this->request->getValue('zoneID'));
+		        $mask = DeliveryZoneCityMask::getNewInstance($zone, $maskValue);
+		    }
+		    
+		    $mask->save();
+		    
+		    return new JSONResponse(array('status' => 'success', 'ID' => $mask->getID()));
 	    }
 	    else
 	    {
-	        $zone = DeliveryZone::getInstanceByID((int)$this->request->getValue('zoneID'));
-	        $mask = DeliveryZoneCityMask::getNewInstance($zone, $maskValue);
+		    return new JSONResponse(array('status' => 'failure'));
 	    }
-	    
-	    $mask->save();
-	    
-	    return new JSONResponse(array('status' => 'success', 'ID' => $mask->getID()));
 	}
 
 	public function deleteCityMask()
@@ -173,21 +203,28 @@ class DeliveryZoneController extends StoreManagementController
 	
 	public function saveZipMask()
 	{	    
-	    $maskValue = $this->request->getValue('mask');
-	    if($id = (int)$this->request->getValue('id'))
+   	    if($this->request->getValue('mask'))
 	    {
-	        $mask = DeliveryZoneCityMask::getInstanceByID($id);
-	        $mask->mask->set($maskValue);
+		    $maskValue = $this->request->getValue('mask');
+		    if($id = (int)$this->request->getValue('id'))
+		    {
+		        $mask = DeliveryZoneCityMask::getInstanceByID($id);
+		        $mask->mask->set($maskValue);
+		    }
+		    else
+		    {
+		        $zone = DeliveryZone::getInstanceByID((int)$this->request->getValue('zoneID'));
+		        $mask = DeliveryZoneZipMask::getNewInstance($zone, $maskValue);
+		    }
+		    
+		    $mask->save();
+		    
+		    return new JSONResponse(array('status' => 'success', 'ID' => $mask->getID()));
 	    }
 	    else
 	    {
-	        $zone = DeliveryZone::getInstanceByID((int)$this->request->getValue('zoneID'));
-	        $mask = DeliveryZoneZipMask::getNewInstance($zone, $maskValue);
+		    return new JSONResponse(array('status' => 'failure'));
 	    }
-	    
-	    $mask->save();
-	    
-	    return new JSONResponse(array('status' => 'success', 'ID' => $mask->getID()));
 	}
 
 	public function deleteZipMask()
@@ -199,21 +236,28 @@ class DeliveryZoneController extends StoreManagementController
 	
 	public function saveAddressMask()
 	{
-	    $maskValue = $this->request->getValue('mask');
-	    if($id = (int)$this->request->getValue('id'))
+   	    if($this->request->getValue('mask'))
 	    {
-	        $mask = DeliveryZoneCityMask::getInstanceByID($id);
-	        $mask->mask->set($maskValue);
+	        $maskValue = $this->request->getValue('mask');
+		    if($id = (int)$this->request->getValue('id'))
+		    {
+		        $mask = DeliveryZoneCityMask::getInstanceByID($id);
+		        $mask->mask->set($maskValue);
+		    }
+		    else
+		    {
+		        $zone = DeliveryZone::getInstanceByID((int)$this->request->getValue('zoneID'));
+		        $mask = DeliveryZoneAddressMask::getNewInstance($zone, $maskValue);
+		    }
+		    
+		    $mask->save();
+		    
+		    return new JSONResponse(array('status' => 'success', 'ID' => $mask->getID()));
 	    }
 	    else
 	    {
-	        $zone = DeliveryZone::getInstanceByID((int)$this->request->getValue('zoneID'));
-	        $mask = DeliveryZoneAddressMask::getNewInstance($zone, $maskValue);
+		    return new JSONResponse(array('status' => 'failure'));
 	    }
-	    
-	    $mask->save();
-	    
-	    return new JSONResponse(array('status' => 'success', 'ID' => $mask->getID()));
 	}
 
 	public function deleteAddressMask()
