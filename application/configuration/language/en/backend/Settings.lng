@@ -126,7 +126,7 @@ MIN_TOTAL=Minimum order total
 MAX_TOTAL=Maximum order total (0 - no limit)
 MAX_QUANT=Maximum quantity of products per order (0 - no limit)
 
-_shipping=Shipping
+_shipping=Shipping Methods
 _store_loc_add=Store Location Address
 STORE_COUNTRY=Store country
 STORE_STATE=Store state
@@ -143,6 +143,8 @@ _email=Email
 _email_addresses=Email Addresses
 _email_store=Store Administration Notifications
 _email_customer=Customer Notifications
+
+_payment=Payment Methods
 
 _customers=Customers
 REQUIRE_PHONE=Require customers to enter phone number on registration

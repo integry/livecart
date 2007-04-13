@@ -92,7 +92,7 @@ class SettingsController extends StoreManagementController
             $c->setAutoSave(false);
 			foreach ($values as $key => $value)
 			{
-				if ($c->isMultiLingual($key))
+				if ($c->isMultiLingual($key) && 'string' == $value['type'])
 				{
                     $c->setValueByLang($key, $defLang, $this->request->getValue($key));
                     foreach ($languages as $lang)

@@ -8,6 +8,7 @@
  */
 
 $routes = array(
+					array("error/404", array(), array('controller' => 'error', 'action' => 'error404')),
 					array("shop/:cathandle-:id", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+")),
 					array("shop/:cathandle-:id/:page", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+","page" => "[0-9_]+")),
 

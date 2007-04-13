@@ -59,8 +59,56 @@ class DeliveryZone extends MultilingualObject
 	 */
     public static function getZoneByAddress(UserAddress $address)
     {
-        
+    	// determine if the country has states defined in database
+		$f = new ARSelectFilter();
+		$f->setCondition(new EqualsCond(new ARFieldHandle('State', 'countryID'), $address->countryID->get()));
+		$hasStates = (ActiveRecordModel::getRecordCount($f) > 0);    
+		
+		// get zones that match country
+		
+		// leave zones that match state
+		
+		// leave zones that match filters
+		
+		return DeliveryZone::getInstanceByID(0);		
     }
+    
+    /**
+     *
+     *	@return ShippingRateSet
+     */
+	public function getDefinedShippingRates(CustomerOrder $order)
+    {
+		// stub
+		ClassLoader::import('library.shipping.ShippingRateSet');
+		ClassLoader::import('library.shipping.ShippingRateResult');
+		
+		$rates = new ShippingRateSet();
+		
+		$rate1 = new ShippingRateResult();
+		$rate1->setServiceName('Test rate 1');
+		$rate1->setCost(10, 'USD');
+		$rate1->setServiceID(12);
+
+		$rate2 = new ShippingRateResult();
+		$rate2->setServiceName('Test rate 2');
+		$rate2->setCost(23.45, 'USD');
+		$rate1->setServiceID(13);
+				
+		$rates->add($rate1);
+		$rates->add($rate2);
+				
+		return $rates;		
+	}
+	
+    /**
+     *
+     *	@return ARSet
+     */
+	public function getTaxRates()
+	{
+		
+	}
 
 	/**
 	 * @return ARSet

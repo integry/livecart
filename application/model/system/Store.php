@@ -218,6 +218,22 @@ class Store
 		return $this->locale->translator()->makeText($key, $params);
 	}
 
+	public function getEnabledCountries()
+	{
+		$countries = $this->locale->info()->getAllCountries();
+		$enabled = Config::getInstance()->getValue('ENABLED_COUNTRIES');
+		
+		$countries = array_intersect_key($countries, $enabled);
+		
+		return $countries;
+	}
+
+	public function isValidCountry($countryCode)
+	{
+		$enabled = Config::getInstance()->getValue('ENABLED_COUNTRIES');
+		return isset($enabled[$countryCode]);		
+	}
+
 	/**
 	 * Creates a handle string that is usually used as part of URL to uniquely
 	 * identify some record

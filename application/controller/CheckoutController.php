@@ -72,10 +72,11 @@ class CheckoutController extends FrontendController
     
     /**
      *  3. Select or enter billing and shipping addresses
+     *	@role login
      */
     public function selectAddress()
     {
-        
+    	$user = User::getCurrentUser();    
     }
     
     

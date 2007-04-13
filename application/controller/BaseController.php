@@ -78,18 +78,13 @@ abstract class BaseController extends Controller implements LCiTranslator
 		parent::__construct($request);
 
 		$this->session = Session::getInstance();
-		$user = $this->session->getValue("user");
-		if (!empty($user)) 
-		{
-			$this->user = unserialize($user);
-		} 
-		else 
-		{
-			$this->user = User::getInstanceByID(User::ANONYMOUS_USER_ID);
-		}
+		$this->user = User::getCurrentUser();
+
 		$this->router = Router::getInstance();
-		if (!$this->user->hasAccess($this->getRoleName())) {
-			//throw new AccessDeniedException($this->user, $this->request->getControllerName(), $this->request->getActionName());
+
+		if (!$this->user->hasAccess($this->getRoleName())) 
+		{
+			throw new AccessDeniedException($this->user, $this->request->getControllerName(), $this->request->getActionName());
 		}
 
 		$this->configFiles = $this->getConfigFiles();
@@ -192,24 +187,24 @@ abstract class BaseController extends Controller implements LCiTranslator
 			throw new ActionNotFoundException($controllerClassName, $actionName);
 		}
 
-		$roleTag = " @role";
+		$roleTag = "@role";
 		$classRoleMatches = array();
 		$actionRoleMatches = array();
 		preg_match("/".$roleTag." (.*)(\\r\\n|\\r|\\n)/U", $classDocComment, $classRoleMatches);
 		preg_match("/".$roleTag." (.*)(\\r\\n|\\r|\\n)/U", $actionDocComment, $actionRoleMatches);
 
-		$roleValue = "";
+		$roleValue = array();
 
 		if (!empty($classRoleMatches))
 		{
-			$roleValue = trim(substr($classRoleMatches[0], strlen($roleTag), strlen($classRoleMatches[0])));
+			$roleValue[] = trim(substr($classRoleMatches[0], strlen($roleTag), strlen($classRoleMatches[0])));
 		}
 		if (!empty($actionRoleMatches))
 		{
-			$roleValue .= "." . trim(substr($actionRoleMatches[0], strlen($roleTag), strlen($actionRoleMatches[0])));
+			$roleValue[] = trim(substr($actionRoleMatches[0], strlen($roleTag), strlen($actionRoleMatches[0])));
 		}
 
-		return $roleValue;
+		return implode('.', $roleValue);
 	}
 
 	/**

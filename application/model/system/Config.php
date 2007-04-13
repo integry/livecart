@@ -248,7 +248,19 @@ class Config
 		{
 			$extra = '';
 			
-            if ('-' == $value || '+' == $value)
+            // evaluate PHP code
+            if (substr($value, 0, 5) == '<?php')
+            {
+				$value = substr($value, 5);
+				if (substr($value, -2) == '?>')
+				{
+					$value = substr($value, 0, -2);
+				}
+				
+				eval('$value = ' . $value . ';');			
+			}
+			
+			if ('-' == $value || '+' == $value)
 			{
 			  	$type = 'bool';
 			  	$value = 1 - ('-' == $value);		  	

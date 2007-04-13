@@ -16,7 +16,7 @@ class UserController extends FrontendController
         $form = $this->buildForm();
         $form->setValue('billing_country', $defCountry);
 
-        $countries = $this->locale->info()->getAllCountries();
+        $countries = $this->store->getEnabledCountries();
         asort($countries);        
     
         // set default country first

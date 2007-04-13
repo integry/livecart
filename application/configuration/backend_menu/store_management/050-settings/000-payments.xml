@@ -1,5 +1,0 @@
-<Menu>
-	<Title>_menu_payment_gateways</Title>	
-	<Controller>backend.paymentConfig</Controller>
-	<Action>index</Action>
-</Menu>

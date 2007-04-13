@@ -36,11 +36,17 @@
 	}
 	catch (ActionNotFoundException $e)
 	{
+		Router::getInstance()->setRequestedRoute('error/404');
+		$app->run();
 		include("404.php");
 	}
 	catch (ControllerNotFoundException $e)
 	{
 		include("404.php");
+	}
+	catch (AccessDeniedException $e)
+	{
+		
 	}
 	catch (ClassLoaderException $e)
 	{
