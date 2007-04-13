@@ -47,5 +47,10 @@ class OrderedItem extends ActiveRecordModel
         $itemPrice = $this->product->get()->getPrice($currency->getID());
         return $itemPrice * $this->count->get();    
     }
+    
+    public function serialize()
+    {
+        return parent::serialize(array('customerOrderID'));
+    }
 }    
 ?>

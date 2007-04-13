@@ -44,7 +44,7 @@ class UserController extends FrontendController
         $validator = $this->buildValidator();
         if (!$validator->isValid())
         {
-            return new ActionRedirectResponse('user', 'register');
+            return new ActionRedirectResponse('user', 'checkout');
         }
 
         // create user account
@@ -109,11 +109,18 @@ class UserController extends FrontendController
 		$userShippingAddress = UserShippingAddress::getNewInstance($user, $address);
         $userShippingAddress->save();
 
+        // set order addresses
+        $order = CustomerOrder::getInstance();
+        $order->billingAddress->set($userBillingAddress->userAddress->get());
+        $order->shippingAddress->set($userShippingAddress->userAddress->get());
+        $order->user->set($user);
+        $order->save();
+        
         ActiveRecordModel::commit();
         
         $user->setAsCurrentUser();       
 
-        return new RedirectResponse($this->request->getValue('return'));
+        return new ActionRedirectResponse('checkout', 'confirmTotals');
     }
     
     /**
@@ -173,7 +180,7 @@ class UserController extends FrontendController
                     	
         if ($this->config->getValue('REQUIRE_PHONE'))
         {
-            $validator->addCheck('phone', new IsNotEmptyCheck($this->translate('_err_enter_phone')));            
+            $validator->addCheck('phone', new IsNotEmptyCheck($this->translate('_err_enter_phone')));
         }
 
     	// validate billing info

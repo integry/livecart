@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import('application.model.user.UserAddressType');
+
 /**
  * Customer shipping address
  *
@@ -19,6 +21,19 @@ class UserShippingAddress extends UserAddressType
     {
         return parent::getNewInstance(__CLASS__, $user, $userAddress);
     }    
+    
+    public function save()
+    {
+        parent::save();
+        
+        $user = $this->user->get();
+        $user->load();        
+        if (!$user->defaultShippingAddress->get())
+        {
+            $user->defaultShippingAddress->set($this);
+            $user->save();
+        }
+    }
 }
 	
 ?>

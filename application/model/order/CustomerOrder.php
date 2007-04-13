@@ -2,19 +2,24 @@
 
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.OrderedItem");
+ClassLoader::import("application.model.system.SessionSyncable");
 
 /**
  * Represents customers order - products placed in shopping basket
  *
  * @package application.model.order
  */
-class CustomerOrder extends ActiveRecordModel
+class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 {
 	protected $orderedItems = array();
 	
 	protected $removedItems = array();
     
+	protected $shipments = array();
+	
     protected static $instance = null;
+    
+    protected $isSyncedToSession = false;
     
     /**
 	 * Define database schema used by this active record instance
@@ -28,6 +33,8 @@ class CustomerOrder extends ActiveRecordModel
 		
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", "User", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("shippingAddressID", "shippingAddress", "ID", 'UserAddress', ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("billingAddressID", "billingAddress", "ID", 'UserAddress', ARInteger::instance()));
 
 //		$schema->registerField(new ARField("sessionID", ARChar::instance(32)));
 		$schema->registerField(new ARField("dateCreated", ARTimeStamp::instance()));
@@ -155,6 +162,11 @@ class CustomerOrder extends ActiveRecordModel
                 $item->delete();
             }                
         }
+        
+        if ($this->isSyncedToSession)
+        {
+            $this->syncToSession();
+        }
     }    
     
     /**
@@ -163,7 +175,26 @@ class CustomerOrder extends ActiveRecordModel
 	public function saveToSession()
     {
         $this->save();
-		Session::getInstance()->setValue('CustomerOrder', $this);
+        $this->syncToSession();
+    }
+    
+    public function syncToSession()
+    {
+        $this->isSyncedToSession = true;
+		Session::getInstance()->setValue('CustomerOrder', $this);        
+    }
+    
+    public function isSyncedToSession()
+    {
+        return $this->isSyncedToSession;
+    }
+    
+    /**
+     *  @todo implement
+     */
+    public function refresh()
+    {
+        
     }
     
     /**
@@ -199,15 +230,40 @@ class CustomerOrder extends ActiveRecordModel
 		}        
     }
     
-    public function getShoppingCartItemCount()
-	{
-		$count = 0;
-		foreach ($this->orderedItems as $item)
+    public function getShoppingCartItems()
+    {
+		$items[] = array();
+        foreach ($this->orderedItems as $item)
 		{
 			if (!$item->isSavedForLater->get())
 			{
-				$count += $item->count->get();
+				$items[] = $item;
 			}
+		}        
+		
+		return $items;
+    }
+    
+    public function getWishListItems()
+    {
+		$items[] = array();
+        foreach ($this->orderedItems as $item)
+		{
+			if ($item->isSavedForLater->get())
+			{
+				$items[] = $item;
+			}
+		}        
+		
+		return $items;
+    }
+    
+    public function getShoppingCartItemCount()
+	{
+		$count = 0;
+		foreach ($this->getShoppingCartItems() as $item)
+		{
+			$count += $item->count->get();
 		}
 		
 		return $count;
@@ -215,16 +271,7 @@ class CustomerOrder extends ActiveRecordModel
     
     public function getWishListItemCount()
 	{
-		$count = 0;
-		foreach ($this->orderedItems as $item)
-		{
-			if ($item->isSavedForLater->get())
-			{
-				$count++;
-			}
-		}
-		
-		return $count;
+		return count($this->getWishListItems());
 	}    
 
 	public function getOrderedItems()
@@ -288,6 +335,49 @@ class CustomerOrder extends ActiveRecordModel
 			}
 		}		
     }
+    
+    /**
+     *  Separate items into shipments (if any item needs to be shipped separately)
+     *
+     *  @return Shipment[]
+     */
+    public function createShipments()
+    {
+        $main = Shipment::getNewInstance($this);
+        $additional = array();
+        
+        foreach ($this->getOrderedItems() as $item)
+        {
+            if ($item->product->get()->isSeparateShipment->get())
+            {
+                $shipment = Shipment::getNewInstance($this);
+                $shipment->addItem($item);
+                $additional[] = $shipment;
+            }
+            else
+            {
+                $main->addItem($item);
+            }
+        }   
+        
+        array_unshift($additional, $main);
+        
+        return $additional;
+    }
+	
+	public function getShippingRates()
+	{
+        $zone = DeliveryZone::getZoneByAddress($this->shippingAddress->get());
+        
+        $shipments = $this->createShipments();
+        $shipmentWeights = array();
+        foreach ($shipments as $key => $shipment)
+        {
+            $shipmentWeights[$key] = $shipment->getChargeableWeight($zone);
+        }   
+                
+        return Store::getInstance()->getShippingRates($zone, $shipmentWeights);
+    }
 	
 	/**
 	 *	Creates an array representation of the shopping cart
@@ -323,6 +413,11 @@ class CustomerOrder extends ActiveRecordModel
 		
 		return $array;
 	}
+	
+	public function serialize()
+	{
+        return parent::serialize(null, array('orderedItems'));
+    }
 }
 	
 ?>

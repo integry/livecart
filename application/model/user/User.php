@@ -1,6 +1,8 @@
 <?php
 
 ClassLoader::import("application.model.ActiveRecordModel");
+ClassLoader::import("application.model.user.UserBillingAddress");
+ClassLoader::import("application.model.user.UserShippingAddress");
 
 /**
  * Store user base class (including frontend and backend)
@@ -30,7 +32,7 @@ class User extends ActiveRecordModel
 		$schema->registerField(new ARField("password", ARVarchar::instance(16)));
 		$schema->registerField(new ARField("firstName", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("lastName", ARVarchar::instance(60)));
-		$schema->registerField(new ARField("creationDate", ARDateTime::instance()));
+		$schema->registerField(new ARField("dateCreated", ARDateTime::instance()));
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));		
 	}
 

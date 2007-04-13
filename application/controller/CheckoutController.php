@@ -79,6 +79,8 @@ class CheckoutController extends FrontendController
     	$user = User::getCurrentUser();    
     }
     
+    //public function 
+    
     
 }
 

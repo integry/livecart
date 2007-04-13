@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import("application.model.delivery.State");
+
 /**
  * Customer billing or shipping address
  *

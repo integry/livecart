@@ -76,7 +76,7 @@ class OrderController extends FrontendController
         $order->addProduct($product, $count);
         $order->mergeItems();
         $order->saveToSession();
-        
+
         return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));
     }
 
@@ -140,7 +140,7 @@ class OrderController extends FrontendController
 		ClassLoader::import("framework.request.validator.RequestValidator");
 		
 		$validator = new RequestValidator("cartValidator", $this->request);
-		
+
 		foreach ($order->getOrderedItems() as $item)
 		{
 			$name = 'item_' . $item->getID();

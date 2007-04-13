@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import('application.model.user.UserAddressType');
+
 /**
  * Customer billing address
  *
@@ -18,6 +20,19 @@ class UserBillingAddress extends UserAddressType
     public static function getNewInstance(User $user, UserAddress $userAddress)
     {
         return parent::getNewInstance(__CLASS__, $user, $userAddress);
+    }    
+    
+    public function save()
+    {
+        parent::save();
+        
+        $user = $this->user->get();
+        $user->load();        
+        if (!$user->defaultBillingAddress->get())
+        {
+            $user->defaultBillingAddress->set($this);
+            $user->save();
+        }
     }    
 }
 	

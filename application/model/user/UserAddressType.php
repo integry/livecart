@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import('application.model.user.UserAddress');
+
 /**
  * Abstract implementation of customer billing or shipping address
  *
@@ -27,6 +29,11 @@ abstract class UserAddressType extends ActiveRecordModel
         $instance->userAddress->set($userAddress);
         return $instance;
     }    
+    
+    public function serialize()
+    {
+        return parent::serialize(array('userID'));
+    }
 }
 	
 ?>
