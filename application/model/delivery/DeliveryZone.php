@@ -2,8 +2,7 @@
 ClassLoader::import("application.model.system.ActiveTreeNode");
 ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.category.CategoryImage");
-ClassLoader::import("application.model.delivery.DeliveryZoneState");
-ClassLoader::import("application.model.delivery.DeliveryZoneCountry");
+ClassLoader::import("application.model.delivery.*");
 
 /**
  * Hierarchial product category model class
@@ -23,6 +22,21 @@ class DeliveryZone extends MultilingualObject
 		$schema->registerField(new ARField("isFreeShipping", ARInteger::instance(1)));
 	}
 
+	/**
+	 * Gets an existing record instance (persisted on a database).
+	 * @param mixed $recordID
+	 * 
+	 * @param bool $loadRecordData
+	 * @param bool $loadReferencedRecords
+	 * @param array $data	Record data array (may include referenced record data)
+	 *
+	 * @return DeliveryZone
+	 */
+	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
+	{		    
+		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
+	}
+	
 	/**
 	 * @return DeliveryZone
 	 */

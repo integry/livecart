@@ -44,6 +44,14 @@ class DeliveryZoneState extends ActiveRecordModel
 	    
 	    return self::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
+
+	public static function removeByZone(DeliveryZone $zone)
+	{
+	    $filter = new ARDeleteFilter();
+	    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'deliveryZoneID'), $zone->getID()));
+	    
+	    return ActiveRecord::deleteRecordSet(__CLASS__, $filter);
+	}
 }
 
 ?>

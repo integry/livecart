@@ -19,6 +19,21 @@ class DeliveryZoneZipMask extends ActiveRecordModel
 	}
 	
 	/**
+	 * Gets an existing record instance (persisted on a database).
+	 *
+	 * @param mixed $recordID
+	 * @param bool $loadRecordData
+	 * @param bool $loadReferencedRecords
+	 * @param array $data	Record data array (may include referenced record data)
+	 *
+	 * @return DeliveryZoneZipMask
+	 */
+	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
+	{	
+	    return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
+	}
+	
+	/**
 	 * @return DeliveryZoneState
 	 */
 	public static function getNewInstance(DeliveryZone $zone, $mask)

@@ -396,6 +396,7 @@ class ProductController extends StoreManagementController
 	{
 		$category = Category::getInstanceByID($this->request->getValue("id"), ActiveRecordModel::LOAD_DATA);
 		$product = Product::getNewInstance($category);
+		$product->save();
 		
 		return $this->productForm($product);		
 	}

@@ -9,7 +9,6 @@ Backend.DeliveryZone.prototype =
 	  
 	initialize: function(zones)
 	{
-        console.info(zones);
         
 		Backend.DeliveryZone.prototype.treeBrowser = new dhtmlXTreeObject("deliveryZoneBrowser","","", false);
 		
@@ -146,7 +145,12 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
             if('success' == response.status) {
                 this.remove(li);     
             }
-        }
+        },
+        'beforeEdit': function(li) 
+        {
+            Backend.DeliveryZone.CountriesAndStates.prototype.toggleMask(li);
+        },
+        'afterEdit': function(li, response) {}
     },
     CallbacksZip: {
         'beforeDelete': function(li) 
@@ -160,7 +164,12 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
             if('success' == response.status) {
                 this.remove(li);     
             }
-        }
+        },
+        'beforeEdit': function(li) 
+        {
+            Backend.DeliveryZone.CountriesAndStates.prototype.toggleMask(li);
+        },
+        'afterEdit': function(li, response) {}
     },
     CallbacksAddress: {
         'beforeDelete': function(li) 
@@ -174,14 +183,22 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
             if('success' == response.status) {
                 this.remove(li);     
             }
-        }
+        },
+        'beforeEdit': function(li) 
+        {
+            Backend.DeliveryZone.CountriesAndStates.prototype.toggleMask(li);
+        },
+        'afterEdit': function(li, response) {}
     },
     
     
     prefix: 'countriesAndStates_',
+    instances: {},
     
-    initialize: function(root) 
+    initialize: function(root, zoneID) 
     {
+        this.zoneID = zoneID;
+
         this.findNodes(root);
         this.bindEvents();
         
@@ -191,10 +208,22 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         this.sortSelect(this.nodes.activeStates);
     },
     
+    getInstance: function(root, zoneID) 
+    {
+        if(!Backend.DeliveryZone.CountriesAndStates.prototype.instances[$(root).id])
+        {
+            Backend.DeliveryZone.CountriesAndStates.prototype.instances[$(root).id] = new Backend.DeliveryZone.CountriesAndStates(root, zoneID);
+        }
+        
+        return Backend.DeliveryZone.CountriesAndStates.prototype.instances[$(root).id];
+    },
+    
     findNodes: function(root)
     {
         this.nodes = {};
         this.nodes.root = $(root);
+        
+        this.nodes.form = this.nodes.root.tagName == 'FORM' ? this.nodes.root : this.nodes.root.down('form');
 
         this.nodes.addCountryButton     = this.nodes.root.down('.' + this.prefix + 'addCountry');
         this.nodes.removeCountryButton  = this.nodes.root.down('.' + this.prefix + 'removeCountry');
@@ -224,6 +253,24 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         this.nodes.zonesAndUnions       = this.nodes.root.down('.' + this.prefix + 'regionsAndUnions').getElementsByTagName('a');
     },
     
+    toggleMask: function(li)
+    {
+        var input = li.down('input');
+        var title = li.down('.maskTitle');
+        if(li.down('input').style.display == 'inline')
+        {
+            input.style.display = 'none';
+            title.style.display = 'inline';
+            
+            title.update(input.value);
+        }
+        else
+        {
+            input.style.display = 'inline';
+            title.style.display = 'none';
+        }
+    },
+    
     bindEvents: function()
     {
         var self = this;
@@ -231,6 +278,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         Event.observe(this.nodes.addCountryButton, 'click', function(e) { Event.stop(e); self.addCountry(); });
         Event.observe(this.nodes.removeCountryButton, 'click', function(e) { Event.stop(e); self.removeCountry(); });
         Event.observe(this.nodes.addStateButton, 'click', function(e) { Event.stop(e); self.addState(); });
+        Event.observe(this.nodes.form, 'submit', function(e) { Event.stop(e); self.save(); });
         Event.observe(this.nodes.removeStateButton, 'click', function(e) { Event.stop(e); self.removeState(); });
         Event.observe(this.nodes.cityMaskNewButton, 'click', function(e) { Event.stop(e); self.addNewCityMask(self.nodes.cityMaskNew.value); });
         Event.observe(this.nodes.zipMaskNewButton, 'click', function(e) { Event.stop(e); self.addNewZipMask(self.nodes.zipMaskNew.value); });
@@ -239,6 +287,15 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         $A(this.nodes.zonesAndUnions).each(function(zoneOrUnion) {
             Event.observe(zoneOrUnion, 'click', function(e) { Event.stop(e); self.selectZoneOrUnion(this.hash.substring(0,1) == '#' ? this.hash.substring(1) : this.hash); });
         });
+    },
+    
+    save: function() {
+        this.saving = true;
+        
+        
+        
+        console.info('blaba');
+        this.saving = false;
     },
     
     selectZoneOrUnion: function(regionName) 
@@ -255,8 +312,10 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
     addNewCityMask: function(mask)
     {
         var self = this;
-        new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.addCityMask + "/",
+        new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveCityMask + "/" + '?zoneID=' + this.zoneID,
         {
+			method: 'post',
+			parameters: 'mask=' + mask,
             onSuccess: function(response) 
             {
                 response = eval('(' + response.responseText + ')');
@@ -274,8 +333,10 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
     addNewZipMask: function(mask)
     {
         var self = this;
-        new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.addZipMask + "/",
+        new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveZipMask + "/" + '?zoneID=' + this.zoneID,
         {
+			method: 'post',
+			parameters: 'mask=' + mask,
             onSuccess: function(response) 
             {
                 response = eval('(' + response.responseText + ')');
@@ -293,8 +354,10 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
     addNewAddressMask: function(mask)
     {
         var self = this;
-        new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.addAddressMask + "/",
+        new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveAddressMask + "/" + '?zoneID=' + this.zoneID,
         {
+			method: 'post',
+			parameters: 'mask=' + mask,
             onSuccess: function(response) 
             {
                 response = eval('(' + response.responseText + ')');
@@ -339,23 +402,48 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         this.sortSelect(toSelect);
     },
     
+    sendSelectsData: function(activeSelect, inactiveSelect, url)
+    {
+        var active = "";
+        $A(activeSelect.options).each(function(option) {
+            active += "active[]=" + option.value + "&";
+        });
+        active.substr(0, active.length - 1);
+        
+        var inactive = "";
+        $A(inactiveSelect.options).each(function(option) {
+            inactive += "inactive[]=" + option.value + "&";
+        });
+        inactive.substr(0, active.length - 1)
+        console.info(active + inactive);
+        var self = this;
+        new Ajax.Request(url + "/" + this.zoneID, {
+            method: 'post',
+            parameters: active + inactive
+        });
+    },
+    
     addCountry: function()
     {
         this.moveSelectedOptions(this.nodes.inactiveCountries, this.nodes.activeCountries);
+        this.sendSelectsData(this.nodes.activeCountries, this.nodes.inactiveCountries, Backend.DeliveryZone.prototype.Links.saveCountries);
     },
     
     removeCountry: function()
     {
         this.moveSelectedOptions(this.nodes.activeCountries, this.nodes.inactiveCountries);
+        this.sendSelectsData(this.nodes.activeCountries, this.nodes.inactiveCountries, Backend.DeliveryZone.prototype.Links.saveCountries);
     },
     
     addState: function()
     {
         this.moveSelectedOptions(this.nodes.inactiveStates, this.nodes.activeStates);
+        this.sendSelectsData(this.nodes.activeStates, this.nodes.inactiveStates, Backend.DeliveryZone.prototype.Links.saveStates);
     },
     
     removeState: function()
     {
         this.moveSelectedOptions(this.nodes.activeStates, this.nodes.inactiveStates);
+        this.sendSelectsData(this.nodes.activeStates, this.nodes.inactiveStates, Backend.DeliveryZone.prototype.Links.saveStates);
     },
 }
