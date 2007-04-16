@@ -61,6 +61,15 @@
         		</fieldset>
             </p>
 
+            <p>
+                <label for="companyName">{t _company_name}:</label>
+                
+        		<fieldset class="error">
+        			{textfield name="companyName" class="text"}
+        			<div class="errorText hidden{error for="companyName"} visible{/error}">{error for="companyName"}{$msg}{/error}</div>
+        		</fieldset>
+            </p>
+
             <p class="required">
                 <label for="email">{t _your_email}:</label>
                 

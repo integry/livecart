@@ -32,6 +32,7 @@ class User extends ActiveRecordModel
 		$schema->registerField(new ARField("password", ARVarchar::instance(16)));
 		$schema->registerField(new ARField("firstName", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("lastName", ARVarchar::instance(60)));
+		$schema->registerField(new ARField("companyName", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("dateCreated", ARDateTime::instance()));
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));		
 	}
@@ -111,17 +112,17 @@ class User extends ActiveRecordModel
 	 */
 	public function hasAccess($roleName)
 	{
+		if ('login' == $roleName)
+		{
+			return $this->getID() > 0;	
+		}
+
 		return true;
 		
 		// disable all login protected content from deactivated users
 		if ($roleName && !$this->isEnabled->get())
 		{
 			return false;	
-		}
-
-		if ('login' == $roleName)
-		{
-			return $this->getID > 0;	
 		}
 		
 		return true;
@@ -142,101 +143,35 @@ class User extends ActiveRecordModel
         return ($this->getID() != self::ANONYMOUS_USER_ID);
     }
 
-	/**
-	 * Gets a user related config value (persisted)
-	 *
-	 * @param string $varName
-	 * @return mixed
-	 */
-	public function getConfigValue($varName)
-	{
-		ClassLoader::import("application.model.user.UserConfigValue");
-		$filter = new ARSelectFilter();
-		$filter->setCondition(new EqualsCond("UserConfigValue.name", $varName));
-
-		$recordSet = $this->getRelatedRecordSet("UserConfigValue", $filter);
-		if ($recordSet->size() == 0)
-		{
-			return null;
-		}
-		else
-		{
-			return $recordSet->get(0);
-		}
-	}
-
-	/**
-	 * Sets a user related config value (persisted)
-	 *
-	 * @param string $varName
-	 * @param mixed $value
-	 */
-	public function setConfigValue($varName, $value)
-	{
-		$configVariable = $this->getConfigValue($varName);
-		if ($configVariable == null)
-		{
-			// creating new var
-			$configVariable = ActiveRecord::getNewInstance("UserConfigValue");
-			$configVariable->user->set($this);
-			$configVariable->name->set($varName);
-			$configVariable->value->set($value);
-		}
-		else
-		{
-			// updating value
-			$configVariable->value->set($value);
-			$configVariable->save();
-		}
-	}
-
-	/**
-	 * Gets a language code from a config that is active now
-	 *
-	 * @return Language
-	 */
-	public function getActiveLang()
-	{
-		ClassLoader::import("application.model.Language");
-		return Language::getInstanceByID("en", ActiveRecord::LOAD_DATA);
-	}
-
-	/**
-	 * Gets user default (native) language
-	 *
-	 * @return Language
-	 */
-	public function getDefaultLang()
-	{
-		ClassLoader::import("application.model.Language");
-		return ActiveRecord::getInstanceByID("Language", "lt", ActiveRecord::LOAD_DATA);
-	}
-
-	/**
-	 * Sets active language that is used to fill multilingual store data
-	 *
-	 * @param Language $lang
-	 */
-	public function setActiveLang(Language $lang)
-	{
-		$this->setConfigValue("active_lang", $lang->getID());
-	}
-
-	/**
-	 * Sets default (native) user language
-	 *
-	 * @param Language $lang
-	 */
-	public function setDefaultLang(Language $lang)
-	{
-		$this->setConfigValue("default_lang", $lang->getID());
-	}
-
     public function getName()
     {
         return $this->firstName->get() . ' ' . $this->lastName->get();
     }
 
+    public function getBillingAddressArray($defaultFirst = true)
+    {
+        $f = new ARSelectFilter();
+        $f->setCondition(new EqualsCond(new ARFieldHandle('UserBillingAddress', 'userID'), $this->getID()));
+        if (!$defaultFirst)
+        {
+            $f->setOrder(new ARExpressionHandle('ID = ' . $this->defaultBillingAddress->get()->getID()));
+        }
+        
+        return ActiveRecordModel::getRecordSetArray('UserBillingAddress', $f, array('UserAddress', 'State'));
+    }
+
+    public function getShippingAddressArray($defaultFirst = true)
+    {
+        $f = new ARSelectFilter();
+        $f->setCondition(new EqualsCond(new ARFieldHandle('UserShippingAddress', 'userID'), $this->getID()));
+        if (!$defaultFirst)
+        {
+            $f->setOrder(new ARExpressionHandle('ID = ' . $this->defaultShippingAddress->get()->getID()));
+        }
+        
+        return ActiveRecordModel::getRecordSetArray('UserShippingAddress', $f, array('UserAddress', 'State'));
+    }
+    
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);

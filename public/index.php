@@ -36,17 +36,18 @@
 	}
 	catch (ActionNotFoundException $e)
 	{
-		Router::getInstance()->setRequestedRoute('error/404');
+		Router::getInstance()->setRequestedRoute('error/index/404');
 		$app->run();
-		include("404.php");
 	}
 	catch (ControllerNotFoundException $e)
 	{
-		include("404.php");
+		Router::getInstance()->setRequestedRoute('error/index/404');
+		$app->run();
 	}
 	catch (AccessDeniedException $e)
 	{
-		
+		Router::getInstance()->setRequestedRoute('error/index/401');
+		$app->run();	
 	}
 	catch (ClassLoaderException $e)
 	{

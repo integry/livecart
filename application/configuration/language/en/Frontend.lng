@@ -15,6 +15,7 @@ _shopping_basket=Shopping Basket
 
 # Checkout
 _order_checkout=Order Checkout
+_the_same_as_shipping_address=My shipping address is the same as my billing address
 
 # Users
 _remind_password=I have forgotten my password

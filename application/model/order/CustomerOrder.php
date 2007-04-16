@@ -232,7 +232,8 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     
     public function getShoppingCartItems()
     {
-		$items[] = array();
+		$items = array();
+
         foreach ($this->orderedItems as $item)
 		{
 			if (!$item->isSavedForLater->get())
@@ -246,7 +247,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     
     public function getWishListItems()
     {
-		$items[] = array();
+		$items = array();
         foreach ($this->orderedItems as $item)
 		{
 			if ($item->isSavedForLater->get())
@@ -261,9 +262,10 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     public function getShoppingCartItemCount()
 	{
 		$count = 0;
+
 		foreach ($this->getShoppingCartItems() as $item)
 		{
-			$count += $item->count->get();
+        	$count += $item->count->get();
 		}
 		
 		return $count;

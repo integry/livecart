@@ -53,6 +53,22 @@ ClassLoader::import('application.model.Currency');
  */
 class CheckoutController extends FrontendController
 {
+    public function init()
+    {
+        parent::init();  
+        $router = Router::getInstance();
+        $this->addBreadCrumb($this->translate('_checkout'), $router->createUrl(array('controller' => 'order', 'action' => 'index')));         
+        
+        $action = $this->request->getActionName();
+                
+        if ('index' == $action)
+        {
+            return false;
+        }       
+        
+
+    }
+    
     /**
      *  1. Determine user status
      */
@@ -76,13 +92,89 @@ class CheckoutController extends FrontendController
      */
     public function selectAddress()
     {
-    	$user = User::getCurrentUser();    
+        $this->addBreadCrumb($this->translate('_select_addresses'), '');
+        
+    	$response = new ActionResponse();
+    	$response->setValue('billingAddresses', $this->user->getBillingAddressArray());
+    	$response->setValue('shippingAddresses', $this->user->getShippingAddressArray());
+    	$response->set('form', $this->buildAddressSelectorForm());
+    	return $response;    	
     }
     
-    //public function 
-    
-    
-}
+    public function doSelectAddress()
+    {
+        if (!$this->buildAddressSelectorValidator()->isValid())
+        {
+            return new ActionRedirectResponse('checkout', 'selectAddress');
+        }   
 
+        try
+        {
+            $billing = ActiveRecordModel::getInstanceById('UserBillingAddress', $this->request->getValue('billingAddress'));
+            
+            if ($billing->user->get()->getID() != $this->user->getID())
+            {
+                throw new ApplicationException('Invalid shipping address');
+            }
+            
+            if ($this->request->getValue('sameAsBilling'))
+            {
+                $shipping = $billing;
+            }
+            else
+            {
+                $shipping = UserAddress::getInstanceById($this->request->getValue('shippingAddress'));    
+            }            
+
+            if ($shipping->user->get()->getID() != $this->user->getID())
+            {
+                throw new ApplicationException('Invalid billing address');
+            }
+        }
+        catch (Exception $e)
+        {
+            return new ActionRedirectResponse('checkout', 'selectAddress');               
+        }
+        
+        $order = CustomerOrder::getInstance();
+        $order->shippingAddress->set($shipping);
+        $order->billingAddress->set($billing);
+        $order->save();
+        
+        return new ActionRedirectResponse('checkout', 'confirmTotals');
+    }
+    
+    public function confirmTotals()
+    {
+        // get shipping address
+        $order = CustomerOrder::getInstance();
+        $address = $order->shippingAddress->get();
+        if (!$address)
+        {
+            return new ActionRedirectResponse('checkout', 'selectAddress');
+        }
+        
+        $rates = $order->getShippingRates();
+        
+        print_r($rates);
+    }
+    
+    private function buildAddressSelectorForm()
+    {
+		ClassLoader::import("framework.request.validator.Form");
+        $validator = new RequestValidator("addressSelectorValidator_blank", $this->request);
+		return new Form($validator);        
+    }
+    
+    private function buildAddressSelectorValidator()
+    {
+		ClassLoader::import("framework.request.validator.Form");
+        $validator = new RequestValidator("addressSelectorValidator", $this->request);
+        $validator->addCheck('billingAddress', new IsNotEmptyCheck($this->translate('_select_billing_address')));
+        $validator->addCheck('shippingAddress', new OrCheck(array('shippingAddress', 'sameAsBilling'), array(new IsNotEmptyCheck($this->translate('_select_shipping_address')), new IsNotEmptyCheck('')), $this->request));
+        
+        return $validator;
+    }
+}
     
 ?>

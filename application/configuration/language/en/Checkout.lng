@@ -1,0 +1,13 @@
+_checkout=Checkout
+
+######################## 
+# Select order addresses
+######################## 
+_select_addresses=Select Order Addresses
+_continue=Continue
+
+_add_shipping_address=Add New Shipping Address
+_add_billing_address=Add New Billing Address
+
+_select_shipping_address=Please select the shipping address!
+_select_billing_address=Please select the billing address!

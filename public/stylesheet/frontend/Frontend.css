@@ -369,6 +369,30 @@ tr.specificationGroup
 	width: 50px;
 }
 
+/*****************************
+	Checkout
+***************************/
+.addressSelector
+{
+    
+}
+
+.addressSelector .selector
+{
+    vertical-align: middle;    
+    text-align: center;
+}
+
+.addressSelector .address
+{
+    padding: 5px;    
+}
+
+.addressSelector .address p
+{
+    margin: 3px;
+}
+
 /*************************** 
 	Form styling
 ***************************/

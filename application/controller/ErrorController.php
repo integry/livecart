@@ -4,9 +4,10 @@ ClassLoader::import("application.controller.FrontendController");
 
 class ErrorController extends FrontendController
 {
-	function error404()
+	function index()
 	{
-	echo 'error 404';
+	   print_r(User::getCurrentUser()->toArray());
+       echo 'error ' . $this->request->getValue('id');
 	//	return new ActionResponse();
 	}	
 }
