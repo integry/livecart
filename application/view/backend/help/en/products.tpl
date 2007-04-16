@@ -1,7 +1,7 @@
 <p>
-To start selling goods in your e-store you have to stock up your system with some products first. LiveCart offers you tools that will help you (to) 
-import and keep your product information up-to-date. As in most e-stores LC allows you to manage your products by 
-categories.
+To start selling goods in your e-store you have to stock up your system with some products first. LiveCart offers
+ you tools that will help you (to) import and keep your product information up-to-date. As in most e-stores LC 
+ allows you to manage your products by categories.
 </p>
 
 <div class="tasks">
@@ -9,7 +9,7 @@ categories.
 <legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#view">View and Sort products</a></li>
-	<li><a href="{self}#find">Find products</a></li>
+	<li><a href="{self}#find">Locate products</a></li>
 	<li><a href="{self}#manage">Manage products</a></li>
 	<li><a href="{help /products.add}">Add new product</a></li>
 	</ul>
@@ -49,14 +49,14 @@ categories.
 	</ul>
 </p>
 
-<h3 id="find">Find products</h3>
+<h3 id="find">Locate products</h3>
 
 <p>LC allows you to conduct a search almost by any product's attribute.</p>
 <ul>
 		<br \>
-		<li>Click a property to activate its field:</li>
+		<li>Click an attribute to activate a search field:</li>
 		<img src="image/doc/products/name2.bmp"/>
-		<li>Enter a name in the field to search products and press Enter:</li>
+		<li>Enter search criteria and press Enter:</li>
 		<img src="image/doc/products/name_nokia2.bmp"/>
 		(Products that match your criteria appear below automatically).
 		<br \>
@@ -81,11 +81,11 @@ most of the attributes by applying changes to several products at once.</p>
 <li>Choose an action from the menu:</li>
 <img src="image/doc/products/menu.bmp"/>
 <img src="image/doc/products/select.bmp"/>
-<li>Click <strong>Save</strong> to process.</li>
+<li>Click <strong>Save</strong>.</li>
 <img src="image/doc/products/save.bmp"/>
 </ol>
 
-<p>To edit a single product, click its name in the products list:</p>
+<p>To edit a <strong>single product</strong>, click product's name in the  list:</p>
 <img src="image/doc/products/click_product.bmp"/>
 Product's <a href="{help /products.define}">detailed page</a> opens. (Where you can edit any of the products properties)
 <br \>

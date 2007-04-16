@@ -1,7 +1,5 @@
 <p>	
-	The product detail form is devided into eight sections. Field specification details are provided below.
-	If you are adding a new product -> the form is divided into ...
-	If you are edditing products -> ...
+	Field specification details are provided below.	
 </p>
 
 <!--
@@ -19,8 +17,8 @@ You can edit details by choosing appropriate tab indicating details group (main,
 	<li><a href="{self}#inventory">Edit Inventory</a></li>
 	<li><i><a href="{self}#images">Edit Images</a></i></li>
 	<li><i><a href="{self}#related">Related Products</a></i></li>
-	<li><i><a href="{self}#options">Edit Options</a></i></li>
 	<li><i><a href="{self}#files">Edit Files</a></i></li>
+	<li><i><a href="{self}#options">Edit Options</a></i></li>
 	<li><a href="{self}#save">Save changes</a></li>
 </ul>
 </fieldset>
@@ -33,7 +31,7 @@ You can edit details by choosing appropriate tab indicating details group (main,
 <ul>
 	<li>Is enabled - mark the checkbox to make the product visible in your e-store.</li>
 	<li>Product name - the name of the product.</li>
-	<li>{glossary}Handle{/glossary}</li>
+	<li>{glossary}Handle{/glossary} - (mouse mouse cursor over the name to see more details)</li>
 	<li>{glossary}SKU{/glossary}</li>
 	<li>Short description - a brief description about the product. Short descirption is displayed in the 
 	{glossary}product list{/glossary} page.</li>
@@ -46,7 +44,8 @@ You can edit details by choosing appropriate tab indicating details group (main,
 	<li>Mark as bestseller - mark the checkbox to set the product's status to {glossary}bestseller{/glossary}.</li>
 </ul>
 If you have more than one language in your system, you can translate the following details:
-<img src="image/doc/products/edit/translate.bmp">
+<img src="image/doc/products/edit/translate1.bmp">
+<img src="image/doc/products/edit/translate2.bmp">
 <ul>
 	<li>Name</li>
 	<li>Short description</li>
@@ -54,10 +53,9 @@ If you have more than one language in your system, you can translate the followi
 </ul>
 
 <h3 id="specification">Product specification</h3>
-<p></p>
+<p>Product specification section includes user defined attributes.</p>
 <img src="image/doc/products/edit/specification.bmp">
-<p>Product specification section includes user defined attributes. See <a href="{help /cat.attr}">attributes</a> 
-for more information.</p>
+<p>See <a href="{help /cat.attr}">attributes</a> for more information.</p>
 
 <h3 id="pricing_shipping">Prices and Shipping</h3>
 <p>This section is used to supply prices of your product.</p>
@@ -67,7 +65,7 @@ Go to <a href="{help /currency}">currencies section</a> to configure currencies 
 <br \>
 <img src="image/doc/products/edit/shipping.bmp">
 <ul>
-	<li>Shipping weight - enter weight of the product.</li>
+	<li>Shipping weight - weight of the product in 'Metric' or 'English' units.</li>
 	<li>Minimum order quantity - a minimum number of product items allowed to order at a time.</li>
 	<li>Minimum surcharge - an extra / additional charge.</li>
 	<li>Requires separate shipment - mark the checkbox to require separate shipment for the product.</li>
@@ -88,18 +86,32 @@ Go to <a href="{help /currency}">currencies section</a> to configure currencies 
 
 <h3 id="images">Images</h3>
 
-<p></p>
+<p>Products can have multiple images to represent them better. To add an image:</p>
+<ol>
+	<li>Click <strong>Add new image</strong>.</li>
+	<li>Click <strong>Browse</strong> to locate imgage on your hard disk drive.</li>
+	<li>Click <strong>Upload</strong> to set an image.</li>
+</ol>
+<p class="note">The first uploaded picture is a <strong>Main</strong> image that is displayed in the product list page. It is
+also the first image that is displayed in the product details page. All the other pictures are considered
+supplemental.</p>
 <img src="image/doc/products/edit/images.bmp">
+
+<h3 id="related">Related products</h3>
+
+<p>For upselling purposes you can easily create related products that are displayed to customers as additional
+products that are some way related. To add related products for a particular product:</p>
 <ul>
+	<li></li>
 	<li></li>
 </ul>
 
 
-<h3 id="related">Related products</h3>
+<h3 id="options">Files</h3>
 
-<p></p>
-<img src="image/doc/products/edit/related_products.bmp">
+<p>Files are most likely used for digital products such as software, music or any other. To upload files:</p>
 <ul>
+	<li></li>
 	<li></li>
 </ul>
 
@@ -113,20 +125,14 @@ Go to <a href="{help /currency}">currencies section</a> to configure currencies 
 </ul>
 
 
-<h3 id="options">Files</h3>
-
-<p></p>
-<img src="image/doc/products/edit/files.bmp">
-<ul>
-	<li></li>
-</ul>
-
 <h3 id="save">Save</h3>
 
 <p>If you are adding a new product you can choose to save only the main details and add another product immediately
  or choose to continue with more details:
  </p>
 <img src="image/doc/products/edit/save.bmp">
+<p>( If you are editing a product, its form is devided into seven sections / groups. Click a tab to access a 
+particular group. )</p>
 
 
 

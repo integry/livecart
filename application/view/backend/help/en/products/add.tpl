@@ -1,6 +1,6 @@
-
+<h2><ins>any alternative ways to add products?</ins></h2>
 <p class="note"><strong>Note</strong>: Because products require different <a href="{help /cat.attr}">attributes</a> (color, weight etc.)
-you have to set appropriate attributes before adding products.</p>
+(it is recommended to) you have to set appropriate attributes before adding products.</p>
 
 <p>To create a new product:</p>
 
