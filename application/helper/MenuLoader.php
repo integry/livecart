@@ -22,7 +22,7 @@ class MenuLoader {
 
 	  	if ($this->reload || !file_exists($cache_file))
 		{
-		  	MenuLoader::createFromDir(&$this->mainMenu, ClassLoader::getRealPath("application.configuration.backend_menu"));
+		  	MenuLoader::createFromDir($this->mainMenu, ClassLoader::getRealPath("application.configuration.backend_menu"));
 //			$this->sortMenu();
 			file_put_contents($cache_file, serialize($this->mainMenu));
 		}
@@ -129,7 +129,7 @@ class MenuLoader {
 
 			if (!empty($child['items']) && count($child['items']) > 0)
 			{
-				$this->findCurrentHierarchy($controller, $action, &$child['items'], $currentTop);
+				$this->findCurrentHierarchy($controller, $action, $child['items'], $currentTop);
 			}
 		}
 	}
@@ -153,11 +153,11 @@ class MenuLoader {
 	  	{
 			// gets simple xml stucture
 			$struct = simplexml_load_file($path.'/'.$file);
-			MenuLoader::createFromXML(&$father_menu, $struct);
+			MenuLoader::createFromXML($father_menu, $struct);
 			$subDir = $path.'/'.substr($file, 0, -4);
 			if (file_exists($subDir))
 			{
-				MenuLoader::createFromDir(&$father_menu[count($father_menu)]['items'], $subDir);
+				MenuLoader::createFromDir($father_menu[count($father_menu)]['items'], $subDir);
 			}
 		}
 	}
@@ -180,7 +180,7 @@ class MenuLoader {
 	  	{
 		  	foreach($struct->Items->Menu as $value)
 		  	{
-				MenuLoader::createFromXML(&$father_menu[$i]['items'], $value);
+				MenuLoader::createFromXML($father_menu[$i]['items'], $value);
 			}
 		}
 	}
