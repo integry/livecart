@@ -18,7 +18,7 @@ class ProductController extends StoreManagementController
 {
 	public function index()
 	{
-		$this->rebuildMenuLangFile();		
+		//$this->rebuildMenuLangFile();		
         $category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
 	
 		$availableColumns = $this->getAvailableColumns($category);
@@ -36,7 +36,7 @@ class ProductController extends StoreManagementController
         $response->setValue("availableColumns", $availableColumns);
 		$response->setValue("categoryID", $category->getID());
 		$response->setValue("offset", $this->request->getValue('offset'));
-		$response->setValue("totalCount", '55');
+		$response->setValue("totalCount", '0');
 		$response->setValue("currency", $this->store->getDefaultCurrency()->getID());
 
 		$path = $this->getCategoryPathArray($category);
