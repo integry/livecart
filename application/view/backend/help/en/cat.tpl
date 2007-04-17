@@ -1,16 +1,16 @@
 <p>
-	As in most e-commerce stores, with LiveCart you can organize products into categories. <del>Categories can also contain subcategories which, in turn,
-	may have their own subcategories.</del> (X-Cart?) The number of subcategories and subcategory levels is unlimited. All the categories are displayed on the left 
-	side of the screen in the tree-based structure.
+	As in most e-commerce stores, with LiveCart you can organize products into categories. Categories can 
+	also contain subcategories. The number of subcategories and subcategory levels is unlimited. 
+	All the categories are displayed on the left side of the screen in the tree-based structure.
 </p>
 
 <img src="image/doc/categories/category tree.bmp">
 
 <p>	
-	Category tree structure represents how all of the categories are arranged. (If a category "LCD monitors" is a <strong>subcategory</strong> of 
-	"Monitors" then "Monitors" is a <strong>parent</strong> category for "LCD monitors"). At the top of the category tree is the 
-	<strong>Root</strong> category which is a parent category for all the descending categories.
-	<del>(In the category tree you can easily manage your categories by selecting one of the options:)</del>
+	Category tree structure represents how all of the categories are arranged. (If a category "LCD monitors" is 
+	a <strong>subcategory</strong> of "Monitors" then "Monitors" is a <strong>parent</strong> category for 
+	"LCD monitors"). At the top of the category tree is the <strong>Root</strong> category which is a parent 
+	category for all the descending categories.
 </p>
 
 <div class="tasks">
@@ -21,6 +21,7 @@
 	<li><a href="{self}#change order">Change category order</a></li>
 	<li><a href="{self}#move">Move category</a></li>
 	<li><a href="{self}#remove">Remove a category</a></li>
+	<li><a href="{help /cat.details}">Edit Category details</a></li>
 
 </ul>
 </fieldset>
@@ -71,9 +72,6 @@
 <p>To remove a category (<strong>including all its subcategories and products</strong>) select a category and click <i>Remove a category</i>:</p>
 <p><img src="image/doc/categories/remove.bmp"></p>
 
-<h3 id="edit">Edit category details</h3>
-
-<a class="note" href="{help .details}">See here</a>
 
 {helpSeeAlso}
 	{see cat.details}
