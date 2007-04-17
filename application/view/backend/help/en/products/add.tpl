@@ -1,8 +1,6 @@
-<del>any alternative ways to add products?</del>
-<ins>no import features in the first version. only through <a href="{help /dev.api}">API</a></ins>
-
-<p class="note"><strong>Note</strong>: Because some products require different <a href="{help /cat.attr}">attributes</a> <del>(color, weight etc.)</del> <ins>(number of pages or ISBN code for books, screen size for TVs, etc.)
-you have to define the appropriate attributes before adding products.</ins></p>
+<p class="note"><strong>Note</strong>: Because some products require different <a href="{help /cat.attr}">attributes
+</a> (number of pages or ISBN code for books, screen size for TVs, and so on) you have to define the appropriate 
+attributes before adding products.</p>
 
 <p>To create a new product:</p>
 

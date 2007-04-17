@@ -1,6 +1,7 @@
 <p>
 To start selling goods in your e-store you have to stock up your system with some products first. LiveCart offers
- you tools that will help you add the products and keep the product information up-to-date. As in most e-stores <ins>the products are arranged by categories</ins><del>LC allows you to manage your products by categories. </del>
+ you tools that will help you add the products and keep the product information up-to-date. As in most e-stores 
+ the products are arranged by categories.
 </p>
 
 <div class="tasks">
@@ -25,14 +26,15 @@ To start selling goods in your e-store you have to stock up your system with som
 		<li>Click a category on the category tree. The Category details tab opens on the right. To view products, 
 		click <strong>Products</strong> tab:</li>
 		<img src="image/doc/products/products_tab.bmp"/>
-		<li>Product<ins>s</ins> are displayed in a table: <del>fashioned similar to this:</del></li>
+		<li>Products are displayed in a table:</li>
 		<img src="image/doc/products/products_table.bmp"/>
-		By default products are displayed in the order <ins>they were added to your store</ins>.
+		By default products are displayed in the order they were added to your store (newest first).
 	</ul>
 </p> 
 <br \>
 <h4>Sort</h4>
-	<p>LiveCart allows you to <strong>sort</strong> product's almost by any attribute: SKU, name, manufacturer, price etc. 
+	<p>LiveCart allows you to <strong>sort</strong> product's almost by any attribute: SKU, name, manufacturer, 
+	price etc. 
 	To sort products in ascending order click the "up" arrow next to the attribute's name:</p>
 	<img src="image/doc/products/arrow.bmp"/>
 	<p>To display products in descending order click "down" arrow:</p>
@@ -56,7 +58,7 @@ To start selling goods in your e-store you have to stock up your system with som
 		<img src="image/doc/products/name2.bmp"/>
 		<li>Enter search criteria and press Enter:</li>
 		<img src="image/doc/products/name_nokia2.bmp"/>
-		<ins>Only the</ins> products that match your criteria <ins>will remain</ins>.<del>appear below automatically)</del>.
+		Only the products that match your criteria will remain.
 	
 	</ul>
 
@@ -65,7 +67,8 @@ subcategories. If you want to search all you product catalog, select the root ca
 
 <p class="note"><strong>Tip</strong>: you can as well use logical operators such as "<" - less or ">" - more 
 in your search. For instance, if you want to display products that cost less than 500, simply enter "< 500"
-in the price field. <ins>You can also search within a particular range. For example, to find products that cost from 200 to 500, enter ">200 <500" in the search field</ins></p>
+in the price field. You can also search within a particular range. For example, to find products that cost 
+from 200 to 500, enter ">200 <500" in the search field.</p>
 
 
 <h3 id="manage">Manage products</h3>
