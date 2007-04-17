@@ -3,11 +3,11 @@
 ClassLoader::import('application.model.user.UserAddressType');
 
 /**
- * Customer billing address
+ * Customer shipping address
  *
- * @package application.model.category
+ * @package application.model.user
  */
-class UserBillingAddress extends UserAddressType
+class ShippingAddress extends UserAddressType
 {
     /**
      * Define database schema
@@ -28,12 +28,12 @@ class UserBillingAddress extends UserAddressType
         
         $user = $this->user->get();
         $user->load();        
-        if (!$user->defaultBillingAddress->get())
+        if (!$user->defaultShippingAddress->get())
         {
-            $user->defaultBillingAddress->set($this);
+            $user->defaultShippingAddress->set($this);
             $user->save();
         }
-    }    
+    }
 }
 	
 ?>

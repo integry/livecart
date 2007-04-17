@@ -1,8 +1,8 @@
 <?php
 
 ClassLoader::import("application.model.ActiveRecordModel");
-ClassLoader::import("application.model.user.UserBillingAddress");
-ClassLoader::import("application.model.user.UserShippingAddress");
+ClassLoader::import("application.model.user.BillingAddress");
+ClassLoader::import("application.model.user.ShippingAddress");
 
 /**
  * Store user base class (including frontend and backend)
@@ -25,8 +25,8 @@ class User extends ActiveRecordModel
 		$schema->setName("User");
 
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("defaultShippingAddressID", "defaultShippingAddress", "ID", 'UserShippingAddress', ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("defaultBillingAddressID", "defaultBillingAddress", "ID", 'UserBillingAddress', ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("defaultShippingAddressID", "defaultShippingAddress", "ID", 'ShippingAddress', ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("defaultBillingAddressID", "defaultBillingAddress", "ID", 'BillingAddress', ARInteger::instance()));
 
 		$schema->registerField(new ARField("email", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("password", ARVarchar::instance(16)));
@@ -151,25 +151,25 @@ class User extends ActiveRecordModel
     public function getBillingAddressArray($defaultFirst = true)
     {
         $f = new ARSelectFilter();
-        $f->setCondition(new EqualsCond(new ARFieldHandle('UserBillingAddress', 'userID'), $this->getID()));
+        $f->setCondition(new EqualsCond(new ARFieldHandle('BillingAddress', 'userID'), $this->getID()));
         if (!$defaultFirst)
         {
             $f->setOrder(new ARExpressionHandle('ID = ' . $this->defaultBillingAddress->get()->getID()));
         }
         
-        return ActiveRecordModel::getRecordSetArray('UserBillingAddress', $f, array('UserAddress', 'State'));
+        return ActiveRecordModel::getRecordSetArray('BillingAddress', $f, array('UserAddress', 'State'));
     }
 
     public function getShippingAddressArray($defaultFirst = true)
     {
         $f = new ARSelectFilter();
-        $f->setCondition(new EqualsCond(new ARFieldHandle('UserShippingAddress', 'userID'), $this->getID()));
+        $f->setCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userID'), $this->getID()));
         if (!$defaultFirst)
         {
             $f->setOrder(new ARExpressionHandle('ID = ' . $this->defaultShippingAddress->get()->getID()));
         }
         
-        return ActiveRecordModel::getRecordSetArray('UserShippingAddress', $f, array('UserAddress', 'State'));
+        return ActiveRecordModel::getRecordSetArray('ShippingAddress', $f, array('UserAddress', 'State'));
     }
     
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)

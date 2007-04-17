@@ -94,10 +94,34 @@ class CheckoutController extends FrontendController
     {
         $this->addBreadCrumb($this->translate('_select_addresses'), '');
         
+        $order = CustomerOrder::getInstance();
+        
+        $form = $this->buildAddressSelectorForm();
+        
+        if ($order->billingAddress->get()->getID())
+        {
+            $form->setValue('billingAddress', $order->billingAddress->get()->getID());
+        }
+        else
+        {
+            $form->setValue('billingAddress', $this->user->defaultBillingAddress->get()->userAddress->get()->getID());
+        }
+        
+        if ($order->shippingAddress->get()->getID())
+        {
+            $form->setValue('shippingAddress', $order->shippingAddress->get()->getID());
+        }
+        else
+        {
+            $form->setValue('shippingAddress', $this->user->defaultShippingAddress->get()->userAddress->get()->getID());
+        }
+         
+        $form->setValue('sameAsBilling', (int)($form->getValue('billingAddress') == $form->getValue('shippingAddress')));
+        
     	$response = new ActionResponse();
     	$response->setValue('billingAddresses', $this->user->getBillingAddressArray());
     	$response->setValue('shippingAddresses', $this->user->getShippingAddressArray());
-    	$response->set('form', $this->buildAddressSelectorForm());
+    	$response->set('form', $form);
     	return $response;    	
     }
     
@@ -105,17 +129,22 @@ class CheckoutController extends FrontendController
     {
         if (!$this->buildAddressSelectorValidator()->isValid())
         {
-            return new ActionRedirectResponse('checkout', 'selectAddress');
+            return new ActionRedirectResponse('checkout', 'selectAddress', array('id' => 1));
         }   
 
         try
         {
-            $billing = ActiveRecordModel::getInstanceById('UserBillingAddress', $this->request->getValue('billingAddress'));
+            $f = new ARSelectFilter();
+            $f->setCondition(new EqualsCond(new ARFieldHandle('BillingAddress', 'userID'), $this->user->getID()));
+            $f->mergeCondition(new EqualsCond(new ARFieldHandle('BillingAddress', 'userAddressID'), $this->request->getValue('billingAddress')));
+            $r = ActiveRecordModel::getRecordSet('BillingAddress', $f, array('UserAddress'));
             
-            if ($billing->user->get()->getID() != $this->user->getID())
+            if (!$r->size())
             {
-                throw new ApplicationException('Invalid shipping address');
+                throw new ApplicationException('Invalid billing address');
             }
+            
+            $billing = $r->get(0);
             
             if ($this->request->getValue('sameAsBilling'))
             {
@@ -123,22 +152,28 @@ class CheckoutController extends FrontendController
             }
             else
             {
-                $shipping = UserAddress::getInstanceById($this->request->getValue('shippingAddress'));    
-            }            
 
-            if ($shipping->user->get()->getID() != $this->user->getID())
-            {
-                throw new ApplicationException('Invalid billing address');
-            }
+                $f = new ARSelectFilter();
+                $f->setCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userID'), $this->user->getID()));
+                $f->mergeCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userAddressID'), $this->request->getValue('shippingAddress')));
+                $r = ActiveRecordModel::getRecordSet('ShippingAddress', $f, array('UserAddress'));
+                
+                if (!$r->size())
+                {
+                    throw new ApplicationException('Invalid shipping address');
+                }
+
+                $shipping = $r->get(0);
+            }            
         }
         catch (Exception $e)
         {
-            return new ActionRedirectResponse('checkout', 'selectAddress');               
+            return new ActionRedirectResponse('checkout', 'selectAddress', array('id' => 2, 'query' => 'msg=' . $e->getMessage()));               
         }
         
         $order = CustomerOrder::getInstance();
-        $order->shippingAddress->set($shipping);
-        $order->billingAddress->set($billing);
+        $order->shippingAddress->set($shipping->userAddress->get());
+        $order->billingAddress->set($billing->userAddress->get());
         $order->save();
         
         return new ActionRedirectResponse('checkout', 'confirmTotals');

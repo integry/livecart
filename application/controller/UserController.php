@@ -102,8 +102,8 @@ class UserController extends FrontendController
         }
         $address->save();
         
-		$userBillingAddress = UserBillingAddress::getNewInstance($user, $address);
-        $userBillingAddress->save();
+		$billingAddress = BillingAddress::getNewInstance($user, $address);
+        $billingAddress->save();
         
         // create user shipping address
         if ($this->request->getValue('sameAsBilling'))
@@ -119,17 +119,17 @@ class UserController extends FrontendController
 		}
 
 	    $address->save();
-		$userShippingAddress = UserShippingAddress::getNewInstance($user, $address);
-        $userShippingAddress->save();
+		$shippingAddress = ShippingAddress::getNewInstance($user, $address);
+        $shippingAddress->save();
 
-        $user->defaultShippingAddress->set($userShippingAddress);
-        $user->defaultBillingAddress->set($userBillingAddress);
+        $user->defaultShippingAddress->set($shippingAddress);
+        $user->defaultBillingAddress->set($billingAddress);
         $user->save();
         
         // set order addresses
         $order = CustomerOrder::getInstance();
-        $order->billingAddress->set($userBillingAddress->userAddress->get());
-        $order->shippingAddress->set($userShippingAddress->userAddress->get());
+        $order->billingAddress->set($billingAddress->userAddress->get());
+        $order->shippingAddress->set($shippingAddress->userAddress->get());
         $order->user->set($user);
         $order->save();
         
@@ -138,6 +138,18 @@ class UserController extends FrontendController
         ActiveRecordModel::commit();
 
         return new ActionRedirectResponse('checkout', 'confirmTotals');
+    }
+
+    public function editShippingAddress()
+    {
+        try
+        {
+            ShippingAddress::getUserAddress($this->request->getValue('id'), $this->user);
+        }
+        catch (ARNotFoundException $e)
+        {
+            return new ActionRedirectResponse('user', 'index');   
+        }
     }
 
     public function addBillingAddress()
@@ -165,12 +177,12 @@ class UserController extends FrontendController
 
     public function doAddBillingAddress()
     {       
-        return $this->doAddAddress('UserBillingAddress', new ActionRedirectResponse('user', 'addBillingAddress', array('query' => array('return' => $this->request->getValue('return')))));
+        return $this->doAddAddress('BillingAddress', new ActionRedirectResponse('user', 'addBillingAddress', array('query' => array('return' => $this->request->getValue('return')))));
     }
 
     public function doAddShippingAddress()
     {       
-        return $this->doAddAddress('UserShippingAddress', new ActionRedirectResponse('user', 'addShippingAddress', array('query' => array('return' => $this->request->getValue('return')))));
+        return $this->doAddAddress('ShippingAddress', new ActionRedirectResponse('user', 'addShippingAddress', array('query' => array('return' => $this->request->getValue('return')))));
     }
 
     private function doAddAddress($addressClass, Response $failureResponse)

@@ -21,17 +21,18 @@
 	{foreach from=$billingAddresses item="item"}
         <tr>
             <td class="selector">
-                <input type="radio" class="radio" name="billingAddress" id="billing_{$item.UserAddress.ID}" value="{$item.UserAddress.ID}" />
+                {radio class="radio" name="billingAddress" id="billing_`$item.UserAddress.ID`" value=$item.UserAddress.ID}
             </td>        
             <td class="address" onclick="$('billing_{$item.UserAddress.ID}').checked = true;">        	    
-                {include file="user/address.tpl"}                
+                {include file="user/address.tpl"} 
+                <a href="{link controller=user action=editBillingAddress id=$item.ID returnPath=true}">{t _edit_address}</a>
             </td>
         </tr>        
 	{/foreach}
 	</table>	
 
     <p>
-        {checkbox name="sameAsBilling" checked="checked" class="checkbox"}
+        {checkbox name="sameAsBilling" class="checkbox"}
         <label for="sameAsBilling" class="checkbox">{t _the_same_as_shipping_address}</label>
     </p>
     
@@ -49,10 +50,11 @@
     	{foreach from=$shippingAddresses item="item"}
             <tr>
                 <td class="selector">
-                    <input type="radio" class="radio" name="shippingAddress" id="shipping_{$item.UserAddress.ID}" value="{$item.UserAddress.ID}" />
+                    {radio class="radio" name="shippingAddress" id="shipping_`$item.UserAddress.ID`" value=$item.UserAddress.ID}
                 </td>        
                 <td class="address" onclick="$('shipping_{$item.UserAddress.ID}').checked = true;">        	    
-                    {include file="user/address.tpl"}                
+                    {include file="user/address.tpl"} 
+                    <a href="{link controller=user action=editShippingAddress id=$item.ID returnPath=true}">{t _edit_address}</a>
                 </td>
             </tr>        
     	{/foreach}
