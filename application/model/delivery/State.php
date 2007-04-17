@@ -35,6 +35,7 @@ class State extends ActiveRecordModel
             $states[$state['ID']] = $state['name'];
         }     
         
+        asort($states);
         return $states;       
     }
     
@@ -62,12 +63,33 @@ class State extends ActiveRecordModel
         }
         else
         {
-            return 0;
+            return null;
         }
-
-        return $states;       
     }    
     
+	/**
+	 * Provides an additional verification that state belongs to the particular country
+	 *
+	 * @return ActiveRecord
+	 */
+    public static function getStateByIDAndCountry($stateID, $countryID)
+    {
+        $f = new ARSelectFilter();
+        $f->setCondition(new EqualsCond(new ARFieldHandle('State', 'ID'), $stateID));
+        $f->mergeCondition(new EqualsCond(new ARFieldHandle('State', 'countryID'), $countryID));
+        
+        $f->setLimit(1);
+        $states = ActiveRecordModel::getRecordSet('State', $f);
+
+        if ($states)
+        {
+            return $states->get(0);
+        }
+        else
+        {
+            return null;
+        }
+    }
 
 	/**
 	 * Gets an existing record instance (persisted on a database).

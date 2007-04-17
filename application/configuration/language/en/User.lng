@@ -5,11 +5,11 @@ _user_registration=New Account Registration
 ######################## 
 
 _contact_info=Contact Information
-_your_first_name=Your first name
-_your_last_name=Your last name
+_your_first_name=First name
+_your_last_name=Last name
 _company_name=Company name
-_your_email=Your e-mail address
-_your_phone=Your phone number
+_your_email=E-mail address
+_your_phone=Phone number
 _enter_password=Enter password
 _reenter_password=Re-enter password
 
@@ -30,5 +30,8 @@ _err_select_state=Please select or enter the state/province
 ######################## 
 _add_billing_address=Add New Billing Address
 _add_shipping_address=Add New Shipping Address
+
+_edit_billing_address=Edit Billing Address
+_edit_shipping_address=Edit Shipping Address
 
 _continue=Continue

@@ -65,8 +65,6 @@ class CheckoutController extends FrontendController
         {
             return false;
         }       
-        
-
     }
     
     /**
@@ -78,7 +76,7 @@ class CheckoutController extends FrontendController
         if ($user->isLoggedIn())
         {
             // go to step 3
-            return new ActionRedirectResponse('checkout', 'selectAddress');
+            return new ActionRedirectResponse('checkout', 'confirmTotals');
         }    
         else
         {

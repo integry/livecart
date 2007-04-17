@@ -76,7 +76,7 @@ class DeliveryZone extends MultilingualObject
     	// determine if the country has states defined in database
 		$f = new ARSelectFilter();
 		$f->setCondition(new EqualsCond(new ARFieldHandle('State', 'countryID'), $address->countryID->get()));
-		$hasStates = (ActiveRecordModel::getRecordCount($f) > 0);    
+		$hasStates = (ActiveRecordModel::getRecordCount('State', $f) > 0);    
 		
 		// get zones that match country
 		

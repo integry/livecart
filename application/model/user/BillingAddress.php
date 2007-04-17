@@ -22,6 +22,11 @@ class BillingAddress extends UserAddressType
         return parent::getNewInstance(__CLASS__, $user, $userAddress);
     }    
     
+    public static function getUserAddress($id, User $user)
+    {
+        return parent::getUserAddress(__class__, $id, $user);
+    }
+    
     public function save()
     {
         parent::save();

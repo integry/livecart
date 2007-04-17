@@ -22,7 +22,7 @@ class OrderedItem extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("customerOrderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
-//		$schema->registerField(new ARForeignKeyField("shipmentID", "Shipment", "ID", "Shipment", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("shipmentID", "Shipment", "ID", "Shipment", ARInteger::instance()));
 
 		$schema->registerField(new ARField("priceCurrencyID", ARChar::instance(3)));
 		$schema->registerField(new ARField("price", ARFloat::instance()));
@@ -37,7 +37,7 @@ class OrderedItem extends ActiveRecordModel
         $instance = parent::getNewInstance(__CLASS__);
         $instance->customerOrder->set($order);
         $instance->product->set($product);
-        $instance->count->set(1);
+        $instance->count->set($count);
 
         return $instance;
     }

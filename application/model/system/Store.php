@@ -332,6 +332,7 @@ class Store
 
 	/**
 	 * Returns array of enabled currency instances
+	 *
 	 * @param bool $includeDefaultCurrency Whether to include default currency in the list
 	 * @return array Enabled currency codes
 	 */
@@ -348,6 +349,24 @@ class Store
 
 		return $currArray;
 	}
+
+	/**
+	 * Returns an array with possible shipping methods and rates for required packages
+	 *
+	 * @param DeliveryZone $zone
+	 * @param array $weights
+	 * @return array Shipping rates
+	 *
+	 * @todo implement
+	 */
+    public function getShippingRates(DeliveryZone $zone, $weights)
+    {
+        $result = array();
+        foreach ($weights as $key => $value)
+        {
+            
+        }
+    }
 
 	/**
 	 * Loads currency data from database

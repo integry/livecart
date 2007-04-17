@@ -38,7 +38,7 @@ class UserController extends FrontendController
     {
         $form = $this->buildForm();
                                 
-        $form->setValue('billing_country', $defCountry);                                
+        $form->setValue('billing_country', $this->config->getValue('DEF_COUNTRY'));  
                                 
         $response = new ActionResponse();   
         $response->setValue('form', $form);
@@ -144,7 +144,7 @@ class UserController extends FrontendController
     {
         try
         {
-            ShippingAddress::getUserAddress($this->request->getValue('id'), $this->user);
+            return $this->editAddress(ShippingAddress::getUserAddress($this->request->getValue('id'), $this->user));
         }
         catch (ARNotFoundException $e)
         {
@@ -152,6 +152,86 @@ class UserController extends FrontendController
         }
     }
 
+    public function editBillingAddress()
+    {
+        try
+        {
+            return $this->editAddress(BillingAddress::getUserAddress($this->request->getValue('id'), $this->user));
+        }
+        catch (ARNotFoundException $e)
+        {
+            return new ActionRedirectResponse('user', 'index');   
+        }
+    }
+
+    private function editAddress(UserAddressType $addressType)
+    {        
+        $form = $this->buildAddressForm();
+        $address = $addressType->userAddress->get();
+        
+        $form->setData($address->toArray());
+        $form->setValue('country', $address->countryID->get());
+        $form->setValue('state_text', $address->stateName->get());
+        
+        if ($address->state->get())
+        {
+            $form->setValue('state_select', $address->state->get()->getID());
+        }
+
+        $form->setValue('zip', $address->postalCode->get());
+                        
+        $response = new ActionResponse();        
+        $response->setValue('form', $form);
+        $response->setValue('return', $this->request->getValue('return'));
+        $response->setValue('countries', $this->getCountryList($form));
+        $response->setValue('states', $this->getStateList($form->getValue('country')));
+        $response->setValue('address', $address->toArray());
+        $response->setValue('addressType', $addressType->toArray());
+        return $response;            
+    }
+    
+    public function saveShippingAddress()
+    {
+        try
+        {
+            $address = ShippingAddress::getUserAddress($this->request->getValue('id'), $this->user);
+        }
+        catch (ARNotFoundException $e)
+        {
+            return new ActionRedirectResponse('user', 'index');   
+        }
+
+        return $this->doSaveAddress($address, new ActionRedirectResponse('user', 'editShippingAddress', array('id' =>$this->request->getValue('id'), 'query' => array('return' => $this->request->getValue('return')))));        
+    }
+    
+    public function saveBillingAddress()
+    {
+        try
+        {
+            $address = BillingAddress::getUserAddress($this->request->getValue('id'), $this->user);
+        }
+        catch (ARNotFoundException $e)
+        {
+            return new ActionRedirectResponse('user', 'index');   
+        }
+
+        return $this->doSaveAddress($address, new ActionRedirectResponse('user', 'editBillingAddress', array('id' =>$this->request->getValue('id'), 'query' => array('return' => $this->request->getValue('return')))));        
+    }
+    
+    private function doSaveAddress(UserAddressType $address, ActionRedirectResponse $invalidResponse)
+    {
+        $address = $address->userAddress->get();
+        if ($this->buildAddressValidator()->isValid())
+        {
+            $this->saveAddress($address);
+            return new RedirectResponse(Router::getInstance()->createURLFromRoute($this->request->getValue('return')));
+        }
+        else
+        {
+            return $invalidResponse;
+        }        
+    }
+    
     public function addBillingAddress()
     {
         $form = $this->buildAddressForm();
@@ -191,16 +271,7 @@ class UserController extends FrontendController
         if ($validator->isValid())
         {
             $address = UserAddress::getNewInstance();
-            $address->firstName->set($this->request->getValue('firstName'));
-            $address->lastName->set($this->request->getValue('lastName'));
-            $address->companyName->set($this->request->getValue('companyName'));
-            $address->address1->set($this->request->getValue('address1'));        
-            $address->address2->set($this->request->getValue('address2'));        
-            $address->city->set($this->request->getValue('city'));
-            $address->countryID->set($this->request->getValue('country'));
-            $address->postalCode->set($this->request->getValue('zip'));
-            $address->phone->set($this->request->getValue('phone'));            
-            $address->save();
+            $this->saveAddress($address);
             
             $addressType = call_user_func_array(array($addressClass, 'getNewInstance'), array($this->user, $address));
             $addressType->save();
@@ -222,13 +293,31 @@ class UserController extends FrontendController
         }        
     }
 
+    private function saveAddress(UserAddress $address)
+    {
+        $address->loadRequestData($this->request);
+        $address->countryID->set($this->request->getValue('country'));
+        $address->postalCode->set($this->request->getValue('zip'));
+        $address->stateName->set($this->request->getValue('state_text')); 
+        if ($this->request->getValue('state_select'))
+        {
+            $address->state->set(State::getStateByIDAndCountry($this->request->getValue('state_select'), $this->request->getValue('country')));                
+        }
+        else
+        {
+            $address->state->set(null);   
+        }
+        $address->save();        
+    }
+
     /**
      *  Return a list of states for the selected country
      *  @return JSONResponse
      */
     public function states()
     {                
-        return new JSONResponse(State::getStatesByCountry($this->request->getValue('country')));  
+        $states = State::getStatesByCountry($this->request->getValue('country'));
+        return new JSONResponse($states);
     }
     
     private function buildAddressForm()
@@ -325,7 +414,11 @@ class UserController extends FrontendController
     private function getStateList($country)
     {
         $states = State::getStatesByCountry($country);
-        $states = array_merge(array('' => ''), $states);
+        
+        if ($states)
+        {
+            $states = array('' => '') + $states;            
+        }
         
         return $states;        
     }    

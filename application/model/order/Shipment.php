@@ -2,7 +2,6 @@
 
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.OrderedItem");
-ClassLoader::import("application.model.system.SessionSyncable");
 
 /**
  * Represents a collection of ordered items that are shipped in the same package
@@ -28,6 +27,13 @@ class Shipment extends ActiveRecordModel
 
 		$schema->registerField(new ARField("status", ARInteger::instance(2)));
 	}       
+	
+	public static function getNewInstance(CustomerOrder $order)
+	{
+        $instance = parent::getNewInstance(__class__);
+        $instance->order->set($order);
+        return $instance;
+    }
 	
 	public function addItem(OrderedItem $item)
 	{

@@ -30,6 +30,21 @@ abstract class UserAddressType extends ActiveRecordModel
         return $instance;
     }    
     
+    public static function getUserAddress($className, $addressID, User $user)
+    {
+        $f = new ARSelectFilter();
+        $f->setCondition(new EqualsCond(new ARFieldHandle($className, 'ID'), $addressID));
+        $f->mergeCondition(new EqualsCond(new ARFieldHandle($className, 'userID'), $user->getID()));        
+        $s = ActiveRecordModel::getRecordSet($className, $f, array('UserAddress'));
+        
+        if (!$s->size())
+        {
+            throw new ARNotFoundException($className, $addressID);
+        }
+        
+        return $s->get(0);
+    }
+    
     public function serialize()
     {
         return parent::serialize(array('userID'));

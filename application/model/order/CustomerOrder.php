@@ -349,6 +349,8 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
      */
     public function createShipments()
     {
+        ClassLoader::import("application.model.order.Shipment");
+
         $main = Shipment::getNewInstance($this);
         $additional = array();
         
@@ -373,6 +375,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 	
 	public function getShippingRates()
 	{
+        ClassLoader::import("application.model.delivery.DeliveryZone");
         $zone = DeliveryZone::getZoneByAddress($this->shippingAddress->get());
         
         $shipments = $this->createShipments();
@@ -381,7 +384,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         {
             $shipmentWeights[$key] = $shipment->getChargeableWeight($zone);
         }   
-                
+          
         return Store::getInstance()->getShippingRates($zone, $shipmentWeights);
     }
 	
