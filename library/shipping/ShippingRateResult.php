@@ -1,5 +1,7 @@
 <?php
 
+include_once('ShippingResultInterface.php');
+
 class ShippingRateResult implements ShippingResultInterface
 {
     protected $serviceID;

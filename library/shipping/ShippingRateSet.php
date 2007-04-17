@@ -1,6 +1,8 @@
 <?php
 
-class ShippingRateSet implements ShippingResultInterface
+include_once('ShippingResultInterface.php');
+
+class ShippingRateSet implements ShippingResultInterface, IteratorAggregate
 {
     protected $rates = array();
     protected $rawResponse;
@@ -24,6 +26,21 @@ class ShippingRateSet implements ShippingResultInterface
     {
         return $this->rawResponse;
     }
+    
+    public function merge(ShippingRateSet $rateSet)
+    {
+        
+    }
+    
+	/**
+	 * Required definition of interface IteratorAggregate
+	 *
+	 * @return Iterator
+	 */
+	public function getIterator()
+	{
+		return new ArrayIterator($this->rates);
+	}    
 }
 
 ?>

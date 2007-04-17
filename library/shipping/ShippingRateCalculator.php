@@ -1,6 +1,5 @@
 <?php
 
-include_once('ShippingResultInterface.php');
 include_once('ShippingRateSet.php');
 include_once('ShippingRateError.php');
 include_once('ShippingRateResult.php');

@@ -1,5 +1,7 @@
 <?php
 
+include_once('ShippingResultInterface.php');
+
 class ShippingRateError implements ShippingResultInterface
 {
     protected $rawResponse;
