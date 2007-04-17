@@ -18,7 +18,7 @@
 
 <h3>APIs</h3>
 <p>
-	LiveCart provides <a href="{help .api}">two APIs</a> to make it easier to integrate with other systems - <a href="{help .api.soap}">SOAP API</a> and <a href="{help .api}">PHP API</a>. SOAP API is useful for exchanging data with remote systems, however PHP API can be used to do system level customizations without modifying original code.
+	LiveCart provides <a href="{help .api}">two APIs</a> to make it easier to integrate with other systems - <a href="{help .api.soap}">SOAP API</a> and <a href="{help .api}">PHP API</a>. SOAP API is useful for exchanging data with remote systems, however PHP API can be used to do system level customizations without modifying the original code.
 </p>
 
 <h3>But I only need to modify the look of my pages?</h3>

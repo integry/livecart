@@ -67,7 +67,7 @@ Go to <a href="{help /currency}">currencies section</a> to configure currencies 
 <ul>
 	<li>Shipping weight - weight of the product in 'Metric' or 'English' units.</li>
 	<li>Minimum order quantity - a minimum number of product items allowed to order at a time.</li>
-	<li>Minimum surcharge - an extra / additional charge.</li>
+	<li><del>Minimum </del> <ins>Shipping</ins> surcharge - an extra / additional shipping charge <ins>(usually for oversized items).</ins></li>
 	<li>Requires separate shipment - mark the checkbox to require separate shipment for the product.</li>
 	<li>Qualifies for free shipping - mark the checkbox to allow free shipping.</li>
 	<li>Allow back-ordering - mark the checkbox to allow users to make {glossary}back-order{/glossary}s.</li>
@@ -80,7 +80,7 @@ Go to <a href="{help /currency}">currencies section</a> to configure currencies 
 <p></p>
 <img src="image/doc/products/edit/inventory.bmp">
 <ul>
-	<li>Items in stock - ther number of product items in your warehouse, etc.</li>
+	<li>Items in stock - ther number of product items in your warehouse<del>, etc</del>.</li>
 </ul>
 
 
@@ -92,9 +92,16 @@ Go to <a href="{help /currency}">currencies section</a> to configure currencies 
 	<li>Click <strong>Browse</strong> to locate imgage on your hard disk drive.</li>
 	<li>Click <strong>Upload</strong> to set an image.</li>
 </ol>
-<p class="note">The first uploaded picture is a <strong>Main</strong> image that is displayed in the product list page. It is
-also the first image that is displayed in the product details page. All the other pictures are considered
-supplemental.</p>
+
+<ins>
+<p>
+	Uploaded images will be resized automatically to predefined sizes.
+</p>
+</ins>
+
+<p class="note">The first uploaded picture is <del>a</del> <ins>the</ins> <strong>Main</strong> image that is displayed in the product list page. It is
+also the first image that is displayed in the product details page. All the other pictures <del>are considered
+supplemental.</del> will be displayed as enlargeable thumbnails in product detail page.</ins></p>
 <img src="image/doc/products/edit/images.bmp">
 
 <h3 id="related">Related products</h3>
@@ -115,26 +122,14 @@ products that are some way related. To add related products for a particular pro
 	<li></li>
 </ul>
 
-
-<h3 id="options">Options</h3>
-
-<p></p>
-<img src="image/doc/products/edit/options.bmp">
-<ul>
-	<li></li>
-</ul>
-
-
 <h3 id="save">Save</h3>
 
 <p>If you are adding a new product you can choose to save only the main details and add another product immediately
  or choose to continue with more details:
  </p>
 <img src="image/doc/products/edit/save.bmp">
-<p>( If you are editing a product, its form is devided into seven sections / groups. Click a tab to access a 
-particular group. )</p>
-
-
+<p>If you are editing a product, its form is devided into <ins>several tabs</ins>. Click a tab to access the
+particular group.</p>
 
 {helpSeeAlso}
 	{see products.add}

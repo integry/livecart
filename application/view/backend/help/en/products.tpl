@@ -1,7 +1,6 @@
 <p>
 To start selling goods in your e-store you have to stock up your system with some products first. LiveCart offers
- you tools that will help you (to) import and keep your product information up-to-date. As in most e-stores LC 
- allows you to manage your products by categories.
+ you tools that will help you add the products and keep the product information up-to-date. As in most e-stores <ins>the products are arranged by categories</ins><del>LC allows you to manage your products by categories. </del>
 </p>
 
 <div class="tasks">
@@ -26,9 +25,9 @@ To start selling goods in your e-store you have to stock up your system with som
 		<li>Click a category on the category tree. The Category details tab opens on the right. To view products, 
 		click <strong>Products</strong> tab:</li>
 		<img src="image/doc/products/products_tab.bmp"/>
-		<li>Product are displayed in the table fashioned similar to this:</li>
+		<li>Product<ins>s</ins> are displayed in a table: <del>fashioned similar to this:</del></li>
 		<img src="image/doc/products/products_table.bmp"/>
-		By default products are displayed in the XXX order.
+		By default products are displayed in the order <ins>they were added to your store</ins>.
 	</ul>
 </p> 
 <br \>
@@ -53,14 +52,12 @@ To start selling goods in your e-store you have to stock up your system with som
 
 <p>LC allows you to conduct a search almost by any product's attribute.</p>
 <ul>
-		<br \>
 		<li>Click an attribute to activate a search field:</li>
 		<img src="image/doc/products/name2.bmp"/>
 		<li>Enter search criteria and press Enter:</li>
 		<img src="image/doc/products/name_nokia2.bmp"/>
-		(Products that match your criteria appear below automatically).
-		<br \>
-		<br \>
+		<ins>Only the</ins> products that match your criteria <ins>will remain</ins>.<del>appear below automatically)</del>.
+	
 	</ul>
 
 <p class="note"><strong>Note</strong>: product search is carried out only throughout the selected category and its
@@ -68,7 +65,7 @@ subcategories. If you want to search all you product catalog, select the root ca
 
 <p class="note"><strong>Tip</strong>: you can as well use logical operators such as "<" - less or ">" - more 
 in your search. For instance, if you want to display products that cost less than 500, simply enter "< 500"
-in the price field.</p>
+in the price field. <ins>You can also search within a particular range. For example, to find products that cost from 200 to 500, enter ">200 <500" in the search field</ins></p>
 
 
 <h3 id="manage">Manage products</h3>

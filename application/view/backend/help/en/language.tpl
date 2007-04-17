@@ -44,7 +44,7 @@ you deal with interface translations (see <a href="{help /language.edit#translat
 <br \><br \>
 <h3 id="enable_disable">Enable or disable languages</h3>	
 
-<p>All the newly added languages are inactive by default. You might want to keep a language inactive while its translation is being carried out. To activate a language mark a box on the left of the <i>flag</i> icon.
+<p>All the newly added languages are inactive by default. You might want to keep a language inactive while its translation is being carried out. To activate a language mark a box on the left<del> of the <i>flag</i> icon</del>.
 To disable a language simply uncheck the box (by the language you want to suspend).</p>
 
 <img src="image/doc/language/enable.bmp"/>

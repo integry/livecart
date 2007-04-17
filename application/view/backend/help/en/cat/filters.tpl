@@ -120,7 +120,7 @@ to define a range for filter's values.</p>
 	<li>Open add new filter form.<a href="{self}#carrier"><small>(remind me how)</small></a></li>
 	<img src="image/doc/categories/filters/date_attribute.bmp">
 	<li>Associate date attribute from the  attribute's list.</li>
-	<li>Name - enter Filter's name or leave the current name / automatic value.</li>
+	<li>Name - enter Filter's name or leave the current name.</li>
 	<li>Other languages - if you have more than one language in your system, click on a language to enter 
 	"name" in other language.</li>
 	<br \>
@@ -149,7 +149,7 @@ be displayed in your e-store.</p>
 
 <ul>
 	<li>To change the filter order go to the filters section. <a href="{self}#carrier"><small>(Remind me how).</small></a></li>
-	<li>Move mouse cursor over the filter, click and hold button when "move" icon appears. You can drag and drop filter to set the appropriate order.</li>
+	<li>Move mouse cursor over the filter<del>, click and hold button when "move" icon appears. You can</del> and drag and drop the filter to set the appropriate order.</li>
 	<img src="image/doc/categories/filters/rearrange.bmp">
 	<li><strong>Save</strong> your changes afterwards.</li>
 	<img src="image/doc/categories/filters/filters_save.bmp">
@@ -158,14 +158,16 @@ be displayed in your e-store.</p>
 <h3 id="edit">Edit and Delete Filters</h3>
 <p align="right"><a href="{self}#top"><small>Top</small></a></p>
 <ul>
+<del>
 	<li>In order to <strong>edit</strong> a filter, go to the Filters section <a href="{self}#carrier"><small>(Remind me how).</small></a></li>
+</del>
 	<li>Hover mouse pointer over the existing filters and click "Edit" icon next to the filter (name) you want to manage.</li>
 	<img src="image/doc/categories/filters/filters_edit.bmp">
 	<p>Filter's form opens. You can edit any of the filter's property as in the add new filter section. 
 	<a href="{self}#carrier"><small>(Remind me how).</small></a> <strong>Save</strong> the changes you have 
 	made.</p>
 	<br \>
-	<li>If you want to <strong>Delete</strong> a filter click "Delete" next to the "edit" icon.</li>
+	<li>If you want to <strong>Delete</strong> a filter click "Delete" icon next to the "edit" icon.</li>
 	<img src="image/doc/categories/filters/filters_delete.bmp">
 </ul>
 
