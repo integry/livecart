@@ -40,30 +40,33 @@
 
 <h3 id="create">Create Attribute</h3>
 
-<p>LC provides a <del>custom based</del> ? attribute management system which allows you to create and manage attributes in a <del>relatively</del> simple manner.
-LiveCart supports three base product <strong>attribute types</strong> which can be: 
+<p>LC provides a attribute management system which allows you to create and manage attributes in a simple manner.
+ LiveCart supports three base product <strong>attribute types</strong> which can be: 
 
 <ul>
-	<li>Number type which can be either an <i><ins>input</ins> field</i> or a <i><ins>pre-defined value</ins> selector</i></li>
-	<li>Text type can be only <i>selector</i> <ins>(? text input fields are still there)</ins></li>
-	<li>and Date type</li>
+	<li>Number type which can be either an <i>input field</i> or a <i>pre-defined value	selector</i></li>
+	<li>Text type which also can be either an an <i>input field</i> or a <i>selector</i></i>
+	<li>and <i>Date</i> type</li>
 </ul>
 
-Using these base types you can create variuos <ins>(spellchecker?)</ins> types of attributes. Below you'll find a couple of practical examples on how to choose the best attribute type for describing a particular product property. (<ins>simpler sentences</ins>)
+Using these base types you can create various types of attributes. Below you'll find a couple of practical 
+examples on how to choose the best attribute type for describing a particular product property. 
+(<ins>simpler sentences</ins>)
 </p>
 
 <p>
-	Suppose that you have a category stocked with cell phones and you want to create custom fields for specifying the following properties:
-	<strong>Carrier</strong> (select <ins>one</ins> option), <strong>Phone Features</strong> (select <del>checkboxes</del> <ins>multiple options</ins>)
-	and <strong>Batery Capacity</strong> (<ins>number input</ins> field option). Because attributes are automatically included in the <i>Add New Product</i> form, we will demonstrate in our examples how attributes are generated and 
-	placed in the product form.
+	Suppose that you have a category stocked with cell phones and you want to create custom fields for specifying 
+	the following properties: <strong>Carrier</strong> (select one option), <strong>Phone Features</strong> 
+	(select multiple options) and <strong>Batery Capacity</strong> (number input field). 
+	Because attributes are automatically included in the <i>Add New Product</i> form, we will demonstrate in our
+	examples how attributes are generated and placed in the product form.
 </p>
 
 <p><a href="javascript:expand(document.getElementById('carrier'))">Create Carrier attribute</a>
 <div class="dottedBorders" id="carrier" style="display:none">
 
 <h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
-<p>To create <del>an</del <ins>the</ins> attribute follow these steps:</p>
+<p>To create the attribute follow these steps:</p>
 	<ul>	
 		<li>Select a category in the category tree and click <strong>Attributes</strong> tab.</li>
 		<img src="image/doc/categories/attributes/attributes_tab.bmp">
@@ -82,9 +85,9 @@ Using these base types you can create variuos <ins>(spellchecker?)</ins> types o
 		<li><strong>Handle</strong> - handle is generated automatically. Handle is used to represent the attribute in {glossary}URL{/glossary}'s, so you can change it for 
 		{glossary}SEO{/glossary} purposes, if needed.</li>
 		<li>Prefix and Suffix - we leave these fields empty because carriers don't have any of them.</li> 
-		<li>In the description field we enter a brief description to describe the term "Carrier" (<ins>optional</ins>)</li> 	
+		<li>In the description field we enter a brief description to describe the term "Carrier" which is optional.</li> 	
 		<li>International details - if you need to translate attributes in other languages installed in your system, click on the Language to 
-		expand additional fields (which include title and <del>Details</del> <ins>description</ins>).</li>
+		expand additional fields (which include title and Description).</li>
 
 
 	<img src="image/doc/categories/attributes/attributes_international_details.bmp">
@@ -111,8 +114,8 @@ The last thing to do is to create Values which will be used as a selection optio
 	<img src="image/doc/categories/attributes/carrier.bmp">
 	</ul>
 
-<p class="note"><strong>Note</strong>: <del>In the list there is also <strong>other</strong> value which is designed to supplement values list
-in case a new value is introduced.</del><ins>Hard to understand, rewrite simpler - If you need to enter a new value when adding new product, select the "Other" option, which will allow you to enter the new value right there - or somehow similarly.</ins></p>
+<p class="note"><strong>Note</strong>: If you need to enter additional value which is not in the list, choose 
+"other" (and add a new value). A new value will be saved in the list.</p>
 
 </div>
 </p>
@@ -179,7 +182,7 @@ by necessary changes. A numeric attribute looks similar to this one:
 
 <ul>
 	<li>Open <strong>Add new attribute form</strong> <a href="{self}#carrier"><small>(remind me how)</small></a></li>
-	<li>Type - select Nember Field. <ins>spelling</ins></li>
+	<li>Type - select Number Field.</li>
 	<li>Required - click the checkbox to make the field required attribute</li>
 	<li>Field is displayed in the product overview page - </li>
 	<li>Field is displayed in the product's detail page - </li>
@@ -205,13 +208,15 @@ by necessary changes. A numeric attribute looks similar to this one:
 
 <h3 id="group">Group attributes</h3>
 
-LC allows you to group <ins>related attributes together.</ins> <del>your attributes into logical chunks called "groups".</del> To <del>introduce</del> <ins>create</ins> a new group:
+LC allows you to group related attributes together. This is mostly important for products detailed page
+because groups allows you to set neccessary attributes' layout / arrangement.
+To create a new group:
 	<ul>
 		<li>Click <strong>Add new group</strong></li>
 		<img src="image/doc/categories/attributes/add_new_group.bmp">
 		<li>Enter group title (to identify group)</li>
 		<img src="image/doc/categories/attributes/group_title.bmp">
-		<li>Supply <del>international translation</del> <ins>maybe "translation for other languages" would be better</ins> if necessary (applicable)</li>
+		<li>Supply translations for other languages if applicable</li>
 	</ul>
 Attribute groups appear as a <del>rectangle</del> <ins>box?</ins> which can contain as many attributes as neccesary. To place attributes into groups, simply drag attributes
 into the appropriate groups.
@@ -245,10 +250,9 @@ To delete attribute: select an attribute from the list and click on its "delete"
 
 <h3 id="sort">Change attribute order</h3>
 
-(In LC sorting of attributes is implemented via drag&drop feature). To change the order of attributes (or attribute groups), click on attributes 
-empty space and then drag it up or down.
-<p class="note"> <del><strong>Notice</strong> that the order of attributes in the <i>Add New Product</i> form is determined by the arrangement of attribute groups as well as separate attributes.</del> <ins>The order matters more in frontend, so this should be reworded relating to the product detail page</ins>
-</p>
+(In LC sorting of attributes is implemented via drag&drop feature). To change the order of attributes (
+or attribute groups), click on attributes empty space and then drag it up or down.
+
 {helpSeeAlso}
 	{see cat.details}
 	{see cat.filters}
