@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2007-04-06 13:31                                #
+# Created on:            2007-04-17 15:24                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -42,7 +42,7 @@ CREATE TABLE Product (
     isSeparateShipment BOOL,
     isFreeShipping BOOL,
     isBackOrderable BOOL,
-    isFractionUnit BOOL,
+    isFractionalUnit BOOL,
     shippingWeight NUMERIC(8,3),
     stockCount FLOAT,
     reservedCount FLOAT,
@@ -149,6 +149,8 @@ CREATE INDEX IDX_SpecFieldValue_1 ON SpecFieldValue (specFieldID);
 CREATE TABLE CustomerOrder (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     userID INTEGER UNSIGNED,
+    billingAddressID INTEGER UNSIGNED,
+    shippingAddressID INTEGER UNSIGNED,
     sessionID CHAR(32),
     dateCreated TIMESTAMP,
     dateCompleted TIMESTAMP,
@@ -189,12 +191,10 @@ CREATE TABLE User (
     defaultShippingAddressID INTEGER UNSIGNED,
     defaultBillingAddressID INTEGER UNSIGNED,
     email VARCHAR(60),
-    password VARCHAR(16),
-    firstName VARCHAR(20),
-    middleName VARCHAR(20),
-    lastName VARCHAR(20),
-    fullName VARCHAR(60),
-    nickname VARCHAR(20),
+    password CHAR(32),
+    firstName VARCHAR(60),
+    lastName VARCHAR(60),
+    companyName VARCHAR(60),
     dateCreated TIMESTAMP,
     isEnabled BOOL,
     CONSTRAINT PK_User PRIMARY KEY (ID)
@@ -430,7 +430,7 @@ CREATE INDEX IDX_SpecificationDateValue_2 ON SpecificationDateValue (specFieldID
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE State (
-    ID INTEGER NOT NULL AUTO_INCREMENT,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     countryID CHAR(2) NOT NULL,
     code VARCHAR(40) NOT NULL,
     name VARCHAR(100),
@@ -512,44 +512,50 @@ CREATE TABLE ProductReview (
 
 CREATE TABLE UserAddress (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    name VARCHAR(255),
+    stateID INTEGER UNSIGNED,
+    firstName VARCHAR(60),
+    lastName VARCHAR(60),
+    companyName VARCHAR(60),
     address1 VARCHAR(255),
     address2 VARCHAR(255),
-    city VARCHAR(255),
-    state VARCHAR(255),
+    city VARCHAR(60),
+    stateName VARCHAR(60),
     postalCode VARCHAR(50),
-    country CHAR(2),
+    countryID CHAR(2),
     phone VARCHAR(100),
     CONSTRAINT PK_UserAddress PRIMARY KEY (ID)
 );
 
 # ---------------------------------------------------------------------- #
-# Add table "UserBillingAddress"                                         #
+# Add table "BillingAddress"                                             #
 # ---------------------------------------------------------------------- #
 
-CREATE TABLE UserBillingAddress (
+CREATE TABLE BillingAddress (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     userID INTEGER UNSIGNED NOT NULL,
     userAddressID INTEGER UNSIGNED NOT NULL,
-    CONSTRAINT PK_UserBillingAddress PRIMARY KEY (ID)
+    CONSTRAINT PK_BillingAddress PRIMARY KEY (ID)
 );
 
-CREATE INDEX IDX_UserBillingAddress_1 ON UserBillingAddress (userID);
+CREATE INDEX IDX_BillingAddress_1 ON BillingAddress (userID);
 
-CREATE INDEX IDX_UserBillingAddress_2 ON UserBillingAddress (userAddressID);
+CREATE INDEX IDX_BillingAddress_2 ON BillingAddress (userAddressID);
 
 # ---------------------------------------------------------------------- #
 # Add table "Transaction"                                                #
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE Transaction (
-    ID INTEGER NOT NULL AUTO_INCREMENT,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     orderID INTEGER UNSIGNED NOT NULL,
+    parentTransactionID INTEGER UNSIGNED,
     amount FLOAT,
     currencyID CHAR(3),
     time TIMESTAMP,
     method VARCHAR(40),
     gatewayTransactionID VARCHAR(40),
+    type TINYINT COMMENT '0 - sale (authorize & capture) 1 - authorize 2 - capture 3 - void',
+    isCompleted BOOL,
     ccExpiryYear INTEGER,
     ccExpiryMonth TINYINT,
     ccLastDigits CHAR(4),
@@ -568,14 +574,14 @@ CREATE TABLE Shipment (
 );
 
 # ---------------------------------------------------------------------- #
-# Add table "UserShippingAddress"                                        #
+# Add table "ShippingAddress"                                            #
 # ---------------------------------------------------------------------- #
 
-CREATE TABLE UserShippingAddress (
+CREATE TABLE ShippingAddress (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     userID INTEGER UNSIGNED NOT NULL,
     userAddressID INTEGER UNSIGNED NOT NULL,
-    CONSTRAINT PK_UserShippingAddress PRIMARY KEY (ID)
+    CONSTRAINT PK_ShippingAddress PRIMARY KEY (ID)
 );
 
 # ---------------------------------------------------------------------- #
@@ -608,8 +614,9 @@ CREATE TABLE DeliveryZone (
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE DeliveryZoneCountry (
-    ID CHAR(2) NOT NULL,
+    ID INTEGER UNSIGNED NOT NULL,
     deliveryZoneID INTEGER UNSIGNED,
+    countryCode CHAR(2) NOT NULL,
     CONSTRAINT PK_DeliveryZoneCountry PRIMARY KEY (ID)
 );
 
@@ -618,9 +625,9 @@ CREATE TABLE DeliveryZoneCountry (
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE DeliveryZoneState (
-    ID INTEGER NOT NULL AUTO_INCREMENT,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     deliveryZoneID INTEGER UNSIGNED,
-    stateID INTEGER,
+    stateID INTEGER UNSIGNED,
     CONSTRAINT PK_DeliveryZoneState PRIMARY KEY (ID)
 );
 
@@ -687,6 +694,15 @@ CREATE TABLE TaxRate (
 
 CREATE TABLE ShippingRate (
     ID INTEGER NOT NULL AUTO_INCREMENT,
+    shippingRateGroupID INTEGER,
+    weightRangeStart FLOAT,
+    weightRangeEnd FLOAT,
+    subtotalRangeStart FLOAT,
+    subtotalRangeEnd FLOAT,
+    flatCharge FLOAT,
+    perItemCharge FLOAT,
+    subtotalPercentCharge FLOAT,
+    perKgCharge FLOAT,
     CONSTRAINT PK_ShippingRate PRIMARY KEY (ID)
 );
 
@@ -700,6 +716,19 @@ CREATE TABLE ProductFileGroup (
     name TEXT,
     position INTEGER UNSIGNED DEFAULT 0,
     CONSTRAINT PK_ProductFileGroup PRIMARY KEY (ID)
+);
+
+# ---------------------------------------------------------------------- #
+# Add table "ShippingRateGroup"                                          #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ShippingRateGroup (
+    ID INTEGER NOT NULL,
+    deliveryZoneID INTEGER UNSIGNED,
+    name TEXT,
+    position INTEGER UNSIGNED DEFAULT 0,
+    rangeType TINYINT COMMENT '0 - weight based range 1 - subtotal based range',
+    CONSTRAINT PK_ShippingRateGroup PRIMARY KEY (ID)
 );
 
 # ---------------------------------------------------------------------- #
@@ -742,6 +771,12 @@ ALTER TABLE SpecFieldValue ADD CONSTRAINT SpecField_SpecFieldValue
 ALTER TABLE CustomerOrder ADD CONSTRAINT User_CustomerOrder 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
 
+ALTER TABLE CustomerOrder ADD CONSTRAINT UserAddress_CustomerOrder 
+    FOREIGN KEY (billingAddressID) REFERENCES UserAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
+
+ALTER TABLE CustomerOrder ADD CONSTRAINT UserAddress_CustomerOrder_Shipping 
+    FOREIGN KEY (shippingAddressID) REFERENCES UserAddress (ID) ON DELETE SET NULL ON UPDATE SET NULL;
+
 ALTER TABLE OrderedItem ADD CONSTRAINT Product_OrderedItem 
     FOREIGN KEY (productID) REFERENCES Product (ID);
 
@@ -751,11 +786,11 @@ ALTER TABLE OrderedItem ADD CONSTRAINT CustomerOrder_OrderedItem
 ALTER TABLE OrderedItem ADD CONSTRAINT Shipment_OrderedItem 
     FOREIGN KEY (shipmentID) REFERENCES Shipment (ID) ON DELETE SET NULL;
 
-ALTER TABLE User ADD CONSTRAINT UserBillingAddress_User 
-    FOREIGN KEY (defaultBillingAddressID) REFERENCES UserBillingAddress (ID) ON DELETE SET NULL;
+ALTER TABLE User ADD CONSTRAINT BillingAddress_User 
+    FOREIGN KEY (defaultBillingAddressID) REFERENCES BillingAddress (ID) ON DELETE SET NULL;
 
-ALTER TABLE User ADD CONSTRAINT UserShippingAddress_User 
-    FOREIGN KEY (defaultShippingAddressID) REFERENCES UserShippingAddress (ID) ON DELETE CASCADE;
+ALTER TABLE User ADD CONSTRAINT ShippingAddress_User 
+    FOREIGN KEY (defaultShippingAddressID) REFERENCES ShippingAddress (ID) ON DELETE CASCADE;
 
 ALTER TABLE AccessControlList ADD CONSTRAINT User_AccessControlList 
     FOREIGN KEY (UserID) REFERENCES User (ID);
@@ -838,22 +873,28 @@ ALTER TABLE ProductReview ADD CONSTRAINT Product_ProductReview
 ALTER TABLE ProductReview ADD CONSTRAINT User_ProductReview 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
 
-ALTER TABLE UserBillingAddress ADD CONSTRAINT User_UserBillingAddress 
+ALTER TABLE UserAddress ADD CONSTRAINT State_UserAddress 
+    FOREIGN KEY (stateID) REFERENCES State (ID) ON DELETE SET NULL;
+
+ALTER TABLE BillingAddress ADD CONSTRAINT User_BillingAddress 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
 
-ALTER TABLE UserBillingAddress ADD CONSTRAINT UserAddress_UserBillingAddress 
+ALTER TABLE BillingAddress ADD CONSTRAINT UserAddress_BillingAddress 
     FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE;
 
 ALTER TABLE Transaction ADD CONSTRAINT CustomerOrder_Transaction 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
 
+ALTER TABLE Transaction ADD CONSTRAINT Transaction_Transaction 
+    FOREIGN KEY (parentTransactionID) REFERENCES Transaction (ID) ON DELETE CASCADE;
+
 ALTER TABLE Shipment ADD CONSTRAINT CustomerOrder_Shipment 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
 
-ALTER TABLE UserShippingAddress ADD CONSTRAINT User_UserShippingAddress 
+ALTER TABLE ShippingAddress ADD CONSTRAINT User_ShippingAddress 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
 
-ALTER TABLE UserShippingAddress ADD CONSTRAINT UserAddress_UserShippingAddress 
+ALTER TABLE ShippingAddress ADD CONSTRAINT UserAddress_ShippingAddress 
     FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE;
 
 ALTER TABLE OrderNote ADD CONSTRAINT CustomerOrder_OrderNote 
@@ -886,5 +927,11 @@ ALTER TABLE TaxRate ADD CONSTRAINT TaxType_TaxRate
 ALTER TABLE TaxRate ADD CONSTRAINT DeliveryZone_TaxRate 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
 
+ALTER TABLE ShippingRate ADD CONSTRAINT ShippingRateGroup_ShippingRate 
+    FOREIGN KEY (shippingRateGroupID) REFERENCES ShippingRateGroup (ID) ON DELETE CASCADE;
+
 ALTER TABLE ProductFileGroup ADD CONSTRAINT Product_ProductFileGroup 
     FOREIGN KEY (productID) REFERENCES Product (ID);
+
+ALTER TABLE ShippingRateGroup ADD CONSTRAINT DeliveryZone_ShippingRateGroup 
+    FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;

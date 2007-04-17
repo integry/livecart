@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2007-04-06 13:31                                #
+# Created on:            2007-04-17 15:24                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -37,15 +37,19 @@ ALTER TABLE SpecFieldValue DROP FOREIGN KEY SpecField_SpecFieldValue;
 
 ALTER TABLE CustomerOrder DROP FOREIGN KEY User_CustomerOrder;
 
+ALTER TABLE CustomerOrder DROP FOREIGN KEY UserAddress_CustomerOrder;
+
+ALTER TABLE CustomerOrder DROP FOREIGN KEY UserAddress_CustomerOrder_Shipping;
+
 ALTER TABLE OrderedItem DROP FOREIGN KEY Product_OrderedItem;
 
 ALTER TABLE OrderedItem DROP FOREIGN KEY CustomerOrder_OrderedItem;
 
 ALTER TABLE OrderedItem DROP FOREIGN KEY Shipment_OrderedItem;
 
-ALTER TABLE User DROP FOREIGN KEY UserBillingAddress_User;
+ALTER TABLE User DROP FOREIGN KEY BillingAddress_User;
 
-ALTER TABLE User DROP FOREIGN KEY UserShippingAddress_User;
+ALTER TABLE User DROP FOREIGN KEY ShippingAddress_User;
 
 ALTER TABLE AccessControlList DROP FOREIGN KEY User_AccessControlList;
 
@@ -101,17 +105,21 @@ ALTER TABLE ProductReview DROP FOREIGN KEY Product_ProductReview;
 
 ALTER TABLE ProductReview DROP FOREIGN KEY User_ProductReview;
 
-ALTER TABLE UserBillingAddress DROP FOREIGN KEY User_UserBillingAddress;
+ALTER TABLE UserAddress DROP FOREIGN KEY State_UserAddress;
 
-ALTER TABLE UserBillingAddress DROP FOREIGN KEY UserAddress_UserBillingAddress;
+ALTER TABLE BillingAddress DROP FOREIGN KEY User_BillingAddress;
+
+ALTER TABLE BillingAddress DROP FOREIGN KEY UserAddress_BillingAddress;
 
 ALTER TABLE Transaction DROP FOREIGN KEY CustomerOrder_Transaction;
 
+ALTER TABLE Transaction DROP FOREIGN KEY Transaction_Transaction;
+
 ALTER TABLE Shipment DROP FOREIGN KEY CustomerOrder_Shipment;
 
-ALTER TABLE UserShippingAddress DROP FOREIGN KEY User_UserShippingAddress;
+ALTER TABLE ShippingAddress DROP FOREIGN KEY User_ShippingAddress;
 
-ALTER TABLE UserShippingAddress DROP FOREIGN KEY UserAddress_UserShippingAddress;
+ALTER TABLE ShippingAddress DROP FOREIGN KEY UserAddress_ShippingAddress;
 
 ALTER TABLE OrderNote DROP FOREIGN KEY CustomerOrder_OrderNote;
 
@@ -133,7 +141,11 @@ ALTER TABLE TaxRate DROP FOREIGN KEY TaxType_TaxRate;
 
 ALTER TABLE TaxRate DROP FOREIGN KEY DeliveryZone_TaxRate;
 
+ALTER TABLE ShippingRate DROP FOREIGN KEY ShippingRateGroup_ShippingRate;
+
 ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
+
+ALTER TABLE ShippingRateGroup DROP FOREIGN KEY DeliveryZone_ShippingRateGroup;
 
 # ---------------------------------------------------------------------- #
 # Drop table "Product"                                                   #
@@ -584,16 +596,16 @@ ALTER TABLE UserAddress DROP PRIMARY KEY;
 DROP TABLE UserAddress;
 
 # ---------------------------------------------------------------------- #
-# Drop table "UserBillingAddress"                                        #
+# Drop table "BillingAddress"                                            #
 # ---------------------------------------------------------------------- #
 
 # Drop constraints #
 
-ALTER TABLE UserBillingAddress DROP PRIMARY KEY;
+ALTER TABLE BillingAddress DROP PRIMARY KEY;
 
 # Drop table #
 
-DROP TABLE UserBillingAddress;
+DROP TABLE BillingAddress;
 
 # ---------------------------------------------------------------------- #
 # Drop table "Transaction"                                               #
@@ -620,16 +632,16 @@ ALTER TABLE Shipment DROP PRIMARY KEY;
 DROP TABLE Shipment;
 
 # ---------------------------------------------------------------------- #
-# Drop table "UserShippingAddress"                                       #
+# Drop table "ShippingAddress"                                           #
 # ---------------------------------------------------------------------- #
 
 # Drop constraints #
 
-ALTER TABLE UserShippingAddress DROP PRIMARY KEY;
+ALTER TABLE ShippingAddress DROP PRIMARY KEY;
 
 # Drop table #
 
-DROP TABLE UserShippingAddress;
+DROP TABLE ShippingAddress;
 
 # ---------------------------------------------------------------------- #
 # Drop table "OrderNote"                                                 #
@@ -764,3 +776,17 @@ ALTER TABLE ProductFileGroup DROP PRIMARY KEY;
 # Drop table #
 
 DROP TABLE ProductFileGroup;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ShippingRateGroup"                                         #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ShippingRateGroup ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE ShippingRateGroup DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ShippingRateGroup;
