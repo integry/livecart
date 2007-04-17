@@ -379,13 +379,13 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         $zone = DeliveryZone::getZoneByAddress($this->shippingAddress->get());
         
         $shipments = $this->createShipments();
-        $shipmentWeights = array();
+        $rates = array();
         foreach ($shipments as $key => $shipment)
         {
-            $shipmentWeights[$key] = $shipment->getChargeableWeight($zone);
+            $rates[$key] = $zone->getShippingRates($shipment);
         }   
           
-        return Store::getInstance()->getShippingRates($zone, $shipmentWeights);
+        return $rates;
     }
 	
 	/**

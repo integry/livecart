@@ -4,6 +4,10 @@ ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.category.CategoryImage");
 ClassLoader::import("application.model.delivery.*");
 
+ClassLoader::import('library.shipping.ShippingRateSet');
+ClassLoader::import('library.shipping.ShippingRateResult');
+
+
 /**
  * Hierarchial product category model class
  *
@@ -88,15 +92,13 @@ class DeliveryZone extends MultilingualObject
     }
     
     /**
+     *  Returns manually defined shipping rates for the particular shipment
      *
      *	@return ShippingRateSet
      */
-	public function getDefinedShippingRates(CustomerOrder $order)
+	public function getDefinedShippingRates(Shipment $shipment)
     {
-		// stub
-		ClassLoader::import('library.shipping.ShippingRateSet');
-		ClassLoader::import('library.shipping.ShippingRateResult');
-		
+		// stub		
 		$rates = new ShippingRateSet();
 		
 		$rate1 = new ShippingRateResult();
@@ -114,6 +116,30 @@ class DeliveryZone extends MultilingualObject
 				
 		return $rates;		
 	}
+	
+    /**
+     *  Returns real time shipping rates for the particular shipment
+     *
+     *	@return ShippingRateSet
+     */
+	public function getRealTimeRates(Shipment $shipment)
+	{
+		$rates = new ShippingRateSet();
+                
+		return $rates;
+    }
+    
+    /**
+     *  Returns both real time and calculated shipping rates for the particular shipment
+     *
+     *	@return ShippingRateSet
+     */
+    public function getShippingRates(Shipment $shipment)
+    {
+        $defined = $this->getDefinedShippingRates($shipment);
+        $defined->merge($this->getRealTimeRates($shipment));    
+        return $defined;
+    }
 	
     /**
      *

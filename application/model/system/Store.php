@@ -351,24 +351,6 @@ class Store
 	}
 
 	/**
-	 * Returns an array with possible shipping methods and rates for required packages
-	 *
-	 * @param DeliveryZone $zone
-	 * @param array $weights
-	 * @return array Shipping rates
-	 *
-	 * @todo implement
-	 */
-    public function getShippingRates(DeliveryZone $zone, $weights)
-    {
-        $result = array();
-        foreach ($weights as $key => $value)
-        {
-            
-        }
-    }
-
-	/**
 	 * Loads currency data from database
 	 */
 	private function loadCurrencyData()
