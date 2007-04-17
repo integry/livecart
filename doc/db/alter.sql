@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-04-12 15:27                                #
+# Created on:            2007-04-17 15:21                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -141,38 +141,41 @@ ALTER TABLE TaxRate DROP FOREIGN KEY TaxType_TaxRate;
 
 ALTER TABLE TaxRate DROP FOREIGN KEY DeliveryZone_TaxRate;
 
+ALTER TABLE ShippingRate DROP FOREIGN KEY ShippingRateGroup_ShippingRate;
+
 ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 
+ALTER TABLE ShippingRateGroup DROP FOREIGN KEY DeliveryZone_ShippingRateGroup;
+
 # ---------------------------------------------------------------------- #
-# Modify table "ShippingRate"                                            #
+# Modify table "UserBillingAddress"                                      #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE ShippingRate ADD COLUMN shippingRateGroupID INTEGER;
+DROP INDEX IDX_UserBillingAddress_1 ON UserBillingAddress;
 
-ALTER TABLE ShippingRate ADD COLUMN weightRangeStart FLOAT;
+DROP INDEX IDX_UserBillingAddress_2 ON UserBillingAddress;
 
-ALTER TABLE ShippingRate ADD COLUMN weightRangeEnd FLOAT;
+ALTER TABLE UserBillingAddress DROP PRIMARY KEY;
 
-ALTER TABLE ShippingRate ADD COLUMN subtotalRangeStart FLOAT;
+RENAME TABLE UserBillingAddress TO BillingAddress;
 
-ALTER TABLE ShippingRate ADD COLUMN subtotalRangeEnd FLOAT;
+ALTER TABLE BillingAddress ADD CONSTRAINT PK_BillingAddress 
+    PRIMARY KEY (ID);
 
-ALTER TABLE ShippingRate ADD COLUMN flatCharge FLOAT;
+CREATE INDEX IDX_BillingAddress_1 ON BillingAddress (userID);
 
-ALTER TABLE ShippingRate ADD COLUMN perItemCharge FLOAT;
+CREATE INDEX IDX_BillingAddress_2 ON BillingAddress (userAddressID);
 
-ALTER TABLE ShippingRate ADD COLUMN subtotalPercentCharge FLOAT;
+# ---------------------------------------------------------------------- #
+# Modify table "UserShippingAddress"                                     #
+# ---------------------------------------------------------------------- #
 
-ALTER TABLE ShippingRate ADD COLUMN perKgCharge FLOAT;
+ALTER TABLE UserShippingAddress DROP PRIMARY KEY;
 
-CREATE TABLE ShippingRateGroup (
-    ID INTEGER NOT NULL,
-    deliveryZoneID INTEGER UNSIGNED,
-    name TEXT,
-    position INTEGER UNSIGNED DEFAULT 0,
-    rangeType TINYINT COMMENT '0 - weight based range 1 - subtotal based range',
-    CONSTRAINT PK_ShippingRateGroup PRIMARY KEY (ID)
-);
+RENAME TABLE UserShippingAddress TO ShippingAddress;
+
+ALTER TABLE ShippingAddress ADD CONSTRAINT PK_ShippingAddress 
+    PRIMARY KEY (ID);
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
@@ -229,11 +232,11 @@ ALTER TABLE OrderedItem ADD CONSTRAINT CustomerOrder_OrderedItem
 ALTER TABLE OrderedItem ADD CONSTRAINT Shipment_OrderedItem 
     FOREIGN KEY (shipmentID) REFERENCES Shipment (ID) ON DELETE SET NULL;
 
-ALTER TABLE User ADD CONSTRAINT UserBillingAddress_User 
-    FOREIGN KEY (defaultBillingAddressID) REFERENCES UserBillingAddress (ID) ON DELETE SET NULL;
+ALTER TABLE User ADD CONSTRAINT BillingAddress_User 
+    FOREIGN KEY (defaultBillingAddressID) REFERENCES BillingAddress (ID) ON DELETE SET NULL;
 
-ALTER TABLE User ADD CONSTRAINT UserShippingAddress_User 
-    FOREIGN KEY (defaultShippingAddressID) REFERENCES UserShippingAddress (ID) ON DELETE CASCADE;
+ALTER TABLE User ADD CONSTRAINT ShippingAddress_User 
+    FOREIGN KEY (defaultShippingAddressID) REFERENCES ShippingAddress (ID) ON DELETE CASCADE;
 
 ALTER TABLE AccessControlList ADD CONSTRAINT User_AccessControlList 
     FOREIGN KEY (UserID) REFERENCES User (ID);
@@ -319,10 +322,10 @@ ALTER TABLE ProductReview ADD CONSTRAINT User_ProductReview
 ALTER TABLE UserAddress ADD CONSTRAINT State_UserAddress 
     FOREIGN KEY (stateID) REFERENCES State (ID) ON DELETE SET NULL;
 
-ALTER TABLE UserBillingAddress ADD CONSTRAINT User_UserBillingAddress 
+ALTER TABLE BillingAddress ADD CONSTRAINT User_BillingAddress 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
 
-ALTER TABLE UserBillingAddress ADD CONSTRAINT UserAddress_UserBillingAddress 
+ALTER TABLE BillingAddress ADD CONSTRAINT UserAddress_BillingAddress 
     FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE;
 
 ALTER TABLE Transaction ADD CONSTRAINT CustomerOrder_Transaction 
@@ -334,10 +337,10 @@ ALTER TABLE Transaction ADD CONSTRAINT Transaction_Transaction
 ALTER TABLE Shipment ADD CONSTRAINT CustomerOrder_Shipment 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
 
-ALTER TABLE UserShippingAddress ADD CONSTRAINT User_UserShippingAddress 
+ALTER TABLE ShippingAddress ADD CONSTRAINT User_ShippingAddress 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
 
-ALTER TABLE UserShippingAddress ADD CONSTRAINT UserAddress_UserShippingAddress 
+ALTER TABLE ShippingAddress ADD CONSTRAINT UserAddress_ShippingAddress 
     FOREIGN KEY (userAddressID) REFERENCES UserAddress (ID) ON DELETE CASCADE;
 
 ALTER TABLE OrderNote ADD CONSTRAINT CustomerOrder_OrderNote 
