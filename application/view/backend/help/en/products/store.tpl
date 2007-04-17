@@ -17,6 +17,11 @@ the following details:
 <p class="note"><strong>Note</strong>: You can specify what product's attributes 
 should be displayed on the product list page in the <a href="{help /cat.attr}">attributes</a> section.</p>
 
+<p class="note"> <del><strong>Note2</strong>: The order of attributes in the <i>Add New Product</i> form is
+ determined by the arrangement of attribute groups as well as separate attributes.</del> 
+</p>
+
+
 <p>More detailed information is provided in <strong>Product details</strong> page. When a customer click on a 
 particular product, product's detailed page opens. This page includes all the necessary details about the product:</p>
 <img src="image/doc/products/product_details.bmp"/>
