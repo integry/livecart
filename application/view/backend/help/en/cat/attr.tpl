@@ -1,5 +1,5 @@
 <p>
-	Attributes allow you to describe product information more precisely as instead of providing all product specifications as free-form text, you can
+	Attributes allow you to describe product information more precisely. Instead of providing all product specifications as free-form text, you can
 	define a fixed set of attributes for each product category and have designated fields for entering each parameter of a product. It makes it 
 	easier for customers to compare common products and by using attributes you can create product filters, which make it easy for a customer to 
 	find the products that match his/her requirements quickly.
@@ -40,24 +40,22 @@
 
 <h3 id="create">Create Attribute</h3>
 
-<p>LC provides a custom based attribute management system which allows you to create and manage attributes in relatively simple manner.
+<p>LC provides a <del>custom based</del> ? attribute management system which allows you to create and manage attributes in a <del>relatively</del> simple manner.
 LiveCart supports three base product <strong>attribute types</strong> which can be: 
 
 <ul>
-	<li>Number type which can be either a <i>field</i> or a <i>selector</i></li>
-	<li>Text type can be only <i>selector</i></li>
+	<li>Number type which can be either an <i><ins>input</ins> field</i> or a <i><ins>pre-defined value</ins> selector</i></li>
+	<li>Text type can be only <i>selector</i> <ins>(? text input fields are still there)</ins></li>
 	<li>and Date type</li>
 </ul>
 
-Using these base types you 
-can create variuos types of attributes. Below you'll find a couple of practical examples on how to choose which attribute type would suit best for describing a particular product property.
+Using these base types you can create variuos <ins>(spellchecker?)</ins> types of attributes. Below you'll find a couple of practical examples on how to choose the best attribute type for describing a particular product property. (<ins>simpler sentences</ins>)
 </p>
 
 <p>
 	Suppose that you have a category stocked with cell phones and you want to create custom fields for specifying the following properties:
-	<strong>Carrier</strong> (select option), <strong>Phone Features</strong> (select checkboxes)
-	and <strong>Batery Capacity</strong> (field option). Because attributes are automatically included in 
-	the <i>Add New Product</i> form, we will demonstrate in our examples how attributes are generated and 
+	<strong>Carrier</strong> (select <ins>one</ins> option), <strong>Phone Features</strong> (select <del>checkboxes</del> <ins>multiple options</ins>)
+	and <strong>Batery Capacity</strong> (<ins>number input</ins> field option). Because attributes are automatically included in the <i>Add New Product</i> form, we will demonstrate in our examples how attributes are generated and 
 	placed in the product form.
 </p>
 
@@ -65,11 +63,11 @@ can create variuos types of attributes. Below you'll find a couple of practical 
 <div class="dottedBorders" id="carrier" style="display:none">
 
 <h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
-<p>To create an attribute follow these steps:</p>
+<p>To create <del>an</del <ins>the</ins> attribute follow these steps:</p>
 	<ul>	
 		<li>Select a category in the category tree and click <strong>Attributes</strong> tab.</li>
 		<img src="image/doc/categories/attributes/attributes_tab.bmp">
-		<li>In the attributes section click <strong>Add new attributes</strong>:</li>
+		<li>In the attributes section click <strong>Add new attribute</strong>:</li>
 		<img src="image/doc/categories/attributes/add_new_attribute_reference.bmp">
 		<p><i>Add new attribute</i> form appears. Fill out the following fields as described below:</p>
 		<img src="image/doc/categories/attributes/add_attribute_form.bmp">
@@ -80,13 +78,13 @@ can create variuos types of attributes. Below you'll find a couple of practical 
 		<li><strong>Can select multiple values</strong> - we leave this checkbox clear to allow assigning only one carrier to each phone</li> 
 		<li>Field displayed in the product's preview info</li>
 		<li>Field displayed in the product's detailed page</li>
-		<li>Attribute's <strong>title</strong> represent its function thus we enter a meaningful name - <strong>Carrier</strong>. </li>
+		<li>Attribute's <strong>title</strong> represents its function thus we enter a meaningful name - <strong>Carrier</strong>. </li>
 		<li><strong>Handle</strong> - handle is generated automatically. Handle is used to represent the attribute in {glossary}URL{/glossary}'s, so you can change it for 
 		{glossary}SEO{/glossary} purposes, if needed.</li>
 		<li>Prefix and Suffix - we leave these fields empty because carriers don't have any of them.</li> 
-		<li>In the description field we enter a brief description to describe the term "Carrier".</li> 	
+		<li>In the description field we enter a brief description to describe the term "Carrier" (<ins>optional</ins>)</li> 	
 		<li>International details - if you need to translate attributes in other languages installed in your system, click on the Language to 
-		expand additional fields (which include Title and Details).</li>
+		expand additional fields (which include title and <del>Details</del> <ins>description</ins>).</li>
 
 
 	<img src="image/doc/categories/attributes/attributes_international_details.bmp">
@@ -113,8 +111,8 @@ The last thing to do is to create Values which will be used as a selection optio
 	<img src="image/doc/categories/attributes/carrier.bmp">
 	</ul>
 
-<p class="note"><strong>Note</strong>: In the list there is also <strong>other</strong> value which is designed to supplement values list
-in case a new value is introduced.</p>
+<p class="note"><strong>Note</strong>: <del>In the list there is also <strong>other</strong> value which is designed to supplement values list
+in case a new value is introduced.</del><ins>Hard to understand, rewrite simpler - If you need to enter a new value when adding new product, select the "Other" option, which will allow you to enter the new value right there - or somehow similarly.</ins></p>
 
 </div>
 </p>
@@ -181,7 +179,7 @@ by necessary changes. A numeric attribute looks similar to this one:
 
 <ul>
 	<li>Open <strong>Add new attribute form</strong> <a href="{self}#carrier"><small>(remind me how)</small></a></li>
-	<li>Type - select Nember Field.</li>
+	<li>Type - select Nember Field. <ins>spelling</ins></li>
 	<li>Required - click the checkbox to make the field required attribute</li>
 	<li>Field is displayed in the product overview page - </li>
 	<li>Field is displayed in the product's detail page - </li>
@@ -207,16 +205,16 @@ by necessary changes. A numeric attribute looks similar to this one:
 
 <h3 id="group">Group attributes</h3>
 
-LC allows you to group your attributes into logical chunks called "groups". To introduce a new group:
+LC allows you to group <ins>related attributes together.</ins> <del>your attributes into logical chunks called "groups".</del> To <del>introduce</del> <ins>create</ins> a new group:
 	<ul>
 		<li>Click <strong>Add new group</strong></li>
 		<img src="image/doc/categories/attributes/add_new_group.bmp">
 		<li>Enter group title (to identify group)</li>
 		<img src="image/doc/categories/attributes/group_title.bmp">
-		<li>Supply international translation if necessary (applicable)</li>
+		<li>Supply <del>international translation</del> <ins>maybe "translation for other languages" would be better</ins> if necessary (applicable)</li>
 	</ul>
-Attribute groups appear as a rectangle which can contain as many attributes as neccesary. To place attributes into groups, simply drag attributes
-into appropriate groups.
+Attribute groups appear as a <del>rectangle</del> <ins>box?</ins> which can contain as many attributes as neccesary. To place attributes into groups, simply drag attributes
+into the appropriate groups.
 
 <img src="image/doc/categories/attributes/groups_main.bmp">
 
@@ -249,8 +247,7 @@ To delete attribute: select an attribute from the list and click on its "delete"
 
 (In LC sorting of attributes is implemented via drag&drop feature). To change the order of attributes (or attribute groups), click on attributes 
 empty space and then drag it up or down.
-<p class="note"> <strong>Notice</strong> that the order of attributes in the <i>Add New Product</i> form is determined by the arrangement
-of attribute groups as well as separate attributes.
+<p class="note"> <del><strong>Notice</strong> that the order of attributes in the <i>Add New Product</i> form is determined by the arrangement of attribute groups as well as separate attributes.</del> <ins>The order matters more in frontend, so this should be reworded relating to the product detail page</ins>
 </p>
 {helpSeeAlso}
 	{see cat.details}

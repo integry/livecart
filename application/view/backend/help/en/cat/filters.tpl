@@ -1,5 +1,5 @@
-<p>Filters is a tool designed to make product search easy. Instead of browsing product catalog by categories you can create filters that will define 
-specific search criteria and allow users to find products in no time. For instance, a <i>Bluetooth</i> filter in a cell phones catalog
+<p>Filters is a tool designed to make product search easy. Instead of <ins>forcing your customers to</ins> browse the product catalog by categories you can create filters that will define 
+specific search criteria and allow users to find products <del>in no time</del> <ins>faster</ins>. For instance, <ins>applying</ins> a <i>Bluetooth</i> filter in a cell phones catalog
 can view all the phones that have a bluetooth feature no matter their place or any other parameters.</p>
 
 <p>It's a common-sence solution that doesn’t force your customer to select the product in pre-set order, instead – the 
@@ -8,7 +8,7 @@ customer may filter the products by any property he likes at any point of the pr
 <p>(Think of as many filters as possible to create an efficient browsing system as users may be interested in many kinds of attributes your products
 have to offer (some may search for products by particular technical details and some may be interested in shape or color)</p>
 
-<p class="note">(Because attributes are assigned to particular categories, the same way filters define search range only within specific categories)</p>
+<p class="note"><del>Because attributes are assigned to particular categories, the same way filters define search range only within specific categories</del><ins>How about - filters are directly mapped to attributes, therefore you can only create filters in those categories that has attributes defined</ins></p>
 
 <p>Let's take a look at a few <strong>examples</strong> to get a better idea how filters work.</p>
 
@@ -17,7 +17,7 @@ have to offer (some may search for products by particular technical details and 
 <legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#create">Create a filter</a></li>
-	<li><a href="{self}#sort">Arrange Filter order</a></li>
+	<li><a href="{self}#sort"><ins>Reorder filters</ins><del>Arrange Filter order</del></a></li>
 	<li><a href="{self}#edit">Edit and Delete Filters</a></li>
 
 </ul>
@@ -45,7 +45,7 @@ to define a range for filter's values.</p>
 <ul>
 	<li>To create filters, select a category from the category tree and click <strong>Filters</strong> tab. </li>
 	<img src="image/doc/categories/filters/filters_tab.bmp">
-	<p>If you see a message "This category has no non-text attributes", go to the <a href="{help /cat.attr}">Attributes </a> section to create 
+	<p>If you see a message "No filterable attributes have yet been created for this category", go to the <a href="{help /cat.attr}">Attributes </a> section to create 
 	attributes first.</p>
 	<li>On the Filters page click <strong>Add new filter</strong>.</li>
 	<img src="image/doc/categories/filters/add_new_filter.bmp">

@@ -1,6 +1,6 @@
 <p>
-	As in most e-commerce stores, with LiveCart you can organize products into categories. Categories can also contain subcategories which, in turn,
-	may have their own subcategories. The number of subcategories and subcategory levels is unlimited. All the categories are displayed on the left 
+	As in most e-commerce stores, with LiveCart you can organize products into categories. <del>Categories can also contain subcategories which, in turn,
+	may have their own subcategories.</del> (X-Cart?) The number of subcategories and subcategory levels is unlimited. All the categories are displayed on the left 
 	side of the screen in the tree-based structure.
 </p>
 
