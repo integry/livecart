@@ -1,14 +1,18 @@
-<p>Filters is a tool designed to make product search easy. Instead of <ins>forcing your customers to</ins> browse the product catalog by categories you can create filters that will define 
-specific search criteria and allow users to find products <del>in no time</del> <ins>faster</ins>. For instance, <ins>applying</ins> a <i>Bluetooth</i> filter in a cell phones catalog
+<p>Filters is a tool designed to make product search easy. Instead of forcing your customers to browse the product
+ catalog by categories you can create filters that will define specific search criteria and allow users to find 
+ products faster. For instance, applying a <i>Bluetooth</i> filter in a cell phones catalog
 can view all the phones that have a bluetooth feature no matter their place or any other parameters.</p>
 
 <p>It's a common-sence solution that doesn’t force your customer to select the product in pre-set order, instead – the 
-customer may filter the products by any property he likes at any point of the process (by adding or removing filters).</p>
+customer may filter the products by any property at any point of the process (by adding or removing filters).</p>
 
 <p>(Think of as many filters as possible to create an efficient browsing system as users may be interested in many kinds of attributes your products
 have to offer (some may search for products by particular technical details and some may be interested in shape or color)</p>
 
-<p class="note"><del>Because attributes are assigned to particular categories, the same way filters define search range only within specific categories</del><ins>How about - filters are directly mapped to attributes, therefore you can only create filters in those categories that has attributes defined</ins></p>
+<p class="note"><strong>Note</strong>: Filters define search range only within specific categories because 
+attributes are assigned to particular categories and filters are directly mapped to attributes.</p>
+<ins>(filters are directly mapped to attributes, therefore you can only create filters in those categories that 
+has attributes defined)</ins>
 
 <p>Let's take a look at a few <strong>examples</strong> to get a better idea how filters work.</p>
 
@@ -17,7 +21,7 @@ have to offer (some may search for products by particular technical details and 
 <legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#create">Create a filter</a></li>
-	<li><a href="{self}#sort"><ins>Reorder filters</ins><del>Arrange Filter order</del></a></li>
+	<li><a href="{self}#sort">Reorder filters</a></li>
 	<li><a href="{self}#edit">Edit and Delete Filters</a></li>
 
 </ul>
@@ -47,7 +51,7 @@ to define a range for filter's values.</p>
 	<img src="image/doc/categories/filters/filters_tab.bmp">
 	<p>If you see a message "No filterable attributes have yet been created for this category", go to the <a href="{help /cat.attr}">Attributes </a> section to create 
 	attributes first.</p>
-	<li>On the Filters page click <strong>Add new filter</strong>.</li>
+	<li id="form">On the Filters page click <strong>Add new filter</strong>.</li>
 	<img src="image/doc/categories/filters/add_new_filter.bmp">
 	<p>Add new filter form appears. </p>
 	<img src="image/doc/categories/filters/main.bmp">
@@ -84,7 +88,7 @@ to define a range for filter's values.</p>
 <p>Complete the following steps to create the battery capacity filter:</p>
 
 <ol>
-	<li>Go to Filters section and open New Filter form <a href="{self}#carrier"><small>(remind me how)</small></a></li>
+	<li>Go to Filters section and open New Filter form <a href="{self}#form"><small>(remind me how)</small></a></li>
 	<li>Fill out the Main section as follows:</li>
 	<img src="image/doc/categories/filters/main.bmp">
 	<li>Name - </li>
@@ -117,7 +121,7 @@ to define a range for filter's values.</p>
 <p>To create a date filter you have to have an attributes wich has a Date type. To create a date filter: </p>
 
 <ul>
-	<li>Open add new filter form.<a href="{self}#carrier"><small>(remind me how)</small></a></li>
+	<li>Open add new filter form.<a href="{self}#form"><small>(remind me how)</small></a></li>
 	<img src="image/doc/categories/filters/date_attribute.bmp">
 	<li>Associate date attribute from the  attribute's list.</li>
 	<li>Name - enter Filter's name or leave the current name.</li>
@@ -129,27 +133,27 @@ to define a range for filter's values.</p>
 	<ul>
 		<li>Name - enter the name of the period you want to define</li>
 		<li>{glossary}Handle{/glossary}</li>
-		<li>Value / Range - "from" and "to" fields are set automatically, to set / change date click on "calendar" icon next to the appropriate
-		field: </li>
+		<li>Value / Range - "from" and "to" fields are set automatically, to set / change date click on "calendar"
+		icon next to the appropriate field: </li>
 		<img src="image/doc/categories/filters/date_form_hand.bmp">
 		<p>Date can be changed by choosing alternate date from the calendar:</p>
 		<img src="image/doc/categories/filters/calendar.bmp">
 
 	</ul>
 	<li>Follow the steps as above to create more rules.</li>
-	<li>You can <strong>sort</strong> values to set criterias' arrangement <a href="{self}#carrier"><small>(remind me how)</small></a></li>
+	<li>You can <strong>sort</strong> values to set criterias' arrangement <a href="{self}#carrier"><small>
+	(remind me how)</small></a></li>
 	<li>Click <strong>Save</strong> button to return to filters page.</li>
 	<img src="image/doc/categories/filters/filters_save.bmp">
 </ul>
 
 <h3 id="sort">Changing Filter Order</h3>
 <p align="right"><a href="{self}#top"><small>Top</small></a></p>
-<p>When you have more than a few filters the order of your filters can be very important. The way you arrange your filters defines how they will
-be displayed in your e-store.</p>
+<p>When you have more than a few filters the order of your filters can be very important. The way you arrange your
+ filters defines how they will be displayed in your e-store <ins>more details!</ins>.</p>
 
 <ul>
-	<li>To change the filter order go to the filters section. <a href="{self}#carrier"><small>(Remind me how).</small></a></li>
-	<li>Move mouse cursor over the filter<del>, click and hold button when "move" icon appears. You can</del> and drag and drop the filter to set the appropriate order.</li>
+	<li>Move mouse cursor over the filter. Drag and drop the filter to set the appropriate order.</li>
 	<img src="image/doc/categories/filters/rearrange.bmp">
 	<li><strong>Save</strong> your changes afterwards.</li>
 	<img src="image/doc/categories/filters/filters_save.bmp">
@@ -158,10 +162,8 @@ be displayed in your e-store.</p>
 <h3 id="edit">Edit and Delete Filters</h3>
 <p align="right"><a href="{self}#top"><small>Top</small></a></p>
 <ul>
-<del>
-	<li>In order to <strong>edit</strong> a filter, go to the Filters section <a href="{self}#carrier"><small>(Remind me how).</small></a></li>
-</del>
-	<li>Hover mouse pointer over the existing filters and click "Edit" icon next to the filter (name) you want to manage.</li>
+	<li>In order to <strong>edit</strong> a filter, hover mouse pointer over the existing filters and click "Edit"
+	 icon next to the filter (name) you want to manage.</li>
 	<img src="image/doc/categories/filters/filters_edit.bmp">
 	<p>Filter's form opens. You can edit any of the filter's property as in the add new filter section. 
 	<a href="{self}#carrier"><small>(Remind me how).</small></a> <strong>Save</strong> the changes you have 

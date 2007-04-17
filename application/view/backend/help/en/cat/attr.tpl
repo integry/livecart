@@ -72,7 +72,7 @@ examples on how to choose the best attribute type for describing a particular pr
 		<img src="image/doc/categories/attributes/attributes_tab.bmp">
 		<li>In the attributes section click <strong>Add new attribute</strong>:</li>
 		<img src="image/doc/categories/attributes/add_new_attribute_reference.bmp">
-		<p><i>Add new attribute</i> form appears. Fill out the following fields as described below:</p>
+		<p id="form"><i>Add new attribute</i> form appears. Fill out the following fields as described below:</p>
 		<img src="image/doc/categories/attributes/add_attribute_form.bmp">
 		<li><strong>Type</strong> - because mobile carrier is a simple text and there is (probably) a finite number of carriers click on the type drop-down menu and 
 		select <i>Text selector</i> type from the list. (Your chosen type is suitable for creating a predefined list of values which will be 
@@ -92,7 +92,8 @@ examples on how to choose the best attribute type for describing a particular pr
 
 	<img src="image/doc/categories/attributes/attributes_international_details.bmp">
 
-The last thing to do is to create Values which will be used as a selection option in the "Add new Product" form. To add values: 
+The last thing to do is to create Values which will be used as a selection option in the "Add new Product" form. 
+To add values: 
 	<ul>
 		<li>Click Values tab in the main window -> </li>
 		<img src="image/doc/categories/attributes/values_tab.bmp">
@@ -240,7 +241,8 @@ To edit attribute: select an attribute from the list and click on its "pen" icon
 <img src="image/doc/categories/attributes/edit_attribute.bmp">
 
 Attribute's management form appears with its specification details. To edit any of attribute's fields or values, simply alter existing parameters/values
-and save changes afterwards. For detailed description of fields, refer to <a href="{self}#create">Create new attribute</a> section.
+and save changes afterwards. For detailed fields' description, refer to <a href="javascript:expand(document.getElementById('carrier'))">Create new 
+attribute</a> section.
 
 <h3 id="delete">Delete attribute</h3>
 
@@ -250,8 +252,9 @@ To delete attribute: select an attribute from the list and click on its "delete"
 
 <h3 id="sort">Change attribute order</h3>
 
-(In LC sorting of attributes is implemented via drag&drop feature). To change the order of attributes (
-or attribute groups), click on attributes empty space and then drag it up or down.
+To change the order of attributes or attribute groups, hover mouse cursor over attribute or entire group and then
+ drag it up or down.
+<img src="image/doc/categories/attributes/sort.bmp">
 
 {helpSeeAlso}
 	{see cat.details}
