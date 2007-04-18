@@ -55,6 +55,16 @@ class ShippingRateResult implements ShippingResultInterface
     {
         return $this->rawResponse;   
     }    
+    
+    public function toArray()
+    {
+        $result = array();
+        $result['serviceID'] = $this->serviceID;
+        $result['serviceName'] = $this->serviceName;
+        $result['costAmount'] = $this->costAmount;
+        $result['costCurrency'] = $this->costCurrency;  
+        return $result;
+    }
 }
 
 ?>

@@ -29,7 +29,10 @@ class ShippingRateSet implements ShippingResultInterface, IteratorAggregate
     
     public function merge(ShippingRateSet $rateSet)
     {
-        
+        foreach ($rateSet as $rate)
+        {
+            $this->add($rate);
+        }
     }
     
 	/**
@@ -41,6 +44,17 @@ class ShippingRateSet implements ShippingResultInterface, IteratorAggregate
 	{
 		return new ArrayIterator($this->rates);
 	}    
+	
+	public function toArray()
+	{
+        $result = array();
+        foreach ($this->rates as $rate)
+        {
+            $result[] = $rate->toArray();
+        }
+        
+        return $result;
+    }
 }
 
 ?>
