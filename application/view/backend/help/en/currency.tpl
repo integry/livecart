@@ -87,19 +87,19 @@ left of the currency name.</p>
 <br \><br \>
 
 <h3 id="format">Currency's symbols</h3>
-<p>To set currency's formatting: frontend, different symbols ($, etc.)</p>
+<p>To express the type of money you can set special currency symbols ("$", etc.) that will be displayed in your 
+store with a particular currency. To set currency's formatting:</p>
+
 <ol>
 	<li>Hover your mouse cursor over the currency and click the "pen" icon on the left:</li>
 	<img src="image/doc/currency/edit.bmp">
-	<li>In the <strong>Price Formatting</strong> you can enter the prefix and suffix (prefix before and suffix after) that will be
-	displayed with the currency:</li>
+	<li>In the <strong>Price Formatting</strong> you can enter the prefix and suffix (prefix before currency name,
+	suffix - after) that will be displayed with the currency:</li>
 	<img src="image/doc/currency/prefix_suffix.bmp">
 	<li>Click save to set symbols:</li>
 	<img src="image/doc/currency/save.bmp">
-	
 </ol>
 <br \><br \>
-
 
 <h3 id="sort">Sort Currencies</h3>
 <p>Sorting currencies determines the order in which the active currencies are be displayed to your customers in 
