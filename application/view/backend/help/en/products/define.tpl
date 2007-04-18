@@ -108,8 +108,23 @@ You can set image dimensions (and other details?) in the <strong>Settings</stron
 <p>For upselling purposes you can easily create related products that are displayed to customers as additional
 products that are some way related. To add related products for a particular product:</p>
 <ul>
-	<li></li>
-	<li></li>
+	<li>Click <strong>Select Products</strong>:</li>
+	<img src="image/doc/products/edit/select.bmp">
+	<p>A new window pop's up.</p>
+	<li>From the window select products by clicking on the products name:</li>
+	<img src="image/doc/products/edit/products.bmp">
+	Close the window when you are done. All the selected products will be displayed in the products detailed page 
+	as related items. For example:
+	<img src="image/doc/products/edit/recommended.bmp">
+</ul>
+<p>If you have many related products it might be useful to group them together. To group existing related products:</p>
+<ul>
+	<li>Click <strong>Add Group</strong>:</li>
+	<img src="image/doc/products/edit/select.bmp">
+	<li>Enter group name and click <strong>Save</strong>.</li>
+	<li>To place products into groups, simply drag and drop products into appropriate groups.</li>
+	<img src="image/doc/products/edit/group1.bmp">
+	<ins>(Group's title is displayed ...)</ins>
 </ul>
 
 
