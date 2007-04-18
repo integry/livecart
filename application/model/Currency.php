@@ -71,6 +71,22 @@ class Currency extends ActiveRecordModel
         return $this->pricePrefix->get() . $price . $this->priceSuffix->get();
     }
 	
+	public function convertAmountFromDefaultCurrency($amount)
+	{
+        return $amount / $this->rate->get();   
+    }
+    
+	public function convertAmountToDefaultCurrency($amount)
+	{
+        return $amount * $this->rate->get();        
+    }
+
+    public function convertAmount(Currency $currency, $amount)
+	{
+        $amount = $currency->convertAmountToDefaultCurrency($amount);
+        return $this->convertAmountFromDefaultCurrency($amount);        
+    }
+	
 	public static function getInstanceById($id, $loadData = false)
 	{
 		return ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);

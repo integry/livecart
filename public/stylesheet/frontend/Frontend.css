@@ -48,6 +48,16 @@ p
 	margin-bottom: 10px;
 }
 
+table
+{
+    border-spacing: 0;   
+}
+
+.clear
+{
+    clear: both;
+}
+
 /*****************************
 	Layout
 *****************************/
@@ -134,6 +144,39 @@ div.box .content
 fieldset.container
 {
     border: 0;
+}
+
+/*****************************
+    Tables
+*****************************/
+.table
+{
+    border: 1px solid #DDDDDD;
+}
+
+.table thead
+{
+    background-color: #FAFAFA;    
+}
+
+.table th
+{
+    padding: 3px;
+}
+
+.table td
+{
+    padding: 4px;
+}
+
+.table tr.odd
+{
+    background-color: #F6F6F6;
+}
+
+.table tr.even
+{
+    background-color: #EEEEEE;
 }
 
 /*****************************
@@ -391,6 +434,42 @@ tr.specificationGroup
 .addressSelector .address p
 {
     margin: 3px;
+}
+
+.shipment
+{
+    width: 70%;    
+    border: 1px solid #DDDDDD;
+}
+
+.shipment td
+{
+    text-align: center;  
+    width: 12%;
+}
+
+.shipment .productName
+{
+    text-align: left;   
+    width: 64%;
+}
+
+.shipment .subTotal
+{
+    font-weight: bold;
+    text-align: center;
+}
+
+.shipment .subTotalCaption
+{
+    text-align: right;
+}
+
+.shippingMethods
+{
+    padding-left: 30px;    
+    padding-bottom: 40px;    
+    clear: both;
 }
 
 /*************************** 

@@ -55,6 +55,8 @@
                 <option value="disable_isFreeShipping">Disable free shipping</option>
                 <option value="enable_isBackOrderable">Enable back-ordering</option>
                 <option value="disable_isBackOrderable">Disable back-ordering</option>
+                <option value="enable_isSeparateShipment">Require separate shipment</option>
+                <option value="disable_isSeparateShipment">Do not require separate shipment</option>
             </optgroup>
             
             <optgroup label="Set Attribute Value">

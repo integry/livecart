@@ -5,8 +5,6 @@ ClassLoader::import("application.model.category.CategoryImage");
 ClassLoader::import("application.model.delivery.*");
 
 ClassLoader::import('library.shipping.ShippingRateSet');
-ClassLoader::import('library.shipping.ShippingRateResult');
-
 
 /**
  * Hierarchial product category model class
@@ -101,15 +99,15 @@ class DeliveryZone extends MultilingualObject
 		// stub		
 		$rates = new ShippingRateSet();
 		
-		$rate1 = new ShippingRateResult();
+		$rate1 = new ShipmentDeliveryRate();
 		$rate1->setServiceName('Test rate 1');
 		$rate1->setCost(10, 'USD');
 		$rate1->setServiceID(12);
 
-		$rate2 = new ShippingRateResult();
+		$rate2 = new ShipmentDeliveryRate();
 		$rate2->setServiceName('Test rate 2');
 		$rate2->setCost(23.45, 'USD');
-		$rate1->setServiceID(13);
+		$rate2->setServiceID(13);
 				
 		$rates->add($rate1);
 		$rates->add($rate2);

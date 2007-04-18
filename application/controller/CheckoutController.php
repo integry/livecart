@@ -76,7 +76,7 @@ class CheckoutController extends FrontendController
         if ($user->isLoggedIn())
         {
             // go to step 3
-            return new ActionRedirectResponse('checkout', 'confirmTotals');
+            return new ActionRedirectResponse('checkout', 'shipping');
         }    
         else
         {
@@ -174,10 +174,10 @@ class CheckoutController extends FrontendController
         $order->billingAddress->set($billing->userAddress->get());
         $order->save();
         
-        return new ActionRedirectResponse('checkout', 'confirmTotals');
+        return new ActionRedirectResponse('checkout', 'shipping');
     }
     
-    public function confirmTotals()
+    public function shipping()
     {
         // get shipping address
         $order = CustomerOrder::getInstance();
@@ -187,11 +187,59 @@ class CheckoutController extends FrontendController
             return new ActionRedirectResponse('checkout', 'selectAddress');
         }
         
-        $rates = $order->getShippingRates();
-        
-        print_r($rates);
+        $shipments = $order->getShipments();
+        $zone = $order->getDeliveryZone();
+        foreach ($shipments as $key => $shipment)
+        {
+            $shipmentRates = $zone->getShippingRates($shipment);
+            $shipment->setAvailableRates($shipmentRates);
+            $rates[$key] = $shipmentRates;
+        }
+
+        $order->save();
+
+        $rateArray = array();
+        foreach ($rates as $key => $rate)
+        {
+            $rateArray[$key] = $rate->toArray();
+        }
+
+        $response = new ActionResponse();
+        $response->setValue('shipments', $shipments->toArray());
+        $response->setValue('rates', $rateArray);
+		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode())); 
+        $response->setValue('form', $this->buildShippingForm($shipments));
+        return $response;
     }
     
+    public function doSelectShippingMethod()
+    {
+        $order = CustomerOrder::getInstance();
+        $shipments = $order->getShipments();
+        
+        if (!$this->buildShippingValidator($shipments)->isValid())
+        {
+            return new ActionRedirectResponse('checkout', 'shipping');               
+        }            
+    }
+    
+    private function buildShippingForm(ARSet $shipments)
+    {
+		ClassLoader::import("framework.request.validator.Form");
+		return new Form($this->buildShippingValidator($shipments));        
+    }
+
+    private function buildShippingValidator(ARSet $shipments)
+    {
+		ClassLoader::import("framework.request.validator.RequestValidator");        
+        $validator = new RequestValidator("shipping", $this->request);
+        foreach ($shipments as $key => $shipment)		
+        {
+            $validator->addCheck('shipping_' . $key, new IsNotEmptyCheck($this->translate('_err_select_shipping')));
+        }
+        return $validator;
+    }
+
     private function buildAddressSelectorForm()
     {
 		ClassLoader::import("framework.request.validator.Form");

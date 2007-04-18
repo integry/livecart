@@ -89,8 +89,8 @@
     {
         Event.observe($("productFileGroup_new_{/literal}{$productID}{literal}_show"), "click", function(e) 
         {
-            Event.stop(e);
             var newForm = Backend.ProductFile.Group.Controller.prototype.getInstance($("productFileGroup_new_{/literal}{$productID}{literal}_form").down('.productFileGroup_form')).showNewForm();
+            Event.stop(e);
         });
 
         Event.observe($("productFile_new_{/literal}{$productID}{literal}_show"), 'click', function(e) {

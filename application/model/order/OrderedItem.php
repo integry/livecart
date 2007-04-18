@@ -50,7 +50,39 @@ class OrderedItem extends ActiveRecordModel
     
     public function serialize()
     {
-        return parent::serialize(array('customerOrderID'));
+        return parent::serialize(array('customerOrderID', 'shipmentID'));
+    }
+    
+    public function save()
+    {
+        if (is_null($this->shipment->get()) || !$this->shipment->get()->getID())
+        {
+            return false;
+        }
+        
+        return parent::save();
+    }
+    
+    public static function transformArray($array, $className = __CLASS__)
+    {
+        $array = parent::transformArray($array, $className);
+        $subTotal = array();
+        foreach ($array['Product']['calculated'] as $currency => $price)
+        {
+            $subTotal[$currency] = $price * $array['count'];
+        }        
+        
+        $array['subTotal'] = $subTotal;
+        
+        $formattedSubTotal = array();
+        foreach ($subTotal as $currency => $price)
+        {
+            $formattedSubTotal[$currency] = Currency::getInstanceByID($currency)->getFormattedPrice($price);
+        }
+        
+        $array['formattedSubTotal'] = $formattedSubTotal;
+        
+        return $array;
     }
 }    
 ?>

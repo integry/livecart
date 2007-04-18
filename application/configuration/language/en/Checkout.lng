@@ -1,4 +1,5 @@
 _checkout=Checkout
+_subtotal=Subtotal
 
 ######################## 
 # Select order addresses
@@ -11,3 +12,10 @@ _add_billing_address=Add New Billing Address
 
 _select_shipping_address=Please select the shipping address!
 _select_billing_address=Please select the billing address!
+
+######################## 
+# Select shipping methods
+######################## 
+
+_shipping=Shipping
+_err_select_shipping=Please select a shipping method for this shipment

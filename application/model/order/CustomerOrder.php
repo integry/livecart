@@ -2,7 +2,9 @@
 
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.OrderedItem");
+ClassLoader::import("application.model.order.Shipment");
 ClassLoader::import("application.model.system.SessionSyncable");
+ClassLoader::import("application.model.delivery.ShipmentDeliveryRate");
 
 /**
  * Represents customers order - products placed in shopping basket
@@ -13,13 +15,13 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 {
 	protected $orderedItems = array();
 	
-	protected $removedItems = array();
-    
-	protected $shipments = array();
+	protected $shipments = array();	
 	
-    protected static $instance = null;
+	private $removedItems = array();
+	    
+    private static $instance = null;
     
-    protected $isSyncedToSession = false;
+    private $isSyncedToSession = false;
     
     /**
 	 * Define database schema used by this active record instance
@@ -149,6 +151,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         {
             parent::save();
             
+            $isModified = false;
             foreach ($this->orderedItems as $item)
             {
                 if (!$item->count->get())
@@ -157,14 +160,25 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 				}
 				else
 				{
-					$item->save();					
+					if ($item->isModified())
+					{
+                        $item->save();
+                        $isModified = true;
+                    }
 				}
             }    
     
             foreach ($this->removedItems as $item)
             {
                 $item->delete();
-            }                
+                $isModified = true;
+            }      
+            
+            // reorder shipments when cart items are modified
+            if ($isModified)
+            {
+                $this->shipments = array();   
+            }                      
         }
         
         if ($this->isSyncedToSession)
@@ -347,45 +361,39 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
      *
      *  @return Shipment[]
      */
-    public function createShipments()
+    public function getShipments()
     {
-        ClassLoader::import("application.model.order.Shipment");
-
-        $main = Shipment::getNewInstance($this);
-        $additional = array();
-        
-        foreach ($this->getOrderedItems() as $item)
+        if (!$this->shipments)
         {
-            if ($item->product->get()->isSeparateShipment->get())
+            ClassLoader::import("application.model.order.Shipment");
+    
+            $main = Shipment::getNewInstance($this);
+            $this->shipments = new ARSet();
+            
+            foreach ($this->getOrderedItems() as $item)
             {
-                $shipment = Shipment::getNewInstance($this);
-                $shipment->addItem($item);
-                $additional[] = $shipment;
-            }
-            else
-            {
-                $main->addItem($item);
-            }
-        }   
-        
-        array_unshift($additional, $main);
-        
-        return $additional;
+                if ($item->product->get()->isSeparateShipment->get())
+                {
+                    $shipment = Shipment::getNewInstance($this);
+                    $shipment->addItem($item);
+                    $this->shipments->add($shipment);
+                }
+                else
+                {
+                    $main->addItem($item);
+                }
+            }   
+            
+            $this->shipments->unshift($main);
+        }
+
+        return $this->shipments;
     }
 	
-	public function getShippingRates()
+	public function getDeliveryZone()
 	{
         ClassLoader::import("application.model.delivery.DeliveryZone");
-        $zone = DeliveryZone::getZoneByAddress($this->shippingAddress->get());
-        
-        $shipments = $this->createShipments();
-        $rates = array();
-        foreach ($shipments as $key => $shipment)
-        {
-            $rates[$key] = $zone->getShippingRates($shipment);
-        }   
-          
-        return $rates;
+        return DeliveryZone::getZoneByAddress($this->shippingAddress->get());            
     }
 	
 	/**
@@ -423,9 +431,14 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 		return $array;
 	}
 	
+	public function setAvailableShippingRates($rates)
+	{
+        $this->availableShippingRates = $rates;
+    }
+	
 	public function serialize()
 	{
-        return parent::serialize(null, array('orderedItems'));
+        return parent::serialize(null, array('orderedItems', 'shipments'));
     }
 }
 	
