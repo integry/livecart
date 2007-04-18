@@ -64,7 +64,7 @@ Backend.DeliveryZone.prototype =
 	{
         Backend.DeliveryZone.prototype.treeBrowser.insertNewItem(0, response.ID, $("newZoneInput").value, 0, 0, 0, 0, 'SELECT');
         $("newZoneInput").value = '';
-        this.activateZone(response.ID);
+        //this.activateZone(response.ID);
 	},
     
     craftTabUrl: function(url)
@@ -89,7 +89,7 @@ Backend.DeliveryZone.prototype =
 	
 	activateZone: function(id)
 	{
-        Backend.DeliveryZone.prototype.activeZone = id;
+		Backend.DeliveryZone.prototype.activeZone = id;
 		Backend.DeliveryZone.prototype.treeBrowser.showFeedback(id);
         
         this.tabControl.activateTab($('tabDeliveryZoneCountry'), function() { Backend.DeliveryZone.prototype.treeBrowser.hideFeedback(id) });

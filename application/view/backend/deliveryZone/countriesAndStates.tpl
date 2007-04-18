@@ -8,6 +8,7 @@
     </fieldset>
     
     
+{*
      <fieldset>
 		{foreach from=$alternativeLanguagesCodes key=lang item=langName}
 		<fieldset class="expandingSection">
@@ -22,7 +23,7 @@
 		</fieldset>
 		{/foreach}
     </fieldset>
-    
+*}    
     
     <label>{t _country}</label>
     <fieldset class="error">
