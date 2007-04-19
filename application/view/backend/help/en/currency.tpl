@@ -21,7 +21,9 @@ which currencies your store will support.</p>
 </fieldset>
 </div>
 
-<br \><br \>
+<br \>
+<br \>
+
 <h3 id="add">Add Currency</h3>
 <p>To add a new currency:</p>
 
@@ -34,7 +36,9 @@ which currencies your store will support.</p>
 	<img src="image/doc/currency/add_button.bmp">
 </ol>
 
-<br \><br \>
+<br \>
+<br \>
+
 <h3 id="set_base">Set the Base Currency</h3>
 <p>The base currency is used as the main currency of your system. All the other currency rates are calculated
  in respect with the base currency.    
@@ -53,7 +57,7 @@ tab (to proceed to manual exchange rates setting page):</p>
 one United Kingdom Pound is worth 1.96475 US Dollars, enter this value:</p>
 <img src="image/doc/currency/adjust_exchange_rates_blink.bmp">
 
-<p>Then click <strong>Save</strong> to set the rates:</p>
+<p>and click <strong>Save</strong> to set the rates:</p>
 <img src="image/doc/currency/save.bmp">
 
 <p class="note"><strong>Note</strong>: rates always have to be calculated in relation to the <strong>base</strong>
@@ -62,7 +66,9 @@ one United Kingdom Pound is worth 1.96475 US Dollars, enter this value:</p>
 <p>See <a href="{self}#adjust_automaticaly"> Automatic Adjust</a> for keeping your rates up-to-date.</p>
 -->
 
-<br \><br \>
+<br \>
+<br \>
+
 <!--
 <h3 id="adjust_automaticaly">Automaticaly Adjust Exchange Rates</h3>
 <p>To configure automatic exchange rates click <strong>Adjust Exchange Rates</strong> tab.</p>
@@ -76,15 +82,18 @@ up-to-date. To do that:
 </ins></ul>
 </p>
 -->
-<br \><br \>
+<br \>
+<br \>
+
 <h3 id="enable_disable">Enable or Disable Currencies</h3>
-<p>All the currencies are disabled by default. To enable a currency click it's <strong>checkbox</strong> on the 
+<p>All the currencies are disabled by default. To enable a currency click it's checkbox on the 
 left of the currency name.</p>
 <img src="image/doc/currency/enable.bmp">
 
 <p>Clear the mark to disable it.</p>
 
-<br \><br \>
+<br \>
+<br \>
 
 <h3 id="format">Currency's symbols</h3>
 <p>To express the type of money you can set special currency symbols ("$", etc.) that will be displayed in your 
@@ -96,21 +105,26 @@ store with a particular currency. To set currency's formatting:</p>
 	<li>In the <strong>Price Formatting</strong> you can enter the prefix and suffix (prefix before currency name,
 	suffix - after) that will be displayed with the currency:</li>
 	<img src="image/doc/currency/prefix_suffix.bmp">
-	<li>Click save to set symbols:</li>
+	<li>Click <strong>Save</strong> to set symbols:</li>
 	<img src="image/doc/currency/save.bmp">
 </ol>
-<br \><br \>
+
+<br \>
+<br \>
 
 <h3 id="sort">Sort Currencies</h3>
 <p>Sorting currencies determines the order in which the active currencies are be displayed to your customers in 
 the currency switching menu. To set the appropriate currency order, click on the currency and drag it up or down.</p>
 <img src="image/doc/currency/sort.bmp">
 
-<br \><br \>
+<br \>
+<br \>
+
 <h3 id="delete">Delete</h3>
-<p>To delete a currency, move your mouse over the currency and click <strong>delete</strong> icon on the left.</p>
+<p>To delete a currency, move your mouse over the currency and click the <strong>Delete</strong> icon on the left.</p>
 <img src="image/doc/currency/delete.bmp">
 
-<br \><br \>
+<br \>
+<br \>
 
 

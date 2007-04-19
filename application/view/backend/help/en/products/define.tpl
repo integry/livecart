@@ -43,9 +43,11 @@ You can edit details by choosing appropriate tab indicating details group (main,
 	<li>Keywords - words or phrases that will be used to help users to find products.</li>
 	<li>Mark as bestseller - mark the checkbox to set the product's status to {glossary}bestseller{/glossary}.</li>
 </ul>
+
 If you have more than one language in your system, you can translate the following details:
 <img src="image/doc/products/edit/translate1.bmp">
 <img src="image/doc/products/edit/translate2.bmp">
+
 <ul>
 	<li>Name</li>
 	<li>Short description</li>
@@ -61,8 +63,10 @@ If you have more than one language in your system, you can translate the followi
 <p>This section is used to supply prices of your product.</p>
 <img src="image/doc/products/edit/pricing.bmp">
 Go to <a href="{help /currency}">currencies section</a> to configure currencies of your system.
+
 <br \>
 <br \>
+
 <img src="image/doc/products/edit/shipping.bmp">
 <ul>
 	<li>Shipping weight - weight of the product in 'Metric' or 'English' units.</li>
@@ -77,7 +81,6 @@ Go to <a href="{help /currency}">currencies section</a> to configure currencies 
 
 <h3 id="inventory">Inventory</h3>
 
-<p></p>
 <img src="image/doc/products/edit/inventory.bmp">
 <ul>
 	<li>Items in stock - ther number of product items in your warehouse.</li>
@@ -92,6 +95,7 @@ displayed in the product details page. All the other pictures will be displayed 
 product detail page.</p>
 
 <p>To add an image:</p>
+
 <ol>
 	<li>Click <strong>Add new image</strong>.</li>
 	<li>Click <strong>Browse</strong> to locate imgage on your hard disk drive.</li>
@@ -107,6 +111,7 @@ You can set image dimensions (and other details?) in the <strong>Settings</stron
 
 <p>For upselling purposes you can easily create related products that are displayed to customers as additional
 products that are some way related. To add related products for a particular product:</p>
+
 <ul>
 	<li>Click <strong>Select Products</strong>:</li>
 	<img src="image/doc/products/edit/select.bmp">
@@ -117,7 +122,9 @@ products that are some way related. To add related products for a particular pro
 	as related items. For example:
 	<img src="image/doc/products/edit/recommended.bmp">
 </ul>
+
 <p>If you have many related products it might be useful to group them together. To group existing related products:</p>
+
 <ul>
 	<li>Click <strong>Add Group</strong>:</li>
 	<img src="image/doc/products/edit/select.bmp">
@@ -140,8 +147,9 @@ products that are some way related. To add related products for a particular pro
 
 <p>If you are adding a new product you can choose to save only the main details and add another product immediately
  or choose to continue with more details:
- </p>
+</p>
 <img src="image/doc/products/edit/save.bmp">
+
 <p>If you are editing a product, its form is devided into several tabs. Click a tab to access the
 particular group.</p>
 

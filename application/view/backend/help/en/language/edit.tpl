@@ -1,4 +1,5 @@
-<p>To prepare your <del>language for usage</del> <ins>store for usage in another language</ins> you have to translate the appropriate words <ins> and sentences</ins> from English to <del>your chosen</del> <ins>the necessary</ins> language.</p>
+<p>To prepare your store for usage in another languages you have to translate appropriate words and sentences
+from English to the necessary language.</p>
 
 <div class="tasks">
 <fieldset>
@@ -14,33 +15,44 @@
 </fieldset>
 </div>
 
-
+<br \>
+<br \>
 <h3 id="user_interface">Translate user interface</h3>
 
 <p>There are two ways of translating the interface - either by using the <strong>word tree</strong> or 
 <a href="{self}#user_interface">Live Translation</a> tool.</p>
-<p>The <strong>word tree</strong> is placed below the Translation Filter. All the words in the tree 
-are categorized as they appear in the interface layout. To supply translations, browse the tree and enter 
-<ins>the</ins> corresponding translations in the fields provided. For example:</p>
-<img src="image/doc/language/edit/text_box.bmp"/>
+<p>The <strong>word tree</strong> is placed below the Translation Filter:</p>
+<img src="image/doc/language/edit/tree_marked.bmp"/>
+
+<p>All the words in the tree are categorized as they appear in the interface layout. To supply translations, browse
+ the tree and enter the corresponding translations in the fields provided:</p>
+<img src="image/doc/language/edit/tree2.bmp"/> 
+
+<p>Take a look at the following example:</p>
+<img src="image/doc/language/edit/cursor.bmp"/>
+
 <ul>
 	<li>where <span style="background: #ffffcc">text field</span> is a field for your translations;</li>
-	<li><span style="background: #ffffcc">_menu_users</span> is a variable name; </li>
-	<li><span style="background: #ffffcc">Users</span> is a default translation which is used if text field
-	 is left empty</li>
+	<li><span style="background: #ffffcc">_user_registration</span> is a variable name;</li>
+	<li>and <span style="background: #ffffcc">New Account Registration</span> is the default translation which is 
+	used if the text field is left empty.</li>
 </ul>
 
-<p class="note"><strong>Note</strong>: you can also enter multiple lines of text in the text area 
-- just click the <i>down arrow</i> key of your keyboard to switch to multi-line input field.</p>
+<p class="note"><strong>Note</strong>: You can also enter multiple lines of text in the text area 
+- just click the "down arrow" key on your keyboard to switch to multi-line input field.</p>
 
-
+<br \>
+<br \>
 <h3 id="find_specific_word">Find and translate a specific word or sentence</h3>
 
-<p>If you need to find a specific word, use a <strong>Search field</strong> in the 
-<i>Translation Filter</i> area. The search is carried out on their default values in English and translations.</p>	
-<img src="image/doc/language/edit/find.bmp"/>
+<p>If you need to find a specific word, use a "Search" field in the Translation Filter area. The search is carried
+ out on their default values in English and translations as well.</p>	
+<img src="image/doc/language/edit/search.bmp"/>
 
+<p>The results that match your search criteria appear below automatically.</p>
 
+<br \>
+<br \>
 <h3 id="find_missing_translations">Find missing translations</h3>	
 <p>You can have keywords filtered by their current status in terms of translation process. The following 
 filtering options are available:</p>
@@ -53,7 +65,8 @@ filtering options are available:</p>
 	translated</li>
 </ul>
 
-
+<br \>
+<br \>
 <h3 id="translate_directly">Translate a word or sentence directly from user interface</h3>	
 	
 <p>Live Translation is a LiveCart tool which allows you to translate a word or sentence directly from the
@@ -65,7 +78,8 @@ interface text (element) directly in the page you see it in. To do that you have
   once you hover the mouse cursor over an element and a pop-up menu appears. We highly recommend to use
    <strong>Live Translation</strong> when you are not sure about the keyword's exact place in the interface.</p>
 
-
+<br \>
+<br \>
 <h3 id="product_info">Translate product info</h3>	
 	
 <p>You can translate products, categories, attributes and other data directly from their management pages, 
