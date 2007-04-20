@@ -28,7 +28,7 @@
 <legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#create">Create a new attribute</a></li>
-	<li><a href="{self}#visible">( Display attribute in the product page )</a></li>
+	<li><a href="{self}#visible">Set Attributes to be displayed in the product page <strong>and order!</strong></a></li>
 	<li><a href="{self}#group">Group attributes</a></li>
 	<li><a href="{self}#edit">Edit attribute</a></li>
 	<li><a href="{self}#delete">Delete attribute</a></li>

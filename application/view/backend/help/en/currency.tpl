@@ -1,4 +1,4 @@
-<p>With LC you can localize your e-store and provide the product and shipping pricing in visitor's home 
+<p>With LC you can localize your e-store and provide the product and shipping pricing in visitor's home
 currency. That is, you can set multiple currencies and allow users to switch between currencies to view the 
 prices of products and conclude payments in the currency they prefer. To do that you have to define 
 which currencies your store will support.</p> 	
@@ -14,7 +14,7 @@ which currencies your store will support.</p>
 	<li><a href="{self}#adjust_automaticaly">Set Automatic Exchange Rates Adjust</a></li>
 -->
 	<li><a href="{self}#enable_disable">Enable or Disable Currency</a></li>
-	<li><a href="{self}#format">Set Currency's Formatting</a></li>
+	<li><a href="{self}#format">Set Price Formatting</a></li>
 	<li><a href="{self}#sort">Sort Currencies</a></li>
 	<li><a href="{self}#delete">Delete Currency</a></li>				
 </ul>
@@ -95,17 +95,17 @@ left of the currency name.</p>
 <br \>
 <br \>
 
-<h3 id="format">Currency's symbols</h3>
+<h3 id="format">Price Formatting</h3>
 <p>To express the type of money you can set special currency symbols ("$", etc.) that will be displayed in your 
-store with a particular currency. To set currency's formatting:</p>
+store with a particular price. To set price formatting:</p>
 
 <ol>
 	<li>Hover your mouse cursor over the currency and click the "pen" icon on the left:</li>
 	<img src="image/doc/currency/edit.bmp">
-	<li>In the <strong>Price Formatting</strong> you can enter the prefix and suffix (prefix before currency name,
-	suffix - after) that will be displayed with the currency:</li>
+	<li>In the <strong>Price Formatting</strong> you can enter the prefix and suffix (prefix before the price,
+	suffix - after) that will be displayed with the price:</li>
 	<img src="image/doc/currency/prefix_suffix.bmp">
-	<li>Click <strong>Save</strong> to set symbols:</li>
+	<li>Click <strong>Save</strong> to set formatting:</li>
 	<img src="image/doc/currency/save.bmp">
 </ol>
 
