@@ -137,7 +137,7 @@ class UserController extends FrontendController
 
         ActiveRecordModel::commit();
 
-        return new ActionRedirectResponse('checkout', 'confirmTotals');
+        return new ActionRedirectResponse('checkout', 'shipping');
     }
 
     public function editShippingAddress()

@@ -196,7 +196,8 @@ class CheckoutController extends FrontendController
             $rates[$key] = $shipmentRates;
         }
 
-        $order->save();
+        $order->syncToSession();
+		$order->save();
 
         $rateArray = array();
         foreach ($rates as $key => $rate)
@@ -221,6 +222,25 @@ class CheckoutController extends FrontendController
         {
             return new ActionRedirectResponse('checkout', 'shipping');               
         }            
+        
+        foreach ($shipments as $key => $shipment)
+        {
+			$rates = $shipment->getAvailableRates();
+			
+			$selectedRateId = $this->request->getValue('shipping_' . $key);
+			if (!isset($rates[$selectedRateId]))
+			{
+				print_r($rates);
+				throw new ApplicationException('No rate found: ' . $key);
+				return new ActionRedirectResponse('checkout', 'shipping');
+			}
+			
+			$shipment->setRateId($selectedRateId);
+		}
+        
+        $order->syncToSession();
+        
+        return new ActionRedirectResponse('checkout', 'confirm');
     }
     
     private function buildShippingForm(ARSet $shipments)

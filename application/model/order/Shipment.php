@@ -12,7 +12,9 @@ class Shipment extends ActiveRecordModel
 {
     protected $items = array();
     
-	protected $availableShippingRates = null;    
+	protected $availableShippingRates;   
+	
+	protected $selectedRateId; 
     
     /**
 	 * Define database schema used by this active record instance
@@ -63,6 +65,11 @@ class Shipment extends ActiveRecordModel
         $this->availableShippingRates = $rates;
     }
     
+    public function getAvailableRates()
+    {
+		return $this->availableShippingRates;
+	}
+    
     public function toArray()
     {
         $array = parent::toArray();
@@ -100,7 +107,7 @@ class Shipment extends ActiveRecordModel
     
 	public function serialize()
 	{
-        return parent::serialize(array('orderID'), array('items'));
+        return parent::serialize(array('orderID'), array('items', 'availableShippingRates', 'selectedRateId'));
     }    
 }
 
