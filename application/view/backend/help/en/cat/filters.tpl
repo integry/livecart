@@ -11,8 +11,6 @@ have to offer (some may search for products by particular technical details and 
 
 <p class="note"><strong>Note</strong>: Filters define search range only within specific categories because 
 attributes are assigned to particular categories and filters are directly mapped to attributes.</p>
-<ins>(filters are directly mapped to attributes, therefore you can only create filters in those categories that 
-has attributes defined)</ins>
 
 <p>Let's take a look at a few <strong>examples</strong> to get a better idea how filters work.</p>
 

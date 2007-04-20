@@ -28,7 +28,7 @@
 <legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#create">Create a new attribute</a></li>
-	<li><a href="{self}#visible">Set Attributes to be displayed in the product page <strong>and order!</strong></a></li>
+	<li><a href="{self}#visible">Set Attributes to be displayed in the product page</a></li>
 	<li><a href="{self}#group">Group attributes</a></li>
 	<li><a href="{self}#edit">Edit attribute</a></li>
 	<li><a href="{self}#delete">Delete attribute</a></li>
@@ -50,8 +50,7 @@
 </ul>
 
 Using these base types you can create various types of attributes. Below you'll find a couple of practical 
-examples on how to choose the best attribute type for describing a particular product property. 
-(<ins>simpler sentences</ins>)
+examples on how to create attributes and choose attribute types. 
 </p>
 
 <p>
@@ -207,6 +206,20 @@ by necessary changes. A numeric attribute looks similar to this one:
 </div>
 </p>
 
+<h3 id="visible">Display attributes in your e-store</h3>
+
+<p>You can define what attributes should be displayed with your products in the main attribute's form.</p>
+
+<ul>
+	<li>To make the attribute visible in the product list page, mark the "Display attribute in the product list page" checkbox.</li>
+	<img src="image/doc/categories/attributes/main_form_product_list_page.bmp">
+	<li>To make the attribute visible in the product page, mark the "Display attribute in the product page" checkbox.</li>
+	<img src="image/doc/categories/attributes/main_form_product_page.bmp">
+</ul>
+
+<p>You can as well define the <strong>order</strong> in which attributes are displayed in the both "Product page" and "Product list page".
+See <a href="{self}#sort">Change attribute order</a> for more information.</p>
+
 <h3 id="group">Group attributes</h3>
 
 LC allows you to group related attributes together. This is mostly important for products detailed page
@@ -241,7 +254,7 @@ To edit attribute: select an attribute from the list and click on its "pen" icon
 <img src="image/doc/categories/attributes/edit_attribute.bmp">
 
 Attribute's management form appears with its specification details. To edit any of attribute's fields or values, simply alter existing parameters/values
-and save changes afterwards. For detailed fields' description, refer to <a href="javascript:expand(document.getElementById('carrier'))">Create new 
+and save changes afterwards. For detailed fields' description, refer to <a onclick="expand(document.getElementById('carrier'))"href="{self}#form">Create new 
 attribute</a> section.
 
 <h3 id="delete">Delete attribute</h3>
@@ -255,6 +268,10 @@ To delete attribute: select an attribute from the list and click on its "delete"
 To change the order of attributes or attribute groups, hover mouse cursor over attribute or entire group and then
  drag it up or down.
 <img src="image/doc/categories/attributes/sort.bmp">
+
+<p class="note"><strong>Note</strong>: The order of attribute groups and single attributes define how they are 
+displayed in the <ins>"Product page"?</ins> and "Product details" pages.</p>
+
 
 {helpSeeAlso}
 	{see cat.details}
