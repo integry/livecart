@@ -50,17 +50,25 @@ class OrderedItem extends ActiveRecordModel
     
     public function serialize()
     {
-        return parent::serialize(array('customerOrderID', 'shipmentID'));
+        return parent::serialize(array('customerOrderID', 'shipmentID', 'productID'));
     }
     
-    public function save()
-    {
+    protected function update()
+    {                       
         if (is_null($this->shipment->get()) || !$this->shipment->get()->getID())
+        {
+            $this->shipment->setNull(false);
+            $this->shipment->resetModifiedStatus();
+        }
+
+        if ($this->isModified())
+        {
+            return parent::update();
+        }
+        else
         {
             return false;
         }
-        
-        return parent::save();
     }
     
     public static function transformArray($array, $className = __CLASS__)

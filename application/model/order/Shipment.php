@@ -12,6 +12,11 @@ class Shipment extends ActiveRecordModel
 {
     protected $items = array();
     
+    /**
+     *  Used only for serialization
+     */
+    protected $itemIds = array();
+    
 	protected $availableShippingRates;   
 	
 	protected $selectedRateId; 
@@ -41,6 +46,7 @@ class Shipment extends ActiveRecordModel
 	
 	public function addItem(OrderedItem $item)
 	{
+        $this->getItems();
         $this->items[] = $item;
         $item->shipment->set($this);
     }
@@ -49,7 +55,7 @@ class Shipment extends ActiveRecordModel
     {
         $weight = 0;
         
-        foreach ($this->items as $item)
+        foreach ($this->getItems() as $item)
         {
             if (!$item->product->get()->isFreeShipping->get() || !$zone->isFreeShipping->get())
             {
@@ -78,8 +84,9 @@ class Shipment extends ActiveRecordModel
         $subTotal = array();
         $currencies = Store::getInstance()->getCurrencySet();
         
-        foreach ($this->items as $item)
-        {
+        foreach ($this->getItems() as $item)
+        {            
+            var_dump($item);
             $items[] = $item->toArray();
             
             foreach ($currencies as $id => $currency)
@@ -107,8 +114,37 @@ class Shipment extends ActiveRecordModel
     
 	public function serialize()
 	{
-        return parent::serialize(array('orderID'), array('items', 'availableShippingRates', 'selectedRateId'));
-    }    
+        $this->getItems();        
+        $this->itemIds = array();
+        foreach ($this->items as $item)
+        {
+            $this->itemIds[] = $item->getID();
+        }
+        
+        return parent::serialize(array('orderID'), array('itemIds', 'availableShippingRates', 'selectedRateId'));
+    }      
+    
+    private function getItems()
+    {
+        $this->restoreItemsAfterUnserialize();
+        return $this->items;
+    }
+    
+    private function restoreItemsAfterUnserialize()
+    {
+        if ($this->itemIds)
+        {
+            $this->items = array();
+            
+            foreach ($this->itemIds as $id)    
+            {
+                $item = $this->order->get()->getItemById($id);
+                $this->items[] = $item;
+            }
+            
+            $this->itemIds = array();
+        }
+    } 
 }
 
 ?>

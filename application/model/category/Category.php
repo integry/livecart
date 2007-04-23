@@ -676,7 +676,11 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 		return $filter;
 	}
-
+	
+	public function serialize()
+	{
+        return parent::serialize(array('defaultImageID', 'parentNodeID'));  
+    }
 }
 
 ?>

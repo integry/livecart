@@ -13,9 +13,9 @@ ClassLoader::import("application.model.delivery.ShipmentDeliveryRate");
  */
 class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 {
-	protected $orderedItems = array();
+	public $orderedItems = array();
 	
-	protected $shipments = array();	
+	public $shipments = array();	
 	
 	private $removedItems = array();
 	    
@@ -94,11 +94,13 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         {
             if (!$product->isAvailable())
             {
-                throw new ApplicationException('Product is not available (' . $product->sku->get() . ')');
+                throw new ApplicationException('Product is not available (' . $product->getID() . ')');
             }
             
             $this->orderedItems[] = OrderedItem::getNewInstance($this, $product, $count);
         }
+        
+        $this->resetShipments();
     }
     
     /**
@@ -120,10 +122,9 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         
         foreach ($this->orderedItems as $key => $item)
         {
-            if ($item->product->getID() == $id)
+            if ($item->product->get()->getID() == $id)
             {
-                $this->removedItems[] = $item;
-                unset($this->orderedItems[$key]);
+                $this->removeItem($item);
             }
         }    
     }
@@ -133,16 +134,15 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
      */
 	public function removeItem(OrderedItem $orderedItem)
     {
-        $id = $orderedItem->getID();
-        
 		foreach ($this->orderedItems as $key => $item)
         {
-            if ($item->getID() == $id)
+            if ($item === $orderedItem)
             {
                 $this->removedItems[] = $item;
                 unset($this->orderedItems[$key]);
+                $this->resetShipments(); 
             }
-        }    
+        } 
     }
     
     public function save()
@@ -161,9 +161,11 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 				else
 				{
 					if ($item->isModified())
-					{
-                        $item->save();
-                        $isModified = true;
+					{                        
+                        if ($item->save())
+                        {
+                            $isModified = true;                            
+                        }
                     }
 				}
             }    
@@ -173,13 +175,15 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
                 $item->delete();
                 $isModified = true;
             }      
-            
+
+            $this->removedItems = array();
+                    
             // reorder shipments when cart items are modified
             if ($isModified)
             {
                 $this->shipments = array();   
             }                      
-        }
+        }        
         
         if ($this->isSyncedToSession)
         {
@@ -304,7 +308,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
      */
 	public function getItemByID($id)
 	{
-		foreach ($this->orderedItems as $item)
+        foreach ($this->orderedItems as $item)
 		{
 			if ($item->getID() == $id)
 			{
@@ -365,6 +369,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     {
         if (!$this->shipments)
         {
+//            echo 'Creating shipments<br>';
             ClassLoader::import("application.model.order.Shipment");
     
             $main = Shipment::getNewInstance($this);
@@ -431,14 +436,14 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 		return $array;
 	}
 	
-	public function setAvailableShippingRates($rates)
-	{
-        $this->availableShippingRates = $rates;
-    }
-	
 	public function serialize()
 	{
-        return parent::serialize(null, array('orderedItems', 'shipments'));
+        return parent::serialize(array('userID'), array('orderedItems', 'shipments'));        
+    }
+    
+    public function resetShipments()
+    {
+        $this->shipments = array();
     }
 }
 	

@@ -34,6 +34,11 @@ class Product extends MultilingualObject
 	 */
 	private $removedRelationships = null;
 
+    public function serialize()
+    {
+        return parent::serialize(array('categoryID', 'Category', 'manufacturerID', 'defaultImageID'));
+    }
+
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
