@@ -17,6 +17,29 @@ class ShippingRateSet implements ShippingResultInterface, IteratorAggregate
         return $this->rates;
     }
     
+    public function get($id)
+    {
+        if (isset($this->rates[$id]))
+        {
+            return $this->rates[$id];
+        }
+        else
+        {
+            return null;
+        }
+    }
+    
+    public function getByServiceId($id)
+    {
+        foreach ($this->rates as $rate)
+        {
+            if ($rate->getServiceID() == $id)
+            {
+                return $rate;
+            }
+        }
+    }
+    
     public function setRawResponse($response)
     {
         $this->rawResponse = $response;
