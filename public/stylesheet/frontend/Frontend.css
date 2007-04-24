@@ -472,6 +472,17 @@ tr.specificationGroup
     clear: both;
 }
 
+/* Payments */
+#ccExpiryMonth, #ccExpiryYear, #ccType
+{
+    width: auto;   
+}
+
+#ccCVV
+{
+    width: 4em;
+}
+
 /*************************** 
 	Form styling
 ***************************/

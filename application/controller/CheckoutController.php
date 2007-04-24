@@ -228,10 +228,10 @@ class CheckoutController extends FrontendController
 			$rates = $shipment->getAvailableRates();
 			
 			$selectedRateId = $this->request->getValue('shipping_' . $key);
-			if (!isset($rates[$selectedRateId]))
+			
+            if (!$rates->getByServiceId($selectedRateId))
 			{
-				print_r($rates);
-				throw new ApplicationException('No rate found: ' . $key);
+//				throw new ApplicationException('No rate found: ' . $key .' (' . $selectedRateId . ')');
 				return new ActionRedirectResponse('checkout', 'shipping');
 			}
 			
@@ -240,7 +240,25 @@ class CheckoutController extends FrontendController
         
         $order->syncToSession();
         
-        return new ActionRedirectResponse('checkout', 'confirm');
+        return new ActionRedirectResponse('checkout', 'pay');
+    }
+    
+    public function pay()
+    {
+        $order = CustomerOrder::getInstance();       
+        
+        if (!$order->isShippingSelected())
+        {
+            return new ActionRedirectResponse('checkout', 'shipping');
+        }
+        
+        $currency = $this->request->getValue('currency', $this->store->getDefaultCurrencyCode());
+                
+        $response = new ActionResponse();
+        $response->setValue('order', $order->toArray());
+		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode())); 
+        $response->setValue('ccForm', $this->buildCreditCardForm());
+        return $response;                        
     }
     
     private function buildShippingForm(ARSet $shipments)
@@ -274,6 +292,25 @@ class CheckoutController extends FrontendController
         $validator->addCheck('billingAddress', new IsNotEmptyCheck($this->translate('_select_billing_address')));
         $validator->addCheck('shippingAddress', new OrCheck(array('shippingAddress', 'sameAsBilling'), array(new IsNotEmptyCheck($this->translate('_select_shipping_address')), new IsNotEmptyCheck('')), $this->request));
         
+        return $validator;
+    }
+
+    private function buildCreditCardForm()
+    {
+		ClassLoader::import("framework.request.validator.Form");
+		return new Form($this->buildCreditCardValidator());        
+    }
+
+    private function buildCreditCardValidator()
+    {
+		ClassLoader::import("framework.request.validator.RequestValidator");        
+        $validator = new RequestValidator("creditCart", $this->request);
+        $validator->addCheck('ccNum', new IsNotEmptyCheck($this->translate('_err_enter_cc_num')));
+        $validator->addCheck('ccType', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));
+        $validator->addCheck('ccExpiryMonth', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_month')));
+        $validator->addCheck('ccExpiryYear', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_year')));
+        $validator->addCheck('ccCVV', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));
+       
         return $validator;
     }
 }

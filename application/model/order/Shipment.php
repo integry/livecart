@@ -46,7 +46,6 @@ class Shipment extends ActiveRecordModel
 	
 	public function addItem(OrderedItem $item)
 	{
-        $this->getItems();
         $this->items[] = $item;
         $item->shipment->set($this);
     }
@@ -55,7 +54,7 @@ class Shipment extends ActiveRecordModel
     {
         $weight = 0;
         
-        foreach ($this->getItems() as $item)
+        foreach ($this->items as $item)
         {
             if (!$item->product->get()->isFreeShipping->get() || !$zone->isFreeShipping->get())
             {
@@ -75,6 +74,21 @@ class Shipment extends ActiveRecordModel
     {
 		return $this->availableShippingRates;
 	}
+	
+	public function setRateId($serviceId)
+	{
+        $this->selectedRateId = $serviceId;
+    }
+    
+    public function getSelectedRate()
+    {
+        if (!$this->availableShippingRates)
+        {
+            return null;
+        }
+        
+        return $this->availableShippingRates->getByServiceId($this->selectedRateId);
+    }
     
     public function toArray()
     {
@@ -84,9 +98,8 @@ class Shipment extends ActiveRecordModel
         $subTotal = array();
         $currencies = Store::getInstance()->getCurrencySet();
         
-        foreach ($this->getItems() as $item)
+        foreach ($this->items as $item)
         {            
-            var_dump($item);
             $items[] = $item->toArray();
             
             foreach ($currencies as $id => $currency)
@@ -108,13 +121,17 @@ class Shipment extends ActiveRecordModel
         $array['items'] = $items;      
         $array['subTotal'] = $subTotal;
         $array['formattedSubTotal'] = $formattedSubTotal;
+        
+        if ($selected = $this->getSelectedRate())
+        {
+            $array['selectedRate'] = $selected->toArray();            
+        }
                 
         return $array;
     }
     
 	public function serialize()
 	{
-        $this->getItems();        
         $this->itemIds = array();
         foreach ($this->items as $item)
         {
@@ -124,27 +141,27 @@ class Shipment extends ActiveRecordModel
         return parent::serialize(array('orderID'), array('itemIds', 'availableShippingRates', 'selectedRateId'));
     }      
     
-    private function getItems()
+    public function unserialize($serialized)
     {
-        $this->restoreItemsAfterUnserialize();
-        return $this->items;
-    }
-    
-    private function restoreItemsAfterUnserialize()
-    {
+        parent::unserialize($serialized);
         if ($this->itemIds)
         {
             $this->items = array();
             
             foreach ($this->itemIds as $id)    
             {
-                $item = $this->order->get()->getItemById($id);
+                $item = ActiveRecordModel::getInstanceById('OrderedItem', $id);
                 $this->items[] = $item;
             }
             
             $this->itemIds = array();
         }
-    } 
+    }
+    
+    private function getItems()
+    {
+        return $this->items;
+    }
 }
 
 ?>

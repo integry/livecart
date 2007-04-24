@@ -19,3 +19,9 @@ _select_billing_address=Please select the billing address!
 
 _shipping=Shipping
 _err_select_shipping=Please select a shipping method for this shipment
+
+######################## 
+# Pay
+######################## 
+
+_pay=Complete Your Order

@@ -6,6 +6,7 @@ ClassLoader::import("application.model.order.Shipment");
 ClassLoader::import("application.model.system.SessionSyncable");
 ClassLoader::import("application.model.delivery.ShipmentDeliveryRate");
 
+
 /**
  * Represents customers order - products placed in shopping basket
  *
@@ -96,7 +97,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
             {
                 throw new ApplicationException('Product is not available (' . $product->getID() . ')');
             }
-            
+                        
             $this->orderedItems[] = OrderedItem::getNewInstance($this, $product, $count);
         }
         
@@ -134,7 +135,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
      */
 	public function removeItem(OrderedItem $orderedItem)
     {
-		foreach ($this->orderedItems as $key => $item)
+        foreach ($this->orderedItems as $key => $item)
         {
             if ($item === $orderedItem)
             {
@@ -147,6 +148,15 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     
     public function save()
     {
+        // remove zero-count items
+        foreach ($this->orderedItems as $item)
+        {
+            if (!$item->count->get())
+            {
+				$this->removeItem($item);
+			}
+		}
+
         if ($this->orderedItems || $this->removedItems)
         {
             parent::save();
@@ -154,20 +164,15 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
             $isModified = false;
             foreach ($this->orderedItems as $item)
             {
-                if (!$item->count->get())
-                {
-					$this->removeItem($item);
-				}
-				else
-				{
-					if ($item->isModified())
-					{                        
-                        if ($item->save())
-                        {
-                            $isModified = true;                            
-                        }
+				if ($item->isModified())
+				{                        
+                    if ($item->save())
+                    {
+                        $isModified = true;                            
                     }
-				}
+                }
+                
+                $item->markAsLoaded();
             }    
     
             foreach ($this->removedItems as $item)
@@ -181,7 +186,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
             // reorder shipments when cart items are modified
             if ($isModified)
             {
-                $this->shipments = array();   
+                $this->resetShipments();   
             }                      
         }        
         
@@ -369,7 +374,6 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     {
         if (!$this->shipments)
         {
-//            echo 'Creating shipments<br>';
             ClassLoader::import("application.model.order.Shipment");
     
             $main = Shipment::getNewInstance($this);
@@ -401,6 +405,21 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         return DeliveryZone::getZoneByAddress($this->shippingAddress->get());            
     }
 	
+	public function isShippingSelected()
+	{
+        $selected = true;
+        
+        foreach ($this->shipments as $shipment)
+        {
+            if (!$shipment->getSelectedRate())
+            {
+                $selected = false;
+            }    
+        }
+        
+        return $selected;
+    }
+	
 	/**
 	 *	Creates an array representation of the shopping cart
 	 */
@@ -428,9 +447,52 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 			$array['basketCount'] = $this->getShoppingCartItemCount();
 			$array['wishListCount'] = $this->getWishListItemCount();
 			
-			// subtotal for all currencies
+			// shipments
+			$array['shipments'] = array();
+            foreach ($this->shipments as $shipment)
+			{
+                $array['shipments'][] = $shipment->toArray();
+            }
 			
-			// formatted price
+			// total for all currencies
+			$total = array();
+			$currencies = Store::getInstance()->getCurrencySet();            
+            foreach ($currencies as $id => $currency)
+            {
+                $total[$id] = 0;
+            }
+            
+            // product price totals
+            foreach ($this->getShoppingCartItems() as $item)
+            {
+                foreach ($currencies as $id => $currency)
+    			{
+                    $total[$id] += $item->product->get()->getPrice($id);
+                }                
+            }
+			
+			// shipping cost totals
+            foreach ($this->shipments as $shipment)
+			{
+                if ($rate = $shipment->getSelectedRate())
+                {
+                    $amount = $rate->getCostAmount();
+                    $currency = Currency::getInstanceById($rate->getCostCurrency());
+                    
+                    foreach ($currencies as $id => $curr)
+                    {
+                        $total[$id] += $curr->convertAmount($currency, $amount);
+                    }
+                }
+            }
+			
+			$array['total'] = $total;
+			
+			$array['formattedTotal'] = array();
+            foreach ($array['total'] as $id => $amount)
+			{
+                $array['formattedTotal'][$id] = $currencies[$id]->getFormattedPrice($amount);   
+            }
 		}	
 		
 		return $array;
@@ -439,6 +501,29 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 	public function serialize()
 	{
         return parent::serialize(array('userID'), array('orderedItems', 'shipments'));        
+    }
+    
+    public function unserialize($serialized)
+    {
+        parent::unserialize($serialized);
+        
+        // load products
+        $productIds = array();
+        foreach ($this->orderedItems as $item)
+        {
+            $productIds[] = $item->product->get()->getID();
+        }
+        
+        $products = ActiveRecordModel::getInstanceArray('Product', $productIds, Product::LOAD_REFERENCES);
+        
+        // load product prices
+        $set = new ARSet();
+        foreach ($products as $product)
+        {
+            $set->add($product);
+        }
+        
+        ProductPrice::loadPricesForRecordSet($set);
     }
     
     public function resetShipments()

@@ -50,6 +50,7 @@ class OrderedItem extends ActiveRecordModel
     
     public function serialize()
     {
+        $this->markAsLoaded();
         return parent::serialize(array('customerOrderID', 'shipmentID', 'productID'));
     }
     
