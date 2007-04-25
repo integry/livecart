@@ -31,6 +31,7 @@ abstract class FrontendController extends BaseController
 	  	$this->addBlock('BREADCRUMB', 'boxBreadCrumb', 'block/box/breadcrumb');
 	  	$this->addBlock('LANGUAGE', 'boxLanguageSelect', 'block/box/language');
 	  	$this->addBlock('CURRENCY', 'boxSwitchCurrency', 'block/box/currency');
+	  	$this->addBlock('CART', 'boxShoppingCart', 'block/box/shoppingCart');
 	}
 	
 	protected function addBreadCrumb($title, $url)
@@ -43,9 +44,14 @@ abstract class FrontendController extends BaseController
 		/* Returning Users: View your order history & information */
 	}
 
-	protected function boxViewBasketBlock()
-	{
-	  	
+	protected function boxShoppingCartBlock()
+	{	 	
+		ClassLoader::import('application.model.order.CustomerOrder');
+		$response = new BlockResponse();
+//		print_r(CustomerOrder::getInstance()->toArray());
+		$response->setValue('order', CustomerOrder::getInstance()->toArray()); 
+		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode()));
+		return $response; 	
 	}
 
 	protected function boxSwitchCurrencyBlock()

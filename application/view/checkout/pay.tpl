@@ -15,22 +15,24 @@
 		   	
     <h2>Pay with a credit card</h2>
     
-    {form action="controller=payment action=payCC" handle=$ccForm}
+    {form action="controller=payment action=payCreditCard" handle=$ccForm method="POST"}
         <p>
             <label for="ccNum">Card number:</label>
             {textfield name="ccNum"}
         </p>
         
+{*
         <p>
             <label for="ccType">Card type:</label>
             {selectfield name="ccType" options=$ccType}
         </p>
+*}
     
         <p>
             <label for="ccExpiryMonth">Card expiration:</label>
-            {selectfield name="ccExpiryMonth" options=$ccExpiryMonth}
+            {selectfield name="ccExpiryMonth" options=$months}
             /
-            {selectfield name="ccExpiryYear" options=$ccExpiryYear}
+            {selectfield name="ccExpiryYear" options=$years}
         </p>
     
         <p>
@@ -65,7 +67,7 @@
         
             <tr>
                 <td colspan="3" class="subTotalCaption">{t _shipping} ({$shipment.selectedRate.serviceName}):</td>
-                <td class="subTotal">{$shipment.selectedRate.formattedPrice.$currency}</td>                        
+                <td>{$shipment.selectedRate.formattedPrice.$currency}</td>                        
             </tr>
     {/foreach}  
       

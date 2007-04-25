@@ -567,6 +567,20 @@ tr.specificationGroup
     width: 4em;
 }
 
+#payTotal
+{
+	font-size: larger;
+	padding: 6px;
+	background-color: yellow;
+	display: inline;
+	clear: both;
+}
+
+#payTotal .subTotal
+{
+	font-weight: bold;
+}
+
 /*************************** 
 	Form styling
 ***************************/
@@ -657,6 +671,17 @@ input, select, file, form.other
     font-size: 16px;
     padding: 2px;
     vertical-align: middle;
+}
+
+select
+{
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+option
+{
+	padding-right: 4px;
 }
 
 optgroup option 

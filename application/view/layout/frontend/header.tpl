@@ -20,8 +20,7 @@
 	
 		<div style="float: right;">
         	{* block LANGUAGE *}
-			<a href="{link controller=order returnPath=true}">{t Shopping Cart}</a> | 
-			<a href="{link controller=checkout returnPath=true}">{t Checkout}</a>
+        	{block CART}
 		</div>
 	
 	</fieldset>

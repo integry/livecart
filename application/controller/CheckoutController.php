@@ -65,6 +65,23 @@ class CheckoutController extends FrontendController
         {
             return false;
         }       
+
+        $this->addBreadCrumb($this->translate('_select_addresses'), $router->createUrl(array('controller' => 'checkout', 'action' => 'selectAddress')));         		
+		
+    	if ('selectAddress' == $action)
+    	{
+			return false;	
+		}
+                
+        $this->addBreadCrumb($this->translate('_shipping'), $router->createUrl(array('controller' => 'checkout', 'action' => 'shipping')));         		
+		
+    	if ('shipping' == $action)
+    	{
+			return false;	
+		}
+
+        $this->addBreadCrumb($this->translate('_pay'), $router->createUrl(array('controller' => 'checkout', 'action' => 'pay')));         		
+		
     }
     
     /**
@@ -89,9 +106,7 @@ class CheckoutController extends FrontendController
      *	@role login
      */
     public function selectAddress()
-    {
-        $this->addBreadCrumb($this->translate('_select_addresses'), '');
-        
+    {        
         $order = CustomerOrder::getInstance();
         
         $form = $this->buildAddressSelectorForm();
@@ -257,7 +272,19 @@ class CheckoutController extends FrontendController
         $response = new ActionResponse();
         $response->setValue('order', $order->toArray());
 		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode())); 
-        $response->setValue('ccForm', $this->buildCreditCardForm());
+        
+        $ccHandler = Store::getInstance()->getCreditCardHandler();
+        if ($ccHandler)
+        {
+			$response->setValue('ccHandler', $ccHandler->toArray());
+			$response->setValue('ccForm', $this->buildCreditCardForm());
+			
+			$months = range(1, 12);
+			$years = range(date('Y'), date('Y') + 20);
+			$response->setValue('months', $months);
+			$response->setValue('years', $years);
+		}
+		
         return $response;                        
     }
     

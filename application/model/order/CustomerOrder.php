@@ -467,7 +467,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
             {
                 foreach ($currencies as $id => $currency)
     			{
-                    $total[$id] += $item->product->get()->getPrice($id);
+                    $total[$id] += ($item->product->get()->getPrice($id) * $item->count->get());
                 }                
             }
 			

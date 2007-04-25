@@ -349,6 +349,18 @@ class Store
 
 		return $currArray;
 	}
+	
+	public function getCreditCardHandler(TransactionDetails $details = null)
+	{
+		ClassLoader::import('library.payment.method.testcreditcard.TestCreditCard');
+
+		if (is_null($details))
+		{
+			$details = new TransactionDetails();
+		}
+
+		return new TestCreditCard($details);
+	}
 
 	/**
 	 * Loads currency data from database
