@@ -14,14 +14,16 @@
 				</li>	
 			{/if}
 			{if $category.subCategories}
-				{fun name="categoryTree" node=$category.subCategories}
+    			<div {if $category.ID == $currentId}id="currentSubCategories"{/if}>                
+    				{fun name="categoryTree" node=$category.subCategories}
+				</div>
 			{/if}
 		{/foreach}
 		</ul>
 	{/if}	
 {/defun}
 
-<div class="box">
+<div class="box categories">
 	<div class="title">
 		<div>Categories {$currentID}</div>
 	</div>

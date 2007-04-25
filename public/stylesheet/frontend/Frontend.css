@@ -4,6 +4,12 @@
   	padding: 0;
 }
 
+body
+{
+    font-family: Verdana;
+    font-size: small;
+}
+
 a img
 {
     border: 0;
@@ -17,7 +23,7 @@ h1, h2, h3
 h1
 {
 	font-size: 200%;
-	padding-left: 20px;
+/*	padding-left: 20px; */
 	margin-bottom: 10px;
 }
 
@@ -71,6 +77,7 @@ table
 {
   	padding: 20px;
   	padding-bottom: 10px;
+  	padding-top: 10px;
 }
 
 #footer 
@@ -111,6 +118,20 @@ table
 #content.right
 {
 	margin-right: 0px;
+}
+
+/*****************************
+	Header
+*****************************/
+#storeName
+{
+	font-family: Trebuchet MS;    
+	font-size: 26px;
+	font-weight: bold;
+	display: inline;
+    position: absolute;
+    left: 90px;
+    top: -10px;
 }
 
 /*****************************
@@ -190,12 +211,34 @@ fieldset.container
 .quickSearch .searchQuery
 {
 	border: 1px solid #DDDDDD;
-	width: 120px;
+	width: 180px;
 }
 
 .quickSearch .submit
 {
 	border: 1px solid #DDDDDD;	
+}
+
+.quickSearch select
+{
+    width: auto;
+    padding-left: 0px;
+}
+
+/*****************************
+	Category box
+*****************************/
+.categories ul ul
+{
+    list-style-type: disc;   
+    margin: 5px;
+    margin-left: 0px;
+}
+
+#currentSubCategories li
+{
+    list-style-type: circle;
+    margin-bottom: 7px;
 }
 
 /*****************************
@@ -248,6 +291,12 @@ fieldset.container
 	float: left;
 	width: 100%;
 	padding: 5px;
+	font-size: smaller;
+}
+
+#breadCrumb ul
+{
+    float: left;
 }
 
 #breadCrumb ul li
@@ -261,6 +310,41 @@ fieldset.container
 {
 	margin-left: 5px;
 	font-weight: bold;
+}
+
+#breadCrumbCaption
+{
+    float: left;
+    font-weight: bold;
+}
+
+/*****************************
+	Sub-category list
+*****************************/
+.subCatName .count
+{
+    color: #666666;
+}
+
+.subCatName
+{
+    font-size: larger;
+    font-weight: bold;
+}
+
+.subCatImage img
+{
+    vertical-align: middle;
+}
+
+tr.separator td
+{
+    height: 10px;   
+}
+
+.subCategories td.details
+{
+    padding-left: 10px;
 }
 
 /*****************************

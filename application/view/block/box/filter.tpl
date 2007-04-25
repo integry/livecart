@@ -15,7 +15,7 @@
 </div>
 {/if}
 
-{if $groups}
+{if $groups || $manGroup || $priceGroup}
 <div class="box narrowResults">
 	<div class="title">
 		<div>{t _narrow_results}</div>

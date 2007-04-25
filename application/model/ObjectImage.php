@@ -30,7 +30,8 @@ abstract class ObjectImage extends MultilingualObject
 
 	public static function deleteByID($className, $id, $foreignKeyName)
 	{
-		$inst = ActiveRecordModel::getInstanceById($className, $id, ActiveRecordModel::LOAD_DATA, array('Product'));
+		$inst = ActiveRecordModel::getInstanceById($className, $id, ActiveRecordModel::LOAD_DATA);
+		$inst->getOwner()->load();
 		$inst->deleteImageFiles();
 		
 		// check if main image is being deleted
