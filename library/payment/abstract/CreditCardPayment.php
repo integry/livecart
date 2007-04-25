@@ -1,6 +1,6 @@
 <?php
 
-include_once('../TransactionPayment.php');
+include_once(dirname(__file__) . '/../TransactionPayment.php');
 
 abstract class CreditCardPayment extends TransactionPayment
 {
@@ -28,6 +28,10 @@ abstract class CreditCardPayment extends TransactionPayment
 	 *	Credit card type (Visa, MasterCard, etc.)
 	 */
 	protected $cardType;
+	
+	const TYPE_VISA = 'Visa';
+	const TYPE_MC = 'MasterCard';
+	const TYPE_AMEX = 'American Express';
 	
 	public function setCardData($cardNumber, $expiryMonth, $expiryYear, $cardCode = null)
 	{
@@ -65,6 +69,13 @@ abstract class CreditCardPayment extends TransactionPayment
 	public function getCardType()
 	{
 		return $this->cardType;
+	}
+	
+	public function toArray()
+	{
+		$ret = array();
+		$ret['type'] = 'CC';		
+		return $ret;
 	}
 	
 	/**

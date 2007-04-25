@@ -3,6 +3,7 @@
 include_once('PaymentException.php');
 include_once('TransactionResult.php');
 include_once('TransactionError.php');
+include_once('TransactionDetails.php');
 
 abstract class TransactionPayment
 {		
