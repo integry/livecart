@@ -1,5 +1,5 @@
 <div id="clearFooter"></div>
 
 <div id="footer"> 
-	Frontend footer
+	<img src="image/promo/logo_small.jpg" />
 </div>
