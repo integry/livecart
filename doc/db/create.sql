@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2007-04-17 15:24                                #
+# Created on:            2007-04-26 19:43                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -151,10 +151,15 @@ CREATE TABLE CustomerOrder (
     userID INTEGER UNSIGNED,
     billingAddressID INTEGER UNSIGNED,
     shippingAddressID INTEGER UNSIGNED,
-    sessionID CHAR(32),
+    currencyID CHAR(3),
     dateCreated TIMESTAMP,
     dateCompleted TIMESTAMP,
-    status TINYINT COMMENT '0 - new 1 - partially paid 2 - paid 3 - awaiting shipment 4 - partially shipped 5 - shipped 6 - confirmed as delivered 7 - pending return 8 - returned',
+    totalAmount FLOAT,
+    capturedAmount FLOAT,
+    isPaid BOOL,
+    isDelivered BOOL,
+    isReturned BOOL,
+    isCancelled BOOL,
     CONSTRAINT PK_CustomerOrder PRIMARY KEY (ID)
 );
 
@@ -556,6 +561,7 @@ CREATE TABLE Transaction (
     gatewayTransactionID VARCHAR(40),
     type TINYINT COMMENT '0 - sale (authorize & capture) 1 - authorize 2 - capture 3 - void',
     isCompleted BOOL,
+    isCreditCard BOOL,
     ccExpiryYear INTEGER,
     ccExpiryMonth TINYINT,
     ccLastDigits CHAR(4),

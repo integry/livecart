@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-04-17 15:21                                #
+# Created on:            2007-04-26 18:12                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -47,9 +47,9 @@ ALTER TABLE OrderedItem DROP FOREIGN KEY CustomerOrder_OrderedItem;
 
 ALTER TABLE OrderedItem DROP FOREIGN KEY Shipment_OrderedItem;
 
-ALTER TABLE User DROP FOREIGN KEY UserBillingAddress_User;
+ALTER TABLE User DROP FOREIGN KEY BillingAddress_User;
 
-ALTER TABLE User DROP FOREIGN KEY UserShippingAddress_User;
+ALTER TABLE User DROP FOREIGN KEY ShippingAddress_User;
 
 ALTER TABLE AccessControlList DROP FOREIGN KEY User_AccessControlList;
 
@@ -107,9 +107,9 @@ ALTER TABLE ProductReview DROP FOREIGN KEY User_ProductReview;
 
 ALTER TABLE UserAddress DROP FOREIGN KEY State_UserAddress;
 
-ALTER TABLE UserBillingAddress DROP FOREIGN KEY User_UserBillingAddress;
+ALTER TABLE BillingAddress DROP FOREIGN KEY User_BillingAddress;
 
-ALTER TABLE UserBillingAddress DROP FOREIGN KEY UserAddress_UserBillingAddress;
+ALTER TABLE BillingAddress DROP FOREIGN KEY UserAddress_BillingAddress;
 
 ALTER TABLE Transaction DROP FOREIGN KEY CustomerOrder_Transaction;
 
@@ -117,9 +117,9 @@ ALTER TABLE Transaction DROP FOREIGN KEY Transaction_Transaction;
 
 ALTER TABLE Shipment DROP FOREIGN KEY CustomerOrder_Shipment;
 
-ALTER TABLE UserShippingAddress DROP FOREIGN KEY User_UserShippingAddress;
+ALTER TABLE ShippingAddress DROP FOREIGN KEY User_ShippingAddress;
 
-ALTER TABLE UserShippingAddress DROP FOREIGN KEY UserAddress_UserShippingAddress;
+ALTER TABLE ShippingAddress DROP FOREIGN KEY UserAddress_ShippingAddress;
 
 ALTER TABLE OrderNote DROP FOREIGN KEY CustomerOrder_OrderNote;
 
@@ -148,34 +148,10 @@ ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 ALTER TABLE ShippingRateGroup DROP FOREIGN KEY DeliveryZone_ShippingRateGroup;
 
 # ---------------------------------------------------------------------- #
-# Modify table "UserBillingAddress"                                      #
+# Modify table "CustomerOrder"                                           #
 # ---------------------------------------------------------------------- #
 
-DROP INDEX IDX_UserBillingAddress_1 ON UserBillingAddress;
-
-DROP INDEX IDX_UserBillingAddress_2 ON UserBillingAddress;
-
-ALTER TABLE UserBillingAddress DROP PRIMARY KEY;
-
-RENAME TABLE UserBillingAddress TO BillingAddress;
-
-ALTER TABLE BillingAddress ADD CONSTRAINT PK_BillingAddress 
-    PRIMARY KEY (ID);
-
-CREATE INDEX IDX_BillingAddress_1 ON BillingAddress (userID);
-
-CREATE INDEX IDX_BillingAddress_2 ON BillingAddress (userAddressID);
-
-# ---------------------------------------------------------------------- #
-# Modify table "UserShippingAddress"                                     #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE UserShippingAddress DROP PRIMARY KEY;
-
-RENAME TABLE UserShippingAddress TO ShippingAddress;
-
-ALTER TABLE ShippingAddress ADD CONSTRAINT PK_ShippingAddress 
-    PRIMARY KEY (ID);
+ALTER TABLE CustomerOrder CHANGE isCanceled isCancelled BOOL;
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
