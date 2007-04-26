@@ -16,7 +16,9 @@ class TransactionResult
 	
 	public $rawResponse;
 	
-	function __construct()
+	protected $isCaptured;
+    
+    public function __construct()
 	{		
 		$this->gatewayTransactionID = new TransactionValueMapper();
 		$this->amount = new TransactionValueMapper();
@@ -26,6 +28,16 @@ class TransactionResult
 		$this->CVVmatch = new TransactionValueMapper();
 		$this->rawResponse = new TransactionValueMapper();
 	}
+	
+	public function setAsCaptured()
+	{
+        $this->isCaptured = true;    
+    }
+    
+    public function isCaptured()
+    {
+        return $this->isCaptured;
+    }
 }
 
 ?>

@@ -81,8 +81,9 @@ class TestCreditCard extends CreditCardPayment
 		
 		$result->AVSaddr->set(true);
 		$result->AVSzip->set(true);
-
 		$result->CVVmatch->set(true);	
+		
+		$result->setAsCaptured();
 		
 		return $result;		
 	}

@@ -117,7 +117,12 @@ class PaypalDirectPayment extends CreditCardPayment
 				$result->CVVmatch->set(PaypalCommon::getCVVByCode($response->CVV2Code));
 				
 				$result->rawResponse->set($response);
-												
+					
+                if ('Sale' == $type)
+                {
+                    $result->setAsCaptured();
+                }
+                    							
 				return $result;
 			}
 		}
@@ -153,6 +158,8 @@ class PaypalDirectPayment extends CreditCardPayment
 				$result->currency->set($details->GrossAmount->currencyID);
 
 				$result->rawResponse->set($response);
+
+                $result->setAsCaptured();
 
 				return $result;
 			}
