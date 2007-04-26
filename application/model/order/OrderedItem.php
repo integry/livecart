@@ -27,7 +27,7 @@ class OrderedItem extends ActiveRecordModel
 		$schema->registerField(new ARField("priceCurrencyID", ARChar::instance(3)));
 		$schema->registerField(new ARField("price", ARFloat::instance()));
 		$schema->registerField(new ARField("count", ARFloat::instance()));
-		$schema->registerField(new ARField("reservedCount", ARFloat::instance()));
+		$schema->registerField(new ARField("reservedProductCount", ARFloat::instance()));
 		$schema->registerField(new ARField("dateAdded", ARTimeStamp::instance()));
 		$schema->registerField(new ARField("isSavedForLater", ARBool::instance()));
 	}
@@ -48,10 +48,31 @@ class OrderedItem extends ActiveRecordModel
         return $itemPrice * $this->count->get();    
     }
     
+    public function reserve()
+    {
+        $product = $this->product->get();
+        $product->reservedCount->set($product->reservedCount->get() + $this->reservedProductCount->get());
+    }
+    
+    /**
+     *  @todo implement
+     */ 
+    public function unreserve()
+    {
+        
+    }
+    
     public function serialize()
     {
         $this->markAsLoaded();
         return parent::serialize(array('customerOrderID', 'shipmentID', 'productID'));
+    }
+    
+    public function save()
+    {
+        parent::save();
+        
+        $this->product->get()->save();
     }
     
     protected function update()

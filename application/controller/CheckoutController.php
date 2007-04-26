@@ -223,7 +223,7 @@ class CheckoutController extends FrontendController
         $response = new ActionResponse();
         $response->setValue('shipments', $shipments->toArray());
         $response->setValue('rates', $rateArray);
-		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode())); 
+		$response->setValue('currency', $this->getRequestCurrency()); 
         $response->setValue('form', $this->buildShippingForm($shipments));
         return $response;
     }
@@ -288,6 +288,55 @@ class CheckoutController extends FrontendController
         return $response;                        
     }
     
+    public function payCreditCard()
+	{
+        ClassLoader::import('application.model.order.*');        
+        $order = CustomerOrder::getInstance();		
+
+        if (!$order->isShippingSelected())
+        {
+            return new ActionRedirectResponse('checkout', 'shipping');
+        }
+
+		if (!$this->buildCreditCardValidator()->isValid())
+		{
+            return new ActionRedirectResponse('checkout', 'pay');
+        }
+                
+        $currency = Currency::getInstanceById($this->getRequestCurrency());
+        
+        // set up transaction details
+        $transaction = new LiveCartTransaction($order, $currency);
+        
+        // process payment
+        $handler = Store::getInstance()->getCreditCardHandler($transaction);
+        $handler->setCardData($this->request->getValue('ccNum'), $this->request->getValue('ccExpiryMonth'), $this->request->getValue('ccExpiryYear'), $this->request->getValue('ccCVV'));
+        $result = $handler->authorizeAndCapture();
+        
+        if ($result instanceof TransactionResult)
+        {
+            $order->finalize($currency);
+            
+            $transaction = Transaction::getNewInstance($order, $result);
+            $transaction->save();
+            return new ActionRedirectResponse('checkout', 'completed');
+        }
+        elseif ($result instanceof TransactionError)
+        {
+            $this->buildCreditCardValidator();
+            return new ActionRedirectResponse('checkout', 'pay');
+        }
+        else
+        {
+            throw new Exception('Unknown transaction result type: ' . get_class($result));
+        }
+	}
+	
+	public function completed()
+	{
+        
+    }
+    
     private function buildShippingForm(ARSet $shipments)
     {
 		ClassLoader::import("framework.request.validator.Form");
@@ -333,10 +382,10 @@ class CheckoutController extends FrontendController
 		ClassLoader::import("framework.request.validator.RequestValidator");        
         $validator = new RequestValidator("creditCart", $this->request);
         $validator->addCheck('ccNum', new IsNotEmptyCheck($this->translate('_err_enter_cc_num')));
-        $validator->addCheck('ccType', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));
+//        $validator->addCheck('ccType', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));
         $validator->addCheck('ccExpiryMonth', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_month')));
         $validator->addCheck('ccExpiryYear', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_year')));
-        $validator->addCheck('ccCVV', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));
+        $validator->addCheck('ccCVV', new IsNotEmptyCheck($this->translate('_err_enter_cc_cvv')));
        
         return $validator;
     }

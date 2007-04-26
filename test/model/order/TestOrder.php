@@ -166,10 +166,36 @@ class TestOrder extends UnitTest
 
         $this->order = unserialize(serialize($this->order));
         
-        $this->assertEqual($subTotal, $this->order->getSubTotal($this->usd));
+        $this->assertEqual($subTotal, $this->order->getSubTotal($this->usd));        
+        
+        $this->assertEqual($shipments->size(), $this->order->getShipments()->size());
+        $this->assertEqual(count($shipments->get(0)->getItems()), count($this->order->getShipments()->get(0)->getItems()));
+    }
 
-        $shipments = $this->order->getShipments();
+    function testFinalize()
+    {
+        $total = $this->order->getTotal($this->usd);
+        $this->order->finalize($this->usd);
+        
+        ActiveRecord::clearPool();        
+        
+        // reload the whole order data - the calculated total should still match
+        $order = CustomerOrder::getInstanceById($this->order->getID());        
+        $this->assertEqual($total, $order->getTotal($this->usd));
+    
+        // change price for one product...
+        foreach ($order->getShoppingCartItems() as $item)
+        {
+            $product = $item->product->get();
+            $product->setPrice('USD', $product->getPrice('USD') + 10);            
+            break;
+        }
 
+        // ...so the new total calculated total would be different
+        $this->assertNotEqual($total, $order->getTotal($this->usd));
+
+        // however the "closed" price should still be the same as this order is already finalized
+        $this->assertEqual($total, $order->totalAmount->get());               
     }
 
     function test_SuiteTearDown()

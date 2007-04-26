@@ -34,6 +34,12 @@ abstract class FrontendController extends BaseController
 	  	$this->addBlock('CART', 'boxShoppingCart', 'block/box/shoppingCart');
 	}
 	
+	protected function getRequestCurrency()
+    {
+        return $this->request->getValue('currency', $this->store->getDefaultCurrencyCode());
+    }
+
+	
 	protected function addBreadCrumb($title, $url)
 	{
 		$this->breadCrumb[] = array('title' => $title, 'url' => $url);

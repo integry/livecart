@@ -158,7 +158,7 @@ class Shipment extends ActiveRecordModel
         }
     }
     
-    private function getItems()
+    public function getItems()
     {
         return $this->items;
     }

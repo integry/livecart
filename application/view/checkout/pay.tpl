@@ -15,7 +15,7 @@
 		   	
     <h2>Pay with a credit card</h2>
     
-    {form action="controller=payment action=payCreditCard" handle=$ccForm method="POST"}
+    {form action="controller=checkout action=payCreditCard" handle=$ccForm method="POST"}
         <p>
             <label for="ccNum">Card number:</label>
             {textfield name="ccNum"}

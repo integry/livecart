@@ -23,7 +23,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     private static $instance = null;
     
     private $isSyncedToSession = false;
-    
+                
     /**
 	 * Define database schema used by this active record instance
 	 *
@@ -38,11 +38,16 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", "User", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("shippingAddressID", "shippingAddress", "ID", 'UserAddress', ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("billingAddressID", "billingAddress", "ID", 'UserAddress', ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("currencyID", "currency", "ID", 'Currency', ARChar::instance(3)));
 
-//		$schema->registerField(new ARField("sessionID", ARChar::instance(32)));
 		$schema->registerField(new ARField("dateCreated", ARTimeStamp::instance()));
 		$schema->registerField(new ARField("dateCompleted", ARTimeStamp::instance()));
-		$schema->registerField(new ARField("status", ARInteger::instance(2)));
+		$schema->registerField(new ARField("totalAmount", ARFloat::instance()));
+		$schema->registerField(new ARField("capturedAmount", ARFloat::instance()));
+		$schema->registerField(new ARField("isPaid", ARBool::instance()));
+		$schema->registerField(new ARField("isDelivered", ARBool::instance()));
+		$schema->registerField(new ARField("isReturned", ARBool::instance()));
+		$schema->registerField(new ARField("isCancelled", ARBool::instance()));        		
 	}
 		
 	public static function getNewInstance(User $user)	
@@ -51,6 +56,17 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 		$instance->user->set($user);     
         
         return $instance;   
+    }
+    
+    public static function getInstanceById($id)
+    {
+        $f = new ARSelectFilter();
+        
+        $instance = ActiveRecordModel::getInstanceById('CustomerOrder', $id, self::LOAD_DATA, self::LOAD_REFERENCES);
+        $instance->orderedItems = $instance->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), self::LOAD_REFERENCES);
+        $instance->shipments = $instance->getRelatedRecordSet('Shipment', new ARSelectFilter());
+        
+        return $instance;
     }
     
     /**
@@ -146,8 +162,52 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         } 
     }
     
+    /**
+     *  "Close" the order for modifications and fix its state
+     *
+     *  1) fix current product prices and total (so the total doesn't change if product prices change)
+     *  2) save created shipments
+     */
+    public function finalize(Currency $currency, $reserveProducts = null)
+    {
+        foreach ($this->getShipments() as $shipment)
+        {
+            $shipment->order->set($this);
+            $shipment->save();
+        }
+        
+        if (!is_null($reserveProducts))
+        {
+            $reserveProducts = !Config::getInstance()->getValue('DISABLE_INVENTORY');            
+        }
+        
+        foreach ($this->getShoppingCartItems() as $item)
+        {
+            // reserve products if inventory is enabled
+            if ($reserveProducts)
+            {
+                $item->reserve();
+            }
+            
+            $item->priceCurrencyID->set($currency->getID());
+            $item->price->set($item->product->get()->getPrice($currency->getID()));
+            $item->save();
+        }
+        
+        $this->totalAmount->set($this->getTotal($currency));
+        $this->currency->set($currency);
+        
+        $this->save();
+    }
+    
     public function save()
     {
+        // update order status if captured amount has changed
+        if ($this->capturedAmount->isModified() && ($this->capturedAmount->get() == $this->totalAmount->get()))
+        {
+            $this->isPaid->set(true);
+        }
+        
         // remove zero-count items
         foreach ($this->orderedItems as $item)
         {
@@ -421,6 +481,35 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     }
 	
 	/**
+	 *	Get total amount for order, including shipping costs
+	 */
+	public function getTotal(Currency $currency)
+	{
+        $total = 0;
+        $id = $currency->getID();
+        
+        // product price totals
+        foreach ($this->getShoppingCartItems() as $item)
+        {
+            $total += ($item->product->get()->getPrice($id) * $item->count->get());
+        }
+		
+		// shipping cost totals
+        foreach ($this->shipments as $shipment)
+		{
+            if ($rate = $shipment->getSelectedRate())
+            {
+                $amount = $rate->getCostAmount();
+                $curr = Currency::getInstanceById($rate->getCostCurrency());
+                
+                $total += $currency->convertAmount($curr, $amount);
+            }
+        }
+        
+        return $total;
+    }
+		
+	/**
 	 *	Creates an array representation of the shopping cart
 	 */
 	public function toArray()
@@ -459,33 +548,9 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 			$currencies = Store::getInstance()->getCurrencySet();            
             foreach ($currencies as $id => $currency)
             {
-                $total[$id] = 0;
+                $total[$id] = $this->getTotal($currency);
             }
-            
-            // product price totals
-            foreach ($this->getShoppingCartItems() as $item)
-            {
-                foreach ($currencies as $id => $currency)
-    			{
-                    $total[$id] += ($item->product->get()->getPrice($id) * $item->count->get());
-                }                
-            }
-			
-			// shipping cost totals
-            foreach ($this->shipments as $shipment)
-			{
-                if ($rate = $shipment->getSelectedRate())
-                {
-                    $amount = $rate->getCostAmount();
-                    $currency = Currency::getInstanceById($rate->getCostCurrency());
-                    
-                    foreach ($currencies as $id => $curr)
-                    {
-                        $total[$id] += $curr->convertAmount($currency, $amount);
-                    }
-                }
-            }
-			
+            			
 			$array['total'] = $total;
 			
 			$array['formattedTotal'] = array();
