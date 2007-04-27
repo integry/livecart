@@ -1,5 +1,10 @@
 RewriteEngine on
 
+# @todo remove >>
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^public/upload/(.*)$ http://server/livecart/prex/public/upload/$1 [R,L]
+# << end remove
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 

@@ -31,9 +31,9 @@ class Transaction extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("parentTransactionID", "Transaction", "ID", "Transaction", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
-
+		$schema->registerField(new ARForeignKeyField("currencyID", "currency", "ID", 'Currency', ARChar::instance(3)));
+		
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
-		$schema->registerField(new ARField("currencyID", ARChar::instance(3)));
 		$schema->registerField(new ARField("time", ARTimeStamp::instance()));
 		$schema->registerField(new ARField("method", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("gatewayTransactionID", ARVarchar::instance(40)));
@@ -49,16 +49,20 @@ class Transaction extends ActiveRecordModel
 	public static function getNewInstance(CustomerOrder $order, TransactionResult $result)
 	{
         $instance = parent::getNewInstance(__CLASS__);
-        foreach (array('amount', 'currency', 'gatewayTransactionID') as $field)
+        $instance->order->set($order);
+        
+        foreach (array('amount', 'gatewayTransactionID') as $field)
         {
             $instance->$field->set($result->$field->get());
         }
+        
+        $instance->currency->set(Currency::getInstanceById($result->currency->get()));
         
         // different currency than initial order currency?
         $amount = $result->amount->get();
         if ($order->currency->get()->getID() != $result->currency->get())
         {
-            $amount = $order->currency->get()->convertAmount(Currency::getInstanceById($result->currency->get()), $amount);
+            $amount = $order->currency->get()->convertAmount($instance->currency->get(), $amount);
         }
         
         if ($result->isCaptured())
@@ -73,7 +77,7 @@ class Transaction extends ActiveRecordModel
     {
         $this->order->get()->save();
         
-        return parent::save();
+        return parent::insert();
     }
 }
 

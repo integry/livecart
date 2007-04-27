@@ -293,6 +293,7 @@ class CheckoutController extends FrontendController
         ClassLoader::import('application.model.order.*');        
         $order = CustomerOrder::getInstance();		
 
+        // the order might not be ready for completion yet
         if (!$order->isShippingSelected())
         {
             return new ActionRedirectResponse('checkout', 'shipping');
@@ -302,7 +303,13 @@ class CheckoutController extends FrontendController
 		{
             return new ActionRedirectResponse('checkout', 'pay');
         }
-                
+        
+        // already paid?
+        if ($order->isPaid->get())
+        {
+            return new ActionRedirectResponse('checkout', 'completed');
+        }
+        
         $currency = Currency::getInstanceById($this->getRequestCurrency());
         
         // set up transaction details
@@ -316,14 +323,22 @@ class CheckoutController extends FrontendController
         if ($result instanceof TransactionResult)
         {
             $order->finalize($currency);
+            $order->unSyncFromSession();  
+            
+            Session::getInstance()->setValue('completedOrderID', $order->getID());          
             
             $transaction = Transaction::getNewInstance($order, $result);
             $transaction->save();
+            
             return new ActionRedirectResponse('checkout', 'completed');
         }
         elseif ($result instanceof TransactionError)
         {
-            $this->buildCreditCardValidator();
+            $validator = $this->buildCreditCardValidator();
+            
+            // set error message for credit card form
+            $validator->triggerError('creditCardError', $this->translate('_err_processing_cc'));
+            
             return new ActionRedirectResponse('checkout', 'pay');
         }
         else
@@ -334,7 +349,11 @@ class CheckoutController extends FrontendController
 	
 	public function completed()
 	{
+        $order = CustomerOrder::getInstanceByID((int)Session::getInstance()->getValue('completedOrderID'));
         
+        $response = new ActionResponse();
+        $response->setValue('order', $order->toArray());        
+        return $response;        
     }
     
     private function buildShippingForm(ARSet $shipments)

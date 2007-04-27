@@ -437,6 +437,17 @@ tr.specificationGroup
 }
 
 /*****************************
+	Users
+*****************************/
+.forgottenPassword
+{
+    display: block;
+    clear: left;
+    font-size: smaller;
+    padding-left: 143px;
+}
+
+/*****************************
 	Shopping cart
 *****************************/
 #cartStats

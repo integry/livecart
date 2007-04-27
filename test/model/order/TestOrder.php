@@ -6,6 +6,7 @@ ClassLoader::import("application.model.category.*");
 ClassLoader::import("application.model.product.*");
 ClassLoader::import("application.model.order.*");
 ClassLoader::import("application.model.user.*");
+ClassLoader::import("library.payment.*");
 
 /**
  *	Test Order model for the following scenarios:
@@ -196,6 +197,20 @@ class TestOrder extends UnitTest
 
         // however the "closed" price should still be the same as this order is already finalized
         $this->assertEqual($total, $order->totalAmount->get());               
+    }
+
+    function testPayment()
+    {
+        $result = new TransactionResult();
+        $result->amount->set($this->order->totalAmount->get());
+        $result->currency->set($this->order->currency->get()->getID());
+        $result->gatewayTransactionID->set('TESTTRANSACTION');
+        $result->setAsCaptured();
+        
+        $transaction = Transaction::getNewInstance($this->order, $result);
+        $transaction->save();
+        
+        $this->assertEqual($this->order->totalAmount->get(), $this->order->capturedAmount->get());
     }
 
     function test_SuiteTearDown()

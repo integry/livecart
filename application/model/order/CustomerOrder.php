@@ -163,6 +163,15 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     }
     
     /**
+     *	Add new ordered item
+     */
+	public function addItem(OrderedItem $orderedItem)
+    {
+        $orderedItem->order->set($this);
+        $this->orderedItems[] = $orderedItem;
+    }    
+    
+    /**
      *  "Close" the order for modifications and fix its state
      *
      *  1) fix current product prices and total (so the total doesn't change if product prices change)
@@ -193,6 +202,14 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
             $item->price->set($item->product->get()->getPrice($currency->getID()));
             $item->save();
         }
+        
+        // move wish list items to a separate order
+        $wishList = CustomerOrder::getNewInstance($this->user->get());
+        foreach ($this->getWishListItems() as $item)
+        {
+            $wishList->addItem($item);
+        }
+        $wishList->save();
         
         $this->totalAmount->set($this->getTotal($currency));
         $this->currency->set($currency);
@@ -275,6 +292,11 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     {
         return $this->isSyncedToSession;
     }
+    
+    public function unSyncFromSession()
+    {
+        Session::getInstance()->unsetValue('CustomerOrder');
+    }    
     
     /**
      *  @todo implement

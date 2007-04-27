@@ -9,25 +9,9 @@
 
 	// session cookie expires in 180 days
 	session_set_cookie_params(180 * 60 * 60 * 24);
+    
+    include dirname(dirname(__file__)) . '/application/Initialize.php';
 
-	require_once(".." . DIRECTORY_SEPARATOR . "framework" . DIRECTORY_SEPARATOR . "ClassLoader.php");
-
-	ClassLoader::mountPath(".", dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
-
-	ClassLoader::import("library.stat.Stat");
-	$stat = new Stat(true);
-
-	ClassLoader::import("framework.request.Request");
-	ClassLoader::import("framework.request.Router");
-	ClassLoader::import("framework.renderer.TemplateRenderer");
-	ClassLoader::import("framework.controller.*");
-	ClassLoader::import("framework.response.*");
-	ClassLoader::import("application.controller.*");
-	ClassLoader::import("application.model.system.*");
-
-	// LiveCart request routing rules
-	ClassLoader::import("application.configuration.route.backend");
-	TemplateRenderer::setCompileDir(ClassLoader::getRealPath("cache.templates_c"));
 	$app = Application::getInstance();
 
 	try

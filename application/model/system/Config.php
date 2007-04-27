@@ -84,6 +84,20 @@ class Config
 		}
 	}
 
+    public function toArray()
+    {
+        $array = array();
+        
+        // some of the values are multi-language, so we can't just return the values array
+        // @todo - this can obviously be optimized
+        foreach ($this->values as $key => $value)
+        {
+            $array[$key] = $this->getValue($key);
+        }
+        
+        return $array;
+    }
+
 	public function setValue($key, $value)
 	{
 		$this->values[$key] = $value;

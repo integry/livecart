@@ -37,6 +37,13 @@ class User extends ActiveRecordModel
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));		
 	}
 
+    public static function getNewInstance()
+    {
+        $instance = parent::getNewInstance(__CLASS__);    
+        
+        return $instance;
+    }
+
     public static function getCurrentUser()
     {
         $user = Session::getInstance()->getObject('User');
@@ -66,11 +73,15 @@ class User extends ActiveRecordModel
         return parent::save();
     }
 
-    public static function getNewInstance()
+    protected function insert()
     {
-        $instance = parent::getNewInstance(__CLASS__);    
+        parent::insert();
         
-        return $instance;
+        // send welcome email with user account details
+        $email = new Email();
+        $email->setUser($this);
+        $email->setTemplate('user.new');
+        $email->send();
     }
 
 	/**
@@ -170,6 +181,14 @@ class User extends ActiveRecordModel
         }
         
         return ActiveRecordModel::getRecordSetArray('ShippingAddress', $f, array('UserAddress', 'State'));
+    }
+    
+    public static function transformArray($array, $class = __CLASS__)
+    {
+        $array = parent::transformArray($array, $class);
+        $array['fullName'] = $array['firstName'] . ' ' . $array['lastName'];
+        
+        return $array;
     }
     
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)

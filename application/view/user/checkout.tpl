@@ -15,7 +15,7 @@
         Please log in to complete your purchase.
     </p>
 	
-	<form action="{link controller=user action=processLogin}" method="POST" />
+	<form action="{link controller=user action=doLogin}" method="POST" />
         <p>
 	       <label for="email">{t Your e-mail address}:</label>
            <input type="text" class="text" id="email" name="email" />
