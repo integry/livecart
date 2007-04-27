@@ -74,7 +74,12 @@ class TestCreditCard extends CreditCardPayment
 	
 	private function process($type)
 	{		
-		$result = new TransactionResult();
+		if ($this->details->cvv->get() == '000')
+		{
+            return new TransactionError();    
+        }
+        
+        $result = new TransactionResult();
 		$result->gatewayTransactionID->set('TESTCC' . rand(1, 10000000));
 		$result->amount->set($this->details->amount->get());
 		$result->currency->set($this->details->currency->get());
