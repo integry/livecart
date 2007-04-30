@@ -74,9 +74,9 @@ class TestCreditCard extends CreditCardPayment
 	
 	private function process($type)
 	{		
-		if ($this->details->cvv->get() == '000')
+		if ($this->getCardCode() == '000')
 		{
-            return new TransactionError();    
+            return new TransactionError($this->details, '');    
         }
         
         $result = new TransactionResult();
