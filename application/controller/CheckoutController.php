@@ -92,8 +92,8 @@ class CheckoutController extends FrontendController
         $user = User::getCurrentUser();
         if ($user->isLoggedIn())
         {
-            // go to step 3
-            return new ActionRedirectResponse('checkout', 'shipping');
+            // try to go to payment page
+            return new ActionRedirectResponse('checkout', 'pay');
         }    
         else
         {
@@ -107,29 +107,48 @@ class CheckoutController extends FrontendController
      */
     public function selectAddress()
     {        
-        $order = CustomerOrder::getInstance();
+        $this->user->loadAddresses();
+		
+		// check if the user has created a billing address
+        if (!$this->user->defaultBillingAddress->get())
+        {
+			return new ActionRedirectResponse('user', 'addBillingAddress', array('returnPath' => true));
+		}
+		
+		$order = CustomerOrder::getInstance();
+        
+        if ($redirect = $this->validateOrder($order))
+        {
+			return $redirect;
+		}
         
         $form = $this->buildAddressSelectorForm();
         
-        if ($order->billingAddress->get()->getID())
+        if ($order->billingAddress->get())
         {
             $form->setValue('billingAddress', $order->billingAddress->get()->getID());
         }
         else
         {
-            $form->setValue('billingAddress', $this->user->defaultBillingAddress->get()->userAddress->get()->getID());
+            if ($this->user->defaultBillingAddress->get())
+            {
+				$form->setValue('billingAddress', $this->user->defaultBillingAddress->get()->userAddress->get()->getID());				
+			}
         }
         
-        if ($order->shippingAddress->get()->getID())
+        if ($order->shippingAddress->get())
         {
             $form->setValue('shippingAddress', $order->shippingAddress->get()->getID());
         }
         else
         {
-            $form->setValue('shippingAddress', $this->user->defaultShippingAddress->get()->userAddress->get()->getID());
+            if ($this->user->defaultShippingAddress->get())
+            {
+				$form->setValue('shippingAddress', $this->user->defaultShippingAddress->get()->userAddress->get()->getID());				
+			}
         }
          
-        $form->setValue('sameAsBilling', (int)($form->getValue('billingAddress') == $form->getValue('shippingAddress')));
+        $form->setValue('sameAsBilling', (int)($form->getValue('billingAddress') == $form->getValue('shippingAddress') || !$this->user->defaultShippingAddress->get()));
         
     	$response = new ActionResponse();
     	$response->setValue('billingAddresses', $this->user->getBillingAddressArray());
@@ -140,9 +159,11 @@ class CheckoutController extends FrontendController
     
     public function doSelectAddress()
     {
+        $this->user->loadAddresses();
+        
         if (!$this->buildAddressSelectorValidator()->isValid())
         {
-            return new ActionRedirectResponse('checkout', 'selectAddress', array('id' => 1));
+            return new ActionRedirectResponse('checkout', 'selectAddress');
         }   
 
         try
@@ -181,21 +202,32 @@ class CheckoutController extends FrontendController
         }
         catch (Exception $e)
         {
-            return new ActionRedirectResponse('checkout', 'selectAddress', array('id' => 2, 'query' => 'msg=' . $e->getMessage()));               
+            return new ActionRedirectResponse('checkout', 'selectAddress');
         }
         
         $order = CustomerOrder::getInstance();
         $order->shippingAddress->set($shipping->userAddress->get());
         $order->billingAddress->set($billing->userAddress->get());
         $order->save();
-        
+		$order->syncToSession();
+		
         return new ActionRedirectResponse('checkout', 'shipping');
     }
     
+    /**
+     *  4. Select shipping methods
+     *	@role login
+     */   
     public function shipping()
     {
-        // get shipping address
+	    // get shipping address
         $order = CustomerOrder::getInstance();
+
+        if ($redirect = $this->validateOrder($order))
+        {
+			return $redirect;
+		}
+
         $address = $order->shippingAddress->get();
         if (!$address)
         {
@@ -203,12 +235,14 @@ class CheckoutController extends FrontendController
         }
         
         $shipments = $order->getShipments();
+        $form = $this->buildShippingForm($shipments);
         $zone = $order->getDeliveryZone();
         foreach ($shipments as $key => $shipment)
         {
             $shipmentRates = $zone->getShippingRates($shipment);
             $shipment->setAvailableRates($shipmentRates);
             $rates[$key] = $shipmentRates;
+            $form->setValue('shipping_' . $key, $shipment->getSelectedRate()->getServiceID());
         }
 
         $order->syncToSession();
@@ -224,7 +258,7 @@ class CheckoutController extends FrontendController
         $response->setValue('shipments', $shipments->toArray());
         $response->setValue('rates', $rateArray);
 		$response->setValue('currency', $this->getRequestCurrency()); 
-        $response->setValue('form', $this->buildShippingForm($shipments));
+        $response->setValue('form', $form);
         return $response;
     }
     
@@ -232,12 +266,12 @@ class CheckoutController extends FrontendController
     {
         $order = CustomerOrder::getInstance();
         $shipments = $order->getShipments();
-        
+
         if (!$this->buildShippingValidator($shipments)->isValid())
         {
             return new ActionRedirectResponse('checkout', 'shipping');               
         }            
-        
+
         foreach ($shipments as $key => $shipment)
         {
 			$rates = $shipment->getAvailableRates();
@@ -246,21 +280,32 @@ class CheckoutController extends FrontendController
 			
             if (!$rates->getByServiceId($selectedRateId))
 			{
-//				throw new ApplicationException('No rate found: ' . $key .' (' . $selectedRateId . ')');
+				throw new ApplicationException('No rate found: ' . $key .' (' . $selectedRateId . ')');
 				return new ActionRedirectResponse('checkout', 'shipping');
 			}
 			
 			$shipment->setRateId($selectedRateId);
 		}
         
-        $order->syncToSession();
+        $order->saveToSession();
         
         return new ActionRedirectResponse('checkout', 'pay');
     }
     
+    /**
+     *  5. Make payment
+     *	@role login
+     */   
     public function pay()
     {
-        $order = CustomerOrder::getInstance();       
+        $order = CustomerOrder::getInstance();    
+		$order->billingAddress->get()->load();   
+		$order->shippingAddress->get()->load();   
+        
+        if ($redirect = $this->validateOrder($order))
+        {
+			return $redirect;
+		}       
         
         if (!$order->isShippingSelected())
         {
@@ -293,6 +338,11 @@ class CheckoutController extends FrontendController
         ClassLoader::import('application.model.order.*');        
         $order = CustomerOrder::getInstance();		
 
+        if ($redirect = $this->validateOrder($order))
+        {
+			return $redirect;
+		}
+
         // the order might not be ready for completion yet
         if (!$order->isShippingSelected())
         {
@@ -317,14 +367,15 @@ class CheckoutController extends FrontendController
         
         // process payment
         $handler = Store::getInstance()->getCreditCardHandler($transaction);
-        $handler->setCardData($this->request->getValue('ccNum'), $this->request->getValue('ccExpiryMonth'), $this->request->getValue('ccExpiryYear'), $this->request->getValue('ccCVV'));
+        $ccNum = str_replace(' ', '', $this->request->getValue('ccNum'));
+        $handler->setCardData($ccNum, $this->request->getValue('ccExpiryMonth'), $this->request->getValue('ccExpiryYear'), $this->request->getValue('ccCVV'));
         $result = $handler->authorizeAndCapture();
         
         if ($result instanceof TransactionResult)
         {
-            $order->finalize($currency);
-            $order->unSyncFromSession();  
-            
+            $newOrder = $order->finalize($currency);
+            $newOrder->syncToSession();
+			            
             Session::getInstance()->setValue('completedOrderID', $order->getID());          
             
             $transaction = Transaction::getNewInstance($order, $result);
@@ -338,6 +389,7 @@ class CheckoutController extends FrontendController
             
             // set error message for credit card form
             $validator->triggerError('creditCardError', $this->translate('_err_processing_cc'));
+            $validator->saveState();
             
             return new ActionRedirectResponse('checkout', 'pay');
         }
@@ -352,9 +404,44 @@ class CheckoutController extends FrontendController
         $order = CustomerOrder::getInstanceByID((int)Session::getInstance()->getValue('completedOrderID'));
         
         $response = new ActionResponse();
-        $response->setValue('order', $order->toArray());        
+        $response->setValue('order', $order->toArray());    
+        $response->setValue('url', $this->router->createUrl(array('controller' => 'user')));
         return $response;        
     }
+    
+    public function cvv()
+    {
+        $this->addBreadCrumb($this->translate('_cvv'), '');         		
+
+		return new ActionResponse();
+	}
+    
+    /******************************* VALIDATION **********************************/
+    
+    /**
+     *	Determines if the necessary steps have been completed, so the order could be finalized
+     *
+     *	@return RedirectResponse
+     *	@return ActionRedirectResponse
+     *	@return false
+	 */
+	private function validateOrder(CustomerOrder $order)
+    {
+		// no items in shopping cart
+		if (!count($order->getShoppingCartItems()))
+		{
+			if ($this->request->isValueSet('return'))
+			{
+				return new RedirectResponse(Router::getInstance()->createUrlFromRoute($this->request->getValue('return')));
+			}		
+			else
+			{
+				return new ActionRedirectResponse('index', 'index');
+			}
+		}
+		
+		return false;		
+	}
     
     private function buildShippingForm(ARSet $shipments)
     {
@@ -404,7 +491,13 @@ class CheckoutController extends FrontendController
 //        $validator->addCheck('ccType', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));
         $validator->addCheck('ccExpiryMonth', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_month')));
         $validator->addCheck('ccExpiryYear', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_year')));
-        $validator->addCheck('ccCVV', new IsNotEmptyCheck($this->translate('_err_enter_cc_cvv')));
+        
+		if ($this->config->getValue('REQUIRE_CVV'))
+		{
+			$validator->addCheck('ccCVV', new IsNotEmptyCheck($this->translate('_err_enter_cc_cvv')));
+		}
+       
+    	$validator->addFilter('ccNum', new RegexFilter('[^ 0-9]'));
        
         return $validator;
     }

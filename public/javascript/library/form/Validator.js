@@ -170,13 +170,9 @@ function NumericFilter(element, params)
 	//in both elements of the array
 	dollars = parts[0].replace(/^-?[^0-9]-/gi, '');
 
-
 	if ('' != dollars && '-' != dollars)
 	{
         dollars = parseInt(dollars);	  
-        
-
-
 
         if(!dollars) dollars = 0;
 	}
@@ -188,6 +184,12 @@ function NumericFilter(element, params)
 	}
 	
 	element.value = dollars;
+}
+
+function RegexFilter(element, params)
+{
+	var regex = new RegExp(params['regex'], 'gi');
+	element.value = element.value.replace(regex, '');
 }
 
 /*

@@ -13,20 +13,23 @@ function smarty_function_translate($params, Smarty $smarty)
 {
 	$liveTranslation = isset($_SESSION['translationMode']);
 
-	if (!$liveTranslation || isset($params['disableLiveTranslation']))
+	$store = Store::getInstance();
+	$translation = $store->translate($params['text']);
+	$translation = preg_replace('/%([a-zA-Z]*)/e', 'smarty_replace_translation_var(\'\\1\', $smarty)', $translation);
+
+	if ($liveTranslation && !isset($params['disableLiveTranslation']))
 	{
-		$translation = Store::getInstance()->translate($params['text']);
-	}
-	else
-	{
-		$store = Store::getInstance();
-		$translation = $store->translate($params['text']);
 		$file = $store->getLocaleInstance()->translationManager()->getFileByDefKey($params['text']);
 		$file = '__file_'.base64_encode($file);
 		$translation = '<span class="transMode __trans_' . $params['text'].' '. $file .'">'.$translation.'</span>';
 	}
 
 	return $translation;
+}
+
+function smarty_replace_translation_var($key, $smarty)
+{
+	return $smarty->_tpl_vars[$key];
 }
 
 ?>

@@ -31,6 +31,11 @@ if (!defined('TEST_INITIALIZED'))
 	define('TEST_INITIALIZED', true);
 }
 
+ClassLoader::import('application.system.*');
+ClassLoader::import('test.mock.Swift_Connection_Fake');
+
+Email::$connection = new Swift_Connection_Fake();
+
 require_once('UTStandalone.php');
 
 ?>

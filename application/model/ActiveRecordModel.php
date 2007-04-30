@@ -4,7 +4,7 @@ ClassLoader::import("library.activerecord.ActiveRecord");
 ClassLoader::import("application.model.*");
 ClassLoader::import("application.model.locale.*");
 
-ActiveRecord::$creolePath = ClassLoader::getRealPath("library.creole");
+ActiveRecord::$creolePath = ClassLoader::getRealPath("library");
 
 include ClassLoader::getRealPath("storage.configuration.database") . '.php';
 ActiveRecord::setDSN($GLOBALS['dsn']);

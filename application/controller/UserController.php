@@ -9,30 +9,143 @@ ClassLoader::import('application.model.user.*');
  */
 class UserController extends FrontendController
 {
+ 	const PASSWORD_MIN_LENGTH = 5;
+ 
+    public function init()
+    {
+        parent::init();  
+        $this->addBreadCrumb($this->translate('_your_account'), $this->router->createUrl(array('controller' => 'user')));         
+                
+		$action = $this->request->getActionName();
+                
+        if ('index' == $action)
+        {
+            return false;
+        }       
+
+        /*
+		$this->addBreadCrumb($this->translate('_select_addresses'), $router->createUrl(array('controller' => 'checkout', 'action' => 'selectAddress')));         		
+		
+    	if ('selectAddress' == $action)
+    	{
+			return false;	
+		}
+                
+        $this->addBreadCrumb($this->translate('_shipping'), $router->createUrl(array('controller' => 'checkout', 'action' => 'shipping')));         		
+		
+    	if ('shipping' == $action)
+    	{
+			return false;	
+		}
+
+        $this->addBreadCrumb($this->translate('_pay'), $router->createUrl(array('controller' => 'checkout', 'action' => 'pay')));         		
+        */
+		
+    }
+    
     /**
+     *	@role login
+     */
+	public function index()
+    {
+		$response = new ActionResponse();
+		
+		return $response;
+	}
+    
+    public function register()
+    {
+		$response = new ActionResponse();
+		$response->setValue('regForm', $this->buildRegForm());				
+		return $response;		
+	}
+    
+    public function doRegister()
+    {
+		if (!$this->buildRegValidator()->isValid())
+		{
+			return new ActionRedirectResponse('user', 'register');
+		}
+		
+		$user = $this->createUser($this->request->getValue('password'));
+		$user->setAsCurrentUser();
+		
+		if ($this->request->isValueSet('return'))
+		{
+			return new RedirectResponse(Router::getInstance()->createUrlFromRoute($this->request->getValue('return')));					
+		}
+		else
+		{
+			return new ActionRedirectResponse('user', 'index');
+		}	
+	}
+    
+	/**
      *  Login form
      */
     public function login()
     {
-
+		$response = new ActionResponse();
+		$response->setValue('regForm', $this->buildRegForm());				
+		return $response;
     }
     
     /**
      *  Process actual login
      */
-    public function processLogin()
+    public function doLogin()
     {
         $user = User::getInstanceByLogin($this->request->getValue('email'), $this->request->getValue('password'));
-        if ($user)
-        {
-            $this->loginUser($user); 
-            return new RedirectResponse($this->request->getValue('return'));               
-        }
-        else
+        if (!$user)
         {
             return new ActionRedirectResponse('user', 'login', array('query' => 'failed=true'));
         }
+
+        $user->setAsCurrentUser();
+        
+        // load the last un-finalized order by this user
+        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $user->getID()));
+        $f->mergeCondition(new NotEqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+        $f->setOrder(new ARFieldHandle('CustomerOrder', 'dateCreated'), 'DESC');
+		$f->setLimit(1);
+        $s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
+
+		$sessionOrder = CustomerOrder::getInstance();			
+        if ($s->size())
+        {
+			$order = $s->get(0);
+			if ($sessionOrder->getID() != $order->getID())
+			{
+				$order->loadItems();
+				$order->merge($sessionOrder);
+				$order->saveToSession();
+				$sessionOrder->delete();
+			}
+		}
+		else
+		{
+			if ($sessionOrder->getID())
+			{
+				$sessionOrder->user->set($user);
+				$sessionOrder->saveToSession();
+			}
+		}
+        
+        return new RedirectResponse($this->request->getValue('return'));
     }
+    
+    public function remindPassword()
+    {
+		$response = new ActionResponse();
+		
+		return $response;
+	}
+	
+	public function logout()
+    {
+		Session::getInstance()->unsetValue('User');
+		return new ActionRedirectResponse('index', 'index');
+	}
     
     public function checkout()
     {
@@ -58,13 +171,7 @@ class UserController extends FrontendController
         }
 
         // create user account
-        $user = User::getNewInstance($this->request->getValue('email'), $this->request->getValue('password'));
-        $user->firstName->set($this->request->getValue('firstName'));
-        $user->lastName->set($this->request->getValue('lastName'));
-        $user->companyName->set($this->request->getValue('companyName'));
-        $user->email->set($this->request->getValue('email'));
-        $user->isEnabled->set(true);
-        $user->save();
+        $user = $this->createUser();
         
         // get billing address state
         if ($this->request->getValue('billing_state_select'))
@@ -140,6 +247,9 @@ class UserController extends FrontendController
         return new ActionRedirectResponse('checkout', 'shipping');
     }
 
+    /**
+     *	@role login
+     */
     public function editShippingAddress()
     {
         try
@@ -152,6 +262,9 @@ class UserController extends FrontendController
         }
     }
 
+    /**
+     *	@role login
+     */
     public function editBillingAddress()
     {
         try
@@ -190,6 +303,9 @@ class UserController extends FrontendController
         return $response;            
     }
     
+    /**
+     *	@role login
+     */
     public function saveShippingAddress()
     {
         try
@@ -204,6 +320,9 @@ class UserController extends FrontendController
         return $this->doSaveAddress($address, new ActionRedirectResponse('user', 'editShippingAddress', array('id' =>$this->request->getValue('id'), 'query' => array('return' => $this->request->getValue('return')))));        
     }
     
+    /**
+     *	@role login
+     */
     public function saveBillingAddress()
     {
         try
@@ -232,15 +351,28 @@ class UserController extends FrontendController
         }        
     }
     
+    /**
+     *	@role login
+     */
     public function addBillingAddress()
     {
         $form = $this->buildAddressForm();
         
-        $form->setValue('country', $this->user->defaultBillingAddress->get()->userAddress->get()->countryID->get());
         $form->setValue('firstName', $this->user->firstName->get());
         $form->setValue('lastName', $this->user->lastName->get());
         $form->setValue('companyName', $this->user->companyName->get());
-        $form->setValue('phone', $this->user->defaultBillingAddress->get()->userAddress->get()->phone->get());
+
+		$this->user->loadAddresses();
+
+        if ($this->user->defaultBillingAddress->get())
+        {
+			$form->setValue('country', $this->user->defaultBillingAddress->get()->userAddress->get()->countryID->get());
+	        $form->setValue('phone', $this->user->defaultBillingAddress->get()->userAddress->get()->phone->get());			
+		}
+		else
+		{
+			$form->setValue('country', $this->config->getValue('DEF_COUNTRY'));	
+		}
                 
         $response = new ActionResponse();        
         $response->setValue('form', $form);
@@ -250,20 +382,61 @@ class UserController extends FrontendController
         return $response;    
     }
     
+    /**
+     *	@role login
+     */
     public function addShippingAddress()
     {
         return $this->addBillingAddress();
     }
 
+    /**
+     *	@role login
+     */
     public function doAddBillingAddress()
     {       
         return $this->doAddAddress('BillingAddress', new ActionRedirectResponse('user', 'addBillingAddress', array('query' => array('return' => $this->request->getValue('return')))));
     }
 
+    /**
+     *	@role login
+     */
     public function doAddShippingAddress()
     {       
         return $this->doAddAddress('ShippingAddress', new ActionRedirectResponse('user', 'addShippingAddress', array('query' => array('return' => $this->request->getValue('return')))));
     }
+
+    /**
+     *  Return a list of states for the selected country
+     *  @return JSONResponse
+     */
+    public function states()
+    {                
+        $states = State::getStatesByCountry($this->request->getValue('country'));
+        return new JSONResponse($states);
+    }
+    
+    /**
+     *	@return User
+     */
+	private function createUser($password = '')
+    {
+		$user = User::getNewInstance($this->request->getValue('email'), $this->request->getValue('password'));
+        $user->firstName->set($this->request->getValue('firstName'));
+        $user->lastName->set($this->request->getValue('lastName'));
+        $user->companyName->set($this->request->getValue('companyName'));
+        $user->email->set($this->request->getValue('email'));
+        $user->isEnabled->set(true);
+        
+        if ($password)
+        {
+			$user->setPassword($password);
+		}
+		
+		$user->save();
+		
+		return $user;			
+	}
 
     private function doAddAddress($addressClass, Response $failureResponse)
     {
@@ -309,89 +482,6 @@ class UserController extends FrontendController
         }
         $address->save();        
     }
-
-    /**
-     *  Return a list of states for the selected country
-     *  @return JSONResponse
-     */
-    public function states()
-    {                
-        $states = State::getStatesByCountry($this->request->getValue('country'));
-        return new JSONResponse($states);
-    }
-    
-    private function buildAddressForm()
-    {
-		ClassLoader::import("framework.request.validator.Form");
-		return new Form($this->buildAddressValidator());        
-    }
-
-    private function buildAddressValidator()
-    {    
-		ClassLoader::import("framework.request.validator.RequestValidator");
-            	
-        $validator = new RequestValidator("userAddress", $this->request);
-        $this->validateAddress($validator);        
-        return $validator;
-    }
-
-    private function buildForm()
-    {
-		ClassLoader::import("framework.request.validator.Form");
-		return new Form($this->buildValidator());        
-    }
-    
-    private function buildValidator()
-    {    
-		ClassLoader::import("framework.request.validator.RequestValidator");
-		ClassLoader::import("application.helper.check.IsUniqueEmailCheck");
-            	
-        // validate contact info
-        $validator = new RequestValidator("registrationValidator", $this->request);
-    	$validator->addCheck('email', new IsNotEmptyCheck($this->translate('_err_enter_email')));    
-    	
-        $emailErr = $this->translate('_err_not_unique_email');
-        $emailErr = str_replace('%1', Router::getInstance()->createUrl(array('controller' => 'user', 'action' => 'login')), $emailErr);
-        $validator->addCheck('email', new IsUniqueEmailCheck($emailErr));    
-                    	
-        // validate billing info
-    	$this->validateAddress($validator, 'billing_');
-
-    	// validate shipping address
-    	$shippingCondition = new ShippingAddressCheckCondition($this->request);
-        $validator->addCheck('shipping_address1', new ConditionalCheck($shippingCondition, new IsNotEmptyCheck($this->translate('_err_enter_address'))));
-        $validator->addCheck('shipping_city', new ConditionalCheck($shippingCondition, new IsNotEmptyCheck($this->translate('_err_enter_city'))));
-        $validator->addCheck('shipping_country', new ConditionalCheck($shippingCondition, new IsNotEmptyCheck($this->translate('_err_select_country'))));
-        $validator->addCheck('shipping_zip', new ConditionalCheck($shippingCondition, new IsNotEmptyCheck($this->translate('_err_enter_zip'))));
-                        
-        $stateCheck = new OrCheck(array('shipping_state_select', 'shipping_state_text'), array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck('')), $this->request);
-        $validator->addCheck('shipping_state_select', new ConditionalCheck($shippingCondition, $stateCheck));
-//        $validator->addCheck('billing_state_select', new IsValidStateCheck($this->translate('_err_select_state')));
-
-//        $validator->addConditionalCheck($shippingCondition, )
-        
-        return $validator;    
-    }
-    
-    private function validateAddress(RequestValidator $validator, $fieldPrefix = '')
-    {
-    	$validator->addCheck('firstName', new IsNotEmptyCheck($this->translate('_err_enter_first_name')));
-    	$validator->addCheck('lastName', new IsNotEmptyCheck($this->translate('_err_enter_last_name')));
-
-        if ($this->config->getValue('REQUIRE_PHONE'))
-        {
-            $validator->addCheck('phone', new IsNotEmptyCheck($this->translate('_err_enter_phone')));
-        }
-
-        $validator->addCheck($fieldPrefix . 'address1', new IsNotEmptyCheck($this->translate('_err_enter_address')));
-        $validator->addCheck($fieldPrefix . 'city', new IsNotEmptyCheck($this->translate('_err_enter_city')));
-        $validator->addCheck($fieldPrefix . 'country', new IsNotEmptyCheck($this->translate('_err_select_country')));
-        $validator->addCheck($fieldPrefix . 'zip', new IsNotEmptyCheck($this->translate('_err_enter_zip')));
-                        
-        $stateCheck = new OrCheck(array($fieldPrefix . 'state_select', $fieldPrefix . 'state_text'), array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck('')), $this->request);
-        $validator->addCheck($fieldPrefix . 'state_select', $stateCheck);
-//        $validator->addCheck('billing_state_select', new IsValidStateCheck($this->translate('_err_select_state')));        
-    }
     
     private function getCountryList(Form $form)
     {
@@ -421,10 +511,119 @@ class UserController extends FrontendController
         }
         
         return $states;        
-    }    
+    }        
+    
+	/**************  VALIDATION ******************/
+    
+    private function buildRegForm()
+    {
+		ClassLoader::import("framework.request.validator.Form");		
+		return new Form($this->buildRegValidator()); 
+	}
+    
+    private function buildRegValidator()
+    {    
+		ClassLoader::import("framework.request.validator.RequestValidator");
+		ClassLoader::import("application.helper.check.PasswordMatchCheck");
+		            	
+        $validator = new RequestValidator("userRegistration", $this->request);
+        $this->validateName($validator);
+        $this->validateEmail($validator);
+    	$validator->addCheck('password', new MinLengthCheck(sprintf($this->translate('_err_short_password'), self::PASSWORD_MIN_LENGTH), self::PASSWORD_MIN_LENGTH)); 
+    	$validator->addCheck('password', new IsNotEmptyCheck($this->translate('_err_enter_password'))); 
+    	$validator->addCheck('confpassword', new IsNotEmptyCheck($this->translate('_err_enter_password'))); 
+    	$validator->addCheck('confpassword', new PasswordMatchCheck($this->translate('_err_password_match'), $this->request, 'password', 'confpassword')); 
+        return $validator;
+    }
+
+    private function buildAddressForm()
+    {
+		ClassLoader::import("framework.request.validator.Form");
+		return new Form($this->buildAddressValidator());        
+    }
+
+    private function buildAddressValidator()
+    {    
+		ClassLoader::import("framework.request.validator.RequestValidator");
+            	
+        $validator = new RequestValidator("userAddress", $this->request);
+        $this->validateAddress($validator);        
+        return $validator;
+    }
+
+    private function buildForm()
+    {
+		ClassLoader::import("framework.request.validator.Form");
+		return new Form($this->buildValidator());        
+    }
+    
+    private function buildValidator()
+    {    
+		ClassLoader::import("framework.request.validator.RequestValidator");
+            	
+        // validate contact info
+        $validator = new RequestValidator("registrationValidator", $this->request);
+		$this->validateEmail($validator);
+	                    	
+        // validate billing info
+    	$this->validateAddress($validator, 'billing_');
+
+    	// validate shipping address
+    	$shippingCondition = new ShippingAddressCheckCondition($this->request);
+        $validator->addCheck('shipping_address1', new ConditionalCheck($shippingCondition, new IsNotEmptyCheck($this->translate('_err_enter_address'))));
+        $validator->addCheck('shipping_city', new ConditionalCheck($shippingCondition, new IsNotEmptyCheck($this->translate('_err_enter_city'))));
+        $validator->addCheck('shipping_country', new ConditionalCheck($shippingCondition, new IsNotEmptyCheck($this->translate('_err_select_country'))));
+        $validator->addCheck('shipping_zip', new ConditionalCheck($shippingCondition, new IsNotEmptyCheck($this->translate('_err_enter_zip'))));
+                        
+        $stateCheck = new OrCheck(array('shipping_state_select', 'shipping_state_text'), array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck('')), $this->request);
+        $validator->addCheck('shipping_state_select', new ConditionalCheck($shippingCondition, $stateCheck));
+//        $validator->addCheck('billing_state_select', new IsValidStateCheck($this->translate('_err_select_state')));
+
+//        $validator->addConditionalCheck($shippingCondition, )
+        
+        return $validator;    
+    }
+    
+    private function validateName(RequestValidator $validator)
+    {
+    	$validator->addCheck('firstName', new IsNotEmptyCheck($this->translate('_err_enter_first_name')));
+    	$validator->addCheck('lastName', new IsNotEmptyCheck($this->translate('_err_enter_last_name')));
+	}    
+    
+    private function validateEmail(RequestValidator $validator)
+    {
+		ClassLoader::import("application.helper.check.IsUniqueEmailCheck");
+
+    	$validator->addCheck('email', new IsNotEmptyCheck($this->translate('_err_enter_email')));    
+    	$validator->addCheck('email', new IsValidEmailCheck($this->translate('_err_invalid_email')));    
+    	
+        $emailErr = $this->translate('_err_not_unique_email');
+        $emailErr = str_replace('%1', Router::getInstance()->createUrl(array('controller' => 'user', 'action' => 'login')), $emailErr);
+        $validator->addCheck('email', new IsUniqueEmailCheck($emailErr));    
+	}    
+	
+    private function validateAddress(RequestValidator $validator, $fieldPrefix = '')
+    {
+		$this->validateName($validator);
+		
+        if ($this->config->getValue('REQUIRE_PHONE'))
+        {
+            $validator->addCheck('phone', new IsNotEmptyCheck($this->translate('_err_enter_phone')));
+        }
+
+        $validator->addCheck($fieldPrefix . 'address1', new IsNotEmptyCheck($this->translate('_err_enter_address')));
+        $validator->addCheck($fieldPrefix . 'city', new IsNotEmptyCheck($this->translate('_err_enter_city')));
+        $validator->addCheck($fieldPrefix . 'country', new IsNotEmptyCheck($this->translate('_err_select_country')));
+        $validator->addCheck($fieldPrefix . 'zip', new IsNotEmptyCheck($this->translate('_err_enter_zip')));
+                        
+        $stateCheck = new OrCheck(array($fieldPrefix . 'state_select', $fieldPrefix . 'state_text'), array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck('')), $this->request);
+        $validator->addCheck($fieldPrefix . 'state_select', $stateCheck);
+//        $validator->addCheck('billing_state_select', new IsValidStateCheck($this->translate('_err_select_state')));        
+    }
 }
  
 ClassLoader::import('framework.request.validator.check.CheckCondition');
+
 class ShippingAddressCheckCondition extends CheckCondition
 {
     function isSatisfied()

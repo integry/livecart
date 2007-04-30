@@ -24,11 +24,11 @@
 
 <p>
     {if $item.State.name}
-        {$item.State.name}
+        {$item.State.name},
     {else}
-        {$item.UserAddress.stateName}
+        {$item.UserAddress.stateName},
     {/if}
-    , {$item.UserAddress.postalCode}
+    {$item.UserAddress.postalCode}
 </p>
 
 <p>

@@ -44,10 +44,12 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 		$schema->registerField(new ARField("dateCompleted", ARTimeStamp::instance()));
 		$schema->registerField(new ARField("totalAmount", ARFloat::instance()));
 		$schema->registerField(new ARField("capturedAmount", ARFloat::instance()));
+		$schema->registerField(new ARField("isFinalized", ARBool::instance()));
 		$schema->registerField(new ARField("isPaid", ARBool::instance()));
 		$schema->registerField(new ARField("isDelivered", ARBool::instance()));
 		$schema->registerField(new ARField("isReturned", ARBool::instance()));
-		$schema->registerField(new ARField("isCancelled", ARBool::instance()));        		
+		$schema->registerField(new ARField("isCancelled", ARBool::instance()));
+		$schema->registerField(new ARField("shipping", ARText::instance()));
 	}
 		
 	public static function getNewInstance(User $user)	
@@ -58,14 +60,12 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         return $instance;   
     }
     
-    public static function getInstanceById($id)
+    public static function getInstanceById($id, $loadReferencedRecords = false)
     {
         $f = new ARSelectFilter();
         
-        $instance = ActiveRecordModel::getInstanceById('CustomerOrder', $id, self::LOAD_DATA, self::LOAD_REFERENCES);
-        $instance->orderedItems = $instance->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), self::LOAD_REFERENCES);
-        $instance->shipments = $instance->getRelatedRecordSet('Shipment', new ARSelectFilter());
-        
+        $instance = ActiveRecordModel::getInstanceById('CustomerOrder', $id, self::LOAD_DATA, $loadReferencedRecords);
+        $instance->loadItems();
         return $instance;
     }
     
@@ -76,34 +76,49 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 	{
         if (!self::$instance)
         {
-            $instance = Session::getInstance()->getObject('CustomerOrder');
+            $id = Session::getInstance()->getValue('CustomerOrder');
                 
-            if (!$instance)
+            if ($id)
+            {
+                try
+                {
+					$instance = CustomerOrder::getInstanceById($id);
+	                $instance->loadItems();
+					$instance->isSyncedToSession = true;					
+				}
+				catch (ARNotFoundException $e)
+				{
+					unset($instance);	
+				}
+            }
+
+            if (!isset($instance))
             {
                 $instance = self::getNewInstance(User::getCurrentUser());
             }    
-            else
-            {
-                $instance->isSyncedToSession = true;
-            }
-            
+
             self::$instance = $instance;
         }
                 
         return self::$instance;
     }
     
+    public function loadItems()
+    {
+        $this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product'))->getData();
+        $this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter())->getData();
+        if (!$this->shipments)
+        {
+			$this->shipments = unserialize($this->shipping->get());
+		}
+	}
+    
     /**
      *	Add a product to shopping basket
      */
 	public function addProduct(Product $product, $count)
     {
-        if ($count < 0)
-        {
-            throw new ApplicationException('Invalid product count (' . $count . ')');
-        }
-        
-        if (0 == $count)
+        if (0 >= $count)
         {
             $this->removeProduct($product);
         }
@@ -114,13 +129,34 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
                 throw new ApplicationException('Product is not available (' . $product->getID() . ')');
             }
                         
-            $this->orderedItems[] = OrderedItem::getNewInstance($this, $product, $count);
+			$count = $this->validateCount($product, $count);
+			$this->orderedItems[] = OrderedItem::getNewInstance($this, $product, $count);
         }
         
         $this->resetShipments();
     }
     
-    /**
+    public function updateCount(OrderedItem $item, $count)
+    {
+        $item->count->set($this->validateCount($item->product->get(), $count));
+	}
+    
+    private function validateCount(Product $product, $count)
+    {
+        if (round($count) != $count && !$product->isFractionalUnit->get())
+        {
+			$count = round($count);
+		}
+		
+        if (0 >= $count)
+        {
+            $count = 0;
+        }	
+		
+		return $count;		
+	}
+    
+	/**
      *	Add a product to wish list
      */
 	public function addToWishList(Product $product)
@@ -163,11 +199,29 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     }
     
     /**
+     *	Move an item to a different order
+     */
+	public function moveItem(OrderedItem $orderedItem, CustomerOrder $order)
+    {
+        foreach ($this->orderedItems as $key => $item)
+        {
+            if ($item === $orderedItem)
+            {
+                unset($this->orderedItems[$key]);
+                $order->addItem($item);
+                
+                $this->resetShipments();
+				$order->resetShipments(); 
+            }
+        } 
+    }
+    
+    /**
      *	Add new ordered item
      */
 	public function addItem(OrderedItem $orderedItem)
     {
-        $orderedItem->order->set($this);
+        $orderedItem->customerOrder->set($this);
         $this->orderedItems[] = $orderedItem;
     }    
     
@@ -176,10 +230,14 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
      *
      *  1) fix current product prices and total (so the total doesn't change if product prices change)
      *  2) save created shipments
+     *
+     *	@return CustomerOrder New order instance containing wishlist items
      */
     public function finalize(Currency $currency, $reserveProducts = null)
     {
-        foreach ($this->getShipments() as $shipment)
+        self::beginTransaction();
+        
+		foreach ($this->getShipments() as $shipment)
         {
             $shipment->order->set($this);
             $shipment->save();
@@ -214,7 +272,12 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         $this->totalAmount->set($this->getTotal($currency));
         $this->currency->set($currency);
         
-        $this->save();
+        $this->isFinalized->set(true);
+		$this->save();
+        
+        self::commit();
+        
+    	return $wishList;
     }
     
     public function save()
@@ -263,10 +326,13 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
             // reorder shipments when cart items are modified
             if ($isModified)
             {
-                $this->resetShipments();   
+                $this->resetShipments(); 
             }                      
-        }        
         
+	        $this->shipping->set(serialize($this->shipments));
+	        parent::save();		
+		}        
+                
         if ($this->isSyncedToSession)
         {
             $this->syncToSession();
@@ -285,7 +351,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     public function syncToSession()
     {
         $this->isSyncedToSession = true;
-		Session::getInstance()->setValue('CustomerOrder', $this);        
+		Session::getInstance()->setValue('CustomerOrder', $this->getID());
     }
     
     public function isSyncedToSession()
@@ -368,6 +434,11 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 		return $items;
     }
     
+	public function getOrderedItems()
+	{
+		return $this->orderedItems;
+	}
+    
     public function getShoppingCartItemCount()
 	{
 		$count = 0;
@@ -385,9 +456,18 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 		return count($this->getWishListItems());
 	}    
 
-	public function getOrderedItems()
+	public function getItemsByProduct(Product $product)
 	{
-		return $this->orderedItems;
+		$items = array();
+        foreach ($this->orderedItems as $item)
+		{
+			if ($item->product->get()->getID() == $product->getID())
+			{
+				$items[] = $item;
+			}
+		}        
+		
+		return $items;		
 	}
 
     /**
@@ -583,6 +663,19 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 		}	
 		
 		return $array;
+	}
+	
+	/**
+	 *	Merge two orders into one
+	 */
+	public function merge(CustomerOrder $order)
+	{
+		foreach ($order->getOrderedItems() as $item)
+		{
+			$order->moveItem($item, $this);
+		}
+		
+		$this->mergeItems();
 	}
 	
 	public function serialize()

@@ -9,6 +9,12 @@
 	
 	<h1>{t _shipping}</h1>
 	
+	{if $shipments|@count > 1}
+		<div class="message">
+			{t _info_multi_shipments}
+		</div>
+	{/if}
+	
     {form action="controller=checkout action=doSelectShippingMethod" method="POST" handle=$form}
         {foreach from=$shipments key="key" item="shipment"}
             <table class="table shipment">            
@@ -53,14 +59,14 @@
                     </p>            
                 {/foreach}
                 
-        		<div class="errorText clear hidden{error for="shipping_`$key`"} visible{/error}">
-                    <div>{error for="shipping_`$key`"}{$msg}{/error}</div>
-                    <div class="clear"></div>
+        		<div class="errorText hidden{error for="shipping_`$key`"} visible{/error}" style="clear: both;">
+					<div>{error for="shipping_`$key`"}{$msg}{/error}</div>
+                	<div class="clear"></div>
                 </div>            
                 
             </div>                
         
-            <div class="clear" />
+            <div class="clear"></div>
             
         {/foreach}
     

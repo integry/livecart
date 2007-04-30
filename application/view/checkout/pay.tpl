@@ -10,15 +10,32 @@
 	<h1>{t _pay}</h1>
 		   	
 	<div id="payTotal">
-        Order total: <span class="subTotal">{$order.formattedTotal.$currency}</span>
+        <div>
+			Order total: <span class="subTotal">{$order.formattedTotal.$currency}</span>
+		</div>
     </div>
 		   	
     <h2>Pay with a credit card</h2>
+        
+	{form action="controller=checkout action=payCreditCard" handle=$ccForm method="POST" style="float: left;"}
     
-    {form action="controller=checkout action=payCreditCard" handle=$ccForm method="POST"}
-        <p>
-            <label for="ccNum">Card number:</label>
-            {textfield name="ccNum"}
+	    {error for="creditCardError"}
+	    	<div class="errorMsg ccPayment">
+	    		{$msg}
+	    	</div>
+	    {/error}
+
+	    <p>
+			<label for="ccNum">Cardholder name:</label>
+            <label>{$order.BillingAddress.fullName}</label>
+        </p>
+
+	    <p>
+			<label for="ccNum">Card number:</label>
+            <fieldset class="error">
+	            {textfield name="ccNum"}
+				<div class="errorText hidden{error for="ccNum"} visible{/error}">{error for="ccNum"}{$msg}{/error}</div>
+			</fieldset>
         </p>
         
 {*
@@ -30,23 +47,35 @@
     
         <p>
             <label for="ccExpiryMonth">Card expiration:</label>
-            {selectfield name="ccExpiryMonth" options=$months}
-            /
-            {selectfield name="ccExpiryYear" options=$years}
+            <fieldset class="error">
+	            {selectfield name="ccExpiryMonth" options=$months}
+	            /
+	            {selectfield name="ccExpiryYear" options=$years}
+				<div class="errorText hidden{error for="ccExpiryYear"} visible{/error}">{error for="ccExpiryYear"}{$msg}{/error}</div>
+			</fieldset>
         </p>
     
         <p>
             <label for="ccCVV">3 or 4 digit code after card # on back of card:</label>
-            {textfield name="ccCVV" maxlength="4"}
+            <fieldset class="error">
+	            {textfield name="ccCVV" maxlength="4"} 
+				<a class="cvv" href="{link controller=checkout action=cvv}" onclick="Element.show($('cvvHelp')); return false;">{t What Is It?}</a>
+				<div class="errorText hidden{error for="ccCVV"} visible{/error}">{error for="ccCVV"}{$msg}{/error}</div>
+			</fieldset>
         </p>
         
         <input type="submit" class="submit" value="{tn Complete Order Now}" />
     {/form}
     
-    <h2>Other payment methods</h2>    
+    <div id="cvvHelp" style="float: left; width: 40%; padding: 5px; margin-left: 20px; display: none;">
+		{include file="checkout/cvvHelp.tpl"}    	
+    </div>
+    
+    <div class="clear"></div> 
 
-    <table class="table shipment">            
-    {foreach from=$order.shipments key="key" item="shipment"}
+    {* <h2>Other payment methods</h2> *}
+
+    <table class="table shipment" id="payItems">            
         <thead>
             <tr>
                 <th class="productName">Product</th>
@@ -55,6 +84,7 @@
                 <th>Subtotal</th>
             </tr>                            
         </thead>
+    {foreach from=$order.shipments key="key" item="shipment"}
         <tbody>
             {foreach from=$shipment.items item="item" name="shipment"}
                 <tr{zebra loop="shipment"}>                    
@@ -78,9 +108,6 @@
 
         </tbody>        
     </table>    
-    
-    <div class="clear" />
-        
     
 </div>
 

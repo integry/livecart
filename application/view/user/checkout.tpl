@@ -9,35 +9,16 @@
 	
 	<h1>{t _order_checkout}</h1>
 	
-	<h2>Returning Customer</h2>
+	<h2>{t Returning Customer}</h2>
 	
 	<p>
         Please log in to complete your purchase.
     </p>
 	
-	<form action="{link controller=user action=doLogin}" method="POST" />
-        <p>
-	       <label for="email">{t Your e-mail address}:</label>
-           <input type="text" class="text" id="email" name="email" />
-        </p>
-        <p>
-            <label for="password">{t Your password}:</label>
-            <input type="password" class="text" id="password" name="password" />
-            <a href="{link controller=user action="remindPassword"}" class="forgottenPassword">
-                {t _remind_password}
-            </a>            
-        </p>	
-    
-       	<p>
-			<label></label>
-			<input type="submit" class="submit" value="{tn Login}" />
-		</p>
-        
-		<input type="hidden" name="return" value="{link controller=checkout action=selectAddress}" />	
+	{capture assign="return"}{link controller=checkout action=selectAddress}{/capture}
+	{include file="user/loginForm.tpl" return=$return}
 		
-	</form>	
-	
-	<h2>New Customer</h2>
+	<h2>{t New Customer}</h2>
 
     {form handle=$form action="controller=user action=processCheckoutRegistration" method="POST"}
         

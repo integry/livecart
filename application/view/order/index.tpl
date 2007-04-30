@@ -7,7 +7,7 @@
 
 <div id="content" class="left right">
 	
-	<h1>My Shopping Basket</h1>
+	<h1>Your Shopping Basket</h1>
 	
 	<p id="cartStats" style="display: none;">
 		{maketext text="There are [quant,_1,item,items,no items] in your shopping basket." params=$cart.basketCount}
@@ -16,9 +16,6 @@
 	{if !$cart.cartItems && !$cart.wishListItems}
 		{t Your shopping basket is empty}. <a href="{link route=$return}">{t Continue shopping}</a>.
 	{else}
-		<p>
-			<a href="{link route=$return}">{t Continue shopping}</a> or <a href="{link controller=checkout}">{t Checkout}</a>	
-		</p>
 		
 		{if $cart.cartItems}		
 		{form action="controller=order action=update" method="POST" handle=$form}
@@ -26,7 +23,7 @@
 			<thead>
 				<tr>
 					<th colspan="2" class="cartListTitle">
-						<h2>Shopping Cart items - to buy now</h2>
+						<h2 style="margin: 0;">Shopping Cart items - to buy now</h2>
 					</th>
 					<th class="cartPrice">{t Price}</th>
 					<th class="cartQuant">{t Quantity}</th>
@@ -43,7 +40,12 @@
 						<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
 					</td>
 					<td class="cartPrice">
-						{$item.Product.formattedPrice.$currency}
+						{$item.formattedSubTotal.$currency}
+						{if $item.count != 1}
+							<div class="subTotalCalc">
+								{$item.count} x {$item.Product.formattedPrice.$currency}
+							</div>
+						{/if}
 					</td>
 					<td class="cartQuant">
 						{textfield name="item_`$item.ID`" class="text"}
@@ -51,14 +53,21 @@
 				</tr>	
 			{/foreach}
     				<tr>
-    				    <td colspan="2"></td>
-    				    <td>{$orderTotal}</td>
-    				    <td></td>
+    				    <td colspan="2" class="subTotalCaption">{t _subtotal}:</td>
+    				    <td class="subTotal">{$orderTotal}</td>
+    				    <td><input type="submit" class="submit" value="{tn Update}" /></td>
     				</tr>
 
 				<tr>
 					<td colspan="3"></td>
-					<td class="cartQuant"><input type="submit" class="submit" value="{tn Update}" />
+					<td class="cartQuant"></td>
+				</tr>
+				<tr>
+					<td colspan="4" style="text-align: right;">
+						<a href="{link route=$return}">&lt;&lt; Continue Shopping</a>
+						 | 
+						<a href="{link controller=checkout}">Proceed to Checkout &gt;&gt;</a>
+					</td>
 				</tr>
 			</tbody>
 		</table>

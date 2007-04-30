@@ -38,7 +38,7 @@ class OrderController extends FrontendController
 		{
 			if ($this->request->isValueSet('item_' . $item->getID()))
 			{
-				$item->count->set($this->request->getValue('item_' . $item->getID(), 0));
+				$order->updateCount($item, $this->request->getValue('item_' . $item->getID(), 0));
 			}
 		}		 
 		

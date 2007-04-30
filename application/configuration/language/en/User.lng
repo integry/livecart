@@ -1,29 +1,36 @@
-_user_registration=New Account Registration
+######################## 
+# Log in
+######################## 
+_login=Sign In
 
 ######################## 
 # Create new account
 ######################## 
-
+_user_registration=New Account Registration
 _contact_info=Contact Information
 _your_first_name=First name
 _your_last_name=Last name
 _company_name=Company name
 _your_email=E-mail address
 _your_phone=Phone number
-_enter_password=Enter password
-_reenter_password=Re-enter password
+_password=Enter password
+_conf_password=Re-enter password
 
 # errors
 _err_enter_first_name=Please enter your first name
 _err_enter_last_name=Please enter your last name
 _err_enter_email=Please enter your e-mail address
-_err_not_unique_email=The e-mail address you entered is already registered in our system. <br />Please <a href="%1">click here</a> to log in using this e-mail address.
+_err_not_unique_email=The e-mail address you entered is already registered in our system. <br />Please <a href="%1">click here</a> to log in using this e-mail address
+_err_invalid_email=The e-mail address you entered is not valid
 _err_enter_phone=Please enter your phone number
 _err_enter_address=Please enter your address
 _err_enter_city=Please enter the city
 _err_select_country=Please select the country
 _err_enter_zip=Please enter your postal code
 _err_select_state=Please select or enter the state/province
+_err_short_password=The password you entered is too short, please enter at least %s characters
+_err_password_match=The passwords do not match
+_err_enter_password=Please enter your password
 
 ######################## 
 # Add new address
@@ -35,3 +42,8 @@ _edit_billing_address=Edit Billing Address
 _edit_shipping_address=Edit Shipping Address
 
 _continue=Continue
+
+######################## 
+# Manage user account
+######################## 
+_your_account=Your Account

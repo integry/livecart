@@ -19,6 +19,8 @@ class TestOrder extends UnitTest
     
     private $usd;
     
+    private $user;
+    
     function __construct()
     {
         parent::__construct();
@@ -39,6 +41,7 @@ class TestOrder extends UnitTest
         // initialize order
         $user = User::getNewInstance();
         $user->save();
+		$this->user = $user;
         
         $address = UserAddress::getNewInstance();
         $address->countryID->set('US');
@@ -94,28 +97,14 @@ class TestOrder extends UnitTest
         $this->order->save();
     }
     
-    function testAddingToCartWithInvalidProductCount()
-    {        
-        // negative
-        try
-        {
-            $this->order->addProduct($this->products[0], -1);   
-            $this->fail(); 
-        }
-        catch (Exception $e)
-        {
-            $this->pass();
-        }
-    }    
-    
     function testAddingToAndRemovingFromCart()
     {        
         $this->order->addProduct($this->products[0], 1);   
-        $this->pass(); 
-        
         $this->order->addProduct($this->products[0], 0);
-        $this->pass(); 
+        $this->assertEqual($this->order->getSubTotal($this->usd), 0);
         
+        $this->order->addProduct($this->products[0], 1);   
+        $this->order->addProduct($this->products[0], -1);
         $this->assertEqual($this->order->getSubTotal($this->usd), 0);
     }    
 
@@ -212,6 +201,52 @@ class TestOrder extends UnitTest
         
         $this->assertEqual($this->order->totalAmount->get(), $this->order->capturedAmount->get());
     }
+
+	function testMerge()
+	{
+		$order =  CustomerOrder::getNewInstance($this->user);
+		$second = CustomerOrder::getNewInstance($this->user);
+		
+		$order->addProduct($this->products[0], 1);
+		$second->addProduct($this->products[1], 1);
+		
+		$order->merge($second);
+		
+		$this->assertEqual(count($order->getOrderedItems()), 2);
+		
+		$order->save();
+		$second->save();
+		
+		// empty orders (without items) should not be saved
+		$this->assertNull($second->getID());
+	
+		ActiveRecord::clearPool();
+		
+		$order = CustomerOrder::getInstanceById($order->getID());
+		$this->assertEqual(count($order->getOrderedItems()), 2);		
+	}
+
+	function testUpdateCounts()
+	{
+		$product = $this->products[0];
+		$order = CustomerOrder::getNewInstance($this->user);	
+		
+		// allow fractional units
+		$product->isFractionalUnit->set(true);
+		$order->addProduct($product, 1.5);		
+		$items = $order->getItemsByProduct($product);
+		$this->assertEqual($items[0]->count->get(), 1.5);
+
+		// disable fractional units
+		$product->isFractionalUnit->set(false);
+		$order->updateCount($items[0], 1.2);		
+		$this->assertEqual($items[0]->count->get(), 1);		
+		
+		$order->removeProduct($product);
+		$order->addProduct($product, 3.3);				
+		$items = $order->getItemsByProduct($product);
+		$this->assertEqual($items[0]->count->get(), 3);
+	}
 
     function test_SuiteTearDown()
     {
