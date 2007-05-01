@@ -20,9 +20,9 @@
 	    
 	    <div id="mainInfo" style="float: left; clear: right;">
 	    	<table>
-				<tr id="price">
+				<tr id="productPrice">
 					<td class="param">{t Price}:</td>
-					<td class="value">{$product.formattedPrice.$currency}</td>
+					<td class="value price">{$product.formattedPrice.$currency}</td>
 				</tr>
 				<tr>
 					<td colspan="2" id="cartLinks">
@@ -43,18 +43,22 @@
 					<td class="param">{t SKU}:</td>
 					<td class="value">{$product.sku}</td>
 				</tr>
+				{if $product.stockCount}
 				<tr>
 					<td class="param">{t In Stock}:</td>
 					<td class="value">{$product.stockCount}</td>
-				</tr>			
+				</tr>
+				{/if}			
 			</table>	
 	    </div>
    	</fieldset>
    
+   	{if $product.longDescription_lang}
     <h2>{t Description}</h2>
     <div id="productDescription">
         {$product.longDescription_lang}    
     </div>
+	{/if}
 
     <h2>{t Product Specification}</h2>
     <div id="productSpecification">
@@ -88,7 +92,8 @@
         </table>
     </div>
     
-    <h2>{t Recommended Products}</h2>
+    {if $related}
+	<h2>{t Recommended Products}</h2>
 	<div id="relatedProducts">
 		
     <ul>
@@ -103,8 +108,11 @@
     {/foreach}	
 	</ul>	
 	</div>
+	{/if}
 	
+	{if $reviews}
 	<h2>{t Customer Reviews}</h2>
+    {/if}    
     
 </div>
 

@@ -31,6 +31,8 @@ h2
 {
 	margin-top: 20px;
 	margin-bottom: 10px;
+	padding-top: 7px;
+	border-top: 1px dashed #AAAAAA;
 }
 
 h3
@@ -408,15 +410,36 @@ ul.productList p.image img
 /*****************************
 	Product page
 *****************************/
+#mainInfo td
+{
+	padding: 5px;		
+}
+
+.price
+{
+	font-weight: bold;
+	color: brown;	
+}
+
+#productSpecification table
+{
+	border: 1px solid #AAAAAA;
+	width: auto;	
+}
+
 #productSpecification td
 {
-    padding: 2px;    
+    padding: 5px;    
     vertical-align: top;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 tr.specificationGroup
 {
-    font-weight: bold;        
+    font-weight: bold; 
+	font-size: larger; 
+	background-color: #CCCCCC;      
 }
 
 #relatedProducts li
