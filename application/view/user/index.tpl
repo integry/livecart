@@ -18,9 +18,20 @@
 	<div class="clear"></div>
     
     <h2>{t Your Recent Orders}</h2>
-    {foreach from=$orders item="order"}
-    
-    {$order.dateCreated}
+    {foreach from=$orders item="order"}    
+	    {$order.formatted_dateCreated.date_long}
+	    {t Status}: 
+		{if $order.isCancelled}
+	    	<span class="cancelled">{t Cancelled}</span>
+	    {else}
+	    	{if !$order.isPaid}
+	    		<span class="awaitingPayment">{t Awaiting payment} ($order.formattedTotal)</span>.
+	    		{t Make payment for this order}.
+	    	{else}
+	    		
+	    	
+	    	{/if}
+	    {/if}
     {/foreach}
     
 </div>

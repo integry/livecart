@@ -28,7 +28,7 @@ class OrderedItem extends ActiveRecordModel
 		$schema->registerField(new ARField("price", ARFloat::instance()));
 		$schema->registerField(new ARField("count", ARFloat::instance()));
 		$schema->registerField(new ARField("reservedProductCount", ARFloat::instance()));
-		$schema->registerField(new ARField("dateAdded", ARTimeStamp::instance()));
+		$schema->registerField(new ARField("dateAdded", ARDateTime::instance()));
 		$schema->registerField(new ARField("isSavedForLater", ARBool::instance()));
 	}
 	

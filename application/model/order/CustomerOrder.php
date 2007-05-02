@@ -40,8 +40,8 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 		$schema->registerField(new ARForeignKeyField("billingAddressID", "billingAddress", "ID", 'UserAddress', ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("currencyID", "currency", "ID", 'Currency', ARChar::instance(3)));
 
-		$schema->registerField(new ARField("dateCreated", ARTimeStamp::instance()));
-		$schema->registerField(new ARField("dateCompleted", ARTimeStamp::instance()));
+		$schema->registerField(new ARField("dateCreated", ARDateTime::instance()));
+		$schema->registerField(new ARField("dateCompleted", ARDateTime::instance()));
 		$schema->registerField(new ARField("totalAmount", ARFloat::instance()));
 		$schema->registerField(new ARField("capturedAmount", ARFloat::instance()));
 		$schema->registerField(new ARField("isFinalized", ARBool::instance()));

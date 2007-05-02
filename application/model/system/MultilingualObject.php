@@ -67,7 +67,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	 */
     public static function transformArray($array, $className = __CLASS__)
     {		
-		$array = parent::transformArray($array);
+		$array = parent::transformArray($array, $className);
 
 		$store = Store::getInstance();
 		$defaultLangCode = $store->getDefaultLanguageCode();

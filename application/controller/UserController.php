@@ -26,6 +26,7 @@ class UserController extends FrontendController
     {		
 		// get recent orders
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
 		$f->setOrder(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
 		$f->setLimit(self::COUNT_RECENT_ORDERS);
 		
@@ -37,7 +38,7 @@ class UserController extends FrontendController
             $order->loadItems();
             $order->loadAddresses();
         }
-
+		var_dump($orders->toArray());
 		$response = new ActionResponse();
 		$response->setValue('orders', $orders->toArray());
 		

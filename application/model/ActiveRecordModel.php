@@ -18,6 +18,18 @@ ActiveRecord::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DI
  */
 abstract class ActiveRecordModel extends ActiveRecord
 {
+	private static $dateTransform = array
+	(		
+		'time_full' => Locale::FORMAT_TIME_FULL,
+		'time_long' => Locale::FORMAT_TIME_LONG,
+		'time_medium' => Locale::FORMAT_TIME_MEDIUM,
+		'time_short' => Locale::FORMAT_TIME_SHORT,
+		'date_full' => Locale::FORMAT_DATE_FULL,
+		'date_long' => Locale::FORMAT_DATE_LONG,
+		'date_medium' => Locale::FORMAT_DATE_MEDIUM,
+		'date_short' => Locale::FORMAT_DATE_SHORT,		
+	);
+	
 	public function loadRequestData(Request $request)
 	{
 		$schema = ActiveRecordModel::getSchemaInstance(get_class($this));
@@ -49,6 +61,37 @@ abstract class ActiveRecordModel extends ActiveRecord
 				}
 			}
 		}	
+	}
+	
+	protected static function transformArray($array, $className)
+	{
+		foreach (self::getSchemaInstance($className)->getFieldsByType('ARDateTime') as $field)
+		{
+			$name = $field->getName();
+			$time = strtotime($array[$name]);
+			
+			if (!$time)
+			{
+				continue;
+			}
+			
+			if (!isset($locale))
+			{
+				$locale = Locale::getCurrentLocale();
+			}
+			
+			$res = array();						
+			foreach (self::$dateTransform as $format => $code)
+			{
+				$res[$format] = $locale->getFormattedTime($time, $code);
+			}
+				
+			$array['formatted_' . $name] = $res;
+	
+	//	var_dump($res);
+		}	
+		
+		return parent::transformArray($array, $className);
 	}
 }
 
