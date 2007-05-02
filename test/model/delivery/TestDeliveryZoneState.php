@@ -6,10 +6,8 @@ ClassLoader::import("application.model.delivery.DeliveryZone");
 ClassLoader::import("application.model.delivery.DeliveryZoneCountry");
 ClassLoader::import("application.model.delivery.DeliveryZoneState");
 
-class TestDeliveryZoneState extends UnitTestCase
+class TestDeliveryZoneState extends UnitTest
 {
-    private $autoincrements = array();
-
     /**
      * @var DeliveryZone
      */
@@ -19,34 +17,24 @@ class TestDeliveryZoneState extends UnitTestCase
      * @var State
      */
     private $alaska;
-    
-    /**
-     * Creole database connection wrapper
-     *
-     * @var Connection
-     */
-    private $db = null;
-    
+
     public function __construct()
     {
         parent::__construct('delivery zone states tests');
-        
-	    $this->db = ActiveRecord::getDBConnection();
     }
 
+    public function getUsedSchemas()
+    {
+        return array(
+			'DeliveryZone', 
+			'DeliveryZoneCountry', 
+			'DeliveryZoneState'
+        );
+    }
+    
     public function setUp()
 	{
-	    ActiveRecordModel::beginTransaction();	
-	    
-	    if(empty($this->autoincrements))
-	    {
-		    foreach(array('DeliveryZone', 'DeliveryZoneCountry', 'DeliveryZoneState') as $table)
-		    {
-				$res = $this->db->executeQuery("SHOW TABLE STATUS LIKE '$table'");
-				$res->next();
-				$this->autoincrements[$table] = (int)$res->getInt("Auto_increment");
-		    }
-	    }
+	    parent::setUp();
 	    
 	    $this->zone = DeliveryZone::getNewInstance();
 	    $this->zone->setValueByLang('name', 'en', ':TEST_ZONE');
@@ -55,17 +43,6 @@ class TestDeliveryZoneState extends UnitTestCase
 	    $this->zone->save();
 	    
 	    $this->alaska = State::getInstanceByID(1, true, true); 
-	}
-
-	public function tearDown()
-	{
-	    ActiveRecordModel::rollback();	
-
-	    foreach(array('DeliveryZone', 'DeliveryZoneCountry', 'DeliveryZoneState') as $table)
-	    {
-	        ActiveRecord::removeClassFromPool($table);
-	        $this->db->executeUpdate("ALTER TABLE $table AUTO_INCREMENT=" . $this->autoincrements[$table]);
-	    }	    
 	}
 	
 	public function testCreateNewDeliveryZoneState()

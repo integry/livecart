@@ -22,36 +22,26 @@ class TestProduct extends UnitTest
 	 * @var Category
 	 */
 	private $productCategory = null; 
-    /**
-     * Creole database connection wrapper
-     *
-     * @var Connection
-     */
-    private $db = null;
-    
-    private $autoincrements = false;
-    private $autoincrementingTables = array('Category', 'Product', 'ProductRelationshipGroup', 'ProductFile', 'ProductFileGroup');
 	
 	public function __construct()
 	{
 		parent::__construct('Test Product class');
-		
-	    $this->db = ActiveRecord::getDBConnection();
+	}
+	
+	public function getUsedSchemas()
+	{
+	    return array(
+			'Category', 
+			'Product', 
+			'ProductRelationshipGroup', 
+			'ProductFile', 
+			'ProductFileGroup'
+	    );
 	}
 	
     public function setUp()
 	{
-		ActiveRecordModel::beginTransaction();		
-		
-	    if(empty($this->autoincrements))
-	    {
-		    foreach($this->autoincrementingTables as $table)
-		    {
-				$res = $this->db->executeQuery("SHOW TABLE STATUS LIKE '$table'");
-				$res->next();
-				$this->autoincrements[$table] = (int)$res->getInt("Auto_increment");
-		    }
-	    }
+		parent::setUp();
 		
 		// create a new category
 		$this->productCategory = Category::getNewInstance(Category::getRootNode());
@@ -64,19 +54,6 @@ class TestProduct extends UnitTest
 		$this->product->setValueByLang("name", "lt", "Bandomasis produktas");
 		$this->product->setFieldValue("isEnabled", true);
 		$this->product->save();	
-	}
-
-	public function tearDown()
-	{
-	    ActiveRecordModel::rollback();
-
-   	    foreach($this->autoincrementingTables as $table)
-	    {
-	        ActiveRecord::removeClassFromPool($table);
-	        $this->db->executeUpdate("ALTER TABLE $table AUTO_INCREMENT=" . $this->autoincrements[$table]);
-	    }	
-	    
-	    ActiveRecord::removeClassFromPool('ProductRelationship');
 	}
 	
 	/**
@@ -95,9 +72,9 @@ class TestProduct extends UnitTest
         
         ActiveRecordModel::removeFromPool($secondCategory);
         $sameCategory = Category::getInstanceByID($secondCategory->getID(), true);
-        $this->assertEqual($secondCategory->totalProductCount->get() + 1, $sameCategory->totalProductCount->get());
-        $this->assertEqual($secondCategory->activeProductCount->get(), $sameCategory->activeProductCount->get());
-        $this->assertEqual($secondCategory->availableProductCount->get(), $sameCategory->availableProductCount->get());
+        $this->assertEqual((int)$secondCategory->totalProductCount->get() + 1, (int)$sameCategory->totalProductCount->get());
+        $this->assertEqual((int)$secondCategory->activeProductCount->get(), (int)$sameCategory->activeProductCount->get());
+        $this->assertEqual((int)$secondCategory->availableProductCount->get(), (int)$sameCategory->availableProductCount->get());
     }
 	
 	/**
@@ -535,8 +512,9 @@ class TestProduct extends UnitTest
 	public function testIsRelatedTo()
 	{
 	    $notRelatedProduct = Product::getNewInstance($this->productCategory);
-		$relatedProduct = Product::getNewInstance($this->productCategory);
 	    $notRelatedProduct->save();
+	    
+		$relatedProduct = Product::getNewInstance($this->productCategory);
 		$relatedProduct->save();
 	    
 		$this->product->addRelatedProduct($relatedProduct);	

@@ -11,7 +11,7 @@ ClassLoader::import("library.payment.*");
 /**
  *	Test Order model for the following scenarios:
  */ 
-class TestOrder extends UnitTest
+class TestOrder extends UnitTestCase
 {  
     private $order;
     
@@ -23,7 +23,7 @@ class TestOrder extends UnitTest
     
     function __construct()
     {
-        parent::__construct();
+        parent::__construct('Test order logic');
         ActiveRecordModel::beginTransaction();            
                 
         // set up currency

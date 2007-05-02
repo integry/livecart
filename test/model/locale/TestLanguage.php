@@ -10,6 +10,19 @@ ClassLoader::import('application.model.system.Language');
  */
 class TestLanguage extends UnitTest
 {	  
+    public function __construct()
+    {
+        parent::__construct('test languages');
+    }
+    
+    public function getUsedSchemas()
+    {
+        return array(
+            'Language',
+            'InterfaceTranslation'
+        );
+    }
+    
 	/*
     function testLanguagesExist() 
 	{  
@@ -101,7 +114,6 @@ class TestLanguage extends UnitTest
 	  	// try to read interface translation data object
 		try
 	  	{
-			$interface = ActiveRecord::getInstanceByID('InterfaceTranslation', $it);
 		}
 		catch (Exception $exc)
 		{

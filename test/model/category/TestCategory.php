@@ -11,40 +11,29 @@ class TestCategory extends UnitTest
 	 */
     private $root;
     
-    private $autoIncrementNumber;
-    
-    /**
-     * Creole database connection wrapper
-     *
-     * @var Connection
-     */
-    private $db;
-    
     public function __construct()
 	{
-	    parent::__construct();
-	    $this->db = ActiveRecord::getDBConnection();
+	    parent::__construct('Testing categories');
+	}
+	
+	public function getUsedSchemas()
+	{
+	    return array(
+	        'Category'
+	    );
 	}
     
     public function setUp()
 	{
-	    ActiveRecordModel::beginTransaction();	
-		
+	    parent::setUp();
+	    
 	    $this->root = Category::getInstanceByID(ActiveTreeNode::ROOT_ID);
 	    
 	    $newCategory = Category::getNewInstance($this->root);
 		$newCategory->setValueByLang("name", 'en', "dump");
 		$newCategory->setFieldValue("handle", "dump");
         $newCategory->save();
-	    $this->autoIncrementNumber = $newCategory->getID();
         $newCategory->delete();
-	}
-	
-	function tearDown()
-	{
-	    $this->root->markAsNotLoaded();
-	    ActiveRecordModel::rollback();		
-	    $this->db->executeUpdate("ALTER TABLE Category AUTO_INCREMENT=" . $this->autoIncrementNumber);
 	}
 	
 	public function testRootCategoryIsCategory()

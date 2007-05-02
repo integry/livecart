@@ -4,10 +4,8 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 ClassLoader::import("application.model.product.*");
 ClassLoader::import("application.model.category.Category");
 
-class TestProductFile extends UnitTestCase
+class TestProductFile extends UnitTest
 {
-    private $autoincrements = array();
-    
     /**
      * @var Product
      */
@@ -29,35 +27,26 @@ class TestProductFile extends UnitTestCase
     private $file = null;
     private $tmpFilePath = 'somefile.txt';
     private $fileBody = 'All your base are belong to us';
-        
-    /**
-     * Creole database connection wrapper
-     *
-     * @var Connection
-     */
-    private $db = null;
     
     public function __construct()
     {
         parent::__construct('Product files tests');
         
         $this->rootCategory = Category::getInstanceByID(Category::ROOT_ID);
-	    $this->db = ActiveRecord::getDBConnection();
     }
 	
+    public function getUsedSchemas()
+    {
+        return array(
+			'ProductFile', 
+			'Product', 
+			'ProductFileGroup'
+        );
+    }
+    
     public function setUp()
 	{
-	    ActiveRecordModel::beginTransaction();	
-	    
-	    if(empty($this->autoincrements))
-	    {
-		    foreach(array('ProductFile', 'Product', 'ProductFileGroup') as $table)
-		    {
-				$res = $this->db->executeQuery("SHOW TABLE STATUS LIKE '$table'");
-				$res->next();
-				$this->autoincrements[$table] = (int)$res->getInt("Auto_increment");
-		    }
-	    }
+	    parent::setUp();
 	    
 		$this->product = Product::getNewInstance($this->rootCategory);
 		$this->product->save();
@@ -67,19 +56,6 @@ class TestProductFile extends UnitTestCase
 		
 	    // create temporary file
 	    file_put_contents($this->tmpFilePath, $this->fileBody);
-	}
-
-	public function tearDown()
-	{
-	    ActiveRecordModel::rollback();	
-
-	    foreach(array('ProductFile', 'Product', 'ProductFileGroup') as $table)
-	    {
-	        ActiveRecord::removeClassFromPool($table);
-	        $this->db->executeUpdate("ALTER TABLE $table AUTO_INCREMENT=" . $this->autoincrements[$table]);
-	    }	    
-	    
-   	    unlink($this->tmpFilePath);
 	}
 	
 	public function testUploadNewFile()

@@ -4,59 +4,35 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 ClassLoader::import("application.model.delivery.DeliveryZone");
 ClassLoader::import("application.model.delivery.DeliveryZoneCityMask");
 
-class TestDeliveryZoneCityMask extends UnitTestCase
+class TestDeliveryZoneCityMask extends UnitTest
 {
-    private $autoincrements = array();
-
     /**
      * @var DeliveryZone
      */
     private $zone;
-    
-    /**
-     * Creole database connection wrapper
-     *
-     * @var Connection
-     */
-    private $db = null;
-    
+
     public function __construct()
     {
         parent::__construct('delivery zone city masks tests');
-        
-	    $this->db = ActiveRecord::getDBConnection();
+    }
+    
+    public function getUsedSchemas()
+    {
+        return array(
+	        'DeliveryZone', 
+			'DeliveryZoneCityMask',
+        );
     }
 
     public function setUp()
 	{
-	    ActiveRecordModel::beginTransaction();	
-	    
-	    if(empty($this->autoincrements))
-	    {
-		    foreach(array('DeliveryZone', 'DeliveryZoneCityMask') as $table)
-		    {
-				$res = $this->db->executeQuery("SHOW TABLE STATUS LIKE '$table'");
-				$res->next();
-				$this->autoincrements[$table] = (int)$res->getInt("Auto_increment");
-		    }
-	    }
+	    parent::setUp();
 	    
 	    $this->zone = DeliveryZone::getNewInstance();
 	    $this->zone->setValueByLang('name', 'en', ':TEST_ZONE');
 	    $this->zone->isEnabled->set(1);
 	    $this->zone->isFreeShipping->set(1);
 	    $this->zone->save();
-	}
-
-	public function tearDown()
-	{
-	    ActiveRecordModel::rollback();	
-
-	    foreach(array('DeliveryZone', 'DeliveryZoneCityMask') as $table)
-	    {
-	        ActiveRecord::removeClassFromPool($table);
-	        $this->db->executeUpdate("ALTER TABLE $table AUTO_INCREMENT=" . $this->autoincrements[$table]);
-	    }	    
 	}
 	
 	public function testCreateNewDeliveryZoneCityMask()

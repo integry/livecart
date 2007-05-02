@@ -5,10 +5,8 @@ ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.product.ProductFileGroup");
 ClassLoader::import("application.model.category.Category");
 
-class TestProductFileGroup extends UnitTestCase
+class TestProductFileGroup extends UnitTest
 {
-    private $autoincrements = array();
-    
     /**
      * @var Product
      */
@@ -19,49 +17,28 @@ class TestProductFileGroup extends UnitTestCase
      */
     private $rootCategory = null;
     
-        
-    /**
-     * Creole database connection wrapper
-     *
-     * @var Connection
-     */
-    private $db = null;
-    
     public function __construct()
     {
         parent::__construct('Related product groups tests');
         
         $this->rootCategory = Category::getInstanceByID(Category::ROOT_ID);
-	    $this->db = ActiveRecord::getDBConnection();
+    }
+    
+    public function getUsedSchemas()
+    {
+        return array(
+			'ProductFile', 
+			'Product', 
+			'ProductFileGroup'
+        );
     }
 
     public function setUp()
 	{
-	    ActiveRecordModel::beginTransaction();	
-	    
-	    if(empty($this->autoincrements))
-	    {
-		    foreach(array('ProductFile', 'Product', 'ProductFileGroup') as $table)
-		    {
-				$res = $this->db->executeQuery("SHOW TABLE STATUS LIKE '$table'");
-				$res->next();
-				$this->autoincrements[$table] = (int)$res->getInt("Auto_increment");
-		    }
-	    }
+	    parent::setUp();
 	    
 		$this->product = Product::getNewInstance($this->rootCategory);
 		$this->product->save();
-	}
-
-	public function tearDown()
-	{
-	    ActiveRecordModel::rollback();	
-
-	    foreach(array('ProductFile', 'Product', 'ProductFileGroup') as $table)
-	    {
-	        ActiveRecord::removeClassFromPool($table);
-	        $this->db->executeUpdate("ALTER TABLE $table AUTO_INCREMENT=" . $this->autoincrements[$table]);
-	    }	    
 	}
 	
 	public function testCreateNewGroup()

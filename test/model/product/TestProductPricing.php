@@ -11,7 +11,7 @@ ClassLoader::import("application.model.product.ProductPricing");
  *	  * Load a product from a database, read and modify specification attributes
  *  
  */
-class TestProductPricing extends UnitTestCase
+class TestProductPricing extends UnitTest
 {
     /**
      * Root category
@@ -26,45 +26,31 @@ class TestProductPricing extends UnitTestCase
      * @var Product
      */
     private $product;
-    
-    /**
-     * Product autoincrement (used to completely revert all changes done to the database during the tests)
-     *
-     * @var integer
-     */
-    private $productAutoIncrementNumber;
-    
-    /**
-     * Creole database connection wrapper
-     *
-     * @var Connection
-     */
-    private $db;
-    
+
     public function __construct()
 	{
-	    parent::__construct();
-	    $this->db = ActiveRecord::getDBConnection();
-	    
+	    parent::__construct('Product pricings');
+
 	    // Get root category
 	    $this->category = Category::getInstanceByID(Category::ROOT_ID);
+	}
+	
+	public function getUsedSchemas()
+	{
+	    return array(
+	        'Product'
+	    );
 	}
     
     public function setUp()
 	{
-	    ActiveRecordModel::beginTransaction();	
+	    parent::setUp();
 		
    		// create a product without attributes
 		$this->product = Product::getNewInstance($this->category);
 		$this->product->setValueByLang("name", "en", "TEST_PRODUCT");
 		$this->product->save();		
 		$this->productAutoIncrementNumber = $this->product->getID();
-	}
-	
-	public function tearDown()
-	{
-	    ActiveRecordModel::rollback();		
-	    $this->db->executeUpdate("ALTER TABLE Product AUTO_INCREMENT=" . $this->productAutoIncrementNumber);
 	}
 	
 	public function testSave()

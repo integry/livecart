@@ -25,28 +25,26 @@ class testSpecFieldValue extends UnitTest
      * @var Product
      */
     private $product;
-        
-    private $specFieldAutoIncrementNumber;
-    private $specFieldValueAutoIncrementNumber;
-    private $productAutoIncrementNumber;
-    
-    /**
-     * Creole database connection wrapper
-     *
-     * @var Connection
-     */
-    private $db;
-    
+
     public function __construct()
 	{
-	    parent::__construct();
-	    $this->db = ActiveRecord::getDBConnection();
+	    parent::__construct('Specification fields test');
 	    $this->rootCategory = Category::getInstanceByID(ActiveTreeNode::ROOT_ID);
+	}
+	
+	public function getUsedSchemas()
+	{
+	    return array(
+	        'Category',
+	        'SpecField',
+	        'SpecFieldValue',
+	        'Product'
+	    );
 	}
     
     public function setUp()
 	{
-	    ActiveRecordModel::beginTransaction();	
+	    parent::setUp();
 		
 	    $this->specField = SpecField::getNewInstance($this->rootCategory, SpecField::DATATYPE_TEXT, SpecField::TYPE_TEXT_SELECTOR);
 	    $this->specField->save();
@@ -59,14 +57,6 @@ class testSpecFieldValue extends UnitTest
 	    $this->product = Product::getNewInstance($this->rootCategory);
 	    $this->product->save();
 	    $this->productAutoIncrementNumber = $this->product->getID();
-	}
-	
-	public function tearDown()
-	{
-	    ActiveRecordModel::rollback();		
-	    $this->db->executeUpdate("ALTER TABLE SpecField AUTO_INCREMENT=" . $this->specFieldAutoIncrementNumber);
-	    $this->db->executeUpdate("ALTER TABLE SpecFieldValue AUTO_INCREMENT=" . $this->specFieldValueAutoIncrementNumber);
-	    $this->db->executeUpdate("ALTER TABLE Product AUTO_INCREMENT=" . $this->productAutoIncrementNumber);
 	}
 
 	public function testMergeSpecFieldValidParameters()

@@ -14,15 +14,17 @@ ClassLoader::import('application.model.category.Category');
  */
 class TestMultiLingualObject extends UnitTest
 {	  
-	function setUp()
-	{
-		ActiveRecordModel::beginTransaction();	  	  	
-	}
-	
-	function tearDown()
-	{
-		ActiveRecordModel::rollback();	  	  	
-	}
+    public function __construct()
+    {
+        parent::__construct('Test multilingual objects');
+    }
+    
+    public function getUsedSchemas()
+    {
+        return array(
+			'Category'
+        );
+    }
 
 	function testSerializingValuesWithQuotes()
 	{

@@ -1,7 +1,8 @@
 <?php
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
-ClassLoader::import('application.model.system.*');        
+ClassLoader::import('application.model.system.*');  
+ClassLoader::import('application.model.user.User');        
 
 /**
  * Test Email class
@@ -11,6 +12,18 @@ ClassLoader::import('application.model.system.*');
  */
 class TestEmail extends UnitTest
 {	  
+    public function __construct()
+    {
+        parent::__construct('Test email class');
+    }
+    
+    public function getUsedSchemas()
+    {
+        return array(
+			'User'
+        );
+    }
+    
     function testSendingAnEmail()
     {
         $email = new Email();
@@ -25,10 +38,7 @@ class TestEmail extends UnitTest
     }
     
     function testUser()
-    {
-        ActiveRecordModel::beginTransaction();
-        
-        ClassLoader::import('application.model.user.*');        
+    {      
         $user = User::getNewInstance();
         $user->email->set('recipient@test.com');
         $user->firstName->set('test');
@@ -48,9 +58,7 @@ class TestEmail extends UnitTest
         
         $this->assertTrue(strpos(Swift_Connection_Fake::getHeaderValue('To'), $user->email->get()) !== false);
         
-        $this->assertEqual($res, 1);        
-
-        ActiveRecordModel::rollback();
+        $this->assertEqual($res, 1);
     }
 }
 

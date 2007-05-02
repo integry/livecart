@@ -4,12 +4,8 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 ClassLoader::import("application.model.product.*");
 ClassLoader::import("application.model.category.Category");
 
-class TestProductRelationship extends UnitTestCase
+class TestProductRelationship extends UnitTest
 {
-    private $groupAutoIncrementNumber = 0;
-    private $productAutoIncrementNumber = 0;
-    private $relatedAutoIncrementNumber = 0;
-    
     /**
      * @var Product
      */
@@ -29,25 +25,26 @@ class TestProductRelationship extends UnitTestCase
      * @var ProductRelationshipGroup
      */
     private $group = null;
-        
-    /**
-     * Creole database connection wrapper
-     *
-     * @var Connection
-     */
-    private $db = null;
-    
+
     public function __construct()
     {
         parent::__construct('Related product tests');
         
         $this->rootCategory = Category::getInstanceByID(Category::ROOT_ID);
-	    $this->db = ActiveRecord::getDBConnection();
+    }
+    
+    public function getUsedSchemas()
+    {
+        return array(
+            'Product',
+            'ProductRelationshipGroup',
+            'ProductRelationship'
+        );
     }
 	
     public function setUp()
 	{
-	    ActiveRecordModel::beginTransaction();	
+	    parent::setUp();
 	    
 	    // Create some product
 		$this->product1 = Product::getNewInstance($this->rootCategory);
@@ -65,18 +62,6 @@ class TestProductRelationship extends UnitTestCase
 		$this->groupAutoIncrementNumber = $this->group->getID();
 	}
 
-	public function tearDown()
-	{
-	    ActiveRecordModel::rollback();	
-
-	    ActiveRecord::removeClassFromPool('Product');
-	    ActiveRecord::removeClassFromPool('ProductRelationship');
-	    ActiveRecord::removeClassFromPool('ProductRelationshipGroup');
-	    
-	    $this->db->executeUpdate("ALTER TABLE ProductRelationshipGroup AUTO_INCREMENT=" . $this->groupAutoIncrementNumber);
-	    $this->db->executeUpdate("ALTER TABLE Product AUTO_INCREMENT=" . $this->productAutoIncrementNumber);
-	}
-	
 	public function testInvalidRelationship()
 	{
 	    // valid

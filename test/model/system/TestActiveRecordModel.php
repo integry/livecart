@@ -1,6 +1,8 @@
 <?php
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
+ClassLoader::import('application.model.user.User');
+
 /**
  * Common ActiveRecordModel tests
  *
@@ -8,21 +10,22 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
  * @package test.model.system
  */
 class TestActiveRecordModel extends UnitTest
-{	  
-	function setUp()
-	{
-		ActiveRecordModel::beginTransaction();	  	  	
-	}
-	
-	function tearDown()
-	{
-		ActiveRecordModel::rollback();	  	  	
-	}
+{	
+    public function __construct()
+    {
+        parent::__construct('Test active record model');
+    }
+
+    public function getUsedSchemas()
+    {
+        return array(
+			'User',
+            'UserAddress'
+        );
+    }
 
     function testSerialization()
-    {
-        ClassLoader::import('application.model.user.User');        
-
+    {        
         $user = User::getNewInstance();        
         $user->firstName->set('Rinalds');
         $user->lastName->set('Uzkalns');
@@ -31,7 +34,6 @@ class TestActiveRecordModel extends UnitTest
         $address = UserAddress::getNewInstance();
         $address->city->set('Vilnius');
         $address->save();
-        
         $user->defaultBillingAddress->set($address);        
                 
         $serialized = serialize($user);        
@@ -43,8 +45,6 @@ class TestActiveRecordModel extends UnitTest
     
     function testCloning()
     {
-        ClassLoader::import('application.model.user.User');            
-
         $user = User::getNewInstance();        
         $user->firstName->set('Rinalds');
         $user->lastName->set('Uzkalns');
