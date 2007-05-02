@@ -38,14 +38,48 @@ Backend.DeliveryZone.prototype =
 		Backend.DeliveryZone.prototype.treeBrowser.hideFeedback = 
 			function()
 			{
-				for (itemId in this.iconUrls)
+				for (var itemId in this.iconUrls)
 				{
 					this.setItemImage(itemId, this.iconUrls[itemId]);	
 				}				
 			}
 		
     	this.insertTreeBranch(zones, 0);    
+        
+        this.bindEvents();
 	},
+
+    bindEvents: function()
+    {
+        var self = this;
+        Event.observe($("deliveryZone_delete"), 'click', function(e) 
+        {
+            Event.stop(e);
+            self.deleteZone();
+        });
+    },
+    
+    deleteZone: function()
+    {
+        var $this = this;
+        
+		new Ajax.Request(
+			Backend.DeliveryZone.prototype.Links.remove + '/' + Backend.DeliveryZone.prototype.activeZone,
+			{
+				onComplete: function(response) { 
+                    response = eval("(" + response.responseText + ")");
+                    if('success' == response.status)
+                    {
+                        $this.treeBrowser.deleteItem(Backend.DeliveryZone.prototype.activeZone, true);
+                        var firstId = false;
+                        if(firstId = parseInt($this.treeBrowser._globalIdStorage[1]))
+                        {
+                            $this.treeBrowser.selectItem(firstId, true);
+                        }
+                    }
+                }
+			});
+    },
     
 	addNewZone: function()
 	{
@@ -173,11 +207,6 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         'beforeEdit': function(li) 
         {
             Backend.DeliveryZone.CountriesAndStates.prototype.toggleMask(li);                
-            new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveAddressMask + "/" + this.getRecordId(li),
-            {
-    			method: 'post',
-    			parameters: 'mask=' + li.down('input').value
-            });
         },
         'afterEdit': function(li, response) {}
     },
@@ -197,11 +226,6 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         'beforeEdit': function(li) 
         {
             Backend.DeliveryZone.CountriesAndStates.prototype.toggleMask(li);
-            new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveAddressMask + "/" + this.getRecordId(li),
-            {
-    			method: 'post',
-    			parameters: 'mask=' + li.down('input').value
-            });
         },
         'afterEdit': function(li, response) {}
     },
@@ -217,10 +241,10 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         this.findNodes(root);
         this.bindEvents();
         
-        this.sortSelect(this.nodes.inactiveCountries);
-        this.sortSelect(this.nodes.activeCountries);
-        this.sortSelect(this.nodes.inactiveStates);
-        this.sortSelect(this.nodes.activeStates);
+//        this.sortSelect(this.nodes.inactiveCountries);
+//        this.sortSelect(this.nodes.activeCountries);
+//        this.sortSelect(this.nodes.inactiveStates);
+//        this.sortSelect(this.nodes.activeStates);
         
         new SectionExpander(this.nodes.root);
     },
@@ -276,14 +300,47 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
     
     toggleMask: function(li)
     {
+        var self = Backend.DeliveryZone.CountriesAndStates.prototype.getInstance(li.up('form'));
         var input = li.down('input');
         var title = li.down('.maskTitle');
         if(li.down('input').style.display == 'inline')
-        {
-            input.style.display = 'none';
-            title.style.display = 'inline';
+        {      
+            var list = null;     
+            if(list = $(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'cityMasksList')) 
+            {
+                var url = Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveAddressMask;
+            }
+            else if(list = $(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'zipMasksList'))
+            {
+                var url = Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveZipMask;
+            }
+            else if(list = $(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'addressMasksList'))
+            {
+                var url = Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveCityMask;
+            }
             
-            title.update(input.value);
+            var activeList = ActiveList.prototype.getInstance(list);
+            new Ajax.Request(url + "/" + activeList.getRecordId(li),
+            {
+    			method: 'post',
+    			parameters: 'mask=' + li.down('input').value,
+                onSuccess: function(response) {
+                    var response = eval('(' + response.responseText + ')');
+                    
+                    if(response.status == 'success') 
+                    {
+                        input.style.display = 'none';
+                        title.style.display = 'inline';
+                        title.update(input.value);
+                        console.info(self);
+                        ActiveForm.prototype.resetErrorMessage(input);
+                    }
+                    else
+                    {
+                        ActiveForm.prototype.setErrorMessage(input, response.errors.mask, true);
+                    }
+                }
+            });
         }
         else
         {
@@ -312,6 +369,49 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         $A(this.nodes.observedElements).each(function(element) {
             Event.observe(element, 'blur', function(e) { self.save() });
         });
+        
+        Event.observe(this.nodes.addressMaskNew, 'keyup', function(e) 
+        {
+           if(KeyboardEvent.prototype.init(e).isEnter()) 
+           {
+               if(!e.target) e.target = e.srcElement;
+               self.addNewAddressMask(e.target);
+           }
+        });
+        
+        Event.observe(this.nodes.zipMaskNew, 'keyup', function(e) 
+        {
+           if(KeyboardEvent.prototype.init(e).isEnter()) 
+           {
+               if(!e.target) e.target = e.srcElement;
+               self.addNewZipMask(e.target);
+           }
+        });
+        
+        Event.observe(this.nodes.cityMaskNew, 'keyup', function(e) 
+        {
+           if(KeyboardEvent.prototype.init(e).isEnter()) 
+           {
+               if(!e.target) e.target = e.srcElement;
+               self.addNewCityMask(e.target);
+           }
+        });
+        
+        document.getElementsByClassName(this.prefix + 'mask').each(function(mask) {
+           self.bindMask(mask);
+        });
+    },
+    
+    bindMask: function(mask) 
+    {
+       var self = this;
+       Event.observe(mask, 'keyup', function(e) 
+       { 
+           if(KeyboardEvent.prototype.init(e).isEnter()) {
+               if(!e.target) e.target = e.srcElement;
+               self.toggleMask(e.target.up('li'));
+           }
+       });
     },
     
     save: function() {
@@ -353,10 +453,15 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                 if('success' == response.status)
                 {
                     var activeList = ActiveList.prototype.getInstance(self.nodes.cityMasksList);
-                    
-                    activeList.addRecord(response.ID, '<span class="maskTitle">' + mask.value + '</span><input type="text" value="' + mask.value + '" style="display:none;" />');
+                    var li = activeList.addRecord(response.ID, '<span class="maskTitle">' + mask.value + '</span><input type="text" value="' + mask.value + '" style="display:none;" />');
 
                     mask.value = '';
+                    self.bindMask(li.down('input'));
+                    ActiveForm.prototype.resetErrorMessage(mask);
+                }
+                else
+                {
+                    ActiveForm.prototype.setErrorMessage(mask, response.errors.mask, true);
                 }
             }
         });
@@ -375,10 +480,15 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                 if('success' == response.status)
                 {
                     var activeList = ActiveList.prototype.getInstance(self.nodes.zipMasksList);
-                    
-                    activeList.addRecord(response.ID, '<span class="maskTitle">' + mask.value + '</span><input type="text" value="' + mask.value + '" style="display:none;" />');
+                    var li = activeList.addRecord(response.ID, '<span class="maskTitle">' + mask.value + '</span><input type="text" value="' + mask.value + '" style="display:none;" />');
 
                     mask.value = '';
+                    self.bindMask(li.down('input'));
+                    ActiveForm.prototype.resetErrorMessage(mask);
+                }
+                else
+                {
+                    ActiveForm.prototype.setErrorMessage(mask, response.errors.mask, true);
                 }
             }
         });
@@ -397,10 +507,15 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                 if('success' == response.status)
                 {
                     var activeList = ActiveList.prototype.getInstance(self.nodes.addressMasksList);
-                    
-                    activeList.addRecord(response.ID, '<span class="maskTitle">' + mask.value + '</span><input type="text" value="' + mask.value + '" style="display:none;" />');
+                    var li = activeList.addRecord(response.ID, '<span class="maskTitle">' + mask.value + '</span><input type="text" value="' + mask.value + '" style="display:none;" />');
 
                     mask.value = '';
+                    self.bindMask(li.down('input'));
+                    ActiveForm.prototype.resetErrorMessage(mask);
+                }
+                else
+                {
+                    ActiveForm.prototype.setErrorMessage(mask, response.errors.mask, true);
                 }
             }
         });

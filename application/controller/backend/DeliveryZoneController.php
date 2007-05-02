@@ -170,7 +170,7 @@ class DeliveryZoneController extends StoreManagementController
 	
 	public function saveCityMask()
 	{
-	    if($this->request->getValue('mask'))
+	    if(($errors = $this->isValidMask()) === true)
 	    {
 		    $maskValue = $this->request->getValue('mask');
 		    if($id = (int)$this->request->getValue('id'))
@@ -190,8 +190,26 @@ class DeliveryZoneController extends StoreManagementController
 	    }
 	    else
 	    {
-		    return new JSONResponse(array('status' => 'failure'));
+		    return new JSONResponse(array('status' => 'failure', 'errors' => $errors));
 	    }
+	}
+	
+	private function isValidMask() {
+	    if($this->request->getValue('mask')) 
+        {
+	        return true;
+	    }
+	    else 
+	    {
+	        return array('mask' => $this->translate('_error_mask_is_empty'));
+	    }
+	}
+
+	public function delete()
+	{
+	    DeliveryZone::getInstanceByID((int)$this->request->getValue('id'))->delete();
+	    
+	    return new JSONResponse(array('status' => 'success'));
 	}
 
 	public function deleteCityMask()
@@ -203,7 +221,7 @@ class DeliveryZoneController extends StoreManagementController
 	
 	public function saveZipMask()
 	{	    
-   	    if($this->request->getValue('mask'))
+   	    if(($errors = $this->isValidMask()) === true)
 	    {
 		    $maskValue = $this->request->getValue('mask');
 		    if($id = (int)$this->request->getValue('id'))
@@ -223,7 +241,7 @@ class DeliveryZoneController extends StoreManagementController
 	    }
 	    else
 	    {
-		    return new JSONResponse(array('status' => 'failure'));
+		    return new JSONResponse(array('status' => 'failure', 'errors' => $errors));
 	    }
 	}
 
@@ -236,7 +254,7 @@ class DeliveryZoneController extends StoreManagementController
 	
 	public function saveAddressMask()
 	{
-   	    if($this->request->getValue('mask'))
+   	    if(($errors = $this->isValidMask()) === true)
 	    {
 	        $maskValue = $this->request->getValue('mask');
 		    if($id = (int)$this->request->getValue('id'))
@@ -256,7 +274,7 @@ class DeliveryZoneController extends StoreManagementController
 	    }
 	    else
 	    {
-		    return new JSONResponse(array('status' => 'failure'));
+		    return new JSONResponse(array('status' => 'failure', 'errors' => $errors));
 	    }
 	}
 

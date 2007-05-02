@@ -26,7 +26,7 @@
             <input type="text" name="name" id="newZoneInput" />
             <input type="button" class="button" value="{t _add}" id="newZoneInputButton"  />
             <br />
-            <a href="#delete">{t _delete}</a>
+            <a id="deliveryZone_delete" href="#delete">{t _delete}</a>
         </div>
 	</div>
     
@@ -58,6 +58,7 @@
 {literal}
 <script type="text/javascript">
     Backend.DeliveryZone.prototype.Links.edit = '{/literal}{link controller=backend.deliveryZone action=edit}?id=_id_{literal}';
+    Backend.DeliveryZone.prototype.Links.remove = '{/literal}{link controller=backend.deliveryZone action=delete}{literal}';
     Backend.DeliveryZone.prototype.Links.save = '{/literal}{link controller=backend.deliveryZone action=save}{literal}';
     Backend.DeliveryZone.prototype.Links.saveCountries = '{/literal}{link controller=backend.deliveryZone action=saveCountries}{literal}';
     Backend.DeliveryZone.prototype.Links.saveStates = '{/literal}{link controller=backend.deliveryZone action=saveStates}{literal}';

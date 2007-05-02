@@ -39,3 +39,7 @@ p.checkbox
     width: 25%;
     text-align: left;
 }
+
+#deliveryZoneManagerContainer .activeList .errorText {
+    float: none;
+}

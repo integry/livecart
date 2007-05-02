@@ -8,7 +8,6 @@
     </fieldset>
     
     
-{*
      <fieldset>
 		{foreach from=$alternativeLanguagesCodes key=lang item=langName}
 		<fieldset class="expandingSection">
@@ -23,7 +22,7 @@
 		</fieldset>
 		{/foreach}
     </fieldset>
-*}    
+    
     
     <label>{t _country}</label>
     <fieldset class="error">
@@ -66,6 +65,7 @@
             </script>
             <fieldset>
                 {textfield name="mask_new" class="countriesAndStates_newMask"}<input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
+                <span class="errorText hidden"> </span>
             </fieldset>
         </fieldset>
     </fieldset>
@@ -87,6 +87,7 @@
             </script>
             <fieldset>
                 {textfield name="mask_new" class="countriesAndStates_newMask"}<input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
+                <span class="errorText hidden"> </span>
             </fieldset>
         </fieldset>
     </fieldset>
@@ -108,6 +109,7 @@
             </script>
             <fieldset>
                 {textfield name="mask_new" class="countriesAndStates_newMask"}<input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
+                <span class="errorText hidden"> </span>
             </fieldset>
         </fieldset>
     </fieldset>

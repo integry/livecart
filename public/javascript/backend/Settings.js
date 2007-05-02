@@ -31,7 +31,7 @@ Backend.Settings.prototype =
 		this.treeBrowser.hideFeedback = 
 			function()
 			{
-				for (itemId in this.iconUrls)
+				for (var itemId in this.iconUrls)
 				{
 					this.setItemImage(itemId, this.iconUrls[itemId]);	
 				}				

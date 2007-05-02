@@ -90,6 +90,11 @@ KeyboardEvent.prototype = {
 
         this.event = e;
     },
+    
+    init: function(e)
+    {
+        return new KeyboardEvent(e);
+    },
 
     /**
      * Determines which key (number) was pressed
@@ -179,7 +184,11 @@ KeyboardEvent.prototype = {
 		{
 		    return false;
 		}
-
+    },
+    
+    isEnter: function()
+    {
+        return this.getKey() == this.KEY_ENTER;
     }
 }
 

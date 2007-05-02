@@ -210,15 +210,23 @@ ActiveForm.prototype = {
     resetErrorMessages: function(form)
     {
 		if('form' != form.tagName.toLowerCase()) form = form.down('form');
-        
-        var errContainers = document.getElementsByClassName("errorText", form);
-		for (k = 0; k < errContainers.length; k++)
-		{
-		  	errContainers[k].innerHTML = '';
-		  	errContainers[k].style.display = 'none';
-		  	Element.addClassName(errContainers[k], 'hidden');
-		}  
+      
+		$A(form.elements).each(function(formElement)
+	  	{           
+           ActiveForm.prototype.resetErrorMessage(formElement);
+        });
 	},
+    
+    resetErrorMessage: function(formElement) 
+    {
+        var errorText = formElement.up().down(".errorText");
+            if(errorText)
+            {
+	  	errorText.innerHTML = '';
+	  	errorText.style.display = 'none';
+	  	Element.addClassName(errorText, 'hidden');
+        }
+    },
 
     setErrorMessages: function(form, errorMessages)
     {
@@ -253,7 +261,7 @@ ActiveForm.prototype = {
                 Element.focus(formElement);
             }
             
-            var errorContainer = document.getElementsByClassName("errorText", formElement.parentNode)[0];		
+            var errorContainer = formElement.up().down(".errorText");		
             if(errorContainer)	
             {
         		errorContainer.innerHTML = errorMessage;
