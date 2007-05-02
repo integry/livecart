@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-05-02 15:43                                #
+# Created on:            2007-05-02 17:12                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -146,6 +146,12 @@ ALTER TABLE ShippingRate DROP FOREIGN KEY ShippingService_ShippingRate;
 ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 
 ALTER TABLE ShippingService DROP FOREIGN KEY DeliveryZone_ShippingService;
+
+# ---------------------------------------------------------------------- #
+# Modify table "ShippingRate"                                            #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE ShippingRate CHANGE shippingRateGroupID shippingServiceID INTEGER;
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
@@ -344,7 +350,7 @@ ALTER TABLE TaxRate ADD CONSTRAINT DeliveryZone_TaxRate
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
 
 ALTER TABLE ShippingRate ADD CONSTRAINT ShippingService_ShippingRate 
-    FOREIGN KEY (shippingRateGroupID) REFERENCES ShippingService (ID) ON DELETE CASCADE;
+    FOREIGN KEY (shippingServiceID) REFERENCES ShippingService (ID) ON DELETE CASCADE;
 
 ALTER TABLE ProductFileGroup ADD CONSTRAINT Product_ProductFileGroup 
     FOREIGN KEY (productID) REFERENCES Product (ID);
