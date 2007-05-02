@@ -1,0 +1,12 @@
+_are_you_sure_you_want_to_delete_this_zone=Are you sure you want to delete this zone
+_are_you_sure_you_want_to_delete_this_address_mask=Are you sure you want to delete this address mask
+_are_you_sure_you_want_to_delete_this_city_mask=Are you sure you want to delete this city mask
+_are_you_sure_you_want_to_delete_this_zip_mask=Are you sure you want to delete this zip mask
+_name=Name
+_city_mask=City mask
+_zip_mask=Zip mask
+_address_mask=Address mask
+_Add_mask=Add new mask
+
+#errors
+_error_mask_is_empty=Mask is empty
