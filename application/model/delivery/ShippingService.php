@@ -10,6 +10,9 @@ ClassLoader::import("application.model.delivery.*");
  */
 class ShippingService extends MultilingualObject 
 {
+    const WEIGHT_BASED = 0;
+    const SUBTOTAL_BASED = 1;
+    
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -40,11 +43,19 @@ class ShippingService extends MultilingualObject
 	/**
 	 * Create new shipping service
 	 * 
+	 * @param DeliveryZone $deliveryZone Delivery zone
+	 * @param string $defaultLanguageName Service name in default language
+	 * @param integer $calculationCriteria Shipping price calculation criteria. 0 for weight based calculations, 1 for subtotal based calculations
 	 * @return ShippingService
 	 */
-	public static function getNewInstance()
+	public static function getNewInstance(DeliveryZone $deliveryZone, $defaultLanguageName, $calculationCriteria)
 	{
-	  	return ActiveRecord::getNewInstance(__CLASS__);
+        $instance = parent::getNewInstance(__CLASS__);
+        $instance->deliveryZone->set($deliveryZone);
+        $instance->setValueByLang('name', Store::getInstance()->getDefaultLanguageCode(), $defaultLanguageName);
+        $instance->rangeType->set($calculationCriteria);
+        
+        return $instance;
 	}
 }
 

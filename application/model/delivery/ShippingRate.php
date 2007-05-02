@@ -46,11 +46,56 @@ class ShippingRate extends MultilingualObject
 	/**
 	 * Create new shipping rate instance
 	 * 
+	 * @param ShippingService $shippingService Shipping service instance
+	 * @param float $rangeStart Lower range limit
+	 * @param float $rangeEnd Higher range limit
 	 * @return ShippingRate
 	 */
-	public static function getNewInstance()
+	public static function getNewInstance(ShippingService $shippingService, $rangeStart, $rangeEnd)
 	{
-	  	return ActiveRecord::getNewInstance(__CLASS__);
+	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
+	  	$instance->shippingService->set($shippingService);
+	  	
+	  	$instance->setRangeStart($rangeStart);
+	  	$instance->setRangeEnd($rangeEnd);
+	  	
+	  	return $instance;
+	}
+	
+	public function setRangeStart($rangeStart)
+	{
+	    return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeStart->set($rangeStart) : $this->subtotalRangeStart->set($rangeStart);
+	}
+	
+	public function setRangeEnd($rangeEnd)
+	{
+	    return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeEnd->set($rangeEnd) : $this->subtotalRangeEnd->set($rangeEnd);
+	}
+	
+	public function getRangeStart()
+	{
+	    return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeStart->get() : $this->subtotalRangeStart->get();
+	}
+	
+	public function getRangeEnd()
+	{
+	    return ($this->getRangeType() == ShippingService::WEIGHT_BASED) ? $this->weightRangeEnd->get() : $this->subtotalRangeEnd->get();
+	}
+	
+	public function getRangeType()
+	{
+	    if(!$this->isLoaded() && $this->isExistingRecord())
+	    {
+	        $this->load();
+	    }
+	    
+	    $service = $this->shippingService->get();
+	    if(!$service->isLoaded()) 
+	    {
+	        $service->load();
+	    }
+	    
+	    return $service->rangeType->get();
 	}
 }
 

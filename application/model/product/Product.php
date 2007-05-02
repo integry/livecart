@@ -516,6 +516,8 @@ class Product extends MultilingualObject
 	 * Creates a new product instance
 	 *
 	 * @param Category $category
+	 * 
+	 * @return Product
 	 */
 	public static function getNewInstance(Category $category)
 	{
