@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2007-04-26 19:43                                #
+# Created on:            2007-05-02 15:45                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -156,10 +156,12 @@ CREATE TABLE CustomerOrder (
     dateCompleted TIMESTAMP,
     totalAmount FLOAT,
     capturedAmount FLOAT,
+    isFinalized BOOL,
     isPaid BOOL,
     isDelivered BOOL,
     isReturned BOOL,
     isCancelled BOOL,
+    shipping TEXT,
     CONSTRAINT PK_CustomerOrder PRIMARY KEY (ID)
 );
 
@@ -642,7 +644,7 @@ CREATE TABLE DeliveryZoneState (
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE DeliveryZoneCityMask (
-    ID INTEGER NOT NULL AUTO_INCREMENT,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     deliveryZoneID INTEGER UNSIGNED,
     mask VARCHAR(60),
     CONSTRAINT PK_DeliveryZoneCityMask PRIMARY KEY (ID)
@@ -653,7 +655,7 @@ CREATE TABLE DeliveryZoneCityMask (
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE DeliveryZoneZipMask (
-    ID INTEGER NOT NULL AUTO_INCREMENT,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     deliveryZoneID INTEGER UNSIGNED,
     mask VARCHAR(60),
     CONSTRAINT PK_DeliveryZoneZipMask PRIMARY KEY (ID)
@@ -664,7 +666,7 @@ CREATE TABLE DeliveryZoneZipMask (
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE DeliveryZoneAddressMask (
-    ID INTEGER NOT NULL AUTO_INCREMENT,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     deliveryZoneID INTEGER UNSIGNED,
     mask VARCHAR(60),
     CONSTRAINT PK_DeliveryZoneAddressMask PRIMARY KEY (ID)
@@ -725,16 +727,16 @@ CREATE TABLE ProductFileGroup (
 );
 
 # ---------------------------------------------------------------------- #
-# Add table "ShippingRateGroup"                                          #
+# Add table "ShippingService"                                            #
 # ---------------------------------------------------------------------- #
 
-CREATE TABLE ShippingRateGroup (
+CREATE TABLE ShippingService (
     ID INTEGER NOT NULL,
     deliveryZoneID INTEGER UNSIGNED,
     name TEXT,
     position INTEGER UNSIGNED DEFAULT 0,
     rangeType TINYINT COMMENT '0 - weight based range 1 - subtotal based range',
-    CONSTRAINT PK_ShippingRateGroup PRIMARY KEY (ID)
+    CONSTRAINT PK_ShippingService PRIMARY KEY (ID)
 );
 
 # ---------------------------------------------------------------------- #
@@ -933,11 +935,11 @@ ALTER TABLE TaxRate ADD CONSTRAINT TaxType_TaxRate
 ALTER TABLE TaxRate ADD CONSTRAINT DeliveryZone_TaxRate 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
 
-ALTER TABLE ShippingRate ADD CONSTRAINT ShippingRateGroup_ShippingRate 
-    FOREIGN KEY (shippingRateGroupID) REFERENCES ShippingRateGroup (ID) ON DELETE CASCADE;
+ALTER TABLE ShippingRate ADD CONSTRAINT ShippingService_ShippingRate 
+    FOREIGN KEY (shippingRateGroupID) REFERENCES ShippingService (ID) ON DELETE CASCADE;
 
 ALTER TABLE ProductFileGroup ADD CONSTRAINT Product_ProductFileGroup 
     FOREIGN KEY (productID) REFERENCES Product (ID);
 
-ALTER TABLE ShippingRateGroup ADD CONSTRAINT DeliveryZone_ShippingRateGroup 
+ALTER TABLE ShippingService ADD CONSTRAINT DeliveryZone_ShippingService 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;

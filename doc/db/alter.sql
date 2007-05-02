@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-04-26 18:12                                #
+# Created on:            2007-05-02 15:43                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -141,17 +141,11 @@ ALTER TABLE TaxRate DROP FOREIGN KEY TaxType_TaxRate;
 
 ALTER TABLE TaxRate DROP FOREIGN KEY DeliveryZone_TaxRate;
 
-ALTER TABLE ShippingRate DROP FOREIGN KEY ShippingRateGroup_ShippingRate;
+ALTER TABLE ShippingRate DROP FOREIGN KEY ShippingService_ShippingRate;
 
 ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 
-ALTER TABLE ShippingRateGroup DROP FOREIGN KEY DeliveryZone_ShippingRateGroup;
-
-# ---------------------------------------------------------------------- #
-# Modify table "CustomerOrder"                                           #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE CustomerOrder CHANGE isCanceled isCancelled BOOL;
+ALTER TABLE ShippingService DROP FOREIGN KEY DeliveryZone_ShippingService;
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
@@ -349,11 +343,11 @@ ALTER TABLE TaxRate ADD CONSTRAINT TaxType_TaxRate
 ALTER TABLE TaxRate ADD CONSTRAINT DeliveryZone_TaxRate 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
 
-ALTER TABLE ShippingRate ADD CONSTRAINT ShippingRateGroup_ShippingRate 
-    FOREIGN KEY (shippingRateGroupID) REFERENCES ShippingRateGroup (ID) ON DELETE CASCADE;
+ALTER TABLE ShippingRate ADD CONSTRAINT ShippingService_ShippingRate 
+    FOREIGN KEY (shippingRateGroupID) REFERENCES ShippingService (ID) ON DELETE CASCADE;
 
 ALTER TABLE ProductFileGroup ADD CONSTRAINT Product_ProductFileGroup 
     FOREIGN KEY (productID) REFERENCES Product (ID);
 
-ALTER TABLE ShippingRateGroup ADD CONSTRAINT DeliveryZone_ShippingRateGroup 
+ALTER TABLE ShippingService ADD CONSTRAINT DeliveryZone_ShippingService 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
