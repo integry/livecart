@@ -404,4 +404,6 @@
     'ZM' => 1,
     'ZW' => 1,
   ),
+  'REQUIRE_CVV' => 1,
+  'MAIN_EMAIL' => '',
 ); ?>
