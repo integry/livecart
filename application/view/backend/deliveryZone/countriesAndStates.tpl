@@ -50,7 +50,7 @@
     
     <fieldset class="countriesAndStates_cityMasks error">
     	<label>{t _city_mask}</label>
-        <fieldset class="error">
+        <fieldset>
             <ul class="activeList activeList_add_delete activeList_add_edit countriesAndStates_cityMasksList" id="countriesAndStates_{$zoneID}_cityMasks">
                 {foreach from=$cityMasks item="mask"}
                     <li id="countriesAndStates_{$zoneID}_cityMasks_{$mask.ID}">
@@ -63,7 +63,7 @@
                     ActiveList.prototype.getInstance("countriesAndStates_{/literal}{$zoneID}{literal}_cityMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksCity, function() {});
                 {/literal}
             </script>
-            <fieldset>
+            <fieldset class="error">
                 {textfield name="mask_new" class="countriesAndStates_newMask"}<input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
                 <span class="errorText hidden"> </span>
             </fieldset>
@@ -72,7 +72,7 @@
     
     <fieldset class="countriesAndStates_zipMasks error">
     	<label>{t _zip_mask}</label>
-        <fieldset class="error">
+        <fieldset>
             <ul class="activeList activeList_add_delete activeList_add_edit countriesAndStates_zipMasksList" id="countriesAndStates_{$zoneID}_zipMasks">
                 {foreach from=$zipMasks item="mask"}
                     <li id="countriesAndStates_{$zoneID}_zipMasks_{$mask.ID}">
@@ -85,7 +85,7 @@
                     ActiveList.prototype.getInstance("countriesAndStates_{/literal}{$zoneID}{literal}_zipMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksZip, function() {});
                 {/literal}
             </script>
-            <fieldset>
+            <fieldset class="error">
                 {textfield name="mask_new" class="countriesAndStates_newMask"}<input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
                 <span class="errorText hidden"> </span>
             </fieldset>
@@ -94,7 +94,7 @@
     
     <fieldset class="countriesAndStates_addressMasks error">
     	<label>{t _address_mask}</label>
-        <fieldset class="error">
+        <fieldset>
             <ul class="activeList activeList_add_delete activeList_add_edit countriesAndStates_addressMasksList" id="countriesAndStates_{$zoneID}_addressMasks">
                 {foreach from=$addressMasks item="mask"}
                     <li id="countriesAndStates_{$zoneID}_addressMasks_{$mask.ID}">
@@ -107,7 +107,7 @@
                     ActiveList.prototype.getInstance("countriesAndStates_{/literal}{$zoneID}{literal}_addressMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksAddress, function() {});
                 {/literal}
             </script>
-            <fieldset>
+            <fieldset class="error">
                 {textfield name="mask_new" class="countriesAndStates_newMask"}<input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
                 <span class="errorText hidden"> </span>
             </fieldset>

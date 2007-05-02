@@ -57,6 +57,11 @@
 
 {literal}
 <script type="text/javascript">
+    Backend.DeliveryZone.prototype.Messages.confirmZoneDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_zone}{literal}';
+    Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmAddressDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_address_mask}{literal}';
+    Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmCityDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_city_mask}{literal}';
+    Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmZipDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_zip_mask}{literal}';
+    
     Backend.DeliveryZone.prototype.Links.edit = '{/literal}{link controller=backend.deliveryZone action=edit}?id=_id_{literal}';
     Backend.DeliveryZone.prototype.Links.remove = '{/literal}{link controller=backend.deliveryZone action=delete}{literal}';
     Backend.DeliveryZone.prototype.Links.save = '{/literal}{link controller=backend.deliveryZone action=save}{literal}';

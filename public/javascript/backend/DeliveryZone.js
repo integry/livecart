@@ -2,6 +2,7 @@ Backend.DeliveryZone = Class.create();
 Backend.DeliveryZone.prototype = 
 {
   	Links: {},
+    Messages: {},
     
     treeBrowser: null,
   	
@@ -63,22 +64,26 @@ Backend.DeliveryZone.prototype =
     {
         var $this = this;
         
-		new Ajax.Request(
-			Backend.DeliveryZone.prototype.Links.remove + '/' + Backend.DeliveryZone.prototype.activeZone,
-			{
-				onComplete: function(response) { 
-                    response = eval("(" + response.responseText + ")");
-                    if('success' == response.status)
-                    {
-                        $this.treeBrowser.deleteItem(Backend.DeliveryZone.prototype.activeZone, true);
-                        var firstId = false;
-                        if(firstId = parseInt($this.treeBrowser._globalIdStorage[1]))
+        if(confirm(Backend.DeliveryZone.prototype.Messages.confirmZoneDelete)) 
+        {
+		    new Ajax.Request(
+    			Backend.DeliveryZone.prototype.Links.remove + '/' + Backend.DeliveryZone.prototype.activeZone,
+    			{
+				    onComplete: function(response) { 
+                        response = eval("(" + response.responseText + ")");
+                        if('success' == response.status)
                         {
-                            $this.treeBrowser.selectItem(firstId, true);
+                            $this.treeBrowser.deleteItem(Backend.DeliveryZone.prototype.activeZone, true);
+                            var firstId = false;
+                            if(firstId = parseInt($this.treeBrowser._globalIdStorage[1]))
+                            {
+                                $this.treeBrowser.selectItem(firstId, true);
+                            }
                         }
                     }
-                }
-			});
+			    }
+            );
+        }
     },
     
 	addNewZone: function()
@@ -98,7 +103,7 @@ Backend.DeliveryZone.prototype =
 	{
         Backend.DeliveryZone.prototype.treeBrowser.insertNewItem(0, response.ID, $("newZoneInput").value, 0, 0, 0, 0, 'SELECT');
         $("newZoneInput").value = '';
-        //this.activateZone(response.ID);
+        this.activateZone(response.ID);
 	},
     
     craftTabUrl: function(url)
@@ -123,7 +128,7 @@ Backend.DeliveryZone.prototype =
 	
 	activateZone: function(id)
 	{
-		Backend.DeliveryZone.prototype.activeZone = id;
+        Backend.DeliveryZone.prototype.activeZone = id;
 		Backend.DeliveryZone.prototype.treeBrowser.showFeedback(id);
         
         this.tabControl.activateTab($('tabDeliveryZoneCountry'), function() { Backend.DeliveryZone.prototype.treeBrowser.hideFeedback(id) });
@@ -166,11 +171,15 @@ Backend.DeliveryZone.CountriesAndStates = Class.create();
 Backend.DeliveryZone.CountriesAndStates.prototype = 
 {
     Links: {},
+    Messages: {},
     
     CallbacksCity: {
         'beforeDelete': function(li) 
         {
-            return Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteCityMask + "/" + this.getRecordId(li);
+            if(confirm(Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmAddressDelete))
+            {
+                return Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteCityMask + "/" + this.getRecordId(li);
+            }
         },
         'afterDelete': function(li, response)
         {
@@ -189,12 +198,10 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
     CallbacksZip: {
         'beforeDelete': function(li) 
         {
-            return Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteZipMask + "/" + this.getRecordId(li);                
-            new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveAddressMask + "/" + this.getRecordId(li),
+            if(confirm(Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmAddressDelete))
             {
-    			method: 'post',
-    			parameters: 'mask=' + li.down('input').value
-            });
+                return Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteZipMask + "/" + this.getRecordId(li);  
+            }              
         },
         'afterDelete': function(li, response)
         {
@@ -213,11 +220,14 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
     CallbacksAddress: {
         'beforeDelete': function(li) 
         {
-            return Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteAddressMask + "/" + this.getRecordId(li);
+            if(confirm(Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmAddressDelete))
+            {
+                return Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteAddressMask + "/" + this.getRecordId(li);
+            }
         },
         'afterDelete': function(li, response)
         {
-            response = eval('(' + response + ')')
+            response = eval('(' + response + ')');
             
             if('success' == response.status) {
                 this.remove(li);     
