@@ -10,45 +10,36 @@ ClassLoader::import('application.model.user.*');
 class UserController extends FrontendController
 {
  	const PASSWORD_MIN_LENGTH = 5;
+ 	
+ 	const COUNT_RECENT_ORDERS = 5;
  
     public function init()
     {
         parent::init();  
-        $this->addBreadCrumb($this->translate('_your_account'), $this->router->createUrl(array('controller' => 'user')));         
-                
-		$action = $this->request->getActionName();
-                
-        if ('index' == $action)
-        {
-            return false;
-        }       
-
-        /*
-		$this->addBreadCrumb($this->translate('_select_addresses'), $router->createUrl(array('controller' => 'checkout', 'action' => 'selectAddress')));         		
-		
-    	if ('selectAddress' == $action)
-    	{
-			return false;	
-		}
-                
-        $this->addBreadCrumb($this->translate('_shipping'), $router->createUrl(array('controller' => 'checkout', 'action' => 'shipping')));         		
-		
-    	if ('shipping' == $action)
-    	{
-			return false;	
-		}
-
-        $this->addBreadCrumb($this->translate('_pay'), $router->createUrl(array('controller' => 'checkout', 'action' => 'pay')));         		
-        */
-		
+        $this->addBreadCrumb($this->translate('_your_account'), $this->router->createUrl(array('controller' => 'user')));         		
     }
     
     /**
      *	@role login
      */
 	public function index()
-    {
+    {		
+		// get recent orders
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+		$f->setOrder(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
+		$f->setLimit(self::COUNT_RECENT_ORDERS);
+		
+		$orders = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
+		
+		foreach ($orders as $order)
+		{
+            $order->getShipments();
+            $order->loadItems();
+            $order->loadAddresses();
+        }
+
 		$response = new ActionResponse();
+		$response->setValue('orders', $orders->toArray());
 		
 		return $response;
 	}

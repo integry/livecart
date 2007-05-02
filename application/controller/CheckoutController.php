@@ -53,6 +53,10 @@ ClassLoader::import('application.model.Currency');
  */
 class CheckoutController extends FrontendController
 {
+    const STEP_ADDRESS = 3;
+    const STEP_SHIPPING = 4;
+    const STEP_PAYMENT = 5;
+    
     public function init()
     {
         parent::init();  
@@ -220,19 +224,12 @@ class CheckoutController extends FrontendController
      */   
     public function shipping()
     {
-	    // get shipping address
         $order = CustomerOrder::getInstance();
 
-        if ($redirect = $this->validateOrder($order))
+        if ($redirect = $this->validateOrder($order, self::STEP_SHIPPING))
         {
 			return $redirect;
 		}
-
-        $address = $order->shippingAddress->get();
-        if (!$address)
-        {
-            return new ActionRedirectResponse('checkout', 'selectAddress');
-        }
         
         $shipments = $order->getShipments();
         $form = $this->buildShippingForm($shipments);
@@ -242,7 +239,10 @@ class CheckoutController extends FrontendController
             $shipmentRates = $zone->getShippingRates($shipment);
             $shipment->setAvailableRates($shipmentRates);
             $rates[$key] = $shipmentRates;
-            $form->setValue('shipping_' . $key, $shipment->getSelectedRate()->getServiceID());
+            if ($shipment->getSelectedRate())
+            {
+                $form->setValue('shipping_' . $key, $shipment->getSelectedRate()->getServiceID());                
+            }
         }
 
         $order->syncToSession();
@@ -299,18 +299,12 @@ class CheckoutController extends FrontendController
     public function pay()
     {
         $order = CustomerOrder::getInstance();    
-		$order->billingAddress->get()->load();   
-		$order->shippingAddress->get()->load();   
+        $order->loadAddresses();	
         
-        if ($redirect = $this->validateOrder($order))
+        if ($redirect = $this->validateOrder($order, self::STEP_PAYMENT))
         {
 			return $redirect;
 		}       
-        
-        if (!$order->isShippingSelected())
-        {
-            return new ActionRedirectResponse('checkout', 'shipping');
-        }
         
         $currency = $this->request->getValue('currency', $this->store->getDefaultCurrencyCode());
                 
@@ -338,16 +332,10 @@ class CheckoutController extends FrontendController
         ClassLoader::import('application.model.order.*');        
         $order = CustomerOrder::getInstance();		
 
-        if ($redirect = $this->validateOrder($order))
+        if ($redirect = $this->validateOrder($order, self::STEP_PAYMENT))
         {
 			return $redirect;
 		}
-
-        // the order might not be ready for completion yet
-        if (!$order->isShippingSelected())
-        {
-            return new ActionRedirectResponse('checkout', 'shipping');
-        }
 
 		if (!$this->buildCreditCardValidator()->isValid())
 		{
@@ -425,7 +413,7 @@ class CheckoutController extends FrontendController
      *	@return ActionRedirectResponse
      *	@return false
 	 */
-	private function validateOrder(CustomerOrder $order)
+	private function validateOrder(CustomerOrder $order, $step = 0)
     {
 		// no items in shopping cart
 		if (!count($order->getShoppingCartItems()))
@@ -439,6 +427,15 @@ class CheckoutController extends FrontendController
 				return new ActionRedirectResponse('index', 'index');
 			}
 		}
+		
+        // shipping address selected
+        if ($step >= self::STEP_SHIPPING)
+        {            
+            if (!$order->shippingAddress->get() || !$order->billingAddress->get())
+            {
+                return new ActionRedirectResponse('checkout', 'selectAddress');
+            }            
+        }
 		
 		return false;		
 	}

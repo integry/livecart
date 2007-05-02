@@ -33,11 +33,15 @@ h2
 	margin-bottom: 10px;
 	padding-top: 7px;
 	border-top: 1px dashed #AAAAAA;
+    font-size: 150%;
 }
 
 h3
 {
-	font-size: 1em;
+	margin-top: 20px;
+	margin-bottom: 10px;
+	padding-top: 7px;
+    font-size: 150%;
 }
 
 td
@@ -660,6 +664,27 @@ a.cvv
 #payItems
 {
 	margin-top: 30px;
+}
+
+/*************************** 
+	User account
+***************************/
+ul#userMenu
+{   
+    clear: both;
+}
+
+#userMenu li
+{
+    float: left;
+    margin-left: 20px;
+    list-style-type: circle;
+}
+
+#userMenu li#homeMenu
+{
+    list-style-type: none;
+    margin-left: 0px;
 }
 
 /*************************** 

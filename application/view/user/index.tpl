@@ -6,8 +6,23 @@
 	
 	<h1>{t _your_account}</h1>
 	
-	<a href="{link controller=user action=logout}">{t Sign Out}</a>
-
+	<ul id="userMenu">
+	   <li id="homeMenu">Your Account Home</li>
+	   <li id="ordersMenu">Orders</li>
+	   <li id="addressMenu">Addresses</li>
+	   <li id="emailMenu">Change E-mail</li>
+	   <li id="passwordMenu">Change Password</li>
+	   <li><a href="{link controller=user action=logout}">{t Sign Out}</a></li>
+	</ul>
+	
+	<div class="clear"></div>
+    
+    <h2>{t Your Recent Orders}</h2>
+    {foreach from=$orders item="order"}
+    
+    {$order.dateCreated}
+    {/foreach}
+    
 </div>
 
 {include file="layout/frontend/footer.tpl"}

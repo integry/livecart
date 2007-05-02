@@ -112,6 +112,19 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 			$this->shipments = unserialize($this->shipping->get());
 		}
 	}
+	
+	public function loadAddresses()
+	{
+        if ($this->billingAddress->get())
+        {
+            $this->billingAddress->get()->load();               
+        }
+
+		if ($this->shippingAddress->get())
+		{
+            $this->shippingAddress->get()->load(); 
+        }
+    }
     
     /**
      *	Add a product to shopping basket

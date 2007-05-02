@@ -22,7 +22,7 @@
 
     {form handle=$form action="controller=user action=processCheckoutRegistration" method="POST"}
         
-        <h2>{t _contact_info}</h2>               
+        <h3>{t _contact_info}</h3>               
 
             <p class="required">
                 <label for="firstName">{t _your_first_name}:</label>
@@ -68,7 +68,7 @@
         		</fieldset>
             </p>
 
-        <h2>{t _billing_address}</h2>
+        <h3>{t _billing_address}</h3>
 
             <p class="required">
                 <label for="billing_address1">{t _address}:</label>
@@ -124,7 +124,7 @@
         		</fieldset>
             </p>            
 
-        <h2>{t _shipping_address}</h2>
+        <h3>{t _shipping_address}</h3>
         
             <p>
                 {checkbox name="sameAsBilling" checked="checked" class="checkbox"}
