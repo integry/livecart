@@ -7,7 +7,7 @@
 	<h1>{t _your_account}</h1>
 	
 	<ul id="userMenu">
-	   <li id="homeMenu">Your Account Home</li>
+	   <li id="homeMenu"><a href="{link controller=user}">{t Your Account Home}</a></li>
 	   <li id="ordersMenu">Orders</li>
 	   <li id="addressMenu">Addresses</li>
 	   <li id="emailMenu">Change E-mail</li>
@@ -27,9 +27,14 @@
 	    	{if !$order.isPaid}
 	    		<span class="awaitingPayment">{t Awaiting payment} ($order.formattedTotal)</span>.
 	    		{t Make payment for this order}.
+	    	{elseif $order.isReturned}
+	    	    <span class="returned">{t Returned}</span>
+	    	{elseif $order.isDelivered}
+	    	    <span class="delivered">{t Delivered}</span>
+	    	{elseif $order.isMailed}
+	    	    <span class="mailed">{t Mailed}</span>
 	    	{else}
-	    		
-	    	
+	    	    <span class="processing">{t The order is being processed and awaits shipment}</span>
 	    	{/if}
 	    {/if}
     {/foreach}

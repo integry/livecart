@@ -1,11 +1,11 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v4.1.3                     #
+# Script generated with: DeZign for Databases v4.2.0                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-05-02 17:12                                #
+# Created on:            2007-05-03 22:01                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -148,10 +148,18 @@ ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 ALTER TABLE ShippingService DROP FOREIGN KEY DeliveryZone_ShippingService;
 
 # ---------------------------------------------------------------------- #
-# Modify table "ShippingRate"                                            #
+# Modify table "CustomerOrder"                                           #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE ShippingRate CHANGE shippingRateGroupID shippingServiceID INTEGER;
+DROP INDEX IDX_CustomerOrder_1 ON CustomerOrder;
+
+ALTER TABLE CustomerOrder ADD COLUMN isFinalized BOOL;
+
+ALTER TABLE CustomerOrder MODIFY status TINYINT COMMENT '0 - awaiting payment 1 - cancelled 2 - paid 3 - backordered 4 - awaiting shipment 5 - shipped 6 - returned';
+
+ALTER TABLE CustomerOrder MODIFY isFinalized BOOL AFTER capturedAmount;
+
+CREATE INDEX IDX_CustomerOrder_1 ON CustomerOrder (status);
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #

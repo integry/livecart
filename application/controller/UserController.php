@@ -38,7 +38,7 @@ class UserController extends FrontendController
             $order->loadItems();
             $order->loadAddresses();
         }
-		var_dump($orders->toArray());
+
 		$response = new ActionResponse();
 		$response->setValue('orders', $orders->toArray());
 		
