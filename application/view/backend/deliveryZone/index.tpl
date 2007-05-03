@@ -73,7 +73,9 @@
     Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveZipMask = '{/literal}{link controller=backend.deliveryZone action=saveZipMask}{literal}';
     Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteAddressMask = '{/literal}{link controller=backend.deliveryZone action=deleteAddressMask}{literal}';
     Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveAddressMask = '{/literal}{link controller=backend.deliveryZone action=saveAddressMask}{literal}';
-	var zones = new Backend.DeliveryZone({/literal}{$zones}{literal});
+	
+    var zones = new Backend.DeliveryZone({/literal}{$zones}{literal});
+
 </script>
 {/literal}
 

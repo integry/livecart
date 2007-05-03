@@ -57,10 +57,14 @@ TabControl.prototype = {
             var indicator = '<img src="' + self.indicatorImageName + '" class="tabIndicator hidden" alt="Tab indicator" /> ';
             
             Event.observe(link, 'click', function(e) { if(e) Event.stop(e); });
-            Event.observe(li, 'click', function(e) { 
-                if(e) Event.stop(e); 
-                self.handleTabClick({'target': li}) 
-            });
+            
+            li.onclick = function(e) { 
+                if(!e) e = window.event;
+                if(e) Event.stop(e);
+                
+                self.handleTabClick({'target': li}); 
+            } 
+   
 			Event.observe(li, 'mouseover', function(e) { 
                 if(e) Event.stop(e); 
                 self.handleTabMouseOver({'target': li}) 
@@ -76,7 +80,7 @@ TabControl.prototype = {
     
     __init__: function()
     {
-        this.activateTab();
+        //this.activateTab();
     },
 
     decorateTabs: function()
@@ -130,17 +134,21 @@ TabControl.prototype = {
     
     addHistory: function()
     {
-        var locationHash = "#" + Backend.ajaxNav.getHash();
-        this.nodes.tabListElements.each(function(tab)
+        var self = this;
+        setTimeout(function()
         {
-            if(locationHash.indexOf("#" + tab.id) !== -1)
+            var locationHash = "#" + Backend.ajaxNav.getHash();
+            self.nodes.tabListElements.each(function(tab)
             {
-                locationHash = locationHash.substring(0, locationHash.indexOf(tab.id) - 1);
-                throw $break;
-            }
-        });
-        
-		Backend.ajaxNav.add(locationHash.substring(1) + "#" + this.activeTab.id);
+                if(locationHash.indexOf("#" + tab.id) !== -1)
+                {
+                    locationHash = locationHash.substring(0, locationHash.indexOf(tab.id) - 1);
+                    throw $break;
+                }
+            });
+            
+            Backend.ajaxNav.add(locationHash.substring(1) + "#" + self.activeTab.id);
+        }, dhtmlHistory.currentWaitTime);
     },
 
 	activateTab: function(targetTab, onComplete)
@@ -183,7 +191,7 @@ TabControl.prototype = {
         {
             onComplete();
         }
-        
+       
         this.addHistory();
 	},
 

@@ -12,6 +12,7 @@ Backend.DeliveryZone.prototype =
 	{
         
 		Backend.DeliveryZone.prototype.treeBrowser = new dhtmlXTreeObject("deliveryZoneBrowser","","", false);
+		Backend.DeliveryZone.prototype.treeBrowser.setOnClickHandler(this.activateZone);
 		
 		Backend.DeliveryZone.prototype.treeBrowser.def_img_x = 'auto';
 		Backend.DeliveryZone.prototype.treeBrowser.def_img_y = 'auto';
@@ -73,11 +74,11 @@ Backend.DeliveryZone.prototype =
                         response = eval("(" + response.responseText + ")");
                         if('success' == response.status)
                         {
-                            $this.treeBrowser.deleteItem(Backend.DeliveryZone.prototype.activeZone, true);
+                            Backend.DeliveryZone.prototype.treeBrowser.deleteItem(Backend.DeliveryZone.prototype.activeZone, true);
                             var firstId = false;
-                            if(firstId = parseInt($this.treeBrowser._globalIdStorage[1]))
+                            if(firstId = parseInt(Backend.DeliveryZone.prototype.treeBrowser._globalIdStorage[1]))
                             {
-                                $this.treeBrowser.selectItem(firstId, true);
+                                Backend.DeliveryZone.prototype.treeBrowser.selectItem(firstId, true);
                             }
                         }
                     }
@@ -121,19 +122,29 @@ Backend.DeliveryZone.prototype =
 		var self = this;
         $A(treeBranch).each(function(node)
 		{
-			self.treeBrowser.insertNewItem(rootId, node.ID, node.name, null, 0, 0, 0, '', 1);
-			self.treeBrowser.showItemSign(node.ID, 0);
+            Backend.DeliveryZone.prototype.treeBrowser.insertNewItem(rootId, node.ID, node.name, null, 0, 0, 0, '', 1);
+            self.treeBrowser.showItemSign(node.ID, 0);
+            var zone = document.getElementsByClassName("standartTreeRow", $("deliveryZoneBrowser")).last();
+            zone.id = 'zone_' + node.ID;
+            zone.onclick = function()
+            {
+                Backend.DeliveryZone.prototype.treeBrowser.selectItem(node.ID, true);
+            }
 		});
 	},
 	
 	activateZone: function(id)
 	{
-        Backend.DeliveryZone.prototype.activeZone = id;
-		Backend.DeliveryZone.prototype.treeBrowser.showFeedback(id);
-        
-        this.tabControl.activateTab($('tabDeliveryZoneCountry'), function() { Backend.DeliveryZone.prototype.treeBrowser.hideFeedback(id) });
-        
-		;
+        if(Backend.DeliveryZone.prototype.activeZone != id)
+        {
+            Backend.DeliveryZone.prototype.activeZone = id;
+    		Backend.DeliveryZone.prototype.treeBrowser.showFeedback(id);
+            
+            Backend.ajaxNav.add('zone_' + id);
+            this.tabControl.activateTab($('tabDeliveryZoneCountry'), function() { 
+                Backend.DeliveryZone.prototype.treeBrowser.hideFeedback(id);
+            });
+        }
 	},
 	
 	displayCategory: function(response)
@@ -163,7 +174,7 @@ Backend.DeliveryZone.prototype =
 	displaySaveConfirmation: function()
 	{
 		new Backend.SaveConfirmationMessage(document.getElementsByClassName('yellowMessage')[0]);			
-	}
+	} 
 }
 
 Backend.DeliveryZone.CountriesAndStates = Class.create();
