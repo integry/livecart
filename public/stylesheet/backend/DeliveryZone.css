@@ -40,6 +40,12 @@ p.checkbox
     text-align: left;
 }
 
-#deliveryZoneManagerContainer .activeList .errorText {
+#deliveryZoneManagerContainer .activeList .errorText 
+{
     float: none;
+}
+
+.shippingService_rateFloatValue
+{
+    width: 60px;   
 }

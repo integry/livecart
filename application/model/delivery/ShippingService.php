@@ -57,6 +57,37 @@ class ShippingService extends MultilingualObject
         
         return $instance;
 	}
+
+	/**
+	 * Load delivery services record set
+	 *
+	 * @param ARSelectFilter $filter
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
+	{
+		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+	}
+	
+	/**
+	 * Load delivery services record by Delivery zone
+	 *
+	 * @param ARSelectFilter $filter
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+	public static function getByDeliveryZone(DeliveryZone $deliveryZone, $loadReferencedRecords = false)
+	{
+ 	    $filter = new ARSelectFilter();
+
+		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"), 'ASC');
+		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "deliveryZoneID"), $deliveryZone->getID()));
+		
+		return self::getRecordSet($filter, $loadReferencedRecords);
+	}
 }
 
 ?>

@@ -32,6 +32,7 @@ if (!defined('TEST_INITIALIZED'))
 }
 
 ClassLoader::import('application.system.*');
+ClassLoader::import('library.locale.Locale');
 ClassLoader::import('test.mock.Swift_Connection_Fake');
 
 Email::$connection = new Swift_Connection_Fake();

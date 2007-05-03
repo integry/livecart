@@ -13,6 +13,11 @@ ClassLoader::import('library.shipping.ShippingRateSet');
  */
 class DeliveryZone extends MultilingualObject 
 {
+    public function __construct($data = array())
+    {
+        parent::__construct($data);
+    }
+    
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);

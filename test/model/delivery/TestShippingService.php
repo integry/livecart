@@ -48,5 +48,17 @@ class TestShippingService extends UnitTest
         $this->assertTrue($service->deliveryZone->get() === $this->deliveryZone);
         $this->assertEqual($service->rangeType->get(), ShippingService::SUBTOTAL_BASED);
     }
+
+    public function testGetServicesByDeliveryZone()
+    {
+        $service1 = ShippingService::getNewInstance($this->deliveryZone, 'Test service 1', ShippingService::SUBTOTAL_BASED);
+        $service1->save();
+        $service2 = ShippingService::getNewInstance($this->deliveryZone, 'Test service 2', ShippingService::SUBTOTAL_BASED);
+        $service2->save();
+        
+        $services = ShippingService::getByDeliveryZone($this->deliveryZone);
+        $this->assertTrue($service1 === $services->get(0));
+        $this->assertTrue($service2 === $services->get(1));
+    }
 }
 ?>

@@ -85,13 +85,7 @@ class DeliveryZoneController extends StoreManagementController
 	    
 	    return $response;
 	}
-	
-	public function shippingRates() 
-	{
-	    if(!($id = (int)$this->request->getValue('id'))) return;
-	    
-	    return new RawResponse('Shipping rates ' . $id);
-	}
+
 	
 	public function taxRates() 
 	{

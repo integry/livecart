@@ -1,7 +1,10 @@
-_are_you_sure_you_want_to_delete_this_zone=Are you sure you want to delete this zone
-_are_you_sure_you_want_to_delete_this_address_mask=Are you sure you want to delete this address mask
-_are_you_sure_you_want_to_delete_this_city_mask=Are you sure you want to delete this city mask
-_are_you_sure_you_want_to_delete_this_zip_mask=Are you sure you want to delete this zip mask
+_are_you_sure_you_want_to_delete_this_zone=Are you sure you want to delete this zone?
+_are_you_sure_you_want_to_delete_this_address_mask=Are you sure you want to delete this address mask?
+_are_you_sure_you_want_to_delete_this_city_mask=Are you sure you want to delete this city mask?
+_are_you_sure_you_want_to_delete_this_zip_mask=Are you sure you want to delete this zip mask?
+_are_you_sure_you_want_to_delete_this_rate=Are you sure you want to delete this rate?
+_are_you_sure_you_want_to_delete_this_service=Are you sure you want to delete this service?
+
 _name=Name
 _city_mask=City mask
 _zip_mask=Zip mask

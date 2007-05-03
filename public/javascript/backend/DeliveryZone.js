@@ -178,7 +178,6 @@ Backend.DeliveryZone.prototype =
 }
 
 Backend.DeliveryZone.CountriesAndStates = Class.create();
-
 Backend.DeliveryZone.CountriesAndStates.prototype = 
 {
     Links: {},
@@ -616,4 +615,172 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         this.moveSelectedOptions(this.nodes.activeStates, this.nodes.inactiveStates);
         this.sendSelectsData(this.nodes.activeStates, this.nodes.inactiveStates, Backend.DeliveryZone.prototype.Links.saveStates);
     },
+}
+
+
+
+
+
+
+
+
+Backend.DeliveryZone.ShippingService = Class.create();
+Backend.DeliveryZone.ShippingService.prototype = 
+{
+    Links: {},
+    Messages: {},
+ 
+    ServiceCallbacks: {
+        'beforeDelete': function(li) 
+        {
+            if(confirm(Backend.DeliveryZone.ShippingRate.prototype.Messages.confirmServiceDelete))
+            {
+                return Backend.DeliveryZone.ShippingRate.prototype.Links.deleteService + "/" + this.getRecordId(li);
+            }
+        },
+        'afterDelete': function(li, response)
+        {
+            response = eval('(' + response + ')')
+            
+            if('success' == response.status) {
+                this.remove(li);     
+            }
+        },
+        'beforeEdit': function(li) 
+        {
+            console.info('before edit');
+        },
+        'afterEdit': function(li, response) 
+        {
+            console.info('after edit');
+        },   
+
+        beforeSort:     function(li, order)
+        {
+            return Backend.DeliveryZone.ShippingService.prototype.Links.sortServices + '?target=' + "shippingService_servicesList" + "&" + order
+        },
+    
+        afterSort:      function(li, response) { }
+    },
+     
+    instances: {},
+    
+    prefix: 'shippingService_',
+    
+    initialize: function(root, service)
+    {
+        this.service = service;
+        
+        this.findUsedNodes(root);
+        
+        new SectionExpander(this.nodes.root);
+    },
+        
+    getInstance: function(rootNode, service)
+    {
+        var rootId = $(rootNode).id;
+        if(!Backend.DeliveryZone.ShippingService.prototype.instances[rootId])
+        {
+            Backend.DeliveryZone.ShippingService.prototype.instances[rootId] = new Backend.DeliveryZone.ShippingService(rootId, service);
+        }
+        
+        return Backend.DeliveryZone.ShippingService.prototype.instances[rootId];
+    },
+    
+    findUsedNodes: function(root)
+    {
+        this.nodes = {};
+        
+        this.nodes.root = $(root);
+    },
+    
+    showNewForm: function()
+    {
+        ActiveForm.prototype.hideMenuItems($(this.prefix + "menu_" + this.service.DeliveryZone.ID), [$(this.prefix + "new_" + this.service.DeliveryZone.ID + "_cancel")]);
+        ActiveForm.prototype.showNewItemForm($(this.prefix + "new_" + this.service.DeliveryZone.ID + "_show"), $(this.prefix + "new_service_" + this.service.DeliveryZone.ID + "_form")); 
+    }
+}
+
+
+
+
+
+
+
+
+Backend.DeliveryZone.ShippingRate = Class.create();
+Backend.DeliveryZone.ShippingRate.prototype = 
+{
+    Links: {},
+    Messages: {},
+ 
+    RatesCallbacks: {
+        'beforeDelete': function(li) 
+        {
+            if(confirm(Backend.DeliveryZone.ShippingRate.prototype.Messages.confirmRateDelete))
+            {
+                return Backend.DeliveryZone.ShippingRate.prototype.Links.deleteRate + "/" + this.getRecordId(li);
+            }
+        },
+        'afterDelete': function(li, response)
+        {
+            response = eval('(' + response + ')')
+            
+            if('success' == response.status) {
+                this.remove(li);     
+            }
+        },
+        'beforeEdit': function(li) 
+        {
+            console.info('before edit');
+        },
+        'afterEdit': function(li, response) 
+        {
+            console.info('after edit');
+        },
+
+        beforeSort:     function(li, order)
+        {
+            return Backend.DeliveryZone.ShippingRate.prototype.Links.sortRates + '?target=' + "shippingService_ratesList" + "&" + order
+        },
+    
+        afterSort:      function(li, response) { }
+    },
+    
+    instances: {},
+    
+    prefix: 'shippingService_',
+    
+    initialize: function(root, rate)
+    {
+        this.rate = rate;
+        
+        this.findUsedNodes(root);
+        
+        new SectionExpander(this.nodes.root);
+    },
+        
+    getInstance: function(rootNode, rate)
+    {
+        var rootId = $(rootNode).id;
+        if(!Backend.DeliveryZone.ShippingRate.prototype.instances[rootId])
+        {
+            Backend.DeliveryZone.ShippingRate.prototype.instances[rootId] = new Backend.DeliveryZone.ShippingRate(rootId, rate);
+        }
+        
+        return Backend.DeliveryZone.ShippingRate.prototype.instances[rootId];
+    },
+    
+    findUsedNodes: function(root)
+    {
+        this.nodes = {};
+        
+        this.nodes.root = $(root);
+    },
+    
+    showNewForm: function()
+    {
+        ActiveForm.prototype.hideMenuItems($(this.prefix + "rate_menu_" + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID), [$(this.prefix + "new_rate_" + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID + "_cancel")]);
+        ActiveForm.prototype.showNewItemForm($(this.prefix + "new_rate_" + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID + "_show"), $(this.prefix + "new_rate_" + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID + "_form")); 
+    }
 }
