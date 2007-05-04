@@ -84,6 +84,18 @@ table
 	font-weight: bold;
 }
 
+div.confirmationMsg
+{
+    padding: 10px;
+}
+
+div.confirmationMsg div
+{
+    display: inline;
+    padding: 5px;
+    background-color: #FFFCAC;   
+}
+
 /*****************************
 	Layout
 *****************************/
@@ -688,6 +700,63 @@ ul#userMenu
 }
 
 /*************************** 
+	User addresses
+***************************/
+div.addressBlock
+{
+    border: 1px solid #DDDDDD;    
+    background-color: #FAFAFA; 
+    float: left; 
+    padding: 10px; 
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 10px;
+    width: 230px;
+}
+
+/*************************** 
+	Orders
+***************************/
+.orderDetails
+{
+    border: 1px solid #DDDDDD;    
+    background-color: #FAFAFA;
+    float: left;
+    width: 700px;
+    padding: 10px;    
+}
+
+.orderMenu
+{
+    padding-left: 10px;
+}
+
+.orderMenu ul
+{
+    list-style-type: none;
+    margin: 5px;
+    margin-left: 0px;
+    padding-left: 0px;
+}
+
+.orderMenu li
+{
+    padding: 4px;   
+    margin-left: 0px;
+    padding-left: 0px;
+}
+
+.orderMenu .orderTotal
+{
+    padding-top: 10px;
+}
+
+div.orderStatus
+{
+    padding: 6px;
+}
+
+/*************************** 
 	Form styling
 ***************************/
 form
@@ -745,7 +814,7 @@ legend
 label
 {
     float: left;
-    width: 11em;
+    width: 12em;
     cursor: pointer;
 }
 

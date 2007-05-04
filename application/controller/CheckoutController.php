@@ -232,6 +232,7 @@ class CheckoutController extends FrontendController
 		}
         
         $shipments = $order->getShipments();
+
         $form = $this->buildShippingForm($shipments);
         $zone = $order->getDeliveryZone();
         foreach ($shipments as $key => $shipment)
@@ -440,13 +441,13 @@ class CheckoutController extends FrontendController
 		return false;		
 	}
     
-    private function buildShippingForm(ARSet $shipments)
+    private function buildShippingForm(/*ARSet */$shipments)
     {
 		ClassLoader::import("framework.request.validator.Form");
 		return new Form($this->buildShippingValidator($shipments));        
     }
 
-    private function buildShippingValidator(ARSet $shipments)
+    private function buildShippingValidator(/*ARSet */$shipments)
     {
 		ClassLoader::import("framework.request.validator.RequestValidator");        
         $validator = new RequestValidator("shipping", $this->request);

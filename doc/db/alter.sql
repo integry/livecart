@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-05-03 22:01                                #
+# Created on:            2007-05-04 22:01                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -47,9 +47,9 @@ ALTER TABLE OrderedItem DROP FOREIGN KEY CustomerOrder_OrderedItem;
 
 ALTER TABLE OrderedItem DROP FOREIGN KEY Shipment_OrderedItem;
 
-ALTER TABLE User DROP FOREIGN KEY BillingAddress_User;
-
 ALTER TABLE User DROP FOREIGN KEY ShippingAddress_User;
+
+ALTER TABLE User DROP FOREIGN KEY BillingAddress_User;
 
 ALTER TABLE AccessControlList DROP FOREIGN KEY User_AccessControlList;
 
@@ -148,20 +148,6 @@ ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 ALTER TABLE ShippingService DROP FOREIGN KEY DeliveryZone_ShippingService;
 
 # ---------------------------------------------------------------------- #
-# Modify table "CustomerOrder"                                           #
-# ---------------------------------------------------------------------- #
-
-DROP INDEX IDX_CustomerOrder_1 ON CustomerOrder;
-
-ALTER TABLE CustomerOrder ADD COLUMN isFinalized BOOL;
-
-ALTER TABLE CustomerOrder MODIFY status TINYINT COMMENT '0 - awaiting payment 1 - cancelled 2 - paid 3 - backordered 4 - awaiting shipment 5 - shipped 6 - returned';
-
-ALTER TABLE CustomerOrder MODIFY isFinalized BOOL AFTER capturedAmount;
-
-CREATE INDEX IDX_CustomerOrder_1 ON CustomerOrder (status);
-
-# ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
 # ---------------------------------------------------------------------- #
 
@@ -216,11 +202,11 @@ ALTER TABLE OrderedItem ADD CONSTRAINT CustomerOrder_OrderedItem
 ALTER TABLE OrderedItem ADD CONSTRAINT Shipment_OrderedItem 
     FOREIGN KEY (shipmentID) REFERENCES Shipment (ID) ON DELETE SET NULL;
 
+ALTER TABLE User ADD CONSTRAINT ShippingAddress_User 
+    FOREIGN KEY (defaultShippingAddressID) REFERENCES ShippingAddress (ID) ON DELETE SET NULL;
+
 ALTER TABLE User ADD CONSTRAINT BillingAddress_User 
     FOREIGN KEY (defaultBillingAddressID) REFERENCES BillingAddress (ID) ON DELETE SET NULL;
-
-ALTER TABLE User ADD CONSTRAINT ShippingAddress_User 
-    FOREIGN KEY (defaultShippingAddressID) REFERENCES ShippingAddress (ID) ON DELETE CASCADE;
 
 ALTER TABLE AccessControlList ADD CONSTRAINT User_AccessControlList 
     FOREIGN KEY (UserID) REFERENCES User (ID);

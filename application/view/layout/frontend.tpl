@@ -4,8 +4,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-	<title>{$PAGE_TITLE}</title>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />	
+    <title>
+        {if $PAGE_TITLE}
+            {$PAGE_TITLE}
+        {else}
+            {assign var="lastBreadcrumb" value=$breadCrumb|@end}
+            {$lastBreadcrumb.title}
+        {/if}
+    </title>
 	<base href="{baseUrl}" />
 
 	<!-- Css includes -->

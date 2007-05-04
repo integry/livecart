@@ -31,6 +31,8 @@ _err_select_state=Please select or enter the state/province
 _err_short_password=The password you entered is too short, please enter at least %s characters
 _err_password_match=The passwords do not match
 _err_enter_password=Please enter your password
+_err_enter_current_password=Please enter your current password
+_err_incorrect_current_password=Your current password is not entered correctly
 
 ######################## 
 # Add new address
@@ -47,3 +49,30 @@ _continue=Continue
 # Manage user account
 ######################## 
 _your_account=Your Account
+
+######################## 
+# Change password
+######################## 
+_change_pass=Change Password
+_current_pass=Current Password
+_enter_new_pass=Enter new password
+_reenter_new_pass=Re-enter new password
+_complete_pass_change=Complete Password Change
+_confirm_password_change=Your password has been changed
+
+######################## 
+# Change e-mail
+######################## 
+_change_email=Change Your E-mail Address
+_new_email=Enter new e-mail address
+_err_not_unique_email_for_change=The e-mail address you entered is already registered in our system.
+_complete_email_change=Complete E-mail Change
+_confirm_email_change=Your e-mail address has been changed
+
+######################## 
+# Manage shipping and billing addresses
+######################## 
+_manage_addresses=Manage Your Addresses
+_billing_addresses=Billing Addresses
+_shipping_addresses=Shipping Addresses
+_remove_address=Remove Address

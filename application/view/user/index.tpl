@@ -6,37 +6,70 @@
 	
 	<h1>{t _your_account}</h1>
 	
-	<ul id="userMenu">
-	   <li id="homeMenu"><a href="{link controller=user}">{t Your Account Home}</a></li>
-	   <li id="ordersMenu">Orders</li>
-	   <li id="addressMenu">Addresses</li>
-	   <li id="emailMenu">Change E-mail</li>
-	   <li id="passwordMenu">Change Password</li>
-	   <li><a href="{link controller=user action=logout}">{t Sign Out}</a></li>
-	</ul>
+	{if $userConfirm}
+	<div class="confirmationMsg">
+        <div>{$userConfirm}</div>
+	</div>
+	{/if}
 	
-	<div class="clear"></div>
+	{include file="user/userMenu.tpl" current="homeMenu"}
     
     <h2>{t Your Recent Orders}</h2>
     {foreach from=$orders item="order"}    
-	    {$order.formatted_dateCreated.date_long}
-	    {t Status}: 
-		{if $order.isCancelled}
-	    	<span class="cancelled">{t Cancelled}</span>
-	    {else}
-	    	{if !$order.isPaid}
-	    		<span class="awaitingPayment">{t Awaiting payment} ($order.formattedTotal)</span>.
-	    		{t Make payment for this order}.
-	    	{elseif $order.isReturned}
-	    	    <span class="returned">{t Returned}</span>
-	    	{elseif $order.isDelivered}
-	    	    <span class="delivered">{t Delivered}</span>
-	    	{elseif $order.isMailed}
-	    	    <span class="mailed">{t Mailed}</span>
-	    	{else}
-	    	    <span class="processing">{t The order is being processed and awaits shipment}</span>
-	    	{/if}
-	    {/if}
+	    <h3>{$order.formatted_dateCreated.date_long}</h3>
+	    
+        <div class="orderStatus">
+            {t Status}: 
+    		{if $order.isCancelled}
+    	    	<span class="cancelled">{t Cancelled}</span>
+    	    {elseif !$order.isPaid}
+        		<span class="awaitingPayment">{t Awaiting payment} 
+                <strong>{$order.formattedTotal[$order.Currency.ID]}</strong></span>.
+        		{t Make payment for this order}.	    
+    	    {else}
+    	    	{if $order.isReturned}
+    	    	    <span class="returned">{t Returned}</span>
+    	    	{elseif $order.isShipped}
+    	    	    <span class="mailed">{t Shipped}</span>
+    	    	{elseif $order.isAwaitingShipment}
+    	    	    <span class="mailed">{t Awaiting Shipment}</span>
+    	    	{elseif $order.isBackordered}
+    	    	    <span class="mailed">{t The products you ordered are being backordered now and will be shipped to you as soon as they become available.}</span>
+    	    	{else}
+    	    	    <span class="processing">{t The order is being processed}</span>
+    	    	{/if}
+    	    {/if}
+    	</div>
+	    
+	    <div class="orderDetails">
+	    
+	       <div class="orderMenu"style="float: left; width: 200px;">
+	       
+	           <ul>
+	               <li><a href="{link controller=user action=order id=$order.ID}">{t View Details}</a></li>
+	               <li><a href="{link controller=user action=orderInvoice id=$order.ID}">{t Print Invoice}</a></li>
+	           </ul>
+	           
+	           <div class="orderTotal">
+	               {t Total}: <strong>{$order.formattedTotal[$order.Currency.ID]}</strong>
+	           </div>
+	       
+	       </div>
+	    
+	       <div style="float: left">
+	        
+                <ul style="padding: 10px;">
+                {foreach from=$order.cartItems item="item"}
+        	        <li>{$item.count} x {$item.Product.name_lang}</li>
+        	    {/foreach}
+        	    </ul>
+        	    
+            </div>
+            
+        </div>
+        
+        <div class="clear"></div>
+    
     {/foreach}
     
 </div>

@@ -57,7 +57,15 @@ class User extends ActiveRecordModel
         }
         else
         {
-			$user = User::getInstanceById($id);
+			try
+			{
+                $user = User::getInstanceById($id);                
+            }
+            catch (ARNotFoundException $e)
+            {
+                Session::getInstance()->unsetValue('User');
+                return self::getCurrentUser();
+            }
 		}
         
         return $user;

@@ -23,6 +23,11 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     private static $instance = null;
     
     private $isSyncedToSession = false;
+    
+    const STATUS_BACKORDERED = 1;
+    const STATUS_AWAITING_SHIPMENT = 2;
+    const STATUS_SHIPPED = 3;
+    const STATUS_RETURNED = 4;        
                 
     /**
 	 * Define database schema used by this active record instance
@@ -46,9 +51,8 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 		$schema->registerField(new ARField("capturedAmount", ARFloat::instance()));
 		$schema->registerField(new ARField("isFinalized", ARBool::instance()));
 		$schema->registerField(new ARField("isPaid", ARBool::instance()));
-		$schema->registerField(new ARField("isDelivered", ARBool::instance()));
-		$schema->registerField(new ARField("isReturned", ARBool::instance()));
 		$schema->registerField(new ARField("isCancelled", ARBool::instance()));
+		$schema->registerField(new ARField("status", ARInteger::instance()));
 		$schema->registerField(new ARField("shipping", ARText::instance()));
 	}
 		
@@ -624,6 +628,26 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         return $total;
     }
 		
+	public function isBackordered()
+	{
+        return $this->status->get() > self::STATUS_BACKORDERED; 
+    }
+
+	public function isAwaitingShipment()
+	{
+        return $this->status->get() > self::STATUS_AWAITING_SHIPMENT; 
+    }
+
+	public function isShipped()
+	{
+        return $this->status->get() > self::STATUS_SHIPPED; 
+    }
+    
+	public function isReturned()
+	{
+        return $this->status->get() > self::STATUS_RETURNED; 
+    }    
+    		
 	/**
 	 *	Creates an array representation of the shopping cart
 	 */
@@ -631,49 +655,52 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 	{
 		$array = parent::toArray();
 		
-		if (is_array($array))
+		$array['cartItems']	= array();
+		$array['wishListItems']	= array();
+				
+		foreach ($this->orderedItems as $item)
 		{
-			$array['cartItems']	= array();
-			$array['wishListItems']	= array();
-					
-			foreach ($this->orderedItems as $item)
+			if ($item->isSavedForLater->get())
 			{
-				if ($item->isSavedForLater->get())
-				{
-					$array['wishListItems'][] = $item->toArray();
-				}
-				else
-				{
-					$array['cartItems'][] = $item->toArray();
-				}
-			}			
+				$array['wishListItems'][] = $item->toArray();
+			}
+			else
+			{
+				$array['cartItems'][] = $item->toArray();
+			}
+		}			
+	
+		$array['basketCount'] = $this->getShoppingCartItemCount();
+		$array['wishListCount'] = $this->getWishListItemCount();
 		
-			$array['basketCount'] = $this->getShoppingCartItemCount();
-			$array['wishListCount'] = $this->getWishListItemCount();
-			
-			// shipments
-			$array['shipments'] = array();
-            foreach ($this->shipments as $shipment)
-			{
-                $array['shipments'][] = $shipment->toArray();
-            }
-			
-			// total for all currencies
-			$total = array();
-			$currencies = Store::getInstance()->getCurrencySet();            
-            foreach ($currencies as $id => $currency)
-            {
-                $total[$id] = $this->getTotal($currency);
-            }
-            			
-			$array['total'] = $total;
-			
-			$array['formattedTotal'] = array();
-            foreach ($array['total'] as $id => $amount)
-			{
-                $array['formattedTotal'][$id] = $currencies[$id]->getFormattedPrice($amount);   
-            }
-		}	
+		// shipments
+		$array['shipments'] = array();
+        foreach ($this->shipments as $shipment)
+		{
+            $array['shipments'][] = $shipment->toArray();
+        }
+		
+		// total for all currencies
+		$total = array();
+		$currencies = Store::getInstance()->getCurrencySet();            
+        foreach ($currencies as $id => $currency)
+        {
+            $total[$id] = $this->getTotal($currency);
+        }
+        			
+		$array['total'] = $total;
+		
+		$array['formattedTotal'] = array();
+        foreach ($array['total'] as $id => $amount)
+		{
+            $array['formattedTotal'][$id] = $currencies[$id]->getFormattedPrice($amount);   
+        }
+        
+        // status
+        $array['isReturned'] = (int)$this->isReturned();;
+        $array['isShipped'] = (int)$this->isShipped();
+        $array['isAwaitingShipment'] = (int)$this->isAwaitingShipment();
+        $array['isBackordered'] = (int)$this->isBackordered();
 		
 		return $array;
 	}

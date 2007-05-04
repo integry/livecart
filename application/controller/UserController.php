@@ -39,11 +39,83 @@ class UserController extends FrontendController
             $order->loadAddresses();
         }
 
-		$response = new ActionResponse();
+        $response = new ActionResponse();
 		$response->setValue('orders', $orders->toArray());
-		
+		$response->setValue('userConfirm', $this->session->pullValue('userConfirm'));		
 		return $response;
 	}
+    
+    /**
+     *	@role login
+     */
+    public function changePassword()
+    {
+        $this->addBreadCrumb($this->translate('_change_pass'), '');
+        $response = new ActionResponse(); 
+        $response->setValue('form', $this->buildPasswordChangeForm());        
+        return $response;
+    }
+    
+    /**
+     *	@role login
+     */
+    public function doChangePassword()
+    {
+        $validator = $this->buildPasswordChangeValidator();
+        if (!$validator->isValid())
+        {
+            return new ActionRedirectResponse('user', 'changePassword');
+        }
+        
+        $this->user->setPassword($this->request->getValue('password'));
+        $this->user->save();
+        
+        $this->session->setValue('userConfirm', $this->translate('_confirm_password_change'));
+        
+        return new ActionRedirectResponse('user', 'index');
+    }
+    
+    /**
+     *	@role login
+     */
+    public function changeEmail()
+    {
+        $this->addBreadCrumb($this->translate('_change_email'), '');
+        $response = new ActionResponse(); 
+        $response->setValue('form', $this->buildEmailChangeForm());        
+        return $response;
+    }
+
+    /**
+     *	@role login
+     */
+    public function doChangeEmail()
+    {
+        $validator = $this->buildEmailChangeValidator();
+        if (!$validator->isValid())
+        {
+            return new ActionRedirectResponse('user', 'changeEmail');
+        }
+        
+        $this->user->email->set($this->request->getValue('email'));
+        $this->user->save();
+        
+        $this->session->setValue('userConfirm', $this->translate('_confirm_email_change'));
+        
+        return new ActionRedirectResponse('user', 'index');
+    }
+    
+    /**
+     *	@role login
+     */
+    public function addresses()
+    {
+        $this->addBreadCrumb($this->translate('_manage_addresses'), '');
+        $response = new ActionResponse(); 
+    	$response->setValue('billingAddresses', $this->user->getBillingAddressArray());
+    	$response->setValue('shippingAddresses', $this->user->getShippingAddressArray());
+        return $response;
+    }    
     
     public function register()
     {
@@ -64,12 +136,12 @@ class UserController extends FrontendController
 		
 		if ($this->request->isValueSet('return'))
 		{
-			return new RedirectResponse(Router::getInstance()->createUrlFromRoute($this->request->getValue('return')));					
+			return new RedirectResponse(Router::getInstance()->createUrlFromRoute($this->request->getValue('return')));
 		}
 		else
 		{
 			return new ActionRedirectResponse('user', 'index');
-		}	
+		}
 	}
     
 	/**
@@ -239,6 +311,42 @@ class UserController extends FrontendController
         return new ActionRedirectResponse('checkout', 'shipping');
     }
 
+    /**
+     *	@role login
+     */
+    public function deleteShippingAddress()
+    {
+        try
+        {
+            return $this->deleteAddress(ShippingAddress::getUserAddress($this->request->getValue('id'), $this->user));
+        }
+        catch (ARNotFoundException $e)
+        {
+            return new ActionRedirectResponse('user', 'index');   
+        }
+    }
+
+    /**
+     *	@role login
+     */
+    public function deleteBillingAddress()
+    {
+        try
+        {
+            return $this->deleteAddress(BillingAddress::getUserAddress($this->request->getValue('id'), $this->user));
+        }
+        catch (ARNotFoundException $e)
+        {
+            return new ActionRedirectResponse('user', 'index');   
+        }
+    }
+    
+    private function deleteAddress(UserAddressType $address)
+    {
+        $address->delete();
+        return new RedirectResponse(Router::getInstance()->createURLFromRoute($this->request->getValue('return')));      
+    }
+    
     /**
      *	@role login
      */
@@ -506,7 +614,42 @@ class UserController extends FrontendController
     }        
     
 	/**************  VALIDATION ******************/
+    private function buildEmailChangeForm()
+    {
+		ClassLoader::import("framework.request.validator.Form");		
+		return new Form($this->buildEmailChangeValidator()); 
+	}
     
+    private function buildEmailChangeValidator()
+    {    
+		ClassLoader::import("framework.request.validator.RequestValidator");		
+		
+        $validator = new RequestValidator("emailChange", $this->request);
+        $this->validateEmail($validator, '_err_not_unique_email_for_change');
+    	
+    	return $validator;
+    }
+    
+    private function buildPasswordChangeForm()
+    {
+		ClassLoader::import("framework.request.validator.Form");		
+		return new Form($this->buildPasswordChangeValidator()); 
+	}
+    
+    private function buildPasswordChangeValidator()
+    {    
+		ClassLoader::import("framework.request.validator.RequestValidator");		
+		ClassLoader::import("application.helper.check.IsPasswordCorrectCheck");
+		
+        $validator = new RequestValidator("passwordChange", $this->request);
+    	$validator->addCheck('currentpassword', new IsNotEmptyCheck($this->translate('_err_enter_current_password'))); 
+    	$validator->addCheck('currentpassword', new IsPasswordCorrectCheck($this->translate('_err_incorrect_current_password'), $this->user)); 
+        
+        $this->validatePassword($validator);
+    	
+    	return $validator;
+    }
+
     private function buildRegForm()
     {
 		ClassLoader::import("framework.request.validator.Form");		
@@ -516,15 +659,11 @@ class UserController extends FrontendController
     private function buildRegValidator()
     {    
 		ClassLoader::import("framework.request.validator.RequestValidator");
-		ClassLoader::import("application.helper.check.PasswordMatchCheck");
 		            	
         $validator = new RequestValidator("userRegistration", $this->request);
         $this->validateName($validator);
         $this->validateEmail($validator);
-    	$validator->addCheck('password', new MinLengthCheck(sprintf($this->translate('_err_short_password'), self::PASSWORD_MIN_LENGTH), self::PASSWORD_MIN_LENGTH)); 
-    	$validator->addCheck('password', new IsNotEmptyCheck($this->translate('_err_enter_password'))); 
-    	$validator->addCheck('confpassword', new IsNotEmptyCheck($this->translate('_err_enter_password'))); 
-    	$validator->addCheck('confpassword', new PasswordMatchCheck($this->translate('_err_password_match'), $this->request, 'password', 'confpassword')); 
+        $this->validatePassword($validator);
         return $validator;
     }
 
@@ -582,14 +721,14 @@ class UserController extends FrontendController
     	$validator->addCheck('lastName', new IsNotEmptyCheck($this->translate('_err_enter_last_name')));
 	}    
     
-    private function validateEmail(RequestValidator $validator)
+    private function validateEmail(RequestValidator $validator, $uniqueError = '_err_not_unique_email')
     {
 		ClassLoader::import("application.helper.check.IsUniqueEmailCheck");
 
     	$validator->addCheck('email', new IsNotEmptyCheck($this->translate('_err_enter_email')));    
     	$validator->addCheck('email', new IsValidEmailCheck($this->translate('_err_invalid_email')));    
     	
-        $emailErr = $this->translate('_err_not_unique_email');
+        $emailErr = $this->translate($uniqueError);
         $emailErr = str_replace('%1', Router::getInstance()->createUrl(array('controller' => 'user', 'action' => 'login')), $emailErr);
         $validator->addCheck('email', new IsUniqueEmailCheck($emailErr));    
 	}    
@@ -611,6 +750,15 @@ class UserController extends FrontendController
         $stateCheck = new OrCheck(array($fieldPrefix . 'state_select', $fieldPrefix . 'state_text'), array(new IsNotEmptyCheck($this->translate('_err_select_state')), new IsNotEmptyCheck('')), $this->request);
         $validator->addCheck($fieldPrefix . 'state_select', $stateCheck);
 //        $validator->addCheck('billing_state_select', new IsValidStateCheck($this->translate('_err_select_state')));        
+    }
+    
+    private function validatePassword(RequestValidator $validator)
+    {
+		ClassLoader::import("application.helper.check.PasswordMatchCheck");
+    	$validator->addCheck('password', new MinLengthCheck(sprintf($this->translate('_err_short_password'), self::PASSWORD_MIN_LENGTH), self::PASSWORD_MIN_LENGTH)); 
+    	$validator->addCheck('password', new IsNotEmptyCheck($this->translate('_err_enter_password'))); 
+    	$validator->addCheck('confpassword', new IsNotEmptyCheck($this->translate('_err_enter_password'))); 
+    	$validator->addCheck('confpassword', new PasswordMatchCheck($this->translate('_err_password_match'), $this->request, 'password', 'confpassword'));             
     }
 }
  

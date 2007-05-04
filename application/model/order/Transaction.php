@@ -34,7 +34,7 @@ class Transaction extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("currencyID", "currency", "ID", 'Currency', ARChar::instance(3)));
 		
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
-		$schema->registerField(new ARField("time", ARTimeStamp::instance()));
+		$schema->registerField(new ARField("time", ARDateTime::instance()));
 		$schema->registerField(new ARField("method", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("gatewayTransactionID", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("type", ARInteger::instance()));
