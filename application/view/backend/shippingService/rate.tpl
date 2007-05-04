@@ -1,7 +1,4 @@
 <div> </div>
-<input type="hidden" name="rateID" value="{$rate.ID}" />
-
-
 <span class="shippingService_subtotalRange">
     <label class="observe">{t _subtotal_range}</label>
     <input type="text" value="{$rate.subtotalRangeStart}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalRangeStart" class="shippingService_subtotalRangeStart shippingService_rateFloatValue" /> 

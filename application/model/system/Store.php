@@ -123,7 +123,7 @@ class Store
 	 *
 	 * @return array
 	 */
-	public function getLanguageSetArray($includeDefaultLanguage = false)
+	public function getLanguageSetArray($includeDefaultLanguage = false, $includeDisabledLanguages = true)
 	{
         $ret = $this->languageList->toArray();
         
@@ -133,7 +133,7 @@ class Store
             
             foreach ($ret as $key => $data)
             {
-                if ($data['ID'] == $defLang)
+                if ($data['ID'] == $defLang || (!$includeDisabledLanguages && $data['isEnabled'] == 0))
                 {
                     unset($ret[$key]);
                 }

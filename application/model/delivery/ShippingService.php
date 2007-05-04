@@ -100,5 +100,4 @@ class ShippingService extends MultilingualObject
 	    return ShippingRate::getRecordSetByService($this, $loadReferencedRecords);
 	}
 }
-
 ?>

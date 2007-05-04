@@ -635,9 +635,9 @@ Backend.DeliveryZone.ShippingService.prototype =
     Callbacks: {
         'beforeDelete': function(li) 
         {
-            if(confirm(Backend.DeliveryZone.ShippingRate.prototype.Messages.confirmServiceDelete))
+            if(confirm(Backend.DeliveryZone.ShippingService.prototype.Messages.confirmDelete))
             {
-                return Backend.DeliveryZone.ShippingRate.prototype.Links.deleteService + "/" + this.getRecordId(li);
+                return Backend.DeliveryZone.ShippingService.prototype.Links.remove + "/" + this.getRecordId(li);
             }
         },
         'afterDelete': function(li, response)
@@ -648,15 +648,25 @@ Backend.DeliveryZone.ShippingService.prototype =
                 this.remove(li);     
             }
         },
-        'beforeEdit': function(li) 
+        
+        beforeEdit:     function(li)
         {
-            console.info('before edit');
+            if(this.isContainerEmpty(li, 'edit')) 
+            {
+                return Backend.DeliveryZone.ShippingService.prototype.Links.edit + '/' + this.getRecordId(li)
+            }
+            else 
+            {
+                this.toggleContainer(li, 'edit');
+            }
         },
-        'afterEdit': function(li, response) 
+       
+        afterEdit:      function(li, response)
         {
-            console.info('after edit');
-        },   
-
+            new Insertion.Bottom(li, response);
+            this.toggleContainer(li, 'edit');
+        },
+         
         beforeSort:     function(li, order)
         {
             return Backend.DeliveryZone.ShippingService.prototype.Links.sortServices + '?target=' + "shippingService_servicesList" + "&" + order
@@ -671,15 +681,19 @@ Backend.DeliveryZone.ShippingService.prototype =
     
     initialize: function(root, service)
     {
-        this.service = service;
-        
-        this.findUsedNodes(root);
-        
-        this.bindEvents();
-        
-        this.rangeTypeChanged();
-        
-        new SectionExpander(this.nodes.root);
+        try
+        {
+            this.service = service;
+            this.findUsedNodes(root);
+            this.bindEvents();
+            this.rangeTypeChanged();
+            this.servicesActiveList = ActiveList.prototype.getInstance(this.nodes.servicesList);
+            new SectionExpander(this.nodes.root);
+        }
+        catch(e)
+        {
+            console.info(e);
+        }
     },
         
     getInstance: function(rootNode, service)
@@ -705,20 +719,28 @@ Backend.DeliveryZone.ShippingService.prototype =
         this.nodes.cancel = this.nodes.controls.down('.' + this.prefix + 'cancel');
         
         this.nodes.rangeTypes = document.getElementsByClassName(this.prefix + 'rangeType', this.nodes.root);
+        
+        this.nodes.servicesList = $$('.' + this.prefix + 'servicesList_' + this.service.DeliveryZone.ID)[0];
 
         this.nodes.menu = $(this.prefix + "menu_" + this.service.DeliveryZone.ID);
         this.nodes.menuCancelLink = $(this.prefix + "new_" + this.service.DeliveryZone.ID + "_cancel");
         this.nodes.menuShowLink = $(this.prefix + "new_" + this.service.DeliveryZone.ID + "_show");
         this.nodes.menuForm = $(this.prefix + "new_service_" + this.service.DeliveryZone.ID + "_form");
+        
+        this.nodes.name = this.nodes.root.down('.' + this.prefix + 'name');
     },
     
     bindEvents: function()
     {
        var self = this;
        
-       Event.observe(this.nodes.form, 'submit', function(e) { self.save(); });
+
+       Event.observe(this.nodes.save, 'click', function(e) { Event.stop(e); self.save(); });
        Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel(); });
-       Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); self.cancel(); });
+       if(!this.service.ID)
+       {
+           Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); self.cancel(); });
+       }
        
        $A(this.nodes.rangeTypes).each(function(radio)
        {
@@ -763,10 +785,29 @@ Backend.DeliveryZone.ShippingService.prototype =
     
     save: function()
     {
+        var self = this;
+        
+        new Ajax.Request(Backend.DeliveryZone.ShippingService.prototype.Links.save, {
+            method: 'post',
+            parameters: Form.serialize(this.nodes.form),
+            onSuccess: function(response) { 
+                var response = eval("(" + response.responseText + ")");
+                self.afterSave(response);     
+            }
+        });
+
         console.info('save');
-        applyFilters(this, event);
-        
-        
+    },
+    
+    afterSave: function(response)
+    {
+        if(response.service.status == 'success')
+        {
+            if(!this.service.ID)
+            {
+                var li = this.servicesActiveList.addRecord(response.service.ID, '<span class="' + this.prefix + 'servicesList_title">' + this.nodes.name.value + '</span>');
+            }
+        }
     },
     
     cancel: function()
@@ -830,16 +871,25 @@ Backend.DeliveryZone.ShippingRate.prototype =
         
         this.ratesActiveList = ActiveList.prototype.getInstance(this.nodes.ratesActiveList, Backend.DeliveryZone.ShippingRate.prototype.RatesCallbacks);
         
-        with(Backend.DeliveryZone.ShippingRate.prototype.Messages)
+        if(this.rate.ID)
         {
-            if(this.rate.ID)
-            {
-                this.nodes.controls.hide();
-            }
-            else
-            {
-                this.nodes.controls.show();
-            }
+            this.nodes.controls.hide();
+        }
+        else
+        {
+            this.nodes.controls.show();
+        }
+        
+        if(this.rate.ID)
+        {
+            this.nodes.weightRangeStart.name = 'rate_' + this.rate.ID + '_weightRangeStart';
+            this.nodes.weightRangeEnd.name = 'rate_' + this.rate.ID + '_weightRangeEnd';
+            this.nodes.subtotalRangeStart.name = 'rate_' + this.rate.ID + '_subtotalRangeStart';
+            this.nodes.subtotalRangeEnd.name = 'rate_' + this.rate.ID + '_subtotalRangeEnd';
+            this.nodes.flatCharge.name = 'rate_' + this.rate.ID + '_flatCharge';
+            this.nodes.perItemCharge.name = 'rate_' + this.rate.ID + '_perItemCharge';
+            this.nodes.subtotalPercentCharge.name = 'rate_' + this.rate.ID + '_subtotalPercentCharge';
+            this.nodes.perKgCharge.name = 'rate_' + this.rate.ID + '_perKgCharge';
         }
         
         new SectionExpander(this.nodes.root);
@@ -886,11 +936,12 @@ Backend.DeliveryZone.ShippingRate.prototype =
     bindEvents: function()
     {
        var self = this;
-       
-       Event.observe(this.nodes.save, 'click', function(e) { Event.stop(e); self.save(e); });
-       Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel();});
-       Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); self.cancel(); });
-       
+       if(!this.rate.ID)
+       {
+           Event.observe(this.nodes.save, 'click', function(e) { Event.stop(e); self.save(e); });
+           Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel();});
+           Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); self.cancel(); });
+       } 
     },
     
     showNewForm: function()
@@ -910,13 +961,14 @@ Backend.DeliveryZone.ShippingRate.prototype =
         if(!this.rate.ID)
         {
             Backend.DeliveryZone.ShippingRate.prototype.newRateLastId++;
+            var newId = Backend.DeliveryZone.ShippingRate.prototype.newRateLastId;
             
-            var li = this.ratesActiveList.addRecord(Backend.DeliveryZone.ShippingRate.prototype.newRateLastId, this.nodes.root);
+            var li = this.ratesActiveList.addRecord(newId, this.nodes.root);
             
             var idStart = this.prefix + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID + "_";
             var idStartRegexp = new RegExp(idStart)
-            document.getElementsByClassName(this.prefix + 'rateFloatValue', li).each(function(input) {
-                input.id = input.id.replace(idStartRegexp, idStart + 'new' + Backend.DeliveryZone.ShippingRate.prototype.newRateLastId);
+                document.getElementsByClassName(this.prefix + 'rateFloatValue', li).each(function(input) {
+                input.id = input.id.replace(idStartRegexp, idStart + 'new' + newId);
                 input.up().down('label')['for'] = input.id;
             });
             
@@ -935,6 +987,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
             
             var newForm = Backend.DeliveryZone.ShippingRate.prototype.getInstance(li, rate);
             
+            
             this.nodes.weightRangeStart.value = '';
             this.nodes.weightRangeEnd.value = '';
             this.nodes.subtotalRangeStart.value = '';
@@ -943,6 +996,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
             this.nodes.perItemCharge.value = '';
             this.nodes.subtotalPercentCharge.value = '';
             this.nodes.perKgCharge.value = '';
+            
         }
     },
     
@@ -958,7 +1012,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
     
     remove: function()
     {
-        if(confirm(Backend.DeliveryZone.ShippingService.prototype.Messages.confirmRateDelete))
+        if(confirm(Backend.DeliveryZone.ShippingRate.prototype.Messages.confirmDelete))
         {
             if(!this.rate.ID.match(/^new/))
             {

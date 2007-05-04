@@ -62,10 +62,8 @@
     Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmAddressDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_address_mask}{literal}';
     Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmCityDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_city_mask}{literal}';
     Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmZipDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_zip_mask}{literal}';
-    Backend.DeliveryZone.ShippingService.prototype.Messages.confirmRateDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_rate}{literal}';
-    Backend.DeliveryZone.ShippingService.prototype.Messages.confirmServiceDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_service}{literal}';
-    Backend.DeliveryZone.ShippingRate.prototype.Messages.save = '{/literal}{t _save}{literal}';
-    Backend.DeliveryZone.ShippingRate.prototype.Messages.add = '{/literal}{t _add}{literal}';
+    Backend.DeliveryZone.ShippingService.prototype.Messages.confirmDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_rate}{literal}';
+    Backend.DeliveryZone.ShippingRate.prototype.Messages.confirmDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_service}{literal}';
     
     
     Backend.DeliveryZone.prototype.Links.edit = '{/literal}{link controller=backend.deliveryZone action=edit}?id=_id_{literal}';
@@ -79,12 +77,13 @@
     Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveZipMask = '{/literal}{link controller=backend.deliveryZone action=saveZipMask}{literal}';
     Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteAddressMask = '{/literal}{link controller=backend.deliveryZone action=deleteAddressMask}{literal}';
     Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveAddressMask = '{/literal}{link controller=backend.deliveryZone action=saveAddressMask}{literal}';
-	Backend.DeliveryZone.ShippingService.prototype.Links.deleteService = '{/literal}{link controller=backend.shippingService action=delete}{literal}';
+	Backend.DeliveryZone.ShippingService.prototype.Links.remove = '{/literal}{link controller=backend.shippingService action=delete}{literal}';
     Backend.DeliveryZone.ShippingService.prototype.Links.sortServices = '{/literal}{link controller=backend.shippingService action=sort}{literal}';
-    Backend.DeliveryZone.ShippingService.prototype.Links.editService = '{/literal}{link controller=backend.shippingService action=edit}{literal}';
+    Backend.DeliveryZone.ShippingService.prototype.Links.edit = '{/literal}{link controller=backend.shippingService action=edit}{literal}';
     Backend.DeliveryZone.ShippingService.prototype.Links.deleteRate = '{/literal}{link controller=backend.shippingRate action=delete}{literal}';
     Backend.DeliveryZone.ShippingService.prototype.Links.sortRates = '{/literal}{link controller=backend.shippingRate action=sort}{literal}';
     Backend.DeliveryZone.ShippingService.prototype.Links.editRate = '{/literal}{link controller=backend.shippingRate action=edit}{literal}';
+    Backend.DeliveryZone.ShippingService.prototype.Links.save = '{/literal}{link controller=backend.shippingService action=save}{literal}';
     
     
     var zones = new Backend.DeliveryZone({/literal}{$zones}{literal});
