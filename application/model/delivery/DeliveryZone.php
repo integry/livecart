@@ -192,6 +192,18 @@ class DeliveryZone extends MultilingualObject
 	{
 	    return DeliveryZoneAddressMask::getRecordSetByZone($this, $loadReferencedRecords);
 	}
+
+	
+	/**
+	 * Get set of shipping sevices available in current zone
+	 * 
+	 * @param boolean $loadReferencedRecords
+	 * @return ARSet
+	 */
+	public function getShippingServices($loadReferencedRecords = false)
+	{
+	    return ShippingService::getByDeliveryZone($this, $loadReferencedRecords);
+	}
 }
 
 ?>

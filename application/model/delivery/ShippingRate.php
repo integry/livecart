@@ -97,6 +97,36 @@ class ShippingRate extends MultilingualObject
 	    
 	    return $service->rangeType->get();
 	}
+
+	/**
+	 * Load service rates record set
+	 *
+	 * @param ARSelectFilter $filter
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
+	{
+		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+	}
+	
+	/**
+	 * Load service rates from known service
+	 *
+	 * @param ShippingService $service
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+	public static function getRecordSetByService(ShippingService $service, $loadReferencedRecords = false)
+	{
+ 	    $filter = new ARSelectFilter();
+
+		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "shippingServiceID"), $service->getID()));
+		
+		return self::getRecordSet($filter, $loadReferencedRecords);
+	}
 }
 
 ?>

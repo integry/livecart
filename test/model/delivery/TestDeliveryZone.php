@@ -176,5 +176,21 @@ class TestDeliveryZone extends UnitTest
 	    $this->assertEqual($masks->getTotalRecordCount(), 1);
 	    $this->assertTrue($masks->get(0) === $mask);
 	}
+
+    public function testGetZoneServices()
+    {
+	    $zone = DeliveryZone::getNewInstance();
+	    $zone->setValueByLang('name', 'en', ':TEST_ZONE');
+	    $zone->save();
+        
+        $service1 = ShippingService::getNewInstance($zone, 'Test service 1', ShippingService::SUBTOTAL_BASED);
+        $service1->save();
+        $service2 = ShippingService::getNewInstance($zone, 'Test service 2', ShippingService::SUBTOTAL_BASED);
+        $service2->save();
+        
+        $services = $zone->getShippingServices();
+        $this->assertTrue($service1 === $services->get(0));
+        $this->assertTrue($service2 === $services->get(1));
+    }
 }
 ?>

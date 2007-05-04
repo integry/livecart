@@ -168,14 +168,18 @@ TabControl.prototype = {
 		}
 		
 		var contentId = this.idParserCallback(targetTab.id);
-        if(!$(contentId)) new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '"></div>');		
+        if(!$(contentId)) new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '" class="tabPageContainer"></div>');		
 
-		if(this.activeTab)
-		{
-			Element.removeClassName(this.activeTab, 'active');
-			Element.addClassName(this.activeTab, 'inactive');
-			Element.hide(this.activeContent);
-		}
+        var self = this;
+        $A(this.nodes.tabListElements).each(function(tab) {
+			Element.removeClassName(tab, 'active');
+			Element.addClassName(tab, 'inactive');
+        });
+        
+        document.getElementsByClassName("tabPageContainer", this.nodes.sectionContainer).each(function(container) {
+            Element.hide(container);
+        })
+        
 		this.activeTab = targetTab;
         this.activeContent = $(contentId);
                 
@@ -187,7 +191,7 @@ TabControl.prototype = {
 		{
             new LiveCart.AjaxUpdater(this.urlParserCallback(targetTab.down('a').href), contentId, targetTab.down('.tabIndicator'), 'bottom',  onComplete);
 		}
-        else
+        else if(onComplete)
         {
             onComplete();
         }

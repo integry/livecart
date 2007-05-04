@@ -2,6 +2,7 @@
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
 {includeJs file="library/form/Validator.js"}
 {includeJs file="library/form/ActiveForm.js"}
+{includeJs file="library/form/State.js"}
 {includeJs file="library/SectionExpander.js"}
 {includeJs file="library/TabControl.js"}
 {includeJs file="library/ActiveList.js"}
@@ -63,6 +64,8 @@
     Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmZipDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_zip_mask}{literal}';
     Backend.DeliveryZone.ShippingService.prototype.Messages.confirmRateDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_rate}{literal}';
     Backend.DeliveryZone.ShippingService.prototype.Messages.confirmServiceDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_service}{literal}';
+    Backend.DeliveryZone.ShippingRate.prototype.Messages.save = '{/literal}{t _save}{literal}';
+    Backend.DeliveryZone.ShippingRate.prototype.Messages.add = '{/literal}{t _add}{literal}';
     
     
     Backend.DeliveryZone.prototype.Links.edit = '{/literal}{link controller=backend.deliveryZone action=edit}?id=_id_{literal}';

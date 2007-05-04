@@ -71,5 +71,17 @@ class TestShippingRate extends UnitTest
         $this->assertEqual($shippingRate->subtotalPercentCharge->get(), 1.3);
         $this->assertEqual($shippingRate->perKgCharge->get(), 1.4);
     }
+
+    public function testGetRatesByService()
+    {
+        $rate1 = ShippingRate::getNewInstance($this->shippingService, 1.1, 1.2);
+        $rate1->save();
+        $rate2 = ShippingRate::getNewInstance($this->shippingService, 1.3, 1.4);
+        $rate2->save();
+        
+        $rates = ShippingRate::getRecordSetByService($this->shippingService);
+        $this->assertTrue($rate1 === $rates->get(0));
+        $this->assertTrue($rate2 === $rates->get(1));
+    }
 }
 ?>

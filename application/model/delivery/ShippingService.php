@@ -74,7 +74,7 @@ class ShippingService extends MultilingualObject
 	/**
 	 * Load delivery services record by Delivery zone
 	 *
-	 * @param ARSelectFilter $filter
+	 * @param DeliveryZone $deliveryZone
 	 * @param bool $loadReferencedRecords
 	 *
 	 * @return ARSet
@@ -87,6 +87,17 @@ class ShippingService extends MultilingualObject
 		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "deliveryZoneID"), $deliveryZone->getID()));
 		
 		return self::getRecordSet($filter, $loadReferencedRecords);
+	}
+	
+	/**
+	 * Get active record set from current service
+	 * 
+	 * @param boolean $loadReferencedRecords
+	 * @return ARSet
+	 */
+	public function getRates($loadReferencedRecords = false)
+	{
+	    return ShippingRate::getRecordSetByService($this, $loadReferencedRecords);
 	}
 }
 

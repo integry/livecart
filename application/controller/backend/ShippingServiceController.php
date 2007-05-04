@@ -21,10 +21,11 @@ class ShippingServiceController extends StoreManagementController
 	    $deliveryZone = DeliveryZone::getInstanceByID($zoneID, true);
 	      
 		$form = $this->createShippingServiceForm($deliveryZone);
-		$form->setData($deliveryZone->toArray());
+		$form->setData(array('name_en' => 'test', 'rangeType' => 1) /* $deliveryZone->toArray() */);
 		
 		$response = new ActionResponse();
-		$response->setValue('shippingServices', ShippingService::getByDeliveryZone($deliveryZone)->toArray());
+		$response->setValue('defaultLanguageCode', $this->store->getDefaultLanguageCode());
+		$response->setValue('shippingServices', $deliveryZone->getShippingServices()->toArray());
 		$response->setValue('alternativeLanguagesCodes', $this->store->getLanguageArray());
 		$response->setValue('newService', array('DeliveryZone' => $deliveryZone->toArray()));
 		$response->setValue('newRate', array('ShippingService' => array('DeliveryZone' => $deliveryZone->toArray(), 'ID' => '')));

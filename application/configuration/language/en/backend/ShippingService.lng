@@ -3,3 +3,13 @@ _cancel_adding_new_service=Cancel adding new service
 
 _add_new_rate=Add new rate
 _cancel_adding_new_rate=Cancel adding new rate
+
+_weight_based_calculations=Weight based calculation
+_subtotal_based_calculations=Subtotal based calculation
+_shipping_service_rates=Rates
+_subtotal_range=Subtotal range
+_flat_charge=Flat charge
+_per_item_charge=Per item charge
+_subtotal_percent_charge=Subtotal percent charge
+_weight_range=Weight range
+_per_kg_charge=Per kg charge

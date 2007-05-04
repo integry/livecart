@@ -41,7 +41,7 @@
         console.info(e);
     }
 
-    ActiveList.prototype.getInstance("shippingService_servicesList_{/literal}{$deliveryZone.ID}{literal}", Backend.DeliveryZone.ShippingService.prototype.ServiceCallbacks, function() {});
+    ActiveList.prototype.getInstance("shippingService_servicesList_{/literal}{$deliveryZone.ID}{literal}", Backend.DeliveryZone.ShippingService.prototype.Callbacks, function() {});
 </script>
 {/literal}
 

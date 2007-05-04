@@ -2,6 +2,7 @@
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
 ClassLoader::import("application.model.delivery.ShippingService");
+ClassLoader::import("application.model.delivery.ShippingRate");
 
 class TestShippingService extends UnitTest
 {
@@ -21,6 +22,7 @@ class TestShippingService extends UnitTest
     {
         return array(
 			'ShippingService',
+			'ShippingRate',
             'DeliveryZone'
         );
     }
@@ -59,6 +61,21 @@ class TestShippingService extends UnitTest
         $services = ShippingService::getByDeliveryZone($this->deliveryZone);
         $this->assertTrue($service1 === $services->get(0));
         $this->assertTrue($service2 === $services->get(1));
+    }
+
+    public function testGetServiceRates()
+    {
+        $service = ShippingService::getNewInstance($this->deliveryZone, 'Test service 1', ShippingService::SUBTOTAL_BASED);
+        $service->save();
+        
+        $rate1 = ShippingRate::getNewInstance($service, 1.1, 1.2);
+        $rate1->save();
+        $rate2 = ShippingRate::getNewInstance($service, 1.3, 1.4);
+        $rate2->save();
+        
+        $rates = $service->getRates();
+        $this->assertTrue($rate1 === $rates->get(0));
+        $this->assertTrue($rate2 === $rates->get(1));
     }
 }
 ?>

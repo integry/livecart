@@ -8,12 +8,12 @@
     
 	<fieldset class="error">
 		<label for=""></label>
-		{radio name="rangeType" id="shippingService_`$deliveryZone.ID`_`$service.ID`" class="checkbox" value="0"}
+		{radio name="rangeType" id="shippingService_`$deliveryZone.ID`_`$service.ID`" class="checkbox shippingService_rangeType" value="0"}
 		<label for="shippingService_{$deliveryZone.ID}_{$service.ID}" class="checkbox">{t _weight_based_calculations}</label>
 	</fieldset class="error">
 	<fieldset class="error">
 		<label for=""></label>
-		{radio name="rangeType" id="shippingService_`$deliveryZone.ID`_`$service.ID`" class="checkbox" value="1"}
+		{radio name="rangeType" id="shippingService_`$deliveryZone.ID`_`$service.ID`" class="checkbox shippingService_rangeType" value="1"}
 		<label for="shippingService_{$deliveryZone.ID}_{$service.ID}" class="checkbox">{t _subtotal_based_calculations}</label>
 	</fieldset class="error">
     
@@ -36,19 +36,12 @@
     <fieldset class="shippingService_rates error">
     	<label>{t _shipping_service_rates}</label>
         <fieldset>
-            <ul class="activeList activeList_add_delete activeList_add_sort activeList_add_edit shippingService_ratesList" id="shippingService_ratesList_{$deliveryZone.ID}_{$service.ID}">
+            <ul class="activeList activeList_add_delete shippingService_ratesList" id="shippingService_ratesList_{$deliveryZone.ID}_{$service.ID}">
                 {foreach from=$shippingRates item="rate"}
                     <li id="shippingService_ratesList_{$deliveryZone.ID}_{$service.ID}_{$rate.ID}">
                         {include file="backend/shippingService/rate.tpl" rate=$rate}
                     </li>
                 {/foreach}
-                
-                    <li id="shippingService_ratesList_{$deliveryZone.ID}_{$service.ID}_1">
-                        asdsad
-                    </li>
-                    <li id="shippingService_ratesList_{$deliveryZone.ID}_{$service.ID}_2">
-                        asdasd
-                    </li>
             </ul>
             
             <fieldset class="container">
@@ -58,7 +51,7 @@
             	</ul>
             </fieldset>
             <fieldset id="shippingService_new_rate_{$deliveryZone.ID}_{$service.ID}_form" style="display: none;">
-                {include file="backend/shippingService/rate.tpl"}
+                {include file="backend/shippingService/rate.tpl" rate=$newRate}
             </fieldset>
             
             <script type="text/jscript">
@@ -68,16 +61,15 @@
                     Event.observe($("shippingService_new_rate_{/literal}{$deliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}_show"), "click", function(e) 
                     {
                         Event.stop(e);
-                        console.info({/literal}{json array=$newRate}{literal});
                         var newForm = Backend.DeliveryZone.ShippingRate.prototype.getInstance(
-                            $("shippingService_new_rate_{/literal}{$deliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}_form").down(),
+                            $("shippingService_new_rate_{/literal}{$deliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}_form"),
                             {/literal}{json array=$newRate}{literal}
                         );
                         
                         newForm.showNewForm();
                     });   
                 
-                    ActiveList.prototype.getInstance("shippingService_ratesList_{/literal}{$deliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}", Backend.DeliveryZone.ShippingService.prototype.RatesCallbacks, function() {});
+                    ActiveList.prototype.getInstance("shippingService_ratesList_{/literal}{$deliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}", Backend.DeliveryZone.ShippingRate.prototype.Callbacks, function() {});
                 }
                 catch(e)
                 {
@@ -87,6 +79,13 @@
                 {/literal}
                 
             </script>
+        </fieldset>
+        
+        <fieldset class="shippingService_controls">
+            <span class="activeForm_progress"></span>
+            <input type="submit" class="shippingService_save button submit" value="{t _save}" />
+            {t _or}
+            <a href="#cancel" class="shippingService_cancel cancel">{t _cancel}</a>
         </fieldset>
     </fieldset>
 

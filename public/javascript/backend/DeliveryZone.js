@@ -135,7 +135,7 @@ Backend.DeliveryZone.prototype =
 	
 	activateZone: function(id)
 	{
-        if(Backend.DeliveryZone.prototype.activeZone != id)
+        if(Backend.DeliveryZone.prototype.activeZone && Backend.DeliveryZone.prototype.activeZone != id)
         {
             Backend.DeliveryZone.prototype.activeZone = id;
     		Backend.DeliveryZone.prototype.treeBrowser.showFeedback(id);
@@ -145,6 +145,8 @@ Backend.DeliveryZone.prototype =
                 Backend.DeliveryZone.prototype.treeBrowser.hideFeedback(id);
             });
         }
+        
+        Backend.DeliveryZone.prototype.activeZone = id;
 	},
 	
 	displayCategory: function(response)
@@ -630,7 +632,7 @@ Backend.DeliveryZone.ShippingService.prototype =
     Links: {},
     Messages: {},
  
-    ServiceCallbacks: {
+    Callbacks: {
         'beforeDelete': function(li) 
         {
             if(confirm(Backend.DeliveryZone.ShippingRate.prototype.Messages.confirmServiceDelete))
@@ -673,6 +675,10 @@ Backend.DeliveryZone.ShippingService.prototype =
         
         this.findUsedNodes(root);
         
+        this.bindEvents();
+        
+        this.rangeTypeChanged();
+        
         new SectionExpander(this.nodes.root);
     },
         
@@ -692,12 +698,85 @@ Backend.DeliveryZone.ShippingService.prototype =
         this.nodes = {};
         
         this.nodes.root = $(root);
+        this.nodes.form = this.nodes.root;
+
+        this.nodes.controls = this.nodes.root.down('.' + this.prefix + 'controls');
+        this.nodes.save = this.nodes.controls.down('.' + this.prefix + 'save');
+        this.nodes.cancel = this.nodes.controls.down('.' + this.prefix + 'cancel');
+        
+        this.nodes.rangeTypes = document.getElementsByClassName(this.prefix + 'rangeType', this.nodes.root);
+
+        this.nodes.menu = $(this.prefix + "menu_" + this.service.DeliveryZone.ID);
+        this.nodes.menuCancelLink = $(this.prefix + "new_" + this.service.DeliveryZone.ID + "_cancel");
+        this.nodes.menuShowLink = $(this.prefix + "new_" + this.service.DeliveryZone.ID + "_show");
+        this.nodes.menuForm = $(this.prefix + "new_service_" + this.service.DeliveryZone.ID + "_form");
+    },
+    
+    bindEvents: function()
+    {
+       var self = this;
+       
+       Event.observe(this.nodes.form, 'submit', function(e) { self.save(); });
+       Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel(); });
+       Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); self.cancel(); });
+       
+       $A(this.nodes.rangeTypes).each(function(radio)
+       {
+           Event.observe(radio, 'click', function(e) { self.rangeTypeChanged(); });
+       });
+    },
+    
+    rangeTypeChanged: function()
+    {
+        var radio = null;
+        $A(this.nodes.rangeTypes).each(function(r){ if(r.checked) radio = r; });
+        
+        if(radio.value == 0) 
+        {
+            document.getElementsByClassName(this.prefix + "subtotalRange").each(function(fieldset) { fieldset.style.display = 'none'; });
+            document.getElementsByClassName(this.prefix + "subtotalPercentCharge").each(function(fieldset) { fieldset.up('fieldset').style.display = 'none'; });
+            document.getElementsByClassName(this.prefix + "perKgCharge").each(function(fieldset) { fieldset.up('fieldset').style.display = 'block'; });
+            document.getElementsByClassName(this.prefix + "weightRange").each(function(fieldset) { fieldset.style.display = 'block'; });
+            console.info('weight based');
+        }
+        else
+        {
+            document.getElementsByClassName(this.prefix + "subtotalRange").each(function(fieldset) { fieldset.style.display = 'block'; });
+            document.getElementsByClassName(this.prefix + "subtotalPercentCharge").each(function(fieldset) { fieldset.up('fieldset').style.display = 'block'; });
+            document.getElementsByClassName(this.prefix + "perKgCharge").each(function(fieldset) { fieldset.up('fieldset').style.display = 'none'; });
+            document.getElementsByClassName(this.prefix + "weightRange").each(function(fieldset) { fieldset.style.display = 'none'; });
+            console.info('subtotal based');
+        }
     },
     
     showNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems($(this.prefix + "menu_" + this.service.DeliveryZone.ID), [$(this.prefix + "new_" + this.service.DeliveryZone.ID + "_cancel")]);
-        ActiveForm.prototype.showNewItemForm($(this.prefix + "new_" + this.service.DeliveryZone.ID + "_show"), $(this.prefix + "new_service_" + this.service.DeliveryZone.ID + "_form")); 
+        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuCancelLink]);
+        ActiveForm.prototype.showNewItemForm(this.nodes.menuShowLink, this.nodes.menuForm); 
+    },
+    
+    hideNewForm: function()
+    {
+        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuShowLink]);
+        ActiveForm.prototype.hideNewItemForm(this.nodes.menuCancelLink, this.nodes.menuForm); 
+    },
+    
+    save: function()
+    {
+        console.info('save');
+        applyFilters(this, event);
+        
+        
+    },
+    
+    cancel: function()
+    {
+        console.info('cancel');
+        
+        if(!this.service.ID)
+        {
+            this.hideNewForm();
+        }
     }
 }
 
@@ -714,21 +793,10 @@ Backend.DeliveryZone.ShippingRate.prototype =
     Links: {},
     Messages: {},
  
-    RatesCallbacks: {
+    Callbacks: {
         'beforeDelete': function(li) 
         {
-            if(confirm(Backend.DeliveryZone.ShippingRate.prototype.Messages.confirmRateDelete))
-            {
-                return Backend.DeliveryZone.ShippingRate.prototype.Links.deleteRate + "/" + this.getRecordId(li);
-            }
-        },
-        'afterDelete': function(li, response)
-        {
-            response = eval('(' + response + ')')
-            
-            if('success' == response.status) {
-                this.remove(li);     
-            }
+            Backend.DeliveryZone.ShippingRate.prototype.getInstance(li).remove();
         },
         'beforeEdit': function(li) 
         {
@@ -739,23 +807,40 @@ Backend.DeliveryZone.ShippingRate.prototype =
             console.info('after edit');
         },
 
-        beforeSort:     function(li, order)
+        'beforeSort':     function(li, order)
         {
-            return Backend.DeliveryZone.ShippingRate.prototype.Links.sortRates + '?target=' + "shippingService_ratesList" + "&" + order
+            return Backend.DeliveryZone.ShippingRate.prototype.Links.sortRates + '?target=' + "shippingService_ratesList&" + order
         },
     
-        afterSort:      function(li, response) { }
+        'afterSort':      function(li, response) { }
     },
     
     instances: {},
     
     prefix: 'shippingService_',
     
+    newRateLastId: 0,
+    
     initialize: function(root, rate)
     {
         this.rate = rate;
         
         this.findUsedNodes(root);
+        this.bindEvents();
+        
+        this.ratesActiveList = ActiveList.prototype.getInstance(this.nodes.ratesActiveList, Backend.DeliveryZone.ShippingRate.prototype.RatesCallbacks);
+        
+        with(Backend.DeliveryZone.ShippingRate.prototype.Messages)
+        {
+            if(this.rate.ID)
+            {
+                this.nodes.controls.hide();
+            }
+            else
+            {
+                this.nodes.controls.show();
+            }
+        }
         
         new SectionExpander(this.nodes.root);
     },
@@ -776,11 +861,111 @@ Backend.DeliveryZone.ShippingRate.prototype =
         this.nodes = {};
         
         this.nodes.root = $(root);
+
+        this.nodes.controls = this.nodes.root.down('.' + this.prefix +     'rate_controls');
+        this.nodes.save     = this.nodes.controls.down('.' + this.prefix + 'rate_save');
+        this.nodes.cancel   = this.nodes.controls.down('.' + this.prefix + 'rate_cancel');
+        
+        this.nodes.menuCancelLink   = $(this.prefix + "new_rate_" + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID + "_cancel");
+        this.nodes.menuShowLink = $(this.prefix + "new_rate_" + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID + "_show");
+        this.nodes.menu =$(this.prefix + "rate_menu_" + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID);
+        this.nodes.menuForm = $(this.prefix + "new_rate_" + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID + "_form");
+        
+        this.nodes.ratesActiveList = $(this.prefix + 'ratesList_' + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID);
+        
+        this.nodes.weightRangeStart = this.nodes.root.down('.' + this.prefix + 'weightRangeStart');
+        this.nodes.weightRangeEnd = this.nodes.root.down('.' + this.prefix + 'weightRangeEnd');
+        this.nodes.subtotalRangeStart = this.nodes.root.down('.' + this.prefix + 'subtotalRangeStart');
+        this.nodes.subtotalRangeEnd = this.nodes.root.down('.' + this.prefix + 'subtotalRangeEnd');
+        this.nodes.flatCharge = this.nodes.root.down('.' + this.prefix + 'flatCharge');
+        this.nodes.perItemCharge = this.nodes.root.down('.' + this.prefix + 'perItemCharge');
+        this.nodes.subtotalPercentCharge = this.nodes.root.down('.' + this.prefix + 'subtotalPercentCharge');
+        this.nodes.perKgCharge = this.nodes.root.down('.' + this.prefix + 'perKgCharge');
+    },
+    
+    bindEvents: function()
+    {
+       var self = this;
+       
+       Event.observe(this.nodes.save, 'click', function(e) { Event.stop(e); self.save(e); });
+       Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel();});
+       Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); self.cancel(); });
+       
     },
     
     showNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems($(this.prefix + "rate_menu_" + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID), [$(this.prefix + "new_rate_" + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID + "_cancel")]);
-        ActiveForm.prototype.showNewItemForm($(this.prefix + "new_rate_" + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID + "_show"), $(this.prefix + "new_rate_" + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID + "_form")); 
+        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuCancelLink ]);
+        ActiveForm.prototype.showNewItemForm(this.nodes.menuShowLink, this.nodes.menuForm); 
+    },
+    
+    hideNewForm: function()
+    {
+        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuShowLink]);
+        ActiveForm.prototype.hideNewItemForm(this.nodes.menuCancelLink, this.nodes.menuForm); 
+    },
+    
+    save: function(event)
+    {
+        if(!this.rate.ID)
+        {
+            Backend.DeliveryZone.ShippingRate.prototype.newRateLastId++;
+            
+            var li = this.ratesActiveList.addRecord(Backend.DeliveryZone.ShippingRate.prototype.newRateLastId, this.nodes.root);
+            
+            var idStart = this.prefix + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID + "_";
+            var idStartRegexp = new RegExp(idStart)
+            document.getElementsByClassName(this.prefix + 'rateFloatValue', li).each(function(input) {
+                input.id = input.id.replace(idStartRegexp, idStart + 'new' + Backend.DeliveryZone.ShippingRate.prototype.newRateLastId);
+                input.up().down('label')['for'] = input.id;
+            });
+            
+            var rate = {
+                'weightRangeStart': this.nodes.weightRangeStart.value,
+                'weightRangeEnd': this.nodes.weightRangeEnd.value,
+                'subtotalRangeStart': this.nodes.subtotalRangeStart.value,
+                'subtotalRangeEnd': this.nodes.subtotalRangeEnd.value,
+                'flatCharge': this.nodes.flatCharge.value,
+                'perItemCharge': this.nodes.perItemCharge.value,
+                'subtotalPercentCharge': this.nodes.subtotalPercentCharge.value,
+                'perKgCharge': this.nodes.perKgCharge.value,
+                'ShippingService': this.rate.ShippingService,
+                'ID': 'new' + Backend.DeliveryZone.ShippingRate.prototype.newRateLastId
+            };
+            
+            var newForm = Backend.DeliveryZone.ShippingRate.prototype.getInstance(li, rate);
+            
+            this.nodes.weightRangeStart.value = '';
+            this.nodes.weightRangeEnd.value = '';
+            this.nodes.subtotalRangeStart.value = '';
+            this.nodes.subtotalRangeEnd.value = '';
+            this.nodes.flatCharge.value = '';
+            this.nodes.perItemCharge.value = '';
+            this.nodes.subtotalPercentCharge.value = '';
+            this.nodes.perKgCharge.value = '';
+        }
+    },
+    
+    cancel: function()
+    {
+        console.info('cancel');
+        
+        if(!this.rate.ID)
+        {
+            this.hideNewForm();
+        }
+    },
+    
+    remove: function()
+    {
+        if(confirm(Backend.DeliveryZone.ShippingService.prototype.Messages.confirmRateDelete))
+        {
+            if(!this.rate.ID.match(/^new/))
+            {
+                new Ajax.Request(Backend.DeliveryZone.ShippingService.prototype.Links.deleteRate + '/' + this.rate.ID);    
+            }
+            
+            Element.remove(this.nodes.root);
+        }
     }
 }
