@@ -45,7 +45,7 @@
     			</li>
     			
     			<li id="tabDeliveryZoneTaxes" class="tab inactive">
-    				<a href="{link controller=backend.deliveryZone action=taxRates id=_id_}">{t Tax Rates}</a>
+    				<a href="{link controller=backend.taxRate action=index id=_id_}">{t Tax Rates}</a>
     				<span class="tabHelp">deliveryZone.taxRates</span>
     			</li>
 			</ul>
