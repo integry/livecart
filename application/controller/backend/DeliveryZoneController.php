@@ -21,10 +21,11 @@ class DeliveryZoneController extends StoreManagementController
 	public function index()
 	{
 		$zones = array();
+		$zones[] = array('ID' => -1, 'name' => $this->translate('_default_zone'));
 		foreach(DeliveryZone::getAll()->toArray() as $zone) 
-		
+		{
 		    $zones[] = array('ID' => $zone['ID'], 'name' => $zone['name']);
-		
+		}
 		    
 		$response = new ActionResponse();
 		$response->setValue('zones', json_encode($zones));
@@ -34,7 +35,10 @@ class DeliveryZoneController extends StoreManagementController
 	
 	public function countriesAndStates() 
 	{
-	    if(!($id = (int)$this->request->getValue('id'))) return;
+	    if(($id = (int)$this->request->getValue('id')) <= 0) 
+	    {
+	        return new RawResponse('aaa');
+	    }
 	    
 	    $deliveryZone = DeliveryZone::getInstanceByID($id, true);
 	    $localeInfo = $this->locale->info();

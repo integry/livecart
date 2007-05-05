@@ -48,10 +48,13 @@ class ShippingService extends MultilingualObject
 	 * @param integer $calculationCriteria Shipping price calculation criteria. 0 for weight based calculations, 1 for subtotal based calculations
 	 * @return ShippingService
 	 */
-	public static function getNewInstance(DeliveryZone $deliveryZone, $defaultLanguageName, $calculationCriteria)
+	public static function getNewInstance(DeliveryZone $deliveryZone = null, $defaultLanguageName, $calculationCriteria)
 	{
         $instance = parent::getNewInstance(__CLASS__);
-        $instance->deliveryZone->set($deliveryZone);
+        if($deliveryZone)
+        {
+            $instance->deliveryZone->set($deliveryZone);
+        }
         $instance->setValueByLang('name', Store::getInstance()->getDefaultLanguageCode(), $defaultLanguageName);
         $instance->rangeType->set($calculationCriteria);
         
@@ -79,12 +82,20 @@ class ShippingService extends MultilingualObject
 	 *
 	 * @return ARSet
 	 */
-	public static function getByDeliveryZone(DeliveryZone $deliveryZone, $loadReferencedRecords = false)
+	public static function getByDeliveryZone(DeliveryZone $deliveryZone = null, $loadReferencedRecords = false)
 	{
  	    $filter = new ARSelectFilter();
 
 		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"), 'ASC');
-		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "deliveryZoneID"), $deliveryZone->getID()));
+		
+		if(!$deliveryZone)
+		{
+		    $filter->setCondition(new IsNullCond(new ARFieldHandle(__CLASS__, "deliveryZoneID")));
+		}
+		else
+		{
+		    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "deliveryZoneID"), $deliveryZone->getID()));
+		}
 		
 		return self::getRecordSet($filter, $loadReferencedRecords);
 	}

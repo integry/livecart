@@ -16,21 +16,31 @@ class ShippingServiceController extends StoreManagementController
 {
 	public function index() 
 	{
-	    if(!($zoneID = (int)$this->request->getValue('id'))) return;
+	    if(($zoneID = (int)$this->request->getValue('id')) <= 0) 
+	    {
+	        $deliveryZoneArray = array('ID' => '');
+	        $shippingServices = ShippingService::getByDeliveryZone()->toArray();
+	    }
+	    else
+	    {
+	        $deliveryZone = DeliveryZone::getInstanceByID($zoneID, true);
+	        $deliveryZoneArray = $deliveryZone->toArray();
+	        $shippingServices = $deliveryZone->getShippingServices()->toArray();
+	    }
 	    
-	    $deliveryZone = DeliveryZone::getInstanceByID($zoneID, true);
+	    
 	      
 		$form = $this->createShippingServiceForm();
-		$form->setData(array('name_en' => 'test', 'rangeType' => 1) /* $deliveryZone->toArray() */);
+		$form->setData(array('name_en' => 'test', 'rangeType' => 1));
 		
 		
 		$response = new ActionResponse();
 		$response->setValue('defaultLanguageCode', $this->store->getDefaultLanguageCode());
-		$response->setValue('shippingServices', $deliveryZone->getShippingServices()->toArray());
+		$response->setValue('shippingServices', $shippingServices);
 		$response->setValue('alternativeLanguagesCodes', $this->store->getLanguageSetArray(false, false));
-		$response->setValue('newService', array('DeliveryZone' => $deliveryZone->toArray()));
-		$response->setValue('newRate', array('ShippingService' => array('DeliveryZone' => $deliveryZone->toArray(), 'ID' => '')));
-		$response->setValue('deliveryZone', $deliveryZone->toArray());
+		$response->setValue('newService', array('DeliveryZone' => $deliveryZoneArray));
+		$response->setValue('newRate', array('ShippingService' => array('DeliveryZone' => $deliveryZoneArray, 'ID' => '')));
+		$response->setValue('deliveryZone', $deliveryZoneArray);
 	    $response->setValue('form', $form);
 	    return $response;
 	}
@@ -80,7 +90,15 @@ class ShippingServiceController extends StoreManagementController
         }
         else
         {
-	        $deliveryZone = DeliveryZone::getInstanceByID($this->request->getValue('deliveryZoneID'), true);
+            if(($deliveryZoneId = (int)$this->request->getValue('deliveryZoneID')) > 0)
+            {
+                $deliveryZone = DeliveryZone::getInstanceByID($deliveryZoneId, true);
+            }
+            else
+            {
+                $deliveryZone = null;
+            }
+	        
 	        $shippingService = ShippingService::getNewInstance($deliveryZone, $this->request->getValue('name'), $this->request->getValue('rangeType'));
         }
         

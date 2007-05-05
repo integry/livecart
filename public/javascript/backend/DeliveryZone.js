@@ -120,6 +120,8 @@ Backend.DeliveryZone.prototype =
 	insertTreeBranch: function(treeBranch, rootId)
 	{
 		var self = this;
+        
+            
         $A(treeBranch).each(function(node)
 		{
             Backend.DeliveryZone.prototype.treeBrowser.insertNewItem(rootId, node.ID, node.name, null, 0, 0, 0, '', 1);
@@ -135,13 +137,33 @@ Backend.DeliveryZone.prototype =
 	
 	activateZone: function(id)
 	{
+        if(id == -1)
+        {
+            if(Backend.ajaxNav.getHash().match(/tabDeliveryZoneCountry/))
+            {
+                Backend.ajaxNav.ignoreNextAdd = false;
+                Backend.ajaxNav.add('zone_' + id + '#tabDeliveryZoneShipping');
+                Backend.ajaxNav.ignoreNextAdd = true;
+            }
+            
+            var activateTab = $('tabDeliveryZoneShipping');
+            $("tabDeliveryZoneCountry").hide();
+            
+        }
+        else
+        {
+            var activateTab = $('tabDeliveryZoneCountry');
+            $("tabDeliveryZoneCountry").show();
+        }
+        
         if(Backend.DeliveryZone.prototype.activeZone && Backend.DeliveryZone.prototype.activeZone != id)
         {
             Backend.DeliveryZone.prototype.activeZone = id;
     		Backend.DeliveryZone.prototype.treeBrowser.showFeedback(id);
             
             Backend.ajaxNav.add('zone_' + id);
-            this.tabControl.activateTab($('tabDeliveryZoneCountry'), function() { 
+            
+            this.tabControl.activateTab(activateTab, function() { 
                 Backend.DeliveryZone.prototype.treeBrowser.hideFeedback(id);
             });
         }
@@ -695,6 +717,7 @@ Backend.DeliveryZone.ShippingService.prototype =
         try
         {
             this.service = service;
+            this.deliveryZoneId = this.service.DeliveryZone ? this.service.DeliveryZone.ID : '';
             this.findUsedNodes(root);
             this.bindEvents();
             this.rangeTypeChanged();
@@ -737,14 +760,17 @@ Backend.DeliveryZone.ShippingService.prototype =
         
         this.nodes.rangeTypes = document.getElementsByClassName(this.prefix + 'rangeType', this.nodes.root);
         
-        this.nodes.servicesList = $$('.' + this.prefix + 'servicesList_' + this.service.DeliveryZone.ID)[0];
-        this.nodes.ratesList = $(this.prefix + 'ratesList_' + this.service.DeliveryZone.ID + '_' + (this.service.ID ? this.service.ID : ''));
-        this.nodes.ratesNewForm = $(this.prefix + 'new_rate_' + this.service.DeliveryZone.ID + '_' + (this.service.ID ? this.service.ID : '') + '_form');
+        this.nodes.servicesList = $$('.' + this.prefix + 'servicesList_' + this.deliveryZoneId)[0];
+        this.nodes.ratesList = $(this.prefix + 'ratesList_' + this.deliveryZoneId + '_' + (this.service.ID ? this.service.ID : ''));
+        this.nodes.ratesNewForm = $(this.prefix + 'new_rate_' + this.deliveryZoneId + '_' + (this.service.ID ? this.service.ID : '') + '_form');
         
-        this.nodes.menu = $(this.prefix + "menu_" + this.service.DeliveryZone.ID);
-        this.nodes.menuCancelLink = $(this.prefix + "new_" + this.service.DeliveryZone.ID + "_cancel");
-        this.nodes.menuShowLink = $(this.prefix + "new_" + this.service.DeliveryZone.ID + "_show");
-        this.nodes.menuForm = $(this.prefix + "new_service_" + this.service.DeliveryZone.ID + "_form");
+        if(!this.service.ID)
+        {
+            this.nodes.menu = $(this.prefix + "menu_" + this.deliveryZoneId);
+            this.nodes.menuCancelLink = $(this.prefix + "new_" + this.deliveryZoneId + "_cancel");
+            this.nodes.menuShowLink = $(this.prefix + "new_" + this.deliveryZoneId + "_show");
+            this.nodes.menuForm = $(this.prefix + "new_service_" + this.deliveryZoneId + "_form");
+        }
         
         this.nodes.name = this.nodes.root.down('.' + this.prefix + 'name');
     },
@@ -917,6 +943,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
     initialize: function(root, rate)
     {
         this.rate = rate;
+        this.deliveryZoneId = this.rate.ShippingService.DeliveryZone ? this.rate.ShippingService.DeliveryZone.ID : '';
         
         this.findUsedNodes(root);
         this.bindEvents();
@@ -964,12 +991,15 @@ Backend.DeliveryZone.ShippingRate.prototype =
         this.nodes.save     = this.nodes.controls.down('.' + this.prefix + 'rate_save');
         this.nodes.cancel   = this.nodes.controls.down('.' + this.prefix + 'rate_cancel');
         
-        this.nodes.menuCancelLink   = $(this.prefix + "new_rate_" + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID + "_cancel");
-        this.nodes.menuShowLink = $(this.prefix + "new_rate_" + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID + "_show");
-        this.nodes.menu =$(this.prefix + "rate_menu_" + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID);
-        this.nodes.menuForm = $(this.prefix + "new_rate_" + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID + "_form");
+        if(!this.rate.ID)
+        {
+            this.nodes.menuCancelLink   = $(this.prefix + "new_rate_" + this.deliveryZoneId + '_' + this.rate.ShippingService.ID + "_cancel");
+            this.nodes.menuShowLink = $(this.prefix + "new_rate_" + this.deliveryZoneId + '_' + this.rate.ShippingService.ID + "_show");
+            this.nodes.menu =$(this.prefix + "rate_menu_" + this.deliveryZoneId + '_' + this.rate.ShippingService.ID);
+            this.nodes.menuForm = $(this.prefix + "new_rate_" + this.deliveryZoneId + '_' + this.rate.ShippingService.ID + "_form");
+        }
         
-        this.nodes.ratesActiveList = $(this.prefix + 'ratesList_' + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID);
+        this.nodes.ratesActiveList = $(this.prefix + 'ratesList_' + this.deliveryZoneId + '_' + this.rate.ShippingService.ID);
         
         this.nodes.weightRangeStart = this.nodes.root.down('.' + this.prefix + 'weightRangeStart');
         this.nodes.weightRangeEnd = this.nodes.root.down('.' + this.prefix + 'weightRangeEnd');
@@ -1061,7 +1091,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
             
             var li = this.ratesActiveList.addRecord(newId, this.nodes.root);
             
-            var idStart = this.prefix + this.rate.ShippingService.DeliveryZone.ID + '_' + this.rate.ShippingService.ID + "_";
+            var idStart = this.prefix + this.deliveryZoneId + '_' + this.rate.ShippingService.ID + "_";
             var idStartRegexp = new RegExp(idStart)
                 document.getElementsByClassName(this.prefix + 'rateFloatValue', li).each(function(input) {
                 input.id = input.id.replace(idStartRegexp, idStart + 'new' + newId);

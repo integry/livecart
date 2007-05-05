@@ -35,17 +35,17 @@
     	<div class="tabContainer">
     		<ul class="tabList tabs">
     			<li id="tabDeliveryZoneCountry" class="tab active">
-    				<a href="{link controller=backend.deliveryZone action=countriesAndStates id=_id_}">{t Countries and States}</a>
+    				<a href="{link controller=backend.deliveryZone action=countriesAndStates}?id=_id_">{t Countries and States}</a>
     				<span class="tabHelp">deliveryZone.countriesAndStates</span>
     			</li>
     			
     			<li id="tabDeliveryZoneShipping" class="tab inactive">
-    				<a href="{link controller=backend.shippingService action=index id=_id_}">{t Shipping Rates}</a>
+    				<a href="{link controller=backend.shippingService action=index}?id=_id_">{t Shipping Rates}</a>
     				<span class="tabHelp">deliveryZone.shippingRates</span>
     			</li>
     			
     			<li id="tabDeliveryZoneTaxes" class="tab inactive">
-    				<a href="{link controller=backend.taxRate action=index id=_id_}">{t Tax Rates}</a>
+    				<a href="{link controller=backend.taxRate action=index}?id=_id_">{t Tax Rates}</a>
     				<span class="tabHelp">deliveryZone.taxRates</span>
     			</li>
 			</ul>
@@ -59,6 +59,7 @@
 {literal}
 <script type="text/javascript">
     Backend.DeliveryZone.prototype.Messages.confirmZoneDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_zone}{literal}';
+    Backend.DeliveryZone.prototype.Messages.defaultZoneName = '{/literal}{t _default_zone}{literal}';
     Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmAddressDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_address_mask}{literal}';
     Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmCityDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_city_mask}{literal}';
     Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmZipDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_zip_mask}{literal}';
