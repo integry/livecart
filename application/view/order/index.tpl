@@ -64,9 +64,8 @@
 				</tr>
 				<tr>
 					<td colspan="4" style="text-align: right;">
-						<a href="{link route=$return}">&lt;&lt; Continue Shopping</a>
-						 | 
-						<a href="{link controller=checkout}">Proceed to Checkout &gt;&gt;</a>
+						<a href="{link route=$return}" style="float: left;">&lt;&lt; Continue Shopping</a>
+						<a href="{link controller=checkout}" style="float: right; font-weight: bold;">Proceed to Checkout &gt;&gt;</a>
 					</td>
 				</tr>
 			</tbody>

@@ -1,4 +1,153 @@
-RENAME TABLE TaxType TO Tax;
+# ---------------------------------------------------------------------- #
+# Script generated with: DeZign for Databases v4.2.0                     #
+# Target DBMS:           MySQL 4                                         #
+# Project file:          LiveCart.dez                                    #
+# Project name:          LiveCart                                        #
+# Author:                Integry Systems                                 #
+# Script type:           Alter database script                           #
+# Created on:            2007-05-05 20:16                                #
+# ---------------------------------------------------------------------- #
+
+
+# ---------------------------------------------------------------------- #
+# Drop foreign key constraints                                           #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE Product DROP FOREIGN KEY Category_Product;
+
+ALTER TABLE Product DROP FOREIGN KEY Manufacturer_Product;
+
+ALTER TABLE Product DROP FOREIGN KEY ProductImage_Product;
+
+ALTER TABLE Category DROP FOREIGN KEY Category_Category;
+
+ALTER TABLE Category DROP FOREIGN KEY CategoryImage_Category;
+
+ALTER TABLE SpecificationItem DROP FOREIGN KEY SpecFieldValue_SpecificationItem;
+
+ALTER TABLE SpecificationItem DROP FOREIGN KEY Product_SpecificationItem;
+
+ALTER TABLE SpecificationItem DROP FOREIGN KEY SpecField_SpecificationItem;
+
+ALTER TABLE SpecField DROP FOREIGN KEY Category_SpecField;
+
+ALTER TABLE SpecField DROP FOREIGN KEY SpecFieldGroup_SpecField;
+
+ALTER TABLE SpecFieldValue DROP FOREIGN KEY SpecField_SpecFieldValue;
+
+ALTER TABLE CustomerOrder DROP FOREIGN KEY User_CustomerOrder;
+
+ALTER TABLE CustomerOrder DROP FOREIGN KEY UserAddress_CustomerOrder;
+
+ALTER TABLE CustomerOrder DROP FOREIGN KEY UserAddress_CustomerOrder_Shipping;
+
+ALTER TABLE OrderedItem DROP FOREIGN KEY Product_OrderedItem;
+
+ALTER TABLE OrderedItem DROP FOREIGN KEY CustomerOrder_OrderedItem;
+
+ALTER TABLE OrderedItem DROP FOREIGN KEY Shipment_OrderedItem;
+
+ALTER TABLE User DROP FOREIGN KEY ShippingAddress_User;
+
+ALTER TABLE User DROP FOREIGN KEY BillingAddress_User;
+
+ALTER TABLE AccessControlList DROP FOREIGN KEY User_AccessControlList;
+
+ALTER TABLE AccessControlList DROP FOREIGN KEY RoleGroup_AccessControlList;
+
+ALTER TABLE AccessControlList DROP FOREIGN KEY Role_AccessControlList;
+
+ALTER TABLE UserGroup DROP FOREIGN KEY User_UserGroup;
+
+ALTER TABLE UserGroup DROP FOREIGN KEY RoleGroup_UserGroup;
+
+ALTER TABLE Filter DROP FOREIGN KEY FilterGroup_Filter;
+
+ALTER TABLE FilterGroup DROP FOREIGN KEY SpecField_FilterGroup;
+
+ALTER TABLE ProductRelationship DROP FOREIGN KEY Product_RelatedProduct_;
+
+ALTER TABLE ProductRelationship DROP FOREIGN KEY Product_ProductRelationship;
+
+ALTER TABLE ProductRelationship DROP FOREIGN KEY ProductRelationshipGroup_ProductRelationship;
+
+ALTER TABLE ProductPrice DROP FOREIGN KEY Product_ProductPrice;
+
+ALTER TABLE ProductPrice DROP FOREIGN KEY Currency_ProductPrice;
+
+ALTER TABLE ProductImage DROP FOREIGN KEY Product_ProductImage;
+
+ALTER TABLE ProductFile DROP FOREIGN KEY Product_ProductFile;
+
+ALTER TABLE ProductFile DROP FOREIGN KEY ProductFileGroup_ProductFile;
+
+ALTER TABLE Discount DROP FOREIGN KEY Product_Discount;
+
+ALTER TABLE CategoryImage DROP FOREIGN KEY Category_CategoryImage;
+
+ALTER TABLE SpecificationNumericValue DROP FOREIGN KEY Product_SpecificationNumericValue;
+
+ALTER TABLE SpecificationNumericValue DROP FOREIGN KEY SpecField_SpecificationNumericValue;
+
+ALTER TABLE SpecificationStringValue DROP FOREIGN KEY Product_SpecificationStringValue;
+
+ALTER TABLE SpecificationStringValue DROP FOREIGN KEY SpecField_SpecificationStringValue;
+
+ALTER TABLE SpecificationDateValue DROP FOREIGN KEY Product_SpecificationDateValue;
+
+ALTER TABLE SpecificationDateValue DROP FOREIGN KEY SpecField_SpecificationDateValue;
+
+ALTER TABLE SpecFieldGroup DROP FOREIGN KEY Category_SpecFieldGroup;
+
+ALTER TABLE ProductRelationshipGroup DROP FOREIGN KEY Product_ProductRelationshipGroup;
+
+ALTER TABLE ProductReview DROP FOREIGN KEY Product_ProductReview;
+
+ALTER TABLE ProductReview DROP FOREIGN KEY User_ProductReview;
+
+ALTER TABLE UserAddress DROP FOREIGN KEY State_UserAddress;
+
+ALTER TABLE BillingAddress DROP FOREIGN KEY User_BillingAddress;
+
+ALTER TABLE BillingAddress DROP FOREIGN KEY UserAddress_BillingAddress;
+
+ALTER TABLE Transaction DROP FOREIGN KEY CustomerOrder_Transaction;
+
+ALTER TABLE Transaction DROP FOREIGN KEY Transaction_Transaction;
+
+ALTER TABLE Shipment DROP FOREIGN KEY CustomerOrder_Shipment;
+
+ALTER TABLE Shipment DROP FOREIGN KEY ShippingService_Shipment;
+
+ALTER TABLE ShippingAddress DROP FOREIGN KEY User_ShippingAddress;
+
+ALTER TABLE ShippingAddress DROP FOREIGN KEY UserAddress_ShippingAddress;
+
+ALTER TABLE OrderNote DROP FOREIGN KEY CustomerOrder_OrderNote;
+
+ALTER TABLE OrderNote DROP FOREIGN KEY User_OrderNote;
+
+ALTER TABLE DeliveryZoneCountry DROP FOREIGN KEY DeliveryZone_DeliveryZoneCountry;
+
+ALTER TABLE DeliveryZoneState DROP FOREIGN KEY DeliveryZone_DeliveryZoneState;
+
+ALTER TABLE DeliveryZoneState DROP FOREIGN KEY State_DeliveryZoneState;
+
+ALTER TABLE DeliveryZoneCityMask DROP FOREIGN KEY DeliveryZone_DeliveryZoneCityMask;
+
+ALTER TABLE DeliveryZoneZipMask DROP FOREIGN KEY DeliveryZone_DeliveryZoneZipMask;
+
+ALTER TABLE DeliveryZoneAddressMask DROP FOREIGN KEY DeliveryZone_DeliveryZoneAddressMask;
+
+ALTER TABLE TaxRate DROP FOREIGN KEY Tax_TaxRate;
+
+ALTER TABLE TaxRate DROP FOREIGN KEY DeliveryZone_TaxRate;
+
+ALTER TABLE ShippingRate DROP FOREIGN KEY ShippingService_ShippingRate;
+
+ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
+
+ALTER TABLE ShippingService DROP FOREIGN KEY DeliveryZone_ShippingService;
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
@@ -160,6 +309,9 @@ ALTER TABLE Transaction ADD CONSTRAINT Transaction_Transaction
 ALTER TABLE Shipment ADD CONSTRAINT CustomerOrder_Shipment 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
 
+ALTER TABLE Shipment ADD CONSTRAINT ShippingService_Shipment 
+    FOREIGN KEY (shippingServiceID) REFERENCES ShippingService (ID) ON DELETE SET NULL;
+
 ALTER TABLE ShippingAddress ADD CONSTRAINT User_ShippingAddress 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
 
@@ -191,7 +343,7 @@ ALTER TABLE DeliveryZoneAddressMask ADD CONSTRAINT DeliveryZone_DeliveryZoneAddr
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
 
 ALTER TABLE TaxRate ADD CONSTRAINT Tax_TaxRate 
-    FOREIGN KEY (taxTypeID) REFERENCES Tax (ID) ON DELETE CASCADE;
+    FOREIGN KEY (taxID) REFERENCES Tax (ID) ON DELETE CASCADE;
 
 ALTER TABLE TaxRate ADD CONSTRAINT DeliveryZone_TaxRate 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;

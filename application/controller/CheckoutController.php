@@ -363,9 +363,10 @@ class CheckoutController extends FrontendController
         if ($result instanceof TransactionResult)
         {
             $newOrder = $order->finalize($currency);
-            $newOrder->syncToSession();
+            $this->session->unsetValue('CustomerOrder');
+            $newOrder->saveToSession();
 			            
-            Session::getInstance()->setValue('completedOrderID', $order->getID());          
+            $this->session->setValue('completedOrderID', $order->getID());          
             
             $transaction = Transaction::getNewInstance($order, $result);
             $transaction->save();

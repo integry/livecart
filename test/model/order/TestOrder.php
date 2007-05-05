@@ -6,7 +6,9 @@ ClassLoader::import("application.model.category.*");
 ClassLoader::import("application.model.product.*");
 ClassLoader::import("application.model.order.*");
 ClassLoader::import("application.model.user.*");
+ClassLoader::import("application.model.Currency");
 ClassLoader::import("library.payment.*");
+
 
 /**
  *	Test Order model for the following scenarios:
@@ -166,6 +168,16 @@ class TestOrder extends UnitTestCase
     {
         $total = $this->order->getTotal($this->usd);
         $this->order->finalize($this->usd);
+        
+        // the sum of all shipments amounts should be equal to the order amount
+        $sum = 0;
+        foreach ($this->order->getShipments() as $shipment)
+        {
+            $sum += $shipment->amount->get();
+            var_dump($shipment->getSelectedRate());
+        }
+        
+        $this->assertEqual($sum, $this->order->totalAmount->get());
         
         ActiveRecord::clearPool();        
         

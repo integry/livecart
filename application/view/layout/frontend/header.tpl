@@ -8,7 +8,7 @@
 		
 		<div style="float: left;">
             <div style="float: left;">
-                <img src="image/promo/transparentlogo_small.png" />
+                <a href="{link}"><img src="image/promo/transparentlogo_small.png" /></a>
                	<span id="storeName">Demo</span>
             </div>
             

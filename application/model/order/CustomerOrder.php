@@ -130,6 +130,13 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         }
     }
     
+    public function loadAll()
+    {
+        $this->loadItems();
+        $this->loadAddresses();
+        $this->getShipments();
+    }
+
     /**
      *	Add a product to shopping basket
      */
@@ -254,6 +261,9 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     {
         self::beginTransaction();
         
+        $this->totalAmount->set($this->getTotal($currency));
+        $this->currency->set($currency);
+
 		foreach ($this->getShipments() as $shipment)
         {
             $shipment->order->set($this);
@@ -285,10 +295,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
             $wishList->addItem($item);
         }
         $wishList->save();
-        
-        $this->totalAmount->set($this->getTotal($currency));
-        $this->currency->set($currency);
-        
+                
         $this->isFinalized->set(true);
 		$this->save();
         
@@ -551,28 +558,35 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
      */
     public function getShipments()
     {
-        if (!$this->shipments)
+        if ($this->isFinalized->get())
         {
-            ClassLoader::import("application.model.order.Shipment");
-    
-            $main = Shipment::getNewInstance($this);
-            $this->shipments = new ARSet();
-            
-            foreach ($this->getOrderedItems() as $item)
+            $this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter());    
+        }
+        else
+        {
+            if (!$this->shipments)
             {
-                if ($item->product->get()->isSeparateShipment->get())
+                ClassLoader::import("application.model.order.Shipment");
+        
+                $main = Shipment::getNewInstance($this);
+                $this->shipments = new ARSet();
+                
+                foreach ($this->getOrderedItems() as $item)
                 {
-                    $shipment = Shipment::getNewInstance($this);
-                    $shipment->addItem($item);
-                    $this->shipments->add($shipment);
-                }
-                else
-                {
-                    $main->addItem($item);
-                }
-            }   
-            
-            $this->shipments->unshift($main);
+                    if ($item->product->get()->isSeparateShipment->get())
+                    {
+                        $shipment = Shipment::getNewInstance($this);
+                        $shipment->addItem($item);
+                        $this->shipments->add($shipment);
+                    }
+                    else
+                    {
+                        $main->addItem($item);
+                    }
+                }   
+                
+                $this->shipments->unshift($main);
+            }            
         }
 
         return $this->shipments;
@@ -701,7 +715,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         $array['isShipped'] = (int)$this->isShipped();
         $array['isAwaitingShipment'] = (int)$this->isAwaitingShipment();
         $array['isBackordered'] = (int)$this->isBackordered();
-		
+//		var_dump($array);
 		return $array;
 	}
 	

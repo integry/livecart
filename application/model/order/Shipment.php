@@ -33,7 +33,11 @@ class Shipment extends ActiveRecordModel
 		
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("amountCurrencyID", "Currency", "ID", "Currency", ARInteger::instance()));
 
+		$schema->registerField(new ARField("trackingCode", ARVarchar::instance(100)));
+		$schema->registerField(new ARField("dateShipped", ARDateTime::instance()));
+		$schema->registerField(new ARField("amount", ARFloat::instance()));
 		$schema->registerField(new ARField("status", ARInteger::instance(2)));
 	}       
 	
@@ -94,40 +98,54 @@ class Shipment extends ActiveRecordModel
     {
         $array = parent::toArray();
         
-        $items = array();
-        $subTotal = array();
-        $currencies = Store::getInstance()->getCurrencySet();
-        
+        // ordered items
+        $items = array();       
         foreach ($this->items as $item)
         {            
             $items[] = $item->toArray();
-            
-            foreach ($currencies as $id => $currency)
-            {
-                if (!isset($subTotal[$id]))
-                {
-                    $subTotal[$id] = 0;
-                }                
-                $subTotal[$id] += $item->getSubTotal($currency);
-            }
         }        
+        $array['items'] = $items;      
         
+        // subtotal
+        $currencies = Store::getInstance()->getCurrencySet();
+        $subTotal = array();
+        foreach ($currencies as $id => $currency)
+        {
+            $subTotal[$id] = $this->getSubTotal($currency);
+        }
+        $array['subTotal'] = $subTotal;
+               
+        // formatted subtotal
         $formattedSubTotal = array();
         foreach ($subTotal as $id => $price)
         {
             $formattedSubTotal[$id] = Currency::getInstanceById($id)->getFormattedPrice($price);
-        }
-        
-        $array['items'] = $items;      
-        $array['subTotal'] = $subTotal;
+        }        
         $array['formattedSubTotal'] = $formattedSubTotal;
         
+        // selected shipping rate
         if ($selected = $this->getSelectedRate())
         {
             $array['selectedRate'] = $selected->toArray();            
         }
                 
         return $array;
+    }
+    
+    public function getSubTotal(Currency $currency)
+    {
+        $subTotal = 0;
+        foreach ($this->items as $item)
+        {            
+            $subTotal += $item->getSubTotal($currency);
+        }            
+        
+        if ($selected = $this->getSelectedRate())
+        {
+            var_dump($selected);
+        }
+        
+        return $subTotal;    
     }
     
 	public function serialize()
@@ -156,6 +174,15 @@ class Shipment extends ActiveRecordModel
             
             $this->itemIds = array();
         }
+    }
+    
+    protected function insert()
+    {
+        $currency = $this->order->get()->currency->get();
+        $this->amountCurrency->set($currency);
+        $this->amount->set($this->getSubTotal($currency));
+
+        return parent::insert();
     }
     
     public function getItems()

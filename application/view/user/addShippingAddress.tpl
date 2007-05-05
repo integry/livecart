@@ -9,6 +9,8 @@
 
     <h1>{t _add_shipping_address}</h1>
     
+	{include file="user/userMenu.tpl" current="addressMenu"}    
+    
     {form action="controller=user action=doAddShippingAddress" handle=$form}
         {include file="user/addressForm.tpl"}                        
         <input type="submit" class="submit" value="{tn _continue}" />        

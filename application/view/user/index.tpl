@@ -46,10 +46,18 @@
 	       <div class="orderMenu"style="float: left; width: 200px;">
 	       
 	           <ul>
-	               <li><a href="{link controller=user action=order id=$order.ID}">{t View Details}</a></li>
+	               <li><a href="{link controller=user action=viewOrder id=$order.ID}">{t View Details}</a></li>
 	               <li><a href="{link controller=user action=orderInvoice id=$order.ID}">{t Print Invoice}</a></li>
 	           </ul>
 	           
+	           <div>
+	               {t Order ID}: {$order.ID}
+	           </div>
+	           
+	           <div>
+	               {t Recipient}: {$order.ShippingAddress.fullName}
+	           </div>
+
 	           <div class="orderTotal">
 	               {t Total}: <strong>{$order.formattedTotal[$order.Currency.ID]}</strong>
 	           </div>
