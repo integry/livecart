@@ -84,6 +84,7 @@
     Backend.DeliveryZone.ShippingService.prototype.Links.sortRates = '{/literal}{link controller=backend.shippingRate action=sort}{literal}';
     Backend.DeliveryZone.ShippingService.prototype.Links.editRate = '{/literal}{link controller=backend.shippingRate action=edit}{literal}';
     Backend.DeliveryZone.ShippingService.prototype.Links.save = '{/literal}{link controller=backend.shippingService action=save}{literal}';
+    Backend.DeliveryZone.ShippingService.prototype.Links.validateRates = '{/literal}{link controller=backend.shippingService action=validateRates}{literal}';
     
     
     var zones = new Backend.DeliveryZone({/literal}{$zones}{literal});

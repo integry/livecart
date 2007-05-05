@@ -16,7 +16,12 @@ class ShippingRateController extends StoreManagementController
 {
     public function delete()
     {
-        return new RawResponse('delete');
+        if($id = (int)$this->request->getValue('id'))
+        {
+            ShippingRate::getInstanceByID($id)->delete();
+        }
+        
+        return new JSONResponse(array('status' => 'success'));
     }
     
     public function edit()
@@ -27,11 +32,6 @@ class ShippingRateController extends StoreManagementController
     public function save()
     {
         return new RawResponse('save');
-    }
-    
-    public function sort()
-    {
-        return new RawResponse('sort');
     }
 }
 ?>

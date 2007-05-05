@@ -49,3 +49,7 @@ p.checkbox
 {
     width: 60px;   
 }
+
+.shippingService_servicesList .activeList_editContainer { 
+    margin: 0 20px;
+}

@@ -8,7 +8,7 @@
 
 {* new form *}
 <fieldset id="shippingService_new_service_{$deliveryZone.ID}_form" style="display: none;">
-    {include file="backend/shippingService/service.tpl" deliveryZone=$deliveryZone}
+    {include file="backend/shippingService/service.tpl" service=$newService}
 </fieldset>
 
 
@@ -44,5 +44,3 @@
     ActiveList.prototype.getInstance("shippingService_servicesList_{/literal}{$deliveryZone.ID}{literal}", Backend.DeliveryZone.ShippingService.prototype.Callbacks, function() {});
 </script>
 {/literal}
-
-{json array=$newRate}

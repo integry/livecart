@@ -74,15 +74,24 @@ class ShippingServiceController extends StoreManagementController
     
     public function save()
     {
-        $deliveryZone = DeliveryZone::getInstanceByID($this->request->getValue('deliveryZoneID'), true);
-        $shippingService = ShippingService::getNewInstance($deliveryZone, $this->request->getValue('name'), $this->request->getValue('rangeType'));
-        $shippingService->setValueArrayByLang(array('name'), $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true, false), $this->request);
-        $shippingService->save();
+        if($serviceID = (int)$this->request->getValue('serviceID'))
+        {
+            $shippingService = ShippingService::getInstanceByID($serviceID);
+        }
+        else
+        {
+	        $deliveryZone = DeliveryZone::getInstanceByID($this->request->getValue('deliveryZoneID'), true);
+	        $shippingService = ShippingService::getNewInstance($deliveryZone, $this->request->getValue('name'), $this->request->getValue('rangeType'));
+        }
         
+	    
         $ratesData = $this->getRatesFromRequest();
         $rates = array();
         if(!($errors = $this->isNotValid($this->request->getValue('name'), $ratesData)))
         {
+	        $shippingService->setValueArrayByLang(array('name'), $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true, false), $this->request);      
+		    $shippingService->save();
+            
             foreach($ratesData as $id => $data)
             {
                 if(preg_match('/^new/', $id))
@@ -113,17 +122,22 @@ class ShippingServiceController extends StoreManagementController
                 $rate->save();
             }
             
-            return new JSONResponse(array('status' => 'success'));
+            return new JSONResponse(array('status' => 'success', 'service' => $shippingService->toArray()));
+        }
+        else
+        {
+            return new JSONResponse(array('status' => 'failure', 'errors' => $errors));
         }
     }
     
     public function getRatesFromRequest()
     {
         $rates = array();
+//        print_r($_POST);
         foreach($_POST as $variable => $value)
         {
             $matches = array();
-            if(preg_match('/^rate_([^_]+)_(perKgCharge|subtotalPercentCharge|perItemCharge|flatCharge|weightRangeEnd|weightRangeStart|subtotalRangeEnd|subtotalRangeStart)$/', $variable, $matches))
+            if(preg_match('/^rate_([^_]*)_(perKgCharge|subtotalPercentCharge|perItemCharge|flatCharge|weightRangeEnd|weightRangeStart|subtotalRangeEnd|subtotalRangeStart)$/', $variable, $matches))
             {
                 $id = $matches[1];
                 $name = $matches[2];
@@ -137,11 +151,66 @@ class ShippingServiceController extends StoreManagementController
     
     public function isNotValid($name, $rates = array())
     {
+        $errors = array();
+        
+        if($name == '')
+        {
+            $errors['name'] = $this->translate('_error_name_should_not_be_empty');
+        }
+        
+        foreach($rates as $id => $rate)
+        {
+            if(!empty($id))
+            {
+                $errors = array_merge($errors, $this->validateRate($id, $rate));
+            }
+        }
+
+        return empty($errors) ? false : $errors;
+    }
+    
+    private function validateRate($id, $rate)
+    {
+       $errors = array();   
+       if($this->request->getValue('rangeType') == ShippingService::WEIGHT_BASED)
+       {
+           if(!is_numeric($rate['weightRangeStart'])) $errors["rate_" . $id . "_weightRangeStart"] = $this->translate('_error_range_start_should_be_a_float_value');
+           if(!is_numeric($rate['weightRangeEnd'])) $errors["rate_" . $id . "_weightRangeEnd"] = $this->translate('_error_range_end_should_be_a_float_value');   
+           if(!empty($rate['perKgCharge']) && !is_numeric($rate['perKgCharge'])) $errors["rate_" . $id . "_perKgCharge"] = $this->translate('_error_per_kg_charge_should_be_a_float_Value');   
+       }
+       else
+       {
+           if(!is_numeric($rate['subtotalRangeStart'])) $errors["rate_" . $id . "_subtotalRangeStart"] = $this->translate('_error_range_start_should_be_a_float_value');
+           if(!is_numeric($rate['subtotalRangeEnd'])) $errors["rate_" . $id . "_subtotalRangeEnd"] = $this->translate('_error_range_end_should_be_a_float_value');
+           if(!empty($rate['subtotalPercentCharge']) && !is_numeric($rate['subtotalPercentCharge'])) $errors["rate_" . $id . "_subtotalPercentCharge"] = $this->translate('_error_subtotal_percent_charge_should_be_a_float_value');   
+       }
+       
+       if(!empty($rate['flatCharge']) && !is_numeric($rate['flatCharge'])) $errors["rate_" . $id . "_flatCharge"] = $this->translate('_error_flat_charge_should_be_a_float_value');
+       if(!empty($rate['perItemCharge']) && !is_numeric($rate['perItemCharge'])) $errors["rate_" . $id . "_perItemCharge"] = $this->translate('_error_per_item_charge_should_be_a_float_value');
+    
+       return $errors;
+    }
+    
+    public function validateRates()
+    {
+        $ratesData = $this->getRatesFromRequest();
+        $errors = $this->validateRate('', $ratesData['']);
+        if(empty($errors)) return new JSONResponse(array('status' => 'success'));
+        else return new JSONResponse(array('status' => 'failure', 'errors' => $errors));
     }
     
     public function sort()
     {
-        return new RawResponse('sort');
+        echo $this->request->getValue('target');
+        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        {
+            echo $key;
+           $shippingService = ShippingService::getInstanceByID((int)$key);
+           $shippingService->position->set((int)$position);
+           $shippingService->save();
+        }
+
+        return new JSONResponse(array('status' => 'success'));
     }
 }
 ?>

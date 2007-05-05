@@ -1,5 +1,6 @@
 {form id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`" handle=$form action="controller=backend.deliveryZone action=save id=`$service.DeliveryZone.ID`" method="post"}
     <input type="hidden" name="deliveryZoneID" value="{$service.DeliveryZone.ID}" />
+    <input type="hidden" name="serviceID" value="{$service.ID}" />
     
     <label>{t _name}</label>
     <fieldset class="error">
@@ -44,20 +45,16 @@
                         {include file="backend/shippingService/rate.tpl" rate=$rate}
                         <script type="text/jscript">
                         {literal}
-                        console.info("{/literal}shippingService_ratesList_{$service.DeliveryZone.ID}_{$service.ID}_{$rate.ID}{literal}");
-                        console.info($("{/literal}shippingService_ratesList_{$service.DeliveryZone.ID}_{$service.ID}_{$rate.ID}{literal}"));
-                            Backend.DeliveryZone.ShippingRate.prototype.getInstance(
+                            var list = Backend.DeliveryZone.ShippingRate.prototype.getInstance(
                                 "{/literal}shippingService_ratesList_{$service.DeliveryZone.ID}_{$service.ID}_{$rate.ID}{literal}",
                                 {/literal}{json array=$rate}{literal}
                             );
-                    
                             ActiveList.prototype.getInstance("shippingService_ratesList_{/literal}{$service.DeliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}", Backend.DeliveryZone.ShippingRate.prototype.Callbacks, function() {});
                         {/literal}
                         </script>
                     </li>
                 {/foreach}
             </ul>
-            
             <fieldset class="container">
             	<ul class="menu" id="shippingService_rate_menu_{$service.DeliveryZone.ID}_{$service.ID}">
             	    <li><a href="#new_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_show">{t _add_new_rate}</a></li>
@@ -83,6 +80,7 @@
                         newForm.showNewForm();
                     });   
                 
+                    console.info(Backend.DeliveryZone.ShippingRate.prototype.Callbacks);
                     ActiveList.prototype.getInstance("shippingService_ratesList_{/literal}{$service.DeliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}", Backend.DeliveryZone.ShippingRate.prototype.Callbacks, function() {});
                 }
                 catch(e)
