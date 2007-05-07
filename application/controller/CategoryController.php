@@ -33,9 +33,8 @@ class CategoryController extends FrontendController
   
 	public function index()
 	{
-		$this->categoryID = $this->request->getValue('id');
-
 		// get category instance
+		$this->categoryID = $this->request->getValue('id');
 		$this->category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
 
 		// get category path for breadcrumb
@@ -69,8 +68,7 @@ class CategoryController extends FrontendController
         $filterChainHandle = implode(',', $filterChainHandle);
 	
 		// pagination
-		$currentPage = $this->request->getValue('page') 
-			or $currentPage = 1;
+		$currentPage = $this->request->getValue('page', 1); 
 
 		$perPage = $this->config->getValue('NUM_PRODUCTS_PER_CAT');
 		$offsetStart = (($currentPage - 1) * $perPage) + 1;
@@ -88,11 +86,20 @@ class CategoryController extends FrontendController
 
 		$this->productFilter = $productFilter;
 
-		$products = $this->category->getProductsArray($productFilter, array('Manufacturer', 'DefaultImage' => 'ProductImage'));
+        $query = $this->request->getValue('q');
 
-		// get product specification and price data
-		ProductSpecification::loadSpecificationForRecordSetArray($products);
-		ProductPrice::loadPricesForRecordSetArray($products);
+      	// search filter
+        if ($query)
+      	{
+    		$locale = $this->locale->getLocaleCode();
+    		
+            $selectFilter->mergeCondition(new LikeCond(new ARFieldHandle('Product', 'name'), '%' . $query . '%'));       
+            $selectFilter->mergeCondition(new LikeCond(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), $query . '%'));
+            
+    		$this->productFilter->includeSubcategories(); 
+        }
+
+        $products = $this->getProductsArray($productFilter);
 
 		$count = new ProductCount($this->productFilter);
 		$totalCount = $count->getCategoryProductCount($productFilter);
@@ -125,7 +132,18 @@ class CategoryController extends FrontendController
 		$response->setValue('filterChainHandle', $filterChainHandle);
 		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode()));
 		return $response;
-	}
+	}        	
+	
+	private function getProductsArray(ProductFilter $filter)
+	{
+		$products = $this->category->getProductsArray($filter, array('Manufacturer', 'DefaultImage' => 'ProductImage', 'Category'));
+
+		// get product specification and price data
+		ProductSpecification::loadSpecificationForRecordSetArray($products);
+		ProductPrice::loadPricesForRecordSetArray($products);
+		
+		return $products;        
+    }
 	
  	/* @todo some defuctoring... */
 	protected function boxFilterBlock()

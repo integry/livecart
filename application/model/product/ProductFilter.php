@@ -8,10 +8,14 @@
 class ProductFilter
 {
 	private $category = null;
+
 	private $selectFilter = null;
+
 	private $condition = null;	
 
 	private $filters = array();
+	
+	private $includeSubcategories = false;
 
 	public function __construct(Category $category, ARSelectFilter $filter)
 	{
@@ -87,6 +91,16 @@ class ProductFilter
 	{
 	  	return $this->category;
 	}
+	
+	public function includeSubcategories()
+	{
+        $this->includeSubcategories = true;
+    }
+    
+    public function isSubcategories()
+    {
+        return $this->includeSubcategories;
+    }
 	
 	protected function addCondition(Condition $cond)
 	{

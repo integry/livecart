@@ -12,8 +12,8 @@
                	<span id="storeName">Demo</span>
             </div>
             
-    		<form action="" class="quickSearch" style="float: left; padding-left: 30px; padding-top: 15px;">
-    		    <input type="text" class="text searchQuery" name="search" value="search" />
+    		<form action="{categoryUrl data=$category}" class="quickSearch" style="float: left; padding-left: 30px; padding-top: 15px;">
+    		    <input type="text" class="text searchQuery" name="q" value="search" />
     		    <input type="submit" class="submit" value="Go!">
     		</form>
         </div>

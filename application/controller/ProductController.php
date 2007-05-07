@@ -58,6 +58,7 @@ class ProductController extends FrontendController
 		
 		$response = new ActionResponse();
         $response->setValue('product', $productArray);        
+        $response->setValue('category', $productArray['Category']);        
         $response->setValue('images', $product->getImageArray());
         $response->setValue('related', $rel);
 		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode())); 
