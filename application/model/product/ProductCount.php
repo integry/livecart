@@ -101,7 +101,7 @@ class ProductCount
         $query = new ARSelectQueryBuilder();
         $query->includeTable('Product');
         $query->joinTable('Manufacturer', 'Product', 'ID', 'manufacturerID');
-        $query->includeTable('Category');
+//        $query->includeTable('Category');
         $query->joinTable('Category', 'Product', 'ID', 'categoryID');
         $query->addField('COUNT(manufacturerID)', null, 'cnt');
         $query->addField('ID', 'Manufacturer');
