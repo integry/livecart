@@ -292,7 +292,7 @@ fieldset.container
 	margin-top: 3px;
 }
 
-.filterGroup .count 
+.filterGroup .count, .categories .count
 {
 	color: #666666;
 }
@@ -397,30 +397,38 @@ ul.productList li
 ul.productList .title
 {
 	display: block;
-	margin-bottom: 3px;
-	font-size: 105%;
+	margin-bottom: 9px;
+	font-size: 110%;
 }
 
 ul.productList .spec
 {
 	font-size: smaller;
 	font-weight: bold;
+	margin-bottom: 5px;
 }
 
-ul.productList p.descr
+ul.productList .descr
 {
-    float: left;
+    margin-left: 110px;
 }
 
-ul.productList p.image
+ul.productList .image
 {
 	float: left; 
     margin-right: 8px;
+    width: 100px;
+    text-align: center;
 }
 
-ul.productList p.image img
+ul.productList .image img
 {
     vertical-align: top;
+}
+
+ul.productList .order
+{
+	margin-top: 9px;
 }
 
 /*****************************
@@ -468,6 +476,23 @@ tr.specificationGroup
 {
 	display: block;
 }
+
+#imageContainer
+{
+	width: 450px;
+}
+
+#largeImage
+{
+	height: 350px;
+}
+
+#largeImage.missingImage
+{
+	width: 300px;
+	height: auto;
+}
+
 
 #moreImages
 {

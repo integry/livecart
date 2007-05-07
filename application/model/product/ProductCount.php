@@ -48,7 +48,10 @@ class ProductCount
 		}
 		else
 		{
-			return $this->productFilter->getCategory()->getProductCount($this->productFilter);
+			$filter = $this->productFilter->getSelectFilter();
+			$filter->joinTable('Category', 'Product', 'ID', 'categoryID');
+			return ActiveRecordModel::getRecordCount('Product', $filter);
+			//return $this->productFilter->getCategory()->getProductCount($this->productFilter);
 		}
 	}
 	
@@ -72,7 +75,6 @@ class ProductCount
         $query = new ARSelectQueryBuilder();
         $query->includeTable('Product');
         $query->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . Store::getInstance()->getDefaultCurrencyCode() . '")', 'ID');
-        $query->includeTable('Category');
         $query->joinTable('Category', 'Product', 'ID', 'categoryID');
 
         foreach ($filters as $key => $filter)
@@ -101,7 +103,6 @@ class ProductCount
         $query = new ARSelectQueryBuilder();
         $query->includeTable('Product');
         $query->joinTable('Manufacturer', 'Product', 'ID', 'manufacturerID');
-//        $query->includeTable('Category');
         $query->joinTable('Category', 'Product', 'ID', 'categoryID');
         $query->addField('COUNT(manufacturerID)', null, 'cnt');
         $query->addField('ID', 'Manufacturer');
@@ -139,7 +140,6 @@ class ProductCount
 		}
 		
 		$query = ActiveRecordModel::createSelectQuery('Product');
-        $query->includeTable('Category');
         $query->joinTable('Category', 'Product', 'ID', 'categoryID');
 		$query->removeFieldList();
 		$query->getFilter()->merge($selectFilter);

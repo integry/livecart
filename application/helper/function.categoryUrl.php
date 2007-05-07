@@ -61,6 +61,11 @@ function smarty_function_categoryUrl($params, $smarty)
 		$handle = '.';
 	}
 
+	if (!isset($category['ID']))
+	{
+		$category['ID'] = 1;
+	}
+	
 	$urlParams = array('controller' => 'category', 
 					   'action' => 'index', 
 					   'cathandle' => $handle, 

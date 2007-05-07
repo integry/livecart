@@ -8,7 +8,13 @@
     
 	<fieldset class="container">
 		<div id="imageContainer" style="float: left; text-align: center;">
-			<img src="{$product.DefaultImage.paths.3}" id="mainImage" style="margin: 20px;" />
+			<div id="largeImage"{if !$product.DefaultImage.paths.3} class="missingImage"{/if}>
+				{if $product.DefaultImage.paths.3}
+					<img src="{$product.DefaultImage.paths.3}" id="mainImage" style="margin: 20px;" />
+				{else}
+					<img src="image/missing_large.jpg" id="mainImage" style="margin: 20px;" />
+				{/if}
+			</div>
             {if $images|@count > 1}
     			<div id="moreImages">
                     {foreach from=$images item="image"}

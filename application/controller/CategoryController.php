@@ -2,10 +2,7 @@
 
 ClassLoader::import("application.controller.FrontendController");
 ClassLoader::import('application.model.category.Category');
-ClassLoader::import('application.model.filter.Filter');
-ClassLoader::import('application.model.filter.SelectorFilter');
-ClassLoader::import('application.model.filter.ManufacturerFilter');
-ClassLoader::import('application.model.filter.PriceFilter');
+ClassLoader::import('application.model.filter.*');
 ClassLoader::import('application.model.product.Product');
 ClassLoader::import('application.model.product.ProductFilter');
 ClassLoader::import('application.model.product.ProductCount');
@@ -77,27 +74,24 @@ class CategoryController extends FrontendController
 		$selectFilter = new ARSelectFilter();
 		$selectFilter->setLimit($perPage, $offsetStart - 1);
 
+      	// search filter
+        $query = $this->request->getValue('q');
+        if ($query)
+      	{
+			$this->filters[] = new SearchFilter($query);    
+        }
+
 		// setup ProductFilter
 		$productFilter = new ProductFilter($this->category, $selectFilter);
+		$this->productFilter = $productFilter;
 		foreach ($this->filters as $filter)
 		{
 			$productFilter->applyFilter($filter);  
+		    if ($filter instanceof SearchFilter)
+		    {
+				$productFilter->includeSubcategories();				
+			}
 		}
-
-		$this->productFilter = $productFilter;
-
-        $query = $this->request->getValue('q');
-
-      	// search filter
-        if ($query)
-      	{
-    		$locale = $this->locale->getLocaleCode();
-    		
-            $selectFilter->mergeCondition(new LikeCond(new ARFieldHandle('Product', 'name'), '%' . $query . '%'));       
-            $selectFilter->mergeCondition(new LikeCond(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), $query . '%'));
-            
-    		$this->productFilter->includeSubcategories(); 
-        }
 
         $products = $this->getProductsArray($productFilter);
 
@@ -327,11 +321,13 @@ class CategoryController extends FrontendController
 			$selectorFilterIds = array();
 			$manufacturerFilterIds = array();
 			$priceFilterIds = array();
+			$searchFilters = array();
 			
 			$filters = explode(',', $this->request->getValue('filters'));
-		  	foreach ($filters as $filter)
+			foreach ($filters as $filter)
 			{
 			  	$pair = explode('-', $filter);
+
 			  	if (count($pair) != 2)
 			  	{
 				    continue;
@@ -348,6 +344,10 @@ class CategoryController extends FrontendController
 				else if (substr($pair[1], 0, 1) == 'p')
 				{
 					$priceFilterIds[] = substr($pair[1], 1);
+				}
+				else if ('s' == $pair[1])
+				{
+					$searchFilters[] = $pair[0];
 				}
 				else
 				{
@@ -399,6 +399,14 @@ class CategoryController extends FrontendController
 					$this->filters[] = new PriceFilter($filterId);
 				}                
             }		
+            
+            if ($searchFilters)
+            {
+				foreach ($searchFilters as $query)
+				{
+					$this->filters[] = new SearchFilter($query);
+				}
+			}
 		}		
 	}
 }
