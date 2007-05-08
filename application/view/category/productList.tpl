@@ -24,33 +24,29 @@
                     			
 			<div class="descr">
 				
-    			<div class="spec">
-    				{if $product.attributes}
-    					{foreach from=$product.attributes item="attr" name="attr"}
-    						{if $attr.isDisplayedInList}
-
-                                {if $attr.values}
-                                    {foreach from=$attr.values item="value" name="values"}
-                                        {$value.value_lang}
-            							{if !$smarty.foreach.values.last}
-            							/
-            							{/if}
-                                    {/foreach}
-                                {elseif $attr.value}
-                                    {$attr.valuePrefix_lang}{$attr.value}{$attr.valueSuffix_lang}
-                                {elseif $attr.value_lang}
-                                    {$attr.value_lang}
-                                {/if}
-                                                            
-    							{if !$smarty.foreach.attr.last}
-    							/
-    							{/if}
-
+  				{if $product.listAttributes}
+        			<div class="spec">
+    					{foreach from=$product.listAttributes item="attr" name="attr"}
+                            {if $attr.values}
+                                {foreach from=$attr.values item="value" name="values"}
+                                    {$value.value_lang}
+        							{if !$smarty.foreach.values.last}
+        							/
+        							{/if}
+                                {/foreach}
+                            {elseif $attr.value}
+                                {$attr.valuePrefix_lang}{$attr.value}{$attr.valueSuffix_lang}
+                            {elseif $attr.value_lang}
+                                {$attr.value_lang}
+                            {/if}
+                                                        
+    						{if !$smarty.foreach.attr.last}
+    						/
     						{/if}
     					{/foreach}
-    				{/if}
-    			</div>
-    			
+        			</div>
+    			{/if}
+                        			
     			<div class="shortDescr">
                     {$product.shortDescription_lang}
                 </div>

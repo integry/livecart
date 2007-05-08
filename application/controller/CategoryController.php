@@ -95,7 +95,21 @@ class CategoryController extends FrontendController
 
         $products = $this->getProductsArray($productFilter);
 
-		$count = new ProductCount($this->productFilter);
+        // attribute summary
+        foreach ($products as &$product)
+        {
+            $product['listAttributes'] = array();
+            foreach ($product['attributes'] as $attr)
+            {
+                if ($attr['isDisplayedInList'] && (!empty($attr['value']) || !empty($attr['values']) || !empty($attr['value_lang'])))
+                {
+                    $product['listAttributes'][] = $attr;
+                }
+            }
+        }
+
+		// pagination
+        $count = new ProductCount($this->productFilter);
 		$totalCount = $count->getCategoryProductCount($productFilter);
 		$offsetEnd = min($totalCount, $offsetEnd);
 		

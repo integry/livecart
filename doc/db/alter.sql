@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-05-08 14:51                                #
+# Created on:            2007-05-08 15:59                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -150,10 +150,6 @@ ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 ALTER TABLE ShippingService DROP FOREIGN KEY DeliveryZone_ShippingService;
 
 # ---------------------------------------------------------------------- #
-# Modify table "TaxRate"                                                 #
-# ---------------------------------------------------------------------- #
-
-# ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
 # ---------------------------------------------------------------------- #
 
@@ -164,13 +160,13 @@ ALTER TABLE Product ADD CONSTRAINT Manufacturer_Product
     FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE Product ADD CONSTRAINT ProductImage_Product 
-    FOREIGN KEY (defaultImageID) REFERENCES ProductImage (ID) ON DELETE SET NULL;
+    FOREIGN KEY (defaultImageID) REFERENCES ProductImage (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE Category ADD CONSTRAINT Category_Category 
     FOREIGN KEY (parentNodeID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Category ADD CONSTRAINT CategoryImage_Category 
-    FOREIGN KEY (defaultImageID) REFERENCES CategoryImage (ID) ON DELETE SET NULL;
+    FOREIGN KEY (defaultImageID) REFERENCES CategoryImage (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE SpecificationItem ADD CONSTRAINT SpecFieldValue_SpecificationItem 
     FOREIGN KEY (specFieldValueID) REFERENCES SpecFieldValue (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -251,7 +247,7 @@ ALTER TABLE ProductPrice ADD CONSTRAINT Currency_ProductPrice
     FOREIGN KEY (currencyID) REFERENCES Currency (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductImage ADD CONSTRAINT Product_ProductImage 
-    FOREIGN KEY (productID) REFERENCES Product (ID);
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductFile ADD CONSTRAINT Product_ProductFile 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;

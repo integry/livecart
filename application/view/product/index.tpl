@@ -66,6 +66,7 @@
     </div>
 	{/if}
 
+    {if $product.attributes}
     <h2>{t Product Specification}</h2>
     <div id="productSpecification">
         <table>
@@ -97,6 +98,7 @@
             {/foreach}
         </table>
     </div>
+    {/if}
     
     {if $related}
 	<h2>{t Recommended Products}</h2>
