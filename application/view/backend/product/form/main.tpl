@@ -70,7 +70,7 @@
 	</p>
 
 	<p>
-		{checkbox name="isBestSeller" class="checkbox" value="on" id="product_`$cat`_`$product.ID`_isbestseller"}
-		<label for="product_{$cat}_{$product.ID}_isbestseller">Mark as bestseller</label>
+		{checkbox name="isFeatured" class="checkbox" value="on" id="product_`$cat`_`$product.ID`_isfeatured"}
+		<label for="product_{$cat}_{$product.ID}_isfeatured">{t Mark as featured product}</label>
 	</p>
 </fieldset>

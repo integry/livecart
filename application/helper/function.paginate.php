@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Inserts a base URL string
+ * Generates pagination block
  *
  * @param array $params
  * @param Smarty $smarty
@@ -11,9 +11,38 @@
  */
 function smarty_function_paginate($params, $smarty)
 {
-	$pages = ceil($params['count'] / $params['perPage']);
+    $interval = 2;
+    
+	// determine which page numbers will be displayed
+    $count = ceil($params['count'] / $params['perPage']);
+    
+    $pages = range(max(1, $params['current'] - $interval), min($count, $params['current'] + $interval));
+    
+    if (array_search(1, $pages) === false)
+    {
+        array_unshift($pages, 1);
+    }
+    
+    if (array_search($count, $pages) === false)
+    {
+        $pages[] = $count;
+    }
 
-	$out = array();
+    // check for any 1-page sized interval breaks
+    $pr = 0;
+    foreach ($pages as $k)
+    {
+        if ($k - 2 == $pr)
+        {
+            $pages[] = $k - 1;
+        }
+        
+        $pr = $k;
+    }
+    sort($pages);
+
+	// generate output
+    $out = array();
 	
 	$store = Store::getInstance();
 	
@@ -22,9 +51,15 @@ function smarty_function_paginate($params, $smarty)
 		$out[] = '<a href="' . str_replace('_page_', $params['current'] - 1, $params['url']) . '">' . $store->translate('_previous') . '</a>';
 	}
 	
-	for ($k = 1; $k <= $pages; $k++)
+	$pr = 0;
+    foreach ($pages as $k)
 	{
-		if ($k != $params['current'])
+		if ($pr < $k - 1)
+		{
+            $out[] = '...';
+        }
+        
+        if ($k != $params['current'])
 		{
 			$out[] = '<a class="page" href="' . str_replace('_page_', $k, $params['url']) . '">' . $k . '</a></span>';			
 		}
@@ -32,9 +67,11 @@ function smarty_function_paginate($params, $smarty)
 		{
 			$out[] = '<span class="page currentPage">' . $k . '</span>';					
 		}
+		
+		$pr = $k;
 	}
 
-	if ($params['current'] < $pages)
+	if ($params['current'] < $count)
 	{
 		$out[] = '<a href="' . str_replace('_page_', $params['current'] + 1, $params['url']) . '">' . $store->translate('_next') . '</a>';
 	}

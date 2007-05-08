@@ -391,7 +391,7 @@ tr.separator td
 *****************************/
 .page
 {
-    border: 1px solid black;
+    border: 1px solid blue;
     padding: 2px 6px;
     text-decoration: none;
     margin-left: 2px;
@@ -400,7 +400,7 @@ tr.separator td
 
 .currentPage
 {
-    background: lightblue;
+    background: #DFDFFF;
     font-weight: bold;
 }
 
@@ -416,6 +416,12 @@ tr.separator td
     padding-bottom: 5px; 
     margin-bottom: 5px; 
     border-bottom: 1px solid #CCCCCC;    
+}
+
+#productSort
+{
+    width: auto;
+    font-size: smaller;
 }
 
 ul.productList

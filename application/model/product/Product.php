@@ -61,8 +61,12 @@ class Product extends MultilingualObject
 
 		$schema->registerField(new ARField("URL", ARVarchar::instance(256)));
 		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
-		$schema->registerField(new ARField("isBestSeller", ARBool::instance()));
+		$schema->registerField(new ARField("isFeatured", ARBool::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance(4)));
+
+		$schema->registerField(new ArField("voteSum", ARInteger::instance()));
+		$schema->registerField(new ArField("voteCount", ARInteger::instance()));
+		$schema->registerField(new ArField("rating", ARFloat::instance(8)));
 
 		$schema->registerField(new ArField("minimumQuantity", ARFloat::instance(8)));
 		$schema->registerField(new ArField("shippingSurchargeAmount", ARFloat::instance(8)));
@@ -75,6 +79,7 @@ class Product extends MultilingualObject
 
 		$schema->registerField(new ArField("stockCount", ARFloat::instance(8)));
 		$schema->registerField(new ArField("reservedCount", ARFloat::instance(8)));
+		$schema->registerField(new ArField("salesRank", ARInteger::instance()));
 	}
 
 	/**

@@ -45,24 +45,6 @@ class CategoryController extends FrontendController
 		}
 	
 		$this->getAppliedFilters();
-
-		// add filters to breadcrumb
-		$params = array('data' => $nodeArray, 'filters' => array());
-		foreach ($this->filters as $filter)
-		{
-			$filter = $filter->toArray();
-			$params['filters'][] = $filter;
-			$url = smarty_function_categoryUrl($params, false);
-			$this->addBreadCrumb($filter['name_lang'], $url);
-		}
-	
-	    // get filter chain handle
-        $filterChainHandle = array();
-        foreach ($params['filters'] as $filter)
-	    {
-            $filterChainHandle[] = filterHandle($filter);
-        }
-        $filterChainHandle = implode(',', $filterChainHandle);
 	
 		// pagination
 		$currentPage = $this->request->getValue('page', 1); 
@@ -82,6 +64,47 @@ class CategoryController extends FrontendController
         }
 
         // sorting
+        $sort = array();
+        foreach ($this->config->getValue('ALLOWED_SORT_ORDER') as $opt => $status)
+        {
+            $sort[strtolower($opt)] = $this->translate($opt);
+        }
+
+        $order = $this->request->getValue('sort');
+        $defOrder = strtolower($this->config->getValue('SORT_ORDER'));
+        if (!$order || !isset($sort[$order]))
+        {
+            $order = $defOrder;
+        }
+
+        if (substr($order, 0, 12) == 'product_name')
+        {
+            $dir = array_pop(explode('_', $order)) == 'asc' ? 'ASC' : 'DESC';            
+            $selectFilter->setOrder(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $this->locale->getLocaleCode()), $dir);            
+        }
+        else if (substr($order, 0, 5) == 'price')
+        {
+            $dir = array_pop(explode('_', $order)) == 'asc' ? 'ASC' : 'DESC';            
+            $selectFilter->setOrder(new ARFieldHandle('ProductPrice', 'price'), $dir);  
+            $selectFilter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . Store::getInstance()->getDefaultCurrencyCode() . '")', 'ID');                       
+        }
+        else if ('newest_arrivals' == $order)
+        {
+            $selectFilter->setOrder(new ARFieldHandle('Product', 'dateCreated'), 'DESC');            
+        }
+        else if ('rating' == $order)
+        {
+            $selectFilter->setOrder(new ARFieldHandle('Product', 'rating'), 'DESC');            
+        }
+        else if ('sales_rank' == $order)
+        {
+            $selectFilter->setOrder(new ARFieldHandle('Product', 'salesRank'), 'DESC');            
+        }       
+        else
+        {
+            $selectFilter->setOrder(new ARFieldHandle('Product', 'isFeatured'), 'DESC');
+            $selectFilter->setOrder(new ARFieldHandle('Product', 'salesRank'), 'DESC');            
+        }        
 
 		// setup ProductFilter
 		$productFilter = new ProductFilter($this->category, $selectFilter);
@@ -128,6 +151,24 @@ class CategoryController extends FrontendController
 		$url = Router::getInstance()->createURL($urlParams);
 		$url = str_replace('_000_', '_page_', $url);
 			
+		// add filters to breadcrumb
+		$params = array('data' => $nodeArray, 'filters' => array());
+		foreach ($this->filters as $filter)
+		{
+			$filter = $filter->toArray();
+			$params['filters'][] = $filter;
+			$url = smarty_function_categoryUrl($params, false);
+			$this->addBreadCrumb($filter['name_lang'], $url);
+		}		
+			
+	    // get filter chain handle
+        $filterChainHandle = array();
+        foreach ($params['filters'] as $filter)
+	    {
+            $filterChainHandle[] = filterHandle($filter);
+        }
+        $filterChainHandle = implode(',', $filterChainHandle);
+        
 		$response = new ActionResponse();
 		$response->setValue('id', $this->categoryID);
 		$response->setValue('url', $url);
@@ -141,6 +182,8 @@ class CategoryController extends FrontendController
 		$response->setValue('subCategories', $this->category->getSubCategoryArray(Category::LOAD_REFERENCES));
 		$response->setValue('filterChainHandle', $filterChainHandle);
 		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode()));
+		$response->setValue('sortOptions', $sort);
+		$response->setValue('sortForm', $this->buildSortForm($order));
 		return $response;
 	}        	
 	
@@ -153,6 +196,18 @@ class CategoryController extends FrontendController
 		ProductPrice::loadPricesForRecordSetArray($products);
 		
 		return $products;        
+    }
+	
+	/**
+	 * @return Form
+	 */
+	private function buildSortForm($order)
+	{
+		ClassLoader::import("framework.request.validator.Form");        
+        $form = new Form(new RequestValidator("productSort", $this->request));
+        $form->enableClientSideValidation(false);
+        $form->setValue('sort', $order);
+        return $form;
     }
 	
  	/* @todo some defuctoring... */

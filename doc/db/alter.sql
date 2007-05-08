@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-05-08 15:59                                #
+# Created on:            2007-05-08 20:17                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -148,6 +148,30 @@ ALTER TABLE ShippingRate DROP FOREIGN KEY ShippingService_ShippingRate;
 ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 
 ALTER TABLE ShippingService DROP FOREIGN KEY DeliveryZone_ShippingService;
+
+# ---------------------------------------------------------------------- #
+# Modify table "Product"                                                 #
+# ---------------------------------------------------------------------- #
+
+DROP INDEX IDX_Product_1 ON Product;
+
+DROP INDEX IDX_Product_2 ON Product;
+
+ALTER TABLE Product ADD COLUMN salesRank INTEGER;
+
+CREATE INDEX IDX_Product_isEnabled ON Product (isEnabled);
+
+CREATE INDEX IDX_Product_dateCreated ON Product (dateCreated);
+
+CREATE INDEX IDX_Product_isFeatured ON Product (isFeatured);
+
+CREATE INDEX IDX_Product_rating ON Product (rating);
+
+CREATE INDEX IDX_Product_salesRank ON Product (salesRank);
+
+CREATE INDEX IDX_Product_Category ON Product (categoryID);
+
+CREATE INDEX IDX_Product_SKU ON Product (sku);
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #

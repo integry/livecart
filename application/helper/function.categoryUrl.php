@@ -16,12 +16,12 @@ function smarty_function_categoryUrl($params, $smarty)
 	
 	// get full category path
 	$parts = array();
-	$parts[] = $category['handle'];
+	$parts[] = Store::createHandleString($category['name_lang']);
 	$current = $category['parent'];
 	while ($current > 1)
 	{
 	  	$cat = Category::getInstanceByID($current, true);
-	  	$parts[] = $cat->handle->get();
+	  	$parts[] = Store::createHandleString($cat->getValueByLang('name', Store::getInstance()->getLocaleCode()));
 	  	$current = $cat->parentNode->get()->getID();
 	}
 	$parts = array_reverse($parts);	

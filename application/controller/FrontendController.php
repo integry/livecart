@@ -14,14 +14,16 @@ abstract class FrontendController extends BaseController
 	public function __construct($request)
 	{
         parent::__construct($request);
-        if ($request->isValueSet('currency'))
+        
+        // variables to append automatically to all URLs
+        $autoAppend = array('currency', 'showAll', 'sort');
+        foreach ($autoAppend as $key)
         {
-            Router::addAutoAppendQueryVariable('currency', $request->getValue('currency'));
-        }    
-        if ($request->isValueSet('showAll'))
-        {
-            Router::addAutoAppendQueryVariable('showAll', $request->getValue('showAll'));
-        }    
+            if ($request->isValueSet($key))
+            {
+                Router::addAutoAppendQueryVariable($key, $request->getValue($key));
+            }    
+        }
     }
     
     public function init()

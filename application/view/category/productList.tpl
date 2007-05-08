@@ -1,9 +1,12 @@
 <div class="resultStats">
-	<div style="float: left;">
+	<div style="float: left; margin-top: 7px;">
         Showing {$offsetStart} to {$offsetEnd} of {$count} found products.
     </div>
     <div style="float: right;">
         Sort by
+        {form handle=$sortForm action="self" method="GET"}
+        {selectfield id="productSort" name="sort" options=$sortOptions onchange="this.form.submit();"}
+        {/form}
     </div>  
     <div style="clear: right;"></div>
 </div>
