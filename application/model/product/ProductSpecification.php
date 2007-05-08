@@ -237,7 +237,7 @@ class ProductSpecification
 	    UNION
 		SELECT SpecificationNumericValue.*, NULL, NULL AS specFieldValuePosition, SpecFieldGroup.position, SpecField.* as valueID FROM SpecificationNumericValue ' . $cond . '
 	    UNION
-		SELECT SpecificationItem.productID, SpecificationItem.specFieldID, SpecFieldValue.value, SpecFieldValue.position, SpecFieldGroup.position, SpecFieldValue.ID, SpecField.*
+		SELECT SpecificationItem.productID, SpecificationItem.specFieldID, SpecFieldValue.value, SpecFieldValue.ID, SpecFieldValue.position, SpecFieldGroup.position, SpecField.*
 				 FROM SpecificationItem
 				 	LEFT JOIN SpecFieldValue ON SpecificationItem.specFieldValueID =  SpecFieldValue.ID
 				 ' . str_replace('ON specFieldID', 'ON SpecificationItem.specFieldID', $cond) . 

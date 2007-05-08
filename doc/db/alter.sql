@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-05-05 20:16                                #
+# Created on:            2007-05-08 14:51                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -148,6 +148,10 @@ ALTER TABLE ShippingRate DROP FOREIGN KEY ShippingService_ShippingRate;
 ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 
 ALTER TABLE ShippingService DROP FOREIGN KEY DeliveryZone_ShippingService;
+
+# ---------------------------------------------------------------------- #
+# Modify table "TaxRate"                                                 #
+# ---------------------------------------------------------------------- #
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
