@@ -1,7 +1,6 @@
 <?php
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.delivery.ShippingService");
-ClassLoader::import("application.model.delivery.ShippingRate");
+ClassLoader::import("application.model.tax.TaxRate");
 ClassLoader::import("framework.request.validator.RequestValidator");
 ClassLoader::import("framework.request.validator.Form");
 		
@@ -16,57 +15,83 @@ class TaxRateController extends StoreManagementController
 {
 	public function index() 
 	{
-	    if(!($zoneID = (int)$this->request->getValue('id'))) return;
+	    if(($zoneID = (int)$this->request->getValue('id')) <= 0)
+	    {
+	        $deliveryZone = null;
+	        $deliveryZoneArray = array('ID' => '');
+	        $taxRatesArray = TaxRate::getRecordSetByDeliveryZone($deliveryZone)->toArray();
+	    }
+	    else
+	    {
+	        $deliveryZone = DeliveryZone::getInstanceByID($zoneID, true);
+	        $deliveryZoneArray = $deliveryZone->toArray();
+	        $taxRatesArray = $deliveryZone->getTaxRates()->toArray();
+	    }
 	    
-	    $deliveryZone = DeliveryZone::getInstanceByID($zoneID, true);
 	      
-		$form = $this->createShippingServiceForm();
-		$form->setData(array('name_en' => 'test', 'rangeType' => 1) /* $deliveryZone->toArray() */);
+		$form = $this->createTaxRateForm();
+		$enabledTaxes = array();
+		foreach(Tax::getTaxes(false, $deliveryZone)->toArray() as $tax)
+		{
+		    $enabledTaxes[$tax['ID']] = $tax['name'];
+		}
 		
 		
 		$response = new ActionResponse();
+		$response->setValue('enabledTaxes', $enabledTaxes);
 		$response->setValue('defaultLanguageCode', $this->store->getDefaultLanguageCode());
-		$response->setValue('shippingServices', $deliveryZone->getShippingServices()->toArray());
+		$response->setValue('taxRates', $taxRatesArray);
 		$response->setValue('alternativeLanguagesCodes', $this->store->getLanguageSetArray(false, false));
-		$response->setValue('newService', array('DeliveryZone' => $deliveryZone->toArray()));
-		$response->setValue('newRate', array('ShippingService' => array('DeliveryZone' => $deliveryZone->toArray(), 'ID' => '')));
-		$response->setValue('deliveryZone', $deliveryZone->toArray());
+		$response->setValue('newTaxRate', array('ID' => '', 'DeliveryZone' => $deliveryZoneArray));
+		$response->setValue('deliveryZone', $deliveryZoneArray);
 	    $response->setValue('form', $form);
 	    return $response;
 	}
 	
-	private function createShippingServiceForm()
+	/**
+	 * @return Form
+	 */
+	private function createTaxRateForm()
 	{
-		return new Form($this->createShippingServiceFormValidator());
+		return new Form($this->createTaxRateFormValidator());
 	}
 	
-	private function createShippingServiceFormValidator()
+	/**
+	 * @return RequestValidator
+	 */
+	private function createTaxRateFormValidator()
 	{	
 		$validator = new RequestValidator('shippingService', $this->request);
+		
+		$validator->addCheck("taxID", new IsNotEmptyCheck($this->translate("_error_tax_should_not_be_empty")));
+		$validator->addCheck("rate", new IsNotEmptyCheck($this->translate("_error_rate_should_not_be_empty")));
+		$validator->addCheck("rate", new IsNumericCheck($this->translate("_error_rate_should_be_numeric_value")));
+		$validator->addCheck("rate", new MinValueCheck($this->translate("_error_rate_should_be_greater_than_zero_and_less_than_hundred"), 0));
+		$validator->addCheck("rate", new MaxValueCheck($this->translate("_error_rate_should_be_greater_than_zero_and_less_than_hundred"), 100));
 		
 		return $validator;
 	}	
 	
     public function delete()
     {
-        $service = ShippingService::getInstanceByID((int)$this->request->getValue('id'));
-        $service->delete();
+        $taxRate = TaxRate::getInstanceByID((int)$this->request->getValue('id'), true, array('Tax'));
+        $tax = $taxRate->tax->get();
+        $taxRate->delete();
         
-        return new JSONResponse(array('status' => 'success'));
+        return new JSONResponse(array('status' => 'success', 'tax' => $tax->toArray()));
     }
     
     public function edit()
     {
-	    $shippingService = ShippingService::getInstanceByID($this->request->getValue('id'), true);
+	    $rate = TaxRate::getInstanceByID((int)$this->request->getValue('id'), true, array('Tax'));
 		
-	    $form = $this->createShippingServiceForm();
-		$form->setData($shippingService->toArray());
+	    $form = $this->createTaxRateForm();
+		$form->setData($rate->toArray());
+		
 		$response = new ActionResponse();
 		$response->setValue('defaultLanguageCode', $this->store->getDefaultLanguageCode());
 		$response->setValue('alternativeLanguagesCodes', $this->store->getLanguageSetArray(false, false));
-		$response->setValue('service', $shippingService->toArray());
-		$response->setValue('shippingRates', $shippingService->getRates()->toArray());
-		$response->setValue('newRate', array('ShippingService' => $shippingService->toArray()));
+		$response->setValue('taxRate', $rate->toArray());
 	    $response->setValue('form', $form);
 	    
 	    return $response;
@@ -74,78 +99,38 @@ class TaxRateController extends StoreManagementController
     
     public function save()
     {
-        if($serviceID = (int)$this->request->getValue('serviceID'))
+        $validator = $this->createTaxRateFormValidator();
+        if($validator->isValid())
         {
-            $shippingService = ShippingService::getInstanceByID($serviceID);
+	        if($taxRateID = (int)$this->request->getValue('taxRateID'))
+	        {
+	            $taxRate = TaxRate::getInstanceByID($taxRateID, true);
+	        }
+	        else
+	        {
+	            if(($deliveryZoneId = (int)$this->request->getValue('deliveryZoneID')) > 0)
+	            {
+	                $deliveryZone = DeliveryZone::getInstanceByID($deliveryZoneId, true);
+	            }
+	            else
+	            {
+	                $deliveryZone = null;
+	            }
+	            
+		        $taxRate = TaxRate::getNewInstance($deliveryZone, Tax::getInstanceByID((int)$this->request->getValue('taxID'), true), (float)$this->request->getValue('rate'));
+	        }
+	        
+		    
+	        $taxRate->setValueArrayByLang(array('name'), $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true, false), $this->request);      
+		    $taxRate->save();
+	            
+            return new JSONResponse(array('status' => 'success', 'rate' => $taxRate->toArray()));
         }
         else
         {
-	        $deliveryZone = DeliveryZone::getInstanceByID($this->request->getValue('deliveryZoneID'), true);
-	        $shippingService = ShippingService::getNewInstance($deliveryZone, $this->request->getValue('name'), $this->request->getValue('rangeType'));
-        }
-        
-	    
-        $ratesData = $this->getRatesFromRequest();
-        $rates = array();
-        if(!($errors = $this->isNotValid($this->request->getValue('name'), $ratesData)))
-        {
-	        $shippingService->setValueArrayByLang(array('name'), $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true, false), $this->request);      
-		    $shippingService->save();
-            
-            foreach($ratesData as $id => $data)
-            {
-                if(preg_match('/^new/', $id))
-                {
-	                if($shippingService->rangeType->get() == ShippingService::WEIGHT_BASED)
-	                {
-	                    $rangeStart = $data['weightRangeStart'];
-	                    $rangeEnd = $data['weightRangeEnd'];
-	                } 
-	                else if($shippingService->rangeType->get() == ShippingService::SUBTOTAL_BASED)
-	                {
-	                    $rangeStart = $data['subtotalRangeStart'];
-	                    $rangeEnd = $data['subtotalRangeEnd'];
-	                }
-	                
-	                $rate = ShippingRate::getNewInstance($shippingService, $rangeStart, $rangeEnd);
-                } 
-                else
-                {
-                    $rate = ShippingRate::getInstanceByID($id);
-                }
-                
-                foreach($data as $var => $value)
-                {
-                    $rate->$var->set($value);
-                }
-                
-                $rate->save();
-            }
-            
-            return new JSONResponse(array('status' => 'success', 'service' => $shippingService->toArray()));
-        }
-        else
-        {
-            return new JSONResponse(array('status' => 'failure', 'errors' => $errors));
+            return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
         }
     }
     
-    public function getRatesFromRequest()
-    {
-        $rates = array();
-        foreach($_POST as $variable => $value)
-        {
-            $matches = array();
-            if(preg_match('/^rate_([^_]*)_(perKgCharge|subtotalPercentCharge|perItemCharge|flatCharge|weightRangeEnd|weightRangeStart|subtotalRangeEnd|subtotalRangeStart)$/', $variable, $matches))
-            {
-                $id = $matches[1];
-                $name = $matches[2];
-                
-                $rates[$id][$name] = $value;
-            }
-        }
-        
-        return $rates;
-    }
 }
 ?>

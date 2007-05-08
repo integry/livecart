@@ -148,9 +148,9 @@ class DeliveryZone extends MultilingualObject
      *
      *	@return ARSet
      */
-	public function getTaxRates()
+	public function getTaxRates($includeDisabled = true, $loadReferencedRecords = array('Tax'))
 	{
-		
+		return TaxRate::getRecordSetByDeliveryZone($this, $includeDisabled, $loadReferencedRecords);
 	}
 
 	/**

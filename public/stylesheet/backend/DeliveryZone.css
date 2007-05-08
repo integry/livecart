@@ -51,5 +51,16 @@ p.checkbox
 }
 
 .shippingService_servicesList .activeList_editContainer { 
-    margin: 0 20px;
+    margin: 10px;
+}
+
+.taxRate_taxRatesList .activeList_editContainer 
+{
+     padding: 10px;
+}  
+
+.taxRate_taxIDFieldset 
+{
+    border: 0 none; 
+    padding: 10px 0;
 }

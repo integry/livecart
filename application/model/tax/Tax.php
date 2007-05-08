@@ -8,16 +8,15 @@ ClassLoader::import("application.model.delivery.*");
  *
  * @package application.model.delivery
  */
-class TaxType extends MultilingualObject 
+class Tax extends MultilingualObject 
 {
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
-		$schema->setName("TaxType");
+		$schema->setName("Tax");
 		
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
-		$schema->registerField(new ARField("isShippingAddressBased", ARBool::instance()));
 		$schema->registerField(new ARField("name", ARArray::instance()));
 	}
 
@@ -28,7 +27,7 @@ class TaxType extends MultilingualObject
 	 * @param bool $loadReferencedRecords
 	 * @param array $data	Record data array (may include referenced record data)
 	 *
-	 * @return TaxType
+	 * @return Tax
 	 */
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
 	{		    
@@ -39,7 +38,7 @@ class TaxType extends MultilingualObject
 	 * Create new tax rate
 	 * 
 	 * @param string $$defaultLanguageName Type name spelled in default language
-	 * @return TaxType
+	 * @return Tax
 	 */
 	public static function getNewInstance($defaultLanguageName)
 	{
@@ -47,6 +46,55 @@ class TaxType extends MultilingualObject
 	  	$instance->setValueByLang('name', Store::getInstance()->getDefaultLanguageCode(), $defaultLanguageName);
         
 	  	return $instance;
+	}
+
+
+	/**
+	 * Load taxes record set
+	 *
+	 * @param ARSelectFilter $filter
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
+	{
+		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+	}
+	
+	
+	/**
+	 * Get a list of existing taxes
+	 * 
+	 * @param boolean $includeDisabled Include disabled taxes in this list
+	 * @param TaxRate $doNotBelongToRate Don not belong to specified rate
+	 * @param boolean $loadReferencedRecords Load referenced records
+	 * 
+	 * @return ARSet
+	 */
+	public static function getTaxes($includeDisabled = false, DeliveryZone $notUsedInThisZone = null, $loadReferencedRecords = false)
+	{
+	    $filter = new ARSelectFilter();
+	    
+	    if(!$includeDisabled)
+	    {
+   		    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "isEnabled"), 1));
+	    }
+	    
+        $rates = TaxRate::getRecordSetByDeliveryZone($notUsedInThisZone, true);
+
+        if($rates->getTotalRecordCount() > 0)
+        {
+            $zoneRatesIDs = array();
+            foreach($rates as $rate)
+            {
+                $taxIDs[] = $rate->tax->get()->getID();
+            }
+            
+            $filter->setCondition(new NotINCond(new ARFieldHandle(__CLASS__, "ID"), $taxIDs));
+        }	
+	    
+	    return self::getRecordSet($filter, $loadReferencedRecords);
 	}
 }
 

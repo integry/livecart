@@ -18,7 +18,7 @@ class TaxRate extends MultilingualObject
 		
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("deliveryZoneID", "DeliveryZone", "ID", "DeliveryZone", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("taxTypeID", "TaxType", "ID", "TaxType", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("taxID", "Tax", "ID", "Tax", ARInteger::instance()));
 		
 		$schema->registerField(new ARField("rate", ARFloat::instance()));
 	}
@@ -41,15 +41,20 @@ class TaxRate extends MultilingualObject
 	 * Create new tax rate
 	 * 
 	 * @param DeliveryZone $deliveryZone Delivery zone instance
-	 * @param TaxType $taxType Tax type
+	 * @param Tax $tax Tax type
 	 * @param float $rate Rate in percents
 	 * @return TaxRate
 	 */
-	public static function getNewInstance(DeliveryZone $deliveryZone, TaxType $taxType, $rate)
+	public static function getNewInstance(DeliveryZone $deliveryZone = null, Tax $tax, $rate)
 	{
 	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
-	  	$instance->deliveryZone->set($deliveryZone);
-	  	$instance->taxType->set($taxType);
+
+        if($deliveryZone)
+        {
+            $instance->deliveryZone->set($deliveryZone);
+        }
+	  	
+	  	$instance->tax->set($tax);
 	  	$instance->rate->set((int)$rate);
 	  	
 	  	return $instance;
@@ -69,21 +74,36 @@ class TaxRate extends MultilingualObject
 	}
 	
 	/**
-	 * Load service rates from known service
+	 * Load rates from known delivery zone
 	 *
 	 * @param DeliveryZone $deliveryZone 
 	 * @param bool $loadReferencedRecords
 	 *
 	 * @return ARSet
 	 */
-	public static function getRecordSetByDeliveryZone(DeliveryZone $deliveryZone, $loadReferencedRecords = false)
+	public static function getRecordSetByDeliveryZone(DeliveryZone $deliveryZone=null, $includeDisabled = true, $loadReferencedRecords = array('Tax'))
 	{
  	    $filter = new ARSelectFilter();
 
-		$filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "deliveryZoneID"), $deliveryZone->getID()));
+	    
+	    if(!$includeDisabled)
+	    {
+   		    $filter->setCondition(new EqualsCond(new ARFieldHandle('Tax', "isEnabled"), 1));
+	    }
+	    
+ 	    
+		if(!$deliveryZone)
+		{
+		    $filter->setCondition(new IsNullCond(new ARFieldHandle(__CLASS__, "deliveryZoneID")));
+		}
+		else
+		{
+		    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "deliveryZoneID"), $deliveryZone->getID()));
+		}
 		
 		return self::getRecordSet($filter, $loadReferencedRecords);
 	}
+
 }
 
 ?>

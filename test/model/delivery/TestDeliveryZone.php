@@ -8,6 +8,8 @@ ClassLoader::import("application.model.delivery.DeliveryZoneCityMask");
 ClassLoader::import("application.model.delivery.DeliveryZoneZipMask");
 ClassLoader::import("application.model.delivery.DeliveryZoneAddressMask");
 ClassLoader::import("application.model.delivery.State");
+ClassLoader::import("application.model.tax.Tax");
+ClassLoader::import("application.model.tax.TaxRate");
 
 class TestDeliveryZone extends UnitTest
 {    
@@ -191,6 +193,24 @@ class TestDeliveryZone extends UnitTest
         $services = $zone->getShippingServices();
         $this->assertTrue($service1 === $services->get(0));
         $this->assertTrue($service2 === $services->get(1));
+    }
+
+    public function testGetTaxRates()
+    {
+	    $zone = DeliveryZone::getNewInstance();
+	    $zone->setValueByLang('name', 'en', ':TEST_ZONE');
+	    $zone->save();
+        
+        $tax = Tax::getNewInstance('VAT');
+        $tax->save();
+        
+        $taxRate = TaxRate::getNewInstance($zone, $tax, 15);
+        $taxRate->save();
+        
+        
+        $taxRates = $zone->getTaxRates();
+        $this->assertEqual($taxRates->getTotalRecordCount(), 1);
+        $this->assertTrue($taxRates->get(0) === $taxRate);
     }
 }
 ?>

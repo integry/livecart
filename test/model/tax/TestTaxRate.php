@@ -2,7 +2,7 @@
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
 ClassLoader::import("application.model.delivery.DeliveryZone");
-ClassLoader::import("application.model.tax.TaxType");
+ClassLoader::import("application.model.tax.Tax");
 ClassLoader::import("application.model.tax.TaxRate");
 
 class TestTaxRate extends UnitTest
@@ -23,7 +23,7 @@ class TestTaxRate extends UnitTest
     {
         return array(
 			'TaxRate',
-			'TaxType',
+			'Tax',
             'DeliveryZone'
         );
     }
@@ -36,13 +36,13 @@ class TestTaxRate extends UnitTest
         $this->deliveryZone->setValueByLang('name', 'en', 'test zone');
         $this->deliveryZone->save();
         
-        $this->taxType = TaxType::getNewInstance('test type');
-        $this->taxType->save();
+        $this->tax = Tax::getNewInstance('test type');
+        $this->tax->save();
     }
     
-    public function testCreateNewService()
+    public function testCreateNewTaxRate()
     {
-        $taxRate = TaxRate::getNewInstance($this->deliveryZone, $this->taxType, 15);
+        $taxRate = TaxRate::getNewInstance($this->deliveryZone, $this->tax, 15);
         $taxRate->save();
         
         $taxRate->markAsNotLoaded();
@@ -50,7 +50,7 @@ class TestTaxRate extends UnitTest
         
         $this->assertEqual($taxRate->rate->get(), 15);
         $this->assertTrue($taxRate->deliveryZone->get() === $this->deliveryZone);
-        $this->assertTrue($taxRate->taxType->get() === $this->taxType);
+        $this->assertTrue($taxRate->tax->get() === $this->tax);
     }
 }
 ?>

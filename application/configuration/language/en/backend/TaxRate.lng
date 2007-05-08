@@ -1,0 +1,9 @@
+_tax=Tax
+_rate=Tax rate
+_add_new_tax_rate=Add new tax rate
+_cancel_adding_new_tax_rate=Cancel adding new tax rate
+
+_error_rate_should_not_be_empty=Tax rate should not be empty
+_error_rate_should_be_numeric_value=Tax rate should be a numeric value
+_error_rate_should_be_greater_than_zero_and_less_than_hundred=Rate should be between 0 and 10
+_error_tax_should_not_be_empty=Tax should not be empty
