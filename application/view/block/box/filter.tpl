@@ -22,24 +22,8 @@
 	</div>
 
 	<div class="content">
-		{foreach from=$groups item="group"}		
-			<div class="filterGroup">
-				<h3>{$group.name_lang}</h3>
-				<ul>
-					{foreach from=$group.filters item="filter"}
-						<li> 
-							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a> 
-							<span class="count">({$filter.count})</span>
-						</li>
-					{/foreach}				
-					{if $group.more}
-						<li class="showAll"><a href="{$group.more}">{t _show_all}</a></li>
-					{/if}					
-				</ul>
-			</div>
-		{/foreach}
-
-		{if $manGroup}		
+		
+        {if $manGroup}		
 			<div class="filterGroup">
 				<h3>{t _by_brand}</h3>
 				<ul>
@@ -70,7 +54,23 @@
 				</ul>
 			</div>
 		{/if}
-
+		
+		{foreach from=$groups item="group"}		
+			<div class="filterGroup">
+				<h3>{$group.name_lang}</h3>
+				<ul>
+					{foreach from=$group.filters item="filter"}
+						<li> 
+							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a> 
+							<span class="count">({$filter.count})</span>
+						</li>
+					{/foreach}				
+					{if $group.more}
+						<li class="showAll"><a href="{$group.more}">{t _show_all}</a></li>
+					{/if}					
+				</ul>
+			</div>
+		{/foreach}
 	</div>
 </div>
 {/if}

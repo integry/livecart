@@ -81,6 +81,8 @@ class CategoryController extends FrontendController
 			$this->filters[] = new SearchFilter($query);    
         }
 
+        // sorting
+
 		// setup ProductFilter
 		$productFilter = new ProductFilter($this->category, $selectFilter);
 		$this->productFilter = $productFilter;

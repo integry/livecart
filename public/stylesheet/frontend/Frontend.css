@@ -389,6 +389,35 @@ tr.separator td
 /*****************************
 	Product list
 *****************************/
+.page
+{
+    border: 1px solid black;
+    padding: 2px 6px;
+    text-decoration: none;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.currentPage
+{
+    background: lightblue;
+    font-weight: bold;
+}
+
+.resultPages
+{
+    border-top: 1px solid #CCCCCC;        
+    padding-top: 10px;
+}
+
+.resultStats
+{
+    padding: 10px; 
+    padding-bottom: 5px; 
+    margin-bottom: 5px; 
+    border-bottom: 1px solid #CCCCCC;    
+}
+
 ul.productList
 {
 	list-style: none;		
@@ -439,6 +468,11 @@ ul.productList .order
 /*****************************
 	Product page
 *****************************/
+.specSummary
+{
+    font-weight: bold;    
+}
+
 #mainInfo td
 {
 	padding: 5px;		

@@ -1,5 +1,11 @@
-<div class="resultStats" style="padding: 10px;">
-	Showing {$offsetStart} to {$offsetEnd} of {$count} found products.
+<div class="resultStats">
+	<div style="float: left;">
+        Showing {$offsetStart} to {$offsetEnd} of {$count} found products.
+    </div>
+    <div style="float: right;">
+        Sort by
+    </div>  
+    <div style="clear: right;"></div>
 </div>
 
 <ul class="productList"> 

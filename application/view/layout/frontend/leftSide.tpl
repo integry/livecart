@@ -1,5 +1,5 @@
 <div id="leftSide"> 
-	{block FILTER_BOX}
 	{block CATEGORY_BOX}
+	{block FILTER_BOX}
 	{block CURRENCY}	
 </div>

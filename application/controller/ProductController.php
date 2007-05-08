@@ -43,6 +43,16 @@ class ProductController extends FrontendController
 
         $productArray = $product->toArray();
 
+        // attribute summary
+        $productArray['listAttributes'] = array();
+        foreach ($productArray['attributes'] as $attr)
+        {
+            if ($attr['SpecField']['isDisplayedInList'] && (!empty($attr['value']) || !empty($attr['values']) || !empty($attr['value_lang'])))
+            {
+                $productArray['listAttributes'][] = $attr;
+            }
+        }
+
         // add product title to breacrumb
         $this->addBreadCrumb($productArray['name_lang'], '');
         

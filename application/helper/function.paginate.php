@@ -26,11 +26,11 @@ function smarty_function_paginate($params, $smarty)
 	{
 		if ($k != $params['current'])
 		{
-			$out[] = '<a href="' . str_replace('_page_', $k, $params['url']) . '">' . $k . '</a>';			
+			$out[] = '<a class="page" href="' . str_replace('_page_', $k, $params['url']) . '">' . $k . '</a></span>';			
 		}
 		else
 		{
-			$out[] = '<span class="current">' . $k . '</span>';					
+			$out[] = '<span class="page currentPage">' . $k . '</span>';					
 		}
 	}
 
@@ -39,7 +39,7 @@ function smarty_function_paginate($params, $smarty)
 		$out[] = '<a href="' . str_replace('_page_', $params['current'] + 1, $params['url']) . '">' . $store->translate('_next') . '</a>';
 	}
 
-	return implode(' | ', $out);
+	return implode(' ', $out);
 }
 
 ?>

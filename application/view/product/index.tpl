@@ -1,10 +1,33 @@
 {pageTitle}{$product.name_lang}{/pageTitle}
 {include file="layout/frontend/header.tpl"}
 {* include file="layout/frontend/leftSide.tpl" *}
-{include file="layout/frontend/rightSide.tpl"}
+{* include file="layout/frontend/rightSide.tpl" *}
 
 <div id="content" style="margin-left: 0;">
     <h1>{$product.name_lang}</h1>
+    
+	{if $product.listAttributes}
+		<div class="specSummary">
+			{foreach from=$product.listAttributes item="attr" name="attr"}
+                {if $attr.values}
+                    {foreach from=$attr.values item="value" name="values"}
+                        {$value.value_lang}
+						{if !$smarty.foreach.values.last}
+						/
+						{/if}
+                    {/foreach}
+                {elseif $attr.value}
+                    {$attr.SpecField.valuePrefix_lang}{$attr.value}{$attr.SpecField.valueSuffix_lang}
+                {elseif $attr.value_lang}
+                    {$attr.value_lang}
+                {/if}
+                                            
+				{if !$smarty.foreach.attr.last}
+				/
+				{/if}
+			{/foreach}
+		</div>
+	{/if}    
     
 	<fieldset class="container">
 		<div id="imageContainer" style="float: left; text-align: center;">
