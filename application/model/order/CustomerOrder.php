@@ -99,6 +99,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
             if (!isset($instance))
             {
                 $instance = self::getNewInstance(User::getCurrentUser());
+                $instance->user->set(NULL);
             }    
 
             self::$instance = $instance;
