@@ -21,16 +21,15 @@ you deal with interface translations (see <a href="{help /language.edit#translat
 </fieldset>
 </div>
 
-<br \><br \>
 <!--
 <h3 id="change working">Change interface language</h3>	
 
 <p>To change the interface language, click <strong>Language</strong> link in the LiveCart's main window's upper right corner and choose a language from the list displayed.</p>
 
-<br \><br \>
+
 -->
 <h3 id="add">Add new language</h3>	
-<p>Adding a language is a one step task:</p>	
+<p>To add a new language:</p>	
 
 <ol>
 <li>Click the <strong>Add New Language</strong> link:</li>
@@ -41,12 +40,12 @@ you deal with interface translations (see <a href="{help /language.edit#translat
 <img src="image/doc/language/add_button.bmp"/>
 </ol>
 
-<br \><br \>
+
 <h3 id="translate">Translate</h3>	
 <p>To translate languages, proceed to <a href="{help /language.edit}">Language translation</a> page by clicking the <strong>pen</strong> icon:</p>
 <img src="image/doc/language/edit.bmp"/>
 
-<br \><br \>
+
 <h3 id="reorder">Reorder Languages</h3>	
 
 <p>To reorder languages click on a language and then drag and drop it to set the appropriate order.</p>
@@ -54,7 +53,6 @@ you deal with interface translations (see <a href="{help /language.edit#translat
 
 <p>Language arrangement affects the order in which languages are displayed in language switching menus.</p>
 
-<br \><br \>
 <h3 id="enable_disable">Enable or disable languages</h3>	
 
 <p>All the newly added languages are inactive by default. You might want to keep a language inactive while its
@@ -67,7 +65,7 @@ you deal with interface translations (see <a href="{help /language.edit#translat
 backend, so you could prepare all the necessary translations before displaying any content in these languages. 
 When you are done with the translations just activate the language to make it available in your e-store.</p>	
 
-<br \><br \>
+
 <h3 id="change_default">Change default language</h3>	
 
 <p>
@@ -83,7 +81,7 @@ The default language serves two main purposes:
 <p>To change the default language click the <strong>Set as default</strong> link under the language name.</p>
 <img src="image/doc/language/set_base2.bmp"/>
 
-<br \><br \>
+
 <h3 id="remove">Remove a language</h3>	 
 
 <p>To delete a language, hover over it and click the <strong>delete</strong> icon on the left.</p>

@@ -9,19 +9,23 @@ from English to the necessary language.</p>
 		<li><a href="{self}#product_info">Translate product info</a></li>
 		<li><a href="{self}#find_specific_word">Find and translate a specific word or sentence</a></li>
 		<li><a href="{self}#find_missing_translations">Find missing translations</a></li>
+<!--
 		<li><a href="{self}#translate_directly">Translate a word or sentence directly from user interface</a>
+-->
 		</li>
 	</ul>
 </fieldset>
 </div>
 
-<br \>
-<br \>
+
 <h3 id="user_interface">Translate user interface</h3>
 
-<p>There are two ways of translating the interface - either by using the <strong>word tree</strong> or 
+<!--
+<p>There are two ways to translate the interface - either by using the <strong>word tree</strong> or 
 <a href="{self}#user_interface">Live Translation</a> tool.</p>
-<p>The <strong>word tree</strong> is placed below the Translation Filter:</p>
+-->
+
+<p>To translate interface, use the <strong>word tree</strong> which is placed below the Translation Filter:</p>
 <img src="image/doc/language/edit/tree_marked.bmp"/>
 
 <p>All the words in the tree are categorized as they appear in the interface layout. To supply translations, browse
@@ -32,7 +36,7 @@ from English to the necessary language.</p>
 <img src="image/doc/language/edit/cursor.bmp"/>
 
 <ul>
-	<li>where <span style="background: #ffffcc">text field</span> is a field for your translations;</li>
+	<li>here <span style="background: #ffffcc">text field</span> is a field for your translations;</li>
 	<li><span style="background: #ffffcc">_user_registration</span> is a variable name;</li>
 	<li>and <span style="background: #ffffcc">New Account Registration</span> is the default translation which is 
 	used if the text field is left empty.</li>
@@ -41,18 +45,21 @@ from English to the necessary language.</p>
 <p class="note"><strong>Note</strong>: You can also enter multiple lines of text in the text area 
 - just click the "down arrow" key on your keyboard to switch to multi-line input field.</p>
 
-<br \>
-<br \>
+<h3 id="product_info">Translate product info</h3>	
+	
+<p>You can translate products, categories, attributes and other data directly from their management pages, 
+for example, products modification page. The fields for entering translations are typically placed below the
+ main data form.</p>
+ 
+ 
 <h3 id="find_specific_word">Find and translate a specific word or sentence</h3>
 
-<p>If you need to find a specific word, use a "Search" field in the Translation Filter area. The search is carried
+<p>If you need to find a specific word, use a search field in the Translation Filter area. The search is carried
  out on their default values in English and translations as well.</p>	
 <img src="image/doc/language/edit/search.bmp"/>
 
 <p>The results that match your search criteria appear below automatically.</p>
 
-<br \>
-<br \>
 <h3 id="find_missing_translations">Find missing translations</h3>	
 <p>You can have keywords filtered by their current status in terms of translation process. The following 
 filtering options are available:</p>
@@ -65,8 +72,7 @@ filtering options are available:</p>
 	translated</li>
 </ul>
 
-<br \>
-<br \>
+<!--
 <h3 id="translate_directly">Translate a word or sentence directly from user interface</h3>	
 	
 <p>Live Translation is a LiveCart tool which allows you to translate a word or sentence directly from the
@@ -77,14 +83,9 @@ interface text (element) directly in the page you see it in. To do that you have
  in the ... mode. Any interface phrase can be translated simply by clicking <strong>Live Translation</strong>
   once you hover the mouse cursor over an element and a pop-up menu appears. We highly recommend to use
    <strong>Live Translation</strong> when you are not sure about the keyword's exact place in the interface.</p>
+-->
 
-<br \>
-<br \>
-<h3 id="product_info">Translate product info</h3>	
-	
-<p>You can translate products, categories, attributes and other data directly from their management pages, 
-for example, products modification page. The fields for entering translations are typically placed below the
- main data form.</p>
+
 
 	
 {helpSeeAlso}
