@@ -2,6 +2,7 @@
 ClassLoader::import("application.model.system.ActiveTreeNode");
 ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.category.CategoryImage");
+ClassLoader::import("application.model.filter.*");
 
 /**
  * Hierarchial product category model class
@@ -192,6 +193,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 	public function getFilterSet()
 	{
+		Classloader::import('application.model.filter.Filter');
 		Classloader::import('application.model.filter.SelectorFilter');
 			
 		// get filter groups
