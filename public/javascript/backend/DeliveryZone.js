@@ -1289,6 +1289,7 @@ Backend.DeliveryZone.TaxRate.prototype =
        Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel(); });
        // Event.observe(this.nodes.form, 'submit', function(e) { Event.stop(e); self.save(); });
       
+       Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel(); });
        if(!this.rate.ID)
        {
            Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); self.cancel(); });
@@ -1353,7 +1354,6 @@ Backend.DeliveryZone.TaxRate.prototype =
     
     cancel: function()
     {
-        // fuck
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
         if(!this.rate.ID)
         {

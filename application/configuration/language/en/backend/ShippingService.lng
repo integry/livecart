@@ -13,6 +13,7 @@ _per_item_charge=Per item charge
 _subtotal_percent_charge=Subtotal percent charge
 _weight_range=Weight range
 _per_kg_charge=Per kg charge
+_name=Name
 
 _error_range_start_should_be_a_float_value=Range start should be a float value
 _error_range_end_should_be_a_float_value=Range end should be a float value

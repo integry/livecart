@@ -308,7 +308,7 @@ ActiveList.prototype = {
      */
     toggleContainerOff: function(container)
     {
-        container = $(container);
+        var container = $(container);
         this.createSortable();
         if(BrowserDetect.browser != 'Explorer')
         {
@@ -502,8 +502,6 @@ ActiveList.prototype = {
     {
         var self = this;
         
-        console.count('decorateLi');
-        
         // Bind events
         Event.observe(li, "mouseover", function(e) { self.showMenu(this) });
         Event.observe(li, "mouseout",  function(e) { self.hideMenu(this) });
@@ -599,7 +597,7 @@ ActiveList.prototype = {
             Event.observe(iconImage, "click", function() { self.bindAction(li, icon.action) });
 
             // Append content container
-            if('delete' != icon.action)
+            if('delete' != icon.action && !this.getContainer(li, icon.action))
             {
                 var contentContainer = document.createElement('div');
                 contentContainer.style.display = 'none';

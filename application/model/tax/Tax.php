@@ -61,7 +61,7 @@ class Tax extends MultilingualObject
 	{
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
-	
+
 	
 	/**
 	 * Get a list of existing taxes
@@ -95,6 +95,19 @@ class Tax extends MultilingualObject
         }	
 	    
 	    return self::getRecordSet($filter, $loadReferencedRecords);
+	}
+	
+	
+	/**
+	 * Get a list of all existing taxes
+	 * 
+	 * @param boolean $loadReferencedRecords Load referenced records
+	 * 
+	 * @return ARSet
+	 */
+	public static function getAllTaxes($loadReferencedRecords = false)
+	{
+	    return self::getRecordSet(new ARSelectFilter(), $loadReferencedRecords);
 	}
 }
 
