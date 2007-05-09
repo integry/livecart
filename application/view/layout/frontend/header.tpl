@@ -2,14 +2,14 @@
 
 <div class="clear"></div>
 
-<div id="header" style="background-color: #EEEEEE;"> 
+<div id="header"> 
 				
 	<fieldset class="container" style="position: relative;">
 		
 		<div style="float: left;">
             <div style="float: left;">
                 <a href="{link}"><img src="image/promo/transparentlogo_small.png" /></a>
-               	<span id="storeName">Demo</span>
+               	<span id="storeName" style="display: none;">Demo</span>
             </div>
             
     		<form action="{categoryUrl data=$category}" class="quickSearch" style="float: left; padding-left: 30px; padding-top: 15px;">
