@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-05-08 20:17                                #
+# Created on:            2007-05-09 17:33                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -51,15 +51,11 @@ ALTER TABLE User DROP FOREIGN KEY ShippingAddress_User;
 
 ALTER TABLE User DROP FOREIGN KEY BillingAddress_User;
 
-ALTER TABLE AccessControlList DROP FOREIGN KEY User_AccessControlList;
+ALTER TABLE User DROP FOREIGN KEY UserGroup_User;
 
-ALTER TABLE AccessControlList DROP FOREIGN KEY RoleGroup_AccessControlList;
+ALTER TABLE AccessControlList DROP FOREIGN KEY UserGroup_AccessControlList;
 
 ALTER TABLE AccessControlList DROP FOREIGN KEY Role_AccessControlList;
-
-ALTER TABLE UserGroup DROP FOREIGN KEY User_UserGroup;
-
-ALTER TABLE UserGroup DROP FOREIGN KEY RoleGroup_UserGroup;
 
 ALTER TABLE Filter DROP FOREIGN KEY FilterGroup_Filter;
 
@@ -150,30 +146,6 @@ ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 ALTER TABLE ShippingService DROP FOREIGN KEY DeliveryZone_ShippingService;
 
 # ---------------------------------------------------------------------- #
-# Modify table "Product"                                                 #
-# ---------------------------------------------------------------------- #
-
-DROP INDEX IDX_Product_1 ON Product;
-
-DROP INDEX IDX_Product_2 ON Product;
-
-ALTER TABLE Product ADD COLUMN salesRank INTEGER;
-
-CREATE INDEX IDX_Product_isEnabled ON Product (isEnabled);
-
-CREATE INDEX IDX_Product_dateCreated ON Product (dateCreated);
-
-CREATE INDEX IDX_Product_isFeatured ON Product (isFeatured);
-
-CREATE INDEX IDX_Product_rating ON Product (rating);
-
-CREATE INDEX IDX_Product_salesRank ON Product (salesRank);
-
-CREATE INDEX IDX_Product_Category ON Product (categoryID);
-
-CREATE INDEX IDX_Product_SKU ON Product (sku);
-
-# ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
 # ---------------------------------------------------------------------- #
 
@@ -234,20 +206,14 @@ ALTER TABLE User ADD CONSTRAINT ShippingAddress_User
 ALTER TABLE User ADD CONSTRAINT BillingAddress_User 
     FOREIGN KEY (defaultBillingAddressID) REFERENCES BillingAddress (ID) ON DELETE SET NULL;
 
-ALTER TABLE AccessControlList ADD CONSTRAINT User_AccessControlList 
-    FOREIGN KEY (UserID) REFERENCES User (ID);
+ALTER TABLE User ADD CONSTRAINT UserGroup_User 
+    FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE AccessControlList ADD CONSTRAINT RoleGroup_AccessControlList 
-    FOREIGN KEY (RoleGroupID) REFERENCES RoleGroup (ID);
+ALTER TABLE AccessControlList ADD CONSTRAINT UserGroup_AccessControlList 
+    FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID);
 
 ALTER TABLE AccessControlList ADD CONSTRAINT Role_AccessControlList 
-    FOREIGN KEY (RoleID) REFERENCES Role (ID);
-
-ALTER TABLE UserGroup ADD CONSTRAINT User_UserGroup 
-    FOREIGN KEY (userID) REFERENCES User (ID);
-
-ALTER TABLE UserGroup ADD CONSTRAINT RoleGroup_UserGroup 
-    FOREIGN KEY (roleGroupID) REFERENCES RoleGroup (ID);
+    FOREIGN KEY (roleID) REFERENCES Role (ID);
 
 ALTER TABLE Filter ADD CONSTRAINT FilterGroup_Filter 
     FOREIGN KEY (filterGroupID) REFERENCES FilterGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
