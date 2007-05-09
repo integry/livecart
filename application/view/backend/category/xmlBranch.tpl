@@ -1,5 +1,5 @@
 <tree id="{$rootID}">
     {foreach item="category" from=$categoryList}
-    <item child="{$category.childrenCount}" id="{$category.ID}" text="{$category.name}"></item>
+    <item child="{$category.childrenCount}" id="{$category.ID}" text="{$category.name|escape:'html'}"></item>
     {/foreach}
 </tree>
