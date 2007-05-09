@@ -127,17 +127,8 @@
 	<h2>{t Recommended Products}</h2>
 	<div id="relatedProducts">
 		
-    <ul>
-	{foreach from=$related item="item"}
-		<li>
-			<a class="productName" href="{productUrl product=$item}">{$item.name_lang}</a>
-			{if $item.DefaultImage}
-				<img src="{$item.DefaultImage.paths.2}"/>
-			{/if}
-
-		</li>
-    {/foreach}	
-	</ul>	
+    	{include file="category/productList.tpl" products=$related}
+		
 	</div>
 	{/if}
 	
