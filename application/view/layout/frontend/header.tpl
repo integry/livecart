@@ -13,7 +13,8 @@
             </div>
             
     		<form action="{categoryUrl data=$category}" class="quickSearch" style="float: left; padding-left: 30px; padding-top: 15px;">
-    		    <input type="text" class="text searchQuery" name="q" value="search" />
+    		    Search
+                <input type="text" class="text searchQuery" name="q" value="{$searchQuery|escape}" />
     		    <input type="submit" class="submit" value="Go!">
     		</form>
         </div>

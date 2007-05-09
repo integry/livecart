@@ -58,7 +58,7 @@
 					</div>				                
 	            
 					<div style="float: right;">
-					1/10
+					{* 1/10 *}
 					</div>  
 				
 				</div>      

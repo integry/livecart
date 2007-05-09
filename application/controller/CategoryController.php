@@ -114,7 +114,8 @@ class CategoryController extends FrontendController
 			$productFilter->applyFilter($filter);  
 		    if ($filter instanceof SearchFilter)
 		    {
-				$productFilter->includeSubcategories();				
+				$productFilter->includeSubcategories();	
+                $searchQuery = $filter->getKeywords();			
 			}
 		}
 
@@ -151,24 +152,33 @@ class CategoryController extends FrontendController
 		{
 			$urlParams['filters'] = $this->request->getValue('filters');
 		}
+
 		$url = Router::getInstance()->createURL($urlParams);
 		$url = str_replace('_000_', '_page_', $url);
 			
 		// add filters to breadcrumb
-		$params = array('data' => $nodeArray, 'filters' => array());
+		if (!isset($nodeArray))
+		{
+            $nodeArray = $this->category->toArray();   
+		}
+		
+        $params = array('data' => $nodeArray, 'filters' => array());
 		foreach ($this->filters as $filter)
 		{
 			$filter = $filter->toArray();
 			$params['filters'][] = $filter;
 			$url = smarty_function_categoryUrl($params, false);
 			$this->addBreadCrumb($filter['name_lang'], $url);
-		}		
+		}            
 			
 	    // get filter chain handle
         $filterChainHandle = array();
-        foreach ($params['filters'] as $filter)
-	    {
-            $filterChainHandle[] = filterHandle($filter);
+        if (!empty($params['filters']))
+        {
+            foreach ($params['filters'] as $filter)
+    	    {
+                $filterChainHandle[] = filterHandle($filter);
+            }            
         }
         $filterChainHandle = implode(',', $filterChainHandle);
         
@@ -189,6 +199,12 @@ class CategoryController extends FrontendController
 		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode()));
 		$response->setValue('sortOptions', $sort);
 		$response->setValue('sortForm', $this->buildSortForm($order));
+		
+		if (isset($searchQuery))
+        {
+    		$response->setValue('searchQuery', $searchQuery);
+        }		
+		
 		return $response;
 	}        	
 	
@@ -376,7 +392,10 @@ class CategoryController extends FrontendController
             $pFilter = new PriceFilter($filterId);    
             $priceFilter = $pFilter->toArray();
             $priceFilter['count'] = $count;
-            $priceFilters[] = $priceFilter;
+            if ($count)
+            {
+                $priceFilters[] = $priceFilter;
+            }
         }
         
         if (count($priceFilters) > 1)

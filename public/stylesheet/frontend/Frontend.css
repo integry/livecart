@@ -201,6 +201,7 @@ div.box .content
 .current 
 {
 	font-weight: bold;
+	font-size: larger;
 }
 
 fieldset.container
@@ -251,13 +252,13 @@ fieldset.container
 
 .quickSearch .searchQuery
 {
-	border: 1px solid #DDDDDD;
-	width: 180px;
+	border: 1px solid #BBBBBB;
+	width: 160px;
 }
 
 .quickSearch .submit
-{
-	border: 1px solid #555555;	
+{   
+
 }
 
 .quickSearch select
@@ -418,7 +419,8 @@ tr.separator td
 
 .subCategories td.details
 {
-    padding-left: 10px;
+    padding-left: 30px;
+    vertical-align: middle;
 }
 
 /*****************************
@@ -467,7 +469,7 @@ ul.productList
 
 ul.productList li
 {
-	margin-bottom: 20px;
+	margin-bottom: 30px;
 }
 
 ul.productList .title
@@ -518,6 +520,10 @@ ul.productList .order
 .specSummary
 {
     font-weight: bold;    
+    float: right; 
+    background: #FFFCAC; 
+    padding: 10px;
+    font-size: smaller;
 }
 
 #mainInfo td

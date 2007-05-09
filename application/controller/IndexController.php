@@ -11,7 +11,16 @@ class IndexController extends FrontendController
 {
 	public function index() 
 	{
-		return new ActionResponse();
+//		return new ActionResponse();
+        ClassLoader::import('application.controller.CategoryController');
+		
+		$this->request->setValue('id', Category::ROOT_ID);
+		$this->request->setValue('cathandle', '.');
+		
+        $controller = new CategoryController($this->request);		
+		$response = $controller->index();
+		
+		return $response;
 	}
 }
 

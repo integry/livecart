@@ -41,6 +41,11 @@ class SearchFilter implements FilterInterface
         return 's';
     }
     
+    public function getKeywords()
+    {
+        return $this->query;
+    }
+    
     public function toArray()
     {
 		$array = array();

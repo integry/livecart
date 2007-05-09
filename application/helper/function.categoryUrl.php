@@ -17,14 +17,22 @@ function smarty_function_categoryUrl($params, $smarty)
 	// get full category path
 	$parts = array();
 	$parts[] = Store::createHandleString($category['name_lang']);
-	$current = $category['parent'];
-	while ($current > 1)
+	
+	if (!isset($category['parent']))
+	{
+        $category['parent'] = 0;    
+    }
+	
+    $current = $category['parent'];	
+	
+    while ($current > 1)
 	{
 	  	$cat = Category::getInstanceByID($current, true);
 	  	$parts[] = Store::createHandleString($cat->getValueByLang('name', Store::getInstance()->getLocaleCode()));
 	  	$current = $cat->parentNode->get()->getID();
 	}
-	$parts = array_reverse($parts);	
+	
+    $parts = array_reverse($parts);	
 	$handle = implode('.', $parts);
 	
 	$filters = array();

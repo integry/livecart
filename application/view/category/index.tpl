@@ -7,11 +7,17 @@
 <div id="content">
 	<h1>{$category.name_lang}</h1>
 
+    {if $searchQuery}
+        <h3>Searching for "{$searchQuery}"</h3>
+    {/if}
+
     <table class="subCategories">
 	{foreach from=$subCategories item="sub"}   
         <tr>
             <td class="subCatImage">
-                <img src="{$sub.DefaultImage.paths.1}" />            
+                <a href="{categoryUrl data=$sub}">
+                    <img src="{$sub.DefaultImage.paths.1}" />            
+                </a>
             </td>
             <td class="details">
                 <div class="subCatName">
@@ -29,28 +35,34 @@
 	{/foreach}    
     </table>
 
-{if $products}	
-    <div class="resultStats">
-    	<div style="float: left; margin-top: 7px;">
-            Showing {$offsetStart} to {$offsetEnd} of {$count} found products.
-        </div>
-        <div style="float: right;">
-            Sort by
-            {form handle=$sortForm action="self" method="GET"}
-            {selectfield id="productSort" name="sort" options=$sortOptions onchange="this.form.submit();"}
-            {/form}
-        </div>  
-        <div style="clear: right;"></div>
-    </div>
-    
-    {include file="category/productList.tpl" products=$products}
-
-    {if $count > $perPage}
-    	<div class="resultPages">
-    		Pages: {paginate current=$currentPage count=$count perPage=$perPage url=$url}
-    	</div>
+    {if $searchQuery && !$products}
+        <p>
+            {t No products were found. Please try different keywords for your search query.}
+        </p>    
     {/if}
-{/if}
+
+    {if $products}	
+        <div class="resultStats">
+        	<div style="float: left; margin-top: 7px;">
+                Showing {$offsetStart} to {$offsetEnd} of {$count} found products.
+            </div>
+            <div style="float: right;">
+                Sort by
+                {form handle=$sortForm action="self" method="GET"}
+                {selectfield id="productSort" name="sort" options=$sortOptions onchange="this.form.submit();"}
+                {/form}
+            </div>  
+            <div style="clear: right;"></div>
+        </div>
+        
+        {include file="category/productList.tpl" products=$products}
+    
+        {if $count > $perPage}
+        	<div class="resultPages">
+        		Pages: {paginate current=$currentPage count=$count perPage=$perPage url=$url}
+        	</div>
+        {/if}
+    {/if}
 		
 </div>		
 {include file="layout/frontend/footer.tpl"}
