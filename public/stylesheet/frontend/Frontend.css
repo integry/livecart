@@ -140,6 +140,7 @@ div.confirmationMsg div
 {
 	margin-left: 190px;
 	padding: 10px;
+	padding-top: 0px;
 }
 
 #content.left
@@ -157,9 +158,10 @@ div.confirmationMsg div
 *****************************/
 #header
 {
-    border-top: 1px solid #CCCCCC;    
+    border-top: 1px solid #CCCCCC;   
     padding-top: 6px;
   	padding-bottom: 10px;    
+  	margin-bottom: 10px;
 }
 
 #storeName
@@ -320,7 +322,7 @@ fieldset.container
     list-style-type: none;
 }
 
-.filterGroup h3
+.filterGroup h4
 {
 	margin-top: 3px;
 }
@@ -472,7 +474,7 @@ ul.productList .title
 {
 	display: block;
 	margin-bottom: 9px;
-	font-size: 110%;
+	font-size: 120%;
 }
 
 ul.productList .spec
@@ -508,6 +510,11 @@ ul.productList .order
 /*****************************
 	Product page
 *****************************/
+.productPage #header
+{
+    border-bottom: 1px solid #CCCCCC; 
+}
+
 .specSummary
 {
     font-weight: bold;    
@@ -562,7 +569,7 @@ tr.specificationGroup
 	width: 450px;
 }
 
-#largeImage
+#largeImage.multipleImages
 {
 	height: 350px;
 }

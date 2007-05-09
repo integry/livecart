@@ -1,13 +1,18 @@
+<div class="productPage">
+
 {pageTitle}{$product.name_lang}{/pageTitle}
 {include file="layout/frontend/header.tpl"}
 {* include file="layout/frontend/leftSide.tpl" *}
 {* include file="layout/frontend/rightSide.tpl" *}
 
 <div id="content" style="margin-left: 0;">
-    <h1>{$product.name_lang}</h1>
+    
+    <div style="padding: 10px; padding-left: 0px;">
+        <a href="{categoryUrl data=$product.Category}">&lt;&lt; {$product.Category.name_lang}</a>
+    </div>
     
 	{if $product.listAttributes}
-		<div class="specSummary">
+		<div class="specSummary" style="float: right; background: yellow; padding: 10px;">
 			{foreach from=$product.listAttributes item="attr" name="attr"}
                 {if $attr.values}
                     {foreach from=$attr.values item="value" name="values"}
@@ -29,9 +34,11 @@
 		</div>
 	{/if}    
     
+    <h1>{$product.name_lang}</h1>
+    
 	<fieldset class="container">
 		<div id="imageContainer" style="float: left; text-align: center;">
-			<div id="largeImage"{if !$product.DefaultImage.paths.3} class="missingImage"{/if}>
+			<div id="largeImage" class="{if !$product.DefaultImage.paths.3}missingImage{/if} {if $images|@count > 1}multipleImages{/if}">
 				{if $product.DefaultImage.paths.3}
 					<img src="{$product.DefaultImage.paths.3}" id="mainImage" style="margin: 20px;" />
 				{else}
@@ -149,3 +156,5 @@
 </script>
 
 {include file="layout/frontend/footer.tpl"}
+
+</div>

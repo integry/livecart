@@ -124,12 +124,15 @@ class CategoryController extends FrontendController
         foreach ($products as &$product)
         {
             $product['listAttributes'] = array();
-            foreach ($product['attributes'] as $attr)
+            if (is_array($product['attributes']))
             {
-                if ($attr['isDisplayedInList'] && (!empty($attr['value']) || !empty($attr['values']) || !empty($attr['value_lang'])))
+                foreach ($product['attributes'] as $attr)
                 {
-                    $product['listAttributes'][] = $attr;
-                }
+                    if ($attr['isDisplayedInList'] && (!empty($attr['value']) || !empty($attr['values']) || !empty($attr['value_lang'])))
+                    {
+                        $product['listAttributes'][] = $attr;
+                    }
+                }                
             }
         }
 
@@ -168,6 +171,8 @@ class CategoryController extends FrontendController
             $filterChainHandle[] = filterHandle($filter);
         }
         $filterChainHandle = implode(',', $filterChainHandle);
+        
+        $this->totalCount = $totalCount;
         
 		$response = new ActionResponse();
 		$response->setValue('id', $this->categoryID);
@@ -329,7 +334,8 @@ class CategoryController extends FrontendController
 		{
 			if (empty($grp['filters']) || count($grp['filters']) == 1)
 			{
-				unset($filterGroups[$key]);
+				//var_dump($grp);
+                unset($filterGroups[$key]);
 			}
 			
 			// hide excess criterias (by default only 5 per filter are displayed)
