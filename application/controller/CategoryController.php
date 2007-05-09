@@ -124,7 +124,7 @@ class CategoryController extends FrontendController
         foreach ($products as &$product)
         {
             $product['listAttributes'] = array();
-            if (is_array($product['attributes']))
+            if (!empty($product['attributes']))
             {
                 foreach ($product['attributes'] as $attr)
                 {

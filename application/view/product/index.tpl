@@ -12,7 +12,7 @@
     </div>
     
 	{if $product.listAttributes}
-		<div class="specSummary" style="float: right; background: yellow; padding: 10px;">
+		<div class="specSummary" style="float: right; background: #FFFCAC; padding: 10px;">
 			{foreach from=$product.listAttributes item="attr" name="attr"}
                 {if $attr.values}
                     {foreach from=$attr.values item="value" name="values"}
