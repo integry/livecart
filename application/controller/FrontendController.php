@@ -43,7 +43,7 @@ abstract class FrontendController extends BaseController
 
 	
 	protected function addBreadCrumb($title, $url)
-	{
+	{		
 		$this->breadCrumb[] = array('title' => $title, 'url' => $url);
 	}	
 

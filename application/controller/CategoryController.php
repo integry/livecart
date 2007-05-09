@@ -33,16 +33,6 @@ class CategoryController extends FrontendController
 		// get category instance
 		$this->categoryID = $this->request->getValue('id');
 		$this->category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
-
-		// get category path for breadcrumb
-		$path = $this->category->getPathNodeSet();
-		include_once(ClassLoader::getRealPath('application.helper') . '/function.categoryUrl.php');
-		foreach ($path as $node)
-		{
-			$nodeArray = $node->toArray();
-			$url = smarty_function_categoryUrl(array('data' => $nodeArray), false);
-			$this->addBreadCrumb($nodeArray['name_lang'], $url);
-		}
 	
 		$this->getAppliedFilters();
 	
@@ -56,7 +46,7 @@ class CategoryController extends FrontendController
 		$selectFilter = new ARSelectFilter();
 		$selectFilter->setLimit($perPage, $offsetStart - 1);
 
-      	// search filter
+      	// create new search filter
         $query = $this->request->getValue('q');
         if ($query)
       	{
@@ -77,6 +67,143 @@ class CategoryController extends FrontendController
             $order = $defOrder;
         }
 
+		$this->applySortOrder($selectFilter, $order);
+
+		// setup ProductFilter
+		$productFilter = new ProductFilter($this->category, $selectFilter);
+		$this->productFilter = $productFilter;
+		foreach ($this->filters as $filter)
+		{
+			$productFilter->applyFilter($filter);  
+		    if ($filter instanceof SearchFilter)
+		    {
+				$productFilter->includeSubcategories();	
+                $searchQuery = $filter->getKeywords();			
+			}
+		}
+
+        $products = $this->getProductsArray($productFilter);
+
+		// pagination
+        $count = new ProductCount($this->productFilter);
+		$totalCount = $count->getCategoryProductCount($productFilter);
+		$offsetEnd = min($totalCount, $offsetEnd);
+        $this->totalCount = $totalCount;
+				
+		$urlParams = array('controller' => 'category', 'action' => 'index', 
+						   'id' => $this->request->getValue('id'),
+						   'cathandle' => $this->request->getValue('cathandle'),
+						   'page' => '_000_',
+						   );
+						   
+		if ($this->request->getValue('filters'))
+		{
+			$urlParams['filters'] = $this->request->getValue('filters');
+		}
+
+		$paginationUrl = str_replace('_000_', '_page_', Router::getInstance()->createURL($urlParams));
+					
+		$filterChainHandle = $this->setUpBreadCrumbAndReturnFilterChainHandle();					
+					        
+		// narrow by subcategories
+		$subCategories = $this->category->getSubCategoryArray(Category::LOAD_REFERENCES);
+		$categoryNarrow = array();
+		if ($searchQuery && $products)
+		{
+			if (count($subCategories) > 0)
+			{
+				$case = new ARCaseHandle();
+				$index = array();
+				foreach ($subCategories as $key => $cat)
+				{
+		            $cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $cat['lft']);
+		    		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $cat['rgt']));
+					$case->addCondition($cond, new ARExpressionHandle($cat['ID']));
+					$index[$cat['ID']] = $key;
+				}	
+				
+				$query = new ARSelectQueryBuilder();
+				$query->includeTable('Product');
+				
+				$filter = clone $selectFilter;
+				$filter->setLimit(0);
+				$filter->resetOrder();
+				$filter->setOrder(new ARExpressionHandle('cnt'), 'DESC');
+				$filter->setGrouping(new ARExpressionHandle('ID'));
+				$query->setFilter($filter);
+				$query->addField($case->toString(), null, 'ID');
+				$query->addField('COUNT(*)', null, 'cnt');
+				$query->joinTable('Category', 'Product', 'ID', 'categoryID');
+				
+				$count = ActiveRecordModel::getDataBySQL($query->createString());
+				
+				foreach ($count as $cat)
+				{
+					$data = $subCategories[$index[$cat['ID']]];
+					$data['searchCount'] = $cat['cnt'];
+					$categoryNarrow[] = $data;
+				}				
+			}
+		}
+        
+		$response = new ActionResponse();
+		$response->setValue('id', $this->categoryID);
+		$response->setValue('url', $paginationUrl);
+		$response->setValue('products', $products);
+		$response->setValue('count', $totalCount);
+		$response->setValue('offsetStart', $offsetStart);
+		$response->setValue('offsetEnd', $offsetEnd);
+		$response->setValue('perPage', $perPage);
+		$response->setValue('currentPage', $currentPage);
+		$response->setValue('category', $this->category->toArray());
+		$response->setValue('subCategories', $subCategories);
+		$response->setValue('filterChainHandle', $filterChainHandle);
+		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode()));
+		$response->setValue('sortOptions', $sort);
+		$response->setValue('sortForm', $this->buildSortForm($order));
+		$response->setValue('categoryNarrow', $categoryNarrow);
+		
+		if (isset($searchQuery))
+        {
+    		$response->setValue('searchQuery', $searchQuery);
+        }		
+		
+		return $response;
+	}        	
+	
+	private function getProductsArray(ProductFilter $filter)
+	{
+		$products = $this->category->getProductsArray($filter, array('Manufacturer', 'DefaultImage' => 'ProductImage', 'Category'));
+
+		// get product specification and price data
+		ProductSpecification::loadSpecificationForRecordSetArray($products);
+		ProductPrice::loadPricesForRecordSetArray($products);
+		
+		$this->createAttributeSummaries($products);
+		
+		return $products;        
+    }
+
+	private function createAttributeSummaries(&$productArray)
+	{
+        foreach ($productArray as &$product)
+        {
+            $product['listAttributes'] = array();
+            if (!empty($product['attributes']))
+            {
+                foreach ($product['attributes'] as $attr)
+                {
+                    if ($attr['isDisplayedInList'] && (!empty($attr['value']) || !empty($attr['values']) || !empty($attr['value_lang'])))
+                    {
+                        $product['listAttributes'][] = $attr;
+                    }
+                }                
+            }
+        }		
+	}
+	
+	private function applySortOrder(ARSelectFilter $selectFilter, $order)
+	{
         if (substr($order, 0, 12) == 'product_name')
         {
             $dir = array_pop(explode('_', $order)) == 'asc' ? 'ASC' : 'DESC';            
@@ -104,64 +231,27 @@ class CategoryController extends FrontendController
         {
             $selectFilter->setOrder(new ARFieldHandle('Product', 'isFeatured'), 'DESC');
             $selectFilter->setOrder(new ARFieldHandle('Product', 'salesRank'), 'DESC');            
-        }        
-
-		// setup ProductFilter
-		$productFilter = new ProductFilter($this->category, $selectFilter);
-		$this->productFilter = $productFilter;
-		foreach ($this->filters as $filter)
+        }	
+	}
+	
+	private function setUpBreadCrumbAndReturnFilterChainHandle()
+	{
+		// get category path for breadcrumb
+		$path = $this->category->getPathNodeSet();
+		include_once(ClassLoader::getRealPath('application.helper') . '/function.categoryUrl.php');
+		foreach ($path as $node)
 		{
-			$productFilter->applyFilter($filter);  
-		    if ($filter instanceof SearchFilter)
-		    {
-				$productFilter->includeSubcategories();	
-                $searchQuery = $filter->getKeywords();			
-			}
+			$nodeArray = $node->toArray();
+			$url = smarty_function_categoryUrl(array('data' => $nodeArray), false);
+			$this->addBreadCrumb($nodeArray['name_lang'], $url);
 		}
-
-        $products = $this->getProductsArray($productFilter);
-
-        // attribute summary
-        foreach ($products as &$product)
-        {
-            $product['listAttributes'] = array();
-            if (!empty($product['attributes']))
-            {
-                foreach ($product['attributes'] as $attr)
-                {
-                    if ($attr['isDisplayedInList'] && (!empty($attr['value']) || !empty($attr['values']) || !empty($attr['value_lang'])))
-                    {
-                        $product['listAttributes'][] = $attr;
-                    }
-                }                
-            }
-        }
-
-		// pagination
-        $count = new ProductCount($this->productFilter);
-		$totalCount = $count->getCategoryProductCount($productFilter);
-		$offsetEnd = min($totalCount, $offsetEnd);
 		
-		$urlParams = array('controller' => 'category', 'action' => 'index', 
-						   'id' => $this->request->getValue('id'),
-						   'cathandle' => $this->request->getValue('cathandle'),
-						   'page' => '_000_',
-						   );
-						   
-		if ($this->request->getValue('filters'))
-		{
-			$urlParams['filters'] = $this->request->getValue('filters');
-		}
-
-		$url = Router::getInstance()->createURL($urlParams);
-		$url = str_replace('_000_', '_page_', $url);
-			
 		// add filters to breadcrumb
 		if (!isset($nodeArray))
 		{
             $nodeArray = $this->category->toArray();   
 		}
-		
+				
         $params = array('data' => $nodeArray, 'filters' => array());
 		foreach ($this->filters as $filter)
 		{
@@ -170,7 +260,7 @@ class CategoryController extends FrontendController
 			$url = smarty_function_categoryUrl($params, false);
 			$this->addBreadCrumb($filter['name_lang'], $url);
 		}            
-			
+		
 	    // get filter chain handle
         $filterChainHandle = array();
         if (!empty($params['filters']))
@@ -180,44 +270,9 @@ class CategoryController extends FrontendController
                 $filterChainHandle[] = filterHandle($filter);
             }            
         }
-        $filterChainHandle = implode(',', $filterChainHandle);
         
-        $this->totalCount = $totalCount;
-        
-		$response = new ActionResponse();
-		$response->setValue('id', $this->categoryID);
-		$response->setValue('url', $url);
-		$response->setValue('products', $products);
-		$response->setValue('count', $totalCount);
-		$response->setValue('offsetStart', $offsetStart);
-		$response->setValue('offsetEnd', $offsetEnd);
-		$response->setValue('perPage', $perPage);
-		$response->setValue('currentPage', $currentPage);
-		$response->setValue('category', $this->category->toArray());
-		$response->setValue('subCategories', $this->category->getSubCategoryArray(Category::LOAD_REFERENCES));
-		$response->setValue('filterChainHandle', $filterChainHandle);
-		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode()));
-		$response->setValue('sortOptions', $sort);
-		$response->setValue('sortForm', $this->buildSortForm($order));
-		
-		if (isset($searchQuery))
-        {
-    		$response->setValue('searchQuery', $searchQuery);
-        }		
-		
-		return $response;
-	}        	
-	
-	private function getProductsArray(ProductFilter $filter)
-	{
-		$products = $this->category->getProductsArray($filter, array('Manufacturer', 'DefaultImage' => 'ProductImage', 'Category'));
-
-		// get product specification and price data
-		ProductSpecification::loadSpecificationForRecordSetArray($products);
-		ProductPrice::loadPricesForRecordSetArray($products);
-		
-		return $products;        
-    }
+		return implode(',', $filterChainHandle);						
+	}
 	
 	/**
 	 * @return Form

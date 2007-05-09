@@ -5,13 +5,38 @@
 {include file="layout/frontend/rightSide.tpl"}
 
 <div id="content">
-	<h1>{$category.name_lang}</h1>
+	<h1>{$category.name_lang}{if $searchQuery} &gt;&gt; "<span class="keywords">{$searchQuery}</span>"{/if}</h1>
 
-    {if $searchQuery}
-        <h3>Searching for "{$searchQuery}"</h3>
-    {/if}
 
+	{if $categoryNarrow}
+	Narrow by category
     <table class="subCategories">
+	{foreach from=$categoryNarrow item="sub"}   
+        <tr>
+            <td class="subCatImage">
+                <a href="{categoryUrl data=$sub}">
+                    <img src="{$sub.DefaultImage.paths.1}" />            
+                </a>
+            </td>
+            <td class="details">
+                <div class="subCatName">
+                    <a href="{categoryUrl data=$sub}">{$sub.name_lang}</a> 
+                    <span class="count">({$sub.searchCount})</span>
+                </div>
+                <div class="subCatDescr">
+                    {$sub.description_lang}
+                </div>            
+            </td>        
+        </tr>
+        <tr class="separator">
+            <td colspan="2"></td>
+        </tr>
+	{/foreach}    
+    </table>	
+	{/if}
+
+    {if !$searchQuery}
+	<table class="subCategories">
 	{foreach from=$subCategories item="sub"}   
         <tr>
             <td class="subCatImage">
@@ -34,6 +59,7 @@
         </tr>
 	{/foreach}    
     </table>
+    {/if}
 
     {if $searchQuery && !$products}
         <p>

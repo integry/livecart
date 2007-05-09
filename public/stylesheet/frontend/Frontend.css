@@ -426,6 +426,11 @@ tr.separator td
 /*****************************
 	Product list
 *****************************/
+.keywords
+{
+	font-style: italic;	
+}
+
 .page
 {
     border: 1px solid blue;

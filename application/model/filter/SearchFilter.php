@@ -13,22 +13,49 @@ class SearchFilter implements FilterInterface
     
     public function getCondition()
     {
-		$searchFields = array('name', 'keywords', 'shortDescription', 'longDescription');
-		$searchCond = null;
-		foreach ($searchFields as $field)
+		// analyze search query
+		// find exact phrases first
+		$query = $this->query;
+		preg_match_all('/"(.*)"/sU', $query, $matches);
+		
+		$phrases = array();
+		if ($matches[1])
 		{
-			$cond = new LikeCond(new ARFieldHandle('Product', $field), '%' . $this->query . '%');
-			if (!$searchCond)
-			{
-				$searchCond = $cond;
-			}
-			else
-			{
-				$searchCond->addOr($cond);
-			}
+			$phrases = $matches[1];
 		}
 		
-        return $searchCond;
+		$query = preg_replace('/"(.*)"/sU', '', $query);
+		$query = preg_replace('/[-,\._!\?\\/]/', ' ', $query);
+		$query = preg_replace('/ {2,}/', ' ', $query);
+		
+		$query = trim($query);
+		
+		$phrases = array_merge($phrases, explode(' ', $query));
+		
+		$searchFields = array('name', 'keywords', 'shortDescription', 'longDescription');
+		
+		$conditions = array();
+		
+		foreach ($phrases as $phrase)
+		{
+			$searchCond = null;
+			foreach ($searchFields as $field)
+			{
+				$cond = new LikeCond(new ARFieldHandle('Product', $field), '%' . $phrase . '%');
+				if (!$searchCond)
+				{
+					$searchCond = $cond;
+				}
+				else
+				{
+					$searchCond->addOr($cond);
+				}
+			}
+			
+			$conditions[] = $searchCond;			
+		}
+			
+        return new AndChainCondition($conditions);
     }
     
     public function defineJoin(ARSelectFilter $filter)
