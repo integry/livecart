@@ -74,10 +74,17 @@ function smarty_function_categoryUrl($params, $smarty)
 		$category['ID'] = 1;
 	}
 	
+	if (!isset($params['query']))
+	{
+        $params['query'] = '';    
+    }
+	
 	$urlParams = array('controller' => 'category', 
 					   'action' => 'index', 
 					   'cathandle' => $handle, 
-					   'id' => $category['ID']);
+					   'id' => $category['ID'],
+                       'query' => $params['query'],
+                       );
 					   
 	if ($filters)
 	{

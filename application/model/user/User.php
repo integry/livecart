@@ -3,6 +3,7 @@
 ClassLoader::import("application.model.ActiveRecordModel");
 ClassLoader::import("application.model.user.BillingAddress");
 ClassLoader::import("application.model.user.ShippingAddress");
+ClassLoader::import("application.model.user.UserGroup");
 
 /**
  * Store user base class (including frontend and backend)

@@ -30,7 +30,7 @@ class CategoryController extends FrontendController
   
 	public function index()
 	{
-		// get category instance
+        // get category instance
 		$this->categoryID = $this->request->getValue('id');
 		$this->category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
 	
@@ -108,7 +108,7 @@ class CategoryController extends FrontendController
 		// narrow by subcategories
 		$subCategories = $this->category->getSubCategoryArray(Category::LOAD_REFERENCES);
 		$categoryNarrow = array();
-		if ($searchQuery && $products)
+		if (!empty($searchQuery) && $products)
 		{
 			if (count($subCategories) > 0)
 			{
@@ -136,10 +136,15 @@ class CategoryController extends FrontendController
 				$query->joinTable('Category', 'Product', 'ID', 'categoryID');
 				
 				$count = ActiveRecordModel::getDataBySQL($query->createString());
-				
+
 				foreach ($count as $cat)
 				{
-					$data = $subCategories[$index[$cat['ID']]];
+					if (empty($index[$cat['ID']]))
+					{
+                        continue;
+                    }
+                    
+                    $data = $subCategories[$index[$cat['ID']]];
 					$data['searchCount'] = $cat['cnt'];
 					$categoryNarrow[] = $data;
 				}				
@@ -289,7 +294,7 @@ class CategoryController extends FrontendController
  	/* @todo some defuctoring... */
 	protected function boxFilterBlock()
 	{
-		if ($this->categoryID < 1)
+        if ($this->categoryID < 1)
 		{
 		  	$this->categoryID = 1;
 		}
@@ -299,11 +304,14 @@ class CategoryController extends FrontendController
 		
 		// get category filter groups
 		$filterGroups = $currentCategory->getFilterGroupArray();
+
+/*
 		if (!$filterGroups)
 		{
 		  	return new RawResponse();
 		}		
-	
+*/
+
 		// get counts by filters, categories, etc
 		$count = new ProductCount($this->productFilter);
 		$filtercount = $count->getCountByFilters();
@@ -468,13 +476,14 @@ class CategoryController extends FrontendController
 	{
 		if ($this->request->getValue('filters'))
 		{
-			$valueFilterIds = array();
+            $valueFilterIds = array();
 			$selectorFilterIds = array();
 			$manufacturerFilterIds = array();
 			$priceFilterIds = array();
 			$searchFilters = array();
 			
 			$filters = explode(',', $this->request->getValue('filters'));
+
 			foreach ($filters as $filter)
 			{
 			  	$pair = explode('-', $filter);
