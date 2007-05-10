@@ -39,6 +39,8 @@
             <option value="set_keywords">Set keywords</option>
             <option value="set_URL">Set website address</option>
             <option value="addRelated">Add related product</option>
+            <option value="enable_isFeatured">Set as featured product</option>
+            <option value="disable_isFeatured">Unset featured product</option>
 			                
             <optgroup label="Inventory & Pricing">
                 <option value="inc_price">Increase price (percent)</option>

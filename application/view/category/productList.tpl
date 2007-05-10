@@ -1,6 +1,6 @@
 <ul class="productList"> 
 {foreach from=$products item=product}
-	<li>			
+	<li class="{if $product.isFeatured}featured{/if}">			
 		
 	    <fieldset class="container">
         

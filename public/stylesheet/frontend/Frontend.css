@@ -248,6 +248,8 @@ fieldset.container
 .quickSearch
 {
 	float: left;
+	padding-left: 30px; 
+    padding-top: 15px;
 }
 
 .quickSearch .searchQuery
@@ -477,6 +479,11 @@ ul.productList li
 	margin-bottom: 30px;
 }
 
+ul.productList li.featured .title
+{
+    font-weight: bold;   
+}
+
 ul.productList .title
 {
 	display: block;
@@ -529,6 +536,8 @@ ul.productList .order
     background: #FFFCAC; 
     padding: 10px;
     font-size: smaller;
+    width: expression((this.clientWidth > 400 ? 400 : this.clientWidth) + 'px');
+    max-width: 400px;
 }
 
 #mainInfo td
@@ -562,12 +571,6 @@ tr.specificationGroup
     font-weight: bold; 
 	font-size: larger; 
 	background-color: #CCCCCC;      
-}
-
-#relatedProducts li
-{
-	margin-bottom: 10px;	
-	list-style: none;
 }
 
 #relatedProducts a.productName

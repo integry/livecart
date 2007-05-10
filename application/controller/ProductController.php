@@ -55,7 +55,39 @@ class ProductController extends FrontendController
 
         // add product title to breacrumb
         $this->addBreadCrumb($productArray['name_lang'], '');
-        
+        		
+        // allowed shopping cart quantities
+        $quantities = range(max($product->minimumQuantity->get(), 1), 30);
+        $quantity = array_combine($quantities, $quantities);		
+		
+		// manufacturer filter
+		$f = new ManufacturerFilter($product->manufacturer->get()->getID(), $product->manufacturer->get()->name->get());
+		
+		$response = new ActionResponse();
+        $response->setValue('product', $productArray);        
+        $response->setValue('category', $productArray['Category']);        
+        $response->setValue('images', $product->getImageArray());
+        $response->setValue('related', $this->getRelatedProducts($product));
+        $response->setValue('quantity', $quantity);
+        $response->setValue('cartForm', $this->buildAddToCartForm());        
+		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode())); 
+        $response->setValue('manufacturerFilter', $f);
+        return $response;        
+	} 
+	
+	/**
+	 * @return Form
+	 */
+	private function buildAddToCartForm()
+	{
+		ClassLoader::import("framework.request.validator.Form");        
+        $form = new Form(new RequestValidator("addToCart", $this->request));
+        $form->enableClientSideValidation(false);
+        return $form;
+    }	
+    
+    private function getRelatedProducts(Product $product)
+    {
 		// get related products
 		$related = $product->getRelatedProductsWithGroupsArray();
 		$rel = array();
@@ -65,16 +97,9 @@ class ProductController extends FrontendController
 		}
 		
 		ProductPrice::loadPricesForRecordSetArray($rel);
-		
-		$response = new ActionResponse();
-        $response->setValue('product', $productArray);        
-        $response->setValue('category', $productArray['Category']);        
-        $response->setValue('images', $product->getImageArray());
-        $response->setValue('related', $rel);
-		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode())); 
 
-        return $response;        
-	} 
+        return $rel;        
+    }
 }
 
 ?>

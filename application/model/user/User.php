@@ -168,7 +168,7 @@ class User extends ActiveRecordModel
 	}
     
 	/**
-	 * Make this user a currently loged user
+	 * Make this user a currently logged user
 	 */
     public function setAsCurrentUser()
     {

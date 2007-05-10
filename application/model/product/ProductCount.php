@@ -98,7 +98,9 @@ class ProductCount
 		$selectFilter->setOrder(new ARExpressionHandle('cnt'), 'DESC');
         $selectFilter->setGrouping(new ARFieldHandle('Product', 'manufacturerID'));
         $selectFilter->mergeHavingCondition(new MoreThanCond(new ARExpressionHandle('cnt'), 0));        
-        $selectFilter->mergeHavingCondition(new NotEqualsCond(new ARFieldHandle('Manufacturer', 'name'), ''));        
+        $selectFilter->mergeHavingCondition(new NotEqualsCond(new ARFieldHandle('Manufacturer', 'name'), ''));  
+        $selectFilter->resetOrder();
+        $selectFilter->setOrder(new ARFieldHandle('Manufacturer', 'name'));
                 
         $query = new ARSelectQueryBuilder();
         $query->includeTable('Product');

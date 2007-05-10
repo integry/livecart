@@ -65,9 +65,11 @@
 				<tr>
 					<td colspan="2" id="cartLinks">
 						<p id="addToCart">
-							<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}">{t Add to Cart}</a>			
+							{form action="controller=order action=addToCart id=`$product.ID` returnPath=true" handle=$cartForm}
+							Quantity: {selectfield name="count" style="width: auto;" options=$quantity}
+							<input type="submit" class="submit" value="{tn Add to Cart}" />							
+							{/form}
 						</p>
-						{t _or}
 						<p id="addToWishList">
 							<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}">{t Add to Wishlist}</a>			
 						</p>					
@@ -75,7 +77,7 @@
 				</tr>
 				<tr>
 					<td class="param">{t Manufacturer}:</td>
-					<td class="value">{$product.Manufacturer.name}</td>
+					<td class="value"><a href="{categoryUrl data=$product.Category addFilter=$manufacturerFilter}">{$product.Manufacturer.name}</a></td>
 				</tr>
 				<tr>
 					<td class="param">{t SKU}:</td>

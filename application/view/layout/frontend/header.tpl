@@ -12,11 +12,12 @@
                	<span id="storeName" style="display: none;">Demo</span>
             </div>
             
-    		<form action="{categoryUrl data=$category}" class="quickSearch" style="float: left; padding-left: 30px; padding-top: 15px;" method="GET">
+    		{capture assign="searchUrl"}{categoryUrl data=$category}{/capture}
+            {form url=$searchUrl class="quickSearch" handle="generic"}            
     		    Search
                 <input type="text" class="text searchQuery" name="q" value="{$searchQuery|escape}" />
     		    <input type="submit" class="submit" value="Go!">
-    		</form>
+    		{/form}
         </div>
 	
 		<div style="float: right; text-align: center;">
