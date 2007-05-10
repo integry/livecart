@@ -13,7 +13,6 @@ ClassLoader::import("application.model.tax.Tax");
  */
 class TaxController extends StoreManagementController
 {
-
 	/**
 	 * List all system currencies
 	 * @return ActionResponse
@@ -65,7 +64,6 @@ class TaxController extends StoreManagementController
 		return $validator;
 	}
 
-    
     public function save()
     {
         if($id = (int)$this->request->getValue('id'))
@@ -90,10 +88,9 @@ class TaxController extends StoreManagementController
         }
         else
         {
-            return new JSONResponse(array('status' => 'error'));
+            return new JSONResponse(array('status' => 'error', 'errors' => $validator->getErrorList()));
         }
     }
-	
 	
     public function edit()
     {

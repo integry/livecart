@@ -17,3 +17,12 @@ _active=Active
 _email=E-mail
 
 _byGroup=By group
+
+_group_users=Group users
+_user_group=User group
+_default_user_group=Defalut user group
+_form_has_been_successfully_saved=This form has been successfully saved
+
+
+_add=Add group
+_delete=Delete group

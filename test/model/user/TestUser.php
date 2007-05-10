@@ -51,11 +51,27 @@ class TestUser extends UnitTest
         
         $this->assertEqual($user->firstName->get(), 'Yuri');
         $this->assertEqual($user->lastName->get(), 'Gagarin');
+        $this->assertEqual($user->password->get(), md5('tester'));
         $this->assertEqual($user->companyName->get(), 'Integry Systams');
         $this->assertTrue($user->isEnabled->get());
         $this->assertTrue($user->isAdmin->get());
         $this->assertReference($user->userGroup->get(), $this->group);
         $this->assertIdentical($dateCreated, $user->dateCreated->get());
+    }
+    
+    public function testGetUsersByGroup()
+    {
+        $userWithGroup = User::getNewInstance('_tester@tester.com', 'tester', $this->group);
+        $userWithGroup->save();
+        
+        $userWithoutGroup = User::getNewInstance('_tester1@tester.com', 'tester');
+        $userWithoutGroup->save();
+        
+        $usersWithGroup = User::getRecordSetByGroup($this->group);
+        $usersWithoutGroup = User::getRecordSetByGroup(null);
+        
+        $this->assertReference($usersWithGroup->get($usersWithGroup->getTotalRecordCount() - 1), $userWithGroup);
+        $this->assertReference($usersWithoutGroup->get($usersWithoutGroup->getTotalRecordCount() - 1), $userWithoutGroup);
     }
 }
 ?>

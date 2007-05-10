@@ -2,6 +2,7 @@
 if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.php';
 
 ClassLoader::import("application.model.user.UserGroup");
+ClassLoader::import("application.model.user.User");
 
 class TestUserGroup extends UnitTest
 {
@@ -41,6 +42,17 @@ class TestUserGroup extends UnitTest
         $this->assertEqual($groups->get($groupCount), $group);
     }
     
-    
+    public function testGetGroupUsers()
+    {
+        $group = UserGroup::getNewInstance('testing', 'testing');
+        $group->save();
+        
+        $user = User::getNewInstance('_tester@tester.com', 'tester', $group);
+        $user->save();
+        
+        $groupUsers = $group->getUsersRecordSet();
+        
+        $this->assertReference($groupUsers->get($groupUsers->getTotalRecordCount() - 1), $user);
+    }   
 }
 ?>

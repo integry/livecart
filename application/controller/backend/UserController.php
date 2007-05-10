@@ -18,30 +18,15 @@ class UserController extends StoreManagementController
 	 */
 	public function index()
 	{
-		//$this->rebuildMenuLangFile();		
-        $category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
-	
-		$availableColumns = $this->getAvailableColumns($category);
-		$displayedColumns = $this->getDisplayedColumns($category);
-		
-		// sort available columns by display state (displayed columns first)
-		$displayedAvailable = array_intersect_key($availableColumns, $displayedColumns);
-		$notDisplayedAvailable = array_diff_key($availableColumns, $displayedColumns);		
-		$availableColumns = array_merge($displayedAvailable, $notDisplayedAvailable);
-			
-		//$response = $this->productList($category, new ActionResponse());
+		$userGroups = array();
+		$userGroups[] = array('ID' => -1, 'name' => $this->translate('_default_user_group'));
+		foreach(UserGroup::getRecordSet(new ARSelectFilter())->toArray() as $group) 
+		{
+		    $userGroups[] = array('ID' => $group['ID'], 'name' => $group['name']);
+		}
+		    
 		$response = new ActionResponse();
-        $response->setValue("massForm", $this->getMassForm());
-        $response->setValue("displayedColumns", $displayedColumns);
-        $response->setValue("availableColumns", $availableColumns);
-		$response->setValue("categoryID", $category->getID());
-		$response->setValue("offset", $this->request->getValue('offset'));
-		$response->setValue("totalCount", '0');
-		$response->setValue("currency", $this->store->getDefaultCurrency()->getID());
-
-		$path = $this->getCategoryPathArray($category);
-		$response->setValue("path", $path);
-				
+		$response->setValue('userGroups', $userGroups);
 		return $response;
 	    
 	    

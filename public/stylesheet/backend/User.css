@@ -1,0 +1,40 @@
+#userGroupsBrowserWithControlls
+{
+  	float: left;
+  	width: 200px;
+}
+
+#newZoneInput {
+    width: 135px;
+}
+
+#userGroupsContent
+{
+	margin-left: 240px;	
+}
+
+#userGroupsContent label.setting 
+{
+	display: block;
+	float: auto;
+	float: none;
+	margin-bottom: 0px;
+	width: auto;
+}
+
+#userGroupsManagerContainer 
+{
+    margin-left: 230px;
+}
+
+.countriesAndStates_regionsAndUnions  div
+{
+    float: left;
+    width: 25%;
+    text-align: left;
+}
+
+#userGroupsManagerContainer .activeList .errorText 
+{
+    float: none;
+}

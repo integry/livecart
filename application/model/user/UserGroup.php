@@ -1,6 +1,6 @@
 <?php
 
-ClassLoader::import("library.activerecord.ActiveRecord");
+ClassLoader::import("application.model.ActiveRecordModel");
 
 /**
  * Users group
@@ -8,7 +8,7 @@ ClassLoader::import("library.activerecord.ActiveRecord");
  * @package application.model.user
  *
  */
-class UserGroup extends ActiveRecord 
+class UserGroup extends ActiveRecordModel 
 {
 	public static function defineSchema($className = __CLASS__)
 	{
@@ -63,6 +63,19 @@ class UserGroup extends ActiveRecord
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+	}
+
+	/**
+	 * Load users in this group
+	 *
+	 * @param DeliveryZone $deliveryZone 
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+	public function getUsersRecordSet(ARSelectFilter $filter = null, $loadReferencedRecords = array('UserGroup'))
+	{
+		return User::getRecordSetByGroup($this, $filter, $loadReferencedRecords);
 	}
 }
 
