@@ -12,6 +12,98 @@ ClassLoader::import("library.AJAX_TreeMenu.*");
  */
 class UserController extends StoreManagementController
 {
+	/**
+	 * Action shows filters and datagrid.
+	 * @return ActionResponse
+	 */
+	public function index()
+	{
+		//$this->rebuildMenuLangFile();		
+        $category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
+	
+		$availableColumns = $this->getAvailableColumns($category);
+		$displayedColumns = $this->getDisplayedColumns($category);
+		
+		// sort available columns by display state (displayed columns first)
+		$displayedAvailable = array_intersect_key($availableColumns, $displayedColumns);
+		$notDisplayedAvailable = array_diff_key($availableColumns, $displayedColumns);		
+		$availableColumns = array_merge($displayedAvailable, $notDisplayedAvailable);
+			
+		//$response = $this->productList($category, new ActionResponse());
+		$response = new ActionResponse();
+        $response->setValue("massForm", $this->getMassForm());
+        $response->setValue("displayedColumns", $displayedColumns);
+        $response->setValue("availableColumns", $availableColumns);
+		$response->setValue("categoryID", $category->getID());
+		$response->setValue("offset", $this->request->getValue('offset'));
+		$response->setValue("totalCount", '0');
+		$response->setValue("currency", $this->store->getDefaultCurrency()->getID());
+
+		$path = $this->getCategoryPathArray($category);
+		$response->setValue("path", $path);
+				
+		return $response;
+	    
+	    
+//		//user count for paging
+//		$schema = ActiveRecord::getSchemaInstance("User");
+//		$db = ActiveRecord::GetDbConnection();
+//		$res = $db->executeQuery("SELECT count(id) AS users_count FROM ".$schema->getName());
+//		$res->next();
+//		$count = (int)$res->getInt("users_count");
+//
+//		//filter
+//		$filter = new DataGridFilter("User", $this->request->toArray());
+//
+//		$filter->selector()->addField("User.email", $this->locale->translate("_email"));
+//		$filter->selector()->addField("User.nickName", $this->locale->translate("_nickName"));
+//		$filter->selector()->addField("User.creationDate", $this->locale->translate("_creationDate"));
+//
+//		$filter->sorter()->addField("User.email", $this->locale->translate("_email"));
+//		$filter->sorter()->addField("User.nickName", $this->locale->translate("_nickName"));
+//		$filter->sorter()->addField("User.creationDate", $this->locale->translate("_creationDate"));
+//		$filter->sorter()->addField("User.isActive", $this->locale->translate("_active"));
+//
+//		$filter->pager()->setOptions($count, 10);
+//
+//		$display = new DataGridFilterDisplayer($filter);
+//
+//		$record_set = ActiveRecord::getRecordSet("User", $filter->getArSelectFilter(), true);
+//
+//		//datagrid
+//		$grid = new DataGridArSetDisplayer();
+//		$grid->setDataSource($record_set);
+//		$grid->setSortedFields($filter->sorter()->getFields());
+//
+//		$grid->addBulcColumn("User.ID");
+//		$grid->addColumnComplex(array("User.nickName", "User.ID"), get_class($this), 'formatNickColUrl', $this->locale->translate("_user"));
+//		$grid->addColumn("User.email", $this->locale->translate("_email"), "<a href='mailto:{0}'>{0}</a>");
+//		$grid->addColumn("User.firstName", $this->locale->translate("_firstName"));
+//		$grid->addColumn("User.lastName", $this->locale->translate("_lastName"));
+//		$grid->addColumnComplex("User.creationDate", get_class($this), 'formatCreationDate', $this->locale->translate("_creationDate"));
+//		$grid->addColumnComplex("User.isActive", get_class($this), 'formatActive', $this->locale->translate("_active"));
+//
+//		//response
+//		$action_response = new ActionResponse();
+//		//$action_response->setValue('action', 'index');
+//		$action_response->setValue('tabclass_search', 'tabpageselected');
+//		$action_response->setValue('tabclass_group', 'tabpage');
+//		$action_response->setValue('filter', $display->display());
+//		$action_response->setValue('grid', $grid->display());
+//		$action_response->setValue('paging', $display->displayPagerAsSelect(""));
+//		$action_response->setValue('group', $this->createRoleGroupView("objTreeMenuAjax_add", "objTreeMenuAjax_add"));
+//		$action_response->setValue('hrefs_list', 'backend/user/group.hrefslist.tpl');
+//
+//		//application rendering
+//		$this->ajaxJS();
+//		$app = Application::getInstance();
+//		$app->getRenderer()->appendValue("BODY_ONLOAD", $display->displayOnLoad(1, 1));
+//		$app->getRenderer()->appendValue("JAVASCRIPT", Router::getInstance()->getBaseDir()."/public/javascript/DataGrid/datagrid.js");
+//
+//		return $action_response;
+	}
+
+	
 	private function ajaxJS()
 	{
 		$app = Application::getInstance();
@@ -19,71 +111,9 @@ class UserController extends StoreManagementController
 		$app->getRenderer()->appendValue("JAVASCRIPT", Router::getInstance()->getBaseDir()."/public/javascript/AJAX_TreeMenu/TreeMenuAjax.js");
 		$app->getRenderer()->appendValue("JAVASCRIPT", Router::getInstance()->getBaseDir()."/public/javascript/ajax.js");
 	}
-
-	/**
-	 * Action shows filters and datagrid.
-	 * @return ActionResponse
-	 */
-	public function index()
-	{
-		//user count for paging
-		$schema = ActiveRecord::getSchemaInstance("User");
-		$db = ActiveRecord::GetDbConnection();
-		$res = $db->executeQuery("SELECT count(id) AS users_count FROM ".$schema->getName());
-		$res->next();
-		$count = (int)$res->getInt("users_count");
-
-		//filter
-		$filter = new DataGridFilter("User", $this->request->toArray());
-
-		$filter->selector()->addField("User.email", $this->locale->translate("_email"));
-		$filter->selector()->addField("User.nickName", $this->locale->translate("_nickName"));
-		$filter->selector()->addField("User.creationDate", $this->locale->translate("_creationDate"));
-
-		$filter->sorter()->addField("User.email", $this->locale->translate("_email"));
-		$filter->sorter()->addField("User.nickName", $this->locale->translate("_nickName"));
-		$filter->sorter()->addField("User.creationDate", $this->locale->translate("_creationDate"));
-		$filter->sorter()->addField("User.isActive", $this->locale->translate("_active"));
-
-		$filter->pager()->setOptions($count, 10);
-
-		$display = new DataGridFilterDisplayer($filter);
-
-		$record_set = ActiveRecord::getRecordSet("User", $filter->getArSelectFilter(), true);
-
-		//datagrid
-		$grid = new DataGridArSetDisplayer();
-		$grid->setDataSource($record_set);
-		$grid->setSortedFields($filter->sorter()->getFields());
-
-		$grid->addBulcColumn("User.ID");
-		$grid->addColumnComplex(array("User.nickName", "User.ID"), get_class($this), 'formatNickColUrl', $this->locale->translate("_user"));
-		$grid->addColumn("User.email", $this->locale->translate("_email"), "<a href='mailto:{0}'>{0}</a>");
-		$grid->addColumn("User.firstName", $this->locale->translate("_firstName"));
-		$grid->addColumn("User.lastName", $this->locale->translate("_lastName"));
-		$grid->addColumnComplex("User.creationDate", get_class($this), 'formatCreationDate', $this->locale->translate("_creationDate"));
-		$grid->addColumnComplex("User.isActive", get_class($this), 'formatActive', $this->locale->translate("_active"));
-
-		//response
-		$action_response = new ActionResponse();
-		//$action_response->setValue('action', 'index');
-		$action_response->setValue('tabclass_search', 'tabpageselected');
-		$action_response->setValue('tabclass_group', 'tabpage');
-		$action_response->setValue('filter', $display->display());
-		$action_response->setValue('grid', $grid->display());
-		$action_response->setValue('paging', $display->displayPagerAsSelect(""));
-		$action_response->setValue('group', $this->createRoleGroupView("objTreeMenuAjax_add", "objTreeMenuAjax_add"));
-		$action_response->setValue('hrefs_list', 'backend/user/group.hrefslist.tpl');
-
-		//application rendering
-		$this->ajaxJS();
-		$app = Application::getInstance();
-		$app->getRenderer()->appendValue("BODY_ONLOAD", $display->displayOnLoad(1, 1));
-		$app->getRenderer()->appendValue("JAVASCRIPT", Router::getInstance()->getBaseDir()."/public/javascript/DataGrid/datagrid.js");
-
-		return $action_response;
-	}
-
+	
+	
+	
 	/**
 	 * Search by group.
 	 * @return ActionResponse

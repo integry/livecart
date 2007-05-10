@@ -29,31 +29,68 @@ class User extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("defaultShippingAddressID", "defaultShippingAddress", "ID", 'ShippingAddress', ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("defaultBillingAddressID", "defaultBillingAddress", "ID", 'BillingAddress', ARInteger::instance()));
-
+		$schema->registerField(new ARForeignKeyField("userGroupID", "UserGroup", "ID", "UserGroup", ARInteger::instance()));
+		
 		$schema->registerField(new ARField("email", ARVarchar::instance(60)));
-		$schema->registerField(new ARField("password", ARVarchar::instance(16)));
+		$schema->registerField(new ARField("password", ARVarchar::instance(32)));
 		$schema->registerField(new ARField("firstName", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("lastName", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("companyName", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("dateCreated", ARDateTime::instance()));
-		$schema->registerField(new ARField("isEnabled", ARBool::instance()));		
+		$schema->registerField(new ARField("isEnabled", ARBool::instance()));	
+		$schema->registerField(new ARField("isAdmin", ARBool::instance()));	 
 	}
 
-    public static function getNewInstance()
+	/**
+	 * Create new user
+	 * 
+	 * @param string $email Email
+	 * @param string $password Password
+	 * @param UserGroup $userGroup User group
+	 * 
+	 * @return User
+	 */
+    public static function getNewInstance($email, $password, UserGroup $userGroup = null)
     {
         $instance = parent::getNewInstance(__CLASS__);    
+        
+        $instance->email->set($email);
+        $instance->password->set(md5($password));
+		$instance->dateCreated->set(new DateTime());
+        
+        if($userGroup)
+        {
+            $instance->userGroup->set($userGroup);
+        }
         
         return $instance;
     }
 
+	/**
+	 * Get anonymous user
+
+	 * @return User
+	 */
+    public static function getAnonymousUser()
+    {
+        $instance = parent::getNewInstance(__CLASS__); 
+        $instance->setID(self::ANONYMOUS_USER_ID);   
+
+        return $instance;
+    }
+
+	/**
+	 * Get current user
+
+	 * @return User
+	 */
     public static function getCurrentUser()
     {
         $id = Session::getInstance()->getValue('User');
     
         if (!$id)
         {
-            $user = self::getNewInstance();
-            $user->setID(self::ANONYMOUS_USER_ID);
+            $user = self::getAnonymousUser();
         }
         else
         {
