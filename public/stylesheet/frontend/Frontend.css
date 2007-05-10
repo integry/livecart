@@ -715,6 +715,7 @@ div.checkout a
 {
 	width: 80px;
 	text-align: center;
+	white-space: nowrap;
 }
 
 .subTotalCalc
@@ -780,6 +781,7 @@ div.checkout a
 {
     font-weight: bold;
     text-align: center;
+	white-space: nowrap;
 }
 
 .subTotalCaption
