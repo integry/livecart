@@ -38,6 +38,7 @@
 					</td>
 					<td class="cartName">
 						<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
+						{$item.Product.Category}
 					</td>
 					<td class="cartPrice">
 						{$item.formattedSubTotal.$currency}

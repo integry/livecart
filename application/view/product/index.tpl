@@ -56,8 +56,9 @@
     		{/if}
 		</div>
 	    
-	    <div id="mainInfo" style="float: left; clear: right;">
-	    	<table>
+	    <div id="mainInfo" style="clear: right; float: none;">
+
+            <table style="border: 1px solid white; float: none; margin-top: 10px;">
 				<tr id="productPrice">
 					<td class="param">{t Price}:</td>
 					<td class="value price">{$product.formattedPrice.$currency}</td>
@@ -92,6 +93,8 @@
 			</table>	
 	    </div>
    	</fieldset>
+   	
+   	<div class="clear"></div>
    
    	{if $product.longDescription_lang}
     <h2>{t Description}</h2>

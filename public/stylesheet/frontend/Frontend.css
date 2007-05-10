@@ -23,7 +23,7 @@ h1, h2, h3
 h1
 {
 	font-size: 200%;
-/*	padding-left: 20px; */
+	padding-left: 10px; 
 	margin-bottom: 10px;
 }
 
@@ -158,10 +158,9 @@ div.confirmationMsg div
 *****************************/
 #header
 {
-    border-top: 1px solid #CCCCCC;   
+/*    border-top: 1px solid #CCCCCC;   */
     padding-top: 6px;
-  	padding-bottom: 10px;    
-  	margin-bottom: 10px;
+  	padding-bottom: 0px;    
 }
 
 #storeName
@@ -247,20 +246,22 @@ fieldset.container
 *****************************/
 .quickSearch
 {
-	float: left;
 	padding-left: 30px; 
-    padding-top: 15px;
+}
+
+.quickSearch input, .quickSearch select
+{
+    font-size: smaller;
 }
 
 .quickSearch .searchQuery
 {
-	border: 1px solid #BBBBBB;
 	width: 160px;
 }
 
 .quickSearch .submit
 {   
-
+    padding: 3px;
 }
 
 .quickSearch select
@@ -291,9 +292,9 @@ fieldset.container
 .categories ul ul
 {
     list-style-type: disc;   
-    margin: 5px;
+    margin-top: 8px;
     margin-left: 0px;
-    padding-left: 15px;
+    padding-left: 12px;
 }
 
 #currentSubCategories li
@@ -319,6 +320,11 @@ fieldset.container
 	width: 95%;
 }
 
+.filterGroup ul li a
+{
+    color: #BB5500;
+}
+
 .filterGroup ul li
 {
     margin-bottom: 2px;
@@ -339,6 +345,11 @@ fieldset.container
 {
 	list-style: none;
 	font-weight: bold;	
+}
+
+#smallCart
+{
+    padding-top: 10px;    
 }
 
 /*****************************
@@ -393,7 +404,7 @@ fieldset.container
 /*****************************
 	Sub-category list
 *****************************/
-.subCatName .count
+.count
 {
     color: #666666;
 }
@@ -404,7 +415,7 @@ fieldset.container
     font-weight: bold;
 }
 
-.subCatImage img
+.subCatImage
 {
     vertical-align: middle;
 }
@@ -416,13 +427,19 @@ tr.separator td
 
 .subCategories
 {
-
+    margin-top: 10px;
+    margin-left: 20px;
 }
 
 .subCategories td.details
 {
     padding-left: 30px;
     vertical-align: middle;
+}
+
+ul.subSubCats
+{
+    margin: 6px;   
 }
 
 /*****************************
@@ -479,6 +496,18 @@ ul.productList li
 	margin-bottom: 30px;
 }
 
+ul.productList li.featured
+{
+    background-color: #FFFEBE;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+ul.productList li.featured .image img
+{
+    border: 1px solid #DDD98A;   
+}
+
 ul.productList li.featured .title
 {
     font-weight: bold;   
@@ -526,7 +555,7 @@ ul.productList .order
 *****************************/
 .productPage #header
 {
-    border-bottom: 1px solid #CCCCCC; 
+
 }
 
 .specSummary
@@ -544,6 +573,7 @@ ul.productList .order
 {
 	padding: 5px;		
 	padding-top: 15px;
+	white-space: nowrap;
 }
 
 .price

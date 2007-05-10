@@ -37,7 +37,7 @@
     </table>	
 	{/if}
 
-    {if !$searchQuery}
+    {if !$searchQuery && $subCategories}
 	<table class="subCategories">
 	{foreach from=$subCategories item="sub"}   
         <tr>
@@ -51,6 +51,18 @@
                     <a href="{categoryUrl data=$sub}">{$sub.name_lang}</a> 
                     <span class="count">({$sub.availableProductCount})</span>
                 </div>
+                
+                {if $sub.subCategories}
+                <ul class="subSubCats">
+                    {foreach from=$sub.subCategories item="subSub"}
+                        <li>
+                            <a href="{categoryUrl data=$subSub}">{$subSub.name_lang}</a>
+                            <span class="count">({$subSub.availableProductCount})</span>
+                        </li>
+                    {/foreach}
+                </ul>
+                {/if}
+                
                 <div class="subCatDescr">
                     {$sub.description_lang}
                 </div>            

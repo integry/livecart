@@ -3,11 +3,7 @@
 	<li class="{if $product.isFeatured}featured{/if}">			
 		
 	    <fieldset class="container">
-        
-            <div class="title">
-				<a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.name_lang}</a>
-			</div>
-				
+        				
             <div class="image">
                 <a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">
 	    	    {if $product.DefaultImage.paths.2}
@@ -20,6 +16,10 @@
                     			
 			<div class="descr">
 				
+                <div class="title">
+    				<a href="{productUrl product=$product filterChainHandle=$filterChainHandle}">{$product.name_lang}</a>
+    			</div>
+
   				{if $product.listAttributes}
         			<div class="spec">
     					{foreach from=$product.listAttributes item="attr" name="attr"}

@@ -110,46 +110,30 @@ class CategoryController extends FrontendController
 		$categoryNarrow = array();
 		if (!empty($searchQuery) && $products)
 		{
-			if (count($subCategories) > 0)
-			{
-				$case = new ARCaseHandle();
-				$index = array();
-				foreach ($subCategories as $key => $cat)
-				{
-		            $cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $cat['lft']);
-		    		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $cat['rgt']));
-					$case->addCondition($cond, new ARExpressionHandle($cat['ID']));
-					$index[$cat['ID']] = $key;
-				}	
-				
-				$query = new ARSelectQueryBuilder();
-				$query->includeTable('Product');
-				
-				$filter = clone $selectFilter;
-				$filter->setLimit(0);
-				$filter->resetOrder();
-				$filter->setOrder(new ARExpressionHandle('cnt'), 'DESC');
-				$filter->setGrouping(new ARExpressionHandle('ID'));
-				$query->setFilter($filter);
-				$query->addField($case->toString(), null, 'ID');
-				$query->addField('COUNT(*)', null, 'cnt');
-				$query->joinTable('Category', 'Product', 'ID', 'categoryID');
-				
-				$count = ActiveRecordModel::getDataBySQL($query->createString());
-
-				foreach ($count as $cat)
-				{
-					if (empty($index[$cat['ID']]))
-					{
-                        continue;
-                    }
-                    
-                    $data = $subCategories[$index[$cat['ID']]];
-					$data['searchCount'] = $cat['cnt'];
-					$categoryNarrow[] = $data;
-				}				
-			}
+			$categoryNarrow = $this->getSubCategoriesBySearchQuery($selectFilter, $subCategories);
 		}
+		
+		// get subcategory-subcategories
+		if ($subCategories)
+		{
+            $ids = array();
+            $index = array();
+            foreach ($subCategories as $key => $cat)
+            {
+                $ids[] = $cat['ID'];
+                $index[$cat['ID']] = $key;
+            }
+            
+            $f = new ARSelectFilter(new INCond(new ARFieldHandle('Category', 'parentNodeID'), $ids));
+            $f->setOrder(new ARFieldHandle('Category', 'parentNodeID'));
+            $f->setOrder(new ARFieldHandle('Category', 'lft'));            
+            
+            $a = ActiveRecordModel::getRecordSetArray('Category', $f, Category::LOAD_REFERENCES);    
+            foreach ($a as $cat)
+            {
+                $subCategories[$index[$cat['parentNodeID']]]['subCategories'][] = $cat;
+            }
+        }
         
 		$response = new ActionResponse();
 		$response->setValue('id', $this->categoryID);
@@ -278,6 +262,51 @@ class CategoryController extends FrontendController
         
 		return implode(',', $filterChainHandle);						
 	}
+	
+	private function getSubcategoriesBySearchQuery(ARSelectFilter $selectFilter, $subCategories)
+	{
+        if (count($subCategories) > 0)
+		{
+			$case = new ARCaseHandle();
+			$index = array();
+			foreach ($subCategories as $key => $cat)
+			{
+	            $cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $cat['lft']);
+	    		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $cat['rgt']));
+				$case->addCondition($cond, new ARExpressionHandle($cat['ID']));
+				$index[$cat['ID']] = $key;
+			}	
+			
+			$query = new ARSelectQueryBuilder();
+			$query->includeTable('Product');
+			
+			$filter = clone $selectFilter;
+			$filter->setLimit(0);
+			$filter->resetOrder();
+			$filter->setOrder(new ARExpressionHandle('cnt'), 'DESC');
+			$filter->setGrouping(new ARExpressionHandle('ID'));
+			$query->setFilter($filter);
+			$query->addField($case->toString(), null, 'ID');
+			$query->addField('COUNT(*)', null, 'cnt');
+			$query->joinTable('Category', 'Product', 'ID', 'categoryID');
+			
+			$count = ActiveRecordModel::getDataBySQL($query->createString());
+
+			foreach ($count as $cat)
+			{
+				if (empty($index[$cat['ID']]))
+				{
+                    continue;
+                }
+                
+                $data = $subCategories[$index[$cat['ID']]];
+				$data['searchCount'] = $cat['cnt'];
+				$categoryNarrow[] = $data;
+			}				
+		}
+        
+        return $categoryNarrow;    
+    }
 	
 	/**
 	 * @return Form

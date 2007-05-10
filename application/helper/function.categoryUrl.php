@@ -18,7 +18,7 @@ function smarty_function_categoryUrl($params, $smarty)
 	$parts = array();
 	$parts[] = Store::createHandleString($category['name_lang']);
 	
-	if (!isset($category['parent']))
+    if (!isset($category['parent']))
 	{
         $category['parent'] = 0;    
     }
@@ -33,7 +33,8 @@ function smarty_function_categoryUrl($params, $smarty)
 	}
 	
     $parts = array_reverse($parts);	
-	$handle = implode('.', $parts);
+	
+    $handle = implode('.', $parts);
 	
 	$filters = array();
 
