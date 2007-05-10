@@ -88,6 +88,155 @@ class UserController extends StoreManagementController
 //		return $action_response;
 	}
 
+	public function lists()
+	{
+		if(($id = (int)$this->request->getValue('id')) > 0)
+		{
+		    $userGroup = UserGroup::getInstanceByID($id);
+		}
+		else
+		{
+		    $userGroup = null;
+		}
+		
+		
+		
+	    $filter = new ARSelectFilter();
+	    $usersArray = User::getRecordSetByGroup($userGroup, $filter, array('UserGroup'))->toArray();
+        new ActiveGrid($this->request, $filter);
+        
+		$displayedColumns = $this->getDisplayedColumns($userGroup);
+		
+        // load specification data
+        foreach ($displayedColumns as $column => $type)
+        {
+            list($class, $field) = explode('.', $column, 2);
+        }
+
+    	$data = array();
+		foreach ($usersArray as $user)
+    	{
+            $record = array();
+            foreach ($displayedColumns as $column => $type)
+            {
+                list($class, $field) = explode('.', $column, 2);
+                if ('User' == $class)
+                {
+					$value = isset($user[$field]) ? $user[$field] : '';
+                }
+				
+				if ('bool' == $type)
+				{
+					$value = $value ? $this->translate('_yes') : $this->translate('_no');
+				}
+				
+				$record[] = $value;
+            }
+            
+            $data[] = $record;
+        }
+    	
+    	$return = array();
+    	$return['columns'] = array_keys($displayedColumns);
+    	$return['totalCount'] = count($usersArray);
+    	$return['data'] = $data;
+    	
+    	return new JSONResponse($return);	  	  	
+	}
+	
+	
+	protected function getDisplayedColumns(UserGroup $userGroup)
+	{	
+		// get displayed columns
+		$displayedColumns = $this->getSessionData('columns');		
+
+		if (!$displayedColumns)
+		{
+			$displayedColumns = array(
+				'User.ID', 
+			 	'User.email', 
+				'User.firstName', 
+				'User.lastName', 
+				'User.companyName', 
+				'User.dateCreated', 
+				'User.isEnabled', 
+				'User.isAdmin'
+			);				
+		}
+		
+		$availableColumns = $this->getAvailableColumns($userGroup);
+		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);	
+
+		// User ID is always passed as the first column
+		$displayedColumns = array_merge(array('User.ID' => 'numeric'), $displayedColumns);
+				
+		// set field type as value
+		foreach ($displayedColumns as $column => $foo)
+		{
+			if (is_numeric($displayedColumns[$column]))
+			{
+				$displayedColumns[$column] = $availableColumns[$column]['type'];					
+			}
+		}
+
+		return $displayedColumns;		
+	}
+	
+	protected function getAvailableColumns(UserGroup $userGroup)
+	{
+		// get available columns
+		$userSchema = ActiveRecordModel::getSchemaInstance('User');
+		
+		$availableColumns = array();
+		foreach ($userSchema->getFieldList() as $field)
+		{
+			$fieldType = $field->getDataType();
+			
+			if ($field instanceof ARForeignKeyField)
+			{
+			  	continue;
+			}		            
+			if ($field instanceof ARPrimaryKeyField)
+			{
+			  	continue;
+			}		            
+			elseif ($fieldType instanceof ARBool)
+			{
+			  	$type = 'bool';
+			}	  
+			elseif ($fieldType instanceof ARNumeric)
+			{
+				$type = 'numeric';	  	
+			}			
+			else
+			{
+			  	$type = 'text';
+			}
+			
+			$availableColumns['User.' . $field->getName()] = $type;
+		}		
+		
+		$availableColumns['UserGroup.name'] = 'text';
+
+		foreach ($availableColumns as $column => $type)
+		{
+			$availableColumns[$column] = array('name' => $this->translate($column), 'type' => $type);	
+		}
+
+
+		return $availableColumns;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	private function ajaxJS()
 	{

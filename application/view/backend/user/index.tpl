@@ -39,7 +39,7 @@
     			</li>
     			
     			<li id="tabUsers" class="tab inactive">
-    				<a href="{link controller=backend.user action=list}?id=_id_">{t _group_users}</a>
+    				<a href="{link controller=backend.user action=lists}?id=_id_">{t _group_users}</a>
     				<span class="tabHelp">userGroups.shippingRates</span>
     			</li>
 			</ul>
