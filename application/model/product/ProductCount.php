@@ -16,6 +16,31 @@ class ProductCount
 	{		
 		$filters = $this->productFilter->getCategory()->getFilterSet();				
 
+        // exclude already applied filters
+        foreach ($this->productFilter->getFilters() as $appliedFilter)
+        {
+            foreach ($filters as $key => $filter)
+            {
+                // Selector filters
+                if ($filter instanceof SelectorFilter && $appliedFilter instanceof SelectorFilter)
+                {
+                    if ($filter->getID() == $appliedFilter->getID())
+                    {
+                        unset($filters[$key]);
+                    }   
+                }
+                
+                // value range filters
+                elseif ($filter instanceof Filter && $appliedFilter instanceof Filter)
+                {
+                    if ($filter->filterGroup->get() === $appliedFilter->filterGroup->get())
+                    {
+                        unset($filters[$key]);
+                    }
+                }   
+            }            
+        }
+
 		// slice the filters array in separate sets
 		// MySQL only allows 31 or 61 joins in a single query (depending on whether it's a 32 or 64 bit system)
 		// so sometimes the counts cannot be retrieved via single query if there are many filters

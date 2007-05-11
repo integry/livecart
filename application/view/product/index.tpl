@@ -12,87 +12,89 @@
         {assign var="lastBreadcrumb" value=$breadCrumb|@prev}
         <a href="{$lastBreadcrumb.url}">&lt;&lt; {$product.Category.name_lang}</a>
     </div>
-    
-	{if $product.listAttributes}
-		<div class="specSummary">
-			{foreach from=$product.listAttributes item="attr" name="attr"}
-                {if $attr.values}
-                    {foreach from=$attr.values item="value" name="values"}
-                        {$value.value_lang}
-						{if !$smarty.foreach.values.last}
-						/
-						{/if}
-                    {/foreach}
-                {elseif $attr.value}
-                    {$attr.SpecField.valuePrefix_lang}{$attr.value}{$attr.SpecField.valueSuffix_lang}
-                {elseif $attr.value_lang}
-                    {$attr.value_lang}
-                {/if}
-                                            
-				{if !$smarty.foreach.attr.last}
-				/
-				{/if}
-			{/foreach}
-		</div>
-	{/if}    
-    
+        
     <h1>{$product.name_lang}</h1>
+    <div class="clear"></div>
     
-	<fieldset class="container">
-		<div id="imageContainer" style="float: left; text-align: center;">
-			<div id="largeImage" class="{if !$product.DefaultImage.paths.3}missingImage{/if} {if $images|@count > 1}multipleImages{/if}">
-				{if $product.DefaultImage.paths.3}
-					<img src="{$product.DefaultImage.paths.3}" id="mainImage" style="margin: 20px;" />
-				{else}
-					<img src="image/missing_large.jpg" id="mainImage" style="margin: 20px;" />
-				{/if}
-			</div>
-            {if $images|@count > 1}
-    			<div id="moreImages">
-                    {foreach from=$images item="image"}
-    					<img src="{$image.paths.1}" id="img_{$image.ID}" />
-    				{/foreach}
-    			</div>
-    		{/if}
+	<div id="imageContainer" style="float: left; text-align: center;">
+		<div id="largeImage" class="{if !$product.DefaultImage.paths.3}missingImage{/if} {if $images|@count > 1}multipleImages{/if}">
+			{if $product.DefaultImage.paths.3}
+				<img src="{$product.DefaultImage.paths.3}" id="mainImage" style="margin: 20px;" />
+			{else}
+				<img src="image/missing_large.jpg" id="mainImage" style="margin: 20px;" />
+			{/if}
 		</div>
-	    
-	    <div id="mainInfo" style="clear: right; float: none;">
+        {if $images|@count > 1}
+			<div id="moreImages">
+                {foreach from=$images item="image"}
+					<img src="{$image.paths.1}" id="img_{$image.ID}" />
+				{/foreach}
+			</div>
+		{/if}
+	</div>
+    
+    <div id="mainInfo" style="clear: right;">
 
-            <table style="border: 1px solid white; float: none; margin-top: 10px;">
-				<tr id="productPrice">
-					<td class="param">{t Price}:</td>
-					<td class="value price">{$product.formattedPrice.$currency}</td>
-				</tr>
-				<tr>
-					<td colspan="2" id="cartLinks">
-						<p id="addToCart">
-							{form action="controller=order action=addToCart id=`$product.ID` returnPath=true" handle=$cartForm}
-							Quantity: {selectfield name="count" style="width: auto;" options=$quantity}
-							<input type="submit" class="submit" value="{tn Add to Cart}" />							
-							{/form}
-						</p>
-						<p id="addToWishList">
-							<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}">{t Add to Wishlist}</a>			
-						</p>					
-					</td>
-				</tr>
-				<tr>
-					<td class="param">{t Manufacturer}:</td>
-					<td class="value"><a href="{categoryUrl data=$product.Category addFilter=$manufacturerFilter}">{$product.Manufacturer.name}</a></td>
-				</tr>
-				<tr>
-					<td class="param">{t SKU}:</td>
-					<td class="value">{$product.sku}</td>
-				</tr>
-				{if $product.stockCount}
-				<tr>
-					<td class="param">{t In Stock}:</td>
-					<td class="value">{$product.stockCount}</td>
-				</tr>
-				{/if}			
-			</table>	
-	    </div>
-   	</fieldset>
+    	{if $product.listAttributes}
+    		<div class="specSummary">
+    			{foreach from=$product.listAttributes item="attr" name="attr"}
+                    {if $attr.values}
+                        {foreach from=$attr.values item="value" name="values"}
+                            {$value.value_lang}
+    						{if !$smarty.foreach.values.last}
+    						/
+    						{/if}
+                        {/foreach}
+                    {elseif $attr.value}
+                        {$attr.SpecField.valuePrefix_lang}{$attr.value}{$attr.SpecField.valueSuffix_lang}
+                    {elseif $attr.value_lang}
+                        {$attr.value_lang}
+                    {/if}
+                                                
+    				{if !$smarty.foreach.attr.last}
+    				/
+    				{/if}
+    			{/foreach}
+    		</div>
+    		
+    		<div style="clear: right;"></div>
+    		
+    	{/if}    
+
+        <table style="border: 1px solid white; float: none; margin-top: 10px;">
+			<tr id="productPrice">
+				<td class="param">{t Price}:</td>
+				<td class="value price">{$product.formattedPrice.$currency}</td>
+			</tr>
+			<tr>
+				<td colspan="2" id="cartLinks">
+					<p id="addToCart">
+						{form action="controller=order action=addToCart id=`$product.ID` returnPath=true" handle=$cartForm}
+						Quantity: {selectfield name="count" style="width: auto;" options=$quantity}
+						<input type="submit" class="submit" value="{tn Add to Cart}" />							
+						{/form}
+					</p>
+					<p id="addToWishList">
+						<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}">{t Add to Wishlist}</a>			
+					</p>					
+				</td>
+			</tr>
+			<tr>
+				<td class="param">{t Manufacturer}:</td>
+				<td class="value"><a href="{categoryUrl data=$product.Category addFilter=$manufacturerFilter}">{$product.Manufacturer.name}</a></td>
+			</tr>
+			<tr>
+				<td class="param">{t SKU}:</td>
+				<td class="value">{$product.sku}</td>
+			</tr>
+			{if $product.stockCount}
+			<tr>
+				<td class="param">{t In Stock}:</td>
+				<td class="value">{$product.stockCount}</td>
+			</tr>
+			{/if}			
+		</table>	
+    </div>
    	
    	<div class="clear"></div>
    

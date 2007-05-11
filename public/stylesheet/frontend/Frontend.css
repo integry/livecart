@@ -284,6 +284,11 @@ fieldset.container
     padding-left: 0px;   
 }
 
+.categories .content
+{
+    background-color: #EEE9E4;
+}
+
 .categories li
 {
     margin-top: 5px; 
@@ -582,6 +587,8 @@ ul.productList .order
     font-size: smaller;
     width: expression((this.clientWidth > 400 ? 400 : this.clientWidth) + 'px');
     max-width: 400px;
+    margin-top: -50px;
+    z-index: 10;
 }
 
 #mainInfo td

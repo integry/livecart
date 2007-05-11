@@ -60,8 +60,7 @@ class CheckoutController extends FrontendController
     public function init()
     {
         parent::init();  
-        $router = Router::getInstance();
-        $this->addBreadCrumb($this->translate('_checkout'), $router->createUrl(array('controller' => 'order', 'action' => 'index')));         
+        $this->addBreadCrumb($this->translate('_checkout'), $this->router->createUrl(array('controller' => 'order', 'action' => 'index')));         
         
         $action = $this->request->getActionName();
                 
@@ -70,22 +69,21 @@ class CheckoutController extends FrontendController
             return false;
         }       
 
-        $this->addBreadCrumb($this->translate('_select_addresses'), $router->createUrl(array('controller' => 'checkout', 'action' => 'selectAddress')));         		
+        $this->addBreadCrumb($this->translate('_select_addresses'), $this->router->createUrl(array('controller' => 'checkout', 'action' => 'selectAddress')));         		
 		
     	if ('selectAddress' == $action)
     	{
 			return false;	
 		}
                 
-        $this->addBreadCrumb($this->translate('_shipping'), $router->createUrl(array('controller' => 'checkout', 'action' => 'shipping')));         		
+        $this->addBreadCrumb($this->translate('_shipping'), $this->router->createUrl(array('controller' => 'checkout', 'action' => 'shipping')));         		
 		
     	if ('shipping' == $action)
     	{
 			return false;	
 		}
 
-        $this->addBreadCrumb($this->translate('_pay'), $router->createUrl(array('controller' => 'checkout', 'action' => 'pay')));         		
-		
+        $this->addBreadCrumb($this->translate('_pay'), $this->router->createUrl(array('controller' => 'checkout', 'action' => 'pay')));		
     }
     
     /**
@@ -349,7 +347,7 @@ class CheckoutController extends FrontendController
             return new ActionRedirectResponse('checkout', 'completed');
         }
         
-        $currency = Currency::getInstanceById($this->getRequestCurrency());
+        $currency = Currency::getValidInstanceById($this->getRequestCurrency());
         
         // set up transaction details
         $transaction = new LiveCartTransaction($order, $currency);

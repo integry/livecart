@@ -19,12 +19,11 @@
 		
 		{if $cart.cartItems}		
 		{form action="controller=order action=update" method="POST" handle=$form}
+						<h2 style="margin: 0;">Shopping Cart items - to buy now</h2>
 		<table id="cart">
 			<thead>
 				<tr>
-					<th colspan="2" class="cartListTitle">
-						<h2 style="margin: 0;">Shopping Cart items - to buy now</h2>
-					</th>
+					<th colspan="2" class="cartListTitle"></th>
 					<th class="cartPrice">{t Price}</th>
 					<th class="cartQuant">{t Quantity}</th>
 				</tr>
@@ -38,7 +37,7 @@
 					</td>
 					<td class="cartName">
 						<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
-						{$item.Product.Category}
+						<small>({$item.Product.Category.name_lang})</small>
 					</td>
 					<td class="cartPrice">
 						{$item.formattedSubTotal.$currency}
@@ -76,12 +75,11 @@
         {/if}
 	
 		{if $cart.wishListItems}		
+			<h2>Wish List items - to buy later</h2>
 			<table id="wishList">
 				<thead>
 					<tr>
-						<th colspan="2" class="cartListTitle">
-							<h2>Wish List items - to buy later</h2>
-						</th>
+						<th colspan="2" class="cartListTitle"></th>
 						<th class="cartPrice">{t Price}</th>
 					</tr>
 				</thead>
@@ -100,6 +98,11 @@
 						</td>
 					</tr>				
 				{/foreach}
+				<tr>
+					<td colspan="4" style="text-align: right;">
+						<a href="{link route=$return}" style="float: left;">&lt;&lt; Continue Shopping</a>
+					</td>
+				</tr>				
 				</tbody>
 			</table>
 		{/if}

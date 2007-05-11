@@ -116,38 +116,17 @@ class CategoryController extends FrontendController
 		// get subcategory-subcategories
 		if ($subCategories)
 		{
-            $ids = array();
-            $index = array();
-            foreach ($subCategories as $key => $cat)
-            {
-                $ids[] = $cat['ID'];
-                $index[$cat['ID']] = $key;
-            }
-            
-            $f = new ARSelectFilter(new INCond(new ARFieldHandle('Category', 'parentNodeID'), $ids));
-            $f->setOrder(new ARFieldHandle('Category', 'parentNodeID'));
-            $f->setOrder(new ARFieldHandle('Category', 'lft'));            
-            
-            $a = ActiveRecordModel::getRecordSetArray('Category', $f, Category::LOAD_REFERENCES);    
-            foreach ($a as $cat)
-            {
-                $subCategories[$index[$cat['parentNodeID']]]['subCategories'][] = $cat;
-            }
+            $this->getSubSubCategories($subCategories);
         }
         
         // get subcategory featured products
         $subCatFeatured = array();
 		if ($subCategories && !$products)
         {
-			$selFilter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true));
-			$selFilter->setOrder(new ARFieldHandle('Product', 'salesRank'));
-			$selFilter->setLimit($this->config->getValue('NUM_PRODUCTS_PER_CAT'));
-			
-			$featuredFilter = new ProductFilter($this->category, $selFilter);
-			$featuredFilter->includeSubcategories();
-						
-			$subCatFeatured = $this->getProductsArray($featuredFilter);			
+			$subCatFeatured = $this->getSubCatFeaturedProducts();
 		}
+		
+		// load filter data
         
 		$response = new ActionResponse();
 		$response->setValue('id', $this->categoryID);
@@ -188,7 +167,10 @@ class CategoryController extends FrontendController
 		return $products;        
     }
 
-	private function createAttributeSummaries(&$productArray)
+	/**
+	 *  
+	 */    
+    private function createAttributeSummaries(&$productArray)
 	{
         foreach ($productArray as &$product)
         {
@@ -206,7 +188,10 @@ class CategoryController extends FrontendController
         }		
 	}
 	
-	private function applySortOrder(ARSelectFilter $selectFilter, $order)
+	/**
+	 *  Apply selected product sort order to ARSelectFilter instance
+	 */
+    private function applySortOrder(ARSelectFilter $selectFilter, $order)
 	{
         if (substr($order, 0, 12) == 'product_name')
         {
@@ -238,7 +223,10 @@ class CategoryController extends FrontendController
         }	
 	}
 	
-	private function setUpBreadCrumbAndReturnFilterChainHandle()
+	/**
+	 *  Create breadcrumb
+	 */
+    private function setUpBreadCrumbAndReturnFilterChainHandle()
 	{
 		// get category path for breadcrumb
 		$path = $this->category->getPathNodeSet();
@@ -278,7 +266,10 @@ class CategoryController extends FrontendController
 		return implode(',', $filterChainHandle);						
 	}
 	
-	private function getSubcategoriesBySearchQuery(ARSelectFilter $selectFilter, $subCategories)
+	/**
+	 *  Narrow search results by categories
+	 */
+    private function getSubcategoriesBySearchQuery(ARSelectFilter $selectFilter, $subCategories)
 	{
         if (count($subCategories) > 0)
 		{
@@ -322,6 +313,39 @@ class CategoryController extends FrontendController
 	        return $categoryNarrow; 
 		}
     }
+    
+    private function getSubSubCategories(&$subCategories)
+    {
+        $ids = array();
+        $index = array();
+        foreach ($subCategories as $key => $cat)
+        {
+            $ids[] = $cat['ID'];
+            $index[$cat['ID']] = $key;
+        }
+        
+        $f = new ARSelectFilter(new INCond(new ARFieldHandle('Category', 'parentNodeID'), $ids));
+        $f->setOrder(new ARFieldHandle('Category', 'parentNodeID'));
+        $f->setOrder(new ARFieldHandle('Category', 'lft'));            
+        
+        $a = ActiveRecordModel::getRecordSetArray('Category', $f, Category::LOAD_REFERENCES);    
+        foreach ($a as $cat)
+        {
+            $subCategories[$index[$cat['parentNodeID']]]['subCategories'][] = $cat;
+        }        
+    }
+    
+    private function getSubCatFeaturedProducts()
+    {
+        $selFilter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true));
+		$selFilter->setOrder(new ARFieldHandle('Product', 'salesRank'));
+		$selFilter->setLimit($this->config->getValue('NUM_PRODUCTS_PER_CAT'));
+		
+		$featuredFilter = new ProductFilter($this->category, $selFilter);
+		$featuredFilter->includeSubcategories();
+					
+		return $this->getProductsArray($featuredFilter);			        
+    }	
 	
 	/**
 	 * @return Form
@@ -335,57 +359,38 @@ class CategoryController extends FrontendController
         return $form;
     }
 	
- 	/* @todo some defuctoring... */
 	protected function boxFilterBlock()
 	{
-        if ($this->categoryID < 1)
-		{
-		  	$this->categoryID = 1;
-		}
-		
 		// get current category instance
 		$currentCategory = Category::getInstanceByID($this->categoryID, true);	
 		
 		// get category filter groups
 		$filterGroups = $currentCategory->getFilterGroupArray();
 
-/*
-		if (!$filterGroups)
-		{
-		  	return new RawResponse();
-		}		
-*/
-
 		// get counts by filters, categories, etc
 		$count = new ProductCount($this->productFilter);
 		$filtercount = $count->getCountByFilters();
 
 		// get group filters
-		$ids = array();
-		foreach ($filterGroups as $group)
-		{
-		  	$ids[] = $group['ID'];
-		}		
-
-		if ($ids)
+		if ($filterGroups)
 		{
 			$filters = $currentCategory->getFilterSet();
 
 			// sort filters by group
 			$sorted = array();
-			$filterArray = array();
 			foreach ($filters as $filter)
 			{
-				$array = $filter->toArray();
-				$array['count'] = isset($filtercount[$filter->getID()]) ? $filtercount[$filter->getID()] : 0;
-				if (!$array['count'])
+				$cnt = isset($filtercount[$filter->getID()]) ? $filtercount[$filter->getID()] : 0;
+				if (!$cnt || $cnt == $this->totalCount)
 				{
 					continue;
 				}
 
+				$array = $filter->toArray();
+				$array['count'] = $cnt;
+
 				$specFieldID = $filter instanceof SelectorFilter ? $filter->getSpecField()->getID() : $filter->filterGroup->get()->specField->get()->getID();
 				$sorted[$specFieldID][] = $array;
-				$filterArray[] = $array;
 			}
 
 			// assign sorted filters to group arrays
@@ -400,68 +405,19 @@ class CategoryController extends FrontendController
 
 	 	$response = new BlockResponse();
 	 	
-		if ($this->filters)
-	 	{
-			$filterArray = array();
-			foreach ($this->filters as $filter)
-			{
-				$filterArray[] = $filter->toArray();
-			}		
-			
-			$response->setValue('filters', $filterArray);	
-
-			// remove already applied value filter groups
-			foreach ($filterArray as $key => $filter)
-			{
-				// selector values
-				if (isset($filter['SpecField']))
-				{
-					foreach ($filterGroups as $groupkey => $group)
-					{
-						if (isset($group['filters']))
-						{
-							foreach ($group['filters'] as $k => $flt)
-							{
-								if ($flt['ID'] == $filter['ID'])
-								{
-									unset($filterGroups[$groupkey]['filters'][$k]);
-								}
-							}								
-						}
-					}	
-				}
-			 	
-				// simple value filter
-				elseif (isset($filter['FilterGroup']))
-			 	{
-					$id = $filter['FilterGroup']['ID'];
-	
-					foreach ($filterGroups as $k => $group)
-					{
-						if ($group['ID'] == $id)
-					  	{						
-						    unset($filterGroups[$k]);
-						}
-					} 						
-				}				
-			}
-		}
-
 		// remove empty filter groups
 		$maxCriteria = $this->config->getValue('MAX_FILTER_CRITERIA_COUNT'); 
 		$showAll = $this->request->getValue('showAll');
 		
-		$router = Router::getInstance();
-		$url = $router->createUrlFromRoute($router->getRequestedRoute());
+		$url = $this->router->createUrlFromRoute($this->router->getRequestedRoute());
 		foreach ($filterGroups as $key => $grp)
 		{
-			if (empty($grp['filters']) || count($grp['filters']) == 1)
+			if (empty($grp['filters']))
 			{
-				//var_dump($grp);
                 unset($filterGroups[$key]);
-			}
+			}			
 			
-			// hide excess criterias (by default only 5 per filter are displayed)
+            // hide excess criterias (by default only 5 per filter are displayed)
 			else if (($showAll != $grp['ID']) && (count($grp['filters']) > $maxCriteria) && ($maxCriteria > 0))
 			{
 				$chunks = array_chunk($grp['filters'], $maxCriteria);
@@ -499,7 +455,7 @@ class CategoryController extends FrontendController
             $pFilter = new PriceFilter($filterId);    
             $priceFilter = $pFilter->toArray();
             $priceFilter['count'] = $count;
-            if ($count)
+            if ($count && $count != $this->totalCount)
             {
                 $priceFilters[] = $priceFilter;
             }
@@ -510,6 +466,13 @@ class CategoryController extends FrontendController
     	 	$response->setValue('priceGroup', array('filters' => $priceFilters));
         }
 
+		$filterArray = array();
+		foreach ($this->filters as $filter)
+		{
+			$filterArray[] = $filter->toArray();
+		}		
+
+		$response->setValue('filters', $filterArray);	
 	 	$response->setValue('category', $currentCategory->toArray());
 	 	$response->setValue('groups', $filterGroups);
 	 	

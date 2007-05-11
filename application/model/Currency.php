@@ -92,6 +92,31 @@ class Currency extends ActiveRecordModel
 		return ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);
 	}
 	
+	/**
+	 *  Return Currency instance by ID and provide additional validation. If the currency doesn't exist
+	 *  or is not valid, instance of the default currency is returned.
+	 *
+	 *  @return Currency
+	 */
+    public static function getValidInstanceById($id, $loadData = false)
+	{
+        try
+        {
+            $instance = ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);    
+        }
+        catch (ARNotFoundException $e)
+        {
+            $instance = Store::getInstance()->getDefaultCurrency();
+        }
+        
+        if (!$instance->isEnabled->get())
+        {
+            $instance = Store::getInstance()->getDefaultCurrency();    
+        }
+        
+        return $instance;
+	}
+
 	public static function deleteById($id)
 	{
 		// make sure the currency record exists

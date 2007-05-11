@@ -39,7 +39,8 @@ abstract class FrontendController extends BaseController
 	
 	protected function getRequestCurrency()
     {
-        return $this->request->getValue('currency', $this->store->getDefaultCurrencyCode());
+        $instance = Currency::getValidInstanceById($this->request->getValue('currency', $this->store->getDefaultCurrencyCode()));
+        return $instance->getID();
     }
 
 	

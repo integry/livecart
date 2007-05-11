@@ -105,12 +105,19 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
             self::$instance = $instance;
         }
                 
+        if (self::$instance->isFinalized->get())
+        {
+            self::$instance = null;
+            Session::getInstance()->unsetValue('CustomerOrder');
+            return self::getInstance();               
+        }
+                
         return self::$instance;
     }
     
     public function loadItems()
     {
-        $this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product'))->getData();
+        $this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category'))->getData();
         $this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter())->getData();
         if (!$this->shipments)
         {

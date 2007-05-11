@@ -49,12 +49,14 @@
         
 	            <div class="order">
 	                <div style="float: left;">
-					Our Price: <span class="price">{$product.formattedPrice.$currency}</span> - 
-					{if $product.isAvailable}
-					<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}">{t Add to Cart}</a>
-	                : 
-					{/if}
-					<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}">{t Add to Wishlist}</a>	
+					   Our Price: <span class="price">{$product.formattedPrice.$currency}</span>
+                    </div>
+                    <div style="float: right;"> 
+    					{if $product.isAvailable}
+    					<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}">{t Add to Cart}</a>
+    	                : 
+    					{/if}
+    					<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}">{t Add to Wishlist}</a>	
 					</div>				                
 	            
 					<div style="float: right;">
