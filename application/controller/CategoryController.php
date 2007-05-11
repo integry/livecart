@@ -135,6 +135,20 @@ class CategoryController extends FrontendController
             }
         }
         
+        // get subcategory featured products
+        $subCatFeatured = array();
+		if ($subCategories && !$products)
+        {
+			$selFilter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true));
+			$selFilter->setOrder(new ARFieldHandle('Product', 'salesRank'));
+			$selFilter->setLimit($this->config->getValue('NUM_PRODUCTS_PER_CAT'));
+			
+			$featuredFilter = new ProductFilter($this->category, $selFilter);
+			$featuredFilter->includeSubcategories();
+						
+			$subCatFeatured = $this->getProductsArray($featuredFilter);			
+		}
+        
 		$response = new ActionResponse();
 		$response->setValue('id', $this->categoryID);
 		$response->setValue('url', $paginationUrl);
@@ -151,7 +165,8 @@ class CategoryController extends FrontendController
 		$response->setValue('sortOptions', $sort);
 		$response->setValue('sortForm', $this->buildSortForm($order));
 		$response->setValue('categoryNarrow', $categoryNarrow);
-		
+		$response->setValue('subCatFeatured', $subCatFeatured);
+				
 		if (isset($searchQuery))
         {
     		$response->setValue('searchQuery', $searchQuery);
@@ -303,9 +318,9 @@ class CategoryController extends FrontendController
 				$data['searchCount'] = $cat['cnt'];
 				$categoryNarrow[] = $data;
 			}				
+		
+	        return $categoryNarrow; 
 		}
-        
-        return $categoryNarrow;    
     }
 	
 	/**

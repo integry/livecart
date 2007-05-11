@@ -18,6 +18,7 @@ class ProductController extends FrontendController
         $product->loadPricing();
 		        
 		$this->category = $product->category->get();
+		$this->categoryID = $product->category->get()->getID();
 		
         // get category path for breadcrumb
 		$path = $product->category->get()->getPathNodeSet();

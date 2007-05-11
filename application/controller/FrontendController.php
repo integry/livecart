@@ -34,6 +34,7 @@ abstract class FrontendController extends BaseController
 	  	$this->addBlock('LANGUAGE', 'boxLanguageSelect', 'block/box/language');
 	  	$this->addBlock('CURRENCY', 'boxSwitchCurrency', 'block/box/currency');
 	  	$this->addBlock('CART', 'boxShoppingCart', 'block/box/shoppingCart');
+	  	$this->addBlock('SEARCH', 'boxSearch', 'block/box/search');
 	}
 	
 	protected function getRequestCurrency()
@@ -120,6 +121,75 @@ abstract class FrontendController extends BaseController
 		$response->setValue('breadCrumb', $this->breadCrumb);
 		return $response;
 	}	
+	
+	protected function boxSearchBlock()
+	{
+		if ($this->categoryID < 1)
+		{
+		  	$this->categoryID = Category::ROOT_ID;
+		}
+
+		$category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
+		$subCategories = $category->getSubCategorySet();
+		
+		$search = array();
+				
+		do
+		{
+			if (isset($parent))
+			{
+				$search[] = $parent->toArray();
+			}
+			else
+			{
+				$parent = $category;
+			}
+		
+			$parent = $parent->parentNode->get();
+		}
+		while ($parent && ($parent->getID() > Category::ROOT_ID));
+		
+		if ($subCategories)
+		{
+			if ($category->getID() != Category::ROOT_ID)
+			{
+				$search[] = $category->toArray();				
+			}
+			
+			foreach ($subCategories as $category)
+			{
+				$search[] = $category->toArray();
+			}					
+		}
+		
+		if (!$search)
+		{
+			$category = Category::getInstanceById(Category::ROOT_ID, Category::LOAD_DATA);
+			$subCategories = $category->getSubCategorySet();
+			
+			foreach ($subCategories as $category)
+			{
+				$search[] = $category->toArray();
+			}		
+		}
+		
+		$options = array(1 => $this->translate('_all_products'));
+		foreach ($search as $cat)
+		{
+			$options[$cat['ID']] = $cat['name_lang'];
+		}
+		
+		ClassLoader::import("framework.request.validator.Form");        
+        $form = new Form(new RequestValidator("productSearch", $this->request));
+        $form->enableClientSideValidation(false);
+        $form->setValue('id', $this->categoryID);
+        $form->setValue('q', $this->request->getValue('q'));
+        
+        $response = new BlockResponse();		
+		$response->setValue('categories', $options);
+		$response->setValue('form', $form);
+		return $response;			
+	}
 	
 	protected function boxCategoryBlock()
 	{

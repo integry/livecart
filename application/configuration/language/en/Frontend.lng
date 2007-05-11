@@ -7,6 +7,9 @@ _narrow_results=Narrow Results
 _by_brand=By Brand
 _by_price=By Price
 
+# Search
+_all_products=All Products
+
 # Currencies
 _switch_currency=Switch Currency
 

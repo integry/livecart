@@ -25,21 +25,4 @@
 
 <div class="clear"></div>
 
-<div style="border-top: 1px solid #CCCCCC; border-bottom: 1px solid #DDDDDD; background: #F7F7F7; margin-bottom: 10px;"> 
-	{capture assign="searchUrl"}{categoryUrl data=$category}{/capture}
-    {form url=$searchUrl class="quickSearch" handle="generic"}            
-        <select>
-            <option>All Products</option>
-        </select>
-        <input type="text" class="text searchQuery" name="q" value="{$searchQuery|escape}" />	    
-        <input type="submit" class="submit" value="Search">
-	{/form}
-	<div class="clear"></div>
-</div>
-
-
-<div class="clear"></div>
-<div>
-
-<div class="clear"></div>
-</div>
+{block SEARCH}

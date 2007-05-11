@@ -11,8 +11,6 @@ class ProductFilter
 
 	private $selectFilter = null;
 
-	private $condition = null;	
-
 	private $filters = array();
 	
 	private $includeSubcategories = false;
@@ -76,6 +74,11 @@ class ProductFilter
 	  	return $selectFilter;
 	}
 	
+	public function getSelectFilterInstance()
+	{
+		return $this->selectFilter;
+	}
+	
 	public function orderByPrice(Currency $currency, $direction = 'ASC')
 	{
 	  	if ('ASC' != $direction)
@@ -101,18 +104,6 @@ class ProductFilter
     {
         return $this->includeSubcategories;
     }
-	
-	protected function addCondition(Condition $cond)
-	{
-	  	if (!$this->condition)
-	  	{
-			$this->condition = $cond;    
-		}
-		else
-		{
-			$this->condition->addAND($cond);  	
-		}
-	}
 }
 
 ?>

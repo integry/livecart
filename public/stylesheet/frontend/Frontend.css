@@ -10,6 +10,11 @@ body
     font-size: small;
 }
 
+a
+{
+	color: #143788;
+}
+
 a img
 {
     border: 0;
@@ -347,6 +352,11 @@ fieldset.container
 	font-weight: bold;	
 }
 
+.filterGroup .showAll a
+{
+	color: darkblue;
+}
+
 #smallCart
 {
     padding-top: 10px;    
@@ -498,7 +508,7 @@ ul.productList li
 
 ul.productList li.featured
 {
-    background-color: #FFFEBE;
+    background-color: #FFF9DD;
     padding: 10px;
     margin-bottom: 20px;
 }
@@ -550,6 +560,11 @@ ul.productList .order
 	margin-top: 9px;
 }
 
+.shortDescr
+{
+	font-size: 90%;
+}
+
 /*****************************
 	Product page
 *****************************/
@@ -572,7 +587,6 @@ ul.productList .order
 #mainInfo td
 {
 	padding: 5px;		
-	padding-top: 15px;
 	white-space: nowrap;
 }
 
@@ -580,6 +594,11 @@ ul.productList .order
 {
 	font-weight: bold;
 	color: brown;	
+}
+
+#mainInfo .price
+{
+	font-size: larger;
 }
 
 #productSpecification table
@@ -640,6 +659,7 @@ tr.specificationGroup
 #cartLinks
 {
 	text-align: center;
+	padding-top: 0px;
 }
 
 #addToCart

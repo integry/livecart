@@ -81,6 +81,11 @@
         </p>    
     {/if}
 
+	{if $subCatFeatured}
+		<h2>{t Featured Products}</h2>
+        {include file="category/productList.tpl" products=$subCatFeatured}	
+	{/if}
+
     {if $products}	
         <div class="resultStats">
         	<div style="float: left; margin-top: 7px;">
