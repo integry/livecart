@@ -49,10 +49,8 @@ Backend.UserGroup.prototype =
     	this.insertTreeBranch(groups, 0); 
         if(!Backend.ajaxNav.getHash().match(/group=/))
         {
-            Backend.UserGroup.prototype.treeBrowser.selectItem(-1, true);
+            Backend.UserGroup.prototype.treeBrowser.selectItem(-2, true);
         }
-        
-        this.bindEvents();
 	},
 
     bindEvents: function()
@@ -106,7 +104,7 @@ Backend.UserGroup.prototype =
 
 	afterNewGroupAdded: function(response)
 	{
-        Backend.UserGroup.prototype.treeBrowser.insertNewItem(0, response.ID, $("newGroupInput").value, 0, 0, 0, 0, 'SELECT');
+        Backend.UserGroup.prototype.treeBrowser.insertNewItem(-2, response.ID, $("newGroupInput").value, 0, 0, 0, 0, 'SELECT');
         $("newGroupInput").value = '';
         this.activateGroup(response.ID);
 	},
@@ -128,7 +126,7 @@ Backend.UserGroup.prototype =
             
         $A(treeBranch).each(function(node)
 		{
-            Backend.UserGroup.prototype.treeBrowser.insertNewItem(rootId, node.ID, node.name, null, 0, 0, 0, '', 1);
+            Backend.UserGroup.prototype.treeBrowser.insertNewItem(node.rootID, node.ID, node.name, null, 0, 0, 0, '', 1);
             self.treeBrowser.showItemSign(node.ID, 0);
             var group = document.getElementsByClassName("standartTreeRow", $("userGroupsBrowser")).last();
             group.id = 'group_' + node.ID;
@@ -141,7 +139,7 @@ Backend.UserGroup.prototype =
 	
 	activateGroup: function(id)
 	{
-        if(id == -1)
+        if(id < 0)
         {
             if(Backend.ajaxNav.getHash().match(/tabUserGroup/))
             {
@@ -204,6 +202,34 @@ Backend.UserGroup.prototype =
 		new Backend.SaveConfirmationMessage(document.getElementsByClassName('yellowMessage')[0]);			
 	} 
 }
+
+
+
+
+Backend.UserGroup.GridFormatter = 
+{
+	getClassName: function(field, value)
+	{
+		
+	},
+	
+	formatValue: function(field, value, id)
+	{
+		if ('User.name' == field)
+		{
+			value = '<span>' + 
+                        '<span class="progressIndicator" id="userIndicator_' + id + '" style="display: none;">' + 
+                        '</span>' + 
+                    '</span>' + 
+                    '<a href="#edit" id="product_' + id + '" onclick="Backend.Product.openProduct(' + id + ', event); return false;">' + 
+                         value + 
+                    '</a>';	
+    		}
+		
+		return value;
+	}
+}
+
 
 
 Backend.User.Group = Class.create();

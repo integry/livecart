@@ -36,7 +36,7 @@ class TestUser extends UnitTest
     
     public function testCreateNewTaxRate()
     {
-        $dateCreated = new DateTime();
+        $dateCreated = new ARSerializableDateTime();
         $user = User::getNewInstance('_tester@tester.com', 'tester', $this->group);
         
         $user->firstName->set('Yuri');
@@ -56,7 +56,8 @@ class TestUser extends UnitTest
         $this->assertTrue($user->isEnabled->get());
         $this->assertTrue($user->isAdmin->get());
         $this->assertReference($user->userGroup->get(), $this->group);
-        $this->assertIdentical($dateCreated, $user->dateCreated->get());
+        
+        $this->assertIdentical($dateCreated->format('Y-m-d H:i:s'), $user->dateCreated->get()->format('Y-m-d H:i:s'));
     }
     
     public function testGetUsersByGroup()

@@ -3,14 +3,18 @@
 {includeJs file="library/form/Validator.js"}
 {includeJs file="library/form/ActiveForm.js"}
 {includeJs file="library/form/State.js"}
-{includeJs file="library/SectionExpander.js"}
 {includeJs file="library/TabControl.js"}
-{includeJs file="library/ActiveList.js"}
+
+{includeJs file="library/rico/ricobase.js"}
+{includeJs file="library/rico/ricoLiveGrid.js"}
+
+{includeJs file="library/ActiveGrid.js"}
 {includeJs file="backend/User.js"}
 
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="library/TabControl.css"}
 {includeCss file="library/ActiveList.css"}
+{includeCss file="library/ActiveGrid.css"}
 {includeCss file="backend/User.css"}
 
 {pageTitle help="userGroups"}{t _livecart_delivery_users}{/pageTitle}
@@ -39,7 +43,7 @@
     			</li>
     			
     			<li id="tabUsers" class="tab inactive">
-    				<a href="{link controller=backend.user action=lists}?id=_id_">{t _group_users}</a>
+    				<a href="{link controller=backend.user action=users}?id=_id_">{t _group_users}</a>
     				<span class="tabHelp">userGroups.shippingRates</span>
     			</li>
 			</ul>
@@ -60,7 +64,6 @@
     Backend.User.Group.prototype.Links.remove = '{/literal}{link controller=backend.userGroup action=delete}{literal}';
 
     var users = new Backend.UserGroup({/literal}{json array=$userGroups}{literal});
-
 </script>
 {/literal}
 

@@ -38,3 +38,15 @@
 {
     float: none;
 }
+
+.userList input
+{
+    width: 20px;
+}
+
+
+.cell_cb 
+{
+    text-align:center !important;
+    width:4% !important;
+}

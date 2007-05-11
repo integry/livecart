@@ -1,6 +1,8 @@
 <?php
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
+ClassLoader::import("framework.request.validator.RequestValidator");
+ClassLoader::import("framework.request.validator.Form");
 ClassLoader::import("application.controller.backend.*");
 ClassLoader::import("application.model.user.*");
 ClassLoader::import("library.DataGrid.*");
@@ -19,99 +21,104 @@ class UserController extends StoreManagementController
 	public function index()
 	{
 		$userGroups = array();
-		$userGroups[] = array('ID' => -1, 'name' => $this->translate('_default_user_group'));
+		$userGroups[] = array('ID' => -2, 'name' => 'root', 'rootID' => 0);
+		$userGroups[] = array('ID' => -1, 'name' => $this->translate('_default_user_group'), 'rootID' => -2);
 		foreach(UserGroup::getRecordSet(new ARSelectFilter())->toArray() as $group) 
 		{
-		    $userGroups[] = array('ID' => $group['ID'], 'name' => $group['name']);
+		    $userGroups[] = array('ID' => $group['ID'], 'name' => $group['name'], 'rootID' => -2);
 		}
 		    
 		$response = new ActionResponse();
 		$response->setValue('userGroups', $userGroups);
 		return $response;
 	    
-	    
-//		//user count for paging
-//		$schema = ActiveRecord::getSchemaInstance("User");
-//		$db = ActiveRecord::GetDbConnection();
-//		$res = $db->executeQuery("SELECT count(id) AS users_count FROM ".$schema->getName());
-//		$res->next();
-//		$count = (int)$res->getInt("users_count");
-//
-//		//filter
-//		$filter = new DataGridFilter("User", $this->request->toArray());
-//
-//		$filter->selector()->addField("User.email", $this->locale->translate("_email"));
-//		$filter->selector()->addField("User.nickName", $this->locale->translate("_nickName"));
-//		$filter->selector()->addField("User.creationDate", $this->locale->translate("_creationDate"));
-//
-//		$filter->sorter()->addField("User.email", $this->locale->translate("_email"));
-//		$filter->sorter()->addField("User.nickName", $this->locale->translate("_nickName"));
-//		$filter->sorter()->addField("User.creationDate", $this->locale->translate("_creationDate"));
-//		$filter->sorter()->addField("User.isActive", $this->locale->translate("_active"));
-//
-//		$filter->pager()->setOptions($count, 10);
-//
-//		$display = new DataGridFilterDisplayer($filter);
-//
-//		$record_set = ActiveRecord::getRecordSet("User", $filter->getArSelectFilter(), true);
-//
-//		//datagrid
-//		$grid = new DataGridArSetDisplayer();
-//		$grid->setDataSource($record_set);
-//		$grid->setSortedFields($filter->sorter()->getFields());
-//
-//		$grid->addBulcColumn("User.ID");
-//		$grid->addColumnComplex(array("User.nickName", "User.ID"), get_class($this), 'formatNickColUrl', $this->locale->translate("_user"));
-//		$grid->addColumn("User.email", $this->locale->translate("_email"), "<a href='mailto:{0}'>{0}</a>");
-//		$grid->addColumn("User.firstName", $this->locale->translate("_firstName"));
-//		$grid->addColumn("User.lastName", $this->locale->translate("_lastName"));
-//		$grid->addColumnComplex("User.creationDate", get_class($this), 'formatCreationDate', $this->locale->translate("_creationDate"));
-//		$grid->addColumnComplex("User.isActive", get_class($this), 'formatActive', $this->locale->translate("_active"));
-//
-//		//response
-//		$action_response = new ActionResponse();
-//		//$action_response->setValue('action', 'index');
-//		$action_response->setValue('tabclass_search', 'tabpageselected');
-//		$action_response->setValue('tabclass_group', 'tabpage');
-//		$action_response->setValue('filter', $display->display());
-//		$action_response->setValue('grid', $grid->display());
-//		$action_response->setValue('paging', $display->displayPagerAsSelect(""));
-//		$action_response->setValue('group', $this->createRoleGroupView("objTreeMenuAjax_add", "objTreeMenuAjax_add"));
-//		$action_response->setValue('hrefs_list', 'backend/user/group.hrefslist.tpl');
-//
-//		//application rendering
-//		$this->ajaxJS();
-//		$app = Application::getInstance();
-//		$app->getRenderer()->appendValue("BODY_ONLOAD", $display->displayOnLoad(1, 1));
-//		$app->getRenderer()->appendValue("JAVASCRIPT", Router::getInstance()->getBaseDir()."/public/javascript/DataGrid/datagrid.js");
-//
-//		return $action_response;
+	}
+	
+	public function users()
+	{
+	    $id = (int)$this->request->getValue("id");
+	    if($id > 0)
+	    {
+	        $showAllGroups = false;
+	        $userGroup = UserGroup::getInstanceByID($id, ActiveRecord::LOAD_DATA);
+	    }
+	    else if($id == -1)
+	    {
+	        $showAllGroups = false;
+	        $userGroup = null;
+	    }
+	    else if($id == -2)
+	    {
+	        $showAllGroups = true;
+	        $userGroup = null;
+	    }
+	    else
+	    {
+	        return;
+	    }
+	        
+		$availableColumns = $this->getAvailableColumns();
+		$displayedColumns = $this->getDisplayedColumns();
+		
+		// sort available columns by display state (displayed columns first)
+		$displayedAvailable = array_intersect_key($availableColumns, $displayedColumns);
+		$notDisplayedAvailable = array_diff_key($availableColumns, $displayedColumns);		
+		$availableColumns = array_merge($displayedAvailable, $notDisplayedAvailable);
+			
+		$response = new ActionResponse();
+        $response->setValue("massForm", $this->getMassForm());
+        $response->setValue("displayedColumns", $displayedColumns);
+        $response->setValue("availableColumns", $availableColumns);
+		$response->setValue("userGroupID", $id);
+		$response->setValue("offset", $this->request->getValue('offset'));
+		$response->setValue("totalCount", '0');
+				
+		return $response;
+	}	
+	
+
+	public function changeColumns()
+	{		
+		$columns = array_keys($this->request->getValue('col', array()));
+		$this->setSessionData('columns', $columns);
+		return new ActionRedirectResponse('backend.user', 'index', array('id' => $this->request->getValue('group')));
 	}
 
 	public function lists()
 	{
-		if(($id = (int)$this->request->getValue('id')) > 0)
-		{
-		    $userGroup = UserGroup::getInstanceByID($id);
-		}
-		else
-		{
-		    $userGroup = null;
-		}
-		
-		
-		
+	    $id = (int)substr($this->request->getValue('id'), 6);
+	    if($id > 0)
+	    {
+	        $showAllGroups = false;
+	        $userGroup = UserGroup::getInstanceByID($id, ActiveRecord::LOAD_DATA);
+	    }
+	    else if($id == -1)
+	    {
+	        $showAllGroups = false;
+	        $userGroup = null;
+	    }
+	    else if($id == -2)
+	    {
+	        $showAllGroups = true;
+	        $userGroup = null;
+	    }
+	    else
+	    {
+	        return;
+	    }
+
 	    $filter = new ARSelectFilter();
-	    $usersArray = User::getRecordSetByGroup($userGroup, $filter, array('UserGroup'))->toArray();
-        new ActiveGrid($this->request, $filter);
-        
+	    new ActiveGrid($this->request, $filter);
+	    if($showAllGroups)
+	    {
+	        $usersArray = User::getRecordSet($filter, array('UserGroup'))->toArray();
+	    }
+	    else
+	    {
+	        $usersArray = User::getRecordSetByGroup($userGroup, $filter, array('UserGroup'))->toArray();
+	    }
+	    
 		$displayedColumns = $this->getDisplayedColumns($userGroup);
-		
-        // load specification data
-        foreach ($displayedColumns as $column => $type)
-        {
-            list($class, $field) = explode('.', $column, 2);
-        }
 
     	$data = array();
 		foreach ($usersArray as $user)
@@ -120,6 +127,7 @@ class UserController extends StoreManagementController
             foreach ($displayedColumns as $column => $type)
             {
                 list($class, $field) = explode('.', $column, 2);
+                
                 if ('User' == $class)
                 {
 					$value = isset($user[$field]) ? $user[$field] : '';
@@ -144,8 +152,7 @@ class UserController extends StoreManagementController
     	return new JSONResponse($return);	  	  	
 	}
 	
-	
-	protected function getDisplayedColumns(UserGroup $userGroup)
+	protected function getDisplayedColumns()
 	{	
 		// get displayed columns
 		$displayedColumns = $this->getSessionData('columns');		
@@ -164,7 +171,7 @@ class UserController extends StoreManagementController
 			);				
 		}
 		
-		$availableColumns = $this->getAvailableColumns($userGroup);
+		$availableColumns = $this->getAvailableColumns();
 		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);	
 
 		// User ID is always passed as the first column
@@ -182,16 +189,18 @@ class UserController extends StoreManagementController
 		return $displayedColumns;		
 	}
 	
-	protected function getAvailableColumns(UserGroup $userGroup)
+	protected function getAvailableColumns()
 	{
 		// get available columns
-		$userSchema = ActiveRecordModel::getSchemaInstance('User');
-		
 		$availableColumns = array();
-		foreach ($userSchema->getFieldList() as $field)
+		foreach (ActiveRecordModel::getSchemaInstance('User')->getFieldList() as $field)
 		{
 			$fieldType = $field->getDataType();
 			
+			if($field->getName() == 'password')
+			{
+			    continue;
+			}
 			if ($field instanceof ARForeignKeyField)
 			{
 			  	continue;
@@ -220,14 +229,27 @@ class UserController extends StoreManagementController
 
 		foreach ($availableColumns as $column => $type)
 		{
-			$availableColumns[$column] = array('name' => $this->translate($column), 'type' => $type);	
+			$availableColumns[$column] = array(
+				'name' => $this->translate($column), 
+				'type' => $type
+			);	
 		}
 
 
 		return $availableColumns;
 	}
 	
-	
+    protected function getMassForm()
+    {
+        		
+		$validator = new RequestValidator("UsersFilterFormValidator", $this->request);
+					
+		
+        return new Form($validator);                
+    }
+    
+    
+    
 	
 	
 	

@@ -22,7 +22,20 @@ _group_users=Group users
 _user_group=User group
 _default_user_group=Defalut user group
 _form_has_been_successfully_saved=This form has been successfully saved
-
-
 _add=Add group
 _delete=Delete group
+
+
+
+########################
+# Active grid fields
+#######################
+User.ID=ID
+User.email=Email
+User.firstName=First Name
+User.lastName=Last Name
+User.companyName=Company Name
+User.dateCreated=Date Created
+User.isEnabled=Enabled
+User.isAdmin=Admin
+UserGroup.name=Group Name

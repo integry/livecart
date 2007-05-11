@@ -55,7 +55,7 @@ class User extends ActiveRecordModel
     {
         $instance = parent::getNewInstance(__CLASS__);    
         $instance->email->set($email);
-        $instance->dateCreated->set(new DateTime());
+        $instance->dateCreated->set(new ARSerializableDateTime());
         
         if($userGroup)
         {

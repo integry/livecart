@@ -37,7 +37,7 @@ class DeliveryZoneController extends StoreManagementController
 	{
 	    if(($id = (int)$this->request->getValue('id')) <= 0) 
 	    {
-	        return new RawResponse('aaa');
+	        return;
 	    }
 	    
 	    $deliveryZone = DeliveryZone::getInstanceByID($id, true);

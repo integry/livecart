@@ -121,9 +121,12 @@ ActiveGrid.prototype =
 	onScroll: function(liveGrid, offset) 
 	{        	
 		this.ricoGrid.onBeginDataFetch = this.showFetchIndicator.bind(this);	
-			
-		Backend.Product.updateHeader(this, offset);
-		
+
+		if(Backend.Product)
+        {
+            Backend.Product.updateHeader(this, offset);
+		}
+        
 		this._markSelectedRows();
 	},
 	

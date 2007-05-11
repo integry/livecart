@@ -406,4 +406,15 @@
   ),
   'REQUIRE_CVV' => 1,
   'MAIN_EMAIL' => '',
+  'ALLOWED_SORT_ORDER' => 
+  array (
+    'FEATURED' => 1,
+    'SALES_RANK' => 1,
+    'PRODUCT_NAME_ASC' => 1,
+    'PRODUCT_NAME_DESC' => 1,
+    'PRICE_ASC' => 1,
+    'PRICE_DESC' => 1,
+    'NEWEST_ARRIVALS' => 1,
+    'RATING' => 1,
+  ),
 ); ?>
