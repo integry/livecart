@@ -1,4 +1,4 @@
 <Menu>
-	<Title>_menu_content</Title>	
-	<Controller>backend.content</Controller>
+	<Title>_menu_pages</Title>	
+	<Controller>backend.staticPage</Controller>
 </Menu>

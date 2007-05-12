@@ -1,4 +1,0 @@
-<Menu>
-	<Title>_menu_articles</Title>	
-	<Controller>backend.articles</Controller>
-</Menu>
