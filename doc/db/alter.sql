@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-05-09 17:33                                #
+# Created on:            2007-05-12 13:36                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -51,11 +51,15 @@ ALTER TABLE User DROP FOREIGN KEY ShippingAddress_User;
 
 ALTER TABLE User DROP FOREIGN KEY BillingAddress_User;
 
-ALTER TABLE User DROP FOREIGN KEY UserGroup_User;
+ALTER TABLE AccessControlList DROP FOREIGN KEY User_AccessControlList;
 
-ALTER TABLE AccessControlList DROP FOREIGN KEY UserGroup_AccessControlList;
+ALTER TABLE AccessControlList DROP FOREIGN KEY RoleGroup_AccessControlList;
 
 ALTER TABLE AccessControlList DROP FOREIGN KEY Role_AccessControlList;
+
+ALTER TABLE UserGroup DROP FOREIGN KEY User_UserGroup;
+
+ALTER TABLE UserGroup DROP FOREIGN KEY RoleGroup_UserGroup;
 
 ALTER TABLE Filter DROP FOREIGN KEY FilterGroup_Filter;
 
@@ -144,6 +148,80 @@ ALTER TABLE ShippingRate DROP FOREIGN KEY ShippingService_ShippingRate;
 ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 
 ALTER TABLE ShippingService DROP FOREIGN KEY DeliveryZone_ShippingService;
+
+# ---------------------------------------------------------------------- #
+# Drop table "UserGroup"                                                 #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE UserGroup DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE UserGroup;
+
+# ---------------------------------------------------------------------- #
+# Modify table "User"                                                    #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE User ADD COLUMN userGroupID INTEGER UNSIGNED;
+
+ALTER TABLE User MODIFY userGroupID INTEGER UNSIGNED AFTER defaultShippingAddressID;
+
+# ---------------------------------------------------------------------- #
+# Modify table "AccessControlList"                                       #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE AccessControlList DROP PRIMARY KEY;
+
+ALTER TABLE AccessControlList DROP COLUMN UserID;
+
+ALTER TABLE AccessControlList ADD COLUMN ID INTEGER NOT NULL;
+
+ALTER TABLE AccessControlList CHANGE RoleGroupID userGroupID INTEGER UNSIGNED NOT NULL;
+
+ALTER TABLE AccessControlList CHANGE RoleID roleID INTEGER UNSIGNED NOT NULL;
+
+ALTER TABLE AccessControlList MODIFY ID INTEGER NOT NULL FIRST;
+
+ALTER TABLE AccessControlList MODIFY roleID INTEGER UNSIGNED NOT NULL AFTER ID;
+
+ALTER TABLE AccessControlList MODIFY userGroupID INTEGER UNSIGNED NOT NULL AFTER roleID;
+
+ALTER TABLE AccessControlList ADD CONSTRAINT PK_AccessControlList 
+    PRIMARY KEY (ID);
+
+# ---------------------------------------------------------------------- #
+# Modify table "RoleGroup"                                               #
+# ---------------------------------------------------------------------- #
+
+ALTER TABLE RoleGroup ALTER COLUMN parent DROP DEFAULT;
+
+ALTER TABLE RoleGroup DROP PRIMARY KEY;
+
+ALTER TABLE RoleGroup DROP COLUMN parent;
+
+ALTER TABLE RoleGroup DROP COLUMN lft;
+
+ALTER TABLE RoleGroup DROP COLUMN rgt;
+
+RENAME TABLE RoleGroup TO UserGroup;
+
+ALTER TABLE UserGroup ADD CONSTRAINT PK_UserGroup 
+    PRIMARY KEY (ID);
+
+# ---------------------------------------------------------------------- #
+# Add table "StaticPage"                                                 #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE StaticPage (
+    ID INTEGER NOT NULL,
+    handle VARCHAR(40),
+    isInformationBox BOOL,
+    position INTEGER UNSIGNED DEFAULT 0,
+    CONSTRAINT PK_StaticPage PRIMARY KEY (ID)
+);
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #

@@ -16,7 +16,7 @@ abstract class FrontendController extends BaseController
         parent::__construct($request);
         
         // variables to append automatically to all URLs
-        $autoAppend = array('currency', 'showAll', 'sort');
+        $autoAppend = array('currency', 'sort');
         foreach ($autoAppend as $key)
         {
             if ($request->isValueSet($key))
@@ -267,6 +267,7 @@ abstract class FrontendController extends BaseController
 		}
 						
 		// apply current filters to suitable categories
+		/*
 		if ($this->filters)
 		{
 			//$filterArray = $this->filters->toArray();
@@ -282,6 +283,7 @@ abstract class FrontendController extends BaseController
 			}
 			$this->applyFilters($topCategories, $rootFilters);		  
 		}
+		*/
 
 		$response = new BlockResponse();
 		$response->setValue('categories', $topCategories);

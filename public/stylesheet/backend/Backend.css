@@ -579,10 +579,24 @@ ul.menu li {
   	color: red;  	
 }
 
+ul.verticalMenu
+{
+	list-style-type: none;	
+	padding: 15px;
+}
+
+ul.verticalMenu li
+{
+	margin-bottom: 5px;
+	padding-left: 23px;
+	background-repeat: no-repeat;
+	background-position: left middle;	
+}
+
 /*************************** 
 	Handy classes
 ***************************/
-br.clear
+br.clear, div.clear
 {
     clear: both;
 }
@@ -833,6 +847,11 @@ input.wide
   	width: 35em;
 }
 
+.wider
+{
+	width: 50em;
+}
+
 input.money, input.number
 {
   	width: 5em;
@@ -841,6 +860,12 @@ input.money, input.number
 input.date
 {
   	width: 6em;  
+}
+
+label.wide
+{
+	display: block;
+	float: none;
 }
 
 /*************************** 
@@ -1002,6 +1027,8 @@ fieldset.group p
 {
     border: 1px solid #ccc; 
     background: #f1f1f1;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 /*************************** 

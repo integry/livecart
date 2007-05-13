@@ -355,11 +355,12 @@ fieldset.container
 {
 	list-style: none;
 	font-weight: bold;	
-}
-
-.filterGroup .showAll a
-{
-	color: darkblue;
+	margin-top: 5px;
+	background-image: url(../../image/silk/tag_yellow.png);
+	background-position: left middle;
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	margin-left: -20px;
 }
 
 #smallCart
@@ -370,15 +371,17 @@ fieldset.container
 /*****************************
 	Currency switch
 *****************************/
-.box.currency .content
+.currency 
 {
 	font-size: smaller;
-	text-align: center;	
+	text-align: center;
+	margin-top: 12px;	
+	margin-right: 12px;
 }
 
-.box.currency .content a
+.currency a
 {
-	margin-left: 3px;
+	margin-left: 3px;	
 }
 
 /*****************************
@@ -465,9 +468,20 @@ ul.subSubCats
 	font-style: italic;	
 }
 
+.allFilters li
+{
+	margin-bottom: 5px !important;	
+}
+
+.allFilters legend
+{
+	color: black;
+	background-color: #DDDDDD;
+}
+
 .page
 {
-    border: 1px solid blue;
+    border: 1px solid #143788;
     padding: 2px 6px;
     text-decoration: none;
     margin-left: 2px;
@@ -476,7 +490,7 @@ ul.subSubCats
 
 .currentPage
 {
-    background: #DFDFFF;
+    background: #EEEEEE;
     font-weight: bold;
 }
 

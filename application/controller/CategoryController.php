@@ -127,6 +127,26 @@ class CategoryController extends FrontendController
 		}
 		
 		// load filter data
+		$this->getFilterCounts();
+		
+		$filters = array();
+		if ($showAll = $this->request->getValue('showAll'))
+		{
+			if ('brand' == $showAll)
+			{
+				$filters = array('filters' => $this->manFilters);
+			}		
+			else 
+			{
+				foreach ($this->filterGroups as $filterGroup)
+				{
+					if ($filterGroup['ID'] == $showAll)
+					{
+						$filters = $filterGroup;		
+					}					
+				}				
+			}
+		}
         
 		$response = new ActionResponse();
 		$response->setValue('id', $this->categoryID);
@@ -145,7 +165,9 @@ class CategoryController extends FrontendController
 		$response->setValue('sortForm', $this->buildSortForm($order));
 		$response->setValue('categoryNarrow', $categoryNarrow);
 		$response->setValue('subCatFeatured', $subCatFeatured);
-				
+		$response->setValue('allFilters', $filters);
+		$response->setValue('showAll', $showAll);
+						
 		if (isset($searchQuery))
         {
     		$response->setValue('searchQuery', $searchQuery);
@@ -361,11 +383,71 @@ class CategoryController extends FrontendController
 	
 	protected function boxFilterBlock()
 	{
-		// get current category instance
-		$currentCategory = Category::getInstanceByID($this->categoryID, true);	
+		$filterGroups = $this->filterGroups;
+
+	 	$response = new BlockResponse();
+	 	
+		// remove empty filter groups
+		$maxCriteria = $this->config->getValue('MAX_FILTER_CRITERIA_COUNT'); 
+		$showAll = $this->request->getValue('showAll');
 		
+		$url = $this->router->createUrlFromRoute($this->router->getRequestedRoute());
+		foreach ($filterGroups as $key => $grp)
+		{
+			if (empty($grp['filters']))
+			{
+                unset($filterGroups[$key]);
+			}			
+			
+            // hide excess criterias (by default only 5 per filter are displayed)
+			else if (($showAll != $grp['ID']) && (count($grp['filters']) > $maxCriteria) && ($maxCriteria > 0))
+			{
+				$chunks = array_chunk($grp['filters'], $maxCriteria);
+				$filterGroups[$key]['filters'] = $chunks[0];
+				$filterGroups[$key]['more'] = Router::setUrlQueryParam($url, 'showAll', $grp['ID']);
+			}
+		}			
+    
+        // filter by manufacturers
+        $manFilters = $this->manFilters;
+        
+        if (count($manFilters) > $maxCriteria && $showAll != 'brand' && $maxCriteria > 0)
+        {
+			$chunks = array_chunk($manFilters, $maxCriteria);
+			$manFilters = $chunks[0];
+			$response->setValue('allManufacturers', Router::setUrlQueryParam($url, 'showAll', 'brand'));		  	
+		}
+        
+        if (count($manFilters) > 1)
+        {
+    	 	$response->setValue('manGroup', array('filters' => $manFilters));
+        }
+        
+        // filter by prices
+        $priceFilters = $this->priceFilters;
+        
+        if (count($priceFilters) > 1)
+        {
+    	 	$response->setValue('priceGroup', array('filters' => $priceFilters));
+        }
+
+		$filterArray = array();
+		foreach ($this->filters as $filter)
+		{
+			$filterArray[] = $filter->toArray();
+		}		
+
+		$response->setValue('filters', $filterArray);	
+	 	$response->setValue('category', $this->category->toArray());
+	 	$response->setValue('groups', $filterGroups);
+	 	
+		return $response;	 	
+	}	
+	
+	private function getFilterCounts()
+	{
 		// get category filter groups
-		$filterGroups = $currentCategory->getFilterGroupArray();
+		$filterGroups = $this->category->getFilterGroupArray();
 
 		// get counts by filters, categories, etc
 		$count = new ProductCount($this->productFilter);
@@ -374,7 +456,7 @@ class CategoryController extends FrontendController
 		// get group filters
 		if ($filterGroups)
 		{
-			$filters = $currentCategory->getFilterSet();
+			$filters = $this->category->getFilterSet();
 
 			// sort filters by group
 			$sorted = array();
@@ -401,55 +483,38 @@ class CategoryController extends FrontendController
 				    $filterGroups[$key]['filters'] = $sorted[$group['specFieldID']];
 				}
 			}			
-		}
-
-	 	$response = new BlockResponse();
-	 	
-		// remove empty filter groups
-		$maxCriteria = $this->config->getValue('MAX_FILTER_CRITERIA_COUNT'); 
-		$showAll = $this->request->getValue('showAll');
+		}		
 		
-		$url = $this->router->createUrlFromRoute($this->router->getRequestedRoute());
-		foreach ($filterGroups as $key => $grp)
-		{
-			if (empty($grp['filters']))
-			{
-                unset($filterGroups[$key]);
-			}			
-			
-            // hide excess criterias (by default only 5 per filter are displayed)
-			else if (($showAll != $grp['ID']) && (count($grp['filters']) > $maxCriteria) && ($maxCriteria > 0))
-			{
-				$chunks = array_chunk($grp['filters'], $maxCriteria);
-				$filterGroups[$key]['filters'] = $chunks[0];
-				$filterGroups[$key]['more'] = Router::setUrlQueryParam($url, 'showAll', $grp['ID']);
-			}
-		}			
-    
-        // filter by manufacturers
-        $manFilters = array();
-        foreach ($count->getCountByManufacturers() as $filterData)
+		$this->filterGroups = $filterGroups;
+		
+        // filter by manufacturers        
+		$isManufacturerFiltered = false;
+		foreach ($this->filters as $filter)
         {
-            $mFilter = new ManufacturerFilter($filterData['ID'], $filterData['name']);
-            $manFilter = $mFilter->toArray();
-            $manFilter['count'] = $filterData['cnt'];
-            $manFilters[] = $manFilter;
-        }
+			if ($filter instanceof ManufacturerFilter)
+			{
+				$isManufacturerFiltered = true;		
+			}	
+		}
+		
+		$manFilters = array();
         
-        if (count($manFilters) > $maxCriteria && $showAll != 'brand' && $maxCriteria > 0)
-        {
-			$chunks = array_chunk($manFilters, $maxCriteria);
-			$manFilters = $chunks[0];
-			$response->setValue('allManufacturers', Router::setUrlQueryParam($url, 'showAll', 'brand'));		  	
+		// check for filter counts only if the manufacturer filter hasn't been applied already
+		if (!$isManufacturerFiltered)
+		{
+			foreach ($count->getCountByManufacturers() as $filterData)
+	        {
+	            $mFilter = new ManufacturerFilter($filterData['ID'], $filterData['name']);
+	            $manFilter = $mFilter->toArray();
+	            $manFilter['count'] = $filterData['cnt'];
+	            $manFilters[] = $manFilter;
+	        }					
 		}
         
-        if (count($manFilters) > 1)
-        {
-    	 	$response->setValue('manGroup', array('filters' => $manFilters));
-        }
+        $this->manFilters = $manFilters;
         
-        // filter by prices
-        $priceFilters = array();
+		// filter by prices
+		$priceFilters = array();
         foreach ($count->getCountByPrices() as $filterId => $count)
         {
             $pFilter = new PriceFilter($filterId);    
@@ -461,23 +526,8 @@ class CategoryController extends FrontendController
             }
         }
         
-        if (count($priceFilters) > 1)
-        {
-    	 	$response->setValue('priceGroup', array('filters' => $priceFilters));
-        }
-
-		$filterArray = array();
-		foreach ($this->filters as $filter)
-		{
-			$filterArray[] = $filter->toArray();
-		}		
-
-		$response->setValue('filters', $filterArray);	
-	 	$response->setValue('category', $currentCategory->toArray());
-	 	$response->setValue('groups', $filterGroups);
-	 	
-		return $response;	 	
-	}	
+        $this->priceFilters = $priceFilters;
+	}
 	
 	public function getAppliedFilters()
 	{

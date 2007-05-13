@@ -1,0 +1,30 @@
+#pageBrowser
+{
+	width: 250px;	
+}
+
+#text
+{
+	height: 350px;
+}
+
+#addMenu
+{
+	background-image: url('../../image/silk/page_white_add.png');
+	margin-bottom: 10px;
+}
+
+#moveUpMenu
+{
+	background-image: url('../../image/silk/arrow_up.png');
+}
+
+#moveDownMenu
+{
+	background-image: url('../../image/silk/arrow_down.png');
+}
+
+#removeMenu
+{
+	background-image: url('../../image/silk/page_white_delete.png');
+}

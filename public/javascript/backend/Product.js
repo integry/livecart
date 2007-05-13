@@ -23,7 +23,7 @@ Backend.Product =
 			new LiveCart.AjaxUpdater(url, container.parentNode, document.getElementsByClassName('progressIndicator', container)[0]);
 		}
 
-		this.initAddForm(categoryID);
+		//this.initAddForm(categoryID);
 	},
 
 	cancelAddProduct: function(categoryID, container)

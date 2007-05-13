@@ -1,14 +1,13 @@
 <?php
-ClassLoader::import("application.model.system.ActiveTreeNode");
-ClassLoader::import("application.model.system.MultilingualObject");
+
 ClassLoader::import("application.model.delivery.*");
 
 /**
- * Hierarchial product category model class
+ * Taxes
  *
  * @package application.model.delivery
  */
-class Tax extends MultilingualObject 
+class Tax extends ActiveRecordModel
 {
 	public static function defineSchema($className = __CLASS__)
 	{

@@ -1,6 +1,5 @@
 <?php
-ClassLoader::import("application.model.system.ActiveTreeNode");
-ClassLoader::import("application.model.system.MultilingualObject");
+
 ClassLoader::import("application.model.delivery.*");
 ClassLoader::import("application.model.tax.*");
 
@@ -9,7 +8,7 @@ ClassLoader::import("application.model.tax.*");
  *
  * @package application.model.delivery
  */
-class TaxRate extends MultilingualObject 
+class TaxRate extends ActiveRecordModel
 {
 	public static function defineSchema($className = __CLASS__)
 	{
