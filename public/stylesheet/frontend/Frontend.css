@@ -195,6 +195,7 @@ div.box .title
   	background-color: #EEEEEE;
   	text-align: center;
   	font-weight: bold;
+  	color: #143788;
 }
 
 div.box .content
@@ -286,14 +287,15 @@ tr.even
 
 .categories .content
 {
-    background-color: #FAFAFA;
+    background-color: #F6F6F6;
     padding: 12px !important;
     padding-top: 5px !important;
+  	border-bottom: 1px solid #CCCCCC;
 }
 
 .categories .content a
 {
-    color: green;
+    color: darkgreen;
 }
 
 .categories li
@@ -501,6 +503,11 @@ ul.subSubCats
 	font-style: italic;	
 }
 
+.allFilters 
+{
+	background-color: yellow;
+}
+
 .allFilters li
 {
 	margin-bottom: 5px !important;	
@@ -509,7 +516,11 @@ ul.subSubCats
 .allFilters legend
 {
 	color: black;
-	background-color: #DDDDDD;
+	background-color: inherit;
+    background-image: url(../../image/silk/zoom.png);
+    background-repeat: no-repeat;
+    background-position: center left;
+    padding-left: 22px;    
 }
 
 .page
@@ -1090,6 +1101,7 @@ form fieldset.group div
     width: auto;
 }
 
+/*
 fieldset
 {
     margin: 1em 0;
@@ -1099,7 +1111,7 @@ fieldset
     margin-bottom: 10px;
     border: 1px solid #DDD;
 }
-
+*/
 legend
 {
 	font-size: 18px;
