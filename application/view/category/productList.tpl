@@ -53,10 +53,10 @@
                     </div>
                     <div style="float: right;"> 
     					{if $product.isAvailable}
-    					<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}">{t Add to Cart}</a>
+    					<a href="{link controller=order action=addToCart id=$product.ID returnPath=true}" class="addToCart">{t Add to Cart}</a>
     	                : 
     					{/if}
-    					<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}">{t Add to Wishlist}</a>	
+    					<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}" class="addToWishList">{t Add to Wishlist}</a>	
 					</div>				                
 	            
 					<div style="float: right;">

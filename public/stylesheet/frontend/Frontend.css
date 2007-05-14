@@ -286,7 +286,14 @@ tr.even
 
 .categories .content
 {
-    border: 2px solid #EEE9E4;
+    background-color: #FAFAFA;
+    padding: 12px !important;
+    padding-top: 5px !important;
+}
+
+.categories .content a
+{
+    color: green;
 }
 
 .categories li
@@ -317,8 +324,8 @@ tr.even
 {
     list-style-type: none;
     margin-bottom: 7px;
+    
     padding-left: 20px;
-
     background-image:url(../../image/silk/bullet_arrow_left.png);
     background-repeat: no-repeat;
     background-position: center left;
@@ -520,6 +527,26 @@ ul.subSubCats
     font-weight: bold;
 }
 
+.resultPages .next
+{
+    background-image: url(../../image/silk/resultset_next.png);
+    background-repeat: no-repeat;
+    background-position: center right;
+    padding-right: 22px;    
+    border: 0;
+    text-decoration: underline;
+}
+
+.resultPages .previous
+{
+    background-image: url(../../image/silk/resultset_previous.png);
+    background-repeat: no-repeat;
+    background-position: center left;
+    padding-left: 22px;    
+    border: 0;
+    text-decoration: underline;
+}
+
 .resultPages
 {
     border-top: 1px solid #CCCCCC;        
@@ -595,6 +622,14 @@ ul.productList .image img
 ul.productList .order
 {
 	margin-top: 9px;
+}
+
+ul.productList a.addToCart
+{
+    padding-left: 20px;
+    background-image:url(../../image/silk/cart_add.png);
+    background-repeat: no-repeat;
+    background-position: center left;    
 }
 
 .shortDescr

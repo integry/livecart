@@ -68,11 +68,12 @@
 			</tr>
 			<tr>
 				<td colspan="2" id="cartLinks">
-					{form action="controller=order action=addToCart id=`$product.ID` returnPath=true" handle=$cartForm}
+					{form action="controller=order action=addToCart id=`$product.ID`" handle=$cartForm}
     					<p id="addToCart">
     						Quantity: {selectfield name="count" style="width: auto;" options=$quantity}
     						<input type="submit" class="submit" value="{tn Add to Cart}" />							
     					</p>
+    					{hidden name="returnUrl" value=$lastBreadcrumb.url}
 					{/form}
 					<p id="addToWishList">
 						<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}">{t Add to Wishlist}</a>			

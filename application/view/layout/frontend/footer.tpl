@@ -9,13 +9,9 @@
         </a>
     </div>
     
-    <div style="float: left; margin-left: 160px; margin-top: 0px;">
+    <div style="float: left; margin-left: 160px; margin-top: 15px;">
 
         &copy; <a href="http://livecart.com">UAB Integry Systems</a>, 2006-2007
-        <br />
-        <a href="http://livecart.com">
-            <img src="http://livecart.com/integry_blank.png" alt="Integry Systems logo" />
-        </a>
     </div>
 
 	<div style="float: right;">

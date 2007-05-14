@@ -75,8 +75,17 @@ class OrderController extends FrontendController
         $order->addProduct($product, $count);
         $order->mergeItems();
         $order->saveToSession();
+    
+        if ($this->request->isValueSet('returnUrl'))
+        {
+            $return = $this->router->getRouteFromUrl($this->request->getValue('returnUrl'));
+        }
+        else
+        {
+            $return = $this->request->getValue('return');
+        }
 
-        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));
+        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $return));
     }
 
 	public function moveToCart()
