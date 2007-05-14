@@ -19,15 +19,15 @@
 	<div id="imageContainer" style="float: left; text-align: center;">
 		<div id="largeImage" class="{if !$product.DefaultImage.paths.3}missingImage{/if} {if $images|@count > 1}multipleImages{/if}">
 			{if $product.DefaultImage.paths.3}
-				<img src="{$product.DefaultImage.paths.3}" id="mainImage" style="margin: 20px;" />
+				<img src="{$product.DefaultImage.paths.3}" alt="{$product.DefaultImage.name_lang|escape}" id="mainImage" style="margin: 20px;" />
 			{else}
-				<img src="image/missing_large.jpg" id="mainImage" style="margin: 20px;" />
+				<img src="image/missing_large.jpg" alt="{$product.DefaultImage.name_lang|escape}" id="mainImage" style="margin: 20px;" />
 			{/if}
 		</div>
         {if $images|@count > 1}
 			<div id="moreImages">
                 {foreach from=$images item="image"}
-					<img src="{$image.paths.1}" id="img_{$image.ID}" />
+					<img src="{$image.paths.1}" id="img_{$image.ID}" alt="{$image.name_lang|escape}" />
 				{/foreach}
 			</div>
 		{/if}
@@ -68,12 +68,12 @@
 			</tr>
 			<tr>
 				<td colspan="2" id="cartLinks">
-					<p id="addToCart">
-						{form action="controller=order action=addToCart id=`$product.ID` returnPath=true" handle=$cartForm}
-						Quantity: {selectfield name="count" style="width: auto;" options=$quantity}
-						<input type="submit" class="submit" value="{tn Add to Cart}" />							
-						{/form}
-					</p>
+					{form action="controller=order action=addToCart id=`$product.ID` returnPath=true" handle=$cartForm}
+    					<p id="addToCart">
+    						Quantity: {selectfield name="count" style="width: auto;" options=$quantity}
+    						<input type="submit" class="submit" value="{tn Add to Cart}" />							
+    					</p>
+					{/form}
 					<p id="addToWishList">
 						<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}">{t Add to Wishlist}</a>			
 					</p>					
@@ -109,18 +109,18 @@
     <h2>{t Product Specification}</h2>
     <div id="productSpecification">
         <table>
-            {foreach from=$product.attributes item="attr"}
+            {foreach from=$product.attributes item="attr" name="attributes"}
                 {if $attr.SpecField.isDisplayed && ($attr.values || $attr.value_lang || $attr.value)}
                     {if $prevAttr.SpecField.SpecFieldGroup.ID != $attr.SpecField.SpecFieldGroup.ID}
                         <tr class="specificationGroup">
                             <td colspan="2">{$attr.SpecField.SpecFieldGroup.name_lang}</td>
                         </tr>
                     {/if}
-                    <tr>
+                    <tr {zebra loop="attributes"}>
                         <td>{$attr.SpecField.name_lang}</td>
                         <td>
                             {if $attr.values}
-                                <ul>
+                                <ul class="attributeList{if $attr.values|@count == 1} singleValue{/if}">
                                     {foreach from=$attr.values item="value"}
                                         <li> {$value.value_lang}</li>
                                     {/foreach}

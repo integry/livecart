@@ -5,6 +5,9 @@
 
 <head>
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />	
+    <meta name="Keywords" content="{$metaKeywords|escape}" />
+	<meta name="Description" content="{$metaDescription|escape}" />
+	
     <title>
         {if $PAGE_TITLE}
             {$PAGE_TITLE}

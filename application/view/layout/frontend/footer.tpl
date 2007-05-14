@@ -1,7 +1,22 @@
 <div id="clearFooter"></div>
 
 <div id="footer"> 
-	<img src="image/promo/logo_small.jpg" alt="LiveCart Logo" />
+	
+    <div style="float: left;">
+        <span style="font-size: smaller; position: absolute; margin-left: 80px;">Powered By</span>
+        <a href="http://livecart.com">
+            <img src="image/promo/logo_small.jpg" alt="LiveCart Logo" style="vertical-align: middle;" />
+        </a>
+    </div>
+    
+    <div style="float: left; margin-left: 160px; margin-top: 0px;">
+
+        &copy; <a href="http://livecart.com">UAB Integry Systems</a>, 2006-2007
+        <br />
+        <a href="http://livecart.com">
+            <img src="http://livecart.com/integry_blank.png" alt="Integry Systems logo" />
+        </a>
+    </div>
 
 	<div style="float: right;">
         <a href="http://validator.w3.org/check?uri=referer">

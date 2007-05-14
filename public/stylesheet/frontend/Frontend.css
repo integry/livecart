@@ -202,7 +202,7 @@ div.box .content
   	padding: 5px;
 }
 
-.current 
+.currentName
 {
 	font-weight: bold;
 	font-size: larger;
@@ -236,12 +236,12 @@ fieldset.container
     padding: 4px;
 }
 
-.table tr.odd
+tr.odd
 {
     background-color: #F6F6F6;
 }
 
-.table tr.even
+tr.even
 {
     background-color: #EEEEEE;
 }
@@ -286,7 +286,7 @@ fieldset.container
 
 .categories .content
 {
-    background-color: #EEE9E4;
+    border: 2px solid #EEE9E4;
 }
 
 .categories li
@@ -307,10 +307,21 @@ fieldset.container
     padding-left: 12px;
 }
 
-#currentSubCategories li
+.current ul, .subSubCats
 {
-    list-style-type: circle;
+    margin-left: 0px !important;    
+    padding-left: 0px !important;
+}
+
+.current ul li, .subSubCats li
+{
+    list-style-type: none;
     margin-bottom: 7px;
+    padding-left: 20px;
+
+    background-image:url(../../image/silk/bullet_arrow_left.png);
+    background-repeat: no-repeat;
+    background-position: center left;
 }
 
 .categories .count
@@ -463,9 +474,16 @@ tr.separator td
     vertical-align: middle;
 }
 
+.subCategories td.details .count
+{
+    font-weight: normal;
+    font-size: smaller;
+}
+
 ul.subSubCats
 {
     margin: 6px;   
+    margin-top: 12px;
 }
 
 /*****************************
@@ -513,7 +531,7 @@ ul.subSubCats
     padding: 10px; 
     padding-top: 0px;
     padding-bottom: 5px; 
-    margin-bottom: 5px; 
+    margin-bottom: 15px; 
     border-bottom: 1px solid #CCCCCC;    
 }
 
@@ -533,21 +551,13 @@ ul.productList li
 	margin-bottom: 30px;
 }
 
-ul.productList li.featured
-{
-    background-color: #FFF9DD;
-    padding: 10px;
-    margin-bottom: 20px;
-}
-
-ul.productList li.featured .image img
-{
-    border: 1px solid #DDD98A;   
-}
-
 ul.productList li.featured .title
 {
     font-weight: bold;   
+    background-image: url(../../image/silk/star.png);
+    background-repeat: no-repeat;
+    background-position: center left;
+    padding-left: 22px;
 }
 
 ul.productList .title
@@ -648,6 +658,27 @@ tr.specificationGroup
     font-weight: bold; 
 	font-size: larger; 
 	background-color: #CCCCCC;      
+}
+
+ul.attributeList
+{
+    padding: 0;
+}
+
+ul.attributeList li
+{
+    background-image: url(../../image/silk/tick.png);
+    background-repeat: no-repeat;
+    background-position: center left;
+    padding-left: 22px;    
+    list-style-type: none;
+    margin-left: 0px;
+}
+
+ul.attributeList.singleValue li
+{
+    background-image: none;
+    padding-left: 0;
 }
 
 #relatedProducts a.productName

@@ -1,4 +1,6 @@
 {pageTitle}{$category.name_lang}{/pageTitle}
+{assign var="metaDescription" value=$category.description_lang}
+{assign var="metaKeywords" value=$category.keywords_lang}
 
 {include file="layout/frontend/header.tpl"}
 {include file="layout/frontend/leftSide.tpl"}
@@ -26,8 +28,7 @@
 			{/if}
 				
 			<li>
-				<a href="{categoryUrl data=$category filters=$filters addFilter=$filter query="showAll=$showAll"}">{$filter.name_lang}</a> 
-				<span class="count">({$filter.count})</span>
+				<a href="{categoryUrl data=$category filters=$filters addFilter=$filter query="showAll=$showAll"}">{$filter.name_lang}</a>&nbsp;<span class="count">({$filter.count})</span>
 			</li>
 
 			{if $smarty.foreach.filters.iteration % $perColumn == 0 || $smarty.foreach.filters.last}
@@ -49,7 +50,7 @@
         <tr>
             <td class="subCatImage">
                 <a href="{categoryUrl data=$sub query="q=`$searchQuery`"}">
-                    <img src="{$sub.DefaultImage.paths.1}" />            
+                    <img src="{$sub.DefaultImage.paths.1}" alt="{$sub.name_lang|escape}" />            
                 </a>
             </td>
             <td class="details">
@@ -58,7 +59,7 @@
                     <span class="count">({$sub.searchCount})</span>
                 </div>
                 <div class="subCatDescr">
-                    {$sub.description_lang}
+                    {* $sub.description_lang *}
                 </div>            
             </td>        
         </tr>
@@ -75,7 +76,7 @@
         <tr>
             <td class="subCatImage">
                 <a href="{categoryUrl data=$sub}">
-                    <img src="{$sub.DefaultImage.paths.1}" />            
+                    <img src="{$sub.DefaultImage.paths.1}"  alt="{$sub.name_lang|escape}" />            
                 </a>
             </td>
             <td class="details">
@@ -96,7 +97,7 @@
                 {/if}
                 
                 <div class="subCatDescr">
-                    {$sub.description_lang}
+                    {* $sub.description_lang *}
                 </div>            
             </td>        
         </tr>
