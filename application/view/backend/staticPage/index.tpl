@@ -23,6 +23,9 @@
 			<li id="addMenu">
 				<a href="" onclick="pageHandler.showAddForm(); return false;">{t _add_new}</a>
 			</li>
+			<li id="codeMenu">
+				<a href="" onclick="pageHandler.showTemplateCode(); return false;">{t _show_template_code}</a>
+			</li>
 			<li id="moveUpMenu">
 				<a href="" onclick="pageHandler.moveUp(); return false;">{t _move_up}</a>
 			</li>

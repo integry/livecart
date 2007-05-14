@@ -6,7 +6,7 @@
 		
 		<div style="float: left;">
             <div style="float: left;">
-                <a href="{link}"><img src="image/promo/logo_small.jpg" /></a>
+                <a href="{link}"><img src="image/promo/logo_small.jpg" alt="LiveCart Logo" /></a>
                	<span id="storeName" style="display: none;">Demo</span>
             </div>
         </div>

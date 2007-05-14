@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Translates interface text to current locale language
+ * Generates category page URL
  *
  * @param array $params
  * @param Smarty $smarty

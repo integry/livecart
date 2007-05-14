@@ -1,9 +1,17 @@
+# Main menu
+
 _static_pages=Static Pages
 
 _add_new=Add new page
+_show_template_code=Show template code
 _move_up=Move selected up
 _move_down=Move selected down
 _remove=Remove selected page 
+
+# Edit page
+
+_template_code=Template code
+_code_explain=Use the following code to create custom links to this page in your template files
 
 _add_new_title=Add New Page
 

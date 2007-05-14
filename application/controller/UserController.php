@@ -16,8 +16,7 @@ class UserController extends FrontendController
     public function init()
     {
         parent::init();  
-        $this->addBreadCrumb($this->translate('_your_account'), $this->router->createUrl(array('controller' => 'user')));         		
-    }
+        $this->addBreadCrumb($this->translate('_your_account'), $this->router->createUrl(array('controller' => 'user')));     }
     
     /**
      *	@role login

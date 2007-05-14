@@ -156,7 +156,13 @@ class StaticPage extends ActiveRecordModel
 		
 		$array['title_lang'] = $this->getTitle($lang);
 		$array['text_lang'] = $this->getText($lang);
-		
+
+        // when the instance is not loaded
+        if (!$array['handle'])
+        {
+            $array['handle'] = $this->handle->get();
+        }
+
 		return $array;
 	}
 	
@@ -181,7 +187,14 @@ class StaticPage extends ActiveRecordModel
 			include $this->getFileName();
 			$this->title = $pageData['title'];
 			$this->text = $pageData['text'];
-		}	
+
+			if (!$this->handle->get())
+			{
+                $this->handle->set($pageData['handle']);
+            }
+
+            $this->isFileLoaded = true;
+		}		
 	}	
 }
 

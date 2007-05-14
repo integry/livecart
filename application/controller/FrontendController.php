@@ -35,6 +35,7 @@ abstract class FrontendController extends BaseController
 	  	$this->addBlock('CURRENCY', 'boxSwitchCurrency', 'block/box/currency');
 	  	$this->addBlock('CART', 'boxShoppingCart', 'block/box/shoppingCart');
 	  	$this->addBlock('SEARCH', 'boxSearch', 'block/box/search');
+	  	$this->addBlock('INFORMATION', 'boxInformationMenu', 'block/box/informationMenu');
 	}
 	
 	protected function getRequestCurrency()
@@ -49,9 +50,15 @@ abstract class FrontendController extends BaseController
 		$this->breadCrumb[] = array('title' => $title, 'url' => $url);
 	}	
 
-	protected function boxLoginBlock()
-	{
-		/* Returning Users: View your order history & information */
+	protected function boxInformationMenuBlock()
+	{	 	
+		ClassLoader::import('application.model.staticpage.StaticPage');
+        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('StaticPage', 'isInformationBox'), true));
+		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
+		
+        $response = new BlockResponse();        
+		$response->setValue('pages', ActiveRecordModel::getRecordSet('StaticPage', $f)->toArray()); 
+		return $response; 	
 	}
 
 	protected function boxShoppingCartBlock()

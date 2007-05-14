@@ -61,7 +61,7 @@ function smarty_function_paginate($params, $smarty)
         
         if ($k != $params['current'])
 		{
-			$out[] = '<a class="page" href="' . str_replace('_page_', $k, $params['url']) . '">' . $k . '</a></span>';			
+			$out[] = '<a class="page" href="' . str_replace('_page_', $k, $params['url']) . '">' . $k . '</a>';			
 		}
 		else
 		{

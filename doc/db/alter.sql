@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-05-12 13:36                                #
+# Created on:            2007-05-14 11:09                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -216,7 +216,7 @@ ALTER TABLE UserGroup ADD CONSTRAINT PK_UserGroup
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE StaticPage (
-    ID INTEGER NOT NULL,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     handle VARCHAR(40),
     isInformationBox BOOL,
     position INTEGER UNSIGNED DEFAULT 0,

@@ -3,7 +3,7 @@
     {form action="controller=category" class="quickSearch" handle=$form style="float: left;"}            
         {selectfield name="id" options=$categories}
         {textfield class="text searchQuery" name="q"}	    
-        <input type="submit" class="submit" value="Search">
+        <input type="submit" class="submit" value="Search" />
         <input type="hidden" name="cathandle" value="." />
 	{/form}
 	<div style="float: right;">

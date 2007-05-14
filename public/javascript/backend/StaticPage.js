@@ -42,7 +42,7 @@ Backend.StaticPage.prototype =
 	
 	showAddForm: function()
 	{
-		new LiveCart.AjaxUpdater(this.urls['add'], $('pageContent'), $('settingsIndicator'), null, this.initForm.bind(this));			
+		new LiveCart.AjaxUpdater(this.urls['add'], $('pageContent'), $('settingsIndicator'), null, this.displayPage.bind(this));			
 	},
 	
 	initForm: function()
@@ -102,8 +102,7 @@ Backend.StaticPage.prototype =
 	{
 		this.treeBrowser.hideFeedback();
 		this.initForm();	
-		var cancel = document.getElementsByClassName('cancel', $('pageContent'))[0];
-		Event.observe(cancel, 'click', this.resetForm.bindAsEventListener(this));
+		Event.observe($('cancel'), 'click', this.cancel.bindAsEventListener(this));
 	},
 	
 	deleteSelected: function()
@@ -143,27 +142,26 @@ Backend.StaticPage.prototype =
 		
 	moveCompleted: function(originalRequest)
 	{
-		eval('var result = ' + originalRequest.responseText);
 		this.treeBrowser.hideFeedback();	
+		eval('var result = ' + originalRequest.responseText);
 		
 		if (result)
 		{
 			var direction = ('up' == result.order) ? 'up_strict' : 'down_strict';
 			this.treeBrowser.moveItem(result.id, direction);				
 		}
-	}
-
-	/*
-	
-	resetForm: function(e)
-	{
-		var el = Event.element(e);
-		while (el.tagName != 'FORM')
-		{
-			el = el.parentNode;
-		}
-		
-		el.reset();		
 	},
-	*/
+	
+	showTemplateCode: function()
+	{
+        if ($('templateCode'))
+        {
+            Element.show($('templateCode'));            
+        }
+    },
+    
+    cancel: function()
+    {
+		new LiveCart.AjaxUpdater(this.urls['empty'], 'pageContent', 'settingsIndicator');        
+    }
 }

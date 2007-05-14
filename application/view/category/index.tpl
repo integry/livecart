@@ -125,7 +125,7 @@
             </div>
             <div style="float: right;">
                 Sort by
-                {form handle=$sortForm action="self" method="GET"}
+                {form handle=$sortForm action="self" method="get"}
                 {selectfield id="productSort" name="sort" options=$sortOptions onchange="this.form.submit();"}
                 {/form}
             </div>  

@@ -1,0 +1,4 @@
+.specSummary
+{
+    width: expression(Math.min(this.clientWidth, 400) + 'px');
+}

@@ -17,6 +17,10 @@
 
 	<!-- Css includes -->
 	<link href="stylesheet/frontend/Frontend.css" media="screen" rel="Stylesheet" type="text/css"/>
+	<!--[if IE]>
+		<link href="stylesheet/frontend/FrontendIE.css" media="screen" rel="Stylesheet" type="text/css"/>
+	<![endif]-->
+
 	{**} {includeCss file="backend/stat.css"}
 	{$STYLESHEET}
 

@@ -15,15 +15,8 @@ function smarty_function_backendMenu($params, Smarty $smarty)
 	$controller = $smarty->_tpl_vars['request']['controller'];
 	$action = $smarty->_tpl_vars['request']['action'];
 	
-	if (!$locale->translationManager()->isFileCached('en/menu/menu')
-     || !$locale->translationManager()->isFileCached($locale->getlocaleCode() . '/menu/menu'))
-	{
-        BackendController::rebuildMenuLangFile(); 
-    }
-	
     // load language file for menu
-	$locale->translationManager()->loadCachedFile('en/menu/menu');		
-	$locale->translationManager()->loadCachedFile($locale->getlocaleCode() . '/menu/menu');		
+	$locale->translationManager()->loadFile('backend/menu');		
 
 	$menuLoader = new MenuLoader();		
 	$structure = $menuLoader->getCurrentHierarchy($controller, $action);

@@ -14,6 +14,11 @@
 	margin-bottom: 10px;
 }
 
+#codeMenu
+{
+	background-image: url('../../image/silk/page_white_code.png');
+}
+
 #moveUpMenu
 {
 	background-image: url('../../image/silk/arrow_up.png');

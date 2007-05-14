@@ -22,7 +22,7 @@ a img
 
 h1, h2, h3
 {
-	font-family: Trebuchet MS;
+	font-family: "Trebuchet MS";
 }
 
 h1
@@ -170,7 +170,7 @@ div.confirmationMsg div
 
 #storeName
 {
-	font-family: Trebuchet MS;    
+	font-family: "Trebuchet MS";
 	font-size: 26px;
 	font-weight: bold;
 	display: inline;
@@ -357,7 +357,7 @@ fieldset.container
 	font-weight: bold;	
 	margin-top: 5px;
 	background-image: url(../../image/silk/tag_yellow.png);
-	background-position: left middle;
+	background-position: center left;
 	background-repeat: no-repeat;
 	padding-left: 20px;
 	margin-left: -20px;
@@ -366,6 +366,14 @@ fieldset.container
 #smallCart
 {
     padding-top: 10px;    
+}
+
+/*****************************
+	Information menu
+*****************************/
+.informationMenu ul li
+{
+    list-style-type: none;   
 }
 
 /*****************************
@@ -598,8 +606,7 @@ ul.productList .order
     float: right; 
     background: #FFFCAC; 
     padding: 10px;
-    font-size: smaller;
-    width: expression((this.clientWidth > 400 ? 400 : this.clientWidth) + 'px');
+    font-size: smaller;    
     max-width: 400px;
     margin-top: -50px;
     z-index: 10;
@@ -614,7 +621,7 @@ ul.productList .order
 .price
 {
 	font-weight: bold;
-	color: brown;	
+	color: #a52a2a;	
 }
 
 #mainInfo .price
@@ -1128,7 +1135,7 @@ input.required, textarea.required, select.required
     border-color: red;
 }
 
-formem.required
+.formem.required
 {
     color: red;
 }
@@ -1158,7 +1165,7 @@ fieldset.error, div.error, fieldset.container
 
 .errorText /* , fieldset.error div */
 {
-	background-color: red;
+	background-color: #FF0001;
 	float: left; 
 	width: auto;
 	margin-bottom: 4px;

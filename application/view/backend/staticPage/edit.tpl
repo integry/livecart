@@ -4,6 +4,15 @@
 	<h1>{$page.title_lang}</h1>
 {/if}
 
+<fieldset id="templateCode" style="display: none;">
+    <legend>{t _template_code}</legend>
+    {t _code_explain}:
+    <br /><br />
+    {literal}
+        &lt;a href="<strong>{pageUrl id={/literal}{$page.ID}{literal}}</strong>"&gt;<strong>{pageName id={/literal}{$page.ID}{literal}}</strong>&lt;/a&gt;
+    {/literal}
+</fieldset>
+
 {form action="controller=backend.staticPage action=save" handle=$form onsubmit="pageHandler.save(this); return false;"}
 
 <fieldset class="container" id="editContainer">
@@ -79,6 +88,6 @@
 <span class="progressIndicator" id="saveIndicator" style="display: none;"></span>
 
 <input type="hidden" name="id" value="{$page.ID}" />
-<input type="submit" value="{tn _save}" class="submit" /> {t _or} <a class="cancel" href="#" onclick="return false;">{t _cancel}</a>
+<input type="submit" value="{tn _save}" class="submit" /> {t _or} <a class="cancel" id="cancel" onclick="return false;" href="#">{t _cancel}</a>
 
 {/form}
