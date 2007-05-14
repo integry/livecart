@@ -207,6 +207,16 @@ div.box .content
 {
 	font-weight: bold;
 	font-size: larger;
+    background-image: url(../../image/silk/bullet_blue.png);
+    background-repeat: no-repeat;
+    background-position: left center;
+    padding-left: 20px;   		
+    margin-left: -20px;
+}
+
+li.current
+{
+
 }
 
 fieldset.container
@@ -289,13 +299,14 @@ tr.even
 {
     background-color: #F6F6F6;
     padding: 12px !important;
+    padding-left: 25px !important;
     padding-top: 5px !important;
   	border-bottom: 1px solid #CCCCCC;
 }
 
 .categories .content a
 {
-    color: darkgreen;
+    color: black;
 }
 
 .categories li
@@ -469,6 +480,14 @@ tr.even
 tr.separator td
 {
     height: 10px;   
+    padding: 15px;
+}
+
+tr.separator div
+{
+	border-bottom: 1px solid #EEEEEE;
+	height: 5px;
+	width: 100%;
 }
 
 .subCategories
@@ -503,11 +522,6 @@ ul.subSubCats
 	font-style: italic;	
 }
 
-.allFilters 
-{
-	background-color: yellow;
-}
-
 .allFilters li
 {
 	margin-bottom: 5px !important;	
@@ -519,8 +533,9 @@ ul.subSubCats
 	background-color: inherit;
     background-image: url(../../image/silk/zoom.png);
     background-repeat: no-repeat;
-    background-position: center left;
-    padding-left: 22px;    
+    background-position: 6px center;
+    padding-left: 28px;    
+    margin-left: 5px;
 }
 
 .page
@@ -657,11 +672,21 @@ ul.productList a.addToCart
 
 }
 
+.returnToCategory
+{
+    background-image: url(../../image/silk/resultset_previous.png);
+    background-repeat: no-repeat;
+    background-position: center left;
+    padding-left: 22px;    
+    list-style-type: none;
+    margin-left: 0px;	
+}
+
 .specSummary
 {
     font-weight: bold;    
     float: right; 
-    background: #FFFCAC; 
+    background: #FFFCDA; 
     padding: 10px;
     font-size: smaller;    
     max-width: 400px;
@@ -808,7 +833,9 @@ div.checkout a
 
 #cart, #wishList
 {
-	width: 90%;
+	width: 100%;
+	margin-left:auto; 
+	margin-right:auto;
 }
 
 #wishList
@@ -875,6 +902,7 @@ div.checkout a
     background-repeat: no-repeat;
     background-position: center left;
     padding-left: 22px;        
+    font-weight: bold;
 }
 
 .proceedToCheckout
@@ -885,6 +913,20 @@ div.checkout a
     background-repeat: no-repeat;
     background-position: center right;
     padding-right: 22px;      
+}
+
+.cartImage
+{
+	float: left;
+	width: 60px; 
+	padding: 5px; 
+	text-align: center;
+}
+
+.cartImage img
+{
+	vertical-align: middle;
+	border: 1px solid #777777;	
 }
 
 /*****************************
@@ -1101,7 +1143,6 @@ form fieldset.group div
     width: auto;
 }
 
-/*
 fieldset
 {
     margin: 1em 0;
@@ -1111,7 +1152,7 @@ fieldset
     margin-bottom: 10px;
     border: 1px solid #DDD;
 }
-*/
+
 legend
 {
 	font-size: 18px;

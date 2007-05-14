@@ -13,7 +13,7 @@
     <div style="padding: 10px; padding-left: 0px;">
         {assign var="lastBreadcrumb" value=$breadCrumb|@end}
         {assign var="lastBreadcrumb" value=$breadCrumb|@prev}
-        <a href="{$lastBreadcrumb.url}">&lt;&lt; {$product.Category.name_lang}</a>
+        <a href="{$lastBreadcrumb.url}" class="returnToCategory">{$product.Category.name_lang}</a>
     </div>
         
     <h1>{$product.name_lang}</h1>

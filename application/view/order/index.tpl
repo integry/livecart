@@ -19,7 +19,7 @@
 		
 		{if $cart.cartItems}		
 		{form action="controller=order action=update" method="POST" handle=$form}
-						<h2 style="margin: 0;">Shopping Cart items - to buy now</h2>
+		<h2 style="margin: 0;">Shopping Cart items - to buy now</h2>
 		<table id="cart">
 			<thead>
 				<tr>
@@ -36,8 +36,15 @@
 						<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t Remove}</a>
 					</td>
 					<td class="cartName">
-						<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
-						<small>({$item.Product.Category.name_lang})</small>
+						
+						<div class="cartImage">
+							<img src="{$item.Product.DefaultImage.paths.1}" alt="{$item.Product.name_lang|escape}" />
+						</div>
+						
+						<div style="float: left;">
+							<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
+							<small>({$item.Product.Category.name_lang})</small>
+						</div>
 					</td>
 					<td class="cartPrice">
 						{$item.formattedSubTotal.$currency}

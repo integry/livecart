@@ -117,7 +117,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     
     public function loadItems()
     {
-        $this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category'))->getData();
+        $this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'))->getData();
         $this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter())->getData();
         if (!$this->shipments)
         {

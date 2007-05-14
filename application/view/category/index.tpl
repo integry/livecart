@@ -46,7 +46,7 @@
         Narrow results by category
     </div>
     <table class="subCategories">
-	{foreach from=$categoryNarrow item="sub"}   
+	{foreach from=$categoryNarrow item="sub" name="subcats"}   
         <tr>
             <td class="subCatImage">
                 <a href="{categoryUrl data=$sub query="q=`$searchQuery`"}">
@@ -64,7 +64,11 @@
             </td>        
         </tr>
         <tr class="separator">
-            <td colspan="2"></td>
+            <td colspan="2">
+			{if !$smarty.foreach.subcats.last}
+			<div></div>
+        	{/if}
+			</td>
         </tr>
 	{/foreach}    
     </table>	
@@ -72,7 +76,7 @@
 
     {if !$searchQuery && $subCategories}
 	<table class="subCategories">
-	{foreach from=$subCategories item="sub"}   
+	{foreach from=$subCategories item="sub" name="subcats"}   
         <tr>
             <td class="subCatImage">
                 <a href="{categoryUrl data=$sub}">
@@ -101,9 +105,11 @@
                 </div>            
             </td>        
         </tr>
-        <tr class="separator">
-            <td colspan="2"></td>
-        </tr>
+        {if !$smarty.foreach.subcats.last}
+			<tr class="separator">
+	            <td colspan="2"><div></div></td>
+	        </tr>
+        {/if}
 	{/foreach}    
     </table>
     {/if}
