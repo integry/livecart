@@ -76,16 +76,7 @@ class OrderController extends FrontendController
         $order->mergeItems();
         $order->saveToSession();
     
-        if ($this->request->isValueSet('returnUrl'))
-        {
-            $return = $this->router->getRouteFromUrl($this->request->getValue('returnUrl'));
-        }
-        else
-        {
-            $return = $this->request->getValue('return');
-        }
-
-        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $return));
+        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));
     }
 
 	public function moveToCart()
@@ -94,6 +85,7 @@ class OrderController extends FrontendController
         $item = $order->getItemByID($this->request->getValue('id'));
         $item->isSavedForLater->set(false);
         $order->mergeItems();        
+        $order->resetShipments();
         $order->saveToSession();
 		
         return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));
@@ -105,6 +97,7 @@ class OrderController extends FrontendController
         $item = $order->getItemByID($this->request->getValue('id'));
         $item->isSavedForLater->set(true);
         $order->mergeItems();
+        $order->resetShipments();
         $order->saveToSession();
 		
         return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));
@@ -121,7 +114,7 @@ class OrderController extends FrontendController
         $order->addToWishList($product);
         $order->mergeItems();
         $order->saveToSession();
-        
+              
         return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));
     }
     

@@ -436,6 +436,18 @@ class CheckoutController extends FrontendController
                 return new ActionRedirectResponse('checkout', 'selectAddress');
             }            
         }
+        
+        // shipping method selected
+        if ($step >= self::STEP_PAYMENT)
+        {            
+            foreach ($order->getShipments() as $shipment)
+            {
+                if (!$shipment->getSelectedRate())
+                {
+                    return new ActionRedirectResponse('checkout', 'shipping');
+                }
+            }
+        }
 		
 		return false;		
 	}

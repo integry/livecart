@@ -11,7 +11,7 @@
     
     <div style="float: left; margin-left: 160px; margin-top: 15px;">
 
-        &copy; <a href="http://livecart.com">UAB Integry Systems</a>, 2006-2007
+        &copy; 2007 <a href="http://livecart.com">UAB Integry Systems</a>
     </div>
 
 	<div style="float: right;">

@@ -523,8 +523,9 @@ ul.subSubCats
 
 .currentPage
 {
-    background: #EEEEEE;
+    background: #143788;
     font-weight: bold;
+    color: white;
 }
 
 .resultPages .next
@@ -799,6 +800,11 @@ div.checkout a
 	width: 90%;
 }
 
+#wishList
+{
+    margin-bottom: 15px;
+}
+
 #cart td, #wishList td
 {
 	overflow: hidden;
@@ -823,6 +829,7 @@ div.checkout a
 {
 	width: 80px;
 	text-align: center;
+	padding-bottom: 5px;
 }
 
 .cartPrice
@@ -830,6 +837,7 @@ div.checkout a
 	width: 80px;
 	text-align: center;
 	white-space: nowrap;
+	padding-bottom: 5px;
 }
 
 .subTotalCalc
@@ -847,6 +855,25 @@ div.checkout a
 .cartQuant input.text
 {
 	width: 50px;
+}
+
+.continueShopping
+{
+    float: left;
+    background-image: url(../../image/silk/resultset_previous.png);
+    background-repeat: no-repeat;
+    background-position: center left;
+    padding-left: 22px;        
+}
+
+.proceedToCheckout
+{
+    float: right; 
+    font-weight: bold;
+    background-image: url(../../image/silk/cart_go.png);
+    background-repeat: no-repeat;
+    background-position: center right;
+    padding-right: 22px;      
 }
 
 /*****************************

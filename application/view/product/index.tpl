@@ -1,6 +1,9 @@
+{assign var="metaDescription" value=$product.shortDescription_lang}
+{assign var="metaKeywords" value=$product.keywords_lang}
+{pageTitle}{$product.name_lang}{/pageTitle}
+
 <div class="productPage">
 
-{pageTitle}{$product.name_lang}{/pageTitle}
 {include file="layout/frontend/header.tpl"}
 {* include file="layout/frontend/leftSide.tpl" *}
 {* include file="layout/frontend/rightSide.tpl" *}
@@ -73,10 +76,10 @@
     						Quantity: {selectfield name="count" style="width: auto;" options=$quantity}
     						<input type="submit" class="submit" value="{tn Add to Cart}" />							
     					</p>
-    					{hidden name="returnUrl" value=$lastBreadcrumb.url}
+    					{hidden name="return" value=$catRoute}
 					{/form}
 					<p id="addToWishList">
-						<a href="{link controller=order action=addToWishList id=$product.ID returnPath=true}">{t Add to Wishlist}</a>			
+						<a href="{link controller=order action=addToWishList id=$product.ID query="return=`$catRoute`"}">{t Add to Wishlist}</a>			
 					</p>					
 				</td>
 			</tr>

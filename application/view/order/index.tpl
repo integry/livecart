@@ -29,8 +29,8 @@
 				</tr>
 			</thead>
 			<tbody>
-			{foreach from=$cart.cartItems item="item"}
-				<tr>
+			{foreach from=$cart.cartItems item="item" name="cart"}
+				<tr {zebra loop="cart"}>
 					<td class="cartControl">
 						<a href="{link controller=order action=moveToWishList id=$item.ID query="return=`$return`"}">{t Move to Wish List}</a>
 						<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t Remove}</a>
@@ -64,8 +64,8 @@
 				</tr>
 				<tr>
 					<td colspan="4" style="text-align: right;">
-						<a href="{link route=$return}" style="float: left;">&lt;&lt; Continue Shopping</a>
-						<a href="{link controller=checkout}" style="float: right; font-weight: bold;">Proceed to Checkout &gt;&gt;</a>
+						<a href="{link route=$return}" class="continueShopping">Continue Shopping</a>
+						<a href="{link controller=checkout}" class="proceedToCheckout">Proceed to Checkout</a>
 					</td>
 				</tr>
 			</tbody>
@@ -84,8 +84,8 @@
 					</tr>
 				</thead>
 				<tbody>
-				{foreach from=$cart.wishListItems item="item"}
-					<tr>
+				{foreach from=$cart.wishListItems item="item" name="wishList"}
+					<tr {zebra loop="wishList"}>
 						<td class="cartControl">
 							<a href="{link controller=order action=moveToCart id=$item.ID query="return=`$return`"}">{t Move to Cart}</a>
 							<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t Remove}</a>
@@ -98,13 +98,9 @@
 						</td>
 					</tr>				
 				{/foreach}
-				<tr>
-					<td colspan="4" style="text-align: right;">
-						<a href="{link route=$return}" style="float: left;">&lt;&lt; Continue Shopping</a>
-					</td>
-				</tr>				
 				</tbody>
 			</table>
+			<a href="{link route=$return}" class="continueShopping">Continue Shopping</a>
 		{/if}
 	{/if}
 </div>

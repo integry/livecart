@@ -160,7 +160,7 @@ class CategoryController extends FrontendController
 		$response->setValue('category', $this->category->toArray());
 		$response->setValue('subCategories', $subCategories);
 		$response->setValue('filterChainHandle', $filterChainHandle);
-		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode()));
+		$response->setValue('currency', $this->getRequestCurrency());
 		$response->setValue('sortOptions', $sort);
 		$response->setValue('sortForm', $this->buildSortForm($order));
 		$response->setValue('categoryNarrow', $categoryNarrow);

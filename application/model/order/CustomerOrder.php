@@ -579,7 +579,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
                 $main = Shipment::getNewInstance($this);
                 $this->shipments = new ARSet();
                 
-                foreach ($this->getOrderedItems() as $item)
+                foreach ($this->getShoppingCartItems() as $item)
                 {
                     if ($item->product->get()->isSeparateShipment->get())
                     {

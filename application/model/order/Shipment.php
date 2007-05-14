@@ -140,11 +140,6 @@ class Shipment extends ActiveRecordModel
             $subTotal += $item->getSubTotal($currency);
         }            
         
-        if ($selected = $this->getSelectedRate())
-        {
-            var_dump($selected);
-        }
-        
         return $subTotal;    
     }
     

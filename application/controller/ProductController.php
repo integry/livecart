@@ -64,6 +64,11 @@ class ProductController extends FrontendController
 		// manufacturer filter
 		$f = new ManufacturerFilter($product->manufacturer->get()->getID(), $product->manufacturer->get()->name->get());
 		
+		// get category page route
+        end($this->breadCrumb);
+        $last = prev($this->breadCrumb);
+        $catRoute = $this->router->getRouteFromUrl($last['url']);
+        		
 		$response = new ActionResponse();
         $response->setValue('product', $productArray);        
         $response->setValue('category', $productArray['Category']);        
@@ -73,6 +78,7 @@ class ProductController extends FrontendController
         $response->setValue('cartForm', $this->buildAddToCartForm());        
 		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode())); 
         $response->setValue('manufacturerFilter', $f);
+        $response->setValue('catRoute', $catRoute);
         return $response;        
 	} 
 	
