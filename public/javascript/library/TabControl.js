@@ -13,7 +13,7 @@ Event.fire = function(element, event)
 
 var TabControl = Class.create();
 TabControl.prototype = {
-    __instance__: null,
+    __instances__: {},
     
 	activeTab: null,
 	indicatorImageName: "image/indicator.gif",
@@ -80,7 +80,7 @@ TabControl.prototype = {
     
     __init__: function()
     {
-        //this.activateTab();
+        // this.activateTab();
     },
 
     decorateTabs: function()
@@ -94,17 +94,17 @@ TabControl.prototype = {
 
     getInstance: function(tabContainerName, urlParserCallback, idParserCallback, callbacks)
     {
-        if(!TabControl.prototype.__instance__)
+        if(!TabControl.prototype.__instances__[tabContainerName])
         {
-            TabControl.prototype.__instance__ = new TabControl(tabContainerName, urlParserCallback, idParserCallback, callbacks);
-            TabControl.prototype.__instance__.__init__();
+            TabControl.prototype.__instances__[tabContainerName] = new TabControl(tabContainerName, urlParserCallback, idParserCallback, callbacks);
+            TabControl.prototype.__instances__[tabContainerName].__init__();
         }
         else if(false !== urlParserCallback)
         {
-            TabControl.prototype.__instance__.__init__();
+            TabControl.prototype.__instances__[tabContainerName].__init__();
         }
         
-        return TabControl.prototype.__instance__;
+        return TabControl.prototype.__instances__[tabContainerName];
     },
 
 	handleTabMouseOver: function(args)

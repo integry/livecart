@@ -37,5 +37,5 @@ User.lastName=Last Name
 User.companyName=Company Name
 User.dateCreated=Date Created
 User.isEnabled=Enabled
-User.isAdmin=Admin
+
 UserGroup.name=Group Name

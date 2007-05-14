@@ -142,7 +142,7 @@ class ProductController extends StoreManagementController
 	
 	public function lists()
 	{
-		$id = substr($this->request->getValue("id"), 6);
+		$id = substr($this->request->getValue("id"), 9);
 		$category = Category::getInstanceByID($id, Category::LOAD_DATA);
 
 		$filter = new ARSelectFilter();

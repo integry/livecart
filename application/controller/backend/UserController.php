@@ -76,12 +76,11 @@ class UserController extends StoreManagementController
 		return $response;
 	}	
 	
-
 	public function changeColumns()
 	{		
 		$columns = array_keys($this->request->getValue('col', array()));
 		$this->setSessionData('columns', $columns);
-		return new ActionRedirectResponse('backend.user', 'index', array('id' => $this->request->getValue('group')));
+		return new ActionRedirectResponse('backend.user', 'users', array('id' => $this->request->getValue('group')));
 	}
 
 	public function lists()
@@ -133,6 +132,11 @@ class UserController extends StoreManagementController
 					$value = isset($user[$field]) ? $user[$field] : '';
                 }
 				
+                if ('UserGroup' == $class)
+                {
+					$value = isset($user['UserGroup'][$field]) ? $user['UserGroup'][$field] : '';
+                }
+				
 				if ('bool' == $type)
 				{
 					$value = $value ? $this->translate('_yes') : $this->translate('_no');
@@ -161,13 +165,13 @@ class UserController extends StoreManagementController
 		{
 			$displayedColumns = array(
 				'User.ID', 
-			 	'User.email', 
+			 	'User.email',
+				'UserGroup.name',
 				'User.firstName', 
 				'User.lastName', 
 				'User.companyName', 
 				'User.dateCreated', 
-				'User.isEnabled', 
-				'User.isAdmin'
+				'User.isEnabled'
 			);				
 		}
 		
@@ -241,21 +245,150 @@ class UserController extends StoreManagementController
 	
     protected function getMassForm()
     {
-        		
-		$validator = new RequestValidator("UsersFilterFormValidator", $this->request);
-					
+		$validator = new RequestValidator("UsersFilterFormValidator", $this->request);		
 		
         return new Form($validator);                
     }
     
+    public function processMass()
+    {        
+		$filter = new ARSelectFilter();
+		
+		$filters = (array)json_decode($this->request->getValue('filters'));
+		$this->request->setValue('filters', $filters);
+		
+        $grid = new ActiveGrid($this->request, $filter, 'User');
+        $filter->setLimit(0);
+        					
+		$users = ActiveRecordModel::getRecordSet('User', $filter, User::LOAD_REFERENCES);
+		
+        $act = $this->request->getValue('act');
+		$field = array_pop(explode('_', $act, 2));           
+
+        foreach ($users as $user)
+		{
+            if (substr($act, 0, 7) == 'enable_')
+            {
+                $user->setFieldValue($field, 1);    
+            }        
+            else if (substr($act, 0, 8) == 'disable_')
+            {
+                $user->setFieldValue($field, 0);                 
+            } 
+            else if ('delete' == $act)
+            {
+				$user->delete();
+			}         
+            
+			$user->save();
+        }		
+		
+		return new JSONResponse($this->request->getValue('act'));	
+    } 
     
+	public function info()
+	{
+	    $user = User::getInstanceById((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA, array('UserGroup'));
+		
+        $availableUserGroups = array('' => '');
+        foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
+        {
+            $availableUserGroups[$group->getID()] = $group->name->get();
+        }
+        
+	    $response = new ActionResponse();	    
+	    $response->setValue('user', $user->toFlatArray());
+	    $response->setValue('availableUserGroups', $availableUserGroups);
+	    $response->setValue('form', $this->createUserForm($user));
+		
+		return $response;
+	}
+	
+	/**
+	 * @return RequestValidator
+	 */
+    private function createUserFormValidator()
+    {
+		$validator = new RequestValidator("UserForm", $this->request);		            
+		
+		$validator->addCheck('email', new IsNotEmptyCheck($this->translate('_err_email_empty')));		
+		$validator->addCheck('email', new IsValidEmailCheck($this->translate('_err_invalid_email')));  
+		$validator->addCheck('firstName', new IsNotEmptyCheck($this->translate('_err_first_name_empty')));		
+		$validator->addCheck('lastName', new IsNotEmptyCheck($this->translate('_err_last_name_empty')));
+		$validator->addCheck('password1', new PasswordEqualityCheck($this->translate('_err_passwords_are_not_the_same'), $this->request->getValue('password2')));
+		$validator->addCheck('password2', new PasswordEqualityCheck($this->translate('_err_passwords_are_not_the_same'), $this->request->getValue('password1')));
+
+		$validator->addCheck('userGroupID', new IsNumericCheck($this->translate('_err_invalid_group')));
+		
+		return $validator;
+    }
+
+    /**
+     * @return Form
+     */
+	private function createUserForm(User $user = null)
+	{
+		$form = new Form($this->createUserFormValidator());
+		
+		if($user)
+		{
+		    $form->setData($user->toFlatArray());
+		}
+
+		return $form;
+	}
+	
+	public function saveInfo()
+	{
+	  	if ($id = (int)$this->request->getValue('id'))
+	  	{
+		  	$user = User::getInstanceByID((int)$id);
+	  	}
+	  	else
+	  	{
+	  	    $user = null;
+	  	}
+	    
+   		$validator = $this->createUserFormValidator($user);
+		if ($validator->isValid())
+		{
+		    $email = $this->request->getValue('email');
+		    $password = $this->request->getValue('password');
+		    $firstName = $this->request->getValue('firstName');
+		    $lastName = $this->request->getValue('lastName');
+		    $companyName = $this->request->getValue('companyName');
+		    
+		    if($groupID = (int)$this->request->getValue('UserGroup'))
+		    {
+		        $group = UserGroup::getInstanceByID((int)$groupID);
+		    }
+		    else
+		    {
+		        $group = null;
+		    }
+		
+		  	if (!$user)
+			{
+			    $user = User::getNewInstance($email, $password, $group);
+			}
+			
+			$user->lastName->set($lastName);
+			$user->firstName->set($firstName);
+			$user->setPassword($password);
+			$user->companyName->set($companyName);
+			$user->email->set($email);
+			$user->userGroup->set($group);
+			
+			$user->save();
+			
+			return new JSONResponse(array('status' => 'success', 'user' => $user->toArray()));
+		}
+		else
+		{
+		    return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
+		}
+	}
     
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -522,50 +655,7 @@ class UserController extends StoreManagementController
 		}
 	}
 
-	/**
-	 * Creates user form.
-	 * @todo email check
-	 * @param array $data Initial values
-	 * @return Form
-	 */
-	private function createUserForm($data)
-	{
-		ClassLoader::import("library.formhandler.*");
-		ClassLoader::import("library.formhandler.check.string.*");
 
-		$form = new Form("userForm", $data);
-
-		if ($this->request->isValueSet("id"))
-		{
-			$form->setAction(Router::getInstance()->createUrl(array('controller' => 'backend.user', 'action' => 'save', 'id' => $this->request->getValue("id"))));
-		}
-		else
-		{
-			$form->setAction(Router::getInstance()->createUrl(array('controller' => 'backend.user', 'action' => 'save')));
-		}
-
-		$field = new TextLineField("nickName", "Nick name");
-		$field->addCheck(new MinLengthCheck("Nick name must be at least 2 chars length!", 2));
-		$form->addField($field);
-
-		$field = new TextLineField("email", "E-mail");
-		//$field->addValidator(new FormValEmail("E-mail is not valid.", "asdf"));
-		$form->addField($field);
-
-		$field = new TextLineField("firstName", "First name");
-		$field->addCheck(new RequiredValueCheck("First name required."));
-		$form->addField($field);
-
-		$field = new TextLineField("middleName", "Middle name");
-		$form->addField($field);
-
-		$field = new TextLineField("lastName", "Last name");
-		$field->addCheck(new RequiredValueCheck("Last name required."));
-		$form->addField($field);
-		$form->addField(new SubmitField("submit", "Save"));
-
-		return $form;
-	}
 
 	/**
 	 */

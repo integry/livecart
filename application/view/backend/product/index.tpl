@@ -182,7 +182,7 @@
 <script type="text/javascript">
 	var grid = new ActiveGrid($('products_{/literal}{$categoryID}'), '{link controller=backend.product action=lists}', {$totalCount}, $("productLoadIndicator_{$categoryID}"));
 
-	grid.setDataFormatter(Backend.UserGroup.GridFormatter);
+	grid.setDataFormatter(Backend.Product.GridFormatter);
 	
 	{foreach from=$displayedColumns item=id key=column name="columns"}
 		{if !$smarty.foreach.columns.first}
@@ -190,6 +190,6 @@
 		{/if}
 	{/foreach}
     
-    var massHandler = new Backend.UserGroup.massActionHandler($('productMass_{$categoryID}'), grid);
+    var massHandler = new Backend.Product.massActionHandler($('productMass_{$categoryID}'), grid);
     massHandler.deleteConfirmMessage = '{t _delete_conf|addslashes}' ;
 </script>

@@ -33,21 +33,22 @@ Backend.Category = {
 	initPage: function()
 	{
 		// check for bookmark
-		if (window.location.hash.length > 0)
-		{
-			var elements = window.location.hash.split('#');
-			if (elements[1].substr(0, 4) == 'cat_')
-			{
-				var parts = elements[1].split('_');
-				var categoryId = parts[1];
-                
-                Backend.Category.activeCategoryId = categoryId;
-				Backend.Category.treeBrowser.selectItem(categoryId, false, false);
+        console.info(window.location.hash.length);
+		if (window.location.hash.length == 0)
+        {
+            window.location.hash = '#cat_1#tabProducts__';
+        }
 
-                // window.dhtmlHistory.handleBookmark();
-                // throw('rest');
-				return true;		  
-			}
+		var elements = window.location.hash.split('#');
+		if (elements[1].substr(0, 4) == 'cat_')
+		{
+			var parts = elements[1].split('_');
+			var categoryId = parts[1];
+            
+            Backend.Category.activeCategoryId = categoryId;
+			Backend.Category.treeBrowser.selectItem(categoryId, false, false);
+            
+			return true;		  
 		}
 
         if($('categoryBrowser').getElementsByClassName('selectedTreeRow')[0])

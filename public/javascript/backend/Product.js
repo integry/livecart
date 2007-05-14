@@ -244,7 +244,7 @@ Backend.Product =
 		{   
             Backend.Product.Editor.prototype.setCurrentProductId(id); 
 	        $('productIndicator_' + id).style.display = '';
-			TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId, {
+			var tabControl = TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId, {
                 afterClick: function()
                 {
                     if(Backend.RelatedProduct.SelectProductPopup.prototype.popup) {
@@ -253,6 +253,9 @@ Backend.Product =
                     }
                 }
             }); 
+            
+            tabControl.activateTab();
+            
 	        if(Backend.Product.Editor.prototype.hasInstance(id)) 
 			{
 				Backend.Product.Editor.prototype.getInstance(id);			
@@ -772,7 +775,12 @@ Backend.Product.GridFormatter =
 	{
 		if ('Product.name' == field)
 		{
-			value = '<span><span class="progressIndicator" id="productIndicator_' + id + '" style="display: none;"></span></span><a href="#edit" id="product_' + id + '" onclick="Backend.Product.openProduct(' + id + ', event); return false;">' + value + '</a>';	
+			value = '<span>' + 
+                        '<span class="progressIndicator" id="productIndicator_' + id + '" style="display: none;"></span>' + 
+                    '</span>' + 
+                    '<a href="#edit" id="product_' + id + '" onclick="Backend.Product.openProduct(' + id + ', event); return false;">' + 
+                        value + 
+                    '</a>';	
 		}
 		
 		return value;

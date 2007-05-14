@@ -63,6 +63,7 @@ class UserGroup extends ActiveRecord
 	{
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
+
 }
 
 ?>

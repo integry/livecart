@@ -630,6 +630,29 @@ form p
     clear: both;
 }
 
+fieldset.error, div.error, fieldset.container
+{
+	padding: 0px;
+	margin: 0px;
+	position: static; 
+	border: 0;
+	background-color: inherit;
+	background: inherit;
+	/* @todo: let's see how this works for IE */
+	background: none;
+}
+
+.errorText /* , fieldset.error div */
+{
+	background-color: red;
+	float: left; 
+	width: auto;
+	margin-bottom: 4px;
+	margin-top: 0px;
+	padding: 3px;
+	color: white;
+}
+
 .feedback, .feedback_textarea
 {
     position: absolute ! important;
@@ -678,17 +701,17 @@ label
     cursor: pointer;
 }
 
-p.required label
+p.required label, fieldset.required label
 {
   	font-weight: bold;
 }
 
-p.radio, p.checkbox
+p.radio, p.checkbox, fieldset.radio, fieldset.checkbox
 {
    padding-left: 11em;
 }
 
-p.radio label, p.checkbox label
+p.radio label, p.checkbox label, fieldset.radio label, fieldset.checkbox label
 {
     white-space: nowrap;
     margin-top: 3px;
@@ -793,28 +816,7 @@ a.cancel
  	color: red;
 }
 
-fieldset.error, div.error, fieldset.container
-{
-	padding: 0px;
-	margin: 0px;
-	position: static; 
-	border: 0;
-	background-color: inherit;
-	background: inherit;
-	/* @todo: let's see how this works for IE */
-	background: none;
-}
 
-.errorText /* , fieldset.error div */
-{
-	background-color: red;
-	float: left; 
-	width: auto;
-	margin-bottom: 4px;
-	margin-top: 0px;
-	padding: 3px;
-	color: white;
-}
 
 .hidden 
 {
@@ -831,7 +833,7 @@ fieldset.error, div.error, fieldset.container
 	clear: none;
 }
 
-p.checkbox label {
+p.checkbox label, fieldset.checkbox label {
     float: none;
     clear: both;
 }

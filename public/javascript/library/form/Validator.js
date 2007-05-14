@@ -94,6 +94,19 @@ function MinLengthCheck(element, params)
 	return (element.value.length >= params.minLength);
 }
 
+function PasswordEqualityCheck(element, params)
+{
+    for(i in element.form.elements)
+    {
+        if(element.form.elements[i].type == 'password')
+        {
+            return (element.value == element.form.elements[i].value);
+        }
+    }
+	
+    return true;
+}
+
 function MaxLengthCheck(element, params)
 {
 	return (element.value.length <= params.maxLength);

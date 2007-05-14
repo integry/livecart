@@ -43,7 +43,6 @@ class TestUser extends UnitTest
         $user->lastName->set('Gagarin');
         $user->companyName->set('Integry Systams');
         $user->isEnabled->set(true);
-        $user->isAdmin->set(true);
         
         $user->save();
         $user->markAsNotLoaded();

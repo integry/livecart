@@ -14,6 +14,11 @@ Backend.UserGroup.prototype =
 	{
         var self = this;
         
+        if(!Backend.ajaxNav.getHash().match(/#group_-?\d+#\w+__/))
+        {
+            window.location.hash = '#group_-2#tabUsers__';
+        }
+        
 		Backend.UserGroup.prototype.treeBrowser = new dhtmlXTreeObject("userGroupsBrowser","","", false);
 		Backend.UserGroup.prototype.treeBrowser.setOnClickHandler(this.activateGroup);
 		
@@ -22,9 +27,7 @@ Backend.UserGroup.prototype =
 				
 		Backend.UserGroup.prototype.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
 		Backend.UserGroup.prototype.treeBrowser.setOnClickHandler(this.activateGroup.bind(this));
-        
-		this.tabControl = TabControl.prototype.getInstance('userGroupsManagerContainer', this.craftTabUrl, this.craftContainerId, {}); 
-
+       
 		Backend.UserGroup.prototype.treeBrowser.showFeedback = 
 			function(itemId) 
 			{
@@ -47,10 +50,11 @@ Backend.UserGroup.prototype =
 			}
 		
     	this.insertTreeBranch(groups, 0); 
-        if(!Backend.ajaxNav.getHash().match(/group=/))
-        {
-            Backend.UserGroup.prototype.treeBrowser.selectItem(-2, true);
-        }
+
+        
+        var self = this;
+	    self.tabControl = TabControl.prototype.getInstance('userGroupsManagerContainer', self.craftTabUrl, self.craftContainerId, {}); 
+        //this.activateGroup();
 	},
 
     bindEvents: function()
@@ -150,7 +154,6 @@ Backend.UserGroup.prototype =
             
             var activateTab = $('tabUsers');
             $("tabUserGroup").hide();
-            
         }
         else
         {
@@ -168,7 +171,11 @@ Backend.UserGroup.prototype =
             this.tabControl.activateTab(activateTab, function() { 
                 Backend.UserGroup.prototype.treeBrowser.hideFeedback(id);
             });
+            
+            Backend.User.Editor.prototype.showGroupsContainer();
         }
+        
+        
         
         Backend.UserGroup.prototype.activeGroup = id;
 	},
@@ -200,7 +207,71 @@ Backend.UserGroup.prototype =
 	displaySaveConfirmation: function()
 	{
 		new Backend.SaveConfirmationMessage(document.getElementsByClassName('yellowMessage')[0]);			
-	} 
+	},
+    
+    
+    openUser: function(id, e) 
+    {
+        Event.stop(e);
+        
+        Backend.User.Editor.prototype.setCurrentId(id); 
+        $('userIndicator_' + id).style.display = '';
+        
+    	var tabControl = TabControl.prototype.getInstance(
+            'userManagerContainer',
+            Backend.User.Editor.prototype.craftTabUrl, 
+            Backend.User.Editor.prototype.craftContentId
+        ); 
+        
+        tabControl.activateTab();
+        
+        if(Backend.User.Editor.prototype.hasInstance(id)) 
+    	{
+    		Backend.User.Editor.prototype.getInstance(id);			
+    	}	
+    },
+   
+   
+	updateHeader: function ( activeGrid, offset ) 
+	{
+		var liveGrid = activeGrid.ricoGrid;
+		
+		var totalCount = liveGrid.metaData.getTotalRows();
+		var from = offset + 1;
+		var to = offset + liveGrid.metaData.getPageSize();
+		
+		if (to > totalCount)
+		{
+			to = totalCount;		
+		}
+		  
+		var categoryID = activeGrid.tableInstance.id.split('_')[1];		
+		var cont = $('productCount_' + categoryID);
+		var countElement = document.getElementsByClassName('rangeCount', cont)[0];
+		var notFound = document.getElementsByClassName('notFound', cont)[0];
+								
+		if (totalCount > 0)
+		{
+			if (!countElement.strTemplate)
+			{
+				countElement.strTemplate = countElement.innerHTML;	
+			}		
+			
+			var str = countElement.strTemplate;
+			str = str.replace(/%from/, from);
+			str = str.replace(/%to/, to);
+			str = str.replace(/%count/, totalCount);
+									
+			countElement.innerHTML = str;
+			notFound.style.display = 'none';
+			countElement.style.display = '';					
+		}
+		else
+		{
+			notFound.style.display = '';
+			countElement.style.display = 'none';					
+		}
+    }
 }
 
 
@@ -215,13 +286,13 @@ Backend.UserGroup.GridFormatter =
 	
 	formatValue: function(field, value, id)
 	{
-		if ('User.name' == field)
+		if ('User.email' == field)
 		{
 			value = '<span>' + 
                         '<span class="progressIndicator" id="userIndicator_' + id + '" style="display: none;">' + 
                         '</span>' + 
                     '</span>' + 
-                    '<a href="#edit" id="product_' + id + '" onclick="Backend.Product.openProduct(' + id + ', event); return false;">' + 
+                    '<a href="#edit" id="user_' + id + '" onclick="Backend.UserGroup.prototype.openUser(' + id + ', event); return false;">' + 
                          value + 
                     '</a>';	
     		}
@@ -230,6 +301,78 @@ Backend.UserGroup.GridFormatter =
 	}
 }
 
+
+
+Backend.UserGroup.massActionHandler = Class.create();
+Backend.UserGroup.massActionHandler.prototype = 
+{
+    handlerMenu: null,    
+    actionSelector: null,
+    valueEntryContainer: null,
+    form: null,
+        
+    grid: null,
+    
+    initialize: function(handlerMenu, activeGrid)
+    {
+        this.handlerMenu = handlerMenu;     
+        this.actionSelector = handlerMenu.getElementsByTagName('select')[0];
+        this.valueEntryContainer = handlerMenu.down('.bulkValues');
+        this.form = this.actionSelector.form;
+
+        this.actionSelector.onchange = this.actionSelectorChange.bind(this);
+        Event.observe(this.actionSelector.form, 'submit', this.submit.bind(this));
+            
+        this.grid = activeGrid;
+    },
+    
+    actionSelectorChange: function()
+    {
+		for (k = 0; k < this.valueEntryContainer.childNodes.length; k++)
+        {
+            if (this.valueEntryContainer.childNodes[k].style)
+            {
+                Element.hide(this.valueEntryContainer.childNodes[k]);
+            }
+        }
+        
+        Element.show(this.valueEntryContainer);
+        
+        if (this.actionSelector.form.elements.namedItem(this.actionSelector.value))
+        {
+            Element.show(this.form.elements.namedItem(this.actionSelector.value));
+            this.form.elements.namedItem(this.actionSelector.value).focus();
+        }    
+        else if (this.handlerMenu.down('.' + this.actionSelector.value))
+        {
+			var el = document.getElementsByClassName(this.actionSelector.value, this.handlerMenu)[0];
+			Element.show(el);
+		}
+    },
+    
+    submit: function()
+    {
+        if ('delete' == this.actionSelector.value)
+        {
+			if (!confirm(this.deleteConfirmMessage))
+			{
+				return false;
+			}
+		}
+		
+		this.form.elements.namedItem('filters').value = this.grid.getFilters().toJSONString();
+        this.form.elements.namedItem('selectedIDs').value = this.grid.getSelectedIDs().toJSONString();
+        this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;
+        new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('progressIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));
+
+        this.grid.resetSelection();   
+    },
+    
+    submitCompleted: function()
+    {
+        this.grid.reloadGrid();   
+    }
+}
 
 
 Backend.User.Group = Class.create();
@@ -304,3 +447,148 @@ Backend.User.Group.prototype =
     }
 }
 
+
+
+Backend.User.Editor = Class.create();
+Backend.User.Editor.prototype = 
+{
+    Links: {},
+    Messages: {},
+    Instances: {},
+    CurrentId: null,
+    
+    getCurrentId: function()
+    {
+        return Backend.User.Editor.prototype.CurrentId;
+    },
+
+    setCurrentId: function(id)
+    {
+        Backend.User.Editor.prototype.CurrentId = id;
+    },
+
+    craftTabUrl: function(url)
+    {
+        return url.replace(/_id_/, Backend.User.Editor.prototype.getCurrentId());
+    },
+
+    craftContentId: function(tabId)
+    {
+        return tabId + '_' +  Backend.User.Editor.prototype.getCurrentId() + 'Content'
+    },
+
+    getInstance: function(id, doInit)
+    {
+		if(!Backend.User.Editor.prototype.Instances[id])
+        {
+            Backend.User.Editor.prototype.Instances[id] = new Backend.User.Editor(id);
+        }
+
+        if(doInit !== false) Backend.User.Editor.prototype.Instances[id].init();
+        
+        return Backend.User.Editor.prototype.Instances[id];
+    },
+
+    hasInstance: function(id)
+    {
+        return this.Instances[id] ? true : false;
+    },
+    
+    initialize: function(id)
+  	{
+        try
+        {
+            this.id = id;
+    
+            this.findUsedNodes();
+            this.bindEvents();
+            
+            Form.State.backup(this.nodes.form);
+            
+            var self = this;
+        }
+        catch(e)
+        {
+            console.info(e);
+        }
+
+	},
+
+	findUsedNodes: function()
+    {
+        this.nodes = {};
+        this.nodes.parent = $("tabUserInfo_" + this.id + "Content");
+        this.nodes.form = this.nodes.parent.down("form");
+		this.nodes.cancel = this.nodes.form.down('a.cancel');
+		this.nodes.submit = this.nodes.form.down('input.submit');
+    },
+
+    bindEvents: function(args)
+    {
+		var self = this;
+		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
+    },
+
+    init: function(args)
+    {	
+		Backend.User.Editor.prototype.setCurrentId(this.id);
+        $('userIndicator_' + this.id).style.display = 'none';
+        this.showUserForm();
+
+        this.tabControl = TabControl.prototype.getInstance("userManagerContainer", false);
+        
+		new SectionExpander(this.nodes.parent);
+    },
+
+    showUserForm: function(args)
+    {
+		this.hideGroupsContainer();
+    },
+
+    hideGroupsContainer: function(args)
+    {
+        Element.hide($("userGroupsManagerContainer"));
+        Element.show($("userManagerContainer"));
+    },
+
+    showGroupsContainer: function(args)
+    {       
+        if($("userManagerContainer")) Element.hide($("userManagerContainer"));
+        if($("userGroupsManagerContainer")) Element.show($("userGroupsManagerContainer"));
+    },
+    
+
+    cancelForm: function()
+    {      
+        ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+		Form.restore(this.nodes.form);
+    },
+    
+    submitForm: function()
+    {
+		var self = this;
+		new Ajax.Request(this.nodes.form.action + "/" + this.id,
+		{
+           method: 'post',
+           parameters: Form.serialize(self.nodes.form),
+           onSuccess: function(responseJSON) {
+				ActiveForm.prototype.resetErrorMessages(self.nodes.form);
+				var responseObject = eval("(" + responseJSON.responseText + ")");
+				self.afterSubmitForm(responseObject);
+		   }
+		});
+    },
+	
+	afterSubmitForm: function(response)
+	{
+		if(response.status == 'success')
+		{
+			new Backend.SaveConfirmationMessage(this.nodes.form.down('.userInfoSaveConf'));
+			Form.State.backup(this.nodes.form);
+		}
+		else
+		{
+			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
+		}
+	}
+}

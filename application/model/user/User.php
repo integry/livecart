@@ -38,8 +38,7 @@ class User extends ActiveRecordModel
 		$schema->registerField(new ARField("lastName", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("companyName", ARVarchar::instance(60)));
 		$schema->registerField(new ARField("dateCreated", ARDateTime::instance()));
-		$schema->registerField(new ARField("isEnabled", ARBool::instance()));	
-		$schema->registerField(new ARField("isAdmin", ARBool::instance()));	 
+		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 	}
 
 	/**

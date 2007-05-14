@@ -22,7 +22,7 @@
 	width: auto;
 }
 
-#userGroupsManagerContainer 
+#userGroupsManagerContainer, #userManagerContainer
 {
     margin-left: 230px;
 }
@@ -34,7 +34,7 @@
     text-align: left;
 }
 
-#userGroupsManagerContainer .activeList .errorText 
+#userManagerContainer .activeList .errorText, #userGroupsManagerContainer .activeList .errorText 
 {
     float: none;
 }

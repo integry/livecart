@@ -127,6 +127,11 @@ ActiveGrid.prototype =
             Backend.Product.updateHeader(this, offset);
 		}
         
+		if(Backend.UserGroup)
+        {
+            Backend.UserGroup.prototype.updateHeader(this, offset);
+		}
+        
 		this._markSelectedRows();
 	},
 	
