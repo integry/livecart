@@ -43,7 +43,6 @@ abstract class FrontendController extends BaseController
         $instance = Currency::getValidInstanceById($this->request->getValue('currency', $this->store->getDefaultCurrencyCode()));
         return $instance->getID();
     }
-
 	
 	protected function addBreadCrumb($title, $url)
 	{		
@@ -65,7 +64,6 @@ abstract class FrontendController extends BaseController
 	{	 	
 		ClassLoader::import('application.model.order.CustomerOrder');
 		$response = new BlockResponse();
-//		print_r(CustomerOrder::getInstance()->toArray());
 		$response->setValue('order', CustomerOrder::getInstance()->toArray()); 
 		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode()));
 		return $response; 	
@@ -273,25 +271,6 @@ abstract class FrontendController extends BaseController
 			}									  
 		}
 						
-		// apply current filters to suitable categories
-		/*
-		if ($this->filters)
-		{
-			//$filterArray = $this->filters->toArray();
-
-			$rootFilters = array();
-			foreach ($this->filters as $filter)
-			{
-				if (!($filter instanceof SpecificationFilterInterface) || 
-                    Category::ROOT_ID == $filter->getSpecField()->category->get()->getID())
-			  	{
-					$rootFilters[$filter->getID()] = true;
-				}
-			}
-			$this->applyFilters($topCategories, $rootFilters);		  
-		}
-		*/
-
 		$response = new BlockResponse();
 		$response->setValue('categories', $topCategories);
 		$response->setValue('currentId', $this->categoryID);

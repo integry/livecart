@@ -99,6 +99,7 @@ div.confirmationMsg div
     display: inline;
     padding: 5px;
     background-color: #FFFCAC;   
+    z-index: 0;
 }
 
 /*****************************
@@ -125,8 +126,10 @@ div.confirmationMsg div
 
 #leftSide 
 {
-	float:left;
+	float: left;
 	width: 190px;
+	overflow: visible;
+	position: relative;
 }
 
 #rightSide 
@@ -185,6 +188,8 @@ div.confirmationMsg div
 div.box
 {
 	margin-bottom: 5px;
+	overflow: visible;
+	position: relative;
 }
 
 div.box .title
@@ -201,13 +206,14 @@ div.box .title
 div.box .content
 {
   	padding: 5px;
+  	overflow: visible;
 }
 
 .currentName
 {
 	font-weight: bold;
 	font-size: larger;
-    background-image: url(../../image/silk/bullet_blue.png);
+/*    background-image: url(../../image/silk/bullet_blue.png); */
     background-repeat: no-repeat;
     background-position: left center;
     padding-left: 20px;   		
@@ -299,7 +305,7 @@ tr.even
 {
     background-color: #F6F6F6;
     padding: 12px !important;
-    padding-left: 25px !important;
+    padding-left: 20px !important;
     padding-top: 5px !important;
   	border-bottom: 1px solid #CCCCCC;
 }
@@ -355,7 +361,7 @@ tr.even
 .filterGroup ul
 {
 	padding: 4px;		
-	padding-left: 10px;
+	padding-left: 20px;
 	font-size: 90%;
 	padding-right: 0;
 	width: 95%;
@@ -384,14 +390,19 @@ tr.even
 
 .filterGroup .showAll
 {
+    overflow: scroll;
 	list-style: none;
 	font-weight: bold;	
 	margin-top: 5px;
-	background-image: url(../../image/silk/tag_yellow.png);
+	padding-top: 2px;
+	background-image: url(../../image/silk/gif/tag_yellow.gif);
 	background-position: center left;
 	background-repeat: no-repeat;
 	padding-left: 20px;
-	margin-left: -20px;
+	margin-left: -20px; 
+
+	z-index: 10;
+
 }
 
 #smallCart
@@ -531,7 +542,7 @@ ul.subSubCats
 {
 	color: black;
 	background-color: inherit;
-    background-image: url(../../image/silk/zoom.png);
+    background-image: url(../../image/silk/gif/zoom.gif);
     background-repeat: no-repeat;
     background-position: 6px center;
     padding-left: 28px;    
@@ -556,7 +567,7 @@ ul.subSubCats
 
 .resultPages .next
 {
-    background-image: url(../../image/silk/resultset_next.png);
+    background-image: url(../../image/silk/gif/resultset_next.gif);
     background-repeat: no-repeat;
     background-position: center right;
     padding-right: 22px;    
@@ -566,7 +577,7 @@ ul.subSubCats
 
 .resultPages .previous
 {
-    background-image: url(../../image/silk/resultset_previous.png);
+    background-image: url(../../image/silk/gif/resultset_previous.gif);
     background-repeat: no-repeat;
     background-position: center left;
     padding-left: 22px;    
@@ -608,7 +619,7 @@ ul.productList li
 ul.productList li.featured .title
 {
     font-weight: bold;   
-    background-image: url(../../image/silk/star.png);
+    background-image: url(../../image/silk/gif/star.gif);
     background-repeat: no-repeat;
     background-position: center left;
     padding-left: 22px;
@@ -654,7 +665,7 @@ ul.productList .order
 ul.productList a.addToCart
 {
     padding-left: 20px;
-    background-image:url(../../image/silk/cart_add.png);
+    background-image:url(../../image/silk/gif/cart_add.gif);
     background-repeat: no-repeat;
     background-position: center left;    
 }
@@ -674,7 +685,7 @@ ul.productList a.addToCart
 
 .returnToCategory
 {
-    background-image: url(../../image/silk/resultset_previous.png);
+    background-image: url(../../image/silk/gif/resultset_previous.gif);
     background-repeat: no-repeat;
     background-position: center left;
     padding-left: 22px;    
@@ -739,7 +750,7 @@ ul.attributeList
 
 ul.attributeList li
 {
-    background-image: url(../../image/silk/tick.png);
+    background-image: url(../../image/silk/gif/tick.gif);
     background-repeat: no-repeat;
     background-position: center left;
     padding-left: 22px;    
@@ -898,7 +909,7 @@ div.checkout a
 .continueShopping
 {
     float: left;
-    background-image: url(../../image/silk/resultset_previous.png);
+    background-image: url(../../image/silk/gif/resultset_previous.gif);
     background-repeat: no-repeat;
     background-position: center left;
     padding-left: 22px;        
@@ -909,7 +920,7 @@ div.checkout a
 {
     float: right; 
     font-weight: bold;
-    background-image: url(../../image/silk/cart_go.png);
+    background-image: url(../../image/silk/gif/cart_go.gif);
     background-repeat: no-repeat;
     background-position: center right;
     padding-right: 22px;      
@@ -917,9 +928,8 @@ div.checkout a
 
 .cartImage
 {
-	float: left;
 	width: 60px; 
-	padding: 5px; 
+	padding: 7px !important; 
 	text-align: center;
 }
 
@@ -1042,13 +1052,48 @@ ul#userMenu
 {
     float: left;
     margin-left: 20px;
-    list-style-type: circle;
+    list-style-type: none;
+    background-repeat: no-repeat;
+    background-position: center left;
+    padding-left: 22px;            
 }
 
 #userMenu li#homeMenu
 {
-    list-style-type: none;
-    margin-left: 0px;
+    background-image: url(../../image/silk/gif/house.gif);
+}
+
+#userMenu li#addressMenu
+{
+    background-image: url(../../image/silk/gif/book_addresses.gif);
+}
+
+#userMenu li#emailMenu
+{
+    background-image: url(../../image/silk/gif/email_edit.gif);
+}
+
+#userMenu li#passwordMenu
+{
+    background-image: url(../../image/silk/gif/key.gif);
+}
+
+#userMenu li#signOutMenu
+{
+    background-image: url(../../image/silk/gif/door_out.gif);
+    background-position: center right;
+    padding-right: 22px;        
+    float: right;    
+}
+
+#userMenu li.selected
+{
+    font-weight: bold;
+}
+
+#userMenuContainer
+{
+    margin-bottom: 20px;
 }
 
 /*************************** 
@@ -1242,11 +1287,7 @@ input.radio, input.checkbox, input.submit, input.button, input.reset
 {
     width: auto;
 }
-input.submit, input.reset {
-	text-transform: uppercase;
-	font-size: 10px;
-	padding: 4px;
-}
+
 input.submit {
 /*	background-color: #008cff;
 	color: #fff;
@@ -1254,6 +1295,7 @@ input.submit {
 	padding-left: 15px;
 	padding-right: 15px;
 }
+
 input.reset {
 	background-color: #ddd;
 	color: #666;
@@ -1279,11 +1321,6 @@ input.submit:focus
 input.required, textarea.required, select.required
 {
     border-color: red;
-}
-
-.formem.required
-{
-    color: red;
 }
 
 label, input, select, form .other, textarea

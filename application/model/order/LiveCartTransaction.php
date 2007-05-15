@@ -8,6 +8,8 @@ class LiveCartTransaction extends TransactionDetails
 	{
         parent::__construct();
         
+        $order->loadAll();
+        
         // billing address
         $address = $order->billingAddress->get();
         $fields = array('firstName', 'lastName', 'companyName', 'phone', 'city', 'postalCode', 'countryID' => 'country');
@@ -29,7 +31,7 @@ class LiveCartTransaction extends TransactionDetails
         }
     
         $this->state->set($this->getStateValue($address));    
-        
+
         $this->shippingEmail->set($order->user->get()->email->get());
         $this->email->set($order->user->get()->email->get());
         

@@ -9,6 +9,7 @@
 {* include file="layout/frontend/rightSide.tpl" *}
 
 <div id="content" style="margin-left: 0;">
+
     
     <div style="padding: 10px; padding-left: 0px;">
         {assign var="lastBreadcrumb" value=$breadCrumb|@end}

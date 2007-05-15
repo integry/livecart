@@ -23,7 +23,7 @@
 		<table id="cart">
 			<thead>
 				<tr>
-					<th colspan="2" class="cartListTitle"></th>
+					<th colspan="3" class="cartListTitle"></th>
 					<th class="cartPrice">{t Price}</th>
 					<th class="cartQuant">{t Quantity}</th>
 				</tr>
@@ -35,11 +35,16 @@
 						<a href="{link controller=order action=moveToWishList id=$item.ID query="return=`$return`"}">{t Move to Wish List}</a>
 						<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t Remove}</a>
 					</td>
+					
+					<td class="cartImage">
+    				    {if $item.Product.DefaultImage.paths.1}
+                        <a href="{productUrl product=$item.Product}">
+					       <img src="{$item.Product.DefaultImage.paths.1}" alt="{$item.Product.name_lang|escape}" />	  
+                        </a>
+                        {/if}
+                    </td>
+					
 					<td class="cartName">
-						
-						<div class="cartImage">
-							<img src="{$item.Product.DefaultImage.paths.1}" alt="{$item.Product.name_lang|escape}" />
-						</div>
 						
 						<div style="float: left;">
 							<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
@@ -60,17 +65,17 @@
 				</tr>	
 			{/foreach}
     				<tr>
-    				    <td colspan="2" class="subTotalCaption">{t _subtotal}:</td>
+    				    <td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
     				    <td class="subTotal">{$orderTotal}</td>
     				    <td><input type="submit" class="submit" value="{tn Update}" /></td>
     				</tr>
 
 				<tr>
-					<td colspan="3"></td>
+					<td colspan="4"></td>
 					<td class="cartQuant"></td>
 				</tr>
 				<tr>
-					<td colspan="4" style="text-align: right;">
+					<td colspan="5" style="text-align: right;">
 						<a href="{link route=$return}" class="continueShopping">Continue Shopping</a>
 						<a href="{link controller=checkout}" class="proceedToCheckout">Proceed to Checkout</a>
 					</td>
@@ -86,7 +91,7 @@
 			<table id="wishList">
 				<thead>
 					<tr>
-						<th colspan="2" class="cartListTitle"></th>
+						<th colspan="3" class="cartListTitle"></th>
 						<th class="cartPrice">{t Price}</th>
 					</tr>
 				</thead>
@@ -97,6 +102,13 @@
 							<a href="{link controller=order action=moveToCart id=$item.ID query="return=`$return`"}">{t Move to Cart}</a>
 							<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t Remove}</a>
 						</td>
+    					<td class="cartImage">
+        				    {if $item.Product.DefaultImage.paths.1}
+    						<a href="{productUrl product=$item.Product}">
+                                <img src="{$item.Product.DefaultImage.paths.1}" alt="{$item.Product.name_lang|escape}" />
+                            </a>	
+                            {/if}
+    					</td>
 						<td class="cartName">
 							<a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a>
 						</td>

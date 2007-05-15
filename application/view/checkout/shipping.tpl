@@ -52,9 +52,9 @@
                 {foreach from=$rates.$key item="rate"}                
                     <p>
                         {radio name="shipping_`$key`" id="shipping_`$key`_`$rate.serviceID`" value=$rate.serviceID class="radio"}
-                        <label for="shipping_{$key}_{$rate.serviceID}">
+                        <label for="shipping_{$key}_{$rate.serviceID}" class="radio">
                             {$rate.serviceName}
-                            {$rate.formattedPrice.$currency}
+                            (<strong>{$rate.formattedPrice.$currency}</strong>)
                         </label>
                     </p>            
                 {/foreach}

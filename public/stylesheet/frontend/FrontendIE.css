@@ -1,4 +1,4 @@
 .specSummary
 {
-    width: expression(Math.min(this.clientWidth, 400) + 'px');
+    width: expression(this.clientWidth > 400 ? '400px' : 'auto');
 }

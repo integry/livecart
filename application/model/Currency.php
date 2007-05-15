@@ -61,6 +61,11 @@ class Currency extends ActiveRecordModel
                 $cents = $cents . '0';
             }
             
+            if (strlen($cents) > 2)
+            {
+                $cents = substr($cents, 0, 2);
+            }
+            
             $price = $dollars . '.' . $cents;            
         }        
         else
