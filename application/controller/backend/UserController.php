@@ -5,12 +5,11 @@ ClassLoader::import("framework.request.validator.RequestValidator");
 ClassLoader::import("framework.request.validator.Form");
 ClassLoader::import("application.controller.backend.*");
 ClassLoader::import("application.model.user.*");
-ClassLoader::import("library.DataGrid.*");
-ClassLoader::import("library.AJAX_TreeMenu.*");
 
 /**
  *
  * @package application.controller.backend
+ * @role user
  */
 class UserController extends StoreManagementController
 {
@@ -349,6 +348,7 @@ class UserController extends StoreManagementController
 
     /**
      * @return Form
+     * @role user.createUser
      */
 	private function createUserForm(User $user = null)
 	{
