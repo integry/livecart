@@ -86,6 +86,11 @@ function smarty_function_categoryUrl($params, $smarty)
         $urlParams['query'] = $params['query'];    
     }    				  
                        
+	if (!empty($params['page']))
+	{
+        $urlParams['page'] = $params['page'];    
+    }    				  
+
 	if ($filters)
 	{
 	  	$urlParams['filters'] = implode(',', $filters);

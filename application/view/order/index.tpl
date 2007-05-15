@@ -67,7 +67,7 @@
     				<tr>
     				    <td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
     				    <td class="subTotal">{$orderTotal}</td>
-    				    <td><input type="submit" class="submit" value="{tn Update}" /></td>
+    				    <td id="cartUpdate"><input type="submit" class="submit" value="{tn Update}" /></td>
     				</tr>
 
 				<tr>
@@ -122,6 +122,9 @@
 			<a href="{link route=$return}" class="continueShopping">Continue Shopping</a>
 		{/if}
 	{/if}
+	
+	<div class="clear"></div>
+	
 </div>
 
 {include file="layout/frontend/footer.tpl"}

@@ -103,7 +103,7 @@ class CategoryController extends FrontendController
 
 		$paginationUrl = str_replace('_000_', '_page_', Router::getInstance()->createURL($urlParams));
 					
-		$filterChainHandle = $this->setUpBreadCrumbAndReturnFilterChainHandle();					
+		$filterChainHandle = $this->setUpBreadCrumbAndReturnFilterChainHandle($currentPage);					
 					        
 		// narrow by subcategories
 		$subCategories = $this->category->getSubCategoryArray(Category::LOAD_REFERENCES);
@@ -248,18 +248,18 @@ class CategoryController extends FrontendController
 	/**
 	 *  Create breadcrumb
 	 */
-    private function setUpBreadCrumbAndReturnFilterChainHandle()
+    private function setUpBreadCrumbAndReturnFilterChainHandle($page)
 	{
 		// get category path for breadcrumb
-		$path = $this->category->getPathNodeSet();
+		$path = $this->category->getPathNodeSet()->toArray();
+
 		include_once(ClassLoader::getRealPath('application.helper') . '/function.categoryUrl.php');
-		foreach ($path as $node)
+		foreach ($path as $nodeArray)
 		{
-			$nodeArray = $node->toArray();
 			$url = smarty_function_categoryUrl(array('data' => $nodeArray), false);
 			$this->addBreadCrumb($nodeArray['name_lang'], $url);
 		}
-		
+				
 		// add filters to breadcrumb
 		if (!isset($nodeArray))
 		{
@@ -271,9 +271,22 @@ class CategoryController extends FrontendController
 		{
 			$filter = $filter->toArray();
 			$params['filters'][] = $filter;
+			
+			// add current page number to the last item URL
+			if (count($params['filters']) == count($this->filters))
+			{
+				$params['page'] = $page;
+			}
+			
 			$url = smarty_function_categoryUrl($params, false);
 			$this->addBreadCrumb($filter['name_lang'], $url);
 		}            
+		
+		// set return path
+		if (isset($url))
+		{
+			$this->router->setReturnPath($this->router->getRouteFromUrl($url));				
+		}
 		
 	    // get filter chain handle
         $filterChainHandle = array();

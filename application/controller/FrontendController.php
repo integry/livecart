@@ -180,6 +180,7 @@ abstract class FrontendController extends BaseController
 		}
 		
 		$options = array(1 => $this->translate('_all_products'));
+
 		foreach ($search as $cat)
 		{
 			$options[$cat['ID']] = $cat['name_lang'];

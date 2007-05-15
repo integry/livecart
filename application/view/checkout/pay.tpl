@@ -9,6 +9,11 @@
 	
 	<h1>{t _pay}</h1>
 		   	
+	<div style="font-size: 90%; width: 600px; margin-left: auto; margin-right: auto; border: 1px solid yellow; padding: 5px; background-color: #FFFCDA; margin-top: 25px; margin-bottom: 25px;">
+		Please do not enter real credit card numbers. You can enter any number in the credit card number field. This is not a real transaction. Enter <strong>000</strong> for CVV to test for failed transactions. 
+		<div style="margin-top: 5px;">Yes, this page will be under SSL in the product release.</div>
+	</div>	
+		   	
 	<div id="payTotal">
         <div>
 			Order total: <span class="subTotal">{$order.formattedTotal.$currency}</span>
@@ -33,7 +38,7 @@
 	    <p>
 			<label for="ccNum">Card number:</label>
             <fieldset class="error">
-	            {textfield name="ccNum"}
+	            {textfield name="ccNum" class="text"}
 				<div class="errorText hidden{error for="ccNum"} visible{/error}">{error for="ccNum"}{$msg}{/error}</div>
 			</fieldset>
         </p>
@@ -58,7 +63,7 @@
         <p>
             <label for="ccCVV">3 or 4 digit code after card # on back of card:</label>
             <fieldset class="error">
-	            {textfield name="ccCVV" maxlength="4"} 
+	            {textfield name="ccCVV" maxlength="4" class="text"} 
 				<a class="cvv" href="{link controller=checkout action=cvv}" onclick="Element.show($('cvvHelp')); return false;">{t What Is It?}</a>
 				<div class="errorText hidden{error for="ccCVV"} visible{/error}">{error for="ccCVV"}{$msg}{/error}</div>
 			</fieldset>

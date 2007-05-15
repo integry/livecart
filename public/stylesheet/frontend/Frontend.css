@@ -23,6 +23,7 @@ a img
 h1, h2, h3
 {
 	font-family: "Trebuchet MS";
+	font-weight: normal;
 }
 
 h1
@@ -35,7 +36,7 @@ h1
 h2
 {
 	margin-top: 20px;
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 	padding-top: 7px;
 	border-top: 1px dashed #AAAAAA;
     font-size: 150%;
@@ -118,7 +119,6 @@ div.confirmationMsg div
 
 #footer 
 {
-  	margin-top: 20px;
 	border-top: 1px solid #DDDDDD;
   	padding: 20px;
   	text-align:center;
@@ -704,6 +704,11 @@ ul.productList a.addToCart
     z-index: 10;
 }
 
+#mainInfo table
+{
+	margin-top: 20px;	
+}
+
 #mainInfo td
 {
 	padding: 5px;		
@@ -955,6 +960,11 @@ div.checkout a
 {
 	vertical-align: middle;
 	border: 1px solid #777777;	
+}
+
+#cartUpdate
+{
+	text-align: center;
 }
 
 /*****************************

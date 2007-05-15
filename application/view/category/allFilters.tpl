@@ -1,3 +1,5 @@
+{math count=$allFilters.filters|@count equation="max(2, ceil(count / 3))" assign="perColumn"}
+	
 <fieldset class="allFilters">
 	
 	{if 'brand' == $showAll}
@@ -5,8 +7,6 @@
 	{else}
 		<legend>{$allFilters.name_lang}</legend>
 	{/if}
-
-	{math count=$allFilters.filters|@count equation="max(2, ceil(count / 3))" assign="perColumn"}
 
 	{foreach from=$allFilters.filters item=filter name="filters"}
 

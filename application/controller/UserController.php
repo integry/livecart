@@ -138,6 +138,30 @@ class UserController extends FrontendController
         }           
     }
 
+    /**
+     *	@role login
+     */
+    public function orderInvoice()
+    {
+        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->getValue('id')));
+        $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+        $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+        
+        $s = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
+        if ($s->size())
+        {
+            $order = $s->get(0);
+            $order->loadAll();  
+            $response = new ActionResponse();
+            $response->setValue('order', $order->toArray());
+            return $response; 
+        }
+        else
+        {
+            return new ActionRedirectResponse('user', 'index');   
+        }           
+    }
+
     public function register()
     {
 		$response = new ActionResponse();

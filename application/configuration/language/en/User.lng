@@ -76,3 +76,9 @@ _manage_addresses=Manage Your Addresses
 _billing_addresses=Billing Addresses
 _shipping_addresses=Shipping Addresses
 _remove_address=Remove Address
+
+######################## 
+# View order
+######################## 
+_view_order=View Order
+_order_invoice=View Invoice
