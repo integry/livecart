@@ -212,7 +212,6 @@ div.box .content
 .currentName
 {
 	font-weight: bold;
-	font-size: larger;
 /*    background-image: url(../../image/silk/bullet_blue.png); */
     background-repeat: no-repeat;
     background-position: left center;
@@ -390,7 +389,6 @@ tr.even
 
 .filterGroup .showAll
 {
-    overflow: scroll;
 	list-style: none;
 	font-weight: bold;	
 	margin-top: 5px;
@@ -1289,9 +1287,6 @@ input.radio, input.checkbox, input.submit, input.button, input.reset
 }
 
 input.submit {
-/*	background-color: #008cff;
-	color: #fff;
-*/
 	padding-left: 15px;
 	padding-right: 15px;
 }
