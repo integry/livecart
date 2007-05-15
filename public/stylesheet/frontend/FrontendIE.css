@@ -2,3 +2,25 @@
 {
     width: expression(this.clientWidth > 400 ? '400px' : 'auto');
 }
+
+.quickSearch .submit
+{
+    position: relative;
+    top: 1px;    
+}
+
+legend {
+    margin: -30px 0 0 0;
+    position: fixed;
+    line-height: 1.4;
+}
+
+.allFilters
+{
+    margin-top: 20px;
+}
+
+#productSpecification td
+{
+    border: 0;
+}

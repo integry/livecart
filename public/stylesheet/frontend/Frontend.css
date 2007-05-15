@@ -272,17 +272,18 @@ tr.even
 
 .quickSearch input, .quickSearch select
 {
-    font-size: smaller;
+    font-size: smaller !important;
+}
+
+.quickSearch .submit
+{
+    margin-bottom: 0;
+    margin-top: 0;    
 }
 
 .quickSearch .searchQuery
 {
 	width: 160px;
-}
-
-.quickSearch .submit
-{   
-    padding: 3px;
 }
 
 .quickSearch select
@@ -709,6 +710,11 @@ ul.productList a.addToCart
 	white-space: nowrap;
 }
 
+#mainInfo td.param
+{
+    text-align: right;
+}
+
 .price
 {
 	font-weight: bold;
@@ -732,6 +738,7 @@ ul.productList a.addToCart
     vertical-align: top;
     padding-left: 10px;
     padding-right: 10px;
+    border: 1px solid white;
 }
 
 tr.specificationGroup
@@ -815,7 +822,7 @@ ul.attributeList.singleValue li
     display: block;
     clear: left;
     font-size: smaller;
-    padding-left: 143px;
+    padding-left: 157px;
 }
 
 /*****************************
@@ -1202,8 +1209,7 @@ legend
 	color: #30A0F9;
 	padding-left: 10px;
 	padding-right: 10px;
-	background-color: #CCC;
-	top: -22px; 
+	top: -22px;
 }
 
 label
@@ -1235,7 +1241,7 @@ label.checkbox, label.radio
   	width: auto;
 }
 
-input, select, file, form.other
+input.text, select, file, form.other
 {
     width: 15em;
     font-size: 16px;
@@ -1281,19 +1287,14 @@ textarea
    line-height: 10em;
 }
 
+input.submit
+{
+    margin-top: 5px;
+}
+
 input.radio, input.checkbox, input.submit, input.button, input.reset
 {
     width: auto;
-}
-
-input.submit {
-	padding-left: 15px;
-	padding-right: 15px;
-}
-
-input.reset {
-	background-color: #ddd;
-	color: #666;
 }
 
 input.radio, input.checkbox

@@ -22,5 +22,7 @@
             <img src="image/promo/valid-css-blue.png" alt="Valid CSS!" />
         </a>
     </div>
+    
+    <div class="clear"></div>
 
 </div>

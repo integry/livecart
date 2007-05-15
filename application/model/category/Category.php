@@ -106,7 +106,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 		return $filter;
 	}
-	
+
+/*	
 	public function testGetProductArray(ARSelectFilter $filter, $loadSpecification = false)
 	{
 		// get specification fields
@@ -123,6 +124,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return ActiveRecordModel::getRecordSet('Product', $filter, true, true);
 	
 	}
+*/
 
 	/**
 	 * Gets a list of products assigned to this node

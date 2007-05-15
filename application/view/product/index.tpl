@@ -65,7 +65,7 @@
     		
     	{/if}    
 
-        <table style="border: 1px solid white; float: none; margin-top: 10px;">
+        <table>
 			<tr id="productPrice">
 				<td class="param">{t Price}:</td>
 				<td class="value price">{$product.formattedPrice.$currency}</td>
