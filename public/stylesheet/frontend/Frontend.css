@@ -803,10 +803,23 @@ ul.attributeList.singleValue li
 	cursor: pointer;
 }
 
-#cartLinks
+.cartLinks
 {
 	text-align: center;
 	padding-top: 0px;
+	vertical-align: middle;
+}
+
+.cartLinks .submit
+{
+    top: 5px;   
+    position: relative;
+}
+
+td.addToWishList
+{
+    text-align: right;
+    padding-bottom: 30px !important;
 }
 
 #addToCart
