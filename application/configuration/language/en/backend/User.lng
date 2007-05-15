@@ -9,12 +9,16 @@ _assignSelectedUserToGroup=Assign selected users to group
 _backToUsersList=Back to users list
 
 _user=User
-_nickName=Nick name
-_firstName=First name
-_lastName=Last name
-_creationDate=Creation date
-_active=Active
+_password=Password
+_repeat_password=Repeat password
+_first_name=First name
+_last_name=Last name
 _email=E-mail
+_company_name=Company name
+_user_group=Group
+_is_enabled=Is enabled
+
+
 
 _byGroup=By group
 
@@ -24,6 +28,13 @@ _default_user_group=Defalut user group
 _form_has_been_successfully_saved=This form has been successfully saved
 _add=Add group
 _delete=Delete group
+
+_err_email_empty=E-mail field is empty
+_err_invalid_email=Invalid e-mail
+_err_invalid_group=Invalid group
+_err_last_name_empty=Empty last name
+_err_first_name_empty=Empty first name
+_err_passwords_are_not_the_same=Passwords do not match
 
 
 
@@ -39,3 +50,8 @@ User.dateCreated=Date Created
 User.isEnabled=Enabled
 
 UserGroup.name=Group Name
+
+
+_are_you_sure_you_want_to_delete_this_user_group=Are you sure you want to delete this user groups
+_are_you_sure_you_want_to_delete_this_user=Are you sure you want to delete this user
+_you_cannot_delete_this_group=This group can not be removed

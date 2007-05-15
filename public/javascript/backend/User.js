@@ -55,13 +55,20 @@ Backend.UserGroup.prototype =
         var self = this;
 	    self.tabControl = TabControl.prototype.getInstance('userGroupsManagerContainer', self.craftTabUrl, self.craftContainerId, {}); 
         //this.activateGroup();
+        
+        this.bindEvents();
 	},
 
     bindEvents: function()
-    {
+    {        
         var self = this;
-        Event.observe($("userGroups_delete"), 'click', function(e) 
-        {
+    
+        Event.observe($("userGroups_add"), "click", function(e) {
+            Event.stop(e);
+            self.createNewGroup(); 
+        });
+        
+        Event.observe($("userGroups_delete"), "click", function(e) {
             Event.stop(e);
             self.deleteGroup();
         });
@@ -71,16 +78,21 @@ Backend.UserGroup.prototype =
     {
         var $this = this;
         
-        if(confirm(Backend.UserGroup.prototype.Messages.confirmGroupDelete)) 
+        if(Backend.UserGroup.prototype.activeGroup < 0)
+        {
+             return alert(Backend.UserGroup.prototype.Messages.youCanntoDeleteThisGroup)
+        }
+        
+        if (confirm(Backend.UserGroup.prototype.Messages.confirmUserGroupRemove)) 
         {
 		    new Ajax.Request(
-    			Backend.UserGroup.prototype.Links.remove + '/' + Backend.UserGroup.prototype.activeGroup,
+    			Backend.User.Group.prototype.Links.removeNewGroup + '/' + Backend.UserGroup.prototype.activeGroup,
     			{
 				    onComplete: function(response) { 
                         response = eval("(" + response.responseText + ")");
                         if('success' == response.status)
                         {
-                            Backend.UserGroup.prototype.treeBrowser.deleteItem(Backend.UserGroup.prototype.activeGroup, true);
+                            Backend.UserGroup.prototype.treeBrowser.deleteItem(response.userGroup.ID, true);
                             var firstId = false;
                             if(firstId = parseInt(Backend.UserGroup.prototype.treeBrowser._globalIdStorage[1]))
                             {
@@ -92,27 +104,30 @@ Backend.UserGroup.prototype =
             );
         }
     },
-    
-	addNewGroup: function()
+
+	createNewGroup: function()
 	{
         var self = this;
         
 		new Ajax.Request(
-			Backend.UserGroup.prototype.Links.save,
+            Backend.User.Group.prototype.Links.createNewUserGroup,
 			{
 				method: 'post',
-				parameters: 'name=' + $("newGroupInput").value,
-				onComplete: function(response) { self.afterNewGroupAdded(eval("(" + response.responseText + ")")); }
+				parameters: '',
+				onComplete: function(response) { 
+                    self.afterGroupAdded(response, self)
+                 }
 			});
 	},
 
-	afterNewGroupAdded: function(response)
+	afterGroupAdded: function(response, self)
 	{
-        Backend.UserGroup.prototype.treeBrowser.insertNewItem(-2, response.ID, $("newGroupInput").value, 0, 0, 0, 0, 'SELECT');
-        $("newGroupInput").value = '';
-        this.activateGroup(response.ID);
+        var newGroup = eval('(' + response.responseText + ')');
+        self.treeBrowser.insertNewItem(-2, newGroup.ID, newGroup.name, 0, 0, 0, 0, 'SELECT');
+
+        self.activateGroup(newGroup.ID);
+        Backend.ajaxNav.add('group_' + newGroup.ID + '#tabUserGroup');
 	},
-    
     craftTabUrl: function(url)
     {
         return url.replace(/_id_/, Backend.UserGroup.prototype.treeBrowser.getSelectedItemId());

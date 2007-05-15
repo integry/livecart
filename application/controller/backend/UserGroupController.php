@@ -74,6 +74,26 @@ class UserGroupController extends StoreManagementController
             return new JSONResponse(array('status' => 'error', 'errors' => $validator->getErrorList()));
         }
     }
-	
+
+	/**
+	 * Creates a new user group
+	 *
+	 * @return ActionRedirectResponse
+	 */
+	public function create()
+	{
+	    $userGroup = UserGroup::getNewInstance($this->translate('_new_user_group'));
+	    $userGroup->save();
+	    
+		return new JSONResponse($userGroup->toArray());
+	}
+	public function remove()
+	{
+		$userGroup = UserGroup::getInstanceByID((int)$this->request->getValue("id"), true);
+		$userGroupArray = $userGroup->toArray();
+		$userGroup->delete();
+		
+		return new JSONResponse(array('status' => 'success', 'userGroup' => $userGroupArray));
+	}
 }
 ?>

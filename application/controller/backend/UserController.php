@@ -315,8 +315,16 @@ class UserController extends StoreManagementController
 		$validator->addCheck('email', new IsValidEmailCheck($this->translate('_err_invalid_email')));  
 		$validator->addCheck('firstName', new IsNotEmptyCheck($this->translate('_err_first_name_empty')));		
 		$validator->addCheck('lastName', new IsNotEmptyCheck($this->translate('_err_last_name_empty')));
-		$validator->addCheck('password1', new PasswordEqualityCheck($this->translate('_err_passwords_are_not_the_same'), $this->request->getValue('password2')));
-		$validator->addCheck('password2', new PasswordEqualityCheck($this->translate('_err_passwords_are_not_the_same'), $this->request->getValue('password1')));
+		$validator->addCheck('password1', new PasswordEqualityCheck(
+						                        $this->translate('_err_passwords_are_not_the_same'), 
+						                        $this->request->getValue('password2'), 
+												'password2'
+					                        ));
+		$validator->addCheck('password2', new PasswordEqualityCheck(
+		                                        $this->translate('_err_passwords_are_not_the_same'), 
+		                                        $this->request->getValue('password1'), 
+												'password1'
+	                                        ));
 
 		$validator->addCheck('userGroupID', new IsNumericCheck($this->translate('_err_invalid_group')));
 		
