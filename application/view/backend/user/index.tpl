@@ -14,6 +14,8 @@
 {includeCss file="library/ActiveList.css"}
 {includeCss file="library/ActiveGrid.css"}
 
+{includeCss file="backend/Backend.css"}
+
 {includeJs file="backend/User.js"}
 {includeCss file="backend/User.css"}
 
@@ -60,8 +62,10 @@
     Backend.User.Group.prototype.Links.remove = '{/literal}{link controller=backend.userGroup action=delete}{literal}';
     Backend.User.Group.prototype.Links.createNewUserGroup = '{/literal}{link controller=backend.userGroup action=create}{literal}';
     Backend.User.Group.prototype.Links.removeNewGroup = '{/literal}{link controller=backend.userGroup action=remove}{literal}';
+    Backend.User.Group.prototype.Links.create = '{/literal}{link controller=backend.userGroup action=create}{literal}';
 
     var users = new Backend.UserGroup({/literal}{json array=$userGroups}{literal});
+    window.usersActiveGrid = {};
 </script>
 {/literal}
 

@@ -96,7 +96,7 @@ function MinLengthCheck(element, params)
 
 function PasswordEqualityCheck(element, params)
 {
-    return (element.value == element.form.elements.namedItem(params.secondPasswordFieldname));
+    return (element.value == element.form.elements.namedItem(params.secondPasswordFieldname).value);
 }
 
 function MaxLengthCheck(element, params)

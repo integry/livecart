@@ -1,15 +1,39 @@
 <div>
 
-<fieldset class="container">
-	<ul class="menu">
-		<li>
-			<a href="#" onclick="Backend.UserGroup.showAddForm(this.parentNode.parentNode.parentNode.parentNode, {$userGroupID}); return false;">
-				Add New User Group
-			</a>
-			<span class="progressIndicator" style="display: none;"></span>
-		</li>
-	</ul>  
-</fieldset>
+{if $userGroupID >= -1}
+    <fieldset class="container">
+    	<ul id="userGroup_{$userGroupID}_addUser_menu" class="menu">
+    		<li>
+    			<a id="userGroup_{$userGroupID}_addUser" href="#addUser">{t _add_new_user}</a>
+    			<span class="progressIndicator" style="display: none;"></span>
+    		</li>
+    		<li>
+    			<a id="userGroup_{$userGroupID}_addUserCancel" href="#cancelAddingUser" class="hidden">{t _cancel_adding_new_user} </a>
+    		</li>
+    	</ul>  
+        
+        <fieldset id="newUserForm_{$userGroupID}" style="display: none;" class="newUserForm">
+            {include file="backend/user/info.tpl"}
+        </fieldset>
+        
+        {literal}
+        <script type="text/javascript">
+            try
+            {
+                Element.observe($("{/literal}userGroup_{$userGroupID}_addUser{literal}"), 'click', function(e)
+                {
+                    Backend.User.Add.prototype.getInstance({/literal}{$userGroupID}{literal}).showAddForm({/literal}{$userGroupID}{literal}); 
+                    Event.stop(e);
+                });
+            }
+            catch(e)
+            {
+                console.info(e);
+            }
+        </script>
+        {/literal}
+    </fieldset>
+{/if}
 
 <fieldset class="container" style="vertical-align: middle;">
                 
@@ -140,6 +164,8 @@
         
         var massHandler = new Backend.UserGroup.massActionHandler($('{/literal}userMass_{$userGroupID}{literal}'), grid);
         massHandler.deleteConfirmMessage = '{/literal}{t _delete_conf|addslashes}{literal}' ;
+        
+        usersActiveGrid[{/literal}{$userGroupID}{literal}] = grid;
     }
     catch(e)
     {

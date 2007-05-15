@@ -18,7 +18,7 @@ _company_name=Company name
 _user_group=Group
 _is_enabled=Is enabled
 
-
+_add_new_user=Add new user
 
 _byGroup=By group
 
@@ -35,7 +35,7 @@ _err_invalid_group=Invalid group
 _err_last_name_empty=Empty last name
 _err_first_name_empty=Empty first name
 _err_passwords_are_not_the_same=Passwords do not match
-
+_err_this_email_is_already_being_used_by_other_user=This e-mail is already being used by another user
 
 
 ########################

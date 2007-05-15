@@ -14,7 +14,7 @@ Backend.UserGroup.prototype =
 	{
         var self = this;
         
-        if(!Backend.ajaxNav.getHash().match(/#group_-?\d+#\w+__/))
+        if(!Backend.ajaxNav.getHash().match(/group_-?\d+#\w+/))
         {
             window.location.hash = '#group_-2#tabUsers__';
         }
@@ -119,7 +119,7 @@ Backend.UserGroup.prototype =
                  }
 			});
 	},
-
+    
 	afterGroupAdded: function(response, self)
 	{
         var newGroup = eval('(' + response.responseText + ')');
@@ -503,6 +503,11 @@ Backend.User.Editor.prototype =
         
         return Backend.User.Editor.prototype.Instances[id];
     },
+   
+	showAddForm: function(groupID)
+	{
+        console.info('add form');
+	},
 
     hasInstance: function(id)
     {
@@ -513,7 +518,7 @@ Backend.User.Editor.prototype =
   	{
         try
         {
-            this.id = id;
+            this.id = id ? id : '';
     
             this.findUsedNodes();
             this.bindEvents();
@@ -547,7 +552,11 @@ Backend.User.Editor.prototype =
     init: function(args)
     {	
 		Backend.User.Editor.prototype.setCurrentId(this.id);
-        $('userIndicator_' + this.id).style.display = 'none';
+        var userIndicator = $('userIndicator_' + this.id);
+        if(userIndicator) 
+        {
+            userIndicator.style.display = 'none';
+        }
         this.showUserForm();
 
         this.tabControl = TabControl.prototype.getInstance("userManagerContainer", false);
@@ -605,5 +614,119 @@ Backend.User.Editor.prototype =
 		{
 			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
 		}
+	}
+}
+
+
+
+
+
+Backend.User.Add = Class.create();
+Backend.User.Add.prototype = 
+{
+    Instances: {},
+    
+    getInstance: function(groupID, grid)
+    {
+		if(!Backend.User.Add.prototype.Instances[groupID])
+        {
+            Backend.User.Add.prototype.Instances[groupID] = new Backend.User.Add(groupID, grid);
+        }
+        
+        return Backend.User.Add.prototype.Instances[groupID];
+    },
+    
+    initialize: function(groupID, grid)
+  	{
+        try
+        {
+            this.groupID = groupID;
+            
+            this.findUsedNodes();
+            this.bindEvents();
+            
+            Form.State.backup(this.nodes.form);
+            var self = this;
+        }
+        catch(e)
+        {
+            console.info(e);
+        }
+
+	},
+
+	findUsedNodes: function()
+    {
+        this.nodes = {};
+        this.nodes.parent = $("newUserForm_" + this.groupID);
+        this.nodes.form = this.nodes.parent.down("form");
+		this.nodes.cancel = this.nodes.form.down('a.cancel');
+		this.nodes.submit = this.nodes.form.down('input.submit');
+        
+        this.nodes.menuShowLink = $("userGroup_" + this.groupID + "_addUser");
+        this.nodes.menu = $("userGroup_" + this.groupID + "_addUser_menu");
+        this.nodes.menuCancelLink = $("userGroup_" + this.groupID + "_addUserCancel");
+        this.nodes.menuForm = this.nodes.parent;
+    },
+   
+	showAddForm: function()
+	{
+        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuCancelLink]);
+        ActiveForm.prototype.showNewItemForm(this.nodes.menuShowLink, this.nodes.menuForm); 
+	},
+   
+	hideAddForm: function()
+	{
+        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuShowLink]);
+        ActiveForm.prototype.hideNewItemForm(this.nodes.menuShowLink, this.nodes.menuForm); 
+	},
+
+    bindEvents: function(args)
+    {
+		var self = this;
+		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
+		Event.observe(this.nodes.submit, 'click', function(e) { Event.stop(e); self.submitForm()});
+        Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); self.cancelForm();});
+    },
+
+    cancelForm: function()
+    {      
+        ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+		Form.restore(this.nodes.form);
+        this.hideAddForm();
+    },
+    
+    submitForm: function()
+    {
+        if (!validateForm(this.nodes.form)) 
+        { 
+            return false; 
+        } 
+        
+		var self = this;
+		new Ajax.Request(this.nodes.form.action,
+		{
+           method: 'post',
+           parameters: Form.serialize(self.nodes.form),
+           onSuccess: function(responseJSON) {
+				ActiveForm.prototype.resetErrorMessages(self.nodes.form);
+				var responseObject = eval("(" + responseJSON.responseText + ")");
+				self.afterSubmitForm(responseObject);
+		   }
+		});
+    },
+	
+	afterSubmitForm: function(response)
+	{
+        if(response.status == 'success')
+        {
+            window.usersActiveGrid[this.groupID].reloadGrid();
+            Form.State.restore(this.nodes.form);
+            this.hideAddForm();
+        }
+        else
+        {
+        	ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
+        }
 	}
 }

@@ -211,7 +211,7 @@ class User extends ActiveRecordModel
         $email = new Email();
         $email->setUser($this);
         $email->setTemplate('user.new');
-        $email->send();
+        //$email->send();
     }
 
     /**
@@ -243,6 +243,29 @@ class User extends ActiveRecordModel
 		$loginCond->addAND(new EqualsCond(new ARFieldHandle('User', 'password'), md5($password)));
 		
 		$recordSet = ActiveRecordModel::getRecordSet(__CLASS__, new ARSelectFilter($loginCond));
+
+		if (!$recordSet->size())
+		{
+			return null;
+		}
+		else
+		{
+			return $recordSet->get(0);
+		}
+	}
+	
+
+	/**
+	 * Gets an instance of user by using user's e-mail
+	 *
+	 * @param string $email
+	 * @return mixed User instance or null if user is not found
+	 */
+	public static function getInstanceByEmail($email)
+	{
+	    $filter = new ARSelectFilter();
+	    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'email'), $email));
+		$recordSet = ActiveRecordModel::getRecordSet(__CLASS__, $filter);
 
 		if (!$recordSet->size())
 		{

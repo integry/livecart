@@ -44,6 +44,11 @@
     width: 20px;
 }
 
+.newUserForm .user_userGroup, .newUserForm .user_userGroupLabel
+{
+    display: none;
+}
+
 
 .cell_cb 
 {

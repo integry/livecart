@@ -29,8 +29,8 @@
 	</fieldset>
     
     
-    <label for="user_{$user.ID}_userGroup">{t _user_group}</label>
-    <fieldset class="error">
+    <label for="user_{$user.ID}_userGroup" class="user_userGroupLabel">{t _user_group}</label>
+    <fieldset class="error user_userGroup">
 		{selectfield name="UserGroup" options=$availableUserGroups id="user_`$user.ID`_userGroup"}
 		<div class="errorText hidden"> </div>
     </fieldset> 
@@ -62,8 +62,6 @@
 	</fieldset>
     
 
-    
-    
     <fieldset>
     	<input type="submit" name="save" class="submit" value="Save"> {t _or} <a class="cancel" href="#">{t _cancel}</a>
     </fieldset>
@@ -73,7 +71,17 @@
         {literal}
         try
         {
-            Backend.User.Editor.prototype.getInstance({/literal}{$user.ID}{literal});
+            console.info({/literal}{$user.ID}{literal});
+            if({/literal}{$user.ID}{literal} > 0)
+            {
+                console.info('edit');
+                Backend.User.Editor.prototype.getInstance({/literal}{$user.ID}{literal});
+            }
+            else
+            {
+                console.info('add');
+                Backend.User.Add.prototype.getInstance({/literal}{$user.UserGroup}{literal});
+            }
         }
         catch(e)
         {

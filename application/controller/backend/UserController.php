@@ -66,6 +66,21 @@ class UserController extends StoreManagementController
 		$availableColumns = array_merge($displayedAvailable, $notDisplayedAvailable);
 			
 		$response = new ActionResponse();
+		
+		$availableUserGroups = array('' => '');
+        foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
+        {
+            $availableUserGroups[$group->getID()] = $group->name->get();
+        }
+          
+        $userArray = array('UserGroup' => $id, 'ID' => 0);
+        $form = $this->createUserForm(null);
+        $form->setData($userArray);
+        
+	    $response->setValue('user', $userArray);
+	    $response->setValue('availableUserGroups', $availableUserGroups);
+	    $response->setValue('form', $form);
+	    
         $response->setValue("massForm", $this->getMassForm());
         $response->setValue("displayedColumns", $displayedColumns);
         $response->setValue("availableColumns", $availableColumns);
@@ -320,6 +335,7 @@ class UserController extends StoreManagementController
 						                        $this->request->getValue('password2'), 
 												'password2'
 					                        ));
+					                        
 		$validator->addCheck('password2', new PasswordEqualityCheck(
 		                                        $this->translate('_err_passwords_are_not_the_same'), 
 		                                        $this->request->getValue('password1'), 
@@ -365,6 +381,11 @@ class UserController extends StoreManagementController
 		    $firstName = $this->request->getValue('firstName');
 		    $lastName = $this->request->getValue('lastName');
 		    $companyName = $this->request->getValue('companyName');
+		    		    
+		    if(User::getInstanceByEmail($email))
+		    {
+		        return new JSONResponse(array('status' => 'failure', 'errors' => array('email' => $this->translate('_err_this_email_is_already_being_used_by_other_user'))));
+		    }
 		    
 		    if($groupID = (int)$this->request->getValue('UserGroup'))
 		    {
