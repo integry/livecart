@@ -2,6 +2,7 @@
 
 ClassLoader::import("framework.request.Session");
 ClassLoader::import("framework.controller.Controller");
+ClassLoader::import("framework.roles.*");
 ClassLoader::import("application.model.user.User");
 ClassLoader::import("application.helper.*");
 ClassLoader::import("application.model.system.Language");
@@ -65,6 +66,13 @@ abstract class BaseController extends Controller implements LCiTranslator
 	 * Configuration files (language, registry)
 	 */
 	protected $configFiles = array();
+	
+	/**
+	 * Roles
+	 * 
+	 * @var RolesParser
+	 */
+	protected $roles;
 
 	/**
 	 * Bese controller constructor: restores user object by using session data and 
@@ -79,14 +87,29 @@ abstract class BaseController extends Controller implements LCiTranslator
 
 		$this->session = Session::getInstance();
 		$this->user = User::getCurrentUser();
-
 		$this->router = Router::getInstance();
-
-		if (!$this->user->hasAccess($this->getRoleName())) 
+	    
+		// If backend controller is being used then we should 
+	    // check for user permissions to use role assigned to current controller and action
+		if($this->request->isBackend())
 		{
-			throw new AccessDeniedException($this->user, $this->request->getControllerName(), $this->request->getActionName());
+			$rolesCacheDir = ClassLoader::getRealPath('storage.roles');
+			if(!is_dir($rolesCacheDir))
+			{
+			    mkdir($rolesCacheDir);
+			}
+			
+			$this->roles = new RolesParser(
+		        ClassLoader::getRealPath('application.controller.backend.') . get_class($this) . '.php',
+		        $rolesCacheDir . DIRECTORY_SEPARATOR . get_class($this) . 'Roles.php'
+		    );
+			
+			if (!$this->user->hasAccess($this->roles->getRole($this->request->getActionName()))) 
+			{
+				throw new AccessDeniedException($this->user, $this->request->getControllerName(), $this->request->getActionName());
+			}
 		}
-
+		
 		$this->configFiles = $this->getConfigFiles();
 		
 		$this->store = Store::getInstance();
@@ -101,7 +124,6 @@ abstract class BaseController extends Controller implements LCiTranslator
 		{
 			Router::setAutoAppendVariables(array('requestLanguage' => $this->store->getLocaleInstance()->getLocaleCode()));			
 		}
-//		print_r($this->user);
 	}	
 	
 	/**
@@ -157,54 +179,6 @@ abstract class BaseController extends Controller implements LCiTranslator
 	protected function setSessionData($key, $value)
 	{
 		return Session::getInstance()->setControllerData($this, $key, $value);
-	}
-		
-	/**
-	 * Gets a @role tag value in a class and method comments
-	 *
-	 * @return string
-	 * @todo default action and controller name should be defined in one place accessible by all framework parts
-	 */
-	private final function getRoleName()
-	{
-		$controllerClassName = get_class($this);
-		$actionName = $this->request->getActionName();
-		if (empty($actionName))
-		{
-			$actionName = "index";
-		}
-
-		$class = new ReflectionClass($controllerClassName);
-		$classDocComment = $class->getDocComment();
-
-		try
-		{
-			$method = new ReflectionMethod($controllerClassName, $actionName);
-			$actionDocComment = $method->getDocComment();
-		}
-		catch (ReflectionException $e)
-		{
-			throw new ActionNotFoundException($controllerClassName, $actionName);
-		}
-
-		$roleTag = "@role";
-		$classRoleMatches = array();
-		$actionRoleMatches = array();
-		preg_match("/".$roleTag." (.*)(\\r\\n|\\r|\\n)/U", $classDocComment, $classRoleMatches);
-		preg_match("/".$roleTag." (.*)(\\r\\n|\\r|\\n)/U", $actionDocComment, $actionRoleMatches);
-
-		$roleValue = array();
-
-		if (!empty($classRoleMatches))
-		{
-			$roleValue[] = trim(substr($classRoleMatches[0], strlen($roleTag), strlen($classRoleMatches[0])));
-		}
-		if (!empty($actionRoleMatches))
-		{
-			$roleValue[] = trim(substr($actionRoleMatches[0], strlen($roleTag), strlen($actionRoleMatches[0])));
-		}
-
-		return implode('.', $roleValue);
 	}
 
 	/**

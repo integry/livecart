@@ -9,7 +9,7 @@ ClassLoader::import("library.*");
  * @package application.controller.backend
  * @author Saulius Rupainis <saulius@integry.net>
  * @author Sergej Andrejev <sandrejev@gmail.com>
- * @role admin.store.category
+ * @role specification
  */
 class SpecFieldController extends StoreManagementController
 {

@@ -6,8 +6,9 @@ ClassLoader::import("application.model.user.*");
 ClassLoader::import("library.AJAX_TreeMenu.*");
 
 /**
- *
  * @package application.controller.backend
+ * 
+ * @role user
  */
 class RoleGroupController extends StoreManagementController
 {

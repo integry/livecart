@@ -3,6 +3,11 @@
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.product.Manufacturer");
 
+/**
+ * Enter description here...
+ *
+ * @role product
+ */
 class ManufacturerController extends StoreManagementController
 {
 	public function autoComplete()

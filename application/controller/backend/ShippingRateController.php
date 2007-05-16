@@ -11,6 +11,7 @@ ClassLoader::import("framework.request.validator.Form");
  *
  * @package application.controller.backend
  *
+ * @role product
  */
 class ShippingRateController extends StoreManagementController
 {

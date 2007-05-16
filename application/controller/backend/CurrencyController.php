@@ -9,6 +9,7 @@ ClassLoader::import("application.model.Currency");
  * @package application.controller.backend
  * @author Rinalds Uzkalns <rinalds@integry.net>
  *
+ * @role settings
  */
 class CurrencyController extends StoreManagementController
 {

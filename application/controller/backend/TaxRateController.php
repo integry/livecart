@@ -10,6 +10,7 @@ ClassLoader::import("framework.request.validator.Form");
  *
  * @package application.controller.backend
  *
+ * @role tax
  */
 class TaxRateController extends StoreManagementController
 {

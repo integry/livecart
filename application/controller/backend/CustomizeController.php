@@ -8,6 +8,7 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
  * @package application.controller.backend
  * @author Rinalds Uzkalns <rinalds@integry.net>
  * @role admin.site.language
+ * @role customize
  */
 class CustomizeController extends StoreManagementController
 {

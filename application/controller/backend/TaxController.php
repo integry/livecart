@@ -10,6 +10,7 @@ ClassLoader::import("application.model.tax.Tax");
  *
  * @package application.controller.backend
  *
+ * @role tax
  */
 class TaxController extends StoreManagementController
 {

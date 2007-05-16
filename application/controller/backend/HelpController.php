@@ -8,6 +8,8 @@ ClassLoader::import("application.model.help.*");
  * Help system related actions
  *
  * @package application.controller.backend
+ * 
+ * @rule help
  */
 class HelpController extends StoreManagementController
 {

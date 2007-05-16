@@ -12,6 +12,7 @@ ClassLoader::import("framework.request.validator.Form");
  *
  * @package application.controller.backend
  *
+ * @role delivery
  */
 class DeliveryZoneController extends StoreManagementController
 {

@@ -12,6 +12,7 @@ ClassLoader::import('framework.request.validator.filter.*');
  *
  * @package application.controller.backend
  *
+ * @role settings
  */
 class SettingsController extends StoreManagementController
 {

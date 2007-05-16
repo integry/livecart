@@ -13,6 +13,7 @@ ClassLoader::import('framework.request.validator.filter.*');
  *
  * @package application.controller.backend
  *
+ * @role page
  */
 class StaticPageController extends StoreManagementController
 {

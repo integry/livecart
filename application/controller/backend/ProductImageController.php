@@ -10,6 +10,7 @@ ClassLoader::import("application.model.product.ProductImage");
  * @package application.controller.backend
  * @author Integry Systems
  *
+ * @role product
  */
 class ProductImageController extends ObjectImageController
 {

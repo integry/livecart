@@ -8,7 +8,7 @@ ClassLoader::import("application.model.user.UserConfigValue");
  *
  * @package application.controller.backend
  * @author Saulius Rupainis <saulius@remo.lt>
- * @role admin
+ * @role index
  */
 class IndexController extends BackendController
 {

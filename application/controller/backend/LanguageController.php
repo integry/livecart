@@ -11,7 +11,7 @@ ClassLoader::import("library.*");
  *
  * @package application.controller.backend
  * @author Rinalds Uzkalns <rinalds@integry.net>
- * @role admin.site.language
+ * @role settings
  */
 class LanguageController extends StoreManagementController
 {	

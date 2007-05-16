@@ -11,6 +11,7 @@ ClassLoader::import("library.*");
  * @author Sergej Andrejev <sandrejev@gmail.com>
  *
  * @role admin.store.catalog
+ * @role filter
  */
 class FilterGroupController extends StoreManagementController
 {

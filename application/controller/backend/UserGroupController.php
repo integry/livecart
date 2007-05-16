@@ -8,6 +8,7 @@ ClassLoader::import("framework.request.validator.RequestValidator");
 
 /**
  * @package application.controller.backend
+ * @role user
  */
 class UserGroupController extends StoreManagementController
 {

@@ -8,7 +8,7 @@ ClassLoader::import("library.*");
  *
  * @package application.controller.backend
  * @author Sergej Andrejev <sergej@gmail.net>
- * @role admin.store.category
+ * @role specification
  */
 class SpecFieldGroupController extends StoreManagementController
 {

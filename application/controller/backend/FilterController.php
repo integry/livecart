@@ -11,6 +11,7 @@ ClassLoader::import("library.*");
  * @author Saulius Rupainis <saulius@integry.net>
  *
  * @role admin.store.catalog
+ * @role filter
  */
 class FilterController extends StoreManagementController
 {

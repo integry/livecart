@@ -10,6 +10,7 @@ ClassLoader::import("application.model.category.CategoryImage");
  * @package application.controller.backend
  * @author Integry Systems
  *
+ * @role category
  */
 class CategoryImageController extends ObjectImageController
 {
