@@ -130,7 +130,8 @@ User.ShippingFormToggler.prototype =
         this.container = container;
         
         Event.observe(this.checkbox, 'change', this.handleChange.bindAsEventListener(this));
-
+        Event.observe(this.checkbox, 'click', this.handleChange.bindAsEventListener(this));
+        
         this.handleChange(null);
     },
     

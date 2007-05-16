@@ -24,11 +24,13 @@ class Email
     {
         ClassLoader::import('library.swiftmailer.Swift');
         ClassLoader::import('library.swiftmailer.Swift.Connection.NativeMail');
+        ClassLoader::import('library.swiftmailer.Swift.Connection.SMTP');
         ClassLoader::import('library.swiftmailer.Swift.Message');
                 
         if (!self::$connection)
         {
             self::$connection = new Swift_Connection_NativeMail();
+//            self::$connection = new Swift_Connection_SMTP(ini_get('SMTP'));
         }
         
         $this->swiftInstance = new Swift(self::$connection);
@@ -127,7 +129,18 @@ class Email
         }
         
         $message = new Swift_Message($this->subject, $this->text);
-        return $this->swiftInstance->send($message, $this->recipients, $this->from);
+        
+        try
+        {
+            $res = $this->swiftInstance->send($message, $this->recipients, $this->from);
+        }
+        catch (Exception $e)
+        {
+//            throw $e;
+            return false;      
+        }        
+        
+        return $res;
     }
 }
 

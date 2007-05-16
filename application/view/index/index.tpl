@@ -12,10 +12,11 @@
         <p>
         <a href="http://livecart.com">LiveCart</a> is a <strong>new shopping cart software</strong> and is currently in a beta testing phase. The software cannot be purchased just yet, while we're still working on it. However, in the meanwhile you're welcome to test it out and if you think it might well suit your next project - the launch is only a couple of weeks away! 
         </p>
-        
-        <a href="http://blog.livecart.com">Read more about LiveCart</a>.
+               
+        <a href="http://blog.livecart.com">Read more about LiveCart</a>
+                
 	</div>
-	
+
 	{include file="category/subcategoriesColumns.tpl"}
 </div>		
 

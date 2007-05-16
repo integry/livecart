@@ -15,6 +15,11 @@ a
 	color: #143788;
 }
 
+a:hover:active
+{
+    color: blue;
+}
+
 a img
 {
     border: 0;
@@ -928,7 +933,7 @@ div.checkout a
 
 .cartPrice
 {
-	width: 80px;
+	width: 100px;
 	text-align: center;
 	white-space: nowrap;
 	padding-bottom: 5px;

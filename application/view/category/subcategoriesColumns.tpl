@@ -1,5 +1,6 @@
 {math count=$subCategories|@count equation="max(2, ceil(count / 2))" assign="perColumn"}
 
+<fieldset class="container">
 {foreach from=$subCategories item="sub" name="subcats"}   
 {if $smarty.foreach.subcats.index % $perColumn == 0}
 <table class="subCategories" style="float: left;">
@@ -48,4 +49,4 @@
 {/if}
 {/foreach}    
 
-<div class="clear"></div>
+</fieldset>
