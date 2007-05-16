@@ -16,7 +16,7 @@ class TestRolesParser extends UnitTestCase
 		        while (($file = readdir($dir)) !== false) {
 		            if(in_array($file, array('.', '..'))) continue;
 		            
-		            unlink($dirPath . DIRECTORY_SEPARATOR . $file);
+		            @unlink($dirPath . DIRECTORY_SEPARATOR . $file);
 		        }
 		        
 		        closedir($dir);
@@ -45,6 +45,18 @@ class TestRolesParser extends UnitTestCase
         );
         
         $this->assertEqual($dumpControllerRoles->getRole('test'), 'test.subtest');
+    }
+    
+    public function testGerRoleNames()
+    {
+        $dumpControllerRoles = new RolesParser(
+            ClassLoader::getRealPath("test.framework.roles.controllers.DumpController") . ".php", 
+            ClassLoader::getRealPath("test.framework.roles.cache.DumpControllerRoles") . ".php"
+        );
+        
+        $this->assertEqual(count($dumpControllerRoles->getRolesNames()), 2);
+        $this->assertTrue(in_array('test', $dumpControllerRoles->getRolesNames()));
+        $this->assertTrue(in_array('test.subtest', $dumpControllerRoles->getRolesNames()));
     }
 }
 
