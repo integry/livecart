@@ -1270,11 +1270,15 @@ label
     padding-right: 6px;
     margin-top: 0;
     margin-bottom: 0;
+    padding-left: 22px;
 }
 
 p.required label
 {
-  	font-weight: bold;
+    background-image: url(../../image/silk/bullet_black.png);
+    background-repeat: no-repeat;
+    background-position: center left;
+    width: 12em;
 }
 
 p.radio, p.checkbox

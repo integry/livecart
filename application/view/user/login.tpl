@@ -12,8 +12,14 @@
 	<h2>{t Returning Customer}</h2>
 	
 	<p>
-        <label></label>
-        Please sign in.
+        {if $failed}           
+            <div class="errorMsg" style="margin: 0;">
+                {t Login failed. Please make sure that your e-mail and password are entered correctly.}
+            </div>                
+        {else}
+            <label></label>
+            {t Please sign in}
+        {/if}
     </p>
 	
 	{capture assign="return"}{link controller=user}{/capture}
