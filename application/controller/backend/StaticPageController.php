@@ -1,12 +1,7 @@
 <?php
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.staticPage.StaticPage");
-
-/*
-ClassLoader::import('framework.request.validator.check.*');
-ClassLoader::import('framework.request.validator.filter.*');
-*/
+ClassLoader::import("application.model.staticpage.StaticPage");
 		
 /**
  * Static page management
