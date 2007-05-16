@@ -91,23 +91,19 @@ abstract class BaseController extends Controller implements LCiTranslator
 	    
 		// If backend controller is being used then we should 
 	    // check for user permissions to use role assigned to current controller and action
-		if($this->request->isBackend())
+		$rolesCacheDir = ClassLoader::getRealPath('cache.roles');
+		if(!is_dir($rolesCacheDir))
 		{
-			$rolesCacheDir = ClassLoader::getRealPath('storage.roles');
-			if(!is_dir($rolesCacheDir))
-			{
-			    mkdir($rolesCacheDir);
-			}
-			
-			$this->roles = new RolesParser(
-		        ClassLoader::getRealPath('application.controller.backend.') . get_class($this) . '.php',
-		        $rolesCacheDir . DIRECTORY_SEPARATOR . get_class($this) . 'Roles.php'
-		    );
-			
-			if (!$this->user->hasAccess($this->roles->getRole($this->request->getActionName()))) 
-			{
-				throw new AccessDeniedException($this->user, $this->request->getControllerName(), $this->request->getActionName());
-			}
+		    mkdir($rolesCacheDir);
+		}
+		
+		$controllerPath = ClassLoader::getRealPath('application.controller.' . ($this->request->isBackend() ? 'backend.' : '')) . get_class($this) . '.php';
+		$cachePath = $rolesCacheDir . DIRECTORY_SEPARATOR . md5($controllerPath) . '.php';
+		$this->roles = new RolesParser($controllerPath, $cachePath);
+	    
+		if (!$this->user->hasAccess($this->roles->getRole($this->request->getActionName()))) 
+		{
+			throw new AccessDeniedException($this->user, $this->request->getControllerName(), $this->request->getActionName());
 		}
 		
 		$this->configFiles = $this->getConfigFiles();

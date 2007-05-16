@@ -1,7 +1,6 @@
 <?php
 
 ClassLoader::import("application.controller.backend.abstract.BackendController");
-ClassLoader::import("application.model.user.UserConfigValue");
 
 /**
  * Main backend controller which stands as an entry point to administration functionality

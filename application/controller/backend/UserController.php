@@ -366,7 +366,7 @@ class UserController extends StoreManagementController
 	{
 	  	if ($id = (int)$this->request->getValue('id'))
 	  	{
-		  	$user = User::getInstanceByID((int)$id);
+		  	$user = User::getInstanceByID((int)$id, true);
 	  	}
 	  	else
 	  	{
@@ -377,12 +377,13 @@ class UserController extends StoreManagementController
 		if ($validator->isValid())
 		{
 		    $email = $this->request->getValue('email');
-		    $password = $this->request->getValue('password');
+		    $password = $this->request->getValue('password1');
 		    $firstName = $this->request->getValue('firstName');
 		    $lastName = $this->request->getValue('lastName');
 		    $companyName = $this->request->getValue('companyName');
-		    		    
-		    if(User::getInstanceByEmail($email))
+
+		    if(($user && $email != $user->email->get() && User::getInstanceByEmail($email)) || 
+		       (!$user && User::getInstanceByEmail($email)))
 		    {
 		        return new JSONResponse(array('status' => 'failure', 'errors' => array('email' => $this->translate('_err_this_email_is_already_being_used_by_other_user'))));
 		    }
