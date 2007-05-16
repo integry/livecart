@@ -22,9 +22,11 @@
 		   	
     <h2>Pay with a credit card</h2>
         
-	{form action="controller=checkout action=payCreditCard" handle=$ccForm method="POST" style="float: left;"}
+	{form action="controller=checkout action=payCreditCard" handle=$ccForm method="POST"}
     
-	    {error for="creditCardError"}
+	    <div style="float: left; width: 500px;">
+	    
+        {error for="creditCardError"}
 	    	<div class="errorMsg ccPayment">
 	    		{$msg}
 	    	</div>
@@ -70,11 +72,15 @@
         </p>
         
         <input type="submit" class="submit" value="{tn Complete Order Now}" />
+        
+        </div>
+
+        <div id="cvvHelp" style="float: left; width: 350px; padding: 5px; margin-left: 20px; display: none;">
+    		{include file="checkout/cvvHelp.tpl"}    	
+        </div>
+
     {/form}
     
-    <div id="cvvHelp" style="float: left; width: 40%; padding: 5px; margin-left: 20px; display: none;">
-		{include file="checkout/cvvHelp.tpl"}    	
-    </div>
     
     <div class="clear"></div> 
 

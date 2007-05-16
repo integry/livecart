@@ -4,7 +4,7 @@
 
 <div id="content" class="left right">
 	
-	<h1>{t _your_account}</h1>
+	<h1>{t _your_account} ({$user.fullName})</h1>
 	
 	{if $userConfirm}
 	<div class="confirmationMsg">

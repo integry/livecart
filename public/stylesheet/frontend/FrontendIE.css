@@ -24,3 +24,9 @@ legend {
 {
     border: 0;
 }
+
+label.checkbox, label.radio
+{
+    margin: 0;
+  	margin-top: 6px; 
+}

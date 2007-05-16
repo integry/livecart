@@ -12,6 +12,10 @@
     <div style="float: left; margin-left: 160px; margin-top: 15px;">
 
         &copy; 2007 <a href="http://livecart.com">UAB Integry Systems</a>
+        <br />
+        <div style="font-size: smaller; margin-top: 5px;">
+            All trademarks used are properties of their respective owners.
+        </div>
     </div>
 
 	<div style="float: right;">

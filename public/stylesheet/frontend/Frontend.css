@@ -4,7 +4,7 @@
   	padding: 0;
 }
 
-body
+body, h4
 {
     font-family: Verdana;
     font-size: small;
@@ -409,6 +409,14 @@ tr.even
     padding-top: 10px;    
 }
 
+#smallCart a.checkout
+{
+	background-image: url(../../image/silk/gif/cart_go.gif);
+	background-position: center right;
+	background-repeat: no-repeat;
+	padding-right: 20px;
+}
+
 /*****************************
 	Information menu
 *****************************/
@@ -530,6 +538,20 @@ ul.subSubCats
 .keywords
 {
 	font-style: italic;	
+}
+
+.notFound
+{
+    margin: 20px;
+    background-image: url(../../image/silk/gif/emoticon_unhappy.gif);
+    background-repeat: no-repeat;
+    background-position: 6px center;
+    padding-left: 28px;    
+}
+
+.notFoundMain
+{
+    font-weight: bold;    
 }
 
 .allFilters li
@@ -838,9 +860,8 @@ td.addToWishList
 .forgottenPassword
 {
     display: block;
-    clear: left;
     font-size: smaller;
-    padding-left: 157px;
+    float: left;
 }
 
 /*****************************
@@ -895,6 +916,7 @@ div.checkout a
 	font-size: smaller;
 	margin-bottom: 5px;
 	display: block;
+	float: left;
 }
 
 .cartQuant
@@ -1240,6 +1262,9 @@ label
     float: left;
     width: 12em;
     cursor: pointer;
+    padding-right: 6px;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 p.required label
@@ -1255,12 +1280,12 @@ p.radio, p.checkbox
 p.radio label, p.checkbox label
 {
     white-space: nowrap;
-    margin-top: 3px;
+    margin-top: 3px; 
 }
 
 label.checkbox, label.radio
 {
-  	margin-top: 3px;
+  	margin-top: 3px; 
   	width: auto;
 }
 
@@ -1270,6 +1295,13 @@ input.text, select, file, form.other
     font-size: 16px;
     padding: 2px;
     vertical-align: middle;
+}
+
+label.cancel
+{
+    float: none;
+    position: relative;
+    top: -6px;
 }
 
 select

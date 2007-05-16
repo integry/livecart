@@ -12,6 +12,7 @@
 	<h2>{t Returning Customer}</h2>
 	
 	<p>
+        <label></label>
         Please sign in.
     </p>
 	
@@ -20,7 +21,8 @@
 		
 	<h2>{t New Customer}</h2>
 
-	Not registered yet?
+        <label></label>
+    	Not registered yet?
 	
 	{include file="user/regForm.tpl"}
 	

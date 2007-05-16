@@ -333,6 +333,8 @@ class CategoryController extends FrontendController
 			
 			$count = ActiveRecordModel::getDataBySQL($query->createString());
 
+            $categoryNarrow = array();
+
 			foreach ($count as $cat)
 			{
 				if (empty($index[$cat['ID']]))

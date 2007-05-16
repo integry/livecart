@@ -57,16 +57,17 @@ _change_pass=Change Password
 _current_pass=Current Password
 _enter_new_pass=Enter new password
 _reenter_new_pass=Re-enter new password
-_complete_pass_change=Complete Password Change
+_complete_pass_change=Change Password
 _confirm_password_change=Your password has been changed
 
 ######################## 
 # Change e-mail
 ######################## 
+_current_email=Current e-mail address
 _change_email=Change Your E-mail Address
 _new_email=Enter new e-mail address
 _err_not_unique_email_for_change=The e-mail address you entered is already registered in our system.
-_complete_email_change=Complete E-mail Change
+_complete_email_change=Change E-mail
 _confirm_email_change=Your e-mail address has been changed
 
 ######################## 

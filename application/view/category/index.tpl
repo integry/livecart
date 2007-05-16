@@ -22,8 +22,8 @@
     {/if}
 
     {if $searchQuery && !$products}
-        <p>
-            {t No products were found. Please try different keywords for your search query.}
+        <p class="notFound">
+            {t <span class='notFoundMain'>No products were found.</span> Please try different keywords for your search query.}
         </p>    
     {/if}
 

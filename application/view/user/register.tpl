@@ -7,7 +7,7 @@
 
 <div id="content" class="left right">
 	
-	<h1>{t _register}</h1>
+	<h1>{t _user_registration}</h1>
 		
 	{include file="user/regForm.tpl"}
 	

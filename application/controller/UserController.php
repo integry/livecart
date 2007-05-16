@@ -37,6 +37,7 @@ class UserController extends FrontendController
         }
 
         $response = new ActionResponse();
+		$response->setValue('user', $this->user->toArray());
 		$response->setValue('orders', $orders->toArray());
 		$response->setValue('userConfirm', $this->session->pullValue('userConfirm'));		
 		return $response;
@@ -49,6 +50,7 @@ class UserController extends FrontendController
     {
         $this->addBreadCrumb($this->translate('_change_pass'), '');
         $response = new ActionResponse(); 
+		$response->setValue('user', $this->user->toArray());
         $response->setValue('form', $this->buildPasswordChangeForm());        
         return $response;
     }
@@ -79,6 +81,7 @@ class UserController extends FrontendController
     {
         $this->addBreadCrumb($this->translate('_change_email'), '');
         $response = new ActionResponse(); 
+		$response->setValue('user', $this->user->toArray());
         $response->setValue('form', $this->buildEmailChangeForm());        
         return $response;
     }
@@ -109,6 +112,7 @@ class UserController extends FrontendController
     {
         $this->addBreadCrumb($this->translate('_manage_addresses'), '');
         $response = new ActionResponse(); 
+		$response->setValue('user', $this->user->toArray());
     	$response->setValue('billingAddresses', $this->user->getBillingAddressArray());
     	$response->setValue('shippingAddresses', $this->user->getShippingAddressArray());
         return $response;
@@ -130,6 +134,7 @@ class UserController extends FrontendController
             $order->loadAll();  
             $response = new ActionResponse();
             $response->setValue('order', $order->toArray());
+    		$response->setValue('user', $this->user->toArray());
             return $response; 
         }
         else
@@ -154,6 +159,7 @@ class UserController extends FrontendController
             $order->loadAll();  
             $response = new ActionResponse();
             $response->setValue('order', $order->toArray());
+    		$response->setValue('user', $this->user->toArray());
             return $response; 
         }
         else
@@ -195,7 +201,8 @@ class UserController extends FrontendController
     public function login()
     {
 		$response = new ActionResponse();
-		$response->setValue('regForm', $this->buildRegForm());				
+        $response->setValue('regForm', $this->buildRegForm());				
+        $response->setValue('email', $this->request->getValue('email'));
 		return $response;
     }
     
@@ -774,7 +781,7 @@ class UserController extends FrontendController
     	$validator->addCheck('email', new IsValidEmailCheck($this->translate('_err_invalid_email')));    
     	
         $emailErr = $this->translate($uniqueError);
-        $emailErr = str_replace('%1', Router::getInstance()->createUrl(array('controller' => 'user', 'action' => 'login')), $emailErr);
+        $emailErr = str_replace('%1', Router::getInstance()->createUrl(array('controller' => 'user', 'action' => 'login', 'query' => array('email' => $this->request->getValue('email')))), $emailErr);
         $validator->addCheck('email', new IsUniqueEmailCheck($emailErr));    
 	}    
 	
