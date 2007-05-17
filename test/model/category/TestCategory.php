@@ -71,10 +71,8 @@ class TestCategory extends UnitTest
 	    $this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::PARENT_NODE_FIELD_NAME)->getID(), $rootID);
 	    
 		// Reload and check again
-	    $this->root->markAsNotLoaded();
-	    $this->root->load();
-	    $newCategory->markAsNotLoaded();
-	    $newCategory->load();
+	    $this->root->reload();
+	    $newCategory->reload();
 	    
 	    // Check
 		$this->assertEqual($newCategory->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootRgt);
@@ -144,17 +142,14 @@ class TestCategory extends UnitTest
         $newCategory->save();
         $categoryID = $newCategory->getID();
         
-        // Reload category
-        $newCategory->markAsNotLoaded();
-        $this->assertTrue($newCategory->isExistingRecord());
-        $this->assertFalse($newCategory->isLoaded());
-        $newCategory->load();
+        $newCategory->reload();
         
         // reload root and check to see if rgt and lft didn't change
 	    $rootRgt = $this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
 	    $rootLft = $this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
-	    $this->root->markAsNotLoaded();
-	    $this->root->load();
+	    
+	    $this->root->reload();
+	    
 	    $this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt);
 	    $this->assertEqual($this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $rootLft);
         
@@ -178,9 +173,7 @@ class TestCategory extends UnitTest
 	    $rootRgt = $this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME);
 	    $rootLft = $this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
 	    
-	    // reload root
-	    $this->root->markAsNotLoaded();
-	    $this->root->load();
+	    $this->root->reload();
 	    
 	    // Make sure everything is created and left and right values are valid
 	    $this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt);
@@ -190,9 +183,7 @@ class TestCategory extends UnitTest
 	    {
 	        $newCategories[2]->moveTo($this->root, $category);
 		    
-		    // reload root
-		    $this->root->markAsNotLoaded();
-		    $this->root->load();
+		    $this->root->reload();
 		    
 		    // Make sure one category is last child, root lft and rgt shouldn't change
 		    $this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt, "Root rgt should be the same when moving category 3 to ".($category ? $key : 'null')." out of 4 ([".($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME))."] and [$rootRgt])");
@@ -258,8 +249,7 @@ class TestCategory extends UnitTest
 	    $rootLft = $this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
 	    
 	    // reload root
-	    $this->root->markAsNotLoaded();
-	    $this->root->load();
+	    $this->root->reload();
 	    
 	    // Make sure everything is created and left and right values are valid
 	    $this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt);
@@ -282,10 +272,8 @@ class TestCategory extends UnitTest
 	    $rootLftAfter = $this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
 	    
 	    // reload target, parent and root
-	    $newCategories[1]->markAsNotLoaded();
-	    $newCategories[1]->load();
-	    $newCategories[4]->markAsNotLoaded();
-	    $newCategories[4]->load();
+	    $newCategories[1]->reload();
+	    $newCategories[4]->reload();
 
 	    // Check if all rgt and lft in database are the same as in objects
 	    $this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgtAfter);
@@ -295,8 +283,7 @@ class TestCategory extends UnitTest
 	    $this->assertEqual($newCategories[4]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $targetCatRgtAfter);
 	    $this->assertEqual($newCategories[4]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME), $targetCatLftAfter);
 	    
-	    $this->root->markAsNotLoaded();
-	    $this->root->load();
+	    $this->root->reload();
 	    
 	    // Check if all lft and rgt are valid
 	    $this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgt);
@@ -325,12 +312,9 @@ class TestCategory extends UnitTest
 	    $rootLftAfter = $this->root->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
 	    
 	    // reload target, parent and root
-	    $newCategories[1]->markAsNotLoaded();
-	    $newCategories[1]->load();
-	    $newCategories[7]->markAsNotLoaded();
-	    $newCategories[7]->load();
-	    $this->root->markAsNotLoaded();
-	    $this->root->load();
+	    $newCategories[1]->reload();
+	    $newCategories[7]->reload();
+	    $this->root->reload();
 	    
 	    // Check if all rgt and lft in database are the same as in objects
 	    $this->assertEqual($this->root->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $rootRgtAfter);
@@ -369,12 +353,9 @@ class TestCategory extends UnitTest
 	    $beforeCatLftAfter = $newCategories[7]->getFieldValue(ActiveTreeNode::LEFT_NODE_FIELD_NAME);
 	    
 	    // reload target, parent and before
-	    $newCategories[1]->markAsNotLoaded();
-	    $newCategories[1]->load();
-	    $newCategories[7]->markAsNotLoaded();
-	    $newCategories[7]->load();
-	    $newCategories[11]->markAsNotLoaded();
-	    $newCategories[11]->load();
+	    $newCategories[1]->reload();
+	    $newCategories[7]->reload();
+	    $newCategories[11]->reload();
 	    
 	    // Check if all rgt and lft in database are the same as in objects
 	    $this->assertEqual($newCategories[1]->getFieldValue(ActiveTreeNode::RIGHT_NODE_FIELD_NAME), $parentCatRgtAfter);

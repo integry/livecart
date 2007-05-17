@@ -391,8 +391,7 @@ class TestProduct extends UnitTest
 	        $this->assertIsA($relatedProduct, 'Product');
 	    }
 	    
-	    $this->product->markAsNotLoaded();
-	    $this->product->load();
+	    $this->product->reload();
 	    
 	    // All relationships will be lost unless product is saved
 	    $this->assertEqual(0, $this->product->getRelatedProducts()->getTotalRecordCount());
@@ -401,8 +400,7 @@ class TestProduct extends UnitTest
 	    $this->product->save();
 	    
 	    // reload
-	    $this->product->markAsNotLoaded();
-	    $this->product->load();
+	    $this->product->reload();
 	    
 	    // all related products should be here
 	    $this->assertEqual(2, $this->product->getRelatedProducts()->getTotalRecordCount());
@@ -420,8 +418,8 @@ class TestProduct extends UnitTest
 	    }
 	    
 	    $this->product->save();
-	    $this->product->markAsNotLoaded();
-	    $this->product->load();
+	    
+	    $this->product->reload();
 	    
 	    $i = 1;
 	    $this->assertEqual(2, $this->product->getRelationships()->getTotalRecordCount());
@@ -493,8 +491,7 @@ class TestProduct extends UnitTest
 	    $this->assertEqual(0, $this->product->getRelatedProducts()->getTotalRecordCount());
 	    
 	    // reload
-	    $this->product->markAsNotLoaded();
-	    $this->product->load();
+	    $this->product->reload();
 	    
 	    // Relationships are not removed from database unless the product is saved
 	    $this->assertEqual(2, $this->product->getRelatedProducts()->getTotalRecordCount());

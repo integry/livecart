@@ -22,8 +22,7 @@ class TestRole extends UnitTest
         $role = Role::getNewInstance('testing');
         $role->save();
         
-        $role->markAsNotLoaded();
-        $role->load();
+        $role->reload();
         
         $this->assertEqual($role->name->get(), 'testing');
     }

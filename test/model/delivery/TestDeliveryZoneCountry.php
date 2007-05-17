@@ -40,8 +40,7 @@ class TestDeliveryZoneCountry extends UnitTest
 	    $deliveryCountry = DeliveryZoneCountry::getNewInstance($this->zone, 'LT');
 	    $deliveryCountry->save();
 	    
-	    $deliveryCountry->markAsNotLoaded();
-	    $deliveryCountry->load();
+	    $deliveryCountry->reload();
 	    
 	    $this->assertEqual($deliveryCountry->deliveryZone->get(), $this->zone);
 	    $this->assertTrue($deliveryCountry->countryCode->get(), 'LT');

@@ -23,8 +23,7 @@ class TestUserGroup extends UnitTest
         $group = UserGroup::getNewInstance('testing', 'testing');
         $group->save();
         
-        $group->markAsNotLoaded();
-        $group->load();
+        $group->reload();
         
         $this->assertEqual($group->name->get(), 'testing');
         $this->assertEqual($group->description->get(), 'testing');
@@ -54,5 +53,21 @@ class TestUserGroup extends UnitTest
         
         $this->assertReference($groupUsers->get($groupUsers->getTotalRecordCount() - 1), $user);
     }   
+
+    public function testGetRolesRecordSet()
+    {
+        $role = Role::getNewInstance('__testrole__');
+        $role->save();
+        
+        $userGroup = UserGroup::getNewInstance('Any random group name');
+        $userGroup->save();
+        
+        $assoc = AccessControlAssociation::getNewInstance($userGroup, $role);
+        $assoc->save();
+        
+        $rolesRecordSet = $userGroup->getRolesRecordSet();
+        $this->assertEqual($rolesRecordSet->getTotalRecordCount(), 1);
+        $this->assertReference($rolesRecordSet->get(0), $role);
+    }
 }
 ?>

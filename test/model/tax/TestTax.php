@@ -41,8 +41,8 @@ class TestTax extends UnitTest
         $tax->isEnabled->set(1);
         $tax->save();
         
-        $tax->markAsNotLoaded();
-        $tax->load();
+        $tax->reload();
+        
         $this->assertEqual($tax->getValueByLang('name', Store::getInstance()->getDefaultLanguageCode()), 'testing');
         $this->assertEqual($tax->isEnabled->get(), 1);
     }

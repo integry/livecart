@@ -45,8 +45,8 @@ class TestUser extends UnitTest
         $user->isEnabled->set(true);
         
         $user->save();
-        $user->markAsNotLoaded();
-        $user->load();
+        
+        $user->reload();
         
         $this->assertEqual($user->firstName->get(), 'Yuri');
         $this->assertEqual($user->lastName->get(), 'Gagarin');

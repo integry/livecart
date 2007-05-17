@@ -99,8 +99,7 @@ class TestProductRelationship extends UnitTest
 	    $relationship->save();
 	    
 	    // reloat
-	    $relationship->markAsNotLoaded();
-	    $relationship->load(array('RelatedProduct' => 'Product'));
+	    $relationship->reload(array('RelatedProduct' => 'Product'));
 	    
 	    // Check if product and related products are not null
 	    $this->assertNotNull($relationship->product->get());
@@ -120,8 +119,7 @@ class TestProductRelationship extends UnitTest
 	    $relationship->save();
 	    
 	    // reloat
-	    $relationship->markAsNotLoaded();
-	    $relationship->load();
+	    $relationship->reload();
 	    
 	    // Check group
 	    $this->assertTrue($relationship->productRelationshipGroup->get() === $this->group);

@@ -55,8 +55,7 @@ class TestShippingRate extends UnitTest
         $shippingRate->perKgCharge->set(1.4);
         $shippingRate->save();
         
-        $shippingRate->markAsNotLoaded();
-        $shippingRate->load();
+        $shippingRate->reload();
         
         $this->assertTrue($shippingRate->shippingService->get() === $this->shippingService);
         

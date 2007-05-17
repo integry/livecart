@@ -40,8 +40,7 @@ class TestDeliveryZoneAddressMask extends UnitTest
 	    $addressMask = DeliveryZoneAddressMask::getNewInstance($this->zone, 'Viln%');
 	    $addressMask->save();
 	    
-	    $addressMask->markAsNotLoaded();
-	    $addressMask->load();
+	    $addressMask->reload();
 	    
 	    $this->assertEqual($addressMask->deliveryZone->get(), $this->zone);
 	    $this->assertTrue($addressMask->mask->get(), 'Viln%');
@@ -54,8 +53,7 @@ class TestDeliveryZoneAddressMask extends UnitTest
 	    
 	    $this->assertTrue($addressMask->isExistingRecord());
 	    
-	    $addressMask->delete();
-	    $addressMask->markAsNotLoaded();
+	    $addressMask->reload();
 	    
 	    try 
         { 

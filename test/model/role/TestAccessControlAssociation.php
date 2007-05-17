@@ -36,7 +36,7 @@ class TestAccessControlAssociation extends UnitTest
         parent::setUp();
         
         $this->role = Role::getNewInstance('__testrole__');
-        $this->role->save;
+        $this->role->save();
         
         $this->userGroup = UserGroup::getNewInstance('Any random group name');
         $this->userGroup->save();
@@ -53,16 +53,26 @@ class TestAccessControlAssociation extends UnitTest
         $this->assertReference($this->role, $assoc->role->get());
     }
 
-    public function xtestGetRoleByName()
+    public function testGetAssociationsByGroup()
     {
-        $newRole = Role::getNewInstance('testing');
-        $newRole->save();
+        $assoc = AccessControlAssociation::getNewInstance($this->userGroup, $this->role);
+        $assoc->save();
         
-        $role = Role::getInstanceByName('testing');
-        $this->assertReference($role, $newRole);
+        $associations = AccessControlAssociation::getRecordSetByUserGroup($this->userGroup, new ARSelectFilter());
         
-        $role = Role::getInstanceByName('unknown');
-        $this->assertNull($role, null);
+        $this->assertEqual($associations->getTotalRecordCount(), 1);
+        $this->assertReference($associations->get(0)->role->get(), $this->role);
+    }
+
+    public function testGetAssociationsByRole()
+    {
+        $assoc = AccessControlAssociation::getNewInstance($this->userGroup, $this->role);
+        $assoc->save();
+        
+        $associations = AccessControlAssociation::getRecordSetByRole($this->role, new ARSelectFilter());
+        
+        $this->assertEqual($associations->getTotalRecordCount(), 1);
+        $this->assertReference($associations->get(0)->userGroup->get(), $this->userGroup);
     }
 }
 ?>

@@ -45,8 +45,7 @@ class TestTaxRate extends UnitTest
         $taxRate = TaxRate::getNewInstance($this->deliveryZone, $this->tax, 15);
         $taxRate->save();
         
-        $taxRate->markAsNotLoaded();
-        $taxRate->load();
+        $taxRate->reload();
         
         $this->assertEqual($taxRate->rate->get(), 15);
         $this->assertTrue($taxRate->deliveryZone->get() === $this->deliveryZone);

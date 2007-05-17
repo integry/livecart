@@ -38,9 +38,7 @@ class TestDeliveryZone extends UnitTest
 	    $zone->isFreeShipping->set(1);
 	    $zone->save();
 	    
-	    // Reload
-	    $zone->markAsNotLoaded();
-	    $zone->load();
+	    $zone->reload();
 	    
 	    $name = $zone->name->get();
 	    $this->assertEqual($name['en'], ':TEST_ZONE');
@@ -56,8 +54,7 @@ class TestDeliveryZone extends UnitTest
 	    
 	    $this->assertTrue($zone->isExistingRecord());
 	    
-	    $zone->delete();
-	    $zone->markAsNotLoaded();
+	    $zone->reload();
 	    
 	    try 
         { 

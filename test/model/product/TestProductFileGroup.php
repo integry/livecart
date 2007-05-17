@@ -47,9 +47,7 @@ class TestProductFileGroup extends UnitTest
 	    $group->setValueByLang('name', 'en', 'TEST_GROUP');
 	    $group->save();
 	    
-	    // Reload
-	    $group->markAsNotLoaded();
-	    $group->load(array('Product'));
+	    $group->reload(array('Product'));
 	    
 	    $name = $group->name->get();
 	    $this->assertEqual($name['en'], 'TEST_GROUP');
@@ -97,8 +95,7 @@ class TestProductFileGroup extends UnitTest
 	    $group->delete();
 	    
 	    try {
-	        $productFile->markAsNotLoaded();
-		    $productFile->load();
+	        $productFile->reload();
 		    $this->fail();
 	    } catch (Exception $e) {
 	        $this->pass();

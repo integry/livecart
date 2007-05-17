@@ -61,8 +61,7 @@ class TestProductPricing extends UnitTest
         $this->product->save();       
         
         // reload product
-        $this->product->markAsNotLoaded();
-        $this->product->load();
+        $this->product->reload();
         
         
         // Load pricing and check if prices are stored in database
@@ -81,8 +80,7 @@ class TestProductPricing extends UnitTest
 		$this->product->save();
 
         // Reload product
-        $this->product->markAsNotLoaded();
-        $this->product->load();
+        $this->product->reload();
   
         // Edit prices
         $this->product->loadSpecification();

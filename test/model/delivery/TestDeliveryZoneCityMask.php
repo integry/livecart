@@ -40,8 +40,7 @@ class TestDeliveryZoneCityMask extends UnitTest
 	    $cityMask = DeliveryZoneCityMask::getNewInstance($this->zone, 'Viln%');
 	    $cityMask->save();
 	    
-	    $cityMask->markAsNotLoaded();
-	    $cityMask->load();
+	    $cityMask->reload();
 	    
 	    $this->assertEqual($cityMask->deliveryZone->get(), $this->zone);
 	    $this->assertTrue($cityMask->mask->get(), 'Viln%');
@@ -54,8 +53,7 @@ class TestDeliveryZoneCityMask extends UnitTest
 	    
 	    $this->assertTrue($cityMask->isExistingRecord());
 	    
-	    $cityMask->delete();
-	    $cityMask->markAsNotLoaded();
+	    $cityMask->reload();
 	    
 	    try 
         { 

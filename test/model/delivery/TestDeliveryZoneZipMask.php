@@ -40,8 +40,7 @@ class TestDeliveryZoneZipMask extends UnitTest
 	    $zipMask = DeliveryZoneZipMask::getNewInstance($this->zone, 'Viln%');
 	    $zipMask->save();
 	    
-	    $zipMask->markAsNotLoaded();
-	    $zipMask->load();
+	    $zipMask->reload();
 	    
 	    $this->assertEqual($zipMask->deliveryZone->get(), $this->zone);
 	    $this->assertTrue($zipMask->mask->get(), 'Viln%');

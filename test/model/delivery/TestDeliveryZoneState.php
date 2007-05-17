@@ -50,8 +50,7 @@ class TestDeliveryZoneState extends UnitTest
 	    $deliveryState = DeliveryZoneState::getNewInstance($this->zone,  $this->alaska);
 	    $deliveryState->save();
 	    
-	    $deliveryState->markAsNotLoaded();
-	    $deliveryState->load();
+	    $deliveryState->reload();
 	    
 	    $this->assertEqual($deliveryState->deliveryZone->get(), $this->zone);
 	    $this->assertTrue($deliveryState->state->get() === $this->alaska);

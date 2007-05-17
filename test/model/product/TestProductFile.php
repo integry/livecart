@@ -76,8 +76,7 @@ class TestProductFile extends UnitTest
 	    
 	    $productFile->save();
 	    
-	    $productFile->markAsNotLoaded();
-	    $productFile->load();
+	    $productFile->reload();
 	    
 	    $this->assertEqual($productFile->fileName->get(), 'some_file');
 	    $this->assertEqual($productFile->extension->get(), $extension);

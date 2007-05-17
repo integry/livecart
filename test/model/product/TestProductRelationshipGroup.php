@@ -54,8 +54,7 @@ class TestProductRelationshipGroup extends UnitTest
 	    $group->save();
 	    
 	    // Reload
-	    $group->markAsNotLoaded();
-	    $group->load(array('Product'));
+	    $group->reload(array('Product'));
 	    
 	    $name = $group->name->get();
 	    $this->assertEqual($name['en'], 'TEST_GROUP');

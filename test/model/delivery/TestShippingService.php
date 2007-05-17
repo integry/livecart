@@ -42,8 +42,7 @@ class TestShippingService extends UnitTest
         $service->position->set(1);
         $service->save();
         
-        $service->markAsNotLoaded();
-        $service->load();
+        $service->reload();
         
         $this->assertEqual($service->getValueByLang('name', 'en'), 'Test service');
         $this->assertEqual($service->position->get(), 1);
