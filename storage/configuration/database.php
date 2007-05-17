@@ -1,1 +1,0 @@
-<?php $GLOBALS['dsn'] = 'mysql://root@192.168.1.6/livecart_prex'; ?>
