@@ -79,19 +79,17 @@ class Role extends ActiveRecordModel
 	
 	public static function addNewRolesNames($roleNames)
 	{
+	    if(!is_array($roleNames) || empty($roleNames)) return;
+
 	    $filter = new ARSelectFilter();
-	    if(is_array($roleNames) && !empty($roleNames))
-	    {
-	        $firstRoleName = $roleNames[0];
-	        $condition = new EqualsCond(new ARFieldHandle(__CLASS__, "name"), $roleNames[0]);
-	        
-	        foreach($roleNames as $roleName)
-	        {
-	            $condition->addOR(new EqualsCond(new ARFieldHandle(__CLASS__, "name"), $roleName));
-	        }
-	        
-	        $filter->setCondition($condition);
-	    }
+	    
+        $condition = new EqualsCond(new ARFieldHandle(__CLASS__, "name"), $roleNames[0]);
+        foreach($roleNames as $roleName)
+        {
+            $condition->addOR(new EqualsCond(new ARFieldHandle(__CLASS__, "name"), $roleName));
+        }
+        
+        $filter->setCondition($condition);
 	    
    	    // Find new roles
 	    $invertedRoleNames = array_flip($roleNames);
