@@ -100,7 +100,12 @@ abstract class BaseController extends Controller implements LCiTranslator
 		$controllerPath = ClassLoader::getRealPath('application.controller.' . ($this->request->isBackend() ? 'backend.' : '')) . get_class($this) . '.php';
 		$cachePath = $rolesCacheDir . DIRECTORY_SEPARATOR . md5($controllerPath) . '.php';
 		$this->roles = new RolesParser($controllerPath, $cachePath);
-	    
+	    if($this->roles->wereExpired())
+	    {
+	        ClassLoader::import('application.model.role.Role');
+	        Role::addNewRolesNames($this->roles->getRolesNames());
+	    }
+		
 		if (!$this->user->hasAccess($this->roles->getRole($this->request->getActionName()))) 
 		{
 			throw new AccessDeniedException($this->user, $this->request->getControllerName(), $this->request->getActionName());
