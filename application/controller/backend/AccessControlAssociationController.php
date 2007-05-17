@@ -12,7 +12,7 @@ ClassLoader::import("framework.request.validator.Form");
  *
  * @role tax
  */
-class TaxRateController extends StoreManagementController
+class AccessControlListController extends StoreManagementController
 {
 	public function index() 
 	{

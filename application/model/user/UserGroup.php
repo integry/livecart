@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("application.model.ActiveRecordModel");
+ClassLoader::import("application.model.role.*");
 
 /**
  * Users group
@@ -76,6 +77,23 @@ class UserGroup extends ActiveRecordModel
 	public function getUsersRecordSet(ARSelectFilter $filter = null, $loadReferencedRecords = array('UserGroup'))
 	{
 		return User::getRecordSetByGroup($this, $filter, $loadReferencedRecords);
+	}
+
+	public function getRolesRecordSet(ARSelectFilter $filter = null, $loadReferencedRecords = false)
+	{
+	    if(!$filter) 
+        {
+            $filter = new ARSelectFilter();
+        }
+        
+        $rolesRecordSet = new ARSet();
+        
+        foreach(AccessControlAssociation::getRecordSetByUserGroup($this, $filter) as $association)
+        {
+            $rolesRecordSet->add($association->role->get());
+        }
+        
+        return $rolesRecordSet;
 	}
 }
 

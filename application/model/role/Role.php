@@ -101,7 +101,6 @@ class Role extends ActiveRecordModel
 	        }
 	    }
 	    // Add new roles to database
-	    $invertedRoleNames = array_flip($roleNames);
 	    foreach($invertedRoleNames as $role => $value)
 	    {
 	        $newRole = Role::getNewInstance($role);
