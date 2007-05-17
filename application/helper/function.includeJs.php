@@ -8,7 +8,7 @@
  * @return string
  * 
  * @package application.helper
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems
  */
 function smarty_function_includeJs($params, $smarty) 
 {
@@ -22,7 +22,7 @@ function smarty_function_includeJs($params, $smarty)
 	{
 		return false; 	
 	}
-	
+
 	$currentContent = $smarty->get_template_vars("JAVASCRIPT");
 	if (strpos($currentContent, $fileName) === false)
 	{

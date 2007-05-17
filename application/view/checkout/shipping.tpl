@@ -1,11 +1,11 @@
-{includeJs file="library/form/Validator.js"}
-{includeJs file="library/form/ActiveForm.js"}
+<div class="checkoutShipping">
 
+{loadJs form=true}
 {include file="layout/frontend/header.tpl"}
 {* include file="layout/frontend/leftSide.tpl" *}
 {* include file="layout/frontend/rightSide.tpl" *}
 
-<div id="content" class="left right">
+<div id="content" class="left right checkoutShipping">
 	
 	<h1>{t _shipping}</h1>
 	
@@ -77,3 +77,5 @@
 </div>
 
 {include file="layout/frontend/footer.tpl"}
+
+</div>

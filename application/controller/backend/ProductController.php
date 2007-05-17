@@ -406,7 +406,7 @@ class ProductController extends StoreManagementController
 	  	// get Product instance
 		if ($this->request->getValue('id') == 0)
 	  	{
-		    $product = Product::getNewInstance(Category::getInstanceByID($this->request->getValue('categoryID'), $this->translate('_new_product'));
+		    $product = Product::getNewInstance(Category::getInstanceByID($this->request->getValue('categoryID')), $this->translate('_new_product'));
 		}
 		else
 		{

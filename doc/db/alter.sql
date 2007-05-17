@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-05-14 11:09                                #
+# Created on:            2007-05-17 16:18                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -51,15 +51,11 @@ ALTER TABLE User DROP FOREIGN KEY ShippingAddress_User;
 
 ALTER TABLE User DROP FOREIGN KEY BillingAddress_User;
 
-ALTER TABLE AccessControlList DROP FOREIGN KEY User_AccessControlList;
+ALTER TABLE User DROP FOREIGN KEY UserGroup_User;
 
-ALTER TABLE AccessControlList DROP FOREIGN KEY RoleGroup_AccessControlList;
+ALTER TABLE AccessControlList DROP FOREIGN KEY UserGroup_AccessControlList;
 
 ALTER TABLE AccessControlList DROP FOREIGN KEY Role_AccessControlList;
-
-ALTER TABLE UserGroup DROP FOREIGN KEY User_UserGroup;
-
-ALTER TABLE UserGroup DROP FOREIGN KEY RoleGroup_UserGroup;
 
 ALTER TABLE Filter DROP FOREIGN KEY FilterGroup_Filter;
 
@@ -150,78 +146,29 @@ ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 ALTER TABLE ShippingService DROP FOREIGN KEY DeliveryZone_ShippingService;
 
 # ---------------------------------------------------------------------- #
-# Drop table "UserGroup"                                                 #
-# ---------------------------------------------------------------------- #
-
-# Drop constraints #
-
-ALTER TABLE UserGroup DROP PRIMARY KEY;
-
-# Drop table #
-
-DROP TABLE UserGroup;
-
-# ---------------------------------------------------------------------- #
-# Modify table "User"                                                    #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE User ADD COLUMN userGroupID INTEGER UNSIGNED;
-
-ALTER TABLE User MODIFY userGroupID INTEGER UNSIGNED AFTER defaultShippingAddressID;
-
-# ---------------------------------------------------------------------- #
 # Modify table "AccessControlList"                                       #
 # ---------------------------------------------------------------------- #
 
 ALTER TABLE AccessControlList DROP PRIMARY KEY;
 
-ALTER TABLE AccessControlList DROP COLUMN UserID;
+RENAME TABLE AccessControlList TO AccessControlAssociation;
 
-ALTER TABLE AccessControlList ADD COLUMN ID INTEGER NOT NULL;
-
-ALTER TABLE AccessControlList CHANGE RoleGroupID userGroupID INTEGER UNSIGNED NOT NULL;
-
-ALTER TABLE AccessControlList CHANGE RoleID roleID INTEGER UNSIGNED NOT NULL;
-
-ALTER TABLE AccessControlList MODIFY ID INTEGER NOT NULL FIRST;
-
-ALTER TABLE AccessControlList MODIFY roleID INTEGER UNSIGNED NOT NULL AFTER ID;
-
-ALTER TABLE AccessControlList MODIFY userGroupID INTEGER UNSIGNED NOT NULL AFTER roleID;
-
-ALTER TABLE AccessControlList ADD CONSTRAINT PK_AccessControlList 
+ALTER TABLE AccessControlAssociation ADD CONSTRAINT PK_AccessControlAssociation 
     PRIMARY KEY (ID);
 
 # ---------------------------------------------------------------------- #
-# Modify table "RoleGroup"                                               #
+# Modify table "StaticPage"                                              #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE RoleGroup ALTER COLUMN parent DROP DEFAULT;
+ALTER TABLE StaticPage ADD COLUMN title TEXT;
 
-ALTER TABLE RoleGroup DROP PRIMARY KEY;
+ALTER TABLE StaticPage ADD COLUMN text TEXT;
 
-ALTER TABLE RoleGroup DROP COLUMN parent;
+ALTER TABLE StaticPage MODIFY isInformationBox BOOL NOT NULL;
 
-ALTER TABLE RoleGroup DROP COLUMN lft;
+ALTER TABLE StaticPage MODIFY title TEXT AFTER handle;
 
-ALTER TABLE RoleGroup DROP COLUMN rgt;
-
-RENAME TABLE RoleGroup TO UserGroup;
-
-ALTER TABLE UserGroup ADD CONSTRAINT PK_UserGroup 
-    PRIMARY KEY (ID);
-
-# ---------------------------------------------------------------------- #
-# Add table "StaticPage"                                                 #
-# ---------------------------------------------------------------------- #
-
-CREATE TABLE StaticPage (
-    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    handle VARCHAR(40),
-    isInformationBox BOOL,
-    position INTEGER UNSIGNED DEFAULT 0,
-    CONSTRAINT PK_StaticPage PRIMARY KEY (ID)
-);
+ALTER TABLE StaticPage MODIFY text TEXT AFTER title;
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #
@@ -287,10 +234,10 @@ ALTER TABLE User ADD CONSTRAINT BillingAddress_User
 ALTER TABLE User ADD CONSTRAINT UserGroup_User 
     FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE AccessControlList ADD CONSTRAINT UserGroup_AccessControlList 
+ALTER TABLE AccessControlAssociation ADD CONSTRAINT UserGroup_AccessControlAssociation 
     FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID);
 
-ALTER TABLE AccessControlList ADD CONSTRAINT Role_AccessControlList 
+ALTER TABLE AccessControlAssociation ADD CONSTRAINT Role_AccessControlAssociation 
     FOREIGN KEY (roleID) REFERENCES Role (ID);
 
 ALTER TABLE Filter ADD CONSTRAINT FilterGroup_Filter 

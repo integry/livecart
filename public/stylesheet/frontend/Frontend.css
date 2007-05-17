@@ -428,6 +428,7 @@ tr.even
 .informationMenu ul li
 {
     list-style-type: none;   
+    margin-bottom: 5px;
 }
 
 /*****************************
@@ -517,6 +518,7 @@ tr.separator div
 {
     margin-top: 10px;
     margin-left: 20px;
+    width: 45%;
 }
 
 .subCategories td.details

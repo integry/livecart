@@ -13,7 +13,7 @@
     {/literal}
 </fieldset>
 
-{form action="controller=backend.staticPage action=save" handle=$form onsubmit="pageHandler.save(this); return false;"}
+{form action="controller=backend.staticPage action=save" handle=$form onsubmit="pageHandler.save(this); return false;" method="post"}
 
 <fieldset class="container" id="editContainer">
 	

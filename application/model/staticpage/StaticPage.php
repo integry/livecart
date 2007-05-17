@@ -5,12 +5,8 @@
  *
  * @package application.model.delivery
  */
-class StaticPage extends ActiveRecordModel
+class StaticPage extends MultilingualObject
 {
-	private $title = array();
-	
-	private $text = array();
-	
 	private $isFileLoaded = false;
 	
 	public static function defineSchema($className = __CLASS__)
@@ -20,6 +16,8 @@ class StaticPage extends ActiveRecordModel
 		
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARField("handle", ARVarchar::instance(255)));
+		$schema->registerField(new ARField("title", ARArray::instance()));
+		$schema->registerField(new ARField("text", ARArray::instance()));
 		$schema->registerField(new ARField("isInformationBox", ARBool::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance()));
 	}
@@ -56,59 +54,9 @@ class StaticPage extends ActiveRecordModel
 		return $s->get(0);
 	}
 	
-	public function setTitle($title, $lang = null)
-	{
-		if (!$lang)
-		{
-			$lang = Store::getInstance()->getDefaultLanguageCode();
-		}		
-				
-		$this->title[$lang] = $title;
-	}
-	
-	public function setText($text, $lang = null)
-	{
-		if (!$lang)
-		{
-			$lang = Store::getInstance()->getDefaultLanguageCode();
-		}		
-		
-		$this->text[$lang] = $text;
-	}
-	
-	public function getTitle($lang = null)
-	{
-		$this->loadFile();
-		
-		if (!$lang || !isset($this->title[$lang]))
-		{
-			$lang = Store::getInstance()->getDefaultLanguageCode();
-		}		
-		
-		if (isset($this->title[$lang]))
-		{
-			return $this->title[$lang];
-		}
-	}
-	
-	public function getText($lang = null)
-	{
-		$this->loadFile();
-		
-		if (!$lang || !isset($this->text[$lang]))
-		{
-			$lang = Store::getInstance()->getDefaultLanguageCode();
-		}		
-		
-		if (isset($this->text[$lang]))
-		{
-			return $this->text[$lang];
-		}
-	}
-
 	public function getFileName()
 	{
-		return ClassLoader::getRealPath('storage.staticpage') . '/' . $this->getID() . '.php';
+		return ClassLoader::getRealPath('cache.staticpage') . '/' . $this->getID() . '.php';
 	}
 	
 	public function save()
@@ -117,25 +65,12 @@ class StaticPage extends ActiveRecordModel
 		
 		if (!$this->handle->get())
 		{
-			$this->handle->set(Store::createHandleString($this->getTitle()));		
+            $this->handle->set(Store::createHandleString($this->getValueByLang('title', $lang)));		
 		}
 	
 		parent::save();
 		
-		$fileData = array('handle' => $this->handle->get(),
-						  'title' => $this->title,
-						  'text' => $this->text,	
-						 );
-						 
-		$dir = dirname($this->getFileName());
-		
-		if (!file_exists($dir))
-		{
-			mkdir($dir, 0777, true);
-			chmod($dir, 0777);
-		}
-		
-		file_put_contents($this->getFileName(), '<?php $pageData = ' . var_export($fileData, true) . '; ?>');
+		$this->saveFile();
 	}
 	
 	public function delete()
@@ -148,14 +83,14 @@ class StaticPage extends ActiveRecordModel
 	{
 		$array = parent::toArray();
 		
-		$this->loadFile();
-		$array['title'] = $this->title;
-		$array['text'] = $this->text;
-		
-		$lang = Store::getInstance()->getLocaleCode();
-		
-		$array['title_lang'] = $this->getTitle($lang);
-		$array['text_lang'] = $this->getText($lang);
+		if (!$this->isLoaded())
+		{
+            $this->loadFile();
+    		$lang = Store::getInstance()->getLocaleCode();
+    		
+    		$array['title_lang'] = $this->getValueByLang('title', $lang);
+    		$array['text_lang'] = $this->getValueByLang('text', $lang);            
+        }
 
         // when the instance is not loaded
         if (!$array['handle'])
@@ -180,13 +115,35 @@ class StaticPage extends ActiveRecordModel
 		return parent::insert();
 	}
 	
+	private function saveFile()
+	{
+		$fileData = array('handle' => $this->handle->get(),
+						  'title' => $this->title->get(),
+						 );
+						 
+		$dir = dirname($this->getFileName());
+		
+		if (!file_exists($dir))
+		{
+			mkdir($dir, 0777, true);
+			chmod($dir, 0777);
+		}
+		
+		file_put_contents($this->getFileName(), '<?php $pageData = ' . var_export($fileData, true) . '; ?>');       
+    }
+	
 	private function loadFile()
 	{
-		if (!$this->isFileLoaded && file_exists($this->getFileName()))
+		if (!$this->isLoaded() && !$this->isFileLoaded && file_exists($this->getFileName()))
 		{
-			include $this->getFileName();
-			$this->title = $pageData['title'];
-			$this->text = $pageData['text'];
+			if (!file_exists($this->getFileName()))
+			{
+                $this->load();
+                $this->saveFile();       
+            }
+            
+            include $this->getFileName();
+			$this->title->set($pageData['title']);
 
 			if (!$this->handle->get())
 			{

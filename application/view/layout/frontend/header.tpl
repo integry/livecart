@@ -1,5 +1,3 @@
-<div class="clear"></div>
-
 <div id="header"> 
 				
 	<fieldset class="container" style="position: relative;">

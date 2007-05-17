@@ -1,15 +1,16 @@
+{loadJs}
+
 {assign var="metaDescription" value=$product.shortDescription_lang}
 {assign var="metaKeywords" value=$product.keywords_lang}
 {pageTitle}{$product.name_lang}{/pageTitle}
 
-<div class="productPage">
+<div class="productIndex productCategory_{$product.Category.ID} product_{$product.ID}">
 
 {include file="layout/frontend/header.tpl"}
 {* include file="layout/frontend/leftSide.tpl" *}
 {* include file="layout/frontend/rightSide.tpl" *}
 
 <div id="content" style="margin-left: 0;">
-
     
     <div style="padding: 10px; padding-left: 0px;">
         {assign var="lastBreadcrumb" value=$breadCrumb|@end}
@@ -77,13 +78,11 @@
 						<input type="submit" class="submit" value="{tn Add to Cart}" />							
     					{hidden name="return" value=$catRoute}
 					{/form}
-					</p>					
 				</td>
 			</tr>
 			<tr>
 				<td colspan="2" class="cartLinks addToWishList">
 					<a href="{link controller=order action=addToWishList id=$product.ID query="return=`$catRoute`"}">{t Add to Wishlist}</a>			
-					</p>					
 				</td>
 			</tr>
 

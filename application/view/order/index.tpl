@@ -1,11 +1,9 @@
-{includeJs file="library/form/Validator.js"}
-{includeJs file="library/form/ActiveForm.js"}
-
+{loadJs form=true}
 {include file="layout/frontend/header.tpl"}
 {* include file="layout/frontend/leftSide.tpl" *}
 {* include file="layout/frontend/rightSide.tpl" *}
 
-<div id="content" class="left right">
+<div id="content" class="left right orderIndex">
 	
 	<h1>Your Shopping Basket</h1>
 	

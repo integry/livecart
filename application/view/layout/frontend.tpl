@@ -24,14 +24,11 @@
 		<link href="stylesheet/frontend/FrontendIE.css" media="screen" rel="Stylesheet" type="text/css"/>
 	<![endif]-->
 
-	{**} {includeCss file="backend/stat.css"}
+	{* {includeCss file="backend/stat.css"} *}
 	{$STYLESHEET}
 
 	<!-- JavaScript includes -->
-    {**} <script type="text/javascript" src="firebug/firebug.js"></script>
-	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
-	<script type="text/javascript" src="javascript/library/scriptaculous/scriptaculous.js"></script>
-	<script type="text/javascript" src="javascript/frontend/Frontend.js"></script>
+    {* <script type="text/javascript" src="firebug/firebug.js"></script> *}
 	{$JAVASCRIPT}
 </head>
 

@@ -19,12 +19,12 @@ class StaticPageController extends StoreManagementController
 	{
 		$f = new ARSelectFilter();
 		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
-		$s = ActiveRecordModel::getRecordSet('StaticPage', $f);
+		$s = ActiveRecordModel::getRecordSetArray('StaticPage', $f);
 		
 		$pages = array();
 		foreach ($s as $page)
 		{
-			$pages[$page->getID()] = $page->getTitle($this->locale->getLocaleCode());
+			$pages[$page['ID']] = $page['title_lang'];
 		}
 		
 		$response = new ActionResponse();
@@ -41,31 +41,15 @@ class StaticPageController extends StoreManagementController
 	
 	public function edit()
 	{
-		$instance = StaticPage::getInstanceById($this->request->getValue('id'), StaticPage::LOAD_DATA);
-		
-		$inst = $instance->toArray();
+		$page = StaticPage::getInstanceById($this->request->getValue('id'), StaticPage::LOAD_DATA)->toArray();
 		
 		$form = $this->getForm();
-		
-		$form->setData($inst);
-		
-		foreach ($inst['title'] as $key => $value)
-		{
-			$form->setValue('title_' . $key, $value);
-		}
-
-		foreach ($inst['text'] as $key => $value)
-		{
-			$form->setValue('text_' . $key, $value);
-		}
-		
-		$form->setValue('title', $instance->getTitle());
-		$form->setValue('text', $instance->getText());
-		$form->setValue('handle', $instance->handle->get());
+				
+		$form->setData($page);		
 				
 		$response = new ActionResponse();				
 		$response->setValue('form', $form);
-		$response->setValue('page', $inst);
+		$response->setValue('page', $page);
 		$response->setValue('languages', $this->store->getLanguageSetArray());
 		return $response;		
 	}
@@ -121,23 +105,12 @@ class StaticPageController extends StoreManagementController
 			$inst = StaticPage::getNewInstance();	
 		}
 	
-		// default language
-		$inst->setTitle($this->request->getValue('title'));
-		$inst->setText($this->request->getValue('text'));
-		$inst->handle->set($this->request->getValue('handle'));
-				
-		// other languages
-		foreach ($this->store->getLanguageArray() as $lang)
-		{
-			$inst->setTitle($this->request->getValue('title_' . $lang), $lang);
-			$inst->setText($this->request->getValue('text_' . $lang), $lang);			
-		}	
-		
-		$inst->isInformationBox->set($this->request->getValue('isInformationBox'));
-		
+		$inst->loadRequestData($this->request);
 		$inst->save();
 		
-		return new JSONResponse(array('id' => $inst->getID(), 'title' => $inst->getTitle()));
+		$arr = $inst->toArray();
+		
+		return new JSONResponse(array('id' => $inst->getID(), 'title' => $arr['title_lang']));
 	}
 
 	public function delete()

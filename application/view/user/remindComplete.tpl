@@ -1,5 +1,4 @@
-{includeJs file="library/form/Validator.js"}
-{includeJs file="library/form/ActiveForm.js"}
+<div class="userRemindComplete">
 
 {include file="layout/frontend/header.tpl"}
 {* include file="layout/frontend/leftSide.tpl" *}
@@ -20,3 +19,5 @@
 </div>
 
 {include file="layout/frontend/footer.tpl"}
+
+</div>
