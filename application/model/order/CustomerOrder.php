@@ -104,6 +104,12 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 
             self::$instance = $instance;
         }
+               
+        if (!self::$instance->user->get() && User::getCurrentUser()->getID() > 0)
+        {
+            self::$instance->user->set(User::getCurrentUser());
+            self::$instance->save();
+        }
                 
         if (self::$instance->isFinalized->get())
         {
