@@ -33,6 +33,11 @@ class HelpComment extends ActiveRecordModel
 		return $comment;		
 	}
 	
+	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
+	{
+	    return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array());
+	}
+	
 	protected function insert()
 	{		
 		parent::insert();

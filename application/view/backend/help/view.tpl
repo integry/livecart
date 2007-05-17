@@ -109,7 +109,7 @@
 
 	function deleteComment(id)
 	{
-		{/literal}new Ajax.Request('{link controller=backend.help action=delete}/' + id);{literal} 
+		{/literal}new Ajax.Request('{link controller=backend.help action=deleteComment}/' + id);{literal} 
 		$('comment_' + id).style.display = 'none';
 	}
 

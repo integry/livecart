@@ -88,7 +88,7 @@ class HelpController extends StoreManagementController
 	
 	public function deleteComment()
 	{
-		ActiveRecordModel::deleteByID('HelpComment', $this->request->getValue('id'));
+	    HelpComment::getInstanceByID((int)$this->request->getValue('id'))->delete();
 		return new JSONResponse(1);
 	}
 	
