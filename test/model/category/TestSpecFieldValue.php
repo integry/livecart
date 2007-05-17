@@ -54,7 +54,7 @@ class testSpecFieldValue extends UnitTest
 	    $specFieldValue->save();
 	    $this->specFieldValueAutoIncrementNumber = $specFieldValue->getID();
 	    
-	    $this->product = Product::getNewInstance($this->rootCategory);
+	    $this->product = Product::getNewInstance($this->rootCategory, 'test');
 	    $this->product->save();
 	    $this->productAutoIncrementNumber = $this->product->getID();
 	}

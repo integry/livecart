@@ -49,7 +49,7 @@ class TestProduct extends UnitTest
 		$this->productCategory->save();
 		
 		// create a product without attributes
-		$this->product = Product::getNewInstance($this->productCategory);
+		$this->product = Product::getNewInstance($this->productCategory, 'test');
 		$this->product->setValueByLang("name", "en", "Test product...");
 		$this->product->setValueByLang("name", "lt", "Bandomasis produktas");
 		$this->product->setFieldValue("isEnabled", true);

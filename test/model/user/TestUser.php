@@ -53,7 +53,6 @@ class TestUser extends UnitTest
         $this->assertEqual($user->password->get(), md5('tester'));
         $this->assertEqual($user->companyName->get(), 'Integry Systams');
         $this->assertTrue($user->isEnabled->get());
-        $this->assertTrue($user->isAdmin->get());
         $this->assertReference($user->userGroup->get(), $this->group);
         
         $this->assertIdentical($dateCreated->format('Y-m-d H:i:s'), $user->dateCreated->get()->format('Y-m-d H:i:s'));

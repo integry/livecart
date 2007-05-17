@@ -39,15 +39,12 @@ class TestProductRelationshipGroup extends UnitTest
 	    parent::setUp();
 		
 	    // Create some product
-		$this->product = Product::getNewInstance($this->rootCategory);
+		$this->product = Product::getNewInstance($this->rootCategory, 'test');
 		$this->product->save();
-		$this->productAutoIncrementNumber = $this->product->getID();
-		
+		return;
    		// create new group
 		$dump = ProductRelationshipGroup::getNewInstance($this->product);
-		$dump->save();		
-		
-		$this->groupAutoIncrementNumber = $dump->getID();
+		$dump->save();
 	}
 	
 	public function testCreateNewGroup()
@@ -79,7 +76,7 @@ class TestProductRelationshipGroup extends UnitTest
 	public function testGetProductGroups()
 	{
 	    // new product
-		$product = Product::getNewInstance($this->rootCategory);
+		$product = Product::getNewInstance($this->rootCategory, 'test');
 		$product->save();	
 	    
 	    $groups = array();

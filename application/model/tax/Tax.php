@@ -1,11 +1,12 @@
 <?php
 
+ClassLoader::import("application.model.tax.*");
 ClassLoader::import("application.model.delivery.*");
 
 /**
  * Taxes
  *
- * @package application.model.delivery
+ * @package application.model.tax
  */
 class Tax extends MultilingualObject 
 {
@@ -77,7 +78,8 @@ class Tax extends MultilingualObject
 	    
 	    if(!$includeDisabled)
 	    {
-   		    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "isEnabled"), 1));
+	        $includeDisabledCond = new EqualsCond(new ARFieldHandle(__CLASS__, "isEnabled"), 1);
+   		    $filter->setCondition($includeDisabledCond);
 	    }
 	    
         $rates = TaxRate::getRecordSetByDeliveryZone($notUsedInThisZone, true);
@@ -90,9 +92,17 @@ class Tax extends MultilingualObject
                 $taxIDs[] = $rate->tax->get()->getID();
             }
             
-            $filter->setCondition(new NotINCond(new ARFieldHandle(__CLASS__, "ID"), $taxIDs));
+            $notInCond = new NotINCond(new ARFieldHandle(__CLASS__, "ID"), $taxIDs);
+            
+            if(isset($includeDisabledCond))
+            {
+                $includeDisabledCond->addAND($notInCond);
+            }
+            else
+            {
+                $filter->setCondition($notInCond);
+            }
         }	
-	    
 	    return self::getRecordSet($filter, $loadReferencedRecords);
 	}
 	

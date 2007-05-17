@@ -47,12 +47,12 @@ class TestProductRelationship extends UnitTest
 	    parent::setUp();
 	    
 	    // Create some product
-		$this->product1 = Product::getNewInstance($this->rootCategory);
+		$this->product1 = Product::getNewInstance($this->rootCategory, 'test');
 		$this->product1->save();
 		$this->productAutoIncrementNumber = $this->product1->getID();	
 		
 	    // Create second product 
-		$this->product2 = Product::getNewInstance($this->rootCategory);
+		$this->product2 = Product::getNewInstance($this->rootCategory, 'test');
 		$this->product2->save();
 		
    		// create new group
@@ -140,7 +140,7 @@ class TestProductRelationship extends UnitTest
 	public function testGetRelatedProducts()
 	{
 	    // new product
-		$product = Product::getNewInstance($this->rootCategory);
+		$product = Product::getNewInstance($this->rootCategory, 'test');
 		$product->save();	
 	    
 		// groups
@@ -158,7 +158,7 @@ class TestProductRelationship extends UnitTest
 	    $relationships = array();
 	    foreach(range(1, 9) as $i)
 	    {
-		    $relatedProducts[$i] = Product::getNewInstance($this->rootCategory);
+		    $relatedProducts[$i] = Product::getNewInstance($this->rootCategory, 'test');
 		    $relatedProducts[$i]->save();
 		    
 		    $relationships[$i] = ProductRelationship::getNewInstance($product, $relatedProducts[$i], $groups[floor(($i - 1) / 3)]);
@@ -186,7 +186,7 @@ class TestProductRelationship extends UnitTest
 		$product = array();
 	    foreach(range(1, 3) as $i)
 		{
-			$product[$i] = Product::getNewInstance($this->rootCategory);
+			$product[$i] = Product::getNewInstance($this->rootCategory, 'test');
 			$product[$i]->save();	
 		}
 		

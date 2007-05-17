@@ -68,7 +68,7 @@ class TestOrder extends UnitTestCase
         $this->order->save();
 
         // set up products
-        $product = Product::getNewInstance(Category::getInstanceById(Category::ROOT_ID));   
+        $product = Product::getNewInstance(Category::getInstanceById(Category::ROOT_ID), 'test1');   
         $product->save();
         $product->setPrice('USD', 100);
         $product->stockCount->set(20);
@@ -76,7 +76,7 @@ class TestOrder extends UnitTestCase
         $product->isEnabled->set(true);
         $this->products[] = $product;
 
-        $product = Product::getNewInstance(Category::getInstanceById(Category::ROOT_ID));   
+        $product = Product::getNewInstance(Category::getInstanceById(Category::ROOT_ID), 'test2');   
         $product->save();
         $product->setPrice('USD', 200);
         $product->stockCount->set(20);
@@ -84,7 +84,7 @@ class TestOrder extends UnitTestCase
         $product->save();
         $this->products[] = $product;
         
-        $product = Product::getNewInstance(Category::getInstanceById(Category::ROOT_ID));   
+        $product = Product::getNewInstance(Category::getInstanceById(Category::ROOT_ID), 'test3');   
         $product->save();
         $product->setPrice('USD', 400);
         $product->isSeparateShipment->set(true);

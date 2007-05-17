@@ -47,7 +47,7 @@ class TestProductPricing extends UnitTest
 	    parent::setUp();
 		
    		// create a product without attributes
-		$this->product = Product::getNewInstance($this->category);
+		$this->product = Product::getNewInstance($this->category, 'test');
 		$this->product->setValueByLang("name", "en", "TEST_PRODUCT");
 		$this->product->save();		
 		$this->productAutoIncrementNumber = $this->product->getID();

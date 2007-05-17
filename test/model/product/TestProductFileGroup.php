@@ -37,7 +37,7 @@ class TestProductFileGroup extends UnitTest
 	{
 	    parent::setUp();
 	    
-		$this->product = Product::getNewInstance($this->rootCategory);
+		$this->product = Product::getNewInstance($this->rootCategory, 'test');
 		$this->product->save();
 	}
 	
@@ -112,7 +112,7 @@ class TestProductFileGroup extends UnitTest
 	public function testGetProductGroups()
 	{
 	    // new product
-		$product = Product::getNewInstance($this->rootCategory);
+		$product = Product::getNewInstance($this->rootCategory, 'test');
 		$product->save();	
 	    
 	    $groups = array();

@@ -95,7 +95,10 @@ class Product extends MultilingualObject
 			// set handle if empty
 			if (!$this->handle->get())
 			{
-                $this->handle->set(Store::createHandleString($this->getValueByLang('name', Store::getInstance()->getDefaultLanguageCode())));    
+			    $defaultLangCode = Store::getInstance()->getDefaultLanguageCode();
+		        $name = $this->getValueByLang('name', $defaultLangCode);
+		        $handle = Store::createHandleString($name);
+                $this->handle->set();    
             }
             
             parent::insert();
@@ -200,7 +203,6 @@ class Product extends MultilingualObject
 		{
 			$this->manufacturer->get()->save();
 		}
-
 		parent::save();
 				
 		$this->getSpecification()->save();
@@ -524,10 +526,13 @@ class Product extends MultilingualObject
 	 * 
 	 * @return Product
 	 */
-	public static function getNewInstance(Category $category)
+	public static function getNewInstance(Category $category, $name)
 	{
 		$product = parent::getNewInstance(__CLASS__);
 		$product->category->set($category);
+		
+	    $defaultLangCode = Store::getInstance()->getDefaultLanguageCode();
+        $name = $product->setValueByLang('name', $defaultLangCode, $name);
 
 		return $product;
 	}

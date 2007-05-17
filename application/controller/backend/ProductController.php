@@ -395,7 +395,7 @@ class ProductController extends StoreManagementController
 	public function add()
 	{
 		$category = Category::getInstanceByID($this->request->getValue("id"), ActiveRecordModel::LOAD_DATA);
-		$product = Product::getNewInstance($category);
+		$product = Product::getNewInstance($category, $this->translate('_new_product'));
 		$product->save();
 		
 		return $this->productForm($product);		
@@ -406,7 +406,7 @@ class ProductController extends StoreManagementController
 	  	// get Product instance
 		if ($this->request->getValue('id') == 0)
 	  	{
-		    $product = Product::getNewInstance(Category::getInstanceByID($this->request->getValue('categoryID'), ActiveRecordModel::LOAD_DATA));
+		    $product = Product::getNewInstance(Category::getInstanceByID($this->request->getValue('categoryID'), $this->translate('_new_product'));
 		}
 		else
 		{
