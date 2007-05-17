@@ -239,27 +239,31 @@ class UserController extends FrontendController
 		$f->setLimit(1);
         $s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
 
-		$sessionOrder = CustomerOrder::getInstance();			
-        if ($s->size())
-        {
-			$order = $s->get(0);
-			if ($sessionOrder->getID() != $order->getID())
-			{
-				$order->loadItems();
-				$order->merge($sessionOrder);
-				$order->saveToSession();
-				$sessionOrder->delete();
-			}
-		}
-		else
-		{
-			if ($sessionOrder->getID())
-			{
-				$sessionOrder->user->set($user);
-				$sessionOrder->saveToSession();
-			}
-		}
+		$sessionOrder = CustomerOrder::getInstance();	
         
+        if (!$sessionOrder->user->get() || $sessionOrder->user->get()->getID() == $user->getID())
+        {
+            if ($s->size())
+            {
+    			$order = $s->get(0);
+    			if ($sessionOrder->getID() != $order->getID())
+    			{
+    				$order->loadItems();
+    				$order->merge($sessionOrder);
+    				$order->saveToSession();
+    				$sessionOrder->delete();
+    			}
+    		}
+    		else
+    		{
+    			if ($sessionOrder->getID())
+    			{
+    				$sessionOrder->user->set($user);
+    				$sessionOrder->saveToSession();
+    			}
+    		}            
+        }  
+        		        
         return new RedirectResponse($this->request->getValue('return'));
     }
     
@@ -300,6 +304,7 @@ class UserController extends FrontendController
 	public function logout()
     {
 		Session::getInstance()->unsetValue('User');
+		Session::getInstance()->unsetValue('CustomerOrder');
 		return new ActionRedirectResponse('index', 'index');
 	}
     
