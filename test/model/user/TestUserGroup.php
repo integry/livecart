@@ -3,6 +3,9 @@ if(!defined('TEST_SUITE')) require_once dirname(__FILE__) . '/../../Initialize.p
 
 ClassLoader::import("application.model.user.UserGroup");
 ClassLoader::import("application.model.user.User");
+ClassLoader::import("application.model.role.Role");
+ClassLoader::import("application.model.role.AccessControlAssociation");
+
 
 class TestUserGroup extends UnitTest
 {
@@ -15,6 +18,8 @@ class TestUserGroup extends UnitTest
     {
         return array(
 			'UserGroup',
+            'Role',
+            'AccessControlAssociation'
         );
     }
     
@@ -68,6 +73,37 @@ class TestUserGroup extends UnitTest
         $rolesRecordSet = $userGroup->getRolesRecordSet();
         $this->assertEqual($rolesRecordSet->getTotalRecordCount(), 1);
         $this->assertReference($rolesRecordSet->get(0), $role);
+    }
+
+    public function testApplyRoles()
+    {
+        $group = UserGroup::getNewInstance('testing', 'testing');
+        $group->save();
+        
+        $role = Role::getNewInstance('testingweoufhyisuy387wh');
+        $role->save();
+        
+        $group->applyRole($role);
+        $group->save();
+        
+        $this->assertEqual($group->getRolesRecordSet()->getTotalRecordCount(), 1);
+    }
+    
+    public function testCancelRoles()
+    {
+        $group = UserGroup::getNewInstance('testing', 'testing');
+        $group->save();
+        
+        $role = Role::getNewInstance('testingweoufhyisuy387wh');
+        $role->save();
+        
+        $group->applyRole($role);
+        $group->save();
+        $this->assertEqual($group->getRolesRecordSet()->getTotalRecordCount(), 1);
+        
+        $group->cancelRole($role);
+        $group->save();
+        $this->assertEqual($group->getRolesRecordSet()->getTotalRecordCount(), 0);
     }
 }
 ?>

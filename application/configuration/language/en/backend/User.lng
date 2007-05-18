@@ -23,6 +23,7 @@ _add_new_user=Add new user
 _byGroup=By group
 
 _group_users=Group users
+_group_roles=Roles
 _user_group=User group
 _default_user_group=Defalut user group
 _form_has_been_successfully_saved=This form has been successfully saved

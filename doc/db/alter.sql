@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-05-17 16:18                                #
+# Created on:            2007-05-18 21:39                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -53,9 +53,9 @@ ALTER TABLE User DROP FOREIGN KEY BillingAddress_User;
 
 ALTER TABLE User DROP FOREIGN KEY UserGroup_User;
 
-ALTER TABLE AccessControlList DROP FOREIGN KEY UserGroup_AccessControlList;
+ALTER TABLE AccessControlAssociation DROP FOREIGN KEY UserGroup_AccessControlAssociation;
 
-ALTER TABLE AccessControlList DROP FOREIGN KEY Role_AccessControlList;
+ALTER TABLE AccessControlAssociation DROP FOREIGN KEY Role_AccessControlAssociation;
 
 ALTER TABLE Filter DROP FOREIGN KEY FilterGroup_Filter;
 
@@ -146,29 +146,15 @@ ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 ALTER TABLE ShippingService DROP FOREIGN KEY DeliveryZone_ShippingService;
 
 # ---------------------------------------------------------------------- #
-# Modify table "AccessControlList"                                       #
+# Modify table "AccessControlAssociation"                                #
 # ---------------------------------------------------------------------- #
 
-ALTER TABLE AccessControlList DROP PRIMARY KEY;
+ALTER TABLE AccessControlAssociation DROP PRIMARY KEY;
 
-RENAME TABLE AccessControlList TO AccessControlAssociation;
+ALTER TABLE AccessControlAssociation MODIFY ID INTEGER NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE AccessControlAssociation ADD CONSTRAINT PK_AccessControlAssociation 
     PRIMARY KEY (ID);
-
-# ---------------------------------------------------------------------- #
-# Modify table "StaticPage"                                              #
-# ---------------------------------------------------------------------- #
-
-ALTER TABLE StaticPage ADD COLUMN title TEXT;
-
-ALTER TABLE StaticPage ADD COLUMN text TEXT;
-
-ALTER TABLE StaticPage MODIFY isInformationBox BOOL NOT NULL;
-
-ALTER TABLE StaticPage MODIFY title TEXT AFTER handle;
-
-ALTER TABLE StaticPage MODIFY text TEXT AFTER title;
 
 # ---------------------------------------------------------------------- #
 # Add foreign key constraints                                            #

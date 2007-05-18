@@ -11,6 +11,9 @@ ClassLoader::import("application.model.role.*");
  */
 class UserGroup extends ActiveRecordModel 
 {
+    private $appliedRoles = array();
+    private $canceledRoles = array();
+    
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -94,6 +97,109 @@ class UserGroup extends ActiveRecordModel
         }
         
         return $rolesRecordSet;
+	}
+
+	public function applyRole(Role $role)
+	{
+	    if(!$role->isExistingRecord()) return;
+	    
+	    $this->appliedRoles[$role->getID()] = $role;
+	    
+	    if(isset($this->canceledRoles[$role->getID()]))
+	    {
+	        unset($this->canceledRoles[$role->getID()]);
+	    }
+	}
+	
+	public function cancelRole(Role $role)
+	{
+	    if(!$role->isExistingRecord()) return;
+	    
+	    $this->canceledRoles[$role->getID()] = $role;
+	    
+	    if(isset($this->appliedRoles[$role->getID()]))
+	    {
+	        unset($this->appliedRoles[$role->getID()]);
+	    }
+	}
+	
+	public function save($forceOperation = 0)
+	{
+	    parent::save($forceOperation);
+	    
+	    $this->updateRoles();
+	}
+	
+	private function updateRoles()
+	{	   
+   	    if(count($this->canceledRoles) > 0)
+	    {
+		    // Delete canceled associations
+		    $deleteFilter = new ARDeleteFilter();
+		    
+		    $condition = new EqualsCond(new ARFieldHandle('AccessControlAssociation', "userGroupID"), $this->getID());
+		    
+	        $roleConditions = new EqualsCond(new ARFieldHandle('AccessControlAssociation', "roleID"), reset($this->canceledRoles)->getID());
+		    foreach($this->canceledRoles as $key => $role)
+		    {
+		        if($role->isExistingRecord())
+		        {
+		            $roleConditions->addOR(new EqualsCond(new ARFieldHandle('AccessControlAssociation', "roleID"), $role->getID()));
+		        }
+		        else
+		        {
+		            unset($this->canceledRoles[$key]);
+		        }
+		    }
+		    
+		    $condition->addAND($roleConditions);
+		    $deleteFilter->setCondition($condition);
+		    
+		    if(!empty($this->canceledRoles))
+		    {
+		        AccessControlAssociation::deleteRecordSet('AccessControlAssociation', $deleteFilter);
+		    }
+	    }
+	    
+		    
+	    if(count($this->appliedRoles) > 0)
+	    {
+		    // adding new associations is a bit trickier
+			// First, find all nodes that are already in DB
+		    // There is no point to apply them 
+		    $appliedRolesFilter = new ARSelectFilter();
+		    $appliedIDs = array();
+	        $condition = new EqualsCond(new ARFieldHandle('AccessControlAssociation', "userGroupID"), $this->getID());
+	        
+	        $roleConditions = new EqualsCond(new ARFieldHandle('AccessControlAssociation', "roleID"), reset($this->appliedRoles)->getID());
+		    foreach($this->appliedRoles as $key => $role)
+		    {
+	   	        if($role->isExistingRecord())
+		        {
+		            $roleConditions->addOR(new EqualsCond(new ARFieldHandle('AccessControlAssociation', "roleID"), $role->getID()));
+		        }
+		        else
+		        {
+		            unset($this->appliedRoles[$key]);
+		        }
+		    }
+		    
+		    $condition->addAND($roleConditions);
+	        $appliedRolesFilter->setCondition($condition);
+		    
+		    // Unset already applied nodes
+		    foreach(AccessControlAssociation::getRecordSetByUserGroup($this, $appliedRolesFilter, self::LOAD_REFERENCES) as $assoc)
+		    {
+		        unset($this->appliedRoles[$assoc->role->get()->getID()]);
+		    }
+		    
+		    // Apply roles
+		    foreach($this->appliedRoles as $role)
+		    {
+		        $assoc = AccessControlAssociation::getNewInstance($this, $role);
+		        $assoc->save();
+		    }
+	    }
 	}
 }
 

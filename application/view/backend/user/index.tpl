@@ -1,5 +1,6 @@
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
+{includeJs file="library/dhtmlxtree/dhtmlXTree_start.js"}
 {includeJs file="library/rico/ricobase.js"}
 {includeJs file="library/rico/ricoLiveGrid.js"}
 {includeJs file="library/form/Validator.js"}
@@ -18,6 +19,9 @@
 
 {includeJs file="backend/User.js"}
 {includeCss file="backend/User.css"}
+
+{includeJs file="backend/Roles.js"}
+
 
 {pageTitle help="userGroups"}{t _livecart_delivery_users}{/pageTitle}
 {include file="layout/backend/header.tpl"}

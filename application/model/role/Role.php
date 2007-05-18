@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("application.model.ActiveRecordModel");
+ClassLoader::import("application.framework.role.*");
 
 /**
  * Roles
@@ -74,22 +75,33 @@ class Role extends ActiveRecordModel
 	 */
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
+	    $filter->setOrder(new ARFieldHandle(__CLASS__, "name"), 'ASC');
+	    
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 	
-	public static function addNewRolesNames($roleNames)
+	public static function addNewRolesNames($roleNames, $deleteOther = false)
 	{
 	    if(!is_array($roleNames) || empty($roleNames)) return;
 
 	    $filter = new ARSelectFilter();
+	    $deleteFilter = new ARDeleteFilter();
 	    
         $condition = new EqualsCond(new ARFieldHandle(__CLASS__, "name"), $roleNames[0]);
+        $deleteCondition = new NotEqualsCond(new ARFieldHandle(__CLASS__, "name"), $roleNames[0]);
         foreach($roleNames as $roleName)
         {
             $condition->addOR(new EqualsCond(new ARFieldHandle(__CLASS__, "name"), $roleName));
+            $deleteCondition->addAnd(new NotEqualsCond(new ARFieldHandle(__CLASS__, "name"), $roleName));
         }
         
         $filter->setCondition($condition);
+        $deleteFilter->setCondition($deleteCondition);
+        
+        if($deleteOther)
+        {
+            self::deleteRecordSet(__CLASS__, $deleteFilter);
+        }
 	    
    	    // Find new roles
 	    $invertedRoleNames = array_flip($roleNames);
@@ -103,9 +115,31 @@ class Role extends ActiveRecordModel
 	    // Add new roles to database
 	    foreach($invertedRoleNames as $role => $value)
 	    {
-	        $newRole = Role::getNewInstance($role);
-	        $newRole->save();
+	        if(!empty($role))
+	        {
+		        $newRole = Role::getNewInstance($role);
+		        $newRole->save();
+	        }
 	    }
+	}
+
+	public static function cleanUp()
+	{
+	    $rolesCacheDir = ClassLoader::getRealPath('cache.roles');
+	    if(!is_dir($rolesCacheDir))
+	    {
+	        mkdir($rolesCacheDir);
+	    }
+	    
+	    $rolesDirectoryParser = new RolesDirectoryParser(ClassLoader::getRealPath('application.controller.backend'), $rolesCacheDir);
+	    $roleNames = array();
+	    foreach($rolesDirectoryParser->getClassParsers() as $classParser)
+	    {
+	        $parserRoleNames = array_flip($classParser->getRolesNames());
+	        $roleNames = array_merge($roleNames, $parserRoleNames);
+	    }
+	    
+	    self::addNewRolesNames(array_keys($roleNames), true);
 	}
 }
 

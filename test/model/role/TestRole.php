@@ -19,7 +19,7 @@ class TestRole extends UnitTest
     
     public function testCreateNewRole()
     {
-        $role = Role::getNewInstance('testing');
+        $role = Role::getNewInstance('testing_s5df4s4sadad');
         $role->save();
         
         $role->reload();

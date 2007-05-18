@@ -11,6 +11,11 @@
 				<a href="{link controller=backend.user action=users}?id=_id_">{t _group_users}</a>
 				<span class="tabHelp">userGroups.shippingRates</span>
 			</li>
+			
+			<li id="tabRoles" class="tab inactive">
+				<a href="{link controller=backend.roles action=index}?id=_id_">{t _group_roles}</a>
+				<span class="tabHelp">userGroups.shippingRates</span>
+			</li>
 		</ul>
 	</div>
 	<div class="sectionContainer maxHeight h--50"></div>

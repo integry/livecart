@@ -222,5 +222,5 @@ Backend.Tax.prototype =
         ActiveForm.prototype.hideNewItemForm(this.nodes.menuCancelLink, this.nodes.menuForm); 
         
         Form.State.restore(this.nodes.form);
-    },
+    }
 }
