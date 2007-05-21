@@ -169,11 +169,13 @@ Backend.UserGroup.prototype =
             
             var activateTab = $('tabUsers');
             $("tabUserGroup").hide();
+            $("tabRoles").hide();
         }
         else
         {
             var activateTab = $('tabUserGroup');
             $("tabUserGroup").show();
+            $("tabRoles").show();
         }
         
         if(Backend.UserGroup.prototype.activeGroup && Backend.UserGroup.prototype.activeGroup != id)

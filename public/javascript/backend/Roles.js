@@ -12,6 +12,7 @@ Backend.Roles.prototype =
         this.findUsedNodes(root);
         this.bindEvents();
         this.initTree(roles, activeRoles);
+        
     },
     
     initTree: function(roles, activeRoles)
@@ -25,19 +26,38 @@ Backend.Roles.prototype =
         this.rolesTree.enableCheckBoxes(true);
         this.rolesTree.enableThreeStateCheckboxes(true);
         
+        this.roles = {};
         $A(roles).each(function(node)
 		{
             self.rolesTree.insertNewItem(node.parent, node.ID, node.name, null, 0, 0, 0, '', 1);
             self.rolesTree.showItemSign(node.ID, 0);
-            
-            
-            if($A(activeRoles).indexOf(node.ID) >= 0)
-            {
-                self.rolesTree.setCheck(node.ID, true);
-            }
+            self.rolesTree.setCheck(parseInt(node.ID), true);
+            self.roles[node.ID] = ($A(activeRoles).indexOf(node.ID) >= 0);
 		});
+        
+        this.backupTree();
+        this.restoreTree();
     },
     
+    restoreTree: function()
+    {
+        var self = this;
+        $H(this.backedUpRoles).each(function(id)
+		{
+            console.info(id, self.backedUpRoles[id]);
+            self.rolesTree.setCheck(parseInt(id), self.backedUpRoles[parseInt(id)]);
+		});
+        
+        this.roles = this.backedUpRoles;
+    },
+    
+    backupTree: function()
+    {
+        var self = this;
+        $A(this.rolesTree.getAllUnchecked().split(/,/)).each(function(id) { self.roles[id] = false; });
+        $A(this.rolesTree.getAllChecked().split(/,/)).each(function(id) { self.roles[id] = true; });
+        this.backedUpRoles = this.roles;
+    },
     
     findUsedNodes: function(root)
     {
@@ -100,6 +120,7 @@ Backend.Roles.prototype =
     {
         if(response.status == 'success')
         {
+            this.backupTree();
             new Backend.SaveConfirmationMessage(this.nodes.root.up().down('.yellowMessage'));	
         }
         else
@@ -110,18 +131,6 @@ Backend.Roles.prototype =
  
     cancel: function()
     {
-        ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-        if(!this.nodes.form.elements.namedItem('ID').value)
-        {
-            this.hideNewForm();
-        }
-        else
-        {
-            this.taxActiveList.toggleContainerOff(this.taxActiveList.getContainer(this.nodes.root.up('li'), 'edit' ));
-            Form.State.restore(this.nodes.form);
-            
-            var title = this.nodes.root.up('li').down(".tax_viewMode");
-            title.style.display = (title.style.display != 'none') ? 'none' : 'inline';
-        }
+        this.restoreTree();
     }
 }

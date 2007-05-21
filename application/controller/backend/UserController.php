@@ -20,7 +20,7 @@ class UserController extends StoreManagementController
 	public function index()
 	{
 		$userGroups = array();
-		$userGroups[] = array('ID' => -2, 'name' => 'root', 'rootID' => 0);
+		$userGroups[] = array('ID' => -2, 'name' => $this->translate('_all_users'), 'rootID' => 0);
 		$userGroups[] = array('ID' => -1, 'name' => $this->translate('_default_user_group'), 'rootID' => -2);
 		foreach(UserGroup::getRecordSet(new ARSelectFilter())->toArray() as $group) 
 		{
