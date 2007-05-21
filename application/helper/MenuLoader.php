@@ -24,7 +24,11 @@ class MenuLoader {
 		{
 		  	MenuLoader::createFromDir($this->mainMenu, ClassLoader::getRealPath("application.configuration.backend_menu"));
 //			$this->sortMenu();
-			file_put_contents($cache_file, serialize($this->mainMenu));
+			if (!is_dir(dirname($cache_file)))
+			{
+                mkdir(dirname($cache_file));
+            }
+            file_put_contents($cache_file, serialize($this->mainMenu));
 		}
 		else
 		{
