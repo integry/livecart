@@ -22,6 +22,11 @@ class IndexController extends FrontendController
 		
 		return $response;
 	}
+
+	public function forbidden()
+	{
+	    return new ActionResponse();
+	}
 }
 
 ?>

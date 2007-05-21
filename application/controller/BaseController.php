@@ -105,10 +105,21 @@ abstract class BaseController extends Controller implements LCiTranslator
 	        ClassLoader::import('application.model.role.Role');
 	        Role::addNewRolesNames($this->roles->getRolesNames());
 	    }
+	    
+	    $actionName = $this->request->getActionName();
+	    $role = $this->roles->getRole($actionName);
+	    $hasAccess = $this->user->hasAccess($role);
 		
-		if (!$this->user->hasAccess($this->roles->getRole($this->request->getActionName()))) 
+	    if (!$hasAccess) 
 		{
-			throw new AccessDeniedException($this->user, $this->request->getControllerName(), $this->request->getActionName());
+			if($this->user->isAnonymous())
+			{
+			    throw new UnauthorizedException($this->user, $this->request->getControllerName(), $this->request->getActionName(), $this->roles->getRole($this->request->getActionName()));
+			}
+			else
+			{
+			    throw new ForbiddenException($this->user, $this->request->getControllerName(), $this->request->getActionName(), $this->roles->getRole($this->request->getActionName()));
+			}			
 		}
 		
 		$this->configFiles = $this->getConfigFiles();

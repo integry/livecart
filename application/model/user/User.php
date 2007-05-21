@@ -81,6 +81,11 @@ class User extends ActiveRecordModel
 
         return $instance;
     }
+    
+    public function isAnonymous()
+    {
+        return $this->getID() == self::ANONYMOUS_USER_ID;
+    }
 
 	/**
 	 * Load users set
@@ -296,25 +301,33 @@ class User extends ActiveRecordModel
 			return $this->getID() > 0;	
 		}
 
-		return true;
-		
-		// disable all login protected content from deactivated users
-		if ($roleName && !$this->isEnabled->get())
+		$this->load(array('UserGroup'));
+		if($this->userGroup->get()->hasAccess($roleName))
 		{
-			return false;	
-		}
-		
-		return true;
-		
-		// pseudo check
-		if ($this->getID() > 0)
-		{
-			return true;
+		    return true;
 		}
 		else
 		{
-			return false;
+		    return false;
 		}
+		
+//		// disable all login protected content from deactivated users
+//		if ($roleName && !$this->isEnabled->get())
+//		{
+//			return false;	
+//		}
+//		
+//		return true;
+//		
+//		// pseudo check
+//		if ($this->getID() > 0)
+//		{
+//			return true;
+//		}
+//		else
+//		{
+//			return false;
+//		}
 	}
 
 	/**

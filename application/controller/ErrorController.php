@@ -7,9 +7,12 @@ class ErrorController extends FrontendController
 	function index()
 	{
 		$id = $this->request->getValue('id');
-		if (401 == $id)
+		switch($id)
 		{
-			return new ActionRedirectResponse('user', 'login');
+		    case 401:
+		        return new ActionRedirectResponse('user', 'login');
+		    case 403:
+		        return new ActionRedirectResponse('index', 'forbidden');
 		}
 	   	
 		print_r(User::getCurrentUser()->toArray());

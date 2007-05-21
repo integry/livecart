@@ -28,7 +28,12 @@
 		Router::getInstance()->setRequestedRoute('error/index/404');
 		$app->run();
 	}
-	catch (AccessDeniedException $e)
+	catch (ForbiddenException $e)
+	{
+		Router::getInstance()->setRequestedRoute('error/index/403');
+		$app->run();	
+	}
+	catch (UnauthorizedException $e)
 	{
 		Router::getInstance()->setRequestedRoute('error/index/401');
 		$app->run();	

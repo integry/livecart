@@ -14,6 +14,7 @@ function smarty_prefilter_config($tplSource, $smarty)
 	$source = preg_replace('/{tn (.+?)}/', '{translate|escape:"html" text="$1" disableLiveTranslation="true"}', $tplSource);
 	
 	$source = preg_replace('/{t ([^\|]+?)}/', '{translate text="$1"}', $source);
+	$source = preg_replace('/{role ([\w.]+)}/', '{role name="$1"}', $source);
 	
 	$source = preg_replace('/{t ([^|]+)\|([^}]+)}/', '{capture assign="translation_$1"}{translate text=$1}{/capture}{\$translation_$1|$2}', $source);
 

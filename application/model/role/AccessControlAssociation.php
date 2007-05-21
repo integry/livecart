@@ -96,7 +96,7 @@ class AccessControlAssociation extends ActiveRecordModel
 	{
 	    $filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "userGroupID"), $userGroup->getID()));
 	    
-	    return self::getRecordSet($filter, $loadReferencedRecords = false);
+	    return self::getRecordSet($filter, $loadReferencedRecords);
 	}
 }
 

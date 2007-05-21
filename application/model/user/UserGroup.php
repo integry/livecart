@@ -13,7 +13,8 @@ class UserGroup extends ActiveRecordModel
 {
     private $appliedRoles = array();
     private $canceledRoles = array();
-    
+    private $rolesLoaded = false;
+        
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -36,6 +37,51 @@ class UserGroup extends ActiveRecordModel
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
 	{		    
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
+	}
+	
+	public function load($loadReferencedRecords = false)
+	{
+	    parent::load($loadReferencedRecords);
+	}
+	
+	public function loadRoles($force = false)
+	{
+	    if(!$this->rolesLoaded || $force)
+	    {
+		    foreach(AccessControlAssociation::getRecordSetByUserGroup($this, new ARSelectFilter(), self::LOAD_REFERENCES) as $assoc)
+		    {
+		        $this->appliedRoles[$assoc->role->get()->getID()] = $assoc->role->get();
+		    }
+		    
+		    $this->rolesLoaded = true;
+	    }
+	}
+	
+	public function hasAccess($actionRoleName)
+	{
+	    if(empty($actionRoleName))
+	    {
+	        return true;
+	    }
+	    
+	    $this->loadRoles();
+	    $appliedRoleNames = array();
+	    foreach($this->getAppliedRoles() as $role)
+	    {
+	        $appliedRoleNames[] = $role->name->get();
+        }
+        
+        if(($actionDotPosition = strpos($actionRoleName, '.')) === false)
+        {
+            return in_array($actionRoleName, $appliedRoleNames);
+        }
+        else
+        {
+            $classRoleName = substr($actionRoleName, 0, $actionDotPosition);
+            return preg_grep('/^(' . preg_quote($classRoleName) . '|' . preg_quote($actionRoleName) . ')$/', $appliedRoleNames) != array();
+        } 
+	    
+	    return false;
 	}
 	
 	/**
@@ -200,6 +246,11 @@ class UserGroup extends ActiveRecordModel
 		        $assoc->save();
 		    }
 	    }
+	}
+	
+	public function getAppliedRoles()
+	{
+	    return $this->appliedRoles;
 	}
 }
 

@@ -14,7 +14,7 @@
 	<div id="pageHeader">
 
 		<div id="topAuthInfo">
-			Logged in as: <span id="headerUserName">rinalds</span> <a href="/logout">(logout)</a>
+			Logged in as: <span id="headerUserName">rinalds</span> <a href="{link controller=backend.index action=logout}">(logout)</a>
 		</div>
 
 		<div id="topBackground" >

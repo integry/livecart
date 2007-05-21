@@ -170,6 +170,117 @@ class UserController extends StoreManagementController
     	return new JSONResponse($return);	  	  	
 	}
 	
+	public function saveInfo()
+	{
+	  	if ($id = (int)$this->request->getValue('id'))
+	  	{
+		  	$user = User::getInstanceByID((int)$id, true);
+	  	}
+	  	else
+	  	{
+	  	    $user = null;
+	  	}
+	    
+   		$validator = $this->createUserFormValidator($user);
+		if ($validator->isValid())
+		{
+		    $email = $this->request->getValue('email');
+		    $password = $this->request->getValue('password1');
+		    $firstName = $this->request->getValue('firstName');
+		    $lastName = $this->request->getValue('lastName');
+		    $companyName = $this->request->getValue('companyName');
+
+		    if(($user && $email != $user->email->get() && User::getInstanceByEmail($email)) || 
+		       (!$user && User::getInstanceByEmail($email)))
+		    {
+		        return new JSONResponse(array('status' => 'failure', 'errors' => array('email' => $this->translate('_err_this_email_is_already_being_used_by_other_user'))));
+		    }
+		    
+		    if($groupID = (int)$this->request->getValue('UserGroup'))
+		    {
+		        $group = UserGroup::getInstanceByID((int)$groupID);
+		    }
+		    else
+		    {
+		        $group = null;
+		    }
+		
+		  	if (!$user)
+			{
+			    $user = User::getNewInstance($email, $password, $group);
+			}
+			
+			$user->lastName->set($lastName);
+			$user->firstName->set($firstName);
+			$user->setPassword($password);
+			$user->companyName->set($companyName);
+			$user->email->set($email);
+			$user->userGroup->set($group);
+			
+			$user->save();
+			
+			return new JSONResponse(array('status' => 'success', 'user' => $user->toArray()));
+		}
+		else
+		{
+		    return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
+		}
+	}
+    
+    public function processMass()
+    {        
+		$filter = new ARSelectFilter();
+		
+		$filters = (array)json_decode($this->request->getValue('filters'));
+		$this->request->setValue('filters', $filters);
+		
+        $grid = new ActiveGrid($this->request, $filter, 'User');
+        $filter->setLimit(0);
+        					
+		$users = ActiveRecordModel::getRecordSet('User', $filter, User::LOAD_REFERENCES);
+		
+        $act = $this->request->getValue('act');
+		$field = array_pop(explode('_', $act, 2));           
+
+        foreach ($users as $user)
+		{
+            if (substr($act, 0, 7) == 'enable_')
+            {
+                $user->setFieldValue($field, 1);    
+            }        
+            else if (substr($act, 0, 8) == 'disable_')
+            {
+                $user->setFieldValue($field, 0);                 
+            } 
+            else if ('delete' == $act)
+            {
+				$user->delete();
+			}         
+            
+			$user->save();
+        }		
+		
+		return new JSONResponse($this->request->getValue('act'));	
+    } 
+    
+	public function info()
+	{
+	    $user = User::getInstanceById((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA, array('UserGroup'));
+		
+        $availableUserGroups = array('' => '');
+        foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
+        {
+            $availableUserGroups[$group->getID()] = $group->name->get();
+        }
+        
+	    $response = new ActionResponse();	    
+	    $response->setValue('user', $user->toFlatArray());
+	    $response->setValue('availableUserGroups', $availableUserGroups);
+	    $response->setValue('form', $this->createUserForm($user));
+		
+		return $response;
+	}
+		
 	protected function getDisplayedColumns()
 	{	
 		// get displayed columns
@@ -263,61 +374,7 @@ class UserController extends StoreManagementController
 		
         return new Form($validator);                
     }
-    
-    public function processMass()
-    {        
-		$filter = new ARSelectFilter();
-		
-		$filters = (array)json_decode($this->request->getValue('filters'));
-		$this->request->setValue('filters', $filters);
-		
-        $grid = new ActiveGrid($this->request, $filter, 'User');
-        $filter->setLimit(0);
-        					
-		$users = ActiveRecordModel::getRecordSet('User', $filter, User::LOAD_REFERENCES);
-		
-        $act = $this->request->getValue('act');
-		$field = array_pop(explode('_', $act, 2));           
 
-        foreach ($users as $user)
-		{
-            if (substr($act, 0, 7) == 'enable_')
-            {
-                $user->setFieldValue($field, 1);    
-            }        
-            else if (substr($act, 0, 8) == 'disable_')
-            {
-                $user->setFieldValue($field, 0);                 
-            } 
-            else if ('delete' == $act)
-            {
-				$user->delete();
-			}         
-            
-			$user->save();
-        }		
-		
-		return new JSONResponse($this->request->getValue('act'));	
-    } 
-    
-	public function info()
-	{
-	    $user = User::getInstanceById((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA, array('UserGroup'));
-		
-        $availableUserGroups = array('' => '');
-        foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
-        {
-            $availableUserGroups[$group->getID()] = $group->name->get();
-        }
-        
-	    $response = new ActionResponse();	    
-	    $response->setValue('user', $user->toFlatArray());
-	    $response->setValue('availableUserGroups', $availableUserGroups);
-	    $response->setValue('form', $this->createUserForm($user));
-		
-		return $response;
-	}
-	
 	/**
 	 * @return RequestValidator
 	 */
@@ -361,63 +418,7 @@ class UserController extends StoreManagementController
 
 		return $form;
 	}
-	
-	public function saveInfo()
-	{
-	  	if ($id = (int)$this->request->getValue('id'))
-	  	{
-		  	$user = User::getInstanceByID((int)$id, true);
-	  	}
-	  	else
-	  	{
-	  	    $user = null;
-	  	}
-	    
-   		$validator = $this->createUserFormValidator($user);
-		if ($validator->isValid())
-		{
-		    $email = $this->request->getValue('email');
-		    $password = $this->request->getValue('password1');
-		    $firstName = $this->request->getValue('firstName');
-		    $lastName = $this->request->getValue('lastName');
-		    $companyName = $this->request->getValue('companyName');
 
-		    if(($user && $email != $user->email->get() && User::getInstanceByEmail($email)) || 
-		       (!$user && User::getInstanceByEmail($email)))
-		    {
-		        return new JSONResponse(array('status' => 'failure', 'errors' => array('email' => $this->translate('_err_this_email_is_already_being_used_by_other_user'))));
-		    }
-		    
-		    if($groupID = (int)$this->request->getValue('UserGroup'))
-		    {
-		        $group = UserGroup::getInstanceByID((int)$groupID);
-		    }
-		    else
-		    {
-		        $group = null;
-		    }
-		
-		  	if (!$user)
-			{
-			    $user = User::getNewInstance($email, $password, $group);
-			}
-			
-			$user->lastName->set($lastName);
-			$user->firstName->set($firstName);
-			$user->setPassword($password);
-			$user->companyName->set($companyName);
-			$user->email->set($email);
-			$user->userGroup->set($group);
-			
-			$user->save();
-			
-			return new JSONResponse(array('status' => 'success', 'user' => $user->toArray()));
-		}
-		else
-		{
-		    return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
-		}
-	}
    
 }
 ?>
