@@ -44,7 +44,6 @@ Backend.Roles.prototype =
         var self = this;
         $H(this.backedUpRoles).each(function(id)
 		{
-            console.info(id, self.backedUpRoles[id]);
             self.rolesTree.setCheck(parseInt(id), self.backedUpRoles[parseInt(id)]);
 		});
         
