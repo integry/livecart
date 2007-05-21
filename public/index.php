@@ -11,8 +11,10 @@
 	session_set_cookie_params(180 * 60 * 60 * 24);
     
     include dirname(dirname(__file__)) . '/application/Initialize.php';
+    
+    ClassLoader::import('application.LiveCart');
 
-	$app = Application::getInstance();
+	$app = LiveCart::getInstance();
 
 	try
 	{
