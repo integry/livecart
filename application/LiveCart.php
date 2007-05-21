@@ -2,6 +2,9 @@
 
 ClassLoader::import('framework.Application');
 
+/**
+ *  Implements LiveCart-specific application flow logic
+ */
 class LiveCart extends Application
 {
 	/**
@@ -25,6 +28,45 @@ class LiveCart extends Application
 		
 		return self::$instance;
 	}
+	
+	/**
+	 * Gets view path for specified controllers action
+	 *
+	 * @param string $controllerName Controller name
+	 * @param string $actionName Action name
+	 * @return string View path
+	 */
+	public function getView($controllerName, $actionName)
+	{
+		// get custom template path
+        $path = ClassLoader::getRealPath('storage.customize.view.' . $controllerName . '.' . $actionName) . '.tpl';
+        
+        if (!is_readable($path))
+        {
+            return parent::getView($controllerName, $actionName);
+        }
+        
+        return $path;
+	}
+
+	/**
+	 * Gets a physical layout template path
+	 *
+	 * @param string $layout layout handle (filename without extension)
+	 * @return string
+	 */
+	public function getLayoutPath($layout)
+	{
+		// get custom template path
+        $path = ClassLoader::getRealPath('storage.customize.view.layout.' . $layout) . '.tpl';
+        
+        if (!is_readable($path))
+        {
+            return parent::getLayoutPath($layout);
+        }
+        
+        return $path;
+	}	
 	
 	/**
 	 * Executes controllers action and returns response

@@ -24,6 +24,8 @@
 		<link href="stylesheet/frontend/FrontendIE.css" media="screen" rel="Stylesheet" type="text/css"/>
 	<![endif]-->
 
+    {includeCss file="custom/Custom.css"}
+    
 	{* {includeCss file="backend/stat.css"} *}
 	{$STYLESHEET}
 

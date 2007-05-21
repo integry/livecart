@@ -18,7 +18,7 @@ class User extends ActiveRecordModel
 	 * ID of anonymous user that is not authorized
 	 *
 	 */
-	const ANONYMOUS_USER_ID = 0;
+	const ANONYMOUS_USER_ID = NULL;
 	
 	private $newPassword;
 
@@ -296,7 +296,13 @@ class User extends ActiveRecordModel
 	 */
 	public function hasAccess($roleName)
 	{
-		if ('login' == $roleName)
+		// no role provided
+        if (!$roleName)
+		{
+            return true;
+        }
+        
+        if ('login' == $roleName)
 		{
 			return $this->getID() > 0;	
 		}
