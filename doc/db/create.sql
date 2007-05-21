@@ -1,11 +1,11 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v4.1.3                     #
+# Script generated with: DeZign for Databases v4.2.0                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2007-05-02 15:45                                #
+# Created on:            2007-05-21 16:30                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -22,36 +22,48 @@ CREATE TABLE Product (
     categoryID INTEGER UNSIGNED NOT NULL,
     manufacturerID INTEGER UNSIGNED,
     defaultImageID INTEGER UNSIGNED,
-    isEnabled BOOL DEFAULT 1 COMMENT '0- not available 1- available 2- disabled (not visble)',
-    sku VARCHAR(20),
+    isEnabled BOOL NOT NULL DEFAULT 1 COMMENT '0- not available 1- available 2- disabled (not visble)',
+    sku VARCHAR(20) NOT NULL,
     name TEXT,
     shortDescription TEXT,
     longDescription TEXT,
     keywords TEXT,
-    dateCreated TIMESTAMP,
+    dateCreated TIMESTAMP NOT NULL,
     dateUpdated TIMESTAMP,
     URL TINYTEXT,
     handle VARCHAR(40),
-    isBestSeller BOOL DEFAULT 0,
+    isFeatured BOOL NOT NULL DEFAULT 0,
     type TINYINT UNSIGNED DEFAULT 0 COMMENT '1 - intangible 0 - tangible',
     voteSum INTEGER UNSIGNED DEFAULT 0,
     voteCount INTEGER UNSIGNED DEFAULT 0,
+    rating FLOAT,
     hits INTEGER UNSIGNED DEFAULT 0 COMMENT 'Number of times product has been viewed by customers',
     minimumQuantity FLOAT,
     shippingSurchargeAmount NUMERIC(12,2),
-    isSeparateShipment BOOL,
-    isFreeShipping BOOL,
-    isBackOrderable BOOL,
-    isFractionalUnit BOOL,
+    isSeparateShipment BOOL NOT NULL,
+    isFreeShipping BOOL NOT NULL,
+    isBackOrderable BOOL NOT NULL,
+    isFractionalUnit BOOL NOT NULL,
     shippingWeight NUMERIC(8,3),
     stockCount FLOAT,
     reservedCount FLOAT,
+    salesRank INTEGER,
     CONSTRAINT PK_Product PRIMARY KEY (ID)
 );
 
-CREATE INDEX IDX_Product_1 ON Product (categoryID);
+CREATE INDEX IDX_Product_Category ON Product (categoryID);
 
-CREATE INDEX IDX_Product_2 ON Product (sku);
+CREATE INDEX IDX_Product_SKU ON Product (sku);
+
+CREATE INDEX IDX_Product_isEnabled ON Product (isEnabled);
+
+CREATE INDEX IDX_Product_dateCreated ON Product (dateCreated);
+
+CREATE INDEX IDX_Product_isFeatured ON Product (isFeatured);
+
+CREATE INDEX IDX_Product_rating ON Product (rating);
+
+CREATE INDEX IDX_Product_salesRank ON Product (salesRank);
 
 # ---------------------------------------------------------------------- #
 # Add table "Category"                                                   #
@@ -148,22 +160,25 @@ CREATE INDEX IDX_SpecFieldValue_1 ON SpecFieldValue (specFieldID);
 
 CREATE TABLE CustomerOrder (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    userID INTEGER UNSIGNED,
+    userID INTEGER UNSIGNED NOT NULL,
     billingAddressID INTEGER UNSIGNED,
     shippingAddressID INTEGER UNSIGNED,
     currencyID CHAR(3),
-    dateCreated TIMESTAMP,
+    dateCreated TIMESTAMP NOT NULL,
     dateCompleted TIMESTAMP,
     totalAmount FLOAT,
     capturedAmount FLOAT,
-    isFinalized BOOL,
-    isPaid BOOL,
-    isDelivered BOOL,
-    isReturned BOOL,
-    isCancelled BOOL,
+    isFinalized BOOL NOT NULL,
+    isPaid BOOL NOT NULL,
+    isCancelled BOOL NOT NULL,
+    status TINYINT COMMENT '1 - backordered 2 - awaiting shipment 3 - shipped 4 - returned',
     shipping TEXT,
     CONSTRAINT PK_CustomerOrder PRIMARY KEY (ID)
 );
+
+CREATE INDEX IDX_CustomerOrder_1 ON CustomerOrder (status);
+
+CREATE INDEX IDX_CustomerOrder_2 ON CustomerOrder (isFinalized);
 
 # ---------------------------------------------------------------------- #
 # Add table "OrderedItem"                                                #
@@ -173,7 +188,7 @@ CREATE TABLE OrderedItem (
     ID INTEGER NOT NULL AUTO_INCREMENT,
     productID INTEGER UNSIGNED NOT NULL,
     customerOrderID INTEGER UNSIGNED NOT NULL,
-    shipmentID INTEGER,
+    shipmentID INTEGER UNSIGNED,
     priceCurrencyID CHAR(3),
     count FLOAT,
     reservedProductCount FLOAT,
@@ -195,54 +210,43 @@ CREATE INDEX IDX_OrderedItem_3 ON OrderedItem (isSavedForLater);
 
 CREATE TABLE User (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    defaultShippingAddressID INTEGER UNSIGNED,
     defaultBillingAddressID INTEGER UNSIGNED,
+    defaultShippingAddressID INTEGER UNSIGNED,
+    userGroupID INTEGER UNSIGNED,
     email VARCHAR(60),
-    password CHAR(32),
+    password CHAR(32) NOT NULL,
     firstName VARCHAR(60),
     lastName VARCHAR(60),
     companyName VARCHAR(60),
-    dateCreated TIMESTAMP,
-    isEnabled BOOL,
+    dateCreated TIMESTAMP NOT NULL,
+    isEnabled BOOL NOT NULL,
+    isAdmin BOOL NOT NULL,
     CONSTRAINT PK_User PRIMARY KEY (ID)
 ) COMMENT = 'Store system base user (including frontend and backend)';
 
 CREATE UNIQUE INDEX IDX_email ON User (email);
 
 # ---------------------------------------------------------------------- #
-# Add table "AccessControlList"                                          #
+# Add table "AccessControlAssociation"                                   #
 # ---------------------------------------------------------------------- #
 
-CREATE TABLE AccessControlList (
-    UserID INTEGER UNSIGNED NOT NULL,
-    RoleGroupID INTEGER UNSIGNED NOT NULL,
-    RoleID INTEGER UNSIGNED NOT NULL,
-    CONSTRAINT PK_AccessControlList PRIMARY KEY (UserID, RoleGroupID, RoleID)
+CREATE TABLE AccessControlAssociation (
+    ID INTEGER NOT NULL AUTO_INCREMENT,
+    roleID INTEGER UNSIGNED NOT NULL,
+    userGroupID INTEGER UNSIGNED NOT NULL,
+    CONSTRAINT PK_AccessControlAssociation PRIMARY KEY (ID)
 );
-
-# ---------------------------------------------------------------------- #
-# Add table "RoleGroup"                                                  #
-# ---------------------------------------------------------------------- #
-
-CREATE TABLE RoleGroup (
-    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    name VARCHAR(60) NOT NULL,
-    description TEXT,
-    parent INTEGER DEFAULT 0,
-    lft INTEGER,
-    rgt INTEGER,
-    CONSTRAINT PK_RoleGroup PRIMARY KEY (ID)
-) COMMENT = 'A list of role based groups in a store system';
 
 # ---------------------------------------------------------------------- #
 # Add table "UserGroup"                                                  #
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE UserGroup (
-    userID INTEGER UNSIGNED NOT NULL,
-    roleGroupID INTEGER UNSIGNED NOT NULL,
-    CONSTRAINT PK_UserGroup PRIMARY KEY (userID, roleGroupID)
-) COMMENT = 'User mapping to roleGroups (many-to-many relationship)';
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(60) NOT NULL,
+    description TEXT,
+    CONSTRAINT PK_UserGroup PRIMARY KEY (ID)
+) COMMENT = 'A list of role based groups in a store system';
 
 # ---------------------------------------------------------------------- #
 # Add table "Filter"                                                     #
@@ -575,9 +579,16 @@ CREATE TABLE Transaction (
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE Shipment (
-    ID INTEGER NOT NULL AUTO_INCREMENT,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     orderID INTEGER UNSIGNED NOT NULL,
+    shippingServiceID INTEGER UNSIGNED,
+    shippingServiceCode CHAR(8),
+    amount FLOAT,
+    shippingAmount FLOAT,
+    amountCurrencyID CHAR(3),
     status TINYINT COMMENT '0 - new 1 - pending 2 - awaiting shipment 3 - shipped 4 - confirmed as delivered 5 - confirmed as lost',
+    dateShipped TIMESTAMP,
+    trackingCode VARCHAR(100),
     CONSTRAINT PK_Shipment PRIMARY KEY (ID)
 );
 
@@ -673,15 +684,14 @@ CREATE TABLE DeliveryZoneAddressMask (
 );
 
 # ---------------------------------------------------------------------- #
-# Add table "TaxType"                                                    #
+# Add table "Tax"                                                        #
 # ---------------------------------------------------------------------- #
 
-CREATE TABLE TaxType (
+CREATE TABLE Tax (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    isEnabled BOOL,
-    isShippingAddressBased BOOL,
+    isEnabled BOOL NOT NULL,
     name TEXT,
-    CONSTRAINT PK_TaxType PRIMARY KEY (ID)
+    CONSTRAINT PK_Tax PRIMARY KEY (ID)
 );
 
 # ---------------------------------------------------------------------- #
@@ -690,10 +700,11 @@ CREATE TABLE TaxType (
 
 CREATE TABLE TaxRate (
     ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    taxTypeID INTEGER UNSIGNED,
+    taxID INTEGER UNSIGNED,
     deliveryZoneID INTEGER UNSIGNED,
     rate FLOAT,
-    CONSTRAINT PK_TaxRate PRIMARY KEY (ID)
+    CONSTRAINT PK_TaxRate PRIMARY KEY (ID),
+    CONSTRAINT TUC_TaxRate_DeliveryZone_Tax UNIQUE (deliveryZoneID, taxID)
 );
 
 # ---------------------------------------------------------------------- #
@@ -701,8 +712,8 @@ CREATE TABLE TaxRate (
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE ShippingRate (
-    ID INTEGER NOT NULL AUTO_INCREMENT,
-    shippingRateGroupID INTEGER,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    shippingServiceID INTEGER UNSIGNED,
     weightRangeStart FLOAT,
     weightRangeEnd FLOAT,
     subtotalRangeStart FLOAT,
@@ -731,12 +742,26 @@ CREATE TABLE ProductFileGroup (
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE ShippingService (
-    ID INTEGER NOT NULL,
+    ID INTEGER UNSIGNED NOT NULL,
     deliveryZoneID INTEGER UNSIGNED,
     name TEXT,
     position INTEGER UNSIGNED DEFAULT 0,
     rangeType TINYINT COMMENT '0 - weight based range 1 - subtotal based range',
     CONSTRAINT PK_ShippingService PRIMARY KEY (ID)
+);
+
+# ---------------------------------------------------------------------- #
+# Add table "StaticPage"                                                 #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE StaticPage (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    handle VARCHAR(40),
+    title TEXT,
+    text TEXT,
+    isInformationBox BOOL NOT NULL,
+    position INTEGER UNSIGNED DEFAULT 0,
+    CONSTRAINT PK_StaticPage PRIMARY KEY (ID)
 );
 
 # ---------------------------------------------------------------------- #
@@ -750,13 +775,13 @@ ALTER TABLE Product ADD CONSTRAINT Manufacturer_Product
     FOREIGN KEY (manufacturerID) REFERENCES Manufacturer (ID) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE Product ADD CONSTRAINT ProductImage_Product 
-    FOREIGN KEY (defaultImageID) REFERENCES ProductImage (ID) ON DELETE SET NULL;
+    FOREIGN KEY (defaultImageID) REFERENCES ProductImage (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE Category ADD CONSTRAINT Category_Category 
     FOREIGN KEY (parentNodeID) REFERENCES Category (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Category ADD CONSTRAINT CategoryImage_Category 
-    FOREIGN KEY (defaultImageID) REFERENCES CategoryImage (ID) ON DELETE SET NULL;
+    FOREIGN KEY (defaultImageID) REFERENCES CategoryImage (ID) ON DELETE SET NULL ON UPDATE SET NULL;
 
 ALTER TABLE SpecificationItem ADD CONSTRAINT SpecFieldValue_SpecificationItem 
     FOREIGN KEY (specFieldValueID) REFERENCES SpecFieldValue (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -794,26 +819,20 @@ ALTER TABLE OrderedItem ADD CONSTRAINT CustomerOrder_OrderedItem
 ALTER TABLE OrderedItem ADD CONSTRAINT Shipment_OrderedItem 
     FOREIGN KEY (shipmentID) REFERENCES Shipment (ID) ON DELETE SET NULL;
 
+ALTER TABLE User ADD CONSTRAINT ShippingAddress_User 
+    FOREIGN KEY (defaultShippingAddressID) REFERENCES ShippingAddress (ID) ON DELETE SET NULL;
+
 ALTER TABLE User ADD CONSTRAINT BillingAddress_User 
     FOREIGN KEY (defaultBillingAddressID) REFERENCES BillingAddress (ID) ON DELETE SET NULL;
 
-ALTER TABLE User ADD CONSTRAINT ShippingAddress_User 
-    FOREIGN KEY (defaultShippingAddressID) REFERENCES ShippingAddress (ID) ON DELETE CASCADE;
+ALTER TABLE User ADD CONSTRAINT UserGroup_User 
+    FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE AccessControlList ADD CONSTRAINT User_AccessControlList 
-    FOREIGN KEY (UserID) REFERENCES User (ID);
+ALTER TABLE AccessControlAssociation ADD CONSTRAINT UserGroup_AccessControlAssociation 
+    FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE AccessControlList ADD CONSTRAINT RoleGroup_AccessControlList 
-    FOREIGN KEY (RoleGroupID) REFERENCES RoleGroup (ID);
-
-ALTER TABLE AccessControlList ADD CONSTRAINT Role_AccessControlList 
-    FOREIGN KEY (RoleID) REFERENCES Role (ID);
-
-ALTER TABLE UserGroup ADD CONSTRAINT User_UserGroup 
-    FOREIGN KEY (userID) REFERENCES User (ID);
-
-ALTER TABLE UserGroup ADD CONSTRAINT RoleGroup_UserGroup 
-    FOREIGN KEY (roleGroupID) REFERENCES RoleGroup (ID);
+ALTER TABLE AccessControlAssociation ADD CONSTRAINT Role_AccessControlAssociation 
+    FOREIGN KEY (roleID) REFERENCES Role (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Filter ADD CONSTRAINT FilterGroup_Filter 
     FOREIGN KEY (filterGroupID) REFERENCES FilterGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -837,7 +856,7 @@ ALTER TABLE ProductPrice ADD CONSTRAINT Currency_ProductPrice
     FOREIGN KEY (currencyID) REFERENCES Currency (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductImage ADD CONSTRAINT Product_ProductImage 
-    FOREIGN KEY (productID) REFERENCES Product (ID);
+    FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE ProductFile ADD CONSTRAINT Product_ProductFile 
     FOREIGN KEY (productID) REFERENCES Product (ID) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -899,6 +918,9 @@ ALTER TABLE Transaction ADD CONSTRAINT Transaction_Transaction
 ALTER TABLE Shipment ADD CONSTRAINT CustomerOrder_Shipment 
     FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE;
 
+ALTER TABLE Shipment ADD CONSTRAINT ShippingService_Shipment 
+    FOREIGN KEY (shippingServiceID) REFERENCES ShippingService (ID) ON DELETE SET NULL;
+
 ALTER TABLE ShippingAddress ADD CONSTRAINT User_ShippingAddress 
     FOREIGN KEY (userID) REFERENCES User (ID) ON DELETE CASCADE;
 
@@ -929,14 +951,14 @@ ALTER TABLE DeliveryZoneZipMask ADD CONSTRAINT DeliveryZone_DeliveryZoneZipMask
 ALTER TABLE DeliveryZoneAddressMask ADD CONSTRAINT DeliveryZone_DeliveryZoneAddressMask 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
 
-ALTER TABLE TaxRate ADD CONSTRAINT TaxType_TaxRate 
-    FOREIGN KEY (taxTypeID) REFERENCES TaxType (ID) ON DELETE CASCADE;
+ALTER TABLE TaxRate ADD CONSTRAINT Tax_TaxRate 
+    FOREIGN KEY (taxID) REFERENCES Tax (ID) ON DELETE CASCADE;
 
 ALTER TABLE TaxRate ADD CONSTRAINT DeliveryZone_TaxRate 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
 
 ALTER TABLE ShippingRate ADD CONSTRAINT ShippingService_ShippingRate 
-    FOREIGN KEY (shippingRateGroupID) REFERENCES ShippingService (ID) ON DELETE CASCADE;
+    FOREIGN KEY (shippingServiceID) REFERENCES ShippingService (ID) ON DELETE CASCADE;
 
 ALTER TABLE ProductFileGroup ADD CONSTRAINT Product_ProductFileGroup 
     FOREIGN KEY (productID) REFERENCES Product (ID);

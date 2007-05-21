@@ -1,11 +1,11 @@
 # ---------------------------------------------------------------------- #
-# Script generated with: DeZign for Databases v4.1.3                     #
+# Script generated with: DeZign for Databases v4.2.0                     #
 # Target DBMS:           MySQL 4                                         #
 # Project file:          LiveCart.dez                                    #
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2007-05-02 15:45                                #
+# Created on:            2007-05-21 16:30                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -47,19 +47,15 @@ ALTER TABLE OrderedItem DROP FOREIGN KEY CustomerOrder_OrderedItem;
 
 ALTER TABLE OrderedItem DROP FOREIGN KEY Shipment_OrderedItem;
 
-ALTER TABLE User DROP FOREIGN KEY BillingAddress_User;
-
 ALTER TABLE User DROP FOREIGN KEY ShippingAddress_User;
 
-ALTER TABLE AccessControlList DROP FOREIGN KEY User_AccessControlList;
+ALTER TABLE User DROP FOREIGN KEY BillingAddress_User;
 
-ALTER TABLE AccessControlList DROP FOREIGN KEY RoleGroup_AccessControlList;
+ALTER TABLE User DROP FOREIGN KEY UserGroup_User;
 
-ALTER TABLE AccessControlList DROP FOREIGN KEY Role_AccessControlList;
+ALTER TABLE AccessControlAssociation DROP FOREIGN KEY UserGroup_AccessControlAssociation;
 
-ALTER TABLE UserGroup DROP FOREIGN KEY User_UserGroup;
-
-ALTER TABLE UserGroup DROP FOREIGN KEY RoleGroup_UserGroup;
+ALTER TABLE AccessControlAssociation DROP FOREIGN KEY Role_AccessControlAssociation;
 
 ALTER TABLE Filter DROP FOREIGN KEY FilterGroup_Filter;
 
@@ -117,6 +113,8 @@ ALTER TABLE Transaction DROP FOREIGN KEY Transaction_Transaction;
 
 ALTER TABLE Shipment DROP FOREIGN KEY CustomerOrder_Shipment;
 
+ALTER TABLE Shipment DROP FOREIGN KEY ShippingService_Shipment;
+
 ALTER TABLE ShippingAddress DROP FOREIGN KEY User_ShippingAddress;
 
 ALTER TABLE ShippingAddress DROP FOREIGN KEY UserAddress_ShippingAddress;
@@ -137,7 +135,7 @@ ALTER TABLE DeliveryZoneZipMask DROP FOREIGN KEY DeliveryZone_DeliveryZoneZipMas
 
 ALTER TABLE DeliveryZoneAddressMask DROP FOREIGN KEY DeliveryZone_DeliveryZoneAddressMask;
 
-ALTER TABLE TaxRate DROP FOREIGN KEY TaxType_TaxRate;
+ALTER TABLE TaxRate DROP FOREIGN KEY Tax_TaxRate;
 
 ALTER TABLE TaxRate DROP FOREIGN KEY DeliveryZone_TaxRate;
 
@@ -155,7 +153,7 @@ ALTER TABLE ShippingService DROP FOREIGN KEY DeliveryZone_ShippingService;
 
 ALTER TABLE Product ALTER COLUMN isEnabled DROP DEFAULT;
 
-ALTER TABLE Product ALTER COLUMN isBestSeller DROP DEFAULT;
+ALTER TABLE Product ALTER COLUMN isFeatured DROP DEFAULT;
 
 ALTER TABLE Product ALTER COLUMN type DROP DEFAULT;
 
@@ -286,30 +284,16 @@ ALTER TABLE User DROP PRIMARY KEY;
 DROP TABLE User;
 
 # ---------------------------------------------------------------------- #
-# Drop table "AccessControlList"                                         #
+# Drop table "AccessControlAssociation"                                  #
 # ---------------------------------------------------------------------- #
 
 # Drop constraints #
 
-ALTER TABLE AccessControlList DROP PRIMARY KEY;
+ALTER TABLE AccessControlAssociation DROP PRIMARY KEY;
 
 # Drop table #
 
-DROP TABLE AccessControlList;
-
-# ---------------------------------------------------------------------- #
-# Drop table "RoleGroup"                                                 #
-# ---------------------------------------------------------------------- #
-
-# Drop constraints #
-
-ALTER TABLE RoleGroup ALTER COLUMN parent DROP DEFAULT;
-
-ALTER TABLE RoleGroup DROP PRIMARY KEY;
-
-# Drop table #
-
-DROP TABLE RoleGroup;
+DROP TABLE AccessControlAssociation;
 
 # ---------------------------------------------------------------------- #
 # Drop table "UserGroup"                                                 #
@@ -728,16 +712,16 @@ ALTER TABLE DeliveryZoneAddressMask DROP PRIMARY KEY;
 DROP TABLE DeliveryZoneAddressMask;
 
 # ---------------------------------------------------------------------- #
-# Drop table "TaxType"                                                   #
+# Drop table "Tax"                                                       #
 # ---------------------------------------------------------------------- #
 
 # Drop constraints #
 
-ALTER TABLE TaxType DROP PRIMARY KEY;
+ALTER TABLE Tax DROP PRIMARY KEY;
 
 # Drop table #
 
-DROP TABLE TaxType;
+DROP TABLE Tax;
 
 # ---------------------------------------------------------------------- #
 # Drop table "TaxRate"                                                   #
@@ -746,6 +730,8 @@ DROP TABLE TaxType;
 # Drop constraints #
 
 ALTER TABLE TaxRate DROP PRIMARY KEY;
+
+DROP INDEX TUC_TaxRate_DeliveryZone_Tax ON TaxRate;
 
 # Drop table #
 
@@ -790,3 +776,17 @@ ALTER TABLE ShippingService DROP PRIMARY KEY;
 # Drop table #
 
 DROP TABLE ShippingService;
+
+# ---------------------------------------------------------------------- #
+# Drop table "StaticPage"                                                #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE StaticPage ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE StaticPage DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE StaticPage;

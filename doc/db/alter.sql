@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Alter database script                           #
-# Created on:            2007-05-18 21:39                                #
+# Created on:            2007-05-21 13:19                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -221,10 +221,10 @@ ALTER TABLE User ADD CONSTRAINT UserGroup_User
     FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE AccessControlAssociation ADD CONSTRAINT UserGroup_AccessControlAssociation 
-    FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID);
+    FOREIGN KEY (userGroupID) REFERENCES UserGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE AccessControlAssociation ADD CONSTRAINT Role_AccessControlAssociation 
-    FOREIGN KEY (roleID) REFERENCES Role (ID);
+    FOREIGN KEY (roleID) REFERENCES Role (ID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE Filter ADD CONSTRAINT FilterGroup_Filter 
     FOREIGN KEY (filterGroupID) REFERENCES FilterGroup (ID) ON DELETE CASCADE ON UPDATE CASCADE;
