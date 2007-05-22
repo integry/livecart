@@ -307,15 +307,14 @@ class User extends ActiveRecordModel
 			return $this->getID() > 0;	
 		}
 
-		$this->load(array('UserGroup'));
-		if($this->userGroup->get()->hasAccess($roleName))
+		$this->load(array('UserGroup'));	
+		
+		if (!$this->userGroup->get())
 		{
-		    return true;
+			return false;
 		}
-		else
-		{
-		    return false;
-		}
+		
+		return $this->userGroup->get()->hasAccess($roleName);
 		
 //		// disable all login protected content from deactivated users
 //		if ($roleName && !$this->isEnabled->get())
