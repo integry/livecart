@@ -31,7 +31,7 @@ abstract class ObjectFile extends MultilingualObject
     }
 
     public function setBaseName($baseName) 
-    {        
+    {                
         $this->newFileUploaded = true;
 
 		// write to database

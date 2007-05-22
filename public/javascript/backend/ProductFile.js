@@ -130,6 +130,8 @@ Backend.ProductFile.Controller.prototype = {
         Form.State.backup(this.view.nodes.form);
         
         Backend.ProductFile.Controller.prototype.instances[this.view.nodes.root.id] = this;
+        
+        new SectionExpander(this.view.nodes.root);
     },
     
     getInstance: function(rootNode)
@@ -209,6 +211,7 @@ Backend.ProductFile.Controller.prototype = {
     
     onSave: function()
     {
+        this.view.nodes.form.action = (this.model.isNew ? Backend.ProductFile.Links.create : Backend.ProductFile.Links.update) + "/?random=" + Math.random() * 100000; 
 	    Element.saveTinyMceFields(this.view.nodes.form);  
     },
     
@@ -404,11 +407,11 @@ Backend.ProductFile.View.prototype = {
             
             translationFieldset.down('legend').update(language.value.name);
             
-            var description = translationFieldset.down('.' + self.prefix + 'name');
+            var description = translationFieldset.down('.' + self.prefix + 'description');
             description.name += '_' + language.key;
             description.value = self.get('description.' + language.key , '');
             
-            var title = translationFieldset.down('.' + self.prefix + 'name');
+            var title = translationFieldset.down('.' + self.prefix + 'title');
             title.name += '_' + language.key;
             title.value = self.get('title.' + language.key , '');
             

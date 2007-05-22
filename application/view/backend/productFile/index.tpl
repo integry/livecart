@@ -58,7 +58,8 @@
     
     with(Backend.ProductFile)
     {
-        Links.save     = '{/literal}{link controller=backend.productFile action=save}{literal}';
+        Links.update     = '{/literal}{link controller=backend.productFile action=update}{literal}';
+        Links.create     = '{/literal}{link controller=backend.productFile action=create}{literal}';
         Links.deleteFile   = '{/literal}{link controller=backend.productFile action=delete}{literal}';
         Links.sort     = '{/literal}{link controller=backend.productFile action=sort}{literal}';
         Links.edit     = '{/literal}{link controller=backend.productFile action=edit}{literal}';
@@ -78,13 +79,19 @@
     }    
     // create empty form
     
+    try
+    {
     $("productFileGroup_new_{/literal}{$productID}{literal}_form").update($("productFileGroup_item_blank").innerHTML);
     $("productFile_new_{/literal}{$productID}{literal}_form").update($("productFile_item_blank").innerHTML);
     var emptyModel = new Backend.ProductFile.Model({Product: {ID: {/literal}{$productID}{literal}}}, Backend.availableLanguages);
-    new Backend.ProductFile.Controller($("productFile_new_{/literal}{$productID}{literal}_form").down('.productFile_form'), emptyModel);
+    var emptyController = new Backend.ProductFile.Controller($("productFile_new_{/literal}{$productID}{literal}_form").down('.productFile_form'), emptyModel);
     var emptyGroupModel = new Backend.ProductFile.Group.Model({Product: {ID: {/literal}{$productID}{literal}}}, Backend.availableLanguages);
     new Backend.ProductFile.Group.Controller($("productFileGroup_new_{/literal}{$productID}{literal}_form").down('.productFileGroup_form'), emptyGroupModel);
-    
+    }
+    catch(e)
+    {
+        console.info(e);
+    }
     try
     {
         Event.observe($("productFileGroup_new_{/literal}{$productID}{literal}_show"), "click", function(e) 

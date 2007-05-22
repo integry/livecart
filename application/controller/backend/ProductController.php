@@ -232,9 +232,6 @@ class ProductController extends StoreManagementController
 		return new JSONResponse($this->request->getValue('act'));	
     }	
 
-    /**
-     * @role autocomplete
-     */
 	public function autoComplete()
 	{
 	  	$f = new ARSelectFilter();

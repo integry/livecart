@@ -29,46 +29,43 @@ class ProductFileController extends StoreManagementController
 	}
 
 	/**
-	 * @return RequestValidator
+	 * @role update
 	 */
-    private function buildValidator($existingProductFile = true)
-    {
-		ClassLoader::import("framework.request.validator.RequestValidator");
-		$validator = new RequestValidator("productFileValidator", $this->request);
-
-		$validator->addCheck('title_' . $this->store->getDefaultLanguageCode(), new IsNotEmptyCheck('_err_file_title_is_empty'));
-		$validator->addCheck('allowDownloadDays', new IsNumericCheck('_err_allow_download_days_should_be_a_number'));
-		$validator->addCheck('allowDownloadDays', new IsNotEmptyCheck('_err_allow_download_days_is_empty'));
-		if(!$existingProductFile) $validator->addCheck('uploadFile', new IsFileUploadedCheck('_err_file_could_not_be_uploaded_to_the_server'));
-		if($existingProductFile) $validator->addCheck('fileName', new IsNotEmptyCheck('_err_fileName_should_not_be_empty'));
-
-		return $validator;
-    }
+	public function update()
+	{
+        $productFile = ProductFile::getInstanceByID((int)$this->request->getValue('ID'), ActiveRecord::LOAD_DATA);
+        $productFile->fileName->set($this->request->getValue('fileName'));
+        
+        $uploadFile = $this->request->getValue('uploadFile');
+        if($this->request->isValueSet('uploadFile')) 
+        {
+            $productFile->storeFile($uploadFile['tmp_name'], $uploadFile['name']);
+        }
+        
+        return $this->save($productFile);
+	}
 	
-	public function save()
+	/**
+	 * @role update
+	 */
+	public function create()
+	{	    
+	    $product = Product::getInstanceByID((int)$this->request->getValue('productID'));
+	    $uploadFile = $this->request->getValue('uploadFile');
+
+	    $productFile = ProductFile::getNewInstance($product, $uploadFile['tmp_name'], $uploadFile['name']);
+        return $this->save($productFile);
+	}
+	
+	private function save(ProductFile $productFile)
 	{
 	    $response = new ActionResponse();
+	    $response->setHeader("Cache-Control", "no-cache, must-revalidate");
+	    $response->setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
 	    
 	    $validator = $this->buildValidator((int)$this->request->getValue('ID'));
 	    if($validator->isValid())
-	    {
-		    $product = Product::getInstanceByID((int)$this->request->getValue('productID'));
-	        $uploadFile = $this->request->getValue('uploadFile');
-		    
-		    if($id = (int)$this->request->getValue('ID'))
-		    {
-		        $productFile = ProductFile::getInstanceByID($id, ActiveRecord::LOAD_DATA);
-		        $productFile->fileName->set($this->request->getValue('fileName'));
-		        
-		        if($this->request->isValueSet('uploadFile')) {
-		            $productFile->storeFile($uploadFile['tmp_name'], $uploadFile['name']);
-		        }
-		    }
-		    else
-		    {
-		        $productFile = ProductFile::getNewInstance($product, $uploadFile['tmp_name'], $uploadFile['name']);
-		    }
-		    
+	    {   
 		    foreach ($this->store->getLanguageArray(true) as $lang)
 	   		{
 	   			if ($this->request->isValueSet('title_' . $lang))
@@ -100,6 +97,9 @@ class ProductFileController extends StoreManagementController
 	    return $response;
 	}
 
+	/**
+	 * @role update
+	 */
 	public function edit()
 	{
 	    $productFile = ProductFile::getInstanceByID((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA);
@@ -107,6 +107,9 @@ class ProductFileController extends StoreManagementController
 	    return new JSONResponse($productFile->toArray());
 	}
 
+	/**
+	 * @role remove
+	 */
 	public function delete()
 	{
 	    ProductFile::getInstanceByID((int)$this->request->getValue('id'))->delete();
@@ -114,6 +117,9 @@ class ProductFileController extends StoreManagementController
 	    return new JSONResponse(array('status' => 'success'));
 	}
 	
+	/**
+	 * @role download
+	 */
 	public function download()
 	{
 	    $productFile = ProductFile::getInstanceByID((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA);
@@ -121,6 +127,9 @@ class ProductFileController extends StoreManagementController
 	    return new ObjectFileResponse($productFile);
 	}
 
+	/**
+	 * @role sort
+	 */
 	public function sort()
 	{ 
         $target = $this->request->getValue('target');    
@@ -141,5 +150,23 @@ class ProductFileController extends StoreManagementController
         
         return new JSONResponse(array('status' => 'success'));
 	}
+
+	/**
+	 * @return RequestValidator
+	 */
+    private function buildValidator($existingProductFile = true)
+    {
+		ClassLoader::import("framework.request.validator.RequestValidator");
+		$validator = new RequestValidator("productFileValidator", $this->request);
+
+		$validator->addCheck('title_' . $this->store->getDefaultLanguageCode(), new IsNotEmptyCheck('_err_file_title_is_empty'));
+		$validator->addCheck('allowDownloadDays', new IsNumericCheck('_err_allow_download_days_should_be_a_number'));
+		$validator->addCheck('allowDownloadDays', new IsNotEmptyCheck('_err_allow_download_days_is_empty'));
+		if(!$existingProductFile) $validator->addCheck('uploadFile', new IsFileUploadedCheck('_err_file_could_not_be_uploaded_to_the_server'));
+		if($existingProductFile) $validator->addCheck('fileName', new IsNotEmptyCheck('_err_fileName_should_not_be_empty'));
+
+		return $validator;
+    }
+	
 }
 ?>

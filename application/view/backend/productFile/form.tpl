@@ -1,5 +1,5 @@
 <div class="productFile_form"  style="display: none;">
-    <form action="{link controller=backend.productFile action=save}" method="post" target="productFileUploadIFrame_" enctype="multipart/form-data">
+    <form action="{link controller=backend.productFile action=update}" method="post" target="productFileUploadIFrame_" enctype="multipart/form-data">
     	<!-- STEP 1 -->
     	<fieldset>
     		<input type="hidden" name="ID" class="hidden productFile_ID" />
@@ -45,18 +45,20 @@
             
         	<!-- STEP 3 -->
         	<fieldset class="productFile_translations">
-        		<fieldset class="dom_template productFile_translations_language">
+        		<fieldset class="dom_template productFile_translations_language expandingSection">
         			<legend class="productFile_translations_language_legend"></legend>
-        
-                    <div class="productFile_translations_language_values">
-                        <div>
-                			<label class="productFile_title_label">{t _productFile_title}</label>
-                			<input type="text" name="title" class="productFile_title" />
-            			</div>
-                        <div>
-                			<label class="productFile_description_label">{t _productFile_description}</label>
-                			<input type="text" name="description" class="productFile_description" />
-            			</div>
+                    
+                    <div class="expandingSectionContent">
+                        <div class="productFile_translations_language_values">
+                            <div>
+                    			<label class="productFile_title_label">{t _productFile_title}</label>
+                    			<input type="text" name="title" class="productFile_title" />
+                			</div>
+                            <div>
+                    			<label class="productFile_description_label">{t _productFile_description}</label>
+                    			<input type="text" name="description" class="productFile_description" />
+                			</div>
+                        </div>
                     </div>
         		</fieldset>
         	</fieldset>
