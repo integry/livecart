@@ -92,7 +92,7 @@ Backend.DeliveryZone.prototype =
         var self = this;
         
 		new Ajax.Request(
-			Backend.DeliveryZone.prototype.Links.save,
+			Backend.DeliveryZone.prototype.Links.create,
 			{
 				method: 'post',
 				parameters: 'name=' + $("newZoneInput").value,

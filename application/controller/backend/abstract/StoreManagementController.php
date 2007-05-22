@@ -9,7 +9,6 @@ ClassLoader::import("application.controller.backend.abstract.BackendController")
  * @package application.controller.backend
  * @author Saulius Rupainis <saulius@integry.net>
  * 
- * @role admin.store
  */
 class StoreManagementController extends BackendController 
 {

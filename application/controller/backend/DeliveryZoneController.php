@@ -17,7 +17,7 @@ ClassLoader::import("framework.request.validator.Form");
 class DeliveryZoneController extends StoreManagementController
 {
 	/**
-	 *	Main settings page
+	 * Main settings page
 	 */
 	public function index()
 	{
@@ -34,6 +34,9 @@ class DeliveryZoneController extends StoreManagementController
 		return $response;
 	}
 	
+	/**
+	 * @role update
+	 */
 	public function countriesAndStates() 
 	{
 	    if(($id = (int)$this->request->getValue('id')) <= 0) 
@@ -90,28 +93,10 @@ class DeliveryZoneController extends StoreManagementController
 	    
 	    return $response;
 	}
-
 	
-	public function taxRates() 
-	{
-	    if(!($id = (int)$this->request->getValue('id'))) return;
-	    
-	    return new RawResponse('Tax rates ' . $id);
-	}
-	
-	private function createCountriesAndStatesForm(DeliveryZone $zone)
-	{
-		return new Form($this->createCountriesAndStatesFormValidator($zone));
-	}
-
-	private function createCountriesAndStatesFormValidator(DeliveryZone $zone)
-	{	
-		$validator = new RequestValidator('countriesAndStates', $this->request);
-		
-		return $validator;
-	}
-	
-	
+	/**
+	 * @role update
+	 */
 	public function saveStates()
 	{
 	    $zone = DeliveryZone::getInstanceByID((int)$this->request->getValue('id'));
@@ -127,6 +112,9 @@ class DeliveryZoneController extends StoreManagementController
 	    return new JSONResponse(array('status' => 'success'));
 	}
 	
+	/**
+	 * @role update
+	 */
 	public function saveCountries()
 	{
 	    $zone = DeliveryZone::getInstanceByID((int)$this->request->getValue('id'));
@@ -141,7 +129,10 @@ class DeliveryZoneController extends StoreManagementController
 	    return new JSONResponse(array('status' => 'success'));
 	}
 
-	public function save()
+	/**
+	 * @role create
+	 */
+	public function create()
 	{
 	    if(($name = $this->request->getValue('name')) != '')
 	    {
@@ -150,23 +141,34 @@ class DeliveryZoneController extends StoreManagementController
 	        $zone->save();
 	        
 	        return new JSONResponse(array('status' => 'success', 'ID' => $zone->getID()));
-	    }
+	    }  
 	    else
 	    {
-	        $zone = DeliveryZone::getInstanceByID((int)$this->request->getValue('id'));
-	        foreach($this->store->getLanguageArray(true) as $langCode) 
-	        {
-	            $zone->setValueByLang('name', $langCode, $this->request->getValue('name_' . $langCode));
-	        }
-	        
-	        $zone->save();
+	        return new JSONResponse(array('status' => 'failure', 'errors' => array('name' => $this->translate('_error_name_is_not_specified'))));
 	    }
 	    
+	}
+	
+	/**
+	 * @role update
+	 */
+	public function save()
+	{
+        $zone = DeliveryZone::getInstanceByID((int)$this->request->getValue('id'));
+        foreach($this->store->getLanguageArray(true) as $langCode) 
+        {
+            $zone->setValueByLang('name', $langCode, $this->request->getValue('name_' . $langCode));
+        }
+        
+        $zone->save();
 	    
         return new JSONResponse(array('status' => 'success'));
 	    
 	}
 	
+	/**
+	 * @role update
+	 */
 	public function saveCityMask()
 	{
 	    if(($errors = $this->isValidMask()) === true)
@@ -192,18 +194,10 @@ class DeliveryZoneController extends StoreManagementController
 		    return new JSONResponse(array('status' => 'failure', 'errors' => $errors));
 	    }
 	}
-	
-	private function isValidMask() {
-	    if($this->request->getValue('mask')) 
-        {
-	        return true;
-	    }
-	    else 
-	    {
-	        return array('mask' => $this->translate('_error_mask_is_empty'));
-	    }
-	}
 
+	/**
+	 * @role remove
+	 */
 	public function delete()
 	{
 	    DeliveryZone::getInstanceByID((int)$this->request->getValue('id'))->delete();
@@ -211,6 +205,9 @@ class DeliveryZoneController extends StoreManagementController
 	    return new JSONResponse(array('status' => 'success'));
 	}
 
+	/**
+	 * @role update
+	 */
 	public function deleteCityMask()
 	{
 	    DeliveryZoneCityMask::getInstanceByID((int)$this->request->getValue('id'))->delete();
@@ -218,6 +215,9 @@ class DeliveryZoneController extends StoreManagementController
 	    return new JSONResponse(array('status' => 'success'));
 	}
 	
+	/**
+	 * @role update
+	 */
 	public function saveZipMask()
 	{	    
    	    if(($errors = $this->isValidMask()) === true)
@@ -244,6 +244,9 @@ class DeliveryZoneController extends StoreManagementController
 	    }
 	}
 
+	/**
+	 * @role update
+	 */
 	public function deleteZipMask()
 	{
 	    DeliveryZoneZipMask::getInstanceByID((int)$this->request->getValue('id'))->delete();
@@ -251,6 +254,9 @@ class DeliveryZoneController extends StoreManagementController
 	    return new JSONResponse(array('status' => 'success'));
 	}
 	
+	/**
+	 * @role update
+	 */
 	public function saveAddressMask()
 	{
    	    if(($errors = $this->isValidMask()) === true)
@@ -277,12 +283,39 @@ class DeliveryZoneController extends StoreManagementController
 	    }
 	}
 
+	/**
+	 * @role update
+	 */
 	public function deleteAddressMask()
 	{    
 	    DeliveryZoneAddressMask::getInstanceByID((int)$this->request->getValue('id'))->delete();
 	    
 	    return new JSONResponse(array('status' => 'success'));
 	}
+
+	private function createCountriesAndStatesForm(DeliveryZone $zone)
+	{
+		return new Form($this->createCountriesAndStatesFormValidator($zone));
+	}
+
+	private function createCountriesAndStatesFormValidator(DeliveryZone $zone)
+	{	
+		$validator = new RequestValidator('countriesAndStates', $this->request);
+		
+		return $validator;
+	}
+	
+	private function isValidMask() {
+	    if($this->request->getValue('mask')) 
+        {
+	        return true;
+	    }
+	    else 
+	    {
+	        return array('mask' => $this->translate('_error_mask_is_empty'));
+	    }
+	}
+	
 }
 
 ?>

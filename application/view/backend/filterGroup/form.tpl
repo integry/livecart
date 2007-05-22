@@ -1,4 +1,4 @@
-<form action="{link controller=backend.filterGroup action=save}" method="post" class="filter">
+<form action="{link controller=backend.filterGroup action=update}" method="post" class="filter">
 	<!-- STEP 1 -->
 	<fieldset class="filter_step_lev1 filter_step_main">
     <legend>{t _Filter_step_one}</legend>

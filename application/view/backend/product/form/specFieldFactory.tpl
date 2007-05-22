@@ -24,7 +24,7 @@
 		</div>
 
 		<p class="selectMenu">
-			<a href="#" onclick="Backend.Product.multiValueSelect(this, true); return false;">Select All</a> | <a href="#" onclick="Backend.Product.multiValueSelect(this, false);  return false;" class="deselect">Deselect All</a>
+			<a href="#" onclick="Backend.Product.multiValueSelect(this, true); return false;">{t _select_all}</a> | <a href="#" onclick="Backend.Product.multiValueSelect(this, false);  return false;" class="deselect">{t _deselect_all}</a>
 		</p>
 
 		</fieldset>

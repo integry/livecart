@@ -10,7 +10,6 @@ ClassLoader::import("library.*");
  * @package application.controller.backend
  * @author Sergej Andrejev <sandrejev@gmail.com>
  *
- * @role admin.store.catalog
  * @role filter
  */
 class FilterGroupController extends StoreManagementController
@@ -51,6 +50,150 @@ class FilterGroupController extends StoreManagementController
         $response->setValue('defaultLangCode', $this->store->getDefaultLanguageCode());
         
         return $response;
+    }
+
+    /**
+     * @role create
+     */
+    public function create()
+    {
+        $filterGroup = FilterGroup::getNewInstance(SpecField::getInstanceByID($this->request->getValue('specFieldID', false)));
+
+        if($specFieldID = $this->request->getValue('specFieldID', false))
+        {
+            $filterGroup->setFieldValue('specFieldID', SpecField::getInstanceByID((int)$specFieldID));
+        }
+        
+        return $this->save($filterGroup);
+    }
+    
+    /**
+     * @role update
+     */
+    public function update()
+    {
+        $filterGroup = FilterGroup::getInstanceByID((int)$this->request->getValue('ID'));
+        
+        return $this->save($filterGroup);
+    }
+    
+    /**
+     * Creates a new or modifies an exisitng specification field (according to a passed parameters)
+     * 
+     * @return JSONResponse Status and errors list if status was equal to failure
+     */
+    private function save(FilterGroup $filterGroup)
+    {
+        $this->getConfig();
+        
+        $errors = FilterGroup::validate($this->request->getValueArray(array('name', 'filters', 'specFieldID', 'ID')), $this->filtersConfig['languageCodes']);
+        
+        if(!$errors)
+        {
+            $name = $this->request->getValue('name');
+            $filters = $this->request->getValue('filters', false);
+            
+            $filterGroup->setLanguageField('name',  $name, $this->filtersConfig['languageCodes']);
+            $filterGroup->specField->set(SpecField::getInstanceByID((int)$this->request->getValue('specFieldID')));
+            $filterGroup->save();
+            
+            $specField = $filterGroup->specField->get();
+            $specField->load();
+            $specFieldType = $specField->type->get();
+
+            $newIDs = array();
+            if(!empty($filters) && !$specField->isSelector()) 
+            {
+				$newIDs = $filterGroup->saveFilters($filters, $specFieldType, $this->filtersConfig['languageCodes']);
+			}
+
+            return new JSONResponse(array('status' => 'success', 'id' => $filterGroup->getID(), 'newIDs' => $newIDs));
+        }
+        else
+        {
+            return new JSONResponse(array('errors' => $this->translateArray($errors), 'status' => 'failure'));
+        }
+    }
+
+    /**
+     * Get filter group data from database
+     * 
+     * @role update
+     * 
+     * @return JSONResponse
+     */
+    public function item()
+    {
+        $groupID = $this->request->getValue('id');
+        $categoryID = $this->request->getValue('categoryID');
+        
+    	$response = new ActionResponse();
+        $filterGroup = FilterGroup::getInstanceByID($groupID, true, array('SpecField', 'Category'));
+        
+        $filterGroupArray = $filterGroup->toArray();
+                
+        foreach($filterGroup->getFiltersList() as $filter)
+        {
+            $filterGroupArray['filters'][$filter->getID()] = $filter->toArray(false);
+        }
+        
+        if($filterGroup->specField->get()->isSelector())
+        {
+            $filterGroupArray['filtersCount'] = $filterGroup->specField->get()->getValuesSet()->getTotalRecordCount();
+        }
+        else
+        {
+            $filterGroupArray['filtersCount'] = isset($filterGroupArray['filters']) ? count($filterGroupArray['filters']) : 0;
+        }
+            
+        $filterGroupArray['rootId'] = "filter_items_list_" . $categoryID . "_".$filterGroupArray['ID'];
+        $filterGroupArray['categoryID'] = $categoryID;
+        
+        $filterGroupArray['specFields'] = $this->getSpecFieldOptions(Category::getInstanceByID($categoryID, ActiveRecord::LOAD_DATA)->getSpecificationFieldArray());           
+
+        return new JSONResponse($filterGroupArray);
+    }
+
+    /**
+     * Delete filter group
+     * 
+     * @role remove
+     * 
+     * @return JSONResponse Status
+     */
+    public function delete()
+    {
+        if($id = $this->request->getValue("id", false))
+        {
+            FilterGroup::deletebyID((int)$id);
+            return new JSONResponse(array('status' => 'success'));
+        }
+        else
+        {
+            return new JSONResponse(array('status' => 'failure'));
+        }
+    }
+
+    /**
+     * Sort filter groups
+     * 
+     * @role sort
+     * 
+     * @return JSONResponse Status
+     */
+    public function sort()
+    {
+        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        {
+            if(!empty($key))
+            {
+                $group = FilterGroup::getInstanceByID((int)$key);
+                $group->setFieldValue('position', (int)$position);
+                $group->save();
+            }
+        }
+
+        return new JSONResponse(array('status' => 'success'));
     }
 
     private function getSpecFieldOptions($specFieldsList)
@@ -109,133 +252,6 @@ class FilterGroupController extends StoreManagementController
             );
             
         return $this->filtersConfig;
-    }
-
-    /**
-     * Creates a new or modifies an exisitng specification field (according to a passed parameters)
-     *
-     * @return JSONResponse Status and errors list if status was equal to failure
-     */
-    public function save()
-    {
-        if(preg_match('/new$/', $this->request->getValue('ID')))
-        {
-            $filterGroup = FilterGroup::getNewInstance(SpecField::getInstanceByID($this->request->getValue('specFieldID', false)));
-
-            if($specFieldID = $this->request->getValue('specFieldID', false))
-            {
-                $filterGroup->setFieldValue('specFieldID', SpecField::getInstanceByID((int)$specFieldID));
-            }
-        }
-        else
-        {
-            $filterGroup = FilterGroup::getInstanceByID((int)$this->request->getValue('ID'));
-        }
-
-        $this->getConfig();
-        
-        $errors = FilterGroup::validate($this->request->getValueArray(array('name', 'filters', 'specFieldID', 'ID')), $this->filtersConfig['languageCodes']);
-        
-        if(!$errors)
-        {
-            $name = $this->request->getValue('name');
-            $filters = $this->request->getValue('filters', false);
-            
-            $filterGroup->setLanguageField('name',  $name, $this->filtersConfig['languageCodes']);
-            $filterGroup->specField->set(SpecField::getInstanceByID((int)$this->request->getValue('specFieldID')));
-            $filterGroup->save();
-            
-            $specField = $filterGroup->specField->get();
-            $specField->load();
-            $specFieldType = $specField->type->get();
-
-            $newIDs = array();
-            if(!empty($filters) && !$specField->isSelector()) 
-            {
-				$newIDs = $filterGroup->saveFilters($filters, $specFieldType, $this->filtersConfig['languageCodes']);
-			}
-
-            return new JSONResponse(array('status' => 'success', 'id' => $filterGroup->getID(), 'newIDs' => $newIDs));
-        }
-        else
-        {
-            return new JSONResponse(array('errors' => $this->translateArray($errors), 'status' => 'failure'));
-        }
-    }
-
-    /**
-     * Get filter group data from database
-     * 
-     * @return JSONResponse
-     */
-    public function item()
-    {
-        $groupID = $this->request->getValue('id');
-        $categoryID = $this->request->getValue('categoryID');
-        
-    	$response = new ActionResponse();
-        $filterGroup = FilterGroup::getInstanceByID($groupID, true, array('SpecField', 'Category'));
-        
-        $filterGroupArray = $filterGroup->toArray();
-                
-        foreach($filterGroup->getFiltersList() as $filter)
-        {
-            $filterGroupArray['filters'][$filter->getID()] = $filter->toArray(false);
-        }
-        
-        if($filterGroup->specField->get()->isSelector())
-        {
-            $filterGroupArray['filtersCount'] = $filterGroup->specField->get()->getValuesSet()->getTotalRecordCount();
-        }
-        else
-        {
-            $filterGroupArray['filtersCount'] = isset($filterGroupArray['filters']) ? count($filterGroupArray['filters']) : 0;
-        }
-            
-        $filterGroupArray['rootId'] = "filter_items_list_" . $categoryID . "_".$filterGroupArray['ID'];
-        $filterGroupArray['categoryID'] = $categoryID;
-        
-        $filterGroupArray['specFields'] = $this->getSpecFieldOptions(Category::getInstanceByID($categoryID, ActiveRecord::LOAD_DATA)->getSpecificationFieldArray());           
-
-        return new JSONResponse($filterGroupArray);
-    }
-
-    /**
-     * Delete filter group
-     * 
-     * @return JSONResponse Status
-     */
-    public function delete()
-    {
-        if($id = $this->request->getValue("id", false))
-        {
-            FilterGroup::deletebyID((int)$id);
-            return new JSONResponse(array('status' => 'success'));
-        }
-        else
-        {
-            return new JSONResponse(array('status' => 'failure'));
-        }
-    }
-
-    /**
-     * Sort filter groups
-     * 
-     * @return JSONResponse Status
-     */
-    public function sort()
-    {
-        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
-        {
-            if(!empty($key))
-            {
-                $group = FilterGroup::getInstanceByID((int)$key);
-                $group->setFieldValue('position', (int)$position);
-                $group->save();
-            }
-        }
-
-        return new JSONResponse(array('status' => 'success'));
     }
 }
 ?>

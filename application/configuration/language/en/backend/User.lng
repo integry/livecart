@@ -19,9 +19,10 @@ _user_group=Group
 _is_enabled=Is enabled
 
 _add_new_user=Add new user
+_with_selected=With selected
 
 _byGroup=By group
-
+_livecart_users=Users
 _group_users=Group users
 _group_roles=Roles
 _user_group=User group

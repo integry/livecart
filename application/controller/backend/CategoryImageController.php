@@ -14,6 +14,46 @@ ClassLoader::import("application.model.category.CategoryImage");
  */
 class CategoryImageController extends ObjectImageController
 {
+	/**
+	 * @role update
+	 */
+    public function index()
+    {
+        return parent::index();
+    }
+
+	/**
+	 * @role update
+	 */
+    public function upload()
+    {
+        return parent::upload();
+    }
+
+	/**
+	 * @role update
+	 */
+	public function save()
+	{
+        return parent::save();
+    }
+
+	/**
+	 * @role update
+	 */
+	public function delete()
+	{
+        return parent::delete();
+    }
+
+	/**
+	 * @role sort
+	 */
+	public function saveOrder()
+	{
+        return parent::saveOrder();
+    }    
+
 	protected function getModelClass()
 	{
         return 'CategoryImage';
@@ -28,31 +68,7 @@ class CategoryImageController extends ObjectImageController
     {
 		return 'categoryID';
 	}   
-    
-    public function index()
-    {
-        return parent::index();
-    }
-		
-    public function upload()
-    {
-        return parent::upload();
-    }
-
-	public function save()
-	{
-        return parent::save();
-    }
-	
-	public function delete()
-	{
-        return parent::delete();
-    }
-
-	public function saveOrder()
-	{
-        return parent::saveOrder();
-    }    
+    	
 }	
 	  
 ?>

@@ -1,9 +1,9 @@
-{form handle=$productForm action="controller=backend.product action=save" id="product_`$product.ID`_form" onsubmit="Backend.Product.Editor.prototype.getInstance(`$product.ID`, false).submitForm(); return false;" method="post"}
+{form handle=$productForm action="controller=backend.product action=update" id="product_`$product.ID`_form" onsubmit="Backend.Product.Editor.prototype.getInstance(`$product.ID`, false).submitForm(); return false;" method="post"}
 
    	<div class="pricesSaveConf" style="display: none;">
    		<div class="yellowMessage">
    			<div>
-   				{t Product information was saved successfuly}
+   				{t _product_information_was_saved}
    			</div>
    		</div>
    	</div>

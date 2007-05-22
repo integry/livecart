@@ -70,6 +70,7 @@
     Backend.DeliveryZone.prototype.Links.edit = '{/literal}{link controller=backend.deliveryZone action=edit}?id=_id_{literal}';
     Backend.DeliveryZone.prototype.Links.remove = '{/literal}{link controller=backend.deliveryZone action=delete}{literal}';
     Backend.DeliveryZone.prototype.Links.save = '{/literal}{link controller=backend.deliveryZone action=save}{literal}';
+    Backend.DeliveryZone.prototype.Links.create = '{/literal}{link controller=backend.deliveryZone action=create}{literal}';
     Backend.DeliveryZone.prototype.Links.saveCountries = '{/literal}{link controller=backend.deliveryZone action=saveCountries}{literal}';
     Backend.DeliveryZone.prototype.Links.saveStates = '{/literal}{link controller=backend.deliveryZone action=saveStates}{literal}';
     Backend.DeliveryZone.CountriesAndStates.prototype.Links.deleteCityMask = '{/literal}{link controller=backend.deliveryZone action=deleteCityMask}{literal}';

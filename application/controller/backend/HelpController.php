@@ -9,11 +9,11 @@ ClassLoader::import("application.model.help.*");
  *
  * @package application.controller.backend
  * 
- * @rule help
+ * @role help
  */
 class HelpController extends StoreManagementController
 {
-	function view()
+	public function view()
 	{
 	  	$id = $this->request->getValue('id');
 	  	$lang = $this->store->getLocaleCode();
@@ -70,6 +70,9 @@ class HelpController extends StoreManagementController
 	  	return $response;
 	}
 	
+	/**
+	 * @role create
+	 */
 	public function addComment()
 	{
 		$comment = HelpComment::getNewInstance($this->request->getValue('topicId'));
@@ -86,12 +89,18 @@ class HelpController extends StoreManagementController
 		return $response;
 	}
 	
+	/**
+	 * @role remove
+	 */
 	public function deleteComment()
 	{
 	    HelpComment::getInstanceByID((int)$this->request->getValue('id'))->delete();
 		return new JSONResponse(1);
 	}
 	
+	/**
+	 * @role update
+	 */
 	public function saveComment()
 	{
 		$comment = ActiveRecordModel::getInstanceByID('HelpComment', $this->request->getValue('id'), HelpComment::LOAD_DATA);

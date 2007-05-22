@@ -5,6 +5,7 @@
     Backend.Filter.prototype.links.deleteGroup = {/literal}'{link controller=backend.filterGroup action=delete}/'{literal};
     Backend.Filter.prototype.links.editGroup = {/literal}'{link controller=backend.filterGroup action=item}/'{literal};
     Backend.Filter.prototype.links.sortGroup = {/literal}'{link controller=backend.filterGroup action=sort}/'{literal};
+    Backend.Filter.prototype.links.updateGroup = {/literal}'{link controller=backend.filterGroup action=update}/'{literal};
     Backend.Filter.prototype.links.deleteFilter = {/literal}'{link controller=backend.filter action=delete}/'{literal};
     Backend.Filter.prototype.links.sortFilter = {/literal}'{link controller=backend.filter action=sort}/'{literal};
     Backend.Filter.prototype.links.generateFilters = {/literal}'{link controller=backend.filter action=generate}/'{literal};

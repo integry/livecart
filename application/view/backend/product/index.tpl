@@ -31,41 +31,41 @@
         With selected: 
         <select name="act" class="select" style="width: auto;">
     
-            <option value="enable_isEnabled">Enable</option>
-            <option value="disable_isEnabled">Disable</option>
-            <option value="delete">Delete</option>
+            <option value="enable_isEnabled">{t _enable}</option>
+            <option value="disable_isEnabled">{t _disable}</option>
+            <option value="delete">{t _delete}</option>
                 
-            <option value="manufacturer">Set manufacturer</option>
-            <option value="set_keywords">Set keywords</option>
-            <option value="set_URL">Set website address</option>
-            <option value="addRelated">Add related product</option>
-            <option value="enable_isFeatured">Set as featured product</option>
-            <option value="disable_isFeatured">Unset featured product</option>
+            <option value="manufacturer">{t _set_manufacter}</option>
+            <option value="set_keywords">{t _set_keywords}</option>
+            <option value="set_URL">{t _set_website_address}</option>
+            <option value="addRelated">{t _add_related_product}</option>
+            <option value="enable_isFeatured">{t _set_as_featured_product}</option>
+            <option value="disable_isFeatured">{t _unset_featured_product}</option>
 			                
-            <optgroup label="Inventory & Pricing">
-                <option value="inc_price">Increase price (percent)</option>
-                <option value="inc_stock">Increase stock (count)</option>
+            <optgroup label="{t _inventory_and_pricing}">
+                <option value="inc_price">{t _increase_price}</option>
+                <option value="inc_stock">{t _increase_stock}</option>
     
-                <option value="price">Set price ({$currency})</option>
-                <option value="set_stockCount">Set stock</option>
+                <option value="price">{t _set_price}</option>
+                <option value="set_stockCount">{t _set_stock}</option>
             </optgroup>
                         
             <optgroup label="Shipping Options">
-                <option value="set_minimumQuantity">Set minimum order quantity</option>
-                <option value="set_shippingSurchargeAmount">Set shipping surcharge</option>
-                <option value="enable_isFreeShipping">Enable free shipping</option>
-                <option value="disable_isFreeShipping">Disable free shipping</option>
-                <option value="enable_isBackOrderable">Enable back-ordering</option>
-                <option value="disable_isBackOrderable">Disable back-ordering</option>
-                <option value="enable_isSeparateShipment">Require separate shipment</option>
-                <option value="disable_isSeparateShipment">Do not require separate shipment</option>
+                <option value="set_minimumQuantity">{t _set_minimum_quantity}</option>
+                <option value="set_shippingSurchargeAmount">{t _set_shipping_surcharge}</option>
+                <option value="enable_isFreeShipping">{t _enable_free_shipping}</option>
+                <option value="disable_isFreeShipping">{t _disable_free_shipping}</option>
+                <option value="enable_isBackOrderable">{t _enable_back_ordering}</option>
+                <option value="disable_isBackOrderable">{t _disable_back_ordering}</option>
+                <option value="enable_isSeparateShipment">{t _requires_separate_shippment}</option>
+                <option value="disable_isSeparateShipment">{t _do_not_require_separate_shippment}</option>
             </optgroup>
             
-            <optgroup label="Set Attribute Value">
+            <optgroup label="{t _set_attribute_value}">
             
             </optgroup>
                             
-            <optgroup label="Clear Attribute Value">
+            <optgroup label="{t _clear_attribute_value}">
             
             </optgroup>
             
@@ -73,7 +73,7 @@
         
         <span class="bulkValues" style="display: none;">
         	<span class="addRelated">
-	            {t Enter product SKU:} {textfield class="text number" name="related" autocomplete="controller=backend.product field=sku"}
+	            {t _enter_sku:} {textfield class="text number" name="related" autocomplete="controller=backend.product field=sku"}
         	</span>
             {textfield class="text number" name="inc_price"}
             {textfield class="text number" name="inc_stock"}
@@ -95,12 +95,12 @@
     
     <span style="float: right; text-align: right; position: relative; padding-bottom: 10px;">
 		<span id="productCount_{$categoryID}">
-			<span class="rangeCount">Listing products %from - %to of %count</span>
-			<span class="notFound">No products found</span>
+			<span class="rangeCount">{t _listing_products_from} %from - %to {t _listing_products_count_of} %count</span>
+			<span class="notFound">{t _no_products_found}</span>
 		</span>    
 		<br />
 		<div style="padding-top: 5px;">
-			<a href="#" onclick="Element.show($('productColumnMenu_{$categoryID}')); return false;" style="margin-top: 15px;">{t Columns}</a>
+			<a href="#" onclick="Element.show($('productColumnMenu_{$categoryID}')); return false;" style="margin-top: 15px;">{t _columns}</a>
 		</div>
 		<div id="productColumnMenu_{$categoryID}" style="left: -250px; position: absolute; z-index: 5; width: auto; display: none;">
   		  <form action="{link controller=backend.product action=changeColumns}" onsubmit="new LiveCart.AjaxUpdater(this, this.parentNode.parentNode.parentNode.parentNode.parentNode, document.getElementsByClassName('progressIndicator', this)[0]); return false;" method="POST">
@@ -132,7 +132,7 @@
 <div style="width: 100%; position: relative;">
 	<div style="display: none;" class="activeGrid_loadIndicator" id="productLoadIndicator_{$categoryID}">
 		<div>
-			{t Loading data...}<span class="progressIndicator"></span>
+			{t _loading}<span class="progressIndicator"></span>
 		</div>
 	</div>
 </div>

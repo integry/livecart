@@ -45,94 +45,6 @@ class ProductController extends StoreManagementController
 		return $response;
 	}
 
-	protected function getAvailableColumns(Category $category)
-	{
-		// get available columns
-		$productSchema = ActiveRecordModel::getSchemaInstance('Product');
-		
-		$availableColumns = array();
-		foreach ($productSchema->getFieldList() as $field)
-		{
-			$fieldType = $field->getDataType();
-			
-			if ($field instanceof ARForeignKeyField)
-			{
-			  	continue;
-			}		            
-			if ($field instanceof ARPrimaryKeyField)
-			{
-			  	continue;
-			}		            
-			elseif ($fieldType instanceof ARBool)
-			{
-			  	$type = 'bool';
-			}	  
-			elseif ($fieldType instanceof ARNumeric)
-			{
-				$type = 'numeric';	  	
-			}			
-			else
-			{
-			  	$type = 'text';
-			}
-			
-			$availableColumns['Product.' . $field->getName()] = $type;
-		}		
-		
-		$availableColumns['Manufacturer.name'] = 'text';
-		$availableColumns['ProductPrice.price'] = 'numeric';
-
-		foreach ($availableColumns as $column => $type)
-		{
-			$availableColumns[$column] = array('name' => $this->translate($column), 'type' => $type);	
-		}
-
-		// specField columns
-		$fields = $category->getSpecificationFieldSet(Category::INCLUDE_PARENT);
-		foreach ($fields as $field)
-		{
-			if (!$field->isMultiValue->get())
-			{				
-				$fieldArray = $field->toArray();
-				$availableColumns['specField.' . $field->getID()] = array
-					(
-						'name' => $fieldArray['name_lang'], 
-						'type' => $field->isSimpleNumbers() ? 'numeric' : 'text'
-					);				
-			}
-		}		
-
-		return $availableColumns;
-	}
-	
-	protected function getDisplayedColumns(Category $category)
-	{	
-		// get displayed columns
-		$displayedColumns = $this->getSessionData('columns');		
-
-		if (!$displayedColumns)
-		{
-			$displayedColumns = array('Product.ID', 'Product.sku', 'Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');				
-		}
-		
-		$availableColumns = $this->getAvailableColumns($category);
-		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);	
-
-		// product ID is always passed as the first column
-		$displayedColumns = array_merge(array('Product.ID' => 'numeric'), $displayedColumns);
-				
-		// set field type as value
-		foreach ($displayedColumns as $column => $foo)
-		{
-			if (is_numeric($displayedColumns[$column]))
-			{
-				$displayedColumns[$column] = $availableColumns[$column]['type'];					
-			}
-		}
-
-		return $displayedColumns;		
-	}
-	
 	public function changeColumns()
 	{		
 		$columns = array_keys($this->request->getValue('col', array()));
@@ -222,23 +134,9 @@ class ProductController extends StoreManagementController
     	return new JSONResponse($return);	  	  	
 	}
 
-    protected function getMassForm()
-    {
-		ClassLoader::import("framework.request.validator.RequestValidator");
-		ClassLoader::import("framework.request.validator.Form");
-        		
-		$validator = new RequestValidator("productFormValidator", $this->request);
-		
-		$validator->addFilter('set_price', new NumericFilter(''));
-		$validator->addFilter('set_stock', new NumericFilter(''));
-		$validator->addFilter('inc_price', new NumericFilter(''));
-		$validator->addFilter('inc_stock', new NumericFilter(''));
-		$validator->addFilter('set_minimumQuantity', new NumericFilter(''));
-		$validator->addFilter('set_shippingSurchargeAmount', new NumericFilter(''));				
-		
-        return new Form($validator);                
-    }
-
+	/**
+	 * @role mass
+	 */
     public function processMass()
     {        
 		$filter = new ARSelectFilter();
@@ -334,6 +232,9 @@ class ProductController extends StoreManagementController
 		return new JSONResponse($this->request->getValue('act'));	
     }	
 
+    /**
+     * @role autocomplete
+     */
 	public function autoComplete()
 	{
 	  	$f = new ARSelectFilter();
@@ -390,6 +291,8 @@ class ProductController extends StoreManagementController
 	/**
 	 * Displays main product information form
 	 *
+	 * @role create
+	 * 
 	 * @return unknown
 	 */
 	public function add()
@@ -401,21 +304,155 @@ class ProductController extends StoreManagementController
 		return $this->productForm($product);		
 	}
 
-	public function save()
+	/**
+	 * @role create
+	 */
+	public function create()
 	{
-	  	// get Product instance
-		if ($this->request->getValue('id') == 0)
-	  	{
-		    $product = Product::getNewInstance(Category::getInstanceByID($this->request->getValue('categoryID')), $this->translate('_new_product'));
-		}
-		else
-		{
+	    $product = Product::getNewInstance(Category::getInstanceByID($this->request->getValue('categoryID')), $this->translate('_new_product'));
+	    
+	    return $this->save($product);
+	}
+	
+	/**
+	 * @role update
+	 */
+	public function update()
+	{
 		  	$product = Product::getInstanceByID($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA);
 		  	$product->loadPricing();
 		  	$product->loadSpecification();
-		  	$arr = $product->toArray();
+		  	
+		  	return $this->save($product);
+	}
+
+	/**
+	 * @role update
+	 */
+	public function basicData()
+	{
+	    $product = Product::getInstanceById($this->request->getValue('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
+		$response = $this->productForm($product);
+		return $response;
+	}
+
+	public function countTabsItems() {
+	  	ClassLoader::import('application.model.product.*');
+	  	$product = Product::getInstanceByID((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA);
+	    
+	  	return new JSONResponse(array(
+	        'tabProductRelationship' => $product->getRelationships(false)->getTotalRecordCount(),
+	        'tabProductFiles' => $product->getFiles(false)->getTotalRecordCount()
+	    ));
+	}
+
+	protected function getAvailableColumns(Category $category)
+	{
+		// get available columns
+		$productSchema = ActiveRecordModel::getSchemaInstance('Product');
+		
+		$availableColumns = array();
+		foreach ($productSchema->getFieldList() as $field)
+		{
+			$fieldType = $field->getDataType();
+			
+			if ($field instanceof ARForeignKeyField)
+			{
+			  	continue;
+			}		            
+			if ($field instanceof ARPrimaryKeyField)
+			{
+			  	continue;
+			}		            
+			elseif ($fieldType instanceof ARBool)
+			{
+			  	$type = 'bool';
+			}	  
+			elseif ($fieldType instanceof ARNumeric)
+			{
+				$type = 'numeric';	  	
+			}			
+			else
+			{
+			  	$type = 'text';
+			}
+			
+			$availableColumns['Product.' . $field->getName()] = $type;
+		}		
+		
+		$availableColumns['Manufacturer.name'] = 'text';
+		$availableColumns['ProductPrice.price'] = 'numeric';
+
+		foreach ($availableColumns as $column => $type)
+		{
+			$availableColumns[$column] = array('name' => $this->translate($column), 'type' => $type);	
 		}
 
+		// specField columns
+		$fields = $category->getSpecificationFieldSet(Category::INCLUDE_PARENT);
+		foreach ($fields as $field)
+		{
+			if (!$field->isMultiValue->get())
+			{				
+				$fieldArray = $field->toArray();
+				$availableColumns['specField.' . $field->getID()] = array
+					(
+						'name' => $fieldArray['name_lang'], 
+						'type' => $field->isSimpleNumbers() ? 'numeric' : 'text'
+					);				
+			}
+		}		
+
+		return $availableColumns;
+	}
+	
+	protected function getDisplayedColumns(Category $category)
+	{	
+		// get displayed columns
+		$displayedColumns = $this->getSessionData('columns');		
+
+		if (!$displayedColumns)
+		{
+			$displayedColumns = array('Product.ID', 'Product.sku', 'Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');				
+		}
+		
+		$availableColumns = $this->getAvailableColumns($category);
+		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);	
+
+		// product ID is always passed as the first column
+		$displayedColumns = array_merge(array('Product.ID' => 'numeric'), $displayedColumns);
+				
+		// set field type as value
+		foreach ($displayedColumns as $column => $foo)
+		{
+			if (is_numeric($displayedColumns[$column]))
+			{
+				$displayedColumns[$column] = $availableColumns[$column]['type'];					
+			}
+		}
+
+		return $displayedColumns;		
+	}
+	
+    protected function getMassForm()
+    {
+		ClassLoader::import("framework.request.validator.RequestValidator");
+		ClassLoader::import("framework.request.validator.Form");
+        		
+		$validator = new RequestValidator("productFormValidator", $this->request);
+		
+		$validator->addFilter('set_price', new NumericFilter(''));
+		$validator->addFilter('set_stock', new NumericFilter(''));
+		$validator->addFilter('inc_price', new NumericFilter(''));
+		$validator->addFilter('inc_stock', new NumericFilter(''));
+		$validator->addFilter('set_minimumQuantity', new NumericFilter(''));
+		$validator->addFilter('set_shippingSurchargeAmount', new NumericFilter(''));				
+		
+        return new Form($validator);                
+    }
+	
+	private function save(Product $product)
+	{
 		$validator = $this->buildValidator($product);
 		if ($validator->isValid())
 		{
@@ -480,10 +517,9 @@ class ProductController extends StoreManagementController
 			$validator->restore();
 			
 			return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
-		}
-				
+		}	
 	}
-	
+    
 	private function productForm(Product $product)
 	{
 		$specFields = $product->getSpecificationFieldSet(ActiveRecordModel::LOAD_REFERENCES);
@@ -612,7 +648,7 @@ class ProductController extends StoreManagementController
 		return $response; 	
 	}
 	
-	/**
+    /**
 	 * @return RequestValidator
 	 */
 	private function buildValidator(Product $product)
@@ -706,47 +742,6 @@ class ProductController extends StoreManagementController
 			$path[] = $node->getValueByLang('name', $defaultLang);
 		}
 		return $path;
-	}
-
-	
-	public function basicData()
-	{
-	    $product = Product::getInstanceById($this->request->getValue('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
-		$response = $this->productForm($product);
-		return $response;
-	}
-
-	public function inventory()
-	{
-	    $response = new ActionResponse();
-
-	    $product = Product::getInstanceById($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
-		
-	    $response->setValue('id', $this->request->getValue('id'));
-	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
-	    
-	    return $response;
-	}
-
-	public function options()
-	{
-	    $response = new ActionResponse();
-
-	    $response->setValue('id', $this->request->getValue('id'));
-	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
-	    
-	    return $response;
-	}
-
-	
-	public function countTabsItems() {
-	  	ClassLoader::import('application.model.product.*');
-	  	$product = Product::getInstanceByID((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA);
-	    
-	  	return new JSONResponse(array(
-	        'tabProductRelationship' => $product->getRelationships(false)->getTotalRecordCount(),
-	        'tabProductFiles' => $product->getFiles(false)->getTotalRecordCount()
-	    ));
 	}
 }
 

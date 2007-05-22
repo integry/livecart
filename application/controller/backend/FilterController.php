@@ -10,13 +10,14 @@ ClassLoader::import("library.*");
  * @package application.controller.backend
  * @author Saulius Rupainis <saulius@integry.net>
  *
- * @role admin.store.catalog
  * @role filter
  */
 class FilterController extends StoreManagementController
 {
     /**
      * Delete filter from database
+     * 
+     * @role update
      * 
      * @return JSONResponse
      */
@@ -36,6 +37,8 @@ class FilterController extends StoreManagementController
     /**
      * Sort filters
      *
+     * @role update
+     * 
      * @return JSONResponse
      */
     public function sort()
@@ -57,6 +60,8 @@ class FilterController extends StoreManagementController
     /**
      * Generate filters according to specification fields names and types
      *
+     * @role update
+     * 
      * @return JSONResponse
      */
     public function generate()

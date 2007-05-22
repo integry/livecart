@@ -23,7 +23,7 @@
 {includeJs file="backend/Roles.js"}
 
 
-{pageTitle help="userGroups"}{t _livecart_delivery_users}{/pageTitle}
+{pageTitle help="userGroups"}{t _livecart_users}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
 

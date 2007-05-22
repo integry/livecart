@@ -978,8 +978,10 @@ Backend.Filter.prototype = {
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
         
         var self = this;
+        
+        var action = this.id.match(/new/) ? Backend.Filter.prototype.links.updateGroup : this.nodes.form.action; 
         new Ajax.Request(
-            this.nodes.form.action,
+            action,
             {
                 method: this.nodes.form.method,
                 postBody: Form.serialize(this.nodes.form),

@@ -1,5 +1,5 @@
 <fieldset class="specification">
-	<legend>Product Specification</legend>
+	<legend>{t _product_specification}</legend>
 	{foreach from=$specFieldList key=groupID item=fieldList}
 	
 		{if $groupID}

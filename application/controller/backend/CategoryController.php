@@ -13,7 +13,7 @@ ClassLoader::import("application.model.category.Category");
  */
 class CategoryController extends StoreManagementController
 {
-	public function init()
+    public function init()
 	{
 		parent::init();
 		$this->removeLayout('productDiscounts', 20);
@@ -39,6 +39,8 @@ class CategoryController extends StoreManagementController
 	/**
 	 * Displays category form (for creating a new category or modifying an existing one)
 	 *
+	 * @role update
+	 * 
 	 * @return ActionResponse
 	 */
 	public function form()
@@ -68,6 +70,8 @@ class CategoryController extends StoreManagementController
 	/**
 	 * Creates a new category record
 	 *
+	 * @role create
+	 * 
 	 * @return ActionRedirectResponse
 	 */
 	public function create()
@@ -94,6 +98,8 @@ class CategoryController extends StoreManagementController
 
 	/**
 	 * Updates a category record
+	 * 
+	 * @role update
 	 *
 	 * @return ActionRedirectResponse
 	 */
@@ -129,6 +135,7 @@ class CategoryController extends StoreManagementController
 	/**
 	 * Removes node from a category
 	 *
+	 * @role remove
 	 */
 	public function remove()
 	{
@@ -142,6 +149,7 @@ class CategoryController extends StoreManagementController
 	/**
 	 * Reorder category node
 	 *
+	 * @role sort
 	 */
 	public function reorder()
 	{
@@ -169,36 +177,6 @@ class CategoryController extends StoreManagementController
 		return new JSONResponse($status);
 	}
 
-	/**
-	 * Builds a category form validator
-	 *
-	 * @return RequestValidator
-	 */
-	private function buildValidator()
-	{
-		ClassLoader::import("framework.request.validator.RequestValidator");
-
-		$validator = new RequestValidator("category", $this->request);
-		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("Catgory name should not be empty")));
-		return $validator;
-	}
-
-	/**
-	 * Builds a category form instance
-	 *
-	 * @return Form
-	 */
-	private function buildForm()
-	{
-		$form = new Form($this->buildValidator());
-		return $form;
-	}
-
-	public function debug()
-	{
-		ActiveTreeNode::reindex("Category");
-	}
-	
 	public function countTabsItems() {
 	  	ClassLoader::import('application.model.category.*');
 	  	ClassLoader::import('application.model.filter.*');
@@ -227,7 +205,7 @@ class CategoryController extends StoreManagementController
 	    
 	    return $xmlResponse;
 	}
-	
+
 	public function xmlRecursivePath() 
 	{
 	    $xmlResponse = new XMLResponse();
@@ -249,6 +227,36 @@ class CategoryController extends StoreManagementController
 	    $xmlResponse->setValue("targetID", $targetID);
 	    
 	    return $xmlResponse;
+	}
+	
+	public function debug()
+	{
+		ActiveTreeNode::reindex("Category");
+	}
+	
+	/**
+	 * Builds a category form validator
+	 *
+	 * @return RequestValidator
+	 */
+	private function buildValidator()
+	{
+		ClassLoader::import("framework.request.validator.RequestValidator");
+
+		$validator = new RequestValidator("category", $this->request);
+		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("Catgory name should not be empty")));
+		return $validator;
+	}
+
+	/**
+	 * Builds a category form instance
+	 *
+	 * @return Form
+	 */
+	private function buildForm()
+	{
+		$form = new Form($this->buildValidator());
+		return $form;
 	}
 }
 

@@ -6,7 +6,7 @@
     		<input type="hidden" name="productID" class="hidden productRelationshipGroup_productID" />
     
     		<fieldset class="productRelationshipGroup_main">
-        		<label class="productRelationshipGroup_name_label">{t _productRelationshipGroup_title}</label>
+        		<label class="productRelationshipGroup_name_label">{t _product_relationship_group_title}</label>
                 <div class="error">
             		<input type="text" name="name" class="productRelationshipGroup_name" />
             		<span class="errorText hidden"> </span>
@@ -20,7 +20,7 @@
         
                     <div class="productRelationshipGroup_translations_language_values">
                         <div>
-                			<label class="productRelationshipGroup_name_label">{t _productRelationshipGroup_title}</label>
+                			<label class="productRelationshipGroup_name_label">{t _product_relationship_group_title}</label>
                 			<input type="text" name="name" class="productRelationshipGroup_name" />
             			</div>
                     </div>

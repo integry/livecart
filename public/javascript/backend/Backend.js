@@ -98,11 +98,15 @@ Backend.AjaxNavigationHandler.prototype =
             else if(Ajax.activeRequestCount > 0)
             {
                 var self = this;
+   
                 setInterval(function() 
                 { 
-                    self.handle(element, { recoverFromIndex: hashPart });
+                    if(self.handle)
+                    {
+                        self.handle(element, { recoverFromIndex: hashPart });
+                    }
                 }, 10);
-                
+
                 return;
             } 
 		}

@@ -9,7 +9,7 @@ ClassLoader::import("application.model.Currency");
  * @package application.controller.backend
  * @author Rinalds Uzkalns <rinalds@integry.net>
  *
- * @role settings
+ * @role currency
  */
 class CurrencyController extends StoreManagementController
 {
@@ -33,6 +33,8 @@ class CurrencyController extends StoreManagementController
 
 	/**
 	 * Displays form for adding new currency
+	 * 
+	 * @role create
 	 * @return ActionRedirectResponse
 	 */
 	public function addForm()
@@ -56,6 +58,9 @@ class CurrencyController extends StoreManagementController
 		return $response;
 	}
 
+	/**
+	 * @role create
+	 */
 	public function add()
 	{
 		try
@@ -74,6 +79,7 @@ class CurrencyController extends StoreManagementController
 
 	/**
 	 * Sets default currency.
+	 * @role status
 	 * @return ActionRedirectResponse
 	 */
 	public function setDefault()
@@ -103,6 +109,7 @@ class CurrencyController extends StoreManagementController
 
 	/**
 	 * Save currency order
+	 * @role sort
 	 * @return RawResponse
 	 */
 	public function saveOrder()
@@ -123,6 +130,7 @@ class CurrencyController extends StoreManagementController
 
 	/**
 	 * Sets if currency is enabled
+	 * @role status
 	 * @return ActionResponse
 	 */
 	public function setEnabled()
@@ -137,6 +145,7 @@ class CurrencyController extends StoreManagementController
 
 	/**
 	 * Remove a currency
+	 * @role remove
 	 * @return RawResponse
 	 */
 	public function delete()
@@ -153,6 +162,9 @@ class CurrencyController extends StoreManagementController
 		return new RawResponse($success);
 	}
 
+	/**
+	 * @role update
+	 */
     public function edit()
     {
         $currency = Currency::getInstanceByID($this->request->getValue('id'), Currency::LOAD_DATA);
@@ -169,6 +181,9 @@ class CurrencyController extends StoreManagementController
         return $response;          
     }
     
+    /**
+     * @role update
+     */
     public function save()
     {
         $currency = Currency::getInstanceByID($this->request->getValue('id'), Currency::LOAD_DATA);
@@ -203,6 +218,7 @@ class CurrencyController extends StoreManagementController
 
 	/**
 	 * Change currency options
+	 * @role update
 	 * @return ActionResponse
 	 */
 	public function options()
@@ -256,6 +272,9 @@ class CurrencyController extends StoreManagementController
 		return $response;
 	}
 
+	/**
+	 * @role update
+	 */
 	public function saveOptions()
 	{
 		$val = $this->buildOptionsValidator();
@@ -288,6 +307,7 @@ class CurrencyController extends StoreManagementController
 	
 	/**
 	 * Saves currency rates.
+	 * @role update
 	 * @return JSONResponse
 	 */
 	public function saveRates()

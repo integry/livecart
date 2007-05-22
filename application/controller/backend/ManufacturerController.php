@@ -10,6 +10,9 @@ ClassLoader::import("application.model.product.Manufacturer");
  */
 class ManufacturerController extends StoreManagementController
 {
+    /**
+     * @role autocomplete
+     */
 	public function autoComplete()
 	{	  	
 	  	$f = new ARSelectFilter();

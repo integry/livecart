@@ -11,7 +11,7 @@ ClassLoader::import("library.*");
  *
  * @package application.controller.backend
  * @author Rinalds Uzkalns <rinalds@integry.net>
- * @role settings
+ * @role language
  */
 class LanguageController extends StoreManagementController
 {	
@@ -19,6 +19,7 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Gets definitions from project files and updates them in database.
+	 * @role update
 	 * @return ActionResponse
 	 */
 	public function update()
@@ -31,6 +32,7 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Displays definitions edit page.
+	 * @role update
 	 * @return ActionResponse	 
 	 */
 	public function edit()
@@ -157,6 +159,7 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Saves translations
+	 * @role update
 	 * @return ActionRedirectResponse
 	 */
 	public function save()
@@ -210,6 +213,9 @@ class LanguageController extends StoreManagementController
 		return $response;
 	}
 	
+	/**
+	 * @role create
+	 */
 	public function addForm()
 	{
 		// get all Locale languages
@@ -232,6 +238,7 @@ class LanguageController extends StoreManagementController
 	
 	/**
 	 * Remove a language
+	 * @role remove
 	 * @return RawResponse
 	 */
 	public function delete()
@@ -253,6 +260,7 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Save language order
+	 * @role sort
 	 * @return RawResponse
 	 */
 	public function saveOrder()
@@ -273,6 +281,7 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Sets default language.
+	 * @role status
 	 * @return ActionRedirectResponse
 	 */
 	public function setDefault()
@@ -302,6 +311,7 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Sets if language is enabled
+	 * @role status
 	 * @return JSONResponse
 	 */
 	public function setEnabled()
@@ -316,6 +326,7 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Add new language
+	 * @role create
 	 * @return JSONResponse
 	 */
 	public function add()
@@ -398,6 +409,8 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Displays translation dialog menu for Live Translations
+	 * 
+	 * @role update
 	 * @return ActionResponse
 	 */
 	public function translationDialog()
@@ -415,6 +428,8 @@ class LanguageController extends StoreManagementController
 	
 	/**
 	 * Saves a single translation entry from Live Translations dialog menu
+	 * 
+	 * @role update
 	 * @return ActionResponse
 	 */
 	public function saveTranslationDialog()

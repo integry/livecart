@@ -1,5 +1,5 @@
 <fieldset>
-	<legend>Pricing</legend>
+	<legend>{t _pricing}</legend>
 	<p class="required">
 		<label for="product_price_{$cat}_{$product.ID}_{$baseCurrency}">{$baseCurrency}:</label>
 		<fieldset class="error">			

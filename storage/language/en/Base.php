@@ -1,6 +1,17 @@
 <?php $languageDefs = array (
   '_yes' => 'Yes',
   '_no' => 'No',
+  '_units_kg' => 'Kg',
+  '_units_g' => 'g',
+  '_units_pounds' => 'pounds',
+  '_units_ounces' => 'ounces',
+  '_deselect_all' => 'Deselect All',
+  '_select_all' => 'Select All',
+  '_enable' => 'Enable',
+  '_disable' => 'Disable',
+  '_delete' => 'Delete',
+  '_columns' => 'Columns',
+  '_translate_to' => 'Translate to',
   '_billing_address' => 'Billing Address',
   '_shipping_address' => 'Shipping Address',
   '_address' => 'Address',
@@ -8,4 +19,5 @@
   '_state' => 'State',
   '_country' => 'Country',
   '_postal_code' => 'Postal code',
+  '_loading' => 'Loading data...',
 ); ?>

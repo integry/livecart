@@ -7,7 +7,7 @@
         Links.sort = '{/literal}{link controller=backend.productRelationshipGroup action=sort}?target=productRelationshipGroup_list_{$productID}{literal}';
         Links.edit = '{/literal}{link controller=backend.productRelationshipGroup action=edit}{literal}';
         
-        Messages.areYouSureYouWantToDelete = '{/literal}{t _Are_you_sure_you_want_to_delete|addslashes}{literal}'
+        Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_group|addslashes}{literal}'
     }
     
     
