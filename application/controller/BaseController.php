@@ -97,7 +97,9 @@ abstract class BaseController extends Controller implements LCiTranslator
 		    mkdir($rolesCacheDir);
 		}
 		
-		$controllerPath = ClassLoader::getRealPath('application.controller.' . ($this->request->isBackend() ? 'backend.' : '')) . get_class($this) . '.php';
+		$refl = new ReflectionClass($this);
+        $controllerPath = $refl->getFileName();
+
 		$cachePath = $rolesCacheDir . DIRECTORY_SEPARATOR . md5($controllerPath) . '.php';
 		$this->roles = new RolesParser($controllerPath, $cachePath);
 	    if($this->roles->wereExpired())
