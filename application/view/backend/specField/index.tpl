@@ -6,6 +6,8 @@
      * so we define them in
      */
     Backend.SpecField.prototype.links = {};
+    Backend.SpecField.prototype.links.create          = {/literal}'{link controller=backend.specField action=create}'{literal};
+    Backend.SpecField.prototype.links.update          = {/literal}'{link controller=backend.specField action=update}'{literal};
     Backend.SpecField.prototype.links.deleteField     = {/literal}'{link controller=backend.specField action=delete}/'{literal};
     Backend.SpecField.prototype.links.editField       = {/literal}'{link controller=backend.specField action=item}/'{literal};
     Backend.SpecField.prototype.links.sortField       = {/literal}'{link controller=backend.specField action=sort}/'{literal};
@@ -15,6 +17,9 @@
     Backend.SpecField.prototype.links.sortGroups      = {/literal}'{link controller=backend.specFieldGroup action=sort}/'{literal};
     Backend.SpecField.prototype.links.getGroup        = {/literal}'{link controller=backend.specFieldGroup action=item}/'{literal};
     Backend.SpecField.prototype.links.deleteGroup     = {/literal}'{link controller=backend.specFieldGroup action=delete}/'{literal};
+    Backend.SpecField.prototype.links.createGroup     = {/literal}'{link controller=backend.specFieldGroup action=create}'{literal};
+    Backend.SpecField.prototype.links.updateGroup     = {/literal}'{link controller=backend.specFieldGroup action=update}'{literal};
+    
 
     Backend.SpecField.prototype.msg = {};
     Backend.SpecField.prototype.msg.removeGroupQuestion  = {/literal}'{t _SpecFieldGroup_remove_question|addslashes}'{literal};

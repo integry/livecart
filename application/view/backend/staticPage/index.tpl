@@ -61,6 +61,8 @@
 	pageHandler.urls['moveup'] = '{/literal}{link controller=backend.staticPage action=reorder}?order=up&id=_id_{literal}';
 	pageHandler.urls['movedown'] = '{/literal}{link controller=backend.staticPage action=reorder}?order=down&id=_id_{literal}';
 	pageHandler.urls['empty'] = '{/literal}{link controller=backend.staticPage action=emptyPage}{literal}';	
+	pageHandler.urls['create'] = '{/literal}{link controller=backend.staticPage action=create}{literal}';	
+	pageHandler.urls['update'] = '{/literal}{link controller=backend.staticPage action=update}{literal}';	
 		
 //	Event.observe(window, 'load', function() {pageHandler.activateCategory('00-store');})
 </script>

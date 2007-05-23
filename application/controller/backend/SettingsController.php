@@ -27,7 +27,7 @@ class SettingsController extends StoreManagementController
 	}
 	
 	/**
-	 *	Individual settings section
+	 * Individual settings section
 	 */
 	public function edit()
 	{
@@ -73,7 +73,7 @@ class SettingsController extends StoreManagementController
 	}  		  
 
 	/**
-	 *	Save settings
+	 * @role update
 	 */
 	public function save()
 	{				

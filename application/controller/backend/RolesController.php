@@ -10,13 +10,10 @@ ClassLoader::import("framework.request.validator.Form");
  *
  * @package application.controller.backend
  *
- * @role role
+ * @role userGroup
  */
 class RolesController extends StoreManagementController
 {
-    /**
-     * @role index
-     */
 	public function index() 
 	{
         Role::cleanUp();
@@ -86,9 +83,9 @@ class RolesController extends StoreManagementController
 	}	
 	
 	/**
-	 * @role save
-	 *
-	 * @return unknown
+	 * Saves changes to current group roles
+	 * 
+	 * @role update
 	 */
     public function save()
     {

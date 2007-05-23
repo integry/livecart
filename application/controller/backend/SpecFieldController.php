@@ -22,42 +22,6 @@ class SpecFieldController extends StoreManagementController
     protected $specFieldConfig = array();
 
     /**
-     * Create and return configurational data. If configurational data is already created just return the array
-     * 
-     * @see self::$specFieldConfig
-     * @return array
-     */
-    private function getSpecFieldConfig()
-    {
-        if(!empty($this->specFieldConfig)) return $this->specFieldConfig;
-        
-        $languages[$this->store->getDefaultLanguageCode()] =  $this->locale->info()->getOriginalLanguageName($this->store->getDefaultLanguageCode());
-        foreach ($this->store->getLanguageList()->toArray() as $lang)
-        {
-            if($lang['isDefault'] != 1)
-            {
-                $languages[$lang['ID']] = $this->locale->info()->getOriginalLanguageName($lang['ID']);
-            }
-        }
-
-        $this->specFieldConfig = array(
-            'languages' => $languages,
-            'languageCodes' => array_keys($languages),
-            'messages' => array
-            (
-                'deleteField' => $this->translate('_delete_field'),
-                'removeFieldQuestion' => $this->translate('_remove_field_question')
-            ),
-
-            'selectorValueTypes' => SpecField::getSelectorValueTypes(),
-            'doNotTranslateTheseValueTypes' => array(2),
-            'countNewValues' => 0
-        );
-        
-        return $this->specFieldConfig;
-    }
-
-    /**
      * Specification field index page
      * 
      * @return ActionResponse
@@ -93,7 +57,8 @@ class SpecFieldController extends StoreManagementController
 
     /**
      * Displays form for creating a new or editing existing one product group specification field
-     *
+     * 
+     * @role update
      * @return ActionResponse
      */
     public function item()
@@ -113,28 +78,39 @@ class SpecFieldController extends StoreManagementController
     }
     
     /**
+     * @role update
+     */
+    public function update()
+    {
+        if(SpecField::exists((int)$this->request->getValue('ID')))
+        {
+            $specField = SpecField::getInstanceByID((int)$this->request->getValue('ID'));
+        }
+        else
+        {
+            return new JSONResponse(array('errors' => array('ID' => $this->translate('_error_record_id_is_not_valid')), 'status' => 'failure', 'ID' => (int)$this->request->getValue('ID')));
+        }
+        
+        return $this->save($specField);
+    }
+    
+    /**
+     * @role create
+     */
+    public function create()
+    {
+        $specField = SpecField::getNewInstance(Category::getInstanceByID($this->request->getValue('categoryID', false)));
+        
+        return $this->save($specField);
+    }
+    
+    /**
      * Creates a new or modifies an exisitng specification field (according to a passed parameters)
      *
      * @return JSONResponse Returns success status or failure status with array of erros
      */
-    public function save()
+    private function save(SpecField $specField)
     {
-        if(preg_match('/new$/', $this->request->getValue('ID')))
-        {
-            $specField = SpecField::getNewInstance(Category::getInstanceByID($this->request->getValue('categoryID', false)));
-        }
-        else
-        {
-            if(SpecField::exists((int)$this->request->getValue('ID')))
-            {
-                $specField = SpecField::getInstanceByID((int)$this->request->getValue('ID'));
-            }
-            else
-            {
-                return new JSONResponse(array('errors' => array('ID' => $this->translate('_error_record_id_is_not_valid')), 'status' => 'failure', 'ID' => (int)$this->request->getValue('ID')));
-            }
-        }
-
         $this->getSpecFieldConfig();
 		$errors = SpecField::validate($this->request->getValueArray(array('handle', 'values', 'name', 'type', 'dataType', 'categoryID', 'ID')), $this->specFieldConfig['languageCodes']);
 		
@@ -232,6 +208,7 @@ class SpecFieldController extends StoreManagementController
     /**
      * Delete specification field from database
      * 
+     * @role remove
      * @return JSONResponse
      */
     public function delete()
@@ -250,6 +227,7 @@ class SpecFieldController extends StoreManagementController
     /**
      * Sort specification fields
      * 
+     * @role sort
      * @return JSONResponse
      */
     public function sort()
@@ -273,4 +251,42 @@ class SpecFieldController extends StoreManagementController
 
         return new JSONResponse(array('status' => 'success'));
     }
+    
+
+    /**
+     * Create and return configurational data. If configurational data is already created just return the array
+     * 
+     * @see self::$specFieldConfig
+     * @return array
+     */
+    private function getSpecFieldConfig()
+    {
+        if(!empty($this->specFieldConfig)) return $this->specFieldConfig;
+        
+        $languages[$this->store->getDefaultLanguageCode()] =  $this->locale->info()->getOriginalLanguageName($this->store->getDefaultLanguageCode());
+        foreach ($this->store->getLanguageList()->toArray() as $lang)
+        {
+            if($lang['isDefault'] != 1)
+            {
+                $languages[$lang['ID']] = $this->locale->info()->getOriginalLanguageName($lang['ID']);
+            }
+        }
+
+        $this->specFieldConfig = array(
+            'languages' => $languages,
+            'languageCodes' => array_keys($languages),
+            'messages' => array
+            (
+                'deleteField' => $this->translate('_delete_field'),
+                'removeFieldQuestion' => $this->translate('_remove_field_question')
+            ),
+
+            'selectorValueTypes' => SpecField::getSelectorValueTypes(),
+            'doNotTranslateTheseValueTypes' => array(2),
+            'countNewValues' => 0
+        );
+        
+        return $this->specFieldConfig;
+    }
+    
 }

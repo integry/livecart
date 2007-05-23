@@ -11,10 +11,13 @@ ClassLoader::import("framework.request.validator.Form");
  *
  * @package application.controller.backend
  *
- * @role product
+ * @role delivery
  */
 class ShippingRateController extends StoreManagementController
 {
+    /**
+     * @role update
+     */
     public function delete()
     {
         if($id = (int)$this->request->getValue('id'))
@@ -23,16 +26,6 @@ class ShippingRateController extends StoreManagementController
         }
         
         return new JSONResponse(array('status' => 'success'));
-    }
-    
-    public function edit()
-    {
-        return new RawResponse('edit');
-    }
-    
-    public function save()
-    {
-        return new RawResponse('save');
     }
 }
 ?>

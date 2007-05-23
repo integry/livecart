@@ -979,7 +979,9 @@ Backend.Filter.prototype = {
         
         var self = this;
         
-        var action = this.id.match(/new/) ? Backend.Filter.prototype.links.updateGroup : this.nodes.form.action; 
+        var action = this.id.match(/new/) 
+            ? Backend.Filter.prototype.links.createGroup
+            : Backend.Filter.prototype.links.updateGroup; 
         new Ajax.Request(
             action,
             {

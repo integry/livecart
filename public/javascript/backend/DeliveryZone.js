@@ -847,7 +847,11 @@ Backend.DeliveryZone.ShippingService.prototype =
         var self = this;
         
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-        new Ajax.Request(Backend.DeliveryZone.ShippingService.prototype.Links.save, {
+        var action = this.service.ID 
+            ? Backend.DeliveryZone.ShippingService.prototype.Links.update
+            : Backend.DeliveryZone.ShippingService.prototype.Links.create;
+            
+        new Ajax.Request(action, {
             method: 'post',
             parameters: Form.serialize(this.nodes.form),
             onSuccess: function(response) { 

@@ -65,7 +65,11 @@ Backend.StaticPage.prototype =
 	
 	save: function(form)
 	{
-		new LiveCart.AjaxRequest(form, $('saveIndicator'), this.saveCompleted.bind(this));	
+		form.action = form.id.value 
+            ? pageHandler.urls.update
+            : pageHandler.urls.create;
+            
+        new LiveCart.AjaxRequest(form, $('saveIndicator'), this.saveCompleted.bind(this));	
 	},
 	
 	saveCompleted: function(originalRequest)

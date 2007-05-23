@@ -14,7 +14,8 @@ class SpecFieldValueController extends StoreManagementController
 {  
     /**
      * Delete specification field value from database
-     *
+     * 
+     * @role update
      * @return JSONResponse Indicates status
      */
     public function delete()
@@ -33,6 +34,7 @@ class SpecFieldValueController extends StoreManagementController
     /**
      * Sort specification field values
      * 
+     * @role update
      * return JSONResponse Indicates status
      */
     public function sort()
@@ -50,7 +52,10 @@ class SpecFieldValueController extends StoreManagementController
 
         return new JSONResponse(array('status' => 'success'));
     }
-
+    
+	/**
+     * @role update
+     */
     public function mergeValues()
     {
         $mergedIntoValue = SpecFieldValue::getInstanceByID((int)$this->request->getValue('mergeIntoValue'), true);

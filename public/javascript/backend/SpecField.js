@@ -982,8 +982,11 @@ Backend.SpecField.prototype = {
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
         
         var self = this;
+        var action = this.id.match(/new/) 
+            ? Backend.SpecField.prototype.links.create 
+            : Backend.SpecField.prototype.links.update;
         new Ajax.Request(
-            this.nodes.form.action,
+            action,
             {
                 method: this.nodes.form.method,
                 postBody: Form.serialize(this.nodes.form),
@@ -1496,8 +1499,12 @@ Backend.SpecFieldGroup.prototype = {
 
         var self = this;
         
+        var action = this.group.ID 
+            ? Backend.SpecField.prototype.links.updateGroup
+            : Backend.SpecField.prototype.links.createGroup;
+            
         new Ajax.Request(
-            this.nodes.form.getElementsByTagName('form')[0].action + (this.group.ID ? this.group.ID : ''),
+            action + '/' + (this.group.ID ? this.group.ID : ''),
             {
                 method: 'post',
                 postBody: Form.serialize(this.nodes.form),

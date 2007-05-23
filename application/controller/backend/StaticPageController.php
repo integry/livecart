@@ -32,6 +32,9 @@ class StaticPageController extends StoreManagementController
 		return $response;
 	}
 	
+	/**
+	 * @role create
+	 */
 	public function add()
 	{
 		$response = new ActionResponse();		
@@ -39,6 +42,9 @@ class StaticPageController extends StoreManagementController
 		return $response;
 	}	  
 	
+	/**
+	 * @role update
+	 */
 	public function edit()
 	{
 		$page = StaticPage::getInstanceById($this->request->getValue('id'), StaticPage::LOAD_DATA)->toArray();
@@ -56,6 +62,8 @@ class StaticPageController extends StoreManagementController
 	
 	/**
 	 * Reorder pages
+	 * 
+	 * @role sort
 	 */
 	public function reorder()
 	{
@@ -94,25 +102,26 @@ class StaticPageController extends StoreManagementController
 		}	
 	}	
 	
-	public function save()
+	/**
+	 * @role update
+	 */
+	public function update()
 	{
-		if ($this->request->getValue('id'))
-		{
-			$inst = StaticPage::getInstanceById($this->request->getValue('id'), StaticPage::LOAD_DATA);
-		}
-		else
-		{
-			$inst = StaticPage::getNewInstance();	
-		}
+	    $page = StaticPage::getInstanceById((int)$this->request->getValue('id'), StaticPage::LOAD_DATA);
+	    
+	    return $this->save($page);
+	}
 	
-		$inst->loadRequestData($this->request);
-		$inst->save();
-		
-		$arr = $inst->toArray();
-		
-		return new JSONResponse(array('id' => $inst->getID(), 'title' => $arr['title_lang']));
+	public function create()
+	{
+	    $page = StaticPage::getNewInstance();	
+	    
+	    return $this->save($page);
 	}
 
+	/**
+	 * @role remove
+	 */
 	public function delete()
 	{
 		try
@@ -132,6 +141,16 @@ class StaticPageController extends StoreManagementController
 	public function emptyPage()
 	{
 		return new ActionResponse();
+	}
+	
+	private function save(StaticPage $page)
+	{
+		$page->loadRequestData($this->request);
+		$page->save();
+		
+		$arr = $page->toArray();
+		
+		return new JSONResponse(array('id' => $page->getID(), 'title' => $arr['title_lang']));
 	}
 	
 	private function getForm()

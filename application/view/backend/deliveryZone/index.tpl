@@ -85,7 +85,8 @@
     Backend.DeliveryZone.ShippingService.prototype.Links.deleteRate = '{/literal}{link controller=backend.shippingRate action=delete}{literal}';
     Backend.DeliveryZone.ShippingService.prototype.Links.sortRates = '{/literal}{link controller=backend.shippingRate action=sort}{literal}';
     Backend.DeliveryZone.ShippingService.prototype.Links.editRate = '{/literal}{link controller=backend.shippingRate action=edit}{literal}';
-    Backend.DeliveryZone.ShippingService.prototype.Links.save = '{/literal}{link controller=backend.shippingService action=save}{literal}';
+    Backend.DeliveryZone.ShippingService.prototype.Links.update = '{/literal}{link controller=backend.shippingService action=update}{literal}';
+    Backend.DeliveryZone.ShippingService.prototype.Links.create = '{/literal}{link controller=backend.shippingService action=create}{literal}';
     Backend.DeliveryZone.ShippingService.prototype.Links.validateRates = '{/literal}{link controller=backend.shippingService action=validateRates}{literal}';
     
     Backend.DeliveryZone.TaxRate.prototype.Links.save = '{/literal}{link controller=backend.TaxRate action=save}{literal}';

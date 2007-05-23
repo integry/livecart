@@ -11,7 +11,7 @@ ClassLoader::import("framework.request.validator.Form");
  *
  * @package application.controller.backend
  *
- * @role product
+ * @role delivery
  */
 class ShippingServiceController extends StoreManagementController
 {
@@ -45,19 +45,10 @@ class ShippingServiceController extends StoreManagementController
 	    $response->setValue('form', $form);
 	    return $response;
 	}
-	
-	private function createShippingServiceForm()
-	{
-		return new Form($this->createShippingServiceFormValidator());
-	}
-	
-	private function createShippingServiceFormValidator()
-	{	
-		$validator = new RequestValidator('shippingService', $this->request);
-		
-		return $validator;
-	}	
-	
+
+	/**
+	 * @role update
+	 */
     public function delete()
     {
         $service = ShippingService::getInstanceByID((int)$this->request->getValue('id'));
@@ -66,6 +57,9 @@ class ShippingServiceController extends StoreManagementController
         return new JSONResponse(array('status' => 'success'));
     }
     
+    /**
+     * @role update
+     */
     public function edit()
     {
 	    $shippingService = ShippingService::getInstanceByID($this->request->getValue('id'), true);
@@ -83,27 +77,103 @@ class ShippingServiceController extends StoreManagementController
 	    return $response;
     }
     
-    public function save()
+    /**
+     * @role update
+     */
+    public function create()
     {
-        if($serviceID = (int)$this->request->getValue('serviceID'))
+        if(($deliveryZoneId = (int)$this->request->getValue('deliveryZoneID')) > 0)
         {
-            $shippingService = ShippingService::getInstanceByID($serviceID);
+            $deliveryZone = DeliveryZone::getInstanceByID($deliveryZoneId, true);
         }
         else
         {
-            if(($deliveryZoneId = (int)$this->request->getValue('deliveryZoneID')) > 0)
-            {
-                $deliveryZone = DeliveryZone::getInstanceByID($deliveryZoneId, true);
-            }
-            else
-            {
-                $deliveryZone = null;
-            }
-	        
-	        $shippingService = ShippingService::getNewInstance($deliveryZone, $this->request->getValue('name'), $this->request->getValue('rangeType'));
+            $deliveryZone = null;
+        }
+     
+        $shippingService = ShippingService::getNewInstance($deliveryZone, $this->request->getValue('name'), $this->request->getValue('rangeType'));
+
+        return $this->save($shippingService);
+    }
+    
+    /**
+     * @role update
+     */
+    public function update()
+    {
+        $shippingService = ShippingService::getInstanceByID((int)$this->request->getValue('serviceID'));
+        return $this->save($shippingService);
+    }
+    
+    /**
+     * @role update
+     */
+    public function validateRates()
+    {
+        $ratesData = $this->getRatesFromRequest();
+        $errors = $this->validateRate('', $ratesData['']);
+        return empty($errors) 
+            ? new JSONResponse(array('status' => 'success')) 
+            : new JSONResponse(array('status' => 'failure', 'errors' => $errors));
+    }
+    
+    /**
+     * @role update
+     */
+    public function sort()
+    {
+        echo $this->request->getValue('target');
+        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        {
+            echo $key;
+           $shippingService = ShippingService::getInstanceByID((int)$key);
+           $shippingService->position->set((int)$position);
+           $shippingService->save();
+        }
+
+        return new JSONResponse(array('status' => 'success'));
+    }
+
+    private function isNotValid($name, $rates = array())
+    {
+        $errors = array();
+        
+        if($name == '')
+        {
+            $errors['name'] = $this->translate('_error_name_should_not_be_empty');
         }
         
-	    
+        foreach($rates as $id => $rate)
+        {
+            if(!empty($id))
+            {
+                $errors = array_merge($errors, $this->validateRate($id, $rate));
+            }
+        }
+
+        return empty($errors) ? false : $errors;
+    }
+
+    private function getRatesFromRequest()
+    {
+        $rates = array();
+        foreach($_POST as $variable => $value)
+        {
+            $matches = array();
+            if(preg_match('/^rate_([^_]*)_(perKgCharge|subtotalPercentCharge|perItemCharge|flatCharge|weightRangeEnd|weightRangeStart|subtotalRangeEnd|subtotalRangeStart)$/', $variable, $matches))
+            {
+                $id = $matches[1];
+                $name = $matches[2];
+                
+                $rates[$id][$name] = $value;
+            }
+        }
+        
+        return $rates;
+    }
+    
+    private function save(ShippingService $shippingService)
+    {       
         $ratesData = $this->getRatesFromRequest();
         $rates = array();
         if(!($errors = $this->isNotValid($this->request->getValue('name'), $ratesData)))
@@ -149,45 +219,18 @@ class ShippingServiceController extends StoreManagementController
         }
     }
     
-    public function getRatesFromRequest()
-    {
-        $rates = array();
-//        print_r($_POST);
-        foreach($_POST as $variable => $value)
-        {
-            $matches = array();
-            if(preg_match('/^rate_([^_]*)_(perKgCharge|subtotalPercentCharge|perItemCharge|flatCharge|weightRangeEnd|weightRangeStart|subtotalRangeEnd|subtotalRangeStart)$/', $variable, $matches))
-            {
-                $id = $matches[1];
-                $name = $matches[2];
-                
-                $rates[$id][$name] = $value;
-            }
-        }
-        
-        return $rates;
-    }
-    
-    public function isNotValid($name, $rates = array())
-    {
-        $errors = array();
-        
-        if($name == '')
-        {
-            $errors['name'] = $this->translate('_error_name_should_not_be_empty');
-        }
-        
-        foreach($rates as $id => $rate)
-        {
-            if(!empty($id))
-            {
-                $errors = array_merge($errors, $this->validateRate($id, $rate));
-            }
-        }
-
-        return empty($errors) ? false : $errors;
-    }
-    
+	private function createShippingServiceForm()
+	{
+		return new Form($this->createShippingServiceFormValidator());
+	}
+	
+	private function createShippingServiceFormValidator()
+	{	
+		$validator = new RequestValidator('shippingService', $this->request);
+		
+		return $validator;
+	}	
+	
     private function validateRate($id, $rate)
     {
        $errors = array();   
@@ -210,26 +253,5 @@ class ShippingServiceController extends StoreManagementController
        return $errors;
     }
     
-    public function validateRates()
-    {
-        $ratesData = $this->getRatesFromRequest();
-        $errors = $this->validateRate('', $ratesData['']);
-        if(empty($errors)) return new JSONResponse(array('status' => 'success'));
-        else return new JSONResponse(array('status' => 'failure', 'errors' => $errors));
-    }
-    
-    public function sort()
-    {
-        echo $this->request->getValue('target');
-        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
-        {
-            echo $key;
-           $shippingService = ShippingService::getInstanceByID((int)$key);
-           $shippingService->position->set((int)$position);
-           $shippingService->save();
-        }
-
-        return new JSONResponse(array('status' => 'success'));
-    }
 }
 ?>

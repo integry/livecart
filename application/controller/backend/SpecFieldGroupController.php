@@ -20,24 +20,9 @@ class SpecFieldGroupController extends StoreManagementController
     protected $languageCodes = array();
 
     /**
-     * Create array of language codes
-     *
-     * @see self::$languageCodes
-     */
-    private function createLanguageCodes()
-    {
-        if(!empty($this->languageCodes)) return true;
-        
-        $this->languageCodes[] = $this->store->getDefaultLanguageCode();
-        foreach ($this->store->getLanguageList()->toArray() as $lang)
-        {
-            if($lang['isDefault'] != 1) $this->languageCodes[] = $lang['ID'];
-        }
-    }
-    
-    /**
      * Get specification field group data
      * 
+     * @role update
      * @return JSONResponse
      */
     public function item()
@@ -46,41 +31,32 @@ class SpecFieldGroupController extends StoreManagementController
     }
     
     /**
-     * Save group data to the database
-     * 
-     * @return JSONResponse Returns status and errors if status is equal to failure
+     * @role update
      */
-    public function save()
-    {   
-        if($id = $this->request->getValue('id'))
-        {
-            $specFieldGroup = SpecFieldGroup::getInstanceByID($id);
-        }
-        else
-        {
-            $category = Category::getInstanceByID((int)$this->request->getValue('categoryID'));
-            $specFieldGroup = SpecFieldGroup::getNewInstance($category);
-            $specFieldGroup->setFieldValue('position', 100000);
-        }
+    public function update()
+    {
+        $specFieldGroup = SpecFieldGroup::getInstanceByID((int)$this->request->getValue('id'));
         
-        $this->createLanguageCodes();
-        if(count($errors = SpecFieldGroup::validate($this->request->getValueArray(array('name')), $this->languageCodes)) == 0)
-        {
-            $name = $this->request->getValue('name');
-            $specFieldGroup->setLanguageField('name', $name, $this->languageCodes);
-            $specFieldGroup->save();
-            
-            return new JSONResponse(array('status' => 'success', 'id' => $specFieldGroup->getID()));
-        }
-        else
-        {
-            return new JSONResponse(array('errors' => $this->translateArray($errors), 'status' => 'failure'));
-        }
+        return $this->save($specFieldGroup);
+    }
+    
+    /**
+     * @role create
+     */
+    public function create()
+    {
+        $category = Category::getInstanceByID((int)$this->request->getValue('categoryID'));
+        $specFieldGroup = SpecFieldGroup::getNewInstance($category);
+        $specFieldGroup->setFieldValue('position', 100000);
+        
+        return $this->save($specFieldGroup);
     }
     
     /**
      * Delete specification field group from database
      *
+     * @role delete
+     * 
      * @return JSONResponse Status
      */
     public function delete()
@@ -99,6 +75,8 @@ class SpecFieldGroupController extends StoreManagementController
     /**
      * Sort specification groups
      * 
+     * @role sort
+     * 
      * @return JSONResponse Status
      */
     public function sort()
@@ -113,4 +91,44 @@ class SpecFieldGroupController extends StoreManagementController
 
         return new JSONResponse(array('status' => 'success'));
     }
+    
+    /**
+     * Save group data to the database
+     * 
+     * @return JSONResponse Returns status and errors if status is equal to failure
+     */
+    private function save(SpecFieldGroup $specFieldGroup)
+    {          
+        $this->createLanguageCodes();
+        if(count($errors = SpecFieldGroup::validate($this->request->getValueArray(array('name')), $this->languageCodes)) == 0)
+        {
+            $name = $this->request->getValue('name');
+            $specFieldGroup->setLanguageField('name', $name, $this->languageCodes);
+            $specFieldGroup->save();
+            
+            return new JSONResponse(array('status' => 'success', 'id' => $specFieldGroup->getID()));
+        }
+        else
+        {
+            return new JSONResponse(array('errors' => $this->translateArray($errors), 'status' => 'failure'));
+        }
+    }
+
+    /**
+     * Create array of language codes
+     *
+     * @see self::$languageCodes
+     */
+    private function createLanguageCodes()
+    {
+        if(!empty($this->languageCodes)) return true;
+        
+        $this->languageCodes[] = $this->store->getDefaultLanguageCode();
+        foreach ($this->store->getLanguageList()->toArray() as $lang)
+        {
+            if($lang['isDefault'] != 1) $this->languageCodes[] = $lang['ID'];
+        }
+    }
+        
+    
 }
