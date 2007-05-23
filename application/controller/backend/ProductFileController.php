@@ -108,7 +108,7 @@ class ProductFileController extends StoreManagementController
 	}
 
 	/**
-	 * @role remove
+	 * @role update
 	 */
 	public function delete()
 	{
@@ -128,7 +128,7 @@ class ProductFileController extends StoreManagementController
 	}
 
 	/**
-	 * @role sort
+	 * @role update
 	 */
 	public function sort()
 	{ 

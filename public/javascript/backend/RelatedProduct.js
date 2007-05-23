@@ -180,7 +180,8 @@ Backend.RelatedProduct.Group.Model.prototype = {
         this.serverError = false;
         
         var self = this;
-        new Ajax.Request(Backend.RelatedProduct.Group.Links.save,
+        var action = this.isNew ? Backend.RelatedProduct.Group.Links.create : Backend.RelatedProduct.Group.Links.update;
+        new Ajax.Request(action,
         {
             method: 'post',
             postBody: serializedData,
@@ -239,6 +240,7 @@ Backend.RelatedProduct.Group.Controller.prototype = {
         this.bindActions();
         
         Form.State.backup(this.view.nodes.root);
+        new SectionExpander(this.view.nodes.root);
         
         Backend.RelatedProduct.Group.Controller.prototype.instances[this.view.nodes.root.id] = this;
     },

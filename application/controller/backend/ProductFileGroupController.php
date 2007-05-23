@@ -12,32 +12,30 @@ ClassLoader::import("application.model.product.Product");
  */
 class ProductFileGroupController extends StoreManagementController 
 {
-    private function buildValidator()
+    /**
+     * @role update
+     */
+    public function create()
     {
-		ClassLoader::import("framework.request.validator.RequestValidator");
-		$validator = new RequestValidator("productFileGroupValidator", $this->request);
-
-		$validator->addCheck('name_' . $this->store->getDefaultLanguageCode(), new IsNotEmptyCheck('_err_group_name_is_empty'));
-
-		return $validator;
+	    $product = Product::getInstanceByID((int)$this->request->getValue('productID'));
+	    $fileGroup = ProductFileGroup::getNewInstance($product);
+	    return $this->save($fileGroup);
     }
-
-    public function save()
+    
+    /**
+     * @role update
+     */
+    public function update()
+    {
+        $fileGroup = ProductFileGroup::getInstanceByID((int)$this->request->getValue('ID'));
+        return $this->save($fileGroup);
+    }
+    
+    private function save(ProductFileGroup $fileGroup)
     {
         $validator = $this->buildValidator();
 		if ($validator->isValid())
-		{
-    		$ID = $this->request->getValue('ID');
-		    if(!empty($ID))
-    		{
-    		    $fileGroup = ProductFileGroup::getInstanceByID((int)$this->request->getValue('ID'));
-    		}
-    		else
-    		{
-    		    $product = Product::getInstanceByID((int)$this->request->getValue('productID'));
-    		    $fileGroup = ProductFileGroup::getNewInstance($product);
-    		}
-    		
+		{   		
 		    foreach ($this->store->getLanguageArray(true) as $lang)
     		{
     			if ($this->request->isValueSet('name_' . $lang))
@@ -56,12 +54,18 @@ class ProductFileGroupController extends StoreManagementController
 		}
     }
     
+    /**
+     * @role update
+     */
 	public function delete()
 	{
 	    ProductFileGroup::getInstanceByID((int)$this->request->getValue('id'))->delete();
 	    return new JSONResponse(array('status' => 'success'));
 	}
 
+	/**
+	 * @role update
+	 */
     public function sort()
     {
         foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
@@ -75,11 +79,24 @@ class ProductFileGroupController extends StoreManagementController
         return new JSONResponse(array('status' => 'success'));
     }
 
+    /**
+     * @role update
+     */
     public function edit()
     {
         $group = ProductFileGroup::getInstanceByID((int)$this->request->getValue('id'), true);
         
         return new JSONResponse($group->toArray());
+    }
+    
+    private function buildValidator()
+    {
+		ClassLoader::import("framework.request.validator.RequestValidator");
+		$validator = new RequestValidator("productFileGroupValidator", $this->request);
+
+		$validator->addCheck('name_' . $this->store->getDefaultLanguageCode(), new IsNotEmptyCheck('_err_group_name_is_empty'));
+
+		return $validator;
     }
     
 }

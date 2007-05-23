@@ -14,6 +14,46 @@ ClassLoader::import("application.model.product.ProductImage");
  */
 class ProductImageController extends ObjectImageController
 {
+    /**
+     * @role update
+     */
+    public function index()
+    {
+        return parent::index();
+    }
+    
+    /**
+     * @role update
+     */
+    public function upload()
+    {
+        return parent::upload();
+    }
+
+    /**
+     * @role update
+     */
+	public function save()
+	{
+        return parent::save();
+    }
+	
+    /**
+     * @role update
+     */
+	public function delete()
+	{
+        return parent::delete();
+    }
+
+    /**
+     * @role update
+     */
+	public function saveOrder()
+	{
+        return parent::saveOrder();
+    }    
+
 	protected function getModelClass()
 	{
         return 'ProductImage';
@@ -29,30 +69,5 @@ class ProductImageController extends ObjectImageController
 		return 'productID';
 	}
     
-    public function index()
-    {
-        return parent::index();
-    }
-		
-    public function upload()
-    {
-        return parent::upload();
-    }
-
-	public function save()
-	{
-        return parent::save();
-    }
-	
-	public function delete()
-	{
-        return parent::delete();
-    }
-
-	public function saveOrder()
-	{
-        return parent::saveOrder();
-    }    
 }	
-	  
 ?>

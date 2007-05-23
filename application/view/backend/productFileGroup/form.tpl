@@ -6,7 +6,7 @@
     		<input type="hidden" name="productID" class="hidden productFileGroup_productID" />
     
     		<fieldset class="productFileGroup_main">
-        		<label class="productFileGroup_name_label">{t _productFileGroup_title}</label>
+        		<label class="productFileGroup_name_label">{t _product_file_group_title}</label>
                 <div class="error">
             		<input type="text" name="name" class="productFileGroup_name" />
             		<span class="errorText hidden"> </span>
@@ -15,15 +15,15 @@
             
         	<!-- STEP 3 -->
         	<fieldset class="productFileGroup_translations">
-        		<fieldset class="dom_template productFileGroup_translations_language">
+        		<fieldset class="dom_template expandingSection productFileGroup_translations_language">
         			<legend class="productFileGroup_translations_language_legend"></legend>
-        
-                    <div class="productFileGroup_translations_language_values">
+                    <div class="productFileGroup_translations_language_values expandingSectionContent">
                         <div>
                 			<label class="productFileGroup_name_label">{t _productFileGroup_title}</label>
                 			<input type="text" name="name" class="productFileGroup_name" />
             			</div>
                     </div>
+                    
         		</fieldset>
         	</fieldset>
     	</fieldset>

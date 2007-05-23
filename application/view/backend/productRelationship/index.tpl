@@ -2,7 +2,8 @@
 {literal}
     with(Backend.RelatedProduct.Group)
     {
-        Links.save = '{/literal}{link controller=backend.productRelationshipGroup action=save}{literal}';
+        Links.update = '{/literal}{link controller=backend.productRelationshipGroup action=update}{literal}';
+        Links.create = '{/literal}{link controller=backend.productRelationshipGroup action=create}{literal}';
         Links.remove = '{/literal}{link controller=backend.productRelationshipGroup action=delete}{literal}';
         Links.sort = '{/literal}{link controller=backend.productRelationshipGroup action=sort}?target=productRelationshipGroup_list_{$productID}{literal}';
         Links.edit = '{/literal}{link controller=backend.productRelationshipGroup action=edit}{literal}';

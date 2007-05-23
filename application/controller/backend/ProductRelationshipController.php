@@ -12,6 +12,9 @@ ClassLoader::import("application.model.product.Product");
  */
 class ProductRelationshipController extends StoreManagementController 
 {
+    /**
+     * @role update
+     */
 	public function index()
 	{		
 	    $productID = (int)$this->request->getValue('id');
@@ -28,6 +31,11 @@ class ProductRelationshipController extends StoreManagementController
 	    return $response;
 	}
 	
+    /**
+     * Products popup
+     * 
+     * @role update
+     */
 	public function selectProduct()
 	{
 	    $response = new ActionResponse();	    
@@ -39,6 +47,11 @@ class ProductRelationshipController extends StoreManagementController
 		return $response;
 	}
 	
+    /**
+     * Creates new relationship
+     * 
+     * @role update
+     */
 	public function addRelated()
 	{
 	    $productID = (int)$this->request->getValue('id');
@@ -71,6 +84,9 @@ class ProductRelationshipController extends StoreManagementController
         return new JSONResponse(array('error' => $this->translate($error)));
 	}
 	
+    /**
+     * @role update
+     */
 	public function delete()
 	{
 	    $productID = (int)$this->request->getValue('id');
@@ -85,6 +101,9 @@ class ProductRelationshipController extends StoreManagementController
 	    return new JSONResponse(array('status' => 'success'));
 	}
 
+    /**
+     * @role update
+     */
     public function sort()
     {
         $product = Product::getInstanceByID((int)$this->request->getValue('id'));    

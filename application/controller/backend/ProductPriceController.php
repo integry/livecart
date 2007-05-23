@@ -12,6 +12,9 @@ ClassLoader::import("application.model.product.Product");
  */
 class ProductPriceController extends StoreManagementController
 {
+    /**
+     * @role update
+     */
 	public function index()
 	{
 
@@ -28,36 +31,9 @@ class ProductPriceController extends StoreManagementController
 	    return $response;
 	}
 
-    private function buildPricingForm(Product $product)
-    {
-        ClassLoader::import("framework.request.validator.Form");
-		if(!$product->isLoaded()) $product->load(ActiveRecord::LOAD_REFERENCES);
-		
-		$product->loadPricing();
-        $pricing = $product->getPricingHandler();
-		$form = new Form($this->buildPricingFormValidator());
-		
-		$pricesData = $product->toArray();
-		$pricesData['shippingHiUnit'] = (int)$pricesData['shippingWeight'];
-		$pricesData['shippingLoUnit'] = ($pricesData['shippingWeight'] - $pricesData['shippingHiUnit']) * 1000;
-		$pricesData = array_merge($pricesData, $product->getPricesFields());
-
-	    $form->setData($pricesData);
-
-		return $form;
-    }
-
-    private function buildPricingFormValidator()
-    {
-		ClassLoader::import("framework.request.validator.RequestValidator");
-		$validator = new RequestValidator("pricingFormValidator", $this->request);
-
-		ProductPricing::addPricesValidator($validator);
-		ProductPricing::addShippingValidator($validator);
-
-		return $validator;
-    }
-
+    /**
+     * @role update
+     */
     public function save()
     {
         $product = Product::getInstanceByID((int)$this->request->getValue('id'));
@@ -90,12 +66,46 @@ class ProductPriceController extends StoreManagementController
 		}
 		else
 		{
-			$validator->restore();
-
 			return new JSONResponse(array('status' => "failure", 'errors' => $validator->getErrorList()));
 		}
-
-
     }
+    
+
+    /**
+     * @role update
+     */
+    private function buildPricingForm(Product $product)
+    {
+        ClassLoader::import("framework.request.validator.Form");
+		if(!$product->isLoaded()) $product->load(ActiveRecord::LOAD_REFERENCES);
+		
+		$product->loadPricing();
+        $pricing = $product->getPricingHandler();
+		$form = new Form($this->buildPricingFormValidator());
+		
+		$pricesData = $product->toArray();
+		$pricesData['shippingHiUnit'] = (int)$pricesData['shippingWeight'];
+		$pricesData['shippingLoUnit'] = ($pricesData['shippingWeight'] - $pricesData['shippingHiUnit']) * 1000;
+		$pricesData = array_merge($pricesData, $product->getPricesFields());
+
+	    $form->setData($pricesData);
+
+		return $form;
+    }
+
+    /**
+     * @role update
+     */
+    private function buildPricingFormValidator()
+    {
+		ClassLoader::import("framework.request.validator.RequestValidator");
+		$validator = new RequestValidator("pricingFormValidator", $this->request);
+
+		ProductPricing::addPricesValidator($validator);
+		ProductPricing::addShippingValidator($validator);
+
+		return $validator;
+    }
+    
 }
 ?>

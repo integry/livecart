@@ -547,7 +547,10 @@ Backend.ProductFile.Group.Model.prototype = {
         this.serverError = false;
         
         var self = this;
-        new Ajax.Request(Backend.ProductFile.Group.Links.save,
+        
+        var action = this.isNew ? Backend.ProductFile.Group.Links.create : Backend.ProductFile.Group.Links.update;
+        
+        new Ajax.Request(action,
         {
             method: 'post',
             postBody: serializedData,
@@ -606,8 +609,10 @@ Backend.ProductFile.Group.Controller.prototype = {
         this.bindActions();
         
         Form.State.backup(this.view.nodes.root);
+        new SectionExpander(this.view.nodes.root);
         
         Backend.ProductFile.Group.Controller.prototype.instances[this.view.nodes.root.id] = this;
+        
     },
     
     getInstance: function(rootNode)

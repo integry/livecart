@@ -15,10 +15,10 @@
             
         	<!-- STEP 3 -->
         	<fieldset class="productRelationshipGroup_translations">
-        		<fieldset class="dom_template productRelationshipGroup_translations_language">
+        		<fieldset class="dom_template expandingSection productRelationshipGroup_translations_language">
         			<legend class="productRelationshipGroup_translations_language_legend"></legend>
         
-                    <div class="productRelationshipGroup_translations_language_values">
+                    <div class="productRelationshipGroup_translations_language_values expandingSectionContent">
                         <div>
                 			<label class="productRelationshipGroup_name_label">{t _product_relationship_group_title}</label>
                 			<input type="text" name="name" class="productRelationshipGroup_name" />
