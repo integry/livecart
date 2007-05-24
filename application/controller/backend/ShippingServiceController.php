@@ -57,9 +57,6 @@ class ShippingServiceController extends StoreManagementController
         return new JSONResponse(array('status' => 'success'));
     }
     
-    /**
-     * @role update
-     */
     public function edit()
     {
 	    $shippingService = ShippingService::getInstanceByID($this->request->getValue('id'), true);

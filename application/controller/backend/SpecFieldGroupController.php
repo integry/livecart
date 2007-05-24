@@ -55,7 +55,7 @@ class SpecFieldGroupController extends StoreManagementController
     /**
      * Delete specification field group from database
      *
-     * @role delete
+     * @role remove
      * 
      * @return JSONResponse Status
      */

@@ -7,7 +7,6 @@ ClassLoader::import("application.controller.backend.abstract.BackendController")
  *
  * @package application.controller.backend
  * @author Saulius Rupainis <saulius@remo.lt>
- * @role index
  */
 class IndexController extends BackendController
 {

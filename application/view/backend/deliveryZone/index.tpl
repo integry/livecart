@@ -24,10 +24,12 @@
 	<div id="deliveryZoneBrowserWithControlls">
     	<div id="deliveryZoneBrowser" class="treeBrowser"></div>
         <div id="deliveryZoneBrowserControls">
-            <input type="text" name="name" id="newZoneInput" />
-            <input type="button" class="button" value="{t _add}" id="newZoneInputButton"  />
-            <br />
-            <a id="deliveryZone_delete" href="#delete">{t _delete}</a>
+            <span style="{denied role='delivery.create'}display: none{/denied}">
+                <input type="text" name="name" id="newZoneInput"/>
+                <input type="button" class="button" value="{t _add}" id="newZoneInputButton"  />
+                <br />
+            </span>
+            <a id="deliveryZone_delete" href="#delete" style="{denied role='delivery.remove'}display: none{/denied}">{t _delete}</a>
         </div>
 	</div>
     
@@ -89,7 +91,8 @@
     Backend.DeliveryZone.ShippingService.prototype.Links.create = '{/literal}{link controller=backend.shippingService action=create}{literal}';
     Backend.DeliveryZone.ShippingService.prototype.Links.validateRates = '{/literal}{link controller=backend.shippingService action=validateRates}{literal}';
     
-    Backend.DeliveryZone.TaxRate.prototype.Links.save = '{/literal}{link controller=backend.TaxRate action=save}{literal}';
+    Backend.DeliveryZone.TaxRate.prototype.Links.update = '{/literal}{link controller=backend.TaxRate action=update}{literal}';
+    Backend.DeliveryZone.TaxRate.prototype.Links.create = '{/literal}{link controller=backend.TaxRate action=create}{literal}';
     Backend.DeliveryZone.TaxRate.prototype.Links.remove = '{/literal}{link controller=backend.TaxRate action=delete}{literal}';
     Backend.DeliveryZone.TaxRate.prototype.Links.edit = '{/literal}{link controller=backend.TaxRate action=edit}{literal}';
     

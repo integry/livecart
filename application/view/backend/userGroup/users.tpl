@@ -73,7 +73,7 @@
 			<a href="#" onclick="Element.show($('userColumnMenu_{$userGroupID}')); return false;" style="margin-top: 15px;">{t Columns}</a>
 		</div>
 		<div id="userColumnMenu_{$userGroupID}" style="left: -250px; position: absolute; z-index: 5; width: auto; display: none;">
-  		  <form action="{link controller=backend.user action=changeColumns}" onsubmit="new LiveCart.AjaxUpdater(this, this.parentNode.parentNode.parentNode.parentNode.parentNode, document.getElementsByClassName('progressIndicator', this)[0]); return false;" method="POST">
+  		  <form action="{link controller=backend.userGroup action=changeColumns}" onsubmit="new LiveCart.AjaxUpdater(this, this.parentNode.parentNode.parentNode.parentNode.parentNode, document.getElementsByClassName('progressIndicator', this)[0]); return false;" method="POST">
 			
 			<input type="hidden" name="group" value="{$userGroupID}" />
 			
@@ -152,7 +152,7 @@
 <script type="text/javascript">
     try
     {
-        var grid = new ActiveGrid($('{/literal}users_{$userGroupID}{literal}'), '{/literal}{link controller=backend.user action=lists}{literal}', {/literal}{$totalCount}{literal}, $("{/literal}userLoadIndicator_{$userGroupID}{literal}"));
+        var grid = new ActiveGrid($('{/literal}users_{$userGroupID}{literal}'), '{/literal}{link controller=backend.userGroup action=lists}{literal}', {/literal}{$totalCount}{literal}, $("{/literal}userLoadIndicator_{$userGroupID}{literal}"));
     
     	grid.setDataFormatter(Backend.UserGroup.GridFormatter);
     	
@@ -163,7 +163,7 @@
     	{/literal}{/foreach}{literal}
         
         var massHandler = new Backend.UserGroup.massActionHandler($('{/literal}userMass_{$userGroupID}{literal}'), grid);
-        massHandler.deleteConfirmMessage = '{/literal}{t _delete_conf|addslashes}{literal}' ;
+        massHandler.deleteConfirmMessage = '{/literal}{t _are_you_sure_you_want_to_delete_this_user|addslashes}{literal}' ;
         
         usersActiveGrid[{/literal}{$userGroupID}{literal}] = grid;
     }

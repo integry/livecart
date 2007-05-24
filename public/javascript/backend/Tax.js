@@ -144,7 +144,12 @@ Backend.Tax.prototype =
     {
         var self = this;
         ActiveForm.prototype.setErrorMessages(this.nodes.form);
-        new Ajax.Request(Backend.Tax.prototype.Links.save + "/" + this.nodes.form.elements.namedItem('ID').value, {
+        
+        var action = this.nodes.form.elements.namedItem('ID').value 
+            ? Backend.Tax.prototype.Links.update
+            : Backend.Tax.prototype.Links.create;
+            
+        new Ajax.Request(action + "/" + this.nodes.form.elements.namedItem('ID').value, {
            method: 'post',
            parameters: Form.serialize(this.nodes.form),
            onSuccess: function(response)

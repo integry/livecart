@@ -4,19 +4,19 @@
     
     <label>{t _name}</label>
     <fieldset class="error">
-		{textfield name="name" class="observed shippingService_name" }
+		{textfield name="name" class="observed shippingService_name" role="delivery.update"}
 		<span class="errorText hidden"> </span>
     </fieldset>
     
     
 	<fieldset class="error">
 		<label for=""></label>
-		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`" class="checkbox shippingService_rangeType" value="0"}
+		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`" class="checkbox shippingService_rangeType" value="0" role="delivery.update"}
 		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}" class="checkbox">{t _weight_based_calculations}</label>
 	</fieldset class="error">
 	<fieldset class="error">
 		<label for=""></label>
-		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`" class="checkbox shippingService_rangeType" value="1"}
+		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`" class="checkbox shippingService_rangeType" value="1" role="delivery.update"}
 		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}" class="checkbox">{t _subtotal_based_calculations}</label>
 	</fieldset class="error">
     
@@ -28,7 +28,7 @@
             <div class="expandingSectionContent">
                 <label>{t _name}</label>
                 <fieldset class="error">
-                    {textfield name="name_`$lang.ID`" class="observed"}
+                    {textfield name="name_`$lang.ID`" class="observed" role="delivery.update"}
                     <span class="errorText hidden"> </span>
                 </fieldset>
             </div>
@@ -39,7 +39,7 @@
     <fieldset class="shippingService_rates error">
     	<label>{t _shipping_service_rates}</label>
         <fieldset>
-            <ul class="activeList activeList_add_delete shippingService_ratesList" id="shippingService_ratesList_{$service.DeliveryZone.ID}_{$service.ID}">
+            <ul class="activeList {allowed role='delivery.update'}activeList_add_delete{/allowed} shippingService_ratesList" id="shippingService_ratesList_{$service.DeliveryZone.ID}_{$service.ID}">
                 {foreach from=$shippingRates item="rate"}
                     <li id="shippingService_ratesList_{$service.DeliveryZone.ID}_{$service.ID}_{$rate.ID}">
                         {include file="backend/shippingService/rate.tpl" rate=$rate}
@@ -55,7 +55,7 @@
                     </li>
                 {/foreach}
             </ul>
-            <fieldset class="container">
+            <fieldset class="container" {denied role='delivery.update'}style="display: none"{/denied}>
             	<ul class="menu" id="shippingService_rate_menu_{$service.DeliveryZone.ID}_{$service.ID}">
             	    <li><a href="#new_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_show">{t _add_new_rate}</a></li>
             	    <li><a href="#cencel_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_cancel" class="hidden">{t _cancel_adding_new_rate}</a></li>
@@ -92,7 +92,7 @@
                 
             </script>
         </fieldset>
-        <fieldset class="shippingService_controls">
+        <fieldset class="shippingService_controls" {denied role='delivery.update'}style="display: none"{/denied}>
             <span class="activeForm_progress"></span>
             <input type="submit" class="shippingService_save button submit" value="{t _save}" />
             {t _or}

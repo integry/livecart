@@ -8,7 +8,7 @@ ClassLoader::import("application.model.tax.*");
  *
  * @package application.model.delivery
  */
-class TaxRate extends ActiveRecordModel
+class TaxRate extends MultilingualObject
 {
 	public static function defineSchema($className = __CLASS__)
 	{

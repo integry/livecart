@@ -1,5 +1,5 @@
 {* upper menu *}
-<fieldset class="container">
+<fieldset class="container" {denied role='delivery.update'}style="display: none;"{/denied}>
 	<ul class="menu" id="taxRate_menu_{$deliveryZone.ID}">
 	    <li><a href="#new_taxRate" id="taxRate_new_{$deliveryZone.ID}_show">{t _add_new_tax_rate}</a></li>
 	    <li><a href="#cencel_taxRate" id="taxRate_new_{$deliveryZone.ID}_cancel" class="hidden">{t _cancel_adding_new_tax_rate}</a></li>
@@ -11,7 +11,7 @@
     {include file="backend/taxRate/rate.tpl" taxRate=$newTaxRate}
 </fieldset>
 
-<ul class="activeList activeList_add_delete activeList_add_edit taxRate_taxRatesList" id="taxRate_taxRatesList_{$deliveryZone.ID}">
+<ul class="activeList {allowed role='delivery.update'}activeList_add_delete{/allowed} activeList_add_edit taxRate_taxRatesList" id="taxRate_taxRatesList_{$deliveryZone.ID}">
 {foreach from=$taxRates item="taxRate"}
     <li id="taxRate_taxRatesList_{$deliveryZone.ID}_{$taxRate.ID}">
         <span class="taxRate_taxRatesList_title">{$taxRate.Tax.name}</span>

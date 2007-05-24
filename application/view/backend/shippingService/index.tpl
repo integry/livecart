@@ -1,5 +1,5 @@
 {* upper menu *}
-<fieldset class="container">
+<fieldset class="container" {denied role='delivery.update'}style="display: none;"{/denied}>
 	<ul class="menu" id="shippingService_menu_{$deliveryZone.ID}">
 	    <li><a href="#new_service" id="shippingService_new_{$deliveryZone.ID}_show">{t _add_new_service}</a></li>
 	    <li><a href="#cencel_service" id="shippingService_new_{$deliveryZone.ID}_cancel" class="hidden">{t _cancel_adding_new_service}</a></li>
@@ -12,7 +12,7 @@
 </fieldset>
 
 
-<ul class="activeList activeList_add_delete activeList_add_sort activeList_add_edit shippingService_servicesList" id="shippingService_servicesList_{$deliveryZone.ID}">
+<ul class="activeList {allowed role='delivery.update'}activeList_add_delete{/allowed} activeList_add_sort activeList_add_edit shippingService_servicesList" id="shippingService_servicesList_{$deliveryZone.ID}">
 {foreach from=$shippingServices item="service"}
     <li id="shippingService_servicesList_{$deliveryZone.ID}_{$service.ID}">
         <span class="shippingService_servicesList_title">{$service.name}</span>

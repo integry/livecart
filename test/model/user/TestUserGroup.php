@@ -105,5 +105,36 @@ class TestUserGroup extends UnitTest
         $group->save();
         $this->assertEqual($group->getRolesRecordSet()->getTotalRecordCount(), 0);
     }
+
+    public function testHasMiscAccess()
+    {
+        $group = UserGroup::getNewInstance('testing1337', 'testing1337');
+        $group->save();
+        
+        $role = Role::getNewInstance('testing1337');
+        $role->save();
+        
+        $group->applyRole($role);
+        $group->save();
+        
+        $this->assertTrue($group->hasAccess('testing1337'));
+        $this->assertFalse($group->hasAccess('testing1337.update'));
+    }
+
+    public function testHasConcreteAccess()
+    {
+        $group = UserGroup::getNewInstance('testing1337', 'testing1337');
+        $group->save();
+        
+        $role = Role::getNewInstance('testing1337.update');
+        $role->save();
+        
+        $group->applyRole($role);
+        $group->save();
+        
+        $this->assertFalse($group->hasAccess('testing1337'));
+        $this->assertTrue($group->hasAccess('testing1337.update'));
+        $this->assertFalse($group->hasAccess('testing1337.create'));
+    }
 }
 ?>

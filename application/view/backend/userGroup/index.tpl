@@ -1,26 +1,74 @@
-<div id="userGroup_{$userGroup.ID}"></div>
+{includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
+{includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
+{includeJs file="library/dhtmlxtree/dhtmlXTree_start.js"}
+{includeJs file="library/rico/ricobase.js"}
+{includeJs file="library/rico/ricoLiveGrid.js"}
+{includeJs file="library/form/Validator.js"}
+{includeJs file="library/form/ActiveForm.js"}
+{includeJs file="library/form/State.js"}
+{includeJs file="library/ActiveGrid.js"}
+{includeJs file="library/TabControl.js"}
+{includeJs file="library/SectionExpander.js"}
 
-{form handle=$userGroupForm action="controller=backend.userGroup action=save" id="userGroupForm_`$userGroup.ID`" method="post" onsubmit="Backend.User.Group.prototype.getInstance(this).save(); return false;"}
-	{hidden name="ID"}
-    
-    <fieldset class="error">
-        <label>{t _name}</label>
-        {textfield name="name"}
-        <span class="errorText" style="display: none" ></span>
-	</fieldset>
-    
-    <fieldset class="error">
-        <label>{t _description}</label>
-        {textarea name="description"}
-	</fieldset>
-    
-    <fieldset class="userGroup_controls">
-        <span class="activeForm_progress"></span>
-        <input type="submit" class="userGroup_save button submit" value="{t _save}" />
-        {t _or}
-        <a href="#cancel" class="userGroup_cancel cancel">{t _cancel}</a>
-    </fieldset>
-{/form}
+{includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
+{includeCss file="library/TabControl.css"}
+{includeCss file="library/ActiveList.css"}
+{includeCss file="library/ActiveGrid.css"}
+
+{includeCss file="backend/Backend.css"}
+
+{includeJs file="backend/User.js"}
+{includeCss file="backend/User.css"}
+
+{includeJs file="backend/Roles.js"}
+
+
+{pageTitle help="userGroups"}{t _livecart_users}{/pageTitle}
+{include file="layout/backend/header.tpl"}
+
+
+
 <script type="text/javascript">
-    Backend.User.Group.prototype.getInstance("userGroupForm_{$userGroup.ID}");
+    Backend.UserGroup.userGroups = {$userGroups};
 </script>
+
+<div id="userGroupsWrapper" class="maxHeight h--50">
+	<div id="userGroupsBrowserWithControlls">
+    	<div id="userGroupsBrowser" class="treeBrowser"></div>
+        <div id="userGroupsBrowserControls">
+            <a id="userGroups_add" href="#add" style="{denied role="userGroup.create"}display: none;{/denied}">{t _add}</a>
+            <br />
+            <a id="userGroups_delete" href="#delete" style="{denied role="userGroup.create"}display: none;{/denied}">{t _delete}</a>
+        </div>
+	</div>
+    
+    {include file="backend/userGroup/groupContainer.tpl"}
+    {include file="backend/userGroup/userContainer.tpl"}
+</div>
+
+
+<div id="activeUserPath"></div>
+
+
+
+{literal}
+<script type="text/javascript">
+    Backend.UserGroup.prototype.Messages.confirmUserDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_user}{literal}';
+    Backend.UserGroup.prototype.Messages.confirmUserGroupRemove = '{/literal}{t _are_you_sure_you_want_to_delete_this_user_group}{literal}';
+    Backend.UserGroup.prototype.Messages.defaultUserName = '{/literal}{t _default_user}{literal}';
+    Backend.UserGroup.prototype.Messages.youCanntoDeleteThisGroup = '{/literal}{t _you_cannot_delete_this_group}{literal}';
+    Backend.User.Group.prototype.Messages.savedMessage = '{/literal}{t _form_has_been_successfully_saved}{literal}';
+
+    Backend.User.Group.prototype.Links.save = '{/literal}{link controller=backend.userGroup action=save}{literal}';
+    Backend.User.Group.prototype.Links.remove = '{/literal}{link controller=backend.userGroup action=delete}{literal}';
+    Backend.User.Group.prototype.Links.createNewUserGroup = '{/literal}{link controller=backend.userGroup action=create}{literal}';
+    Backend.User.Group.prototype.Links.removeNewGroup = '{/literal}{link controller=backend.userGroup action=remove}{literal}';
+    Backend.User.Group.prototype.Links.create = '{/literal}{link controller=backend.userGroup action=create}{literal}';
+
+    var users = new Backend.UserGroup({/literal}{json array=$userGroups}{literal});
+    window.usersActiveGrid = {};
+</script>
+{/literal}
+
+
+{include file="layout/backend/footer.tpl"}

@@ -5,7 +5,7 @@
 </div>
 
 
-{form id="roles_form_`$userGroup.ID`" handle=$form action="controller=backend.roles action=save id=`$userGroup.ID`" onsubmit="Backend.Roles.prototype.getInstance('roles_form_`$userGroup.ID`').save(event);" method="post"}
+{form id="roles_form_`$userGroup.ID`" handle=$form action="controller=backend.roles action=update id=`$userGroup.ID`" onsubmit="Backend.Roles.prototype.getInstance('roles_form_`$userGroup.ID`').save(event);" method="post"}
     
     <div id="userGroupsRolesTree" class="treeBrowser" ></div>
     
@@ -17,6 +17,8 @@
     </fieldset>	
 {/form}
 
-<script type="text/javascript">
+<script type="text/javascript">    	
+    Backend.Roles.prototype.Links.xmlBranch  = '{link controller=backend.roles action=xmlBranch}';
+      
     var roles = Backend.Roles.prototype.getInstance('roles_form_{$userGroup.ID}', {json array=$roles}, {json array=$activeRolesIDs});
 </script>

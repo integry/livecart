@@ -34,9 +34,6 @@ class DeliveryZoneController extends StoreManagementController
 		return $response;
 	}
 	
-	/**
-	 * @role update
-	 */
 	public function countriesAndStates() 
 	{
 	    if(($id = (int)$this->request->getValue('id')) <= 0) 

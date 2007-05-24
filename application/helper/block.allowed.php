@@ -8,21 +8,16 @@
  *
  * @package application.helper
  */
-function smarty_block_role($params, $content, $smarty, &$repeat)
+function smarty_block_allowed($params, $content, $smarty, &$repeat)
 {
     if (!$repeat)
     {
+        ClassLoader::import('application.model.user.User');
         $currentUser = User::getCurrentUser();
-        
-        if(!$currentUser->hasAccess($params['name']))
+        if($currentUser->hasAccess($params['role']))
         {
             return $content;
         }
-        else
-        {
-            // Show some message that user has no permission to view this content
-        }
-
     }
 }
 

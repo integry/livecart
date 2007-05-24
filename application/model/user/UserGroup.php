@@ -71,17 +71,7 @@ class UserGroup extends ActiveRecordModel
 	        $appliedRoleNames[] = $role->name->get();
         }
         
-        if(($actionDotPosition = strpos($actionRoleName, '.')) === false)
-        {
-            return in_array($actionRoleName, $appliedRoleNames);
-        }
-        else
-        {
-            $classRoleName = substr($actionRoleName, 0, $actionDotPosition);
-            return preg_grep('/^(' . preg_quote($classRoleName) . '|' . preg_quote($actionRoleName) . ')$/', $appliedRoleNames) != array();
-        } 
-	    
-	    return false;
+	    return in_array($actionRoleName, $appliedRoleNames);
 	}
 	
 	/**

@@ -112,6 +112,9 @@ class StaticPageController extends StoreManagementController
 	    return $this->save($page);
 	}
 	
+	/**
+	 * @role create
+	 */
 	public function create()
 	{
 	    $page = StaticPage::getNewInstance();	

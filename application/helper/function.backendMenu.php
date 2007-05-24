@@ -21,7 +21,6 @@ function smarty_function_backendMenu($params, Smarty $smarty)
 	$menuLoader = new MenuLoader();		
 	$structure = $menuLoader->getCurrentHierarchy($controller, $action);
 	$router = Router::getInstance();
-	
 	// get translations and generate URL's
 	foreach($structure['items'] as &$topValue)
 	{

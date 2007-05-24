@@ -19,20 +19,23 @@ Backend.Roles.prototype =
     {
         var self = this;
         
-		this.rolesTree = new dhtmlXTreeObject(this.nodes.rolesTree.id, "", "", false);
+		this.rolesTree = new dhtmlXTreeObject(this.nodes.rolesTree.id, "", "", 0);
 		this.rolesTree.def_img_x = 'auto';
 		this.rolesTree.def_img_y = 'auto';	
 		this.rolesTree.setImagePath("image/backend/dhtmlxtree/");
         this.rolesTree.enableCheckBoxes(true);
+        this.rolesTree.enableSmartCheckboxes(true);
+        this.rolesTree.enableThreeStateCheckboxes(true);
         
         this.roles = {};
         $A(roles).each(function(node)
 		{
-            self.rolesTree.insertNewItem(node.parent, node.ID, node.name, null, 0, 0, 0, '', 1);
+            self.rolesTree.insertNewItem(node.parent, node.ID, node.translation, null, 0, 0, 0, "", 1);
             self.rolesTree.showItemSign(node.ID, 0);
             self.roles[node.ID] = ($A(activeRoles).indexOf(node.ID) >= 0);
             self.rolesTree.setCheck(parseInt(node.ID), self.roles[node.ID]);
 		});
+        
         
         this.backedUpRoles = this.roles;
         this.restoreTree();

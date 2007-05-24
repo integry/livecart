@@ -10,7 +10,7 @@ ClassLoader::import("framework.request.validator.Form");
  *
  * @package application.controller.backend
  *
- * @role tax
+ * @role delivery
  */
 class TaxRateController extends StoreManagementController
 {
@@ -48,31 +48,10 @@ class TaxRateController extends StoreManagementController
 	    $response->setValue('form', $form);
 	    return $response;
 	}
-	
+
 	/**
-	 * @return Form
+	 * @role update
 	 */
-	private function createTaxRateForm()
-	{
-		return new Form($this->createTaxRateFormValidator());
-	}
-	
-	/**
-	 * @return RequestValidator
-	 */
-	private function createTaxRateFormValidator()
-	{	
-		$validator = new RequestValidator('shippingService', $this->request);
-		
-		$validator->addCheck("taxID", new IsNotEmptyCheck($this->translate("_error_tax_should_not_be_empty")));
-		$validator->addCheck("rate", new IsNotEmptyCheck($this->translate("_error_rate_should_not_be_empty")));
-		$validator->addCheck("rate", new IsNumericCheck($this->translate("_error_rate_should_be_numeric_value")));
-		$validator->addCheck("rate", new MinValueCheck($this->translate("_error_rate_should_be_greater_than_zero_and_less_than_hundred"), 0));
-		$validator->addCheck("rate", new MaxValueCheck($this->translate("_error_rate_should_be_greater_than_zero_and_less_than_hundred"), 100));
-		
-		return $validator;
-	}	
-	
     public function delete()
     {
         $taxRate = TaxRate::getInstanceByID((int)$this->request->getValue('id'), true, array('Tax'));
@@ -98,30 +77,43 @@ class TaxRateController extends StoreManagementController
 	    return $response;
     }
     
-    public function save()
+	/**
+	 * @role update
+	 */
+    public function create()
+    {
+        if(($deliveryZoneId = (int)$this->request->getValue('deliveryZoneID')) > 0)
+        {
+            $deliveryZone = DeliveryZone::getInstanceByID($deliveryZoneId, true);
+        }
+        else
+        {
+            $deliveryZone = null;
+        }
+        
+        $taxRate = TaxRate::getNewInstance($deliveryZone, Tax::getInstanceByID((int)$this->request->getValue('taxID'), true), (float)$this->request->getValue('rate'));
+        
+        return $this->save($taxRate);
+    }
+    
+	/**
+	 * @role update
+	 */
+    public function update()
+    {
+        $taxRate = TaxRate::getInstanceByID($taxRateID, true);
+        
+        return $this->save($taxRate);
+    }
+    
+	/**
+	 * @role update
+	 */
+    public function save(TaxRate $taxRate)
     {
         $validator = $this->createTaxRateFormValidator();
         if($validator->isValid())
-        {
-	        if($taxRateID = (int)$this->request->getValue('taxRateID'))
-	        {
-	            $taxRate = TaxRate::getInstanceByID($taxRateID, true);
-	        }
-	        else
-	        {
-	            if(($deliveryZoneId = (int)$this->request->getValue('deliveryZoneID')) > 0)
-	            {
-	                $deliveryZone = DeliveryZone::getInstanceByID($deliveryZoneId, true);
-	            }
-	            else
-	            {
-	                $deliveryZone = null;
-	            }
-	            
-		        $taxRate = TaxRate::getNewInstance($deliveryZone, Tax::getInstanceByID((int)$this->request->getValue('taxID'), true), (float)$this->request->getValue('rate'));
-	        }
-	        
-		    
+        {          
 	        $taxRate->setValueArrayByLang(array('name'), $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true, false), $this->request);      
 		    $taxRate->save();
 	            
@@ -132,6 +124,30 @@ class TaxRateController extends StoreManagementController
             return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
         }
     }
-    
+	
+	/**
+	 * @return Form
+	 */
+	private function createTaxRateForm()
+	{
+		return new Form($this->createTaxRateFormValidator());
+	}
+	
+	/**
+	 * @return RequestValidator
+	 */
+	private function createTaxRateFormValidator()
+	{	
+		$validator = new RequestValidator('shippingService', $this->request);
+		
+		$validator->addCheck("taxID", new IsNotEmptyCheck($this->translate("_error_tax_should_not_be_empty")));
+		$validator->addCheck("rate", new IsNotEmptyCheck($this->translate("_error_rate_should_not_be_empty")));
+		$validator->addCheck("rate", new IsNumericCheck($this->translate("_error_rate_should_be_numeric_value")));
+		$validator->addCheck("rate", new MinValueCheck($this->translate("_error_rate_should_be_greater_than_zero_and_less_than_hundred"), 0));
+		$validator->addCheck("rate", new MaxValueCheck($this->translate("_error_rate_should_be_greater_than_zero_and_less_than_hundred"), 100));
+		
+		return $validator;
+	}	
+	
 }
 ?>

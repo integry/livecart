@@ -1324,7 +1324,11 @@ Backend.DeliveryZone.TaxRate.prototype =
     {
         var self = this;
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-        new Ajax.Request(Backend.DeliveryZone.TaxRate.prototype.Links.save, {
+        var action = this.rate.ID 
+            ? Backend.DeliveryZone.TaxRate.prototype.Links.update
+            : Backend.DeliveryZone.TaxRate.prototype.Links.create;
+            
+        new Ajax.Request(action, {
             method: 'post',
             parameters: Form.serialize(this.nodes.form),
             onSuccess: function(response) { 
