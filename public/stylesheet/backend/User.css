@@ -49,6 +49,11 @@
     display: none;
 }
 
+.tabPageContainer .treeBrowser
+{
+    background: inherit;
+    border: 0 none;
+}
 
 .cell_cb 
 {

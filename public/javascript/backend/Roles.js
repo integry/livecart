@@ -30,12 +30,18 @@ Backend.Roles.prototype =
         this.roles = {};
         $A(roles).each(function(node)
 		{
-            self.rolesTree.insertNewItem(node.parent, node.ID, node.translation, null, 0, 0, 0, "", 1);
-            self.rolesTree.showItemSign(node.ID, 0);
-            self.roles[node.ID] = ($A(activeRoles).indexOf(node.ID) >= 0);
-            self.rolesTree.setCheck(parseInt(node.ID), self.roles[node.ID]);
+            try
+            {
+                self.rolesTree.insertNewItem(node.parent, node.ID, node.translation, null, 0, 0, 0, "", 1);
+                self.rolesTree.showItemSign(node.ID, 0);
+                self.roles[node.ID] = ($A(activeRoles).indexOf(node.ID) >= 0);
+                self.rolesTree.setCheck(parseInt(node.ID), self.roles[node.ID]);
+            }
+            catch(e)
+            {
+                console.info(e);
+            }
 		});
-        
         
         this.backedUpRoles = this.roles;
         this.restoreTree();
@@ -67,7 +73,7 @@ Backend.Roles.prototype =
         this.nodes.root = $(root);
         this.nodes.form = this.nodes.root.nodeName == 'FORM' ? this.nodes.root : this.nodes.root.down('form'); 
         
-        this.nodes.rolesTree = $("userGroupsRolesTree");
+        this.nodes.rolesTree = this.nodes.root.down('.treeBrowser');
         
         this.nodes.controls = this.nodes.root.down('.roles_controls');
         this.nodes.save = this.nodes.controls.down('.roles_save');

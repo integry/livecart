@@ -1,6 +1,6 @@
 <div id="userGroup_{$userGroup.ID}"></div>
 
-{form handle=$userGroupForm action="controller=backend.userGroup action=save" id="userGroupForm_`$userGroup.ID`" method="post" onsubmit="Backend.User.Group.prototype.getInstance(this).save(); return false;"}
+{form handle=$userGroupForm action="controller=backend.userGroup action=save" id="userGroupForm_`$userGroup.ID`" method="post" onsubmit="Backend.User.Group.prototype.getInstance(this).save(); return false;" role="userGroup.update"}
 	{hidden name="ID"}
     
     <fieldset class="error">
@@ -14,7 +14,7 @@
         {textarea name="description"}
 	</fieldset>
     
-    <fieldset class="userGroup_controls">
+    <fieldset class="userGroup_controls controls">
         <span class="activeForm_progress"></span>
         <input type="submit" class="userGroup_save button submit" value="{t _save}" />
         {t _or}

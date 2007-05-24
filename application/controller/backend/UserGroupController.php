@@ -32,9 +32,6 @@ class UserGroupController extends StoreManagementController
 	    
 	}
     
-	/**
-	 * @role update
-	 */
     public function edit()
     {
 	    $group = UserGroup::getInstanceByID((int)$this->request->getValue('id'), true);
