@@ -49,7 +49,7 @@
 </fieldset>
 
 
-<fieldset class="error shippingService_rate_controls" {denied role='delivery.update'}style="display: none"{/denied}>
+<fieldset class="error controls shippingService_rate_controls">
     <span class="activeForm_progress"></span>
     <input type="submit" class="shippingService_rate_save button submit" value="{if $rate.ID > 0}{t _save}{else}{t _add}{/if}" />
     {t _or}

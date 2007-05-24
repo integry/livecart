@@ -1,11 +1,9 @@
 <div id="countriesAndStatesMsg_{$categoryId}"></div>
-    {denied role='delivery.update'}
-    {/denied}
 
-{form id="countriesAndStates_$zoneID" handle=$form action="controller=backend.deliveryZone action=save id=$zoneID" method="post"}
+{form id="countriesAndStates_$zoneID" handle=$form action="controller=backend.deliveryZone action=save id=$zoneID" method="post" role="delivery.update"}
     <label>{t _name}</label>
     <fieldset class="error">
-		{textfield name="name_`$defaultLanguageCode`" class="observed countriesAndStates_name" role="delivery.update"}
+		{textfield name="name_`$defaultLanguageCode`" class="observed countriesAndStates_name"}
 		<span class="errorText hidden"> </span>
     </fieldset>
     
@@ -17,7 +15,7 @@
 			<div class="expandingSectionContent">
 			    <label>{t _name}</label>
                 <fieldset class="error">
-            		{textfield name="name_`$lang`" class="observed" role="delivery.update"}
+            		{textfield name="name_`$lang`" class="observed"}
             		<span class="errorText hidden"> </span>
                 </fieldset>
 			</div>
@@ -28,10 +26,10 @@
     
     <label>{t _country}</label>
     <fieldset class="error">
-        {selectfield name="activeCountries" size="15" class="countriesAndStates_activeCountries" multiple="multiple" options=$selectedCountries role="delivery.update"}
+        {selectfield name="activeCountries" size="15" class="countriesAndStates_activeCountries" multiple="multiple" options=$selectedCountries}
         <input type="button" value="&lt;&lt;" class="submit countriesAndStates_addCountry" style="{denied role='delivery.update'}display: none{/denied}" />
         <input type="button" value="&gt;&gt;" class="submit countriesAndStates_removeCountry" style="{denied role='delivery.update'}display: none{/denied}" />
-        {selectfield name="inactiveCountries" size="15" options=$countries class="countriesAndStates_inactiveCountries" multiple="multiple" role="delivery.update"}
+        {selectfield name="inactiveCountries" size="15" options=$countries class="countriesAndStates_inactiveCountries" multiple="multiple"}
         
         <span class="errorText hidden"> </span>
         
@@ -44,10 +42,10 @@
 
     <label>{t _state}</label>
     <fieldset class="error">
-        {selectfield name="activeStates" size="15" options=$selectedStates class="countriesAndStates_activeStates" multiple="multiple" role="delivery.update"}
+        {selectfield name="activeStates" size="15" options=$selectedStates class="countriesAndStates_activeStates" multiple="multiple"}
         <input type="button" value="&lt;&lt;" class="submit countriesAndStates_addState" style="{denied role='delivery.update'}display: none{/denied}" />
         <input type="button" value="&gt;&gt;" class="submit countriesAndStates_removeState" style="{denied role='delivery.update'}display: none{/denied}" />
-        {selectfield name="inactiveStates" size="15" options=$states class="countriesAndStates_inactiveStates" multiple="multiple" role="delivery.update"}
+        {selectfield name="inactiveStates" size="15" options=$states class="countriesAndStates_inactiveStates" multiple="multiple"}
 		<span class="errorText hidden"> </span>
     </fieldset>
     <fieldset class="countriesAndStates_cityMasks error">

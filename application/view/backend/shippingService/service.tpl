@@ -1,22 +1,22 @@
-{form id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`" handle=$form action="controller=backend.deliveryZone action=update id=`$service.DeliveryZone.ID`" method="post"}
+{form id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`" handle=$form action="controller=backend.deliveryZone action=update id=`$service.DeliveryZone.ID`" method="post" role="delivery.update"}
     <input type="hidden" name="deliveryZoneID" value="{$service.DeliveryZone.ID}" />
     <input type="hidden" name="serviceID" value="{$service.ID}" />
     
     <label>{t _name}</label>
     <fieldset class="error">
-		{textfield name="name" class="observed shippingService_name" role="delivery.update"}
+		{textfield name="name" class="observed shippingService_name"}
 		<span class="errorText hidden"> </span>
     </fieldset>
     
     
 	<fieldset class="error">
 		<label for=""></label>
-		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`" class="checkbox shippingService_rangeType" value="0" role="delivery.update"}
+		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`" class="checkbox shippingService_rangeType" value="0"}
 		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}" class="checkbox">{t _weight_based_calculations}</label>
 	</fieldset class="error">
 	<fieldset class="error">
 		<label for=""></label>
-		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`" class="checkbox shippingService_rangeType" value="1" role="delivery.update"}
+		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`" class="checkbox shippingService_rangeType" value="1"}
 		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}" class="checkbox">{t _subtotal_based_calculations}</label>
 	</fieldset class="error">
     
@@ -28,7 +28,7 @@
             <div class="expandingSectionContent">
                 <label>{t _name}</label>
                 <fieldset class="error">
-                    {textfield name="name_`$lang.ID`" class="observed" role="delivery.update"}
+                    {textfield name="name_`$lang.ID`" class="observed"}
                     <span class="errorText hidden"> </span>
                 </fieldset>
             </div>
@@ -92,7 +92,7 @@
                 
             </script>
         </fieldset>
-        <fieldset class="shippingService_controls" {denied role='delivery.update'}style="display: none"{/denied}>
+        <fieldset class="shippingService_controls controls">
             <span class="activeForm_progress"></span>
             <input type="submit" class="shippingService_save button submit" value="{t _save}" />
             {t _or}
