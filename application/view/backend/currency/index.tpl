@@ -22,9 +22,9 @@
 {*		<li id="tabOptions" class="tab inactive"><a href="{link controller=backend.currency action=options}">{t _options}</a></li> *}
 	</ul>
 	<div class="sectionContainer maxHeight h--95">
-		<div id="tabManageContent" class="maxHeight">
+		<div id="tabManageContent" class="maxHeight tabPageContainer">
 		
-			<ul class="menu" id="currPageMenu">
+			<ul class="menu" id="currPageMenu" {denied role="currency.create"}style="display: none;"{/denied}>
 				<li>
 					<a href="#" onClick="curr.showAddForm(); return false;">{t _add_currency}</a>
 					<span class="progressIndicator" id="currAddMenuLoadIndicator"></span>
@@ -38,11 +38,11 @@
 			</div>
 	
 			<ul style="display: none;">
-				<li id="currencyList_template" class="activeList_add_sort activeList_add_edit activeList_remove_delete disabled default">
+				<li id="currencyList_template" class="{allowed role="currency.sort"}activeList_add_sort{/allowed} activeList_add_edit {allowed role="currency.remove"}activeList_remove_delete{/allowed} disabled default" style="position: relative">
 				<div>
 					<div class="currListContainer">
-						<span>
-							<input type="checkbox" class="checkbox" disabled="disabled" />
+						<span {denied role="currency.status"}style="display: none;"{/denied}>
+							<input type="checkbox" class="checkbox" disabled="disabled"  />
 						</span>	
 					
 						<span class="currData">	
@@ -51,7 +51,7 @@
 						</span>
 						
 						<div class="currListMenu">
-							<a href="{link controller=backend.currency action=setDefault}?id=" class="setDefault listLink">{t _set_as_default}</a>
+							<a href="{link controller=backend.currency action=setDefault}?id=" class="setDefault listLink" {denied role="currency.status"}style="display: none;"{/denied}>{t _set_as_default}</a>
 							<span class="currDefault">{t _default_currency}</span>
 						</div>
 						<div class="currEdit"></div>
@@ -60,7 +60,7 @@
 				</li>
 			</ul>			
 			
-			<ul id="currencyList" class="activeList_add_delete activeList_add_edit activeList_add_sort"></ul>		
+			<ul id="currencyList" class="{allowed role="currency.remove"}activeList_add_delete{/allowed} activeList_add_edit {allowed role="currency.sort"}activeList_add_sort"{/allowed}></ul>		
 			
 		</div>
 		<div id="tabRatesContent"></div>

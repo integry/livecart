@@ -1,5 +1,5 @@
 <div id="currencyRateList">
-{form id="rateForm" handle=$rateForm action="controller=backend.currency action=saveRates" method="post" onsubmit="curr.saveRates(this); return false;"}
+{form id="rateForm" handle=$rateForm action="controller=backend.currency action=saveRates" method="post" onsubmit="curr.saveRates(this); return false;" role="currency.update"}
 
 	<fieldset id="rates">
 	
@@ -21,7 +21,7 @@
 
 	</fieldset>	
 
-	<fieldset id="saveRates">
+	<fieldset id="saveRates" class="controls">
 	
 		<label for="submit"> </label>
 		<span id="rateSaveIndicator" class="progressIndicator" style="display: none;"></span>

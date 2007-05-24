@@ -27,7 +27,7 @@
 
 {tip}{t _index_tip}{/tip}
 
-<fieldset class="container">
+<fieldset class="container" {denied role="language.create"}style="display: none;"{/denied}>
 	<ul class="menu" id="langPageMenu">
 		<li>
 			<a href="#" onClick="lng.showAddForm(); return false;">{t _add_language}</a>
@@ -38,15 +38,15 @@
 
 <div id="addLang" class="slideForm"></div>
 
-<ul id="languageList" class="activeList_add_sort activeList_add_delete activeList_add_edit">
+<ul id="languageList" class="{allowed role="language.sort"}activeList_add_sort{/allowed} {allowed role="language.remove"}activeList_add_delete{/allowed} activeList_add_edit">
 </ul>
 
 <ul>
-<li id="languageList_template" class="activeList_add_sort activeList_remove_delete disabled default">
+<li id="languageList_template" class="{allowed role="language.sort"}activeList_add_sort{/allowed} {allowed role="language.remove"}activeList_remove_delete{/allowed} disabled default" style="position: relative;">
 	<div>
-		<div class="langListContainer">
+		<div class="langListContainer" >
 
-			<span class="langCheckBox">
+			<span class="langCheckBox" {denied role="language.status"}style="display: none;"{/denied}>
 				<input type="checkbox" class="checkbox" disabled="disabled" onclick="lng.setEnabled(this);" />
 			</span>	
 		
@@ -57,7 +57,7 @@
 			</span>
 			
 			<div class="langListMenu">
-				<a href="{link controller=backend.language action=setDefault}/" class="listLink setDefault">
+				<a href="{link controller=backend.language action=setDefault}/" class="listLink setDefault" {denied role="language.status"}style="display: none;"{/denied}>
 					{t _set_as_default}
 				</a>
 				<span class="langDefault">{t _default_language}</span>

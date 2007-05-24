@@ -32,7 +32,6 @@ class LanguageController extends StoreManagementController
 
 	/**
 	 * Displays definitions edit page.
-	 * @role update
 	 * @return ActionResponse	 
 	 */
 	public function edit()

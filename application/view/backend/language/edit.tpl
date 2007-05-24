@@ -78,7 +78,7 @@
 					<tr class="lang-trans-template" style="display: none;">
 						<td class="lang-key"></td>
 						<td class="lang-translation">
-							<input type="text"><br />
+							<input type="text" {denied role="language.status"}readonly="readonly"{/denied}><br />
 							<span></span>
 						</td>
 					<tr>	
@@ -100,7 +100,12 @@
 		breadcrumb.addItem('{$edit_language}', '');
 	</script>
 
-	<img id="saveProgress" src="image/indicator.gif" style="display: none;"> <input type="submit" class="submit" value="{t _save}"> {t _or} <a href="#" onClick="window.location.reload(); return false;" class="cancel">{t _cancel}</a>
+    <span {denied role='language.update'}style="display: none"{/denied}>
+    	<img id="saveProgress" src="image/indicator.gif" style="display: none;"> 
+        <input type="submit" class="submit" value="{t _save}"> 
+        {t _or} 
+        <a href="#" onClick="window.location.reload(); return false;" class="cancel">{t _cancel}</a>
+    </span>
 	
 </form>
 

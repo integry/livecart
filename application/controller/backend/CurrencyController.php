@@ -162,9 +162,6 @@ class CurrencyController extends StoreManagementController
 		return new RawResponse($success);
 	}
 
-	/**
-	 * @role update
-	 */
     public function edit()
     {
         $currency = Currency::getInstanceByID($this->request->getValue('id'), Currency::LOAD_DATA);
