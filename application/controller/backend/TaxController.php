@@ -42,9 +42,6 @@ class TaxController extends StoreManagementController
 		return $response;
 	}
 
-	/**
-	 * @role update
-	 */
     public function edit()
     {
 	    $tax = Tax::getInstanceByID((int)$this->request->getValue('id'), true);

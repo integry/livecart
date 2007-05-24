@@ -624,6 +624,11 @@ form
      display: inline;
 }
 
+.formReadonly .controls
+{
+    display: none;
+}
+
 form p
 {
     position: relative;

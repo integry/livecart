@@ -12,9 +12,8 @@ function smarty_block_allowed($params, $content, $smarty, &$repeat)
 {
     if (!$repeat)
     {
-        ClassLoader::import('application.model.user.User');
-        $currentUser = User::getCurrentUser();
-        if($currentUser->hasAccess($params['role']))
+        ClassLoader::import('framework.roles.AccessStringParser');
+        if(AccessStringParser::run($params['role']))
         {
             return $content;
         }

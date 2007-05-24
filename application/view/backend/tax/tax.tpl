@@ -1,6 +1,5 @@
-{form handle=$taxForm action="controller=backend.tax action=save" id="taxForm_`$tax.ID`" method="post" onsubmit="Backend.Tax.prototype.getInstance(this).save(); return false;"}
+{form handle=$taxForm action="controller=backend.tax action=save" id="taxForm_`$tax.ID`" method="post" onsubmit="Backend.Tax.prototype.getInstance(this).save(); return false;" role="taxes.update(edit),taxes.create(index)"}
 	{hidden name="ID"}
-    
     
     <fieldset class="error">
         <label>{t _name}</label>
@@ -30,8 +29,7 @@
     {/foreach}
     </fieldset>
     
-    
-    <fieldset class="tax_controls">
+    <fieldset class="tax_controls controls">
         <span class="activeForm_progress"></span>
         <input type="submit" class="tax_save button submit" value="{t _save}" />
         {t _or}

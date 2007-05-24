@@ -57,12 +57,15 @@ class UserGroup extends ActiveRecordModel
 	    }
 	}
 	
-	public function hasAccess($actionRoleName)
+	/**
+	 * Array(string) of applied roles
+	 * 
+	 * @param array|string
+	 */
+	public function hasAccess($actionRoleNames)
 	{
-	    if(empty($actionRoleName))
-	    {
-	        return true;
-	    }
+	    if(empty($actionRoleNames)) return true;
+	    if(!is_array($actionRoleNames)) $actionRoleNames = array($actionRoleNames);
 	    
 	    $this->loadRoles();
 	    $appliedRoleNames = array();
@@ -71,9 +74,9 @@ class UserGroup extends ActiveRecordModel
 	        $appliedRoleNames[] = $role->name->get();
         }
         
-	    return in_array($actionRoleName, $appliedRoleNames);
+	    return count(array_intersect($actionRoleNames, $appliedRoleNames)) > 0;
 	}
-	
+
 	/**
 	 * Create new user group
 	 * 

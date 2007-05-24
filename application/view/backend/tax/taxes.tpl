@@ -1,4 +1,6 @@
-<fieldset class="container">
+{denied role="taxes.create"} {/denied}
+
+<fieldset class="container" {denied role="taxes.create"}style="display: none"{/denied}>
 	<ul class="menu" id="tax_new_menu">
 	    <li><a href="#new_tax" id="tax_new_show">{t _add_new_tax}</a></li>
 	    <li><a href="#cencel_tax" id="tax_new_cancel" class="hidden">{t _cancel_adding_new_tax}</a></li>
@@ -15,7 +17,7 @@
 
 
 
-<ul class="activeList activeList_add_delete activeList_add_edit tax_taxesList" id="tax_taxesList" style="height: auto;" >
+<ul class="activeList {allowed role="taxes.remove"}activeList_add_delete{/allowed} activeList_add_edit tax_taxesList" id="tax_taxesList" style="height: auto;" >
 {foreach from=$taxesForms key="key" item="taxForm"}
     <li id="tax_taxesList_{$taxes[$key].ID}">
         
@@ -33,7 +35,6 @@
 
 {literal}
 <script type="text/javascript">
-  
     try
     {
         Event.observe($("tax_new_show"), "click", function(e) 
@@ -48,8 +49,6 @@
         console.info(e);
     }
     
-
-console.info("tax_taxesList", Backend.Tax.prototype.Callbacks);
 ActiveList.prototype.getInstance("tax_taxesList", Backend.Tax.prototype.Callbacks, function() {});
 </script>
 {/literal}

@@ -141,6 +141,14 @@ abstract class BaseController extends Controller implements LCiTranslator
 	}	
 	
 	/**
+	 * @return RolesParser
+	 */
+	public function getRoles()
+	{
+	    return $this->roles;
+	}
+	
+	/**
 	 * Translates text using Locale::LCInterfaceTranslator
 	 * @param string $key
 	 * @return string
