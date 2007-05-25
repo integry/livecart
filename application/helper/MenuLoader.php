@@ -174,6 +174,7 @@ class MenuLoader {
 	  	$father_menu[$i]['order'] = (string)$struct->Order;
 	  	$father_menu[$i]['controller'] = (string)$struct->Controller;
 	  	$father_menu[$i]['action'] = (string)$struct->Action;
+	  	$father_menu[$i]['role'] = (string)$struct->Role;
 
 	  	if (empty($father_menu[$i]['action']))
 	  	{

@@ -11,6 +11,9 @@
  */
 function smarty_function_backendMenu($params, Smarty $smarty) 
 {
+    
+//    ClassLoader::import('application.helper.AccessStringParser');
+    
 	$locale = Store::getInstance()->getLocaleInstance();
 	$controller = $smarty->_tpl_vars['request']['controller'];
 	$action = $smarty->_tpl_vars['request']['action'];
@@ -22,12 +25,17 @@ function smarty_function_backendMenu($params, Smarty $smarty)
 	$structure = $menuLoader->getCurrentHierarchy($controller, $action);
 	$router = Router::getInstance();
 	
-
 	// get translations and generate URL's
-	foreach($structure['items'] as &$topValue)
+	foreach($structure['items'] as $topNo => &$topValue)
 	{
-	 	$topValue['title'] = $locale->translator()->translate($topValue['title']);
-	 	
+	 	if(!empty($topValue['role']) && !AccessStringParser::run($topValue['role'])) 
+	 	{
+	 	    unset($structure['items'][$topNo]);
+	 	    continue;
+	 	}
+	    
+	    $topValue['title'] = $locale->translator()->translate($topValue['title']);
+	 		 	
 	    if(!empty($topValue['controller']))
 	    {
 	        $topValue['url'] = $router->createUrl(array('controller' => $topValue['controller'], 'action' => $topValue['action']));
@@ -35,8 +43,14 @@ function smarty_function_backendMenu($params, Smarty $smarty)
 	    
 		if (is_array($topValue['items']))
 		{
-			foreach ($topValue['items'] as &$subValue)
+			foreach ($topValue['items'] as $subNo => &$subValue)
 		  	{
+		  	    if(!empty($subValue['role']) && !AccessStringParser::run($subValue['role'])) 
+		  	    {
+			 	    unset($structure['items'][$topNo]['items'][$subNo]);
+			 	    continue;
+		  	    }
+		  	    
 			    $subValue['title'] = $locale->translator()->translate($subValue['title']);
 		        $subValue['url'] = $router->createUrl(array('controller' => $subValue['controller'], 'action' => $subValue['action']));
 			}		
