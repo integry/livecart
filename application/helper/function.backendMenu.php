@@ -26,38 +26,52 @@ function smarty_function_backendMenu($params, Smarty $smarty)
 	$router = Router::getInstance();
 	
 	// get translations and generate URL's
-	foreach($structure['items'] as $topNo => &$topValue)
+	$items = array();
+	foreach($structure['items'] as $topValue)
 	{
 	 	if(!empty($topValue['role']) && !AccessStringParser::run($topValue['role'])) 
 	 	{
-	 	    unset($structure['items'][$topNo]);
 	 	    continue;
 	 	}
-	    
-	    $topValue['title'] = $locale->translator()->translate($topValue['title']);
-	 		 	
+	 	$filteredValue = array();
+	    $filteredValue['title'] = $locale->translator()->translate($topValue['title']);
+	    $filteredValue['controller'] = $topValue['controller'];
+	    $filteredValue['action'] = $topValue['action'];
+
 	    if(!empty($topValue['controller']))
 	    {
-	        $topValue['url'] = $router->createUrl(array('controller' => $topValue['controller'], 'action' => $topValue['action']));
+	        $filteredValue['url'] = $router->createUrl(array('controller' => $topValue['controller'], 'action' => $topValue['action']));
 	    }
 	    
 		if (is_array($topValue['items']))
 		{
-			foreach ($topValue['items'] as $subNo => &$subValue)
+		    $subItems = array();
+			foreach ($topValue['items'] as &$subValue)
 		  	{
 		  	    if(!empty($subValue['role']) && !AccessStringParser::run($subValue['role'])) 
 		  	    {
-			 	    unset($structure['items'][$topNo]['items'][$subNo]);
 			 	    continue;
 		  	    }
 		  	    
-			    $subValue['title'] = $locale->translator()->translate($subValue['title']);
-		        $subValue['url'] = $router->createUrl(array('controller' => $subValue['controller'], 'action' => $subValue['action']));
-			}		
-		}			
+		  	    $filteredSubValue = array();
+			    $filteredSubValue['title'] = $locale->translator()->translate($subValue['title']);
+		        $filteredSubValue['url'] = $router->createUrl(array('controller' => $subValue['controller'], 'action' => $subValue['action']));
+		        $filteredSubValue['controller'] = $subValue['controller'];
+		        $filteredSubValue['action'] = $subValue['action'];
+		        
+		        $subItems[] = $filteredSubValue;
+			}	
+
+			if(count($subItems) > 0)
+			{
+			    $filteredValue['items'] = $subItems;
+			}
+		}
+
+		$items[] = $filteredValue;
 	}
 	
-	$smarty->assign('menuArray', json_encode($structure['items']));
+	$smarty->assign('menuArray', json_encode($items));
 	$smarty->assign('controller', $controller);
 	$smarty->assign('action', $action);
 	
