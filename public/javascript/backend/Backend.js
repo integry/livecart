@@ -392,6 +392,11 @@ Backend.NavMenu.prototype =
 				menuItem = topItem.cloneNode(true);
 				
 				menuItem.getElementsByTagName('a')[0].href = mItem['url'];
+                if(!mItem['url'])
+                {
+                    menuItem.getElementsByTagName('a')[0].onclick = function() { return false; }
+                    menuItem.getElementsByTagName('a')[0].style.textDecoration = 'none';
+                }
 				menuItem.getElementsByTagName('a')[0].innerHTML = mItem['title'];
 				menuItem.style.display = 'block';
 									

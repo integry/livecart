@@ -21,18 +21,24 @@ function smarty_function_backendMenu($params, Smarty $smarty)
 	$menuLoader = new MenuLoader();		
 	$structure = $menuLoader->getCurrentHierarchy($controller, $action);
 	$router = Router::getInstance();
+	
+
 	// get translations and generate URL's
 	foreach($structure['items'] as &$topValue)
 	{
 	 	$topValue['title'] = $locale->translator()->translate($topValue['title']);
-	    $topValue['url'] = $router->createUrl(array('controller' => $topValue['controller'], 'action' => $topValue['action']));
-	
+	 	
+	    if(!empty($topValue['controller']))
+	    {
+	        $topValue['url'] = $router->createUrl(array('controller' => $topValue['controller'], 'action' => $topValue['action']));
+	    }
+	    
 		if (is_array($topValue['items']))
 		{
 			foreach ($topValue['items'] as &$subValue)
 		  	{
 			    $subValue['title'] = $locale->translator()->translate($subValue['title']);
-			 	$subValue['url'] = $router->createUrl(array('controller' => $subValue['controller'], 'action' => $subValue['action']));
+		        $subValue['url'] = $router->createUrl(array('controller' => $subValue['controller'], 'action' => $subValue['action']));
 			}		
 		}			
 	}
