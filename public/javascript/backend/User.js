@@ -305,14 +305,14 @@ Backend.UserGroup.GridFormatter =
 	{
 		if ('User.email' == field)
 		{
-			value = '<span>' + 
-                        '<span class="progressIndicator" id="userIndicator_' + id + '" style="display: none;">' + 
-                        '</span>' + 
+		    value = '<span>' + 
+                    '<span class="progressIndicator" id="userIndicator_' + id + '" style="display: none;">' + 
                     '</span>' + 
-                    '<a href="#edit" id="user_' + id + '" onclick="Backend.UserGroup.prototype.openUser(' + id + ', event); return false;">' + 
-                         value + 
-                    '</a>';	
-    		}
+                '</span>' + 
+                '<a href="#edit" id="user_' + id + '" onclick="Backend.UserGroup.prototype.openUser(' + id + ', event); return false;">' + 
+                     value + 
+                '</a>';	
+		}
 		
 		return value;
 	}

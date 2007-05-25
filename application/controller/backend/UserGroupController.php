@@ -266,24 +266,25 @@ class UserGroupController extends StoreManagementController
 
 		if (!$displayedColumns)
 		{
-			$displayedColumns = array(
-				'User.ID', 
-			 	'User.email',
-				'UserGroup.name',
-				'User.firstName', 
-				'User.lastName', 
-				'User.companyName', 
-				'User.dateCreated', 
-				'User.isEnabled'
-			);				
+            $displayedColumns = array();
+
+		    $displayedColumns[] = 'User.email';
+		    $displayedColumns[] = 'UserGroup.name';
+		    $displayedColumns[] = 'User.firstName';
+		    $displayedColumns[] = 'User.lastName';
+		    $displayedColumns[] = 'User.companyName';
+		    $displayedColumns[] = 'User.dateCreated';
+		    $displayedColumns[] = 'User.isEnabled';	
 		}
 		
 		$availableColumns = $this->getAvailableColumns();
 		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);	
 
 		// User ID is always passed as the first column
-		$displayedColumns = array_merge(array('User.ID' => 'numeric'), $displayedColumns);
-				
+	    if(AccessStringParser::run('userGroup.status,userGroup.remove'))
+	    {
+	        $displayedColumns = array_merge(array('User.ID' => 'numeric'), $displayedColumns);
+	    }	
 		// set field type as value
 		foreach ($displayedColumns as $column => $foo)
 		{

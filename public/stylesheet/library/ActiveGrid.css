@@ -35,6 +35,12 @@
   	background: #CCCCCC;
 }
 
+.readonlyGrid .cell_cb
+{
+  	display: none;
+}
+
+
 .activeGrid th input, .activeGrid th select
 {
     width: 70%; 
