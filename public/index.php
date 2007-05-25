@@ -1,5 +1,4 @@
 <?php
-
 	/**
 	 * livecart front controller
 	 *
@@ -20,25 +19,19 @@
 	{
 		$app->run();
 	}
-	catch (ActionNotFoundException $e)
+	catch (HTTPStatusException $e)
 	{
-		Router::getInstance()->setRequestedRoute('error/index/404');
+	    if($e->getController() instanceof BackendController) 
+	    {
+	        $route = 'backend.err/redirect/' . $e->getStatusCode();
+	    }
+	    else 
+	    {
+	        $route = 'err/redirect/' . $e->getStatusCode();
+	    }
+	    
+	    Router::getInstance()->setRequestedRoute($route);
 		$app->run();
-	}
-	catch (ControllerNotFoundException $e)
-	{
-		Router::getInstance()->setRequestedRoute('error/index/404');
-		$app->run();
-	}
-	catch (ForbiddenException $e)
-	{
-		Router::getInstance()->setRequestedRoute('error/index/403');
-		$app->run();	
-	}
-	catch (UnauthorizedException $e)
-	{
-		Router::getInstance()->setRequestedRoute('error/index/401');
-		$app->run();	
 	}
 	catch (ClassLoaderException $e)
 	{

@@ -317,6 +317,7 @@ Backend.NavMenu.prototype =
 	{	
 		var index = 0;
 		var subIndex = 0;
+        var subItemIndex = 0;
 		var match = false;
 		
 		// find current menu items
