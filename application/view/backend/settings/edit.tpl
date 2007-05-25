@@ -1,6 +1,6 @@
 <h1>{$title}</h1>
 
-{form action="controller=backend.settings action=save" handle=$form onsubmit="settings.save(this); return false;"}
+{form action="controller=backend.settings action=save" handle=$form onsubmit="settings.save(this); return false;" role="settings.update"}
 
 {foreach from=$layout key=groupName item=fields name="groups"}
 
@@ -88,6 +88,10 @@
 <span class="progressIndicator" style="display: none;"></span>
 
 <input type="hidden" name="id" value="{$id}" />
-<input type="submit" value="{tn _save}" class="submit" /> {t _or} <a class="cancel" href="#" onclick="return false;">{t _cancel}</a>
 
+<span class="controls">
+    <input type="submit" value="{tn _save}" class="submit" /> 
+    {t _or} 
+    <a class="cancel" href="#" onclick="return false;">{t _cancel}</a>
+</span>
 {/form}
