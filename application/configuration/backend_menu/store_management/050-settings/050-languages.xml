@@ -1,5 +1,0 @@
-<Menu>
-	<Title>_menu_languages</Title>	
-	<Controller>backend.language</Controller>
-	<Action>index</Action>
-</Menu>

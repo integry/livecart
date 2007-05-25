@@ -1,4 +1,0 @@
-<Menu>
-	<Title>_menu_users</Title>	
-	<Controller>backend.userGroup</Controller>
-</Menu>

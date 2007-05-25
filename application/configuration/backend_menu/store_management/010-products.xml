@@ -1,5 +1,0 @@
-<Menu>
-	<Title>_menu_products</Title>		
-	<Controller>backend.category</Controller>
-	<Action>index</Action>	
-</Menu>

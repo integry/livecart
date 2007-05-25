@@ -1,4 +1,0 @@
-<Menu>
-	<Title>_menu_orders</Title>		
-	<Controller>backend.order</Controller>
-</Menu>

@@ -1,4 +1,0 @@
-<Menu>
-	<Title>_menu_pages</Title>	
-	<Controller>backend.staticPage</Controller>
-</Menu>
