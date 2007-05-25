@@ -1,4 +1,4 @@
-{form handle=$form action="controller=backend.user action=saveInfo" id="userInfo_`$user.ID`_form" onsubmit="Backend.User.Editor.prototype.getInstance(`$user.ID`, false).submitForm(); return false;" method="post"}
+{form handle=$form action="controller=backend.user action=update" id="userInfo_`$user.ID`_form" onsubmit="Backend.User.Editor.prototype.getInstance(`$user.ID`, false).submitForm(); return false;" method="post" role="user.create(backend.userGroup/index)user.update(backend.user/info)"}
 
    	<div class="userInfoSaveConf" style="display: none;">
    		<div class="yellowMessage">
@@ -62,7 +62,7 @@
 	</fieldset>
     
 
-    <fieldset>
+    <fieldset class="controls">
     	<input type="submit" name="save" class="submit" value="Save"> {t _or} <a class="cancel" href="#">{t _cancel}</a>
     </fieldset>
     

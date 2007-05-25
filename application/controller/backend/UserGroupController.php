@@ -48,7 +48,7 @@ class UserGroupController extends StoreManagementController
 	{		
 		$columns = array_keys($this->request->getValue('col', array()));
 		$this->setSessionData('columns', $columns);
-		return new ActionRedirectResponse('backend.user', 'users', array('id' => $this->request->getValue('group')));
+		return new ActionRedirectResponse('backend.userGroup', 'users', array('id' => $this->request->getValue('group')));
 	}
 
 	public function lists()
@@ -266,25 +266,23 @@ class UserGroupController extends StoreManagementController
 
 		if (!$displayedColumns)
 		{
-            $displayedColumns = array();
-
-		    $displayedColumns[] = 'User.email';
-		    $displayedColumns[] = 'UserGroup.name';
-		    $displayedColumns[] = 'User.firstName';
-		    $displayedColumns[] = 'User.lastName';
-		    $displayedColumns[] = 'User.companyName';
-		    $displayedColumns[] = 'User.dateCreated';
-		    $displayedColumns[] = 'User.isEnabled';	
+			$displayedColumns = array(
+			 	'User.email',
+				'UserGroup.name',
+				'User.firstName', 
+				'User.lastName', 
+				'User.companyName', 
+				'User.dateCreated', 
+				'User.isEnabled'
+			);				
 		}
 		
 		$availableColumns = $this->getAvailableColumns();
 		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);	
 
 		// User ID is always passed as the first column
-	    if(AccessStringParser::run('userGroup.status,userGroup.remove'))
-	    {
-	        $displayedColumns = array_merge(array('User.ID' => 'numeric'), $displayedColumns);
-	    }	
+		$displayedColumns = array_merge(array('User.ID' => 'numeric'), $displayedColumns);
+				
 		// set field type as value
 		foreach ($displayedColumns as $column => $foo)
 		{

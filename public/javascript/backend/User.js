@@ -303,7 +303,7 @@ Backend.UserGroup.GridFormatter =
 	
 	formatValue: function(field, value, id)
 	{
-		if ('User.email' == field)
+		if ('User.email' == field && Backend.UserGroup.prototype.usersMiscPermision)
 		{
 		    value = '<span>' + 
                     '<span class="progressIndicator" id="userIndicator_' + id + '" style="display: none;">' + 
@@ -593,7 +593,7 @@ Backend.User.Editor.prototype =
     submitForm: function()
     {
 		var self = this;
-		new Ajax.Request(this.nodes.form.action + "/" + this.id,
+		new Ajax.Request(Backend.User.Editor.prototype.Links.update + "/" + this.id,
 		{
            method: 'post',
            parameters: Form.serialize(self.nodes.form),
@@ -706,7 +706,7 @@ Backend.User.Add.prototype =
         } 
         
 		var self = this;
-		new Ajax.Request(this.nodes.form.action,
+		new Ajax.Request(Backend.User.Editor.prototype.Links.create,
 		{
            method: 'post',
            parameters: Form.serialize(self.nodes.form),

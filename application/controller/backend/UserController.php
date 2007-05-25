@@ -13,9 +13,6 @@ ClassLoader::import("application.model.user.*");
  */
 class UserController extends StoreManagementController
 {
-    /**
-     * @role update
-     */
 	public function info()
 	{
 	    $user = User::getInstanceById((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA, array('UserGroup'));
@@ -74,19 +71,68 @@ class UserController extends StoreManagementController
     } 
 	
     /**
+     * @role create
+     */
+    public function create()
+    {
+        return $this->save(null);
+    }
+    
+    /**
      * @role update
      */
-	public function saveInfo()
+    public function update()
+    {
+        $user = User::getInstanceByID((int)$this->request->getValue('id'), true);
+        return $this->save($user);
+    }
+
+	/**
+	 * @return RequestValidator
+	 */
+    public static function createUserFormValidator(StoreManagementController $controller)
+    {
+        $validator = new RequestValidator("UserForm", $controller->request);		            
+		
+		$validator->addCheck('email', new IsNotEmptyCheck($controller->translate('_err_email_empty')));		
+		$validator->addCheck('email', new IsValidEmailCheck($controller->translate('_err_invalid_email')));  
+		$validator->addCheck('firstName', new IsNotEmptyCheck($controller->translate('_err_first_name_empty')));		
+		$validator->addCheck('lastName', new IsNotEmptyCheck($controller->translate('_err_last_name_empty')));
+		$validator->addCheck('password1', new PasswordEqualityCheck(
+						                        $controller->translate('_err_passwords_are_not_the_same'), 
+						                        $controller->request->getValue('password2'), 
+												'password2'
+					                        ));
+					                        
+		$validator->addCheck('password2', new PasswordEqualityCheck(
+		                                        $controller->translate('_err_passwords_are_not_the_same'), 
+		                                        $controller->request->getValue('password1'), 
+												'password1'
+	                                        ));
+
+		$validator->addCheck('userGroupID', new IsNumericCheck($controller->translate('_err_invalid_group')));
+		
+		return $validator;
+    }
+
+    /**
+     * @return Form
+     */
+	public static function createUserForm(StoreManagementController $controller, User $user = null)
 	{
-	  	if ($id = (int)$this->request->getValue('id'))
-	  	{
-		  	$user = User::getInstanceByID((int)$id, true);
-	  	}
-	  	else
-	  	{
-	  	    $user = null;
-	  	}
-	    
+		$form = new Form(self::createUserFormValidator($controller));
+		
+		if($user)
+		{
+		    $form->setData($user->toFlatArray());
+		}
+
+		return $form;
+	}
+
+    
+	private function save(User $user = null)
+	{
    		$validator = self::createUserFormValidator($this, $user);
 		if ($validator->isValid())
 		{
@@ -132,51 +178,5 @@ class UserController extends StoreManagementController
 		    return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
 		}
 	}
-
-	/**
-	 * @return RequestValidator
-	 */
-    public static function createUserFormValidator(StoreManagementController $controller)
-    {
-        $validator = new RequestValidator("UserForm", $controller->request);		            
-		
-		$validator->addCheck('email', new IsNotEmptyCheck($controller->translate('_err_email_empty')));		
-		$validator->addCheck('email', new IsValidEmailCheck($controller->translate('_err_invalid_email')));  
-		$validator->addCheck('firstName', new IsNotEmptyCheck($controller->translate('_err_first_name_empty')));		
-		$validator->addCheck('lastName', new IsNotEmptyCheck($controller->translate('_err_last_name_empty')));
-		$validator->addCheck('password1', new PasswordEqualityCheck(
-						                        $controller->translate('_err_passwords_are_not_the_same'), 
-						                        $controller->request->getValue('password2'), 
-												'password2'
-					                        ));
-					                        
-		$validator->addCheck('password2', new PasswordEqualityCheck(
-		                                        $controller->translate('_err_passwords_are_not_the_same'), 
-		                                        $controller->request->getValue('password1'), 
-												'password1'
-	                                        ));
-
-		$validator->addCheck('userGroupID', new IsNumericCheck($controller->translate('_err_invalid_group')));
-		
-		return $validator;
-    }
-
-    /**
-     * @return Form
-     * @role user.createUser
-     */
-	public static function createUserForm(StoreManagementController $controller, User $user = null)
-	{
-		$form = new Form(self::createUserFormValidator($controller));
-		
-		if($user)
-		{
-		    $form->setData($user->toFlatArray());
-		}
-
-		return $form;
-	}
-
-   
 }
 ?>

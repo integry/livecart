@@ -1,7 +1,7 @@
 <div>
 
 {if $userGroupID >= -1}
-    <fieldset class="container" {denied role="userGroup.update"}style="display: none;"{/denied}>
+    <fieldset class="container" {denied role="user.create"}style="display: none;"{/denied}>
     	<ul id="userGroup_{$userGroupID}_addUser_menu" class="menu">
     		<li>
     			<a id="userGroup_{$userGroupID}_addUser" href="#addUser">{t _add_new_user}</a>
@@ -37,7 +37,7 @@
 
 <fieldset class="container" style="vertical-align: middle;">
                 
-    <span style="float: left; text-align: right; {denied role="userGroup.status,userGroup.remove"}visibility: hidden;{/denied}" id="userMass_{$userGroupID}" >
+    <span style="float: left; text-align: right; {denied role="user.mass"}visibility: hidden;{/denied}" id="userMass_{$userGroupID}" >
 
 	    {form action="controller=backend.user action=processMass id=$userGroupID" handle=$massForm style="vertical-align: middle;" onsubmit="return false;"}
 	    
@@ -47,9 +47,9 @@
 	    
         {t _with_selected}:
         <select name="act" class="select" style="width: auto;">
-            {allowed role="userGroup.status"}<option value="enable_isEnabled">Enable</option>{/allowed}
-            {allowed role="userGroup.status"}<option value="disable_isEnabled">Disable</option>{/allowed}
-            {allowed role="userGroup.remove"}<option value="delete">Delete</option>{/allowed}
+            <option value="enable_isEnabled">Enable</option>
+            <option value="disable_isEnabled">Disable</option>
+            <option value="delete">Delete</option>
         </select>
         
         <span class="bulkValues" style="display: none;">
@@ -108,7 +108,7 @@
 </div>
 
 <div style="width: 100%;height: 100%;">
-<table class="activeGrid userList {denied role="userGroup.status,userGroup.remove"}readonlyGrid{/denied}" id="users_{$userGroupID}" style="height: 100%;">
+<table class="activeGrid userList {denied role="user.mass"}readonlyGrid{/denied}" id="users_{$userGroupID}" style="height: 100%;">
 	<thead>
 		<tr class="headRow">
 	

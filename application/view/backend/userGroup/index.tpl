@@ -65,6 +65,12 @@
     Backend.User.Group.prototype.Links.removeNewGroup = '{/literal}{link controller=backend.userGroup action=remove}{literal}';
     Backend.User.Group.prototype.Links.create = '{/literal}{link controller=backend.userGroup action=create}{literal}';
 
+    Backend.User.Editor.prototype.Links.create = '{/literal}{link controller=backend.user action=create}{literal}';
+    Backend.User.Editor.prototype.Links.update = '{/literal}{link controller=backend.user action=update}{literal}';
+    
+    Backend.UserGroup.prototype.usersMiscPermision = {/literal}{allowed role="user"}true{/allowed}{denied role="user"}false{/denied}{literal};
+
+
     var users = new Backend.UserGroup({/literal}{json array=$userGroups}{literal});
     window.usersActiveGrid = {};
 </script>
