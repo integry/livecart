@@ -7,9 +7,7 @@
  * @author Integry Systems
  */
 
-$routes = array(
-					array("error/404", array(), array('controller' => 'error', 'action' => 'error404')),
-					
+$routes = array(					
                     // category URLs
                     array("shop/:cathandle-:id", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+")),
 					array("shop/:cathandle-:id/:page", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+","page" => "[0-9_]+")),
@@ -25,6 +23,7 @@ $routes = array(
 
 					// default rules
                     array(":controller", array("action" => "index"), array()),
+					array(":controller/:id", array("action" => "index"), array("id" => "-?[0-9]+")),
 					array(":controller/:action", array(), array()),
 					array(":controller/:action/:id", array(), array("id" => "-?[0-9]+")),
 					array(":controller/:action/:mode/:id", array(), array("id" => "[0-9]+", "mode" => "create|modify")),

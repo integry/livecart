@@ -33,6 +33,7 @@ function smarty_function_backendMenu($params, Smarty $smarty)
 	 	{
 	 	    continue;
 	 	}
+	 	
 	 	$filteredValue = array();
 	    $filteredValue['title'] = $locale->translator()->translate($topValue['title']);
 	    $filteredValue['controller'] = $topValue['controller'];

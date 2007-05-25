@@ -93,16 +93,18 @@ class MenuLoader {
 		{
 			unset($this->indexTopKey);
 		}
-
 	  	$this->findCurrentHierarchy($controller, $action);
-
 		if (!empty($this->currentTopKey))
 		{
 			return $this->mainMenu[$this->currentTopKey];
 		}
-		else
+		else if($this->indexTopKey)
 		{
 	  		return $this->mainMenu[$this->indexTopKey];
+	  	}
+	  	else
+	  	{
+	  	    return reset($this->mainMenu);
 	  	}
 	}
 

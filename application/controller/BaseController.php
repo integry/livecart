@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("framework.request.Session");
+ClassLoader::import("framework.controller.exception.*");
 ClassLoader::import("framework.controller.Controller");
 ClassLoader::import("framework.roles.*");
 ClassLoader::import("application.model.user.User");
@@ -116,11 +117,11 @@ abstract class BaseController extends Controller implements LCiTranslator
 		{
 			if($this->user->isAnonymous())
 			{
-			    throw new UnauthorizedException($this->user, $this->request->getControllerName(), $this->request->getActionName(), $this->roles->getRole($this->request->getActionName()));
+			    throw new UnauthorizedException($this);
 			}
 			else
 			{
-			    throw new ForbiddenException($this->user, $this->request->getControllerName(), $this->request->getActionName(), $this->roles->getRole($this->request->getActionName()));
+			    throw new ForbiddenException($this);
 			}			
 		}
 		
@@ -146,6 +147,16 @@ abstract class BaseController extends Controller implements LCiTranslator
 	public function getRoles()
 	{
 	    return $this->roles;
+	}
+	
+	/**
+	 * Get logged user
+	 *
+	 * @return User
+	 */
+	public function getUser()
+	{
+	    return $this->user;
 	}
 	
 	/**
