@@ -20,19 +20,19 @@
 		<div style="clear: both;"></div>
 	
 		<ul class="verticalMenu">
-			<li id="addMenu">
+			<li id="addMenu" {denied role="page.create"}style="display: none;"{/denied}>
 				<a href="" onclick="pageHandler.showAddForm(); return false;">{t _add_new}</a>
 			</li>
-			<li id="codeMenu">
+			<li id="codeMenu" {denied role="page.create,page.update"}style="display: none;"{/denied}>
 				<a href="" onclick="pageHandler.showTemplateCode(); return false;">{t _show_template_code}</a>
 			</li>
-			<li id="moveUpMenu">
+			<li id="moveUpMenu" {denied role="page.sort"}style="display: none;"{/denied}>
 				<a href="" onclick="pageHandler.moveUp(); return false;">{t _move_up}</a>
 			</li>
-			<li id="moveDownMenu">
+			<li id="moveDownMenu" {denied role="page.sort"}style="display: none;"{/denied}>
 				<a href="" onclick="pageHandler.moveDown(); return false;">{t _move_down}</a>
 			</li>
-			<li id="removeMenu">
+			<li id="removeMenu" {denied role="page.remove"}style="display: none;"{/denied}>
 				<a href="" onclick="pageHandler.deleteSelected(); return false;">{t _remove}</a>
 			</li>
 		</ul>
