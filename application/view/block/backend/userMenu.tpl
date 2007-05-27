@@ -1,0 +1,1 @@
+{t Logged in as}: <span id="headerUserName">{$user.fullName}</span> <a href="{link controller=backend.index action=logout}">(logout)</a>

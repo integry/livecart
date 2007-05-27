@@ -17,7 +17,8 @@
         {/if}
     </title>
 	<base href="{baseUrl}" />
-
+	{liveCustomization}    
+	
 	<!-- Css includes -->
 	<link href="stylesheet/frontend/Frontend.css" media="screen" rel="Stylesheet" type="text/css"/>
 	<!--[if IE]>
@@ -25,7 +26,7 @@
 	<![endif]-->
 
     {includeCss file="custom/Custom.css"}
-    
+
 	{* {includeCss file="backend/stat.css"} *}
 	{$STYLESHEET}
 
@@ -38,6 +39,7 @@
 	<div id="container">
 		{$ACTION_VIEW}
 	</div>	
+	{liveCustomization action="menu"}
 </body>
 
 </html>

@@ -18,7 +18,7 @@ function smarty_resource_custom_source($tpl_name, &$tpl_source, &$smarty_obj)
         if (file_exists($path))
         {
             $tpl_source = file_get_contents($path);
-            return true;
+			return true;
         } 
     }
     

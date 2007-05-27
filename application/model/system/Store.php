@@ -66,6 +66,10 @@ class Store
 	 */
 	private static $instance = null;
 
+	private static $isCustomizationMode = null;
+
+	private static $isTranslationMode = null;
+
 	private function __construct()
 	{
 		// unset locale variables to make use of lazy loading
@@ -86,6 +90,28 @@ class Store
 			self::$instance = new Store();
 		}
 		return self::$instance;
+	}
+
+	public static function isCustomizationMode()
+	{
+		if (is_null(self::$isCustomizationMode))
+		{
+			$session = Session::getInstance();
+			self::$isCustomizationMode = $session->getValue('customizationMode');
+		}	
+		
+		return self::$isCustomizationMode;
+	}
+
+	public static function isTranslationMode()
+	{
+		if (is_null(self::$isTranslationMode))
+		{
+			$session = Session::getInstance();
+			self::$isTranslationMode = $session->getValue('translationMode');
+		}	
+		
+		return self::$isTranslationMode;
 	}
 
 	public function getLocaleInstance()
@@ -112,7 +138,6 @@ class Store
     	  	$filter = new ARSelectFilter();
 			$langFilter = new ARSelectFilter();
     	  	$langFilter->setOrder(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);
-			//$langFilter->setCondition(new EqualsCond(new ARFieldHandle("Language", "isEnabled"), 1));
 			$this->languageList = ActiveRecordModel::getRecordSet("Language", $langFilter);
 		}
 		return $this->languageList;

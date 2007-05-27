@@ -23,3 +23,6 @@ _country=Country
 _postal_code=Postal code
 
 _loading=Loading data...
+
+# Live Customization
+_live_translate=Translate

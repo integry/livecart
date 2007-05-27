@@ -22,7 +22,6 @@ ClassLoader::import('application.model.system.*');
 
 // LiveCart request routing rules
 ClassLoader::import('application.configuration.route.backend');
-TemplateRenderer::setCompileDir(ClassLoader::getRealPath('cache.templates_c'));
 
 // Custom initialization tasks
 $custom = ClassLoader::getRealPath('storage.configuration.CustomInitialize') . '.php';

@@ -706,6 +706,13 @@ label
     cursor: pointer;
 }
 
+label.cancel
+{
+    float: none;
+    position: relative;
+    padding-left: 0px;
+}
+
 p.required label, fieldset.required label
 {
   	font-weight: bold;
@@ -1036,13 +1043,6 @@ fieldset.group p
     background: #f1f1f1;
     padding-top: 5px;
     padding-bottom: 5px;
-}
-
-/*************************** 
-	Live Translation mode
-***************************/
-.transMode:hover {
-  	color: red;
 }
 
 /**************************

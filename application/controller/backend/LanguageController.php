@@ -191,9 +191,6 @@ class LanguageController extends StoreManagementController
 		  	$editLocale->translationManager()->saveCacheData($localeCode . '/' . $file, $data);
 		}
 		
-        // create a common language file for menu
-		$this->rebuildMenuLangFile();
-					
 		return new ActionRedirectResponse($this->request->getControllerName(), 'edit', array('id' => $localeCode, 'query' => 'langFileSel='.$this->request->getValue('langFileSel').'&saved=true'));
 	}
 	
@@ -409,7 +406,6 @@ class LanguageController extends StoreManagementController
 	/**
 	 * Displays translation dialog menu for Live Translations
 	 * 
-	 * @role update
 	 * @return ActionResponse
 	 */
 	public function translationDialog()
@@ -418,10 +414,14 @@ class LanguageController extends StoreManagementController
 	  	$file = base64_decode($this->request->getValue('file'));
 	  	$translation = $this->locale->translationManager()->getValue($file, $id);
 	  		  	
+	  	$defaultTranslation = Locale::getInstance(Store::getInstance()->getDefaultLanguageCode())->translationManager()->getValue($file, $id);
+	  		  	
 	  	$response = new ActionResponse();
 	  	$response->setValue('id', $id);
 	  	$response->setValue('file', $file);
 	  	$response->setValue('translation', $translation);
+	  	$response->setValue('defaultTranslation', $defaultTranslation);
+	  	$response->setValue('language', Language::getInstanceByID($this->locale->getLocaleCode())->toArray());
 	  	return $response;
 	}
 	
@@ -437,10 +437,10 @@ class LanguageController extends StoreManagementController
 	  	$file = $this->request->getValue('file');
 	  	$translation = $this->request->getValue('translation');
 
-	  	$this->locale->translationManager()->loadCachedFile($this->locale->getLocaleCode() . '/' . $file);
+	  	$this->locale->translationManager()->loadFile($file, true);
 
 		$res = $this->locale->translationManager()->updateValue($file, $id, $translation);
-	  	
+
 	  	return new RawResponse();
 	}
 	

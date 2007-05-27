@@ -1,19 +1,24 @@
-#customizeMenu td {
-  	padding: 5px;
-  	vertical-align: top;
-}
-
-#customizeMenu img {
-	margin-top: 5px; 
-}
-
-#customizeMenu a {
-	text-decoration: none;  
+.customizeControl 
+{
 	font-size: x-large;
 	font-weight: bold;
 	display: block;
 }
 
-#customizeMenu a:hover {
-	text-decoration: underline;  
+.modeDescr
+{
+	margin-top: 10px;
+	margin-bottom: 30px;
+}
+
+#goToFrontend
+{
+	float: left;
+	margin-top: 20px;
+	font-size: larger;
+
+	padding-right: 22px;
+	background-image: url(../../image/silk/gif/resultset_next.gif);
+	background-position: center right;
+	background-repeat: no-repeat;
 }

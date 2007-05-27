@@ -19,8 +19,8 @@ TranslationMenuEvent.prototype =
 	}
 }
 
-Backend.Customize = Class.create();
-Backend.Customize.prototype = {		
+Customize = Class.create();
+Customize.prototype = {		
   
 	controllerUrl: false,
 	
@@ -51,27 +51,41 @@ Backend.Customize.prototype = {
 	
 	showTranslationMenu: function(element, e)
 	{
-		dialog = document.getElementById('transDialogMenu');
+		if (element == this.currentElement)
+		{
+			return false;
+		}
 
-		xPos = Event.pointerX(e) + 5;
-		yPos = Event.pointerY(e);
+/*
+		xPos = Event.pointerX(e) - 5;
+		yPos = Event.pointerY(e) - 5;
+*/		
+		var pos = Position.cumulativeOffset(element);
+		
+		xPos = pos[0];
+		yPos = pos[1] - 23;
+		
+		var dialog = $('transDialogMenu');	
 		
 		// make sure the dialog is not being displayed outside window boundaries
 		mh = new PopupMenuHandler(xPos, yPos, 100, 30);
 		dialog.style.left = mh.x + 'px';
 		dialog.style.top = mh.y + 'px';
-		dialog.style.display = 'block';	
+		Element.show(dialog);
 		this.currentElement = element;			
-		Event.observe(document, 'click', this.hideTranslationMenu.bind(this), true);
+		Event.observe(document, 'click', this.hideTranslationMenu.bindAsEventListener(this), false);
 	},
-	
+		
 	hideTranslationMenu: function()
-	{
-		document.getElementById('transDialogMenu').style.display = 'none';
+	{		
+		Element.hide($('transDialogMenu'));
+		
+		this.currentElement = null;
 	},
 
 	translationMenuClick: function(e)
 	{
+		e.stopPropagation();
 		this.showTranslationDialog(this.currentElement, e);  	
 		this.hideTranslationMenu();
 		Event.stop(e);
@@ -108,13 +122,21 @@ Backend.Customize.prototype = {
 
 		new Ajax.Updater('transDialogContent', url, {onComplete: this.displayDialogContent.bind(this)});
 		
-		Event.observe(document, 'mousedown', this.cancelTransDialog.bind(this), false);
+		this.bfx = this.cancelTransDialog.bind(this);
+		
+		Event.observe(document, 'mousedown', this.bfx, false);
 	},
 	
+	handleTransFieldClick: function(e)
+	{
+	 	e.stopPropagation();
+	},
+
 	displayDialogContent: function()
 	{
 		document.getElementById('transDialogContent').style.display = 'block';
 		document.getElementById('transDialogIndicator').style.display = 'none';
+		Event.observe($('trans'), 'mousedown', this.handleTransFieldClick.bindAsEventListener(this), true);
 	},
 
 	saveTranslationDialog: function(form)
@@ -124,6 +146,7 @@ Backend.Customize.prototype = {
 		this.updateDocumentTranslations(form.elements.namedItem('id').value, form.elements.namedItem('translation').value);
 		
         new LiveCart.AjaxUpdater(form, 'translationDialog', 'transSaveIndicator'); 
+		Event.stopObserving(document, 'mousedown', this.bfx, false);
 	},
 	
 	showTranslationSaveIndicator: function()

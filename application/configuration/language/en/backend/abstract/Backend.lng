@@ -10,9 +10,6 @@ _save=Save
 
 _translate=Translate to: [_1]
 
-# Live Customization
-_live_translate=Translate
-
 # ActiveList icon captions
 _activeList_edit=Edit
 _activeList_delete=Delete'

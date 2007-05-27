@@ -7,6 +7,8 @@
 	<title>LiveCart Admin - {$TITLE}</title>
 	<base href="{baseUrl}" />
 
+	{liveCustomization}
+	
 	<!-- Css includes -->
 	<link href="stylesheet/backend/Backend.css" media="screen" rel="Stylesheet" type="text/css"/>
 	{includeCss file="backend/stat.css"}
@@ -38,8 +40,6 @@
 	{includeJs file=library/Debug.js}
 	{includeJs file=library/dhtmlHistory/dhtmlHistory.js}
 	
-	{includeJs file=backend/Customize.js}
-    
 	{$JAVASCRIPT}
 
 	{literal}

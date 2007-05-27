@@ -1211,6 +1211,40 @@ div.orderStatus
 }
 
 /*************************** 
+	Customization
+***************************/
+div.templateLocator:hover
+{
+	border: 2px solid blue;	
+	position: relative;
+	padding: 5px;
+	padding-top: 15px;
+	z-index: 2;
+}
+
+div.templateLocator span.templateName
+{
+	display: none;
+	position: absolute;
+	top: -2px;
+	left: -2px;
+	background-color: #DDF;
+	height: 15px;
+	padding: 3px;
+	z-index: 1;
+	border: 2px solid blue;
+	padding-left: 25px;
+	background-image: url(../../image/silk/gif/layout_edit.gif);
+	background-position: 4px center;
+	background-repeat: no-repeat;
+}
+
+div.templateLocator:hover > span.templateName:first-child
+{
+	display: inline;
+}
+
+/*************************** 
 	Form styling
 ***************************/
 form
@@ -1313,6 +1347,7 @@ label.cancel
     float: none;
     position: relative;
     top: -6px;
+    padding-left: 0px;
 }
 
 select

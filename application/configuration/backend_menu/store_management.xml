@@ -30,7 +30,7 @@
         	<Role>settings,delivery,currency,language,delivery</Role>
             <Items>
                 <Menu>
-                	<Title>_menu_settings</Title>	
+                	<Title>_menu_configuration</Title>	
                 	<Controller>backend.settings</Controller>
                 	<Role>settings</Role>	
                 </Menu>
@@ -58,7 +58,6 @@
         </Menu>
         <Menu>
         	<Title>_menu_customize</Title>		
-        	<Controller>backend.customize</Controller>
         	<Role>customize</Role>
         	<Items>
         		<Menu>

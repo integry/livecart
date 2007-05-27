@@ -12,6 +12,8 @@ class LiveCart extends Application
 	 */
 	private static $instance = null;
 
+	private $isBackend = false;
+
 	/**
 	 * Returns an instance of LiveCart Application
 	 *
@@ -24,6 +26,9 @@ class LiveCart extends Application
 		if (is_null(self::$instance))
 		{
 			self::$instance = new LiveCart();
+			
+			$compileDir = Store::isCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
+			TemplateRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
 		}
 		
 		return self::$instance;
@@ -37,7 +42,7 @@ class LiveCart extends Application
 	 * @return string View path
 	 */
 	public function getView($controllerName, $actionName)
-	{
+	{		
 		// get custom template path
         $path = ClassLoader::getRealPath('storage.customize.view.' . $controllerName . '.' . $actionName) . '.tpl';
         
@@ -67,7 +72,48 @@ class LiveCart extends Application
         
         return $path;
 	}	
-	
+		
+	/**
+	 * Gets renderer for application
+	 *
+	 * @return Renderer
+	 */
+	public function getRenderer()
+	{
+		if (is_null($this->renderer))
+		{
+			ClassLoader::import('application.LiveCartRenderer');
+			$this->renderer = new LiveCartRenderer($this->router);
+		}
+		
+		$renderer = parent::getRenderer();
+
+		if (Store::isCustomizationMode() && !$this->isBackend)
+		{
+			$smarty = TemplateRenderer::getSmartyInstance();
+			$smarty->autoload_filters = array('pre' => array('templateLocator'));			
+		}
+		
+		return $renderer;
+	}	
+		
+	/**
+	 * Gets specified controller instance
+	 *
+	 * @param string $controllerName Controller name
+	 * @return Controller
+	 * @throws ControllerNotFoundException if controller does not exist
+	 */
+	protected function getControllerInstance($controllerName)
+	{
+		if (substr($controllerName, 0, 8) == 'backend.')
+		{
+			$this->isBackend = true;
+		}
+
+		return parent::getControllerInstance($controllerName);
+	}
+		
 	/**
 	 * Executes controllers action and returns response
 	 *

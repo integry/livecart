@@ -10,7 +10,18 @@ ClassLoader::import("library.json.json");
  */
 abstract class BackendController extends BaseController
 {
-
+    public function init()
+	{
+	  	$this->setLayout('empty');
+		$this->addBlock('USER_MENU', 'boxUserMenu', 'block/backend/userMenu');
+	}
+	
+	public function boxUserMenuBlock()
+	{
+		$response = new BlockResponse();
+		$response->setValue('user', $this->user->toArray());
+		return $response;
+	}
 }
 
 ?>

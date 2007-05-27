@@ -3,40 +3,30 @@
 
 {include file="layout/backend/header.tpl"}
 
-<table id="customizeMenu">
-	<tr>
-		<td>
-			<img src="image/backend/icon/translate.gif" style="vertical-align: absmiddle;">
-		</td>
-		<td>
-			<a href="{link controller=backend.customize action=translationMode}">Live Translation Mode</a>
-			{if $isTranslationModeEnabled}
-				(on)
-			{else}
-				(off)
-			{/if}
-			Translate menus and captions to other languages directly from <s>user interface</s>.
-		</td>
-	</tr>
+<a href="{link controller=backend.customize action=customizationMode}" class="customizeControl">
+{if $isCustomizationModeEnabled}
+	{tn _turn_off}
+{else}
+	{tn _turn_on}
+{/if}
+</a>
 
-	<tr>
-		<td>
-			<img src="image/backend/icon/customize.gif" style="vertical-align: absmiddle;">
-		</td>
-		<td>
-			<a href="">Customize Layout</a>
-			Move page blocks around in drag & drop mode
-		</td>
-	</tr>
-	
-	<tr>
-		<td>
-			<img src="image/backend/icon/templates.gif" style="vertical-align: absmiddle;">
-		</td>
-		<td>
-			<a href="">Edit Templates</a>
-			Locate and modify individual page blocks
-		</td>
-</table>
+<div class="modeDescr">
+	{t _live_locate}
+</div>
+
+<a href="{link controller=backend.customize action=translationMode}" class="customizeControl">
+{if $isTranslationModeEnabled}
+	{tn _turn_off_trans}
+{else}
+	{tn _turn_on_trans}
+{/if}
+</a>
+
+<div class="modeDescr" style="margin-bottom: 10px;">
+	{t _live_trans}
+</div>
+
+<a href="{link}" target="_blank" id="goToFrontend">{tn _go_frontend}</a>
 
 {include file="layout/backend/footer.tpl"}
