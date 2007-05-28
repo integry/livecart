@@ -17,5 +17,21 @@ class DumpController
     {
         
     }
+    
+    /**
+     * @role !another.another
+     */
+    public function test2()
+    {
+        
+    }
+    
+    /**
+     * @role !another
+     */
+    public function test3()
+    {
+        
+    }
 }
 ?>

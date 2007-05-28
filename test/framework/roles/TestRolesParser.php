@@ -28,15 +28,7 @@ class TestRolesParser extends UnitTestCase
 	{
         $this->clearDirectory(ClassLoader::getRealPath('test.framework.roles.cache'));
 	}
-    
-    public function testParseControllerClass()
-    {
-        $rolesParser = new RolesParser(
-            ClassLoader::getRealPath("test.framework.roles.controllers.DumpController") . ".php", 
-            ClassLoader::getRealPath("test.framework.roles.cache.DumpControllerRoles") . ".php"
-        );
-    }
-    
+
     public function testGetRoleByAction()
     {
         $dumpControllerRoles = new RolesParser(
@@ -53,10 +45,12 @@ class TestRolesParser extends UnitTestCase
             ClassLoader::getRealPath("test.framework.roles.controllers.DumpController") . ".php", 
             ClassLoader::getRealPath("test.framework.roles.cache.DumpControllerRoles") . ".php"
         );
-        
-        $this->assertEqual(count($dumpControllerRoles->getRolesNames()), 2);
-        $this->assertTrue(in_array('test', $dumpControllerRoles->getRolesNames()));
-        $this->assertTrue(in_array('test.subtest', $dumpControllerRoles->getRolesNames()));
+        $roleNames = $dumpControllerRoles->getRolesNames();
+        $this->assertEqual(count($roleNames), 4);
+        $this->assertTrue(in_array('test', $roleNames));
+        $this->assertTrue(in_array('test.subtest', $roleNames));
+        $this->assertTrue(in_array('another', $roleNames));
+        $this->assertTrue(in_array('another.another', $roleNames));
     }
 }
 
