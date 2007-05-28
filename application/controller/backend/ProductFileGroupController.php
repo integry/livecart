@@ -79,9 +79,6 @@ class ProductFileGroupController extends StoreManagementController
         return new JSONResponse(array('status' => 'success'));
     }
 
-    /**
-     * @role update
-     */
     public function edit()
     {
         $group = ProductFileGroup::getInstanceByID((int)$this->request->getValue('id'), true);

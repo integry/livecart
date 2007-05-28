@@ -97,9 +97,6 @@ class ProductFileController extends StoreManagementController
 	    return $response;
 	}
 
-	/**
-	 * @role update
-	 */
 	public function edit()
 	{
 	    $productFile = ProductFile::getInstanceByID((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA);

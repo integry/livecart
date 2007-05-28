@@ -29,7 +29,7 @@
     
 <div id="productRelationshipMsg_{$productID}" style="display: none;"></div>
 
-<fieldset class="container">
+<fieldset class="container" {denied role="product.update"}style="display: none"{/denied}>
 	<ul class="menu" id="productRelationship_menu_{$productID}">
 	    <li><a href="#selectProduct" id="selectProduct_{$productID}">{t _select_product}</a></li>
 	    <li><a href="#cancelSelectProduct" id="selectProduct_{$productID}_cancel" class="hidden">{t _cancel_adding_new_related_product}</a></li>
@@ -51,7 +51,7 @@
 
 
 {* No group *}
-<ul id="productRelationship_list_{$productID}_" class="productRelationship_list activeList_add_sort activeList_add_delete activeList_accept_productRelationship_list">
+<ul id="productRelationship_list_{$productID}_" class="productRelationship_list {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_productRelationship_list">
 {foreach item="relationship" from=$relationshipsWithGroups}
     {if $relationship.ProductRelationshipGroup.ID}{php}break;{/php}{/if}
     {if $relationship.RelatedProduct.ID} 
@@ -63,16 +63,16 @@
 </ul>
 
 
-<ul id="productRelationshipGroup_list_{$productID}" class="activeList_add_sort activeList_add_delete activeList_add_edit productRelationshipGroup_list">
+<ul id="productRelationshipGroup_list_{$productID}" class="{allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit productRelationshipGroup_list">
 {foreach item="relationship" from=$relationshipsWithGroups}
     {if !$relationship.ProductRelationshipGroup.ID}{php}continue;{/php}{/if}
     
     {if $lastProductRelationshipGroup != $relationship.ProductRelationshipGroup.ID }
         {if $lastProductRelationshipGroup > 0}</ul></li>{/if}
         <li id="productRelationshipGroup_list_{$productID}_{$relationship.ProductRelationshipGroup.ID}" class="productRelationshipGroup_item">
-            <span class="productRelationshipGroup_title">{$relationship.ProductRelationshipGroup.name_lang}</span>
+            <span class="productRelationshipGroup_title">{$relationship.ProductRelationshipGroup.name}</span>
             {include file="backend/productRelationshipGroup/form.tpl"}	
-            <ul id="productRelationship_list_{$productID}_{$relationship.ProductRelationshipGroup.ID}" class="productRelationship_list activeList_add_sort activeList_add_delete activeList_accept_productRelationship_list">
+            <ul id="productRelationship_list_{$productID}_{$relationship.ProductRelationshipGroup.ID}" class="productRelationship_list {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_accept_productRelationship_list">
     {/if}
     
     {if $relationship.RelatedProduct.ID} {* For empty groups *}

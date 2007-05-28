@@ -22,7 +22,6 @@ class ProductRelationshipController extends StoreManagementController
 	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
 		$response->setValue('productID', $productID);
 		$response->setValue('relationships', $product->getRelationships()->toArray());
-		
 		$response->setValue('relationshipsWithGroups', $product->getRelatedProductsWithGroupsArray());
 		
 	    return $response;

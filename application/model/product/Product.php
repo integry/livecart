@@ -721,7 +721,7 @@ class Product extends MultilingualObject
     /**
      * @return ARSet
      */
-    public function getRelationships($loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer'))
+    public function getRelationships($loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup'))
     {
         if(is_null($this->relationships))
         {

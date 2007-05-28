@@ -1,7 +1,7 @@
 <div id="productFileMsg_{$productID}" style="display: none;"></div>
 
 {* upper menu *}
-<fieldset class="container">
+<fieldset class="container" {denied role="product.update"}style="dispaly: none"{/denied}>
 	<ul class="menu" id="productFile_menu_{$productID}">
 	    <li><a href="#new_file" id="productFile_new_{$productID}_show">{t _add_new_file}</a></li>
 	    <li><a href="#cancel_group" id="productFile_new_{$productID}_cancel" class="hidden">{t _cancel_adding_new_file}</a></li>
@@ -15,7 +15,7 @@
 <div id="productFile_new_{$productID}_form"></div>
 
 {* Files with no group *}
-<ul id="productFile_list_{$productID}_" class="productFile_list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_productFile_list">
+<ul id="productFile_list_{$productID}_" class="productFile_list {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeList_accept_productFile_list">
 {foreach item="productFile" from=$productFilesWithGroups}
     {if $productFile.ProductFileGroup.ID}{php}break;{/php}{/if}
     {if $productFile.ID} 
@@ -27,7 +27,7 @@
 </ul>
 
 {* Files in groups *}
-<ul id="productFileGroup_list_{$productID}" class="activeList_add_sort activeList_add_edit activeList_add_delete productFileGroup_list">
+<ul id="productFileGroup_list_{$productID}" class="{allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit productFileGroup_list">
 {foreach item="productFile" from=$productFilesWithGroups}
     {if !$productFile.ProductFileGroup.ID}{php}continue;{/php}{/if}
     
@@ -38,7 +38,7 @@
             <div id="activeList_editContainer_productFileGroup_list_{$productID}_{$productFile.ProductFileGroup.ID}" class="activeList_editContainer activeList_container" style="display: none">
                 {include file="backend/productFileGroup/form.tpl"}	
             </div>
-            <ul id="productFile_list_{$productID}_{$productFile.ProductFileGroup.ID}" class="productFile_list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_productFile_list">
+            <ul id="productFile_list_{$productID}_{$productFile.ProductFileGroup.ID}" class="productFile_list {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeList_accept_productFile_list">
     {/if}
     
     {if $productFile.ID} {* For empty groups *}

@@ -58,9 +58,6 @@ class ProductRelationshipGroupController extends StoreManagementController
         return new JSONResponse(array('status' => 'success'));
     }
 
-    /**
-     * @role update
-     */
     public function edit()
     {
         $group = ProductRelationshipGroup::getInstanceByID((int)$this->request->getValue('id'), true);
