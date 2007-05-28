@@ -12,9 +12,6 @@ ClassLoader::import("application.model.product.Product");
  */
 class ProductPriceController extends StoreManagementController
 {
-    /**
-     * @role update
-     */
 	public function index()
 	{
 

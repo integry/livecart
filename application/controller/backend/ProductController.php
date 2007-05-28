@@ -323,9 +323,6 @@ class ProductController extends StoreManagementController
 		  	return $this->save($product);
 	}
 
-	/**
-	 * @role update
-	 */
 	public function basicData()
 	{
 	    $product = Product::getInstanceById($this->request->getValue('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));

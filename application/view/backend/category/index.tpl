@@ -55,16 +55,19 @@
 	<div id="categoryBrowser" class="treeBrowser">
 	</div>
 	<br />
-	{t With selected category}:
+    {allowed role="category.create,category.remove,category.sort"}
+	    {t _with_selected_category}:
+    {/allowed}
 	<ul id="categoryBrowserActions">
-		<li><a href="#" id="createNewCategoryLink">{t _create_subcategory}</a></li>
-		<li><a href="#" id="removeCategoryLink">{t _remove_category}</a></li>
-		<li><a href="#" id="moveCategoryUp">{t _move_category_up}</a></li>
-		<li><a href="#" id="moveCategoryDown">{t _move_category_down}</a></li>
+		<li {denied role="category.create"}style="display: none"{/denied}><a href="#" id="createNewCategoryLink">{t _create_subcategory}</a></li>
+		<li {denied role="category.remove"}style="display: none"{/denied}><a href="#" id="removeCategoryLink">{t _remove_category}</a></li>
+		<li {denied role="category.sort"}style="display: none"{/denied}><a href="#" id="moveCategoryUp">{t _move_category_up}</a></li>
+		<li {denied role="category.sort"}style="display: none"{/denied}><a href="#" id="moveCategoryDown">{t _move_category_down}</a></li>
 	</ul>
 </div>
 
 <div id="activeCategoryPath"></div>
+
 
 <div id="managerContainer" class="managerContainer maxHeight h--60">
 	<div id="tabContainer" class="tabContainer">
@@ -76,7 +79,7 @@
 				<span class="tabHelp">products</span>
 			</li>
 
-			<li id="tabMainDetails" class="tab inactive">
+			<li id="tabMainDetails" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
 				<a href="{link controller=backend.category action=form id=_id_}">{t _category_details}</a>
 				<span> </span>
 				<span class="tabHelp">cat.details</span>
@@ -126,7 +129,12 @@
         Backend.Category.messages._reorder_failed = '{t _reorder_failed|addslashes}';
         Backend.Category.messages._confirm_category_remove = '{t _confirm_category_remove|addslashes}';
     
-    	Backend.Category.init();    
+    	Backend.Category.init(); 
+        
+        {allowed role="category.sort"}
+            Backend.Category.allowSorting = true;
+        {/allowed} 
+        
     	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading); 
         Backend.Category.addCategories({json array=$categoryList});
         
@@ -134,6 +142,10 @@
     	Backend.Category.initPage();
         
         Backend.Category.loadBookmarkedCategory();
+
+        {allowed role="product"}
+            Backend.Product.productsMiscPermision = true;
+        {/allowed}
     
     {rdelim}
     catch(e)

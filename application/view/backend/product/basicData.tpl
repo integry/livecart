@@ -1,4 +1,4 @@
-{form handle=$productForm action="controller=backend.product action=update" id="product_`$product.ID`_form" onsubmit="Backend.Product.Editor.prototype.getInstance(`$product.ID`, false).submitForm(); return false;" method="post"}
+{form handle=$productForm action="controller=backend.product action=update" id="product_`$product.ID`_form" onsubmit="Backend.Product.Editor.prototype.getInstance(`$product.ID`, false).submitForm(); return false;" method="post" role="product.update"}
 
    	<div class="pricesSaveConf" style="display: none;">
    		<div class="yellowMessage">
@@ -16,8 +16,10 @@
     {/if}
     {include file="backend/product/form/translations.tpl" product=$product cat=$cat multiLingualSpecFields=$multiLingualSpecFields }
     
-    <fieldset>
-    	<input type="submit" name="save" class="submit" value="Save"> {t _or} <a class="cancel" href="#">{t _cancel}</a>
+    <fieldset class="controls">
+    	<input type="submit" name="save" class="submit" value="Save"> 
+        {t _or} 
+        <a class="cancel" href="#">{t _cancel}</a>
     </fieldset>
     
     <script type="text/javascript">

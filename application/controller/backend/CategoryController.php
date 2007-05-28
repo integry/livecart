@@ -9,7 +9,7 @@ ClassLoader::import("application.model.category.Category");
  * @package application.controller.backend
  * @author Saulius Rupainis <saulius@integry.net>
  *
- * @role category
+ * @role product
  */
 class CategoryController extends StoreManagementController
 {
@@ -33,7 +33,7 @@ class CategoryController extends StoreManagementController
 	/**
 	 * Displays category form (for creating a new category or modifying an existing one)
 	 *
-	 * @role update
+	 * @role !category
 	 * 
 	 * @return ActionResponse
 	 */
@@ -64,7 +64,7 @@ class CategoryController extends StoreManagementController
 	/**
 	 * Creates a new category record
 	 *
-	 * @role create
+	 * @role !category.create
 	 * 
 	 * @return ActionRedirectResponse
 	 */
@@ -93,7 +93,7 @@ class CategoryController extends StoreManagementController
 	/**
 	 * Updates a category record
 	 * 
-	 * @role update
+	 * @role !category.update
 	 *
 	 * @return ActionRedirectResponse
 	 */
@@ -129,7 +129,7 @@ class CategoryController extends StoreManagementController
 	/**
 	 * Removes node from a category
 	 *
-	 * @role remove
+	 * @role !category.remove
 	 */
 	public function remove()
 	{
@@ -143,7 +143,7 @@ class CategoryController extends StoreManagementController
 	/**
 	 * Reorder category node
 	 *
-	 * @role sort
+	 * @role !category.sort
 	 */
 	public function reorder()
 	{

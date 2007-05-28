@@ -56,6 +56,7 @@
   '_confirm_category_remove' => 'Are you sure you want to remove this category?',
   '_move_category_up' => 'Move category up',
   '_move_category_down' => 'Move category down',
+  '_with_selected_category' => 'With selected category',
   '_category_name' => 'Category name',
   '_category_handle' => 'Handle',
   '_descr' => 'Description',

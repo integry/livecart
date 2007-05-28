@@ -7,7 +7,7 @@
 
 <div>
 
-<fieldset class="container">
+<fieldset class="container" {denied role="product.create"}style="display: none"{/denied}>
 	<ul class="menu">
 		<li>
 			<a href="#" onclick="Backend.Product.showAddForm(this.parentNode.parentNode.parentNode.parentNode, {$categoryID}); return false;">
@@ -20,7 +20,7 @@
 
 <fieldset class="container" style="vertical-align: middle;">
                 
-    <span style="float: left; text-align: right;" id="productMass_{$categoryID}">
+    <span style="float: left; text-align: right; {denied role="product.mass"}display: none;{/denied}" id="productMass_{$categoryID}" >
 
 	    {form action="controller=backend.product action=processMass id=$categoryID" handle=$massForm style="vertical-align: middle;" onsubmit="return false;"}
 	    
@@ -138,7 +138,7 @@
 </div>
 
 <div style="width: 100%;height: 100%;">
-<table class="activeGrid productList" id="products_{$categoryID}" style="height: 100%;">
+<table class="activeGrid productList {denied role="product.mass"}readonlyGrid{/denied}" id="products_{$categoryID}" style="height: 100%;">
 	<thead>
 		<tr class="headRow">
 	

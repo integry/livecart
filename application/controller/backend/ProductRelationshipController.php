@@ -12,9 +12,6 @@ ClassLoader::import("application.model.product.Product");
  */
 class ProductRelationshipController extends StoreManagementController 
 {
-    /**
-     * @role update
-     */
 	public function index()
 	{		
 	    $productID = (int)$this->request->getValue('id');

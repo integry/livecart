@@ -14,9 +14,6 @@ ClassLoader::import("application.model.product.ProductImage");
  */
 class ProductImageController extends ObjectImageController
 {
-    /**
-     * @role update
-     */
     public function index()
     {
         return parent::index();

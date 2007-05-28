@@ -99,8 +99,11 @@ Backend.Category = {
 		this.treeBrowser = new dhtmlXTreeObject("categoryBrowser","","", 0);
 		this.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
 		this.treeBrowser.setOnClickHandler(this.activateCategory);
-		this.treeBrowser.setDragHandler(this.reorderCategory);
-		this.treeBrowser.enableDragAndDrop(1);
+        if(Backend.Category.allowSorting)
+        {
+		    this.treeBrowser.setDragHandler(this.reorderCategory);
+            this.treeBrowser.enableDragAndDrop(1);
+		}
 	},
 
 	initTabs: function()

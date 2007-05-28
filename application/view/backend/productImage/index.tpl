@@ -5,7 +5,7 @@
 	</li>
 </ul>
 
-<fieldset class="container">
+<fieldset class="container" {denied role="product.update"}style="display: none"{/denied}>
 	<ul class="menu" id="prodImgMenu_{$ownerId}">
 		<li>
 			<a href="#" onclick="slideForm('prodImgAdd_{$ownerId}', 'prodImgMenu_{$ownerId}'); return false;" class="pageMenu">{t _add_new}</a>
@@ -14,7 +14,7 @@
 </fieldset>
 
 <div id="prodImgAdd_{$ownerId}" class="prodImageEditForm" style="display: none;">
-{form handle=$form action="controller=backend.productImage action=upload" method="post" onsubmit="$('prodImageList_`$ownerId`').handler.upload(this);" target="prodImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data"}
+{form handle=$form action="controller=backend.productImage action=upload" method="post" onsubmit="$('prodImageList_`$ownerId`').handler.upload(this);" target="prodImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="product.update"}
 	
 	<input type="hidden" name="ownerId" value="{$ownerId}" />
 	<input type="hidden" name="imageId" value="" />
@@ -50,16 +50,20 @@
 				var expander = new SectionExpander();
 			</script>
 		</div>		
-		
+	
+        <span class="controls">	
 			<span class="progressIndicator" style="display: none;"></span>
-			<input type="submit" name="upload" class="submit" value="{tn _upload}"> {t _or} <a href="#" class="cancel" onclick="restoreMenu('prodImgAdd_{$ownerId}', 'prodImgMenu_{$ownerId}'); return false;">{t _cancel}</a>
+			<input type="submit" name="upload" class="submit" value="{tn _upload}"> 
+            {t _or} 
+            <a href="#" class="cancel" onclick="restoreMenu('prodImgAdd_{$ownerId}', 'prodImgMenu_{$ownerId}'); return false;">{t _cancel}</a>
+        </span>
 	</fieldset>
 
 {/form}
-<iframe name="prodImgUpload_{$ownerId}" id="prodImgUpload_{$ownerId}" style="display: block;"></iframe>
+<iframe name="prodImgUpload_{$ownerId}" id="prodImgUpload_{$ownerId}" style="display: none;"></iframe>
 </div>
 
-<ul id="prodImageList_{$ownerId}" class="prodImageList activeList_add_sort activeList_add_delete activeList_add_edit">
+<ul id="prodImageList_{$ownerId}" class="prodImageList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit">
     <p class="main">{t _main_image}</p><p class="supplemental">{t _supplemental_images}</p>
 </ul>
 

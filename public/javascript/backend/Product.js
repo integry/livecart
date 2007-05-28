@@ -773,7 +773,7 @@ Backend.Product.GridFormatter =
 	
 	formatValue: function(field, value, id)
 	{
-		if ('Product.name' == field)
+		if ('Product.name' == field && Backend.Product.productsMiscPermision)
 		{
 			value = '<span>' + 
                         '<span class="progressIndicator" id="productIndicator_' + id + '" style="display: none;"></span>' + 
