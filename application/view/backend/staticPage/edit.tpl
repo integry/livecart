@@ -13,7 +13,7 @@
     {/literal}
 </fieldset>
 
-{form action="controller=backend.staticPage action=save" handle=$form onsubmit="pageHandler.save(this); return false;" method="post"}
+{form action="controller=backend.staticPage action=save" handle=$form onsubmit="pageHandler.save(this); return false;" method="post" role="page.update(edit),page.create(add)"}
 
 <fieldset class="container" id="editContainer">
 	
@@ -85,9 +85,12 @@
 
 </fieldset>
 
-<span class="progressIndicator" id="saveIndicator" style="display: none;"></span>
-
 <input type="hidden" name="id" value="{$page.ID}" />
-<input type="submit" value="{tn _save}" class="submit" /> {t _or} <a class="cancel" id="cancel" onclick="return false;" href="#">{t _cancel}</a>
+<span class="controls">
+    <span class="progressIndicator" id="saveIndicator" style="display: none;"></span>
+    <input type="submit" value="{tn _save}" class="submit" /> 
+    {t _or} 
+    <a class="cancel" id="cancel" onclick="return false;" href="#">{t _cancel}</a>
+</span>
 
 {/form}

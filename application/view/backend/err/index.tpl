@@ -1,5 +1,9 @@
-{include file="layout/backend/header.tpl"}
+{if !$ajax}
+    {include file="layout/backend/header.tpl"}
+{/if}
 
 {$description} [Code {$id}]
 
-{include file="layout/backend/footer.tpl"}
+{if !$ajax}
+    {include file="layout/backend/footer.tpl"}
+{/if}

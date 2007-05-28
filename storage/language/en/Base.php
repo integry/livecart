@@ -20,4 +20,5 @@
   '_country' => 'Country',
   '_postal_code' => 'Postal code',
   '_loading' => 'Loading data...',
+  '_live_translate' => 'Translate',
 ); ?>

@@ -6,7 +6,7 @@
   '_cancel' => 'Cancel',
   '_save' => 'Save',
   '_translate' => 'Translate to: [_1]',
-  '_live_translate' => 'Translate',
   '_activeList_edit' => 'Edit',
   '_activeList_delete' => 'Delete\'',
+  '_live_translate' => 'Translate',
 ); ?>

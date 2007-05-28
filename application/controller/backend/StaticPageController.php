@@ -41,10 +41,7 @@ class StaticPageController extends StoreManagementController
 		$response->setValue('form', $this->getForm());				
 		return $response;
 	}	  
-	
-	/**
-	 * @role update
-	 */
+
 	public function edit()
 	{
 		$page = StaticPage::getInstanceById($this->request->getValue('id'), StaticPage::LOAD_DATA)->toArray();
