@@ -29,7 +29,9 @@
                 <input type="button" class="button" value="{t _add}" id="newZoneInputButton"  />
                 <br />
             </span>
-            <a id="deliveryZone_delete" href="#delete" style="{denied role='delivery.remove'}display: none{/denied}">{t _delete}</a>
+            <ul class="verticalMenu">
+                <li class="removeTreeNode"><a id="deliveryZone_delete" href="#delete" style="{denied role='delivery.remove'}display: none{/denied}">{t _delete}</a></li>
+            </ul>
         </div>
 	</div>
     

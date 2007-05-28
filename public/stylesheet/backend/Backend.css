@@ -1104,3 +1104,31 @@ a.acronym:hover div
     padding-right: 20px;
 }
 
+/***************************
+ * Tree actions
+ **************************/
+.addTreeNode
+{
+	background-image: url('../../image/silk/page_white_add.png');
+	margin-bottom: 10px;
+}
+
+.viewTreeNode
+{
+	background-image: url('../../image/silk/page_white_code.png');
+}
+
+.moveUpTreeNode
+{
+	background-image: url('../../image/silk/arrow_up.png');
+}
+
+.moveDownTreeNode
+{
+	background-image: url('../../image/silk/arrow_down.png');
+}
+
+.removeTreeNode
+{
+	background-image: url('../../image/silk/page_white_delete.png');
+}

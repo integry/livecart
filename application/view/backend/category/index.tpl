@@ -58,11 +58,11 @@
     {allowed role="category.create,category.remove,category.sort"}
 	    {t _with_selected_category}:
     {/allowed}
-	<ul id="categoryBrowserActions">
-		<li {denied role="category.create"}style="display: none"{/denied}><a href="#" id="createNewCategoryLink">{t _create_subcategory}</a></li>
-		<li {denied role="category.remove"}style="display: none"{/denied}><a href="#" id="removeCategoryLink">{t _remove_category}</a></li>
-		<li {denied role="category.sort"}style="display: none"{/denied}><a href="#" id="moveCategoryUp">{t _move_category_up}</a></li>
-		<li {denied role="category.sort"}style="display: none"{/denied}><a href="#" id="moveCategoryDown">{t _move_category_down}</a></li>
+	<ul id="categoryBrowserActions" class="verticalMenu">
+		<li class="addTreeNode" {denied role="category.create"}style="display: none"{/denied}><a href="#" id="createNewCategoryLink">{t _create_subcategory}</a></li>
+		<li class="moveUpTreeNode" {denied role="category.sort"}style="display: none"{/denied}><a href="#" id="moveCategoryUp">{t _move_category_up}</a></li>
+		<li class="moveDownTreeNode" {denied role="category.sort"}style="display: none"{/denied}><a href="#" id="moveCategoryDown">{t _move_category_down}</a></li>
+		<li class="removeTreeNode" {denied role="category.remove"}style="display: none"{/denied}><a href="#" id="removeCategoryLink">{t _remove_category}</a></li>
 	</ul>
 </div>
 

@@ -35,11 +35,10 @@
 <div id="userGroupsWrapper" class="maxHeight h--50">
 	<div id="userGroupsBrowserWithControlls">
     	<div id="userGroupsBrowser" class="treeBrowser"></div>
-        <div id="userGroupsBrowserControls">
-            <a id="userGroups_add" href="#add" style="{denied role="userGroup.create"}display: none;{/denied}">{t _add}</a>
-            <br />
-            <a id="userGroups_delete" href="#delete" style="{denied role="userGroup.create"}display: none;{/denied}">{t _delete}</a>
-        </div>
+        <ul id="userGroupsBrowserControls" class="verticalMenu">
+            <li class="addTreeNode" style="{denied role="userGroup.create"}display: none;{/denied}"><a id="userGroups_add" href="#add">{t _add}</a></li>
+            <li class="removeTreeNode" style="{denied role="userGroup.remove"}display: none;{/denied}"><a id="userGroups_delete" href="#delete">{t _delete}</a></li>
+        </ul>
 	</div>
     
     {include file="backend/userGroup/groupContainer.tpl"}
