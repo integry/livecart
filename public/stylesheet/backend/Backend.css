@@ -315,7 +315,7 @@ html, body{
   	padding: 0px;
  	background-image: url(../../image/backend/menu/menu_item_right.gif); 
   	background-repeat: no-repeat;
-	background-position: right 0px;
+	background-position: top right;
 }
 
 #nav li div div div {
@@ -590,7 +590,7 @@ ul.verticalMenu li
 	margin-bottom: 5px;
 	padding-left: 23px;
 	background-repeat: no-repeat;
-	background-position: left middle;	
+	background-position: left center;	
 }
 
 /*************************** 
@@ -656,6 +656,13 @@ fieldset.error, div.error, fieldset.container
 	margin-top: 0px;
 	padding: 3px;
 	color: white;
+}
+
+.disabledTextarea
+{
+    border: 1px solid #888;
+    background-color: white;
+    overflow: auto;
 }
 
 .feedback, .feedback_textarea
@@ -756,7 +763,7 @@ optgroup
    font-weight: bold;
 }
 
-textarea
+textarea, .disabledTextarea
 {
     padding: 2px;
     width: 40em;
@@ -817,7 +824,7 @@ formem.required
     color: red;
 }
 
-label, input, select, form .other, textarea
+label, input, select, form .other, textarea, .disabledTextarea
 {
     margin-top: 5px;
     margin-bottom: 5px;
@@ -1052,7 +1059,7 @@ a.acronym
 {
     border-bottom: 1px dotted black;    
     cursor: help;
-    #margin-right: 5px; /* IE */
+/*    margin-right: 5px; /* IE */
     color: black !important;
     position: relative;
 }
@@ -1073,10 +1080,10 @@ a.acronym:hover div
 {
     display: block;
     position: absolute;
-#   background-color: yellow;
+/*   background-color: yellow; */
     border: 2px solid gray;
     padding: 5px;
-    #margin-top: 17px;
+/*    margin-top: 17px;  */
     left: 0px;
     white-space: nowrap;
     color: black;

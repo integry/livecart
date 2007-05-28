@@ -310,12 +310,50 @@ ActiveForm.prototype = {
     
     lastTinyMceId: 0,
     
+    disabledTextareas: {},
+    lastDisabledTextareaId: 1,
     initTinyMceFields: function(container) {
 		var textareas = container.getElementsByTagName('textarea');
 		for (k = 0; k < textareas.length; k++)
 		{
-            if(!textareas[k].id) textareas[k].id = 'tinyMceControll_' + (this.lastTinyMceId++);
-			tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
+            if(textareas[k].readOnly)
+            {
+                textareas[k].style.display = 'none';
+                new Insertion.After(textareas[k], '<div class="disabledTextarea" id="disabledTextareas_' + (ActiveForm.prototype.lastDisabledTextareaId++) + '">' + textareas[k].value + '</div>'); 
+                var disabledTextarea = textareas[k].up().down('.disabledTextarea');
+                ActiveForm.prototype.disabledTextareas[disabledTextarea.id] = disabledTextarea;
+                
+                var hoverFunction = function()
+                {
+                    try
+                    {
+                        $H(ActiveForm.prototype.disabledTextareas).each(function(iter)
+                        {
+                            iter.value.style.backgroundColor = '';
+                            iter.value.style.borderStyle = '';
+                            iter.value.style.borderWidth = '';
+                        });
+                    }
+                    catch(e)
+                    {
+                        console.info(e)
+                    }
+                }
+                
+                Event.observe(document.body, 'mousedown', hoverFunction, true);
+                Event.observe(disabledTextarea, 'click', function()
+                {
+                    this.style.backgroundColor = '#ffc';
+                    this.style.borderStyle = 'inset';
+                    this.style.borderWidth = '2px';
+                }, true);
+                
+            }
+            else
+            {
+                if(!textareas[k].id) textareas[k].id = 'tinyMceControll_' + (this.lastTinyMceId++);
+    			tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
+            }
 		}
     },
     
@@ -323,8 +361,22 @@ ActiveForm.prototype = {
         var textareas = container.getElementsByTagName('textarea');
 		for (k = 0; k < textareas.length; k++)
 		{
-            if(!textareas[k].id) textareas[k].id = 'tinyMceControll_' + (this.lastTinyMceId++);
-			tinyMCE.execCommand('mceRemoveControl', true, textareas[k].id);
+            if(textareas[k].readOnly)
+            {
+                textareas[k].style.display = 'block';
+                var disabledTextarea = textareas[k].up().down('.disabledTextarea');
+                if(disabledTextarea)
+                {
+                    Element.remove(disabledTextarea);
+                    delete ActiveForm.prototype.disabledTextareas[disabledTextarea.id];
+                }
+                
+            }
+            else
+            {
+                if(!textareas[k].id) textareas[k].id = 'tinyMceControll_' + (this.lastTinyMceId++);
+    			tinyMCE.execCommand('mceRemoveControl', true, textareas[k].id);
+            }
 		}
     },
     
@@ -333,6 +385,7 @@ ActiveForm.prototype = {
 		var textareas = container.getElementsByTagName('textarea');
 		for(k = 0; k < textareas.length; k++)
 		{
+            if(!textareas[k].readonly) continue;
 			tinyMCE.execInstanceCommand(textareas[k].id, 'mceSetContent', true, '', true);
 		}
 	}
