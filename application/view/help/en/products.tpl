@@ -9,7 +9,7 @@ To start selling goods in your e-store you have to stock up your system with som
 <legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#view">View and Sort products</a></li>
-	<li><a href="{self}#find">Locate products</a></li>
+	<li><a href="{self}#find">Find products</a></li>
 	<li><a href="{self}#manage">Manage products</a></li>
 	<li><a href="{help /products.add}">Add new product</a></li>
 	</ul>
@@ -34,25 +34,25 @@ To start selling goods in your e-store you have to stock up your system with som
 
 <h4>(Sort)</h4>
 	<p>LiveCart allows you to <strong>sort</strong> product's almost by any attribute: SKU, name, manufacturer, 
-	price etc. 
-	To sort products in ascending order click the "up" arrow next to the attribute's name:</p>
-	<img src="image/doc/products/arrow_up.bmp"/>
-	<p>To display products in descending order click the "down" arrow:</p>
-	<img src="image/doc/products/arrow_down.bmp"/>
+	price, stock, status. 
+	To sort products in ascending order click the "up" arrow next to the attribute's name. To display products in descending order click the "down" arrow.</p>
+	<img src="image/doc/products/arrows.bmp"/>
+
 	
 	You can add or remove products' attributes that are displayed in the toolbar:
-	<ul>
+	<div id="columns">
+	<ol>
 		<li>Click <strong>Columns</strong> on the right:</li>
 		<img src="image/doc/products/columns.bmp"/>
-		<li>You can add or remove attributes by checking or clearing a checkbox next to appropriate attribute:</li>
+		<li>Select or remove attributes by checking or clearing a checkbox next to appropriate attribute:</li>
 		<img src="image/doc/products/checkbox.bmp"/>
 		<li>Click <strong>Change Columns</strong> to save changes.</li>
-	</ul>
+	</ol>
 </p>
 
-<h3 id="find">Locate products</h3>
+<h3 id="find">Find products</h3>
 
-<p>LC allows you to conduct a product search almost by any product's attribute.</p>
+<p>LC allows you to conduct a product search almost by any product's attribute. You can <a href="{self}#columns">changes attributes</a></small> (...)</p>
 <ul>
 		<li>Click an attribute to activate a search field:</li>
 		<img src="image/doc/products/name2.bmp"/>

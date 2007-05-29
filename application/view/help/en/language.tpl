@@ -33,7 +33,7 @@ you deal with interface translations (see <a href="{help /language.edit#translat
 
 <ol>
 <li>Click the <strong>Add New Language</strong> link:</li>
-<img src="image/doc/language/add.bmp"/>
+<img src="image/doc/language/add_language.bmp"/>
 <li>Then select a language from the pulldown menu:</li>
 <img src="image/doc/language/menu.bmp"/>
 <li>Click <strong>Add</strong> for the language to appear below in the language list.</li>

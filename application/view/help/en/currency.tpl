@@ -29,9 +29,9 @@ which currencies your store will support.</p>
 
 <ol>
 	<li>Click the <strong>Add currency</strong> link:</li>
-	<img src="image/doc/currency/add.bmp">
+	<img src="image/doc/currency/add_currency.bmp">
 	<li>Then choose a currency from the pulldown menu:</li>
-	<img src="image/doc/currency/menu.bmp">
+	<img src="image/doc/currency/menu_add.bmp">
 	<li>Finally click the <strong>Add Currency</strong> button:</li>
 	<img src="image/doc/currency/add_button.bmp">
 </ol>
@@ -51,7 +51,10 @@ If you want to change the base currency click the <strong>Set as base currency</
 <h3 id="adjust_rates">Adjust Exchange Rates</h3>
 <p>To adjust exchange rates of your (active) currencies click on the <strong>Adjust Exchange Rates</strong> 
 tab (to proceed to manual exchange rates setting page):</p>
-<img src="image/doc/currency/exchange_rates_tab.bmp">
+<img src="image/doc/currency/adjust_exchange_rates.bmp">
+<img src="image/doc/currency/adjust_exchange_rates_highlight_red.bmp">
+<img src="image/doc/currency/adjust_exchange_rates_highlight_blue.bmp">
+<img src="image/doc/currency/adjust_exchange_rates_highlight_green.bmp">
 
 <p>To set the currency exchange rates simply enter currency's value in the appropriate field. For instance, if 
 one United Kingdom Pound is worth 1.96475 US Dollars, enter this value:</p>
