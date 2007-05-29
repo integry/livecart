@@ -26,6 +26,10 @@ Backend.Roles.prototype =
         this.rolesTree.enableCheckBoxes(true);
         this.rolesTree.enableSmartCheckboxes(true);
         this.rolesTree.enableThreeStateCheckboxes(true);
+        this.rolesTree.setOnCheckHandler(function(id, state)
+        {
+             self.nodes.setAllPermissions.checked = (self.rolesTree.getAllUnchecked() == '');
+        });
         
         this.roles = {};
         $A(roles).each(function(node)
@@ -50,11 +54,13 @@ Backend.Roles.prototype =
     restoreTree: function()
     {
         var self = this;
+        this.allChecked = true;
         $H(this.backedUpRoles).each(function(id)
 		{
             self.rolesTree.setCheck(parseInt(id), self.backedUpRoles[parseInt(id)]);
 		});
         
+        self.nodes.setAllPermissions.checked = (self.rolesTree.getAllUnchecked() == '');
         this.roles = this.backedUpRoles;
     },
     
@@ -78,6 +84,8 @@ Backend.Roles.prototype =
         this.nodes.controls = this.nodes.root.down('.roles_controls');
         this.nodes.save = this.nodes.controls.down('.roles_save');
         this.nodes.cancel = this.nodes.controls.down('.roles_cancel');
+        
+        this.nodes.setAllPermissions = this.nodes.root.down('.setAllPermissions');
     },
     
     bindEvents: function()
@@ -85,6 +93,19 @@ Backend.Roles.prototype =
         var self = this;
         
         Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel(); });
+        Event.observe(this.nodes.setAllPermissions,  'change', function(e){ self.checkAll(); });
+    },
+    
+    checkAll: function()
+    {
+        try
+        {
+            this.rolesTree.setSubChecked(0, this.nodes.setAllPermissions.checked);
+        }
+        catch(e)
+        {
+            // ok
+        }
     },
     
     getInstance: function(root, roles, activeRoles)

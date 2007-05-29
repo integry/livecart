@@ -8,7 +8,14 @@
 
 {form id="roles_form_`$userGroup.ID`" handle=$form action="controller=backend.roles action=update id=`$userGroup.ID`" onsubmit="Backend.Roles.prototype.getInstance('roles_form_`$userGroup.ID`').save(event);" method="post" role="userGroup.update"}
     
-    <div id="userGroupsRolesTree_{$userGroup.ID}" class="treeBrowser" ></div>
+    <fieldset class="error">
+        {checkbox name="setAllPermissions" class="checkbox setAllPermissions" id="roles_setAllPermissions_`$userGroup.ID`"}
+        <label class="checkbox" for="roles_setAllPermissions_{$userGroup.ID}">{t _set_all_permissions}</label>
+    </fieldset>
+    
+    <div id="userGroupsRolesTree_{$userGroup.ID}" class="treeBrowser" >
+        
+    </div>
     
     <fieldset class="roles_controls error controls">
         <span class="activeForm_progress"></span>

@@ -13,7 +13,7 @@
 			</li>
 			
 			<li id="tabRoles" class="tab inactive">
-				<a href="{link controller=backend.roles action=index}?id=_id_">{t _group_roles}</a>
+				<a href="{link controller=backend.roles action=index}?id=_id_">{t _group_permissions}</a>
 				<span class="tabHelp">userGroups.shippingRates</span>
 			</li>
 		</ul>
