@@ -12,8 +12,8 @@
         </Menu>
         <Menu>
         	<Title>_menu_orders</Title>		
-        	<Controller>backend.order</Controller>
-        	<Role>orders</Role>	
+        	<Controller>backend.CustomerOrder</Controller>
+        	<Role>order</Role>	
         </Menu>
         <Menu>
         	<Title>_menu_users</Title>	

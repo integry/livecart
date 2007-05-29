@@ -76,6 +76,13 @@
 	Backend.Category.initPage();
     
     Backend.Category.loadBookmarkedCategory();
+    
+    {/literal}
+        {allowed role="product"}
+            Backend.Product.productsMiscPermision = true;
+        {/allowed}
+    {literal}
+    
 </script>
 {/literal}
     
