@@ -32,7 +32,7 @@ Backend.LanguageIndex.prototype =
 	
     initLangList: function ()
     {	
-		ActiveList.prototype.getInstance('languageList', {
+		return ActiveList.prototype.getInstance('languageList', {
 	         beforeEdit:     function(li) {window.location.href = lng.editUrl + '/' + this.getRecordId(li); },
 	         beforeSort:     function(li, order) 
 			 { 
@@ -111,7 +111,11 @@ Backend.LanguageIndex.prototype =
 		node.parentNode.replaceChild(cl, node);
 	  	
 		this.renderItem(itemData, cl);
-		this.initLangList();
+
+        var list = this.initLangList();
+        list.decorateItems();
+        list.createSortable();
+        
 		new Effect.Highlight(cl, {startcolor:'#FBFF85', endcolor:'#EFF4F6'})
 	},
 	
@@ -163,14 +167,18 @@ Backend.LanguageIndex.prototype =
 	  	var list = $('languageList');
 		var node = template.cloneNode(true);
 		node = this.renderItem(itemData, node);
+
+        console.log(node.innerHTML);
 		list.appendChild(node);
-  	
-		this.initLangList();
-				
+
+        var list = this.initLangList();
+        list.decorateItems();
+        list.createSortable();
+        		
 		restoreMenu('addLang', 'langPageMenu');
 		document.getElementById('addLangFeedback').style.display = 'none';
-				
-		new Effect.Highlight(node, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
+						
+        new Effect.Highlight(node, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
 	},
 	
 	setEnabled: function(node) 

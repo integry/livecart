@@ -24,8 +24,9 @@
 					<td id="footerLeft">
 						&copy; UAB <a href="http://integry.com" target="_blank">Integry Systems</a>, 2007
 					</td>
-					<td id="footerStretch">
+					<td id="footerStretch" style="text-align: right; padding-right: 15px;">
 						&nbsp; 
+						<a href="{link}" target="_blank" id="frontendLink">{t Store Frontend}</a>
 					</td>
 				</tr>
 			</table>

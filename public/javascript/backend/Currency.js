@@ -124,8 +124,10 @@ Backend.Currency.prototype =
 		node = this.renderItem(itemData, node);
 		list.appendChild(node);
   	
-		initCurrencyList();
-				
+        var activeList = ActiveList.prototype.getInstance('currencyList');
+        activeList.decorateItems();
+        activeList.createSortable();
+        		
 		new Effect.Highlight(node, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
 	},	
 	
@@ -140,7 +142,11 @@ Backend.Currency.prototype =
 		node.parentNode.replaceChild(cl, node);
 	  	
 		this.renderItem(itemData, cl);
-		initCurrencyList();
+
+        var activeList = ActiveList.prototype.getInstance('currencyList');
+        activeList.decorateItems();
+        activeList.createSortable();
+
 		new Effect.Highlight(cl, {startcolor:'#FBFF85', endcolor:'#EFF4F6'})
 	},
 	

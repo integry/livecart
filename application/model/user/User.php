@@ -302,6 +302,11 @@ class User extends ActiveRecordModel
             return true;
         }
         
+        if (!$this->getID())
+        {
+            return false;
+        }
+        
         if ('login' == $roleName)
 		{
 			return $this->getID() > 0;	

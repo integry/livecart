@@ -252,6 +252,15 @@ html, body{
     background-color: #E6E6E6;
 }
 
+#frontendLink
+{
+    color: white; 
+    padding-right: 22px; 
+    background-image:url(../../image/silk/gif/house.gif); 
+    background-repeat: no-repeat;    
+    background-position: center right;
+}
+
 /*************************** 
  	Navigation menu 
 ****************************/

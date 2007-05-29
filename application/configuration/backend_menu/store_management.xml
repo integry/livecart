@@ -66,8 +66,7 @@
         		</Menu>
         		<Menu>
         			<Title>_menu_edit_templates</Title>
-        			<Controller>backend.customize</Controller>
-        			<Action>editTemplate</Action>	
+        			<Controller>backend.template</Controller>
         		</Menu>
         	</Items>
         </Menu>
