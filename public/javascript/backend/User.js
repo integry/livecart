@@ -12,12 +12,7 @@ Backend.UserGroup.prototype =
 	  
 	initialize: function(groups)
 	{
-        var self = this;
-        
-        if(!Backend.ajaxNav.getHash().match(/group_-?\d+#\w+/))
-        {
-            window.location.hash = '#group_-2#tabUsers__';
-        }
+        var self = this;      
         
 		Backend.UserGroup.prototype.treeBrowser = new dhtmlXTreeObject("userGroupsBrowser","","", false);
 		Backend.UserGroup.prototype.treeBrowser.setOnClickHandler(this.activateGroup);
@@ -50,7 +45,15 @@ Backend.UserGroup.prototype =
 			}
 		
     	this.insertTreeBranch(groups, 0); 
-
+        
+        try
+        {
+            if(!Backend.ajaxNav.getHash().match(/group_-?\d+#\w+/))
+            {
+                window.location.hash = '#group_-2#tabUsers__';
+                Backend.ajaxNav.handle(window.location.hash.substr(1))
+            }
+        } catch(e) {  }
         
         var self = this;
 	    self.tabControl = TabControl.prototype.getInstance('userGroupsManagerContainer', self.craftTabUrl, self.craftContainerId, {}); 

@@ -54,7 +54,7 @@ TabControl.prototype = {
         this.nodes.tabListElements.each(function(li) 
         {
 			var link = li.down('a');
-            var indicator = '<img src="' + self.indicatorImageName + '" class="tabIndicator hidden" alt="Tab indicator" /> ';
+            var indicator = '<img src="' + self.indicatorImageName + '" class="tabIndicator" alt="Tab indicator" style="display: none" /> ';
             
             Event.observe(link, 'click', function(e) { if(e) Event.stop(e); });
             

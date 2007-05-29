@@ -25,6 +25,13 @@ _is_enabled=Is enabled
 _add_new_user=Add new user
 _with_selected=With selected
 
+_process=Process
+
+# Tabs
+_user_info=User info
+_cancel_editing_user_info=Cancel editing user info
+_cancel_adding_new_user=Cancel adding new user
+
 _byGroup=By group
 _livecart_users=Users
 _group_users=Group users
