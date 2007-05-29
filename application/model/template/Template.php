@@ -17,6 +17,45 @@ class Template
 		$this->file = $fileName;
 	}
 
+    public static function getTree($dir = null)
+    {
+	  	if (!$dir)
+	  	{
+			$dir = ClassLoader::getRealPath('application.view.');
+		}
+		
+		$rootLn = strlen(ClassLoader::getRealPath('application.view.'));
+		
+		$res = array();
+		$d = new DirectoryIterator($dir);
+		
+		$store = Store::getInstance();
+		
+		foreach ($d as $file)
+		{
+			if (!$file->isDot())
+			{
+                $id = substr($file->getPathName(), $rootLn);
+                
+                if ($file->isDir())
+    			{
+                    $dir = self::getTree($file->getPathName());
+                    if ($dir)
+                    {
+                        $res[$file->getFileName()]['id'] = $id;
+                        $res[$file->getFileName()]['subs'] = $dir;
+                    }
+                }
+                elseif (substr($file->getFileName(), -4) == '.tpl')
+                {
+                    $res[$file->getFileName()]['id'] = $id;
+                }                
+            }
+		}
+		
+		return $res;        
+    }
+
 	public static function getRealFilePath($fileName)
 	{
 		$paths = array();
@@ -43,8 +82,8 @@ class Template
 	}
 
 	public function setCode($code)
-	{
-		$this->code = $code;
+	{        
+        $this->code = $code;
 	}	
 	
 	public function getCode()
@@ -56,6 +95,17 @@ class Template
 	{
 		return $this->file;
 	}
+	
+	private function checkForChanges()
+	{
+        $l = str_replace("\r\n", "\n", file_get_contents(self::getCustomizedFilePath($this->file)));
+        $r = str_replace("\r\n", "\n", file_get_contents(self::getOriginalFilePath($this->file)));
+        
+        if ($l == $r)
+        {
+            $this->restoreOriginal();
+        }
+    }
 	
 	public function save()
 	{
@@ -69,6 +119,9 @@ class Template
 		}
 		
 		$res = file_put_contents($path, $this->code);
+		
+		$this->checkForChanges();
+		
 		return $res !== false;		
 	}
 

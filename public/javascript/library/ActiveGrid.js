@@ -66,7 +66,8 @@ ActiveGrid.prototype =
 		var headerRow = this._getHeaderRow();
 		this.selectAllInstance = headerRow.getElementsByTagName('input')[0];
 		this.selectAllInstance.onclick = this.selectAll.bindAsEventListener(this); 
-			
+		this.selectAllInstance.parentNode.onclick = function(e){Event.stop(e);}.bindAsEventListener(this); 
+                			
 		this.ricoGrid.onUpdate = this.onUpdate.bind(this);
 		this.ricoGrid.onBeginDataFetch = this.showFetchIndicator.bind(this);
 		this.ricoGrid.options.onRefreshComplete = this.hideFetchIndicator.bind(this);
@@ -203,6 +204,8 @@ ActiveGrid.prototype =
 		this.selectedRows = new Object;		
 		this.inverseSelection = this.selectAllInstance.checked;		
 		this._markSelectedRows();
+    
+        e.stopPropagation();
 	},
 	
 	/**

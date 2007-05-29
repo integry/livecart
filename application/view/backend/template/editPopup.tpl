@@ -1,4 +1,4 @@
-{pageTitle help="template"}{t Edit Template File}: {$fileName}{/pageTitle}
+{pageTitle}{t Edit Template File}: {$fileName}{/pageTitle}
 {includeCss file="backend/Template.css"}
 {includeJs file="backend/Template.js"}
 {includeJs file="library/form/ActiveForm.js"}
@@ -23,7 +23,7 @@
 
 {form handle=$form action="controller=backend.template action=save" method="POST" id="templateForm"}
 
-	{textarea name="code"}
+	{textarea name="code" id="cd"}
 	
 	<fieldset class="controls">
 		{hidden name="file"}
