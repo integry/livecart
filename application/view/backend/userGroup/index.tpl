@@ -26,14 +26,12 @@
 {pageTitle help="userGroups"}{t _livecart_users}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
-
-
 <script type="text/javascript">
     Backend.UserGroup.userGroups = {$userGroups};
 </script>
 
 <div id="userGroupsWrapper" class="maxHeight h--50">
-	<div id="userGroupsBrowserWithControlls">
+	<div id="userGroupsBrowserWithControlls" class="maxHeight">
     	<div id="userGroupsBrowser" class="treeBrowser"></div>
         <ul id="userGroupsBrowserControls" class="verticalMenu">
             <li class="addTreeNode" style="{denied role="userGroup.create"}display: none;{/denied}"><a id="userGroups_add" href="#add">{t _add}</a></li>
@@ -45,10 +43,7 @@
     {include file="backend/userGroup/userContainer.tpl"}
 </div>
 
-
 <div id="activeUserPath"></div>
-
-
 
 {literal}
 <script type="text/javascript">

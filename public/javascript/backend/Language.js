@@ -237,6 +237,149 @@ Backend.LanguageIndex.prototype =
 	}
 }
 
+/**
+ *  Edit translations
+ */
+Backend.LangEdit = Class.create();
+Backend.LangEdit.prototype = 
+{
+	translations: false,
+	
+	english: false,
+	
+	treeBrowser: false,
+    
+    initialize: function(translations, english)
+	{
+        this.initTreeBrowser();
+        
+        this.translations = translations;
+        this.english = english;
+        
+		for (var file in english)
+		{
+            if ('object' == typeof english[file])
+            {
+				this.insertMenuItem(file);
+            }
+        }        
+        
+        this.treeBrowser.closeAllItems();
+        
+        console.log(this);
+    },
+    
+    insertMenuItem: function(file)
+    {
+        var path = file.substr(0, file.lastIndexOf('/'))
+        if (!this.treeBrowser.getItemText(path) && '' != path)
+        {
+            this.insertMenuItem(path);
+        }
+        
+        if (file.lastIndexOf('/'))
+        {
+            var fileName = file.substr(file.lastIndexOf('/') + 1);    
+        }
+        else
+        {
+            var fileName = file;   
+        }        
+        
+        if (fileName.substr(-4) == '.lng')
+        {
+            fileName = fileName.substr(0, fileName.length - 4);   
+        }
+        
+        this.treeBrowser.insertNewItem(path, file, fileName, null, 0, 0, 0, '');
+    },
+    
+    initTreeBrowser: function()
+    {
+		this.treeBrowser = new dhtmlXTreeObject("langBrowser","","", false);
+		
+		this.treeBrowser.def_img_x = 'auto';
+		this.treeBrowser.def_img_y = 'auto';
+				
+		this.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
+		this.treeBrowser.setOnClickHandler(this.activateCategory.bind(this));
+
+		this.treeBrowser.showFeedback = 
+			function(itemId) 
+			{
+				if (!this.iconUrls)
+				{
+					this.iconUrls = new Object();	
+				}
+				
+				this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+				this.setItemImage(itemId, '../../../image/indicator.gif');
+			}
+		
+		this.treeBrowser.hideFeedback = 
+			function()
+			{
+				for (var itemId in this.iconUrls)
+				{
+					this.setItemImage(itemId, this.iconUrls[itemId]);	
+				}				
+			}        
+    },
+    
+	activateCategory: function(id)
+	{
+        if (!this.treeBrowser.hasChildren(id))
+		{
+			this.treeBrowser.showFeedback(id);
+			this.displayFile(id);
+		}
+	},	
+	
+	displayFile: function(file)
+	{
+		this.treeBrowser.hideFeedback();
+		
+		var transTemplate = $('transTemplate').innerHTML;
+		
+		var english = this.english[file];		
+		var edit = '';
+        var template = '';
+        for (var key in english)
+		{
+            if ('function' != typeof english[key])
+            {
+                template = transTemplate;
+    			template = template.replace(/_file_/g, file);
+    			template = template.replace(/_key_/g, key);
+    			template = template.replace(/_english_/g, english[key]);
+    			edit += template;                
+            }
+        }
+        
+        $('translations').innerHTML = edit;
+
+        // set field values and behavior through DOM
+        for (var key in english)
+		{
+            var input = $(file + '#' + key);
+            if (!input)
+            {
+                continue;
+            }
+
+            input.value = this.translations[file][key];
+            input.handler = this;
+            input.file = file;
+            input.key = key;
+            input.onchange = 
+                function()
+                {
+                    this.handler.translations[this.file][this.key] = this.value;
+                }
+        }
+	}
+}
+
 Backend.LanguageEdit = Class.create();
 Backend.LanguageEdit.prototype = 
 {		
@@ -244,15 +387,12 @@ Backend.LanguageEdit.prototype =
 	
 	row: false,
 	
-	expandedFiles: false,
-	
 	english: false,
 	
 	initialize: function(translations, english, container)
 	{
 		this.templ = document.getElementsByClassName('lang-template')[0];
 		this.row   = this.templ.getElementsByClassName('lang-trans-template')[0];  			
-		this.expandedFiles =  document.getElementById('navLang').elements.namedItem('langFileSel').value.parseJSON();	
 		
 		this.english = english;
 		
@@ -323,11 +463,6 @@ Backend.LanguageEdit.prototype =
 				{
 					langEdit.langToggleVisibility(this.parentNode);	
 				}
-				// full expand ..advanced stuff..sss..aaaa..sss...
-				else
-				{
-					langEdit.langExpandAll(this.parentNode.parentNode.id, 1 - langEdit.isContainerVisible(this.parentNode.	parentNode.parentNode));				  
-				}
   			}
 
 		t.getElementsByTagName('legend')[0].getElementsByTagName('a')[0].onkeydown = 			
@@ -339,13 +474,6 @@ Backend.LanguageEdit.prototype =
 				}									  	
 			}					
 		
-		// set visibility
-		if (this.expandedFiles[fileName])
-		{
-		  	t.getElementsByTagName('div')[0].style.display = '';
-			img = t.getElementsByTagName('img')[1];
-			img.src = 'image/backend/icon/collapse.gif';  	
-		}		
 
 		// generate container content
 		zebra = 0;
@@ -516,17 +644,13 @@ Backend.LanguageEdit.prototype =
 		
 	},
 	
-	langSearch: function(query, display, expand)
+	langSearch: function(query, display)
 	{
 		query = query.toLowerCase();  
 		found = this.langFileSearch(query, translations, '', display);
 		document.getElementById('langNotFound').style.display = (found) ? 'none' : 'block';  	
 		document.getElementById('editLang').style.display = (found) ? 'block' : 'none';  			
 		
-		if (expand)
-		{
-			this.langExpandAll('translations', true);
-		}
 	},
 	
 	replaceInputWithTextarea: function(element)
@@ -537,27 +661,13 @@ Backend.LanguageEdit.prototype =
 		textarea.name = element.name;
 		textarea.focus();								  	
 	},
-	
-	langExpandAll: function(containerId, expand)
-	{
-		containers = document.getElementById(containerId).getElementsByTagName('fieldset');
-		for (k = 0; k < containers.length; k++)
-		{
-		  	this.langSetVisibility(containers[k], expand);
-		}
-		window.onresize();
-	},
-	
+		
 	langSetVisibility: function(container, visibility)
 	{
 		// toggle translation input visibility
 		transCont = container.getElementsByTagName('div')[0];
 		transCont.style.display = (visibility ? '' : 'none');
-	
-		// toggle collapse/expand images
-		img = container.getElementsByTagName('img')[1];
-		img.src = 'image/backend/icon/' + (visibility ? 'collapse.gif' : 'expand.gif');
-		
+			
 		// save explode/collapse status in form variable
 		sel = document.getElementById('navLang').elements.namedItem('langFileSel');
 	

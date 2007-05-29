@@ -3,9 +3,12 @@
 {/pageTitle}
 
 {includeJs file="library/json.js"}
+{includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
+{includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
 {includeJs file="backend/Language.js"}
 
 {includeCss file="backend/Language.css"}
+{includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 
 {include file="layout/backend/header.tpl"}
 
@@ -16,9 +19,66 @@
 </script>
 {/literal}
 
-{if $saved}
-<div id="langSaveConf"></div>
-{/if}
+<div id="fileTemplate">
+
+    <h1>_name_</h1>
+
+    <div>
+        _edit_        
+    </div>
+
+</div>
+
+<div id="transTemplate" class="lang-trans-template">
+	<label class="lang-key">_key_</label>
+	<fieldset class="container lang-translation">
+		<input id="_file_#_key_" type="text" {denied role="language.status"}readonly="readonly"{/denied}><br />
+		<span>_english_</span>
+	</fieldset>
+</div>	
+
+<div id="pageContainer">
+		
+	<div style="float: left;">
+		<div id="langBrowser" class="treeBrowser">
+		</div>
+	
+	    <div class="clear"></div>
+	
+		<div style="margin-top: 20px;">
+			<div class="yellowMessage" style="display: none;">
+				<div>
+					{t Template saved successfuly}
+				</div>
+			</div>
+			<div class="redMessage" style="display: none;">
+				<div>
+					{t Template could not be saved}
+				</div>
+			</div>
+		</div>		
+		
+		<div style="clear: both;"></div>
+	
+	</div>
+
+	<div style="float: left; margin-left: 20px;">
+		
+		<span id="langIndicator" class="progressIndicator" style="display: none;"></span>
+				
+		<div id="langContent">
+			{include file="backend/template/emptyPage.tpl"}
+		</div>
+	</div>
+
+</div>
+
+{literal}
+<script type="text/javascript">
+{/literal}
+	var edit = new Backend.LangEdit(translations, english);
+</script>
+
 
 {tip}
 	{capture assign=tipUrl}{link controller=backend.customize action=index}{/capture}
@@ -60,11 +120,6 @@
 	<input type="hidden" name="langFileSel" />
 	<input type="hidden" name="show" />
 	
-	<div id="expandCollapse">
-		<a href="#" onClick="langEdit.langExpandAll('translations', true); return false;">Expand all</a> 
-		<a href="#" onClick="langEdit.langExpandAll('translations', false); return false;">Collapse all</a>
-	</div>
-	
 	<fieldset class="langTranslations lang-template" style="display: none;">
 		<legend>
 			<img src="image/backend/Language/hor_line.gif" class="langTreeLine" />
@@ -92,12 +147,14 @@
 	{literal}
 	<script type="text/javascript">
 	{/literal}
+/*
 		var langEdit = new Backend.LanguageEdit(translations, english, document.getElementById('translations'));
 		langEdit.preFilter();
 		{if $saved}{literal}
 		new Backend.SaveConfirmationMessage($('langSaveConf'), { message: 'Translations were saved successfuly', type: 'yellow' });
 		{/literal}{/if}
 		breadcrumb.addItem('{$edit_language}', '');
+*/
 	</script>
 
     <span {denied role='language.update'}style="display: none"{/denied}>

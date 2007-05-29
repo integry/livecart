@@ -1,6 +1,6 @@
 label.radio {
 	width: auto;  
-	float: auto;
+	float: none;
 	margin-right: 10px;
 	margin-left: -10px;
 }
@@ -83,6 +83,15 @@ label.radio {
 .disabled .langListMenu
 {
   	display: none;
+}
+
+/* edit */
+#langBrowser
+{
+  	float: left;
+  	width: 250px;
+  	height: 400px;
+  	overflow: auto;    
 }
 
 /* edit */

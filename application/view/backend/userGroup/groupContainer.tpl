@@ -1,5 +1,5 @@
 {* User groups container *}
-<div id="userGroupsManagerContainer" class="managerContainer">   
+<div id="userGroupsManagerContainer" class="managerContainer maxHeight">   
 	<div class="tabContainer">
 		<ul class="tabList tabs">
 			<li id="tabUserGroup" class="tab active">

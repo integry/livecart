@@ -7,7 +7,6 @@
 {includeJs file="backend/Template.js"}
 
 {includeCss file="backend/Template.css"}
-{includeCss file="library/TabControl.css"}
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 
 {pageTitle help="template"}Edit Templates{/pageTitle}

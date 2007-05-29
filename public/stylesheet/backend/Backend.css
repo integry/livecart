@@ -1057,8 +1057,8 @@ fieldset.group p
 {
     border: 1px solid #ccc; 
     background: #f1f1f1;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding: 5px;
+    padding-right: 0;
 }
 
 /**************************
