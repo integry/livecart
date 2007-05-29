@@ -8,7 +8,7 @@
         	<Title>_menu_products</Title>		
         	<Controller>backend.category</Controller>
         	<Action>index</Action>	
-        	<Role>category</Role>	
+        	<Role>product</Role>	
         </Menu>
         <Menu>
         	<Title>_menu_orders</Title>		

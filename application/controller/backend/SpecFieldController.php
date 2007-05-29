@@ -9,7 +9,7 @@ ClassLoader::import("library.*");
  * @package application.controller.backend
  * @author Saulius Rupainis <saulius@integry.net>
  * @author Sergej Andrejev <sandrejev@gmail.com>
- * @role specification
+ * @role category
  */
 class SpecFieldController extends StoreManagementController
 {
@@ -58,7 +58,6 @@ class SpecFieldController extends StoreManagementController
     /**
      * Displays form for creating a new or editing existing one product group specification field
      * 
-     * @role update
      * @return ActionResponse
      */
     public function item()
@@ -95,7 +94,7 @@ class SpecFieldController extends StoreManagementController
     }
     
     /**
-     * @role create
+     * @role update
      */
     public function create()
     {
@@ -208,7 +207,7 @@ class SpecFieldController extends StoreManagementController
     /**
      * Delete specification field from database
      * 
-     * @role remove
+     * @role update
      * @return JSONResponse
      */
     public function delete()
@@ -227,7 +226,7 @@ class SpecFieldController extends StoreManagementController
     /**
      * Sort specification fields
      * 
-     * @role sort
+     * @role update
      * @return JSONResponse
      */
     public function sort()

@@ -85,19 +85,19 @@
 				<span class="tabHelp">cat.details</span>
 			</li>
 			
-			<li id="tabFields" class="tab inactive">
+			<li id="tabFields" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
 				<a href="{link controller=backend.specField action=index id=_id_}">{t _attributes}</a>
 				<span> </span>
 				<span class="tabHelp">cat.attr</span>
 			</li>
 			
-			<li id="tabFilters" class="tab inactive">
+			<li id="tabFilters" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
 				<a href="{link controller=backend.filterGroup action=index id=_id_}">{t _filters}</a>
 				<span> </span>
 				<span class="tabHelp">cat.filters</span>
 			</li>
 			
-			<li id="tabImages" class="tab inactive">
+			<li id="tabImages" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
 				<a href="{link controller=backend.categoryImage action=index id=_id_}">{t _images}</a>
 				<span> </span>
 				<span class="tabHelp">cat.images</span>

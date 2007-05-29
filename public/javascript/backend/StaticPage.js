@@ -169,3 +169,12 @@ Backend.StaticPage.prototype =
 		new LiveCart.AjaxUpdater(this.urls['empty'], 'pageContent', 'settingsIndicator');        
     }
 }
+
+try
+{
+  new Backend.StaticPage()
+}
+catch(e)
+{
+    console.info(e);
+}

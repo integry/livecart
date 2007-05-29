@@ -1,11 +1,11 @@
 <div class="specField_group_form">
-    <form action="{link controller=backend.specFieldGroup action=save}/" method="post"> 
+    <form action="{link controller=backend.specFieldGroup action=save}/" method="post" class="{denied role="category.update"}formReadonly{/denied}"> 
         <input type="hidden" name="categoryID" class="specField_group_categoryID" />
         <fieldset class="specField_group_translations specField_step_main">
 			<div class="specField_group_default_language">
         		<label class="specField_group_name_label">{t _specField_group_title}</label>
                 <fieldset class="error" style="display: block;">
-                    <input type="text" name="name" class="specField_group_name_label" />
+                    <input type="text" name="name" class="specField_group_name_label" {denied role="category.update"}readonly="readonly"{/denied} />
             		<span class="errorText hidden"> </span>
                 </fieldset>
         	</div>
@@ -19,13 +19,13 @@
                 <div class="activeForm_translation_values specField_group_language_translation">
                     <p class="required">
             			<label>{t _specField_group_title}</label>
-            			<input type="text" name="name" />
+            			<input type="text" name="name" {denied role="category.update"}readonly="readonly"{/denied} />
         			</p>
                 </div>
         	</fieldset>
         </fieldset>
         
-        <fieldset class="specField_group_controls">
+        <fieldset class="specField_group_controls controls">
         	<span class="activeForm_progress"></span>
             <input type="submit" class="specField_save button submit" value="{translate text=_save}" />
             {t _or}

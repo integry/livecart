@@ -45,7 +45,7 @@
 </script>
 
 
-<fieldset class="container">
+<fieldset class="container" {denied role="category.update"}style="display: none"{/denied}>
 	<ul class="menu" id="specField_menu_{$categoryID}">
 	    <li><a href="#new" id="specField_item_new_{$categoryID}_show">{t _add_new_field}</a></li>
 	    <li><a href="#new" id="specField_item_new_{$categoryID}_cancel" class="hidden">{t _cancel_adding_new_field}</a></li>
@@ -81,7 +81,7 @@
 </div>
 
 {* No group *}
-<ul id="specField_items_list_{$categoryID}_" class="specFieldList activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_specFieldList">
+<ul id="specField_items_list_{$categoryID}_" class="specFieldList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeList_accept_specFieldList">
 {assign var="lastSpecFieldGroup" value="-1"}
 {foreach name="specFieldForeach" item="field" from=$specFieldsWithGroups}
     {if $field.SpecFieldGroup.ID}{php}break;{/php}{/if}
@@ -96,7 +96,7 @@
 
 {* Grouped specification fields *}
 {assign var="lastSpecFieldGroup" value="-1"}
-<ul id="specField_groups_list_{$categoryID}" class="specFieldListGroup activeList_add_sort activeList_add_edit activeList_add_delete">
+<ul id="specField_groups_list_{$categoryID}" class="specFieldListGroup {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit">
 {foreach name="specFieldForeach" item="field" from=$specFieldsWithGroups}
     {if !$field.SpecFieldGroup.ID}{php}continue;{/php}{/if}
     
@@ -104,7 +104,7 @@
         {if $lastSpecFieldGroup > 0}</ul></li>{/if}
         <li id="specField_groups_list_{$categoryID}_{$field.SpecFieldGroup.ID}">
             <span class="specField_group_title">{$field.SpecFieldGroup.name_lang}</span>   	
-            <ul id="specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}" class="specFieldList activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_specFieldList">
+            <ul id="specField_items_list_{$categoryID}_{$field.SpecFieldGroup.ID}" class="specFieldList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit  activeList_accept_specFieldList">
     {/if}
 
     {if $field.ID} {* For empty groups *}

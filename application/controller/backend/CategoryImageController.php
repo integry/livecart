@@ -14,9 +14,6 @@ ClassLoader::import("application.model.category.CategoryImage");
  */
 class CategoryImageController extends ObjectImageController
 {
-	/**
-	 * @role update
-	 */
     public function index()
     {
         return parent::index();

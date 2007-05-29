@@ -5,7 +5,7 @@
 	</li>
 </ul>
 
-<fieldset class="container">
+<fieldset class="container" {denied role="category.update"}style="display: none"{/denied}>
 	<ul class="menu" id="catImgMenu_{$ownerId}">
 		<li>
 			<a href="#" onclick="slideForm('catImgAdd_{$ownerId}', 'catImgMenu_{$ownerId}'); return false;" class="pageMenu">{t _add_new}</a>
@@ -14,7 +14,7 @@
 </fieldset>
 
 <div id="catImgAdd_{$ownerId}" class="catImageEditForm" style="display: none;">
-{form handle=$form action="controller=backend.categoryImage action=upload" method="post" onsubmit="$('catImageList_`$ownerId`').handler.upload(this);" target="catImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data"}
+{form handle=$form action="controller=backend.categoryImage action=upload" method="post" onsubmit="$('catImageList_`$ownerId`').handler.upload(this);" target="catImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="category.update"}
 	
 	<input type="hidden" name="ownerId" value="{$ownerId}" />
 	<input type="hidden" name="imageId" value="" />
@@ -51,16 +51,18 @@
 			</script>
 		</div>		
 		
+        <span class="controls">
 			<span class="progressIndicator" style="display: none;"></span>
 			<input type="submit" name="upload" class="submit" value="{tn _upload}"> {t _or} <a href="#" class="cancel" onclick="restoreMenu('catImgAdd_{$ownerId}', 'catImgMenu_{$ownerId}'); return false;">{t _cancel}</a>
-	</fieldset>
+	    </span>
+    </fieldset>
 
 {/form}
 <script>console.info('{$ownerId}')</script>
-<iframe name="catImgUpload_{$ownerId}" id="catImgUpload_{$ownerId}"></iframe>
+<iframe name="catImgUpload_{$ownerId}" id="catImgUpload_{$ownerId}" style="display: none"></iframe>
 </div>
 
-<ul id="catImageList_{$ownerId}" class="catImageList activeList_add_sort activeList_add_delete activeList_add_edit">
+<ul id="catImageList_{$ownerId}" class="catImageList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit">
     <p class="main">{t _main_image}</p><p class="supplemental">{t _supplemental_images}</p>
 </ul>
 

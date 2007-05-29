@@ -8,7 +8,7 @@ ClassLoader::import("library.*");
  *
  * @package application.controller.backend
  * @author Sergej Andrejev <sergej@gmail.net>
- * @role specification
+ * @role category
  */
 class SpecFieldGroupController extends StoreManagementController
 {
@@ -22,7 +22,6 @@ class SpecFieldGroupController extends StoreManagementController
     /**
      * Get specification field group data
      * 
-     * @role update
      * @return JSONResponse
      */
     public function item()
@@ -41,7 +40,7 @@ class SpecFieldGroupController extends StoreManagementController
     }
     
     /**
-     * @role create
+     * @role update
      */
     public function create()
     {
@@ -55,7 +54,7 @@ class SpecFieldGroupController extends StoreManagementController
     /**
      * Delete specification field group from database
      *
-     * @role remove
+     * @role update
      * 
      * @return JSONResponse Status
      */
@@ -75,7 +74,7 @@ class SpecFieldGroupController extends StoreManagementController
     /**
      * Sort specification groups
      * 
-     * @role sort
+     * @role update
      * 
      * @return JSONResponse Status
      */

@@ -507,41 +507,44 @@ ActiveList.prototype = {
         Event.observe(li, "mouseout",  function(e) { self.hideMenu(this) });
 
         // Create icons container. All icons will be placed incide it
-        var iconsDiv = document.createElement('span');
-        Element.addClassName(iconsDiv, self.cssPrefix + 'icons');
-        li.insertBefore(iconsDiv, li.firstChild);
-
-        // add all icons
-        $A(this.ul.className.split(' ')).each(function(className)
+        if(!li.down('.' + self.cssPrefix + 'icons'))
         {
-            // If icon is not progress and it was added to a whole list or only this item then put that icon into container
-            self.addIconToContainer(li, className);
-        });
-
-        // progress is not a div like all other icons. It has no fixed size and is not clickable.
-        // This is done to properly handle animated images because i am not sure if all browsers will
-        // handle animated backgrounds in the same way. Also differently from icons progress icon
-        // can vary in size while all other icons are always the same size
-        iconProgress = document.createElement('img');
-        iconProgress.src = this.icons.progress;
-        
-        try{
-            iconImage.title = this.messages._activeList_progress;
-            iconImage.alt = this.messages._activeList_progress;
-        } catch(e) { }   
-        if(this.messages && this.messages._activeList_progress)
-        {
-            iconImage.title = iconImage.alt = this.messages._activeList_progress;            
+            var iconsDiv = document.createElement('span');
+            Element.addClassName(iconsDiv, self.cssPrefix + 'icons');
+            li.insertBefore(iconsDiv, li.firstChild);
+    
+            // add all icons
+            $A(this.ul.className.split(' ')).each(function(className)
+            {
+                // If icon is not progress and it was added to a whole list or only this item then put that icon into container
+                self.addIconToContainer(li, className);
+            });
+    
+            // progress is not a div like all other icons. It has no fixed size and is not clickable.
+            // This is done to properly handle animated images because i am not sure if all browsers will
+            // handle animated backgrounds in the same way. Also differently from icons progress icon
+            // can vary in size while all other icons are always the same size
+            iconProgress = document.createElement('img');
+            iconProgress.src = this.icons.progress;
+            
+            try{
+                iconImage.title = this.messages._activeList_progress;
+                iconImage.alt = this.messages._activeList_progress;
+            } catch(e) { }   
+            if(this.messages && this.messages._activeList_progress)
+            {
+                iconImage.title = iconImage.alt = this.messages._activeList_progress;            
+            }
+            
+            iconProgress.style.visibility = 'hidden';
+            
+            Element.addClassName(iconProgress, self.cssPrefix + 'progress');
+            iconsDiv.appendChild(iconProgress);
+    
+    
+            li.progress = iconProgress;
+            li.prevParentId = this.ul.id;
         }
-        
-        iconProgress.style.visibility = 'hidden';
-        
-        Element.addClassName(iconProgress, self.cssPrefix + 'progress');
-        iconsDiv.appendChild(iconProgress);
-
-
-        li.progress = iconProgress;
-        li.prevParentId = this.ul.id;
     },
 
     /**
