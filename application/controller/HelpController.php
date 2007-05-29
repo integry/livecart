@@ -1,7 +1,5 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-
 ClassLoader::import("application.model.help.*");
 
 /**
@@ -11,7 +9,7 @@ ClassLoader::import("application.model.help.*");
  * 
  * @role help
  */
-class HelpController extends StoreManagementController
+class HelpController extends BaseController
 {
 	public function view()
 	{
