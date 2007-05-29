@@ -13,8 +13,7 @@ You can edit details by choosing appropriate tab indicating details group (main,
 <ul>	
 	<li><a href="{self}#main">Edit Main details</a></li>
 	<li><a href="{self}#specification">Specification</a></li>
-	<li><a href="{self}#pricing_shipping">Pricing and Shipping</a></li>
-	<li><a href="{self}#inventory">Edit Inventory</a></li>
+	<li><a href="{self}#stock_pricing">Stock and Pricing</a></li>
 	<li><a href="{self}#images">Edit Images</a></li>
 	<li><a href="{self}#related">Related Products</a></li>
 	<li><a href="{self}#files">Edit Files</a></li>
@@ -33,8 +32,8 @@ You can edit details by choosing appropriate tab indicating details group (main,
 	<li>Is enabled - when the checkbox is marked, the product is visible in your e-store. It is not displayed 
 	otherwise.</li>
 	<li>Product name - the name of the product.</li>
-	<li>{glossary}Handle{/glossary} - (mouse mouse cursor over the name to see more details)</li>
-	<li>{glossary}SKU{/glossary} - (mouse mouse cursor over the name to see more details)</li>
+	<li>Handle - Handle is used to represent object's {glossary}URL{/glossary}s, so you can change it for search engine optimization purposes, if needed.</li>
+	<li>SKU - a stock keeping unit which is a specific number designating one specific product</li>
 	<li>Short description - a brief description about the product. Short descirption is displayed in the 
 	{glossary}product list{/glossary} page.</li>
 	<li>Long description - a detailed description which is displayed in the {glossary}product details{/glossary} 
@@ -43,7 +42,7 @@ You can edit details by choosing appropriate tab indicating details group (main,
 	<li>Website address - optional website address (for more details).</li>
 	<li>Manufacturer - producer of the product.</li>
 	<li>Keywords - words or phrases that will be used to help users to find products.</li>
-	<li>Mark as bestseller - mark the checkbox to set the product's status to {glossary}bestseller{/glossary}.</li>
+	<li>Mark as featured product - mark the checkbox to set the product's status to {glossary}featured{/glossary}.</li>
 </ul>
 
 If you have more than one language in your system, you can translate the following details:
@@ -57,17 +56,21 @@ If you have more than one language in your system, you can translate the followi
 </ul>
 
 <h3 id="specification">Product specification</h3>
-<p>Product Specification section includes user defined attributes.</p>
+<p>Product Specification section includes user defined attributes. You can create attributes in the category's <a href="{help /cat.attr}">attributes section</a>.</p>
 <img src="image/doc/products/edit/specifications1.bmp">
-<p>See <a href="{help /cat.attr}">attributes</a> for more information.</p>
 
-<h3 id="pricing_shipping">Prices and Shipping</h3>
-<p>This section is used to supply prices of your product.</p>
+
+<h3 id="stock_pricing">Stock and Pricing</h3>
+
+<img src="image/doc/products/edit/inventory.bmp">
+<ul>
+	<li>Items in stock - ther number of product items in your warehouse.</li>
+</ul>
+
 <img src="image/doc/products/edit/pricing.bmp">
-Go to <a href="{help /currency}">currencies section</a> to configure currencies of your system.
-
-<br \>
-<br \>
+<ul>
+	<li>Price or prices of the product according to <a href="{help /currency}">currencies configuration</a> of your system.</li>
+</ul>
 
 <img src="image/doc/products/edit/shipping.bmp">
 <ul>
@@ -79,22 +82,12 @@ Go to <a href="{help /currency}">currencies section</a> to configure currencies 
 	<li>Allow back-ordering - mark the checkbox to allow users to make {glossary}back-order{/glossary}s.</li>
 </ul>
 
-
-
-<h3 id="inventory">Inventory</h3>
-
-<img src="image/doc/products/edit/inventory.bmp">
-<ul>
-	<li>Items in stock - ther number of product items in your warehouse.</li>
-</ul>
-
-
 <h3 id="images">Images</h3>
 
 <p>Products can have multiple images to represent them better. The first uploaded picture is the 
-<strong>Main</strong> image that is displayed in the product list page. It is also the first image that is 
-displayed in the product details page. All the other pictures will be displayed as enlargeable thumbnails in 
-product detail page.</p>
+<strong>Main</strong> image that is displayed in the {glossary}product list{/glossary} page. It is also the first image that is 
+displayed in the {glossary}product details{/glossary} page. All the other pictures will be displayed as enlargeable thumbnails in 
+{glossary}product details{/glossary} page.</p>
 
 <p>To add an image:</p>
 
@@ -111,10 +104,10 @@ You can set image dimensions (<ins>and other details?</ins>) in the <strong>Sett
 
 <h3 id="related">Related products</h3>
 
-<p>For upselling purposes you can easily create related products that are displayed to customers as additional
+<p>For upselling purposes you can easily add related products that are displayed to customers as additional
 products that are some way related. To add related products for a particular product:</p>
 
-<ul>
+<ol>
 	<li>Click <strong>Select Products</strong>:</li>
 	<p>A new window pop's up.</p>
 	<li>From the window select products by clicking on the products name:</li>
@@ -122,7 +115,7 @@ products that are some way related. To add related products for a particular pro
 	Close the window when you are done. All the selected products will be displayed in the products detailed page 
 	as related items. For example:
 	<img src="image/doc/products/edit/recommended.bmp">
-</ul>
+</ol>
 
 <p>If you have many related products it might be useful to group them together. To group existing related products:</p>
 
@@ -131,15 +124,14 @@ products that are some way related. To add related products for a particular pro
 	<li>Enter group name and click <strong>Save</strong>.</li>
 	<li>To place products into groups, simply drag and drop products into appropriate groups.</li>
 	<img src="image/doc/products/edit/group1.bmp">
-	<ins>(Group's title is displayed ...)</ins>
 </ul>
-
+<p class="note"><strong>Note:</strong> the name of the related products' group is not displayed anywhere in e-store.</p>
 
 <h3 id="options">Files</h3>
-<ins>Not completed interface</ins>
 <p>Files are most likely used for digital products such as software, music or any other. To upload files:</p>
 <ul>
 	<li>Click <strong>Add new file</strong>.</li>
+	<img src="image/doc/products/edit/add_file.bmp">
 	<li>Click <strong>Browse</strong> to locate your file and click <strong>Upload</strong>.</li>
 </ul>
 
