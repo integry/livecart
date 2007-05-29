@@ -16,7 +16,7 @@ $routes = array(
 					array("shop/:cathandle-:id/:filters/:page", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+","page" => "[0-9_]+", "filters" => "[0-9A-Za-z\-.,_]+")),
 					
 					// help section
-                    array("backend.help/:id", array('controller' => 'backend.help', 'action' => 'view'), array()),
+                    array("help/:id", array('controller' => 'help', 'action' => 'view'), array()),
 					
                     // static pages
                     array(":handle.html", array('controller' => 'staticPage', 'action' => 'view'), array("handle" => "[a-zA-Z0-9\.]+")),
