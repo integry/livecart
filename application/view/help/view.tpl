@@ -10,7 +10,7 @@
 				</li>	
 			{else}
 				<li>
-					<a href="{link controller="backend.help" action="view" id=$topic.ID}">{$topic.name}</a>
+					<a href="{link controller="help" action="view" id=$topic.ID}">{$topic.name}</a>
 				</li>	
 			{/if}
 			{if $topic.sub}
@@ -109,7 +109,7 @@
 
 	function deleteComment(id)
 	{
-		{/literal}new Ajax.Request('{link controller=backend.help action=deleteComment}/' + id);{literal} 
+		{/literal}new Ajax.Request('{link controller=help action=deleteComment}/' + id);{literal} 
 		$('comment_' + id).style.display = 'none';
 	}
 
@@ -149,7 +149,7 @@
 					<span class="progressIndicator" id="commentIndicator" style="display: none;"></span>
 				</div>
 						
-				{form handle=$commentForm action="controller=backend.help action=addComment id=0" method="POST" style="display:none;" id="commentForm" onsubmit="addComment(this); return false;"}
+				{form handle=$commentForm action="controller=help action=addComment id=0" method="POST" style="display:none;" id="commentForm" onsubmit="addComment(this); return false;"}
 					{hidden name="topicId" value=$topic.ID}
 	
 						<label for="username">{t _name}:</label>
@@ -171,7 +171,7 @@
 				{foreach from=$comments item="comment"}
 					<a name="c{$comment.ID}"></a>
 					<li id="comment_{$comment.ID}">
-						{include file="backend/help/comment.tpl"}
+						{include file="help/comment.tpl"}
 					</li>
 				{/foreach}
 				</ul>

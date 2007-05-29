@@ -18,7 +18,7 @@ function smarty_block_glossary($params, $content, Smarty $smarty, &$repeat)
 {		
     if (!$repeat) 
 	{		
-		$glossary = parse_ini_file(ClassLoader::getRealPath('application.view.backend.help.en') . '/glossary.ini');
+		$glossary = parse_ini_file(ClassLoader::getRealPath('application.view.help.en') . '/glossary.ini');
 		$glossary = array_change_key_case($glossary, CASE_LOWER);
 
 		$term = strtolower(strip_tags($content));

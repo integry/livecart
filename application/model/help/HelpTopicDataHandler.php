@@ -13,10 +13,10 @@ class HelpTopicDataHandler
 	  	$this->language = $language;
 
 		// get help file directory
-		$this->helpDir = ClassLoader::getRealPath('application.view') . '/backend/help/' . $language . '/';
+		$this->helpDir = ClassLoader::getRealPath('application.view') . '/help/' . $language . '/';
 		if (!is_dir($this->helpDir))
 		{
-		  	$this->helpDir = ClassLoader::getRealPath('application.view') . '/backend/help/en/';
+		  	$this->helpDir = ClassLoader::getRealPath('application.view') . '/help/en/';
 		}
 
 		$currentTopic = array();

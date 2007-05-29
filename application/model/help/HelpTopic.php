@@ -87,7 +87,7 @@ class HelpTopic
   	public function getTemplateFile()
   	{
 		$path = explode('.', $this->id);
-	  	return 'backend/help/' . $this->dataHandler->getLanguage() . '/' . implode('/', $path) . '.tpl';
+	  	return 'help/' . $this->dataHandler->getLanguage() . '/' . implode('/', $path) . '.tpl';
 	}
 
 	public function getID()

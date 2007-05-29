@@ -10,7 +10,7 @@
 
 	<!-- Css includes -->
 	<link href="stylesheet/backend/Backend.css" media="screen" rel="Stylesheet" type="text/css"/>
-	{includeCss file="backend/Help.css"}
+	{includeCss file="help/Help.css"}
 	{$STYLESHEET}
 	{literal}
 	<!--[if IE]>

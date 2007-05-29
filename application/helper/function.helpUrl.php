@@ -12,7 +12,7 @@
 function smarty_function_helpUrl($params, $smarty)
 {
 	$router = Router::getInstance();
-	return $router->createUrl(array('controller' => 'backend.help', 'action' => 'view', 'id' => $params['help']));
+	return $router->createUrl(array('controller' => 'help', 'action' => 'view', 'id' => $params['help']));
 }
 
 ?>

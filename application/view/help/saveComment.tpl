@@ -1,1 +1,1 @@
-{include file="backend/help/comment.tpl"}
+{include file="help/comment.tpl"}

@@ -28,7 +28,7 @@ function smarty_function_helpLink($params, $smarty)
 		$topic = $root . '.' . $topic;			
 	}
 	
-	return Router::getInstance()->createUrl(array('controller' => 'backend.help', 'action' => 'view', 'id' => $topic));
+	return Router::getInstance()->createUrl(array('controller' => 'help', 'action' => 'view', 'id' => $topic));
 }
 
 ?>

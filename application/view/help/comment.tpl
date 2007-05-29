@@ -1,4 +1,4 @@
-<form action="{link controller=backend.help action=saveComment id=$comment.ID}">
+<form action="{link controller=help action=saveComment id=$comment.ID}">
 
 	<div class="commentHeader">
 		<fieldset class="container">
