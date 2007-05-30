@@ -1,15 +1,12 @@
 <p>
 	Attributes allow you to describe product information more precisely. Instead of providing all product specifications as free-form text, you can
 	define a fixed set of attributes for each product category and have designated fields for entering each parameter of a product. It makes it 
-	easier for customers to compare common products and by using attributes you can create product filters, which make it easy for a customer to 
-	find the products that match his/her requirements quickly.
-</p>
-<p>
-	Attributes allow grouping (filtering) products by their specific properties.
+	easier for customers to compare common products and by using attributes you can create product filters, which make it easy for a customers to quickly
+	find the products that match their requirements.
 </p>
 
 <p>
-	For instance, if a customer is shopping for a new laptop and is particularly looking for an AMD processor and you have created a "Processor Type"
+	Attributes allow grouping (filtering) products by their specific properties. For instance, if a customer is shopping for a new laptop and is particularly looking for an AMD processor and you have created a "Processor Type"
 	attribute, the customer will be able to sort the whole list of laptops to display only AMD processor powered laptops with a single click. This 
 	way a customer will have an ability to select certain kind of processor without a need to browse through all the available types 
 	(thus restricting his/her search to specific needs). Of course you can (and you probably should) create as many attributes as possible 
@@ -28,7 +25,7 @@
 <legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#create">Create a new attribute</a></li>
-	<li><a href="{self}#visible">Set Attributes to be displayed in the product page</a></li>
+	<li><a href="{self}#visible">Set Attributes to be displayed in storefront</a></li>
 	<li><a href="{self}#group">Group attributes</a></li>
 	<li><a href="{self}#edit">Edit attribute</a></li>
 	<li><a href="{self}#delete">Delete attribute</a></li>
@@ -40,8 +37,8 @@
 
 <h3 id="create">Create Attribute</h3>
 
-<p>LC provides a attribute management system which allows you to create and manage attributes in a simple manner.
- LiveCart supports three base product <strong>attribute types</strong> which can be: 
+<p>LC provides attribute management system which allows you to create and manage attributes in a simple manner.
+ LiveCart supports three base product <strong>attribute types</strong>: 
 
 <ul>
 	<li>Number type which can be either an <i>input field</i> or a <i>pre-defined value	selector</i></li>
@@ -61,27 +58,29 @@ examples on how to create attributes and choose attribute types.
 	examples how attributes are generated and placed in the product form.
 </p>
 
+<!--
 <p><a href="javascript:expand(document.getElementById('carrier'))">Create Carrier attribute</a>
 <div class="dottedBorders" id="carrier" style="display:none">
+-->
 
-<h4 id="carrier">Creating <i>Carrier</i> attribute</h4>
+<h4 id="carrier">Creating Carrier attribute</h4>
 <p>To create the attribute follow these steps:</p>
 	<ul>	
 		<li>Select a category in the category tree and click <strong>Attributes</strong> tab.</li>
-		<img src="image/doc/categories/attributes/attributes_tab.bmp">
+		<img src="image/doc/categories/attributes/attributes_tab_green.bmp">
 		<li>In the attributes section click <strong>Add new attribute</strong>:</li>
-		<img src="image/doc/categories/attributes/add_new_attribute_reference.bmp">
-		<p id="form"><i>Add new attribute</i> form appears. Fill out the following fields as described below:</p>
-		<img src="image/doc/categories/attributes/add_attribute_form.bmp">
-		<li><strong>Type</strong> - because mobile carrier is a simple text and there is (probably) a finite number of carriers click on the type drop-down menu and 
-		select <i>Text selector</i> type from the list. (Your chosen type is suitable for creating a predefined list of values which will be 
-		displayed as a selection option).</li>
-		<li>We check <strong>Required</strong> to make the field mandatory since it is an important feature. </li>
-		<li><strong>Can select multiple values</strong> - we leave this checkbox clear to allow assigning only one carrier to each phone</li> 
-		<li>Field displayed in the product's preview info</li>
-		<li>Field displayed in the product's detailed page</li>
-		<li>Attribute's <strong>title</strong> represents its function thus we enter a meaningful name - <strong>Carrier</strong>. </li>
-		<li><strong>Handle</strong> - handle is generated automatically. Handle is used to represent the attribute in {glossary}URL{/glossary}'s, so you can change it for 
+		<img src="image/doc/categories/attributes/add_attribute.bmp">
+		<p id="form">Add new attribute form appears. Fill out the following fields as described below:</p>
+		<img src="image/doc/categories/attributes/main_form_carrier.bmp">
+		
+		<li>Type - because mobile carrier is a simple text and there is probably a finite number of carriers click on the type drop-down menu and 
+		select <i>Text Options</i> type from the list.</li>
+		<li>Check "Required" to make the field mandatory since it is an important feature. </li>
+		<li>Can select multiple values - leave this checkbox clear to allow assigning only one carrier to each phone</li> 
+		<li>Display attribute in product page - mark the checkbox to display attribute in the <a href="{help /products.store}#product_details">product details</a> page.</li>
+		<li>Display attribute in product list - leave this checkbox clear because we don't need carrier attribute to be displayed in the <a href="{help /products.store}#product_details">product list</a>.</li>
+		<li>Attribute's title represents its function thus we enter a meaningful name - "Carrier". </li>
+		<li>Handle is generated automatically and is used to represent the attribute in {glossary}URL{/glossary}'s, so you can change it for 
 		{glossary}SEO{/glossary} purposes, if needed.</li>
 		<li>Prefix and Suffix - we leave these fields empty because carriers don't have any of them.</li> 
 		<li>In the description field we enter a brief description to describe the term "Carrier" which is optional.</li> 	
@@ -107,7 +106,6 @@ To add values:
 		<img src="image/doc/categories/attributes/values.bmp">
 
 		<li>Click the <strong>Save</strong> button to return to the Attributes page. </li>
-		<img src="image/doc/categories/attributes/save.bmp">
 	</ul>
 
 	Your new attribute is automatically generated in the "Add new Product" form and <ins>will</ins> look similar to this one:
@@ -117,30 +115,33 @@ To add values:
 <p class="note"><strong>Note</strong>: If you need to enter additional value which is not in the list, choose 
 "other" (and add a new value). A new value will be saved in the list.</p>
 
-</div>
+
 </p>
 
+<!--
 <p><a href="javascript:expand(document.getElementById('features'))">Create Phone Features</a>
 <div class="dottedBorders" id="features" style="display:none">
+-->
 
-<h4 id="features">Creating <i>Phone Features</i> attribute</h4>
+<h4 id="features">Creating Phone Features attribute</h4>
 <p>
 	Cell phones usually have a great variety of features therefore it would more convenient to create a list of features than re-enter them
 	every time. To create an attribute of features, open <strong>Add new attribute form</strong> <a href="{self}#carrier"><small>(remind me how)
 	</small></a> 
 </p>
-	<p><img src="image/doc/categories/attributes/multi.bmp"></p>
+	<p><img src="image/doc/categories/attributes/main_form_features.bmp"></p>
 	<p>The following parameters have to be set in the form:</p>
 
 	<ul>
-		<li>Type - expand type list and choose Text -> Options as your type </li>
-		<li>Required - leave the checkbox empty as some phones may don't have additional features (optional field/selection) </li>
+		<li>Type - click type list and choose Text -> Options as your type.</li>
+		<li>Required - leave the checkbox empty as some phones may don't have additional features.</li>
 		<li>Can select multiple values - mark the checkbox to allow multiple features assigned to a cell phone</li>
-		<li>Field is displayed in the product overview page - </li>
-		<li>Field is displayed in the product's detail page - </li>
-		<li>Title - enter here <strong>Features</strong> to represent attribute's purpose/function.</li>
-		<li>Handle is generated automatically therefore you may leave the field as it is</li>
-		<li>Description - enter a few sentences about features attribute to set its description.</li>
+		<li>Display attribute in product page - mark the checkbox to display attribute in the <a href="{help /products.store}#product_details">product details</a> page.</li>
+		<li>Display attribute in product list - mark the checkbox to display attribute in the <a href="{help /products.store}#product_details">product list</a> page.</li>
+		<li>Title - enter "Features".</li>
+		<li>Handle is generated automatically and is used to represent the attribute in {glossary}URL{/glossary}'s, so you can change it for 
+		{glossary}SEO{/glossary} purposes, if needed.</li>
+		<li>Description - optional description the attribute.</li>
 
 	</ul>
 
@@ -148,9 +149,8 @@ To add values:
 
 	<ul>
 		<li>Click <i>Values</i> tab which appears on the right of the <i>Main</i> tab. </li>
-		<img src="image/doc/categories/attributes/values_tab.bmp">
+		<img src="image/doc/categories/attributes/value_tab_features.bmp">
 		<li>In the Values section enter all the necessary features one by one.</li>
-		<img src="image/doc/categories/attributes/enter_values.bmp">
 		<li><strong>Save</strong> the attribute when done.</li>
 	</ul>
 
@@ -163,19 +163,21 @@ To add values:
 <p class="note"><strong>Note</strong>: to create a corresponding attribute for a numeric selection choose <strong>Number Selector</strong> type followed
 by necessary changes. A numeric attribute looks similar to this one:
 <img src="image/doc/categories/attributes/bandwidth_generated.bmp">
-<strong>Other</strong> value can be used to add more values. Click <strong>other</strong> to add a new value.
+<strong>Other</strong> value can be used to add more values which will be saved in the original attribute.
 </p>
 
-</div>
+
 </p>
 
+<!--
 <p><a href="javascript:expand(document.getElementById('capacity'))">Create Batery Capacity</a>
 <div class="dottedBorders" id="capacity" style="display:none">
+-->
 
 <h4 id="capacity">Creating <i>Batery Capacity</i> attribute</h4>
 
 <p>
-	Battery capacity is expressed in numeric(al) format of mAh, therefore you should consider choosing a <strong>Number</strong> type. When it comes
+	Battery capacity is expressed in numeric(al) format of mAh, therefore you should consider choosing a "Number" type. When it comes
 	to field or selector it is up to you to decide whether you want to create a single field for entering a value or to create a pre-defined list of possible capacity values. 
 	We choose a field type in the following example.
 </p>
@@ -184,8 +186,8 @@ by necessary changes. A numeric attribute looks similar to this one:
 	<li>Open <strong>Add new attribute form</strong> <a href="{self}#carrier"><small>(remind me how)</small></a></li>
 	<li>Type - select Number Field.</li>
 	<li>Required - click the checkbox to make the field required attribute</li>
-	<li>Field is displayed in the product overview page - </li>
-	<li>Field is displayed in the product's detail page - </li>
+	<li>Display attribute in product page - mark the checkbox to display attribute in the <a href="{help /products.store}#product_details">product details</a> page or leave it clear otherwise.</li>
+	<li>Display attribute in product list - mark the checkbox to display attribute in the <a href="{help /products.store}#product_details">product list</a> page or leave it clear otherwise.</li>
 	<li>Title - enter <strong>Battery Capacity</strong> to represent attribute's purpose/function.</li>
 	<li>Handle is generated automatically so we leave the field unaltered</li>
 	<li>Prefix - leave the field empty.</li>			
@@ -203,7 +205,7 @@ by necessary changes. A numeric attribute looks similar to this one:
 	
 <p class="note"><strong>Note</strong>: to create analogous attribute for Text Field simply change type to <strong>Text Field</strong>.</p>
 
-</div>
+
 </p>
 
 <h3 id="visible">Display attributes in your e-store</h3>
@@ -211,10 +213,10 @@ by necessary changes. A numeric attribute looks similar to this one:
 <p>You can define what attributes should be displayed with your products in the main attribute's form.</p>
 
 <ul>
-	<li>To make the attribute visible in the product list page, mark the "Display attribute in the product list page" checkbox.</li>
-	<img src="image/doc/categories/attributes/main_form_product_list_page.bmp">
-	<li>To make the attribute visible in the product page, mark the "Display attribute in the product page" checkbox.</li>
-	<img src="image/doc/categories/attributes/main_form_product_page.bmp">
+	<li id="attributes_product_list">To make the attribute visible in the <a href="{help /products.store}#product_list">product list page</a>, mark the "Display attribute in the product list page" checkbox.</li>
+	<img src="image/doc/categories/attributes/product_list.bmp">
+	<li id="attributes_product_details">To make the attribute visible in the <a href="{help /products.store}#product_details">product's detailed page</a>, mark the "Display attribute in the product page" checkbox.</li>
+	<img src="image/doc/categories/attributes/product_page.bmp">
 </ul>
 
 <p>You can as well define the <strong>order</strong> in which attributes are displayed in the both "Product page" and "Product list page".
@@ -254,8 +256,11 @@ To edit attribute: select an attribute from the list and click on its "pen" icon
 <img src="image/doc/categories/attributes/edit_attribute.bmp">
 
 Attribute's management form appears with its specification details. To edit any of attribute's fields or values, simply alter existing parameters/values
-and save changes afterwards. For detailed fields' description, refer to <a onclick="expand(document.getElementById('carrier'))"href="{self}#form">Create new 
-attribute</a> section.
+and save changes afterwards. For detailed fields' description, refer to <a href="{self}#form">Create new attribute</a> section.
+
+<!--
+<a onclick="expand(document.getElementById('carrier'))"href="{self}#form">show me</a>
+-->
 
 <h3 id="delete">Delete attribute</h3>
 

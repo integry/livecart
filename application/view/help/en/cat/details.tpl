@@ -19,7 +19,7 @@
 		<li>Details</li>
 		<li>Keywords</li>
 	</ul>
-<p class="note"><strong>Note</strong>: Read more about <a href="{help language}">enabling additional languages</a>.</p>
+<p class="note"><strong>Note</strong>: Read more about <a href="{help /language}">enabling additional languages</a>.</p>
 
 <p>Click the <strong>Save</strong> button to save category details:</p>
 

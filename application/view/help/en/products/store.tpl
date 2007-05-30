@@ -1,22 +1,23 @@
 
-<h3>Product representation in store frontend</h3>
-
 <p>	
-Customers can view products either browsing your catalog or searching the web. At first customers are displayed 
-<strong>Product List</strong> where products are displayed with the following details:
-</p>
-<img src="image/doc/products/store/product_canon.bmp"/>
+Customers can view products either by browsing your catalog or searching the web. At first customers are displayed 
+<strong>product list</strong> where products are displayed with the following details:
+<div id="product_list"></p>
+
+<img src="image/doc/products/store/products.bmp"/>
 <ul>
 <li>The name or the product</li>
 <li>Price</li>
+<li>Description</li>
+<li>Other attributes</li>
 </ul>
 
 <p class="note"><strong>Note</strong>: You can specify what product's attributes 
-should be displayed on the product list page in the <a href="{help /cat.attr}">attributes</a> section.</p>
-
-<p>More detailed information is provided in <strong>Product details</strong> page. When a customer click on a 
+should be displayed on the product list page in the <a href="{help /cat.attr}#attributes_product_list">attributes</a> section.</p>
+<div id="product_details">
+<p>More detailed information is provided in <strong>product details</strong> page. When a customer clicks on a 
 particular product, product's detailed page opens. This page includes all the necessary details about the product:</p>
-<img src="image/doc/products/store/product_details2.bmp"/>
+<img src="image/doc/products/store/table.bmp"/>
 
 <p class="note"><strong>Note</strong>: You can specify what product's attributes 
-should be displayed on the detailed page in the <a href="{help /cat.attr}">attributes</a> section.</p>
+should be displayed on the detailed page in the <a href="{help /cat.attr}#attributes_product_details">attributes</a> section.</p>

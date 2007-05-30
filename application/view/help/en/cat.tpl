@@ -11,7 +11,7 @@
 	a <strong>subcategory</strong> of "Monitors" then "Monitors" is a <strong>parent</strong> category for 
 	"LCD monitors"). At the top of the category tree is the <strong>Root</strong> category which is a parent 
 	category for all the descending categories The root category here is "LiveCart". Also notice that categories
-	which have subcategories are denoted with "folder" icons and categories with no subcategories have a "file"
+	which have subcategories are denoted with "folder" icons and categories with no subcategories are marked with a "file"
 	image. 
 </p>
 
@@ -63,7 +63,7 @@
 <h3 id="remove">Remove a category</h3>
 
 <p>To remove a category <strong>including all its subcategories and products</strong> select a category and click 
-<strong>Remove selected category</strong>:</p>
+"Remove selected category" below the category tree: </p>
 <p><img src="image/doc/categories/remove.bmp"></p>
 
 
@@ -75,7 +75,7 @@
 <ol>
 	<li>Select a category on the category tree.</li>
 	<li>Use "Move category up" and "Move category down" to move the category up or down.</li>
-	<img src="image/doc/categories/move_rectangle.bmp">
+	<img src="image/doc/categories/up_down.bmp">
 </ol>
 
 

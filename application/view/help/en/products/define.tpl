@@ -1,11 +1,7 @@
 <p>	
-	Field specification details are provided below.	
+	Product details are devided into several tabs that provide information on particular product's details. To open a particular section, click on a necessary tab.
 </p>
-
-<!--
-You can edit details by choosing appropriate tab indicating details group (main, pricing etc.)
 <img src="image/doc/products/edit/tabs.bmp">
--->
 
 <div class="tasks">
 <fieldset>
@@ -19,7 +15,6 @@ You can edit details by choosing appropriate tab indicating details group (main,
 	<li><a href="{self}#files">Edit Files</a></li>
 	<li><ins><a href="{self}#options">Edit Products Operations</a></ins></li>
 	<li><ins><a href="{self}#info">Edit Products Info</a></ins></li>
-	<li><a href="{self}#save">Save changes</a></li>
 </ul>
 </fieldset>
 </div>
@@ -86,7 +81,7 @@ If you have more than one language in your system, you can translate the followi
 
 <p>Products can have multiple images to represent them better. The first uploaded picture is the 
 <strong>Main</strong> image that is displayed in the {glossary}product list{/glossary} page. It is also the first image that is 
-displayed in the {glossary}product details{/glossary} page. All the other pictures will be displayed as enlargeable thumbnails in 
+displayed in the <a href="{help /products.store}#product_details">product details</a> page. All the other pictures will be displayed as enlargeable thumbnails in 
 {glossary}product details{/glossary} page.</p>
 
 <p>To add an image:</p>
@@ -112,7 +107,7 @@ products that are some way related. To add related products for a particular pro
 	<p>A new window pop's up.</p>
 	<li>From the window select products by clicking on the products name:</li>
 	<img src="image/doc/products/edit/products.bmp">
-	Close the window when you are done. All the selected products will be displayed in the products detailed page 
+	Close the window when you are done. All the selected products will be displayed in your store's  products detailed page 
 	as related items. For example:
 	<img src="image/doc/products/edit/recommended.bmp">
 </ol>
@@ -123,9 +118,11 @@ products that are some way related. To add related products for a particular pro
 	<li>Click <strong>Add Group</strong>.</li>
 	<li>Enter group name and click <strong>Save</strong>.</li>
 	<li>To place products into groups, simply drag and drop products into appropriate groups.</li>
+<!--
 	<img src="image/doc/products/edit/group1.bmp">
+-->
 </ul>
-<p class="note"><strong>Note:</strong> the name of the related products' group is not displayed anywhere in e-store.</p>
+<p><ins>Note: the name of the related products' group is not displayed anywhere in e-store.</ins></p>
 
 <h3 id="options">Files</h3>
 <p>Files are most likely used for digital products such as software, music or any other. To upload files:</p>
@@ -148,17 +145,6 @@ products that are some way related. To add related products for a particular pro
 <h3 id="info">Info</h3>
 <p><ins>Not completed interface</ins></p>
 
-
-<h3 id="save">Save</h3>
-
-<p>If you are adding a new product you can choose to save only the main details and add another product immediately
- or choose to continue with more details:
-</p>
-<img src="image/doc/products/edit/save.bmp">
-
-<p>If you are editing a product, its form is devided into several tabs. Click a tab to access the
-particular group:</p>
-<img src="image/doc/products/edit/tabs.bmp">
 
 {helpSeeAlso}
 	{see products.add}

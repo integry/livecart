@@ -52,7 +52,7 @@ To start selling goods in your e-store you have to stock up your system with som
 
 <h3 id="find">Find products</h3>
 
-<p>LC allows you to conduct a product search almost by any product's attribute. You can <a href="{self}#columns">changes attributes</a></small> (...)</p>
+<p>LC allows you to conduct a product search almost by any product's attribute. See how to <a href="{self}#columns">changes attributes</a></small> that are displayed in the toolbar.</p>
 <ul>
 		<li>Click an attribute to activate a search field:</li>
 		<img src="image/doc/products/name2.bmp"/>
