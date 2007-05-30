@@ -39,6 +39,39 @@ Backend.Category = {
             window.location.hash = '#cat_1#tabProducts__';
         }
 
+		Backend.Category.treeBrowser.showFeedback = 
+			function(itemId) 
+			{
+				if (!this.iconUrls)
+				{
+					this.iconUrls = new Object();	
+				}
+				
+				this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+                var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
+				img.src = 'image/indicator.gif';
+			}
+		
+		Backend.Category.treeBrowser.hideFeedback = 
+			function()
+			{
+                try
+                {
+    				for (var itemId in this.iconUrls)
+    				{
+                        if(!parseInt(itemId)) continue;
+            			this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+                        var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
+            			img.src = 'image/backend/dhtmlxtree/' + this.iconUrls[itemId];
+    				}
+                    
+                }
+                catch(e)
+                {
+                    console.info(e)
+                }				
+			}
+
 		var elements = window.location.hash.split('#');
 		if (elements[1].substr(0, 4) == 'cat_')
 		{
@@ -133,6 +166,7 @@ Backend.Category = {
 		// and register browser history event to enable backwar/forward navigation
 		// Backend.ajaxNav.add('cat_' + categoryId);
 		if(Backend.Category.tabControl.activeTab) Backend.Category.tabControl.activeTab.onclick();
+
         
         var currentProductId;
         if(currentProductId = Backend.Product.Editor.prototype.getCurrentProductId())
@@ -526,9 +560,13 @@ CategoryTabControl.prototype = {
 		}
 		if (categoryId != "" && Element.empty(containerId))
 		{
+            Backend.Category.treeBrowser.showFeedback(parseInt(categoryId));
 			new LiveCart.AjaxUpdater(this.getTabUrl(tabId, categoryId),
 									 this.getContainerId(tabId, categoryId),
-									 this.getIndicatorId(tabId));
+									 this.getIndicatorId(tabId),
+                                     undefined,
+                                     function(){ Backend.Category.treeBrowser.hideFeedback(); }
+                                     );
 		}
 	},
 
