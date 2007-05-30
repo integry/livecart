@@ -17,32 +17,25 @@
 
 {includeCss file="backend/Backend.css"}
 
-{includeJs file="backend/Order.js"}
-{includeCss file="backend/Order.css"}
+{includeJs file="backend/CustomerOrder.js"}
+{includeCss file="backend/CustomerOrder.css"}
 
 {pageTitle help="orderGroups"}{t _livecart_orders}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
-
-
-<script type="text/javascript">
-    Backend.UserGroup.orderGroups = {$orderGroups};
-</script>
-
-<div id="orderGroupsWrapper" class="maxHeight h--50">    
-    {include file="backend/orderGroup/groupContainer.tpl"}
-    {include file="backend/orderGroup/orderContainer.tpl"}
+<div id="orderGroupsWrapper" class="maxHeight h--50">
+	<div id="orderGroupsBrowser" class="treeBrowser"></div>
+   
+    {include file="backend/customerOrder/groupContainer.tpl"}
+    {include file="backend/customerOrder/orderContainer.tpl"}
 </div>
-
 
 <div id="activeUserPath"></div>
 
-
-
 {literal}
 <script type="text/javascript">
-    var users = new Backend.Orders({/literal}{json array=$orderGroups}{literal});
-    window.usersActiveGrid = {};
+    new Backend.CustomerOrder({/literal}{json array=$orderGroups}{literal});
+    window.ordersActiveGrid = {};
 </script>
 {/literal}
 

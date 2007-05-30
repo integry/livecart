@@ -121,6 +121,14 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         return self::$instance;
     }
     
+    /**
+     * @return ARSet
+     */
+    public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
+    {
+        return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+    }
+    
     public function loadItems()
     {
         $this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'))->getData();
@@ -778,6 +786,8 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     {
         $this->shipments = array();
     }
+
+
 }
 	
 ?>

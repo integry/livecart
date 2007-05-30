@@ -3,6 +3,7 @@
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.controller.backend.*");
 ClassLoader::import("application.model.order.*");
+ClassLoader::import("application.model.currency");
 ClassLoader::import("framework.request.validator.Form");
 ClassLoader::import("framework.request.validator.RequestValidator");
 
@@ -26,7 +27,7 @@ class CustomerOrderController extends StoreManagementController
 		            array('ID' => 5, 'name' => $this->translate('_awaiting_shipment_orders'), 'rootID' => 2),
 		        array('ID' => 6, 'name' => $this->translate('_shipped_orders'), 'rootID' => 1),
 		        array('ID' => 7, 'name' => $this->translate('_returned_orders'), 'rootID' => 1),
-		    array('ID' => 1, 'name' => $this->translate('_shopping_carts'), 'rootID' => 0),
+		    array('ID' => 8, 'name' => $this->translate('_shopping_carts'), 'rootID' => 0),
 		);
 		
 		$response = new ActionResponse();
@@ -34,7 +35,69 @@ class CustomerOrderController extends StoreManagementController
 		return $response;
 	    
 	}
-    
+	
+	public function orders()
+	{        
+		$availableColumns = $this->getAvailableColumns();
+		$displayedColumns = $this->getDisplayedColumns();
+		
+		// sort available columns by display state (displayed columns first)
+		$displayedAvailable = array_intersect_key($availableColumns, $displayedColumns);
+		$notDisplayedAvailable = array_diff_key($availableColumns, $displayedColumns);		
+		$availableColumns = array_merge($displayedAvailable, $notDisplayedAvailable);
+			
+		$response = new ActionResponse();
+        $response->setValue("massForm", $this->getMassForm());
+        $response->setValue("massForm", $this->getMassForm());
+        $response->setValue("orderGroupID", $this->request->getValue('id'));
+        $response->setValue("displayedColumns", $displayedColumns);
+        $response->setValue("availableColumns", $availableColumns);
+		$response->setValue("offset", $this->request->getValue('offset'));
+		$response->setValue("totalCount", '0');	
+		return $response;
+	}
+	
+	
+	/**
+	 * @role mass
+	 */
+    public function processMass()
+    {        
+		$filter = new ARSelectFilter();
+		
+		$filters = (array)json_decode($this->request->getValue('filters'));
+		$this->request->setValue('filters', $filters);
+		
+        $grid = new ActiveGrid($this->request, $filter, 'User');
+        $filter->setLimit(0);
+        					
+		$users = ActiveRecordModel::getRecordSet('User', $filter, User::LOAD_REFERENCES);
+		
+        $act = $this->request->getValue('act');
+		$field = array_pop(explode('_', $act, 2));           
+
+        foreach ($users as $user)
+		{
+            if (substr($act, 0, 7) == 'enable_')
+            {
+                $user->setFieldValue($field, 1);    
+            }        
+            else if (substr($act, 0, 8) == 'disable_')
+            {
+                $user->setFieldValue($field, 0);                 
+            } 
+            else if ('delete' == $act)
+            {
+				$user->delete();
+			}         
+            
+			$user->save();
+        }		
+		
+		return new JSONResponse($this->request->getValue('act'));	
+    } 
+	
+	
     public function edit()
     {
 	    $group = UserGroup::getInstanceByID((int)$this->request->getValue('id'), true);
@@ -56,58 +119,64 @@ class CustomerOrderController extends StoreManagementController
 
 	public function lists()
 	{
-	    $id = (int)substr($this->request->getValue('id'), 6);
-	    if($id > 0)
-	    {
-	        $showAllGroups = false;
-	        $userGroup = UserGroup::getInstanceByID($id, ActiveRecord::LOAD_DATA);
-	    }
-	    else if($id == -1)
-	    {
-	        $showAllGroups = false;
-	        $userGroup = null;
-	    }
-	    else if($id == -2)
-	    {
-	        $showAllGroups = true;
-	        $userGroup = null;
-	    }
-	    else
-	    {
-	        return;
-	    }
-
 	    $filter = new ARSelectFilter();
+	    switch($id = $this->request->getValue('id'))
+	    {
+	        case 'orders_1': 
+	            $cond = new MoreThanCond(new ARFieldHandle('CustomerOrder', "dateCompleted"), 0);
+	            break;
+	        case 'orders_2': 
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_AWAITING_SHIPMENT);
+	            $cond->addOR(new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_BACKORDERED));
+	            $cond->addOR(new MoreThanCond(new ARFieldHandle('CustomerOrder', "dateCompleted"), CustomerOrder::STATUS_BACKORDERED));
+	            break;
+	        case 'orders_3':
+	            $cond = new MoreThanCond(new ARFieldHandle('CustomerOrder', "dateCompleted"), 0);	            
+	            $cond2 = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_AWAITING_SHIPMENT);
+	            $cond2->addOR(new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_BACKORDERED));
+	            $cond2->addOR(new MoreThanCond(new ARFieldHandle('CustomerOrder', "dateCompleted"), CustomerOrder::STATUS_BACKORDERED));
+	            $cond->addAND($cond2);
+	            break;
+	        case 'orders_4': 
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_BACKORDERED);
+	            break;
+	        case 'orders_5': 
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_AWAITING_SHIPMENT);
+	            break;
+	        case 'orders_6': 
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_SHIPPED);
+	            break;
+	        case 'orders_7': 
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_RETURNED);
+	            break;
+	        case 'orders_8': 
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "dateCompleted"), 0);
+	            break;
+	        default: return;
+	    }
+	   
+	    $filter->setCondition($cond);
 	    new ActiveGrid($this->request, $filter);
-	    if($showAllGroups)
-	    {
-	        $usersArray = User::getRecordSet($filter, array('UserGroup'))->toArray();
-	    }
-	    else
-	    {
-	        $usersArray = User::getRecordSetByGroup($userGroup, $filter, array('UserGroup'))->toArray();
-	    }
-	    
-		$displayedColumns = $this->getDisplayedColumns($userGroup);
+	    $orders = CustomerOrder::getRecordSet($filter, true)->toArray();
+		$displayedColumns = $this->getDisplayedColumns();
 
     	$data = array();
-		foreach ($usersArray as $user)
+		foreach ($orders as $order)
     	{
             $record = array();
             foreach ($displayedColumns as $column => $type)
             {
                 list($class, $field) = explode('.', $column, 2);
-                
+                if ('CustomerOrder' == $class)
+                {
+					$value = isset($order[$field]) ? $order[$field] : '';
+                }
+				
                 if ('User' == $class)
                 {
-					$value = isset($user[$field]) ? $user[$field] : '';
+					$value = isset($order['User'][$field]) ? $order['User'][$field] : '';
                 }
-				
-                if ('UserGroup' == $class)
-                {
-					$value = isset($user['UserGroup'][$field]) ? $user['UserGroup'][$field] : '';
-                }
-				
+                
 				if ('bool' == $type)
 				{
 					$value = $value ? $this->translate('_yes') : $this->translate('_no');
@@ -119,69 +188,11 @@ class CustomerOrderController extends StoreManagementController
             $data[] = $record;
         }
     	
-    	$return = array();
-    	$return['columns'] = array_keys($displayedColumns);
-    	$return['totalCount'] = count($usersArray);
-    	$return['data'] = $data;
-    	
-    	return new JSONResponse($return);	  	  	
-	}
-	
-	public function users()
-	{
-	    $id = (int)$this->request->getValue("id");
-	    if($id > 0)
-	    {
-	        $showAllGroups = false;
-	        $userGroup = UserGroup::getInstanceByID($id, ActiveRecord::LOAD_DATA);
-	    }
-	    else if($id == -1)
-	    {
-	        $showAllGroups = false;
-	        $userGroup = null;
-	    }
-	    else if($id == -2)
-	    {
-	        $showAllGroups = true;
-	        $userGroup = null;
-	    }
-	    else
-	    {
-	        return;
-	    }
-	        
-		$availableColumns = $this->getAvailableColumns();
-		$displayedColumns = $this->getDisplayedColumns();
-		
-		// sort available columns by display state (displayed columns first)
-		$displayedAvailable = array_intersect_key($availableColumns, $displayedColumns);
-		$notDisplayedAvailable = array_diff_key($availableColumns, $displayedColumns);		
-		$availableColumns = array_merge($displayedAvailable, $notDisplayedAvailable);
-			
-		$response = new ActionResponse();
-		
-		$availableUserGroups = array('' => '');
-        foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
-        {
-            $availableUserGroups[$group->getID()] = $group->name->get();
-        }
-          
-        $userArray = array('UserGroup' => $id, 'ID' => 0);
-        $form = UserController::createUserForm($this, null);
-        $form->setData($userArray);
-        
-	    $response->setValue('user', $userArray);
-	    $response->setValue('availableUserGroups', $availableUserGroups);
-	    $response->setValue('form', $form);
-	    
-        $response->setValue("massForm", $this->getMassForm());
-        $response->setValue("displayedColumns", $displayedColumns);
-        $response->setValue("availableColumns", $availableColumns);
-		$response->setValue("userGroupID", $id);
-		$response->setValue("offset", $this->request->getValue('offset'));
-		$response->setValue("totalCount", '0');
-				
-		return $response;
+    	return new JSONResponse(array(
+	    	'columns' => array_keys($displayedColumns),
+	    	'totalCount' => count($orders),
+	    	'data' => $data
+    	));	  	  	
 	}
 
 	/**
@@ -270,21 +281,28 @@ class CustomerOrderController extends StoreManagementController
 		if (!$displayedColumns)
 		{
 			$displayedColumns = array(
+				'CustomerOrder.companyName',
+				'CustomerOrder.dateCompleted', 
+				'CustomerOrder.status', 
+				'CustomerOrder.dateCreated', 
+				'CustomerOrder.dateCompleted', 
+				'ShippingAddress.countryID', 
+				'ShippingAddress.city', 
+				'ShippingAddress.address1', 
+				'ShippingAddress.postalCode', 
 			 	'User.email',
-				'UserGroup.name',
 				'User.firstName', 
 				'User.lastName', 
 				'User.companyName', 
-				'User.dateCreated', 
-				'User.isEnabled'
 			);				
 		}
 		
 		$availableColumns = $this->getAvailableColumns();
 		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);	
 
+		
 		// User ID is always passed as the first column
-		$displayedColumns = array_merge(array('User.ID' => 'numeric'), $displayedColumns);
+		$displayedColumns = array_merge(array('CustomerOrder.ID' => 'numeric'), $displayedColumns);
 				
 		// set field type as value
 		foreach ($displayedColumns as $column => $foo)
@@ -302,7 +320,7 @@ class CustomerOrderController extends StoreManagementController
 	{
 		// get available columns
 		$availableColumns = array();
-		foreach (ActiveRecordModel::getSchemaInstance('User')->getFieldList() as $field)
+		foreach (ActiveRecordModel::getSchemaInstance('CustomerOrder')->getFieldList() as $field)
 		{
 			$fieldType = $field->getDataType();
 			
@@ -335,6 +353,13 @@ class CustomerOrderController extends StoreManagementController
 		}		
 		
 		$availableColumns['UserGroup.name'] = 'text';
+		$availableColumns['ShippingAddress.city'] = 'text';
+		$availableColumns['ShippingAddress.address1'] = 'text';
+		$availableColumns['ShippingAddress.postalCode'] = 'text';
+		$availableColumns['ShippingAddress.countryID'] = 'number';
+		$availableColumns['User.firstName'] = 'text';
+		$availableColumns['User.lastName'] = 'text';
+		$availableColumns['User.companyName'] = 'text';
 
 		foreach ($availableColumns as $column => $type)
 		{
@@ -343,7 +368,6 @@ class CustomerOrderController extends StoreManagementController
 				'type' => $type
 			);	
 		}
-
 
 		return $availableColumns;
 	}

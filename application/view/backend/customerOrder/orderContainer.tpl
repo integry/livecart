@@ -1,4 +1,3 @@
-{* User managing container *}
 <div id="orderManagerContainer" class="managerContainer" style="display: none;">
 	<fieldset class="container">
 		<ul class="menu">
