@@ -13,21 +13,22 @@
         <span class="errorText" style="display: none" />
 	</fieldset>
     
-    
-    <fieldset>
-    {foreach from=$alternativeLanguagesCodes item=lang}
-        <fieldset class="expandingSection">
-            <legend>Translate to: {$lang.name}</legend>
-            <div class="expandingSectionContent">
-                <label>{t _name}</label>
-                <fieldset class="error">
-                    {textfield name="name_`$lang.ID`" class="observed"}
-                    <span class="errorText hidden"> </span>
-                </fieldset>
-            </div>
+    {if $alternativeLanguagesCodes}
+        <fieldset>
+        {foreach from=$alternativeLanguagesCodes item=lang}
+            <fieldset class="expandingSection">
+                <legend>Translate to: {$lang.name}</legend>
+                <div class="expandingSectionContent">
+                    <label>{t _name}</label>
+                    <fieldset class="error">
+                        {textfield name="name_`$lang.ID`" class="observed"}
+                        <span class="errorText hidden"> </span>
+                    </fieldset>
+                </div>
+            </fieldset>
+        {/foreach}
         </fieldset>
-    {/foreach}
-    </fieldset>
+    {/if}
     
     <fieldset class="tax_controls controls">
         <span class="activeForm_progress"></span>

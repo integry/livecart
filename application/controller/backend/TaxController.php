@@ -31,7 +31,7 @@ class TaxController extends StoreManagementController
 		}
 		
 		$response->setValue('defaultLanguageCode', $this->store->getDefaultLanguageCode());
-		$response->setValue('alternativeLanguagesCodes', $this->store->getLanguageSetArray(false, false));
+		$response->setValue('alternativeLanguagesCodes', $this->store->getLanguageSetArray());
 		$response->setValue("taxesForms", $taxesForms);
 		$response->setValue("taxes", $taxes);
 		
@@ -52,7 +52,7 @@ class TaxController extends StoreManagementController
 		
 		$response = new ActionResponse();
 		$response->setValue('defaultLanguageCode', $this->store->getDefaultLanguageCode());
-		$response->setValue('alternativeLanguagesCodes', $this->store->getLanguageSetArray(false, false));
+		$response->setValue('alternativeLanguagesCodes', $this->store->getLanguageSetArray());
 		$response->setValue('tax', $tax->toArray());
 	    $response->setValue('taxForm', $form);
 	    

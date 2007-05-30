@@ -1,4 +1,5 @@
 <?php $languageDefs = array (
+  '_live_translate' => 'Translate',
   '_yes' => 'Yes',
   '_no' => 'No',
   '_units_kg' => 'Kg',
@@ -20,5 +21,4 @@
   '_country' => 'Country',
   '_postal_code' => 'Postal code',
   '_loading' => 'Loading data...',
-  '_live_translate' => 'Translate',
 ); ?>

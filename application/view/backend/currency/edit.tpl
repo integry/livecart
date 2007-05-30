@@ -1,4 +1,4 @@
-{form action="controller=backend.currency action=save query=id=`$id`" onsubmit="Backend.Currency.prototype.saveFormat(this); return false;" handle=$form role="curency.update"}
+{form action="controller=backend.currency action=save query=id=`$id`" onsubmit="Backend.Currency.prototype.saveFormat(this); return false;" handle=$form role="currency.update"}
 
 <fieldset style="width: 70%; margin-top: 15px;">
 
