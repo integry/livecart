@@ -46,18 +46,8 @@ Backend.UserGroup.prototype =
 		
     	this.insertTreeBranch(groups, 0); 
         
-        try
-        {
-            if(!Backend.ajaxNav.getHash().match(/group_-?\d+#\w+/))
-            {
-                window.location.hash = '#group_-2#tabUsers__';
-                Backend.ajaxNav.handle(window.location.hash.substr(1))
-            }
-        } catch(e) {  }
-        
-        var self = this;
+        if(!Backend.ajaxNav.getHash().match(/group_-?\d+#\w+/)) window.location.hash = '#group_-2#tabUsers__';
 	    self.tabControl = TabControl.prototype.getInstance('userGroupsManagerContainer', self.craftTabUrl, self.craftContainerId, {}); 
-        //this.activateGroup();
         
         this.bindEvents();
 	},

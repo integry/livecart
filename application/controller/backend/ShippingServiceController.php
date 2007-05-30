@@ -38,10 +38,11 @@ class ShippingServiceController extends StoreManagementController
 		$response = new ActionResponse();
 		$response->setValue('defaultLanguageCode', $this->store->getDefaultLanguageCode());
 		$response->setValue('shippingServices', $shippingServices);
-		$response->setValue('alternativeLanguagesCodes', $this->store->getLanguageSetArray(false, false));
+		$response->setValue('alternativeLanguagesCodes', $this->store->getLanguageSetArray());
 		$response->setValue('newService', array('DeliveryZone' => $deliveryZoneArray));
 		$response->setValue('newRate', array('ShippingService' => array('DeliveryZone' => $deliveryZoneArray, 'ID' => '')));
 		$response->setValue('deliveryZone', $deliveryZoneArray);
+	    $response->setValue('defaultCurrencyCode', $this->store->getDefaultCurrency()->getID());
 	    $response->setValue('form', $form);
 	    return $response;
 	}
@@ -65,11 +66,12 @@ class ShippingServiceController extends StoreManagementController
 		$form->setData($shippingService->toArray());
 		$response = new ActionResponse();
 		$response->setValue('defaultLanguageCode', $this->store->getDefaultLanguageCode());
-		$response->setValue('alternativeLanguagesCodes', $this->store->getLanguageSetArray(false, false));
+		$response->setValue('alternativeLanguagesCodes', $this->store->getLanguageSetArray());
 		$response->setValue('service', $shippingService->toArray());
 		$response->setValue('shippingRates', $shippingService->getRates()->toArray());
 		$response->setValue('newRate', array('ShippingService' => $shippingService->toArray()));
-	    $response->setValue('form', $form);
+	    $response->setValue('defaultCurrencyCode', $this->store->getDefaultCurrency()->getID());
+		$response->setValue('form', $form);
 	    
 	    return $response;
     }

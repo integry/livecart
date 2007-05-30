@@ -2,39 +2,40 @@
     <input type="hidden" name="deliveryZoneID" value="{$service.DeliveryZone.ID}" />
     <input type="hidden" name="serviceID" value="{$service.ID}" />
     
-    <label>{t _name}</label>
+    <label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_name">{t _name}</label>
     <fieldset class="error">
-		{textfield name="name" class="observed shippingService_name"}
+		{textfield name="name" class="observed shippingService_name" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_name""}
 		<span class="errorText hidden"> </span>
     </fieldset>
     
     
 	<fieldset class="error">
-		<label for=""></label>
-		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`" class="checkbox shippingService_rangeType" value="0"}
-		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}" class="checkbox">{t _weight_based_calculations}</label>
+		<label ></label>
+		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_weight" class="checkbox shippingService_rangeType" value="0"}
+		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_weight" class="checkbox">{t _weight_based_calculations}</label>
 	</fieldset class="error">
 	<fieldset class="error">
-		<label for=""></label>
-		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`" class="checkbox shippingService_rangeType" value="1"}
-		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}" class="checkbox">{t _subtotal_based_calculations}</label>
+		<label></label>
+		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_subtotal" class="checkbox shippingService_rangeType" value="1"}
+		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_subtotal" class="checkbox">{t _subtotal_based_calculations}</label>
 	</fieldset class="error">
     
-    
+    {if $alternativeLanguagesCodes}
     <fieldset>
-    {foreach from=$alternativeLanguagesCodes item=lang}
-        <fieldset class="expandingSection">
-            <legend>Translate to: {$lang.name}</legend>
-            <div class="expandingSectionContent">
-                <label>{t _name}</label>
-                <fieldset class="error">
-                    {textfield name="name_`$lang.ID`" class="observed"}
-                    <span class="errorText hidden"> </span>
-                </fieldset>
-            </div>
+        {foreach from=$alternativeLanguagesCodes item=lang}
+            <fieldset class="expandingSection">
+                <legend>Translate to: {$lang.name}</legend>
+                <div class="expandingSectionContent">
+                    <label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_name_{$lang.ID}">{t _name}</label>
+                    <fieldset class="error">
+                        {textfield name="name_`$lang.ID`" class="observed" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_name_`$lang.ID`"}
+                        <span class="errorText hidden"> </span>
+                    </fieldset>
+                </div>
+            </fieldset>
+        {/foreach}
         </fieldset>
-    {/foreach}
-    </fieldset>
+    {/if}
  
     <fieldset class="shippingService_rates error">
     	<label>{t _shipping_service_rates}</label>

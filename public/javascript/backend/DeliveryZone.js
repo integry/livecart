@@ -23,7 +23,6 @@ Backend.DeliveryZone.prototype =
         var self = this;
         Event.observe($("newZoneInputButton"), 'click', function(e){ Event.stop(e); self.addNewZone(); })
         
-		this.tabControl = TabControl.prototype.getInstance('deliveryZoneManagerContainer', this.craftTabUrl, this.craftContainerId, {}); 
 
 		Backend.DeliveryZone.prototype.treeBrowser.showFeedback = 
 			function(itemId) 
@@ -45,8 +44,11 @@ Backend.DeliveryZone.prototype =
 					this.setItemImage(itemId, this.iconUrls[itemId]);	
 				}				
 			}
-		
+            
     	this.insertTreeBranch(zones, 0);    
+        
+        if(!Backend.ajaxNav.getHash().match(/zone_-?\d+#\w+/)) window.location.hash = '#zone_-1#tabDeliveryZoneShipping__';
+		this.tabControl = TabControl.prototype.getInstance('deliveryZoneManagerContainer', this.craftTabUrl, this.craftContainerId, {}); 
         
         this.bindEvents();
 	},
@@ -764,6 +766,8 @@ Backend.DeliveryZone.ShippingService.prototype =
         this.nodes.ratesList = $(this.prefix + 'ratesList_' + this.deliveryZoneId + '_' + (this.service.ID ? this.service.ID : ''));
         this.nodes.ratesNewForm = $(this.prefix + 'new_rate_' + this.deliveryZoneId + '_' + (this.service.ID ? this.service.ID : '') + '_form');
         
+        
+        
         if(!this.service.ID)
         {
             this.nodes.menu = $(this.prefix + "menu_" + this.deliveryZoneId);
@@ -778,8 +782,6 @@ Backend.DeliveryZone.ShippingService.prototype =
     bindEvents: function()
     {
        var self = this;
-       
-
        Event.observe(this.nodes.save, 'click', function(e) { Event.stop(e); self.save(); });
        Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel(); });
        if(!this.service.ID)
@@ -790,6 +792,11 @@ Backend.DeliveryZone.ShippingService.prototype =
        $A(this.nodes.rangeTypes).each(function(radio)
        {
            Event.observe(radio, 'click', function(e) { self.rangeTypeChanged(); });
+       });
+       
+       $A(document.getElementsByClassName('shippingService_rateFloatValue', this.nodes.root)).each(function(input)
+       {
+           Event.observe(input, "keyup", function(e){ NumericFilter(this); });
        });
     },
     
@@ -887,7 +894,7 @@ Backend.DeliveryZone.ShippingService.prototype =
     
     cancel: function()
     {
-        if(!this.rate.ID)
+        if(!this.service.ID)
         {
             this.hideNewForm();
         }
@@ -1095,8 +1102,10 @@ Backend.DeliveryZone.ShippingRate.prototype =
             var li = this.ratesActiveList.addRecord(newId, this.nodes.root);
             
             var idStart = this.prefix + this.deliveryZoneId + '_' + this.rate.ShippingService.ID + "_";
-            var idStartRegexp = new RegExp(idStart)
-                document.getElementsByClassName(this.prefix + 'rateFloatValue', li).each(function(input) {
+            var idStartRegexp = new RegExp(idStart);
+            var self = this;
+            document.getElementsByClassName(this.prefix + 'rateFloatValue', li).each(function(input) {
+                Event.observe(input, "keyup", function(e){ NumericFilter(this) });
                 input.id = input.id.replace(idStartRegexp, idStart + 'new' + newId);
                 input.up().down('label')['for'] = input.id;
             });

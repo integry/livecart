@@ -26,6 +26,7 @@ TabControl.prototype = {
             this.urlParserCallback = urlParserCallback;
             this.idParserCallback = idParserCallback;
             this.callbacks = callbacks ? callbacks : {};
+            this.loadedContents = {};
             
             this.__nodes__();
             this.__bind__();
@@ -77,11 +78,6 @@ TabControl.prototype = {
             li.update(indicator + li.innerHTML);
 		});
     },
-    
-    __init__: function()
-    {
-        // this.activateTab();
-    },
 
     decorateTabs: function()
     {
@@ -97,13 +93,8 @@ TabControl.prototype = {
         if(!TabControl.prototype.__instances__[tabContainerName])
         {
             TabControl.prototype.__instances__[tabContainerName] = new TabControl(tabContainerName, urlParserCallback, idParserCallback, callbacks);
-            TabControl.prototype.__instances__[tabContainerName].__init__();
         }
-        else if(false !== urlParserCallback)
-        {
-            TabControl.prototype.__instances__[tabContainerName].__init__();
-        }
-        
+                
         return TabControl.prototype.__instances__[tabContainerName];
     },
 
@@ -187,8 +178,9 @@ TabControl.prototype = {
 		Element.addClassName(this.activeTab, 'active');
 		Element.show(contentId);
         
-		if (Element.empty($(contentId)))
+		if (!this.loadedContents[this.urlParserCallback(targetTab.down('a').href) + contentId] && Element.empty($(contentId)))
 		{
+            this.loadedContents[this.urlParserCallback(targetTab.down('a').href) + contentId] = true;
             new LiveCart.AjaxUpdater(this.urlParserCallback(targetTab.down('a').href), contentId, targetTab.down('.tabIndicator'), 'bottom',  onComplete);
 		}
         else if(onComplete)

@@ -150,6 +150,8 @@ function MaxValueCheck(element, constraint)
 *********************************************/
 function NumericFilter(element, params)
 {
+    element.focus();
+    
 	var value = element.value;
 	value = value.replace(',' , '.');
 	
