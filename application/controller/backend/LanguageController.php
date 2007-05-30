@@ -113,7 +113,8 @@ class LanguageController extends StoreManagementController
 		}
 		
 		// get submited translation data
-		$submitedLang = $this->request->getValue("lang");
+		$submitedLang = json_decode($this->request->getValue("translations"), true);
+
 		if (!is_array($submitedLang))
 		{
 		  	$submitedLang = array();

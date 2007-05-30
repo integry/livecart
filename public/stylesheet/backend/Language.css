@@ -94,6 +94,16 @@ label.radio {
   	overflow: auto;    
 }
 
+#langContent
+{
+	float: left;
+}
+
+#translations
+{
+	margin-left: 280px;
+}
+
 /* edit */
 
 #translations fieldset {
@@ -122,116 +132,18 @@ label.radio {
 	position: relative;
 	background-color: #FFFFFF;
 }
-
-.langTreeLine {
-  	clear: none; 
-	height: 1px; 
-	position: relative; 
-	left: -10px; 
-	margin-right: 0px;
-}
-
-.langTreeControl {
-  	clear: none; 
-	position: relative; 
-	left: -13px;
-}
-
-.langTreeSpacer {
-  	float: left; 
-	width:5px; 
-	height: 10px; 
-	position: absolute; 
-	left: -12px; 
-	top: -7px;
-	visibility: hidden;  	
-}
-
-.transValuesLast .langTreeSpacer {
-	visibility: visible;  
-}
-
-.transContainer {
-  	margin-bottom: 20px;
-}
-
-.transValues .langTreeControl { 
-  	left: -28px;
-}
-
-.transContainer table {
-	margin-top: 20px;
-	width: 700px;
-}
-.transContainer .langTreeLine {
-	visibility: hidden;
-  	width: 7px;
-}
-
-.transValues div {
-	position: relative;	
-}
-
-.transValuesLast div {
-	position: relative;
-	left: -40px;
-}
-
-.transValuesLast table {
-	margin-left: 40px;  
-}
-
-.transValues .langTreeLine {
-	visibility: visible;
-	width: 22px; 
-}  
-
-.langTranslations legend {
-	text-align: left;
-	font-weight: bold;   
-	padding-top: 10px;
-	padding-left: 0px;
-}  
-
-.transContainer legend a {
-	position: relative;
-	left: -10px;	  
-	text-decoration: none;
-}
-.transValues legend a {
-	position: relative;
-	left: -25px;	  
-}
-.transContainer legend a:hover {
-	text-decoration: underline;  
-}
-  
-.langTranslations div {
-	background-color: #FFFFFF;
-	padding-left: 10px;
-	margin-left: 10px;
-}  
-
-.langTranslations td {
-	padding: 3px;
-	padding-top: 5px;
-}  
-
-.langTranslations input, .langTranslations textarea {
+ 
+.lang-translation input, .lang-translation textarea {
 	width: 445px;
 }  
 
-.langTranslations textarea {
+.lang-translation textarea {
 	height: 150px;  
 }
 
-.langTranslations img {
-  	vertical-align: middle;
-  	margin-right: 5px;
-}
-
 .lang-key {
-  	width: 250px;
+  	width: 200px;
+  	font-size: smaller;
 }
 
 .lang-translation {

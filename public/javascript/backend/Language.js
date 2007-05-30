@@ -1,13 +1,3 @@
-/**
- * Passes language display settings from navigation form to translation modification form
- */
-function langPassDisplaySettings(form)
-{
-	nav = document.getElementById('navLang');
-	form.langFileSel.value = nav.elements.namedItem('langFileSel').value;
-	form.show.value = nav.elements.namedItem('show').value;
-}
-
 Backend.LanguageIndex = Class.create();
 Backend.LanguageIndex.prototype = 
 {		
@@ -247,14 +237,18 @@ Backend.LangEdit.prototype =
 	
 	english: false,
 	
+	editedTranslations: false,
+	
 	treeBrowser: false,
     
     initialize: function(translations, english)
 	{
-        this.initTreeBrowser();
+        // set up language file tree
+		this.initTreeBrowser();
         
         this.translations = translations;
         this.english = english;
+        this.editedTranslations = {};
         
 		for (var file in english)
 		{
@@ -266,7 +260,19 @@ Backend.LangEdit.prototype =
         
         this.treeBrowser.closeAllItems();
         
-        console.log(this);
+        // set up form
+		var form = $('editLang');		
+
+		form.onsubmit = 
+			function()
+			{	
+				console.log(this.handler.editedTranslations);
+				this.elements.namedItem('translations').value = this.handler.editedTranslations.toJSONString();
+				new LiveCart.AjaxRequest(this, $('saveProgress'));
+				return false;
+			};
+		
+		form.handler = this;
     },
     
     insertMenuItem: function(file)
@@ -374,10 +380,40 @@ Backend.LangEdit.prototype =
             input.onchange = 
                 function()
                 {
-                    this.handler.translations[this.file][this.key] = this.value;
+                    if (!this.handler.editedTranslations[this.file])
+                    {
+						this.handler.editedTranslations[this.file] = {};		
+					}
+					
+					this.handler.translations[this.file][this.key] = this.value;
+                    this.handler.editedTranslations[this.file][this.key] = this.value;
                 }
+                
+			input.onkeydown = 
+					function(e) 
+					{ 
+						key = new KeyboardEvent(e); 
+						if(key.getKey() == key.KEY_DOWN)
+						{
+							this.handler.replaceInputWithTextarea(this);
+						} 
+					}
+                
+			if (input.value.indexOf("\n") > -1)
+			{
+			  	this.replaceInputWithTextarea(inp);
+			}                
         }
-	}
+	},
+	
+	replaceInputWithTextarea: function(element)
+	{
+		textarea = document.createElement('textarea');  	
+		element.parentNode.replaceChild(textarea, element);
+		textarea.value = element.value;
+		textarea.name = element.name;
+		textarea.focus();								  	
+	}	
 }
 
 Backend.LanguageEdit = Class.create();

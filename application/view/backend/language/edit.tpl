@@ -19,23 +19,32 @@
 </script>
 {/literal}
 
-<div id="fileTemplate">
-
-    <h1>_name_</h1>
-
-    <div>
-        _edit_        
-    </div>
-
+<div style="display: none;">
+	<div id="fileTemplate">
+	
+	    <h1>_name_</h1>
+	
+	    <div>
+	        _edit_        
+	    </div>
+	
+	</div>
+	
+	<div id="transTemplate" class="lang-trans-template">
+		<div style="margin-bottom: 10px;">
+			<label class="lang-key">_key_</label>
+			<fieldset class="container lang-translation">
+				<input id="_file_#_key_" type="text" {denied role="language.status"}readonly="readonly"{/denied}><br />
+				<span>_english_</span>
+			</fieldset>
+		</div>
+	</div>	
 </div>
 
-<div id="transTemplate" class="lang-trans-template">
-	<label class="lang-key">_key_</label>
-	<fieldset class="container lang-translation">
-		<input id="_file_#_key_" type="text" {denied role="language.status"}readonly="readonly"{/denied}><br />
-		<span>_english_</span>
-	</fieldset>
-</div>	
+{tip}
+	{capture assign=tipUrl}{link controller=backend.customize action=index}{/capture}
+	{maketext text="_tip_live_trans" params="$tipUrl"}
+{/tip}
 
 <div id="pageContainer">
 		
@@ -73,18 +82,6 @@
 
 </div>
 
-{literal}
-<script type="text/javascript">
-{/literal}
-	var edit = new Backend.LangEdit(translations, english);
-</script>
-
-
-{tip}
-	{capture assign=tipUrl}{link controller=backend.customize action=index}{/capture}
-	{maketext text="_tip_live_trans" params="$tipUrl"}
-{/tip}
-
 <fieldset class="menuFieldSet">
 	<legend>{t _translation_filter}</legend>
 	<form id="navLang" method="post" style="margin-bottom: 10px;" action="{link controller=backend.language action=edit id=$id}" class="">
@@ -115,55 +112,25 @@
 
 <br /><br />
 
-<form id="editLang" method="post" action="{link controller=backend.language action=save id=$id}" onSubmit="langPassDisplaySettings(this); document.getElementById('saveProgress').style.display = 'inline';">
-	
-	<input type="hidden" name="langFileSel" />
-	<input type="hidden" name="show" />
-	
-	<fieldset class="langTranslations lang-template" style="display: none;">
-		<legend>
-			<img src="image/backend/Language/hor_line.gif" class="langTreeLine" />
-			<img src="image/backend/icon/expand.gif" class="langTreeControl" />
-			<img src="image/backend/Language/spacer.gif" class="langTreeSpacer" />
-			<a href="#" onClick="return false;"></a>
-		</legend>
-		<div class="branch" style="display: none;">
-			<table style="display: none;">	
-				<tbody style="display: none;">
-					<tr class="lang-trans-template" style="display: none;">
-						<td class="lang-key"></td>
-						<td class="lang-translation">
-							<input type="text" {denied role="language.status"}readonly="readonly"{/denied}><br />
-							<span></span>
-						</td>
-					<tr>	
-				</tbody>
-			</table>	
-		</div>
-	</fieldset>
+<div id="translations" style="display: block; margin-bottom: 15px;"></div>
 
-	<div id="translations" style="display: block; margin-bottom: 15px;"></div>
 
-	{literal}
-	<script type="text/javascript">
-	{/literal}
-/*
-		var langEdit = new Backend.LanguageEdit(translations, english, document.getElementById('translations'));
-		langEdit.preFilter();
-		{if $saved}{literal}
-		new Backend.SaveConfirmationMessage($('langSaveConf'), { message: 'Translations were saved successfuly', type: 'yellow' });
-		{/literal}{/if}
-		breadcrumb.addItem('{$edit_language}', '');
-*/
-	</script>
+<form id="editLang" method="post" action="{link controller=backend.language action=save id=$id}" onSubmit="langPassDisplaySettings(this); $('saveProgress').style.display = 'inline';">
 
     <span {denied role='language.update'}style="display: none"{/denied}>
-    	<img id="saveProgress" src="image/indicator.gif" style="display: none;"> 
+    	<input type="hidden" name="translations" />
+		<span class="progressIndicator" id="saveProgress" style="display: none;"></span>
         <input type="submit" class="submit" value="{t _save}"> 
         {t _or} 
         <a href="#" onClick="window.location.reload(); return false;" class="cancel">{t _cancel}</a>
     </span>
 	
 </form>
+
+{literal}
+<script type="text/javascript">
+{/literal}
+	var edit = new Backend.LangEdit(translations, english);
+</script>
 
 {include file="layout/backend/footer.tpl"}

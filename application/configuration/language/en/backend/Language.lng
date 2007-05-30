@@ -31,7 +31,7 @@ _help_index_title=Manage Languages
 
 # edit
 
-_tip_live_trans=Tip: You can also edit translations <a href='[_1]'>directly from user interface</a>.
+_tip_live_trans=Tip: You can also edit translations <a href='[_1]'>directly from the user interface</a>.
 _translation_filter=Translation Filter
 _show_words=Display
 _search_trans=Search
