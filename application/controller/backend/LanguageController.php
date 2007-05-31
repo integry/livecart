@@ -48,9 +48,6 @@ class LanguageController extends StoreManagementController
 		$fileDir = ClassLoader::getRealPath('application.configuration.language.en');
 		$files = $enLocale->translationManager()->getDefinitionFiles($fileDir);
 
-		// sort files
-		usort($files, array($this, 'translationSort'));
-
 		// get currently translated definitions
 		$translated = array();
 		$enDefs = array();
@@ -80,18 +77,33 @@ class LanguageController extends StoreManagementController
 						
 			// put all definitions together
 			$translated[$relPath] = array_merge($keys, $default, $transl);	
-		}
+		}		
+		
+		uksort($translated, array($this, 'sortTranslations'));
 		
 		$response = new ActionResponse();
 		$response->setValue("id", $editLocaleName);
-		$response->SetValue("language", $this->request->getValue("language"));
-		$response->SetValue("edit_language", $editLocale->info()->getLanguageName($editLocaleName));
-		
 		$response->setValue("translations", json_encode($translated));
 		$response->setValue("english", json_encode($enDefs));
+		$response->setValue("edit_language", $editLocale->info()->getLanguageName($editLocaleName));
 					
 		return $response;
 	}
+
+    private function sortTranslations($a, $b)
+    {
+        $dirA = substr($a, 0, strrpos($a, '/'));
+        $dirB = substr($b, 0, strrpos($b, '/'));
+        
+        if ($dirA == $dirB)
+        {
+            return $a > $b ? -1 : 1;   
+        }
+        else
+        {
+            return $dirA > $dirB ? -1 : 1;               
+        }        
+    }
 
 	/**
 	 * Saves translations
@@ -380,21 +392,6 @@ class LanguageController extends StoreManagementController
 		$res = $this->locale->translationManager()->updateValue($file, $id, $translation);
 
 	  	return new RawResponse();
-	}
-	
-	private function translationSort($a, $b)
-	{
-		if ($b == 'menu')
-	    {
-		  	return -1;
-		}
-
-		if ($a == $b) 
-		{
-			return 0;		  
-		}
-
-	    return ($a > $b) ? -1 : 1;
 	}
 	
 	private function getLanguages($active = 0)

@@ -34,7 +34,7 @@
 		<div style="margin-bottom: 10px;">
 			<label class="lang-key">_key_</label>
 			<fieldset class="container lang-translation">
-				<input id="_file_#_key_" type="text" {denied role="language.status"}readonly="readonly"{/denied}><br />
+				<input id="_file_#_key_" type="text" value="blah" {denied role="language.status"}readonly="readonly"{/denied}><br />
 				<span>_english_</span>
 			</fieldset>
 		</div>
@@ -55,14 +55,9 @@
 	    <div class="clear"></div>
 	
 		<div style="margin-top: 20px;">
-			<div class="yellowMessage" style="display: none;">
+			<div class="yellowMessage" style="display: none; width: 230px;">
 				<div>
-					{t Template saved successfuly}
-				</div>
-			</div>
-			<div class="redMessage" style="display: none;">
-				<div>
-					{t Template could not be saved}
+					{t _save_conf}
 				</div>
 			</div>
 		</div>		
@@ -76,56 +71,66 @@
 		<span id="langIndicator" class="progressIndicator" style="display: none;"></span>
 				
 		<div id="langContent">
-			{include file="backend/template/emptyPage.tpl"}
+
+            <fieldset class="menuFieldSet">
+            	<legend>{t _translation_filter}</legend>
+            	<form id="navLang" method="post" style="margin-bottom: 10px;" action="{link controller=backend.language action=edit id=$id}" class="">
+            
+            			<label>{t _show_words}:</label>
+            		
+            			<input type="hidden" name="langFileSel" value='{$langFileSel|escape:"quotes"}' />
+            
+            			<input type="radio" class="radio" name="show" value="all" id="show-all" />
+            			<label class="radio" for="show-all">{t _all}</label>
+            						
+            			<input type="radio" class="radio" name="show" value="notDefined" id="show-undefined" />
+            			<label class="radio" for="show-undefined">{t _not_defined}</label>
+            			
+            			<input type="radio" class="radio" name="show" value="defined" id="show-defined" />
+            			<label class="radio" for="show-defined">{t _defined}</label>
+            
+            			<br />			
+            			<br />
+            
+            			<label>{t _search_trans}:</label>
+            
+            			<fieldset class="container">
+                            <input type="text" id="filter" />			
+                            
+                            <input type="checkbox" class="checkbox" id="allFiles" />
+                            <label for="allFiles">{t _all_files}</label>
+                            
+                        </fieldset>
+            			
+            			<div id="langNotFound" style="display: none;">{t _no_translations_found}</div>
+            			<div id="foundMany" style="display: none;">{t _found_many}</div>
+                                    
+            	</form>	
+            </fieldset>
+            
+            <br /><br />
+            
+            <div id="translations" style="display: block; margin-bottom: 15px;"></div>
+            
+            
+            <form id="editLang" method="post" action="{link controller=backend.language action=save id=$id}" onSubmit="langPassDisplaySettings(this); $('saveProgress').style.display = 'inline';">
+            
+                <fieldset class="controls" {denied role='language.update'}style="display: none"{/denied}>
+                	<input type="hidden" name="translations" />
+            		<span class="progressIndicator" id="saveProgress" style="display: none;"></span>
+                    <input type="submit" class="submit" value="{t _save}"> 
+                    {t _or} 
+                    <a href="#" onClick="window.location.reload(); return false;" class="cancel">{t _cancel}</a>
+                </fieldset>
+            	
+            </form>
+
 		</div>
 	</div>
 
 </div>
 
-<fieldset class="menuFieldSet">
-	<legend>{t _translation_filter}</legend>
-	<form id="navLang" method="post" style="margin-bottom: 10px;" action="{link controller=backend.language action=edit id=$id}" class="">
-
-			<label>{t _show_words}:</label>
-		
-			<input type="hidden" name="langFileSel" value='{$langFileSel|escape:"quotes"}' />
-
-			<input type="radio" class="radio" name="show" value="all" id="show-all" {$selected_all} onclick="langEdit.displayFilter(0)" />
-			<label class="radio" for="show-all">{t _all}</label>
-						
-			<input type="radio" class="radio" name="show" value="notDefined" id="show-undefined" {$selected_not_defined} onclick="langEdit.displayFilter(1)" />
-			<label class="radio" for="show-undefined">{t _not_defined}</label>
-			
-			<input type="radio" class="radio" name="show" value="defined" id="show-defined" {$selected_defined} onclick="langEdit.displayFilter(2)" />
-			<label class="radio" for="show-defined">{t _defined}</label>
-
-			<br />			
-			<br />
-
-			<label>{t _search_trans}:</label>
-
-			<input type="text" id="filter" onkeyup="langEdit.langSearch(this.value, langEdit.getDisplayFilter(), true);">			
-			<div id="langNotFound">{t _no_translations_found}</div>
-
-	</form>	
-</fieldset>
-
-<br /><br />
-
-<div id="translations" style="display: block; margin-bottom: 15px;"></div>
-
-
-<form id="editLang" method="post" action="{link controller=backend.language action=save id=$id}" onSubmit="langPassDisplaySettings(this); $('saveProgress').style.display = 'inline';">
-
-    <span {denied role='language.update'}style="display: none"{/denied}>
-    	<input type="hidden" name="translations" />
-		<span class="progressIndicator" id="saveProgress" style="display: none;"></span>
-        <input type="submit" class="submit" value="{t _save}"> 
-        {t _or} 
-        <a href="#" onClick="window.location.reload(); return false;" class="cancel">{t _cancel}</a>
-    </span>
-	
-</form>
+<div class="clear"></div>
 
 {literal}
 <script type="text/javascript">

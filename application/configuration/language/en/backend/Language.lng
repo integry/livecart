@@ -36,17 +36,17 @@ _translation_filter=Translation Filter
 _show_words=Display
 _search_trans=Search
 _all=All
-_not_defined=Translated
-_defined=Not translated
-
-_collapse_all=Collapse all
-_expand_all=Expand all
+_not_defined=Not translated
+_defined=Translated
+_all_files=Search all files
 
 _no_translations_found=No translations found
+_found_many=More than 50 translations were found
 _save=Save translations
 
 _editing_translations=Editing Translations
-_help=Here goes some helpful information.
+
+_save_conf=Translations were saved successfuly
 
 # live translation
 

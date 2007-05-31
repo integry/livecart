@@ -158,7 +158,6 @@ Backend.LanguageIndex.prototype =
 		var node = template.cloneNode(true);
 		node = this.renderItem(itemData, node);
 
-        console.log(node.innerHTML);
 		list.appendChild(node);
 
         var list = this.initLangList();
@@ -260,20 +259,32 @@ Backend.LangEdit.prototype =
         
         this.treeBrowser.closeAllItems();
         
+        // set up filter control
+        $('show-all').onclick = this.search.bindAsEventListener(this);
+        $('show-defined').onclick = this.search.bindAsEventListener(this);
+        $('show-undefined').onclick = this.search.bindAsEventListener(this);
+        
+        $('filter').onkeyup = this.search.bindAsEventListener(this);
+        $('allFiles').onclick = this.search.bindAsEventListener(this);
+                        
         // set up form
 		var form = $('editLang');		
 
 		form.onsubmit = 
 			function()
 			{	
-				console.log(this.handler.editedTranslations);
-				this.elements.namedItem('translations').value = this.handler.editedTranslations.toJSONString();
-				new LiveCart.AjaxRequest(this, $('saveProgress'));
+    			this.elements.namedItem('translations').value = this.handler.editedTranslations.toJSONString();
+				new LiveCart.AjaxRequest(this, $('saveProgress'), this.handler.saveCompleted.bind(this.handler));
 				return false;
 			};
 		
 		form.handler = this;
     },
+    
+	saveCompleted: function(originalRequest)
+	{
+		new Backend.SaveConfirmationMessage(document.getElementsByClassName('yellowMessage')[0]);		
+	},	    
     
     insertMenuItem: function(file)
     {
@@ -337,9 +348,57 @@ Backend.LangEdit.prototype =
         if (!this.treeBrowser.hasChildren(id))
 		{
 			this.treeBrowser.showFeedback(id);
-			this.displayFile(id);
+			$('translations').innerHTML = '';
+            this.displayFile(id);
 		}
 	},	
+	
+	showSelected: function(e)
+	{
+        var id = this.treeBrowser.getSelectedItemId();
+        this.activateCategory(id);
+        console.log(e);  
+    },
+    
+    search: function(e)
+    {
+        Element.hide($('langNotFound'));
+        Element.hide($('foundMany'));
+                
+        if ($('allFiles').checked && $('filter').value)
+        {
+            this.showAll(e);
+        }
+        else
+        {
+            this.showSelected(e);
+        }
+        
+        if (!$('translations').getElementsByTagName('input').length)
+        {
+            Element.show($('langNotFound'));
+        }
+        
+    },
+    
+    showAll: function(e)
+    {
+        $('translations').innerHTML = '';
+        
+        for (file in this.translations)    
+        {
+            if ('function' != typeof this.translations[file])
+            {
+                if ($('translations').getElementsByTagName('input').length > 50)
+                {
+            Element.show($('foundMany'));
+                    return false;
+                }
+
+                this.displayFile(file);
+            }            
+        }
+    },
 	
 	displayFile: function(file)
 	{
@@ -350,10 +409,41 @@ Backend.LangEdit.prototype =
 		var english = this.english[file];		
 		var edit = '';
         var template = '';
+        
+        if ($('show-defined').checked)
+        {
+            var status = 1;
+        }
+        else if ($('show-undefined').checked)
+        {
+            var status = 2;
+        }
+        else
+        {
+            var status = 0;
+        }
+        
         for (var key in english)
 		{
             if ('function' != typeof english[key])
             {
+                // check translation status filter
+                if ((status == 1 && !this.translations[file][key]) || (status == 2 && this.translations[file][key]))
+                {
+                    continue;
+                }
+                
+                // check word filter
+                var filter = $('filter').value.toLowerCase();
+                
+                if (key.toLowerCase().indexOf(filter) == -1
+                   && this.translations[file][key].toLowerCase().indexOf(filter) == -1
+                   && english[key].toLowerCase().indexOf(filter) == -1
+                   )
+                {
+                    continue;
+                }
+                
                 template = transTemplate;
     			template = template.replace(/_file_/g, file);
     			template = template.replace(/_key_/g, key);
@@ -362,8 +452,20 @@ Backend.LangEdit.prototype =
             }
         }
         
-        $('translations').innerHTML = edit;
-
+        if (!edit)
+        {
+            return false;
+        }
+        
+        // append to translation container
+        var tr = $('translations');
+        var r = tr.ownerDocument.createRange();
+        
+        r.selectNodeContents(tr);
+        r.collapse(false);
+        df = r.createContextualFragment(edit);
+        tr.appendChild(df);
+                  
         // set field values and behavior through DOM
         for (var key in english)
 		{
@@ -373,7 +475,8 @@ Backend.LangEdit.prototype =
                 continue;
             }
 
-            input.value = this.translations[file][key];
+            var value = this.translations[file][key];
+            input.value = value;
             input.handler = this;
             input.file = file;
             input.key = key;
@@ -387,6 +490,8 @@ Backend.LangEdit.prototype =
 					
 					this.handler.translations[this.file][this.key] = this.value;
                     this.handler.editedTranslations[this.file][this.key] = this.value;
+                    
+                    console.log(this.handler.editedTranslations[this.file][this.key].indexOf("\n"));
                 }
                 
 			input.onkeydown = 
@@ -397,377 +502,31 @@ Backend.LangEdit.prototype =
 						{
 							this.handler.replaceInputWithTextarea(this);
 						} 
+						
+						return true;
 					}
                 
-			if (input.value.indexOf("\n") > -1)
+            if (value.indexOf("\n") > -1)
 			{
-			  	this.replaceInputWithTextarea(inp);
+			  	var textarea = this.replaceInputWithTextarea(input);
+			  	textarea.value = value;
 			}                
         }
 	},
 	
 	replaceInputWithTextarea: function(element)
 	{
-		textarea = document.createElement('textarea');  	
+		var textarea = document.createElement('textarea');  	
 		element.parentNode.replaceChild(textarea, element);
-		textarea.value = element.value;
-		textarea.name = element.name;
+		
+        textarea.value = element.value;
+		textarea.handler = element.handler;
+		textarea.file = element.file;
+		textarea.key = element.key;
+		textarea.onchange = element.onchange;
+                		
 		textarea.focus();								  	
+		
+		return textarea;
 	}	
-}
-
-Backend.LanguageEdit = Class.create();
-Backend.LanguageEdit.prototype = 
-{		
-	templ: false,
-	
-	row: false,
-	
-	english: false,
-	
-	initialize: function(translations, english, container)
-	{
-		this.templ = document.getElementsByClassName('lang-template')[0];
-		this.row   = this.templ.getElementsByClassName('lang-trans-template')[0];  			
-		
-		this.english = english;
-		
-		this.generateForm(translations, container);
-		
-	},
-	
-	langContainerVisibility: function (container, visibility)
-	{
-		container.style.display = (visibility ? '' : 'none');  	
-	},
-	
-	generateForm: function(translations, container, fileName)
-	{
-		// create container
-		var t = this.templ.cloneNode(true);
-		transcont = t.getElementsByTagName('table')[0].getElementsByTagName('tbody')[0];
-
-		t.style.display = '';
-		t.file = fileName;
-
-		t.id = 'cont-' + fileName;
-
-		if ('translations' == container.id)
-		{
-		  	t.className += ' transContainer';
-		}
-		else 
-		{
-		  	t.className += ' transValues';	
-		}
-		
-		if (fileName)
-		{
-			// set caption
-			var caption = fileName;
-			
-			// remove file extension
-			if (caption.indexOf('.lng') > 0)
-			{
-			  	caption = caption.substr(0, caption.indexOf('.lng'));
-			}
-			
-			// remove directory path
-			temp = caption.split('/');
-			if (temp.length > 1)
-			{
-			  	caption = temp[temp.length - 1];
-			}			
-			
-			// capitalize
-			caption = caption.substring(0,1).toUpperCase() + caption.substring(1, caption.length);
-			  
-		}
-		
-		t.getElementsByTagName('legend')[0].getElementsByTagName('a')[0].innerHTML = caption;
-		t.getElementsByTagName('legend')[0].onclick = 
-			function () 
-			{
-				langEdit.langToggleVisibility(this.parentNode);
-  			}
-		
-		t.getElementsByTagName('legend')[0].getElementsByTagName('img')[1].onclick = 
-			function () 
-			{
-				// shallow collapse
-				if (langEdit.isContainerVisible(this.parentNode.parentNode.parentNode))
-				{
-					langEdit.langToggleVisibility(this.parentNode);	
-				}
-  			}
-
-		t.getElementsByTagName('legend')[0].getElementsByTagName('a')[0].onkeydown = 			
-			function (event)
-			{
-				if (getPressedKey(event) != KEY_TAB && getPressedKey(event) != KEY_SHIFT) 
-				{
-				  	langEdit.langToggleVisibility(this.parentNode.parentNode);
-				}									  	
-			}					
-		
-
-		// generate container content
-		zebra = 0;
-
-		for (var file in translations)
-		{
-			if ('object' == typeof translations[file])
-			{
-				var cont = (undefined == fileName ? container : t.getElementsByTagName('div')[0]);
-				this.generateForm(translations[file], cont, file);
-			}
-			else if ('function' != typeof translations[file])
-			{
-				k = file;
-				r = this.row.cloneNode(true);
-				r.style.display = '';
-
-				r.id = 'cont-' + fileName + '-' + k;
-
-				if (++zebra % 2 == 1)
-				{
-				  	r.className += ' altrow';
-				}
-				
-				r.getElementsByClassName('lang-key')[0].innerHTML = k;
-				r.getElementsByClassName('lang-translation')[0].getElementsByTagName('span')[0].innerHTML = this.english[fileName][k];
-				
-				try 
-				{
-					inp = r.getElementsByClassName('lang-translation')[0].getElementsByTagName('input')[0];
-				}
-				catch (e) 
-				{
-					inp = r.getElementsByClassName('lang-translation')[0].getElementsByTagName('textarea')[0];  	
-				}
-								
-				inp.value = translations[k];
-				inp.name = "lang[" + fileName + "][" + k + "]";
-				
-				inp.onkeydown = 
-						function(e) 
-						{ 
-							key = new KeyboardEvent(e); 
-							if(key.getKey() == key.KEY_DOWN)
-							{
-								langEdit.replaceInputWithTextarea(this);
-							} 
-						}
-				
-				if (inp.value.indexOf("\n") > -1)
-				{
-				  	this.replaceInputWithTextarea(inp);
-				}
-
-				transcont.appendChild(r);
-				
-				t.getElementsByTagName('div')[0].style.borderLeft = '0px'; 
-				transcont.style.display = '';
-				transcont.parentNode.style.display = '';
-			}
-		}
-
-		// no translations to display for this file
-		if (3 == transcont.childNodes.length && 0 == container.childNodes.length)
-		{
-		//  	continue;
-		}			
-								
-		if (undefined != fileName)
-		{
-			container.appendChild(t);	
-		}
- 
-		cont = t.getElementsByTagName('div')[0];
-		subCont = cont.getElementsByTagName('fieldset');
-		if (subCont.length > 0)
-		{
-		  	subCont[subCont.length - 1].className += " transValuesLast";
-		}
-	
-	},
-	
-	langFileSearch: function(query, translations, file, display)
-	{	
-		var found = false;
-			
-		var showFile = false;
-			
-		for (var k in translations)
-		{			
-			if ('object' == typeof translations[k])
-			{
-			  	if (this.langFileSearch(query, translations[k], k, display))
-				{
-				  	showFile = true;
-				}			  	
-			}
-			else
-			{		
-				matchIndex = (k.toLowerCase().indexOf(query) > -1);
-				
-				valueInput = document.getElementById('cont-' + file + '-' + k);
-	
-				if (!valueInput)
-				{
-				  	continue;
-				}
-				
-				inp = valueInput.getElementsByTagName('input');
-	
-				if (0 == inp.length) 
-				{				
-					inp = valueInput.getElementsByTagName('textarea');  	
-				}
-				inp = inp[0];
-				
-				matchValue = (inp.value.toLowerCase().indexOf(query) > -1);
-				
-				if (english[file][k])
-				{
-					matchEnValue = (english[file][k].toLowerCase().indexOf(query) > -1);						
-				}				
-	
-				valueInput.style.display = (!matchIndex && !matchValue && !matchEnValue) ? 'none' : '';					
-				
-				// filter by translated/untranslated radio buttons
-				if ((display > 0) && ('none' != valueInput.style.display))
-				{
-					if (1 == display)
-				  	{
-						d = ('' == inp.value);
-					}
-					else if (2 == display)
-					{
-						d = ('' != inp.value);							  
-					}
-				
-					if (d)
-					{
-						valueInput.style.display = 'none';  
-					}					
-				}
-				
-				if ('' == valueInput.style.display)
-				{
-				  	showFile = true;
-				}
-			}
-		}
-		
-		container = document.getElementById('cont-' + file);
-		
-		if (container)
-		{
-			this.langContainerVisibility(container, showFile);  
-		}	
-		
-		if (showFile)
-		{
-		  	found = true;
-		}	
-		
-		// for IE
-		$('filter').focus();		
-		window.setTimeout("$('filter').focus()", 200);
-		
-		return found;				
-		
-	},
-	
-	langSearch: function(query, display)
-	{
-		query = query.toLowerCase();  
-		found = this.langFileSearch(query, translations, '', display);
-		document.getElementById('langNotFound').style.display = (found) ? 'none' : 'block';  	
-		document.getElementById('editLang').style.display = (found) ? 'block' : 'none';  			
-		
-	},
-	
-	replaceInputWithTextarea: function(element)
-	{
-		textarea = document.createElement('textarea');  	
-		element.parentNode.replaceChild(textarea, element);
-		textarea.value = element.value;
-		textarea.name = element.name;
-		textarea.focus();								  	
-	},
-		
-	langSetVisibility: function(container, visibility)
-	{
-		// toggle translation input visibility
-		transCont = container.getElementsByTagName('div')[0];
-		transCont.style.display = (visibility ? '' : 'none');
-			
-		// save explode/collapse status in form variable
-		sel = document.getElementById('navLang').elements.namedItem('langFileSel');
-	
-		try 
-		{
-			var arr = sel.value.parseJSON();
-		}
-		catch (e)
-		{
-			var arr = new Object();  	
-		}
-			
-		arr[container.file] = visibility;
-	
-		sel.value = arr.toJSONString();	
-	},
-	
-	/**
-	 * Toggles visibility for lang file
-	 */
-	langToggleVisibility: function(container)
-	{
-		this.langSetVisibility(container, 1 - this.isContainerVisible(container));
-		
-		// rerender the document otherwise IE will screw it up
-		document.body.style.display = 'none';
-		document.body.style.display = 'block';
-		window.onresize();
-	},
-	
-	isContainerVisible: function(container)
-	{
-		return container.getElementsByTagName('div')[0].style.display != 'none';  	
-	},
-	
-	preFilter: function()
-	{
-		this.langSearch('', this.getDisplayFilter(), false);	  
-	},
-	
-	displayFilter: function(display)
-	{
-		// get search query
-		var query = document.getElementById('filter').value;
-		
-		this.langSearch(query, display, true);
-	},
-	
-	getDisplayFilter: function()
-	{
-	  	var filter = 0;
-		if (document.getElementById('show-all').checked)
-	  	{
-			filter = 0;    
-		}
-		else if(document.getElementById('show-undefined').checked)
-		{
-		  	filter = 1;
-		}
-		else if(document.getElementById('show-defined').checked)
-		{
-		  	filter = 2;
-		}
-		
-		return filter;
-	}
 }

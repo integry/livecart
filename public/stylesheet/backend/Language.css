@@ -1,6 +1,6 @@
 label.radio {
 	width: auto;  
-	float: none;
+	float: left;
 	margin-right: 10px;
 	margin-left: -10px;
 }
@@ -86,6 +86,11 @@ label.radio {
 }
 
 /* edit */
+div.tip
+{
+    margin-bottom: 20px;
+}
+
 #langBrowser
 {
   	float: left;
@@ -99,40 +104,11 @@ label.radio {
 	float: left;
 }
 
-#translations
-{
-	margin-left: 280px;
-}
-
-/* edit */
-
-#translations fieldset {
-  	padding: 0;
-  	margin: 0;
-}
-
-#langNotFound {
-  	display: none;
+#langNotFound, #foundMany {
   	margin-top: 5px;
   	color: red;
 }
 
-#expandCollapse {
-  	font-size: smaller;
-}
-
-.branch {
-	border-left: 1px solid black; 
-	margin-left: 57px;
-}
-
-.langTranslations {
-	width: 850px;  	
-	border: 0px;
-	position: relative;
-	background-color: #FFFFFF;
-}
- 
 .lang-translation input, .lang-translation textarea {
 	width: 445px;
 }  

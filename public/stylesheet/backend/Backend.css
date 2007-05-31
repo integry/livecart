@@ -96,6 +96,7 @@ div.yellowMessage, div.redMessage {
 	margin: 0pt;
 	padding: 10pt;
 	float: none;
+	clear: both;
 }
 
 div.yellowMessage div, div.redMessage div {
@@ -103,8 +104,9 @@ div.yellowMessage div, div.redMessage div {
 	font-weight: bold;
 	padding: 7px;
 	width: auto;
-	display: inline;
+	float: left;
 	margin-left: 10px;
+	text-align: center;
 }
 
 div.yellowMessage div {
