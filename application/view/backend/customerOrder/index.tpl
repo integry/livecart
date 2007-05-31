@@ -35,6 +35,7 @@
 {literal}
 <script type="text/javascript">
     new Backend.CustomerOrder({/literal}{json array=$orderGroups}{literal});
+    Backend.CustomerOrder.prototype.ordersMiscPermission = true;
     window.ordersActiveGrid = {};
 </script>
 {/literal}

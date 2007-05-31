@@ -24,6 +24,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     
     private $isSyncedToSession = false;
     
+    const STATUS_NEW = null;
     const STATUS_BACKORDERED = 1;
     const STATUS_AWAITING_SHIPMENT = 2;
     const STATUS_SHIPPED = 3;
@@ -377,7 +378,11 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         
 	        $this->shipping->set(serialize($this->shipments));
 	        parent::save();		
-		}        
+		}
+		else if($this->isModified())
+		{
+		    parent::save();        
+		}
                 
         if ($this->isSyncedToSession)
         {

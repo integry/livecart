@@ -85,7 +85,6 @@ abstract class BaseController extends Controller implements LCiTranslator
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
-
 		$this->session = Session::getInstance();
 		$this->user = User::getCurrentUser();
 		$this->router = Router::getInstance();
@@ -134,9 +133,12 @@ abstract class BaseController extends Controller implements LCiTranslator
 		unset($this->locale);
 		unset($this->config);
 		
+		$localeCode = $this->store->getLocaleInstance()->getLocaleCode();
+		$defaultLanguageCode = $this->store->getDefaultLanguageCode();
 		// add language code to URL for non-default languages
-		if ($this->store->getLocaleInstance()->getLocaleCode() != $this->store->getDefaultLanguageCode())
+		if ($localeCode != $defaultLanguageCode)
 		{
+die(__FILE__ . ': ' . __LINE__  . "$localeCode == $defaultLanguageCode");
 			Router::setAutoAppendVariables(array('requestLanguage' => $this->store->getLocaleInstance()->getLocaleCode()));			
 		}
 	}	

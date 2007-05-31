@@ -747,18 +747,18 @@ p.radio label, p.checkbox label, fieldset.radio label, fieldset.checkbox label
     margin-top: 3px;
 }
 
-label.checkbox, label.radio
-{
-  	margin-top: 3px;
-  	width: auto;
-}
-
 input, select, file, form.other
 {
     width: 15em;
     font-size: 16px;
     padding: 2px;
     vertical-align: middle;
+}
+
+label.checkbox, label.radio
+{
+  	margin-top: 3px;
+  	width: auto;
 }
 
 optgroup option 

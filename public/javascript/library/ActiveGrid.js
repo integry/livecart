@@ -95,7 +95,7 @@ ActiveGrid.prototype =
 		for(k = 0; k < data['data'].length; k++)
 		{
 			var id = data['data'][k][0];
-			data['data'][k][0] = '<input type="checkbox" name="item[' + id + ']" />';
+			data['data'][k][0] = '<input type="checkbox" class="checkbox" name="item[' + id + ']" />';
 			
 			if (this.dataFormatter)
 			{
@@ -131,6 +131,11 @@ ActiveGrid.prototype =
 		if(Backend.UserGroup)
         {
             Backend.UserGroup.prototype.updateHeader(this, offset);
+		}
+        
+		if(Backend.CustomerOrder)
+        {
+            Backend.CustomerOrder.prototype.updateHeader(this, offset);
 		}
         
 		this._markSelectedRows();

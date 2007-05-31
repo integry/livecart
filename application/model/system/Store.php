@@ -114,6 +114,9 @@ class Store
 		return self::$isTranslationMode;
 	}
 
+	/**
+	 * @return Locale
+	 */
 	public function getLocaleInstance()
 	{
 	  	return $this->locale;

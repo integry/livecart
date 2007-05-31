@@ -91,6 +91,46 @@ class UserController extends StoreManagementController
 		return $form;
 	}
 
+	
+	/**
+	 * @role mass
+	 */
+    public function processMass()
+    {        
+		$filter = new ARSelectFilter();
+		
+		$filters = (array)json_decode($this->request->getValue('filters'));
+		$this->request->setValue('filters', $filters);
+		
+        $grid = new ActiveGrid($this->request, $filter, 'User');
+        $filter->setLimit(0);
+        					
+		$users = ActiveRecordModel::getRecordSet('User', $filter, User::LOAD_REFERENCES);
+		
+        $act = $this->request->getValue('act');
+		$field = array_pop(explode('_', $act, 2));           
+
+        foreach ($users as $user)
+		{
+            if (substr($act, 0, 7) == 'enable_')
+            {
+                $user->setFieldValue($field, 1);    
+            }        
+            else if (substr($act, 0, 8) == 'disable_')
+            {
+                $user->setFieldValue($field, 0);                 
+            } 
+            else if ('delete' == $act)
+            {
+				$user->delete();
+			}         
+            
+			$user->save();
+        }		
+		
+		return new JSONResponse($this->request->getValue('act'));	
+    } 
+	
     
 	private function save(User $user = null)
 	{

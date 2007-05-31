@@ -14,7 +14,6 @@
     ClassLoader::import('application.LiveCart');
 
 	$app = LiveCart::getInstance();
-
 	try
 	{
 		$app->run();
