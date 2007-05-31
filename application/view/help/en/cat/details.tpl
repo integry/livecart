@@ -11,9 +11,10 @@
 		<li>Keywords - words that are used in search queries and {glossary}Meta tags{/glossary}.</li>
 	</ul>
 <p>
-	If you have more than one language in your system, click on the language link to expand additional fields below. You can enter the following category details in the selected language:
+	If you have more than one language in your system, click on the language link to expand additional fields below.
 	<img src="image/doc/categories/details/translate.bmp">
 </p>
+You can enter the following category details in the selected language:
 	<ul>
 		<li>Category name</li>
 		<li>Details</li>

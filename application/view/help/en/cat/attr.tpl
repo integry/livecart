@@ -25,7 +25,7 @@
 <legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#create">Create a new attribute</a></li>
-	<li><a href="{self}#visible">Set Attributes to be displayed in storefront</a></li>
+	<li><a href="{self}#visible">Display attributes in storefront</a></li>
 	<li><a href="{self}#group">Group attributes</a></li>
 	<li><a href="{self}#edit">Edit attribute</a></li>
 	<li><a href="{self}#delete">Delete attribute</a></li>
@@ -38,10 +38,10 @@
 <h3 id="create">Create Attribute</h3>
 
 <p>LC provides attribute management system which allows you to create and manage attributes in a simple manner.
- LiveCart supports three base product <strong>attribute types</strong>: 
+ LiveCart supports three base product attribute types: 
 
 <ul>
-	<li>Number type which can be either an <i>input field</i> or a <i>pre-defined value	selector</i></li>
+	<li>Number type which can be either an <i>input field</i> or a pre-defined <i>value	selector</i></li>
 	<li>Text type which also can be either an an <i>input field</i> or a <i>selector</i></i>
 	<li>and <i>Date</i> type</li>
 </ul>
@@ -52,9 +52,9 @@ examples on how to create attributes and choose attribute types.
 
 <p>
 	Suppose that you have a category stocked with cell phones and you want to create custom fields for specifying 
-	the following properties: <strong>Carrier</strong> (select one option), <strong>Phone Features</strong> 
-	(select multiple options) and <strong>Batery Capacity</strong> (number input field). 
-	Because attributes are automatically included in the <i>Add New Product</i> form, we will demonstrate in our
+	the following properties: <a href="{self}#carrier">Carrier</a> (select one option), <a href="{self}#features">Phone Features</a> 
+	(select multiple options) and <a href="{self}#capacity">Batery Capacity</a> (number input field). 
+	Because attributes are automatically included in the "Add New Product" form, we will demonstrate in our
 	examples how attributes are generated and placed in the product form.
 </p>
 
@@ -66,16 +66,16 @@ examples on how to create attributes and choose attribute types.
 <h4 id="carrier">Creating Carrier attribute</h4>
 <p>To create the attribute follow these steps:</p>
 	<ul>	
-		<li>Select a category in the category tree and click <strong>Attributes</strong> tab.</li>
+		<li>Select a category in the category tree and click "Attributes" tab.</li>
 		<img src="image/doc/categories/attributes/attributes_tab_green.bmp">
-		<li>In the attributes section click <strong>Add new attribute</strong>:</li>
+		<li>In the "Attributes" section click "Add new attribute":</li>
 		<img src="image/doc/categories/attributes/add_attribute.bmp">
 		<p id="form">Add new attribute form appears. Fill out the following fields as described below:</p>
 		<img src="image/doc/categories/attributes/main_form_carrier.bmp">
 		
 		<li>Type - because mobile carrier is a simple text and there is probably a finite number of carriers click on the type drop-down menu and 
-		select <i>Text Options</i> type from the list.</li>
-		<li>Check "Required" to make the field mandatory since it is an important feature. </li>
+		select "Text Options" type from the list.</li>
+		<li>Check "Required" to make the field mandatory since it is an important feature.</li>
 		<li>Can select multiple values - leave this checkbox clear to allow assigning only one carrier to each phone</li> 
 		<li>Display attribute in product page - mark the checkbox to display attribute in the <a href="{help /products.store}#product_details">product details</a> page.</li>
 		<li>Display attribute in product list - leave this checkbox clear because we don't need carrier attribute to be displayed in the <a href="{help /products.store}#product_details">product list</a>.</li>
@@ -105,7 +105,7 @@ To add values:
 		<li>Keep in this manner until we have a full list of carriers.</li>
 		<img src="image/doc/categories/attributes/values.bmp">
 
-		<li>Click the <strong>Save</strong> button to return to the Attributes page. </li>
+		<li>Click the "Save" button to return to the Attributes page. </li>
 	</ul>
 
 	Your new attribute is automatically generated in the "Add new Product" form and <ins>will</ins> look similar to this one:
@@ -126,11 +126,10 @@ To add values:
 <h4 id="features">Creating Phone Features attribute</h4>
 <p>
 	Cell phones usually have a great variety of features therefore it would more convenient to create a list of features than re-enter them
-	every time. To create an attribute of features, open <strong>Add new attribute form</strong> <a href="{self}#carrier"><small>(remind me how)
-	</small></a> 
+	every time. To create the attribute open "Add new attribute form" <a href="{self}#carrier"><small>(remind me how)</small></a>
 </p>
 	<p><img src="image/doc/categories/attributes/main_form_features.bmp"></p>
-	<p>The following parameters have to be set in the form:</p>
+	<p>The following parameters have to be set:</p>
 
 	<ul>
 		<li>Type - click type list and choose Text -> Options as your type.</li>
@@ -148,10 +147,10 @@ To add values:
 <p>The next thing to do is to create a value list of mobile's features. 
 
 	<ul>
-		<li>Click <i>Values</i> tab which appears on the right of the <i>Main</i> tab. </li>
+		<li>Click "Values" tab which appears on the right of the "Main" tab. </li>
 		<img src="image/doc/categories/attributes/value_tab_features.bmp">
-		<li>In the Values section enter all the necessary features one by one.</li>
-		<li><strong>Save</strong> the attribute when done.</li>
+		<li>In the "Values" section enter all the necessary features one by one.</li>
+		<li>Save the attribute when done.</li>
 	</ul>
 
 </p>
@@ -174,7 +173,7 @@ by necessary changes. A numeric attribute looks similar to this one:
 <div class="dottedBorders" id="capacity" style="display:none">
 -->
 
-<h4 id="capacity">Creating <i>Batery Capacity</i> attribute</h4>
+<h4 id="capacity">Creating Batery Capacity attribute</h4>
 
 <p>
 	Battery capacity is expressed in numeric(al) format of mAh, therefore you should consider choosing a "Number" type. When it comes
@@ -183,19 +182,20 @@ by necessary changes. A numeric attribute looks similar to this one:
 </p>
 
 <ul>
-	<li>Open <strong>Add new attribute form</strong> <a href="{self}#carrier"><small>(remind me how)</small></a></li>
-	<li>Type - select Number Field.</li>
-	<li>Required - click the checkbox to make the field required attribute</li>
+	<li>Click "Add new attribute" <a href="{self}#carrier"><small>(remind me how)</small></a></li>
+	<li>Type - select "Number Field".</li>
+	<li>Required - click the checkbox to make the field required attribute.</li>
 	<li>Display attribute in product page - mark the checkbox to display attribute in the <a href="{help /products.store}#product_details">product details</a> page or leave it clear otherwise.</li>
 	<li>Display attribute in product list - mark the checkbox to display attribute in the <a href="{help /products.store}#product_details">product list</a> page or leave it clear otherwise.</li>
-	<li>Title - enter <strong>Battery Capacity</strong> to represent attribute's purpose/function.</li>
-	<li>Handle is generated automatically so we leave the field unaltered</li>
+	<li>Title - enter "Battery Capacity".</li>
+	<li>Handle is generated automatically and is used to represent the attribute in {glossary}URL{/glossary}'s, so you can change it for 
+		{glossary}SEO{/glossary} purposes, if needed.</li>
 	<li>Prefix - leave the field empty.</li>			
 	<li>Suffix - enter "mAh" as battery capacity is defined by this symbol.</li>
 	<li>In the description field provide brief information about the attribute.</li>
 </ul>	
 
-<p>Don't forget to click <strong>Save</strong> at the end.</p>
+<p>Don't forget to click save at the end.</p>
 <br \>
 <p>
 	Generated attribute will provide a field for entering battery capacity:
@@ -203,14 +203,14 @@ by necessary changes. A numeric attribute looks similar to this one:
 	<img src="image/doc/categories/attributes/capacity_generated_mah.bmp">
 </p>
 	
-<p class="note"><strong>Note</strong>: to create analogous attribute for Text Field simply change type to <strong>Text Field</strong>.</p>
+<p class="note"><strong>Note</strong>: to create analogous attribute for Text Field simply change type to "Text Field".</p>
 
 
 </p>
 
 <h3 id="visible">Display attributes in your e-store</h3>
 
-<p>You can define what attributes should be displayed with your products in the main attribute's form.</p>
+<p>You can define what attributes should be displayed with your products.</p>
 
 <ul>
 	<li id="attributes_product_list">To make the attribute visible in the <a href="{help /products.store}#product_list">product list page</a>, mark the "Display attribute in the product list page" checkbox.</li>
@@ -219,18 +219,18 @@ by necessary changes. A numeric attribute looks similar to this one:
 	<img src="image/doc/categories/attributes/product_page.bmp">
 </ul>
 
-<p>You can as well define the <strong>order</strong> in which attributes are displayed in the both "Product page" and "Product list page".
-See <a href="{self}#sort">Change attribute order</a> for more information.</p>
+<p>(You can as well define the order in which attributes are displayed in the both "Product page" and "Product list page".
+See <a href="{self}#sort">Change attribute order</a> for more information).</p>
 
 <h3 id="group">Group attributes</h3>
 
-LC allows you to group related attributes together. This is mostly important for products detailed page
-because groups allows you to set neccessary attributes' layout / arrangement.
+LC allows you to group related attributes together. This is mostly important for {glossary}product details{/glossary} page 
+because groups allow you to set neccessary attributes' arrangement.
 To create a new group:
 	<ul>
 		<li>Click <strong>Add new group</strong></li>
 		<img src="image/doc/categories/attributes/add_new_group.bmp">
-		<li>Enter group title (to identify group)</li>
+		<li>Enter group title (for instance, "dimensions")</li>
 		<img src="image/doc/categories/attributes/group_title.bmp">
 		<li>Supply translations for other languages if applicable</li>
 	</ul>
@@ -244,7 +244,7 @@ into the appropriate groups.
 
 <img src="image/doc/categories/attributes/group_edit.bmp">
 
-<p class="note"><strong>Notice</strong>: deleting a group will cause all of its attributes to be deleted as well. Thus you have to <strong>ungroup
+<p class="note"><strong>Note</strong>: deleting a group will cause all of its attributes to be deleted as well. Thus you have to <strong>ungroup
 </strong> attributes that you want to keep.</p>
 
 
@@ -255,7 +255,7 @@ To edit attribute: select an attribute from the list and click on its "pen" icon
 
 <img src="image/doc/categories/attributes/edit_attribute.bmp">
 
-Attribute's management form appears with its specification details. To edit any of attribute's fields or values, simply alter existing parameters/values
+Attribute's management form appears with its specification details. To edit any of attribute's fields or values, simply alter existing parameters
 and save changes afterwards. For detailed fields' description, refer to <a href="{self}#form">Create new attribute</a> section.
 
 <!--
@@ -270,12 +270,8 @@ To delete attribute: select an attribute from the list and click on its "delete"
 
 <h3 id="sort">Change attribute order</h3>
 
-To change the order of attributes or attribute groups, hover mouse cursor over attribute or entire group and then
- drag it up or down.
+The order of attributes and attribute groups define how they are displayed in the "Product list" and "Product details" page. To change the order of attributes or attribute groups, hover mouse cursor over attribute or entire group and then drag it up or down.
 <img src="image/doc/categories/attributes/sort.bmp">
-
-<p class="note"><strong>Note</strong>: The order of attribute groups and single attributes define how they are 
-displayed in the <ins>"Product page"?</ins> and "Product details" pages.</p>
 
 
 {helpSeeAlso}

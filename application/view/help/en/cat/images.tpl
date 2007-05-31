@@ -1,6 +1,12 @@
 
 <p>Images are used to represent category's contents. LC allows you to have unlimited number of images
- for one category, however only the <strong>Main</strong> image will be displayed in your store frontend. 
+ for one category. There are two types of images:</p>
+ 
+ <ul> 
+ 	<li></li>
+ </ul>
+
+ <p>however only the <strong>Main</strong> image will be displayed in your store frontend. 
 (Additional images can be used with custom template file modifications).</p>
 
 <h3 id="add">Add an image</h3>
@@ -14,7 +20,7 @@ To add an image for a category:
 fields.)</li>
 
 <p class="note"><strong>Note:</strong> Upon upload, the image will automatically be resized to predefined sizes.
-You can set image dimensions <ins>(and other details?)</ins> in the <strong>Settings</strong> section.</p>
+You can set image dimensions and quality in the <strong>Settings</strong> section.</p>
 
 <h3 id="sort">Reorder images</h3>
 <p>To change the main image or sort images:</p>

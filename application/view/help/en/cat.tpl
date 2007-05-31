@@ -10,7 +10,7 @@
 	Category tree structure represents how all of the categories are arranged. (If a category "LCD monitors" is 
 	a <strong>subcategory</strong> of "Monitors" then "Monitors" is a <strong>parent</strong> category for 
 	"LCD monitors"). At the top of the category tree is the <strong>Root</strong> category which is a parent 
-	category for all the descending categories The root category here is "LiveCart". Also notice that categories
+	category for all the descending categories. The root category here is "LiveCart". Also notice that categories
 	which have subcategories are denoted with "folder" icons and categories with no subcategories are marked with a "file"
 	image. 
 </p>
