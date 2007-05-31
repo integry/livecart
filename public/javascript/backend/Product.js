@@ -236,11 +236,11 @@ Backend.Product =
     
     openProduct: function(id, e) 
     {
-		try 
+		if (window.opener) 
 		{
 			window.opener.selectProductPopup.getSelectedProduct(id);	
 		}
-		catch (exc)
+		else
 		{   
             Backend.Product.Editor.prototype.setCurrentProductId(id); 
 	        $('productIndicator_' + id).style.display = '';
@@ -261,6 +261,7 @@ Backend.Product =
 				Backend.Product.Editor.prototype.getInstance(id);			
 			}			
 		}
+		
         Event.stop(e);
     }
 }
@@ -322,8 +323,8 @@ Backend.Product.massActionHandler.prototype =
 			}
 		}
 		
-		this.form.elements.namedItem('filters').value = this.grid.getFilters().toJSONString();
-        this.form.elements.namedItem('selectedIDs').value = this.grid.getSelectedIDs().toJSONString();
+		this.form.elements.namedItem('filters').value = this.grid.getFilters().toJSON();
+        this.form.elements.namedItem('selectedIDs').value = this.grid.getSelectedIDs().toJSON();
         this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;
         new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('progressIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));
 
@@ -507,6 +508,7 @@ Backend.Product.Editor.prototype =
 
     initialize: function(id)
   	{
+		var t = new TimeTrack();
         try
         {
             this.id = id;
@@ -522,7 +524,7 @@ Backend.Product.Editor.prototype =
         {
             console.info(e);
         }
-
+        t.track('editor instance');
 	},
 
 	__nodes__: function()
@@ -542,31 +544,36 @@ Backend.Product.Editor.prototype =
 
     __init__: function(args)
     {	
-		Backend.Product.Editor.prototype.setCurrentProductId(this.id);
+		var i = new TimeTrack();
+        Backend.Product.Editor.prototype.setCurrentProductId(this.id);
         $('productIndicator_' + this.id).style.display = 'none';
         this.showProductForm();
-
         this.tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
+
         this.addTinyMce();
+        i.track('start');
+
         this.setTabCounters();
-        
+        i.track('5');        
 		new SectionExpander(this.nodes.parent);
+        i.track('6');
     },
     
     setTabCounters: function()
     {
         try
         {
-            var $this = this;
-            if(!$this.tabControl.restoreAllCounters($this.id))
+            if(!this.tabControl.restoreAllCounters(this.id))
             {
-                new Ajax.Request(Backend.Product.Editor.prototype.links.countTabsItems + "/" + $this.id, {
-                   method: 'get',
-                   onSuccess: function(reply) {
-                       var counters = eval("(" + reply.responseText + ")")
-                       $this.tabControl.setAllCounters(counters, $this.id);
-                   } 
-                });
+                new Ajax.Request(Backend.Product.Editor.prototype.links.countTabsItems + "/" + this.id, 
+                    {
+                       method: 'get',
+                       onSuccess: function(reply) {
+                           var counters = eval("(" + reply.responseText + ")")
+                           this.tabControl.setAllCounters(counters, this.id);
+                       }.bind(this)
+                    }
+                );
             }
         } 
         catch(e)
@@ -597,13 +604,21 @@ Backend.Product.Editor.prototype =
 
     getInstance: function(id, doInit)
     {
-		if(!Backend.Product.Editor.prototype.__instances__[id])
+		var t = new TimeTrack();
+        if(!Backend.Product.Editor.prototype.__instances__[id])
         {
             Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id);
         }
 
-        if(doInit !== false) Backend.Product.Editor.prototype.__instances__[id].__init__();
-        
+        if(doInit !== false) 
+        {
+		    var i = new TimeTrack();
+            Backend.Product.Editor.prototype.__instances__[id].__init__();
+            i.track('initializing');
+        }
+
+        t.track('getting instance');
+
         return Backend.Product.Editor.prototype.__instances__[id];
     },
 
@@ -625,24 +640,21 @@ Backend.Product.Editor.prototype =
 
     submitForm: function()
     {
-		var self = this;
-		new Ajax.Request(this.nodes.form.action + "/" + this.id,
-		{
-           method: this.nodes.form.method,
-           parameters: Form.serialize(self.nodes.form),
-           onSuccess: function(responseJSON) {
-				ActiveForm.prototype.resetErrorMessages(self.nodes.form);
-				var responseObject = eval("(" + responseJSON.responseText + ")");
-				self.afterSubmitForm(responseObject);
-		   }
-		});
+		new LiveCart.AjaxRequest(this.nodes.form, document.getElementsByClassName('progressIndicator', this.nodes.form)[0], this.nodes.form, this.formSaved.bind(this));
+    },
+    
+    formSaved: function(responseJSON) 
+    {
+		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+		var responseObject = eval("(" + responseJSON.responseText + ")");
+		this.afterSubmitForm(responseObject);
     },
 	
 	afterSubmitForm: function(response)
 	{
 		if(!response.errors || 0 == response.errors.length)
 		{
-			new Backend.SaveConfirmationMessage(this.nodes.form.down('.pricesSaveConf'));
+			new Backend.SaveConfirmationMessage($('pricesSaveConf'));
 			Form.State.backup(this.nodes.form);
 		}
 		else
@@ -669,8 +681,7 @@ Backend.Product.Editor.prototype =
     },
     
     addTinyMce: function()
-    {
-		
+    {		
         ActiveForm.prototype.initTinyMceFields(this.nodes.parent);
     }
 }
@@ -749,7 +760,7 @@ Backend.Product.Prices.prototype =
     {
 		if('success' == response.status)
 		{
-			new Backend.SaveConfirmationMessage(this.nodes.form.down('.pricesSaveConf'));
+			new Backend.SaveConfirmationMessage($('pricesSaveConf'));
 			var self = this;
 			$H(response.prices).each(function(price) {
 				self.nodes.form.elements.namedItem(price.key).value = price.value;

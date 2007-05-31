@@ -149,7 +149,7 @@ Backend.Roles.prototype =
         if(response.status == 'success')
         {
             this.backupTree();
-            new Backend.SaveConfirmationMessage(this.nodes.root.up().down('.yellowMessage'));	
+            new Backend.SaveConfirmationMessage($('rolesConfirmation'));	
         }
         else
         {

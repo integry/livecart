@@ -2,8 +2,6 @@
 
 {assign var="action" value="create"}
 
-<div id="categoryMsg_{$categoryId}"></div>
-
 {form id="categoryForm_$categoryId" handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="Backend.Category.updateBranch(this); return false;"}
 	<fieldset class="container">
 

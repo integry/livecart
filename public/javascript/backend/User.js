@@ -370,8 +370,8 @@ Backend.UserGroup.massActionHandler.prototype =
 			}
 		}
 		
-		this.form.elements.namedItem('filters').value = this.grid.getFilters().toJSONString();
-        this.form.elements.namedItem('selectedIDs').value = this.grid.getSelectedIDs().toJSONString();
+		this.form.elements.namedItem('filters').value = this.grid.getFilters().toJSON();
+        this.form.elements.namedItem('selectedIDs').value = this.grid.getSelectedIDs().toJSON();
         this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;
         new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('progressIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));
 
@@ -447,7 +447,7 @@ Backend.User.Group.prototype =
     {
         if(response.status == 'success')
         {
-            new Backend.SaveConfirmationMessage($('userGroup_' + this.nodes.ID.value), { message: Backend.User.Group.prototype.Messages.savedMessage, type: 'yellow' });
+            new Backend.SaveConfirmationMessage($('groupConfirmation'));
             Backend.UserGroup.prototype.treeBrowser.setItemText(Backend.UserGroup.prototype.activeGroup, this.nodes.name.value);
         }
         else

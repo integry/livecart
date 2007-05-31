@@ -1,12 +1,12 @@
 .productRelationshipGroup_title {
     color: grey;
-    font-size:300%;
-    font-weight:bold;
+    font-size: 300%;
+    font-weight: bold;
 }
 
 li.productRelationshipGroup_item {
     border: 2px solid grey;
-    margin-bottom: 1em;   
+    margin-bottom: 0.5em;   
 }
 
 li.productRelationshipGroup_item li {
@@ -19,5 +19,11 @@ li.productRelationshipGroup_item li {
 }
 
 .productRelationship_list {
-    padding-bottom: 2em;
+    padding-bottom: 1em;
+}
+
+.productRelationship_list li
+{
+    margin-bottom: 10px;
+    padding: 5px;
 }

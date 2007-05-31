@@ -273,7 +273,8 @@ Backend.LangEdit.prototype =
 		form.onsubmit = 
 			function()
 			{	
-    			this.elements.namedItem('translations').value = this.handler.editedTranslations.toJSONString();
+    			this.focus();
+                this.elements.namedItem('translations').value = this.handler.editedTranslations.toJSON();
 				new LiveCart.AjaxRequest(this, $('saveProgress'), this.handler.saveCompleted.bind(this.handler));
 				return false;
 			};
@@ -402,6 +403,8 @@ Backend.LangEdit.prototype =
 	
 	displayFile: function(file)
 	{
+        Element.hide($('foundMany'));
+        
 		this.treeBrowser.hideFeedback();
 		
 		var transTemplate = $('transTemplate').innerHTML;
@@ -493,14 +496,20 @@ Backend.LangEdit.prototype =
                     
                     console.log(this.handler.editedTranslations[this.file][this.key].indexOf("\n"));
                 }
+            
+            input.onkeyup = input.onchange;
                 
 			input.onkeydown = 
 					function(e) 
 					{ 
 						key = new KeyboardEvent(e); 
-						if(key.getKey() == key.KEY_DOWN)
+						if (key.getKey() == key.KEY_DOWN)
 						{
 							this.handler.replaceInputWithTextarea(this);
+						} 
+						else if (key.getKey() == key.KEY_ENTER)
+						{
+							$('editLang').onsubmit();
 						} 
 						
 						return true;

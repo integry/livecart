@@ -1432,6 +1432,11 @@ Backend.SpecFieldGroup.prototype = {
         var self = this;
         Backend.SpecField.prototype.loadLanguagesAction();
 
+        if (!this.nodes.name)
+        {
+            this.nodes.name = '';
+        }
+        
         this.nodes.name.name += "[" + Backend.SpecField.prototype.languageCodes[0] + "]";
         if(this.group.name_lang) this.nodes.name.value = this.group.name_lang;
         
@@ -1440,7 +1445,7 @@ Backend.SpecFieldGroup.prototype = {
         this.nodes.categoryID.value = this.group.Category.ID;
         
         $H(Backend.SpecField.prototype.languages).each(function(language) {
-            if(language.key == Backend.SpecField.prototype.languageCodes[0]) throw $continue;
+            if(language.key == Backend.SpecField.prototype.languageCodes[0]) return;
             
             var languageTranlation = self.nodes.translationTemplate.cloneNode(true);
             Element.removeClassName(languageTranlation, self.cssPrefix + 'group_translations_language_');

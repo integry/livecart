@@ -92,7 +92,10 @@ Backend.AjaxNavigationHandler.prototype =
 					Backend.ajaxNav.ignoreNext();
 				}
 				
-				$(hashElements[hashPart]).onclick();
+				if ($(hashElements[hashPart]).onclick)
+				{
+                    $(hashElements[hashPart]).onclick();    
+                }                
 			}	
             // This is in case element is not yet loaded. If so we wait for all requests to finish and the continue.
             else if(Ajax.activeRequestCount > 0)

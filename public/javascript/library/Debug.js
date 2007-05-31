@@ -11,13 +11,14 @@ TimeTrack.prototype =
 	track: function(pointName)
 	{
 	  	var curr = this.dateToSec(new Date());
-	 	addlog(pointName + ' - ' + (curr - this.start));
+	 	console.log(pointName + ' - ' + (curr - this.start));
 		this.start = curr; 	
 	},
 	
 	dateToSec: function(dat)
 	{
-	  	return (dat.getHours() * 3600) + (dat.getMinutes() * 60) + dat.getSeconds() + '.' + dat.getMilliseconds();
+		var ret = (dat.getHours() * 3600) + (dat.getMinutes() * 60) + dat.getSeconds() + '.' + dat.getMilliseconds();
+	  	return ret;
 	}
 	
 }

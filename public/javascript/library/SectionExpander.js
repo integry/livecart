@@ -11,7 +11,8 @@ SectionExpander.prototype = {
 	 */
 	initialize: function(parent)
 	{
-		var sectionList = document.getElementsByClassName('expandingSection', $(parent));
+        var sectionList = document.getElementsByClassName('expandingSection', $(parent));
+
 		for (var i = 0; i < sectionList.length; i++)
 		{
 			var legend = sectionList[i].down('legend');
@@ -22,7 +23,9 @@ SectionExpander.prototype = {
 				legend.onclick = this.handleLegendClick.bindAsEventListener(this);
 			}
 		}
+
 		var sectionContentList = document.getElementsByClassName('expandingSectionContent', $(parent));
+
 		for (var i = 0; i < sectionContentList.length; i++)
 		{
 			Element.hide(sectionContentList[i]);

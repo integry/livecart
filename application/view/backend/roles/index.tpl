@@ -1,11 +1,3 @@
-<div class="yellowMessage" style="display: none;">
-   	<div>
-   		{t _user_group_roles_where_successfully_updated}
-   	</div>
-</div>
-
-
-
 {form id="roles_form_`$userGroup.ID`" handle=$form action="controller=backend.roles action=update id=`$userGroup.ID`" onsubmit="Backend.Roles.prototype.getInstance('roles_form_`$userGroup.ID`').save(event);" method="post" role="userGroup.update"}
     
     <fieldset class="error">

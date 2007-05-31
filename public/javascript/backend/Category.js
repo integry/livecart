@@ -33,7 +33,6 @@ Backend.Category = {
 	initPage: function()
 	{
 		// check for bookmark
-        console.info(window.location.hash.length);
 		if (window.location.hash.length == 0)
         {
             window.location.hash = '#cat_1#tabProducts__';
@@ -159,7 +158,7 @@ Backend.Category = {
 
 		Backend.Category.tabControl.switchCategory(categoryId, Backend.Category.activeCategoryId);
 		Backend.Category.activeCategoryId = categoryId;
-        
+
 		// set ID for the current tree node element
 		$('categoryBrowser').getElementsByClassName('selectedTreeRow')[0].parentNode.id = 'cat_' + categoryId;
 			
@@ -167,7 +166,6 @@ Backend.Category = {
 		// Backend.ajaxNav.add('cat_' + categoryId);
 		if(Backend.Category.tabControl.activeTab) Backend.Category.tabControl.activeTab.onclick();
 
-        
         var currentProductId;
         if(currentProductId = Backend.Product.Editor.prototype.getCurrentProductId())
         {
@@ -256,7 +254,7 @@ Backend.Category = {
 		var categoryData = eval('(' + response.responseText + ')');
 
 		Backend.Category.treeBrowser.setItemText(categoryData.ID, categoryData.name);
-        new Backend.SaveConfirmationMessage($('categoryMsg_' + categoryData.ID), { message: categoryData.infoMessage, type: 'yellow' });
+        new Backend.SaveConfirmationMessage($('categoryMsg'));
 	},
 
 	/**

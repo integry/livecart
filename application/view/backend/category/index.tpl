@@ -64,10 +64,22 @@
 		<li class="moveDownTreeNode" {denied role="category.sort"}style="display: none"{/denied}><a href="#" id="moveCategoryDown">{t _move_category_down}</a></li>
 		<li class="removeTreeNode" {denied role="category.remove"}style="display: none"{/denied}><a href="#" id="removeCategoryLink">{t _remove_category}</a></li>
 	</ul>
+
+    <div id="categoryMsg" class="yellowMessage" style="display: none;">
+        <div>
+            {t _successfully_saved}
+        </div>
+    </div>
+    
+   	<div id="pricesSaveConf" class="pricesSaveConf yellowMessage" style="display: none;">
+		<div>
+			{t _product_information_was_saved}
+		</div>
+   	</div>    
+
 </div>
 
 <div id="activeCategoryPath"></div>
-
 
 <div id="managerContainer" class="managerContainer maxHeight h--60">
 	<div id="tabContainer" class="tabContainer">

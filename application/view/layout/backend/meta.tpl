@@ -26,16 +26,19 @@
 	<![endif]-->
 	{/literal}
 
-	<script type="text/javascript" src="javascript/library/tinymce/tiny_mce.js"></script>
+
+    <script type="text/javascript" src="javascript/library/tinymce/tiny_mce.js"></script>
+
 
 	<script type="text/javascript" src="firebug/firebug.js"></script>
+    
 	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
 	<script type="text/javascript" src="javascript/library/scriptaculous/scriptaculous.js"></script>
 	<script type="text/javascript" src="javascript/backend/Backend.js"></script>
 
 	<!-- JavaScript includes -->
 	{includeJs file=library/KeyboardEvent.js}
-	{includeJs file=library/json.js}
+
 	{includeJs file=library/livecart.js}
 	{includeJs file=library/Debug.js}
 	{includeJs file=library/dhtmlHistory/dhtmlHistory.js}
@@ -46,7 +49,7 @@
 	<script language="javascript" type="text/javascript">
     try
     {
-		tinyMCE.init({
+        tinyMCE.init({
 			theme : "advanced",
 			mode : "exact",
 			elements : "",

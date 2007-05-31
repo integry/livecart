@@ -18,10 +18,10 @@ ActiveForm.prototype = {
     {
         animate = animate !== false ? true : animate;
         
-        if(link) $(link).addClassName('hidden');  
-        if(animate && BrowserDetect.browser != 'Explorer')
+        if (link) $(link).addClassName('hidden');  
+        if (animate && BrowserDetect.browser != 'Explorer')
         {             
-            if(form) 
+            if (form) 
             {
                 Effect.BlindDown(form, {duration: 0.3});
                 Effect.Appear(form, {duration: 0.66});
@@ -34,7 +34,7 @@ ActiveForm.prototype = {
         }
         else
         {
-            if(form) form.style.display = 'block'; 
+            if (form) form.style.display = 'block'; 
         }
     },
     
@@ -49,24 +49,24 @@ ActiveForm.prototype = {
     {
         animate = animate !== false ? true : animate;
         
-        if(animate && BrowserDetect.browser != 'Explorer')
+        if (animate && BrowserDetect.browser != 'Explorer')
         {
-            if(form) 
+            if (form) 
             {
                 Effect.Fade(form, {duration: 0.2});
                 Effect.BlindUp(form, {duration: 0.3});
                 setTimeout(function() { form.style.display = 'none'; }, 300);   
             }
             
-            if(link) 
+            if (link) 
             {
                 setTimeout(function() { $(link).removeClassName('hidden'); }, 300);   
             }
         }
         else
         {
-            if(link) $(link).removeClassName('hidden');
-            if(form) form.style.display = 'none';
+            if (link) $(link).removeClassName('hidden');
+            if (form) form.style.display = 'none';
         }
     },
     
@@ -112,7 +112,7 @@ ActiveForm.prototype = {
         var progress = document.getElementsByClassName('activeForm_progress', $(form))[0];
         
         var img = progress.getElementsByTagName("img")[0];
-        if(!img) 
+        if (!img) 
         {
             img = document.createElement("img");
             img.src = 'image/indicator.gif';
@@ -135,7 +135,7 @@ ActiveForm.prototype = {
         var progress = document.getElementsByClassName('activeForm_progress', $(form))[0];
         
         var img = progress.getElementsByTagName("img")[0];      
-        if(img) img.style.visibility = "hidden";
+        if (img) img.style.visibility = "hidden";
     },
     
     
@@ -197,7 +197,7 @@ ActiveForm.prototype = {
      */
     toggleTranslations: function(fieldset) 
     {
-        if('block' != document.getElementsByClassName("activeForm_translation_values", fieldset)[0].style.display)
+        if ('block' != document.getElementsByClassName("activeForm_translation_values", fieldset)[0].style.display)
         {
             ActiveForm.prototype.showTranslations(fieldset);
         }
@@ -209,28 +209,34 @@ ActiveForm.prototype = {
     
     resetErrorMessages: function(form)
     {
-		if('form' != form.tagName.toLowerCase()) form = form.down('form');
+        if ('form' != form.tagName.toLowerCase()) 
+        {
+            form = form.down('form');
+        }
       
-		$A(form.elements).each(function(formElement)
-	  	{           
-           ActiveForm.prototype.resetErrorMessage(formElement);
-        });
+        var messages = document.getElementsByClassName('errorText', form);
+        for (k = 0; k < messages.length; k++)
+        {
+            messages[k].innerHTML = '';
+            messages[k].style.display = 'none';
+        }
 	},
     
     resetErrorMessage: function(formElement) 
     {
         var errorText = formElement.up().down(".errorText");
-            if(errorText)
-            {
-	  	errorText.innerHTML = '';
-	  	errorText.style.display = 'none';
-	  	Element.addClassName(errorText, 'hidden');
+
+        if (errorText)
+        {
+    	  	errorText.innerHTML = '';
+    	  	errorText.style.display = 'none';
+    	  	Element.addClassName(errorText, 'hidden');
         }
     },
 
     setErrorMessages: function(form, errorMessages)
     {
-        if('form' != form.tagName.toLowerCase()) form = form.down('form');
+        if ('form' != form.tagName.toLowerCase()) form = form.down('form');
         
         try
         {
@@ -262,7 +268,7 @@ ActiveForm.prototype = {
             }
             
             var errorContainer = formElement.up().down(".errorText");		
-            if(errorContainer)	
+            if (errorContainer)	
             {
         		errorContainer.innerHTML = errorMessage;
         	  	Element.removeClassName(errorContainer, 'hidden');
@@ -291,7 +297,7 @@ ActiveForm.prototype = {
             {
                var attr = attributes[a];
                ids.each(function(transformation) { 
-                   if(element[attr]) element[attr] = element[attr].replace(transformation.value, transformation.key); 
+                   if (element[attr]) element[attr] = element[attr].replace(transformation.value, transformation.key); 
                });
             };
         });
@@ -304,7 +310,7 @@ ActiveForm.prototype = {
         $A(menu.getElementsByTagName('li')).each(function(li) {
             a = $(li).down('a');
             a.hide();
-            $A(except).each(function(el) { if(a == $(el)) a.style.display = 'inline';  });
+            $A(except).each(function(el) { if (a == $(el)) a.style.display = 'inline';  });
         });
     },
     
@@ -312,11 +318,13 @@ ActiveForm.prototype = {
     
     disabledTextareas: {},
     lastDisabledTextareaId: 1,
-    initTinyMceFields: function(container) {
+    
+    initTinyMceFields: function(container) 
+    {
 		var textareas = container.getElementsByTagName('textarea');
 		for (k = 0; k < textareas.length; k++)
 		{
-            if(textareas[k].readOnly)
+            if (textareas[k].readOnly)
             {
                 textareas[k].style.display = 'none';
                 new Insertion.After(textareas[k], '<div class="disabledTextarea" id="disabledTextareas_' + (ActiveForm.prototype.lastDisabledTextareaId++) + '">' + textareas[k].value + '</div>'); 
@@ -351,8 +359,11 @@ ActiveForm.prototype = {
             }
             else
             {
-                if(!textareas[k].id) textareas[k].id = 'tinyMceControll_' + (this.lastTinyMceId++);
-    			tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
+                if (!textareas[k].id) 
+                {    
+                    textareas[k].id = 'tinyMceControll_' + (this.lastTinyMceId++);
+                }
+                tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
             }
 		}
     },
@@ -361,11 +372,11 @@ ActiveForm.prototype = {
         var textareas = container.getElementsByTagName('textarea');
 		for (k = 0; k < textareas.length; k++)
 		{
-            if(textareas[k].readOnly)
+            if (textareas[k].readOnly)
             {
                 textareas[k].style.display = 'block';
                 var disabledTextarea = textareas[k].up().down('.disabledTextarea');
-                if(disabledTextarea)
+                if (disabledTextarea)
                 {
                     Element.remove(disabledTextarea);
                     delete ActiveForm.prototype.disabledTextareas[disabledTextarea.id];
@@ -374,7 +385,7 @@ ActiveForm.prototype = {
             }
             else
             {
-                if(!textareas[k].id) textareas[k].id = 'tinyMceControll_' + (this.lastTinyMceId++);
+                if (!textareas[k].id) textareas[k].id = 'tinyMceControll_' + (this.lastTinyMceId++);
     			tinyMCE.execCommand('mceRemoveControl', true, textareas[k].id);
             }
 		}
@@ -385,7 +396,7 @@ ActiveForm.prototype = {
 		var textareas = container.getElementsByTagName('textarea');
 		for(k = 0; k < textareas.length; k++)
 		{
-            if(!textareas[k].readonly) continue;
+            if (!textareas[k].readonly) continue;
 			tinyMCE.execInstanceCommand(textareas[k].id, 'mceSetContent', true, '', true);
 		}
 	}
@@ -412,9 +423,9 @@ Element.focus = function(element)
     var styleVisibility = element.style.visibility;
     var elementType = element.type;
 
-    if('none' == element.style.display || "hidden" == element.type)
+    if ('none' == element.style.display || "hidden" == element.type)
     {
-        if(Element.isTinyMce(element)) element.style.height = '80px';
+        if (Element.isTinyMce(element)) element.style.height = '80px';
         
         element.style.visibility = 'hidden';
         element.style.display = 'block';
@@ -425,14 +436,14 @@ Element.focus = function(element)
         element.style.visibility = styleVisibility;
         try { element.type = elementType; } catch(e) {}
         
-        if(Element.isTinyMce(element)) element.style.height = '1px';
+        if (Element.isTinyMce(element)) element.style.height = '1px';
     }
     else
     {
         element.focus();
     }
     
-    if(Element.isTinyMce(element))
+    if (Element.isTinyMce(element))
     {
         var inst = tinyMCE.getInstanceById(element.nextSibling.down(".mceEditorIframe").id);  
         tinyMCE.execCommand("mceStartTyping");

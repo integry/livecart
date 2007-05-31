@@ -43,6 +43,9 @@ _Filter_value=Value
 _Filter_date_range=Date between
 _Filter_handle=Handle
 
+# Product
+_product_information_was_saved=Product information was saved successfuly
+
 # ProductFileGroup
 _productFileGroup_title=Group title
 
@@ -61,7 +64,7 @@ _images=Images
 _articles=Articles
 _create_subcategory=Create a new sub-category
 _remove_category=Remove selected category
-_succsessfully_saved=Details were successfuly updated!
+_successfully_saved=Details were successfuly updated!
 _new_category=New Category
 _reorder_failed=Could not move category
 _confirm_category_remove=Are you sure you want to remove this category?

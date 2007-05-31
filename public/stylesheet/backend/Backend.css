@@ -95,15 +95,15 @@ div.noRecords div {
 div.yellowMessage, div.redMessage {
 	margin: 0pt;
 	padding: 10pt;
-	float: none;
-	clear: both;
+	float: left;
+	text-align: center;
+	z-index: 50000;
 }
 
 div.yellowMessage div, div.redMessage div {
 	border: 4px solid;
 	font-weight: bold;
 	padding: 7px;
-	width: auto;
 	float: left;
 	margin-left: 10px;
 	text-align: center;
@@ -841,12 +841,16 @@ label, input, select, form .other, textarea, .disabledTextarea
     margin-bottom: 5px;
 }
 
+select
+{
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+}
+
 a.cancel 
 {
  	color: red;
 }
-
-
 
 .hidden 
 {
@@ -1050,6 +1054,11 @@ fieldset.group p
 .tabHelp
 {
 	display: none;
+}
+
+span.tabCounter
+{
+    margin-left: 6px;
 }
 
 /*************************** 

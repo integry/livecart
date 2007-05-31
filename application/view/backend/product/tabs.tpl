@@ -1,4 +1,4 @@
-<div id="productManagerContainer" class="managerContainer" style="display: none;">
+<div id="productManagerContainer" class="managerContainer maxHeight h--90" style="display: none;">
     
 	<fieldset class="container">
 		<ul class="menu">

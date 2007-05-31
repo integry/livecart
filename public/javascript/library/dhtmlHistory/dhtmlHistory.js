@@ -488,7 +488,7 @@ window.historyStorage = {
    /** public */ debugging: false,
    
    /** Our hash of key name/values. */
-   /** private */ storageHash: new Object(),
+   /** private */ storageHash: {},
    
    /** If true, we have loaded our hash table out of the storage form. */
    /** private */ hashLoaded: false, 
@@ -503,7 +503,12 @@ window.historyStorage = {
          this.remove(key);
        }
        
-       // store this new key
+       if (!this.storageHash)
+       {
+            this.storageHash = {};
+       }
+       
+       // store this new key       
        this.storageHash[key] = value;
        
        // save and serialize the hashtable into the form
@@ -553,7 +558,7 @@ window.historyStorage = {
       // from the form
       this.loadHashTable();
       
-      if (typeof this.storageHash[key] == "undefined")
+      if (!this.storageHash || !this.storageHash[key])
          return false;
       else
          return true;
@@ -640,7 +645,8 @@ window.historyStorage = {
       this.loadHashTable();
       
       // serialized the hash table
-      var serializedHashTable = this.storageHash.toJSONString();
+      this.storageHash.toJSON = Object.toJSON;
+      var serializedHashTable = this.storageHash.toJSON();
       
       // save this value
       this.storageField.value = serializedHashTable;

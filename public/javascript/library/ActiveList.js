@@ -123,6 +123,8 @@ ActiveList.prototype = {
     hiddenMenuOpacity: 0.15, 
 
     activeListsUsers: {},
+    
+    messages: {},
 
     /**
      * Constructor
@@ -380,7 +382,6 @@ ActiveList.prototype = {
      */
     rebindIcons: function(li)
     {
-        console.count('ActiveList::rebindIcons()');
         var self = this;
         $A(this.ul.className.split(' ')).each(function(className)
         {
@@ -389,7 +390,7 @@ ActiveList.prototype = {
             var regex = new RegExp('^' + self.cssPrefix + '(add|remove)_(\\w+)(_(before|after)_(\\w+))*');
             var tmp = regex.exec(className);
 
-            if(!tmp) throw $continue;
+            if(!tmp) return;
 
             var icon = {};
             icon.type = tmp[1];
@@ -527,11 +528,12 @@ ActiveList.prototype = {
             iconProgress = document.createElement('img');
             iconProgress.src = this.icons.progress;
             
-            try{
-                iconImage.title = this.messages._activeList_progress;
-                iconImage.alt = this.messages._activeList_progress;
-            } catch(e) { }   
-            if(this.messages && this.messages._activeList_progress)
+            if (this.messages && this.messages._activeList_progress)
+            {
+                iconImage.alt = this.messages._activeList_progress;                
+            }
+            
+            if (this.messages && this.messages._activeList_progress)
             {
                 iconImage.title = iconImage.alt = this.messages._activeList_progress;            
             }
@@ -726,7 +728,7 @@ ActiveList.prototype = {
         $A(this.ul.className.split(' ')).each(function(className)
         {
             var tmp = regex.exec(className);
-            if(!tmp) throw $continue;
+            if(!tmp) return;
             var allowedClassName = tmp[1];
             
             self.acceptFromLists = $$('ul.' + allowedClassName);
@@ -740,7 +742,6 @@ ActiveList.prototype = {
      */
     createSortable: function ()
     {
-        console.count('ActiveList::createSortable');
         var self = this;
 
         Element.addClassName(this.ul, this.cssPrefix.substr(0, this.cssPrefix.length-1));
@@ -841,7 +842,7 @@ ActiveList.prototype = {
         
         $H(this.icons).each(function(icon)
         {
-            if(!li[icon.key] || icon.key == 'progress') throw $continue;
+            if(!li[icon.key] || icon.key == 'progress') return;
             
             try {
                 li[icon.key].setOpacity(self.visibleMenuOpacity);            
@@ -864,7 +865,7 @@ ActiveList.prototype = {
     
         $H(this.icons).each(function(icon)
         {
-            if(!li[icon.key] || icon.key == 'progress') throw $continue;
+            if(!li[icon.key] || icon.key == 'progress') return;
             
             try {
                 li[icon.key].setOpacity(self.hiddenMenuOpacity);
@@ -1083,7 +1084,7 @@ ActiveList.prototype = {
         
         $H(activeLists).each(function(activeList) 
         {
-            if(!activeList.value.ul || 0 >= activeList.value.ul.offsetHeight) throw $continue; // if list is invisible there is no need to collapse it
+            if(!activeList.value.ul || 0 >= activeList.value.ul.offsetHeight) return; // if list is invisible there is no need to collapse it
             
             var containers = document.getElementsByClassName('activeList_container', activeList.value.ul);
             
@@ -1101,7 +1102,7 @@ ActiveList.prototype = {
     {
         $H(ActiveList.prototype.activeListsUsers).each(function(activeList) 
         {
-            if(!activeList.value.ul || 0 >= activeList.value.ul.offsetHeight) throw $continue; // if list is invisible there is no need to collapse it
+            if(!activeList.value.ul || 0 >= activeList.value.ul.offsetHeight) return; // if list is invisible there is no need to collapse it
             ActiveList.prototype.getInstance(activeList.value.ul).touch();
         });
     },

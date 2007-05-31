@@ -11,6 +11,7 @@ LiveCart.AjaxRequest.prototype = {
     
 	initialize: function(formOrUrl, indicatorId, onComplete)
     {
+        var t = new TimeTrack();
         var url = "";
         var method = "";
         var params = "";
@@ -39,9 +40,10 @@ LiveCart.AjaxRequest.prototype = {
                                };
        
 		document.body.style.cursor = 'progress';
-		
+
         new Ajax.Request(url,
                          updaterOptions);
+        t.track('end');		
     },
 
 	hideIndicator: function()
@@ -90,7 +92,9 @@ LiveCart.AjaxUpdater.prototype = {
             var form = formOrUrl;
             url = form.action;
             method = form.method;
+            t = new TimeTrack();
             params = Form.serialize(form);
+            t.track();
         }
         else
         {
@@ -135,9 +139,10 @@ LiveCart.AjaxUpdater.prototype = {
         
 		document.body.style.cursor = 'progress';
 		
-        new Ajax.Updater({success: containerId},
+        var ajax = new Ajax.Updater({success: containerId},
                          url,
                          updaterOptions); 
+
     },
 
 
@@ -153,7 +158,7 @@ LiveCart.AjaxUpdater.prototype = {
 
     postProcessResponse: function(response)
     {
-		document.body.style.cursor = 'default';
+        document.body.style.cursor = 'default';
         response.responseText.evalScripts();  
         LiveCart.ajaxUpdaterInstance.hideIndicator();
 

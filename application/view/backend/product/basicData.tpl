@@ -1,12 +1,4 @@
-{form handle=$productForm action="controller=backend.product action=update" id="product_`$product.ID`_form" onsubmit="Backend.Product.Editor.prototype.getInstance(`$product.ID`, false).submitForm(); return false;" method="post" role="product.update"}
-
-   	<div class="pricesSaveConf" style="display: none;">
-   		<div class="yellowMessage">
-   			<div>
-   				{t _product_information_was_saved}
-   			</div>
-   		</div>
-   	</div>
+{form handle=$productForm action="controller=backend.product action=update id=`$product.ID`" id="product_`$product.ID`_form" onsubmit="Backend.Product.Editor.prototype.getInstance(`$product.ID`, false).submitForm(); return false;" method="post" role="product.update"}
 
     <input type="hidden" name="categoryID" value="{$cat}" />
     
@@ -17,7 +9,8 @@
     {include file="backend/product/form/translations.tpl" product=$product cat=$cat multiLingualSpecFields=$multiLingualSpecFields }
     
     <fieldset class="controls">
-    	<input type="submit" name="save" class="submit" value="Save"> 
+    	<span class="progressIndicator" style="display: none;"></span>
+        <input type="submit" name="save" class="submit" value="Save"> 
         {t _or} 
         <a class="cancel" href="#">{t _cancel}</a>
     </fieldset>
