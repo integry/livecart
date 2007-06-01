@@ -780,7 +780,7 @@ Backend.SaveConfirmationMessage.prototype =
 	{
         try 
         {
-            new Effect.ScrollTo(this.element.id, {offset: -24});
+            new Effect.ScrollTo(this.element, {offset: -24});
         }
         catch(e) {}
         new Effect.SlideDown(this.element, {duration: 0.4, afterFinish: this.highlight.bind(this)});
