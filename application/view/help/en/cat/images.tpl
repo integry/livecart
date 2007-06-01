@@ -3,33 +3,44 @@
  for one category. There are two types of images:</p>
  
  <ul> 
- 	<li></li>
+ 	<li>Main image - the image which is displayed in the storefront.</li>
+ 	<li>Supplemental images - additional category's images.</li>
  </ul>
 
- <p>however only the <strong>Main</strong> image will be displayed in your store frontend. 
-(Additional images can be used with custom template file modifications).</p>
+<div class="tasks">
+<fieldset>
+<legend>Things you can do</legend>
+<ul>	
+	<li><a href="{self}#add">Add an image</a></li>
+	<li><a href="{self}#change">Change the main image</a></li>
+	<li><a href="{self}#delete">Delete image</a></li>
+
+</ul>
+</fieldset>
+</div>
 
 <h3 id="add">Add an image</h3>
-To add an image for a category:
+<p>To add an image for a category:</p>
 <ul>
-<li>Select a category in the category tree and click on the <strong>Images</strong> tab.</li> 
-<li>In the Image section click <strong>Add new image</strong> and browse an image on your hard disk drive.</li>
-<li>Click <strong>Upload</strong> to set an image.</li>
-<li>(Then enter optional image title in the field provided).</li> 
-<li>(Finally you can supply image titles in other languages if applicable. To do that click a Language to expand additional name 
-fields.)</li>
-
+	<li>Select a category in the category tree and click on the "Images" tab.</li> 
+	<li>In the Image section click "Add new image" and browse an image on your hard disk drive.</li>
+	<li>Image title is optional (...)</li> 
+	<li>Supply image titles in other languages if applicable. Click a Language to expand additional name fields.</li>
+	<li>Click the "Upload" link to set an image.</li>
+</ul>
 <p class="note"><strong>Note:</strong> Upon upload, the image will automatically be resized to predefined sizes.
-You can set image dimensions and quality in the <strong>Settings</strong> section.</p>
+You can set image dimensions and quality in the <a href="{help /settings}">Settings</a> section.</p>
 
-<h3 id="sort">Reorder images</h3>
+<h3 id="change">Change the main image</h3>
 <p>To change the main image or sort images:</p>
 <ul>
 	<li>Hover the mouse cursor over an image.</li>
 	<li>Then drag and drop an image to place it into appropriate position.</li>
 </ul>
 
-<h3 id="edit">Edit or Delete images</h3>
+<h3 id="delete">(Edit) or Delete images</h3>
+
+<ins>Is editing necessary for images?</ins>
 
 <p>To <strong>edit</strong> an image click the "pen" icon on the left:</p>
 <img src="image/doc/categories/images/edit.bmp">

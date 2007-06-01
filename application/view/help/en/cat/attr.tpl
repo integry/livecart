@@ -96,7 +96,7 @@ To add values:
 		<li>Click on the "Values" tab in the main window -> </li>
 		<img src="image/doc/categories/attributes/values_tab.bmp">
 
-		<li>When switched to the Value window enter the first Mobile Carrier in the text field provided.</li>
+		<li>When switched to the "Values" window enter the first Mobile Carrier in the text field provided.</li>
 		<img src="image/doc/categories/attributes/empty_field.bmp">
 
 		<li>As soon as you start entering the value, additional empty field appears below.</li>
@@ -219,12 +219,12 @@ by necessary changes. A numeric attribute looks similar to this one:
 	<img src="image/doc/categories/attributes/product_page.bmp">
 </ul>
 
-<p>(You can as well define the order in which attributes are displayed in the both "Product page" and "Product list page".
+<p>(You can as well define the order in which attributes are displayed in the "{glossary}Product list{/glossary}" and "{glossary}Product details{/glossary}" page.
 See <a href="{self}#sort">Change attribute order</a> for more information).</p>
 
 <h3 id="group">Group attributes</h3>
 
-LC allows you to group related attributes together. This is mostly important for {glossary}product details{/glossary} page 
+LC allows you to group related attributes together. This is mostly important for the "{glossary}Product Details{/glossary}" page 
 because groups allow you to set neccessary attributes' arrangement.
 To create a new group:
 	<ul>
@@ -264,13 +264,13 @@ and save changes afterwards. For detailed fields' description, refer to <a href=
 
 <h3 id="delete">Delete attribute</h3>
 
-To delete attribute: select an attribute from the list and click the "delete" icon on the left:
+To delete attribute: select an attribute from the list and click the "Delete" icon on the left:
 
 <img src="image/doc/categories/attributes/delete_attribute.bmp">
 
 <h3 id="sort">Change attribute order</h3>
 
-The order of attributes and attribute groups define how they are displayed in the "Product list" and "Product details" page. To change the order of attributes or attribute groups, hover mouse cursor over attribute or entire group and then drag it up or down.
+The order of attributes and attribute groups define how they are displayed in the "{glossary}Product list{/glossary}" and "{glossary}Product details{/glossary}" page. To change the order of attributes or attribute groups, hover mouse cursor over attribute or entire group and then drag it up or down.
 <img src="image/doc/categories/attributes/sort.bmp">
 
 

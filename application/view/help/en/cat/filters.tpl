@@ -29,7 +29,6 @@ have to offer (some may search for products by particular technical details and 
 </div>
 
 <h3 id="create">Create Filter</h3>
-
 <p>
 You can create four types of filters:</p>
 <ul>
@@ -148,10 +147,10 @@ to define a range for filter's values.</p>
 <p align="right"><a href="{self}#top"><small>Top</small></a></p>
 
 <ul>
-	<li>In order to <strong>edit</strong> a filter, hover mouse pointer over the existing filters and click the "Edit" icon.</li>
+	<li>In order to edit a filter, hover mouse pointer over the existing filters and click the "Edit" icon.</li>
 	<img src="image/doc/categories/filters/filter_edit.bmp">
 	<p>Filter's form opens. You can edit any of the filter's property as in the add new filter section. <a href="{self}#carrier"><small>(Remind me how).</small></a></p>
-	<li>If you want to <strong>Delete</strong> a filter click the "Delete" icon next to the "Edit".</li>
+	<li>If you want to delete a filter click the "Delete" icon next to the "Edit".</li>
 	<img src="image/doc/categories/filters/filter_delete.bmp">
 </ul>
 
