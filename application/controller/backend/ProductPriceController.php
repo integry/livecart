@@ -15,7 +15,8 @@ class ProductPriceController extends StoreManagementController
 	public function index()
 	{
 
-	    $product = Product::getInstanceByID($this->request->getValue('id'), ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
+	    $this->locale->translationManager()->loadFile('backend/Product');
+        $product = Product::getInstanceByID($this->request->getValue('id'), ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
 
 	    $pricingForm = $this->buildPricingForm($product);
 
@@ -67,10 +68,58 @@ class ProductPriceController extends StoreManagementController
 		}
     }
     
+	public static function addShippingValidator(RequestValidator $validator)
+	{
+		// shipping related numeric field validations
+		$validator->addCheck('shippingSurchargeAmount', new IsNumericCheck('_err_surcharge_not_numeric'));
+		$validator->addFilter('shippingSurchargeAmount', new NumericFilter());
 
-    /**
-     * @role update
-     */
+		$validator->addCheck('minimumQuantity', new IsNumericCheck('_err_quantity_not_numeric'));
+		$validator->addCheck('minimumQuantity', new MinValueCheck('_err_quantity_negative', 0));
+		$validator->addFilter('minimumQuantity', new NumericFilter());
+
+		$validator->addFilter('shippingHiUnit', new NumericFilter());
+		$validator->addCheck('shippingHiUnit', new IsNumericCheck('_err_weight_not_numeric'));
+		$validator->addCheck('shippingHiUnit', new MinValueCheck('_err_weight_negative', 0));
+
+		$validator->addFilter('shippingLoUnit', new NumericFilter());
+		$validator->addCheck('shippingLoUnit', new IsNumericCheck('_err_weight_not_numeric'));
+		$validator->addCheck('shippingLoUnit', new MinValueCheck('_err_weight_negative', 0));
+
+		return $validator;
+	}
+
+	public static function addPricesValidator(RequestValidator $validator)
+	{
+		// price in base currency
+		$baseCurrency = Store::getInstance()->getDefaultCurrency()->getID();
+		$validator->addCheck('price_' . $baseCurrency, new IsNotEmptyCheck('_err_price_empty'));
+
+	    $currencies = Store::getInstance()->getCurrencyArray();
+		foreach ($currencies as $currency)
+		{
+			$validator->addCheck('price_' . $currency, new IsNumericCheck('_err_price_invalid'));
+			$validator->addCheck('price_' . $currency, new MinValueCheck('_err_price_negative', 0));
+			$validator->addFilter('price_' . $currency, new NumericFilter());
+		}
+
+		return $validator;
+	}    
+    
+	public function addInventoryValidator(RequestValidator $validator)
+	{
+		if (!$this->config->getValue('DISABLE_INVENTORY'))
+		{    
+			$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required')));  
+			$validator->addCheck('stockCount', new IsNumericCheck($this->translate('_err_stock_not_numeric')));		  
+			$validator->addCheck('stockCount', new MinValueCheck($this->translate('_err_stock_negative'), 0));	
+	    }
+
+		$validator->addFilter('stockCount', new NumericFilter());	
+			
+		return $validator;
+	}
+     
     private function buildPricingForm(Product $product)
     {
         ClassLoader::import("framework.request.validator.Form");
@@ -90,16 +139,19 @@ class ProductPriceController extends StoreManagementController
 		return $form;
     }
 
-    /**
-     * @role update
-     */
     private function buildPricingFormValidator()
     {
 		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("pricingFormValidator", $this->request);
 
-		ProductPricing::addPricesValidator($validator);
-		ProductPricing::addShippingValidator($validator);
+		self::addPricesValidator($validator);
+		self::addShippingValidator($validator);
+		self::addInventoryValidator($validator);
+        		
+		if (!$this->config->getValue('DISABLE_INVENTORY'))
+		{
+            $validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required'))); 
+        }
 
 		return $validator;
     }

@@ -11,7 +11,6 @@ LiveCart.AjaxRequest.prototype = {
     
 	initialize: function(formOrUrl, indicatorId, onComplete)
     {
-        var t = new TimeTrack();
         var url = "";
         var method = "";
         var params = "";
@@ -24,15 +23,25 @@ LiveCart.AjaxRequest.prototype = {
             url = form.action;
             method = form.method;
             params = Form.serialize(form);
+        
+            if (!indicatorId)
+            {
+                var controls = form.down('fieldset.controls');
+                if (controls)
+                {
+                    indicatorId = controls.down('.progressIndicator');
+                }
+            }
         }
         else
         {
             url = formOrUrl;
             method = "post";
         }
-               
+                       
         this.indicatorContainerId = indicatorId;
         Element.show(this.indicatorContainerId);
+        
         var updaterOptions = { method: method,
                                parameters: params,
                                onComplete: this.postProcessResponse.bind(this),
@@ -43,12 +52,12 @@ LiveCart.AjaxRequest.prototype = {
 
         new Ajax.Request(url,
                          updaterOptions);
-        t.track('end');		
     },
 
 	hideIndicator: function()
 	{
 		Element.hide(this.indicatorContainerId);
+		console.log(this.indicatorContainerId);
 	},
 
 	showIndocator: function()
@@ -58,12 +67,12 @@ LiveCart.AjaxRequest.prototype = {
 
     postProcessResponse: function(response)
     {
+		this.hideIndicator();
 		document.body.style.cursor = 'default';
         if (this.onComplete)
         {
 		  	this.onComplete(response);
 		}
-		this.hideIndicator();        
     },
 
     reportError: function(response)
@@ -79,6 +88,8 @@ LiveCart.AjaxUpdater.prototype = {
 
     initialize: function(formOrUrl, container, indicator, insertionPosition, onComplete)
     {
+        console.log('test ++++');
+
         var url = "";
         var method = "";
         var params = "";
@@ -92,15 +103,23 @@ LiveCart.AjaxUpdater.prototype = {
             var form = formOrUrl;
             url = form.action;
             method = form.method;
-            t = new TimeTrack();
             params = Form.serialize(form);
-            t.track();
+
+            if (!indicatorId)
+            {
+                var controls = form.down('fieldset.controls');
+                if (controls)
+                {
+                    indicatorId = controls.down('.progressIndicator');
+                }
+            }
         }
         else
         {
             url = formOrUrl;
             method = "post";
         }
+        
         LiveCart.ajaxUpdaterInstance = this;
         this.indicatorContainerId = indicatorId;
         Element.show(this.indicatorContainerId);

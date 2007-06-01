@@ -698,15 +698,11 @@ class ProductController extends StoreManagementController
 		// validate price input in all currencies
 		if(!$product->isExistingRecord()) 
 		{
-			ProductPricing::addPricesValidator($validator);
-			ProductPricing::addShippingValidator($validator);
-			
-			// inventory validation
-			$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required')));		    
-			$validator->addCheck('stockCount', new IsNumericCheck($this->translate('_err_stock_not_numeric')));		  
-			$validator->addCheck('stockCount', new MinValueCheck($this->translate('_err_stock_negative'), 0));	
-			$validator->addFilter('stockCount', new NumericFilter());	
-		}
+			ClassLoader::import('application.controller.backend.ProductPriceController');
+            ProductPriceController::addPricesValidator($validator);
+			ProductPriceController::addShippingValidator($validator);
+			ProductPriceController::addInventoryValidator($validator);        
+        }
 		
 		return $validator;
 	}

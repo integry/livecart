@@ -3,7 +3,7 @@
 
 	<fieldset id="rates">
 	
-		<div class="yellowMessage" id="rateConf" style="display: none;">
+		<div class="yellowMessage" id="rateConf" style="display: none; float: right;">
 			<div>{t _rate_save_conf}</div>
 		</div>
 	
@@ -24,7 +24,7 @@
 	<fieldset id="saveRates" class="controls">
 	
 		<label for="submit"> </label>
-		<span id="rateSaveIndicator" class="progressIndicator" style="display: none;"></span>
+		<span class="progressIndicator" style="display: none;"></span>
 		<input type="submit" class="submit" id="submit" value="{t _save}"/> or
 		<a href="#" class="cancel" onClick="$('rateForm').reset(); return false;">{t _cancel}</a>
 	

@@ -104,10 +104,12 @@ ProductPrice.price=Price
 
 _err_sku_empty=SKU is not specified
 _err_stock_required=Stock count is not specified
+_err_stock_not_numeric=Numeric value required
+_err_stock_negative=Stock count can not be negative
 _err_price_invalid=Price is invalid
 _err_weight_not_numeric=Weight is not numeric value
 _err_quantity_not_numeric=Quantity is not numeric value
+_err_quantity_negative=Quantity can not be negative
 _err_price_empty=Price empty
-
-
-
+_err_price_negative=Price can not be negative
+_err_surcharge_not_numeric=Sucharge amount must be a numeric value

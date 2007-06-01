@@ -63,7 +63,7 @@
 			<ul id="currencyList" class="{allowed role="currency.remove"}activeList_add_delete{/allowed} activeList_add_edit {allowed role="currency.sort"}activeList_add_sort"{/allowed}></ul>		
 			
 		</div>
-		<div id="tabRatesContent"></div>
+		<div id="tabRatesContent" class="tabPageContainer"></div>
 		<div id="tabOptionsContent"></div>	
 	</div>
 </div>

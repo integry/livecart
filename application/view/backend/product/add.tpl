@@ -23,12 +23,12 @@
             {include file="backend/product/form/specFieldList.tpl" product=$product cat=$cat specFieldList=$specFieldList}
         {/if}
     	   
-        {include file="backend/product/form/inventory.tpl" product=$product cat=$cat baseCurrency=$baseCurrency}
+        {include file="backend/product/form/inventory.tpl" product=$product cat=$cat baseCurrency=$baseCurrency form=$productForm}
         {include file="backend/product/form/pricing.tpl" product=$product cat=$cat baseCurrency=$baseCurrency}
         {include file="backend/product/form/shipping.tpl" product=$product cat=$cat baseCurrency=$baseCurrency}    
         {include file="backend/product/form/translations.tpl" product=$product cat=$cat multiLingualSpecFields=$languageList}
     
-    	<fieldset>
+    	<fieldset class="controls">
     		<p>			
     			<label for="">{t _when_the_product_is_added}:</label> 
     			<fieldset class="container">
@@ -41,7 +41,8 @@
     			</fieldset>	
     		</p>	
     	
-    		<input type="submit" name="save" class="submit" value="Save"> {t _or} <a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}, this.parentNode.parentNode.parentNode); return false;">{t _cancel}</a>
+    		<span class="progressIndicator"></span>
+            <input type="submit" name="save" class="submit" value="Save"> {t _or} <a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}, this.parentNode.parentNode.parentNode); return false;">{t _cancel}</a>
     	</fieldset>
     	
     {/form}

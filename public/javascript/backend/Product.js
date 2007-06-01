@@ -634,7 +634,7 @@ Backend.Product.Editor.prototype =
 
     submitForm: function()
     {
-		new LiveCart.AjaxRequest(this.nodes.form, document.getElementsByClassName('progressIndicator', this.nodes.form)[0], this.nodes.form, this.formSaved.bind(this));
+		new LiveCart.AjaxRequest(this.nodes.form, null, this.formSaved.bind(this));
     },
     
     formSaved: function(responseJSON) 
@@ -732,22 +732,20 @@ Backend.Product.Prices.prototype =
 
     submitForm: function()
     {
-        var self = this;
-        new Ajax.Request(this.nodes.form.action + "/" + this.product.ID, {
-           method: this.nodes.form.method,
-           parameters: Form.serialize(self.nodes.form),
-           onSuccess: function(responseJSON) {
-				ActiveForm.prototype.resetErrorMessages(self.nodes.form);
-				var responseObject = eval("(" + responseJSON.responseText + ")");
-				self.afterSubmitForm(responseObject);
-		   }
-        });
+        new LiveCart.AjaxRequest(this.nodes.form, null, this.saveComplete.bind(this));
     },
 
     resetForm: function(response)
     {
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		Form.State.restore(this.nodes.form);
+    },
+
+    saveComplete: function(responseJSON)
+    {
+		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+		var responseObject = eval("(" + responseJSON.responseText + ")");
+		this.afterSubmitForm(responseObject);        
     },
 
     afterSubmitForm: function(response)

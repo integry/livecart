@@ -188,7 +188,7 @@ Backend.Currency.prototype =
 *************************************/
     saveFormat: function(form)
     {
-        new LiveCart.AjaxRequest(form, document.getElementsByClassName('progressIndicator', form)[0], this.completeSaveFormat.bind(form)); 
+        new LiveCart.AjaxRequest(form, null, this.completeSaveFormat.bind(form)); 
     },
 
     completeSaveFormat: function()
@@ -202,7 +202,7 @@ Backend.Currency.prototype =
 
 	saveRates: function(form)
 	{
-		new LiveCart.AjaxRequest(form, 'rateSaveIndicator', this.updateRatesForm);
+		new LiveCart.AjaxRequest(form, null, this.updateRatesForm);
 	},
 	
 	updateRatesForm: function(request)
@@ -218,7 +218,6 @@ Backend.Currency.prototype =
 				}
 			}	
 
-			Element.hide($('rateSaveIndicator'));	
 			new Backend.SaveConfirmationMessage('rateConf');
 		}
 		catch (e)

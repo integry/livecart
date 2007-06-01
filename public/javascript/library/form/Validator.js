@@ -39,7 +39,9 @@ function applyFilters(form, ev)
 	var filter = filterData.evalJSON();
 
 	element = ev.target;	
-	elementFilters = filter[element.id];
+	elementFilters = filter[element.name];
+
+    console.log(elementFilters);
 	
 	if ('undefined' == 'elementFilters')
 	{
