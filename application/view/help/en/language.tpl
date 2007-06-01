@@ -32,11 +32,11 @@ you deal with interface translations (see <a href="{help /language.edit#translat
 <p>To add a new language:</p>	
 
 <ol>
-<li>Click the <strong>Add New Language</strong> link:</li>
+<li>Click the "Add New Language" link:</li>
 <img src="image/doc/language/add_language.bmp"/>
 <li>Then select a language from the pulldown menu:</li>
 <img src="image/doc/language/menu.bmp"/>
-<li>Click <strong>Add</strong> for the language to appear below in the language list.</li>
+<li>Click "Add" for the language to appear below in the language list.</li>
 <img src="image/doc/language/add_button.bmp"/>
 </ol>
 
@@ -78,13 +78,13 @@ The default language serves two main purposes:
 </ul>
 </p>
 
-<p>To change the default language click the <strong>Set as default</strong> link under the language name.</p>
+<p>To change the default language click the "Set as default" link under the language name.</p>
 <img src="image/doc/language/set_base2.bmp"/>
 
 
 <h3 id="remove">Remove a language</h3>	 
 
-<p>To delete a language, hover over it and click the <strong>delete</strong> icon on the left.</p>
+<p>To delete a language, hover over it and click the "Delete" icon on the left.</p>
 
 <img src="image/doc/language/delete.bmp"/>
 

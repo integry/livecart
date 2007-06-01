@@ -11,7 +11,7 @@
 		<li>Keywords - words that are used in search queries and {glossary}Meta tags{/glossary}.</li>
 	</ul>
 <p>
-	If you have more than one language in your system, click on the language link to expand additional fields below.
+	If you have more than one language in your system, click the language link to expand additional fields below.
 	<img src="image/doc/categories/details/translate.bmp">
 </p>
 You can enter the following category details in the selected language:
@@ -22,7 +22,7 @@ You can enter the following category details in the selected language:
 	</ul>
 <p class="note"><strong>Note</strong>: Read more about <a href="{help /language}">enabling additional languages</a>.</p>
 
-<p>Click the <strong>Save</strong> button to save category details:</p>
+<p>Click the "Save" button to save category details:</p>
 
 {helpSeeAlso}
 	{see cat.attr}

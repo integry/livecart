@@ -28,11 +28,11 @@ which currencies your store will support.</p>
 <p>To add a new currency:</p>
 
 <ol>
-	<li>Click the <strong>Add currency</strong> link:</li>
+	<li>Click the "Add currency" link:</li>
 	<img src="image/doc/currency/add_currency.bmp">
 	<li>Then choose a currency from the pulldown menu:</li>
 	<img src="image/doc/currency/menu_add.bmp">
-	<li>Finally click the <strong>Add Currency</strong> button:</li>
+	<li>Finally click the "Add Currency" button:</li>
 	<img src="image/doc/currency/add_button.bmp">
 </ol>
 
@@ -43,13 +43,13 @@ which currencies your store will support.</p>
 <p>The base currency is used as the main currency of your system. All the other currency rates are calculated
  in respect with the base currency.    
 
-If you want to change the base currency click the <strong>Set as base currency</strong> link under the currency name.</p>
+If you want to change the base currency click the "Set as base currency" link under the currency name.</p>
 <img src="image/doc/currency/set_base.bmp">
 <p class="note"><strong>Note</strong>: Once you change the base currency all prices have to be recalculated and re-set for all the products.</p>
 <br \><br \>
 
 <h3 id="adjust_rates">Adjust Exchange Rates</h3>
-<p>To adjust exchange rates of your (active) currencies click on the <strong>Adjust Exchange Rates</strong> 
+<p>To adjust exchange rates of your (active) currencies click on the "Adjust Exchange Rates" 
 tab (to proceed to manual exchange rates setting page):</p>
 <img src="image/doc/currency/adjust_exchange_rates.bmp">
 <img src="image/doc/currency/adjust_exchange_rates_highlight_red.bmp">
@@ -60,7 +60,7 @@ tab (to proceed to manual exchange rates setting page):</p>
 one United Kingdom Pound is worth 1.96475 US Dollars, enter this value:</p>
 <img src="image/doc/currency/adjust_exchange_rates_blink.bmp">
 
-<p>and click <strong>Save</strong> to set the rates:</p>
+<p>and click "Save" to set the rates:</p>
 <img src="image/doc/currency/save.bmp">
 
 <p class="note"><strong>Note</strong>: rates always have to be calculated in relation to the <strong>base</strong>
@@ -103,12 +103,12 @@ left of the currency name.</p>
 store with a particular price. To set price formatting:</p>
 
 <ol>
-	<li>Hover your mouse cursor over the currency and click the "pen" icon on the left:</li>
+	<li>Hover your mouse cursor over the currency and click the "Pen" icon on the left:</li>
 	<img src="image/doc/currency/edit.bmp">
 	<li>In the <strong>Price Formatting</strong> you can enter the prefix and suffix (prefix before the price,
 	suffix - after) that will be displayed with the price:</li>
 	<img src="image/doc/currency/prefix_suffix.bmp">
-	<li>Click <strong>Save</strong> to set formatting:</li>
+	<li>Click "Save" to set formatting:</li>
 	<img src="image/doc/currency/save.bmp">
 </ol>
 
@@ -124,7 +124,7 @@ the currency switching menu. To set the appropriate currency order, click on the
 <br \>
 
 <h3 id="delete">Delete</h3>
-<p>To delete a currency, move your mouse over the currency and click the <strong>Delete</strong> icon on the left.</p>
+<p>To delete a currency, move your mouse over the currency and click the "Delete" icon on the left.</p>
 <img src="image/doc/currency/delete.bmp">
 
 <br \>

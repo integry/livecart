@@ -43,7 +43,7 @@ from English to the necessary language.</p>
 </ul>
 
 <p class="note"><strong>Note</strong>: You can also enter multiple lines of text in the text area 
-- just click the "down arrow" key on your keyboard to switch to multi-line input field.</p>
+- just click the "Down Arrow" key on your keyboard to switch to multi-line input field.</p>
 
 <h3 id="product_info">Translate product info</h3>	
 	

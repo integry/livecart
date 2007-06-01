@@ -22,7 +22,7 @@ To start selling goods in your e-store you have to stock up your system with som
 <p>
 	To display products of a particular category:
 	<ol>
-		<li>Click <strong>Products</strong> in the main menu.</li>
+		<li>Click on the "Products" tab in the main menu.</li>
 		<li>Then select a category on the category tree.</li>
 		<li>The Products tab opens on the right. Products are displayed in a table (similar to this):</li>
 		<img src="image/doc/products/products_table.bmp"/>
@@ -42,11 +42,11 @@ To start selling goods in your e-store you have to stock up your system with som
 	You can add or remove products' attributes that are displayed in the toolbar:
 	<div id="columns">
 	<ol>
-		<li>Click <strong>Columns</strong> on the right:</li>
+		<li>Click "Columns" on the right:</li>
 		<img src="image/doc/products/columns.bmp"/>
 		<li>Select or remove attributes by checking or clearing a checkbox next to appropriate attribute:</li>
 		<img src="image/doc/products/checkbox.bmp"/>
-		<li>Click <strong>Change Columns</strong> to save changes.</li>
+		<li>Click "Change Columns" to save changes.</li>
 	</ol>
 </p>
 
@@ -82,11 +82,11 @@ most of the attributes by applying changes to several products at once.</p>
 <li>Choose an action from the list:</li>
 <img src="image/doc/products/menu.bmp"/>
 <img src="image/doc/products/select.bmp"/>
-<li>Click <strong>Save</strong> (for the changes to take place immediately).</li>
+<li>Click "Save" (for the changes to take place immediately).</li>
 <img src="image/doc/products/save.bmp"/>
 </ol>
 
-<p>To edit a <strong>single product</strong>, click product's name in the  list:</p>
+<p>To edit a <strong>single product</strong>, click the product's name in the list:</p>
 <img src="image/doc/products/click_product.bmp"/>
 Product's <a href="{help /products.define}">detailed page</a> opens. (Where you can edit any of the products properties)
 

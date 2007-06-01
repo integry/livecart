@@ -35,7 +35,7 @@
 	If you want to add a <i>root</i> level category or create the very first category:
 	<ol>
 		<li>Select LiveCart on the category tree</li>
-		<li>Click <strong>Add new sub-category</strong> right below the category tree.
+		<li>Click the "Add new sub-category" link right below the category tree.
 	</ol>
 </p>
 
@@ -43,7 +43,7 @@
 	If you want to add a <i>sub-category</i> for any existing category:
 	<ol>
 		<li>Select the desired category on the category tree.</li>
-		<li>Click <strong>Add new sub-category</strong>.</li>
+		<li>Click "Add new sub-category".</li>
 	</ol>
 </p>
 

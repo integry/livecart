@@ -66,14 +66,14 @@ examples on how to create attributes and choose attribute types.
 <h4 id="carrier">Creating Carrier attribute</h4>
 <p>To create the attribute follow these steps:</p>
 	<ul>	
-		<li>Select a category in the category tree and click "Attributes" tab.</li>
+		<li>Select a category in the category tree and click on the "Attributes" tab.</li>
 		<img src="image/doc/categories/attributes/attributes_tab_green.bmp">
 		<li>In the "Attributes" section click "Add new attribute":</li>
 		<img src="image/doc/categories/attributes/add_attribute.bmp">
 		<p id="form">Add new attribute form appears. Fill out the following fields as described below:</p>
 		<img src="image/doc/categories/attributes/main_form_carrier.bmp">
 		
-		<li>Type - because mobile carrier is a simple text and there is probably a finite number of carriers click on the type drop-down menu and 
+		<li>Type - because mobile carrier is a simple text and there is probably a finite number of carriers click the type drop-down menu and 
 		select "Text Options" type from the list.</li>
 		<li>Check "Required" to make the field mandatory since it is an important feature.</li>
 		<li>Can select multiple values - leave this checkbox clear to allow assigning only one carrier to each phone</li> 
@@ -84,7 +84,7 @@ examples on how to create attributes and choose attribute types.
 		{glossary}SEO{/glossary} purposes, if needed.</li>
 		<li>Prefix and Suffix - we leave these fields empty because carriers don't have any of them.</li> 
 		<li>In the description field we enter a brief description to describe the term "Carrier" which is optional.</li> 	
-		<li>International details - if you need to translate attributes in other languages installed in your system, click on the Language to 
+		<li>International details - if you need to translate attributes in other languages installed in your system, click the Language to 
 		expand additional fields (which include title and Description).</li>
 
 
@@ -93,7 +93,7 @@ examples on how to create attributes and choose attribute types.
 The last thing to do is to create Values which will be used as a selection option in the "Add new Product" form. 
 To add values: 
 	<ul>
-		<li>Click Values tab in the main window -> </li>
+		<li>Click on the "Values" tab in the main window -> </li>
 		<img src="image/doc/categories/attributes/values_tab.bmp">
 
 		<li>When switched to the Value window enter the first Mobile Carrier in the text field provided.</li>
@@ -147,7 +147,7 @@ To add values:
 <p>The next thing to do is to create a value list of mobile's features. 
 
 	<ul>
-		<li>Click "Values" tab which appears on the right of the "Main" tab. </li>
+		<li>Click on the "Values" tab which appears on the right of the "Main" tab. </li>
 		<img src="image/doc/categories/attributes/value_tab_features.bmp">
 		<li>In the "Values" section enter all the necessary features one by one.</li>
 		<li>Save the attribute when done.</li>
@@ -195,7 +195,7 @@ by necessary changes. A numeric attribute looks similar to this one:
 	<li>In the description field provide brief information about the attribute.</li>
 </ul>	
 
-<p>Don't forget to click save at the end.</p>
+<p>Don't forget to click "Save" at the end.</p>
 <br \>
 <p>
 	Generated attribute will provide a field for entering battery capacity:
@@ -240,7 +240,7 @@ into the appropriate groups.
 <img src="image/doc/categories/attributes/groups_main.bmp">
 
 	In the image above you see two groups named "Cell Phones" and "Dimensions" and one attribute "Color" what doesn't belong to any group. 
-	To change group's name or delete a group click on one of the icons on the left:
+	To change group's name or delete a group click one of the icons on the left:
 
 <img src="image/doc/categories/attributes/group_edit.bmp">
 
@@ -251,7 +251,7 @@ into the appropriate groups.
 <h3 id="edit">Edit attribute</h3>
 <p align="right"><a href="{self}#top"><small>Top</small></a></p>
 
-To edit attribute: select an attribute from the list and click on its "pen" icon on the left:
+To edit attribute: select an attribute from the list and click the "pen" icon on the left:
 
 <img src="image/doc/categories/attributes/edit_attribute.bmp">
 
@@ -264,7 +264,7 @@ and save changes afterwards. For detailed fields' description, refer to <a href=
 
 <h3 id="delete">Delete attribute</h3>
 
-To delete attribute: select an attribute from the list and click on its "delete" icon on the left:
+To delete attribute: select an attribute from the list and click the "delete" icon on the left:
 
 <img src="image/doc/categories/attributes/delete_attribute.bmp">
 

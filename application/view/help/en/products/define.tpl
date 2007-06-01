@@ -87,9 +87,9 @@ displayed in the <a href="{help /products.store}#product_details">product detail
 <p>To add an image:</p>
 
 <ol>
-	<li>Click <strong>Add new image</strong>.</li>
-	<li>Click <strong>Browse</strong> to locate imgage on your hard disk drive.</li>
-	<li>Click <strong>Upload</strong> to set an image.</li>
+	<li>Click "Add new image".</li>
+	<li>Click "Browse" to locate imgage on your hard disk drive.</li>
+	<li>Click "Upload" to set an image.</li>
 </ol>
 
 <img src="image/doc/products/edit/images.bmp">
@@ -103,9 +103,9 @@ You can set image dimensions (<ins>and other details?</ins>) in the <strong>Sett
 products that are some way related. To add related products for a particular product:</p>
 
 <ol>
-	<li>Click <strong>Select Products</strong>:</li>
+	<li>Click "Select Products":</li>
 	<p>A new window pop's up.</p>
-	<li>From the window select products by clicking on the products name:</li>
+	<li>From the window select products by clicking the products name:</li>
 	<img src="image/doc/products/edit/products.bmp">
 	Close the window when you are done. All the selected products will be displayed in your store's  products detailed page 
 	as related items. For example:
@@ -115,8 +115,8 @@ products that are some way related. To add related products for a particular pro
 <p>If you have many related products it might be useful to group them together. To group existing related products:</p>
 
 <ul>
-	<li>Click <strong>Add Group</strong>.</li>
-	<li>Enter group name and click <strong>Save</strong>.</li>
+	<li>Click "Add Group".</li>
+	<li>Enter group name and click "Save".</li>
 	<li>To place products into groups, simply drag and drop products into appropriate groups.</li>
 <!--
 	<img src="image/doc/products/edit/group1.bmp">
@@ -127,15 +127,15 @@ products that are some way related. To add related products for a particular pro
 <h3 id="options">Files</h3>
 <p>Files are most likely used for digital products such as software, music or any other. To upload files:</p>
 <ul>
-	<li>Click <strong>Add new file</strong>.</li>
+	<li>Click "Add new file".</li>
 	<img src="image/doc/products/edit/add_file.bmp">
-	<li>Click <strong>Browse</strong> to locate your file and click <strong>Upload</strong>.</li>
+	<li>Click "Browse" to locate your file and click "Upload".</li>
 </ul>
 
 <p>If you have many files you can group them into separate groups. To group files:</p>
 <ul>
-	<li>Click <strong>Add new group</strong>.</li>
-	<li>Then enter goup's name and click <strong>Add</strong>.</li>
+	<li>Click "Add new group".</li>
+	<li>Then enter goup's name and click "Add".</li>
 	<li>To put products into groups, simply drag and drop files into appropriate groups.</li>
 </ul>
 

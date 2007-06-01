@@ -47,7 +47,7 @@ to define a range for filter's values.</p>
 
 <h4 id="carrier">Creating Carrier filter</h4>
 <ul>
-	<li>To create filters, select a category from the category tree and click the "Filters" tab.</li>
+	<li>To create filters, select a category from the category tree and click on the "Filters" tab.</li>
 	<img src="image/doc/categories/filters/filters_tab.bmp">
 	<p class="note">If you see a message "No filterable attributes have yet been created for this category", go to the <a href="{help /cat.attr}">Attributes </a> section to create 
 	attributes first.</p>
@@ -55,9 +55,9 @@ to define a range for filter's values.</p>
 	<img src="image/doc/categories/filters/add_new_filter.bmp">
 	<p>Add new filter form appears. </p>
 	<img src="image/doc/categories/filters/carrier_filter.bmp">
-	<li>Associated attribute - click on the dropown menu and select carrier attribute</li>
+	<li>Associated attribute - click the dropown menu and select carrier attribute</li>
 	<li>The name of the filter appears automatically so you can leave it as it is.</li>
-	<li>Also you can enter filter's name in other languages supported by your system. Click on the language to supply Filter's name.</li>
+	<li>Also you can enter filter's name in other languages supported by your system. Click the language to supply Filter's name.</li>
 	<li>Click "Save"</li>
 	</ul>
 	<p>Because carrier attribute has already pre-set values, filtering rules are generated automatically. Filter appears below with a number indicating total filtering rules.</p>
@@ -101,7 +101,7 @@ to define a range for filter's values.</p>
 	<li id="sort">Arrangement of filter's criteria can be important because it defines how filtering options are displayed in storefront. To change criteria's order click on criteria's empty space and drag
 	it up or down:</li>
 	<img src="image/doc/categories/filters/sort.bmp">
-	<li>Make sure to click <strong>Save</strong> changes at the end.</li>
+	<li>Make sure to click the "Save" button.</li>
 </ol>
 
 <!--
@@ -123,7 +123,7 @@ to define a range for filter's values.</p>
 	<li>To set filtering rules:</li>
 	<ul>
 		<li>Enter the name of the period you want to define.</li>
-		<li>Set "Date between" by specifying fields "from" and "to". To set date click on "calendar" icon next to the appropriate field: </li>
+		<li>Set "Date between" by specifying fields "from" and "to". To set date click the "calendar" icon next to the appropriate field: </li>
 		<img src="image/doc/categories/filters/date_form_hand.bmp">
 		<p>Date can be changed by choosing alternate date from the calendar:</p>
 		<img src="image/doc/categories/filters/calendar.bmp">
