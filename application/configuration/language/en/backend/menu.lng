@@ -1,0 +1,21 @@
+_menu_products=Products
+
+_menu_orders=Orders
+
+_menu_users=Users
+_menu_pages=Pages
+
+_menu_settings=Settings
+_menu_configuration=Configuration
+_menu_payment_gateways=Payment Gateways
+_menu_delivery_zones=Delivery Zones
+_menu_tax=Taxes
+_menu_shipping_rate=Shipping Rate Calculators
+
+_menu_customize=Customize
+_menu_customization_mode=Live Customization
+_menu_edit_templates=Edit Templates
+
+_menu_languages=Languages
+
+_menu_currencies=Currencies

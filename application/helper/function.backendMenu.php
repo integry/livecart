@@ -11,9 +11,6 @@
  */
 function smarty_function_backendMenu($params, Smarty $smarty) 
 {
-    
-//    ClassLoader::import('application.helper.AccessStringParser');
-    
 	$locale = Store::getInstance()->getLocaleInstance();
 	$controller = $smarty->_tpl_vars['request']['controller'];
 	$action = $smarty->_tpl_vars['request']['action'];
