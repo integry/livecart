@@ -104,7 +104,6 @@ div.yellowMessage div, div.redMessage div {
 	border: 4px solid;
 	font-weight: bold;
 	padding: 7px;
-	float: left;
 	margin-left: 10px;
 	text-align: center;
 }

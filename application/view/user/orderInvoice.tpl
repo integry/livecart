@@ -6,7 +6,7 @@
 
 <div id="content" class="left right">
 
-    <h1>{t _order_invoice} {$order.ID} ({$order.formatted_dateCreated.date_long})</h1>
+    <h1>{t _order_invoice} {$order.ID} ({$order.formatted_dateCompleted.date_long})</h1>
     
 	{include file="user/userMenu.tpl" current="ordersMenu"}    
     

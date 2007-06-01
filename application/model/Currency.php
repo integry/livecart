@@ -78,12 +78,14 @@ class Currency extends ActiveRecordModel
 	
 	public function convertAmountFromDefaultCurrency($amount)
 	{
-        return $amount / $this->rate->get();   
+	    $rate = $this->rate->get();
+        return $amount / (empty($rate) ? 1 : $rate);   
     }
     
 	public function convertAmountToDefaultCurrency($amount)
 	{
-        return $amount * $this->rate->get();        
+	    $rate = $this->rate->get();
+        return $amount * (empty($rate) ? 1 : $rate);        
     }
 
     public function convertAmount(Currency $currency, $amount)

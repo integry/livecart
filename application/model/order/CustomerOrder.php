@@ -284,7 +284,6 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     {
         self::beginTransaction();
         
-        $this->totalAmount->set($this->getTotal($currency));
         $this->currency->set($currency);
 
 		foreach ($this->getShipments() as $shipment)
@@ -320,6 +319,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         $wishList->save();
                 
         $this->isFinalized->set(true);
+        $this->dateCompleted->set(new ARSerializableDateTime());
 		$this->save();
         
         self::commit();
@@ -346,6 +346,13 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 
         if ($this->orderedItems || $this->removedItems)
         {
+            if(!$this->currency->get())
+            {
+                $this->currency->set(Store::getInstance()->getDefaultCurrency());
+            }
+            
+	        $this->totalAmount->set($this->getTotal($this->currency->get()));
+            
             parent::save();
             
             $isModified = false;

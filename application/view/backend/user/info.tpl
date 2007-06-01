@@ -1,4 +1,4 @@
-{form handle=$form action="controller=backend.user action=update" id="userInfo_`$user.ID`_form" onsubmit="Backend.User.Editor.prototype.getInstance(`$user.ID`, false).submitForm(); return false;" method="post" role="user.create(backend.userGroup/index)user.update(backend.user/info)"}
+{form handle=$form action="controller=backend.user action=update" id="userInfo_`$user.ID`_form" onsubmit="Backend.User.Editor.prototype.getInstance(`$user.ID`, false).submitForm(); return false;" method="post" role="user.create(backend.userGroup/index),user.update(backend.user/info)"}
 
    	<div class="userInfoSaveConf" style="display: none;">
    		<div class="yellowMessage">

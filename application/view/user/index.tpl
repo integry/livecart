@@ -18,7 +18,7 @@
     
     <h2>{t Your Recent Orders}</h2>
     {foreach from=$orders item="order"}    
-	    <h3>{$order.formatted_dateCreated.date_long}</h3>
+	    <h3>{$order.formatted_dateCompleted.date_long}</h3>
 	    
         <div class="orderStatus">
             {t Status}: 

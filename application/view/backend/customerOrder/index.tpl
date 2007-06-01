@@ -20,14 +20,21 @@
 {includeJs file="backend/CustomerOrder.js"}
 {includeCss file="backend/CustomerOrder.css"}
 
+{includeJs file="backend/User.js"}
+{includeCss file="backend/User.css"}
+
+{includeJs file="backend/CustomerOrder.js"}
+{includeCss file="backend/CustomerOrder.css"}
+
 {pageTitle help="orderGroups"}{t _livecart_orders}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
 <div id="orderGroupsWrapper" class="maxHeight h--50">
 	<div id="orderGroupsBrowser" class="treeBrowser"></div>
    
-    {include file="backend/customerOrder/groupContainer.tpl"}
     {include file="backend/customerOrder/orderContainer.tpl"}
+    {include file="backend/customerOrder/groupContainer.tpl"}
+    {include file="backend/userGroup/userContainer.tpl"}
 </div>
 
 <div id="activeUserPath"></div>

@@ -45,7 +45,7 @@ class CustomerOrderController extends StoreManagementController
 		$displayedAvailable = array_intersect_key($availableColumns, $displayedColumns);
 		$notDisplayedAvailable = array_diff_key($availableColumns, $displayedColumns);		
 		$availableColumns = array_merge($displayedAvailable, $notDisplayedAvailable);
-			
+		
 		$response = new ActionResponse();
         $response->setValue("massForm", $this->getMassForm());
         $response->setValue("orderGroupID", $this->request->getValue('id'));
@@ -160,7 +160,7 @@ class CustomerOrderController extends StoreManagementController
 	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
 	            break;
 	        case 'orders_8': 
-	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "dateCompleted"), 0);
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 0);
 	            break;
 	        default: 
 	            return;
@@ -199,7 +199,7 @@ class CustomerOrderController extends StoreManagementController
 					$value = $value ? $this->translate('_yes') : $this->translate('_no');
 				}
 				
-				if($field == 'status')
+				if('status' == $field)
 				{
 				    switch($order[$field])
 				    {
@@ -219,6 +219,24 @@ class CustomerOrderController extends StoreManagementController
 				            $value = $this->translate('_status_new');   
 				            break;
 				    }
+				}
+				
+				if('totalAmount' == $field || 'capturedAmount' == $field)
+				{
+				    if(empty($value))
+				    {
+				        $value = '0';
+				    }
+				    
+				    if(isset($order['Currency']))
+				    {
+				        $value .= ' ' . $order['Currency']["ID"];
+				    }
+				}
+				
+				if('dateCompleted' == $field && !$value)
+				{
+				    $value = '-';
 				}
 				
 				$record[] = $value;
@@ -287,8 +305,9 @@ class CustomerOrderController extends StoreManagementController
 
 		
 		// User ID is always passed as the first column
-		$displayedColumns = array_merge(array('CustomerOrder.ID' => 'numeric'), $displayedColumns);
 		$displayedColumns = array_merge(array('User.email' => 'text'), $displayedColumns);
+		$displayedColumns = array_merge(array('User.ID' => 'number'), $displayedColumns); // user id must go after user email here
+		$displayedColumns = array_merge(array('CustomerOrder.ID' => 'numeric'), $displayedColumns);
 				
 		// set field type as value
 		foreach ($displayedColumns as $column => $foo)
@@ -305,6 +324,8 @@ class CustomerOrderController extends StoreManagementController
 	{
 		// get available columns
 		$availableColumns = array();
+		$availableColumns['User.email'] = 'text'; 
+		$availableColumns['User.ID'] = 'text'; 
 		$availableColumns['CustomerOrder.status'] = 'text'; 
 		$availableColumns['CustomerOrder.totalAmount'] = 'text';
 		$availableColumns['CustomerOrder.dateCreated'] = 'text';

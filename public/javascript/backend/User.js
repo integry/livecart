@@ -566,14 +566,16 @@ Backend.User.Editor.prototype =
 
     hideGroupsContainer: function(args)
     {
-        Element.hide($("userGroupsManagerContainer"));
-        Element.show($("userManagerContainer"));
+        if($("userGroupsManagerContainer")) Element.hide($("userGroupsManagerContainer"));
+        if($("userManagerContainer")) Element.show($("userManagerContainer"));
+        if($("orderGroupsManagerContainer")) Element.hide($("orderGroupsManagerContainer"));
     },
 
     showGroupsContainer: function(args)
     {       
         if($("userManagerContainer")) Element.hide($("userManagerContainer"));
         if($("userGroupsManagerContainer")) Element.show($("userGroupsManagerContainer"));
+        if($("orderGroupsManagerContainer")) Element.show($("orderGroupsManagerContainer"));
     },
     
 
