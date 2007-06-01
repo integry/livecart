@@ -178,6 +178,8 @@ ActiveGrid.prototype =
             }
         }        
 
+        res.toJSON = Object.toJSON;
+
         return res;
     },
     

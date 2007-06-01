@@ -10,7 +10,7 @@
     </div>
     
     <fieldset class="roles_controls error controls">
-        <span class="activeForm_progress"></span>
+        <span class="progressIndicator"></span>
         <input type="submit" class="roles_save button submit" value="{t _save}" />
         {t _or}
         <a href="#cancel" class="roles_cancel cancel">{t _cancel}</a>

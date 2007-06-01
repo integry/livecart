@@ -142,22 +142,19 @@ Backend.Tax.prototype =
     
     save: function()
     {
-        var self = this;
         ActiveForm.prototype.setErrorMessages(this.nodes.form);
         
         var action = this.nodes.form.elements.namedItem('ID').value 
             ? Backend.Tax.prototype.Links.update
             : Backend.Tax.prototype.Links.create;
             
-        new Ajax.Request(action + "/" + this.nodes.form.elements.namedItem('ID').value, {
-           method: 'post',
-           parameters: Form.serialize(this.nodes.form),
-           onSuccess: function(response)
-           {
-               response = eval("(" + response.responseText + ")");
-               self.afterSave(response);
-           }
-        });
+        new LiveCart.AjaxRequest(this.nodes.form, null, this.saveCompleted.bind(this));
+    },
+    
+    saveCompleted: function(response)
+    {
+       response = eval("(" + response.responseText + ")");
+       this.afterSave(response);        
     },
     
     afterSave: function(response)

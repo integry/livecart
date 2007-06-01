@@ -96,7 +96,7 @@ div.yellowMessage, div.redMessage {
 	margin: 0pt;
 	padding: 10pt;
 	float: left;
-    overflow: auto;
+    overflow: visible;
     width: 180px;
 	text-align: center;
 	z-index: 50000;
@@ -687,6 +687,14 @@ fieldset.error, div.error, fieldset.container
     white-space: nowrap;
 }
 
+fieldset.controls
+{
+    background-color: #FFF;
+    border: 1px solid #DDD;
+    padding: 0.5em;
+    padding-left: 1em;
+}
+
 fieldset.group
 {
     position: relative;
@@ -997,15 +1005,39 @@ fieldset.group p
 ***************************/
 .expandingSection
 {
-	background-color: #e0e0e0;
-	margin-bottom: 16px;
+/*	background-color: #e0e0e0; */
+	margin-bottom: 5px;
+	padding: 0;
+	border: 0;
 }
-.expandingSection legend
+.expandingSection > legend
 {
 	cursor: pointer;
+	background: inherit;
+	background-image: url(../../image/silk/bullet_arrow_left.png);
+	background-repeat: no-repeat;
+	background-position: center left;
+	padding-left: 22px;
+	color: black;
+	font-size: inherit;
 }
 .expandingSectionContent
 {
+    display: none;
+    margin: 10px;
+    margin-left: 0px;
+    border: 1px solid #DDD;
+    padding: 10px;
+}
+
+.expandingSection.expanded > legend
+{
+	background-image: url(../../image/silk/bullet_arrow_down.png);
+}
+
+.expandingSection.expanded div.expandingSectionContent
+{
+    display: block;
 }
 
 /*************************** 

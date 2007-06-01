@@ -11,7 +11,7 @@
 			<span class="progressIndicator" style="display: none;"></span>
 			<input type="submit" class="submit" value="{tn Save Template}" /> 
 			{t _or} 
-			<a id="cancel" "class="cancel" href="#">{t _cancel}</a>
+			<a id="cancel" class="cancel" href="{link controller="backend.template"}">{t _cancel}</a>
 		</div>
 	</fieldset>
 	

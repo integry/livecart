@@ -320,7 +320,7 @@ Backend.Product.massActionHandler.prototype =
 		this.form.elements.namedItem('filters').value = this.grid.getFilters().toJSON();
         this.form.elements.namedItem('selectedIDs').value = this.grid.getSelectedIDs().toJSON();
         this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;
-        new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('progressIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));
+        new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('massIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));
 
         this.grid.resetSelection();   
     },

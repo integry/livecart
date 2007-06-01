@@ -15,7 +15,7 @@
 	</fieldset>
     
     <fieldset class="userGroup_controls controls">
-        <span class="activeForm_progress"></span>
+        <span class="progressIndicator"></span>
         <input type="submit" class="userGroup_save button submit" value="{t _save}" />
         {t _or}
         <a href="#cancel" class="userGroup_cancel cancel">{t _cancel}</a>

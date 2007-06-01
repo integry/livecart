@@ -783,7 +783,7 @@ Backend.SaveConfirmationMessage.prototype =
             new Effect.ScrollTo(this.element, {offset: -24});
         }
         catch(e) {}
-        new Effect.SlideDown(this.element, {duration: 0.4, afterFinish: this.highlight.bind(this)});
+        new Effect.Appear(this.element, {duration: 0.4, afterFinish: this.highlight.bind(this)});
 	},
 
 	highlight: function()
@@ -797,7 +797,7 @@ Backend.SaveConfirmationMessage.prototype =
 
 	hide: function()
 	{
-        Effect.BlindUp(this.element, {duration: 0.4});
+        Effect.Fade(this.element, {duration: 0.4});
 	}
 }
 

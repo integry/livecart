@@ -87,7 +87,7 @@
         </span>
         
         <input type="submit" value="{tn _process}" class="submit" />
-        <span class="progressIndicator" style="display: none;"></span>
+        <span class="progressIndicator massIndicator" style="display: none;"></span>
         
         {/form}
         

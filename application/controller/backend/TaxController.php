@@ -77,7 +77,7 @@ class TaxController extends StoreManagementController
     {
         $tax = Tax::getInstanceByID((int)$this->request->getValue('id'));
         
-        return $this->save($tax);
+        return $this->saveTax($tax);
     }
 
 	/**
@@ -87,10 +87,10 @@ class TaxController extends StoreManagementController
     {
         $tax = Tax::getNewInstance($this->request->getValue('name'));
         
-        return $this->save($tax);
+        return $this->saveTax($tax);
     }
     
-    private function save(Tax $tax)
+    private function saveTax(Tax $tax)
     {
         $validator = $this->createTaxFormValidator($tax);
         

@@ -22,7 +22,7 @@
     Backend.Tax.prototype.Links.remove = "{link controller=backend.tax action=delete}";
     Backend.Tax.prototype.Messages.enabled = "{t _enabled}";
     Backend.Tax.prototype.Messages.enabled = "{t _disabled}";
-    Backend.Tax.prototype.Messages.confirmRemove = "{t _are_you_sure_you_want_to_remove_ths_taxt}";
+    Backend.Tax.prototype.Messages.confirmRemove = "{t _are_you_sure_you_want_to_remove_ths_tax}";
 </script>
 
 {include file="backend/tax/taxes.tpl"}

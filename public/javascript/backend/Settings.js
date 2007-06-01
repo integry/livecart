@@ -88,8 +88,7 @@ Backend.Settings.prototype =
 	
 	save: function(form)
 	{
-		var indicator = document.getElementsByClassName('progressIndicator', form)[0];
-		new LiveCart.AjaxRequest(form, indicator, this.displaySaveConfirmation.bind(this));	
+		new LiveCart.AjaxRequest(form, null, this.displaySaveConfirmation.bind(this));	
 	},
 	
 	displaySaveConfirmation: function()

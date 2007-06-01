@@ -99,8 +99,7 @@ Backend.TemplateHandler.prototype =
 	
 	submit: function()
 	{
-		var indicator = document.getElementsByClassName('progressIndicator', this.form)[0];
-		new LiveCart.AjaxRequest(this.form, indicator, this.saveComplete.bind(this));
+		new LiveCart.AjaxRequest(this.form, null, this.saveComplete.bind(this));
 		return false;
 	},
 	

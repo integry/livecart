@@ -12,12 +12,19 @@
 {include file="layout/backend/header.tpl"}
 
 <div id="settingsContainer" class="maxHeight h--50">
-	<div id="settingsBrowser" class="treeBrowser">
-	</div>
+	
+    <div style="float: left;">
+
+        <div id="settingsBrowser" class="treeBrowser">
+    	</div>
+    
+        <div class="clear"></div>
+    
+    	<div class="yellowMessage" style="display: none;"><div>{t _save_conf}</div></div>
+    	
+    </div>
 
 	<span id="settingsIndicator"></span>
-	
-	<div class="yellowMessage" style="display: none;"><div>{t _save_conf}</div></div>
 	
 	<div id="settingsContent" class="maxHeight">
 	<span class="progressIndicator"></span>

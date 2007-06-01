@@ -86,11 +86,10 @@
 	</script>
 {/if}
 
-<span class="progressIndicator" style="display: none;"></span>
-
 <input type="hidden" name="id" value="{$id}" />
 
 <fieldset class="controls">
+    <span class="progressIndicator" style="display: none;"></span>
     <input type="submit" value="{tn _save}" class="submit" /> 
     {t _or} 
     <a class="cancel" href="#" onclick="return false;">{t _cancel}</a>

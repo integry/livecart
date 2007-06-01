@@ -38,7 +38,7 @@ LiveCart.AjaxRequest.prototype = {
             url = formOrUrl;
             method = "post";
         }
-                       
+
         this.indicatorContainerId = indicatorId;
         Element.show(this.indicatorContainerId);
         
@@ -57,7 +57,6 @@ LiveCart.AjaxRequest.prototype = {
 	hideIndicator: function()
 	{
 		Element.hide(this.indicatorContainerId);
-		console.log(this.indicatorContainerId);
 	},
 
 	showIndocator: function()
@@ -88,8 +87,6 @@ LiveCart.AjaxUpdater.prototype = {
 
     initialize: function(formOrUrl, container, indicator, insertionPosition, onComplete)
     {
-        console.log('test ++++');
-
         var url = "";
         var method = "";
         var params = "";

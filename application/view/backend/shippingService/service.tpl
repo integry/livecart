@@ -19,23 +19,6 @@
 		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_subtotal" class="checkbox shippingService_rangeType" value="1"}
 		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_subtotal" class="checkbox">{t _subtotal_based_calculations}</label>
 	</fieldset class="error">
-    
-    {if $alternativeLanguagesCodes}
-    <fieldset>
-        {foreach from=$alternativeLanguagesCodes item=lang}
-            <fieldset class="expandingSection">
-                <legend>Translate to: {$lang.name}</legend>
-                <div class="expandingSectionContent">
-                    <label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_name_{$lang.ID}">{t _name}</label>
-                    <fieldset class="error">
-                        {textfield name="name_`$lang.ID`" class="observed" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_name_`$lang.ID`"}
-                        <span class="errorText hidden"> </span>
-                    </fieldset>
-                </div>
-            </fieldset>
-        {/foreach}
-        </fieldset>
-    {/if}
  
     <fieldset class="shippingService_rates error">
     	<label>{t _shipping_service_rates}</label>
@@ -93,11 +76,27 @@
                 
             </script>
         </fieldset>
-        <fieldset class="shippingService_controls controls">
-            <span class="activeForm_progress"></span>
-            <input type="submit" class="shippingService_save button submit" value="{t _save}" />
-            {t _or}
-            <a href="#cancel" class="shippingService_cancel cancel">{t _cancel}</a>
+    </fieldset>
+
+    {if $alternativeLanguagesCodes}
+    {foreach from=$alternativeLanguagesCodes item=lang}
+        <fieldset class="expandingSection">
+            <legend>Translate to: {$lang.name}</legend>
+            <div class="expandingSectionContent">
+                <label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_name_{$lang.ID}">{t _name}</label>
+                <fieldset class="error">
+                    {textfield name="name_`$lang.ID`" class="observed" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_name_`$lang.ID`"}
+                    <span class="errorText hidden"> </span>
+                </fieldset>
+            </div>
         </fieldset>
+    {/foreach}
+    {/if}
+
+    <fieldset class="shippingService_controls controls">
+        <span class="activeForm_progress"></span>
+        <input type="submit" class="shippingService_save button submit" value="{t _save}" />
+        {t _or}
+        <a href="#cancel" class="shippingService_cancel cancel">{t _cancel}</a>
     </fieldset>
 {/form}

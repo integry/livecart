@@ -51,10 +51,13 @@
 				$('name_{$categoryId}').focus();
 			</script>
 		</p>
-		<p>
-			<label for="submit"> </label>
-			<input type="submit" class="submit" id="submit" value="{t _save}"/> or
-			<a href="#" class="cancel" onClick="$('categoryForm_{$categoryId}').reset(); return false;">{t _cancel}</a>
-		</p>
 	</fieldset>		
+    
+    <fieldset class="controls">
+		<span class="progressIndicator" style="display: none;"></span>
+        <input type="submit" class="submit" id="submit" value="{t _save}"/> or
+		<a href="#" class="cancel" onClick="$('categoryForm_{$categoryId}').reset(); return false;">{t _cancel}</a>
+        <div class="clear"></div>
+    </fieldset>
+
 {/form}

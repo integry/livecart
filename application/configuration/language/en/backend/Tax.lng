@@ -1,7 +1,11 @@
 _add_new_tax=Add new tax
+_cancel_adding_new_tax=Cancel adding new tax
 _cancel_adding_new_tax_rate=Cancel adding new tax rate
 _enabled=Enabled
 _disabled=Disabled
 _name=Name
 _manage=Manage
 _taxes=Taxes
+
+_error_the_name_should_not_be_empty=The name should not be empty
+_are_you_sure_you_want_to_remove_ths_tax=Are you sure you want to remove this tax?
