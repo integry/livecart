@@ -1,0 +1,32 @@
+#orderGroupsBrowser
+{
+  	float: left;
+  	width: 200px;
+}
+
+#orderGroupsManagerContainer, #orderManagerContainer
+{
+	margin-left: 230px;	
+}
+
+.cell_cb 
+{
+    text-align:center !important;
+    width:4% !important;
+}
+
+.cell_User_ID
+{
+    display: none;   
+}
+
+.cell_CustomerOrder_viewOrder input, .column_CustomerOrder_viewOrder
+{
+    display: none;
+}
+
+.cell_CustomerOrder_viewOrder
+{
+    width: 70px;
+}
+
