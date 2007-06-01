@@ -60,7 +60,6 @@ class Product extends MultilingualObject
 		$schema->registerField(new ARField("dateUpdated", ARDateTime::instance()));
 
 		$schema->registerField(new ARField("URL", ARVarchar::instance(256)));
-		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("isFeatured", ARBool::instance()));
 		$schema->registerField(new ARField("type", ARInteger::instance(4)));
 
@@ -92,15 +91,6 @@ class Product extends MultilingualObject
 
 		try
 		{
-			// set handle if empty
-			if (!$this->handle->get())
-			{
-			    $defaultLangCode = Store::getInstance()->getDefaultLanguageCode();
-		        $name = $this->getValueByLang('name', $defaultLangCode);
-		        $handle = Store::createHandleString($name);
-                $this->handle->set();    
-            }
-            
             parent::insert();
 
 			// update category product count numbers

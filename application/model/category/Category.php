@@ -33,7 +33,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$schema->registerField(new ARField("description", ARArray::instance()));
 		$schema->registerField(new ARField("keywords", ARArray::instance()));
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
-		$schema->registerField(new ARField("handle", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("availableProductCount", ARInteger::instance()));
 		$schema->registerField(new ARField("activeProductCount", ARInteger::instance()));
 		$schema->registerField(new ARField("totalProductCount", ARInteger::instance()));
@@ -479,17 +478,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return $this->isEnabled->get();
 	}
 
-	protected function insert()
-	{
-		// set handle if empty
-		if (!$this->handle->get())
-		{
-            $this->handle->set(Store::createHandleString($this->getValueByLang('name', Store::getInstance()->getDefaultLanguageCode())));    
-        }
-        
-        return parent::insert();        
-    }
-    
     /**
 	 *
 	 * @todo fix potential bug: when using $this->load() in method, it might

@@ -15,11 +15,6 @@
 		</p>
 
 		<p>
-			<label for="handle_{$categoryId}">{t _category_handle}:</label>
-			{textfield name="handle" id="handle_$categoryId"}
-		</p>
-		
-		<p>
 			<label for="details_{$categoryId}">{t _descr}:</label>
 			{textarea name="description" id="details_$categoryId"}
 		</p>

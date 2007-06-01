@@ -12,10 +12,6 @@
 			<div class="errorText hidden"></div>
 		</fieldset>
 	</p>
-	<p>
-		<label for="product_{$cat}_{$product.ID}_handle">{t _handle}:</label>
-		{textfield name="handle" id="product_`$cat`_`$product.ID`_handle"}
-	</p>
     <p class="required">
     	<label for="product_{$cat}_{$product.ID}_sku"><a class="acronym">{t _sku_code}<div>{t _what_is_sku}</div></a>:</label>
     	<fieldset class="error">

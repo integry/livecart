@@ -12,21 +12,14 @@
 function smarty_function_productUrl($params, Smarty $smarty)
 {	
 	$product = $params['product'];	
-	$router = Router::getInstance();
-	
-	$handle = $product['handle'];
-	
-	if (!$handle)
-	{
-		$handle = 'temporaryhandle';
-	}
-	
+	$handle = Store::createHandleString($product['name_lang']);
+		
 	$urlParams = array('controller' => 'product', 
 					   'action' => 'index', 
 					   'producthandle' => $handle, 
 					   'id' => $product['ID']);
 					   
-	$url = $router->createUrl($urlParams);	
+	$url = Router::getInstance()->createUrl($urlParams);	
 
     if (!empty($params['filterChainHandle']))
     {

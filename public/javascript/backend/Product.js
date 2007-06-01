@@ -96,12 +96,6 @@ Backend.Product =
 		}
 	},
 
-	generateHandle: function(titleElement)
-	{
-	  	handleElement = titleElement.form.elements.namedItem('handle');
-	  	handleElement.value = ActiveForm.prototype.generateHandle(titleElement.value);
-	},
-
 	multiValueSelect: function(anchor, state)
 	{
 	  	while (('FIELDSET' != anchor.tagName) && (undefined != anchor.parentNode))
