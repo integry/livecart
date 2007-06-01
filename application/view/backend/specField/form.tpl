@@ -128,7 +128,7 @@
 	<!-- STEP 2 -->
 	<fieldset class="specField_step_lev1 specField_step_values">
     <legend>{t _SpecField_step_two}</legend>
-        <a href="#mergeValues" class="specField_mergeValuesLink">{t _specField_merge_values}</a>
+        <a href="#mergeValues" class="specField_mergeValuesLink menu">{t _specField_merge_values}</a>
         <a href="#mergeValues" class="specField_mergeValuesCancelLink" style="display: none;">{t _specField_cancel_merge_values}</a>
 
 		<p>

@@ -6,7 +6,7 @@
 {includeJs file="backend/Settings.js"}
 
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
-{includeCss file="backend/Template.css"}
+{includeCss file="backend/Settings.css"}
 
 {pageTitle help="config"}{t _livecart_settings}{/pageTitle}
 {include file="layout/backend/header.tpl"}

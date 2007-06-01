@@ -122,7 +122,8 @@ DISABLE_INVENTORY=Disable inventory tracking
 DISABLE_NOT_IN_STOCK=Disable products that are out of stock
 
 _checkout=Checkout
-ANONYMOUS_CHECKOUT=Enable anonymous checkout
+_credit_card_options=Credit Card Options
+REQUIRE_CVV=Require Card Verification Code (CVV) to be entered
 
 _purchase=Purchase
 MIN_TOTAL=Minimum order total
@@ -151,3 +152,6 @@ _payment=Payment Methods
 
 _customers=Customers
 REQUIRE_PHONE=Require customers to enter phone number on registration
+
+# Countries
+ENABLED_COUNTRIES=Enabled Countries

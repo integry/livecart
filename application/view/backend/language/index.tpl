@@ -31,7 +31,7 @@
 	<ul class="menu" id="langPageMenu">
 		<li>
 			<a href="#" onClick="lng.showAddForm(); return false;">{t _add_language}</a>
-			<span class="progressIndicator" id="langAddMenuLoadIndicator"></span>
+			<span class="progressIndicator" id="langAddMenuLoadIndicator" style="display: none;"></span>
 		</li>
 	</ul>
 </fieldset>

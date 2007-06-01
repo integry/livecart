@@ -207,7 +207,7 @@ Backend.SpecField.prototype = {
 	{
 		if(!this.nodes) this.nodes = [];
 
-		this.nodes.parent = document.getElementById(this.rootId);
+		this.nodes.parent = $(this.rootId);
 
 		this.nodes.form 			    = this.nodes.parent.getElementsByTagName("form")[0];
 
@@ -666,7 +666,7 @@ Backend.SpecField.prototype = {
 
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
-			var translatedValue = document.getElementById(this.cssPrefix + "form_values_" + this.languageCodes[i] + "_" + id);
+			var translatedValue = $(this.cssPrefix + "form_values_" + this.languageCodes[i] + "_" + id);
 
 			// if new or not main language
 			if(isNew || i > 0)

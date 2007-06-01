@@ -12,7 +12,7 @@
 				<div class="title">{$item.name}</div>
 					<label for="rate_{$item.ID}">1 {$item.ID} = </label>
 					<fieldset class="error">
-						{textfield name="rate_`$item.ID`" id="rate_`$item.ID`"}
+						{textfield name="rate_`$item.ID`" class="text"}
 						<span class="defaultCurrency">{$defaultCurrency}</span>
 						<div class="errorText hidden"></div>
 					</fieldset>

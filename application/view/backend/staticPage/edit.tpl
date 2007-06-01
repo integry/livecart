@@ -86,11 +86,11 @@
 </fieldset>
 
 <input type="hidden" name="id" value="{$page.ID}" />
-<span class="controls">
+<fieldset class="controls">
     <span class="progressIndicator" id="saveIndicator" style="display: none;"></span>
     <input type="submit" value="{tn _save}" class="submit" /> 
     {t _or} 
     <a class="cancel" id="cancel" onclick="return false;" href="#">{t _cancel}</a>
-</span>
+</fieldset>
 
 {/form}

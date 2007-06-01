@@ -111,11 +111,11 @@ Backend.LanguageIndex.prototype =
 	
 	showAddForm: function()
 	{
-		document.getElementById('langAddMenuLoadIndicator').style.display = 'inline';
-		new Ajax.Request(
+		Element.show($('langAddMenuLoadIndicator'));
+        
+        new Ajax.Request(
 		  			this.formUrl,
 					{
-					  method: 'get',
 					  onComplete: this.doShowAddForm
 					}	  										  
 					);
@@ -123,19 +123,18 @@ Backend.LanguageIndex.prototype =
 	
 	doShowAddForm: function(request)
 	{
-		document.getElementById('langAddMenuLoadIndicator').style.display = 'none';
-		cont = document.getElementById('addLang');
-		cont.innerHTML = request.responseText;
+		Element.hide($('langAddMenuLoadIndicator'));
+		$('addLang').innerHTML = request.responseText;
 		slideForm('addLang', 'langPageMenu');	  	
 	},
 	
 	add: function(langCode)
 	{
 	  	// deactivate submit button and display feedback
-	  	button = document.getElementById('addLang').getElementsByTagName('input')[0];
+	  	button = $('addLang').getElementsByTagName('input')[0];
 	  	button.disabled = true;
 
-		document.getElementById('addLangFeedback').style.display = 'inline';
+		$('addLangFeedback').style.display = 'inline';
 		  
 		new Ajax.Request(
 		  			this.addUrl,
@@ -165,7 +164,7 @@ Backend.LanguageIndex.prototype =
         list.createSortable();
         		
 		restoreMenu('addLang', 'langPageMenu');
-		document.getElementById('addLangFeedback').style.display = 'none';
+		Element.hide($('addLangFeedback'));
 						
         new Effect.Highlight(node, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
 	},

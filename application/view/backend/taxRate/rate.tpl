@@ -4,7 +4,7 @@
     
     <label for="taxRate_{$taxRate.DeliveryZone.ID}_{$taxRate.ID}_rate">{t _rate}</label>
     <fieldset class="error">
-		{textfield name="rate" class="observed taxRate_rate" id="taxRate_`$taxRate.DeliveryZone.ID`_`$taxRate.ID`_rate" role="delivery.update"}
+		{textfield name="rate" class="observed taxRate_rate number" id="taxRate_`$taxRate.DeliveryZone.ID`_`$taxRate.ID`_rate" role="delivery.update"} %
 		<span class="errorText hidden"> </span>
     </fieldset>
     

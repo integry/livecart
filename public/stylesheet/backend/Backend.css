@@ -847,7 +847,7 @@ select
     padding-left: 0 !important;
 }
 
-a.cancel 
+a.cancel, a.menu
 {
  	color: red;
 }
@@ -1054,11 +1054,6 @@ fieldset.group p
 .tabHelp
 {
 	display: none;
-}
-
-span.tabCounter
-{
-    margin-left: 6px;
 }
 
 /*************************** 

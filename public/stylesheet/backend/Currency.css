@@ -84,7 +84,7 @@
   	font-size: larger;
 }
 
-#currencyRateList input {
+#currencyRateList input.text {
   	width: 120px;
   	vertical-align: middle;
 }

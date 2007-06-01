@@ -22,3 +22,10 @@ p.checkbox
 {
 	padding-left: 0px;
 }
+
+div.multi
+{
+    border: 1px solid gray;
+    margin: 5px;
+    background: #EEE;
+}

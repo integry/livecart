@@ -39,6 +39,7 @@
 				        <label for="{$fieldName}[{$key}]" class="checkbox">{$value}</label>
 				        </p>
 				    {/foreach}
+				        <div class="clear"></div>
                     </div>
 				{else}
                     {selectfield options=$values.$fieldName.type name="$fieldName" id="$fieldName"}
@@ -89,9 +90,9 @@
 
 <input type="hidden" name="id" value="{$id}" />
 
-<span class="controls">
+<fieldset class="controls">
     <input type="submit" value="{tn _save}" class="submit" /> 
     {t _or} 
     <a class="cancel" href="#" onclick="return false;">{t _cancel}</a>
-</span>
+</fieldset>
 {/form}

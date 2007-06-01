@@ -13,7 +13,7 @@ Backend.locale = 'en';
 **************************************************/
 Backend.setHelpContext = function(context)
 {
-	document.getElementById('help').href = 'http://doc.livecart.com/en/' + context;
+	$('help').href = 'http://doc.livecart.com/en/' + context;
 }
 
 /*************************************************
@@ -195,24 +195,24 @@ Backend.LayoutManager.prototype =
             
 		if (document.all)
 		{
-			document.getElementById('pageContentContainer').style.height = '0px';
+			$('pageContentContainer').style.height = '0px';
 		}
 				
 		// calculate content area height
 		var ph = new PopupMenuHandler();
 		var w = ph.getWindowHeight();
 		var h = w - 160 - (document.all ? 1 : 0);
-		var cont = document.getElementById('pageContentContainer');
+		var cont = $('pageContentContainer');
 
 		if (BrowserDetect.browser == 'Explorer')
 		{
 			cont.style.height = h + 'px';				  
 			
 			// force re-render for IE
-			document.getElementById('pageContainer').style.display = 'none';
-			document.getElementById('pageContainer').style.display = 'block';
-			document.getElementById('nav').style.display = 'none';
-			document.getElementById('nav').style.display = 'block';
+			$('pageContainer').style.display = 'none';
+			$('pageContainer').style.display = 'block';
+			$('nav').style.display = 'none';
+			$('nav').style.display = 'block';
 		}
 		else // Good browsers
 		{
@@ -277,10 +277,10 @@ Backend.Breadcrumb.prototype =
 			return false;  
 		}
 	
-		cont = document.getElementById('breadcrumb');
-		itemTemplate = document.getElementById('breadcrumb_item');
-		sepTemplate = document.getElementById('breadcrumb_separator');
-		lastItemTemplate = document.getElementById('breadcrumb_lastItem');
+		cont = $('breadcrumb');
+		itemTemplate = $('breadcrumb_item');
+		sepTemplate = $('breadcrumb_separator');
+		lastItemTemplate = $('breadcrumb_lastItem');
 										
 		for (k = 0; k < this.items.length; k++)
 		{
@@ -382,10 +382,10 @@ Backend.NavMenu.prototype =
 		}
 
 		// build menu
-		var topItem = document.getElementById('navTopItem-template');
-		var subItem = document.getElementById('navSubItem-template');
+		var topItem = $('navTopItem-template');
+		var subItem = $('navSubItem-template');
 		
-		navCont = document.getElementById('nav');
+		navCont = $('nav');
 		
 		for (topIndex in menuArray)
 		{
@@ -483,7 +483,7 @@ Backend.NavMenu.prototype =
 	Language switch menu
 *************************************************/
 function showLangMenu(display) {		
-	menu = document.getElementById('langMenuContainer');
+	menu = $('langMenuContainer');
 	if (display)
 	{
 		menu.style.display = 'block';
@@ -808,14 +808,15 @@ Backend.SaveConfirmationMessage.prototype =
 function slideForm(id, menuId)
 {
 	Effect.Appear(id, {duration: 0.50});	  	
-	document.getElementById(menuId).style.display = 'none';
-	setTimeout('document.getElementById("' +  id + '").focus()', 100);
+	Element.hide($(menuId));
+//	setTimeout('$("' +  id + '").focus()', 100);
 }
 
 function restoreMenu(blockId, menuId)
 {
-	Effect.Fade(blockId, {duration: 0.15});	  	
-	document.getElementById(menuId).style.display = 'block'; 	
+	Element.hide($(blockId));
+//	Effect.Fade(blockId, {duration: 0.15});	  	
+	Element.show($(menuId)); 	
 }
 
 

@@ -1,3 +1,5 @@
+_livecart_delivery_zones=Delivery Zones
+
 _are_you_sure_you_want_to_delete_this_zone=Are you sure you want to delete this zone?
 _are_you_sure_you_want_to_delete_this_address_mask=Are you sure you want to delete this address mask?
 _are_you_sure_you_want_to_delete_this_city_mask=Are you sure you want to delete this city mask?
@@ -7,7 +9,7 @@ _are_you_sure_you_want_to_delete_this_service=Are you sure you want to delete th
 _are_you_sure_you_want_to_delete_this_tax_rate=Are you sure you want to delete this tax rate?
 
 _default_zone=Default zone
-_name=Name
+_name=Zone Name
 _city_mask=City mask
 _zip_mask=Zip mask
 _address_mask=Address mask

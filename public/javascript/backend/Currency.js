@@ -24,7 +24,7 @@ Backend.Currency.prototype =
 
 	showAddForm: function()
 	{
-		document.getElementById('currAddMenuLoadIndicator').style.display = 'inline';
+		Element.show($('currAddMenuLoadIndicator'));
 		new Ajax.Request(
 		  			this.formUrl,
 					{
@@ -36,9 +36,8 @@ Backend.Currency.prototype =
 	
 	doShowAddForm: function(request)
 	{
-		document.getElementById('currAddMenuLoadIndicator').style.display = 'none';
-		cont = document.getElementById('addCurr');
-		cont.innerHTML = request.responseText;
+		Element.hide($('currAddMenuLoadIndicator'));
+		$('addCurr').innerHTML = request.responseText;
 		slideForm('addCurr', 'currPageMenu');	  	
 	},	
 	
@@ -90,10 +89,10 @@ Backend.Currency.prototype =
 	add: function(code)
 	{
 	  	// deactivate submit button and display feedback
-	  	button = document.getElementById('addCurr').getElementsByTagName('input')[0];
+	  	button = $('addCurr').getElementsByTagName('input')[0];
 	  	button.disabled = true;
 
-		document.getElementById('addCurrIndicator').style.display = 'inline';
+		Element.show($('addCurrIndicator'));
 		  
 		new Ajax.Request(
 		  			this.addUrl,
@@ -109,7 +108,7 @@ Backend.Currency.prototype =
 	addToList: function(originalRequest)
 	{
 		// activate submit button and hide feedback
-	  	button = document.getElementById('addCurr').getElementsByTagName('input')[0];
+	  	button = $('addCurr').getElementsByTagName('input')[0];
 	  	button.disabled = false;
 
 		// hide menu..
@@ -172,7 +171,7 @@ Backend.Currency.prototype =
 	
 	resetRatesContainer: function()
 	{
-		rateCont = document.getElementById('tabRatesContent');
+		rateCont = $('tabRatesContent');
 		while (rateCont.firstChild)
 		{
 			rateCont.removeChild(rateCont.firstChild);  	
@@ -219,7 +218,7 @@ Backend.Currency.prototype =
 				}
 			}	
 
-			document.getElementById('rateSaveIndicator').style.display = 'none';	
+			Element.hide($('rateSaveIndicator'));	
 			new Backend.SaveConfirmationMessage('rateConf');
 		}
 		catch (e)

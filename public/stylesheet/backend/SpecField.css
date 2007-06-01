@@ -82,6 +82,13 @@
     width: auto;
 }
 
+.specField_mergeValuesLink
+{
+    display: block;
+    float: left;
+    margin-bottom: 10px;
+}
+
 .specField .specField_mergeCheckbox 
 {
    float: none;
@@ -108,6 +115,11 @@
 .specField_add_field {
     white-space: nowrap;
     margin-left: 56px;
+}
+
+a.specField_add_field
+{
+    color: red;
 }
 
 .specField_values {
