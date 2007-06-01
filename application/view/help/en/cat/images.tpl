@@ -1,11 +1,10 @@
 
 <p>Images are used to represent category's contents. LC allows you to have unlimited number of images
  for one category. There are two types of images:</p>
- 
- <ul> 
+<ul> 
  	<li>Main image - the image which is displayed in the storefront.</li>
  	<li>Supplemental images - additional category's images.</li>
- </ul>
+</ul>
 
 <div class="tasks">
 <fieldset>
@@ -14,7 +13,6 @@
 	<li><a href="{self}#add">Add an image</a></li>
 	<li><a href="{self}#change">Change the main image</a></li>
 	<li><a href="{self}#delete">Delete image</a></li>
-
 </ul>
 </fieldset>
 </div>
@@ -42,14 +40,14 @@ You can set image dimensions and quality in the <a href="{help /settings}">Setti
 
 <ins>Is editing necessary for images?</ins>
 
-<p>To <strong>edit</strong> an image click the "pen" icon on the left:</p>
+<p>To <strong>edit</strong> an image click the "Pen" icon on the left:</p>
 <img src="image/doc/categories/images/edit.bmp">
 <p>When editing an image you can choose to upload an image as in the Add new image section above.</p>
 
 <br \>
 <br \>
 
-<p>To <strong>delete</strong> an image click the "delete" icon on the left:</p>
+<p>To <strong>delete</strong> an image click the "Delete" icon on the left:</p>
 <img src="image/doc/categories/images/delete.bmp">
 
 {helpSeeAlso}
