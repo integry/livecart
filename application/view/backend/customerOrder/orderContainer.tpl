@@ -7,8 +7,8 @@
 	
 	<div class="tabContainer">
 		<ul class="tabList tabs">
-			<li id="tabUserInfo" class="tab active">
-				<a href="{link controller=backend.order action=info id=_id_}"}">{t _order_info}</a>
+			<li id="tabOrderInfo" class="tab active">
+				<a href="{link controller=backend.customerOrder action=info id=_id_}"}">{t _order_info}</a>
 				<span class="tabHelp">orders.edit</span>
 			</li>
 		</ul>
@@ -19,7 +19,7 @@
     <script type="text/javascript">
         Event.observe($("cancel_order_edit"), "click", function(e) {
             Event.stop(e); 
-            var order = Backend.User.Editor.prototype.getInstance(Backend.User.Editor.prototype.getCurrentId(), false);   
+            var order = Backend.CustomerOrder.Editor.prototype.getInstance(Backend.CustomerOrder.Editor.prototype.getCurrentId(), false);   
             order.cancelForm();
             SectionExpander.prototype.unexpand(order.nodes.parent);
             Backend.User.Editor.prototype.showGroupsContainer();

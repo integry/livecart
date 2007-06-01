@@ -1,0 +1,47 @@
+_all_orders=All Orders
+_current_orders=Current
+_new_orders=New
+_backordered_orders=Backordered		
+_awaiting_shipment_orders=Awaiting Shipment
+_shipped_orders=Shipped
+_returned_orders=Returned
+_shopping_carts=Shoping Carts
+_orders=Orders
+_livecart_orders=Orders
+
+_process=Process
+
+# Mass actions
+_with_selected=With selected
+_order_status=Order status
+_set_new=New
+_set_backordered=Backordered
+_set_awaiting_shipment=Awaiting shipment
+_set_shipped=Shipped
+_set_returned=Returned
+
+# Grid labels
+CustomerOrder.status=Status
+CustomerOrder.totalAmount=Total cost
+CustomerOrder.capturedAmount=Captured amount
+CustomerOrder.isFinalized=Finalized
+CustomerOrder.isPaid=Paid
+CustomerOrder.isCanceled=Canceled
+CustomerOrder.dateCreated=Created
+CustomerOrder.dateCompleted=Completed
+ShippingAddress.countryID=Country
+ShippingAddress.city=City
+ShippingAddress.address1=Address
+ShippingAddress.postalCode=Postal
+User.email=E-mail
+User.firstName=First name
+User.lastName=Last name
+User.companyName=Company name
+
+_status_new=New
+_status_backordered=Backordered
+_status_awaiting_shipment=Awaiting shipment
+_status_shipped=Shipped
+_status_canceled=Canceled
+
+_are_you_sure_you_want_to_delete_this_order=Are you sure you want to delete this order?

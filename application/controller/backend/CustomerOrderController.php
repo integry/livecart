@@ -36,6 +36,65 @@ class CustomerOrderController extends StoreManagementController
 	    
 	}
 	
+	public function info()
+	{
+	    $order = CustomerOrder::getInstanceById((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA, true);
+	    $response = new ActionResponse();	 
+	    $response->setValue('order', $order->toArray());
+	    $response->setValue('form', self::createOrderForm($order));
+		
+		return $response;
+	}	
+	/**
+	 * @return RequestValidator
+	 */
+    public function createOrderFormValidator()
+    {
+        $validator = new RequestValidator("CustomerOrder", $this->request);		            
+		
+        return $validator;
+    }
+
+    /**
+     * @return Form
+     */
+	public function createOrderForm(CustomerOrder $order)
+	{
+		$form = new Form($this->createOrderFormValidator());
+		
+	    $data = array();
+	    $orderArray = $order->toArray();
+		foreach (ActiveRecordModel::getSchemaInstance('CustomerOrder')->getFieldList() as $field)
+		{
+			if ($field instanceof ARForeignKeyField) continue;
+			$data[$field->getName()] = $orderArray[$field->getName()];
+		}	
+		
+		$data['firstName'] = $orderArray['User']['firstName'];
+		$data['lastName'] = $orderArray['User']['lastName'];
+		$data['email'] = $orderArray['User']['email'];
+		$data['companyName'] = $orderArray['User']['companyName'];
+		$data['countryID'] = $orderArray['ShippingAddress']['countryID'];
+		$data['city'] = $orderArray['ShippingAddress']['city'];
+		$data['address1'] = $orderArray['ShippingAddress']['address1'];
+		$data['address2'] = $orderArray['ShippingAddress']['address2'];
+		$data['stateName'] = $orderArray['ShippingAddress']['stateName'];	
+		$data['postalCode'] = $orderArray['ShippingAddress']['postalCode'];	
+		
+		$data['user'] = "{$data['firstName']} {$data['lastName']}";	
+		$data['shippingAddress1'] = "{$data['countryID']} {$data['stateName']}, {$data['city']}, {$data['address1']} ({$data['postalCode']})";
+		if(!empty($data['address2'])) 
+		{
+		    $data['shippingAddress2'] = "{$data['countryID']} {$data['stateName']}, {$data['city']}, {$data['address2']} ({$data['postalCode']})";	
+		}
+		
+	    $form->setData($data);
+		
+		return $form;
+	}
+
+	
+	
 	public function orders()
 	{        
 		$availableColumns = $this->getAvailableColumns();
@@ -55,7 +114,6 @@ class CustomerOrderController extends StoreManagementController
 		$response->setValue("totalCount", '0');	
 		return $response;
 	}
-	
 	
 	/**
 	 * @role mass
@@ -103,19 +161,6 @@ class CustomerOrderController extends StoreManagementController
 		
 		return new JSONResponse($this->request->getValue('act'));	
     } 
-	
-	
-    public function edit()
-    {
-	    $group = UserGroup::getInstanceByID((int)$this->request->getValue('id'), true);
-	    $form = $this->createUserGroupForm($group);
-
-		$response = new ActionResponse();
-		$response->setValue('userGroup', $group->toArray());
-	    $response->setValue('userGroupForm', $form);
-	    
-	    return $response;
-    }
     
 	public function changeColumns()
 	{		
@@ -251,40 +296,6 @@ class CustomerOrderController extends StoreManagementController
 	    	'data' => $data
     	));	  	  	
 	}
-	
-	/**
-	 * @role remove
-	 */
-	public function remove()
-	{
-		$userGroup = UserGroup::getInstanceByID((int)$this->request->getValue("id"), true);
-		$userGroupArray = $userGroup->toArray();
-		$userGroup->delete();
-		
-		return new JSONResponse(array('status' => 'success', 'userGroup' => $userGroupArray));
-	}
-
-	/**
-	 * @return Form
-	 */
-	private function createUserGroupForm(UserGroup $group)
-	{
-	    $form = new Form($this->createUserGroupFormValidator($group)); 
-        $form->setData($group->toArray());
-	    
-	    return $form;
-	}
-	
-	/**
-	 * @return RequestValidator
-	 */
-	private function createUserGroupFormValidator(UserGroup $group)
-	{
-		$validator = new RequestValidator("userGroupForm_" . $group->isExistingRecord() ? $group->getID() : '', $this->request);
-		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("_error_name_should_not_be_empty")));
-		
-		return $validator;
-	}
 		
 	protected function getDisplayedColumns()
 	{	
@@ -302,11 +313,11 @@ class CustomerOrderController extends StoreManagementController
 		
 		$availableColumns = $this->getAvailableColumns();
 		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);	
-
 		
 		// User ID is always passed as the first column
 		$displayedColumns = array_merge(array('User.email' => 'text'), $displayedColumns);
 		$displayedColumns = array_merge(array('User.ID' => 'number'), $displayedColumns); // user id must go after user email here
+		$displayedColumns = array_merge(array('CustomerOrder.viewOrder' => 'text'), $displayedColumns);
 		$displayedColumns = array_merge(array('CustomerOrder.ID' => 'numeric'), $displayedColumns);
 				
 		// set field type as value
@@ -324,8 +335,10 @@ class CustomerOrderController extends StoreManagementController
 	{
 		// get available columns
 		$availableColumns = array();
+		
 		$availableColumns['User.email'] = 'text'; 
 		$availableColumns['User.ID'] = 'text'; 
+		$availableColumns['CustomerOrder.viewOrder'] = 'text'; 
 		$availableColumns['CustomerOrder.status'] = 'text'; 
 		$availableColumns['CustomerOrder.totalAmount'] = 'text';
 		$availableColumns['CustomerOrder.dateCreated'] = 'text';

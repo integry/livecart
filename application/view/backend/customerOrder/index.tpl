@@ -42,7 +42,16 @@
 {literal}
 <script type="text/javascript">
     new Backend.CustomerOrder({/literal}{json array=$orderGroups}{literal});
-    Backend.CustomerOrder.prototype.ordersMiscPermission = true;
+    
+    {/literal}
+        {allowed role="order"}
+            Backend.CustomerOrder.prototype.ordersMiscPermission = true;
+        {/allowed}
+        {allowed role="user"}
+        Backend.CustomerOrder.prototype.usersMiscPermission = true;
+        {/allowed}
+    {literal}
+    
     window.ordersActiveGrid = {};
 </script>
 {/literal}
