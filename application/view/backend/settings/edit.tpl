@@ -62,29 +62,18 @@
 	</fieldset>
 {/if}
 
-{if $multiLingualValues}
-    {foreach from=$languages item="language"}
-		<fieldset class="expandingSection">
-		<legend>{t Translate to}: {$language.originalName}</legend>
-			<div class="expandingSectionContent">
-			    {foreach from=$multiLingualValues key="fieldName" item="foo"}
-                <p>
-    				<label for="{$fieldName}_{$language.ID}" class="setting">{t `$values.$fieldName.title`}:</label>
+{language}
+    {foreach from=$multiLingualValues key="fieldName" item="foo"}
+    <p>
+		<label for="{$fieldName}_{$lang.ID}" class="setting">{t `$values.$fieldName.title`}:</label>
 
-            		<fieldset class="error">
-           				{textfield class="text wide" name="`$fieldName`_`$language.ID`" id="`$fieldName`_`$language.ID`"}
-            			<div class="errorText hidden"></div>
-            		</fieldset>
-				</p>
-				{/foreach}
-			</div>
+		<fieldset class="error">
+			{textfield class="text wide" name="`$fieldName`_`$lang.ID`" id="`$fieldName`_`$lang.ID`"}
+			<div class="errorText hidden"></div>
 		</fieldset>
-    {/foreach}
-
-	<script type="text/javascript">
-		var expander = new SectionExpander();
-	</script>
-{/if}
+	</p>
+	{/foreach}
+{/language}
 
 <input type="hidden" name="id" value="{$id}" />
 

@@ -24,38 +24,26 @@
 			{textarea name="keywords" id="keywords_$categoryId" style="height: 3em;"}
 		</p>
 
-		<br /><br />
+		{language}
+			<p>
+				<label>{t _category_name}:</label>
+				{textfield name="name_`$lang.ID`"}
+			</p>
+			<p>
+				<label>{t _descr}:</label>
+				{textarea name="description_`$lang.ID`"}
+			</p>
+			<p>
+				<label>{t _keywords}:</label>
+				{textarea name="keywords_`$lang.ID`" style="height: 3em;"}
+			</p>
+		{/language}
 
-		<p>
-			{foreach from=$languageList key=lang item=langName}
-			<fieldset class="expandingSection">
-				<legend>Translate to: {$langName}</legend>
-				<div class="expandingSectionContent">
-					<p>
-						<label>{t _category_name}:</label>
-						{textfield name="name_$lang"}
-					</p>
-					<p>
-						<label>{t _descr}:</label>
-						{textarea name="description_$lang"}
-					</p>
-					<p>
-						<label>{t _keywords}:</label>
-						{textarea name="keywords_$lang" style="height: 3em;"}
-					</p>
-				</div>
-			</fieldset>
-			{/foreach}
-			<script type="text/javascript">
-				var expander = new SectionExpander();
-				$('name_{$categoryId}').focus();
-			</script>
-		</p>
 	</fieldset>		
     
     <fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>
-        <input type="submit" class="submit" id="submit" value="{t _save}"/> or
+        <input type="submit" class="submit" id="submit" value="{tn _save}"/> or
 		<a href="#" class="cancel" onClick="$('categoryForm_{$categoryId}').reset(); return false;">{t _cancel}</a>
         <div class="clear"></div>
     </fieldset>

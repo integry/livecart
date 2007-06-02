@@ -6,23 +6,14 @@
 		{textfield name="name_`$defaultLanguageCode`" class="observed countriesAndStates_name"}
 		<span class="errorText hidden"> </span>
     </fieldset>
-    
-    
-     <fieldset>
-		{foreach from=$alternativeLanguagesCodes key=lang item=langName}
-		<fieldset class="expandingSection">
-			<legend>Translate to: {$langName}</legend>
-			<div class="expandingSectionContent">
-			    <label>{t _name}</label>
-                <fieldset class="error">
-            		{textfield name="name_`$lang`" class="observed"}
-            		<span class="errorText hidden"> </span>
-                </fieldset>
-			</div>
+        
+    {language}
+		<label>{t _name}</label>
+		<fieldset class="error">
+			{textfield name="name_`$lang.ID`" class="observed"}
+			<span class="errorText hidden"> </span>
 		</fieldset>
-		{/foreach}
-    </fieldset>
-    
+    {/language}    
     
     <label>{t _country}</label>
     <fieldset class="error">

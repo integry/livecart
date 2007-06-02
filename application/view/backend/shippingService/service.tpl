@@ -78,20 +78,13 @@
         </fieldset>
     </fieldset>
 
-    {if $alternativeLanguagesCodes}
-    {foreach from=$alternativeLanguagesCodes item=lang}
-        <fieldset class="expandingSection">
-            <legend>Translate to: {$lang.name}</legend>
-            <div class="expandingSectionContent">
-                <label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_name_{$lang.ID}">{t _name}</label>
-                <fieldset class="error">
-                    {textfield name="name_`$lang.ID`" class="observed" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_name_`$lang.ID`"}
-                    <span class="errorText hidden"> </span>
-                </fieldset>
-            </div>
+    {language}
+        <label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_name_{$lang.ID}">{t _name}</label>
+        <fieldset class="error">
+            {textfield name="name_`$lang.ID`" class="observed" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_name_`$lang.ID`"}
+            <span class="errorText hidden"> </span>
         </fieldset>
-    {/foreach}
-    {/if}
+    {/language}
 
     <fieldset class="shippingService_controls controls">
         <span class="activeForm_progress"></span>

@@ -68,7 +68,6 @@ class SettingsController extends StoreManagementController
 		$response->setValue('id', $sectionId);
 		$response->setValue('layout', $c->getSectionLayout($sectionId));		
 		$response->setValue('multiLingualValues', $multiLingualValues);
-		$response->setValue('languages', Store::getInstance()->getLanguageSetArray());
 		return $response;	
 	}  		  
 

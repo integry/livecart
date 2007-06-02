@@ -41,8 +41,6 @@ function applyFilters(form, ev)
 	element = ev.target;	
 	elementFilters = filter[element.name];
 
-    console.log(elementFilters);
-	
 	if ('undefined' == 'elementFilters')
 	{
 	  	return false;

@@ -237,13 +237,7 @@ Backend.Category = {
 	 */
 	updateBranch: function(formObj)
 	{
-		new Ajax.Request(formObj.action,
-			{
-				method: formObj.method,
-				parameters: Form.serialize(formObj),
-				onComplete: this.afterBranchUpdate
-			}
-		);
+		new LiveCart.AjaxRequest(formObj, null, this.afterBranchUpdate.bind(this));
 	},
 
 	/**

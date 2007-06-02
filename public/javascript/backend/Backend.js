@@ -819,7 +819,56 @@ function restoreMenu(blockId, menuId)
 	Element.show($(menuId)); 	
 }
 
-
+/***************************************************
+ * Language form
+ **************************************************/
+Backend.LanguageForm = Class.create();
+Backend.LanguageForm.prototype = 
+{
+	initialize: function()
+	{
+		var forms = document.getElementsByClassName('languageForm');
+		for (var k = 0; k < forms.length; k++)
+		{
+			var tabs = forms[k].down('ul.languageFormTabs').getElementsByTagName('li');
+			for (var t = 0; t < tabs.length; t++)
+			{
+				tabs[t].onclick = this.handleTabClick.bindAsEventListener(this);
+			}
+		}		
+	},
+	
+	handleTabClick: function(e)
+	{
+		var tab = Event.element(e);
+		
+		// make other tabs inactive
+		var tabs = tab.parentNode.getElementsByTagName('li');
+		for (var k = 0; k < tabs.length; k++)
+		{
+			if (tabs[k] != tab)
+			{
+				Element.removeClassName(tabs[k], 'active');
+			}
+		}
+		
+		Element.toggleClassName(tab, 'active');		
+				
+		// hide tab contents
+		var cont = tab.up('div.languageForm').down('div.languageFormContent').getElementsByClassName('languageFormContainer');
+		for (var k = 0; k < cont.length; k++)
+		{
+			Element.removeClassName(cont[k], 'active');		
+		}		
+		
+		if (Element.hasClassName(tab, 'active'))
+		{
+			// get language code
+			var id = tab.className.match(/languageFormTabs_([a-z]{2})/)[1];
+			Element.addClassName(tab.up('div.languageForm').down('div.languageFormContainer_' + id), 'active');
+		}		
+	}
+}
 
 /***************************************************
  * MVC View

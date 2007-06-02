@@ -47,32 +47,25 @@
 		</fieldset>
 	</p>
 
-    {foreach from=$languages item="language"}
-		<fieldset class="expandingSection">
-		<legend>{t Translate to}: {$language.originalName}</legend>
-			<div class="expandingSectionContent">
-			    
-				<p>
-					<label for="title_{$language.ID}" class="wide">{t _title}:</label>
-					<fieldset class="error">
-						{textfield name="title_`$language.ID`" class="wider"}
-						<div class="errorText hidden"></div>
-					</fieldset>
-				</p>
-			
-				<p>
-					<label for="text_{$language.ID}" class="wide">{t _text}:</label>
-					<fieldset class="error">
-						<div class="textarea" id="textContainer">
-							{textarea class="longDescr" name="text_`$language.ID`" style="width: 100%;"}
-							<div class="errorText hidden" style="margin-top: 5px;"></div>
-						</div>			
-					</fieldset>
-				</p>
-
-			</div>
-		</fieldset>
-    {/foreach}
+    {language}
+		<p>
+			<label for="title_{$lang.ID}" class="wide">{t _title}:</label>
+			<fieldset class="error">
+				{textfield name="title_`$lang.ID`" class="wider"}
+				<div class="errorText hidden"></div>
+			</fieldset>
+		</p>
+	
+		<p>
+			<label for="text_{$lang.ID}" class="wide">{t _text}:</label>
+			<fieldset class="error">
+				<div class="textarea" id="textContainer">
+					{textarea class="longDescr" name="text_`$lang.ID`" style="width: 100%;"}
+					<div class="errorText hidden" style="margin-top: 5px;"></div>
+				</div>			
+			</fieldset>
+		</p>
+    {/language}
 
 	<p>
 		{checkbox name="isInformationBox" class="checkbox"}

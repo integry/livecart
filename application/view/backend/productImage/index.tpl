@@ -34,22 +34,12 @@
 			{textfield name="title" id="title"}	
 		</p>		
 		
-		<div class="translations">
-			{foreach from=$languageList key=lang item=langName}
-			<fieldset class="expandingSection">
-				<legend>{maketext text="_translate" params="$langName"}</legend>
-				<div class="expandingSectionContent">
-					<p>
-						<label>{t _image_title}</label>
-						{textfield name="title_$lang"}
-					</p>
-				</div>
-			</fieldset>
-			{/foreach}
-			<script type="text/javascript">
-				var expander = new SectionExpander();
-			</script>
-		</div>		
+		{language}
+			<p>
+				<label>{t _image_title}</label>
+				{textfield name="title_`$lang.ID`"}
+			</p>
+		{/language}		
 	
         <fieldset class="controls">	
 			<span class="progressIndicator" style="display: none;"></span>

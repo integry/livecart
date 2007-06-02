@@ -95,35 +95,31 @@
             		<span class="errorText hidden"> </span>
                 </fieldset>
     		</p>
-        </div>
-        
-    	<!-- STEP 3 -->
-    	<div class="specField_step_translations">
-    		<fieldset class="dom_template specField_step_translations_language specField_step_translations_language_">
-    			<legend><span class="expandIcon">[+]</span><span class="specField_legend_text"></span></legend>
-    
-                <div class="activeForm_translation_values specField_language_translation">
-                    <p>
-            			<label>{t _SpecField_title}</label>
-            			<input type="text" name="name" {denied role="category.update"}readonly="readonly"{/denied} />
-        			</p>
-                    <p>
-            			<label>{t _SpecField_valuePrefix}</label>
-            			<input type="text" name="valuePrefix" {denied role="category.update"}readonly="readonly"{/denied} />
-        			</p>
-                    <p>
-            			<label>{t _SpecField_valueSuffix}</label>
-            			<input type="text" name="valueSuffix" {denied role="category.update"}readonly="readonly"{/denied} />
-        			</p>
-                    <p>
-            			<label>{t _SpecField_description}</label>
-            			<textarea name="description" rows="5" cols="40" {denied role="category.update"}readonly="readonly"{/denied}></textarea>
-        			</p>
-                </div>
-    		</fieldset>
-    	</div>
+		
+		</div>
             
 	</fieldset>
+
+    	{language}
+
+	        <p>
+				<label>{t _SpecField_title}</label>
+				<input type="text" name="name_`$lang.ID`" {denied role="category.update"}readonly="readonly"{/denied} />
+			</p>
+	        <p>
+				<label>{t _SpecField_valuePrefix}</label>
+				<input type="text" name="valuePrefix_`$lang.ID`" {denied role="category.update"}readonly="readonly"{/denied} />
+			</p>
+	        <p>
+				<label>{t _SpecField_valueSuffix}</label>
+				<input type="text" name="valueSuffix_`$lang.ID`" {denied role="category.update"}readonly="readonly"{/denied} />
+			</p>
+	        <p>
+				<label>{t _SpecField_description}</label>
+				<textarea name="description_`$lang.ID`" rows="5" cols="40" {denied role="category.update"}readonly="readonly"{/denied}></textarea>
+			</p>
+
+    	{/language}  
 
 	<!-- STEP 2 -->
 	<fieldset class="specField_step_lev1 specField_step_values">

@@ -40,9 +40,7 @@ class TaxRateController extends StoreManagementController
 		
 		$response = new ActionResponse();
 		$response->setValue('enabledTaxes', $enabledTaxes);
-		$response->setValue('defaultLanguageCode', $this->store->getDefaultLanguageCode());
 		$response->setValue('taxRates', $taxRatesArray);
-		$response->setValue('alternativeLanguagesCodes', $this->store->getLanguageSetArray(false, false));
 		$response->setValue('newTaxRate', array('ID' => '', 'DeliveryZone' => $deliveryZoneArray));
 		$response->setValue('deliveryZone', $deliveryZoneArray);
 	    $response->setValue('form', $form);
@@ -69,8 +67,6 @@ class TaxRateController extends StoreManagementController
 		$form->setData($rate->toArray());
 		
 		$response = new ActionResponse();
-		$response->setValue('defaultLanguageCode', $this->store->getDefaultLanguageCode());
-		$response->setValue('alternativeLanguagesCodes', $this->store->getLanguageSetArray(false, false));
 		$response->setValue('taxRate', $rate->toArray());
 	    $response->setValue('form', $form);
 	    

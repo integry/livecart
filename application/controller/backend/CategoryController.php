@@ -15,18 +15,11 @@ class CategoryController extends StoreManagementController
 {
 	public function index()
 	{
-		$response = new ActionResponse();
-	    
 		$categoryList = Category::getRootNode()->getDirectChildNodes();
 		$categoryList->unshift(Category::getRootNode());
 		
-		$languages = array();
-		foreach($this->store->getLanguageList()->toArray() as $language) $languages[$language['ID']] = $language;
-		$response->setValue('languages', $languages);
-		
-		$response->setValue('categoryList', $categoryList->toArray($this->store->getDefaultLanguageCode()));
-        $response->setValue('curLanguageCode', $this->locale->getLocaleCode());
-        
+		$response = new ActionResponse();
+		$response->setValue('categoryList', $categoryList->toArray($this->store->getDefaultLanguageCode()));        
 		return $response;
 	}
 
@@ -45,18 +38,9 @@ class CategoryController extends StoreManagementController
 		$form = $this->buildForm();
 		$response->setValue("catalogForm", $form);
 
-		$category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
-		$categoryArr = $category->toArray();
+		$categoryArr = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA)->toArray();
 		$form->setData($categoryArr);
-
-		$languages = array();
-		foreach ($this->store->getLanguageArray() as $lang)
-		{
-			$languages[$lang] = $this->locale->info()->getOriginalLanguageName($lang);
-		}
-
 		$response->setValue("categoryId", $categoryArr['ID']);
-		$response->setValue("languageList", $languages);
 
 		return $response;
 	}
@@ -77,7 +61,7 @@ class CategoryController extends StoreManagementController
 		$categoryNode->save();
 		
 		$categoryNode->setValueByLang("name", $this->store->getDefaultLanguageCode(), $this->translate("_new_category") . " " . $categoryNode->getID() );
-		$categoryNode->setFieldValue("handle", "new.category." . $categoryNode->getID() );
+
         $categoryNode->save();
 
 		try 
@@ -104,7 +88,6 @@ class CategoryController extends StoreManagementController
 		{
 			$categoryNode = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
 			$categoryNode->setFieldValue('isEnabled', $this->request->getValue('isEnabled', 0));
-			$categoryNode->setFieldValue('handle', $this->request->getValue('handle', ''));
 			
 			$multilingualFields = array("name", "description", "keywords");
 			$categoryNode->setValueArrayByLang($multilingualFields, $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true), $this->request);

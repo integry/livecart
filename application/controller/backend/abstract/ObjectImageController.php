@@ -21,18 +21,11 @@ abstract class ObjectImageController extends StoreManagementController
 		$filter->setOrder(new ARFieldHandle($this->getModelClass(), 'position'));
 		
 		$imageArray = ActiveRecordModel::getRecordSetArray($this->getModelClass(), $filter);
-		
-		$languages = array();
-		foreach ($this->store->getLanguageArray(false) as $langId)
-		{
-		  	$languages[$langId] = $this->locale->info()->getOriginalLanguageName($langId);
-		}
-		
+				
 		$response = new ActionResponse();
 		$response->setValue('form', $this->buildForm($owner->getID()));
 		$response->setValue('ownerId', $owner->getID());
 		$response->setValue('images', json_encode($imageArray));
-		$response->setValue('languageList', $languages);
 		return $response;		  
 	}    
 	

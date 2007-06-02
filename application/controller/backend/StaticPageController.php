@@ -53,7 +53,6 @@ class StaticPageController extends StoreManagementController
 		$response = new ActionResponse();				
 		$response->setValue('form', $form);
 		$response->setValue('page', $page);
-		$response->setValue('languages', $this->store->getLanguageSetArray());
 		return $response;		
 	}
 	

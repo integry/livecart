@@ -143,11 +143,11 @@ Backend.ObjectImage.prototype =
 				 editCont.style.display = 'none';
 				 editCont.appendChild(form);
 				 
-				 var expander = new SectionExpander();				 
-				 
 				// Effect.Appear(editCont, {duration: 0.2});
                  
-                 this.toggleContainerOn(editCont)
+                 this.toggleContainerOn(editCont);
+                 
+                 new Backend.LanguageForm();
 			 },
 	         
 			 beforeSort:     function(li, order) 

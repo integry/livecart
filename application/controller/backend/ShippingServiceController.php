@@ -36,9 +36,7 @@ class ShippingServiceController extends StoreManagementController
 		
 		
 		$response = new ActionResponse();
-		$response->setValue('defaultLanguageCode', $this->store->getDefaultLanguageCode());
 		$response->setValue('shippingServices', $shippingServices);
-		$response->setValue('alternativeLanguagesCodes', $this->store->getLanguageSetArray());
 		$response->setValue('newService', array('DeliveryZone' => $deliveryZoneArray));
 		$response->setValue('newRate', array('ShippingService' => array('DeliveryZone' => $deliveryZoneArray, 'ID' => '')));
 		$response->setValue('deliveryZone', $deliveryZoneArray);
@@ -65,8 +63,6 @@ class ShippingServiceController extends StoreManagementController
 	    $form = $this->createShippingServiceForm();
 		$form->setData($shippingService->toArray());
 		$response = new ActionResponse();
-		$response->setValue('defaultLanguageCode', $this->store->getDefaultLanguageCode());
-		$response->setValue('alternativeLanguagesCodes', $this->store->getLanguageSetArray());
 		$response->setValue('service', $shippingService->toArray());
 		$response->setValue('shippingRates', $shippingService->getRates()->toArray());
 		$response->setValue('newRate', array('ShippingService' => $shippingService->toArray()));
