@@ -92,7 +92,7 @@ Backend.CustomerOrder.prototype =
                 Backend.CustomerOrder.prototype.treeBrowser.hideFeedback(id);
             });
             
-            Backend.showContainer("orderGroupsBrowser");
+            Backend.showContainer("orderGroupsManagerContainer");
         }
         
         Backend.CustomerOrder.prototype.activeGroup = id;
@@ -100,7 +100,7 @@ Backend.CustomerOrder.prototype =
 	
 	displayCategory: function(response)
 	{
-		Backend.CustomerOrder.prototype.treeBrowser.hideFeedback();	
+		Backend.CustomerOrder.prototype.treeBrowser.hideFeedback();
 	},
 	
 	resetForm: function(e)
