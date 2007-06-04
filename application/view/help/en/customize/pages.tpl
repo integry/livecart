@@ -1,4 +1,4 @@
-<p>Pages are a simple and easy way to create additional pages for your storefront. You can create pages to provide your company details, shipping info, privacy policy or any other. Pages are created using WYSIVIG or HTML code.</p> 	
+<p>Pages are a simple and easy way to create additional pages for your storefront. You can create pages to provide your company details, shipping info, privacy policy or any other. Pages can be created using WYSIVIG or HTML code.</p> 	
 
 <div class="tasks">
 <fieldset>
@@ -6,25 +6,43 @@
 <ul>	
 	<li><a href="{self}#add">Create new page</a></li>
 	<li><a href="{self}#sort">Sort pages</a></li>
-	<li><a href="{self}#adjust_rates">Delete page</a></li>
+	<li><a href="{self}#delete">Delete page</a></li>
 </ul>
 </fieldset>
 </div>
 
 <h3 id="add">Create page</h3>
-<p>To create a new page</p>
+<p>To create a new page:</p>
 
 <ol>
 	<li>Click the "Add new page" link:</li>
 	<img src="image/doc/customize/pages/add.bmp">
-	<li>Complete the following information:</li>
+	<li>Complete the following steps:</li>
 	<ul>
-		<li>Display in "Information" menu - </li>
-		<li>Page Title - </li>
-		<li>{glossary}URL{/glossary} handle - </li>
-		<li>Page text - </li>
-		<li>Translate - </li>
+		<li>Enter page title</li>
+		<li>Display in "Information" menu - mark the checkbox to enable the page.</li>
+		<li>{glossary}URL{/glossary} handle is generated automatically (...)</li>
+		<li>Page text - the contents of your page.</li>
+		<li>Translate - if applicable click on the language to translate page title and page text.</li>
+		<li>Click "Save".</li>
 	</ul>
 </ol>
 
-<p class="note">All your pages will be places in the "information" box below "categories" section.</p>
+<p class="note">(<strong>Note</strong>: The "Information" box is displayed right below the "Categories" section.)</p>
+
+<h3 id="sort">Sort pages</h3>
+
+<p>The way pages are displayed in you e-store is defined by their order in the page tree. To set pages' arrangement:</p>
+<ol>
+	<li>Click a page in the tree.</li>
+	<li>Use "Move selected up" or "Move selected down" link to reorder pages:</li>
+	<img src="image/doc/customize/pages/move.bmp">
+</ol>
+
+<h3 id="delete">Delete pages</h3>
+<p>To delete a page select page and click "Remove selected page".</p>
+
+{helpSeeAlso}
+	{see customize.live}
+	{see customize.templates}
+{/helpSeeAlso}

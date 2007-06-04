@@ -33,7 +33,8 @@
 
 	customize=Customize
 		pages=Pages
-		template=Templates
+		live=Live Customization
+		templates=Templates
 		css=CSS
 		skin=Skins
 		
