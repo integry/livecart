@@ -15,6 +15,7 @@
             {assign var="lastBreadcrumb" value=$breadCrumb|@end}
             {$lastBreadcrumb.title}
         {/if}
+        - LiveCart Demo
     </title>
 	<base href="{baseUrl}" />
 	{liveCustomization}    
