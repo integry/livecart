@@ -161,11 +161,13 @@ class StaticPageController extends StoreManagementController
 	private function getValidator()
 	{	
 		ClassLoader::import('framework.request.validator.RequestValidator');
-		
+		ClassLoader::import('application.helper.filter.HandleFilter');
+        		
 		$val = new RequestValidator('staticPage', $this->request);
 		$val->addCheck('title', new IsNotEmptyCheck($this->translate('_err_title_empty')));
 		$val->addCheck('text', new IsNotEmptyCheck($this->translate('_err_text_empty')));
-		
+		$val->addFilter('handle', HandleFilter::create());
+        		
 		return $val;
 	}
 }

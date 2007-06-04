@@ -29,6 +29,12 @@
 		</fieldset>
 	</p>
 
+	<p style="margin-top: 7px; padding-bottom: 7px; clear: both;">
+		{checkbox name="isInformationBox" class="checkbox"}
+		<label for="isInformationBox" class="checkbox">{t _inf_menu}</label>
+	    <br class="clear" />
+    </p>
+
 	<p>
 		<label for="title" class="wide">{t _handle}:</label>
 		<fieldset class="error">
@@ -66,11 +72,6 @@
 			</fieldset>
 		</p>
     {/language}
-
-	<p>
-		{checkbox name="isInformationBox" class="checkbox"}
-		<label for="isInformationBox" class="checkbox">{t _inf_menu}</label>
-	</p>
 
 	<script type="text/javascript">
 		var expander = new SectionExpander();
