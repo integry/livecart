@@ -502,7 +502,6 @@ Backend.Product.Editor.prototype =
 
     initialize: function(id)
   	{
-		var t = new TimeTrack();
         try
         {
             this.id = id;
@@ -518,7 +517,6 @@ Backend.Product.Editor.prototype =
         {
             console.info(e);
         }
-        t.track('editor instance');
 	},
 
 	__nodes__: function()
@@ -538,19 +536,16 @@ Backend.Product.Editor.prototype =
 
     __init__: function(args)
     {	
-		var i = new TimeTrack();
         Backend.Product.Editor.prototype.setCurrentProductId(this.id);
         $('productIndicator_' + this.id).style.display = 'none';
         this.showProductForm();
         this.tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
 
         this.addTinyMce();
-        i.track('start');
 
         this.setTabCounters();
-        i.track('5');        
+
 		new SectionExpander(this.nodes.parent);
-        i.track('6');
     },
     
     setTabCounters: function()
@@ -598,7 +593,6 @@ Backend.Product.Editor.prototype =
 
     getInstance: function(id, doInit)
     {
-		var t = new TimeTrack();
         if(!Backend.Product.Editor.prototype.__instances__[id])
         {
             Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id);
@@ -606,12 +600,8 @@ Backend.Product.Editor.prototype =
 
         if(doInit !== false) 
         {
-		    var i = new TimeTrack();
             Backend.Product.Editor.prototype.__instances__[id].__init__();
-            i.track('initializing');
         }
-
-        t.track('getting instance');
 
         return Backend.Product.Editor.prototype.__instances__[id];
     },
