@@ -843,6 +843,12 @@ formem.required
     color: red;
 }
 
+form, .formDiv
+{
+    height: 2em;
+    width: 33em;
+}
+
 label, input, select, form .other, textarea, .disabledTextarea
 {
     margin-top: 5px;

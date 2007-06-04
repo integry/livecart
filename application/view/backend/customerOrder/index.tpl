@@ -31,16 +31,24 @@
 
 <div id="orderGroupsWrapper" class="maxHeight h--50">
 	<div id="orderGroupsBrowser" class="treeBrowser"></div>
-   
+      
+    <div class="yellowMessage" id="orderConfirmation" style="left: 20; top: 180px; position: absolute; display: none;">
+       	<div>
+       		{t _order_information_has_been_successfully_updated}
+       	</div>
+    </div>
+    
     {include file="backend/customerOrder/orderContainer.tpl"}
     {include file="backend/customerOrder/groupContainer.tpl"}
     {include file="backend/userGroup/userContainer.tpl"}
+
 </div>
 
 <div id="activeUserPath"></div>
 
 {literal}
 <script type="text/javascript">
+    Backend.CustomerOrder.Editor.prototype.Links.update = '{/literal}{link controller=backend.customerOrder action=update}{literal}';
     new Backend.CustomerOrder({/literal}{json array=$orderGroups}{literal});
     
     {/literal}
@@ -51,7 +59,7 @@
         Backend.CustomerOrder.prototype.usersMiscPermission = true;
         {/allowed}
     {literal}
-    
+    Backend.showContainer("orderGroupsManagerContainer");
     window.ordersActiveGrid = {};
 </script>
 {/literal}

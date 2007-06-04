@@ -8,6 +8,22 @@ var Backend = {};
 // set default locale
 Backend.locale = 'en';
 
+    
+Backend.openedContainersStack = [];
+Backend.showContainer = function(containerID)
+{
+    if(Backend.openedContainersStack.length  > 0) $(Backend.openedContainersStack[Backend.openedContainersStack.length - 1]).hide();
+    Backend.openedContainersStack[Backend.openedContainersStack.length] = containerID;
+    $(containerID).show();
+}
+
+Backend.hideContainer = function()
+{       
+    if(Backend.openedContainersStack.length  > 0) $(Backend.openedContainersStack[Backend.openedContainersStack.length - 1]).hide();
+    Backend.openedContainersStack.splice(Backend.openedContainersStack.length - 1, 1)
+    $(Backend.openedContainersStack[Backend.openedContainersStack.length - 1]).show();
+}
+
 /*************************************************
 	Help context handler
 **************************************************/

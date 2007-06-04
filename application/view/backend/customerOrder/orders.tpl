@@ -2,7 +2,7 @@
 
 <fieldset class="container" style="vertical-align: middle;">
                 
-    <span style="float: left; text-align: right; {denied role="order.mass"}visibility: hidden;{/denied}" id="orderMass_{$orderGroupID}" >
+    <span style="float: left; text-align: right; {if $orderGroupID == 8}visibility: hidden;{else}{denied role="order.mass"}visibility: hidden;{/denied}{/if}" id="orderMass_{$orderGroupID}" >
 
 	    {form action="controller=backend.customerOrder action=processMass id=$orderGroupID" handle=$massForm style="vertical-align: middle;" onsubmit="return false;"}
 	    

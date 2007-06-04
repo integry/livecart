@@ -62,6 +62,8 @@
 
 {literal}
 <script type="text/javascript">
+    Backend.showContainer('deliveryZoneManagerContainer');
+        
     Backend.DeliveryZone.prototype.Messages.confirmZoneDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_zone}{literal}';
     Backend.DeliveryZone.prototype.Messages.defaultZoneName = '{/literal}{t _default_zone}{literal}';
     Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmAddressDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_address_mask}{literal}';

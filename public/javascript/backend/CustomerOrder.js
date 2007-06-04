@@ -69,7 +69,7 @@ Backend.CustomerOrder.prototype =
 		{
             Backend.CustomerOrder.prototype.treeBrowser.insertNewItem(node.rootID, node.ID, node.name, null, 0, 0, 0, '', 1);
             self.treeBrowser.showItemSign(node.ID, 0);
-            var group = document.getElementsByClassName("standartTreeRow", $("userGroupsBrowser")).last();
+            var group = document.getElementsByClassName("standartTreeRow", $("orderGroupsBrowser")).last();
             group.id = 'group_' + node.ID;
             group.onclick = function()
             {
@@ -92,7 +92,7 @@ Backend.CustomerOrder.prototype =
                 Backend.CustomerOrder.prototype.treeBrowser.hideFeedback(id);
             });
             
-            Backend.User.Editor.prototype.showGroupsContainer();
+            Backend.showContainer("orderGroupsBrowser");
         }
         
         Backend.CustomerOrder.prototype.activeGroup = id;
@@ -101,8 +101,6 @@ Backend.CustomerOrder.prototype =
 	displayCategory: function(response)
 	{
 		Backend.CustomerOrder.prototype.treeBrowser.hideFeedback();	
-		var cancel = document.getElementsByClassName('cancel', $('userGroupsContent'))[0];
-		Event.observe(cancel, 'click', this.resetForm.bindAsEventListener(this));
 	},
 	
 	resetForm: function(e)
@@ -292,9 +290,12 @@ Backend.CustomerOrder.massActionHandler.prototype =
 			}
 		}
 		
-		this.form.elements.namedItem('filters').value = this.grid.getFilters().toJSONString();
-        this.form.elements.namedItem('selectedIDs').value = this.grid.getSelectedIDs().toJSONString();
+        var filters = Object.toJSON(this.grid.getFilters());
+		this.form.elements.namedItem('filters').value = filters ? filters : '';
+        var selectedIDs = Object.toJSON(this.grid.getSelectedIDs());
+        this.form.elements.namedItem('selectedIDs').value = selectedIDs ? selectedIDs : '';
         this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;
+        console.info(this.form.elements.namedItem('filters'))
         new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('progressIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));
 
         this.grid.resetSelection();   
@@ -400,30 +401,11 @@ Backend.CustomerOrder.Editor.prototype =
         {
             orderIndicator.style.display = 'none';
         }
-        this.showOrderForm();
+        Backend.showContainer("orderManagerContainer");
 
         this.tabControl = TabControl.prototype.getInstance("orderManagerContainer", false);
         
 		new SectionExpander(this.nodes.parent);
-    },
-
-    showOrderForm: function(args)
-    {
-		this.hideGroupsContainer();
-    },
-
-    hideGroupsContainer: function(args)
-    {
-        if($("userGroupsManagerContainer")) Element.hide($("userGroupsManagerContainer"));
-        if($("orderManagerContainer")) Element.show($("orderManagerContainer"));
-        if($("orderGroupsManagerContainer")) Element.hide($("orderGroupsManagerContainer"));
-    },
-
-    showGroupsContainer: function(args)
-    {       
-        if($("userManagerContainer")) Element.hide($("userManagerContainer"));
-        if($("orderManagerContainer")) Element.hide($("orderManagerContainer"));
-        if($("orderGroupsManagerContainer")) Element.show($("orderGroupsManagerContainer"));
     },
     
     cancelForm: function()
@@ -451,126 +433,12 @@ Backend.CustomerOrder.Editor.prototype =
 	{
 		if(response.status == 'success')
 		{
-			new Backend.SaveConfirmationMessage(this.nodes.form.down('.userInfoSaveConf'));
+			new Backend.SaveConfirmationMessage($('orderConfirmation'));
 			Form.State.backup(this.nodes.form);
 		}
 		else
 		{
 			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
 		}
-	}
-}
-
-
-
-
-
-Backend.CustomerOrder.Add = Class.create();
-Backend.CustomerOrder.Add.prototype = 
-{
-    Instances: {},
-    
-    getInstance: function(groupID, grid)
-    {
-		if(!Backend.CustomerOrder.Add.prototype.Instances[groupID])
-        {
-            Backend.CustomerOrder.Add.prototype.Instances[groupID] = new Backend.CustomerOrder.Add(groupID, grid);
-        }
-        
-        return Backend.CustomerOrder.Add.prototype.Instances[groupID];
-    },
-    
-    initialize: function(groupID, grid)
-  	{
-        try
-        {
-            this.groupID = groupID;
-            
-            this.findUsedNodes();
-            this.bindEvents();
-            
-            Form.State.backup(this.nodes.form);
-            var self = this;
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
-
-	},
-
-	findUsedNodes: function()
-    {
-        this.nodes = {};
-        this.nodes.parent = $("newUserForm_" + this.groupID);
-        this.nodes.form = this.nodes.parent.down("form");
-		this.nodes.cancel = this.nodes.form.down('a.cancel');
-		this.nodes.submit = this.nodes.form.down('input.submit');
-        
-        this.nodes.menuShowLink = $("userGroup_" + this.groupID + "_addUser");
-        this.nodes.menu = $("userGroup_" + this.groupID + "_addUser_menu");
-        this.nodes.menuCancelLink = $("userGroup_" + this.groupID + "_addUserCancel");
-        this.nodes.menuForm = this.nodes.parent;
-    },
-   
-	showAddForm: function()
-	{
-        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuCancelLink]);
-        ActiveForm.prototype.showNewItemForm(this.nodes.menuShowLink, this.nodes.menuForm); 
-	},
-   
-	hideAddForm: function()
-	{
-        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuShowLink]);
-        ActiveForm.prototype.hideNewItemForm(this.nodes.menuShowLink, this.nodes.menuForm); 
-	},
-
-    bindEvents: function(args)
-    {
-		var self = this;
-		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
-		Event.observe(this.nodes.submit, 'click', function(e) { Event.stop(e); self.submitForm()});
-        Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); self.cancelForm();});
-    },
-
-    cancelForm: function()
-    {      
-        ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-		Form.restore(this.nodes.form);
-        this.hideAddForm();
-    },
-    
-    submitForm: function()
-    {
-        if (!validateForm(this.nodes.form)) 
-        { 
-            return false; 
-        } 
-        
-		var self = this;
-		new Ajax.Request(Backend.CustomerOrder.Editor.prototype.Links.create,
-		{
-           method: 'post',
-           parameters: Form.serialize(self.nodes.form),
-           onSuccess: function(responseJSON) {
-				ActiveForm.prototype.resetErrorMessages(self.nodes.form);
-				var responseObject = eval("(" + responseJSON.responseText + ")");
-				self.afterSubmitForm(responseObject);
-		   }
-		});
-    },
-	
-	afterSubmitForm: function(response)
-	{
-        if(response.status == 'success')
-        {
-            window.ordersActiveGrid[this.groupID].reloadGrid();
-            Form.State.restore(this.nodes.form);
-            this.hideAddForm();
-        }
-        else
-        {
-        	ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
-        }
 	}
 }

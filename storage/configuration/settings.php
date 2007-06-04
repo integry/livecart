@@ -2,6 +2,8 @@
   'STORE_NAME' => 
   array (
     'en' => 'LiveCart Demo',
+    'fr' => '',
+    'de' => '',
   ),
   'NUM_PRODUCTS_PER_CAT' => '10',
   'ALLOWED_SORT_ORDER' => 

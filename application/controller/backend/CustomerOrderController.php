@@ -39,9 +39,17 @@ class CustomerOrderController extends StoreManagementController
 	public function info()
 	{
 	    $order = CustomerOrder::getInstanceById((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA, true);
-	    $response = new ActionResponse();	 
+	    $response = new ActionResponse();
+	    $response->setValue('statuses', array(
+	                                    CustomerOrder::STATUS_BACKORDERED  => $this->translate('_status_backordered'),
+	                                    CustomerOrder::STATUS_AWAITING_SHIPMENT  => $this->translate('_status_awaiting_shipment'),
+	                                    CustomerOrder::STATUS_SHIPPED  => $this->translate('_status_shipped'),
+	                                    CustomerOrder::STATUS_RETURNED  => $this->translate('_status_returned'),
+	                                    CustomerOrder::STATUS_NEW => $this->translate('_status_new'),
+				            ));
+				            
 	    $response->setValue('order', $order->toArray());
-	    $response->setValue('form', self::createOrderForm($order));
+	    $response->setValue('form', $this->createOrderForm($order));
 		
 		return $response;
 	}	
@@ -51,7 +59,10 @@ class CustomerOrderController extends StoreManagementController
     public function createOrderFormValidator()
     {
         $validator = new RequestValidator("CustomerOrder", $this->request);		            
-		
+			
+		$validator->addCheck('status', new MinValueCheck($this->translate('_invalid_Status'), 1));
+		$validator->addCheck('status', new MaxValueCheck($this->translate('_invalid_Status'), 4));	
+        
         return $validator;
     }
 
@@ -60,41 +71,12 @@ class CustomerOrderController extends StoreManagementController
      */
 	public function createOrderForm(CustomerOrder $order)
 	{
-		$form = new Form($this->createOrderFormValidator());
-		
-	    $data = array();
-	    $orderArray = $order->toArray();
-		foreach (ActiveRecordModel::getSchemaInstance('CustomerOrder')->getFieldList() as $field)
-		{
-			if ($field instanceof ARForeignKeyField) continue;
-			$data[$field->getName()] = $orderArray[$field->getName()];
-		}	
-		
-		$data['firstName'] = $orderArray['User']['firstName'];
-		$data['lastName'] = $orderArray['User']['lastName'];
-		$data['email'] = $orderArray['User']['email'];
-		$data['companyName'] = $orderArray['User']['companyName'];
-		$data['countryID'] = $orderArray['ShippingAddress']['countryID'];
-		$data['city'] = $orderArray['ShippingAddress']['city'];
-		$data['address1'] = $orderArray['ShippingAddress']['address1'];
-		$data['address2'] = $orderArray['ShippingAddress']['address2'];
-		$data['stateName'] = $orderArray['ShippingAddress']['stateName'];	
-		$data['postalCode'] = $orderArray['ShippingAddress']['postalCode'];	
-		
-		$data['user'] = "{$data['firstName']} {$data['lastName']}";	
-		$data['shippingAddress1'] = "{$data['countryID']} {$data['stateName']}, {$data['city']}, {$data['address1']} ({$data['postalCode']})";
-		if(!empty($data['address2'])) 
-		{
-		    $data['shippingAddress2'] = "{$data['countryID']} {$data['stateName']}, {$data['city']}, {$data['address2']} ({$data['postalCode']})";	
-		}
-		
-	    $form->setData($data);
+		$form = new Form($this->createOrderFormValidator());	
+	    $form->setData($order->toArray());
 		
 		return $form;
 	}
 
-	
-	
 	public function orders()
 	{        
 		$availableColumns = $this->getAvailableColumns();
@@ -385,5 +367,35 @@ class CustomerOrderController extends StoreManagementController
 		
         return new Form($validator);                
     }
+    
+    /**
+     * @role update
+     */
+    public function update()
+    {
+        $order = CustomerOrder::getInstanceByID((int)$this->request->getValue('id'), true);
+        return $this->save($order);
+    }
+    
+	private function save(CustomerOrder $order)
+	{
+   		$validator = self::createOrderFormValidator();
+		if ($validator->isValid())
+		{
+		    $isCancelled = (int)$this->request->getValue('isCancelled') ? true : false;
+		    $status = (int)$this->request->getValue('status');
+		    
+			$order->isCancelled->set($isCancelled);
+			$order->status->set($status);
+
+			$order->save();
+			
+			return new JSONResponse(array('status' => 'success'));
+		}
+		else
+		{
+		    return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
+		}
+	}
 }
 ?>

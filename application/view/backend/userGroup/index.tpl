@@ -60,6 +60,8 @@
 
 {literal}
 <script type="text/javascript">
+    Backend.showContainer("userGroupsManagerContainer");
+    
     Backend.UserGroup.prototype.Messages.confirmUserDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_user}{literal}';
     Backend.UserGroup.prototype.Messages.confirmUserGroupRemove = '{/literal}{t _are_you_sure_you_want_to_delete_this_user_group}{literal}';
     Backend.UserGroup.prototype.Messages.defaultUserName = '{/literal}{t _default_user}{literal}';

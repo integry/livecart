@@ -23,7 +23,7 @@
             var user = Backend.User.Editor.prototype.getInstance(Backend.User.Editor.prototype.getCurrentId(), false);   
             user.cancelForm();
             SectionExpander.prototype.unexpand(user.nodes.parent);
-            Backend.User.Editor.prototype.showGroupsContainer();
+            Backend.hideContainer();
         });
     </script>
     {/literal}

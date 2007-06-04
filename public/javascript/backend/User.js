@@ -182,7 +182,7 @@ Backend.UserGroup.prototype =
                 Backend.UserGroup.prototype.treeBrowser.hideFeedback(id);
             });
             
-            Backend.User.Editor.prototype.showGroupsContainer();
+            Backend.showContainer("userGroupsManagerContainer");
         }
         
         
@@ -370,8 +370,10 @@ Backend.UserGroup.massActionHandler.prototype =
 			}
 		}
 		
-		this.form.elements.namedItem('filters').value = this.grid.getFilters().toJSON();
-        this.form.elements.namedItem('selectedIDs').value = this.grid.getSelectedIDs().toJSON();
+        var filters = Object.toJSON(this.grid.getFilters());
+		this.form.elements.namedItem('filters').value = filters ? filters : '';
+        var selectedIDs = Object.toJSON(this.grid.getSelectedIDs());
+        this.form.elements.namedItem('selectedIDs').value = selectedIDs ? selectedIDs : '';
         this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;
         new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('progressIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));
 
@@ -552,32 +554,12 @@ Backend.User.Editor.prototype =
         {
             userIndicator.style.display = 'none';
         }
-        this.showUserForm();
+        Backend.showContainer('userManagerContainer');
 
         this.tabControl = TabControl.prototype.getInstance("userManagerContainer", false);
         
 		new SectionExpander(this.nodes.parent);
-    },
-
-    showUserForm: function(args)
-    {
-		this.hideGroupsContainer();
-    },
-
-    hideGroupsContainer: function(args)
-    {
-        if($("userGroupsManagerContainer")) Element.hide($("userGroupsManagerContainer"));
-        if($("userManagerContainer")) Element.show($("userManagerContainer"));
-        if($("orderGroupsManagerContainer")) Element.hide($("orderGroupsManagerContainer"));
-    },
-
-    showGroupsContainer: function(args)
-    {       
-        if($("userManagerContainer")) Element.hide($("userManagerContainer"));
-        if($("userGroupsManagerContainer")) Element.show($("userGroupsManagerContainer"));
-        if($("orderGroupsManagerContainer")) Element.show($("orderGroupsManagerContainer"));
-    },
-    
+    }, 
 
     cancelForm: function()
     {      

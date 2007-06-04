@@ -22,7 +22,7 @@
             var order = Backend.CustomerOrder.Editor.prototype.getInstance(Backend.CustomerOrder.Editor.prototype.getCurrentId(), false);   
             order.cancelForm();
             SectionExpander.prototype.unexpand(order.nodes.parent);
-            Backend.User.Editor.prototype.showGroupsContainer();
+            Backend.hideContainer();
         });
     </script>
     {/literal}

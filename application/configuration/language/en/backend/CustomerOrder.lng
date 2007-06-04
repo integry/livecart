@@ -20,6 +20,22 @@ _set_awaiting_shipment=Awaiting shipment
 _set_shipped=Shipped
 _set_returned=Returned
 
+_is_paid=Is paid
+_status=Status
+_date_completed=Date completed
+_date_created=Date created
+_amount=Amount
+_email=Email
+_user=User
+
+_order_information_has_been_successfully_updated=Urder information has been successfully updated
+
+_cancel_editing_user_info=Cancel editing user info
+_cancel_editing_order_info=Cancel editing order info
+_user_info=User info
+_order_info=Order info
+
+
 # Grid labels
 CustomerOrder.status=Status
 CustomerOrder.totalAmount=Total cost
@@ -43,5 +59,6 @@ _status_backordered=Backordered
 _status_awaiting_shipment=Awaiting shipment
 _status_shipped=Shipped
 _status_canceled=Canceled
+_status_returned=Returned
 
 _are_you_sure_you_want_to_delete_this_order=Are you sure you want to delete this order?

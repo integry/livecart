@@ -123,6 +123,8 @@
 <script type="text/javascript">
     try
     {ldelim}
+        Backend.showContainer('managerContainer');
+    
     	/**
     	 * URL assigment for internal javascript requests
     	 */
