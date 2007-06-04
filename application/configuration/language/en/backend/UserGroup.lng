@@ -14,6 +14,8 @@ _activateSelectedUsers=Activate selected users
 _suspendSelectedUsers=Suspend selected users
 _assignSelectedUserToGroup=Assign selected users to group
 
+
+_orders=Orders
 _user=User
 _password=Password
 _repeat_password=Repeat password

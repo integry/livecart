@@ -133,6 +133,12 @@ class CustomerOrderController extends StoreManagementController
 		        case 'setReturned':
 		            $order->status->set(CustomerOrder::STATUS_RETURNED);
 		            break;
+		        case 'setFinalized':
+		            $order->isFinalized->set(1);
+		            break;
+		        case 'setUnfinalized':
+		            $order->isFinalized->set(0);
+		            break;
 		        case 'delete':
 		            $order->delete();
 		            break;

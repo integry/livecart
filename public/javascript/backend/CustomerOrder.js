@@ -1,5 +1,3 @@
-Backend.User = {};
-
 Backend.CustomerOrder = Class.create();
 Backend.CustomerOrder.prototype = 
 {

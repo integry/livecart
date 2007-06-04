@@ -20,6 +20,9 @@
 {includeJs file="backend/User.js"}
 {includeCss file="backend/User.css"}
 
+{includeJs file="backend/CustomerOrder.js"}
+
+
 {includeJs file="backend/Roles.js"}
 
 
@@ -60,7 +63,14 @@
 
 {literal}
 <script type="text/javascript">
+    window.ordersActiveGrid = {};
+    
     Backend.showContainer("userGroupsManagerContainer");
+    {/literal}
+        {allowed role="order"}
+            Backend.CustomerOrder.prototype.ordersMiscPermission = true;
+        {/allowed}
+    {literal}    
     
     Backend.UserGroup.prototype.Messages.confirmUserDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_user}{literal}';
     Backend.UserGroup.prototype.Messages.confirmUserGroupRemove = '{/literal}{t _are_you_sure_you_want_to_delete_this_user_group}{literal}';

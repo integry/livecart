@@ -19,6 +19,8 @@
                 <option value="setShipped">{t _set_shipped}</option>
                 <option value="setReturned">{t _set_returned}</option>
             </optgroup>
+            <option value="setFinalized">{t _set_finalized}</option>
+            <option value="setUnfinalized">{t _set_unfinalized}</option>
             <option value="delete">{t _delete}</option>
         </select>
         
@@ -131,11 +133,9 @@
     		    new ActiveGridFilter($('{/literal}filter_{$column}_{$orderGroupID}{literal}'), grid);
     		{/literal}{/if}{literal}
     	{/literal}{/foreach}{literal}
-
         var massHandler = new Backend.CustomerOrder.massActionHandler($('{/literal}orderMass_{$orderGroupID}{literal}'), grid);
         massHandler.deleteConfirmMessage = '{/literal}{t _are_you_sure_you_want_to_delete_this_order|addslashes}{literal}' ;
-        
-        ordersActiveGrid[{/literal}{$orderGroupID}{literal}] = grid;
+        ordersActiveGrid['{/literal}{$orderGroupID}{literal}'] = grid;
     }
     catch(e)
     {

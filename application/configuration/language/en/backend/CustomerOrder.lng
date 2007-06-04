@@ -34,6 +34,9 @@ _cancel_editing_user_info=Cancel editing user info
 _cancel_editing_order_info=Cancel editing order info
 _user_info=User info
 _order_info=Order info
+_is_canceled=Is canceled
+_order_id=Order ID
+_is_finalized=Is finalized
 
 
 # Grid labels
