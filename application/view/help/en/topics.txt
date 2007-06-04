@@ -6,8 +6,6 @@
 
 	config=Configuration
 		
-	temp=Temp
-
 	cat=Product Categories
 		details=Category Details
 		attr=Attributes
@@ -32,17 +30,18 @@
 	user=Users		
 		groups=User Groups
 		add=Create New User
+
+	customize=Customize
+		pages=Pages
+		template=Templates
+		css=CSS
+		skin=Skins
 		
 	currency=Currencies
 		
 	language=Languages
 		edit=Edit Translations
-		
-	cust=Customization
-		template=Templates
-		css=CSS
-		skin=Skins
-		
+			
 	dev=Developers Manual
 		app=Application
 			model=Models
@@ -61,3 +60,4 @@
 		api=APIs
 			soap=SOAP API
 			php=PHP API
+	temp=Temp
