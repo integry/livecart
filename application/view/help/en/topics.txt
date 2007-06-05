@@ -1,9 +1,5 @@
 =LiveCart Help
 
-	intro=Introduction
-
-	installation=Installation
-		
 	cat=Product Categories
 		details=Category Details
 		attr=Attributes
@@ -25,7 +21,7 @@
 			communication=Communication
 		export=Export Orders
 
-	user=Users		
+	users=Users		
 		groups=User Groups
 		add=Create New User
 

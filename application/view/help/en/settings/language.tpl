@@ -93,5 +93,5 @@ interface elements will be lost for good. If you removed a language by accident,
 translations will still be in place.</p>
 
 {helpSeeAlso}
-	{see language.edit}
+	{see settings.language.edit}
 {/helpSeeAlso}
