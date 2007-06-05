@@ -36,7 +36,7 @@
     </span>
     
     <span style="float: right; text-align: right; position: relative; padding-bottom: 10px;">
-		<span id="orderCount_{$orderGroupID}">
+		<span id="orderCount_{$orderGroupID}" class="orderCount">
 			<span class="rangeCount">Listing orders %from - %to of %count</span>
 			<span class="notFound">No orders found</span>
 		</span>    
@@ -97,7 +97,7 @@
 							</select>					
 						{else}
 						    <input type="text" class="text {$type}" id="filter_{$column}_{$orderGroupID}" value="{$availableColumns.$column.name|escape}" />
-						{/if}
+                        {/if}
 					</th>		
 				{/if}
 			{/foreach}
@@ -124,13 +124,19 @@
 <script type="text/javascript">
     try
     {
-        var grid = new ActiveGrid($('{/literal}orders_{$orderGroupID}{literal}'), '{/literal}{link controller=backend.customerOrder action=lists}{literal}', {/literal}{$totalCount}{literal}, $("{/literal}orderLoadIndicator_{$orderGroupID}{literal}"));
+        {/literal}
+            {if $userID > 0}
+                {assign var="userID" value="?filters[User.ID]=`$userID`"}
+            {/if}
+        {literal}
+        
+        var grid = new ActiveGrid($('{/literal}orders_{$orderGroupID}{literal}'), "{/literal}{link controller=backend.customerOrder action=lists}{$userID}{literal}", {/literal}{$totalCount}{literal}, $("{/literal}orderLoadIndicator_{$orderGroupID}{literal}"));
     
     	grid.setDataFormatter(Backend.CustomerOrder.GridFormatter);
     	
     	{/literal}{foreach from=$displayedColumns item=id key=column name="columns"}{literal}
     		{/literal}{if !$smarty.foreach.columns.first}{literal}
-    		    new ActiveGridFilter($('{/literal}filter_{$column}_{$orderGroupID}{literal}'), grid);
+    		    var filter = new ActiveGridFilter($('{/literal}filter_{$column}_{$orderGroupID}{literal}'), grid);
     		{/literal}{/if}{literal}
     	{/literal}{/foreach}{literal}
         var massHandler = new Backend.CustomerOrder.massActionHandler($('{/literal}orderMass_{$orderGroupID}{literal}'), grid);

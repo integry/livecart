@@ -93,6 +93,7 @@ class CustomerOrderController extends StoreManagementController
         $response->setValue("displayedColumns", $displayedColumns);
         $response->setValue("availableColumns", $availableColumns);
 		$response->setValue("offset", $this->request->getValue('offset'));
+		$response->setValue("userID", $this->request->getValue('userID'));
 		$response->setValue("totalCount", '0');	
 		return $response;
 	}

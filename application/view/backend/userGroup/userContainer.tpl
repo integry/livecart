@@ -13,7 +13,7 @@
 				<span class="tabHelp">users.edit</span>
 			</li>
 			<li id="tabOrdersList" class="tab active">
-				<a href="{link controller=backend.customerOrder action=orders}?id=8&amp;filters%5BUser.ID%5D=_id_&amp;&amp;page_size=45&amp;offset=0"}">{t _orders}</a>
+				<a href="{link controller=backend.customerOrder action=orders id=8}?userID=_id_"}">{t _orders}</a>
 				<span class="tabHelp">customerOrders.orders</span>
 			</li>
 		</ul>

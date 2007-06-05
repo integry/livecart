@@ -54,9 +54,11 @@
         </div>
 
 	</div>
-    
-    {include file="backend/userGroup/groupContainer.tpl"}
-    {include file="backend/userGroup/userContainer.tpl"}
+    <span id="fromUsersPage">
+        {include file="backend/customerOrder/orderContainer.tpl"}
+        {include file="backend/userGroup/groupContainer.tpl"}
+        {include file="backend/userGroup/userContainer.tpl"}
+    </span>
 </div>
 
 <div id="activeUserPath"></div>
@@ -64,7 +66,7 @@
 {literal}
 <script type="text/javascript">
     window.ordersActiveGrid = {};
-    
+    //new ActiveGridFilter($('filter_User_ID'), window.ordersActiveGrid);
     Backend.showContainer("userGroupsManagerContainer");
     {/literal}
         {allowed role="order"}

@@ -178,6 +178,11 @@ TabControl.prototype = {
 		Element.addClassName(this.activeTab, 'active');
 		Element.show(contentId);
         
+        if(!onComplete && this.callbacks.onComplete)
+        {
+            onComplete = this.callbacks.onComplete;
+        }
+        
 		if (!this.loadedContents[this.urlParserCallback(targetTab.down('a').href) + contentId] && Element.empty($(contentId)))
 		{
             this.loadedContents[this.urlParserCallback(targetTab.down('a').href) + contentId] = true;

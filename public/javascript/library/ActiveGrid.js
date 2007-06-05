@@ -387,8 +387,13 @@ ActiveGridFilter.prototype =
 	setFilterValue: function()
 	{
         var filterName = this.element.id;
-        filterName = filterName.substr(0, filterName.indexOf('_', 7));
-        this.activeGridInstance.setFilterValue(filterName, this.element.value);
+        filterName = filterName.substr(0, filterName.indexOf('_', 7));  
+        this.setFilterValueManualy(filterName, this.element.value);
+    },
+	
+	setFilterValueManualy: function(filterName, value)
+	{
+        this.activeGridInstance.setFilterValue(filterName, value);
 		this.activeGridInstance.reloadGrid();        
     }
 }

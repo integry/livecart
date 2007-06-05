@@ -136,8 +136,9 @@ Backend.CustomerOrder.prototype =
 			to = totalCount;		
 		}
 		  
+       
 		var categoryID = activeGrid.tableInstance.id.split('_')[1];		
-		var cont = $('productCount_' + categoryID);
+		var cont =  activeGrid.tableInstance.up('.sectionContainer').down('.orderCount');
 		var countElement = document.getElementsByClassName('rangeCount', cont)[0];
 		var notFound = document.getElementsByClassName('notFound', cont)[0];
 								
@@ -223,6 +224,11 @@ Backend.CustomerOrder.GridFormatter =
         else if('User.ID' == field)
         {
             Backend.CustomerOrder.GridFormatter.lastUserID = value;
+        }
+        
+        if(value == '-')
+        {
+            value = "<center>" + value + "</center>";   
         }
 		
 		return value;

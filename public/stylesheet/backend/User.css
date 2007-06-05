@@ -4,11 +4,7 @@
   	width: 200px;
 }
 
-#newZoneInput {
-    width: 135px;
-}
-
-#userGroupsContent
+#userGroupsContent, #orderManagerContainer
 {
 	margin-left: 240px;	
 }
@@ -64,4 +60,28 @@
 {
     text-align:center !important;
     width:4% !important;
+}
+
+
+#fromUsersPage .orderList .cell_CustomerOrder_viewOrder input,
+#fromUsersPage .orderList .cell_User_email,
+#fromUsersPage .orderList .cell_ShippingAddress_countryID,
+#fromUsersPage .orderList .cell_ShippingAddress_city,
+#fromUsersPage .orderList .cell_ShippingAddress_address1,
+#fromUsersPage .orderList .cell_ShippingAddress_postalCode,
+#fromUsersPage .orderList .cell_User_firstName,
+#fromUsersPage .orderList .cell_User_lastName,
+#fromUsersPage .orderList .cell_User_companyName,
+#fromUsersPage #orderColumnMenu_8 .column_User_ID, 
+#fromUsersPage #orderColumnMenu_8 .column_User_email,
+#fromUsersPage #orderColumnMenu_8 .column_CustomerOrder_viewOrder,
+#fromUsersPage #orderColumnMenu_8 .column_ShippingAddress_countryID,
+#fromUsersPage #orderColumnMenu_8 .column_ShippingAddress_city,
+#fromUsersPage #orderColumnMenu_8 .column_ShippingAddress_address1,
+#fromUsersPage #orderColumnMenu_8 .column_ShippingAddress_postalCode,
+#fromUsersPage #orderColumnMenu_8 .column_User_companyName,
+#fromUsersPage #orderColumnMenu_8 .column_User_lastName,
+#fromUsersPage #orderColumnMenu_8 .column_User_firstName
+{
+    display: none;
 }

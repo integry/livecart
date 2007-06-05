@@ -26,7 +26,6 @@ class ActiveGrid
         
 		// apply filters
 		$filters = $request->getValue('filters', array());
-
         foreach ($filters as $field => $value)
 		{    		
             if (!strlen($value))

@@ -14,6 +14,7 @@ _activateSelectedUsers=Activate selected users
 _suspendSelectedUsers=Suspend selected users
 _assignSelectedUserToGroup=Assign selected users to group
 
+_order_info=Order info
 
 _orders=Orders
 _user=User

@@ -306,6 +306,12 @@ Backend.UserGroup.GridFormatter =
                      value + 
                 '</a>';	
 		}
+        
+        if(value == '-')
+        {
+            value = "<center>" + value + "</center>";   
+        }
+		
 		
 		return value;
 	}

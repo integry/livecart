@@ -662,16 +662,19 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         }
 		
 		// shipping cost totals
-        foreach ($this->shipments as $shipment)
+		if(is_array($this->shipments))
 		{
-            if ($rate = $shipment->getSelectedRate())
-            {
-                $amount = $rate->getCostAmount();
-                $curr = Currency::getInstanceById($rate->getCostCurrency());
-                
-                $total += $currency->convertAmount($curr, $amount);
-            }
-        }
+	        foreach ($this->shipments as $shipment)
+			{
+	            if ($rate = $shipment->getSelectedRate())
+	            {
+	                $amount = $rate->getCostAmount();
+	                $curr = Currency::getInstanceById($rate->getCostCurrency());
+	                
+	                $total += $currency->convertAmount($curr, $amount);
+	            }
+	        }
+		}
         
         return $total;
     }
@@ -706,15 +709,18 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 		$array['cartItems']	= array();
 		$array['wishListItems']	= array();
 				
-		foreach ($this->orderedItems as $item)
+		if(is_array($this->orderedItems))
 		{
-			if ($item->isSavedForLater->get())
+			foreach ($this->orderedItems as $item)
 			{
-				$array['wishListItems'][] = $item->toArray();
-			}
-			else
-			{
-				$array['cartItems'][] = $item->toArray();
+				if ($item->isSavedForLater->get())
+				{
+					$array['wishListItems'][] = $item->toArray();
+				}
+				else
+				{
+					$array['cartItems'][] = $item->toArray();
+				}
 			}
 		}			
 	
@@ -723,26 +729,35 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 		
 		// shipments
 		$array['shipments'] = array();
-        foreach ($this->shipments as $shipment)
+		if(is_array($this->shipments))
 		{
-            $array['shipments'][] = $shipment->toArray();
-        }
+	        foreach ($this->shipments as $shipment)
+			{
+	            $array['shipments'][] = $shipment->toArray();
+	        }
+		}
 		
 		// total for all currencies
 		$total = array();
-		$currencies = Store::getInstance()->getCurrencySet();            
-        foreach ($currencies as $id => $currency)
-        {
-            $total[$id] = $this->getTotal($currency);
-        }
+		$currencies = Store::getInstance()->getCurrencySet();
+		if(is_array($currencies))
+		{
+	        foreach ($currencies as $id => $currency)
+	        {
+	            $total[$id] = $this->getTotal($currency);
+	        }
+		}
         			
 		$array['total'] = $total;
 		
 		$array['formattedTotal'] = array();
-        foreach ($array['total'] as $id => $amount)
+		if(is_array($array['total']))
 		{
-            $array['formattedTotal'][$id] = $currencies[$id]->getFormattedPrice($amount);   
-        }
+	        foreach ($array['total'] as $id => $amount)
+			{
+	            $array['formattedTotal'][$id] = $currencies[$id]->getFormattedPrice($amount);   
+	        }
+		}
         
         // status
         $array['isReturned'] = (int)$this->isReturned();;
