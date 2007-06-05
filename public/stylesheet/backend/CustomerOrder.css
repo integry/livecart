@@ -30,3 +30,17 @@
     width: 70px;
 }
 
+.order_shippingAddress, .order_billingAddress, .order_info, .order_status{
+    width: 45%;
+}
+
+.order_billingAddress,  .order_status
+{   
+    margin-left: 10px;
+}
+
+.order_shippingAddress, .order_info
+{
+    float: left;
+    margin-right: 10px;
+}

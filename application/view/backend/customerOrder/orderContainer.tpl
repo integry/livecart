@@ -1,3 +1,12 @@
+<div class="yellowMessage" id="orderConfirmation" style="left: 20; top: 180px; position: absolute; display: none;">
+   	<div>{t _order_information_has_been_successfully_updated}</div>
+</div>
+<div class="yellowMessage" id="orderAddressConfirmation" style="left: 20; top: 180px; position: absolute; display: none;">
+   	<div>{t _order_address_information_has_been_successfully_updated}</div>
+</div>
+
+
+
 <div id="orderManagerContainer" class="managerContainer" style="display: none;">
 	<fieldset class="container">
 		<ul class="menu">

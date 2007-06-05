@@ -846,7 +846,7 @@ formem.required
 form, .formDiv
 {
     height: 2em;
-    width: 33em;
+    width: 11em;
 }
 
 label, input, select, form .other, textarea, .disabledTextarea

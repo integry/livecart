@@ -446,3 +446,121 @@ Backend.CustomerOrder.Editor.prototype =
 		}
 	}
 }
+
+
+Backend.CustomerOrder.Address = Class.create();
+Backend.CustomerOrder.Address.prototype = 
+{
+    Links: {},
+    Messages: {},
+    Instances: {},
+    
+    getCurrentId: function()
+    {
+        return Backend.CustomerOrder.Address.prototype.CurrentId;
+    },
+
+    setCurrentId: function(id)
+    {
+        Backend.CustomerOrder.Address.prototype.CurrentId = id;
+    },
+
+    getInstance: function(root, doInit)
+    {
+		if(!Backend.CustomerOrder.Address.prototype.Instances[root.id])
+        {
+            Backend.CustomerOrder.Address.prototype.Instances[root.id] = new Backend.CustomerOrder.Address(root);
+        }
+
+        if(doInit !== false) Backend.CustomerOrder.Address.prototype.Instances[root.id].init();
+        
+        return Backend.CustomerOrder.Address.prototype.Instances[root.id];
+    },
+
+    hasInstance: function(root)
+    {
+        return this.Instances[root.id] ? true : false;
+    },
+    
+    initialize: function(root)
+  	{
+        try
+        {
+            this.findUsedNodes(root);
+            this.bindEvents();
+            
+            Form.State.backup(this.nodes.form);
+            
+            var self = this;
+        }
+        catch(e)
+        {
+            console.info(e);
+        }
+
+	},
+
+	findUsedNodes: function(root)
+    {
+        this.nodes = {};
+        this.nodes.parent = root;
+        this.nodes.form = root;
+		this.nodes.cancel = this.nodes.form.down('a.cancel');
+		this.nodes.submit = this.nodes.form.down('input.submit');
+    },
+
+    bindEvents: function(args)
+    {
+		var self = this;
+		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
+    },
+
+    init: function(args)
+    {	
+		Backend.CustomerOrder.Address.prototype.setCurrentId(this.id);
+        var orderIndicator = $('orderIndicator_' + this.id);
+        if(orderIndicator) 
+        {
+            orderIndicator.style.display = 'none';
+        }
+        Backend.showContainer("orderManagerContainer");
+
+        this.tabControl = TabControl.prototype.getInstance("orderManagerContainer", false);
+        
+		new SectionExpander(this.nodes.parent);
+    },
+    
+    cancelForm: function()
+    {      
+        ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+		Form.restore(this.nodes.form);
+    },
+    
+    submitForm: function()
+    {
+		var self = this;
+		new Ajax.Request(this.nodes.form.action + "/" + this.nodes.form.elements.namedItem('ID').value,
+		{
+           method: 'post',
+           parameters: Form.serialize(self.nodes.form),
+           onSuccess: function(responseJSON) {
+				ActiveForm.prototype.resetErrorMessages(self.nodes.form);
+				var responseObject = eval("(" + responseJSON.responseText + ")");
+				self.afterSubmitForm(responseObject);
+		   }
+		});
+    },
+	
+	afterSubmitForm: function(response)
+	{
+		if(response.status == 'success')
+		{
+			new Backend.SaveConfirmationMessage($('orderConfirmation'));
+			Form.State.backup(this.nodes.form);
+		}
+		else
+		{
+			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
+		}
+	}
+}

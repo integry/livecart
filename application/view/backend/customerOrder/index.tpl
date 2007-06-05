@@ -31,12 +31,6 @@
 
 <div id="orderGroupsWrapper" class="maxHeight h--50">
 	<div id="orderGroupsBrowser" class="treeBrowser"></div>
-      
-    <div class="yellowMessage" id="orderConfirmation" style="left: 20; top: 180px; position: absolute; display: none;">
-       	<div>
-       		{t _order_information_has_been_successfully_updated}
-       	</div>
-    </div>
     
     {include file="backend/customerOrder/orderContainer.tpl"}
     {include file="backend/customerOrder/groupContainer.tpl"}
