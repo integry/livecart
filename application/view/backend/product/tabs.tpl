@@ -19,7 +19,7 @@
 			</li>
 			
 			<li id="tabProductImages" class="tab inactive">
-				<a href="{link    controller=backend.productImage action=index id=_id_}?categoryID=_categoryID_">{t Images}</a>
+				<a href="{link controller=backend.productImage action=index id=_id_}?categoryID=_categoryID_">{t Images}</a>
 				<span class="tabHelp">products.edit.images</span>
 			</li>
 			
@@ -54,7 +54,6 @@
         var product = Backend.Product.Editor.prototype.getInstance(Backend.Product.Editor.prototype.getCurrentProductId(), false);
         product.removeTinyMce();     
         product.cancelForm();
-        SectionExpander.prototype.unexpand(product.nodes.parent);
         Backend.Product.Editor.prototype.showCategoriesContainer();
     });
 </script>

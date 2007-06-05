@@ -2,7 +2,6 @@
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
 {includeJs file="library/form/Validator.js"}
 {includeJs file="library/form/ActiveForm.js"}
-{includeJs file="library/SectionExpander.js"}
 {includeJs file="backend/StaticPage.js"}
 
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}

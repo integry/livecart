@@ -4,7 +4,9 @@
     
     {include file="backend/product/form/main.tpl" product=$product cat=$cat productTypes=$productTypes}
     {if $specFieldList}
+        <div class="specFieldContainer">
         {include file="backend/product/form/specFieldList.tpl" product=$product cat=$cat specFieldList=$specFieldList}
+        </div>
     {/if}
     {include file="backend/product/form/translations.tpl" product=$product cat=$cat multiLingualSpecFields=$multiLingualSpecFields }
     

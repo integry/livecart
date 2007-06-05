@@ -7,8 +7,6 @@
 {includeJs file="library/form/Validator.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXCommon.js"}
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
-{includeJs file="library/SectionExpander.js"}
-{* includeJs file="library/rico/rico.js" *}
 {includeJs file="library/TabControl.js"}
 
 {includeJs file="library/rico/ricobase.js"}
@@ -80,6 +78,7 @@
 </div>
 
 <div id="activeCategoryPath"></div>
+<div id="activeProductPath" style="display: none;"></div>
 
 <div id="managerContainer" class="managerContainer maxHeight h--60">
 	<div id="tabContainer" class="tabContainer">
@@ -136,8 +135,6 @@
     	Backend.Category.links.categoryAutoloading = '{link controller=backend.category action=xmlBranch}';
     	Backend.Category.links.categoryRecursiveAutoloading = '{link controller=backend.category action=xmlRecursivePath}';
     	Backend.Category.links.addProduct  = '{link controller=backend.product action=add id=_id_}';
-        
-        Backend.availableLanguages = {json array=$languages};
     	    
         Backend.Category.messages = {literal}{}{/literal};
         Backend.Category.messages._reorder_failed = '{t _reorder_failed|addslashes}';

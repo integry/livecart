@@ -31,7 +31,7 @@
 		<input class="fieldStatus" name="{$fieldName}" value="" style="display: none;" />
 	{else}
 		{selectfield id="product_`$cat`_`$product.ID`_`$fieldName`" name=$fieldName options=$field.values class="select"}
-		{textfield name="other[`$field.ID`][]" id="product_`$cat`_`$product.ID`_specItem_other_`$field.ID`" style="display: none"}
+		{textfield name="other[`$field.ID`]" id="product_`$cat`_`$product.ID`_specItem_other_`$field.ID`" style="display: none"}
 	{/if}
 
 {elseif $field.type == 2}

@@ -41,7 +41,7 @@
     			</fieldset>	
     		</p>	
     	
-    		<span class="progressIndicator"></span>
+    		<span class="progressIndicator" style="display: none;"></span>
             <input type="submit" name="save" class="submit" value="Save"> {t _or} <a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}, this.parentNode.parentNode.parentNode); return false;">{t _cancel}</a>
     	</fieldset>
     	

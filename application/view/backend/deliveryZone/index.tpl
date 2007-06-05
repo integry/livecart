@@ -3,7 +3,6 @@
 {includeJs file="library/form/Validator.js"}
 {includeJs file="library/form/ActiveForm.js"}
 {includeJs file="library/form/State.js"}
-{includeJs file="library/SectionExpander.js"}
 {includeJs file="library/TabControl.js"}
 {includeJs file="library/ActiveList.js"}
 {includeJs file="backend/DeliveryZone.js"}

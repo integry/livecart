@@ -5,7 +5,6 @@
 {includeJs file="library/form/ActiveForm.js"}
 {includeJs file="library/TabControl.js"}
 {includeJs file="library/form/Validator.js"}
-{includeJs file="library/SectionExpander.js"}
 
 {includeCss file="backend/Tax.css"}
 {includeCss file="library/ActiveList.css"}

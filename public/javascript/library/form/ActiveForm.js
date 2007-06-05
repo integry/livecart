@@ -396,7 +396,10 @@ ActiveForm.prototype = {
 		var textareas = container.getElementsByTagName('textarea');
 		for(k = 0; k < textareas.length; k++)
 		{
-            if (!textareas[k].readonly) continue;
+            if (textareas[k].readonly) 
+            {
+                continue;    
+            }
 			tinyMCE.execInstanceCommand(textareas[k].id, 'mceSetContent', true, '', true);
 		}
 	}

@@ -295,7 +295,7 @@ class ProductController extends StoreManagementController
 	public function add()
 	{
 		$category = Category::getInstanceByID($this->request->getValue("id"), ActiveRecordModel::LOAD_DATA);
-		$product = Product::getNewInstance($category, $this->translate('_new_product'));
+		$product = Product::getNewInstance($category, '');
 		$product->save();
 		
 		return $this->productForm($product);		
@@ -502,7 +502,8 @@ class ProductController extends StoreManagementController
 			}
 			else
 			{
-				return new JSONResponse(array('status' => 'success'));		
+				return $this->productForm($product);
+                return new JSONResponse(array('status' => 'success'));		
 			}
 		}
 		else
@@ -625,7 +626,6 @@ class ProductController extends StoreManagementController
 							
 		$response = new ActionResponse();
 		$response->setValue("cat", $product->category->get()->getID());
-		$response->setValue("languageList", $languages);
 		$response->setValue("specFieldList", $specFieldsByGroup);
 		$response->setValue("productForm", $form);
 		$response->setValue("multiLingualSpecFieldss", $multiLingualSpecFields);

@@ -9,7 +9,7 @@
 #categoryBrowserActions {
 }
 
-#activeCategoryPath {
+#activeCategoryPath, #activeProductPath {
     font-weight: normal; 
     padding-bottom: 5px; 
     padding-left: 275px;

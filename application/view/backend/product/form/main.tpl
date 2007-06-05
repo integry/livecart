@@ -1,3 +1,9 @@
+{literal}
+<script type="text/javascript">
+{/literal}
+Backend.Product.Editor.prototype.setActiveProductName({json array=$product.name_lang});
+</script>
+
 <fieldset>
     <legend>{t _main_details}</legend>
     
@@ -66,7 +72,8 @@
 	</p>
 
 	<p>
-		{checkbox name="isFeatured" class="checkbox" value="on" id="product_`$cat`_`$product.ID`_isfeatured"}
+		<label></label>
+        {checkbox name="isFeatured" class="checkbox" value="on" id="product_`$cat`_`$product.ID`_isfeatured"}
 		<label for="product_{$cat}_{$product.ID}_isfeatured">{t _mark_as_featured_product}</label>
 	</p>
 </fieldset>

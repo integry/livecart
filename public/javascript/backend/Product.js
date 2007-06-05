@@ -50,34 +50,8 @@ Backend.Product =
 	{
         tinyMCE.idCounter = 0;
         ActiveForm.prototype.initTinyMceFields($('tabProductsContent_' + categoryID));
-
-		new SectionExpander();
-
-		// specField entry logic (multiple value select)
-		var containers = document.getElementsByClassName('multiValueSelect', $('tabProductsContent_' + categoryID));
-        try
-        {
-    		for (k = 0; k < containers.length; k++)
-    		{
-    			new Backend.Product.specFieldEntryMultiValue(containers[k]);
-    		}
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
-
-		// single value select
-		var specFieldContainer = document.getElementsByClassName('specification', $('tabProductsContent_' + categoryID))[0];
-
-		if (specFieldContainer)
-		{
-			var selects = specFieldContainer.getElementsByTagName('select');
-			for (k = 0; k < selects.length; k++)
-			{
-				new Backend.Product.specFieldEntrySingleSelect(selects[k]);
-			}
-		}
+		
+		console.log('initing');
 	},
 
 	toggleSkuField: function(checkbox)
@@ -545,7 +519,36 @@ Backend.Product.Editor.prototype =
 
         this.setTabCounters();
 
-		new SectionExpander(this.nodes.parent);
+        this.initSpecFieldControls();
+    },
+    
+    initSpecFieldControls: function()
+    {
+		// specField entry logic (multiple value select)
+		var containers = document.getElementsByClassName('multiValueSelect', $('tabProductsContent_' + this.id));
+        try
+        {
+    		for (k = 0; k < containers.length; k++)
+    		{
+    			new Backend.Product.specFieldEntryMultiValue(containers[k]);
+    		}
+        }
+        catch(e)
+        {
+            console.info(e);
+        }
+
+		// single value select
+		var specFieldContainer = document.getElementsByClassName('specification', $('tabProductsContent_' + this.id))[0];
+
+		if (specFieldContainer)
+		{
+			var selects = specFieldContainer.getElementsByTagName('select');
+			for (k = 0; k < selects.length; k++)
+			{
+				new Backend.Product.specFieldEntrySingleSelect(selects[k]);
+			}
+		}        
     },
     
     setTabCounters: function()
@@ -569,6 +572,13 @@ Backend.Product.Editor.prototype =
         {
             console.info(e);
         }
+    },
+    
+    setActiveProductName: function(name)
+    {
+        $('activeProductPath').innerHTML = name;
+        Element.show('activeProductPath');
+        Element.hide('activeCategoryPath');
     },
 
     craftProductUrl: function(url)
@@ -620,6 +630,8 @@ Backend.Product.Editor.prototype =
     {      
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		Form.restore(this.nodes.form);
+        ActiveForm.prototype.resetTinyMceFields(this.nodes.form);        
+		console.log('resetting');
     },
 
     submitForm: function()
@@ -640,6 +652,13 @@ Backend.Product.Editor.prototype =
 		{
 			new Backend.SaveConfirmationMessage($('pricesSaveConf'));
 			Form.State.backup(this.nodes.form);
+			if (response.specFieldHtml)
+			{
+                console.log(response.specFieldHtml);    
+                this.nodes.form.down('div.specFieldContainer').innerHTML = response.specFieldHtml;
+                this.initSpecFieldControls();
+                response.specFieldHtml.evalScripts();
+            }
 		}
 		else
 		{
@@ -657,6 +676,8 @@ Backend.Product.Editor.prototype =
     {       
         if($("productManagerContainer")) Element.hide($("productManagerContainer"));
         if($("managerContainer")) Element.show($("managerContainer"));
+        Element.hide('activeProductPath');
+        Element.show('activeCategoryPath');       
     },
     
     removeTinyMce: function()

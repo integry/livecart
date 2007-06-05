@@ -73,10 +73,6 @@
 		</p>
     {/language}
 
-	<script type="text/javascript">
-		var expander = new SectionExpander();
-	</script>
-
 </fieldset>
 
 <input type="hidden" name="id" value="{$page.ID}" />

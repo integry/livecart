@@ -8,7 +8,6 @@
 {includeJs file="library/form/State.js"}
 {includeJs file="library/ActiveGrid.js"}
 {includeJs file="library/TabControl.js"}
-{includeJs file="library/SectionExpander.js"}
 
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="library/TabControl.css"}
