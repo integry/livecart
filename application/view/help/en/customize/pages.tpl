@@ -21,8 +21,8 @@
 	<ul>
 		<li>Enter page title</li>
 		<li>Display in "Information" menu - mark the checkbox to enable the page.</li>
-		<li>{glossary}URL{/glossary} handle is generated automatically (...)</li>
-		<li>Page text - the contents of your page.</li>
+		<li>{glossary}URL{/glossary} handle is generated automatically so you can leave it as it is.</li>
+		<li>Page text - supply the contents of your page.</li>
 		<li>Translate - if applicable click on the language to translate page title and page text.</li>
 		<li>Click "Save".</li>
 	</ul>
@@ -35,12 +35,12 @@
 <p>The way pages are displayed in you e-store is defined by their order in the page tree. To set pages' arrangement:</p>
 <ol>
 	<li>Click a page in the tree.</li>
-	<li>Use "Move selected up" or "Move selected down" link to reorder pages:</li>
+	<li>Use the "Move selected up" or "Move selected down" link to reorder pages:</li>
 	<img src="image/doc/customize/pages/move.bmp">
 </ol>
 
 <h3 id="delete">Delete pages</h3>
-<p>To delete a page select page and click "Remove selected page".</p>
+<p>To delete a page select a page and click "Remove selected page".</p>
 
 {helpSeeAlso}
 	{see customize.live}

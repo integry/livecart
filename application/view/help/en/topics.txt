@@ -3,20 +3,18 @@
 	intro=Introduction
 
 	installation=Installation
-
-	config=Configuration
 		
 	cat=Product Categories
 		details=Category Details
 		attr=Attributes
 		filters=Filters
 		images=Images
-		
+
 	products=Products
 		add=Add New Product
 		define=Define Product Details
 		store=Products in e-store
-		
+
 	orders=Orders		
 		create=Create Order
 		edit=Modify Order
@@ -26,22 +24,24 @@
 			returns=Returns
 			communication=Communication
 		export=Export Orders
-		
+
 	user=Users		
 		groups=User Groups
 		add=Create New User
 
+
+	settings=Settings
+		configuration=Configuration
+		delivery=Delivery Zones
+		taxes=Taxes
+		currency=Currencies
+		language=Languages
+			edit=Edit Translations
+		
 	customize=Customize
 		pages=Pages
 		live=Live Customization
 		templates=Templates
-		css=CSS
-		skin=Skins
-		
-	currency=Currencies
-		
-	language=Languages
-		edit=Edit Translations
 			
 	dev=Developers Manual
 		app=Application

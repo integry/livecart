@@ -1,22 +1,13 @@
-<p>Pages are a simple and easy way to create additional pages for your storefront. You can create pages to provide your company details, shipping info, privacy policy or any other. Pages can be created using WYSIVIG or HTML code.</p> 	
+<p>In this section you can edit LiveCart's templates. To edit a particular template:</p> 	
+<ol>
+<li>Browse the template tree to find the template.</li>
+<li>Click on the template to view its source.</li>
+<li>Modify the template as necessary and click "Save".</li>
+</ol>
 
-<div class="tasks">
-<fieldset>
-<legend>Things you can do</legend>
-<ul>	
-	<li><a href="{self}#add">Create new page</a></li>
-	<li><a href="{self}#sort">Sort pages</a></li>
-	<li><a href="{self}#delete">Delete page</a></li>
-</ul>
-</fieldset>
-</div>
-
-<h3 id="add">Create page</h3>
-<p>To create a new page:</p>
-
-
+<p class="note"><strong>Note</strong>: you can also try <a href="{help /customize.live}">Live Customizaton</a> mode to edit templates directly in the graphical user interface.</p>
 
 {helpSeeAlso}
-	{see customize.live}
 	{see customize.pages}
+	{see customize.live}
 {/helpSeeAlso}
