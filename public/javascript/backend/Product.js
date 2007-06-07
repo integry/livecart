@@ -14,6 +14,7 @@ Backend.Product =
 		if (this.formTabCopies[categoryID])
 		{
 			tabContainer.replaceChild(this.formTabCopies[categoryID], container);
+		    this.initAddForm(categoryID);
 		}
 
 		// retrieve product form
@@ -22,8 +23,6 @@ Backend.Product =
 			var url = Backend.Category.links.addProduct.replace('_id_', categoryID);
 			new LiveCart.AjaxUpdater(url, container.parentNode, document.getElementsByClassName('progressIndicator', container)[0]);
 		}
-
-		//this.initAddForm(categoryID);
 	},
 
 	cancelAddProduct: function(categoryID, container)
@@ -51,7 +50,31 @@ Backend.Product =
         tinyMCE.idCounter = 0;
         ActiveForm.prototype.initTinyMceFields($('tabProductsContent_' + categoryID));
 		
-		console.log('initing');
+		// specField entry logic (multiple value select)
+		var containers = document.getElementsByClassName('multiValueSelect', $('tabProductsContent_' + categoryID));
+        try
+        {
+    		for (k = 0; k < containers.length; k++)
+    		{
+    			new Backend.Product.specFieldEntryMultiValue(containers[k]);
+    		}
+        }
+        catch(e)
+        {
+            console.info(e);
+        }
+
+		// single value select
+		var specFieldContainer = document.getElementsByClassName('specification', $('tabProductsContent_' + categoryID))[0];
+
+		if (specFieldContainer)
+		{
+			var selects = specFieldContainer.getElementsByTagName('select');
+			for (k = 0; k < selects.length; k++)
+			{
+				new Backend.Product.specFieldEntrySingleSelect(selects[k]);
+			}
+		} 		
 	},
 
 	toggleSkuField: function(checkbox)
@@ -158,7 +181,7 @@ Backend.Product =
 	saveForm: function(form)
 	{
 		var saveHandler = new Backend.Product.saveHandler(form);
-		new LiveCart.AjaxRequest(form, 'tabProductsIndicator', saveHandler.saveComplete.bind(saveHandler));
+		new LiveCart.AjaxRequest(form, null, saveHandler.saveComplete.bind(saveHandler));
 	},
 
 	updateHeader: function ( activeGrid, offset ) 
@@ -211,7 +234,12 @@ Backend.Product =
 		else
 		{   
             Backend.Product.Editor.prototype.setCurrentProductId(id); 
-	        $('productIndicator_' + id).style.display = '';
+	           
+            if ($('productIndicator_' + id))
+            {
+                Element.hide($('productIndicator_' + id));
+            }
+
 			var tabControl = TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId, {
                 afterClick: function()
                 {
@@ -230,8 +258,11 @@ Backend.Product =
 			}			
 		}
 		
-        Event.stop(e);
-    }
+        if (e)
+        {
+            Event.stop(e);           
+        }
+     }
 }
 
 Backend.Product.massActionHandler = Class.create();
@@ -325,28 +356,24 @@ Backend.Product.saveHandler.prototype =
 		else
 		{
 			// reset form and add more products
-			if (response.addmore)
+			if ($('afAd_new').checked)
 			{
 				this.form.reset();
-                try
-                {
-                    document.getElementsByClassName('product_sku', this.form)[0].disabled = false;
-    				Form.focusFirstElement(this.form);
 
-				    new Backend.SaveConfirmationMessage(this.form.getElementsByClassName('productSaveConf')[0]);
-                }
-                catch(e)
-                {
-                    console.info(e);
-                }
+                document.getElementsByClassName('product_sku', this.form)[0].disabled = false;
+				Form.focusFirstElement(this.form);
+
+			    new Backend.SaveConfirmationMessage($('productAddConf'));
 			}
 
-			// product customization content
+			// continue to edit the newly added product
 			else
 			{
-
-			}
-
+				new Backend.SaveConfirmationMessage($('productAddContinueConf'));             
+				this.form.reset();
+                Backend.Product.openProduct(response.id);
+                Backend.Product.cancelAddProduct(this.form.elements.namedItem('categoryID').value, this.form.parentNode);
+  			}
 		}
 	}
 }
@@ -511,7 +538,12 @@ Backend.Product.Editor.prototype =
     __init__: function(args)
     {	
         Backend.Product.Editor.prototype.setCurrentProductId(this.id);
-        $('productIndicator_' + this.id).style.display = 'none';
+
+        if ($('productIndicator_' + this.id))
+        {
+            Element.hide($('productIndicator_' + this.id));
+        }
+
         this.showProductForm();
         this.tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
 
@@ -636,7 +668,8 @@ Backend.Product.Editor.prototype =
 
     submitForm: function()
     {
-		new LiveCart.AjaxRequest(this.nodes.form, null, this.formSaved.bind(this));
+		console.log('submiting');
+        new LiveCart.AjaxRequest(this.nodes.form, null, this.formSaved.bind(this));
     },
     
     formSaved: function(responseJSON) 
@@ -743,7 +776,9 @@ Backend.Product.Prices.prototype =
 
     submitForm: function()
     {
+        console.log('just a minute');
         new LiveCart.AjaxRequest(this.nodes.form, null, this.saveComplete.bind(this));
+        console.log('sending request');
     },
 
     resetForm: function(response)
@@ -754,16 +789,22 @@ Backend.Product.Prices.prototype =
 
     saveComplete: function(responseJSON)
     {
-		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+		console.log(responseJSON);
+        ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+		console.log(1);
 		var responseObject = eval("(" + responseJSON.responseText + ")");
+		console.log(2);
 		this.afterSubmitForm(responseObject);        
+		console.log(3);
     },
 
     afterSubmitForm: function(response)
     {
+			console.log(response);
 		if('success' == response.status)
 		{
-			new Backend.SaveConfirmationMessage($('pricesSaveConf'));
+			console.log('success');
+            new Backend.SaveConfirmationMessage($('pricesSaveConf'));
 			var self = this;
 			$H(response.prices).each(function(price) {
 				self.nodes.form.elements.namedItem(price.key).value = price.value;

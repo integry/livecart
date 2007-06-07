@@ -68,38 +68,38 @@ class ProductPriceController extends StoreManagementController
 		}
     }
     
-	public static function addShippingValidator(RequestValidator $validator)
+	public function addShippingValidator(RequestValidator $validator)
 	{
 		// shipping related numeric field validations
-		$validator->addCheck('shippingSurchargeAmount', new IsNumericCheck('_err_surcharge_not_numeric'));
+		$validator->addCheck('shippingSurchargeAmount', new IsNumericCheck($this->translate('_err_surcharge_not_numeric')));
 		$validator->addFilter('shippingSurchargeAmount', new NumericFilter());
 
-		$validator->addCheck('minimumQuantity', new IsNumericCheck('_err_quantity_not_numeric'));
-		$validator->addCheck('minimumQuantity', new MinValueCheck('_err_quantity_negative', 0));
+		$validator->addCheck('minimumQuantity', new IsNumericCheck($this->translate('_err_quantity_not_numeric')));
+		$validator->addCheck('minimumQuantity', new MinValueCheck($this->translate('_err_quantity_negative'), 0));
 		$validator->addFilter('minimumQuantity', new NumericFilter());
 
 		$validator->addFilter('shippingHiUnit', new NumericFilter());
-		$validator->addCheck('shippingHiUnit', new IsNumericCheck('_err_weight_not_numeric'));
-		$validator->addCheck('shippingHiUnit', new MinValueCheck('_err_weight_negative', 0));
+		$validator->addCheck('shippingHiUnit', new IsNumericCheck($this->translate('_err_weight_not_numeric')));
+		$validator->addCheck('shippingHiUnit', new MinValueCheck($this->translate('_err_weight_negative'), 0));
 
 		$validator->addFilter('shippingLoUnit', new NumericFilter());
-		$validator->addCheck('shippingLoUnit', new IsNumericCheck('_err_weight_not_numeric'));
-		$validator->addCheck('shippingLoUnit', new MinValueCheck('_err_weight_negative', 0));
+		$validator->addCheck('shippingLoUnit', new IsNumericCheck($this->translate('_err_weight_not_numeric')));
+		$validator->addCheck('shippingLoUnit', new MinValueCheck($this->translate('_err_weight_negative'), 0));
 
 		return $validator;
 	}
 
-	public static function addPricesValidator(RequestValidator $validator)
+	public function addPricesValidator(RequestValidator $validator)
 	{
 		// price in base currency
 		$baseCurrency = Store::getInstance()->getDefaultCurrency()->getID();
-		$validator->addCheck('price_' . $baseCurrency, new IsNotEmptyCheck('_err_price_empty'));
+		$validator->addCheck('price_' . $baseCurrency, new IsNotEmptyCheck($this->translate('_err_price_empty')));
 
 	    $currencies = Store::getInstance()->getCurrencyArray();
 		foreach ($currencies as $currency)
 		{
-			$validator->addCheck('price_' . $currency, new IsNumericCheck('_err_price_invalid'));
-			$validator->addCheck('price_' . $currency, new MinValueCheck('_err_price_negative', 0));
+			$validator->addCheck('price_' . $currency, new IsNumericCheck($this->translate('_err_price_invalid')));
+			$validator->addCheck('price_' . $currency, new MinValueCheck($this->translate('_err_price_negative'), 0));
 			$validator->addFilter('price_' . $currency, new NumericFilter());
 		}
 

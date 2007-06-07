@@ -45,7 +45,6 @@ _product_specification=Product Specification
 
 _specification_attributes=Specification Attributes
 
-_notification_product_was_successfuly=Product was added successfuly. You may now add another product.
 _when_the_product_is_added=When the product is added
 _add_another_product=Add another product
 _continue_with_more_details=Continue with more detailed product configuration (add images, define related products, discounts, etc.)
@@ -102,6 +101,8 @@ Product.shippingWeight=Shipping weight
 Manufacturer.name=Manufacturer
 ProductPrice.price=Price
 
+_err_name_empty=Please enter product name
+_err_sku_not_unique=A product with such SKU already exists
 _err_sku_empty=SKU is not specified
 _err_stock_required=Stock count is not specified
 _err_stock_not_numeric=Numeric value required

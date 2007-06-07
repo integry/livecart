@@ -75,6 +75,18 @@
 		</div>
    	</div>    
 
+   	<div id="productAddConf" class="pricesSaveConf yellowMessage" style="display: none;">
+		<div>
+			{t _notification_product_was_successfuly}
+		</div>
+   	</div>    
+
+   	<div id="productAddContinueConf" class="pricesSaveConf yellowMessage" style="display: none;">
+		<div>
+			{t _product_added_continuing} <span class="progressIndicator"></span>
+		</div>
+   	</div>    
+
 </div>
 
 <div id="activeCategoryPath"></div>

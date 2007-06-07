@@ -295,10 +295,8 @@ class ProductController extends StoreManagementController
 	public function add()
 	{
 		$category = Category::getInstanceByID($this->request->getValue("id"), ActiveRecordModel::LOAD_DATA);
-		$product = Product::getNewInstance($category, '');
-		$product->save();
 		
-		return $this->productForm($product);		
+		return $this->productForm(Product::getNewInstance($category, ''));		
 	}
 
 	/**
@@ -308,7 +306,9 @@ class ProductController extends StoreManagementController
 	{
 	    $product = Product::getNewInstance(Category::getInstanceByID($this->request->getValue('categoryID')), $this->translate('_new_product'));
 	    
-	    return $this->save($product);
+	    $this->save($product);
+	    
+        return new JSONResponse(array('status' => 'success', 'id' => $product->getID()));
 	}
 	
 	/**
@@ -492,19 +492,10 @@ class ProductController extends StoreManagementController
 				}				
 			}
 			
-			$product->loadRequestData($this->request);
-			
+			$product->loadRequestData($this->request);			
 			$product->save();
 									
-			if ($this->request->getValue('afterAdding') == 'new')
-			{
-				return new JSONResponse(array('status' => 'success', 'addmore' => 1, 'needReload' => $needReload));			  	
-			}
-			else
-			{
-				return $this->productForm($product);
-                return new JSONResponse(array('status' => 'success'));		
-			}
+			return $this->productForm($product);
 		}
 		else
 		{

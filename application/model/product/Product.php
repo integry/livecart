@@ -402,8 +402,11 @@ class Product extends MultilingualObject
 	public function toArray()
 	{
 	  	$array = parent::toArray();
-	  	$array['attributes'] = $this->getSpecification()->toArray();
-		$array = array_merge($array, $this->getPricesFields());
+	  	if ($this->isLoaded())
+	  	{
+            $array['attributes'] = $this->getSpecification()->toArray();
+    		$array = array_merge($array, $this->getPricesFields());                
+        }
 	  	return $array;
 	}
 	
