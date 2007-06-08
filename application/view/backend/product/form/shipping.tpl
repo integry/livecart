@@ -1,7 +1,7 @@
 <fieldset>
-	<legend>{t shipping}</legend>
+	<legend>{t _shipping}</legend>
 
-	<p style="color:red;">
+	<p>
 		<label for="product_shippingWeight_{$cat}_{$product.ID}">{t _shipping_weight}:</label>
 		<fieldset class="error">				
 			

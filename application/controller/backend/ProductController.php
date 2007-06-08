@@ -90,7 +90,7 @@ class ProductController extends StoreManagementController
     	$currency = Store::getInstance()->getDefaultCurrency()->getID();
 
     	$data = array();
-//$index = 0;
+
 		foreach ($productArray as $product)
     	{
             $record = array();
@@ -99,12 +99,12 @@ class ProductController extends StoreManagementController
                 list($class, $field) = explode('.', $column, 2);
                 if ('Product' == $class)
                 {
-					$value = isset($product[$field]) ? $product[$field] : '';
+					$value = isset($product[$field . '_lang']) ? 
+                                $product[$field . '_lang'] : (isset($product[$field]) ? $product[$field] : '');
                 }
                 else if ('ProductPrice' == $class)
                 {
 					$value = isset($product['price_' . $currency]) ? $product['price_' . $currency] : 0;
-//$value = ++$index + $this->request->getValue('offset');
                 }
                 else if ('specField' == $class)
                 {
@@ -195,7 +195,7 @@ class ProductController extends StoreManagementController
             }
             else if ('delete' == $act)
             {
-				$product->delete();
+				Product::deleteById($product->getID());
 			}
 			else if ('manufacturer' == $act)
 			{
@@ -306,9 +306,16 @@ class ProductController extends StoreManagementController
 	{
 	    $product = Product::getNewInstance(Category::getInstanceByID($this->request->getValue('categoryID')), $this->translate('_new_product'));
 	    
-	    $this->save($product);
+	    $response = $this->save($product);
 	    
-        return new JSONResponse(array('status' => 'success', 'id' => $product->getID()));
+	    if ($response instanceOf ActionResponse)
+	    {
+            return new JSONResponse(array('status' => 'success', 'id' => $product->getID()));    
+        }
+        else
+        {
+            return $response;
+        }
 	}
 	
 	/**
@@ -339,6 +346,14 @@ class ProductController extends StoreManagementController
 	        'tabProductFiles' => $product->getFiles(false)->getTotalRecordCount()
 	    ));
 	}
+	
+	public function info()
+	{
+	    $product = Product::getInstanceById($this->request->getValue('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
+        $response = new ActionResponse();
+        $response->setValue('product', $product->toArray());
+        return $response;        
+    }
 
 	protected function getAvailableColumns(Category $category)
 	{
@@ -643,7 +658,7 @@ class ProductController extends StoreManagementController
 		$validator = new RequestValidator("productFormValidator", $this->request);
 		
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name_empty')));		    
-		
+				
 		// check if SKU is entered if not autogenerating
 		if ($this->request->getValue('save') && !$product->isExistingRecord() && !$this->request->getValue('autosku'))
 		{

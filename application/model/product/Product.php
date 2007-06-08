@@ -431,7 +431,6 @@ class Product extends MultilingualObject
 	/**
 	 * Removes a product from a database
 	 *
-	 * @todo Reduce category product count
 	 * @param int $recordID
 	 * @return bool
 	 * @throws Exception
@@ -458,9 +457,7 @@ class Product extends MultilingualObject
                 }
             }
             
-            $this->updateCategoryCounters($catUpdate);
-
-			$category = $product->category->get();
+            $product->updateCategoryCounters($catUpdate);
 
 			parent::deleteByID(__CLASS__, $recordID);
 			ActiveRecordModel::commit();
@@ -544,7 +541,6 @@ class Product extends MultilingualObject
 	}
 	
 	/**
-	 * @todo implement
 	 *
 	 */
 	public function getImageArray()
@@ -554,14 +550,6 @@ class Product extends MultilingualObject
 		$f->setOrder(new ARFieldHandle('ProductImage', 'position'));
 
 		return ActiveRecordModel::getRecordSetArray('ProductImage', $f);
-	}
-
-	/**
-	 * @todo implement
-	 *
-	 */
-	public function getImageSet()
-	{
 	}
 
 	/**

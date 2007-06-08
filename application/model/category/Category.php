@@ -8,6 +8,7 @@ ClassLoader::import("application.model.filter.*");
  * Hierarchial product category model class
  *
  * @package application.model.category
+ * @todo Update product counts when category is moved
  */
 class Category extends ActiveTreeNode implements MultilingualObjectInterface
 {

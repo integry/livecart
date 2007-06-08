@@ -33,10 +33,12 @@
 				<span class="tabHelp">products.edit.files</span>
 			</li>
 
+{*
 			<li id="tabOperations" class="tab inactive">
 				<a href="{link controller=backend.product action=operation id=_id_}?categoryID=_categoryID_">{t Operations}</a>
 				<span class="tabHelp">products.edit.operations</span>
 			</li>
+*}
 
 			<li id="tabInfo" class="tab inactive">
 				<a href="{link controller=backend.product action=info id=_id_}?categoryID=_categoryID_">{t Info}</a>
