@@ -1,4 +1,4 @@
-<p></p> 	
+<p>This section is used for customizing LiveCart's graphical user interface. To access a particular section click on the respective links below.</p> 	
 
 <div class="tasks">
 <fieldset>

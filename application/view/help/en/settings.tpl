@@ -1,12 +1,14 @@
-<p></p> 	
+<p>This section is used for managing LiveCart's settings. To access a particular section click on the respective links below.</p> 	
 
 <div class="tasks">
 <fieldset>
 <legend>Things you can do</legend>
 <ul>	
-	<li><a href="{help /customize.pages}">Pages</a></li>
-	<li><a href="{help /customize.live}">Live Customization</a></li>
-	<li><a href="{help /customize.templates}">Edit templates</a></li>
+	<li><a href="{help /settings.configuration}">Edit Configuration</a></li>
+	<li><a href="{help /settings.delivery}">Manage Delivery Zones</a></li>
+	<li><a href="{help /settings.taxes}">Manage Taxes</a></li>
+	<li><a href="{help /settings.currency}">Manage Currencies</a></li>
+	<li><a href="{help /settings.language}">Manage Languages</a></li>
 </ul>
 </fieldset>
 </div>

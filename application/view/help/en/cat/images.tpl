@@ -38,8 +38,6 @@ You can set image dimensions and quality in the <a href="{help /settings}">Setti
 
 <h3 id="delete">(Edit) or Delete images</h3>
 
-<ins>Is editing necessary for images?</ins>
-
 <p>To <strong>edit</strong> an image click the "Pen" icon on the left:</p>
 <img src="image/doc/categories/images/edit.bmp">
 <p>When editing an image you can choose to upload an image as in the Add new image section above.</p>

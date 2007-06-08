@@ -22,7 +22,7 @@
 	<li>When you locate the necessary template click on its name:</li>
 	<img src="image/doc/customize/live/name.bmp">
 	<p>Template window opens.</p> 
-	<li>Make neccesary changes click "Save template" to save changes.</li>
+	<li>Make neccesary changes and click the "Save template" button.</li>
 </ol>
 <p class="note"><strong>Note</strong>: You can also manage templates in the <a href="{help /customize.templates}">Edit Templates</a> section.</p>
 
@@ -32,12 +32,9 @@
 <ol>
 	<li>Turn on the "Live translation mode":</li>
 	<img src="image/doc/customize/live/on.bmp">
-	<li>Go to your store's frontend:</li>
-	<img src="image/doc/customize/live/go.bmp">
-	<p>You should see a "translate" pop-up when you move mouse cursor around. </p>
-	<li>To translate particular details of the user interface, drag your mouse cursor over a word or a phrase and click "Translate".</li>
+	<li>Go to your store's frontend.</li>
+	<li>To translate particular details of the user interface, drag your mouse cursor over a word or a phrase and click "Translate" pop-up.</li>
 	<p>A translation box appears (...)</p>
-	<img src="image/doc/customize/live/translate.bmp">
 </ol>
 
 

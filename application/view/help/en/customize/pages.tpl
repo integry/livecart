@@ -19,7 +19,7 @@
 	<img src="image/doc/customize/pages/add.bmp">
 	<li>Complete the following steps:</li>
 	<ul>
-		<li>Enter page title</li>
+		<li>Enter page title.</li>
 		<li>Display in "Information" menu - mark the checkbox to enable the page.</li>
 		<li>{glossary}URL{/glossary} handle is generated automatically so you can leave it as it is.</li>
 		<li>Page text - supply the contents of your page.</li>
@@ -34,8 +34,8 @@
 
 <p>The way pages are displayed in you e-store is defined by their order in the page tree. To set pages' arrangement:</p>
 <ol>
-	<li>Click a page in the tree.</li>
-	<li>Use the "Move selected up" or "Move selected down" link to reorder pages:</li>
+	<li>Click a page on the tree.</li>
+	<li>Use the "Move selected up" and "Move selected down" links to reorder pages:</li>
 	<img src="image/doc/customize/pages/move.bmp">
 </ol>
 
