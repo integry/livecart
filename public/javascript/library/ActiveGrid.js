@@ -176,10 +176,8 @@ ActiveGrid.prototype =
             {
                 res[k.substr(7, 1000)] = this.filters[k];
             }
-        }        
-
-        res.toJSON = Object.toJSON;
-
+        }      
+          
         return res;
     },
     

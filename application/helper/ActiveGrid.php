@@ -124,7 +124,7 @@ class ActiveGrid
     
     private function getFieldHandle($fieldName, $handleType)
     {
-		list($schemaName, $fieldName) = explode('.', $fieldName);
+        list($schemaName, $fieldName) = explode('.', $fieldName);
 		
 		$handle = null;
 		

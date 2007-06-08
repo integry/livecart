@@ -322,8 +322,9 @@ Backend.Product.massActionHandler.prototype =
 			}
 		}
 		
-		this.form.elements.namedItem('filters').value = this.grid.getFilters().toJSON();
-        this.form.elements.namedItem('selectedIDs').value = this.grid.getSelectedIDs().toJSON();
+        var filters = this.grid.getFilters();
+		this.form.elements.namedItem('filters').value = filters ? Object.toJSON(filters) : '';
+        this.form.elements.namedItem('selectedIDs').value = Object.toJSON(this.grid.getSelectedIDs());
         this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;
         new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('massIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));
 

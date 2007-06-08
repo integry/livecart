@@ -294,8 +294,7 @@ Backend.CustomerOrder.massActionHandler.prototype =
 			}
 		}
 		
-        var filters = Object.toJSON(this.grid.getFilters());
-		this.form.elements.namedItem('filters').value = filters ? filters : '';
+		this.form.elements.namedItem('filters').value = Object.toJSON(this.grid.getFilters());
         var selectedIDs = Object.toJSON(this.grid.getSelectedIDs());
         this.form.elements.namedItem('selectedIDs').value = selectedIDs ? selectedIDs : '';
         this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;

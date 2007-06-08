@@ -273,7 +273,6 @@ Backend.LangEdit.prototype =
 			function()
 			{	
     			this.focus();
-                this.handler.editedTranslations.toJSON = Object.toJSON;
                 this.elements.namedItem('translations').value = this.handler.editedTranslations.toJSON();
 				new LiveCart.AjaxRequest(this, $('saveProgress'), this.handler.saveCompleted.bind(this.handler));
 				return false;

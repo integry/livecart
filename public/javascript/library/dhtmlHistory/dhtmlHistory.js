@@ -645,8 +645,7 @@ window.historyStorage = {
       this.loadHashTable();
       
       // serialized the hash table
-      this.storageHash.toJSON = Object.toJSON;
-      var serializedHashTable = this.storageHash.toJSON();
+      var serializedHashTable = Object.toJSON(this.storageHash);
       
       // save this value
       this.storageField.value = serializedHashTable;
