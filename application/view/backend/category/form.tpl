@@ -1,8 +1,7 @@
 {includeCss file="form.css"}
 
 {assign var="action" value="create"}
-
-{form id="categoryForm_$categoryId" handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="Backend.Category.updateBranch(this); return false;"}
+{form id="categoryForm_$categoryId" handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="Backend.Category.updateBranch(this); return false;" role="category.update"}
 	<fieldset class="container">
 
 		<p class="checkbox">

@@ -24,6 +24,7 @@
     
     
 {denied role="userGroup.update"}{literal}
+    console.info('asdasd')
     $A($("{/literal}userGroupsRolesTree_{$userGroup.ID}{literal}").getElementsByTagName('img')).each(function(img)
     {
         img.onclick = function() { return false; };

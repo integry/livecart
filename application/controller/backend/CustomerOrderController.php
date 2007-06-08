@@ -38,7 +38,8 @@ class CustomerOrderController extends StoreManagementController
 	
 	public function info()
 	{
-	    $order = CustomerOrder::getInstanceById((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA, true);
+	    $order = CustomerOrder::getInstanceById((int)$this->request->getValue('id'), true, true);
+	    
 	    $response = new ActionResponse();
 	    $response->setValue('statuses', array(
 	                                    CustomerOrder::STATUS_BACKORDERED  => $this->translate('_status_backordered'),
@@ -48,15 +49,29 @@ class CustomerOrderController extends StoreManagementController
 	                                    CustomerOrder::STATUS_NEW => $this->translate('_status_new'),
 				            ));
 				            
-	    $response->setValue('order', $order->toArray());
-	    $response->setValue('form', $this->createOrderForm($order));
-	    $response->setValue('formShippingAddress', $this->createUserAddressForm($order->shippingAddress->get()));
-	    $response->setValue('formBillingAddress', $this->createUserAddressForm($order->billingAddress->get()));
         $response->setValue('countries', $this->store->getEnabledCountries());
         
-        $response->setValue('shippingStates',  State::getStatesByCountry($order->shippingAddress->get()->countryID->get()));
-        $response->setValue('billingStates',  State::getStatesByCountry($order->billingAddress->get()->countryID->get()));
-		
+        $orderArray = $order->toArray();
+        if($order->isFinalized->get())
+        {
+	        $response->setValue('shippingStates',  State::getStatesByCountry($order->shippingAddress->get()->countryID->get()));
+	        $response->setValue('billingStates',  State::getStatesByCountry($order->billingAddress->get()->countryID->get()));
+        }
+        else
+        {
+            $order->user->get()->loadAddresses();
+	        $response->setValue('shippingStates',  State::getStatesByCountry($order->user->get()->defaultShippingAddress->get()->userAddress->get()->countryID->get()));
+	        $response->setValue('billingStates',  State::getStatesByCountry($order->user->get()->defaultBillingAddress->get()->userAddress->get()->countryID->get()));
+        
+	        $orderArray['BillingAddress'] = $order->user->get()->defaultBillingAddress->get()->userAddress->get()->toArray();
+	        $orderArray['ShippingAddress'] = $order->user->get()->defaultShippingAddress->get()->userAddress->get()->toArray();
+        }
+       
+	    $response->setValue('order', $orderArray);
+	    $response->setValue('form', $this->createOrderForm($orderArray));
+	    $response->setValue('formShippingAddress', $this->createUserAddressForm($orderArray['ShippingAddress']));
+	    $response->setValue('formBillingAddress', $this->createUserAddressForm($orderArray['BillingAddress']));
+        
 		return $response;
 	}
 	
@@ -79,12 +94,12 @@ class CustomerOrderController extends StoreManagementController
     /**
      * @return Form
      */
-	public function createUserAddressForm(UserAddress $address = null)
+	public function createUserAddressForm($addressArray = array())
 	{
 		$form = new Form($this->createUserAddressFormValidator());	
-	    if($address)
+	    if(!empty($addressArray))
 	    {
-	        $form->setData($address->toArray());
+	        $form->setData($addressArray);
 	    }
 	    
 		return $form;
@@ -106,10 +121,10 @@ class CustomerOrderController extends StoreManagementController
     /**
      * @return Form
      */
-	public function createOrderForm(CustomerOrder $order)
+	public function createOrderForm($orderArray)
 	{
 		$form = new Form($this->createOrderFormValidator());	
-	    $form->setData($order->toArray());
+	    $form->setData($orderArray);
 		
 		return $form;
 	}

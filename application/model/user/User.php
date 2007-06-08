@@ -226,12 +226,12 @@ class User extends ActiveRecordModel
 	{
 		if ($this->defaultBillingAddress->get())
 		{
-			$this->defaultBillingAddress->get()->load(array('UserAddress'));					
+			$this->defaultBillingAddress->get()->load(array('UserAddress'));	
 		}
 
 		if ($this->defaultShippingAddress->get())
 		{
-			$this->defaultShippingAddress->get()->load(array('UserAddress'));			
+			$this->defaultShippingAddress->get()->load(array('UserAddress'));	
 		}
 	}
 	

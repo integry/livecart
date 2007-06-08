@@ -1,5 +1,4 @@
 <div id="userGroup_{$userGroup.ID}"></div>
-
 {form handle=$userGroupForm action="controller=backend.userGroup action=save" id="userGroupForm_`$userGroup.ID`" method="post" onsubmit="Backend.User.Group.prototype.getInstance(this).save(); return false;" role="userGroup.update"}
 	{hidden name="ID"}
     
