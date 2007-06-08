@@ -151,22 +151,14 @@ Backend.UserGroup.prototype =
 	
 	activateGroup: function(id)
 	{
+        var activateTab = $('tabUsers');
         if(id < 0)
         {
-            if(Backend.ajaxNav.getHash().match(/tabUserGroup/))
-            {
-                Backend.ajaxNav.ignoreNextAdd = false;
-                Backend.ajaxNav.add('group_' + id + '#tabUsers');
-                Backend.ajaxNav.ignoreNextAdd = true;
-            }
-            
-            var activateTab = $('tabUsers');
             $("tabUserGroup").hide();
             $("tabRoles").hide();
         }
         else
         {
-            var activateTab = $('tabUserGroup');
             $("tabUserGroup").show();
             $("tabRoles").show();
         }
