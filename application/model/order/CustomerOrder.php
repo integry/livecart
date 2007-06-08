@@ -310,6 +310,15 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
             $item->save();
         }
         
+        // clone billing/shipping addresses
+        $shippingAddress = clone $this->shippingAddress->get();
+        $shippingAddress->save();
+        $this->shippingAddress->set($shippingAddress);
+        
+        $billingAddress = clone $this->billingAddress->get();
+        $billingAddress->save();
+        $this->billingAddress->set($billingAddress);
+
         // move wish list items to a separate order
         $wishList = CustomerOrder::getNewInstance($this->user->get());
         foreach ($this->getWishListItems() as $item)

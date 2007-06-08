@@ -1,53 +1,10 @@
-# Main form
-_product=Product
-
-_tangible=Tangible (shippable)
-_intangible=Intangible (downloadable)
+# Product list
 
 _process=Save
 _delete_conf=Really delete the selected products?
 
 _with_selected=With selected
 _new_product=New Product
-
-_inventory=Inventory
-_items_in_stock=Items in stock
-_main_details=Main Details
-_enabled=Enabled (visible)
-_product_name=Product name
-_handle=Handle
-_sku_code=SKU (code)
-_what_is_sku=Sku is sku
-_generate_sku=Generate SKU automatically
-_short_description=Short description
-_long_description=Long description
-_product_type=Product Type
-_website_address=Website address
-_manufacturer=Manufacturer
-_keywords=Keywords
-_mark_as_featured_product=Mark as featured product
-_pricing=Pricing
-_shipping=Shipping
-_shipping_weight=Shipping Weight
-_other=Other
-_enter_other=Enter Other >>
-
-_switch_to_english_units=Switch to English units
-_switch_to_metric_units=Switch to Metric units
-
-_minimum_order_quantity=Minimum Order Quantity
-_shipping_surcharge=Shipping Surcharge
-_requires_separate_shipment=Requires separate shipment
-_qualifies_for_free_shipping=Qualifies for free shipping
-_allow_back_ordering=Allow back-ordering
-
-_product_specification=Product Specification
-
-_specification_attributes=Specification Attributes
-
-_when_the_product_is_added=When the product is added
-_add_another_product=Add another product
-_continue_with_more_details=Continue with more detailed product configuration (add images, define related products, discounts, etc.)
 
 _set_manufacter=Set manufacturer
 _set_keywords=Set keywords
@@ -101,6 +58,58 @@ Product.shippingWeight=Shipping weight
 Manufacturer.name=Manufacturer
 ProductPrice.price=Price
 
+# Main form
+
+_product=Product
+
+_tangible=Tangible (shippable)
+_intangible=Intangible (downloadable)
+
+_inventory=Inventory
+_items_in_stock=Items in stock
+_main_details=Main Details
+_enabled=Enabled (visible)
+_product_name=Product name
+_handle=Handle
+_sku_code=SKU (code)
+_what_is_sku=Sku is sku
+_generate_sku=Generate SKU automatically
+_short_description=Short description
+_long_description=Long description
+_product_type=Product Type
+_website_address=Website address
+_manufacturer=Manufacturer
+_keywords=Keywords
+_mark_as_featured_product=Mark as featured product
+_allow_fractional_quantities=Allow fractional quantities
+
+# Pricing and shipping
+
+_pricing=Pricing
+_shipping=Shipping
+_shipping_weight=Shipping Weight
+_other=Other
+_enter_other=Enter Other >>
+
+_switch_to_english_units=Switch to English units
+_switch_to_metric_units=Switch to Metric units
+
+_minimum_order_quantity=Minimum Order Quantity
+_shipping_surcharge=Shipping Surcharge
+_requires_separate_shipment=Requires separate shipment
+_qualifies_for_free_shipping=Qualifies for free shipping
+_allow_back_ordering=Allow back-ordering
+
+# Product attributes
+_product_specification=Product Specification
+_specification_attributes=Specification Attributes
+
+_when_the_product_is_added=When the product is added
+_add_another_product=Add another product
+_continue_with_more_details=Continue with more detailed product configuration (add images, define related products, discounts, etc.)
+
+# Errors
+
 _err_name_empty=Please enter product name
 _err_sku_not_unique=A product with such SKU already exists
 _err_sku_empty=SKU is not specified
@@ -114,3 +123,18 @@ _err_quantity_negative=Quantity can not be negative
 _err_price_empty=Price empty
 _err_price_negative=Price can not be negative
 _err_surcharge_not_numeric=Sucharge amount must be a numeric value
+_err_specfield_multivaluerequired=At least one option must be selected
+
+# Form field hints
+
+_hint_sku=Stock keeping unit is a specific number or code designating one specific product.
+
+_hint_shortdescr=A brief product description. Short description is displayed in the product list page where concise information about products is provided. It is also used in the meta description tags for the product page.
+
+_hint_longdescr=Detailed description which is displayed in the product details page where detailed information about product is provided.
+
+_hint_keywords=Supply words or phrases here that may assist users in searching products.
+
+_hint_featured=Featured products are displayed above all other products, so marking a product as featured will provide extra exposure to this product.
+
+_hint_surcharge=Define additional shipping charges for this particular product

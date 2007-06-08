@@ -115,8 +115,8 @@ Backend.Product =
 
 		if ('english' == unitsType)
 		{
-		  	hiMultiplier = 453.59237;
-		  	loMultiplier = 28.3495231;
+		  	hiMultiplier = 0.45359237;
+		  	loMultiplier = 0.0283495231;
 		}
 		else
 		{
@@ -237,7 +237,7 @@ Backend.Product =
 	           
             if ($('productIndicator_' + id))
             {
-                Element.hide($('productIndicator_' + id));
+                Element.show($('productIndicator_' + id));
             }
 
 			var tabControl = TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId, {

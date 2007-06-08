@@ -1,0 +1,26 @@
+#catgegoryContainer {
+    float: left; 
+    width: 260px;
+}
+
+#categoryBrowser {
+
+}
+#categoryBrowserActions {
+}
+
+#activeCategoryPath, #activeProductPath {
+    font-weight: normal; 
+    padding-bottom: 5px; 
+    padding-left: 275px;
+    font-weight: bold;
+}
+
+.managerContainer {
+    margin-left: 270px;
+}
+
+#categoryBrowser div.containerTableStyle
+{
+    height: 300px;
+}

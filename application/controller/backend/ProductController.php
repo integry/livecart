@@ -674,14 +674,14 @@ class ProductController extends StoreManagementController
 		  	// validate required fields
 			if ($field->isRequired->get())
 		  	{
-				if (!$field->isSelector())
+				if (!($field->isSelector() && $field->isMultiValue->get()))
 				{
 					$validator->addCheck($fieldname, new IsNotEmptyCheck($this->translate('_err_specfield_required'))); 
 				}
 				else
 				{
 					ClassLoader::import('application.helper.check.SpecFieldIsValueSelectedCheck');
-					$validator->addCheck($fieldname, new SpecFieldIsValueSelectedCheck($this->translate('_err_specfield_requiredaaaaaaaa'), $field, $this->request));		    
+					$validator->addCheck($fieldname, new SpecFieldIsValueSelectedCheck($this->translate('_err_specfield_multivaluerequired'), $field, $this->request));		    
 				}			
 			}
 		}  
