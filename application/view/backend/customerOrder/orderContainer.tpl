@@ -7,7 +7,7 @@
 
 
 
-<div id="orderManagerContainer" class="treeManagerContainer" style="display: none;">
+<fieldset id="orderManagerContainer" class="treeManagerContainer" style="display: none;">
 	<fieldset class="container">
 		<ul class="menu">
 			<li><a href="#cancelEditing" id="cancel_order_edit" class="cancel">{t _cancel_editing_order_info}</a></li>
@@ -22,7 +22,7 @@
 			</li>
 		</ul>
 	</div>
-    <div class="sectionContainer maxHeight h--50"></div>
+    <fieldset class="sectionContainer maxHeight h--50"></fieldset>
     
     {literal}
     <script type="text/javascript">
@@ -35,4 +35,4 @@
         });
     </script>
     {/literal}
-</div>
+</fieldset>

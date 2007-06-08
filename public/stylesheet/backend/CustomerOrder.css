@@ -47,3 +47,8 @@
     float: left;
     margin-right: 10px;
 }
+
+#orderGroupsTabContainer
+{
+    display: none;    
+}

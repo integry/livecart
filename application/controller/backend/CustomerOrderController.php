@@ -96,9 +96,6 @@ class CustomerOrderController extends StoreManagementController
      */
 	public function createUserAddressForm($addressArray = array())
 	{
-	    print_r($addressArray);
-	    echo "<br /><br /><br />";
-	    
 		$form = new Form($this->createUserAddressFormValidator());	
 	    if(!empty($addressArray))
 	    {
