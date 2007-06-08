@@ -87,19 +87,6 @@ div.tip
     margin-bottom: 20px;
 }
 
-#langBrowser
-{
-  	float: left;
-  	width: 250px;
-  	height: 400px;
-  	overflow: auto;    
-}
-
-#langContent
-{
-	float: left;
-}
-
 #langNotFound, #foundMany {
   	margin-top: 5px;
   	color: red;

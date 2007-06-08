@@ -70,7 +70,7 @@
 	</style>
 {/literal}
 
-<div class="languageForm" style="float: left;">
+<div class="languageForm" >
 	
 	<span class="languageFormCaption">
 		Translate: 

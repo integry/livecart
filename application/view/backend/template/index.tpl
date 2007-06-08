@@ -14,7 +14,7 @@
 
 <div id="pageContainer">
 		
-	<div style="float: left;">
+	<div class="treeContainer">
 		<div id="templateBrowser" class="treeBrowser">
 		</div>
 	

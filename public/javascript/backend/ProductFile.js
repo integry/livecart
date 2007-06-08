@@ -130,8 +130,6 @@ Backend.ProductFile.Controller.prototype = {
         Form.State.backup(this.view.nodes.form);
         
         Backend.ProductFile.Controller.prototype.instances[this.view.nodes.root.id] = this;
-        
-        new SectionExpander(this.view.nodes.root);
     },
     
     getInstance: function(rootNode)
@@ -609,7 +607,6 @@ Backend.ProductFile.Group.Controller.prototype = {
         this.bindActions();
         
         Form.State.backup(this.view.nodes.root);
-        new SectionExpander(this.view.nodes.root);
         
         Backend.ProductFile.Group.Controller.prototype.instances[this.view.nodes.root.id] = this;
         

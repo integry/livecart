@@ -29,20 +29,20 @@
 {pageTitle help="orderGroups"}{t _livecart_orders}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
-<div id="orderGroupsWrapper" class="maxHeight h--50">
+<div id="orderGroupsWrapper" class="treeContainer maxHeight h--50">
 	<div id="orderGroupsBrowser" class="treeBrowser"></div>
-    
-    {include file="backend/customerOrder/orderContainer.tpl"}
-    {include file="backend/customerOrder/groupContainer.tpl"}
-    {include file="backend/userGroup/userContainer.tpl"}
-
 </div>
+
+{include file="backend/customerOrder/orderContainer.tpl"}
+{include file="backend/customerOrder/groupContainer.tpl"}
+{include file="backend/userGroup/userContainer.tpl"}
 
 <div id="activeUserPath"></div>
 
 {literal}
 <script type="text/javascript">
     Backend.CustomerOrder.Editor.prototype.Links.update = '{/literal}{link controller=backend.customerOrder action=update}{literal}';
+    Backend.CustomerOrder.Editor.prototype.Links.switchCancelled = '{/literal}{link controller=backend.customerOrder action=switchCancelled}{literal}';
     new Backend.CustomerOrder({/literal}{json array=$orderGroups}{literal});
     
     {/literal}

@@ -351,12 +351,9 @@ Backend.CustomerOrder.Editor.prototype =
         
         return Backend.CustomerOrder.Editor.prototype.Instances[id];
     },
-   
-	showAddForm: function(groupID)
-	{
-        console.info('add form');
-	},
-
+    
+    
+    
     hasInstance: function(id)
     {
         return this.Instances[id] ? true : false;
@@ -387,14 +384,36 @@ Backend.CustomerOrder.Editor.prototype =
         this.nodes = {};
         this.nodes.parent = $("tabOrderInfo_" + this.id + "Content");
         this.nodes.form = this.nodes.parent.down("form");
-		this.nodes.cancel = this.nodes.form.down('a.cancel');
-		this.nodes.submit = this.nodes.form.down('input.submit');
+		this.nodes.isCanceled = this.nodes.form.down('a.isCanceled');
+		this.nodes.status = this.nodes.form.down('select.status');
     },
 
     bindEvents: function(args)
     {
 		var self = this;
-		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
+		Event.observe(this.nodes.isCanceled, 'click', function(e) { Event.stop(e); self.switchCancelled(); });
+		Event.observe(this.nodes.status, 'change', function(e) { Event.stop(e); self.submitForm(); });
+    },
+
+    switchCancelled: function()
+    {
+        var self = this;
+        
+        new Ajax.Request(Backend.CustomerOrder.Editor.prototype.Links.switchCancelled + '/' + this.id, {
+           onSuccess: function(response) {
+               response = eval("(" + response.responseText + ")");
+               
+               if(response.status == 'success')
+               {
+                   self.nodes.isCanceled.update(response.value);
+               }
+           }    
+        });
+    },
+    
+    updateStatus: function()
+    {
+        this.form.submit();
     },
 
     init: function(args)
@@ -408,8 +427,6 @@ Backend.CustomerOrder.Editor.prototype =
         Backend.showContainer("orderManagerContainer");
 
         this.tabControl = TabControl.prototype.getInstance("orderManagerContainer", false);
-        
-		new SectionExpander(this.nodes.parent);
     },
     
     cancelForm: function()
@@ -437,7 +454,6 @@ Backend.CustomerOrder.Editor.prototype =
 	{
 		if(response.status == 'success')
 		{
-			new Backend.SaveConfirmationMessage($('orderConfirmation'));
 			Form.State.backup(this.nodes.form);
 		}
 		else
@@ -526,8 +542,6 @@ Backend.CustomerOrder.Address.prototype =
         Backend.showContainer("orderManagerContainer");
 
         this.tabControl = TabControl.prototype.getInstance("orderManagerContainer", false);
-        
-		new SectionExpander(this.nodes.parent);
     },
     
     cancelForm: function()

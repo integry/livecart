@@ -240,8 +240,6 @@ Backend.RelatedProduct.Group.Controller.prototype = {
         this.bindActions();
         
         Form.State.backup(this.view.nodes.root);
-        new SectionExpander(this.view.nodes.root);
-        
         Backend.RelatedProduct.Group.Controller.prototype.instances[this.view.nodes.root.id] = this;
     },
     

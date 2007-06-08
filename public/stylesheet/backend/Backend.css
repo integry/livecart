@@ -1105,6 +1105,22 @@ fieldset.group p
     padding-right: 0;
 }
 
+.treeContainer {
+    position: absolute; 
+    width: 260px;
+}
+
+.treeManagerContainer {
+    margin-left: 270px;
+}
+
+.treePath {
+    font-weight: normal; 
+    padding-bottom: 5px; 
+    padding-left: 275px;
+}
+
+
 /**************************
 	Glossary
 **************************/

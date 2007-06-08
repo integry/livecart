@@ -19,12 +19,12 @@
 
 <a id="help" href="#" target="_blank" style="display: none;">Help</a>
 
-<div id="catgegoryContainer">
+<div id="catgegoryContainer" class="treeContainer">
 	<div id="categoryBrowser" class="treeBrowser"> </div>
 </div>
 <div id="activeCategoryPath"></div>
  
-<div id="managerContainer" class="managerContainer">
+<div id="managerContainer" class="treeManagerContainer">
 	<div id="tabContainer" class="tabContainer">
 	<ul id="tabList" class="tabList tabs">
 

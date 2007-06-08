@@ -34,7 +34,7 @@
 </script>
 
 <div id="userGroupsWrapper" class="maxHeight h--50">
-	<div id="userGroupsBrowserWithControlls" class="maxHeight">
+	<div id="userGroupsBrowserWithControlls" class="treeContainer maxHeight">
     	<div id="userGroupsBrowser" class="treeBrowser"></div>
         <ul id="userGroupsBrowserControls" class="verticalMenu">
             <li class="addTreeNode" style="{denied role="userGroup.create"}display: none;{/denied}"><a id="userGroups_add" href="#add">{t _add}</a></li>

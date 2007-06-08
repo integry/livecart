@@ -1,5 +1,5 @@
 {* User groups container *}
-<div id="orderGroupsManagerContainer" class="managerContainer">   
+<div id="orderGroupsManagerContainer" class="treeManagerContainer">   
 	<div class="tabContainer">
 		<ul class="tabList tabs">
 			<li id="tabOrders" class="tab inactive">

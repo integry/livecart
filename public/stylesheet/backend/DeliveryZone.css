@@ -1,19 +1,6 @@
-
-#deliveryZoneBrowserWithControlls
-{
-  	float: left;
-  	width: 200px;
-}
-
 #newZoneInput {
     width: 135px;
 }
-
-#deliveryZoneContent
-{
-	margin-left: 240px;	
-}
-
 #deliveryZoneContent label.setting 
 {
 	display: block;
@@ -26,18 +13,6 @@
 p.checkbox 
 {
 	padding-left: 0px;
-}
-
-#deliveryZoneManagerContainer 
-{
-    margin-left: 230px;
-}
-
-.countriesAndStates_regionsAndUnions  div
-{
-    float: left;
-    width: 25%;
-    text-align: left;
 }
 
 #deliveryZoneManagerContainer .activeList .errorText 

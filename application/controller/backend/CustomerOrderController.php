@@ -96,6 +96,9 @@ class CustomerOrderController extends StoreManagementController
      */
 	public function createUserAddressForm($addressArray = array())
 	{
+	    print_r($addressArray);
+	    echo "<br /><br /><br />";
+	    
 		$form = new Form($this->createUserAddressFormValidator());	
 	    if(!empty($addressArray))
 	    {
@@ -112,8 +115,8 @@ class CustomerOrderController extends StoreManagementController
     {
         $validator = new RequestValidator("CustomerOrder", $this->request);		            
 			
-		$validator->addCheck('status', new MinValueCheck($this->translate('_invalid_Status'), 1));
-		$validator->addCheck('status', new MaxValueCheck($this->translate('_invalid_Status'), 4));	
+		$validator->addCheck('status', new MinValueCheck($this->translate('_invalid_status'), 0));
+		$validator->addCheck('status', new MaxValueCheck($this->translate('_invalid_status'), 4));	
         
         return $validator;
     }
@@ -148,6 +151,15 @@ class CustomerOrderController extends StoreManagementController
 		$response->setValue("userID", $this->request->getValue('userID'));
 		$response->setValue("totalCount", '0');	
 		return $response;
+	}
+	
+	public function switchCancelled()
+	{
+	    $order = CustomerOrder::getInstanceById((int)$this->request->getValue('id'), true);
+	    $order->isCancelled->set(!$order->isCancelled->get());
+	    $order->save();
+	    
+	    return new JSONResponse(array('status' => 'success', 'value' => $this->translate($order->isCancelled->get() ? '_cancelled' : '_applied')));
 	}
 	
 	/**

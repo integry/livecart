@@ -5,6 +5,7 @@
         <label class="checkbox" for="roles_setAllPermissions_{$userGroup.ID}">{t _set_all_permissions}</label>
     </fieldset>
     
+    
     <div id="userGroupsRolesTree_{$userGroup.ID}" class="treeBrowser" >
         
     </div>

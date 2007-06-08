@@ -49,7 +49,7 @@
 <div id="productFileGroup_item_blank">{include file="backend/productFileGroup/form.tpl"}</div>
 <div id="productFile_item_blank">{include file="backend/productFile/form.tpl"}</div>
 
-<div id="catgegoryContainer">
+<div id="catgegoryContainer" class="treeContainer">
 	<div id="categoryBrowser" class="treeBrowser">
 	</div>
 	<br />
@@ -89,10 +89,10 @@
 
 </div>
 
-<div id="activeCategoryPath"></div>
-<div id="activeProductPath" style="display: none;"></div>
+<div id="activeCategoryPath" class="treePath"></div>
+<div id="activeProductPath" class="treePath" style="display: none;"></div>
 
-<div id="managerContainer" class="managerContainer maxHeight h--60">
+<div id="managerContainer" class="treeManagerContainer maxHeight h--60">
 	<div id="tabContainer" class="tabContainer">
 		<ul id="tabList" class="tabList tabs">
 

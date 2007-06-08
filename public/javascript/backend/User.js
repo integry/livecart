@@ -563,8 +563,6 @@ Backend.User.Editor.prototype =
         Backend.showContainer('userManagerContainer');
 
         this.tabControl = TabControl.prototype.getInstance("userManagerContainer", false);
-        
-		new SectionExpander(this.nodes.parent);
     }, 
 
     cancelForm: function()

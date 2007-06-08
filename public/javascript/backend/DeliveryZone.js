@@ -291,8 +291,6 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 //        this.sortSelect(this.nodes.activeCountries);
 //        this.sortSelect(this.nodes.inactiveStates);
 //        this.sortSelect(this.nodes.activeStates);
-        
-        new SectionExpander(this.nodes.root);
     },
     
     getInstance: function(root, zoneID) 
@@ -729,8 +727,6 @@ Backend.DeliveryZone.ShippingService.prototype =
             {
                 Form.State.backup(this.nodes.form);
             }
-            
-            new SectionExpander(this.nodes.root);
         }
         catch(e)
         {
@@ -976,8 +972,6 @@ Backend.DeliveryZone.ShippingRate.prototype =
         {
             this.nodes.controls.show();
         }
-        
-        new SectionExpander(this.nodes.root);
     },
         
     getInstance: function(rootNode, rate)
@@ -1226,8 +1220,6 @@ Backend.DeliveryZone.TaxRate.prototype =
             this.ratesActiveList = ActiveList.prototype.getInstance(this.nodes.ratesList);
 
             Form.State.backup(this.nodes.form);
-            
-            new SectionExpander(this.nodes.root);
         }
         catch(e)
         {

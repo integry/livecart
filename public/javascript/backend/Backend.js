@@ -841,9 +841,9 @@ function restoreMenu(blockId, menuId)
 Backend.LanguageForm = Class.create();
 Backend.LanguageForm.prototype = 
 {
-	initialize: function()
+	initialize: function(root)
 	{
-		var forms = document.getElementsByClassName('languageForm');
+		var forms = document.getElementsByClassName('languageForm', root);
 		for (var k = 0; k < forms.length; k++)
 		{
 			var tabs = forms[k].down('ul.languageFormTabs').getElementsByTagName('li');

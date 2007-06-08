@@ -7,7 +7,6 @@
         {textfield name="name"}
         <span class="errorText" style="display: none" ></span>
 	</fieldset>
-    
     <fieldset class="error">
         <label>{t _description}</label>
         {textarea name="description"}

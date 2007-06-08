@@ -1,14 +1,3 @@
-#orderGroupsBrowser
-{
-  	float: left;
-  	width: 200px;
-}
-
-#orderGroupsManagerContainer, #orderManagerContainer
-{
-	margin-left: 230px;	
-}
-
 .cell_cb 
 {
     text-align:center !important;
@@ -30,9 +19,23 @@
     width: 70px;
 }
 
-.order_shippingAddress, .order_billingAddress, .order_info, .order_status{
+.order_shippingAddress input, 
+.order_billingAddress input,
+.order_shippingAddress select, 
+.order_billingAddress select, 
+.order_status select
+{
+    width: 10em;
+}
+
+.order_shippingAddress, 
+.order_billingAddress, 
+.order_info, 
+.order_status
+{
     width: 45%;
 }
+
 
 .order_billingAddress,  .order_status
 {   

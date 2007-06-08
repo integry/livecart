@@ -48,7 +48,7 @@
 
 <div id="pageContainer">
 		
-	<div style="float: left;">
+	<div class="treeContainer">
 		<div id="langBrowser" class="treeBrowser">
 		</div>
 	
@@ -66,13 +66,13 @@
 	
 	</div>
 
-	<div style="float: left; margin-left: 20px;">
+	<div class="treeManagerContainer">
 		
 		<span id="langIndicator" class="progressIndicator" style="display: none;"></span>
 				
 		<div id="langContent">
 
-            <fieldset class="menuFieldSet">
+            <fieldset>
             	<legend>{t _translation_filter}</legend>
             	<form id="navLang" method="post" style="margin-bottom: 10px;" action="{link controller=backend.language action=edit id=$id}" class="">
             

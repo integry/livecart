@@ -20,7 +20,7 @@
 </script>
 
 <div id="deliveryZoneWrapper" class="maxHeight h--50">
-	<div id="deliveryZoneBrowserWithControlls">
+	<div id="deliveryZoneBrowserWithControlls" class="treeContainer">
     	<div id="deliveryZoneBrowser" class="treeBrowser"></div>
         <div id="deliveryZoneBrowserControls">
             <span style="{denied role='delivery.create'}display: none{/denied}">
@@ -34,7 +34,7 @@
         </div>
 	</div>
     
-    <div id="deliveryZoneManagerContainer" class="managerContainer">
+    <div id="deliveryZoneManagerContainer" class="treeManagerContainer">
     	<div class="tabContainer">
     		<ul class="tabList tabs">
     			<li id="tabDeliveryZoneCountry" class="tab active">
@@ -57,7 +57,7 @@
     </div>
 </div>
 
-<div id="activeDeliveryZonePath"></div>
+<div id="activeDeliveryZonePath" class="treePath"></div>
 
 {literal}
 <script type="text/javascript">

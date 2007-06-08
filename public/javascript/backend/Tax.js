@@ -79,7 +79,6 @@ Backend.Tax.prototype =
             this.taxActiveList = ActiveList.prototype.getInstance(this.nodes.taxList);
             Form.State.backup(this.nodes.form);
             this.bindEvents();
-            new SectionExpander(this.nodes.root);
         }
         catch(e)
         {

@@ -5,22 +5,10 @@
 { 
     display: none; 
 }
-
-#categoryBrowser {
-    height: 480px;
-    padding: 0px;
-    overflow: auto;
-}
-
 #sectionContainer {
     height: 455px;
     padding: 0px;
     margin-right: 10px;
-}
-
-#activeCategoryPath {
-    font-size: 20px;
-    height: 25px;
 }
 
 #topShadeContainerRight {

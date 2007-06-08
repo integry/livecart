@@ -46,20 +46,20 @@
 	</fieldset>
 </fieldset>
 
-{form handle=$form action="controller=backend.order action=update" id="orderInfo_`$order.ID`_form" onsubmit="Backend.CustomerOrder.Editor.prototype.getInstance(`$order.ID`, false).submitForm(); return false;" method="post"}
-    <fieldset class="order_status">
-        <legend>{t _order_status}</legend>
+<fieldset class="order_status">
+    <legend>{t _order_status}</legend>
+    {form handle=$form action="controller=backend.order action=update" id="orderInfo_`$order.ID`_form" onsubmit="Backend.CustomerOrder.Editor.prototype.getInstance(`$order.ID`, false).submitForm(); return false;" method="post"}
         <fieldset class="error">
-            <label for="order_{$order.ID}_status" class="checkbox">{t _status}</label>
-            {selectfield options=$statuses id="order_`$order.ID`_status" name="status"}
+            <label for="order_{$order.ID}_status">{t _status}</label>
+            {selectfield options=$statuses id="order_`$order.ID`_status" name="status" class="status"} 
     	</fieldset>  
         
         <fieldset class="error">
             <label></label>
-            <a href="{link controller="backend.order" action="setIsCanceled" id=$order.id}">{if $order.isCancelled}{t _canceled}{else}{t _applyed}{/if}</a>
+            <a class="isCanceled" href="{link controller="backend.customerOrder" action="setIsCanceled" id=$order.id}">{if $order.isCancelled}{t _cancelled}{else}{t _applied}{/if}</a>
     	</fieldset>
-    </fieldset>
-{/form}
+    {/form}
+</fieldset>
 
 
 <br class="clear" />

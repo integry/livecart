@@ -12,7 +12,7 @@
 
 <div id="settingsContainer" class="maxHeight h--50">
 	
-    <div style="float: left;">
+    <div class="treeContainer">
 
         <div id="settingsBrowser" class="treeBrowser">
     	</div>
@@ -25,13 +25,13 @@
 
 	<span id="settingsIndicator"></span>
 	
-	<div id="settingsContent" class="maxHeight">
+	<div id="settingsContent" class="treeManagerContainer maxHeight">
 	<span class="progressIndicator"></span>
 	</div>
 
 </div>
 
-<div id="activeSettingsPath"></div>
+<div id="activeSettingsPath" ></div>
 
 {literal}
 <script type="text/javascript">

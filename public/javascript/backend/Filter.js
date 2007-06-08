@@ -124,8 +124,6 @@ Backend.Filter.prototype = {
             
             this.hideSpecField();
             this.toggleFilters();
-            
-            new SectionExpander(this.nodes.parent)
         }
         catch(e)
         {
