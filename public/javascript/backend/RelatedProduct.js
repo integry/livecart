@@ -388,13 +388,6 @@ Backend.RelatedProduct.Group.View.prototype = {
         this.nodes.title = this.nodes.root.previous('.' + this.prefix + 'title');
         
         this.nodes.newGroupCancelLink = $(this.prefix + 'new_' + productID + '_cancel');
-        
-        this.nodes.translations = this.nodes.root.down('.' + this.prefix + 'translations');
-        this.nodes.translationTemplate = this.nodes.translations.down('.' + this.prefix + 'translations_language');
-        Element.remove(this.nodes.translationTemplate);
-        Element.removeClassName(this.nodes.translationTemplate, 'dom_template');
-        
-        this.nodes.translationsFieldsets = {};
     },
     
     setDefaultLanguageValues: function()
@@ -419,22 +412,8 @@ Backend.RelatedProduct.Group.View.prototype = {
         {
             if(language.value.ID == defaultLanguageID) return;
             
-            var translationFieldset = self.nodes.translationTemplate.cloneNode(true);
-            
-            translationFieldset.down('legend').update(language.value.name);
-            
-            var name = translationFieldset.down('.' + self.prefix + 'name');
-            name.name += '_' + language.key;
-            name.value = self.get('name_' + language.key , '')
-            
-            self.nodes.translationsFieldsets[language.value.ID] = translationFieldset;
-            self.nodes.translations.appendChild(translationFieldset);
-            
-            altLanguagesCount++;
+            self.nodes.form.elements.namedItem('name_' + language.key).value = self.get('name.' + language.key , '');
         });
-        
-        if(altLanguagesCount < 1) this.nodes.translations.hide();
-        
         this.clear();
     }, 
     

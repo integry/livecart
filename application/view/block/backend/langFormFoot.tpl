@@ -1,6 +1,5 @@
 	</div>
 </div>
-<div class="clear"></div>
 
 {literal}
 <script type="text/javascript">

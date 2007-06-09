@@ -906,7 +906,6 @@ Backend.RegisterMVC = function(MVC)
                 if(parseInt(language.value.isDefault))
                 {
                     self.defaultLanguage = language.value;
-                    throw $break;
                 }   
             });
         }
@@ -936,15 +935,19 @@ Backend.RegisterMVC = function(MVC)
         var keys = name.split('.');
         var destination = this._data;
         var found = true;
-        $A(keys).each(function(key) 
+        
+        try
         {
-            if(destination[key] === undefined) 
+            $A(keys).each(function(key) 
             {
-                found = false;
-                throw $break;
-            }
-            destination = destination[key];
-        });
+                if(destination[key] === undefined) throw new Error('not found');
+                destination = destination[key];
+            });
+        }
+        catch(e)
+        {
+            found = false;
+        }
         
         return found ? destination : defaultValue;
     }

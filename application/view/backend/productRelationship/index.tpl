@@ -11,7 +11,6 @@
         Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_group|addslashes}{literal}'
     }
     
-    
     Backend.RelatedProduct.links = {};
     Backend.RelatedProduct.messages = {};
     with(Backend.RelatedProduct)
@@ -20,7 +19,7 @@
         links.deleteRelated = '{/literal}{link controller=backend.productRelationship action=delete}/{$productID}{literal}';
         links.selectProduct = '{/literal}{link controller=backend.productRelationship action=selectProduct}#cat_{$categoryID}#tabProducts__{literal}';
         links.sort = '{/literal}{link controller=backend.productRelationship action=sort}/{$productID}{literal}';
-        
+
         messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
         messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_relation|addslashes}{literal}';
     }
@@ -43,8 +42,15 @@
     
     <script type="text/javascript">
     {literal}
+    try
+    {
         var emptyGroupModel = new Backend.RelatedProduct.Group.Model({Product: {ID: {/literal}{$productID}{literal}}}, Backend.availableLanguages);
         new Backend.RelatedProduct.Group.Controller($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('.productRelationshipGroup_form'), emptyGroupModel);
+    }
+    catch(e)
+    {
+        console.info(e)   
+    }
     {/literal}
     </script>
 </div>
@@ -94,7 +100,7 @@
             Event.stop(e);
             var newForm = Backend.RelatedProduct.Group.Controller.prototype.getInstance($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('.productRelationshipGroup_form')).showNewForm();
         });
-        
+
         Event.observe($("selectProduct_{/literal}{$productID}{literal}"), 'click', function(e) {
             Event.stop(e);
             new Backend.RelatedProduct.SelectProductPopup(
@@ -108,7 +114,6 @@
             Backend.RelatedProduct.Group.Controller.prototype.getInstance($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('form')).hideNewForm();
         });
         
-
         {/literal}    
         var groupList = ActiveList.prototype.getInstance('productRelationshipGroup_list_{$productID}', Backend.RelatedProduct.Group.Callbacks);  
         ActiveList.prototype.getInstance("productRelationship_list_{$productID}_", Backend.RelatedProduct.activeListCallbacks);
@@ -123,6 +128,7 @@
         {literal}
         
         groupList.createSortable();
+
     }
     catch(e)
     {

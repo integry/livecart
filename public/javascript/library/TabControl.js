@@ -129,14 +129,18 @@ TabControl.prototype = {
         setTimeout(function()
         {
             var locationHash = "#" + Backend.ajaxNav.getHash();
-            self.nodes.tabListElements.each(function(tab)
+            try
             {
-                if(locationHash.indexOf("#" + tab.id) !== -1)
+                self.nodes.tabListElements.each(function(tab)
                 {
-                    locationHash = locationHash.substring(0, locationHash.indexOf(tab.id) - 1);
-                    throw $break;
-                }
-            });
+                    if(locationHash.indexOf("#" + tab.id) !== -1)
+                    {
+                        locationHash = locationHash.substring(0, locationHash.indexOf(tab.id) - 1);
+                        throw new Error('stop');
+                    }
+                });
+            }
+            catch(e) { }
             
             Backend.ajaxNav.add(locationHash.substring(1) + "#" + self.activeTab.id);
         }, dhtmlHistory.currentWaitTime);

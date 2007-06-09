@@ -14,18 +14,12 @@
     		</fieldset>
             
         	<!-- STEP 3 -->
-        	<fieldset class="productFileGroup_translations">
-        		<fieldset class="dom_template expandingSection productFileGroup_translations_language">
-        			<legend class="productFileGroup_translations_language_legend"></legend>
-                    <div class="productFileGroup_translations_language_values expandingSectionContent">
-                        <div>
-                			<label class="productFileGroup_name_label">{t _productFileGroup_title}</label>
-                			<input type="text" name="name" class="productFileGroup_name" {denied role="product.update"}readonly="readonly"{/denied} />
-            			</div>
-                    </div>
-                    
-        		</fieldset>
-        	</fieldset>
+        	{language}
+                <fieldset class="error">
+            		<label>{t _product_file_group_title}:</label>
+            		<input type="text" value="" id="name_{$lang.ID}" name="name_{$lang.ID}"/>
+            	</fieldset>
+		    {/language}
     	</fieldset>
     
         <fieldset class="productFileGroup_controls controls">

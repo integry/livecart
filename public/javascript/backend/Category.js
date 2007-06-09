@@ -355,15 +355,19 @@ Backend.Category = {
         if(match = window.location.hash.match(/cat_(\d+)/)) 
         {
             var alreadyLoaded = false;
-            $A(Backend.Category.treeBrowser._globalIdStorage).each(function(id) 
+            try
             {
-                if(id == match[1]) 
+                $A(Backend.Category.treeBrowser._globalIdStorage).each(function(id) 
                 {
-                    alreadyLoaded = true;
-                    throw $break;
-                }
-            });
+                    if(id == match[1]) throw new Error('Already loaded')
+                });
+            }
+            catch(e)
+            {
+                alreadyLoaded = true;
+            }
             
+            alreadyLoaded = true;
             
 		    Element.update('activeCategoryPath', Backend.Category.getPath(match[1]));
         

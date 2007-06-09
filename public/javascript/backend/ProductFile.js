@@ -329,13 +329,6 @@ Backend.ProductFile.View.prototype = {
         this.nodes.downloadLink = this.nodes.root.down('.' + this.prefix + 'download_link');
         
         this.nodes.newFileCancelLink = $(this.prefix + 'new_' + productID + '_cancel');
-        
-        this.nodes.translations = this.nodes.root.down('.' + this.prefix + 'translations');
-        this.nodes.translationTemplate = this.nodes.translations.down('.' + this.prefix + 'translations_language');
-        Element.remove(this.nodes.translationTemplate);
-        Element.removeClassName(this.nodes.translationTemplate, 'dom_template');
-        
-        this.nodes.translationsFieldsets = {};
     },
     
     createUploadIFrame: function()
@@ -396,31 +389,14 @@ Backend.ProductFile.View.prototype = {
         
         var self = this;
         var languages = this.get('languages', {});
-        altLanguagesCount = 0;
         languages.each(function(language)
         {
             if(language.value.ID == defaultLanguageID) return;
             
-            var translationFieldset = self.nodes.translationTemplate.cloneNode(true);
-            
-            translationFieldset.down('legend').update(language.value.name);
-            
-            var description = translationFieldset.down('.' + self.prefix + 'description');
-            description.name += '_' + language.key;
-            description.value = self.get('description.' + language.key , '');
-            
-            var title = translationFieldset.down('.' + self.prefix + 'title');
-            title.name += '_' + language.key;
-            title.value = self.get('title.' + language.key , '');
-            
-            self.nodes.translationsFieldsets[language.value.ID] = translationFieldset;
-            self.nodes.translations.appendChild(translationFieldset);
-            
-            altLanguagesCount++;
+            self.nodes.form.elements.namedItem('description_' + language.key).value = self.get('description.' + language.key , 'no');
+            self.nodes.form.elements.namedItem('title_' + language.key).value = self.get('title.' + language.key , 'no');
         });
-        
-        if(altLanguagesCount < 1) this.nodes.translations.hide();
-        
+
         this.clear();
     }, 
     
@@ -765,12 +741,7 @@ Backend.ProductFile.Group.View.prototype = {
         
         this.nodes.newGroupCancelLink = $(this.prefix + 'new_' + productID + '_cancel');
         
-        this.nodes.translations = this.nodes.root.down('.' + this.prefix + 'translations');
-        this.nodes.translationTemplate = this.nodes.translations.down('.' + this.prefix + 'translations_language');
-        Element.remove(this.nodes.translationTemplate);
-        Element.removeClassName(this.nodes.translationTemplate, 'dom_template');
-        
-        this.nodes.translationsFieldsets = {};
+        this.nodes.languageForm = this.nodes.root.down('.languageForm');
     },
     
     setDefaultLanguageValues: function()
@@ -790,26 +761,12 @@ Backend.ProductFile.Group.View.prototype = {
         
         var self = this;
         var languages = this.get('languages', {});
-        altLanguagesCount = 0;
         languages.each(function(language)
         {
             if(language.value.ID == defaultLanguageID) return;
-            
-            var translationFieldset = self.nodes.translationTemplate.cloneNode(true);
-            
-            translationFieldset.down('legend').update(language.value.name);
-            
-            var name = translationFieldset.down('.' + self.prefix + 'name');
-            name.name += '_' + language.key;
-            name.value = self.get('name_' + language.key , '')
-            
-            self.nodes.translationsFieldsets[language.value.ID] = translationFieldset;
-            self.nodes.translations.appendChild(translationFieldset);
-            
-            altLanguagesCount++;
+            console.info(language.key, self.nodes.form.elements.namedItem('name_' + language.key), self.get('name.' + language.key , ''))
+            self.nodes.form.elements.namedItem('name_' + language.key).value = self.get('name.' + language.key, '');
         });
-        
-        if(altLanguagesCount < 1) this.nodes.translations.hide();
         
         this.clear();
     }, 

@@ -1248,16 +1248,20 @@ Backend.DeliveryZone.TaxRate.prototype =
     removeTaxOption: function(id)
     {
         var self = this;
-        $A(this.nodes.taxID.options).each(function(option)
+        try
         {
-            if(option.value == id)
+            $A(this.nodes.taxID.options).each(function(option)
             {
-                var formBackupId = self.nodes.form.backupId;
-                delete Form.State.backups[formBackupId]['taxID'][0]['options'][id];
-                Element.remove(option);
-                throw $break;
-            }
-        });
+                if(option.value == id)
+                {
+                    var formBackupId = self.nodes.form.backupId;
+                    delete Form.State.backups[formBackupId]['taxID'][0]['options'][id];
+                    Element.remove(option);
+                    throw new Error('Found');
+                }
+            });
+        }
+        catch(e) { }
     },
     
     findUsedNodes: function(root)

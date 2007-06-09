@@ -14,18 +14,12 @@
     		</fieldset>
             
         	<!-- STEP 3 -->
-        	<fieldset class="productRelationshipGroup_translations">
-        		<fieldset class="dom_template expandingSection productRelationshipGroup_translations_language">
-        			<legend class="productRelationshipGroup_translations_language_legend"></legend>
-        
-                    <div class="productRelationshipGroup_translations_language_values expandingSectionContent">
-                        <div>
-                			<label class="productRelationshipGroup_name_label">{t _product_relationship_group_title}</label>
-                			<input type="text" name="name" class="productRelationshipGroup_name" {denied role="product.update"}readonly="readonly"{/denied} />
-            			</div>
-                    </div>
-        		</fieldset>
-        	</fieldset>
+        	{language}
+                <fieldset class="error">
+        			<label class="productRelationshipGroup_name_label">{t _product_relationship_group_title}</label>
+        			<input type="text" name="name_{$lang.ID}" class="productRelationshipGroup_name" {denied role="product.update"}readonly="readonly"{/denied} />
+                </fieldset>
+            {/language}
     	</fieldset>
     
         <fieldset class="productRelationshipGroup_controls controls">

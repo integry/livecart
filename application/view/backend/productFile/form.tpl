@@ -46,24 +46,18 @@
     		</fieldset>
             
         	<!-- STEP 3 -->
-        	<fieldset class="productFile_translations">
-        		<fieldset class="dom_template productFile_translations_language expandingSection">
-        			<legend class="productFile_translations_language_legend"></legend>
-                    
-                    <div class="expandingSectionContent">
-                        <div class="productFile_translations_language_values">
-                            <div>
-                    			<label class="productFile_title_label">{t _productFile_title}</label>
-                    			<input type="text" name="title" class="productFile_title" {denied role="product.update"}readonly="readonly"{/denied} />
-                			</div>
-                            <div>
-                    			<label class="productFile_description_label">{t _productFile_description}</label>
-                    			<input type="text" name="description" class="productFile_description" {denied role="product.update"}readonly="readonly"{/denied} />
-                			</div>
-                        </div>
-                    </div>
-        		</fieldset>
-        	</fieldset>
+        	
+		    {language}
+                <fieldset class="error">
+        			<label class="productFile_title_label">{t _productFile_title}</label>
+        			<input type="text" name="title_{$lang.ID}" class="productFile_title" {denied role="product.update"}readonly="readonly"{/denied} />
+                </fieldset>
+                <fieldset class="error">
+        			<label class="productFile_description_label">{t _productFile_description}</label>
+                    <textarea type="text" name="description_{$lang.ID}" class="productFile_description" {denied role="product.update"}readonly="readonly"{/denied} ></textarea>
+                </fieldset>
+		    {/language}
+
     	</fieldset>
     
         <fieldset class="productFile_controls controls">
