@@ -134,6 +134,14 @@
 <script type="text/javascript">
     try
     {ldelim}
+        {allowed role="category.sort"}
+            Backend.Category.allowSorting = true;
+        {/allowed} 
+        
+        {allowed role="product"}
+            Backend.Product.productsMiscPermision = true;
+        {/allowed}
+        
         Backend.showContainer('managerContainer');
     
     	/**
@@ -153,11 +161,7 @@
         Backend.Category.messages._confirm_category_remove = '{t _confirm_category_remove|addslashes}';
     
     	Backend.Category.init(); 
-        
-        {allowed role="category.sort"}
-            Backend.Category.allowSorting = true;
-        {/allowed} 
-        
+                
     	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading); 
         Backend.Category.addCategories({json array=$categoryList});
         
@@ -165,11 +169,6 @@
     	Backend.Category.initPage();
         
         Backend.Category.loadBookmarkedCategory();
-
-        {allowed role="product"}
-            Backend.Product.productsMiscPermision = true;
-        {/allowed}
-    
     {rdelim}
     catch(e)
     {ldelim}
