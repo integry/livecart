@@ -41,6 +41,7 @@
 
 {literal}
 <script type="text/javascript">
+    Backend.CustomerOrder.Editor.prototype.Links.states = '{/literal}{link controller=backend.user action=states}{literal}';
     Backend.CustomerOrder.Editor.prototype.Links.update = '{/literal}{link controller=backend.customerOrder action=update}{literal}';
     Backend.CustomerOrder.Editor.prototype.Links.switchCancelled = '{/literal}{link controller=backend.customerOrder action=switchCancelled}{literal}';
     new Backend.CustomerOrder({/literal}{json array=$orderGroups}{literal});

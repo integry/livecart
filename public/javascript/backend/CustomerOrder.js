@@ -503,10 +503,15 @@ Backend.CustomerOrder.Address.prototype =
         {
             this.findUsedNodes(root);
             this.bindEvents();
-            
+            this.showOtherState();
+            new Backend.User.StateSwitcher(
+                this.nodes.form.elements.namedItem('countryID'), 
+                this.nodes.form.elements.namedItem('stateID'), 
+                this.nodes.form.elements.namedItem('stateName'),
+                Backend.CustomerOrder.Editor.prototype.Links.states
+            );
+      
             Form.State.backup(this.nodes.form);
-            
-            var self = this;
         }
         catch(e)
         {
@@ -514,6 +519,33 @@ Backend.CustomerOrder.Address.prototype =
         }
 
 	},
+    
+    showOtherState: function()
+    {
+
+                            
+     return;
+        if(!this.nodes.form.elements.namedItem('stateID').value)
+        {
+            new Ajax.Request(
+                Backend.CustomerOrder.Editor.prototype.Links.states + 'country=' + this.nodes.form.elements.namedItem('countryID').value,
+                {
+                    onSuccess: function(response)
+                    {
+                        response = eval("(" + response + ")");
+                        console.info(response)
+                    }    
+                }
+            );
+            
+            this.nodes.form.elements.namedItem('stateName').up('fieldset').show();
+        }   
+        else
+        {
+            this.nodes.form.elements.namedItem('stateName').up('fieldset').hide();
+        } 
+        
+    },
 
 	findUsedNodes: function(root)
     {
@@ -528,6 +560,7 @@ Backend.CustomerOrder.Address.prototype =
     {
 		var self = this;
 		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
+        Event.observe(this.nodes.form.elements.namedItem('stateID'), 'change', function(e) { self.showOtherState()});
     },
 
     init: function(args)
@@ -538,8 +571,6 @@ Backend.CustomerOrder.Address.prototype =
         {
             orderIndicator.style.display = 'none';
         }
-        Backend.showContainer("orderManagerContainer");
-
         this.tabControl = TabControl.prototype.getInstance("orderManagerContainer", false);
     },
     

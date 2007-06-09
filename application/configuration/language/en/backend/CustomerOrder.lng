@@ -39,6 +39,8 @@ _is_canceled=Is canceled
 _order_id=Order ID
 _is_finalized=Is finalized
 
+_edit=Edit
+_view=View
 
 # Grid labels
 CustomerOrder.status=Status

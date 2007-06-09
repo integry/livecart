@@ -131,6 +131,16 @@ class UserController extends StoreManagementController
 		return new JSONResponse($this->request->getValue('act'));	
     } 
 	
+
+    /**
+     *  Return a list of states for the selected country
+     *  @return JSONResponse
+     */
+    public function states()
+    {                
+        $states = State::getStatesByCountry($this->request->getValue('country'));
+        return new JSONResponse($states);
+    }
     
 	private function save(User $user = null)
 	{
