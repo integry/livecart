@@ -1,5 +1,5 @@
 <div class="specField_group_form">
-    <form action="{link controller=backend.specFieldGroup action=save}/" method="post" class="{denied role="category.update"}formReadonly{/denied}"> 
+    <form action="{link controller=backend.specFieldGroup action=save}/" method="post" class="{denied role="category.update"}formReadonly{/denied} specField_group_form_node"> 
         <input type="hidden" name="categoryID" class="specField_group_categoryID" />
         <fieldset class="specField_group_translations specField_step_main">
 			<div class="specField_group_default_language">
@@ -10,19 +10,12 @@
                 </fieldset>
         	</div>
         
-        	<fieldset style="display: block" class="dom_template expandingSection specField_step_translations_language specField_group_translations_language_">
-        		<legend>
-                    <span class="expandIcon">[+] </span>
-                    <span class="specField_group_translation_language_name"></span>
-                </legend>
-        
-                <div class="activeForm_translation_values specField_group_language_translation">
-                    <p class="required">
-            			<label>{t _specField_group_title}</label>
-            			<input type="text" name="name" {denied role="category.update"}readonly="readonly"{/denied} />
-        			</p>
-                </div>
-        	</fieldset>
+        	{language}
+                <fieldset class="error required">
+        			<label>{t _specField_group_title}</label>
+        			<input type="text" name="name_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
+    			</fieldset>
+            {/language}
         </fieldset>
         
         <fieldset class="specField_group_controls controls">

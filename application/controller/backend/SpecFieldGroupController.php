@@ -99,10 +99,13 @@ class SpecFieldGroupController extends StoreManagementController
     private function save(SpecFieldGroup $specFieldGroup)
     {          
         $this->createLanguageCodes();
-        if(count($errors = SpecFieldGroup::validate($this->request->getValueArray(array('name')), $this->languageCodes)) == 0)
+        if(count($errors = SpecFieldGroup::validate($this->request->getValueArray(array("name_{$this->languageCodes[0]}")), $this->languageCodes)) == 0)
         {
-            $name = $this->request->getValue('name');
-            $specFieldGroup->setLanguageField('name', $name, $this->languageCodes);
+			foreach($this->store->getLanguageArray(true) as $langCode) 
+			{
+			    $specFieldGroup->setValueByLang('name', $langCode, $this->request->getValue('name_' . $langCode));
+			}
+            
             $specFieldGroup->save();
             
             return new JSONResponse(array('status' => 'success', 'id' => $specFieldGroup->getID()));

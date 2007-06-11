@@ -181,19 +181,15 @@ Backend.SpecField.prototype = {
 	 * @access private
 	 */
 	cloneForm: function(prototypeId)
-	{
-	    var blankForm = $(prototypeId);
-                
-        var blankFormValues = blankForm.getElementsByTagName("*");
+	{ 
         var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ?  ActiveList.prototype.getInstance(this.specField.rootId).getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
 
-        for(var i = 0; i < blankFormValues.length; i++)
-        {
-            if(blankFormValues[i] && blankFormValues[i].parentNode == blankForm)
-            {
-                root.appendChild(blankFormValues[i].cloneNode(true));
-            }
-        }
+	    var blankForm = $(prototypeId);
+        var copiedForm = blankForm.cloneNode(true);    
+        Element.removeClassName(copiedForm, 'dom_template');
+        root.appendChild(copiedForm);
+        
+        new Backend.LanguageForm(copiedForm);
 	},
 
 
@@ -462,11 +458,10 @@ Backend.SpecField.prototype = {
         this.nodes.name.id = this.cssPrefix + this.categoryID + "_" + this.id + "_name_" + this.languageCodes[0]; 
         this.nodes.valuePrefix.id = this.cssPrefix + this.categoryID + "_" + this.id + "_valuePrefix_" + this.languageCodes[0]; 
         this.nodes.valueSuffix.id = this.cssPrefix + this.categoryID + "_" + this.id + "_valueSuffix_" + this.languageCodes[0]; 
-        
-        
-		this.nodes.name.name = "name[" + this.languageCodes[0] + "]";
-		this.nodes.valuePrefix.name = "valuePrefix[" + this.languageCodes[0] + "]";
-		this.nodes.valueSuffix.name = "valueSuffix[" + this.languageCodes[0] + "]";
+
+		this.nodes.name.name = "name_" + this.languageCodes[0];
+		this.nodes.valuePrefix.name = "valuePrefix_" + this.languageCodes[0];
+		this.nodes.valueSuffix.name = "valueSuffix_" + this.languageCodes[0];
                    
 		this.nodes.multipleSelector.checked = this.isMultiValue;
 		this.nodes.isRequired.checked = this.isRequired;
@@ -507,85 +502,22 @@ Backend.SpecField.prototype = {
         this.changeMainTitleAction(this.nodes.name.value);
 
 		if(this.specField.description_lang) this.nodes.description.value = this.specField.description_lang;
-		this.nodes.description.name = "description[" + this.languageCodes[0] + "]";
+		this.nodes.description.name = "description_" + this.languageCodes[0];
         
         this.nodes.description.id = this.cssPrefix + this.categoryID + "_" + this.id + "_description_" + this.languageCodes[0]; 
-        
-
-		// Translations
-		var translations = document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations);
-		var valuesTranslations = document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepValues);
-        // we should have a template to continue
-		if(translations.length > 0 && Element.hasClassName(translations[0], 'dom_template'))
-		{
-			this.nodes.translations = new Array();
-			for(var i = 1; i < this.languageCodes.length; i++)
-			{
-                // Name, description, etc translations                
-				// copy template class
-				var newTranslation = translations[0].cloneNode(true);
-				Element.removeClassName(newTranslation, "dom_template");
-    
-    			// bind it
-                var legend = newTranslation.getElementsByTagName("legend")[0];
-                Event.observe(legend, "click", function(e) { ActiveForm.prototype.toggleTranslations(this.up('fieldset')) } );
+        var fields = ['name', 'valuePrefix', 'valueSuffix', 'description'];
+		for(var i = 1; i < this.languageCodes.length; i++)
+		{          
+    		for(var j = 0; j < fields.length; j++) {
+                var field = this.nodes.form.elements.namedItem(fields[j] + '_' + this.languageCodes[i]);
+                var label = field.up('.languageFormContainer').down('.translation_' + fields[j] + '_label');
+                field.id = this.cssPrefix + this.categoryID + "_" + this.id + "_" + fields[j] + "_" + this.languageCodes[i];
+                label.forID = field.id;
                 
-				newTranslation.className += this.languageCodes[i];
-                
-                document.getElementsByClassName(this.cssPrefix + "legend_text", newTranslation.getElementsByTagName("legend")[0])[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
-
-				var inputFields = $A(newTranslation.getElementsByTagName('input'));
-				var textAreas = newTranslation.getElementsByTagName('textarea');
-				for(var j = 0; j < textAreas.length; j++)
-				{
-				    inputFields[inputFields.length] = textAreas[j];
-				}
-
-				for(var j = 0; j < inputFields.length; j++)
-				{
-                    if(Element.hasClassName(inputFields[j].parentNode.parentNode, this.cssPrefix + 'language_translation'))
-                    {
-                        var translationId = this.cssPrefix + this.categoryID + "_" + this.id + "_" + inputFields[j].name + "_" + this.languageCodes[i];
-						var translationLabel = inputFields[j].up().down("label");
-                        translationLabel.languageCode = this.languageCodes[i];
-                        translationLabel.simpleName = inputFields[j].name;
-                        
-                        var _self_ = this;
-                        Event.observe(translationLabel, "click", function(e) { 
-                            $(_self_.cssPrefix + _self_.categoryID + "_" + _self_.id + "_" + this.simpleName + "_" + this.languageCode).focus();
-                        });
-                        
-                        inputFields[j].id = translationId;
-                        eval("if(self.specField." + inputFields[j].name + "_" + self.languageCodes[i] + ") inputFields[j].value = self.specField."+inputFields[j].name + "_" + self.languageCodes[i] + ";");
-						inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
-                    }
-				}
-
-				this.nodes.stepTranslations.appendChild(newTranslation);
-
-				// add to nodes list
-				this.nodes.translations[this.languageCodes[i]] = newTranslation;
-                                
-                // Create place for values translations
-				var newValueTranslation = valuesTranslations[0].cloneNode(true);
-				Element.removeClassName(newValueTranslation, "dom_template");
-				newValueTranslation.className += this.languageCodes[i];
-                
-                
-                var valueTranslationLegend = newValueTranslation.getElementsByTagName("legend")[0];
-                
-                document.getElementsByClassName(this.cssPrefix + "legend_text", valueTranslationLegend)[0].appendChild(document.createTextNode(this.languages[this.languageCodes[i]]));
-                
-                Event.observe(valueTranslationLegend, "click", function(e) { ActiveForm.prototype.toggleTranslations(e.target.parentNode.parentNode) } );
-                
-                
-				valuesTranslations[0].parentNode.appendChild(newValueTranslation);
-                this.nodes.valuesTranslations[this.languageCodes[i]] = newValueTranslation;
-			}
-		}
-        
-		// Delete language template, so that included in that template variables would not be sent to server
-		Element.remove(document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations)[0]);
+                if(this.specField[fields[j] + '_' + this.languageCodes[i]]) field.value = this.specField[fields[j] + '_' + this.languageCodes[i]];
+                Event.observe(label, "click", function(e) { $(this.forID).focus(); });
+           }
+        }
 	},
 
 	/**
@@ -850,6 +782,7 @@ Backend.SpecField.prototype = {
 	 */
 	addField: function(value, id, isDefault)
 	{
+        return; // look
         var self = this;
 		if(!value) value = {};
 		
@@ -1320,7 +1253,7 @@ Backend.SpecFieldGroup.prototype = {
                 }
                 else
                 {
-                    if('block' != document.getElementsByClassName('specField_group_form', li)[0].style.display)
+                    if('block' != li.down('.specField_group_form_node').style.display)
                     {
                          Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);
                     }
@@ -1396,13 +1329,25 @@ Backend.SpecFieldGroup.prototype = {
         this.nodes = {};
 
         this.nodes.parent              = parent;
-        this.nodes.form                = document.getElementsByClassName(this.cssPrefix + 'group_form', this.nodes.template)[0].cloneNode(true);
+        this.nodes.form                = document.getElementsByClassName(this.cssPrefix + 'group_form', this.nodes.template)[0].down('form').cloneNode(true);
+        this.nodes.mainTitle           = document.getElementsByClassName(this.cssPrefix + 'group_title', this.nodes.parent)[0];
+        
+        try
+        {
+            this.nodes.parent.insertBefore(this.nodes.form, this.nodes.mainTitle.nextSibling);
+        }
+        catch(e)
+        {
+            this.nodes.parent.appendChild(this.nodes.form);
+        }
+        
+        new Backend.LanguageForm(this.nodes.form);
+        
         this.nodes.template            = $('specField_group_blank');
         this.nodes.translations        = document.getElementsByClassName(this.cssPrefix + 'group_translations', this.nodes.form)[0];
         this.nodes.controls            = document.getElementsByClassName(this.cssPrefix + 'group_controls', this.nodes.form)[0];
         this.nodes.translationTemplate = document.getElementsByClassName(this.cssPrefix + 'group_translations_language_', this.nodes.translations)[0];
         this.nodes.name                = document.getElementsByClassName(this.cssPrefix + 'group_default_language', this.nodes.translations)[0].down("input");
-        this.nodes.mainTitle           = document.getElementsByClassName(this.cssPrefix + 'group_title', this.nodes.parent)[0];
         this.nodes.categoryID          = document.getElementsByClassName(this.cssPrefix + 'group_categoryID', this.nodes.form)[0];
         this.nodes.save                = document.getElementsByClassName(this.cssPrefix + 'save', this.nodes.controls)[0];
         this.nodes.cancel              = document.getElementsByClassName(this.cssPrefix + 'cancel', this.nodes.controls)[0];
@@ -1437,7 +1382,7 @@ Backend.SpecFieldGroup.prototype = {
             this.nodes.name = '';
         }
         
-        this.nodes.name.name += "[" + Backend.SpecField.prototype.languageCodes[0] + "]";
+        this.nodes.name.name += "_" + Backend.SpecField.prototype.languageCodes[0];
         if(this.group.name_lang) this.nodes.name.value = this.group.name_lang;
         
         this.nodes.labels.name.onclick = function() { self.nodes.name.focus() }
@@ -1446,43 +1391,17 @@ Backend.SpecFieldGroup.prototype = {
         
         $H(Backend.SpecField.prototype.languages).each(function(language) {
             if(language.key == Backend.SpecField.prototype.languageCodes[0]) return;
-            
-            var languageTranlation = self.nodes.translationTemplate.cloneNode(true);
-            Element.removeClassName(languageTranlation, self.cssPrefix + 'group_translations_language_');
-            Element.removeClassName(languageTranlation, 'dom_template');
-            Element.addClassName(languageTranlation, self.cssPrefix + 'group_translations_language_' + language.key);
+                       
+            var elements = self.nodes.form.elements;
+            var translationInput = elements.namedItem("name_" + language.key);
+            var translationLabel = translationInput.up('fieldset').down("label"); 
+            if(self.group['name_' + language.key]) translationInput.value = self.group['name_' + language.key];
 
-            
-            var legend = languageTranlation.getElementsByTagName('legend')[0];
-            var languageName = document.getElementsByClassName(self.cssPrefix + 'group_translation_language_name', legend)[0];  
-            languageName.innerHTML  = language.value;
-                        
-            var translationInput   = languageTranlation.getElementsByTagName("input")[0];
-            translationInput.name  += '[' + language.key + ']';
-            translationInput.value = self.group["name_" + language.key] ? self.group["name_" + language.key] : '';
-            
-            Event.observe(legend, "click", function(e) { ActiveForm.prototype.toggleTranslations(legend.parentNode) } );
-
-            self.nodes.translations.appendChild(languageTranlation);
-            
-            var input = languageTranlation.down("input");
-            var label = languageTranlation.down("label"); 
-
-            input.id = self.cssPrefix + "group_name_" + self.group.ID + "_" + language.key;
-            label['for'] = input.id;
-            label.onclick = function() { $(this["for"]).focus() };
+            translationInput.id = self.cssPrefix + "group_name_" + self.group.ID + "_" + language.key;
+            translationLabel.forID = translationInput;
+            console.info(translationLabel, $(translationLabel['forID']))
+            Element.observe(translationLabel, 'click', function() { this.forID.focus(); });
         });
-        
-        Element.remove(self.nodes.translationTemplate);
-        
-        try
-        {
-            this.nodes.parent.insertBefore(this.nodes.form, this.nodes.mainTitle.nextSibling);
-        }
-        catch(e)
-        {
-            this.nodes.parent.appendChild(this.nodes.form);
-        }
     },
     
     /**
@@ -1613,13 +1532,12 @@ Backend.SpecFieldGroup.prototype = {
      * 
      * @param HTMLElement parent
      */
-    displayGroupTranslations: function(parent)
+    displayGroupTranslations: function(root)
     {
-        ActiveForm.prototype.showNewItemForm(
-            document.getElementsByClassName(this.cssPrefix + 'group_title', parent)[0], 
-            document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0]
-        ); 
-        parent.down('input.specField_group_name_label').focus();
+        root.down('form').style.display = 'inline';
+        root.down('.' + this.cssPrefix + 'group_title').hide();
+
+        root.down('input.specField_group_name_label').focus();
     },
     
     
@@ -1628,12 +1546,10 @@ Backend.SpecFieldGroup.prototype = {
      * 
      * @param HTMLElement parent
      */
-    hideGroupTranslations: function(parent)
+    hideGroupTranslations: function(root)
     {
-        ActiveForm.prototype.hideNewItemForm(
-            document.getElementsByClassName(this.cssPrefix + 'group_title', parent)[0], 
-            document.getElementsByClassName(this.cssPrefix + 'group_form', parent)[0]
-        ); 
+        root.down('.specField_group_title').show();
+        root.down('form').hide();
     },
     
     /**
@@ -1642,9 +1558,9 @@ Backend.SpecFieldGroup.prototype = {
      * @param HTMLElement parent
      * @return boolean
      */
-    isGroupTranslated: function(parent)
+    isGroupTranslated: function(root)
     {
-        return document.getElementsByClassName(this.cssPrefix + 'group_form', parent).length > 0;
+        return root.down('.' + this.cssPrefix + 'group_form_node');
     },
 
     /**

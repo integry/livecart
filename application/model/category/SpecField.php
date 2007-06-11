@@ -362,9 +362,9 @@ class SpecField extends MultilingualObject
     {
         $errors = array();
         
-        if(!isset($values['name']) || $values['name'][$languageCodes[0]] == '')
+        if(!isset($values['name_' . $languageCodes[0]]) || $values['name_' . $languageCodes[0]] == '')
         {
-            $errors["name[{$languageCodes[0]}]"] = '_error_name_empty';
+            $errors["name_" + $languageCodes[0]] = '_error_name_empty';
         }
 
         if(!isset($values['handle']) || $values['handle'] == '' || preg_match('/[^\w\d_.]/', $values['handle']))
