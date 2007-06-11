@@ -1,7 +1,7 @@
 <?php
 
 include_once('../abstract/CreditCardPayment.php');
-include_once('../method/paypal/PaypalCommon.php');
+include_once('../method/library/paypal/PaypalCommon.php');
 
 class PaypalDirectPayment extends CreditCardPayment
 {

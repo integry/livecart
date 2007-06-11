@@ -8,7 +8,16 @@ include_once('../TransactionDetails.php');
 
 class PaymentTest extends UnitTest
 {
-	function setUp()
+	public function __construct($name = null)
+	{
+		UnitTestCase::__construct($name);
+	}
+
+	public function tearDown()
+	{		
+	}
+
+	public function setUp()
 	{
 		$details = new TransactionDetails();
 		$details->firstName->set('Rinalds');
@@ -40,6 +49,11 @@ class PaymentTest extends UnitTest
 		$details->description->set('LiveCart Order');								
 
 		$this->details = $details;		
+	}
+	
+	public function getUsedSchemas()
+	{
+		return array();
 	}
 }
 
