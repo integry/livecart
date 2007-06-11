@@ -42,7 +42,7 @@ class TemplateController extends StoreManagementController
         
         $template = new Template($this->request->getValue('file')); 
 		$template->setCode($code);
-		$template->save();
+		$res = $template->save();
 		
 		return new JSONResponse($res);
 	}

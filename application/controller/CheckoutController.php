@@ -318,7 +318,11 @@ class CheckoutController extends FrontendController
 			$response->setValue('ccForm', $this->buildCreditCardForm());
 			
 			$months = range(1, 12);
+			$months = array_combine($months, $months);
+			
 			$years = range(date('Y'), date('Y') + 20);
+			$years = array_combine($years, $years);
+			
 			$response->setValue('months', $months);
 			$response->setValue('years', $years);
 		}
@@ -374,7 +378,7 @@ class CheckoutController extends FrontendController
         elseif ($result instanceof TransactionError)
         {
             $validator = $this->buildCreditCardValidator();
-            
+            var_dump($handler, $result); exit;
             // set error message for credit card form
             $validator->triggerError('creditCardError', $this->translate('_err_processing_cc'));
             $validator->saveState();

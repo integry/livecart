@@ -35,7 +35,7 @@ class Store
 	 *
 	 * @var Config
 	 */
-	protected $configInstance = null;
+	protected $config = null;
 
 	private $requestLanguage;
 
@@ -359,7 +359,7 @@ class Store
 	}
 
 	/**
-	 * Returns array of enabled currency instances
+	 * Returns an array of enabled currency instances
 	 *
 	 * @param bool $includeDefaultCurrency Whether to include default currency in the list
 	 * @return array Enabled currency codes
@@ -378,16 +378,38 @@ class Store
 		return $currArray;
 	}
 	
+	/**
+	 * Returns an array of available credit card handlers
+	 */
+	public function getCreditCardHandlerList()
+	{
+		ClassLoader::import('library.payment.PaymentMethodManager');		
+		return PaymentMethodManager::getCreditCardHandlerList();
+	}
+
 	public function getCreditCardHandler(TransactionDetails $details = null)
 	{
-		ClassLoader::import('library.payment.method.testcreditcard.TestCreditCard');
+		$handler = $this->config->getValue('CC_HANDLER');
+		
+		ClassLoader::import('library.payment.method.cc.' . $handler . '.' . $handler);
 
 		if (is_null($details))
 		{
 			$details = new TransactionDetails();
 		}
 
-		return new TestCreditCard($details);
+		$inst = new $handler($details);
+		
+		$c = $this->config->getSection('payment/' . $handler);
+		foreach ($c as $key => $value)
+		{
+			$key = substr($key, strlen($handler) + 1);
+			$inst->setConfigValue($key, $value);
+		}
+		
+		$inst->setCardType('Visa');
+		
+		return $inst;
 	}
 
 	/**

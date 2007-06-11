@@ -149,6 +149,7 @@ _email_store=Store Administration Notifications
 _email_customer=Customer Notifications
 
 _payment=Payment Methods
+CC_HANDLER=Credit card handler
 
 _customers=Customers
 REQUIRE_PHONE=Require customers to enter phone number on registration
