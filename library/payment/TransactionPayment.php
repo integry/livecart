@@ -11,6 +11,8 @@ abstract class TransactionPayment
 	
 	protected $isTestTransaction = false;
 	
+	private $config = array();
+	
 	public function __construct(TransactionDetails $transactionDetails)
 	{
 		$this->details = $transactionDetails;
@@ -19,6 +21,19 @@ abstract class TransactionPayment
 	public function setAsTestTransaction($test = true)
 	{
 		$this->isTestTransaction = true;
+	}
+	
+	public function setConfigValue($key, $value)
+	{
+		$this->config[$key] = $value;
+	}
+	
+	public function getConfigValue($key)
+	{
+		if (isset($this->config[$key]))
+		{
+			return $this->config[$key];
+		}
 	}
 	
 	/**

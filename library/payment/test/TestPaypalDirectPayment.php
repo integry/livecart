@@ -3,13 +3,23 @@
 include_once('unittest/UTStandalone.php');
 
 include_once('PaymentTest.php');
-include_once('../method/paypaldirectpayment/PaypalDirectPayment.php');
+include_once('../method/cc/PaypalDirectPayment/PaypalDirectPayment.php');
 
 class TestPaypalDirectPayment extends PaymentTest
 {
-	function testInvalidCard()
+	private function getPaymentHandler()
 	{
 		$payment = new PaypalDirectPayment($this->details);
+		$payment->setConfigValue('username', 'sandbox_api1.integry.net');
+		$payment->setConfigValue('password', '9AURF7SPQCEYCDXV');
+		$payment->setConfigValue('signature', 'AeQ618dBMNS1kVFZwUIitcve-k.dAT5pnzBekoPUhcIj1J5p65ZAR8Pu');
+		
+		return $payment;
+	}
+	
+	function testInvalidCard()
+	{
+		$payment = $this->getPaymentHandler();
 		$payment->setCardData('5522219712684510', '12', '2007', '000');
 		$payment->setCardType('Visa');
 		
@@ -20,7 +30,7 @@ class TestPaypalDirectPayment extends PaymentTest
 
 	function testAuthorizeAndCapture()
 	{		
-		$payment = new PaypalDirectPayment($this->details);
+		$payment = $this->getPaymentHandler();
 		$payment->setCardData('4522219712684510', '12', '2007', '000');
 		$payment->setCardType('Visa');
 		
@@ -31,7 +41,7 @@ class TestPaypalDirectPayment extends PaymentTest
 	
 	function testAuthorizationWithSeparateCapture()
 	{		
-		$payment = new PaypalDirectPayment($this->details);
+		$payment = $this->getPaymentHandler();
 		$payment->setCardData('4522219712684510', '12', '2007', '000');
 		$payment->setCardType('Visa');
 		
@@ -40,7 +50,7 @@ class TestPaypalDirectPayment extends PaymentTest
 		
 		$this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());		
 		
-		$capture = new PaypalDirectPayment($this->details);
+		$capture = $this->getPaymentHandler();
 		$result = $capture->capture();
 		
 		$this->assertTrue($result instanceof TransactionResult);
@@ -48,7 +58,7 @@ class TestPaypalDirectPayment extends PaymentTest
 	
 	function testAuthorizationWithHugeCaptureAmount()
 	{		
-		$payment = new PaypalDirectPayment($this->details);
+		$payment = $this->getPaymentHandler();
 		$payment->setCardData('4522219712684510', '12', '2007', '000');
 		$payment->setCardType('Visa');
 		
@@ -58,7 +68,7 @@ class TestPaypalDirectPayment extends PaymentTest
 		$this->details->amount->set($this->details->amount->get() * 2);		
 		$this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());		
 		
-		$capture = new PaypalDirectPayment($this->details);
+		$capture = $this->getPaymentHandler();
 		$result = $capture->capture();
 		
 		$this->assertTrue($result instanceof TransactionError);
@@ -66,7 +76,7 @@ class TestPaypalDirectPayment extends PaymentTest
 
 	function testAuthorizationWith14PercentHigherCaptureAmount()
 	{		
-		$payment = new PaypalDirectPayment($this->details);
+		$payment = $this->getPaymentHandler();
 		$payment->setCardData('4522219712684510', '12', '2007', '000');
 		$payment->setCardType('Visa');
 		
@@ -76,7 +86,7 @@ class TestPaypalDirectPayment extends PaymentTest
 		$this->details->amount->set(round($this->details->amount->get() * 1.14, 2));		
 		$this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());		
 		
-		$capture = new PaypalDirectPayment($this->details);
+		$capture = $this->getPaymentHandler();
 		$result = $capture->capture();
 		
 		$this->assertTrue($result instanceof TransactionResult);
@@ -84,7 +94,7 @@ class TestPaypalDirectPayment extends PaymentTest
 
 	function testAuthorizationWithPartialCaptureAmount()
 	{		
-		$payment = new PaypalDirectPayment($this->details);
+		$payment = $this->getPaymentHandler();
 		$payment->setCardData('4522219712684510', '12', '2007', '000');
 		$payment->setCardType('Visa');
 		
@@ -94,7 +104,7 @@ class TestPaypalDirectPayment extends PaymentTest
 		$this->details->amount->set(round($this->details->amount->get() * 0.7, 2));		
 		$this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());		
 		
-		$capture = new PaypalDirectPayment($this->details);
+		$capture = $this->getPaymentHandler();
 		$result = $capture->capture();
 		
 		$this->assertTrue($result instanceof TransactionResult);
@@ -102,7 +112,7 @@ class TestPaypalDirectPayment extends PaymentTest
 
 	function testAuthorizationWithTwoCaptures()
 	{		
-		$payment = new PaypalDirectPayment($this->details);
+		$payment = $this->getPaymentHandler();
 		$payment->setCardData('4522219712684510', '12', '2007', '000');
 		$payment->setCardType('Visa');
 		
@@ -114,7 +124,7 @@ class TestPaypalDirectPayment extends PaymentTest
 		$this->details->amount->set(round($amount * 0.7, 2));		
 		$this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());		
 		
-		$capture = new PaypalDirectPayment($this->details);
+		$capture = $this->getPaymentHandler();
 		$result = $capture->capture();
 		
 		$this->assertTrue($result instanceof TransactionResult);
@@ -122,7 +132,7 @@ class TestPaypalDirectPayment extends PaymentTest
 		// second capture - 25%
 		$this->details->amount->set(round($amount * 0.25, 2));		
 		
-		$capture = new PaypalDirectPayment($this->details);
+		$capture = $this->getPaymentHandler();
 		$result = $capture->capture();
 
 		$this->assertTrue($result instanceof TransactionResult);
@@ -130,7 +140,7 @@ class TestPaypalDirectPayment extends PaymentTest
 		// third capture - +17%
 		$this->details->amount->set(round($amount * 0.12, 2));		
 		
-		$capture = new PaypalDirectPayment($this->details);
+		$capture = $this->getPaymentHandler();
 		$result = $capture->capture();
 
 		$this->assertTrue($result instanceof TransactionResult);
@@ -138,7 +148,7 @@ class TestPaypalDirectPayment extends PaymentTest
 		// fourth capture attempt should fail, because we have captured all allocated funds already
 		$this->details->amount->set(round($amount * 0.2, 2));		
 		
-		$capture = new PaypalDirectPayment($this->details);
+		$capture = $this->getPaymentHandler();
 		$result = $capture->capture();
 
 		$this->assertTrue($result instanceof TransactionError);
@@ -146,14 +156,14 @@ class TestPaypalDirectPayment extends PaymentTest
 
 	function testVoidAuthorizedTransaction()
 	{
-		$payment = new PaypalDirectPayment($this->details);
+		$payment = $this->getPaymentHandler();
 		$payment->setCardData('4522219712684510', '12', '2007', '000');
 		$payment->setCardType('Visa');
 		
 		$result = $payment->authorize();
 		$this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());		
 		
-		$void = new PaypalDirectPayment($this->details);
+		$void = $this->getPaymentHandler();
 		$result = $void->void();
 
 		$this->assertTrue($result instanceof TransactionResult);
@@ -161,14 +171,14 @@ class TestPaypalDirectPayment extends PaymentTest
 
 	function testVoidCapturedTransaction()
 	{
-		$payment = new PaypalDirectPayment($this->details);
+		$payment = $this->getPaymentHandler();
 		$payment->setCardData('4522219712684510', '12', '2007', '000');
 		$payment->setCardType('Visa');
 		
 		$result = $payment->authorizeAndCapture();
 		$this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());		
 		
-		$void = new PaypalDirectPayment($this->details);
+		$void = $this->getPaymentHandler();
 		$result = $void->void();
 
 		$this->assertTrue($result instanceof TransactionError);		
@@ -176,7 +186,7 @@ class TestPaypalDirectPayment extends PaymentTest
 
 	function testVoidHalfCapturedTransaction()
 	{
-		$payment = new PaypalDirectPayment($this->details);
+		$payment = $this->getPaymentHandler();
 		$payment->setCardData('4522219712684510', '12', '2007', '000');
 		$payment->setCardType('Visa');
 		
@@ -186,18 +196,18 @@ class TestPaypalDirectPayment extends PaymentTest
 		$amount = $this->details->amount->get();
 		$this->details->amount->set(round($amount * 0.7, 2));		
 		$this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());				
-		$capture = new PaypalDirectPayment($this->details);
+		$capture = $this->getPaymentHandler();
 		$result = $capture->capture();		
 		
 		// void the whole transaction
-		$void = new PaypalDirectPayment($this->details);
+		$void = $this->getPaymentHandler();
 		$result = $void->void();
 		$this->assertTrue($result instanceof TransactionResult);
 
 		// attempt a second capture - 30%
 		$this->details->amount->set(round($amount * 0.3, 2));		
 		
-		$capture = new PaypalDirectPayment($this->details);
+		$capture = $this->getPaymentHandler();
 		$result = $capture->capture();
 
 		$this->assertTrue($result instanceof TransactionError);		
@@ -206,7 +216,7 @@ class TestPaypalDirectPayment extends PaymentTest
 	function testUnsupportedCurrency()
 	{
 		$this->details->currency->set('LTL');
-		$payment = new PaypalDirectPayment($this->details);
+		$payment = $this->getPaymentHandler();
 		$payment->setCardData('4522219712684510', '12', '2007', '000');
 		$payment->setCardType('Visa');
 		
@@ -222,7 +232,7 @@ class TestPaypalDirectPayment extends PaymentTest
 			$this->details->currency->set($currency);
 			$this->details->invoiceID->set(rand(1,1000000));
 			$this->details->amount->set(1000);
-			$payment = new PaypalDirectPayment($this->details);
+			$payment = $this->getPaymentHandler();
 			$payment->setCardData('4522219712684510', '12', '2007', '000');
 			$payment->setCardType('Visa');
 			

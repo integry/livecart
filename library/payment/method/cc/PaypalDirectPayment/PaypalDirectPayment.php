@@ -1,7 +1,7 @@
 <?php
 
-include_once('../abstract/CreditCardPayment.php');
-include_once('../method/library/paypal/PaypalCommon.php');
+include_once(dirname(__file__) . '/../../../abstract/CreditCardPayment.php');
+include_once(dirname(__file__) . '/../../../method/library/paypal/PaypalCommon.php');
 
 class PaypalDirectPayment extends CreditCardPayment
 {
@@ -206,9 +206,9 @@ class PaypalDirectPayment extends CreditCardPayment
 		
 		$handler = new WebsitePaymentsPro();
 		
-		$username = 'sandbox_api1.integry.net';		
-		$password = '9AURF7SPQCEYCDXV';		
-		$signature = 'AeQ618dBMNS1kVFZwUIitcve-k.dAT5pnzBekoPUhcIj1J5p65ZAR8Pu';
+		$username = $this->getConfigValue('username');		
+		$password = $this->getConfigValue('password');
+		$signature = $this->getConfigValue('signature');
 		
 		$handler->prepare($username, $password, $signature);		
 		

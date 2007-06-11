@@ -25,7 +25,7 @@ class PaymentTest extends UnitTest
 		$details->address->set('Taikos 259-55');
 		$details->city->set('Vilnius');
 		$details->state->set('CA');
-		$details->country->set('US');
+		$details->country->set('LT');
 		$details->postalCode->set('90210');								
 
 		$details->shippingFirstName->set('Rinalds');
