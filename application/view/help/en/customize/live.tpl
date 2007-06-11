@@ -18,7 +18,7 @@
 	<img src="image/doc/customize/live/on.bmp">
 	<li>Go to your store's frontend:</li>
 	<img src="image/doc/customize/live/go.bmp">
-	<p>When the customization mode is on, you will notice how moving your mouse cursor affects distinct areas of your store's website. These are the chunks / parts of the the web site and each of them is controlled by a particular template thus to modify a part of your web site you have to alter appropriate template.</p> 
+	<p>When the customization mode is on, you will notice how moving your mouse cursor affects distinct areas of your store's website. These are the chunks / parts of the the web site and each of them is controlled by a particular template. To modify a part of your web site you have to alter appropriate template.</p> 
 	<li>When you locate the necessary template click on its name:</li>
 	<img src="image/doc/customize/live/name.bmp">
 	<p>Template window opens.</p> 

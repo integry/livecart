@@ -1,4 +1,4 @@
-<p>This section is used for managing LiveCart's settings. To access a particular section click on the respective links below.</p> 	
+<p>This section is used for managing LiveCart's settings. To access a particular section click on the respective link below.</p> 	
 
 <div class="tasks">
 <fieldset>

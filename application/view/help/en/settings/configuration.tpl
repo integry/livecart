@@ -22,7 +22,7 @@
 </div>
 
 <h3 id="main">Main Settings</h3>
-<p>Store name - enter the name of your store.</p>
+<p>Store name - the store name is displayed in (...)</p>
 
 
 <h3 id="general">General Configuration</h3>
@@ -33,14 +33,14 @@
 	<li>Number of products per category page - the number of products displayed in product list page.</li>
 	<li>Allow sort parameters - mark the parameters by which users will be able to sort products.</li>
 	<li>Default product sort order - click the drop-down list and select the dafault sorting parameter.</li>
-	<li>Display the number of products per category.</li>
-	<li>Display the number of products per filter.</li>
-	<li>Display product thumbnail image in product list.</li>
+	<li>Display the number of products per category - enables the number of products displayed with a category.</li>
+	<li>Display the number of products per filter - enables the number of products displayed with a filter.</li>
+	<li>Display product thumbnail image in product list - enables small images of products in product list.</li>
 </ul>
 
 <h3 id="products">Products</h3>
 
-<p>Click the drop-down list and select on of the unit measurement systems to use. Metric system has units such as "meter", "liter" while English units are "inch", "gallon" etc.</p>
+<p>Unit measurement system - click the drop-down list and select on of the unit measurement systems to use for product details. Metric system has units such as "meter", "liter" while English units are "inch", "gallon" etc.</p>
 
 <h3 id="images">Images</h3>
 
@@ -106,13 +106,13 @@
 
 <p>Main settings:</p>
 <ul>	
-	<li>Enable USPS as shipping method.</li>
+	<li>Enable USPS as shipping method - the shipping method will be available in the checkout process.</li>
 </ul>
 
 <p>USPS Shipping API Access</p>
 <ul>	
-	<li>USPS API username - </li>
-	<li>USPS API URL - </li>
+	<li>USPS API username - obtained from USPS (www.usps.gov.com)</li>
+	<li>USPS API URL - (...)</li>
 </ul>
 
 <p>Domestic Shipping Options</p>
