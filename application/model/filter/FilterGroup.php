@@ -239,7 +239,7 @@ class FilterGroup extends MultilingualObject
                              || !checkdate($edp[1], $edp[2], $edp[0]) 
                              || !checkdate($sdp[1], $sdp[2], $sdp[0])
                         ){
-                            $errors['filters['.$key.'][date_range]'] = '_error_illegal_date';
+                            $errors['filters['.$key.'][rangeDateStart_show]'] = '_error_illegal_date';
                         }
                     break;
                 }

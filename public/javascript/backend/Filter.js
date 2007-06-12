@@ -792,14 +792,12 @@ Backend.Filter.prototype = {
                 rangeDateStartButton.showInput  = rangeDateStart.showInput  = rangeDateStart;
                 rangeDateEndButton.showInput    = rangeDateEnd.showInput    = rangeDateEnd;
                                                
-                rangeDateStartReal.value  = (value.rangeDateStart) ? value.rangeDateStart : (new Date()).print("%Y-%m-%d");
-                rangeDateEndReal.value    = (value.rangeDateEnd) ? value.rangeDateEnd : (new Date()).print("%y-%m-%d");
-                
-                rangeDateStart.value  = rangeDateStartReal.value;
-                rangeDateEnd.value    = rangeDateEndReal.value ;
-                  
-                rangeDateStart.value = Date.parseDate(rangeDateStartReal.value, "%y-%m-%d").print(self.dateFormat);
-                rangeDateEnd.value = Date.parseDate(rangeDateEnd.value, "%y-%m-%d").print(self.dateFormat);
+                // rangeDateStartReal.value  = (value.rangeDateStart) ? value.rangeDateStart : (new Date()).print("%Y-%m-%d");
+                // rangeDateEndReal.value    = (value.rangeDateEnd) ? value.rangeDateEnd : (new Date()).print("%y-%m-%d");
+                // rangeDateStart.value  = rangeDateStartReal.value;
+                // rangeDateEnd.value    = rangeDateEndReal.value ;
+                // rangeDateStart.value = Date.parseDate(rangeDateStartReal.value, "%y-%m-%d").print(self.dateFormat);
+                // rangeDateEnd.value = Date.parseDate(rangeDateEnd.value, "%y-%m-%d").print(self.dateFormat);
                          
                 Event.observe(rangeDateStart,       "keyup",     Calendar.updateDate );
                 Event.observe(rangeDateEnd,         "keyup",     Calendar.updateDate );
@@ -1001,7 +999,6 @@ Backend.Filter.prototype = {
                 }
 
                 ActiveList.prototype.getInstance(this.nodes.parent.parentNode).toggleContainer(this.nodes.parent, 'edit');
-                this.saving = false;
             }
             else
             {
@@ -1043,12 +1040,13 @@ Backend.Filter.prototype = {
                 this.recreate(this.filter, true);   
             }
             
-            this.saving = false;
         }
         else if(jsonResponse.errors)
         {
             ActiveForm.prototype.setErrorMessages(this.nodes.form, jsonResponse.errors);
         }
+        
+        this.saving = false;
 
         // Toggle progress won't work on new form
         try
