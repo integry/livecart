@@ -20,6 +20,7 @@ class LiveCartTransaction extends TransactionDetails
         }
     
         $this->state->set($this->getStateValue($address));    
+        $this->address->set($address->address1->get() . ' ' . $address->address2->get());    
         
         // shipping address
         $address = $order->shippingAddress->get();
@@ -30,7 +31,8 @@ class LiveCartTransaction extends TransactionDetails
             $this->$field->set($address->$addressField->get());
         }
     
-        $this->state->set($this->getStateValue($address));    
+        $this->shippingState->set($this->getStateValue($address));    
+        $this->shippingAddress->set($address->address1->get() . ' ' . $address->address2->get());    
 
         $this->shippingEmail->set($order->user->get()->email->get());
         $this->email->set($order->user->get()->email->get());
@@ -41,7 +43,8 @@ class LiveCartTransaction extends TransactionDetails
         
         // transaction identification
         $this->invoiceID->set($order->getID());
-        $this->clientID->set($order->user->get()->getID());
+        $this->clientID->set($order->user->get()->getID());        
+		$this->ipAddress->set($_SERVER['REMOTE_ADDR']);        
     }
     
     private function getStateValue(UserAddress $address)

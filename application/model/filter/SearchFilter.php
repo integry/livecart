@@ -32,7 +32,7 @@ class SearchFilter implements FilterInterface
 		
 		$phrases = array_merge($phrases, explode(' ', $query));
 		
-		$searchFields = array('name', 'keywords', 'shortDescription', 'longDescription');
+		$searchFields = array('name', 'keywords', 'shortDescription', 'longDescription', 'sku');
 		
 		$conditions = array();
 		

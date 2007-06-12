@@ -158,7 +158,10 @@ class CheckoutController extends FrontendController
     	$response->set('form', $form);
     	return $response;    	
     }
-    
+
+    /**
+     *	@role login
+     */           
     public function doSelectAddress()
     {
         $this->user->loadAddresses();
@@ -261,6 +264,9 @@ class CheckoutController extends FrontendController
         return $response;
     }
     
+    /**
+     *	@role login
+     */           
     public function doSelectShippingMethod()
     {
         $order = CustomerOrder::getInstance();
@@ -298,7 +304,7 @@ class CheckoutController extends FrontendController
     public function pay()
     {
         $order = CustomerOrder::getInstance();    
-        $order->loadAddresses();	
+        $order->loadAll();	
         
         if ($redirect = $this->validateOrder($order, self::STEP_PAYMENT))
         {
@@ -329,7 +335,10 @@ class CheckoutController extends FrontendController
 		
         return $response;                        
     }
-    
+
+    /**
+     *	@role login
+     */       
     public function payCreditCard()
 	{
         ClassLoader::import('application.model.order.*');        
@@ -360,10 +369,19 @@ class CheckoutController extends FrontendController
         $handler = Store::getInstance()->getCreditCardHandler($transaction);
         $ccNum = str_replace(' ', '', $this->request->getValue('ccNum'));
         $handler->setCardData($ccNum, $this->request->getValue('ccExpiryMonth'), $this->request->getValue('ccExpiryYear'), $this->request->getValue('ccCVV'));
-        $result = $handler->authorizeAndCapture();
+        
+        if ($handler->getConfigValue('authorizeonly'))
+        {
+            $result = $handler->authorize();
+        }
+        else
+        {
+            $result = $handler->authorizeAndCapture();
+        }
         
         if ($result instanceof TransactionResult)
         {
+            $order->isPaid->set(true);
             $newOrder = $order->finalize($currency);
             $this->session->unsetValue('CustomerOrder');
             $newOrder->saveToSession();
@@ -378,7 +396,7 @@ class CheckoutController extends FrontendController
         elseif ($result instanceof TransactionError)
         {
             $validator = $this->buildCreditCardValidator();
-            var_dump($handler, $result); exit;
+            var_dump($handler, $result, $result->getDetails()->Errors, $handler->getDetails()->getData()); exit;
             // set error message for credit card form
             $validator->triggerError('creditCardError', $this->translate('_err_processing_cc'));
             $validator->saveState();
@@ -391,6 +409,9 @@ class CheckoutController extends FrontendController
         }
 	}
 	
+    /**
+     *	@role login
+     */       
 	public function completed()
 	{
         $order = CustomerOrder::getInstanceByID((int)Session::getInstance()->getValue('completedOrderID'));

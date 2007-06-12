@@ -59,7 +59,7 @@ Backend.Settings.prototype =
 	
 	activateCategory: function(id)
 	{
-		if (!this.treeBrowser.hasChildren(id))
+		//if (!this.treeBrowser.hasChildren(id))
 		{
 			this.treeBrowser.showFeedback(id);
 			var url = this.urls['edit'].replace('_id_', id);
