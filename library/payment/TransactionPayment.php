@@ -36,6 +36,11 @@ abstract class TransactionPayment
 		}
 	}
 	
+	public function getDetails()
+	{
+        return $this->details;
+    }
+	
 	/**
 	 *	Determine if the payment method supports crediting a refund payment back to customer
 	 */

@@ -66,6 +66,11 @@ class TransactionDetails
 			return $this->data[$key]->get();
 		}
 	}
+	
+	public function getData()
+	{
+        return $this->data;
+    }
 }
 
 ?>

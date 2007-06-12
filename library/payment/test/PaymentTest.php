@@ -24,9 +24,9 @@ class PaymentTest extends UnitTest
 		$details->lastName->set('Uzkalns');
 		$details->address->set('Taikos 259-55');
 		$details->city->set('Vilnius');
-		$details->state->set('CA');
+		$details->state->set('Vilnius');
 		$details->country->set('LT');
-		$details->postalCode->set('90210');								
+		$details->postalCode->set('05214');								
 
 		$details->shippingFirstName->set('Rinalds');
 		$details->shippingLastName->set('Uzkalns');
@@ -34,12 +34,12 @@ class PaymentTest extends UnitTest
 		$details->shippingCity->set('Vilnius');
 		$details->shippingState->set('Vilnius');
 		$details->shippingCountry->set('LT');
-		$details->shippingPostalCode->set('LT-05214');								
+		$details->shippingPostalCode->set('05214');								
 
 		$details->phone->set('+370-66666666');
-		$details->email->set('sandbox@integry.net');								
+		$details->email->set('test@integry.net');								
 				
-		$details->clientID->set('22');
+		$details->clientID->set('1');
 		$details->ipAddress->set($_SERVER['REMOTE_ADDR']);
 		
 		$details->invoiceID->set(rand(1, 10000000));

@@ -30,6 +30,7 @@ class TestPaypalDirectPayment extends PaymentTest
 
 	function testAuthorizeAndCapture()
 	{		
+		$this->details->amount->set('321.17');
 		$payment = $this->getPaymentHandler();
 		$payment->setCardData('4522219712684510', '12', '2007', '000');
 		$payment->setCardType('Visa');
