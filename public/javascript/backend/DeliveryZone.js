@@ -896,7 +896,7 @@ Backend.DeliveryZone.ShippingService.prototype =
         }
         else
         {
-            this.servicesActiveList.toggleContainerOff(this.nodes.root.up('li'));
+            this.servicesActiveList.toggleContainerOff(this.nodes.root.up('.activeList_editContainer'));
             Form.State.restore(this.nodes.form);
         }
     }
@@ -1374,7 +1374,7 @@ Backend.DeliveryZone.TaxRate.prototype =
         }
         else
         {
-            this.ratesActiveList.toggleContainerOff(this.nodes.root.up('li'));
+            this.ratesActiveList.toggleContainerOff(this.nodes.root.up('.activeList_editContainer'));
             Form.State.restore(this.nodes.form);
         }
     }
