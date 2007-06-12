@@ -8,12 +8,13 @@
 	list-style: none;
 	margin:0px;
 	padding: 0px;
-	height: 26px;
+	height: 25px;
 }
 
 .tabContainer ul li
 {
 	margin-right: 2px;	
+	display: inline;
 }
 
 .tabContainer ul li.inactive, .tabContainer ul li.active, .tabContainer ul li.hover
@@ -21,7 +22,6 @@
 	padding: 5px 15px 5px 15px;
 	border: 1px solid #ccc;
 	border-bottom: 0px;
-	float: left;
 }
 .tabContainer ul li.active
 {
