@@ -23,8 +23,8 @@
 		</p>
         
     	<!-- STEP 2 -->
-    	<fieldset class="filter_step_lev1 filter_step_filters">
-        <legend>{t _Filter_step_two}</legend>
+    	<fieldset class="filter_step_lev1 filter_step_filters error">
+        <legend>{t _filters}</legend>
     	    <p>
     		<fieldset class="group filter_form_filters_group">
         		<h2 class="filter_filters_title">{t _Filter_filters}</h2>
@@ -81,8 +81,9 @@
         			<input type="text" name="name_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
         		</fieldset>
             </fieldset>
+            
+    		<h5 class="filter_filters_title">{t _Filter_filters}:</h5>
             <fieldset class="filters_translations_fieldset">
-                <legend>{t _filter_translations}</legend>
 				<ul class="filters_translations_{$lang.ID}">
 					<li class="dom_template filter_form_filters_value" id="filter_form_filters_">
 						<label class="filter_update"> </label>
