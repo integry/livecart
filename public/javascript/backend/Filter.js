@@ -792,20 +792,13 @@ Backend.Filter.prototype = {
                 rangeDateStartButton.showInput  = rangeDateStart.showInput  = rangeDateStart;
                 rangeDateEndButton.showInput    = rangeDateEnd.showInput    = rangeDateEnd;
                                                
-                // rangeDateStartReal.value  = (value.rangeDateStart) ? value.rangeDateStart : (new Date()).print("%Y-%m-%d");
-                // rangeDateEndReal.value    = (value.rangeDateEnd) ? value.rangeDateEnd : (new Date()).print("%y-%m-%d");
-                // rangeDateStart.value  = rangeDateStartReal.value;
-                // rangeDateEnd.value    = rangeDateEndReal.value ;
-                // rangeDateStart.value = Date.parseDate(rangeDateStartReal.value, "%y-%m-%d").print(self.dateFormat);
-                // rangeDateEnd.value = Date.parseDate(rangeDateEnd.value, "%y-%m-%d").print(self.dateFormat);
-                         
-                Event.observe(rangeDateStart,       "keyup",     Calendar.updateDate );
-                Event.observe(rangeDateEnd,         "keyup",     Calendar.updateDate );
-                Event.observe(rangeDateStart,       "blur",      Calendar.updateDate );
-                Event.observe(rangeDateEnd,         "blur",      Calendar.updateDate );
-                Event.observe(rangeDateStartButton, "mousedown", Calendar.updateDate );
-                Event.observe(rangeDateEndButton,   "mousedown", Calendar.updateDate );
-                            
+                rangeDateStartReal.value  = (value.rangeDateStart) ? value.rangeDateStart : ''; //(new Date()).print("%Y-%m-%d");
+                rangeDateEndReal.value    = (value.rangeDateEnd) ? value.rangeDateEnd : ''; //(new Date()).print("%y-%m-%d");
+                rangeDateStart.value  = rangeDateStartReal.value;
+                rangeDateEnd.value    = rangeDateEndReal.value ;
+                rangeDateStart.value = rangeDateStartReal.value ? Date.parseDate(rangeDateStartReal.value, "%y-%m-%d").print(self.dateFormat) : '';
+                rangeDateEnd.value = rangeDateEnd.value ? Date.parseDate(rangeDateEnd.value, "%y-%m-%d").print(self.dateFormat) : '';
+                                                     
                 Event.observe(rangeDateStartButton, "mousedown", function(e){
                     if(!self.filterCalendars[rangeDateStart.id]) 
                     {
@@ -1039,13 +1032,12 @@ Backend.Filter.prototype = {
                 this.hideNewFilterAction(this.categoryID);
                 this.recreate(this.filter, true);   
             }
-            
         }
         else if(jsonResponse.errors)
         {
             ActiveForm.prototype.setErrorMessages(this.nodes.form, jsonResponse.errors);
         }
-        
+            
         this.saving = false;
 
         // Toggle progress won't work on new form

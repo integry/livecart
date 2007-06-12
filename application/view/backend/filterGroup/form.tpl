@@ -38,24 +38,25 @@
                                         <fieldset class="error">
                         				    <input type="text" class="filter_update" {denied role="category.update"}readonly="readonly"{/denied} />
                                     		<span class="errorText hidden"> </span>
-                                            <br />
                                         </fieldset>
                 				    </span>
 
                 					<span class="filter_range">
                     					<label class="filter_update">{t _Filter_range}</label>
+                                        <fieldset class="error">
                         					<input type="text" class="filter_update" {denied role="category.update"}readonly="readonly"{/denied} /> - <input type="text" class="filter_update" {denied role="category.update"}readonly="readonly"{/denied} />
                                     		<span class="errorText hidden"> </span>
-                                            <br />
+                                        </fieldset>
                 				    </span>
     
                                     <span class="filter_date_range">
                                         <label class="filter_update">{t _Filter_date_range}</label>
+                                        <fieldset class="error">
                                             <input type="text" class="filter_update" {denied role="category.update"}readonly="readonly"{/denied} /> <img src="image/silk/calendar.png" class="calendar_button filter_update" {denied role="category.update"}style="display: none"{/denied} /> - <input type="text" class="filter_update"  {denied role="category.update"}readonly="readonly"{/denied} /> <img src="image/silk/calendar.png" class="calendar_button"  {denied role="category.update"}style="display: none"{/denied} />
                                             <input type="hidden" class="hidden filter_date_start_real filter_update"  {denied role="category.update"}readonly="readonly"{/denied} />
                                             <input type="hidden" class="hidden filter_date_end_real filter_update"  {denied role="category.update"}readonly="readonly"{/denied} />
                                             <span class="errorText hidden"> </span>
-                                            <br />
+                                        </fieldset>
                                     </span>
                 				    <br />
                 				</span>
