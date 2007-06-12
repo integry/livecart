@@ -74,32 +74,25 @@
         
     	<!-- STEP 3 -->
     	<fieldset class="filter_step_translations container">
-            <fieldset class="expandingSection dom_template filter_step_translations_language filter_step_translations_language_">
-                <legend></legend>
-                <fieldset class="expandingSectionContent">
-                    <fieldset class="activeForm_translation_values filter_language_translation">
-                        <p>
-                			<label>{t _Filter_name}</label>
-                			<input type="text" name="name" {denied role="category.update"}readonly="readonly"{/denied} />
-            			</p>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Filters translations</legend>
-                        <div class="filter_form_language_translation">
-                            <p>
-            					<ul>
-            						<li class="dom_template filter_form_filters_value" id="filter_form_filters_">
-            							<label class="filter_update"> </label>
-            							<input type="text" class="filter_update"  {denied role="category.update"}readonly="readonly"{/denied} />
-            							<br />
-            						</li>
-            					</ul>
-                            </p>
-                        </div>
-                    </fieldset>
-                </fieldset>
+        {language}
+            <fieldset class="activeForm_translation_values filter_language_translation">
+                <fieldset class="error">
+        			<label>{t _Filter_name}</label>
+        			<input type="text" name="name_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
+        		</fieldset>
             </fieldset>
-    	</fieldset>
+            <fieldset class="filters_translations_fieldset">
+                <legend>{t _filter_translations}</legend>
+				<ul class="filters_translations_{$lang.ID}">
+					<li class="dom_template filter_form_filters_value" id="filter_form_filters_">
+						<label class="filter_update"> </label>
+						<input type="text" class="filter_update"  {denied role="category.update"}readonly="readonly"{/denied} />
+						<br />
+					</li>
+				</ul>
+            </fieldset>
+        {/language}
+        </fieldset>
     </fieldset>
 
 

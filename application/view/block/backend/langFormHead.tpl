@@ -1,4 +1,4 @@
-<div class="languageForm" >
+<fieldset class="languageForm" >
 	
     <div class="languageTabsContainer">
     	<span class="languageFormCaption">

@@ -652,8 +652,7 @@ fieldset.error, div.error, fieldset.container
 	margin: 0px;
 	position: static; 
 	border: 0;
-	background-color: inherit;
-	background: inherit;
+	background-color: transparent;
 	/* @todo: let's see how this works for IE */
 	background: none;
 }
@@ -1105,7 +1104,9 @@ Translation tabs
 .languageForm
 {
     margin-top: 1em;
-    margin-bottom: 1em;		
+    margin-bottom: 1em;
+    border: 0px none;
+    background-color: transparent;			
 }
 
 .languageFormCaption

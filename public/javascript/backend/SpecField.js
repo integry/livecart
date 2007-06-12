@@ -187,6 +187,7 @@ Backend.SpecField.prototype = {
 	    var blankForm = $(prototypeId);
         var copiedForm = blankForm.cloneNode(true);    
         Element.removeClassName(copiedForm, 'dom_template');
+        copiedForm.id = false;
         root.appendChild(copiedForm);
         
         new Backend.LanguageForm(copiedForm);
@@ -350,8 +351,6 @@ Backend.SpecField.prototype = {
 			this.nodes.stateLinks[1].parentNode.style.display = 'inline';
 			this.nodes.stateLinks[1].style.display = 'inline';
             this.nodes.multipleSelector.parentNode.style.display = 'block';
-            
-            valuesTranslations.style.display = this.isNumber(this.type) ? 'none' : 'block';
 		}
         
         this.nodes.formatedText.style.display = this.type == Backend.SpecField.prototype.TYPE_TEXT_SIMPLE ? 'block' : 'none';
@@ -508,7 +507,8 @@ Backend.SpecField.prototype = {
         var fields = ['name', 'valuePrefix', 'valueSuffix', 'description'];
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{          
-    		for(var j = 0; j < fields.length; j++) {
+    		for(var j = 0; j < fields.length; j++) 
+            {
                 var field = this.nodes.form.elements.namedItem(fields[j] + '_' + this.languageCodes[i]);
                 var label = field.up('.languageFormContainer').down('.translation_' + fields[j] + '_label');
                 field.id = this.cssPrefix + this.categoryID + "_" + this.id + "_" + fields[j] + "_" + this.languageCodes[i];
@@ -782,7 +782,6 @@ Backend.SpecField.prototype = {
 	 */
 	addField: function(value, id, isDefault)
 	{
-        return; // look
         var self = this;
 		if(!value) value = {};
 		
@@ -806,25 +805,24 @@ Backend.SpecField.prototype = {
         });
 
 		// now insert all translation fields
+        var nodeValues = this.nodes.parent.down('.specField_step_values');
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
-			var newValueTranslation = document.getElementsByClassName(this.cssPrefix + "form_values_value", this.nodes.valuesTranslations[this.languageCodes[i]])[0].cloneNode(true);
+			var translationsUl = nodeValues.down('.languageFormContainer_' + this.languageCodes[i]).down('ul');
+            
+			var newValueTranslation = translationsUl.down('.dom_template').cloneNode(true);
 			Element.removeClassName(newValueTranslation, "dom_template");
-
 			newValueTranslation.id = newValueTranslation.id + this.languageCodes[i] + "_" + id;
+			translationsUl.appendChild(newValueTranslation);
+            
+
 
 			var inputTranslation = newValueTranslation.getElementsByTagName("input")[0];
 			inputTranslation.name = "values[" + id + "][" + this.languageCodes[i] + "]";
 			inputTranslation.value = value['value_' + this.languageCodes[i]] ? value['value_' + this.languageCodes[i]] : '';
-            
             var translationLabel = newValueTranslation.down("label");
             translationLabel.update(input.value);
-            
-			// add to node tree
-			var translationsUl = document.getElementsByClassName(this.cssPrefix + "form_values_translations", this.nodes.valuesTranslations[this.languageCodes[i]])[0].getElementsByTagName('ul')[0];
-			translationsUl.id = this.cssPrefix + "form_"+this.id+'_values_'+this.languageCodes[i];
-			translationsUl.appendChild(newValueTranslation);
-            
+
             inputTranslation.id = this.cssPrefix + "field_" + id + "_value_" + this.languageCodes[i];
             translationLabel['for'] = inputTranslation.id;
             translationLabel.onclick = function() { $(this['for']).focus(); }
@@ -1097,13 +1095,13 @@ Backend.SpecField.prototype = {
             this.nodes.controls.hide();
             this.nodes.mergeValuesCancelLink.show();
             this.nodes.mergeValuesLink.hide();
-            this.nodes.valuesTranslationsDiv.hide();
+            this.nodes.stepValues.down('.languageForm').hide();
         }
         else
         {
             this.nodes.mergeValuesControls.hide();
             this.nodes.valuesAddFieldLink.show();
-            this.nodes.valuesTranslationsDiv.show();
+            this.nodes.stepValues.down('.languageForm').show();
             this.nodes.mergeValuesCancelLink.hide();
             this.nodes.mergeValuesLink.show();
             this.nodes.controls.show();

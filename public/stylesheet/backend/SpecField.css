@@ -3,6 +3,10 @@
     
 }
 
+.specField_step_lev1 {
+    background: white;
+}
+
 .specField .specField_step_translations_language legend {
     cursor: pointer;
     cursor: hand;
@@ -10,7 +14,6 @@
 }
 
 .specField fieldset {
-    background: #fff;
     margin-right: 1em;
 }
 
@@ -115,11 +118,12 @@
 .specField_add_field {
     white-space: nowrap;
     margin-left: 56px;
+    color: red;
 }
 
-a.specField_add_field
+.specField_values_controls
 {
-    color: red;
+    margin-bottom: 2em ! important;
 }
 
 .specField_values {
@@ -157,11 +161,6 @@ fieldset.group h2 {
 .specField_step_translations_language_active {
     background: yellow;
     padding: 5px;
-}
-
-.specField_add_field
-{
-    padding-bottom: 4em;
 }
 
 /* IE */

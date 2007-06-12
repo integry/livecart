@@ -1,5 +1,5 @@
 	</div>
-</div>
+</fieldset>
 
 {literal}
 <script type="text/javascript">

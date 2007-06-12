@@ -871,7 +871,7 @@ Backend.LanguageForm.prototype =
 		Element.toggleClassName(tab, 'active');		
 				
 		// hide tab contents
-		var cont = tab.up('div.languageForm').down('div.languageFormContent').getElementsByClassName('languageFormContainer');
+		var cont = tab.up('.languageForm').down('.languageFormContent').getElementsByClassName('languageFormContainer');
 		for (var k = 0; k < cont.length; k++)
 		{
 			Element.removeClassName(cont[k], 'active');		
@@ -881,7 +881,7 @@ Backend.LanguageForm.prototype =
 		{
 			// get language code
 			var id = tab.className.match(/languageFormTabs_([a-z]{2})/)[1];
-			Element.addClassName(tab.up('div.languageForm').down('div.languageFormContainer_' + id), 'active');
+			Element.addClassName(tab.up('.languageForm').down('.languageFormContainer_' + id), 'active');
 		}		
 	}
 }

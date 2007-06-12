@@ -119,6 +119,7 @@ Backend.Filter.prototype = {
 
             this.loadLanguagesAction();
             this.findUsedNodes();
+            new Backend.LanguageForm(this.nodes.form);
             this.bindFields();
             this.generateTitleFromSpecField();
             
@@ -127,7 +128,6 @@ Backend.Filter.prototype = {
         }
         catch(e)
         {
-            console.trace();
             console.info(e);
         }
     },
@@ -155,16 +155,18 @@ Backend.Filter.prototype = {
         if(showFilters) 
         {
             this.nodes.stepFilters.show(); 
+            document.getElementsByClassName('filters_translations_fieldset', this.nodes.form).each(function(fieldset) 
+            {
+                fieldset.show();
+            });
         }
         else 
         {
-            this.nodes.stepFilters.hide();
-        }
-        
-        for(var i = 1; i < this.languageCodes.length; i++)
-        {
-   			var filterTranslations = this.nodes.translationsUl[this.languageCodes[i]].up("fieldset");           
-            if(showFilters) filterTranslations.show(); else filterTranslations.hide();
+            this.nodes.stepFilters.hide(); 
+            document.getElementsByClassName('filters_translations_fieldset', this.nodes.form).each(function(fieldset) 
+            {
+                fieldset.hide();
+            });
         }
     },
 
@@ -527,48 +529,20 @@ Backend.Filter.prototype = {
         var translations = this.nodes.stepTranslations.down("." + this.cssPrefix + "step_translations_language");
         
         // we should have a template to continue
-        this.nodes.translations = new Array();
+        var fields = ['name'];
         for(var i = 1; i < this.languageCodes.length; i++)
         {
-            // copy template class
-            var newTranslation = translations.cloneNode(true);
-            Element.removeClassName(newTranslation, "dom_template");
-            
-            newTranslation.className += this.languageCodes[i];
-            newTranslation.down("legend").update(this.languages[this.languageCodes[i]]);
-
-            var inputFields = $A(newTranslation.getElementsByTagName('input'));
-            var textAreas = newTranslation.getElementsByTagName('textarea');
-            for(var j = 0; j < textAreas.length; j++)
+    		for(var j = 0; j < fields.length; j++) 
             {
-                inputFields[inputFields.length] = textAreas[j];
-            }
-
-            for(var j = 0; j < inputFields.length; j++)
-            {
-                if(Element.hasClassName(inputFields[j].parentNode.parentNode, this.cssPrefix + 'language_translation'))
-                {                        
-                    var translationId = this.cssPrefix + this.categoryID + "_" + this.id + "_" + inputFields[j].name + "_" + this.languageCodes[i];
-					var translationLabel = inputFields[j].up().down("label");
-                    translationLabel.for = translationId;
-                    
-                    Event.observe(translationLabel, "click", function(e) { 
-                        $(this.for).focus();
-                    });
-                    
-                    inputFields[j].id = translationId;
-					if(self.filter[inputFields[j].name + "_" + self.languageCodes[i]]) inputFields[j].value = self.filter[inputFields[j].name + "_" + self.languageCodes[i]];
-					inputFields[j].name = inputFields[j].name + "[" + self.languageCodes[i] + "]";
-
-                }
-            }
-
-            this.nodes.stepTranslations.appendChild(newTranslation);
-   			this.nodes.translationsUl[this.languageCodes[i]] = newTranslation.down("." + this.cssPrefix + "form_language_translation").down('ul');
+                var field = this.nodes.form.elements.namedItem(fields[j] + '_' + this.languageCodes[i]);
+                var label = field.up('fieldset').down('label');
+                field.id = this.cssPrefix + this.categoryID + "_" + this.id + "_" + fields[j] + "_" + this.languageCodes[i];
+                label.forID = field.id;
+                
+                if(this.filter[fields[j] + '_' + this.languageCodes[i]]) field.value = this.filter[fields[j] + '_' + this.languageCodes[i]];
+                Event.observe(label, "click", function(e) { $(this.forID).focus(); });
+           }
         }
-
-        // Delete language template, so that included in that template variables would not be sent to server
-        Element.remove(document.getElementsByClassName(this.cssPrefix + "step_translations_language", this.nodes.stepTranslations)[0]);
     },  
 
     /**
@@ -881,8 +855,9 @@ Backend.Filter.prototype = {
 		{
             var newValueTranslation = this.nodes.filtersTranslationTemplate.cloneNode(true);
             Element.removeClassName(newValueTranslation, "dom_template");
+            var translationsUl = this.nodes.form.down('.filters_translations_' + this.languageCodes[i]);
+			translationsUl.appendChild(newValueTranslation);
             
-            var translationsUl = this.nodes.translationsUl[this.languageCodes[i]];
             var inputTranslation = newValueTranslation.down("input");
 
 			inputTranslation.name = "filters[" + id + "][name][" + this.languageCodes[i] + "]";
@@ -894,11 +869,7 @@ Backend.Filter.prototype = {
             
             inputTranslation.id = this.cssPrefix + "filter_filter_" + id + "_name_" + this.languageCodes[i];
             translationLabel['for'] = inputTranslation.id;
-            translationLabel.onclick = function() { $(this['for']).focus(); }           
-            
-            // add to node tree
-			translationsUl.id = this.cssPrefix + "form_" + this.id + '_values_' + this.languageCodes[i];
-			translationsUl.appendChild(newValueTranslation);
+            translationLabel.onclick = function() { $(this['for']).focus(); }
 		}
         
         return li;

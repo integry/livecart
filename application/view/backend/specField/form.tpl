@@ -97,9 +97,7 @@
     		</p>
 		
 		</div>
-            
-	</fieldset>
-
+        
     	{language}
 
 	        <p>
@@ -120,6 +118,8 @@
 			</p>
 
     	{/language}  
+            
+	</fieldset>
 
 	<!-- STEP 2 -->
 	<fieldset class="specField_step_lev1 specField_step_values">
@@ -141,7 +141,7 @@
         				</li>
         			</ul>
                 </p>
-                <p>
+                <p class="specField_values_controls">
                     <a href="#add" class="specField_add_field">{t _SpecField_add_values}</a>
                     <span class="specField_mergeValuesControls controls" style="display: none">
                         <input type="button" class="submit specField_mergeValuesSubmit" value="{tn _specField_merge_values}" />
@@ -150,25 +150,16 @@
                     </span>
                 </p>   
                      	
-                        
-                <!-- STEP 3 -->
-            	<div class="specField_step_values_translations">
-            		<fieldset class="dom_template specField_step_translations_language specField_step_translations_language_">
-            			<legend><span class="expandIcon">[+]</span><span class="specField_legend_text"></span></legend>
-            
-                        <div class="activeForm_translation_values specField_form_values_translations specField_language_translation">
-                            <p>
-            					<ul>
-            						<li class="dom_template specField_form_values_value" id="specField_form_values_">
-            							<label class="specField_update"> </label>
-            							<input class="specField_update" type="text" {denied role="category.update"}readonly="readonly"{/denied} />
-            							<br />
-            						</li>
-            					</ul>
-                            </p>
-                        </div>
-            		</fieldset>
-            	</div>
+                {language}
+    				<ul>
+    					<li class="dom_template specField_form_values_value" id="specField_form_values_">
+    						<fieldset class="error">
+                                <label class="specField_update"> </label>
+        						<input class="specField_update" type="text" {denied role="category.update"}readonly="readonly"{/denied} />
+    						</fieldset>
+    					</li>
+                    </ul>
+                {/language}
                 
                 
 			</div>
