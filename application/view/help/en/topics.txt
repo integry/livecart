@@ -23,8 +23,6 @@
 
 	users=Users		
 		groups=User Groups
-		add=Create New User
-
 
 	settings=Settings
 		configuration=Configuration
