@@ -183,7 +183,15 @@ class Config
 
 	public function getSection($sectionId)
 	{
-		return parse_ini_file($this->getSectionFile($sectionId));	
+		$file = $this->getSectionFile($sectionId);
+		if (file_exists($file))
+		{
+            return parse_ini_file($file);	            
+        }
+        else
+        {
+            return array();
+        }
 	}
 
 	public function getSectionLayout($sectionId)
