@@ -22,7 +22,6 @@
 		export=Export Orders
 
 	users=Users		
-		groups=User Groups
 
 	settings=Settings
 		configuration=Configuration
