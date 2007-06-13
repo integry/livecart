@@ -41,7 +41,7 @@ class TestOrder extends UnitTestCase
         }        
 
         // initialize order
-        $user = User::getNewInstance();
+        $user = User::getNewInstance('test@test.com');
         $user->save();
 		$this->user = $user;
         
@@ -174,7 +174,7 @@ class TestOrder extends UnitTestCase
         foreach ($this->order->getShipments() as $shipment)
         {
             $sum += $shipment->amount->get();
-            var_dump($shipment->getSelectedRate());
+//            var_dump($shipment->getSelectedRate());
         }
         
         $this->assertEqual($sum, $this->order->totalAmount->get());

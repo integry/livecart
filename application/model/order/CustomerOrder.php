@@ -286,6 +286,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         
         $this->currency->set($currency);
 
+        $this->loadAll();
 		foreach ($this->getShipments() as $shipment)
         {
             $shipment->order->set($this);
@@ -347,7 +348,20 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 			}
 		}
 
-        if ($this->orderedItems || $this->removedItems)
+        // delete removed items
+        if ($this->removedItems)
+        {
+            foreach ($this->removedItems as $item)
+            {
+                $item->delete();
+                $isModified = true;
+            }      
+
+            $this->removedItems = array();
+            $this->resetShipments();             
+        }
+        
+        if ($this->orderedItems)
         {
             if(!$this->currency->get())
             {
@@ -371,15 +385,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
                 
                 $item->markAsLoaded();
             }    
-    
-            foreach ($this->removedItems as $item)
-            {
-                $item->delete();
-                $isModified = true;
-            }      
-
-            $this->removedItems = array();
-                    
+                        
             // reorder shipments when cart items are modified
             if ($isModified)
             {
@@ -387,13 +393,15 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
             }                      
         
 	        $this->shipping->set(serialize($this->shipments));
-	        parent::save();		
+	        
+            parent::save();		
 		}
-		else if($this->isModified())
-		{
-		    parent::save();        
-		}
-                
+        
+        if (!$this->orderedItems)
+        {
+            $this->delete();
+        }
+
         if ($this->isSyncedToSession)
         {
             $this->syncToSession();

@@ -21,6 +21,11 @@ class Shipment extends ActiveRecordModel
 	
 	protected $selectedRateId; 
     
+    const STATUS_NEW = 0;
+    const STATUS_PENDING = 1;
+    const STATUS_AWAITING = 2;
+    const STATUS_SHIPPED = 3;
+    
     /**
 	 * Define database schema used by this active record instance
 	 *
@@ -36,8 +41,11 @@ class Shipment extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("amountCurrencyID", "Currency", "ID", "Currency", ARInteger::instance()));
 
 		$schema->registerField(new ARField("trackingCode", ARVarchar::instance(100)));
+		$schema->registerField(new ARField("shippingServiceID", ARVarchar::instance(50)));
+		$schema->registerField(new ARField("shippingServiceCode", ARVarchar::instance(50)));
 		$schema->registerField(new ARField("dateShipped", ARDateTime::instance()));
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
+		$schema->registerField(new ARField("shippingAmount", ARFloat::instance()));
 		$schema->registerField(new ARField("status", ARInteger::instance(2)));
 	}       
 	
@@ -176,8 +184,24 @@ class Shipment extends ActiveRecordModel
         $currency = $this->order->get()->currency->get();
         $this->amountCurrency->set($currency);
         $this->amount->set($this->getSubTotal($currency));
+    
+        $rate = $this->getSelectedRate();
 
-        return parent::insert();
+        $this->shippingAmount->set($rate->getAmountByCurrency($currency));
+        $this->shippingServiceCode->set($rate->getServiceName());
+//        $this->shippingServiceID->set($rate->getServiceID());
+
+        $this->status->set(self::STATUS_NEW);
+
+        $ret = parent::insert();
+        
+        foreach ($this->items as $item)
+        {
+            $item->shipment->set($this);
+            $item->save();
+        }
+        
+        return $ret;
     }
     
     public function getItems()

@@ -258,6 +258,7 @@ class CheckoutController extends FrontendController
 
         $response = new ActionResponse();
         $response->setValue('shipments', $shipments->toArray());
+        var_dump($rate);
         $response->setValue('rates', $rateArray);
 		$response->setValue('currency', $this->getRequestCurrency()); 
         $response->setValue('form', $form);
