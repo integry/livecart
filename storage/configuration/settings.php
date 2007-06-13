@@ -397,4 +397,9 @@
     'ZM' => 1,
     'ZW' => 1,
   ),
+  'CC_HANDLER' => 'TestCreditCard',
+  'PaypalDirectPayment_username' => 'sandbox_api1.integry.net',
+  'PaypalDirectPayment_password' => '9AURF7SPQCEYCDXV',
+  'PaypalDirectPayment_signature' => 'AeQ618dBMNS1kVFZwUIitcve-k.dAT5pnzBekoPUhcIj1J5p65ZAR8Pu',
+  'PaypalDirectPayment_authorizeonly' => 0,
 ); ?>

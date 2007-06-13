@@ -1,5 +1,4 @@
 <?php
-
 include_once('../abstract/CreditCardPayment.php');
 
 class AuthorizeNetPayment extends CreditCardPayment

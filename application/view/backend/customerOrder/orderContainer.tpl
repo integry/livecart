@@ -20,6 +20,10 @@
 				<a href="{link controller=backend.customerOrder action=info id=_id_}"}">{t _order_info}</a>
 				<span class="tabHelp">orders.edit</span>
 			</li>
+			<li id="tabOrderProducts" class="tab active">
+				<a href="{link controller=backend.shipment action=index id=_id_}"}">{t _order_products}</a>
+				<span class="tabHelp">orders.edit</span>
+			</li>
 		</ul>
 	</div>
     <fieldset class="sectionContainer maxHeight h--50"></fieldset>

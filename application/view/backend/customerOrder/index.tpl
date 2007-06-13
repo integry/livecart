@@ -9,6 +9,7 @@
 {includeJs file="library/ActiveGrid.js"}
 {includeJs file="library/TabControl.js"}
 {includeJs file="library/SectionExpander.js"}
+{includeJs file="library/ActiveList.js"}
 
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="library/TabControl.css"}
@@ -19,6 +20,9 @@
 
 {includeJs file="backend/CustomerOrder.js"}
 {includeCss file="backend/CustomerOrder.css"}
+
+{includeJs file="backend/Shipment.js"}
+{includeCss file="backend/Shipment.css"}
 
 {includeJs file="backend/User.js"}
 {includeCss file="backend/User.css"}

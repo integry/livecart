@@ -10,6 +10,7 @@ _orders=Orders
 _livecart_orders=Orders
 
 _process=Process
+_order_products=Products
 
 # Mass actions
 _with_selected=With selected

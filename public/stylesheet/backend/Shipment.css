@@ -1,0 +1,26 @@
+.orderShipments_title 
+{
+    font-size: 200%;
+    color: #777;
+    font-weight: bold;
+    display: inline;
+}
+
+
+.orderShipmentsItems_title 
+{
+    font-size: 1em;
+    display: inline;
+}
+
+.orderShipment
+{
+    border: 2px solid #777 ! important;
+    margin-bottom: 1em;
+}
+
+.orderShipmentsItem
+{
+    padding-bottom: 1em;
+    padding-top: 1em;
+}

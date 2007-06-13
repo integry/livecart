@@ -1,5 +1,3 @@
-{denied role="taxes.create"} {/denied}
-
 <fieldset class="container" {denied role="taxes.create"}style="display: none"{/denied}>
 	<ul class="menu" id="tax_new_menu">
 	    <li><a href="#new_tax" id="tax_new_show">{t _add_new_tax}</a></li>
@@ -7,13 +5,9 @@
 	</ul>
 </fieldset>
 
-
-
-
 <fieldset id="tax_new_form" style="display: none;">
     {include file="backend/tax/tax.tpl" tax=$newTax taxForm=$newTaxForm}
 </fieldset>
-
 
 
 

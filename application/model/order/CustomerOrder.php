@@ -82,7 +82,6 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         if (!self::$instance)
         {
             $id = Session::getInstance()->getValue('CustomerOrder');
-                
             if ($id)
             {
                 try
@@ -339,6 +338,12 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     
     public function save()
     {
+        // update order status if captured amount has changed
+        if ($this->capturedAmount->isModified() && ($this->capturedAmount->get() == $this->totalAmount->get()))
+        {
+            $this->isPaid->set(true);
+        }
+        
         // remove zero-count items
         foreach ($this->orderedItems as $item)
         {
@@ -605,7 +610,12 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     {
         if ($this->isFinalized->get())
         {
-            $this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter());    
+            $this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter()); 
+
+            foreach($this->shipments as $shipment)
+            {
+                $shipment->loadItems();
+            }
         }
         else
         {
@@ -613,6 +623,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
             {
                 ClassLoader::import("application.model.order.Shipment");
         
+                $main = Shipment::getNewInstance($this);
                 $this->shipments = new ARSet();
                 
                 foreach ($this->getShoppingCartItems() as $item)
@@ -625,20 +636,12 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
                     }
                     else
                     {
-                        if (!isset($main))
-                        {
-                            $main = Shipment::getNewInstance($this);                            
-                        }
-                        
                         $main->addItem($item);
                     }
                 }   
                 
-                if (isset($main))
-                {
-                    $this->shipments->unshift($main); 
-                }                   
-            }            
+                $this->shipments->unshift($main);
+            }
         }
 
         return $this->shipments;
@@ -680,13 +683,13 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         }
 		
 		// shipping cost totals
-		if ($this->shipments)
+		if(is_array($this->shipments))
 		{
-            foreach ($this->shipments as $shipment)
+	        foreach ($this->shipments as $shipment)
 			{
 	            if ($rate = $shipment->getSelectedRate())
 	            {
-                    $amount = $rate->getCostAmount();
+	                $amount = $rate->getCostAmount();
 	                $curr = Currency::getInstanceById($rate->getCostCurrency());
 	                
 	                $total += $currency->convertAmount($curr, $amount);
@@ -747,7 +750,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 		
 		// shipments
 		$array['shipments'] = array();
-		if ($this->shipments)
+		if(is_array($this->shipments))
 		{
 	        foreach ($this->shipments as $shipment)
 			{
@@ -832,7 +835,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         $this->shipments = array();
     }
 
-
+    
 }
 	
 ?>

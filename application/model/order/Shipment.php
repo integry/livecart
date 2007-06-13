@@ -39,15 +39,35 @@ class Shipment extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("amountCurrencyID", "Currency", "ID", "Currency", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("shippingServiceID", "ShippingService", "ID", "ShippingService", ARInteger::instance()));
+		
 
 		$schema->registerField(new ARField("trackingCode", ARVarchar::instance(100)));
-		$schema->registerField(new ARField("shippingServiceID", ARVarchar::instance(50)));
 		$schema->registerField(new ARField("shippingServiceCode", ARVarchar::instance(50)));
 		$schema->registerField(new ARField("dateShipped", ARDateTime::instance()));
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
 		$schema->registerField(new ARField("shippingAmount", ARFloat::instance()));
 		$schema->registerField(new ARField("status", ARInteger::instance(2)));
 	}       
+	
+	public function load($loadReferencedRecords = false)
+	{
+	    parent::load($loadReferencedRecords);
+	}
+	
+	public function loadItems()
+	{
+	    if(empty($this->items))
+	    {
+		    $filter = new ARSelectFilter();
+			$filter->setCondition(new EqualsCond(new ARFieldHandle('OrderedItem', 'shipmentID'), $this->getID()));
+		
+			foreach(OrderedITem::getRecordSet('OrderedItem', $filter) as $item)
+			{
+			    $this->items[] = $item;
+			}
+	    }
+	}
 	
 	public static function getNewInstance(CustomerOrder $order)
 	{
@@ -58,8 +78,29 @@ class Shipment extends ActiveRecordModel
 	
 	public function addItem(OrderedItem $item)
 	{
+	    foreach($this->items as $key => $shipmentItem)
+        {
+            if($shipmentItem === $item)
+            {
+				return;
+            }
+        }
         $this->items[] = $item;
         $item->shipment->set($this);
+    }
+	
+	public function removeItem(OrderedItem $item)
+	{
+        foreach($this->items as $key => $shipmentItem)
+        {
+            if($shipmentItem === $item)
+            {
+				unset($this->items[$key]);
+				$item->shipment->setNull( );
+				break;
+            }
+        }
+        
     }
     
     public function getChargeableWeight(DeliveryZone $zone)
@@ -183,7 +224,6 @@ class Shipment extends ActiveRecordModel
         if ($this->itemIds)
         {
             $this->items = array();
-            
             foreach ($this->itemIds as $id)    
             {
                 $item = ActiveRecordModel::getInstanceById('OrderedItem', $id);
@@ -195,17 +235,13 @@ class Shipment extends ActiveRecordModel
     }
     
     protected function insert()
-    {
-        $currency = $this->order->get()->currency->get();
-        $this->amountCurrency->set($currency);
-        $this->amount->set($this->getSubTotal($currency));
-    
+    {      
         $rate = $this->getSelectedRate();
-
-        $this->shippingAmount->set($rate->getAmountByCurrency($currency));
         $this->shippingServiceCode->set($rate->getServiceName());
-        $this->shippingServiceID->set($rate->getServiceID());
+        $this->shippingService->set(ShippingService::getInstanceByID($rate->getServiceID()));
 
+        $this->recalculateAmounts();
+        
         $this->status->set(self::STATUS_NEW);
 
         $ret = parent::insert();
@@ -221,7 +257,17 @@ class Shipment extends ActiveRecordModel
     
     public function getItems()
     {
+	    $this->loadItems();
         return $this->items;
+    }
+    
+    public function recalculateAmounts()
+    {
+       $currency = $this->order->get()->currency->get();
+       $this->amountCurrency->set($currency);
+       $rate = $this->getSelectedRate();
+       $this->amount->set($this->getSubTotal($currency));
+       $this->shippingAmount->set($rate->getAmountByCurrency($currency));
     }
 }
 

@@ -29,14 +29,6 @@
             {$order.dateCreated}
 	    </div>
 	</fieldset>
-    
-    <label for="order_{$order.ID}_dateCompleted">{t _date_completed}</label>
-    <fieldset class="error">
-        <div class="formDiv">
-            {$order.dateCompleted}
-            <div class="errorText" style="display: none" ></span>
-	    </div>
-	</fieldset>
 
     <label for="order_{$order.ID})_isPaid">{t _is_paid}</label>    
     <fieldset class="error">
