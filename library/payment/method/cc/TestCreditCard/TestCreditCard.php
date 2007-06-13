@@ -1,6 +1,6 @@
 <?php
 
-include_once(dirname(__file__) . '../../../abstract/CreditCardPayment.php');
+include_once(dirname(__file__) . '/../../../abstract/CreditCardPayment.php');
 
 class TestCreditCard extends CreditCardPayment
 {
