@@ -12,6 +12,8 @@ abstract class ShippingRateCalculator
     protected $sourceZip;   
     protected $weight;   
     
+	private $config = array();    
+    
     public function setDestCountry($country)
     {
         $this->destCountry = $country;
@@ -36,6 +38,23 @@ abstract class ShippingRateCalculator
     {
         $this->weight = $grams;
     }
+    
+	public function setConfigValue($key, $value)
+	{
+		$this->config[$key] = $value;
+	}
+	
+	public function getConfigValue($key, $defaultValue = '')
+	{
+		if (isset($this->config[$key]))
+		{
+			return $this->config[$key];
+		}
+		else
+		{
+            return $defaultValue;
+        }
+	}    
     
     public abstract function getRates();
 }

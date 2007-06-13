@@ -6,7 +6,17 @@ include_once('simpletest/reporter.php');
 
 class ShippingTest extends UnitTest
 {
-	function setUp()
+	function getUsedSchemas()
+	{
+        return array();    
+    }
+    
+    function setUp()
+	{
+
+	}
+
+    function tearDown()
 	{
 
 	}

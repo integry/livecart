@@ -28,12 +28,16 @@ abstract class TransactionPayment
 		$this->config[$key] = $value;
 	}
 	
-	public function getConfigValue($key)
+	public function getConfigValue($key, $defaultValue = '')
 	{
 		if (isset($this->config[$key]))
 		{
 			return $this->config[$key];
 		}
+		else
+		{
+            return $defaultValue;
+        }
 	}
 	
 	public function getDetails()
