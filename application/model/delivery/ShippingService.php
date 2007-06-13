@@ -110,5 +110,70 @@ class ShippingService extends MultilingualObject
 	{
 	    return ShippingRate::getRecordSetByService($this, $loadReferencedRecords);
 	}
+	
+	/**
+	 * Calculate a delivery rate for a particular shipment
+	 *
+	 * @return ShipmentDeliveryRate
+	 */
+    public function getDeliveryRate(Shipment $shipment)
+    {
+        // get applicable rates
+        if (self::WEIGHT_BASED == $this->rangeType->get())
+        {
+            $weight = $shipment->getChargeableWeight($this->deliveryZone->get());
+            $cond = new EqualsOrLessCond(new ARFieldHandle('ShippingRate', 'weightRangeStart'), $weight);
+            $cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'weightRangeStart'), $weight));
+        }    
+        else
+        {
+            $total = $shipment->getSubTotal(Store::getInstance()->getDefaultCurrency());
+            $cond = new EqualsOrLessCond(new ARFieldHandle('ShippingRate', 'subtotalRangeStart'), $total);
+            $cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'subtotalRangeEnd'), $total));
+        }
+
+        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ShippingRate', 'shippingServiceID'), $this->getID()));
+        $f->mergeCondition($cond);
+
+        $rates = ActiveRecordModel::getRecordSet('ShippingRate', $f);
+        
+        if (!$rates->size())
+        {
+            return null;
+        }        
+        
+        $itemCount = $shipment->getChargeableItemCount($this->deliveryZone->get()); 
+        
+        if (!$itemCount && $this->deliveryZone->get()->isFreeShipping->get())
+        {
+            // free shipping
+            $maxRate = 0;
+        }
+        else
+        {
+            $maxRate = 0;
+            
+            foreach ($rates as $rate)
+            {
+                $charge = $rate->flatCharge->get() + ($itemCount * $rate->perItemCharge->get());
+
+                if (self::WEIGHT_BASED == $this->rangeType->get())
+                {
+                    $charge += ($rate->perKgCharge->get() * $weight);
+                }    
+                else
+                {
+                    $charge += ($rate->subtotalPercentCharge->get() / 100) * $total;
+                }                            
+
+                if ($charge > $maxRate)
+                {
+                    $maxRate = $charge;
+                }
+            }
+        }
+        
+        return ShipmentDeliveryRate::getNewInstance($this, $maxRate);
+    }	
 }
 ?>

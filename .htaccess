@@ -4,7 +4,7 @@ RewriteEngine on
 RewriteRule ^$ public/index.php [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^public/upload/(.*)$ http://dev.integry.net/livecart/prex/public/upload/$1 [R,L]
+RewriteRule ^public/upload/(.*)$ http://demo.livecart.com/upload/$1 [R,L]
 # << end remove
 
 RewriteCond %{REQUEST_FILENAME} !-f

@@ -80,18 +80,102 @@ class DeliveryZone extends MultilingualObject
 	 */
     public static function getZoneByAddress(UserAddress $address)
     {
-    	// determine if the country has states defined in database
-		$f = new ARSelectFilter();
-		$f->setCondition(new EqualsCond(new ARFieldHandle('State', 'countryID'), $address->countryID->get()));
-		$hasStates = (ActiveRecordModel::getRecordCount('State', $f) > 0);    
+		if (!$address->isLoaded())
+		{
+            $address->load();    
+        }
+        
+        $zones = array();
+		    
+    	// get zones by state
+    	if ($address->state->get())
+    	{
+            $f = new ARSelectFilter();
+		    $f->setCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneState', 'stateID'), $address->state->get()->getID()));
+		    $s = ActiveRecordModel::getRecordSet('DeliveryZoneState', $f, ActiveRecordModel::LOAD_REFERENCES);
+		    
+            foreach ($s as $zone)
+            {
+                $zones[] = $s->deliveryZone->get();
+            }    
+        }
+        
+		// get zones by country
+		if (!$zones)
+		{
+            $f = new ARSelectFilter();
+		    $f->setCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneCountry', 'countryCode'), $address->countryID->get()));
+		    $s = ActiveRecordModel::getRecordSet('DeliveryZoneCountry', $f, ActiveRecordModel::LOAD_REFERENCES);
+
+            foreach ($s as $zone)
+            {
+                $zones[] = $zone->deliveryZone->get();
+            }                
+        }
 		
-		// get zones that match country
+		// leave zones that match masks
+		foreach ($zones as $key => $zone)
+		{
+            if (!$zone->hasMaskMatch($address))
+            {
+                unset($zones[$key]);       
+            }
+        }
 		
-		// leave zones that match state
-		
-		// leave zones that match filters
-		
-		return DeliveryZone::getInstanceByID(0);		
+		return $zones ? array_shift($zones) : DeliveryZone::getDefaultZoneInstance();
+    }
+    
+	/**
+	 * Returns the default delivery zone instance
+	 *
+     * @return DeliveryZone
+	 */
+    public static function getDefaultZoneInstance()
+    {
+        return self::getInstanceById(0);    
+    }    
+    
+	/**
+	 * Determine if the supplied UserAddress matches address masks
+	 *
+     * @return bool
+	 */
+    public function hasMaskMatch(UserAddress $address)
+    {
+        return 
+               $this->hasMaskGroupMatch($this->getCityMasks(), $address->city->get()) &&
+               
+               ($this->hasMaskGroupMatch($this->getAddressMasks(), $address->address1->get()) ||                
+               $this->hasMaskGroupMatch($this->getAddressMasks(), $address->address2->get())) &&
+                         
+               $this->hasMaskGroupMatch($this->getZipMasks(), $address->postalCode->get());                   
+    }
+    
+    private function hasMaskGroupMatch(ARSet $masks, $addressString)
+    {
+        if (!$masks->size())
+        {
+            return true;
+        }
+        
+        $match = false;
+        
+        foreach ($masks as $mask)
+        {
+            if ($this->isMaskMatch($addressString, $mask->mask->get()))
+            {
+                $match = true;
+            }
+        }
+        
+        return $match;
+    }
+    
+    private function isMaskMatch($addressString, $maskString)
+    {
+        $maskString = str_replace('*', '.*', $maskString);
+        $maskString = str_replace('?', '.{0,1}', $maskString);
+        return preg_match('/' . $maskString . '/im', $addressString);
     }
     
     /**
@@ -101,21 +185,16 @@ class DeliveryZone extends MultilingualObject
      */
 	public function getDefinedShippingRates(Shipment $shipment)
     {
-		// stub		
 		$rates = new ShippingRateSet();
 		
-		$rate1 = new ShipmentDeliveryRate();
-		$rate1->setServiceName('Ground');
-		$rate1->setCost(10, 'USD');
-		$rate1->setServiceID(12);
-
-		$rate2 = new ShipmentDeliveryRate();
-		$rate2->setServiceName('Overnight');
-		$rate2->setCost(23.45, 'USD');
-		$rate2->setServiceID(13);
-				
-		$rates->add($rate1);
-		$rates->add($rate2);
+		foreach ($this->getShippingServices() as $service)
+		{
+            $rate = $service->getDeliveryRate($shipment);
+            if ($rate)
+            {
+                $rates->add($rate);
+            }
+        }
 				
 		return $rates;		
 	}

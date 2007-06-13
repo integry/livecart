@@ -5,19 +5,28 @@ ClassLoader::import('library.shipping.ShippingRateResult');
 
 class ShipmentDeliveryRate extends ShippingRateResult
 {
-    function getAmountByCurrency(Currency $currency)
+    public static function getNewInstance(ShippingService $service, $cost)
+    {
+        $inst = new ShipmentDeliveryRate();
+        $inst->setServiceId($service->getID());
+        $inst->setCost($cost, Store::getInstance()->getDefaultCurrencyCode());
+        return $inst;
+    }
+    
+    public function getAmountByCurrency(Currency $currency)
     {
         $amountCurrency = Currency::getInstanceById($this->getCostCurrency());
         return $currency->convertAmount($amountCurrency, $this->getCostAmount());
     }
     
-    function toArray()
+    public function toArray()
     {
         $array = parent::toArray();
         
         $amountCurrency = Currency::getInstanceById($array['costCurrency']);
         $currencies = Store::getInstance()->getCurrencySet();
 
+        // get and format prices
         $prices = array();
         $formattedPrices = array();
         foreach ($currencies as $id => $currency)
@@ -25,9 +34,16 @@ class ShipmentDeliveryRate extends ShippingRateResult
             $prices[$id] = $currency->convertAmount($amountCurrency, $array['costAmount']);
             $formattedPrices[$id] = $currency->getFormattedPrice($prices[$id]);
         }
-    
+
         $array['price'] = $prices;
         $array['formattedPrice'] = $formattedPrices;
+        
+        // shipping service name
+        if ($id = $this->getServiceID())
+        {
+            $service = ShippingService::getInstanceById($id, ShippingService::LOAD_DATA);   
+            $array['ShippingService'] = $service->toArray();
+        }
         
         return $array;
     }

@@ -236,6 +236,7 @@ class CheckoutController extends FrontendController
 
         $form = $this->buildShippingForm($shipments);
         $zone = $order->getDeliveryZone();
+        
         foreach ($shipments as $key => $shipment)
         {
             $shipmentRates = $zone->getShippingRates($shipment);

@@ -34,7 +34,7 @@ class DeliveryZoneZipMask extends ActiveRecordModel
 	}
 	
 	/**
-	 * @return DeliveryZoneState
+	 * @return DeliveryZoneZipMask
 	 */
 	public static function getNewInstance(DeliveryZone $zone, $mask)
 	{

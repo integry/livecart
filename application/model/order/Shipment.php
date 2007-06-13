@@ -77,6 +77,21 @@ class Shipment extends ActiveRecordModel
         return $weight;
     }
     
+    public function getChargeableItemCount(DeliveryZone $zone)
+    {
+        $count = 0;
+        
+        foreach ($this->items as $item)
+        {
+            if (!$item->product->get()->isFreeShipping->get() || !$zone->isFreeShipping->get())
+            {
+                $count += $item->count->get();
+            }
+        }   
+        
+        return $count;
+    }
+    
     public function setAvailableRates(ShippingRateSet $rates)
     {
         $this->availableShippingRates = $rates;
