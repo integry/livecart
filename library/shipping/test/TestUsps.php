@@ -3,7 +3,7 @@
 include_once('unittest/UTStandalone.php');
 
 include_once('ShippingTest.php');
-include_once('../method/usps/UspsRateCalculator.php');
+include_once('../method/UspsRateCalculator.php');
 
 class TestUsps extends ShippingTest
 {
