@@ -2,6 +2,7 @@
 
 ClassLoader::import('library.shipping.ShippingRateSet');
 ClassLoader::import('library.shipping.ShippingRateResult');
+ClassLoader::import('application.model.delivery.ShippingService');
 
 class ShipmentDeliveryRate extends ShippingRateResult
 {
@@ -16,7 +17,9 @@ class ShipmentDeliveryRate extends ShippingRateResult
     public function getAmountByCurrency(Currency $currency)
     {
         $amountCurrency = Currency::getInstanceById($this->getCostCurrency());
-        return $currency->convertAmount($amountCurrency, $this->getCostAmount());
+        $amount = $currency->convertAmount($amountCurrency, $this->getCostAmount());
+        
+        return round($amount, 2);
     }
     
     public function toArray()

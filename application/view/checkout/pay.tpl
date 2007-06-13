@@ -107,7 +107,7 @@
             {/foreach}            
         
             <tr>
-                <td colspan="3" class="subTotalCaption">{t _shipping} ({$shipment.selectedRate.serviceName}):</td>
+                <td colspan="3" class="subTotalCaption">{t _shipping} ({$shipment.selectedRate.ShippingService.name_lang}):</td>
                 <td>{$shipment.selectedRate.formattedPrice.$currency}</td>                        
             </tr>
     {/foreach}  

@@ -204,7 +204,7 @@ class Shipment extends ActiveRecordModel
 
         $this->shippingAmount->set($rate->getAmountByCurrency($currency));
         $this->shippingServiceCode->set($rate->getServiceName());
-//        $this->shippingServiceID->set($rate->getServiceID());
+        $this->shippingServiceID->set($rate->getServiceID());
 
         $this->status->set(self::STATUS_NEW);
 
