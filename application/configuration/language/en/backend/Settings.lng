@@ -144,6 +144,7 @@ DEF_ZIP=Default ZIP code
 DEF_CITY=Default city
 
 _realtime_shipping=Real-time Shipping Rates
+SHIPPING_HANDLERS=Enabled Shipping Handlers
 
 _email=Email
 _email_addresses=Email Addresses

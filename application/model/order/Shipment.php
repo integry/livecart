@@ -39,15 +39,14 @@ class Shipment extends ActiveRecordModel
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("amountCurrencyID", "Currency", "ID", "Currency", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("shippingServiceID", "ShippingService", "ID", "ShippingService", ARInteger::instance()));
-		
+		$schema->registerField(new ARForeignKeyField("shippingServiceID", "ShippingService", "ID", "ShippingService", ARInteger::instance()));		
 
 		$schema->registerField(new ARField("trackingCode", ARVarchar::instance(100)));
-		$schema->registerField(new ARField("shippingServiceCode", ARVarchar::instance(50)));
 		$schema->registerField(new ARField("dateShipped", ARDateTime::instance()));
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
 		$schema->registerField(new ARField("shippingAmount", ARFloat::instance()));
 		$schema->registerField(new ARField("status", ARInteger::instance(2)));
+		$schema->registerField(new ARField("shippingServiceData", ARText::instance(50)));
 	}       
 	
 	public function load($loadReferencedRecords = false)
@@ -103,9 +102,14 @@ class Shipment extends ActiveRecordModel
         
     }
     
-    public function getChargeableWeight(DeliveryZone $zone)
+    public function getChargeableWeight(DeliveryZone $zone = null)
     {
         $weight = 0;
+        
+        if (is_null($zone))
+        {
+            $zone = $this->order->get()->getDeliveryZone();   
+        }
         
         foreach ($this->items as $item)
         {
@@ -237,8 +241,16 @@ class Shipment extends ActiveRecordModel
     protected function insert()
     {      
         $rate = $this->getSelectedRate();
-        $this->shippingServiceCode->set($rate->getServiceName());
-        $this->shippingService->set(ShippingService::getInstanceByID($rate->getServiceID()));
+        
+        $serviceId = $rate->getServiceID();
+        if (is_numeric($serviceId))
+        {
+            $this->shippingService->set(ShippingService::getInstanceByID($serviceId));
+        }
+        else
+        {
+            $this->shippingServiceData->set(serialize($rate));
+        }
 
         $this->recalculateAmounts();
         

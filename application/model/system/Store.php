@@ -387,6 +387,9 @@ class Store
 		return PaymentMethodManager::getCreditCardHandlerList();
 	}
 
+	/**
+	 * Returns an instance of the selected credit card handler
+	 */
 	public function getCreditCardHandler(TransactionDetails $details = null)
 	{
 		$handler = $this->config->getValue('CC_HANDLER');
@@ -403,6 +406,7 @@ class Store
 		$c = $this->config->getSection('payment/' . $handler);
 		foreach ($c as $key => $value)
 		{
+			$value = $this->config->getValue($key);
 			$key = substr($key, strlen($handler) + 1);
 			$inst->setConfigValue($key, $value);
 		}
@@ -411,6 +415,43 @@ class Store
 		
 		return $inst;
 	}
+
+	/**
+	 * Returns an array of all real-time shipping rate services
+	 */
+	public function getAllRealTimeShippingServices()
+	{
+		ClassLoader::import('library.shipping.ShippingMethodManager');
+		return ShippingMethodManager::getHandlerList();
+	}
+
+	/**
+	 * Returns an array of enabled real-time shipping rate services
+	 */
+	public function getEnabledRealTimeShippingServices()
+	{
+		return array_flip($this->config->getValue('SHIPPING_HANDLERS'));
+	}
+
+	/**
+	 * Returns a shipping handler instance
+	 */
+    public function getShippingHandler($className)
+    {
+		ClassLoader::import('library.shipping.method.' . $className);
+
+		$inst = new $className();
+		
+		$c = $this->config->getSection('shipping/' . $className);
+		foreach ($c as $key => $value)
+		{
+			$value = $this->config->getValue($key);
+            $key = substr($key, strlen($className) + 1);
+			$inst->setConfigValue($key, $value);
+		}
+		
+		return $inst;        
+    }
 
 	/**
 	 * Loads currency data from database

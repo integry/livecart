@@ -338,12 +338,6 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     
     public function save()
     {
-        // update order status if captured amount has changed
-        if ($this->capturedAmount->isModified() && ($this->capturedAmount->get() == $this->totalAmount->get()))
-        {
-            $this->isPaid->set(true);
-        }
-        
         // remove zero-count items
         foreach ($this->orderedItems as $item)
         {
@@ -623,7 +617,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
             {
                 ClassLoader::import("application.model.order.Shipment");
         
-                $main = Shipment::getNewInstance($this);
+
                 $this->shipments = new ARSet();
                 
                 foreach ($this->getShoppingCartItems() as $item)
@@ -636,12 +630,20 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
                     }
                     else
                     {
+                        if (!isset($main))
+                        {
+                            $main = Shipment::getNewInstance($this);                            
+                        }
+                        
                         $main->addItem($item);
                     }
                 }   
                 
-                $this->shipments->unshift($main);
-            }
+                if (isset($main))
+                {
+                    $this->shipments->unshift($main); 
+                }                   
+            }                    
         }
 
         return $this->shipments;
@@ -683,7 +685,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         }
 		
 		// shipping cost totals
-		if(is_array($this->shipments))
+		if ($this->shipments)
 		{
 	        foreach ($this->shipments as $shipment)
 			{
@@ -750,7 +752,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 		
 		// shipments
 		$array['shipments'] = array();
-		if(is_array($this->shipments))
+		if ($this->shipments)
 		{
 	        foreach ($this->shipments as $shipment)
 			{

@@ -14,6 +14,33 @@ class ShipmentDeliveryRate extends ShippingRateResult
         return $inst;
     }
     
+    public static function getRealTimeRates(ShippingRateCalculator $handler, Shipment $shipment)
+    {
+        $handler->setWeight($shipment->getChargeableWeight());
+        
+        $address = $shipment->order->get()->shippingAddress->get();        
+        $handler->setDestCountry($address->countryID->get()); 
+        $handler->setDestZip($address->postalCode->get());
+
+        $config = Config::getInstance();        
+        $handler->setSourceCountry($config->getValue('STORE_COUNTRY'));
+        $handler->setSourceZip($config->getValue('STORE_ZIP'));
+        
+        $rates = new ShippingRateSet();
+        foreach ($handler->getAllRates() as $k => $rate)        
+        {            
+            $newRate = new ShipmentDeliveryRate();
+            $newRate->setCost($rate->getCostAmount(), $rate->getCostCurrency()); 
+            $newRate->setServiceName($rate->getServiceName());
+            $newRate->setClassName($rate->getClassName());
+            $newRate->setProviderName($rate->getProviderName());
+            $newRate->setServiceId($rate->getClassName() . '_' . $k);
+            $rates->add($newRate);
+        }
+        
+        return $rates;
+    }
+    
     public function getAmountByCurrency(Currency $currency)
     {
         $amountCurrency = Currency::getInstanceById($this->getCostCurrency());
@@ -42,10 +69,15 @@ class ShipmentDeliveryRate extends ShippingRateResult
         $array['formattedPrice'] = $formattedPrices;
         
         // shipping service name
-        if ($id = $this->getServiceID())
+        $id = $this->getServiceID();
+        if (is_numeric($id))
         {
             $service = ShippingService::getInstanceById($id, ShippingService::LOAD_DATA);   
             $array['ShippingService'] = $service->toArray();
+        }
+        else
+        {
+            $array['ShippingService'] = array('name_lang' => $this->getServiceName(), 'provider' => $this->getProviderName());
         }
         
         return $array;

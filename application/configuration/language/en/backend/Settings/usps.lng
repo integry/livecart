@@ -1,8 +1,10 @@
+UspsShipping=USPS
+
 _USPS_MAIN_OPTS=Main Settings
 SHIPPING_METHOD_USPS=Enable USPS as shipping method
 
 _USPS_API_ACCESS=USPS Shipping API Access
-UspsShipping_username=USPS API username
+UspsShipping_userId=USPS API username
 UspsShipping_apiUrl=USPS API URL
 
 _USPS_DOMESTIC_OPTS=Domestic Shipping Options
