@@ -11,6 +11,7 @@ _USPS_DOMESTIC_OPTS=Domestic Shipping Options
 UspsShipping_domestic=Enabled mailing services
 UspsShipping_priorityPackageType=Priority mail package type
 UspsShipping_isMachinable=Package is machinable
+UspsShipping_size=Package size
 
 _USPS_ITL_OPTS=International Shipping Options
 UspsShipping_international=Enabled international mailing services

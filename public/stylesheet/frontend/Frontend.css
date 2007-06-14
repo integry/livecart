@@ -1306,7 +1306,6 @@ label
     padding-right: 6px;
     margin-top: 0;
     margin-bottom: 0;
-/*    padding-left: 22px; */
 }
 
 p.required label
@@ -1314,6 +1313,8 @@ p.required label
     background-image: url(../../image/silk/bullet_black.png);
     background-repeat: no-repeat;
     background-position: center left;
+    margin-left: -22px;
+    padding-left: 22px;
     width: 12em;
 }
 

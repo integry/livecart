@@ -78,6 +78,12 @@ _billing_addresses=Billing Addresses
 _shipping_addresses=Shipping Addresses
 _remove_address=Remove Address
 
+_address=Address
+_city=City
+_country=Country
+_state=State
+_postal_code=Postal Code
+
 ######################## 
 # View order
 ######################## 
