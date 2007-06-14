@@ -68,13 +68,20 @@ class USPSHandler {
     function getPrice() {
         if($this->country=="USA"){
             // may need to urlencode xml portion
-            $str = $this->server. "?API=RateV2&XML=<RateV2Request%20USERID=\"";
+            $str = $this->server. "?API=RateV3&XML=<RateV3Request%20USERID=\"";
             $str .= $this->user . "\"%20PASSWORD=\"" . $this->pass . "\"><Package%20ID=\"0\"><Service>";
             $str .= $this->service . "</Service><ZipOrigination>" . $this->orig_zip . "</ZipOrigination>";
             $str .= "<ZipDestination>" . $this->dest_zip . "</ZipDestination>";
             $str .= "<Pounds>" . $this->pounds . "</Pounds><Ounces>" . $this->ounces . "</Ounces>";
             $str .= "<Container>" . urlencode($this->container) . "</Container><Size>" . $this->size . "</Size>";
-            $str .= "<Machinable>" . $this->machinable . "</Machinable></Package></RateV2Request>";
+            $str .= "<Machinable>" . $this->machinable . "</Machinable>";
+            
+            if (strtolower($this->service) == 'first class')
+            {
+                $str .= "<FirstClassMailType>PARCEL</FirstClassMailType>";                
+            }
+            
+            $str .= "</Package></RateV3Request>";
         }
         else {
             $str = $this->server. "?API=IntlRate&XML=<IntlRateRequest%20USERID=\"";
@@ -97,6 +104,9 @@ class USPSHandler {
         $xmlParser = new xmlparser();
         $array = $xmlParser->GetXMLTree($ats);
 
+        $e = error_reporting();
+        error_reporting(E_WARNING);
+
         //$xmlParser->printa($array);
         if(isset($array['ERROR'])) { // If it is error
             $error = new UspsError();
@@ -106,13 +116,13 @@ class USPSHandler {
             $error->helpcontext = $array['ERROR'][0]['HELPCONTEXT'][0]['VALUE'];
             $error->helpfile = $array['ERROR'][0]['HELPFILE'][0]['VALUE'];
             $this->error = $error;
-        } else if(isset($array['RATEV2RESPONSE'][0]['PACKAGE'][0]['ERROR'])) {
+        } else if(isset($array['RATEV3RESPONSE'][0]['PACKAGE'][0]['ERROR'])) {
             $error = new UspsError();
-            $error->number = $array['RATEV2RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['NUMBER'][0]['VALUE'];
-            $error->source = $array['RATEV2RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['SOURCE'][0]['VALUE'];
-            $error->description = $array['RATEV2RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['DESCRIPTION'][0]['VALUE'];
-            $error->helpcontext = $array['RATEV2RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['HELPCONTEXT'][0]['VALUE'];
-            $error->helpfile = $array['RATEV2RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['HELPFILE'][0]['VALUE'];
+            $error->number = $array['RATEV3RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['NUMBER'][0]['VALUE'];
+            $error->source = $array['RATEV3RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['SOURCE'][0]['VALUE'];
+            $error->description = $array['RATEV3RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['DESCRIPTION'][0]['VALUE'];
+            $error->helpcontext = $array['RATEV3RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['HELPCONTEXT'][0]['VALUE'];
+            $error->helpfile = $array['RATEV3RESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['HELPFILE'][0]['VALUE'];
             $this->error = $error;        
         } else if(isset($array['INTLRATERESPONSE'][0]['PACKAGE'][0]['ERROR'])){ //if it is international shipping error
             $error = new UspsError($array['INTLRATERESPONSE'][0]['PACKAGE'][0]['ERROR']);
@@ -122,10 +132,10 @@ class USPSHandler {
             $error->helpcontext = $array['INTLRATERESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['HELPCONTEXT'][0]['VALUE'];
             $error->helpfile = $array['INTLRATERESPONSE'][0]['PACKAGE'][0]['ERROR'][0]['HELPFILE'][0]['VALUE'];
             $this->error = $error;
-        } else if(isset($array['RATEV2RESPONSE'])){ // if everything OK
+        } else if(isset($array['RATEV3RESPONSE'])){ // if everything OK
             //print_r($array['RATEV2RESPONSE']);
-            $this->zone = $array['RATEV2RESPONSE'][0]['PACKAGE'][0]['ZONE'][0]['VALUE'];
-            foreach ($array['RATEV2RESPONSE'][0]['PACKAGE'][0]['POSTAGE'] as $value){
+            $this->zone = $array['RATEV3RESPONSE'][0]['PACKAGE'][0]['ZONE'][0]['VALUE'];
+            foreach ($array['RATEV3RESPONSE'][0]['PACKAGE'][0]['POSTAGE'] as $value){
                 $price = new UspsPrice();
                 $price->mailservice = $value['MAILSERVICE'][0]['VALUE'];
                 $price->rate = $value['RATE'][0]['VALUE'];
@@ -148,6 +158,10 @@ class USPSHandler {
             }
         
         }
+        
+        //if (isset($error)) { echo '<pre>'; print_r($array); echo '</pre>';  }
+        
+        error_reporting($e);        
         
         return $this;
     }

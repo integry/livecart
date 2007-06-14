@@ -2,7 +2,7 @@
 
 class ShippingMethodManager
 {
-	private function getHandlerList()
+	public static function getHandlerList()
 	{
 		$ret = array();
 		
@@ -10,7 +10,7 @@ class ShippingMethodManager
 		{
 			if (substr($method->getFileName(), 0, 1) != '.')
 			{
-				$ret[] = $method->getFileName();
+				$ret[] = substr($method->getFileName(), 0, -4);
 			}
 		}
 		

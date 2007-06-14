@@ -12,7 +12,7 @@ abstract class ShippingRateCalculator
     protected $sourceZip;   
     protected $weight;   
     
-	private $config = array();    
+	protected $config = array();    
     
     public function setDestCountry($country)
     {
@@ -57,6 +57,10 @@ abstract class ShippingRateCalculator
 	}    
     
     public abstract function getRates();
+
+    public abstract function getAllRates();
+
+    public abstract function getProviderName();
 }
 
 

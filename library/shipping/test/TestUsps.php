@@ -3,13 +3,13 @@
 include_once('unittest/UTStandalone.php');
 
 include_once('ShippingTest.php');
-include_once('../method/UspsRateCalculator.php');
+include_once(dirname(__file__) . '/../method/UspsShipping.php');
 
 class TestUsps extends ShippingTest
 {
     function testDomesticRates()
     {
-        $usps = new UspsRateCalculator();
+        $usps = new UspsShipping();
         $usps->setUserId('550INTEG8147');
         $usps->setSourceCountry('US');
         $usps->setSourceZip('90210');
@@ -22,11 +22,12 @@ class TestUsps extends ShippingTest
                                         
         // priority
         $usps->setService('Priority');
-        $usps->setContainer('Flat Rate Box');
+
+        $usps->setContainer('Flat Rate Envelope');
         $rates = $usps->getRates();     
         $this->assertTrue($rates instanceof ShippingRateSet);
 
-        $usps->setContainer('Flat Rate Envelope');
+        $usps->setContainer('Flat Rate Box');
         $rates = $usps->getRates();     
         $this->assertTrue($rates instanceof ShippingRateSet);
 
@@ -34,19 +35,17 @@ class TestUsps extends ShippingTest
         $usps->setService('Express');        
         $rates = $usps->getRates();     
         $this->assertTrue($rates instanceof ShippingRateSet);
-        
-        // parcel post
-        $usps->setService('Parcel');        
+
+        // first class
+/*
+        $usps->setService('First Class');        
         $rates = $usps->getRates();     
         $this->assertTrue($rates instanceof ShippingRateSet);
+        var_dump($rates);        
+*/
 
         // parcel post
         $usps->setService('Parcel');        
-        $rates = $usps->getRates();     
-        $this->assertTrue($rates instanceof ShippingRateSet);
-
-        // library
-        $usps->setService('Library'); 
         $rates = $usps->getRates();     
         $this->assertTrue($rates instanceof ShippingRateSet);
 
@@ -71,7 +70,7 @@ class TestUsps extends ShippingTest
     
     public function testInternational()
     {
-        $usps = new UspsRateCalculator();
+        $usps = new UspsShipping();
         $usps->setUserId('550INTEG8147');
         $usps->setSourceCountry('US');
         $usps->setSourceZip('90210');
@@ -82,6 +81,7 @@ class TestUsps extends ShippingTest
         $usps->setService('Package');
                 
         $rates = $usps->getRates();     
+        
         $this->assertTrue($rates instanceof ShippingRateSet);
 
     }

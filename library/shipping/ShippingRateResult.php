@@ -8,6 +8,8 @@ class ShippingRateResult implements ShippingResultInterface
 	protected $serviceName;
     protected $costAmount;
     protected $costCurrency;
+    protected $className;
+    protected $providerName;
     protected $rawResponse;
         
     public function setServiceID($id)
@@ -26,6 +28,16 @@ class ShippingRateResult implements ShippingResultInterface
         $this->costCurrency = $currency;
     }
     
+    public function getClassName()
+    {
+        return $this->className;
+    }
+
+    public function setClassName($className)
+    {
+        $this->className = $className;
+    }
+
     public function setRawResponse($response)
     {
         $this->rawResponse = $response;   
@@ -34,6 +46,16 @@ class ShippingRateResult implements ShippingResultInterface
     public function getServiceName()
     {
         return $this->serviceName;
+    }
+
+    public function getProviderName()
+    {
+        return $this->providerName;
+    }
+
+    public function setProviderName($name)
+    {
+        $this->providerName = $name;
     }
 
     public function getCostAmount()
@@ -61,6 +83,8 @@ class ShippingRateResult implements ShippingResultInterface
         $result = array();
         $result['serviceID'] = $this->serviceID;
         $result['serviceName'] = $this->serviceName;
+        $result['providerName'] = $this->providerName;
+        $result['className'] = $this->className;
         $result['costAmount'] = $this->costAmount;
         $result['costCurrency'] = $this->costCurrency;  
         return $result;

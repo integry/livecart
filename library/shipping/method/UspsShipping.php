@@ -1,8 +1,8 @@
 <?php
 
-include_once('../ShippingRateCalculator.php');
+include_once(dirname(__file__) . '/../ShippingRateCalculator.php');
 
-class UspsRateCalculator extends ShippingRateCalculator
+class UspsShipping extends ShippingRateCalculator
 {
     private $service;
     
@@ -10,9 +10,57 @@ class UspsRateCalculator extends ShippingRateCalculator
     
     private $size;
     
+    public function getProviderName()
+    {
+        return 'USPS';
+    }
+    
+    public function getAllRates()
+    {
+        $return = new ShippingRateSet();
+        
+        if ('US' == $this->destCountry)
+        {
+            $services = array_keys($this->getConfigValue('domestic'));
+            foreach ($services as $service)
+            {
+                $this->setService($service);
+                $rates = $this->getRates();
+                
+                if ($rates instanceof ShippingRateSet)
+                {
+                    $return->merge($rates);
+                }
+            }
+        }
+        else
+        {
+            $rates = $this->getRates();
+            $services = array_keys($this->getConfigValue('international'));
+            
+            if ($rates instanceof ShippingRateSet)
+            {
+                foreach ($rates as $rate)
+                {
+                    $name = $rate->getServiceName();
+                    foreach ($services as $service)
+                    {
+                        if (substr($name, 0, strlen($service) + 2) == $service . ' (')
+                        {
+                            $return->add($rate);
+                            break;   
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $return;
+    }
+    
     public function getRates()
     {
-        include_once('../library/usps/usps.php');   
+        include_once(dirname(__file__) . '/../library/usps/usps.php');   
         
         $usps = new USPSHandler();
 
@@ -49,7 +97,9 @@ class UspsRateCalculator extends ShippingRateCalculator
             {
                 $r = new ShippingRateResult();
                 $r->setServiceName(isset($rate->mailservice) ? $rate->mailservice : $rate->svcdescription . ' ('. $rate->svccommitments .')');
-                $r->setCost($rate->rate, 'USD');                
+                $r->setCost($rate->rate, 'USD');    
+                $r->setClassName(get_class($this));
+                $r->setProviderName($this->getProviderName());
                 $result->add($r);
             }
         }        
