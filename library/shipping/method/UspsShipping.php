@@ -8,8 +8,6 @@ class UspsShipping extends ShippingRateCalculator
     
     private $container;
     
-    private $size;
-    
     public function getProviderName()
     {
         return 'USPS';
@@ -26,7 +24,7 @@ class UspsShipping extends ShippingRateCalculator
             {
                 $this->setService($service);
                 $rates = $this->getRates();
-                
+
                 if ($rates instanceof ShippingRateSet)
                 {
                     $return->merge($rates);
@@ -80,7 +78,7 @@ class UspsShipping extends ShippingRateCalculator
         
         $usps->setMachinable($this->getConfigValue('isMachinable') ? 'TRUE' : 'FALSE');
         $usps->setService($this->service);
-        $usps->setSize($this->size);
+        $usps->setSize($this->getConfigValue('size', 'Regular'));
         
         if ($this->container)
         {
