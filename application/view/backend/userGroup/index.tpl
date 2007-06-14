@@ -14,8 +14,6 @@
 {includeCss file="library/ActiveList.css"}
 {includeCss file="library/ActiveGrid.css"}
 
-{includeCss file="backend/Backend.css"}
-
 {includeJs file="backend/User.js"}
 {includeCss file="backend/User.css"}
 

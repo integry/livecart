@@ -88,7 +88,13 @@ class ShipmentController extends StoreManagementController
 		    
     		$shipment->save();
     		
-            return new JSONResponse(array('status' => "success", 'ID' => $shipment->getID()));
+            return new JSONResponse(array(
+            'status' => "success", 
+            'shipment' => array(
+                'ID' => $shipment->getID(),
+                'amount' => $shipment->amount->get(),
+                'shippingAmount' => $shipment->shippingAmount->get()
+            )));
 		}
 		else
 		{

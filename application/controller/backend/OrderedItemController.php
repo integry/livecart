@@ -70,17 +70,24 @@ class OrderedItemController extends StoreManagementController
 		            $oldShipment->save();
 		            $newShipment->save();
 		            
+		            $np = $newShipment->amountCurrency->get()->pricePrefix->get(); // new prefix
+		            $ns = $newShipment->amountCurrency->get()->priceSuffix->get(); // new suffix
+		            $op = $oldShipment->amountCurrency->get()->pricePrefix->get(); // old prefix
+		            $os = $oldShipment->amountCurrency->get()->priceSuffix->get(); // old suffix
+		            
 		            return new JSONResponse(array(
 		                'status' => 'success', 
 			            'oldShipment' => array(
 			                'ID' => $oldShipment->getID(),
-			                'amount' => $oldShipment->amount->get(),
-			                'shippingAmount' => $oldShipment->shippingAmount->get()
+			                'amount' => $op . $oldShipment->amount->get() . $os,
+			                'shippingAmount' => $op . $oldShipment->shippingAmount->get() . $os,
+			                'totalAmount' => $op . ((float)$newShipment->shippingAmount->get() + (float)$newShipment->amount->get()) . $os,
 		                ),
 			            'newShipment' => array(
 			                'ID' => $newShipment->getID(),
-			                'amount' => $newShipment->amount->get(),
-			                'shippingAmount' => $newShipment->shippingAmount->get()
+			                'amount' =>  $np . $newShipment->amount->get() . $ns,
+			                'shippingAmount' => $np . $newShipment->shippingAmount->get() . $ns,
+			                'totalAmount' => $np . ((float)$newShipment->shippingAmount->get() + (float)$newShipment->amount->get()) . $ns,
 		                )
 		            ));
 			    }

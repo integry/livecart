@@ -40,6 +40,10 @@
     width:4% !important;
 }
 
+th.cell_User_email
+{
+    padding-left: 30px;
+}
 
 #fromUsersPage .orderList .cell_CustomerOrder_viewOrder input,
 #fromUsersPage .orderList .cell_User_email,

@@ -170,7 +170,7 @@ Backend.CustomerOrder.prototype =
         Event.stop(e);
         
         Backend.CustomerOrder.Editor.prototype.setCurrentId(id); 
-        $('orderIndicator_' + id).style.display = '';
+        $('orderIndicator_' + id).style.visibility = 'visible';
         
     	var tabControl = TabControl.prototype.getInstance(
             'orderManagerContainer',
@@ -205,7 +205,7 @@ Backend.CustomerOrder.GridFormatter =
 		{
 		    value = 
             '<span>' + 
-            '    <span class="progressIndicator" id="userIndicator_' + Backend.CustomerOrder.GridFormatter.lastUserID + '" style="display: none;"></span>' + 
+            '    <span class="progressIndicator" id="orderUserIndicator_' + id + '_' + Backend.CustomerOrder.GridFormatter.lastUserID + '" style="visibility: hidden;"></span>' + 
             '</span>' + 
             '<a href="#edit" id="user_' + Backend.CustomerOrder.GridFormatter.lastUserID + '" onclick="Backend.UserGroup.prototype.openUser(' + Backend.CustomerOrder.GridFormatter.lastUserID + ', event); } catch(e) { console.info(e) }  return false;">' + 
                  value + 
@@ -215,7 +215,7 @@ Backend.CustomerOrder.GridFormatter =
 		{
 		    value = 
             '<span>' + 
-            '    <span class="progressIndicator" id="orderIndicator_' + id + '" style="display: none;"></span>' + 
+            '    <span class="progressIndicator" id="orderIndicator_' + id + '" style="visibility: hidden;"></span>' + 
             '</span>' + 
             '<a href="#edit" id="order_' + id + '" onclick="try { Backend.CustomerOrder.prototype.openOrder(' + id + ', event); } catch(e) { console.info(e) }  return false;">' + 
                  'view order' + 
@@ -421,7 +421,7 @@ Backend.CustomerOrder.Editor.prototype =
         var orderIndicator = $('orderIndicator_' + this.id);
         if(orderIndicator) 
         {
-            orderIndicator.style.display = 'none';
+            orderIndicator.style.visibility = 'hidden';
         }
         Backend.showContainer("orderManagerContainer");
 
@@ -569,7 +569,7 @@ Backend.CustomerOrder.Address.prototype =
         var orderIndicator = $('orderIndicator_' + this.id);
         if(orderIndicator) 
         {
-            orderIndicator.style.display = 'none';
+            orderIndicator.style.visibility = 'hidden';
         }
         this.tabControl = TabControl.prototype.getInstance("orderManagerContainer", false);
     },

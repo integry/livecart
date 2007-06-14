@@ -217,7 +217,13 @@ Backend.UserGroup.prototype =
         Event.stop(e);
         
         Backend.User.Editor.prototype.setCurrentId(id); 
-        $('userIndicator_' + id).style.display = '';
+        var userIndicator = $('userIndicator_' + id);
+        if(!userIndicator)
+        {
+            var userIndicator = $('orderUserIndicator_' + id);
+        }
+        
+        userIndicator.style.visibility = 'visible';
         
     	var tabControl = TabControl.prototype.getInstance(
             'userManagerContainer',
@@ -291,7 +297,7 @@ Backend.UserGroup.GridFormatter =
 		if ('User.email' == field && Backend.UserGroup.prototype.usersMiscPermision)
 		{
 		    value = '<span>' + 
-                    '<span class="progressIndicator" id="userIndicator_' + id + '" style="display: none;">' + 
+                    '<span class="progressIndicator" id="userIndicator_' + id + '" style="visibility: hidden;">' + 
                     '</span>' + 
                 '</span>' + 
                 '<a href="#edit" id="user_' + id + '" onclick="Backend.UserGroup.prototype.openUser(' + id + ', event); return false;">' + 
@@ -550,7 +556,7 @@ Backend.User.Editor.prototype =
         var userIndicator = $('userIndicator_' + this.id);
         if(userIndicator) 
         {
-            userIndicator.style.display = 'none';
+            userIndicator.style.visibility = 'hidden';
         }
         Backend.showContainer('userManagerContainer');
 

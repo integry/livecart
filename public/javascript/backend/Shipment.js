@@ -34,11 +34,11 @@ Backend.OrderedItem = {
             {
                 oldShipmentLi.down('.orderShipment_info_subtotal').update(response.oldShipment.amount);
                 oldShipmentLi.down('.orderShipment_info_shippingAmount').update(response.oldShipment.shippingAmount);
-                oldShipmentLi.down('.orderShipment_info_total').update(response.oldShipment.shippingAmount + response.oldShipment.amount);
+                oldShipmentLi.down('.orderShipment_info_total').update(response.oldShipment.totalAmount);
                 
                 newShipmentLi.down('.orderShipment_info_subtotal').update(response.newShipment.amount);
                 newShipmentLi.down('.orderShipment_info_shippingAmount').update(response.newShipment.shippingAmount);
-                newShipmentLi.down('.orderShipment_info_total').update(response.newShipment.shippingAmount + response.newShipment.amount);
+                newShipmentLi.down('.orderShipment_info_total').update(response.newShipment.totalAmount);
                 
                 shipmentsActiveList.highlight(newShipmentLi);
             }
@@ -67,7 +67,7 @@ Backend.Shipment.prototype =
         {
             this.findUsedNodes(root);
             this.bindEvents();
-            this.servicesActiveList = ActiveList.prototype.getInstance(this.nodes.shipmentsList);
+            this.shipmentsActiveList = ActiveList.prototype.getInstance(this.nodes.shipmentsList);
             
             if(this.nodes.form.elements.namedItem('ID').value)
             {
@@ -135,19 +135,6 @@ Backend.Shipment.prototype =
     {
         ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuShowLink]);
         ActiveForm.prototype.hideNewItemForm(this.nodes.menuCancelLink, this.nodes.menuForm); 
-        
-        if(this.nodes.ratesNewForm.style.display == 'block')
-        {
-            Backend.DeliveryZone.ShippingRate.prototype.getInstance(this.nodes.ratesNewForm).hideNewForm();
-        }
-        
-        $A(this.nodes.ratesList.getElementsByTagName('li')).each(function(li) {
-           Element.remove(li);
-        });
-        
-        $A(this.nodes.root.getElementsByTagName('input')).each(function(input) {
-            if(input.type == 'text') input.value = ''; 
-        });
     },
     
     save: function()
@@ -176,9 +163,25 @@ Backend.Shipment.prototype =
         if(response.status == 'success')
         {
             ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-            if(!this.service.ID)
+            if(!this.nodes.form.elements.namedItem('ID').value)
             {
-                var li = this.servicesActiveList.addRecord(response.service.ID, '<span class="' + this.prefix + 'servicesList_title">' + this.nodes.name.value + '</span>');
+                var title = '<h3 class="orderShipment_title">' + this.nodes.form.elements.namedItem('shippingServiceID').options[this.nodes.form.elements.namedItem('shippingServiceID').selectedIndex].text + '</h3>';
+                var stats = $("orderShipment_" + this.nodes.form.elements.namedItem('orderID').value + "_info_empty").innerHTML;
+                var ul = '<ul id="orderShipmentsItems_list_' + this.nodes.form.elements.namedItem('orderID').value + '_' +response.shipment.ID + '" class="activeList_add_sort activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem"></ul>'
+                
+                var li = this.shipmentsActiveList.addRecord(response.shipment.ID, title + stats + ul);
+
+                ActiveList.prototype.getInstance($('orderShipmentsItems_list_' + this.nodes.form.elements.namedItem('orderID').value + '_' + response.shipment.ID), Backend.OrderedItem.activeListCallbacks);
+                Element.addClassName(li, this.prefix  + 'item');
+                                
+                ActiveList.prototype.recreateVisibleLists();
+
+                li.down('.orderShipment_info_subtotal').update(response.shipment.amount);
+                li.down('.orderShipment_info_shippingAmount').update(response.shipment.shippingAmount);
+                li.down('.orderShipment_info_total').update(response.shipment.totalAmount);
+                Element.addClassName(li, 'orderShipment');
+
+                this.shipmentsActiveList.highlight(li);
                 this.hideNewForm();
             }
             else
@@ -195,7 +198,7 @@ Backend.Shipment.prototype =
     
     cancel: function()
     {
-        if(!this.service.ID)
+        if(!this.nodes.form.elements.namedItem('ID').value)
         {
             this.hideNewForm();
         }

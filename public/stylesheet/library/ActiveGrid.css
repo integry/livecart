@@ -48,7 +48,6 @@
     font-weight: bold;
     border: 1px solid #888888 !important;
 }
-
 .activeGrid th select
 {
 	width: 80%;
@@ -92,3 +91,5 @@
 	background-color: #DDDDDD;	  
     overflow: hidden;
 }
+
+

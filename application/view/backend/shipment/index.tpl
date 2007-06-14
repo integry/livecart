@@ -9,47 +9,21 @@
     {include file="backend/shipment/form.tpl" shipment=$newShipment shipmentForm=$newShipmentForm}
 </fieldset>
 
-
+<div id="orderShipment_{$orderID}_info_empty" style="display: none">
+    {include file="backend/shipment/shipmentAmount.tpl"}
+</div>
 
 <ul id="orderShipments_list_{$orderID}" class="activeList_add_delete activeList_add_edit">
 {foreach item="shipment" from=$shipments}
     <li id="orderShipments_list_{$orderID}_{$shipment.ID}" class="orderShipment">
         <h3 class="orderShipment_title">{$shipment.ShippingService.name}</h3>
-        <div class="orderShipment_info">
-            <fieldset class="error">
-                <label>{t _subtotal_price}:</label>
-                {$shipment.AmountCurrency.pricePrefix}<span class="orderShipment_info_subtotal">{$shipment.amount}</span>{$shipment.AmountCurrency.priceSuffix}
-            </fieldset >
-            <fieldset class="error">
-                <label>{t _shipping_price}:</label>
-                {$shipment.AmountCurrency.pricePrefix}<span class="orderShipment_info_shippingAmount">{$shipment.shippingAmount}</span>{$shipment.AmountCurrency.priceSuffix}
-            </fieldset >
-            
-            <hr />
-            
-            <fieldset class="error">
-                <label>{t _total_price}:</label>
-                {$shipment.AmountCurrency.pricePrefix}<span class="orderShipment_info_total">{math equation="x + y" x=$shipment.shippingAmount y=$shipment.amount}</span>{$shipment.AmountCurrency.priceSuffix}
-            </fieldset >
-        </div>
+        {include file="backend/shipment/shipmentAmount.tpl"}
         
         <ul id="orderShipmentsItems_list_{$orderID}_{$shipment.ID}" class="activeList_add_sort activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem">
         {foreach item="item" from=$shipment.items}
             <li id="orderShipmentsItems_list_{$item.ID}_{$shipment.ID}_{$item.ID}" >
                 <h3 class="orderShipmentsItem_title">{$item.Product.name}</h3>
-                <div class="orderShipmentsItem_info">
-                    <dl>
-                        <dt>{t _price}: </dt>
-                    	<dd>
-                    	    {$item.count}
-                            x 
-                            {$shipment.AmountCurrency.pricePrefix}{$item.price}{$shipment.AmountCurrency.priceSuffix}
-                            = 
-                            {$shipment.AmountCurrency.pricePrefix}{math equation="x * y" x=$item.price y=$item.count}{$shipment.AmountCurrency.priceSuffix}
-                        </dd>
-                    </dl>
-                </div >
-                
+                {include file="backend/shipment/itemAmount.tpl"}
             </li>
         {/foreach}
         </ul>
