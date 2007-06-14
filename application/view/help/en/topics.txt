@@ -12,14 +12,6 @@
 		store=Products in e-store
 
 	orders=Orders		
-		create=Create Order
-		edit=Modify Order
-			billing=Billing
-			shipping=Shipping
-			anti_fraud=Anti-Fraud
-			returns=Returns
-			communication=Communication
-		export=Export Orders
 
 	users=Users		
 

@@ -9,6 +9,7 @@ administrators).</p>
 <ul>	
 	<li><a href="{self}#view">View and Find Orders</a></li>
 	<li><a href="{self}#manage">Manage Orders</a></li>
+	<li><a href="{self}#create">Create an Order</a></li>
 </ul>
 </fieldset>
 </div>
@@ -36,8 +37,17 @@ are displayed. Each order is characterized by its status:</p>
 	<p>Results that match your criteria appear below. By default orders are displayed from the latest to the oldest as placed in your store.</p>
 	<li>Use "up" and "down" arrows next to appropriate attribute to sort orders ascending or descending.</li>
 	<img src="image/doc/orders/search3.bmp"/>
-	
 </ul>
+
+<p>You can also define what attributes should be displayed in the menu.</p>
+<ol>
+	<li>Click the "Columns" link at the right:</li>
+	<img src="image/doc/orders/columns.bmp"/>
+	<li>Add or remove attributes by marking or clearing the checkboxes:</li>
+	<img src="image/doc/orders/checkboxes.bmp"/>
+	<li>Click the "Change columns" button.</li>
+</ol>
+
 
 <h3 id="manage">Manage Orders</h3>
 <p>You can quickly manage your orders by using a "multiple edit" tool.</p>
@@ -58,9 +68,3 @@ are displayed. Each order is characterized by its status:</p>
 </ul>
 
 <p class="note"><strong>Note</strong>: Shipments are different part of the same order. Sometimes if any of the items are not available at the moment, according to the customer's preference it might be chosen to split an order into separate shipments. Usually the rest of the parcel is sent when the the products become available.</p>
-
-{helpSeeAlso}
-	{see orders.edit}
-	{see orders.create}
-	{see orders.export}
-{/helpSeeAlso}
