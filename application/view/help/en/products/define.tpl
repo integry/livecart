@@ -27,7 +27,6 @@
 	<li>Is enabled - when the checkbox is marked, the product is visible in your e-store. It is not displayed 
 	otherwise.</li>
 	<li>Product name - the name of the product.</li>
-	<li>Handle - Handle is used to represent object's {glossary}URL{/glossary}s, so you can change it for search engine optimization purposes, if needed.</li>
 	<li>SKU - a stock keeping unit which is a specific number designating one specific product</li>
 	<li>Short description - a brief description about the product. Short descirption is displayed in the 
 	{glossary}product list{/glossary} page.</li>
