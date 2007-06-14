@@ -1,8 +1,11 @@
-<div class="yellowMessage" id="orderConfirmation" style="left: 20; top: 180px; position: absolute; display: none;">
+<div class="yellowMessage" id="orderConfirmation" style="left: 20px; top: 180px; position: absolute; display: none;">
    	<div>{t _order_information_has_been_successfully_updated}</div>
 </div>
-<div class="yellowMessage" id="orderAddressConfirmation" style="left: 20; top: 180px; position: absolute; display: none;">
+<div class="yellowMessage" id="orderAddressConfirmation" style="left: 20px; top: 180px; position: absolute; display: none;">
    	<div>{t _order_address_information_has_been_successfully_updated}</div>
+</div>
+<div class="redMessage" id="noRateInShippingServiceIsAvailableError" style="left: 20px; top: 180px; position: absolute; display: none;">
+   	<div>{t _this_shipping_service_has_no_available_rates}</div>
 </div>
 
 
@@ -21,7 +24,11 @@
 				<span class="tabHelp">orders.edit</span>
 			</li>
 			<li id="tabOrderProducts" class="tab active">
-				<a href="{link controller=backend.shipment action=index id=_id_}"}">{t _order_products}</a>
+				<a href="{link controller=backend.shipment action=index id=_id_}"}">{t _order_shipments}</a>
+				<span class="tabHelp">orders.edit</span>
+			</li>
+			<li id="tabOrderProducts" class="tab active">
+				<a href="{link controller=backend.customerOrder action=report id=_id_}"}">{t _order_report}</a>
 				<span class="tabHelp">orders.edit</span>
 			</li>
 		</ul>

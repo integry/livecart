@@ -19,7 +19,9 @@
     <label for="order_{$order.ID}_amount">{t _amount}</label>
     <fieldset class="error">
         <div class="formDiv">
-            {$order.capturedAmount|default:0} / {$order.totalAmount|default:0} {$order.Currency.ID}
+            {$order.Currency.pricePrefix}{$order.capturedAmount|default:0}{$order.Currency.priceSuffix} 
+            / 
+            {$order.Currency.pricePrefix}{$order.totalAmount|default:0}{$order.Currency.priceSuffix} 
 	    </div>
 	</fieldset>
 
@@ -48,7 +50,7 @@
         
         <fieldset class="error">
             <label></label>
-            <a class="isCanceled" href="{link controller="backend.customerOrder" action="setIsCanceled" id=$order.id}">{if $order.isCancelled}{t _cancelled}{else}{t _applied}{/if}</a>
+            <a class="isCanceled" href="{link controller="backend.customerOrder" action="setIsCanceled" id=$order.id}">{if $order.isCancelled}{t _cancelled}{else}{t _active}{/if}</a>
     	</fieldset>
     {/form}
 </fieldset>

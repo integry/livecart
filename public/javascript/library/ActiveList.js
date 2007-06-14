@@ -459,12 +459,21 @@ ActiveList.prototype = {
         return li;
     },
     
-    highlight: function(li)
+    highlight: function(li, color)
     {
         if(!li) li = this._currentLi;
         li = $(li);
         
-        new Effect.Highlight(li, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
+        switch(color)
+        {
+            case 'red':
+                new Effect.Highlight(li, {startcolor:'#FFF1F1', endcolor:'#FB8585'});
+                break;
+            case 'yellow':
+            default:
+                new Effect.Highlight(li, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
+                break;
+        }
     },
 
 

@@ -1,4 +1,4 @@
-.orderShipments_title 
+.orderShipment_title 
 {
     font-size: 200%;
     color: #777;
@@ -7,7 +7,7 @@
 }
 
 
-.orderShipmentsItems_title 
+.orderShipmentsItem_title 
 {
     font-size: 1em;
     display: inline;
@@ -23,4 +23,32 @@
 {
     padding-bottom: 1em;
     padding-top: 1em;
+}
+
+.orderShipment_info
+{
+    margin-left: 80px; 
+    color: #777;
+}
+.orderShipment_info hr
+{
+    width: 13em;
+}
+
+.orderShipmentsItem_info
+{
+    margin-left: 60px; 
+    color: #777;
+}
+
+.orderShipmentsItem_info dt, .orderShipmentsItem_info dd
+{
+    display: inline; 
+}
+
+.orderShipment_info label, .orderShipmentsItem_info dt
+{
+    width: 9em;
+    margin-top: 2px;
+    font-weight: bold;
 }

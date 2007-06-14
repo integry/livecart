@@ -10,8 +10,6 @@ Backend.OrderedItem = {
         afterDelete: function(li, response){
             if(!response.error) {
                 this.remove(li);
-                var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-                tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') - 1);
             }
         },
         beforeSort: function(li, order){ 
@@ -23,7 +21,36 @@ Backend.OrderedItem = {
                 return Backend.OrderedItem.Links.changeShipment + "/" + this.getRecordId(li) + "?from=" + oldShipmentId + "&to=" + newShipmentId
             }
         },
-        afterSort: function(li, response){ }
+        afterSort: function(li, response){
+            var response = eval("(" + response + ")");
+            var orderID = this.getRecordId(li, 3);
+            
+            var shipmentsActiveList = ActiveList.prototype.getInstance('orderShipments_list_' + orderID);
+            
+            var oldShipmentLi = $("orderShipments_list_" + orderID + "_" + response.oldShipment.ID);
+            var newShipmentLi = $("orderShipments_list_" + orderID + "_" + response.newShipment.ID)
+            ;
+            if('success' == response.status)
+            {
+                oldShipmentLi.down('.orderShipment_info_subtotal').update(response.oldShipment.amount);
+                oldShipmentLi.down('.orderShipment_info_shippingAmount').update(response.oldShipment.shippingAmount);
+                oldShipmentLi.down('.orderShipment_info_total').update(response.oldShipment.shippingAmount + response.oldShipment.amount);
+                
+                newShipmentLi.down('.orderShipment_info_subtotal').update(response.newShipment.amount);
+                newShipmentLi.down('.orderShipment_info_shippingAmount').update(response.newShipment.shippingAmount);
+                newShipmentLi.down('.orderShipment_info_total').update(response.newShipment.shippingAmount + response.newShipment.amount);
+                
+                shipmentsActiveList.highlight(newShipmentLi);
+            }
+            else
+            {
+                li.id = 'orderShipmentsItems_list_' + orderID + '_' + response.oldShipment.ID + '_' + this.getRecordId(li); 
+                oldShipmentLi.down('ul').appendChild(li);
+                shipmentsActiveList.highlight(oldShipmentLi, 'red');
+                
+			    new Backend.SaveConfirmationMessage($('noRateInShippingServiceIsAvailableError'))
+            }
+        }
     }
 };
 

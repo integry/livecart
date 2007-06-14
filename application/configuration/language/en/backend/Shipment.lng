@@ -3,6 +3,14 @@ _shipping_status_pending=Pending
 _shipping_status_awaiting=Awaiting
 _shipping_status_shipped=Shipped
 
+_add_new_shippment=Add new shipment
+_cancel_adding_new_shipment=Cancel adding new shipment
 
 _shipment_status=Status
 _shipment_service=Service
+
+_subtotal_price=Subtotal price
+_shipping_price=Shipping price
+_total_price=Total price
+
+_price=Price

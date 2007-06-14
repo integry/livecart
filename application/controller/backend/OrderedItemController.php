@@ -47,22 +47,21 @@ class OrderedItemController extends StoreManagementController
             $oldShipment = Shipment::getInstanceByID('Shipment', $fromID, true, true); 
             $newShipment = Shipment::getInstanceByID('Shipment', $toID, true, true); 
             
-            echo $oldShipment->getID();
-            echo " -> " . $newShipment->getID();
-            echo "<br />";
-            
             if($oldShipment !== $newShipment)
             {
-		            $oldShipment->loadItems();
-		            $newShipment->loadItems();
-				    $oldShipment->setRateId($oldShipment->shippingService->get()->getID());
-				    $newShipment->setRateId($newShipment->shippingService->get()->getID());
-				    $oldShipment->setAvailableRates($oldShipment->order->get()->getDeliveryZone()->getShippingRates($oldShipment));
-				    $newShipment->setAvailableRates($newShipment->order->get()->getDeliveryZone()->getShippingRates($newShipment));
-				    
-		            $newShipment->addItem($item);
-		            $oldShipment->removeItem($item);
-		            
+	            $oldShipment->loadItems();
+	            $oldShipment->removeItem($item);
+			    
+	            $newShipment->loadItems();
+	            $newShipment->addItem($item);
+	            
+			    $oldShipment->setRateId($oldShipment->shippingService->get()->getID());
+			    $oldShipment->setAvailableRates($oldShipment->order->get()->getDeliveryZone()->getShippingRates($oldShipment));
+			    $newShipment->setRateId($newShipment->shippingService->get()->getID());
+			    $newShipment->setAvailableRates($newShipment->order->get()->getDeliveryZone()->getShippingRates($newShipment));
+			    
+			    if($newShipment->getSelectedRate())
+			    {
 		            $item->save();
 				    
 		            $oldShipment->recalculateAmounts();
@@ -70,12 +69,30 @@ class OrderedItemController extends StoreManagementController
 		            	            
 		            $oldShipment->save();
 		            $newShipment->save();
-	            
-		            echo $newShipment->getID() . ": " . $newShipment->amount->get() ."<br />";
-		            echo $newShipment->getID() . ": " . $newShipment->shippingAmount->get();
-	            
+		            
+		            return new JSONResponse(array(
+		                'status' => 'success', 
+			            'oldShipment' => array(
+			                'ID' => $oldShipment->getID(),
+			                'amount' => $oldShipment->amount->get(),
+			                'shippingAmount' => $oldShipment->shippingAmount->get()
+		                ),
+			            'newShipment' => array(
+			                'ID' => $newShipment->getID(),
+			                'amount' => $newShipment->amount->get(),
+			                'shippingAmount' => $newShipment->shippingAmount->get()
+		                )
+		            ));
+			    }
+			    else
+			    {
+			        return new JSONResponse(array(
+			            'status' => 'failure', 
+			            'oldShipment' => array('ID' => $fromID),
+			            'newShipment' => array('ID' => $toID)
+		            ));
+			    }
             }
-            return new JSONResponse(array('status' => 'success'));
         }
         else
         {

@@ -402,4 +402,19 @@
   'PaypalDirectPayment_password' => '9AURF7SPQCEYCDXV',
   'PaypalDirectPayment_signature' => 'AeQ618dBMNS1kVFZwUIitcve-k.dAT5pnzBekoPUhcIj1J5p65ZAR8Pu',
   'PaypalDirectPayment_authorizeonly' => 0,
+  'UspsShipping_username' => '',
+  'UspsShipping_apiUrl' => 'http://production.shippingapis.com/ShippingAPI.dll',
+  'UspsShipping_domestic' => 
+  array (
+    'Express' => 1,
+    'Priority' => 1,
+  ),
+  'UspsShipping_priorityPackageType' => 'Flat Rate Box',
+  'UspsShipping_isMachinable' => 1,
+  'UspsShipping_international' => 
+  array (
+    'Global Express Mail (EMS)' => 1,
+    'Airmail Parcel Post' => 1,
+    'Economy (Surface) Parcel Post' => 1,
+  ),
 ); ?>

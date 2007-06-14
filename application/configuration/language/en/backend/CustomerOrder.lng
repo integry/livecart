@@ -9,8 +9,12 @@ _shopping_carts=Shoping Carts
 _orders=Orders
 _livecart_orders=Orders
 
+_order_info=Details
+_order_shipments=Shipments
+_order_report=Report
+
+
 _process=Process
-_order_products=Products
 
 # Mass actions
 _with_selected=With selected
@@ -35,7 +39,6 @@ _order_address_information_has_been_successfully_updated=Order address informati
 _cancel_editing_user_info=Cancel editing user info
 _cancel_editing_order_info=Cancel editing order info
 _user_info=User info
-_order_info=Order info
 _is_canceled=Is canceled
 _order_id=Order ID
 _is_finalized=Is finalized
@@ -69,6 +72,7 @@ _status_canceled=Canceled
 _status_returned=Returned
 
 _are_you_sure_you_want_to_delete_this_order=Are you sure you want to delete this order?
+_this_shipping_service_has_no_available_rates=This service is not available for user zone and order price
 
 _applied=Applied
 _cancelled=Cancelled
