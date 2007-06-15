@@ -1045,7 +1045,7 @@ div.checkout a
 	white-space: nowrap;
 }
 
-.subTotalCaption
+.subTotalCaption, .shipment td.tax
 {
     text-align: right !important;
 }

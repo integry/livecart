@@ -2,6 +2,7 @@
 
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.OrderedItem");
+ClassLoader::import("application.model.order.ShipmentTax");
 
 /**
  * Represents a collection of ordered items that are shipped in the same package
@@ -26,6 +27,8 @@ class Shipment extends ActiveRecordModel
     const STATUS_AWAITING = 2;
     const STATUS_SHIPPED = 3;
     
+    const WITHOUT_TAXES = false;
+    
     /**
 	 * Define database schema used by this active record instance
 	 *
@@ -44,6 +47,7 @@ class Shipment extends ActiveRecordModel
 		$schema->registerField(new ARField("trackingCode", ARVarchar::instance(100)));
 		$schema->registerField(new ARField("dateShipped", ARDateTime::instance()));
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
+		$schema->registerField(new ARField("taxAmount", ARFloat::instance()));
 		$schema->registerField(new ARField("shippingAmount", ARFloat::instance()));
 		$schema->registerField(new ARField("status", ARInteger::instance(2)));
 		$schema->registerField(new ARField("shippingServiceData", ARText::instance(50)));
@@ -162,6 +166,31 @@ class Shipment extends ActiveRecordModel
         return $this->availableShippingRates->getByServiceId($this->selectedRateId);
     }
     
+    public function getTaxes()
+    {
+        if (!$this->taxes)
+        {
+            if ($this->isLoaded())
+            {
+                $this->taxes = ActiveRecordModel::getRecordSet('ShipmentTax', new ARSelectFilter(new EqualsCond(new ARFieldHandle('ShipmentTax', 'shipmentID'), $this->getID())), ActiveRecordModel::LOAD_REFERENCES);
+            }
+            else
+            {
+                $zone = $this->order->get()->getDeliveryZone();
+                $rates = $zone->getTaxRates(DeliveryZone::ENABLED_TAXES);
+                
+                $this->taxes = new ARSet();
+                
+                foreach ($rates as $rate)
+                {
+                    $this->taxes->unshift(ShipmentTax::getNewInstance($rate, $this));
+                }                
+            }        
+        }
+
+        return $this->taxes;
+    }
+    
     public function toArray()
     {
         $array = parent::toArray();
@@ -190,22 +219,31 @@ class Shipment extends ActiveRecordModel
             $formattedSubTotal[$id] = Currency::getInstanceById($id)->getFormattedPrice($price);
         }        
         $array['formattedSubTotal'] = $formattedSubTotal;
+        
         // selected shipping rate
         if ($selected = $this->getSelectedRate())
         {
             $array['selectedRate'] = $selected->toArray();            
         }
+        
+        // taxes
+        $array['taxes'] = $this->getTaxes()->toArray();
                 
         return $array;
     }
     
-    public function getSubTotal(Currency $currency)
+    public function getSubTotal(Currency $currency, $applyTaxes = true)
     {
         $subTotal = 0;
         foreach ($this->items as $item)
         {            
             $subTotal += $item->getSubTotal($currency);
         }            
+        
+        if ($applyTaxes)
+        {
+            $subTotal = $this->applyTaxesToAmount($subTotal);
+        }
         
         return $subTotal;    
     }
@@ -251,16 +289,29 @@ class Shipment extends ActiveRecordModel
             $this->shippingServiceData->set(serialize($rate));
         }
 
+        // reset amounts...
+        $this->amount->set(0);
+        $this->shippingAmount->set(0);
+        $this->taxAmount->set(0);
+                
+        // ... and recalculated them
         $this->recalculateAmounts();
         
         $this->status->set(self::STATUS_NEW);
-
+        
         $ret = parent::insert();
         
+        // save ordered items
         foreach ($this->items as $item)
         {
             $item->shipment->set($this);
             $item->save();
+        }
+        
+        // save taxes
+        foreach ($this->getTaxes() as $tax)
+        {
+            $tax->save();
         }
         
         return $ret;
@@ -274,11 +325,33 @@ class Shipment extends ActiveRecordModel
     
     public function recalculateAmounts()
     {
-       $currency = $this->order->get()->currency->get();
-       $this->amountCurrency->set($currency);
-       $rate = $this->getSelectedRate();
-       $this->amount->set($this->getSubTotal($currency));
-       $this->shippingAmount->set($rate->getAmountByCurrency($currency));
+        $currency = $this->order->get()->currency->get();
+        $this->amountCurrency->set($currency);
+        $this->amount->set($this->getSubTotal($currency, self::WITHOUT_TAXES));
+       
+        // total taxes
+        $taxes = 0;
+        foreach ($this->getTaxes() as $tax)
+        {
+            $taxes += $tax->getAmountByCurrency($currency);   
+        } 
+        $this->taxAmount->set($taxes);
+       
+        // shipping rate
+        if ($rate = $this->getSelectedRate())
+        {
+            $this->shippingAmount->set($rate->getAmountByCurrency($currency));            
+        }
+    }
+    
+    public function applyTaxesToAmount($amount)
+    {
+        foreach ($this->getTaxes() as $tax)
+        {
+            $amount = $tax->taxRate->get()->applyTax($amount);
+        }        
+        
+        return $amount;
     }
 }
 

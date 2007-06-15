@@ -24,6 +24,8 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     
     private $isSyncedToSession = false;
     
+    private $taxes = array();
+    
     const STATUS_NEW = null;
     const STATUS_BACKORDERED = 1;
     const STATUS_AWAITING_SHIPMENT = 2;
@@ -330,7 +332,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         $this->isFinalized->set(true);
         $this->dateCompleted->set(new ARSerializableDateTime());
 		$this->save();
-        
+
         self::commit();
         
     	return $wishList;
@@ -678,17 +680,13 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         $total = 0;
         $id = $currency->getID();
         
-        // product price totals
-        foreach ($this->getShoppingCartItems() as $item)
-        {
-            $total += ($item->product->get()->getPrice($id) * $item->count->get());
-        }
-		
-		// shipping cost totals
 		if ($this->shipments)
 		{
-	        foreach ($this->shipments as $shipment)
-			{
+    		$this->taxes[$id] = array();
+            foreach ($this->shipments as $shipment)
+    		{
+                $total += $shipment->getSubTotal($currency);
+                
 	            if ($rate = $shipment->getSelectedRate())
 	            {
 	                $amount = $rate->getCostAmount();
@@ -696,9 +694,28 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 	                
 	                $total += $currency->convertAmount($curr, $amount);
 	            }
-	        }
+
+                foreach ($shipment->getTaxes() as $tax)
+                {
+                    $taxId = $tax->taxRate->get()->tax->get()->getID();
+                    if (!isset($this->taxes[$id][$taxId]))
+                    {
+                        $this->taxes[$id][$taxId] = 0;    
+                    }    
+                    
+                    $this->taxes[$id][$taxId] += $tax->getAmountByCurrency($currency);
+                }
+            }
 		}
-        
+		else
+		{
+            $id = $currency->getID();
+            foreach ($this->getShoppingCartItems() as $item)
+            {
+                $total += ($item->product->get()->getPrice($id) * $item->count->get());
+            }            
+        }		        
+    
         return $total;
     }
 		
@@ -759,6 +776,20 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 	            $array['shipments'][] = $shipment->toArray();
 	        }
 		}
+		
+		// taxes
+		$array['taxes'] = array();
+		foreach ($this->taxes as $currencyId => $taxes)
+		{
+            $array['taxes'][$currencyId] = array();
+            $currency = Currency::getInstanceById($currencyId);
+            
+            foreach ($taxes as $taxId => $amount)
+            {
+                $array['taxes'][$currencyId][$taxId] = Tax::getInstanceById($taxId)->toArray();
+                $array['taxes'][$currencyId][$taxId]['formattedAmount'] = $currency->getFormattedPrice($amount);
+            }
+        }
 		
 		// total for all currencies
 		$total = array();

@@ -17,6 +17,13 @@
             </tr>
         {/foreach}            
     
+        {foreach from=$shipment.taxes item="tax"}
+            <tr>                    
+                <td colspan="3" class="tax">{$tax.TaxRate.Tax.name_lang}:</td>
+                <td>{$tax.formattedAmount.$currency}</td>
+            </tr>
+        {/foreach}            
+
         <tr>
             <td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
             <td class="subTotal">{$shipment.formattedSubTotal.$currency}</td>                        

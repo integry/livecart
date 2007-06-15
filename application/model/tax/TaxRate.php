@@ -80,7 +80,7 @@ class TaxRate extends MultilingualObject
 	 *
 	 * @return ARSet
 	 */
-	public static function getRecordSetByDeliveryZone(DeliveryZone $deliveryZone=null, $includeDisabled = true, $loadReferencedRecords = array('Tax'))
+	public static function getRecordSetByDeliveryZone(DeliveryZone $deliveryZone = null, $includeDisabled = true, $loadReferencedRecords = array('Tax'))
 	{
  	    $filter = new ARSelectFilter();
 
@@ -103,6 +103,10 @@ class TaxRate extends MultilingualObject
 		return self::getRecordSet($filter, $loadReferencedRecords);
 	}
 
+    public function applyTax($amount)
+    {
+        return $amount + ($amount * ($this->rate->get() / 100));   
+    }
 }
 
 ?>

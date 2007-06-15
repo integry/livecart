@@ -9,7 +9,7 @@
             {radio name="shipping_`$key`" id="shipping_`$key`_`$rate.serviceID`" value=$rate.serviceID class="radio"}
             <label for="shipping_{$key}_{$rate.serviceID}" class="radio">
                 {$rate.ShippingService.name_lang}
-                (<strong>{$rate.formattedPrice.$currency}</strong>)
+                (<strong>{$rate.taxPrice.$currency}</strong>)
             </label>
         </p>            
     {/foreach}

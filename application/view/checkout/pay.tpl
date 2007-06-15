@@ -95,8 +95,9 @@
                 <th>Subtotal</th>
             </tr>                            
         </thead>
-    {foreach from=$order.shipments key="key" item="shipment"}
         <tbody>
+
+        {foreach from=$order.shipments key="key" item="shipment"}
             {foreach from=$shipment.items item="item" name="shipment"}
                 <tr{zebra loop="shipment"}>                    
                     <td class="productName"><a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a></td>
@@ -110,8 +111,15 @@
                 <td colspan="3" class="subTotalCaption">{t _shipping} ({$shipment.selectedRate.ShippingService.name_lang}):</td>
                 <td>{$shipment.selectedRate.formattedPrice.$currency}</td>                        
             </tr>
-    {/foreach}  
+        {/foreach}  
       
+        {foreach from=$order.taxes.$currency item="tax"}
+            <tr>                    
+                <td colspan="3" class="tax">{$tax.name_lang}:</td>
+                <td>{$tax.formattedAmount}</td>
+            </tr>
+        {/foreach}        
+          
             <tr>
                 <td colspan="3" class="subTotalCaption">{t _total}:</td>
                 <td class="subTotal">{$order.formattedTotal.$currency}</td>                        

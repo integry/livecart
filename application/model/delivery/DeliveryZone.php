@@ -1,9 +1,6 @@
 <?php
-ClassLoader::import("application.model.system.ActiveTreeNode");
-ClassLoader::import("application.model.system.MultilingualObject");
-ClassLoader::import("application.model.category.CategoryImage");
-ClassLoader::import("application.model.delivery.*");
 
+ClassLoader::import("application.model.delivery.*");
 ClassLoader::import('library.shipping.ShippingRateSet');
 
 /**
@@ -13,6 +10,8 @@ ClassLoader::import('library.shipping.ShippingRateSet');
  */
 class DeliveryZone extends MultilingualObject 
 {
+    const ENABLED_TAXES = false;
+    
     public function __construct($data = array())
     {
         parent::__construct($data);
@@ -229,7 +228,14 @@ class DeliveryZone extends MultilingualObject
     public function getShippingRates(Shipment $shipment)
     {
         $defined = $this->getDefinedShippingRates($shipment);
-        $defined->merge($this->getRealTimeRates($shipment));    
+        $defined->merge($this->getRealTimeRates($shipment));   
+        
+        // apply taxes
+        foreach ($defined as $rate)
+        {
+            $rate->setAmountWithTax($shipment->applyTaxesToAmount($rate->getCostAmount()));
+        }
+         
         return $defined;
     }
 	

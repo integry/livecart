@@ -6,6 +6,8 @@ ClassLoader::import('application.model.delivery.ShippingService');
 
 class ShipmentDeliveryRate extends ShippingRateResult
 {
+    protected $amountWithTax;
+    
     public static function getNewInstance(ShippingService $service, $cost)
     {
         $inst = new ShipmentDeliveryRate();
@@ -49,6 +51,11 @@ class ShipmentDeliveryRate extends ShippingRateResult
         return round($amount, 2);
     }
     
+    public function setAmountWithTax($amount)
+    {
+        $this->amountWithTax = $amount;
+    }
+    
     public function toArray()
     {
         $array = parent::toArray();
@@ -57,17 +64,19 @@ class ShipmentDeliveryRate extends ShippingRateResult
         $currencies = Store::getInstance()->getCurrencySet();
 
         // get and format prices
-        $prices = array();
-        $formattedPrices = array();
+        $prices = $formattedPrices = $taxPrices = array();
+        array();
         foreach ($currencies as $id => $currency)
         {
             $prices[$id] = $currency->convertAmount($amountCurrency, $array['costAmount']);
             $formattedPrices[$id] = $currency->getFormattedPrice($prices[$id]);
+            $taxPrices[$id] = $currency->getFormattedPrice($currency->convertAmount($amountCurrency, $this->amountWithTax));
         }
 
         $array['price'] = $prices;
         $array['formattedPrice'] = $formattedPrices;
-        
+        $array['taxPrice'] = $taxPrices;
+                
         // shipping service name
         $id = $this->getServiceID();
         if (is_numeric($id))
