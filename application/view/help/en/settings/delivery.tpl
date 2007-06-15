@@ -1,4 +1,4 @@
-<p>Delivery zones - regions that follow the same certain rules of shipping and taxes. This means that you can create different shipping charges for countries, states, cities or even districts and streets.</p>
+<p>Delivery zones - regions that follow the same certain rules of shipping and taxes. This means that you can create different shipping and taxation charges for countries, states, cities or even districts and streets.</p>
 
 <div class="tasks">
 <fieldset>
@@ -21,14 +21,14 @@
 	<li>Group countries by adding them to the left "Country" box. Select a country from the country list and use the "<<" button to add it your list.</li>
 	<img src="image/doc/settings/delivery/one_two.bmp">
 	<p class="note"><strong>Note</strong>: You can also select multiple countries by holding the "ctrl" or "shift" key.</p>
-	Choosing africa, asia, europe, (...)
+	<p>Choosing africa, asia, europe, (...)</p>
 	<li>States - for United States you can also group states as countries above.</li>
 	<li>City mask defines particular cities if necessary. You can also use the "*" character for any number of unknown characters. For example, "New*" corresponds to "New York", New Jersey", etc</li>
 	<li>Zip mask is used to filter zip codes. For example, "55*" corresponds to "55344", "55555", etc</li>
 	<li>Address mask - for example, "* street" corresponds to "5th Street", etc</li>
 </ul>
 <p><strong>Defining shipping rates</strong></p>
-<p>Shipping rates - rates that determine variuos pricing according to order's weight or value. To add a new shipping service:</p>
+<p>These are the rates that determine various pricing according to order's weight, value or delivery time. Shipping rates can be defined manually or you can use realtime shipping methods such as USPS, FedEx, etc. Realtime shipping methods can be configured in Settings -> Configuration area. To add a custom shipping service:</p>
 <ul>
 	<li>Click on the "Shipping Rates" tab.</li>
 	<img src="image/doc/settings/delivery/shipping_tab.bmp">
@@ -52,8 +52,8 @@
 	<li>Click on the "Tax Rates" tab.</li>
 	<img src="image/doc/settings/delivery/tax_tab.bmp">
 	<li>Click the "Add new tax rate" link.</li>
-	<li>Tax - click a drop-down list to select a tax. (Taxes can be created in the Settings -> Taxes section) </li>
-	<li>Tax rate - enter a tax rate.</li>
+	<li>Click a drop-down list to select a tax. (Taxes can be created in the Settings -> Taxes section) </li>
+	<li>Enter a tax rate.</li>
 	<li>Click "Save".</li>
 </ul>
 

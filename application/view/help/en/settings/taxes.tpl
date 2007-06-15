@@ -6,6 +6,7 @@
 <ul>	
 	<li><a href="{self}#add">Create new tax</a></li>
 	<li><a href="{self}#edit_delete">Edit or delete tax</a></li>
+	<li><a href="{self}#sort">Sort taxes?</a></li>
 </ul>
 </fieldset>
 </div>
@@ -22,3 +23,8 @@
 <h3 id="edit_delete">Edit or delete taxes</h3>
 <p>To edit or delete a tax click one of the icons:</p>
 <img src="image/doc/settings/taxes/edit_delete.bmp">
+
+
+<h3 id="sort">Sort taxes?</h3>
+
+<p>Sort me</p>
