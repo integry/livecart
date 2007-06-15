@@ -22,10 +22,14 @@ class ShippingRateResult implements ShippingResultInterface
         $this->serviceName = $name;            
     }
 
-    public function setCost($amount, $currency)
+    public function setCost($amount, $currency = null)
     {
         $this->costAmount = $amount;
-        $this->costCurrency = $currency;
+        
+        if (!is_null($currency))
+        {
+            $this->costCurrency = $currency;
+        }
     }
     
     public function getClassName()
