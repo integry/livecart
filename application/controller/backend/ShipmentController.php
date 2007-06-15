@@ -106,7 +106,10 @@ class ShipmentController extends StoreManagementController
             'shipment' => array(
                 'ID' => $shipment->getID(),
                 'amount' => $shipment->amount->get(),
-                'shippingAmount' => $shipment->shippingAmount->get()
+                'shippingAmount' => $shipment->shippingAmount->get(),
+                'totalAmount' => $shipment->shippingAmount->get() + $shipment->amount->get(),
+                'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
+                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
             )));
 		}
 		else

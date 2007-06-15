@@ -10,6 +10,8 @@ Backend.OrderedItem = {
         afterDelete: function(li, response){
             if(!response.error) {
                 this.remove(li);
+                var orderID = this.getRecordId(li, 3);
+                Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
             }
         },
         beforeSort: function(li, order){ 
@@ -23,7 +25,7 @@ Backend.OrderedItem = {
         },
         afterSort: function(li, response){
             var response = eval("(" + response + ")");
-            var orderID = this.getRecordId(li, 3);
+            var orderID = this.getRecordId(li, 2);
             
             var shipmentsActiveList = ActiveList.prototype.getInstance('orderShipments_list_' + orderID);
             
@@ -32,27 +34,53 @@ Backend.OrderedItem = {
 
             if('success' == response.status)
             {
-                oldShipmentLi.down('.orderShipment_info_subtotal').update(response.oldShipment.prefix + response.oldShipment.amount + response.oldShipment.suffix);
-                oldShipmentLi.down('.orderShipment_info_shippingAmount').update(response.oldShipment.prefix + response.oldShipment.shippingAmount + response.oldShipment.suffix);
-                oldShipmentLi.down('.orderShipment_info_total').update(response.oldShipment.prefix + response.oldShipment.totalAmount + response.oldShipment.suffix);
+                try
+                {
+                    // Old shipment changes
+                    var oldSubtotal = oldShipmentLi.down('.orderShipment_info_subtotal');
+                        oldSubtotal.down('.pricePrefix').innerHTML = response.oldShipment.prefix;
+                        oldSubtotal.down('.price').innerHTML = parseFloat(response.oldShipment.amount);
+                        oldSubtotal.down('.priceSuffix').innerHTML = response.oldShipment.suffix;
+                    console.info(newShipmentLi.down('.orderShipment_info_total').down('.price'));
+                    
+                    var oldShippingAmount = oldShipmentLi.down('.orderShipment_info_shippingAmount');
+                        oldShippingAmount.down('.pricePrefix').innerHTML = response.oldShipment.prefix;
+                        oldShippingAmount.down('.price').innerHTML = parseFloat(response.oldShipment.shippingAmount);
+                        oldShippingAmount.down('.priceSuffix').innerHTML = response.oldShipment.suffix;
+                    console.info(newShipmentLi.down('.orderShipment_info_total').down('.price'));
+                    
+                    var oldTotalAmount = oldShipmentLi.down('.orderShipment_info_total');
+                        oldTotalAmount.down('.pricePrefix').innerHTML = response.oldShipment.prefix;
+                        oldTotalAmount.down('.price').innerHTML = parseFloat(response.oldShipment.totalAmount);
+                        oldTotalAmount.down('.priceSuffix').innerHTML = response.oldShipment.suffix;
+                    console.info(newShipmentLi.down('.orderShipment_info_total').down('.price'));
+                                    
+                    // New shipment changes
+                    var newSubtotal = newShipmentLi.down('.orderShipment_info_subtotal');
+                        newSubtotal.down('.pricePrefix').innerHTML = response.newShipment.prefix;
+                        newSubtotal.down('.price').innerHTML = parseFloat(response.newShipment.amount);
+                        newSubtotal.down('.priceSuffix').innerHTML = response.newShipment.suffix;
+                    console.info(newShipmentLi.down('.orderShipment_info_total').down('.price'));
+                    
+                    var newShippingAmount = newShipmentLi.down('.orderShipment_info_shippingAmount');
+                        newShippingAmount.down('.pricePrefix').innerHTML = response.newShipment.prefix;
+                        newShippingAmount.down('.price').innerHTML = parseFloat(response.newShipment.shippingAmount);
+                        newShippingAmount.down('.priceSuffix').innerHTML = response.newShipment.suffix;
+                        
+                    console.info(newShipmentLi.down('.orderShipment_info_total').down('.price'));
+                    var newTotalAmount = newShipmentLi.down('.orderShipment_info_total');
+                        newTotalAmount.down('.pricePrefix').innerHTML = response.newShipment.prefix;
+                        newTotalAmount.down('.price').innerHTML = parseFloat(response.newShipment.totalAmount);
+                        newTotalAmount.down('.priceSuffix').innerHTML = response.newShipment.suffix;
+    
+                    shipmentsActiveList.highlight(newShipmentLi);
                 
-                newShipmentLi.down('.orderShipment_info_subtotal').update(response.newShipment.prefix + response.newShipment.amount + response.newShipment.suffix);
-                newShipmentLi.down('.orderShipment_info_shippingAmount').update(response.newShipment.prefix + response.newShipment.shippingAmount + response.newShipment.suffix);
-                newShipmentLi.down('.orderShipment_info_total').update(response.newShipment.prefix + response.newShipment.totalAmount + response.newShipment.suffix);
-                
-                var report = $("orderShipment_report_" + orderID);
-                var reportSubtotal = report.down('.orderShipment_report_subtotal');
-                var shippingAmount = report.down('.orderShipment_report_shippingAmount');
-                var shippingAmount = report.down('.orderShipment_report_total');
-                
-                var prefixRegexp = new RegExp("^" + response.oldShipment.prefix);
-                var suffixRegexp = new RegExp("^" + response.oldShipment.prefix);
-                
-                report.update( + response.oldShipment.amount + response.oldShipment.suffix);
-                oldShipmentLi.down('.orderShipment_report_shippingAmount').update(response.oldShipment.prefix + response.oldShipment.shippingAmount + response.oldShipment.suffix);
-                oldShipmentLi.down('.orderShipment_report_total').update(response.oldShipment.prefix + response.oldShipment.totalAmount + response.oldShipment.suffix);
-                
-                shipmentsActiveList.highlight(newShipmentLi);
+                    Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
+                }
+                catch(e)
+                {
+                    console.info(e)
+                }
             }
             else
             {
@@ -63,9 +91,23 @@ Backend.OrderedItem = {
 			    new Backend.SaveConfirmationMessage($('noRateInShippingServiceIsAvailableError'))
             }
         }
-    }
+    },
+    
+    updateReport: function(report)
+    {
+        var reportValues = { 'subtotalAmount': 0, 'shippingAmount': 0, 'totalAmount': 0 };
+        document.getElementsByClassName('orderShipment_info', report.up('.tabPageContainer')).each(function(shipmentReport) 
+        {
+            reportValues['subtotalAmount'] += (parseFloat(shipmentReport.down('.orderShipment_info_subtotal').down('.price').innerHTML) || 0);
+            reportValues['shippingAmount'] += (parseFloat(shipmentReport.down('.orderShipment_info_shippingAmount').down('.price').innerHTML) || 0);
+            reportValues['totalAmount'] += (parseFloat(shipmentReport.down('.orderShipment_info_total').down('.price').innerHTML) || 0);
+        });
+        
+        report.down('.orderShipment_report_subtotal').down('.price').innerHTML = Math.round(reportValues['subtotalAmount'] * 100) / 100;;
+        report.down('.orderShipment_report_shippingAmount').down('.price').innerHTML = Math.round(reportValues['shippingAmount'] * 100) / 100;;
+        report.down('.orderShipment_report_total').down('.price').innerHTML = Math.round(reportValues['totalAmount'] * 100) / 100;;
+   }
 };
-
 
 
 Backend.Shipment = Class.create();
@@ -188,10 +230,24 @@ Backend.Shipment.prototype =
                                 
                 ActiveList.prototype.recreateVisibleLists();
 
-                li.down('.orderShipment_info_subtotal').update(response.shipment.amount);
-                li.down('.orderShipment_info_shippingAmount').update(response.shipment.shippingAmount);
-                li.down('.orderShipment_info_total').update(response.shipment.totalAmount);
+                var newSubtotal = li.down('.orderShipment_info_subtotal');
+                    newSubtotal.down('.pricePrefix').innerHTML = response.shipment.prefix;
+                    newSubtotal.down('.price').innerHTML = response.shipment.amount;
+                    newSubtotal.down('.priceSuffix').innerHTML = response.shipment.suffix;
+                
+                var newShippingAmount = li.down('.orderShipment_info_shippingAmount');
+                    newShippingAmount.down('.pricePrefix').innerHTML = response.shipment.prefix;
+                    newShippingAmount.down('.price').innerHTML = response.shipment.shippingAmount;
+                    newShippingAmount.down('.priceSuffix').innerHTML = response.shipment.suffix;
+                
+                var newTotalAmount = li.down('.orderShipment_info_total');
+                    newTotalAmount.down('.pricePrefix').innerHTML = response.shipment.prefix;
+                    newTotalAmount.down('.price').innerHTML = response.shipment.totalAmount;
+                    newTotalAmount.down('.priceSuffix').innerHTML = response.shipment.suffix;
+                
                 Element.addClassName(li, 'orderShipment');
+                
+                Backend.OrderedItem.updateReport($("orderShipment_report_" + this.nodes.form.elements.namedItem('orderID').value));
 
                 this.shipmentsActiveList.highlight(li);
                 this.hideNewForm();
@@ -235,8 +291,8 @@ Backend.Shipment.Callbacks =
     afterDelete: function(li, response) {
         if(!response.error) {
             this.remove(li);
-            var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-            tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') - li.getElementsByTagName('li').length);
+            var orderID = this.getRecordId(li, 2);
+            Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
         }
     },
     

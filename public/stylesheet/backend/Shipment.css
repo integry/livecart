@@ -6,13 +6,6 @@
     display: inline;
 }
 
-
-.orderShipmentsItem_title 
-{
-    font-size: 1em;
-    display: inline;
-}
-
 .orderShipment
 {
     border: 2px solid #777 ! important;
@@ -40,20 +33,56 @@
     margin-left: 50px;
 }
 
-.orderShipmentsItem_info
-{
-    margin-left: 60px; 
-    color: #777;
-}
-
-.orderShipmentsItem_info dt, .orderShipmentsItem_info dd
-{
-    display: inline; 
-}
-
 .orderShipment_info label, .orderShipmentsItem_info dt
 {
     width: 9em;
     margin-top: 2px;
     font-weight: bold;
+}
+
+
+/* Product table */
+.orderShipmentsItem_info
+{
+    margin-left: 30px;
+    margin-top: -26px;
+}
+
+.orderShipmentsItem_info td
+{
+    padding: 2px 4px;
+    border: 1px solid ! important;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+}
+
+.orderShipmentsItem_info td.orderShipmentsItem_info_sku
+{
+    width: 60px;
+}
+
+.orderShipmentsItem_info td.orderShipmentsItem_info_price
+{
+    width: 80px;
+}
+
+.orderShipmentsItem_info td.orderShipmentsItem_info_total
+{
+    width: 80px;
+}
+
+.orderShipmentsItem_info td.orderShipmentsItem_info_name
+{
+   width: 60px;
+}
+
+.orderShipmentsItem_info td.orderShipmentsItem_info_count
+{
+    width: 20px;
+}
+
+.orderShipmentsItem li
+{
+    border: 0px none;
 }

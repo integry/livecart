@@ -70,18 +70,13 @@ class OrderedItemController extends StoreManagementController
 		            $oldShipment->save();
 		            $newShipment->save();
 		            
-		            $np = $newShipment->amountCurrency->get()->pricePrefix->get(); // new prefix
-		            $ns = $newShipment->amountCurrency->get()->priceSuffix->get(); // new suffix
-		            $op =  // old prefix
-		            $os = ; // old suffix
-		            
 		            return new JSONResponse(array(
 		                'status' => 'success', 
 			            'oldShipment' => array(
 			                'ID' => $oldShipment->getID(),
 			                'amount' => $oldShipment->amount->get(),
 			                'shippingAmount' => $oldShipment->shippingAmount->get(),
-			                'totalAmount' =>((float)$newShipment->shippingAmount->get() + (float)$newShipment->amount->get()),
+			                'totalAmount' =>((float)$oldShipment->shippingAmount->get() + (float)$oldShipment->amount->get()),
 			                'prefix' => $oldShipment->amountCurrency->get()->pricePrefix->get(),
 			                'suffix' => $oldShipment->amountCurrency->get()->priceSuffix->get()
 		                ),

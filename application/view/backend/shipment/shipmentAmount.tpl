@@ -2,13 +2,17 @@
     <fieldset class="error">
         <label>{t _subtotal_price}:</label>
         <span class="orderShipment_info_subtotal">
-            {$shipment.AmountCurrency.pricePrefix}{$shipment.amount}{$shipment.AmountCurrency.priceSuffix}
+            <span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
+            <span class="price">{$shipment.amount}</span>
+            <span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
         </span>
     </fieldset >
     <fieldset class="error">
         <label>{t _shipping_price}:</label>
         <span class="orderShipment_info_shippingAmount">
-            {$shipment.AmountCurrency.pricePrefix}{$shipment.shippingAmount}{$shipment.AmountCurrency.priceSuffix}
+            <span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
+            <span class="price">{$shipment.shippingAmount}</span>
+            <span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
         </span>
     </fieldset >
     
@@ -17,9 +21,9 @@
     <fieldset class="error">
         <label>{t _total_price}:</label>
         <span class="orderShipment_info_total">
-        {if $shipment.shippingAmount && $shipment.amount}
-            {$shipment.AmountCurrency.pricePrefix}{math equation="x + y" x=$shipment.shippingAmount y=$shipment.amount}{$shipment.AmountCurrency.priceSuffix}
-        {/if}            
+            <span class="pricePrefix">{if $shipment.shippingAmount !== null && $shipment.amount !== null}{$shipment.AmountCurrency.pricePrefix}{/if}</span>
+            <span class="price">{if $shipment.shippingAmount !== null && $shipment.amount !== null}{math equation="x + y" x=$shipment.shippingAmount y=$shipment.amount}{/if}</span>
+            <span class="priceSuffix">{if $shipment.shippingAmount !== null && $shipment.amount !== null}{$shipment.AmountCurrency.priceSuffix}{/if}</span>
         </span>
     </fieldset >
 </div>

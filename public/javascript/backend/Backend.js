@@ -1,3 +1,8 @@
+function rescape(str) 
+{ 
+    return srt.replace(/([\/()[\]{}|*+-.,^$?\\])/g, "\\$1"); 
+}
+
 function showHelp(url)
 {
   	return window.open(url, 'helpWin', 'width=400, height=700, resizable, scrollbars, location=no');

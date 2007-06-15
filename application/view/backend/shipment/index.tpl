@@ -19,13 +19,17 @@
         <fieldset class="error">
             <label>{t _subtotal_price}:</label>
             <span class="orderShipment_report_subtotal">
-                {$order.Currency.pricePrefix}{$subtotalAmount}{$order.Currency.priceSuffix}
+                <span class="pricePrefix">{$order.Currency.pricePrefix}</span>
+                <span class="price">{$subtotalAmount}</span>
+                <span class="priceSuffix">{$order.Currency.priceSuffix}</span>
             </span>
         </fieldset >
         <fieldset class="error">
             <label>{t _shipping_price}:</label>
             <span class="orderShipment_report_shippingAmount">
-                {$order.Currency.pricePrefix}{$shippingAmount}{$order.Currency.priceSuffix}
+                <span class="pricePrefix">{$order.Currency.pricePrefix}</span>
+                <span class="price">{$shippingAmount}</span>
+                <span class="priceSuffix">{$order.Currency.priceSuffix}</span>
             </span>
         </fieldset >
         
@@ -34,7 +38,9 @@
         <fieldset class="error">
             <label>{t _total_price}:</label>
             <span class="orderShipment_report_total">
-                {$order.Currency.pricePrefix}{$totalAmount}{$order.Currency.priceSuffix}
+                <span class="pricePrefix">{$order.Currency.pricePrefix}</span>
+                <span class="price">{$totalAmount}</span>
+                <span class="priceSuffix">{$order.Currency.priceSuffix}</span>
             </span>
         </fieldset >
     </div>
@@ -51,7 +57,6 @@
             <ul id="orderShipmentsItems_list_{$orderID}_{$shipment.ID}" class="activeList_add_sort activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem">
             {foreach item="item" from=$shipment.items}
                 <li id="orderShipmentsItems_list_{$item.ID}_{$shipment.ID}_{$item.ID}" >
-                    <h3 class="orderShipmentsItem_title">{$item.Product.name}</h3>
                     {include file="backend/shipment/itemAmount.tpl"}
                 </li>
             {/foreach}
