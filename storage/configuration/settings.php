@@ -417,4 +417,9 @@
     'Airmail Parcel Post' => 1,
     'Economy (Surface) Parcel Post' => 1,
   ),
+  'SHIPPING_HANDLERS' => 
+  array (
+  ),
+  'UspsShipping_userId' => '',
+  'UspsShipping_size' => 'Regular',
 ); ?>
