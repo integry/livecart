@@ -175,7 +175,12 @@ class UserController extends StoreManagementController
 			
 			$user->lastName->set($lastName);
 			$user->firstName->set($firstName);
-			$user->setPassword($password);
+			
+			if(!empty($password))
+			{
+			    $user->setPassword($password);
+			}
+			
 			$user->companyName->set($companyName);
 			$user->email->set($email);
 			$user->userGroup->set($group);

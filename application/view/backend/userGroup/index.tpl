@@ -51,6 +51,15 @@
            	</div>
         </div>
 
+       	<div id="userInfoSaveConf" style="display: none;">
+       		<div class="yellowMessage">
+       			<div>
+       				{t _user_information_was_saved_successfuly}
+       			</div>
+       		</div>
+       	</div>
+    
+
 	</div>
     <span id="fromUsersPage">
         {include file="backend/customerOrder/orderContainer.tpl"}

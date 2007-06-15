@@ -33,10 +33,23 @@ class ShipmentController extends StoreManagementController
 		    Shipment::STATUS_SHIPPED => $this->translate('_shipping_status_shipped')
 	    );
 	    
+	    $subtotalAmount = 0; 
+	    $shippingAmount = 0;
+	    foreach($shipments as $shipment)
+	    {
+	        $subtotalAmount += $shipment->amount->get();
+	        $shippingAmount += $shipment->shippingAmount->get();
+	    }
+        $totalAmount = $subtotalAmount + $shippingAmount;
+	    
 	    $response = new ActionResponse();
 	    $response->setValue('orderID', $this->request->getValue('id'));
+	    $response->setValue('order', $order->toArray());
 	    $response->setValue('shipments', $shipments->toArray());
 	    $response->setValue('shippingServices', $shippingServices);
+	    $response->setValue('subtotalAmount', $subtotalAmount);
+	    $response->setValue('shippingAmount', $shippingAmount);
+	    $response->setValue('totalAmount', $totalAmount);
 	    $response->setValue('statuses', $statuses);
 	    $response->setValue('newShipmentForm', $form);
 	    return $response;

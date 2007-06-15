@@ -216,12 +216,13 @@ Backend.UserGroup.prototype =
     {
         Event.stop(e);
         
-        Backend.User.Editor.prototype.setCurrentId(id); 
-        var userIndicator = $('userIndicator_' + id);
-        if(!userIndicator)
-        {
-            var userIndicator = $('orderUserIndicator_' + id);
-        }
+		if(!e.target)
+		{
+            e.target = e.srcElement
+		}
+
+        var userIndicator = e.target.up('td').down('.progressIndicator');
+        Backend.User.Editor.prototype.setCurrentId(id);
         
         userIndicator.style.visibility = 'visible';
         
@@ -297,7 +298,7 @@ Backend.UserGroup.GridFormatter =
 		if ('User.email' == field && Backend.UserGroup.prototype.usersMiscPermision)
 		{
 		    value = '<span>' + 
-                    '<span class="progressIndicator" id="userIndicator_' + id + '" style="visibility: hidden;">' + 
+                    '<span class="progressIndicator userIndicator" id="userIndicator_' + id + '" style="visibility: hidden;">' + 
                     '</span>' + 
                 '</span>' + 
                 '<a href="#edit" id="user_' + id + '" onclick="Backend.UserGroup.prototype.openUser(' + id + ', event); return false;">' + 
@@ -554,6 +555,15 @@ Backend.User.Editor.prototype =
     {	
 		Backend.User.Editor.prototype.setCurrentId(this.id);
         var userIndicator = $('userIndicator_' + this.id);
+        document.getElementsByClassName('UserIndicator').each(function(span)
+        {
+           if('visible' == span.style.visibility)
+           {
+               span.style.visibility = 'hidden';
+               throw $break;
+           }
+        });
+        
         if(userIndicator) 
         {
             userIndicator.style.visibility = 'hidden';
@@ -588,7 +598,7 @@ Backend.User.Editor.prototype =
 	{
 		if(response.status == 'success')
 		{
-			new Backend.SaveConfirmationMessage(this.nodes.form.down('.userInfoSaveConf'));
+			new Backend.SaveConfirmationMessage($('userInfoSaveConf'));
 			Form.State.backup(this.nodes.form);
 		}
 		else

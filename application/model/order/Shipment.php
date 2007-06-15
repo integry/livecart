@@ -190,7 +190,6 @@ class Shipment extends ActiveRecordModel
             $formattedSubTotal[$id] = Currency::getInstanceById($id)->getFormattedPrice($price);
         }        
         $array['formattedSubTotal'] = $formattedSubTotal;
-        
         // selected shipping rate
         if ($selected = $this->getSelectedRate())
         {

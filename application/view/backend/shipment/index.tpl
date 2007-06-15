@@ -13,23 +13,56 @@
     {include file="backend/shipment/shipmentAmount.tpl"}
 </div>
 
-<ul id="orderShipments_list_{$orderID}" class="activeList_add_delete activeList_add_edit">
-{foreach item="shipment" from=$shipments}
-    <li id="orderShipments_list_{$orderID}_{$shipment.ID}" class="orderShipment">
-        <h3 class="orderShipment_title">{$shipment.ShippingService.name}</h3>
-        {include file="backend/shipment/shipmentAmount.tpl"}
+<div id="orderShipment_report_{$orderID}" class="orderShipment_report">
+    <h2>{t _report}</h2>
+    <div class="orderShipment_report_values">
+        <fieldset class="error">
+            <label>{t _subtotal_price}:</label>
+            <span class="orderShipment_report_subtotal">
+                {$order.Currency.pricePrefix}{$subtotalAmount}{$order.Currency.priceSuffix}
+            </span>
+        </fieldset >
+        <fieldset class="error">
+            <label>{t _shipping_price}:</label>
+            <span class="orderShipment_report_shippingAmount">
+                {$order.Currency.pricePrefix}{$shippingAmount}{$order.Currency.priceSuffix}
+            </span>
+        </fieldset >
         
-        <ul id="orderShipmentsItems_list_{$orderID}_{$shipment.ID}" class="activeList_add_sort activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem">
-        {foreach item="item" from=$shipment.items}
-            <li id="orderShipmentsItems_list_{$item.ID}_{$shipment.ID}_{$item.ID}" >
-                <h3 class="orderShipmentsItem_title">{$item.Product.name}</h3>
-                {include file="backend/shipment/itemAmount.tpl"}
-            </li>
-        {/foreach}
-        </ul>
-    </li>
-{/foreach}
-</ul>
+        <hr />
+        
+        <fieldset class="error">
+            <label>{t _total_price}:</label>
+            <span class="orderShipment_report_total">
+                {$order.Currency.pricePrefix}{$totalAmount}{$order.Currency.priceSuffix}
+            </span>
+        </fieldset >
+    </div>
+</div>
+
+<div class="orderShipment_shipments">
+    <h2>{t _shipments}</h2>
+    <ul id="orderShipments_list_{$orderID}" class="orderShipments activeList_add_delete activeList_add_edit">
+    {foreach item="shipment" from=$shipments}
+        <li id="orderShipments_list_{$orderID}_{$shipment.ID}" class="orderShipment">
+            <h3 class="orderShipment_title">{$shipment.ShippingService.name}</h3>
+            {include file="backend/shipment/shipmentAmount.tpl"}
+            
+            <ul id="orderShipmentsItems_list_{$orderID}_{$shipment.ID}" class="activeList_add_sort activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem">
+            {foreach item="item" from=$shipment.items}
+                <li id="orderShipmentsItems_list_{$item.ID}_{$shipment.ID}_{$item.ID}" >
+                    <h3 class="orderShipmentsItem_title">{$item.Product.name}</h3>
+                    {include file="backend/shipment/itemAmount.tpl"}
+                </li>
+            {/foreach}
+            </ul>
+        </li>
+    {/foreach}
+    </ul>
+</div>
+
+
+
 
 {literal}
 <script type="text/javascript">
@@ -62,14 +95,7 @@
             
             newForm.showNewForm();
         });   
-    }
-    catch(e)
-    {
-        console.info(e);
-    }
-        
-    try
-    {   
+
         {/literal}    
         var groupList = ActiveList.prototype.getInstance('orderShipments_list_{$orderID}', Backend.Shipment.Callbacks);  
         {foreach item="shipment" from=$shipments}

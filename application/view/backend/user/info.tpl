@@ -1,13 +1,4 @@
 {form handle=$form action="controller=backend.user action=update" id="userInfo_`$user.ID`_form" onsubmit="Backend.User.Editor.prototype.getInstance(`$user.ID`, false).submitForm(); return false;" method="post" role="user.create(backend.userGroup/index),user.update(backend.user/info)"}
-
-   	<div class="userInfoSaveConf" style="display: none;">
-   		<div class="yellowMessage">
-   			<div>
-   				{t _user_information_was_saved_successfuly}
-   			</div>
-   		</div>
-   	</div>
-    
     
     <label for="user_{$user.ID}_email">{t _email}</label>
     <fieldset class="error">

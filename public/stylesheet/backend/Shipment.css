@@ -30,9 +30,14 @@
     margin-left: 80px; 
     color: #777;
 }
-.orderShipment_info hr
+.orderShipment_report hr, .orderShipment_shipments hr
 {
     width: 13em;
+}
+
+.orderShipments, .orderShipment_report_values
+{
+    margin-left: 50px;
 }
 
 .orderShipmentsItem_info

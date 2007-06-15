@@ -29,16 +29,28 @@ Backend.OrderedItem = {
             
             var oldShipmentLi = $("orderShipments_list_" + orderID + "_" + response.oldShipment.ID);
             var newShipmentLi = $("orderShipments_list_" + orderID + "_" + response.newShipment.ID)
-            ;
+
             if('success' == response.status)
             {
-                oldShipmentLi.down('.orderShipment_info_subtotal').update(response.oldShipment.amount);
-                oldShipmentLi.down('.orderShipment_info_shippingAmount').update(response.oldShipment.shippingAmount);
-                oldShipmentLi.down('.orderShipment_info_total').update(response.oldShipment.totalAmount);
+                oldShipmentLi.down('.orderShipment_info_subtotal').update(response.oldShipment.prefix + response.oldShipment.amount + response.oldShipment.suffix);
+                oldShipmentLi.down('.orderShipment_info_shippingAmount').update(response.oldShipment.prefix + response.oldShipment.shippingAmount + response.oldShipment.suffix);
+                oldShipmentLi.down('.orderShipment_info_total').update(response.oldShipment.prefix + response.oldShipment.totalAmount + response.oldShipment.suffix);
                 
-                newShipmentLi.down('.orderShipment_info_subtotal').update(response.newShipment.amount);
-                newShipmentLi.down('.orderShipment_info_shippingAmount').update(response.newShipment.shippingAmount);
-                newShipmentLi.down('.orderShipment_info_total').update(response.newShipment.totalAmount);
+                newShipmentLi.down('.orderShipment_info_subtotal').update(response.newShipment.prefix + response.newShipment.amount + response.newShipment.suffix);
+                newShipmentLi.down('.orderShipment_info_shippingAmount').update(response.newShipment.prefix + response.newShipment.shippingAmount + response.newShipment.suffix);
+                newShipmentLi.down('.orderShipment_info_total').update(response.newShipment.prefix + response.newShipment.totalAmount + response.newShipment.suffix);
+                
+                var report = $("orderShipment_report_" + orderID);
+                var reportSubtotal = report.down('.orderShipment_report_subtotal');
+                var shippingAmount = report.down('.orderShipment_report_shippingAmount');
+                var shippingAmount = report.down('.orderShipment_report_total');
+                
+                var prefixRegexp = new RegExp("^" + response.oldShipment.prefix);
+                var suffixRegexp = new RegExp("^" + response.oldShipment.prefix);
+                
+                report.update( + response.oldShipment.amount + response.oldShipment.suffix);
+                oldShipmentLi.down('.orderShipment_report_shippingAmount').update(response.oldShipment.prefix + response.oldShipment.shippingAmount + response.oldShipment.suffix);
+                oldShipmentLi.down('.orderShipment_report_total').update(response.oldShipment.prefix + response.oldShipment.totalAmount + response.oldShipment.suffix);
                 
                 shipmentsActiveList.highlight(newShipmentLi);
             }
