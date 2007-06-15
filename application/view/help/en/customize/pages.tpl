@@ -20,7 +20,7 @@
 	<li>Complete the following steps:</li>
 	<ul>
 		<li>Enter page title.</li>
-		<li>Display in "Information" menu - mark the checkbox to enable the page.</li>
+		<li>Display in Information menu - mark the checkbox to enable the page.</li>
 		<li>{glossary}URL{/glossary} handle is generated automatically so you can leave it as it is.</li>
 		<li>Page text - supply the contents of your page.</li>
 		<li>Translate - if applicable click on the language to translate page title and page text.</li>
@@ -28,7 +28,7 @@
 	</ul>
 </ol>
 
-<p class="note">(<strong>Note</strong>: The "Information" box is displayed right below the "Categories" section.)</p>
+<p class="note">(<strong>Note</strong>: The "Information" menu is displayed right below the "Categories" section.)</p>
 
 <h3 id="sort">Sort pages</h3>
 
