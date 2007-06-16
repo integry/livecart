@@ -1,88 +1,55 @@
-.orderShipment_title 
+.orderShipmentsItem 
 {
-    font-size: 200%;
-    color: #777;
-    font-weight: bold;
+   position: relative;
+}
+/* Product table */
+.orderShipmentsItem_info
+{
+    width: 100%;
     display: inline;
-}
-
-.orderShipment
-{
-    border: 2px solid #777 ! important;
-    margin-bottom: 1em;
-}
-
-.orderShipmentsItem
-{
-    padding-bottom: 1em;
-    padding-top: 1em;
 }
 
 .orderShipment_info
 {
-    margin-left: 80px; 
-    color: #777;
+    display: block;
+    padding-left: 40px;
+    margin-top: -3px;
+   
 }
-.orderShipment_report hr, .orderShipment_shipments hr
-{
-    width: 13em;
-}
-
-.orderShipments, .orderShipment_report_values
-{
-    margin-left: 50px;
-}
-
-.orderShipment_info label, .orderShipmentsItem_info dt
-{
-    width: 9em;
-    margin-top: 2px;
-    font-weight: bold;
-}
-
-
-/* Product table */
-.orderShipmentsItem_info
-{
-    margin-left: 30px;
-    margin-top: -26px;
-}
-
 .orderShipmentsItem_info td
 {
     padding: 2px 4px;
-    border: 1px solid ! important;
-    white-space: nowrap;
-    overflow: hidden;
-    width: 100%;
+    border: 1px solid;
 }
 
-.orderShipmentsItem_info td.orderShipmentsItem_info_sku
+.orderShipments li
 {
-    width: 60px;
+    border: 0px none;
 }
 
-.orderShipmentsItem_info td.orderShipmentsItem_info_price
-{
-    width: 80px;
-}
+.orderShipmentsItem_info_sku_td { width: 80px; }
+.orderShipmentsItem_info_sku { width: 70px; }
 
-.orderShipmentsItem_info td.orderShipmentsItem_info_total
-{
-    width: 80px;
-}
+.orderShipmentsItem_info_name_td { width: 100%;  }
+.orderShipmentsItem_info_name { width: 400px;  }
 
-.orderShipmentsItem_info td.orderShipmentsItem_info_name
-{
-   width: 60px;
-}
+.orderShipmentsItem_info_price_td { width: 90px;}
+.orderShipmentsItem_info_price { width: 80px;  }
 
-.orderShipmentsItem_info td.orderShipmentsItem_info_count
-{
-    width: 20px;
-}
+.orderShipmentsItem_info_total_td { width: 90px; }
+.orderShipmentsItem_info_total { width: 80px; }
+
+.orderShipmentsItem_info_report_td { width: 100%;  }
+.orderShipmentsItem_info_report_td { width: 100%; text-align: right; }
+
+
+.orderShipmentsItem_info_count_td { width: 70px; }
+.orderShipmentsItem_info_count { width: 60px; text-align: right;}
 
 .orderShipmentsItem li
 {
     border: 0px none;
+    padding: 0px;
+    margin: 0px;
+    margin-top: -3px;
 }

@@ -10,7 +10,7 @@
 </fieldset>
 
 <div id="orderShipment_{$orderID}_info_empty" style="display: none">
-    {include file="backend/shipment/shipmentAmount.tpl"}
+    {include file="backend/shipment/shipmentTotal.tpl"}
 </div>
 
 <div id="orderShipment_report_{$orderID}" class="orderShipment_report">
@@ -48,11 +48,10 @@
 
 <div class="orderShipment_shipments">
     <h2>{t _shipments}</h2>
-    <ul id="orderShipments_list_{$orderID}" class="orderShipments activeList_add_delete activeList_add_edit">
+    <ul id="orderShipments_list_{$orderID}" class="orderShipments">
     {foreach item="shipment" from=$shipments}
         <li id="orderShipments_list_{$orderID}_{$shipment.ID}" class="orderShipment">
-            <h3 class="orderShipment_title">{$shipment.ShippingService.name}</h3>
-            {include file="backend/shipment/shipmentAmount.tpl"}
+            {include file="backend/shipment/shipmentControls.tpl"}
             
             <ul id="orderShipmentsItems_list_{$orderID}_{$shipment.ID}" class="activeList_add_sort activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem">
             {foreach item="item" from=$shipment.items}
@@ -61,6 +60,9 @@
                 </li>
             {/foreach}
             </ul>
+            
+            {include file="backend/shipment/shipmentTotal.tpl"}
+            
         </li>
     {/foreach}
     </ul>

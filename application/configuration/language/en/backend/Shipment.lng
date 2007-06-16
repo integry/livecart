@@ -11,8 +11,8 @@ _shipments=Shipments
 _shipment_status=Status
 _shipment_service=Service
 
-_subtotal_price=Subtotal price
-_shipping_price=Shipping price
-_total_price=Total price
+_shipping=Shipping
+_usps_priority=USPS priority
+_change_usps_priority=change
 
 _price=Price
