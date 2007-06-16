@@ -1,7 +1,7 @@
 <p>Filters is a tool designed to make product search easy. Instead of forcing your customers to browse the product
  catalog by categories you can create filters that will define specific search criteria and allow users to find 
  products faster. For instance, applying a "Bluetooth" filter in a cell phones catalog
-can view all the phones that have a bluetooth feature no matter their place or any other parameters.</p>
+<ins>can view</ins> all the phones that have a bluetooth feature no matter their place or any other parameters.</p>
 
 <p>It's a common-sence solution that doesn’t force your customer to select the product in pre-set order, instead – the 
 customer may filter the products by any property at any point of the process (by adding or removing filters).</p>
@@ -86,7 +86,7 @@ to define a range for filter's values.</p>
 
 <ol>
 	<li>Go to Filters section and open "Add new Filter" form <a href="{self}#form"><small>(remind me how)</small></a></li>
-	<li>Choose "Battery Capacity" from the dropdown menu to accociate an attribute.</li>
+	<li>Choose "Battery Capacity" from the drop-down menu to accociate an attribute.</li>
 	<img src="image/doc/categories/filters/filter_battery_capacity.bmp">
 	<li>Because "Battery Capacity" attribute doesn't have any values set initially, you have to define ranges that will specify filtering criteria.
 	Let's say that battery capacity might range from 200 to 2000 mAh, therefore we create rules by providing the following parameters:</li>

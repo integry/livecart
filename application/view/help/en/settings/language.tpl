@@ -79,7 +79,8 @@ The default language serves two main purposes:
 </p>
 
 <p>To change the default language click the "Set as default" link under the language name.</p>
-<img src="image/doc/language/set_base2.bmp"/>
+<img src="image/doc/language/set_default.bmp"/>
+<img src="image/doc/language/set_default_red.bmp"/>
 
 
 <h3 id="remove">Remove a language</h3>	 
