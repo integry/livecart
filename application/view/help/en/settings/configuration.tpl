@@ -154,4 +154,4 @@
 
 <h3 id="enabled_countries">Enabled Countries</h3>
 
-<p>Enabled countries are available for setting delivery zones, languages, etc <strong>(?)</strong> </p>
+<p>Enabled countries are available for setting delivery zones, etc <strong>(?)</strong> </p>

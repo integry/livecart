@@ -13,8 +13,7 @@
 	<li><a href="{self}#images">Edit Images</a></li>
 	<li><a href="{self}#related">Related Products</a></li>
 	<li><a href="{self}#files">Edit Files</a></li>
-	<li><ins><a href="{self}#options">Edit Products Operations</a></ins></li>
-	<li><ins><a href="{self}#info">Edit Products Info</a></ins></li>
+	<li><a href="{self}#info">Edit Products Info</a></li>
 </ul>
 </fieldset>
 </div>
@@ -37,22 +36,23 @@
 	<li>Manufacturer - producer of the product.</li>
 	<li>Keywords - words or phrases that will be used to help users to find products.</li>
 	<li>Mark as featured product - mark the checkbox to set the product's status to {glossary}featured{/glossary}.</li>
+	<li>Allow fractional quantities - enable to stock products in fractional quantitie (e.g. 2.2, 1.9, etc.)</li>
 </ul>
 
-If you have more than one language in your system, you can translate the following details:
-<img src="image/doc/products/edit/translate1.bmp">
-<img src="image/doc/products/edit/translate2.bmp">
 
-<ul>
-	<li>Name</li>
-	<li>Short description</li>
-	<li>Long description</li>
-</ul>
 
 <h3 id="specification">Product specification</h3>
 <p>Product Specification section includes user defined attributes. You can create attributes in the category's <a href="{help /cat.attr}">attributes section</a>.</p>
 <img src="image/doc/products/edit/specifications1.bmp">
 
+If you have more than one language in your system, click on the language tab to translate the following details:
+<img src="image/doc/products/edit/translate.bmp">
+<ul>
+	<li>Name</li>
+	<li>Short description</li>
+	<li>Long description</li>
+	<li>Attributes' titles</li>
+</ul>
 
 <h3 id="stock_pricing">Stock and Pricing</h3>
 
@@ -117,11 +117,11 @@ products that are some way related. To add related products for a particular pro
 	<li>Click "Add Group".</li>
 	<li>Enter group name and click "Save".</li>
 	<li>To place products into groups, simply drag and drop products into appropriate groups.</li>
-<!--
+
 	<img src="image/doc/products/edit/group1.bmp">
--->
+
 </ul>
-<p><ins>Note: the name of the related products' group is not displayed anywhere in e-store.</ins></p>
+<p><ins>Note:</ins> the name of the related products' group is not displayed anywhere in e-store.</p>
 
 <h3 id="options">Files</h3>
 <p>Files are most likely used for digital products such as software, music or any other. To upload files:</p>
@@ -138,11 +138,8 @@ products that are some way related. To add related products for a particular pro
 	<li>To put products into groups, simply drag and drop files into appropriate groups.</li>
 </ul>
 
-<h3 id="operations">Operations</h3>
-<p><ins>Not completed interface</ins></p>
-
 <h3 id="info">Info</h3>
-<p><ins>Not completed interface</ins></p>
+<p>Product's info tab provides brief information about the product (...)</p>
 
 
 {helpSeeAlso}

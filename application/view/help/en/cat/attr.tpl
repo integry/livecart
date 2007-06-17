@@ -86,9 +86,7 @@ examples on how to create attributes and choose attribute types.
 		<li>In the description field we enter a brief description to describe the term "Carrier" which is optional.</li> 	
 		<li>International details - if you need to translate attributes in other languages installed in your system, click the Language to 
 		expand additional fields (which include title and Description).</li>
-
-
-	<img src="image/doc/categories/attributes/attributes_international_details.bmp">
+		<img src="image/doc/categories/attributes/translate.bmp">
 
 The last thing to do is to create Values which will be used as a selection option in the "Add new Product" form. 
 To add values: 

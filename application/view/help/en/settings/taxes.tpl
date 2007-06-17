@@ -1,4 +1,4 @@
-<p>Taxes are used for delivery zones to define variuos tax rates depending on the shipping location.</p>
+<p>Taxes are used for delivery zones to define various tax rates depending on the shipping location.</p>
 
 <div class="tasks">
 <fieldset>

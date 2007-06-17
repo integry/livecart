@@ -35,7 +35,7 @@ are displayed. Each order is characterized by its status:</p>
 	<li>Supply search criteria and press enter:</li>
 	<img src="image/doc/orders/search2.bmp"/>
 	<p>Results that match your criteria appear below. By default orders are displayed from the latest to the oldest as placed in your store.</p>
-	<li>Use "up" and "down" arrows next to appropriate attribute to sort orders ascending or descending.</li>
+	<li>Use the arrowa next to appropriate attribute to sort orders ascending or descending.</li>
 	<img src="image/doc/orders/search3.bmp"/>
 </ul>
 

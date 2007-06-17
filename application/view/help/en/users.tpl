@@ -23,7 +23,7 @@
 	<li>Enter search criteria and press "Enter".</li>
 	<img src="image/doc/users/search2.bmp">
 	<p>Results maching your criteria appears below.</p>
-	<li>You can sort users ascending or descending by selecting "up" or "down" arrows next to appropriate attribute:</li>
+	<li>You can sort users ascending or descending by clicking the arrow next to appropriate attribute:</li>
 	<img src="image/doc/users/sort.bmp">
 	<li>You can also change attributes displayed in the toolbar:</li>
 	<ol>

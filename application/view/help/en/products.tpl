@@ -32,10 +32,10 @@ To start selling goods in your e-store you have to stock up your system with som
 
 <br \>
 
-<h4>(Sort)</h4>
-	<p>LiveCart allows you to <strong>sort</strong> product's almost by any attribute: SKU, name, manufacturer, 
+<h4>Sorting products</h4>
+	<p>LiveCart allows you to sort product's almost by any attribute: SKU, name, manufacturer, 
 	price, stock, status. 
-	To sort products in ascending order click the "up" arrow next to the attribute's name. To display products in descending order click the "down" arrow.</p>
+	To sort products in ascending order click the arrow next to the attribute's name. To display products in descending order click the arrow one more time.</p>
 	<img src="image/doc/products/arrows.bmp"/>
 
 	
