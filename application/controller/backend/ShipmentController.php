@@ -54,7 +54,62 @@ class ShipmentController extends StoreManagementController
 	    $response->setValue('newShipmentForm', $form);
 	    return $response;
 	}
+	
+	public function changeService()
+	{
+	    $shippingService = ShippingService::getInstanceByID((int)$this->request->getValue('serviceID'));
+	    
+	    $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->getValue('id'), true, array('Order' => 'CustomerOrder'));
+	    $shipment->loadItems();
+	    
+        $shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
+        $shipment->setRateId($shippingService->getID());
+        
+        
+	    $shipment->shippingService->set($shippingService);
+        $shipment->recalculateAmounts();
+	    
+	    $shipment->save();
+	    
+	    return new JSONResponse(array('status' => 'suckless'));
+	}
     
+	public function getAvailableServices()
+	{
+	    if($shipmentID = (int)$this->request->getValue('id'))
+	    {
+	        
+	        $shipment = Shipment::getInstanceByID('Shipment', $shipmentID, true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
+            $shipment->loadItems();
+             
+	        $deliveryZone = DeliveryZone::getZoneByAddress($shipment->order->get()->shippingAddress->get());
+	        
+	        $shippingServices = array();
+            $shipment->setAvailableRates($deliveryZone->getShippingRates($shipment));
+	        foreach($deliveryZone->getShippingServices() as $service)
+	        {
+                $shipment->setRateId($service->getID());
+                if($shipment->getSelectedRate())
+                {
+                    $shipment->recalculateAmounts();
+                    $shippingServices[$service->getID()] = $service->toArray();
+                    $shippingServices[$service->getID()]['shipment'] = array(
+		                'ID' => $shipment->getID(),
+		                'amount' => $shipment->amount->get(),
+		                'shippingAmount' => $shipment->shippingAmount->get(),
+		                'totalAmount' => $shipment->shippingAmount->get() + $shipment->amount->get(),
+		                'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
+		                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
+		            );
+                }
+	        }
+	        
+	        return new JSONResponse(array(
+		        'services' => $shippingServices, 
+            ));
+	    }
+	}
+	
 	private function createShipmentForm()
 	{
 		return new Form($this->createShipmentFormValidator());

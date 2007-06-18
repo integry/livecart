@@ -65,7 +65,7 @@ class Shipment extends ActiveRecordModel
 		    $filter = new ARSelectFilter();
 			$filter->setCondition(new EqualsCond(new ARFieldHandle('OrderedItem', 'shipmentID'), $this->getID()));
 		
-			foreach(OrderedITem::getRecordSet('OrderedItem', $filter) as $item)
+			foreach(OrderedItem::getRecordSet('OrderedItem', $filter) as $item)
 			{
 			    $this->items[] = $item;
 			}
@@ -328,7 +328,7 @@ class Shipment extends ActiveRecordModel
         $currency = $this->order->get()->currency->get();
         $this->amountCurrency->set($currency);
         $this->amount->set($this->getSubTotal($currency, self::WITHOUT_TAXES));
-       
+        
         // total taxes
         $taxes = 0;
         foreach ($this->getTaxes() as $tax)

@@ -70,24 +70,39 @@
 
 
 
+    
+<fieldset class="error" style="text-align: right;">
+    <span class="activeForm_progress"></span>
+    <input type="submit" class="button submit" value="{t _save}" />
+    {t _or}
+    <a href="#cancel" class="cancel">{t _cancel}</a>
+</fieldset>
+
+
+
 
 {literal}
 <script type="text/javascript">
     Backend.OrderedItem.Links = {};
     Backend.OrderedItem.Links.remove             = '{/literal}{link controller=backend.orderedItem action=delete}{literal}';
-    Backend.OrderedItem.Links.changeShipment    = '{/literal}{link controller=backend.orderedItem action=changeShipment}{literal}';
+    Backend.OrderedItem.Links.changeShipment     = '{/literal}{link controller=backend.orderedItem action=changeShipment}{literal}';
+    Backend.OrderedItem.Links.addProduct         = '{/literal}{link controller=backend.productRelationship action=selectProduct}#cat_1#tabProducts__{literal}';
+    Backend.OrderedItem.Links.createNewItem      = '{/literal}{link controller=backend.orderedItem action=create}{literal}';
 
     Backend.Shipment.Links = {};
-    Backend.Shipment.Links.update     = '{/literal}{link controller=backend.shipment action=update}{literal}';
-    Backend.Shipment.Links.create     = '{/literal}{link controller=backend.shipment action=create}{literal}';
-    Backend.Shipment.Links.remove   = '{/literal}{link controller=backend.shipment action=delete}{literal}';
-    Backend.Shipment.Links.edit     = '{/literal}{link controller=backend.shipment action=edit}{literal}';
+    Backend.Shipment.Links.update               = '{/literal}{link controller=backend.shipment action=update}{literal}';
+    Backend.Shipment.Links.create               = '{/literal}{link controller=backend.shipment action=create}{literal}';
+    Backend.Shipment.Links.remove               = '{/literal}{link controller=backend.shipment action=delete}{literal}';
+    Backend.Shipment.Links.edit                 = '{/literal}{link controller=backend.shipment action=edit}{literal}';
+    Backend.Shipment.Links.getAvailableServices = '{/literal}{link controller=backend.shipment action=getAvailableServices}{literal}';
+    Backend.Shipment.Links.changeService        = '{/literal}{link controller=backend.shipment action=changeService}{literal}';
     
     Backend.Shipment.Messages = {};
     Backend.Shipment.Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_group|addslashes}{literal}'
     
     Backend.OrderedItem.Messages = {};
     Backend.OrderedItem.Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete|addslashes}{literal}';
+    Backend.OrderedItem.Messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
     
     try
     {
@@ -103,14 +118,33 @@
             newForm.showNewForm();
         });   
 
-        {/literal}    
-        var groupList = ActiveList.prototype.getInstance('orderShipments_list_{$orderID}', Backend.Shipment.Callbacks);  
-        {foreach item="shipment" from=$shipments}
-            console.info($('orderShipmentsItems_list_{$orderID}_{$shipment.ID}'))
-            ActiveList.prototype.getInstance('orderShipmentsItems_list_{$orderID}_{$shipment.ID}', Backend.OrderedItem.activeListCallbacks);
-        {/foreach}
+        
+        var groupList = ActiveList.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{literal}', Backend.Shipment.Callbacks);  
+        {/literal}{foreach item="shipment" from=$shipments}{literal}
+            ActiveList.prototype.getInstance('{/literal}orderShipmentsItems_list_{$orderID}_{$shipment.ID}{literal}', Backend.OrderedItem.activeListCallbacks);
+            
+            
+        Event.observe("{/literal}orderShipment_change_usps_{$shipment.ID}{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS();  });
+        Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_submit{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS();  });       
+        Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_cancel{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS(true);  });
+        Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_select{literal}", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').USPSChanged();  });
+            
+        Event.observe($("{/literal}orderShipment_addProduct_{$shipment.ID}{literal}"), 'click', function(e) {
+            Event.stop(e);
+            new Backend.OrderedItem.SelectProductPopup(
+                Backend.OrderedItem.Links.addProduct, 
+                Backend.OrderedItem.Messages.selectProductTitle, 
+                {
+                    onProductSelect: function() { 
+                        Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').addNewProductToShipment(this.productID, {/literal}{$orderID}{literal}); 
+                    }
+                }
+            );
+        });
+        
+        {/literal}{/foreach}{literal}
         groupList.createSortable();
-        {literal}
+        
     }
     catch(e)
     {

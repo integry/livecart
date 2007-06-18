@@ -1,3 +1,8 @@
+<form>
+    <input type="hidden" name="ID" value="{$shipment.ID}"}
+    <input type="hidden" name="orderID" value="{$shipment.Order.ID}"}
+    <input type="hidden" name="shippingServiceID" value="{$shipment.ShippingService.ID}"}
+
 <table class="orderShipmentsItem_info orderShipment_info">
     <tr style="display: none;">
         <td class="orderShipmentsItem_info_report_td">
@@ -20,7 +25,17 @@
     <tr>
         <td class="orderShipmentsItem_info_report_td">
             <div class="orderShipmentsItem_info_report">
-                {t _shipping} ({t _usps_priority}): <a href="#change">({t _change_usps_priority})</a>
+                {t _shipping} ({t _usps_priority}): 
+                <a href="#change" class="orderShipment_change_usps" id="orderShipment_change_usps_{$shipment.ID}">({t _change_usps_priority})</a>
+                
+                <span class="controls" id="orderShipment_USPS_{$shipment.ID}" style="display: none">
+                    <select name="USPS" id="orderShipment_USPS_{$shipment.ID}_select"> </select>
+                
+                    <span class="activeForm_progress"/>
+                    <input type="submit" value="Save" class="button submit"  id="orderShipment_USPS_{$shipment.ID}_submit" />
+                    or
+                    <a class="cancel" href="#cancel"  id="orderShipment_USPS_{$shipment.ID}_cancel" >Cancel</a>
+                </span>
             </div>
         </td>
         <td class="orderShipmentsItem_info_total_td">
@@ -52,10 +67,4 @@
     </tr>
 </table>
 
-    
-<fieldset class="error" style="text-align: right;">
-    <span class="activeForm_progress"></span>
-    <input type="submit" class="button submit" value="{t _save}" />
-    {t _or}
-    <a href="#cancel" class="cancel">{t _cancel}</a>
-</fieldset>
+</form>

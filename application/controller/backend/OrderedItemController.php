@@ -3,6 +3,8 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
 ClassLoader::import("application.model.order.*");
 ClassLoader::import("application.model.Currency");
 ClassLoader::import("library.*");
+ClassLoader::import("framework.request.validator.RequestValidator");
+ClassLoader::import("framework.request.validator.Form");
 
 /**
  * ...
@@ -14,6 +16,54 @@ ClassLoader::import("library.*");
  */
 class OrderedItemController extends StoreManagementController
 {
+    public function create()
+    {
+        $order = CustomerOrder::getInstanceById((int)$this->request->getValue('orderID'));
+        $product = Product::getInstanceById((int)$this->request->getValue('productID'));
+        $item = OrderedItem::getNewInstance($order, $product);
+        $item->count->set(1);
+        
+        return $this->save($item);
+    }
+    
+    public function update()
+    {
+        
+    }
+    
+    private function save(OrderedItem $item)
+    {
+        $validator = $this->createOrderedItemValidator();
+        if($validator->isValid())
+        {
+	        if($count = (int)$this->request->getValue('count'))
+	        {
+	            $item->count->set($count);
+	        }
+	        
+	        $item->save();
+	        
+            return new JSONResponse(array('status' => 'succsess', 'item' => $item->toArray()));
+        }
+        else
+        {
+            return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
+        }
+    }
+    
+    /**
+     * @return RequestValidator
+     */
+    private function createOrderedItemValidator()
+    {
+		$validator = new RequestValidator('orderedItem', $this->request);
+		$validator->addCheck('productID', new MinValueCheck('_err_invalid_product', 0));
+		$validator->addCheck('orderID', new MinValueCheck('_err_invalid_customer_order', 0));
+		$validator->addCheck('count', new MinValueCheck('_err_count_should_be_more_than_zero', 0));
+		
+		return $validator;
+    }
+    
     /**
      * Delete filter from database
      * 
