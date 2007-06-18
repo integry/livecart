@@ -4,10 +4,11 @@ ClassLoader::import("application.model.ActiveRecordModel");
 ClassLoader::import("application.model.role.*");
 
 /**
- * Users group
+ * All users can be assigned to a group. Assigning users to a group is necessary to provide admin
+ * privileges for a user. User access privileges can be modified and fine-grained at the user group level.
  *
- * @package application.model.user
- *
+ * @package application.model.role
+ * @author Integry Systems <http://integry.com> 
  */
 class UserGroup extends ActiveRecordModel 
 {

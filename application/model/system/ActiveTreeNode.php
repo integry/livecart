@@ -48,7 +48,7 @@ ClassLoader::import("application.model.ActiveRecordModel");
  * </code>
  *
  * @link http://www.sitepoint.com/article/hierarchical-data-database/
- * @author Saulius Rupainis <saulius@integry.net>
+ * @author Integry Systems <http://integry.com>  
  * @package application.model.system
  *
  */

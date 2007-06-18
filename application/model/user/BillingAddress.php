@@ -5,7 +5,8 @@ ClassLoader::import('application.model.user.UserAddressType');
 /**
  * Customer billing address
  *
- * @package application.model.category
+ * @package application.model.user
+ * @author Integry Systems <http://integry.com>
  */
 class BillingAddress extends UserAddressType
 {

@@ -3,9 +3,9 @@
 ClassLoader::import("application.model.ActiveRecordModel");
 
 /**
- * Language model
+ * System language logic - adding, removing or enabling languages.
  *
- * @author Rinalds Uzkalns
+ * @author Integry Systems <http://integry.com>  
  * @package application.model.system
  */
 class Language extends ActiveRecordModel

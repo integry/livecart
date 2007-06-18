@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Top-level model class for Store related logic
+ * Top-level model class for Store related logic. One of the main classes for retrieving system data - 
+ * available languages, currencies, payment handlers, shipping services, etc.
  *
+ * @author Integry Systems <http://integry.com>  
  * @package application.model.system
- * @author Integry Systems
- *
  */
 class Store
 {

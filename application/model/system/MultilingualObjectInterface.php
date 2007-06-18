@@ -3,7 +3,7 @@
 /**
  * Interface for multilingual record manipulation
  *
- * @author Saulius Rupainis
+ * @author Integry Systems <http://integry.com>  
  * @package application.model.system
  */
 interface MultilingualObjectInterface

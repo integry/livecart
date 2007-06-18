@@ -2,9 +2,10 @@
 ClassLoader::import("application.model.delivery.DeliveryZone");
 
 /**
- * 
+ * Country assignment to a DeliveryZone 
  *
  * @package application.model.delivery
+ * @author Integry Systems <http://integry.com> 
  */
 class DeliveryZoneCountry extends ActiveRecordModel 
 {

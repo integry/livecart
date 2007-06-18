@@ -6,6 +6,7 @@ ClassLoader::import("application.model.delivery.State");
  * Customer billing or shipping address
  *
  * @package application.model.user
+ * @author Integry Systems <http://integry.com> 
  */
 class UserAddress extends ActiveRecordModel
 {

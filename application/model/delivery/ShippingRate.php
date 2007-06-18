@@ -4,9 +4,21 @@ ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.delivery.*");
 
 /**
- * Hierarchial product category model class
+ * Define rules for shipping cost calculation, which can be based on shipment weight, subtotal,
+ * number of items, etc. Each ShippingRate entity defines one concrete shipping cost calculation
+ * formula for a defined shipping weight or subtotal interval. ShippingRate's belong to ShippingService
+ * entities.
+ *
+ * Shipping rate is being calculated as follows:
+ *
+ * weight based rates:
+ *     rate = flatCharge + (itemCount * perItemCharge) + (shipmentWeight * perKgCharge)
+ *
+ * subtotal based rates:
+ *     rate = flatCharge + (itemCount * perItemCharge) + (shipmentSubtotal * subtotalPercentCharge)
  *
  * @package application.model.delivery
+ * @author Integry Systems <http://integry.com> 
  */
 class ShippingRate extends MultilingualObject 
 {

@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * Page template file logic - saving and retrieving template code.
+ *
+ * There are two sets of template files active at the same time:
+ *	
+ *		1) application.view - default view template files
+ *		2) storage.customize - edited template files.
+ *
+ * This system allows to modify template files without overwriting the existing ones, among other benefits.
+ *
+ * @package application.model.template
+ * @author Integry Systems <http://integry.com>
+ */
 class Template
 {
 	private $code;

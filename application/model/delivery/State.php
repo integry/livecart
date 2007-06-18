@@ -1,9 +1,13 @@
 <?php
 
 /**
- * Country states/provinces
+ * Pre-defined address state/province. When there are states defined for a country the system
+ * will always offer to select the address from a drop-down list. Otherwise the user has to
+ * enter the address manually. It would be a good idea to pre-define states for the countries
+ * your store serves (the ones that bring the most orders).
  *
- * @package application.model.category
+ * @package application.model.delivery
+ * @author Integry Systems <http://integry.com>
  */
 class State extends ActiveRecordModel
 {

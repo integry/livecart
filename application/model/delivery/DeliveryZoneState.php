@@ -1,11 +1,12 @@
 <?php
-ClassLoader::import("application.model.delivery.DeliveryZoneCountry");
+
 ClassLoader::import("application.model.delivery.DeliveryZone");
 
 /**
- * 
+ * State assignment to a DeliveryZone 
  *
  * @package application.model.delivery
+ * @author Integry Systems <http://integry.com> 
  */
 class DeliveryZoneState extends ActiveRecordModel 
 {

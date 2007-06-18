@@ -3,7 +3,8 @@
 /**
  * Static site pages (shipping information, contact information, terms of service, etc.)
  *
- * @package application.model.delivery
+ * @package application.model.staticpage
+ * @author Integry Systems <http://integry.com>  
  */
 class StaticPage extends MultilingualObject
 {

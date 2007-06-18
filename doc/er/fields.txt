@@ -219,3 +219,99 @@ companyName - Users company name
 dateCreated - The date the users account was created
 isEnabled - Determines if the user account is enabled
 isAdmin - ?
+
+* UserAddress
+stateID - Pre-defined address state/province ID. If the customers address is in a country for which the states are not defined, the value of this field would be NULL instead and the value would be entered in the stateName field.
+firstName - Customers first name
+lastName - Customers last name
+companyName - Customers company name
+address1 - First address line
+address2 - Second address line
+city - Address city
+stateName - Address state name (entered only if pre-defined states are not available for this country)
+postalCode - Postal/ZIP code
+countryID - 2-letter country code
+phone - Phone number
+
+* BillingAddress
+userID - ID of the User that is associated to the address
+userAddressID - ID of the UserAddress entity
+
+* ShippingAddress
+userID - ID of the User that is associated to the address
+userAddressID - ID of the UserAddress entity
+
+* UserGroup
+name - User group name
+description - User group description
+
+* Role
+name - Role package name (for example, backend.category.add)
+
+* AccessControlAssociation
+roleID - Referenced Role ID
+userGroupID - Referenced UserGroup ID
+
+* DeliveryZone
+isEnabled - Determines if the particular delivery zone is enabled
+isFreeShipping - Determines if free shipping is available for this delivery zone
+name - Delivery zone name
+
+* State
+countryID - 2-letter country code
+code - State code (for example, FL for Florida, etc.)
+name - State name
+subdivisionType - For US states, the value for this field would be "State", for Canadian provinces, it would be "Province"
+
+* DeliveryZoneState
+deliveryZoneID - ID of the referenced DeliveryZone
+stateID - ID of the referenced State
+
+* DeliveryZoneCountry
+deliveryZoneID - ID of the referenced DeliveryZone
+countryID - 2-letter country code
+
+* DeliveryZoneCityMask
+deliveryZoneID - ID of the referenced DeliveryZone
+mask - City name mask. For example, "New Y*k" or "New Y" would match "New York".
+
+* DeliveryZoneZipMask
+deliveryZoneID - ID of the referenced DeliveryZone
+mask - ZIP/postal code mask. For example, "90*" would match "90210".
+
+* DeliveryZoneAddressMask
+deliveryZoneID - ID of the referenced DeliveryZone
+mask - Address mask. For example, "5th Avenue".
+
+* ShippingService
+deliveryZoneID - ID of the referenced DeliveryZone
+name - Service name (translatable). For example, "Next Day Delivery"
+position - Sort order in relation to other ShippingServices
+rangeType - 0 - weight based range 1 - subtotal based range
+
+* ShippingRate
+shippingServiceID - ID of the referenced ShippingService
+weightRangeStart - Lowest allowed shipment weight for the ShippingRate entity to be applicable
+weightRangeEnd - Highest allowed shipment weight for the ShippingRate entity to be applicable
+subtotalRangeStart - Lowest allowed shipment subtotal (in base Currency) for the ShippingRate entity to be applicable
+subtotalRangeEnd - Highest allowed shipment subtotal (in base Currency) for the ShippingRate entity to be applicable
+flatCharge - Constant flat fee (in base Currency) that does not change if shipment weight or subtotal is changed
+perItemCharge - Fixed charge per each item (in base Currency)
+subttotalPercentCharge - Fee calculation as a percentage of a subtotal
+perKgCharge - Charge per each kg of weight
+
+* Tax
+isEnabled - Determines whether the particular Tax is enabled
+name - Tax name (translatable). For example, "VAT"
+
+* TaxRate
+taxID - ID of the referenced Tax
+deliveryZoneID - ID of the referenced DeliveryZone
+rate - Tax rate. For example, 20, to set a 20% rate.
+
+* StaticPage
+handle - URL slug. For example, for Terms Of Service page it could be "terms.of.service"
+title - Page title (translatable)
+text - Page text (translatable)
+isInformationBox - Determines if a link to the page is being displayed in the "Information Box" menu
+position - Sort order in relation to other StaticPages

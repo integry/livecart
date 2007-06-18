@@ -2,9 +2,12 @@
 ClassLoader::import("application.model.delivery.DeliveryZone");
 
 /**
- * 
+ * Match an address to delivery zone by address mask string. For example, "5th Avenue" would match all addresses
+ * within the 5th Avenue. The address mask usually has to be used together with other masks or state/country
+ * rules to make sure an address from a wrong country doesn't get matched.
  *
  * @package application.model.delivery
+ * @author Integry Systems <http://integry.com> 
  */
 class DeliveryZoneAddressMask extends ActiveRecordModel 
 {

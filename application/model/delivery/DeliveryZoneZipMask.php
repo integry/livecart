@@ -2,9 +2,12 @@
 ClassLoader::import("application.model.delivery.DeliveryZone");
 
 /**
- * 
+ * Match an address to delivery zone by postal code mask string. For example, "90*" would match "90210".
+ * The postal code mask usually has to be used together with state/country
+ * rules to make sure an address from a wrong country doesn't get matched.
  *
  * @package application.model.delivery
+ * @author Integry Systems <http://integry.com> 
  */
 class DeliveryZoneZipMask extends ActiveRecordModel 
 {

@@ -4,7 +4,8 @@ ClassLoader::import("application.model.ActiveRecordModel");
 ClassLoader::import("application.framework.role.*");
 
 /**
- * Roles
+ * Roles allow to fine-grain user (UserGroup) access to controller classes and methods.
+ * For the time being the roles are only used for the backend area.
  *
  * @package application.model.roles
  */

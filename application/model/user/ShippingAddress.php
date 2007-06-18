@@ -6,6 +6,7 @@ ClassLoader::import('application.model.user.UserAddressType');
  * Customer shipping address
  *
  * @package application.model.user
+ * @author Integry Systems <http://integry.com>
  */
 class ShippingAddress extends UserAddressType
 {

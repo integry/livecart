@@ -4,9 +4,10 @@ ClassLoader::import("application.model.delivery.*");
 ClassLoader::import("application.model.tax.*");
 
 /**
- * Hierarchial product category model class
+ * Defines a tax rate for a DeliveryZone. Tax rates are applied to order totals and shipping charges as well.
  *
- * @package application.model.delivery
+ * @package application.model.tax
+ * @author Integry Systems <http://integry.com>  
  */
 class TaxRate extends MultilingualObject
 {

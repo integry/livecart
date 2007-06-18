@@ -4,6 +4,14 @@ ClassLoader::import('library.shipping.ShippingRateSet');
 ClassLoader::import('library.shipping.ShippingRateResult');
 ClassLoader::import('application.model.delivery.ShippingService');
 
+/**
+ * Shipping cost calculation result for a particular Shipment. One Shipment can have several
+ * ShipmentDeliveryRates - one for each available shipping service. Customer is able to choose between
+ * the available rates. ShipmentDeliveryRate can be either a pre-defined rate or a real-time rate.
+ *
+ * @package application.model.delivery
+ * @author Integry Systems <http://integry.com> 
+ */
 class ShipmentDeliveryRate extends ShippingRateResult
 {
     protected $amountWithTax;

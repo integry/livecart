@@ -4,9 +4,15 @@ ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.delivery.*");
 
 /**
- * Hierarchial product category model class
+ * Pre-defined shipping service plan, that is assigned to a particular DeliveryZone. 
+ * Each ShippingService entity can contain several ShippingRate entities to determine
+ * the actual shipping rates.
+ *
+ * In addition to pre-defined rates, it is also possible to use real-time shipping
+ * rate calculation with integrated postal company web services.
  *
  * @package application.model.delivery
+ * @author Integry Systems <http://integry.com> 
  */
 class ShippingService extends MultilingualObject 
 {

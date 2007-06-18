@@ -2,9 +2,12 @@
 ClassLoader::import("application.model.delivery.DeliveryZone");
 
 /**
- * 
+ * Match an address to delivery zone by city name mask string. For example, "New Y*k" or "New Y" would 
+ * match "New York". The city name mask usually has to be used together with other masks or state/country
+ * rules to make sure an address from a wrong country doesn't get matched.
  *
  * @package application.model.delivery
+ * @author Integry Systems <http://integry.com> 
  */
 class DeliveryZoneCityMask extends ActiveRecordModel 
 {

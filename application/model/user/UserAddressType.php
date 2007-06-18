@@ -3,9 +3,11 @@
 ClassLoader::import('application.model.user.UserAddress');
 
 /**
- * Abstract implementation of customer billing or shipping address
+ * Abstract implementation of customer billing or shipping address. A customer can have several
+ * billing and shipping addresses.
  *
- * @package application.model.category
+ * @package application.model.user
+ * @author Integry Systems <http://integry.com> 
  */
 abstract class UserAddressType extends ActiveRecordModel
 {

@@ -4,9 +4,19 @@ ClassLoader::import("application.model.delivery.*");
 ClassLoader::import('library.shipping.ShippingRateSet');
 
 /**
- * Hierarchial product category model class
+ * Delivery zones are used to classify shipping locations, which allows to define different
+ * shipping rates and taxes for different delivery addresses.
+ *
+ * Delivery zone is determined automatically when user proceeds with the checkout and enters
+ * the shipping address. In case no rules match for the shipping zone, the default delivery
+ * zone is used.
+ *
+ * The delivery zone address rules can be set up in several ways - by assigning whole countries
+ * or states or by defining mask strings, that allow to recognize addresses by city names, postal
+ * codes or even street addresses.
  *
  * @package application.model.delivery
+ * @author Integry Systems <http://integry.com>
  */
 class DeliveryZone extends MultilingualObject 
 {

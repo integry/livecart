@@ -1,12 +1,10 @@
 <?php
 
-ClassLoader::import("application.model.tax.*");
-ClassLoader::import("application.model.delivery.*");
-
 /**
- * Taxes
+ * Intermediate entity for assigning Roles to UserGroups.
  *
- * @package application.model.tax
+ * @package application.model.role
+ * @author Integry Systems <http://integry.com> 
  */
 class AccessControlAssociation extends ActiveRecordModel 
 {
@@ -64,8 +62,6 @@ class AccessControlAssociation extends ActiveRecordModel
 	{
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
-
-	
 
 	/**
 	 * Load groups to roles associations from database using specified role

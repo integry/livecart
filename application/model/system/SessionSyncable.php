@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * A common interface for objects that can be stored to session
+ *
+ * @author Integry Systems <http://integry.com>  
+ * @package application.model.system
+ */
 interface SessionSyncable
 {
     /**

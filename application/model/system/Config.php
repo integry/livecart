@@ -1,9 +1,10 @@
 <?php
 
 /**
- * System configuration container
+ * System configuration manager
  *
  * @package application.model.system
+ * @author Integry Systems <http://integry.com>  
  */
 class Config
 {

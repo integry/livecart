@@ -4,9 +4,10 @@ ClassLoader::import("application.model.tax.*");
 ClassLoader::import("application.model.delivery.*");
 
 /**
- * Taxes
+ * Defines a tax. Actual tax rates have to be defined for each DeliveryZone separately.
  *
  * @package application.model.tax
+ * @author Integry Systems <http://integry.com>  
  */
 class Tax extends MultilingualObject 
 {
@@ -35,7 +36,7 @@ class Tax extends MultilingualObject
 	}
 	
 	/**
-	 * Create new tax rate
+	 * Create new tax
 	 * 
 	 * @param string $$defaultLanguageName Type name spelled in default language
 	 * @return Tax
