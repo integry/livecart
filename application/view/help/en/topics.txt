@@ -1,6 +1,6 @@
 =LiveCart Help
 
-	cat=Product Categories
+	categories=Product Categories
 		details=Category Details
 		attr=Attributes
 		filters=Filters

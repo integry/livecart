@@ -1,18 +1,21 @@
+<h2>Introduction</h2>
+<ol>
+	<li><a href="{help /x}">Installation</a></li>
+	<li><a href="{help /x}">Setting up the store</a></li>
+</ol>
+
 <h2>Store Management</h2>
 <ol>
-	<li><a href="{help products}">Products and Categories</a></li>
-	<li><a href="{help orders}">Orders</a></li>
-	<li><a href="{help payments}">Payments</a></li>
-	<li><a href="{help shipments}">Shipments</a></li>
-	<li><a href="{help users}">Users</a></li>
+	<li><a href="{help /categories}">Categories</a></li>
+	<li><a href="{help /products}">Products</a></li>
+	<li><a href="{help /orders}">Orders</a></li>
+	<li><a href="{help /users}">Users</a></li>
 </ol>
 
 <h2>Customization and Configuration</h2>
 <ol>
-	<li><a href="{help custmode}">Customization Mode</a></li>
-	<li><a href="{help templates}">Page Templates</a></li>
-	<li><a href="{help skins}">Skins</a></li>
-	<li><a href="{help language}">Languages</a></li>
+	<li><a href="{help /settings}">Settings</a></li>
+	<li><a href="{help /customize}">Customization</a></li>
 </ol>
 
 {*

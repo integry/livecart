@@ -82,9 +82,9 @@
 
 
 {helpSeeAlso}
-	{see cat.details}
+	{see categories.details}
 	{see products}
-	{see cat.attr}
-	{see cat.filters}
-	{see cat.images}
+	{see categories.attr}
+	{see categories.filters}
+	{see categories.images}
 {/helpSeeAlso}
