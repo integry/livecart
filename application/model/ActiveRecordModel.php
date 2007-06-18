@@ -15,6 +15,7 @@ ActiveRecord::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DI
  * application specific model class hierarchy)
  *
  * @package application.model
+ * @author Integry Systems <http://integry.com>    
  */
 abstract class ActiveRecordModel extends ActiveRecord
 {	
@@ -53,7 +54,6 @@ abstract class ActiveRecordModel extends ActiveRecord
 	
 	protected static function transformArray($array, $className)
 	{
-
     	$dateTransform = array
     	(		
     		'time_full' => Locale::FORMAT_TIME_FULL,
@@ -64,8 +64,7 @@ abstract class ActiveRecordModel extends ActiveRecord
     		'date_long' => Locale::FORMAT_DATE_LONG,
     		'date_medium' => Locale::FORMAT_DATE_MEDIUM,
     		'date_short' => Locale::FORMAT_DATE_SHORT,		
-    	);
-    
+    	);    
 
 		foreach (self::getSchemaInstance($className)->getFieldsByType('ARDateTime') as $field)
 		{
@@ -89,8 +88,6 @@ abstract class ActiveRecordModel extends ActiveRecord
 			}
 				
 			$array['formatted_' . $name] = $res;
-	
-	//	var_dump($res);
 		}	
 		
 		return parent::transformArray($array, $className);

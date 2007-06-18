@@ -2,15 +2,16 @@
 
 ClassLoader::import("application.model.system.Language");
 ClassLoader::import("application.model.system.MultilingualObject");
-
 ClassLoader::import("application.model.category.*");
 ClassLoader::import("application.model.specification.*");
 ClassLoader::import("application.model.product.*");
 
 /**
- * Store product (item)
+ * One of the main entities of the system - defines and handles product related logic.
+ * This class allows to assign or change product attribute values, product files, images, related products, etc.
  *
  * @package application.model.product
+ * @author Integry Systems <http://integry.com>   
  */
 class Product extends MultilingualObject
 {

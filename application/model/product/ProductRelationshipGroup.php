@@ -1,6 +1,14 @@
 <?php
+
 ClassLoader::import("application.model.product.ProductParametersGroup");
 
+/**
+ * Groups related products. This is useful when there are several different related products assigned
+ * to one product, so similar products could be grouped together.
+ * 
+ * @package application.model.product
+ * @author Integry Systems <http://integry.com>   
+ */
 class ProductRelationshipGroup extends ProductParametersGroup 
 {
 	private static $nextPosition = false;

@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Date attribute value assigned to a particular product.
+ * 
+ * @package application.model.specification
+ * @author Integry Systems <http://integry.com>   
+ */
 class SpecificationDateValue extends ValueSpecification
 {
 	public static function defineSchema($className = __CLASS__)

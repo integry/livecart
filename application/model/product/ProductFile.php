@@ -1,9 +1,15 @@
 <?php
 
 ClassLoader::import("application.model.ObjectFile");
+
 /**
- *
+ * Defines a file that is assigned to a particular product. This is mostly needed for 
+ * tangible (downloadable) products. Multiple files can be assigned to one product and
+ * related files can be grouped together using ProductFileGroup, which is useful if there
+ * are many files assigned to the same product.
+ * 
  * @package application.model.product
+ * @author Integry Systems <http://integry.com>   
  */
 class ProductFile extends ObjectFile 
 {

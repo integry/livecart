@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * E-mail handler
+ *
+ * @package application.model
+ * @author Integry Systems <http://integry.com>   
+ */
 class Email
 {
     public static $connection;

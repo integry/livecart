@@ -4,7 +4,12 @@ ClassLoader::import('application.model.product.ProductPrice');
 ClassLoader::import('application.model.Currency');
 
 /**
- *	A container class containing product prices in all currencies
+ * Product pricing logic. Allows to modify product prices and calculates prices for other currencies
+ * if a price is not defined for a particular currency. This class usually should not be used directly
+ * as the Product class provides most of the methods necessary for pricing manipulation.
+ *
+ * @package application.model.product
+ * @author Integry Systems <http://integry.com>   
  */
 class ProductPricing
 {

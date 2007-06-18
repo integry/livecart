@@ -3,6 +3,13 @@
 ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("library.image.ImageManipulator");
 
+/**
+ * Generic associated image handler. Images can be associated to products, categories and possibly
+ * other entities in the future
+ *
+ * @package application.model
+ * @author Integry Systems <http://integry.com>   
+ */
 abstract class ObjectImage extends MultilingualObject
 {
 	abstract public static function getImageSizes();

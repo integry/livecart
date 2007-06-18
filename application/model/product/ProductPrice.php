@@ -4,10 +4,11 @@ ClassLoader::import("application.model.ActiveRecordModel");
 ClassLoader::import("application.model.Currency");
 
 /**
- * Product price class
- * Prices can be entered in different currencies
+ * Product price class. Prices can be entered in different currencies. 
+ * Each instance of ProductPrice determines product price in a particular currency.
  *
  * @package application.model.product
+ * @author Integry Systems <http://integry.com>   
  */
 class ProductPrice extends ActiveRecordModel
 {

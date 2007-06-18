@@ -6,11 +6,11 @@ ClassLoader::import("application.model.order.Shipment");
 ClassLoader::import("application.model.system.SessionSyncable");
 ClassLoader::import("application.model.delivery.ShipmentDeliveryRate");
 
-
 /**
- * Represents customers order - products placed in shopping basket
+ * Represents customers order - products placed in shopping basket or wish list
  *
  * @package application.model.order
+ * @author Integry Systems <http://integry.com> 
  */
 class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 {
@@ -866,9 +866,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     public function resetShipments()
     {
         $this->shipments = array();
-    }
-
-    
+    }    
 }
 	
 ?>

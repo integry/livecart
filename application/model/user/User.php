@@ -6,11 +6,10 @@ ClassLoader::import("application.model.user.ShippingAddress");
 ClassLoader::import("application.model.user.UserGroup");
 
 /**
- * Store user base class (including frontend and backend)
+ * Store user logic (including frontend and backend), including authorization and access control checking
  *
  * @package application.model.user
- * @author Integry Systems
- *
+ * @author Integry Systems <http://integry.com>
  */
 class User extends ActiveRecordModel
 {
@@ -128,7 +127,7 @@ class User extends ActiveRecordModel
 	}
     
 	/**
-	 * Get current user
+	 * Get current user (from session)
 
 	 * @return User
 	 */

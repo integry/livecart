@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * String attribute value assigned to a particular product.
+ * 
+ * @package application.model.specification
+ * @author Integry Systems <http://integry.com>   
+ */
 class SpecificationStringValue extends ValueSpecification
 {
 	public static function defineSchema($className = __CLASS__)
@@ -37,21 +43,6 @@ class SpecificationStringValue extends ValueSpecification
 		$currentValue[$langCode] = $value;
 		$this->value->set($currentValue);
 	}
-
-/*
-	public function toArray()
-	{
-		$ret = parent::toArray();
-
-		if (!is_array($ret['value']))
-		{
-			$ret['value'] = array(Store::getInstance()->getLocaleCode() => $ret['value']);
-		}
-
-	  	$ret['value_lang'] = $ret['value'][Store::getInstance()->getLocaleCode()];
-	  	return $ret;
-	}	
-*/
 }
 
 ?>

@@ -6,6 +6,7 @@ ClassLoader::import("application.model.product.Product");
  * Represents a shopping basket item (one or more instances of the same product)
  *
  * @package application.model.order
+ * @author Integry Systems <http://integry.com> 
  */
 class OrderedItem extends ActiveRecordModel
 {

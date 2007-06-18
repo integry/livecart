@@ -6,12 +6,10 @@ ClassLoader::import("application.model.product.*");
 include_once('Specification.php');
 
 /**
- * Product specification data container
- * Contains a relation between specification fields (attributes), assigned values and products
- * (kind of "feature table")
+ * Links a pre-defined attribute value to a product
  *
- * @author Saulius Rupainis <saulius@integry.net>
- * @package application.model.product
+ * @package application.model.specification
+ * @author Integry Systems <http://integry.com>   
  */
 class SpecificationItem extends Specification
 {

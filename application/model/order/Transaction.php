@@ -3,13 +3,16 @@
 ClassLoader::import("application.model.product.Product");
 
 /**
- * Represents a financial transaction, which can be:
+ * Represents a financial/monetary transaction, which can be:
  *    
  *      a) customers payment for ordered items
  *      b) capture transaction to request authorized funds
  *      c) void transaction to cancel an earlier transaction
  *
+ * The transaction must be assigned to a concrete CustomerOrder
+ *
  * @package application.model.order
+ * @author Integry Systems <http://integry.com>   
  */
 class Transaction extends ActiveRecordModel
 {

@@ -1,6 +1,11 @@
 <?php
-class ProductRelationshipException extends ApplicationException { }
 
+/**
+ * Assigns a related (recommended) product to a particular product
+ * 
+ * @package application.model.product
+ * @author Integry Systems <http://integry.com>   
+ */
 class ProductRelationship extends ActiveRecord 
 {
 	public static function defineSchema($className = __CLASS__)
@@ -8,9 +13,9 @@ class ProductRelationship extends ActiveRecord
 		$schema = self::getSchemaInstance($className);
 		$schema->setName("ProductRelationship");
 
-		$schema->registerField(new ARPrimaryForeignKeyField("productID", 		"Product",   	 	   "ID", "Product", ARInteger::instance()));
-		$schema->registerField(new ARPrimaryForeignKeyField("relatedProductID", "Product", 			   "ID", "Product", ARInteger::instance()));
-		$schema->registerField(new ARForeignKeyField("productRelationshipGroupID", 	"ProductRelationshipGroup", "ID", "ProductRelationshipGroup", ARInteger::instance()));
+		$schema->registerField(new ARPrimaryForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
+		$schema->registerField(new ARPrimaryForeignKeyField("relatedProductID", "Product", "ID", "Product", ARInteger::instance()));
+		$schema->registerField(new ARForeignKeyField("productRelationshipGroupID", "ProductRelationshipGroup", "ID", "ProductRelationshipGroup", ARInteger::instance()));
 		$schema->registerField(new ARField("position",  ARInteger::instance()));
 	}
 	
@@ -45,7 +50,8 @@ class ProductRelationship extends ActiveRecord
 	{
 		if(null == $product || null == $related || $product === $related || $product->getID() == $related->getID())
 		{
-		    throw new ProductRelationshipException('Expected two different products when creating a relationship');
+		    require_once('ProductRelationshipException.php');
+			throw new ProductRelationshipException('Expected two different products when creating a relationship');
 		}
 		
 	    $relationship = parent::getNewInstance(__CLASS__);

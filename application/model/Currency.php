@@ -1,10 +1,13 @@
 <?php
 
 /**
- * Currency model
+ * Defines a system currency. There can be multiple currencies active at the same time.
+ * This allows to define product prices in different currencies or convert the prices
+ * automatically using the currency rates. In addition to product prices, shipping rates,
+ * taxes and other charges can also be converted to other currencies using the currency rates.
  *
  * @package application.model
- * @author Rinalds Uzkalns <rinalds@integry.net>
+ * @author Integry Systems <http://integry.com>   
  */
 class Currency extends ActiveRecordModel
 {

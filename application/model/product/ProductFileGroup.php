@@ -1,6 +1,14 @@
 <?php
+
 ClassLoader::import("application.model.product.ProductParametersGroup");
 
+/**
+ * Related ProductFiles can be grouped together using ProductFileGroup, which is useful if there
+ * are many files assigned to the same product.
+ * 
+ * @package application.model.product
+ * @author Integry Systems <http://integry.com>   
+ */
 class ProductFileGroup extends ProductParametersGroup
 {
 	private static $nextPosition = false;
@@ -87,7 +95,8 @@ class ProductFileGroup extends ProductParametersGroup
 		return $filter;
 	}
 	
-	public function getFiles($loadReferencedRecords = false) {
+	public function getFiles($loadReferencedRecords = false) 
+	{
 	    return ProductFile::getRecordSet($this->getFilesFilter(), $loadReferencedRecords);
 	}
 	

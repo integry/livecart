@@ -3,11 +3,13 @@
 ClassLoader::import("application.model.specification.SpecificationItem");
 
 /**
- * Product specification wrapper class
- * Loads/modifies product specification data
+ * Product specification wrapper class. Loads/modifies product specification data.
  *
- * @author Integry Systems
+ * This class usually should not be used directly as most of the attribute manipulations
+ * can be done with Product class itself.
+ *
  * @package application.model.product
+ * @author Integry Systems <http://integry.com>   
  */
 class ProductSpecification
 {
@@ -96,8 +98,7 @@ class ProductSpecification
 	}
 
 	public function isAttributeSet(SpecField $field)
-	{
-		
+	{		
 		return isset($this->attributes[$field->getID()]);  
 	}
 	

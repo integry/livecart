@@ -1,10 +1,16 @@
 <?php
 
 ClassLoader::import("application.model.system.MultilingualObject");
-ClassLoader::import("library.image.ImageManipulator");
 
 class ObjectFileException extends ApplicationException { }
 
+/**
+ * Generic associated file handler. Files can be associated to products, articles and possibly
+ * other entities in the future
+ *
+ * @package application.model
+ * @author Integry Systems <http://integry.com>   
+ */
 abstract class ObjectFile extends MultilingualObject
 {    		
 	private $sourceFilePath = false;

@@ -1,12 +1,11 @@
 <?php
 
 /**
- * Product specification data container
- * Contains a relation between specification fields (attributes), assigned values and products
- * (kind of "feature table")
+ * An attribute value that is assigned to a particular product.
+ * Concrete attribute value types (string, number, date, etc.) are defined by subclasses.
  *
- * @author Saulius Rupainis <saulius@integry.net>
- * @package application.model.product
+ * @package application.model.specification
+ * @author Integry Systems <http://integry.com>   
  */
 abstract class ValueSpecification extends Specification
 {

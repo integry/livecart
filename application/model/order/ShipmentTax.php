@@ -4,9 +4,11 @@ ClassLoader::import("application.model.order.Shipment");
 ClassLoader::import("application.model.tax.TaxRate");
 
 /**
- * Tax amount for a particular shipment
+ * Tax amount for a particular shipment. One shipment can have multiple taxes, depending on
+ * how they are set up for a particular system.
  *
  * @package application.model.order
+ * @author Integry Systems <http://integry.com>   
  */
 class ShipmentTax extends ActiveRecordModel
 {

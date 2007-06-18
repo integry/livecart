@@ -1,0 +1,221 @@
+* Filter
+filterGroupID - The FilterGroup ID the particular Filter belongs to
+name - Filter name (translatable)
+position - Sort order in relation to other Filters than belong to the same FilterGroup
+type - ?
+rangeStart - Range interval starting value for numeric values. Use NULL if there's no starting value (negative infinity).
+rangeEnd - Range interval ending value for numeric values. Use NULL if there's no ending value (infinity).
+rangeDateStart - Range interval starting value for date values. Use NULL if there's no starting value (negative infinity).
+rangeDateEnd - Range interval ending value for date values. Use NULL if there's no ending value (infinity).
+
+* FilterGroup
+specFieldID - The attribute (SpecField) ID the particular FilterGroup is being based on
+name - FilterGroup name (translatable)
+position - Sort order in relation to other FilterGroups
+isEnabled - Determine if the FilterGroup is active
+
+* SpecField
+categoryID - The Category the particular SpecField (attribute) belongs to
+specFieldGroupID - SpecFieldGroup ID if the attribute is being grouped together with other related attributes. If the attribute is not grouped, the value is NULL.
+name - Attribute name (translatable)
+description - Attribute description / explanation (translatable)
+type - Attribute type. Available types: 1. selector (numeric) 2. input (numeric) 3. input (text) 4. editor (text) 5. selector (text) 6. Date
+dataType - 1. text 2. numeric
+position - Sort order in relation to other SpecFields
+handle - ?
+isMultiValue - Determines if multiple values can be selected for selector attributes
+isRequired - Determines if a value has to be provided/entered for this attribute when creating or updating product information
+isDisplayed - Determines if the attribute value is displayed in product page
+isDisplayedInList - Determines if the attribute value is displayed in a category/search page (attribute summary)
+valuePrefix - Fixed prefix for all numeric values
+valueSuffix - Fixed suffix for all numeric values (for example, sec, kg, px, etc.)
+
+* SpecFieldGroup
+categoryID - The Category the particular SpecFieldGroup (attribute group) belongs to
+name - Group name (translatable)
+position - Sort order in relation to other groups
+
+* SpecFieldValue
+specFieldID - The attribute (SpecField) ID the particular value is assigned to
+value - The actual attribute value (translatable)
+position - Sort order in relation to other values that are assigned to the same attribute
+
+* Category
+parentNodeID - Parent Category ID (1 for top level categories, NULL for root category)
+defaultImageID - ID of CategoryImage, which has been designated as the default image for the particular category
+name - Category name (translatable)
+description - Category description (translatable)
+keywords - Category keywords (translatable) - used for meta tags
+activeProductCount - Count of total active (enabled products)
+totalProductCount - Count of all products (enabled and disabled)
+availableProductCount - Count of all products that are available for purchasing (enabled and in stock)
+isEnabled - Determines if the Category is enabled (visible and available in the store frontend)
+handle - ??
+lft - Determines category order in tree
+rgt - Determines category order in tree
+
+* CategoryImage
+categoryID - The Category the particular image belongs to
+title - Image name (translatable)
+position - Sort order in relation to other images that are assigned to the same category (the first image is the default one)
+
+* SpecificationItem
+specFieldValueID - ID of the pre-defined attribute value (SpecFieldValue)
+productID - ID of the product the value is linked to
+specFieldID - ID of the attribute (SpecField)
+
+* SpecificationNumericValue
+productID - ID of the product the value is linked to
+specFieldID - ID of the attribute (SpecField)
+value - The actual attribute value (numeric) assigned to a particular product
+
+* SpecificationStringValue
+productID - ID of the product the value is linked to
+specFieldID - ID of the attribute (SpecField)
+value - The actual attribute value (string) assigned to a particular product
+
+* SpecificationDateValue
+productID - ID of the product the value is linked to
+specFieldID - ID of the attribute (SpecField)
+value - The actual attribute value (date) assigned to a particular product
+
+* Manufacturer
+name - Name (brand name) of the manufacturer
+
+* Product
+categoryID - The Category the product belongs to
+manufacturerID - ID of the assigned manufacturer
+defaultImageID - ID of ProductImage, which has been designated as the default image for the particular product
+isEnabled - Determines if the Product is enabled (visible and available in the store frontend)
+sku - Product stock keeping unit code
+name - Product name (translatable)
+shortDescription - A shorter description of the product (translatable). The short description is usually displayed in the category product list
+longDescription - A longer description of the product (translatable). The long description is usually displayed in the product detail page
+keywords - Additional product search keywords, which may not be included in the product name or description, but can be used when a customer searches for a product
+dateCreated - Product creation date
+dateUpdated - Product last update date
+URL - External website URL (manufacturers website, etc.)
+isFeatured - Determines if the product has been marked as featured product
+type - Determines if the product is intangible (1) or tangible (0)
+voteSum - Sum of all rating votes
+voteCount - Count of all rating votes
+rating - Product rating (voteSum divided by voteCount)
+hits - Number of times the product has been viewed by customers
+minimumQuantity - Minimum amount of the product that can be ordered
+shippingSurchargeAmount - Additional surcharge for shipping (extra large, etc. items)
+isSeparateShipment - Determines if a separate shipment is required for delivering this product
+isFreeShipping - Determines if free shipping is available for this product
+isBackOrderable - Determines if this product is available for backordering. If backordering is enabled, customers can order the product even if it is out of stock
+shippingWeight - Weight of the product (including shipping wrappers, etc). This value is used for calculating the shipping rates.
+stockCount - Number of products in stock
+reservedCount - Number of products that are reserved (ordered and in stock but not delivered yet)
+salesRank - Number of products sold
+
+* ProductImage
+productID - The Product the particular image belongs to
+title - Image name (translatable)
+position - Sort order in relation to other images that are assigned to the same product (the first image is the default one)
+
+* ProductFile
+productID - The Product the particular file belongs to
+productFileGroupID - ID of the ProductFileGroup - if the product is assigned to one (grouped together with related files)
+fileName - File name (the actual filename)
+extension - File type (for example, zip, mp3, exe, etc.)
+title - File title (short description, translatable)
+description - File description (translatable)
+position - Sort order in relation to other ProductFiles that are assigned to the same product
+allowDownloadDays - Allow customer to download the product only for a certain number of days after placing the order
+
+* ProductFileGroup
+productID - The Product the file group belongs to
+name - File group name (translatable)
+position - Sort order in relation to other ProductFileGroups that are assigned to the same product
+
+* ProductRelationShip
+productID - The Product the related Product is assigned to
+relatedProductID - ID of the related Product
+productRelationshipGroupID - ID of the ProductRelationshipGroup - if the related product is assigned to one (grouped together with similar products)
+
+* ProductPrice
+productID - The Product the price is being defined for
+currencyID - Price Currency ID
+price - The actual price value
+
+* Currency
+rate - Currency rate in relation to the base (default) currency
+lastUpdate - The date the rate was last updated
+isDefault - Determines if the currency is the base (default) currency
+position - Sort order in relation to other Currencies
+pricePrefix - Used for price formatting. Symbols to place before price price, for example $, etc.
+priceSuffix - Used for price formatting. Symbols to place after the price - usually the currency code itself
+
+* CustomerOrder
+userID - ID of user the order is assigned to
+billingAddressID - ID of order billing address
+shippingAddressID - ID of order shipping address
+currencyID - ID of currency used to finalize the order
+dateCreated - Initial order creation date
+dateCompleted - The date the order was finalized (completed checkout)
+totalAmount - Order total amount, including taxes and shipping costs
+capturedAmount - The amount that is captured from customers credit card
+isFinalized - Determines if the order is completed (completed checkout)
+isPaid - Determines if the order has been fully paid
+isCancelled - Determines if the order is cancelled
+status - 1 - backordered 2 - awaiting shipment 3 - shipped 4 - returned
+shipping - serialized PHP shipping rate data
+
+* OrderedItem
+productID - ID of ordered Product
+customerOrderID - ID of order the item is assigned to
+shipmentID - ID of the shipment the item is assigned to (when the order has been finalized)
+priceCurrencyID - ID of the active currency at the time the customer added the product to shopping cart
+count - Amount of ordered Products
+reservedProductCount - Amount of reserved Products from inventory (stock)
+dateAdded - Date when the product was added to shopping cart
+price - Product item price at the time the product was added to shopping cart
+isSavedForLater - Determines if the product has been added to shopping cart or to a wish list
+
+* Shipment
+orderID - ID of order the shipment is assigned to
+shippingServiceID - ID of the selected ShippingService for this item. In case a real-time shipping rate service is used, the value for this field would be NULL
+amount - Total product price amount
+shippingAmount - Shipping price amount
+taxAmount - Total associated tax amount
+amountCurrencyID - ID of the currency the shipment amounts are refered to
+status - 0 - new 1 - pending 2 - awaiting shipment 3 - shipped 4 - confirmed as delivered 5 - confirmed as lost
+dateShipped - Date the product was shipped to customer
+trackingCode - Online tracking code for this shipment
+shippingServiceData	- Serialized ShipmentDeliveryRate class data - for real-time shipping rates only
+
+* Transaction
+orderID - ID of order the transaction is assigned to
+parentTransactionID - If the transaction relies on some other transaction (for example, captures funds that were authorized earlier or voids a transaction), the ID of that transaction
+amount - Transaction amount
+currencyID - Transaction currency ID/code
+time - Date and time of the transaction
+method - Payment method class name (for example, PaypalDirectPayment)
+gatewayTransactionID - ID that was assigned to this transaction by the payment gateway. This ID is needed if any child transactions (capture or void) are going to be performed
+type - 0 - sale (authorize & capture) 1 - authorize 2 - capture 3 - void
+isCompleted - Determines if the transaction has been completely finalized (no more captures possible)
+isCreditCard - Determines if it is a credit card transaction
+ccExpiryYear - Credit card expiration year
+ccExpiryMonth - Credit card expiration month
+ccLastDigits - Last 4 digits of credit card number
+
+* ShipmentTax
+taxRateID - ID of the TaxRate that is being applied to the shipment
+shipmentID - ID of the shipment the tax is being applied to
+amount - Tax amount
+
+* User
+defaultBillingAddressID - ID of users default billing address
+defaultShippingAddressID - ID of users default shipping address
+userGroupID - ID of UserGroup if the user is assigned to one
+email - Users e-mail address. E-mail address must be unique and it is used for authorization (instead of a login name).
+password - Users password, encoded with MD5
+firstName - First name
+lastName - Last name
+companyName - Users company name
+dateCreated - The date the users account was created
+isEnabled - Determines if the user account is enabled
+isAdmin - ?

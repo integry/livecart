@@ -1,9 +1,11 @@
 <?php
 
 /**
- *
+ * Category product filter. Generates ARSelectFilter object for selecting products
+ * according to defined conditions (category, applied filters, etc)
+ * 
  * @package application.model.product
- *
+ * @author Integry Systems <http://integry.com>   
  */
 class ProductFilter
 {

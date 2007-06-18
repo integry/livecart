@@ -3,8 +3,12 @@
 ClassLoader::import("application.model.ActiveRecordModel");
 
 /**
+ * Defines a product manufacturer. Each product can be assigned to one manufacturer.
+ * Keeping manufacturers as a separate entity allows to manipulate them more easily and
+ * provide more effective product filtering (search by manufacturers).
  *
  * @package application.model.product
+ * @author Integry Systems <http://integry.com>   
  */
 class Manufacturer extends ActiveRecordModel
 {

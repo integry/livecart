@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Links multiple pre-defined attribute values (of the same attribute) to a product
+ *
+ * @package application.model.specification
+ * @author Integry Systems <http://integry.com>   
+ */
 class MultiValueSpecificationItem implements iSpecification
 {
 	protected $items = array();
@@ -148,8 +154,7 @@ class MultiValueSpecificationItem implements iSpecification
 		}
 		
 		$this->removedItems = array();
-	}
-	
+	}	
 }
 
 ?>

@@ -1,7 +1,11 @@
 <?php
 
 /**
- *	Calculates the number of products found in categories by filters, manufacturers, price intervals, search queries, etc.
+ * Calculates the number of products found in categories by filters, manufacturers, 
+ * price intervals, search queries, etc.
+ *
+ * @package application.model.product
+ * @author Integry Systems <http://integry.com>   
  */
 class ProductCount
 {
@@ -76,7 +80,6 @@ class ProductCount
 			$filter = $this->productFilter->getSelectFilter();
 			$filter->joinTable('Category', 'Product', 'ID', 'categoryID');
 			return ActiveRecordModel::getRecordCount('Product', $filter);
-			//return $this->productFilter->getCategory()->getProductCount($this->productFilter);
 		}
 	}
 	
@@ -141,11 +144,6 @@ class ProductCount
         return $data;
 	}
 
-	public function getCountBySubCategories()
-	{
-	  
-	}
-	
 	private function getCountByFilterSet($filters)
 	{
 		$selectFilter = $this->productFilter->getSelectFilter();		
