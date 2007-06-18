@@ -2,6 +2,13 @@
 
 ClassLoader::import('application.model.filter.SpecificationFilterInterface');
 
+/**
+ * Filter product list by selector attribute value. SelectorFilters are being generated automatically based on
+ * the available attribute values.
+ *
+ * @package application.model.filter
+ * @author Integry Systems <http://integry.com>
+ */
 class SelectorFilter implements SpecificationFilterInterface
 {
 	private $specFieldValue;

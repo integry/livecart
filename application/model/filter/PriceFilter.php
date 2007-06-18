@@ -2,6 +2,12 @@
 
 ClassLoader::import('application.model.filter.FilterInterface');
 
+/**
+ * Filter product list by price. Price intervals are pre-defined (for now).
+ *
+ * @package application.model.filter
+ * @author Integry Systems <http://integry.com>
+ */
 class PriceFilter implements FilterInterface
 {
     private $filterID = 0;

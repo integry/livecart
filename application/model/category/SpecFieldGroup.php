@@ -5,9 +5,10 @@ ClassLoader::import("application.model.category.Category");
 ClassLoader::import("application.model.system.ActiveRecordGroup");
 
 /**
- * Specification field class
+ * SpecFieldGroups allow to group related attributes (SpecFields) together.
  *
  * @package application.model.category
+ * @author Integry Systems <http://integry.com>
  */
 class SpecFieldGroup extends MultilingualObject 
 {

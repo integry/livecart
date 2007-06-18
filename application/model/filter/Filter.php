@@ -7,13 +7,19 @@ ClassLoader::import('application.model.category.SpecField');
 ClassLoader::import('application.model.category.SpecFieldValue');
 
 /**
- *
- * @package application.model.category
+ * Filters allow to filter the product list by specific product attribute values.
+ * Common Filters (that are based on the same attribute) are grouped into FilterGroups.
+ * 
+ * There are several other types of filters, but Filter class defines filters for attributes
+ * that can be filtered by a value range (weight, size, date, etc.)
+ * 
+ * @package application.model.filter
+ * @author Integry Systems <http://integry.com>
  */
 class Filter extends MultilingualObject implements SpecificationFilterInterface
 {
     /**
-     * Define filter schema
+     * Define Filter schema
      */
 	public static function defineSchema()
 	{

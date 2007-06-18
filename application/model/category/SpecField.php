@@ -6,9 +6,14 @@ ClassLoader::import("application.model.category.SpecFieldGroup");
 ClassLoader::import('application.model.specification.*');
 
 /**
- * Specification field class
+ * Specification attributes allow to define specific product models with a specific set of features or parameters.
+ *
+ * Each SpecField is a separate attribute. For example, screen size for laptops, ISBN code for books, 
+ * horsepowers for cars, etc. Since SpecFields are linked to categories, products from different categories can
+ * have different set of attributes.
  *
  * @package application.model.category
+ * @author Integry Systems <http://integry.com>
  */
 class SpecField extends MultilingualObject
 {

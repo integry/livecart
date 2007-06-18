@@ -2,6 +2,12 @@
 
 ClassLoader::import('application.model.filter.FilterInterface');
 
+/**
+ * Filter product list by manufacturer. The manufacturer filters are generated automatically.
+ *
+ * @package application.model.filter
+ * @author Integry Systems <http://integry.com>
+ */
 class ManufacturerFilter implements FilterInterface
 {
     private $manufacturerID = 0;

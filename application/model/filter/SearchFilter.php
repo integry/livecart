@@ -2,6 +2,12 @@
 
 ClassLoader::import('application.model.filter.FilterInterface');
 
+/**
+ * Filter product list by search keyword.
+ *
+ * @package application.model.filter
+ * @author Integry Systems <http://integry.com>
+ */
 class SearchFilter implements FilterInterface
 {
     private $query;

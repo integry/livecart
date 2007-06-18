@@ -1,13 +1,18 @@
 <?php
+
 ClassLoader::import("application.model.system.ActiveTreeNode");
 ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.category.CategoryImage");
 ClassLoader::import("application.model.filter.*");
 
 /**
- * Hierarchial product category model class
+ * Hierarchial product category structure.
+ *
+ * Each product belongs to one particular category. The category structure has a root node (ID = 1).
+ * The category tree is based on a modified preordered tree traversal model (http://www.sitepoint.com/article/hierarchical-data-database/2)
  *
  * @package application.model.category
+ * @author Integry Systems <http://integry.com>  
  * @todo Update product counts when category is moved
  */
 class Category extends ActiveTreeNode implements MultilingualObjectInterface
@@ -106,25 +111,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 		return $filter;
 	}
-
-/*	
-	public function testGetProductArray(ARSelectFilter $filter, $loadSpecification = false)
-	{
-		// get specification fields
-		if ($loadSpecification)
-		{
-			$specFields = $this->getSpecificationFieldSet(self::INCLUDE_PARENT);	  
-		}	  	
-	
-		ClassLoader::import('application.model.product.Product');
-		
-		$cond = new EqualsCond(new ARFieldHandle('Product', 'categoryID'), $this->getID());
-		$filter->setCondition($cond);
-	
-		return ActiveRecordModel::getRecordSet('Product', $filter, true, true);
-	
-	}
-*/
 
 	/**
 	 * Gets a list of products assigned to this node

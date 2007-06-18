@@ -1,8 +1,10 @@
 <?php
 
+ClassLoader::import('application.model.ObjectImage');
 
 /**
- *
+ * Category image (icon)
+ * 
  * @package application.model.category
  */
 class CategoryImage extends ObjectImage

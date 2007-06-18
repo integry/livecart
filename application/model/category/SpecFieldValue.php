@@ -3,9 +3,13 @@
 ClassLoader::import("application.model.system.MultilingualObject");
 
 /**
- * Specification field value class
+ * Attribute selector value. The same selector value can be assigned to multiple products and usually
+ * can be selected from a list of already created values when entering product information - as opposed to
+ * input values (numeric or string) that are related to one product only. The advantage of selector values
+ * is that they can be used to create product Filters, while input string (SpecificationStringValues) can not.
  *
  * @package application.model.category
+ * @author Integry Systems <http://integry.com> 
  */
 class SpecFieldValue extends MultilingualObject
 {

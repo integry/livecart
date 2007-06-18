@@ -1,10 +1,14 @@
 <?php
+
 ClassLoader::import("application.model.system.MultilingualObject");
 
 /**
- * Filter group model
+ * Filters allow to filter the product list by specific product attribute values.
+ * FilterGroup is a container of Filters that are based on the same attribute.
+ * For selector attribute values, the Filters are generated automatically.
  *
- * @package application.model.category
+ * @package application.model.filter
+ * @author Integry Systems <http://integry.com>
  */
 class FilterGroup extends MultilingualObject
 {
