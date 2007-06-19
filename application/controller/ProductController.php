@@ -97,15 +97,29 @@ class ProductController extends FrontendController
     {
 		// get related products
 		$related = $product->getRelatedProductsWithGroupsArray();
+
 		$rel = array();
 		foreach ($related as $r)
 		{
-			$rel[] = $r['RelatedProduct'];	
+			$p = $r['RelatedProduct'];
+            if (isset($r['ProductRelationshipGroup']))
+            {
+                $p['ProductRelationshipGroup'] = $r['ProductRelationshipGroup'];                
+            }
+            $rel[] = $p;	
 		}
 		
-		ProductPrice::loadPricesForRecordSetArray($rel);
+        ProductPrice::loadPricesForRecordSetArray($rel);
 
-        return $rel;        
+		// sort related products into groups
+        $byGroup = array();
+		foreach ($rel as $r)
+		{
+            $groupID = isset($r['ProductRelationshipGroup']) ? $r['ProductRelationshipGroup']['ID'] : 0;
+            $byGroup[$groupID][] = $r;
+        }
+        
+        return $byGroup;
     }
 }
 

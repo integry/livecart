@@ -749,6 +749,11 @@ ul.productList a.addToCart
     text-align: right;
 }
 
+#mainInfo td.websiteUrl
+{
+    text-align: center;
+}
+
 .price
 {
 	font-weight: bold;

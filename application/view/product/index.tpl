@@ -94,12 +94,20 @@
 				<td class="param">{t SKU}:</td>
 				<td class="value">{$product.sku}</td>
 			</tr>
+
 			{if $product.stockCount}
 			<tr>
 				<td class="param">{t In Stock}:</td>
 				<td class="value">{$product.stockCount}</td>
 			</tr>
-			{/if}			
+			{/if}
+
+			{if $product.URL}
+            <tr>
+                <td colspan="2" class="websiteUrl"><a href="{$product.URL}" target="_blank">{t _product_website}</a></td>            
+            </tr>			
+            {/if}
+            
 		</table>	
     </div>
    	
@@ -150,7 +158,15 @@
 	<h2>{t Recommended Products}</h2>
 	<div id="relatedProducts">
 		
-    	{include file="category/productList.tpl" products=$related}
+		{foreach from=$related item=group}
+    	   
+           {if $group.0.ProductRelationshipGroup.name_lang}
+    	       <h3>{$group.0.ProductRelationshipGroup.name_lang}</h3>
+    	   {/if}
+    	   
+           {include file="category/productList.tpl" products=$group}
+           
+    	{/foreach}
 		
 	</div>
 	{/if}
