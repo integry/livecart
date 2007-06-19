@@ -74,9 +74,9 @@
         <td class="orderShipmentsItem_info_total_td">
             <div class="orderShipmentsItem_info_total orderShipment_totalSum">
                 <span class="orderShipment_info_total shipment_total">
-                    <span class="pricePrefix">{if $shipment.shippingAmount !== null && $shipment.amount !== null}{$shipment.AmountCurrency.pricePrefix}{/if}</span>
-                    <span class="price">{if $shipment.shippingAmount !== null && $shipment.amount !== null}{math equation="x + y" x=$shipment.shippingAmount y=$shipment.amount}{/if}</span>
-                    <span class="priceSuffix">{if $shipment.shippingAmount !== null && $shipment.amount !== null}{$shipment.AmountCurrency.priceSuffix}{/if}</span>
+                    <span class="pricePrefix">{if $shipment.shippingAmount !== null && $shipment.amount !== null && $shipment.taxAmount !== null}{$shipment.AmountCurrency.pricePrefix}{/if}</span>
+                    <span class="price">{if $shipment.shippingAmount !== null && $shipment.amount !== null && $shipment.taxAmount !== null}{math equation="x + y + z" x=$shipment.shippingAmount y=$shipment.amount z=$shipment.taxAmount}{/if}</span>
+                    <span class="priceSuffix">{if $shipment.shippingAmount !== null && $shipment.amount !== null && $shipment.taxAmount !== null}{$shipment.AmountCurrency.priceSuffix}{/if}</span>
                 </span>
             </div>
         </td>

@@ -60,7 +60,7 @@
             
             <ul id="orderShipmentsItems_list_{$orderID}_{$shipment.ID}" class="activeList_add_sort activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem">
             {foreach item="item" from=$shipment.items}
-                <li id="orderShipmentsItems_list_{$item.ID}_{$shipment.ID}_{$item.ID}" >
+                <li id="orderShipmentsItems_list_{$orderID}_{$shipment.ID}_{$item.ID}" >
                     {include file="backend/shipment/itemAmount.tpl"}
                 </li>
             {/foreach}
@@ -101,7 +101,6 @@
      
     Backend.Shipment.Messages = {};
     Backend.Shipment.Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_group|addslashes}{literal}'
-    
     Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToAwaiting = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_awaiting|addslashes}{literal}'
     Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToPending = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_pending|addslashes}{literal}'
     Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToNew = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_new|addslashes}{literal}'
@@ -109,8 +108,9 @@
     Backend.Shipment.Messages.youWontBeAableToRevertStatusFromShipped = '{/literal}{t _you_wont_be_able_to_revert_status_from_shipped|addslashes}{literal}'
     
     Backend.OrderedItem.Messages = {};
-    Backend.OrderedItem.Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete|addslashes}{literal}';
+    Backend.OrderedItem.Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_item|addslashes}{literal}';
     Backend.OrderedItem.Messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
+    Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount = '{/literal}{t _are_you_realy_want_to_update_items_count|addslashes}{literal}';
     
     try
     {
@@ -157,9 +157,13 @@
             {/literal}{foreach item="item" from=$shipment.items}{literal}
                 $("{/literal}orderShipmentsItem_count_{$item.ID}{literal}").lastValue = $("{/literal}orderShipmentsItem_count_{$item.ID}{literal}").value;
                                 
+                Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'focus', function(e) { window.lastFocusedItemCount = this; });
                 Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'keyup', function(e) { Backend.OrderedItem.updateProductCount({/literal}this, {$orderID}, {$item.ID}, {$shipment.ID}{literal}) });
-                Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'change', function(e) { Backend.OrderedItem.changeProductCount({/literal}this, {$orderID}, {$item.ID}, {$shipment.ID}{literal}) }, false);
-                Event.observe("{/literal}orderShipmentsItems_list_{$item.ID}_{$shipment.ID}_{$item.ID}{literal}", 'click', function(e) { var input = this.down('.orderShipmentsItem_info_count').down('input'); if(input.value != input.lastValue) { input.blur(); } });
+                Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'blur', function(e) { Backend.OrderedItem.changeProductCount({/literal}this, {$orderID}, {$item.ID}, {$shipment.ID}{literal}) }, false);
+                Event.observe("{/literal}orderShipmentsItems_list_{$orderID}_{$shipment.ID}_{$item.ID}{literal}", 'click', function(e) { 
+                    var input = window.lastFocusedItemCount;
+                    if(input && input.value != input.lastValue) { input.blur(); } 
+                });
             {/literal}{/foreach}{literal}
         
         {/literal}{/foreach}{literal}

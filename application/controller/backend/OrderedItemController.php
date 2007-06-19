@@ -18,18 +18,39 @@ class OrderedItemController extends StoreManagementController
 {
     public function create()
     {
-        $shipment = Shipment::getInstanceById('Shipment', (int)$this->request->getValue('shipmentID'), true, array('Order' => 'CustomerOrder', 'AmountCurrency' => 'Currency'));
+        $shipment = Shipment::getInstanceById('Shipment', (int)$this->request->getValue('shipmentID'), true, array('Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency'));
         $product = Product::getInstanceById((int)$this->request->getValue('productID'), true);
-        $order = $shipment->order->get();
-        $currency = $shipment->amountCurrency->get();
         
-        $item = OrderedItem::getNewInstance($order, $product);
-        $item->count->set(1);
-        $item->shipment->set($shipment);
-        $item->priceCurrencyID->set($currency->getID());
-        $item->price->set($product->getPrice($currency->getID()));
-
-        return $this->save($item);
+        $existingItem = false;
+        foreach($shipment->getItems() as $item)
+        {
+            if($item->product->get() === $product)
+            {
+                $existingItem = $item;
+                break;
+            }
+        }
+        
+        if($existingItem)
+        {
+	        $item = $existingItem;
+	        $item->count->set($item->count->get() + 1);
+        }
+        else
+        {
+	        $order = $shipment->order->get();
+	        $currency = $shipment->amountCurrency->get();
+	        
+	        $item = OrderedItem::getNewInstance($order, $product);
+	        $item->count->set(1);
+	        $item->priceCurrencyID->set($currency->getID());
+	        $item->price->set($product->getPrice($currency->getID()));
+	        
+            $shipment->addItem($item);
+            $shipment->save();
+        }
+          
+        return $this->save($item, $existingItem ? true : false );
     }
     
     public function update()
@@ -37,7 +58,7 @@ class OrderedItemController extends StoreManagementController
         
     }
     
-    private function save(OrderedItem $item)
+    private function save(OrderedItem $item, $existingItem = false)
     {
         $validator = $this->createOrderedItemValidator();
         if($validator->isValid())
@@ -47,9 +68,22 @@ class OrderedItemController extends StoreManagementController
 	            $item->count->set($count);
 	        }
 	        
-	        $item->save();
-	        
 	        $shipment = $item->shipment->get();
+	        $shipment->loadItems();
+	        
+	        if(!$existingItem)
+	        {
+	            $shipment->addItem($item);
+	        }
+	        
+	        $shipment->setRateId($shipment->shippingService->get()->getID());
+		    $shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
+	        
+	        $item->save();
+            
+            $shipment->recalculateAmounts();
+            $shipment->save();
+			    
             return new JSONResponse(array(
 	            'status' => 'succsess', 
 	            'item' => array(
@@ -64,9 +98,10 @@ class OrderedItemController extends StoreManagementController
 							                'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
 							                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
 	                                     ),
-	                'count'           => $item->price->get(),
-	                'price'           => $item->count->get(),
-	                'priceCurrencyID' => $item->priceCurrencyID->get()
+	                'count'           => $item->count->get(),
+	                'price'           => $item->price->get(),
+	                'priceCurrencyID' => $item->priceCurrencyID->get(),
+	                'isExisting'	  => $existingItem
 	            )
             ));
         }
@@ -100,9 +135,40 @@ class OrderedItemController extends StoreManagementController
     {
         if($id = $this->request->getValue("id", false))
         {
-            $item = OrderedItem::getInstanceByID('OrderedItem', (int)$key); 
+            $item = OrderedItem::getInstanceByID('OrderedItem', (int)$id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency')); 
+                        
+	        $shipment = $item->shipment->get();
+	        
+	        $shipment->loadItems();
+            $shipment->removeItem($item);
+	        
+	        $shipment->setRateId($shipment->shippingService->get()->getID());
+		    $shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
+	        
             $item->delete();
-            return new JSONResponse(array('status' => 'success'));
+            
+            $shipment->recalculateAmounts();
+            
+            $shipment->save();
+            
+            return new JSONResponse(array(
+	            'status' => 'succsess', 
+	            'item' => array(
+	                'ID'              => $item->getID(),
+	                'Shipment'        => array(
+							                'ID' => $shipment->getID(),
+							                'amount' => $shipment->amount->get(),
+							                'shippingAmount' => $shipment->shippingAmount->get(),
+							                'taxAmount' => $shipment->taxAmount->get(),    
+							                'total' =>((float)$shipment->shippingAmount->get() + (float)$shipment->amount->get() + (float)$shipment->taxAmount->get()),
+							                'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
+							                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
+	                                     ),
+	                'count'           => $item->count->get(),
+	                'price'           => $item->price->get(),
+	                'priceCurrencyID' => $item->priceCurrencyID->get()
+	            )
+            ));
         }
         else
         {
@@ -185,8 +251,9 @@ class OrderedItemController extends StoreManagementController
 
 	public function changeCount()
 	{   
-        if(($id = (int)$this->request->getValue("id", false)) && ($count = (int)$this->request->getValue("count", false)))
+        if(($id = (int)$this->request->getValue("id", false)) )
         {
+            $count = (int)$this->request->getValue("count");
             $item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Shipment', 'Order' => 'CustomerOrder')); 
             $item->count->set($count);
             

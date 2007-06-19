@@ -4,14 +4,23 @@ Backend.OrderedItem = {
         beforeDelete: function(li){ 
             if(confirm(Backend.OrderedItem.Messages.areYouSureYouWantToDelete)) 
             {
-                return Backend.OrderedItem.Links.remove + "/?ShippingID=" + this.getRecordId(li);
+                return Backend.OrderedItem.Links.remove + "/" + this.getRecordId(li);
             }
         },
         afterDelete: function(li, response){
+            response = eval("(" + response + ")");
+            
             if(!response.error) {
                 this.remove(li);
                 var orderID = this.getRecordId(li, 3);
                 Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
+                
+                var shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + response.item.Shipment.ID);
+
+                shipment.setAmount(response.item.Shipment.amount);
+                shipment.setTaxAmount(response.item.Shipment.taxAmount);
+                shipment.setShippingAmount(response.item.Shipment.shippingAmount);
+                shipment.setTotal(response.item.Shipment.total);
             }
         },
         beforeSort: function(li, order){ 
@@ -104,11 +113,12 @@ Backend.OrderedItem = {
     
    changeProductCount: function(input, orderID, itemID, shipmentID)
    {
-       
+       if(input.value == input.lastValue) return;
+
        var price = input.up('tr').down('.orderShipmentsItem_info_price').down('.price');
        var total = input.up('tr').down('.orderShipmentsItem_info_total').down('.price');
        
-       if(confirm('Update count'))
+       if(confirm(Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount))
        {   
            new Ajax.Request(Backend.OrderedItem.Links.changeItemCount + "/" + itemID + "?count=" + input.value, {
                 method: 'post',
@@ -116,14 +126,16 @@ Backend.OrderedItem = {
                     var response = eval("(" + response.responseText + ")");
                     var shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + shipmentID);
                     
+                    shipment.itemsActiveList.highlight($('orderShipmentsItems_list_' + orderID + '_' + shipmentID + '_' + itemID));
+                    
                     shipment.setAmount(response.shipment.amount);
                     shipment.setTaxAmount(response.shipment.taxAmount);
                     shipment.setShippingAmount(response.shipment.shippingAmount);
                     shipment.setTotal(response.shipment.total);
                     
-                   input.lastValue = input.value;
+                    input.lastValue = input.value;
                    
-                   Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
+                    Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
                 }
            });
        }
@@ -191,6 +203,7 @@ Backend.Shipment.prototype =
             this.findUsedNodes(root);
             this.bindEvents();
             this.shipmentsActiveList = ActiveList.prototype.getInstance(this.nodes.shipmentsList);
+            this.itemsActiveList = ActiveList.prototype.getInstance(this.nodes.itemsList);
             
             if(this.nodes.form.elements.namedItem('ID').value)
             {
@@ -229,6 +242,7 @@ Backend.Shipment.prototype =
         }
         
         this.nodes.shipmentsList = $('orderShipments_list_' + this.nodes.form.elements.namedItem('orderID').value);
+        this.nodes.itemsList = this.nodes.root.down('.activeList');
 
         if(!this.nodes.form.elements.namedItem('ID').value)
         {
@@ -359,23 +373,50 @@ Backend.Shipment.prototype =
                
                    if(response.status == 'succsess')
                    {
-                       var itemsList = ActiveList.prototype.getInstance($("productRelationship_list_" + productID + "_"));
-                       var li = itemsList.addRecord(relatedProductID, $("orderShipmentItem_" + self.nodes.form.elements.namedItem('orderID').value + "_empty").innerHTML);
+                       var li = null;
+                       var itemsList = ActiveList.prototype.getInstance($("orderShipmentsItems_list_" + self.nodes.form.elements.namedItem('orderID').value + "_" + self.nodes.form.elements.namedItem('ID').value));
+                           
+                       if(!response.item.isExisting)
+                       {
+                           li = itemsList.addRecord(response.item.ID, $("orderShipmentItem_" + self.nodes.form.elements.namedItem('orderID').value + "_empty").innerHTML);
+                       }
+                       else
+                       {
+                           li = $("orderShipmentsItems_list_" + self.nodes.form.elements.namedItem('orderID').value + "_" + response.item.Shipment.ID + "_" + response.item.ID);
+                       }
                        
                        li.down('.orderShipmentsItem_info_sku').innerHTML = response.item.Product.sku;
                        li.down('.orderShipmentsItem_info_name').innerHTML = response.item.Product.name;
+                       li.down('.orderShipmentsItem_count').value = response.item.count;
                        
                        var price = li.down('.orderShipmentsItem_info_price');
                        price.down('.pricePrefix').innerHTML = response.item.Shipment.prefix;
                        price.down('.price').innerHTML = response.item.price
                        price.down('.priceSuffix').innerHTML = response.item.Shipment.suffix;
                        
-                       li.down('.orderShipmentsItem_count').innerHTML = response.item.count;
-
                        var priceTotal = li.down('.item_subtotal');
                        priceTotal.down('.pricePrefix').innerHTML = response.item.Shipment.prefix;
                        priceTotal.down('.price').innerHTML = Math.round(response.item.price * response.item.count * 100) / 100;
                        priceTotal.down('.priceSuffix').innerHTML = response.item.Shipment.suffix;
+                       
+                       var countInput = li.down('.orderShipmentsItem_count');
+                       countInput.lastValue = countInput.value;
+                       
+                       Event.observe(countInput, 'focus', function(e) { window.lastFocusedItemCount = this; });      
+                       Event.observe(countInput, 'keyup', function(e) { Backend.OrderedItem.updateProductCount(countInput, self.nodes.form.elements.namedItem('orderID').value, response.item.ID, response.item.Shipment.ID) });
+                       Event.observe(countInput, 'blur', function(e) { Backend.OrderedItem.changeProductCount(countInput, self.nodes.form.elements.namedItem('orderID').value, response.item.ID, response.item.Shipment.ID) });
+                       Event.observe(countInput, 'click', function(e) { 
+                           var input = window.lastFocusedItemCount;
+                           if(input.value != input.lastValue) { input.blur(); } 
+                       });
+                       
+                       self.setAmount(response.item.Shipment.amount);
+                       self.setTaxAmount(response.item.Shipment.taxAmount);
+                       self.setShippingAmount(response.item.Shipment.shippingAmount);
+                       self.setTotal(response.item.Shipment.total);
+                       
+                       itemsList.highlight(li)
+                       
                    }
                } 
                catch(e)
@@ -572,33 +613,6 @@ Backend.Shipment.Callbacks =
             this.remove(li);
             var orderID = this.getRecordId(li, 2);
             Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
-        }
-    },
-    
-    beforeEdit:     function(li) 
-    {
-        if(!Backend.Shipment.Controller.prototype.getInstance(li.down('.productRelationshipGroup_form')))
-        {
-            return Backend.Shipment.Links.edit + "/" + this.getRecordId(li);
-        }
-        else
-        {
-            with(Backend.Shipment.Controller.prototype.getInstance(li.down('.productRelationshipGroup_form')))
-            {
-                if('block' != view.nodes.root.style.display) showForm();
-                else hideForm();
-            }
-        }
-    },
-    afterEdit:      function(li, response) 
-    { 
-        try
-        {
-            response = eval("(" + response + ")");
-        }
-        catch(e)
-        {
-            console.info(e);
         }
     }
 }
