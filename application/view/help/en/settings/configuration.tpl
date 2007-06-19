@@ -1,4 +1,4 @@
-<p>Configuration settings are devided into several groups. You can access particular settings by choosing a group.</p> 	
+<p>Configuration settings are devided into several groups. You can access particular settings by clicking a link below.</p> 	
 
 <div class="tasks">
 <fieldset>
@@ -23,8 +23,8 @@
 
 <h3 id="main">Main Settings</h3>
 <ul>
-	<li>Store name - the store name is displayed in your storefrond and is seen by your customers.</li>
-	<li>Translate - click on the language tab to translate store name (if applicable).</li>
+	<li>Store name - the store name is displayed in your storefront and is seen by your customers.</li>
+	<li>Translate - click on the language tab to translate the store name (if applicable).</li>
 </ul>
 
 
@@ -34,35 +34,36 @@
 <img src="image/doc/settings/general.bmp"/>
 
 <ul>
-	<li>Number of products per category page - the number of products displayed in {glossary}product list{/glossary} page.</li>
+	<li>Number of products per category page - the number of products displayed in a {glossary}product list{/glossary} page.</li>
 	<li>Allow sort parameters - mark the parameters by which users will be able to sort products.</li>
 	<li>Default product sort order - click the drop-down list and select the dafault sorting parameter.</li>
 	<li>Display the number of products per category - enables the number of products displayed with a category.</li>
 	<li>Display the number of products per filter - enables the number of products displayed with a filter.</li>
-	<li>Display product thumbnail image in product list - enables small images of products in product list page.</li>
+	<li>Display product thumbnail image in product list - enables small images of products in a product list page.</li>
 </ul>
 
 <h3 id="products">Products</h3>
+<ul>
+	<li>Unit measurement system - click the drop-down list and select one of the unit measurement systems to use for product details <ins>(only for product details?)</ins>. Metric system has units such as "meter", "liter" while English units are "inch", "gallon" etc.</li>
+</ul>	
 
-<p>Unit measurement system - click the drop-down list and select one of the unit measurement systems to use for product details. Metric system has units such as "meter", "liter" while English units are "inch", "gallon" etc.</p>
+
 
 <h3 id="images">Images</h3>
 
 <p>You can set image sizes for products and categories. According to preset image sizes, all the uploaded images will be resized accordingly. You can preset four types of images: small, thumbnail, medium and large. You can also set image quality which affects the size of the image (the better the quality the bigger the size).</p>
 <ul>
-	<li>Small images are tiny winy images which are displayed in the {glossary}product details{/glossary} page.</li>
-	<li>Thumbnail images are displayed in the {glossary}product list{/glossary} page.</li>
+	<li>Small images are tiny winy images which are displayed in a {glossary}product details{/glossary} page.</li>
+	<li>Thumbnail images are displayed in a {glossary}product list{/glossary} page.</li>
 	<li>Medium images are displayed when customers click on the small image in the product details page.</li>
 	<li>Large images are used (...)</li>
 </ul>
 
 <h3 id="product_filters">Filters</h3>
 
-<p>(Here you can define filtering parameters and price filter criteria.)</p>
-
 <ul>
 	<li>Max number of filter criterias to display without expanding - defines how many filtering options are available per one filter without expanding all possible criteria.</li>
-	<li>Price filters are static thus you have to create the same filter's criteria for all product categories:</li>
+	<li>Price filters - there is only one price filter which is used for all categories. Fill out the following fields to define filter's criteria:</li>
 	<img src="image/doc/settings/criterion.bmp"/>
 	<ul>
 		<li>Filter Name - the name of the criterion (for example, "100 to 199")</li>

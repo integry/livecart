@@ -121,7 +121,6 @@ products that are some way related. To add related products for a particular pro
 	<img src="image/doc/products/edit/group1.bmp">
 
 </ul>
-<p><ins>Note:</ins> the name of the related products' group is not displayed anywhere in e-store.</p>
 
 <h3 id="options">Files</h3>
 <p>Files are most likely used for digital products such as software, music or any other. To upload files:</p>
