@@ -126,7 +126,8 @@ class OrderedItemController extends StoreManagementController
 			                'ID' => $oldShipment->getID(),
 			                'amount' => $oldShipment->amount->get(),
 			                'shippingAmount' => $oldShipment->shippingAmount->get(),
-			                'totalAmount' =>((float)$oldShipment->shippingAmount->get() + (float)$oldShipment->amount->get()),
+			                'taxAmount' => $shipment->taxAmount->get(),    
+			                'total' =>((float)$oldShipment->shippingAmount->get() + (float)$oldShipment->amount->get() + (float)$oldShipment->taxAmount->get()),
 			                'prefix' => $oldShipment->amountCurrency->get()->pricePrefix->get(),
 			                'suffix' => $oldShipment->amountCurrency->get()->priceSuffix->get()
 		                ),
@@ -134,7 +135,8 @@ class OrderedItemController extends StoreManagementController
 			                'ID' => $newShipment->getID(),
 			                'amount' =>  $newShipment->amount->get(),
 			                'shippingAmount' =>  $newShipment->shippingAmount->get(),
-			                'totalAmount' => ((float)$newShipment->shippingAmount->get() + (float)$newShipment->amount->get()),
+			                'taxAmount' => $shipment->taxAmount->get(),
+			                'total' => ((float)$newShipment->shippingAmount->get() + (float)$newShipment->amount->get() + (float)$newShipment->taxAmount->get()),
 			                'prefix' => $newShipment->amountCurrency->get()->pricePrefix->get(),
 			                'suffix' => $newShipment->amountCurrency->get()->priceSuffix->get()
 		                )
@@ -153,6 +155,44 @@ class OrderedItemController extends StoreManagementController
         else
         {
             return new JSONResponse(array('status' => 'failure'));
+        }
+	}
+
+	public function changeCount()
+	{
+        if(($id = (int)$this->request->getValue("id", false)) && ($count = (int)$this->request->getValue("count", false)))
+        {
+            $item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Shipment', 'Order' => 'CustomerOrder')); 
+            $item->count->set($count);
+            
+            $shipment = $item->shipment->get();
+		    $shipment->loadItems();
+		    
+	        $shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
+	        $shipment->setRateId($shipment->shippingService->get()->getID());
+	        
+	        $shipment->recalculateAmounts();
+		    
+		    $shipment->save();
+		    
+		    return new JSONResponse(array(
+		        'status' => 'success',
+				'shipment' => array(
+				    'ID' => $shipment->getID(),
+				    'amount' => $shipment->amount->get(),
+				    'shippingAmount' => $shipment->shippingAmount->get(),
+				    'total' =>((float)$shipment->shippingAmount->get() + (float)$shipment->amount->get() + (float)$shipment->taxAmount->get()),
+	                'taxAmount' => $shipment->taxAmount->get(),
+				    'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
+				    'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
+				 )
+			));
+        }
+        else
+        {
+	        return new JSONResponse(array(
+	            'status' => 'failure'
+           ));
         }
 	}
 }

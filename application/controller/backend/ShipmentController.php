@@ -73,7 +73,19 @@ class ShipmentController extends StoreManagementController
 	    
 	    return new JSONResponse(array('status' => 'suckless'));
 	}
-    
+	
+	public function changeStatus()
+	{
+	    $status = (int)$this->request->getValue('status');
+	    
+	    $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->getValue('id'));
+	    $shipment->status->set($status);
+	    
+	    $shipment->save();
+	    
+	    return new JSONResponse(array('status' => 'success'));
+	}
+	
 	public function getAvailableServices()
 	{
 	    if($shipmentID = (int)$this->request->getValue('id'))
@@ -97,7 +109,8 @@ class ShipmentController extends StoreManagementController
 		                'ID' => $shipment->getID(),
 		                'amount' => $shipment->amount->get(),
 		                'shippingAmount' => $shipment->shippingAmount->get(),
-		                'totalAmount' => $shipment->shippingAmount->get() + $shipment->amount->get(),
+		                'taxAmount' => $shipment->taxAmount->get(),
+		                'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$shipment->taxAmount->get(),
 		                'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
 		                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
 		            );
@@ -162,7 +175,8 @@ class ShipmentController extends StoreManagementController
                 'ID' => $shipment->getID(),
                 'amount' => $shipment->amount->get(),
                 'shippingAmount' => $shipment->shippingAmount->get(),
-                'totalAmount' => $shipment->shippingAmount->get() + $shipment->amount->get(),
+                'taxAmount' => $shipment->taxAmount->get(),
+                'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$shipment->taxAmount->get(),
                 'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
                 'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
             )));
@@ -172,6 +186,8 @@ class ShipmentController extends StoreManagementController
 			return new JSONResponse(array('status' => "failure", 'errors' => $validator->getErrorList()));
 		}
     }
+    
+    
 
     public function edit()
     {

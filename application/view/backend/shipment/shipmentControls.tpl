@@ -4,11 +4,10 @@
    </div >
    <fieldset class="orderShipment_status error" style="float: right; text-align: right;">
        <label>Status: </label>
-       <select>
-           <option>New</option>
-           <option>Shipped</option>
-           <option>Backordered</option>
-           <option>Returned</option>
+       <select name="status" id="orderShipment_status_{$shipment.ID}">
+           {foreach key="statusID" item="status" from=$statuses}
+               <option value="{$statusID}" {if $shipment.status == $statusID}selected{/if}>{$status}</option>
+           {/foreach}
        </select>
    </fieldset>
 </fieldset >

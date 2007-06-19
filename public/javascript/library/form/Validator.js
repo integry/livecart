@@ -193,6 +193,19 @@ function NumericFilter(element, params)
 	element.value = dollars;
 }
 
+function IntegerFilter(element, params)
+{
+    element.focus();
+    
+	element.value = element.value.replace(/[^\d]/, '');
+	element.value = element.value.replace(/^0/, '');
+    
+    if(element.value == '') 
+    {
+        element.value = 0;
+    }
+}
+
 function RegexFilter(element, params)
 {
 	var regex = new RegExp(params['regex'], 'gi');

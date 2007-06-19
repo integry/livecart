@@ -1,10 +1,9 @@
-<form>
-    <input type="hidden" name="ID" value="{$shipment.ID}"}
-    <input type="hidden" name="orderID" value="{$shipment.Order.ID}"}
-    <input type="hidden" name="shippingServiceID" value="{$shipment.ShippingService.ID}"}
+<input type="hidden" name="ID" value="{$shipment.ID}"}
+<input type="hidden" name="orderID" value="{$shipment.Order.ID}"}
+<input type="hidden" name="shippingServiceID" value="{$shipment.ShippingService.ID}"}
 
 <table class="orderShipmentsItem_info orderShipment_info">
-    <tr style="display: none;">
+    <tr>
         <td class="orderShipmentsItem_info_report_td">
             <div class="orderShipmentsItem_info_report">
                 {t _subtotal_price}:
@@ -12,9 +11,26 @@
         </td>
         <td class="orderShipmentsItem_info_total_td">
             <div class="orderShipmentsItem_info_total">
-                <span class="orderShipment_info_subtotal">
+                <span class="orderShipment_info_subtotal shipment_amount">
                     <span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
                     <span class="price">{$shipment.amount}</span>
+                    <span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
+                </span>
+            </div>
+        </td>
+    </tr>
+    
+    <tr>
+        <td class="orderShipmentsItem_info_report_td">
+            <div class="orderShipmentsItem_info_report">
+                {t _taxes}:
+            </div>
+        </td>
+        <td class="orderShipmentsItem_info_total_td">
+            <div class="orderShipmentsItem_info_tax">
+                <span class="orderShipment_info_subtotal shipment_taxAmount">
+                    <span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
+                    <span class="price">{$shipment.taxAmount}</span>
                     <span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
                 </span>
             </div>
@@ -40,7 +56,7 @@
         </td>
         <td class="orderShipmentsItem_info_total_td">
             <div class="orderShipmentsItem_info_total">
-                <span class="orderShipment_info_shippingAmount">
+                <span class="orderShipment_info_shippingAmount shipment_shippingAmount">
                     <span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
                     <span class="price">{$shipment.shippingAmount}</span>
                     <span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
@@ -56,8 +72,8 @@
             </div>
         </td>
         <td class="orderShipmentsItem_info_total_td">
-            <div class="orderShipmentsItem_info_total">
-                <span class="orderShipment_info_total">
+            <div class="orderShipmentsItem_info_total orderShipment_totalSum">
+                <span class="orderShipment_info_total shipment_total">
                     <span class="pricePrefix">{if $shipment.shippingAmount !== null && $shipment.amount !== null}{$shipment.AmountCurrency.pricePrefix}{/if}</span>
                     <span class="price">{if $shipment.shippingAmount !== null && $shipment.amount !== null}{math equation="x + y" x=$shipment.shippingAmount y=$shipment.amount}{/if}</span>
                     <span class="priceSuffix">{if $shipment.shippingAmount !== null && $shipment.amount !== null}{$shipment.AmountCurrency.priceSuffix}{/if}</span>

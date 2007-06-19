@@ -37,36 +37,22 @@ Backend.OrderedItem = {
                 try
                 {
                     // Old shipment changes
-                    var oldSubtotal = oldShipmentLi.down('.orderShipment_info_subtotal');
-                        oldSubtotal.down('.pricePrefix').innerHTML = response.oldShipment.prefix;
-                        oldSubtotal.down('.price').innerHTML = parseFloat(response.oldShipment.amount);
-                        oldSubtotal.down('.priceSuffix').innerHTML = response.oldShipment.suffix;
-
-                    var oldShippingAmount = oldShipmentLi.down('.orderShipment_info_shippingAmount');
-                        oldShippingAmount.down('.pricePrefix').innerHTML = response.oldShipment.prefix;
-                        oldShippingAmount.down('.price').innerHTML = parseFloat(response.oldShipment.shippingAmount);
-                        oldShippingAmount.down('.priceSuffix').innerHTML = response.oldShipment.suffix;
-  
-                    var oldTotalAmount = oldShipmentLi.down('.orderShipment_info_total');
-                        oldTotalAmount.down('.pricePrefix').innerHTML = response.oldShipment.prefix;
-                        oldTotalAmount.down('.price').innerHTML = parseFloat(response.oldShipment.totalAmount);
-                        oldTotalAmount.down('.priceSuffix').innerHTML = response.oldShipment.suffix;
+                    $A(["amount", 'shippingAmount', 'taxAmount', 'total']).each(function(type)
+                    {
+                        var price = oldShipmentLi.down(".shipment_" + type);
+                            price.down('.pricePrefix').innerHTML = response.oldShipment.prefix;
+                            price.down('.price').innerHTML = parseFloat(response.oldShipment[type]);
+                            price.down('.priceSuffix').innerHTML = response.oldShipment.suffix;
+                    });
                
                     // New shipment changes
-                    var newSubtotal = newShipmentLi.down('.orderShipment_info_subtotal');
-                        newSubtotal.down('.pricePrefix').innerHTML = response.newShipment.prefix;
-                        newSubtotal.down('.price').innerHTML = parseFloat(response.newShipment.amount);
-                        newSubtotal.down('.priceSuffix').innerHTML = response.newShipment.suffix;
-
-                    var newShippingAmount = newShipmentLi.down('.orderShipment_info_shippingAmount');
-                        newShippingAmount.down('.pricePrefix').innerHTML = response.newShipment.prefix;
-                        newShippingAmount.down('.price').innerHTML = parseFloat(response.newShipment.shippingAmount);
-                        newShippingAmount.down('.priceSuffix').innerHTML = response.newShipment.suffix;
- 
-                    var newTotalAmount = newShipmentLi.down('.orderShipment_info_total');
-                        newTotalAmount.down('.pricePrefix').innerHTML = response.newShipment.prefix;
-                        newTotalAmount.down('.price').innerHTML = parseFloat(response.newShipment.totalAmount);
-                        newTotalAmount.down('.priceSuffix').innerHTML = response.newShipment.suffix;
+                    $A(["amount", 'shippingAmount', 'taxAmount', 'total']).each(function(type)
+                    {
+                        var price = newShipmentLi.down(".shipment_" + type);
+                            price.down('.pricePrefix').innerHTML = response.newShipment.prefix;
+                            price.down('.price').innerHTML = parseFloat(response.newShipment[type]);
+                            price.down('.priceSuffix').innerHTML = response.newShipment.suffix;
+                    });
     
                     shipmentsActiveList.highlight(newShipmentLi);
                 
@@ -90,17 +76,64 @@ Backend.OrderedItem = {
     
     updateReport: function(report)
     {
-        var reportValues = { 'subtotalAmount': 0, 'shippingAmount': 0, 'totalAmount': 0 };
+        
+        
+        var reportValues = { 'subtotalAmount': 0, 'shippingAmount': 0, 'totalAmount': 0, 'taxAmount': 0 };
         document.getElementsByClassName('orderShipment_info', report.up('.tabPageContainer')).each(function(shipmentReport) 
         {
-            reportValues['subtotalAmount'] += (parseFloat(shipmentReport.down('.orderShipment_info_subtotal').down('.price').innerHTML) || 0);
-            reportValues['shippingAmount'] += (parseFloat(shipmentReport.down('.orderShipment_info_shippingAmount').down('.price').innerHTML) || 0);
-            reportValues['totalAmount'] += (parseFloat(shipmentReport.down('.orderShipment_info_total').down('.price').innerHTML) || 0);
+            reportValues['subtotalAmount'] += (parseFloat(shipmentReport.down('.shipment_amount').down('.price').innerHTML) || 0);
+            reportValues['shippingAmount'] += (parseFloat(shipmentReport.down('.shipment_shippingAmount').down('.price').innerHTML) || 0);
+            reportValues['taxAmount'] += (parseFloat(shipmentReport.down('.shipment_taxAmount').down('.price').innerHTML) || 0);
+            reportValues['totalAmount'] += (parseFloat(shipmentReport.down('.shipment_total').down('.price').innerHTML) || 0);
         });
         
-        report.down('.orderShipment_report_subtotal').down('.price').innerHTML = Math.round(reportValues['subtotalAmount'] * 100) / 100;;
-        report.down('.orderShipment_report_shippingAmount').down('.price').innerHTML = Math.round(reportValues['shippingAmount'] * 100) / 100;;
-        report.down('.orderShipment_report_total').down('.price').innerHTML = Math.round(reportValues['totalAmount'] * 100) / 100;;
+        report.down('.orderShipment_report_subtotal').down('.price').innerHTML = Math.round(reportValues['subtotalAmount'] * 100) / 100;
+        report.down('.orderShipment_report_shippingAmount').down('.price').innerHTML = Math.round(reportValues['shippingAmount'] * 100) / 100;
+        report.down('.orderShipment_report_tax').down('.price').innerHTML = Math.round(reportValues['taxAmount'] * 100) / 100;
+        report.down('.orderShipment_report_total').down('.price').innerHTML = Math.round(reportValues['totalAmount'] * 100) / 100;
+   },
+    
+   updateProductCount: function(input, orderID, itemID, shipmentID)
+   {
+       IntegerFilter(input);
+       
+       var price = input.up('tr').down('.orderShipmentsItem_info_price').down('.price');
+       var total = input.up('tr').down('.orderShipmentsItem_info_total').down('.price');
+       
+       // Recalculate item cost
+       total.innerHTML = Math.round(parseFloat(input.value) * parseFloat(price.innerHTML) * 100) / 100;
+   },
+    
+   changeProductCount: function(input, orderID, itemID, shipmentID)
+   {
+       
+       var price = input.up('tr').down('.orderShipmentsItem_info_price').down('.price');
+       var total = input.up('tr').down('.orderShipmentsItem_info_total').down('.price');
+       
+       if(confirm('Update count'))
+       {   
+           new Ajax.Request(Backend.OrderedItem.Links.changeItemCount + "/" + itemID + "?count=" + input.value, {
+                method: 'post',
+                onSuccess: function(response) { 
+                    var response = eval("(" + response.responseText + ")");
+                    var shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + shipmentID);
+                    
+                    shipment.setAmount(response.shipment.amount);
+                    shipment.setTaxAmount(response.shipment.taxAmount);
+                    shipment.setShippingAmount(response.shipment.shippingAmount);
+                    shipment.setTotal(response.shipment.total);
+                    
+                   input.lastValue = input.value;
+                   
+                   Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
+                }
+           });
+       }
+       else
+       {
+           input.value = input.lastValue;
+           Backend.OrderedItem.updateProductCount(input, orderID);
+       }
    }
 };
 
@@ -273,20 +306,14 @@ Backend.Shipment.prototype =
                                 
                 ActiveList.prototype.recreateVisibleLists();
 
-                var newSubtotal = li.down('.orderShipment_info_subtotal');
-                    newSubtotal.down('.pricePrefix').innerHTML = response.shipment.prefix;
-                    newSubtotal.down('.price').innerHTML = response.shipment.amount;
-                    newSubtotal.down('.priceSuffix').innerHTML = response.shipment.suffix;
-                
-                var newShippingAmount = li.down('.orderShipment_info_shippingAmount');
-                    newShippingAmount.down('.pricePrefix').innerHTML = response.shipment.prefix;
-                    newShippingAmount.down('.price').innerHTML = response.shipment.shippingAmount;
-                    newShippingAmount.down('.priceSuffix').innerHTML = response.shipment.suffix;
-                
-                var newTotalAmount = li.down('.orderShipment_info_total');
-                    newTotalAmount.down('.pricePrefix').innerHTML = response.shipment.prefix;
-                    newTotalAmount.down('.price').innerHTML = response.shipment.totalAmount;
-                    newTotalAmount.down('.priceSuffix').innerHTML = response.shipment.suffix;
+                // Old shipment changes
+                $A(["amount", 'shippingAmount', 'taxAmount', 'total']).each(function(type)
+                {
+                    var price = li.down(".shipment_" + type);
+                        price.down('.pricePrefix').innerHTML = response.oldShipment.prefix;
+                        price.down('.price').innerHTML = parseFloat(response.oldShipment[type]);
+                        price.down('.priceSuffix').innerHTML = response.oldShipment.suffix;
+                });
                 
                 Element.addClassName(li, 'orderShipment');
                 
@@ -404,7 +431,7 @@ Backend.Shipment.prototype =
            }
            else
            {
-                uspsSelect.up('tr').down('.orderShipment_info_shippingAmount').down('.price').innerHTML = uspsSelect.services[this.nodes.form.elements.namedItem('shippingServiceID').value].shipment.shippingAmount;
+                this.setShippingAmount(uspsSelect.services[this.nodes.form.elements.namedItem('shippingServiceID').value].shipment.shippingAmount);
                 Backend.OrderedItem.updateReport($("orderShipment_report_" + this.nodes.form.elements.namedItem('orderID').value));
            }
         }
@@ -413,10 +440,116 @@ Backend.Shipment.prototype =
     USPSChanged: function()
     {
         var select = this.nodes.form.elements.namedItem('USPS');
-        select.up('tr').down('.orderShipment_info_shippingAmount').down('.price').innerHTML = select.services[select.value].shipment.shippingAmount;
+        this.setShippingAmount(select.services[select.value].shipment.shippingAmount);
+        this.setTaxAmount(select.services[select.value].shipment.taxAmount);
+        this.setTotal(select.services[select.value].shipment.total);
+        
         Backend.OrderedItem.updateReport($("orderShipment_report_" + this.nodes.form.elements.namedItem('orderID').value));
-    }
+    },
     
+    
+    changeStatus: function()
+    {
+        console.info('changeStatus');
+        
+        var select = this.nodes.form.elements.namedItem('status');
+        
+        var proceed = false;
+        switch(select.value)
+        {
+            case "0": 
+                proceed = confirm(Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToNew); 
+                break;
+            case "1": 
+                proceed = confirm(Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToPending); 
+                break;
+            case "2": 
+                proceed = confirm(Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToAwaiting); 
+                break;
+            case "3": 
+                proceed = confirm(Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToShipped); 
+                break;
+        }
+        
+        if(!proceed || (3 == select.value && !confirm(Backend.Shipment.Messages.youWontBeAableToRevertStatusFromShipped)))
+        {
+            select.value = select.lastValue;
+            return;
+        }
+        
+        new Ajax.Request(Backend.Shipment.Links.changeStatus + "/" + this.nodes.form.elements.namedItem('ID').value + "?status=" + this.nodes.form.elements.namedItem('status').value, {
+           onSuccess: function(response) {
+               var response = eval("(" + response.responseText + ")");
+               
+               select.lastValue = select.value;
+               
+               if(3 == select.value)
+               {
+               }
+           }
+        });
+        
+    },
+    
+    recalculateTotal: function()
+    {
+        // Recalculate subtotal 
+        var subtotal = 0;
+        document.getElementsByClassName('item_subtotal', this.nodes.root).each(function(itemSubtotal)
+        {
+            subtotal += parseFloat(itemSubtotal.down('.price').innerHTML);  
+        });
+        this.nodes.root.down(".shipment_amount").down('price').innerHTML = Math.round(subtotal * 100) / 100;
+        
+        
+        // Recalculate total
+        var total = 0;
+        total += this.getAmount();
+        total += this.getTaxAmount();
+        total += this.getShippingAmount();
+        
+        this.setTotal(total)
+    },
+    
+    setTotal: function(total)
+    {
+        this.nodes.root.down(".shipment_total").down('.price').innerHTML = Math.round(total * 100) / 100;
+    },
+    
+    getTotal: function()
+    {
+        return parseFloat(this.nodes.root.down(".shipment_total").down('.price').innerHTML);
+    },
+    
+    setAmount: function(amount)
+    {
+        this.nodes.root.down(".shipment_amount").down('.price').innerHTML = Math.round(amount * 100) / 100;
+    },
+    
+    getAmount: function()
+    {
+        return parseFloat(this.nodes.root.down(".shipment_amount").down('.price').innerHTML);
+    },
+    
+    setTaxAmount: function(tax)
+    {
+        this.nodes.root.down(".shipment_taxAmount").down('.price').innerHTML = Math.round(tax * 100) / 100;
+    },
+    
+    getTaxAmount: function()
+    {
+        return parseFloat(this.nodes.root.down(".shipment_taxAmount").down('.price').innerHTML);
+    },
+    
+    setShippingAmount: function(shippingAmount)
+    {
+        this.nodes.root.down(".shipment_shippingAmount").down('.price').innerHTML = Math.round(shippingAmount * 100) / 100;
+    },
+    
+    getShippingAmount: function()
+    {
+        return  parseFloat(this.nodes.root.down(".shipment_shippingAmount").down('.price').innerHTML);
+    }
 }
 
 

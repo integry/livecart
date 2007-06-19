@@ -53,3 +53,9 @@
     margin: 0px;
     margin-top: -3px;
 }
+
+.orderShipmentsItem_count
+{
+    width: 50px;
+    text-align: right;
+}
