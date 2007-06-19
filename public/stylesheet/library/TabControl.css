@@ -3,15 +3,16 @@
 }
 
 /* Category manager styling */
-.tabContainer ul
+.tabContainer ul.tabList
 {
 	list-style: none;
 	margin:0px;
 	padding: 0px;
 	height: 25px;
+	padding-top: 8px;
 }
 
-.tabContainer ul li
+.tabContainer ul.tabList li
 {
 	margin-right: 2px;	
 	display: inline;

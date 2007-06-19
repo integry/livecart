@@ -77,7 +77,7 @@
 
 .activeGrid th, .activeGrid td
 {
-  	height: 23px;
+  	height: 23px !important;
   	padding: 2px;
   	white-space: nowrap;
 }
@@ -93,4 +93,7 @@
     overflow: hidden;
 }
 
-
+.activeGrid .headRow
+{
+    height: 36px !important;
+}

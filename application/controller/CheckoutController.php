@@ -237,10 +237,22 @@ class CheckoutController extends FrontendController
         $form = $this->buildShippingForm($shipments);
         $zone = $order->getDeliveryZone();
         
+        $needSelecting = false;
+        
         foreach ($shipments as $key => $shipment)
         {
             $shipmentRates = $zone->getShippingRates($shipment);
             $shipment->setAvailableRates($shipmentRates);
+                        
+            if ($shipmentRates->size() > 1)
+            {
+                $needSelecting = true;
+            }
+            else if ($shipmentRates->size() == 1)
+            {
+                $shipment->setRateId($shipmentRates->get(0)->getServiceId());
+            }
+            
             $rates[$key] = $shipmentRates;
             if ($shipment->getSelectedRate())
             {
@@ -250,6 +262,12 @@ class CheckoutController extends FrontendController
 
         $order->syncToSession();
 		$order->save();
+
+        // only one shipping method for each shipment, so we pre-select it automatically
+        if (!$needSelecting)
+        {
+            return new ActionRedirectResponse('checkout', 'pay');
+        }
 
         $rateArray = array();
         foreach ($rates as $key => $rate)

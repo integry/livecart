@@ -78,6 +78,11 @@ class ShippingRateSet implements ShippingResultInterface, IteratorAggregate
         
         return $result;
     }
+    
+    public function size()
+    {
+        return count($this->rates);
+    }
 }
 
 ?>
