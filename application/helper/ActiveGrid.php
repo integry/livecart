@@ -45,12 +45,27 @@ class ActiveGrid
                     $constraints = explode(' ', $value);
                     foreach ($constraints as $c)
                     {
-                        if (!in_array(substr($c, 0, 1), array('>', '<', '=')))
+                        if (in_array(substr($c, 0, 2), array('<>', '<=', '>=')))
                         {
-                            $c = '=' . $c;
+                            $operator = substr($c, 0, 2);
+                            $value = substr($c, 2);   
+                        }
+                        else if (in_array(substr($c, 0, 1), array('>', '<', '=')))
+                        {
+                            $operator = substr($c, 0, 1);
+                            $value = substr($c, 1);   
+                        }
+                        else
+                        {
+                            $operator = '=';
+                            $value = $c;
                         }
                         
-                        list($operator, $value) = preg_split('//', $c, 2);
+                        if (!is_numeric($value))
+                        {
+                            continue;
+                        }
+                        
                         $filter->mergeCondition(new OperatorCond($handle, $value, $operator));
                     }
                 }

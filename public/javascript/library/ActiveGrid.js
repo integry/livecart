@@ -67,43 +67,7 @@ ActiveGrid.prototype =
 		this.selectAllInstance = headerRow.getElementsByTagName('input')[0];
 		this.selectAllInstance.onclick = this.selectAll.bindAsEventListener(this); 
 		this.selectAllInstance.parentNode.onclick = function(e){Event.stop(e);}.bindAsEventListener(this); 
-                		
-        // show sort arrows on hover
-        var columns = document.getElementsByClassName('first', headerRow);
-        for (k = 0; k < columns.length; k++)
-        {
-            columns[k].onmouseover = 
-                function(e)
-                {
-                    var el = Event.element(e);
-                    if ('TH' != el.tagName)
-                    {
-                        el = el.up('th');
-                    }
-                    
-                    var imgCont = el.down('span.sortImg');
-                    
-                    if (imgCont.innerHTML.length > 0)
-                    {
-                        return;                        
-                    }
-                    
-                    imgCont.innerHTML = '<img src="image/silk/bullet_arrow_up.png" />';
-                    
-                    el.onmouseout = 
-                        function(e)
-                        {
-                            var el = Event.element(e);
-                            if ('TH' != el.tagName)
-                            {
-                                return;
-                            }
-                            
-                            el.down('span.sortImg').innerHTML = '';
-                        }
-                }
-        }
-                        	
+                		                        	
 		this.ricoGrid.onUpdate = this.onUpdate.bind(this);
 		this.ricoGrid.onBeginDataFetch = this.showFetchIndicator.bind(this);
 		this.ricoGrid.options.onRefreshComplete = this.hideFetchIndicator.bind(this);
@@ -383,6 +347,8 @@ ActiveGridFilter.prototype =
         this.element.onblur = this.filterBlur.bindAsEventListener(this);        
         this.element.onchange = this.setFilterValue.bindAsEventListener(this);  
         
+        this.element.filter = this;
+        
    		Element.addClassName(this.element, 'activeGrid_filter_blur');          
     },
 
@@ -408,6 +374,7 @@ ActiveGridFilter.prototype =
 	{
 		if ('' == this.element.value)
 		{
+			this.setFilterValue();
 			this.element.value = this.element.columnName;
 		}
 
@@ -429,5 +396,49 @@ ActiveGridFilter.prototype =
 	{
         this.activeGridInstance.setFilterValue(filterName, value);
 		this.activeGridInstance.reloadGrid();        
+    },
+    
+    initFilter: function(e)
+    {
+        Event.stop(e);
+        
+        var element = Event.element(e);
+        if ('LI' != element.tagName)
+        {
+            element = element.up('li');
+        }
+        
+        this.filterFocus(e);
+        this.element.value = element.attributes.getNamedItem('symbol').nodeValue;
+        this.element.focus();
+        
+        if ('' == this.element.value)
+        {
+            this.element.blur();
+        }
+        
+        // show/hide input fields
+        if ('><' == this.element.value)
+        {
+            Element.hide(this.element);
+            Element.show(this.element.next('div.rangeFilter'));
+        }
+        else
+        {
+            Element.show(this.element);
+            Element.hide(this.element.next('div.rangeFilter'));           
+        }
+        
+        // hide menu
+        Element.hide(element.up('div.filterMenu'));
+        window.setTimeout(function() { Element.show(this.up('div.filterMenu')); }.bind(element), 200);
+                
+    },
+    
+    updateRangeFilter: function(e)
+    {
+        console.log(e);
+        
+        Event.stop(e);
     }
 }

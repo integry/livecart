@@ -61,14 +61,6 @@
                 <option value="disable_isSeparateShipment">{t _do_not_require_separate_shippment}</option>
             </optgroup>
             
-            <optgroup label="{t _set_attribute_value}">
-            
-            </optgroup>
-                            
-            <optgroup label="{t _clear_attribute_value}">
-            
-            </optgroup>
-            
         </select>
         
         <span class="bulkValues" style="display: none;">
@@ -138,42 +130,9 @@
 </div>
 
 <div style="width: 100%;height: 100%;">
-<table class="activeGrid productList {denied role="product.mass"}readonlyGrid{/denied}" id="products_{$categoryID}" style="height: 100%;">
-	<thead>
-		<tr class="headRow">
-	
-			<th class="cell_cb"><input type="checkbox" class="checkbox" /></th>
-			{foreach from=$displayedColumns item=type key=column name="columns"}
-				{if !$smarty.foreach.columns.first}
-					<th class="first cellt_{$type} cell_{$column|replace:'.':'_'}">
-						<span class="fieldName">{$column}</span>
-						{if 'bool' == $type}
-				    		<select style="width: auto;" id="filter_{$column}_{$categoryID}">
-								<option value="">{tn $column}</option>
-								<option value="1">{tn _yes}</option>
-								<option value="0">{tn _no}</option>
-							</select>					
-						{else}
-						<input type="text" class="text {$type}" id="filter_{$column}_{$categoryID}" value="{$availableColumns.$column.name|escape}" />
-						{/if}
-					</th>		
-				{/if}
-			{/foreach}
-		</tr>
-	</thead>	
-	<tbody>
-		{section name="createRows" start=0 loop=15}
-			<tr class="{if $smarty.section.createRows.index is even}even{else}odd{/if}">
-				<td class="cell_cb"></td>
-			{foreach from=$displayedColumns key=column item=type name="columns"}
-  			 	{if !$smarty.foreach.columns.first}
-					<td class="cellt_{$type} cell_{$column|replace:'.':'_'}"></td>		
-				{/if}
-			{/foreach}	
-			</tr>	
-		{/section}
-	</tbody>
-</table>
+    <table class="activeGrid productList {denied role="product.mass"}readonlyGrid{/denied}" id="products_{$categoryID}" style="height: 100%;">
+        {include file="block/activeGrid/gridTable.tpl"}
+    </table>
 </div>
 
 </div>

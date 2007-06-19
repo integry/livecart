@@ -47,7 +47,14 @@
     font-size: smaller; 
     font-weight: bold;
     border: 1px solid #888888 !important;
+    float: left;
 }
+
+.activeGrid th.cellt_numeric input
+{
+    width: 50%;
+}
+
 .activeGrid th select
 {
 	width: 80%;
@@ -91,9 +98,123 @@
 {
 	background-color: #DDDDDD;	  
     overflow: hidden;
+    white-space: nowrap;
+    padding: 0;
+    padding-left: 2px;
 }
 
 .activeGrid .headRow
 {
     height: 36px !important;
+}
+
+.activeGrid .headRow .rangeTo
+{
+    font-weight: normal;
+    font-size: smaller;
+}
+
+.activeGrid th .filterIcon
+{
+    margin-top: 7px;
+    margin-right: 2px;
+    float: left;
+}
+
+.activeGrid th:hover
+{
+    background-color: #E5E5E5;   
+}
+
+/***********************
+    Sort preview icon
+***********************/
+.activeGrid th .sortPreview, .activeGrid th .sortImg
+{
+    float: left;
+    margin-top: 7px;
+    margin-left: 2px;
+}
+
+.activeGrid th .sortPreview
+{
+    display: none;    
+}
+
+.activeGrid th:hover .sortPreview
+{
+    display: block;
+}
+
+.activeGrid th:hover .sortImg
+{
+    display: none;
+}
+
+/***********************
+    Filter menu
+***********************/
+.activeGrid .filterMenuContainer
+{
+    float: left;
+    position: relative;
+    z-index: 65000;
+}
+
+.activeGrid .filterMenu
+{
+    display: none;
+    position: absolute; 
+    margin-top: 23px;
+    margin-left: -20px;
+    left: 0;
+    z-index: 50000;
+
+    border: 1px solid black; 
+    background-color: white;
+    padding: 5px;
+    padding-right: 20px;
+}
+
+.activeGrid .filterMenuContainer:hover .filterMenu, .filterMenu:hover
+{
+    display: block;
+}
+
+.activeGrid th .filterMenu li
+{
+    padding: 5px;    
+    list-style-type: none;
+    font-weight: normal;
+}
+
+.activeGrid th .filterMenu li:hover
+{
+    background-color: #eee;
+}
+
+.activeGrid th .filterMenu span.sign
+{
+    float: left;
+    width: 22px;
+    font-weight: bold;
+}
+
+/***********************
+    Range filter
+***********************/
+.activeGrid th .rangeFilter
+{
+    white-space: nowrap; 
+    float: left;
+}
+
+.activeGrid th .rangeFilter input
+{
+    width: 30px;    
+}
+
+.activeGrid th .rangeFilter input, .activeGrid th .rangeFilter span
+{
+    float: left;   
 }
