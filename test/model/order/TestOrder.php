@@ -182,7 +182,7 @@ class TestOrder extends UnitTestCase
         ActiveRecord::clearPool();        
         
         // reload the whole order data - the calculated total should still match
-        $order = CustomerOrder::getInstanceById($this->order->getID());        
+        $order = CustomerOrder::getInstanceById($this->order->getID(), true);        
         $this->assertEqual($total, $order->getTotal($this->usd));
     
         // change price for one product...

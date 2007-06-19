@@ -5,13 +5,9 @@
 	</ul>
 </fieldset>
 
-<fieldset id="orderShipments_new_{$orderID}_form" style="display: none;">
-    {include file="backend/shipment/form.tpl" shipment=$newShipment shipmentForm=$newShipmentForm}
-</fieldset>
-
-<div id="orderShipment_{$orderID}_info_empty" style="display: none">
-    {include file="backend/shipment/shipmentTotal.tpl"}
-</div>
+<fieldset id="orderShipments_new_{$orderID}_form" style="display: none;">{include file="backend/shipment/form.tpl" shipment=$newShipment shipmentForm=$newShipmentForm}</fieldset>
+<div id="orderShipment_{$orderID}_info_empty" style="display: none">{include file="backend/shipment/shipmentTotal.tpl"}</div>
+<div id="orderShipmentItem_{$orderID}_empty" style="display: none">{include file="backend/shipment/itemAmount.tpl"}</div>
 
 <div id="orderShipment_report_{$orderID}" class="orderShipment_report">
     <h2>{t _report}</h2>

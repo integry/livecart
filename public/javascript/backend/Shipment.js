@@ -2,7 +2,7 @@ Backend.OrderedItem = {
     activeListCallbacks: 
     {
         beforeDelete: function(li){ 
-            if(confirm(Backend.OrderedItem.messages.areYouSureYouWantToDelete)) 
+            if(confirm(Backend.OrderedItem.Messages.areYouSureYouWantToDelete)) 
             {
                 return Backend.OrderedItem.Links.remove + "/?ShippingID=" + this.getRecordId(li);
             }
@@ -76,8 +76,6 @@ Backend.OrderedItem = {
     
     updateReport: function(report)
     {
-        
-        
         var reportValues = { 'subtotalAmount': 0, 'shippingAmount': 0, 'totalAmount': 0, 'taxAmount': 0 };
         document.getElementsByClassName('orderShipment_info', report.up('.tabPageContainer')).each(function(shipmentReport) 
         {
@@ -347,32 +345,39 @@ Backend.Shipment.prototype =
         }
     },
     
-    addNewProductToShipment: function(productID, orderID)
+    addNewProductToShipment: function(productID)
     {
-        console.info(productID);
-        
         var self = this;
-        new Ajax.Request(Backend.OrderedItem.Links.createNewItem + "/?productID=" + productID + "&orderID=" + orderID, {
+        
+        new Ajax.Request(Backend.OrderedItem.Links.createNewItem + "/?productID=" + productID + "&shipmentID=" + self.nodes.form.elements.namedItem('ID').value, {
            method: 'get',
            onSuccess: function(response) {
                var evaluatedResponse;
                try
                {
-                   evaluatedResponse = eval("(" + response.responseText + ")");
+                   response = eval("(" + response.responseText + ")");
                
-                   if(evaluatedResponse && evaluatedResponse.error && evaluatedResponse.error.length > 0)
+                   if(response.status == 'succsess')
                    {
-                       // error
-                       new Backend.SaveConfirmationMessage($('productRelationshipMsg_' + productID), { message: evaluatedResponse.error, type: 'red' });
+                       var itemsList = ActiveList.prototype.getInstance($("productRelationship_list_" + productID + "_"));
+                       var li = itemsList.addRecord(relatedProductID, $("orderShipmentItem_" + self.nodes.form.elements.namedItem('orderID').value + "_empty").innerHTML);
+                       
+                       li.down('.orderShipmentsItem_info_sku').innerHTML = response.item.Product.sku;
+                       li.down('.orderShipmentsItem_info_name').innerHTML = response.item.Product.name;
+                       
+                       var price = li.down('.orderShipmentsItem_info_price');
+                       price.down('.pricePrefix').innerHTML = response.item.Shipment.prefix;
+                       price.down('.price').innerHTML = response.item.price
+                       price.down('.priceSuffix').innerHTML = response.item.Shipment.suffix;
+                       
+                       li.down('.orderShipmentsItem_count').innerHTML = response.item.count;
+
+                       var priceTotal = li.down('.item_subtotal');
+                       priceTotal.down('.pricePrefix').innerHTML = response.item.Shipment.prefix;
+                       priceTotal.down('.price').innerHTML = Math.round(response.item.price * response.item.count * 100) / 100;
+                       priceTotal.down('.priceSuffix').innerHTML = response.item.Shipment.suffix;
                    }
-                   else
-                   {
-                       var relatedList = ActiveList.prototype.getInstance($("productRelationship_list_" + productID + "_"));
-                       relatedList.addRecord(relatedProductID, response.responseText, true);
-                        var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-                       tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') + 1);
-                   }
-                   } 
+               } 
                catch(e)
                {
                    console.info(e);

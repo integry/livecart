@@ -16,7 +16,7 @@ class ShipmentController extends StoreManagementController
 {
 	public function index()
 	{
-	    $order = CustomerOrder::getInstanceById($this->request->getValue('id'), true);
+	    $order = CustomerOrder::getInstanceById($this->request->getValue('id'), true, true);
 		$form = $this->createShipmentForm();
 		$form->setData(array('orderID' => $order->getID()));
 	    $shipments = $order->getShipments();

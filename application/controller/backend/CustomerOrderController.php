@@ -152,7 +152,7 @@ class CustomerOrderController extends StoreManagementController
 	
 	public function switchCancelled()
 	{
-	    $order = CustomerOrder::getInstanceById((int)$this->request->getValue('id'), true);
+	    $order = CustomerOrder::getInstanceById((int)$this->request->getValue('id'), true, true);
 	    $order->isCancelled->set(!$order->isCancelled->get());
 	    $order->save();
 	    

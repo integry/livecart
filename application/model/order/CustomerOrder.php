@@ -67,11 +67,9 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         return $instance;   
     }
     
-    public static function getInstanceById($id, $loadReferencedRecords = false)
+    public static function getInstanceById($id, $loadData = self::LOAD_DATA, $loadReferencedRecords = false)
     {
-        $f = new ARSelectFilter();
-        
-        $instance = ActiveRecordModel::getInstanceById('CustomerOrder', $id, self::LOAD_DATA, $loadReferencedRecords);
+        $instance = ActiveRecordModel::getInstanceById('CustomerOrder', $id, $loadData, $loadReferencedRecords);
         $instance->loadItems();
         return $instance;
     }
@@ -88,7 +86,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
             {
                 try
                 {
-					$instance = CustomerOrder::getInstanceById($id);
+					$instance = CustomerOrder::getInstanceById($id, true);
 	                $instance->loadItems();
 					$instance->isSyncedToSession = true;					
 				}

@@ -18,11 +18,17 @@ class OrderedItemController extends StoreManagementController
 {
     public function create()
     {
-        $order = CustomerOrder::getInstanceById((int)$this->request->getValue('orderID'));
-        $product = Product::getInstanceById((int)$this->request->getValue('productID'));
+        $shipment = Shipment::getInstanceById('Shipment', (int)$this->request->getValue('shipmentID'), true, array('Order' => 'CustomerOrder', 'AmountCurrency' => 'Currency'));
+        $product = Product::getInstanceById((int)$this->request->getValue('productID'), true);
+        $order = $shipment->order->get();
+        $currency = $shipment->amountCurrency->get();
+        
         $item = OrderedItem::getNewInstance($order, $product);
         $item->count->set(1);
-        
+        $item->shipment->set($shipment);
+        $item->priceCurrencyID->set($currency->getID());
+        $item->price->set($product->getPrice($currency->getID()));
+
         return $this->save($item);
     }
     
@@ -43,7 +49,26 @@ class OrderedItemController extends StoreManagementController
 	        
 	        $item->save();
 	        
-            return new JSONResponse(array('status' => 'succsess', 'item' => $item->toArray()));
+	        $shipment = $item->shipment->get();
+            return new JSONResponse(array(
+	            'status' => 'succsess', 
+	            'item' => array(
+	                'ID'              => $item->getID(),
+	                'Product'         => $item->product->get()->toArray(),
+	                'Shipment'        => array(
+							                'ID' => $shipment->getID(),
+							                'amount' => $shipment->amount->get(),
+							                'shippingAmount' => $shipment->shippingAmount->get(),
+							                'taxAmount' => $shipment->taxAmount->get(),    
+							                'total' =>((float)$shipment->shippingAmount->get() + (float)$shipment->amount->get() + (float)$shipment->taxAmount->get()),
+							                'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
+							                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
+	                                     ),
+	                'count'           => $item->price->get(),
+	                'price'           => $item->count->get(),
+	                'priceCurrencyID' => $item->priceCurrencyID->get()
+	            )
+            ));
         }
         else
         {
@@ -159,7 +184,7 @@ class OrderedItemController extends StoreManagementController
 	}
 
 	public function changeCount()
-	{
+	{   
         if(($id = (int)$this->request->getValue("id", false)) && ($count = (int)$this->request->getValue("count", false)))
         {
             $item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Shipment', 'Order' => 'CustomerOrder')); 
