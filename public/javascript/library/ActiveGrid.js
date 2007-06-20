@@ -386,8 +386,8 @@ ActiveGridFilter.prototype =
 	},
 	
 	setFilterValue: function()
-	{
-        var filterName = this.element.id;
+	{        
+		var filterName = this.element.id;
         filterName = filterName.substr(0, filterName.indexOf('_', 7));  
         this.setFilterValueManualy(filterName, this.element.value);
     },
@@ -403,42 +403,72 @@ ActiveGridFilter.prototype =
         Event.stop(e);
         
         var element = Event.element(e);
-        if ('LI' != element.tagName)
+        if ('LI' != element.tagName && element.up('li'))
         {
             element = element.up('li');
         }
         
         this.filterFocus(e);
-        this.element.value = element.attributes.getNamedItem('symbol').nodeValue;
-        this.element.focus();
         
-        if ('' == this.element.value)
-        {
-            this.element.blur();
-        }
-        
+		if (element.attributes.getNamedItem('symbol'))
+		{
+			this.element.value = element.attributes.getNamedItem('symbol').nodeValue;			
+		}
+
+	    // range fields
+		var cont = element.up('th');
+		var min = document.getElementsByClassName('min', cont)[0];
+        var max = document.getElementsByClassName('max', cont)[0];
+	        
         // show/hide input fields
         if ('><' == this.element.value)
         {
             Element.hide(this.element);
             Element.show(this.element.next('div.rangeFilter'));
+            min.focus();
         }
         else
         {
             Element.show(this.element);
             Element.hide(this.element.next('div.rangeFilter'));           
-        }
+
+			min.value = '';
+			max.value = '';
+        	this.element.focus();
         
+	        if ('' == this.element.value)
+	        {
+	            this.element.blur();
+	        }        
+		}
+                      
         // hide menu
-        Element.hide(element.up('div.filterMenu'));
-        window.setTimeout(function() { Element.show(this.up('div.filterMenu')); }.bind(element), 200);
-                
+        if (element.up('div.filterMenu'))
+        {
+			Element.hide(element.up('div.filterMenu'));
+	        window.setTimeout(function() { Element.show(this.up('div.filterMenu')); }.bind(element), 200);         
+		}
     },
     
     updateRangeFilter: function(e)
     {
-        console.log(e);
-        
-        Event.stop(e);
-    }
+        var cont = Event.element(e).up('div.rangeFilter');        
+        var min = document.getElementsByClassName('min', cont)[0];
+        var max = document.getElementsByClassName('max', cont)[0];
+		        
+		this.element.value = (min.value.length > 0 ? '>=' + min.value + ' ' : '') + (max.value.length > 0 ? '<=' + max.value : '');
+		
+		this.element.filter.setFilterValue();
+		
+		if ('' == this.element.value)
+		{
+			this.initFilter(e);
+		}
+		
+    },
+    
+    rangeBlur: function(e)
+    {
+			
+	}
 }

@@ -63,12 +63,12 @@
                         
                         </div>
 
-                        <input type="text" class="text {$type}" id="filter_{$column}_{$categoryID}" value="{$availableColumns.$column.name|escape}" onkeyup="RegexFilter(this, {ldelim} regex : '[^=<>.0-9]' {rdelim});" />
+                        <input type="text" class="text {$type}" id="filter_{$column}_{$categoryID}" value="{$availableColumns.$column.name|escape}" onkeyup="RegexFilter(this, {ldelim} regex : '[^ =<>.0-9]' {rdelim});" />
 
                         <div class="rangeFilter" style="display: none;">
-                            <input type="text" class="text {$type}" onclick="Event.stop(event);" onkeyup="$('filter_{$column}_{$categoryID}').filter.updateRangeFilter(event);" name="min" />
+                            <input type="text" class="text numeric min" onclick="event.stopPropagation();" onchange="$('filter_{$column}_{$categoryID}').filter.updateRangeFilter(event);" />
                             <span class="rangeTo">-</span>
-                            <input type="text" class="text {$type}" onclick="Event.stop(event);" onkeyup="$('filter_{$column}_{$categoryID}').filter.updateRangeFilter(event);" name="max" />
+                            <input type="text" class="text numeric max" onclick="event.stopPropagation();" onchange="$('filter_{$column}_{$categoryID}').filter.updateRangeFilter(event);" />
                         </div>
         
 					{else}
