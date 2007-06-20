@@ -264,7 +264,8 @@ class OrderedItemController extends StoreManagementController
 	        $shipment->setRateId($shipment->shippingService->get()->getID());
 	        
 	        $shipment->recalculateAmounts();
-		    
+	        
+		    $item->save();
 		    $shipment->save();
 		    
 		    return new JSONResponse(array(
