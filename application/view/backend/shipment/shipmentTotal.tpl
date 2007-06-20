@@ -1,6 +1,6 @@
-<input type="hidden" name="ID" value="{$shipment.ID}"}
-<input type="hidden" name="orderID" value="{$shipment.Order.ID}"}
-<input type="hidden" name="shippingServiceID" value="{$shipment.ShippingService.ID}"}
+<input type="hidden" name="ID" value="{$shipment.ID}" />
+<input type="hidden" name="orderID" value="{$shipment.Order.ID}" />
+<input type="hidden" name="shippingServiceID" value="{$shipment.ShippingService.ID}" />
 
 <table class="orderShipmentsItem_info orderShipment_info">
     <tr class="orderShipment_info_first_row" >

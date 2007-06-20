@@ -6,7 +6,9 @@
 </fieldset>
 
 <fieldset id="orderShipments_new_{$orderID}_form" style="display: none;">{include file="backend/shipment/form.tpl" shipment=$newShipment shipmentForm=$newShipmentForm}</fieldset>
-<div id="orderShipment_{$orderID}_info_empty" style="display: none">{include file="backend/shipment/shipmentTotal.tpl"}</div>
+
+<div id="orderShipment_{$orderID}_controls_empty" style="display: none">{include file="backend/shipment/shipmentControls.tpl"}</div>
+<div id="orderShipment_{$orderID}_total_empty" style="display: none">{include file="backend/shipment/shipmentTotal.tpl"}</div>
 <div id="orderShipmentItem_{$orderID}_empty" style="display: none">{include file="backend/shipment/itemAmount.tpl"}</div>
 
 <h2 class="orderReportTitle">{t _report}</h2>
@@ -154,7 +156,6 @@
                 
                 $("{/literal}orderShipment_status_{$shipment.ID}{literal}").lastValue = $("{/literal}orderShipment_status_{$shipment.ID}{literal}").value;
                 Event.observe("{/literal}orderShipment_status_{$shipment.ID}{literal}", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').changeStatus();  });
-                  
                     
                 Event.observe($("{/literal}orderShipment_addProduct_{$shipment.ID}{literal}"), 'click', function(e) {
                     Event.stop(e);

@@ -307,11 +307,18 @@ Backend.Shipment.prototype =
             ActiveForm.prototype.resetErrorMessages(this.nodes.form);
             if(!this.nodes.form.elements.namedItem('ID').value)
             {
-                var title = '<h3 class="orderShipment_title">' + this.nodes.form.elements.namedItem('shippingServiceID').options[this.nodes.form.elements.namedItem('shippingServiceID').selectedIndex].text + '</h3>';
-                var stats = $("orderShipment_" + this.nodes.form.elements.namedItem('orderID').value + "_info_empty").innerHTML;
-                var ul = '<ul id="orderShipmentsItems_list_' + this.nodes.form.elements.namedItem('orderID').value + '_' +response.shipment.ID + '" class="activeList_add_sort activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem"></ul>'
+                var orderID = this.nodes.form.elements.namedItem('orderID').value;
                 
-                var li = this.shipmentsActiveList.addRecord(response.shipment.ID, title + stats + ul);
+                var controls = $("orderShipment_" + this.nodes.form.elements.namedItem('orderID').value + "_controls_empty").innerHTML;
+                var stats = $("orderShipment_" + this.nodes.form.elements.namedItem('orderID').value + "_total_empty").innerHTML;
+                
+                var inputID = '<input type="hidden" name="ID" value="' + response.shipment.ID + '" />';
+                var inputOrderID = '<input type="hidden" name="orderID" value="' + orderID + '" />';
+                var inputServiceID = '<input type="hidden" name="shippingServiceID" value="' + response.shipment.ShippingService.ID + '" />';
+
+                
+                var ul = '<ul id="orderShipmentsItems_list_' + this.nodes.form.elements.namedItem('orderID').value + '_' + response.shipment.ID + '" class="activeList_add_sort activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem"></ul>'
+                var li = this.shipmentsActiveList.addRecord(response.shipment.ID, '<form>' + inputID + inputOrderID + inputServiceID + controls + ul + stats + '</form>');
 
                 ActiveList.prototype.getInstance($('orderShipmentsItems_list_' + this.nodes.form.elements.namedItem('orderID').value + '_' + response.shipment.ID), Backend.OrderedItem.activeListCallbacks);
                 Element.addClassName(li, this.prefix  + 'item');
@@ -322,10 +329,42 @@ Backend.Shipment.prototype =
                 $A(["amount", 'shippingAmount', 'taxAmount', 'total']).each(function(type)
                 {
                     var price = li.down(".shipment_" + type);
-                        price.down('.pricePrefix').innerHTML = response.oldShipment.prefix;
-                        price.down('.price').innerHTML = parseFloat(response.oldShipment[type]);
-                        price.down('.priceSuffix').innerHTML = response.oldShipment.suffix;
+                        price.down('.pricePrefix').innerHTML = response.shipment.prefix;
+                        price.down('.price').innerHTML = parseFloat(response.shipment[type]);
+                        price.down('.priceSuffix').innerHTML = response.shipment.suffix;
                 });
+
+
+                li.down("#orderShipment_status_").id = "orderShipment_status_" + response.shipment.ID;
+                li.down("#orderShipment_change_usps_").id = "orderShipment_change_usps_" + response.shipment.ID;
+                li.down("#orderShipment_USPS__submit").id = "orderShipment_USPS_" + response.shipment.ID + "_submit";
+                li.down("#orderShipment_USPS__cancel").id = "orderShipment_USPS_" + response.shipment.ID + "_cancel";
+                li.down("#orderShipment_USPS__select").id = "orderShipment_USPS_" + response.shipment.ID + "_select";
+                li.down("#orderShipment_addProduct_").id = "orderShipment_addProduct_" + response.shipment.ID;
+
+
+
+                Event.observe("orderShipment_change_usps_" + response.shipment.ID, 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + response.shipment.ID).toggleUSPS();  });
+                Event.observe("orderShipment_USPS_" + response.shipment.ID + "_submit", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + response.shipment.ID).toggleUSPS();  });       
+                Event.observe("orderShipment_USPS_" + response.shipment.ID + "_cancel", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + response.shipment.ID).toggleUSPS(true);  });
+                Event.observe("orderShipment_USPS_" + response.shipment.ID + "_select", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + response.shipment.ID).USPSChanged();  });
+
+                $("orderShipment_status_" + response.shipment.ID).lastValue = $("orderShipment_status_" + response.shipment.ID).value;
+                Event.observe("orderShipment_status_" + response.shipment.ID, 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + response.shipment.ID).changeStatus();  });
+
+                Event.observe($("orderShipment_addProduct_" + response.shipment.ID), 'click', function(e) {
+                    Event.stop(e);
+                    new Backend.OrderedItem.SelectProductPopup(
+                        Backend.OrderedItem.Links.addProduct, 
+                        Backend.OrderedItem.Messages.selectProductTitle, 
+                        {
+                            onProductSelect: function() { 
+                                Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + response.shipment.ID).addNewProductToShipment(this.productID, orderID); 
+                            }
+                        }
+                    );
+                });
+                
                 
                 Element.addClassName(li, 'orderShipment');
                 
