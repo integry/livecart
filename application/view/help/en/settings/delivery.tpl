@@ -5,7 +5,8 @@
 <legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#create">Create delivery zone</a></li>
-	<li><a href="{self}#default">Manage default zone</a></li>
+	<li><a href="{self}#default">Default zone</a></li>
+	<li><a href="{self}#manage">Manage zones</a></li>
 	<li><a href="{self}#delete">Delete zone</a></li>
 
 </ul>
@@ -13,53 +14,68 @@
 </div>
 
 <h3 id="create">Create delivery zone</h3>	
-<p>To add a new delivery zone you have to define location, shipping rates and taxation.</p>	
+<p>To add a new delivery zone you have to define its location, shipping rates and taxation.</p>	
 <p><strong>Defining location</strong></p>
-<ul>
-	<li>Click add new zone.</li>
-	<li>Enter zone's name.</li>
+<ol>
+	<li>In the "Delivery Zones" section click the "Add" link:</li>
+	<img src="image/doc/settings/delivery/add.bmp">
+	<li>Enter zone's name and click the "Add" button.</li>
 	<li>Group countries by adding them to the left "Country" box. Select a country from the country list and use the "<<" button to add it your list.</li>
 	<img src="image/doc/settings/delivery/one_two.bmp">
-	<p class="note"><strong>Note</strong>: You can also select multiple countries by holding the "ctrl" or "shift" key.</p>
-	<p>Choosing africa, asia, europe, (...)</p>
+	<p class="note"><strong>Note</strong>: You can select multiple countries by holding the "ctrl" or "shift" key. Also you can select multiple countries by clicking one of the regions: Africa, Asia, Europe, North America, South America, Oceania or European Union.</p>
 	<li>States - for United States you can also group states as countries above.</li>
 	<li>City mask defines particular cities if necessary. You can also use the "*" character for any number of unknown characters. For example, "New*" corresponds to "New York", New Jersey", etc</li>
 	<li>Zip mask is used to filter zip codes. For example, "55*" corresponds to "55344", "55555", etc</li>
 	<li>Address mask - for example, "* street" corresponds to "5th Street", etc</li>
-</ul>
+	<p>To edit or remove any of the masks, click on the appropriate icon:</p>
+	<img src="image/doc/settings/delivery/icon.bmp">
+</ol>
+
 <p><strong>Defining shipping rates</strong></p>
-<p>These are the rates that determine various pricing according to order's weight, value (or delivery time). Shipping rates can be defined manually or you can use realtime shipping methods such as USPS, FedEx, etc. Realtime shipping methods can be configured in Settings -> Configuration area. To add a custom shipping service:</p>
-<ul>
+<p>These are the rates that determine various pricing according to order's weight, value or delivery time. Shipping rates can be defined manually or you can use realtime shipping methods such as USPS, FedEx, etc. Realtime shipping methods can be configured in Settings -> <a href="{help /settings.configuration}#shipping">Configuration area</a>. To add a custom shipping service:</p>
+<p><ins>how overlaping of services works (?)</ins></p>
+<ol>
 	<li>Click on the "Shipping Rates" tab.</li>
 	<img src="image/doc/settings/delivery/shipping_tab.bmp">
 	<li>Name - enter the name of the shipping service (for example, "Extra heavy")</li>
 	<li>Select "Weight based calculation" or "Subtotal based calculation" as necessary.</li>
-	<li>Click the "Add new rate" link and complete the necessary fields to create a rate.</li>
+	<li>Click the "Add new rate" link and fill in the necessary fields:</li>
 	<img src="image/doc/settings/delivery/rates.bmp">
 	<ul>
 		<li>Weight / Subtotal range - weight or subtotal range of the order.</li>
 		<li>Flat charge - a single charge for the whole order.</li>
 		<li>Per item charge - a charge that is applied per every item in order.</li>
-		<li>Per kg charge - a charge that is applied per weight unit</li>
+		<li>Per kg charge - a charge that is applied per weight unit.</li>
     </ul>
 	<li>Translate - if applicable, select a language to translate the name of the service.</li>
 	<li>Click the "Save" button.</li>
-</ul>
+</ol>
 
+<p>Sorting the shipping services defines the order in which they are displayed to customers. To change the order click on a shipping service and move it up or down:</p>
+<img src="image/doc/settings/delivery/sort.bmp">
+
+<p>To edit or delete existing shipping service, click on the appropriate icon:</p>
+<img src="image/doc/settings/delivery/icon2.bmp">
 <p><strong>Defining tax rates</strong></p>
 
-<ul>
+<ol>
 	<li>Click on the "Tax Rates" tab.</li>
 	<img src="image/doc/settings/delivery/tax_tab.bmp">
 	<li>Click the "Add new tax rate" link.</li>
 	<li>Click a drop-down list to select a tax. (Taxes can be created in the Settings -> Taxes section) </li>
 	<li>Enter a tax rate.</li>
 	<li>Click "Save".</li>
-</ul>
+</ol>
+<p><ins>What about several taxes, how are they applied(?)</ins></p>
 
-<h3 id="default">Manage default zone</h3>	
+<h3 id="default">Default zone</h3>	
 <p>Default zone is the main zone which is applied to shipping and taxation if no defined zones are available / applicable. You can manage default zone's shipping and tax rates as in the section above.</p>
 
+<h3 id="manage">Manage zones</h3>	
+
+<p>If you need to edit a delivery zone, select it on the delivery zone tree. The "Countries and States" tab opens. You can manage any zone's parameter as in the <a href="{self}#create">Create a delivery zone</a> section.</p>
+
+	
 <h3 id="delete">Delete zone</h3>	
 <p>To delete a delivery zone, select the zone and click the "Delete" button.</p>
 

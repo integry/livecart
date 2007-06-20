@@ -23,6 +23,7 @@ have to offer (some may search for products by particular technical details and 
 	<li><a href="{self}#create">Create a filter</a></li>
 	<li><a href="{self}#sort">Reorder filters</a></li>
 	<li><a href="{self}#edit">Edit and Delete Filters</a></li>
+	<li><a href="{help /settings.configuration}#product_filters">Define Price Filters ("external")</a></li>
 
 </ul>
 </fieldset>

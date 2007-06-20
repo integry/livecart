@@ -72,7 +72,7 @@
 	</ul>
 	<li>Translate - click on the language tab to enter filter's criteria names if applicable.</li>
 </ul>
-
+<p class="note"><strong>Note</strong>: fractional parts should be also defined as there is no rounding applied to such prices as "2.49" or "9.99". Thus criteria have to be set up appropriately: "0 to 2.50" and "2.51 to 9.99" or similar.</p>
 
 <h3 id="inventory">Inventory</h3>
 
