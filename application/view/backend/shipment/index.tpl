@@ -9,51 +9,48 @@
 <div id="orderShipment_{$orderID}_info_empty" style="display: none">{include file="backend/shipment/shipmentTotal.tpl"}</div>
 <div id="orderShipmentItem_{$orderID}_empty" style="display: none">{include file="backend/shipment/itemAmount.tpl"}</div>
 
+<h2 class="orderReportTitle">{t _report}</h2>
 <div id="orderShipment_report_{$orderID}" class="orderShipment_report">
-    <h2>{t _report}</h2>
-    <div class="orderShipment_report_values">
-        <fieldset class="error">
-            <label>{t _subtotal_price}:</label>
-            <span class="orderShipment_report_subtotal">
+    <table class="orderShipment_report_values">
+        <tr>
+            <td class="orderShipment_report_description">{t _subtotal_price}</td>
+            <td class="orderShipment_report_subtotal orderShipment_report_value">
                 <span class="pricePrefix">{$order.Currency.pricePrefix}</span>
                 <span class="price">{$subtotalAmount}</span>
                 <span class="priceSuffix">{$order.Currency.priceSuffix}</span>
-            </span>
-        </fieldset >
-        <fieldset class="error">
-            <label>{t _shipping_price}:</label>
-            <span class="orderShipment_report_shippingAmount">
+            </td>
+        </tr>
+        <tr>
+            <td class="orderShipment_report_description">{t _shipping_price}</td>
+            <td class="orderShipment_report_shippingAmount orderShipment_report_value">
                 <span class="pricePrefix">{$order.Currency.pricePrefix}</span>
                 <span class="price">{$shippingAmount}</span>
                 <span class="priceSuffix">{$order.Currency.priceSuffix}</span>
-            </span>
-        </fieldset >
-        <fieldset class="error">
-            <label>{t _taxes}:</label>
-            <span class="orderShipment_report_tax">
+            </td>
+        </tr>
+        <tr>
+            <td class="orderShipment_report_description">{t _taxes}</td>
+            <td class="orderShipment_report_tax orderShipment_report_value">
                 <span class="pricePrefix">{$order.Currency.pricePrefix}</span>
                 <span class="price">{$taxAmount}</span>
                 <span class="priceSuffix">{$order.Currency.priceSuffix}</span>
-            </span>
-        </fieldset >
-        
-        <hr />
-        
-        <fieldset class="error">
-            <label>{t _total_price}:</label>
-            <span class="orderShipment_report_total">
+            </td>
+        </tr>
+        <tr>
+            <td class="orderShipment_report_description">{t _total_price}</td>
+            <td class="orderShipment_report_total orderShipment_report_value">
                 <span class="pricePrefix">{$order.Currency.pricePrefix}</span>
                 <span class="price">{$totalAmount}</span>
                 <span class="priceSuffix">{$order.Currency.priceSuffix}</span>
-            </span>
-        </fieldset >
-    </div>
+            </td>
+        </tr>
+    </table>
 </div>
 
-<div class="orderShipment_shipments">
-    <h2>{t _shipments}</h2>
-    <ul id="orderShipments_list_{$orderID}" class="orderShipments">
-    {foreach item="shipment" from=$shipments}
+<h2 class="notShippedShipmentsTitle">{t _not_shipped}</h2>
+<ul id="orderShipments_list_{$orderID}" class="orderShipments">
+{foreach item="shipment" from=$shipments}
+    {if $shipment.status != 3}
         <li id="orderShipments_list_{$orderID}_{$shipment.ID}" class="orderShipment">
         <form>
             {include file="backend/shipment/shipmentControls.tpl"}
@@ -61,7 +58,7 @@
             <ul id="orderShipmentsItems_list_{$orderID}_{$shipment.ID}" class="activeList_add_sort activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem">
             {foreach item="item" from=$shipment.items}
                 <li id="orderShipmentsItems_list_{$orderID}_{$shipment.ID}_{$item.ID}" >
-                    {include file="backend/shipment/itemAmount.tpl"}
+                    {include file="backend/shipment/itemAmount.tpl" shipped=false}
                 </li>
             {/foreach}
             </ul>
@@ -69,9 +66,27 @@
             {include file="backend/shipment/shipmentTotal.tpl"}
         </form>
         </li>
-    {/foreach}
-    </ul>
-</div>
+    {/if}
+{/foreach}
+</ul>
+
+<h2 class="shippedShipmentsTitle">{t _shipped}</h2>
+<ul id="orderShipments_list_{$orderID}_shipped" class="orderShippedShipments">
+{foreach item="shipment" from=$shipments}
+    {if $shipment.status == 3}
+    <li id="orderShipments_list_{$orderID}_shipped_{$shipment.ID}" class="orderShipment">
+        <ul id="orderShipmentsItems_list_{$orderID}_{$shipment.ID}" class="orderShipmentsItem">
+        {foreach item="item" from=$shipment.items}
+            <li id="orderShipmentsItems_list_{$orderID}_{$shipment.ID}_{$item.ID}" class="orderShipmentItem">
+                {include file="backend/shipment/itemAmount.tpl" shipped=true}
+            </li>
+        {/foreach}
+        </ul>
+        {include file="backend/shipment/shipmentTotal.tpl"}
+    </li>
+    {/if}
+{/foreach}
+</ul>
 
 
 
@@ -129,43 +144,44 @@
         
         var groupList = ActiveList.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{literal}', Backend.Shipment.Callbacks);  
         {/literal}{foreach item="shipment" from=$shipments}{literal}
-            ActiveList.prototype.getInstance('{/literal}orderShipmentsItems_list_{$orderID}_{$shipment.ID}{literal}', Backend.OrderedItem.activeListCallbacks);
-            
-            
-            Event.observe("{/literal}orderShipment_change_usps_{$shipment.ID}{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS();  });
-            Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_submit{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS();  });       
-            Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_cancel{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS(true);  });
-            Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_select{literal}", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').USPSChanged();  });
-            
-            $("{/literal}orderShipment_status_{$shipment.ID}{literal}").lastValue = $("{/literal}orderShipment_status_{$shipment.ID}{literal}").value;
-            Event.observe("{/literal}orderShipment_status_{$shipment.ID}{literal}", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').changeStatus();  });
-              
+            {/literal}{if $shipment.status != 3}{literal}
+                ActiveList.prototype.getInstance('{/literal}orderShipmentsItems_list_{$orderID}_{$shipment.ID}{literal}', Backend.OrderedItem.activeListCallbacks);
                 
-            Event.observe($("{/literal}orderShipment_addProduct_{$shipment.ID}{literal}"), 'click', function(e) {
-                Event.stop(e);
-                new Backend.OrderedItem.SelectProductPopup(
-                    Backend.OrderedItem.Links.addProduct, 
-                    Backend.OrderedItem.Messages.selectProductTitle, 
-                    {
-                        onProductSelect: function() { 
-                            Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').addNewProductToShipment(this.productID, {/literal}{$orderID}{literal}); 
+                Event.observe("{/literal}orderShipment_change_usps_{$shipment.ID}{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS();  });
+                Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_submit{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS();  });       
+                Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_cancel{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS(true);  });
+                Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_select{literal}", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').USPSChanged();  });
+                
+                $("{/literal}orderShipment_status_{$shipment.ID}{literal}").lastValue = $("{/literal}orderShipment_status_{$shipment.ID}{literal}").value;
+                Event.observe("{/literal}orderShipment_status_{$shipment.ID}{literal}", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').changeStatus();  });
+                  
+                    
+                Event.observe($("{/literal}orderShipment_addProduct_{$shipment.ID}{literal}"), 'click', function(e) {
+                    Event.stop(e);
+                    new Backend.OrderedItem.SelectProductPopup(
+                        Backend.OrderedItem.Links.addProduct, 
+                        Backend.OrderedItem.Messages.selectProductTitle, 
+                        {
+                            onProductSelect: function() { 
+                                Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').addNewProductToShipment(this.productID, {/literal}{$orderID}{literal}); 
+                            }
                         }
-                    }
-                );
-            });
-        
-            {/literal}{foreach item="item" from=$shipment.items}{literal}
-                $("{/literal}orderShipmentsItem_count_{$item.ID}{literal}").lastValue = $("{/literal}orderShipmentsItem_count_{$item.ID}{literal}").value;
-                                
-                Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'focus', function(e) { window.lastFocusedItemCount = this; });
-                Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'keyup', function(e) { Backend.OrderedItem.updateProductCount({/literal}this, {$orderID}, {$item.ID}, {$shipment.ID}{literal}) });
-                Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'blur', function(e) { Backend.OrderedItem.changeProductCount({/literal}this, {$orderID}, {$item.ID}, {$shipment.ID}{literal}) }, false);
-                Event.observe("{/literal}orderShipmentsItems_list_{$orderID}_{$shipment.ID}_{$item.ID}{literal}", 'click', function(e) { 
-                    var input = window.lastFocusedItemCount;
-                    if(input && input.value != input.lastValue) { input.blur(); } 
+                    );
                 });
-            {/literal}{/foreach}{literal}
-        
+            
+                {/literal}{foreach item="item" from=$shipment.items}{literal}
+                    $("{/literal}orderShipmentsItem_count_{$item.ID}{literal}").lastValue = $("{/literal}orderShipmentsItem_count_{$item.ID}{literal}").value;
+                                    
+                    Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'focus', function(e) { window.lastFocusedItemCount = this; });
+                    Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'keyup', function(e) { Backend.OrderedItem.updateProductCount({/literal}this, {$orderID}, {$item.ID}, {$shipment.ID}{literal}) });
+                    Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'blur', function(e) { Backend.OrderedItem.changeProductCount({/literal}this, {$orderID}, {$item.ID}, {$shipment.ID}{literal}) }, false);
+                    Event.observe("{/literal}orderShipmentsItems_list_{$orderID}_{$shipment.ID}_{$item.ID}{literal}", 'click', function(e) { 
+                        var input = window.lastFocusedItemCount;
+                        if(input && input.value != input.lastValue) { input.blur(); } 
+                    });
+                {/literal}{/foreach}{literal}
+            
+            {/literal}{/if}{literal}
         {/literal}{/foreach}{literal}
         groupList.createSortable();
         

@@ -35,10 +35,12 @@ class ShipmentController extends StoreManagementController
 	    
 	    $subtotalAmount = 0; 
 	    $shippingAmount = 0;
+	    $taxAmount = 0;
 	    foreach($shipments as $shipment)
 	    {
 	        $subtotalAmount += $shipment->amount->get();
 	        $shippingAmount += $shipment->shippingAmount->get();
+	        $taxAmount += $shipment->taxAmount->get();
 	    }
         $totalAmount = $subtotalAmount + $shippingAmount;
 	    
@@ -49,8 +51,11 @@ class ShipmentController extends StoreManagementController
 	    $response->setValue('shippingServices', $shippingServices);
 	    $response->setValue('subtotalAmount', $subtotalAmount);
 	    $response->setValue('shippingAmount', $shippingAmount);
+	    $response->setValue('taxAmount', $taxAmount);
 	    $response->setValue('totalAmount', $totalAmount);
 	    $response->setValue('statuses', $statuses);
+	    unset($statuses[3]);
+	    $response->setValue('statusesWithoutShipped', $statuses);
 	    $response->setValue('newShipmentForm', $form);
 	    return $response;
 	}
@@ -186,8 +191,6 @@ class ShipmentController extends StoreManagementController
 			return new JSONResponse(array('status' => "failure", 'errors' => $validator->getErrorList()));
 		}
     }
-    
-    
 
     public function edit()
     {
@@ -204,8 +207,6 @@ class ShipmentController extends StoreManagementController
 	    Shipment::getInstanceByID('Shipment', (int)$this->request->getValue('id'))->delete();
 	    return new JSONResponse(array('status' => 'success'));
 	}
-
-    
 }
 
 ?>

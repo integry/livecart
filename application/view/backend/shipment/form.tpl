@@ -18,7 +18,7 @@
     
     <label>{t _shipment_status}</label>
     <fieldset class="error">
-        {selectfield name="status" options=$statuses}
+        {selectfield name="status" options=$statusesWithoutShipped}
         <span class="errorText" style="display: none" />
 	</fieldset>
     

@@ -226,6 +226,17 @@ ActiveList.prototype = {
        }
     },
 
+    makeStatic: function()
+    {
+       Sortable.destroy(this.ul);
+       Element.removeClassName(this.ul, 'activeList_add_sort')
+       document.getElementsByClassName('activeList_icons', this.ul).each(function(iconContainer)
+       {
+           iconContainer.hide();
+           iconContainer.style.visibility = 'hidden';
+       });
+    },
+
     /**
      * Split list by odd and even active records by adding ActiveList_odd or ActiveList_even to each element
      */

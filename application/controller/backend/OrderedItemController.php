@@ -217,7 +217,7 @@ class OrderedItemController extends StoreManagementController
 			                'ID' => $oldShipment->getID(),
 			                'amount' => $oldShipment->amount->get(),
 			                'shippingAmount' => $oldShipment->shippingAmount->get(),
-			                'taxAmount' => $shipment->taxAmount->get(),    
+			                'taxAmount' => $oldShipment->taxAmount->get(),    
 			                'total' =>((float)$oldShipment->shippingAmount->get() + (float)$oldShipment->amount->get() + (float)$oldShipment->taxAmount->get()),
 			                'prefix' => $oldShipment->amountCurrency->get()->pricePrefix->get(),
 			                'suffix' => $oldShipment->amountCurrency->get()->priceSuffix->get()
@@ -226,7 +226,7 @@ class OrderedItemController extends StoreManagementController
 			                'ID' => $newShipment->getID(),
 			                'amount' =>  $newShipment->amount->get(),
 			                'shippingAmount' =>  $newShipment->shippingAmount->get(),
-			                'taxAmount' => $shipment->taxAmount->get(),
+			                'taxAmount' => $newShipment->taxAmount->get(),
 			                'total' => ((float)$newShipment->shippingAmount->get() + (float)$newShipment->amount->get() + (float)$newShipment->taxAmount->get()),
 			                'prefix' => $newShipment->amountCurrency->get()->pricePrefix->get(),
 			                'suffix' => $newShipment->amountCurrency->get()->priceSuffix->get()

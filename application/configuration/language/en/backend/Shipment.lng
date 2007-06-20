@@ -15,10 +15,16 @@ _shipping=Shipping
 _usps_priority=USPS priority
 _change_usps_priority=change
 
+_not_shipped=Not shipped
+_shipped=Shipped
+
 _price=Price
 
 _subtotal_price=Subtotal price
 _taxes=Taxes
+
+_shipping_price=Shipping price
+_total_price=Total price
 
 _are_you_sure_you_want_to_change_shipment_status_to_awaiting=Are you sure you want to change shipment status to awaiting?
 _are_you_sure_you_want_to_change_shipment_status_to_pending=Are you sure you want to change shipment status to pending?

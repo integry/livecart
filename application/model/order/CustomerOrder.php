@@ -604,7 +604,10 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     {
         if ($this->isFinalized->get())
         {
-            $this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter()); 
+            $filter = new ARSelectFilter();
+            $filter->setOrder(new ARFieldHandle('Shipment', 'status'));
+            
+            $this->shipments = $this->getRelatedRecordSet('Shipment', $filter); 
 
             foreach($this->shipments as $shipment)
             {

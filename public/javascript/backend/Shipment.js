@@ -496,8 +496,7 @@ Backend.Shipment.prototype =
     
     changeStatus: function()
     {
-        console.info('changeStatus');
-        
+        var self = this;
         var select = this.nodes.form.elements.namedItem('status');
         
         var proceed = false;
@@ -531,6 +530,20 @@ Backend.Shipment.prototype =
                
                if(3 == select.value)
                {
+                   $(self.nodes.root.up('ul').id + '_shipped').appendChild(self.nodes.root);
+                   
+                   self.nodes.root.className = 'orderShipmentsItem';
+                   
+                   self.itemsActiveList.makeStatic();
+                   self.nodes.root.style.paddingLeft = '0px';
+                   self.nodes.root.down('a.orderShipment_change_usps').hide();
+                   self.nodes.root.down('.orderShipment_controls').hide();
+                   
+                   document.getElementsByClassName("orderShipmentsItem_count", self.nodes.root).each(function(countInput)
+                   {
+                      countInput.hide(); 
+                      countInput.up('.orderShipmentsItem_info_count').appendChild(document.createTextNode(countInput.value));
+                   });
                }
            }
         });
