@@ -122,13 +122,27 @@ class DeliveryZone extends MultilingualObject
             }                
         }
 		
+		$maskPoints = array();
+		
 		// leave zones that match masks
 		foreach ($zones as $key => $zone)
 		{
-            if (!$zone->hasMaskMatch($address))
+            $match = $zone->getMaskMatch($address);
+            if (!$match)
             {
                 unset($zones[$key]);       
             }
+            else
+            {
+                $maskPoints[$key] = $match;
+            }
+        }
+		
+		if ($maskPoints)
+		{
+            asort($maskPoints);
+            end($maskPoints);
+            return $zones[key($maskPoints)];
         }
 		
 		return $zones ? array_shift($zones) : DeliveryZone::getDefaultZoneInstance();
@@ -149,13 +163,13 @@ class DeliveryZone extends MultilingualObject
 	 *
      * @return bool
 	 */
-    public function hasMaskMatch(UserAddress $address)
+    public function getMaskMatch(UserAddress $address)
     {
         return 
-               $this->hasMaskGroupMatch($this->getCityMasks(), $address->city->get()) &&
+               $this->hasMaskGroupMatch($this->getCityMasks(), $address->city->get()) +
                
                ($this->hasMaskGroupMatch($this->getAddressMasks(), $address->address1->get()) ||                
-               $this->hasMaskGroupMatch($this->getAddressMasks(), $address->address2->get())) &&
+               $this->hasMaskGroupMatch($this->getAddressMasks(), $address->address2->get())) +
                          
                $this->hasMaskGroupMatch($this->getZipMasks(), $address->postalCode->get());                   
     }
@@ -173,7 +187,7 @@ class DeliveryZone extends MultilingualObject
         {
             if ($this->isMaskMatch($addressString, $mask->mask->get()))
             {
-                $match = true;
+                $match = 2;
             }
         }
         
