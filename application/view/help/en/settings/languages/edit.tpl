@@ -89,5 +89,5 @@ interface text (element) directly in the page you see it in. To do that you have
 
 	
 {helpSeeAlso}
-	{see settings.language}
+	{see settings.languages}
 {/helpSeeAlso}	

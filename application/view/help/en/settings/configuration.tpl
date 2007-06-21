@@ -156,3 +156,10 @@
 <h3 id="enabled_countries">Enabled Countries</h3>
 
 <p>Enabled countries are available for setting delivery zones, etc <strong>(?)</strong> </p>
+
+{helpSeeAlso}
+	{see settings.delivery}
+	{see settings.taxes}
+	{see settings.currencies}
+	{see settings.languages}
+{/helpSeeAlso}

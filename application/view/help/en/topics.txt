@@ -19,8 +19,8 @@
 		configuration=Configuration
 		delivery=Delivery Zones
 		taxes=Taxes
-		currency=Currencies
-		language=Languages
+		currencies=Currencies
+		languages=Languages
 			edit=Edit Translations
 		
 	customize=Customize

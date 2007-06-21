@@ -23,3 +23,9 @@
 <p>To edit or delete a tax click one of the icons:</p>
 <img src="image/doc/settings/taxes/edit_delete.bmp">
 
+{helpSeeAlso}
+	{see settings.configuration}
+	{see settings.delivery}
+	{see settings.currencies}
+	{see settings.languages}
+{/helpSeeAlso}

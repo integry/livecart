@@ -79,4 +79,9 @@
 <p>To delete a delivery zone, select the zone and click the "Delete" link:</p>
 <img src="image/doc/settings/delivery/delete.bmp">
 
-
+{helpSeeAlso}
+	{see settings.configuration}
+	{see settings.taxes}
+	{see settings.currencies}
+	{see settings.languages}
+{/helpSeeAlso}

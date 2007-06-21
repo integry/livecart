@@ -111,4 +111,9 @@ the currency switching menu. To set the appropriate currency order, click on the
 <p>To delete a currency, move your mouse over the currency and click the "Delete" icon on the left.</p>
 <img src="image/doc/currency/delete.bmp">
 
-
+{helpSeeAlso}
+	{see settings.configuration}
+	{see settings.delivery}
+	{see settings.taxes}
+	{see settings.languages}
+{/helpSeeAlso}
