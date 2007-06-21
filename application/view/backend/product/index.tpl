@@ -131,7 +131,7 @@
 
 <div style="width: 100%;height: 100%;">
     <table class="activeGrid productList {denied role="product.mass"}readonlyGrid{/denied}" id="products_{$categoryID}" style="height: 100%;">
-        {include file="block/activeGrid/gridTable.tpl"}
+        {include file="block/activeGrid/gridTable.tpl" itemID=$categoryID displayedColumns=$displayedColumns}
     </table>
 </div>
 

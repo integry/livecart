@@ -8,7 +8,36 @@ class ActiveGrid
     private $filter;
     private $request;
     
-    function __construct(Request $request, ARSelectFilter $filter, $modelClass = false)
+    public static function getFieldType(ARField $field)
+    {
+		$fieldType = $field->getDataType();
+		
+		if ($field instanceof ARForeignKeyField || $field instanceof ARPrimaryKeyField)
+		{
+		  	return null;
+		}		            
+		
+        if ($fieldType instanceof ARBool)
+		{
+		  	$type = 'bool';
+		}	  
+		elseif ($fieldType instanceof ARNumeric)
+		{
+			$type = 'numeric';	  	
+		}			
+		elseif ($fieldType instanceof ARPeriod)
+		{
+			$type = 'date';
+		}			
+		else
+		{
+		  	$type = 'text';
+		}
+		
+		return $type;        
+    }
+    
+    public function __construct(Request $request, ARSelectFilter $filter, $modelClass = false)
     {        
 		// set recordset boundaries (limits)
         $filter->setLimit($request->getValue('page_size', 20), $request->getValue('offset', 0));

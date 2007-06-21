@@ -363,28 +363,12 @@ class ProductController extends StoreManagementController
 		$availableColumns = array();
 		foreach ($productSchema->getFieldList() as $field)
 		{
-			$fieldType = $field->getDataType();
-			
-			if ($field instanceof ARForeignKeyField)
+			$type = ActiveGrid::getFieldType($field);
+            
+			if (!$type)
 			{
-			  	continue;
-			}		            
-			if ($field instanceof ARPrimaryKeyField)
-			{
-			  	continue;
-			}		            
-			elseif ($fieldType instanceof ARBool)
-			{
-			  	$type = 'bool';
-			}	  
-			elseif ($fieldType instanceof ARNumeric)
-			{
-				$type = 'numeric';	  	
-			}			
-			else
-			{
-			  	$type = 'text';
-			}
+                continue;
+            }
 			
 			$availableColumns['Product.' . $field->getName()] = $type;
 		}		

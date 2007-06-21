@@ -131,24 +131,19 @@
 ***********************/
 .activeGrid th .sortPreview, .activeGrid th .sortImg
 {
-    float: left;
-    margin-top: 7px;
-    margin-left: 2px;
+    position: absolute;
+    right: 5px;
+    margin-top: 5px;
 }
 
-.activeGrid th .sortPreview
+.activeGrid th:hover .sortImg, .activeGrid th .sortPreview
 {
-    display: none;    
+    display: none;
 }
 
 .activeGrid th:hover .sortPreview
 {
     display: block;
-}
-
-.activeGrid th:hover .sortImg
-{
-    display: none;
 }
 
 /***********************

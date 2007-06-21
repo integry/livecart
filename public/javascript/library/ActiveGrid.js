@@ -338,32 +338,34 @@ ActiveGridFilter.prototype =
     
     activeGridInstance: null,
     
+    focusValue: null,
+    
     initialize: function(element, activeGridInstance)
     {
         this.element = element;
         this.activeGridInstance = activeGridInstance;
 
-        this.element.onclick = this.filterFocus.bindAsEventListener(this);
+        this.element.onclick = Event.stop.bindAsEventListener(this);
+        this.element.onfocus = this.filterFocus.bindAsEventListener(this);
         this.element.onblur = this.filterBlur.bindAsEventListener(this);        
         this.element.onchange = this.setFilterValue.bindAsEventListener(this);  
         
         this.element.filter = this;
         
    		Element.addClassName(this.element, 'activeGrid_filter_blur');          
+
+		this.element.columnName = this.element.value;
     },
 
 	filterFocus: function(e)
-	{
-		if (this.element.columnName == undefined)
-		{
-			this.element.columnName = this.element.value;	
-		}
-		
+	{	
 		if (this.element.value == this.element.columnName)
 		{
 			this.element.value = '';
 		}
-		
+	
+		this.focusValue = this.element.value;    
+    	
   		Element.removeClassName(this.element, 'activeGrid_filter_blur');
 		Element.addClassName(this.element, 'activeGrid_filter_select');		
 		
@@ -372,9 +374,14 @@ ActiveGridFilter.prototype =
 
 	filterBlur: function()
 	{
-		if ('' == this.element.value)
+		if ('' == this.element.value.replace(/ /g, ''))
 		{
-			this.setFilterValue();
+			// only update filter value if it actually has changed
+            if ('' != this.focusValue)
+			{
+                this.setFilterValue();                
+            }
+
 			this.element.value = this.element.columnName;
 		}
 

@@ -6,11 +6,12 @@
         {foreach from=$displayedColumns item=type key=column name="columns"}
 			{if !$smarty.foreach.columns.first}
 				<th class="first cellt_{$type} cell_{$column|replace:'.':'_'}">
-					<span class="fieldName">{$column}</span>
+					<div style="position: relative;">
+                    <span class="fieldName">{$column}</span>
 					
                     {if 'bool' == $type}
 			    		
-                        <select style="width: auto;" id="filter_{$column}_{$categoryID}">
+                        <select style="width: auto;" id="filter_{$column}_{$itemID}">
 							<option value="">{tn $column}</option>
 							<option value="1">{tn _yes}</option>
 							<option value="0">{tn _no}</option>
@@ -24,7 +25,7 @@
                             
                             <div class="filterMenu">
                                 
-                                <ul onclick="$('filter_{$column}_{$categoryID}').filter.initFilter(event);">
+                                <ul onclick="$('filter_{$column}_{$itemID}').filter.initFilter(event);">
                                     <li symbol="">
                                         <span class="sign">&nbsp;</span>
                                         All
@@ -63,21 +64,28 @@
                         
                         </div>
 
-                        <input type="text" class="text {$type}" id="filter_{$column}_{$categoryID}" value="{$availableColumns.$column.name|escape}" onkeyup="RegexFilter(this, {ldelim} regex : '[^ =<>.0-9]' {rdelim});" />
+                        <input type="text" class="text {$type}" id="filter_{$column}_{$itemID}" value="{$availableColumns.$column.name|escape}" onkeyup="RegexFilter(this, {ldelim} regex : '[^=<>.0-9 ]' {rdelim});" />
 
                         <div class="rangeFilter" style="display: none;">
-                            <input type="text" class="text numeric min" onclick="event.stopPropagation();" onchange="$('filter_{$column}_{$categoryID}').filter.updateRangeFilter(event);" />
+                            <input type="text" class="text numeric min" onclick="event.stopPropagation();" onchange="$('filter_{$column}_{$itemID}').filter.updateRangeFilter(event);" onkeyup="RegexFilter(this, {ldelim} regex : '[^.0-9]' {rdelim});" />
                             <span class="rangeTo">-</span>
-                            <input type="text" class="text numeric max" onclick="event.stopPropagation();" onchange="$('filter_{$column}_{$categoryID}').filter.updateRangeFilter(event);" />
+                            <input type="text" class="text numeric max" onclick="event.stopPropagation();" onchange="$('filter_{$column}_{$itemID}').filter.updateRangeFilter(event);" onkeyup="RegexFilter(this, {ldelim} regex : '[^.0-9]' {rdelim});" />
                         </div>
         
+        
+					{elseif 'date' == $type}
+
+					   {calendar noform="true" class="text `$type`" id="filter_`$column`_`$itemID`" value=$availableColumns.$column.name|escape style="float: left;"}
+
 					{else}
 
-					   <input type="text" class="text {$type}" id="filter_{$column}_{$categoryID}" value="{$availableColumns.$column.name|escape}" style="float: left;" />
+					   <input type="text" class="text {$type}" id="filter_{$column}_{$itemID}" value="{$availableColumns.$column.name|escape}" style="float: left;" />
 
 					{/if}
 					
 					<img src="image/silk/bullet_arrow_up.png" class="sortPreview" />
+                    					
+					</div>
 					
 				</th>		
 			{/if}
