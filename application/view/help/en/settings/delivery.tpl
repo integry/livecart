@@ -14,7 +14,7 @@
 </div>
 
 <h3 id="create">Create delivery zone</h3>	
-<p>To add a new delivery zone you have to define its location, shipping rates and taxation.</p>	
+<p>To create a new delivery zone you have to define its location, shipping rates and taxation. Once created, delivery zones apply particular rates according to customers' address. That is, the closest match of the existing delivery zones ir referenced to the customers address. If no match is found, the <a href="{self}#default">default zone's</a> rates are applied.</p>	
 <p><strong>Defining location</strong></p>
 <ol>
 	<li>In the "Delivery Zones" section click the "Add" link:</li>
@@ -33,7 +33,6 @@
 
 <p><strong>Defining shipping rates</strong></p>
 <p>These are the rates that determine various pricing according to order's weight, value or delivery time. Shipping rates can be defined manually or you can use realtime shipping methods such as USPS, FedEx, etc. Realtime shipping methods can be configured in Settings -> <a href="{help /settings.configuration}#shipping">Configuration area</a>. To add a custom shipping service:</p>
-<p><ins>how overlaping of services works (?)</ins></p>
 <ol>
 	<li>Click on the "Shipping Rates" tab.</li>
 	<img src="image/doc/settings/delivery/shipping_tab.bmp">
@@ -51,7 +50,7 @@
 	<li>Click the "Save" button.</li>
 </ol>
 
-<p>Sorting the shipping services defines the order in which they are displayed to customers. To change the order click on a shipping service and move it up or down:</p>
+<p>If you have several shipping services you can sort them to define the way they are displayed to customers. To change the order, click and hold a shipping service and move it up or down:</p>
 <img src="image/doc/settings/delivery/sort.bmp">
 
 <p>To edit or delete existing shipping service, click on the appropriate icon:</p>
@@ -66,10 +65,10 @@
 	<li>Enter a tax rate.</li>
 	<li>Click "Save".</li>
 </ol>
-<p><ins>What about several taxes, how are they applied(?)</ins></p>
+<p class="note"><strong>Note</strong>: If you create more than one tax for a delivery zone, all of them will be included into shipments cost.</p>
 
 <h3 id="default">Default zone</h3>	
-<p>Default zone is the main zone which is applied to shipping and taxation if no defined zones are available / applicable. You can manage default zone's shipping and tax rates as in the section above.</p>
+<p>The default zone is the main zone which is applied to shipping and taxation if no other delivery zones are applicable (to a certain address). You can manage default zone's shipping and tax rates as in the section above.</p>
 
 <h3 id="manage">Manage zones</h3>	
 
@@ -77,7 +76,7 @@
 
 	
 <h3 id="delete">Delete zone</h3>	
-<p>To delete a delivery zone, select the zone and click the "Delete" button.</p>
-
+<p>To delete a delivery zone, select the zone and click the "Delete" link:</p>
+<img src="image/doc/settings/delivery/delete.bmp">
 
 
