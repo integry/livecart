@@ -40,9 +40,13 @@ class ShipmentTax extends ActiveRecordModel
 	/**
 	 * Recalculate tax amount
 	 */
-    public function recalculateAmount()
+    public function recalculateAmount($recalculateShipping = true)
     {
-        $this->shipment->get()->recalculateAmounts();
+        if($recalculateShipping)
+        {
+            $this->shipment->get()->recalculateAmounts();
+        }
+        
         $totalAmount = $this->shipment->get()->amount->get();
         if ($this->shipment->get()->isLoaded())
         {

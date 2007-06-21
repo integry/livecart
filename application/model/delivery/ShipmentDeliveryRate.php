@@ -100,5 +100,4 @@ class ShipmentDeliveryRate extends ShippingRateResult
         return $array;
     }
 }
-
 ?>

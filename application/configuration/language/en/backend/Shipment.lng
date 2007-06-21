@@ -32,6 +32,8 @@ _are_you_sure_you_want_to_change_shipment_status_to_new=Are you sure you want to
 _are_you_sure_you_want_to_change_shipment_status_to_shipped=Are you sure you want to change shipment status to shipped?
 _you_wont_be_able_to_revert_status_from_shipped=You won't be able to revert status after changing it to shipped. Do you realy want to proceed?
 
-
 _are_you_sure_you_want_to_delete_this_item=Are you sure you want to delete this item?
 _are_you_realy_want_to_update_items_count=Are you sure you want to update item's count?
+
+_you_wont_be_able_to_undelete_this_shipment=You wont be able to undelete the shipment. Are you realy sure you want to proceed?
+_are_you_sure_you_want_to_delete_this_shipment=Are you sure you want to delete this shipment?

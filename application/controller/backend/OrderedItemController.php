@@ -80,10 +80,9 @@ class OrderedItemController extends StoreManagementController
 		    $shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
 	        
 	        $item->save();
-            
             $shipment->recalculateAmounts();
             $shipment->save();
-			    
+            			    
             return new JSONResponse(array(
 	            'status' => 'succsess', 
 	            'item' => array(

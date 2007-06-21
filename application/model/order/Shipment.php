@@ -22,7 +22,7 @@ class Shipment extends ActiveRecordModel
 	protected $availableShippingRates;   
 	
 	protected $selectedRateId; 
-    
+    	
     const STATUS_NEW = 0;
     const STATUS_PENDING = 1;
     const STATUS_AWAITING = 2;
@@ -334,8 +334,9 @@ class Shipment extends ActiveRecordModel
         $taxes = 0;
         foreach ($this->getTaxes() as $tax)
         {
+            $tax->recalculateAmount(false);
             $taxes += $tax->getAmountByCurrency($currency);   
-        } 
+        }
         $this->taxAmount->set($taxes);
        
         // shipping rate

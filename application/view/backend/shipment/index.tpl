@@ -117,12 +117,14 @@
     {/literal}{/foreach}{literal}
      
     Backend.Shipment.Messages = {};
-    Backend.Shipment.Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_group|addslashes}{literal}'
-    Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToAwaiting = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_awaiting|addslashes}{literal}'
-    Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToPending = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_pending|addslashes}{literal}'
-    Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToNew = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_new|addslashes}{literal}'
-    Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToShipped = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_shipped|addslashes}{literal}'
-    Backend.Shipment.Messages.youWontBeAableToRevertStatusFromShipped = '{/literal}{t _you_wont_be_able_to_revert_status_from_shipped|addslashes}{literal}'
+    Backend.Shipment.Messages.areYouSureYouWantToDelete                         = '{/literal}{t _are_you_sure_you_want_to_delete_group|addslashes}{literal}';
+    Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToAwaiting  = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_awaiting|addslashes}{literal}';
+    Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToPending   = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_pending|addslashes}{literal}';
+    Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToNew       = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_new|addslashes}{literal}';
+    Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToShipped   = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_shipped|addslashes}{literal}';
+    Backend.Shipment.Messages.youWontBeAableToRevertStatusFromShipped           = '{/literal}{t _you_wont_be_able_to_revert_status_from_shipped|addslashes}{literal}';
+    Backend.Shipment.Messages.youWontBeAbleToUndelete                           = '{/literal}{t _you_wont_be_able_to_undelete_this_shipment|addslashes}{literal}'
+    Backend.Shipment.Messages.areYouSureYouWantToDeleteThisShipment             = '{/literal}{t _are_you_sure_you_want_to_delete_this_shipment|addslashes}{literal}'
     
     Backend.OrderedItem.Messages = {};
     Backend.OrderedItem.Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_item|addslashes}{literal}';

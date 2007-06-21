@@ -108,8 +108,49 @@
     list-style: none;
 }
 
-.orderShippedShipments .orderShipmentsItem, 
-.orderShippedShipments .orderShipment_info
+
+.orderShipment_addProduct
 {
-    padding-left: 50px;
+    position: absolute;
+    bottom: 4px;
+    left: 40px;
 }
+
+.orderShipment_status
+{
+    float: right; 
+    text-align: right;
+}
+
+.orderShipment_controls
+{
+    position: relative ! important;
+}
+
+.orderShipment_status label
+{
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    font-weight: bold;
+}
+
+
+.orderShipments .activeList_icons
+{
+   display: none;
+}
+
+.orderShipmentsItem .activeList_icons
+{
+    vertical-align: top;
+    padding-top: 1em;
+    padding-right: 0px;
+    display: inline;
+}
+
+
+.orderShipmentsItem .activeList_icons img
+{    
+    margin-bottom: -1em;
+}
+

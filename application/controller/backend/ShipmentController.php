@@ -53,7 +53,7 @@ class ShipmentController extends StoreManagementController
 	    $response->setValue('shippingAmount', $shippingAmount);
 	    $response->setValue('taxAmount', $taxAmount);
 	    $response->setValue('totalAmount', $totalAmount);
-	    $response->setValue('statuses', $statuses);
+	    $response->setValue('statuses', $statuses + array(-1 => $this->translate('_delete')));
 	    unset($statuses[3]);
 	    $response->setValue('statusesWithoutShipped', $statuses);
 	    $response->setValue('newShipmentForm', $form);
