@@ -71,52 +71,7 @@
     
 </fieldset>
 
-<div style="width: 100%; position: relative;">
-	<div style="display: none;" class="activeGrid_loadIndicator" id="orderLoadIndicator_{$orderGroupID}">
-		<div>
-			{t Loading data...}<span class="progressIndicator"></span>
-		</div>
-	</div>
-</div>
-
-<div style="width: 100%;height: 100%;">
-<table class="activeGrid orderList {denied role="order.mass"}readonlyGrid{/denied}" id="orders_{$orderGroupID}" style="height: 100%;">
-	<thead>
-		<tr class="headRow">
-	
-			<th class="cell_cb"><input type="checkbox" class="checkbox" /></th>
-			{foreach from=$displayedColumns item=type key=column name="columns"}
-				{if !$smarty.foreach.columns.first}
-					<th class="first cellt_{$type} cell_{$column|replace:'.':'_'}">
-						<span class="fieldName">{$column}</span>
-						{if 'bool' == $type}
-				    		<select style="width: auto;" id="filter_{$column}_{$orderGroupID}">
-								<option value="">{tn $column}</option>
-								<option value="1">{tn _yes}</option>
-								<option value="0">{tn _no}</option>
-							</select>					
-						{else}
-						    <input type="text" class="text {$type}" id="filter_{$column}_{$orderGroupID}" value="{$availableColumns.$column.name|escape}" />
-                        {/if}
-					</th>		
-				{/if}
-			{/foreach}
-		</tr>
-	</thead>	
-	<tbody>
-		{section name="createRows" start=0 loop=15}
-			<tr class="{if $smarty.section.createRows.index is even}even{else}odd{/if}">
-				<td class="cell_cb"></td>
-			{foreach from=$displayedColumns key=column item=type name="columns"}
-  			 	{if !$smarty.foreach.columns.first}
-					<td class="cellt_{$type} cell_{$column|replace:'.':'_'}"></td>		
-				{/if}
-			{/foreach}	
-			</tr>	
-		{/section}
-	</tbody>
-</table>
-</div>
+{activeGrid prefix="orders" id=$orderGroupID role="order.mass" controller="backend.customerOrder" action="lists" displayedColumns=$displayedColumns availableColumns=$availableColumns totalCount=$totalCount}
 
 </div>
 
@@ -129,16 +84,9 @@
                 {assign var="userID" value="?filters[User.ID]=`$userID`"}
             {/if}
         {literal}
-        
-        var grid = new ActiveGrid($('{/literal}orders_{$orderGroupID}{literal}'), "{/literal}{link controller=backend.customerOrder action=lists}{$userID}{literal}", {/literal}{$totalCount}{literal}, $("{/literal}orderLoadIndicator_{$orderGroupID}{literal}"));
     
     	grid.setDataFormatter(Backend.CustomerOrder.GridFormatter);
     	
-    	{/literal}{foreach from=$displayedColumns item=id key=column name="columns"}{literal}
-    		{/literal}{if !$smarty.foreach.columns.first}{literal}
-    		    var filter = new ActiveGridFilter($('{/literal}filter_{$column}_{$orderGroupID}{literal}'), grid);
-    		{/literal}{/if}{literal}
-    	{/literal}{/foreach}{literal}
         var massHandler = new Backend.CustomerOrder.massActionHandler($('{/literal}orderMass_{$orderGroupID}{literal}'), grid);
         massHandler.deleteConfirmMessage = '{/literal}{t _are_you_sure_you_want_to_delete_this_order|addslashes}{literal}' ;
         ordersActiveGrid['{/literal}{$orderGroupID}{literal}'] = grid;

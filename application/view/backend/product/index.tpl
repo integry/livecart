@@ -121,34 +121,17 @@
     
 </fieldset>
 
-<div style="width: 100%; position: relative;">
-	<div style="display: none;" class="activeGrid_loadIndicator" id="productLoadIndicator_{$categoryID}">
-		<div>
-			{t _loading}<span class="progressIndicator"></span>
-		</div>
-	</div>
-</div>
-
-<div style="width: 100%;height: 100%;">
-    <table class="activeGrid productList {denied role="product.mass"}readonlyGrid{/denied}" id="products_{$categoryID}" style="height: 100%;">
-        {include file="block/activeGrid/gridTable.tpl" itemID=$categoryID displayedColumns=$displayedColumns}
-    </table>
-</div>
+{activeGrid prefix="products" id=$categoryID role="product.mass" controller="backend.product" action="lists" displayedColumns=$displayedColumns availableColumns=$availableColumns totalCount=$totalCount}
 
 </div>
 
 {literal}
 <script type="text/javascript">
-	var grid = new ActiveGrid($('products_{/literal}{$categoryID}'), '{link controller=backend.product action=lists}', {$totalCount}, $("productLoadIndicator_{$categoryID}"));
+{/literal}
 
 	grid.setDataFormatter(Backend.Product.GridFormatter);
-	
-	{foreach from=$displayedColumns item=id key=column name="columns"}
-		{if !$smarty.foreach.columns.first}
-		    new ActiveGridFilter($('filter_{$column}_{$categoryID}'), grid);
-		{/if}
-	{/foreach}
     
     var massHandler = new Backend.Product.massActionHandler($('productMass_{$categoryID}'), grid);
     massHandler.deleteConfirmMessage = '{t _delete_conf|addslashes}' ;
+
 </script>

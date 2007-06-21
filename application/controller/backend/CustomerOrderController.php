@@ -389,23 +389,25 @@ class CustomerOrderController extends StoreManagementController
 		$availableColumns['User.email'] = 'text'; 
 		$availableColumns['User.ID'] = 'text'; 
 		$availableColumns['CustomerOrder.viewOrder'] = 'text'; 
-		$availableColumns['CustomerOrder.status'] = 'text'; 
-		$availableColumns['CustomerOrder.totalAmount'] = 'text';
-		$availableColumns['CustomerOrder.dateCreated'] = 'text';
-		$availableColumns['CustomerOrder.dateCompleted'] = 'text'; 
-		$availableColumns['CustomerOrder.isFinalized'] = 'bool'; 
-		$availableColumns['CustomerOrder.isPaid'] = 'bool'; 
-		$availableColumns['CustomerOrder.isCanceled'] = 'bool'; 
+
+		foreach (ActiveRecordModel::getSchemaInstance('CustomerOrder')->getFieldList() as $field)
+		{
+			$type = ActiveGrid::getFieldType($field);
 			
-        // Order
+			if (!$type)
+			{
+			    continue;
+			}		
+            
+			$availableColumns['CustomerOrder.' . $field->getName()] = $type;            			
+        }
+
+        unset($availableColumns['CustomerOrder.shipping']);
+
+        // @todo - does why enabling this column raise an error?
+        unset($availableColumns['CustomerOrder.dateCompleted']);
+                                        
 		$availableColumns['CustomerOrder.status'] = 'text'; 
-		$availableColumns['CustomerOrder.totalAmount'] = 'text';
-		$availableColumns['CustomerOrder.capturedAmount'] = 'text';
-		$availableColumns['CustomerOrder.dateCreated'] = 'text';
-		$availableColumns['CustomerOrder.dateCompleted'] = 'text'; 
-		$availableColumns['CustomerOrder.isFinalized'] = 'bool'; 
-		$availableColumns['CustomerOrder.isPaid'] = 'bool'; 
-		$availableColumns['CustomerOrder.isCanceled'] = 'bool'; 
 		
 		// Address
 		$availableColumns['ShippingAddress.countryID'] = 'text';  

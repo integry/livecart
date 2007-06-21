@@ -301,33 +301,13 @@ class UserGroupController extends StoreManagementController
 		$availableColumns = array();
 		foreach (ActiveRecordModel::getSchemaInstance('User')->getFieldList() as $field)
 		{
-			$fieldType = $field->getDataType();
+			$type = ActiveGrid::getFieldType($field);
 			
-			if($field->getName() == 'password')
+			if ($field->getName() == 'password' || !$type)
 			{
 			    continue;
-			}
-			if ($field instanceof ARForeignKeyField)
-			{
-			  	continue;
-			}		            
-			if ($field instanceof ARPrimaryKeyField)
-			{
-			  	continue;
-			}		            
-			elseif ($fieldType instanceof ARBool)
-			{
-			  	$type = 'bool';
-			}	  
-			elseif ($fieldType instanceof ARNumeric)
-			{
-				$type = 'numeric';	  	
-			}			
-			else
-			{
-			  	$type = 'text';
-			}
-			
+			}		
+            
 			$availableColumns['User.' . $field->getName()] = $type;
 		}		
 		

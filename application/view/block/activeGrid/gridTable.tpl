@@ -1,3 +1,14 @@
+<div style="width: 100%; position: relative;">
+	<div style="display: none;" class="activeGrid_loadIndicator" id="{$prefix}LoadIndicator_{$id}">
+		<div>
+			{t _loading}<span class="progressIndicator"></span>
+		</div>
+	</div>
+</div>
+
+<div style="width: 100%;height: 100%;">
+    <table class="activeGrid {$prefix}List {denied role=$role}readonlyGrid{/denied}" id="{$prefix}_{$id}" style="height: 100%;">
+
 <thead>
 	<tr class="headRow">
 		
@@ -11,7 +22,7 @@
 					
                     {if 'bool' == $type}
 			    		
-                        <select style="width: auto;" id="filter_{$column}_{$itemID}">
+                        <select style="width: auto;" id="filter_{$column}_{$id}">
 							<option value="">{tn $column}</option>
 							<option value="1">{tn _yes}</option>
 							<option value="0">{tn _no}</option>
@@ -25,7 +36,7 @@
                             
                             <div class="filterMenu">
                                 
-                                <ul onclick="$('filter_{$column}_{$itemID}').filter.initFilter(event);">
+                                <ul onclick="$('filter_{$column}_{$id}').filter.initFilter(event);">
                                     <li symbol="">
                                         <span class="sign">&nbsp;</span>
                                         All
@@ -64,22 +75,22 @@
                         
                         </div>
 
-                        <input type="text" class="text {$type}" id="filter_{$column}_{$itemID}" value="{$availableColumns.$column.name|escape}" onkeyup="RegexFilter(this, {ldelim} regex : '[^=<>.0-9 ]' {rdelim});" />
+                        <input type="text" class="text {$type}" id="filter_{$column}_{$id}" value="{$availableColumns.$column.name|escape}" onkeyup="RegexFilter(this, {ldelim} regex : '[^=<>.0-9 ]' {rdelim});" />
 
                         <div class="rangeFilter" style="display: none;">
-                            <input type="text" class="text numeric min" onclick="event.stopPropagation();" onchange="$('filter_{$column}_{$itemID}').filter.updateRangeFilter(event);" onkeyup="RegexFilter(this, {ldelim} regex : '[^.0-9]' {rdelim});" />
+                            <input type="text" class="text numeric min" onclick="event.stopPropagation();" onchange="$('filter_{$column}_{$id}').filter.updateRangeFilter(event);" onkeyup="RegexFilter(this, {ldelim} regex : '[^.0-9]' {rdelim});" />
                             <span class="rangeTo">-</span>
-                            <input type="text" class="text numeric max" onclick="event.stopPropagation();" onchange="$('filter_{$column}_{$itemID}').filter.updateRangeFilter(event);" onkeyup="RegexFilter(this, {ldelim} regex : '[^.0-9]' {rdelim});" />
+                            <input type="text" class="text numeric max" onclick="event.stopPropagation();" onchange="$('filter_{$column}_{$id}').filter.updateRangeFilter(event);" onkeyup="RegexFilter(this, {ldelim} regex : '[^.0-9]' {rdelim});" />
                         </div>
         
         
 					{elseif 'date' == $type}
 
-					   {calendar noform="true" class="text `$type`" id="filter_`$column`_`$itemID`" value=$availableColumns.$column.name|escape style="float: left;"}
+					   {calendar noform="true" class="text `$type`" id="filter_`$column`_`$id`" value=$availableColumns.$column.name|escape style="float: left;"}
 
 					{else}
 
-					   <input type="text" class="text {$type}" id="filter_{$column}_{$itemID}" value="{$availableColumns.$column.name|escape}" style="float: left;" />
+					   <input type="text" class="text {$type}" id="filter_{$column}_{$id}" value="{$availableColumns.$column.name|escape}" style="float: left;" />
 
 					{/if}
 					
@@ -105,3 +116,19 @@
 		</tr>	
 	{/section}
 </tbody>
+
+    </table>
+</div>
+
+{literal}
+<script type="text/javascript">
+{/literal}
+	grid = new ActiveGrid($('{$prefix}_{$id}'), '{$url}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"));
+	
+	{foreach from=$displayedColumns item=index key=column name="columns"}
+		{if !$smarty.foreach.columns.first}
+		    new ActiveGridFilter($('filter_{$column}_{$id}'), grid);
+		{/if}
+	{/foreach}
+	
+</script>
