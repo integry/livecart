@@ -302,11 +302,21 @@ Backend.Shipment.prototype =
     
     afterSave: function(response)
     {
+        var self = this;
+        
         if(response.status == 'success')
         {
             ActiveForm.prototype.resetErrorMessages(this.nodes.form);
             if(!this.nodes.form.elements.namedItem('ID').value)
             {
+                var shipmentItems = document.getElementsByClassName("orderShipmentsItem", self.nodes.shipmentsList);
+                if(shipmentItems.length == 1)
+                {
+                    var firstShipmentItems = ActiveList.prototype.getInstance(shipmentItems[0]);
+                    Element.addClassName(firstShipmentItems.ul, 'activeList_add_sort');
+                    firstShipmentItems.createSortable();
+                }
+                
                 var orderID = this.nodes.form.elements.namedItem('orderID').value;
                 
                 var controls = $("orderShipment_" + this.nodes.form.elements.namedItem('orderID').value + "_controls_empty").innerHTML;
@@ -316,14 +326,18 @@ Backend.Shipment.prototype =
                 var inputOrderID = '<input type="hidden" name="orderID" value="' + orderID + '" />';
                 var inputServiceID = '<input type="hidden" name="shippingServiceID" value="' + response.shipment.ShippingService.ID + '" />';
 
-                
                 var ul = '<ul id="orderShipmentsItems_list_' + this.nodes.form.elements.namedItem('orderID').value + '_' + response.shipment.ID + '" class="activeList_add_sort activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem"></ul>'
                 var li = this.shipmentsActiveList.addRecord(response.shipment.ID, '<form>' + inputID + inputOrderID + inputServiceID + controls + ul + stats + '</form>');
 
-                ActiveList.prototype.getInstance($('orderShipmentsItems_list_' + this.nodes.form.elements.namedItem('orderID').value + '_' + response.shipment.ID), Backend.OrderedItem.activeListCallbacks);
+                var newShipmentActiveList = ActiveList.prototype.getInstance($('orderShipmentsItems_list_' + this.nodes.form.elements.namedItem('orderID').value + '_' + response.shipment.ID), Backend.OrderedItem.activeListCallbacks);
                 Element.addClassName(li, this.prefix  + 'item');
-                                
                 ActiveList.prototype.recreateVisibleLists();
+                
+                if(shipmentItems.length == 0)
+                {
+                    Element.removeClassName(newShipmentActiveList.ul, 'activeList_add_sort');
+                    newShipmentActiveList.destroySortable();
+                }
 
                 // Old shipment changes
                 $A(["amount", 'shippingAmount', 'taxAmount', 'total']).each(function(type)
@@ -364,11 +378,12 @@ Backend.Shipment.prototype =
                 
                 
                 Element.addClassName(li, 'orderShipment');
-                
+             
                 Backend.OrderedItem.updateReport($("orderShipment_report_" + this.nodes.form.elements.namedItem('orderID').value));
 
                 this.shipmentsActiveList.highlight(li);
                 this.hideNewForm();
+                
             }
             else
             {
@@ -486,7 +501,10 @@ Backend.Shipment.prototype =
                    uspsSelect.services = response.services;
                    $H(response.services).each(function(service)
                    {
-                       uspsSelect.options[uspsSelect.options.length] = new Option(service.value.name, service.value.ID);
+                       var prefix = service.value.shipment.prefix ? service.value.shipment.prefix : '';
+                       var suffix = service.value.shipment.suffix ? service.value.shipment.suffix : '';
+                       
+                       uspsSelect.options[uspsSelect.options.length] = new Option(service.value.name + " - " + prefix + service.value.shipment.shippingAmount + suffix, service.value.ID);
                        
                        if(service.value.ID == self.nodes.form.elements.namedItem('shippingServiceID').value)
                        {
@@ -569,10 +587,28 @@ Backend.Shipment.prototype =
             new Ajax.Request(Backend.Shipment.Links.remove + "/" + this.nodes.form.elements.namedItem('ID').value, {
                onSuccess: function(response) {
                    var response = eval("(" + response.responseText + ")");
+                
+                   var shipmentItems = document.getElementsByClassName("orderShipmentsItem", self.nodes.shipmentsList);
+                   for(var i = 0; i < shipmentItems.length; i++)
+                   {
+                       if(shipmentItems[i] == self.nodes.root.down('.orderShipmentsItem'))
+                       {
+                           shipmentItems.splice(i, 1);
+                           break;
+                       }
+                   }
                    
                    select.lastValue = select.value;
                    var orderID = self.nodes.form.elements.namedItem('orderID').value;
                    self.shipmentsActiveList.remove(self.nodes.root);
+                                   
+                   if(shipmentItems.length == 1)
+                   {
+                       var firstItemsList = ActiveList.prototype.getInstance(shipmentItems[0]);
+                       Element.removeClassName(firstItemsList.ul, 'activeList_add_sort');
+                       firstItemsList.destroySortable();
+                   }
+                   
                    Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
                }
             });

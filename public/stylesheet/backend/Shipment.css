@@ -1,3 +1,4 @@
+
 .orderShipments, .orderShipment_report
 {
    padding-bottom: 3em;
@@ -29,9 +30,10 @@
     text-align: right; 
 }
 
-.orderShipmentsItem 
+.orderShippedShipments .orderShipmentsItem 
 {
     padding-top: 15px;
+    padding-left: 40px;
 }
 /* Product table */
 .orderShipmentsItem_info
@@ -108,25 +110,6 @@
     list-style: none;
 }
 
-
-.orderShipment_addProduct
-{
-    position: absolute;
-    bottom: 4px;
-    left: 40px;
-}
-
-.orderShipment_status
-{
-    float: right; 
-    text-align: right;
-}
-
-.orderShipment_controls
-{
-    position: relative ! important;
-}
-
 .orderShipment_status label
 {
     padding-top: 0.4em;
@@ -154,3 +137,27 @@
     margin-bottom: -1em;
 }
 
+.orderShipment_addProduct
+{
+    position: absolute;
+    bottom: 4px;
+    left: 40px;
+}
+
+.orderShipment_status
+{
+    float: right; 
+    text-align: right;
+}
+
+.orderShipment_controls
+{
+    position: relative ! important;
+    padding: 40px 0 20px 0 ! important;
+}
+
+
+.orderShipmentsItem
+{
+   padding-top: 15px;
+}

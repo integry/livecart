@@ -226,6 +226,12 @@ ActiveList.prototype = {
        }
     },
 
+    destroySortable: function()
+    {
+       Sortable.destroy(this.ul);
+       console.info('destroy sortable')
+    },
+
     makeStatic: function()
     {
        Sortable.destroy(this.ul);

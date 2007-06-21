@@ -57,7 +57,7 @@
         <form>
             {include file="backend/shipment/shipmentControls.tpl"}
             
-            <ul id="orderShipmentsItems_list_{$orderID}_{$shipment.ID}" class="activeList_add_sort activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem">
+            <ul id="orderShipmentsItems_list_{$orderID}_{$shipment.ID}" class="{if $shipments|@count > 1}activeList_add_sort{/if} activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem">
             {foreach item="item" from=$shipment.items}
                 <li id="orderShipmentsItems_list_{$orderID}_{$shipment.ID}_{$item.ID}" >
                     {include file="backend/shipment/itemAmount.tpl" shipped=false}
