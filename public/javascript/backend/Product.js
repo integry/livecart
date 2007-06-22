@@ -75,6 +75,24 @@ Backend.Product =
 				new Backend.Product.specFieldEntrySingleSelect(selects[k]);
 			}
 		} 		
+		
+        // init type selector logic
+        var typeSel = $('tabProductsContent_' + categoryID).down('select.productType');
+        typeSel.onchange = 
+            function(e)
+            {
+                var el = Event.element(e);
+                var cont = el.up('div.productForm');
+                if (1 == el.value)
+                {
+                    cont.addClassName('intangible');
+                }
+                else
+                {
+                    cont.removeClassName('intangible');                    
+                }
+            }
+		
 	},
 
 	toggleSkuField: function(checkbox)
@@ -552,7 +570,7 @@ Backend.Product.Editor.prototype =
 
         this.setTabCounters();
 
-        this.initSpecFieldControls();
+        this.initSpecFieldControls();            
     },
     
     initSpecFieldControls: function()

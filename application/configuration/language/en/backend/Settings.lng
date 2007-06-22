@@ -144,7 +144,7 @@ DEF_ZIP=Default ZIP code
 DEF_CITY=Default city
 
 _realtime_shipping=Real-time Shipping Rates
-SHIPPING_HANDLERS=Enabled Shipping Handlers
+SHIPPING_HANDLERS=Enabled shipping handlers
 
 _email=Email
 _email_addresses=Email Addresses
@@ -159,3 +159,14 @@ REQUIRE_PHONE=Require customers to enter phone number on registration
 
 # Countries
 ENABLED_COUNTRIES=Enabled Countries
+
+# Backend Options
+_backend_opts=Backend Administration
+
+_product_management=Product Management
+DEFAULT_PRODUCT_TYPE=Default product type
+_prod_type_0=Tangible (shippable products)
+_prod_type_1=Intangible (downlodable files)
+
+_language_management=Language Management
+SHOW_BACKEND_LANG_FILES=Allow to edit backend language files

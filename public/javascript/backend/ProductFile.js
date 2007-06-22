@@ -394,7 +394,7 @@ Backend.ProductFile.View.prototype = {
             if(language.value.ID == defaultLanguageID) return;
             
             self.nodes.form.elements.namedItem('description_' + language.key).value = self.get('description.' + language.key , 'no');
-            self.nodes.form.elements.namedItem('title_' + language.key).value = self.get('title.' + language.key , 'no');
+            self.nodes.form.elements.namedItem('title_' + language.key).value = self.get('title.' + language.key , '');
         });
 
         this.clear();

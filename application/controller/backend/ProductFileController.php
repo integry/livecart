@@ -156,11 +156,11 @@ class ProductFileController extends StoreManagementController
 		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("productFileValidator", $this->request);
 
-		$validator->addCheck('title_' . $this->store->getDefaultLanguageCode(), new IsNotEmptyCheck('_err_file_title_is_empty'));
-		$validator->addCheck('allowDownloadDays', new IsNumericCheck('_err_allow_download_days_should_be_a_number'));
-		$validator->addCheck('allowDownloadDays', new IsNotEmptyCheck('_err_allow_download_days_is_empty'));
-		if(!$existingProductFile) $validator->addCheck('uploadFile', new IsFileUploadedCheck('_err_file_could_not_be_uploaded_to_the_server'));
-		if($existingProductFile) $validator->addCheck('fileName', new IsNotEmptyCheck('_err_fileName_should_not_be_empty'));
+		$validator->addCheck('title_' . $this->store->getDefaultLanguageCode(), new IsNotEmptyCheck($this->translate('_err_file_title_is_empty')));
+		$validator->addCheck('allowDownloadDays', new IsNumericCheck($this->translate('_err_allow_download_days_should_be_a_number')));
+		$validator->addCheck('allowDownloadDays', new IsNotEmptyCheck($this->translate('_err_allow_download_days_is_empty')));
+		if(!$existingProductFile) $validator->addCheck('uploadFile', new IsFileUploadedCheck($this->translate('_err_file_could_not_be_uploaded_to_the_server')));
+		if($existingProductFile) $validator->addCheck('fileName', new IsNotEmptyCheck($this->translate('_err_fileName_should_not_be_empty')));
 
 		return $validator;
     }

@@ -1,4 +1,4 @@
-<div>
+<div class="productForm {if 1 == $product.type}intangible{/if}">
     <fieldset class="container">
 		<ul class="menu">
 	        <li><a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}, this.parentNode.parentNode.parentNode.parentNode); return false;">Cancel adding new product</a></li>

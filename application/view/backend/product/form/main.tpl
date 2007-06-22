@@ -45,7 +45,7 @@ Backend.Product.Editor.prototype.setActiveProductName({json array=$product.name_
 	<p>
 		<label for="product_{$cat}_{$product.ID}_type">{t _product_type}:</label>
 		<fieldset class="error">
-			{selectfield options=$productTypes name="type" id="product_`$cat`_`$product.ID`_type"}
+			{selectfield options=$productTypes name="type" id="product_`$cat`_`$product.ID`_type" class="productType"}
 			<div class="errorText hidden"></div>
 		</fieldset>			
 	</p>

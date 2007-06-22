@@ -50,6 +50,11 @@ fieldset.specification .numeric
 	display: none;  
 }
 
+.productForm.intangible .shipping, .productForm.intangible .inventory
+{
+    display: none;
+}
+
 /*************************
 	Product list
 *************************/

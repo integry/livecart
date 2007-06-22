@@ -920,6 +920,7 @@ div.checkout a
 .cartControl
 {
 	width: 120px;
+	overflow: hidden;
 }
 
 .cartControl a
@@ -928,7 +929,6 @@ div.checkout a
 	font-size: smaller;
 	margin-bottom: 5px;
 	display: block;
-	float: left;
 }
 
 .cartQuant

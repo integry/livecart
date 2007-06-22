@@ -1,4 +1,4 @@
-<fieldset>
+<fieldset class="inventory">
 	<legend>{t _inventory}</legend>
 	<p {if $form|isRequired:"stockCount"}class="required"{/if}>
 		<label for="product_stockCount_{$cat}_{$product.ID}">{t _items_in_stock}:</label>

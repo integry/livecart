@@ -1,4 +1,4 @@
-<fieldset>
+<fieldset class="shipping">
 	<legend>{t _shipping}</legend>
 
 	<p>

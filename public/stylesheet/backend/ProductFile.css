@@ -1,3 +1,8 @@
+.productFile_main
+{
+    border: 0;
+}
+
 .productFileGroup_title {
     color: grey;
     font-size:300%;
@@ -24,4 +29,9 @@ li.productFileGroup_item li {
 
 .productFile_download_link {
 margin-left: 2em;
+}
+
+.productFile_fileName_div
+{
+    padding: 0 !important;
 }

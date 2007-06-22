@@ -1,11 +1,6 @@
+<div class="productForm {if 1 == $product.type}intangible{/if}">
+
 {form handle=$pricingForm action="controller=backend.productPrice action=save id=`$product.ID`" id="product_form_`$product.ID`_`$product.Category.ID`" method="POST" onsubmit="Backend.Product.Prices.prototype.getInstance(this.id).submitForm(); return false; " onreset="Backend.Product.Prices.prototype.getInstance(this.id).resetForm(this);" role="product.update"}
-   	<div class="pricesSaveConf" style="display: none;">
-   		<div class="yellowMessage">
-   			<div>
-   				{t Product data was successfuly saved}
-   			</div>
-   		</div>
-   	</div>
   
     {include file="backend/product/form/inventory.tpl" product=$product cat=$product.Category.ID baseCurrency=$baseCurrency form=$pricingForm}
     {include file="backend/product/form/pricing.tpl" product=$product cat=$product.Category.ID baseCurrency=$baseCurrency }
@@ -21,3 +16,5 @@
         Backend.Product.Prices.prototype.getInstance('product_form_{$product.ID}_{$product.Category.ID}', {json array=$product});
     </script>
 {/form}
+
+</div>

@@ -23,6 +23,10 @@ class Product extends MultilingualObject
 
 	const DO_NOT_RECALCULATE_PRICE = false;
 	
+	const TYPE_TANGIBLE = 0;
+
+	const TYPE_DOWNLOADABLE = 1;
+	
 	/**
 	 * Related products
 	 * @return ARSet
@@ -414,7 +418,26 @@ class Product extends MultilingualObject
 	public static function transformArray($array)
 	{
 		$array = parent::transformArray($array, __CLASS__);
-		$array['isAvailable'] = self::isAvailableForOrdering($array['isEnabled'], $array['stockCount'], $array['isBackOrderable']);
+		
+        $array['isTangible'] = $array['type'] == self::TYPE_TANGIBLE;
+        $array['isDownloadable'] = $array['type'] == self::TYPE_DOWNLOADABLE;
+        
+        if ($array['isEnabled'])
+		{
+            if ($array['isDownloadable'])
+            {
+                $array['isAvailable'] = true;           
+            }
+            else
+            {
+                $array['isAvailable'] = self::isAvailableForOrdering($array['isEnabled'], $array['stockCount'], $array['isBackOrderable']);                
+            }
+        }
+        else
+        {
+            $array['isAvailable'] = false;    
+        }
+        
 		return $array;
 	}
 

@@ -81,6 +81,17 @@ class LanguageController extends StoreManagementController
 		
 		uksort($translated, array($this, 'sortTranslations'));
 		
+		if (!$this->config->getValue('SHOW_BACKEND_LANG_FILES'))
+		{
+            foreach ($enDefs as $key => $value)
+            {
+                if (substr($key, 0, 7) == 'backend')
+                {
+                    unset($enDefs[$key]);                    
+                }
+            }
+        }
+		
 		$response = new ActionResponse();
 		$response->setValue("id", $editLocaleName);
 		$response->setValue("translations", json_encode($translated));

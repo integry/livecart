@@ -599,6 +599,13 @@ class ProductController extends StoreManagementController
 					   1 => $this->translate('_intangible'),	
 					  );
 
+        // default product type
+        if (!$product->isLoaded())
+        {
+            $product->type->set(substr($this->config->getValue('DEFAULT_PRODUCT_TYPE'), -1));
+            $form->setValue('type', $product->type->get());
+        }
+    
 		// arrange SpecFields's into groups
 		$specFieldsByGroup = array();
 		$prevGroupID = -6541;
