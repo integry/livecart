@@ -37,3 +37,5 @@ _are_you_realy_want_to_update_items_count=Are you sure you want to update item's
 
 _you_wont_be_able_to_undelete_this_shipment=You wont be able to undelete the shipment. Are you realy sure you want to proceed?
 _are_you_sure_you_want_to_delete_this_shipment=Are you sure you want to delete this shipment?
+
+_you_have_count_empty_shipments_do_you_want_to_proceed_to_the_next_page=You have empty shipments which will be removed if you leave this page. Do you want to proceed? 

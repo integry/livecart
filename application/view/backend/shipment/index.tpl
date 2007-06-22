@@ -110,6 +110,7 @@
     Backend.Shipment.Links.getAvailableServices = '{/literal}{link controller=backend.shipment action=getAvailableServices}{literal}';
     Backend.Shipment.Links.changeService        = '{/literal}{link controller=backend.shipment action=changeService}{literal}';
     Backend.Shipment.Links.changeStatus         = '{/literal}{link controller=backend.shipment action=changeStatus}{literal}';
+    Backend.Shipment.Links.removeEmptyShipments = '{/literal}{link controller=backend.shipment action=changeStatus}{literal}';
     
     Backend.Shipment.Statuses = {};
     {/literal}{foreach key="statusID" item="status" from=$statuses}{literal}
@@ -123,13 +124,28 @@
     Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToNew       = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_new|addslashes}{literal}';
     Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToShipped   = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_shipped|addslashes}{literal}';
     Backend.Shipment.Messages.youWontBeAableToRevertStatusFromShipped           = '{/literal}{t _you_wont_be_able_to_revert_status_from_shipped|addslashes}{literal}';
-    Backend.Shipment.Messages.youWontBeAbleToUndelete                           = '{/literal}{t _you_wont_be_able_to_undelete_this_shipment|addslashes}{literal}'
-    Backend.Shipment.Messages.areYouSureYouWantToDeleteThisShipment             = '{/literal}{t _are_you_sure_you_want_to_delete_this_shipment|addslashes}{literal}'
-    
+    Backend.Shipment.Messages.youWontBeAbleToUndelete                           = '{/literal}{t _you_wont_be_able_to_undelete_this_shipment|addslashes}{literal}';
+    Backend.Shipment.Messages.areYouSureYouWantToDeleteThisShipment             = '{/literal}{t _are_you_sure_you_want_to_delete_this_shipment|addslashes}{literal}';
+    Backend.Shipment.Messages.emptyShipmentsWillBeRemoved                       = '{/literal}{t _you_have_count_empty_shipments_do_you_want_to_proceed_to_the_next_page|addslashes}{literal}'
     Backend.OrderedItem.Messages = {};
     Backend.OrderedItem.Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_item|addslashes}{literal}';
     Backend.OrderedItem.Messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}';
     Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount = '{/literal}{t _are_you_realy_want_to_update_items_count|addslashes}{literal}';
+    
+    window.onbeforeunload = function() { 
+        var shipmentsContainer = $('{/literal}tabOrderProducts_{$orderID}Content{literal}');
+        var ordersManagerContainer = $("orderManagerContainer");
+        
+        if(ordersManagerContainer.style.display != 'none' && shipmentsContainer && shipmentsContainer.style.display != 'none')
+        {
+            return Backend.Shipment.Messages.emptyShipmentsWillBeRemoved; 
+        }
+    }
+    
+    Event.observe($('{/literal}tabOrderProducts_{$orderID}Content{literal}'), 'unload', function()
+    {
+        new Ajax.Request(Backend.Shipment.Links.removeEmptyShipments + '/{/literal}{$orderID}{literal}');
+    });
     
     try
     {

@@ -19,7 +19,6 @@ Backend.CustomerOrder.prototype =
 		Backend.CustomerOrder.prototype.treeBrowser.def_img_y = 'auto';
 				
 		Backend.CustomerOrder.prototype.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
-		Backend.CustomerOrder.prototype.treeBrowser.setOnClickHandler(this.activateGroup.bind(this));
        
 		Backend.CustomerOrder.prototype.treeBrowser.showFeedback = 
 			function(itemId) 
@@ -46,6 +45,8 @@ Backend.CustomerOrder.prototype =
         
         if(!Backend.ajaxNav.getHash().match(/group_\d+#\w+/)) window.location.hash = '#group_1#tabOrders__';
 	    self.tabControl = TabControl.prototype.getInstance('orderGroupsManagerContainer', self.craftTabUrl, self.craftContainerId, {}); 
+
+        Backend.CustomerOrder.prototype.instance = this;
 	},
 
     craftTabUrl: function(url)
@@ -67,7 +68,7 @@ Backend.CustomerOrder.prototype =
 		{
             Backend.CustomerOrder.prototype.treeBrowser.insertNewItem(node.rootID, node.ID, node.name, null, 0, 0, 0, '', 1);
             self.treeBrowser.showItemSign(node.ID, 0);
-            var group = document.getElementsByClassName("standartTreeRow", $("orderGroupsBrowser")).last();
+            var group = document.getElementsByClassName("standartTreeRow", $("orderGroupsBrowser")).last().up('tr');
             group.id = 'group_' + node.ID;
             group.onclick = function()
             {
@@ -78,15 +79,28 @@ Backend.CustomerOrder.prototype =
 
 	activateGroup: function(id)
 	{
-       
+        var self = Backend.CustomerOrder.prototype.instance;
+        
         if(Backend.CustomerOrder.prototype.activeGroup && Backend.CustomerOrder.prototype.activeGroup != id)
         {
+            // Remove empty shippments
+            
+            var productsContainer = $("orderManagerContainer");
+            if(productsContainer && productsContainer.style.display != 'none')
+            {
+                if(!Backend.CustomerOrder.Editor.prototype.getInstance(Backend.CustomerOrder.Editor.prototype.getCurrentId()).removeEmptyShipmentsConfirmation()) 
+                {
+                    Backend.CustomerOrder.prototype.treeBrowser.selectItem(Backend.CustomerOrder.prototype.activeGroup, false);
+                    return;
+                }
+            }
+            
             Backend.CustomerOrder.prototype.activeGroup = id;
     		Backend.CustomerOrder.prototype.treeBrowser.showFeedback(id);
             
             Backend.ajaxNav.add('group_' + id);
             
-            this.tabControl.activateTab('tabOrders', function() { 
+            self.tabControl.activateTab('tabOrders', function() { 
                 Backend.CustomerOrder.prototype.treeBrowser.hideFeedback(id);
             });
             
@@ -336,6 +350,20 @@ Backend.CustomerOrder.Editor.prototype =
 
     craftContentId: function(tabId)
     {
+        // Remove empty shippments
+        if(tabId != 'tabOrderProducts')
+        {
+            var productsContainer = $("tabOrderProducts_" + Backend.CustomerOrder.Editor.prototype.getCurrentId() + "Content");
+            if(productsContainer && productsContainer.style.display != 'none')
+            {
+                if(!Backend.CustomerOrder.Editor.prototype.getInstance(Backend.CustomerOrder.Editor.prototype.getCurrentId()).removeEmptyShipmentsConfirmation())
+                {
+                    TabControl.prototype.getInstance("orderManagerContainer", false).activateTab($("tabOrderProducts"));
+                    return false;
+                }
+            }
+        }
+        
         return tabId + '_' +  Backend.CustomerOrder.Editor.prototype.getCurrentId() + 'Content'
     },
 
@@ -459,7 +487,61 @@ Backend.CustomerOrder.Editor.prototype =
 		{
 			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
 		}
-	}
+	},
+    
+    removeEmptyShipmentsConfirmation: function()
+    {
+        if(!Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime) Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime = 0;
+    
+        container = $("tabOrderProducts_" + this.id + "Content");
+                
+        if($("orderManagerContainer").style.display == 'none' || (container.style.display == 'none'))
+        {
+            Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime = (new Date()).getTime();
+            return true;   
+        }
+        else
+        {
+            var hasEmptyShipments = false;
+            document.getElementsByClassName('orderShipmentsItem', container).each(function(itemList)
+            {
+                 if(!itemList.down('li'))
+                 {
+                     hasEmptyShipments = true;
+                     return $break;
+                 }
+            })
+            
+            if(!hasEmptyShipments) 
+            {
+                Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime = (new Date()).getTime();
+                return true;
+            }
+            
+            
+            new Ajax.Request(Backend.Shipment.Links.removeEmptyShipments + this.id);
+            
+            // Confirm can be called few times in a row. To prevent multiple dialogs
+            // rember user last decision
+            if((new Date()).getTime() - Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime < 100)
+            {
+                return Backend.Shipment.removeEmptyShipmentsConfirmationLastUserDecision;
+            }
+            
+            if(confirm(Backend.Shipment.Messages.emptyShipmentsWillBeRemoved))
+            {
+                Backend.Shipment.removeEmptyShipmentsConfirmationLastUserDecision = true;
+                Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime = (new Date()).getTime();
+                return true;   
+            }   
+            else
+            {
+                Backend.Shipment.removeEmptyShipmentsConfirmationLastUserDecision = false;
+                Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime = (new Date()).getTime();
+                return false;
+            }
+        }
+    }
 }
 
 

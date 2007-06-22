@@ -348,12 +348,14 @@ Backend.Shipment.prototype =
                         price.down('.priceSuffix').innerHTML = response.shipment.suffix;
                 });
 
-                li.down("#orderShipment_status_").id = "orderShipment_status_" + response.shipment.ID;
-                li.down("#orderShipment_change_usps_").id = "orderShipment_change_usps_" + response.shipment.ID;
-                li.down("#orderShipment_USPS__submit").id = "orderShipment_USPS_" + response.shipment.ID + "_submit";
-                li.down("#orderShipment_USPS__cancel").id = "orderShipment_USPS_" + response.shipment.ID + "_cancel";
-                li.down("#orderShipment_USPS__select").id = "orderShipment_USPS_" + response.shipment.ID + "_select";
-                li.down("#orderShipment_addProduct_").id = "orderShipment_addProduct_" + response.shipment.ID;
+
+                li.down("#orderShipment_status_").id       = "orderShipment_status_" + response.shipment.ID;
+                li.down("#orderShipment_change_usps_").id  = "orderShipment_change_usps_" + response.shipment.ID;
+                li.down("#orderShipment_USPS_").id         = "orderShipment_USPS_" + response.shipment.ID;
+                li.down("#orderShipment_USPS__submit").id  = "orderShipment_USPS_" + response.shipment.ID + "_submit";
+                li.down("#orderShipment_USPS__cancel").id  = "orderShipment_USPS_" + response.shipment.ID + "_cancel";
+                li.down("#orderShipment_USPS__select").id  = "orderShipment_USPS_" + response.shipment.ID + "_select";
+                li.down("#orderShipment_addProduct_").id   = "orderShipment_addProduct_" + response.shipment.ID;
 
                 Event.observe("orderShipment_change_usps_" + response.shipment.ID, 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + response.shipment.ID).toggleUSPS();  });
                 Event.observe("orderShipment_USPS_" + response.shipment.ID + "_submit", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + response.shipment.ID).toggleUSPS();  });       

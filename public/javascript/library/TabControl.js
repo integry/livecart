@@ -163,6 +163,13 @@ TabControl.prototype = {
 		}
 		
 		var contentId = this.idParserCallback(targetTab.id);
+        
+        // Cancel loading tab if false was returned
+        if(!contentId)
+        {
+            return;
+        }
+        
         if(!$(contentId)) new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '" class="tabPageContainer"></div>');		
 
         var self = this;
