@@ -1221,6 +1221,19 @@ div.orderStatus
 }
 
 /*************************** 
+	File downloads
+***************************/
+ul.downloadFile li
+{
+    list-style-type: none;
+    padding: 4px;
+    padding-left: 22px;
+    background-image: url(../../image/silk/gif/disk.gif);
+    background-position: center left;
+    background-repeat: no-repeat;
+}
+
+/*************************** 
 	Customization
 ***************************/
 div.templateLocator:hover

@@ -12,6 +12,8 @@ class UserController extends FrontendController
  	const PASSWORD_MIN_LENGTH = 5;
  	
  	const COUNT_RECENT_ORDERS = 5;
+
+ 	const COUNT_RECENT_FILES = 5;
  
     private function addAccountBreadcrumb()
     {
@@ -38,11 +40,31 @@ class UserController extends FrontendController
             $order->loadAll();
         }
 
+        // get downloadable items
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'type'), Product::TYPE_DOWNLOADABLE));
+		$f->setOrder(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
+		$f->setLimit(self::COUNT_RECENT_FILES);
+        
+        $downloadable = ActiveRecordModel::getRecordSet('OrderedItem', $f, ActiveRecordModel::LOAD_REFERENCES);
+        $fileArray = array();
+        foreach ($downloadable as &$item)
+        {
+            $array = $item->toArray();
+            $array['Product']['Files'] = $item->product->get()->getFilesMergedWithGroupsArray();
+            $fileArray[] = $array;
+        }        
+		
         $response = new ActionResponse();
 		$response->setValue('user', $this->user->toArray());
 		$response->setValue('orders', $orders->toArray());
-		$response->setValue('userConfirm', $this->session->pullValue('userConfirm'));		
-		return $response;
+		$response->setValue('files', $fileArray);
+		
+		// feedback/confirmation message that was stored in session by some other action
+        $response->setValue('userConfirm', $this->session->pullValue('userConfirm'));		
+		
+        return $response;
 	}
     
     /**
@@ -615,6 +637,45 @@ class UserController extends FrontendController
     {                
         $states = State::getStatesByCountry($this->request->getValue('country'));
         return new JSONResponse($states);
+    }
+    
+    /**
+     *  Download an ordered file
+     *
+     *  @return ObjectFileResponse
+     *  @return ActionRedirectResponse
+     *	@role login
+     */
+    public function download()
+    {
+	    // get and validate OrderedItem instance first
+        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('OrderedItem', 'ID'), $this->request->getValue('id')));
+	    $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID())); 
+	    
+	    $s = ActiveRecordModel::getRecordSet('OrderedItem', $f, ActiveRecordModel::LOAD_REFERENCES);
+	    
+	    // OrderedItem does not exist
+        if (!$s->size())
+	    {
+            return new ActionRedirectResponse('user', 'index');
+        }
+	    
+	    $item = $s->get(0);
+	    $file = $item->getFileByID($this->request->getValue('fileID'));
+	    
+	    // file does not exist for OrderedItem
+	    if (!$file)
+	    {
+            return new ActionRedirectResponse('user', 'index');            
+        }
+	    
+	    // download expired
+        if (!$item->isDownloadable($file))
+	    {
+            return new ActionRedirectResponse('user', 'downloadExpired', array('id' => $item->getID(), 'query' => array('fileID' => $file->getID())));
+        }
+        
+	    return new ObjectFileResponse($file);
     }
     
     /**

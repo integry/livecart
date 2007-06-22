@@ -76,6 +76,37 @@ class OrderedItem extends ActiveRecordModel
         $this->product->get()->save();
     }
     
+    /**
+     *  @return ProductFile
+     */
+    public function getFileByID($id)
+    {
+        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('ProductFile', 'ID'), $id));
+        $f->mergeCondition(new EqualsCond(new ARFieldHandle('ProductFile', 'productID'), $this->product->get()->getID()));
+        $s = ActiveRecordModel::getRecordSet('ProductFile', $f);
+        if (!$s->size())
+        {
+            return false;
+        }
+        else
+        {
+            return $s->get(0);
+        }
+    }
+    
+    /**
+     *  Determine if the file download period hasn't expired yet
+     *  
+     *  @return ProductFile
+     */
+    public function isDownloadable(ProductFile $file)
+    {
+        $orderDate = $this->customerOrder->get()->dateCompleted->get();
+        
+        return (abs($orderDate->getDayDifference(new DateTime())) <= $file->allowDownloadDays->get()) ||
+                !$file->allowDownloadDays->get();
+    }
+    
     protected function update()
     {                       
         if (is_null($this->shipment->get()) || !$this->shipment->get()->getID())
