@@ -98,25 +98,7 @@
         <tbody>
 
         {foreach from=$order.shipments key="key" item="shipment"}
-            {foreach from=$shipment.items item="item" name="shipment"}
-                <tr{zebra loop="shipment"}>                    
-                    <td class="productName"><a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a></td>
-                    <td>{$item.Product.formattedPrice.$currency}</td>
-                    <td>{$item.count}</td>
-                    <td>{$item.formattedSubTotal.$currency}</td>
-                </tr>
-            {/foreach}            
-        
-            {if $order.isShippingRequired && $shipment.isShippable}
-                <tr>
-                    <td colspan="3" class="subTotalCaption">
-                        {t _shipping} ({$shipment.selectedRate.ShippingService.name_lang}):
-                    </td>
-                    <td>
-                        {$shipment.selectedRate.formattedPrice.$currency}
-                    </td>
-                </tr>
-            {/if}
+            {include file="order/orderTableDetails.tpl"}
         {/foreach}  
       
         {foreach from=$order.taxes.$currency item="tax"}
@@ -126,10 +108,10 @@
             </tr>
         {/foreach}        
           
-            <tr>
-                <td colspan="3" class="subTotalCaption">{t _total}:</td>
-                <td class="subTotal">{$order.formattedTotal.$currency}</td>                        
-            </tr>
+        <tr>
+            <td colspan="3" class="subTotalCaption">{t _total}:</td>
+            <td class="subTotal">{$order.formattedTotal.$currency}</td>                        
+        </tr>
 
         </tbody>        
     </table>    

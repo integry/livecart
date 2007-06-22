@@ -18,6 +18,10 @@ _switch_currency=Switch Currency
 # Shopping basket
 _shopping_basket=Shopping Basket
 
+# Orders
+_subtotal=Subtotal
+_shipping=Shipping
+
 # Checkout
 _order_checkout=Order Checkout
 _the_same_as_shipping_address=My shipping address is the same as my billing address

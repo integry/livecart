@@ -132,7 +132,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     public function loadItems()
     {
         $this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'))->getData();
-        $this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter())->getData();
+        $this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter(), self::LOAD_REFERENCES)->getData();
         if (!$this->shipments)
         {
 			$this->shipments = unserialize($this->shipping->get());
@@ -607,15 +607,32 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     {
         if ($this->isFinalized->get())
         {
-            $filter = new ARSelectFilter();
+            $this->loadItems();
+            
+            $filter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Shipment', 'orderID'), $this->getID()));
             $filter->setOrder(new ARFieldHandle('Shipment', 'status'));
             
-            $this->shipments = $this->getRelatedRecordSet('Shipment', $filter); 
-
+            $this->shipments = $this->getRelatedRecordSet('Shipment', $filter, array('ShippingService')); 
+                        
             foreach($this->shipments as $shipment)
             {
                 $shipment->loadItems();
             }
+            
+            // get downloadable items
+            foreach ($this->getShoppingCartItems() as $item)
+            {
+                if ($item->product->get()->isDownloadable())
+                {
+                    if (!isset($downloadable))
+                    {
+                        $downloadable = Shipment::getNewInstance($this);
+                        $this->shipments->add($downloadable);
+                    }
+
+                    $downloadable->addItem($item);
+                }
+            }            
         }
         else
         {
@@ -835,18 +852,26 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 		// total for all currencies
 		$total = array();
 		$currencies = Store::getInstance()->getCurrencySet();
-		if(is_array($currencies))
+
+		if (is_array($currencies))
 		{
 	        foreach ($currencies as $id => $currency)
 	        {
-	            $total[$id] = $this->getTotal($currency);
+	            if ($this->isFinalized->get())
+	            {
+                    $total[$id] = $currency->convertAmount($this->currency->get(), $array['totalAmount']);
+                }
+                else
+                {
+                    $total[$id] = $this->getTotal($currency);
+                }
 	        }
 		}
         			
 		$array['total'] = $total;
 		
 		$array['formattedTotal'] = array();
-		if(is_array($array['total']))
+		if (is_array($array['total']))
 		{
 	        foreach ($array['total'] as $id => $amount)
 			{

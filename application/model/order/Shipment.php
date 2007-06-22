@@ -179,7 +179,7 @@ class Shipment extends ActiveRecordModel
         {
             if ($this->isLoaded())
             {
-                $this->taxes = ActiveRecordModel::getRecordSet('ShipmentTax', new ARSelectFilter(new EqualsCond(new ARFieldHandle('ShipmentTax', 'shipmentID'), $this->getID())), ActiveRecordModel::LOAD_REFERENCES);
+                $this->taxes = $this->getRelatedRecordSet('ShipmentTax', new ARSelectFilter(), array('Tax', 'TaxRate'));
             }
             else
             {
@@ -230,12 +230,25 @@ class Shipment extends ActiveRecordModel
         // selected shipping rate
         if ($selected = $this->getSelectedRate())
         {
-            $array['selectedRate'] = $selected->toArray();            
+            $array['selectedRate'] = $selected->toArray();    
+            $array['ShippingService'] = $array['selectedRate']['ShippingService'];
+        }
+        
+        // shipping rate for a saved shipment
+        if (!isset($array['selectedRate']) && isset($array['shippingAmount']))
+        {
+            $currency = Currency::getInstanceByID($array['AmountCurrency']['ID']);
+            $array['selectedRate']['formattedPrice'] = array();
+            foreach ($currencies as $id => $currency)
+            {
+                $rate = $currency->convertAmount($currency, $array['shippingAmount']);
+                $array['selectedRate']['formattedPrice'][$id] = Currency::getInstanceById($id)->getFormattedPrice($rate);
+            }
         }
         
         // taxes
         $array['taxes'] = $this->getTaxes()->toArray();
-               
+
         // consists of downloadable files only?
         $array['isShippable'] = $this->isShippable();
                 
@@ -348,7 +361,7 @@ class Shipment extends ActiveRecordModel
         {
             $tax->save();
         }
-        
+                            
         return $ret;
     }
     

@@ -89,3 +89,8 @@ _postal_code=Postal Code
 ######################## 
 _view_order=View Order
 _order_invoice=View Invoice
+
+_ordered_products=Ordered Products
+_downloads=Downloads
+_order_total=Order Total
+_shipment_total=Shipment Total

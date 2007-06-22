@@ -159,11 +159,12 @@ class UserController extends FrontendController
         $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
         $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
         
-        $s = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
+        $s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
         if ($s->size())
         {
             $order = $s->get(0);
             $order->loadAll();  
+
             $response = new ActionResponse();
             $response->setValue('order', $order->toArray());
     		$response->setValue('user', $this->user->toArray());
