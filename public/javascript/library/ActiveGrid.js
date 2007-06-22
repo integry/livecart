@@ -446,6 +446,7 @@ ActiveGridFilter.prototype =
 	        if ('' == this.element.value)
 	        {
 	            this.element.blur();
+	            this.setFilterValue();
 	        }        
 		}
                       

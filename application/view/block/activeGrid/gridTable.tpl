@@ -84,10 +84,12 @@
                         </div>
         
         
-					{elseif 'date' == $type}
+					{* elseif 'date' == $type}
 
 					   {calendar noform="true" class="text `$type`" id="filter_`$column`_`$id`" value=$availableColumns.$column.name|escape style="float: left;"}
 
+                    *}
+                    
 					{else}
 
 					   <input type="text" class="text {$type}" id="filter_{$column}_{$id}" value="{$availableColumns.$column.name|escape}" style="float: left;" />
@@ -123,8 +125,9 @@
 {literal}
 <script type="text/javascript">
 {/literal}
+	console.log('starting');
 	grid = new ActiveGrid($('{$prefix}_{$id}'), '{$url}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"));
-	
+	console.log(grid);
 	{foreach from=$displayedColumns item=index key=column name="columns"}
 		{if !$smarty.foreach.columns.first}
 		    new ActiveGridFilter($('filter_{$column}_{$id}'), grid);

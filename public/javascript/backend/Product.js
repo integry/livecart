@@ -710,7 +710,7 @@ Backend.Product.Editor.prototype =
     {       
         if($("productManagerContainer")) Element.hide($("productManagerContainer"));
         if($("managerContainer")) Element.show($("managerContainer"));
-        Element.hide('activeProductPath');
+        if($("activeProductPath")) Element.hide('activeProductPath');
         Element.show('activeCategoryPath');       
     },
     
