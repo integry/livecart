@@ -18,9 +18,12 @@
     {form action="controller=checkout action=doSelectShippingMethod" method="POST" handle=$form}
         {foreach from=$shipments key="key" item="shipment"}
             
-			{include file="checkout/shipmentProductList.tpl"}
-			
-			{include file="checkout/shipmentSelectShipping.tpl"}
+            {if $shipment.isShippable}
+            
+    			{include file="checkout/shipmentProductList.tpl"}    			
+    			{include file="checkout/shipmentSelectShipping.tpl"}
+    			
+    		{/if}
                    
         {/foreach}
     

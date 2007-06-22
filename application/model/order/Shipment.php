@@ -169,6 +169,12 @@ class Shipment extends ActiveRecordModel
     
     public function getTaxes()
     {
+        // no taxes are calculated for downloadable products
+        if (!$this->isShippable())
+        {
+            return new ARSet();
+        }
+        
         if (!$this->taxes)
         {
             if ($this->isLoaded())
@@ -229,6 +235,9 @@ class Shipment extends ActiveRecordModel
         
         // taxes
         $array['taxes'] = $this->getTaxes()->toArray();
+               
+        // consists of downloadable files only?
+        $array['isShippable'] = $this->isShippable();
                 
         return $array;
     }
@@ -276,8 +285,33 @@ class Shipment extends ActiveRecordModel
         }
     }
     
+    public function isShippable()
+    {
+        foreach ($this->items as $key => $value)
+        {
+            if ($value->product->get()->isDownloadable())
+            {
+                return false;
+            }   
+        }
+        
+        return true;
+    }
+    
+    public function save()
+    {
+        // make sure the shipment doesn't consist of downloadable files only
+        if (!$this->isShippable())
+        {
+            return false;
+        }
+
+        return parent::save();
+    }
+    
     protected function insert()
-    {      
+    {              
+        // set shipping data
         $rate = $this->getSelectedRate();
         
         $serviceId = $rate->getServiceID();

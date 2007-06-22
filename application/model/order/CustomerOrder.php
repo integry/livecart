@@ -311,9 +311,12 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         }
         
         // clone billing/shipping addresses
-        $shippingAddress = clone $this->shippingAddress->get();
-        $shippingAddress->save();
-        $this->shippingAddress->set($shippingAddress);
+        if ($this->shippingAddress->get())
+        {
+            $shippingAddress = clone $this->shippingAddress->get();
+            $shippingAddress->save();
+            $this->shippingAddress->set($shippingAddress);            
+        }
         
         $billingAddress = clone $this->billingAddress->get();
         $billingAddress->save();
@@ -619,13 +622,21 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
             if (!$this->shipments)
             {
                 ClassLoader::import("application.model.order.Shipment");
-        
 
                 $this->shipments = new ARSet();
                 
                 foreach ($this->getShoppingCartItems() as $item)
                 {
-                    if ($item->product->get()->isSeparateShipment->get())
+                    if ($item->product->get()->isDownloadable())
+                    {
+                        if (!isset($downloadable))
+                        {
+                            $downloadable = Shipment::getNewInstance($this);                            
+                        }
+                        
+                        $downloadable->addItem($item);
+                    }
+                    else if ($item->product->get()->isSeparateShipment->get())
                     {
                         $shipment = Shipment::getNewInstance($this);
                         $shipment->addItem($item);
@@ -646,6 +657,11 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
                 {
                     $this->shipments->unshift($main); 
                 }                   
+
+                if (isset($downloadable))
+                {
+                    $this->shipments->unshift($downloadable);
+                }                   
             }                    
         }
 
@@ -655,7 +671,31 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 	public function getDeliveryZone()
 	{
         ClassLoader::import("application.model.delivery.DeliveryZone");
-        return DeliveryZone::getZoneByAddress($this->shippingAddress->get());            
+        
+        if ($this->isShippingRequired())
+        {
+            return DeliveryZone::getZoneByAddress($this->shippingAddress->get()); 
+        }
+        else
+        {
+            return DeliveryZone::getDefaultZoneInstance();   
+        }
+    }
+	
+	/**
+	 * No shipping is required for orders consisting of downloadable items only
+	 */
+    public function isShippingRequired()
+	{
+        foreach ($this->getShoppingCartItems() as $item)
+        {
+            if (!$item->product->get()->isDownloadable())
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
 	
 	public function isShippingSelected()
@@ -814,12 +854,15 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 	        }
 		}
         
+        // order type
+        $array['isShippingRequired'] = (int)$this->isShippingRequired();
+        
         // status
         $array['isReturned'] = (int)$this->isReturned();;
         $array['isShipped'] = (int)$this->isShipped();
         $array['isAwaitingShipment'] = (int)$this->isAwaitingShipment();
         $array['isBackordered'] = (int)$this->isBackordered();
-//		var_dump($array);
+
 		return $array;
 	}
 	

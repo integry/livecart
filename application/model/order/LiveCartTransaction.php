@@ -29,7 +29,12 @@ class LiveCartTransaction extends TransactionDetails
         $this->address->set($address->address1->get() . ' ' . $address->address2->get());    
         
         // shipping address
-        $address = $order->shippingAddress->get();
+        $address = $order->shippingAddress->get();        
+        if (!$address)
+        {
+            $address = $order->billingAddress->get();
+        }
+        
         foreach ($fields as $key => $field)
         {
             $addressField = is_numeric($key) ? $field : $key;            

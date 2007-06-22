@@ -31,42 +31,46 @@
 	{/foreach}
 	</table>	
 
-    <p>
-        {checkbox name="sameAsBilling" class="checkbox"}
-        <label for="sameAsBilling" class="checkbox">{t _the_same_as_shipping_address}</label>
-    </p>
+    {if $order.isShippingRequired}
     
-    <div style="clear: both;"></div>
+        <p>
+            {checkbox name="sameAsBilling" class="checkbox"}
+            <label for="sameAsBilling" class="checkbox">{t _the_same_as_shipping_address}</label>
+        </p>
+        
+        <div style="clear: both;"></div>
+        
+        <div id="shippingSelector">
     
-    <div id="shippingSelector">
+        <h2>{t _shipping_address}</h2>
+    
+        <a href="{link controller=user action=addShippingAddress returnPath=true}" class="menu">
+            {t _add_shipping_address}
+        </a>
+    
+            <table class="addressSelector">
+        	{foreach from=$shippingAddresses item="item"}
+                <tr>
+                    <td class="selector">
+                        {radio class="radio" name="shippingAddress" id="shipping_`$item.UserAddress.ID`" value=$item.UserAddress.ID}
+                    </td>        
+                    <td class="address" onclick="$('shipping_{$item.UserAddress.ID}').checked = true;">        	    
+                        {include file="user/address.tpl"} 
+                        <a href="{link controller=user action=editShippingAddress id=$item.ID returnPath=true}">{t _edit_address}</a>
+                    </td>
+                </tr>        
+        	{/foreach}
+        	</table>
+    
+        </div>
+    
+        {literal}
+        <script type="text/javascript">
+            new User.ShippingFormToggler($('sameAsBilling'), $('shippingSelector'));    
+        </script>
+        {/literal}
 
-    <h2>{t _shipping_address}</h2>
-
-    <a href="{link controller=user action=addShippingAddress returnPath=true}" class="menu">
-        {t _add_shipping_address}
-    </a>
-
-        <table class="addressSelector">
-    	{foreach from=$shippingAddresses item="item"}
-            <tr>
-                <td class="selector">
-                    {radio class="radio" name="shippingAddress" id="shipping_`$item.UserAddress.ID`" value=$item.UserAddress.ID}
-                </td>        
-                <td class="address" onclick="$('shipping_{$item.UserAddress.ID}').checked = true;">        	    
-                    {include file="user/address.tpl"} 
-                    <a href="{link controller=user action=editShippingAddress id=$item.ID returnPath=true}">{t _edit_address}</a>
-                </td>
-            </tr>        
-    	{/foreach}
-    	</table>
-
-    </div>
-
-    {literal}
-    <script type="text/javascript">
-        new User.ShippingFormToggler($('sameAsBilling'), $('shippingSelector'));    
-    </script>
-    {/literal}
+    {/if}
 
     <input type="submit" class="submit" value="{tn _continue}" />
     

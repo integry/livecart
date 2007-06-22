@@ -1015,6 +1015,11 @@ div.checkout a
     text-align: center;
 }
 
+.addressSelector a
+{
+    float: right;
+}
+
 .addressSelector .address
 {
     padding: 5px;    

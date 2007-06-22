@@ -107,10 +107,16 @@
                 </tr>
             {/foreach}            
         
-            <tr>
-                <td colspan="3" class="subTotalCaption">{t _shipping} ({$shipment.selectedRate.ShippingService.name_lang}):</td>
-                <td>{$shipment.selectedRate.formattedPrice.$currency}</td>                        
-            </tr>
+            {if $order.isShippingRequired && $shipment.isShippable}
+                <tr>
+                    <td colspan="3" class="subTotalCaption">
+                        {t _shipping} ({$shipment.selectedRate.ShippingService.name_lang}):
+                    </td>
+                    <td>
+                        {$shipment.selectedRate.formattedPrice.$currency}
+                    </td>
+                </tr>
+            {/if}
         {/foreach}  
       
         {foreach from=$order.taxes.$currency item="tax"}

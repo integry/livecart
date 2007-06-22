@@ -797,6 +797,14 @@ class Product extends MultilingualObject
         
     	return self::isAvailableForOrdering($this->isEnabled->get(), $this->stockCount->get(), $this->isBackOrderable->get());
 	}
+
+    /**
+     *  Determines if the product is downloadable (digital file) - as opposed to shippable products
+     */  
+    public function isDownloadable()
+    {
+        return $this->type->get() == self::TYPE_DOWNLOADABLE;
+    }
     
     protected static function isAvailableForOrdering($isEnabled, $stockCount, $isBackOrderable)
     {

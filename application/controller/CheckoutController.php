@@ -124,7 +124,7 @@ class CheckoutController extends FrontendController
 			return $redirect;
 		}
         
-        $form = $this->buildAddressSelectorForm();
+        $form = $this->buildAddressSelectorForm($order);
         
         if ($order->billingAddress->get())
         {
@@ -166,7 +166,9 @@ class CheckoutController extends FrontendController
     {
         $this->user->loadAddresses();
         
-        if (!$this->buildAddressSelectorValidator()->isValid())
+        $order = CustomerOrder::getInstance();        
+        
+        if (!$this->buildAddressSelectorValidator($order)->isValid())
         {
             return new ActionRedirectResponse('checkout', 'selectAddress');
         }   
@@ -184,35 +186,41 @@ class CheckoutController extends FrontendController
             }
             
             $billing = $r->get(0);
-            
-            if ($this->request->getValue('sameAsBilling'))
+            $order->billingAddress->set($billing->userAddress->get());
+                    
+            // shipping address
+            if ($order->isShippingRequired())
             {
-                $shipping = $billing;
-            }
-            else
-            {
-
-                $f = new ARSelectFilter();
-                $f->setCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userID'), $this->user->getID()));
-                $f->mergeCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userAddressID'), $this->request->getValue('shippingAddress')));
-                $r = ActiveRecordModel::getRecordSet('ShippingAddress', $f, array('UserAddress'));
                 
-                if (!$r->size())
+                if ($this->request->getValue('sameAsBilling'))
                 {
-                    throw new ApplicationException('Invalid shipping address');
+                    $shipping = $billing;
                 }
-
-                $shipping = $r->get(0);
-            }            
+                else
+                {
+    
+                    $f = new ARSelectFilter();
+                    $f->setCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userID'), $this->user->getID()));
+                    $f->mergeCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userAddressID'), $this->request->getValue('shippingAddress')));
+                    $r = ActiveRecordModel::getRecordSet('ShippingAddress', $f, array('UserAddress'));
+                    
+                    if (!$r->size())
+                    {
+                        throw new ApplicationException('Invalid shipping address');
+                    }
+    
+                    $shipping = $r->get(0);
+                }
+                
+                $order->shippingAddress->set($shipping->userAddress->get());            
+            }
         }
         catch (Exception $e)
         {
+            throw $e;
             return new ActionRedirectResponse('checkout', 'selectAddress');
         }
         
-        $order = CustomerOrder::getInstance();
-        $order->shippingAddress->set($shipping->userAddress->get());
-        $order->billingAddress->set($billing->userAddress->get());
         $order->save();
 		$order->syncToSession();
 		
@@ -231,6 +239,11 @@ class CheckoutController extends FrontendController
         {
 			return $redirect;
 		}
+        
+        if (!$order->isShippingRequired())
+        {
+            return new ActionRedirectResponse('checkout', 'pay');
+        }
         
         $shipments = $order->getShipments();
 
@@ -298,17 +311,20 @@ class CheckoutController extends FrontendController
 
         foreach ($shipments as $key => $shipment)
         {
-			$rates = $shipment->getAvailableRates();
-			
-			$selectedRateId = $this->request->getValue('shipping_' . $key);
-			
-            if (!$rates->getByServiceId($selectedRateId))
+			if ($shipment->isShippable())
 			{
-				throw new ApplicationException('No rate found: ' . $key .' (' . $selectedRateId . ')');
-				return new ActionRedirectResponse('checkout', 'shipping');
-			}
-			
-			$shipment->setRateId($selectedRateId);
+                $rates = $shipment->getAvailableRates();
+    			
+    			$selectedRateId = $this->request->getValue('shipping_' . $key);
+    			
+                if (!$rates->getByServiceId($selectedRateId))
+    			{
+    				throw new ApplicationException('No rate found: ' . $key .' (' . $selectedRateId . ')');
+    				return new ActionRedirectResponse('checkout', 'shipping');
+    			}
+    			
+    			$shipment->setRateId($selectedRateId);
+		    }
 		}
         
         $order->saveToSession();
@@ -475,18 +491,18 @@ class CheckoutController extends FrontendController
         // shipping address selected
         if ($step >= self::STEP_SHIPPING)
         {            
-            if (!$order->shippingAddress->get() || !$order->billingAddress->get())
+            if ((!$order->shippingAddress->get() && $order->isShippingRequired()) || !$order->billingAddress->get())
             {
                 return new ActionRedirectResponse('checkout', 'selectAddress');
             }            
         }
         
         // shipping method selected
-        if ($step >= self::STEP_PAYMENT)
+        if ($step >= self::STEP_PAYMENT && $order->isShippingRequired())
         {            
             foreach ($order->getShipments() as $shipment)
             {
-                if (!$shipment->getSelectedRate())
+                if (!$shipment->getSelectedRate() && $shipment->isShippable())
                 {
                     return new ActionRedirectResponse('checkout', 'shipping');
                 }
@@ -508,24 +524,31 @@ class CheckoutController extends FrontendController
         $validator = new RequestValidator("shipping", $this->request);
         foreach ($shipments as $key => $shipment)		
         {
-            $validator->addCheck('shipping_' . $key, new IsNotEmptyCheck($this->translate('_err_select_shipping')));
+            if ($shipment->isShippable())
+            {
+                $validator->addCheck('shipping_' . $key, new IsNotEmptyCheck($this->translate('_err_select_shipping')));
+            }
         }
         return $validator;
     }
 
-    private function buildAddressSelectorForm()
+    private function buildAddressSelectorForm(CustomerOrder $order)
     {
 		ClassLoader::import("framework.request.validator.Form");
         $validator = new RequestValidator("addressSelectorValidator_blank", $this->request);
 		return new Form($validator);        
     }
     
-    private function buildAddressSelectorValidator()
+    private function buildAddressSelectorValidator(CustomerOrder $order)
     {
 		ClassLoader::import("framework.request.validator.Form");
         $validator = new RequestValidator("addressSelectorValidator", $this->request);
         $validator->addCheck('billingAddress', new IsNotEmptyCheck($this->translate('_select_billing_address')));
-        $validator->addCheck('shippingAddress', new OrCheck(array('shippingAddress', 'sameAsBilling'), array(new IsNotEmptyCheck($this->translate('_select_shipping_address')), new IsNotEmptyCheck('')), $this->request));
+        
+        if ($order->isShippingRequired())
+        {
+            $validator->addCheck('shippingAddress', new OrCheck(array('shippingAddress', 'sameAsBilling'), array(new IsNotEmptyCheck($this->translate('_select_shipping_address')), new IsNotEmptyCheck('')), $this->request));            
+        }
         
         return $validator;
     }
