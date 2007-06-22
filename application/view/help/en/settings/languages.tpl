@@ -1,8 +1,8 @@
 <p>LiveCart supports multiple languages for the same system, which enables you to adjust your shop for 
-international usage. You can translate both interface information (menus, captions, instructions, etc.), 
+international usage. You can translate both interface information (menus, captions, error messages, etc.), 
 as well as most of the data, which is stored in the system, like product descriptions, category names and 
 others. (This may seem overwhelming at first but as you will see there are a couple of handy tools to help 
-you deal with interface translations (see <a href="{help /language.edit#translate_directly}">Live Translation</a>).)</p>
+you deal with interface translations (see <a href="{help /settings.languages.edit#translate_directly}">Live Translation</a>).)</p>
 
 <div class="tasks">
 <fieldset>

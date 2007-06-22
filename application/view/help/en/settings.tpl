@@ -7,8 +7,8 @@
 	<li><a href="{help /settings.configuration}">Edit Configuration</a></li>
 	<li><a href="{help /settings.delivery}">Manage Delivery Zones</a></li>
 	<li><a href="{help /settings.taxes}">Manage Taxes</a></li>
-	<li><a href="{help /settings.currency}">Manage Currencies</a></li>
-	<li><a href="{help /settings.language}">Manage Languages</a></li>
+	<li><a href="{help /settings.currencies}">Manage Currencies</a></li>
+	<li><a href="{help /settings.languages}">Manage Languages</a></li>
 </ul>
 </fieldset>
 </div>

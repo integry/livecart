@@ -32,7 +32,7 @@
 </ol>
 
 <p><strong>Defining shipping rates</strong></p>
-<p>These are the rates that determine various pricing according to order's weight, value or delivery time. Shipping rates can be defined manually or you can use realtime shipping methods such as USPS, FedEx, etc. Realtime shipping methods can be configured in Settings -> <a href="{help /settings.configuration}#shipping">Configuration area</a>. To add a custom shipping service:</p>
+<p>These are the rates that determine various pricing according to order's weight, value or delivery time. Shipping rates can be defined manually or you can use realtime shipping methods such as USPS, FedEx, etc. Realtime shipping methods can be enabled and configured in Settings -> <a href="{help /settings.configuration}#shipping">Configuration area</a>. To add a custom shipping service:</p>
 <ol>
 	<li>Click on the "Shipping Rates" tab.</li>
 	<img src="image/doc/settings/delivery/shipping_tab.bmp">

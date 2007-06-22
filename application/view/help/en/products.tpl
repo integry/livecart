@@ -18,7 +18,6 @@ To start selling goods in your e-store you have to stock up your system with som
 
 
 <h3 id="view">View and Sort products</h3>
-<h4>(View)</h4>
 <p>
 	To display products of a particular category:
 	<ol>
@@ -54,6 +53,8 @@ To start selling goods in your e-store you have to stock up your system with som
 
 <p>LC allows you to conduct a product search almost by any product's attribute. See how to <a href="{self}#columns">changes attributes</a></small> that are displayed in the toolbar.</p>
 <ul>
+		<li><ins>select category</ins></li>
+		If you want to search all you product catalog, select the root category in the category tree.
 		<li>Click an attribute to activate a search field:</li>
 		<img src="image/doc/products/name2.bmp"/>
 		<li>Enter search criteria and press Enter:</li>
@@ -62,13 +63,10 @@ To start selling goods in your e-store you have to stock up your system with som
 	
 	</ul>
 
-<p class="note"><strong>Note</strong>: product search is carried out only throughout the selected category and its
-subcategories. If you want to search all you product catalog, select the root category in the category tree.</p>
-
-<p class="note"><strong>Tip</strong>: you can as well use logical operators such as "<" - less or ">" - more 
-in your search. For instance, if you want to display products that cost less than 500, simply enter "< 500"
-in the price field. You can also search within a particular range. For example, to find products that cost 
-from 200 to 500, enter ">200 <500".</p>
+<p class="note">You can as well use logical operators to customize your search. Click on the "Magnifying glass" icon to select an appropriate operator.
+For example, if you want to display products that cost less than 500, select "< Less than" operator and enter "500"
+in the price field and press "Enter". (You can also search within a particular range. For example, to find products that cost 
+from 200 to 500, select "Range" and enter "200" and "500" accordingly.)</p>
 
 
 <h3 id="manage">Manage products</h3>
