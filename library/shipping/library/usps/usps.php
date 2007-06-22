@@ -184,4 +184,4 @@ class UspsIntPrice
     var $id;
     var $rate;
 }
-?> 
+?>
