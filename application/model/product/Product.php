@@ -409,10 +409,36 @@ class Product extends MultilingualObject
 	  	$array = parent::toArray();
 	  	if ($this->isLoaded())
 	  	{
-            $array['attributes'] = $this->getSpecification()->toArray();
+            $array['attributes'] = $this->getSpecification()->toArray();  
+			self::sortAttributesByHandle($array);
     		$array = array_merge($array, $this->getPricesFields());                
         }
 	  	return $array;
+	}
+	
+	public static function sortAttributesByHandle(&$array)
+	{
+		if (isset($array['attributes']))
+		{
+			foreach ($array['attributes'] as $attr)
+			{
+				if (isset($attr['SpecField']))
+				{
+					$array['byHandle'][$attr['SpecField']['handle']] = $attr;
+				}
+				else
+				{
+					if (!$attr['isMultiValue'])
+					{
+						$array['byHandle'][$attr['handle']] = $attr;					
+					}
+					else
+					{
+						$array['byHandle'][$attr['handle']][$attr['specFieldValueID']] = $attr;
+					}					
+				}
+			}			
+		}		
 	}
 	
 	public static function transformArray($array)

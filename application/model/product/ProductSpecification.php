@@ -204,7 +204,7 @@ class ProductSpecification
 		}
 		
 		$specificationArray = self::fetchSpecificationData(array_flip($ids));
-		
+
 		foreach ($specificationArray as &$spec)
 		{
 			// transform for presentation
@@ -212,7 +212,8 @@ class ProductSpecification
 			$spec = MultiLingualObject::transformArray($spec, 'SpecField');
 
 			// append to product array
-			$productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']] = $spec;			
+			$productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']] = $spec;		
+			Product::sortAttributesByHandle($productArray[$ids[$spec['productID']]]);	
 		}
 	}
 

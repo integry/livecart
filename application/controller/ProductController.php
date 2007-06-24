@@ -68,7 +68,7 @@ class ProductController extends FrontendController
         end($this->breadCrumb);
         $last = prev($this->breadCrumb);
         $catRoute = $this->router->getRouteFromUrl($last['url']);
-        		
+
 		$response = new ActionResponse();
         $response->setValue('product', $productArray);        
         $response->setValue('category', $productArray['Category']);        

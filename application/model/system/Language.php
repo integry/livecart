@@ -59,7 +59,7 @@ class Language extends ActiveRecordModel
 	  	$array['name'] = Store::getInstance()->getLocaleInstance()->info()->getLanguageName($array['ID']);
 	  	$array['originalName'] = Store::getInstance()->getLocaleInstance()->info()->getOriginalLanguageName($array['ID']);
 	  	
-		if (file_exists('image/localeflag/' . $array['ID'] . '.png'))
+		if (file_exists(ClassLoader::getRealPath('public.image.localeflag') . '/' . $array['ID'] . '.png'))
 		{
 		  	$array['image'] = 'image/localeflag/' . $array['ID'] . '.png';
 		}	  	

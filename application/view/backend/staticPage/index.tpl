@@ -69,4 +69,6 @@
 
 <div class="clear"></div>
 
+<div id="pageDelConf" style="display: none;">{t _del_conf}</div>
+
 {include file="layout/backend/footer.tpl"}

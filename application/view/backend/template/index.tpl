@@ -6,6 +6,8 @@
 {includeJs file="library/dhtmlxtree/dhtmlXTree.js"}
 {includeJs file="backend/Template.js"}
 
+{includeJs file="library/editarea/edit_area_full.js"}
+
 {includeCss file="backend/Template.css"}
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 
@@ -37,10 +39,7 @@
 	
 	</div>
 
-	<div style="float: left; margin-left: 20px;">
-		
-		<span id="templateIndicator" class="progressIndicator" style="display: none;"></span>
-				
+	<div style="float: left; margin-left: 20px;">		
 		<div id="templateContent">
 			{include file="backend/template/emptyPage.tpl"}
 		</div>

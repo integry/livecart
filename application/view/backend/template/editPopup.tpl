@@ -3,6 +3,7 @@
 {includeJs file="backend/Template.js"}
 {includeJs file="library/form/ActiveForm.js"}
 {includeJs file="library/form/Validator.js"}
+{includeJs file="library/editarea/edit_area_full.js"}
 
 {include file="layout/backend/meta.tpl"}
 
@@ -23,7 +24,7 @@
 
 {form handle=$form action="controller=backend.template action=save" method="POST" id="templateForm"}
 
-	{textarea name="code" id="cd"}
+	{textarea name="code"}
 	
 	<fieldset class="controls">
 		{hidden name="file"}
@@ -53,6 +54,7 @@
 
 {literal}
 	<script type="text/javascript">
+		editAreaLoader.baseURL = "{/literal}{baseUrl}javascript/library/editarea/{literal}";
 		new Backend.TemplateHandler($('templateForm'));
 	</script>
 {/literal}

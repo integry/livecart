@@ -20,3 +20,7 @@ _handle=URL Handle (slug)
 _text=Page Text
 
 _inf_menu=Display in <em>Information</em> menu
+
+_del_conf=Are you sure you wish to delete this page?
+_err_text_empty=Please enter page content
+_save_conf=Page was saved successfuly

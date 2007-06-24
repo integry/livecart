@@ -169,4 +169,7 @@ _prod_type_0=Tangible (shippable products)
 _prod_type_1=Intangible (downlodable files)
 
 _language_management=Language Management
-SHOW_BACKEND_LANG_FILES=Allow to edit backend language files
+SHOW_BACKEND_LANG_FILES=Allow to edit store backend language files
+
+_template_management=Template Management
+SHOW_BACKEND_TEMPLATE_FILES=Allow to edit store backend template files

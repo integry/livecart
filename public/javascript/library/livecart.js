@@ -118,8 +118,12 @@ LiveCart.AjaxUpdater.prototype = {
         }
         
         LiveCart.ajaxUpdaterInstance = this;
-        this.indicatorContainerId = indicatorId;
-        Element.show(this.indicatorContainerId);
+
+        if (indicatorId)
+        {
+			this.indicatorContainerId = indicatorId;
+	        Element.show(this.indicatorContainerId);			
+		}
 
         var updaterOptions = { method: method,
                                parameters: params,
@@ -161,10 +165,12 @@ LiveCart.AjaxUpdater.prototype = {
 
     },
 
-
 	hideIndicator: function()
 	{
-		Element.hide(LiveCart.ajaxUpdaterInstance.indicatorContainerId);
+		if ($(LiveCart.ajaxUpdaterInstance.indicatorContainerId))
+		{
+			Element.hide(LiveCart.ajaxUpdaterInstance.indicatorContainerId);			
+		}
 	},
 
 	showIndocator: function()

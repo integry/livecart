@@ -16,3 +16,10 @@
 	</fieldset>
 	
 {/form}
+
+{literal}
+<script type="text/javascript">
+	$('code').value = {/literal}decode64("{$code}");{literal};
+	editAreaLoader.baseURL = "{/literal}{baseUrl}javascript/library/editarea/{literal}";
+</script>
+{/literal}

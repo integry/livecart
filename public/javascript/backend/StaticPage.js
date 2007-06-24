@@ -111,6 +111,11 @@ Backend.StaticPage.prototype =
 	
 	deleteSelected: function()
 	{
+		if (!confirm($('pageDelConf').innerHTML))
+		{
+			return false;		
+		}
+	
 		var id = this.treeBrowser.getSelectedItemId();
 		var url = this.urls['delete'].replace('_id_', id);
 		new Ajax.Request(url, {onComplete: this.deleteCompleted.bind(this)});	
