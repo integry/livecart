@@ -52,7 +52,7 @@ class TemplateController extends StoreManagementController
 	{
 		$code = $this->request->getValue('code');
         //$code = preg_replace('/&\#([\d]{1,3});/e', "chr('\\1')", $code);		
-        
+
         $template = new Template($this->request->getValue('file')); 
 		$template->setCode($code);
 		$res = $template->save();

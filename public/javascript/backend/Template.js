@@ -103,7 +103,9 @@ Backend.TemplateHandler.prototype =
 		editAreaLoader.init({
 			id : "code",		// textarea id
 			syntax: "html",			// syntax to be uses for highgliting
-			start_highlight: true		// to display with highlight mode on start-up
+			start_highlight: true,		// to display with highlight mode on start-up
+			allow_toggle: false,
+			allow_resize: true
 			}
 		);
 		
@@ -113,6 +115,7 @@ Backend.TemplateHandler.prototype =
 	
 	submit: function()
 	{
+		$('code').value = editAreaLoader.getValue('code');
 		new LiveCart.AjaxRequest(this.form, null, this.saveComplete.bind(this));
 		return false;
 	},
@@ -183,5 +186,37 @@ enc1 = enc2 = enc3 = enc4 = "";
 } while (i < inp.length); //finish off the loop
 
 //Now return the decoded values.
-return out;
+//return out;
+return _utf8_decode(out);
 }
+
+ // private method for UTF-8 decoding  
+function _utf8_decode(utftext) {  
+     var string = "";  
+     var i = 0;  
+     var c = c1 = c2 = 0;  
+
+     while ( i < utftext.length ) {  
+
+         c = utftext.charCodeAt(i);  
+
+         if (c < 128) {  
+             string += String.fromCharCode(c);  
+             i++;  
+         }  
+         else if((c > 191) && (c < 224)) {  
+             c2 = utftext.charCodeAt(i+1);  
+             string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));  
+             i += 2;  
+         }  
+         else {  
+             c2 = utftext.charCodeAt(i+1);  
+             c3 = utftext.charCodeAt(i+2);  
+             string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));  
+             i += 3;  
+         }  
+
+     }  
+
+     return string;  
+}  
