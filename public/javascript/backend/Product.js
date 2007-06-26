@@ -625,9 +625,18 @@ Backend.Product.Editor.prototype =
         }
     },
     
-    setActiveProductName: function(name)
+    setActiveProductName: function(name, path)
     {
+        var productPath = '';
+        for (k = 0; k < path.length; k++)
+        {
+            productPath += path[k].name_lang + ' &gt; ';
+        }
+        
+        $('productCategoryPath').innerHTML = productPath;
         $('activeProductName').innerHTML = name;
+        
+        Element.hide('activeCategoryPath');
         Element.show('activeProductPath');
     },
 
@@ -739,6 +748,17 @@ Backend.Product.Editor.prototype =
     addTinyMce: function()
     {		
         ActiveForm.prototype.initTinyMceFields(this.nodes.parent);
+    },
+    
+    goToProductPage: function()
+    {
+        var node = $('productPage');
+        if (!node.urlTemplate)
+        {
+            node.urlTemplate = node.href;   
+        }
+        
+        node.href = node.urlTemplate.replace('_id_', Backend.Product.Editor.prototype.getCurrentProductId());
     }
 }
 

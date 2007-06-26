@@ -39,7 +39,7 @@
 {includeCss file="library/TabControl.css"}
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 
-{pageTitle help="cat"}<span id="activeCategoryPath"></span><span id="activeProductPath" style="display: none;"> &gt; <span id="activeProductName"></span></span><span style="display: none;">{t Product and Categories}</span>{/pageTitle}
+{pageTitle help="cat"}<span id="activeCategoryPath"></span><span id="activeProductPath" style="display: none;"><span id="productCategoryPath"></span><span id="activeProductName"></span></span><span style="display: none;">{t Products and Categories}</span>{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
 <div id="specField_item_blank" class="dom_template">{include file="backend/specField/form.tpl"}</div>

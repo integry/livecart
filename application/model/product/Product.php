@@ -205,7 +205,7 @@ class Product extends MultilingualObject
 		$this->saveRelationships();
 		
 		// generate SKU automatically if not set
-		if (!$this->sku->get() && 0)
+		if (!$this->sku->get())
 		{
 			ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
 

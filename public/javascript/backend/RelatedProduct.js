@@ -37,7 +37,8 @@ Backend.RelatedProduct = {
                 if(evaluatedResponse && evaluatedResponse.error && evaluatedResponse.error.length > 0)
                 {
                     // error
-                    new Backend.SaveConfirmationMessage($('productRelationshipMsg_' + productID), { message: evaluatedResponse.error, type: 'red' });
+                    var relMsg = Backend.RelatedProduct.SelectProductPopup.prototype.popup.document.getElementById('relError');
+                    new Backend.SaveConfirmationMessage(relMsg, { message: evaluatedResponse.error, type: 'red' });
                 }
                 else
                 {
@@ -48,6 +49,9 @@ Backend.RelatedProduct = {
 
                         var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
                         tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') + 1);
+                        var relMsg = Backend.RelatedProduct.SelectProductPopup.prototype.popup.document.getElementById('relConf');
+
+                        new Backend.SaveConfirmationMessage(relMsg);
                     } 
                     catch(e)
                     {

@@ -3,6 +3,21 @@
     margin-left: 6px;
 }
 
+.doneProduct
+{
+    float: left;
+    margin-bottom: 8px !important;
+}
+
+#productPage
+{
+	padding-right: 22px;
+	background-image: url(../../image/silk/gif/resultset_next.gif);
+	background-position: center right;
+	background-repeat: no-repeat;    
+	float: right;
+}
+
 /*************************
 	Product form
 *************************/

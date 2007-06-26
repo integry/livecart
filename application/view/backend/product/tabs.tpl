@@ -1,9 +1,12 @@
 <div id="productManagerContainer" class="treeManagerContainer maxHeight h--90" style="display: none;">
     
 	<fieldset class="container">
-		<ul class="menu">
+		<ul class="menu doneProduct">
 			<li><a href="#cancelEditing" id="cancel_product_edit" class="cancel">{t Done editing product}</a></li>
 		</ul>
+		
+		<a id="productPage" onclick="Backend.Product.Editor.prototype.goToProductPage();" href="{link controller=product action=index id=_id_}" target="_blank">Product page</a>
+		
 	</fieldset>
 	
 	<div class="tabContainer">

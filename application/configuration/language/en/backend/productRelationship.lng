@@ -7,3 +7,7 @@ _are_you_sure_you_want_to_delete_this_group=Are you sure you want to delete this
 _are_you_sure_you_want_to_delete_this_relation=Are you sure you want to delete this relationship?
 
 _product_relationship_group_title=Title
+
+_err_circular=Cannot add a related product to the same product
+_err_multiple=This product has already been assigned as related
+_msg_added=Related product successfully added

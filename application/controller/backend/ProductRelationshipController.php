@@ -69,12 +69,12 @@ class ProductRelationshipController extends StoreManagementController
 	        }
 	        catch(ProductRelationshipException $e)
 	        {
-	            $error = '_trying_add_the_product_itself_to_the_related_products_list';
+	            $error = '_err_circular';
 	        }
 	    }
 	    else
 	    {
-	        $error = '_product_cannot_have_more_than_one_relationship_with_same_product';
+	        $error = '_err_multiple';
 	    }
 	    
         return new JSONResponse(array('error' => $this->translate($error)));

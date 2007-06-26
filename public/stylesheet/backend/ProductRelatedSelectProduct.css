@@ -19,3 +19,8 @@ body, html {
     padding: 5px;
     background-image: none;
 }
+
+#activeCategoryPath
+{
+    padding-left: 270px;   
+}

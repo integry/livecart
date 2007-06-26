@@ -152,6 +152,7 @@ Backend.Category = {
 	 */
 	activateCategory: function(categoryId)
 	{
+		Element.show('activeCategoryPath');
 		Element.update('activeCategoryPath', Backend.Category.getPath(categoryId));
 
 		if(Backend.Product) Backend.Product.Editor.prototype.showCategoriesContainer();

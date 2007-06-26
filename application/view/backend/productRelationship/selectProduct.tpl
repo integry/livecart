@@ -15,12 +15,23 @@
 {includeCss file="backend/Product.css"}
 {includeCss file="backend/ProductRelatedSelectProduct.css"}
 
+{pageTitle}{t _select_product}{/pageTitle}
+
 {include file="layout/backend/meta.tpl"}
 
 <a id="help" href="#" target="_blank" style="display: none;">Help</a>
 
 <div id="catgegoryContainer" class="treeContainer">
-	<div id="categoryBrowser" class="treeBrowser"> </div>
+	
+    <div style="margin-bottom: 5px; text-align: center;">
+        <a class="menu" href="#" onclick="window.close(); return false;">
+            Done adding related products
+        </a>
+    </div>
+    
+    <div id="categoryBrowser" class="treeBrowser"> </div>
+	<div id="relError" style="width: auto;"></div>
+	<div id="relConf" class="yellowMessage" style="display: none; width: auto;"><div>{t _msg_added}</div></div>
 </div>
 <div id="activeCategoryPath"></div>
  

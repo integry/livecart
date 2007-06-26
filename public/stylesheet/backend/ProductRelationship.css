@@ -16,10 +16,24 @@ li.productRelationshipGroup_item li {
 .productRelationship_title {
     font-size: 1.5em; 
     font-weight: bold;
+    float: left;
+}
+
+.productRelationship_image
+{
+    width: 80px;
+    float: left;
+    text-align: center;
 }
 
 .productRelationship_list {
     padding-bottom: 1em;
+}
+
+.productRelationship_list .activeList_icons 
+{
+    float: left;
+    width: 50px;
 }
 
 .productRelationship_list li
