@@ -66,7 +66,7 @@ class Shipment extends ActiveRecordModel
 		    $filter = new ARSelectFilter();
 			$filter->setCondition(new EqualsCond(new ARFieldHandle('OrderedItem', 'shipmentID'), $this->getID()));
 		
-			foreach(OrderedItem::getRecordSet('OrderedItem', $filter) as $item)
+			foreach(OrderedItem::getRecordSet('OrderedItem', $filter, array('Product', 'Category', 'DefaultImage' => 'ProductImage')) as $item)
 			{
 			    $this->items[] = $item;
 			}
@@ -296,6 +296,49 @@ class Shipment extends ActiveRecordModel
             
             $this->itemIds = array();
         }
+    }
+
+    protected function update()
+    {
+        $rate = $this->getSelectedRate();
+        
+        $serviceId = $rate->getServiceID();
+        if (is_numeric($serviceId))
+        {
+            $this->shippingService->set(ShippingService::getInstanceByID($serviceId));
+        }
+        else
+        {
+            $this->shippingService->set(null);
+            $this->shippingServiceData->set(serialize($rate));
+        }
+
+        // reset amounts...
+        $this->amount->set(0);
+        $this->shippingAmount->set(0);
+        $this->taxAmount->set(0);
+                
+        // ... and recalculated them
+        $this->recalculateAmounts();
+        
+        $this->status->set(self::STATUS_NEW);
+        
+        $ret = parent::update();
+        
+        // save ordered items
+        foreach ($this->items as $item)
+        {
+            $item->shipment->set($this);
+            $item->save();
+        }
+        
+        // save taxes
+        foreach ($this->getTaxes() as $tax)
+        {
+            $tax->save();
+        }
+        
+        return $ret;
     }
     
     public function isShippable()

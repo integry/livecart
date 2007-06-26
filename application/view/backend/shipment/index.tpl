@@ -110,7 +110,7 @@
     Backend.Shipment.Links.getAvailableServices = '{/literal}{link controller=backend.shipment action=getAvailableServices}{literal}';
     Backend.Shipment.Links.changeService        = '{/literal}{link controller=backend.shipment action=changeService}{literal}';
     Backend.Shipment.Links.changeStatus         = '{/literal}{link controller=backend.shipment action=changeStatus}{literal}';
-    Backend.Shipment.Links.removeEmptyShipments = '{/literal}{link controller=backend.shipment action=changeStatus}{literal}';
+    Backend.Shipment.Links.removeEmptyShipments = '{/literal}{link controller=backend.shipment action=removeEmptyShipments}{literal}';
     
     Backend.Shipment.Statuses = {};
     {/literal}{foreach key="statusID" item="status" from=$statuses}{literal}
@@ -133,18 +133,27 @@
     Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount = '{/literal}{t _are_you_realy_want_to_update_items_count|addslashes}{literal}';
     
     window.onbeforeunload = function() { 
+        var customerOrder = Backend.CustomerOrder.Editor.prototype.getInstance('{/literal}{$orderID}{literal}');
         var shipmentsContainer = $('{/literal}tabOrderProducts_{$orderID}Content{literal}');
         var ordersManagerContainer = $("orderManagerContainer");
         
-        if(ordersManagerContainer.style.display != 'none' && shipmentsContainer && shipmentsContainer.style.display != 'none')
+        if(ordersManagerContainer.style.display != 'none' && shipmentsContainer && shipmentsContainer.style.display != 'none' && customerOrder.hasEmptyShipments())
         {
-            return Backend.Shipment.Messages.emptyShipmentsWillBeRemoved; 
+            return Backend.Shipment.Messages.emptyShipmentsWillBeRemoved;
         }
     }
     
-    Event.observe($('{/literal}tabOrderProducts_{$orderID}Content{literal}'), 'unload', function()
+    
+    Event.observe(window, 'unload', function()
     {
-        new Ajax.Request(Backend.Shipment.Links.removeEmptyShipments + '/{/literal}{$orderID}{literal}');
+        var customerOrder = Backend.CustomerOrder.Editor.prototype.getInstance('{/literal}{$orderID}{literal}');
+        
+        var shipmentsContainer = $('{/literal}tabOrderProducts_{$orderID}Content{literal}');
+        var ordersManagerContainer = $("orderManagerContainer");
+        if(ordersManagerContainer.style.display != 'none' && shipmentsContainer && shipmentsContainer.style.display != 'none' && customerOrder.hasEmptyShipments())
+        {
+            customerOrder.removeEmptyShipmentsFromHTML();
+        }
     });
     
     try

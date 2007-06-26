@@ -506,9 +506,10 @@ Backend.Shipment.prototype =
                        var prefix = service.value.shipment.prefix ? service.value.shipment.prefix : '';
                        var suffix = service.value.shipment.suffix ? service.value.shipment.suffix : '';
                        
-                       uspsSelect.options[uspsSelect.options.length] = new Option(service.value.name + " - " + prefix + service.value.shipment.shippingAmount + suffix, service.value.ID);
+                       uspsSelect.options[uspsSelect.options.length] = new Option(service.value.ShippingService.name_lang + " - " + prefix + service.value.shipment.shippingAmount + suffix, service.key);
                        
-                       if(service.value.ID == self.nodes.form.elements.namedItem('shippingServiceID').value)
+
+                       if(service.key == self.nodes.form.elements.namedItem('shippingServiceID').value)
                        {
                            uspsSelect.options[uspsSelect.options.length - 1].selected = true;
                        }

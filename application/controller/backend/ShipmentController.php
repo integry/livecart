@@ -2,6 +2,7 @@
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.order.*");
+ClassLoader::import("application.model.delivery.*");
 ClassLoader::import("application.model.Currency");
 ClassLoader::import("framework.request.validator.RequestValidator");
 ClassLoader::import("framework.request.validator.Form");
@@ -20,11 +21,8 @@ class ShipmentController extends StoreManagementController
 		$form = $this->createShipmentForm();
 		$form->setData(array('orderID' => $order->getID()));
 	    $shipments = $order->getShipments();
-	    
-	    $shippingServices = array();
-	    foreach($order->getDeliveryZone()->getShippingServices() as $service) {
-	        $shippingServices[$service->getID()]= $service->getValueByLang('name', $this->store->getDefaultLanguageCode(), true);
-	    }
+        $zone = $order->getDeliveryZone();
+	
 	
 	    $statuses = array(
 		    Shipment::STATUS_NEW => $this->translate('_shipping_status_new'),
@@ -36,19 +34,30 @@ class ShipmentController extends StoreManagementController
 	    $subtotalAmount = 0; 
 	    $shippingAmount = 0;
 	    $taxAmount = 0;
+	    $shipmentsArray = array();
+	    
 	    foreach($shipments as $shipment)
 	    {
 	        $subtotalAmount += $shipment->amount->get();
 	        $shippingAmount += $shipment->shippingAmount->get();
 	        $taxAmount += $shipment->taxAmount->get();
+	        
+	        $shipmentsArray[$shipment->getID()] = $shipment->toArray();
+	        
+	        if(!$shipment->shippingService->get())
+	        {
+	            $rate = unserialize($shipment->shippingServiceData->get())->toArray();
+	            $shipmentsArray[$shipment->getID()]['ShippingService']['ID'] = $rate['serviceID'];
+	        }
 	    }
+	    
+	    
         $totalAmount = $subtotalAmount + $shippingAmount;
 	    
 	    $response = new ActionResponse();
 	    $response->setValue('orderID', $this->request->getValue('id'));
 	    $response->setValue('order', $order->toArray());
-	    $response->setValue('shipments', $shipments->toArray());
-	    $response->setValue('shippingServices', $shippingServices);
+	    $response->setValue('shipments', $shipmentsArray);
 	    $response->setValue('subtotalAmount', $subtotalAmount);
 	    $response->setValue('shippingAmount', $shippingAmount);
 	    $response->setValue('taxAmount', $taxAmount);
@@ -62,10 +71,28 @@ class ShipmentController extends StoreManagementController
 	
 	public function changeService()
 	{
-	    $shippingService = ShippingService::getInstanceByID((int)$this->request->getValue('serviceID'));
 	    
 	    $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->getValue('id'), true, array('Order' => 'CustomerOrder'));
 	    $shipment->loadItems();
+	    
+        $zone = $shipment->order->get()->getDeliveryZone();
+        $rates = $zone->getShippingRates($shipment);
+        $shipment->setAvailableRates($rates);
+            			
+		if (!$rates->getByServiceId($this->request->getValue('serviceID')))
+		{
+			throw new ApplicationException('No rate found: ' . $shipment->getID() .' (' . $this->request->getValue('serviceID') . ')');
+			return new ActionRedirectResponse('checkout', 'shipping');
+		}
+		
+		$shipment->setRateId($this->request->getValue('serviceID'));
+	    $shipment->save(ActiveRecord::PERFORM_UPDATE);
+			
+	    die();
+	    
+	    
+	    //$shippingService = ShippingService::getInstanceByID($this->request->getValue('serviceID'));
+	    
 	    
         $shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
         $shipment->setRateId($shippingService->getID());
@@ -98,32 +125,29 @@ class ShipmentController extends StoreManagementController
 	        
 	        $shipment = Shipment::getInstanceByID('Shipment', $shipmentID, true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
             $shipment->loadItems();
-             
-	        $deliveryZone = DeliveryZone::getZoneByAddress($shipment->order->get()->shippingAddress->get());
-	        
-	        $shippingServices = array();
-            $shipment->setAvailableRates($deliveryZone->getShippingRates($shipment));
-	        foreach($deliveryZone->getShippingServices() as $service)
-	        {
-                $shipment->setRateId($service->getID());
-                if($shipment->getSelectedRate())
-                {
-                    $shipment->recalculateAmounts();
-                    $shippingServices[$service->getID()] = $service->toArray();
-                    $shippingServices[$service->getID()]['shipment'] = array(
-		                'ID' => $shipment->getID(),
-		                'amount' => $shipment->amount->get(),
-		                'shippingAmount' => $shipment->shippingAmount->get(),
-		                'taxAmount' => $shipment->taxAmount->get(),
-		                'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$shipment->taxAmount->get(),
-		                'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
-		                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
-		            );
-                }
-	        }
-	        
+            
+            
+            $zone = $shipment->order->get()->getDeliveryZone();
+            $shipmentRates = $zone->getShippingRates($shipment);
+            $shipment->setAvailableRates($shipmentRates);
+            
+            $shippingRatesArray = array();
+            foreach($shipment->getAvailableRates() as $rate)
+            {
+                $rateArray = $rate->toArray();
+                $shippingRatesArray[$rateArray['serviceID']] = $rateArray;
+                $shippingRatesArray[$rateArray['serviceID']]['shipment'] = array(
+	                'ID' => $shipment->getID(),
+	                'amount' => $shipment->amount->get(),
+	                'shippingAmount' => (float)$rateArray['costAmount'],
+	                'taxAmount' => $shipment->taxAmount->get(),
+	                'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$rateArray['costAmount'],
+	                'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
+	                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
+                );
+            }
 	        return new JSONResponse(array(
-		        'services' => $shippingServices, 
+		        'services' => $shippingRatesArray, 
             ));
 	    }
 	}

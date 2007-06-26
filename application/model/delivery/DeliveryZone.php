@@ -233,7 +233,6 @@ class DeliveryZone extends MultilingualObject
         
         $store = Store::getInstance();
         $handlers = $store->getEnabledRealTimeShippingServices();
-        
         foreach ($handlers as $handler)
         {            
             $rates->merge(ShipmentDeliveryRate::getRealTimeRates($store->getShippingHandler($handler), $shipment));

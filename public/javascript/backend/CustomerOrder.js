@@ -81,10 +81,18 @@ Backend.CustomerOrder.prototype =
 	{
         var self = Backend.CustomerOrder.prototype.instance;
         
-        if(Backend.CustomerOrder.prototype.activeGroup && Backend.CustomerOrder.prototype.activeGroup != id)
+        if(id == 8)
         {
+            $("tabOrderProducts").hide();
+        }
+        else
+        {
+            $("tabOrderProducts").show();
+        }
+        
+        if(Backend.CustomerOrder.prototype.activeGroup && Backend.CustomerOrder.prototype.activeGroup != id)
+        {           
             // Remove empty shippments
-            
             var productsContainer = $("orderManagerContainer");
             if(productsContainer && productsContainer.style.display != 'none')
             {
@@ -489,11 +497,43 @@ Backend.CustomerOrder.Editor.prototype =
 		}
 	},
     
+    removeEmptyShipmentsFromHTML: function()
+    {
+        new Ajax.Request(Backend.Shipment.Links.removeEmptyShipments + "/" + this.id);
+        
+        var container = $("tabOrderProducts_" + this.id + "Content").down('.orderShipments');
+        document.getElementsByClassName('orderShipmentsItem', container).each(function(itemList)
+        {
+             if(!itemList.down('li'))
+             {
+                 Element.remove(itemList.up('.orderShipment'));
+             }
+        });
+        
+    },
+    
+    
+    hasEmptyShipments: function()
+    {
+        var container = $("tabOrderProducts_" + this.id + "Content").down('.orderShipments');;
+        var hasEmptyShipments = false;
+        document.getElementsByClassName('orderShipmentsItem', container).each(function(itemList)
+        {
+             if(!itemList.down('li'))
+             {
+                 hasEmptyShipments = true;
+                 return $break;
+             }
+        })
+        
+        return hasEmptyShipments;
+    },
+    
     removeEmptyShipmentsConfirmation: function()
     {
         if(!Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime) Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime = 0;
     
-        container = $("tabOrderProducts_" + this.id + "Content");
+        var container = $("tabOrderProducts_" + this.id + "Content").down('.orderShipments');;
                 
         if($("orderManagerContainer").style.display == 'none' || (container.style.display == 'none'))
         {
@@ -502,24 +542,11 @@ Backend.CustomerOrder.Editor.prototype =
         }
         else
         {
-            var hasEmptyShipments = false;
-            document.getElementsByClassName('orderShipmentsItem', container).each(function(itemList)
-            {
-                 if(!itemList.down('li'))
-                 {
-                     hasEmptyShipments = true;
-                     return $break;
-                 }
-            })
-            
-            if(!hasEmptyShipments) 
+            if(!this.hasEmptyShipments()) 
             {
                 Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime = (new Date()).getTime();
                 return true;
-            }
-            
-            
-            new Ajax.Request(Backend.Shipment.Links.removeEmptyShipments + this.id);
+            }  
             
             // Confirm can be called few times in a row. To prevent multiple dialogs
             // rember user last decision
@@ -532,6 +559,9 @@ Backend.CustomerOrder.Editor.prototype =
             {
                 Backend.Shipment.removeEmptyShipmentsConfirmationLastUserDecision = true;
                 Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime = (new Date()).getTime();
+                
+                this.removeEmptyShipmentsFromHTML();
+                
                 return true;   
             }   
             else
