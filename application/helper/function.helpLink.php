@@ -27,6 +27,13 @@ function smarty_function_helpLink($params, $smarty)
 		$root = substr($topic, strrpos('.', $topic));
 		$topic = $root . '.' . $topic;			
 	}
+
+	$inst = $smarty->get_template_vars('rootTopic')->getTopic($topic);
+	
+	if (!($inst instanceof HelpTopic))
+    {
+        return '"><span style="color:red;font-weight: bold; font-size: larger;">INVALID LINK ('.$topic.')</span><a href="';    
+    }
 	
 	return Router::getInstance()->createUrl(array('controller' => 'help', 'action' => 'view', 'id' => $topic));
 }

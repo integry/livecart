@@ -28,7 +28,7 @@
 
 		<div id="helpHeader">
 			<div style="float: left;">
-				<a href="{help index}">
+				<a href="{help /index}">
 					<img src="image/backend/layout/logo_tr.png" style="margin-right: 10px;">
 				</a>
 				<span id="helpTitle">Help</span>

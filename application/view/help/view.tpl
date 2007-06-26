@@ -119,7 +119,7 @@
 <div id="helpNav" style="background-color: #ABCDEF;">
 {foreach from=$path item=item name=breadCrumb}
 	{if !$smarty.foreach.breadCrumb.last}
-		<a href="{help $item.ID}">{$item.name}</a> &gt;
+		<a href="{help /`$item.ID`}">{$item.name}</a> &gt;
 	{else}
 		<span id="breadCrumbLast">{$item.name}</span>
 	{/if}
