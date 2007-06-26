@@ -6,6 +6,16 @@
 		<input type="hidden" name="productID" class="hidden productFile_productID" />
 
 		<fieldset class="productFile_main">
+		
+    		<label class="productFile_uploadFile_label">{t _upload_file}</label>
+            <fieldset class="error">
+        		<input type="file" name="uploadFile" class="productFile_uploadFile" {denied role="product.update"}disabled="disabled"{/denied} />
+                <span {denied role='product.download'}style="display: none"{/denied}>
+                <a class="productFile_download_link" href="" target="_blank" style="display: none"></a>
+        		</span>
+                <span class="errorText hidden"> </span>
+            </fieldset>
+
     		<label class="productFile_title_label">{t _productFile_title}</label>
             <fieldset  class="error">
         		<input type="text" name="title" class="productFile_title" {denied role="product.update"}readonly="readonly"{/denied} />
@@ -34,15 +44,6 @@
         		<input type="text" name="allowDownloadDays" class="productFile_allowDownloadDays" {denied role="product.update"}readonly="readonly"{/denied} />
                 {t _days}
         		<span class="errorText hidden"> </span>
-            </fieldset>
-            
-    		<label class="productFile_uploadFile_label">{t _productFile_uploadFile}</label>
-            <fieldset class="error">
-        		<input type="file" name="uploadFile" class="productFile_uploadFile" {denied role="product.update"}disabled="disabled"{/denied} />
-                <span {denied role='product.download'}style="display: none"{/denied}>
-                <a class="productFile_download_link" href="" target="_blank" style="display: none"></a>
-        		</span>
-                <span class="errorText hidden"> </span>
             </fieldset>
 		</fieldset>
             

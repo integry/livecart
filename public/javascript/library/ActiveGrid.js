@@ -464,6 +464,13 @@ ActiveGridFilter.prototype =
         var min = document.getElementsByClassName('min', cont)[0];
         var max = document.getElementsByClassName('max', cont)[0];
 		        
+		if ((parseInt(min.value) > parseInt(max.value)) && max.value.length > 0)
+		{
+            var temp = min.value;
+            min.value = max.value;
+            max.value = temp;
+        }
+		        
 		this.element.value = (min.value.length > 0 ? '>=' + min.value + ' ' : '') + (max.value.length > 0 ? '<=' + max.value : '');
 		
 		this.element.filter.setFilterValue();

@@ -36,8 +36,8 @@ _user=User
 _order_information_has_been_successfully_updated=Order information has been successfully updated
 _order_address_information_has_been_successfully_updated=Order address information has been successfully updated
 
-_cancel_editing_user_info=Cancel editing user info
-_cancel_editing_order_info=Cancel editing order info
+_cancel_editing_user_info=Done editing user
+_cancel_editing_order_info=Done editing order
 _user_info=User info
 _is_canceled=Is canceled
 _order_id=Order ID

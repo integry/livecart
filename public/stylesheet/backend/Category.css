@@ -12,8 +12,12 @@
 #activeCategoryPath, #activeProductPath {
     font-weight: normal; 
     padding-bottom: 5px; 
-    padding-left: 275px;
     font-weight: bold;
+}
+
+#activeProductName
+{
+    text-decoration:underline;    
 }
 
 .managerContainer {

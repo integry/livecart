@@ -627,9 +627,8 @@ Backend.Product.Editor.prototype =
     
     setActiveProductName: function(name)
     {
-        $('activeProductPath').innerHTML = name;
+        $('activeProductName').innerHTML = name;
         Element.show('activeProductPath');
-        Element.hide('activeCategoryPath');
     },
 
     craftProductUrl: function(url)

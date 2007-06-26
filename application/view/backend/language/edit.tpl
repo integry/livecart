@@ -34,7 +34,7 @@
 		<div style="margin-bottom: 10px;">
 			<label class="lang-key">_key_</label>
 			<fieldset class="container lang-translation">
-				<input id="_file_#_key_" type="text" value="blah" {denied role="language.status"}readonly="readonly"{/denied}><br />
+				<input id="_file_#_key_" type="text" value="" {denied role="language.status"}readonly="readonly"{/denied}><br />
 				<span>_english_</span>
 			</fieldset>
 		</div>

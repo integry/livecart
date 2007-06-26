@@ -3,7 +3,7 @@
 
 {include file="layout/backend/header.tpl"}
 
-<a href="{link controller=backend.customize action=customizationMode}" class="customizeControl">
+<a href="{link controller=backend.customize action=customizationMode}" class="customizeControl {if $isCustomizationModeEnabled}on{/if}">
 {if $isCustomizationModeEnabled}
 	{tn _turn_off}
 {else}
@@ -15,7 +15,7 @@
 	{t _live_locate}
 </div>
 
-<a href="{link controller=backend.customize action=translationMode}" class="customizeControl">
+<a href="{link controller=backend.customize action=translationMode}" class="customizeControl {if $isTranslationModeEnabled}on{/if}">
 {if $isTranslationModeEnabled}
 	{tn _turn_off_trans}
 {else}

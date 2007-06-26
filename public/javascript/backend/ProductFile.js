@@ -764,7 +764,6 @@ Backend.ProductFile.Group.View.prototype = {
         languages.each(function(language)
         {
             if(language.value.ID == defaultLanguageID) return;
-            console.info(language.key, self.nodes.form.elements.namedItem('name_' + language.key), self.get('name.' + language.key , ''))
             self.nodes.form.elements.namedItem('name_' + language.key).value = self.get('name.' + language.key, '');
         });
         

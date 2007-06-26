@@ -56,6 +56,8 @@ _productFile_change_fileName=File name
 _productFile_allow_download_for=Allow to download for
 _productFile_title=File title
 _productFile_description=File description
+_days=days
+_upload_file=Select a file
 
 # index
 _products=Products

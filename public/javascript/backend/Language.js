@@ -273,7 +273,7 @@ Backend.LangEdit.prototype =
 			function()
 			{	
     			this.focus();
-                this.elements.namedItem('translations').value = this.handler.editedTranslations.toJSON();
+                this.elements.namedItem('translations').value = Object.toJSON(this.handler.editedTranslations);
 				new LiveCart.AjaxRequest(this, $('saveProgress'), this.handler.saveCompleted.bind(this.handler));
 				return false;
 			};
@@ -357,7 +357,6 @@ Backend.LangEdit.prototype =
 	{
         var id = this.treeBrowser.getSelectedItemId();
         this.activateCategory(id);
-        console.log(e);  
     },
     
     search: function(e)
@@ -492,8 +491,6 @@ Backend.LangEdit.prototype =
 					
 					this.handler.translations[this.file][this.key] = this.value;
                     this.handler.editedTranslations[this.file][this.key] = this.value;
-                    
-                    console.log(this.handler.editedTranslations[this.file][this.key].indexOf("\n"));
                 }
             
             input.onkeyup = input.onchange;

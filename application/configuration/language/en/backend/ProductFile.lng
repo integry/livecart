@@ -1,4 +1,4 @@
-_add_new_file=Add new file
+_add_new_file=Add new filezzzz
 _cancel_adding_new_file=Cancel adding new file
 _add_new_group=Add new group
 _cancel_adding_file_group=Cancel adding new group
@@ -6,9 +6,6 @@ _are_you_sure_you_want_to_delete=Are you sure you want to delete this file
 _are_you_sure_you_want_to_delete_group=Are you sure you want to delete this group
 
 _product_file_group_title=Group title
-
-_productFile_uploadFile=Select a file
-_days=Days
 
 _err_file_title_is_empty=File title is empty
 _err_allow_download_days_should_be_a_number=Number of days should be of numeric type
