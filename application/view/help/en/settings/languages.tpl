@@ -2,7 +2,7 @@
 international usage. You can translate both interface information (menus, captions, error messages, etc.), 
 as well as most of the data, which is stored in the system, like product descriptions, category names and 
 others. (This may seem overwhelming at first but as you will see there are a couple of handy tools to help 
-you deal with interface translations (see <a href="{help /settings.languages.edit#translate_directly}">Live Translation</a>).)</p>
+you deal with interface translations (see <a href="{help /customize.live}#translate">Live Translation</a>).)</p>
 
 <div class="tasks">
 <fieldset>

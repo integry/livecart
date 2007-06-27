@@ -23,7 +23,7 @@
 	<li><a href="{self}#move">Move category</a></li>
 	<li><a href="{self}#remove">Remove a category</a></li>
 	<li><a href="{self}#change order">Change category order</a></li>
-	<li><a href="{help /cat.details}">Edit Category details</a></li>
+	<li><a href="{help /categories.details}">Edit Category details</a></li>
 
 </ul>
 </fieldset>

@@ -7,7 +7,7 @@
 customer may filter the products by any property at any point of the process (by adding or removing filters).</p>
 
 <p class="note"><strong>Note</strong>: Filters define search range only within specific categories because 
-attributes are assigned to particular categories and filters are directly mapped to attributes. If you are not familiar with term "attribute" plase refer to  <a href="{help /cat.attr}">Attributes</a> section.</p>
+attributes are assigned to particular categories and filters are directly mapped to attributes. If you are not familiar with term "attribute" plase refer to  <a href="{help /categories.attributes}">Attributes</a> section.</p>
 
 <p class="note"><strong>Tip</strong>:(When creating filters think of as many filters as possible to create an efficient browsing system because users may be interested in many kinds of attributes your products
 have to offer (some may search for products by particular technical details and some may be interested in shape or color)).</p>
@@ -42,14 +42,14 @@ to define a range for filter's values.</p>
 </p>
 
 <p>We will guide you through several tutorials and show how to generate filters for your existing attributes. As in examples with 
-<a href="{help /cat.attr}">attributes</a> in the previuos section we will use cell phones for illustrating <a href="{self}#carrier">Carrier</a>, 
+<a href="{help /categories.attributes}">attributes</a> in the previuos section we will use cell phones for illustrating <a href="{self}#carrier">Carrier</a>, 
 <a href="{self}#capacity">Battery Capacity</a> and additional <a href="{self}#date">Date</a> filter.</p>
 
 <h4 id="carrier">Creating Carrier filter</h4>
 <ul>
 	<li>To create filters, select a category from the category tree and click on the "Filters" tab.</li>
 	<img src="image/doc/categories/filters/filters_tab.bmp">
-	<p class="note">If you see a message "No filterable attributes have yet been created for this category", go to the <a href="{help /cat.attr}">Attributes </a> section to create 
+	<p class="note">If you see a message "No filterable attributes have yet been created for this category", go to the <a href="{help /categories.attributes}">Attributes </a> section to create 
 	attributes first.</p>
 	<li id="form">On the Filters page click "Add new filter".</li>
 	<img src="image/doc/categories/filters/add_new_filter.bmp">

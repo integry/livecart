@@ -19,7 +19,7 @@ You can enter the following category details in the selected language:
 		<li>Details</li>
 		<li>Keywords</li>
 	</ul>
-<p class="note"><strong>Note</strong>: Read more about <a href="{help /language}">enabling additional languages</a>.</p>
+<p class="note"><strong>Note</strong>: Read more about <a href="{help /settings.languages}">enabling additional languages</a>.</p>
 
 <p>Click the "Save" button to save category details:</p>
 
