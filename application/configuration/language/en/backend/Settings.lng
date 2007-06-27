@@ -164,6 +164,7 @@ ENABLED_COUNTRIES=Enabled Countries
 _backend_opts=Backend Administration
 
 _product_management=Product Management
+AUTO_GENERATE_SKU=Generate SKU automatically
 DEFAULT_PRODUCT_TYPE=Default product type
 _prod_type_0=Tangible (shippable products)
 _prod_type_1=Intangible (downlodable files)

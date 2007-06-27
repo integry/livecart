@@ -129,7 +129,6 @@
 
 		<p>
 		<fieldset class="group specField_form_values_group">
-    		<h2 class="specField_values_title">{t _SpecField_values}</h2>
     		<div class="specField_values">
                 <p>
         			<ul class="{allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed}">
@@ -164,7 +163,7 @@
                 
 			</div>
 
-			<br class="clear" />
+			<div class="clear"></div>
 		</fieldset>
 		</p>
 

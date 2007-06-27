@@ -799,8 +799,8 @@ Backend.SpecField.prototype = {
         
         input.id = this.cssPrefix + "field_" + id + "_value_" + this.languageCodes[0];
         
-        Event.observe(input, "keyup", function(e) { self.mainValueFieldChangedAction(e) }, false);
-        Event.observe(input, "keyup", function(e) {
+        Event.observe(input, "input", function(e) { self.mainValueFieldChangedAction(e) }, false);
+        Event.observe(input, "input", function(e) {
             if(!this.up('li').next() && this.value != '') self.addValueFieldAction();
         });
 

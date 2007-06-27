@@ -18,7 +18,6 @@ class ProductController extends StoreManagementController
 {
 	public function index()
 	{
-		//$this->rebuildMenuLangFile();		
         $category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
 	
 		$availableColumns = $this->getAvailableColumns($category);
@@ -235,6 +234,8 @@ class ProductController extends StoreManagementController
 	public function autoComplete()
 	{
 	  	$f = new ARSelectFilter();
+		$f->setLimit(20);
+		  	
 		$resp = array();
 				  	
 		$field = $this->request->getValue('field');
@@ -245,7 +246,6 @@ class ProductController extends StoreManagementController
 		  	$f->setCondition($c);		  	
 
 			$f->setOrder(new ARFieldHandle('Product', $field), 'ASC');
-		  	$f->setLimit(20);
 		  	
 		  	$query = new ARSelectQueryBuilder();
 		  	$query->setFilter($f);
@@ -260,7 +260,7 @@ class ProductController extends StoreManagementController
 			}	  			  
 		}
 		
-		elseif ('name' == $field)
+		else if ('name' == $field)
 		{
 		  	$c = new LikeCond(new ARFieldHandle('Product', $field), '%:"' . $this->request->getValue($field) . '%');
 		  	$f->setCondition($c);		  	
@@ -270,7 +270,6 @@ class ProductController extends StoreManagementController
 			$c->addAND($langCond);
 					  	
 		  	$f->setOrder(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), 'ASC');
-		  	$f->setLimit(20);
 			  		  	
 		  	$results = ActiveRecordModel::getRecordSet('Product', $f);
 		  	
@@ -279,8 +278,32 @@ class ProductController extends StoreManagementController
 				$resp[$value->getValueByLang('name', $locale, Product::NO_DEFAULT_VALUE)] = true;
 			}
 			
-			$resp = array_keys($resp);	  			  
+			$resp = array_keys($resp);
 		}
+		
+		else if ('specField_' == substr($field, 0, 10))
+		{
+            list($foo, $id) = explode('_', $field);
+        
+            $handle = new ARFieldHandle('SpecificationStringValue', 'value');
+			$locale = $this->locale->getLocaleCode();
+            $searchHandle = MultiLingualObject::getLangSearchHandle($handle, $locale);
+
+		  	$f->setCondition(new EqualsCond(new ARFieldHandle('SpecificationStringValue', 'specFieldID'), $id));
+            $f->mergeCondition(new LikeCond($handle, '%:"' . $this->request->getValue($field) . '%'));            
+			$f->mergeCondition(new LikeCond($searchHandle, $this->request->getValue($field) . '%'));
+					  	
+		  	$f->setOrder($searchHandle, 'ASC');
+			  		  	
+		  	$results = ActiveRecordModel::getRecordSet('SpecificationStringValue', $f);
+		  	
+		  	foreach ($results as $value)
+		  	{
+				$resp[$value->getValueByLang('value', $locale, Product::NO_DEFAULT_VALUE)] = true;
+			}
+
+			$resp = array_keys($resp);
+        }
 		  	
 		return new AutoCompleteResponse($resp);
 	}
@@ -290,13 +313,18 @@ class ProductController extends StoreManagementController
 	 *
 	 * @role create
 	 * 
-	 * @return unknown
+	 * @return ActionResponse
 	 */
 	public function add()
 	{
 		$category = Category::getInstanceByID($this->request->getValue("id"), ActiveRecordModel::LOAD_DATA);
 		
-		return $this->productForm(Product::getNewInstance($category, ''));		
+		$response = $this->productForm(Product::getNewInstance($category, ''));		
+		if ($this->config->getValue('AUTO_GENERATE_SKU'))
+		{
+            $response->getValue('productForm')->setValue('autosku', true);
+        }
+		return $response;
 	}
 
 	/**
@@ -310,7 +338,9 @@ class ProductController extends StoreManagementController
 	    
 	    if ($response instanceOf ActionResponse)
 	    {
-            return new JSONResponse(array('status' => 'success', 'id' => $product->getID()));    
+            $response->getValue('productForm')->clearData();
+            $response->setValue('id', $product->getID());
+            return $response;
         }
         else
         {
@@ -323,17 +353,18 @@ class ProductController extends StoreManagementController
 	 */
 	public function update()
 	{
-		  	$product = Product::getInstanceByID($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA);
-		  	$product->loadPricing();
-		  	$product->loadSpecification();
-		  	
-		  	return $this->save($product);
+	  	$product = Product::getInstanceByID($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA);
+	  	$product->loadPricing();
+	  	$product->loadSpecification();
+	  	
+	  	return $this->save($product);
 	}
 
 	public function basicData()
 	{
 	    $product = Product::getInstanceById($this->request->getValue('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
 		$response = $this->productForm($product);
+		$response->setValue('counters', $this->countTabsItems()->getData());
 		return $response;
 	}
 
@@ -343,7 +374,8 @@ class ProductController extends StoreManagementController
 	    
 	  	return new JSONResponse(array(
 	        'tabProductRelationship' => $product->getRelationships(false)->getTotalRecordCount(),
-	        'tabProductFiles' => $product->getFiles(false)->getTotalRecordCount()
+	        'tabProductFiles' => $product->getFiles(false)->getTotalRecordCount(),
+	        'tabProductImages' => count($product->getImageArray()),
 	    ));
 	}
 	

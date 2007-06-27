@@ -1,7 +1,7 @@
 <div class="productForm {if 1 == $product.type}intangible{/if}">
     <fieldset class="container">
 		<ul class="menu">
-	        <li><a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}, this.parentNode.parentNode.parentNode.parentNode); return false;">Cancel adding new product</a></li>
+	        <li><a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}, this.up('div.productForm')); return false;">Cancel adding new product</a></li>
 	    </ul>
 	</fieldset>
         
@@ -20,7 +20,9 @@
         {include file="backend/product/form/main.tpl" product=$product cat=$cat productTypes=$productTypes}
         
         {if $specFieldList}
+            <div class="specFieldContainer">
             {include file="backend/product/form/specFieldList.tpl" product=$product cat=$cat specFieldList=$specFieldList}
+            </div>
         {/if}
     	   
         {include file="backend/product/form/inventory.tpl" product=$product cat=$cat baseCurrency=$baseCurrency form=$productForm}
@@ -42,7 +44,7 @@
     		</p>	
     	
     		<span class="progressIndicator" style="display: none;"></span>
-            <input type="submit" name="save" class="submit" value="Save"> {t _or} <a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}, this.up('form')); return false;">{t _cancel}</a>
+            <input type="submit" name="save" class="submit" value="Save"> {t _or} <a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}, this.up('div.productForm')); return false;">{t _cancel}</a>
     	</fieldset>
     	
     {/form}

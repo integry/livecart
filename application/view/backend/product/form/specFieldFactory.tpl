@@ -31,14 +31,14 @@
 		<input class="fieldStatus" name="{$fieldName}" value="" style="display: none;" />
 	{else}
 		{selectfield id="product_`$cat`_`$product.ID`_`$fieldName`" name=$fieldName options=$field.values class="select"}
-		{textfield name="other[`$field.ID`]" id="product_`$cat`_`$product.ID`_specItem_other_`$field.ID`" style="display: none"}
+		{textfield name="other[`$field.ID`]" id="product_`$cat`_`$product.ID`_specItem_other_`$field.ID`" style="display: none" class="text wide"}
 	{/if}
 
 {elseif $field.type == 2}
 	{$field.valuePrefix_lang}{textfield id="product_`$cat`_`$product.ID`_`$fieldName`" name=$fieldName class="text numeric"}{$field.valueSuffix_lang}
 
 {elseif $field.type == 3}
-	{textfield id="product_`$cat`_`$product.ID`_`$fieldName`" name=$fieldName class="text"}
+	{textfield id="product_`$cat`_`$product.ID`_`$fieldName`" name=$fieldName class="text wide" autocomplete="controller=backend.product field=`$fieldName`"}
 
 {elseif $field.type == 4}
 	<div class="textarea">

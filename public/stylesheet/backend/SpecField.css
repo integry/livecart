@@ -64,8 +64,8 @@
   	padding-top: 1em;
 }
 
-.specField_form_values_group div input.specField_valueName {
-    width: 10em;
+.specField_form_values_group div input.specField_valueName, input.specField_update {
+    width: 30em;
 }
 
 .specField_language_link {
@@ -128,7 +128,8 @@
 
 .specField_values {
     width: auto !important;
-    padding-bottom: 10px;
+    padding-bottom: 0px !important;
+    padding-left: 0px !important;
 }
 
 h2.specField_values_title {

@@ -49,9 +49,9 @@ fieldset.specification .numeric
   	margin-right: 10px;        
 }
 
-.multiValueSelect div.other input
+.multiValueSelect div.other input, input.other
 {
-  	width: 150px;
+  	width: 400px;
 }
 
 .unitSwitch

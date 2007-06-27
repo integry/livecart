@@ -48,6 +48,7 @@ ActiveGrid.prototype =
 	initialize: function(tableInstance, dataUrl, totalCount, loadIndicator)
   	{
 		this.tableInstance = tableInstance;
+		this.tableInstance.gridInstance = this;
 		this.dataUrl = dataUrl;
 		this.setLoadIndicator(loadIndicator);
 		this.filters = {};

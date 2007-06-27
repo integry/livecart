@@ -32,6 +32,11 @@ class SpecificationStringValue extends ValueSpecification
 		return $specItem;
 	}	
 	
+	public function getValueByLang($fieldName, $langCode, $returnDefaultIfEmpty = true)
+	{
+        return MultiLingualObject::getValueByLang($fieldName, $langCode, $returnDefaultIfEmpty);
+    }
+    
 	public function setValueByLang($langCode, $value)
 	{
 		$currentValue = $this->value->get();

@@ -47,37 +47,15 @@ Backend.Product =
 
 	initAddForm: function(categoryID)
 	{
+        var container = $('tabProductsContent_' + categoryID);
         tinyMCE.idCounter = 0;
-        ActiveForm.prototype.initTinyMceFields($('tabProductsContent_' + categoryID));
+        ActiveForm.prototype.initTinyMceFields(container);
+        this.toggleSkuField(container.down('form').elements.namedItem('autosku'));
 		
-		// specField entry logic (multiple value select)
-		var containers = document.getElementsByClassName('multiValueSelect', $('tabProductsContent_' + categoryID));
-        try
-        {
-    		for (k = 0; k < containers.length; k++)
-    		{
-    			new Backend.Product.specFieldEntryMultiValue(containers[k]);
-    		}
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
-
-		// single value select
-		var specFieldContainer = document.getElementsByClassName('specification', $('tabProductsContent_' + categoryID))[0];
-
-		if (specFieldContainer)
-		{
-			var selects = specFieldContainer.getElementsByTagName('select');
-			for (k = 0; k < selects.length; k++)
-			{
-				new Backend.Product.specFieldEntrySingleSelect(selects[k]);
-			}
-		} 		
+		this.initSpecFieldControls(categoryID);
 		
         // init type selector logic
-        var typeSel = $('tabProductsContent_' + categoryID).down('select.productType');
+        var typeSel = container.down('select.productType');
         typeSel.onchange = 
             function(e)
             {
@@ -94,6 +72,35 @@ Backend.Product =
             }
 		
 	},
+
+    initSpecFieldControls: function(categoryID)
+    {
+		// specField entry logic (multiple value select)
+		var containers = document.getElementsByClassName('multiValueSelect', $('tabProductsContent_' + categoryID));
+        try
+        {
+    		for (k = 0; k < containers.length; k++)
+    		{
+    			new Backend.Product.specFieldEntryMultiValue(containers[k]);
+    		}
+        }
+        catch(e)
+        {
+            console.info(e);
+        }
+
+        // single value select
+		var specFieldContainer = document.getElementsByClassName('specification', $('tabProductsContent_' + categoryID))[0];
+
+		if (specFieldContainer)
+		{
+			var selects = specFieldContainer.getElementsByTagName('select');
+			for (k = 0; k < selects.length; k++)
+			{
+				new Backend.Product.specFieldEntrySingleSelect(selects[k]);
+			}
+		} 		        
+    },
 
 	toggleSkuField: function(checkbox)
 	{
@@ -374,11 +381,21 @@ Backend.Product.saveHandler.prototype =
 		}
 		else
 		{
+		    var categoryID = this.form.elements.namedItem('categoryID').value;
+            
+            if (response.specFieldHtml)
+			{
+                this.form.down('div.specFieldContainer').innerHTML = response.specFieldHtml;
+                Backend.Product.initSpecFieldControls(categoryID); 
+                response.specFieldHtml.evalScripts();
+            }
+
 			// reset form and add more products
 			if ($('afAd_new').checked)
-			{
-				this.form.reset();
-
+			{				
+			    this.form.reset();
+			    $('afAd_new').checked = true;
+			    
                 document.getElementsByClassName('product_sku', this.form)[0].disabled = false;
 				Form.focusFirstElement(this.form);
 
@@ -388,10 +405,11 @@ Backend.Product.saveHandler.prototype =
 			// continue to edit the newly added product
 			else
 			{
+			    this.form.reset();
 				new Backend.SaveConfirmationMessage($('productAddContinueConf'));             
-				this.form.reset();
+
                 Backend.Product.openProduct(response.id);
-                Backend.Product.cancelAddProduct(this.form.elements.namedItem('categoryID').value, this.form.parentNode);
+                Backend.Product.cancelAddProduct(categoryID, this.form.parentNode);
   			}
 		}
 	}
@@ -443,11 +461,9 @@ Backend.Product.specFieldEntryMultiValue.prototype =
 	bindField: function(field)
 	{
 		var self = this;
+        Event.observe(field, "input", function(e) { self.handleChange(e); });
         Event.observe(field, "keyup", function(e) { self.handleChange(e); });
         Event.observe(field, "blur", function(e) { self.handleBlur(e); });
-
-        field.onkeyup = this.handleChange.bindAsEventListener(this);
-		field.onblur = this.handleBlur.bindAsEventListener(this);
 
 		if (this.isNumeric)
 		{
@@ -568,7 +584,7 @@ Backend.Product.Editor.prototype =
 
         this.addTinyMce();
 
-        this.setTabCounters();
+        //this.setTabCounters();
 
         this.initSpecFieldControls();            
     },
@@ -627,6 +643,8 @@ Backend.Product.Editor.prototype =
     
     setActiveProductName: function(name, path)
     {
+        this.path = path;
+        
         var productPath = '';
         for (k = 0; k < path.length; k++)
         {
@@ -690,12 +708,10 @@ Backend.Product.Editor.prototype =
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		Form.restore(this.nodes.form);
         ActiveForm.prototype.resetTinyMceFields(this.nodes.form);        
-		console.log('resetting');
     },
 
     submitForm: function()
     {
-		console.log('submiting');
         new LiveCart.AjaxRequest(this.nodes.form, null, this.formSaved.bind(this));
     },
     
@@ -714,10 +730,20 @@ Backend.Product.Editor.prototype =
 			Form.State.backup(this.nodes.form);
 			if (response.specFieldHtml)
 			{
-                console.log(response.specFieldHtml);    
                 this.nodes.form.down('div.specFieldContainer').innerHTML = response.specFieldHtml;
                 this.initSpecFieldControls();
                 response.specFieldHtml.evalScripts();
+            }
+            
+            for (var k = 0; k <= this.path.length; k++)
+            {
+                var category = this.path[k] ? this.path[k].ID : 1;
+                var table = $('products_' + category);
+
+                if (table)
+                {
+                    table.gridInstance.reloadGrid();   
+                }
             }
 		}
 		else
