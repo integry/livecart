@@ -1,17 +1,6 @@
-<div class="yellowMessage" id="orderConfirmation" style="left: 20px; top: 180px; position: absolute; display: none;">
-   	<div>{t _order_information_has_been_successfully_updated}</div>
-</div>
-<div class="yellowMessage" id="orderAddressConfirmation" style="left: 20px; top: 180px; position: absolute; display: none;">
-   	<div>{t _order_address_information_has_been_successfully_updated}</div>
-</div>
-<div class="redMessage" id="noRateInShippingServiceIsAvailableError" style="left: 20px; top: 180px; position: absolute; display: none;">
-   	<div>{t _this_shipping_service_has_no_available_rates}</div>
-</div>
-
-
-
-<fieldset id="orderManagerContainer" class="treeManagerContainer" style="display: none;">
-	<fieldset class="container">
+<fieldset id="orderManagerContainer" class="treeManagerContainer maxHeight h--50" style="display: none;">
+	
+    <fieldset class="container">
 		<ul class="menu">
 			<li><a href="#cancelEditing" id="cancel_order_edit" class="cancel">{t _cancel_editing_order_info}</a></li>
 		</ul>
@@ -25,6 +14,18 @@
 			</li>
 			<li id="tabOrderProducts" class="tab active">
 				<a href="{link controller=backend.shipment action=index id=_id_}"}">{t _order_shipments}</a>
+				<span class="tabHelp">orders.edit</span>
+			</li>
+			<li id="tabOrderPayments" class="tab active">
+				<a href="{link controller=backend.payment id=_id_}"}">{t _order_payments}</a>
+				<span class="tabHelp">orders.edit</span>
+			</li>
+			<li id="tabOrderCommunication" class="tab active">
+				<a href="{link controller=backend.orderNote id=_id_}"}">{t _order_communication}</a>
+				<span class="tabHelp">orders.edit</span>
+			</li>
+			<li id="tabOrderLog" class="tab active">
+				<a href="{link controller=backend.orderLog id=_id_}"}">{t _order_log}</a>
 				<span class="tabHelp">orders.edit</span>
 			</li>
 		</ul>

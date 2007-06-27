@@ -31,7 +31,6 @@ class TestCategory extends UnitTest
 	    
 	    $newCategory = Category::getNewInstance($this->root);
 		$newCategory->setValueByLang("name", 'en', "dump");
-		$newCategory->setFieldValue("handle", "dump");
         $newCategory->save();
         $newCategory->delete();
 	}
@@ -57,7 +56,6 @@ class TestCategory extends UnitTest
 	    // Create new category
 	    $newCategory = Category::getNewInstance($this->root);		
 		$newCategory->setValueByLang("name", 'en', 'TEST ' . rand(1, 1000));
-		$newCategory->setFieldValue("handle", "new.category." . rand(1, 1000));
         $newCategory->save();
         $this->assertTrue($newCategory->isExistingRecord());
 
@@ -97,7 +95,6 @@ class TestCategory extends UnitTest
 	    // new node
 	    $newCategory = Category::getNewInstance($this->root);
 		$newCategory->setValueByLang("name", 'en', 'TEST ' . rand(1, 1000));
-		$newCategory->setFieldValue("handle", "new.category." . rand(1, 1000));
 		$newCategory->save();
 				
 		// nested nodes
@@ -107,7 +104,6 @@ class TestCategory extends UnitTest
 		{
 		    $nestedNodes[$i] = Category::getNewInstance($lastNode);
 			$nestedNodes[$i]->setValueByLang("name", 'en', 'TEST ' . rand(1, 1000));
-			$nestedNodes[$i]->setFieldValue("handle", "new.category." . rand(1, 1000));
 			$nestedNodes[$i]->save();
 			$lastNode = $nestedNodes[$i];
 		}
@@ -138,7 +134,6 @@ class TestCategory extends UnitTest
 	{
 	    $newCategory = Category::getNewInstance($this->root);
 		$newCategory->setValueByLang("name", 'en', "New Category");
-		$newCategory->setFieldValue("handle", "new.category");
         $newCategory->save();
         $categoryID = $newCategory->getID();
         
@@ -165,7 +160,6 @@ class TestCategory extends UnitTest
 	    {
 		    $newCategories[$i] = Category::getNewInstance($this->root);
 			$newCategories[$i]->setValueByLang("name", 'en', "New Category " . $i );
-			$newCategories[$i]->setFieldValue("handle", "new.category." . $i);
 	        $newCategories[$i]->save();
 	        $this->assertTrue($newCategories[$i]->isExistingRecord());
 	    }
@@ -199,7 +193,6 @@ class TestCategory extends UnitTest
 	    {
 		    $newCategories[$i] = Category::getNewInstance($lastCategory);
 			$newCategories[$i]->setValueByLang("name", 'en', "New Category " . $i );
-			$newCategories[$i]->setFieldValue("handle", "TEST.CATEGORY." . $i);
 	        $newCategories[$i]->save();	        
 	        $lastCategory = $newCategories[$i];
 	    }
@@ -209,7 +202,6 @@ class TestCategory extends UnitTest
 	    {
 		    $newCategories[$i] = Category::getNewInstance($lastCategory);
 			$newCategories[$i]->setValueByLang("name", 'en', "New Category " . $i );
-			$newCategories[$i]->setFieldValue("handle", "TEST.CATEGORY." . $i);
 	        $newCategories[$i]->save();
 	        $lastCategory = $newCategories[$i];
 	    }
@@ -219,7 +211,6 @@ class TestCategory extends UnitTest
 	    {
 		    $newCategories[$i] = Category::getNewInstance($lastCategory);
 			$newCategories[$i]->setValueByLang("name", 'en', "New Category " . $i );
-			$newCategories[$i]->setFieldValue("handle", "TEST.CATEGORY." . $i);
 	        $newCategories[$i]->save();
 	        $lastCategory = $newCategories[$i];
 	    }
@@ -229,7 +220,6 @@ class TestCategory extends UnitTest
 	    {
 		    $newCategories[$i] = Category::getNewInstance($lastCategory);
 			$newCategories[$i]->setValueByLang("name", 'en', "New Category " . $i );
-			$newCategories[$i]->setFieldValue("handle", "TEST.CATEGORY." . $i);
 	        $newCategories[$i]->save();
 	        $lastCategory = $newCategories[$i];
 	    }
@@ -396,14 +386,12 @@ class TestCategory extends UnitTest
 	    
 	    $newCategories[0] = Category::getNewInstance($this->root);
 		$newCategories[0]->setValueByLang("name", 'en', "New Category " . 0 );
-		$newCategories[0]->setFieldValue("handle", "TEST.CATEGORY." . 0);
         $newCategories[0]->save();	        
         
 	    foreach(range(1, 4) as $i)
 	    {
 		    $newCategories[$i] = Category::getNewInstance($newCategories[0]);
 			$newCategories[$i]->setValueByLang("name", 'en', "New Category " . $i );
-			$newCategories[$i]->setFieldValue("handle", "TEST.CATEGORY." . $i);
 	        $newCategories[$i]->save();	        
 	    }
 	    

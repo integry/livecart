@@ -35,6 +35,23 @@
 
 <div id="orderGroupsWrapper" class="treeContainer maxHeight h--50">
 	<div id="orderGroupsBrowser" class="treeBrowser"></div>
+
+	<ul id="categoryBrowserActions" class="verticalMenu">
+		<li class="addTreeNode"><a href="#" id="createNewCategoryLink">{t _create_order}</a></li>
+	</ul>	
+	
+    <div class="yellowMessage" id="orderConfirmation" style="display: none;">
+       	<div>{t _order_information_has_been_successfully_updated}</div>
+    </div>
+    
+    <div class="yellowMessage" id="orderAddressConfirmation" style="display: none;">
+       	<div>{t _order_address_information_has_been_successfully_updated}</div>
+    </div>
+    
+    <div class="redMessage" id="noRateInShippingServiceIsAvailableError" style="display: none;">
+       	<div>{t _this_shipping_service_has_no_available_rates}</div>
+    </div>
+	
 </div>
 
 {include file="backend/customerOrder/orderContainer.tpl"}

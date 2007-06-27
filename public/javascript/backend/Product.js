@@ -3,6 +3,8 @@ Backend.Product =
 	productTabCopies: new Array(),
 
 	formTabCopies: new Array(),
+	
+	categoryPaths: {},
 
 	showAddForm: function(container, categoryID)
 	{
@@ -287,7 +289,12 @@ Backend.Product =
         {
             Event.stop(e);           
         }
-     }
+     },
+     
+    setPath: function(categoryID, path)
+    {
+        this.categoryPaths[categoryID] = path;
+    }
 }
 
 Backend.Product.massActionHandler = Class.create();
@@ -385,10 +392,38 @@ Backend.Product.saveHandler.prototype =
             
             if (response.specFieldHtml)
 			{
-                this.form.down('div.specFieldContainer').innerHTML = response.specFieldHtml;
-                Backend.Product.initSpecFieldControls(categoryID); 
-                response.specFieldHtml.evalScripts();
+                var specFieldContainer = this.form.down('div.specFieldContainer');
+                if (specFieldContainer)
+                {
+                    specFieldContainer.innerHTML = response.specFieldHtml;
+                    Backend.Product.initSpecFieldControls(categoryID); 
+                    response.specFieldHtml.evalScripts();                    
+                }
             }
+
+  		
+              // reload product grids
+            /*
+            var path = Backend.Product.categoryPaths[categoryID] 			
+            for (var k = 0; k <= path.length; k++)
+            {
+                var category = path[k] ? path[k].ID : 1;
+                var table = $('products_' + category);
+                
+                if (!table && Backend.Product.productTabCopies[categoryID])
+                {
+                    console.log(Backend.Product.productTabCopies[categoryID]);
+                    table = Backend.Product.productTabCopies[categoryID].getElementById('products_' + category);
+                }
+                
+                console.log(table);
+                if (table)
+                {
+                    table.gridInstance.reloadGrid();
+                console.log(table.gridInstance);
+                }
+            }
+            */
 
 			// reset form and add more products
 			if ($('afAd_new').checked)
@@ -411,7 +446,7 @@ Backend.Product.saveHandler.prototype =
                 Backend.Product.openProduct(response.id);
                 Backend.Product.cancelAddProduct(categoryID, this.form.parentNode);
   			}
-		}
+ 		}
 	}
 }
 
@@ -730,9 +765,13 @@ Backend.Product.Editor.prototype =
 			Form.State.backup(this.nodes.form);
 			if (response.specFieldHtml)
 			{
-                this.nodes.form.down('div.specFieldContainer').innerHTML = response.specFieldHtml;
-                this.initSpecFieldControls();
-                response.specFieldHtml.evalScripts();
+                var specFieldContainer = this.nodes.form.down('div.specFieldContainer');
+                if (specFieldContainer)
+                {
+                    specFieldContainer.innerHTML = response.specFieldHtml;
+                    this.initSpecFieldControls();
+                    response.specFieldHtml.evalScripts();                    
+                }
             }
             
             for (var k = 0; k <= this.path.length; k++)

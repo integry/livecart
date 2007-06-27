@@ -1,43 +1,52 @@
 <fieldset class="order_info">
     <legend>{t _order_info}</legend>
-    <label for="order_{$order.ID}_amount">{t _order_id}</label>
-    <fieldset class="error">
-        <div class="formDiv">
-            {$order.ID}
-	    </div>
-	</fieldset>
-        
-    <label for="order_{$order.ID}_user">{t _user}</label>
-    <fieldset class="error">
-        <div class="formDiv">
+    
+    <p>
+        <label for="order_{$order.ID}_amount">{t _order_id}</label>
+        <label>{$order.ID}</label>
+    </p>
+    
+    <p>
+        <label for="order_{$order.ID}_user">{t _user}</label>
+        <label>
             <a href="#" onclick="Backend.UserGroup.prototype.openUser({$order.User.ID}, event); return false;">
                 {$order.User.firstName} {$order.User.lastName}
             </a>
-        </div> 
-	</fieldset>
+        </label>
+    </p>
 
-    <label for="order_{$order.ID}_amount">{t _amount}</label>
-    <fieldset class="error">
-        <div class="formDiv">
+    <p>
+        <label for="order_{$order.ID}_amount">{t _amount}</label>
+        <label>
             {$order.Currency.pricePrefix}{$order.capturedAmount|default:0}{$order.Currency.priceSuffix} 
             / 
             {$order.Currency.pricePrefix}{$order.totalAmount|default:0}{$order.Currency.priceSuffix} 
-	    </div>
-	</fieldset>
+        </label>
+    </p>
 
-    <label for="order_{$order.ID}_dateCreated">{t _date_created}</label>
-    <fieldset class="error">
-        <div class="formDiv">
-            {$order.dateCreated}
-	    </div>
-	</fieldset>
+    <p>
+        <label for="order_{$order.ID}_dateCreated">{t _date_created}</label>
+        <label>{$order.dateCompleted}</label>
+    </p>
 
-    <label for="order_{$order.ID})_isPaid">{t _is_paid}</label>    
-    <fieldset class="error">
-        <div class="formDiv">
-            {if $order.isPaid}{t _yes}{else}{t _no}{/if}
-	    </div>
-	</fieldset>
+    <p>
+        <label for="order_{$order.ID})_isPaid">{t _is_paid}</label>    
+        <label>{if $order.isPaid}{t _yes}{else}{t _no}{/if}</label>
+    </p>
+</fieldset>
+
+<fieldset class="container">
+    <ul class="menu orderMenu">
+        <li>
+            <a href="">Print invoice</a>
+        </li>
+        <li>
+            <a href="">Cancel order</a>
+        </li>
+        <li>
+            <a href="">Delete order</a>
+        </li>
+    </ul>
 </fieldset>
 
 <fieldset class="order_status">
@@ -54,7 +63,6 @@
     	</fieldset>
     {/form}
 </fieldset>
-
 
 <br class="clear" />
 

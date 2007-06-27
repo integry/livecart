@@ -19,8 +19,6 @@
                 <option value="setShipped">{t _set_shipped}</option>
                 <option value="setReturned">{t _set_returned}</option>
             </optgroup>
-            <option value="setFinalized">{t _set_finalized}</option>
-            <option value="setUnfinalized">{t _set_unfinalized}</option>
             <option value="delete">{t _delete}</option>
         </select>
         

@@ -46,8 +46,12 @@ class ShipmentController extends StoreManagementController
 	        
 	        if(!$shipment->shippingService->get())
 	        {
-	            $rate = unserialize($shipment->shippingServiceData->get())->toArray();
-	            $shipmentsArray[$shipment->getID()]['ShippingService']['ID'] = $rate['serviceID'];
+	            $rate = unserialize($shipment->shippingServiceData->get());
+	            if (is_object($rate))
+	            {
+                    $rate = $rate->toArray();    
+                    $shipmentsArray[$shipment->getID()]['ShippingService']['ID'] = $rate['serviceID'];
+                }
 	        }
 	    }
 	    

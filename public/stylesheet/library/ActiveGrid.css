@@ -40,6 +40,18 @@
   	display: none;
 }
 
+.activeGrid .cell_cb
+{
+    padding: 0 !important;
+}
+
+.activeGrid .cell_cb input
+{
+    width: auto !important;
+    float: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
 
 .activeGrid th input, .activeGrid th select
 {
@@ -106,6 +118,12 @@
 .activeGrid .headRow
 {
     height: 36px !important;
+}
+
+.activeGrid .headRow .cell_cb
+{
+    text-align: center !important;
+    padding: 0 !important;
 }
 
 .activeGrid .headRow .rangeTo

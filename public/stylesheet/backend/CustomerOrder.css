@@ -1,3 +1,6 @@
+/******************
+    order list
+******************/
 .cell_cb 
 {
     text-align:center !important;
@@ -17,6 +20,14 @@
 .cell_CustomerOrder_viewOrder
 {
     width: 70px;
+}
+
+/******************
+    overview
+******************/
+.orderMenu
+{
+    margin-left: 20px;
 }
 
 .order_shippingAddress input, 

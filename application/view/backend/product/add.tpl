@@ -52,6 +52,7 @@
     {literal}
     <script type="text/javascript">
     	Backend.Product.initAddForm({/literal}{$product.Category.ID}{literal});
+    	Backend.Product.setPath({/literal}{$product.Category.ID}, {json array=$path}{literal})
     </script>
     {/literal}
 

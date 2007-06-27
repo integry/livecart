@@ -21,7 +21,6 @@
 </script>
 {/literal}
 
-
 <fieldset id="order_{$order.ID}_{$type}_edit" class="error" style="display: none">
     {hidden name="ID"}
     
@@ -86,58 +85,51 @@
     </fieldset>
 </fieldset>
 
+<fieldset id="order_{$order.ID}_{$type}_view" class="container">
+    <p>
+        <label>{t _name}</label>
+        <label>{$order.fullName}</label>    
+    </p>    
 
-<fieldset id="order_{$order.ID}_{$type}_view" class="error" >
-    <label>{t _first_name}</label>
-    <fieldset class="error">
-        <div class="formDiv">{$order.firstName}</div>
-    </fieldset> 
+    {if $order.companyName}
+        <p>
+            <label>{t _company}</label>    
+            <label>{$order.companyName}</label>
+        </p>
+    {/if}
     
+    <p>
+        <label>{t _country}</label>    
+        <label>{$order.countryName}</label>
+    </p>
     
-    <label>{t _last_name}</label>
-    <fieldset class="error">
-        <div class="formDiv">{$order.lastName}</div>
-    </fieldset>
+    <p>
+        <label>{t _state}</label>    
+        <label>{$order.stateName}</label>
+    </p>    
     
+    <p>
+        <label>{t _city}</label>    
+        <label>{$order.city}</label>
+    </p>
     
-    <label>{t _country}</label>
-    <fieldset class="error">
-        <div class="formDiv">{$order.country} COUNTRY</div>
-    </fieldset>
+    <p>
+        <label>{t _address}</label>    
+        <label>{$order.address1}</label>
+    </p>    
     
+    <p>
+        <label>{t _address}</label>    
+        <label>{$order.address2}</label>
+    </p>    
     
-    <label>{t _state}</label>
-    <fieldset class="error">
-        <div class="formDiv">{$order.state} STATE</div>
-    </fieldset>
+    <p>
+        <label>{t _postal_code}</label>    
+        <label>{$order.postalCode}</label>
+    </p>
     
-    
-    <label>{t _city}</label>
-    <fieldset class="error">
-        <div class="formDiv">{$order.city}</div>
-    </fieldset>
-    
-    
-    <label>{t _address}</label>
-    <fieldset class="error">
-        <div class="formDiv">{$order.address1}</div>
-    </fieldset>
-    
-    
-    <label>{t _address}</label>
-    <fieldset class="error">
-        <div class="formDiv">{$order.address2}</div>
-    </fieldset>
-    
-    
-    <label>{t _postal_code}</label>
-    <fieldset class="error">
-        <div class="formDiv">{$order.postalCode}</div>
-    </fieldset>
-    
-    
-    <label>{t _phone}</label>
-    <fieldset class="error">
-        <div class="formDiv">{$order.phone}</div>
-    </fieldset>
+    <p>
+        <label>{t _phone}</label>    
+        <label>{$order.phone}</label>
+    </p>
 </fieldset>
