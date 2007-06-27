@@ -64,7 +64,7 @@ abstract class ActiveRecordModel extends ActiveRecord
     		'date_long' => Locale::FORMAT_DATE_LONG,
     		'date_medium' => Locale::FORMAT_DATE_MEDIUM,
     		'date_short' => Locale::FORMAT_DATE_SHORT,		
-    	);    
+    	);
 
 		foreach (self::getSchemaInstance($className)->getFieldsByType('ARDateTime') as $field)
 		{

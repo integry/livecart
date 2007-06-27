@@ -11,6 +11,8 @@ class LiveCart extends Application
 	 * Application instance (based on a singleton pattern)
 	 */
 	private static $instance = null;
+	
+	private static $pluginDirectories = array();
 
 	private $isBackend = false;
 
@@ -32,6 +34,16 @@ class LiveCart extends Application
 		}
 		
 		return self::$instance;
+	}
+	
+	/**
+	 * Registers a new plugin directory (multiple plugin directories are supported)
+	 *
+	 * @param string $dir Full plugin directory path
+	 */
+	public static function registerPluginDirectory($dir)
+	{
+		self::$pluginDirectories[$dir] = true;
 	}
 	
 	/**
@@ -132,30 +144,42 @@ class LiveCart extends Application
 	}    
 	
 	/**
+ `	 * Execute response post-processor plugins        
+ 	 *
 	 * @todo Cache plugin file locations
 	 */
     private function processPlugins(Controller $controllerInstance, Response $response)
 	{
         $name = $controllerInstance->getControllerName();
-        		
-        // check for response post-processor plugins        
-        $pluginDir = ClassLoader::getRealPath('plugin.controller.' . $name);
-		
-		if (!is_dir($pluginDir))
-		{
-            return false;
-        }
-		
-		foreach (new DirectoryIterator($pluginDir) as $file)
-		{
-            if (substr($file->getFileName(), -4) == '.php')
-            {
-                include_once($file->getPathname());
-                $class = substr($file->getFileName(), 0, -4);
-                $plugin = new $class($response);
-                $plugin->process();
-            }
-        }
+        $action = $controllerInstance->getRequest()->getActionName();
+        
+		ClassLoader::import('application.ControllerPlugin');
+				
+		$dirs = array_merge(array(ClassLoader::getRealPath('plugin.controller.' . $name . '.' . $action) => 0), self::$pluginDirectories);
+				
+        foreach ($dirs as $pluginDir => $type)
+        {
+			if ($type)
+			{
+				$pluginDir = $pluginDir . '/controller/' . $name . '/' . $action;
+			}				
+
+			if (!is_dir($pluginDir))
+			{
+	            continue;
+	        }
+
+			foreach (new DirectoryIterator($pluginDir) as $file)
+			{
+	            if (substr($file->getFileName(), -4) == '.php')
+	            {
+	                include_once($file->getPathname());
+	                $class = substr($file->getFileName(), 0, -4);
+	                $plugin = new $class($response, $controllerInstance);
+	                $plugin->process();
+	            }
+	        }
+		}
     }
 }
 

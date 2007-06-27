@@ -55,6 +55,7 @@
 {literal}
 	<script type="text/javascript">
 		editAreaLoader.baseURL = "{/literal}{baseUrl}javascript/library/editarea/{literal}";
+		$('code').value = {/literal}decode64("{$code}");{literal};
 		new Backend.TemplateHandler($('templateForm'));
 	</script>
 {/literal}

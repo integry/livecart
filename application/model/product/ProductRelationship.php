@@ -129,6 +129,18 @@ class ProductRelationship extends ActiveRecord
 		
 		return $filter;
 	}
+	
+	protected function insert()
+	{
+	  	// get max position
+	  	$f = self::getRelatedProductsSetFilter($this->product->get());
+	  	$f->setLimit(1);
+	  	$rec = ActiveRecord::getRecordSetArray('ProductRelationship', $f);
+		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 0;
+		$this->position->set($position);	
+		
+		return parent::insert();
+	}	
 }
 
 ?>
