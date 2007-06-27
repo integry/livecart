@@ -566,7 +566,7 @@ class Product extends MultilingualObject
 	 * 
 	 * @return Product
 	 */
-	public static function getNewInstance(Category $category, $name)
+	public static function getNewInstance(Category $category, $name = '')
 	{
 		$product = parent::getNewInstance(__CLASS__);
 		$product->category->set($category);

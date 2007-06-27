@@ -205,11 +205,46 @@ class ProductSpecification
 		
 		$specificationArray = self::fetchSpecificationData(array_flip($ids));
 
+        $specFieldColumns = array();
+        foreach (ActiveRecordModel::getSchemaInstance('SpecField')->getFieldList() as $field)
+        {
+            $specFieldColumns[] = $field->getName();
+        }
+
 		foreach ($specificationArray as &$spec)
 		{
-			// transform for presentation
-			$spec = MultiLingualObject::transformArray($spec, 'SpecificationStringValue');
-			$spec = MultiLingualObject::transformArray($spec, 'SpecField');
+		    if ($spec['isMultiValue'])
+		    {
+                $value['value'] = $spec['value'];
+                $value = MultiLingualObject::transformArray($value, 'SpecificationStringValue');
+                
+                if (isset($productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']]))
+                {
+                    $sp =& $productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']];
+                    $sp['valueIDs'][] = $spec['specFieldValueID'];
+                    $sp['values'][] = $value;
+                    continue;
+                }
+            }
+            
+			foreach ($specFieldColumns as $key)
+			{
+                $spec['SpecField'][$key] = $spec[$key];
+                unset($spec[$key]);
+            }
+            
+            // transform for presentation
+			$spec['SpecField'] = MultiLingualObject::transformArray($spec['SpecField'], 'SpecField');
+
+            if ($spec['SpecField']['isMultiValue'])
+            {
+                $spec['valueIDs'] = array($spec['specFieldValueID']);
+                $spec['values'] = array($value);                
+            }
+            else
+            {
+                $spec = MultiLingualObject::transformArray($spec, 'SpecificationStringValue');
+            }
 
 			// append to product array
 			$productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']] = $spec;		

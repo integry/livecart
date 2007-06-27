@@ -62,7 +62,6 @@ class TestProduct extends UnitTest
     public function testCategoryCountsWhenDisabledProductWithNoStockIsAdded()
 	{
         $secondCategory = Category::getNewInstance($this->productCategory);
-        $secondCategory->handle->set(':SECOND_TEST_HANDLE');
         $secondCategory->save();
         
         $product = Product::getNewInstance($secondCategory);
@@ -118,7 +117,6 @@ class TestProduct extends UnitTest
     public function xtestCategoryCountsWhenEnabledProductWithSomeStockIsAdded()
 	{
         $secondCategory = Category::getNewInstance($this->productCategory);
-        $secondCategory->handle->set(':SECOND_TEST_HANDLE');
         $secondCategory->save();
         
         $product = Product::getNewInstance($secondCategory);
@@ -138,7 +136,6 @@ class TestProduct extends UnitTest
     public function xtestCategoryCountsWhenEnabledProductWithNoStockIsAdded()
 	{
         $secondCategory = Category::getNewInstance($this->productCategory);
-        $secondCategory->handle->set(':SECOND_TEST_HANDLE');
         $secondCategory->save();
         
         $product = Product::getNewInstance($secondCategory);

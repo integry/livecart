@@ -201,7 +201,7 @@ class CategoryController extends FrontendController
             {
                 foreach ($product['attributes'] as $attr)
                 {
-                    if ($attr['isDisplayedInList'] && (!empty($attr['value']) || !empty($attr['values']) || !empty($attr['value_lang'])))
+                    if ($attr['SpecField']['isDisplayedInList'] && (!empty($attr['value']) || !empty($attr['values']) || !empty($attr['value_lang'])))
                     {
                         $product['listAttributes'][] = $attr;
                     }
