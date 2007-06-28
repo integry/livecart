@@ -28,8 +28,8 @@ To start selling goods in your e-store you have to stock up your system with som
 		By default products are displayed in the order they were added to your store (newest first, oldest - last).
 	</ol>
 </p> 
+<p class="note"><strong>Note</strong>: To view all products, select the most top category.</p>
 
-<br \>
 
 <h4>Sorting products</h4>
 	<p>LiveCart allows you to sort product's almost by any attribute: SKU, name, manufacturer, 
@@ -88,8 +88,6 @@ most of the attributes by applying changes to several products at once.</p>
 <img src="image/doc/products/click_product.bmp"/>
 Product's <a href="{help /products.define}">detailed page</a> opens. (Where you can edit any of the products properties)
 
-<br \>
-<br \>
 
 {helpSeeAlso}
 	{see products.add}
