@@ -14,8 +14,15 @@ class PaymentController extends StoreManagementController
 {
     public function index()
     {
-        $response = new ActionResponse();
+        $order = CustomerOrder::getInstanceById($this->request->getValue('id'));
         
+        $transactions = $order->getTransactions();
+        
+        //var_dump($transactions->toArray());
+        
+        $response = new ActionResponse();
+        $response->setValue('transactions', $transactions->toArray());
+        $response->setValue('order', $order->toArray());
         return $response;
     }
 }

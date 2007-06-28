@@ -20,6 +20,11 @@ class Transaction extends ActiveRecordModel
     const TYPE_AUTH = 1;
     const TYPE_CAPTURE = 2;
     const TYPE_VOID = 3;
+           
+    /**
+     *  Instance of credit card handler object
+     */
+    private $handler;
             
     /**
 	 * Define database schema used by this active record instance
@@ -68,17 +73,80 @@ class Transaction extends ActiveRecordModel
             $amount = $order->currency->get()->convertAmount($instance->currency->get(), $amount);
         }
         
+        $instance->type->set($result->getTransactionType());
+        
         if ($result->isCaptured())
-        {
+        {            
+            $instance->isCompleted->set(true);
             $order->capturedAmount->set($order->capturedAmount->get() + $amount);
         }
         
         return $instance;   
     }
     
+    public static function transformArray($array)
+    {
+		$array = parent::transformArray($array, __CLASS__);
+        
+        try
+        {
+            $array['formattedAmount'] = Currency::getInstanceByID($array['Currency']['ID'])->getFormattedPrice($array['amount']);
+        }
+        catch (ARNotFoundException $e)
+        {            
+        }
+        
+        $array['methodName'] = Store::getInstance()->getLocaleInstance()->translator()->translate($array['method']);
+        
+        return $array;        
+    }
+    
+    public static function loadHandlerClass($className, $isCreditCard)
+    {
+        if (!class_exists($className, false))
+        {
+            ClassLoader::import('library.payment.method.' . ($isCreditCard ? 'cc.' : '') . $className . '.' . $className);
+        }
+    }
+    
+    public function toArray()
+    {
+        $array = parent::toArray();
+        
+        $array['isVoidable'] = $this->isVoidable();
+        
+        return $array;
+    }    
+    
+    public function setHandler(TransactionPayment $handler)
+    {
+        $this->handler = $handler;
+    }
+    
+    public function isVoidable()
+    {
+        self::loadHandlerClass($this->method->get(), $this->isCreditCard->get());
+        return call_user_func(array($this->method->get(), 'isVoidable'));
+    }
+    
     protected function insert()
     {
         $this->order->get()->save();
+        
+        if ($this->handler instanceof CreditCardPayment)
+        {
+            $this->isCreditCard->set(true);
+            $this->ccExpiryMonth->set($this->handler->getExpirationMonth());
+            $this->ccExpiryYear->set($this->handler->getExpirationYear());
+                        
+            // only the last 5 digits of credit card number are stored
+            $this->ccLastDigits->set(substr($this->handler->getCardNumber(), -5));
+        }
+        
+        if ($this->handler)
+        {
+            $this->method->set(get_class($this->handler));
+        }
         
         return parent::insert();
     }

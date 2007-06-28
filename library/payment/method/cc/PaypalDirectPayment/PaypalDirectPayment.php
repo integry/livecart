@@ -120,7 +120,11 @@ class PaypalDirectPayment extends CreditCardPayment
 					
                 if ('Sale' == $type)
                 {
-                    $result->setAsCaptured();
+                    $result->setTransactionType(TransactionResult::TYPE_SALE);
+                }
+                else
+                {
+                    $result->setTransactionType(TransactionResult::TYPE_AUTH);
                 }
                     							
 				return $result;
@@ -158,8 +162,7 @@ class PaypalDirectPayment extends CreditCardPayment
 				$result->currency->set($details->GrossAmount->currencyID);
 
 				$result->rawResponse->set($response);
-
-                $result->setAsCaptured();
+                $result->setTransactionType(TransactionResult::TYPE_CAPTURE);
 
 				return $result;
 			}
@@ -190,7 +193,8 @@ class PaypalDirectPayment extends CreditCardPayment
 				$result = new TransactionResult();
 
 				$result->rawResponse->set($response);
-
+                $result->setTransactionType(TransactionResult::TYPE_VOID);
+                
 				return $result;
 			}
 		}

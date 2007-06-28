@@ -27,7 +27,7 @@
 							{/if}
                         {/foreach}
                     {elseif $attr.value}
-                        {$attr.valuePrefix_lang}{$attr.value}{$attr.valueSuffix_lang}
+                        {$attr.SpecField.valuePrefix_lang}{$attr.value}{$attr.SpecField.valueSuffix_lang}
                     {elseif $attr.value_lang}
                         {$attr.value_lang}
                     {/if}

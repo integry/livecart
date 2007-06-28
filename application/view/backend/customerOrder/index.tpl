@@ -30,6 +30,8 @@
 {includeJs file="backend/CustomerOrder.js"}
 {includeCss file="backend/CustomerOrder.css"}
 
+{includeCss file="backend/Payment.css"}
+
 {pageTitle help="orderGroups"}{t _livecart_orders}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 

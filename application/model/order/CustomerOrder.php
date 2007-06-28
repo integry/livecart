@@ -774,7 +774,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
             }            
         }		        
     
-        return $total;
+        return round($total, 2);
     }
 		
 	public function isBackordered()
@@ -936,6 +936,15 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     {
         $this->shipments = array();
     }    
+    
+    /**
+     *  Return all transactions that are related to this order
+     */
+    public function getTransactions()
+    {
+        ClassLoader::import('application.model.order.Transaction');
+        return $this->getRelatedRecordSet('Transaction', new ARSelectFilter());
+    }
 }
 	
 ?>

@@ -395,6 +395,8 @@ class CheckoutController extends FrontendController
             return new ActionRedirectResponse('checkout', 'completed');
         }
         
+        ActiveRecordModel::beginTransaction();
+        
         $currency = Currency::getValidInstanceById($this->getRequestCurrency());
         
         // set up transaction details
@@ -418,30 +420,36 @@ class CheckoutController extends FrontendController
         {
             $order->isPaid->set(true);
             $newOrder = $order->finalize($currency);
-            $this->session->unsetValue('CustomerOrder');
-            $newOrder->saveToSession();
 			            
             $this->session->setValue('completedOrderID', $order->getID());          
             
             $transaction = Transaction::getNewInstance($order, $result);
+            $transaction->setHandler($handler);
             $transaction->save();
             
-            return new ActionRedirectResponse('checkout', 'completed');
+            $this->session->unsetValue('CustomerOrder');
+            $newOrder->saveToSession();
+
+            $response = new ActionRedirectResponse('checkout', 'completed');
         }
         elseif ($result instanceof TransactionError)
         {
             $validator = $this->buildCreditCardValidator();
-            var_dump($handler, $result, $result->getDetails()->Errors, $handler->getDetails()->getData()); exit;
+//            var_dump($handler, $result, $result->getDetails()->Errors, $handler->getDetails()->getData()); exit;
             // set error message for credit card form
             $validator->triggerError('creditCardError', $this->translate('_err_processing_cc'));
             $validator->saveState();
             
-            return new ActionRedirectResponse('checkout', 'pay');
+            $response = new ActionRedirectResponse('checkout', 'pay');
         }
         else
         {
             throw new Exception('Unknown transaction result type: ' . get_class($result));
         }
+        
+        ActiveRecordModel::commit();        
+        
+        return $response;
 	}
 	
     /**

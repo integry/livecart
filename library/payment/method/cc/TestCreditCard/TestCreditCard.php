@@ -11,7 +11,7 @@ class TestCreditCard extends CreditCardPayment
 	
 	public static function isVoidable()
 	{
-		return true;
+        return true;
 	}
 	
 	public static function getSupportedCurrencies()
@@ -29,7 +29,9 @@ class TestCreditCard extends CreditCardPayment
 	 */
 	public function authorize()
 	{
-		return $this->processAuth('DoDirectPayment', 'Authorization');
+		$result = $this->processAuth('DoDirectPayment', 'Authorization');
+		$result->setTransactionType(TransactionResult::TYPE_AUTH);		
+		return $result;
 	}
 	
 	/**
@@ -37,7 +39,9 @@ class TestCreditCard extends CreditCardPayment
 	 */
 	public function capture()
 	{
-		return $this->processCapture();
+		$result = $this->processCapture();
+		$result->setTransactionType(TransactionResult::TYPE_CAPTURE);
+		return $result;
 	}
 	
 	/**
@@ -45,7 +49,9 @@ class TestCreditCard extends CreditCardPayment
 	 */
 	public function credit()
 	{
-		return $this->process('');		
+		$result = $this->process('');
+		$result->setTransactionType(TransactionResult::TYPE_VOID);
+		return $result;
 	}
 
 	/**
@@ -53,7 +59,9 @@ class TestCreditCard extends CreditCardPayment
 	 */
 	public function void()
 	{
-		return $this->process();		
+		$result = $this->process('');
+		$result->setTransactionType(TransactionResult::TYPE_VOID);
+		return $result;
 	}
 
 	/**
@@ -61,7 +69,9 @@ class TestCreditCard extends CreditCardPayment
 	 */
 	public function authorizeAndCapture()
 	{
-		return $this->process('Sale');
+		$result = $this->process('Sale');
+		$result->setTransactionType(TransactionResult::TYPE_SALE);
+		return $result;
 	}
 	
 	public function toArray()
@@ -87,8 +97,6 @@ class TestCreditCard extends CreditCardPayment
 		$result->AVSaddr->set(true);
 		$result->AVSzip->set(true);
 		$result->CVVmatch->set(true);	
-		
-		$result->setAsCaptured();
 		
 		return $result;		
 	}

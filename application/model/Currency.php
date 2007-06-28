@@ -47,6 +47,8 @@ class Currency extends ActiveRecordModel
 	
 	public function getFormattedPrice($price)
 	{
+        $price = round($price, 2);
+        
         $parts = explode('.', $price);                
         
         $dollars = $parts[0];

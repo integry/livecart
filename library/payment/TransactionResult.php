@@ -17,6 +17,13 @@ class TransactionResult
 	public $rawResponse;
 	
 	protected $isCaptured;
+	
+	protected $type;
+	
+    const TYPE_SALE = 0;
+    const TYPE_AUTH = 1;
+    const TYPE_CAPTURE = 2;
+    const TYPE_VOID = 3;	
     
     public function __construct()
 	{		
@@ -29,15 +36,20 @@ class TransactionResult
 		$this->rawResponse = new TransactionValueMapper();
 	}
 	
-	public function setAsCaptured()
-	{
-        $this->isCaptured = true;    
+    public function setTransactionType($type)
+    {
+        $this->type = $type;
     }
     
+    public function getTransactionType()
+    {
+        return $this->type;
+    }
+
     public function isCaptured()
     {
-        return $this->isCaptured;
-    }
+        return (self::TYPE_SALE == $this->type) || (self::TYPE_CAPTURE == $this->type);
+    }    
 }
 
 ?>
