@@ -395,7 +395,7 @@ Backend.Shipment.prototype =
     {
         var self = this;
         
-        new Ajax.Request(Backend.OrderedItem.Links.createNewItem + "/?productID=" + productID + "&shipmentID=" + self.nodes.form.elements.namedItem('ID').value, {
+        new Ajax.Request(Backend.OrderedItem.Links.createNewItem + "/?productID=" + productID + "&shipmentID=" + self.nodes.form.elements.namedItem('ID').value + "&orderID=" + self.nodes.form.elements.namedItem('orderID').value, {
            method: 'get',
            onSuccess: function(response) {
                var evaluatedResponse;
@@ -406,6 +406,7 @@ Backend.Shipment.prototype =
                    if(response.status == 'succsess')
                    {
                        var li = null;
+                       console.info("orderShipmentsItems_list_" + self.nodes.form.elements.namedItem('orderID').value + "_" + self.nodes.form.elements.namedItem('ID').value);
                        var itemsList = ActiveList.prototype.getInstance($("orderShipmentsItems_list_" + self.nodes.form.elements.namedItem('orderID').value + "_" + self.nodes.form.elements.namedItem('ID').value));
                            
                        if(!response.item.isExisting)
@@ -463,13 +464,17 @@ Backend.Shipment.prototype =
     hideShippedStatus: function()
     {    
         var shippedOption = $("orderShipment_status_" + this.nodes.form.elements.namedItem('ID').value + "_3");
-        if(!this.nodes.itemsList.down('li') || !this.nodes.form.elements.namedItem('shippingServiceID').value)
-        {
-            shippedOption.hide();
-        }
-        else
-        {
-            shippedOption.show();
+        
+        if(shippedOption)
+        {        
+            if(!this.nodes.itemsList.down('li') || !this.nodes.form.elements.namedItem('shippingServiceID').value)
+            {
+                shippedOption.hide();
+            }
+            else
+            {
+                shippedOption.show();
+            }
         }
     },
     

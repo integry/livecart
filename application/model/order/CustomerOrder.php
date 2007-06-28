@@ -945,6 +945,20 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         ClassLoader::import('application.model.order.Transaction');
         return $this->getRelatedRecordSet('Transaction', new ARSelectFilter());
     }
+    
+    public function getDownloadShipment()
+    {
+ 	    foreach($this->getShipments() as $shipment)
+ 	    {
+ 	        if(!$shipment->isShippable()) return $shipment;
+ 	    }
+ 	    
+ 	    $shipment = Shipment::getNewInstance($this);
+	    $shipment->amountCurrency->set($this->currency->get());
+   		$shipment->save();
+   	
+   		return $shipment;
+    }
 }
 	
 ?>

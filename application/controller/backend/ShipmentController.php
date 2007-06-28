@@ -67,6 +67,11 @@ class ShipmentController extends StoreManagementController
 	    $response->setValue('shipments', $shipmentsArray);
 	    $response->setValue('subtotalAmount', $subtotalAmount);
 	    $response->setValue('shippingAmount', $shippingAmount);
+	    $downloadableShipment = $order->getDownloadShipment()->toArray();
+	    print_r($order->getDownloadShipment()->amount->get());
+	    
+	    
+	    $response->setValue('downloadableShipment', $order->getDownloadShipment()->toArray());
 	    $response->setValue('taxAmount', $taxAmount);
 	    $response->setValue('totalAmount', $totalAmount);
 	    $response->setValue('statuses', $statuses + array(-1 => $this->translate('_delete')));

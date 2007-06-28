@@ -18,7 +18,16 @@ class OrderedItemController extends StoreManagementController
 {
     public function create()
     {
-        $shipment = Shipment::getInstanceById('Shipment', (int)$this->request->getValue('shipmentID'), true, array('Order' => 'CustomerOrder', 'ShippingService', 'ShippingAddress' => 'UserAddress', 'AmountCurrency' => 'Currency'));
+        if($this->request->getValue('shipmentID') == 'downloadable')
+        {
+	 	    $order = CustomerOrder::getInstanceByID((int)$this->request->getValue('orderID'), true, array('ShippingAddress' => 'UserAddress', 'Currency'));		    
+	 	    $shipment = $order->getDownloadShipment();
+        }
+        else
+        {
+            $shipment = Shipment::getInstanceById('Shipment', (int)$this->request->getValue('shipmentID'), true, array('Order' => 'CustomerOrder', 'ShippingService', 'ShippingAddress' => 'UserAddress', 'AmountCurrency' => 'Currency'));
+        }
+
         $product = Product::getInstanceById((int)$this->request->getValue('productID'), true);
         
         $existingItem = false;

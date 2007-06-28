@@ -1,6 +1,6 @@
-<input type="hidden" name="ID" value="{$shipment.ID}" />
-<input type="hidden" name="orderID" value="{$shipment.Order.ID}" />
-<input type="hidden" name="shippingServiceID" value="{$shipment.ShippingService.ID}" />
+<input type="hidden" name="ID" value="{$shipment.ID|default:$shipmentID}" />
+<input type="hidden" name="orderID" value="{$shipment.Order.ID|default:$orderID}" />
+<input type="hidden" name="shippingServiceID" value="{$shipment.ShippingService.ID|default:$shippingServiceID}" />
 
 <table class="orderShipmentsItem_info orderShipment_info">
     <tr class="orderShipment_info_first_row" >
@@ -20,7 +20,7 @@
         </td>
     </tr>
     
-    <tr>
+    <tr {if !$isShippable}style="display: none"{/if}>
         <td class="orderShipmentsItem_info_report_td">
             <div class="orderShipmentsItem_info_report">
                 {t _taxes}:
@@ -37,7 +37,7 @@
         </td>
     </tr>
     
-    <tr>
+    <tr {if !$isShippable}style="display: none"{/if}>
         <td class="orderShipmentsItem_info_report_td">
             <div class="orderShipmentsItem_info_report">
                 {t _shipping}:  

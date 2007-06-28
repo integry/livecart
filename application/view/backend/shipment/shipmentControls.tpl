@@ -1,6 +1,6 @@
 <fieldset class="orderShipment_controls error">
    <div class="orderShipment_addProduct">
-       <a href="#newProduct" id="orderShipment_addProduct_{$shipment.ID}" class="addNewProductLink">Add new product</a>
+       <a href="#newProduct" id="orderShipment_addProduct_{$shipment.ID}" class="addNewProductLink">{t _add_new_product}</a>
    </div >
    <fieldset class="orderShipment_status error">
        <label>Status: </label>
