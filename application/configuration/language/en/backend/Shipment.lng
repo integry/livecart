@@ -18,6 +18,9 @@ _change_usps_priority=change
 _not_shipped=Not shipped
 _shipped=Shipped
 
+_do_you_want_to_create_new_shipment=Do you want to create new shipment?
+_shipping_service_is_not_selected=Shipping service is not selected
+
 _price=Price
 
 _subtotal_price=Subtotal price

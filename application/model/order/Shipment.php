@@ -12,7 +12,7 @@ ClassLoader::import("application.model.order.ShipmentTax");
  */
 class Shipment extends ActiveRecordModel
 {
-    protected $items = array();
+    public $items = array();
     
     /**
      *  Used only for serialization
@@ -65,7 +65,7 @@ class Shipment extends ActiveRecordModel
 	    {
 		    $filter = new ARSelectFilter();
 			$filter->setCondition(new EqualsCond(new ARFieldHandle('OrderedItem', 'shipmentID'), $this->getID()));
-		
+	    
 			foreach(OrderedItem::getRecordSet('OrderedItem', $filter, array('Product', 'Category', 'DefaultImage' => 'ProductImage')) as $item)
 			{
 			    $this->items[] = $item;
@@ -122,6 +122,7 @@ class Shipment extends ActiveRecordModel
             {
                 $weight += $item->product->get()->shippingWeight->get();
             }
+            
         }   
         
         return $weight;
@@ -255,6 +256,23 @@ class Shipment extends ActiveRecordModel
         return $array;
     }
     
+    public function getShippingService()
+    {
+        if($this->shippingService->get())
+        {
+            return $this->shippingService->get();
+        }
+        else if($this->shippingServiceData->get())
+        {
+            $rate = unserialize($this->shippingServiceData->get());
+            return ShippingService::getInstanceByID($rate->getServiceID());
+        }
+        else
+        {
+            return null;
+        }
+    }
+    
     public function getSubTotal(Currency $currency, $applyTaxes = true)
     {
         $subTotal = 0;
@@ -301,16 +319,18 @@ class Shipment extends ActiveRecordModel
     protected function update()
     {
         $rate = $this->getSelectedRate();
-        
-        $serviceId = $rate->getServiceID();
-        if (is_numeric($serviceId))
+        if($rate)
         {
-            $this->shippingService->set(ShippingService::getInstanceByID($serviceId));
-        }
-        else
-        {
-            $this->shippingService->set(null);
-            $this->shippingServiceData->set(serialize($rate));
+	        $serviceId = $rate->getServiceID();
+	        if (is_numeric($serviceId))
+	        {
+	            $this->shippingService->set(ShippingService::getInstanceByID($serviceId));
+	        }
+	        else
+	        {
+	            $this->shippingService->set(null);
+	            $this->shippingServiceData->set(serialize($rate));
+	        }
         }
 
         // reset amounts...
@@ -370,23 +390,26 @@ class Shipment extends ActiveRecordModel
         // set shipping data
         $rate = $this->getSelectedRate();
         
-        $serviceId = $rate->getServiceID();
-        if (is_numeric($serviceId))
-        {
-            $this->shippingService->set(ShippingService::getInstanceByID($serviceId));
+        if($rate)
+        {        
+	        $serviceId = $rate->getServiceID();
+	        if (is_numeric($serviceId))
+	        {
+	            $this->shippingService->set(ShippingService::getInstanceByID($serviceId));
+	        }
+	        else
+	        {
+	            $this->shippingServiceData->set(serialize($rate));
+	        }
+	
+	        // reset amounts...
+	        $this->amount->set(0);
+	        $this->shippingAmount->set(0);
+	        $this->taxAmount->set(0);
+	                
+	        // ... and recalculated them
+	        $this->recalculateAmounts();
         }
-        else
-        {
-            $this->shippingServiceData->set(serialize($rate));
-        }
-
-        // reset amounts...
-        $this->amount->set(0);
-        $this->shippingAmount->set(0);
-        $this->taxAmount->set(0);
-                
-        // ... and recalculated them
-        $this->recalculateAmounts();
         
         $this->status->set(self::STATUS_NEW);
         
@@ -414,8 +437,15 @@ class Shipment extends ActiveRecordModel
         return $this->items;
     }
     
+    public function unloadItems()
+    {
+        $this->items = null;
+    }    
+    
     public function recalculateAmounts()
     {
+        $this->loadItems();
+        
         $currency = $this->order->get()->currency->get();
         $this->amountCurrency->set($currency);
         $this->amount->set($this->getSubTotal($currency, self::WITHOUT_TAXES));

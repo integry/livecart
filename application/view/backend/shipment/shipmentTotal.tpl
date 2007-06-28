@@ -13,7 +13,7 @@
             <div class="orderShipmentsItem_info_total">
                 <span class="orderShipment_info_subtotal shipment_amount">
                     <span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
-                    <span class="price">{$shipment.amount}</span>
+                    <span class="price">{$shipment.amount|default:0}</span>
                     <span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
                 </span>
             </div>
@@ -30,19 +30,18 @@
             <div class="orderShipmentsItem_info_tax">
                 <span class="orderShipment_info_subtotal shipment_taxAmount">
                     <span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
-                    <span class="price">{$shipment.taxAmount}</span>
+                    <span class="price">{$shipment.taxAmount|default:0}</span>
                     <span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
                 </span>
             </div>
         </td>
     </tr>
     
-    
     <tr>
         <td class="orderShipmentsItem_info_report_td">
             <div class="orderShipmentsItem_info_report">
-                {t _shipping} ({t _usps_priority}): 
-                <a href="#change" class="orderShipment_change_usps" id="orderShipment_change_usps_{$shipment.ID}"  style="{if $shipment.status == 3}display: none;{/if}">({t _change_usps_priority})</a>
+                {t _shipping}:  
+                <a href="#change" class="orderShipment_change_usps" id="orderShipment_change_usps_{$shipment.ID}"  style="{if $shipment.status == 3}display: none;{/if}">{$shipment.ShippingService.name_lang|default:$shippingServiceIsNotSelected}</a>
                 
                 <span class="controls" id="orderShipment_USPS_{$shipment.ID}" style="display: none">
                     <select name="USPS" id="orderShipment_USPS_{$shipment.ID}_select"> </select>
@@ -58,7 +57,7 @@
             <div class="orderShipmentsItem_info_total">
                 <span class="orderShipment_info_shippingAmount shipment_shippingAmount">
                     <span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>
-                    <span class="price">{$shipment.shippingAmount}</span>
+                    <span class="price">{$shipment.shippingAmount|default:0}</span>
                     <span class="priceSuffix">{$shipment.AmountCurrency.priceSuffix}</span>
                 </span>
             </div>

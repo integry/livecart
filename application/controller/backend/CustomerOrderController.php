@@ -496,5 +496,23 @@ class CustomerOrderController extends StoreManagementController
 		    return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
 		}
 	}
+
+    /**
+     * @role update
+     */
+	public function removeEmptyShipments()
+	{
+	    $order = CustomerOrder::getInstanceById((int)$this->request->getValue('id'), true, true);
+	    
+	    foreach($order->getShipments() as $shipment)
+	    {
+	        if(count($shipment->getItems()) == 0)
+	        {
+                $shipment->delete();
+	        }
+	    }
+	    
+	    return new JSONResponse(array('status' => 'success'));
+	}
 }
 ?>

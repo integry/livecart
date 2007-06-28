@@ -18,6 +18,7 @@ class ShipmentController extends StoreManagementController
 	public function index()
 	{
 	    $order = CustomerOrder::getInstanceById($this->request->getValue('id'), true, true);
+        $order->loadItems();
 		$form = $this->createShipmentForm();
 		$form->setData(array('orderID' => $order->getID()));
 	    $shipments = $order->getShipments();
@@ -38,29 +39,31 @@ class ShipmentController extends StoreManagementController
 	    
 	    foreach($shipments as $shipment)
 	    {
+	        
 	        $subtotalAmount += $shipment->amount->get();
 	        $shippingAmount += $shipment->shippingAmount->get();
 	        $taxAmount += $shipment->taxAmount->get();
 	        
 	        $shipmentsArray[$shipment->getID()] = $shipment->toArray();
 	        
-	        if(!$shipment->shippingService->get())
-	        {
-	            $rate = unserialize($shipment->shippingServiceData->get());
-	            if (is_object($rate))
-	            {
-                    $rate = $rate->toArray();    
-                    $shipmentsArray[$shipment->getID()]['ShippingService']['ID'] = $rate['serviceID'];
-                }
-	        }
+	        $rate = unserialize($shipment->shippingServiceData->get());
+            if(is_object($rate))
+            {
+	            $shipmentsArray[$shipment->getID()] = array_merge($shipmentsArray[$shipment->getID()], unserialize($shipment->shippingServiceData->get())->toArray());
+	            $shipmentsArray[$shipment->getID()]['ShippingService']['ID'] = $shipmentsArray[$shipment->getID()]['serviceID'];
+            }
+            else
+            {
+                $shipmentsArray[$shipment->getID()]['ShippingService']['name_lang'] = $this->translate('_shipping_service_is_not_selected');
+            }	
 	    }
-	    
 	    
         $totalAmount = $subtotalAmount + $shippingAmount;
 	    
 	    $response = new ActionResponse();
 	    $response->setValue('orderID', $this->request->getValue('id'));
 	    $response->setValue('order', $order->toArray());
+	    $response->setValue('shippingServiceIsNotSelected', $this->translate('_shipping_service_is_not_selected'));
 	    $response->setValue('shipments', $shipmentsArray);
 	    $response->setValue('subtotalAmount', $subtotalAmount);
 	    $response->setValue('shippingAmount', $shippingAmount);
@@ -75,15 +78,14 @@ class ShipmentController extends StoreManagementController
 	
 	public function changeService()
 	{
-	    
-	    $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->getValue('id'), true, array('Order' => 'CustomerOrder'));
-	    $shipment->loadItems();
-	    
+        $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->getValue('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
+        $shipment->loadItems();
+	        
         $zone = $shipment->order->get()->getDeliveryZone();
-        $rates = $zone->getShippingRates($shipment);
-        $shipment->setAvailableRates($rates);
+        $shipmentRates = $zone->getShippingRates($shipment);
+        $shipment->setAvailableRates($shipmentRates);
             			
-		if (!$rates->getByServiceId($this->request->getValue('serviceID')))
+		if (!$shipmentRates->getByServiceId($this->request->getValue('serviceID')))
 		{
 			throw new ApplicationException('No rate found: ' . $shipment->getID() .' (' . $this->request->getValue('serviceID') . ')');
 			return new ActionRedirectResponse('checkout', 'shipping');
@@ -91,30 +93,39 @@ class ShipmentController extends StoreManagementController
 		
 		$shipment->setRateId($this->request->getValue('serviceID'));
 	    $shipment->save(ActiveRecord::PERFORM_UPDATE);
-			
-	    die();
-	    
-	    
-	    //$shippingService = ShippingService::getInstanceByID($this->request->getValue('serviceID'));
-	    
+
+	    $shippingService = ShippingService::getInstanceByID($this->request->getValue('serviceID'));
 	    
         $shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
         $shipment->setRateId($shippingService->getID());
-        
         
 	    $shipment->shippingService->set($shippingService);
         $shipment->recalculateAmounts();
 	    
 	    $shipment->save();
+	    $shipmentArray = $shipment->toArray();
+	    $shipmentArray['ShippingService']['ID'] = $this->request->getValue('serviceID');
 	    
-	    return new JSONResponse(array('status' => 'suckless'));
+	    return new JSONResponse(array(
+		    'status' => 'success', 
+		    'shipment' => array(
+                'ID' => $shipment->getID(),
+                'amount' => $shipment->amount->get(),
+                'shippingAmount' => (float)$shipment->shippingAmount->get(),
+                'taxAmount' => $shipment->taxAmount->get(),
+                'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$shipment->taxAmount->get(),
+                'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
+                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get(),
+                'ShippingService' => $shipmentArray['ShippingService']
+            )
+		));
 	}
 	
 	public function changeStatus()
 	{
 	    $status = (int)$this->request->getValue('status');
 	    
-	    $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->getValue('id'));
+	    $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->getValue('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
 	    $shipment->status->set($status);
 	    
 	    $shipment->save();
@@ -126,10 +137,8 @@ class ShipmentController extends StoreManagementController
 	{
 	    if($shipmentID = (int)$this->request->getValue('id'))
 	    {
-	        
 	        $shipment = Shipment::getInstanceByID('Shipment', $shipmentID, true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
             $shipment->loadItems();
-            
             
             $zone = $shipment->order->get()->getDeliveryZone();
             $shipmentRates = $zone->getShippingRates($shipment);
@@ -145,7 +154,7 @@ class ShipmentController extends StoreManagementController
 	                'amount' => $shipment->amount->get(),
 	                'shippingAmount' => (float)$rateArray['costAmount'],
 	                'taxAmount' => $shipment->taxAmount->get(),
-	                'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$rateArray['costAmount'],
+	                'total' => (float)$shipment->taxAmount->get() + (float)$shipment->amount->get() + (float)$rateArray['costAmount'],
 	                'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
 	                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
                 );
@@ -193,12 +202,19 @@ class ShipmentController extends StoreManagementController
         $validator = $this->createShipmentFormValidator();
 		if ($validator->isValid())
 		{   		
-		    $shippingService = ShippingService::getInstanceByID((int)$this->request->getValue('shippingServiceID'));
-		    
-		    $shipment->status->set((int)$this->request->getValue('status'));
-		    $shipment->shippingService->set($shippingService);
-		    $shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
-		    $shipment->setRateId($shippingService->getID());
+		    if($shippingServiceID = $this->request->getValue('shippingServiceID'))
+		    {
+			    $shippingService = ShippingService::getInstanceByID($shippingServiceID);
+			    
+			    $shipment->status->set((int)$this->request->getValue('status'));
+			    $shipment->shippingService->set($shippingService);
+			    $shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
+			    $shipment->setRateId($shippingService->getID());
+		    }
+		    else
+		    {
+		        $shipment->amountCurrency->set($shipment->order->get()->currency->get());
+		    }
 		    
     		$shipment->save();
     		
@@ -208,7 +224,7 @@ class ShipmentController extends StoreManagementController
                 'ID' => $shipment->getID(),
                 'amount' => $shipment->amount->get(),
                 'shippingAmount' => $shipment->shippingAmount->get(),
-                'ShippingService' => array('ID' => $shipment->shippingService->get()->getID() ),
+                'ShippingService' => array('ID' => ($shipment->shippingService->get() ? $shipment->shippingService->get()->getID() : 0) ),
                 'taxAmount' => $shipment->taxAmount->get(),
                 'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$shipment->taxAmount->get(),
                 'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),

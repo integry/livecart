@@ -1,11 +1,18 @@
 <fieldset class="container" {denied role="order.update"}style="display: none"{/denied}>
 	<ul class="menu" id="orderShipments_menu_{$orderID}">
 	    <li><a href="#new" id="orderShipments_new_{$orderID}_show">{t _add_new_shipment}</a></li>
-	    <li><a href="#new" id="orderShipments_new_{$orderID}_cancel" class="hidden">{t _cancel_adding_new_shipment}</a></li>
+	    <li class="controls" id="orderShipments_new_{$orderID}_controls" style="display:none">
+	        {t _do_you_want_to_create_new_shipment}
+            
+            <input type="submit" value="{t _yes}" class="submit"  id="orderShipments_new_{$orderID}_submit">
+            {t _or}
+            <a href="#new" id="orderShipments_new_{$orderID}_cancel">{t _no}</a>
+        </li>
 	</ul>
 </fieldset>
 
-<fieldset id="orderShipments_new_{$orderID}_form" style="display: none;">{include file="backend/shipment/form.tpl" shipment=$newShipment shipmentForm=$newShipmentForm}</fieldset>
+<fieldset id="orderShipments_new_{$orderID}_form" style="display: none;">
+</fieldset>
 
 <div id="orderShipment_{$orderID}_controls_empty" style="display: none">{include file="backend/shipment/shipmentControls.tpl"}</div>
 <div id="orderShipment_{$orderID}_total_empty" style="display: none">{include file="backend/shipment/shipmentTotal.tpl"}</div>
@@ -110,7 +117,7 @@
     Backend.Shipment.Links.getAvailableServices = '{/literal}{link controller=backend.shipment action=getAvailableServices}{literal}';
     Backend.Shipment.Links.changeService        = '{/literal}{link controller=backend.shipment action=changeService}{literal}';
     Backend.Shipment.Links.changeStatus         = '{/literal}{link controller=backend.shipment action=changeStatus}{literal}';
-    Backend.Shipment.Links.removeEmptyShipments = '{/literal}{link controller=backend.shipment action=removeEmptyShipments}{literal}';
+    Backend.Shipment.Links.removeEmptyShipments = '{/literal}{link controller=backend.customerOrder action=removeEmptyShipments}{literal}';
     
     Backend.Shipment.Statuses = {};
     {/literal}{foreach key="statusID" item="status" from=$statuses}{literal}
@@ -119,6 +126,7 @@
      
     Backend.Shipment.Messages = {};
     Backend.Shipment.Messages.areYouSureYouWantToDelete                         = '{/literal}{t _are_you_sure_you_want_to_delete_group|addslashes}{literal}';
+    Backend.Shipment.Messages.shippingServiceIsNotSelected                         = '{/literal}{t _shipping_service_is_not_selected|addslashes}{literal}';
     Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToAwaiting  = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_awaiting|addslashes}{literal}';
     Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToPending   = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_pending|addslashes}{literal}';
     Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToNew       = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_new|addslashes}{literal}';
@@ -142,8 +150,7 @@
             return Backend.Shipment.Messages.emptyShipmentsWillBeRemoved;
         }
     }
-    
-    
+
     Event.observe(window, 'unload', function()
     {
         var customerOrder = Backend.CustomerOrder.Editor.prototype.getInstance('{/literal}{$orderID}{literal}');
@@ -162,19 +169,46 @@
         {
             Event.stop(e);
             
+            $("{/literal}orderShipments_new_{$orderID}_show{literal}").hide();
+	        $("{/literal}orderShipments_new_{$orderID}_controls{literal}").show();
+        });   
+
+        Event.observe($("{/literal}orderShipments_new_{$orderID}_cancel{literal}"), "click", function(e) 
+        {
+            Event.stop(e);
+            
+            $("{/literal}orderShipments_new_{$orderID}_show{literal}").show();
+	        $("{/literal}orderShipments_new_{$orderID}_controls{literal}").hide();
+        });   
+
+        Event.observe($("{/literal}orderShipments_new_{$orderID}_submit{literal}"), "click", function(e) 
+        {
+            Event.stop(e);
+            
+            $("{/literal}orderShipments_new_{$orderID}_show{literal}").show();
+	        $("{/literal}orderShipments_new_{$orderID}_controls{literal}").hide();
+            
+            
             var newForm = Backend.Shipment.prototype.getInstance(
-                $("{/literal}orderShipments_new_{$orderID}_form{literal}").down('form'),
+                $("{/literal}orderShipments_new_{$orderID}_form{literal}"),
                 {/literal}{$orderID}{literal}
             );
             
-            newForm.showNewForm();
+            newForm.save();
         });   
-
         
         var groupList = ActiveList.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{literal}', Backend.Shipment.Callbacks);  
         {/literal}{foreach item="shipment" from=$shipments}{literal}
             {/literal}{if $shipment.status != 3}{literal}
-                ActiveList.prototype.getInstance('{/literal}orderShipmentsItems_list_{$orderID}_{$shipment.ID}{literal}', Backend.OrderedItem.activeListCallbacks);
+                var shippedOption = $("{/literal}orderShipment_status_{$shipment.ID}_3{literal}");
+                var itemsList = $('{/literal}orderShipmentsItems_list_{$orderID}_{$shipment.ID}{literal}');
+            
+                if(!itemsList.down('li') || !shippedOption.form.elements.namedItem('shippingServiceID').value)
+                {
+                    shippedOption.hide();
+                }
+            
+                ActiveList.prototype.getInstance(itemsList, Backend.OrderedItem.activeListCallbacks);
                 
                 Event.observe("{/literal}orderShipment_change_usps_{$shipment.ID}{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS();  });
                 Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_submit{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS();  });       
@@ -198,12 +232,11 @@
                 });
             
                 {/literal}{foreach item="item" from=$shipment.items}{literal}
-                    $("{/literal}orderShipmentsItem_count_{$item.ID}{literal}").lastValue = $("{/literal}orderShipmentsItem_count_{$item.ID}{literal}").value;
-                                    
-                    Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'focus', function(e) { window.lastFocusedItemCount = this; });
-                    Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'keyup', function(e) { Backend.OrderedItem.updateProductCount({/literal}this, {$orderID}, {$item.ID}, {$shipment.ID}{literal}) });
-                    Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'blur', function(e) { Backend.OrderedItem.changeProductCount({/literal}this, {$orderID}, {$item.ID}, {$shipment.ID}{literal}) }, false);
-                    Event.observe("{/literal}orderShipmentsItems_list_{$orderID}_{$shipment.ID}_{$item.ID}{literal}", 'click', function(e) { 
+                    $("{/literal}orderShipmentsItem_count_{$item.ID}{literal}").lastValue = $("{/literal}orderShipmentsItem_count_{$item.ID}{literal}").value;     
+                        Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'focus', function(e) { window.lastFocusedItemCount = this; });
+                        Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'keyup', function(e) { Backend.OrderedItem.updateProductCount({/literal}this, {$orderID}, {$item.ID}, {$shipment.ID}{literal}) });
+                        Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'blur', function(e) { Backend.OrderedItem.changeProductCount({/literal}this, {$orderID}, {$item.ID}, {$shipment.ID}{literal}) }, false);
+                        Event.observe("{/literal}orderShipmentsItems_list_{$orderID}_{$shipment.ID}_{$item.ID}{literal}", 'click', function(e) { 
                         var input = window.lastFocusedItemCount;
                         if(input && input.value != input.lastValue) { input.blur(); } 
                     });

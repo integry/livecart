@@ -30,6 +30,7 @@ class ShipmentDeliveryRate extends ShippingRateResult
         
         $address = $shipment->order->get()->shippingAddress->get();        
         $handler->setDestCountry($address->countryID->get()); 
+        
         $handler->setDestZip($address->postalCode->get());
 
         $config = Config::getInstance();        

@@ -6,7 +6,7 @@
        <label>Status: </label>
        <select name="status" id="orderShipment_status_{$shipment.ID}">
            {foreach key="statusID" item="status" from=$statuses}
-               <option value="{$statusID}" {if $shipment.status == $statusID}selected{/if}>{$status}</option>
+               <option value="{$statusID}" id="orderShipment_status_{$shipment.ID}_{$statusID}" {if $shipment.status == $statusID}selected{/if}>{$status}</option>
            {/foreach}
        </select>
    </fieldset>

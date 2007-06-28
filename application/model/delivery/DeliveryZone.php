@@ -234,11 +234,9 @@ class DeliveryZone extends MultilingualObject
         $store = Store::getInstance();
         $handlers = $store->getEnabledRealTimeShippingServices();
         foreach ($handlers as $handler)
-        {            
+        {
             $rates->merge(ShipmentDeliveryRate::getRealTimeRates($store->getShippingHandler($handler), $shipment));
-        }
-                
-//        foreach ($rates as $rate) { var_dump($rate); }        
+        }      
         
 		return $rates;
     }
@@ -251,8 +249,7 @@ class DeliveryZone extends MultilingualObject
     public function getShippingRates(Shipment $shipment)
     {
         $defined = $this->getDefinedShippingRates($shipment);
-        $defined->merge($this->getRealTimeRates($shipment));   
-        
+        $defined->merge($this->getRealTimeRates($shipment));  
         // apply taxes
         foreach ($defined as $rate)
         {
