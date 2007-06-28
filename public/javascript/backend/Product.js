@@ -228,7 +228,12 @@ Backend.Product =
 		var cont = $('productCount_' + categoryID);
 		var countElement = document.getElementsByClassName('rangeCount', cont)[0];
 		var notFound = document.getElementsByClassName('notFound', cont)[0];
-								
+						
+        if (!countElement)
+        {
+            return false;
+        }
+                        		
 		if (totalCount > 0)
 		{
 			if (!countElement.strTemplate)
@@ -400,10 +405,8 @@ Backend.Product.saveHandler.prototype =
                     response.specFieldHtml.evalScripts();                    
                 }
             }
-
   		
-              // reload product grids
-            /*
+            // reload product grids
             var path = Backend.Product.categoryPaths[categoryID] 			
             for (var k = 0; k <= path.length; k++)
             {
@@ -412,18 +415,14 @@ Backend.Product.saveHandler.prototype =
                 
                 if (!table && Backend.Product.productTabCopies[categoryID])
                 {
-                    console.log(Backend.Product.productTabCopies[categoryID]);
-                    table = Backend.Product.productTabCopies[categoryID].getElementById('products_' + category);
+                    table = Backend.Product.productTabCopies[categoryID].getElementsByTagName('table')[0];
                 }
                 
-                console.log(table);
                 if (table)
                 {
                     table.gridInstance.reloadGrid();
-                console.log(table.gridInstance);
                 }
             }
-            */
 
 			// reset form and add more products
 			if ($('afAd_new').checked)

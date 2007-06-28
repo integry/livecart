@@ -112,12 +112,17 @@
     overflow: hidden;
     white-space: nowrap;
     padding: 0;
-    padding-left: 2px;
+    padding: 3px;
 }
 
 .activeGrid .headRow
 {
-    height: 36px !important;
+    height: 23px !important;
+}
+
+.activeGrid select, .activeGrid input
+{
+    margin: 0 !important;
 }
 
 .activeGrid .headRow .cell_cb
