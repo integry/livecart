@@ -63,8 +63,17 @@ TabControl.prototype = {
                 if(!e) e = window.event;
                 if(e) Event.stop(e);
                 
-                self.handleTabClick({'target': li}); 
-            } 
+                if (e)
+                {
+                    var keyboard = new KeyboardEvent(e);
+                    if (keyboard.isShift())
+                    {                        
+                        self.resetContent(Event.element(e).up('li'));
+                    }
+                }
+
+                self.handleTabClick({'target': li});                 
+            }
    
 			Event.observe(li, 'mouseover', function(e) { 
                 if(e) Event.stop(e); 
@@ -213,7 +222,12 @@ TabControl.prototype = {
 	 */
 	resetContent: function(tabObj)
 	{
-		$($(tabObj).id + 'Content').update();
+        var id = this.idParserCallback(tabObj.id);
+        this.loadedContents[this.urlParserCallback(tabObj.down('a').href) + id] = false;
+		if ($(id))
+		{
+            $(id).update();
+        }
 	},
 
 	reloadActiveTab: function()
