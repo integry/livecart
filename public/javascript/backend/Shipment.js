@@ -395,7 +395,7 @@ Backend.Shipment.prototype =
     {
         var self = this;
         
-        new Ajax.Request(Backend.OrderedItem.Links.createNewItem + "/?productID=" + productID + "&shipmentID=" + self.nodes.form.elements.namedItem('ID').value + "&orderID=" + self.nodes.form.elements.namedItem('orderID').value, {
+        new Ajax.Request(Backend.OrderedItem.Links.createNewItem + "/?productID=" + productID + "&shipmentID=" + this.nodes.form.elements.namedItem('ID').value + "&orderID=" + this.nodes.form.elements.namedItem('orderID').value + "&downloadable=" + this.nodes.form.elements.namedItem('downloadable').value, {
            method: 'get',
            onSuccess: function(response) {
                var evaluatedResponse;

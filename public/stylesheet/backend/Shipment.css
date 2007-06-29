@@ -1,4 +1,3 @@
-
 .orderShipments, .orderShipment_report
 {
    padding-bottom: 3em;
@@ -20,10 +19,6 @@
     padding: 2px; 
 }
 
-.orderShipment_report_description
-{
-}
-
 .orderShipment_report_value
 {
     width: 90px;
@@ -32,9 +27,19 @@
 
 .orderShippedShipments .orderShipmentsItem 
 {
-    padding-top: 15px;
     padding-left: 40px;
 }
+
+.orderShippedShipments .orderShipmentsItem
+{
+    padding-top: 0px;
+}
+
+.orderShippedShipments .orderShipment_info
+{
+    padding-bottom: 20px;
+}
+
 /* Product table */
 .orderShipmentsItem_info
 {
@@ -153,11 +158,25 @@
 .orderShipment_controls
 {
     position: relative ! important;
-    padding: 40px 0 20px 0 ! important;
+    padding: 20px 0 0px 0 ! important;
 }
 
 
 .orderShipmentsItem
 {
    padding-top: 15px;
+}
+
+.downloadableShipmetn .orderShipmentsItem_info_count_td,
+.downloadableShipmetn .orderShipmentsItem_info_price_td,
+.downloadableShipmetn .orderShipment_info_shipping_row,
+.downloadableShipmetn .orderShipment_info_total_row,
+.downloadableShipmetn .orderShipment_info_tax_row
+{
+    display: none;
+}
+
+.downloadableShipmetn .orderShipmentsItem .activeList_icons img
+{    
+    margin-bottom: 0;
 }

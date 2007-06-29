@@ -126,7 +126,7 @@
 <script type="text/javascript">
 {/literal}
 	console.log('starting');
-	grid = new ActiveGrid($('{$prefix}_{$id}'), '{$url}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"));
+	grid = new ActiveGrid($('{$prefix}_{$id}'), '{$url}{$filters}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"));
 	console.log(grid);
 	{foreach from=$displayedColumns item=index key=column name="columns"}
 		{if !$smarty.foreach.columns.first}

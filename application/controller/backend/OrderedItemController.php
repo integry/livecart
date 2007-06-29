@@ -18,7 +18,7 @@ class OrderedItemController extends StoreManagementController
 {
     public function create()
     {
-        if($this->request->getValue('shipmentID') == 'downloadable')
+        if($downloadable = (int)$this->request->getValue('downloadable'))
         {
 	 	    $order = CustomerOrder::getInstanceByID((int)$this->request->getValue('orderID'), true, array('ShippingAddress' => 'UserAddress', 'Currency'));		    
 	 	    $shipment = $order->getDownloadShipment();
@@ -43,7 +43,14 @@ class OrderedItemController extends StoreManagementController
         if($existingItem)
         {
 	        $item = $existingItem;
-	        $item->count->set($item->count->get() + 1);
+	        if($downloadable)
+	        {
+	            $item->count->set(1);
+	        }
+	        else
+	        {
+	            $item->count->set($item->count->get() + 1);
+	        }
         }
         else
         {
@@ -59,7 +66,7 @@ class OrderedItemController extends StoreManagementController
             $shipment->save();
         }
           
-        return $this->save($item, $existingItem ? true : false );
+        return $this->save($item, $shipment, $existingItem ? true : false );
     }
     
     public function update()
@@ -67,17 +74,16 @@ class OrderedItemController extends StoreManagementController
         
     }
     
-    private function save(OrderedItem $item, $existingItem = false)
+    private function save(OrderedItem $item, Shipment $shipment, $existingItem = false)
     {
         $validator = $this->createOrderedItemValidator();
         if($validator->isValid())
         {
-	        if($count = (int)$this->request->getValue('count'))
+	        if($count = (int)$this->request->getValue('count') && !(int)$this->request->getValue('downloadable'))
 	        {
 	            $item->count->set($count);
 	        }
 	        
-	        $shipment = $item->shipment->get();
 	        $shipment->loadItems();
         
 	        if(!$existingItem)
@@ -123,6 +129,25 @@ class OrderedItemController extends StoreManagementController
             return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
         }
     }
+	
+    /**
+     * Products popup
+     * 
+     * @role update
+     */
+	public function selectProduct()
+	{
+	    ClassLoader::import("application.model.category.Category");
+	    
+	    $response = new ActionResponse();	   
+	    
+		$categoryList = Category::getRootNode()->getDirectChildNodes();
+		$categoryList->unshift(Category::getRootNode());
+	    $response->setValue("filters", 'filters[Product.type]=' . (int)$this->request->getValue('downloadable'));
+		$response->setValue("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
+		
+		return $response;
+	}
     
     /**
      * @return RequestValidator

@@ -121,7 +121,7 @@
     
 </fieldset>
 
-{activeGrid prefix="products" id=$categoryID role="product.mass" controller="backend.product" action="lists" displayedColumns=$displayedColumns availableColumns=$availableColumns totalCount=$totalCount}
+{activeGrid prefix="products" id=$categoryID role="product.mass" controller="backend.product" action="lists" displayedColumns=$displayedColumns availableColumns=$availableColumns totalCount=$totalCount filters=$filters}
 
 </div>
 

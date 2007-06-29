@@ -66,7 +66,7 @@
     <ul id="orderShipmentsItems_list_{$orderID}_downloadable" class="activeList_add_delete orderShipmentsItem activeList"> 
         <li id="orderShipments_list_downloadable_{$orderID}_{$downloadableShipment.ID}" >
             <form>
-                {include file="backend/shipment/shipment.tpl" shipment=$downloadableShipment notShippable=true}
+                {include file="backend/shipment/shipment.tpl" shipment=$downloadableShipment notShippable=true downloadable=1}
             </form>
         </li>
     </ul>
@@ -106,7 +106,7 @@
     Backend.OrderedItem.Links = {};
     Backend.OrderedItem.Links.remove = '{/literal}{link controller=backend.orderedItem action=delete}{literal}'; 
     Backend.OrderedItem.Links.changeShipment = '{/literal}{link controller=backend.orderedItem action=changeShipment}{literal}'; 
-    Backend.OrderedItem.Links.addProduct = '{/literal}{link controller=backend.productRelationship action=selectProduct}#cat_1#tabProducts__{literal}';
+    Backend.OrderedItem.Links.addProduct = '{/literal}{link controller=backend.orderedItem action=selectProduct}{literal}';
     Backend.OrderedItem.Links.createNewItem = '{/literal}{link controller=backend.orderedItem action=create}{literal}'; 
     Backend.OrderedItem.Links.changeItemCount = '{/literal}{link controller=backend.orderedItem action=changeCount}{literal}'; 
     
@@ -160,7 +160,7 @@
         var shipmentsContainer = $('{/literal}tabOrderProducts_{$orderID}Content{literal}'); 
         var ordersManagerContainer = $("orderManagerContainer"); 
         
-        if(ordersManagerContainer.style.display != 'none' && shipmentsContainer && shipmentsContainer.style.display != 'none' && customerOrder.hasEmptyShipments()) 
+        if(ordersManagerContainer.style.display != 'none' && shipmentsContainer && shipmentsContainer.style.display != 'none') 
         { 
             customerOrder.removeEmptyShipmentsFromHTML(); 
         }
@@ -191,7 +191,7 @@
         Event.observe($("{/literal}orderShipment_addFile_{$orderID}{literal}"), 'click', function(e) 
         { 
             Event.stop(e); 
-            new Backend.OrderedItem.SelectProductPopup( Backend.OrderedItem.Links.addProduct, Backend.OrderedItem.Messages.selectProductTitle, 
+            new Backend.OrderedItem.SelectProductPopup( Backend.OrderedItem.Links.addProduct + '?downloadable=1', Backend.OrderedItem.Messages.selectProductTitle, 
             { 
                 onProductSelect: function() 
                 { 

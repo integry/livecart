@@ -1,9 +1,10 @@
 <input type="hidden" name="ID" value="{$shipment.ID|default:$shipmentID}" />
 <input type="hidden" name="orderID" value="{$shipment.Order.ID|default:$orderID}" />
 <input type="hidden" name="shippingServiceID" value="{$shipment.ShippingService.ID|default:$shippingServiceID}" />
+<input type="hidden" name="downloadable" value="{$downloadable|default:0}" />
 
 <table class="orderShipmentsItem_info orderShipment_info">
-    <tr class="orderShipment_info_first_row" >
+    <tr class="orderShipment_info_first_row orderShipment_info_subtotal_row">
         <td class="orderShipmentsItem_info_report_td">
             <div class="orderShipmentsItem_info_report">
                 {t _subtotal_price}:
@@ -20,7 +21,7 @@
         </td>
     </tr>
     
-    <tr {if !$isShippable}style="display: none"{/if}>
+    <tr class="orderShipment_info_tax_row">
         <td class="orderShipmentsItem_info_report_td">
             <div class="orderShipmentsItem_info_report">
                 {t _taxes}:
@@ -37,7 +38,7 @@
         </td>
     </tr>
     
-    <tr {if !$isShippable}style="display: none"{/if}>
+    <tr class="orderShipment_info_shipping_row">
         <td class="orderShipmentsItem_info_report_td">
             <div class="orderShipmentsItem_info_report">
                 {t _shipping}:  
@@ -64,7 +65,7 @@
         </td>
     </tr>
     
-    <tr>
+    <tr class="orderShipment_info_total_row">
         <td class="orderShipmentsItem_info_report_td">
             <div class="orderShipmentsItem_info_report">
                 {t _price}:

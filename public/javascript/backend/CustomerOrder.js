@@ -545,6 +545,7 @@ Backend.CustomerOrder.Editor.prototype =
             if(!this.hasEmptyShipments()) 
             {
                 Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime = (new Date()).getTime();
+                this.removeEmptyShipmentsFromHTML();
                 return true;
             }  
             
