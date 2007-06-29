@@ -22,8 +22,13 @@
 {/literal}
 
 <fieldset id="order_{$order.ID}_{$type}_edit" class="error" style="display: none">
-    {hidden name="ID"}
+    {hidden name="ID"} 
     
+    <fieldset class="error">
+        <label for="order_{$orderID}_{$type}_existingAddress_select">{t _use_existing_address}</label>
+        {selectfield options=$existingUserAddresses id="order_`$orderID`_`$type`_existingAddress_select" name="existingUserAddress"} 
+    </fieldset>
+
     <fieldset class="error">
         <label for="order_{$order.ID}_{$type}_firstName">{t _first_name}</label>
         {textfield name="firstName" id="order_`$order.ID`_`$type`_firstName"}

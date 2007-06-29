@@ -67,12 +67,64 @@ class CustomerOrderController extends StoreManagementController
 	        $orderArray['ShippingAddress'] = $order->user->get()->defaultShippingAddress->get()->userAddress->get()->toArray();
         }
        
+        $user = $order->user->get();
+        $addresses = array();
+        $addresses['optgroup_0'] = $this->translate('_shipping_addresses');
+        foreach($user->getBillingAddressArray() as $address)
+        {
+            $addresses[$address['ID']] = $this->createAddressString($address);
+        }
+        
+        $addresses['optgroup_1'] = $this->translate('_billing_addresses');
+        foreach($user->getShippingAddressArray() as $address)
+        {
+            $addresses[$address['ID']] = $this->createAddressString($address);
+        }
+        
 	    $response->setValue('order', $orderArray);
 	    $response->setValue('form', $this->createOrderForm($orderArray));
+	    $response->setValue('existingUserAddresses', $addresses);
 	    $response->setValue('formShippingAddress', $this->createUserAddressForm($orderArray['ShippingAddress']));
 	    $response->setValue('formBillingAddress', $this->createUserAddressForm($orderArray['BillingAddress']));
         
 		return $response;
+	}
+	
+	private function createAddressString($addressArray)
+	{
+          $addressString = '';
+          
+          if(!empty($addressArray['UserAddress']['fullName']))
+          {
+              $addressString .= $addressArray['UserAddress']['fullName'] . ', ';
+          }
+          
+          if(!empty($addressArray['UserAddress']['countryName']))
+          {
+              $addressString .= $addressArray['UserAddress']['countryName'] . ', ';
+          }
+      
+          if(!empty($addressArray['UserAddress']['stateName']))
+          {
+              $addressString .= $addressArray['UserAddress']['stateName'] . ', ';
+          }
+      
+          if(!empty($addressArray['State']['code']))
+          {
+              $addressString .= $addressArray['State']['code'] . ', ';
+          }
+      
+          if(!empty($addressArray['UserAddress']['city']))
+          {
+              $addressString .= $addressArray['UserAddress']['city'] . ', ';
+          }
+          
+          if(strlen($addressString) > 2)
+          {
+              $addressString = substr($addressString, 0, -2);
+          }
+          
+          return $addressString;
 	}
 	
 	/**

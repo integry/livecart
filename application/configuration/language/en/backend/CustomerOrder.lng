@@ -12,6 +12,9 @@ _livecart_orders=Orders
 
 _create_order=Create new order
 
+_billing_addresses=Billing Addresses
+_shipping_addresses=Shipping Addresses
+
 # Tabs
 _order_info=Overview
 _order_shipments=Products
@@ -86,6 +89,7 @@ _applied=Applied
 _cancelled=Cancelled
 
 # Addresses
+_use_existing_address=Use existing address?
 _name=Name
 _company=Company
 _first_name=First name
