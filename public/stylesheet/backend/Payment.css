@@ -1,0 +1,84 @@
+fieldset.transactionContainer
+{
+    margin-top: 20px;
+    width: 600px;
+}
+
+ul.transactions li
+{
+    padding: 5px;
+    margin-top: 10px;
+    border: 2px solid #DDDDDD;
+    list-style-type: none;    
+}
+
+ul.transactionMenu li
+{
+    margin: 0;
+}
+
+.transactionAmount.isVoided
+{
+    text-decoration: line-through;    
+}
+
+/* Sale */
+.transaction_0 .transactionAmount
+{
+    color: green;
+}
+
+/* Authorize */
+.transaction_1 .transactionAmount
+{
+    color: black;
+}
+
+/* Capture */
+.transaction_2 .transactionAmount
+{
+    color: green;
+}
+
+/* Void */
+.transaction_3 .transactionAmount
+{
+    color: red;
+}
+
+.transactionAmount
+{
+    font-size: 200%;
+    font-weight: bold;
+}
+
+.transactionMainDetails
+{
+    float: left;
+    text-align: center;
+}
+
+.transactionDetails
+{
+    text-align: right;
+}
+
+ul.transactionMenu li
+{
+    border: 0;       
+    width: auto;
+}
+
+.transactionMenu li a
+{
+    color: red;
+}
+
+/*********************
+    offline payment
+*********************/
+.addOfflinePayment textarea
+{
+    width: 300px;
+    height: 100px;      
+}

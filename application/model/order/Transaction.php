@@ -21,8 +21,13 @@ class Transaction extends ActiveRecordModel
     const TYPE_CAPTURE = 2;
     const TYPE_VOID = 3;
            
+    const METHOD_OFFLINE = 0;
+    const METHOD_CREDITCARD = 1;
+    const METHOD_ONLINE = 2;
+           
     /**
-     *  Instance of credit card handler object
+     *  Instance of payment handler object
+     *  @TransactionPayment
      */
     private $handler;
             
@@ -46,12 +51,14 @@ class Transaction extends ActiveRecordModel
 		$schema->registerField(new ARField("method", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("gatewayTransactionID", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("type", ARInteger::instance()));
+		$schema->registerField(new ARField("methodType", ARInteger::instance()));
 		$schema->registerField(new ARField("isCompleted", ARBool::instance()));
-
-		$schema->registerField(new ARField("isCreditCard", ARBool::instance()));		
+		$schema->registerField(new ARField("isVoided", ARBool::instance()));
+	
         $schema->registerField(new ARField("ccExpiryYear", ARInteger::instance()));
         $schema->registerField(new ARField("ccExpiryMonth", ARInteger::instance()));
         $schema->registerField(new ARField("ccLastDigits", ARInteger::instance()));
+		$schema->registerField(new ARField("comment", ARText::instance()));
 	}
 	
 	public static function getNewInstance(CustomerOrder $order, TransactionResult $result)
@@ -75,13 +82,44 @@ class Transaction extends ActiveRecordModel
         
         $instance->type->set($result->getTransactionType());
         
+        if ($instance->type->get() != self::TYPE_AUTH)
+        {
+            $instance->isCompleted->set(true);            
+        }
+        
         if ($result->isCaptured())
         {            
-            $instance->isCompleted->set(true);
             $order->capturedAmount->set($order->capturedAmount->get() + $amount);
         }
         
         return $instance;   
+    }
+    
+    public static function getNewSubTransaction(Transaction $transaction, TransactionResult $result)
+    {
+        $instance = self::getNewInstance($transaction->order->get(), $result);
+        $instance->parentTransaction->set($transaction);      
+        $instance->method->set($transaction->method->get());
+        return $instance;        
+    }
+    
+    public static function getNewOfflineTransactionInstance(CustomerOrder $order, $amount)
+    {
+        $instance = parent::getNewInstance(__CLASS__);
+        $instance->order->set($order);
+        $instance->currency->set($order->currency->get());
+        $instance->type->set(self::METHOD_OFFLINE);
+        $instance->isCompleted->set(true);
+        $instance->amount->set($amount);
+        
+        $order->addCapturedAmount($amount);
+        
+        return $instance;
+    }
+    
+    public static function getInstanceById($id)
+    {
+        return parent::getInstanceById(__CLASS__, $id, self::LOAD_DATA, self::LOAD_REFERENCES);
     }
     
     public static function transformArray($array)
@@ -101,14 +139,6 @@ class Transaction extends ActiveRecordModel
         return $array;        
     }
     
-    public static function loadHandlerClass($className, $isCreditCard)
-    {
-        if (!class_exists($className, false))
-        {
-            ClassLoader::import('library.payment.method.' . ($isCreditCard ? 'cc.' : '') . $className . '.' . $className);
-        }
-    }
-    
     public function toArray()
     {
         $array = parent::toArray();
@@ -121,21 +151,129 @@ class Transaction extends ActiveRecordModel
     public function setHandler(TransactionPayment $handler)
     {
         $this->handler = $handler;
+        
+        if ($handler instanceof CreditCardPayment)
+        {
+            $this->setAsCreditCard();
+        }
     }
     
+    /**
+     *  Load payment handler class that was used for processing this transaction
+     */
+    public function loadHandlerClass()
+    {
+        $className = $this->method->get();
+        
+        if (!class_exists($className, false))
+        {
+            ClassLoader::import('library.payment.method.' . ($this->isCreditCard() ? 'cc.' : '') . $className . '.' . $className);
+        }
+    }
+    
+    /**
+     *  Mark payment method type as credit card
+     *  
+     *  @return bool
+     */
+    public function setAsCreditCard()
+    {
+        $this->methodType->set(self::METHOD_CREDITCARD);
+    }
+    
+    /**
+     *  Determines if the payment was made via credit card
+     *  
+     *  @return bool
+     */
+    public function isCreditCard()
+    {
+        return self::METHOD_CREDITCARD == $this->methodType->get();
+    }
+    
+    /**
+     *  Determines if this transaction can be voided
+     *  
+     *  @return bool
+     */
     public function isVoidable()
     {
-        self::loadHandlerClass($this->method->get(), $this->isCreditCard->get());
-        return call_user_func(array($this->method->get(), 'isVoidable'));
+        if ($this->isVoided->get())
+        {
+            if (self::METHOD_OFFLINE == $this->methodType->get())
+            {
+                return true;
+            }
+            else if (self::TYPE_VOID != $this->type->get())
+            {
+                $this->loadHandlerClass();
+                return call_user_func(array($this->method->get(), 'isVoidable'));            
+            }            
+        }
+    }
+    
+    /**
+     *  Creates a new VOID transaction for this transaction
+     *  
+     *  @return Transaction
+     */
+    public function void()
+    {        
+        if (!$this->isVoidable())
+        {
+            return false;
+        }
+        
+        // attempt to void the transaction
+        $result = $this->getSubTransactionHandler()->void();
+        
+        if (!($result instanceof TransactionResult))
+        {
+            return false;
+        }
+        
+        self::beginTransaction();        
+        
+        $instance = self::getNewSubTransaction($this, $result);       
+        $instance->amount->set($this->amount->get() * -1);
+        $instance->save();
+        
+        $this->isVoided->set(true);
+        $this->save();
+        
+        self::commit();
+        
+        return $instance;
+    }
+    
+    /**
+     *  Creates a payment handler instance for processing sub-transactions (capture or void)
+     *  
+     *  @return TransactionPayment
+     */
+    protected function getSubTransactionHandler()
+    {
+        // set up transaction parameters object
+        $details = new LiveCartTransaction($this->order->get(), $this->currency->get());
+        $details->amount->set($this->amount->get());
+        $details->gatewayTransactionID->set($this->gatewayTransactionID->get());
+        
+        // set up payment handler instance
+        $this->loadHandlerClass();
+        $className = $this->method->get();
+        return new $className($details);
     }
     
     protected function insert()
     {
-        $this->order->get()->save();
+//        if ($this->order->get()->isLoaded())
+//        {
+            $this->order->get()->save();
+//        }
         
         if ($this->handler instanceof CreditCardPayment)
         {
-            $this->isCreditCard->set(true);
+            $this->setAsCreditCard();
             $this->ccExpiryMonth->set($this->handler->getExpirationMonth());
             $this->ccExpiryYear->set($this->handler->getExpirationYear());
                         

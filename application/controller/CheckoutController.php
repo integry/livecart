@@ -570,7 +570,7 @@ class CheckoutController extends FrontendController
     private function buildCreditCardValidator()
     {
 		ClassLoader::import("framework.request.validator.RequestValidator");        
-        $validator = new RequestValidator("creditCart", $this->request);
+        $validator = new RequestValidator("creditCard", $this->request);
         $validator->addCheck('ccNum', new IsNotEmptyCheck($this->translate('_err_enter_cc_num')));
 //        $validator->addCheck('ccType', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));
         $validator->addCheck('ccExpiryMonth', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_month')));

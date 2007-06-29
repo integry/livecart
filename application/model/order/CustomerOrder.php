@@ -339,6 +339,11 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     	return $wishList;
     }
     
+    public function addCapturedAmount($amount)
+    {
+        $this->capturedAmount->set($this->capturedAmount->get() + $amount);
+    }
+    
     public function save()
     {
         // remove zero-count items
@@ -943,7 +948,9 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     public function getTransactions()
     {
         ClassLoader::import('application.model.order.Transaction');
-        return $this->getRelatedRecordSet('Transaction', new ARSelectFilter());
+        $filter = new ARSelectFilter();
+        $filter->setOrder(new ARFieldHandle('Transaction', 'ID'), 'ASC');
+        return $this->getRelatedRecordSet('Transaction', $filter);
     }
     
     public function getDownloadShipment()

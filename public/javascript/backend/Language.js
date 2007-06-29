@@ -125,7 +125,7 @@ Backend.LanguageIndex.prototype =
 	{
 		Element.hide($('langAddMenuLoadIndicator'));
 		$('addLang').innerHTML = request.responseText;
-		slideForm('addLang', 'langPageMenu');	  	
+		slideForm('addLang', 'langPageMenu');
 	},
 	
 	add: function(langCode)

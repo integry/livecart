@@ -1,10 +1,47 @@
-<ul class="menu" style="margin: 0;">
-	<li><a href="#captureAll" id="captureAll">{t _capture_all_payments}</a></li>
-	<li><a href="#addOfflinePayment" id="addOfflinePayment">{t _add_offline_payment}</a></li>
-	<li><a href="#addCreditCardPayment" id="addCreditCardPayment">{t _add_credit_card_payment}</a></li>
-</ul>
+<div style="float: left;">
+<div class="menuContainer" id="paymentMenu_{$order.ID}">
 
-<div class="clear"></div>
+    <ul class="menu paymentMenu" style="margin: 0;">
+    	<li><a href="#captureAll" onclick="return false;" class="captureAll">{t _capture_all_payments}</a></li>
+    	<li><a href="#addOfflinePayment" onclick="return false;" class="addOfflinePayment">{t _add_offline_payment}</a></li>
+    	<li><a href="#addCreditCardPayment" onclick="return false;" class="addCreditCardPayment">{t _add_credit_card_payment}</a></li>
+    </ul>
+    
+    <div class="clear"></div>
+    
+    <div class="slideForm addOffline" style="display: none;">
+        <fieldset class="addOfflinePayment">
+        
+            <legend>{t _add_offline_payment}</legend>
+        
+            {form action="controller=backend.payment action=addOffline id=`$order.ID`" method="POST" handle=$offlinePaymentForm onsubmit="Backend.Payment.submitOfflinePaymentForm(event); return false;"}
+            
+                <p>
+                    <label>{t Amount}:</label>
+                    <fieldset class="error">
+                        {textfield name="amount" class="text number"} {$order.Currency.ID}
+                        <div class="errorText hidden"></div> 
+                    </fieldset>
+                </p>        
+            
+                <p>
+                    <label>{t Comment}:</label>
+                    {textarea name="comment"}
+                </p>        
+        
+                <fieldset class="controls">
+                    <label></label>
+                    <span class="progressIndicator" style="display: none;"></span>
+                    <input type="submit" class="submit" value="{tn Add payment}" />
+                    {t _or} <a class="cancel offlinePaymentCancel" href="#" onclick="return false;">{t _cancel}</a>
+                </fieldset>
+        
+            {/form}
+        
+        </fieldset>
+    </div>
+
+</div>
 
 <form>
     <p>
@@ -25,63 +62,12 @@
 
 <div class="clear"></div>
 
-<ul class="transactions">
+<fieldset class="container transactionContainer">
+    {include file="backend/payment/transactions.tpl" transactions=$transactions}
+</fieldset>
 
-    {foreach from=$transactions item="transaction"}
-        
-        <li class="transaction_{$transaction.type}">
-            
-            <div class="transactionMainDetails">
-                <div class="transactionAmount">
-                    {$transaction.formattedAmount}
-                </div>
-                
-                <div class="transactionStatus">
-    
-                    {if 0 == $transaction.type}
-                        {t Sale}
-    
-                    {elseif 1 == $transaction.type}
-                        {t Authorization}
-    
-                    {elseif 2 == $transaction.type}
-                        {t Capture}
-    
-                    {elseif 3 == $transaction.type}
-                        {t Void}
-                        
-                    {/if}
-                </div>
-            </div>
+<script type="text/javascript">
+    Backend.Payment.init($('paymentMenu_{$order.ID}'));
+</script>
 
-            <div class="transactionDetails" style="float: right;">
-
-                <ul class="transactionMenu">
-                    {if !$transaction.isCompleted}
-                        <li>
-                            <a href="">{t Capture}</a>
-                        </li>
-                    {/if}
-                    {if $transaction.isVoidable}
-                        <li>
-                            <a href="">{t Void}</a>
-                        </li>
-                    {/if}
-                </ul>
-
-                <div class="transactionMethod">
-                    {$transaction.methodName}
-                </div>
-                <div class="transactionTime">
-                    {$transaction.formatted_time.date_full} {$transaction.formatted_time.time_full}
-                </div>
-
-            </div>
-
-            <div class="clear"></div>
-
-        </li>
-    
-    {/foreach}
-
-</ul>
+</div>
