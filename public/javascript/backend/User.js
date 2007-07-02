@@ -46,8 +46,19 @@ Backend.UserGroup.prototype =
 		
     	this.insertTreeBranch(groups, 0); 
         
-        if(!Backend.ajaxNav.getHash().match(/group_-?\d+#\w+/)) window.location.hash = '#group_-2#tabUsers__';
+        var id = -2
+        var match = null;
+        if(!(match = Backend.ajaxNav.getHash().match(/group_(-?\d+)#\w+/))) 
+        {
+            window.location.hash = '#group_' + id + '#tabUsers__';
+        }
+        else
+        {
+            id = match[1];
+        }
+        
 	    self.tabControl = TabControl.prototype.getInstance('userGroupsManagerContainer', self.craftTabUrl, self.craftContainerId, {}); 
+        $("activeUserPath").innerHTML = this.treeBrowser.getItemText(id);
         
         this.bindEvents();
 	},
@@ -175,6 +186,8 @@ Backend.UserGroup.prototype =
             });
             
             Backend.showContainer("userGroupsManagerContainer");
+            
+            $("activeUserPath").innerHTML = this.treeBrowser.getItemText(id);
         }
         
         
@@ -305,6 +318,11 @@ Backend.UserGroup.GridFormatter =
                      value + 
                 '</a>';	
 		}
+        else if('User.email' == field && window.opener)
+        {
+		    value = '<a href="#edit" onclick="window.opener.Backend.CustomerOrder.prototype.customerPopup.getSelectedObject(' + id + '); return false;">' + value + '</a>';	
+                // asdasd'
+        }
         
         if(value == '-')
         {

@@ -94,6 +94,23 @@ class CustomerOrderController extends StoreManagementController
 		return $response;
 	}
 	
+	public function selectCustomer()
+	{
+		$userGroups = array();
+		$userGroups[] = array('ID' => -2, 'name' => $this->translate('_all_users'), 'rootID' => 0);
+		$userGroups[] = array('ID' => -1, 'name' => $this->translate('_default_user_group'), 'rootID' => -2);
+		
+		foreach(UserGroup::getRecordSet(new ARSelectFilter())->toArray() as $group) 
+		{
+		    $userGroups[] = array('ID' => $group['ID'], 'name' => $group['name'], 'rootID' => -2);
+		}
+		    
+		$response = new ActionResponse();
+		$response->setValue('userGroups', $userGroups);
+		
+		return $response;
+	}
+	
 	private function createAddressString($addressArray)
 	{
           $addressString = '';
@@ -500,8 +517,49 @@ class CustomerOrderController extends StoreManagementController
     public function update()
     {
         $order = CustomerOrder::getInstanceByID((int)$this->request->getValue('id'), true);
+	    $status = (int)$this->request->getValue('status');
+		$order->status->set($status);
+	    $isCancelled = (int)$this->request->getValue('isCancelled') ? true : false;
+		$order->isCancelled->set($isCancelled);
+		
         return $this->save($order);
     }
+    
+    /**
+     * @role update
+     */
+    public function create()
+    {
+        $user = User::getInstanceByID((int)$this->request->getValue('customerID'), true, true);
+        $order = CustomerOrder::getNewInstance($user);
+	    $status = CustomerOrder::STATUS_NEW;
+		$order->status->set($status);
+		$order->isFinalized->set(1);
+		$order->capturedAmount->set(0);
+		$order->totalAmount->set(0);
+		$order->dateCompleted->set(new ARSerializableDateTime());
+		$order->billingAddress->set($user->defaultBillingAddress->get()->userAddress->get());
+		$order->shippingAddress->set($user->defaultShippingAddress->get()->userAddress->get());
+		$order->currency->set($this->store->getDefaultCurrency());
+		
+        
+        return $this->save($order);
+    }
+    
+	private function save(CustomerOrder $order)
+	{
+   		$validator = self::createOrderFormValidator();
+		if ($validator->isValid())
+		{
+			$order->save();
+			
+			return new JSONResponse(array('status' => 'success', 'order' => $order->toArray()));
+		}
+		else
+		{
+		    return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
+		}
+	}
     
     public function updateAddress()
     {
@@ -531,27 +589,6 @@ class CustomerOrderController extends StoreManagementController
             return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
         }
     }
-    
-	private function save(CustomerOrder $order)
-	{
-   		$validator = self::createOrderFormValidator();
-		if ($validator->isValid())
-		{
-		    $isCancelled = (int)$this->request->getValue('isCancelled') ? true : false;
-		    $status = (int)$this->request->getValue('status');
-		    
-			$order->isCancelled->set($isCancelled);
-			$order->status->set($status);
-
-			$order->save();
-			
-			return new JSONResponse(array('status' => 'success'));
-		}
-		else
-		{
-		    return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
-		}
-	}
 
     /**
      * @role update

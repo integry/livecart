@@ -344,7 +344,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         $this->capturedAmount->set($this->capturedAmount->get() + $amount);
     }
     
-    public function save()
+    public function save($deleteEmpty = true)
     {
         // remove zero-count items
         foreach ($this->orderedItems as $item)
@@ -399,12 +399,12 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
                 $this->resetShipments(); 
             }                      
         
-	        $this->shipping->set(serialize($this->shipments));
-	        
-            parent::save();		
+	        $this->shipping->set(serialize($this->shipments));		
 		}
         
-        if (!$this->orderedItems)
+		parent::save();
+		
+        if (!$this->isFinalized->get() && !$this->orderedItems)
         {
             $this->delete();
         }

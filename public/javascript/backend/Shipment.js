@@ -150,49 +150,6 @@ Backend.OrderedItem = {
 };
 
 
-Backend.OrderedItem.SelectProductPopup = Class.create();
-Backend.OrderedItem.SelectProductPopup.prototype = {
-    height: 520,
-    width:  1000,
-    onProductSelect: function() {},
-    
-    initialize: function(link, title, options)
-    {
-        try
-        {
-            this.link = link;
-            this.title = title;
-            
-            if(options.onProductSelect) this.onProductSelect = options.onProductSelect;
-            
-            this.createPopup();
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
-    },
-    
-    createPopup: function()
-    {
-        Backend.OrderedItem.SelectProductPopup.prototype.popup = window.open(this.link, this.title, 'resizable=1,width=' + this.width + ',height=' + this.height);
-        Backend.OrderedItem.SelectProductPopup.prototype.popup.focus();
-                        
-        Event.observe(window, 'unload', function() { Backend.OrderedItem.SelectProductPopup.prototype.popup.close(); });
-        
-        window.selectProductPopup = this;
-    },
-    
-    getSelectedProduct: function(productID)
-    {
-        this.productID = productID;
-        
-        var self = this;
-        setTimeout(function() { self.onProductSelect.call(self); }, 100)
-        
-    }
-}
-
 Backend.Shipment = Class.create();
 Backend.Shipment.prototype = 
 {
@@ -358,12 +315,12 @@ Backend.Shipment.prototype =
 
             Event.observe($("orderShipment_addProduct_" + response.shipment.ID), 'click', function(e) {
                 Event.stop(e);
-                new Backend.OrderedItem.SelectProductPopup(
+                new Backend.SelectPopup(
                     Backend.OrderedItem.Links.addProduct, 
                     Backend.OrderedItem.Messages.selectProductTitle, 
                     {
-                        onProductSelect: function() { 
-                            Backend.Shipment.prototype.getInstance('orderShipments_list_' + self.orderID + '_' + response.shipment.ID).addNewProductToShipment(this.productID, self.orderID); 
+                        onObjectSelect: function() { 
+                            Backend.Shipment.prototype.getInstance('orderShipments_list_' + self.orderID + '_' + response.shipment.ID).addNewProductToShipment(this.objectID, self.orderID); 
                         }
                     }
                 );

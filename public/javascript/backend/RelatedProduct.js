@@ -37,7 +37,7 @@ Backend.RelatedProduct = {
                 if(evaluatedResponse && evaluatedResponse.error && evaluatedResponse.error.length > 0)
                 {
                     // error
-                    var relMsg = Backend.RelatedProduct.SelectProductPopup.prototype.popup.document.getElementById('relError');
+                    var relMsg = Backend.SelectPopup.prototype.popup.document.getElementById('relError');
                     new Backend.SaveConfirmationMessage(relMsg, { message: evaluatedResponse.error, type: 'red' });
                 }
                 else
@@ -49,7 +49,7 @@ Backend.RelatedProduct = {
 
                         var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
                         tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') + 1);
-                        var relMsg = Backend.RelatedProduct.SelectProductPopup.prototype.popup.document.getElementById('relConf');
+                        var relMsg = Backend.SelectPopup.prototype.popup.document.getElementById('relConf');
 
                         new Backend.SaveConfirmationMessage(relMsg);
                     } 
@@ -65,50 +65,6 @@ Backend.RelatedProduct = {
 };
 
 
-Backend.RelatedProduct.SelectProductPopup = Class.create();
-Backend.RelatedProduct.SelectProductPopup.prototype = {
-    height: 520,
-    width:  1000,
-    onProductSelect: function() {},
-    
-    initialize: function(link, title, options)
-    {
-        try
-        {
-            this.link = link;
-            this.title = title;
-            
-            if(options.onProductSelect) this.onProductSelect = options.onProductSelect;
-            
-            this.createPopup();
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
-    },
-    
-    createPopup: function()
-    {
-        Backend.RelatedProduct.SelectProductPopup.prototype.popup = window.open(this.link, this.title, 'resizable=1,width=' + this.width + ',height=' + this.height);
-        Backend.RelatedProduct.SelectProductPopup.prototype.popup.focus();
-                        
-        Event.observe(window, 'unload', function() { Backend.RelatedProduct.SelectProductPopup.prototype.popup.close(); });
-        
-        window.selectProductPopup = this;
-    },
-    
-    getSelectedProduct: function(productID)
-    {
-        this.productID = productID;
-        // Backend.RelatedProduct.SelectProductPopup.prototype.popup.opener.focus();
-        // Backend.RelatedProduct.SelectProductPopup.prototype.popup.close();
-        
-        var self = this;
-        setTimeout(function() { self.onProductSelect.call(self); }, 100)
-        
-    }
-}
 
 Backend.RelatedProduct.Group = {};
 

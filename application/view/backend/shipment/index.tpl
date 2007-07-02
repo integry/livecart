@@ -191,9 +191,9 @@
         Event.observe($("{/literal}orderShipment_addFile_{$orderID}{literal}"), 'click', function(e) 
         { 
             Event.stop(e); 
-            new Backend.OrderedItem.SelectProductPopup( Backend.OrderedItem.Links.addProduct + '?downloadable=1', Backend.OrderedItem.Messages.selectProductTitle, 
+            new Backend.SelectPopup( Backend.OrderedItem.Links.addProduct + '?downloadable=1', Backend.OrderedItem.Messages.selectProductTitle, 
             { 
-                onProductSelect: function() 
+                onObjectSelect: function() 
                 { 
                     Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_downloadable_{$orderID}_{$downloadableShipment.ID}{literal}').addNewProductToShipment(this.productID, {/literal}{$orderID}{literal}); 
                 } 
@@ -252,8 +252,8 @@
                 Event.observe($("{/literal}orderShipment_addProduct_{$shipment.ID}{literal}"), 'click', function(e) 
                 { 
                     Event.stop(e);
-                    new Backend.OrderedItem.SelectProductPopup( Backend.OrderedItem.Links.addProduct, Backend.OrderedItem.Messages.selectProductTitle, { 
-                        onProductSelect: function() 
+                    new Backend.SelectPopup( Backend.OrderedItem.Links.addProduct, Backend.OrderedItem.Messages.selectProductTitle, { 
+                        onObjectSelect: function() 
                         { 
                             Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').addNewProductToShipment(this.productID, {/literal}{$orderID}{literal}); 
                         } 

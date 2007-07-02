@@ -261,7 +261,7 @@ Backend.Product =
     {
 		if (window.opener) 
 		{
-			window.opener.selectProductPopup.getSelectedProduct(id);	
+			window.opener.selectProductPopup.getSelectedObject(id);	
 		}
 		else
 		{   
@@ -275,9 +275,9 @@ Backend.Product =
 			var tabControl = TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId, {
                 afterClick: function()
                 {
-                    if(Backend.RelatedProduct.SelectProductPopup.prototype.popup) {
-                        Backend.RelatedProduct.SelectProductPopup.prototype.popup.opener.focus();    
-                        Backend.RelatedProduct.SelectProductPopup.prototype.popup.close();
+                    if(Backend.SelectPopup.prototype.popup) {
+                        Backend.SelectPopup.prototype.popup.opener.focus();    
+                        Backend.SelectPopup.prototype.popup.close();
                     }
                 }
             }); 

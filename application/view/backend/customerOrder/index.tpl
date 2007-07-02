@@ -40,7 +40,7 @@
 	<div id="orderGroupsBrowser" class="treeBrowser"></div>
 
 	<ul id="categoryBrowserActions" class="verticalMenu">
-		<li class="addTreeNode"><a href="#" id="createNewCategoryLink">{t _create_order}</a></li>
+		<li class="addTreeNode"><a href="#" id="createNewOrderLink">{t _create_order}</a></li>
 	</ul>	
 	
     <div class="yellowMessage" id="orderConfirmation" style="display: none;">
@@ -65,18 +65,23 @@
 
 {literal}
 <script type="text/javascript">
-    
     Backend.CustomerOrder.Editor.prototype.Links.states = '{/literal}{link controller=backend.user action=states}{literal}';
     Backend.CustomerOrder.Editor.prototype.Links.update = '{/literal}{link controller=backend.customerOrder action=update}{literal}';
     Backend.CustomerOrder.Editor.prototype.Links.switchCancelled = '{/literal}{link controller=backend.customerOrder action=switchCancelled}{literal}';
+    
+    Backend.CustomerOrder.Links.selectCustomer = '{/literal}{link controller=backend.customerOrder action=selectCustomer}{literal}';
+    Backend.CustomerOrder.Links.createOrder = '{/literal}{link controller=backend.customerOrder action=create}{literal}';
+    Backend.CustomerOrder.Messages.selecCustomerTitle = '{/literal}{t _select_customer_title}{literal}';
+    
     new Backend.CustomerOrder({/literal}{json array=$orderGroups}{literal});
     
     {/literal}
         {allowed role="order"}
             Backend.CustomerOrder.prototype.ordersMiscPermission = true;
         {/allowed}
+        
         {allowed role="user"}
-        Backend.CustomerOrder.prototype.usersMiscPermission = true;
+            Backend.CustomerOrder.prototype.usersMiscPermission = true;
         {/allowed}
     {literal}
     Backend.showContainer("orderGroupsManagerContainer");

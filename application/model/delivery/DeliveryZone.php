@@ -103,9 +103,9 @@ class DeliveryZone extends MultilingualObject
 		    $f->setCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneState', 'stateID'), $address->state->get()->getID()));
 		    $s = ActiveRecordModel::getRecordSet('DeliveryZoneState', $f, ActiveRecordModel::LOAD_REFERENCES);
 		    
-            foreach ($s as $zone)
+            foreach ($s as $zoneState)
             {
-                $zones[] = $s->deliveryZone->get();
+                $zones[] = $zoneState->deliveryZone->get();
             }    
         }
         

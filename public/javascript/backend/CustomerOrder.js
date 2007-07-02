@@ -47,8 +47,42 @@ Backend.CustomerOrder.prototype =
 	    self.tabControl = TabControl.prototype.getInstance('orderGroupsManagerContainer', self.craftTabUrl, self.craftContainerId, {}); 
 
         Backend.CustomerOrder.prototype.instance = this;
-	},
+        
+        var $this = this;
+        Event.observe($("createNewOrderLink"), "click", function(e) {
+            Event.stop(e);
+            Backend.CustomerOrder.prototype.customerPopup = new Backend.SelectPopup(
+                Backend.CustomerOrder.Links.selectCustomer, 
+                Backend.CustomerOrder.Messages.selecCustomerTitle, 
+                {
+                    onObjectSelect: function() { 
+                        console.info($this);
+                        $this.createNewOrder(this.objectID);
 
+                        Backend.SelectPopup.prototype.popup.close();
+                    }
+                }
+            );
+        });
+	},
+    
+    createNewOrder: function(customerID)
+    {
+        var $this = this;
+        new Ajax.Request(Backend.CustomerOrder.Links.createOrder + "?customerID=" + customerID, 
+        {
+            onSuccess: function(response)
+            {
+                response = eval("(" + response.responseText + ")");
+                
+                if('success' == response.status)
+                {
+                    window.ordersActiveGrid[Backend.CustomerOrder.prototype.activeGroup].reloadGrid();
+                }
+            } 
+        });
+    },
+    
     craftTabUrl: function(url)
     {
         return url.replace(/_id_/, Backend.CustomerOrder.prototype.treeBrowser.getSelectedItemId());
@@ -209,8 +243,8 @@ Backend.CustomerOrder.prototype =
     }
 }
 
-
-
+Backend.CustomerOrder.Links = {}; 
+Backend.CustomerOrder.Messages = {}; 
 
 Backend.CustomerOrder.GridFormatter = 
 {
@@ -533,9 +567,13 @@ Backend.CustomerOrder.Editor.prototype =
     {
         if(!Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime) Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime = 0;
     
-        var container = $("tabOrderProducts_" + this.id + "Content").down('.orderShipments');;
-                
-        if($("orderManagerContainer").style.display == 'none' || (container.style.display == 'none'))
+        var container = null;
+        if($("tabOrderProducts_" + this.id + "Content"))
+        {
+            container = $("tabOrderProducts_" + this.id + "Content").down('.orderShipments');;
+        }
+           
+        if($("orderManagerContainer").style.display == 'none' || !container || (container.style.display == 'none'))
         {
             Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime = (new Date()).getTime();
             return true;   

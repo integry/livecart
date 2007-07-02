@@ -103,11 +103,11 @@
 
         Event.observe($("selectProduct_{/literal}{$productID}{literal}"), 'click', function(e) {
             Event.stop(e);
-            new Backend.RelatedProduct.SelectProductPopup(
+            new Backend.SelectPopup(
                 Backend.RelatedProduct.links.selectProduct, 
                 Backend.RelatedProduct.messages.selectProductTitle, 
                 {
-                    onProductSelect: function() { Backend.RelatedProduct.addProductToList({/literal}{$productID}{literal}, this.productID) }
+                    onObjectSelect: function() { Backend.RelatedProduct.addProductToList({/literal}{$productID}{literal}, this.productID) }
                 }
             );
           

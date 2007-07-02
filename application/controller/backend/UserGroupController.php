@@ -29,7 +29,6 @@ class UserGroupController extends StoreManagementController
 		$response = new ActionResponse();
 		$response->setValue('userGroups', $userGroups);
 		return $response;
-	    
 	}
     
     public function edit()

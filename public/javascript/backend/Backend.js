@@ -957,3 +957,50 @@ Backend.RegisterMVC = function(MVC)
         return found ? destination : defaultValue;
     }
 }
+
+
+/********************************************************************
+ * Select popup
+ ********************************************************************/
+Backend.SelectPopup = Class.create();
+Backend.SelectPopup.prototype = {
+    height: 520,
+    width:  1000,
+    onObjectSelect: function() {},
+    
+    initialize: function(link, title, options)
+    {
+        try
+        {
+            this.link = link;
+            this.title = title;
+            
+            if(options.onObjectSelect) this.onObjectSelect = options.onObjectSelect;
+            
+            this.createPopup();
+        }
+        catch(e)
+        {
+            console.info(e);
+        }
+    },
+    
+    createPopup: function()
+    {
+        Backend.SelectPopup.prototype.popup = window.open(this.link, this.title, 'resizable=1,toolbar=1,location=1,width=' + this.width + ',height=' + this.height);
+        Backend.SelectPopup.prototype.popup.focus();
+                        
+        Event.observe(window, 'unload', function() { Backend.SelectPopup.prototype.popup.close(); });
+        
+        window.selectProductPopup = this;
+    },
+    
+    getSelectedObject: function(objectID)
+    {
+        this.objectID = objectID;
+        
+        var self = this;
+        setTimeout(function() { self.onObjectSelect.call(self); }, 100)
+        
+    }
+}
