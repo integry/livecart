@@ -68,21 +68,25 @@ class CustomerOrderController extends StoreManagementController
         }
        
         $user = $order->user->get();
+        $addressOptions = array('' => '');
+        $addressOptions['optgroup_0'] = $this->translate('_shipping_addresses');
         $addresses = array();
-        $addresses['optgroup_0'] = $this->translate('_shipping_addresses');
         foreach($user->getBillingAddressArray() as $address)
         {
-            $addresses[$address['ID']] = $this->createAddressString($address);
+            $addressOptions[$address['ID']] = $this->createAddressString($address);
+            $addresses[$address['ID']] = $address;
         }
         
-        $addresses['optgroup_1'] = $this->translate('_billing_addresses');
+        $addressOptions['optgroup_1'] = $this->translate('_billing_addresses');
         foreach($user->getShippingAddressArray() as $address)
         {
-            $addresses[$address['ID']] = $this->createAddressString($address);
+            $addressOptions[$address['ID']] = $this->createAddressString($address);
+            $addresses[$address['ID']] = $address;
         }
         
 	    $response->setValue('order', $orderArray);
 	    $response->setValue('form', $this->createOrderForm($orderArray));
+	    $response->setValue('existingUserAddressOptions', $addressOptions);
 	    $response->setValue('existingUserAddresses', $addresses);
 	    $response->setValue('formShippingAddress', $this->createUserAddressForm($orderArray['ShippingAddress']));
 	    $response->setValue('formBillingAddress', $this->createUserAddressForm($orderArray['BillingAddress']));

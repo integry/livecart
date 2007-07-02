@@ -616,8 +616,8 @@ Backend.CustomerOrder.Address.prototype =
         {
             this.findUsedNodes(root);
             this.bindEvents();
-            this.showOtherState();
-            new Backend.User.StateSwitcher(
+
+            this.stateSwitcher = new Backend.User.StateSwitcher(
                 this.nodes.form.elements.namedItem('countryID'), 
                 this.nodes.form.elements.namedItem('stateID'), 
                 this.nodes.form.elements.namedItem('stateName'),
@@ -633,33 +633,6 @@ Backend.CustomerOrder.Address.prototype =
 
 	},
     
-    showOtherState: function()
-    {
-
-                            
-     return;
-        if(!this.nodes.form.elements.namedItem('stateID').value)
-        {
-            new Ajax.Request(
-                Backend.CustomerOrder.Editor.prototype.Links.states + 'country=' + this.nodes.form.elements.namedItem('countryID').value,
-                {
-                    onSuccess: function(response)
-                    {
-                        response = eval("(" + response + ")");
-                        console.info(response)
-                    }    
-                }
-            );
-            
-            this.nodes.form.elements.namedItem('stateName').up('fieldset').show();
-        }   
-        else
-        {
-            this.nodes.form.elements.namedItem('stateName').up('fieldset').hide();
-        } 
-        
-    },
-
 	findUsedNodes: function(root)
     {
         this.nodes = {};
@@ -673,7 +646,38 @@ Backend.CustomerOrder.Address.prototype =
     {
 		var self = this;
 		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
-        Event.observe(this.nodes.form.elements.namedItem('stateID'), 'change', function(e) { self.showOtherState()});
+        Event.observe(this.nodes.form.elements.namedItem('existingUserAddress'), 'change', function(e) { self.useExistingAddress()});
+    },
+    
+    useExistingAddress: function()
+    {
+        if(this.nodes.form.elements.namedItem('existingUserAddress').value)
+        {
+            var self = this;
+            
+            var address = Backend.CustomerOrder.Editor.prototype.existingUserAddresses[this.nodes.form.elements.namedItem('existingUserAddress').value];
+    
+            this.nodes.form.elements.namedItem('firstName').value = address.UserAddress.address1;
+            this.nodes.form.elements.namedItem('lastName').value = address.UserAddress.firstName;
+            this.nodes.form.elements.namedItem('countryID').value = address.UserAddress.countryID;
+            
+            if(address.UserAddress.stateID)
+            {
+                this.nodes.form.elements.namedItem('stateID').value = address.UserAddress.stateID;
+            }
+            else
+            {
+                this.nodes.form.elements.namedItem('stateName').value = address.UserAddress.stateName;
+            }
+            
+            this.nodes.form.elements.namedItem('city').value = address.UserAddress.city;
+            this.nodes.form.elements.namedItem('address1').value = address.UserAddress.address1;
+            this.nodes.form.elements.namedItem('address2').value = address.UserAddress.address2;
+            this.nodes.form.elements.namedItem('postalCode').value = address.UserAddress.postalCode;
+            this.nodes.form.elements.namedItem('phone').value = address.UserAddress.phone;
+            
+            this.stateSwitcher.updateStates(null, function(){ self.nodes.form.elements.namedItem('stateID').value = address.UserAddress.stateID; });
+        }
     },
 
     init: function(args)

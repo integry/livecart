@@ -752,10 +752,19 @@ Backend.User.StateSwitcher.prototype =
         Event.observe(countrySelector, 'change', this.updateStates.bind(this)); 
     },
     
-    updateStates: function(e)
+    updateStates: function(e, onComplete)
     {
         var url = this.url + '/?country=' + this.countrySelector.value;
-        new Ajax.Request(url, {onComplete: this.updateStatesComplete.bind(this)});  
+        var self = this;
+        new Ajax.Request(url, 
+        {
+            onComplete: function(response) 
+            {
+                var states = $H(eval('(' + response.responseText + ')'));
+                
+                self.updateStatesComplete(states, onComplete)
+            }    
+        });  
         
         var indicator = document.getElementsByClassName('progressIndicator', this.countrySelector.parentNode);
         if (indicator.length > 0)
@@ -768,11 +777,9 @@ Backend.User.StateSwitcher.prototype =
         this.stateTextInput.value = '';    
     },
     
-    updateStatesComplete: function(ajaxRequest)
+    updateStatesComplete: function(states, onComplete)
     {
-        eval('var states = ' + ajaxRequest.responseText);
-
-        if (0 == states.length)
+        if (!states.size())
         {
             Element.hide(this.stateSelector);   
             Element.show(this.stateTextInput);               
@@ -782,12 +789,9 @@ Backend.User.StateSwitcher.prototype =
         {
             this.stateSelector.options[this.stateSelector.length] = new Option('', '', true);  
                 
-            Object.keys(states).each(function(key)
+            states.each(function(state)
             {
-                if (!isNaN(parseInt(key)))
-                {
-                    this.stateSelector.options[this.stateSelector.length] = new Option(states[key], key, false);  
-                }
+                this.stateSelector.options[this.stateSelector.length] = new Option(state.value, state.key, false);  
             }.bind(this));
             Element.show(this.stateSelector);            
             Element.hide(this.stateTextInput);
@@ -799,5 +803,10 @@ Backend.User.StateSwitcher.prototype =
         {
             Element.hide(this.indicator);              
         }       
+        
+        if(onComplete)
+        {
+            onComplete();
+        }
     }
 }   
