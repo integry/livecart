@@ -2,7 +2,7 @@
 <div class="menuContainer" id="paymentMenu_{$order.ID}">
 
     <ul class="menu paymentMenu" style="margin: 0;">
-    	<li><a href="#captureAll" onclick="return false;" class="captureAll">{t _capture_all_payments}</a></li>
+    	
     	<li><a href="#addOfflinePayment" onclick="return false;" class="addOfflinePayment">{t _add_offline_payment}</a></li>
     	<li><a href="#addCreditCardPayment" onclick="return false;" class="addCreditCardPayment">{t _add_credit_card_payment}</a></li>
     </ul>
@@ -43,21 +43,38 @@
 
 </div>
 
-<form>
+<div class="clear"></div>
+
+<div style="height: 10px;">&nbsp;</div>
+
+<form class="paymentSummary" style="clear: both;">
+
     <p>
         <label>{t Order total}:</label>
-        <label></label>
+        <label>{$order.formattedTotal[$order.Currency.ID]}</label>
     </p>
     
     <p>
         <label>{t Amount paid}:</label>
-        <label>({t _not_captured})</label>
+        <label>{$order.formatted_amountPaid}</label>
     </p>
     
-    <p>
-        <label>{t Amount due}:</label>
-        <label></label>
-    </p>
+    <div class="clear amountSection"></div>
+    
+    {if $order.amountNotCaptured != 0}
+	    <p>
+	        <label>{t Amount not captured}:</label>
+	        <label>{$order.formatted_amountNotCaptured}</label>
+	    </p>
+    {/if}
+
+    {if $order.amountDue > 0}    
+		<p>
+	        <label>{t Amount due}:</label>
+	        <label>{$order.formatted_amountDue}</label>
+	    </p>
+	{/if}
+
 </form>
 
 <div class="clear"></div>
@@ -69,5 +86,7 @@
 <script type="text/javascript">
     Backend.Payment.init($('paymentMenu_{$order.ID}'));
 </script>
+
+<div class="clear"></div>
 
 </div>

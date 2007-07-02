@@ -805,7 +805,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 	/**
 	 *	Creates an array representation of the shopping cart
 	 */
-	public function toArray()
+	public function toArray($options = array())
 	{
 		$array = parent::toArray();
 		
@@ -893,6 +893,30 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         $array['isAwaitingShipment'] = (int)$this->isAwaitingShipment();
         $array['isBackordered'] = (int)$this->isBackordered();
 
+		// payments
+		if (isset($options['payments']))
+		{
+			$currency = $this->currency->get();
+			$array['amountPaid'] = $this->getPaidAmount();
+			
+			$array['amountNotCaptured'] = $array['amountPaid'] - $array['capturedAmount'];
+			if ($array['amountNotCaptured'] < 0)
+			{
+				$array['amountNotCaptured'] = 0;	
+			}
+			
+			$array['amountDue'] = $array['total'][$currency->getID()] - $array['amountPaid'];
+			if ($array['amountDue'] < 0)
+			{
+				$array['amountDue'] = 0;	
+			}
+						
+			foreach (array('amountPaid', 'amountNotCaptured', 'amountDue') as $key)
+			{
+				$array['formatted_' . $key] = $currency->getFormattedPrice($array[$key]);
+			}
+		}
+
 		return $array;
 	}
 	
@@ -942,17 +966,6 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         $this->shipments = array();
     }    
     
-    /**
-     *  Return all transactions that are related to this order
-     */
-    public function getTransactions()
-    {
-        ClassLoader::import('application.model.order.Transaction');
-        $filter = new ARSelectFilter();
-        $filter->setOrder(new ARFieldHandle('Transaction', 'ID'), 'ASC');
-        return $this->getRelatedRecordSet('Transaction', $filter);
-    }
-    
     public function getDownloadShipment()
     {
  	    foreach($this->getShipments() as $shipment)
@@ -966,6 +979,35 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
    	
    		return $shipment;
     }
+
+    /**
+     *  Return all transactions that are related to this order
+     */
+    public function getTransactions(ARSelectFilter $filter = null)
+    {
+        ClassLoader::import('application.model.order.Transaction');
+        if (is_null($filter))
+        {
+			$filter = new ARSelectFilter();			
+		}
+        $filter->setOrder(new ARFieldHandle('Transaction', 'ID'), 'ASC');
+        return $this->getRelatedRecordSet('Transaction', $filter);
+    }
+    
+    public function getPaidAmount()
+    {
+		$filter = new ARSelectFilter(new InCond(new ARFieldHandle('Transaction', 'type'), array(Transaction::TYPE_AUTH, Transaction::TYPE_SALE)));
+		$filter->mergeCondition(new NotEqualsCond(new ARFieldHandle('Transaction', 'isVoided'), true));
+		
+		$transactions = $this->getTransactions($filter);
+		$paid = 0;
+		foreach ($transactions as $transaction)
+		{
+			$paid += $transaction->amount->get();
+		}
+		
+		return $paid;
+	}
 }
 	
 ?>

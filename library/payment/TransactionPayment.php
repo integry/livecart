@@ -48,20 +48,9 @@ abstract class TransactionPayment
 	/**
 	 *	Determine if the payment method supports crediting a refund payment back to customer
 	 */
-	public abstract static function isCreditable();
-}
+	public abstract static function isVoidable();
 
-abstract class IPNPaymentMethod
-{
-	
-}
-
-abstract class OfflinePaymentMethod
-{
-	public function isCreditable()
-	{
-		return false;
-	}		
+	public abstract function void();
 }
 
 ?>

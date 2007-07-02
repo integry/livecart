@@ -29,7 +29,7 @@ class TestCreditCard extends CreditCardPayment
 	 */
 	public function authorize()
 	{
-		$result = $this->processAuth('DoDirectPayment', 'Authorization');
+		$result = $this->process('');
 		$result->setTransactionType(TransactionResult::TYPE_AUTH);		
 		return $result;
 	}
@@ -39,7 +39,7 @@ class TestCreditCard extends CreditCardPayment
 	 */
 	public function capture()
 	{
-		$result = $this->processCapture();
+		$result = $this->process('');
 		$result->setTransactionType(TransactionResult::TYPE_CAPTURE);
 		return $result;
 	}

@@ -44,8 +44,10 @@ ActiveGrid.prototype =
 	filters: {},
 	
 	loadIndicator: null,
+	
+	rowCount: 15,
   	
-	initialize: function(tableInstance, dataUrl, totalCount, loadIndicator)
+	initialize: function(tableInstance, dataUrl, totalCount, loadIndicator, rowCount)
   	{
 		this.tableInstance = tableInstance;
 		this.tableInstance.gridInstance = this;
@@ -53,7 +55,12 @@ ActiveGrid.prototype =
 		this.setLoadIndicator(loadIndicator);
 		this.filters = {};
 
-		this.ricoGrid = new Rico.LiveGrid(this.tableInstance.id, 15, totalCount, dataUrl, 
+		if (!rowCount)
+		{
+			rowCount = this.rowCount;
+		}
+
+		this.ricoGrid = new Rico.LiveGrid(this.tableInstance.id, rowCount, totalCount, dataUrl, 
 								{
 								  prefetchBuffer: true, 
 								  onscroll: this.onScroll.bind(this),  

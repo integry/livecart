@@ -107,7 +107,7 @@
 	</tr>
 </thead>	
 <tbody>
-	{section name="createRows" start=0 loop=15}
+	{section name="createRows" start=0 loop=$rowCount}
 		<tr class="{if $smarty.section.createRows.index is even}even{else}odd{/if}">
 			<td class="cell_cb"></td>
 		{foreach from=$displayedColumns key=column item=type name="columns"}
@@ -126,7 +126,7 @@
 <script type="text/javascript">
 {/literal}
 	console.log('starting');
-	grid = new ActiveGrid($('{$prefix}_{$id}'), '{$url}{$filters}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"));
+	grid = new ActiveGrid($('{$prefix}_{$id}'), '{$url}{$filters}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"), {$rowCount});
 	console.log(grid);
 	{foreach from=$displayedColumns item=index key=column name="columns"}
 		{if !$smarty.foreach.columns.first}

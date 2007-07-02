@@ -152,7 +152,10 @@ _email_store=Store Administration Notifications
 _email_customer=Customer Notifications
 
 _payment=Payment Methods
+_cc_opts=Credit Card Options
+CC_ENABLE=Enable credit card payments
 CC_HANDLER=Credit card handler
+CC_AUTHONLY=Only authorize payments without capturing them automatically
 
 _customers=Customers
 REQUIRE_PHONE=Require customers to enter phone number on registration

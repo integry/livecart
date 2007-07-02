@@ -45,6 +45,7 @@ class Transaction extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("parentTransactionID", "Transaction", "ID", "Transaction", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("currencyID", "currency", "ID", 'Currency', ARChar::instance(3)));
+		$schema->registerField(new ARForeignKeyField("userID", "user", "ID", 'User', ARInteger::instance()));
 		
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
 		$schema->registerField(new ARField("time", ARDateTime::instance()));
@@ -87,11 +88,6 @@ class Transaction extends ActiveRecordModel
             $instance->isCompleted->set(true);            
         }
         
-        if ($result->isCaptured())
-        {            
-            $order->capturedAmount->set($order->capturedAmount->get() + $amount);
-        }
-        
         return $instance;   
     }
     
@@ -108,11 +104,10 @@ class Transaction extends ActiveRecordModel
         $instance = parent::getNewInstance(__CLASS__);
         $instance->order->set($order);
         $instance->currency->set($order->currency->get());
-        $instance->type->set(self::METHOD_OFFLINE);
+        $instance->type->set(self::TYPE_SALE);
+        $instance->methodType->set(self::METHOD_OFFLINE);
         $instance->isCompleted->set(true);
         $instance->amount->set($amount);
-        
-        $order->addCapturedAmount($amount);
         
         return $instance;
     }
@@ -144,7 +139,8 @@ class Transaction extends ActiveRecordModel
         $array = parent::toArray();
         
         $array['isVoidable'] = $this->isVoidable();
-        
+        $array['isCapturable'] = $this->isCapturable();
+		        
         return $array;
     }    
     
@@ -163,12 +159,21 @@ class Transaction extends ActiveRecordModel
      */
     public function loadHandlerClass()
     {
-        $className = $this->method->get();
+        $className = $this->isOffline() ? 'OfflineTransactionHandler' : $this->method->get();
         
         if (!class_exists($className, false))
         {
-            ClassLoader::import('library.payment.method.' . ($this->isCreditCard() ? 'cc.' : '') . $className . '.' . $className);
+            if (!$this->isOffline())
+            {
+				ClassLoader::import('library.payment.method.' . ($this->isCreditCard() ? 'cc.' : '') . $className . '.' . $className);				
+			}
+			else
+			{
+				ClassLoader::import('application.model.order.' . $className);
+			}
         }
+        
+        return $className;
     }
     
     /**
@@ -192,25 +197,42 @@ class Transaction extends ActiveRecordModel
     }
     
     /**
+     *  Determines if the payment was made via credit card
+     *  
+     *  @return bool
+     */
+    public function isOffline()
+    {
+        return self::METHOD_OFFLINE == $this->methodType->get();
+    }
+    
+    /**
      *  Determines if this transaction can be voided
      *  
      *  @return bool
      */
     public function isVoidable()
     {
-        if ($this->isVoided->get())
+        if (!$this->isVoided->get() && self::TYPE_VOID != $this->type->get())
         {
-            if (self::METHOD_OFFLINE == $this->methodType->get())
+            if ($this->isOffline())
             {
                 return true;
             }
-            else if (self::TYPE_VOID != $this->type->get())
+            else
             {
-                $this->loadHandlerClass();
-                return call_user_func(array($this->method->get(), 'isVoidable'));            
+                $class = $this->loadHandlerClass();
+                return call_user_func(array($class, 'isVoidable'));            
             }            
         }
+        
+        return false;
     }
+    
+    public function isCapturable()
+    {
+        return (self::TYPE_AUTH == $this->type->get()) && !$this->isCompleted->get() && !$this->isOffline() && !$this->isVoided->get();
+	}
     
     /**
      *  Creates a new VOID transaction for this transaction
@@ -245,31 +267,69 @@ class Transaction extends ActiveRecordModel
         
         return $instance;
     }
+
+    /**
+     *  Creates a new CAPTURE transaction for this transaction
+     *  
+     *  @return Transaction
+     */
+    public function capture($amount)
+    {        
+        if (!$this->isCapturable())
+        {
+            return false;
+        }
+        
+        $result = $this->getSubTransactionHandler($amount)->capture();
+        
+        if (!($result instanceof TransactionResult))
+        {
+            return false;
+        }
+        
+        $instance = self::getNewSubTransaction($this, $result);       
+        $instance->amount->set($amount);
+        $instance->save();
+                
+        return $instance;
+    }
     
     /**
      *  Creates a payment handler instance for processing sub-transactions (capture or void)
      *  
      *  @return TransactionPayment
      */
-    protected function getSubTransactionHandler()
+    protected function getSubTransactionHandler($amount = null)
     {
         // set up transaction parameters object
         $details = new LiveCartTransaction($this->order->get(), $this->currency->get());
-        $details->amount->set($this->amount->get());
+        if (is_null($amount))
+        {
+			$details->amount->set($this->amount->get());
+		}
         $details->gatewayTransactionID->set($this->gatewayTransactionID->get());
         
         // set up payment handler instance
-        $this->loadHandlerClass();
-        $className = $this->method->get();
+        $className = $this->loadHandlerClass();         
         return new $className($details);
     }
     
     protected function insert()
     {
-//        if ($this->order->get()->isLoaded())
-//        {
-            $this->order->get()->save();
-//        }
+        if (self::TYPE_CAPTURE == $this->type->get() || self::TYPE_SALE == $this->type->get())
+        {
+			$this->order->get()->addCapturedAmount($this->amount->get());
+		}
+		else if (self::TYPE_VOID == $this->type->get())
+		{
+			$parentType = $this->parentTransaction->get()->type->get();
+			if (self::TYPE_CAPTURE == $parentType || self::TYPE_SALE == $parentType)
+			{
+				$this->order->get()->addCapturedAmount(-1 * $this->parentTransaction->get()->amount->get());				
+			}
+		}
+        
+		$this->order->get()->save();
         
         if ($this->handler instanceof CreditCardPayment)
         {

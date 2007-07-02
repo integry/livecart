@@ -1,4 +1,4 @@
-<fieldset id="orderManagerContainer" class="treeManagerContainer maxHeight h--50" style="display: none;">
+<fieldset id="orderManagerContainer" class="treeManagerContainer maxHeight h--100" style="display: none;">
 	
     <fieldset class="container">
 		<ul class="menu">

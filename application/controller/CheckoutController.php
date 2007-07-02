@@ -407,7 +407,7 @@ class CheckoutController extends FrontendController
         $ccNum = str_replace(' ', '', $this->request->getValue('ccNum'));
         $handler->setCardData($ccNum, $this->request->getValue('ccExpiryMonth'), $this->request->getValue('ccExpiryYear'), $this->request->getValue('ccCVV'));
         
-        if ($handler->getConfigValue('authorizeonly'))
+        if ($this->config->getValue('CC_AUTHONLY'))
         {
             $result = $handler->authorize();
         }

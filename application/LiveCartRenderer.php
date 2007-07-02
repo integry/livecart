@@ -3,6 +3,18 @@
 class LiveCartRenderer extends TemplateRenderer
 {
 	/**
+	 * Template renderer constructor
+	 *
+	 * Creates a smarty instance and sets a compile directory path (this is required
+	 * by smarty)
+	 */
+	public function __construct(Router $router)
+	{
+		self::registerHelperDirectory(ClassLoader::getRealPath('application.helper'));
+		parent::__construct($router);		
+	}
+
+	/**
 	 * Process
 	 *
 	 * @param Renderable $object Object to render
@@ -18,7 +30,7 @@ class LiveCartRenderer extends TemplateRenderer
 		{
 			$view = $customizedPath;
 		}
-		
+				
 		return parent::process($object, $view);
 	}	
 }

@@ -33,7 +33,7 @@
 {includeJs file="backend/Payment.js"}
 {includeCss file="backend/Payment.css"}
 
-{pageTitle help="orderGroups"}{t _livecart_orders}{/pageTitle}
+{pageTitle help="order"}{t _livecart_orders}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
 <div id="orderGroupsWrapper" class="treeContainer maxHeight h--50">

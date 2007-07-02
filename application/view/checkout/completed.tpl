@@ -1,5 +1,6 @@
 <div class="checkoutCompleted">
 
+{pageTitle}{t _order_completed}{/pageTitle}
 {include file="layout/frontend/header.tpl"}
 {* include file="layout/frontend/leftSide.tpl" *}
 {* include file="layout/frontend/rightSide.tpl" *}

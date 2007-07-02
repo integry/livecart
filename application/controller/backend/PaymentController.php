@@ -26,10 +26,15 @@ class PaymentController extends StoreManagementController
             }
         }
         
-        $response = new ActionResponse();
-        $response->setValue('transactions', $transactions);
-        $response->setValue('order', $order->toArray());
-        $response->setValue('offlinePaymentForm', $this->buildOfflinePaymentForm());
+        $orderArray = $order->toArray(array('payments' => true));
+        $captureForm = $this->buildCaptureForm();
+        $captureForm->setValue('amount', $orderArray['amountNotCaptured']);
+        
+		$response = new ActionResponse();
+        $response->set('transactions', $transactions);
+        $response->set('order', $orderArray);
+        $response->set('offlinePaymentForm', $this->buildOfflinePaymentForm());
+        $response->set('capture', $captureForm);
         return $response;
     }
     
@@ -41,7 +46,37 @@ class PaymentController extends StoreManagementController
         
         if ($voidTransaction instanceof Transaction)
         {
-            return new ActionResponse();
+	        $voidTransaction->user->set($this->user);
+	        $voidTransaction->comment->set($this->request->getValue('comment'));
+	        $voidTransaction->save();
+
+            return $this->getTransactionFragment($transaction);
+        }
+        else
+        {
+            return new JSONResponse(array('error' => true));
+        }
+    }
+
+    public function capture()
+    {
+        $transaction = Transaction::getInstanceById($this->request->getValue('id'));
+        
+        $captureTransaction = $transaction->capture($this->request->getValue('amount'));
+        
+        if ($captureTransaction instanceof Transaction)
+        {
+			$captureTransaction->user->set($this->user);
+	        $captureTransaction->comment->set($this->request->getValue('comment'));
+	        $captureTransaction->save();
+
+	        if ($this->request->getValue('complete'))
+	        {
+				$transaction->isCompleted->set(true);
+				$transaction->save();
+			}
+
+            return $this->getTransactionFragment($transaction);
         }
         else
         {
@@ -54,6 +89,7 @@ class PaymentController extends StoreManagementController
         $order = CustomerOrder::getInstanceById($this->request->getValue('id'));
         $transaction = Transaction::getNewOfflineTransactionInstance($order, $this->request->getValue('amount'));
         $transaction->comment->set($this->request->getValue('comment'));
+        $transaction->user->set($this->user);        
         $transaction->save();
         
         return $this->getTransactionFragment($transaction);
@@ -68,8 +104,13 @@ class PaymentController extends StoreManagementController
     {
         $transactions = $this->getTransactionArray($transaction->order->get());
         
+        $orderArray = $transaction->order->get()->toArray(array('payments' => true));
+        $captureForm = $this->buildCaptureForm();
+        $captureForm->setValue('amount', $orderArray['amountNotCaptured']);        
+        
         $response = new ActionResponse();
         $response->set('transaction', $transactions[$transaction->getID()]);
+        $response->set('capture', $captureForm);
         return $response;
     }
     
@@ -92,6 +133,25 @@ class PaymentController extends StoreManagementController
         }
         
         return $transactions;        
+    }
+    
+    private function buildCaptureForm()
+    {
+		ClassLoader::import("framework.request.validator.Form");
+		return new Form($this->buildCaptureValidator());
+    }
+
+    private function buildCaptureValidator()
+    {
+		ClassLoader::import("framework.request.validator.RequestValidator");        
+
+        $validator = new RequestValidator("paymentCapture", $this->request);
+        $validator->addCheck('amount', new IsNotEmptyCheck($this->translate('_err_enter_amount')));
+        $validator->addCheck('amount', new MinValueCheck($this->translate('_err_amount_negative'), 0));
+
+        $validator->addFilter('amount', new NumericFilter());
+       
+        return $validator;
     }
     
     private function buildOfflinePaymentForm()

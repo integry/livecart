@@ -4,12 +4,23 @@ fieldset.transactionContainer
     width: 600px;
 }
 
+.paymentSummary
+{
+	padding-top: 15px;
+}
+
+.amountSection
+{
+	border-bottom: 1px solid black;
+}
+
 ul.transactions li
 {
     padding: 5px;
     margin-top: 10px;
     border: 2px solid #DDDDDD;
-    list-style-type: none;    
+    list-style-type: none;  
+	position: relative;  
 }
 
 ul.transactionMenu li
@@ -23,25 +34,25 @@ ul.transactionMenu li
 }
 
 /* Sale */
-.transaction_0 .transactionAmount
+.transactionType_0 .transactionAmount
 {
     color: green;
 }
 
 /* Authorize */
-.transaction_1 .transactionAmount
+.transactionType_1 .transactionAmount
 {
     color: black;
 }
 
 /* Capture */
-.transaction_2 .transactionAmount
+.transactionType_2 .transactionAmount
 {
-    color: green;
+    color: lightgreen;
 }
 
 /* Void */
-.transaction_3 .transactionAmount
+.transactionType_3 .transactionAmount
 {
     color: red;
 }
@@ -55,12 +66,28 @@ ul.transactionMenu li
 .transactionMainDetails
 {
     float: left;
-    text-align: center;
 }
 
 .transactionDetails
 {
+	float: right;
     text-align: right;
+    width: 250px;
+}
+
+.gatewayTransactionID
+{
+	font-size: smaller;
+}
+
+.transactionComment
+{
+	float: left;
+	background-color: lightyellow;
+	border: 1px solid black;
+	margin-top: 5px;
+	padding: 5px;
+	font-size: smaller;
 }
 
 ul.transactionMenu li
@@ -72,6 +99,26 @@ ul.transactionMenu li
 .transactionMenu li a
 {
     color: red;
+}
+
+/*********************
+    transaction action form (capture or void)
+*********************/
+.transactionForm
+{
+	position: relative;
+	text-align: left;
+}
+
+.transactionForm textarea
+{
+	width: 97%;
+	height: 80px;
+}
+
+.transactionForm fieldset.controls
+{
+	padding: 5px;
 }
 
 /*********************

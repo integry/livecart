@@ -1,5 +1,4 @@
-{* User groups container *}
-<div id="orderGroupsManagerContainer" class="treeManagerContainer">   
+<div id="orderGroupsManagerContainer" class="treeManagerContainer maxHeight h--20">   
 	<div class="tabContainer" id="orderGroupsTabContainer">
 		<ul class="tabList tabs">
 			<li id="tabOrders" class="tab inactive">

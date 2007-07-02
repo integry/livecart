@@ -11,13 +11,18 @@
  */
 function smarty_function_activeGrid($params, Smarty $smarty) 
 {
-    foreach ($params as $key => $value)
+    if (!isset($params['rowCount']) || !$params['rowCount'])
+    {
+		$params['rowCount'] = 15;	
+	}
+	
+	foreach ($params as $key => $value)
     {
         $smarty->assign($key, $value);
     }
     
     $filtersString = '';
-    if(isset($params['filters']) && is_array($params['filters']))
+    if (isset($params['filters']) && is_array($params['filters']))
     {
         foreach($params['filters'] as $key => $value)
         {
