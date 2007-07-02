@@ -101,7 +101,8 @@ abstract class BaseController extends Controller implements LCiTranslator
         $controllerPath = $refl->getFileName();
 
 		$cachePath = $rolesCacheDir . DIRECTORY_SEPARATOR . md5($controllerPath) . '.php';
-		$this->roles = new RolesParser($controllerPath, $cachePath);
+
+        $this->roles = new RolesParser($controllerPath, $cachePath);
 	    if($this->roles->wereExpired())
 	    {
 	        ClassLoader::import('application.model.role.Role');

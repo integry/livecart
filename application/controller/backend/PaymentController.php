@@ -50,12 +50,20 @@ class PaymentController extends StoreManagementController
 	        $voidTransaction->comment->set($this->request->getValue('comment'));
 	        $voidTransaction->save();
 
-            return $this->getTransactionFragment($transaction);
+            return $this->getTransactionUpdateResponse();
         }
         else
         {
             return new JSONResponse(array('error' => true));
         }
+    }
+
+    private function getTransactionUpdateResponse()
+    {
+        $response = new CompositeJSONResponse();
+        $response->addAction('transaction', 'backend.payment', 'transaction');
+        $response->addAction('totals', 'backend.payment', 'totals');
+        return $response;
     }
 
     public function capture()
@@ -76,7 +84,7 @@ class PaymentController extends StoreManagementController
 				$transaction->save();
 			}
 
-            return $this->getTransactionFragment($transaction);
+            return $this->getTransactionUpdateResponse();
         }
         else
         {
@@ -95,13 +103,22 @@ class PaymentController extends StoreManagementController
         return $this->getTransactionFragment($transaction);
     }
 
+    public function totals()
+    {
+        $transaction = Transaction::getInstanceById($this->request->getValue('id'));
+        $response = new ActionResponse();
+        $response->set('order', $transaction->order->get()->toArray(array('payments' => true)));
+        return $response;
+    }
+
     /**
-     *  Return a response that generates a page fragment with particular transaction
+     *  Generates a page fragment with particular transaction
      *
      *  @return ActionResponse
      */   
-    private function getTransactionFragment(Transaction $transaction)
+    public function transaction()
     {
+        $transaction = Transaction::getInstanceById($this->request->getValue('id'));
         $transactions = $this->getTransactionArray($transaction->order->get());
         
         $orderArray = $transaction->order->get()->toArray(array('payments' => true));

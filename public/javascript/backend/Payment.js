@@ -97,18 +97,31 @@ Backend.Payment.TransactionAction.prototype =
 	{
 		this.id = transactionID;
 		this.form = form;
-		new LiveCart.AjaxRequest(this.form, null, this.complete.bind(this));
+		
+		if (confirm(this.form.down('span.confirmation').innerHTML))
+		{
+            new LiveCart.AjaxRequest(this.form, null, this.complete.bind(this));
+        }
 	},
 
     complete: function(originalRequest)
     {
+        console.log(originalRequest);
+        var responseHTML = originalRequest.responseText.evalJSON();
+        console.log(responseHTML);
+        var cont = this.form.up('div.tabPageContainer');
+        
+        // update totals
+        cont.down('.paymentSummary').innerHTML = responseHTML.totals;
+        
+        // update transaction
         var newli = document.createElement('ul');
-        newli.innerHTML = originalRequest.responseText;
+        newli.innerHTML = responseHTML.transaction;
 		
-		var li = this.form.up('div.tabPageContainer').down('ul.transactions').down('#transaction_' + this.id);
+		var li = cont.down('ul.transactions').down('#transaction_' + this.id);
 		var newChild = newli.firstChild;
 		
 		li.parentNode.replaceChild(newChild, li);
-        new Effect.Highlight(newChild, {startcolor:'#FBFF85', endcolor:'#EFF4F6'})
+        new Effect.Highlight(newChild, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
     }
 }

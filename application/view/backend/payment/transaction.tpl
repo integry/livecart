@@ -41,6 +41,8 @@
         <div class="transactionForm voidForm" style="display: none;">
         	<form action="{link controller=backend.payment action=void id=$transaction.ID}" method="POST" onsubmit="Backend.Payment.voidTransaction({$transaction.ID}, this, event);">
 
+                <span class="confirmation" style="display: none">{t Really void this transaction?}</span>
+                
         		<p>
 					{t Reason for voiding}:
 				</p>
@@ -59,6 +61,8 @@
         <div class="transactionForm captureForm" style="display: none;">
         	{form action="controller=backend.payment action=capture id=`$transaction.ID`" method="POST" onsubmit="Backend.Payment.captureTransaction(`$transaction.ID`, this, event);" handle=$capture}
 
+                <span class="confirmation" style="display: none">{t Really capture this payment?}</span>
+                
         		<p>
 					{t Amount to capture}:<Br />
 					{textfield name="amount" class="text number"}
@@ -86,18 +90,24 @@
         {/if}
 
         <div class="transactionMethod">
+        
             {$transaction.methodName}
             {if $transaction.gatewayTransactionID}
             	<span class="gatewayTransactionID">
 				({$transaction.gatewayTransactionID})
 				</span>
             {/if}
+
+            {if $transaction.ccLastDigits}
+                ...{$transaction.ccLastDigits} ({$transaction.ccExpiryMonth} / {$transaction.ccExpiryYear})
+            {/if}
+
+    		<div class="transactionTime">
+                {$transaction.formatted_time.date_full} {$transaction.formatted_time.time_full}
+            </div>
+
         </div>
-        
-		<div class="transactionTime">
-            {$transaction.formatted_time.date_full} {$transaction.formatted_time.time_full}
-        </div>
-		
+                		
 		{$transaction.User.fullName}
 		
 		{if $transaction.comment}
