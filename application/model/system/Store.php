@@ -396,11 +396,7 @@ class Store
 		
 		ClassLoader::import('library.payment.method.cc.' . $handler . '.' . $handler);
 
-		$inst = $this->getPaymentHandler($handler, $details);
-				
-		$inst->setCardType('Visa');
-		
-		return $inst;
+		return $this->getPaymentHandler($handler, $details);
 	}
 
     public function getPaymentHandler($className, TransactionDetails $details = null)

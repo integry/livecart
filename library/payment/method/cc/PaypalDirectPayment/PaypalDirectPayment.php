@@ -15,6 +15,11 @@ class PaypalDirectPayment extends CreditCardPayment
 		return true;
 	}
 	
+	public static function isCardTypeNeeded()
+	{
+        return true;
+    }
+	
 	public static function getSupportedCurrencies()
 	{
 		return array('AUD', 'CAD', 'EUR', 'GBP', 'JPY', 'USD');

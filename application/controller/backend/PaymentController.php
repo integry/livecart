@@ -132,6 +132,102 @@ class PaymentController extends StoreManagementController
         return $response;
     }
     
+    public function ccForm()
+    {
+        $order = CustomerOrder::getInstanceById($this->request->getValue('id'));
+
+        $response = new ActionResponse();
+        
+		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode())); 
+        
+        $ccHandler = Store::getInstance()->getCreditCardHandler();
+        if ($ccHandler)
+        {
+			$response->setValue('ccHandler', $ccHandler->toArray());
+			$response->setValue('ccForm', $this->buildCreditCardForm());
+			
+			$months = range(1, 12);
+			$months = array_combine($months, $months);
+			
+			$years = range(date('Y'), date('Y') + 20);
+			$years = array_combine($years, $years);
+			
+			$response->setValue('months', $months);
+			$response->setValue('years', $years);
+		}
+
+        $response->set('order', $order->toArray(array('payments' => true)));
+        $response->set('ccForm', $this->buildCreditCardForm());
+        return $response;
+    }
+    
+    public function processCreditCard()
+    {
+        $order = CustomerOrder::getInstanceById($this->request->getValue('id'));
+        
+		if (!$this->buildCreditCardValidator()->isValid())
+		{
+            return new ActionRedirectResponse('backend.payment', 'ccForm', array('id' => $order->getID()));
+        }       
+        
+        ActiveRecordModel::beginTransaction();
+        
+        $currency = Currency::getValidInstanceById($this->getRequestCurrency());
+        
+        // set up transaction details
+        $transaction = new LiveCartTransaction($order, $currency);
+        
+        // process payment
+        $handler = Store::getInstance()->getCreditCardHandler($transaction);
+        if ($this->request->isValueSet('ccType'))
+        {
+            $handler->setCardType($this->request->getValue('ccType'));
+        }
+        		
+        $handler->setCardData($this->request->getValue('ccNum'), $this->request->getValue('ccExpiryMonth'), $this->request->getValue('ccExpiryYear'), $this->request->getValue('ccCVV'));
+        
+        if ($this->config->getValue('CC_AUTHONLY'))
+        {
+            $result = $handler->authorize();
+        }
+        else
+        {
+            $result = $handler->authorizeAndCapture();
+        }
+        
+        if ($result instanceof TransactionResult)
+        {
+            $order->isPaid->set(true);
+            $newOrder = $order->finalize($currency);
+			            
+            $this->session->setValue('completedOrderID', $order->getID());          
+            
+            $transaction = Transaction::getNewInstance($order, $result);
+            $transaction->setHandler($handler);
+            $transaction->save();
+            
+            $this->session->unsetValue('CustomerOrder');
+            $newOrder->saveToSession();
+
+            $response = new ActionRedirectResponse('checkout', 'completed');
+        }
+        elseif ($result instanceof TransactionError)
+        {
+            $validator = $this->buildCreditCardValidator();
+
+            // set error message for credit card form
+            $validator->triggerError('creditCardError', $this->translate('_err_processing_cc'));
+            $validator->saveState();
+            
+            $response = new ActionRedirectResponse('checkout', 'pay');
+        }
+        else
+        {
+            throw new Exception('Unknown transaction result type: ' . get_class($result));
+        }         
+                
+    }
+    
     /**
      *  Return a structured transactions array (tree of transactions with related sub-transactions)
      *
@@ -187,6 +283,32 @@ class PaymentController extends StoreManagementController
         $validator->addCheck('amount', new MinValueCheck($this->translate('_err_amount_negative'), 0));
 
         $validator->addFilter('amount', new NumericFilter());
+       
+        return $validator;
+    }    
+    
+    private function buildCreditCardForm()
+    {
+		ClassLoader::import("framework.request.validator.Form");
+		return new Form($this->buildCreditCardValidator());        
+    }
+
+    private function buildCreditCardValidator()
+    {
+		ClassLoader::import("framework.request.validator.RequestValidator");        
+        $validator = new RequestValidator("creditCard", $this->request);
+
+        $validator->addCheck('amount', new IsNotEmptyCheck($this->translate('_err_enter_amount')));
+        $validator->addCheck('amount', new MinValueCheck($this->translate('_err_amount_negative'), 0));
+
+        $validator->addCheck('ccNum', new IsNotEmptyCheck($this->translate('_err_enter_cc_num')));
+//        $validator->addCheck('ccType', new IsNotEmptyCheck($this->translate('_err_select_cc_type')));
+        $validator->addCheck('ccExpiryMonth', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_month')));
+        $validator->addCheck('ccExpiryYear', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_year')));
+                
+    	$validator->addFilter('ccCVV', new NumericFilter);
+    	$validator->addFilter('amount', new NumericFilter);
+    	$validator->addFilter('ccNum', new RegexFilter('[^ 0-9]'));
        
         return $validator;
     }    

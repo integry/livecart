@@ -35,6 +35,7 @@ abstract class CreditCardPayment extends TransactionPayment
 	
 	public function setCardData($cardNumber, $expiryMonth, $expiryYear, $cardCode = null)
 	{
+        $cardNumber = str_replace(' ', '', $cardNumber);
 		$this->cardNumber = $cardNumber;
 		$this->expiryMonth = $expiryMonth;
 		$this->expiryYear = $expiryYear;
@@ -97,6 +98,11 @@ abstract class CreditCardPayment extends TransactionPayment
 	 *	Refund a payment back to customers card
 	 */
 	abstract public function credit();
+	
+	/**
+	 *	Determines if credit card type needs to be passed to payment processor
+	 */
+	abstract public static function isCardTypeNeeded();
 }
 
 ?>

@@ -135,3 +135,11 @@ ul.transactionMenu li
     width: 300px;
     height: 100px;      
 }
+
+/*********************
+    credit card payment
+*********************/
+#ccForm
+{
+    padding: 15px;   
+}

@@ -404,7 +404,8 @@ class CheckoutController extends FrontendController
         
         // process payment
         $handler = Store::getInstance()->getCreditCardHandler($transaction);
-        $ccNum = str_replace(' ', '', $this->request->getValue('ccNum'));
+        $handler->setCardType('Visa');
+        		
         $handler->setCardData($ccNum, $this->request->getValue('ccExpiryMonth'), $this->request->getValue('ccExpiryYear'), $this->request->getValue('ccCVV'));
         
         if ($this->config->getValue('CC_AUTHONLY'))

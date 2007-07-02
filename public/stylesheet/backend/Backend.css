@@ -917,6 +917,11 @@ label.wide
 	float: none;
 }
 
+select.narrow
+{
+    width: 5em;
+}
+
 /*************************** 
 	List styling
 ***************************/
