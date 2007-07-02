@@ -50,6 +50,6 @@ You can set image dimensions and quality in the <a href="{help /settings}">Setti
 
 {helpSeeAlso}
 	{see categories.details}
-	{see categories.attr}
+	{see categories.attributes}
 	{see categories.filters}
 {/helpSeeAlso}

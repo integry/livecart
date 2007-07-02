@@ -2,7 +2,7 @@
 
 	categories=Product Categories
 		details=Category Details
-		attr=Attributes
+		attributes=Attributes
 		filters=Filters
 		images=Images
 

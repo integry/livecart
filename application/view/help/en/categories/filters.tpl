@@ -157,6 +157,6 @@ to define a range for filter's values.</p>
 
 {helpSeeAlso}
 	{see categories.details}
-	{see categories.attr}
+	{see categories.attributes}
 	{see categories.images}
 {/helpSeeAlso}

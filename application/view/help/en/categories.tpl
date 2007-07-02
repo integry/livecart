@@ -84,7 +84,7 @@
 {helpSeeAlso}
 	{see categories.details}
 	{see products}
-	{see categories.attr}
+	{see categories.attributes}
 	{see categories.filters}
 	{see categories.images}
 {/helpSeeAlso}

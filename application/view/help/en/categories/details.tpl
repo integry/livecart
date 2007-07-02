@@ -24,7 +24,7 @@ You can enter the following category details in the selected language:
 <p>Click the "Save" button to save category details:</p>
 
 {helpSeeAlso}
-	{see categories.attr}
+	{see categories.attributes}
 	{see categories.filters}
 	{see categories.images}
 {/helpSeeAlso}
