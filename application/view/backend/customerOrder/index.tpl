@@ -55,6 +55,13 @@
        	<div>{t _this_shipping_service_has_no_available_rates}</div>
     </div>
 	
+    <div class="redMessage" id="transactionError" style="display: none;">
+       	<div>
+            {t Could not process this transaction}
+            <span id="transactionErrorMsg"></span>
+        </div>
+    </div>
+
 </div>
 
 {include file="backend/customerOrder/orderContainer.tpl"}

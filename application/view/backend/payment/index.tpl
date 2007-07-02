@@ -3,8 +3,8 @@
 
     <ul class="menu paymentMenu" style="margin: 0;">
     	
-    	<li><a href="#addOfflinePayment" onclick="return false;" class="addOfflinePayment">{t _add_offline_payment}</a></li>
-    	<li><a href="#addCreditCardPayment" onclick="return false;" class="addCreditCardPayment">{t _add_credit_card_payment}</a></li>
+    	<li><a href="#addOfflinePayment" class="addOfflinePayment">{t _add_offline_payment}</a></li>
+    	<li><a href="#addCreditCardPayment" class="addCreditCardPayment">{t _add_credit_card_payment}</a></li>
     </ul>
     
     <div class="clear"></div>
@@ -14,7 +14,7 @@
         
             <legend>{t _add_offline_payment}</legend>
         
-            {form action="controller=backend.payment action=addOffline id=`$order.ID`" method="POST" handle=$offlinePaymentForm onsubmit="Backend.Payment.submitOfflinePaymentForm(event); return false;"}
+            {form action="controller=backend.payment action=addOffline id=`$order.ID`" method="POST" handle=$offlinePaymentForm onsubmit="Backend.Payment.submitOfflinePaymentForm(event);"}
             
                 <p>
                     <label>{t Amount}:</label>
@@ -33,7 +33,7 @@
                     <label></label>
                     <span class="progressIndicator" style="display: none;"></span>
                     <input type="submit" class="submit" value="{tn Add payment}" />
-                    {t _or} <a class="cancel offlinePaymentCancel" href="#" onclick="return false;">{t _cancel}</a>
+                    {t _or} <a class="cancel offlinePaymentCancel" href="#">{t _cancel}</a>
                 </fieldset>
         
             {/form}

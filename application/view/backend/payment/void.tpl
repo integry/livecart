@@ -1,1 +1,0 @@
-{include file="backend/payment/transaction.tpl"}

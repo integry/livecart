@@ -812,7 +812,7 @@ Backend.SaveConfirmationMessage.prototype =
        var self = this;	
        this.innerElement.focus();
        new Effect.Highlight(this.innerElement, { duration: 0.4 });
-       setTimeout(function() { self.hide() }, 3000);
+       setTimeout(function() { self.hide() }, 4000);
 
 	},
 

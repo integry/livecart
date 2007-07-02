@@ -54,7 +54,7 @@ class PaymentController extends StoreManagementController
         }
         else
         {
-            return new JSONResponse(array('error' => true));
+            return new JSONResponse(array('error' => true, 'msg' => $voidTransaction->getMessage()));
         }
     }
 
@@ -70,7 +70,7 @@ class PaymentController extends StoreManagementController
     {
         $transaction = Transaction::getInstanceById($this->request->getValue('id'));
         
-        $captureTransaction = $transaction->capture($this->request->getValue('amount'));
+        $captureTransaction = $transaction->capture($this->request->getValue('amount'), $this->request->getValue('complete'));
         
         if ($captureTransaction instanceof Transaction)
         {
@@ -88,7 +88,7 @@ class PaymentController extends StoreManagementController
         }
         else
         {
-            return new JSONResponse(array('error' => true));
+            return new JSONResponse(array('error' => true, 'msg' => $captureTransaction->getMessage()));
         }
     }
     
@@ -100,7 +100,8 @@ class PaymentController extends StoreManagementController
         $transaction->user->set($this->user);        
         $transaction->save();
         
-        return $this->getTransactionFragment($transaction);
+        $this->request->setValue('id', $transaction->getID());
+        return $this->getTransactionUpdateResponse();
     }
 
     public function totals()

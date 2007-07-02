@@ -140,7 +140,7 @@ class Transaction extends ActiveRecordModel
         
         $array['isVoidable'] = $this->isVoidable();
         $array['isCapturable'] = $this->isCapturable();
-		        
+
         return $array;
     }    
     
@@ -203,7 +203,7 @@ class Transaction extends ActiveRecordModel
      */
     public function isOffline()
     {
-        return self::METHOD_OFFLINE == $this->methodType->get();
+        return (self::METHOD_OFFLINE == $this->methodType->get()) && !$this->method->get();
     }
     
     /**
@@ -221,8 +221,11 @@ class Transaction extends ActiveRecordModel
             }
             else
             {
-                $class = $this->loadHandlerClass();
-                return call_user_func(array($class, 'isVoidable'));            
+                if ((self::TYPE_AUTH == $this->type->get()) || (self::TYPE_SALE == $this->type->get()))
+                {
+                    $class = $this->loadHandlerClass();
+                    return call_user_func(array($class, 'isVoidable'));                     
+                }
             }            
         }
         
@@ -251,7 +254,7 @@ class Transaction extends ActiveRecordModel
         
         if (!($result instanceof TransactionResult))
         {
-            return false;
+            return $result;
         }
         
         self::beginTransaction();        
@@ -273,18 +276,20 @@ class Transaction extends ActiveRecordModel
      *  
      *  @return Transaction
      */
-    public function capture($amount)
+    public function capture($amount, $isCompleted = false)
     {        
         if (!$this->isCapturable())
         {
             return false;
         }
         
-        $result = $this->getSubTransactionHandler($amount)->capture();
+        $handler = $this->getSubTransactionHandler($amount); 
+        $handler->getDetails()->isCompleted->set($isCompleted);
+        $result = $handler->capture();
         
         if (!($result instanceof TransactionResult))
         {
-            return false;
+            return $result;
         }
         
         $instance = self::getNewSubTransaction($this, $result);       
@@ -303,15 +308,13 @@ class Transaction extends ActiveRecordModel
     {
         // set up transaction parameters object
         $details = new LiveCartTransaction($this->order->get(), $this->currency->get());
-        if (is_null($amount))
-        {
-			$details->amount->set($this->amount->get());
-		}
+		$details->amount->set(is_null($amount) ? $this->amount->get() : $amount);
         $details->gatewayTransactionID->set($this->gatewayTransactionID->get());
         
         // set up payment handler instance
         $className = $this->loadHandlerClass();         
-        return new $className($details);
+
+        return Store::getInstance()->getPaymentHandler($className, $details);
     }
     
     protected function insert()

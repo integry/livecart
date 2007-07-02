@@ -92,14 +92,7 @@ class PaypalDirectPayment extends CreditCardPayment
 		    
 		    if (isset($response->Errors))
 		    {
-				if (isset($response->Errors->LongMessage))
-				{
-					$error = $response->Errors;
-				}
-				else
-				{
-					$error = $response->Errors[0];
-				}
+				$error = isset($response->Errors->LongMessage) ? $response->Errors : $error = $response->Errors[0];
 			
 				return new TransactionError($error->LongMessage, $response);
 			}
@@ -139,7 +132,7 @@ class PaypalDirectPayment extends CreditCardPayment
 	protected function processCapture()
 	{
 		$paypal = $this->getHandler('DoCapture');
-		$paypal->setParams($this->details->gatewayTransactionID->get(), $this->details->amount->get(), $this->details->currency->get(), 'NotComplete', '', $this->details->invoiceID->get());
+		$paypal->setParams($this->details->gatewayTransactionID->get(), $this->details->amount->get(), $this->details->currency->get(), $this->details->isCompleted->get() ? 'Complete' : 'NotComplete', '', $this->details->invoiceID->get());
 		
 		$paypal->execute();
 		
@@ -194,7 +187,7 @@ class PaypalDirectPayment extends CreditCardPayment
 
 				$result->rawResponse->set($response);
                 $result->setTransactionType(TransactionResult::TYPE_VOID);
-                
+
 				return $result;
 			}
 		}

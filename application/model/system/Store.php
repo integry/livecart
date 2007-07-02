@@ -396,25 +396,37 @@ class Store
 		
 		ClassLoader::import('library.payment.method.cc.' . $handler . '.' . $handler);
 
+		$inst = $this->getPaymentHandler($handler, $details);
+				
+		$inst->setCardType('Visa');
+		
+		return $inst;
+	}
+
+    public function getPaymentHandler($className, TransactionDetails $details = null)
+    {
+        if (!class_exists($className, false))
+        {
+            ClassLoader::import('library.payment.method.' . $className . '.' . $className); 
+        }   
+
 		if (is_null($details))
 		{
 			$details = new TransactionDetails();
 		}
 
-		$inst = new $handler($details);
-		
-		$c = $this->config->getSection('payment/' . $handler);
+		$inst = new $className($details);
+
+		$c = $this->config->getSection('payment/' . $className);
 		foreach ($c as $key => $value)
 		{
 			$value = $this->config->getValue($key);
-			$key = substr($key, strlen($handler) + 1);
+			$key = substr($key, strlen($className) + 1);
 			$inst->setConfigValue($key, $value);
 		}
-		
-		$inst->setCardType('Visa');
-		
-		return $inst;
-	}
+
+        return $inst;
+    }
 
 	/**
 	 * Returns an array of all real-time shipping rate services

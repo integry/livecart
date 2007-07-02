@@ -42,6 +42,7 @@ class TransactionDetails
 		'invoiceID' => null,	
 		
 		// transaction data
+		'isCompleted' => null,
 		'amount' => null,
 		'currency' => null,
 		'description' => null,

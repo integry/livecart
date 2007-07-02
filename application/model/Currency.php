@@ -78,6 +78,11 @@ class Currency extends ActiveRecordModel
             $price = $dollars;
         }
         
+        if (!$this->isLoaded())
+        {
+            $this->load();
+        }
+        
         return $this->pricePrefix->get() . $price . $this->priceSuffix->get();
     }
 	

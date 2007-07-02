@@ -4,6 +4,12 @@ fieldset.transactionContainer
     width: 600px;
 }
 
+#transactionErrorMsg
+{
+    display: block;
+    margin-top: 20px;
+}
+
 .paymentSummary
 {
 	padding-top: 15px;

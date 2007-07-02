@@ -28,12 +28,12 @@
         <ul class="transactionMenu">
             {if $transaction.isCapturable}
                 <li>
-                    <a href="" onclick="Backend.Payment.showCaptureForm({$transaction.ID}); return false;">{t Capture}</a>
+                    <a href="" onclick="Backend.Payment.showCaptureForm({$transaction.ID}, event);">{t Capture}</a>
                 </li>
             {/if}
             {if $transaction.isVoidable}
                 <li class="voidMenu">
-                    <a href="#void" onclick="Backend.Payment.showVoidForm({$transaction.ID}); return false;">{t Void}</a>
+                    <a href="#void" onclick="Backend.Payment.showVoidForm({$transaction.ID}, event);">{t Void}</a>
                 </li>
             {/if}
         </ul>
@@ -51,7 +51,7 @@
         		<fieldset class="controls">
 					<span class="progressIndicator" style="display: none;"></span>
 					<input type="submit" class="submit" value="{tn Void Transaction}" />
-	        		{t _or} <a class="menu" href="#" onclick="Backend.Payment.hideVoidForm({$transaction.ID}); return false;">{t _cancel}</a>
+	        		{t _or} <a class="menu" href="#" onclick="Backend.Payment.hideVoidForm({$transaction.ID}, event);">{t _cancel}</a>
 	        	</fieldset>
 	        	
         	</form>
@@ -82,7 +82,7 @@
         		<fieldset class="controls">
 					<span class="progressIndicator" style="display: none;"></span>
 					<input type="submit" class="submit" value="{tn Process Capture}" />
-	        		{t _or} <a class="menu" href="#" onclick="Backend.Payment.hideCaptureForm({$transaction.ID}); return false;">{t _cancel}</a>
+	        		{t _or} <a class="menu" href="#" onclick="Backend.Payment.hideCaptureForm({$transaction.ID}, event);">{t _cancel}</a>
 	        	</fieldset>
 	        	
         	{/form}
