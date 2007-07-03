@@ -166,6 +166,8 @@
     	Backend.Category.initPage();
         
         Backend.Category.loadBookmarkedCategory();
+        
+        MVC.Model.prototype.languages
     {rdelim}
     catch(e)
     {ldelim}

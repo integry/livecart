@@ -17,9 +17,13 @@ class ProductRelationshipController extends StoreManagementController
 	    $productID = (int)$this->request->getValue('id');
 		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA, array('Category'));
 	    
+		$languages = array();
+		foreach($this->store->getLanguageList()->toArray() as $language) $languages[$language['ID']] = $language;
+		
 		$response = new ActionResponse();
 
 	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
+		$response->setValue('languages', $languages);
 		$response->setValue('productID', $productID);
 		$response->setValue('relationships', $product->getRelationships()->toArray());
 		$response->setValue('relationshipsWithGroups', $product->getRelatedProductsWithGroupsArray());

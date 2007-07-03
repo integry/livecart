@@ -58,6 +58,11 @@ _productFile_title=File title
 _productFile_description=File description
 _days=days
 _upload_file=Select a file
+_product_file_group_title=Title
+
+# Product relationship
+_product_relationship_group_title=Title
+
 
 # index
 _products=Products

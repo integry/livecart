@@ -1,5 +1,7 @@
 <script type="text/javascript">
 {literal}
+    Backend.availableLanguages = {/literal}{json array=$languages}{literal};
+    
     with(Backend.RelatedProduct.Group)
     {
         Links.update = '{/literal}{link controller=backend.productRelationshipGroup action=update}{literal}';
