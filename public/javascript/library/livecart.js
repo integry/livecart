@@ -67,6 +67,19 @@ LiveCart.AjaxRequest.prototype = {
     postProcessResponse: function(response)
     {
 		this.hideIndicator();
+		
+		if ('text/javascript' == response.getResponseHeader('Content-type'))
+		{
+            try
+            {
+                response.responseData = response.responseText.evalJSON();
+            }
+            catch (e)
+            {
+                console.log(e);
+            }
+        }
+
 		document.body.style.cursor = 'default';
         if (this.onComplete)
         {

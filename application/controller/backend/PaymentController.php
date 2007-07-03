@@ -58,14 +58,6 @@ class PaymentController extends StoreManagementController
         }
     }
 
-    private function getTransactionUpdateResponse()
-    {
-        $response = new CompositeJSONResponse();
-        $response->addAction('transaction', 'backend.payment', 'transaction');
-        $response->addAction('totals', 'backend.payment', 'totals');
-        return $response;
-    }
-
     public function capture()
     {
         $transaction = Transaction::getInstanceById($this->request->getValue('id'));
@@ -156,8 +148,14 @@ class PaymentController extends StoreManagementController
 			$response->setValue('years', $years);
 		}
 
-        $response->set('order', $order->toArray(array('payments' => true)));
-        $response->set('ccForm', $this->buildCreditCardForm());
+        $orderArray = $order->toArray(array('payments' => true));
+        $form = $this->buildCreditCardForm();
+        $form->setValue('amount', $orderArray['amountDue']);
+        $form->setValue('name', $order->user->get()->getName());
+                
+        $response->set('ccTypes', Store::getInstance()->getCardTypes($ccHandler));
+        $response->set('order', $orderArray);
+        $response->set('ccForm', $form);
         return $response;
     }
     
@@ -170,12 +168,9 @@ class PaymentController extends StoreManagementController
             return new ActionRedirectResponse('backend.payment', 'ccForm', array('id' => $order->getID()));
         }       
         
-        ActiveRecordModel::beginTransaction();
-        
-        $currency = Currency::getValidInstanceById($this->getRequestCurrency());
-        
         // set up transaction details
-        $transaction = new LiveCartTransaction($order, $currency);
+        $transaction = new LiveCartTransaction($order, $order->currency->get());
+        $transaction->amount->set($this->request->getValue('amount'));
         
         // process payment
         $handler = Store::getInstance()->getCreditCardHandler($transaction);
@@ -194,39 +189,36 @@ class PaymentController extends StoreManagementController
         {
             $result = $handler->authorizeAndCapture();
         }
-        
+
         if ($result instanceof TransactionResult)
         {
             $order->isPaid->set(true);
-            $newOrder = $order->finalize($currency);
 			            
-            $this->session->setValue('completedOrderID', $order->getID());          
-            
             $transaction = Transaction::getNewInstance($order, $result);
             $transaction->setHandler($handler);
+            $transaction->comment->set($this->request->getValue('comment'));
             $transaction->save();
             
-            $this->session->unsetValue('CustomerOrder');
-            $newOrder->saveToSession();
-
-            $response = new ActionRedirectResponse('checkout', 'completed');
+            $this->request->setValue('id', $transaction->getID());
+            return $this->getTransactionUpdateResponse();
         }
         elseif ($result instanceof TransactionError)
         {
-            $validator = $this->buildCreditCardValidator();
-
-            // set error message for credit card form
-            $validator->triggerError('creditCardError', $this->translate('_err_processing_cc'));
-            $validator->saveState();
-            
-            $response = new ActionRedirectResponse('checkout', 'pay');
+            return new JSONResponse(array('error' => 'true', 'msg' => $this->translate('_err_processing_cc')));
         }
         else
         {
             throw new Exception('Unknown transaction result type: ' . get_class($result));
-        }         
-                
+        }                
     }
+    
+    private function getTransactionUpdateResponse()
+    {
+        $response = new CompositeJSONResponse();
+        $response->addAction('transaction', 'backend.payment', 'transaction');
+        $response->addAction('totals', 'backend.payment', 'totals');
+        return $response;
+    }    
     
     /**
      *  Return a structured transactions array (tree of transactions with related sub-transactions)
@@ -306,7 +298,7 @@ class PaymentController extends StoreManagementController
         $validator->addCheck('ccExpiryMonth', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_month')));
         $validator->addCheck('ccExpiryYear', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_year')));
                 
-    	$validator->addFilter('ccCVV', new NumericFilter);
+    	$validator->addFilter('ccCVV', new RegexFilter('[^0-9]'));
     	$validator->addFilter('amount', new NumericFilter);
     	$validator->addFilter('ccNum', new RegexFilter('[^ 0-9]'));
        

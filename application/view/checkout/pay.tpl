@@ -45,12 +45,12 @@
 			</fieldset>
         </p>
         
-{*
+        {if $ccTypes}
         <p>
             <label for="ccType">Card type:</label>
-            {selectfield name="ccType" options=$ccType}
+            {selectfield name="ccType" options=$ccTypes}
         </p>
-*}
+        {/if}
     
         <p>
             <label for="ccExpiryMonth">Card expiration:</label>

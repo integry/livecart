@@ -29,10 +29,6 @@ abstract class CreditCardPayment extends TransactionPayment
 	 */
 	protected $cardType;
 	
-	const TYPE_VISA = 'Visa';
-	const TYPE_MC = 'MasterCard';
-	const TYPE_AMEX = 'American Express';
-	
 	public function setCardData($cardNumber, $expiryMonth, $expiryYear, $cardCode = null)
 	{
         $cardNumber = str_replace(' ', '', $cardNumber);

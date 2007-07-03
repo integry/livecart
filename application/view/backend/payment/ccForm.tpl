@@ -3,6 +3,7 @@
 {includeJs file="library/form/ActiveForm.js"}
 {includeJs file="library/form/State.js"}
 
+{pageTitle}{t _add_credit_card_payment}{/pageTitle}
 {include file="layout/backend/meta.tpl"}
 
 {literal}
@@ -16,7 +17,9 @@
 
 <div id="ccForm">
 
-{form action="controller=backend.payment action=processCreditCard" handle=$ccForm method="POST"}
+{form action="controller=backend.payment action=processCreditCard id=`$order.ID`" onsubmit="new window.opener.Backend.Payment.AddCreditCard(this, window); return false;" handle=$ccForm method="POST"}
+
+<input type="hidden" name="id" value="{$order.ID}" />
 
 {error for="creditCardError"}
 	<div class="errorMsg ccPayment">
@@ -48,10 +51,10 @@
 	</fieldset>
 </p>
 
-{if $ccType}
+{if $ccTypes}
     <p>
         <label for="ccType">{t Card type}:</label>
-        {selectfield name="ccType" options=$ccType}
+        {selectfield name="ccType" options=$ccTypes}
     </p>
 {/if}
 
@@ -73,11 +76,19 @@
 	</fieldset>
 </p>
 
+<p>
+    <label for="comment">{t _comment}:</label>
+    <fieldset class="error">
+        {textarea name="comment"} 
+		<div class="errorText hidden{error for="comment"} visible{/error}">{error for="comment"}{$msg}{/error}</div>
+	</fieldset>
+</p>
+
 <fieldset class="controls">
     <label></label>
     <span class="progressIndicator" style="display: none;"></span>
     <input type="submit" class="submit" value="{tn Process Payment}" />
-    {t _or} <a href="#cancel" class="cancel">{t _cancel}</a>
+    {t _or} <a href="#cancel" onclick="window.close(); return false;" class="cancel">{t _cancel}</a>
 </fieldset>
 
 {/form}

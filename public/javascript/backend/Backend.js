@@ -809,11 +809,15 @@ Backend.SaveConfirmationMessage.prototype =
 
 	highlight: function()
 	{
-       var self = this;	
-       this.innerElement.focus();
-       new Effect.Highlight(this.innerElement, { duration: 0.4 });
-       setTimeout(function() { self.hide() }, 4000);
-
+        var self = this;	
+        this.innerElement.focus();
+        new Effect.Highlight(this.innerElement, { duration: 0.4 });
+       
+        // do not hide error messages
+        if (!this.element.hasClassName('redMessage'))
+        {
+            setTimeout(function() { self.hide() }, 4000);   
+        }
 	},
 
 	hide: function()

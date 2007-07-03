@@ -366,6 +366,7 @@ class CheckoutController extends FrontendController
 			
 			$response->setValue('months', $months);
 			$response->setValue('years', $years);
+            $response->set('ccTypes', $this->store->getCardTypes($ccHandler));
 		}
 		
         return $response;                        
@@ -404,9 +405,12 @@ class CheckoutController extends FrontendController
         
         // process payment
         $handler = Store::getInstance()->getCreditCardHandler($transaction);
-        $handler->setCardType('Visa');
+        if ($this->request->isValueSet('ccType'))
+        {
+            $handler->setCardType($this->request->getValue('ccType'));
+        }
         		
-        $handler->setCardData($ccNum, $this->request->getValue('ccExpiryMonth'), $this->request->getValue('ccExpiryYear'), $this->request->getValue('ccCVV'));
+        $handler->setCardData($this->request->getValue('ccNum'), $this->request->getValue('ccExpiryMonth'), $this->request->getValue('ccExpiryYear'), $this->request->getValue('ccCVV'));
         
         if ($this->config->getValue('CC_AUTHONLY'))
         {
@@ -582,6 +586,7 @@ class CheckoutController extends FrontendController
 			$validator->addCheck('ccCVV', new IsNotEmptyCheck($this->translate('_err_enter_cc_cvv')));
 		}
        
+    	$validator->addFilter('ccCVV', new RegexFilter('[^0-9]'));
     	$validator->addFilter('ccNum', new RegexFilter('[^ 0-9]'));
        
         return $validator;

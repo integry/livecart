@@ -115,7 +115,8 @@ Backend.TemplateHandler.prototype =
 	
 	submit: function()
 	{
-		$('code').value = editAreaLoader.getValue('code');
+		Element.hide(document.getElementsByClassName('redMessage')[0]);
+        $('code').value = editAreaLoader.getValue('code');
 		new LiveCart.AjaxRequest(this.form, null, this.saveComplete.bind(this));
 		return false;
 	},

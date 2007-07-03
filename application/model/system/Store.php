@@ -424,6 +424,12 @@ class Store
         return $inst;
     }
 
+    public function getCardTypes(CreditCardPayment $handler)
+    {
+		$types = array_keys($this->config->getValue(get_class($handler) . '_cardTypes'));
+		return array_combine($types, $types);
+    }
+
 	/**
 	 * Returns an array of all real-time shipping rate services
 	 */

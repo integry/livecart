@@ -1,7 +1,9 @@
+# Payment menu
 _add_offline_payment=Add offline payment
 _add_credit_card_payment=Add credit card payment
-_capture_all_payments=Capture all payments
 
+# Credit card payment
+_comment=Comment
 _err_enter_amount=Enter transaction amount
 _err_amount_negative=Amount cannot be negative
 _err_enter_cc_num=Enter credit card number

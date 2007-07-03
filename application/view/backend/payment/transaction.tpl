@@ -21,6 +21,21 @@
                 
             {/if}
         </div>
+        
+        <div class="transactionUser">
+
+    		{if $transaction.User}
+                {t Processed by}: {$transaction.User.fullName}
+            {/if}
+    		
+    		{if $transaction.comment}
+    			<div class="transactionComment">
+    				{$transaction.comment}
+    			</div>
+    		{/if}        
+        
+        </div>
+        
     </div>
 
     <div class="transactionDetails">
@@ -37,6 +52,8 @@
                 </li>
             {/if}
         </ul>
+        
+        <div class="clear"></div>
 
         <div class="transactionForm voidForm" style="display: none;">
         	<form action="{link controller=backend.payment action=void id=$transaction.ID}" method="POST" onsubmit="Backend.Payment.voidTransaction({$transaction.ID}, this, event);">
@@ -89,33 +106,30 @@
         </div>
         {/if}
 
-        <div class="transactionMethod">
+        <fieldset class="transactionMethod">
         
-            {$transaction.methodName}
-            {if $transaction.gatewayTransactionID}
-            	<span class="gatewayTransactionID">
-				({$transaction.gatewayTransactionID})
-				</span>
+            <legend>{$transaction.methodName}</legend>
+            
+            {if $transaction.ccLastDigits}
+                <div class="ccDetails">
+                    <div>{$transaction.ccName}</div>
+                    <div>{$transaction.ccType} <span class="ccNum">...{$transaction.ccLastDigits}</span></div>
+                    <div>{$transaction.ccExpiryMonth} / {$transaction.ccExpiryYear}</div>
+                </div>
             {/if}
 
-            {if $transaction.ccLastDigits}
-                ...{$transaction.ccLastDigits} ({$transaction.ccExpiryMonth} / {$transaction.ccExpiryYear})
+            {if $transaction.gatewayTransactionID}
+            	<div class="gatewayTransactionID">
+				    {t Transaction ID}: {$transaction.gatewayTransactionID}
+				</div>
             {/if}
 
     		<div class="transactionTime">
                 {$transaction.formatted_time.date_full} {$transaction.formatted_time.time_full}
             </div>
 
-        </div>
+        </fieldset>
                 		
-		{$transaction.User.fullName}
-		
-		{if $transaction.comment}
-			<div class="transactionComment">
-				{$transaction.comment}
-			</div>
-		{/if}
-
     </div>
 
     <div class="clear"></div>

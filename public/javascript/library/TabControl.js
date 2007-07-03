@@ -127,6 +127,16 @@ TabControl.prototype = {
 
 	handleTabClick: function(args)
 	{
+        // hide all error messages within a background process (to avoid potential tab switching delays)
+        window.setTimeout(function()
+            {
+                var errors = document.getElementsByClassName('redMessage');
+                for (k = 0; k < errors.length; k++)
+                {
+                    Element.hide(errors[k]);
+                }                
+            }, 10);
+
         if(this.callbacks.beforeClick) this.callbacks.beforeClick.call(this);
         this.activateTab(args.target);
         if(this.callbacks.afterClick) this.callbacks.afterClick.call(this);
@@ -222,6 +232,11 @@ TabControl.prototype = {
 	 */
 	resetContent: function(tabObj)
 	{
+        if (!tabObj)
+        {
+            return false;
+        }
+        
         var id = this.idParserCallback(tabObj.id);
         this.loadedContents[this.urlParserCallback(tabObj.down('a').href) + id] = false;
 		if ($(id))

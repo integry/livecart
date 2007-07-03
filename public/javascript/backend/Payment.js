@@ -81,20 +81,57 @@ Backend.Payment.AddOffline.prototype =
         this.form = Event.element(e);    
         this.event = e;
         new LiveCart.AjaxRequest(this.form, null, this.complete.bind(this));
+        Element.hide('transactionError');
     },
     
     complete: function(originalRequest)
     {
         Backend.Payment.hideOfflinePaymentForm(this.event);    
         
-        var responseHTML = originalRequest.responseText.evalJSON();
         var cont = this.form.up('div.tabPageContainer');
         
         // update totals
-        cont.down('.paymentSummary').innerHTML = responseHTML.totals;
+        cont.down('.paymentSummary').innerHTML = originalRequest.responseData.totals;
 
         var ul = cont.down('ul.transactions');
-        ul.innerHTML += responseHTML.transaction;
+        ul.innerHTML += originalRequest.responseData.transaction;
+        new Effect.Highlight(ul.lastChild, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
+    }
+}
+
+Backend.Payment.AddCreditCard = Class.create();
+Backend.Payment.AddCreditCard.prototype = 
+{
+    form: null,
+    
+    window: null,
+    
+    initialize: function(form, window)
+    {
+        this.form = form;
+        this.window = window;
+        new LiveCart.AjaxRequest(this.form, null, this.complete.bind(this));
+        Element.hide('transactionError');
+    },
+    
+    complete: function(originalRequest)
+    {        
+        if (originalRequest.responseData.error)
+        {
+            $('transactionErrorMsg').innerHTML = originalRequest.responseData.msg;
+            new Backend.SaveConfirmationMessage($('transactionError'));
+            return;
+        }        
+     
+        this.window.close();
+        
+        var cont = this.window.opener.document.getElementById('orderManagerContainer').down('div.tabPageContainer');     
+        
+        // update totals
+        cont.down('.paymentSummary').innerHTML = originalRequest.responseData.totals;
+
+        var ul = cont.down('ul.transactions');
+        ul.innerHTML += originalRequest.responseData.transaction;
         new Effect.Highlight(ul.lastChild, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
     }
 }
@@ -108,7 +145,8 @@ Backend.Payment.TransactionAction.prototype =
 	
 	initialize: function(transactionID, form)
 	{
-		this.id = transactionID;
+		Element.hide('transactionError');
+        this.id = transactionID;
 		this.form = form;
 		
 		if (confirm(this.form.down('span.confirmation').innerHTML))
@@ -118,12 +156,12 @@ Backend.Payment.TransactionAction.prototype =
 	},
 
     complete: function(originalRequest)
-    {
-        var responseHTML = originalRequest.responseText.evalJSON();
+    {   
+        var resp = originalRequest.responseData;
         
-        if (responseHTML.error)
+        if (resp.error)
         {
-            $('transactionErrorMsg').innerHTML = responseHTML.msg;
+            $('transactionErrorMsg').innerHTML = resp.msg;
             new Backend.SaveConfirmationMessage($('transactionError'));
             return;
         }
@@ -131,11 +169,11 @@ Backend.Payment.TransactionAction.prototype =
         var cont = this.form.up('div.tabPageContainer');
         
         // update totals
-        cont.down('.paymentSummary').innerHTML = responseHTML.totals;
+        cont.down('.paymentSummary').innerHTML = resp.totals;
         
         // update transaction
         var newli = document.createElement('ul');
-        newli.innerHTML = responseHTML.transaction;
+        newli.innerHTML = resp.transaction;
 		
 		var li = cont.down('ul.transactions').down('#transaction_' + this.id);
 		var newChild = newli.firstChild;

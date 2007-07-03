@@ -4,7 +4,7 @@
     <ul class="menu paymentMenu" style="margin: 0;">
     	
     	<li><a href="#addOfflinePayment" class="addOfflinePayment">{t _add_offline_payment}</a></li>
-    	<li><a href="{link controller=backend.payment action=ccForm id=$order.ID}" class="addCreditCardPayment">{t _add_credit_card_payment}</a></li>
+    	<li><a onclick="window.open('{link controller=backend.payment action=ccForm id=$order.ID}', 'creditCard', 'directories=no, height=440, width=500, resizable=yes, scrollbars=no, toolbar=no'); return false;" href="#" class="addCreditCardPayment">{t _add_credit_card_payment}</a></li>
     </ul>
     
     <div class="clear"></div>

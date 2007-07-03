@@ -5,9 +5,10 @@ ClassLoader::import("application.model.product.Product");
 /**
  * Represents a financial/monetary transaction, which can be:
  *    
- *      a) customers payment for ordered items
- *      b) capture transaction to request authorized funds
- *      c) void transaction to cancel an earlier transaction
+ *      a) customers payment for ordered items (sale)
+ *      b) authorization transaction to reserve funds on customers credit card
+ *      c) capture transaction to request authorized funds
+ *      d) void transaction to cancel an earlier transaction
  *
  * The transaction must be assigned to a concrete CustomerOrder
  *
@@ -59,6 +60,8 @@ class Transaction extends ActiveRecordModel
         $schema->registerField(new ARField("ccExpiryYear", ARInteger::instance()));
         $schema->registerField(new ARField("ccExpiryMonth", ARInteger::instance()));
         $schema->registerField(new ARField("ccLastDigits", ARInteger::instance()));
+		$schema->registerField(new ARField("ccType", ARVarchar::instance(40)));
+		$schema->registerField(new ARField("ccName", ARVarchar::instance(100)));
 		$schema->registerField(new ARField("comment", ARText::instance()));
 	}
 	
@@ -72,7 +75,14 @@ class Transaction extends ActiveRecordModel
             $instance->$field->set($result->$field->get());
         }
         
-        $instance->currency->set(Currency::getInstanceById($result->currency->get()));
+        if ($result->currency->get())
+        {
+            $instance->currency->set(Currency::getInstanceById($result->currency->get()));
+        }
+        else
+        {
+            $instance->currency->set($order->currency->get());
+        }
         
         // different currency than initial order currency?
         $amount = $result->amount->get();
@@ -339,7 +349,9 @@ class Transaction extends ActiveRecordModel
             $this->setAsCreditCard();
             $this->ccExpiryMonth->set($this->handler->getExpirationMonth());
             $this->ccExpiryYear->set($this->handler->getExpirationYear());
-                        
+            $this->ccType->set($this->handler->getCardType());
+            $this->ccName->set($this->handler->getDetails()->getName());
+                                                
             // only the last 5 digits of credit card number are stored
             $this->ccLastDigits->set(substr($this->handler->getCardNumber(), -5));
         }

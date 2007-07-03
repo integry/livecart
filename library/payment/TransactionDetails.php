@@ -72,6 +72,11 @@ class TransactionDetails
 	{
         return $this->data;
     }
+    
+    public function getName()
+    {
+        return $this->firstName->get() . ' ' . $this->lastName->get();
+    }
 }
 
 ?>

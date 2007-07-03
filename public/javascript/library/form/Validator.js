@@ -17,6 +17,12 @@ function validateForm(form)
 		{                
 			if (window[func.key] && !window[func.key](formElement, func.value.param)) // If element is not valid
 			{
+                // radio button group
+                if (!formElement.parentNode && formElement.length)
+                {
+                    formElement = formElement[formElement.length - 1];
+                }
+                
                 ActiveForm.prototype.setErrorMessage(formElement, func.value.error, focus);
 				isFormValid = false;
                 focus = false;
@@ -83,10 +89,27 @@ function trim(strValue)
 
 function IsNotEmptyCheck(element, params)
 {
-	if (element.getAttribute("type") == "checkbox") {
-		return element.checked;
-	}
-	return (element.value.length > 0);
+	// radio buttons
+    if (!element.parentNode && element.length)
+	{
+        for (k = 0; k < element.length; k++)
+        {
+            if (element[k].checked)
+            {
+                return true;
+            }
+        }   
+    }
+    
+    else
+    {
+        if (element.getAttribute("type") == "checkbox") 
+        {
+    		return element.checked;
+    	}
+    	
+    	return (element.value.length > 0);       
+    }
 }
 
 function MinLengthCheck(element, params)
