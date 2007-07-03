@@ -189,7 +189,7 @@ class CustomerOrderController extends StoreManagementController
 		
 		if(!empty($addressArray))
 	    {
-			if($addressArray['State']['ID'])
+			if(isset($addressArray['State']['ID']))
 			{
 			    $addressArray['stateID'] = $addressArray['State']['ID'];
 			}
@@ -615,7 +615,12 @@ class CustomerOrderController extends StoreManagementController
 	        $address->address2->set($this->request->getValue('address2'));
 	        $address->city->set($this->request->getValue('city'));
 	        $address->stateName->set($this->request->getValue('stateName'));
-	        $address->state->set($this->request->getValue('stateID'));
+	        
+	        if($this->request->getValue('stateID'))
+	        {
+	            $address->state->set(State::getInstanceByID((int)$this->request->getValue('stateID')));
+	        }
+	        
 	        $address->postalCode->set($this->request->getValue('postalCode'));
 	        $address->countryID->set($this->request->getValue('countryID'));
 	        $address->phone->set($this->request->getValue('phone'));

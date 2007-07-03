@@ -669,6 +669,7 @@ Backend.CustomerOrder.Address.prototype =
             );
       
             Form.State.backup(this.nodes.form);
+            this.stateID = this.nodes.form.elements.namedItem('stateID').value;
         }
         catch(e)
         {
@@ -732,15 +733,19 @@ Backend.CustomerOrder.Address.prototype =
         {
             orderIndicator.style.visibility = 'hidden';
         }
+        
         this.tabControl = TabControl.prototype.getInstance("orderManagerContainer", false);
     },
     
     cancelForm: function()
-    {      
+    {
+        var $this = this;
+        
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-		Form.restore(this.nodes.form);
+		Form.State.restore(this.nodes.form, ['existingUserAddress']);
+        this.stateSwitcher.updateStates(null, function(){ $this.nodes.form.elements.namedItem('stateID').value = $this.stateID; });
     },
-    
+
     submitForm: function()
     {
 		var self = this;
@@ -755,12 +760,13 @@ Backend.CustomerOrder.Address.prototype =
 		   }
 		});
     },
-	
+
 	afterSubmitForm: function(response)
 	{
 		if(response.status == 'success')
 		{
 			new Backend.SaveConfirmationMessage($('orderConfirmation'));
+            this.stateID = this.nodes.form.elements.namedItem('stateID').value;
 			Form.State.backup(this.nodes.form);
 		}
 		else
