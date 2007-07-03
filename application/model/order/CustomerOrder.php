@@ -319,7 +319,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         }
         
         $billingAddress = clone $this->billingAddress->get();
-        $billingAddress->save();
+        $billingAddress->save(); 
         $this->billingAddress->set($billingAddress);
 
         // move wish list items to a separate order

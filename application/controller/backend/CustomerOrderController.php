@@ -54,14 +54,30 @@ class CustomerOrderController extends StoreManagementController
         $orderArray = $order->toArray();
         if($order->isFinalized->get())
         {
-	        $response->setValue('shippingStates',  State::getStatesByCountry($order->shippingAddress->get()->countryID->get()));
-	        $response->setValue('billingStates',  State::getStatesByCountry($order->billingAddress->get()->countryID->get()));
+            $shippingStates = State::getStatesByCountry($order->shippingAddress->get()->countryID->get());
+            $billingStates = State::getStatesByCountry($order->billingAddress->get()->countryID->get());
+           
+            $billingStates[''] = '';
+            $shippingStates[''] = '';
+                        
+            asort($shippingStates);
+            asort($billingStates);
+            
+	        $response->setValue('shippingStates',  $shippingStates);
+	        $response->setValue('billingStates',  $billingStates);
         }
         else
         {
             $order->user->get()->loadAddresses();
-	        $response->setValue('shippingStates',  State::getStatesByCountry($order->user->get()->defaultShippingAddress->get()->userAddress->get()->countryID->get()));
-	        $response->setValue('billingStates',  State::getStatesByCountry($order->user->get()->defaultBillingAddress->get()->userAddress->get()->countryID->get()));
+            
+            $shippingStates = State::getStatesByCountry($order->user->get()->defaultShippingAddress->get()->userAddress->get()->countryID->get());
+            $shippingStates[''] = '';
+            
+            $billingStates = State::getStatesByCountry($order->user->get()->defaultBillingAddress->get()->userAddress->get()->countryID->get());
+            $billingStates[''] = '';
+            
+	        $response->setValue('shippingStates',  $shippingStates);
+	        $response->setValue('billingStates',  $billingStates);
         
 	        $orderArray['BillingAddress'] = $order->user->get()->defaultBillingAddress->get()->userAddress->get()->toArray();
 	        $orderArray['ShippingAddress'] = $order->user->get()->defaultShippingAddress->get()->userAddress->get()->toArray();
@@ -170,8 +186,14 @@ class CustomerOrderController extends StoreManagementController
 	public function createUserAddressForm($addressArray = array())
 	{
 		$form = new Form($this->createUserAddressFormValidator());	
-	    if(!empty($addressArray))
+		
+		if(!empty($addressArray))
 	    {
+			if($addressArray['State']['ID'])
+			{
+			    $addressArray['stateID'] = $addressArray['State']['ID'];
+			}
+			
 	        $form->setData($addressArray);
 	    }
 	    
@@ -229,7 +251,7 @@ class CustomerOrderController extends StoreManagementController
 	    $order->isCancelled->set(!$order->isCancelled->get());
 	    $order->save();
 	    
-	    return new JSONResponse(array('status' => 'success', 'value' => $this->translate($order->isCancelled->get() ? '_cancelled' : '_applied')));
+	    return new JSONResponse(array('status' => 'success', 'value' => $this->translate($order->isCancelled->get() ? '_cancelled' : '_active')));
 	}
 	
 	/**
@@ -538,12 +560,33 @@ class CustomerOrderController extends StoreManagementController
 		$order->capturedAmount->set(0);
 		$order->totalAmount->set(0);
 		$order->dateCompleted->set(new ARSerializableDateTime());
-		$order->billingAddress->set($user->defaultBillingAddress->get()->userAddress->get());
-		$order->shippingAddress->set($user->defaultShippingAddress->get()->userAddress->get());
 		$order->currency->set($this->store->getDefaultCurrency());
 		
-        
-        return $this->save($order);
+		if($user->defaultShippingAddress->get() && $user->defaultBillingAddress->get())
+		{
+		    $user->defaultBillingAddress->get()->load(array('UserAddress'));
+		    $user->defaultShippingAddress->get()->load(array('UserAddress'));
+		    
+		    $billingAddress = clone $user->defaultBillingAddress->get()->userAddress->get();
+		    $shippingAddress = clone $user->defaultShippingAddress->get()->userAddress->get();
+		    
+		    $billingAddress->save();
+		    $shippingAddress->save();
+		    
+			$order->billingAddress->set($billingAddress);
+			$order->shippingAddress->set($shippingAddress);
+		
+		    return $this->save($order);
+		}
+		else
+		{
+		    return new JSONResponse(array(
+				    'status' => 'failure', 
+				    'errors' => array(
+					    'noaddress' => $this->translate('_err_user_has_no_billing_or_shipping_address')
+				    )
+		    ));
+		}
     }
     
 	private function save(CustomerOrder $order)

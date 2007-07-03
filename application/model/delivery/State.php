@@ -40,6 +40,7 @@ class State extends ActiveRecordModel
         }     
         
         asort($states);
+        
         return $states;       
     }
     

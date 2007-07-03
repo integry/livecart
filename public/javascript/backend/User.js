@@ -67,15 +67,21 @@ Backend.UserGroup.prototype =
     {        
         var self = this;
     
-        Event.observe($("userGroups_add"), "click", function(e) {
-            Event.stop(e);
-            self.createNewGroup(); 
-        });
+        if($("userGroups_add"))
+        {
+            Event.observe($("userGroups_add"), "click", function(e) {
+                Event.stop(e);
+                self.createNewGroup(); 
+            });
+        }
         
-        Event.observe($("userGroups_delete"), "click", function(e) {
-            Event.stop(e);
-            self.deleteGroup();
-        });
+        if($("userGroups_delete"))
+        {
+            Event.observe($("userGroups_delete"), "click", function(e) {
+                Event.stop(e);
+                self.deleteGroup();
+            });
+        }
     },
     
     deleteGroup: function()

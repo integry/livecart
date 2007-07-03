@@ -55,12 +55,7 @@ Backend.CustomerOrder.prototype =
                 Backend.CustomerOrder.Links.selectCustomer, 
                 Backend.CustomerOrder.Messages.selecCustomerTitle, 
                 {
-                    onObjectSelect: function() { 
-                        console.info($this);
-                        $this.createNewOrder(this.objectID);
-
-                        Backend.SelectPopup.prototype.popup.close();
-                    }
+                    onObjectSelect: function() { $this.createNewOrder(this.objectID); }
                 }
             );
         });
@@ -78,6 +73,17 @@ Backend.CustomerOrder.prototype =
                 if('success' == response.status)
                 {
                     window.ordersActiveGrid[Backend.CustomerOrder.prototype.activeGroup].reloadGrid();
+                    
+                    new Backend.SaveConfirmationMessage($("orderCreatedConfirmation"));	
+                    new Backend.SelectPopup.prototype.popup.Backend.SaveConfirmationMessage(Backend.SelectPopup.prototype.popup.$("orderCreatedConfirmation")); // show message in the popup
+                }
+                else
+                {
+                     if(response.errors.noaddress)
+                     {	
+                         new Backend.SaveConfirmationMessage($("userHasNoAddressError")); // show error on the main page
+                         new Backend.SelectPopup.prototype.popup.Backend.SaveConfirmationMessage(Backend.SelectPopup.prototype.popup.$("userHasNoAddressError")); // show error in popup
+                     }
                 }
             } 
         });

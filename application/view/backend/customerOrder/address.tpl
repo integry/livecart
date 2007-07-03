@@ -110,7 +110,13 @@
     
     <p>
         <label>{t _state}</label>    
-        <label>{$order.stateName}</label>
+        <label>
+            {if $order.State.ID}
+                {$order.State.name}
+            {else}
+                {$order.stateName}
+            {/if}
+        </label>
     </p>    
     
     <p>

@@ -1,3 +1,16 @@
+# Errors
+_err_user_has_no_billing_or_shipping_address=User has no default billing or shipping address
+
+
+_new_order_has_been_successfully_created=New order has been successfully created
+_done_choosing_costumer=Done choosing costumer
+_all_users=All users
+_default_user_group=Default user group
+
+_active=Active
+
+
+
 # Tree
 _all_orders=All Orders
 _current_orders=Current
