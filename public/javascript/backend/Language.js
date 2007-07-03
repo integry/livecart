@@ -110,15 +110,8 @@ Backend.LanguageIndex.prototype =
 	},
 	
 	showAddForm: function()
-	{
-		Element.show($('langAddMenuLoadIndicator'));
-        
-        new Ajax.Request(
-		  			this.formUrl,
-					{
-					  onComplete: this.doShowAddForm
-					}	  										  
-					);
+	{       
+        new LiveCart.AjaxRequest(this.formUrl, 'langAddMenuLoadIndicator', this.doShowAddForm);
 	},
 	
 	doShowAddForm: function(request)
@@ -128,23 +121,9 @@ Backend.LanguageIndex.prototype =
 		slideForm('addLang', 'langPageMenu');
 	},
 	
-	add: function(langCode)
+	add: function(form)
 	{
-	  	// deactivate submit button and display feedback
-	  	button = $('addLang').getElementsByTagName('input')[0];
-	  	button.disabled = true;
-
-		$('addLangFeedback').style.display = 'inline';
-		  
-		new Ajax.Request(
-		  			this.addUrl,
-					{
-					  method: 'get',
-					  parameters: 'id=' + langCode,
-					  onComplete: this.addToList.bind(this)
-					}	  										  
-					);
-
+		new LiveCart.AjaxRequest(form, 'addLangFeedback', this.addToList.bind(this));
 	},
 	
 	addToList: function(originalRequest)

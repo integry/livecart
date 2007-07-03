@@ -39,8 +39,11 @@ LiveCart.AjaxRequest.prototype = {
             method = "post";
         }
 
-        this.indicatorContainerId = indicatorId;
-        Element.show(this.indicatorContainerId);
+        if (indicatorId)
+        {
+            this.indicatorContainerId = indicatorId;
+            Element.show(this.indicatorContainerId);            
+        }
         
         var updaterOptions = { method: method,
                                parameters: params,

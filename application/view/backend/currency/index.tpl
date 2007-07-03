@@ -24,12 +24,14 @@
 	<div class="sectionContainer maxHeight h--95">
 		<div id="tabManageContent" class="maxHeight tabPageContainer">
 		
-			<ul class="menu" id="currPageMenu" {denied role="currency.create"}style="display: none;"{/denied}>
+			<ul class="menu" id="currPageMenu" style="float: left; margin-bottom: 0px; {denied role="currency.create"}display: none;{/denied}">
 				<li>
 					<a href="#" onClick="curr.showAddForm(); return false;">{t _add_currency}</a>
-					<span class="progressIndicator" id="currAddMenuLoadIndicator"></span>
+					<span class="progressIndicator" id="currAddMenuLoadIndicator" style="display: none;"></span>
 				</li>
 			</ul>
+						
+			<div class="clear"></div>
 						
 			<div id="addCurr" class="slideForm"></div>
 					
@@ -72,7 +74,6 @@
 <script type="text/javascript">
 	curr = new Backend.Currency();
 	curr.setFormUrl('{/literal}{link controller=backend.currency action=addForm}{literal}');
-	curr.setAddUrl('{/literal}{link controller=backend.currency action=add}{literal}');
 	curr.setStatusUrl('{/literal}{link controller=backend.currency action=setEnabled}{literal}/');
     
     var messages = 

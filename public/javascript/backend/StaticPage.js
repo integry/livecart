@@ -118,7 +118,7 @@ Backend.StaticPage.prototype =
 	
 		var id = this.treeBrowser.getSelectedItemId();
 		var url = this.urls['delete'].replace('_id_', id);
-		new Ajax.Request(url, {onComplete: this.deleteCompleted.bind(this)});	
+		new LiveCart.AjaxRequest(url, null, this.deleteCompleted.bind(this));	
 		this.treeBrowser.showFeedback(id);		
 	},
 	
@@ -137,7 +137,7 @@ Backend.StaticPage.prototype =
 	{
 		var id = this.treeBrowser.getSelectedItemId();
 		var url = this.urls['moveup'].replace('_id_', id);
-		new Ajax.Request(url, {onComplete: this.moveCompleted.bind(this)});
+		new LiveCart.AjaxRequest(url, null, this.moveCompleted.bind(this));
 		this.treeBrowser.showFeedback(id);
 	},
 
@@ -145,7 +145,7 @@ Backend.StaticPage.prototype =
 	{
 		var id = this.treeBrowser.getSelectedItemId();
 		var url = this.urls['movedown'].replace('_id_', id);
-		new Ajax.Request(url, {onComplete: this.moveCompleted.bind(this)});
+		new LiveCart.AjaxRequest(url, null, this.moveCompleted.bind(this));
 		this.treeBrowser.showFeedback(id);
 	},
 		

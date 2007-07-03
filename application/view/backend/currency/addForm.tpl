@@ -1,9 +1,9 @@
 <div>	
-	<form onSubmit="curr.add(this.getElementsByTagName('select')[0].value); return false;" action="">
+	<form onSubmit="curr.add(this); return false;" action="{link controller=backend.currency action=add}">
 		<select name="id" class="select" id="addLang-sel">
 		   {html_options options=$currencies}
 		</select>
-		<img src="image/indicator.gif" id="addCurrIndicator" />
+		<span class="progressIndicator" id="addCurrIndicator" style="display: none;"></span>
 		<input type="submit" value="{t _add_curr_button}" name="sm" class="submit" />
 		<span>{t _or} </span>
 		<a href="#" class="cancel" onClick="restoreMenu('addCurr', 'currPageMenu'); return false;">{t _cancel}</a>

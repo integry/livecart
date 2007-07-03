@@ -24,14 +24,7 @@ Backend.Currency.prototype =
 
 	showAddForm: function()
 	{
-		Element.show($('currAddMenuLoadIndicator'));
-		new Ajax.Request(
-		  			this.formUrl,
-					{
-					  method: 'get',
-					  onComplete: this.doShowAddForm
-					}	  										  
-					);		  
+		new LiveCart.AjaxRequest(this.formUrl, 'currAddMenuLoadIndicator', this.doShowAddForm);		  
 	},
 	
 	doShowAddForm: function(request)
@@ -86,23 +79,13 @@ Backend.Currency.prototype =
 		return node;  
 	},
 	
-	add: function(code)
+	add: function(form)
 	{
 	  	// deactivate submit button and display feedback
 	  	button = $('addCurr').getElementsByTagName('input')[0];
 	  	button.disabled = true;
-
-		Element.show($('addCurrIndicator'));
 		  
-		new Ajax.Request(
-		  			this.addUrl,
-					{
-					  method: 'get',
-					  parameters: 'id=' + code,
-					  onComplete: this.addToList.bind(this)
-					}	  										  
-					);
-
+		new LiveCart.AjaxRequest(form, 'addCurrIndicator', this.addToList.bind(this));
 	},
 	
 	addToList: function(originalRequest)

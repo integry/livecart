@@ -16,7 +16,6 @@
     }
     {/literal}
 	lng.setFormUrl('{link controller=backend.language action=addForm}');
-	lng.setAddUrl('{link controller=backend.language action=add}');
 	lng.setStatusUrl("{link controller=backend.language action=setEnabled}/");
 	lng.setEditUrl("{link controller=backend.language action=edit}");
 	lng.setSortUrl("{link controller=backend.language action=saveorder}/");
