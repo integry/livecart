@@ -195,7 +195,7 @@
             { 
                 onObjectSelect: function() 
                 { 
-                    Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_downloadable_{$orderID}_{$downloadableShipment.ID}{literal}').addNewProductToShipment(this.productID, {/literal}{$orderID}{literal}); 
+                    Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_downloadable_{$orderID}_{$downloadableShipment.ID}{literal}').addNewProductToShipment(this.objectID, {/literal}{$orderID}{literal}); 
                 } 
             }); 
         }); 
@@ -255,7 +255,7 @@
                     new Backend.SelectPopup( Backend.OrderedItem.Links.addProduct, Backend.OrderedItem.Messages.selectProductTitle, { 
                         onObjectSelect: function() 
                         { 
-                            Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').addNewProductToShipment(this.productID, {/literal}{$orderID}{literal}); 
+                            Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').addNewProductToShipment(this.objectID, {/literal}{$orderID}{literal}); 
                         } 
                     }); 
                 }); 

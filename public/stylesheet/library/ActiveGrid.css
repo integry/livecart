@@ -1,6 +1,7 @@
 .activeGrid
 {
-    table-layout: fixed;    
+    table-layout: fixed;   
+	width: 100%;  
 }
 
 .activeGrid_loadIndicator
@@ -42,15 +43,15 @@
 
 .activeGrid .cell_cb
 {
-    padding: 0 !important;
+    padding: 0;
 }
 
 .activeGrid .cell_cb input
 {
-    width: auto !important;
-    float: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
+    width: auto;
+    float: none;
+    padding: 0;
+    margin: 0;
 }
 
 .activeGrid th input, .activeGrid th select
@@ -58,7 +59,7 @@
     width: 70%; 
     font-size: smaller; 
     font-weight: bold;
-    border: 1px solid #888888 !important;
+    border: 1px solid #888888;
     float: left;
 }
 
@@ -75,7 +76,6 @@
 .activeGrid th 
 {
 	text-align: left;
-    width: 15%;
 }
 
 .activeGrid th img
@@ -86,17 +86,17 @@
 .activeGrid_filter_blur
 {
     background-color: #EEEEEE;
-    border: 0 !important;
+    border: 0;
 }
 
 .activeGrid_filter_select
 {
-	font-weight: normal !important;	
+	font-weight: normal;	
 }
 
 .activeGrid th, .activeGrid td
 {
-  	height: 23px !important;
+  	height: 23px;
   	padding: 2px;
   	white-space: nowrap;
 }
@@ -117,18 +117,18 @@
 
 .activeGrid .headRow
 {
-    height: 23px !important;
+    height: 23px;
 }
 
 .activeGrid select, .activeGrid input
 {
-    margin: 0 !important;
+    margin: 0;
 }
 
 .activeGrid .headRow .cell_cb
 {
-    text-align: center !important;
-    padding: 0 !important;
+    text-align: center;
+    padding: 0;
 }
 
 .activeGrid .headRow .rangeTo

@@ -1,27 +1,33 @@
 /******************
     order list
 ******************/
-.cell_cb 
+#orderGroupsManagerContainer .cell_cb
 {
-    text-align:center !important;
-    width:4% !important;
+    width: 20px !important;
+    text-align: center !important;
+}
+
+#orderGroupsManagerContainer th.cell_CustomerOrder_ID2
+{
+    padding-left: 27px !important;
+    width: 5em !important;
+}
+
+#orderGroupsManagerContainer th.cell_CustomerOrder_ID2 input
+{
+    width: 4em !important;
+}
+
+.activeGrid th.cell_CustomerOrder_ID2
+{
+    padding-left: 27px !important;
+    width: 5em !important;
 }
 
 .cell_User_ID
 {
     display: none;   
 }
-
-.cell_CustomerOrder_viewOrder input, .column_CustomerOrder_viewOrder
-{
-    display: none;
-}
-
-.cell_CustomerOrder_viewOrder
-{
-    width: 70px;
-}
-
 /******************
     overview
 ******************/

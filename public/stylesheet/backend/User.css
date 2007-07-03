@@ -36,8 +36,8 @@
 
 .cell_cb 
 {
-    text-align:center !important;
-    width:4% !important;
+    text-align: left;
+    width:4%;
 }
 
 th.cell_User_email

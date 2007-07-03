@@ -55,7 +55,10 @@ Backend.CustomerOrder.prototype =
                 Backend.CustomerOrder.Links.selectCustomer, 
                 Backend.CustomerOrder.Messages.selecCustomerTitle, 
                 {
-                    onObjectSelect: function() { $this.createNewOrder(this.objectID); }
+                    onObjectSelect: function() { 
+                       console.info('asdad');
+                       $this.createNewOrder(this.objectID); 
+                    }
                 }
             );
         });
@@ -273,14 +276,14 @@ Backend.CustomerOrder.GridFormatter =
                  value + 
             '</a>';	
 		}
-		else if ('CustomerOrder.viewOrder' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
+		else if ('CustomerOrder.ID2' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
 		{
 		    value = 
             '<span>' + 
             '    <span class="progressIndicator" id="orderIndicator_' + id + '" style="visibility: hidden;"></span>' + 
             '</span>' + 
             '<a href="#edit" id="order_' + id + '" onclick="try { Backend.CustomerOrder.prototype.openOrder(' + id + ', event); } catch(e) { console.info(e) }  return false;">' + 
-                 'view order' + 
+                 + id + 
             '</a>'
         }
         else if('User.ID' == field)

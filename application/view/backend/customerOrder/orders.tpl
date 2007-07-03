@@ -69,7 +69,7 @@
     
 </fieldset>
 
-{activeGrid prefix="orders" id=$orderGroupID role="order.mass" controller="backend.customerOrder" action="lists" displayedColumns=$displayedColumns availableColumns=$availableColumns totalCount=$totalCount rowCount=17}
+{activeGrid prefix="orders" id=$orderGroupID role="order.mass" controller="backend.customerOrder" action="lists" displayedColumns=$displayedColumns availableColumns=$availableColumns totalCount=$totalCount rowCount=17 showID=true}
 
 </div>
 

@@ -320,7 +320,7 @@ Backend.Shipment.prototype =
                     Backend.OrderedItem.Messages.selectProductTitle, 
                     {
                         onObjectSelect: function() { 
-                            Backend.Shipment.prototype.getInstance('orderShipments_list_' + self.orderID + '_' + response.shipment.ID).addNewProductToShipment(this.objectID, self.orderID); 
+                           Backend.Shipment.prototype.getInstance('orderShipments_list_' + self.orderID + '_' + response.shipment.ID).addNewProductToShipment(this.objectID, self.orderID); 
                         }
                     }
                 );

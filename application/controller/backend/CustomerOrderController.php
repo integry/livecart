@@ -355,7 +355,23 @@ class CustomerOrderController extends StoreManagementController
 	        default: 
 	            return;
 	    }
-	   
+	    
+	    if($this->request->getValue('sort_col') == 'CustomerOrder.ID2')
+	    {
+	        $this->request->setValue('sort_col', 'CustomerOrder.ID');
+	    }
+	    
+	    if($filters = $this->request->getValue('filters'))
+	    {
+	        if(isset($filters['CustomerOrder.ID2']))
+	        {
+	            $filters['CustomerOrder.ID'] = $filters['CustomerOrder.ID2'];
+	            unset($filters['CustomerOrder.ID2']);
+	            $this->request->setValue('filters', $filters);
+	        }
+	    }
+	    
+	    
 	    $filter->setCondition($cond);
 	    new ActiveGrid($this->request, $filter);
 	    $orders = CustomerOrder::getRecordSet($filter, true)->toArray();
@@ -459,10 +475,9 @@ class CustomerOrderController extends StoreManagementController
 		$availableColumns = $this->getAvailableColumns();
 		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);	
 		
-		// User ID is always passed as the first column
 		$displayedColumns = array_merge(array('User.email' => 'text'), $displayedColumns);
 		$displayedColumns = array_merge(array('User.ID' => 'number'), $displayedColumns); // user id must go after user email here
-		$displayedColumns = array_merge(array('CustomerOrder.viewOrder' => 'text'), $displayedColumns);
+		$displayedColumns = array_merge(array('CustomerOrder.ID2' => 'numeric'), $displayedColumns);
 		$displayedColumns = array_merge(array('CustomerOrder.ID' => 'numeric'), $displayedColumns);
 				
 		// set field type as value
@@ -483,7 +498,7 @@ class CustomerOrderController extends StoreManagementController
 		
 		$availableColumns['User.email'] = 'text'; 
 		$availableColumns['User.ID'] = 'text'; 
-		$availableColumns['CustomerOrder.viewOrder'] = 'text'; 
+		$availableColumns['CustomerOrder.ID2'] = 'numeric'; 
 
 		foreach (ActiveRecordModel::getSchemaInstance('CustomerOrder')->getFieldList() as $field)
 		{
@@ -522,6 +537,8 @@ class CustomerOrderController extends StoreManagementController
 				'type' => $type
 			);	
 		}
+		
+		unset($availableColumns['CustomerOrder.isFinalized']);
 
 		return $availableColumns;
 	}

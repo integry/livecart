@@ -987,7 +987,7 @@ Backend.SelectPopup.prototype = {
     
     createPopup: function()
     {
-        Backend.SelectPopup.prototype.popup = window.open(this.link, this.title, 'resizable=1,toolbar=1,location=1,width=' + this.width + ',height=' + this.height);
+        Backend.SelectPopup.prototype.popup = window.open(this.link, this.title, 'resizable=1,width=' + this.width + ',height=' + this.height);
         Backend.SelectPopup.prototype.popup.focus();
                         
         Event.observe(window, 'unload', function() { Backend.SelectPopup.prototype.popup.close(); });
@@ -998,9 +998,6 @@ Backend.SelectPopup.prototype = {
     getSelectedObject: function(objectID)
     {
         this.objectID = objectID;
-        
-        var self = this;
-        setTimeout(function() { self.onObjectSelect.call(self); }, 100)
-        
+        this.onObjectSelect.call(this, objectID);
     }
 }

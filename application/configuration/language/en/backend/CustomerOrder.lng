@@ -38,6 +38,7 @@ _order_log=Log
 _order_report=Report
 
 # Grid columns
+CustomerOrder.ID2=Order ID
 CustomerOrder.status=Status
 CustomerOrder.totalAmount=Total cost
 CustomerOrder.capturedAmount=Captured amount

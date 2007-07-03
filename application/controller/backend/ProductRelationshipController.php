@@ -53,7 +53,7 @@ class ProductRelationshipController extends StoreManagementController
 	    $productID = (int)$this->request->getValue('id');
 	    $relatedProductID = (int)$this->request->getValue('relatedProductID');
 	    
-	    $relatedProduct = Product::getInstanceByID($relatedProductID);
+	    $relatedProduct = Product::getInstanceByID($relatedProductID, true, array('DefaultImage' => 'ProductImage'));
 	    $product = Product::getInstanceByID($productID);
 	    
 	    if(!$relatedProduct->isRelatedTo($product))
@@ -64,7 +64,7 @@ class ProductRelationshipController extends StoreManagementController
 		        $product->save();
 		        
 			    $response = new ActionResponse();
-			    $response->setValue('product', Product::getInstanceByID($relatedProductID, ActiveRecord::LOAD_DATA)->toArray());
+			    $response->setValue('product', $relatedProduct->toArray());
 			    return $response;
 	        }
 	        catch(ProductRelationshipException $e)
