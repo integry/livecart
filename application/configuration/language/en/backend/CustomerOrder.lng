@@ -55,6 +55,7 @@ User.email=E-mail
 User.firstName=First name
 User.lastName=Last name
 User.companyName=Company name
+User.fullName=Full name
 
 # Mass actions
 _with_selected=With selected

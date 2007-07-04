@@ -266,25 +266,30 @@ Backend.CustomerOrder.GridFormatter =
 	
 	formatValue: function(field, value, id)
 	{
-		if ('User.email' == field && Backend.CustomerOrder.prototype.usersMiscPermission)
-		{
-		    value = 
-            '<span>' + 
-            '    <span class="progressIndicator UserIndicator" id="orderUserIndicator_' + id + '_' + Backend.CustomerOrder.GridFormatter.lastUserID + '" style="visibility: hidden;"></span>' + 
-            '</span>' + 
-            '<a href="#edit" id="user_' + Backend.CustomerOrder.GridFormatter.lastUserID + '" onclick="Backend.UserGroup.prototype.openUser(' + Backend.CustomerOrder.GridFormatter.lastUserID + ', event); } catch(e) { console.info(e) }  return false;">' + 
-                 value + 
-            '</a>';	
-		}
-		else if ('CustomerOrder.ID2' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
+		if ('User.fullName' == field && Backend.CustomerOrder.prototype.usersMiscPermission)
 		{
 		    value = 
             '<span>' + 
             '    <span class="progressIndicator" id="orderIndicator_' + id + '" style="visibility: hidden;"></span>' + 
             '</span>' + 
-            '<a href="#edit" id="order_' + id + '" onclick="try { Backend.CustomerOrder.prototype.openOrder(' + id + ', event); } catch(e) { console.info(e) }  return false;">' + 
-                 + id + 
+            '<a href="#edit" id="order_' + id + '" onclick="try { Backend.CustomerOrder.prototype.openOrder(' + id + ', event); } catch(e) { console.info(e) }  return false;">' +
+                 value + 
             '</a>'
+		}
+// Email lead to user's page
+//      else if ('User.email' == field && Backend.CustomerOrder.prototype.usersMiscPermission)
+//		{
+//		    value = 
+//          '<span>' + 
+//          '    <span class="progressIndicator UserIndicator" id="orderUserIndicator_' + id + '_' + Backend.CustomerOrder.GridFormatter.lastUserID + '" style="visibility: hidden;"></span>' + 
+//          '</span>' + 
+//          '<a href="#edit" id="user_' + Backend.CustomerOrder.GridFormatter.lastUserID + '" onclick="Backend.UserGroup.prototype.openUser(' + Backend.CustomerOrder.GridFormatter.lastUserID + ', event); } catch(e) { console.info(e) }  return false;">' + 
+//              value + 
+//          '</a>';	
+//		}
+		else if ('CustomerOrder.ID2' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
+		{
+		    value = id;
         }
         else if('User.ID' == field)
         {

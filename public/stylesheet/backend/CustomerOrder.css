@@ -9,19 +9,17 @@
 
 #orderGroupsManagerContainer th.cell_CustomerOrder_ID2
 {
-    padding-left: 27px !important;
     width: 5em !important;
+}
+
+#orderGroupsManagerContainer td.cell_CustomerOrder_ID2
+{
+    text-align: center;
 }
 
 #orderGroupsManagerContainer th.cell_CustomerOrder_ID2 input
 {
     width: 4em !important;
-}
-
-.activeGrid th.cell_CustomerOrder_ID2
-{
-    padding-left: 27px !important;
-    width: 5em !important;
 }
 
 .cell_User_ID

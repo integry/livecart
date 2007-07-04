@@ -361,12 +361,27 @@ class CustomerOrderController extends StoreManagementController
 	        $this->request->setValue('sort_col', 'CustomerOrder.ID');
 	    }
 	    
+	    if($this->request->getValue('sort_col') == 'User.fullName')
+	    {
+	        $this->request->setValue('sort_col', 'User.lastName');
+	    }
+	    
 	    if($filters = $this->request->getValue('filters'))
 	    {
 	        if(isset($filters['CustomerOrder.ID2']))
 	        {
 	            $filters['CustomerOrder.ID'] = $filters['CustomerOrder.ID2'];
 	            unset($filters['CustomerOrder.ID2']);
+	            $this->request->setValue('filters', $filters);
+	        }
+	    }
+	    
+	    if($filters = $this->request->getValue('filters'))
+	    {
+	        if(isset($filters['User.fullName']))
+	        {
+	            $filters['User.lastName'] = $filters['User.fullName'];
+	            unset($filters['User.fullName']);
 	            $this->request->setValue('filters', $filters);
 	        }
 	    }
@@ -389,7 +404,6 @@ class CustomerOrderController extends StoreManagementController
                 {
 					$value = isset($order[$field]) ? $order[$field] : '';
                 }
-				
                 if ('User' == $class)
                 {
 					$value = isset($order['User'][$field]) ? $order['User'][$field] : '';
@@ -450,7 +464,8 @@ class CustomerOrderController extends StoreManagementController
             
             $data[] = $record;
         }
-    	
+        
+        
     	return new JSONResponse(array(
 	    	'columns' => array_keys($displayedColumns),
 	    	'totalCount' => count($orders),
@@ -477,6 +492,7 @@ class CustomerOrderController extends StoreManagementController
 		
 		$displayedColumns = array_merge(array('User.email' => 'text'), $displayedColumns);
 		$displayedColumns = array_merge(array('User.ID' => 'number'), $displayedColumns); // user id must go after user email here
+		$displayedColumns = array_merge(array('User.fullName' => 'text'), $displayedColumns);
 		$displayedColumns = array_merge(array('CustomerOrder.ID2' => 'numeric'), $displayedColumns);
 		$displayedColumns = array_merge(array('CustomerOrder.ID' => 'numeric'), $displayedColumns);
 				
@@ -499,6 +515,7 @@ class CustomerOrderController extends StoreManagementController
 		$availableColumns['User.email'] = 'text'; 
 		$availableColumns['User.ID'] = 'text'; 
 		$availableColumns['CustomerOrder.ID2'] = 'numeric'; 
+		$availableColumns['User.fullName'] = 'text'; 
 
 		foreach (ActiveRecordModel::getSchemaInstance('CustomerOrder')->getFieldList() as $field)
 		{
