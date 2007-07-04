@@ -10,10 +10,17 @@ ClassLoader::import("application.controller.BaseController");
 abstract class FrontendController extends BaseController 
 {	
 	protected $breadCrumb = array();
+
+	/**
+	 *	Session order instance
+	 */
+	protected $order;
 	
 	public function __construct($request)
 	{
         parent::__construct($request);
+
+		unset($this->order);
         
         // variables to append automatically to all URLs
         $autoAppend = array('currency', 'sort');
@@ -64,7 +71,7 @@ abstract class FrontendController extends BaseController
 	{	 	
 		ClassLoader::import('application.model.order.CustomerOrder');
 		$response = new BlockResponse();
-		$response->setValue('order', CustomerOrder::getInstance()->toArray()); 
+		$response->setValue('order', $this->order->toArray()); 
 		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode()));
 		return $response; 	
 	}
@@ -306,6 +313,25 @@ abstract class FrontendController extends BaseController
 		}  	
 	}
 
+	protected function __get($name)
+	{
+		if ($inst = parent::__get($name))
+		{
+			return $inst;
+		}
+		
+		switch ($name)
+	  	{
+		    case 'order':
+		    	ClassLoader::import('application.model.order.SessionOrder');
+				$this->order = SessionOrder::getOrder();
+				return $this->order;
+		    break;
+		    
+			default:
+		    break;
+		}
+	}
 }
 
 ?>

@@ -430,8 +430,12 @@ class Store
 
     public function getCardTypes(CreditCardPayment $handler)
     {
-		$types = array_keys($this->config->getValue(get_class($handler) . '_cardTypes'));
-		return array_combine($types, $types);
+		$key = get_class($handler) . '_cardTypes';
+		if ($this->config->isValueSet($key))
+		{
+			$types = array_keys($this->config->getValue($key));
+			return array_combine($types, $types);			
+		}
     }
 
 	/**

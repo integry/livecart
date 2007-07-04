@@ -253,7 +253,8 @@ class UserController extends FrontendController
             return new ActionRedirectResponse('user', 'login', array('query' => 'failed=true'));
         }
 
-        $user->setAsCurrentUser();
+        // login
+        SessionUser::setUser($user);
         
         // load the last un-finalized order by this user
         $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $user->getID()));
@@ -262,27 +263,26 @@ class UserController extends FrontendController
 		$f->setLimit(1);
         $s = ActiveRecordModel::getRecordSet('CustomerOrder', $f, ActiveRecordModel::LOAD_REFERENCES);
 
-		$sessionOrder = CustomerOrder::getInstance();	
-        
-        if (!$sessionOrder->user->get() || $sessionOrder->user->get()->getID() == $user->getID())
+        if (!$this->order->user->get() || $this->order->user->get()->getID() == $user->getID())
         {
             if ($s->size())
             {
     			$order = $s->get(0);
-    			if ($sessionOrder->getID() != $order->getID())
+    			if ($this->order->getID() != $order->getID())
     			{
     				$order->loadItems();
     				$order->merge($sessionOrder);
-    				$order->saveToSession();
-    				$sessionOrder->delete();
+    				$order->save();
+    				SessionOrder::setOrder($order);
+    				$this->order->delete();
     			}
     		}
     		else
     		{
-    			if ($sessionOrder->getID())
+    			if ($this->order->getID())
     			{
-    				$sessionOrder->user->set($user);
-    				$sessionOrder->saveToSession();
+    				$this->order->user->set($user);    				
+    				SessionOrder::save($this->order);
     			}
     		}            
         }  
@@ -326,8 +326,7 @@ class UserController extends FrontendController
 	
 	public function logout()
     {
-		$this->session->unsetValue('User');
-		$this->session->unsetValue('CustomerOrder');
+		SessionUser::destroy();
 		return new ActionRedirectResponse('index', 'index');
 	}
     
@@ -418,11 +417,10 @@ class UserController extends FrontendController
         $user->save();
         
         // set order addresses
-        $order = CustomerOrder::getInstance();
-        $order->billingAddress->set($billingAddress->userAddress->get());
-        $order->shippingAddress->set($shippingAddress->userAddress->get());
-        $order->user->set($user);
-        $order->save();
+        $this->order->billingAddress->set($billingAddress->userAddress->get());
+        $this->order->shippingAddress->set($shippingAddress->userAddress->get());
+        $this->order->user->set($user);
+        SessionOrder::save($this->order);
         
         $user->setAsCurrentUser();       
 

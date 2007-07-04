@@ -9,6 +9,11 @@ class TestCreditCard extends CreditCardPayment
 		return true;
 	}
 	
+	public static function isCardTypeNeeded()
+	{
+		return false;
+	}
+	
 	public static function isVoidable()
 	{
         return true;
@@ -30,7 +35,11 @@ class TestCreditCard extends CreditCardPayment
 	public function authorize()
 	{
 		$result = $this->process('');
-		$result->setTransactionType(TransactionResult::TYPE_AUTH);		
+		if ($result instanceof TransactionResult)
+		{
+			$result->setTransactionType(TransactionResult::TYPE_AUTH);					
+		}
+		
 		return $result;
 	}
 	
@@ -39,8 +48,12 @@ class TestCreditCard extends CreditCardPayment
 	 */
 	public function capture()
 	{
-		$result = $this->process('');
-		$result->setTransactionType(TransactionResult::TYPE_CAPTURE);
+		$result = $this->process('');		
+		if ($result instanceof TransactionResult)
+		{
+			$result->setTransactionType(TransactionResult::TYPE_CAPTURE);
+		}
+
 		return $result;
 	}
 	
@@ -50,7 +63,11 @@ class TestCreditCard extends CreditCardPayment
 	public function credit()
 	{
 		$result = $this->process('');
-		$result->setTransactionType(TransactionResult::TYPE_VOID);
+		if ($result instanceof TransactionResult)
+		{
+			$result->setTransactionType(TransactionResult::TYPE_VOID);
+		}
+		
 		return $result;
 	}
 
@@ -60,7 +77,10 @@ class TestCreditCard extends CreditCardPayment
 	public function void()
 	{
 		$result = $this->process('');
-		$result->setTransactionType(TransactionResult::TYPE_VOID);
+		if ($result instanceof TransactionResult)
+		{
+			$result->setTransactionType(TransactionResult::TYPE_VOID);
+		}
 		return $result;
 	}
 
@@ -70,7 +90,11 @@ class TestCreditCard extends CreditCardPayment
 	public function authorizeAndCapture()
 	{
 		$result = $this->process('Sale');
-		$result->setTransactionType(TransactionResult::TYPE_SALE);
+		if ($result instanceof TransactionResult)
+		{
+			$result->setTransactionType(TransactionResult::TYPE_SALE);
+		}
+		
 		return $result;
 	}
 	
@@ -78,7 +102,6 @@ class TestCreditCard extends CreditCardPayment
 	{
 		$ret = parent::toArray();
 		$ret['name'] = 'Test';
-		$ret['cardTypes'] = array(self::TYPE_VISA, self::TYPE_MC, self::TYPE_AMEX);
 		return $ret;
 	}
 	

@@ -91,8 +91,7 @@ class CheckoutController extends FrontendController
      */
     public function index()
     {
-        $user = User::getCurrentUser();
-        if ($user->isLoggedIn())
+        if ($this->user->isLoggedIn())
         {
             // try to go to payment page
             return new ActionRedirectResponse('checkout', 'pay');
@@ -117,18 +116,16 @@ class CheckoutController extends FrontendController
 			return new ActionRedirectResponse('user', 'addBillingAddress', array('returnPath' => true));
 		}
 		
-		$order = CustomerOrder::getInstance();
-        
-        if ($redirect = $this->validateOrder($order))
+        if ($redirect = $this->validateOrder($this->order))
         {
 			return $redirect;
 		}
         
-        $form = $this->buildAddressSelectorForm($order);
+        $form = $this->buildAddressSelectorForm($this->order);
         
-        if ($order->billingAddress->get())
+        if ($this->order->billingAddress->get())
         {
-            $form->setValue('billingAddress', $order->billingAddress->get()->getID());
+            $form->setValue('billingAddress', $this->order->billingAddress->get()->getID());
         }
         else
         {
@@ -138,9 +135,9 @@ class CheckoutController extends FrontendController
 			}
         }
         
-        if ($order->shippingAddress->get())
+        if ($this->order->shippingAddress->get())
         {
-            $form->setValue('shippingAddress', $order->shippingAddress->get()->getID());
+            $form->setValue('shippingAddress', $this->order->shippingAddress->get()->getID());
         }
         else
         {
@@ -166,9 +163,7 @@ class CheckoutController extends FrontendController
     {
         $this->user->loadAddresses();
         
-        $order = CustomerOrder::getInstance();        
-        
-        if (!$this->buildAddressSelectorValidator($order)->isValid())
+        if (!$this->buildAddressSelectorValidator($this->order)->isValid())
         {
             return new ActionRedirectResponse('checkout', 'selectAddress');
         }   
@@ -186,10 +181,10 @@ class CheckoutController extends FrontendController
             }
             
             $billing = $r->get(0);
-            $order->billingAddress->set($billing->userAddress->get());
+            $this->order->billingAddress->set($billing->userAddress->get());
                     
             // shipping address
-            if ($order->isShippingRequired())
+            if ($this->order->isShippingRequired())
             {
                 
                 if ($this->request->getValue('sameAsBilling'))
@@ -212,7 +207,7 @@ class CheckoutController extends FrontendController
                     $shipping = $r->get(0);
                 }
                 
-                $order->shippingAddress->set($shipping->userAddress->get());            
+                $this->order->shippingAddress->set($shipping->userAddress->get());            
             }
         }
         catch (Exception $e)
@@ -221,8 +216,7 @@ class CheckoutController extends FrontendController
             return new ActionRedirectResponse('checkout', 'selectAddress');
         }
         
-        $order->save();
-		$order->syncToSession();
+        SessionOrder::save($this->order);
 		
         return new ActionRedirectResponse('checkout', 'shipping');
     }
@@ -233,22 +227,20 @@ class CheckoutController extends FrontendController
      */   
     public function shipping()
     {
-        $order = CustomerOrder::getInstance();
-
-        if ($redirect = $this->validateOrder($order, self::STEP_SHIPPING))
+        if ($redirect = $this->validateOrder($this->order, self::STEP_SHIPPING))
         {
 			return $redirect;
 		}
         
-        if (!$order->isShippingRequired())
+        if (!$this->order->isShippingRequired())
         {
             return new ActionRedirectResponse('checkout', 'pay');
         }
         
-        $shipments = $order->getShipments();
+        $shipments = $this->order->getShipments();
 
         $form = $this->buildShippingForm($shipments);
-        $zone = $order->getDeliveryZone();
+        $zone = $this->order->getDeliveryZone();
         
         $needSelecting = false;
         
@@ -261,7 +253,11 @@ class CheckoutController extends FrontendController
             {
                 $needSelecting = true;
             }
-            else if ($shipmentRates->size() == 1)
+            else if (!$shipmentRates->size())
+            {
+             	return new ActionRedirectResponse('checkout', 'selectAddress');
+            }
+            else
             {
                 $shipment->setRateId($shipmentRates->get(0)->getServiceId());
             }
@@ -273,8 +269,7 @@ class CheckoutController extends FrontendController
             }
         }
 
-        $order->syncToSession();
-		$order->save();
+		SessionOrder::save($this->order);
 
         // only one shipping method for each shipment, so we pre-select it automatically
         if (!$needSelecting)
@@ -301,8 +296,7 @@ class CheckoutController extends FrontendController
      */           
     public function doSelectShippingMethod()
     {
-        $order = CustomerOrder::getInstance();
-        $shipments = $order->getShipments();
+        $shipments = $this->order->getShipments();
 
         if (!$this->buildShippingValidator($shipments)->isValid())
         {
@@ -327,7 +321,7 @@ class CheckoutController extends FrontendController
 		    }
 		}
         
-        $order->saveToSession();
+        SessionOrder::save($this->order);
         
         return new ActionRedirectResponse('checkout', 'pay');
     }
@@ -338,10 +332,9 @@ class CheckoutController extends FrontendController
      */   
     public function pay()
     {
-        $order = CustomerOrder::getInstance();    
-        $order->loadAll();	
+        $this->order->loadAll();	
         
-        if ($redirect = $this->validateOrder($order, self::STEP_PAYMENT))
+        if ($redirect = $this->validateOrder($this->order, self::STEP_PAYMENT))
         {
 			return $redirect;
 		}       
@@ -349,7 +342,7 @@ class CheckoutController extends FrontendController
         $currency = $this->request->getValue('currency', $this->store->getDefaultCurrencyCode());
                 
         $response = new ActionResponse();
-        $response->setValue('order', $order->toArray());
+        $response->setValue('order', $this->order->toArray());
 		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode())); 
         
         $ccHandler = $this->store->getCreditCardHandler();
@@ -378,9 +371,8 @@ class CheckoutController extends FrontendController
     public function payCreditCard()
 	{
         ClassLoader::import('application.model.order.*');        
-        $order = CustomerOrder::getInstance();		
 
-        if ($redirect = $this->validateOrder($order, self::STEP_PAYMENT))
+        if ($redirect = $this->validateOrder($this->order, self::STEP_PAYMENT))
         {
 			return $redirect;
 		}
@@ -391,7 +383,7 @@ class CheckoutController extends FrontendController
         }
         
         // already paid?
-        if ($order->isPaid->get())
+        if ($this->order->isPaid->get())
         {
             return new ActionRedirectResponse('checkout', 'completed');
         }
@@ -401,7 +393,7 @@ class CheckoutController extends FrontendController
         $currency = Currency::getValidInstanceById($this->getRequestCurrency());
         
         // set up transaction details
-        $transaction = new LiveCartTransaction($order, $currency);
+        $transaction = new LiveCartTransaction($this->order, $currency);
         
         // process payment
         $handler = $this->store->getCreditCardHandler($transaction);
@@ -423,17 +415,16 @@ class CheckoutController extends FrontendController
         
         if ($result instanceof TransactionResult)
         {
-            $order->isPaid->set(true);
-            $newOrder = $order->finalize($currency);
+            $this->order->isPaid->set(true);
+            $newOrder = $this->order->finalize($currency);
 			            
-            $this->session->setValue('completedOrderID', $order->getID());          
+            $this->session->setValue('completedOrderID', $this->order->getID());          
             
-            $transaction = Transaction::getNewInstance($order, $result);
+            $transaction = Transaction::getNewInstance($this->order, $result);
             $transaction->setHandler($handler);
             $transaction->save();
             
-            $this->session->unsetValue('CustomerOrder');
-            $newOrder->saveToSession();
+            SessionOrder::save($newOrder);
 
             $response = new ActionRedirectResponse('checkout', 'completed');
         }
@@ -517,7 +508,7 @@ class CheckoutController extends FrontendController
             {
                 if (!$shipment->getSelectedRate() && $shipment->isShippable())
                 {
-                    return new ActionRedirectResponse('checkout', 'shipping');
+					return new ActionRedirectResponse('checkout', 'shipping');
                 }
             }
         }

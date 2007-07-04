@@ -33,7 +33,7 @@ class ErrController extends BackendController
 			    $params['id'] = $id;
 			    return new ActionRedirectResponse('backend.err', 'index', $params);  
 			default:
-				print_r(User::getCurrentUser()->toArray());
+				print_r($this->user->toArray());
 		       	echo 'error ' . $this->request->getValue('id');
 		}
 	}

@@ -13,17 +13,16 @@ class OrderController extends FrontendController
     	$this->addBreadCrumb($this->translate('My Shopping Session'), $this->router->createUrlFromRoute($this->request->getValue('return')));
 		$this->addBreadCrumb($this->translate('My Shopping Basket'), '');
 		
-		$order = CustomerOrder::getInstance();
-		$order->loadItemData();		
+		$this->order->loadItemData();		
 		
         $currency = Currency::getValidInstanceByID($this->request->getValue('currency', $this->store->getDefaultCurrencyCode()), Currency::LOAD_DATA);                   
         		
 		$response = new ActionResponse();
-		$response->setValue('cart', $order->toArray());
-		$response->setValue('form', $this->buildCartForm($order));
+		$response->setValue('cart', $this->order->toArray());
+		$response->setValue('form', $this->buildCartForm($this->order));
 		$response->setValue('return', $this->request->getValue('return'));				
 		$response->setValue('currency', $currency->getID());
-		$response->setValue('orderTotal', $currency->getFormattedPrice($order->getSubTotal($currency)));
+		$response->setValue('orderTotal', $currency->getFormattedPrice($this->order->getSubTotal($currency)));
 		return $response;
     }   
     
@@ -32,16 +31,15 @@ class OrderController extends FrontendController
      */
     public function update()
     {
-		$order = CustomerOrder::getInstance();
-		foreach ($order->getOrderedItems() as $item)
+		foreach ($this->order->getOrderedItems() as $item)
 		{
 			if ($this->request->isValueSet('item_' . $item->getID()))
 			{
-				$order->updateCount($item, $this->request->getValue('item_' . $item->getID(), 0));
+				$this->order->updateCount($item, $this->request->getValue('item_' . $item->getID(), 0));
 			}
 		}		 
 		
-		$order->saveToSession();
+        SessionOrder::save($this->order);
 		
         return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));	      
     }
@@ -51,9 +49,8 @@ class OrderController extends FrontendController
      */
     public function delete()
     {
-		$order = CustomerOrder::getInstance();
-		$order->removeItem(ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->getValue('id')));
-		$order->saveToSession();
+		$this->order->removeItem(ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->getValue('id')));
+		SessionOrder::save($this->order);
 		
         return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));	      		
     }
@@ -71,34 +68,31 @@ class OrderController extends FrontendController
         
         $count = $this->request->getValue('count', 1);
 
-        $order = CustomerOrder::getInstance();
-        $order->addProduct($product, $count);
-        $order->mergeItems();
-        $order->saveToSession();
+        $this->order->addProduct($product, $count);
+        $this->order->mergeItems();
+        SessionOrder::save($this->order);
     
         return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));
     }
 
 	public function moveToCart()
 	{
-        $order = CustomerOrder::getInstance();
-        $item = $order->getItemByID($this->request->getValue('id'));
+        $item = $this->order->getItemByID($this->request->getValue('id'));
         $item->isSavedForLater->set(false);
-        $order->mergeItems();        
-        $order->resetShipments();
-        $order->saveToSession();
+        $this->order->mergeItems();        
+        $this->order->resetShipments();
+        SessionOrder::save($this->order);
 		
         return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));
 	}
 
 	public function moveToWishList()
 	{
-        $order = CustomerOrder::getInstance();
-        $item = $order->getItemByID($this->request->getValue('id'));
+        $item = $this->order->getItemByID($this->request->getValue('id'));
         $item->isSavedForLater->set(true);
-        $order->mergeItems();
-        $order->resetShipments();
-        $order->saveToSession();
+        $this->order->mergeItems();
+        $this->order->resetShipments();
+        SessionOrder::save($this->order);
 		
         return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));
 	}
@@ -110,10 +104,9 @@ class OrderController extends FrontendController
     {
         $product = Product::getInstanceByID($this->request->getValue('id'), Product::LOAD_DATA);
 
-        $order = CustomerOrder::getInstance();
-        $order->addToWishList($product);
-        $order->mergeItems();
-        $order->saveToSession();
+        $this->order->addToWishList($product);
+        $this->order->mergeItems();
+        SessionOrder::save($this->order);
               
         return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));
     }

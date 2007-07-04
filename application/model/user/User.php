@@ -67,19 +67,6 @@ class User extends ActiveRecordModel
         
         return $instance;
     }
-
-	/**
-	 * Get anonymous user
-
-	 * @return User
-	 */
-    public static function getAnonymousUser()
-    {
-        $instance = parent::getNewInstance(__CLASS__); 
-        $instance->setID(self::ANONYMOUS_USER_ID);   
-
-        return $instance;
-    }
     
     public function isAnonymous()
     {
@@ -127,37 +114,6 @@ class User extends ActiveRecordModel
 	}
     
 	/**
-	 * Get current user (from session)
-
-	 * @return User
-	 */
-    public static function getCurrentUser()
-    {
-        $session = new Session();
-        
-		$id = $session->getValue('User');
-    
-        if (!$id)
-        {
-            $user = self::getAnonymousUser();
-        }
-        else
-        {
-			try
-			{
-                $user = User::getInstanceById($id);                
-            }
-            catch (ARNotFoundException $e)
-            {
-                $session->unsetValue('User');
-                return self::getCurrentUser();
-            }
-		}
-        
-        return $user;
-    }
-    
-	/**
 	 * Gets an existing record instance (persisted on a database).
 	 * 
 	 * @param mixed $recordID
@@ -170,15 +126,6 @@ class User extends ActiveRecordModel
 	public static function getInstanceByID($recordID, $loadRecordData = true, $loadReferencedRecords = array('UserGroup'), $data = array())
 	{		    
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
-	}
-    
-	/**
-	 * Make this user a currently logged user
-	 */
-    public function setAsCurrentUser()
-    {
-		$session = new Session();
-		$session->setValue('User', $this->getID());
 	}
 
 	/**

@@ -7,9 +7,9 @@ class AccessStringParser
 	    
         if(preg_match_all('/([\w\.]+)(?:\(([\w\.]*)(?:\/(\w*))?\))?,?/', $accessString, $roles))
         {        
-	        ClassLoader::import('application.model.user.User');
+	        ClassLoader::import('application.model.user.SessionUser');
 	        
-	        $currentUser = User::getCurrentUser();
+	        $currentUser = SessionUser::getUser();
 			$controller = Controller::getCurrentController();
 	        $rolesParser = $controller->getRoles();
 	        

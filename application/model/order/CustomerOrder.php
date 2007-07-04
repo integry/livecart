@@ -1,5 +1,6 @@
 <?php
 
+ClassLoader::import("application.model.user.User");
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.OrderedItem");
 ClassLoader::import("application.model.order.Shipment");
@@ -19,10 +20,6 @@ class CustomerOrder extends ActiveRecordModel
 	
 	private $removedItems = array();
 	    
-    private static $instance = null;
-    
-    private $isSyncedToSession = false;
-    
     private $taxes = array();
     
     const STATUS_NEW = null;
@@ -71,55 +68,6 @@ class CustomerOrder extends ActiveRecordModel
         $instance = ActiveRecordModel::getInstanceById('CustomerOrder', $id, $loadData, $loadReferencedRecords);
         $instance->loadItems();
         return $instance;
-    }
-    
-    /**
-     *	Get instance from session
-     */
-	public static function getInstance()
-	{
-        $session = new Session();
-        
-		if (!self::$instance)
-        {
-            $id = $session->getValue('CustomerOrder');
-            if ($id)
-            {
-                try
-                {
-					$instance = CustomerOrder::getInstanceById($id, true);
-	                $instance->loadItems();
-					$instance->isSyncedToSession = true;					
-				}
-				catch (ARNotFoundException $e)
-				{
-					unset($instance);	
-				}
-            }
-
-            if (!isset($instance))
-            {
-                $instance = self::getNewInstance(User::getCurrentUser());
-                $instance->user->set(NULL);
-            }    
-
-            self::$instance = $instance;
-        }
-               
-        if (!self::$instance->user->get() && User::getCurrentUser()->getID() > 0)
-        {
-            self::$instance->user->set(User::getCurrentUser());
-            self::$instance->save();
-        }
-                
-        if (self::$instance->isFinalized->get())
-        {
-            self::$instance = null;
-            $session->unsetValue('CustomerOrder');
-            return self::getInstance();               
-        }
-                
-        return self::$instance;
     }
     
     /**
@@ -409,33 +357,7 @@ class CustomerOrder extends ActiveRecordModel
         {
             $this->delete();
         }
-
-        if ($this->isSyncedToSession)
-        {
-            $this->syncToSession();
-        }
     }    
-    
-    /**
-     *	Save to database and put in session
-     */
-	public function saveToSession()
-    {
-        $this->save();
-        $this->syncToSession();
-    }
-    
-    public function syncToSession()
-    {
-        $this->isSyncedToSession = true;
-        $session = new Session();
-		$session->setValue('CustomerOrder', $this->getID());
-    }
-    
-    public function isSyncedToSession()
-    {
-        return $this->isSyncedToSession;
-    }
     
     /**
      *  Merge OrderedItem instances of the same product into one instance

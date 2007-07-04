@@ -1,10 +1,8 @@
 <?php
 
-ClassLoader::import("framework.request.Session");
 ClassLoader::import("framework.controller.exception.*");
 ClassLoader::import("framework.controller.Controller");
 ClassLoader::import("framework.roles.*");
-ClassLoader::import("application.model.user.User");
 ClassLoader::import("application.helper.*");
 ClassLoader::import("application.model.system.Language");
 ClassLoader::import("application.model.system.Store");
@@ -85,8 +83,12 @@ abstract class BaseController extends Controller implements LCiTranslator
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
-		$this->session = new Session();
-		$this->user = User::getCurrentUser();
+
+		unset($this->locale);
+		unset($this->config);
+		unset($this->user);
+		unset($this->session);
+
 		$this->router = Router::getInstance();
 	    
 		// If backend controller is being used then we should 
@@ -111,18 +113,22 @@ abstract class BaseController extends Controller implements LCiTranslator
 	    
 	    $actionName = $this->request->getActionName();
 	    $role = $this->roles->getRole($actionName);
-	    $hasAccess = $this->user->hasAccess($role);
-		
-	    if (!$hasAccess) 
+	    
+		if ($role)
 		{
-			if($this->user->isAnonymous())
+			$hasAccess = $this->user->hasAccess($role);
+			
+		    if (!$hasAccess) 
 			{
-			    throw new UnauthorizedException($this);
+				if($this->user->isAnonymous())
+				{
+				    throw new UnauthorizedException($this);
+				}
+				else
+				{
+				    throw new ForbiddenException($this);
+				}			
 			}
-			else
-			{
-			    throw new ForbiddenException($this);
-			}			
 		}
 		
 		$this->configFiles = $this->getConfigFiles();
@@ -130,9 +136,6 @@ abstract class BaseController extends Controller implements LCiTranslator
 		$this->store = Store::getInstance();
 		$this->store->setRequestLanguage($this->request->getValue('requestLanguage'));				
 		$this->store->setConfigFiles($this->configFiles);
-
-		unset($this->locale);
-		unset($this->config);
 		
 		$localeCode = $this->store->getLocaleInstance()->getLocaleCode();
 		$defaultLanguageCode = $this->store->getDefaultLanguageCode();
@@ -150,16 +153,6 @@ abstract class BaseController extends Controller implements LCiTranslator
 	public function getRoles()
 	{
 	    return $this->roles;
-	}
-	
-	/**
-	 * Get logged user
-	 *
-	 * @return User
-	 */
-	public function getUser()
-	{
-	    return $this->user;
 	}
 	
 	/**
@@ -239,7 +232,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 		return $files;
 	}
 
-	private function __get($name)
+	protected function __get($name)
 	{
 		switch ($name)
 	  	{
@@ -253,6 +246,19 @@ abstract class BaseController extends Controller implements LCiTranslator
 				return $this->config;
 		    break;
 
+		    case 'user':
+		    	ClassLoader::import('application.model.user.SessionUser');
+		    	$sessionUser = new SessionUser();
+				$this->user = $sessionUser->getUser();
+				return $this->user;
+		    break;
+		    
+		    case 'session':
+		    	ClassLoader::import("framework.request.Session");
+		    	$this->session = new Session();
+				return $this->session;
+		    break;
+		    
 			default:
 		    break;
 		}
