@@ -69,22 +69,22 @@ Backend.DeliveryZone.prototype =
         
         if(confirm(Backend.DeliveryZone.prototype.Messages.confirmZoneDelete)) 
         {
-		    new Ajax.Request(
+		    new LiveCart.AjaxRequest(
     			Backend.DeliveryZone.prototype.Links.remove + '/' + Backend.DeliveryZone.prototype.activeZone,
-    			{
-				    onComplete: function(response) { 
-                        response = eval("(" + response.responseText + ")");
-                        if('success' == response.status)
+    			false,
+                function(response) 
+                { 
+                    response = eval("(" + response.responseText + ")");
+                    if('success' == response.status)
+                    {
+                        Backend.DeliveryZone.prototype.treeBrowser.deleteItem(Backend.DeliveryZone.prototype.activeZone, true);
+                        var firstId = false;
+                        if(firstId = parseInt(Backend.DeliveryZone.prototype.treeBrowser._globalIdStorage[1]))
                         {
-                            Backend.DeliveryZone.prototype.treeBrowser.deleteItem(Backend.DeliveryZone.prototype.activeZone, true);
-                            var firstId = false;
-                            if(firstId = parseInt(Backend.DeliveryZone.prototype.treeBrowser._globalIdStorage[1]))
-                            {
-                                Backend.DeliveryZone.prototype.treeBrowser.selectItem(firstId, true);
-                            }
+                            Backend.DeliveryZone.prototype.treeBrowser.selectItem(firstId, true);
                         }
                     }
-			    }
+                }
             );
         }
     },
@@ -93,13 +93,14 @@ Backend.DeliveryZone.prototype =
 	{
         var self = this;
         
-		new Ajax.Request(
-			Backend.DeliveryZone.prototype.Links.create,
-			{
-				method: 'post',
-				parameters: 'name=' + $("newZoneInput").value,
-				onComplete: function(response) { self.afterNewZoneAdded(eval("(" + response.responseText + ")")); }
-			});
+		new LiveCart.AjaxRequest(
+			Backend.DeliveryZone.prototype.Links.create + '?name=' + $("newZoneInput").value,
+			false,
+            function(response) 
+            { 
+                self.afterNewZoneAdded(eval("(" + response.responseText + ")")); 
+            }
+		);
 	},
 
 	afterNewZoneAdded: function(response)
@@ -364,11 +365,10 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
             }
             
             var activeList = ActiveList.prototype.getInstance(list);
-            new Ajax.Request(url + "/" + activeList.getRecordId(li),
-            {
-    			method: 'post',
-    			parameters: 'mask=' + li.down('input').value,
-                onSuccess: function(response) {
+            new LiveCart.AjaxRequest(
+                url + "/" + activeList.getRecordId(li) + '&mask=' + li.down('input').value,
+                false,
+                function(response) {
                     var response = eval('(' + response.responseText + ')');
                     
                     if(response.status == 'success') 
@@ -384,7 +384,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                         ActiveForm.prototype.setErrorMessage(input, response.errors.mask, true);
                     }
                 }
-            });
+            );
         }
         else
         {
@@ -464,11 +464,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         Backend.DeliveryZone.prototype.treeBrowser.setItemText(Backend.DeliveryZone.prototype.activeZone, this.nodes.name.value)
         
         var self = this;
-        new Ajax.Request(Backend.DeliveryZone.prototype.Links.save + "/" + this.zoneID,
-        {
-           method: 'post',
-           parameters: Form.serialize(self.nodes.form)
-        });
+        new LiveCart.AjaxRequest(self.nodes.form);
     
         this.saving = false;
     },
@@ -487,11 +483,10 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
     addNewCityMask: function(mask)
     {
         var self = this;
-        new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveCityMask + "/" + '?zoneID=' + this.zoneID,
-        {
-			method: 'post',
-			parameters: 'mask=' + mask.value,
-            onSuccess: function(response) 
+        new LiveCart.AjaxRequest(
+            Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveCityMask + "/" + '?zoneID=' + this.zoneID + '&mask=' + mask.value,
+            false,
+            function(response) 
             {
                 response = eval('(' + response.responseText + ')');
                 if('success' == response.status)
@@ -508,17 +503,16 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                     ActiveForm.prototype.setErrorMessage(mask, response.errors.mask, true);
                 }
             }
-        });
+        );
     },
     
     addNewZipMask: function(mask)
     {
         var self = this;
-        new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveZipMask + "/" + '?zoneID=' + this.zoneID,
-        {
-			method: 'post',
-			parameters: 'mask=' + mask.value,
-            onSuccess: function(response) 
+        new LiveCart.AjaxRequest (
+            Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveZipMask + "/" + '?zoneID=' + this.zoneID + '&mask=' + mask.value,
+            false,
+            function(response) 
             {
                 response = eval('(' + response.responseText + ')');
                 if('success' == response.status)
@@ -535,24 +529,23 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                     ActiveForm.prototype.setErrorMessage(mask, response.errors.mask, true);
                 }
             }
-        });
+        );
     },
     
     addNewAddressMask: function(mask)
     {
         var self = this;
-        new Ajax.Request(Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveAddressMask + "/" + '?zoneID=' + this.zoneID,
-        {
-			method: 'post',
-			parameters: 'mask=' + mask.value,
-            onSuccess: function(response) 
+        new LiveCart.AjaxRequest(
+            Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveAddressMask + "/" + '?zoneID=' + this.zoneID + '&mask=' + mask.value,
+            false,
+            function(response) 
             {
                 response = eval('(' + response.responseText + ')');
                 if('success' == response.status)
                 {
                     var activeList = ActiveList.prototype.getInstance(self.nodes.addressMasksList);
                     var li = activeList.addRecord(response.ID, '<span class="maskTitle">' + mask.value + '</span><input type="text" value="' + mask.value + '" style="display:none;" />');
-
+    
                     mask.value = '';
                     self.bindMask(li.down('input'));
                     ActiveForm.prototype.resetErrorMessage(mask);
@@ -562,7 +555,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                     ActiveForm.prototype.setErrorMessage(mask, response.errors.mask, true);
                 }
             }
-        });
+        );
     },
     
     sortSelect: function(select)
@@ -603,17 +596,15 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         });
         active.substr(0, active.length - 1);
         
+        
         var inactive = "";
         $A(inactiveSelect.options).each(function(option) {
             inactive += "inactive[]=" + option.value + "&";
         });
-        inactive.substr(0, active.length - 1)
-        console.info(active + inactive);
-        var self = this;
-        new Ajax.Request(url + "/" + this.zoneID, {
-            method: 'post',
-            parameters: active + inactive
-        });
+        inactive.substr(0, active.length - 1);
+        
+        
+        new LiveCart.AjaxRequest(url + "/" + this.zoneID + "?" + active + inactive);
     },
     
     addCountry: function()
@@ -854,14 +845,15 @@ Backend.DeliveryZone.ShippingService.prototype =
             ? Backend.DeliveryZone.ShippingService.prototype.Links.update
             : Backend.DeliveryZone.ShippingService.prototype.Links.create;
             
-        new Ajax.Request(action, {
-            method: 'post',
-            parameters: Form.serialize(this.nodes.form),
-            onSuccess: function(response) { 
+        new LiveCart.AjaxRequest(
+            action + '?' + Form.serialize(this.nodes.form),
+            false,
+            function(response) 
+            { 
                 var response = eval("(" + response.responseText + ")");
                 self.afterSave(response);     
             }
-        });
+        );
 
         console.info('save');
     },
@@ -1062,10 +1054,8 @@ Backend.DeliveryZone.ShippingRate.prototype =
             var rangeType = rangeTypeRadio.value;
             
             ActiveForm.prototype.resetErrorMessages(this.nodes.root.up('form'));
-            new Ajax.Request(Backend.DeliveryZone.ShippingService.prototype.Links.validateRates,
-            {
-                method: 'post',
-                parameters: 
+            new LiveCart.Request(
+                Backend.DeliveryZone.ShippingService.prototype.Links.validateRates + "?" + 
                     'rate__weightRangeStart=' + rate.weightRangeStart + '&' +
                     'rate__weightRangeEnd=' + rate.weightRangeEnd + '&' +
                     'rate__subtotalRangeStart=' + rate.subtotalRangeStart + '&' +
@@ -1075,11 +1065,13 @@ Backend.DeliveryZone.ShippingRate.prototype =
                     'rate__subtotalPercentCharge=' + rate.subtotalPercentCharge + '&' +
                     'rate__perKgCharge=' + rate.perKgCharge + '&' +
                     'rangeType=' + rangeType,
-                onSuccess: function(response) { 
+                false,
+                function(response) 
+                { 
                     var response = eval("(" + response.responseText + ")");
                     self.afterAdd(response, rate) 
                 }
-            });
+            );
             
 
             
@@ -1135,7 +1127,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
         {
             if(!this.rate.ID.match(/^new/))
             {
-                new Ajax.Request(Backend.DeliveryZone.ShippingService.prototype.Links.deleteRate + '/' + this.rate.ID);    
+                new LiveCart.AjaxRequest(Backend.DeliveryZone.ShippingService.prototype.Links.deleteRate + '/' + this.rate.ID);    
             }
             
             Element.remove(this.nodes.root);
@@ -1333,14 +1325,15 @@ Backend.DeliveryZone.TaxRate.prototype =
             ? Backend.DeliveryZone.TaxRate.prototype.Links.update
             : Backend.DeliveryZone.TaxRate.prototype.Links.create;
             
-        new Ajax.Request(action, {
-            method: 'post',
-            parameters: Form.serialize(this.nodes.form),
-            onSuccess: function(response) { 
+        new LiveCart.AjaxRequest(
+            action + '?' + Form.serialize(this.nodes.form),
+            false,
+            function(response) 
+            { 
                 var response = eval("(" + response.responseText + ")");
                 self.afterSave(response);     
             }
-        });
+        );
     },
     
     afterSave: function(response)

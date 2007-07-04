@@ -59,7 +59,10 @@ LiveCart.AjaxRequest.prototype = {
 
 	hideIndicator: function()
 	{
-		Element.hide(this.indicatorContainerId);
+        if(this.indicatorContainerId)
+        {
+		    Element.hide(this.indicatorContainerId);
+        }
 	},
 
 	showIndocator: function()

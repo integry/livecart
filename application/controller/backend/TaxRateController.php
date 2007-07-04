@@ -97,7 +97,7 @@ class TaxRateController extends StoreManagementController
 	 */
     public function update()
     {
-        $taxRate = TaxRate::getInstanceByID($taxRateID, true);
+        $taxRate = TaxRate::getInstanceByID((int)$this->request->getValue('taxRateID'), true);
         
         return $this->save($taxRate);
     }

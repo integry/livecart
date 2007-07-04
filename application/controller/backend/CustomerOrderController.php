@@ -572,7 +572,7 @@ class CustomerOrderController extends StoreManagementController
      */
     public function update()
     {
-        $order = CustomerOrder::getInstanceByID((int)$this->request->getValue('id'), true);
+        $order = CustomerOrder::getInstanceByID((int)$this->request->getValue('ID'), true);
 	    $status = (int)$this->request->getValue('status');
 		$order->status->set($status);
 	    $isCancelled = (int)$this->request->getValue('isCancelled') ? true : false;
@@ -630,7 +630,7 @@ class CustomerOrderController extends StoreManagementController
 		{
 			$order->save();
 			
-			return new JSONResponse(array('status' => 'success', 'order' => $order->toArray()));
+			return new JSONResponse(array('status' => 'success'));
 		}
 		else
 		{

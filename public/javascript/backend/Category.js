@@ -196,13 +196,11 @@ Backend.Category = {
 	{
         var self = this;
         
-		new Ajax.Request(
-			this.getUrlForNewNode(this.treeBrowser.getSelectedItemId()),
-			{
-				method: 'post',
-				parameters: '',
-				onComplete: function(response) { self.afterNewBranchCreated(response, self) }
-			});
+		new LiveCart.AjaxRequest(
+			this.getUrlForNewNode(this.treeBrowser.getSelectedItemId()), 
+            false, 
+            function(response) { self.afterNewBranchCreated(response, self) }
+		);
 	},
 
     moveCategory: function(categoryID, direction)
@@ -292,35 +290,18 @@ Backend.Category = {
 		var nodeIdToRemove = this.treeBrowser.getSelectedItemId();
 		var parentNodeId = this.treeBrowser.getParentId(nodeIdToRemove);
 
-		var ajaxRequest = new Ajax.Request(
-			this.getUrlForNodeRemoval(nodeIdToRemove),
-			{
-				method: 'post'
-			});
+		new LiveCart.AjaxRequest(this.getUrlForNodeRemoval(nodeIdToRemove));
 
 		this.treeBrowser.deleteItem(nodeIdToRemove, true);
 		this.activateCategory(parentNodeId);
 	},
 
 	reorderCategory: function(targetId, parentId, siblingNodeId)
-	{        
-     
-        var success = false;
-        new Ajax.Request(Backend.Category.getUrlForNodeReorder(targetId, parentId, Backend.Category.treeBrowser._reorderDirection),
-        {
-			method: 'get', 
-            asynchronous: false,
-			onComplete: function(response) 
-            { 
-                success = eval("(" + response.responseText + ")");   
-            }
-    	});
-        
-        if(!success) alert(Backend.Category.messages._reorder_failed);
-		return success;
-	}
-    
-,
+	{ 
+        new LiveCart.AjaxRequest(Backend.Category.getUrlForNodeReorder(targetId, parentId, Backend.Category.treeBrowser._reorderDirection));
+	
+        return true;
+    },
     
     /**
      * Insert array of categories into tree
@@ -620,16 +601,18 @@ CategoryTabControl.prototype = {
     {     
         if(categoryID != "" && !CategoryTabControl.prototype.tabItemsCounts[categoryID])
         {
-            new Ajax.Request(
-            Backend.Category.getUrlItemsInTabsCount(categoryID), 
-    		{
-    			method: 'get', 
-    			onComplete: function(response) { 
+            new LiveCart.AjaxRequest(
+                Backend.Category.getUrlItemsInTabsCount(categoryID), 
+        		false,
+        		function(response) 
+                { 
                     CategoryTabControl.prototype.tabItemsCounts[categoryID] = eval("(" + response.responseText + ")");
                     CategoryTabControl.prototype.setTabItemsCount(categoryID); 
                 }
-    		});
-        } else {
+            );
+        } 
+        else 
+        {
             CategoryTabControl.prototype.setTabItemsCount(categoryID); 
         }
     },

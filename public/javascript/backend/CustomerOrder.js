@@ -67,9 +67,10 @@ Backend.CustomerOrder.prototype =
     createNewOrder: function(customerID)
     {
         var $this = this;
-        new Ajax.Request(Backend.CustomerOrder.Links.createOrder + "?customerID=" + customerID, 
-        {
-            onSuccess: function(response)
+        new LiveCart.AjaxRequest(
+            Backend.CustomerOrder.Links.createOrder + "?customerID=" + customerID,
+            false,
+            function(response)
             {
                 response = eval("(" + response.responseText + ")");
                 
@@ -89,7 +90,7 @@ Backend.CustomerOrder.prototype =
                      }
                 }
             } 
-        });
+        );
     },
     
     craftTabUrl: function(url)
@@ -482,16 +483,18 @@ Backend.CustomerOrder.Editor.prototype =
     {
         var self = this;
         
-        new Ajax.Request(Backend.CustomerOrder.Editor.prototype.Links.switchCancelled + '/' + this.id, {
-           onSuccess: function(response) {
-               response = eval("(" + response.responseText + ")");
-               
-               if(response.status == 'success')
-               {
-                   self.nodes.isCanceled.update(response.value);
-               }
-           }    
-        });
+        new LiveCart.AjaxRequest(
+            Backend.CustomerOrder.Editor.prototype.Links.switchCancelled + '/' + this.id, 
+            false,
+            function(response) {
+	            response = eval("(" + response.responseText + ")");
+                
+	            if(response.status == 'success')
+	            {
+	                self.nodes.isCanceled.update(response.value);
+	            }
+	        }
+        );
     },
     
     updateStatus: function()
@@ -520,17 +523,18 @@ Backend.CustomerOrder.Editor.prototype =
     
     submitForm: function()
     {
-		var self = this;
-		new Ajax.Request(Backend.CustomerOrder.Editor.prototype.Links.update + "/" + this.id,
-		{
-           method: 'post',
-           parameters: Form.serialize(self.nodes.form),
-           onSuccess: function(responseJSON) {
+		var self = this;        
+        
+		new LiveCart.AjaxRequest(
+            self.nodes.form,
+            false,
+            function(responseJSON) 
+            {
 				ActiveForm.prototype.resetErrorMessages(self.nodes.form);
 				var responseObject = eval("(" + responseJSON.responseText + ")");
 				self.afterSubmitForm(responseObject);
-		   }
-		});
+		    }
+        );
     },
 	
 	afterSubmitForm: function(response)
@@ -547,7 +551,7 @@ Backend.CustomerOrder.Editor.prototype =
     
     removeEmptyShipmentsFromHTML: function()
     {
-        new Ajax.Request(Backend.Shipment.Links.removeEmptyShipments + "/" + this.id);
+        new LiveCart.AjaxRequest(Backend.Shipment.Links.removeEmptyShipments + "/" + this.id);
         
         var container = $("tabOrderProducts_" + this.id + "Content").down('.orderShipments');
         document.getElementsByClassName('orderShipmentsItem', container).each(function(itemList)
@@ -757,16 +761,16 @@ Backend.CustomerOrder.Address.prototype =
     submitForm: function()
     {
 		var self = this;
-		new Ajax.Request(this.nodes.form.action + "/" + this.nodes.form.elements.namedItem('ID').value,
-		{
-           method: 'post',
-           parameters: Form.serialize(self.nodes.form),
-           onSuccess: function(responseJSON) {
-				ActiveForm.prototype.resetErrorMessages(self.nodes.form);
-				var responseObject = eval("(" + responseJSON.responseText + ")");
-				self.afterSubmitForm(responseObject);
-		   }
-		});
+		new LiveCart.AjaxRequest(
+            this.nodes.form,
+    		false,
+            function(responseJSON) 
+            {
+                ActiveForm.prototype.resetErrorMessages(self.nodes.form);
+                var responseObject = eval("(" + responseJSON.responseText + ")");
+                self.afterSubmitForm(responseObject);
+            }
+		);
     },
 
 	afterSubmitForm: function(response)
