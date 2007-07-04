@@ -352,7 +352,7 @@ class CheckoutController extends FrontendController
         $response->setValue('order', $order->toArray());
 		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode())); 
         
-        $ccHandler = Store::getInstance()->getCreditCardHandler();
+        $ccHandler = $this->store->getCreditCardHandler();
         if ($ccHandler)
         {
 			$response->setValue('ccHandler', $ccHandler->toArray());
@@ -404,7 +404,7 @@ class CheckoutController extends FrontendController
         $transaction = new LiveCartTransaction($order, $currency);
         
         // process payment
-        $handler = Store::getInstance()->getCreditCardHandler($transaction);
+        $handler = $this->store->getCreditCardHandler($transaction);
         if ($this->request->isValueSet('ccType'))
         {
             $handler->setCardType($this->request->getValue('ccType'));
@@ -493,7 +493,7 @@ class CheckoutController extends FrontendController
 		{
 			if ($this->request->isValueSet('return'))
 			{
-				return new RedirectResponse(Router::getInstance()->createUrlFromRoute($this->request->getValue('return')));
+				return new RedirectResponse($this->router->createUrlFromRoute($this->request->getValue('return')));
 			}		
 			else
 			{

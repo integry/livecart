@@ -222,7 +222,7 @@ class UserController extends FrontendController
 		
 		if ($this->request->isValueSet('return'))
 		{
-			return new RedirectResponse(Router::getInstance()->createUrlFromRoute($this->request->getValue('return')));
+			return new RedirectResponse($this->router->createUrlFromRoute($this->request->getValue('return')));
 		}
 		else
 		{
@@ -326,8 +326,8 @@ class UserController extends FrontendController
 	
 	public function logout()
     {
-		Session::getInstance()->unsetValue('User');
-		Session::getInstance()->unsetValue('CustomerOrder');
+		$this->session->unsetValue('User');
+		$this->session->unsetValue('CustomerOrder');
 		return new ActionRedirectResponse('index', 'index');
 	}
     
@@ -464,7 +464,7 @@ class UserController extends FrontendController
     private function deleteAddress(UserAddressType $address)
     {
         $address->delete();
-        return new RedirectResponse(Router::getInstance()->createURLFromRoute($this->request->getValue('return')));      
+        return new RedirectResponse($this->router->createURLFromRoute($this->request->getValue('return')));      
     }
     
     /**
@@ -565,7 +565,7 @@ class UserController extends FrontendController
         if ($this->buildAddressValidator()->isValid())
         {
             $this->saveAddress($address);
-            return new RedirectResponse(Router::getInstance()->createURLFromRoute($this->request->getValue('return')));
+            return new RedirectResponse($this->router->createURLFromRoute($this->request->getValue('return')));
         }
         else
         {
@@ -714,7 +714,7 @@ class UserController extends FrontendController
             
             if ($this->request->getValue('return'))
             {
-                $response = new RedirectResponse(Router::getInstance()->createURLFromRoute($this->request->getValue('return')));    
+                $response = new RedirectResponse($this->router->createURLFromRoute($this->request->getValue('return')));    
             }
             else
             {
@@ -901,7 +901,7 @@ class UserController extends FrontendController
     	$validator->addCheck('email', new IsValidEmailCheck($this->translate('_err_invalid_email')));    
     	
         $emailErr = $this->translate($uniqueError);
-        $emailErr = str_replace('%1', Router::getInstance()->createUrl(array('controller' => 'user', 'action' => 'login', 'query' => array('email' => $this->request->getValue('email')))), $emailErr);
+        $emailErr = str_replace('%1', $this->router->createUrl(array('controller' => 'user', 'action' => 'login', 'query' => array('email' => $this->request->getValue('email')))), $emailErr);
         $validator->addCheck('email', new IsUniqueEmailCheck($emailErr));    
 	}    
 	

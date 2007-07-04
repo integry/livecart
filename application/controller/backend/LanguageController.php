@@ -359,7 +359,7 @@ class LanguageController extends StoreManagementController
 			}
 		}		
 				
-		$url = Router::getInstance()->createUrlFromRoute($returnRoute);
+		$url = $this->router->createUrlFromRoute($returnRoute);
 			
 		return new RedirectResponse($url);			
 	}
@@ -375,7 +375,7 @@ class LanguageController extends StoreManagementController
 	  	$file = base64_decode($this->request->getValue('file'));
 	  	$translation = $this->locale->translationManager()->getValue($file, $id);
 	  		  	
-	  	$defaultTranslation = Locale::getInstance(Store::getInstance()->getDefaultLanguageCode())->translationManager()->getValue($file, $id);
+	  	$defaultTranslation = Locale::getInstance($this->store->getDefaultLanguageCode())->translationManager()->getValue($file, $id);
 	  		  	
 	  	$response = new ActionResponse();
 	  	$response->setValue('id', $id);
@@ -394,13 +394,10 @@ class LanguageController extends StoreManagementController
 	 */
 	public function saveTranslationDialog()
 	{
-	  	$id = $this->request->getValue('id');
 	  	$file = $this->request->getValue('file');
-	  	$translation = $this->request->getValue('translation');
 
 	  	$this->locale->translationManager()->loadFile($file, true);
-
-		$res = $this->locale->translationManager()->updateValue($file, $id, $translation);
+		$this->locale->translationManager()->updateValue($file, $this->request->getValue('id'), $this->request->getValue('translation'));
 
 	  	return new RawResponse();
 	}

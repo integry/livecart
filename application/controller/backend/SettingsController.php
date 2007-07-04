@@ -22,7 +22,7 @@ class SettingsController extends StoreManagementController
 	public function index()
 	{
 		$response = new ActionResponse();
-		$response->setValue('categories', json_encode(Config::getInstance()->getTree()));
+		$response->setValue('categories', json_encode($this->config->getTree()));
 		return $response;
 	}
 	
@@ -31,42 +31,40 @@ class SettingsController extends StoreManagementController
 	 */
 	public function edit()
 	{
-		$c = Config::getInstance();
-		$c->updateSettings();
+		$this->config->updateSettings();
 		
-        $defLang = Store::getInstance()->getDefaultLanguageCode();
-		$languages = Store::getInstance()->getLanguageArray(Store::INCLUDE_DEFAULT);
+        $defLang = $this->store->getDefaultLanguageCode();
+		$languages = $this->store->getLanguageArray(Store::INCLUDE_DEFAULT);
 			
 		$sectionId = $this->request->getValue('id');						
-		$values = $c->getSettingsBySection($sectionId);
-		//print_r($values);
+		$values = $this->config->getSettingsBySection($sectionId);
 		
 		$form = $this->getForm($values);
 		$multiLingualValues = array();
 		
 		foreach ($values as $key => $value)
 		{
-    		if ($c->isMultiLingual($key) && 'string' == $value['type'])
+    		if ($this->config->isMultiLingual($key) && 'string' == $value['type'])
     		{
                 foreach ($languages as $lang)
                 {
-                    $form->setValue($key . ($lang != $defLang ? '_' . $lang : ''), $c->getValueByLang($key, $lang));    
+                    $form->setValue($key . ($lang != $defLang ? '_' . $lang : ''), $this->config->getValueByLang($key, $lang));    
                 }                
 
                 $multiLingualValues[$key] = true;
             }
             else
             {
-                $form->setValue($key, $c->getValue($key));	
+                $form->setValue($key, $this->config->getValue($key));	
     		}
 		}
 				
 		$response = new ActionResponse();
 		$response->set('form', $form);
-		$response->setValue('title', $this->translate($c->getSectionTitle($sectionId)));
+		$response->setValue('title', $this->translate($this->config->getSectionTitle($sectionId)));
 		$response->setValue('values', $values);
 		$response->setValue('id', $sectionId);
-		$response->setValue('layout', $c->getSectionLayout($sectionId));		
+		$response->setValue('layout', $this->config->getSectionLayout($sectionId));		
 		$response->setValue('multiLingualValues', $multiLingualValues);
 		return $response;	
 	}  		  
@@ -76,8 +74,7 @@ class SettingsController extends StoreManagementController
 	 */
 	public function save()
 	{				
-		$c = Config::getInstance();
-		$values = $c->getSettingsBySection($this->request->getValue('id'));
+		$values = $this->config->getSettingsBySection($this->request->getValue('id'));
 		$validator = $this->getValidator($values);
 		
 		if (!$validator->isValid())
@@ -86,28 +83,28 @@ class SettingsController extends StoreManagementController
 		}
 		else
 		{
-			$languages = Store::getInstance()->getLanguageArray();
-            $defLang = Store::getInstance()->getDefaultLanguageCode();
+			$languages = $this->store->getLanguageArray();
+            $defLang = $this->store->getDefaultLanguageCode();
                     
-            $c->setAutoSave(false);
+            $this->config->setAutoSave(false);
 			foreach ($values as $key => $value)
 			{
-				if ($c->isMultiLingual($key) && 'string' == $value['type'])
+				if ($this->config->isMultiLingual($key) && 'string' == $value['type'])
 				{
-                    $c->setValueByLang($key, $defLang, $this->request->getValue($key));
+                    $this->config->setValueByLang($key, $defLang, $this->request->getValue($key));
                     foreach ($languages as $lang)
                     {
-                        $c->setValueByLang($key, $lang, $this->request->getValue($key . '_' . $lang));
+                        $this->config->setValueByLang($key, $lang, $this->request->getValue($key . '_' . $lang));
                     }
                 }
                 else
                 {
-                    $c->setValue($key, $this->request->getValue($key, 'bool' == $value['type'] ? 0 : ''));		                    
+                    $this->config->setValue($key, $this->request->getValue($key, 'bool' == $value['type'] ? 0 : ''));		                    
                 }
 			}  	
 			
-			$c->save();
-			$c->setAutoSave(true);
+			$this->config->save();
+			$this->config->setAutoSave(true);
 			  
 			return new JSONResponse(array('success' => true));		  	
 		}
@@ -116,14 +113,13 @@ class SettingsController extends StoreManagementController
 	private function getForm($settings)
 	{
 		$form = new Form($this->getValidator($settings));
-		$c = Config::getInstance();
 		
 		// set multi-select values
 		foreach ($settings as $key => $value)
 		{
             if ('multi' == $value['extra'])
             {
-                $values = $c->getValue($value['title']);
+                $values = $this->config->getValue($value['title']);
 
                 foreach ($values as $key => $val)
                 {

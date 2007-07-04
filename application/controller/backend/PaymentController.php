@@ -132,7 +132,7 @@ class PaymentController extends StoreManagementController
         
 		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode())); 
         
-        $ccHandler = Store::getInstance()->getCreditCardHandler();
+        $ccHandler = $this->store->getCreditCardHandler();
         if ($ccHandler)
         {
 			$response->setValue('ccHandler', $ccHandler->toArray());
@@ -153,7 +153,7 @@ class PaymentController extends StoreManagementController
         $form->setValue('amount', $orderArray['amountDue']);
         $form->setValue('name', $order->user->get()->getName());
                 
-        $response->set('ccTypes', Store::getInstance()->getCardTypes($ccHandler));
+        $response->set('ccTypes', $this->store->getCardTypes($ccHandler));
         $response->set('order', $orderArray);
         $response->set('ccForm', $form);
         return $response;
@@ -173,7 +173,7 @@ class PaymentController extends StoreManagementController
         $transaction->amount->set($this->request->getValue('amount'));
         
         // process payment
-        $handler = Store::getInstance()->getCreditCardHandler($transaction);
+        $handler = $this->store->getCreditCardHandler($transaction);
         if ($this->request->isValueSet('ccType'))
         {
             $handler->setCardType($this->request->getValue('ccType'));

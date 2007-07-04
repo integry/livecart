@@ -71,12 +71,11 @@ abstract class FrontendController extends BaseController
 
 	protected function boxSwitchCurrencyBlock()
 	{
-        $router = Router::getInstance();
-        $returnRoute = $router->getRequestedRoute();
-		$returnRoute = $router->createUrlFromRoute($returnRoute);		
-		$returnRoute = Router::setUrlQueryParam($returnRoute, 'currency', '_curr_');
+        $returnRoute = $this->router->getRequestedRoute();
+		$returnRoute = $this->router->createUrlFromRoute($returnRoute);		
+		$returnRoute = $this->router->setUrlQueryParam($returnRoute, 'currency', '_curr_');
 
-        $currencies = Store::getInstance()->getCurrencySet();        
+        $currencies = $this->store->getCurrencySet();        
         $currencyArray = array();
         foreach ($currencies as $currency)
         {
@@ -92,11 +91,10 @@ abstract class FrontendController extends BaseController
 	protected function boxLanguageSelectBlock()
 	{
         $response = new BlockResponse();			  	
-        $languages = Store::getInstance()->getLanguageList()->toArray();
-        $current = Store::getInstance()->getLocaleCode();
+        $languages = $this->store->getLanguageList()->toArray();
+        $current = $this->store->getLocaleCode();
         
-        $router = Router::getInstance();
-        $returnRoute = $router->getRequestedRoute();
+        $returnRoute = $this->router->getRequestedRoute();
         
     	if ('/' == substr($returnRoute, 2, 1))
     	{
@@ -111,7 +109,7 @@ abstract class FrontendController extends BaseController
             }   
             else
             {
-                $languages[$key]['url'] = $router->createUrlFromRoute($lang['ID'] . '/' . $returnRoute);
+                $languages[$key]['url'] = $this->router->createUrlFromRoute($lang['ID'] . '/' . $returnRoute);
             }
         }
 
@@ -122,7 +120,7 @@ abstract class FrontendController extends BaseController
 	protected function boxBreadCrumbBlock()
 	{
 		array_unshift($this->breadCrumb, array('title' => $this->config->getValue('STORE_NAME'), 
-											   'url' => Router::getInstance()->createUrl(array('controller' => 'index', 'action' => 'index'))));
+											   'url' => $this->router->createUrl(array('controller' => 'index', 'action' => 'index'))));
 		$response = new BlockResponse();
 		$response->setValue('breadCrumb', $this->breadCrumb);
 		return $response;

@@ -101,7 +101,7 @@ class CategoryController extends FrontendController
 			$urlParams['filters'] = $this->request->getValue('filters');
 		}
 
-		$paginationUrl = str_replace('_000_', '_page_', Router::getInstance()->createURL($urlParams));
+		$paginationUrl = str_replace('_000_', '_page_', $this->router->createURL($urlParams));
 					
 		$filterChainHandle = $this->setUpBreadCrumbAndReturnFilterChainHandle($currentPage);					
 					        
@@ -224,7 +224,7 @@ class CategoryController extends FrontendController
         {
             $dir = array_pop(explode('_', $order)) == 'asc' ? 'ASC' : 'DESC';            
             $selectFilter->setOrder(new ARFieldHandle('ProductPrice', 'price'), $dir);  
-            $selectFilter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . Store::getInstance()->getDefaultCurrencyCode() . '")', 'ID');                       
+            $selectFilter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->store->getDefaultCurrencyCode() . '")', 'ID');                       
         }
         else if ('newest_arrivals' == $order)
         {

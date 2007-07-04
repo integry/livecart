@@ -10,7 +10,7 @@ class OrderController extends FrontendController
      */
     public function index()
     {
-    	$this->addBreadCrumb($this->translate('My Shopping Session'), Router::getInstance()->createUrlFromRoute($this->request->getValue('return')));
+    	$this->addBreadCrumb($this->translate('My Shopping Session'), $this->router->createUrlFromRoute($this->request->getValue('return')));
 		$this->addBreadCrumb($this->translate('My Shopping Basket'), '');
 		
 		$order = CustomerOrder::getInstance();

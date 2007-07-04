@@ -63,7 +63,7 @@ class ProductController extends StoreManagementController
 		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
 		$filter->setCondition($cond);
 
-        $filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . Store::getInstance()->getDefaultCurrencyCode() . '")', 'ID');
+        $filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->store->getDefaultCurrencyCode() . '")', 'ID');
 		
         new ActiveGrid($this->request, $filter);
         					
@@ -87,7 +87,7 @@ class ProductController extends StoreManagementController
         // load price data
     	ProductPrice::loadPricesForRecordSetArray($productArray);
 		
-    	$currency = Store::getInstance()->getDefaultCurrency()->getID();
+    	$currency = $this->store->getDefaultCurrency()->getID();
 
     	$data = array();
 
@@ -146,7 +146,7 @@ class ProductController extends StoreManagementController
 		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
 		
         $filter->setCondition($cond);
-        $filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . Store::getInstance()->getDefaultCurrencyCode() . '")', 'ID');
+        $filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->store->getDefaultCurrencyCode() . '")', 'ID');
 		
 		$filters = (array)json_decode($this->request->getValue('filters'));
 		$this->request->setValue('filters', $filters);
@@ -166,9 +166,9 @@ class ProductController extends StoreManagementController
 		else if ('price' == $act || 'inc_price' == $act)
 		{
 			ProductPrice::loadPricesForRecordSet($products);	
-			$baseCurrency = Store::getInstance()->getDefaultCurrencyCode();
+			$baseCurrency = $this->store->getDefaultCurrencyCode();
 			$price = $this->request->getValue($act);
-			$currencies = Store::getInstance()->getCurrencySet();
+			$currencies = $this->store->getCurrencySet();
 		}
 		else if ('addRelated' == $act)
 		{
@@ -599,7 +599,7 @@ class ProductController extends StoreManagementController
         	    else if(in_array($attr['SpecField']['type'], SpecField::getMultilanguageTypes()))
         	    {
         	        $productFormData["{$attr['SpecField']['fieldName']}"] = $attr['value'];
-        	        foreach(Store::getInstance()->getLanguageArray() as $lang)
+        	        foreach($this->store->getLanguageArray() as $lang)
         	        {
         	            if (isset($attr['value_' . $lang]))
         	            {
@@ -661,8 +661,8 @@ class ProductController extends StoreManagementController
 		$response->setValue("path", $product->category->get()->getPathNodeArray());
 		$response->setValue("multiLingualSpecFieldss", $multiLingualSpecFields);
 		$response->setValue("productTypes", $types);
-		$response->setValue("baseCurrency", Store::getInstance()->getDefaultCurrency()->getID());
-		$response->setValue("otherCurrencies", Store::getInstance()->getCurrencyArray(Store::EXCLUDE_DEFAULT_CURRENCY));
+		$response->setValue("baseCurrency", $this->store->getDefaultCurrency()->getID());
+		$response->setValue("otherCurrencies", $this->store->getCurrencyArray(Store::EXCLUDE_DEFAULT_CURRENCY));
 		$productData = $product->toArray();
 		if (empty($productData['ID']))
 		{

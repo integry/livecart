@@ -209,12 +209,12 @@ abstract class BaseController extends Controller implements LCiTranslator
 	
 	protected function getSessionData($key = '')
 	{
-		return Session::getInstance()->getControllerData($this, $key);
+		return $this->session->getControllerData($this, $key);
 	}
 	
 	protected function setSessionData($key, $value)
 	{
-		return Session::getInstance()->setControllerData($this, $key, $value);
+		return $this->session->setControllerData($this, $key, $value);
 	}
 
 	/**
