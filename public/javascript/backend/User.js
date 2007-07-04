@@ -95,39 +95,36 @@ Backend.UserGroup.prototype =
         
         if (confirm(Backend.UserGroup.prototype.Messages.confirmUserGroupRemove)) 
         {
-		    new Ajax.Request(
+		    new LiveCart.AjaxRequest(
     			Backend.User.Group.prototype.Links.removeNewGroup + '/' + Backend.UserGroup.prototype.activeGroup,
-    			{
-				    onComplete: function(response) { 
-                        response = eval("(" + response.responseText + ")");
-                        if('success' == response.status)
+    			false,
+                function(response) 
+                { 
+                    response = eval("(" + response.responseText + ")");
+                    if('success' == response.status)
+                    {
+                        Backend.UserGroup.prototype.treeBrowser.deleteItem(response.userGroup.ID, true);
+                        var firstId = false;
+                        if(firstId = parseInt(Backend.UserGroup.prototype.treeBrowser._globalIdStorage[1]))
                         {
-                            Backend.UserGroup.prototype.treeBrowser.deleteItem(response.userGroup.ID, true);
-                            var firstId = false;
-                            if(firstId = parseInt(Backend.UserGroup.prototype.treeBrowser._globalIdStorage[1]))
-                            {
-                                Backend.UserGroup.prototype.treeBrowser.selectItem(firstId, true);
-                            }
+                            Backend.UserGroup.prototype.treeBrowser.selectItem(firstId, true);
                         }
                     }
-			    }
+                }
             );
         }
     },
 
 	createNewGroup: function()
 	{
-        var self = this;
-        
-		new Ajax.Request(
+		new LiveCart.AjaxRequest(
             Backend.User.Group.prototype.Links.createNewUserGroup,
-			{
-				method: 'post',
-				parameters: '',
-				onComplete: function(response) { 
-                    self.afterGroupAdded(response, self)
-                 }
-			});
+            false,
+            function(response) 
+            { 
+                this.afterGroupAdded(response, this)
+            }
+		).bind(this);
 	},
     
 	afterGroupAdded: function(response, self)
@@ -457,19 +454,18 @@ Backend.User.Group.prototype =
         
     },
     
-    save: function() {
-        
-        var self = this;
-        new Ajax.Request(Backend.User.Group.prototype.Links.save + "/" + this.nodes.ID.value,
-        {
-           method: 'post',
-           parameters: Form.serialize(self.nodes.form),
-           onSuccess: function(response)
+    save: function() 
+    {   
+        this.nodes.form.action = Backend.User.Group.prototype.Links.save + "/" + this.nodes.ID.value
+        new LiveCart.AjaxRequest(
+           this.nodes.form,
+           false,
+           function(response)
            {
                response = eval("(" + response.responseText + ")");
-               self.afterSave(response);
-           }
-        });
+               this.afterSave(response);
+           }.bind(this)
+        );
     
         this.saving = false;
     },
@@ -605,17 +601,16 @@ Backend.User.Editor.prototype =
     
     submitForm: function()
     {
-		var self = this;
-		new Ajax.Request(Backend.User.Editor.prototype.Links.update + "/" + this.id,
-		{
-           method: 'post',
-           parameters: Form.serialize(self.nodes.form),
-           onSuccess: function(responseJSON) {
-				ActiveForm.prototype.resetErrorMessages(self.nodes.form);
+        this.nodes.form.action = Backend.User.Editor.prototype.Links.update + "/" + this.id;
+		new LiveCart.AjaxRequest(
+            this.nodes.form,
+            false,
+            function(responseJSON) {
+				ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 				var responseObject = eval("(" + responseJSON.responseText + ")");
-				self.afterSubmitForm(responseObject);
-		   }
-		});
+				this.afterSubmitForm(responseObject);
+		   }.bind(this)
+		);
     },
 	
 	afterSubmitForm: function(response)
@@ -718,17 +713,17 @@ Backend.User.Add.prototype =
             return false; 
         } 
         
-		var self = this;
-		new Ajax.Request(Backend.User.Editor.prototype.Links.create,
-		{
-           method: 'post',
-           parameters: Form.serialize(self.nodes.form),
-           onSuccess: function(responseJSON) {
-				ActiveForm.prototype.resetErrorMessages(self.nodes.form);
-				var responseObject = eval("(" + responseJSON.responseText + ")");
-				self.afterSubmitForm(responseObject);
-		   }
-		});
+        this.nodes.form.action = Backend.User.Editor.prototype.Links.create;
+		new LiveCart.AjaxRequest(
+            this.nodes.form,
+            false,
+            function(responseJSON) 
+            {
+             	ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+             	var responseObject = eval("(" + responseJSON.responseText + ")");
+             	this.afterSubmitForm(responseObject);
+		    }.bind(this)
+		);
     },
 	
 	afterSubmitForm: function(response)
@@ -780,15 +775,16 @@ Backend.User.StateSwitcher.prototype =
     {
         var url = this.url + '/?country=' + this.countrySelector.value;
         var self = this;
-        new Ajax.Request(url, 
-        {
-            onComplete: function(response) 
+        new LiveCart.AjaxRequest(
+            url, 
+        	false,
+            function(response) 
             {
                 var states = $H(eval('(' + response.responseText + ')'));
                 
                 self.updateStatesComplete(states, onComplete)
             }    
-        });  
+        );  
         
         var indicator = document.getElementsByClassName('progressIndicator', this.countrySelector.parentNode);
         if (indicator.length > 0)

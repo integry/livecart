@@ -658,14 +658,14 @@ Backend.Product.Editor.prototype =
         {
             if(!this.tabControl.restoreAllCounters(this.id))
             {
-                new Ajax.Request(Backend.Product.Editor.prototype.links.countTabsItems + "/" + this.id, 
+                new LiveCart.AjaxRequest(
+                    Backend.Product.Editor.prototype.links.countTabsItems + "/" + this.id, 
+                    false,
+                    function(reply) 
                     {
-                       method: 'get',
-                       onSuccess: function(reply) {
-                           var counters = eval("(" + reply.responseText + ")")
-                           this.tabControl.setAllCounters(counters, this.id);
-                       }.bind(this)
-                    }
+                        var counters = eval("(" + reply.responseText + ")");
+                        this.tabControl.setAllCounters(counters, this.id);
+                    }.bind(this)
                 );
             }
         } 

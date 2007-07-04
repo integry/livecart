@@ -939,17 +939,13 @@ Backend.Filter.prototype = {
         
         var self = this;
         
-        var action = this.id.match(/new/) 
-            ? Backend.Filter.prototype.links.createGroup
-            : Backend.Filter.prototype.links.updateGroup; 
-        new Ajax.Request(
-            action,
+        this.nodes.form.action = this.id.match(/new/) ? Backend.Filter.prototype.links.createGroup : Backend.Filter.prototype.links.updateGroup; 
+        new LiveCart.AjaxRequest(
+            this.nodes.form,
+            false,
+            function(param) 
             {
-                method: this.nodes.form.method,
-                postBody: Form.serialize(this.nodes.form),
-                onComplete: function(param) {
-                    self.afterSaveAction(param.responseText)
-                }
+                self.afterSaveAction(param.responseText) 
             }
         );  
     },
@@ -1008,7 +1004,7 @@ Backend.Filter.prototype = {
                 {
                     var filters = document.getElementsByClassName(this.cssPrefix + "default_filter_li", this.nodes.filtersDefaultGroup);
                     filterCount = filters.length;
-                    if(filters[filterCount - 1].down(".filter_name").down("input").value == '') filterCount--;
+                    if(filters[filterCount - 1] && filters[filterCount - 1].down(".filter_name").down("input").value == '') filterCount--;
                 }
                 else
                 {

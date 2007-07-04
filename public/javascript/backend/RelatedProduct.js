@@ -24,9 +24,10 @@ Backend.RelatedProduct = {
     addProductToList: function(productID, relatedProductID)
     {
         var self = this;
-        new Ajax.Request(this.links.related + "/?relatedProductID=" + relatedProductID , {
-           method: 'get',
-           onSuccess: function(response) {
+        new LiveCart.AjaxRequest(
+            this.links.related + "/?relatedProductID=" + relatedProductID,
+            false,
+            function(response) {
                 var evaluatedResponse;
                 try
                 {
@@ -59,8 +60,8 @@ Backend.RelatedProduct = {
                     }
                 }
                
-           }
-        });
+            }
+        );
     }
 };
 
@@ -133,19 +134,18 @@ Backend.RelatedProduct.Group.Model.prototype = {
         this.languages = $H(languages);
     },
     
-    save: function(serializedData, onSaveResponse)
+    save: function(form, onSaveResponse)
     {
         if(true == this.saving) return;
         this.saving = true;
         this.serverError = false;
         
         var self = this;
-        var action = this.isNew ? Backend.RelatedProduct.Group.Links.create : Backend.RelatedProduct.Group.Links.update;
-        new Ajax.Request(action,
-        {
-            method: 'post',
-            postBody: serializedData,
-            onSuccess: function(response) 
+        form.action = this.isNew ? Backend.RelatedProduct.Group.Links.create : Backend.RelatedProduct.Group.Links.update;
+        new LiveCart.AjaxRequest(
+            form,
+            false,
+            function(response) 
             {
                 var responseHash = {};
                 try 
@@ -160,7 +160,7 @@ Backend.RelatedProduct.Group.Model.prototype = {
                 
                 self.afterSave(responseHash, onSaveResponse);
             }
-        });
+        );
     },
     
     afterSave: function(response, onSaveResponse)
@@ -250,7 +250,7 @@ Backend.RelatedProduct.Group.Controller.prototype = {
     {        
         var self = this;
         ActiveForm.prototype.resetErrorMessages(this.view.nodes.root);
-        this.model.save(Form.serialize(this.view.nodes.root), function(status) { 
+        this.model.save(this.view.nodes.root.down('form'), function(status) { 
             self.onSaveResponse(status) ;
         });
     },

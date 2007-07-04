@@ -94,14 +94,12 @@ Backend.Category = {
     
     initTreeControls: function() 
     {
-        var self = this;
-        
         if($("categoryBrowserActions"))
         {
             Event.observe($("createNewCategoryLink"), "click", function(e) {
                 Event.stop(e);
                 Backend.Category.createNewBranch(); 
-            });
+            }.bind(this));
             
             Event.observe($("removeCategoryLink"), "click", function(e) {
                 Event.stop(e);
@@ -109,17 +107,17 @@ Backend.Category = {
                 {
                     Backend.Category.removeBranch(); 
                 }
-            });
+            }.bind(this));
             
             Event.observe($("moveCategoryUp"), "click", function(e) {
                 Event.stop(e);
-                self.moveCategory(Backend.Category.activeCategoryId, 'up_strict');
-            });
+                this.moveCategory(Backend.Category.activeCategoryId, 'up_strict');
+            }.bind(this));
             
             Event.observe($("moveCategoryDown"), "click", function(e) {
                 Event.stop(e);
-                self.moveCategory(Backend.Category.activeCategoryId, 'down_strict');
-            });
+                this.moveCategory(Backend.Category.activeCategoryId, 'down_strict');
+            }.bind(this));
         }
     },
 
@@ -194,12 +192,10 @@ Backend.Category = {
 
 	createNewBranch: function()
 	{
-        var self = this;
-        
 		new LiveCart.AjaxRequest(
 			this.getUrlForNewNode(this.treeBrowser.getSelectedItemId()), 
             false, 
-            function(response) { self.afterNewBranchCreated(response, self) }
+            function(response) { this.afterNewBranchCreated(response) }.bind(this)
 		);
 	},
 
@@ -221,13 +217,13 @@ Backend.Category = {
 
     },
 
-	afterNewBranchCreated: function(response, self)
+	afterNewBranchCreated: function(response)
 	{
         var newCategory = eval('(' + response.responseText + ')');
         var parentCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
-        self.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
+        this.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
 
-        self.activateCategory(newCategory.ID);
+        this.activateCategory(newCategory.ID);
         Backend.ajaxNav.add('cat_' + newCategory.ID + '#tabMainDetails');
 	},
 

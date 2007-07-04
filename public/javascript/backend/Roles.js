@@ -133,15 +133,15 @@ Backend.Roles.prototype =
         Event.stop(event);
         
         var self = this;
-        new Ajax.Request(this.nodes.form.action, {
-           method: 'post',
-           parameters: 'checked=' + this.rolesTree.getAllChecked() + '&unchecked=' + this.rolesTree.getAllUnchecked(),
-           onSuccess: function(response)
-           {
+        new LiveCart.AjaxRequest(
+            this.nodes.form.action + '?checked=' + this.rolesTree.getAllChecked() + '&unchecked=' + this.rolesTree.getAllUnchecked(),
+            false,
+            function(response)
+            {
                response = eval("(" + response.responseText + ")");
                self.afterSave(response);
-           }
-        });
+            }
+        );
     },
     
     afterSave: function(response)

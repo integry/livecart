@@ -10,6 +10,7 @@ class ErrController extends BackendController
 	    $response->setValue('id', $this->request->getValue('id'));
 	    $response->setValue('ajax', $this->request->getValue('ajax'));
 	    $response->setValue('description', HTTPStatusException::getCodeMeaning($this->request->getValue('id')));
+	    
 	    return $response;
 	}
 	

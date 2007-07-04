@@ -20,10 +20,8 @@ Backend.DeliveryZone.prototype =
 		Backend.DeliveryZone.prototype.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
 		Backend.DeliveryZone.prototype.treeBrowser.setOnClickHandler(this.activateZone.bind(this));
         
-        var self = this;
-        Event.observe($("newZoneInputButton"), 'click', function(e){ Event.stop(e); self.addNewZone(); })
+        Event.observe($("newZoneInputButton"), 'click', function(e){ Event.stop(e); this.addNewZone(); }.bind(this))
         
-
 		Backend.DeliveryZone.prototype.treeBrowser.showFeedback = 
 			function(itemId) 
 			{
@@ -55,12 +53,11 @@ Backend.DeliveryZone.prototype =
 
     bindEvents: function()
     {
-        var self = this;
         Event.observe($("deliveryZone_delete"), 'click', function(e) 
         {
             Event.stop(e);
-            self.deleteZone();
-        });
+            this.deleteZone();
+        }.bind(this));
     },
     
     deleteZone: function()
@@ -91,15 +88,13 @@ Backend.DeliveryZone.prototype =
     
 	addNewZone: function()
 	{
-        var self = this;
-        
 		new LiveCart.AjaxRequest(
 			Backend.DeliveryZone.prototype.Links.create + '?name=' + $("newZoneInput").value,
 			false,
             function(response) 
             { 
-                self.afterNewZoneAdded(eval("(" + response.responseText + ")")); 
-            }
+                this.afterNewZoneAdded(eval("(" + response.responseText + ")")); 
+            }.bind(this)
 		);
 	},
 
@@ -122,20 +117,17 @@ Backend.DeliveryZone.prototype =
 	
 	insertTreeBranch: function(treeBranch, rootId)
 	{
-		var self = this;
-        
-            
         $A(treeBranch).each(function(node)
 		{
             Backend.DeliveryZone.prototype.treeBrowser.insertNewItem(rootId, node.ID, node.name, null, 0, 0, 0, '', 1);
-            self.treeBrowser.showItemSign(node.ID, 0);
+            this.treeBrowser.showItemSign(node.ID, 0);
             var zone = document.getElementsByClassName("standartTreeRow", $("deliveryZoneBrowser")).last();
             zone.id = 'zone_' + node.ID;
             zone.onclick = function()
             {
                 Backend.DeliveryZone.prototype.treeBrowser.selectItem(node.ID, true);
             }
-		});
+		}.bind(this));
 	},
 	
 	activateZone: function(id)
@@ -376,14 +368,13 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                         input.style.display = 'none';
                         title.style.display = 'inline';
                         title.update(input.value);
-                        console.info(self);
                         ActiveForm.prototype.resetErrorMessage(input);
                     }
                     else
                     {
                         ActiveForm.prototype.setErrorMessage(input, response.errors.mask, true);
                     }
-                }
+                }.bind(self)
             );
         }
         else
@@ -395,83 +386,77 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
     
     bindEvents: function()
     {
-        var self = this;
-        
-        Event.observe(this.nodes.addCountryButton, 'click', function(e) { Event.stop(e); self.addCountry(); });
-        Event.observe(this.nodes.removeCountryButton, 'click', function(e) { Event.stop(e); self.removeCountry(); });
-        Event.observe(this.nodes.addStateButton, 'click', function(e) { Event.stop(e); self.addState(); });
-        Event.observe(this.nodes.form, 'submit', function(e) { Event.stop(e); self.save(); });
-        Event.observe(this.nodes.removeStateButton, 'click', function(e) { Event.stop(e); self.removeState(); });
-        Event.observe(this.nodes.cityMaskNewButton, 'click', function(e) { Event.stop(e); self.addNewCityMask(self.nodes.cityMaskNew); });
-        Event.observe(this.nodes.zipMaskNewButton, 'click', function(e) { Event.stop(e); self.addNewZipMask(self.nodes.zipMaskNew); });
-        Event.observe(this.nodes.addressMaskNewButton, 'click', function(e) { Event.stop(e); self.addNewAddressMask(self.nodes.addressMaskNew); });
+        Event.observe(this.nodes.addCountryButton, 'click', function(e) { Event.stop(e); this.addCountry(); }.bind(this));
+        Event.observe(this.nodes.removeCountryButton, 'click', function(e) { Event.stop(e); this.removeCountry(); }.bind(this));
+        Event.observe(this.nodes.addStateButton, 'click', function(e) { Event.stop(e); this.addState(); }.bind(this));
+        Event.observe(this.nodes.form, 'submit', function(e) { Event.stop(e); this.save(); }.bind(this));
+        Event.observe(this.nodes.removeStateButton, 'click', function(e) { Event.stop(e); this.removeState(); }.bind(this));
+        Event.observe(this.nodes.cityMaskNewButton, 'click', function(e) { Event.stop(e); this.addNewCityMask(this.nodes.cityMaskNew); }.bind(this));
+        Event.observe(this.nodes.zipMaskNewButton, 'click', function(e) { Event.stop(e); this.addNewZipMask(this.nodes.zipMaskNew); }.bind(this));
+        Event.observe(this.nodes.addressMaskNewButton, 'click', function(e) { Event.stop(e); this.addNewAddressMask(this.nodes.addressMaskNew); }.bind(this));
 
         $A(this.nodes.zonesAndUnions).each(function(zoneOrUnion) {
-            Event.observe(zoneOrUnion, 'click', function(e) { Event.stop(e); self.selectZoneOrUnion(this.hash.substring(0,1) == '#' ? this.hash.substring(1) : this.hash); });
-        });
+            Event.observe(zoneOrUnion, 'click', function(e) { Event.stop(e); this.selectZoneOrUnion(this.hash.substring(0,1) == '#' ? this.hash.substring(1) : this.hash); }.bind(this));
+        }.bind(this));
         
         $A(this.nodes.observedElements).each(function(element) {
-            Event.observe(element, 'blur', function(e) { self.save() });
-        });
+            Event.observe(element, 'blur', function(e) { this.save() }.bind(this));
+        }.bind(this));
         
         Event.observe(this.nodes.addressMaskNew, 'keyup', function(e) 
         {
            if(KeyboardEvent.prototype.init(e).isEnter()) 
            {
                if(!e.target) e.target = e.srcElement;
-               self.addNewAddressMask(e.target);
+               this.addNewAddressMask(e.target);
            }
-        });
+        }.bind(this));
         
         Event.observe(this.nodes.zipMaskNew, 'keyup', function(e) 
         {
            if(KeyboardEvent.prototype.init(e).isEnter()) 
            {
                if(!e.target) e.target = e.srcElement;
-               self.addNewZipMask(e.target);
+               this.addNewZipMask(e.target);
            }
-        });
+        }.bind(this));
         
         Event.observe(this.nodes.cityMaskNew, 'keyup', function(e) 
         {
            if(KeyboardEvent.prototype.init(e).isEnter()) 
            {
                if(!e.target) e.target = e.srcElement;
-               self.addNewCityMask(e.target);
+               this.addNewCityMask(e.target);
            }
-        });
+        }.bind(this));
         
         document.getElementsByClassName(this.prefix + 'mask').each(function(mask) {
-           self.bindMask(mask);
-        });
+           this.bindMask(mask);
+        }.bind(this));
     },
     
     bindMask: function(mask) 
     {
-       var self = this;
        Event.observe(mask, 'keyup', function(e) 
        { 
            if(KeyboardEvent.prototype.init(e).isEnter()) {
                if(!e.target) e.target = e.srcElement;
-               self.toggleMask(e.target.up('li'));
+               this.toggleMask(e.target.up('li'));
            }
-       });
+       }.bind(this));
     },
     
     save: function() {
         this.saving = true;
         
-        Backend.DeliveryZone.prototype.treeBrowser.setItemText(Backend.DeliveryZone.prototype.activeZone, this.nodes.name.value)
-        
-        var self = this;
-        new LiveCart.AjaxRequest(self.nodes.form);
+        Backend.DeliveryZone.prototype.treeBrowser.setItemText(Backend.DeliveryZone.prototype.activeZone, this.nodes.name.value)        
+        new LiveCart.AjaxRequest(this.nodes.form);
     
         this.saving = false;
     },
     
     selectZoneOrUnion: function(regionName) 
     {
-        var self = this;
         includedCountriesCodes = Backend.DeliveryZone.countryGroups[regionName];
         
         $A(this.nodes.inactiveCountries.options).each(function(option) 
@@ -482,7 +467,6 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
     
     addNewCityMask: function(mask)
     {
-        var self = this;
         new LiveCart.AjaxRequest(
             Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveCityMask + "/" + '?zoneID=' + this.zoneID + '&mask=' + mask.value,
             false,
@@ -491,24 +475,23 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                 response = eval('(' + response.responseText + ')');
                 if('success' == response.status)
                 {
-                    var activeList = ActiveList.prototype.getInstance(self.nodes.cityMasksList);
+                    var activeList = ActiveList.prototype.getInstance(this.nodes.cityMasksList);
                     var li = activeList.addRecord(response.ID, '<span class="maskTitle">' + mask.value + '</span><input type="text" value="' + mask.value + '" style="display:none;" />');
 
                     mask.value = '';
-                    self.bindMask(li.down('input'));
+                    this.bindMask(li.down('input'));
                     ActiveForm.prototype.resetErrorMessage(mask);
                 }
                 else
                 {
                     ActiveForm.prototype.setErrorMessage(mask, response.errors.mask, true);
                 }
-            }
+            }.bind(this)
         );
     },
     
     addNewZipMask: function(mask)
     {
-        var self = this;
         new LiveCart.AjaxRequest (
             Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveZipMask + "/" + '?zoneID=' + this.zoneID + '&mask=' + mask.value,
             false,
@@ -517,24 +500,23 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                 response = eval('(' + response.responseText + ')');
                 if('success' == response.status)
                 {
-                    var activeList = ActiveList.prototype.getInstance(self.nodes.zipMasksList);
+                    var activeList = ActiveList.prototype.getInstance(this.nodes.zipMasksList);
                     var li = activeList.addRecord(response.ID, '<span class="maskTitle">' + mask.value + '</span><input type="text" value="' + mask.value + '" style="display:none;" />');
 
                     mask.value = '';
-                    self.bindMask(li.down('input'));
+                    this.bindMask(li.down('input'));
                     ActiveForm.prototype.resetErrorMessage(mask);
                 }
                 else
                 {
                     ActiveForm.prototype.setErrorMessage(mask, response.errors.mask, true);
                 }
-            }
+            }.bind(this)
         );
     },
     
     addNewAddressMask: function(mask)
     {
-        var self = this;
         new LiveCart.AjaxRequest(
             Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveAddressMask + "/" + '?zoneID=' + this.zoneID + '&mask=' + mask.value,
             false,
@@ -543,18 +525,18 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                 response = eval('(' + response.responseText + ')');
                 if('success' == response.status)
                 {
-                    var activeList = ActiveList.prototype.getInstance(self.nodes.addressMasksList);
+                    var activeList = ActiveList.prototype.getInstance(this.nodes.addressMasksList);
                     var li = activeList.addRecord(response.ID, '<span class="maskTitle">' + mask.value + '</span><input type="text" value="' + mask.value + '" style="display:none;" />');
     
                     mask.value = '';
-                    self.bindMask(li.down('input'));
+                    this.bindMask(li.down('input'));
                     ActiveForm.prototype.resetErrorMessage(mask);
                 }
                 else
                 {
                     ActiveForm.prototype.setErrorMessage(mask, response.errors.mask, true);
                 }
-            }
+            }.bind(this)
         );
     },
     
@@ -569,7 +551,6 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
     
     moveSelectedOptions: function(fromSelect, toSelect)
     {
-        var self = this;
         fromSelectOptions = fromSelect.options;
         toSelectOptions = toSelect.options;
         
@@ -768,23 +749,22 @@ Backend.DeliveryZone.ShippingService.prototype =
     
     bindEvents: function()
     {
-       var self = this;
-       Event.observe(this.nodes.save, 'click', function(e) { Event.stop(e); self.save(); });
-       Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel(); });
+       Event.observe(this.nodes.save, 'click', function(e) { Event.stop(e); this.save(); }.bind(this));
+       Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
        if(!this.service.ID)
        {
-           Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); self.cancel(); });
+           Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
        }
        
        $A(this.nodes.rangeTypes).each(function(radio)
        {
-           Event.observe(radio, 'click', function(e) { self.rangeTypeChanged(); });
-       });
+           Event.observe(radio, 'click', function(e) { this.rangeTypeChanged(); }.bind(this));
+       }.bind(this));
        
        $A(document.getElementsByClassName('shippingService_rateFloatValue', this.nodes.root)).each(function(input)
        {
-           Event.observe(input, "keyup", function(e){ NumericFilter(this); });
-       });
+           Event.observe(input, "keyup", function(e){ NumericFilter(this); }.bind(this));
+       }.bind(this));
     },
     
     rangeTypeChanged: function()
@@ -838,8 +818,6 @@ Backend.DeliveryZone.ShippingService.prototype =
     
     save: function()
     {
-        var self = this;
-        
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
         var action = this.service.ID 
             ? Backend.DeliveryZone.ShippingService.prototype.Links.update
@@ -851,11 +829,9 @@ Backend.DeliveryZone.ShippingService.prototype =
             function(response) 
             { 
                 var response = eval("(" + response.responseText + ")");
-                self.afterSave(response);     
-            }
+                this.afterSave(response);     
+            }.bind(this)
         );
-
-        console.info('save');
     },
     
     afterSave: function(response)
@@ -1009,12 +985,11 @@ Backend.DeliveryZone.ShippingRate.prototype =
     
     bindEvents: function()
     {
-       var self = this;
        if(!this.rate.ID)
        {
-           Event.observe(this.nodes.save, 'click', function(e) { Event.stop(e); self.save(e); });
-           Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel();});
-           Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); self.cancel(); });
+           Event.observe(this.nodes.save, 'click', function(e) { Event.stop(e); this.save(e); }.bind(this));
+           Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel();}.bind(this));
+           Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
        } 
     },
     
@@ -1034,7 +1009,6 @@ Backend.DeliveryZone.ShippingRate.prototype =
     {
         if(!this.rate.ID)
         {
-            var self = this;
             var rate = {
                 'weightRangeStart': this.nodes.weightRangeStart.value,
                 'weightRangeEnd': this.nodes.weightRangeEnd.value,
@@ -1069,8 +1043,8 @@ Backend.DeliveryZone.ShippingRate.prototype =
                 function(response) 
                 { 
                     var response = eval("(" + response.responseText + ")");
-                    self.afterAdd(response, rate) 
-                }
+                    this.afterAdd(response, rate) 
+                }.bind(this)
             );
             
 
@@ -1089,12 +1063,11 @@ Backend.DeliveryZone.ShippingRate.prototype =
             
             var idStart = this.prefix + this.deliveryZoneId + '_' + this.rate.ShippingService.ID + "_";
             var idStartRegexp = new RegExp(idStart);
-            var self = this;
             document.getElementsByClassName(this.prefix + 'rateFloatValue', li).each(function(input) {
                 Event.observe(input, "keyup", function(e){ NumericFilter(this) });
                 input.id = input.id.replace(idStartRegexp, idStart + 'new' + newId);
                 input.up().down('label')['for'] = input.id;
-            });
+            }.bind(this));
             
             var newForm = Backend.DeliveryZone.ShippingRate.prototype.getInstance(li, rate);
             
@@ -1239,19 +1212,18 @@ Backend.DeliveryZone.TaxRate.prototype =
     
     removeTaxOption: function(id)
     {
-        var self = this;
         try
         {
             $A(this.nodes.taxID.options).each(function(option)
             {
                 if(option.value == id)
                 {
-                    var formBackupId = self.nodes.form.backupId;
+                    var formBackupId = this.nodes.form.backupId;
                     delete Form.State.backups[formBackupId]['taxID'][0]['options'][id];
                     Element.remove(option);
                     throw new Error('Found');
                 }
-            });
+            }.bind(this));
         }
         catch(e) { }
     },
@@ -1285,21 +1257,19 @@ Backend.DeliveryZone.TaxRate.prototype =
     
     bindEvents: function()
     {
-       var self = this;
-       
-       Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel(); });
-       // Event.observe(this.nodes.form, 'submit', function(e) { Event.stop(e); self.save(); });
+       Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
+       // Event.observe(this.nodes.form, 'submit', function(e) { Event.stop(e); this.save(); }.bind(this));
       
-       Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancel(); });
+       Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
        if(!this.rate.ID)
        {
-           Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); self.cancel(); });
+           Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
        }
        
        $A(this.nodes.rangeTypes).each(function(radio)
        {
-           Event.observe(radio, 'click', function(e) { self.rangeTypeChanged(); });
-       });
+           Event.observe(radio, 'click', function(e) { this.rangeTypeChanged(); }.bind(this));
+       }.bind(this));
     },
     
     showNewForm: function()
@@ -1319,7 +1289,6 @@ Backend.DeliveryZone.TaxRate.prototype =
     
     save: function(event)
     {
-        var self = this;
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
         var action = this.rate.ID 
             ? Backend.DeliveryZone.TaxRate.prototype.Links.update
@@ -1331,8 +1300,8 @@ Backend.DeliveryZone.TaxRate.prototype =
             function(response) 
             { 
                 var response = eval("(" + response.responseText + ")");
-                self.afterSave(response);     
-            }
+                this.afterSave(response);     
+            }.bind(this)
         );
     },
     

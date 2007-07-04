@@ -81,7 +81,7 @@ Backend.ProductFile.Model.prototype = {
         this.serverError = false;
         
         var self = this;
-        new Ajax.Request(Backend.ProductFile.Links.save,
+        new LiveCart.AjaxRequest(Backend.ProductFile.Links.save,
         {
             method: 'post',
             postBody: serializedData,
@@ -514,7 +514,7 @@ Backend.ProductFile.Group.Model.prototype = {
         this.languages = $H(languages);
     },
     
-    save: function(serializedData, onSaveResponse)
+    save: function(form, onSaveResponse)
     {
         if(true == this.saving) return;
         this.saving = true;
@@ -522,13 +522,14 @@ Backend.ProductFile.Group.Model.prototype = {
         
         var self = this;
         
-        var action = this.isNew ? Backend.ProductFile.Group.Links.create : Backend.ProductFile.Group.Links.update;
         
-        new Ajax.Request(action,
-        {
-            method: 'post',
-            postBody: serializedData,
-            onSuccess: function(response) 
+        console.info(form)
+        form.action = this.isNew ? Backend.ProductFile.Group.Links.create : Backend.ProductFile.Group.Links.update;
+        
+        new LiveCart.AjaxRequest(
+            form,
+            false,
+            function(response) 
             {
                 var responseHash = {};
                 try 
@@ -543,7 +544,7 @@ Backend.ProductFile.Group.Model.prototype = {
                 
                 self.afterSave(responseHash, onSaveResponse);
             }
-        });
+        );
     },
     
     afterSave: function(response, onSaveResponse)
@@ -636,7 +637,7 @@ Backend.ProductFile.Group.Controller.prototype = {
     {        
         var self = this;
         ActiveForm.prototype.resetErrorMessages(this.view.nodes.root);
-        this.model.save(Form.serialize(this.view.nodes.root), function(status) { 
+        this.model.save(this.view.nodes.root.down('form'), function(status) { 
             self.onSaveResponse(status) ;
         });
     },

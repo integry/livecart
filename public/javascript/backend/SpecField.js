@@ -912,19 +912,14 @@ Backend.SpecField.prototype = {
         
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
         
-        var self = this;
-        var action = this.id.match(/new/) 
-            ? Backend.SpecField.prototype.links.create 
-            : Backend.SpecField.prototype.links.update;
-        new Ajax.Request(
-            action,
+        this.nodes.form.action = this.id.match(/new/) ? Backend.SpecField.prototype.links.create : Backend.SpecField.prototype.links.update;
+        new LiveCart.AjaxRequest(
+            this.nodes.form,
+            false,
+            function(param) 
             {
-                method: this.nodes.form.method,
-                postBody: Form.serialize(this.nodes.form),
-                onComplete: function(param) {
-                    self.afterSaveAction(param.responseText)
-                }
-            }
+                this.afterSaveAction(param.responseText)
+            }.bind(this)
         );
     },
 
@@ -1132,23 +1127,23 @@ Backend.SpecField.prototype = {
     
     mergeValues: function()
     {
-        var self = this;
         var mergedString = "";
         $H(this.mergedValues).each(function(mergedValue) {
-            if(Element.hasClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner"))
+            if(Element.hasClassName(mergedValue.value, this.cssPrefix + "valueMergedWinner"))
             {
                 mergeIntoValue = "mergeIntoValue="  + mergedValue.key;
             }
             mergedString += ("&mergedValues[]=" + mergedValue.key);
-        });
+        }.bind(this));
         
-        new Ajax.Request(Backend.SpecField.prototype.links.mergeValues + "?" + mergeIntoValue + mergedString,
-        {
-           onSuccess: function(reply)
-           {
-               self.handleMergeValuesResponse(eval("(" + reply.responseText + ")"));               
-           }
-        });
+        new LiveCart.AjaxRequest(
+            Backend.SpecField.prototype.links.mergeValues + "?" + mergeIntoValue + mergedString,
+            false,
+            function(reply)
+            {
+                this.handleMergeValuesResponse(eval("(" + reply.responseText + ")"));               
+            }.bind(this)
+        );
     },
     
     handleMergeValuesResponse: function(response)
@@ -1421,18 +1416,13 @@ Backend.SpecFieldGroup.prototype = {
 
         var self = this;
         
-        var action = this.group.ID 
-            ? Backend.SpecField.prototype.links.updateGroup
-            : Backend.SpecField.prototype.links.createGroup;
-            
-        new Ajax.Request(
-            action + '/' + (this.group.ID ? this.group.ID : ''),
-            {
-                method: 'post',
-                postBody: Form.serialize(this.nodes.form),
-                onComplete: function(response) { 
-                    self.afterSave(eval("(" + response.responseText + ")")); 
-                }
+        this.nodes.form.action = (this.group.ID ? Backend.SpecField.prototype.links.updateGroup : Backend.SpecField.prototype.links.createGroup) +  '/' + (this.group.ID ? this.group.ID : '');
+        new LiveCart.AjaxRequest(
+            this.nodes.form,
+            false,
+            function(response) 
+            { 
+                self.afterSave(eval("(" + response.responseText + ")")); 
             }
         );
     },

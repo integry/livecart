@@ -10,8 +10,6 @@ Backend.CustomerOrder.prototype =
 	  
 	initialize: function(groups)
 	{
-        var self = this;      
-        
 		Backend.CustomerOrder.prototype.treeBrowser = new dhtmlXTreeObject("orderGroupsBrowser","","", false);
 		Backend.CustomerOrder.prototype.treeBrowser.setOnClickHandler(this.activateGroup);
 		
@@ -44,7 +42,7 @@ Backend.CustomerOrder.prototype =
     	this.insertTreeBranch(groups, 0); 
         
         if(!Backend.ajaxNav.getHash().match(/group_\d+#\w+/)) window.location.hash = '#group_1#tabOrders__';
-	    self.tabControl = TabControl.prototype.getInstance('orderGroupsManagerContainer', self.craftTabUrl, self.craftContainerId, {}); 
+	    this.tabControl = TabControl.prototype.getInstance('orderGroupsManagerContainer', this.craftTabUrl, this.craftContainerId, {}); 
 
         Backend.CustomerOrder.prototype.instance = this;
         
@@ -105,20 +103,17 @@ Backend.CustomerOrder.prototype =
 	
 	insertTreeBranch: function(treeBranch, rootId)
 	{
-		var self = this;
-        
-            
         $A(treeBranch).each(function(node)
 		{
             Backend.CustomerOrder.prototype.treeBrowser.insertNewItem(node.rootID, node.ID, node.name, null, 0, 0, 0, '', 1);
-            self.treeBrowser.showItemSign(node.ID, 0);
+            this.treeBrowser.showItemSign(node.ID, 0);
             var group = document.getElementsByClassName("standartTreeRow", $("orderGroupsBrowser")).last().up('tr');
             group.id = 'group_' + node.ID;
             group.onclick = function()
             {
                 Backend.CustomerOrder.prototype.treeBrowser.selectItem(node.ID, true);
             }
-		});
+		}.bind(this));
 	},
 
 	activateGroup: function(id)
@@ -453,8 +448,6 @@ Backend.CustomerOrder.Editor.prototype =
             this.bindEvents();
             
             Form.State.backup(this.nodes.form);
-            
-            var self = this;
         }
         catch(e)
         {
@@ -474,15 +467,12 @@ Backend.CustomerOrder.Editor.prototype =
 
     bindEvents: function(args)
     {
-		var self = this;
-		Event.observe(this.nodes.isCanceled, 'click', function(e) { Event.stop(e); self.switchCancelled(); });
-		Event.observe(this.nodes.status, 'change', function(e) { Event.stop(e); self.submitForm(); });
+		Event.observe(this.nodes.isCanceled, 'click', function(e) { Event.stop(e); this.switchCancelled(); }.bind(this));
+		Event.observe(this.nodes.status, 'change', function(e) { Event.stop(e); this.submitForm(); }.bind(this));
     },
 
     switchCancelled: function()
     {
-        var self = this;
-        
         new LiveCart.AjaxRequest(
             Backend.CustomerOrder.Editor.prototype.Links.switchCancelled + '/' + this.id, 
             false,
@@ -491,9 +481,9 @@ Backend.CustomerOrder.Editor.prototype =
                 
 	            if(response.status == 'success')
 	            {
-	                self.nodes.isCanceled.update(response.value);
+	                this.nodes.isCanceled.update(response.value);
 	            }
-	        }
+	        }.bind(this)
         );
     },
     
@@ -523,17 +513,15 @@ Backend.CustomerOrder.Editor.prototype =
     
     submitForm: function()
     {
-		var self = this;        
-        
 		new LiveCart.AjaxRequest(
-            self.nodes.form,
+            this.nodes.form,
             false,
             function(responseJSON) 
             {
-				ActiveForm.prototype.resetErrorMessages(self.nodes.form);
+				ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 				var responseObject = eval("(" + responseJSON.responseText + ")");
-				self.afterSubmitForm(responseObject);
-		    }
+				this.afterSubmitForm(responseObject);
+		    }.bind(this)
         );
     },
 	
@@ -701,17 +689,14 @@ Backend.CustomerOrder.Address.prototype =
 
     bindEvents: function(args)
     {
-		var self = this;
-		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
-        Event.observe(this.nodes.form.elements.namedItem('existingUserAddress'), 'change', function(e) { self.useExistingAddress()});
+		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancelForm()}.bind(this));
+        Event.observe(this.nodes.form.elements.namedItem('existingUserAddress'), 'change', function(e) { this.useExistingAddress()}.bind(this));
     },
     
     useExistingAddress: function()
     {
         if(this.nodes.form.elements.namedItem('existingUserAddress').value)
         {
-            var self = this;
-            
             var address = Backend.CustomerOrder.Editor.prototype.existingUserAddresses[this.nodes.form.elements.namedItem('existingUserAddress').value];
     
             this.nodes.form.elements.namedItem('firstName').value = address.UserAddress.address1;
@@ -733,7 +718,7 @@ Backend.CustomerOrder.Address.prototype =
             this.nodes.form.elements.namedItem('postalCode').value = address.UserAddress.postalCode;
             this.nodes.form.elements.namedItem('phone').value = address.UserAddress.phone;
             
-            this.stateSwitcher.updateStates(null, function(){ self.nodes.form.elements.namedItem('stateID').value = address.UserAddress.stateID; });
+            this.stateSwitcher.updateStates(null, function(){ this.nodes.form.elements.namedItem('stateID').value = address.UserAddress.stateID; }.bind(this));
         }
     },
 
@@ -760,16 +745,15 @@ Backend.CustomerOrder.Address.prototype =
 
     submitForm: function()
     {
-		var self = this;
 		new LiveCart.AjaxRequest(
             this.nodes.form,
     		false,
             function(responseJSON) 
             {
-                ActiveForm.prototype.resetErrorMessages(self.nodes.form);
+                ActiveForm.prototype.resetErrorMessages(this.nodes.form);
                 var responseObject = eval("(" + responseJSON.responseText + ")");
-                self.afterSubmitForm(responseObject);
-            }
+                this.afterSubmitForm(responseObject);
+            }.bind(this)
 		);
     },
 

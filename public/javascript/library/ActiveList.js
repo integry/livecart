@@ -669,18 +669,16 @@ ActiveList.prototype = {
             this.onProgress(li);
 
             // execute the action
-            new Ajax.Request(
-                    url,
-                    {
-                        method: 'get',
-
-                        // the object context mystically dissapears when onComplete function is called,
-                        // so the only way I could make it work is this
-                        onComplete: function(param)
-                        {
-                            self.callUserCallback(action, param, li);
-                        }
-                    });
+            new LiveCart.AjaxRequest(
+                url,
+                false,
+                // the object context mystically dissapears when onComplete function is called,
+                // so the only way I could make it work is this
+                function(param)
+                {
+                    self.callUserCallback(action, param, li);
+                }
+            );
         }
     },
 
@@ -920,17 +918,16 @@ ActiveList.prototype = {
             this._currentLi = this.dragged;
           
             var url = this.callbacks.beforeSort.call(this, this.dragged, order);
-            new Ajax.Request(url,
-            {
-                method: 'get',
-
+            new LiveCart.AjaxRequest(
+                url,
+                false,
                 // the object context mystically dissapears when onComplete function is called,
                 // so the only way I could make it work is this
-                onComplete: function(param)
+                function(param)
                 {
                     self.restoreDraggedItem(param.responseText);
                 }
-            });
+            );
         }
     },
 

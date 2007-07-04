@@ -122,9 +122,11 @@ Backend.OrderedItem = {
        
        if(confirm(Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount))
        {   
-           new Ajax.Request(Backend.OrderedItem.Links.changeItemCount + "/" + itemID + "?count=" + input.value, {
-                method: 'post',
-                onSuccess: function(response) { 
+           new LiveCart.AjaxRequest(
+               Backend.OrderedItem.Links.changeItemCount + "/" + itemID + "?count=" + input.value, 
+               false,
+               function(response) 
+               { 
                     var response = eval("(" + response.responseText + ")");
                     var shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + shipmentID);
                     
@@ -139,7 +141,7 @@ Backend.OrderedItem = {
                    
                     Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
                 }
-           });
+           );
        }
        else
        {
@@ -214,30 +216,15 @@ Backend.Shipment.prototype =
     
     save: function()
     {
-        var self = this;
-        
-        if(this.nodes.form)
-        {
-            ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-            var action = Backend.Shipment.Links.update
-            var data = Form.serialize(this.nodes.form);
-        }
-        else
-        {
-            var action = Backend.Shipment.Links.create + '/?orderID=' + this.orderID;
-            var data = '';
-        }
-            
-        new Ajax.Request(action, {
-            method: 'post',
-            parameters: data,
-            onSuccess: function(response) { 
+        new LiveCart.AjaxRequest(
+            Backend.Shipment.Links.create + '/?orderID=' + this.orderID,
+            false,
+            function(response) 
+            { 
                 var response = eval("(" + response.responseText + ")");
-                self.afterSave(response);     
-            }
-        });
-
-        console.info('save');
+                this.afterSave(response);     
+            }.bind(this)
+        );
     },
     
     afterSave: function(response)
@@ -352,9 +339,11 @@ Backend.Shipment.prototype =
     {
         var self = this;
         
-        new Ajax.Request(Backend.OrderedItem.Links.createNewItem + "/?productID=" + productID + "&shipmentID=" + this.nodes.form.elements.namedItem('ID').value + "&orderID=" + this.nodes.form.elements.namedItem('orderID').value + "&downloadable=" + this.nodes.form.elements.namedItem('downloadable').value, {
-           method: 'get',
-           onSuccess: function(response) {
+        new LiveCart.AjaxRequest(
+            Backend.OrderedItem.Links.createNewItem + "/?productID=" + productID + "&shipmentID=" + this.nodes.form.elements.namedItem('ID').value + "&orderID=" + this.nodes.form.elements.namedItem('orderID').value + "&downloadable=" + this.nodes.form.elements.namedItem('downloadable').value,
+            false,
+            function(response) 
+            {
                var evaluatedResponse;
                try
                {
@@ -415,7 +404,7 @@ Backend.Shipment.prototype =
                    console.info(e);
                }
            }
-        });
+        );
     },
     
     hideShippedStatus: function()
@@ -437,7 +426,6 @@ Backend.Shipment.prototype =
     
     toggleUSPS: function(cancel)
     {       
-       var self = this;
        var uspsLink = $("orderShipment_change_usps_" + this.nodes.form.elements.namedItem('ID').value);
        var usps = $("orderShipment_USPS_" + this.nodes.form.elements.namedItem('ID').value);
        var uspsSelect = $("orderShipment_USPS_" + this.nodes.form.elements.namedItem('ID').value + "_select");
@@ -446,55 +434,56 @@ Backend.Shipment.prototype =
         {
             Form.State.backup(this.nodes.form);
             
-            new Ajax.Request(Backend.Shipment.Links.getAvailableServices + "/" + this.nodes.form.elements.namedItem('ID').value, {
-               onSuccess: function(response) {
-                   var response = eval("(" + response.responseText + ")");
-                   
-                   uspsLink.hide();
-                   usps.show();   
-                   uspsSelect.options.length = 0;
-                   
-                   uspsSelect.services = response.services;
-                   $H(response.services).each(function(service)
-                   {
-                       var prefix = service.value.shipment.prefix ? service.value.shipment.prefix : '';
-                       var suffix = service.value.shipment.suffix ? service.value.shipment.suffix : '';
-                       
-                       uspsSelect.options[uspsSelect.options.length] = new Option(service.value.ShippingService.name_lang + " - " + prefix + service.value.shipment.shippingAmount + suffix, service.key);
-                       
-                       if(service.key == self.nodes.form.elements.namedItem('shippingServiceID').value)
-                       {
-                           uspsSelect.options[uspsSelect.options.length - 1].selected = true;
-                       }
-                   });
-               } 
-            });
+            new LiveCart.AjaxRequest(
+                Backend.Shipment.Links.getAvailableServices + "/" + this.nodes.form.elements.namedItem('ID').value, 
+                false,
+                function(response) {
+                    var response = eval("(" + response.responseText + ")");
+                    
+                    uspsLink.hide();
+                    usps.show();   
+                    uspsSelect.options.length = 0;
+                    
+                    uspsSelect.services = response.services;
+                    $H(response.services).each(function(service)
+                    {
+                        var prefix = service.value.shipment.prefix ? service.value.shipment.prefix : '';
+                        var suffix = service.value.shipment.suffix ? service.value.shipment.suffix : '';
+                        
+                        uspsSelect.options[uspsSelect.options.length] = new Option(service.value.ShippingService.name_lang + " - " + prefix + service.value.shipment.shippingAmount + suffix, service.key);
+                        
+                        if(service.key == this.nodes.form.elements.namedItem('shippingServiceID').value)
+                        {
+                            uspsSelect.options[uspsSelect.options.length - 1].selected = true;
+                        }
+                    }.bind(this));
+                }.bind(this) 
+            );
         } 
         else 
         { 
-           
            if(!cancel)
            {
-               new Ajax.Request(Backend.Shipment.Links.changeService + "/" + this.nodes.form.elements.namedItem('ID').value + "?serviceID=" + this.nodes.form.elements.namedItem('USPS').value, {
-                  onSuccess: function(response) {
-                      var response = eval("(" + response.responseText + ")");
+               new LiveCart.AjaxRequest(
+                   Backend.Shipment.Links.changeService + "/" + this.nodes.form.elements.namedItem('ID').value + "?serviceID=" + this.nodes.form.elements.namedItem('USPS').value,
+                   false,
+                   function(response) {
+                       var response = eval("(" + response.responseText + ")");
                       
-                      console.info("orderShipment_change_usps_" + self.nodes.form.elements.namedItem('ID').value);
-                      
-                      self.nodes.form.elements.namedItem('shippingServiceID').value = response.shipment.ShippingService.ID;
-                      $("orderShipment_change_usps_" + self.nodes.form.elements.namedItem('ID').value).innerHTML = response.shipment.ShippingService.name_lang;
+                       this.nodes.form.elements.namedItem('shippingServiceID').value = response.shipment.ShippingService.ID;
+                       $("orderShipment_change_usps_" + this.nodes.form.elements.namedItem('ID').value).innerHTML = response.shipment.ShippingService.name_lang;
                     
-                      self.setAmount(response.shipment.amount);
-                      self.setShippingAmount(response.shipment.shippingAmount);
-                      self.setTaxAmount(response.shipment.taxAmount);
-                      self.setTotal(response.shipment.total);
-                                          
-                      uspsLink.show();
-                      usps.hide();   
-                       
-                      self.hideShippedStatus();
-                  }
-               });
+                       this.setAmount(response.shipment.amount);
+                       this.setShippingAmount(response.shipment.shippingAmount);
+                       this.setTaxAmount(response.shipment.taxAmount);
+                       this.setTotal(response.shipment.total);
+                                           
+                       uspsLink.show();
+                       usps.hide();   
+                        
+                       this.hideShippedStatus();
+                  }.bind(this)
+               );
            }
            else
            {
@@ -505,7 +494,7 @@ Backend.Shipment.prototype =
                    this.setShippingAmount(uspsSelect.services[this.nodes.form.elements.namedItem('shippingServiceID').value].shipment.shippingAmount);
                }
                
-               Backend.OrderedItem.updateReport($("orderShipment_report_" + self.nodes.form.elements.namedItem('orderID').value));
+               Backend.OrderedItem.updateReport($("orderShipment_report_" + this.nodes.form.elements.namedItem('orderID').value));
            }
         }
     },
@@ -557,8 +546,10 @@ Backend.Shipment.prototype =
         
         if("-1" == select.value)
         {
-            new Ajax.Request(Backend.Shipment.Links.remove + "/" + this.nodes.form.elements.namedItem('ID').value, {
-               onSuccess: function(response) {
+            new LiveCart.AjaxRequest(
+                Backend.Shipment.Links.remove + "/" + this.nodes.form.elements.namedItem('ID').value,
+                false,
+                function(response) {
                    var response = eval("(" + response.responseText + ")");
                 
                    var shipmentItems = document.getElementsByClassName("orderShipmentsItem", self.nodes.shipmentsList);
@@ -584,12 +575,14 @@ Backend.Shipment.prototype =
                    
                    Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
                }
-            });
+            );
         }
         else
         {
-            new Ajax.Request(Backend.Shipment.Links.changeStatus + "/" + this.nodes.form.elements.namedItem('ID').value + "?status=" + this.nodes.form.elements.namedItem('status').value, {
-               onSuccess: function(response) {
+            new LiveCart.AjaxRequest(
+                Backend.Shipment.Links.changeStatus + "/" + this.nodes.form.elements.namedItem('ID').value + "?status=" + this.nodes.form.elements.namedItem('status').value,
+                false,
+                function(response) {
                    var response = eval("(" + response.responseText + ")");
                    
                    select.lastValue = select.value;
@@ -612,7 +605,7 @@ Backend.Shipment.prototype =
                        });
                    }
                }
-            });
+            );
         }
     },
     

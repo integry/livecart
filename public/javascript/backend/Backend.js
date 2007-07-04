@@ -121,15 +121,13 @@ Backend.AjaxNavigationHandler.prototype =
             // This is in case element is not yet loaded. If so we wait for all requests to finish and the continue.
             else if(Ajax.activeRequestCount > 0)
             {
-                var self = this;
-   
                 setInterval(function() 
                 { 
-                    if(self.handle)
+                    if(this.handle)
                     {
-                        self.handle(element, { recoverFromIndex: hashPart });
+                        this.handle(element, { recoverFromIndex: hashPart });
                     }
-                }, 10);
+                }.bind(this), 10);
 
                 return;
             } 
@@ -809,14 +807,13 @@ Backend.SaveConfirmationMessage.prototype =
 
 	highlight: function()
 	{
-        var self = this;	
         this.innerElement.focus();
         new Effect.Highlight(this.innerElement, { duration: 0.4 });
        
         // do not hide error messages
         if (!this.element.hasClassName('redMessage'))
         {
-            setTimeout(function() { self.hide() }, 4000);   
+            setTimeout(function() { this.hide() }.bind(this), 4000);   
         }
 	},
 
@@ -909,14 +906,13 @@ Backend.RegisterMVC = function(MVC)
     {
         if(this.defaultLanguage === false) 
         {
-            var self = this;
             this.languages.each(function(language)
             {
                 if(parseInt(language.value.isDefault))
                 {
-                    self.defaultLanguage = language.value;
+                    this.defaultLanguage = language.value;
                 }   
-            });
+            }.bind(this));
         }
         
         return this.defaultLanguage;
