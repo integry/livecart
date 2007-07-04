@@ -29,7 +29,7 @@ class LiveCart extends Application
 		{
 			self::$instance = new LiveCart();
 			
-			$compileDir = Store::isCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
+			$compileDir = Store::getInstance()->isCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
 			TemplateRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
 		}
 		
@@ -100,7 +100,7 @@ class LiveCart extends Application
 		
 		$renderer = parent::getRenderer();
 
-		if (Store::isCustomizationMode() && !$this->isBackend)
+		if (Store::getInstance()->isCustomizationMode() && !$this->isBackend)
 		{
 			$smarty = TemplateRenderer::getSmartyInstance();
 			$smarty->autoload_filters = array('pre' => array('templateLocator'));			

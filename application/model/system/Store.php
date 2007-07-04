@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Top-level model class for Store related logic. One of the main classes for retrieving system data - 
- * available languages, currencies, payment handlers, shipping services, etc.
+ * Top-level facade class for retrieving system data - available languages, currencies, 
+ * payment handlers, shipping services, etc.
  *
  * @author Integry Systems <http://integry.com>  
  * @package application.model.system
@@ -14,28 +14,35 @@ class Store
 	 *
 	 * @var Locale
 	 */
-	protected $locale = null;
-
-  	/**
-	 * Current locale code (ex: lt, en, de)
-	 *
-	 * @var string
-	 */
-	protected $localeName;
-
-  	/**
-	 * Default (base) language code/ID (ex: lt, en, de)
-	 *
-	 * @var string
-	 */
-	protected $defaultLanguageID;
+	private $locale = null;
 
   	/**
 	 * Configuration registry handler instance
 	 *
 	 * @var Config
 	 */
-	protected $config = null;
+	private $config = null;
+
+  	/**
+	 * Session handler instance
+	 *
+	 * @var Session
+	 */
+	private $session = null;
+
+  	/**
+	 * Current locale code (ex: lt, en, de)
+	 *
+	 * @var string
+	 */
+	private $localeName;
+
+  	/**
+	 * Default (base) language code/ID (ex: lt, en, de)
+	 *
+	 * @var string
+	 */
+	private $defaultLanguageID;
 
 	private $requestLanguage;
 
@@ -52,8 +59,6 @@ class Store
 	private $currencyArray;
 	
 	private $currencySet;
-	
-	private $session;
 	
 	const EXCLUDE_DEFAULT_CURRENCY = false;
 
@@ -72,10 +77,11 @@ class Store
 
 	private function __construct()
 	{
-		// unset locale variables to make use of lazy loading
+		// unset context instance variables to make use of lazy loading
 		unset($this->locale);
 		unset($this->localeName);
 		unset($this->config);
+		unset($this->session);
 	}
 
 	/**
@@ -92,23 +98,21 @@ class Store
 		return self::$instance;
 	}
 
-	public static function isCustomizationMode()
+	public function isCustomizationMode()
 	{
 		if (is_null(self::$isCustomizationMode))
 		{
-			$session = Session::getInstance();
-			self::$isCustomizationMode = $session->getValue('customizationMode');
+			self::$isCustomizationMode = $this->session->getValue('customizationMode');
 		}	
 		
 		return self::$isCustomizationMode;
 	}
 
-	public static function isTranslationMode()
+	public function isTranslationMode()
 	{
 		if (is_null(self::$isTranslationMode))
 		{
-			$session = Session::getInstance();
-			self::$isTranslationMode = $session->getValue('translationMode');
+			self::$isTranslationMode = $this->session->getValue('translationMode');
 		}	
 		
 		return self::$isTranslationMode;
@@ -501,6 +505,8 @@ class Store
 
 	private function loadLocale()
 	{
+		ClassLoader::import('library.locale.Locale');
+		    	
 		$this->locale =	Locale::getInstance($this->localeName);
 		$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage.language'));
 		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('application.configuration.language'));
@@ -513,6 +519,8 @@ class Store
 
 	private function loadLocaleName()
 	{
+		ClassLoader::import('library.locale.Locale');
+		    	
 		if ($this->requestLanguage)
 		{
 			$this->localeName = $this->requestLanguage;
@@ -532,22 +540,31 @@ class Store
 		return $this->config;
 	}
 
+	private function loadSession()
+	{
+	  	ClassLoader::import("application.model.system.Config");
+    	$this->session = new Session();
+    	return $this->session;
+	}
+	
 	private function __get($name)
 	{
 		switch ($name)
 	  	{
 		    case 'locale':
-		    	ClassLoader::import('library.locale.Locale');
 		    	return $this->loadLocale();
 		    break;
 
 		    case 'localeName':
-		    	ClassLoader::import('library.locale.Locale');
 		    	return $this->loadLocaleName();
 		    break;
 
 		    case 'config':
 		    	return $this->loadConfig();
+		    break;
+
+		    case 'session':
+		    	return $this->loadSession();
 		    break;
 
 			default:

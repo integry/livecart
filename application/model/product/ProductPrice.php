@@ -54,7 +54,7 @@ class ProductPrice extends ActiveRecordModel
 	public static function getProductPricesSet(Product $product)
 	{	    
 		// preload currency data (otherwise prices would have to be loaded with referenced records)
-		Store::getInstance()->getCurrencySet();
+		self::getStore()->getCurrencySet();
 		
 		return self::getRecordSet(self::getProductPricesFilter($product));
 	}
@@ -70,10 +70,7 @@ class ProductPrice extends ActiveRecordModel
 	{
 	    ClassLoader::import("application.model.Currency");
 
-	    $filter = new ARSelectFilter();
-	    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
-
-	    return $filter;
+	    return new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
 	}
 
 	public static function getInstance(Product $product, Currency $currency)
@@ -99,7 +96,7 @@ class ProductPrice extends ActiveRecordModel
 
 	public function reCalculatePrice()
 	{
-		$defaultCurrency = Store::getInstance()->getDefaultCurrency();
+		$defaultCurrency = $this->getStore()->getDefaultCurrency();
 		$basePrice = $this->product->get()->getPrice($defaultCurrency->getID(), Product::DO_NOT_RECALCULATE_PRICE);
 
 		if ($this->currency->get()->rate->get())
@@ -124,7 +121,7 @@ class ProductPrice extends ActiveRecordModel
 	{
 		if (is_null($basePrice))
 		{
-			$defaultCurrency = Store::getInstance()->getDefaultCurrencyCode();
+			$defaultCurrency = self::getStore()->getDefaultCurrencyCode();
 			$basePrice = $product->getPrice($defaultCurrency, Product::DO_NOT_RECALCULATE_PRICE);
 		}
 
@@ -192,8 +189,8 @@ class ProductPrice extends ActiveRecordModel
             $productPrices[$price['productID']][$price['currencyID']] = $price['price'];
         }
         
-        $baseCurrency = Store::getInstance()->getDefaultCurrencyCode();
-        $currencies = Store::getInstance()->getCurrencySet();
+        $baseCurrency = self::getStore()->getDefaultCurrencyCode();
+        $currencies = self::getStore()->getCurrencySet();
         
         foreach ($productPrices as $product => $prices)
         {
@@ -220,10 +217,9 @@ class ProductPrice extends ActiveRecordModel
 			return array();	
 		}
 		
-		$baseCurrency = Store::getInstance()->getDefaultCurrencyCode();
+		$baseCurrency = self::getStore()->getDefaultCurrencyCode();
         
-        $filter = new ARSelectFilter();
-        $filter->setCondition(new INCond(new ARFieldHandle('ProductPrice', 'productID'), $productIDs));
+        $filter = new ARSelectFilter(new INCond(new ARFieldHandle('ProductPrice', 'productID'), $productIDs));
         $filter->setOrder(new ARExpressionHandle('currencyID = "' . $baseCurrency . '"'), 'DESC');
         return ActiveRecordModel::getRecordSetArray('ProductPrice', $filter);		
 	}

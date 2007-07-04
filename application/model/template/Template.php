@@ -42,8 +42,6 @@ class Template
 		$res = array();
 		$d = new DirectoryIterator($dir);
 		
-		$store = Store::getInstance();
-		
 		foreach ($d as $file)
 		{
 			if (!$file->isDot())

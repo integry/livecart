@@ -2,7 +2,6 @@
 
 ClassLoader::import("library.activerecord.ActiveRecord");
 ClassLoader::import("application.model.*");
-ClassLoader::import("application.model.locale.*");
 
 ActiveRecord::$creolePath = ClassLoader::getRealPath("library");
 
@@ -19,6 +18,19 @@ ActiveRecord::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DI
  */
 abstract class ActiveRecordModel extends ActiveRecord
 {	
+ 	private static $store;
+
+	public static function setStoreInstance(Store $storeInstance)
+	{
+		self::$store = $storeInstance;
+	}
+
+	protected function getStore()
+	{
+		return Store::getInstance();
+		return self::$store;
+	}
+	
 	public function loadRequestData(Request $request)
 	{
 		$schema = ActiveRecordModel::getSchemaInstance(get_class($this));
@@ -32,7 +44,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 					switch (get_class($field->getDataType()))
 					{
 						case 'ARArray':
-							$this->setValueArrayByLang(array($name), Store::getInstance()->getDefaultLanguageCode(), Store::getInstance()->getLanguageArray(Store::INCLUDE_DEFAULT), $request);
+							$this->setValueArrayByLang(array($name), $this->getStore()->getDefaultLanguageCode(), $this->getStore()->getLanguageArray(Store::INCLUDE_DEFAULT), $request);
 						break;
 								
 						case 'ARBool':
@@ -54,7 +66,6 @@ abstract class ActiveRecordModel extends ActiveRecord
 	
 	protected static function transformArray($array, $className)
 	{
-
 		foreach (self::getSchemaInstance($className)->getFieldsByType('ARDateTime') as $field)
 		{
 			$name = $field->getName();
@@ -67,7 +78,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 			
 			if (!isset($locale))
 			{
-				$locale = Store::getInstance()->getLocaleInstance();;
+				$locale = self::getStore()->getLocaleInstance();
 			}
 			
 			$res = array();						

@@ -69,7 +69,7 @@ class ShipmentTax extends ActiveRecordModel
         $array['formattedAmount'] = array();
         
         $amountCurrency = $this->shipment->get()->amountCurrency->get();
-        $currencies = Store::getInstance()->getCurrencySet();
+        $currencies = $this->getStore()->getCurrencySet();
 
         // get and format prices
         foreach ($currencies as $id => $currency)

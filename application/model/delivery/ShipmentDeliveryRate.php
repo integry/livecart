@@ -74,7 +74,7 @@ class ShipmentDeliveryRate extends ShippingRateResult
 
         // get and format prices
         $prices = $formattedPrices = $taxPrices = array();
-        array();
+
         foreach ($currencies as $id => $currency)
         {
             $prices[$id] = $currency->convertAmount($amountCurrency, $array['costAmount']);

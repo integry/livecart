@@ -85,7 +85,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 	public function __construct(Request $request)
 	{
 		parent::__construct($request);
-		$this->session = Session::getInstance();
+		$this->session = new Session();
 		$this->user = User::getCurrentUser();
 		$this->router = Router::getInstance();
 	    

@@ -61,7 +61,7 @@ class ShippingService extends MultilingualObject
         {
             $instance->deliveryZone->set($deliveryZone);
         }
-        $instance->setValueByLang('name', Store::getInstance()->getDefaultLanguageCode(), $defaultLanguageName);
+        $instance->setValueByLang('name', null, $defaultLanguageName);
         $instance->rangeType->set($calculationCriteria);
         
         return $instance;
@@ -133,7 +133,7 @@ class ShippingService extends MultilingualObject
         }    
         else
         {
-            $total = $shipment->getSubTotal(Store::getInstance()->getDefaultCurrency(), Shipment::WITHOUT_TAXES);
+            $total = $shipment->getSubTotal($this->getStore()->getDefaultCurrency(), Shipment::WITHOUT_TAXES);
             $cond = new EqualsOrLessCond(new ARFieldHandle('ShippingRate', 'subtotalRangeStart'), $total);
             $cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'subtotalRangeEnd'), $total));
         }

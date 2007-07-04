@@ -12,7 +12,7 @@
  */
 function smarty_function_liveCustomization($params, $smarty) 
 {
-	if (Store::isTranslationMode())
+	if (Store::getInstance()->isTranslationMode())
 	{
 		if (!isset($params['action']))
 		{

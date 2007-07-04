@@ -336,7 +336,7 @@ class Product extends MultilingualObject
 		}
 
 		// set prices
-		$currencies = Store::getInstance()->getCurrencyArray();
+		$currencies = $this->getStore()->getCurrencyArray();
 		foreach ($currencies as $currency)
 		{
 			if ($request->isValueSet('price_' . $currency))
@@ -386,7 +386,7 @@ class Product extends MultilingualObject
 			  	{
 			  		if ($field->isTextField())
 					{
-						$languages = Store::getInstance()->getLanguageArray(Store::INCLUDE_DEFAULT);
+						$languages = $this->getStore()->getLanguageArray(Store::INCLUDE_DEFAULT);
 						foreach ($languages as $language)
 						{
 						  	if ($request->isValueSet($field->getFormFieldName($language)))
@@ -570,9 +570,7 @@ class Product extends MultilingualObject
 	{
 		$product = parent::getNewInstance(__CLASS__);
 		$product->category->set($category);
-		
-	    $defaultLangCode = Store::getInstance()->getDefaultLanguageCode();
-        $name = $product->setValueByLang('name', $defaultLangCode, $name);
+        $product->setValueByLang('name', null, $name);
 
 		return $product;
 	}

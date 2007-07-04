@@ -15,7 +15,7 @@ function smarty_function_translate($params, Smarty $smarty)
 	$translation = $store->translate($params['text']);
 	$translation = preg_replace('/%([a-zA-Z]*)/e', 'smarty_replace_translation_var(\'\\1\', $smarty)', $translation);
 
-	if (Store::isTranslationMode() && !isset($params['disableLiveTranslation']))
+	if ($store->isTranslationMode() && !isset($params['disableLiveTranslation']))
 	{
 		$file = $store->getLocaleInstance()->translationManager()->getFileByDefKey($params['text']);
 		$file = '__file_'.base64_encode($file);

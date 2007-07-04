@@ -15,14 +15,14 @@ class CustomizeController extends StoreManagementController
 	public function index()
 	{
 		$response = new ActionResponse();		
-		$response->setValue('isCustomizationModeEnabled', Store::isCustomizationMode());
-		$response->setValue('isTranslationModeEnabled', Store::isTranslationMode());
+		$response->setValue('isCustomizationModeEnabled', $this->store->isCustomizationMode());
+		$response->setValue('isTranslationModeEnabled', $this->store->isTranslationMode());
 		return $response;
 	}	
 	
 	public function translationMode()
 	{
-	  	if (Store::isTranslationMode())
+	  	if ($this->store->isTranslationMode())
 	  	{
 			unset($_SESSION['translationMode']);
 		}
@@ -36,7 +36,7 @@ class CustomizeController extends StoreManagementController
 
 	public function customizationMode()
 	{
-	  	if (Store::isCustomizationMode())
+	  	if ($this->store->isCustomizationMode())
 	  	{
 			unset($_SESSION['customizationMode']);
 		}

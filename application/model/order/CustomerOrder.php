@@ -3,7 +3,6 @@
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.OrderedItem");
 ClassLoader::import("application.model.order.Shipment");
-ClassLoader::import("application.model.system.SessionSyncable");
 ClassLoader::import("application.model.delivery.ShipmentDeliveryRate");
 
 /**
@@ -12,7 +11,7 @@ ClassLoader::import("application.model.delivery.ShipmentDeliveryRate");
  * @package application.model.order
  * @author Integry Systems <http://integry.com> 
  */
-class CustomerOrder extends ActiveRecordModel implements SessionSyncable
+class CustomerOrder extends ActiveRecordModel
 {
 	public $orderedItems = array();
 	
@@ -79,9 +78,11 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
      */
 	public static function getInstance()
 	{
-        if (!self::$instance)
+        $session = new Session();
+        
+		if (!self::$instance)
         {
-            $id = Session::getInstance()->getValue('CustomerOrder');
+            $id = $session->getValue('CustomerOrder');
             if ($id)
             {
                 try
@@ -114,7 +115,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         if (self::$instance->isFinalized->get())
         {
             self::$instance = null;
-            Session::getInstance()->unsetValue('CustomerOrder');
+            $session->unsetValue('CustomerOrder');
             return self::getInstance();               
         }
                 
@@ -372,7 +373,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
         {
             if(!$this->currency->get())
             {
-                $this->currency->set(Store::getInstance()->getDefaultCurrency());
+                $this->currency->set($this->getStore()->getDefaultCurrency());
             }
             
 	        $this->totalAmount->set($this->getTotal($this->currency->get()));
@@ -427,25 +428,13 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
     public function syncToSession()
     {
         $this->isSyncedToSession = true;
-		Session::getInstance()->setValue('CustomerOrder', $this->getID());
+        $session = new Session();
+		$session->setValue('CustomerOrder', $this->getID());
     }
     
     public function isSyncedToSession()
     {
         return $this->isSyncedToSession;
-    }
-    
-    public function unSyncFromSession()
-    {
-        Session::getInstance()->unsetValue('CustomerOrder');
-    }    
-    
-    /**
-     *  @todo implement
-     */
-    public function refresh()
-    {
-        
     }
     
     /**
@@ -856,7 +845,7 @@ class CustomerOrder extends ActiveRecordModel implements SessionSyncable
 		
 		// total for all currencies
 		$total = array();
-		$currencies = Store::getInstance()->getCurrencySet();
+		$currencies = $this->getStore()->getCurrencySet();
 
 		if (is_array($currencies))
 		{

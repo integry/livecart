@@ -40,7 +40,7 @@ class Currency extends ActiveRecordModel
 	public function toArray()
 	{
 	  	$array = parent::toArray();
-		$array['name'] = Store::getInstance()->getLocaleInstance()->info()->getCurrencyName($this->getId());	  	
+		$array['name'] = $this->getStore()->getLocaleInstance()->info()->getCurrencyName($this->getId());	  	
 		
 		return $array;
 	}
@@ -123,12 +123,12 @@ class Currency extends ActiveRecordModel
         }
         catch (ARNotFoundException $e)
         {
-            $instance = Store::getInstance()->getDefaultCurrency();
+            $instance = null;
         }
         
-        if (!$instance->isEnabled->get())
+        if (!$instance || !$instance->isEnabled->get())
         {
-            $instance = Store::getInstance()->getDefaultCurrency();    
+            $instance = $this->getStore()->getDefaultCurrency();    
         }
         
         return $instance;

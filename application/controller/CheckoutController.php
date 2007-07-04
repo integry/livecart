@@ -462,7 +462,7 @@ class CheckoutController extends FrontendController
      */       
 	public function completed()
 	{
-        $order = CustomerOrder::getInstanceByID((int)Session::getInstance()->getValue('completedOrderID'));
+        $order = CustomerOrder::getInstanceByID((int)$this->session->getValue('completedOrderID'));
         
         $response = new ActionResponse();
         $response->setValue('order', $order->toArray());    

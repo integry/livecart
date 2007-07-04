@@ -56,8 +56,8 @@ class Language extends ActiveRecordModel
 	public function toArray()
 	{
 	  	$array = parent::toArray();
-	  	$array['name'] = Store::getInstance()->getLocaleInstance()->info()->getLanguageName($array['ID']);
-	  	$array['originalName'] = Store::getInstance()->getLocaleInstance()->info()->getOriginalLanguageName($array['ID']);
+	  	$array['name'] = $this->getStore()->getLocaleInstance()->info()->getLanguageName($array['ID']);
+	  	$array['originalName'] = $this->getStore()->getLocaleInstance()->info()->getOriginalLanguageName($array['ID']);
 	  	
 		if (file_exists(ClassLoader::getRealPath('public.image.localeflag') . '/' . $array['ID'] . '.png'))
 		{

@@ -18,12 +18,18 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 
 	public function setValueByLang($fieldName, $langCode, $value)
 	{
+		if (is_null($langCode))
+		{
+			$langCode = $this->getStore()->getDefaultLanguageCode();
+		}
+	
 		$valueArray = $this->getFieldValue($fieldName);
 		if (!is_array($valueArray)) 
 		{
 			$valueArray = array();
 		}
 		$valueArray[$langCode] = $value;
+		
 		$this->setFieldValue($fieldName, $valueArray);
 	}
 
@@ -33,7 +39,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 
 		if (!isset($valueArray[$langCode]) && $returnDefaultIfEmpty)
 		{
-			$langCode = Store::getInstance()->getDefaultLanguageCode();	
+			$langCode = $this->getStore()->getDefaultLanguageCode();	
 		}
 		
 		if (isset($valueArray[$langCode]))
@@ -79,7 +85,7 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
     {		
 		$array = parent::transformArray($array, $className);
 
-		$store = Store::getInstance();
+		$store = self::getStore();
 		$defaultLangCode = $store->getDefaultLanguageCode();
 		$currentLangCode = $store->getLocaleCode();
 
@@ -154,8 +160,8 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	 */
 	public static function getLangOrderHandle(ARFieldHandle $field)
 	{
-		$currentLanguage = Store::getInstance()->getLocaleCode();
-		$defaultLanguage = Store::getInstance()->getDefaultLanguageCode();
+		$currentLanguage = self::getStore()->getLocaleCode();
+		$defaultLanguage = self::getStore()->getDefaultLanguageCode();
 		
 		if ($currentLanguage == $defaultLanguage)
 		{

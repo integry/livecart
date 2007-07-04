@@ -133,7 +133,9 @@ class User extends ActiveRecordModel
 	 */
     public static function getCurrentUser()
     {
-        $id = Session::getInstance()->getValue('User');
+        $session = new Session();
+        
+		$id = $session->getValue('User');
     
         if (!$id)
         {
@@ -147,7 +149,7 @@ class User extends ActiveRecordModel
             }
             catch (ARNotFoundException $e)
             {
-                Session::getInstance()->unsetValue('User');
+                $session->unsetValue('User');
                 return self::getCurrentUser();
             }
 		}
@@ -175,7 +177,8 @@ class User extends ActiveRecordModel
 	 */
     public function setAsCurrentUser()
     {
-		Session::getInstance()->setValue('User', $this->getID());
+		$session = new Session();
+		$session->setValue('User', $this->getID());
 	}
 
 	/**
