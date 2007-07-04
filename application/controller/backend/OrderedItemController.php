@@ -18,17 +18,17 @@ class OrderedItemController extends StoreManagementController
 {
     public function create()
     {
-        if($downloadable = (int)$this->request->getValue('downloadable'))
+        if($downloadable = (int)$this->request->get('downloadable'))
         {
-	 	    $order = CustomerOrder::getInstanceByID((int)$this->request->getValue('orderID'), true, array('ShippingAddress' => 'UserAddress', 'Currency'));		    
+	 	    $order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('ShippingAddress' => 'UserAddress', 'Currency'));		    
 	 	    $shipment = $order->getDownloadShipment();
         }
         else
         {
-            $shipment = Shipment::getInstanceById('Shipment', (int)$this->request->getValue('shipmentID'), true, array('Order' => 'CustomerOrder', 'ShippingService', 'ShippingAddress' => 'UserAddress', 'AmountCurrency' => 'Currency'));
+            $shipment = Shipment::getInstanceById('Shipment', (int)$this->request->get('shipmentID'), true, array('Order' => 'CustomerOrder', 'ShippingService', 'ShippingAddress' => 'UserAddress', 'AmountCurrency' => 'Currency'));
         }
 
-        $product = Product::getInstanceById((int)$this->request->getValue('productID'), true);
+        $product = Product::getInstanceById((int)$this->request->get('productID'), true);
         
         $existingItem = false;
         foreach($shipment->getItems() as $item)
@@ -79,7 +79,7 @@ class OrderedItemController extends StoreManagementController
         $validator = $this->createOrderedItemValidator();
         if($validator->isValid())
         {
-	        if($count = (int)$this->request->getValue('count') && !(int)$this->request->getValue('downloadable'))
+	        if($count = (int)$this->request->get('count') && !(int)$this->request->get('downloadable'))
 	        {
 	            $item->count->set($count);
 	        }
@@ -143,8 +143,8 @@ class OrderedItemController extends StoreManagementController
 	    
 		$categoryList = Category::getRootNode()->getDirectChildNodes();
 		$categoryList->unshift(Category::getRootNode());
-	    $response->setValue("filters", 'filters[Product.type]=' . (int)$this->request->getValue('downloadable'));
-		$response->setValue("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
+	    $response->set("filters", 'filters[Product.type]=' . (int)$this->request->get('downloadable'));
+		$response->set("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
 		
 		return $response;
 	}
@@ -171,7 +171,7 @@ class OrderedItemController extends StoreManagementController
      */
     public function delete()
     {
-        if($id = $this->request->getValue("id", false))
+        if($id = $this->request->get("id", false))
         {
             $item = OrderedItem::getInstanceByID('OrderedItem', (int)$id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress')); 
                         
@@ -222,7 +222,7 @@ class OrderedItemController extends StoreManagementController
 	 */
 	public function changeShipment()
 	{ 
-        if(($id = (int)$this->request->getValue("id", false)) && ($fromID = (int)$this->request->getValue("from", false)) && ($toID = (int)$this->request->getValue("to", false)))
+        if(($id = (int)$this->request->get("id", false)) && ($fromID = (int)$this->request->get("from", false)) && ($toID = (int)$this->request->get("to", false)))
         {
             $item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Product')); 
                     
@@ -311,9 +311,9 @@ class OrderedItemController extends StoreManagementController
 
 	public function changeCount()
 	{   
-        if(($id = (int)$this->request->getValue("id", false)) )
+        if(($id = (int)$this->request->get("id", false)) )
         {
-            $count = (int)$this->request->getValue("count");
+            $count = (int)$this->request->get("count");
             $item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress')); 
             $item->count->set($count);
             

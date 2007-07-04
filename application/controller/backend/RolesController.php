@@ -18,7 +18,7 @@ class RolesController extends StoreManagementController
 	{
         Role::cleanUp();
 	    
-	    $userGroupID = (int)$this->request->getValue('id');
+	    $userGroupID = (int)$this->request->get('id');
         $userGroup = UserGroup::getInstanceByID($userGroupID);
         $activeRoles = $userGroup->getRolesRecordSet();
         
@@ -68,10 +68,10 @@ class RolesController extends StoreManagementController
 		$form = $this->createRolesForm($userGroup, $activeRoles);
 				
 		$response = new ActionResponse();
-		$response->setValue('form', $form);
-		$response->setValue('roles', $roles);
-		$response->setValue('userGroup', $userGroup->toArray());
-		$response->setValue('activeRolesIDs', $activeRolesIDs);
+		$response->set('form', $form);
+		$response->set('roles', $roles);
+		$response->set('userGroup', $userGroup->toArray());
+		$response->set('activeRolesIDs', $activeRolesIDs);
 		
 	    return $response;
 	}
@@ -83,19 +83,19 @@ class RolesController extends StoreManagementController
 	 */
     public function update()
     {
-	    $userGroupID = (int)$this->request->getValue('id');
+	    $userGroupID = (int)$this->request->get('id');
         $userGroup = UserGroup::getInstanceByID($userGroupID);
         
         $validator = $this->createRolesFormValidator($userGroup);
         if($validator->isValid())
         {
-            foreach(explode(',', $this->request->getValue('checked')) as $roleID)
+            foreach(explode(',', $this->request->get('checked')) as $roleID)
             {
                 if(preg_match('/smart/', $roleID)) continue;
                 $userGroup->applyRole(Role::getInstanceByID((int)$roleID));
             }
             
-            foreach(explode(',', $this->request->getValue('unchecked')) as $roleID)
+            foreach(explode(',', $this->request->get('unchecked')) as $roleID)
             {
                 if(preg_match('/smart/', $roleID)) continue;
                 $userGroup->cancelRole(Role::getInstanceByID((int)$roleID));

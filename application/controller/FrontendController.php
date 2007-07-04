@@ -28,7 +28,7 @@ abstract class FrontendController extends BaseController
         {
             if ($request->isValueSet($key))
             {
-                Router::addAutoAppendQueryVariable($key, $request->getValue($key));
+                Router::addAutoAppendQueryVariable($key, $request->get($key));
             }    
         }
     }
@@ -47,7 +47,7 @@ abstract class FrontendController extends BaseController
 	
 	protected function getRequestCurrency()
     {
-        $instance = Currency::getValidInstanceById($this->request->getValue('currency', $this->store->getDefaultCurrencyCode()));
+        $instance = Currency::getValidInstanceById($this->request->get('currency', $this->store->getDefaultCurrencyCode()));
         return $instance->getID();
     }
 	
@@ -63,7 +63,7 @@ abstract class FrontendController extends BaseController
 		$f->setOrder(new ARFieldHandle('StaticPage', 'position'));
 		
         $response = new BlockResponse();        
-		$response->setValue('pages', ActiveRecordModel::getRecordSet('StaticPage', $f)->toArray()); 
+		$response->set('pages', ActiveRecordModel::getRecordSet('StaticPage', $f)->toArray()); 
 		return $response; 	
 	}
 
@@ -71,8 +71,8 @@ abstract class FrontendController extends BaseController
 	{	 	
 		ClassLoader::import('application.model.order.CustomerOrder');
 		$response = new BlockResponse();
-		$response->setValue('order', $this->order->toArray()); 
-		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode()));
+		$response->set('order', $this->order->toArray()); 
+		$response->set('currency', $this->request->get('currency', $this->store->getDefaultCurrencyCode()));
 		return $response; 	
 	}
 
@@ -91,7 +91,7 @@ abstract class FrontendController extends BaseController
         }
         
         $response = new BlockResponse();			  	        
-        $response->setValue('currencies', $currencyArray);        
+        $response->set('currencies', $currencyArray);        
         return $response;	  	
 	}
 
@@ -120,16 +120,16 @@ abstract class FrontendController extends BaseController
             }
         }
 
-        $response->setValue('languages', $languages);
+        $response->set('languages', $languages);
         return $response;
 	}
 	
 	protected function boxBreadCrumbBlock()
 	{
-		array_unshift($this->breadCrumb, array('title' => $this->config->getValue('STORE_NAME'), 
+		array_unshift($this->breadCrumb, array('title' => $this->config->get('STORE_NAME'), 
 											   'url' => $this->router->createUrl(array('controller' => 'index', 'action' => 'index'))));
 		$response = new BlockResponse();
-		$response->setValue('breadCrumb', $this->breadCrumb);
+		$response->set('breadCrumb', $this->breadCrumb);
 		return $response;
 	}	
 	
@@ -194,12 +194,12 @@ abstract class FrontendController extends BaseController
 		ClassLoader::import("framework.request.validator.Form");        
         $form = new Form(new RequestValidator("productSearch", $this->request));
         $form->enableClientSideValidation(false);
-        $form->setValue('id', $this->categoryID);
-        $form->setValue('q', $this->request->getValue('q'));
+        $form->set('id', $this->categoryID);
+        $form->set('q', $this->request->get('q'));
         
         $response = new BlockResponse();		
-		$response->setValue('categories', $options);
-		$response->setValue('form', $form);
+		$response->set('categories', $options);
+		$response->set('form', $form);
 		return $response;			
 	}
 	
@@ -278,9 +278,9 @@ abstract class FrontendController extends BaseController
 		}
 						
 		$response = new BlockResponse();
-		$response->setValue('categories', $topCategories);
-		$response->setValue('currentId', $this->categoryID);
-		$response->setValue('lang', 'en');
+		$response->set('categories', $topCategories);
+		$response->set('currentId', $this->categoryID);
+		$response->set('lang', 'en');
 		return $response;
 	}
 	

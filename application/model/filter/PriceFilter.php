@@ -22,9 +22,9 @@ class PriceFilter implements FilterInterface
         
         $c = Config::getInstance();
            
-        $this->name = $c->getValue('PRICE_FILTER_NAME_' . $filterID);
-        $this->priceFrom = $c->getValue('PRICE_FILTER_FROM_' . $filterID);
-        $this->priceTo = $c->getValue('PRICE_FILTER_TO_' . $filterID);
+        $this->name = $c->get('PRICE_FILTER_NAME_' . $filterID);
+        $this->priceFrom = $c->get('PRICE_FILTER_FROM_' . $filterID);
+        $this->priceTo = $c->get('PRICE_FILTER_TO_' . $filterID);
     }
     
     public function getCondition()

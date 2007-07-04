@@ -43,7 +43,7 @@ class Email
         $this->recipients = new Swift_RecipientList();
         
         $config = Config::getInstance();
-        $this->setFrom($config->getValue('MAIN_EMAIL'), $config->getValue('STORE_NAME'));
+        $this->setFrom($config->get('MAIN_EMAIL'), $config->get('STORE_NAME'));
     }
     
     public function setSubject($subject)
@@ -96,7 +96,7 @@ class Email
         $this->template = $templateFile;        
     }
     
-    public function setValue($key, $value)
+    public function set($key, $value)
     {
         $this->values[$key] = $value;
     }
@@ -104,7 +104,7 @@ class Email
     public function setUser(User $user)
     {
         $array = $user->toArray();
-        $this->setValue('user', $array);
+        $this->set('user', $array);
         $this->setTo($array['email'], $array['fullName']);
     }
     

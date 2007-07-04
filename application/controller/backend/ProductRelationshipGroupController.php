@@ -17,7 +17,7 @@ class ProductRelationshipGroupController extends StoreManagementController
      */
     public function create()
     {
-	    $product = Product::getInstanceByID((int)$this->request->getValue('productID'));
+	    $product = Product::getInstanceByID((int)$this->request->get('productID'));
 	    $relationshipGroup = ProductRelationshipGroup::getNewInstance($product);
 	    
 	    return $this->save($relationshipGroup);
@@ -28,7 +28,7 @@ class ProductRelationshipGroupController extends StoreManagementController
      */
     public function update()
     {
-        $relationshipGroup = ProductRelationshipGroup::getInstanceByID((int)$this->request->getValue('ID'));
+        $relationshipGroup = ProductRelationshipGroup::getInstanceByID((int)$this->request->get('ID'));
         
         return $this->save($relationshipGroup);
     }
@@ -38,7 +38,7 @@ class ProductRelationshipGroupController extends StoreManagementController
      */
 	public function delete()
 	{
-	    ProductRelationshipGroup::getInstanceByID((int)$this->request->getValue('id'))->delete();
+	    ProductRelationshipGroup::getInstanceByID((int)$this->request->get('id'))->delete();
 	    return new JSONResponse(array('status' => 'success'));
 	}
 
@@ -47,7 +47,7 @@ class ProductRelationshipGroupController extends StoreManagementController
      */
     public function sort()
     {
-        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
         {
             if(empty($key)) continue;
             $relationship = ProductRelationshipGroup::getInstanceByID((int)$key); 
@@ -60,7 +60,7 @@ class ProductRelationshipGroupController extends StoreManagementController
 
     public function edit()
     {
-        $group = ProductRelationshipGroup::getInstanceByID((int)$this->request->getValue('id'), true);
+        $group = ProductRelationshipGroup::getInstanceByID((int)$this->request->get('id'), true);
         
         return new JSONResponse($group->toArray());
     }
@@ -84,7 +84,7 @@ class ProductRelationshipGroupController extends StoreManagementController
     		{
     			if ($this->request->isValueSet('name_' . $lang))
     			{
-    			    $relationshipGroup->setValueByLang('name', $lang, $this->request->getValue('name_' . $lang));
+    			    $relationshipGroup->setValueByLang('name', $lang, $this->request->get('name_' . $lang));
     			}
     		}
     		

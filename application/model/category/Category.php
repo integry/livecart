@@ -59,7 +59,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$config = Config::getInstance();
 		
 		// all enabled products are available
-		if ($config->getValue('DISABLE_INVENTORY') || !$config->getValue('DISABLE_NOT_IN_STOCK'))
+		if ($config->get('DISABLE_INVENTORY') || !$config->get('DISABLE_NOT_IN_STOCK'))
 		{
 			return $this->activeProductCount->get();
 		}
@@ -102,7 +102,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
         $filter->mergeCondition($cond);
             
 		$config = Config::getInstance();
-		if ($config->getValue('DISABLE_NOT_IN_STOCK') && !$config->getValue('DISABLE_INVENTORY'))
+		if ($config->get('DISABLE_NOT_IN_STOCK') && !$config->get('DISABLE_INVENTORY'))
 		{
 			$cond = new MoreThanCond(new ARFieldHandle('Product', 'stockCount'), 0);
 			$cond->addOR(new EqualsCond(new ARFieldHandle('Product', 'isBackOrderable'), 1));
@@ -139,9 +139,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
         $filter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), 1));
 		
 		$c = Config::getInstance();
-		if (!$c->getValue('DISABLE_INVENTORY'))
+		if (!$c->get('DISABLE_INVENTORY'))
 		{
-			if ($c->getValue('DISABLE_NOT_IN_STOCK'))
+			if ($c->get('DISABLE_NOT_IN_STOCK'))
 			{
 				$cond = new MoreThanCond(new ARFieldHandle('Product', 'stockCount'), 0);
 				$cond->addOr(new EqualsCond(new ARFieldHandle('Product', 'isBackOrderable'), 1));

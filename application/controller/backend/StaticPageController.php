@@ -28,7 +28,7 @@ class StaticPageController extends StoreManagementController
 		}
 		
 		$response = new ActionResponse();
-		$response->setValue('pages', json_encode($pages));
+		$response->set('pages', json_encode($pages));
 		return $response;
 	}
 	
@@ -38,21 +38,21 @@ class StaticPageController extends StoreManagementController
 	public function add()
 	{
 		$response = new ActionResponse();		
-		$response->setValue('form', $this->getForm());				
+		$response->set('form', $this->getForm());				
 		return $response;
 	}	  
 
 	public function edit()
 	{
-		$page = StaticPage::getInstanceById($this->request->getValue('id'), StaticPage::LOAD_DATA)->toArray();
+		$page = StaticPage::getInstanceById($this->request->get('id'), StaticPage::LOAD_DATA)->toArray();
 		
 		$form = $this->getForm();
 				
 		$form->setData($page);		
 				
 		$response = new ActionResponse();				
-		$response->setValue('form', $form);
-		$response->setValue('page', $page);
+		$response->set('form', $form);
+		$response->set('page', $page);
 		return $response;		
 	}
 	
@@ -63,11 +63,11 @@ class StaticPageController extends StoreManagementController
 	 */
 	public function reorder()
 	{
-	    $inst = StaticPage::getInstanceById($this->request->getValue('id'), StaticPage::LOAD_DATA);
+	    $inst = StaticPage::getInstanceById($this->request->get('id'), StaticPage::LOAD_DATA);
 	    
 	    $f = new ARSelectFilter();
 	    $handle = new ARFieldHandle('StaticPage', 'position');
-	    if ('down' == $this->request->getValue('order'))
+	    if ('down' == $this->request->get('order'))
 	    {
 			$f->setCondition(new MoreThanCond($handle, $inst->position->get()));
 			$f->setOrder($handle, 'ASC');
@@ -90,7 +90,7 @@ class StaticPageController extends StoreManagementController
 			$inst->save();
 			$replace->save();
 			
-			return new JSONResponse(array('id' => $inst->getID(), 'order' => $this->request->getValue('order')));	
+			return new JSONResponse(array('id' => $inst->getID(), 'order' => $this->request->get('order')));	
 		}
 		else
 		{
@@ -103,7 +103,7 @@ class StaticPageController extends StoreManagementController
 	 */
 	public function update()
 	{
-	    $page = StaticPage::getInstanceById((int)$this->request->getValue('id'), StaticPage::LOAD_DATA);
+	    $page = StaticPage::getInstanceById((int)$this->request->get('id'), StaticPage::LOAD_DATA);
 	    
 	    return $this->save($page);
 	}
@@ -125,7 +125,7 @@ class StaticPageController extends StoreManagementController
 	{
 		try
 		{
-			$inst = StaticPage::getInstanceById($this->request->getValue('id'), StaticPage::LOAD_DATA);	
+			$inst = StaticPage::getInstanceById($this->request->get('id'), StaticPage::LOAD_DATA);	
 			
 			$inst->delete();
 				

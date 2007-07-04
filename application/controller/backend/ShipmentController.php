@@ -17,7 +17,7 @@ class ShipmentController extends StoreManagementController
 {
 	public function index()
 	{
-	    $order = CustomerOrder::getInstanceById($this->request->getValue('id'), true, true);
+	    $order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
         $order->loadItems();
 		$form = $this->createShipmentForm();
 		$form->setData(array('orderID' => $order->getID()));
@@ -61,45 +61,45 @@ class ShipmentController extends StoreManagementController
         $totalAmount = $subtotalAmount + $shippingAmount;
 	    
 	    $response = new ActionResponse();
-	    $response->setValue('orderID', $this->request->getValue('id'));
-	    $response->setValue('order', $order->toArray());
-	    $response->setValue('shippingServiceIsNotSelected', $this->translate('_shipping_service_is_not_selected'));
-	    $response->setValue('shipments', $shipmentsArray);
-	    $response->setValue('subtotalAmount', $subtotalAmount);
-	    $response->setValue('shippingAmount', $shippingAmount);
+	    $response->set('orderID', $this->request->get('id'));
+	    $response->set('order', $order->toArray());
+	    $response->set('shippingServiceIsNotSelected', $this->translate('_shipping_service_is_not_selected'));
+	    $response->set('shipments', $shipmentsArray);
+	    $response->set('subtotalAmount', $subtotalAmount);
+	    $response->set('shippingAmount', $shippingAmount);
 	    $downloadableShipment = $order->getDownloadShipment()->toArray();
 	    print_r($order->getDownloadShipment()->amount->get());
 	    
 	    
-	    $response->setValue('downloadableShipment', $order->getDownloadShipment()->toArray());
-	    $response->setValue('taxAmount', $taxAmount);
-	    $response->setValue('totalAmount', $totalAmount);
-	    $response->setValue('statuses', $statuses + array(-1 => $this->translate('_delete')));
+	    $response->set('downloadableShipment', $order->getDownloadShipment()->toArray());
+	    $response->set('taxAmount', $taxAmount);
+	    $response->set('totalAmount', $totalAmount);
+	    $response->set('statuses', $statuses + array(-1 => $this->translate('_delete')));
 	    unset($statuses[3]);
-	    $response->setValue('statusesWithoutShipped', $statuses);
-	    $response->setValue('newShipmentForm', $form);
+	    $response->set('statusesWithoutShipped', $statuses);
+	    $response->set('newShipmentForm', $form);
 	    return $response;
 	}
 	
 	public function changeService()
 	{
-        $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->getValue('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
+        $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
         $shipment->loadItems();
 	        
         $zone = $shipment->order->get()->getDeliveryZone();
         $shipmentRates = $zone->getShippingRates($shipment);
         $shipment->setAvailableRates($shipmentRates);
             			
-		if (!$shipmentRates->getByServiceId($this->request->getValue('serviceID')))
+		if (!$shipmentRates->getByServiceId($this->request->get('serviceID')))
 		{
-			throw new ApplicationException('No rate found: ' . $shipment->getID() .' (' . $this->request->getValue('serviceID') . ')');
+			throw new ApplicationException('No rate found: ' . $shipment->getID() .' (' . $this->request->get('serviceID') . ')');
 			return new ActionRedirectResponse('checkout', 'shipping');
 		}
 		
-		$shipment->setRateId($this->request->getValue('serviceID'));
+		$shipment->setRateId($this->request->get('serviceID'));
 	    $shipment->save(ActiveRecord::PERFORM_UPDATE);
 
-	    $shippingService = ShippingService::getInstanceByID($this->request->getValue('serviceID'));
+	    $shippingService = ShippingService::getInstanceByID($this->request->get('serviceID'));
 	    
         $shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
         $shipment->setRateId($shippingService->getID());
@@ -109,7 +109,7 @@ class ShipmentController extends StoreManagementController
 	    
 	    $shipment->save();
 	    $shipmentArray = $shipment->toArray();
-	    $shipmentArray['ShippingService']['ID'] = $this->request->getValue('serviceID');
+	    $shipmentArray['ShippingService']['ID'] = $this->request->get('serviceID');
 	    
 	    return new JSONResponse(array(
 		    'status' => 'success', 
@@ -128,9 +128,9 @@ class ShipmentController extends StoreManagementController
 	
 	public function changeStatus()
 	{
-	    $status = (int)$this->request->getValue('status');
+	    $status = (int)$this->request->get('status');
 	    
-	    $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->getValue('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
+	    $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
 	    $shipment->status->set($status);
 	    
 	    $shipment->save();
@@ -140,7 +140,7 @@ class ShipmentController extends StoreManagementController
 	
 	public function getAvailableServices()
 	{
-	    if($shipmentID = (int)$this->request->getValue('id'))
+	    if($shipmentID = (int)$this->request->get('id'))
 	    {
 	        $shipment = Shipment::getInstanceByID('Shipment', $shipmentID, true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
             $shipment->loadItems();
@@ -187,7 +187,7 @@ class ShipmentController extends StoreManagementController
      */
     public function create()
     {
-	    $order = CustomerOrder::getInstanceByID((int)$this->request->getValue('orderID'));
+	    $order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'));
 	    $shipment = Shipment::getNewInstance($order);
 	    
 	    return $this->save($shipment);
@@ -198,7 +198,7 @@ class ShipmentController extends StoreManagementController
      */
     public function update()
     {
-        $order = CustomerOrder::getInstanceByID((int)$this->request->getValue('ID'));
+        $order = CustomerOrder::getInstanceByID((int)$this->request->get('ID'));
         return $this->save($order);
     }
     
@@ -207,11 +207,11 @@ class ShipmentController extends StoreManagementController
         $validator = $this->createShipmentFormValidator();
 		if ($validator->isValid())
 		{   		
-		    if($shippingServiceID = $this->request->getValue('shippingServiceID'))
+		    if($shippingServiceID = $this->request->get('shippingServiceID'))
 		    {
 			    $shippingService = ShippingService::getInstanceByID($shippingServiceID);
 			    
-			    $shipment->status->set((int)$this->request->getValue('status'));
+			    $shipment->status->set((int)$this->request->get('status'));
 			    $shipment->shippingService->set($shippingService);
 			    $shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
 			    $shipment->setRateId($shippingService->getID());
@@ -244,7 +244,7 @@ class ShipmentController extends StoreManagementController
 
     public function edit()
     {
-        $group = ProductFileGroup::getInstanceByID((int)$this->request->getValue('id'), true);
+        $group = ProductFileGroup::getInstanceByID((int)$this->request->get('id'), true);
         
         return new JSONResponse($group->toArray());
     }
@@ -254,7 +254,7 @@ class ShipmentController extends StoreManagementController
      */
 	public function delete()
 	{
-	    Shipment::getInstanceByID('Shipment', (int)$this->request->getValue('id'))->delete();
+	    Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'))->delete();
 	    return new JSONResponse(array('status' => 'success'));
 	}
 }

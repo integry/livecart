@@ -57,12 +57,12 @@ class UserController extends FrontendController
         }        
 		
         $response = new ActionResponse();
-		$response->setValue('user', $this->user->toArray());
-		$response->setValue('orders', $orders->toArray());
-		$response->setValue('files', $fileArray);
+		$response->set('user', $this->user->toArray());
+		$response->set('orders', $orders->toArray());
+		$response->set('files', $fileArray);
 		
 		// feedback/confirmation message that was stored in session by some other action
-        $response->setValue('userConfirm', $this->session->pullValue('userConfirm'));		
+        $response->set('userConfirm', $this->session->pullValue('userConfirm'));		
 		
         return $response;
 	}
@@ -76,8 +76,8 @@ class UserController extends FrontendController
 		
         $this->addBreadCrumb($this->translate('_change_pass'), '');
         $response = new ActionResponse(); 
-		$response->setValue('user', $this->user->toArray());
-        $response->setValue('form', $this->buildPasswordChangeForm());        
+		$response->set('user', $this->user->toArray());
+        $response->set('form', $this->buildPasswordChangeForm());        
         return $response;
     }
     
@@ -92,10 +92,10 @@ class UserController extends FrontendController
             return new ActionRedirectResponse('user', 'changePassword');
         }
         
-        $this->user->setPassword($this->request->getValue('password'));
+        $this->user->setPassword($this->request->get('password'));
         $this->user->save();
         
-        $this->session->setValue('userConfirm', $this->translate('_confirm_password_change'));
+        $this->session->set('userConfirm', $this->translate('_confirm_password_change'));
         
         return new ActionRedirectResponse('user', 'index');
     }
@@ -109,8 +109,8 @@ class UserController extends FrontendController
 		
         $this->addBreadCrumb($this->translate('_change_email'), '');
         $response = new ActionResponse(); 
-		$response->setValue('user', $this->user->toArray());
-        $response->setValue('form', $this->buildEmailChangeForm());        
+		$response->set('user', $this->user->toArray());
+        $response->set('form', $this->buildEmailChangeForm());        
         return $response;
     }
 
@@ -125,10 +125,10 @@ class UserController extends FrontendController
             return new ActionRedirectResponse('user', 'changeEmail');
         }
         
-        $this->user->email->set($this->request->getValue('email'));
+        $this->user->email->set($this->request->get('email'));
         $this->user->save();
         
-        $this->session->setValue('userConfirm', $this->translate('_confirm_email_change'));
+        $this->session->set('userConfirm', $this->translate('_confirm_email_change'));
         
         return new ActionRedirectResponse('user', 'index');
     }
@@ -142,9 +142,9 @@ class UserController extends FrontendController
 		
         $this->addBreadCrumb($this->translate('_manage_addresses'), '');
         $response = new ActionResponse(); 
-		$response->setValue('user', $this->user->toArray());
-    	$response->setValue('billingAddresses', $this->user->getBillingAddressArray());
-    	$response->setValue('shippingAddresses', $this->user->getShippingAddressArray());
+		$response->set('user', $this->user->toArray());
+    	$response->set('billingAddresses', $this->user->getBillingAddressArray());
+    	$response->set('shippingAddresses', $this->user->getShippingAddressArray());
         return $response;
     }    
     
@@ -155,7 +155,7 @@ class UserController extends FrontendController
     {
 		$this->addAccountBreadcrumb();
 		
-        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->getValue('id')));
+        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->get('id')));
         $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
         $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
         
@@ -166,8 +166,8 @@ class UserController extends FrontendController
             $order->loadAll();  
 
             $response = new ActionResponse();
-            $response->setValue('order', $order->toArray());
-    		$response->setValue('user', $this->user->toArray());
+            $response->set('order', $order->toArray());
+    		$response->set('user', $this->user->toArray());
             return $response; 
         }
         else
@@ -183,7 +183,7 @@ class UserController extends FrontendController
     {
 		$this->addAccountBreadcrumb();
 		
-        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->getValue('id')));
+        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->get('id')));
         $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
         $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
         
@@ -193,8 +193,8 @@ class UserController extends FrontendController
             $order = $s->get(0);
             $order->loadAll();  
             $response = new ActionResponse();
-            $response->setValue('order', $order->toArray());
-    		$response->setValue('user', $this->user->toArray());
+            $response->set('order', $order->toArray());
+    		$response->set('user', $this->user->toArray());
             return $response; 
         }
         else
@@ -206,7 +206,7 @@ class UserController extends FrontendController
     public function register()
     {
 		$response = new ActionResponse();
-		$response->setValue('regForm', $this->buildRegForm());				
+		$response->set('regForm', $this->buildRegForm());				
 		return $response;		
 	}
     
@@ -217,12 +217,12 @@ class UserController extends FrontendController
 			return new ActionRedirectResponse('user', 'register');
 		}
 		
-		$user = $this->createUser($this->request->getValue('password'));
+		$user = $this->createUser($this->request->get('password'));
 		$user->setAsCurrentUser();
 		
 		if ($this->request->isValueSet('return'))
 		{
-			return new RedirectResponse($this->router->createUrlFromRoute($this->request->getValue('return')));
+			return new RedirectResponse($this->router->createUrlFromRoute($this->request->get('return')));
 		}
 		else
 		{
@@ -236,9 +236,9 @@ class UserController extends FrontendController
     public function login()
     {
 		$response = new ActionResponse();
-        $response->setValue('regForm', $this->buildRegForm());				
-        $response->setValue('email', $this->request->getValue('email'));
-        $response->setValue('failed', $this->request->getValue('failed'));
+        $response->set('regForm', $this->buildRegForm());				
+        $response->set('email', $this->request->get('email'));
+        $response->set('failed', $this->request->get('failed'));
 		return $response;
     }
     
@@ -247,7 +247,7 @@ class UserController extends FrontendController
      */
     public function doLogin()
     {
-        $user = User::getInstanceByLogin($this->request->getValue('email'), $this->request->getValue('password'));
+        $user = User::getInstanceByLogin($this->request->get('email'), $this->request->get('password'));
         if (!$user)
         {
             return new ActionRedirectResponse('user', 'login', array('query' => 'failed=true'));
@@ -287,20 +287,20 @@ class UserController extends FrontendController
     		}            
         }  
         		        
-        return new RedirectResponse($this->request->getValue('return'));
+        return new RedirectResponse($this->request->get('return'));
     }
     
     public function remindPassword()
     {
 		$response = new ActionResponse();
-		$response->setValue('form', $this->buildPasswordReminderForm());
-		$response->setValue('return', $this->request->getValue('return'));
+		$response->set('form', $this->buildPasswordReminderForm());
+		$response->set('return', $this->request->get('return'));
 		return $response;
 	}
 	
 	public function doRemindPassword()
 	{
-        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('User', 'email'), $this->request->getValue('email')));
+        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('User', 'email'), $this->request->get('email')));
         $s = ActiveRecordModel::getRecordSet('User', $f);
         if ($s->size())
         {
@@ -314,13 +314,13 @@ class UserController extends FrontendController
             $email->send();
         }
         
-        return new ActionRedirectResponse('user', 'remindComplete', array('query' => array('email' => $this->request->getValue('email'))));
+        return new ActionRedirectResponse('user', 'remindComplete', array('query' => array('email' => $this->request->get('email'))));
     }
 	
 	public function remindComplete()
 	{
         $response = new ActionResponse();
-        $response->setValue('email', $this->request->getValue('email'));
+        $response->set('email', $this->request->get('email'));
         return $response;
     }
 	
@@ -334,12 +334,12 @@ class UserController extends FrontendController
     {
         $form = $this->buildForm();
                                 
-        $form->setValue('billing_country', $this->config->getValue('DEF_COUNTRY'));  
+        $form->set('billing_country', $this->config->get('DEF_COUNTRY'));  
                                 
         $response = new ActionResponse();   
-        $response->setValue('form', $form);
-        $response->setValue('countries', $this->getCountryList($form));
-        $response->setValue('states', $this->getStateList($form->getValue('billing_country')));
+        $response->set('form', $form);
+        $response->set('countries', $this->getCountryList($form));
+        $response->set('states', $this->getStateList($form->get('billing_country')));
         return $response;
     }        
     
@@ -357,11 +357,11 @@ class UserController extends FrontendController
         $user = $this->createUser();
         
         // get billing address state
-        if ($this->request->getValue('billing_state_select'))
+        if ($this->request->get('billing_state_select'))
         {
             try
             {
-                $billingState = ActiveRecordModel::getInstanceByID('State', $this->request->getValue('billing_state_select'), ActiveRecordModel::LOAD_DATA);
+                $billingState = ActiveRecordModel::getInstanceByID('State', $this->request->get('billing_state_select'), ActiveRecordModel::LOAD_DATA);
             }
             catch (Exception $e)
             {
@@ -376,19 +376,19 @@ class UserController extends FrontendController
         $address->firstName->set($user->firstName->get());
         $address->lastName->set($user->lastName->get());
         $address->companyName->set($user->companyName->get());
-        $address->address1->set($this->request->getValue('billing_address1'));        
-        $address->address2->set($this->request->getValue('billing_address2'));        
-        $address->city->set($this->request->getValue('billing_city'));
-        $address->countryID->set($this->request->getValue('billing_country'));
-        $address->postalCode->set($this->request->getValue('billing_zip'));
-        $address->phone->set($this->request->getValue('phone'));
+        $address->address1->set($this->request->get('billing_address1'));        
+        $address->address2->set($this->request->get('billing_address2'));        
+        $address->city->set($this->request->get('billing_city'));
+        $address->countryID->set($this->request->get('billing_country'));
+        $address->postalCode->set($this->request->get('billing_zip'));
+        $address->phone->set($this->request->get('phone'));
         if (isset($billingState))
         {
             $address->state->set($billingState);
         }
         else
         {
-            $address->stateName->set($this->request->getValue('billing_state_text'));
+            $address->stateName->set($this->request->get('billing_state_text'));
         }
         $address->save();
         
@@ -396,7 +396,7 @@ class UserController extends FrontendController
         $billingAddress->save();
         
         // create user shipping address
-        if ($this->request->getValue('sameAsBilling'))
+        if ($this->request->get('sameAsBilling'))
         {
 			$address = clone $address;
 		}
@@ -404,8 +404,8 @@ class UserController extends FrontendController
 		{
 	        $address = UserAddress::getNewInstance();
 	        $address->name->set($user->name->get());
-	        $address->address1->set($this->request->getValue('shipping_address1'));
-	        $address->address2->set($this->request->getValue('shipping_address2'));
+	        $address->address1->set($this->request->get('shipping_address1'));
+	        $address->address2->set($this->request->get('shipping_address2'));
 		}
 
 	    $address->save();
@@ -436,7 +436,7 @@ class UserController extends FrontendController
     {
         try
         {
-            return $this->deleteAddress(ShippingAddress::getUserAddress($this->request->getValue('id'), $this->user));
+            return $this->deleteAddress(ShippingAddress::getUserAddress($this->request->get('id'), $this->user));
         }
         catch (ARNotFoundException $e)
         {
@@ -451,7 +451,7 @@ class UserController extends FrontendController
     {
         try
         {
-            return $this->deleteAddress(BillingAddress::getUserAddress($this->request->getValue('id'), $this->user));
+            return $this->deleteAddress(BillingAddress::getUserAddress($this->request->get('id'), $this->user));
         }
         catch (ARNotFoundException $e)
         {
@@ -462,7 +462,7 @@ class UserController extends FrontendController
     private function deleteAddress(UserAddressType $address)
     {
         $address->delete();
-        return new RedirectResponse($this->router->createURLFromRoute($this->request->getValue('return')));      
+        return new RedirectResponse($this->router->createURLFromRoute($this->request->get('return')));      
     }
     
     /**
@@ -472,7 +472,7 @@ class UserController extends FrontendController
     {
         try
         {
-            return $this->editAddress(ShippingAddress::getUserAddress($this->request->getValue('id'), $this->user));
+            return $this->editAddress(ShippingAddress::getUserAddress($this->request->get('id'), $this->user));
         }
         catch (ARNotFoundException $e)
         {
@@ -487,7 +487,7 @@ class UserController extends FrontendController
     {
         try
         {
-            return $this->editAddress(BillingAddress::getUserAddress($this->request->getValue('id'), $this->user));
+            return $this->editAddress(BillingAddress::getUserAddress($this->request->get('id'), $this->user));
         }
         catch (ARNotFoundException $e)
         {
@@ -503,23 +503,23 @@ class UserController extends FrontendController
         $address = $addressType->userAddress->get();
         
         $form->setData($address->toArray());
-        $form->setValue('country', $address->countryID->get());
-        $form->setValue('state_text', $address->stateName->get());
+        $form->set('country', $address->countryID->get());
+        $form->set('state_text', $address->stateName->get());
         
         if ($address->state->get())
         {
-            $form->setValue('state_select', $address->state->get()->getID());
+            $form->set('state_select', $address->state->get()->getID());
         }
 
-        $form->setValue('zip', $address->postalCode->get());
+        $form->set('zip', $address->postalCode->get());
                         
         $response = new ActionResponse();        
-        $response->setValue('form', $form);
-        $response->setValue('return', $this->request->getValue('return'));
-        $response->setValue('countries', $this->getCountryList($form));
-        $response->setValue('states', $this->getStateList($form->getValue('country')));
-        $response->setValue('address', $address->toArray());
-        $response->setValue('addressType', $addressType->toArray());
+        $response->set('form', $form);
+        $response->set('return', $this->request->get('return'));
+        $response->set('countries', $this->getCountryList($form));
+        $response->set('states', $this->getStateList($form->get('country')));
+        $response->set('address', $address->toArray());
+        $response->set('addressType', $addressType->toArray());
         return $response;            
     }
     
@@ -530,14 +530,14 @@ class UserController extends FrontendController
     {
         try
         {
-            $address = ShippingAddress::getUserAddress($this->request->getValue('id'), $this->user);
+            $address = ShippingAddress::getUserAddress($this->request->get('id'), $this->user);
         }
         catch (zzzARNotFoundException $e)
         {
             return new ActionRedirectResponse('user', 'index');   
         }
 
-        return $this->doSaveAddress($address, new ActionRedirectResponse('user', 'editShippingAddress', array('id' =>$this->request->getValue('id'), 'query' => array('return' => $this->request->getValue('return')))));        
+        return $this->doSaveAddress($address, new ActionRedirectResponse('user', 'editShippingAddress', array('id' =>$this->request->get('id'), 'query' => array('return' => $this->request->get('return')))));        
     }
     
     /**
@@ -547,14 +547,14 @@ class UserController extends FrontendController
     {
         try
         {
-            $address = BillingAddress::getUserAddress($this->request->getValue('id'), $this->user);
+            $address = BillingAddress::getUserAddress($this->request->get('id'), $this->user);
         }
         catch (ARNotFoundException $e)
         {
             return new ActionRedirectResponse('user', 'index');   
         }
 
-        return $this->doSaveAddress($address, new ActionRedirectResponse('user', 'editBillingAddress', array('id' =>$this->request->getValue('id'), 'query' => array('return' => $this->request->getValue('return')))));        
+        return $this->doSaveAddress($address, new ActionRedirectResponse('user', 'editBillingAddress', array('id' =>$this->request->get('id'), 'query' => array('return' => $this->request->get('return')))));        
     }
     
     private function doSaveAddress(UserAddressType $address, ActionRedirectResponse $invalidResponse)
@@ -563,7 +563,7 @@ class UserController extends FrontendController
         if ($this->buildAddressValidator()->isValid())
         {
             $this->saveAddress($address);
-            return new RedirectResponse($this->router->createURLFromRoute($this->request->getValue('return')));
+            return new RedirectResponse($this->router->createURLFromRoute($this->request->get('return')));
         }
         else
         {
@@ -580,27 +580,27 @@ class UserController extends FrontendController
 		
         $form = $this->buildAddressForm();
         
-        $form->setValue('firstName', $this->user->firstName->get());
-        $form->setValue('lastName', $this->user->lastName->get());
-        $form->setValue('companyName', $this->user->companyName->get());
+        $form->set('firstName', $this->user->firstName->get());
+        $form->set('lastName', $this->user->lastName->get());
+        $form->set('companyName', $this->user->companyName->get());
 
 		$this->user->loadAddresses();
 
         if ($this->user->defaultBillingAddress->get())
         {
-			$form->setValue('country', $this->user->defaultBillingAddress->get()->userAddress->get()->countryID->get());
-	        $form->setValue('phone', $this->user->defaultBillingAddress->get()->userAddress->get()->phone->get());			
+			$form->set('country', $this->user->defaultBillingAddress->get()->userAddress->get()->countryID->get());
+	        $form->set('phone', $this->user->defaultBillingAddress->get()->userAddress->get()->phone->get());			
 		}
 		else
 		{
-			$form->setValue('country', $this->config->getValue('DEF_COUNTRY'));	
+			$form->set('country', $this->config->get('DEF_COUNTRY'));	
 		}
                 
         $response = new ActionResponse();        
-        $response->setValue('form', $form);
-        $response->setValue('return', $this->request->getValue('return'));
-        $response->setValue('countries', $this->getCountryList($form));
-        $response->setValue('states', $this->getStateList($form->getValue('country')));
+        $response->set('form', $form);
+        $response->set('return', $this->request->get('return'));
+        $response->set('countries', $this->getCountryList($form));
+        $response->set('states', $this->getStateList($form->get('country')));
         return $response;    
     }
     
@@ -617,7 +617,7 @@ class UserController extends FrontendController
      */
     public function doAddBillingAddress()
     {       
-        return $this->doAddAddress('BillingAddress', new ActionRedirectResponse('user', 'addBillingAddress', array('query' => array('return' => $this->request->getValue('return')))));
+        return $this->doAddAddress('BillingAddress', new ActionRedirectResponse('user', 'addBillingAddress', array('query' => array('return' => $this->request->get('return')))));
     }
 
     /**
@@ -625,7 +625,7 @@ class UserController extends FrontendController
      */
     public function doAddShippingAddress()
     {       
-        return $this->doAddAddress('ShippingAddress', new ActionRedirectResponse('user', 'addShippingAddress', array('query' => array('return' => $this->request->getValue('return')))));
+        return $this->doAddAddress('ShippingAddress', new ActionRedirectResponse('user', 'addShippingAddress', array('query' => array('return' => $this->request->get('return')))));
     }
 
     /**
@@ -634,7 +634,7 @@ class UserController extends FrontendController
      */
     public function states()
     {                
-        $states = State::getStatesByCountry($this->request->getValue('country'));
+        $states = State::getStatesByCountry($this->request->get('country'));
         return new JSONResponse($states);
     }
     
@@ -648,7 +648,7 @@ class UserController extends FrontendController
     public function download()
     {
 	    // get and validate OrderedItem instance first
-        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('OrderedItem', 'ID'), $this->request->getValue('id')));
+        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('OrderedItem', 'ID'), $this->request->get('id')));
 	    $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID())); 
 	    
 	    $s = ActiveRecordModel::getRecordSet('OrderedItem', $f, ActiveRecordModel::LOAD_REFERENCES);
@@ -660,7 +660,7 @@ class UserController extends FrontendController
         }
 	    
 	    $item = $s->get(0);
-	    $file = $item->getFileByID($this->request->getValue('fileID'));
+	    $file = $item->getFileByID($this->request->get('fileID'));
 	    
 	    // file does not exist for OrderedItem
 	    if (!$file)
@@ -682,11 +682,11 @@ class UserController extends FrontendController
      */
 	private function createUser($password = '')
     {
-		$user = User::getNewInstance($this->request->getValue('email'), $this->request->getValue('password'));
-        $user->firstName->set($this->request->getValue('firstName'));
-        $user->lastName->set($this->request->getValue('lastName'));
-        $user->companyName->set($this->request->getValue('companyName'));
-        $user->email->set($this->request->getValue('email'));
+		$user = User::getNewInstance($this->request->get('email'), $this->request->get('password'));
+        $user->firstName->set($this->request->get('firstName'));
+        $user->lastName->set($this->request->get('lastName'));
+        $user->companyName->set($this->request->get('companyName'));
+        $user->email->set($this->request->get('email'));
         $user->isEnabled->set(true);
         
         if ($password)
@@ -710,9 +710,9 @@ class UserController extends FrontendController
             $addressType = call_user_func_array(array($addressClass, 'getNewInstance'), array($this->user, $address));
             $addressType->save();
             
-            if ($this->request->getValue('return'))
+            if ($this->request->get('return'))
             {
-                $response = new RedirectResponse($this->router->createURLFromRoute($this->request->getValue('return')));    
+                $response = new RedirectResponse($this->router->createURLFromRoute($this->request->get('return')));    
             }
             else
             {
@@ -730,12 +730,12 @@ class UserController extends FrontendController
     private function saveAddress(UserAddress $address)
     {
         $address->loadRequestData($this->request);
-        $address->countryID->set($this->request->getValue('country'));
-        $address->postalCode->set($this->request->getValue('zip'));
-        $address->stateName->set($this->request->getValue('state_text')); 
-        if ($this->request->getValue('state_select'))
+        $address->countryID->set($this->request->get('country'));
+        $address->postalCode->set($this->request->get('zip'));
+        $address->stateName->set($this->request->get('state_text')); 
+        if ($this->request->get('state_select'))
         {
-            $address->state->set(State::getStateByIDAndCountry($this->request->getValue('state_select'), $this->request->getValue('country')));                
+            $address->state->set(State::getStateByIDAndCountry($this->request->get('state_select'), $this->request->get('country')));                
         }
         else
         {
@@ -746,7 +746,7 @@ class UserController extends FrontendController
     
     private function getCountryList(Form $form)
     {
-        $defCountry = $this->config->getValue('DEF_COUNTRY');
+        $defCountry = $this->config->get('DEF_COUNTRY');
 
         $countries = $this->store->getEnabledCountries();
         asort($countries);        
@@ -899,7 +899,7 @@ class UserController extends FrontendController
     	$validator->addCheck('email', new IsValidEmailCheck($this->translate('_err_invalid_email')));    
     	
         $emailErr = $this->translate($uniqueError);
-        $emailErr = str_replace('%1', $this->router->createUrl(array('controller' => 'user', 'action' => 'login', 'query' => array('email' => $this->request->getValue('email')))), $emailErr);
+        $emailErr = str_replace('%1', $this->router->createUrl(array('controller' => 'user', 'action' => 'login', 'query' => array('email' => $this->request->get('email')))), $emailErr);
         $validator->addCheck('email', new IsUniqueEmailCheck($emailErr));    
 	}    
 	
@@ -907,7 +907,7 @@ class UserController extends FrontendController
     {
 		$this->validateName($validator);
 		
-        if ($this->config->getValue('REQUIRE_PHONE'))
+        if ($this->config->get('REQUIRE_PHONE'))
         {
             $validator->addCheck('phone', new IsNotEmptyCheck($this->translate('_err_enter_phone')));
         }

@@ -23,7 +23,7 @@ class FilterController extends StoreManagementController
      */
     public function delete()
     {
-        if($id = $this->request->getValue("id", false))
+        if($id = $this->request->get("id", false))
         {
             Filter::deleteByID($id);
             return new JSONResponse(array('status' => 'success'));
@@ -43,7 +43,7 @@ class FilterController extends StoreManagementController
      */
     public function sort()
     {
-        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
         {
             // Except new fields, because they are not yet in database
             if(!empty($key) && !preg_match('/^new/', $key))
@@ -67,7 +67,7 @@ class FilterController extends StoreManagementController
     public function generate()
     {        
         $filters = array();   
-        foreach(SpecField::getInstanceByID((int)$this->request->getValue('specFieldID'), true)->getValuesList() as $value) 
+        foreach(SpecField::getInstanceByID((int)$this->request->get('specFieldID'), true)->getValuesList() as $value) 
         {
             $filters[$value['ID']] = array('name' => $value['value'], 'specFieldValueID' => $value['ID']);
         }

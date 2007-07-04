@@ -30,7 +30,7 @@ class SpecFieldController extends StoreManagementController
     {
         $response = new ActionResponse();
 
-        $categoryID = (int)$this->request->getValue('id');
+        $categoryID = (int)$this->request->get('id');
         $category = Category::getInstanceByID($categoryID);
 
         $defaultSpecFieldValues = array
@@ -46,11 +46,11 @@ class SpecFieldController extends StoreManagementController
             'categoryID' => $categoryID
         );
         
-        $response->setValue('categoryID', $categoryID);
-        $response->setValue('configuration', $this->getSpecFieldConfig());
-        $response->setValue('specFieldsList', $defaultSpecFieldValues);
-        $response->setValue('defaultLangCode', $this->store->getDefaultLanguageCode());
-        $response->setValue('specFieldsWithGroups', $category->getSpecFieldsWithGroupsArray());
+        $response->set('categoryID', $categoryID);
+        $response->set('configuration', $this->getSpecFieldConfig());
+        $response->set('specFieldsList', $defaultSpecFieldValues);
+        $response->set('defaultLangCode', $this->store->getDefaultLanguageCode());
+        $response->set('specFieldsWithGroups', $category->getSpecFieldsWithGroupsArray());
 
         return $response;
     }
@@ -63,7 +63,7 @@ class SpecFieldController extends StoreManagementController
     public function item()
     {
 		$response = new ActionResponse();
-		$specFieldList = SpecField::getInstanceByID($this->request->getValue('id'), true, true)->toArray(false, false);
+		$specFieldList = SpecField::getInstanceByID($this->request->get('id'), true, true)->toArray(false, false);
 		
 		foreach(SpecFieldValue::getRecordSetArray($specFieldList['ID']) as $value)
 		{
@@ -81,13 +81,13 @@ class SpecFieldController extends StoreManagementController
      */
     public function update()
     {
-        if(SpecField::exists((int)$this->request->getValue('ID')))
+        if(SpecField::exists((int)$this->request->get('ID')))
         {
-            $specField = SpecField::getInstanceByID((int)$this->request->getValue('ID'));
+            $specField = SpecField::getInstanceByID((int)$this->request->get('ID'));
         }
         else
         {
-            return new JSONResponse(array('errors' => array('ID' => $this->translate('_error_record_id_is_not_valid')), 'status' => 'failure', 'ID' => (int)$this->request->getValue('ID')));
+            return new JSONResponse(array('errors' => array('ID' => $this->translate('_error_record_id_is_not_valid')), 'status' => 'failure', 'ID' => (int)$this->request->get('ID')));
         }
         
         return $this->save($specField);
@@ -98,7 +98,7 @@ class SpecFieldController extends StoreManagementController
      */
     public function create()
     {
-        $specField = SpecField::getNewInstance(Category::getInstanceByID($this->request->getValue('categoryID', false)));
+        $specField = SpecField::getNewInstance(Category::getInstanceByID($this->request->get('categoryID', false)));
         
         return $this->save($specField);
     }
@@ -115,17 +115,17 @@ class SpecFieldController extends StoreManagementController
 		
         if(!$errors)
         {
-            $type = $this->request->getValue('advancedText') ? SpecField::TYPE_TEXT_ADVANCED : (int)$this->request->getValue('type');
+            $type = $this->request->get('advancedText') ? SpecField::TYPE_TEXT_ADVANCED : (int)$this->request->get('type');
             $dataType = SpecField::getDataTypeFromType($type);
-            $categoryID = (int)$this->request->getValue('categoryID');
+            $categoryID = (int)$this->request->get('categoryID');
 
-            $handle = $this->request->getValue('handle');
-            $values = $this->request->getValue('values');
+            $handle = $this->request->get('handle');
+            $values = $this->request->get('values');
             
-            $isMultiValue = $this->request->getValue('multipleSelector') == 1 ? 1 : 0;
-            $isRequired = $this->request->getValue('isRequired') == 1 ? 1 : 0;
-            $isDisplayed = $this->request->getValue('isDisplayed') == 1 ? 1 : 0;
-            $isDisplayedInList = $this->request->getValue('isDisplayedInList') == 1 ? 1 : 0;
+            $isMultiValue = $this->request->get('multipleSelector') == 1 ? 1 : 0;
+            $isRequired = $this->request->get('isRequired') == 1 ? 1 : 0;
+            $isDisplayed = $this->request->get('isDisplayed') == 1 ? 1 : 0;
+            $isDisplayedInList = $this->request->get('isDisplayedInList') == 1 ? 1 : 0;
 
             $specField->setFieldValue('dataType',          $dataType);
             $specField->setFieldValue('type',              $type);
@@ -138,10 +138,10 @@ class SpecFieldController extends StoreManagementController
             
 			foreach($this->store->getLanguageArray(true) as $langCode) 
 			{
-			    $specField->setValueByLang('name', $langCode, $this->request->getValue('name_' . $langCode));
-			    $specField->setValueByLang('valueSuffix', $langCode, $this->request->getValue('valueSuffix_' . $langCode));
-			    $specField->setValueByLang('valuePrefix', $langCode, $this->request->getValue('valuePrefix_' . $langCode));
-			    $specField->setValueByLang('description', $langCode, $this->request->getValue('description_' . $langCode));
+			    $specField->setValueByLang('name', $langCode, $this->request->get('name_' . $langCode));
+			    $specField->setValueByLang('valueSuffix', $langCode, $this->request->get('valueSuffix_' . $langCode));
+			    $specField->setValueByLang('valuePrefix', $langCode, $this->request->get('valuePrefix_' . $langCode));
+			    $specField->setValueByLang('description', $langCode, $this->request->get('description_' . $langCode));
 			}
             
             $specField->save();  
@@ -209,7 +209,7 @@ class SpecFieldController extends StoreManagementController
      */
     public function delete()
     {
-        if($id = $this->request->getValue("id", false))
+        if($id = $this->request->get("id", false))
         {
             SpecField::deleteById($id);
             return new JSONResponse(array('status' => 'success'));
@@ -228,10 +228,10 @@ class SpecFieldController extends StoreManagementController
      */
     public function sort()
     {
-        $target = $this->request->getValue('target');
+        $target = $this->request->get('target');
         preg_match('/_(\d+)$/', $target, $match); // Get group. 
         
-        foreach($this->request->getValue($target, array()) as $position => $key)
+        foreach($this->request->get($target, array()) as $position => $key)
         {
             if(!empty($key))
             {

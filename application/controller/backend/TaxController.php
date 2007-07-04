@@ -30,27 +30,27 @@ class TaxController extends StoreManagementController
 		    $taxesForms[] = $this->createTaxForm($tax);
 		}
 		
-		$response->setValue("taxesForms", $taxesForms);
-		$response->setValue("taxes", $taxes);
+		$response->set("taxesForms", $taxesForms);
+		$response->set("taxes", $taxes);
 		
 		$newTax = Tax::getNewInstance('');
-		$response->setValue("newTaxForm", $this->createTaxForm($newTax));
-		$response->setValue("newTax", $newTax->toArray());
+		$response->set("newTaxForm", $this->createTaxForm($newTax));
+		$response->set("newTax", $newTax->toArray());
 		
 		return $response;
 	}
 
     public function edit()
     {
-	    $tax = Tax::getInstanceByID((int)$this->request->getValue('id'), true);
+	    $tax = Tax::getInstanceByID((int)$this->request->get('id'), true);
 		
 	    $form = $this->createTaxForm($tax);
 		$form->setData($tax->toArray());
 		
 		
 		$response = new ActionResponse();
-		$response->setValue('tax', $tax->toArray());
-	    $response->setValue('taxForm', $form);
+		$response->set('tax', $tax->toArray());
+	    $response->set('taxForm', $form);
 	    
 	    return $response;
     }
@@ -60,7 +60,7 @@ class TaxController extends StoreManagementController
 	 */
     public function delete()
     {
-        $service = Tax::getInstanceByID((int)$this->request->getValue('id'));
+        $service = Tax::getInstanceByID((int)$this->request->get('id'));
         $service->delete();
         
         return new JSONResponse(array('status' => 'success'));
@@ -71,7 +71,7 @@ class TaxController extends StoreManagementController
 	 */
     public function update()
     {
-        $tax = Tax::getInstanceByID((int)$this->request->getValue('id'));
+        $tax = Tax::getInstanceByID((int)$this->request->get('id'));
         
         return $this->saveTax($tax);
     }
@@ -81,7 +81,7 @@ class TaxController extends StoreManagementController
 	 */
     public function create()
     {
-        $tax = Tax::getNewInstance($this->request->getValue('name'));
+        $tax = Tax::getNewInstance($this->request->get('name'));
         
         return $this->saveTax($tax);
     }
@@ -92,7 +92,7 @@ class TaxController extends StoreManagementController
         
         if($validator->isValid())
         {            
-            $tax->isEnabled->set($this->request->getValue("isEnabled", 0));
+            $tax->isEnabled->set($this->request->get("isEnabled", 0));
             $tax->setValueArrayByLang(array('name'), $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true, false), $this->request);      
 		    
 	        $tax->save();

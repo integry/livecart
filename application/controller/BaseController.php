@@ -134,7 +134,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 		$this->configFiles = $this->getConfigFiles();
 		
 		$this->store = Store::getInstance();
-		$this->store->setRequestLanguage($this->request->getValue('requestLanguage'));				
+		$this->store->setRequestLanguage($this->request->get('requestLanguage'));				
 		$this->store->setConfigFiles($this->configFiles);
 		
 		$localeCode = $this->store->getLocaleInstance()->getLocaleCode();

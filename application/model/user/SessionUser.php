@@ -13,7 +13,7 @@ class SessionUser
     {
         $session = new Session();
         
-		$id = $session->getValue('User');
+		$id = $session->get('User');
     
         if (!$id)
         {
@@ -36,7 +36,7 @@ class SessionUser
 	public static function setUser(User $user)
 	{
 		$session = new Session();
-		$session->setValue('User', $user->getID());
+		$session->set('User', $user->getID());
 	}
 
 	public static function destroy()

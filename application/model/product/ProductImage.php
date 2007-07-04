@@ -24,7 +24,7 @@ class ProductImage extends ObjectImage
         $k = 0;
         while ($config->isValueSet('IMG_P_W_' . ++$k))
         {
-            $sizes[$k] = array($config->getValue('IMG_P_W_' . $k), $config->getValue('IMG_P_H_' . $k));
+            $sizes[$k] = array($config->get('IMG_P_W_' . $k), $config->get('IMG_P_H_' . $k));
         }
 
         return $sizes;

@@ -14,7 +14,7 @@ class SessionOrder
     {
         $session = new Session();
         
-        $id = $session->getValue('CustomerOrder');
+        $id = $session->get('CustomerOrder');
         if ($id)
         {
             try
@@ -54,7 +54,7 @@ class SessionOrder
 	public static function setOrder(CustomerOrder $order)
 	{
 		$session = new Session();
-		$session->setValue('CustomerOrder', $order->getID());
+		$session->set('CustomerOrder', $order->getID());
 	}
 
 	public static function save(CustomerOrder $order)

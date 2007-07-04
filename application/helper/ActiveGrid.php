@@ -40,21 +40,21 @@ class ActiveGrid
     public function __construct(Request $request, ARSelectFilter $filter, $modelClass = false)
     {        
 		// set recordset boundaries (limits)
-        $filter->setLimit($request->getValue('page_size', 20), $request->getValue('offset', 0));
+        $filter->setLimit($request->get('page_size', 20), $request->get('offset', 0));
 
 		// set order
 		if ($request->isValueSet('sort_col'))
 		{
-            $handle = $this->getFieldHandle($request->getValue('sort_col'), self::SORT_HANDLE);
+            $handle = $this->getFieldHandle($request->get('sort_col'), self::SORT_HANDLE);
                         
             if ($handle)
             {
-                $filter->setOrder($handle, $request->getValue('sort_dir'));
+                $filter->setOrder($handle, $request->get('sort_dir'));
             }				
 		}
         
 		// apply filters
-		$filters = $request->getValue('filters', array());
+		$filters = $request->get('filters', array());
         foreach ($filters as $field => $value)
 		{    		
             if (!strlen($value))
@@ -128,10 +128,10 @@ class ActiveGrid
 		// apply IDs to filter
 		if ($modelClass)
 		{
-			$selectedIDs = json_decode($request->getValue('selectedIDs'));
+			$selectedIDs = json_decode($request->get('selectedIDs'));
 			if ($selectedIDs)
 			{
-				if ((bool)$request->getValue('isInverse'))
+				if ((bool)$request->get('isInverse'))
 				{
 					$idcond = new NotINCond(new ARFieldHandle($modelClass, 'ID'), $selectedIDs);				
 				}	
@@ -144,7 +144,7 @@ class ActiveGrid
 			}
 			else
 			{
-				if (!(bool)$request->getValue('isInverse'))
+				if (!(bool)$request->get('isInverse'))
                 {
                     $idcond = new EqualsCond(new ARExpressionHandle(1), 2);
     		        $filter->mergeCondition($idcond);

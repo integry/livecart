@@ -332,7 +332,7 @@ class Product extends MultilingualObject
 		// set manufacturer
 		if ($request->isValueSet('manufacturer'))
 		{
-			$this->manufacturer->set(Manufacturer::getInstanceByName($request->getValue('manufacturer')));
+			$this->manufacturer->set(Manufacturer::getInstanceByName($request->get('manufacturer')));
 		}
 
 		// set prices
@@ -341,7 +341,7 @@ class Product extends MultilingualObject
 		{
 			if ($request->isValueSet('price_' . $currency))
 			{
-			  	$this->setPrice($currency, $request->getValue('price_' . $currency));
+			  	$this->setPrice($currency, $request->get('price_' . $currency));
 			}
 		}
 
@@ -355,9 +355,9 @@ class Product extends MultilingualObject
 			{
 				if (!$field->isMultiValue->get())
 				{
-					if ($request->isValueSet($fieldName) && !in_array($request->getValue($fieldName), array('other', '')))
+					if ($request->isValueSet($fieldName) && !in_array($request->get($fieldName), array('other', '')))
 				  	{
-				  		$this->setAttributeValue($field, SpecFieldValue::getInstanceByID((int)$request->getValue($fieldName), ActiveRecordModel::LOAD_DATA));
+				  		$this->setAttributeValue($field, SpecFieldValue::getInstanceByID((int)$request->get($fieldName), ActiveRecordModel::LOAD_DATA));
 				  	}
 				}
 				else
@@ -368,7 +368,7 @@ class Product extends MultilingualObject
 					{
 					  	if ($request->isValueSet($value->getFormFieldName()))
 					  	{
-						  	if ($request->getValue($value->getFormFieldName()))
+						  	if ($request->get($value->getFormFieldName()))
 						  	{
 								$this->setAttributeValue($field, $value);
 							}
@@ -391,13 +391,13 @@ class Product extends MultilingualObject
 						{
 						  	if ($request->isValueSet($field->getFormFieldName($language)))
 						  	{
-								$this->setAttributeValueByLang($field, $language, $request->getValue($field->getFormFieldName($language)));
+								$this->setAttributeValueByLang($field, $language, $request->get($field->getFormFieldName($language)));
 							}
 						}
 					}
 					else
 					{
-						$this->setAttributeValue($field, $request->getValue($fieldName));
+						$this->setAttributeValue($field, $request->get($fieldName));
 					}
 				}
 			}
@@ -621,7 +621,7 @@ class Product extends MultilingualObject
 		if (!is_null($value))
 		{		
 			$specification = $this->getSpecification()->getAttribute($field, $value);
-			$specification->setValue($value);
+			$specification->set($value);
 		
 			$this->setAttribute($specification);
 		}
@@ -836,7 +836,7 @@ class Product extends MultilingualObject
         {
     		$config = Config::getInstance();
 		
-		    if ($config->getValue('DISABLE_INVENTORY'))
+		    if ($config->get('DISABLE_INVENTORY'))
 		    {
                 return true;
             }

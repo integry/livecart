@@ -20,7 +20,7 @@ class SpecFieldValueController extends StoreManagementController
      */
     public function delete()
     {
-        if($id = $this->request->getValue("id", false))
+        if($id = $this->request->get("id", false))
         {
             SpecFieldValue::deleteById($id);
             return new JSONResponse(array('status' => 'success'));
@@ -39,7 +39,7 @@ class SpecFieldValueController extends StoreManagementController
      */
     public function sort()
     {
-        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
         {
             // Except new fields, because they are not yet in database
             if(!empty($key) && !preg_match('/^new/', $key))
@@ -58,9 +58,9 @@ class SpecFieldValueController extends StoreManagementController
      */
     public function mergeValues()
     {
-        $mergedIntoValue = SpecFieldValue::getInstanceByID((int)$this->request->getValue('mergeIntoValue'), true);
+        $mergedIntoValue = SpecFieldValue::getInstanceByID((int)$this->request->get('mergeIntoValue'), true);
         
-        foreach($this->request->getValue('mergedValues') as $mergedValueId)
+        foreach($this->request->get('mergedValues') as $mergedValueId)
         {
             $mergedValue = SpecFieldValue::getInstanceByID((int)$mergedValueId, true);
             $mergedIntoValue->mergeWith($mergedValue);

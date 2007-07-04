@@ -19,7 +19,7 @@ abstract class BackendController extends BaseController
 	public function boxUserMenuBlock()
 	{
 		$response = new BlockResponse();
-		$response->setValue('user', $this->user->toArray());
+		$response->set('user', $this->user->toArray());
 		return $response;
 	}
 }

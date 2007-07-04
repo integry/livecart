@@ -14,7 +14,7 @@ class ProductRelationshipController extends StoreManagementController
 {
 	public function index()
 	{		
-	    $productID = (int)$this->request->getValue('id');
+	    $productID = (int)$this->request->get('id');
 		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA, array('Category'));
 	    
 		$languages = array();
@@ -22,11 +22,11 @@ class ProductRelationshipController extends StoreManagementController
 		
 		$response = new ActionResponse();
 
-	    $response->setValue('categoryID', $this->request->getValue('categoryID'));
-		$response->setValue('languages', $languages);
-		$response->setValue('productID', $productID);
-		$response->setValue('relationships', $product->getRelationships()->toArray());
-		$response->setValue('relationshipsWithGroups', $product->getRelatedProductsWithGroupsArray());
+	    $response->set('categoryID', $this->request->get('categoryID'));
+		$response->set('languages', $languages);
+		$response->set('productID', $productID);
+		$response->set('relationships', $product->getRelationships()->toArray());
+		$response->set('relationshipsWithGroups', $product->getRelatedProductsWithGroupsArray());
 		
 	    return $response;
 	}
@@ -42,7 +42,7 @@ class ProductRelationshipController extends StoreManagementController
 	    
 		$categoryList = Category::getRootNode()->getDirectChildNodes();
 		$categoryList->unshift(Category::getRootNode());
-		$response->setValue("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
+		$response->set("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
 		
 		return $response;
 	}
@@ -54,8 +54,8 @@ class ProductRelationshipController extends StoreManagementController
      */
 	public function addRelated()
 	{
-	    $productID = (int)$this->request->getValue('id');
-	    $relatedProductID = (int)$this->request->getValue('relatedProductID');
+	    $productID = (int)$this->request->get('id');
+	    $relatedProductID = (int)$this->request->get('relatedProductID');
 	    
 	    $relatedProduct = Product::getInstanceByID($relatedProductID, true, array('DefaultImage' => 'ProductImage'));
 	    $product = Product::getInstanceByID($productID);
@@ -68,7 +68,7 @@ class ProductRelationshipController extends StoreManagementController
 		        $product->save();
 		        
 			    $response = new ActionResponse();
-			    $response->setValue('product', $relatedProduct->toArray());
+			    $response->set('product', $relatedProduct->toArray());
 			    return $response;
 	        }
 	        catch(ProductRelationshipException $e)
@@ -89,8 +89,8 @@ class ProductRelationshipController extends StoreManagementController
      */
 	public function delete()
 	{
-	    $productID = (int)$this->request->getValue('id');
-	    $relatedProductID = (int)$this->request->getValue('relatedProductID');
+	    $productID = (int)$this->request->get('id');
+	    $relatedProductID = (int)$this->request->get('relatedProductID');
 	    
 	    $relatedProduct = Product::getInstanceByID($relatedProductID);
 	    $product = Product::getInstanceByID($productID);	    
@@ -106,11 +106,11 @@ class ProductRelationshipController extends StoreManagementController
      */
     public function sort()
     {
-        $product = Product::getInstanceByID((int)$this->request->getValue('id'));    
-        $target = $this->request->getValue('target');    
+        $product = Product::getInstanceByID((int)$this->request->get('id'));    
+        $target = $this->request->get('target');    
         preg_match('/_(\d+)$/', $target, $match); // Get group. 
 
-        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
         {
             if(empty($key)) continue;
             

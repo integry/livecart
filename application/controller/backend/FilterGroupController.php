@@ -30,7 +30,7 @@ class FilterGroupController extends StoreManagementController
     {        
         $response = new ActionResponse();
 
-        $categoryID = (int)$this->request->getValue('id');
+        $categoryID = (int)$this->request->get('id');
         $category = Category::getInstanceByID($categoryID);
         $specFieldsList = $category->getSpecificationFieldSet();
         
@@ -43,11 +43,11 @@ class FilterGroupController extends StoreManagementController
             'specFields' => $this->getSpecFieldOptions($category->getSpecificationFieldArray())
         );
         
-        $response->setValue('filters', Filter::createFiltersInGroupsCountArray($category->getFilterGroupSet()));
-        $response->setValue('blankFilter', $blankFilter);
-        $response->setValue('categoryID', $categoryID);
-        $response->setValue('configuration', $this->getConfig());
-        $response->setValue('defaultLangCode', $this->store->getDefaultLanguageCode());
+        $response->set('filters', Filter::createFiltersInGroupsCountArray($category->getFilterGroupSet()));
+        $response->set('blankFilter', $blankFilter);
+        $response->set('categoryID', $categoryID);
+        $response->set('configuration', $this->getConfig());
+        $response->set('defaultLangCode', $this->store->getDefaultLanguageCode());
         
         return $response;
     }
@@ -57,9 +57,9 @@ class FilterGroupController extends StoreManagementController
      */
     public function create()
     {
-        $filterGroup = FilterGroup::getNewInstance(SpecField::getInstanceByID($this->request->getValue('specFieldID', false)));
+        $filterGroup = FilterGroup::getNewInstance(SpecField::getInstanceByID($this->request->get('specFieldID', false)));
 
-        if($specFieldID = $this->request->getValue('specFieldID', false))
+        if($specFieldID = $this->request->get('specFieldID', false))
         {
             $filterGroup->setFieldValue('specFieldID', SpecField::getInstanceByID((int)$specFieldID));
         }
@@ -72,7 +72,7 @@ class FilterGroupController extends StoreManagementController
      */
     public function update()
     {
-        $filterGroup = FilterGroup::getInstanceByID((int)$this->request->getValue('ID'));
+        $filterGroup = FilterGroup::getInstanceByID((int)$this->request->get('ID'));
         
         return $this->save($filterGroup);
     }
@@ -90,11 +90,11 @@ class FilterGroupController extends StoreManagementController
         
         if(!$errors)
         {
-            $name = $this->request->getValue('name');
-            $filters = $this->request->getValue('filters', false);
+            $name = $this->request->get('name');
+            $filters = $this->request->get('filters', false);
             
             $filterGroup->setLanguageField('name',  $name, $this->filtersConfig['languageCodes']);
-            $filterGroup->specField->set(SpecField::getInstanceByID((int)$this->request->getValue('specFieldID')));
+            $filterGroup->specField->set(SpecField::getInstanceByID((int)$this->request->get('specFieldID')));
             $filterGroup->save();
             
             $specField = $filterGroup->specField->get();
@@ -124,8 +124,8 @@ class FilterGroupController extends StoreManagementController
      */
     public function item()
     {
-        $groupID = $this->request->getValue('id');
-        $categoryID = $this->request->getValue('categoryID');
+        $groupID = $this->request->get('id');
+        $categoryID = $this->request->get('categoryID');
         
     	$response = new ActionResponse();
         $filterGroup = FilterGroup::getInstanceByID($groupID, true, array('SpecField', 'Category'));
@@ -163,7 +163,7 @@ class FilterGroupController extends StoreManagementController
      */
     public function delete()
     {
-        if($id = $this->request->getValue("id", false))
+        if($id = $this->request->get("id", false))
         {
             FilterGroup::deletebyID((int)$id);
             return new JSONResponse(array('status' => 'success'));
@@ -183,7 +183,7 @@ class FilterGroupController extends StoreManagementController
      */
     public function sort()
     {
-        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
         {
             if(!empty($key))
             {

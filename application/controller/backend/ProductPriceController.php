@@ -16,15 +16,15 @@ class ProductPriceController extends StoreManagementController
 	{
 
 	    $this->locale->translationManager()->loadFile('backend/Product');
-        $product = Product::getInstanceByID($this->request->getValue('id'), ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
+        $product = Product::getInstanceByID($this->request->get('id'), ActiveRecord::LOAD_DATA, ActiveRecord::LOAD_REFERENCES);
 
 	    $pricingForm = $this->buildPricingForm($product);
 
 	    $response = new ActionResponse();
-	    $response->setValue("product", $product->toFlatArray());
-		$response->setValue("otherCurrencies", $this->store->getCurrencyArray(Store::EXCLUDE_DEFAULT_CURRENCY));
-		$response->setValue("baseCurrency", $this->store->getDefaultCurrency()->getID());
-		$response->setValue("pricingForm", $pricingForm);
+	    $response->set("product", $product->toFlatArray());
+		$response->set("otherCurrencies", $this->store->getCurrencyArray(Store::EXCLUDE_DEFAULT_CURRENCY));
+		$response->set("baseCurrency", $this->store->getDefaultCurrency()->getID());
+		$response->set("pricingForm", $pricingForm);
 
 	    return $response;
 	}
@@ -34,7 +34,7 @@ class ProductPriceController extends StoreManagementController
      */
     public function save()
     {
-        $product = Product::getInstanceByID((int)$this->request->getValue('id'));
+        $product = Product::getInstanceByID((int)$this->request->get('id'));
 
 		$validator = $this->buildPricingFormValidator($product);
 		if ($validator->isValid())
@@ -44,20 +44,20 @@ class ProductPriceController extends StoreManagementController
     		{
     			if ($this->request->isValueSet('price_' . $currency))
     			{
-    				$product->setPrice($currency, $this->request->getValue('price_' . $currency));
+    				$product->setPrice($currency, $this->request->get('price_' . $currency));
     			}
     		}
 
     		// Save shipping
     		$product->loadSpecification();
     		$product->loadPricing();
-    		$product->setFieldValue('stockCount', (int)$this->request->getValue('stockCount'));
-            $product->setFieldValue('shippingWeight', (float)$this->request->getValue('shippingWeight'));
-            $product->setFieldValue('shippingSurchargeAmount', (float)$this->request->getValue('shippingSurchargeAmount'));
-            $product->setFieldValue('minimumQuantity', (int)$this->request->getValue('minimumQuantity'));
-            $product->setFieldValue('isSeparateShipment', $this->request->getValue('isSeparateShipment') ? 1 : 0);
-            $product->setFieldValue('isFreeShipping', $this->request->getValue('isFreeShipping') ? 1 : 0);
-            $product->setFieldValue('isBackOrderable', $this->request->getValue('isBackOrderable') ? 1 : 0);
+    		$product->setFieldValue('stockCount', (int)$this->request->get('stockCount'));
+            $product->setFieldValue('shippingWeight', (float)$this->request->get('shippingWeight'));
+            $product->setFieldValue('shippingSurchargeAmount', (float)$this->request->get('shippingSurchargeAmount'));
+            $product->setFieldValue('minimumQuantity', (int)$this->request->get('minimumQuantity'));
+            $product->setFieldValue('isSeparateShipment', $this->request->get('isSeparateShipment') ? 1 : 0);
+            $product->setFieldValue('isFreeShipping', $this->request->get('isFreeShipping') ? 1 : 0);
+            $product->setFieldValue('isBackOrderable', $this->request->get('isBackOrderable') ? 1 : 0);
             $product->save();
 
             return new JSONResponse(array('status' => "success", 'prices' => $product->getPricesFields()));
@@ -108,7 +108,7 @@ class ProductPriceController extends StoreManagementController
     
 	public function addInventoryValidator(RequestValidator $validator)
 	{
-		if (!$this->config->getValue('DISABLE_INVENTORY'))
+		if (!$this->config->get('DISABLE_INVENTORY'))
 		{    
 			$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required')));  
 			$validator->addCheck('stockCount', new IsNumericCheck($this->translate('_err_stock_not_numeric')));		  
@@ -148,7 +148,7 @@ class ProductPriceController extends StoreManagementController
 		self::addShippingValidator($validator);
 		self::addInventoryValidator($validator);
         		
-		if (!$this->config->getValue('DISABLE_INVENTORY'))
+		if (!$this->config->get('DISABLE_INVENTORY'))
 		{
             $validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required'))); 
         }

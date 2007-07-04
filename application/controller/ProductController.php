@@ -13,7 +13,7 @@ class ProductController extends FrontendController
   	
 	public function index()
 	{
-        $product = Product::getInstanceByID($this->request->getValue('id'), Product::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer'));    	
+        $product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer'));    	
         $product->loadSpecification();
         $product->loadPricing();
 		        
@@ -70,15 +70,15 @@ class ProductController extends FrontendController
         $catRoute = $this->router->getRouteFromUrl($last['url']);
 
 		$response = new ActionResponse();
-        $response->setValue('product', $productArray);        
-        $response->setValue('category', $productArray['Category']);        
-        $response->setValue('images', $product->getImageArray());
-        $response->setValue('related', $this->getRelatedProducts($product));
-        $response->setValue('quantity', $quantity);
-        $response->setValue('cartForm', $this->buildAddToCartForm());        
-		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode())); 
-        $response->setValue('manufacturerFilter', $f);
-        $response->setValue('catRoute', $catRoute);
+        $response->set('product', $productArray);        
+        $response->set('category', $productArray['Category']);        
+        $response->set('images', $product->getImageArray());
+        $response->set('related', $this->getRelatedProducts($product));
+        $response->set('quantity', $quantity);
+        $response->set('cartForm', $this->buildAddToCartForm());        
+		$response->set('currency', $this->request->get('currency', $this->store->getDefaultCurrencyCode())); 
+        $response->set('manufacturerFilter', $f);
+        $response->set('catRoute', $catRoute);
         return $response;        
 	} 
 	

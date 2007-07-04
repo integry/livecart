@@ -19,7 +19,7 @@ class CategoryController extends StoreManagementController
 		$categoryList->unshift(Category::getRootNode());
 		
 		$response = new ActionResponse();
-		$response->setValue('categoryList', $categoryList->toArray($this->store->getDefaultLanguageCode()));        
+		$response->set('categoryList', $categoryList->toArray($this->store->getDefaultLanguageCode()));        
 		return $response;
 	}
 
@@ -36,11 +36,11 @@ class CategoryController extends StoreManagementController
 
 		$response = new ActionResponse();
 		$form = $this->buildForm();
-		$response->setValue("catalogForm", $form);
+		$response->set("catalogForm", $form);
 
-		$categoryArr = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA)->toArray();
+		$categoryArr = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA)->toArray();
 		$form->setData($categoryArr);
-		$response->setValue("categoryId", $categoryArr['ID']);
+		$response->set("categoryId", $categoryArr['ID']);
 
 		return $response;
 	}
@@ -54,7 +54,7 @@ class CategoryController extends StoreManagementController
 	 */
 	public function create()
 	{
-		$parent = Category::getInstanceByID((int)$this->request->getValue("id"));
+		$parent = Category::getInstanceByID((int)$this->request->get("id"));
 		
 		$categoryNode = Category::getNewInstance($parent);
 		$categoryNode->setValueByLang("name", $this->store->getDefaultLanguageCode(), 'dump' );
@@ -86,8 +86,8 @@ class CategoryController extends StoreManagementController
 	    $validator = $this->buildValidator();
 		if($validator->isValid())
 		{
-			$categoryNode = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
-			$categoryNode->setFieldValue('isEnabled', $this->request->getValue('isEnabled', 0));
+			$categoryNode = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
+			$categoryNode->setFieldValue('isEnabled', $this->request->get('isEnabled', 0));
 			
 			$multilingualFields = array("name", "description", "keywords");
 			$categoryNode->setValueArrayByLang($multilingualFields, $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true), $this->request);
@@ -118,7 +118,7 @@ class CategoryController extends StoreManagementController
 	{
 		try
         {
-            Category::deleteByID($this->request->getValue("id"), 0);   
+            Category::deleteByID($this->request->get("id"), 0);   
             $status = true;
         }
         catch (Exception $e)
@@ -136,13 +136,13 @@ class CategoryController extends StoreManagementController
 	 */
 	public function reorder()
 	{
-	    $targetNode = Category::getInstanceByID((int)$this->request->getValue("id"));
-		$parentNode = Category::getInstanceByID((int)$this->request->getValue("parentId"));
+	    $targetNode = Category::getInstanceByID((int)$this->request->get("id"));
+		$parentNode = Category::getInstanceByID((int)$this->request->get("parentId"));
 		
 		$status = true;
 		try
 		{
-			if($direction = $this->request->getValue("direction", false))
+			if($direction = $this->request->get("direction", false))
 			{
 			    if(ActiveTreeNode::DIRECTION_LEFT == $direction) $targetNode->moveLeft(false);
 			    if(ActiveTreeNode::DIRECTION_RIGHT == $direction) $targetNode->moveRight(false);
@@ -165,7 +165,7 @@ class CategoryController extends StoreManagementController
 	  	ClassLoader::import('application.model.filter.*');
 	  	ClassLoader::import('application.model.product.*');
 	    
-	    $category = Category::getInstanceByID((int)$this->request->getValue('id'), Category::LOAD_DATA);
+	    $category = Category::getInstanceByID((int)$this->request->get('id'), Category::LOAD_DATA);
 	    return new JSONResponse(array(
 	        'tabProducts' => $category->totalProductCount->get(),
 	        'tabFilters' => FilterGroup::countItems($category),
@@ -177,13 +177,13 @@ class CategoryController extends StoreManagementController
 	public function xmlBranch() 
 	{
 	    $xmlResponse = new XMLResponse();
-	    $rootID = (int)$this->request->getValue("id");
+	    $rootID = (int)$this->request->get("id");
 
 	    if(!in_array($rootID, array(Category::ROOT_ID, 0))) 
 	    {
 	       $category = Category::getInstanceByID($rootID);
-		   $xmlResponse->setValue("rootID", $rootID);
-           $xmlResponse->setValue("categoryList", $category->getChildNodes(false, true)->toArray($this->store->getDefaultLanguageCode()));
+		   $xmlResponse->set("rootID", $rootID);
+           $xmlResponse->set("categoryList", $category->getChildNodes(false, true)->toArray($this->store->getDefaultLanguageCode()));
 	    }
 	    
 	    return $xmlResponse;
@@ -192,22 +192,22 @@ class CategoryController extends StoreManagementController
 	public function xmlRecursivePath() 
 	{
 	    $xmlResponse = new XMLResponse();
-	    $targetID = (int)$this->request->getValue("id");
+	    $targetID = (int)$this->request->get("id");
 	    
 	    try 
 	    {
     	    $categoriesList = Category::getInstanceByID($targetID)->getPathBranchesArray();
     	    if(count($categoriesList) > 0 && isset($categoriesList['children'][0]['parent'])) 
     	    {
-        	    $xmlResponse->setValue("rootID", $categoriesList['children'][0]['parent']);
-        	    $xmlResponse->setValue("categoryList", $categoriesList);
+        	    $xmlResponse->set("rootID", $categoriesList['children'][0]['parent']);
+        	    $xmlResponse->set("categoryList", $categoriesList);
     	    }
 	    }
 	    catch(Exception $e) 
 	    {
 	    }
 	    
-	    $xmlResponse->setValue("targetID", $targetID);
+	    $xmlResponse->set("targetID", $targetID);
 	    
 	    return $xmlResponse;
 	}

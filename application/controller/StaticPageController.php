@@ -12,10 +12,10 @@ class StaticPageController extends FrontendController
 {
 	public function view() 
 	{
-		$page = StaticPage::getInstanceByHandle($this->request->getValue('handle'));
+		$page = StaticPage::getInstanceByHandle($this->request->get('handle'));
 		
         $response = new ActionResponse();
-        $response->setValue('page', $page->toArray());		
+        $response->set('page', $page->toArray());		
 		return $response;
 	}
 }

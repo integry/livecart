@@ -48,11 +48,11 @@ abstract class ActiveRecordModel extends ActiveRecord
 						break;
 								
 						case 'ARBool':
-							$this->setFieldValue($name, in_array($request->getValue($name), array('on', 1)));
+							$this->setFieldValue($name, in_array($request->get($name), array('on', 1)));
 						break;
 							
 						default:
-							$this->setFieldValue($name, $request->getValue($name));	
+							$this->setFieldValue($name, $request->get($name));	
 						break;	
 					}
 				}

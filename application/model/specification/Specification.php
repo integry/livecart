@@ -10,7 +10,7 @@ abstract class Specification extends ActiveRecordModel implements iSpecification
 		return $this->specField->get();
 	}
 	
-	public function setValue($value)
+	public function set($value)
 	{
 		$this->value->set($value);
 	}	

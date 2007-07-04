@@ -92,7 +92,7 @@ class ProductCount
         $filters = array();
         while ($c->isValueSet('PRICE_FILTER_NAME_' . ++$k))
         {
-            $filters[$k] = array($c->getValue('PRICE_FILTER_FROM_' . $k), $c->getValue('PRICE_FILTER_TO_' . $k));
+            $filters[$k] = array($c->get('PRICE_FILTER_FROM_' . $k), $c->get('PRICE_FILTER_TO_' . $k));
         }          
         
 		// get product counts

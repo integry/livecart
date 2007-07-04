@@ -11,7 +11,7 @@ class HelpController extends BaseController
 {
 	public function view()
 	{
-	  	$id = $this->request->getValue('id');
+	  	$id = $this->request->get('id');
 	  	$lang = $this->store->getLocaleCode();
 
 		// get topic structure
@@ -50,17 +50,17 @@ class HelpController extends BaseController
 		$current['sub'] = $currentTopic->getSubTopicArray();
 	  	
 	  	$response = new ActionResponse();
-	  	$response->setValue('helpTemplate', $currentTopic->getTemplateFile());
-	  	$response->setValue('topicTree', array(0 => $rootTopic));
-	  	$response->setValue('topic', $currentTopic->toArray());
-	  	$response->setValue('next', $currentTopic->getNext()->toArray());
-	  	$response->setValue('prev', $currentTopic->getPrevious()->toArray());
-	  	$response->setValue('PAGE_TITLE', $currentTopic->getName());
-	  	$response->setValue('path', $path);
-	  	$response->setValue('currentId', $id);
-	  	$response->setValue('comments', $commentArray);
-	  	$response->setValue('commentCount', count($commentArray));
-	  	$response->setValue('commentForm', $this->getCommentForm());
+	  	$response->set('helpTemplate', $currentTopic->getTemplateFile());
+	  	$response->set('topicTree', array(0 => $rootTopic));
+	  	$response->set('topic', $currentTopic->toArray());
+	  	$response->set('next', $currentTopic->getNext()->toArray());
+	  	$response->set('prev', $currentTopic->getPrevious()->toArray());
+	  	$response->set('PAGE_TITLE', $currentTopic->getName());
+	  	$response->set('path', $path);
+	  	$response->set('currentId', $id);
+	  	$response->set('comments', $commentArray);
+	  	$response->set('commentCount', count($commentArray));
+	  	$response->set('commentForm', $this->getCommentForm());
 	  	$response->set('rootTopic', $root);
 		  		  	  	
 	  	return $response;
@@ -71,9 +71,9 @@ class HelpController extends BaseController
 	 */
 	public function addComment()
 	{
-		$comment = HelpComment::getNewInstance($this->request->getValue('topicId'));
-		$comment->username->set($this->request->getValue('username'));
-		$comment->text->set($this->request->getValue('text'));
+		$comment = HelpComment::getNewInstance($this->request->get('topicId'));
+		$comment->username->set($this->request->get('username'));
+		$comment->text->set($this->request->get('text'));
 		$comment->save();
 		
 		ActiveRecordModel::removeFromPool($comment);
@@ -81,7 +81,7 @@ class HelpController extends BaseController
 		$comment = ActiveRecordModel::getInstanceById('HelpComment', $comment->getID(), HelpComment::LOAD_DATA);
 		
 		$response = new ActionResponse();
-		$response->setValue('comment', $comment->toArray());
+		$response->set('comment', $comment->toArray());
 		return $response;
 	}
 	
@@ -90,7 +90,7 @@ class HelpController extends BaseController
 	 */
 	public function deleteComment()
 	{
-	    HelpComment::getInstanceByID((int)$this->request->getValue('id'))->delete();
+	    HelpComment::getInstanceByID((int)$this->request->get('id'))->delete();
 		return new JSONResponse(1);
 	}
 	
@@ -99,13 +99,13 @@ class HelpController extends BaseController
 	 */
 	public function saveComment()
 	{
-		$comment = ActiveRecordModel::getInstanceByID('HelpComment', $this->request->getValue('id'), HelpComment::LOAD_DATA);
-		$comment->username->set($this->request->getValue('username'));
-		$comment->text->set($this->request->getValue('text'));
+		$comment = ActiveRecordModel::getInstanceByID('HelpComment', $this->request->get('id'), HelpComment::LOAD_DATA);
+		$comment->username->set($this->request->get('username'));
+		$comment->text->set($this->request->get('text'));
 		$comment->save();
 		
 		$response = new ActionResponse();
-		$response->setValue('comment', $comment->toArray());
+		$response->set('comment', $comment->toArray());
 		return $response;
 	}
 

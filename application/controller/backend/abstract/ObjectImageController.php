@@ -15,7 +15,7 @@ abstract class ObjectImageController extends StoreManagementController
 	    
     public function index()
 	{
-		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), (int)$this->request->getValue('id'));
+		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), (int)$this->request->get('id'));
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle($this->getModelClass(), $this->getForeignKeyName()), $owner->getID()));
 		$filter->setOrder(new ARFieldHandle($this->getModelClass(), 'position'));
@@ -23,15 +23,15 @@ abstract class ObjectImageController extends StoreManagementController
 		$imageArray = ActiveRecordModel::getRecordSetArray($this->getModelClass(), $filter);
 				
 		$response = new ActionResponse();
-		$response->setValue('form', $this->buildForm($owner->getID()));
-		$response->setValue('ownerId', $owner->getID());
-		$response->setValue('images', json_encode($imageArray));
+		$response->set('form', $this->buildForm($owner->getID()));
+		$response->set('ownerId', $owner->getID());
+		$response->set('images', json_encode($imageArray));
 		return $response;		  
 	}    
 	
 	public function upload()
 	{	
-		$ownerId = $this->request->getValue('ownerId');
+		$ownerId = $this->request->get('ownerId');
 		
 		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), $ownerId);
 			  	
@@ -72,8 +72,8 @@ abstract class ObjectImageController extends StoreManagementController
 		$this->setLayout('iframeJs');
 		
 		$response = new ActionResponse();
-		$response->setValue('ownerId', $ownerId);		
-		$response->setValue('result', json_encode($result));		
+		$response->set('ownerId', $ownerId);		
+		$response->set('result', json_encode($result));		
 		return $response;
 	}	
 	
@@ -83,7 +83,7 @@ abstract class ObjectImageController extends StoreManagementController
 		
 	  	try
 		{  
-			$image = ActiveRecord::getInstanceById($this->getModelClass(), $this->request->getValue('imageId'), true);
+			$image = ActiveRecord::getInstanceById($this->getModelClass(), $this->request->get('imageId'), true);
 			
 			$multilingualFields = array("title");
 			$image->setValueArrayByLang($multilingualFields, $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true), $this->request);			
@@ -131,9 +131,9 @@ abstract class ObjectImageController extends StoreManagementController
 		}		
 		
 		$this->setLayout('iframeJs');
-		$response->setValue('ownerId', $this->request->getValue('ownerId'));		
-		$response->setValue('imageId', $this->request->getValue('imageId'));		
-	  	$response->setValue('result', json_encode($result));
+		$response->set('ownerId', $this->request->get('ownerId'));		
+		$response->set('imageId', $this->request->get('imageId'));		
+	  	$response->set('result', json_encode($result));
 		return $response;
 	}	
 	
@@ -145,7 +145,7 @@ abstract class ObjectImageController extends StoreManagementController
 	{  					
 		try
 		{
-			call_user_func_array(array($this->getModelClass(), 'deleteByID'), array($this->request->getValue('id')));
+			call_user_func_array(array($this->getModelClass(), 'deleteByID'), array($this->request->get('id')));
 		  	$success = true;
 		}
 		catch (ARNotFoundException $exc)
@@ -162,9 +162,9 @@ abstract class ObjectImageController extends StoreManagementController
 	 */
 	public function saveOrder()
 	{
-	  	$ownerId = $this->request->getValue('ownerId');
+	  	$ownerId = $this->request->get('ownerId');
 	  	
-		$order = $this->request->getValue('catImageList_' . $ownerId, $this->request->getValue('prodImageList_' . $ownerId));
+		$order = $this->request->get('catImageList_' . $ownerId, $this->request->get('prodImageList_' . $ownerId));
 			
 		foreach ($order as $key => $value)
 		{
@@ -183,7 +183,7 @@ abstract class ObjectImageController extends StoreManagementController
         }
 
 		$resp = new RawResponse();
-	  	$resp->setContent($this->request->getValue('draggedId'));
+	  	$resp->setContent($this->request->get('draggedId'));
 		return $resp;		  	
 	}				
 	

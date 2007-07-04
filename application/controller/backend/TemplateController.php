@@ -17,7 +17,7 @@ class TemplateController extends StoreManagementController
 	{        
 		$files = Template::getTree();
 		
-		if (!$this->config->getValue('SHOW_BACKEND_TEMPLATE_FILES'))
+		if (!$this->config->get('SHOW_BACKEND_TEMPLATE_FILES'))
 		{
             unset($files['backend']);
             unset($files['block']['subs']['backend']);
@@ -28,18 +28,18 @@ class TemplateController extends StoreManagementController
         }
 
         $response = new ActionResponse();
-		$response->setValue('categories', json_encode($files));        
+		$response->set('categories', json_encode($files));        
         return $response;
 	}	
 	
 	public function edit()
 	{
-		$template = new Template($this->request->getValue('file'));  	
+		$template = new Template($this->request->get('file'));  	
 		
 		$response = new ActionResponse();	  	
-	  	$response->setValue('fileName', $template->getFileName());
-	  	$response->setValue('form', $this->getTemplateForm($template));
-	  	$response->setValue('code', base64_encode($template->getCode()));
+	  	$response->set('fileName', $template->getFileName());
+	  	$response->set('form', $this->getTemplateForm($template));
+	  	$response->set('code', base64_encode($template->getCode()));
 		return $response;		       
     }
 	
@@ -50,10 +50,10 @@ class TemplateController extends StoreManagementController
 	
 	public function save()
 	{
-		$code = $this->request->getValue('code');
+		$code = $this->request->get('code');
         //$code = preg_replace('/&\#([\d]{1,3});/e', "chr('\\1')", $code);		
 
-        $template = new Template($this->request->getValue('file')); 
+        $template = new Template($this->request->get('file')); 
 		$template->setCode($code);
 		$res = $template->save();
 		
@@ -70,7 +70,7 @@ class TemplateController extends StoreManagementController
 		ClassLoader::import("framework.request.validator.Form");
 		$form = new Form(new RequestValidator('template', $this->request));
         $form->setData($template->toArray());
-		$form->setValue('code', '');
+		$form->set('code', '');
 		return $form;
 	}
 }

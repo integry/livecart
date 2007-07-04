@@ -49,7 +49,7 @@ class Config
         return isset($this->values[$key]);
     }
 	
-	public function getValue($key)
+	public function get($key)
 	{
 		if (!isset($this->values[$key]) && !$this->isUpdated)
 		{
@@ -93,13 +93,13 @@ class Config
         // @todo - this can obviously be optimized
         foreach ($this->values as $key => $value)
         {
-            $array[$key] = $this->getValue($key);
+            $array[$key] = $this->get($key);
         }
         
         return $array;
     }
 
-	public function setValue($key, $value)
+	public function set($key, $value)
 	{
 		$this->values[$key] = $value;
 		

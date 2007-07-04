@@ -102,7 +102,7 @@ class Store
 	{
 		if (is_null(self::$isCustomizationMode))
 		{
-			self::$isCustomizationMode = $this->session->getValue('customizationMode');
+			self::$isCustomizationMode = $this->session->get('customizationMode');
 		}	
 		
 		return self::$isCustomizationMode;
@@ -112,7 +112,7 @@ class Store
 	{
 		if (is_null(self::$isTranslationMode))
 		{
-			self::$isTranslationMode = $this->session->getValue('translationMode');
+			self::$isTranslationMode = $this->session->get('translationMode');
 		}	
 		
 		return self::$isTranslationMode;
@@ -253,7 +253,7 @@ class Store
 	public function getEnabledCountries()
 	{
 		$countries = $this->locale->info()->getAllCountries();
-		$enabled = Config::getInstance()->getValue('ENABLED_COUNTRIES');
+		$enabled = Config::getInstance()->get('ENABLED_COUNTRIES');
 		
 		$countries = array_intersect_key($countries, $enabled);
 		
@@ -262,7 +262,7 @@ class Store
 
 	public function isValidCountry($countryCode)
 	{
-		$enabled = Config::getInstance()->getValue('ENABLED_COUNTRIES');
+		$enabled = Config::getInstance()->get('ENABLED_COUNTRIES');
 		return isset($enabled[$countryCode]);		
 	}
 
@@ -396,7 +396,7 @@ class Store
 	 */
 	public function getCreditCardHandler(TransactionDetails $details = null)
 	{
-		$handler = $this->config->getValue('CC_HANDLER');
+		$handler = $this->config->get('CC_HANDLER');
 		
 		ClassLoader::import('library.payment.method.cc.' . $handler . '.' . $handler);
 
@@ -420,7 +420,7 @@ class Store
 		$c = $this->config->getSection('payment/' . $className);
 		foreach ($c as $key => $value)
 		{
-			$value = $this->config->getValue($key);
+			$value = $this->config->get($key);
 			$key = substr($key, strlen($className) + 1);
 			$inst->setConfigValue($key, $value);
 		}
@@ -433,7 +433,7 @@ class Store
 		$key = get_class($handler) . '_cardTypes';
 		if ($this->config->isValueSet($key))
 		{
-			$types = array_keys($this->config->getValue($key));
+			$types = array_keys($this->config->get($key));
 			return array_combine($types, $types);			
 		}
     }
@@ -452,7 +452,7 @@ class Store
 	 */
 	public function getEnabledRealTimeShippingServices()
 	{
-		return array_flip($this->config->getValue('SHIPPING_HANDLERS'));
+		return array_flip($this->config->get('SHIPPING_HANDLERS'));
 	}
 
 	/**
@@ -467,7 +467,7 @@ class Store
 		$c = $this->config->getSection('shipping/' . $className);
 		foreach ($c as $key => $value)
 		{
-			$value = $this->config->getValue($key);
+			$value = $this->config->get($key);
             $key = substr($key, strlen($className) + 1);
 			$inst->setConfigValue($key, $value);
 		}

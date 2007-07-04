@@ -14,8 +14,8 @@ class IndexController extends FrontendController
 //		return new ActionResponse();
         ClassLoader::import('application.controller.CategoryController');
 		
-		$this->request->setValue('id', Category::ROOT_ID);
-		$this->request->setValue('cathandle', '.');
+		$this->request->set('id', Category::ROOT_ID);
+		$this->request->set('cathandle', '.');
 		
         $controller = new CategoryController($this->request);		
 		$response = $controller->index();

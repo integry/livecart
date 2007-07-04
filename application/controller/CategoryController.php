@@ -31,15 +31,15 @@ class CategoryController extends FrontendController
 	public function index()
 	{
         // get category instance
-		$this->categoryID = $this->request->getValue('id');
+		$this->categoryID = $this->request->get('id');
 		$this->category = Category::getInstanceById($this->categoryID, Category::LOAD_DATA);
 	
 		$this->getAppliedFilters();
 	
 		// pagination
-		$currentPage = $this->request->getValue('page', 1); 
+		$currentPage = $this->request->get('page', 1); 
 
-		$perPage = $this->config->getValue('NUM_PRODUCTS_PER_CAT');
+		$perPage = $this->config->get('NUM_PRODUCTS_PER_CAT');
 		$offsetStart = (($currentPage - 1) * $perPage) + 1;
 		$offsetEnd = $currentPage * $perPage;
 		
@@ -47,7 +47,7 @@ class CategoryController extends FrontendController
 		$selectFilter->setLimit($perPage, $offsetStart - 1);
 
       	// create new search filter
-        $query = $this->request->getValue('q');
+        $query = $this->request->get('q');
         if ($query)
       	{
 			$this->filters[] = new SearchFilter($query);    
@@ -55,13 +55,13 @@ class CategoryController extends FrontendController
 
         // sorting
         $sort = array();
-        foreach ($this->config->getValue('ALLOWED_SORT_ORDER') as $opt => $status)
+        foreach ($this->config->get('ALLOWED_SORT_ORDER') as $opt => $status)
         {
             $sort[strtolower($opt)] = $this->translate($opt);
         }
 
-        $order = $this->request->getValue('sort');
-        $defOrder = strtolower($this->config->getValue('SORT_ORDER'));
+        $order = $this->request->get('sort');
+        $defOrder = strtolower($this->config->get('SORT_ORDER'));
         if (!$order || !isset($sort[$order]))
         {
             $order = $defOrder;
@@ -91,14 +91,14 @@ class CategoryController extends FrontendController
         $this->totalCount = $totalCount;
 				
 		$urlParams = array('controller' => 'category', 'action' => 'index', 
-						   'id' => $this->request->getValue('id'),
-						   'cathandle' => $this->request->getValue('cathandle'),
+						   'id' => $this->request->get('id'),
+						   'cathandle' => $this->request->get('cathandle'),
 						   'page' => '_000_',
 						   );
 						   
-		if ($this->request->getValue('filters'))
+		if ($this->request->get('filters'))
 		{
-			$urlParams['filters'] = $this->request->getValue('filters');
+			$urlParams['filters'] = $this->request->get('filters');
 		}
 
 		$paginationUrl = str_replace('_000_', '_page_', $this->router->createURL($urlParams));
@@ -130,7 +130,7 @@ class CategoryController extends FrontendController
 		$this->getFilterCounts();
 		
 		$filters = array();
-		if ($showAll = $this->request->getValue('showAll'))
+		if ($showAll = $this->request->get('showAll'))
 		{
 			if ('brand' == $showAll)
 			{
@@ -149,28 +149,28 @@ class CategoryController extends FrontendController
 		}
         
 		$response = new ActionResponse();
-		$response->setValue('id', $this->categoryID);
-		$response->setValue('url', $paginationUrl);
-		$response->setValue('products', $products);
-		$response->setValue('count', $totalCount);
-		$response->setValue('offsetStart', $offsetStart);
-		$response->setValue('offsetEnd', $offsetEnd);
-		$response->setValue('perPage', $perPage);
-		$response->setValue('currentPage', $currentPage);
-		$response->setValue('category', $this->category->toArray());
-		$response->setValue('subCategories', $subCategories);
-		$response->setValue('filterChainHandle', $filterChainHandle);
-		$response->setValue('currency', $this->getRequestCurrency());
-		$response->setValue('sortOptions', $sort);
-		$response->setValue('sortForm', $this->buildSortForm($order));
-		$response->setValue('categoryNarrow', $categoryNarrow);
-		$response->setValue('subCatFeatured', $subCatFeatured);
-		$response->setValue('allFilters', $filters);
-		$response->setValue('showAll', $showAll);
+		$response->set('id', $this->categoryID);
+		$response->set('url', $paginationUrl);
+		$response->set('products', $products);
+		$response->set('count', $totalCount);
+		$response->set('offsetStart', $offsetStart);
+		$response->set('offsetEnd', $offsetEnd);
+		$response->set('perPage', $perPage);
+		$response->set('currentPage', $currentPage);
+		$response->set('category', $this->category->toArray());
+		$response->set('subCategories', $subCategories);
+		$response->set('filterChainHandle', $filterChainHandle);
+		$response->set('currency', $this->getRequestCurrency());
+		$response->set('sortOptions', $sort);
+		$response->set('sortForm', $this->buildSortForm($order));
+		$response->set('categoryNarrow', $categoryNarrow);
+		$response->set('subCatFeatured', $subCatFeatured);
+		$response->set('allFilters', $filters);
+		$response->set('showAll', $showAll);
 						
 		if (isset($searchQuery))
         {
-    		$response->setValue('searchQuery', $searchQuery);
+    		$response->set('searchQuery', $searchQuery);
         }		
 		
 		return $response;
@@ -376,7 +376,7 @@ class CategoryController extends FrontendController
     {
         $selFilter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Product', 'isFeatured'), true));
 		$selFilter->setOrder(new ARFieldHandle('Product', 'salesRank'));
-		$selFilter->setLimit($this->config->getValue('NUM_PRODUCTS_PER_CAT'));
+		$selFilter->setLimit($this->config->get('NUM_PRODUCTS_PER_CAT'));
 		
 		$featuredFilter = new ProductFilter($this->category, $selFilter);
 		$featuredFilter->includeSubcategories();
@@ -392,7 +392,7 @@ class CategoryController extends FrontendController
 		ClassLoader::import("framework.request.validator.Form");        
         $form = new Form(new RequestValidator("productSort", $this->request));
         $form->enableClientSideValidation(false);
-        $form->setValue('sort', $order);
+        $form->set('sort', $order);
         return $form;
     }
 	
@@ -403,8 +403,8 @@ class CategoryController extends FrontendController
 	 	$response = new BlockResponse();
 	 	
 		// remove empty filter groups
-		$maxCriteria = $this->config->getValue('MAX_FILTER_CRITERIA_COUNT'); 
-		$showAll = $this->request->getValue('showAll');
+		$maxCriteria = $this->config->get('MAX_FILTER_CRITERIA_COUNT'); 
+		$showAll = $this->request->get('showAll');
 		
 		$url = $this->router->createUrlFromRoute($this->router->getRequestedRoute());
 		foreach ($filterGroups as $key => $grp)
@@ -430,12 +430,12 @@ class CategoryController extends FrontendController
         {
 			$chunks = array_chunk($manFilters, $maxCriteria);
 			$manFilters = $chunks[0];
-			$response->setValue('allManufacturers', Router::setUrlQueryParam($url, 'showAll', 'brand'));		  	
+			$response->set('allManufacturers', Router::setUrlQueryParam($url, 'showAll', 'brand'));		  	
 		}
         
         if (count($manFilters) > 1)
         {
-    	 	$response->setValue('manGroup', array('filters' => $manFilters));
+    	 	$response->set('manGroup', array('filters' => $manFilters));
         }
         
         // filter by prices
@@ -443,7 +443,7 @@ class CategoryController extends FrontendController
         
         if (count($priceFilters) > 1)
         {
-    	 	$response->setValue('priceGroup', array('filters' => $priceFilters));
+    	 	$response->set('priceGroup', array('filters' => $priceFilters));
         }
 
 		$filterArray = array();
@@ -452,9 +452,9 @@ class CategoryController extends FrontendController
 			$filterArray[] = $filter->toArray();
 		}		
 
-		$response->setValue('filters', $filterArray);	
-	 	$response->setValue('category', $this->category->toArray());
-	 	$response->setValue('groups', $filterGroups);
+		$response->set('filters', $filterArray);	
+	 	$response->set('category', $this->category->toArray());
+	 	$response->set('groups', $filterGroups);
 	 	
 		return $response;	 	
 	}	
@@ -546,7 +546,7 @@ class CategoryController extends FrontendController
 	
 	public function getAppliedFilters()
 	{
-		if ($this->request->getValue('filters'))
+		if ($this->request->get('filters'))
 		{
             $valueFilterIds = array();
 			$selectorFilterIds = array();
@@ -554,7 +554,7 @@ class CategoryController extends FrontendController
 			$priceFilterIds = array();
 			$searchFilters = array();
 			
-			$filters = explode(',', $this->request->getValue('filters'));
+			$filters = explode(',', $this->request->get('filters'));
 
 			foreach ($filters as $filter)
 			{

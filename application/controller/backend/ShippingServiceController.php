@@ -17,7 +17,7 @@ class ShippingServiceController extends StoreManagementController
 {
 	public function index() 
 	{
-	    if(($zoneID = (int)$this->request->getValue('id')) <= 0) 
+	    if(($zoneID = (int)$this->request->get('id')) <= 0) 
 	    {
 	        $deliveryZoneArray = array('ID' => '');
 	        $shippingServices = ShippingService::getByDeliveryZone()->toArray();
@@ -36,12 +36,12 @@ class ShippingServiceController extends StoreManagementController
 		
 		
 		$response = new ActionResponse();
-		$response->setValue('shippingServices', $shippingServices);
-		$response->setValue('newService', array('DeliveryZone' => $deliveryZoneArray));
-		$response->setValue('newRate', array('ShippingService' => array('DeliveryZone' => $deliveryZoneArray, 'ID' => '')));
-		$response->setValue('deliveryZone', $deliveryZoneArray);
-	    $response->setValue('defaultCurrencyCode', $this->store->getDefaultCurrency()->getID());
-	    $response->setValue('form', $form);
+		$response->set('shippingServices', $shippingServices);
+		$response->set('newService', array('DeliveryZone' => $deliveryZoneArray));
+		$response->set('newRate', array('ShippingService' => array('DeliveryZone' => $deliveryZoneArray, 'ID' => '')));
+		$response->set('deliveryZone', $deliveryZoneArray);
+	    $response->set('defaultCurrencyCode', $this->store->getDefaultCurrency()->getID());
+	    $response->set('form', $form);
 	    return $response;
 	}
 
@@ -50,7 +50,7 @@ class ShippingServiceController extends StoreManagementController
 	 */
     public function delete()
     {
-        $service = ShippingService::getInstanceByID((int)$this->request->getValue('id'));
+        $service = ShippingService::getInstanceByID((int)$this->request->get('id'));
         $service->delete();
         
         return new JSONResponse(array('status' => 'success'));
@@ -58,16 +58,16 @@ class ShippingServiceController extends StoreManagementController
     
     public function edit()
     {
-	    $shippingService = ShippingService::getInstanceByID($this->request->getValue('id'), true);
+	    $shippingService = ShippingService::getInstanceByID($this->request->get('id'), true);
 		
 	    $form = $this->createShippingServiceForm();
 		$form->setData($shippingService->toArray());
 		$response = new ActionResponse();
-		$response->setValue('service', $shippingService->toArray());
-		$response->setValue('shippingRates', $shippingService->getRates()->toArray());
-		$response->setValue('newRate', array('ShippingService' => $shippingService->toArray()));
-	    $response->setValue('defaultCurrencyCode', $this->store->getDefaultCurrency()->getID());
-		$response->setValue('form', $form);
+		$response->set('service', $shippingService->toArray());
+		$response->set('shippingRates', $shippingService->getRates()->toArray());
+		$response->set('newRate', array('ShippingService' => $shippingService->toArray()));
+	    $response->set('defaultCurrencyCode', $this->store->getDefaultCurrency()->getID());
+		$response->set('form', $form);
 	    
 	    return $response;
     }
@@ -77,7 +77,7 @@ class ShippingServiceController extends StoreManagementController
      */
     public function create()
     {
-        if(($deliveryZoneId = (int)$this->request->getValue('deliveryZoneID')) > 0)
+        if(($deliveryZoneId = (int)$this->request->get('deliveryZoneID')) > 0)
         {
             $deliveryZone = DeliveryZone::getInstanceByID($deliveryZoneId, true);
         }
@@ -86,7 +86,7 @@ class ShippingServiceController extends StoreManagementController
             $deliveryZone = null;
         }
      
-        $shippingService = ShippingService::getNewInstance($deliveryZone, $this->request->getValue('name'), $this->request->getValue('rangeType'));
+        $shippingService = ShippingService::getNewInstance($deliveryZone, $this->request->get('name'), $this->request->get('rangeType'));
 
         return $this->save($shippingService);
     }
@@ -96,7 +96,7 @@ class ShippingServiceController extends StoreManagementController
      */
     public function update()
     {
-        $shippingService = ShippingService::getInstanceByID((int)$this->request->getValue('serviceID'));
+        $shippingService = ShippingService::getInstanceByID((int)$this->request->get('serviceID'));
         return $this->save($shippingService);
     }
     
@@ -117,8 +117,8 @@ class ShippingServiceController extends StoreManagementController
      */
     public function sort()
     {
-        echo $this->request->getValue('target');
-        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        echo $this->request->get('target');
+        foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
         {
             echo $key;
            $shippingService = ShippingService::getInstanceByID((int)$key);
@@ -171,7 +171,7 @@ class ShippingServiceController extends StoreManagementController
     {       
         $ratesData = $this->getRatesFromRequest();
         $rates = array();
-        if(!($errors = $this->isNotValid($this->request->getValue('name'), $ratesData)))
+        if(!($errors = $this->isNotValid($this->request->get('name'), $ratesData)))
         {
 	        $shippingService->setValueArrayByLang(array('name'), $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true, false), $this->request);      
 		    $shippingService->save();
@@ -229,7 +229,7 @@ class ShippingServiceController extends StoreManagementController
     private function validateRate($id, $rate)
     {
        $errors = array();   
-       if($this->request->getValue('rangeType') == ShippingService::WEIGHT_BASED)
+       if($this->request->get('rangeType') == ShippingService::WEIGHT_BASED)
        {
            if(!is_numeric($rate['weightRangeStart'])) $errors["rate_" . $id . "_weightRangeStart"] = $this->translate('_error_range_start_should_be_a_float_value');
            if(!is_numeric($rate['weightRangeEnd'])) $errors["rate_" . $id . "_weightRangeEnd"] = $this->translate('_error_range_end_should_be_a_float_value');   

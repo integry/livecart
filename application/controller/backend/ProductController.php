@@ -18,7 +18,7 @@ class ProductController extends StoreManagementController
 {
 	public function index()
 	{
-        $category = Category::getInstanceByID($this->request->getValue("id"), Category::LOAD_DATA);
+        $category = Category::getInstanceByID($this->request->get("id"), Category::LOAD_DATA);
 	
 		$availableColumns = $this->getAvailableColumns($category);
 		$displayedColumns = $this->getDisplayedColumns($category);
@@ -30,31 +30,31 @@ class ProductController extends StoreManagementController
 			
 		//$response = $this->productList($category, new ActionResponse());
 		$response = new ActionResponse();
-        $response->setValue("massForm", $this->getMassForm());
-        $response->setValue("displayedColumns", $displayedColumns);
-        $response->setValue("availableColumns", $availableColumns);
-		$response->setValue("categoryID", $category->getID());
-		$response->setValue("offset", $this->request->getValue('offset'));
-		$response->setValue("totalCount", '0');
-		$response->setValue("currency", $this->store->getDefaultCurrency()->getID());
-		$response->setValue("filters", $this->request->getValue('filters'));
+        $response->set("massForm", $this->getMassForm());
+        $response->set("displayedColumns", $displayedColumns);
+        $response->set("availableColumns", $availableColumns);
+		$response->set("categoryID", $category->getID());
+		$response->set("offset", $this->request->get('offset'));
+		$response->set("totalCount", '0');
+		$response->set("currency", $this->store->getDefaultCurrency()->getID());
+		$response->set("filters", $this->request->get('filters'));
 
 		$path = $this->getCategoryPathArray($category);
-		$response->setValue("path", $path);
+		$response->set("path", $path);
 				
 		return $response;
 	}
 
 	public function changeColumns()
 	{		
-		$columns = array_keys($this->request->getValue('col', array()));
+		$columns = array_keys($this->request->get('col', array()));
 		$this->setSessionData('columns', $columns);
-		return new ActionRedirectResponse('backend.product', 'index', array('id' => $this->request->getValue('category')));
+		return new ActionRedirectResponse('backend.product', 'index', array('id' => $this->request->get('category')));
 	}
 	
 	public function lists()
 	{
-		$id = substr($this->request->getValue("id"), 9);
+		$id = substr($this->request->get("id"), 9);
 		$category = Category::getInstanceByID($id, Category::LOAD_DATA);
 
 		$filter = new ARSelectFilter();
@@ -141,38 +141,38 @@ class ProductController extends StoreManagementController
     {        
 		$filter = new ARSelectFilter();
 		
-        $category = Category::getInstanceByID($this->request->getValue('id'), Category::LOAD_DATA);
+        $category = Category::getInstanceByID($this->request->get('id'), Category::LOAD_DATA);
         $cond = new EqualsOrMoreCond(new ARFieldHandle('Category', 'lft'), $category->lft->get());
 		$cond->addAND(new EqualsOrLessCond(new ARFieldHandle('Category', 'rgt'), $category->rgt->get()));
 		
         $filter->setCondition($cond);
         $filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->store->getDefaultCurrencyCode() . '")', 'ID');
 		
-		$filters = (array)json_decode($this->request->getValue('filters'));
-		$this->request->setValue('filters', $filters);
+		$filters = (array)json_decode($this->request->get('filters'));
+		$this->request->set('filters', $filters);
 		
         $grid = new ActiveGrid($this->request, $filter, 'Product');
         $filter->setLimit(0);
         					
 		$products = ActiveRecordModel::getRecordSet('Product', $filter, Product::LOAD_REFERENCES);
 		
-        $act = $this->request->getValue('act');
+        $act = $this->request->get('act');
 		$field = array_pop(explode('_', $act, 2));
 		
 		if ('manufacturer' == $act)
 		{
-			$manufacturer = Manufacturer::getInstanceByName($this->request->getValue('manufacturer'));
+			$manufacturer = Manufacturer::getInstanceByName($this->request->get('manufacturer'));
 		}
 		else if ('price' == $act || 'inc_price' == $act)
 		{
 			ProductPrice::loadPricesForRecordSet($products);	
 			$baseCurrency = $this->store->getDefaultCurrencyCode();
-			$price = $this->request->getValue($act);
+			$price = $this->request->get($act);
 			$currencies = $this->store->getCurrencySet();
 		}
 		else if ('addRelated' == $act)
 		{
-			$relatedProduct = Product::getInstanceBySKU($this->request->getValue('related'));
+			$relatedProduct = Product::getInstanceBySKU($this->request->get('related'));
 			if (!$relatedProduct)
 			{
 				return new JSONResponse(0);
@@ -191,7 +191,7 @@ class ProductController extends StoreManagementController
             }
             else if (substr($act, 0, 4) == 'set_')
             {
-                $product->setFieldValue($field, $this->request->getValue('set_' . $field));                    
+                $product->setFieldValue($field, $this->request->get('set_' . $field));                    
             }
             else if ('delete' == $act)
             {
@@ -219,7 +219,7 @@ class ProductController extends StoreManagementController
 			}
 			else if ('inc_stock' == $act)
 			{
-				$product->stockCount->set($product->stockCount->get() + $this->request->getValue($act));
+				$product->stockCount->set($product->stockCount->get() + $this->request->get($act));
 			}        
 			else if ('addRelated' == $act)
 			{
@@ -229,7 +229,7 @@ class ProductController extends StoreManagementController
 			$product->save();
         }		
 		
-		return new JSONResponse($this->request->getValue('act'));	
+		return new JSONResponse($this->request->get('act'));	
     }	
 
 	public function autoComplete()
@@ -239,11 +239,11 @@ class ProductController extends StoreManagementController
 		  	
 		$resp = array();
 				  	
-		$field = $this->request->getValue('field');
+		$field = $this->request->get('field');
 		
 		if (in_array($field, array('sku', 'URL', 'keywords')))
 		{
-		  	$c = new LikeCond(new ARFieldHandle('Product', $field), $this->request->getValue($field) . '%');
+		  	$c = new LikeCond(new ARFieldHandle('Product', $field), $this->request->get($field) . '%');
 		  	$f->setCondition($c);		  	
 
 			$f->setOrder(new ARFieldHandle('Product', $field), 'ASC');
@@ -263,11 +263,11 @@ class ProductController extends StoreManagementController
 		
 		else if ('name' == $field)
 		{
-		  	$c = new LikeCond(new ARFieldHandle('Product', $field), '%:"' . $this->request->getValue($field) . '%');
+		  	$c = new LikeCond(new ARFieldHandle('Product', $field), '%:"' . $this->request->get($field) . '%');
 		  	$f->setCondition($c);		  	
 
 			$locale = $this->locale->getLocaleCode();
-			$langCond = new LikeCond(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), $this->request->getValue($field) . '%');
+			$langCond = new LikeCond(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), $this->request->get($field) . '%');
 			$c->addAND($langCond);
 					  	
 		  	$f->setOrder(Product::getLangSearchHandle(new ARFieldHandle('Product', 'name'), $locale), 'ASC');
@@ -291,8 +291,8 @@ class ProductController extends StoreManagementController
             $searchHandle = MultiLingualObject::getLangSearchHandle($handle, $locale);
 
 		  	$f->setCondition(new EqualsCond(new ARFieldHandle('SpecificationStringValue', 'specFieldID'), $id));
-            $f->mergeCondition(new LikeCond($handle, '%:"' . $this->request->getValue($field) . '%'));            
-			$f->mergeCondition(new LikeCond($searchHandle, $this->request->getValue($field) . '%'));
+            $f->mergeCondition(new LikeCond($handle, '%:"' . $this->request->get($field) . '%'));            
+			$f->mergeCondition(new LikeCond($searchHandle, $this->request->get($field) . '%'));
 					  	
 		  	$f->setOrder($searchHandle, 'ASC');
 			  		  	
@@ -318,12 +318,12 @@ class ProductController extends StoreManagementController
 	 */
 	public function add()
 	{
-		$category = Category::getInstanceByID($this->request->getValue("id"), ActiveRecordModel::LOAD_DATA);
+		$category = Category::getInstanceByID($this->request->get("id"), ActiveRecordModel::LOAD_DATA);
 		
 		$response = $this->productForm(Product::getNewInstance($category, ''));		
-		if ($this->config->getValue('AUTO_GENERATE_SKU'))
+		if ($this->config->get('AUTO_GENERATE_SKU'))
 		{
-            $response->getValue('productForm')->setValue('autosku', true);
+            $response->get('productForm')->set('autosku', true);
         }
 		return $response;
 	}
@@ -333,14 +333,14 @@ class ProductController extends StoreManagementController
 	 */
 	public function create()
 	{
-	    $product = Product::getNewInstance(Category::getInstanceByID($this->request->getValue('categoryID')), $this->translate('_new_product'));
+	    $product = Product::getNewInstance(Category::getInstanceByID($this->request->get('categoryID')), $this->translate('_new_product'));
 	    
 	    $response = $this->save($product);
 	    
 	    if ($response instanceOf ActionResponse)
 	    {
-            $response->getValue('productForm')->clearData();
-            $response->setValue('id', $product->getID());
+            $response->get('productForm')->clearData();
+            $response->set('id', $product->getID());
             return $response;
         }
         else
@@ -354,7 +354,7 @@ class ProductController extends StoreManagementController
 	 */
 	public function update()
 	{
-	  	$product = Product::getInstanceByID($this->request->getValue('id'), ActiveRecordModel::LOAD_DATA);
+	  	$product = Product::getInstanceByID($this->request->get('id'), ActiveRecordModel::LOAD_DATA);
 	  	$product->loadPricing();
 	  	$product->loadSpecification();
 	  	
@@ -363,15 +363,15 @@ class ProductController extends StoreManagementController
 
 	public function basicData()
 	{
-	    $product = Product::getInstanceById($this->request->getValue('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
+	    $product = Product::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
 		$response = $this->productForm($product);
-		$response->setValue('counters', $this->countTabsItems()->getData());
+		$response->set('counters', $this->countTabsItems()->getData());
 		return $response;
 	}
 
 	public function countTabsItems() {
 	  	ClassLoader::import('application.model.product.*');
-	  	$product = Product::getInstanceByID((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA);
+	  	$product = Product::getInstanceByID((int)$this->request->get('id'), ActiveRecord::LOAD_DATA);
 	    
 	  	return new JSONResponse(array(
 	        'tabProductRelationship' => $product->getRelationships(false)->getTotalRecordCount(),
@@ -382,9 +382,9 @@ class ProductController extends StoreManagementController
 	
 	public function info()
 	{
-	    $product = Product::getInstanceById($this->request->getValue('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
+	    $product = Product::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
         $response = new ActionResponse();
-        $response->setValue('product', $product->toArray());
+        $response->set('product', $product->toArray());
         return $response;        
     }
 
@@ -487,7 +487,7 @@ class ProductController extends StoreManagementController
 			// create new specField values
 			if ($this->request->isValueSet('other'))
 			{
-				$other = $this->request->getValue('other');
+				$other = $this->request->get('other');
 				foreach ($other as $fieldID => $values)
 				{
 					$field = SpecField::getInstanceByID($fieldID);
@@ -503,7 +503,7 @@ class ProductController extends StoreManagementController
 							  	$fieldValue->setValueByLang('value', $this->store->getDefaultLanguageCode(), $value);
 							  	$fieldValue->save();
 							  	
-							  	$this->request->setValue('specItem_' . $fieldValue->getID(), 'on');				    
+							  	$this->request->set('specItem_' . $fieldValue->getID(), 'on');				    
 								$needReload = 1;
 							}
 						}  					  
@@ -511,13 +511,13 @@ class ProductController extends StoreManagementController
 					else
 					{
 						// single select
-						if ('other' == $this->request->getValue('specField_' . $fieldID))
+						if ('other' == $this->request->get('specField_' . $fieldID))
 						{
 							$fieldValue = SpecFieldValue::getNewInstance($field);
 						  	$fieldValue->setValueByLang('value', $this->store->getDefaultLanguageCode(), $values);
 						  	$fieldValue->save();
 						  	
-						  	$this->request->setValue('specField_' . $fieldID, $fieldValue->getID());    
+						  	$this->request->set('specField_' . $fieldID, $fieldValue->getID());    
 							$needReload = 1;					  
 						}					  
 					}
@@ -635,8 +635,8 @@ class ProductController extends StoreManagementController
         // default product type
         if (!$product->isLoaded())
         {
-            $product->type->set(substr($this->config->getValue('DEFAULT_PRODUCT_TYPE'), -1));
-            $form->setValue('type', $product->type->get());
+            $product->type->set(substr($this->config->get('DEFAULT_PRODUCT_TYPE'), -1));
+            $form->set('type', $product->type->get());
         }
     
 		// arrange SpecFields's into groups
@@ -655,20 +655,20 @@ class ProductController extends StoreManagementController
 		}		
 							
 		$response = new ActionResponse();
-		$response->setValue("cat", $product->category->get()->getID());
-		$response->setValue("specFieldList", $specFieldsByGroup);
-		$response->setValue("productForm", $form);
-		$response->setValue("path", $product->category->get()->getPathNodeArray());
-		$response->setValue("multiLingualSpecFieldss", $multiLingualSpecFields);
-		$response->setValue("productTypes", $types);
-		$response->setValue("baseCurrency", $this->store->getDefaultCurrency()->getID());
-		$response->setValue("otherCurrencies", $this->store->getCurrencyArray(Store::EXCLUDE_DEFAULT_CURRENCY));
+		$response->set("cat", $product->category->get()->getID());
+		$response->set("specFieldList", $specFieldsByGroup);
+		$response->set("productForm", $form);
+		$response->set("path", $product->category->get()->getPathNodeArray());
+		$response->set("multiLingualSpecFieldss", $multiLingualSpecFields);
+		$response->set("productTypes", $types);
+		$response->set("baseCurrency", $this->store->getDefaultCurrency()->getID());
+		$response->set("otherCurrencies", $this->store->getCurrencyArray(Store::EXCLUDE_DEFAULT_CURRENCY));
 		$productData = $product->toArray();
 		if (empty($productData['ID']))
 		{
 			$productData['ID'] = 0;  	
 		}
-		$response->setValue("product", $productData);
+		$response->set("product", $productData);
 		
 		return $response; 	
 	}
@@ -685,13 +685,13 @@ class ProductController extends StoreManagementController
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name_empty')));		    
 				
 		// check if SKU is entered if not autogenerating
-		if ($this->request->getValue('save') && !$product->isExistingRecord() && !$this->request->getValue('autosku'))
+		if ($this->request->get('save') && !$product->isExistingRecord() && !$this->request->get('autosku'))
 		{
 			$validator->addCheck('sku', new IsNotEmptyCheck($this->translate('_err_sku_empty')));		    		  
 		}
 		
 		// check if entered SKU is unique
-		if ($this->request->getValue('sku') && $this->request->getValue('save') && (!$product->isExistingRecord() || ($this->request->isValueSet('sku') && $product->getFieldValue('sku') != $this->request->getValue('sku'))))
+		if ($this->request->get('sku') && $this->request->get('save') && (!$product->isExistingRecord() || ($this->request->isValueSet('sku') && $product->getFieldValue('sku') != $this->request->get('sku'))))
 		{
 			ClassLoader::import('application.helper.check.IsUniqueSkuCheck');
 			$validator->addCheck('sku', new IsUniqueSkuCheck($this->translate('_err_sku_not_unique'), $product));

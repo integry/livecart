@@ -26,7 +26,7 @@ class SpecFieldGroupController extends StoreManagementController
      */
     public function item()
     {
-        return new JSONResponse(SpecFieldGroup::getInstanceByID((int)$this->request->getValue('id'), true)->toArray(false));
+        return new JSONResponse(SpecFieldGroup::getInstanceByID((int)$this->request->get('id'), true)->toArray(false));
     }
     
     /**
@@ -34,7 +34,7 @@ class SpecFieldGroupController extends StoreManagementController
      */
     public function update()
     {
-        $specFieldGroup = SpecFieldGroup::getInstanceByID((int)$this->request->getValue('id'));
+        $specFieldGroup = SpecFieldGroup::getInstanceByID((int)$this->request->get('id'));
         
         return $this->save($specFieldGroup);
     }
@@ -44,7 +44,7 @@ class SpecFieldGroupController extends StoreManagementController
      */
     public function create()
     {
-        $category = Category::getInstanceByID((int)$this->request->getValue('categoryID'));
+        $category = Category::getInstanceByID((int)$this->request->get('categoryID'));
         $specFieldGroup = SpecFieldGroup::getNewInstance($category);
         $specFieldGroup->setFieldValue('position', 100000);
         
@@ -60,7 +60,7 @@ class SpecFieldGroupController extends StoreManagementController
      */
     public function delete()
     {
-        if($id = $this->request->getValue("id", false))
+        if($id = $this->request->get("id", false))
         {
             SpecFieldGroup::deleteById($id);
             return new JSONResponse(array('status' => 'success'));
@@ -80,7 +80,7 @@ class SpecFieldGroupController extends StoreManagementController
      */
     public function sort()
     {
-        foreach($this->request->getValue($this->request->getValue('target'), array()) as $position => $key)
+        foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
         {
             // Except new fields, because they are not yet in database
             $group = SpecFieldGroup::getInstanceByID((int)$key);
@@ -103,7 +103,7 @@ class SpecFieldGroupController extends StoreManagementController
         {
 			foreach($this->store->getLanguageArray(true) as $langCode) 
 			{
-			    $specFieldGroup->setValueByLang('name', $langCode, $this->request->getValue('name_' . $langCode));
+			    $specFieldGroup->setValueByLang('name', $langCode, $this->request->get('name_' . $langCode));
 			}
             
             $specFieldGroup->save();

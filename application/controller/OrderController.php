@@ -10,19 +10,19 @@ class OrderController extends FrontendController
      */
     public function index()
     {
-    	$this->addBreadCrumb($this->translate('My Shopping Session'), $this->router->createUrlFromRoute($this->request->getValue('return')));
+    	$this->addBreadCrumb($this->translate('My Shopping Session'), $this->router->createUrlFromRoute($this->request->get('return')));
 		$this->addBreadCrumb($this->translate('My Shopping Basket'), '');
 		
 		$this->order->loadItemData();		
 		
-        $currency = Currency::getValidInstanceByID($this->request->getValue('currency', $this->store->getDefaultCurrencyCode()), Currency::LOAD_DATA);                   
+        $currency = Currency::getValidInstanceByID($this->request->get('currency', $this->store->getDefaultCurrencyCode()), Currency::LOAD_DATA);                   
         		
 		$response = new ActionResponse();
-		$response->setValue('cart', $this->order->toArray());
-		$response->setValue('form', $this->buildCartForm($this->order));
-		$response->setValue('return', $this->request->getValue('return'));				
-		$response->setValue('currency', $currency->getID());
-		$response->setValue('orderTotal', $currency->getFormattedPrice($this->order->getSubTotal($currency)));
+		$response->set('cart', $this->order->toArray());
+		$response->set('form', $this->buildCartForm($this->order));
+		$response->set('return', $this->request->get('return'));				
+		$response->set('currency', $currency->getID());
+		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getSubTotal($currency)));
 		return $response;
     }   
     
@@ -35,13 +35,13 @@ class OrderController extends FrontendController
 		{
 			if ($this->request->isValueSet('item_' . $item->getID()))
 			{
-				$this->order->updateCount($item, $this->request->getValue('item_' . $item->getID(), 0));
+				$this->order->updateCount($item, $this->request->get('item_' . $item->getID(), 0));
 			}
 		}		 
 		
         SessionOrder::save($this->order);
 		
-        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));	      
+        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));	      
     }
 
     /**
@@ -49,10 +49,10 @@ class OrderController extends FrontendController
      */
     public function delete()
     {
-		$this->order->removeItem(ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->getValue('id')));
+		$this->order->removeItem(ActiveRecordModel::getInstanceByID('OrderedItem', $this->request->get('id')));
 		SessionOrder::save($this->order);
 		
-        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));	      		
+        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));	      		
     }
     
     /**
@@ -60,41 +60,41 @@ class OrderController extends FrontendController
      */
     public function addToCart()
     {
-        $product = Product::getInstanceByID($this->request->getValue('id'));
+        $product = Product::getInstanceByID($this->request->get('id'));
         if (!$product->isAvailable())
         {
             throw new ApplicationException('The product ' . $product->sku->get() . '  is not available for ordering!'); 
         }
         
-        $count = $this->request->getValue('count', 1);
+        $count = $this->request->get('count', 1);
 
         $this->order->addProduct($product, $count);
         $this->order->mergeItems();
         SessionOrder::save($this->order);
     
-        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));
+        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
     }
 
 	public function moveToCart()
 	{
-        $item = $this->order->getItemByID($this->request->getValue('id'));
+        $item = $this->order->getItemByID($this->request->get('id'));
         $item->isSavedForLater->set(false);
         $this->order->mergeItems();        
         $this->order->resetShipments();
         SessionOrder::save($this->order);
 		
-        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));
+        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 
 	public function moveToWishList()
 	{
-        $item = $this->order->getItemByID($this->request->getValue('id'));
+        $item = $this->order->getItemByID($this->request->get('id'));
         $item->isSavedForLater->set(true);
         $this->order->mergeItems();
         $this->order->resetShipments();
         SessionOrder::save($this->order);
 		
-        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));
+        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
 	}
 	
     /**
@@ -102,13 +102,13 @@ class OrderController extends FrontendController
      */
     public function addToWishList()
     {
-        $product = Product::getInstanceByID($this->request->getValue('id'), Product::LOAD_DATA);
+        $product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA);
 
         $this->order->addToWishList($product);
         $this->order->mergeItems();
         SessionOrder::save($this->order);
               
-        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->getValue('return')));
+        return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));
     }
     
 	private function buildCartForm(CustomerOrder $order)
@@ -120,7 +120,7 @@ class OrderController extends FrontendController
 		foreach ($order->getOrderedItems() as $item)
 		{
 			$name = 'item_' . $item->getID();
-			$form->setValue($name, $item->count->get());			
+			$form->set($name, $item->count->get());			
 		}
 		
 		return $form;

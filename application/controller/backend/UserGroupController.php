@@ -27,32 +27,32 @@ class UserGroupController extends StoreManagementController
 		}
 		    
 		$response = new ActionResponse();
-		$response->setValue('userGroups', $userGroups);
+		$response->set('userGroups', $userGroups);
 		return $response;
 	}
     
     public function edit()
     {
-	    $group = UserGroup::getInstanceByID((int)$this->request->getValue('id'), true);
+	    $group = UserGroup::getInstanceByID((int)$this->request->get('id'), true);
 	    $form = $this->createUserGroupForm($group);
 
 		$response = new ActionResponse();
-		$response->setValue('userGroup', $group->toArray());
-	    $response->setValue('userGroupForm', $form);
+		$response->set('userGroup', $group->toArray());
+	    $response->set('userGroupForm', $form);
 	    
 	    return $response;
     }
     
 	public function changeColumns()
 	{		
-		$columns = array_keys($this->request->getValue('col', array()));
+		$columns = array_keys($this->request->get('col', array()));
 		$this->setSessionData('columns', $columns);
-		return new ActionRedirectResponse('backend.userGroup', 'users', array('id' => $this->request->getValue('group')));
+		return new ActionRedirectResponse('backend.userGroup', 'users', array('id' => $this->request->get('group')));
 	}
 
 	public function lists()
 	{
-	    $id = (int)substr($this->request->getValue('id'), 6);
+	    $id = (int)substr($this->request->get('id'), 6);
 	    if($id > 0)
 	    {
 	        $showAllGroups = false;
@@ -125,7 +125,7 @@ class UserGroupController extends StoreManagementController
 	
 	public function users()
 	{
-	    $id = (int)$this->request->getValue("id");
+	    $id = (int)$this->request->get("id");
 	    if($id > 0)
 	    {
 	        $showAllGroups = false;
@@ -166,16 +166,16 @@ class UserGroupController extends StoreManagementController
         $form = UserController::createUserForm($this, null);
         $form->setData($userArray);
         
-	    $response->setValue('user', $userArray);
-	    $response->setValue('availableUserGroups', $availableUserGroups);
-	    $response->setValue('form', $form);
+	    $response->set('user', $userArray);
+	    $response->set('availableUserGroups', $availableUserGroups);
+	    $response->set('form', $form);
 	    
-        $response->setValue("massForm", $this->getMassForm());
-        $response->setValue("displayedColumns", $displayedColumns);
-        $response->setValue("availableColumns", $availableColumns);
-		$response->setValue("userGroupID", $id);
-		$response->setValue("offset", $this->request->getValue('offset'));
-		$response->setValue("totalCount", '0');
+        $response->set("massForm", $this->getMassForm());
+        $response->set("displayedColumns", $displayedColumns);
+        $response->set("availableColumns", $availableColumns);
+		$response->set("userGroupID", $id);
+		$response->set("offset", $this->request->get('offset'));
+		$response->set("totalCount", '0');
 				
 		return $response;
 	}
@@ -185,10 +185,10 @@ class UserGroupController extends StoreManagementController
 	 */
     public function save()
     {
-        $name = $this->request->getValue('name');
-        $description = $this->request->getValue('description');
+        $name = $this->request->get('name');
+        $description = $this->request->get('description');
         
-        if($id = (int)$this->request->getValue('id'))
+        if($id = (int)$this->request->get('id'))
         {
             $group = UserGroup::getInstanceByID($id);
         }
@@ -229,7 +229,7 @@ class UserGroupController extends StoreManagementController
 	 */
 	public function remove()
 	{
-		$userGroup = UserGroup::getInstanceByID((int)$this->request->getValue("id"), true);
+		$userGroup = UserGroup::getInstanceByID((int)$this->request->get("id"), true);
 		$userGroupArray = $userGroup->toArray();
 		$userGroup->delete();
 		

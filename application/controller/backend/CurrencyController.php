@@ -26,7 +26,7 @@ class CurrencyController extends StoreManagementController
 		$curr = ActiveRecord::getRecordSet("Currency", $filter, true)->toArray();
 
 		$response = new ActionResponse();
-		$response->setValue("currencies", json_encode($curr));
+		$response->set("currencies", json_encode($curr));
 
 		return $response;
 	}
@@ -54,7 +54,7 @@ class CurrencyController extends StoreManagementController
 		}
 
 		$response = new ActionResponse();
-		$response->setValue('currencies', $currencies);
+		$response->set('currencies', $currencies);
 		return $response;
 	}
 
@@ -66,7 +66,7 @@ class CurrencyController extends StoreManagementController
 		try
 		{
 			$newCurrency = ActiveRecord::getNewInstance('Currency');
-		  	$newCurrency->setId($this->request->getValue('id'));
+		  	$newCurrency->setId($this->request->get('id'));
 			$newCurrency->save(ActiveRecord::PERFORM_INSERT);	  	
 	
 			return new JSONResponse($newCurrency->toArray());
@@ -86,7 +86,7 @@ class CurrencyController extends StoreManagementController
 	{
 		try 
 		{
-			$r = ActiveRecord::getInstanceByID('Currency', $this->request->getValue('id'), true);
+			$r = ActiveRecord::getInstanceByID('Currency', $this->request->get('id'), true);
 		}
 		catch (ARNotFoundException $e)
 		{
@@ -114,7 +114,7 @@ class CurrencyController extends StoreManagementController
 	 */
 	public function saveOrder()
 	{
-	  	$order = $this->request->getValue('currencyList');
+	  	$order = $this->request->get('currencyList');
 		foreach ($order as $key => $value)
 		{
 			$update = new ARUpdateFilter();
@@ -124,7 +124,7 @@ class CurrencyController extends StoreManagementController
 		}
 
 		$resp = new RawResponse();
-	  	$resp->setContent($this->request->getValue('draggedId'));
+	  	$resp->setContent($this->request->get('draggedId'));
 		return $resp;		  	
 	}
 
@@ -135,9 +135,9 @@ class CurrencyController extends StoreManagementController
 	 */
 	public function setEnabled()
 	{
-		$id = $this->request->getValue('id');		
+		$id = $this->request->get('id');		
 		$curr = ActiveRecord::getInstanceById('Currency', $id, true);
-		$curr->isEnabled->set((int)(bool)$this->request->getValue("status"));
+		$curr->isEnabled->set((int)(bool)$this->request->get("status"));
 		$curr->save();
 				
 		return new JSONResponse($curr->toArray());
@@ -152,7 +152,7 @@ class CurrencyController extends StoreManagementController
 	{  	
 		try
 	  	{
-			$success = Currency::deleteById($this->request->getValue('id'));
+			$success = Currency::deleteById($this->request->get('id'));
 		}
 		catch (Exception $exc)
 		{			  	
@@ -164,7 +164,7 @@ class CurrencyController extends StoreManagementController
 
     public function edit()
     {
-        $currency = Currency::getInstanceByID($this->request->getValue('id'), Currency::LOAD_DATA);
+        $currency = Currency::getInstanceByID($this->request->get('id'), Currency::LOAD_DATA);
         
 		ClassLoader::import("framework.request.validator.Form");
 		ClassLoader::import("framework.request.validator.RequestValidator");
@@ -173,8 +173,8 @@ class CurrencyController extends StoreManagementController
 		$form->setData($currency->toArray());
         
         $response = new ActionResponse();
-        $response->setValue('form', $form);
-        $response->setValue('id', $this->request->getValue('id'));
+        $response->set('form', $form);
+        $response->set('id', $this->request->get('id'));
         return $response;          
     }
     
@@ -183,9 +183,9 @@ class CurrencyController extends StoreManagementController
      */
     public function save()
     {
-        $currency = Currency::getInstanceByID($this->request->getValue('id'), Currency::LOAD_DATA);
-        $currency->pricePrefix->set($this->request->getValue('pricePrefix'));
-        $currency->priceSuffix->set($this->request->getValue('priceSuffix'));
+        $currency = Currency::getInstanceByID($this->request->get('id'), Currency::LOAD_DATA);
+        $currency->pricePrefix->set($this->request->get('pricePrefix'));
+        $currency->priceSuffix->set($this->request->get('priceSuffix'));
         $currency->save();        
 
         return new JSONResponse(1);
@@ -202,14 +202,14 @@ class CurrencyController extends StoreManagementController
 
 		foreach ($currencies as $currency)
 		{
-			$form->setValue('rate_' . $currency['ID'], $currency['rate']);
+			$form->set('rate_' . $currency['ID'], $currency['rate']);
 		}
 
 		$response = new ActionResponse();
-		$response->setValue('currencies', $currencies);
-		$response->setValue('saved', $this->request->getValue('saved'));
-		$response->setValue('rateForm', $form);
-		$response->setValue('defaultCurrency', $this->store->getDefaultCurrency()->getID());		
+		$response->set('currencies', $currencies);
+		$response->set('saved', $this->request->get('saved'));
+		$response->set('rateForm', $form);
+		$response->set('defaultCurrency', $this->store->getDefaultCurrency()->getID());		
 		return $response;
 	}
 
@@ -222,8 +222,8 @@ class CurrencyController extends StoreManagementController
 	{
 		ClassLoader::import("framework.request.validator.Form");
 		$form = new Form($this->buildOptionsValidator());
-		$form->setValue('updateCb', $this->config->getValue('currencyAutoUpdate'));
-		$form->setValue('frequency', $this->config->getValue('currencyUpdateFrequency'));
+		$form->set('updateCb', $this->config->get('currencyAutoUpdate'));
+		$form->set('frequency', $this->config->get('currencyUpdateFrequency'));
 				
 		// get all feeds
 		$dir = new DirectoryIterator(ClassLoader::getRealPath('library.currency'));
@@ -244,14 +244,14 @@ class CurrencyController extends StoreManagementController
 		// get currency settings		
 		$currencies = $this->getCurrencySet()->toArray();
 		
-		$settings = $this->config->getValue('currencyFeeds');
+		$settings = $this->config->get('currencyFeeds');
 
 		foreach ($currencies as $id => &$currency)
 		{
 			if (isset($settings[$currency['ID']]))
 			{
-			  	$form->setValue('curr_' . $currency['ID'], $settings[$currency['ID']]['enabled']);
-			  	$form->setValue('feed_' . $currency['ID'], $settings[$currency['ID']]['feed']);
+			  	$form->set('curr_' . $currency['ID'], $settings[$currency['ID']]['enabled']);
+			  	$form->set('feed_' . $currency['ID'], $settings[$currency['ID']]['feed']);
 			}
 		}
 
@@ -262,10 +262,10 @@ class CurrencyController extends StoreManagementController
 		}
 				
 		$response = new ActionResponse();
-		$response->setValue('form', $form);
-		$response->setValue('currencies', $currencies);
-		$response->setValue('frequency', $frequency);
-		$response->setValue('feeds', $feeds);
+		$response->set('form', $form);
+		$response->set('currencies', $currencies);
+		$response->set('frequency', $frequency);
+		$response->set('feeds', $feeds);
 		return $response;
 	}
 
@@ -277,13 +277,13 @@ class CurrencyController extends StoreManagementController
 		$val = $this->buildOptionsValidator();
 		
 		// main update setting
-		$this->setConfigValue('currencyAutoUpdate', $this->request->getValue('updateCb'));
+		$this->setConfigValue('currencyAutoUpdate', $this->request->get('updateCb'));
 		
 		// frequency
-		$this->setConfigValue('currencyUpdateFrequency', $this->request->getValue('frequency'));
+		$this->setConfigValue('currencyUpdateFrequency', $this->request->get('frequency'));
 				  	
 		// individual currency settings
-		$setting = $this->config->getValue('currencyFeeds');
+		$setting = $this->config->get('currencyFeeds');
 		if (!is_array($setting))
 		{
 		  	$setting = array();
@@ -291,8 +291,8 @@ class CurrencyController extends StoreManagementController
 		$currencies = $this->getCurrencySet();
 		foreach ($currencies as $currency)
 		{
-			$setting[$currency->getID()] = array('enabled' => $this->request->getValue('curr_' . $currency->getID()),
-												 'feed' => $this->request->getValue('feed_' . $currency->getID())
+			$setting[$currency->getID()] = array('enabled' => $this->request->get('curr_' . $currency->getID()),
+												 'feed' => $this->request->get('feed_' . $currency->getID())
 												);  	
 		}
 		$this->setConfigValue('currencyFeeds', $setting);
@@ -316,7 +316,7 @@ class CurrencyController extends StoreManagementController
 		{ 
 			foreach($currencies as &$currency)
 			{
-				$currency->rate->set($this->request->getValue('rate_' . $currency->getID()));
+				$currency->rate->set($this->request->get('rate_' . $currency->getID()));
 				$currency->save();
 			}
 		}

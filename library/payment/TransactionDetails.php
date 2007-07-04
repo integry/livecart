@@ -60,7 +60,7 @@ class TransactionDetails
 		}
 	}
 	
-	public function getValue($key)
+	public function get($key)
 	{
 		if (isset($this->data[$key]))
 		{

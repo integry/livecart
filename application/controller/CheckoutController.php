@@ -125,33 +125,33 @@ class CheckoutController extends FrontendController
         
         if ($this->order->billingAddress->get())
         {
-            $form->setValue('billingAddress', $this->order->billingAddress->get()->getID());
+            $form->set('billingAddress', $this->order->billingAddress->get()->getID());
         }
         else
         {
             if ($this->user->defaultBillingAddress->get())
             {
-				$form->setValue('billingAddress', $this->user->defaultBillingAddress->get()->userAddress->get()->getID());				
+				$form->set('billingAddress', $this->user->defaultBillingAddress->get()->userAddress->get()->getID());				
 			}
         }
         
         if ($this->order->shippingAddress->get())
         {
-            $form->setValue('shippingAddress', $this->order->shippingAddress->get()->getID());
+            $form->set('shippingAddress', $this->order->shippingAddress->get()->getID());
         }
         else
         {
             if ($this->user->defaultShippingAddress->get())
             {
-				$form->setValue('shippingAddress', $this->user->defaultShippingAddress->get()->userAddress->get()->getID());				
+				$form->set('shippingAddress', $this->user->defaultShippingAddress->get()->userAddress->get()->getID());				
 			}
         }
          
-        $form->setValue('sameAsBilling', (int)($form->getValue('billingAddress') == $form->getValue('shippingAddress') || !$this->user->defaultShippingAddress->get()));
+        $form->set('sameAsBilling', (int)($form->get('billingAddress') == $form->get('shippingAddress') || !$this->user->defaultShippingAddress->get()));
         
     	$response = new ActionResponse();
-    	$response->setValue('billingAddresses', $this->user->getBillingAddressArray());
-    	$response->setValue('shippingAddresses', $this->user->getShippingAddressArray());
+    	$response->set('billingAddresses', $this->user->getBillingAddressArray());
+    	$response->set('shippingAddresses', $this->user->getShippingAddressArray());
     	$response->set('form', $form);
     	return $response;    	
     }
@@ -172,7 +172,7 @@ class CheckoutController extends FrontendController
         {
             $f = new ARSelectFilter();
             $f->setCondition(new EqualsCond(new ARFieldHandle('BillingAddress', 'userID'), $this->user->getID()));
-            $f->mergeCondition(new EqualsCond(new ARFieldHandle('BillingAddress', 'userAddressID'), $this->request->getValue('billingAddress')));
+            $f->mergeCondition(new EqualsCond(new ARFieldHandle('BillingAddress', 'userAddressID'), $this->request->get('billingAddress')));
             $r = ActiveRecordModel::getRecordSet('BillingAddress', $f, array('UserAddress'));
             
             if (!$r->size())
@@ -187,7 +187,7 @@ class CheckoutController extends FrontendController
             if ($this->order->isShippingRequired())
             {
                 
-                if ($this->request->getValue('sameAsBilling'))
+                if ($this->request->get('sameAsBilling'))
                 {
                     $shipping = $billing;
                 }
@@ -196,7 +196,7 @@ class CheckoutController extends FrontendController
     
                     $f = new ARSelectFilter();
                     $f->setCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userID'), $this->user->getID()));
-                    $f->mergeCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userAddressID'), $this->request->getValue('shippingAddress')));
+                    $f->mergeCondition(new EqualsCond(new ARFieldHandle('ShippingAddress', 'userAddressID'), $this->request->get('shippingAddress')));
                     $r = ActiveRecordModel::getRecordSet('ShippingAddress', $f, array('UserAddress'));
                     
                     if (!$r->size())
@@ -265,7 +265,7 @@ class CheckoutController extends FrontendController
             $rates[$key] = $shipmentRates;
             if ($shipment->getSelectedRate())
             {
-                $form->setValue('shipping_' . $key, $shipment->getSelectedRate()->getServiceID());                
+                $form->set('shipping_' . $key, $shipment->getSelectedRate()->getServiceID());                
             }
         }
 
@@ -284,10 +284,10 @@ class CheckoutController extends FrontendController
         }
 
         $response = new ActionResponse();
-        $response->setValue('shipments', $shipments->toArray());
-        $response->setValue('rates', $rateArray);
-		$response->setValue('currency', $this->getRequestCurrency()); 
-        $response->setValue('form', $form);
+        $response->set('shipments', $shipments->toArray());
+        $response->set('rates', $rateArray);
+		$response->set('currency', $this->getRequestCurrency()); 
+        $response->set('form', $form);
         return $response;
     }
     
@@ -309,7 +309,7 @@ class CheckoutController extends FrontendController
 			{
                 $rates = $shipment->getAvailableRates();
     			
-    			$selectedRateId = $this->request->getValue('shipping_' . $key);
+    			$selectedRateId = $this->request->get('shipping_' . $key);
     			
                 if (!$rates->getByServiceId($selectedRateId))
     			{
@@ -339,17 +339,17 @@ class CheckoutController extends FrontendController
 			return $redirect;
 		}       
         
-        $currency = $this->request->getValue('currency', $this->store->getDefaultCurrencyCode());
+        $currency = $this->request->get('currency', $this->store->getDefaultCurrencyCode());
                 
         $response = new ActionResponse();
-        $response->setValue('order', $this->order->toArray());
-		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode())); 
+        $response->set('order', $this->order->toArray());
+		$response->set('currency', $this->request->get('currency', $this->store->getDefaultCurrencyCode())); 
         
         $ccHandler = $this->store->getCreditCardHandler();
         if ($ccHandler)
         {
-			$response->setValue('ccHandler', $ccHandler->toArray());
-			$response->setValue('ccForm', $this->buildCreditCardForm());
+			$response->set('ccHandler', $ccHandler->toArray());
+			$response->set('ccForm', $this->buildCreditCardForm());
 			
 			$months = range(1, 12);
 			$months = array_combine($months, $months);
@@ -357,8 +357,8 @@ class CheckoutController extends FrontendController
 			$years = range(date('Y'), date('Y') + 20);
 			$years = array_combine($years, $years);
 			
-			$response->setValue('months', $months);
-			$response->setValue('years', $years);
+			$response->set('months', $months);
+			$response->set('years', $years);
             $response->set('ccTypes', $this->store->getCardTypes($ccHandler));
 		}
 		
@@ -399,12 +399,12 @@ class CheckoutController extends FrontendController
         $handler = $this->store->getCreditCardHandler($transaction);
         if ($this->request->isValueSet('ccType'))
         {
-            $handler->setCardType($this->request->getValue('ccType'));
+            $handler->setCardType($this->request->get('ccType'));
         }
         		
-        $handler->setCardData($this->request->getValue('ccNum'), $this->request->getValue('ccExpiryMonth'), $this->request->getValue('ccExpiryYear'), $this->request->getValue('ccCVV'));
+        $handler->setCardData($this->request->get('ccNum'), $this->request->get('ccExpiryMonth'), $this->request->get('ccExpiryYear'), $this->request->get('ccCVV'));
         
-        if ($this->config->getValue('CC_AUTHONLY'))
+        if ($this->config->get('CC_AUTHONLY'))
         {
             $result = $handler->authorize();
         }
@@ -418,7 +418,7 @@ class CheckoutController extends FrontendController
             $this->order->isPaid->set(true);
             $newOrder = $this->order->finalize($currency);
 			            
-            $this->session->setValue('completedOrderID', $this->order->getID());          
+            $this->session->set('completedOrderID', $this->order->getID());          
             
             $transaction = Transaction::getNewInstance($this->order, $result);
             $transaction->setHandler($handler);
@@ -453,11 +453,11 @@ class CheckoutController extends FrontendController
      */       
 	public function completed()
 	{
-        $order = CustomerOrder::getInstanceByID((int)$this->session->getValue('completedOrderID'));
+        $order = CustomerOrder::getInstanceByID((int)$this->session->get('completedOrderID'));
         
         $response = new ActionResponse();
-        $response->setValue('order', $order->toArray());    
-        $response->setValue('url', $this->router->createUrl(array('controller' => 'user')));
+        $response->set('order', $order->toArray());    
+        $response->set('url', $this->router->createUrl(array('controller' => 'user')));
         return $response;        
     }
     
@@ -484,7 +484,7 @@ class CheckoutController extends FrontendController
 		{
 			if ($this->request->isValueSet('return'))
 			{
-				return new RedirectResponse($this->router->createUrlFromRoute($this->request->getValue('return')));
+				return new RedirectResponse($this->router->createUrlFromRoute($this->request->get('return')));
 			}		
 			else
 			{
@@ -572,7 +572,7 @@ class CheckoutController extends FrontendController
         $validator->addCheck('ccExpiryMonth', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_month')));
         $validator->addCheck('ccExpiryYear', new IsNotEmptyCheck($this->translate('_err_select_cc_expiry_year')));
         
-		if ($this->config->getValue('REQUIRE_CVV'))
+		if ($this->config->get('REQUIRE_CVV'))
 		{
 			$validator->addCheck('ccCVV', new IsNotEmptyCheck($this->translate('_err_enter_cc_cvv')));
 		}

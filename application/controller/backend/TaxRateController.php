@@ -16,7 +16,7 @@ class TaxRateController extends StoreManagementController
 {
 	public function index() 
 	{
-	    if(($zoneID = (int)$this->request->getValue('id')) <= 0)
+	    if(($zoneID = (int)$this->request->get('id')) <= 0)
 	    {
 	        $deliveryZone = null;
 	        $deliveryZoneArray = array('ID' => '');
@@ -39,11 +39,11 @@ class TaxRateController extends StoreManagementController
 		
 		
 		$response = new ActionResponse();
-		$response->setValue('enabledTaxes', $enabledTaxes);
-		$response->setValue('taxRates', $taxRatesArray);
-		$response->setValue('newTaxRate', array('ID' => '', 'DeliveryZone' => $deliveryZoneArray));
-		$response->setValue('deliveryZone', $deliveryZoneArray);
-	    $response->setValue('form', $form);
+		$response->set('enabledTaxes', $enabledTaxes);
+		$response->set('taxRates', $taxRatesArray);
+		$response->set('newTaxRate', array('ID' => '', 'DeliveryZone' => $deliveryZoneArray));
+		$response->set('deliveryZone', $deliveryZoneArray);
+	    $response->set('form', $form);
 	    return $response;
 	}
 
@@ -52,7 +52,7 @@ class TaxRateController extends StoreManagementController
 	 */
     public function delete()
     {
-        $taxRate = TaxRate::getInstanceByID((int)$this->request->getValue('id'), true, array('Tax'));
+        $taxRate = TaxRate::getInstanceByID((int)$this->request->get('id'), true, array('Tax'));
         $tax = $taxRate->tax->get();
         $taxRate->delete();
         
@@ -61,14 +61,14 @@ class TaxRateController extends StoreManagementController
     
     public function edit()
     {
-	    $rate = TaxRate::getInstanceByID((int)$this->request->getValue('id'), true, array('Tax'));
+	    $rate = TaxRate::getInstanceByID((int)$this->request->get('id'), true, array('Tax'));
 		
 	    $form = $this->createTaxRateForm();
 		$form->setData($rate->toArray());
 		
 		$response = new ActionResponse();
-		$response->setValue('taxRate', $rate->toArray());
-	    $response->setValue('form', $form);
+		$response->set('taxRate', $rate->toArray());
+	    $response->set('form', $form);
 	    
 	    return $response;
     }
@@ -78,7 +78,7 @@ class TaxRateController extends StoreManagementController
 	 */
     public function create()
     {
-        if(($deliveryZoneId = (int)$this->request->getValue('deliveryZoneID')) > 0)
+        if(($deliveryZoneId = (int)$this->request->get('deliveryZoneID')) > 0)
         {
             $deliveryZone = DeliveryZone::getInstanceByID($deliveryZoneId, true);
         }
@@ -87,7 +87,7 @@ class TaxRateController extends StoreManagementController
             $deliveryZone = null;
         }
         
-        $taxRate = TaxRate::getNewInstance($deliveryZone, Tax::getInstanceByID((int)$this->request->getValue('taxID'), true), (float)$this->request->getValue('rate'));
+        $taxRate = TaxRate::getNewInstance($deliveryZone, Tax::getInstanceByID((int)$this->request->get('taxID'), true), (float)$this->request->get('rate'));
         
         return $this->save($taxRate);
     }
@@ -97,7 +97,7 @@ class TaxRateController extends StoreManagementController
 	 */
     public function update()
     {
-        $taxRate = TaxRate::getInstanceByID((int)$this->request->getValue('taxRateID'), true);
+        $taxRate = TaxRate::getInstanceByID((int)$this->request->get('taxRateID'), true);
         
         return $this->save($taxRate);
     }

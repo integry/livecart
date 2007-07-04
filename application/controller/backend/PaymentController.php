@@ -14,7 +14,7 @@ class PaymentController extends StoreManagementController
 {
     public function index()
     {
-        $order = CustomerOrder::getInstanceById($this->request->getValue('id'));
+        $order = CustomerOrder::getInstanceById($this->request->get('id'));
         
         $transactions = $this->getTransactionArray($order);
         
@@ -28,7 +28,7 @@ class PaymentController extends StoreManagementController
         
         $orderArray = $order->toArray(array('payments' => true));
         $captureForm = $this->buildCaptureForm();
-        $captureForm->setValue('amount', $orderArray['amountNotCaptured']);
+        $captureForm->set('amount', $orderArray['amountNotCaptured']);
         
 		$response = new ActionResponse();
         $response->set('transactions', $transactions);
@@ -40,14 +40,14 @@ class PaymentController extends StoreManagementController
     
     public function void()
     {
-        $transaction = Transaction::getInstanceById($this->request->getValue('id'));
+        $transaction = Transaction::getInstanceById($this->request->get('id'));
         
         $voidTransaction = $transaction->void();
         
         if ($voidTransaction instanceof Transaction)
         {
 	        $voidTransaction->user->set($this->user);
-	        $voidTransaction->comment->set($this->request->getValue('comment'));
+	        $voidTransaction->comment->set($this->request->get('comment'));
 	        $voidTransaction->save();
 
             return $this->getTransactionUpdateResponse();
@@ -60,17 +60,17 @@ class PaymentController extends StoreManagementController
 
     public function capture()
     {
-        $transaction = Transaction::getInstanceById($this->request->getValue('id'));
+        $transaction = Transaction::getInstanceById($this->request->get('id'));
         
-        $captureTransaction = $transaction->capture($this->request->getValue('amount'), $this->request->getValue('complete'));
+        $captureTransaction = $transaction->capture($this->request->get('amount'), $this->request->get('complete'));
         
         if ($captureTransaction instanceof Transaction)
         {
 			$captureTransaction->user->set($this->user);
-	        $captureTransaction->comment->set($this->request->getValue('comment'));
+	        $captureTransaction->comment->set($this->request->get('comment'));
 	        $captureTransaction->save();
 
-	        if ($this->request->getValue('complete'))
+	        if ($this->request->get('complete'))
 	        {
 				$transaction->isCompleted->set(true);
 				$transaction->save();
@@ -86,19 +86,19 @@ class PaymentController extends StoreManagementController
     
     public function addOffline()
     {
-        $order = CustomerOrder::getInstanceById($this->request->getValue('id'));
-        $transaction = Transaction::getNewOfflineTransactionInstance($order, $this->request->getValue('amount'));
-        $transaction->comment->set($this->request->getValue('comment'));
+        $order = CustomerOrder::getInstanceById($this->request->get('id'));
+        $transaction = Transaction::getNewOfflineTransactionInstance($order, $this->request->get('amount'));
+        $transaction->comment->set($this->request->get('comment'));
         $transaction->user->set($this->user);        
         $transaction->save();
         
-        $this->request->setValue('id', $transaction->getID());
+        $this->request->set('id', $transaction->getID());
         return $this->getTransactionUpdateResponse();
     }
 
     public function totals()
     {
-        $transaction = Transaction::getInstanceById($this->request->getValue('id'));
+        $transaction = Transaction::getInstanceById($this->request->get('id'));
         $response = new ActionResponse();
         $response->set('order', $transaction->order->get()->toArray(array('payments' => true)));
         return $response;
@@ -111,12 +111,12 @@ class PaymentController extends StoreManagementController
      */   
     public function transaction()
     {
-        $transaction = Transaction::getInstanceById($this->request->getValue('id'));
+        $transaction = Transaction::getInstanceById($this->request->get('id'));
         $transactions = $this->getTransactionArray($transaction->order->get());
         
         $orderArray = $transaction->order->get()->toArray(array('payments' => true));
         $captureForm = $this->buildCaptureForm();
-        $captureForm->setValue('amount', $orderArray['amountNotCaptured']);        
+        $captureForm->set('amount', $orderArray['amountNotCaptured']);        
         
         $response = new ActionResponse();
         $response->set('transaction', $transactions[$transaction->getID()]);
@@ -126,17 +126,17 @@ class PaymentController extends StoreManagementController
     
     public function ccForm()
     {
-        $order = CustomerOrder::getInstanceById($this->request->getValue('id'));
+        $order = CustomerOrder::getInstanceById($this->request->get('id'));
 
         $response = new ActionResponse();
         
-		$response->setValue('currency', $this->request->getValue('currency', $this->store->getDefaultCurrencyCode())); 
+		$response->set('currency', $this->request->get('currency', $this->store->getDefaultCurrencyCode())); 
         
         $ccHandler = $this->store->getCreditCardHandler();
         if ($ccHandler)
         {
-			$response->setValue('ccHandler', $ccHandler->toArray());
-			$response->setValue('ccForm', $this->buildCreditCardForm());
+			$response->set('ccHandler', $ccHandler->toArray());
+			$response->set('ccForm', $this->buildCreditCardForm());
 			
 			$months = range(1, 12);
 			$months = array_combine($months, $months);
@@ -144,14 +144,14 @@ class PaymentController extends StoreManagementController
 			$years = range(date('Y'), date('Y') + 20);
 			$years = array_combine($years, $years);
 			
-			$response->setValue('months', $months);
-			$response->setValue('years', $years);
+			$response->set('months', $months);
+			$response->set('years', $years);
 		}
 
         $orderArray = $order->toArray(array('payments' => true));
         $form = $this->buildCreditCardForm();
-        $form->setValue('amount', $orderArray['amountDue']);
-        $form->setValue('name', $order->user->get()->getName());
+        $form->set('amount', $orderArray['amountDue']);
+        $form->set('name', $order->user->get()->getName());
                 
         $response->set('ccTypes', $this->store->getCardTypes($ccHandler));
         $response->set('order', $orderArray);
@@ -161,7 +161,7 @@ class PaymentController extends StoreManagementController
     
     public function processCreditCard()
     {
-        $order = CustomerOrder::getInstanceById($this->request->getValue('id'));
+        $order = CustomerOrder::getInstanceById($this->request->get('id'));
         
 		if (!$this->buildCreditCardValidator()->isValid())
 		{
@@ -170,18 +170,18 @@ class PaymentController extends StoreManagementController
         
         // set up transaction details
         $transaction = new LiveCartTransaction($order, $order->currency->get());
-        $transaction->amount->set($this->request->getValue('amount'));
+        $transaction->amount->set($this->request->get('amount'));
         
         // process payment
         $handler = $this->store->getCreditCardHandler($transaction);
         if ($this->request->isValueSet('ccType'))
         {
-            $handler->setCardType($this->request->getValue('ccType'));
+            $handler->setCardType($this->request->get('ccType'));
         }
         		
-        $handler->setCardData($this->request->getValue('ccNum'), $this->request->getValue('ccExpiryMonth'), $this->request->getValue('ccExpiryYear'), $this->request->getValue('ccCVV'));
+        $handler->setCardData($this->request->get('ccNum'), $this->request->get('ccExpiryMonth'), $this->request->get('ccExpiryYear'), $this->request->get('ccCVV'));
         
-        if ($this->config->getValue('CC_AUTHONLY'))
+        if ($this->config->get('CC_AUTHONLY'))
         {
             $result = $handler->authorize();
         }
@@ -196,10 +196,10 @@ class PaymentController extends StoreManagementController
 			            
             $transaction = Transaction::getNewInstance($order, $result);
             $transaction->setHandler($handler);
-            $transaction->comment->set($this->request->getValue('comment'));
+            $transaction->comment->set($this->request->get('comment'));
             $transaction->save();
             
-            $this->request->setValue('id', $transaction->getID());
+            $this->request->set('id', $transaction->getID());
             return $this->getTransactionUpdateResponse();
         }
         elseif ($result instanceof TransactionError)

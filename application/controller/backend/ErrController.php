@@ -7,16 +7,16 @@ class ErrController extends BackendController
 	public function index()
 	{
 	    $response = new ActionResponse();
-	    $response->setValue('id', $this->request->getValue('id'));
-	    $response->setValue('ajax', $this->request->getValue('ajax'));
-	    $response->setValue('description', HTTPStatusException::getCodeMeaning($this->request->getValue('id')));
+	    $response->set('id', $this->request->get('id'));
+	    $response->set('ajax', $this->request->get('ajax'));
+	    $response->set('description', HTTPStatusException::getCodeMeaning($this->request->get('id')));
 	    
 	    return $response;
 	}
 	
 	public function redirect()
 	{
-		$id = $this->request->getValue('id');
+		$id = $this->request->get('id');
 		$params = array();
 		
 		if($this->request->isAjax())
@@ -34,7 +34,7 @@ class ErrController extends BackendController
 			    return new ActionRedirectResponse('backend.err', 'index', $params);  
 			default:
 				print_r($this->user->toArray());
-		       	echo 'error ' . $this->request->getValue('id');
+		       	echo 'error ' . $this->request->get('id');
 		}
 	}
 }

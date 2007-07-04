@@ -15,7 +15,7 @@ class UserController extends StoreManagementController
 {
 	public function info()
 	{
-	    $user = User::getInstanceById((int)$this->request->getValue('id'), ActiveRecord::LOAD_DATA, array('UserGroup'));
+	    $user = User::getInstanceById((int)$this->request->get('id'), ActiveRecord::LOAD_DATA, array('UserGroup'));
 		
         $availableUserGroups = array('' => '');
         foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
@@ -24,9 +24,9 @@ class UserController extends StoreManagementController
         }
         
 	    $response = new ActionResponse();	    
-	    $response->setValue('user', $user->toFlatArray());
-	    $response->setValue('availableUserGroups', $availableUserGroups);
-	    $response->setValue('form', self::createUserForm($this, $user));
+	    $response->set('user', $user->toFlatArray());
+	    $response->set('availableUserGroups', $availableUserGroups);
+	    $response->set('form', self::createUserForm($this, $user));
 		
 		return $response;
 	}	
@@ -44,7 +44,7 @@ class UserController extends StoreManagementController
      */
     public function update()
     {
-        $user = User::getInstanceByID((int)$this->request->getValue('id'), true);
+        $user = User::getInstanceByID((int)$this->request->get('id'), true);
         return $this->save($user);
     }
 
@@ -61,13 +61,13 @@ class UserController extends StoreManagementController
 		$validator->addCheck('lastName', new IsNotEmptyCheck($controller->translate('_err_last_name_empty')));
 		$validator->addCheck('password1', new PasswordEqualityCheck(
 						                        $controller->translate('_err_passwords_are_not_the_same'), 
-						                        $controller->request->getValue('password2'), 
+						                        $controller->request->get('password2'), 
 												'password2'
 					                        ));
 					                        
 		$validator->addCheck('password2', new PasswordEqualityCheck(
 		                                        $controller->translate('_err_passwords_are_not_the_same'), 
-		                                        $controller->request->getValue('password1'), 
+		                                        $controller->request->get('password1'), 
 												'password1'
 	                                        ));
 
@@ -99,15 +99,15 @@ class UserController extends StoreManagementController
     {        
 		$filter = new ARSelectFilter();
 		
-		$filters = (array)json_decode($this->request->getValue('filters'));
-		$this->request->setValue('filters', $filters);
+		$filters = (array)json_decode($this->request->get('filters'));
+		$this->request->set('filters', $filters);
 		
         $grid = new ActiveGrid($this->request, $filter, 'User');
         $filter->setLimit(0);
         					
 		$users = ActiveRecordModel::getRecordSet('User', $filter, User::LOAD_REFERENCES);
 		
-        $act = $this->request->getValue('act');
+        $act = $this->request->get('act');
 		$field = array_pop(explode('_', $act, 2));           
 
         foreach ($users as $user)
@@ -128,7 +128,7 @@ class UserController extends StoreManagementController
 			$user->save();
         }		
 		
-		return new JSONResponse($this->request->getValue('act'));	
+		return new JSONResponse($this->request->get('act'));	
     } 
 	
 
@@ -138,7 +138,7 @@ class UserController extends StoreManagementController
      */
     public function states()
     {                
-        $states = State::getStatesByCountry($this->request->getValue('country'));
+        $states = State::getStatesByCountry($this->request->get('country'));
         return new JSONResponse($states);
     }
     
@@ -147,11 +147,11 @@ class UserController extends StoreManagementController
    		$validator = self::createUserFormValidator($this, $user);
 		if ($validator->isValid())
 		{
-		    $email = $this->request->getValue('email');
-		    $password = $this->request->getValue('password1');
-		    $firstName = $this->request->getValue('firstName');
-		    $lastName = $this->request->getValue('lastName');
-		    $companyName = $this->request->getValue('companyName');
+		    $email = $this->request->get('email');
+		    $password = $this->request->get('password1');
+		    $firstName = $this->request->get('firstName');
+		    $lastName = $this->request->get('lastName');
+		    $companyName = $this->request->get('companyName');
 
 		    if(($user && $email != $user->email->get() && User::getInstanceByEmail($email)) || 
 		       (!$user && User::getInstanceByEmail($email)))
@@ -159,7 +159,7 @@ class UserController extends StoreManagementController
 		        return new JSONResponse(array('status' => 'failure', 'errors' => array('email' => $this->translate('_err_this_email_is_already_being_used_by_other_user'))));
 		    }
 		    
-		    if($groupID = (int)$this->request->getValue('UserGroup'))
+		    if($groupID = (int)$this->request->get('UserGroup'))
 		    {
 		        $group = UserGroup::getInstanceByID((int)$groupID);
 		    }

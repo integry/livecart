@@ -22,7 +22,7 @@ class MultiValueSpecificationItem implements iSpecification
 		$this->specFieldInstance = $field;	  	
 	}
 	
-	public function setValue(SpecFieldValue $value)
+	public function set(SpecFieldValue $value)
 	{
 	  	// test whether the value belongs to the same field
 		if ($value->specField->get()->getID() != $this->specFieldInstance->getID())
@@ -118,7 +118,7 @@ class MultiValueSpecificationItem implements iSpecification
 		
 		if ($value)
 		{
-			$specItem->setValue($value); 	  	
+			$specItem->set($value); 	  	
 		}		
 		
 		return $specItem;

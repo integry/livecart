@@ -34,8 +34,8 @@ class ShipmentDeliveryRate extends ShippingRateResult
         $handler->setDestZip($address->postalCode->get());
 
         $config = Config::getInstance();        
-        $handler->setSourceCountry($config->getValue('STORE_COUNTRY'));
-        $handler->setSourceZip($config->getValue('STORE_ZIP'));
+        $handler->setSourceCountry($config->get('STORE_COUNTRY'));
+        $handler->setSourceZip($config->get('STORE_ZIP'));
         
         $rates = new ShippingRateSet();
         foreach ($handler->getAllRates() as $k => $rate)        

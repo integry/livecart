@@ -22,7 +22,7 @@ class SettingsController extends StoreManagementController
 	public function index()
 	{
 		$response = new ActionResponse();
-		$response->setValue('categories', json_encode($this->config->getTree()));
+		$response->set('categories', json_encode($this->config->getTree()));
 		return $response;
 	}
 	
@@ -36,7 +36,7 @@ class SettingsController extends StoreManagementController
         $defLang = $this->store->getDefaultLanguageCode();
 		$languages = $this->store->getLanguageArray(Store::INCLUDE_DEFAULT);
 			
-		$sectionId = $this->request->getValue('id');						
+		$sectionId = $this->request->get('id');						
 		$values = $this->config->getSettingsBySection($sectionId);
 		
 		$form = $this->getForm($values);
@@ -48,24 +48,24 @@ class SettingsController extends StoreManagementController
     		{
                 foreach ($languages as $lang)
                 {
-                    $form->setValue($key . ($lang != $defLang ? '_' . $lang : ''), $this->config->getValueByLang($key, $lang));    
+                    $form->set($key . ($lang != $defLang ? '_' . $lang : ''), $this->config->getValueByLang($key, $lang));    
                 }                
 
                 $multiLingualValues[$key] = true;
             }
             else
             {
-                $form->setValue($key, $this->config->getValue($key));	
+                $form->set($key, $this->config->get($key));	
     		}
 		}
 				
 		$response = new ActionResponse();
 		$response->set('form', $form);
-		$response->setValue('title', $this->translate($this->config->getSectionTitle($sectionId)));
-		$response->setValue('values', $values);
-		$response->setValue('id', $sectionId);
-		$response->setValue('layout', $this->config->getSectionLayout($sectionId));		
-		$response->setValue('multiLingualValues', $multiLingualValues);
+		$response->set('title', $this->translate($this->config->getSectionTitle($sectionId)));
+		$response->set('values', $values);
+		$response->set('id', $sectionId);
+		$response->set('layout', $this->config->getSectionLayout($sectionId));		
+		$response->set('multiLingualValues', $multiLingualValues);
 		return $response;	
 	}  		  
 
@@ -74,7 +74,7 @@ class SettingsController extends StoreManagementController
 	 */
 	public function save()
 	{				
-		$values = $this->config->getSettingsBySection($this->request->getValue('id'));
+		$values = $this->config->getSettingsBySection($this->request->get('id'));
 		$validator = $this->getValidator($values);
 		
 		if (!$validator->isValid())
@@ -91,15 +91,15 @@ class SettingsController extends StoreManagementController
 			{
 				if ($this->config->isMultiLingual($key) && 'string' == $value['type'])
 				{
-                    $this->config->setValueByLang($key, $defLang, $this->request->getValue($key));
+                    $this->config->setValueByLang($key, $defLang, $this->request->get($key));
                     foreach ($languages as $lang)
                     {
-                        $this->config->setValueByLang($key, $lang, $this->request->getValue($key . '_' . $lang));
+                        $this->config->setValueByLang($key, $lang, $this->request->get($key . '_' . $lang));
                     }
                 }
                 else
                 {
-                    $this->config->setValue($key, $this->request->getValue($key, 'bool' == $value['type'] ? 0 : ''));		                    
+                    $this->config->set($key, $this->request->get($key, 'bool' == $value['type'] ? 0 : ''));		                    
                 }
 			}  	
 			
@@ -119,11 +119,11 @@ class SettingsController extends StoreManagementController
 		{
             if ('multi' == $value['extra'])
             {
-                $values = $this->config->getValue($value['title']);
+                $values = $this->config->get($value['title']);
 
                 foreach ($values as $key => $val)
                 {
-                    $form->setValue($value['title'] . '[' . $key . ']', 1);                    
+                    $form->set($value['title'] . '[' . $key . ']', 1);                    
                 }
             }   
         }

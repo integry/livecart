@@ -42,7 +42,7 @@ class SpecificationItem extends Specification
 		return $inst;
 	}
 
-	public function setValue(SpecFieldValue $value)
+	public function set(SpecFieldValue $value)
 	{
 	  	// test whether the value belongs to the same field
 		if ($value->specField->get()->getID() != $this->specField->get()->getID())
