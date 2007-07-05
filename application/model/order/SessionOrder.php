@@ -28,7 +28,8 @@ class SessionOrder
 				unset($instance);	
 			}
         }
-        else
+        
+        if (!isset($instance))
         {
             $instance = CustomerOrder::getNewInstance(User::getNewInstance(0));
             $instance->user->set(NULL);
