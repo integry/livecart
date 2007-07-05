@@ -27,11 +27,11 @@
 {includeJs file="backend/User.js"}
 {includeCss file="backend/User.css"}
 
-{includeJs file="backend/CustomerOrder.js"}
-{includeCss file="backend/CustomerOrder.css"}
-
 {includeJs file="backend/Payment.js"}
 {includeCss file="backend/Payment.css"}
+
+{includeJs file="backend/OrderNote.js"}
+{includeCss file="backend/OrderNote.css"}
 
 {pageTitle help="order"}{t _livecart_orders}{/pageTitle}
 {include file="layout/backend/header.tpl"}

@@ -1,5 +1,6 @@
 <?php
 
+ClassLoader::import("application.model.Currency");
 ClassLoader::import("application.model.user.User");
 ClassLoader::import("application.model.product.Product");
 ClassLoader::import("application.model.order.OrderedItem");
@@ -919,6 +920,13 @@ class CustomerOrder extends ActiveRecordModel
 		
 		return $paid;
 	}
+	
+	public function getNotes()
+	{
+        $f = new ARSelectFilter();
+        $f->setOrder(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
+        return $this->getRelatedRecordSet('OrderNote', $f, OrderNote::LOAD_REFERENCES);
+    }
 }
 	
 ?>
