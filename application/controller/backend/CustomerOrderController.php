@@ -251,7 +251,12 @@ class CustomerOrderController extends StoreManagementController
 	    $order->isCancelled->set(!$order->isCancelled->get());
 	    $order->save();
 	    
-	    return new JSONResponse(array('status' => 'success', 'value' => $this->translate($order->isCancelled->get() ? '_cancelled' : '_active')));
+	    return new JSONResponse(array(
+	        'status' => 'success', 
+	        'isCanceled' => $order->isCancelled->get(),
+	        'linkValue' => $this->translate($order->isCancelled->get() ? '_accept_order' : '_cancel_order'),
+	        'value' => $this->translate($order->isCancelled->get() ? '_canceled' : '_accepted')
+        ));
 	}
 	
 	/**

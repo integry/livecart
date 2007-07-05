@@ -7,7 +7,12 @@ _done_choosing_costumer=Done choosing costumer
 _all_users=All users
 _default_user_group=Default user group
 
-_active=Active
+_accepted=accepted
+_canceled=canceled
+
+_accept_order=Accept order
+_cancel_order=Cancel order
+_this_order_is=This order is
 
 
 

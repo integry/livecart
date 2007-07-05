@@ -41,7 +41,10 @@
             <a href="">Print invoice</a>
         </li>
         <li>
-            <a href="">Cancel order</a>
+            <span style="display: none;" id="order_{$order.ID}_isCanceledIndicator" class="progressIndicator"></span>
+            <a id="order_{$order.ID}_isCanceled" href="{link controller="backend.customerOrder" action="setIsCanceled" id=$order.ID}">
+                {if $order.isCancelled}{t _accept_order}{else}{t _cancel_order}{/if}
+            </a>
         </li>
         <li>
             <a href="">Delete order</a>
@@ -57,12 +60,16 @@
             <label for="order_{$order.ID}_status">{t _status}</label>
             {selectfield options=$statuses id="order_`$order.ID`_status" name="status" class="status"} 
     	</fieldset>  
-        
-        <fieldset class="error">
-            <label></label>
-            <a class="isCanceled" href="{link controller="backend.customerOrder" action="setIsCanceled" id=$order.id}">{if $order.isCancelled}{t _cancelled}{else}{t _active}{/if}</a>
-    	</fieldset>
     {/form}
+    
+    <div class="order_acceptanceStatus" >
+        {t _this_order_is}
+        <span class="order_acceptanceStatusValue" id="order_acceptanceStatusValue_{$order.ID}" style="color: {if $order.isCancelled}red{else}green{/if}">
+            {if $order.isCancelled}{t _canceled}{else}{t _accepted}{/if}
+        </span>
+    </div>
+    
+    
 </fieldset>
 
 <br class="clear" />

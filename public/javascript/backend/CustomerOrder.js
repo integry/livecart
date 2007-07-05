@@ -461,8 +461,11 @@ Backend.CustomerOrder.Editor.prototype =
         this.nodes = {};
         this.nodes.parent = $("tabOrderInfo_" + this.id + "Content");
         this.nodes.form = this.nodes.parent.down("form");
-		this.nodes.isCanceled = this.nodes.form.down('a.isCanceled');
+		this.nodes.isCanceled = $("order_" + this.id + "_isCanceled");
+		this.nodes.isCanceledIndicator = $("order_" + this.id + "_isCanceledIndicator");
+		this.nodes.acceptanceStatusValue = $("order_acceptanceStatusValue_" + this.id);
 		this.nodes.status = this.nodes.form.down('select.status');
+		this.nodes.orderStatus = this.nodes.parent.down('.order_status');
     },
 
     bindEvents: function(args)
@@ -473,6 +476,7 @@ Backend.CustomerOrder.Editor.prototype =
 
     switchCancelled: function()
     {
+        this.nodes.isCanceledIndicator.show();
         new LiveCart.AjaxRequest(
             Backend.CustomerOrder.Editor.prototype.Links.switchCancelled + '/' + this.id, 
             false,
@@ -481,7 +485,11 @@ Backend.CustomerOrder.Editor.prototype =
                 
 	            if(response.status == 'success')
 	            {
-	                this.nodes.isCanceled.update(response.value);
+	                this.nodes.isCanceled.update(response.linkValue);
+                    this.nodes.acceptanceStatusValue.update(response.value);
+                    this.nodes.acceptanceStatusValue.style.color = response.isCanceled ? 'red' : 'green';
+                    new Effect.Highlight(this.nodes.orderStatus, {startcolor:'#FBFF85', endcolor:'#F8F8F8'});
+                    this.nodes.isCanceledIndicator.hide();
 	            }
 	        }.bind(this)
         );

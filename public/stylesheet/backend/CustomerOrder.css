@@ -34,6 +34,22 @@
     margin-left: 20px;
 }
 
+.order_acceptanceStatus
+{
+    text-align: center; 
+    margin-top: 20px; 
+}
+
+.order_acceptanceStatusValue
+{
+    font-weight: bold; 
+}
+
+.order_status
+{
+    font-size: 120%;
+}
+
 .order_shippingAddress input, 
 .order_billingAddress input,
 .order_shippingAddress select, 
