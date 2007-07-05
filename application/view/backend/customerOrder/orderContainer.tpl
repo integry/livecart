@@ -31,6 +31,7 @@
 		</ul>
 	</div>
     <fieldset class="sectionContainer maxHeight h--50"></fieldset>
+       	
     
     {literal}
     <script type="text/javascript">

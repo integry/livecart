@@ -9,5 +9,6 @@
                <option value="{$statusID}" id="orderShipment_status_{$shipment.ID}_{$statusID}" {if $shipment.status == $statusID}selected{/if}>{$status}</option>
            {/foreach}
        </select>
+       <img style="display: none" id="orderShipment_status_{$shipment.ID}_feedback" src="image/indicator.gif"/>
    </fieldset>
 </fieldset >

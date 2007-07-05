@@ -33,7 +33,7 @@ class DeliveryZone extends MultilingualObject
 		$schema->setName("DeliveryZone");
 		
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARField("name", ARArray::instance()));
+		$schema->registerField(new ARField("name", ARText::instance()));
 		$schema->registerField(new ARField("isEnabled", ARInteger::instance(1)));
 		$schema->registerField(new ARField("isFreeShipping", ARInteger::instance(1)));
 	}

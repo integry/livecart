@@ -76,14 +76,12 @@ Backend.CustomerOrder.prototype =
                 {
                     window.ordersActiveGrid[Backend.CustomerOrder.prototype.activeGroup].reloadGrid();
                     
-                    new Backend.SaveConfirmationMessage($("orderCreatedConfirmation"));	
                     new Backend.SelectPopup.prototype.popup.Backend.SaveConfirmationMessage(Backend.SelectPopup.prototype.popup.$("orderCreatedConfirmation")); // show message in the popup
                 }
                 else
                 {
                      if(response.errors.noaddress)
                      {	
-                         new Backend.SaveConfirmationMessage($("userHasNoAddressError")); // show error on the main page
                          new Backend.SelectPopup.prototype.popup.Backend.SaveConfirmationMessage(Backend.SelectPopup.prototype.popup.$("userHasNoAddressError")); // show error in popup
                      }
                 }
@@ -172,18 +170,7 @@ Backend.CustomerOrder.prototype =
 		
 		el.reset();		
 	},
-	
-	save: function(form)
-	{
-		var indicator = document.getElementsByClassName('progressIndicator', form)[0];
-		new LiveCart.AjaxRequest(form, indicator, this.displaySaveConfirmation.bind(this));	
-	},
-	
-	displaySaveConfirmation: function()
-	{
-		new Backend.SaveConfirmationMessage(document.getElementsByClassName('yellowMessage')[0]);			
-	},
-   
+    
 	updateHeader: function ( activeGrid, offset ) 
 	{
 		var liveGrid = activeGrid.ricoGrid;
@@ -476,10 +463,9 @@ Backend.CustomerOrder.Editor.prototype =
 
     switchCancelled: function()
     {
-        this.nodes.isCanceledIndicator.show();
         new LiveCart.AjaxRequest(
             Backend.CustomerOrder.Editor.prototype.Links.switchCancelled + '/' + this.id, 
-            false,
+            this.nodes.isCanceledIndicator,
             function(response) {
 	            response = eval("(" + response.responseText + ")");
                 
@@ -488,8 +474,6 @@ Backend.CustomerOrder.Editor.prototype =
 	                this.nodes.isCanceled.update(response.linkValue);
                     this.nodes.acceptanceStatusValue.update(response.value);
                     this.nodes.acceptanceStatusValue.style.color = response.isCanceled ? 'red' : 'green';
-                    new Effect.Highlight(this.nodes.orderStatus, {startcolor:'#FBFF85', endcolor:'#F8F8F8'});
-                    this.nodes.isCanceledIndicator.hide();
 	            }
 	        }.bind(this)
         );
@@ -523,7 +507,7 @@ Backend.CustomerOrder.Editor.prototype =
     {
 		new LiveCart.AjaxRequest(
             this.nodes.form,
-            false,
+            $("order_" + this.id + "_status_feedback"),
             function(responseJSON) 
             {
 				ActiveForm.prototype.resetErrorMessages(this.nodes.form);
@@ -662,12 +646,13 @@ Backend.CustomerOrder.Address.prototype =
         return this.Instances[root.id] ? true : false;
     },
     
-    initialize: function(root)
+    initialize: function(root, type)
   	{
         try
         {
             this.findUsedNodes(root);
             this.bindEvents();
+            this.type = type;
 
             this.stateSwitcher = new Backend.User.StateSwitcher(
                 this.nodes.form.elements.namedItem('countryID'), 
@@ -693,12 +678,31 @@ Backend.CustomerOrder.Address.prototype =
         this.nodes.form = root;
 		this.nodes.cancel = this.nodes.form.down('a.cancel');
 		this.nodes.submit = this.nodes.form.down('input.submit');
+        
+		this.nodes.showEdit = this.nodes.form.down('.orderAddress_showEdit');
+		this.nodes.view = this.nodes.form.down('.orderAddress_view');
+		this.nodes.edit = this.nodes.form.down('.orderAddress_edit');
     },
 
     bindEvents: function(args)
     {
 		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancelForm()}.bind(this));
         Event.observe(this.nodes.form.elements.namedItem('existingUserAddress'), 'change', function(e) { this.useExistingAddress()}.bind(this));
+        Element.observe(this.nodes.showEdit, 'click', function(e) { Event.stop(e); this.showForm(); }.bind(this));
+    },
+    
+    showForm: function()
+    {
+        this.nodes.showEdit.hide(); 
+        this.nodes.view.hide();
+        this.nodes.edit.show();
+    },
+    
+    hideForm: function()
+    {
+        this.nodes.showEdit.show(); 
+        this.nodes.view.show();
+        this.nodes.edit.hide();
     },
     
     useExistingAddress: function()
@@ -749,6 +753,7 @@ Backend.CustomerOrder.Address.prototype =
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		Form.State.restore(this.nodes.form, ['existingUserAddress']);
         this.stateSwitcher.updateStates(null, function(){ $this.nodes.form.elements.namedItem('stateID').value = $this.stateID; });
+        this.hideForm();
     },
 
     submitForm: function()
@@ -769,9 +774,9 @@ Backend.CustomerOrder.Address.prototype =
 	{
 		if(response.status == 'success')
 		{
-			new Backend.SaveConfirmationMessage($('orderConfirmation'));
             this.stateID = this.nodes.form.elements.namedItem('stateID').value;
 			Form.State.backup(this.nodes.form);
+            this.hideForm();
 		}
 		else
 		{

@@ -101,45 +101,6 @@ ActiveForm.prototype = {
     },
     
     /**
-     * Turn on progress indicator in the form.
-     * 
-     * Note: to use this method you should place empty div/span tag inside your form with class "activeForm_progress"
-     * 
-     * @param HTMLElement form
-     */
-    onProgress: function(form) 
-    {
-        var progress = document.getElementsByClassName('activeForm_progress', $(form))[0];
-        
-        var img = progress.getElementsByTagName("img")[0];
-        if (!img) 
-        {
-            img = document.createElement("img");
-            img.src = 'image/indicator.gif';
-            progress.style.paddingRight = "inherit";
-            progress.appendChild(img);
-        }
-        
-        img.style.visibility = "visible";
-    },
-    
-    /**
-     * Turn off progress indicator in the form.
-     * 
-     * Note: to use this method you should place empty div/span tag inside your form with class "activeForm_progress"
-     * 
-     * @param HTMLElement form
-     */
-    offProgress: function(form) 
-    {
-        var progress = document.getElementsByClassName('activeForm_progress', $(form))[0];
-        
-        var img = progress.getElementsByTagName("img")[0];      
-        if (img) img.style.visibility = "hidden";
-    },
-    
-    
-    /**
      * Show translations
      * 
      * To use this method you must have appropriate HTML structure shown bellow

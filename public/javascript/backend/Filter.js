@@ -932,7 +932,6 @@ Backend.Filter.prototype = {
         }
         catch (e)
         {
-             ActiveForm.prototype.offProgress(this.nodes.form);
         }
 
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
@@ -1043,7 +1042,6 @@ Backend.Filter.prototype = {
         }
         catch (e)
         {
-            ActiveForm.prototype.offProgress(this.nodes.form);
         }
         
     },

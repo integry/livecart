@@ -40,6 +40,18 @@ p.checkbox
     padding: 10px 0;
 }
 
+.countriesAndStates_regionsAndUnions
+{
+    width: 20em;
+    text-align: center;
+    margin: 0 9em 2em;
+}
+
+.countriesAndStates_regionsAndUnions div
+{
+   display: inline;
+}
+
 #zone_-1
 {
     font-weight: bold;

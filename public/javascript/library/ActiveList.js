@@ -484,11 +484,11 @@ ActiveList.prototype = {
         switch(color)
         {
             case 'red':
-                new Effect.Highlight(li, {startcolor:'#FFF1F1', endcolor:'#FB8585'});
+                new Effect.Highlight(li, {startcolor:'#FFF1F1', endcolor:'#F5F5F5'});
                 break;
             case 'yellow':
             default:
-                new Effect.Highlight(li, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
+                new Effect.Highlight(li, {startcolor:'#FBFF85', endcolor:'#F5F5F5'});
                 break;
         }
     },

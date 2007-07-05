@@ -1,3 +1,11 @@
+# Confirmations
+_new_shipment_has_been_successfully_created=New shipment has been successfully created
+_error_creating_new_shipment=Error occurred creating new shipment
+_shipment_was_successfully_removed=Shipment was successfully removed
+_shipment_status_has_been_successfully_updated=Shipment status has been successfully updated
+_shipping_service_was_successfuly_changed=Shipping service was successfully changed
+
+
 _shipping_status_new=New
 _shipping_status_pending=Pending
 _shipping_status_awaiting=Awaiting

@@ -79,8 +79,6 @@ Backend.OrderedItem = {
                 li.id = 'orderShipmentsItems_list_' + orderID + '_' + response.oldShipment.ID + '_' + this.getRecordId(li); 
                 oldShipmentLi.down('ul').appendChild(li);
                 shipmentsActiveList.highlight(oldShipmentLi, 'red');
-                
-			    new Backend.SaveConfirmationMessage($('noRateInShippingServiceIsAvailableError'))
             }
         }
     },
@@ -124,7 +122,7 @@ Backend.OrderedItem = {
        {   
            new LiveCart.AjaxRequest(
                Backend.OrderedItem.Links.changeItemCount + "/" + itemID + "?count=" + input.value, 
-               false,
+               input.up('li').down('.activeList_progress'),
                function(response) 
                { 
                     var response = eval("(" + response.responseText + ")");
@@ -140,7 +138,9 @@ Backend.OrderedItem = {
                     input.lastValue = input.value;
                    
                     Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
-                }
+                    
+                    ActiveList.prototype.getInstance(input.up('.activeList')).highlight(input.up('li'));
+                }.bind(this)
            );
        }
        else
@@ -229,11 +229,9 @@ Backend.Shipment.prototype =
     
     afterSave: function(response)
     {
-        var self = this;
-        
         if(response.status == 'success')
         {
-            var shipmentItems = document.getElementsByClassName("orderShipmentsItem", self.nodes.shipmentsList);
+            var shipmentItems = document.getElementsByClassName("orderShipmentsItem", this.nodes.shipmentsList);
             if(shipmentItems.length == 1)
             {
                 var firstShipmentItems = ActiveList.prototype.getInstance(shipmentItems[0]);
@@ -278,6 +276,8 @@ Backend.Shipment.prototype =
             li.down("#orderShipment_USPS__cancel").id  = "orderShipment_USPS_" + response.shipment.ID + "_cancel";
             li.down("#orderShipment_USPS__select").id  = "orderShipment_USPS_" + response.shipment.ID + "_select";
             li.down("#orderShipment_addProduct_").id   = "orderShipment_addProduct_" + response.shipment.ID;
+            li.down("#orderShipment_status__feedback").id = "orderShipment_status_" + response.shipment.ID + "_feedback";
+                        
                         
             for(var z = -1; z <= 3; z++)
             {
@@ -290,16 +290,17 @@ Backend.Shipment.prototype =
             $("orderShipment_status_" + response.shipment.ID + "_3").hide();
 
 
-            Event.observe("orderShipment_change_usps_" + response.shipment.ID, 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + self.orderID + '_' + response.shipment.ID).toggleUSPS();  });
-            Event.observe("orderShipment_USPS_" + response.shipment.ID + "_submit", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + self.orderID + '_' + response.shipment.ID).toggleUSPS();  });       
-            Event.observe("orderShipment_USPS_" + response.shipment.ID + "_cancel", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + self.orderID + '_' + response.shipment.ID).toggleUSPS(true);  });
-            Event.observe("orderShipment_USPS_" + response.shipment.ID + "_select", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + self.orderID + '_' + response.shipment.ID).USPSChanged();  });
+            Event.observe("orderShipment_change_usps_" + response.shipment.ID, 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + this.orderID + '_' + response.shipment.ID).toggleUSPS();  }.bind(this));
+            Event.observe("orderShipment_USPS_" + response.shipment.ID + "_submit", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + this.orderID + '_' + response.shipment.ID).toggleUSPS();  }.bind(this));       
+            Event.observe("orderShipment_USPS_" + response.shipment.ID + "_cancel", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + this.orderID + '_' + response.shipment.ID).toggleUSPS(true);  }.bind(this));
+            Event.observe("orderShipment_USPS_" + response.shipment.ID + "_select", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + this.orderID + '_' + response.shipment.ID).USPSChanged();  }.bind(this));
 
             $("orderShipment_change_usps_" + response.shipment.ID).innerHTML = Backend.Shipment.Messages.shippingServiceIsNotSelected;
 
             $("orderShipment_status_" + response.shipment.ID).lastValue = $("orderShipment_status_" + response.shipment.ID).value;
-            Event.observe("orderShipment_status_" + response.shipment.ID, 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + self.orderID + '_' + response.shipment.ID).changeStatus();  });
+            Event.observe("orderShipment_status_" + response.shipment.ID, 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + this.orderID + '_' + response.shipment.ID).changeStatus();  }.bind(this));
 
+            var self = this;
             Event.observe($("orderShipment_addProduct_" + response.shipment.ID), 'click', function(e) {
                 Event.stop(e);
                 new Backend.SelectPopup(
@@ -337,73 +338,63 @@ Backend.Shipment.prototype =
     
     addNewProductToShipment: function(productID)
     {
-        var self = this;
-        
         new LiveCart.AjaxRequest(
             Backend.OrderedItem.Links.createNewItem + "/?productID=" + productID + "&shipmentID=" + this.nodes.form.elements.namedItem('ID').value + "&orderID=" + this.nodes.form.elements.namedItem('orderID').value + "&downloadable=" + this.nodes.form.elements.namedItem('downloadable').value,
             false,
             function(response) 
             {
-               var evaluatedResponse;
-               try
+               response = eval("(" + response.responseText + ")");
+           
+               if(response.status == 'succsess')
                {
-                   response = eval("(" + response.responseText + ")");
-               
-                   if(response.status == 'succsess')
+                   var li = null;
+                   
+                   var itemsList = ActiveList.prototype.getInstance($("orderShipmentsItems_list_" + this.nodes.form.elements.namedItem('orderID').value + "_" + this.nodes.form.elements.namedItem('ID').value));
+                       
+                   if(!response.item.isExisting)
                    {
-                       var li = null;
-                       console.info("orderShipmentsItems_list_" + self.nodes.form.elements.namedItem('orderID').value + "_" + self.nodes.form.elements.namedItem('ID').value);
-                       var itemsList = ActiveList.prototype.getInstance($("orderShipmentsItems_list_" + self.nodes.form.elements.namedItem('orderID').value + "_" + self.nodes.form.elements.namedItem('ID').value));
-                           
-                       if(!response.item.isExisting)
-                       {
-                           li = itemsList.addRecord(response.item.ID, $("orderShipmentItem_" + self.nodes.form.elements.namedItem('orderID').value + "_empty").innerHTML);
-                       }
-                       else
-                       {
-                           li = $("orderShipmentsItems_list_" + self.nodes.form.elements.namedItem('orderID').value + "_" + response.item.Shipment.ID + "_" + response.item.ID);
-                       }
-                       
-                       li.down('.orderShipmentsItem_info_sku').innerHTML = response.item.Product.sku;
-                       li.down('.orderShipmentsItem_info_name').innerHTML = response.item.Product.name;
-                       li.down('.orderShipmentsItem_count').value = response.item.count;
-                       
-                       var price = li.down('.orderShipmentsItem_info_price');
-                       price.down('.pricePrefix').innerHTML = response.item.Shipment.prefix;
-                       price.down('.price').innerHTML = response.item.price
-                       price.down('.priceSuffix').innerHTML = response.item.Shipment.suffix;
-                       
-                       var priceTotal = li.down('.item_subtotal');
-                       priceTotal.down('.pricePrefix').innerHTML = response.item.Shipment.prefix;
-                       priceTotal.down('.price').innerHTML = Math.round(response.item.price * response.item.count * 100) / 100;
-                       priceTotal.down('.priceSuffix').innerHTML = response.item.Shipment.suffix;
-                       
-                       var countInput = li.down('.orderShipmentsItem_count');
-                       countInput.lastValue = countInput.value;
-                       
-                       Event.observe(countInput, 'focus', function(e) { window.lastFocusedItemCount = this; });      
-                       Event.observe(countInput, 'keyup', function(e) { Backend.OrderedItem.updateProductCount(countInput, self.nodes.form.elements.namedItem('orderID').value, response.item.ID, response.item.Shipment.ID) });
-                       Event.observe(countInput, 'blur', function(e) { Backend.OrderedItem.changeProductCount(countInput, self.nodes.form.elements.namedItem('orderID').value, response.item.ID, response.item.Shipment.ID) });
-                       Event.observe(countInput, 'click', function(e) { 
-                           var input = window.lastFocusedItemCount;
-                           if(input.value != input.lastValue) { input.blur(); } 
-                       });
-                       
-                       self.setAmount(response.item.Shipment.amount);
-                       self.setTaxAmount(response.item.Shipment.taxAmount);
-                       self.setShippingAmount(response.item.Shipment.shippingAmount);
-                       self.setTotal(response.item.Shipment.total);
-                       
-                       itemsList.highlight(li)
-                       
-                       self.hideShippedStatus();
+                       li = itemsList.addRecord(response.item.ID, $("orderShipmentItem_" + this.nodes.form.elements.namedItem('orderID').value + "_empty").innerHTML);
                    }
-               } 
-               catch(e)
-               {
-                   console.info(e);
+                   else
+                   {
+                       li = $("orderShipmentsItems_list_" + this.nodes.form.elements.namedItem('orderID').value + "_" + response.item.Shipment.ID + "_" + response.item.ID);
+                   }
+                   
+                   li.down('.orderShipmentsItem_info_sku').innerHTML = response.item.Product.sku;
+                   li.down('.orderShipmentsItem_info_name').innerHTML = response.item.Product.name;
+                   li.down('.orderShipmentsItem_count').value = response.item.count;
+                   
+                   var price = li.down('.orderShipmentsItem_info_price');
+                   price.down('.pricePrefix').innerHTML = response.item.Shipment.prefix;
+                   price.down('.price').innerHTML = response.item.price
+                   price.down('.priceSuffix').innerHTML = response.item.Shipment.suffix;
+                   
+                   var priceTotal = li.down('.item_subtotal');
+                   priceTotal.down('.pricePrefix').innerHTML = response.item.Shipment.prefix;
+                   priceTotal.down('.price').innerHTML = Math.round(response.item.price * response.item.count * 100) / 100;
+                   priceTotal.down('.priceSuffix').innerHTML = response.item.Shipment.suffix;
+                   
+                   var countInput = li.down('.orderShipmentsItem_count');
+                   countInput.lastValue = countInput.value;
+                   
+                   Event.observe(countInput, 'focus', function(e) { window.lastFocusedItemCount = this; });      
+                   Event.observe(countInput, 'keyup', function(e) { Backend.OrderedItem.updateProductCount(countInput, this.nodes.form.elements.namedItem('orderID').value, response.item.ID, response.item.Shipment.ID) }.bind(this));
+                   Event.observe(countInput, 'blur', function(e) { Backend.OrderedItem.changeProductCount(countInput, this.nodes.form.elements.namedItem('orderID').value, response.item.ID, response.item.Shipment.ID) }.bind(this));
+                   Event.observe(countInput, 'click', function(e) { 
+                       var input = window.lastFocusedItemCount;
+                       if(input.value != input.lastValue) { input.blur(); } 
+                   });
+                   
+                   this.setAmount(response.item.Shipment.amount);
+                   this.setTaxAmount(response.item.Shipment.taxAmount);
+                   this.setShippingAmount(response.item.Shipment.shippingAmount);
+                   this.setTotal(response.item.Shipment.total);
+                   
+                   itemsList.highlight(li)
+                   
+                   this.hideShippedStatus();
                }
-           }
+            }.bind(this)
         );
     },
     
@@ -436,7 +427,7 @@ Backend.Shipment.prototype =
             
             new LiveCart.AjaxRequest(
                 Backend.Shipment.Links.getAvailableServices + "/" + this.nodes.form.elements.namedItem('ID').value, 
-                false,
+                usps.up('li').down('.progressIndicator'),
                 function(response) {
                     var response = eval("(" + response.responseText + ")");
                     
@@ -466,7 +457,7 @@ Backend.Shipment.prototype =
            {
                new LiveCart.AjaxRequest(
                    Backend.Shipment.Links.changeService + "/" + this.nodes.form.elements.namedItem('ID').value + "?serviceID=" + this.nodes.form.elements.namedItem('USPS').value,
-                   false,
+                   usps.up('li').down('.progressIndicator'),
                    function(response) {
                        var response = eval("(" + response.responseText + ")");
                       
@@ -548,14 +539,14 @@ Backend.Shipment.prototype =
         {
             new LiveCart.AjaxRequest(
                 Backend.Shipment.Links.remove + "/" + this.nodes.form.elements.namedItem('ID').value,
-                false,
+                $("orderShipment_status_" + this.nodes.form.elements.namedItem('ID').value + "_feedback"),
                 function(response) {
                    var response = eval("(" + response.responseText + ")");
                 
-                   var shipmentItems = document.getElementsByClassName("orderShipmentsItem", self.nodes.shipmentsList);
+                   var shipmentItems = document.getElementsByClassName("orderShipmentsItem", this.nodes.shipmentsList);
                    for(var i = 0; i < shipmentItems.length; i++)
                    {
-                       if(shipmentItems[i] == self.nodes.root.down('.orderShipmentsItem'))
+                       if(shipmentItems[i] == this.nodes.root.down('.orderShipmentsItem'))
                        {
                            shipmentItems.splice(i, 1);
                            break;
@@ -563,8 +554,8 @@ Backend.Shipment.prototype =
                    }
                    
                    select.lastValue = select.value;
-                   var orderID = self.nodes.form.elements.namedItem('orderID').value;
-                   self.shipmentsActiveList.remove(self.nodes.root);
+                   var orderID = this.nodes.form.elements.namedItem('orderID').value;
+                   this.shipmentsActiveList.remove(this.nodes.root);
                                    
                    if(shipmentItems.length == 1)
                    {
@@ -574,14 +565,14 @@ Backend.Shipment.prototype =
                    }
                    
                    Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
-               }
+               }.bind(this)
             );
         }
         else
         {
             new LiveCart.AjaxRequest(
                 Backend.Shipment.Links.changeStatus + "/" + this.nodes.form.elements.namedItem('ID').value + "?status=" + this.nodes.form.elements.namedItem('status').value,
-                false,
+                $("orderShipment_status_" + this.nodes.form.elements.namedItem('ID').value + "_feedback"),
                 function(response) {
                    var response = eval("(" + response.responseText + ")");
                    
@@ -589,22 +580,22 @@ Backend.Shipment.prototype =
                    
                    if(3 == select.value)
                    {
-                       $(self.nodes.root.up('ul').id + '_shipped').appendChild(self.nodes.root);
+                       $(this.nodes.root.up('ul').id + '_shipped').appendChild(this.nodes.root);
                        
-                       self.nodes.root.className = 'orderShipmentsItem';
+                       this.nodes.root.className = 'orderShipmentsItem';
                        
-                       self.itemsActiveList.makeStatic();
-                       self.nodes.root.style.paddingLeft = '0px';
-                       self.nodes.root.down('a.orderShipment_change_usps').hide();
-                       self.nodes.root.down('.orderShipment_controls').hide();
+                       this.itemsActiveList.makeStatic();
+                       this.nodes.root.style.paddingLeft = '0px';
+                       this.nodes.root.down('a.orderShipment_change_usps').hide();
+                       this.nodes.root.down('.orderShipment_controls').hide();
                        
-                       document.getElementsByClassName("orderShipmentsItem_count", self.nodes.root).each(function(countInput)
+                       document.getElementsByClassName("orderShipmentsItem_count", this.nodes.root).each(function(countInput)
                        {
                           countInput.hide(); 
                           countInput.up('.orderShipmentsItem_info_count').appendChild(document.createTextNode(countInput.value));
                        });
                    }
-               }
+               }.bind(this)
             );
         }
     },

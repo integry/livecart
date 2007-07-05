@@ -3,17 +3,9 @@
 {form id="countriesAndStates_$zoneID" handle=$form action="controller=backend.deliveryZone action=save id=$zoneID" method="post" role="delivery.update"}
     <label>{t _name}</label>
     <fieldset class="error">
-		{textfield name="name_`$defaultLanguageCode`" class="observed countriesAndStates_name"}
+		{textfield name="name" class="observed countriesAndStates_name"}
 		<span class="errorText hidden"> </span>
     </fieldset>
-        
-    {language}
-		<label>{t _name}</label>
-		<fieldset class="error">
-			{textfield name="name_`$lang.ID`" class="observed"}
-			<span class="errorText hidden"> </span>
-		</fieldset>
-    {/language}    
     
     <label>{t _country}</label>
     <fieldset class="error">

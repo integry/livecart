@@ -58,7 +58,8 @@
         {hidden name="ID"} 
         <fieldset class="error">
             <label for="order_{$order.ID}_status">{t _status}</label>
-            {selectfield options=$statuses id="order_`$order.ID`_status" name="status" class="status"} 
+            {selectfield options=$statuses id="order_`$order.ID`_status" name="status" class="status"}
+            <img src="image/indicator.gif" id="order_{$order.ID}_status_feedback" style="display: none;"/> 
     	</fieldset>  
     {/form}
     
@@ -99,8 +100,8 @@
     try
     {
         var status = Backend.CustomerOrder.Editor.prototype.getInstance({/literal}{$order.ID}{literal});
-        var shippingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_shippingAddress_form{literal}'));
-        var billingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_billingAddress_form{literal}'));
+        var shippingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_shippingAddress_form{literal}'), 'shippingAddress');
+        var billingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_billingAddress_form{literal}'), 'billingAddress');
     }
     catch(e)
     {

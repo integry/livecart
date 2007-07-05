@@ -50,9 +50,10 @@
 <div id="productFile_item_blank">{include file="backend/productFile/form.tpl"}</div>
 
 <div id="catgegoryContainer" class="treeContainer">
-	<div id="categoryBrowser" class="treeBrowser">
-	</div>
+	<div id="categoryBrowser" class="treeBrowser"></div>
+    
 	<br />
+    
     {allowed role="category.create,category.remove,category.sort"}
 	    {t _with_selected_category}:
     {/allowed}
@@ -63,29 +64,10 @@
 		<li class="removeTreeNode" {denied role="category.remove"}style="display: none"{/denied}><a href="#" id="removeCategoryLink">{t _remove_category}</a></li>
 	</ul>
 
-    <div id="categoryMsg" class="yellowMessage" style="display: none;">
-        <div>
-            {t _successfully_saved}
-        </div>
-    </div>
-    
-   	<div id="pricesSaveConf" class="pricesSaveConf yellowMessage" style="display: none;">
-		<div>
-			{t _product_information_was_saved}
-		</div>
-   	</div>    
-
-   	<div id="productAddConf" class="pricesSaveConf yellowMessage" style="display: none;">
-		<div>
-			{t _notification_product_was_successfuly}
-		</div>
-   	</div>    
-
-   	<div id="productAddContinueConf" class="pricesSaveConf yellowMessage" style="display: none;">
-		<div>
-			{t _product_added_continuing} <span class="progressIndicator"></span>
-		</div>
-   	</div>    
+    <div id="categoryMsg" class="yellowMessage" style="display: none;"><div>{t _successfully_saved}</div></div>
+    <div id="pricesSaveConf" class="pricesSaveConf yellowMessage" style="display: none;"><div>{t _product_information_was_saved}</div></div>    
+    <div id="productAddConf" class="pricesSaveConf yellowMessage" style="display: none;"><div>{t _notification_product_was_successfuly}</div></div>    
+   	<div id="productAddContinueConf" class="pricesSaveConf yellowMessage" style="display: none;"><div>{t _product_added_continuing} <span class="progressIndicator"></span></div></div>    
 
 </div>
 

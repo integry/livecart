@@ -252,11 +252,13 @@ class CustomerOrderController extends StoreManagementController
 	    $order->save();
 	    
 	    return new JSONResponse(array(
-	        'status' => 'success', 
-	        'isCanceled' => $order->isCancelled->get(),
-	        'linkValue' => $this->translate($order->isCancelled->get() ? '_accept_order' : '_cancel_order'),
-	        'value' => $this->translate($order->isCancelled->get() ? '_canceled' : '_accepted')
-        ));
+		        'isCanceled' => $order->isCancelled->get(),
+		        'linkValue' => $this->translate($order->isCancelled->get() ? '_accept_order' : '_cancel_order'),
+		        'value' => $this->translate($order->isCancelled->get() ? '_canceled' : '_accepted')
+	        ), 
+	        'success', 
+	        $this->translate($order->isCancelled->get() ? '_order_is_accepted' : '_order_is_canceled')
+        );
 	}
 	
 	/**
@@ -619,12 +621,7 @@ class CustomerOrderController extends StoreManagementController
 		}
 		else
 		{
-		    return new JSONResponse(array(
-				    'status' => 'failure', 
-				    'errors' => array(
-					    'noaddress' => $this->translate('_err_user_has_no_billing_or_shipping_address')
-				    )
-		    ));
+		    return new JSONResponse(array('noaddress' => true), 'failure', $this->translate('_err_user_has_no_billing_or_shipping_address'));
 		}
     }
     
@@ -633,13 +630,14 @@ class CustomerOrderController extends StoreManagementController
    		$validator = self::createOrderFormValidator();
 		if ($validator->isValid())
 		{
+		    $existingRecord = $order->isExistingRecord();
 			$order->save();
 			
-			return new JSONResponse(array('status' => 'success'));
+			return new JSONResponse(false, 'success', $this->translate($existingRecord ? '_order_status_has_been_successfully_changed' : '_new_order_has_been_successfully_created'));
 		}
 		else
 		{
-		    return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
+		    return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_error_updating_order_status'));
 		}
 	}
     
@@ -669,11 +667,11 @@ class CustomerOrderController extends StoreManagementController
 	        
 	        $address->save();
 	        
-	        return new JSONResponse(array('status' => 'success', 'address' => $address->toArray()));
+	        return new JSONResponse(array('address' => $address->toArray()), 'success', $this->translate('_order_address_was_successfully_updated'));
         }
         else
         {
-            return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
+            return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_error_updating_order_address'));
         }
     }
 

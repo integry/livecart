@@ -20,7 +20,7 @@
     {/if}
 
     <fieldset class="taxRate_controls" {denied role="delivery.update"}style="display: none;"{/denied}>
-        <span class="activeForm_progress"></span>
+        <span class="progressIndicator" style="display: none;"></span>
         <input type="submit" class="taxRate_save button submit" value="{t _save}" />
         {t _or}
         <a href="#cancel" class="taxRate_cancel cancel">{t _cancel}</a>

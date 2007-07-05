@@ -1,27 +1,6 @@
-<a id="order_{$order.ID}_{$type}_showView" href="#view" style="display: none">{t _view}</a>
-<a id="order_{$order.ID}_{$type}_showEdit" href="#edit" >{t _edit}</a>
+<a class="orderAddress_showEdit" href="#edit" >{t _edit}</a>
 
-{literal}
-<script>
-    Element.observe($('{/literal}order_{$order.ID}_{$type}_showView{literal}'), 'click', function(e) { 
-        Event.stop(e);
-        $('{/literal}order_{$order.ID}_{$type}_edit{literal}').hide(); 
-        $('{/literal}order_{$order.ID}_{$type}_view{literal}').show();
-        $('{/literal}order_{$order.ID}_{$type}_showEdit{literal}').show(); 
-        $('{/literal}order_{$order.ID}_{$type}_showView{literal}').hide();
-    });
-
-    Element.observe($('{/literal}order_{$order.ID}_{$type}_showEdit{literal}'), 'click', function(e) { 
-        Event.stop(e);
-        $('{/literal}order_{$order.ID}_{$type}_edit{literal}').show(); 
-        $('{/literal}order_{$order.ID}_{$type}_view{literal}').hide();
-        $('{/literal}order_{$order.ID}_{$type}_showEdit{literal}').hide(); 
-        $('{/literal}order_{$order.ID}_{$type}_showView{literal}').show();
-    });
-</script>
-{/literal}
-
-<fieldset id="order_{$order.ID}_{$type}_edit" class="error" style="display: none">
+<fieldset id="order_{$order.ID}_{$type}_edit" class="orderAddress_edit error" style="display: none">
     {hidden name="ID"} 
     
     <fieldset class="error">
@@ -83,14 +62,15 @@
     </fieldset>
     
     <fieldset class="controls">
-        <span class="activeForm_progress"></span>
+        <span style="display: none;" class="progressIndicator"></span>
+        
         <input type="submit" class="button submit" value="{t _save}" />
         {t _or}
         <a href="#cancel" class="cancel">{t _cancel}</a>
     </fieldset>
 </fieldset>
 
-<fieldset id="order_{$order.ID}_{$type}_view" class="container">
+<fieldset id="order_{$order.ID}_{$type}_view" class="container orderAddress_view">
     <p>
         <label>{t _name}</label>
         <label>{$order.fullName}</label>    

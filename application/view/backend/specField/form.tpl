@@ -171,7 +171,7 @@
 
 
     <fieldset class="specField_controls controls">
-    	<span class="activeForm_progress"></span>
+    	<span class="progressIndicator" style="display: none;"></span>
         <input type="submit" class="specField_save button submit" value="{translate text=_save}" />
         {t _or}
         <a href="#cancel" class="specField_cancel cancel">{t _cancel}</a>

@@ -23,7 +23,7 @@
     	</fieldset>
     
         <fieldset class="productRelationshipGroup_controls controls">
-        	<span class="activeForm_progress"></span>
+        	<span class="progressIndicator" style="display: none;"></span>
             <input type="submit" class="productRelationshipGroup_save button submit" value="{t _save}" />
             {t _or}
             <a href="#cancel" class="productRelationshipGroup_cancel cancel">{t _cancel}</a>

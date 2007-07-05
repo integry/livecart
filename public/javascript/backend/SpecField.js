@@ -920,8 +920,6 @@ Backend.SpecField.prototype = {
 		}
 		catch (e)
 		{
-		    ActiveForm.prototype.onProgress(this.nodes.form);
-            // New item has no pr06r3s5 indicator
 		}
         
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
@@ -1011,7 +1009,6 @@ Backend.SpecField.prototype = {
 		}
 		catch (e)
 		{
-            ActiveForm.prototype.offProgress(this.nodes.form);
 		}
         
         this.saving = false;
@@ -1425,7 +1422,6 @@ Backend.SpecFieldGroup.prototype = {
 		}
 		catch (e)
 		{
-		    ActiveForm.prototype.offProgress(this.nodes.form);
 		}
 
         var self = this;
@@ -1457,9 +1453,7 @@ Backend.SpecFieldGroup.prototype = {
                 Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.parent);
     		}
     		else
-    		{
-    		    ActiveForm.prototype.offProgress(this.nodes.form);
-                
+    		{                
                 var title = document.createElement('span');
                 Element.addClassName(title, this.cssPrefix + 'group_title');
                 title.appendChild(document.createTextNode(this.nodes.name.value));

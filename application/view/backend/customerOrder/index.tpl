@@ -42,13 +42,9 @@
 	<ul id="categoryBrowserActions" class="verticalMenu">
 		<li class="addTreeNode"><a href="#" id="createNewOrderLink">{t _create_order}</a></li>
 	</ul>	
-    
-    <div class="yellowMessage" id="orderCreatedConfirmation" style="display: none;"><div>{t _new_order_has_been_successfully_created}</div></div>
-    <div class="yellowMessage" id="orderConfirmation" style="display: none;"><div>{t _order_information_has_been_successfully_updated}</div></div>
-    <div class="yellowMessage" id="orderAddressConfirmation" style="display: none;"><div>{t _order_address_information_has_been_successfully_updated}</div></div>
-    <div class="redMessage" id="noRateInShippingServiceIsAvailableError" style="display: none;"><div>{t _this_shipping_service_has_no_available_rates}</div></div>
-    <div class="redMessage" id="userHasNoAddressError" style="display: none;"><div>{t _err_user_has_no_billing_or_shipping_address}</div></div>
-	
+
+    <div id="confirmations"></div>
+
     <div class="redMessage" id="transactionError" style="display: none;">
        	<div>
             {t Could not process this transaction}

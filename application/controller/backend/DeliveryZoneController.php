@@ -134,7 +134,8 @@ class DeliveryZoneController extends StoreManagementController
 	    if(($name = $this->request->get('name')) != '')
 	    {
 	        $zone = DeliveryZone::getNewInstance();
-	        $zone->setValueByLang('name', $this->store->getDefaultLanguageCode(), $name);
+	        echo $name;
+	        $zone->name->set($name);
 	        $zone->save();
 	        
 	        return new JSONResponse(array('status' => 'success', 'ID' => $zone->getID()));
@@ -152,10 +153,7 @@ class DeliveryZoneController extends StoreManagementController
 	public function save()
 	{
         $zone = DeliveryZone::getInstanceByID((int)$this->request->get('id'));
-        foreach($this->store->getLanguageArray(true) as $langCode) 
-        {
-            $zone->setValueByLang('name', $langCode, $this->request->get('name_' . $langCode));
-        }
+        $zone->name->set($this->request->get('name'));
         
         $zone->save();
 	    

@@ -4,7 +4,8 @@ var LiveCart = {
 
 LiveCart.AjaxRequest = Class.create();
 LiveCart.AjaxRequest.prototype = {
-
+    requestCount: 0,
+    
 	onComplete: false,
     
     indicatorContainerId: false,
@@ -53,8 +54,7 @@ LiveCart.AjaxRequest.prototype = {
        
 		document.body.style.cursor = 'progress';
 
-        new Ajax.Request(url,
-                         updaterOptions);
+        new Ajax.Request(url, updaterOptions);
     },
 
 	hideIndicator: function()
@@ -79,6 +79,12 @@ LiveCart.AjaxRequest.prototype = {
             try
             {
                 response.responseData = response.responseText.evalJSON();
+                
+                // Show confirmation
+                if(response.responseData.status)
+                {
+                    this.showConfirmation(response.responseData);
+                }
             }
             catch (e)
             {
@@ -92,7 +98,31 @@ LiveCart.AjaxRequest.prototype = {
 		  	this.onComplete(response);
 		}
     },
-
+    
+    showConfirmation: function(responseData)
+    {
+        var confirmations = $('confirmations');
+        if(!confirmations.down('#redZone'))
+        {
+            new Insertion.Bottom('confirmations', '<div id="redZone"></div><div id="yellowZone"></div>');
+        }
+        
+        var color = null;
+        var zone = null;
+                            
+        if('success' == responseData.status) 
+        {
+            color = 'yellow';
+        }
+        else if('failure' == responseData.status) 
+        {
+            color = 'red';
+        }
+        
+        new Insertion.Top(color + 'Zone', '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="' + color + 'Message"><div>' + responseData.message + '</div></div>');
+        new Backend.SaveConfirmationMessage($('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));	
+    },
+    
     reportError: function(response)
     {
         alert('Error!\n\n' + response.responseText);

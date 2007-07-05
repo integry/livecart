@@ -112,18 +112,20 @@ class ShipmentController extends StoreManagementController
 	    $shipmentArray['ShippingService']['ID'] = $this->request->get('serviceID');
 	    
 	    return new JSONResponse(array(
-		    'status' => 'success', 
-		    'shipment' => array(
-                'ID' => $shipment->getID(),
-                'amount' => $shipment->amount->get(),
-                'shippingAmount' => (float)$shipment->shippingAmount->get(),
-                'taxAmount' => $shipment->taxAmount->get(),
-                'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$shipment->taxAmount->get(),
-                'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
-                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get(),
-                'ShippingService' => $shipmentArray['ShippingService']
-            )
-		));
+			    'shipment' => array(
+		               'ID' => $shipment->getID(),
+		               'amount' => $shipment->amount->get(),
+		               'shippingAmount' => (float)$shipment->shippingAmount->get(),
+		               'taxAmount' => $shipment->taxAmount->get(),
+		               'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$shipment->taxAmount->get(),
+		               'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
+		               'suffix' => $shipment->amountCurrency->get()->priceSuffix->get(),
+		               'ShippingService' => $shipmentArray['ShippingService']
+		           )
+			),
+			'success',
+			$this->translate('_shipping_service_was_successfuly_changed')
+		);
 	}
 	
 	public function changeStatus()
@@ -135,7 +137,7 @@ class ShipmentController extends StoreManagementController
 	    
 	    $shipment->save();
 	    
-	    return new JSONResponse(array('status' => 'success'));
+	    return new JSONResponse(false, 'success', $this->translate('_shipment_status_has_been_successfully_updated'));
 	}
 	
 	public function getAvailableServices()
@@ -223,22 +225,32 @@ class ShipmentController extends StoreManagementController
 		    
     		$shipment->save();
     		
-            return new JSONResponse(array(
-            'status' => "success", 
-            'shipment' => array(
-                'ID' => $shipment->getID(),
-                'amount' => $shipment->amount->get(),
-                'shippingAmount' => $shipment->shippingAmount->get(),
-                'ShippingService' => array('ID' => ($shipment->shippingService->get() ? $shipment->shippingService->get()->getID() : 0) ),
-                'taxAmount' => $shipment->taxAmount->get(),
-                'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$shipment->taxAmount->get(),
-                'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
-                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
-            )));
+            return new JSONResponse(
+	            array(
+		            'shipment' => array(
+		                'ID' => $shipment->getID(),
+		                'amount' => $shipment->amount->get(),
+		                'shippingAmount' => $shipment->shippingAmount->get(),
+		                'ShippingService' => array('ID' => ($shipment->shippingService->get() ? $shipment->shippingService->get()->getID() : 0) ),
+		                'taxAmount' => $shipment->taxAmount->get(),
+		                'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$shipment->taxAmount->get(),
+		                'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
+		                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
+		            )
+	            ),
+	            'success',
+	            $this->translate('_new_shipment_has_been_successfully_created')
+            );
 		}
 		else
 		{
-			return new JSONResponse(array('status' => "failure", 'errors' => $validator->getErrorList()));
+			return new JSONResponse(
+			    array(
+			        'errors' => $validator->getErrorList()
+			    ),
+			    'failure',
+			    $this->translate('_error_creating_new_shipment')
+		    );
 		}
     }
 
@@ -255,7 +267,7 @@ class ShipmentController extends StoreManagementController
 	public function delete()
 	{
 	    Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'))->delete();
-	    return new JSONResponse(array('status' => 'success'));
+	    return new JSONResponse(false, 'success', $this->translate('_shipment_was_successfully_removed'));
 	}
 }
 

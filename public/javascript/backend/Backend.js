@@ -768,10 +768,22 @@ BrowserDetect.init();
 Backend.SaveConfirmationMessage = Class.create();
 Backend.SaveConfirmationMessage.prototype = 
 {
-	initialize: function(element, options)
+	counter: 0,
+    timers: {},
+    
+    initialize: function(element, options)
   	{
         this.element = $(element);
-        this.element.style.display = 'none';
+        
+        if(!this.element.id)
+        {
+            this.element.id = 'saveConfirmationMessage_' + (Backend.SaveConfirmationMessage.prototype++);
+        }
+        
+        if(!Backend.SaveConfirmationMessage.prototype.timers[this.element.id])
+        {
+            Backend.SaveConfirmationMessage.prototype.timers[this.element.id] = {};
+        }
         
         if(!this.element.down('div')) this.element.appendChild(document.createElement('div'));
         this.innerElement = this.element.down('div');
@@ -797,30 +809,41 @@ Backend.SaveConfirmationMessage.prototype =
 	
 	show: function()
 	{
-        try 
-        {
-            new Effect.ScrollTo(this.element, {offset: -24});
-        }
-        catch(e) {}
-        new Effect.Appear(this.element, {duration: 0.4, afterFinish: this.highlight.bind(this)});
+        this.stopTimers();
+        this.element.hide();
+        
+        this.displaying = true;
+        
+        Backend.SaveConfirmationMessage.prototype.timers[this.element.id].scrollEffect = new Effect.ScrollTo(this.element, {offset: -24});
+        Backend.SaveConfirmationMessage.prototype.timers[this.element.id].appearEffect = new Effect.Appear(this.element, {duration: 0.4, afterFinish: this.highlight.bind(this)});
 	},
 
 	highlight: function()
 	{
         this.innerElement.focus();
-        new Effect.Highlight(this.innerElement, { duration: 0.4 });
+        Backend.SaveConfirmationMessage.prototype.timers[this.element.id].effectHighlight = new Effect.Highlight(this.innerElement, { duration: 0.4 });
        
         // do not hide error messages
         if (!this.element.hasClassName('redMessage'))
         {
-            setTimeout(function() { this.hide() }.bind(this), 4000);   
+            Backend.SaveConfirmationMessage.prototype.timers[this.element.id].hideTimeout = setTimeout(function() { this.hide() }.bind(this), 4000);   
         }
 	},
 
 	hide: function()
 	{
-        Effect.Fade(this.element, {duration: 0.4});
-	}
+        Backend.SaveConfirmationMessage.prototype.timers[this.element.id].fadeEffect = Effect.Fade(this.element, {duration: 0.4});
+        Backend.SaveConfirmationMessage.prototype.timers[this.element.id].fadeTimeout = setTimeout(function() { this.displaying = false; }.bind(this), 4000);  
+	},
+    
+    stopTimers: function()
+    {
+        if(Backend.SaveConfirmationMessage.prototype.timers[this.element.id].hideTimeout) clearTimeout(Backend.SaveConfirmationMessage.prototype.timers[this.element.id].hideTimeout);
+        if(Backend.SaveConfirmationMessage.prototype.timers[this.element.id].fadeTimeout) clearTimeout(Backend.SaveConfirmationMessage.prototype.timers[this.element.id].fadeTimeout);
+        if(Backend.SaveConfirmationMessage.prototype.timers[this.element.id].appearEffect) Backend.SaveConfirmationMessage.prototype.timers[this.element.id].appearEffect.cancel();
+        if(Backend.SaveConfirmationMessage.prototype.timers[this.element.id].fadeEffect) Backend.SaveConfirmationMessage.prototype.timers[this.element.id].fadeEffect.cancel();
+        if(Backend.SaveConfirmationMessage.prototype.timers[this.element.id].effectHighlight) Backend.SaveConfirmationMessage.prototype.timers[this.element.id].effectHighlight.cancel();
+    }
 }
 
 /*************************************************

@@ -193,27 +193,29 @@ class OrderedItemController extends StoreManagementController
             $shipment->save();
             
             return new JSONResponse(array(
-	            'status' => 'succsess', 
-	            'item' => array(
-	                'ID'              => $item->getID(),
-	                'Shipment'        => array(
-							                'ID' => $shipment->getID(),
-							                'amount' => $shipment->amount->get(),
-							                'shippingAmount' => $shipment->shippingAmount->get(),
-							                'taxAmount' => $shipment->taxAmount->get(),    
-							                'total' =>((float)$shipment->shippingAmount->get() + (float)$shipment->amount->get() + (float)$shipment->taxAmount->get()),
-							                'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
-							                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
-	                                     ),
-	                'count'           => $item->count->get(),
-	                'price'           => $item->price->get(),
-	                'priceCurrencyID' => $item->priceCurrencyID->get()
-	            )
-            ));
+		            'item' => array(
+		                'ID'              => $item->getID(),
+		                'Shipment'        => array(
+								                'ID' => $shipment->getID(),
+								                'amount' => $shipment->amount->get(),
+								                'shippingAmount' => $shipment->shippingAmount->get(),
+								                'taxAmount' => $shipment->taxAmount->get(),    
+								                'total' =>((float)$shipment->shippingAmount->get() + (float)$shipment->amount->get() + (float)$shipment->taxAmount->get()),
+								                'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
+								                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
+		                                     ),
+		                'count'           => $item->count->get(),
+		                'price'           => $item->price->get(),
+		                'priceCurrencyID' => $item->priceCurrencyID->get()
+		            )
+	            ), 
+	            'success',
+				$this->translate('_item_was_successfully_removed_from_shipment')
+			);
         }
         else
         {
-            return new JSONResponse(array('status' => 'failure'));
+            return new JSONResponse(false, 'failure', '_error_removing_item_from_shipment');
         }
     }
 
@@ -271,35 +273,41 @@ class OrderedItemController extends StoreManagementController
 		            $newShipment->save();
 		            
     
-		            return new JSONResponse(array(
-		                'status' => 'success', 
-			            'oldShipment' => array(
-			                'ID' => $oldShipment->getID(),
-			                'amount' => $oldShipment->amount->get(),
-			                'shippingAmount' => $oldShipment->shippingAmount->get(),
-			                'taxAmount' => $oldShipment->taxAmount->get(),    
-			                'total' =>((float)$oldShipment->shippingAmount->get() + (float)$oldShipment->amount->get() + (float)$oldShipment->taxAmount->get()),
-			                'prefix' => $oldShipment->amountCurrency->get()->pricePrefix->get(),
-			                'suffix' => $oldShipment->amountCurrency->get()->priceSuffix->get()
-		                ),
-			            'newShipment' => array(
-			                'ID' => $newShipment->getID(),
-			                'amount' =>  $newShipment->amount->get(),
-			                'shippingAmount' =>  $newShipment->shippingAmount->get(),
-			                'taxAmount' => $newShipment->taxAmount->get(),
-			                'total' => ((float)$newShipment->shippingAmount->get() + (float)$newShipment->amount->get() + (float)$newShipment->taxAmount->get()),
-			                'prefix' => $newShipment->amountCurrency->get()->pricePrefix->get(),
-			                'suffix' => $newShipment->amountCurrency->get()->priceSuffix->get()
-		                )
-		            ));
+		            return new JSONResponse(
+		                array(
+				            'oldShipment' => array(
+				                'ID' => $oldShipment->getID(),
+				                'amount' => $oldShipment->amount->get(),
+				                'shippingAmount' => $oldShipment->shippingAmount->get(),
+				                'taxAmount' => $oldShipment->taxAmount->get(),    
+				                'total' =>((float)$oldShipment->shippingAmount->get() + (float)$oldShipment->amount->get() + (float)$oldShipment->taxAmount->get()),
+				                'prefix' => $oldShipment->amountCurrency->get()->pricePrefix->get(),
+				                'suffix' => $oldShipment->amountCurrency->get()->priceSuffix->get()
+			                ),
+				            'newShipment' => array(
+				                'ID' => $newShipment->getID(),
+				                'amount' =>  $newShipment->amount->get(),
+				                'shippingAmount' =>  $newShipment->shippingAmount->get(),
+				                'taxAmount' => $newShipment->taxAmount->get(),
+				                'total' => ((float)$newShipment->shippingAmount->get() + (float)$newShipment->amount->get() + (float)$newShipment->taxAmount->get()),
+				                'prefix' => $newShipment->amountCurrency->get()->pricePrefix->get(),
+				                'suffix' => $newShipment->amountCurrency->get()->priceSuffix->get()
+			                )
+			            ), 
+			            'success', 
+			            $this->translate('_ordered_item_was_successfully_moved')
+		            );
 			    }
 			    else
 			    {
-			        return new JSONResponse(array(
-			            'status' => 'failure', 
-			            'oldShipment' => array('ID' => $fromID),
-			            'newShipment' => array('ID' => $toID)
-		            ));
+			        return new JSONResponse(
+				        array(
+				            'oldShipment' => array('ID' => $fromID),
+				            'newShipment' => array('ID' => $toID)
+			            ), 
+			            'failure', 
+			            $this->translate('_this_shipping_service_has_no_available_rates')
+		            );
 			    }
             }
         }
@@ -333,7 +341,6 @@ class OrderedItemController extends StoreManagementController
 		    $shipment->save();
 		    
 		    return new JSONResponse(array(
-		        'status' => 'success',
 				'shipment' => array(
 				    'ID' => $shipment->getID(),
 				    'amount' => $shipment->amount->get(),
@@ -342,14 +349,14 @@ class OrderedItemController extends StoreManagementController
 	                'taxAmount' => $shipment->taxAmount->get(),
 				    'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
 				    'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
-				 )
-			));
+				 )),
+				 'success',
+				 $this->translate('_ordered_item_quantity_was_updated')
+			 );
         }
         else
         {
-	        return new JSONResponse(array(
-	            'status' => 'failure'
-           ));
+	        return new JSONResponse(false, 'failure', $this->translate('_error_updating_item_quantity'));
         }
 	}
 }

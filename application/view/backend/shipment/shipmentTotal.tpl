@@ -41,13 +41,14 @@
     <tr class="orderShipment_info_shipping_row">
         <td class="orderShipmentsItem_info_report_td">
             <div class="orderShipmentsItem_info_report">
+                <span class="progressIndicator" style="display: none;"></span>
                 {t _shipping}:  
                 <a href="#change" class="orderShipment_change_usps" id="orderShipment_change_usps_{$shipment.ID}"  style="{if $shipment.status == 3}display: none;{/if}">{$shipment.ShippingService.name_lang|default:$shippingServiceIsNotSelected}</a>
                 
                 <span class="controls" id="orderShipment_USPS_{$shipment.ID}" style="display: none">
                     <select name="USPS" id="orderShipment_USPS_{$shipment.ID}_select"> </select>
                 
-                    <span class="activeForm_progress"/>
+                    <span class="progressIndicator" style="display: none;"></span>
                     <input type="submit" value="Save" class="button submit"  id="orderShipment_USPS_{$shipment.ID}_submit" />
                     or
                     <a class="cancel" href="#cancel"  id="orderShipment_USPS_{$shipment.ID}_cancel" >Cancel</a>

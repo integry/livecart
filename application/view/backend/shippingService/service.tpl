@@ -87,7 +87,7 @@
     {/language}
 
     <fieldset class="shippingService_controls controls">
-        <span class="activeForm_progress"></span>
+        <span class="progressIndicator" style="display: none;"></span>
         <input type="submit" class="shippingService_save button submit" value="{t _save}" />
         {t _or}
         <a href="#cancel" class="shippingService_cancel cancel">{t _cancel}</a>
