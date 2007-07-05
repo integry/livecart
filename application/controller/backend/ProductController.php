@@ -526,7 +526,7 @@ class ProductController extends StoreManagementController
 			
 			$product->loadRequestData($this->request);			
 			$product->save();
-									
+							
 			return $this->productForm($product);
 		}
 		else
@@ -653,7 +653,7 @@ class ProductController extends StoreManagementController
 			
 			$specFieldsByGroup[$groupID][] = $field;
 		}		
-							
+
 		$response = new ActionResponse();
 		$response->set("cat", $product->category->get()->getID());
 		$response->set("specFieldList", $specFieldsByGroup);

@@ -169,8 +169,11 @@ Calendar.setup = function (params) {
         var real = document.getElementById(dateEl.id + "_real");
         var realValue = real ? real.value : false;
 		if (dateEl)
-			 params.date = Date.parseDate(dateEl.value || dateEl.innerHTML || realValue || params.date.print("%y-%m-%d"), dateFmt);
-			 
+        {
+		    var curentDate = params.date ? params.date.print("%y-%m-%d") : '';
+            params.date = Date.parseDate(dateEl.value || dateEl.innerHTML || realValue || curentDate, dateFmt);
+		}
+        	 
 		if (!(cal && params.cache)) {
 			window.calendar = cal = new Calendar(params.firstDay,
 							     params.date,
@@ -213,12 +216,23 @@ Calendar.setup = function (params) {
 
     if(!cal)
     {
+        if(params.inputFieldReal.value == '0000-00-00') params.inputFieldReal.value = '';
+        if(params.inputField.value == '0000-00-00') params.inputField.value = '';
+        
         cal = new Calendar();
         cal.create();
         cal.setDateFormat(params.ifFormat);
         cal.parseDate(params.inputFieldReal.value);
-        params.inputField.value = cal.date.print(params.ifFormat);
-	    if(params.inputFieldReal) params.inputFieldReal.value = cal.date.getFullYear() + "-" + (cal.date.getMonth() + 1) + "-" + cal.date.getDate();
+        
+        if(params.inputFieldReal.value)
+        {
+            params.inputField.value = cal.date.print(params.ifFormat);
+
+            if(params.inputFieldReal) 
+            {
+                params.inputFieldReal.value = cal.date.getFullYear() + "-" + (cal.date.getMonth() + 1) + "-" + cal.date.getDate();
+            }
+        }
 
     }
 
@@ -227,5 +241,8 @@ Calendar.setup = function (params) {
 
 Calendar.updateDate = function(e) 
 { 
-    this.realInput.value = Date.parseDate(this.showInput.value, "%d-%b-%Y").print("%Y-%m-%d"); 
+    if(this.showInput.value != "")
+    {
+        this.realInput.value =  Date.parseDate(this.showInput.value, "%d-%b-%Y").print("%Y-%m-%d"); 
+    }
 }

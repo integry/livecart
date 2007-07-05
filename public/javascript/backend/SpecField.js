@@ -232,8 +232,8 @@ Backend.SpecField.prototype = {
         this.nodes.labels = {};  
         $A(['description', 'handle', 'type', 'name', 'valuePrefix', 'valueSuffix', 'advancedText', 'multipleSelector', 'isRequired', 'isDisplayed', 'isDisplayedInList']).each(function(field)
         {
-            self.nodes.labels[field] = document.getElementsByClassName(self.cssPrefix + "form_" + field + "_label", self.nodes.parent)[0];
-        });   
+            this.nodes.labels[field] = document.getElementsByClassName(self.cssPrefix + "form_" + field + "_label", this.nodes.parent)[0];
+        }.bind(this));   
 
 		this.nodes.mainTitle 			= document.getElementsByClassName(this.cssPrefix + "title", this.nodes.parent)[0];
 		this.nodes.id 					= document.getElementsByClassName(this.cssPrefix + "form_id", this.nodes.parent)[0];
@@ -254,7 +254,7 @@ Backend.SpecField.prototype = {
 		this.nodes.valueSuffix          = document.getElementsByClassName(this.cssPrefix + "form_valueSuffix", this.nodes.parent)[0];
         
 		this.nodes.valuesDefaultGroup 	= document.getElementsByClassName(this.cssPrefix + "form_values_group", this.nodes.parent)[0];
-        this.nodes.formatedText         = document.getElementsByClassName(this.cssPrefix + 'form_advancedText', this.nodes.parent)[0];
+        this.nodes.advancedText         = document.getElementsByClassName(this.cssPrefix + 'form_advancedText', this.nodes.parent)[0];
         
 		this.nodes.controls 	        = this.nodes.parent.down("." + this.cssPrefix + "controls");
 		this.nodes.cancel 	            = this.nodes.controls.down("." + this.cssPrefix + "cancel");
@@ -353,7 +353,7 @@ Backend.SpecField.prototype = {
             this.nodes.multipleSelector.parentNode.style.display = 'block';
 		}
         
-        this.nodes.formatedText.style.display = this.type == Backend.SpecField.prototype.TYPE_TEXT_SIMPLE ? 'block' : 'none';
+        this.nodes.advancedText.style.display = this.type == Backend.SpecField.prototype.TYPE_TEXT_SIMPLE ? 'block' : 'none';
 	},
 
 
@@ -474,24 +474,38 @@ Backend.SpecField.prototype = {
                 
         $A(['name', 'valuePrefix', 'valueSuffix', 'handle', 
             'multipleSelector', 'isRequired',  'isDisplayed', 
-            'isDisplayedInList', 'type', 'description']).each(function(fieldName)
+            'isDisplayedInList', 'type', 'description', 'advancedText']).each(function(fieldName)
         {
-            self.nodes.labels[fieldName].onclick = function() { 
-                var input = self.nodes[fieldName];
+            this.nodes.labels[fieldName].onclick = function() { 
+                var input = this.nodes[fieldName];
+                
+                if(input.down('input'))
+                {
+                    input = input.down('input');
+                }
+                else if(input.down('select'))
+                {
+                    input = input.down('select');
+                }
+                else if(input.down('textarea'))
+                {
+                    input = input.down('textarea');
+                }
+                
                 if('checkbox' == input.type) input.checked = !input.checked;
                 else input.focus();
-            };
-        });
+            }.bind(this);
+        }.bind(this));
         
         if(this.type == Backend.SpecField.prototype.TYPE_TEXT_ADVANCED)
         {
             this.nodes.type.value = Backend.SpecField.prototype.TYPE_TEXT_SIMPLE;
-            this.nodes.formatedText.down('input').checked = true;
+            this.nodes.advancedText.down('input').checked = true;
         }
         else
         {
             this.nodes.type.value = this.type;
-            this.nodes.formatedText.checked = false;
+            this.nodes.advancedText.checked = false;
         }
         
 		if(!this.id.match(/new$/))
