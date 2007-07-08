@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.filter.FilterInterface');
+ClassLoader::import('application.helper.CreateHandleString');
 
 /**
  * Filter product list by manufacturer. The manufacturer filters are generated automatically.
@@ -39,7 +40,7 @@ class ManufacturerFilter implements FilterInterface
     {
 		$array = array();
 		$array['name_lang'] = $this->manufacturerName;
-		$array['handle'] = Store::createHandleString($array['name_lang']);
+		$array['handle'] = createHandleString($array['name_lang']);
 		$array['ID'] = $this->getID();
 		return $array;        
     }

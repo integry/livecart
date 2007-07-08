@@ -13,7 +13,6 @@ $stat = new Stat(true);
 
 ClassLoader::import('framework.request.Request');
 ClassLoader::import('framework.request.Router');
-ClassLoader::import('framework.renderer.TemplateRenderer');
 ClassLoader::import('framework.controller.*');
 ClassLoader::import('framework.response.*');
 ClassLoader::import('application.controller.*');

@@ -13,7 +13,7 @@
     
     ClassLoader::import('application.LiveCart');
 
-	$app = LiveCart::getInstance();
+	$app = new LiveCart();
 	try
 	{
 		$app->run();

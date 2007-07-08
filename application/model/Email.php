@@ -114,8 +114,8 @@ class Email
         {
             ClassLoader::import('library.smarty.libs.Smarty');
         
-            $renderer = new TemplateRenderer(Router::getInstance());
-            $smarty = TemplateRenderer::getSmartyInstance();
+            $renderer = new SmartyRenderer(Router::getInstance());
+            $smarty = SmartyRenderer::getSmartyInstance();
 
             $smarty->compile_dir = ClassLoader::getRealPath('cache.templates_c');
             $smarty->template_dir = ClassLoader::getRealPath('application.view');

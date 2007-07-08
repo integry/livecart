@@ -1,6 +1,6 @@
 <?php
 
-class LiveCartRenderer extends TemplateRenderer
+class LiveCartRenderer extends SmartyRenderer
 {
 	/**
 	 * Template renderer constructor
@@ -25,7 +25,7 @@ class LiveCartRenderer extends TemplateRenderer
 	public function process(Renderable $object, $view)
 	{
 		$customizedPath = ClassLoader::getRealPath('storage.customize.view.') . $view;
-		
+
 		if (file_exists($customizedPath))
 		{
 			$view = $customizedPath;

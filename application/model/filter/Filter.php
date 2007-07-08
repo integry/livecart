@@ -5,6 +5,7 @@ ClassLoader::import('application.model.filter.SpecificationFilterInterface');
 ClassLoader::import('application.model.filter.FilterGroup');
 ClassLoader::import('application.model.category.SpecField');
 ClassLoader::import('application.model.category.SpecFieldValue');
+ClassLoader::import('application.helper.CreateHandleString');
 
 /**
  * Filters allow to filter the product list by specific product attribute values.
@@ -114,7 +115,7 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 	public static function transformArray($array, $class = __CLASS__)
 	{		
 		$array = parent::transformArray($array, $class);
-		$array['handle'] = Store::createHandleString($array['name_lang']);
+		$array['handle'] = createHandleString($array['name_lang']);
 		return $array;
 	}
 

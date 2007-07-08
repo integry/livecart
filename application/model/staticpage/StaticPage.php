@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import('application.helper.CreateHandleString');
+
 /**
  * Static site pages (shipping information, contact information, terms of service, etc.)
  *
@@ -66,7 +68,7 @@ class StaticPage extends MultilingualObject
 		
 		if (!$this->handle->get())
 		{
-            $this->handle->set(Store::createHandleString($this->getValueByLang('title', $lang)));		
+            $this->handle->set(createHandleString($this->getValueByLang('title', $lang)));		
 		}
 	
 		parent::save();

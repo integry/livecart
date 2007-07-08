@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import('application.helper.CreateHandleString');
+
 /**
  * Generates category page URL
  *
@@ -10,13 +12,13 @@
  * @package application.helper
  */
 function smarty_function_categoryUrl($params, $smarty)
-{	
+{		
 	$category = $params['data'];	
 	$router = Router::getInstance();
 	
 	// get full category path
 	$parts = array();
-	$parts[] = Store::createHandleString($category['name_lang']);
+	$parts[] = createHandleString($category['name_lang']);
 	
     if (!isset($category['parent']))
 	{
@@ -28,7 +30,7 @@ function smarty_function_categoryUrl($params, $smarty)
     while ($current > 1)
 	{
 	  	$cat = Category::getInstanceByID($current, true);
-	  	$parts[] = Store::createHandleString($cat->getValueByLang('name', Store::getInstance()->getLocaleCode()));
+	  	$parts[] = createHandleString($cat->getValueByLang('name', Store::getInstance()->getLocaleCode()));
 	  	$current = $cat->parentNode->get()->getID();
 	}
 	

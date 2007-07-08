@@ -7,14 +7,11 @@ ClassLoader::import('framework.Application');
  */
 class LiveCart extends Application
 {
-	/**
-	 * Application instance (based on a singleton pattern)
-	 */
-	private static $instance = null;
-	
 	private static $pluginDirectories = array();
 
 	private $isBackend = false;
+	
+	private $session;
 
 	/**
 	 * Returns an instance of LiveCart Application
@@ -23,17 +20,14 @@ class LiveCart extends Application
 	 *
 	 * @return LiveCart
 	 */
-	public static function getInstance()
+	public function __construct()
 	{
-		if (is_null(self::$instance))
-		{
-			self::$instance = new LiveCart();
-			
-			$compileDir = Store::getInstance()->isCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
-			TemplateRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
-		}
+		parent::__construct();
 		
-		return self::$instance;
+		unset($this->session);
+		
+		$compileDir = $this->isCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
+		SmartyRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
 	}
 	
 	/**
@@ -100,9 +94,9 @@ class LiveCart extends Application
 		
 		$renderer = parent::getRenderer();
 
-		if (Store::getInstance()->isCustomizationMode() && !$this->isBackend)
+		if ($this->isCustomizationMode() && !$this->isBackend)
 		{
-			$smarty = TemplateRenderer::getSmartyInstance();
+			$smarty = SmartyRenderer::getSmartyInstance();
 			$smarty->autoload_filters = array('pre' => array('templateLocator'));			
 		}
 		
@@ -181,6 +175,48 @@ class LiveCart extends Application
 	        }
 		}
     }
+    
+	public function isCustomizationMode()
+	{
+		return $this->session->get('customizationMode');
+	}
+
+	public function isTranslationMode()
+	{
+		return $this->session->get('translationMode');
+	}    
+	
+	private function loadSession()
+	{
+	  	ClassLoader::import("application.model.system.Config");
+    	$this->session = new Session();
+    	return $this->session;
+	}
+	
+	private function __get($name)
+	{
+		switch ($name)
+	  	{
+		    case 'locale':
+		    	return $this->loadLocale();
+		    break;
+
+		    case 'localeName':
+		    	return $this->loadLocaleName();
+		    break;
+
+		    case 'config':
+		    	return $this->loadConfig();
+		    break;
+
+		    case 'session':
+		    	return $this->loadSession();
+		    break;
+
+			default:
+		    break;
+		}
+	}	
 }
 
 ?>

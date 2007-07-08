@@ -77,73 +77,33 @@ abstract class BaseController extends Controller implements LCiTranslator
 	 * Bese controller constructor: restores user object by using session data and 
 	 * checks a permission to a requested action
 	 *
-	 * @param Request $request
+	 * @param LiveCart $application Application instance
 	 * @throws AccessDeniedExeption
 	 */
-	public function __construct(Request $request)
+	public function __construct(LiveCart $application)
 	{
-		parent::__construct($request);
+		parent::__construct($application);
 
 		unset($this->locale);
 		unset($this->config);
 		unset($this->user);
 		unset($this->session);
 
-		$this->router = Router::getInstance();
+		$this->router = $this->application->getRouter();
 	    
-		// If backend controller is being used then we should 
-	    // check for user permissions to use role assigned to current controller and action
-		$rolesCacheDir = ClassLoader::getRealPath('cache.roles');
-		if(!is_dir($rolesCacheDir))
-		{
-		    mkdir($rolesCacheDir);
-		}
-		
-		$refl = new ReflectionClass($this);
-        $controllerPath = $refl->getFileName();
-
-		$cachePath = $rolesCacheDir . DIRECTORY_SEPARATOR . md5($controllerPath) . '.php';
-
-        $this->roles = new RolesParser($controllerPath, $cachePath);
-	    if($this->roles->wereExpired())
-	    {
-	        ClassLoader::import('application.model.role.Role');
-	        Role::addNewRolesNames($this->roles->getRolesNames());
-	    }
-	    
-	    $actionName = $this->request->getActionName();
-	    $role = $this->roles->getRole($actionName);
-	    
-		if ($role)
-		{
-			$hasAccess = $this->user->hasAccess($role);
-			
-		    if (!$hasAccess) 
-			{
-				if($this->user->isAnonymous())
-				{
-				    throw new UnauthorizedException($this);
-				}
-				else
-				{
-				    throw new ForbiddenException($this);
-				}			
-			}
-		}
-		
-		$this->configFiles = $this->getConfigFiles();
+	    $this->checkAccess();
 		
 		$this->store = Store::getInstance();
 		$this->store->setRequestLanguage($this->request->get('requestLanguage'));				
+		$this->configFiles = $this->getConfigFiles();		
 		$this->store->setConfigFiles($this->configFiles);
-		
+				
 		$localeCode = $this->store->getLocaleInstance()->getLocaleCode();
-		$defaultLanguageCode = $this->store->getDefaultLanguageCode();
 
 		// add language code to URL for non-default languages
-		if ($localeCode != $defaultLanguageCode)
+		if ($localeCode != $this->store->getDefaultLanguageCode())
 		{
-			Router::setAutoAppendVariables(array('requestLanguage' => $this->store->getLocaleInstance()->getLocaleCode()));
+			Router::setAutoAppendVariables(array('requestLanguage' => $localeCode));
 		}
 	}	
 	
@@ -163,17 +123,6 @@ abstract class BaseController extends Controller implements LCiTranslator
 	public function translate($key)
 	{
 		return $this->locale->translator()->translate($key);
-	}
-	
-	/**
-	 * Translate text passed by reference. 
-	 * 
-	 * @see BaseController::translate
-	 * @see BaseController::translateArray
-	 */
-	private function translateByReference(&$text)
-	{
-	    $text = $this->translate($text);
 	}
 	
 	/**
@@ -224,7 +173,15 @@ abstract class BaseController extends Controller implements LCiTranslator
 		$class = new ReflectionClass(get_class($this));
 		while ($class->getParentClass())
 		{
-			$file = substr($class->getFileName(), strlen($controllerRoot) + 1);
+			if (substr($class->getFileName(), 0, strlen($controllerRoot)) == $controllerRoot)
+			{
+				$file = substr($class->getFileName(), strlen($controllerRoot) + 1);
+			}
+			else
+			{
+				$file = basename($class->getFileName());
+			}			
+
 			$files[] = substr($file, 0, -14);
 			$class = $class->getParentClass();
 		}
@@ -263,6 +220,46 @@ abstract class BaseController extends Controller implements LCiTranslator
 		    break;
 		}
 	}	
+	
+	private function checkAccess()
+	{
+		// If backend controller is being used then we should 
+	    // check for user permissions to use role assigned to current controller and action
+		$rolesCacheDir = ClassLoader::getRealPath('cache.roles');
+		if(!is_dir($rolesCacheDir))
+		{
+		    mkdir($rolesCacheDir);
+		}
+		
+		$refl = new ReflectionClass($this);
+        $controllerPath = $refl->getFileName();
+
+		$cachePath = $rolesCacheDir . DIRECTORY_SEPARATOR . md5($controllerPath) . '.php';
+
+        $this->roles = new RolesParser($controllerPath, $cachePath);
+	    if($this->roles->wereExpired())
+	    {
+	        ClassLoader::import('application.model.role.Role');
+	        Role::addNewRolesNames($this->roles->getRolesNames());
+	    }
+	    
+	    $role = $this->roles->getRole($this->request->getActionName());
+	    
+		if ($role)
+		{
+		    if (!$this->user->hasAccess($role))
+			{
+				if($this->user->isAnonymous())
+				{
+				    throw new UnauthorizedException($this);
+				}
+				else
+				{
+				    throw new ForbiddenException($this);
+				}			
+			}
+		}		
+	}
 }
 
 ?>

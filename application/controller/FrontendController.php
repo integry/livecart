@@ -16,9 +16,9 @@ abstract class FrontendController extends BaseController
 	 */
 	protected $order;
 	
-	public function __construct($request)
+	public function __construct(LiveCart $application)
 	{
-        parent::__construct($request);
+        parent::__construct($application);
 
 		unset($this->order);
         
@@ -26,9 +26,9 @@ abstract class FrontendController extends BaseController
         $autoAppend = array('currency', 'sort');
         foreach ($autoAppend as $key)
         {
-            if ($request->isValueSet($key))
+            if ($this->request->isValueSet($key))
             {
-                Router::addAutoAppendQueryVariable($key, $request->get($key));
+                Router::addAutoAppendQueryVariable($key, $this->request->get($key));
             }    
         }
     }

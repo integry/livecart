@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.filter.SpecificationFilterInterface');
+ClassLoader::import('application.helper.CreateHandleString');
 
 /**
  * Filter product list by selector attribute value. SelectorFilters are being generated automatically based on
@@ -43,7 +44,7 @@ class SelectorFilter implements SpecificationFilterInterface
 	{
 		$array = $this->specFieldValue->toArray();
 		$array['name_lang'] = $array['value_lang'];
-		$array['handle'] = Store::createHandleString($array['value_lang']);
+		$array['handle'] = createHandleString($array['value_lang']);
 		$array['ID'] = 'v' . $array['ID'];
 		if (!isset($array['FilterGroup']))
 		{

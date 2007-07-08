@@ -15,20 +15,20 @@ class CustomizeController extends StoreManagementController
 	public function index()
 	{
 		$response = new ActionResponse();		
-		$response->set('isCustomizationModeEnabled', $this->store->isCustomizationMode());
-		$response->set('isTranslationModeEnabled', $this->store->isTranslationMode());
+		$response->set('isCustomizationModeEnabled', $this->application->isCustomizationMode());
+		$response->set('isTranslationModeEnabled', $this->application->isTranslationMode());
 		return $response;
 	}	
 	
 	public function translationMode()
 	{
-	  	if ($this->store->isTranslationMode())
+	  	if ($this->application->isTranslationMode())
 	  	{
-			unset($_SESSION['translationMode']);
+			$this->session->unsetValue('translationMode');
 		}
 		else
 		{
-			$_SESSION['translationMode'] = true;  
+			$this->session->set('translationMode', true);
 		}
 		
 		return new ActionRedirectResponse('backend.customize', 'index');
@@ -36,13 +36,13 @@ class CustomizeController extends StoreManagementController
 
 	public function customizationMode()
 	{
-	  	if ($this->store->isCustomizationMode())
+	  	if ($this->application->isCustomizationMode())
 	  	{
-			unset($_SESSION['customizationMode']);
+			$this->session->unsetValue('customizationMode');
 		}
 		else
 		{
-			$_SESSION['customizationMode'] = true;  
+			$this->session->set('customizationMode', true);
 		}
 		
 		return new ActionRedirectResponse('backend.customize', 'index');

@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('application.model.filter.FilterInterface');
+ClassLoader::import('application.helper.CreateHandleString');
 
 /**
  * Filter product list by price. Price intervals are pre-defined (for now).
@@ -50,7 +51,7 @@ class PriceFilter implements FilterInterface
     {
 		$array = array();
 		$array['name_lang'] = $this->name;
-		$array['handle'] = Store::createHandleString($this->name);
+		$array['handle'] = createHandleString($this->name);
 		$array['ID'] = $this->getID();
 		return $array;        
     }

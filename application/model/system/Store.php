@@ -1,11 +1,12 @@
 <?php
 
 /**
- * Top-level facade class for retrieving system data - available languages, currencies, 
+ * Top-level GOD class for retrieving system data - available languages, currencies, 
  * payment handlers, shipping services, etc.
  *
  * @author Integry Systems <http://integry.com>  
  * @package application.model.system
+ * @todo Get rid of this class by moving most stuff to LiveCart class
  */
 class Store
 {
@@ -71,10 +72,6 @@ class Store
 	 */
 	private static $instance = null;
 
-	private static $isCustomizationMode = null;
-
-	private static $isTranslationMode = null;
-
 	private function __construct()
 	{
 		// unset context instance variables to make use of lazy loading
@@ -96,26 +93,6 @@ class Store
 			self::$instance = new Store();
 		}
 		return self::$instance;
-	}
-
-	public function isCustomizationMode()
-	{
-		if (is_null(self::$isCustomizationMode))
-		{
-			self::$isCustomizationMode = $this->session->get('customizationMode');
-		}	
-		
-		return self::$isCustomizationMode;
-	}
-
-	public function isTranslationMode()
-	{
-		if (is_null(self::$isTranslationMode))
-		{
-			self::$isTranslationMode = $this->session->get('translationMode');
-		}	
-		
-		return self::$isTranslationMode;
 	}
 
 	/**
@@ -142,7 +119,6 @@ class Store
 		{
 			ClassLoader::import("application.model.system.Language");
 
-    	  	$filter = new ARSelectFilter();
 			$langFilter = new ARSelectFilter();
     	  	$langFilter->setOrder(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);
 			$this->languageList = ActiveRecordModel::getRecordSet("Language", $langFilter);
@@ -253,56 +229,15 @@ class Store
 	public function getEnabledCountries()
 	{
 		$countries = $this->locale->info()->getAllCountries();
-		$enabled = Config::getInstance()->get('ENABLED_COUNTRIES');
+		$enabled = $this->config->get('ENABLED_COUNTRIES');
 		
-		$countries = array_intersect_key($countries, $enabled);
-		
-		return $countries;
+		return array_intersect_key($countries, $enabled);
 	}
 
 	public function isValidCountry($countryCode)
 	{
-		$enabled = Config::getInstance()->get('ENABLED_COUNTRIES');
+		$enabled = $this->config->get('ENABLED_COUNTRIES');
 		return isset($enabled[$countryCode]);		
-	}
-
-	/**
-	 * Creates a handle string that is usually used as part of URL to uniquely
-	 * identify some record
-	 * Example: "Some Record TITLE!!!" becomes "some-record-title"
-	 * @param string $str
-	 * @return string
-	 *
-	 * @todo test with multibyte strings
-	 */
-	public static function createHandleString($str)
-	{
-		$wordSeparator = '.';
-		
-		$str = strtolower(trim(strip_tags(stripslashes($str))));		
-
-		// fix accented characters
-        $from = array();
-		for ($k = 192; $k <= 255; $k++) 
-        {
-			$from[] = chr($k);
-		}
-
-		$repl = array ('A','A','A','A','A','A','A','E','E','E','E','E','I','I','I','I','D','N','O','O','O','O','O','O','O','U','U','U','U','Y','b','b','a','a','a','a','a','a','a','e','e','e','e','e','i','i','i','i','n','n','o','o','o','o','o','o','o','u','u','u','u','y','y','y');		
-
-        $str = str_replace($from, $repl, $str);
-		
-		// non alphanumeric characters
-		$str = preg_replace('/[^a-z0-9]/', $wordSeparator, $str);
-		
-		// double separators
-		$str = preg_replace('/[\\' . $wordSeparator . ']{2,}/', $wordSeparator, $str);
-		
-        // separators from beginning and end
-		$str = preg_replace('/^[\\' . $wordSeparator . ']/', '', $str);
-		$str = preg_replace('/[\\' . $wordSeparator . ']$/', '', $str);
-				        
-		return $str;
 	}
 
 	public function setConfigFiles($fileArray)

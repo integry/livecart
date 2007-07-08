@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import('application.helper.CreateHandleString');
+
 /**
  * Generates product page URL
  *
@@ -10,9 +12,9 @@
  * @package application.helper
  */
 function smarty_function_productUrl($params, Smarty $smarty)
-{	
+{		
 	$product = $params['product'];	
-	$handle = Store::createHandleString($product['name_lang']);
+	$handle = createHandleString($product['name_lang']);
 		
 	$urlParams = array('controller' => 'product', 
 					   'action' => 'index', 
