@@ -59,37 +59,42 @@
     {/allowed}
 	<ul id="categoryBrowserActions" class="verticalMenu">
 		<li class="addTreeNode" {denied role="category.create"}style="display: none"{/denied}>
-            <span id="createNewCategoryLinkIndicator" class="progressIndicator" style="display: none;"></span>
             <a href="#" id="createNewCategoryLink">
     	        {t _create_subcategory}
             </a>
         </li>
 		<li class="moveUpTreeNode" {denied role="category.sort"}style="display: none"{/denied}>
-            <span id="moveCategoryUpIndicator" class="progressIndicator" style="display: none;"></span>
             <a href="#" id="moveCategoryUp">
                 {t _move_category_up}
             </a>
         </li>
 		<li class="moveDownTreeNode" {denied role="category.sort"}style="display: none"{/denied}>
-            <span id="moveCategoryDownIndicator" class="progressIndicator" style="display: none;"></span>
             <a href="#" id="moveCategoryDown">
                 {t _move_category_down}
             </a>
         </li>
 		<li class="removeTreeNode" {denied role="category.remove"}style="display: none"{/denied}>
-            <span id="removeCategoryLinkIndicator" class="progressIndicator" style="display: none;"></span>
             <a href="#" id="removeCategoryLink">
                 {t _remove_category}
             </a>
         </li>
 	</ul>
 
-    <div id="confirmations"></div>
+    <div id="confirmations">
+        <div id="redZone">
+            <div id="categoryImageSaved" class="yellowMessage" style="display: none;">
+                <img class="closeMessage" src="image/silk/cancel.png"/>
+                <div>{t _category_image_was_successfully_saved}</div>
+            </div>
+        </div>
+        <div id="yellowZone">
+            <div id="pricesSaveConf" class="pricesSaveConf yellowMessage" style="display: none;"><div>{t _product_information_was_saved}</div></div>    
+            <div id="productAddConf" class="pricesSaveConf yellowMessage" style="display: none;"><div>{t _notification_product_was_successfuly}</div></div>    
+           	<div id="productAddContinueConf" class="pricesSaveConf yellowMessage" style="display: none;"><div>{t _product_added_continuing} <span class="progressIndicator"></span></div></div>    
+        </div>
+    </div>
 
-    <div id="pricesSaveConf" class="pricesSaveConf yellowMessage" style="display: none;"><div>{t _product_information_was_saved}</div></div>    
-    <div id="productAddConf" class="pricesSaveConf yellowMessage" style="display: none;"><div>{t _notification_product_was_successfuly}</div></div>    
-   	<div id="productAddContinueConf" class="pricesSaveConf yellowMessage" style="display: none;"><div>{t _product_added_continuing} <span class="progressIndicator"></span></div></div>    
-
+ 
 </div>
 
 <div id="managerContainer" class="treeManagerContainer maxHeight h--60">

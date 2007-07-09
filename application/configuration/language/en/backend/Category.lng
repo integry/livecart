@@ -6,6 +6,7 @@ _could_not_remove_category=Could not remove selected category
 _categories_tree_was_reordered=Categories tree was reordered
 _unable_to_reorder_categories_tree=Unable to reorder categories tree
 _category_succsessfully_saved=Category was successfully updated
+_category_image_was_successfully_saved=Category image was successfully saved
 
 # SpecField
 _SpecField_main=Main

@@ -61,6 +61,7 @@ abstract class ObjectImageController extends StoreManagementController
 			{
 			  	ActiveRecord::commit();
 			  	$result = $catImage->toArray();
+			  	$result['status'] = 'success';
 			}
 			else
 			{
@@ -128,6 +129,7 @@ abstract class ObjectImageController extends StoreManagementController
 		{
 			ActiveRecord::commit();
 		  	$result = $image->toArray();
+		  	$result['status'] = 'success';
 		}		
 		
 		$this->setLayout('iframeJs');
@@ -146,14 +148,12 @@ abstract class ObjectImageController extends StoreManagementController
 		try
 		{
 			call_user_func_array(array($this->getModelClass(), 'deleteByID'), array($this->request->get('id')));
-		  	$success = true;
+		  	return true;
 		}
 		catch (ARNotFoundException $exc)
 		{
-			$success = false;  
+			return false;  
 		}
-		
-		return new RawResponse($success);
 	}		
 	
 	/**

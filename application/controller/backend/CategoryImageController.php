@@ -40,7 +40,14 @@ class CategoryImageController extends ObjectImageController
 	 */
 	public function delete()
 	{
-        return parent::delete();
+        if(parent::delete())
+        {
+            return new JSONResponse(false, 'success', $this->translate('_category_image_was_successfully_removed'));
+        }
+        else
+        {
+            return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_category_image'));
+        }
     }
 
 	/**
@@ -48,7 +55,9 @@ class CategoryImageController extends ObjectImageController
 	 */
 	public function saveOrder()
 	{
-        return parent::saveOrder();
+        parent::saveOrder();
+        
+        return new JSONResponse(false, 'success', $this->translate('_category_images_were_successfully_reordered'));
     }    
 
 	protected function getModelClass()

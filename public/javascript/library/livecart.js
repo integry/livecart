@@ -111,7 +111,12 @@ LiveCart.AjaxRequest.prototype = {
         var confirmations = $('confirmations');
         if(!confirmations.down('#redZone'))
         {
-            new Insertion.Bottom('confirmations', '<div id="redZone"></div><div id="yellowZone"></div>');
+            new Insertion.Bottom('confirmations', '<div id="redZone"></div>');
+        }
+        
+        if(!confirmations.down('#yellowZone'))
+        {
+            new Insertion.Bottom('confirmations', '<div id="yellowZone"></div>');
         }
         
         var color = null;
