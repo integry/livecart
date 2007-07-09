@@ -49,7 +49,7 @@ class SpecFieldController extends StoreManagementController
         $response->set('categoryID', $categoryID);
         $response->set('configuration', $this->getSpecFieldConfig());
         $response->set('specFieldsList', $defaultSpecFieldValues);
-        $response->set('defaultLangCode', $this->store->getDefaultLanguageCode());
+        $response->set('defaultLangCode', $this->application->getDefaultLanguageCode());
         $response->set('specFieldsWithGroups', $category->getSpecFieldsWithGroupsArray());
 
         return $response;
@@ -142,7 +142,7 @@ class SpecFieldController extends StoreManagementController
             $specField->setFieldValue('isDisplayed',       $isDisplayed);
             $specField->setFieldValue('isDisplayedInList', $isDisplayedInList);
             
-			foreach($this->store->getLanguageArray(true) as $langCode) 
+			foreach($this->application->getLanguageArray(true) as $langCode) 
 			{
 			    $specField->setValueByLang('name', $langCode, $this->request->get('name_' . $langCode));
 			    $specField->setValueByLang('valueSuffix', $langCode, $this->request->get('valueSuffix_' . $langCode));
@@ -265,8 +265,8 @@ class SpecFieldController extends StoreManagementController
     {
         if(!empty($this->specFieldConfig)) return $this->specFieldConfig;
         
-        $languages[$this->store->getDefaultLanguageCode()] =  $this->locale->info()->getOriginalLanguageName($this->store->getDefaultLanguageCode());
-        foreach ($this->store->getLanguageList()->toArray() as $lang)
+        $languages[$this->application->getDefaultLanguageCode()] =  $this->locale->info()->getOriginalLanguageName($this->application->getDefaultLanguageCode());
+        foreach ($this->application->getLanguageList()->toArray() as $lang)
         {
             if($lang['isDefault'] != 1)
             {

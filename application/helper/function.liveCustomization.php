@@ -10,9 +10,9 @@
  * @package application.helper
  * @author Integry Systems
  */
-function smarty_function_liveCustomization($params, $smarty) 
+function smarty_function_liveCustomization($params, LiveCartSmarty $smarty) 
 {
-	if ($smarty->get_template_vars('application')->isTranslationMode())
+	if ($smarty->getApplication()->isTranslationMode())
 	{
 		if (!isset($params['action']))
 		{

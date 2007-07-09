@@ -20,7 +20,7 @@ class ShipmentDeliveryRate extends ShippingRateResult
     {
         $inst = new ShipmentDeliveryRate();
         $inst->setServiceId($service->getID());
-        $inst->setCost($cost, Store::getInstance()->getDefaultCurrencyCode());
+        $inst->setCost($cost, self::getApplication()->getDefaultCurrencyCode());
         return $inst;
     }
     
@@ -33,7 +33,7 @@ class ShipmentDeliveryRate extends ShippingRateResult
         
         $handler->setDestZip($address->postalCode->get());
 
-        $config = Config::getInstance();        
+        $config = self::getApplication()->getConfig();
         $handler->setSourceCountry($config->get('STORE_COUNTRY'));
         $handler->setSourceZip($config->get('STORE_ZIP'));
         
@@ -70,7 +70,7 @@ class ShipmentDeliveryRate extends ShippingRateResult
         $array = parent::toArray();
         
         $amountCurrency = Currency::getInstanceById($array['costCurrency']);
-        $currencies = Store::getInstance()->getCurrencySet();
+        $currencies = self::getApplication()->getCurrencySet();
 
         // get and format prices
         $prices = $formattedPrices = $taxPrices = array();

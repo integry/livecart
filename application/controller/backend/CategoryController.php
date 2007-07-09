@@ -19,7 +19,7 @@ class CategoryController extends StoreManagementController
 		$categoryList->unshift(Category::getRootNode());
 		
 		$response = new ActionResponse();
-		$response->set('categoryList', $categoryList->toArray($this->store->getDefaultLanguageCode()));        
+		$response->set('categoryList', $categoryList->toArray($this->application->getDefaultLanguageCode()));        
 		return $response;
 	}
 
@@ -57,10 +57,10 @@ class CategoryController extends StoreManagementController
 		$parent = Category::getInstanceByID((int)$this->request->get("id"));
 		
 		$categoryNode = Category::getNewInstance($parent);
-		$categoryNode->setValueByLang("name", $this->store->getDefaultLanguageCode(), 'dump' );
+		$categoryNode->setValueByLang("name", $this->application->getDefaultLanguageCode(), 'dump' );
 		$categoryNode->save();
 		
-		$categoryNode->setValueByLang("name", $this->store->getDefaultLanguageCode(), $this->translate("_new_category") . " " . $categoryNode->getID() );
+		$categoryNode->setValueByLang("name", $this->application->getDefaultLanguageCode(), $this->translate("_new_category") . " " . $categoryNode->getID() );
 
         $categoryNode->save();
 
@@ -90,7 +90,7 @@ class CategoryController extends StoreManagementController
 			$categoryNode->setFieldValue('isEnabled', $this->request->get('isEnabled', 0));
 			
 			$multilingualFields = array("name", "description", "keywords");
-			$categoryNode->setValueArrayByLang($multilingualFields, $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true), $this->request);
+			$categoryNode->setValueArrayByLang($multilingualFields, $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true), $this->request);
 			$categoryNode->save();
 			
 			return new JSONResponse($categoryNode->toFlatArray(), 'success', $this->translate('_category_succsessfully_saved'));
@@ -183,7 +183,7 @@ class CategoryController extends StoreManagementController
 	    {
 	       $category = Category::getInstanceByID($rootID);
 		   $xmlResponse->set("rootID", $rootID);
-           $xmlResponse->set("categoryList", $category->getChildNodes(false, true)->toArray($this->store->getDefaultLanguageCode()));
+           $xmlResponse->set("categoryList", $category->getChildNodes(false, true)->toArray($this->application->getDefaultLanguageCode()));
 	    }
 	    
 	    return $xmlResponse;

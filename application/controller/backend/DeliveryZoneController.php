@@ -66,7 +66,7 @@ class DeliveryZoneController extends StoreManagementController
 	    }
 	    	    
 		$alternativeLanguagesCodes = array();
-		foreach ($this->store->getLanguageArray() as $lang)
+		foreach ($this->application->getLanguageArray() as $lang)
 		{
 			$alternativeLanguagesCodes[$lang] = $this->locale->info()->getOriginalLanguageName($lang);
 		}
@@ -85,7 +85,7 @@ class DeliveryZoneController extends StoreManagementController
 	    $response->set('zipMasks', $deliveryZone->getZipMasks()->toArray());
 	    $response->set('cityMasks', $deliveryZone->getCityMasks()->toArray());
 	    $response->set('addressMasks', $deliveryZone->getAddressMasks()->toArray());
-	    $response->set('defaultLanguageCode', $this->store->getDefaultLanguageCode());
+	    $response->set('defaultLanguageCode', $this->application->getDefaultLanguageCode());
 	    $response->set('alternativeLanguagesCodes', $alternativeLanguagesCodes);
 	    
 	    return $response;

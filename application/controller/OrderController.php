@@ -15,7 +15,7 @@ class OrderController extends FrontendController
 		
 		$this->order->loadItemData();		
 		
-        $currency = Currency::getValidInstanceByID($this->request->get('currency', $this->store->getDefaultCurrencyCode()), Currency::LOAD_DATA);                   
+        $currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);                   
         		
 		$response = new ActionResponse();
 		$response->set('cart', $this->order->toArray());

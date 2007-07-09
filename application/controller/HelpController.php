@@ -12,7 +12,7 @@ class HelpController extends BaseController
 	public function view()
 	{
 	  	$id = $this->request->get('id');
-	  	$lang = $this->store->getLocaleCode();
+	  	$lang = $this->application->getLocaleCode();
 
 		// get topic structure
 		$root = HelpTopic::getRootTopic($lang);

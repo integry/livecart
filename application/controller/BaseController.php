@@ -5,7 +5,6 @@ ClassLoader::import("framework.controller.Controller");
 ClassLoader::import("framework.roles.*");
 ClassLoader::import("application.helper.*");
 ClassLoader::import("application.model.system.Language");
-ClassLoader::import("application.model.system.Store");
 ClassLoader::import("library.locale.*");
 
 /**
@@ -46,13 +45,6 @@ abstract class BaseController extends Controller implements LCiTranslator
 	 * @var Locale
 	 */
 	protected $locale = null;
-
-	/**
-	 * Store instance
-	 *
-	 * @var Store
-	 */
-	protected $store = null;
 	
 	/**
 	 * Configuration handler instance
@@ -93,17 +85,16 @@ abstract class BaseController extends Controller implements LCiTranslator
 	    
 	    $this->checkAccess();
 		
-		$this->store = Store::getInstance();
-		$this->store->setRequestLanguage($this->request->get('requestLanguage'));				
+		$this->application->setRequestLanguage($this->request->get('requestLanguage'));				
 		$this->configFiles = $this->getConfigFiles();		
-		$this->store->setConfigFiles($this->configFiles);
+		$this->application->setConfigFiles($this->configFiles);
 				
-		$localeCode = $this->store->getLocaleInstance()->getLocaleCode();
+		$localeCode = $this->application->getLocaleCode();
 
 		// add language code to URL for non-default languages
-		if ($localeCode != $this->store->getDefaultLanguageCode())
+		if ($localeCode != $this->application->getDefaultLanguageCode())
 		{
-			Router::setAutoAppendVariables(array('requestLanguage' => $localeCode));
+			$this->router->setAutoAppendVariables(array('requestLanguage' => $localeCode));
 		}
 	}	
 	
@@ -194,12 +185,12 @@ abstract class BaseController extends Controller implements LCiTranslator
 		switch ($name)
 	  	{
 		    case 'locale':
-		    	$this->locale = $this->store->getLocaleInstance();
+		    	$this->locale = $this->application->getLocale();
 				return $this->locale;
 		    break;
 
 		    case 'config':
-		    	$this->config = $this->store->getConfigInstance();
+		    	$this->config = $this->application->getConfig();
 				return $this->config;
 		    break;
 

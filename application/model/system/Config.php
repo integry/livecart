@@ -17,7 +17,9 @@ class Config
 	
 	private $isUpdated = false;
 
-	private function __construct()
+	private $application;
+    
+    public function __construct(LiveCart $application)
 	{
 		$filePath = $this->getFilePath();
 		if (file_exists($filePath))
@@ -25,18 +27,8 @@ class Config
 			include $filePath;
 			$this->values = $config;
 		}		
-	}
-
-	public static function getInstance()
-	{
-		static $instance;
 		
-		if (!$instance)
-		{
-			$instance = new Config();
-		}
-		
-		return $instance;
+		$this->application = $application;
 	}
 
 	public function isValueSet($key)
@@ -60,14 +52,14 @@ class Config
 		{
 		  	if (is_array($this->values[$key]))
 		  	{
-                $lang = Store::getInstance()->getLocaleCode();
+                $lang = $this->application->getLocaleCode();
                 if (!empty($this->values[$key][$lang]))       
                 {
                     return $this->values[$key][$lang];
                 }
-                else if (isset($this->values[$key][Store::getInstance()->getDefaultLanguageCode()]))
+                else if (isset($this->values[$key][$this->application->getDefaultLanguageCode()]))
                 {
-                    return $this->values[$key][Store::getInstance()->getDefaultLanguageCode()];
+                    return $this->values[$key][$this->application->getDefaultLanguageCode()];
                 }
                 else
                 {
@@ -157,7 +149,7 @@ class Config
 					// check for multi-lingual values
                     if (!is_array($value['value']) && substr($value['value'], 0, 1) == '_')
 					{
-                        $value['value'] = array(Store::getInstance()->getDefaultLanguageCode() => substr($value['value'], 1)); 
+                        $value['value'] = array($this->application->getDefaultLanguageCode() => substr($value['value'], 1)); 
                     }
                     
                     $this->values[$key] = $value['value'];
@@ -230,8 +222,6 @@ class Config
 		$res = array();
 		$d = new DirectoryIterator($dir);
 		
-		$store = Store::getInstance();
-		
 		foreach ($d as $file)
 		{
 			if ($file->isFile() && 'ini' == substr($file->getFileName(), -3))
@@ -240,7 +230,7 @@ class Config
 				$key = substr($file->getFileName(), 0, -4);
 				
 				$out = array();
-				$out['name'] = $store->translate(key($ini));
+				$out['name'] = $this->application->translate(key($ini));
 				
 				$subpath = $file->getPath() . '/' . substr($key, 3);
 				
@@ -264,7 +254,6 @@ class Config
 	public function getSettingsBySection($sectionId)
 	{
 		$section = $this->getSection($sectionId);		
-		$store = Store::getInstance();
 
 		$values = array();
 		foreach ($section as $key => $value)
@@ -314,7 +303,7 @@ class Config
                         }                        
                     }
                     
-                    $type[$v] = $store->translate($v);	
+                    $type[$v] = $this->application->translate($v);	
 				}	
 				
                 $value = key($type);

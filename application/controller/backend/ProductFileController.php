@@ -19,7 +19,7 @@ class ProductFileController extends StoreManagementController
 	    $response = new ActionResponse();
 	    
 		$languages = array();
-		foreach($this->store->getLanguageList()->toArray() as $language) $languages[$language['ID']] = $language;
+		foreach($this->application->getLanguageList()->toArray() as $language) $languages[$language['ID']] = $language;
 		$response->set('languages', $languages);
 		
 	    $response->set('productID', $product->getID());
@@ -66,7 +66,7 @@ class ProductFileController extends StoreManagementController
 	    $validator = $this->buildValidator((int)$this->request->get('ID'));
 	    if($validator->isValid())
 	    {   
-		    foreach ($this->store->getLanguageArray(true) as $lang)
+		    foreach ($this->application->getLanguageArray(true) as $lang)
 	   		{
 	   			if ($this->request->isValueSet('title_' . $lang))
 	    			$productFile->setValueByLang('title', $lang, $this->request->get('title_' . $lang));
@@ -76,7 +76,7 @@ class ProductFileController extends StoreManagementController
 	   		}
 	   		
 	   		// Use title as description if no description was provided
-	   		$defaultLang = $this->store->getDefaultLanguageCode();
+	   		$defaultLang = $this->application->getDefaultLanguageCode();
 	   		if(!$this->request->isValueSet('description_' . $defaultLang) || $this->request->get('description_' . $defaultLang) == '')
 	   		{
     			$productFile->setValueByLang('description', $defaultLang, $this->request->get('title_' . $defaultLang));
@@ -156,7 +156,7 @@ class ProductFileController extends StoreManagementController
 		ClassLoader::import("framework.request.validator.RequestValidator");
 		$validator = new RequestValidator("productFileValidator", $this->request);
 
-		$validator->addCheck('title_' . $this->store->getDefaultLanguageCode(), new IsNotEmptyCheck($this->translate('_err_file_title_is_empty')));
+		$validator->addCheck('title_' . $this->application->getDefaultLanguageCode(), new IsNotEmptyCheck($this->translate('_err_file_title_is_empty')));
 		$validator->addCheck('allowDownloadDays', new IsNumericCheck($this->translate('_err_allow_download_days_should_be_a_number')));
 		$validator->addCheck('allowDownloadDays', new IsNotEmptyCheck($this->translate('_err_allow_download_days_is_empty')));
 		if(!$existingProductFile) $validator->addCheck('uploadFile', new IsFileUploadedCheck($this->translate('_err_file_could_not_be_uploaded_to_the_server')));

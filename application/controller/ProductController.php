@@ -26,7 +26,7 @@ class ProductController extends FrontendController
 		foreach ($path as $node)
 		{
 			$nodeArray = $node->toArray();
-			$url = smarty_function_categoryUrl(array('data' => $nodeArray), false);
+			$url = createCategoryUrl(array('data' => $nodeArray), $this->application);
 			$this->addBreadCrumb($nodeArray['name_lang'], $url);
 		}
         
@@ -38,7 +38,7 @@ class ProductController extends FrontendController
 		{
 			$f = $filter->toArray();
 			$params['filters'][] = $f;
-			$url = smarty_function_categoryUrl($params, false);
+			$url = createCategoryUrl($params, $this->application);
 			$this->addBreadCrumb($f['name_lang'], $url);
 		}
 
@@ -76,7 +76,7 @@ class ProductController extends FrontendController
         $response->set('related', $this->getRelatedProducts($product));
         $response->set('quantity', $quantity);
         $response->set('cartForm', $this->buildAddToCartForm());        
-		$response->set('currency', $this->request->get('currency', $this->store->getDefaultCurrencyCode())); 
+		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode())); 
         $response->set('manufacturerFilter', $f);
         $response->set('catRoute', $catRoute);
         return $response;        

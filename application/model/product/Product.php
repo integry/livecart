@@ -319,7 +319,7 @@ class Product extends MultilingualObject
 
 	public function loadPricing($pricingData = null)
 	{
-  	  	$this->pricingHandlerInstance = new ProductPricing($this, $pricingData);		
+  	  	$this->pricingHandlerInstance = new ProductPricing($this, $pricingData, self::getApplication());
 	}
 
 	public function loadRequestData(Request $request)
@@ -336,7 +336,7 @@ class Product extends MultilingualObject
 		}
 
 		// set prices
-		$currencies = $this->getStore()->getCurrencyArray();
+		$currencies = self::getApplication()->getCurrencyArray();
 		foreach ($currencies as $currency)
 		{
 			if ($request->isValueSet('price_' . $currency))
@@ -386,7 +386,7 @@ class Product extends MultilingualObject
 			  	{
 			  		if ($field->isTextField())
 					{
-						$languages = $this->getStore()->getLanguageArray(Store::INCLUDE_DEFAULT);
+						$languages = self::getApplication()->getLanguageArray(LiveCart::INCLUDE_DEFAULT);
 						foreach ($languages as $language)
 						{
 						  	if ($request->isValueSet($field->getFormFieldName($language)))
@@ -683,7 +683,7 @@ class Product extends MultilingualObject
 	{
 		if (!$this->pricingHandlerInstance)
 		{
-			$this->pricingHandlerInstance = new ProductPricing($this);
+			$this->pricingHandlerInstance = new ProductPricing($this, null, self::getApplication());
 		}
 
 		return $this->pricingHandlerInstance;
@@ -834,7 +834,7 @@ class Product extends MultilingualObject
     {
         if ($isEnabled)
         {
-    		$config = Config::getInstance();
+    		$config = self::getApplication()->getConfig();
 		
 		    if ($config->get('DISABLE_INVENTORY'))
 		    {

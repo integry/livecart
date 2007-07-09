@@ -748,7 +748,7 @@ class UserController extends FrontendController
     {
         $defCountry = $this->config->get('DEF_COUNTRY');
 
-        $countries = $this->store->getEnabledCountries();
+        $countries = $this->application->getEnabledCountries();
         asort($countries);        
     
         // set default country first

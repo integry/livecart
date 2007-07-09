@@ -47,7 +47,7 @@ abstract class FrontendController extends BaseController
 	
 	protected function getRequestCurrency()
     {
-        $instance = Currency::getValidInstanceById($this->request->get('currency', $this->store->getDefaultCurrencyCode()));
+        $instance = Currency::getValidInstanceById($this->request->get('currency', $this->application->getDefaultCurrencyCode()));
         return $instance->getID();
     }
 	
@@ -72,7 +72,7 @@ abstract class FrontendController extends BaseController
 		ClassLoader::import('application.model.order.CustomerOrder');
 		$response = new BlockResponse();
 		$response->set('order', $this->order->toArray()); 
-		$response->set('currency', $this->request->get('currency', $this->store->getDefaultCurrencyCode()));
+		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
 		return $response; 	
 	}
 
@@ -82,7 +82,7 @@ abstract class FrontendController extends BaseController
 		$returnRoute = $this->router->createUrlFromRoute($returnRoute);		
 		$returnRoute = $this->router->setUrlQueryParam($returnRoute, 'currency', '_curr_');
 
-        $currencies = $this->store->getCurrencySet();        
+        $currencies = $this->application->getCurrencySet();        
         $currencyArray = array();
         foreach ($currencies as $currency)
         {
@@ -98,8 +98,8 @@ abstract class FrontendController extends BaseController
 	protected function boxLanguageSelectBlock()
 	{
         $response = new BlockResponse();			  	
-        $languages = $this->store->getLanguageList()->toArray();
-        $current = $this->store->getLocaleCode();
+        $languages = $this->application->getLanguageList()->toArray();
+        $current = $this->application->getLocaleCode();
         
         $returnRoute = $this->router->getRequestedRoute();
         

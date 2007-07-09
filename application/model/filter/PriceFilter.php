@@ -17,12 +17,12 @@ class PriceFilter implements FilterInterface
     private $priceFrom = 0;
     private $priceTo = 0;
             
-    function __construct($filterID)
+    function __construct($filterID, LiveCart $application)
     {
         $this->filterID = $filterID;
+        $this->application = $application;
+        $c = $this->application->getConfig();
         
-        $c = Config::getInstance();
-           
         $this->name = $c->get('PRICE_FILTER_NAME_' . $filterID);
         $this->priceFrom = $c->get('PRICE_FILTER_FROM_' . $filterID);
         $this->priceTo = $c->get('PRICE_FILTER_TO_' . $filterID);
@@ -39,7 +39,7 @@ class PriceFilter implements FilterInterface
     
     public function defineJoin(ARSelectFilter $filter)
     {
-        $filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . Store::getInstance()->getDefaultCurrencyCode() . '")', 'ID');
+        $filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
     }
     
     public function getID()

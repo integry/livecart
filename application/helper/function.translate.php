@@ -9,16 +9,16 @@
  *
  * @package application.helper
  */
-function smarty_function_translate($params, Smarty $smarty)
+function smarty_function_translate($params, LiveCartSmarty $smarty)
 {
-	$application = $smarty->get_template_vars('application');
-	$store = Store::getInstance();
-	$translation = $store->translate($params['text']);
+	$application = $smarty->getApplication();
+	
+	$translation = $application->translate($params['text']);
 	$translation = preg_replace('/%([a-zA-Z]*)/e', 'smarty_replace_translation_var(\'\\1\', $smarty)', $translation);
 
 	if ($application->isTranslationMode() && !isset($params['disableLiveTranslation']))
 	{
-		$file = $store->getLocaleInstance()->translationManager()->getFileByDefKey($params['text']);
+		$file = $application->getLocale()->translationManager()->getFileByDefKey($params['text']);
 		$file = '__file_'.base64_encode($file);
 		$translation = '<span class="transMode __trans_' . $params['text'].' '. $file .'">'.$translation.'</span>';
 	}

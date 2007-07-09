@@ -339,13 +339,13 @@ class CheckoutController extends FrontendController
 			return $redirect;
 		}       
         
-        $currency = $this->request->get('currency', $this->store->getDefaultCurrencyCode());
+        $currency = $this->request->get('currency', $this->application->getDefaultCurrencyCode());
                 
         $response = new ActionResponse();
         $response->set('order', $this->order->toArray());
-		$response->set('currency', $this->request->get('currency', $this->store->getDefaultCurrencyCode())); 
+		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode())); 
         
-        $ccHandler = $this->store->getCreditCardHandler();
+        $ccHandler = $this->application->getCreditCardHandler();
         if ($ccHandler)
         {
 			$response->set('ccHandler', $ccHandler->toArray());
@@ -359,7 +359,7 @@ class CheckoutController extends FrontendController
 			
 			$response->set('months', $months);
 			$response->set('years', $years);
-            $response->set('ccTypes', $this->store->getCardTypes($ccHandler));
+            $response->set('ccTypes', $this->application->getCardTypes($ccHandler));
 		}
 		
         return $response;                        
@@ -396,7 +396,7 @@ class CheckoutController extends FrontendController
         $transaction = new LiveCartTransaction($this->order, $currency);
         
         // process payment
-        $handler = $this->store->getCreditCardHandler($transaction);
+        $handler = $this->application->getCreditCardHandler($transaction);
         if ($this->request->isValueSet('ccType'))
         {
             $handler->setCardType($this->request->get('ccType'));

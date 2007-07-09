@@ -209,7 +209,7 @@ class CurrencyController extends StoreManagementController
 		$response->set('currencies', $currencies);
 		$response->set('saved', $this->request->get('saved'));
 		$response->set('rateForm', $form);
-		$response->set('defaultCurrency', $this->store->getDefaultCurrency()->getID());		
+		$response->set('defaultCurrency', $this->application->getDefaultCurrency()->getID());		
 		return $response;
 	}
 

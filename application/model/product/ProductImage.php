@@ -18,7 +18,7 @@ class ProductImage extends ObjectImage
 		
 	public static function getImageSizes()
 	{
-        $config = Config::getInstance();
+        $config = self::getApplication()->getConfig();
      
         $sizes = array();
         $k = 0;

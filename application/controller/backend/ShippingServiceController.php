@@ -40,7 +40,7 @@ class ShippingServiceController extends StoreManagementController
 		$response->set('newService', array('DeliveryZone' => $deliveryZoneArray));
 		$response->set('newRate', array('ShippingService' => array('DeliveryZone' => $deliveryZoneArray, 'ID' => '')));
 		$response->set('deliveryZone', $deliveryZoneArray);
-	    $response->set('defaultCurrencyCode', $this->store->getDefaultCurrency()->getID());
+	    $response->set('defaultCurrencyCode', $this->application->getDefaultCurrency()->getID());
 	    $response->set('form', $form);
 	    return $response;
 	}
@@ -66,7 +66,7 @@ class ShippingServiceController extends StoreManagementController
 		$response->set('service', $shippingService->toArray());
 		$response->set('shippingRates', $shippingService->getRates()->toArray());
 		$response->set('newRate', array('ShippingService' => $shippingService->toArray()));
-	    $response->set('defaultCurrencyCode', $this->store->getDefaultCurrency()->getID());
+	    $response->set('defaultCurrencyCode', $this->application->getDefaultCurrency()->getID());
 		$response->set('form', $form);
 	    
 	    return $response;
@@ -173,7 +173,7 @@ class ShippingServiceController extends StoreManagementController
         $rates = array();
         if(!($errors = $this->isNotValid($this->request->get('name'), $ratesData)))
         {
-	        $shippingService->setValueArrayByLang(array('name'), $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true, false), $this->request);      
+	        $shippingService->setValueArrayByLang(array('name'), $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true, false), $this->request);      
 		    $shippingService->save();
             
             foreach($ratesData as $id => $data)

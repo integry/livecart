@@ -40,7 +40,7 @@ class Currency extends ActiveRecordModel
 	public function toArray()
 	{
 	  	$array = parent::toArray();
-		$array['name'] = $this->getStore()->getLocaleInstance()->info()->getCurrencyName($this->getId());	  	
+		$array['name'] = self::getApplication()->getLocale()->info()->getCurrencyName($this->getId());	  	
 		
 		return $array;
 	}
@@ -128,7 +128,7 @@ class Currency extends ActiveRecordModel
         
         if (!$instance || !$instance->isEnabled->get())
         {
-            $instance = $this->getStore()->getDefaultCurrency();    
+            $instance = self::getApplication()->getDefaultCurrency();    
         }
         
         return $instance;

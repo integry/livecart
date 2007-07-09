@@ -212,7 +212,7 @@ class Shipment extends ActiveRecordModel
         $array['items'] = $items;      
         
         // subtotal
-        $currencies = $this->getStore()->getCurrencySet();
+        $currencies = self::getApplication()->getCurrencySet();
         $subTotal = array();
         foreach ($currencies as $id => $currency)
         {

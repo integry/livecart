@@ -244,7 +244,7 @@ class CustomerOrder extends ActiveRecordModel
         
         if (!is_null($reserveProducts))
         {
-            $reserveProducts = !Config::getInstance()->get('DISABLE_INVENTORY');            
+            $reserveProducts = !self::getApplication()->getConfig()->get('DISABLE_INVENTORY');            
         }
         
         foreach ($this->getShoppingCartItems() as $item)
@@ -322,7 +322,7 @@ class CustomerOrder extends ActiveRecordModel
         {
             if(!$this->currency->get())
             {
-                $this->currency->set($this->getStore()->getDefaultCurrency());
+                $this->currency->set(self::getApplication()->getDefaultCurrency());
             }
             
 	        $this->totalAmount->set($this->getTotal($this->currency->get()));
@@ -768,7 +768,7 @@ class CustomerOrder extends ActiveRecordModel
 		
 		// total for all currencies
 		$total = array();
-		$currencies = $this->getStore()->getCurrencySet();
+		$currencies = self::getApplication()->getCurrencySet();
 
 		if (is_array($currencies))
 		{

@@ -18,17 +18,16 @@ ActiveRecord::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DI
  */
 abstract class ActiveRecordModel extends ActiveRecord
 {	
- 	private static $store;
+ 	private static $application;
 
-	public static function setStoreInstance(Store $storeInstance)
+	public static function setApplicationInstance(LiveCart $application)
 	{
-		self::$store = $storeInstance;
+		self::$application = $application;
 	}
 
-	protected function getStore()
+	protected function getApplication()
 	{
-		return Store::getInstance();
-		return self::$store;
+		return self::$application;
 	}
 	
 	public function loadRequestData(Request $request)
@@ -44,7 +43,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 					switch (get_class($field->getDataType()))
 					{
 						case 'ARArray':
-							$this->setValueArrayByLang(array($name), $this->getStore()->getDefaultLanguageCode(), $this->getStore()->getLanguageArray(Store::INCLUDE_DEFAULT), $request);
+							$this->setValueArrayByLang(array($name), self::getApplication()->getDefaultLanguageCode(), self::getApplication()->getLanguageArray(LiveCart::INCLUDE_DEFAULT), $request);
 						break;
 								
 						case 'ARBool':
@@ -78,7 +77,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 			
 			if (!isset($locale))
 			{
-				$locale = self::getStore()->getLocaleInstance();
+				$locale = self::getApplication()->getLocale();
 			}
 			
 			$res = array();						

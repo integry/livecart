@@ -139,7 +139,7 @@ class Transaction extends ActiveRecordModel
         {            
         }
         
-        $array['methodName'] = self::getStore()->getLocaleInstance()->translator()->translate($array['method']);
+        $array['methodName'] = self::getApplication()->getLocale()->translator()->translate($array['method']);
         
         return $array;        
     }
@@ -324,7 +324,7 @@ class Transaction extends ActiveRecordModel
         // set up payment handler instance
         $className = $this->loadHandlerClass();         
 
-        return $this->getStore()->getPaymentHandler($className, $details);
+        return self::getApplication()->getPaymentHandler($className, $details);
     }
     
     protected function insert()

@@ -18,7 +18,7 @@ class ProductRelationshipController extends StoreManagementController
 		$product = Product::getInstanceByID($productID, ActiveRecord::LOAD_DATA, array('Category'));
 	    
 		$languages = array();
-		foreach($this->store->getLanguageList()->toArray() as $language) $languages[$language['ID']] = $language;
+		foreach($this->application->getLanguageList()->toArray() as $language) $languages[$language['ID']] = $language;
 		
 		$response = new ActionResponse();
 
@@ -42,7 +42,7 @@ class ProductRelationshipController extends StoreManagementController
 	    
 		$categoryList = Category::getRootNode()->getDirectChildNodes();
 		$categoryList->unshift(Category::getRootNode());
-		$response->set("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
+		$response->set("categoryList", $categoryList->toArray($this->application->getDefaultLanguageCode()));
 		
 		return $response;
 	}

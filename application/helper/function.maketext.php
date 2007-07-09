@@ -9,9 +9,9 @@
  * 
  * @package application.helper
  */
-function smarty_function_maketext($params, $smarty) 
+function smarty_function_maketext($params, LiveCartSmarty $smarty) 
 {	
-	return Store::getInstance()->makeText($params['text'], $params['params']);
+	return $smarty->getApplication()->makeText($params['text'], $params['params']);
 }
 
 ?>

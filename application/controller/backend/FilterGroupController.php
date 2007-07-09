@@ -47,7 +47,7 @@ class FilterGroupController extends StoreManagementController
         $response->set('blankFilter', $blankFilter);
         $response->set('categoryID', $categoryID);
         $response->set('configuration', $this->getConfig());
-        $response->set('defaultLangCode', $this->store->getDefaultLanguageCode());
+        $response->set('defaultLangCode', $this->application->getDefaultLanguageCode());
         
         return $response;
     }
@@ -227,8 +227,8 @@ class FilterGroupController extends StoreManagementController
     {
         if(!empty($this->filtersConfig)) return $this->filtersConfig;
         
-        $languages[$this->store->getDefaultLanguageCode()] =  $this->locale->info()->getLanguageName($this->store->getDefaultLanguageCode());
-        foreach ($this->store->getLanguageList()->toArray() as $lang)
+        $languages[$this->application->getDefaultLanguageCode()] =  $this->locale->info()->getLanguageName($this->application->getDefaultLanguageCode());
+        foreach ($this->application->getLanguageList()->toArray() as $lang)
         {
             if($lang['isDefault'] != 1)
             {

@@ -22,10 +22,13 @@ class ProductPricing
 	private $prices = array();
 
 	private $removedPrices = array();
+	
+	private $application;
 
-	public function __construct(Product $product, $prices = null)
+	public function __construct(Product $product, $prices = null, LiveCart $application)
 	{
 		$this->product = $product;
+		$this->application = $application;
 		        
         if (is_null($prices))
 		{
@@ -132,12 +135,12 @@ class ProductPricing
 		    $defined[$inst->currency->get()->getID()] = $inst->price->get();
 		}
 
-		$baseCurrency = Store::getInstance()->getDefaultCurrencyCode();				
+		$baseCurrency = $this->application->getDefaultCurrencyCode();				
 		$basePrice = isset($defined[$baseCurrency]) ? $defined[$baseCurrency] : 0;
 		
 		$formattedPrice = $calculated = array();
 
-		foreach (Store::getInstance()->getCurrencySet() as $id => $currency)
+		foreach ($this->application->getCurrencySet() as $id => $currency)
 		{
 			if (!empty($defined[$id]))
 		  	{

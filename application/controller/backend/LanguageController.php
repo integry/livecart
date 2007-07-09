@@ -296,25 +296,6 @@ class LanguageController extends StoreManagementController
 	}
 
 	/**
-	 * Displays variuos information.
-	 * @return ActionResponse
-	 */
-	public function information()
-	{
-		$locale = Store::getLocaleInstance();
-		
-		$response = new ActionResponse();
-
-		//$masyvas["I18Nv2::getInfo()"] = I18Nv2::getInfo();
-		$masyvas["\$locale->GetCountries()"] = $locale->info()->GetAllCountries();
-		$masyvas["\$locale->GetLanguages()"] = $locale->info()->GetAllLanguages();
-		$masyvas["\$locale->GetCurrencies()"] = $locale->info()->GetAllCurrencies();
-
-		$response->set("masyvas", $masyvas);
-		return $response;
-	}
-
-	/**
 	 * Displays system menu for switching active language
 	 * @return ActionResponse
 	 */
@@ -375,7 +356,7 @@ class LanguageController extends StoreManagementController
 	  	$file = base64_decode($this->request->get('file'));
 	  	$translation = $this->locale->translationManager()->get($file, $id);
 	  		  	
-	  	$defaultTranslation = Locale::getInstance($this->store->getDefaultLanguageCode())->translationManager()->get($file, $id);
+	  	$defaultTranslation = Locale::getInstance($this->application->getDefaultLanguageCode())->translationManager()->get($file, $id);
 	  		  	
 	  	$response = new ActionResponse();
 	  	$response->set('id', $id);

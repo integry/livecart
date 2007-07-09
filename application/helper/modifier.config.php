@@ -1,8 +1,8 @@
 <?php
 
-function smarty_modifier_config($key)
+function smarty_modifier_config($key, LiveCartSmarty $smarty)
 {
-    return Config::getInstance()->get($key);    
+    return $smarty->getApplication()->getConfig()->get($key);    
 }
 
 ?>

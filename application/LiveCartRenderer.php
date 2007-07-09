@@ -1,17 +1,36 @@
 <?php
 
+ClassLoader::import('application.LiveCartSmarty');
+
 class LiveCartRenderer extends SmartyRenderer
-{
-	/**
+{    	
+    /**
 	 * Template renderer constructor
 	 *
 	 * Creates a smarty instance and sets a compile directory path (this is required
 	 * by smarty)
 	 */
-	public function __construct(Router $router)
+	public function __construct(LiveCart $application)
 	{
 		self::registerHelperDirectory(ClassLoader::getRealPath('application.helper'));
-		parent::__construct($router);		
+		parent::__construct($application);		
+	}
+
+	/**
+	 * Gets a smarty instance
+	 *
+	 * @return Smarty
+	 */
+	public function getSmartyInstance()
+	{
+		if (!$this->tpl)
+		{
+			$this->tpl = new LiveCartSmarty($this->getApplication());
+			$this->tpl->compile_dir = self::$compileDir;
+			$this->tpl->template_dir = ClassLoader::getRealPath("application.view");
+		}
+
+		return $this->tpl;
 	}
 
 	/**

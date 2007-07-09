@@ -49,7 +49,7 @@ class CustomerOrderController extends StoreManagementController
 	                                    CustomerOrder::STATUS_NEW => $this->translate('_status_new'),
 				            ));
 				            
-        $response->set('countries', $this->store->getEnabledCountries());
+        $response->set('countries', $this->application->getEnabledCountries());
         
         $orderArray = $order->toArray();
         if($order->isFinalized->get())
@@ -601,7 +601,7 @@ class CustomerOrderController extends StoreManagementController
 		$order->capturedAmount->set(0);
 		$order->totalAmount->set(0);
 		$order->dateCompleted->set(new ARSerializableDateTime());
-		$order->currency->set($this->store->getDefaultCurrency());
+		$order->currency->set($this->application->getDefaultCurrency());
 		
 		if($user->defaultShippingAddress->get() && $user->defaultBillingAddress->get())
 		{

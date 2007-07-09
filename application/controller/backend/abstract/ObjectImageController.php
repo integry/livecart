@@ -49,7 +49,7 @@ abstract class ObjectImageController extends StoreManagementController
 			$catImage = call_user_func_array(array($this->getModelClass(), 'getNewInstance'), array($owner));
 
 			$multilingualFields = array("title");
-			$catImage->setValueArrayByLang($multilingualFields, $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true), $this->request);			
+			$catImage->setValueArrayByLang($multilingualFields, $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true), $this->request);			
 			
 			$catImage->save();
 			
@@ -87,7 +87,7 @@ abstract class ObjectImageController extends StoreManagementController
 			$image = ActiveRecord::getInstanceById($this->getModelClass(), $this->request->get('imageId'), true);
 			
 			$multilingualFields = array("title");
-			$image->setValueArrayByLang($multilingualFields, $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true), $this->request);			
+			$image->setValueArrayByLang($multilingualFields, $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true), $this->request);			
 			$image->save();
 			
 		  	if ($_FILES['image']['tmp_name'])

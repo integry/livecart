@@ -33,8 +33,8 @@ class SettingsController extends StoreManagementController
 	{
 		$this->config->updateSettings();
 		
-        $defLang = $this->store->getDefaultLanguageCode();
-		$languages = $this->store->getLanguageArray(Store::INCLUDE_DEFAULT);
+        $defLang = $this->application->getDefaultLanguageCode();
+		$languages = $this->application->getLanguageArray(LiveCart::INCLUDE_DEFAULT);
 			
 		$sectionId = $this->request->get('id');						
 		$values = $this->config->getSettingsBySection($sectionId);
@@ -83,8 +83,8 @@ class SettingsController extends StoreManagementController
 		}
 		else
 		{
-			$languages = $this->store->getLanguageArray();
-            $defLang = $this->store->getDefaultLanguageCode();
+			$languages = $this->application->getLanguageArray();
+            $defLang = $this->application->getDefaultLanguageCode();
                     
             $this->config->setAutoSave(false);
 			foreach ($values as $key => $value)

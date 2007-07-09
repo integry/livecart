@@ -9,9 +9,9 @@
  * 
  * @package application.helper
  */
-function smarty_function_backendMenu($params, Smarty $smarty) 
+function smarty_function_backendMenu($params, LiveCartSmarty $smarty) 
 {
-	$locale = Store::getInstance()->getLocaleInstance();
+	$locale = $smarty->getApplication()->getLocale();
 	$controller = $smarty->_tpl_vars['request']['controller'];
 	$action = $smarty->_tpl_vars['request']['action'];
 	
@@ -20,7 +20,7 @@ function smarty_function_backendMenu($params, Smarty $smarty)
 
 	$menuLoader = new MenuLoader();		
 	$structure = $menuLoader->getCurrentHierarchy($controller, $action);
-	$router = Router::getInstance();
+	$router = $smarty->getRouter();
 	
 	// get translations and generate URL's
 	$items = array();

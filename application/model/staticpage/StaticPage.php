@@ -89,7 +89,7 @@ class StaticPage extends MultilingualObject
 		if (!$this->isLoaded())
 		{
             $this->loadFile();
-    		$lang = $this->getStore()->getLocaleCode();
+    		$lang = self::getApplication()->getLocaleCode();
     		
     		$array['title_lang'] = $this->getValueByLang('title', $lang);
     		$array['text_lang'] = $this->getValueByLang('text', $lang);            

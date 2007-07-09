@@ -7,11 +7,11 @@
  *
  * @package application.helper
  */
-function smarty_block_language($params, $content, $smarty, &$repeat)
+function smarty_block_language($params, $content, LiveCartSmarty $smarty, &$repeat)
 {
 	if ($repeat)
 	{
-		$smarty->languageBlock = Store::getInstance()->getLanguageSetArray();		
+		$smarty->languageBlock = $smarty->getApplication()->getLanguageSetArray();		
 		$smarty->assign('languageBlock', $smarty->languageBlock);
 		$smarty->assign('lang', array_shift($smarty->languageBlock));
 		$smarty->langHeadDisplayed = false;

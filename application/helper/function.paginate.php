@@ -9,7 +9,7 @@
  *
  * @package application.helper
  */
-function smarty_function_paginate($params, $smarty)
+function smarty_function_paginate($params, LiveCartSmarty $smarty)
 {
     $interval = 2;
     
@@ -44,11 +44,11 @@ function smarty_function_paginate($params, $smarty)
 	// generate output
     $out = array();
 	
-	$store = Store::getInstance();
+	$application = $smarty->getApplication();
 	
 	if ($params['current'] > 1)
 	{
-		$out[] = '<a class="page previous" href="' . str_replace('_page_', $params['current'] - 1, $params['url']) . '">' . $store->translate('_previous') . '</a>';
+		$out[] = '<a class="page previous" href="' . str_replace('_page_', $params['current'] - 1, $params['url']) . '">' . $application->translate('_previous') . '</a>';
 	}
 	
 	$pr = 0;
@@ -73,7 +73,7 @@ function smarty_function_paginate($params, $smarty)
 
 	if ($params['current'] < $count)
 	{
-		$out[] = '<a class="page next" href="' . str_replace('_page_', $params['current'] + 1, $params['url']) . '">' . $store->translate('_next') . '</a>';
+		$out[] = '<a class="page next" href="' . str_replace('_page_', $params['current'] + 1, $params['url']) . '">' . $application->translate('_next') . '</a>';
 	}
 
 	return implode(' ', $out);

@@ -101,7 +101,7 @@ class SpecFieldGroupController extends StoreManagementController
         $this->createLanguageCodes();
         if(count($errors = SpecFieldGroup::validate($this->request->getValueArray(array("name_{$this->languageCodes[0]}")), $this->languageCodes)) == 0)
         {
-			foreach($this->store->getLanguageArray(true) as $langCode) 
+			foreach($this->application->getLanguageArray(true) as $langCode) 
 			{
 			    $specFieldGroup->setValueByLang('name', $langCode, $this->request->get('name_' . $langCode));
 			}
@@ -125,8 +125,8 @@ class SpecFieldGroupController extends StoreManagementController
     {
         if(!empty($this->languageCodes)) return true;
         
-        $this->languageCodes[] = $this->store->getDefaultLanguageCode();
-        foreach ($this->store->getLanguageList()->toArray() as $lang)
+        $this->languageCodes[] = $this->application->getDefaultLanguageCode();
+        foreach ($this->application->getLanguageList()->toArray() as $lang)
         {
             if($lang['isDefault'] != 1) $this->languageCodes[] = $lang['ID'];
         }

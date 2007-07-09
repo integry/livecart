@@ -9,9 +9,9 @@
  *
  * @package application.helper
  */
-function smarty_function_localeCode($params, $smarty)
+function smarty_function_localeCode($params, LiveCartSmarty $smarty)
 {
-	return Store::getInstance()->getLocaleInstance()->getLocaleCode();
+	return $smarty->getApplication()->getLocale()->getLocaleCode();
 }
 
 ?>

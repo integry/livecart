@@ -39,7 +39,7 @@ class UserAddress extends ActiveRecordModel
 	
 	public static function transformArray($array, $className)
 	{          
-        $array['countryName'] = self::getStore()->getLocaleInstance()->info()->getCountryName($array['countryID']);
+        $array['countryName'] = self::getApplication()->getLocale()->info()->getCountryName($array['countryID']);
         $array['fullName'] = $array['firstName'] . ' ' . $array['lastName'];
         return $array;   
     }	

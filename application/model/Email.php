@@ -1,5 +1,11 @@
 <?php
 
+ClassLoader::import('library.smarty.libs.Smarty');
+ClassLoader::import('library.swiftmailer.Swift');
+ClassLoader::import('library.swiftmailer.Swift.Connection.NativeMail');
+ClassLoader::import('library.swiftmailer.Swift.Connection.SMTP');
+ClassLoader::import('library.swiftmailer.Swift.Message');
+
 /**
  * E-mail handler
  *
@@ -8,7 +14,7 @@
  */
 class Email
 {
-    public static $connection;
+    private $connection;
     
     private $swiftInstance;
     
@@ -26,23 +32,19 @@ class Email
     
     private $isHtml = false;
         
-    public function __construct()
-    {
-        ClassLoader::import('library.swiftmailer.Swift');
-        ClassLoader::import('library.swiftmailer.Swift.Connection.NativeMail');
-        ClassLoader::import('library.swiftmailer.Swift.Connection.SMTP');
-        ClassLoader::import('library.swiftmailer.Swift.Message');
-                
-        if (!self::$connection)
-        {
-            self::$connection = new Swift_Connection_NativeMail();
-//            self::$connection = new Swift_Connection_SMTP(ini_get('SMTP'));
-        }
+    private $application;
+        
+    public function __construct(LiveCart $application)
+    {                
+        $this->application = $application;
+        
+        $this->connection = new Swift_Connection_NativeMail();
+//      self::$connection = new Swift_Connection_SMTP(ini_get('SMTP'));
         
         $this->swiftInstance = new Swift(self::$connection);
         $this->recipients = new Swift_RecipientList();
         
-        $config = Config::getInstance();
+        $config = $this->application->getConfig();
         $this->setFrom($config->get('MAIN_EMAIL'), $config->get('STORE_NAME'));
     }
     
@@ -111,12 +113,8 @@ class Email
     public function send()
     {
         if ($this->template)
-        {
-            ClassLoader::import('library.smarty.libs.Smarty');
-        
-            $renderer = new SmartyRenderer(Router::getInstance());
-            $smarty = SmartyRenderer::getSmartyInstance();
-
+        {        
+            $smarty = new Smarty();
             $smarty->compile_dir = ClassLoader::getRealPath('cache.templates_c');
             $smarty->template_dir = ClassLoader::getRealPath('application.view');
     
@@ -125,7 +123,7 @@ class Email
                 $smarty->assign($key, $value);
             }
 
-            $smarty->assign('config', Config::getInstance()->toArray());
+            $smarty->assign('config', self::getApplication()->getConfig()->toArray());
             
             $html = $smarty->fetch($this->template);
             

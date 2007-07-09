@@ -6,7 +6,7 @@ class ActiveGrid
     const FILTER_HANDLE = 1;
     
     private $filter;
-    private $request;
+    private $application;
     
     public static function getFieldType(ARField $field)
     {
@@ -37,9 +37,12 @@ class ActiveGrid
 		return $type;        
     }
     
-    public function __construct(Request $request, ARSelectFilter $filter, $modelClass = false)
+    public function __construct(LiveCart $application, ARSelectFilter $filter, $modelClass = false)
     {        
-		// set recordset boundaries (limits)
+		$this->application = $application;
+        $request = $this->application->getRequest();
+        
+        // set recordset boundaries (limits)
         $filter->setLimit($request->get('page_size', 20), $request->get('offset', 0));
 
 		// set order
@@ -192,9 +195,10 @@ class ActiveGrid
                     else
                     {
                         $handleres = array();
-                        $defLang = Store::getInstance()->getDefaultLanguageCode();
-                        $handleres[] = MultiLingualObject::getLangSearchHandle($handle, Store::getInstance()->getLocaleCode());    
-                        if (Store::getInstance()->getLocaleCode() != $defLang)
+                        $defLang = $this->application->getDefaultLanguageCode();
+                        $locale = $this->application->getLocaleCode();
+                        $handleres[] = MultiLingualObject::getLangSearchHandle($handle, $locale);    
+                        if ($locale != $defLang)
                         {                            
                             $handleres[] = MultiLingualObject::getLangSearchHandle($handle, $defLang);    
                         }

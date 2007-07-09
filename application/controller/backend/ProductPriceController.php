@@ -22,8 +22,8 @@ class ProductPriceController extends StoreManagementController
 
 	    $response = new ActionResponse();
 	    $response->set("product", $product->toFlatArray());
-		$response->set("otherCurrencies", $this->store->getCurrencyArray(Store::EXCLUDE_DEFAULT_CURRENCY));
-		$response->set("baseCurrency", $this->store->getDefaultCurrency()->getID());
+		$response->set("otherCurrencies", $this->application->getCurrencyArray(LiveCart::EXCLUDE_DEFAULT_CURRENCY));
+		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
 		$response->set("pricingForm", $pricingForm);
 
 	    return $response;
@@ -40,7 +40,7 @@ class ProductPriceController extends StoreManagementController
 		if ($validator->isValid())
 		{
 		    // Save prices
-    		foreach ($this->store->getCurrencyArray() as $currency)
+    		foreach ($this->application->getCurrencyArray() as $currency)
     		{
     			if ($this->request->isValueSet('price_' . $currency))
     			{
@@ -92,10 +92,10 @@ class ProductPriceController extends StoreManagementController
 	public function addPricesValidator(RequestValidator $validator)
 	{
 		// price in base currency
-		$baseCurrency = $this->store->getDefaultCurrency()->getID();
+		$baseCurrency = $this->application->getDefaultCurrency()->getID();
 		$validator->addCheck('price_' . $baseCurrency, new IsNotEmptyCheck($this->translate('_err_price_empty')));
 
-	    $currencies = $this->store->getCurrencyArray();
+	    $currencies = $this->application->getCurrencyArray();
 		foreach ($currencies as $currency)
 		{
 			$validator->addCheck('price_' . $currency, new IsNumericCheck($this->translate('_err_price_invalid')));

@@ -133,7 +133,7 @@ class ShippingService extends MultilingualObject
         }    
         else
         {
-            $total = $shipment->getSubTotal($this->getStore()->getDefaultCurrency(), Shipment::WITHOUT_TAXES);
+            $total = $shipment->getSubTotal(self::getApplication()->getDefaultCurrency(), Shipment::WITHOUT_TAXES);
             $cond = new EqualsOrLessCond(new ARFieldHandle('ShippingRate', 'subtotalRangeStart'), $total);
             $cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'subtotalRangeEnd'), $total));
         }

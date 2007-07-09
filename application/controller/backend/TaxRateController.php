@@ -110,7 +110,7 @@ class TaxRateController extends StoreManagementController
         $validator = $this->createTaxRateFormValidator();
         if($validator->isValid())
         {          
-	        $taxRate->setValueArrayByLang(array('name'), $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true, false), $this->request);      
+	        $taxRate->setValueArrayByLang(array('name'), $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true, false), $this->request);      
 		    $taxRate->save();
 	            
             return new JSONResponse(array('status' => 'success', 'rate' => $taxRate->toArray()));

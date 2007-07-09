@@ -11,10 +11,14 @@ ClassLoader::import('application.helper.CreateHandleString');
  *
  * @package application.helper
  */
-function smarty_function_categoryUrl($params, $smarty)
+function smarty_function_categoryUrl($params, LiveCartSmarty $smarty)
 {		
+    return createCategoryUrl($params, $smarty->getApplication());
+}
+
+function createCategoryUrl($params, LiveCart $application)
+{
 	$category = $params['data'];	
-	$router = Router::getInstance();
 	
 	// get full category path
 	$parts = array();
@@ -30,7 +34,7 @@ function smarty_function_categoryUrl($params, $smarty)
     while ($current > 1)
 	{
 	  	$cat = Category::getInstanceByID($current, true);
-	  	$parts[] = createHandleString($cat->getValueByLang('name', Store::getInstance()->getLocaleCode()));
+	  	$parts[] = createHandleString($cat->getValueByLang('name', $application->getLocaleCode()));
 	  	$current = $cat->parentNode->get()->getID();
 	}
 	
@@ -98,7 +102,7 @@ function smarty_function_categoryUrl($params, $smarty)
 	  	$urlParams['filters'] = implode(',', $filters);
 	}
 
-	return $router->createUrl($urlParams);
+	return $application->getRouter()->createUrl($urlParams);    
 }
 
 function filterHandle($filter)

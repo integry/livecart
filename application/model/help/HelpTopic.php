@@ -18,12 +18,8 @@ class HelpTopic
 	  	$this->dataHandler = $handler;
 	}
 	
-	public static function getRootTopic($language = false)
+	public static function getRootTopic($language)
 	{
-		if (!$language)
-		{
-			$language = Store::getInstance()->getLocaleCode();
-		}
 		$handler = new HelpTopicDataHandler($language);
 		return $handler->getTopic('index');
   	}	

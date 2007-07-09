@@ -11,10 +11,13 @@ class ProductCount
 {
 	protected $productFilter;
 	
-	public function __construct(ProductFilter $productFilter)
+	private $application;
+	
+	public function __construct(ProductFilter $productFilter, LiveCart $application)
 	{
 		$this->productFilter = $productFilter;
-	}
+		$this->application = $application;
+  	}
 	
 	public function getCountByFilters()
 	{		
@@ -86,13 +89,12 @@ class ProductCount
 	public function getCountByPrices()
 	{
         // get price filters
-        $c = Config::getInstance();
-        
         $k = 0;        
         $filters = array();
-        while ($c->isValueSet('PRICE_FILTER_NAME_' . ++$k))
+        $config = $this->application->getConfig();
+        while ($config->isValueSet('PRICE_FILTER_NAME_' . ++$k))
         {
-            $filters[$k] = array($c->get('PRICE_FILTER_FROM_' . $k), $c->get('PRICE_FILTER_TO_' . $k));
+            $filters[$k] = array($config->get('PRICE_FILTER_FROM_' . $k), $config->get('PRICE_FILTER_TO_' . $k));
         }          
         
 		// get product counts
@@ -102,7 +104,7 @@ class ProductCount
     
         $query = new ARSelectQueryBuilder();
         $query->includeTable('Product');
-        $query->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . Store::getInstance()->getDefaultCurrencyCode() . '")', 'ID');
+        $query->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
         $query->joinTable('Category', 'Product', 'ID', 'categoryID');
 
         foreach ($filters as $key => $filter)

@@ -144,7 +144,7 @@ class OrderedItemController extends StoreManagementController
 		$categoryList = Category::getRootNode()->getDirectChildNodes();
 		$categoryList->unshift(Category::getRootNode());
 	    $response->set("filters", 'filters[Product.type]=' . (int)$this->request->get('downloadable'));
-		$response->set("categoryList", $categoryList->toArray($this->store->getDefaultLanguageCode()));
+		$response->set("categoryList", $categoryList->toArray($this->application->getDefaultLanguageCode()));
 		
 		return $response;
 	}

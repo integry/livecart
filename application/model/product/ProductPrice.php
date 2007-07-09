@@ -54,7 +54,7 @@ class ProductPrice extends ActiveRecordModel
 	public static function getProductPricesSet(Product $product)
 	{	    
 		// preload currency data (otherwise prices would have to be loaded with referenced records)
-		self::getStore()->getCurrencySet();
+		self::getApplication()->getCurrencySet();
 		
 		return self::getRecordSet(self::getProductPricesFilter($product));
 	}
@@ -96,7 +96,7 @@ class ProductPrice extends ActiveRecordModel
 
 	public function reCalculatePrice()
 	{
-		$defaultCurrency = $this->getStore()->getDefaultCurrency();
+		$defaultCurrency = self::getApplication()->getDefaultCurrency();
 		$basePrice = $this->product->get()->getPrice($defaultCurrency->getID(), Product::DO_NOT_RECALCULATE_PRICE);
 
 		if ($this->currency->get()->rate->get())
@@ -121,7 +121,7 @@ class ProductPrice extends ActiveRecordModel
 	{
 		if (is_null($basePrice))
 		{
-			$defaultCurrency = self::getStore()->getDefaultCurrencyCode();
+			$defaultCurrency = self::getApplication()->getDefaultCurrencyCode();
 			$basePrice = $product->getPrice($defaultCurrency, Product::DO_NOT_RECALCULATE_PRICE);
 		}
 
@@ -189,8 +189,8 @@ class ProductPrice extends ActiveRecordModel
             $productPrices[$price['productID']][$price['currencyID']] = $price['price'];
         }
         
-        $baseCurrency = self::getStore()->getDefaultCurrencyCode();
-        $currencies = self::getStore()->getCurrencySet();
+        $baseCurrency = self::getApplication()->getDefaultCurrencyCode();
+        $currencies = self::getApplication()->getCurrencySet();
         
         foreach ($productPrices as $product => $prices)
         {
@@ -217,7 +217,7 @@ class ProductPrice extends ActiveRecordModel
 			return array();	
 		}
 		
-		$baseCurrency = self::getStore()->getDefaultCurrencyCode();
+		$baseCurrency = self::getApplication()->getDefaultCurrencyCode();
         
         $filter = new ARSelectFilter(new INCond(new ARFieldHandle('ProductPrice', 'productID'), $productIDs));
         $filter->setOrder(new ARExpressionHandle('currencyID = "' . $baseCurrency . '"'), 'DESC');

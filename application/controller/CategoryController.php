@@ -85,7 +85,7 @@ class CategoryController extends FrontendController
         $products = $this->getProductsArray($productFilter);
 
 		// pagination
-        $count = new ProductCount($this->productFilter);
+        $count = new ProductCount($this->productFilter, $this->application);
 		$totalCount = $count->getCategoryProductCount($productFilter);
 		$offsetEnd = min($totalCount, $offsetEnd);
         $this->totalCount = $totalCount;
@@ -224,7 +224,7 @@ class CategoryController extends FrontendController
         {
             $dir = array_pop(explode('_', $order)) == 'asc' ? 'ASC' : 'DESC';            
             $selectFilter->setOrder(new ARFieldHandle('ProductPrice', 'price'), $dir);  
-            $selectFilter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->store->getDefaultCurrencyCode() . '")', 'ID');                       
+            $selectFilter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');                       
         }
         else if ('newest_arrivals' == $order)
         {
@@ -256,7 +256,7 @@ class CategoryController extends FrontendController
 		include_once(ClassLoader::getRealPath('application.helper') . '/function.categoryUrl.php');
 		foreach ($path as $nodeArray)
 		{
-			$url = smarty_function_categoryUrl(array('data' => $nodeArray), false);
+			$url = createCategoryUrl(array('data' => $nodeArray), $this->application);
 			$this->addBreadCrumb($nodeArray['name_lang'], $url);
 		}
 				
@@ -278,7 +278,7 @@ class CategoryController extends FrontendController
 				$params['page'] = $page;
 			}
 			
-			$url = smarty_function_categoryUrl($params, false);
+			$url = createCategoryUrl($params, $this->application);
 			$this->addBreadCrumb($filter['name_lang'], $url);
 		}            
 		
@@ -465,7 +465,7 @@ class CategoryController extends FrontendController
 		$filterGroups = $this->category->getFilterGroupArray();
 
 		// get counts by filters, categories, etc
-		$count = new ProductCount($this->productFilter);
+		$count = new ProductCount($this->productFilter, $this->application);
 		$filtercount = $count->getCountByFilters();
 
 		// get group filters
@@ -532,7 +532,7 @@ class CategoryController extends FrontendController
 		$priceFilters = array();
         foreach ($count->getCountByPrices() as $filterId => $count)
         {
-            $pFilter = new PriceFilter($filterId);    
+            $pFilter = new PriceFilter($filterId, $this->application);    
             $priceFilter = $pFilter->toArray();
             $priceFilter['count'] = $count;
             if ($count && $count != $this->totalCount)
@@ -628,7 +628,7 @@ class CategoryController extends FrontendController
             {
                 foreach ($priceFilterIds as $filterId)
 				{
-					$this->filters[] = new PriceFilter($filterId);
+					$this->filters[] = new PriceFilter($filterId, $this->application);
 				}                
             }		
             
