@@ -74,7 +74,7 @@ class UserGroupController extends StoreManagementController
 	    }
 
 	    $filter = new ARSelectFilter();
-	    new ActiveGrid($this->request, $filter);
+	    new ActiveGrid($this->application, $filter);
 	    if($showAllGroups)
 	    {
 	        $usersArray = User::getRecordSet($filter, array('UserGroup'))->toArray();

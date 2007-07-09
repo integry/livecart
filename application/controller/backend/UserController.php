@@ -102,7 +102,7 @@ class UserController extends StoreManagementController
 		$filters = (array)json_decode($this->request->get('filters'));
 		$this->request->set('filters', $filters);
 		
-        $grid = new ActiveGrid($this->request, $filter, 'User');
+        $grid = new ActiveGrid($this->application, $filter, 'User');
         $filter->setLimit(0);
         					
 		$users = ActiveRecordModel::getRecordSet('User', $filter, User::LOAD_REFERENCES);

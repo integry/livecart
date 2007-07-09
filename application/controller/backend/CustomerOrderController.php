@@ -270,7 +270,7 @@ class CustomerOrderController extends StoreManagementController
 		
 		$filters = (array)json_decode($this->request->get('filters'));
 		$this->request->set('filters', $filters);
-        $grid = new ActiveGrid($this->request, $filter, 'CustomerOrder');
+        $grid = new ActiveGrid($this->application, $filter, 'CustomerOrder');
         $filter->setLimit(0);
         					
 		$orders = CustomerOrder::getRecordSet($filter);
@@ -395,7 +395,7 @@ class CustomerOrderController extends StoreManagementController
 	    
 	    
 	    $filter->setCondition($cond);
-	    new ActiveGrid($this->request, $filter);
+	    new ActiveGrid($this->application, $filter);
 	    $orders = CustomerOrder::getRecordSet($filter, true)->toArray();
 	    
 		$displayedColumns = $this->getDisplayedColumns();

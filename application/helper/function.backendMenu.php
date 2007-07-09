@@ -20,7 +20,7 @@ function smarty_function_backendMenu($params, LiveCartSmarty $smarty)
 
 	$menuLoader = new MenuLoader();		
 	$structure = $menuLoader->getCurrentHierarchy($controller, $action);
-	$router = $smarty->getRouter();
+	$router = $smarty->getApplication()->getRouter();
 	
 	// get translations and generate URL's
 	$items = array();

@@ -65,7 +65,7 @@ class ProductController extends StoreManagementController
 
         $filter->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
 		
-        new ActiveGrid($this->request, $filter);
+        new ActiveGrid($this->application, $filter);
         					
         $recordCount = true;
 
@@ -151,7 +151,7 @@ class ProductController extends StoreManagementController
 		$filters = (array)json_decode($this->request->get('filters'));
 		$this->request->set('filters', $filters);
 		
-        $grid = new ActiveGrid($this->request, $filter, 'Product');
+        $grid = new ActiveGrid($this->application, $filter, 'Product');
         $filter->setLimit(0);
         					
 		$products = ActiveRecordModel::getRecordSet('Product', $filter, Product::LOAD_REFERENCES);
