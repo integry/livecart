@@ -1,7 +1,7 @@
 <p>In the "Edit templates" section you can edit LiveCart's templates. To edit a particular template:</p> 	
 <ol>
-	<li>Browse the template tree to find the template.</li>
-	<li>Click on the template to view its source.</li>
+	<li>Browse the template tree to find the necessary template.</li>
+	<li>Click the template to view its source.</li>
 	<li>Modify the template and click "Save".</li>
 </ol>
 

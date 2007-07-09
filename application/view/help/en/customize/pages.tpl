@@ -1,4 +1,4 @@
-<p>Using pages you can create additional pages for your storefront. You can create pages to provide your company details, shipping info, privacy policy or any other. Pages can be created using WYSIVIG or HTML code.</p> 	
+<p>Using pages you can provide additional information such as company details, shipping info, privacy policy or any other. Pages can be created using WYSIVIG or HTML code.</p> 	
 
 <div class="tasks">
 <fieldset>
@@ -34,7 +34,7 @@
 
 <p>The way pages are displayed in you e-store is defined by their order in the page tree. To set the arrangement of pages:</p>
 <ol>
-	<li>Click a page on the tree.</li>
+	<li>Select a page on the tree.</li>
 	<li>Use the "Move selected up" and "Move selected down" links to reorder pages:</li>
 	<img src="image/doc/customize/pages/move1.bmp">
 </ol>

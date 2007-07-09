@@ -17,6 +17,7 @@
 	<li><a href="{self}#customers">Customers</a></li>
 	<li><a href="{self}#payment_methods">Payment Methods</a></li>
 	<li><a href="{self}#enabled_countries">Enabled Countries</a></li>
+	<li><a href="{self}#backend">Backend administration</a></li>
 </ul>
 </fieldset>
 </div>
@@ -44,7 +45,7 @@
 
 <h3 id="products">Products</h3>
 <ul>
-	<li>Unit measurement system - click the drop-down list and select one of the unit measurement systems to use for product details <ins>(only for product details?)</ins>. Metric system has units such as "meter", "liter" while English units are "inch", "gallon" etc.</li>
+	<li>Unit measurement system - click the drop-down list and select one of the unit measurement systems to use (for product details). Metric system has units such as "meter", "liter" while English units are "inch", "gallon" etc.</li>
 </ul>	
 
 
@@ -56,7 +57,7 @@
 	<li>Small images are tiny winy images which are displayed in a {glossary}product details{/glossary} page.</li>
 	<li>Thumbnail images are displayed in a {glossary}product list{/glossary} page.</li>
 	<li>Medium images are displayed when customers click on the small image in the product details page.</li>
-	<li>Large images are used (...)</li>
+	<li><ins>Large images are used (...)</ins></li>
 </ul>
 
 <h3 id="product_filters">Filters</h3>
@@ -72,7 +73,7 @@
 	</ul>
 	<li>Translate - click on the language tab to enter filter's criteria names if applicable.</li>
 </ul>
-<p class="note"><strong>Note</strong>: fractional parts should be also defined as there is no rounding applied to such prices as "2.49" or "9.99". Thus criteria have to be set up appropriately: "0 to 2.50" and "2.51 to 9.99" or similar.</p>
+<p class="note"><strong>Note</strong>: Fractional parts should be also defined as there is no rounding applied to such prices as "2.49" or "9.99". Thus criteria have to be set up appropriately: "0 to 2.50" and "2.51 to 9.99" or similar.</p>
 
 <h3 id="inventory">Inventory</h3>
 
@@ -95,15 +96,9 @@
 	<li>Maximum quantity of products per order - the limitation of products per one order.</li>
 </ul>
 
-<h3 id="purchase">Purchase</h3>
+<h3 id="shipping">Shipping methods</h3>
 
-<p>You can manage shipping methods by selecting one of the methods from the list:</p>
-
-<ul>	
-	<li><a href="{self}#usps">USPS</a></li>
-	<li><a href="{self}#fedex">FedEx</a></li>
-	<li><a href="{self}#post">Post</a></li>
-</ul>
+<p>Here you can set-up and manage realtime shipping methods which use postage calculation methods such as USPS, FedEx or other.</p>
 
 <h4 id="usps">USPS</h3>
 
@@ -156,6 +151,18 @@
 <h3 id="enabled_countries">Enabled Countries</h3>
 
 <p>Enabled countries are available for setting delivery zones, etc <strong>(?)</strong> </p>
+
+<h3 id="backend">Backend Administration</h3>
+
+<p></p>
+
+<ul>	
+	<li> </li>
+	<li> </li>
+	<li> </li>
+</ul>
+
+
 
 {helpSeeAlso}
 	{see settings.delivery}
