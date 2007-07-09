@@ -63,11 +63,11 @@ class SpecFieldGroupController extends StoreManagementController
         if($id = $this->request->get("id", false))
         {
             SpecFieldGroup::deleteById($id);
-            return new JSONResponse(array('status' => 'success'));
+            return new JSONResponse(false, 'success', $this->translate('_specfield_group_was_successfully_removed'));
         }
         else
         {
-            return new JSONResponse(array('status' => 'failure'));
+            return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_specfield_group'));
         }
     }
     
@@ -88,7 +88,7 @@ class SpecFieldGroupController extends StoreManagementController
             $group->save();
         }
 
-        return new JSONResponse(array('status' => 'success'));
+        return new JSONResponse(false, 'success', $this->translate('_specfield_groups_were_successfully_reordered'));
     }
     
     /**
@@ -108,11 +108,11 @@ class SpecFieldGroupController extends StoreManagementController
             
             $specFieldGroup->save();
             
-            return new JSONResponse(array('status' => 'success', 'id' => $specFieldGroup->getID()));
+            return new JSONResponse(array('id' => $specFieldGroup->getID()), 'success', $this->translate('_specfield_group_was_successfully_saved'));
         }
         else
         {
-            return new JSONResponse(array('errors' => $this->translateArray($errors), 'status' => 'failure'));
+            return new JSONResponse(array('errors' => $this->translateArray($errors)), 'failure', $this->translate('_could_not_save_specification_group'));
         }
     }
 

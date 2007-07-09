@@ -126,7 +126,11 @@ LiveCart.AjaxRequest.prototype = {
             color = 'red';
         }
         
-        new Insertion.Top(color + 'Zone', '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="' + color + 'Message"><div>' + responseData.message + '</div></div>');
+        new Insertion.Top(color + 'Zone', 
+        '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="' + color + 'Message">' + 
+            '<img class="closeMessage" src="image/silk/cancel.png"/>' + 
+            '<div>' + responseData.message + '</div>' + 
+        '</div>');
         new Backend.SaveConfirmationMessage($('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));	
     },
     

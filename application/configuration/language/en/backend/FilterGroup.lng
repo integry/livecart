@@ -1,3 +1,11 @@
+# Confirmations
+_filter_group_was_successfully_saved=Filter group was successfully saved
+_could_not_save_filter_group=Could not save filter group
+_filter_group_was_successfully_removed=Filter group was successfully removed
+_could_not_remove_filter_group=Could not remove filter group
+_filter_groups_were_successfully_reordered=Filter groups were successfully reordered
+
+
 _add_new_filter=Add new filter
 _category_has_no_attr=No filterable attributes have yet been created for this category
 _delete_field=Delete field

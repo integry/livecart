@@ -100,6 +100,15 @@ div.yellowMessage, div.redMessage {
     width: 180px;
 	text-align: center;
 	z-index: 50000;
+    position: relative
+}
+
+div.yellowMessage .closeMessage, div.redMessage .closeMessage {
+    position: absolute; 
+    right: 18px; 
+    top: 18px;
+    cursor: pointer;
+	cursor: hand;
 }
 
 div.yellowMessage div, div.redMessage div {

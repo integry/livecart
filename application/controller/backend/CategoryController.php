@@ -66,11 +66,11 @@ class CategoryController extends StoreManagementController
 
 		try 
 		{
-			return new JSONResponse($categoryNode->toArray());
+			return new JSONResponse($categoryNode->toArray(), 'success', $this->translate('_new_category_was_successfully_created'));
 		}
 		catch(Exception $e)
 		{
-		    return new JSONResponse(false);
+		    return new JSONResponse(false, 'failure', $this->translate('_could_not_create_a_category'));
 		}
 	}
 
@@ -93,7 +93,7 @@ class CategoryController extends StoreManagementController
 			$categoryNode->setValueArrayByLang($multilingualFields, $this->store->getDefaultLanguageCode(), $this->store->getLanguageArray(true), $this->request);
 			$categoryNode->save();
 			
-			return new JSONResponse(array_merge($categoryNode->toFlatArray(), array('infoMessage' => $this->translate('_succsessfully_saved'))));
+			return new JSONResponse($categoryNode->toFlatArray(), 'success', $this->translate('_category_succsessfully_saved'));
 		}
 	}
 
@@ -119,14 +119,13 @@ class CategoryController extends StoreManagementController
 		try
         {
             Category::deleteByID($this->request->get("id"), 0);   
-            $status = true;
+            return new JSONResponse(false, 'success', $this->translate('_category_was_successfully_removed'));
         }
         catch (Exception $e)
         {
-            $status = false;
+            return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_category'));
         }
 		
-		return new JSONResponse($status);
 	}
 
 	/**
@@ -139,7 +138,6 @@ class CategoryController extends StoreManagementController
 	    $targetNode = Category::getInstanceByID((int)$this->request->get("id"));
 		$parentNode = Category::getInstanceByID((int)$this->request->get("parentId"));
 		
-		$status = true;
 		try
 		{
 			if($direction = $this->request->get("direction", false))
@@ -151,10 +149,12 @@ class CategoryController extends StoreManagementController
 			{
 			    $targetNode->moveTo($parentNode);
 			}
+			
+			return new JSONResponse(false, 'success', $this->translate('_categories_tree_was_reordered'));
 		}
 		catch(Exception $e)
 	    {
-		    $status = false;
+			return new JSONResponse(false, 'failure', $this->translate('_unable_to_reorder_categories_tree'));
 		}
 		
 		return new JSONResponse($status);

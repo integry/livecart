@@ -107,11 +107,11 @@ class FilterGroupController extends StoreManagementController
 				$newIDs = $filterGroup->saveFilters($filters, $specFieldType, $this->filtersConfig['languageCodes']);
 			}
 
-            return new JSONResponse(array('status' => 'success', 'id' => $filterGroup->getID(), 'newIDs' => $newIDs));
+            return new JSONResponse(array('id' => $filterGroup->getID(), 'newIDs' => $newIDs), 'success', $this->translate('_filter_group_was_successfully_saved'));
         }
         else
         {
-            return new JSONResponse(array('errors' => $this->translateArray($errors), 'status' => 'failure'));
+            return new JSONResponse(array('errors' => $this->translateArray($errors)), 'failure', $this->translate('_could_not_save_filter_group'));
         }
     }
 
@@ -166,11 +166,11 @@ class FilterGroupController extends StoreManagementController
         if($id = $this->request->get("id", false))
         {
             FilterGroup::deletebyID((int)$id);
-            return new JSONResponse(array('status' => 'success'));
+            return new JSONResponse(false, 'success', $this->translate('_filter_group_was_successfully_removed'));
         }
         else
         {
-            return new JSONResponse(array('status' => 'failure'));
+            return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_filter_group'));
         }
     }
 
@@ -193,7 +193,7 @@ class FilterGroupController extends StoreManagementController
             }
         }
 
-        return new JSONResponse(array('status' => 'success'));
+        return new JSONResponse(false, 'success', $this->translate('_filter_groups_were_successfully_reordered'));
     }
 
     private function getSpecFieldOptions($specFieldsList)

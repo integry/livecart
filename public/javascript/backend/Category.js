@@ -89,7 +89,6 @@ Backend.Category = {
     		treeNode.onclick();	
     		Backend.ajaxNav.add('cat_' + treeNode.parentObject.id + '#tabProducts');
         }
-
 	},
     
     initTreeControls: function() 
@@ -141,6 +140,32 @@ Backend.Category = {
 		this.tabControl = new CategoryTabControl(this.treeBrowser, 'tabList', 'sectionContainer', 'image/indicator.gif');
 	},
 
+    showControls: function()
+    {
+        var categoryId = Backend.Category.treeBrowser.getSelectedItemId();
+        
+        if(categoryId == '1') 
+        {
+            $("removeCategoryLink").hide();
+            $("moveCategoryUp").hide();
+            $("moveCategoryDown").hide();
+        }
+        else 
+        {
+            $("removeCategoryLink").show();
+            
+            parentId = Backend.Category.treeBrowser.getParentId(categoryId)
+            categoryIndex = Backend.Category.treeBrowser.getIndexById(categoryId)
+            nextCategoryId = Backend.Category.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1)
+
+            if(nextCategoryId) $("moveCategoryDown").show();
+            else $("moveCategoryDown").hide();
+            
+            if(categoryIndex > 0) $("moveCategoryUp").show();
+            else $("moveCategoryUp").hide();
+        }  
+    },
+
 	/**
 	 * Tree browser onClick handler. Activates selected category by realoading active
 	 * tab with category specific data
@@ -152,6 +177,8 @@ Backend.Category = {
 	{
 		Element.show('activeCategoryPath');
 		Element.update('activeCategoryPath', Backend.Category.getPath(categoryId));
+              
+        Backend.Category.showControls();
 
 		if(Backend.Product) Backend.Product.Editor.prototype.showCategoriesContainer();
 
@@ -243,7 +270,6 @@ Backend.Category = {
 		var categoryData = eval('(' + response.responseText + ')');
 
 		Backend.Category.treeBrowser.setItemText(categoryData.ID, categoryData.name);
-        new Backend.SaveConfirmationMessage($('categoryMsg'));
 	},
 
 	/**

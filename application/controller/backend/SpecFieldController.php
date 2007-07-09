@@ -87,7 +87,13 @@ class SpecFieldController extends StoreManagementController
         }
         else
         {
-            return new JSONResponse(array('errors' => array('ID' => $this->translate('_error_record_id_is_not_valid')), 'status' => 'failure', 'ID' => (int)$this->request->get('ID')));
+            return new JSONResponse(array(
+	                'errors' => array('ID' => $this->translate('_error_record_id_is_not_valid')), 
+	                'ID' => (int)$this->request->get('ID')
+                ),
+                'failure', 
+                $this->translate('_could_not_save_attribute')
+            );
         }
         
         return $this->save($specField);
@@ -193,11 +199,11 @@ class SpecFieldController extends StoreManagementController
             
 			
 			
-            return new JSONResponse(array('status' => 'success', 'id' => $specField->getID(), 'newIDs' => $newIDs));
+            return new JSONResponse(array('id' => $specField->getID(), 'newIDs' => $newIDs), 'success', $this->translate('_attribute_was_successfully_saved'));
         }
         else
         {
-            return new JSONResponse(array('errors' => $this->translateArray($errors), 'status' => 'failure'));
+            return new JSONResponse(array('errors' => $this->translateArray($errors)), 'failure', $this->translate('_could_not_save_attribute'));
         }
     }
     
@@ -212,11 +218,11 @@ class SpecFieldController extends StoreManagementController
         if($id = $this->request->get("id", false))
         {
             SpecField::deleteById($id);
-            return new JSONResponse(array('status' => 'success'));
+            return new JSONResponse(false, 'success', $this->translate('_attribute_was_successfully_removed'));
         }
         else
         {
-            return new JSONResponse(array('status' => 'failure'));
+            return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_attribute'));
         }
     }
 
@@ -245,7 +251,7 @@ class SpecFieldController extends StoreManagementController
             }
         }
 
-        return new JSONResponse(array('status' => 'success'));
+        return new JSONResponse(false, 'success', $this->translate('_attributes_were_successfully_reordered'));
     }
     
 

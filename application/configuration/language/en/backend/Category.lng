@@ -1,3 +1,12 @@
+# Confirmations
+_new_category_was_successfully_created=New category was successfully created
+_could_not_create_a_category=Could not create a category
+_category_was_successfully_removed=Category was successfully removed
+_could_not_remove_category=Could not remove selected category
+_categories_tree_was_reordered=Categories tree was reordered
+_unable_to_reorder_categories_tree=Unable to reorder categories tree
+_category_succsessfully_saved=Category was successfully updated
+
 # SpecField
 _SpecField_main=Main
 _SpecField_values=Values
@@ -73,7 +82,6 @@ _images=Images
 _articles=Articles
 _create_subcategory=Create a new sub-category
 _remove_category=Remove selected category
-_successfully_saved=Details were successfuly updated!
 _new_category=New Category
 _reorder_failed=Could not move category
 _confirm_category_remove=Are you sure you want to remove this category?

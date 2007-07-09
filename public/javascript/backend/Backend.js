@@ -803,9 +803,37 @@ Backend.SaveConfirmationMessage.prototype =
             console.info(e);
         }
         
+        var closeButton = this.element.down('.closeMessage');
+        if(closeButton)
+        {
+            this.hideCloseButton(closeButton);
+            
+            Event.observe(closeButton, 'mouseover', function(e) { this.showCloseButton(closeButton) }.bind(this) )
+            Event.observe(closeButton, 'mouseout', function(e) { this.hideCloseButton(closeButton) }.bind(this) )
+            Event.observe(closeButton, 'click', function(e) { this.hide() }.bind(this) )
+            
+        }
         
 		this.show();
 	},
+    
+    showCloseButton: function(closeButton)
+    {
+        try {
+            closeButton.setOpacity(1);            
+        } catch(e) {
+            closeButton.style.visibility = 'visible';
+        }
+    },
+    
+    hideCloseButton: function(closeButton)
+    {
+        try {
+            closeButton.setOpacity(0.5);            
+        } catch(e) {
+            closeButton.style.visibility = 'hidden';
+        }
+    },
 	
 	show: function()
 	{

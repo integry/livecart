@@ -1,3 +1,10 @@
+# Confirmations
+_could_not_save_attribute=Could not save attribute
+_attribute_was_successfully_saved=Attribute was successfully saved
+_attributes_were_successfully_reordered=Atributes were successfully reordered
+_could_not_remove_attribute=Could not remove attribute
+_attribute_was_successfully_removed=Attribute was successfully removed
+
 _add_new_field=Add new attribute
 _add_new_group=Add new group
 _delete_field=Delete field

@@ -26,11 +26,11 @@ class FilterController extends StoreManagementController
         if($id = $this->request->get("id", false))
         {
             Filter::deleteByID($id);
-            return new JSONResponse(array('status' => 'success'));
+            return new JSONResponse(false, 'success', $this->translate('_filter_group_was_successfully_removed'));
         }
         else
         {
-            return new JSONResponse(array('status' => 'failure'));
+            return new JSONResponse(false, 'success', $this->translate('_could_not_remove_filter_group'));
         }
     }
 
@@ -54,7 +54,7 @@ class FilterController extends StoreManagementController
             }
         }
 
-        return new JSONResponse(array('status' => 'success'));
+        return new JSONResponse(false, 'success', $this->translate('_filter_groups_were_successfully_reordered'));
     }
     
     /**
@@ -72,7 +72,7 @@ class FilterController extends StoreManagementController
             $filters[$value['ID']] = array('name' => $value['value'], 'specFieldValueID' => $value['ID']);
         }
         
-        return new JSONResponse(array("status" => "success", "filters" => $filters));
+        return new JSONResponse(array("filters" => $filters), 'success', $this->translate('_filters_were_successfully_generated'));
     }
 }
 
