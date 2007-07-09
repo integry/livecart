@@ -9,7 +9,7 @@
  *
  * @package application.helper
  */
-function smarty_function_helpLink($params, $smarty)
+function smarty_function_helpLink($params, LiveCartSmarty $smarty)
 {
 	$topic = $params['id'];
 	$current = $smarty->_tpl_vars['topic']['ID'];
@@ -35,7 +35,7 @@ function smarty_function_helpLink($params, $smarty)
         return '"><span style="color:red;font-weight: bold; font-size: larger;">INVALID LINK ('.$topic.')</span><a href="';    
     }
 	
-	return Router::getInstance()->createUrl(array('controller' => 'help', 'action' => 'view', 'id' => $topic));
+	return $smarty->getApplication()->getRouter()->createUrl(array('controller' => 'help', 'action' => 'view', 'id' => $topic));
 }
 
 ?>

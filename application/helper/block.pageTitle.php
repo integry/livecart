@@ -6,7 +6,7 @@
  * @package application.helper
  * @author Rinalds Uzkalns <rinalds@integry.net>
  */
-function smarty_block_pageTitle($params, $content, $smarty, &$repeat) 
+function smarty_block_pageTitle($params, $content, LiveCartSmarty $smarty, &$repeat) 
 {
 	$smarty->assign('TITLE', strip_tags($content));
 	

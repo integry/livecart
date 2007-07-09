@@ -9,7 +9,7 @@
  * 
  * @package application.helper
  */
-function smarty_function_zebra($params, Smarty $smarty) 
+function smarty_function_zebra($params, LiveCartSmarty $smarty) 
 {
 	if (!isset($smarty->_foreach[$params['loop']]))
 	{

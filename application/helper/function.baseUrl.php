@@ -9,9 +9,9 @@
  *
  * @package application.helper
  */
-function smarty_function_baseUrl($params, $smarty)
+function smarty_function_baseUrl($params, LiveCartSmarty $smarty)
 {
-	return Router::getBaseUrl();
+	return $smarty->getApplication()->getRouter()->getBaseUrl();
 }
 
 ?>

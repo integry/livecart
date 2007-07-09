@@ -7,7 +7,7 @@
  *
  * @package application.helper
  */
-function smarty_block_denied($params, $content, $smarty, &$repeat)
+function smarty_block_denied($params, $content, LiveCartSmarty $smarty, &$repeat)
 {
     if (!$repeat)
     {

@@ -19,9 +19,6 @@ ClassLoader::import('application.controller.*');
 ClassLoader::import('application.model.*');
 ClassLoader::import('application.model.system.*');
 
-// LiveCart request routing rules
-ClassLoader::import('application.configuration.route.backend');
-
 // Custom initialization tasks
 $custom = ClassLoader::getRealPath('storage.configuration.CustomInitialize') . '.php';
 if (file_exists($custom))

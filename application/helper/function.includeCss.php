@@ -10,7 +10,7 @@
  * @package application.helper
  * @author Saulius Rupainis <saulius@integry.net>
  */
-function smarty_function_includeCss($params, $smarty) 
+function smarty_function_includeCss($params, LiveCartSmarty $smarty) 
 {
 	$fileName = $params['file'];
 	

@@ -9,7 +9,7 @@
  * 
  * @package application.helper
  */
-function smarty_function_activeGrid($params, Smarty $smarty) 
+function smarty_function_activeGrid($params, LiveCartSmarty $smarty) 
 {
     if (!isset($params['rowCount']) || !$params['rowCount'])
     {
@@ -32,7 +32,7 @@ function smarty_function_activeGrid($params, Smarty $smarty)
         $smarty->assign('filters', "?$filtersString");
     }
     
-    $smarty->assign('url', Router::getInstance()->createUrl(array('controller' => $params['controller'], 'action' => $params['action'])));
+    $smarty->assign('url', $smarty->getApplication()->getRouter()->createUrl(array('controller' => $params['controller'], 'action' => $params['action'])));
     
 	return $smarty->display('block/activeGrid/gridTable.tpl');
 }

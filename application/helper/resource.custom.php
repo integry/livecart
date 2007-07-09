@@ -9,7 +9,7 @@
  *  directory writable to enable template modification from admin interface.
  */
 
-function smarty_resource_custom_source($tpl_name, &$tpl_source, &$smarty_obj)
+function smarty_resource_custom_source($tpl_name, &$tpl_source, LiveCartSmarty $smarty_obj)
 {
     $paths = custom_get_paths($tpl_name, $smarty_obj);
 
@@ -25,7 +25,7 @@ function smarty_resource_custom_source($tpl_name, &$tpl_source, &$smarty_obj)
     return false;
 }
 
-function smarty_resource_custom_timestamp($tpl_name, &$tpl_timestamp, &$smarty_obj)
+function smarty_resource_custom_timestamp($tpl_name, &$tpl_timestamp, LiveCartSmarty $smarty_obj)
 {
     $paths = custom_get_paths($tpl_name, $smarty_obj);
       
@@ -41,7 +41,7 @@ function smarty_resource_custom_timestamp($tpl_name, &$tpl_timestamp, &$smarty_o
     return false;
 }
 
-function custom_get_paths($tpl_name, Smarty $smarty)
+function custom_get_paths($tpl_name, LiveCartSmarty $smarty)
 {
     static $customDirectory = null;
     
@@ -57,13 +57,13 @@ function custom_get_paths($tpl_name, Smarty $smarty)
     return $paths;    
 }
 
-function smarty_resource_custom_secure($tpl_name, &$smarty_obj)
+function smarty_resource_custom_secure($tpl_name, LiveCartSmarty $smarty_obj)
 {
     // assume all templates are secure
     return true;
 }
 
-function smarty_resource_custom_trusted($tpl_name, &$smarty_obj)
+function smarty_resource_custom_trusted($tpl_name, LiveCartSmarty $smarty_obj)
 {
     // not used for templates
 }

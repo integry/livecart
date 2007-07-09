@@ -9,10 +9,9 @@
  *
  * @package application.helper
  */
-function smarty_function_helpUrl($params, $smarty)
+function smarty_function_helpUrl($params, LiveCartSmarty $smarty)
 {
-	$router = Router::getInstance();
-	return $router->createUrl(array('controller' => 'help', 'action' => 'view', 'id' => $params['help']));
+	return $smarty->getApplication()->getRouter()->createUrl(array('controller' => 'help', 'action' => 'view', 'id' => $params['help']));
 }
 
 ?>

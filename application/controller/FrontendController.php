@@ -28,7 +28,7 @@ abstract class FrontendController extends BaseController
         {
             if ($this->request->isValueSet($key))
             {
-                Router::addAutoAppendQueryVariable($key, $this->request->get($key));
+                $this->router->addAutoAppendQueryVariable($key, $this->request->get($key));
             }    
         }
     }

@@ -38,12 +38,11 @@ $routes = array(
                     
   			   );
 
-$router = Router::getInstance();
 foreach ($routes as $route)
 {
-	$router->connect($route[0], $route[1], $route[2]);
+	$this->router->connect($route[0], $route[1], $route[2]);
   	$route[2]['requestLanguage'] = "[a-zA-Z]{2}";
-  	$router->connect(':requestLanguage/' . $route[0], $route[1], $route[2]);
+  	$this->router->connect(':requestLanguage/' . $route[0], $route[1], $route[2]);
 }
 
 ?>

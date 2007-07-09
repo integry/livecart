@@ -29,7 +29,7 @@
 	        $route = 'err/redirect/' . $e->getStatusCode();
 	    }
 	    
-	    Router::getInstance()->setRequestedRoute($route);
+	    $app->getRouter()->setRequestedRoute($route);
 		$app->run();
 	}
 	catch (ClassLoaderException $e)

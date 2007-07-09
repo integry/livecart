@@ -1,0 +1,35 @@
+ul.notes
+{
+    list-style-type: none;   
+    margin-top: 15px;
+}
+
+ul.notes li
+{
+    margin-bottom: 10px;
+    width: 600px;
+}
+
+ul.notes li.responder_0
+{
+    background-color: #AA0000;
+}
+
+.responseUser
+{
+    float: left;
+}
+
+.noteDate
+{
+    float: right;
+}
+
+.noteText
+{
+    border: 1px solid #EEEEEE;
+    background-color: #FCFCFC;
+    padding: 5px;
+    margin-top: 5px;
+    font-family: "Lucida Console", Monospace;
+}

@@ -82,6 +82,9 @@ class LiveCart extends Application
 		unset($this->locale);
 		unset($this->localeName);
         		
+        // LiveCart request routing rules
+        include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';        		
+        		
 		ClassLoader::import('application.model.ActiveRecordModel');
 		ActiveRecordModel::setApplicationInstance($this);
 		

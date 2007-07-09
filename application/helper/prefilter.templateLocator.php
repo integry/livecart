@@ -9,7 +9,7 @@
  *
  * @package application.helper
  */
-function smarty_prefilter_templateLocator($tplSource, $smarty)
+function smarty_prefilter_templateLocator($tplSource, LiveCartSmarty $smarty)
 {
 	$file = $smarty->_current_file;
 		
@@ -29,7 +29,7 @@ function smarty_prefilter_templateLocator($tplSource, $smarty)
 	
 	$file = str_replace('\\', '/', $file);
 		
-	$editUrl = Router::getInstance()->createUrl(array('controller' => 'backend.template', 'action' => 'editPopup', 'query' => array('file' => $file)));
+	$editUrl = $smarty->getApplication()->getRouter()->createUrl(array('controller' => 'backend.template', 'action' => 'editPopup', 'query' => array('file' => $file)));
 	
 	return '<div class="templateLocator"><span class="templateName"><a onclick="window.open(\'' . $editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); return false;" href="#">' . $file . '</a></span>' . $tplSource . '</div>';					
 }

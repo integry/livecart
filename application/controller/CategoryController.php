@@ -419,7 +419,7 @@ class CategoryController extends FrontendController
 			{
 				$chunks = array_chunk($grp['filters'], $maxCriteria);
 				$filterGroups[$key]['filters'] = $chunks[0];
-				$filterGroups[$key]['more'] = Router::setUrlQueryParam($url, 'showAll', $grp['ID']);
+				$filterGroups[$key]['more'] = $this->router->setUrlQueryParam($url, 'showAll', $grp['ID']);
 			}
 		}			
     
@@ -430,7 +430,7 @@ class CategoryController extends FrontendController
         {
 			$chunks = array_chunk($manFilters, $maxCriteria);
 			$manFilters = $chunks[0];
-			$response->set('allManufacturers', Router::setUrlQueryParam($url, 'showAll', 'brand'));		  	
+			$response->set('allManufacturers', $this->router->setUrlQueryParam($url, 'showAll', 'brand'));		  	
 		}
         
         if (count($manFilters) > 1)

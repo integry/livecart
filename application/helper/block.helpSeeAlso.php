@@ -16,7 +16,7 @@
  * @return string HTML code
  * @package application.helper
  */
-function smarty_block_helpSeeAlso($params, $content, Smarty $smarty, &$repeat) 
+function smarty_block_helpSeeAlso($params, $content, LiveCartSmarty $smarty, &$repeat) 
 {	
 	if (!$repeat) 
 	{		

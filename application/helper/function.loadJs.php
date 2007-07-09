@@ -10,7 +10,7 @@
  * @package application.helper
  * @author Integry Systems
  */
-function smarty_function_loadJs($params, $smarty) 
+function smarty_function_loadJs($params, LiveCartSmarty $smarty) 
 {
 	$files = array("library/prototype/prototype.js", "frontend/Frontend.js");
 

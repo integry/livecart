@@ -9,7 +9,7 @@
  *
  * @package application.helper
  */
-function smarty_function_pageUrl($params, $smarty)
+function smarty_function_pageUrl($params, LiveCartSmarty $smarty)
 {	
     if (isset($params['id']))
     {
@@ -21,7 +21,7 @@ function smarty_function_pageUrl($params, $smarty)
 					   'handle' => $params['data']['handle'], 
                        );
 
-	return Router::getInstance()->createUrl($urlParams);
+	return $smarty->getApplication()->getRouter()->createUrl($urlParams);
 }
 
 ?>

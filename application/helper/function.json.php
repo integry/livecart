@@ -10,7 +10,7 @@
  * @package application.helper
  * @author Saulius Rupainis <saulius@integry.net>
  */
-function smarty_function_json($params, $smarty)
+function smarty_function_json($params, LiveCartSmarty $smarty)
 {
 	$array = $params['array'];
 	$assign = isset($params['assign']) ? $params['assign'] : false;

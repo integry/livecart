@@ -9,7 +9,7 @@
  *
  * @package application.helper
  */
-function smarty_function_pageName($params, $smarty)
+function smarty_function_pageName($params, LiveCartSmarty $smarty)
 {	
     if (!isset($params['id']))
     {

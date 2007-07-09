@@ -11,7 +11,7 @@ ClassLoader::import('application.helper.CreateHandleString');
  *
  * @package application.helper
  */
-function smarty_function_productUrl($params, Smarty $smarty)
+function smarty_function_productUrl($params, LiveCartSmarty $smarty)
 {		
 	$product = $params['product'];	
 	$handle = createHandleString($product['name_lang']);
@@ -21,11 +21,11 @@ function smarty_function_productUrl($params, Smarty $smarty)
 					   'producthandle' => $handle, 
 					   'id' => $product['ID']);
 					   
-	$url = Router::getInstance()->createUrl($urlParams);	
+	$url = $smarty->getApplication()->getRouter()->createUrl($urlParams);	
 
     if (!empty($params['filterChainHandle']))
     {
-        $url = Router::setUrlQueryParam($url, 'filters', $params['filterChainHandle']);
+        $url = $smarty->getApplication()->getRouter()->setUrlQueryParam($url, 'filters', $params['filterChainHandle']);
     }
     
     return $url;

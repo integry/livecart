@@ -8,7 +8,7 @@
  *
  * @package application.helper
  */
-function smarty_block_tip($params, $content, $smarty, &$repeat)
+function smarty_block_tip($params, $content, LiveCartSmarty $smarty, &$repeat)
 {
 	if (!$repeat)
 	{

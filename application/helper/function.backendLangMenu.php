@@ -9,10 +9,9 @@
  * 
  * @package application.helper
  */
-function smarty_function_backendLangMenu($params, Smarty $smarty) 
+function smarty_function_backendLangMenu($params, LiveCartSmarty $smarty) 
 {
-  	$router = Router::getInstance();
-  	$smarty->assign('returnRoute', base64_encode($router->getRequestedRoute()));
+  	$smarty->assign('returnRoute', base64_encode($smarty->getApplication()->getRouter()->getRequestedRoute()));
 	return $smarty->display('block/backend/langMenu.tpl');
 }
 

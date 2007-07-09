@@ -9,7 +9,7 @@
  *
  * @package application.helper
  */
-function smarty_prefilter_config($tplSource, $smarty)
+function smarty_prefilter_config($tplSource, LiveCartSmarty $smarty)
 {
 	$source = preg_replace('/{tn (.+?)}/', '{translate|escape:"html" text="$1" disableLiveTranslation="true"}', $tplSource);
 	$source = preg_replace('/{t ([^\|]+?)}/', '{translate text="$1"}', $source);

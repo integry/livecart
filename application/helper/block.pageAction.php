@@ -24,7 +24,7 @@
  * @package application.helper
  * @author Rinalds Uzkalns <rinalds@integry.net>
  */
-function smarty_block_pageAction($params, $content, Smarty $smarty, &$repeat) 
+function smarty_block_pageAction($params, $content, LiveCartSmarty $smarty, &$repeat) 
 {	
 	if (!$repeat) 
 	{		

@@ -10,7 +10,7 @@
  * @package application.helper
  * @author Integry Systems
  */
-function smarty_function_includeJs($params, $smarty) 
+function smarty_function_includeJs($params, LiveCartSmarty $smarty) 
 {
 	$fileName = $params['file'];
 	
