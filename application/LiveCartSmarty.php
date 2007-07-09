@@ -1,5 +1,7 @@
 <?php
 
+ClassLoader::import('library.smarty.libs.Smarty');
+
 class LiveCartSmarty extends Smarty
 {
     private $application;
