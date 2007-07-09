@@ -104,7 +104,7 @@ class OrderedItemController extends StoreManagementController
             
             $shipment->save();
             return new JSONResponse(array(
-            'status' => 'succsess',
+            'status' => 'success',
 	            'item' => array(
 	                'ID'              => $item->getID(),
 	                'Product'         => $item->product->get()->toArray(),

@@ -54,7 +54,7 @@ class PaymentController extends StoreManagementController
         }
         else
         {
-            return new JSONResponse(array('error' => true, 'msg' => $voidTransaction->getMessage()));
+            return new JSONResponse(false, 'failure', $voidTransaction->getMessage());
         }
     }
 
@@ -80,7 +80,7 @@ class PaymentController extends StoreManagementController
         }
         else
         {
-            return new JSONResponse(array('error' => true, 'msg' => $captureTransaction->getMessage()));
+            return new JSONResponse(false, 'success', $captureTransaction->getMessage());
         }
     }
     
@@ -204,7 +204,7 @@ class PaymentController extends StoreManagementController
         }
         elseif ($result instanceof TransactionError)
         {
-            return new JSONResponse(array('error' => 'true', 'msg' => $this->translate('_err_processing_cc')));
+            return new JSONResponse(false, 'failure', $this->translate('_err_processing_cc'));
         }
         else
         {

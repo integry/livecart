@@ -64,6 +64,8 @@
 		<li class="removeTreeNode" {denied role="category.remove"}style="display: none"{/denied}><a href="#" id="removeCategoryLink">{t _remove_category}</a></li>
 	</ul>
 
+    <div id="confirmations"></div>
+
     <div id="categoryMsg" class="yellowMessage" style="display: none;"><div>{t _successfully_saved}</div></div>
     <div id="pricesSaveConf" class="pricesSaveConf yellowMessage" style="display: none;"><div>{t _product_information_was_saved}</div></div>    
     <div id="productAddConf" class="pricesSaveConf yellowMessage" style="display: none;"><div>{t _notification_product_was_successfuly}</div></div>    

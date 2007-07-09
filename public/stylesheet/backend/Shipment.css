@@ -87,7 +87,8 @@
 
 
 .orderShipmentsItem_info_count_td { width: 70px; }
-.orderShipmentsItem_info_count { width: 60px; text-align: right;}
+.orderShipmentsItem_info_count { width: 60px; text-align: right; position: relative; }
+.orderShipmentsItem_info_count .progressIndicator { position: absolute; left: -15px; top: -6px; }
 
 .orderShipmentsItem li
 {

@@ -19,6 +19,7 @@
         </td>
         <td class="orderShipmentsItem_info_count_td">
             <div class="orderShipmentsItem_info_count">
+                <span class="progressIndicator" style="display: none;"></span>
                 <input name="count_{$item.ID}" value="{$item.count}" id="orderShipmentsItem_count_{$item.ID}" class="orderShipmentsItem_count" style="{if $shipped}display: none;{/if}" />
                 {if $shipped}{$item.count}{/if}
             </div>

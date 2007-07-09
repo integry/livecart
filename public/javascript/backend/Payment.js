@@ -81,7 +81,6 @@ Backend.Payment.AddOffline.prototype =
         this.form = Event.element(e);    
         this.event = e;
         new LiveCart.AjaxRequest(this.form, null, this.complete.bind(this));
-        Element.hide('transactionError');
     },
     
     complete: function(originalRequest)
@@ -111,15 +110,12 @@ Backend.Payment.AddCreditCard.prototype =
         this.form = form;
         this.window = window;
         new LiveCart.AjaxRequest(this.form, null, this.complete.bind(this));
-        Element.hide('transactionError');
     },
     
     complete: function(originalRequest)
     {        
-        if (originalRequest.responseData.error)
+        if (originalRequest.responseData.status == 'failure')
         {
-            $('transactionErrorMsg').innerHTML = originalRequest.responseData.msg;
-            new Backend.SaveConfirmationMessage($('transactionError'));
             return;
         }        
      
@@ -145,7 +141,6 @@ Backend.Payment.TransactionAction.prototype =
 	
 	initialize: function(transactionID, form)
 	{
-		Element.hide('transactionError');
         this.id = transactionID;
 		this.form = form;
 		
@@ -159,10 +154,8 @@ Backend.Payment.TransactionAction.prototype =
     {   
         var resp = originalRequest.responseData;
         
-        if (resp.error)
+        if (resp.status == 'failure')
         {
-            $('transactionErrorMsg').innerHTML = resp.msg;
-            new Backend.SaveConfirmationMessage($('transactionError'));
             return;
         }
         

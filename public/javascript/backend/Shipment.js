@@ -122,7 +122,7 @@ Backend.OrderedItem = {
        {   
            new LiveCart.AjaxRequest(
                Backend.OrderedItem.Links.changeItemCount + "/" + itemID + "?count=" + input.value, 
-               input.up('li').down('.activeList_progress'),
+               input.up('.orderShipmentsItem_info_count').down('.progressIndicator'),
                function(response) 
                { 
                     var response = eval("(" + response.responseText + ")");
@@ -345,7 +345,7 @@ Backend.Shipment.prototype =
             {
                response = eval("(" + response.responseText + ")");
            
-               if(response.status == 'succsess')
+               if(response.status == 'success')
                {
                    var li = null;
                    

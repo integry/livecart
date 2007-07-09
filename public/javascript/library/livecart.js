@@ -31,6 +31,10 @@ LiveCart.AjaxRequest.prototype = {
                 if (controls)
                 {
                     indicatorId = controls.down('.progressIndicator');
+                    if(indicatorId.style.visibility == 'hidden')
+                    {
+                        this.adjustIndicatorVisibility = true;
+                    }
                 }
             }
         }
@@ -61,13 +65,16 @@ LiveCart.AjaxRequest.prototype = {
 	{
         if(this.indicatorContainerId)
         {
-		    Element.hide(this.indicatorContainerId);
+            Element.hide(this.indicatorContainerId);
         }
 	},
 
 	showIndocator: function()
 	{
-		Element.show(this.indicatorContainerId);
+		if(this.indicatorContainerId)
+        {
+            Element.show(this.indicatorContainerId);
+        }
 	},
 
     postProcessResponse: function(response)

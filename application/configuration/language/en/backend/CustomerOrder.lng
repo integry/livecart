@@ -6,6 +6,7 @@ _order_status_has_been_successfully_changed=Order status has been successfully c
 _order_is_canceled=Order is canceled
 _order_is_accepted=Order is accepted
 _order_address_was_successfully_updated=Order address was successfully updated
+_empty_shipments_were_removed=Empty shipments were removed
 _error_updating_order_address=An error occurred updating order address
 _error_updating_order_status=An error occured updating order status
 

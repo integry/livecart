@@ -682,15 +682,25 @@ class CustomerOrderController extends StoreManagementController
 	{
 	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
 	    
+	    $recordsCount = 0;
 	    foreach($order->getShipments() as $shipment)
 	    {
 	        if(count($shipment->getItems()) == 0)
 	        {
-                $shipment->delete();
+                $recordsCount++;
+	            $shipment->delete();
+	        }
+	        
+	        if($shipment->isShippable())
+	        {
+	            $recordsCount++;
 	        }
 	    }
 	    
-	    return new JSONResponse(array('status' => 'success'));
+	    if($recordsCount > 1) // One for downloadable
+	    {
+	        return new JSONResponse(array('status' => 'success', 'message' => $this->translate('_empty_shipments_were_removed')));
+	    }
 	}
 }
 ?>
