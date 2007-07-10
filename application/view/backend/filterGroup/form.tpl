@@ -5,14 +5,6 @@
 
 		<input type="hidden" name="ID" class="hidden filter_form_id" />
 
-		<p class="required">
-    		<label class="filter_form_name_label">{t _Filter_name}</label>
-            <fieldset class="error">
-        		<input type="text" name="name" class="required filter_form_name" {denied role="category.update"}readonly="readonly"{/denied} />
-        		<span class="errorText hidden"> </span>
-            </fieldset>
-    	</p>
-
 		<p class="filter_specField">
     		<label class="filter_form_specFieldID_label">{t _Filter_associated_field}</label>
             <fieldset class="error">
@@ -21,6 +13,14 @@
         		<span class="errorText hidden"> </span>
             </fieldset>
 		</p>
+		
+		<p class="required">
+    		<label class="filter_form_name_label">{t _Filter_name}</label>
+            <fieldset class="error">
+        		<input type="text" name="name" class="required filter_form_name" {denied role="category.update"}readonly="readonly"{/denied} />
+        		<span class="errorText hidden"> </span>
+            </fieldset>
+    	</p>
         
     	<!-- STEP 2 -->
     	<fieldset class="filter_step_lev1 filter_step_filters error">

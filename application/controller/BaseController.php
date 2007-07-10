@@ -106,6 +106,17 @@ abstract class BaseController extends Controller implements LCiTranslator
 	    return $this->roles;
 	}
 	
+    /**
+     * Translate text passed by reference. 
+	 * 
+	 * @see BaseController::translate
+	 * @see BaseController::translateArray
+	 */
+	private function translateByReference(&$text)
+	{
+	    $text = $this->translate($text);
+	}
+	
 	/**
 	 * Translates text using Locale::LCInterfaceTranslator
 	 * @param string $key
