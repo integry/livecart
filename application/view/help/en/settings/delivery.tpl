@@ -1,4 +1,4 @@
-<p>Delivery zones - regions that follow the same certain rules of shipping and taxes. This means that you can create different shipping and taxation charges for countries, states, cities or even districts and streets.</p>
+<p>Delivery zones - regions that follow the same certain rules of shipping and taxes. This means that you can create different shipping and taxation charges for countries, states, cities or even districts and streets. Once created, delivery zones apply particular rates according to customers' addresses. That is, the closest match of the existing delivery zones ir referenced to the customers address. If no match is found, the <a href="{self}#default">default zone's</a> rates are applied.</p>
 
 <div class="tasks">
 <fieldset>
@@ -14,25 +14,26 @@
 </div>
 
 <h3 id="create">Create delivery zone</h3>	
-<p>To create a new delivery zone you have to define its location, shipping rates and taxation. Once created, delivery zones apply particular rates according to customers' address. That is, the closest match of the existing delivery zones ir referenced to the customers address. If no match is found, the <a href="{self}#default">default zone's</a> rates are applied.</p>	
+<p>To create a new delivery zone you have to define its area / location, shipping rates and taxation. </p>	
 <p><strong>Defining location</strong></p>
 <ol>
-	<li>In the "Delivery Zones" section click the "Add" link:</li>
+	<li>Under the "Delivery Zones" tree click the "Add" link:</li>
 	<img src="image/doc/settings/delivery/add.bmp">
 	<li>Enter zone's name and click the "Add" button.</li>
-	<li>Group countries by adding them to the left "Country" box. Select a country from the country list and use the "<<" button to add it your list.</li>
+	<li>Group countries by adding them to the left "Country" box. Select a country from the country list on the right and use the "<<" button to add it your list.</li>
 	<img src="image/doc/settings/delivery/one_two.bmp">
 	<p class="note"><strong>Note</strong>: You can select multiple countries by holding the "ctrl" or "shift" key. Also you can select multiple countries by clicking one of the regions: Africa, Asia, Europe, North America, South America, Oceania or European Union.</p>
-	<li>States - for United States you can also group states as countries above.</li>
-	<li>City mask defines particular cities if necessary. You can also use the "*" character for any number of unknown characters. For example, "New*" corresponds to "New York", New Jersey", etc</li>
-	<li>Zip mask is used to filter zip codes. For example, "55*" corresponds to "55344", "55555", etc</li>
-	<li>Address mask - for example, "* street" corresponds to "5th Street", etc</li>
+	<li>State - for United States you can also group states as countries above.</li>
+	<img src="image/doc/settings/delivery/states.png">
+	<li>City mask are used to extract city matches. It is common to use an asterisk ("*") for any number of unknown characters. For example, "New*" corresponds to "New York", New Jersey", etc.</li>
+	<li>The same way Zip mask is used to filter zip codes. For example, "55*" corresponds to "55344", "55555", etc</li>
+	<li>Address mask - for example, "* street" corresponds to "5th Street", etc.</li>
 	<p>To edit or remove any of the masks, click on the appropriate icon:</p>
 	<img src="image/doc/settings/delivery/icon.bmp">
 </ol>
 
 <p><strong>Defining shipping rates</strong></p>
-<p>These are the rates that determine various pricing according to order's weight, value or delivery time. Shipping rates can be defined manually or you can use realtime shipping methods such as USPS, FedEx, etc. Realtime shipping methods can be enabled and configured in Settings -> <a href="{help /settings.configuration}#shipping">Configuration area</a>. To add a custom shipping service:</p>
+<p>These are the rates that determine various pricing according to order's weight, value or delivery time. Shipping rates can be defined manually or you can use realtime shipping methods such as USPS, FedEx, etc. Realtime shipping methods can be enabled and configured in the Settings -> <a href="{help /settings.configuration}#shipping">Configuration area</a>. To add a custom shipping service:</p>
 <ol>
 	<li>Click on the "Shipping Rates" tab.</li>
 	<img src="image/doc/settings/delivery/shipping_tab.bmp">
@@ -47,6 +48,7 @@
 		<li>Per kg charge - a charge that is applied per weight unit.</li>
     </ul>
 	<li>Translate - if applicable, select a language to translate the name of the service.</li>
+	<img src="image/doc/translate.bmp">
 	<li>Click the "Save" button.</li>
 </ol>
 
@@ -61,7 +63,7 @@
 	<li>Click on the "Tax Rates" tab.</li>
 	<img src="image/doc/settings/delivery/tax_tab.bmp">
 	<li>Click the "Add new tax rate" link.</li>
-	<li>Click a drop-down list to select a tax. (Taxes can be created in the Settings -> Taxes section) </li>
+	<li>Click a drop-down list to select a tax. (Taxes can be created in the Settings -> <a href="{help /settings.taxes}">Taxes</a> section) </li>
 	<li>Enter a tax rate.</li>
 	<li>Click "Save".</li>
 </ol>

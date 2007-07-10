@@ -98,9 +98,9 @@
 
 <h3 id="shipping">Shipping methods</h3>
 
-<p>Here you can set-up and manage realtime shipping methods which use postage calculation methods such as USPS, FedEx or other.</p>
+<p>Here you can set-up and manage realtime shipping methods  such as USPS, FedEx, etc. which use postage calculation methods.</p>
 
-<h4 id="usps">USPS</h3>
+<h4 id="usps">Setting up USPS</h3>
 
 <p>Main settings:</p>
 <ul>	
@@ -143,23 +143,35 @@
 
 <h3 id="payment_methods">Payment Methods</h3>
 <p>Here you can manage payment methods which are used to accept payments from customers.</p>
+
 <ul>	
-	<li>Paypal direct payment - </li>
+	<li>Enable credit card payments - </li>
+	<li>Only authorize payments without capturing them automatically - </li>
+	<li>Credit card handler - </li>
+</ul>
+
+
+<h4 id="paypal">Setting up Paypal Direct</h3>
+
+<ul>	
+	<li>Username - </li>
+	<li>Password - </li>
+	<li>Signature - </li>
+	<li>Enabled credit card types - </li>
 </ul>
 
 
 <h3 id="enabled_countries">Enabled Countries</h3>
 
-<p>Enabled countries are available for setting delivery zones, etc <strong>(?)</strong> </p>
+<p>Enabled countries are available for setting delivery zones, etc <strong>(?)</strong>. Mark checkboxes next to the countries you want to enable.</p>
 
 <h3 id="backend">Backend Administration</h3>
 
-<p></p>
-
 <ul>	
-	<li> </li>
-	<li> </li>
-	<li> </li>
+	<li>Generate SKU automatically - forces SKU to be created automatically.</li>
+	<li>Default product type - click a drop-down list to select a default product type.</li>
+	<li>Allow to edit store backend language files - mark the checkbox to allow editing backend language files.</li>
+	<li>Allow to edit store backend template files - mark the checkbox to allow editing backend template files.</li>
 </ul>
 
 

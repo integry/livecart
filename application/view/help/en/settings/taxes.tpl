@@ -11,13 +11,16 @@
 </div>
 
 <h3 id="add">Create new tax</h3>
-<ul>
+
+<p>To crate a new tax:</p>
+
+<ol>
 	<li>Click the "Add new tax" link.</li>
 	<li>Enter tax name. (For example, "WAT")</li>
-	<li>Enabled - enabled taxes will be available in "Delivery Zones" section for setting up taxation.</li>
+	<li>Enabled - mark the checkbox to set the tax active. Active taxes are available in the "Delivery Zones" section for setting up taxation.</li>
 	<li>Translate - click on the language tab to translate tax name if applicable.</li>
 	<li>Click the "Save" button.</li>
-</ul>
+</ol>
 
 <h3 id="edit_delete">Edit or delete taxes</h3>
 <p>To edit or delete a tax click one of the icons:</p>
