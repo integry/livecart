@@ -201,7 +201,19 @@ class Config
 		  	$arr = array_shift($ini);
 			$ini = array('' => $arr);
 		}	
-		
+
+        // remove validation rules
+        foreach ($ini as &$sect)
+        {
+            foreach ($sect as $key => $value)
+            {
+                if (substr($key, 0, 9) == 'validate_')
+                {
+                    unset($sect[$key]);
+                }
+            }
+        }
+
 		return $ini;
 	}
 

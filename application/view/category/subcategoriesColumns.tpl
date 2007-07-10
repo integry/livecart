@@ -7,9 +7,11 @@
 {/if}
     <tr>
         <td class="subCatImage">
-            <a href="{categoryUrl data=$sub}">
-                <img src="{$sub.DefaultImage.paths.1}"  alt="{$sub.name_lang|escape}" />            
-            </a>
+            {if $sub.DefaultImage.paths.1}
+                <a href="{categoryUrl data=$sub}">
+                    <img src="{$sub.DefaultImage.paths.1}"  alt="{$sub.name_lang|escape}" />            
+                </a>
+            {/if}
         </td>
         <td class="details" style="height: 140px; ">
             <div class="subCatName">

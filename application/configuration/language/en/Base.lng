@@ -4,3 +4,4 @@ _live_translate=Translate
 # Generic error messages
 _err_numeric=Value must be numeric
 _err_specfield_required=This field cannot be left blank
+_err_negative=The value cannot be negative

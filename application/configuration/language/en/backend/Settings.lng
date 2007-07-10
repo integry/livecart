@@ -1,6 +1,7 @@
 _livecart_settings=LiveCart Settings
 
 _save_conf=Settings successfuly saved
+_err_not_positive=The value must be positive
 
 ################ Individual settings #################
 

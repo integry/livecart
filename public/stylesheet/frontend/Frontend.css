@@ -357,7 +357,7 @@ tr.even
 
 .categories .count
 {
-    display: none;
+
 }
 
 /*****************************
@@ -626,6 +626,13 @@ ul.subSubCats
     padding-bottom: 5px; 
     margin-bottom: 15px; 
     border-bottom: 1px solid #CCCCCC;    
+}
+
+.resultStats .pagingInfo
+{
+    float: left; 
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 #productSort

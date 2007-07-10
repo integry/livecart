@@ -35,18 +35,25 @@
 	{/if}
 
     {if $products}	
+        <fieldset class="container">
         <div class="resultStats">
-        	<div style="float: left; margin-top: 7px;">
+        	<div class="pagingInfo">
                 Showing {$offsetStart} to {$offsetEnd} of {$count} found products.
             </div>
+            
             <div style="float: right;">
-                Sort by
-                {form handle=$sortForm action="self" method="get"}
-                {selectfield id="productSort" name="sort" options=$sortOptions onchange="this.form.submit();"}
-                {/form}
+                {if $sortOptions}
+                    Sort by
+                    {form handle=$sortForm action="self" method="get"}
+                    {selectfield id="productSort" name="sort" options=$sortOptions onchange="this.form.submit();"}
+                    {/form}
+                {/if}
+                &nbsp;
             </div>  
-            <div style="clear: right;"></div>
+            
+            <div style="clear: both;"></div>
         </div>
+        </fieldset>
         
         {include file="category/productList.tpl" products=$products}
     

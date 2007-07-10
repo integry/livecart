@@ -21,7 +21,7 @@ class SettingsController extends StoreManagementController
 	 */
 	public function index()
 	{
-		$response = new ActionResponse();
+        $response = new ActionResponse();
 		$response->set('categories', json_encode($this->config->getTree()));
 		return $response;
 	}
@@ -39,7 +39,8 @@ class SettingsController extends StoreManagementController
 		$sectionId = $this->request->get('id');						
 		$values = $this->config->getSettingsBySection($sectionId);
 		
-		$form = $this->getForm($values);
+		$validation = $this->getValidationRules($values);		
+		$form = $this->getForm($values, $validation);
 		$multiLingualValues = array();
 		
 		foreach ($values as $key => $value)
@@ -75,7 +76,8 @@ class SettingsController extends StoreManagementController
 	public function save()
 	{				
 		$values = $this->config->getSettingsBySection($this->request->get('id'));
-		$validator = $this->getValidator($values);
+		$validation = $this->getValidationRules($values);
+		$validator = $this->getValidator($values, $validation);
 		
 		if (!$validator->isValid())
 		{
@@ -110,9 +112,29 @@ class SettingsController extends StoreManagementController
 		}
 	}  		  
 	
-	private function getForm($settings)
+	private function getValidationRules(&$values)
 	{
-		$form = new Form($this->getValidator($settings));
+		// look for validation rules
+        $validation = array();
+        foreach ($values as $key => $value)
+        {
+            if (substr($key, 0, 9) == 'validate_')
+            {
+                // add quotes, so that json_decode wouldn't return NULLs
+                $value = str_replace(array('<', '>'), array('{', '}'), $value['value']);
+                $value = preg_replace('/[a-zA-Z0-9_]{1,}/', '"\\0"', $value);
+                
+                $validation[substr($key, 9)] = json_decode('{' . $value . '}', true);
+                unset($values[$key]);
+            }
+        }
+        
+        return $validation;        
+    }
+	
+	private function getForm($settings, $validation)
+	{
+		$form = new Form($this->getValidator($settings, $validation));
 		
 		// set multi-select values
 		foreach ($settings as $key => $value)
@@ -131,7 +153,7 @@ class SettingsController extends StoreManagementController
 		return $form;
 	}
 
-	private function getValidator($settings)
+	private function getValidator($settings, $validation)
 	{	
 		$val = new RequestValidator('settings', $this->request);
 		foreach ($settings as $key => $value)
@@ -139,9 +161,22 @@ class SettingsController extends StoreManagementController
 			if ('num' == $value['type'])
 			{
 				$val->addCheck($key, new IsNumericCheck($this->translate('_err_numeric')));
+				$val->addCheck($key, new MinValueCheck($this->translate('_err_negative'), 0));
 				$val->addFilter($key, new NumericFilter());
 			}	
 		}
+		
+		// apply custom validation rules
+        foreach ($validation as $field => $validators)
+		{
+            foreach ($validators as $validator => $constraint)
+            {
+                foreach ($constraint as $c => $error)
+                {
+                    $val->addCheck($field, new $validator($this->translate($error), $c));
+                }
+            }
+        }
 		
 		return $val;	  
 	}

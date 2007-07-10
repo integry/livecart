@@ -55,9 +55,13 @@ class CategoryController extends FrontendController
 
         // sorting
         $sort = array();
-        foreach ($this->config->get('ALLOWED_SORT_ORDER') as $opt => $status)
+        $opts = $this->config->get('ALLOWED_SORT_ORDER');
+        if ($opts)
         {
-            $sort[strtolower($opt)] = $this->translate($opt);
+            foreach ($opts as $opt => $status)
+            {
+                $sort[strtolower($opt)] = $this->translate($opt);
+            }
         }
 
         $order = $this->request->get('sort');

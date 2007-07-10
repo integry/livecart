@@ -30,7 +30,9 @@
 					{foreach from=$manGroup.filters item="filter"}
 						<li> 
 							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a> 
-							<span class="count">({$filter.count})</span>
+        					{if 'DISPLAY_NUM_FILTER'|config}
+							     <span class="count">({$filter.count})</span>
+							{/if}							 
 						</li>
 					{/foreach}	
 					
@@ -48,7 +50,9 @@
 					{foreach from=$priceGroup.filters item="filter"}
 						<li> 
 							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a> 
-							<span class="count">({$filter.count})</span>
+        					{if 'DISPLAY_NUM_FILTER'|config}
+							    <span class="count">({$filter.count})</span>
+							{/if}
 						</li>
 					{/foreach}									
 				</ul>
@@ -62,7 +66,9 @@
 					{foreach from=$group.filters item="filter"}
 						<li> 
 							<a href="{categoryUrl data=$category filters=$filters addFilter=$filter}">{$filter.name_lang}</a> 
-							<span class="count">({$filter.count})</span>
+        					{if 'DISPLAY_NUM_FILTER'|config}
+							     <span class="count">({$filter.count})</span>
+							{/if}
 						</li>
 					{/foreach}				
 					{if $group.more}
