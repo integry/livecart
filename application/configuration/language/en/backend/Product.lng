@@ -1,3 +1,9 @@
+# Confirmation
+_could_not_save_product_information=Could not save product information
+_product_information_was_successfully_saved=Product detailes were successfully saved
+_new_product_was_successfully_created=New product was successfully created
+_mass_action_succeed=Mass action succeed
+
 # Product list
 
 _process=Save

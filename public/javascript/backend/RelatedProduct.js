@@ -38,8 +38,10 @@ Backend.RelatedProduct = {
                 if(evaluatedResponse && evaluatedResponse.error && evaluatedResponse.error.length > 0)
                 {
                     // error
-                    var relMsg = Backend.SelectPopup.prototype.popup.document.getElementById('relError');
                     new Backend.SaveConfirmationMessage(relMsg, { message: evaluatedResponse.error, type: 'red' });
+                    
+                    new Backend.SelectPopup.prototype.popup.Backend.SaveConfirmationMessage('productRelationshipCreateFailure');
+                    new Backend.SaveConfirmationMessage('productRelationshipCreateFailure');
                 }
                 else
                 {
@@ -50,9 +52,9 @@ Backend.RelatedProduct = {
 
                         var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
                         tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') + 1);
-                        var relMsg = Backend.SelectPopup.prototype.popup.document.getElementById('relConf');
 
-                        new Backend.SaveConfirmationMessage(relMsg);
+                        new Backend.SelectPopup.prototype.popup.Backend.SaveConfirmationMessage('productRelationshipCreated');
+                        new Backend.SaveConfirmationMessage('productRelationshipCreated');
                     } 
                     catch(e)
                     {

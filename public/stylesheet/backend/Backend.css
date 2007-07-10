@@ -95,12 +95,8 @@ div.noRecords div {
 div.yellowMessage, div.redMessage {
 	margin: 0pt;
 	padding: 10pt;
-	float: left;
+	position: relative;
     overflow: visible;
-    width: 180px;
-	text-align: center;
-	z-index: 50000;
-    position: relative
 }
 
 div.yellowMessage .closeMessage, div.redMessage .closeMessage {
@@ -1199,7 +1195,7 @@ ul.languageFormTabs li.active
 }
 
 .treeContainer {
-    position: absolute; 
+    position: absolute;
     width: 260px;
 }
 

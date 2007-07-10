@@ -38,29 +38,14 @@
             <li class="addTreeNode" style="{denied role="userGroup.create"}display: none;{/denied}"><a id="userGroups_add" href="#add">{t _add}</a></li>
             <li class="removeTreeNode" style="{denied role="userGroup.remove"}display: none;{/denied}"><a id="userGroups_delete" href="#delete">{t _delete}</a></li>
         </ul>
-
-        <div class="yellowMessage" id="rolesConfirmation" style="display: none;">
-           	<div>
-           		{t _user_group_roles_where_successfully_updated}
-           	</div>
-        </div>
-
-        <div class="yellowMessage" id="groupConfirmation" style="display: none;">
-           	<div>
-           		{t _form_has_been_successfully_saved}
-           	</div>
-        </div>
-
-       	<div id="userInfoSaveConf" style="display: none;">
-       		<div class="yellowMessage">
-       			<div>
-       				{t _user_information_was_saved_successfuly}
-       			</div>
-       		</div>
-       	</div>
-    
+        
+        <div id="confirmations"></div>
+ 
 
 	</div>
+    
+    <div id="activeUserPath" class="treePath">All users</div>
+
     <span id="fromUsersPage">
         {include file="backend/customerOrder/orderContainer.tpl"}
         {include file="backend/userGroup/groupContainer.tpl"}
@@ -68,7 +53,6 @@
     </span>
 </div>
 
-<div id="activeUserPath"></div>
 
 {literal}
 <script type="text/javascript">

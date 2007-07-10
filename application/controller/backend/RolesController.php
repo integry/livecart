@@ -103,11 +103,11 @@ class RolesController extends StoreManagementController
             
             $userGroup->save();
             
-            return new JSONResponse(array('status' => 'success'));
+            return new JSONResponse(false, 'success', $this->translate('_group_permissions_were_successfully_updated'));
         }
         else
         {
-            return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
+            return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', '_could_not_update_group_permissions');
         }
     }
     

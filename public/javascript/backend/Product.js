@@ -432,15 +432,12 @@ Backend.Product.saveHandler.prototype =
 			    
                 document.getElementsByClassName('product_sku', this.form)[0].disabled = false;
 				Form.focusFirstElement(this.form);
-
-			    new Backend.SaveConfirmationMessage($('productAddConf'));
 			}
 
 			// continue to edit the newly added product
 			else
 			{
-			    this.form.reset();
-				new Backend.SaveConfirmationMessage($('productAddContinueConf'));             
+			    this.form.reset();          
 
                 Backend.Product.openProduct(response.id);
                 Backend.Product.cancelAddProduct(categoryID, this.form.parentNode);
@@ -760,7 +757,6 @@ Backend.Product.Editor.prototype =
 	{
 		if(!response.errors || 0 == response.errors.length)
 		{
-			new Backend.SaveConfirmationMessage($('pricesSaveConf'));
 			Form.State.backup(this.nodes.form);
 			if (response.specFieldHtml)
 			{
@@ -902,11 +898,8 @@ Backend.Product.Prices.prototype =
 
     afterSubmitForm: function(response)
     {
-			console.log(response);
 		if('success' == response.status)
 		{
-			console.log('success');
-            new Backend.SaveConfirmationMessage($('pricesSaveConf'));
 			var self = this;
 			$H(response.prices).each(function(price) {
 				self.nodes.form.elements.namedItem(price.key).value = price.value;

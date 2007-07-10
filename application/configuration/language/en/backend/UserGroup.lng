@@ -1,4 +1,10 @@
+# Confirmations
 _user_group_roles_where_successfully_updated=User group roles where successfully updated
+_could_not_save_user_group=Could not save user group
+_user_group_successfully_saved=User group successfully saved
+_user_group_was_successfully_removed=User group was successfully removed
+_new_user_group_successfully_created=New user group was successfully created
+
 
 _error_name_should_not_be_empty=Name should not be empty
 _description=Description
@@ -44,8 +50,6 @@ _group_permissions=Permissions
 _group_info=Group details
 _default_user_group=Defalut user group
 _all_users=All users
-_form_has_been_successfully_saved=This form has been successfully saved
-_user_information_was_saved_successfuly=User information was saved successfuly
 _add=Add group
 _delete=Delete group
 

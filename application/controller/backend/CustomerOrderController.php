@@ -311,7 +311,7 @@ class CustomerOrderController extends StoreManagementController
 			$order->save();
         }		
 		
-		return new JSONResponse($this->request->get('act'));	
+		return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_mass_action_succeed'));	
     } 
     
 	public function changeColumns()

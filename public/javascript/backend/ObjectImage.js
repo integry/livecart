@@ -276,6 +276,25 @@ Backend.ObjectImage.prototype =
 		errorElement = document.getElementsByClassName('errorText', this.addForm)[0];
 		errorElement.style.display = 'none';
 		this.showProgressIndicator(this.addForm);
+        
+        if(form.action.match(/random=/))
+        {
+            form.action.replace(/random=/, 'random=' + "random=" + Math.random() * 100000)
+        }
+        else
+        {
+            if(form.action.match(/\?/))
+            {
+                form.action += '&';    
+            }
+            else
+            {
+                form.action += '?';
+            }
+            
+            form.action += "random=" + Math.random() * 100000
+        }
+        
 		return false;
 	},
 	

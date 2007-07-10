@@ -229,7 +229,7 @@ class ProductController extends StoreManagementController
 			$product->save();
         }		
 		
-		return new JSONResponse($this->request->get('act'));	
+		return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_mass_action_succeed'));	
     }	
 
 	public function autoComplete()
@@ -526,15 +526,21 @@ class ProductController extends StoreManagementController
 			
 			$product->loadRequestData($this->request);			
 			$product->save();
+			
+			$response = $this->productForm($product);
+			
+		    $response->setHeader('Cache-Control', 'no-cache, must-revalidate');
+		    $response->setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
+		    $response->setHeader('Content-type', 'text/javascript');
 							
-			return $this->productForm($product);
+			return $response;
 		}
 		else
 		{
 			// reset validator data (as we won't need to restore the form)
 			$validator->restore();
 			
-			return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
+			return new JSONResponse(array('errors' => $validator->getErrorList(), 'failure', $this->translate('_could_not_save_product_information')));
 		}	
 	}
     

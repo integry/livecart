@@ -123,8 +123,8 @@ Backend.UserGroup.prototype =
             function(response) 
             { 
                 this.afterGroupAdded(response, this)
-            }
-		).bind(this);
+            }.bind(this)
+		);
 	},
     
 	afterGroupAdded: function(response, self)
@@ -175,6 +175,15 @@ Backend.UserGroup.prototype =
         {
             $("tabUserGroup").show();
             $("tabRoles").show();
+        }
+        
+        if(id <= 0)
+        {
+            $("userGroups_delete").hide();
+        }
+        else
+        {
+            $("userGroups_delete").show();  
         }
         
         if(Backend.UserGroup.prototype.activeGroup && Backend.UserGroup.prototype.activeGroup != id)

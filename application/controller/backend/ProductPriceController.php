@@ -60,11 +60,11 @@ class ProductPriceController extends StoreManagementController
             $product->setFieldValue('isBackOrderable', $this->request->get('isBackOrderable') ? 1 : 0);
             $product->save();
 
-            return new JSONResponse(array('status' => "success", 'prices' => $product->getPricesFields()));
+            return new JSONResponse(array('prices' => $product->getPricesFields()), 'success', $this->translate('_product_prices_were_successfully_updated'));
 		}
 		else
 		{
-			return new JSONResponse(array('status' => "failure", 'errors' => $validator->getErrorList()));
+			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_product_prices_could_not_be_updated'));
 		}
     }
     

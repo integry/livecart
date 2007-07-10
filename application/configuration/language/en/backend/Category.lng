@@ -7,6 +7,12 @@ _categories_tree_was_reordered=Categories tree was reordered
 _unable_to_reorder_categories_tree=Unable to reorder categories tree
 _category_succsessfully_saved=Category was successfully updated
 _category_image_was_successfully_saved=Category image was successfully saved
+_product_image_was_successfully_saved=Product image was successfully saved
+_product_file_was_successfully_saved=Product file was successfully saved
+_a_relationship_between_products_was_successfully_created=A relationship between products was successfully created
+_could_not_create_product_relationship=This product has already been assigned as related
+_could_not_save_product_file=Could not save product file
+_could_not_save_product_image=Could not save product image
 
 # SpecField
 _SpecField_main=Main

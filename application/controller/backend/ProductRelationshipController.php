@@ -69,6 +69,7 @@ class ProductRelationshipController extends StoreManagementController
 		        
 			    $response = new ActionResponse();
 			    $response->set('product', $relatedProduct->toArray());
+			    $response->set('added', true);
 			    return $response;
 	        }
 	        catch(ProductRelationshipException $e)
@@ -98,7 +99,7 @@ class ProductRelationshipController extends StoreManagementController
 	    $product->removeFromRelatedProducts($relatedProduct);
 	    $product->save();
 	    
-	    return new JSONResponse(array('status' => 'success'));
+	    return new JSONResponse(false, 'success', $this->translate('_relationship_was_successfully_removed'));
 	}
 
     /**
@@ -123,7 +124,7 @@ class ProductRelationshipController extends StoreManagementController
             $relationship->save();
         }
         
-        return new JSONResponse(array('status' => 'success'));
+        return new JSONResponse(false, 'success', $this->translate('_relationships_were_successfully_reordered'));
     }
 }
 

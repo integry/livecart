@@ -9,6 +9,7 @@ _order_address_was_successfully_updated=Order address was successfully updated
 _empty_shipments_were_removed=Empty shipments were removed
 _error_updating_order_address=An error occurred updating order address
 _error_updating_order_status=An error occured updating order status
+_mass_action_succeed=Mass action succeed
 
 # Errors
 _err_user_has_no_billing_or_shipping_address=User has no default billing or shipping address

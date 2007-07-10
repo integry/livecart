@@ -33,6 +33,8 @@ abstract class ObjectImageController extends StoreManagementController
 	{	
 		$ownerId = $this->request->get('ownerId');
 		
+		print_r($_POST);
+		
 		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), $ownerId);
 			  	
 		$validator = $this->buildValidator($ownerId);
@@ -40,7 +42,7 @@ abstract class ObjectImageController extends StoreManagementController
 		if (!$validator->isValid())
 		{
 		  	$errors = $validator->getErrorList();
-			$result = array('error' => $errors['image']);
+			$result = array('status' => 'failure', 'error' => $errors['image']);
 		}
 		else
 		{
@@ -65,13 +67,13 @@ abstract class ObjectImageController extends StoreManagementController
 			}
 			else
 			{
+			  	$result['status'] = 'failure';
 			  	$result = array('error' => $this->translate('_err_resize'));
 				ActiveRecord::rollback();
 			}	  			  		  	
 		}
 		
 		$this->setLayout('iframeJs');
-		
 		$response = new ActionResponse();
 		$response->set('ownerId', $ownerId);		
 		$response->set('result', json_encode($result));		

@@ -128,7 +128,7 @@ class UserController extends StoreManagementController
 			$user->save();
         }		
 		
-		return new JSONResponse($this->request->get('act'));	
+		return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_mass_action_succeed'));	
     } 
 	
 
@@ -156,7 +156,7 @@ class UserController extends StoreManagementController
 		    if(($user && $email != $user->email->get() && User::getInstanceByEmail($email)) || 
 		       (!$user && User::getInstanceByEmail($email)))
 		    {
-		        return new JSONResponse(array('status' => 'failure', 'errors' => array('email' => $this->translate('_err_this_email_is_already_being_used_by_other_user'))));
+		        return new JSONResponse(false, 'failure', $this->translate('_err_this_email_is_already_being_used_by_other_user'));
 		    }
 		    
 		    if($groupID = (int)$this->request->get('UserGroup'))
@@ -187,11 +187,11 @@ class UserController extends StoreManagementController
 			
 			$user->save();
 			
-			return new JSONResponse(array('status' => 'success', 'user' => $user->toArray()));
+			return new JSONResponse(array('user' => $user->toArray()), 'success', $this->translate('_user_details_were_successfully_saved'));
 		}
 		else
 		{
-		    return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
+			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_user_details'));
 		}
 	}
 }

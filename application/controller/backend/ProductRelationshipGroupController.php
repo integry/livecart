@@ -39,7 +39,8 @@ class ProductRelationshipGroupController extends StoreManagementController
 	public function delete()
 	{
 	    ProductRelationshipGroup::getInstanceByID((int)$this->request->get('id'))->delete();
-	    return new JSONResponse(array('status' => 'success'));
+	    
+        return new JSONResponse(false, 'success', $this->translate('_relationship_group_wes_deleted'));   
 	}
 
     /**
@@ -55,7 +56,7 @@ class ProductRelationshipGroupController extends StoreManagementController
             $relationship->save();
         }
         
-        return new JSONResponse(array('status' => 'success'));
+        return new JSONResponse(false, 'success', $this->translate('_relationship_groups_were_reordered'));   
     }
 
     public function edit()
@@ -90,11 +91,11 @@ class ProductRelationshipGroupController extends StoreManagementController
     		
     		$relationshipGroup->save();
     		
-            return new JSONResponse(array('status' => "success", 'ID' => $relationshipGroup->getID()));
+            return new JSONResponse(array('ID' => $relationshipGroup->getID()), 'success', $this->translate('_relationship_group_was_successfully_saved'));
 		}
 		else
 		{
-			return new JSONResponse(array('status' => "failure", 'errors' => $validator->getErrorList()));
+			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_relationship_group'));
 		}
     }
 }

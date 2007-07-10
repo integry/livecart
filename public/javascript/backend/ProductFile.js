@@ -226,7 +226,9 @@ Backend.ProductFile.Controller.prototype = {
         else
         {
             var activeList = ActiveList.prototype.getInstance(this.view.prefix + "list_" + this.model.get('Product.ID', '') + "_" + this.model.get('ProductFileGroup.ID', ''));
-            activeList.toggleContainer(activeList.getContainer(li, 'edit'));
+            activeList.toggleContainer(this.view.nodes.root.up('li'), 'edit');
+            
+            this.nodes.fileHeader.innerHTML = this.nodes.title.value
         }
     },
     
@@ -263,6 +265,7 @@ Backend.ProductFile.Controller.prototype = {
         }
         else
         {
+            console.info(this.model.errors)
             ActiveForm.prototype.setErrorMessages(this.view.nodes.root, this.model.errors);
         }
     },

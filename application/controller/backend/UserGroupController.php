@@ -205,11 +205,11 @@ class UserGroupController extends StoreManagementController
             
 	        $group->save();
 	        
-	        return new JSONResponse(array('status' => 'success', 'group' => $group->toArray()));
+	        return new JSONResponse(array('group' => $group->toArray()), 'success', $this->translate('_user_group_successfully_saved'));
         }
         else
         {
-            return new JSONResponse(array('status' => 'error', 'errors' => $validator->getErrorList()));
+            return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_user_group'));
         }
     }
 
@@ -221,7 +221,7 @@ class UserGroupController extends StoreManagementController
 	    $userGroup = UserGroup::getNewInstance($this->translate('_new_user_group'));
 	    $userGroup->save();
 	    
-		return new JSONResponse($userGroup->toArray());
+		return new JSONResponse($userGroup->toArray(), 'success', $this->translate('_new_user_group_successfully_created'));
 	}
 	
 	/**
@@ -233,7 +233,7 @@ class UserGroupController extends StoreManagementController
 		$userGroupArray = $userGroup->toArray();
 		$userGroup->delete();
 		
-		return new JSONResponse(array('status' => 'success', 'userGroup' => $userGroupArray));
+		return new JSONResponse(array('userGroup' => $userGroupArray), 'success', $this->translate('_user_group_was_successfully_removed'));
 	}
 
 	/**

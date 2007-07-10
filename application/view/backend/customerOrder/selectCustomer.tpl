@@ -37,8 +37,10 @@
         <div class="yellowMessage" id="orderCreatedConfirmation" style="display: none;"><div>{t _new_order_has_been_successfully_created}</div></div>
         <div class="redMessage" id="userHasNoAddressError" style="display: none;"><div>{t _err_user_has_no_billing_or_shipping_address}</div></div>
 	</div>
+    
+    <div id="activeUserPath" class="treePath">All users</div>
+
     <span id="fromUsersPage">
-       <div id="activeUserPath">asdsda</div>
         {include file="backend/userGroup/groupContainer.tpl"}
     </span>
 </div>
