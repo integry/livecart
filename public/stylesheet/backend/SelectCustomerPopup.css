@@ -1,0 +1,30 @@
+#tabContainer, 
+.container,
+.cell_cb,
+.cell_stock,
+.cell_User_dateCreated,
+.cell_User_isEnabled,
+.tabContainer
+{
+   display: none;
+}
+
+#topShadeContainerRight {
+    display: none;
+}
+
+body, html {
+    padding: 5px;
+    background-image: none;
+}
+
+#activeCategoryPath
+{
+    padding-left: 270px;   
+}
+#activeUserPath
+{
+    font-size: 110%; 
+    font-weight: bold;  
+    padding-left: 273px;
+}

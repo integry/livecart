@@ -123,9 +123,7 @@ class CurrencyController extends StoreManagementController
 			ActiveRecord::updateRecordSet('Currency', $update);  	
 		}
 
-		$resp = new RawResponse();
-	  	$resp->setContent($this->request->get('draggedId'));
-		return $resp;		  	
+		return new JSONResponse(false, 'success', $this->translate('_currency_list_was_successfully_reordered'));
 	}
 
 	/**
@@ -140,7 +138,8 @@ class CurrencyController extends StoreManagementController
 		$curr->isEnabled->set((int)(bool)$this->request->get("status"));
 		$curr->save();
 				
-		return new JSONResponse($curr->toArray());
+
+		return new JSONResponse(array('currency' => $curr->toArray()), 'success', $this->translate('_currency_was_successfully_enabled'));
 	}
 
 	/**
@@ -188,7 +187,7 @@ class CurrencyController extends StoreManagementController
         $currency->priceSuffix->set($this->request->get('priceSuffix'));
         $currency->save();        
 
-        return new JSONResponse(1);
+        return new JSONResponse(false, 'success', $this->translate('_currency_was_successfully_saved'));
     }
 
 	/**
@@ -330,7 +329,7 @@ class CurrencyController extends StoreManagementController
 			$values[$currency->getID()] = $currency->rate->get();
 		}
 
-		return new JSONResponse($values);		
+		return new JSONResponse(array('values' => $values), 'success', $this->translate('_rate_save_conf'));		
 	}	
 
 	private function getCurrencySet()

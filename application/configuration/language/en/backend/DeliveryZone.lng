@@ -1,3 +1,13 @@
+# Confirmations
+_delivery_zone_was_successfully_saved=Delivery zone was successfully saved
+_new_delivery_zone_was_successfully_created=New delivery zone was successfully created
+_delivery_zone_was_successfully_removed=Delivery zone was successfully removed
+_mask_was_successfully_removed=Mask was successfully removed
+_countries_list_was_successfully_updated=Countries list was successfully updated
+_delivery_zone_name_was_updated=Delivery zone name was updated
+_could_not_save_mask=Could not save mask
+_mask_was_successfully_saved=Mask was successfully saved
+
 _livecart_delivery_zones=Delivery Zones
 
 _are_you_sure_you_want_to_delete_this_zone=Are you sure you want to delete this zone?

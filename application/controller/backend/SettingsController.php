@@ -81,7 +81,7 @@ class SettingsController extends StoreManagementController
 		
 		if (!$validator->isValid())
 		{
-		  	return new JSONResponse(array('errors' => $validator->getErrorList()));
+		  	return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_note_save_section'));
 		}
 		else
 		{
@@ -108,7 +108,7 @@ class SettingsController extends StoreManagementController
 			$this->config->save();
 			$this->config->setAutoSave(true);
 			  
-			return new JSONResponse(array('success' => true));		  	
+			return new JSONResponse(false, 'success', $this->translate('_section_was_successfully_saved'));		  	
 		}
 	}  		  
 	

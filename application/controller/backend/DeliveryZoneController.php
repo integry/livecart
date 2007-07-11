@@ -106,7 +106,7 @@ class DeliveryZoneController extends StoreManagementController
 	        $deliveryZoneState->save();
 	    }
 	    
-	    return new JSONResponse(array('status' => 'success'));
+	    return new JSONResponse(false, 'success', $this->translate('_delivery_zone_was_successfully_saved'));
 	}
 	
 	/**
@@ -123,7 +123,7 @@ class DeliveryZoneController extends StoreManagementController
 	        $deliveryZoneState->save();
 	    }
 	    
-	    return new JSONResponse(array('status' => 'success'));
+	    return new JSONResponse(false, 'success', $this->translate('_countries_list_was_successfully_updated'));
 	}
 
 	/**
@@ -131,18 +131,18 @@ class DeliveryZoneController extends StoreManagementController
 	 */
 	public function create()
 	{
-	    if(($name = $this->request->get('name')) != '')
+	    $name = $this->request->get('name', '');
+	    if($name != '')
 	    {
 	        $zone = DeliveryZone::getNewInstance();
-	        echo $name;
 	        $zone->name->set($name);
 	        $zone->save();
 	        
-	        return new JSONResponse(array('status' => 'success', 'ID' => $zone->getID()));
+	        return new JSONResponse(array('ID' => $zone->getID()), 'success', $this->translate('_new_delivery_zone_was_successfully_created'));
 	    }  
 	    else
 	    {
-	        return new JSONResponse(array('status' => 'failure', 'errors' => array('name' => $this->translate('_error_name_is_not_specified'))));
+	        return new JSONResponse(false, 'failure', $this->translate('_error_name_is_not_specified'));
 	    }
 	    
 	}
@@ -157,8 +157,7 @@ class DeliveryZoneController extends StoreManagementController
         
         $zone->save();
 	    
-        return new JSONResponse(array('status' => 'success'));
-	    
+	    return new JSONResponse(false, 'success', $this->translate('_delivery_zone_name_was_updated'));
 	}
 	
 	/**
@@ -181,12 +180,12 @@ class DeliveryZoneController extends StoreManagementController
 		    }
 		    
 		    $mask->save();
-		    
-		    return new JSONResponse(array('status' => 'success', 'ID' => $mask->getID()));
+	    
+		    return new JSONResponse(array('ID' => $mask->getID()), 'success', $this->translate('_mask_was_successfully_saved'));
 	    }
 	    else
 	    {
-		    return new JSONResponse(array('status' => 'failure', 'errors' => $errors));
+		    return new JSONResponse(array('errors' => $errors), 'failure', $this->translate('_could_not_save_mask'));
 	    }
 	}
 
@@ -197,7 +196,7 @@ class DeliveryZoneController extends StoreManagementController
 	{
 	    DeliveryZone::getInstanceByID((int)$this->request->get('id'))->delete();
 	    
-	    return new JSONResponse(array('status' => 'success'));
+	    return new JSONResponse(false, 'success', $this->translate('_delivery_zone_was_successfully_removed'));
 	}
 
 	/**
@@ -207,7 +206,7 @@ class DeliveryZoneController extends StoreManagementController
 	{
 	    DeliveryZoneCityMask::getInstanceByID((int)$this->request->get('id'))->delete();
 	    
-	    return new JSONResponse(array('status' => 'success'));
+	    return new JSONResponse(false, 'success', $this->translate('_mask_was_successfully_removed'));
 	}
 	
 	/**
@@ -246,7 +245,7 @@ class DeliveryZoneController extends StoreManagementController
 	{
 	    DeliveryZoneZipMask::getInstanceByID((int)$this->request->get('id'))->delete();
 	    
-	    return new JSONResponse(array('status' => 'success'));
+	    return new JSONResponse(false, 'success', $this->translate('_mask_was_successfully_removed'));
 	}
 	
 	/**
@@ -285,7 +284,7 @@ class DeliveryZoneController extends StoreManagementController
 	{    
 	    DeliveryZoneAddressMask::getInstanceByID((int)$this->request->get('id'))->delete();
 	    
-	    return new JSONResponse(array('status' => 'success'));
+	    return new JSONResponse(false, 'success', $this->translate('_mask_was_successfully_removed'));
 	}
 
 	private function createCountriesAndStatesForm(DeliveryZone $zone)

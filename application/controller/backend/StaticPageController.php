@@ -90,11 +90,11 @@ class StaticPageController extends StoreManagementController
 			$inst->save();
 			$replace->save();
 			
-			return new JSONResponse(array('id' => $inst->getID(), 'order' => $this->request->get('order')));	
+			return new JSONResponse(array('id' => $inst->getID(), 'order' => $this->request->get('order')), 'success', $this->translate('_pages_were_successfully_reordered'));	
 		}
 		else
 		{
-			return new JSONResponse(0);	
+			return new JSONResponse(false, 'failure', $this->translate('_could_not_reorder_pages'));	
 		}	
 	}	
 	
@@ -149,7 +149,7 @@ class StaticPageController extends StoreManagementController
 		
 		$arr = $page->toArray();
 		
-		return new JSONResponse(array('id' => $page->getID(), 'title' => $arr['title_lang']));
+		return new JSONResponse(array('id' => $page->getID(), 'title' => $arr['title_lang']), 'success', $this->translate('_page_has_been_successfully_saved'));
 	}
 	
 	private function getForm()

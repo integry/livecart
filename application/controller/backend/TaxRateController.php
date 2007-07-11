@@ -56,7 +56,7 @@ class TaxRateController extends StoreManagementController
         $tax = $taxRate->tax->get();
         $taxRate->delete();
         
-        return new JSONResponse(array('status' => 'success', 'tax' => $tax->toArray()));
+        return new JSONResponse(array('tax' => $tax->toArray()), 'success', $this->translate('_tax_rate_was_successfully_deleted'));
     }
     
     public function edit()
@@ -113,11 +113,11 @@ class TaxRateController extends StoreManagementController
 	        $taxRate->setValueArrayByLang(array('name'), $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true, false), $this->request);      
 		    $taxRate->save();
 	            
-            return new JSONResponse(array('status' => 'success', 'rate' => $taxRate->toArray()));
+            return new JSONResponse(array('rate' => $taxRate->toArray()), 'success', $this->translate('_tax_rate_has_been_successfully_saved'));
         }
         else
         {
-            return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
+            return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_tax_rate'));
         }
     }
 	

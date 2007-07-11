@@ -24,7 +24,7 @@
     
 </script>
 
-{tip}{t _index_tip}{/tip}
+<div id="confirmations" class="rightConfirmations"></div>
 
 <fieldset class="container" {denied role="language.create"}style="display: none;"{/denied}>
 	<ul class="menu" id="langPageMenu">
@@ -48,6 +48,8 @@
 			<span class="langCheckBox" {denied role="language.status"}style="display: none;"{/denied}>
 				<input type="checkbox" class="checkbox" disabled="disabled" onclick="lng.setEnabled(this);" />
 			</span>	
+            
+		    <span class="progressIndicator" style="display: none;"></span>
 		
 			<span class="langData">
 				<img src="" />

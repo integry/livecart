@@ -40,9 +40,8 @@
         </ul>
         
         <div id="confirmations"></div>
- 
-
 	</div>
+    
     
     <div id="activeUserPath" class="treePath">All users</div>
 

@@ -1,12 +1,7 @@
 <div id="currencyRateList">
 {form id="rateForm" handle=$rateForm action="controller=backend.currency action=saveRates" method="post" onsubmit="curr.saveRates(this); return false;" role="currency.update"}
 
-	<fieldset id="rates">
-	
-		<div class="yellowMessage" id="rateConf" style="display: none; float: right;">
-			<div>{t _rate_save_conf}</div>
-		</div>
-	
+	<fieldset id="rates">	
 		{foreach from=$currencies key=key item=item}
 			<div{if $item.isEnabled == 0} class="disabled"{/if}>
 				<div class="title">{$item.name}</div>

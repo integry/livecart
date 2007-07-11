@@ -6,3 +6,11 @@
   	background-color: #F7F7F7;
   	width: 500px;
 }
+
+
+#confirmations
+{
+    position: absolute; 
+    right: 0px; 
+    width: 600px;
+}

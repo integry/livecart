@@ -53,7 +53,7 @@ class ShippingServiceController extends StoreManagementController
         $service = ShippingService::getInstanceByID((int)$this->request->get('id'));
         $service->delete();
         
-        return new JSONResponse(array('status' => 'success'));
+        return new JSONResponse(false, 'success', $this->translate('_shipping_service_was_successfully_deleted'));
     }
     
     public function edit()
@@ -108,8 +108,8 @@ class ShippingServiceController extends StoreManagementController
         $ratesData = $this->getRatesFromRequest();
         $errors = $this->validateRate('', $ratesData['']);
         return empty($errors) 
-            ? new JSONResponse(array('status' => 'success')) 
-            : new JSONResponse(array('status' => 'failure', 'errors' => $errors));
+            ? new JSONResponse(array('validation' => 'success')) 
+            : new JSONResponse(array('validation' => 'failure', 'errors' => $errors));
     }
     
     /**
@@ -117,16 +117,14 @@ class ShippingServiceController extends StoreManagementController
      */
     public function sort()
     {
-        echo $this->request->get('target');
         foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
         {
-            echo $key;
            $shippingService = ShippingService::getInstanceByID((int)$key);
            $shippingService->position->set((int)$position);
            $shippingService->save();
         }
 
-        return new JSONResponse(array('status' => 'success'));
+        return new JSONResponse(false, 'success', $this->translate('_shipping_services_were_successfully_reordered'));
     }
 
     private function isNotValid($name, $rates = array())
@@ -152,7 +150,8 @@ class ShippingServiceController extends StoreManagementController
     private function getRatesFromRequest()
     {
         $rates = array();
-        foreach($_POST as $variable => $value)
+        
+        foreach($this->request->toArray() as $variable => $value)
         {
             $matches = array();
             if(preg_match('/^rate_([^_]*)_(perKgCharge|subtotalPercentCharge|perItemCharge|flatCharge|weightRangeEnd|weightRangeStart|subtotalRangeEnd|subtotalRangeStart)$/', $variable, $matches))
@@ -206,11 +205,11 @@ class ShippingServiceController extends StoreManagementController
                 $rate->save();
             }
             
-            return new JSONResponse(array('status' => 'success', 'service' => $shippingService->toArray()));
+            return new JSONResponse(array('service' => $shippingService->toArray()), 'success', $this->translate('_shipping_service_was_successfully_saved'));
         }
         else
         {
-            return new JSONResponse(array('status' => 'failure', 'errors' => $errors));
+            return new JSONResponse(array('errors' => $errors), 'failure', $this->translate('_could_note_save_shipping_service'));
         }
     }
     

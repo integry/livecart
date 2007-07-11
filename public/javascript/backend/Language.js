@@ -34,7 +34,13 @@ Backend.LanguageIndex.prototype =
 	         },
 	         afterEdit:      function(li, response) {  },
 	         afterSort:      function(li, response) {  },
-	         afterDelete:    function(li, response)  { Element.remove(li); }
+	         afterDelete:    function(li, response)  { 
+                 response = eval('(' + response + ')');
+                 if(response.status == 'success')
+                 {
+                     Element.remove(li); 
+                 }
+             }
 	     },  this.activeListMessages);
 	},	
 	
@@ -92,8 +98,9 @@ Backend.LanguageIndex.prototype =
 	
 	updateItem: function(originalRequest)
 	{
- 	    eval('var itemData = ' + originalRequest.responseText);
-		
+ 	    var response = eval('(' + originalRequest.responseText + ')');
+		var itemData = response.language;
+        
 		var node = $('languageList_' + itemData.ID);
 	  	var template = $('languageList_template');
 		var cl = template.cloneNode(true);
@@ -128,8 +135,9 @@ Backend.LanguageIndex.prototype =
 	
 	addToList: function(originalRequest)
 	{		
- 	    eval('var itemData = ' + originalRequest.responseText);
-		
+ 	    var response = eval('(' + originalRequest.responseText + ')');
+		var itemData = response.language;
+        
 	  	var template = $('languageList_template');
 	  	
 	  	var list = $('languageList');
@@ -150,22 +158,12 @@ Backend.LanguageIndex.prototype =
 	
 	setEnabled: function(node) 
 	{
-		p = node;
-		while (p.tagName != 'LI')
-		{
-		  	p = p.parentNode;
-		}
+		p = node.up('li');
+        
 		langId = p.id.substr(p.id.length - 2, 2);
-		
 		url = this.statusUrl + langId + "?status=" + (node.checked - 1 + 1);
-
-		img = document.createElement('img');
-		img.src = 'image/indicator.gif';
-		img.className = 'activateIndicator';
-										
-		node.parentNode.replaceChild(img, node);
-		
-		new LiveCart.AjaxRequest(url, img, this.updateItem.bind(this));
+        
+		new LiveCart.AjaxRequest(url, p.down('.progressIndicator'), this.updateItem.bind(this));
 	},
 		
 	setFormUrl: function(url)

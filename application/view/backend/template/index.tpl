@@ -15,36 +15,16 @@
 {include file="layout/backend/header.tpl"}
 
 <div id="pageContainer">
-		
 	<div class="treeContainer">
-		<div id="templateBrowser" class="treeBrowser">
-		</div>
-	
-	    <div class="clear"></div>
-	
-		<div style="margin-top: 20px;">
-			<div class="yellowMessage" style="display: none;">
-				<div>
-					{t Template saved successfuly}
-				</div>
-			</div>
-			<div class="redMessage" style="display: none;">
-				<div>
-					{t Template could not be saved}
-				</div>
-			</div>
-		</div>		
-		
-		<div style="clear: both;"></div>
-	
+		<div id="templateBrowser" class="treeBrowser"></div>
+    	<div id="confirmations"></div>
 	</div>
 
-	<div style="float: left; margin-left: 20px;">		
+	<div class="treeManagerContainer">		
 		<div id="templateContent">
 			{include file="backend/template/emptyPage.tpl"}
 		</div>
 	</div>
-
 </div>
 
 {literal}

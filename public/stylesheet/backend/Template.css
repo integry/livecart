@@ -1,19 +1,6 @@
-#templateBrowser
-{
-  	float: left;
-  	width: 250px;
-  	height: 400px;
-  	overflow: auto;
-}
-
 /***************
 	editor
 ****************/
-#templateContent
-{
-	margin-left: 270px;
-}
-
 /* popup */
 #templateForm #code
 {

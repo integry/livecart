@@ -31,6 +31,7 @@
             <ul class="verticalMenu">
                 <li class="removeTreeNode"><a id="deliveryZone_delete" href="#delete" style="{denied role='delivery.remove'}display: none{/denied}">{t _delete}</a></li>
             </ul>
+            <div id="confirmations"></div>
         </div>
 	</div>
     

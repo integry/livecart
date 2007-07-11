@@ -152,7 +152,7 @@ class LanguageController extends StoreManagementController
 		  	$editLocale->translationManager()->saveCacheData($localeCode . '/' . $file, $data);
 		}
 		
-		return new JSONResponse(1);
+		return new JSONResponse(false, 'success', $this->translate('_translations_were_successfully_saved'));
 	}
 	
 	/**
@@ -204,15 +204,13 @@ class LanguageController extends StoreManagementController
 		
 		try
 	  	{
-			Language::deleteById($langId);			
-			$success = $langId;
+			Language::deleteById($langId);	
+			return new JSONResponse(false, 'success', $this->translate('_language_has_been_successfully_removed'));		
 		}
 		catch (Exception $exc)
 		{			  	
-		  	$success = false;
+			return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_language'));
 		}
-		  
-		return new RawResponse($success);
 	}
 
 	/**
@@ -278,7 +276,7 @@ class LanguageController extends StoreManagementController
 		$lang->setAsEnabled($this->request->get("status"));
 		$lang->save();
 		
-		return new JSONResponse($lang->toArray());
+		return new JSONResponse(array('language' => $lang->toArray()), 'success', $this->translate($this->request->get("status") ? '_language_status_has_been_changed_to_enabled' : '_language_status_has_been_changed_to_disabled'));
 	}
 
 	/**
@@ -292,7 +290,7 @@ class LanguageController extends StoreManagementController
 		$lang->setID($this->request->get("id"));
 		$lang->save(ActiveRecord::PERFORM_INSERT);
 
-		return new JSONResponse($lang->toArray());
+		return new JSONResponse(array('language' => $lang->toArray()), 'success', $this->translate('_new_language_was_successfully_added'));
 	}
 
 	/**

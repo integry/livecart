@@ -13,20 +13,14 @@
 <div id="settingsContainer" class="maxHeight h--50">
 	
     <div class="treeContainer">
-
-        <div id="settingsBrowser" class="treeBrowser">
-    	</div>
-    
-        <div class="clear"></div>
-    
-    	<div class="yellowMessage" style="display: none;"><div>{t _save_conf}</div></div>
-    	
+        <div id="settingsBrowser" class="treeBrowser"></div>
+        <div id="confirmations"></div>
     </div>
 
 	<span id="settingsIndicator"></span>
 	
 	<div id="settingsContent" class="treeManagerContainer maxHeight">
-	<span class="progressIndicator"></span>
+	    <span class="progressIndicator"></span>
 	</div>
 
 </div>

@@ -1,3 +1,10 @@
+# Confirmations
+_currency_list_was_successfully_reordered=Currency list was successfully reordered
+_currency_was_successfully_enabled=Currency was successfully enabled
+_currency_was_successfully_saved=Currency was successfully saved
+
+_rate_save_conf=Currency exchange rates were saved successfully
+
 _currencies=Currencies
 
 _manage=Manage
@@ -17,8 +24,6 @@ _default_currency=Base currency
 _confirm_delete=Are you sure you wish to delete this currency?
 
 # rates
-
-_rate_save_conf=Currency exchange rates were saved successfuly
 
 _err_empty=Please enter the currency exchange rate
 _err_numeric=Please enter a numeric value

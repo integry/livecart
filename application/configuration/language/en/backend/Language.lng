@@ -1,5 +1,11 @@
-# index
+# Confirmations
+_language_status_has_been_changed_to_enabled=Language status has been changed to enabled
+_language_status_has_been_changed_to_disabled=Language status has been changed to disabled
+_new_language_was_successfully_added=New language was successfully added
+_language_has_been_successfully_removed=Language has been successfully removed
+_translations_were_successfully_saved=Translations were saved successfuly
 
+# index
 _languages=Languages	
 
 _index_tip=Move mouse cursor over language list to edit translations or remove language
@@ -45,8 +51,6 @@ _found_many=More than 50 translations were found
 _save=Save translations
 
 _editing_translations=Editing Translations
-
-_save_conf=Translations were saved successfuly
 
 # live translation
 

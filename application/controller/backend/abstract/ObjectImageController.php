@@ -33,8 +33,6 @@ abstract class ObjectImageController extends StoreManagementController
 	{	
 		$ownerId = $this->request->get('ownerId');
 		
-		print_r($_POST);
-		
 		$owner = ActiveRecordModel::getInstanceByID($this->getOwnerClass(), $ownerId);
 			  	
 		$validator = $this->buildValidator($ownerId);

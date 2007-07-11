@@ -1,5 +1,10 @@
-# Main menu
+# Confirmations
+_page_has_been_successfully_saved=Page has been successfully saved
+_new_page_was_successfully_added=New page was successfully added
+_pages_were_successfully_reordered=Pages were successfully reordered
+_could_not_reorder_pages=Could not reorder pages
 
+# Main menu
 _static_pages=Static Pages
 
 _add_new=Add new page
@@ -17,7 +22,7 @@ _add_new_title=Add New Page
 
 _title=Page Title
 _handle=URL Handle (slug)
-_text=Page Text
+_text=Page Textaj
 
 _inf_menu=Display in <em>Information</em> menu
 

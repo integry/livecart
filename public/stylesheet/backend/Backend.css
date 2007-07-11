@@ -1192,11 +1192,19 @@ ul.languageFormTabs li.active
     background: #f1f1f1;
     padding: 5px;
     padding-right: 0;
+  	height: 260px;
 }
 
 .treeContainer {
     position: absolute;
     width: 260px;
+}
+
+.containerTableStyle
+{
+    height: 262px; 
+    width: 250px;
+    overflow: auto;
 }
 
 .treeManagerContainer {

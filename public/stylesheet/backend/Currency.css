@@ -143,3 +143,13 @@
 #updateLabel {
   	 width: auto; 
 }
+
+
+
+#confirmations
+{
+    position: absolute; 
+    top: 45px; 
+    right: 10px;
+    width: 600px;
+}

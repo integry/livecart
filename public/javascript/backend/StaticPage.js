@@ -99,6 +99,8 @@ Backend.StaticPage.prototype =
 			var url = this.urls['edit'].replace('_id_', id);
 			var upd = new LiveCart.AjaxUpdater(url, 'pageContent', 'settingsIndicator');
 			upd.onComplete = this.displayPage.bind(this);
+            
+            this.showControls()
 		}
 	},
 
@@ -152,9 +154,9 @@ Backend.StaticPage.prototype =
 	moveCompleted: function(originalRequest)
 	{
 		this.treeBrowser.hideFeedback();	
-		eval('var result = ' + originalRequest.responseText);
+		var result = eval('(' + originalRequest.responseText + ')');
 		
-		if (result)
+		if (result.status == 'success')
 		{
 			var direction = ('up' == result.order) ? 'up_strict' : 'down_strict';
 			this.treeBrowser.moveItem(result.id, direction);				
@@ -167,6 +169,21 @@ Backend.StaticPage.prototype =
         {
             Element.show($('templateCode'));            
         }
+    },
+
+    showControls: function()
+    {
+        var categoryId = this.treeBrowser.getSelectedItemId();
+        
+        parentId = this.treeBrowser.getParentId(categoryId)
+        categoryIndex = this.treeBrowser.getIndexById(categoryId)
+        nextCategoryId = this.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1)
+
+        if(nextCategoryId) $("moveDownMenu").show();
+        else $("moveDownMenu").hide();
+        
+        if(categoryIndex > 0) $("moveUpMenu").show();
+        else $("moveUpMenu").hide();
     },
     
     cancel: function()

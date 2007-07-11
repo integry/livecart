@@ -49,21 +49,8 @@
 <div id="pageContainer">
 		
 	<div class="treeContainer">
-		<div id="langBrowser" class="treeBrowser">
-		</div>
-	
-	    <div class="clear"></div>
-	
-		<div style="margin-top: 20px;">
-			<div class="yellowMessage" style="display: none; width: 230px;">
-				<div>
-					{t _save_conf}
-				</div>
-			</div>
-		</div>		
-		
-		<div style="clear: both;"></div>
-	
+		<div id="langBrowser" class="treeBrowser"></div>
+        <div id="confirmations"></div>
 	</div>
 
 	<div class="treeManagerContainer">

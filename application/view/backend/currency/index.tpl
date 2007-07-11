@@ -15,6 +15,8 @@
 {pageTitle}{t _currencies}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
+<div id="confirmations"></div>
+
 <div id="tabContainer" class="tabContainer maxHeight h--20">
 	<ul class="tabList tabs">
 		<li id="tabManage" class="tab active"><a href="{link controller=backend.currency action=list}">{t _manage}</a></li>

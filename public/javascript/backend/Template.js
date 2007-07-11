@@ -115,7 +115,6 @@ Backend.TemplateHandler.prototype =
 	
 	submit: function()
 	{
-		Element.hide(document.getElementsByClassName('redMessage')[0]);
         $('code').value = editAreaLoader.getValue('code');
 		new LiveCart.AjaxRequest(this.form, null, this.saveComplete.bind(this));
 		return false;
@@ -123,11 +122,6 @@ Backend.TemplateHandler.prototype =
 	
 	saveComplete: function(originalRequest)
 	{
-		var msgClass = originalRequest.responseText ? 'yellowMessage' : 'redMessage';			 
-		var msg = new Backend.SaveConfirmationMessage(document.getElementsByClassName(msgClass)[0]);
-		 
-		msg.show();
-		 
 		if (opener)
 		{
             opener.location.reload();	            

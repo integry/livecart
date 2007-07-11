@@ -57,7 +57,14 @@ class TemplateController extends StoreManagementController
 		$template->setCode($code);
 		$res = $template->save();
 		
-		return new JSONResponse($res);
+		if($res)
+		{
+		    return new JSONResponse(false, 'success', $this->translate('_template_has_been_successfully_updated'));
+		}
+		else
+		{
+		    return new JSONResponse(false, 'failure', $this->translate('_could_not_update_template'));
+		}
 	}
 	
 	public function emptyPage()

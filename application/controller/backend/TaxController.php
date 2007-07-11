@@ -63,7 +63,7 @@ class TaxController extends StoreManagementController
         $service = Tax::getInstanceByID((int)$this->request->get('id'));
         $service->delete();
         
-        return new JSONResponse(array('status' => 'success'));
+        return new JSONResponse(false, 'success', $this->translate('_tax_entry_was_successfully_deleted'));
     }
 
 	/**
@@ -97,11 +97,12 @@ class TaxController extends StoreManagementController
 		    
 	        $tax->save();
 	        
-	        return new JSONResponse(array('status' => 'success', 'tax' => $tax->toArray()));
+	        return new JSONResponse(array('tax' => $tax->toArray()), 'success', $this->translate('_tax_entry_was_successfully_saved'));
         }
         else
         {
-            return new JSONResponse(array('status' => 'error', 'errors' => $validator->getErrorList()));
+	        
+	        return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_tax_entry'));
         }
     }
     

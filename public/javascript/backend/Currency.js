@@ -115,8 +115,9 @@ Backend.Currency.prototype =
 	
 	updateItem: function(originalRequest)
 	{
- 	    eval('var itemData = ' + originalRequest.responseText);
-		
+ 	    var response = eval('(' + originalRequest.responseText + ")");
+		var itemData = response.currency;
+        
 		var node = $('currencyList_' + itemData.ID);
 	  	var template = $('currencyList_template');
 		var cl = template.cloneNode(true);
@@ -192,7 +193,7 @@ Backend.Currency.prototype =
 	{		
 		try 
 		{
-			eval('var rates = ' + request.responseText);
+			var rates = eval('(' + request.responseText + ')');
 			for (k in rates)
 			{
 			  	if ($('rate_' + k))
@@ -200,8 +201,6 @@ Backend.Currency.prototype =
 					$('rate_' + k).value = rates[k];
 				}
 			}	
-
-			new Backend.SaveConfirmationMessage('rateConf');
 		}
 		catch (e)
 		{

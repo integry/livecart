@@ -143,12 +143,13 @@ Backend.DeliveryZone.prototype =
             
             var activateTab = $('tabDeliveryZoneShipping');
             $("tabDeliveryZoneCountry").hide();
-            
+            $("deliveryZone_delete").hide();
         }
         else
         {
             var activateTab = $('tabDeliveryZoneCountry');
             $("tabDeliveryZoneCountry").show();
+            $("deliveryZone_delete").show();
         }
         
         if(Backend.DeliveryZone.prototype.activeZone && Backend.DeliveryZone.prototype.activeZone != id)
@@ -396,7 +397,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         Event.observe(this.nodes.addressMaskNewButton, 'click', function(e) { Event.stop(e); this.addNewAddressMask(this.nodes.addressMaskNew); }.bind(this));
 
         $A(this.nodes.zonesAndUnions).each(function(zoneOrUnion) {
-            Event.observe(zoneOrUnion, 'click', function(e) { Event.stop(e); this.selectZoneOrUnion(this.hash.substring(0,1) == '#' ? this.hash.substring(1) : this.hash); }.bind(this));
+            Event.observe(zoneOrUnion, 'click', function(e) { Event.stop(e); this.selectZoneOrUnion(zoneOrUnion.hash.substring(0,1) == '#' ? zoneOrUnion.hash.substring(1) : zoneOrUnion.hash); }.bind(this));
         }.bind(this));
         
         $A(this.nodes.observedElements).each(function(element) {
@@ -1028,7 +1029,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
             var rangeType = rangeTypeRadio.value;
             
             ActiveForm.prototype.resetErrorMessages(this.nodes.root.up('form'));
-            new LiveCart.Request(
+            new LiveCart.AjaxRequest(
                 Backend.DeliveryZone.ShippingService.prototype.Links.validateRates + "?" + 
                     'rate__weightRangeStart=' + rate.weightRangeStart + '&' +
                     'rate__weightRangeEnd=' + rate.weightRangeEnd + '&' +
@@ -1054,7 +1055,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
     
     afterAdd: function(response, rate)
     {
-        if(response.status == 'success')
+        if(response.validation == 'success')
         {
             Backend.DeliveryZone.ShippingRate.prototype.newRateLastId++;
             var newId = Backend.DeliveryZone.ShippingRate.prototype.newRateLastId;

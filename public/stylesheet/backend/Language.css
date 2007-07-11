@@ -110,3 +110,10 @@ div.tip
 	color: #999999;
 	font-size: smaller;
 }
+
+.rightConfirmations
+{
+    position: absolute ! important; 
+    right: 0px ! important; 
+    width: 600px ! important;
+}
