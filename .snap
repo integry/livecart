@@ -3,7 +3,7 @@ root = .
 revision = 64a451b50bedc7d5fbf4db1d7c5de094afff63cb
 
 [tree1.paths]
-default = /tmp/livecart/trunk
+default = /var/db/repo/livecart
 
 [tree2]
 root = framework
