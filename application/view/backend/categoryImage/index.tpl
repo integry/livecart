@@ -43,7 +43,9 @@
 		
         <fieldset class="controls">
 			<span class="progressIndicator" style="display: none;"></span>
-			<input type="submit" name="upload" class="submit" value="{tn _upload}"> {t _or} <a href="#" class="cancel" onclick="restoreMenu('catImgAdd_{$ownerId}', 'catImgMenu_{$ownerId}'); return false;">{t _cancel}</a>
+			<input type="submit" name="upload" class="submit" value="{tn _upload}"> 
+            {t _or} 
+            <a href="#" class="cancel" onclick="restoreMenu('catImgAdd_{$ownerId}', 'catImgMenu_{$ownerId}'); return false;">{t _cancel}</a>
 	    </fieldset>
     </fieldset>
 

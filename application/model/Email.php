@@ -41,7 +41,7 @@ class Email
         $this->connection = new Swift_Connection_NativeMail();
 //      self::$connection = new Swift_Connection_SMTP(ini_get('SMTP'));
         
-        $this->swiftInstance = new Swift(self::$connection);
+        $this->swiftInstance = new Swift($this->connection);
         $this->recipients = new Swift_RecipientList();
         
         $config = $this->application->getConfig();

@@ -45,6 +45,18 @@ th.cell_User_email
     padding-left: 30px;
 }
 
+
+
+#userGroupsManagerContainer .containerTableStyle
+{
+    height: auto ! important; 
+}
+
+.treeBrowser
+{
+    height: auto ;
+}
+
 #fromUsersPage .orderList .cell_CustomerOrder_viewOrder input,
 #fromUsersPage .orderList .cell_User_email,
 #fromUsersPage .orderList .cell_ShippingAddress_countryID,

@@ -54,7 +54,10 @@
     
 
     <fieldset class="controls">
-    	<input type="submit" name="save" class="submit" value="Save"> {t _or} <a class="cancel" href="#">{t _cancel}</a>
+		<span class="progressIndicator" style="display: none;"></span>
+    	<input type="submit" name="save" class="submit" value="Save"> 
+        {t _or} 
+        <a class="cancel" href="#">{t _cancel}</a>
     </fieldset>
     
     
@@ -62,7 +65,6 @@
         {literal}
         try
         {
-            console.info({/literal}{$user.ID}{literal});
             if({/literal}{$user.ID}{literal} > 0)
             {
                 console.info('edit');

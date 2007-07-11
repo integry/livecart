@@ -162,7 +162,7 @@ class User extends ActiveRecordModel
         parent::insert();
         
         // send welcome email with user account details
-        $email = new Email();
+        $email = new Email(self::getApplication());
         $email->setUser($this);
         $email->setTemplate('user.new');
         //$email->send();
