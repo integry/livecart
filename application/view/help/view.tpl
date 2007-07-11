@@ -128,7 +128,7 @@
 
 <div id="helpContent" style="padding-bottom: 40px;">
 
-	<fieldset id="helpTopicTree" style="border: 1px solid black; background-color: white; padding: 5px; float: left; width: 200px; background-color: #EEEEEE;">
+	<fieldset id="helpTopicTree" style="border: 0px solid black; background-color: white; padding: 5px; float: left; width: 200px; background-color: #EEEFFF;">
 		{fun name="topicTree" node=$topicTree}
 	</fieldset>
 

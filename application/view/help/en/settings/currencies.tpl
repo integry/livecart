@@ -84,7 +84,7 @@ left of the currency name.</p>
 
 
 <h3 id="format">Price Formatting</h3>
-<p>To express the type of money you can set special currency symbols ("$", etc.) that will be displayed in your 
+<p>To express the type of money you can set special currency symbols ("$", etc.) which will be displayed in your 
 store with a particular price. To set price formatting:</p>
 
 <ol>

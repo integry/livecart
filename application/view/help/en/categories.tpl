@@ -22,7 +22,7 @@
 	<li><a href="{self}#add">Create a new category</a></li>
 	<li><a href="{self}#move">Move category</a></li>
 	<li><a href="{self}#remove">Remove a category</a></li>
-	<li><a href="{self}#change order">Change category order</a></li>
+	<li><a href="{self}#reorder">Reorder categories</a></li>
 	<li><a href="{help /categories.details}">Edit Category details</a></li>
 
 </ul>
@@ -68,7 +68,7 @@
 
 
 
-<h3 id="change order">Change category order</h3>
+<h3 id="reorder">Reorder categories</h3>
 
 <p>To change category order:</p>
 

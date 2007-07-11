@@ -70,14 +70,14 @@ When you are done with the translations just activate the language to make it av
 <p>
 The default language serves two main purposes:
 <ul>
-	<li>It is the language your e-store visitors see when first visiting the site. All the frontend content is 
+	<li>It is the language your e-store visitors see when first visiting the site. That is, all the frontend content is 
 	displayed in the default language until the visitor switches to a different language.</li>
 	<li>Any translations that are missing for any other language (interface elements, product or category 
 	information, etc.) are automatically taken from the default language.</li>	
 </ul>
 </p>
 
-<p>To change the default language click the "Set as default" link under the language name.</p>
+<p>To change the default language click the "Set as default" link under the desired language name.</p>
 
 <img src="image/doc/language/set_default_red.bmp"/>
 

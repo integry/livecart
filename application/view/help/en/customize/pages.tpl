@@ -5,7 +5,7 @@
 <legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#add">Create new page</a></li>
-	<li><a href="{self}#sort">Sort pages</a></li>
+	<li><a href="{self}#reorder">Reorder pages</a></li>
 	<li><a href="{self}#delete">Delete page</a></li>
 </ul>
 </fieldset>
@@ -30,7 +30,7 @@
 
 <p class="note">(<strong>Note</strong>: The "Information" menu is displayed right below the "Categories" section of your storefront.)</p>
 
-<h3 id="sort">Sort pages</h3>
+<h3 id="reorder">Reorder pages</h3>
 
 <p>The way pages are displayed in you e-store is defined by their order in the page tree. To set the arrangement of pages:</p>
 <ol>

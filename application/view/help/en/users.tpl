@@ -1,4 +1,4 @@
-<p>All the users of your system including customers and administrators are considered (as) <i>users</i>. Customers that register in your storefront are automatically placed into "Customers" category. Administrators or any other users have to be added manually.</p>
+<p>All the users of your system including customers and administrators (or any other) are considered (as) <i>users</i>. <ins>Customers that register in your storefront are automatically placed into "Customers" category.</ins> Administrators or any other users have to be added manually.</p>
 
 <div class="tasks">
 <fieldset>
@@ -9,7 +9,7 @@
 	<li><a href="{self}#manage">Manage users</a></li>
 	<li><a href="{self}#add">Add new user</a></li>
 	<li><a href="{self}#user_group">Create a new user group</a></li>
-	<li><a href="{self}#permissions">Set administrator permissions</a></li>
+	<li><a href="{self}#permissions">Set administrating permissions</a></li>
 </ul>
 </fieldset>
 </div>
@@ -19,10 +19,10 @@
 <p>To view users:</p>
 
 <ol>
-	<li>Select a user group on the group tree.</li>
+	<li>Select a user group in the group tree.</li>
 	<p>Users are displayed in a table similar to this:</p>
 	<img src="image/doc/users/table.bmp"/>
-	<p>By default users are displayed in the date order: newest first, oldest - last.</p>
+	<p>By default users are displayed by the date they registered or were added: newest first, oldest - last.</p>
 </ol>
 
 <h4>Sorting users</h4>
@@ -47,12 +47,14 @@
 
 <ol>
 	<li>Select a category on the user group tree.</li>
-	<li>You can search (for) users by using one of the attributes displayed in the toolbar menu. <small><a href="{self}#change_attributes">(Tell me how)</a></small>. Click an attribute to activate a search field:</li>
+	<li>You can search (for) users by using one of the attributes displayed in the toolbar menu. Click an attribute to activate a search field:</li>
 	<img src="image/doc/users/search1.bmp">
 	<li>Enter search criteria and press "Enter".</li>
 	<img src="image/doc/users/search2.bmp">
 	<p>Results maching your criteria appears below.</p>	
 </ol>
+
+<p>You can also add or remove attributes displayed in the toolbar. <small><a href="{self}#change_attributes">(Tell me how)</a></small>.</p>
 
 <h3 id="manage">Manage users</h3>
 
@@ -68,15 +70,16 @@
 <ul>
 <p>To edit a <strong>single user</strong>, click the users' email:</p>
 	<img src="image/doc/users/email.bmp">
-	<li>You can edit user's details and view all past orders.</li>
+	<li>You can edit user's details, change user's group and view all past orders.</li>
 	<li>Save changes when you are done.</li>
 </ul>
+
 
 <h3 id="add">Add new user</h3>
 
 <p>Users should be added to their appropriate user groups. To add a user:</p>
 <ol>
-	<li>Select a user group on the tree.</li>
+	<li>Select a user group in the tree.</li>
 	<li>Click the "Add new user" link.</li>
 	<img src="image/doc/users/add_new.bmp"/>
 	<li>Complete the form to add the user:</li>
@@ -91,7 +94,7 @@
 <ol>
 	<li>Click the "Add group" link:</li>
 	<img src="image/doc/users/add_group.bmp"/>
-	<li>In the "Group datails" tab enter groups name and description if necessary:</li>
+	<li>In the "Group datails" tab enter group's name and description if necessary:</li>
 	<img src="image/doc/users/group_details.bmp"/>
 	<li>Click "Save".</li>
 </ol>
@@ -100,14 +103,14 @@
 
 <h3 id="permissions">Setting administration permissions</h3>
 
-<p>Except for customer, all the other users can have administations rights which can be set in the "Permissions" section.</p>
+<p>Except for customer, all the other users can have administation rights which can be set in the "Permissions" section.</p>
 
 <ol>
-	<li>Select a user group on the tree.</li>
+	<li>Select a user group in the tree.</li>
 	<img src="image/doc/users/select_group.bmp"/>
 	<li>Click on the "Permissions" tab.</li>
 	<img src="image/doc/users/tab.bmp"/>
-	<p>You can manage administration rights my checking necessary roles at their appropriate groups.</p>
+	<p>You can grant administration rights my checking necessary roles.</p>
 	<img src="image/doc/users/permissions.bmp"/>
 	<li>Click "Save" when done.</li>
 </ol>

@@ -33,7 +33,7 @@
 	<li><a href="{self}#group">Group attributes</a></li>
 	<li><a href="{self}#edit">Edit attribute</a></li>
 	<li><a href="{self}#delete">Delete attribute</a></li>
-	<li><a href="{self}#sort">Change attribute order</a></li>
+	<li><a href="{self}#reorder">Reorder attributes</a></li>
 </ul>
 </fieldset>
 </div>
@@ -258,7 +258,7 @@ To edit attribute: select an attribute from the list and click the "pen" icon on
 <img src="image/doc/categories/attributes/edit_attribute.bmp">
 
 Attribute's management form appears with its specification details. To edit any of attribute's fields or values, simply alter existing parameters
-and save changes afterwards. For detailed fields' description, refer to <a href="{self}#form">Create new attribute</a> section.
+and save changes afterwards. For detailed fields' description, refer to the <a href="{self}#form">Create new attribute</a> section.
 
 <!--
 <a onclick="expand(document.getElementById('carrier'))"href="{self}#form">show me</a>
@@ -270,7 +270,7 @@ To delete attribute: select an attribute from the list and click the "Delete" ic
 
 <img src="image/doc/categories/attributes/delete_attribute.bmp">
 
-<h3 id="sort">Change attribute order</h3>
+<h3 id="sort">Reorder attributes</h3>
 
 The order of attributes and attribute groups define how they are displayed in the "{glossary}Product list{/glossary}" and "{glossary}Product details{/glossary}" page. To change the order of attributes or attribute groups, hover mouse cursor over attribute or entire group and then drag it up or down.
 <img src="image/doc/categories/attributes/sort.bmp">

@@ -42,7 +42,7 @@
 
 
 <h3 id="specification">Product specification</h3>
-<p>Product Specification section includes user defined attributes. You can create attributes in the category's <a href="{help /categories.attributes}">attributes section</a>.</p>
+<p>The Product Specification section includes user defined attributes. You can create attributes in the category's <a href="{help /categories.attributes}">attributes section</a>.</p>
 <img src="image/doc/products/edit/specifications1.bmp">
 
 If you have more than one language in your system, click on the language tab to translate the following details:

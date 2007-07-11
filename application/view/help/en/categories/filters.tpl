@@ -7,7 +7,7 @@
 customer may filter the products by any property at any point of the process (by adding or removing filters).</p>
 
 <p class="note"><strong>Note</strong>: Filters define search range only within specific categories because 
-attributes are assigned to particular categories and filters are directly mapped to attributes. If you are not familiar with term "attribute" plase refer to  <a href="{help /categories.attributes}">Attributes</a> section.</p>
+attributes are assigned to particular categories and filters are directly mapped to attributes. If you are not familiar with term "attribute" plase refer to the <a href="{help /categories.attributes}">Attributes</a> section.</p>
 
 <p class="note"><strong>Tip</strong>:(When creating filters think of as many filters as possible to create an efficient browsing system because users may be interested in many kinds of attributes your products
 have to offer (some may search for products by particular technical details and some may be interested in shape or color)).</p>
@@ -21,7 +21,7 @@ have to offer (some may search for products by particular technical details and 
 <legend>Things you can do</legend>
 <ul>	
 	<li><a href="{self}#create">Create a filter</a></li>
-	<li><a href="{self}#sort">Reorder filters</a></li>
+	<li><a href="{self}#reorder">Reorder filters</a></li>
 	<li><a href="{self}#edit">Edit and Delete Filters</a></li>
 	<li><a href="{help /settings.configuration}#product_filters">Define Price Filters ("external")</a></li>
 
@@ -86,7 +86,7 @@ to define a range for filter's values.</p>
 <p>Complete the following steps to create the battery capacity filter:</p>
 
 <ol>
-	<li>Go to Filters section and open "Add new Filter" form <a href="{self}#form"><small>(remind me how)</small></a></li>
+	<li>Go to the Filters section and open "Add new Filter" form <a href="{self}#form"><small>(remind me how)</small></a></li>
 	<li>Choose "Battery Capacity" from the drop-down menu to accociate an attribute.</li>
 	<img src="image/doc/categories/filters/filter_battery_capacity.bmp">
 	<li>Because "Battery Capacity" attribute doesn't have any values set initially, you have to define ranges that will specify filtering criteria.
@@ -134,7 +134,7 @@ to define a range for filter's values.</p>
 	<li>Click the "Save" button to return to filters page.</li>
 </ul>
 
-<h3 id="sort">Changing Filter Order</h3>
+<h3 id="reorder">Reorder Filters</h3>
 <p align="right"><a href="{self}#top"><small>Top</small></a></p>
 
 <p>The way filters are displayed in your frontend is determined by their arrangement.</p>

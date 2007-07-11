@@ -1,5 +1,4 @@
-<p>To prepare your store for usage in another language you have to translate appropriate words or phrases
-from English to the necessary language. (You can translate both frontend and backend of your store.)</p>
+<p>To prepare your store for usage in another language you have to translate appropriate words or phrases from English to the necessary language. </p>
 
 <div class="tasks">
 <fieldset>
@@ -23,7 +22,7 @@ from English to the necessary language. (You can translate both frontend and bac
 
 <p>To translate interface using the <strong>word tree</strong>:</p>
 <ol>
-	<li>Select a group on the tree:</li>
+	<li>Select a file in the tree:</li>
 	<img src="image/doc/language/edit/tree.bmp"/>
 	<li>Enter the corresponding translations in the fields provided.</li>
 	<p>(Take a look at the following example of an error message:)</p>
@@ -46,6 +45,16 @@ from English to the necessary language. (You can translate both frontend and bac
 <p>The results that match your search criteria appear below automatically.</p>
 </ol>
 
+<p class="note"><strong>Note</strong>: By default, only frontend language files are available for translation but you can as well translate backend. To enable backend language files:</p>
+
+<ul>
+	<li>Go to the Settings -> Configuration -> Backend Administration section.</li>
+	<li>Mark the "Allow to edit store backend language files" checkbox.</li>
+</ul>
+
+<p>When you allow to edit backend language files, they will appear in the word tree.</p>
+
+
 <h3 id="product_info">Translate product info</h3>	
 
 <p>You can translate products, categories, attributes and other data directly from their management pages, 
@@ -61,7 +70,6 @@ for example, products modification page. The fields for entering translations ar
 </ul>
 <img src="image/doc/language/edit/translation_filter2.bmp"/>
 
-<p></p>
 <!--
 <h3 id="find_specific_word">Find and translate a specific word or sentence</h3>
 <img src="image/doc/language/edit/search.bmp"/>

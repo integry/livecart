@@ -4,9 +4,9 @@
 <p>To create a new product:</p>
 
 <ol>
-	<li>Go to <strong>Products</strong> section.</li>
+	<li>Go to the <strong>Products</strong> section.</li>
 	<li>Select existing category in the category tree (or <a href="{help /categories}#add">add new</a> category).</li>
-	<li>(Click on the "Products" tab to open product management section).</li>
+	<li>(Click on the "Products" tab to open the product management section).</li>
 	<li>In the products section click "Add new Product" link.</li>
 	<img src="image/doc/products/add/add.bmp"/>
 	<li>"Add new product" form opens. Fill out the form by supplying necessary fields, see 
