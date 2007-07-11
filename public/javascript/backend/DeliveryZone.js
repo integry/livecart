@@ -89,7 +89,7 @@ Backend.DeliveryZone.prototype =
 	addNewZone: function()
 	{
 		new LiveCart.AjaxRequest(
-			Backend.DeliveryZone.prototype.Links.create + '?name=' + $("newZoneInput").value,
+			Backend.DeliveryZone.prototype.Links.create,
 			false,
             function(response) 
             { 
@@ -100,8 +100,7 @@ Backend.DeliveryZone.prototype =
 
 	afterNewZoneAdded: function(response)
 	{
-        Backend.DeliveryZone.prototype.treeBrowser.insertNewItem(0, response.ID, $("newZoneInput").value, 0, 0, 0, 0, 'SELECT');
-        $("newZoneInput").value = '';
+        Backend.DeliveryZone.prototype.treeBrowser.insertNewItem(0, response.zone.ID, response.zone.name, 0, 0, 0, 0, 'SELECT');
         this.activateZone(response.ID);
 	},
     

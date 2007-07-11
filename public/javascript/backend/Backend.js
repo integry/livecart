@@ -811,7 +811,6 @@ Backend.SaveConfirmationMessage.prototype =
             Event.observe(closeButton, 'mouseover', function(e) { this.showCloseButton(closeButton) }.bind(this) )
             Event.observe(closeButton, 'mouseout', function(e) { this.hideCloseButton(closeButton) }.bind(this) )
             Event.observe(closeButton, 'click', function(e) { this.hide() }.bind(this) )
-            
         }
         
 		this.show();
@@ -852,7 +851,7 @@ Backend.SaveConfirmationMessage.prototype =
         Backend.SaveConfirmationMessage.prototype.timers[this.element.id].effectHighlight = new Effect.Highlight(this.innerElement, { duration: 0.4 });
        
         // do not hide error messages
-        if (!this.element.hasClassName('redMessage'))
+        if (!this.element.hasClassName('redMessage') && !this.element.hasClassName('bugMessage'))
         {
             Backend.SaveConfirmationMessage.prototype.timers[this.element.id].hideTimeout = setTimeout(function() { this.hide() }.bind(this), 4000);   
         }

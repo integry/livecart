@@ -131,20 +131,11 @@ class DeliveryZoneController extends StoreManagementController
 	 */
 	public function create()
 	{
-	    $name = $this->request->get('name', '');
-	    if($name != '')
-	    {
-	        $zone = DeliveryZone::getNewInstance();
-	        $zone->name->set($name);
-	        $zone->save();
-	        
-	        return new JSONResponse(array('ID' => $zone->getID()), 'success', $this->translate('_new_delivery_zone_was_successfully_created'));
-	    }  
-	    else
-	    {
-	        return new JSONResponse(false, 'failure', $this->translate('_error_name_is_not_specified'));
-	    }
-	    
+        $zone = DeliveryZone::getNewInstance();
+        $zone->name->set($this->translate('_new_delivery_zone'));
+        $zone->save();
+        
+        return new JSONResponse(array('zone' => $zone->toArray()), 'success', $this->translate('_new_delivery_zone_was_successfully_created'));  
 	}
 	
 	/**

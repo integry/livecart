@@ -83,6 +83,11 @@ LiveCart.AjaxRequest.prototype = {
 		
 		if ('text/javascript' == response.getResponseHeader('Content-type'))
 		{
+            var confirmations = $('confirmations');
+            if(!confirmations.down('#yellowZone')) new Insertion.Top('confirmations', '<div id="yellowZone"></div>');
+            if(!confirmations.down('#redZone')) new Insertion.Top('confirmations', '<div id="redZone"></div>');
+            if(!confirmations.down('#bugZone')) new Insertion.Top('confirmations', '<div id="bugZone"></div>');
+
             try
             {
                 response.responseData = response.responseText.evalJSON();
@@ -93,10 +98,7 @@ LiveCart.AjaxRequest.prototype = {
                     this.showConfirmation(response.responseData);
                 }
             }
-            catch (e)
-            {
-                console.log(e);
-            }
+            catch (e)  { this.showBug(); }
         }
 
 		document.body.style.cursor = 'default';
@@ -106,36 +108,29 @@ LiveCart.AjaxRequest.prototype = {
 		}
     },
     
-    showConfirmation: function(responseData)
+    showBug: function()
     {
-        var confirmations = $('confirmations');
-        if(!confirmations.down('#redZone'))
-        {
-            new Insertion.Bottom('confirmations', '<div id="redZone"></div>');
-        }
+        new Insertion.Top('bugZone', 
+        '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="bugMessage">' + 
+            '<img class="closeMessage" src="image/silk/cancel.png"/>' + 
+            '<div>' + Backend.internalErrorMessage + '</div>' + 
+        '</div>');
         
-        if(!confirmations.down('#yellowZone'))
-        {
-            new Insertion.Bottom('confirmations', '<div id="yellowZone"></div>');
-        }
-        
+        new Backend.SaveConfirmationMessage($('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));	
+    },
+    
+    showConfirmation: function(responseData)
+    {       
         var color = null;
-        var zone = null;
-                            
-        if('success' == responseData.status) 
-        {
-            color = 'yellow';
-        }
-        else if('failure' == responseData.status) 
-        {
-            color = 'red';
-        }
+        if('success' == responseData.status) color = 'yellow';
+        if('failure' == responseData.status) color = 'red';
         
         new Insertion.Top(color + 'Zone', 
         '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="' + color + 'Message">' + 
             '<img class="closeMessage" src="image/silk/cancel.png"/>' + 
             '<div>' + responseData.message + '</div>' + 
         '</div>');
+        
         new Backend.SaveConfirmationMessage($('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));	
     },
     

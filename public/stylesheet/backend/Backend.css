@@ -92,14 +92,14 @@ div.noRecords div {
 /***************************
 * Messages
 ****************************/
-div.yellowMessage, div.redMessage {
+div.yellowMessage, div.redMessage, div.bugMessage {
 	margin: 0pt;
 	padding: 10pt;
 	position: relative;
     overflow: visible;
 }
 
-div.yellowMessage .closeMessage, div.redMessage .closeMessage {
+div.yellowMessage .closeMessage, div.redMessage .closeMessage, div.bugMessage .closeMessage {
     position: absolute; 
     right: 18px; 
     top: 18px;
@@ -107,7 +107,7 @@ div.yellowMessage .closeMessage, div.redMessage .closeMessage {
 	cursor: hand;
 }
 
-div.yellowMessage div, div.redMessage div {
+div.yellowMessage div, div.redMessage div, div.bugMessage div {
 	border: 4px solid;
 	font-weight: bold;
 	padding: 7px;
@@ -124,6 +124,13 @@ div.redMessage div {
     border-color: #FF4E3A;
 }
 
+div.bugMessage div {
+    background-color: black ! important;
+    border-color: #BBB;
+    color: #CCC;
+    font-size: 120%;
+    padding: 15px;
+}
 
 /*************************** 
 	Layout 

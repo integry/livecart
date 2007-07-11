@@ -36,6 +36,8 @@
 	
 
 <script type="text/javascript">
+    Backend.internalErrorMessage = '{t _internal_error_have_accurred}';
+    
     try
     {ldelim}
     	new Backend.LayoutManager();
