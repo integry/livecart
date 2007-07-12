@@ -1,0 +1,6 @@
+syntax: regexp
+^cache$
+^storage\/(?!configuration)(.*)
+
+syntax: glob
+storage/configuration/settings.php
