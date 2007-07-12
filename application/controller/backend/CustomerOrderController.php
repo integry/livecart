@@ -54,17 +54,22 @@ class CustomerOrderController extends StoreManagementController
         $orderArray = $order->toArray();
         if($order->isFinalized->get())
         {
-            $shippingStates = State::getStatesByCountry($order->shippingAddress->get()->countryID->get());
-            $billingStates = State::getStatesByCountry($order->billingAddress->get()->countryID->get());
-           
-            $billingStates[''] = '';
-            $shippingStates[''] = '';
-                        
-            asort($shippingStates);
-            asort($billingStates);
             
-	        $response->set('shippingStates',  $shippingStates);
-	        $response->set('billingStates',  $billingStates);
+            if($order->billingAddress->get())
+            {
+	            $billingStates = State::getStatesByCountry($order->billingAddress->get()->countryID->get());
+	            $billingStates[''] = '';
+	            asort($billingStates);
+		        $response->set('billingStates',  $billingStates);
+            }
+            
+            if($order->shippingAddress->get())
+            {
+	            $shippingStates = State::getStatesByCountry($order->shippingAddress->get()->countryID->get());
+	            $shippingStates[''] = '';
+	            asort($shippingStates);
+		        $response->set('shippingStates',  $shippingStates);
+            }
         }
         else
         {
@@ -104,9 +109,17 @@ class CustomerOrderController extends StoreManagementController
 	    $response->set('form', $this->createOrderForm($orderArray));
 	    $response->set('existingUserAddressOptions', $addressOptions);
 	    $response->set('existingUserAddresses', $addresses);
-	    $response->set('formShippingAddress', $this->createUserAddressForm($orderArray['ShippingAddress']));
-	    $response->set('formBillingAddress', $this->createUserAddressForm($orderArray['BillingAddress']));
-        
+	    
+	    if(isset($orderArray['ShippingAddress']))
+	    {
+	        $response->set('formShippingAddress', $this->createUserAddressForm($orderArray['ShippingAddress']));
+	    }
+	    
+	    if(isset($orderArray['BillingAddress']))
+	    {
+	        $response->set('formBillingAddress', $this->createUserAddressForm());
+	    }
+	    
 		return $response;
 	}
 	
@@ -125,103 +138,6 @@ class CustomerOrderController extends StoreManagementController
 		$response->set('userGroups', $userGroups);
 		
 		return $response;
-	}
-	
-	private function createAddressString($addressArray)
-	{
-          $addressString = '';
-          
-          if(!empty($addressArray['UserAddress']['fullName']))
-          {
-              $addressString .= $addressArray['UserAddress']['fullName'] . ', ';
-          }
-          
-          if(!empty($addressArray['UserAddress']['countryName']))
-          {
-              $addressString .= $addressArray['UserAddress']['countryName'] . ', ';
-          }
-      
-          if(!empty($addressArray['UserAddress']['stateName']))
-          {
-              $addressString .= $addressArray['UserAddress']['stateName'] . ', ';
-          }
-      
-          if(!empty($addressArray['State']['code']))
-          {
-              $addressString .= $addressArray['State']['code'] . ', ';
-          }
-      
-          if(!empty($addressArray['UserAddress']['city']))
-          {
-              $addressString .= $addressArray['UserAddress']['city'] . ', ';
-          }
-          
-          if(strlen($addressString) > 2)
-          {
-              $addressString = substr($addressString, 0, -2);
-          }
-          
-          return $addressString;
-	}
-	
-	/**
-	 * @return RequestValidator
-	 */
-    public function createUserAddressFormValidator()
-    {
-        $validator = new RequestValidator("userAddress", $this->request);		            
-			
-		$validator->addCheck('countryID', new IsNotEmptyCheck($this->translate('_country_empty')));
-		$validator->addCheck('city',      new IsNotEmptyCheck($this->translate('_city_empty')));
-		$validator->addCheck('address1',  new IsNotEmptyCheck($this->translate('_address_empty')));
-		$validator->addCheck('firstName', new IsNotEmptyCheck($this->translate('_first_name_is_empty')));
-		$validator->addCheck('lastName',  new IsNotEmptyCheck($this->translate('_last_name_is_empty')));
-        
-        return $validator;
-    }
-
-    /**
-     * @return Form
-     */
-	public function createUserAddressForm($addressArray = array())
-	{
-		$form = new Form($this->createUserAddressFormValidator());	
-		
-		if(!empty($addressArray))
-	    {
-			if(isset($addressArray['State']['ID']))
-			{
-			    $addressArray['stateID'] = $addressArray['State']['ID'];
-			}
-			
-	        $form->setData($addressArray);
-	    }
-	    
-		return $form;
-	}
-	
-	/**
-	 * @return RequestValidator
-	 */
-    public function createOrderFormValidator()
-    {
-        $validator = new RequestValidator("CustomerOrder", $this->request);		            
-			
-		$validator->addCheck('status', new MinValueCheck($this->translate('_invalid_status'), 0));
-		$validator->addCheck('status', new MaxValueCheck($this->translate('_invalid_status'), 4));	
-        
-        return $validator;
-    }
-
-    /**
-     * @return Form
-     */
-	public function createOrderForm($orderArray)
-	{
-		$form = new Form($this->createOrderFormValidator());	
-	    $form->setData($orderArray);
-		
-		return $form;
 	}
 
 	public function orders()
@@ -245,6 +161,9 @@ class CustomerOrderController extends StoreManagementController
 		return $response;
 	}
 	
+	/**
+	 * @role update
+	 */
 	public function switchCancelled()
 	{
 	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
@@ -479,7 +398,177 @@ class CustomerOrderController extends StoreManagementController
 	    	'data' => $data
     	));	  	  	
 	}
+    
+    /**
+     * @role update
+     */
+    public function update()
+    {
+        $order = CustomerOrder::getInstanceByID((int)$this->request->get('ID'), true);
+	    $status = (int)$this->request->get('status');
+		$order->status->set($status);
+	    $isCancelled = (int)$this->request->get('isCancelled') ? true : false;
+		$order->isCancelled->set($isCancelled);
 		
+        return $this->save($order);
+    }
+    
+    /**
+     * @role create
+     */
+    public function create()
+    {
+        $user = User::getInstanceByID((int)$this->request->get('customerID'), true, true);
+        $order = CustomerOrder::getNewInstance($user);
+	    $status = CustomerOrder::STATUS_NEW;
+		$order->status->set($status);
+		$order->isFinalized->set(1);
+		$order->capturedAmount->set(0);
+		$order->totalAmount->set(0);
+		$order->dateCompleted->set(new ARSerializableDateTime());
+		$order->currency->set($this->application->getDefaultCurrency());
+		
+		if($user->defaultShippingAddress->get() && $user->defaultBillingAddress->get())
+		{
+		    $user->defaultBillingAddress->get()->load(array('UserAddress'));
+		    $user->defaultShippingAddress->get()->load(array('UserAddress'));
+		    
+		    $billingAddress = clone $user->defaultBillingAddress->get()->userAddress->get();
+		    $shippingAddress = clone $user->defaultShippingAddress->get()->userAddress->get();
+		    
+		    $billingAddress->save();
+		    $shippingAddress->save();
+		    
+			$order->billingAddress->set($billingAddress);
+			$order->shippingAddress->set($shippingAddress);
+		
+		    return $this->save($order);
+		}
+		else
+		{
+		    return new JSONResponse(array('noaddress' => true), 'failure', $this->translate('_err_user_has_no_billing_or_shipping_address'));
+		}
+    }
+    
+    /**
+     * @role update
+     */
+    public function updateAddress()
+    {
+        $validator = $this->createUserAddressFormValidator();
+        
+        if($validator->isValid())
+        {		
+	        $address = UserAddress::getInstanceByID('UserAddress', (int)$this->request->get('ID'));
+	        $address->address1->set($this->request->get('address1'));
+	        $address->address2->set($this->request->get('address2'));
+	        $address->city->set($this->request->get('city'));
+	        $address->stateName->set($this->request->get('stateName'));
+	        
+	        if($this->request->get('stateID'))
+	        {
+	            $address->state->set(State::getInstanceByID((int)$this->request->get('stateID')));
+	        }
+	        
+	        $address->postalCode->set($this->request->get('postalCode'));
+	        $address->countryID->set($this->request->get('countryID'));
+	        $address->phone->set($this->request->get('phone'));
+	        $address->companyName->set($this->request->get('companyName'));
+	        $address->firstName->set($this->request->get('firstName'));
+	        $address->lastName->set($this->request->get('lastName'));
+	        
+	        $address->save();
+	        
+	        return new JSONResponse(array('address' => $address->toArray()), 'success', $this->translate('_order_address_was_successfully_updated'));
+        }
+        else
+        {
+            return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_error_updating_order_address'));
+        }
+    }
+
+	public function removeEmptyShipments()
+	{
+	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
+	    
+	    $recordsCount = 0;
+	    foreach($order->getShipments() as $shipment)
+	    {
+	        if(count($shipment->getItems()) == 0)
+	        {
+                $recordsCount++;
+	            $shipment->delete();
+	        }
+	        
+	        if($shipment->isShippable())
+	        {
+	            $recordsCount++;
+	        }
+	    }
+	    
+	    if($recordsCount > 1) // One for downloadable
+	    {
+	        return new JSONResponse(array('status' => 'success', 'message' => $this->translate('_empty_shipments_were_removed')));
+	    } 
+	    else
+	    {
+	        return new ActionResponse();
+	    }
+	}   
+	
+	private function save(CustomerOrder $order)
+	{
+   		$validator = self::createOrderFormValidator();
+		if ($validator->isValid())
+		{
+		    $existingRecord = $order->isExistingRecord();
+			$order->save();
+			
+			return new JSONResponse(false, 'success', $this->translate($existingRecord ? '_order_status_has_been_successfully_changed' : '_new_order_has_been_successfully_created'));
+		}
+		else
+		{
+		    return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_error_updating_order_status'));
+		}
+	}
+	
+	private function createAddressString($addressArray)
+	{
+          $addressString = '';
+          
+          if(!empty($addressArray['UserAddress']['fullName']))
+          {
+              $addressString .= $addressArray['UserAddress']['fullName'] . ', ';
+          }
+          
+          if(!empty($addressArray['UserAddress']['countryName']))
+          {
+              $addressString .= $addressArray['UserAddress']['countryName'] . ', ';
+          }
+      
+          if(!empty($addressArray['UserAddress']['stateName']))
+          {
+              $addressString .= $addressArray['UserAddress']['stateName'] . ', ';
+          }
+      
+          if(!empty($addressArray['State']['code']))
+          {
+              $addressString .= $addressArray['State']['code'] . ', ';
+          }
+      
+          if(!empty($addressArray['UserAddress']['city']))
+          {
+              $addressString .= $addressArray['UserAddress']['city'] . ', ';
+          }
+          
+          if(strlen($addressString) > 2)
+          {
+              $addressString = substr($addressString, 0, -2);
+          }
+          
+          return $addressString;
+	}
+	
 	protected function getDisplayedColumns()
 	{	
 		// get displayed columns
@@ -573,134 +662,66 @@ class CustomerOrderController extends StoreManagementController
 		
         return new Form($validator);                
     }
-    
-    /**
-     * @role update
-     */
-    public function update()
+
+
+	/**
+	 * @return RequestValidator
+	 */
+    private function createUserAddressFormValidator()
     {
-        $order = CustomerOrder::getInstanceByID((int)$this->request->get('ID'), true);
-	    $status = (int)$this->request->get('status');
-		$order->status->set($status);
-	    $isCancelled = (int)$this->request->get('isCancelled') ? true : false;
-		$order->isCancelled->set($isCancelled);
-		
-        return $this->save($order);
-    }
-    
-    /**
-     * @role update
-     */
-    public function create()
-    {
-        $user = User::getInstanceByID((int)$this->request->get('customerID'), true, true);
-        $order = CustomerOrder::getNewInstance($user);
-	    $status = CustomerOrder::STATUS_NEW;
-		$order->status->set($status);
-		$order->isFinalized->set(1);
-		$order->capturedAmount->set(0);
-		$order->totalAmount->set(0);
-		$order->dateCompleted->set(new ARSerializableDateTime());
-		$order->currency->set($this->application->getDefaultCurrency());
-		
-		if($user->defaultShippingAddress->get() && $user->defaultBillingAddress->get())
-		{
-		    $user->defaultBillingAddress->get()->load(array('UserAddress'));
-		    $user->defaultShippingAddress->get()->load(array('UserAddress'));
-		    
-		    $billingAddress = clone $user->defaultBillingAddress->get()->userAddress->get();
-		    $shippingAddress = clone $user->defaultShippingAddress->get()->userAddress->get();
-		    
-		    $billingAddress->save();
-		    $shippingAddress->save();
-		    
-			$order->billingAddress->set($billingAddress);
-			$order->shippingAddress->set($shippingAddress);
-		
-		    return $this->save($order);
-		}
-		else
-		{
-		    return new JSONResponse(array('noaddress' => true), 'failure', $this->translate('_err_user_has_no_billing_or_shipping_address'));
-		}
-    }
-    
-	private function save(CustomerOrder $order)
-	{
-   		$validator = self::createOrderFormValidator();
-		if ($validator->isValid())
-		{
-		    $existingRecord = $order->isExistingRecord();
-			$order->save();
+        $validator = new RequestValidator("userAddress", $this->request);		            
 			
-			return new JSONResponse(false, 'success', $this->translate($existingRecord ? '_order_status_has_been_successfully_changed' : '_new_order_has_been_successfully_created'));
-		}
-		else
-		{
-		    return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_error_updating_order_status'));
-		}
-	}
-    
-    public function updateAddress()
-    {
-        $validator = $this->createUserAddressFormValidator();
+		$validator->addCheck('countryID', new IsNotEmptyCheck($this->translate('_country_empty')));
+		$validator->addCheck('city',      new IsNotEmptyCheck($this->translate('_city_empty')));
+		$validator->addCheck('address1',  new IsNotEmptyCheck($this->translate('_address_empty')));
+		$validator->addCheck('firstName', new IsNotEmptyCheck($this->translate('_first_name_is_empty')));
+		$validator->addCheck('lastName',  new IsNotEmptyCheck($this->translate('_last_name_is_empty')));
         
-        if($validator->isValid())
-        {		
-	        $address = UserAddress::getInstanceByID('UserAddress', (int)$this->request->get('ID'));
-	        $address->address1->set($this->request->get('address1'));
-	        $address->address2->set($this->request->get('address2'));
-	        $address->city->set($this->request->get('city'));
-	        $address->stateName->set($this->request->get('stateName'));
-	        
-	        if($this->request->get('stateID'))
-	        {
-	            $address->state->set(State::getInstanceByID((int)$this->request->get('stateID')));
-	        }
-	        
-	        $address->postalCode->set($this->request->get('postalCode'));
-	        $address->countryID->set($this->request->get('countryID'));
-	        $address->phone->set($this->request->get('phone'));
-	        $address->companyName->set($this->request->get('companyName'));
-	        $address->firstName->set($this->request->get('firstName'));
-	        $address->lastName->set($this->request->get('lastName'));
-	        
-	        $address->save();
-	        
-	        return new JSONResponse(array('address' => $address->toArray()), 'success', $this->translate('_order_address_was_successfully_updated'));
-        }
-        else
-        {
-            return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_error_updating_order_address'));
-        }
+        return $validator;
     }
 
     /**
-     * @role update
+     * @return Form
      */
-	public function removeEmptyShipments()
+	private function createUserAddressForm($addressArray = array())
 	{
-	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
-	    
-	    $recordsCount = 0;
-	    foreach($order->getShipments() as $shipment)
+		$form = new Form($this->createUserAddressFormValidator());	
+		
+		if(!empty($addressArray))
 	    {
-	        if(count($shipment->getItems()) == 0)
-	        {
-                $recordsCount++;
-	            $shipment->delete();
-	        }
-	        
-	        if($shipment->isShippable())
-	        {
-	            $recordsCount++;
-	        }
+			if(isset($addressArray['State']['ID']))
+			{
+			    $addressArray['stateID'] = $addressArray['State']['ID'];
+			}
+			
+	        $form->setData($addressArray);
 	    }
 	    
-	    if($recordsCount > 1) // One for downloadable
-	    {
-	        return new JSONResponse(array('status' => 'success', 'message' => $this->translate('_empty_shipments_were_removed')));
-	    }
+		return $form;
+	}
+	
+	/**
+	 * @return RequestValidator
+	 */
+    private function createOrderFormValidator()
+    {
+        $validator = new RequestValidator("CustomerOrder", $this->request);		            
+			
+		$validator->addCheck('status', new MinValueCheck($this->translate('_invalid_status'), 0));
+		$validator->addCheck('status', new MaxValueCheck($this->translate('_invalid_status'), 4));	
+        
+        return $validator;
+    }
+
+    /**
+     * @return Form
+     */
+	private function createOrderForm($orderArray)
+	{
+		$form = new Form($this->createOrderFormValidator());	
+	    $form->setData($orderArray);
+		
+		return $form;
 	}
 }
 ?>

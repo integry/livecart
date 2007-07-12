@@ -38,6 +38,9 @@ class PaymentController extends StoreManagementController
         return $response;
     }
     
+    /**
+     * @role update
+     */
     public function void()
     {
         $transaction = Transaction::getInstanceById($this->request->get('id'));
@@ -58,6 +61,9 @@ class PaymentController extends StoreManagementController
         }
     }
 
+    /**
+     * @role update
+     */
     public function capture()
     {
         $transaction = Transaction::getInstanceById($this->request->get('id'));
@@ -84,6 +90,9 @@ class PaymentController extends StoreManagementController
         }
     }
     
+    /**
+     * @role update
+     */
     public function addOffline()
     {
         $order = CustomerOrder::getInstanceById($this->request->get('id'));
@@ -159,6 +168,9 @@ class PaymentController extends StoreManagementController
         return $response;
     }
     
+    /**
+     * @role update
+     */
     public function processCreditCard()
     {
         $order = CustomerOrder::getInstanceById($this->request->get('id'));

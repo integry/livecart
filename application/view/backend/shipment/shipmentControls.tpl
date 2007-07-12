@@ -1,10 +1,10 @@
 <fieldset class="orderShipment_controls error">
-   <div class="orderShipment_addProduct">
+   <div class="orderShipment_addProduct" style="{denied role='order.update'}display: none{/denied}">
        <a href="#newProduct" id="orderShipment_addProduct_{$shipment.ID}" class="addNewProductLink">{t _add_new_product}</a>
    </div >
    <fieldset class="orderShipment_status error">
        <label>Status: </label>
-       <select name="status" id="orderShipment_status_{$shipment.ID}">
+       <select name="status" id="orderShipment_status_{$shipment.ID}" {denied role='order.update'}disabled="disabled"{/denied}">
            {foreach key="statusID" item="status" from=$statuses}
                <option value="{$statusID}" id="orderShipment_status_{$shipment.ID}_{$statusID}" {if $shipment.status == $statusID}selected{/if}>{$status}</option>
            {/foreach}

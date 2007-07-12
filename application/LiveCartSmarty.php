@@ -26,7 +26,7 @@ class LiveCartSmarty extends Smarty
      */    
     public function config($key)
     {
-        return $this->getApplication()->getConfig()->get($key);
+        return self::getApplication()->getConfig()->get($key);
     }
 }
 

@@ -25,7 +25,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 		self::$application = $application;
 	}
 
-	protected function getApplication()
+	public function getApplication()
 	{
 		return self::$application;
 	}

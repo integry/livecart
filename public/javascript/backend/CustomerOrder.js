@@ -80,10 +80,7 @@ Backend.CustomerOrder.prototype =
                 }
                 else
                 {
-                     if(response.errors.noaddress)
-                     {	
-                         new Backend.SelectPopup.prototype.popup.Backend.SaveConfirmationMessage(Backend.SelectPopup.prototype.popup.$("userHasNoAddressError")); // show error in popup
-                     }
+                     new Backend.SelectPopup.prototype.popup.Backend.SaveConfirmationMessage(Backend.SelectPopup.prototype.popup.$("userHasNoAddressError")); // show error in popup
                 }
             } 
         );
@@ -492,14 +489,23 @@ Backend.CustomerOrder.Editor.prototype =
         {
             orderIndicator.style.visibility = 'hidden';
         }
-        Backend.showContainer("orderManagerContainer");
 
+            
+        Backend.showContainer("orderManagerContainer");
         this.tabControl = TabControl.prototype.getInstance("orderManagerContainer", false);
     },
     
     cancelForm: function()
     {      
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+        
+        if(!Backend.CustomerOrder.Editor.prototype.getInstance(Backend.CustomerOrder.Editor.prototype.getCurrentId()).removeEmptyShipmentsConfirmation()) 
+        {
+            Backend.CustomerOrder.prototype.treeBrowser.selectItem(Backend.CustomerOrder.prototype.activeGroup, false);
+            return;
+        }
+        
+        Backend.hideContainer();
 		Form.restore(this.nodes.form);
     },
     

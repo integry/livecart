@@ -40,21 +40,18 @@
         <li>
             <a href="">Print invoice</a>
         </li>
-        <li>
+        <li style="{denied role='order.update'}display: none{/denied}">
             <span style="display: none;" id="order_{$order.ID}_isCanceledIndicator" class="progressIndicator"></span>
             <a id="order_{$order.ID}_isCanceled" href="{link controller="backend.customerOrder" action="setIsCanceled" id=$order.ID}">
                 {if $order.isCancelled}{t _accept_order}{else}{t _cancel_order}{/if}
             </a>
-        </li>
-        <li>
-            <a href="">Delete order</a>
         </li>
     </ul>
 </fieldset>
 
 <fieldset class="order_status">
     <legend>{t _order_status}</legend>
-    {form handle=$form action="controller=backend.customerOrder action=update" id="orderInfo_`$order.ID`_form" onsubmit="Backend.CustomerOrder.Editor.prototype.getInstance(`$order.ID`, false).submitForm(); return false;" method="post"}
+    {form handle=$form action="controller=backend.customerOrder action=update" id="orderInfo_`$order.ID`_form" onsubmit="Backend.CustomerOrder.Editor.prototype.getInstance(`$order.ID`, false).submitForm(); return false;" method="post" role="order.update"}
         {hidden name="ID"} 
         <fieldset class="error">
             <label for="order_{$order.ID}_status">{t _status}</label>
@@ -75,21 +72,24 @@
 
 <br class="clear" />
 
+{if $formShippingAddress}
+    {form handle=$formShippingAddress action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_shippingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
+        <fieldset class="order_shippingAddress">
+            <legend>{t _shipping_address}</legend>
+            {include file=backend/customerOrder/address.tpl type="shippingAddress" order=$order.ShippingAddress states=$shippingStates}
+        </fieldset>
+    {/form}
+{/if}
 
-{form handle=$formShippingAddress action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_shippingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post"}
-    <fieldset class="order_shippingAddress">
-        <legend>{t _shipping_address}</legend>
-        {include file=backend/customerOrder/address.tpl type="shippingAddress" order=$order.ShippingAddress states=$shippingStates}
-    </fieldset>
-{/form}
 
-
-{form handle=$formBillingAddress action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_billingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post"}
-    <fieldset class="order_billingAddress">
-        <legend>{t _billing_address}</legend>
-        {include file=backend/customerOrder/address.tpl type="billingAddress" order=$order.BillingAddress states=$billingStates}
-    </fieldset>
-{/form}
+{if $formBillingAddress}
+    {form handle=$formBillingAddress action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_billingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
+        <fieldset class="order_billingAddress">
+            <legend>{t _billing_address}</legend>
+            {include file=backend/customerOrder/address.tpl type="billingAddress" order=$order.BillingAddress states=$billingStates}
+        </fieldset>
+    {/form}
+{/if}
 
 
 
@@ -100,8 +100,14 @@
     try
     {
         var status = Backend.CustomerOrder.Editor.prototype.getInstance({/literal}{$order.ID}{literal});
-        var shippingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_shippingAddress_form{literal}'), 'shippingAddress');
-        var billingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_billingAddress_form{literal}'), 'billingAddress');
+        
+        {/literal}{if $formShippingAddress}{literal}
+            var shippingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_shippingAddress_form{literal}'), 'shippingAddress');
+        {/literal}{/if}{literal}
+        
+        {/literal}{if $formBillingAddress}{literal}
+            var billingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_billingAddress_form{literal}'), 'billingAddress');
+        {/literal}{/if}{literal}
     }
     catch(e)
     {

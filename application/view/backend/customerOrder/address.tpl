@@ -1,4 +1,4 @@
-<a class="orderAddress_showEdit" href="#edit" >{t _edit}</a>
+<a class="orderAddress_showEdit" href="#edit" style="{denied role='order.update'}display: none{/denied}" >{t _edit}</a>
 
 <fieldset id="order_{$order.ID}_{$type}_edit" class="orderAddress_edit error" style="display: none">
     {hidden name="ID"} 

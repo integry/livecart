@@ -1,8 +1,8 @@
 <div style="float: left;">
 <div class="menuContainer" id="orderNoteMenu_{$order.ID}">
 
-    <ul class="menu orderNoteMenu" style="margin: 0;">    	
-    	<li><a href="#addResponse" class="addResponse">{t _add_response}</a></li>
+    <ul class="menu orderNoteMenu" style="margin: 0; {denied role='order.update'}display: none;{/denied}">    	
+    	<li><a href="#addResponse" class="addResponse" >{t _add_response}</a></li>
     </ul>
     
     <div class="clear"></div>
@@ -12,7 +12,7 @@
         
             <legend>{t _add_response}</legend>
         
-            {form action="controller=backend.orderNote action=add id=`$order.ID`" method="POST" handle=$form onsubmit="Backend.OrderNote.submitForm(event);"}
+            {form action="controller=backend.orderNote action=add id=`$order.ID`" method="POST" handle=$form onsubmit="Backend.OrderNote.submitForm(event);" role="order.update"}
             
                 <p>
                     {textarea name="comment"}

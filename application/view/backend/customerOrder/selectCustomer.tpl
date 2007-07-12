@@ -30,9 +30,11 @@
                 {t _done_choosing_costumer}
             </a>
         </div>
-        
-        
-    	<div id="userGroupsBrowser" class="treeBrowser"></div>
+    	<div id="userGroupsBrowser" class="treeBrowser"></div>        
+        <ul id="userGroupsBrowserControls" class="verticalMenu">
+            <li class="addTreeNode" style="display: none;"><a id="userGroups_add" href="#add">{t _add}</a></li>
+            <li class="removeTreeNode" style="display: none;"><a id="userGroups_delete" href="#delete">{t _delete}</a></li>
+        </ul>
     
         <div class="yellowMessage" id="orderCreatedConfirmation" style="display: none;"><div>{t _new_order_has_been_successfully_created}</div></div>
         <div class="redMessage" id="userHasNoAddressError" style="display: none;"><div>{t _err_user_has_no_billing_or_shipping_address}</div></div>

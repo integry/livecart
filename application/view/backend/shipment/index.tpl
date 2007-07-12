@@ -1,4 +1,4 @@
-<fieldset class="container" {denied role="order.update"}style="display: none"{/denied}> 
+<fieldset class="container" style="{denied role='order.update'}display: none{/denied}"> 
     <ul class="menu" id="orderShipments_menu_{$orderID}"> 
         <li>
             <a href="#new" id="orderShipments_new_{$orderID}_show">{t _add_new_shipment}</a>
@@ -56,7 +56,7 @@
               
               
 <h2 class="notShippedShipmentsTitle">{t _downloadable}</h2> 
-<div id="orderShipments_list_{$orderID}_downloadable" class="downloadableShipmetn"> 
+<div id="orderShipments_list_{$orderID}_downloadable" class="downloadableShipmetn"  style="{denied role='order.update'}display: none{/denied}"> 
     <fieldset class="orderShipment_controls error"> 
         <div class="orderShipment_addProduct">
             <a href="#newProduct" id="orderShipment_addFile_{$orderID}" class="addNewProductLink">{t _add_new_file}</a>

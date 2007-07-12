@@ -25,7 +25,7 @@ class LiveCartRenderer extends SmartyRenderer
 	{
 		if (!$this->tpl)
 		{
-			$this->tpl = new LiveCartSmarty($this->getApplication());
+			$this->tpl = new LiveCartSmarty(self::getApplication());
 			$this->tpl->compile_dir = self::$compileDir;
 			$this->tpl->template_dir = ClassLoader::getRealPath("application.view");
 		}

@@ -36,8 +36,25 @@ body {
 	background-color: #FFFFFF;
 }
 p {
-  	margin-bottom: 10px;
+  	margin-top: 0px;
+	margin-bottom: 20px;
+	margin-left: 0px;	
 /* 	padding-left: 20px;*/
+}
+
+.top {
+	margin-top: 40px;
+	margin-bottom: 0px;
+}
+
+.topP {
+	margin-top: 80px;
+	margin-bottom: 0px;
+}
+
+.subList {
+	font-size: 12px;
+	list-style-type: circle;
 }
 
 ol {
@@ -91,13 +108,13 @@ h2 {
 }
 
 h3 {
-	margin-top: 30px;  
-	margin-bottom: 20px;  
+	margin-top: 50px;  
+	margin-bottom: 10px;  
 }
 
 h4 {
 	margin-top: 30px;  
-	margin-bottom: 30px;  
+	margin-bottom: 10px;  
 }
 
 a {

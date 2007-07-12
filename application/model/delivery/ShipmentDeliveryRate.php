@@ -15,12 +15,19 @@ ClassLoader::import('application.model.delivery.ShippingService');
 class ShipmentDeliveryRate extends ShippingRateResult
 {
     protected $amountWithTax;
+    private $application;
+    
+    public function setApplication($application)
+    {
+        $this->application = $application;
+    }
     
     public static function getNewInstance(ShippingService $service, $cost)
     {
         $inst = new ShipmentDeliveryRate();
         $inst->setServiceId($service->getID());
-        $inst->setCost($cost, self::getApplication()->getDefaultCurrencyCode());
+        $inst->setApplication($service->getApplication());
+        $inst->setCost($cost, $service->getApplication()->getDefaultCurrencyCode());
         return $inst;
     }
     
@@ -32,8 +39,7 @@ class ShipmentDeliveryRate extends ShippingRateResult
         $handler->setDestCountry($address->countryID->get()); 
         
         $handler->setDestZip($address->postalCode->get());
-
-        $config = self::getApplication()->getConfig();
+        $config = $shipment->getApplication()->getConfig();
         $handler->setSourceCountry($config->get('STORE_COUNTRY'));
         $handler->setSourceZip($config->get('STORE_ZIP'));
         
@@ -41,6 +47,7 @@ class ShipmentDeliveryRate extends ShippingRateResult
         foreach ($handler->getAllRates() as $k => $rate)        
         {            
             $newRate = new ShipmentDeliveryRate();
+            $newRate->setApplication($shipment->getApplication());
             $newRate->setCost($rate->getCostAmount(), $rate->getCostCurrency()); 
             $newRate->setServiceName($rate->getServiceName());
             $newRate->setClassName($rate->getClassName());
@@ -68,9 +75,8 @@ class ShipmentDeliveryRate extends ShippingRateResult
     public function toArray()
     {
         $array = parent::toArray();
-        
         $amountCurrency = Currency::getInstanceById($array['costCurrency']);
-        $currencies = self::getApplication()->getCurrencySet();
+        $currencies = $this->application->getCurrencySet();
 
         // get and format prices
         $prices = $formattedPrices = $taxPrices = array();

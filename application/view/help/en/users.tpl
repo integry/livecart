@@ -1,4 +1,4 @@
-<p>All the users of your system including customers and administrators (or any other) are considered (as) <i>users</i>. <ins>Customers that register in your storefront are automatically placed into "Customers" category.</ins> Administrators or any other users have to be added manually.</p>
+<p>All the users of your system including customers and administrators are considered (as) <i>users</i>. <ins>Customers that register in your storefront are automatically placed into "Customers" category.</ins> Administrators or any other users have to be added manually.</p>
 
 <div class="tasks">
 <fieldset>
@@ -16,11 +16,12 @@
 
 <h3 id="view_sort">View and Sort users</h3>
 
-<p>To view users:</p>
+<p>When you access the users section, all users are displayed. To view one of the user groups:</p>
 
 <ol>
 	<li>Select a user group in the group tree.</li>
-	<p>Users are displayed in a table similar to this:</p>
+	<img src="image/doc/users/select_group.bmp"/>
+	<p class="top">Users are displayed in a table similar to this:</p>
 	<img src="image/doc/users/table.bmp"/>
 	<p>By default users are displayed by the date they registered or were added: newest first, oldest - last.</p>
 </ol>
@@ -32,7 +33,7 @@
 <img src="image/doc/users/sort.bmp"/>
 
 	
-<p id="change_attributes">You can also change attributes displayed in the toolbar:</p>
+<p id="change_attributes" class="topP">You can also change attributes displayed in the toolbar:</p>
 <ol>
 	<li>Click "Columns" on the right:</li>
 	<img src="image/doc/users/columns.bmp"/>
@@ -46,7 +47,7 @@
 <p>To locate a user or users:</p>
 
 <ol>
-	<li>Select a category on the user group tree.</li>
+	<li>Select a category in the user group tree.</li>
 	<li>You can search (for) users by using one of the attributes displayed in the toolbar menu. Click an attribute to activate a search field:</li>
 	<img src="image/doc/users/search1.bmp">
 	<li>Enter search criteria and press "Enter".</li>
@@ -67,19 +68,16 @@
 	<li>Click the "Process" button to apply changes.</li>
 </ol>
 
-<ul>
-<p>To edit a <strong>single user</strong>, click the users' email:</p>
+<p class="topP">To edit a <strong>single user</strong>, click the users' email:</p>
 	<img src="image/doc/users/email.bmp">
-	<li>You can edit user's details, change user's group and view all past orders.</li>
-	<li>Save changes when you are done.</li>
-</ul>
+	<p>You can edit user's details, change user's group and view all past orders. Save changes when you are done.</p>
 
 
 <h3 id="add">Add new user</h3>
 
 <p>Users should be added to their appropriate user groups. To add a user:</p>
 <ol>
-	<li>Select a user group in the tree.</li>
+	<li>Select a user group in the user group tree.</li>
 	<li>Click the "Add new user" link.</li>
 	<img src="image/doc/users/add_new.bmp"/>
 	<li>Complete the form to add the user:</li>
@@ -103,14 +101,14 @@
 
 <h3 id="permissions">Setting administration permissions</h3>
 
-<p>Except for customer, all the other users can have administation rights which can be set in the "Permissions" section.</p>
+<p>Except for customer, all the other users can have administation rights (to manage backend) which can be set in the "Permissions" section.</p>
 
 <ol>
 	<li>Select a user group in the tree.</li>
 	<img src="image/doc/users/select_group.bmp"/>
 	<li>Click on the "Permissions" tab.</li>
 	<img src="image/doc/users/tab.bmp"/>
-	<p>You can grant administration rights my checking necessary roles.</p>
+	<p>You can grant administration rights my checking the necessary roles.</p>
 	<img src="image/doc/users/permissions.bmp"/>
 	<li>Click "Save" when done.</li>
 </ol>
