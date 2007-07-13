@@ -1,21 +1,70 @@
 [tree1]
 root = .
-revision = 64a451b50bedc7d5fbf4db1d7c5de094afff63cb
+revision = 8bc0cf6863c783f326a5b1be4188ce7ef824d782
 
 [tree1.paths]
-default = /var/db/repo/livecart
+default = ssh://mercurial@dev.integry.net/livecart
 
 [tree2]
 root = framework
-revision = e902d464148ee0b86ca08431790cc6efaa598828
+revision = ab5096961ee2896ca4860a08f3c2d2af6e5a785a
 
 [tree2.paths]
-default = /var/db/repo/framework
+default = ssh://mercurial@dev.integry.net/framework
 
 [tree3]
-root = library/activerecord
-revision = 6b7ae2366408cf74ea8901c787ef4cd10490245b
+root = library/I18Nv2
+revision = d79ce12994eed6059bf59bc76f00b2988e721087
 
 [tree3.paths]
-default = /var/db/repo/activerecord
+default = ssh://mercurial@dev.integry.net/livecart\library\I18Nv2
+
+[tree4]
+root = library/activerecord
+revision = 20707de264160bd6d154d94eec331b74c09f9549
+
+[tree4.paths]
+default = ssh://mercurial@dev.integry.net/activerecord
+
+[tree5]
+root = library/creole
+revision = e57c65fc6bbc7c0a33cca7468c792964a7bcd6e4
+
+[tree5.paths]
+default = ssh://mercurial@dev.integry.net/livecart\library\creole
+
+[tree6]
+root = library/locale
+revision = 7a1798db848e2560d33388516a917e88e5afe750
+
+[tree6.paths]
+default = ssh://mercurial@dev.integry.net/livecart\library\locale
+
+[tree7]
+root = library/smarty
+revision = 22839073df6bc643750685fed879a1c2215773f0
+
+[tree7.paths]
+default = ssh://mercurial@dev.integry.net/livecart\library\smarty
+
+[tree8]
+root = library/stat
+revision = 4332f24a8c8d400269de3d8638e1c405989db19b
+
+[tree8.paths]
+default = ssh://mercurial@dev.integry.net/livecart\library\stat
+
+[tree9]
+root = library/swiftmailer
+revision = 2a758a82ba52a602f875447e88e61c140aac5d0c
+
+[tree9.paths]
+default = ssh://mercurial@dev.integry.net/livecart\library\swiftmailer
+
+[tree10]
+root = library/unittest
+revision = 47f84ea319374efe7d056a759ce69b1a7f47b5a0
+
+[tree10.paths]
+default = ssh://mercurial@dev.integry.net/livecart\library\unittest
 
