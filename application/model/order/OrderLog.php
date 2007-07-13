@@ -30,16 +30,19 @@ class OrderLog extends ActiveRecordModel
 		$schema->registerField(new ARField("newValue", ARText::instance()));
 	}
 		
-	public static function getNewInstance(User $user, CustomerOrder $oldOrder, CustomerOrder $newOrder, $type, $action)	
+	public static function getNewInstance($type, $action, User $user, $oldValue, $newValue, CustomerOrder $oldOrder, CustomerOrder $newOrder)	
 	{
         $instance = parent::getNewInstance(__CLASS__);
         
 		$instance->user->set($user);   
 		$instance->time->set(new ARSerializableDateTime());
-		$instance->type->set($type);
-		$instance->action->set($action);
+		$instance->type->set((int)$type);
+		$instance->action->set((int)$action);
+        $instance->order->set($oldOrder);
         $instance->oldTotal->set($oldOrder->totalAmount->get());
         $instance->newTotal->set($newOrder->totalAmount->get());
+        $instance->oldValue->set($oldValue);
+        $instance->newValue->set($newValue);
 		
         return $instance;   
     }
@@ -55,6 +58,18 @@ class OrderLog extends ActiveRecordModel
     public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
     {
         return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+    }
+
+    public static function getRecordSetByOrder(CustomerOrder $order, ARSelectFilter $filter = null, $loadReferencedRecords = false)
+    {
+        if(!$filter)
+        {
+            $filter = new ARSelectFilter();
+        }
+        
+        $filter->getCondition()->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'orderID'), $order->getID()));
+        
+        return self::getRecordSet($filter, $loadReferencedRecords);
     }
 }
 	

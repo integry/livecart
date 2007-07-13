@@ -2,10 +2,11 @@
 
 <fieldset id="order_{$order.ID}_{$type}_edit" class="orderAddress_edit error" style="display: none">
     {hidden name="ID"} 
+    <input name="orderID" type="hidden" value="{$order.ID}" />
     
     <fieldset class="error">
         <label for="order_{$order.ID}_{$type}_existingAddress_select">{t _use_existing_address}</label>
-        {selectfield options=$existingUserAddressOptions id="order_`$orderID`_`$type`_existingAddress_select" name="existingUserAddress"} 
+        {selectfield options=$existingUserAddressOptions id="order_`$order.ID`_`$type`_existingAddress_select" name="existingUserAddress"} 
     </fieldset>
 
     <fieldset class="error">
@@ -73,54 +74,54 @@
 <fieldset id="order_{$order.ID}_{$type}_view" class="container orderAddress_view">
     <p>
         <label>{t _name}</label>
-        <label>{$order.fullName}</label>    
+        <label>{$address.fullName}</label>    
     </p>    
 
     {if $order.companyName}
         <p>
             <label>{t _company}</label>    
-            <label>{$order.companyName}</label>
+            <label>{$address.companyName}</label>
         </p>
     {/if}
     
     <p>
         <label>{t _country}</label>    
-        <label>{$order.countryName}</label>
+        <label>{$address.countryName}</label>
     </p>
     
     <p>
         <label>{t _state}</label>    
         <label>
-            {if $order.State.ID}
-                {$order.State.name}
+            {if $address.State.ID}
+                {$address.State.name}
             {else}
-                {$order.stateName}
+                {$address.stateName}
             {/if}
         </label>
     </p>    
     
     <p>
         <label>{t _city}</label>    
-        <label>{$order.city}</label>
+        <label>{$address.city}</label>
     </p>
     
     <p>
-        <label>{t _address}</label>    
-        <label>{$order.address1}</label>
+        <label>{t _address} 1</label>    
+        <label>{$address.address1}</label>
     </p>    
     
     <p>
-        <label>{t _address}</label>    
-        <label>{$order.address2}</label>
+        <label>{t _address} 2</label>    
+        <label>{$address.address2}</label>
     </p>    
     
     <p>
         <label>{t _postal_code}</label>    
-        <label>{$order.postalCode}</label>
+        <label>{$address.postalCode}</label>
     </p>
     
     <p>
         <label>{t _phone}</label>    
-        <label>{$order.phone}</label>
+        <label>{$address.phone}</label>
     </p>
 </fieldset>

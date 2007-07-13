@@ -27,7 +27,9 @@ class OrderedItemController extends StoreManagementController
         {
             $shipment = Shipment::getInstanceById('Shipment', (int)$this->request->get('shipmentID'), true, array('Order' => 'CustomerOrder', 'ShippingService', 'ShippingAddress' => 'UserAddress', 'AmountCurrency' => 'Currency'));
         }
-
+        
+        $history = new OrderHistory($shipment->order->get(), $this->user);
+        
         $product = Product::getInstanceById((int)$this->request->get('productID'), true);
         
         $existingItem = false;
@@ -65,8 +67,12 @@ class OrderedItemController extends StoreManagementController
             $shipment->addItem($item);
             $shipment->save();
         }
-          
-        return $this->save($item, $shipment, $existingItem ? true : false );
+        
+        $response = $this->save($item, $shipment, $existingItem ? true : false );
+        
+        $history->saveLog();
+        
+        return $response;
     }
     
     public function update()

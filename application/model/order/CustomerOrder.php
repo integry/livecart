@@ -23,6 +23,11 @@ class CustomerOrder extends ActiveRecordModel
 	    
     private $taxes = array();
     
+    /**
+     * @var LogHistory
+     */
+    private $history = null;
+    
     const STATUS_NEW = null;
     const STATUS_BACKORDERED = 1;
     const STATUS_AWAITING_SHIPMENT = 2;
@@ -78,7 +83,7 @@ class CustomerOrder extends ActiveRecordModel
     {
         return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
     }
-    
+        
     public function loadItems()
     {
         $this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'))->getData();

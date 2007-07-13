@@ -76,7 +76,7 @@
     {form handle=$formShippingAddress action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_shippingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
         <fieldset class="order_shippingAddress">
             <legend>{t _shipping_address}</legend>
-            {include file=backend/customerOrder/address.tpl type="shippingAddress" order=$order.ShippingAddress states=$shippingStates}
+            {include file=backend/customerOrder/address.tpl type="shippingAddress" address=$order.ShippingAddress states=$shippingStates order=$order}
         </fieldset>
     {/form}
 {/if}
@@ -86,7 +86,7 @@
     {form handle=$formBillingAddress action="controller=backend.customerOrder action=updateAddress" id="orderInfo_`$order.ID`_billingAddress_form" onsubmit="Backend.CustomerOrder.Address.prototype.getInstance(this, false).submitForm(); return false;" method="post" role="order.update"}
         <fieldset class="order_billingAddress">
             <legend>{t _billing_address}</legend>
-            {include file=backend/customerOrder/address.tpl type="billingAddress" order=$order.BillingAddress states=$billingStates}
+            {include file=backend/customerOrder/address.tpl type="billingAddress" address=$order.BillingAddress states=$billingStates order=$order}
         </fieldset>
     {/form}
 {/if}

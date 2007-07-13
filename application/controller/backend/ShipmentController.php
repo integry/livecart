@@ -188,9 +188,15 @@ class ShipmentController extends StoreManagementController
     public function create()
     {
 	    $order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'));
+	    $history = new OrderHistory($order, $this->user);
+	    
 	    $shipment = Shipment::getNewInstance($order);
 	    
-	    return $this->save($shipment);
+	    $response = $this->save($shipment);
+	    
+	    $history->saveLog();
+	    
+	    return $response;
     }
     
     /**

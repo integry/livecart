@@ -43,6 +43,33 @@ class UserAddress extends ActiveRecordModel
         $array['fullName'] = $array['firstName'] . ' ' . $array['lastName'];
         return $array;   
     }	
+    
+    public function toString()
+    {
+        $addressString = '';
+        
+        // Name
+        if($this->firstName->get() != '') $addressString .= $this->firstName->get();
+        if($this->firstName->get() != '' && $this->lastName->get() != '') $addressString .= " ";
+        if($this->lastName->get() != '') $addressString .= $this->lastName->get();
+        if($this->firstName->get() != '' || $this->lastName->get() != '') $addressString .= "\n";
+        
+        // Company name
+        if($this->companyName->get() != '') $addressString .= $this->companyName->get() . "\n";
+        
+        // Address
+        if($this->address1->get() != '') $addressString .= $this->address1->get() . "\n";
+        if($this->address2->get() != '') $addressString .= $this->address2->get() . "\n";
+        
+        // City and postal code
+        if($this->city->get() != '') $addressString .= $this->city->get();
+        if($this->city->get() != '' && $this->postalCode->get() != '') $addressString .= ", ";
+        if($this->postalCode->get() != '') $addressString .= $this->postalCode->get();
+        if($this->city->get() != '' || $this->postalCode->get() != '') $addressString .= "\n";
+        
+        if($this->countryID->get() != '') $addressString .=  $this->getApplication()->getLocale()->info()->getCountryName($this->countryID->get()) . "\n";
+
+        return $addressString;
+    }
 }
-	
 ?>

@@ -117,7 +117,7 @@ class CustomerOrderController extends StoreManagementController
 	    
 	    if(isset($orderArray['BillingAddress']))
 	    {
-	        $response->set('formBillingAddress', $this->createUserAddressForm());
+	        $response->set('formBillingAddress', $this->createUserAddressForm($orderArray['BillingAddress']));
 	    }
 	    
 		return $response;
@@ -167,8 +167,10 @@ class CustomerOrderController extends StoreManagementController
 	public function switchCancelled()
 	{
 	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
+	    $history = new OrderHistory($order, $this->user);
 	    $order->isCancelled->set(!$order->isCancelled->get());
 	    $order->save();
+	    $history->saveLog();
 	    
 	    return new JSONResponse(array(
 		        'isCanceled' => $order->isCancelled->get(),
@@ -196,7 +198,7 @@ class CustomerOrderController extends StoreManagementController
 		
         $act = $this->request->get('act');
 		$field = array_pop(explode('_', $act, 2));           
-
+		
         foreach ($orders as $order)
 		{
 		    switch($act)
@@ -405,12 +407,17 @@ class CustomerOrderController extends StoreManagementController
     public function update()
     {
         $order = CustomerOrder::getInstanceByID((int)$this->request->get('ID'), true);
-	    $status = (int)$this->request->get('status');
+	    $history = new OrderHistory($order, $this->user);
+        
+        $status = (int)$this->request->get('status');
 		$order->status->set($status);
 	    $isCancelled = (int)$this->request->get('isCancelled') ? true : false;
 		$order->isCancelled->set($isCancelled);
 		
-        return $this->save($order);
+        $response = $this->save($order);
+        $history->saveLog();
+        
+        return $response;
     }
     
     /**
@@ -459,8 +466,12 @@ class CustomerOrderController extends StoreManagementController
         
         if($validator->isValid())
         {		
-	        $address = UserAddress::getInstanceByID('UserAddress', (int)$this->request->get('ID'));
-	        $address->address1->set($this->request->get('address1'));
+            $order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true);
+            $address = UserAddress::getInstanceByID('UserAddress', (int)$this->request->get('ID'), true);
+            
+            $history = new OrderHistory($order, $this->user);
+            
+	        $address->address1->set($this->request->get('address1'));        
 	        $address->address2->set($this->request->get('address2'));
 	        $address->city->set($this->request->get('city'));
 	        $address->stateName->set($this->request->get('stateName'));
@@ -479,6 +490,9 @@ class CustomerOrderController extends StoreManagementController
 	        
 	        $address->save();
 	        
+	        $history->saveLog();
+	        
+	        
 	        return new JSONResponse(array('address' => $address->toArray()), 'success', $this->translate('_order_address_was_successfully_updated'));
         }
         else
@@ -494,25 +508,25 @@ class CustomerOrderController extends StoreManagementController
 	    $recordsCount = 0;
 	    foreach($order->getShipments() as $shipment)
 	    {
-	        if(count($shipment->getItems()) == 0)
-	        {
-                $recordsCount++;
-	            $shipment->delete();
-	        }
-	        
-	        if($shipment->isShippable())
+	        if($shipment->isShippable() && count($shipment->getItems()) == 0)
 	        {
 	            $recordsCount++;
+	        }
+	        
+	        if(count($shipment->getItems()) == 0)
+	        {
+	            $shipment->delete();
 	        }
 	    }
 	    
 	    if($recordsCount > 1) // One for downloadable
 	    {
-	        return new JSONResponse(array('status' => 'success', 'message' => $this->translate('_empty_shipments_were_removed')));
+	        return new RawResponse();
+//	        return new JSONResponse(array('status' => 'success', 'message' => $this->translate('_empty_shipments_were_removed')));
 	    } 
 	    else
 	    {
-	        return new ActionResponse();
+	        return new RawResponse();
 	    }
 	}   
 	
@@ -686,7 +700,7 @@ class CustomerOrderController extends StoreManagementController
 	private function createUserAddressForm($addressArray = array())
 	{
 		$form = new Form($this->createUserAddressFormValidator());	
-		
+
 		if(!empty($addressArray))
 	    {
 			if(isset($addressArray['State']['ID']))
