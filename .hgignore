@@ -1,6 +1,7 @@
 syntax: regexp
 ^cache$
 ^storage\/(?!configuration)(.*)
+Thumbs.db
 
 syntax: glob
 storage/configuration/settings.php
