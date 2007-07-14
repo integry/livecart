@@ -17,7 +17,7 @@ root = library/I18Nv2
 revision = d79ce12994eed6059bf59bc76f00b2988e721087
 
 [tree3.paths]
-default = ssh://mercurial@dev.integry.net/livecart\library\I18Nv2
+default = ssh://mercurial@dev.integry.net/vendor/I18Nv2
 
 [tree4]
 root = library/activerecord
@@ -31,7 +31,7 @@ root = library/creole
 revision = e57c65fc6bbc7c0a33cca7468c792964a7bcd6e4
 
 [tree5.paths]
-default = ssh://mercurial@dev.integry.net/livecart\library\creole
+default = ssh://mercurial@dev.integry.net/vendor/creole
 
 [tree6]
 root = library/locale
@@ -45,7 +45,7 @@ root = library/smarty
 revision = 22839073df6bc643750685fed879a1c2215773f0
 
 [tree7.paths]
-default = ssh://mercurial@dev.integry.net/livecart\library\smarty
+default = ssh://mercurial@dev.integry.net/vendor/smarty
 
 [tree8]
 root = library/stat
@@ -59,7 +59,7 @@ root = library/swiftmailer
 revision = 2a758a82ba52a602f875447e88e61c140aac5d0c
 
 [tree9.paths]
-default = ssh://mercurial@dev.integry.net/livecart\library\swiftmailer
+default = ssh://mercurial@dev.integry.net/vendor/swiftmailer
 
 [tree10]
 root = library/unittest
@@ -68,3 +68,44 @@ revision = 47f84ea319374efe7d056a759ce69b1a7f47b5a0
 [tree10.paths]
 default = ssh://mercurial@dev.integry.net/livecart\library\unittest
 
+[tree11]
+root = public/javascript/library/dhtmlxtree
+revision = fcacc34dbdc57fda928f797ff7efba513a56cacf
+
+[tree11.paths]
+default = ssh://mercurial@dev.integry.net/vendor/dhtmlxtree
+
+[tree12]
+root = public/javascript/library/editarea
+revision = 1fb5f311abb14f574c64e5c93827326a4b079060
+
+[tree12.paths]
+default = ssh://mercurial@dev.integry.net/vendor/editarea
+
+[tree13]
+root = public/javascript/library/prototype
+revision = d01bf337c54ea3af677f034d6694928e9c091315
+
+[tree13.paths]
+default = ssh://mercurial@dev.integry.net/vendor/prototype
+
+[tree14]
+root = public/javascript/library/rico
+revision = 9317453a3c6382123aea22068a9ce3e5acd50ada
+
+[tree14.paths]
+default = ssh://mercurial@dev.integry.net/vendor/rico
+
+[tree15]
+root = public/javascript/library/scriptaculous
+revision = afd8199661585627edee4b771346420b80eaec39
+
+[tree15.paths]
+default = ssh://mercurial@dev.integry.net/vendor/scriptaculous
+
+[tree16]
+root = public/javascript/library/tinymce
+revision = 0168f4a3d710974daa9642e6dfe7116b240b96b7
+
+[tree16.paths]
+default = ssh://mercurial@dev.integry.net/vendor/tinymce
