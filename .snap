@@ -1,111 +1,118 @@
 [tree1]
 root = .
-revision = 8bc0cf6863c783f326a5b1be4188ce7ef824d782
+revision = tip
 
 [tree1.paths]
 default = ssh://mercurial@dev.integry.net/livecart
 
 [tree2]
 root = framework
-revision = ab5096961ee2896ca4860a08f3c2d2af6e5a785a
+revision = tip
 
 [tree2.paths]
 default = ssh://mercurial@dev.integry.net/framework
 
 [tree3]
 root = library/I18Nv2
-revision = d79ce12994eed6059bf59bc76f00b2988e721087
+revision = tip
 
 [tree3.paths]
 default = ssh://mercurial@dev.integry.net/vendor/I18Nv2
 
 [tree4]
 root = library/activerecord
-revision = 20707de264160bd6d154d94eec331b74c09f9549
+revision = tip
 
 [tree4.paths]
 default = ssh://mercurial@dev.integry.net/activerecord
 
 [tree5]
 root = library/creole
-revision = e57c65fc6bbc7c0a33cca7468c792964a7bcd6e4
+revision = tip
 
 [tree5.paths]
 default = ssh://mercurial@dev.integry.net/vendor/creole
 
 [tree6]
 root = library/locale
-revision = 7a1798db848e2560d33388516a917e88e5afe750
+revision = tip
 
 [tree6.paths]
 default = ssh://mercurial@dev.integry.net/livecart\library\locale
 
 [tree7]
 root = library/smarty
-revision = 22839073df6bc643750685fed879a1c2215773f0
+revision = tip
 
 [tree7.paths]
 default = ssh://mercurial@dev.integry.net/vendor/smarty
 
 [tree8]
 root = library/stat
-revision = 4332f24a8c8d400269de3d8638e1c405989db19b
+revision = tip
 
 [tree8.paths]
 default = ssh://mercurial@dev.integry.net/livecart\library\stat
 
 [tree9]
 root = library/swiftmailer
-revision = 2a758a82ba52a602f875447e88e61c140aac5d0c
+revision = tip
 
 [tree9.paths]
 default = ssh://mercurial@dev.integry.net/vendor/swiftmailer
 
 [tree10]
 root = library/unittest
-revision = 47f84ea319374efe7d056a759ce69b1a7f47b5a0
+revision = tip
 
 [tree10.paths]
 default = ssh://mercurial@dev.integry.net/livecart\library\unittest
 
 [tree11]
 root = public/javascript/library/dhtmlxtree
-revision = fcacc34dbdc57fda928f797ff7efba513a56cacf
+revision = tip
 
 [tree11.paths]
 default = ssh://mercurial@dev.integry.net/vendor/dhtmlxtree
 
 [tree12]
 root = public/javascript/library/editarea
-revision = 1fb5f311abb14f574c64e5c93827326a4b079060
+revision = tip
 
 [tree12.paths]
 default = ssh://mercurial@dev.integry.net/vendor/editarea
 
 [tree13]
 root = public/javascript/library/prototype
-revision = d01bf337c54ea3af677f034d6694928e9c091315
+revision = tip
 
 [tree13.paths]
 default = ssh://mercurial@dev.integry.net/vendor/prototype
 
 [tree14]
 root = public/javascript/library/rico
-revision = 9317453a3c6382123aea22068a9ce3e5acd50ada
+revision = tip
 
 [tree14.paths]
 default = ssh://mercurial@dev.integry.net/vendor/rico
 
 [tree15]
 root = public/javascript/library/scriptaculous
-revision = afd8199661585627edee4b771346420b80eaec39
+revision = tip
 
 [tree15.paths]
 default = ssh://mercurial@dev.integry.net/vendor/scriptaculous
 
 [tree16]
 root = public/javascript/library/tinymce
-revision = 0168f4a3d710974daa9642e6dfe7116b240b96b7
+revision = tip
 
 [tree16.paths]
 default = ssh://mercurial@dev.integry.net/vendor/tinymce
+
+[tree17]
+root = library/json
+revision = tip
+
+[tree17.paths]
+default = ssh://mercurial@dev.integry.net/vendor/json
