@@ -19,11 +19,4 @@ ClassLoader::import('application.controller.*');
 ClassLoader::import('application.model.*');
 ClassLoader::import('application.model.system.*');
 
-// Custom initialization tasks
-$custom = ClassLoader::getRealPath('storage.configuration.CustomInitialize') . '.php';
-if (file_exists($custom))
-{
-    ClassLoader::import('storage.configuration.CustomInitialize');    
-}
-
 ?>

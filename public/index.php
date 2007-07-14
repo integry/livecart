@@ -14,6 +14,14 @@
     ClassLoader::import('application.LiveCart');
 
 	$app = new LiveCart();
+	
+	// Custom initialization tasks
+	$custom = ClassLoader::getRealPath('storage.configuration.CustomInitialize') . '.php';
+	if (file_exists($custom))
+	{
+	    include $custom;
+	}
+	
 	try
 	{
 		$app->run();

@@ -15,9 +15,6 @@ $routes = array(
 					array("shop/:cathandle-:id/:filters", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+", "filters" => "([,]{0,1}[0-9A-Za-z._]+\-[vmps]{0,1}[0-9]{0,})*")),
 					array("shop/:cathandle-:id/:filters/:page", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[a-z0-9\.]+","id" => "[0-9]+","page" => "[0-9_]+", "filters" => "[0-9A-Za-z\-.,_]+")),
 					
-					// help section
-                    array("help/:id", array('controller' => 'help', 'action' => 'view'), array()),
-					
                     // static pages
                     array(":handle.html", array('controller' => 'staticPage', 'action' => 'view'), array("handle" => "[a-zA-Z0-9\.]+")),
 

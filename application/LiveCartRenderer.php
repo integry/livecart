@@ -1,5 +1,6 @@
 <?php
 
+ClassLoader::import('framework.renderer.SmartyRenderer');
 ClassLoader::import('application.LiveCartSmarty');
 
 class LiveCartRenderer extends SmartyRenderer
