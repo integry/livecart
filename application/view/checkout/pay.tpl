@@ -64,7 +64,7 @@
         <p>
             {err for="ccCVV"}
                 {{label {t 3 or 4 digit code after card # on back of card}:}}
-	            {textfield maxlength="4" class="text"} 
+	            {textfield maxlength="4" class="text"}
 				<a class="cvv" href="{link controller=checkout action=cvv}" onclick="Element.show($('cvvHelp')); return false;">{t What Is It?}</a>
             {/err}
         </p>

@@ -18,3 +18,8 @@ div.multi
     margin: 5px;
     background: #EEE;
 }
+
+#settingsBrowser, #settingsBrowser .containerTableStyle
+{
+    height: auto;
+}

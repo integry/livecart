@@ -11,13 +11,16 @@ class UserController extends FrontendController
 {
  	const PASSWORD_MIN_LENGTH = 5;
  	
- 	const COUNT_RECENT_ORDERS = 5;
-
  	const COUNT_RECENT_FILES = 5;
  
     private function addAccountBreadcrumb()
     {
         $this->addBreadCrumb($this->translate('_your_account'), $this->router->createUrl(array('controller' => 'user')));
+    }
+
+    private function addAddressBreadcrumb()
+    {
+        $this->addBreadCrumb($this->translate('_manage_addresses'), $this->router->createUrl(array('controller' => 'user', 'action' => 'addresses')));
     }
     
     /**
@@ -31,7 +34,7 @@ class UserController extends FrontendController
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
 		$f->setOrder(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
-		$f->setLimit(self::COUNT_RECENT_ORDERS);
+		$f->setLimit($this->config->get('USER_COUNT_RECENT_ORDERS'));
 		
 		$orders = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
 		
@@ -66,6 +69,39 @@ class UserController extends FrontendController
 		
         return $response;
 	}
+    
+    /**
+     *	@role login
+     */
+	public function orders()
+    {		
+		$this->addAccountBreadcrumb();
+		
+		$this->addBreadCrumb($this->translate('_your_orders'), '');
+
+        $perPage = $this->config->get('USER_ORDERS_PER_PAGE');
+        $page = $this->request->get('id', 1);
+        
+		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
+		$f->setOrder(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
+		$f->setLimit($perPage, ($page - 1) * $perPage);
+		
+		$orders = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
+		
+		foreach ($orders as $order)
+		{
+            $order->loadAll();
+        }
+    
+        $response = new ActionResponse();
+		$response->set('count', $orders->getTotalRecordCount());
+		$response->set('currentPage', $page);
+		$response->set('perPage', $perPage);
+		$response->set('user', $this->user->toArray());
+		$response->set('orders', $orders->toArray());
+        return $response;
+    }    
     
     /**
      *	@role login
@@ -138,9 +174,9 @@ class UserController extends FrontendController
      */
     public function addresses()
     {
-		$this->addAccountBreadcrumb();
-		
-        $this->addBreadCrumb($this->translate('_manage_addresses'), '');
+		$this->addAccountBreadcrumb();		
+        $this->addAddressBreadcrumb();
+        
         $response = new ActionResponse(); 
 		$response->set('user', $this->user->toArray());
     	$response->set('billingAddresses', $this->user->getBillingAddressArray());
@@ -153,8 +189,6 @@ class UserController extends FrontendController
      */
     public function viewOrder()
     {
-		$this->addAccountBreadcrumb();
-		
         $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->get('id')));
         $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
         $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
@@ -164,6 +198,10 @@ class UserController extends FrontendController
         {
             $order = $s->get(0);
             $order->loadAll();  
+
+    		$this->addAccountBreadcrumb();
+    		$this->addBreadCrumb($this->translate('_your_orders'), $this->router->createUrl(array('controller' => 'user', 'action' => 'orders')));
+    		$this->addBreadCrumb($order->getID(), '');
 
             $response = new ActionResponse();
             $response->set('order', $order->toArray());
@@ -473,7 +511,9 @@ class UserController extends FrontendController
     {
         try
         {
-            return $this->editAddress(ShippingAddress::getUserAddress($this->request->get('id'), $this->user));
+            $response = $this->editAddress(ShippingAddress::getUserAddress($this->request->get('id'), $this->user));
+            $this->addBreadCrumb($this->translate('_edit_shipping_address'), '');
+            return $response;
         }
         catch (ARNotFoundException $e)
         {
@@ -488,7 +528,9 @@ class UserController extends FrontendController
     {
         try
         {
-            return $this->editAddress(BillingAddress::getUserAddress($this->request->get('id'), $this->user));
+            $response = $this->editAddress(BillingAddress::getUserAddress($this->request->get('id'), $this->user));
+            $this->addBreadCrumb($this->translate('_edit_shipping_address'), '');
+            return $response;
         }
         catch (ARNotFoundException $e)
         {
@@ -499,7 +541,8 @@ class UserController extends FrontendController
     private function editAddress(UserAddressType $addressType)
     {        
 		$this->addAccountBreadcrumb();
-		
+        $this->addAddressBreadcrumb();
+        		
         $form = $this->buildAddressForm();
         $address = $addressType->userAddress->get();
         
@@ -575,9 +618,14 @@ class UserController extends FrontendController
     /**
      *	@role login
      */
-    public function addBillingAddress()
+    public function addBillingAddress($shipping = false)
     {
 		$this->addAccountBreadcrumb();
+		$this->addAddressBreadcrumb();
+   		if (!$shipping)
+   		{
+            $this->addBreadCrumb($this->translate('_add_billing_address'), '');                
+        }
 		
         $form = $this->buildAddressForm();
         
@@ -610,7 +658,9 @@ class UserController extends FrontendController
      */
     public function addShippingAddress()
     {
-        return $this->addBillingAddress();
+        $response = $this->addBillingAddress(true);
+        $this->addBreadCrumb($this->translate('_add_shipping_address'), '');
+        return $response;
     }
 
     /**

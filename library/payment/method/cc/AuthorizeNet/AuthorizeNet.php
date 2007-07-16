@@ -1,13 +1,18 @@
 <?php
-include_once('../abstract/CreditCardPayment.php');
+include_once(dirname(__file__).'/../../../abstract/CreditCardPayment.php');
 
-class AuthorizeNetPayment extends CreditCardPayment
+class AuthorizeNet extends CreditCardPayment
 {
 	public static function isCreditable()
 	{
 		return true;
 	}
 	
+	public static function isCardTypeNeeded()
+	{
+		return true;
+	}
+
 	public static function isVoidable()
 	{
 		return true;

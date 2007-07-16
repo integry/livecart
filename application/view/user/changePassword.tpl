@@ -12,6 +12,9 @@
 	
 	{include file="user/userMenu.tpl" current="passwordMenu"}
 	
+	<div id="userContent">
+	
+    <fieldset class="container">
     {form action="controller=user action=doChangePassword" method="POST" handle=$form}    
         
     	<p class="required">
@@ -43,7 +46,10 @@
         	</label>
         </p>
             
-    {/form}    
+    {/form}
+    </fieldset> 
+    
+    </div>   
     
 </div>
 

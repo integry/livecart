@@ -89,6 +89,7 @@ _postal_code=Postal Code
 ######################## 
 # View order
 ######################## 
+_your_orders=Your Orders
 _view_order=View Order
 _order_invoice=View Invoice
 

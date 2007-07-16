@@ -122,6 +122,10 @@ PRICE_FILTER_TO_8=Price To
 PRICE_FILTER_TO_9=Price To
 PRICE_FILTER_TO_10=Price To
 
+_users=Users
+USER_COUNT_RECENT_ORDERS=Number of recent orders to display in account homepage
+USER_ORDERS_PER_PAGE=Number of orders per page
+
 _inventory=Inventory
 DISABLE_INVENTORY=Disable inventory tracking
 DISABLE_NOT_IN_STOCK=Disable products that are out of stock

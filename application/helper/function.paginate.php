@@ -46,9 +46,12 @@ function smarty_function_paginate($params, LiveCartSmarty $smarty)
 	
 	$application = $smarty->getApplication();
 	
-	if ($params['current'] > 1)
+	// get variable to replace - _page_ if defined, otherwise 0
+	$replace = strpos($params['url'], '_page_') ? '_page_' : 0;
+    
+    if ($params['current'] > 1)
 	{
-		$out[] = '<a class="page previous" href="' . str_replace('_page_', $params['current'] - 1, $params['url']) . '">' . $application->translate('_previous') . '</a>';
+		$out[] = '<a class="page previous" href="' . str_replace($replace, $params['current'] - 1, $params['url']) . '">' . $application->translate('_previous') . '</a>';
 	}
 	
 	$pr = 0;
@@ -61,7 +64,7 @@ function smarty_function_paginate($params, LiveCartSmarty $smarty)
         
         if ($k != $params['current'])
 		{
-			$out[] = '<a class="page" href="' . str_replace('_page_', $k, $params['url']) . '">' . $k . '</a>';			
+			$out[] = '<a class="page" href="' . str_replace($replace, $k, $params['url']) . '">' . $k . '</a>';			
 		}
 		else
 		{
@@ -73,7 +76,7 @@ function smarty_function_paginate($params, LiveCartSmarty $smarty)
 
 	if ($params['current'] < $count)
 	{
-		$out[] = '<a class="page next" href="' . str_replace('_page_', $params['current'] + 1, $params['url']) . '">' . $application->translate('_next') . '</a>';
+		$out[] = '<a class="page next" href="' . str_replace($replace, $params['current'] + 1, $params['url']) . '">' . $application->translate('_next') . '</a>';
 	}
 
 	return implode(' ', $out);

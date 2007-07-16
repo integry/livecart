@@ -10,7 +10,11 @@
     
 	{include file="user/userMenu.tpl" current="ordersMenu"}    
     
+    <div id="userContent">
+    
 	This feature will be implemented in the Second Beta version.
+
+    </div>
 
 </div>
 

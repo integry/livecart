@@ -49,7 +49,7 @@ h2
 
 h3
 {
-	margin-top: 20px;
+/*	margin-top: 20px; */
 	margin-bottom: 10px;
 	padding-top: 7px;
     font-size: 150%;
@@ -1119,13 +1119,12 @@ a.cvv
 ***************************/
 ul#userMenu
 {   
-    clear: both;
+    padding: 0;
 }
 
 #userMenu li
 {
-    float: left;
-    margin-left: 20px;
+    margin-bottom: 10px;
     list-style-type: none;
     background-repeat: no-repeat;
     background-position: center left;
@@ -1137,8 +1136,19 @@ ul#userMenu
     background-image: url(../../image/silk/gif/house.gif);
 }
 
+#userMenu li#orderMenu
+{
+    border-top: 1px solid #DDDDDD;
+    padding-top: 10px;
+    background-position: bottom left;
+    background-image: url(../../image/silk/gif/book_addresses.gif);
+}
+
 #userMenu li#addressMenu
 {
+    border-top: 1px solid #DDDDDD;
+    padding-top: 10px;
+    background-position: bottom left;
     background-image: url(../../image/silk/gif/book_addresses.gif);
 }
 
@@ -1154,10 +1164,10 @@ ul#userMenu
 
 #userMenu li#signOutMenu
 {
+    border-top: 1px solid #DDDDDD;
+    padding-top: 10px;
+    background-position: bottom left;
     background-image: url(../../image/silk/gif/door_out.gif);
-    background-position: center right;
-    padding-right: 22px;        
-    float: right;    
 }
 
 #userMenu li.selected
@@ -1167,7 +1177,15 @@ ul#userMenu
 
 #userMenuContainer
 {
-    margin-bottom: 20px;
+    padding: 10px; 
+    float: left;
+    background-color: #EEEEEE;
+    margin-bottom: 30px;
+}
+
+#userContent
+{
+    margin-left: 210px;
 }
 
 /*************************** 
@@ -1195,6 +1213,7 @@ div.addressBlock
     float: left;
     width: 700px;
     padding: 10px;    
+    margin-bottom: 20px;
 }
 
 .orderMenu
