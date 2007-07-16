@@ -110,7 +110,6 @@ class OrderedItemController extends StoreManagementController
             
             $shipment->save();
             return new JSONResponse(array(
-            'status' => 'success',
 	            'item' => array(
 	                'ID'              => $item->getID(),
 	                'Product'         => $item->product->get()->toArray(),
@@ -128,11 +127,11 @@ class OrderedItemController extends StoreManagementController
 	                'priceCurrencyID' => $item->priceCurrencyID->get(),
 	                'isExisting'	  => $existingItem
 	            )
-            ));
+            ), 'success', $this->translate('_items_quantity_has_been_successfuly_updated'));
         }
         else
         {
-            return new JSONResponse(array('status' => 'failure', 'errors' => $validator->getErrorList()));
+            return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_unable_to_update_items_quantity'));
         }
     }
 	
