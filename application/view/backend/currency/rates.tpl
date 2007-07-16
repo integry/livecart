@@ -5,12 +5,10 @@
 		{foreach from=$currencies key=key item=item}
 			<div{if $item.isEnabled == 0} class="disabled"{/if}>
 				<div class="title">{$item.name}</div>
-					<label for="rate_{$item.ID}">1 {$item.ID} = </label>
-					<fieldset class="error">
-						{textfield name="rate_`$item.ID`" class="text"}
-						<span class="defaultCurrency">{$defaultCurrency}</span>
-						<div class="errorText hidden"></div>
-					</fieldset>
+				{{err for="rate_{$item.ID}"}}
+				    {{label 1 {$item.ID} = }}
+					{textfield class="text"}
+				{/err}
 			</div>
 		{/foreach}
 

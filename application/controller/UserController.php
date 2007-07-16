@@ -270,7 +270,8 @@ class UserController extends FrontendController
     			$order = $s->get(0);
     			if ($this->order->getID() != $order->getID())
     			{
-    				$order->loadItems();
+    				$sessionOrder = SessionOrder::getOrder();
+                    $order->loadItems();
     				$order->merge($sessionOrder);
     				$order->save();
     				SessionOrder::setOrder($order);

@@ -37,6 +37,8 @@ _err_incorrect_current_password=Your current password is not entered correctly
 ######################## 
 # Add new address
 ######################## 
+_billing_address=Billing Address
+_shipping_address=Shipping Address
 _add_billing_address=Add New Billing Address
 _add_shipping_address=Add New Shipping Address
 

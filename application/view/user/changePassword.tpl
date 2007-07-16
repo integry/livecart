@@ -15,30 +15,24 @@
     {form action="controller=user action=doChangePassword" method="POST" handle=$form}    
         
     	<p class="required">
-    	    <label for="currentpassword">{t _current_pass}:</label>
-    	    
-    		<fieldset class="error">
-    			{textfield type="password" name="currentpassword" class="text"}
-    			<div class="errorText hidden{error for="currentpassword"} visible{/error}">{error for="currentpassword"}{$msg}{/error}</div>
-    		</fieldset>
+    	    {err for="currentpassword"}
+                {{label {t _current_pass}:}}
+    			{textfield type="password" class="text"}
+            {/err}
     	</p>    
 
     	<p class="required">
-    	    <label for="password">{t _enter_new_pass}:</label>
-    	    
-    		<fieldset class="error">
-    			{textfield type="password" name="password" class="text"}
-    			<div class="errorText hidden{error for="password"} visible{/error}">{error for="password"}{$msg}{/error}</div>
-    		</fieldset>
+    	    {err for="password"}
+                {{label {t _enter_new_pass}:}}
+        		{textfield type="password" class="text"}
+        	{/err}
     	</p>
     
     	<p class="required">
-    	    <label for="confpassword">{t _reenter_new_pass}:</label>
-    	    
-    		<fieldset class="error">
-    			{textfield type="password" name="confpassword" class="text"}
-    			<div class="errorText hidden{error for="confpassword"} visible{/error}">{error for="confpassword"}{$msg}{/error}</div>
-    		</fieldset>
+    		{err for="confpassword"}
+    			{{label {t _reenter_new_pass}:}}
+                {textfield type="password" class="text"}
+            {/err}
     	</p>    
     	
     	<p>

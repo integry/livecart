@@ -31,6 +31,7 @@
         {selectfield name="inactiveStates" size="15" options=$states class="countriesAndStates_inactiveStates" multiple="multiple"}
 		<span class="errorText hidden"> </span>
     </fieldset>
+	
     <fieldset class="countriesAndStates_cityMasks error">
     	<label>{t _city_mask}</label>
         <fieldset>
@@ -47,7 +48,7 @@
                 {/literal}
             </script>
 
-            <fieldset class="error" style="{denied role='delivery.update'}display: none{/denied}">
+            <fieldset style="{denied role='delivery.update'}display: none{/denied}">
                 {textfield name="mask_new" class="countriesAndStates_newMask"}<input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
                 <span class="errorText hidden"> </span>
             </fieldset>
@@ -99,8 +100,6 @@
     </fieldset>
 
 {/form}
-
-
 
 <script type="text/javascript">
     Backend.DeliveryZone.CountriesAndStates.prototype.getInstance('countriesAndStates_{$zoneID}', {$zoneID});

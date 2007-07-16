@@ -38,11 +38,10 @@
         </p>
 
 	    <p>
-			<label for="ccNum">Card number:</label>
-            <fieldset class="error">
-	            {textfield name="ccNum" class="text"}
-				<div class="errorText hidden{error for="ccNum"} visible{/error}">{error for="ccNum"}{$msg}{/error}</div>
-			</fieldset>
+            {err for="ccNum"}
+                {{label {t Card number}:}}
+	            {textfield class="text"}
+            {/err}
         </p>
         
         {if $ccTypes}
@@ -63,12 +62,11 @@
         </p>
     
         <p>
-            <label for="ccCVV">3 or 4 digit code after card # on back of card:</label>
-            <fieldset class="error">
-	            {textfield name="ccCVV" maxlength="4" class="text"} 
+            {err for="ccCVV"}
+                {{label {t 3 or 4 digit code after card # on back of card}:}}
+	            {textfield maxlength="4" class="text"} 
 				<a class="cvv" href="{link controller=checkout action=cvv}" onclick="Element.show($('cvvHelp')); return false;">{t What Is It?}</a>
-				<div class="errorText hidden{error for="ccCVV"} visible{/error}">{error for="ccCVV"}{$msg}{/error}</div>
-			</fieldset>
+            {/err}
         </p>
         
         <input type="submit" class="submit" value="{tn Complete Order Now}" />

@@ -21,12 +21,11 @@
 		
 	<fieldset>	
 		<legend>{t _add_new}</legend>
-		<p class="required">
-			<label for="image">{t _image_file}</label>
-			<fieldset class="error">
-				{filefield name="image" id="image"}
-				<div class="errorText" style="display: none;"></div>
-			</fieldset>
+		<p class="required">			
+			{err for="image"}
+                {label}{t _image_file}{label}
+				{filefield}
+            {/err}
 		</p>
 			
 		<p>

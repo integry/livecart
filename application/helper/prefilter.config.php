@@ -42,12 +42,14 @@ function smarty_prefilter_config($tplSource, $smarty)
         it is possible to write this:
         
         {err for="name"}
-            {label}Your Name{/label}
+            {{label Your Name}}
             {textfield}
         {/err}            
 	*/	
-    $source = preg_replace('/{err for="([a-zA-Z0-9_]+)"}(.*){label(.*)}(.*){\/label}(.*){\/err}/msU', '{err for="\\1"}\\2<label for="\\1" \\3>\\4</label>\\5{/err}', $source);    
-    $source = preg_replace('/{err for="([a-zA-Z0-9_]+)"}(.*){(calendar|checkbox|filefield|password|radio|selectfield|textfield|textarea)(.*)}(.*){\/err}/msU', '\\2<fieldset class="error">{\\3 name="\\1" \\4}
+    $source = preg_replace('/{{err for="([a-zA-Z0-9_]+)"}}(.*){{label(.*)}}(.*){\/err}/msU', '{{err for="\\1"}}\\2<label for="\\1">\\3</label>\\4{/err}', $source);    
+    $source = preg_replace('/{err for="([a-zA-Z0-9_]+)"}(.*){{label(.*)}}(.*){\/err}/msU', '{{err for="\\1"}}\\2<label for="\\1">\\3</label>\\4{/err}', $source);    
+
+    $source = preg_replace('/{{err for="([a-zA-Z0-9_]+)"}}(.*){(calendar|checkbox|filefield|password|radio|selectfield|textfield|textarea)(.*)}(.*){\/err}/msU', '\\2<fieldset class="error">{\\3 name="\\1" \\4}
     <div class="errorText hidden{error for="\\1"} visible{/error}">{error for="\\1"}{$msg}{/error}</div>
     </fieldset>\\5', $source);
     	

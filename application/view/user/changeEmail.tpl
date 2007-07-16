@@ -19,13 +19,11 @@
             <label class="currentEmail">{$user.email}</label>
     	</p>    
 
-    	<p class="required">
-    	    <label for="email">{t _new_email}:</label>
-    	    
-    		<fieldset class="error">
-    			{textfield name="email" class="text"}
-    			<div class="errorText hidden{error for="email"} visible{/error}">{error for="email"}{$msg}{/error}</div>
-    		</fieldset>
+    	<p class="required">    	        	    
+    		{err for="email"}
+    		    {{label {t _new_email}:}}
+    			{textfield class="text"}
+            {/err}
     	</p>    
 
     	<p>
