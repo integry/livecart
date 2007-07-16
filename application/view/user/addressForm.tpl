@@ -1,77 +1,66 @@
 <input type="hidden" name="return" value="{$return}" />    
 
 <p class="required">
-    <label for="firstName">{t _your_first_name}:</label>
-    
-	<fieldset class="error">
-		{textfield name="firstName" class="text"}
-		<div class="errorText hidden{error for="firstName"} visible{/error}">{error for="firstName"}{$msg}{/error}</div>
-	</fieldset>
+	{err for="firstName"}
+	   {label}{t _your_first_name}:{/label}  
+       {textfield class="text"}
+	{/err}
 </p>
 
 <p class="required">
-    <label for="lastName">{t _your_last_name}:</label>
-    
-	<fieldset class="error">
-		{textfield name="lastName" class="text"}
-		<div class="errorText hidden{error for="lastName"} visible{/error}">{error for="lastName"}{$msg}{/error}</div>
-	</fieldset>
+	{err for="lastName"}
+        {label}{t _your_last_name}:{/label}
+		{textfield class="text"}
+	{/err}
 </p>
 
 <p>
-    <label for="companyName">{t _company_name}:</label>
-    
-	<fieldset class="error">
-		{textfield name="companyName" class="text"}
-		<div class="errorText hidden{error for="companyName"} visible{/error}">{error for="companyName"}{$msg}{/error}</div>
-	</fieldset>
+	{err for="companyName"}
+        {label}{t _company_name}:{/label}
+		{textfield class="text"}
+	{/err}
 </p>
 
 <p{if $form|isRequired:"phone"} class="required"{/if}>
-    <label for="phone">{t _your_phone}:</label>
-	<fieldset class="error">
-		{textfield name="phone" class="text"}
-		<div class="errorText hidden{error for="phone"} visible{/error}">{error for="phone"}{$msg}{/error}</div>
-	</fieldset>
+    {err for="phone"}
+        {label}{t _your_phone}:{/label}
+		{textfield class="text"}
+	{/err}
 </p>
 
 <p class="required">
-    <label for="address1">{t _address}:</label>
-	<fieldset class="error">
-        {textfield name="address1" class="text"}
-		<div class="errorText hidden{error for="address1"} visible{/error}">{error for="address1"}{$msg}{/error}</div>
-	</fieldset>
+    {err for="address1"}
+        {label}{t _address}:{/label}
+        {textfield class="text"}
+	{/err}
 </p>
 
 <p>
-    <label for="address_2"></label>
+    <label></label>
     {textfield name="address_2" class="text"}
 </p>
 
 <p class="required">
-    <label for="city">{t _city}</label>
-	<fieldset class="error">
-        {textfield name="city" class="text"}
-		<div class="errorText hidden{error for="city"} visible{/error}">{error for="city"}{$msg}{/error}</div>
-	</fieldset>
+    {err for="city"}
+        {label}{t _city}{/label}
+        {textfield class="text"}
+	{/err}
 </p>
 
 <p class="required">
-    <label for="country">{t _country}</label>
-	<fieldset class="error">
-        {selectfield name="country" id="country" options=$countries}
+    {err for="country"}
+        {label}{t _country}{/label}
+        {selectfield options=$countries}
         <span class="progressIndicator" style="display: none;"></span>
-		<div class="errorText hidden{error for="country"} visible{/error}">{error for="country"}{$msg}{/error}</div>
-	</fieldset>
+	{/err}
 </p>
 
 <p class="required">
-    <label for="state_select">{t _state}</label>
-	<fieldset class="error">
-        {selectfield name="state_select" id="state_select" style="display: none;" options=$states}
+    {err for="state_select"}
+        {label}{t _state}{/label}
+        {selectfield style="display: none;" options=$states}
         {textfield name="state_text" class="text"}
-		<div class="errorText hidden{error for="state_select"} visible{/error}">{error for="state_select"}{$msg}{/error}</div>
-	</fieldset>
+	{/err}
 
     {literal}
     <script type="text/javascript">
@@ -82,9 +71,8 @@
 </p>
 
 <p class="required">
-    <label for="zip">{t _postal_code}</label>
-	<fieldset class="error">
-        {textfield name="zip" class="text"}
-		<div class="errorText hidden{error for="zip"} visible{/error}">{error for="zip"}{$msg}{/error}</div>
-	</fieldset>
+    {err for="zip"}
+        {label}{t _postal_code}{/label}
+        {textfield class="text"}
+	{/err}
 </p>
