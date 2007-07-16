@@ -90,7 +90,7 @@ class CustomerOrder extends ActiveRecordModel
         $this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter(), self::LOAD_REFERENCES)->getData();
         if (!$this->shipments)
         {
-            $this->shipments = unserialize($this->shipping->get());
+			$this->shipments = unserialize($this->shipping->get());
 		}
 	}
 	
@@ -112,6 +112,8 @@ class CustomerOrder extends ActiveRecordModel
         $this->loadItems();
         $this->loadAddresses();
         $this->getShipments();
+		$this->billingAddress->get()->load();
+		$this->shippingAddress->get()->load();
     }
 
     /**
@@ -694,12 +696,7 @@ class CustomerOrder extends ActiveRecordModel
             {
                 $total += ($item->product->get()->getPrice($id) * $item->count->get());
             }            
-        }
-    
-        if ($this->isFinalized->get())
-        {
-            return $currency->convertAmount($this->currency->get(), $this->totalAmount->get());
-        }    
+        }		        
     
         return round($total, 2);
     }
@@ -762,18 +759,6 @@ class CustomerOrder extends ActiveRecordModel
 	        }
 		}
 		
-		// total for all currencies
-		$total = array();
-		$currencies = $this->getApplication()->getCurrencySet();
-
-		if (is_array($currencies))
-		{
-	        foreach ($currencies as $id => $currency)
-	        {
-                $total[$id] = $this->getTotal($currency);
-	        }
-		}
-        			
 		// taxes
 		$array['taxes'] = array();
 		foreach ($this->taxes as $currencyId => $taxes)
@@ -788,6 +773,25 @@ class CustomerOrder extends ActiveRecordModel
             }
         }
 		
+		// total for all currencies
+		$total = array();
+		$currencies = self::getApplication()->getCurrencySet();
+
+		if (is_array($currencies))
+		{
+	        foreach ($currencies as $id => $currency)
+	        {
+	            if ($this->isFinalized->get())
+	            {
+                    $total[$id] = $currency->convertAmount($this->currency->get(), $array['totalAmount']);
+                }
+                else
+                {
+                    $total[$id] = $this->getTotal($currency);
+                }
+	        }
+		}
+        			
 		$array['total'] = $total;
 		
 		$array['formattedTotal'] = array();
@@ -826,29 +830,10 @@ class CustomerOrder extends ActiveRecordModel
 				$array['amountDue'] = 0;	
 			}
 						
-		    // items subtotal
-            $array['itemSubtotal'] = 0;
-            foreach ($this->getOrderedItems() as $item)
-		    {
-                $array['itemSubtotal'] += $item->getSubtotal($currency);
-            }
-			
-			// shipping subtotal
-			$array['shippingSubtotal'] = 0;
-			foreach ($this->shipments as $shipment)
-			{
-                $array['shippingSubtotal'] += 22;
-                // $array['shippingSubtotal'] += $shipment->getSelectedRate()->getAmountByCurrency($currency);
-            }
-
-            $array['subtotalBeforeTaxes'] = $array['itemSubtotal'] + $array['shippingSubtotal'];
-			
-            // format prices
-            foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes') as $key)
+			foreach (array('amountPaid', 'amountNotCaptured', 'amountDue') as $key)
 			{
 				$array['formatted_' . $key] = $currency->getFormattedPrice($array[$key]);
 			}
-			            	
 		}
 
 		return $array;
@@ -930,8 +915,7 @@ class CustomerOrder extends ActiveRecordModel
     
     public function getPaidAmount()
     {
-		ClassLoader::import('application.model.order.Transaction');
-        $filter = new ARSelectFilter(new InCond(new ARFieldHandle('Transaction', 'type'), array(Transaction::TYPE_AUTH, Transaction::TYPE_SALE)));
+		$filter = new ARSelectFilter(new InCond(new ARFieldHandle('Transaction', 'type'), array(Transaction::TYPE_AUTH, Transaction::TYPE_SALE)));
 		$filter->mergeCondition(new NotEqualsCond(new ARFieldHandle('Transaction', 'isVoided'), true));
 		
 		$transactions = $this->getTransactions($filter);
@@ -946,7 +930,6 @@ class CustomerOrder extends ActiveRecordModel
 	
 	public function getNotes()
 	{
-        ClassLoader::import('application.model.order.OrderNote');
         $f = new ARSelectFilter();
         $f->setOrder(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
         return $this->getRelatedRecordSet('OrderNote', $f, OrderNote::LOAD_REFERENCES);

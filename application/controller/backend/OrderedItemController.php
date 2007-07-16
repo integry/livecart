@@ -324,6 +324,7 @@ class OrderedItemController extends StoreManagementController
 
 	public function changeCount()
 	{   
+		// asdad
         if(($id = (int)$this->request->get("id", false)) )
         {
             $count = (int)$this->request->get("count");
@@ -364,6 +365,7 @@ class OrderedItemController extends StoreManagementController
 	        return new JSONResponse(false, 'failure', $this->translate('_error_updating_item_quantity'));
         }
 	}
+
 }
 
 ?>

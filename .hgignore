@@ -1,5 +1,7 @@
 syntax: regexp
 ^cache$
+^\.cache$
+^\.project$
 ^storage\/(?!configuration)(.*)
 Thumbs.db
 

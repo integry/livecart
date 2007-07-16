@@ -7,6 +7,18 @@ ClassLoader::import("application.model.order.Shipment");
 
 class OrderLog extends ActiveRecordModel
 {     
+	   const TYPE_ORDER = 0;
+	   const TYPE_SHIPMENT = 1;
+	   const TYPE_ORDERITEM = 2;
+	   const TYPE_SHIPPINGADDRESS = 3;
+	   const TYPE_BILLINGADDRESS = 4;
+	    
+	   const ACTION_ADD = 0;
+	   const ACTION_REMOVE = 1;
+	   const ACTION_CHANGE = 2;
+	   const ACTION_ORDER = 3;
+	   const ACTION_STATUSCHANGE = 4;
+	
     /**
 	 * Define database schema used by this active record instance
 	 *
@@ -30,17 +42,22 @@ class OrderLog extends ActiveRecordModel
 		$schema->registerField(new ARField("newValue", ARText::instance()));
 	}
 		
-	public static function getNewInstance($type, $action, User $user, $oldValue, $newValue, CustomerOrder $oldOrder, CustomerOrder $newOrder)	
+	public static function getNewInstance($type, $action, $oldValue, $newValue, $oldTotal, $newTotal, User $user, CustomerOrder $order)	
 	{
         $instance = parent::getNewInstance(__CLASS__);
         
 		$instance->user->set($user);   
+		
 		$instance->time->set(new ARSerializableDateTime());
+		
 		$instance->type->set((int)$type);
 		$instance->action->set((int)$action);
-        $instance->order->set($oldOrder);
-        $instance->oldTotal->set($oldOrder->totalAmount->get());
-        $instance->newTotal->set($newOrder->totalAmount->get());
+		
+        $instance->order->set($order);
+        
+        $instance->oldTotal->set($oldTotal);
+        $instance->newTotal->set($newTotal);
+        
         $instance->oldValue->set($oldValue);
         $instance->newValue->set($newValue);
 		

@@ -164,9 +164,7 @@ class ShipmentController extends StoreManagementController
 	                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
                 );
             }
-	        return new JSONResponse(array(
-		        'services' => $shippingRatesArray, 
-            ));
+	        return new JSONResponse(array( 'services' => $shippingRatesArray));
 	    }
 	}
 	
@@ -188,9 +186,9 @@ class ShipmentController extends StoreManagementController
     public function create()
     {
 	    $order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('BillingAddress' => 'UserAddress', 'ShippingAddress' => 'UserAddress'));
-	    $history = new OrderHistory($order, $this->user);
-	    
 	    $shipment = Shipment::getNewInstance($order);
+	    
+	    $history = new OrderHistory($order, $this->user);
 	    
 	    $response = $this->save($shipment);
 	    
@@ -270,7 +268,13 @@ class ShipmentController extends StoreManagementController
      */
 	public function delete()
 	{
-	    Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'))->delete();
+	    $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder'));
+	    $history = new OrderHistory($shipment->order->get(), $this->user);
+	    
+	    $shipment->delete();
+	    
+	    $history->saveLog();
+	    
 	    return new JSONResponse(false, 'success', $this->translate('_shipment_was_successfully_removed'));
 	}
 }

@@ -1,27 +1,12 @@
 <?php
 class OrderHistory
 {
-   const TYPE_ORDER = 0;
-   const TYPE_SHIPMENT = 1;
-   const TYPE_ORDERITEM = 2;
-   const TYPE_SHIPPINGADDRESS = 3;
-   const TYPE_BILLINGADDRESS = 4;
-    
-   const ACTION_ADD = 0;
-   const ACTION_REMOVE = 1;
-   const ACTION_CHANGE = 2;
-   const ACTION_ORDER = 3;
-   const ACTION_STATUSCHANGE = 4;
+   private $oldOrder;
    
    /**
-    * @var CustomerOrder
+    * CustomerOrder
     */
-   public $oldOrder;
-   
-   /**
-    * @var CustomerOrder
-    */
-   public $currentOrder;
+   private $currentOrder;
    
    /**
     * @var User
@@ -30,69 +15,129 @@ class OrderHistory
    
    public function __construct(CustomerOrder $order, User $user)
    {
+   	   $order->loadAll();
+	   
        $this->currentOrder = $order;
        $this->user = $user;
-       
-       // Clone. PHP native function clone() does only shallow copy of an object
-       $this->oldOrder = unserialize(serialize($order));
+
+       $this->oldOrder = $this->serializeToArray($this->currentOrder);
+   }
+   
+   private function serializeToArray(CustomerOrder $order)
+   {	
+   		$array = array();
+
+   		$array['ID'] = $order->getID();
+   		$array['totalAmount'] = $order->totalAmount->get();
+   		$array['isCancelled'] = (int)$order->isCancelled->get();
+   		$array['status'] = (int)$order->status->get();
+		
+		$array['items'] = array();
+   		foreach ($order->getOrderedItems() as $item)
+   		{
+   			$array['items'][$item->product->get()->getID()] = array(
+   				'ID' => $item->getID(), 
+   				'count' => $item->count->get(), 
+   				'Product' => $item->product->get()->getID()
+			);
+   		}
+   		
+		$array['shipments'] = array();
+   		foreach ($order->getShipments() as $shipment)
+   		{
+   			$array['shipments'][$shipment->getID()] = array(
+   				'ID' => $shipment->getID(), 
+   				'ShippingService' => $shipment->getShippingService() ? $shipment->getShippingService()->toArray() : null
+			);
+   		}
+		
+		$array['BillingAddress'] = $order->billingAddress->get()->toArray();
+		$array['ShippingAddress'] = $order->shippingAddress->get()->toArray();
+   	
+   		return $array;
    }
    
    public function saveLog()
    {
-       $hasChanged = false;
-       $currentTime = new ARSerializableDateTime();
-
-       $this->logOrderCanceled();
-       $this->logOrderStatus();
-       $this->logOrderAddresses();
-       $this->logShipments();
-   }
-   
-   private function logOrderCanceled()
-   {
-          if($this->oldOrder->isCancelled->get() != $this->currentOrder->isCancelled->get()) {
-           OrderLog::getNewInstance(self::TYPE_ORDER, self::ACTION_STATUSCHANGE, $this->user, (int)$this->oldOrder->isCancelled->get(), (int)$this->currentOrder->isCancelled->get(), $this->oldOrder, $this->currentOrder)->save();	
+       $currentOrder = $this->serializeToArray($this->currentOrder);
+	
+	   // Shipping address
+       if($currentOrder['BillingAddress'] != $this->oldOrder['BillingAddress']) 
+       {
+           OrderLog::getNewInstance(
+			   OrderLog::TYPE_SHIPPINGADDRESS, 
+			   OrderLog::ACTION_CHANGE, 
+			   print_r($this->oldOrder['BillingAddress'], true), 
+			   print_r($currentOrder['BillingAddress']), 
+			   $this->oldOrder['totalAmount'], 
+			   $currentOrder['totalAmount'], 
+			   $this->user, 
+			   $currentOrder
+		   )->save();	
        }
-   }
-   
-   private function logOrderStatus()
-   {
-       if($this->oldOrder->status->get() != $this->currentOrder->status->get()) {
-           OrderLog::getNewInstance(self::TYPE_ORDER, self::ACTION_STATUSCHANGE, $this->user, (int)$this->oldOrder->status->get(), (int)$this->currentOrder->status->get(), $this->oldOrder, $this->currentOrder)->save();	
-       }
-   }
-   
-   private function logOrderAddresses()
-   {
-       $oldShippingAddress = $this->oldOrder->shippingAddress->get();
-       $oldBillingAddress = $this->oldOrder->billingAddress->get();
-       
-       $currentShippingAddress = $this->currentOrder->shippingAddress->get();
-       $currentBillingAddress = $this->currentOrder->billingAddress->get();
-       
-       if($currentShippingAddress && $currentShippingAddress->toArray(true) != $oldShippingAddress->toArray(true)) {
-           OrderLog::getNewInstance(self::TYPE_SHIPPINGADDRESS, self::ACTION_CHANGE, $this->user, $oldShippingAddress->toString(), $currentShippingAddress->toString(), $this->oldOrder, $this->currentOrder)->save();	
+	   
+	   // Billing address
+       if($currentOrder['ShippingAddress'] != $this->oldOrder['ShippingAddress']) 
+       {
+           OrderLog::getNewInstance(
+			   OrderLog::TYPE_SHIPPINGADDRESS, 
+			   OrderLog::ACTION_CHANGE, 
+			   print_r($this->oldOrder['ShippingAddress'], true), 
+			   print_r($currentOrder['ShippingAddress']), 
+			   $this->oldOrder['totalAmount'], 
+			   $currentOrder['totalAmount'], 
+			   $this->user, 
+			   $currentOrder
+		   )->save();	
        }
 
-       if($currentBillingAddress && $currentBillingAddress->toArray(true) != $oldBillingAddress->toArray(true)) {
-           OrderLog::getNewInstance(self::TYPE_BILLINGADDRESS, self::ACTION_CHANGE, $this->user, $oldBillingAddress->toString(), $currentBillingAddress->toString(), $this->oldOrder, $this->currentOrder)->save();	
+       // Canceled
+       if($currentOrder['isCancelled'] != $this->oldOrder['isCancelled']) 
+       {
+          OrderLog::getNewInstance(
+			  OrderLog::TYPE_ORDER, 
+			  OrderLog::ACTION_STATUSCHANGE, 
+			  $this->oldOrder['isCancelled'], 
+			  $currentOrder['isCancelled'], 
+			  $this->oldOrder['totalAmount'], 
+			  $currentOrder['totalAmount'], 
+			  $this->user, 
+			  $this->currentOrder
+		  )->save();	
        }
-   }
-   
-   private function logShipments()
-   {
-//       $oldShipments = $this->oldOrder->getShipments();
-//       $currentShipments = $this->currentOrder->getShipments();
-//       
-//       echo $oldShipments->getTotalRecordCount() . "\n";
-//       echo $currentShipments->getTotalRecordCount() . "\n";
-//       
-//       for($i = 0; $i < $oldShipments->getTotalRecordCount(); $i++)
-//       {
-//           $currentShipment = Shipment::getInstanceByID('Shipment', $oldshipment->getID());
-//           
-//       }
        
+       // Status
+       if($currentOrder['status'] != $this->oldOrder['status']) 
+       {
+          OrderLog::getNewInstance(
+			  OrderLog::TYPE_ORDER, 
+			  OrderLog::ACTION_STATUSCHANGE, 
+			  $this->oldOrder['status'], 
+			  $currentOrder['status'], 
+			  $this->oldOrder['totalAmount'], 
+			  $currentOrder->oldOrder['totalAmount'], 
+			  $this->user, 
+			  $currentOrder
+		  )->save();	
+       }
+		  
+	   // Create shippment
+       if(count($this->oldOrder['shipments']) < count($currentOrder['shipments'])) 
+   	   {
+   	   	   foreach(array_diff_key($currentOrder['shipments'], $this->oldOrder['shipments']) as $shipment)
+		   {
+           	   OrderLog::getNewInstance(OrderLog::TYPE_SHIPMENT, OrderLog::ACTION_ADD, '', $shipment['ID'], $this->oldOrder['totalAmount'], $currentOrder['totalAmount'], $this->user, $this->currentOrder)->save();	
+		   }
+       }
+
+	   // Delete shipment
+       if(count($this->oldOrder['shipments']) > count($currentOrder['shipments'])) 
+   	   {
+   	   	   foreach(array_diff_key($this->oldOrder['shipments'], $currentOrder['shipments']) as $shipment)
+		   {
+           	   OrderLog::getNewInstance(OrderLog::TYPE_SHIPMENT, OrderLog::ACTION_REMOVE, $shipment['ID'], '', $this->oldOrder['totalAmount'], $currentOrder['totalAmount'], $this->user, $this->currentOrder)->save();	
+		   }
+       }
    }
 }
 ?>
