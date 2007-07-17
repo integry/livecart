@@ -64,6 +64,7 @@ class OrderedItemController extends StoreManagementController
 	        $item->priceCurrencyID->set($currency->getID());
 	        $item->price->set($product->getPrice($currency->getID()));
 	        
+            $order->addItem($item);
             $shipment->addItem($item);
             $shipment->save();
         }
@@ -109,6 +110,7 @@ class OrderedItemController extends StoreManagementController
             $shipment->recalculateAmounts();
             
             $shipment->save();
+            
             return new JSONResponse(array(
 	            'item' => array(
 	                'ID'              => $item->getID(),
@@ -179,11 +181,13 @@ class OrderedItemController extends StoreManagementController
         if($id = $this->request->get("id", false))
         {
             $item = OrderedItem::getInstanceByID('OrderedItem', (int)$id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress')); 
-                        
 	        $shipment = $item->shipment->get();
+	        $order = $shipment->order->get();
+	        $history = new OrderHistory($order, $this->user);
 	        
 	        $shipment->loadItems();
             $shipment->removeItem($item);
+            $order->removeItem($item);
 	        
             if($shipment->getShippingService())
             {
@@ -196,6 +200,8 @@ class OrderedItemController extends StoreManagementController
             
             $shipment->recalculateAmounts();
             $shipment->save();
+            
+            $history->saveLog();
             
             return new JSONResponse(array(
 		            'item' => array(
@@ -329,6 +335,8 @@ class OrderedItemController extends StoreManagementController
         {
             $count = (int)$this->request->get("count");
             $item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress')); 
+            $history = new OrderHistory($item->customerOrder->get(), $this->user);
+            
             $item->count->set($count);
             
             $shipment = $item->shipment->get();
@@ -345,6 +353,8 @@ class OrderedItemController extends StoreManagementController
 	        
 		    $item->save();
 		    $shipment->save();
+		    
+		    $history->saveLog();
 		    
 		    return new JSONResponse(array(
 				'shipment' => array(

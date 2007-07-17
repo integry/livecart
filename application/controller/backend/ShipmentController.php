@@ -84,16 +84,12 @@ class ShipmentController extends StoreManagementController
         $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
         $shipment->loadItems();
 	        
+        $history = new OrderHistory($shipment->order->get(), $this->user);
+        
         $zone = $shipment->order->get()->getDeliveryZone();
         $shipmentRates = $zone->getShippingRates($shipment);
         $shipment->setAvailableRates($shipmentRates);
-            			
-		if (!$shipmentRates->getByServiceId($this->request->get('serviceID')))
-		{
-			throw new ApplicationException('No rate found: ' . $shipment->getID() .' (' . $this->request->get('serviceID') . ')');
-			return new ActionRedirectResponse('checkout', 'shipping');
-		}
-		
+ 
 		$shipment->setRateId($this->request->get('serviceID'));
 	    $shipment->save(ActiveRecord::PERFORM_UPDATE);
 
@@ -106,6 +102,9 @@ class ShipmentController extends StoreManagementController
         $shipment->recalculateAmounts();
 	    
 	    $shipment->save();
+	    
+	    $history->saveLog();
+	    
 	    $shipmentArray = $shipment->toArray();
 	    $shipmentArray['ShippingService']['ID'] = $this->request->get('serviceID');
 	    
@@ -131,9 +130,11 @@ class ShipmentController extends StoreManagementController
 	    $status = (int)$this->request->get('status');
 	    
 	    $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
+	    $history = new OrderHistory($shipment->order->get(), $this->user);
 	    $shipment->status->set($status);
-	    
 	    $shipment->save();
+	    
+	    $history->saveLog();
 	    
 	    return new JSONResponse(false, 'success', $this->translate('_shipment_status_has_been_successfully_updated'));
 	}

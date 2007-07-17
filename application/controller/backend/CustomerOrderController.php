@@ -229,7 +229,10 @@ class CustomerOrderController extends StoreManagementController
 		            break;
 		    }
 
-			$order->save();
+		    if($act != 'delete')
+		    {
+			    $order->save();
+		    }
         }		
 		
 		return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_mass_action_succeed'));	
@@ -466,7 +469,7 @@ class CustomerOrderController extends StoreManagementController
         
         if($validator->isValid())
         {		
-            $order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true);
+            $order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress'));
             $address = UserAddress::getInstanceByID('UserAddress', (int)$this->request->get('ID'), true);
             
             $history = new OrderHistory($order, $this->user);
@@ -489,9 +492,7 @@ class CustomerOrderController extends StoreManagementController
 	        $address->lastName->set($this->request->get('lastName'));
 	        
 	        $address->save();
-	        
 	        $history->saveLog();
-	        
 	        
 	        return new JSONResponse(array('address' => $address->toArray()), 'success', $this->translate('_order_address_was_successfully_updated'));
         }

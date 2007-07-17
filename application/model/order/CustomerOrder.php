@@ -88,6 +88,7 @@ class CustomerOrder extends ActiveRecordModel
     {
         $this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'))->getData();
         $this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter(), self::LOAD_REFERENCES)->getData();
+        
         if (!$this->shipments)
         {
 			$this->shipments = unserialize($this->shipping->get());
@@ -112,8 +113,16 @@ class CustomerOrder extends ActiveRecordModel
         $this->loadItems();
         $this->loadAddresses();
         $this->getShipments();
-		$this->billingAddress->get()->load();
-		$this->shippingAddress->get()->load();
+		
+        if($this->billingAddress->get())
+        {
+            $this->billingAddress->get()->load();
+        }
+        
+		if($this->shippingAddress->get())
+		{
+		   $this->shippingAddress->get()->load();
+		}
     }
 
     /**

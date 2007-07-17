@@ -1,6 +1,7 @@
 <fieldset class="container" style="{denied role='order.update'}display: none{/denied}"> 
     <ul class="menu" id="orderShipments_menu_{$orderID}"> 
         <li>
+            <span id="orderShipments_new_{$orderID}_indicator" class="progressIndicator" style="display: none"> </span>
             <a href="#new" id="orderShipments_new_{$orderID}_show">{t _add_new_shipment}</a>
         </li> 
         <li class="controls" id="orderShipments_new_{$orderID}_controls" style="display:none"> 
@@ -170,19 +171,22 @@
     { 
         Event.observe($("{/literal}orderShipments_new_{$orderID}_show{literal}"), "click", function(e) 
         { 
-            Event.stop(e); $("{/literal}orderShipments_new_{$orderID}_show{literal}").hide(); 
+            Event.stop(e); 
+            $("{/literal}orderShipments_new_{$orderID}_show{literal}").hide(); 
             $("{/literal}orderShipments_new_{$orderID}_controls{literal}").show(); 
         }); 
         
         Event.observe($("{/literal}orderShipments_new_{$orderID}_cancel{literal}"), "click", function(e) 
         { 
-            Event.stop(e); $("{/literal}orderShipments_new_{$orderID}_show{literal}").show(); 
+            Event.stop(e); 
+            $("{/literal}orderShipments_new_{$orderID}_show{literal}").show(); 
             $("{/literal}orderShipments_new_{$orderID}_controls{literal}").hide(); 
         }); 
             
         Event.observe($("{/literal}orderShipments_new_{$orderID}_submit{literal}"), "click", function(e) 
         { 
-            Event.stop(e); $("{/literal}orderShipments_new_{$orderID}_show{literal}").show(); 
+            Event.stop(e); 
+            $("{/literal}orderShipments_new_{$orderID}_show{literal}").show(); 
             $("{/literal}orderShipments_new_{$orderID}_controls{literal}").hide(); 
             var newForm = Backend.Shipment.prototype.getInstance( $("{/literal}orderShipments_new_{$orderID}_form{literal}"), {/literal}{$orderID}{literal} ); 
             newForm.save(); 

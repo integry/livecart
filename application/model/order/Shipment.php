@@ -105,6 +105,7 @@ class Shipment extends ActiveRecordModel
             }
         }
         
+        
     }
     
     public function getChargeableWeight(DeliveryZone $zone = null)
@@ -231,7 +232,6 @@ class Shipment extends ActiveRecordModel
         // selected shipping rate
         if ($selected = $this->getSelectedRate())
         {
-            $selected->setApplication($this->getApplication());
             $array['selectedRate'] = $selected->toArray();    
             $array['ShippingService'] = $array['selectedRate']['ShippingService'];
         }
@@ -342,15 +342,16 @@ class Shipment extends ActiveRecordModel
         // ... and recalculated them
         $this->recalculateAmounts();
         
-        $this->status->set(self::STATUS_NEW);
-        
         $ret = parent::update();
         
         // save ordered items
         foreach ($this->items as $item)
         {
-            $item->shipment->set($this);
-            $item->save();
+            if(!$item->isDeleted())
+            {
+                $item->shipment->set($this);
+                $item->save();
+            }
         }
         
         // save taxes
@@ -475,6 +476,28 @@ class Shipment extends ActiveRecordModel
         }        
         
         return $amount;
+    }
+
+    public function delete()
+    {
+        $order = $this->order->get();
+        $orderedItems = $order->getOrderedItems();
+        for($i = 0; $i < count($orderedItems); $i++)
+        {
+            if($orderedItems[$i]->shipment->get() && ($orderedItems[$i]->shipment->get() === $this))
+            {
+                $order->removeItem($orderedItems[$i]);
+            }
+        }
+        
+        reset($this->items);
+        while($item = current($this->items))
+        {
+            unset($item);
+            next($this->items);
+        }
+        
+        parent::delete();
     }
 }
 

@@ -218,7 +218,7 @@ Backend.Shipment.prototype =
     {
         new LiveCart.AjaxRequest(
             Backend.Shipment.Links.create + '/?orderID=' + this.orderID,
-            false,
+            $("orderShipments_new_" + this.orderID + "_indicator"),
             function(response) 
             { 
                 var response = eval("(" + response.responseText + ")");
