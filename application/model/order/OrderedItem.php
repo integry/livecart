@@ -129,6 +129,7 @@ class OrderedItem extends ActiveRecordModel
     {
         $array = parent::transformArray($array, $className);
         $subTotal = array();
+        
         foreach ($array['Product']['calculated'] as $currency => $price)
         {
             $subTotal[$currency] = $price * $array['count'];

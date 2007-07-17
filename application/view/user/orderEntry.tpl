@@ -1,6 +1,14 @@
 <h3>
-    <a href="{link controller=user action=viewOrder id=$order.ID}">{$order.formatted_dateCompleted.date_long}</a>
+    <a href="{link controller=user action=viewOrder id=$order.ID}">{$order.formatted_dateCompleted.date_long}</a>    
 </h3>
+
+{if $order.unreadMessageCount}
+    <p class="messages">
+        <a href="{link controller=user action=viewOrder id=$order.ID}#msg" class="messages">
+            {maketext text="[quant,_1,unread message,unread messages]" params=$order.unreadMessageCount}
+        </a>
+    </p>
+{/if}
 
 <div class="orderStatus">
     {t Status}: 
@@ -27,11 +35,11 @@
 
 <div class="orderDetails">
 
-   <div class="orderMenu"style="float: left; width: 200px;">
+   <div class="orderMenu" style="float: left; width: 200px;">
    
        <ul>
-           <li><a href="{link controller=user action=viewOrder id=$order.ID}">{t View Details}</a></li>
-           <li><a href="{link controller=user action=orderInvoice id=$order.ID}">{t Print Invoice}</a></li>
+           <li><a href="{link controller=user action=viewOrder id=$order.ID}" class="viewOrder">{t View Details}</a></li>
+           <li><a href="{link controller=user action=orderInvoice id=$order.ID}" class="invoice">{t _order_invoice}</a></li>
        </ul>
        
        <div>
@@ -48,11 +56,17 @@
    
    </div>
 
-   <div style="float: left">
+   <div style="margin-left: 220px;">
     
-        <ul style="padding: 10px;">
+        <ul>
         {foreach from=$order.cartItems item="item"}
-	        <li>{$item.count} x {$item.Product.name_lang}</li>
+	        <li>{$item.count} x 
+                {if $item.Product.isDownloadable}
+                    <a href="{link controller=user action=item id=$item.ID}">{$item.Product.name_lang}</a>
+                {else}
+                    {$item.Product.name_lang}
+                {/if}
+            </li>
 	    {/foreach}
 	    </ul>	    
     </div>

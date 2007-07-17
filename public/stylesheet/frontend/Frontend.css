@@ -41,7 +41,7 @@ h1
 h2
 {
 	margin-top: 20px;
-	margin-bottom: 20px;
+	margin-bottom: 12px;
 	padding-top: 7px;
 	border-top: 1px dashed #AAAAAA;
     font-size: 150%;
@@ -49,9 +49,8 @@ h2
 
 h3
 {
-/*	margin-top: 20px; */
 	margin-bottom: 10px;
-	padding-top: 7px;
+    margin-top: 7px;
     font-size: 150%;
 }
 
@@ -1141,7 +1140,7 @@ ul#userMenu
     border-top: 1px solid #DDDDDD;
     padding-top: 10px;
     background-position: bottom left;
-    background-image: url(../../image/silk/gif/book_addresses.gif);
+    background-image: url(../../image/silk/package.png);
 }
 
 #userMenu li#addressMenu
@@ -1155,6 +1154,11 @@ ul#userMenu
 #userMenu li#emailMenu
 {
     background-image: url(../../image/silk/gif/email_edit.gif);
+}
+
+#userMenu li#fileMenu
+{
+    background-image: url(../../image/silk/gif/disk.gif);
 }
 
 #userMenu li#passwordMenu
@@ -1257,6 +1261,108 @@ ul.downloadFile li
     background-image: url(../../image/silk/gif/disk.gif);
     background-position: center left;
     background-repeat: no-repeat;
+}
+
+ul.downloadFile li.fileGroup
+{
+    padding-left: 0;
+    background-image: none;
+    margin-top: 7px;
+    font-weight: bold;
+}
+
+/*************************** 
+	Order notes
+***************************/
+ul.notes
+{
+    list-style-type: none;   
+    margin-top: 15px;
+    padding-left: 0px;
+}
+
+ul.notes li
+{
+    margin-bottom: 10px;
+    width: 600px;
+}
+
+.responseUser
+{
+    float: left;
+}
+
+.noteDate
+{
+    float: right;
+}
+
+.noteText
+{
+    border: 1px solid #EEEEEE;
+    background-color: #FCFCFC;
+    padding: 5px;
+    margin-top: 5px;
+    font-family: "Lucida Console", Monospace;
+}
+
+ul.notes li.responder_1 .noteText
+{
+    border: 1px solid #AA0000;
+}
+
+.noteAbout
+{
+    border-bottom: 1px solid #999999;
+    width: auto;
+    padding: 5px;
+}
+
+#noteForm
+{
+    margin-top: 2em;    
+    display: block;
+}
+
+#noteForm label
+{
+    float: none;
+}
+
+/*************************** 
+	Invoices
+***************************/
+#invoiceContacts h2
+{
+    border: none;
+}
+
+#invoiceDate
+{
+    padding-bottom: 10px;
+}
+
+a.invoice, a.viewOrder, a.messages
+{
+	padding-left: 22px;
+	background-image: url(../../image/silk/printer.png);
+	background-position: left center;
+	background-repeat: no-repeat;   
+}
+
+a.viewOrder
+{
+	background-image: url(../../image/silk/page_white_text.png);    
+}
+
+a.messages
+{
+	background-image: url(../../image/silk/email.png);   
+	color: red;
+}
+
+p.messages
+{    
 }
 
 /*************************** 

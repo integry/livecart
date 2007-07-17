@@ -90,10 +90,28 @@ _postal_code=Postal Code
 # View order
 ######################## 
 _your_orders=Your Orders
+_no_orders_found=No orders were found
+
 _view_order=View Order
-_order_invoice=View Invoice
+_order_invoice=Print Invoice
+_invoice=Invoice
 
 _ordered_products=Ordered Products
 _downloads=Downloads
 _order_total=Order Total
 _shipment_total=Shipment Total
+
+
+######################## 
+# Order notes
+######################## 
+_respond_admin=Support
+_respond_customer=Me
+_err_enter_note=Please enter your question or response
+_submit_response=Submit response
+
+######################## 
+# Download files
+######################## 
+_your_files=Download Files
+_no_files_found=No files found

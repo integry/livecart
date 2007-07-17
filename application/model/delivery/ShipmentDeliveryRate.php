@@ -12,7 +12,7 @@ ClassLoader::import('application.model.delivery.ShippingService');
  * @package application.model.delivery
  * @author Integry Systems <http://integry.com> 
  */
-class ShipmentDeliveryRate extends ShippingRateResult
+class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 {
     protected $amountWithTax;
     private $application;
@@ -105,6 +105,22 @@ class ShipmentDeliveryRate extends ShippingRateResult
         }
         
         return $array;
+    }
+    
+	public function serialize()
+	{
+        $vars = get_object_vars($this); 
+        unset($vars['application']);
+        
+        return serialize($vars);
+    }
+    
+    public function unserialize($serialized)
+    {
+        foreach (unserialize($serialized) as $key => $value)
+        {
+            $this->$key = $value;
+        }
     }
 }
 ?>

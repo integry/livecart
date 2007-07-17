@@ -23,6 +23,11 @@ class UserController extends FrontendController
         $this->addBreadCrumb($this->translate('_manage_addresses'), $this->router->createUrl(array('controller' => 'user', 'action' => 'addresses')));
     }
     
+    private function addFilesBreadcrumb()
+    {
+		$this->addBreadCrumb($this->translate('_your_files'), $this->router->createUrl(array('controller' => 'user', 'action' => 'files')));    
+    }
+    
     /**
      *	@role login
      */
@@ -31,38 +36,20 @@ class UserController extends FrontendController
 		$this->addAccountBreadcrumb();
 		
         // get recent orders
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
-		$f->setOrder(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
+		$f = new ARSelectFilter();
 		$f->setLimit($this->config->get('USER_COUNT_RECENT_ORDERS'));
-		
-		$orders = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
-		
-		foreach ($orders as $order)
-		{
-            $order->loadAll();
-        }
+		$orders = $this->loadOrders($f);
+
+        $orderArray = $this->getOrderArray($orders);
 
         // get downloadable items
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'type'), Product::TYPE_DOWNLOADABLE));
-		$f->setOrder(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
 		$f->setLimit(self::COUNT_RECENT_FILES);
-        
-        $downloadable = ActiveRecordModel::getRecordSet('OrderedItem', $f, ActiveRecordModel::LOAD_REFERENCES);
-        $fileArray = array();
-        foreach ($downloadable as &$item)
-        {
-            $array = $item->toArray();
-            $array['Product']['Files'] = $item->product->get()->getFilesMergedWithGroupsArray();
-            $fileArray[] = $array;
-        }        
 		
         $response = new ActionResponse();
 		$response->set('user', $this->user->toArray());
-		$response->set('orders', $orders->toArray());
-		$response->set('files', $fileArray);
+		$response->set('orders', $orderArray);
+		$response->set('files', $this->loadDownloadableItems(new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()))));
 		
 		// feedback/confirmation message that was stored in session by some other action
         $response->set('userConfirm', $this->session->pullValue('userConfirm'));		
@@ -75,33 +62,138 @@ class UserController extends FrontendController
      */
 	public function orders()
     {		
-		$this->addAccountBreadcrumb();
-		
+		$this->addAccountBreadcrumb();		
 		$this->addBreadCrumb($this->translate('_your_orders'), '');
 
         $perPage = $this->config->get('USER_ORDERS_PER_PAGE');
         $page = $this->request->get('id', 1);
         
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+		$f = new ARSelectFilter();
+		$f->setLimit($perPage, ($page - 1) * $perPage);
+		$orders = $this->loadOrders($f);
+		
+        $orderArray = $this->getOrderArray($orders);
+                   
+        $response = new ActionResponse();
+		$response->set('from', ($perPage * ($page - 1)) + 1);
+		$response->set('to', min($perPage * $page, $orders->getTotalRecordCount()));
+		$response->set('count', $orders->getTotalRecordCount());
+		$response->set('currentPage', $page);
+		$response->set('perPage', $perPage);
+		$response->set('user', $this->user->toArray());
+		$response->set('orders', $orderArray);
+        return $response;
+    }    
+
+    private function loadOrders(ARSelectFilter $f)
+    {
+        $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), 1));
 		$f->setOrder(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
-		$f->setLimit($perPage, ($page - 1) * $perPage);
-		
+
 		$orders = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
 		
 		foreach ($orders as $order)
 		{
             $order->loadAll();
         }
-    
+        
+        return $orders;        
+    }
+
+    private function getOrderArray(ARSet $orders)
+    {
+        $orderArray = $orders->toArray();
+        
+        $ids = array();
+        foreach ($orderArray as $key => $order)
+        {
+            $ids[$order['ID']] = $key;
+        }
+        
+        ClassLoader::import('application.model.order.OrderNote');
+        
+        $f = new ARSelectFilter(new INCond(new ARFieldHandle('OrderNote', 'orderID'), array_keys($ids)));
+        $f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isRead'), 0));
+        $f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isRead'), 0));
+        $f->setGrouping(new ARFieldHandle('OrderNote', 'orderID'));
+        
+	  	$query = new ARSelectQueryBuilder();
+	  	$query->setFilter($f);
+	  	$query->includeTable('OrderNote');
+        $query->removeFieldList();
+        $query->addField('COUNT(*)', null, 'cnt');
+        $query->addField('orderID');
+        
+        foreach (ActiveRecordModel::getDataBySQL($query->createString()) as $res)
+		{
+            $orderArray[$ids[$res['orderID']]]['unreadMessageCount'] = $res['cnt'];
+        }        
+        
+        return $orderArray;
+    }
+
+    /**
+     *	@role login
+     */
+	public function files()
+    {		
+		$this->addAccountBreadcrumb();		
+		$this->addFilesBreadcrumb();
+		
         $response = new ActionResponse();
-		$response->set('count', $orders->getTotalRecordCount());
-		$response->set('currentPage', $page);
-		$response->set('perPage', $perPage);
 		$response->set('user', $this->user->toArray());
-		$response->set('orders', $orders->toArray());
-        return $response;
+		$response->set('files', $this->loadDownloadableItems(new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()))));
+		return $response;
     }    
+
+    /**
+     *	@role login
+     */
+	public function item()
+    {				
+        $item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA, ActiveRecordModel::LOAD_REFERENCES)->toArray();
+
+		$this->addAccountBreadcrumb();		
+		$this->addFilesBreadcrumb();
+		$this->addBreadCrumb($item['Product']['name_lang'], '');
+
+        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('OrderedItem', 'ID'), $item['ID']));
+        $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+        
+        $fileArray = $this->loadDownloadableItems($f);
+        
+        if (!$fileArray)
+        {
+            return new ActionRedirectResponse('user', 'index');
+        }
+
+        $response = new ActionResponse();
+		$response->set('user', $this->user->toArray());
+		$response->set('files', $fileArray);
+		$response->set('item', $item);
+		return $response;
+    }
+    
+    private function loadDownloadableItems(ARSelectFilter $f)
+    {
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), 0));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isPaid'), true));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'type'), Product::TYPE_DOWNLOADABLE));
+		$f->setOrder(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
+        
+        $downloadable = ActiveRecordModel::getRecordSet('OrderedItem', $f, ActiveRecordModel::LOAD_REFERENCES);
+        $fileArray = array();
+        foreach ($downloadable as &$item)
+        {
+            $array = $item->toArray();
+            $array['Product']['Files'] = $item->product->get()->getFilesMergedWithGroupsArray();
+            $fileArray[] = $array;
+        }        
+        
+        return $fileArray;
+    }
     
     /**
      *	@role login
@@ -122,8 +214,7 @@ class UserController extends FrontendController
      */
     public function doChangePassword()
     {
-        $validator = $this->buildPasswordChangeValidator();
-        if (!$validator->isValid())
+        if (!$this->buildPasswordChangeValidator()->isValid())
         {
             return new ActionRedirectResponse('user', 'changePassword');
         }
@@ -155,8 +246,7 @@ class UserController extends FrontendController
      */
     public function doChangeEmail()
     {
-        $validator = $this->buildEmailChangeValidator();
-        if (!$validator->isValid())
+        if (!$this->buildEmailChangeValidator()->isValid())
         {
             return new ActionRedirectResponse('user', 'changeEmail');
         }
@@ -203,9 +293,22 @@ class UserController extends FrontendController
     		$this->addBreadCrumb($this->translate('_your_orders'), $this->router->createUrl(array('controller' => 'user', 'action' => 'orders')));
     		$this->addBreadCrumb($order->getID(), '');
 
+            // mark all notes as read
+            $notes = $order->getNotes();
+            foreach ($notes as $note)
+            {
+                if (!$note->isRead->get())
+                {
+                    $note->isRead->set(true);
+                    $note->save();
+                }
+            }
+
             $response = new ActionResponse();
             $response->set('order', $order->toArray());
+            $response->set('notes', $notes->toArray());
     		$response->set('user', $this->user->toArray());
+    		$response->set('noteForm', $this->buildNoteForm());
             return $response; 
         }
         else
@@ -214,6 +317,28 @@ class UserController extends FrontendController
         }           
     }
 
+    public function addNote()
+    {
+        ClassLoader::import('application.model.order.OrderNote');
+        
+        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->get('id')));
+        $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
+        $set = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
+        if (!$set->size() || !$this->buildNoteValidator()->isValid())
+        {
+            return new ActionRedirectResponse('user', 'index');
+        }
+        
+        $order = $set->get(0);
+        $note = OrderNote::getNewInstance($order, $this->user);
+        $note->text->set($this->request->get('text'));
+        $note->isAdmin->set(false);
+        $note->isRead->set(true);
+        $note->save();
+        
+        return new ActionRedirectResponse('user', 'viewOrder', array('id' => $order->getID()));
+    }
+    
     /**
      *	@role login
      */
@@ -980,6 +1105,22 @@ class UserController extends FrontendController
     	$validator->addCheck('password', new IsNotEmptyCheck($this->translate('_err_enter_password'))); 
     	$validator->addCheck('confpassword', new IsNotEmptyCheck($this->translate('_err_enter_password'))); 
     	$validator->addCheck('confpassword', new PasswordMatchCheck($this->translate('_err_password_match'), $this->request, 'password', 'confpassword'));             
+    }
+    
+    private function buildNoteForm()
+    {
+		ClassLoader::import("framework.request.validator.Form");		
+		return new Form($this->buildNoteValidator()); 
+	}    
+	
+    private function buildNoteValidator()
+    {    
+		ClassLoader::import("framework.request.validator.RequestValidator");
+            	
+        $validator = new RequestValidator("orderNote", $this->request);
+    	$validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_enter_note'))); 
+    	$validator->addFilter('text', new HtmlSpecialCharsFilter); 
+        return $validator;
     }
 }
  

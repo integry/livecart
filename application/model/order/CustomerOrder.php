@@ -90,7 +90,7 @@ class CustomerOrder extends ActiveRecordModel
         $this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter(), self::LOAD_REFERENCES)->getData();
         if (!$this->shipments)
         {
-			$this->shipments = unserialize($this->shipping->get());
+            $this->shipments = unserialize($this->shipping->get());
 		}
 	}
 	
@@ -928,6 +928,7 @@ class CustomerOrder extends ActiveRecordModel
 	
 	public function getNotes()
 	{
+        ClassLoader::import('application.model.order.OrderNote');
         $f = new ARSelectFilter();
         $f->setOrder(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
         return $this->getRelatedRecordSet('OrderNote', $f, OrderNote::LOAD_REFERENCES);

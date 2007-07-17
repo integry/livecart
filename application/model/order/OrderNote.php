@@ -25,6 +25,7 @@ class OrderNote extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("userID", "User", "ID", "User", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
 
+		$schema->registerField(new ARField("isRead", ARBool::instance()));
 		$schema->registerField(new ARField("isAdmin", ARBool::instance()));
 		$schema->registerField(new ARField("time", ARDateTime::instance()));
 		$schema->registerField(new ARField("text", ARText::instance()));

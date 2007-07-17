@@ -231,6 +231,7 @@ class Shipment extends ActiveRecordModel
         // selected shipping rate
         if ($selected = $this->getSelectedRate())
         {
+            $selected->setApplication($this->getApplication());
             $array['selectedRate'] = $selected->toArray();    
             $array['ShippingService'] = $array['selectedRate']['ShippingService'];
         }
