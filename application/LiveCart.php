@@ -158,10 +158,35 @@ class LiveCart extends Application
 
 		if ($this->isCustomizationMode() && !$this->isBackend)
 		{			
-			$this->renderer->getSmartyInstance()->autoload_filters = array('pre' => array('templateLocator'));			
+			$this->renderer->getSmartyInstance()->register_prefilter(array($this, 'templateLocator'));			
 		}
 		
 		return $renderer;
+	}	
+	
+	public function templateLocator($tplSource, $smarty)
+	{
+		$file = $smarty->_current_file;
+
+		$paths = array(					
+					'custom:',
+					ClassLoader::getRealPath('application.view.'),
+					ClassLoader::getRealPath('storage.customize.view.')
+				 );
+		
+		foreach ($paths as $path)
+		{
+			if ($path == substr($file, 0, strlen($path)))
+			{
+				$file = substr($file, strlen($path));
+			}			
+		}
+		
+		$file = str_replace('\\', '/', $file);
+			
+		$editUrl = $this->getRouter()->createUrl(array('controller' => 'backend.template', 'action' => 'editPopup', 'query' => array('file' => $file)));
+		
+		return '<div class="templateLocator"><span class="templateName"><a onclick="window.open(\'' . $editUrl . '\', \'template\', \'width=800,height=600,scrollbars=yes,resizable=yes\'); return false;" href="#">' . $file . '</a></span>' . $tplSource . '</div>';					
 	}	
 		
 	/**
@@ -282,6 +307,7 @@ class LiveCart extends Application
 		$this->locale =	Locale::getInstance($this->localeName);
 		$this->locale->translationManager()->setCacheFileDir(ClassLoader::getRealPath('storage.language'));
 		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('application.configuration.language'));
+		$this->locale->translationManager()->setDefinitionFileDir(ClassLoader::getRealPath('storage.language'));
 		Locale::setCurrentLocale($this->localeName);
 
 		$this->loadLanguageFiles();

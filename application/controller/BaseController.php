@@ -86,9 +86,9 @@ abstract class BaseController extends Controller implements LCiTranslator
 	    $this->checkAccess();
 		
 		$this->application->setRequestLanguage($this->request->get('requestLanguage'));				
-		$this->configFiles = $this->getConfigFiles();		
+		$this->configFiles = $this->getConfigFiles();
 		$this->application->setConfigFiles($this->configFiles);
-				
+
 		$localeCode = $this->application->getLocaleCode();
 
 		// add language code to URL for non-default languages
@@ -187,6 +187,8 @@ abstract class BaseController extends Controller implements LCiTranslator
 			$files[] = substr($file, 0, -14);
 			$class = $class->getParentClass();
 		}
+
+		$files[] = 'Custom';
 
 		return $files;
 	}

@@ -71,7 +71,7 @@ abstract class ObjectImage extends MultilingualObject
 	
 	public function resizeImage(ImageManipulator $resizer)
 	{
-	  	$publicRoot = ClassLoader::getRealPath('public') . '/';
+	  	$publicRoot = dirname(ClassLoader::getRealPath('public.upload')) . '/';
 		  
 		foreach ($this->getImageSizes() as $key => $size)
 	  	{

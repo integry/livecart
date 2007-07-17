@@ -9,7 +9,7 @@
 	// session cookie expires in 180 days
 	session_set_cookie_params(180 * 60 * 60 * 24);
     
-    include dirname(dirname(__file__)) . '/application/Initialize.php';
+    include_once dirname(dirname(__file__)) . '/application/Initialize.php';
     
     ClassLoader::import('application.LiveCart');
 
