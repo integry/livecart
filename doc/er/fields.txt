@@ -1,12 +1,5 @@
 * Filter
-filterGroupID - The FilterGroup ID the particular Filter belongs to
-name - Filter name (translatable)
-position - Sort order in relation to other Filters than belong to the same FilterGroup
 type - ?
-rangeStart - Range interval starting value for numeric values. Use NULL if there's no starting value (negative infinity).
-rangeEnd - Range interval ending value for numeric values. Use NULL if there's no ending value (infinity).
-rangeDateStart - Range interval starting value for date values. Use NULL if there's no starting value (negative infinity).
-rangeDateEnd - Range interval ending value for date values. Use NULL if there's no ending value (infinity).
 
 * FilterGroup
 specFieldID - The attribute (SpecField) ID the particular FilterGroup is being based on
