@@ -886,7 +886,6 @@ class Product extends MultilingualObject
 	    return ProductFile::getFilesByProduct($this);
 	}
 	
-	
 	public function getFilesMergedWithGroupsArray()
 	{
 	    return ProductFileGroup::mergeGroupsWithFields($this->getFileGroups()->toArray(), $this->getFiles()->toArray());
