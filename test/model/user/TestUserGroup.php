@@ -6,7 +6,7 @@ ClassLoader::import("application.model.user.User");
 ClassLoader::import("application.model.role.Role");
 ClassLoader::import("application.model.role.AccessControlAssociation");
 
-
+/* test */
 class TestUserGroup extends UnitTest
 {
     public function __construct()
