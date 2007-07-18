@@ -33,21 +33,10 @@ class OrderHistory
 		$array['isCancelled'] = (int)$order->isCancelled->get();
 		$array['status'] = (int)$order->status->get();
 				
-		$array['items'] = array();
-		foreach ($order->getOrderedItems() as $item)
-		{
-			$array['items'][$item->getID()] = array(
-				'ID' => $item->getID(), 
-                'shipmentID' => $item->shipment->get() ? $item->shipment->get()->getID() : null, 
-				'count' => $item->count->get(), 
-				'Product' => $item->product->get()->getID()
-			);
-		}
-		    	
-		$array['shipments'] = array();
-		foreach ($order->getShipments() as $shipment)
-		{
-		    $shippingServiceArray = null;
+        $array['shipments'] = array();
+        foreach ($order->getShipments() as $shipment)
+        {
+            $shippingServiceArray = null;
             if($shipment->shippingService->get())
             {
                 $shippingServiceArray = $shipment->shippingService->get()->toArray();
@@ -55,8 +44,8 @@ class OrderHistory
             else
             {
                 $shippingService = unserialize($shipment->shippingServiceData->get());
-                $shippingServiceArray = null;
                 
+                $shippingServiceArray = null;
                 if(is_object($shippingService))
                 {
                     $shippingService->setApplication($order->getApplication());
@@ -64,13 +53,31 @@ class OrderHistory
                 }
             }
             
-		    $array['shipments'][$shipment->getID()] = array(
-				'ID' => $shipment->getID(), 
+            $array['shipments'][$shipment->getID()] = array(
+                'ID' => $shipment->getID(), 
                 'status' => $shipment->status->get(), 
-				'ShippingService' => $shippingServiceArray
+                'ShippingService' => $shippingServiceArray
+            );
+            
+        } 
+		
+		$array['items'] = array();
+		foreach ($order->getOrderedItems() as $item)
+		{
+		    $lng = $order->getApplication()->getDefaultLanguageCode();
+            $name = $item->product->get()->name->get();
+
+			$array['items'][$item->getID()] = array(
+				'ID' => $item->getID(), 
+                'shipmentID' => $item->shipment->get() ? $item->shipment->get()->getID() : null, 
+				'count' => $item->count->get(), 
+				'Product' => array(
+				    'ID' => $item->product->get()->getID(),
+				    'name' => isset($name[$lng]) ? $name[$lng] : reset($name)
+		        ),
+				'Shipment' => $array['shipments'][$item->shipment->get()->getID()]
 			);
-			
-		} 
+		}
 		
 		$array['BillingAddress'] = $order->billingAddress->get()->toArray(true);
 		$array['ShippingAddress'] = $order->shippingAddress->get()->toArray(true);
@@ -88,8 +95,8 @@ class OrderHistory
 			OrderLog::getNewInstance(
 				OrderLog::TYPE_BILLINGADDRESS, 
 				OrderLog::ACTION_CHANGE, 
-				print_r($this->oldOrder['BillingAddress'], true), 
-				print_r($currentOrder['BillingAddress'], true), 
+				$this->oldOrder['BillingAddress'], 
+				$currentOrder['BillingAddress'], 
 				$this->oldOrder['totalAmount'], 
 				$currentOrder['totalAmount'], 
 				$this->user, 
@@ -103,8 +110,8 @@ class OrderHistory
 			OrderLog::getNewInstance(
 				OrderLog::TYPE_SHIPPINGADDRESS, 
 				OrderLog::ACTION_CHANGE, 
-				print_r($this->oldOrder['ShippingAddress'], true), 
-				print_r($currentOrder['ShippingAddress'], true), 
+				$this->oldOrder['ShippingAddress'], 
+				$currentOrder['ShippingAddress'], 
 				$this->oldOrder['totalAmount'], 
 				$currentOrder['totalAmount'], 
 				$this->user, 
@@ -117,9 +124,9 @@ class OrderHistory
 		{
 			OrderLog::getNewInstance(
 				OrderLog::TYPE_ORDER, 
-				OrderLog::ACTION_STATUSCHANGE, 
-				$this->oldOrder['isCancelled'], 
-				$currentOrder['isCancelled'], 
+				OrderLog::ACTION_CANCELEDCHANGE, 
+				array('value' => $this->oldOrder['isCancelled']), 
+				array('value' => $currentOrder['isCancelled']), 
 				$this->oldOrder['totalAmount'], 
 				$currentOrder['totalAmount'], 
 				$this->user, 
@@ -133,8 +140,8 @@ class OrderHistory
 			OrderLog::getNewInstance(
 				OrderLog::TYPE_ORDER, 
 				OrderLog::ACTION_STATUSCHANGE, 
-				$this->oldOrder['status'], 
-				$currentOrder['status'], 
+				array('value' => $this->oldOrder['status']), 
+				array('value' => $currentOrder['status']), 
 				$this->oldOrder['totalAmount'], 
 				$currentOrder['totalAmount'], 
 				$this->user, 
@@ -147,7 +154,7 @@ class OrderHistory
 		{
 			foreach(array_diff_key($currentOrder['shipments'], $this->oldOrder['shipments']) as $shipment)
 			{
-                $this->logShipment(null, $shipment['ID'], $currentOrder);
+                $this->logShipment(null, $shipment, $currentOrder);
 			}
 		}
 		// Delete shipment
@@ -155,12 +162,12 @@ class OrderHistory
 		{
             foreach(array_diff_key($this->oldOrder['shipments'], $currentOrder['shipments']) as $shipment)
             {
-                $this->logShipment($shipment['ID'], null, $currentOrder);
+                $this->logShipment($shipment, null, $currentOrder);
             }
                 
             foreach(array_diff_key($this->oldOrder['items'], $currentOrder['items']) as $item)
             {
-                $this->logItem($item['ID'], null, $currentOrder);
+                $this->logItem($item, null, $currentOrder);
             }
 		}
 		
@@ -173,7 +180,7 @@ class OrderHistory
                 
                 if($oldShipment['status'] != $shipment['status'])
                 {
-                    $this->logShipment($oldShipment['status'], $shipment['status'], $currentOrder);
+                    $this->logShipment($oldShipment, $shipment, $currentOrder);
                 }
                 
                 if($oldShipment['ShippingService'] != $shipment['ShippingService'])
@@ -181,8 +188,8 @@ class OrderHistory
                     OrderLog::getNewInstance(
                         OrderLog::TYPE_SHIPMENT, 
                         OrderLog::ACTION_SHIPPINGSERVICECHANGE, 
-                        $oldShipment['ShippingService'] ? print_r($oldShipment['ShippingService'], true) : '', 
-                        $shipment['ShippingService'] ? print_r($shipment['ShippingService'], true) : '', 
+                        $oldShipment['ShippingService'], 
+                        $shipment['ShippingService'], 
                         $this->oldOrder['totalAmount'], 
                         $currentOrder['totalAmount'], 
                         $this->user, 
@@ -195,13 +202,13 @@ class OrderHistory
 		// Add item
         foreach(array_diff_key($currentOrder['items'], $this->oldOrder['items']) as $item)
         {
-            $this->logItem(null, $item['ID'], $currentOrder);
+            $this->logItem(null, $item, $currentOrder);
         }
         
         // Remove item
         foreach(array_diff_key($this->oldOrder['items'], $currentOrder['items']) as $item)
         {
-            $this->logItem($item['ID'], null, $currentOrder);
+            $this->logItem($item, null, $currentOrder);
         }
         
         foreach($currentOrder['items'] as $item)
@@ -211,13 +218,13 @@ class OrderHistory
                 $oldItem = $this->oldOrder['items'][$item['ID']];
                 
                 // Change shipping
-                if($oldItem['shipmentID'] != $item['shipmentID'])
+                if($oldItem['Shipment'] != $item['Shipment'])
                 {
                     OrderLog::getNewInstance(
                         OrderLog::TYPE_ORDERITEM, 
                         OrderLog::ACTION_SHIPMENTCHANGE, 
-                        $oldItem['shipmentID'], 
-                        $item['shipmentID'], 
+                        $oldItem, 
+                        $item, 
                         $this->oldOrder['totalAmount'], 
                         $currentOrder['totalAmount'], 
                         $this->user, 
@@ -228,10 +235,12 @@ class OrderHistory
                 // Change item's quantity
                 if($oldItem['count'] != $item['count'])
                 {
-                    $this->logItem($oldItem['count'], $item['count'], $currentOrder);
+                    $this->logItem($oldItem, $item, $currentOrder);
                 }
             }
         }
+
+        
     }
     
     private function logItem($oldValue, $newValue, $orderArray)
@@ -249,8 +258,8 @@ class OrderHistory
         OrderLog::getNewInstance(
             OrderLog::TYPE_ORDERITEM, 
             $action, 
-            $oldValue ? $oldValue : '', 
-            $newValue ? $newValue : '', 
+            $oldValue, 
+            $newValue, 
             $this->oldOrder['totalAmount'], 
             $orderArray['totalAmount'], 
             $this->user, 
@@ -273,8 +282,8 @@ class OrderHistory
         OrderLog::getNewInstance(
             OrderLog::TYPE_SHIPMENT, 
             $action, 
-            $oldValue ? $oldValue : '', 
-            $newValue ? $newValue : '', 
+            $oldValue, 
+            $newValue, 
             $this->oldOrder['totalAmount'], 
             $orderArray['totalAmount'], 
             $this->user, 

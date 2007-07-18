@@ -1,9 +1,6 @@
 <?php
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
-ClassLoader::import("application.model.order.CustomerOrder");
-ClassLoader::import("application.model.order.OrderNote");
-ClassLoader::import("framework.request.validator.RequestValidator");
-ClassLoader::import("framework.request.validator.Form");
+ClassLoader::import("application.model.order.*");
 
 /**
  * Manage order notes (communication with customer)
@@ -18,7 +15,10 @@ class OrderLogController extends StoreManagementController
     public function index()
     {
         $response = new ActionResponse();
-        $response->set('logs', array('1', '2', '3'));
+        
+        $customerOrder = CustomerOrder::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA);
+ 
+        $response->set('logs', OrderLog::getRecordSetByOrder($customerOrder, null, array('User'))->toArray());
         return $response;
     }
 }

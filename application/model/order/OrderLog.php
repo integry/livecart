@@ -21,7 +21,8 @@ class OrderLog extends ActiveRecordModel
 	   const ACTION_SHIPPINGSERVICECHANGE = 5;
 	   const ACTION_SHIPMENTCHANGE = 6;
 	   const ACTION_ORDER = 7;
-	
+	   const ACTION_CANCELEDCHANGE = 8;
+	   
     /**
 	 * Define database schema used by this active record instance
 	 *
@@ -41,8 +42,8 @@ class OrderLog extends ActiveRecordModel
 		$schema->registerField(new ARField("time", ARDateTime::instance()));
 		$schema->registerField(new ARField("oldTotal", ARFloat::instance()));
 		$schema->registerField(new ARField("newTotal", ARFloat::instance()));
-		$schema->registerField(new ARField("oldValue", ARText::instance()));
-		$schema->registerField(new ARField("newValue", ARText::instance()));
+		$schema->registerField(new ARField("oldValue", ARArray::instance()));
+		$schema->registerField(new ARField("newValue", ARArray::instance()));
 	}
 		
 	public static function getNewInstance($type, $action, $oldValue, $newValue, $oldTotal, $newTotal, User $user, CustomerOrder $order)	
@@ -87,7 +88,7 @@ class OrderLog extends ActiveRecordModel
             $filter = new ARSelectFilter();
         }
         
-        $filter->getCondition()->addAND(new EqualsCond(new ARFieldHandle(__CLASS__, 'orderID'), $order->getID()));
+        $filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'orderID'), $order->getID()));
         
         return self::getRecordSet($filter, $loadReferencedRecords);
     }

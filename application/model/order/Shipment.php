@@ -161,6 +161,13 @@ class Shipment extends ActiveRecordModel
     
     public function getSelectedRate()
     {
+        if($serializedRate = $this->shippingServiceData->get())
+        {
+            $rate = unserialize($serializedRate);
+            $rate->setApplication($this->getApplication());
+            return $rate;
+        }
+        
         if (!$this->availableShippingRates)
         {
             return null;

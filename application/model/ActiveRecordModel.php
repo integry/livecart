@@ -25,6 +25,9 @@ abstract class ActiveRecordModel extends ActiveRecord
 		self::$application = $application;
 	}
 
+	/**
+	 * @return LiveCart
+	 */
 	public function getApplication()
 	{
 		return self::$application;

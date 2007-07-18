@@ -180,7 +180,7 @@ class OrderedItemController extends StoreManagementController
     {
         if($id = $this->request->get("id", false))
         {
-            $item = OrderedItem::getInstanceByID('OrderedItem', (int)$id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress')); 
+            $item = OrderedItem::getInstanceByID('OrderedItem', (int)$id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress', 'Product')); 
 	        $shipment = $item->shipment->get();
 	        $order = $shipment->order->get();
 	        $history = new OrderHistory($order, $this->user);
@@ -333,11 +333,10 @@ class OrderedItemController extends StoreManagementController
 
 	public function changeCount()
 	{   
-		// asdad
         if(($id = (int)$this->request->get("id", false)) )
         {
             $count = (int)$this->request->get("count");
-            $item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress')); 
+            $item = OrderedItem::getInstanceByID('OrderedItem', $id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress', 'Product')); 
             $history = new OrderHistory($item->customerOrder->get(), $this->user);
             
             $item->count->set($count);

@@ -132,6 +132,7 @@ class ShipmentController extends StoreManagementController
 	    $status = (int)$this->request->get('status');
 	    
 	    $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
+	    
 	    $history = new OrderHistory($shipment->order->get(), $this->user);
 	    $shipment->status->set($status);
 	    $shipment->save();

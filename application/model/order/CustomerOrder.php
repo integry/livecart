@@ -669,7 +669,7 @@ class CustomerOrder extends ActiveRecordModel
 	public function getTotal(Currency $currency)
 	{
         $total = 0;
-        $id = $currency->getID();
+        $id = $currency->getID();        
         
 		if ($this->shipments)
 		{
