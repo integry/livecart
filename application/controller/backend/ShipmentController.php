@@ -49,7 +49,8 @@ class ShipmentController extends StoreManagementController
 	        $rate = unserialize($shipment->shippingServiceData->get());
             if(is_object($rate))
             {
-	            $shipmentsArray[$shipment->getID()] = array_merge($shipmentsArray[$shipment->getID()], unserialize($shipment->shippingServiceData->get())->toArray());
+                $rate->setApplication($this->application);
+	            $shipmentsArray[$shipment->getID()] = array_merge($shipmentsArray[$shipment->getID()], $rate->toArray());
 	            $shipmentsArray[$shipment->getID()]['ShippingService']['ID'] = $shipmentsArray[$shipment->getID()]['serviceID'];
             }
             else
@@ -83,8 +84,9 @@ class ShipmentController extends StoreManagementController
 	{
         $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
         $shipment->loadItems();
-	        
-        $history = new OrderHistory($shipment->order->get(), $this->user);
+        $order = $shipment->order->get();
+	    
+        $history = new OrderHistory($order, $this->user);
         
         $zone = $shipment->order->get()->getDeliveryZone();
         $shipmentRates = $zone->getShippingRates($shipment);

@@ -232,11 +232,14 @@ Backend.Shipment.prototype =
         if(response.status == 'success')
         {
             var shipmentItems = document.getElementsByClassName("orderShipmentsItem", this.nodes.shipmentsList);
-            if(shipmentItems.length == 1)
+            if(shipmentItems.length >= 1)
             {
-                var firstShipmentItems = ActiveList.prototype.getInstance(shipmentItems[0]);
-                Element.addClassName(firstShipmentItems.ul, 'activeList_add_sort');
-                firstShipmentItems.createSortable();
+				shipmentItems.each(function(item) 
+				{
+	                var firstShipmentItems = ActiveList.prototype.getInstance(item);
+	                Element.addClassName(firstShipmentItems.ul, 'activeList_add_sort');
+	                firstShipmentItems.createSortable();
+				}.bind(this));
             }
             
             var controls = $("orderShipment_" + this.orderID + "_controls_empty").innerHTML;

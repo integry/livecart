@@ -60,8 +60,10 @@
     	   
             {if !$shipment.isShippable}
                 <h2>{t _downloads}</h2>        
-            {else}
+            {elseif $smarty.foreach.shipments.total > 1}
                 <h2>{t Shipment} #{$smarty.foreach.shipments.iteration}</h2>        
+            {else}
+                <h2>{t _ordered_products}</h2>
             {/if}
     	
             <table class="table shipment">
@@ -82,7 +84,7 @@
                             <td class="productName">{$item.Product.name_lang}</td>
                             <td>{$item.Product.formattedPrice[$order.Currency.ID]}</td>
                             <td>{$item.count}</td>
-                            <td class="amount">{$item.formattedSubTotal[$order.Currency.ID]}</td>
+                            <td>{$item.formattedSubTotal[$order.Currency.ID]}</td>
                         </tr>
                     {/foreach}            
                     
@@ -91,7 +93,7 @@
                             <td colspan="3" class="subTotalCaption">
                                 {t _shipping} ({$shipment.ShippingService.name_lang}):
                             </td>
-                            <td class="amount">
+                            <td>
                                 {$shipment.selectedRate.formattedPrice[$order.Currency.ID]}
                             </td>
                         </tr>
@@ -100,15 +102,19 @@
                     {foreach from=$shipment.taxes item="tax"}
                         <tr>                    
                             <td colspan="3" class="tax">{$tax.TaxRate.Tax.name_lang}:</td>
-                            <td class="amount">{$tax.formattedAmount[$order.Currency.ID]}</td>
+                            <td>{$tax.formattedAmount[$order.Currency.ID]}</td>
                         </tr>
                     {/foreach}        
                       
                     <tr>
                         <td colspan="3" class="subTotalCaption">
-                            {t _shipment_total}:
+                            {if $smarty.foreach.shipments.total > 1}
+                                {t _shipment_total}:
+                            {else}
+                                {t _order_total}:                        
+                            {/if}
                         </td>
-                        <td class="amount subTotal">{$shipment.formattedSubTotal[$order.Currency.ID]}</td>
+                        <td class="subTotal">{$shipment.formattedSubTotal[$order.Currency.ID]}</td>                        
                     </tr>
                                             
                 </tbody>
@@ -116,45 +122,6 @@
             </table>
     	
     	{/foreach}    
-    	
-    	<h2>{t Payment Information}</h2>
-    	
-    	<table id="invoicePaymentInfo">    	
-            <tr class="itemSubtotal">
-                <td>{t Item(s) Subtotal}:</td>
-                <td class="amount">{$order.formatted_itemSubtotal}</td>
-            </tr>
-            <tr class="shippingSubtotal">
-                <td>{t Shipping & Handling}:</td>
-                <td class="amount">{$order.formatted_shippingSubtotal}</td>
-            </tr>
-            {if $order.taxes}
-                <tr class="beforeTaxSubtotal">
-                    <td>{t Total Before Tax}:</td>
-                    <td class="amount">{$order.formatted_subtotalBeforeTaxes}</td>
-                </tr>
-                {foreach from=$order.taxes[$order.Currency.ID] item=tax}
-                    <tr class="taxSubtotal">
-                        <td>{$tax.name_lang}:</td>
-                        <td class="amount">{$tax.formattedAmount}</td>
-                    </tr>
-                {/foreach}
-            {/if}
-            <tr class="grandTotal">
-                <td>{t Grand Total}:</td>
-                <td class="amount">{$order.formattedTotal[$order.Currency.ID]}</td>
-            </tr>
-            <tr class="amountPaid">
-                <td>{t Amount Paid}:</td>
-                <td class="amount">{$order.formatted_amountPaid}</td>
-            </tr>
-            <tr class="amountDue">
-                <td>{t Amount Due}:</td>
-                <td class="amount">{$order.formatted_amountDue}</td>
-            </tr>    	
-    	</table>
-    	
-    	{*$order|@var_dump*}
     
     </div>    
 
@@ -165,5 +132,5 @@
 </div>
 
 <script type="text/javascript">
-{*    window.print(); *}
+    window.print();
 </script>

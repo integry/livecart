@@ -51,13 +51,6 @@ class UserController extends FrontendController
 		$response->set('orders', $orderArray);
 		$response->set('files', $this->loadDownloadableItems(new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()))));
 		
-		// get unread messages
-		ClassLoader::import('application.model.order.OrderNote');
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('OrderNote', 'userID'), $this->user->getID()));
-		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isRead'), 0));
-		$f->setOrder(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
-		$response->set('notes', ActiveRecordModel::getRecordSetArray('OrderNote', $f, array('User')));
-		
 		// feedback/confirmation message that was stored in session by some other action
         $response->set('userConfirm', $this->session->pullValue('userConfirm'));		
 		
@@ -194,32 +187,8 @@ class UserController extends FrontendController
         $fileArray = array();
         foreach ($downloadable as &$item)
         {
-	        $files = $item->product->get()->getFiles();
-	        $itemFiles = array();
-            foreach ($files as $file)
-	        {
-                if ($item->isDownloadable($file))
-                {
-                    $itemFiles[] = $file->toArray();
-                }
-            }
-            
-            if (!$itemFiles)
-            {
-                continue;
-            }
-            
             $array = $item->toArray();
-            $array['Product']['Files'] = ProductFileGroup::mergeGroupsWithFields($item->product->get()->getFileGroups()->toArray(), $itemFiles);
-
-            foreach ($array['Product']['Files'] as $key => $file)
-            {
-                if (!isset($file['ID']))
-                {
-                    unset($array['Product']['Files'][$key]);
-                }
-            }
-
+            $array['Product']['Files'] = $item->product->get()->getFilesMergedWithGroupsArray();
             $fileArray[] = $array;
         }        
         
@@ -387,7 +356,7 @@ class UserController extends FrontendController
             $order = $s->get(0);
             $order->loadAll();  
             $response = new ActionResponse();
-            $response->set('order', $order->toArray(array('payments' => true)));
+            $response->set('order', $order->toArray());
     		$response->set('user', $this->user->toArray());
             return $response; 
         }

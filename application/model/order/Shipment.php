@@ -360,6 +360,8 @@ class Shipment extends ActiveRecordModel
             $tax->save();
         }
         
+        $this->order->get()->save();
+        
         return $ret;
     }
     

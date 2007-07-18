@@ -15,6 +15,10 @@ ClassLoader::import('application.model.delivery.ShippingService');
 class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
 {
     protected $amountWithTax;
+    
+    /**
+     * @var LiveCart
+     */
     private $application;
     
     public function setApplication($application)

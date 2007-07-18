@@ -21,11 +21,9 @@
     <table class="addressSelector">
 	{foreach from=$billingAddresses item="item"}
         {include file="user/address.tpl"} 
-        <div class="addressControl">
-            <a href="{link controller=user action=editBillingAddress id=$item.ID returnPath=true}">{t _edit_address}</a>
-            |
-            <a href="{link controller=user action=deleteBillingAddress id=$item.ID returnPath=true}">{t _remove_address}</a>
-        </div>
+        <a href="{link controller=user action=editBillingAddress id=$item.ID returnPath=true}">{t _edit_address}</a>
+        |
+        <a href="{link controller=user action=deleteBillingAddress id=$item.ID returnPath=true}">{t _remove_address}</a>
 	{/foreach}
 	</table>	
     
@@ -39,11 +37,9 @@
 
 	{foreach from=$shippingAddresses item="item"}
         {include file="user/address.tpl"} 
-        <div class="addressControl">
-            <a href="{link controller=user action=editShippingAddress id=$item.ID returnPath=true}">{t _edit_address}</a>
-            |
-            <a href="{link controller=user action=deleteShippingAddress id=$item.ID returnPath=true}">{t _remove_address}</a>
-        </div>
+        <a href="{link controller=user action=editShippingAddress id=$item.ID returnPath=true}">{t _edit_address}</a>
+        |
+        <a href="{link controller=user action=deleteShippingAddress id=$item.ID returnPath=true}">{t _remove_address}</a>
 	{/foreach}
 	
 	</div>

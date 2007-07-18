@@ -38,6 +38,7 @@ class OrderHistory
 		{
 			$array['items'][$item->getID()] = array(
 				'ID' => $item->getID(), 
+                'shipmentID' => $item->shipment->get() ? $item->shipment->get()->getID() : null, 
 				'count' => $item->count->get(), 
 				'Product' => $item->product->get()->getID()
 			);
@@ -54,7 +55,13 @@ class OrderHistory
             else
             {
                 $shippingService = unserialize($shipment->shippingServiceData->get());
-                $shippingServiceArray = is_object($shippingService) ? $shippingService->toArray() : null;
+                $shippingServiceArray = null;
+                
+                if(is_object($shippingService))
+                {
+                    $shippingService->setApplication($order->getApplication());
+                    $shippingServiceArray = $shippingService->toArray();
+                }
             }
             
 		    $array['shipments'][$shipment->getID()] = array(
@@ -89,7 +96,7 @@ class OrderHistory
 				$this->currentOrder
 			)->save();	
 		}
-			    
+		
 		// Shipping address
 		if($currentOrder['ShippingAddress'] != $this->oldOrder['ShippingAddress']) 
 		{
@@ -143,9 +150,8 @@ class OrderHistory
                 $this->logShipment(null, $shipment['ID'], $currentOrder);
 			}
 		}
-		
 		// Delete shipment
-		if(count($this->oldOrder['shipments']) > count($currentOrder['shipments'])) 
+		else if(count($this->oldOrder['shipments']) > count($currentOrder['shipments'])) // Delete shipment
 		{
             foreach(array_diff_key($this->oldOrder['shipments'], $currentOrder['shipments']) as $shipment)
             {
@@ -174,7 +180,7 @@ class OrderHistory
                 {
                     OrderLog::getNewInstance(
                         OrderLog::TYPE_SHIPMENT, 
-                        OrderLog::ACTION_SHIPMENTSERVICE, 
+                        OrderLog::ACTION_SHIPPINGSERVICECHANGE, 
                         $oldShipment['ShippingService'] ? print_r($oldShipment['ShippingService'], true) : '', 
                         $shipment['ShippingService'] ? print_r($shipment['ShippingService'], true) : '', 
                         $this->oldOrder['totalAmount'], 
@@ -197,13 +203,29 @@ class OrderHistory
         {
             $this->logItem($item['ID'], null, $currentOrder);
         }
-    
-        // Change item's quantity
+        
         foreach($currentOrder['items'] as $item)
         {
             if(isset($this->oldOrder['items'][$item['ID']]))
             {
                 $oldItem = $this->oldOrder['items'][$item['ID']];
+                
+                // Change shipping
+                if($oldItem['shipmentID'] != $item['shipmentID'])
+                {
+                    OrderLog::getNewInstance(
+                        OrderLog::TYPE_ORDERITEM, 
+                        OrderLog::ACTION_SHIPMENTCHANGE, 
+                        $oldItem['shipmentID'], 
+                        $item['shipmentID'], 
+                        $this->oldOrder['totalAmount'], 
+                        $currentOrder['totalAmount'], 
+                        $this->user, 
+                        $this->currentOrder
+                    )->save();
+                }
+
+                // Change item's quantity
                 if($oldItem['count'] != $item['count'])
                 {
                     $this->logItem($oldItem['count'], $item['count'], $currentOrder);
@@ -235,8 +257,7 @@ class OrderHistory
             $this->currentOrder
         )->save();
     }
-
-    
+ 
     private function logShipment($oldValue, $newValue, $orderArray)
     {
         $action = OrderLog::ACTION_STATUSCHANGE;

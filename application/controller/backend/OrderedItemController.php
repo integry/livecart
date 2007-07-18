@@ -242,6 +242,8 @@ class OrderedItemController extends StoreManagementController
             $oldShipment = Shipment::getInstanceByID('Shipment', $fromID, true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress', 'AmountCurrency' => 'Currency')); 
             $newShipment = Shipment::getInstanceByID('Shipment', $toID, true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress', 'AmountCurrency' => 'Currency')); 
 
+            $history = new OrderHistory($oldShipment->order->get(), $this->user);
+            
             $zone = $oldShipment->order->get()->getDeliveryZone();
             
             if($oldShipment !== $newShipment)
@@ -283,6 +285,7 @@ class OrderedItemController extends StoreManagementController
 		            $oldShipment->save();
 		            $newShipment->save();
 		            
+		            $history->saveLog();
     
 		            return new JSONResponse(
 		                array(
