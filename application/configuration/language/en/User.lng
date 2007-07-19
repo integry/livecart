@@ -89,6 +89,7 @@ _postal_code=Postal Code
 ######################## 
 # View order
 ######################## 
+_order=Order
 _your_orders=Your Orders
 _no_orders_found=No orders were found
 

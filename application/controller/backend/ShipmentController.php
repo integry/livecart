@@ -85,21 +85,32 @@ class ShipmentController extends StoreManagementController
         $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
         $shipment->loadItems();
         $order = $shipment->order->get();
-	    
+        $zone = $shipment->order->get()->getDeliveryZone();        
+        $shipmentRates = $zone->getShippingRates($shipment);
+        
+        $shipment->setAvailableRates($shipmentRates);
+        
         $history = new OrderHistory($order, $this->user);
         
-        $zone = $shipment->order->get()->getDeliveryZone();
-        $shipmentRates = $zone->getShippingRates($shipment);
-        $shipment->setAvailableRates($shipmentRates);
- 
+        $selectedRate = null;
+        foreach($shipment->getAvailableRates() as $rate)
+        {
+            if($rate->getServiceID() == $this->request->get('serviceID'))
+            {
+                $selectedRate = $rate;
+                break;
+            }
+        }
+        
 		$shipment->setRateId($this->request->get('serviceID'));
+		
 	    $shipment->save(ActiveRecord::PERFORM_UPDATE);
 
 	    $shippingService = ShippingService::getInstanceByID($this->request->get('serviceID'));
 	    
         $shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
         $shipment->setRateId($shippingService->getID());
-        
+   
 	    $shipment->shippingService->set($shippingService);
         $shipment->recalculateAmounts();
 	    
@@ -132,8 +143,14 @@ class ShipmentController extends StoreManagementController
 	    $status = (int)$this->request->get('status');
 	    
 	    $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
-	    
+        $shipment->loadItems();
+        
+        $zone = $shipment->order->get()->getDeliveryZone();
+        $shipmentRates = $zone->getShippingRates($shipment);
+        $shipment->setAvailableRates($shipmentRates);
+            
 	    $history = new OrderHistory($shipment->order->get(), $this->user);
+	    
 	    $shipment->status->set($status);
 	    $shipment->save();
 	    

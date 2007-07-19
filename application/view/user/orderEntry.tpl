@@ -46,9 +46,11 @@
            {t Order ID}: {$order.ID}
        </div>
        
-       <div>
-           {t Recipient}: {$order.ShippingAddress.fullName}
-       </div>
+       {if $order.ShippingAddress}
+           <div>
+               {t Recipient}: {$order.ShippingAddress.fullName}
+           </div>
+       {/if}
 
        <div class="orderTotal">
            {t Total}: <strong>{$order.formattedTotal[$order.Currency.ID]}</strong>

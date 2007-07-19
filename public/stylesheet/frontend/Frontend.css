@@ -625,6 +625,7 @@ ul.subSubCats
     padding-bottom: 5px; 
     margin-bottom: 15px; 
     border-bottom: 1px solid #CCCCCC;    
+    font-size: 120%;
 }
 
 .resultStats .pagingInfo
@@ -1057,7 +1058,6 @@ div.checkout a
 .shipment .subTotal, #cart .subTotal
 {
     font-weight: bold;
-    text-align: center;
 	white-space: nowrap;
 }
 
@@ -1183,7 +1183,8 @@ ul#userMenu
 {
     padding: 10px; 
     float: left;
-    background-color: #EEEEEE;
+    background-color: #F7F7F7;
+    border: 1px solid #DDDDDD;
     margin-bottom: 30px;
 }
 
@@ -1205,6 +1206,14 @@ div.addressBlock
     padding-bottom: 5px;
     margin-top: 10px;
     width: 230px;
+}
+
+div.addressControl
+{
+    text-align: right;
+    width: 250px;
+    margin-bottom: 15px;
+    margin-top: 5px;
 }
 
 /*************************** 
@@ -1248,6 +1257,29 @@ div.addressBlock
 div.orderStatus
 {
     padding: 6px;
+}
+
+a.invoice, a.viewOrder, a.messages
+{
+	padding-left: 22px;
+	background-image: url(../../image/silk/printer.png);
+	background-position: left center;
+	background-repeat: no-repeat;   
+}
+
+a.viewOrder
+{
+	background-image: url(../../image/silk/page_white_text.png);    
+}
+
+a.messages
+{
+	background-image: url(../../image/silk/email.png);   
+	color: red;
+}
+
+p.messages
+{    
 }
 
 /*************************** 
@@ -1342,27 +1374,46 @@ ul.notes li.responder_1 .noteText
     padding-bottom: 10px;
 }
 
-a.invoice, a.viewOrder, a.messages
+#invoicePaymentInfo td
 {
-	padding-left: 22px;
-	background-image: url(../../image/silk/printer.png);
-	background-position: left center;
-	background-repeat: no-repeat;   
+    padding: 5px;
+    width: 300px;
 }
 
-a.viewOrder
+td.amount
 {
-	background-image: url(../../image/silk/page_white_text.png);    
+    text-align: right;
 }
 
-a.messages
+#invoicePaymentInfo td.amount
 {
-	background-image: url(../../image/silk/email.png);   
-	color: red;
+    width: auto;
 }
 
-p.messages
-{    
+#invoicePaymentInfo .beforeTaxSubtotal td.amount
+{
+    border-top: 1px solid black;
+}
+
+#invoicePaymentInfo .grandTotal td.amount
+{
+    border-top: 1px solid black;
+    padding-bottom: 10px;
+}
+
+#invoicePaymentInfo .amountPaid td
+{
+    border-top: 1px solid black;
+}
+
+#invoicePaymentInfo .grandTotal td.amount
+{
+    font-weight: bold;
+}
+
+#invoicePaymentInfo .amountDue td.amount
+{
+    font-weight: bold;
 }
 
 /*************************** 

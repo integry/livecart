@@ -129,7 +129,7 @@ class OrderedItemController extends StoreManagementController
 	                'priceCurrencyID' => $item->priceCurrencyID->get(),
 	                'isExisting'	  => $existingItem
 	            )
-            ), 'success', $this->translate('_items_quantity_has_been_successfuly_updated'));
+            ), 'success', $this->translate('_item_has_been_successfuly_saved'));
         }
         else
         {

@@ -17,7 +17,7 @@ class OrderLogController extends StoreManagementController
         $response = new ActionResponse();
         
         $customerOrder = CustomerOrder::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA);
- 
+        $response->set('defaultCurrencyCode', $this->application->getDefaultCurrencyCode());
         $response->set('logs', OrderLog::getRecordSetByOrder($customerOrder, null, array('User'))->toArray());
         return $response;
     }

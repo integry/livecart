@@ -158,6 +158,11 @@ class Shipment extends ActiveRecordModel
 	{
         $this->selectedRateId = $serviceId;
     }
+
+    public function getRateId()
+    {
+        return $this->selectedRateId ;
+    }
     
     public function getSelectedRate()
     {
@@ -165,7 +170,11 @@ class Shipment extends ActiveRecordModel
         {
             $rate = unserialize($serializedRate);
             $rate->setApplication($this->getApplication());
-            return $rate;
+
+            if($this->getRateId() == $rate->getServiceId())
+            {
+                return $rate;
+            }
         }
         
         if (!$this->availableShippingRates)
