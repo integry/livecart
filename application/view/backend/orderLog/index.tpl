@@ -31,7 +31,11 @@
 {
     border: 1px solid;
 }
-    
+ 
+.logEntry tr
+{
+    padding: 30px;
+}   
 
 </style>
 {/literal}
