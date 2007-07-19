@@ -15,102 +15,76 @@
 {assign var="ACTION_CANCELEDCHANGE" value=8}
 
 
-{literal}
-<style>
-.logEntryTotalAmount
-{
-    height: 30px;
-    width: 200px;
-}
-
-.logEntry
-{
-    width: 100%;
-}
-
-.logEntry td
-{
-    border: 1px solid;
-}
- 
-</style>
-{/literal}
-
-<h1>Order log</h1>
-
+<ul class="logHistory">
 {foreach item='log' from=$logs}
-    TYPE: {$log.type} ACTION: {$log.action}
-    <table class="logEntry" border="1" s>
-        <tr>
-            <td class="logEntryAction">
-                {if $log.type == $TYPE_ORDER}
-                    {if $log.action == $ACTION_STATUSCHANGE}
-                        {t _order_status_changed}
-                    {elseif $log.action == $ACTION_CANCELEDCHANGE}
-                        {t _order_status_changed}
+    <li>
+        <table>
+            <tr>
+                <td class="logEntryAction">
+                    {if $log.type == $TYPE_ORDER}
+                        {if $log.action == $ACTION_STATUSCHANGE}{t _order_status_changed}
+                        {elseif $log.action == $ACTION_CANCELEDCHANGE}{t _order_cancelled_changed}{/if}
+                    {elseif $log.type == $TYPE_SHIPMENT}
+                        {if $log.action == $ACTION_ADD}{t _new_shipment_added}
+                        {elseif $log.action == $ACTION_REMOVE}{t _shipment_removed}
+                        {elseif $log.action == $ACTION_STATUSCHANGE}{t _shipment_status_changed}
+                        {elseif $log.action == $ACTION_SHIPPINGSERVICECHANGE}{t _shipping_service_changed}{/if}
+                    {elseif $log.type == $TYPE_ORDERITEM}
+                        {if $log.action == $ACTION_ADD}{t _new_item_added}
+                        {elseif $log.action == $ACTION_REMOVE}{t _item_removed}
+                        {elseif $log.action == $ACTION_COUNTCHANGE}{t _item_quantity_updated}
+                        {elseif $log.action == $ACTION_SHIPMENTCHANGE}{t _item_moved_to_another_shipment}{/if}
+                    {elseif $log.type == $TYPE_SHIPPINGADDRESS}
+                        {t _shipping_address_changed}
+                    {elseif $log.type == $TYPE_BILLINGADDRESS}
+                        {t _billing_address_changed}
                     {/if}
-                {elseif $log.type == $TYPE_SHIPMENT}
-                    {if $log.action == $ACTION_ADD}
-                        {t _new_shipment_added}
-                    {elseif $log.action == $ACTION_REMOVE}
-                        {t _shipment_removed}
-                    {elseif $log.action == $ACTION_STATUSCHANGE}
-                        {t _shipment_status_changed}
-                    {elseif $log.action == $ACTION_SHIPPINGSERVICECHANGE}
-                        {t _shipping_service_changed}
-                    {/if}
-                {elseif $log.type == $TYPE_ORDERITEM}
-                    {if $log.action == $ACTION_ADD}
-                        {t _new_item_added}
-                    {elseif $log.action == $ACTION_REMOVE}
-                        {t _item_removed}
-                    {elseif $log.action == $ACTION_COUNTCHANGE}
-                        {t _item_quantity_updated}
-                    {elseif $log.action == $ACTION_SHIPMENTCHANGE}
-                        {t _item_moved_to_another_shipment}
-                    {/if}
-                {elseif $log.type == $TYPE_SHIPPINGADDRESS}
-                    {t _shipping_address_changed}
-                {elseif $log.type == $TYPE_BILLINGADDRESS}
-                    {t _billing_address_changed}
-                {/if}
-            </td>
-            <td class="logEntryAuthor">
-                <div class="logEntryDate">{$log.formatted_time.date_full} {$log.formatted_time.time_full}</div>
-                <div class="logEntryUser">{$log.user.full_name}</div>
-            </td>
-        </tr>
-        <tr>
-            <td rowspan="2">
-                {if $log.type == $TYPE_ORDER}
-                    {t _from}<br />
+                </td>
+                <td class="logEntryAuthor">
+                    <div class="logEntryDate">{$log.formatted_time.date_full} {$log.formatted_time.time_full}</div>
+                    <div class="logEntryUser">{$log.User.fullName} (ID: {$log.User.ID})</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    {if $log.type == $TYPE_ORDER}
+                        <div class="logEntryValueFrom">{t _from}:</div>
                         {include file="backend/orderLog/order.tpl" order=$log.oldValue otherOrder=$log.newValue}
-                    <br />{t _to}<br /><br />
+                        
+                        <div class="logEntryValueTo">{t _to}:</div>
                         {include file="backend/orderLog/order.tpl" order=$log.newValue otherOrder=$log.oldValue}
-                {elseif $log.type == $TYPE_SHIPMENT}
-                    {t _from}<br />
-                        {include file="backend/orderLog/shipment.tpl" shipment=$log.oldValue}
-                    <br />{t _to}<br /><br />
-                        {include file="backend/orderLog/shipment.tpl" shipment=$log.newValue}        
-                {elseif $log.type == $TYPE_ORDERITEM}
-                    {t _from}<br />
-                        {include file="backend/orderLog/orderedItem.tpl" orderedItem=$log.oldValue}
-                    <br />{t _to}<br /><br />
-                        {include file="backend/orderLog/orderedItem.tpl" orderedItem=$log.newValue}
-                {elseif $log.type == $TYPE_SHIPPINGADDRESS || $log.type == $TYPE_BILLINGADDRESS}
-                    {t _from}<br />
-                        {include file="backend/orderLog/address.tpl" address=$log.oldValue}                        
-                    <br />{t to}<br /><br />
-                        {include file="backend/orderLog/address.tpl" address=$log.newValue}  
-                {/if}
-            </td>
-            <td></td>
-        </tr>
-        <tr>
-            <td class="logEntryTotalAmount">Order total changed: <b>{$log.Order.Currency.pricePrefix}{$log.oldTotal}{$log.Order.Currency.priceSuffix}</b> to <b>{$log.Order.Currency.pricePrefix}{$log.oldTotal}{$log.Order.Currency.priceSuffix}</b></td>
-        </tr>
-    </table>
-    <br />
-    <br />
-    <br />
+                    {elseif $log.type == $TYPE_SHIPMENT}
+                        <div class="logEntryValueFrom">{t _from}:</div>
+                        {include file="backend/orderLog/shipment.tpl" shipment=$log.oldValue otherShipment=$log.newValue}
+                        
+                        <div class="logEntryValueTo">{t _to}:</div>
+                        {include file="backend/orderLog/shipment.tpl" shipment=$log.newValue otherShipment=$log.oldValue}        
+                    {elseif $log.type == $TYPE_ORDERITEM}
+                        <div class="logEntryValueFrom">{t _from}:</div>
+                        {include file="backend/orderLog/orderedItem.tpl" orderedItem=$log.oldValue otherOrderedItem=$log.newValue}
+                        
+                        <div class="logEntryValueTo">{t _to}:</div>
+                        {include file="backend/orderLog/orderedItem.tpl" orderedItem=$log.newValue otherOrderedItem=$log.oldValue}
+                    {elseif $log.type == $TYPE_SHIPPINGADDRESS || $log.type == $TYPE_BILLINGADDRESS}
+                        <div class="logEntryValueFrom">{t _from}:</div>
+                        {include file="backend/orderLog/address.tpl" address=$log.oldValue otherAddress=$log.newValue}                        
+                        
+                        <div class="logEntryValueTo">{t _to}:</div>
+                        {include file="backend/orderLog/address.tpl" address=$log.newValue otherAddress=$log.oldValue}  
+                    {/if}
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td class="logEntryTotalAmount">
+                    <div class="logEntryTotalAmountTitle">{t _order_total_changed}:</div>
+                    {t _from_lowercase} 
+                    <span class="logEntryOldTotalAmount">{$log.Order.Currency.pricePrefix}{$log.oldTotal}{$log.Order.Currency.priceSuffix}</span> 
+                    {t _to_lowercase} 
+                    <span class="logEntryNewTotalAmount">{$log.Order.Currency.pricePrefix}{$log.oldTotal}{$log.Order.Currency.priceSuffix}</span>
+                </td>
+            </tr>
+        </table>
+    </li>
 {/foreach}

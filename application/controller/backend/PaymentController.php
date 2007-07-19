@@ -96,7 +96,6 @@ class PaymentController extends StoreManagementController
     public function addOffline()
     {
         $order = CustomerOrder::getInstanceById($this->request->get('id'));
-        $history = new OrderHistory($order, $this->user);
         
         $transaction = Transaction::getNewOfflineTransactionInstance($order, $this->request->get('amount'));
         $transaction->comment->set($this->request->get('comment'));
@@ -105,7 +104,6 @@ class PaymentController extends StoreManagementController
         
         $this->request->set('id', $transaction->getID());
         
-        $history->saveLog();
         return $this->getTransactionUpdateResponse();
     }
 

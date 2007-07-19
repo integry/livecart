@@ -1,0 +1,69 @@
+# Addresses
+
+_first_name=First name
+_last_name=Last name
+_company_name=Company name
+_address_1=Address 1
+_address_2=Address 2
+_city=City
+_postal_code=Postal code
+_contry_name=Country
+_state_name=State
+
+
+# Main
+
+_order_status_changed=Order status changed
+_order_cancelled_changed=Order canceled/activated
+_new_shipment_added=New shipment added
+_shipment_removed=Shipment removed
+_shipment_status_changed=Shipment status changed
+_shipping_service_changed=Shipping service changed
+_new_item_added=New item added
+_item_removed=Item removed
+_item_quantity_updated=Item's quantity updated
+_item_moved_to_another_shipment=Item moved to another shipment
+_shipping_address_changed=Shipping address changed
+_billing_address_changed=Billing address changed
+_from=From
+_to=To
+_from_lowercase=from
+_to_lowercase=to
+_order_total_changed=Order total changed
+_no_data_available=No data available
+_status=Status
+
+
+# Order
+
+_order_id=Order ID
+_order_backordered=Backordered
+_order_awaiting_shipment=Awaiting shipment
+_order_shipped=Shipped
+_order_returned=Returned
+_order_canceled=Canceled
+_false=False
+_true=True
+
+
+# Ordered item
+
+_item_id=Item ID
+_product_name=Product
+_sku=SKU
+_quantity=Quantity
+_shipment=Shipment
+
+
+# Shipment
+
+_shipment_id=Shipment ID
+_shipment_new=New
+_shipment_pending=Pending
+_shipment_awaiting=Awaiting shipment
+_shipment_shipped=Shipped
+_shipping_service=Service
+_provider_name=Provider
+_shipment_price=Price
+_taxes_price=Taxes
+_no_shipping_service_selected=No shipping service selected

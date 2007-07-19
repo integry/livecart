@@ -33,6 +33,8 @@
 {includeJs file="backend/OrderNote.js"}
 {includeCss file="backend/OrderNote.css"}
 
+{includeCss file="backend/OrderLog.css"}
+
 {pageTitle help="order"}{t _livecart_orders}{/pageTitle}
 {include file="layout/backend/header.tpl"}
 

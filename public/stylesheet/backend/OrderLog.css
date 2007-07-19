@@ -1,0 +1,100 @@
+.logEntryAuthor, .logEntryTotalAmount
+{
+    text-align: right;
+    padding-right: 1em;
+}
+
+.logHistory .logEntryTotalAmount
+{
+    height: 2em;
+    width: 18em;
+}
+
+.logHistory .logEntryAuthor
+{
+    font-weight: bold;
+}
+
+.logHistory
+{
+    width: 100%;
+}
+
+.logHistory li
+{
+    border: 2px solid #DDDDDD;
+    list-style-type: none;
+    margin-top: 10px;
+    padding: 5px;
+    position: relative;
+}
+
+.logHistory table
+{
+    width: 100%;
+}
+
+.logHistory .logEntryAction
+{
+    font-size: 300%;
+    font-weight: bold;
+}
+
+.logEntryValueFrom, .logEntryValueTo 
+{
+    font-size: 120%;
+    font-weight: bold;
+    color: #999
+}
+
+.logHistory .logNoData
+{
+    font-size: 120%;
+    text-align: center;
+    color: yellow;
+}
+
+.logHistory .logEntryTotalAmount
+{
+   font-size: 110%;
+}
+
+.logHistory .logEntryOldTotalAmount, .logHistory .logEntryNewTotalAmount
+{
+   font-weight: bold;
+}
+
+.logHistory dl, .logHistory .logNoData
+{
+   margin: 0 20px;
+}
+
+.logNoData, .logValueChanged
+{
+   background-color: red;
+   color: white;
+}
+
+.logNoData, dl
+{
+   padding: 0.5em;
+}
+
+dl
+{
+   background-color: green;
+   color: white;
+}
+
+dt
+{
+    font-weight: bold;
+    font-size: 120%;
+    width: 10em; 
+}
+
+dt
+{
+    display: inline;
+    float: left;
+}

@@ -22,6 +22,12 @@
     </fieldset>
     
     <fieldset class="error">
+        <label for="order_{$order.ID}_{$type}_lastName">{t _company}</label>
+        {textfield name="companyName" id="order_`$order.ID`_`$type`_companyName"}
+        <div class="errorText" style="display: none" ></span>
+    </fieldset>
+    
+    <fieldset class="error">
         <label for="order_{$order.ID}_{$type}_countryID">{t _country}</label>
         {selectfield name="countryID" options=$countries id="order_`$order.ID`_`$type`_countryID"}
         <div class="errorText" style="display: none" ></span>

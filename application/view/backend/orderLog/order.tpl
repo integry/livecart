@@ -1,9 +1,9 @@
-<dl>
+<dl class="{if $order.ID !== $otherOrder.ID}logValueChanged{/if}">
     <dt>{t _order_id}:</dt>
     <dd>{$order.ID}</dd>
 </dl>
 
-<dl>
+<dl class="{if $order.status !== $otherOrder.status}logValueChanged{/if}">
     <dt>{t _status}:</dt>
     <dd>
         {if $order.status == 0}{t _new}
@@ -14,7 +14,7 @@
     </dd>
 </dl>
 
-<dl>
+<dl class="{if $order.isCancelled !== $otherOrder.isCancelled}logValueChanged{/if}">
     <dt>{t _canceled}:</dt>
     <dd>
         {if $order.isCancelled == 0}{t _false}

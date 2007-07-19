@@ -469,19 +469,26 @@ class CustomerOrderController extends StoreManagementController
         
         if($validator->isValid())
         {		
-            $order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress'));
-            $address = UserAddress::getInstanceByID('UserAddress', (int)$this->request->get('ID'), true);
+            $order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State'));
+            $address = UserAddress::getInstanceByID('UserAddress', (int)$this->request->get('ID'), true, array('State'));
             
             $history = new OrderHistory($order, $this->user);
             
 	        $address->address1->set($this->request->get('address1'));        
 	        $address->address2->set($this->request->get('address2'));
 	        $address->city->set($this->request->get('city'));
-	        $address->stateName->set($this->request->get('stateName'));
+	        
 	        
 	        if($this->request->get('stateID'))
 	        {
-	            $address->state->set(State::getInstanceByID((int)$this->request->get('stateID')));
+	            $address->state->set(State::getInstanceByID((int)$this->request->get('stateID'), true));
+	            $address->stateName->set(null);       
+	        }
+	        else
+	        {
+	            $address->stateName->set($this->request->get('stateName'));
+                $address->state->set(null); 
+                echo get_class($address->state->get());
 	        }
 	        
 	        $address->postalCode->set($this->request->get('postalCode'));

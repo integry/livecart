@@ -72,16 +72,17 @@ class OrderHistory
 				'count' => (int)$item->count->get(), 
 				'Product' => array(
 				    'ID' => (int)$item->product->get()->getID(),
+                    'sku' =>$item->product->get()->sku->get(),
 				    'name' => isset($name[$lng]) ? $name[$lng] : reset($name)
 		        ),
 				'Shipment' => $array['shipments'][$item->shipment->get()->getID()]
 			);
 		}
 		
+        $array['ShippingAddress'] = $order->shippingAddress->get()->toArray(true);
 		$array['BillingAddress'] = $order->billingAddress->get()->toArray(true);
-		$array['ShippingAddress'] = $order->shippingAddress->get()->toArray(true);
-		    	
-		return $array;
+		
+        return $array;
     }
     
     public function saveLog()
