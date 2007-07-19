@@ -68,13 +68,13 @@ class OrderHistory
 
 			$array['items'][$item->getID()] = array(
 				'ID' => $item->getID(), 
-                'shipmentID' => $item->shipment->get() ? (int)$item->shipment->get()->getID() : null, 
+                'shipmentID' => $item->shipment->get() ? $item->shipment->get()->getID() : null, 
 				'count' => (int)$item->count->get(), 
 				'Product' => array(
 				    'ID' => (int)$item->product->get()->getID(),
 				    'name' => isset($name[$lng]) ? $name[$lng] : reset($name)
 		        ),
-				'Shipment' => $array['shipments'][(int)$item->shipment->get()->getID()]
+				'Shipment' => $array['shipments'][$item->shipment->get()->getID()]
 			);
 		}
 		
