@@ -4,7 +4,7 @@
 <VERSION>
 <PROJECTSETTINGS>
 <PROJECTFILENAME>C:\projects\livecart\doc\er\LiveCart-no-lang-tbl.dez</PROJECTFILENAME>
-<MODIFIED>2007-07-19</MODIFIED>
+<MODIFIED>2007-07-20</MODIFIED>
 <CREATED>2006-05-30</CREATED>
 <CREATED2></CREATED2>
 <PROJECTNAME>LiveCart</PROJECTNAME>
@@ -207,7 +207,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The Category the product belongs to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -234,7 +234,7 @@
 <ID>29</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the assigned manufacturer</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -248,7 +248,7 @@
 <ID>30</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of ProductImage, which has been designated as the default image for the particular product</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -263,7 +263,8 @@
 <ID>11</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC>0- not available
+<DESC>Determines if the Product is enabled (visible and available in the store frontend)
+0- not available
 1- available
 2- disabled (not visble)</DESC>
 <DOMAINID>-1</DOMAINID>
@@ -305,7 +306,7 @@
 <ID>28</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Product stock keeping unit code</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -332,7 +333,7 @@
 <ID>32</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Product name (translatable)</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -345,7 +346,7 @@
 <ID>33</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>A shorter description of the product (translatable). The short description is usually displayed in the category product list</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -358,7 +359,7 @@
 <ID>34</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>A longer description of the product (translatable). The long description is usually displayed in the product detail page</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -371,7 +372,7 @@
 <ID>37</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Additional product search keywords, which may not be included in the product name or description, but can be used when a customer searches for a product</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -384,7 +385,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Product creation date</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TIMESTAMP</DTLISTNAME>
@@ -410,7 +411,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Product last update date</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TIMESTAMP</DTLISTNAME>
@@ -423,7 +424,7 @@
 <ID>12</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>External website URL (manufacturers website, etc.)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TINYTEXT</DTLISTNAME>
@@ -437,7 +438,7 @@
 <ID>13</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if the product has been marked as featured product</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -478,8 +479,7 @@
 <ID>14</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC>1 - intangible
-0 - tangible</DESC>
+<DESC>Determines if the product is intangible (1) or tangible (0)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TINYINT</DTLISTNAME>
@@ -508,7 +508,7 @@
 <ID>15</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Sum of all rating votes</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -537,7 +537,7 @@
 <ID>16</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Count of all rating votes</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -565,7 +565,7 @@
 <ID>41</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Product rating (voteSum divided by voteCount)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -579,7 +579,7 @@
 <ID>17</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC>Number of times product has been viewed by customers</DESC>
+<DESC>Number of times the product has been viewed by customers</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -607,7 +607,7 @@
 <ID>23</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Minimum amount of the product that can be ordered</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -620,7 +620,7 @@
 <ID>24</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Additional surcharge for shipping (extra large, etc. items)</DESC>
 <DOMAINID>91</DOMAINID>
 <DT>
 <DTLISTNAME>NUMERIC</DTLISTNAME>
@@ -635,7 +635,7 @@
 <ID>26</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if a separate shipment is required for delivering this product</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -661,7 +661,7 @@
 <ID>27</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if free shipping is available for this product</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -687,7 +687,7 @@
 <ID>39</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if this product is available for backordering. If backordering is enabled, customers can order the product even if it is out of stock</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -739,7 +739,7 @@
 <ID>22</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Weight of the product (including shipping wrappers, etc). This value is used for calculating the shipping rates.</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>NUMERIC</DTLISTNAME>
@@ -754,7 +754,7 @@
 <ID>35</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Number of products in stock</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -767,7 +767,7 @@
 <ID>36</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Number of products that are reserved (ordered and in stock but not delivered yet)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -780,7 +780,7 @@
 <ID>42</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Number of products sold</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -943,7 +943,7 @@
 <ID>11</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Parent Category ID (1 for top level categories, NULL for root category)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -957,7 +957,7 @@
 <ID>18</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of CategoryImage, which has been designated as the default image for the particular category</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -971,7 +971,7 @@
 <ID>13</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Category name (translatable)</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -984,7 +984,7 @@
 <ID>14</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Category description (translatable)</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -997,7 +997,7 @@
 <ID>15</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Category keywords (translatable) - used for meta tags</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -1010,7 +1010,7 @@
 <ID>16</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Count of total active (enabled products)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -1038,7 +1038,7 @@
 <ID>17</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Count of all products (enabled and disabled)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -1065,7 +1065,7 @@
 <ID>19</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Count of all products that are available for purchasing (enabled and in stock)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -1079,7 +1079,7 @@
 <ID>9</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if the Category is enabled (visible and available in the store frontend)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -1106,7 +1106,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines category order in tree</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -1119,7 +1119,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines category order in tree</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -1303,7 +1303,7 @@
 <ID>2</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the pre-defined attribute value (SpecFieldValue)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -1332,7 +1332,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the product the value is linked to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -1361,7 +1361,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the attribute (SpecField)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -1477,7 +1477,7 @@
 <ID>2</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The Category the particular SpecField (attribute) belongs to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -1491,7 +1491,7 @@
 <ID>15</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>SpecFieldGroup ID if the attribute is being grouped together with other related attributes. If the attribute is not grouped, the value is NULL.</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -1505,7 +1505,7 @@
 <ID>11</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Attribute name (translatable)</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -1518,7 +1518,7 @@
 <ID>12</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Attribute description / explanation (translatable)</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -1631,7 +1631,7 @@
 <ID>10</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if multiple values can be selected for selector attributes</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -1644,7 +1644,7 @@
 <ID>13</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if a value has to be provided/entered for this attribute when creating or updating product information</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -1657,7 +1657,7 @@
 <ID>16</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if the attribute value is displayed in product page</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -1670,7 +1670,7 @@
 <ID>17</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if the attribute value is displayed in a category/search page (attribute summary)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -1683,7 +1683,7 @@
 <ID>18</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Fixed prefix for all numeric values</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -1696,7 +1696,7 @@
 <ID>19</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Fixed suffix for all numeric values (for example, sec, kg, px, etc.)</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -1781,7 +1781,7 @@
 <ID>2</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The attribute (SpecField) ID the particular value is assigned to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -1795,7 +1795,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The actual attribute value (translatable)</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -1809,7 +1809,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Sort order in relation to other values that are assigned to the same attribute</DESC>
 <DOMAINID>143</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -1909,7 +1909,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of user the order is assigned to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -1936,7 +1936,7 @@
 <ID>9</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of order billing address</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -1950,7 +1950,7 @@
 <ID>10</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of order shipping address</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -1964,7 +1964,7 @@
 <ID>11</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of currency used to finalize the order</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>CHAR</DTLISTNAME>
@@ -1978,7 +1978,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Initial order creation date</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TIMESTAMP</DTLISTNAME>
@@ -2004,7 +2004,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The date the order was finalized (completed checkout)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TIMESTAMP</DTLISTNAME>
@@ -2017,7 +2017,7 @@
 <ID>12</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Order total amount, including taxes and shipping costs</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -2030,7 +2030,7 @@
 <ID>13</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The amount that is captured from customers credit card</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -2044,7 +2044,7 @@
 <ID>21</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if the order is completed (completed checkout)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -2072,7 +2072,7 @@
 <ID>22</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if the order has been fully paid</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -2100,7 +2100,7 @@
 <ID>23</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if the order is cancelled</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -2143,7 +2143,7 @@
 <ID>19</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>serialized PHP shipping rate data</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -2242,7 +2242,7 @@
 <ID>2</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of ordered Product</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -2271,7 +2271,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of order the item is assigned to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -2299,7 +2299,7 @@
 <ID>8</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the shipment the item is assigned to (when the order has been finalized)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -2313,7 +2313,7 @@
 <ID>7</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the active currency at the time the customer added the product to shopping cart</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>CHAR</DTLISTNAME>
@@ -2327,7 +2327,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Amount of ordered Products</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -2340,7 +2340,7 @@
 <ID>12</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Amount of reserved Products from inventory (stock)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -2353,7 +2353,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Date when the product was added to shopping cart</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TIMESTAMP</DTLISTNAME>
@@ -2366,7 +2366,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Product item price at the time the product was added to shopping cart</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -2379,7 +2379,7 @@
 <ID>9</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if the product has been added to shopping cart or to a wish list</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -2490,7 +2490,7 @@
 <ID>16</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of users default billing address</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -2504,7 +2504,7 @@
 <ID>17</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of users default shipping address</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -2518,7 +2518,7 @@
 <ID>19</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of UserGroup if the user is assigned to one</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -2532,7 +2532,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Users e-mail address. E-mail address must be unique and it is used for authorization (instead of a login name).</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -2546,7 +2546,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Users password, encoded with MD5</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>CHAR</DTLISTNAME>
@@ -2573,7 +2573,7 @@
 <ID>8</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>First name</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -2587,7 +2587,7 @@
 <ID>14</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Last name</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -2601,7 +2601,7 @@
 <ID>15</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Users company name</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -2615,7 +2615,7 @@
 <ID>10</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The date the users account was created</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TIMESTAMP</DTLISTNAME>
@@ -2641,7 +2641,7 @@
 <ID>11</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if the user account is enabled</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -2768,7 +2768,7 @@
 <ID>9</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Referenced Role ID</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -2797,7 +2797,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Referenced UserGroup ID</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -2883,7 +2883,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>User group name</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -2911,7 +2911,7 @@
 <ID>7</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>User group description</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -3143,7 +3143,7 @@
 <ID>7</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The attribute (SpecField) ID the particular FilterGroup is being based on</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -3170,7 +3170,7 @@
 <ID>9</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>FilterGroup name (translatable)</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -3183,7 +3183,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Sort order in relation to other FilterGroups</DESC>
 <DOMAINID>143</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -3210,7 +3210,7 @@
 <ID>8</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determine if the FilterGroup is active</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -3281,7 +3281,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Role package name (for example, backend.category.add)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -3367,7 +3367,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The Product the related Product is assigned to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -3395,7 +3395,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the related Product</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -3410,7 +3410,7 @@
 <ID>7</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the ProductRelationshipGroup - if the related product is assigned to one (grouped together with similar products)</DESC>
 <DOMAINID>143</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -3467,7 +3467,7 @@
 <ID>2</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The Product the price is being defined for</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -3496,7 +3496,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Price Currency ID</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>CHAR</DTLISTNAME>
@@ -3525,7 +3525,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The actual price value</DESC>
 <DOMAINID>91</DOMAINID>
 <DT>
 <DTLISTNAME>NUMERIC</DTLISTNAME>
@@ -3610,7 +3610,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Currency rate in relation to the base (default) currency</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -3625,7 +3625,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The date the rate was last updated</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TIMESTAMP</DTLISTNAME>
@@ -3639,7 +3639,7 @@
 <ID>7</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if the currency is the base (default) currency</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -3695,7 +3695,7 @@
 <ID>8</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Sort order in relation to other Currencies</DESC>
 <DOMAINID>143</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -3723,7 +3723,7 @@
 <ID>10</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Used for price formatting. Symbols to place before price price, for example $, etc.</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -3736,7 +3736,7 @@
 <ID>11</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Used for price formatting. Symbols to place after the price - usually the currency code itself</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -3807,7 +3807,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Name (brand name) of the manufacturer</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -3892,7 +3892,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The Product the particular image belongs to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -3919,7 +3919,7 @@
 <ID>8</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Image name (translatable)</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -3933,7 +3933,7 @@
 <ID>7</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Sort order in relation to other images that are assigned to the same product (the first image is the default one)</DESC>
 <DOMAINID>143</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -4018,7 +4018,7 @@
 <ID>11</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The Product the particular file belongs to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -4032,7 +4032,7 @@
 <ID>17</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the ProductFileGroup - if the product is assigned to one (grouped together with related files)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -4046,7 +4046,7 @@
 <ID>8</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>File name (the actual filename)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -4060,7 +4060,7 @@
 <ID>16</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>File type (for example, zip, mp3, exe, etc.)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -4074,7 +4074,7 @@
 <ID>13</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>File title (short description, translatable)</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -4087,7 +4087,7 @@
 <ID>14</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>File description (translatable)</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -4101,7 +4101,7 @@
 <ID>15</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Sort order in relation to other ProductFiles that are assigned to the same product</DESC>
 <DOMAINID>143</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -4129,7 +4129,7 @@
 <ID>18</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Allow customer to download the product only for a certain number of days after placing the order</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -4311,7 +4311,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The Category the particular image belongs to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -4325,7 +4325,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Image name (translatable)</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -4339,7 +4339,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Sort order in relation to other images that are assigned to the same category (the first image is the default one)</DESC>
 <DOMAINID>143</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -4410,7 +4410,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the product the value is linked to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -4437,7 +4437,7 @@
 <ID>7</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the attribute (SpecField)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -4464,7 +4464,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The actual attribute value (numeric) assigned to a particular product</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -4536,7 +4536,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the product the value is linked to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -4563,7 +4563,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the attribute (SpecField)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -4590,7 +4590,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The actual attribute value (string) assigned to a particular product</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -4647,7 +4647,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the product the value is linked to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -4674,7 +4674,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the attribute (SpecField)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -4701,7 +4701,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The actual attribute value (date) assigned to a particular product</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>DATE</DTLISTNAME>
@@ -4800,7 +4800,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>2-letter country code</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>CHAR</DTLISTNAME>
@@ -4829,7 +4829,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>State code (for example, FL for Florida, etc.)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -4857,7 +4857,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>State name</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -4871,7 +4871,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>For US states, the value for this field would be &quot;State&quot;, for Canadian provinces, it would be &quot;Province&quot;</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -5113,7 +5113,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The Category the particular SpecFieldGroup (attribute group) belongs to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -5127,7 +5127,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Group name (translatable)</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -5141,7 +5141,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Sort order in relation to other groups</DESC>
 <DOMAINID>143</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -5573,7 +5573,7 @@
 <ID>12</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Pre-defined address state/province ID. If the customers address is in a country for which the states are not defined, the value of this field would be NULL instead and the value would be entered in the stateName field.</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -5587,7 +5587,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Customers first name</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -5601,7 +5601,7 @@
 <ID>13</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Customers last name</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -5615,7 +5615,7 @@
 <ID>14</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Customers company name</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -5629,7 +5629,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>First address line</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -5643,7 +5643,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Secondary address line</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -5657,7 +5657,7 @@
 <ID>7</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Address city</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -5671,7 +5671,7 @@
 <ID>8</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Address state name (entered only if pre-defined states are not available for this country)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -5685,7 +5685,7 @@
 <ID>9</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Postal/ZIP code</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -5699,7 +5699,7 @@
 <ID>10</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>2-letter country code</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>CHAR</DTLISTNAME>
@@ -5713,7 +5713,7 @@
 <ID>11</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Phone number</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -5784,7 +5784,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the User that is associated to the address</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -5811,7 +5811,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the UserAddress entity</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -5923,7 +5923,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of order the transaction is assigned to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -5950,7 +5950,7 @@
 <ID>13</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>If the transaction relies on some other transaction (for example, captures funds that were authorized earlier or voids a transaction), the ID of that transaction</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -5978,7 +5978,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Transaction amount</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -5991,7 +5991,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Transaction currency ID/code</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>CHAR</DTLISTNAME>
@@ -6005,7 +6005,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Date and time of the transaction</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TIMESTAMP</DTLISTNAME>
@@ -6018,7 +6018,7 @@
 <ID>7</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Payment method class name (for example, PaypalDirectPayment)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -6060,7 +6060,7 @@
 <ID>8</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID that was assigned to this transaction by the payment gateway. This ID is needed if any child transactions (capture or void) are going to be performed</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -6103,7 +6103,7 @@
 <ID>14</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if the transaction has been completely finalized (no more captures possible)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -6157,7 +6157,7 @@
 <ID>9</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Credit card expiration year</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -6170,7 +6170,7 @@
 <ID>10</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Credit card expiration month</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TINYINT</DTLISTNAME>
@@ -6183,7 +6183,7 @@
 <ID>11</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Last 4 digits of credit card number</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>CHAR</DTLISTNAME>
@@ -6295,7 +6295,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of order the shipment is assigned to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -6322,7 +6322,7 @@
 <ID>10</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the selected ShippingService for this item. In case a real-time shipping rate service is used, the value for this field would be NULL</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -6336,7 +6336,7 @@
 <ID>7</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Total product price amount</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -6349,7 +6349,7 @@
 <ID>9</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Shipping price amount</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -6362,7 +6362,7 @@
 <ID>12</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Total associated tax amount</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -6375,7 +6375,7 @@
 <ID>8</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the currency the shipment amounts are refered to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>CHAR</DTLISTNAME>
@@ -6407,7 +6407,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Date the product was shipped to customer</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>TIMESTAMP</DTLISTNAME>
@@ -6420,7 +6420,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Online tracking code for this shipment</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -6504,7 +6504,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the User that is associated to the address</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -6531,7 +6531,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the UserAddress entity</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -6821,7 +6821,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if the particular delivery zone is enabled</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -6834,7 +6834,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if free shipping is available for this delivery zone</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -6889,7 +6889,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Delivery zone name</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -6959,7 +6959,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the referenced DeliveryZone</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -6974,7 +6974,7 @@
 <ID>2</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>2-letter country code</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>CHAR</DTLISTNAME>
@@ -7059,7 +7059,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the referenced DeliveryZone</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -7073,7 +7073,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the referenced State</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -7144,7 +7144,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the referenced DeliveryZone</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -7158,7 +7158,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>City name mask. For example, &quot;New Y*k&quot; or &quot;New Y&quot; would match &quot;New York&quot;.</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -7229,7 +7229,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the referenced DeliveryZone</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -7243,7 +7243,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ZIP/postal code mask. For example, &quot;90*&quot; would match &quot;90210&quot;.</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -7314,7 +7314,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the referenced DeliveryZone</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -7328,7 +7328,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Address mask. For example, &quot;*th Avenue&quot; corresponds to &quot;5th Avenue&quot;, &quot;6th Avenue&quot;, etc.</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -7399,7 +7399,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines whether the particular Tax is enabled</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -7425,7 +7425,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Tax name (translatable). For example, &quot;VAT&quot;</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -7495,7 +7495,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the referenced Tax</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -7509,7 +7509,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the referenced DeliveryZone</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -7523,7 +7523,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Tax rate. For example, 20, to set a 20% rate.</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -7609,7 +7609,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the referenced ShippingService</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -7623,7 +7623,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Lowest allowed shipment weight for the ShippingRate entity to be applicable</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -7636,7 +7636,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Highest allowed shipment weight for the ShippingRate entity to be applicable</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -7649,7 +7649,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Lowest allowed shipment subtotal (in base Currency) for the ShippingRate entity to be applicable</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -7662,7 +7662,7 @@
 <ID>7</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Highest allowed shipment subtotal (in base Currency) for the ShippingRate entity to be applicable</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -7675,7 +7675,7 @@
 <ID>8</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Constant flat fee (in base Currency) that does not change if shipment weight or subtotal is changed</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -7688,7 +7688,7 @@
 <ID>9</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Fixed charge per each item (in base Currency)</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -7701,7 +7701,7 @@
 <ID>10</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Fee calculation as a percentage of a subtotal</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -7714,7 +7714,7 @@
 <ID>11</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Charge per each kg of weight</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
@@ -7784,7 +7784,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>The Product the file group belongs to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -7798,7 +7798,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>File group name (translatable)</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -7812,7 +7812,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Sort order in relation to other ProductFileGroups that are assigned to the same product</DESC>
 <DOMAINID>143</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -7896,7 +7896,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the referenced DeliveryZone</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -7910,7 +7910,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Service name (translatable). For example, &quot;Next Day Delivery&quot;</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -7924,7 +7924,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Sort order in relation to other ShippingServices</DESC>
 <DOMAINID>143</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -8023,7 +8023,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>URL slug. For example, for Terms Of Service page it could be &quot;terms.of.service&quot;</DESC>
 <DOMAINID>147</DOMAINID>
 <DT>
 <DTLISTNAME>VARCHAR</DTLISTNAME>
@@ -8037,7 +8037,7 @@
 <ID>7</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Page title (translatable)</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -8050,7 +8050,7 @@
 <ID>8</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Page text (translatable)</DESC>
 <DOMAINID>158</DOMAINID>
 <DT>
 <DTLISTNAME>TEXT</DTLISTNAME>
@@ -8063,7 +8063,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Determines if a link to the page is being displayed in the &quot;Information Box&quot; menu</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>BOOL</DTLISTNAME>
@@ -8090,7 +8090,7 @@
 <ID>6</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Sort order in relation to other StaticPages</DESC>
 <DOMAINID>143</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -8176,7 +8176,7 @@
 <ID>3</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the TaxRate that is being applied to the shipment</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -8205,7 +8205,7 @@
 <ID>4</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>ID of the shipment the tax is being applied to</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>INTEGER</DTLISTNAME>
@@ -8233,7 +8233,7 @@
 <ID>5</ID>
 <POSNR>0</POSNR>
 <SCHEMANAME></SCHEMANAME>
-<DESC></DESC>
+<DESC>Tax amount</DESC>
 <DOMAINID>-1</DOMAINID>
 <DT>
 <DTLISTNAME>FLOAT</DTLISTNAME>
