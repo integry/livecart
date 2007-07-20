@@ -104,6 +104,7 @@ Backend.OrderedItem = {
         report.down('.orderShipment_report_total').down('.price').innerHTML = totalAmount;
 		
 		$("tabOrderInfo_" + id + "Content").down('.order_totalAmount').innerHTML = totalAmount;
+		Backend.CustomerOrder.prototype.updateLog(id);
    },
     
    updateProductCount: function(input, orderID, itemID, shipmentID)
@@ -325,8 +326,6 @@ Backend.Shipment.prototype =
             
             
             Element.addClassName(li, 'orderShipment');
-         
-            Backend.OrderedItem.updateReport($("orderShipment_report_" + this.orderID));
 
             this.shipmentsActiveList.highlight(li);
         }
@@ -402,6 +401,8 @@ Backend.Shipment.prototype =
                    itemsList.highlight(li)
                    
                    this.hideShippedStatus();
+				   
+                   Backend.OrderedItem.updateReport($("orderShipment_report_" + this.nodes.form.elements.namedItem('orderID').value));
                }
             }.bind(this)
         );
@@ -480,6 +481,8 @@ Backend.Shipment.prototype =
                                            
                        uspsLink.show();
                        usps.hide();   
+					   
+                       Backend.OrderedItem.updateReport($("orderShipment_report_" + this.nodes.form.elements.namedItem('orderID').value));
                         
                        this.hideShippedStatus();
                   }.bind(this)
@@ -543,6 +546,8 @@ Backend.Shipment.prototype =
             select.value = select.lastValue;
             return;
         }
+		
+        var orderID = this.nodes.form.elements.namedItem('orderID').value;
         
         if("-1" == select.value)
         {
@@ -563,7 +568,6 @@ Backend.Shipment.prototype =
                    }
                    
                    select.lastValue = select.value;
-                   var orderID = this.nodes.form.elements.namedItem('orderID').value;
                    this.shipmentsActiveList.remove(this.nodes.root);
                                    
                    if(shipmentItems.length == 1)
@@ -607,6 +611,8 @@ Backend.Shipment.prototype =
                }.bind(this)
             );
         }
+		
+        Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
     },
     
     recalculateTotal: function()

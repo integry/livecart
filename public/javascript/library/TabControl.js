@@ -130,11 +130,8 @@ TabControl.prototype = {
         // hide all error messages within a background process (to avoid potential tab switching delays)
         window.setTimeout(function()
             {
-                var errors = document.getElementsByClassName('redMessage');
-                for (k = 0; k < errors.length; k++)
-                {
-                    Element.hide(errors[k]);
-                }                
+                document.getElementsByClassName('redMessage').each(function(message){ message.hide(); });
+                document.getElementsByClassName('bugMessage').each(function(message){ message.hide(); });   
             }, 10);
 
         if(this.callbacks.beforeClick) this.callbacks.beforeClick.call(this);

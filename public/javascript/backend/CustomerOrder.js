@@ -229,6 +229,11 @@ Backend.CustomerOrder.prototype =
     	{
     		Backend.CustomerOrder.Editor.prototype.getInstance(id);			
     	}	
+    },
+    
+    updateLog: function(orderID)
+    {
+		TabControl.prototype.getInstance("orderManagerContainer").resetContent($("tabOrderLog"));
     }
 }
 
@@ -803,6 +808,8 @@ Backend.CustomerOrder.Address.prototype =
             this.nodes.form.down('.addressPhone').innerHTML = this.nodes.form.elements.namedItem('address2').value
 			
             this.hideForm();
+
+            Backend.CustomerOrder.prototype.updateLog(this.nodes.form.elements.namedItem('orderID').value);
 		}
 		else
 		{

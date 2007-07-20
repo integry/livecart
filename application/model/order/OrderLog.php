@@ -89,6 +89,8 @@ class OrderLog extends ActiveRecordModel
         }
         
         $filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'orderID'), $order->getID()));
+        $filter->setOrder(new ARFieldHandle(__CLASS__, 'time'), ARSelectFilter::ORDER_DESC);
+        
         
         return self::getRecordSet($filter, $loadReferencedRecords);
     }
