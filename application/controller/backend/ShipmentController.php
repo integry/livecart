@@ -37,6 +37,7 @@ class ShipmentController extends StoreManagementController
 	    $taxAmount = 0;
 	    $shipmentsArray = array();
 	    
+	    $shipableShipmentsCount = 0;
 	    foreach($shipments as $shipment)
 	    {
 	        
@@ -57,6 +58,11 @@ class ShipmentController extends StoreManagementController
             {
                 $shipmentsArray[$shipment->getID()]['ShippingService']['name_lang'] = $this->translate('_shipping_service_is_not_selected');
             }	
+            
+            if($shipment->status->get() != Shipment::STATUS_SHIPPED && $shipment->isShippable()) 
+            {
+                $shipableShipmentsCount++;
+            }
 	    }
 	    
         $totalAmount = $subtotalAmount + $shippingAmount;
@@ -73,6 +79,7 @@ class ShipmentController extends StoreManagementController
 	    $response->set('downloadableShipment', $order->getDownloadShipment()->toArray());
 	    $response->set('taxAmount', $taxAmount);
 	    $response->set('totalAmount', $totalAmount);
+        $response->set('shipableShipmentsCount', $shipableShipmentsCount);
 	    $response->set('statuses', $statuses + array(-1 => $this->translate('_delete')));
 	    unset($statuses[3]);
 	    $response->set('statusesWithoutShipped', $statuses);
