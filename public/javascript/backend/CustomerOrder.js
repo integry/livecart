@@ -782,6 +782,26 @@ Backend.CustomerOrder.Address.prototype =
 		{
             this.stateID = this.nodes.form.elements.namedItem('stateID').value;
 			Form.State.backup(this.nodes.form);
+			
+			this.nodes.form.down('.addressFullName').innerHTML = this.nodes.form.elements.namedItem('firstName').value + " " +this.nodes.form.elements.namedItem('lastName').value
+            this.nodes.form.down('.addressCountryName').innerHTML = this.nodes.form.elements.namedItem('countryID').options[this.nodes.form.elements.namedItem('countryID').selectedIndex].text
+            
+			if(this.nodes.form.elements.namedItem('stateID').options.length == 0)
+			{
+			    this.nodes.form.down('.addressStateName').innerHTML = this.nodes.form.elements.namedItem('stateName').value
+			}
+			else
+			{
+				this.nodes.form.down('.addressStateName').innerHTML = this.nodes.form.elements.namedItem('stateID').options[this.nodes.form.elements.namedItem('stateID').selectedIndex].text
+			}
+			
+            this.nodes.form.down('.addressCompanyName').innerHTML = this.nodes.form.elements.namedItem('companyName').value
+            this.nodes.form.down('.addressCity').innerHTML = this.nodes.form.elements.namedItem('city').value
+            this.nodes.form.down('.addressAddress1').innerHTML = this.nodes.form.elements.namedItem('address1').value
+            this.nodes.form.down('.addressAddress2').innerHTML = this.nodes.form.elements.namedItem('address2').value
+            this.nodes.form.down('.addressPostalCode').innerHTML = this.nodes.form.elements.namedItem('postalCode').value
+            this.nodes.form.down('.addressPhone').innerHTML = this.nodes.form.elements.namedItem('address2').value
+			
             this.hideForm();
 		}
 		else

@@ -80,54 +80,46 @@
 <fieldset id="order_{$order.ID}_{$type}_view" class="container orderAddress_view">
     <p>
         <label>{t _name}</label>
-        <label>{$address.fullName}</label>    
+        <label class="addressFullName">{$address.fullName}</label>    
     </p>    
 
-    {if $order.companyName}
-        <p>
-            <label>{t _company}</label>    
-            <label>{$address.companyName}</label>
-        </p>
-    {/if}
+    <p>
+        <label>{t _company}</label>    
+        <label class="addressCompanyName">{$address.companyName}</label>
+    </p>
     
     <p>
         <label>{t _country}</label>    
-        <label>{$address.countryName}</label>
+        <label class="addressCountryName">{$address.countryName}</label>
     </p>
     
     <p>
         <label>{t _state}</label>    
-        <label>
-            {if $address.State.ID}
-                {$address.State.name}
-            {else}
-                {$address.stateName}
-            {/if}
-        </label>
+        <label class="addressStateName">{$address.State.name|default:$address.stateName}</label>
     </p>    
     
     <p>
         <label>{t _city}</label>    
-        <label>{$address.city}</label>
+        <label class="addressCity">{$address.city}</label>
     </p>
     
     <p>
         <label>{t _address} 1</label>    
-        <label>{$address.address1}</label>
+        <label class="addressAddress1">{$address.address1}</label>
     </p>    
     
     <p>
         <label>{t _address} 2</label>    
-        <label>{$address.address2}</label>
+        <label class="addressAddress2">{$address.address2}</label>
     </p>    
     
     <p>
         <label>{t _postal_code}</label>    
-        <label>{$address.postalCode}</label>
+        <label class="addressPostalCode">{$address.postalCode}</label>
     </p>
     
     <p>
         <label>{t _phone}</label>    
-        <label>{$address.phone}</label>
+        <label class="addressPhone">{$address.phone}</label>
     </p>
 </fieldset>

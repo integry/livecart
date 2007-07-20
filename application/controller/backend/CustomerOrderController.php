@@ -38,7 +38,7 @@ class CustomerOrderController extends StoreManagementController
 	
 	public function info()
 	{
-	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
+	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State'));
 	    
 	    $response = new ActionResponse();
 	    $response->set('statuses', array(
@@ -54,6 +54,16 @@ class CustomerOrderController extends StoreManagementController
         $orderArray = $order->toArray();
         if($order->isFinalized->get())
         {
+            if($billingAddress = $order->billingAddress->get())
+            {
+                $billingAddress->load(true);
+                $orderArray['BillingAddress'] = $billingAddress->toArray();
+            }
+            if($shippingAddress = $order->shippingAddress->get())
+            {
+                $shippingAddress->load(true);
+                $orderArray['ShippingAddress'] = $shippingAddress->toArray();
+            }
             
             if($order->billingAddress->get())
             {
@@ -83,7 +93,7 @@ class CustomerOrderController extends StoreManagementController
             
 	        $response->set('shippingStates',  $shippingStates);
 	        $response->set('billingStates',  $billingStates);
-        
+            
 	        $orderArray['BillingAddress'] = $order->user->get()->defaultBillingAddress->get()->userAddress->get()->toArray();
 	        $orderArray['ShippingAddress'] = $order->user->get()->defaultShippingAddress->get()->userAddress->get()->toArray();
         }

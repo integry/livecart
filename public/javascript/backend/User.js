@@ -813,6 +813,7 @@ Backend.User.StateSwitcher.prototype =
             Element.hide(this.stateSelector);   
             Element.show(this.stateTextInput);               
             this.stateTextInput.focus();
+			this.stateSelector.options.length = 0;
         }
         else
         {
@@ -824,6 +825,8 @@ Backend.User.StateSwitcher.prototype =
             }.bind(this));
             Element.show(this.stateSelector);            
             Element.hide(this.stateTextInput);
+			
+			this.stateTextInput.value = ''
             
             this.stateSelector.focus();
         }
