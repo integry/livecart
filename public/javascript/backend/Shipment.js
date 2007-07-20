@@ -85,6 +85,8 @@ Backend.OrderedItem = {
     
     updateReport: function(report)
     {
+		var id = report.up('.tabPageContainer').id.match(/\w+_(\d+)\w+/)[1]
+		
         var reportValues = { 'subtotalAmount': 0, 'shippingAmount': 0, 'totalAmount': 0, 'taxAmount': 0 };
         document.getElementsByClassName('orderShipment_info', report.up('.tabPageContainer')).each(function(shipmentReport) 
         {
@@ -97,7 +99,11 @@ Backend.OrderedItem = {
         report.down('.orderShipment_report_subtotal').down('.price').innerHTML = Math.round(reportValues['subtotalAmount'] * 100) / 100;
         report.down('.orderShipment_report_shippingAmount').down('.price').innerHTML = Math.round(reportValues['shippingAmount'] * 100) / 100;
         report.down('.orderShipment_report_tax').down('.price').innerHTML = Math.round(reportValues['taxAmount'] * 100) / 100;
-        report.down('.orderShipment_report_total').down('.price').innerHTML = Math.round(reportValues['totalAmount'] * 100) / 100;
+		
+		var totalAmount = Math.round(reportValues['totalAmount'] * 100) / 100;
+        report.down('.orderShipment_report_total').down('.price').innerHTML = totalAmount;
+		
+		$("tabOrderInfo_" + id + "Content").down('.order_totalAmount').innerHTML = totalAmount;
    },
     
    updateProductCount: function(input, orderID, itemID, shipmentID)

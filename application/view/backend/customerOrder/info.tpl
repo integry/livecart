@@ -18,9 +18,11 @@
     <p>
         <label for="order_{$order.ID}_amount">{t _amount}</label>
         <label>
-            {$order.Currency.pricePrefix}{$order.capturedAmount|default:0}{$order.Currency.priceSuffix} 
-            / 
-            {$order.Currency.pricePrefix}{$order.totalAmount|default:0}{$order.Currency.priceSuffix} 
+            {$order.Currency.pricePrefix}<span class="order_capturedAmount">{$order.capturedAmount|default:0}</span>{$order.Currency.priceSuffix} 
+            
+            /
+            
+            {$order.Currency.pricePrefix}<span class="order_totalAmount">{$order.totalAmount|default:0}</span>{$order.Currency.priceSuffix}
         </label>
     </p>
 
