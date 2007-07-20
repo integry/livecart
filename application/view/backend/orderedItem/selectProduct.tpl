@@ -27,10 +27,9 @@
             {t _done_adding_products}
         </a>
     </div>
-    
     <div id="categoryBrowser" class="treeBrowser"> </div>
-	<div id="relError" style="width: auto;"></div>
-	<div id="relConf" class="yellowMessage" style="display: none; width: auto;"><div>{t _msg_added}</div></div>
+        
+    <div id="confirmations"></div>
 </div>
 <div id="activeCategoryPath"></div>
  

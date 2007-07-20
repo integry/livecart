@@ -79,15 +79,29 @@ LiveCart.AjaxRequest.prototype = {
 
     postProcessResponse: function(response)
     {
+		
 		this.hideIndicator();
 		
-		if ('text/javascript' == response.getResponseHeader('Content-type'))
+		if ('text/javascript' == response.getResponseHeader('Content-type') && $('confirmations'))
 		{
             var confirmations = $('confirmations');
             if(!confirmations.down('#yellowZone')) new Insertion.Top('confirmations', '<div id="yellowZone"></div>');
             if(!confirmations.down('#redZone')) new Insertion.Top('confirmations', '<div id="redZone"></div>');
             if(!confirmations.down('#bugZone')) new Insertion.Top('confirmations', '<div id="bugZone"></div>');
 
+            if(window.selectPopupWindow)
+			{
+				var win = window.selectPopupWindow;
+				
+	            var confirmations = win.$('confirmations');
+                if(confirmations)
+                {
+		            if(!confirmations.down('#yellowZone')) new win.Insertion.Top('confirmations', '<div id="yellowZone"></div>');
+		            if(!confirmations.down('#redZone')) new win.Insertion.Top('confirmations', '<div id="redZone"></div>');
+		            if(!confirmations.down('#bugZone')) new win.Insertion.Top('confirmations', '<div id="bugZone"></div>');
+				}
+            }
+			
             try
             {
                 response.responseData = response.responseText.evalJSON();
@@ -117,6 +131,21 @@ LiveCart.AjaxRequest.prototype = {
         '</div>');
         
         new Backend.SaveConfirmationMessage($('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));	
+		
+		if(window.selectPopupWindow)
+		{
+			var win = window.selectPopupWindow;
+            if(win.$('confirmations'))
+            {
+		        new win.Insertion.Top('bugZone', 
+		        '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="bugMessage">' + 
+		            '<img class="closeMessage" src="image/silk/cancel.png"/>' + 
+		            '<div>' + Backend.internalErrorMessage + '</div>' + 
+		        '</div>');
+		        
+		        new Backend.SaveConfirmationMessage(win.$('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));  
+            }
+		}
     },
     
     showConfirmation: function(responseData)
@@ -132,6 +161,19 @@ LiveCart.AjaxRequest.prototype = {
         '</div>');
         
         new Backend.SaveConfirmationMessage($('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));	
+		
+		if(window.selectPopupWindow)
+		{
+			var win = window.selectPopupWindow;
+			
+	        new win.Insertion.Top(color + 'Zone', 
+	        '<div style="display: none;" id="confirmation_' + (++LiveCart.AjaxRequest.prototype.requestCount) + '" class="' + color + 'Message">' + 
+	            '<img class="closeMessage" src="image/silk/cancel.png"/>' + 
+	            '<div>' + responseData.message + '</div>' + 
+	        '</div>');
+			
+            new win.Backend.SaveConfirmationMessage(win.$('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));  
+	}
     },
     
     reportError: function(response)

@@ -30,6 +30,9 @@
     </div>
     
     <div id="categoryBrowser" class="treeBrowser"> </div>
+        
+    <div id="confirmations"></div>
+    
 	<div id="relError" style="width: auto;"></div>
     
     

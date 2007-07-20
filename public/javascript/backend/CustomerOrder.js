@@ -233,7 +233,16 @@ Backend.CustomerOrder.prototype =
     
     updateLog: function(orderID)
     {
-		TabControl.prototype.getInstance("orderManagerContainer").resetContent($("tabOrderLog"));
+		// I had too :(
+		var url = $("tabOrderLog").down('a').href.replace(/_id_/, orderID);
+		var container = "tabOrderLog_" + orderID + "Content";
+		var identificator = url + container;
+		
+		if($(container))
+        {
+			$(container).remove();
+			TabControl.prototype.getInstance("orderManagerContainer").loadedContents[identificator] = false;
+		}
     }
 }
 

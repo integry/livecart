@@ -348,7 +348,7 @@ class CustomerOrder extends ActiveRecordModel
             $isModified = false;
             foreach ($this->orderedItems as $item)
             {
-				if ($item->isModified())
+				if ($item->isModified() && !$item->isDeleted())
 				{                        
                     if ($item->save())
                     {

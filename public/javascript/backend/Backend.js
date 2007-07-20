@@ -1046,8 +1046,17 @@ Backend.SelectPopup.prototype = {
     createPopup: function()
     {
         Backend.SelectPopup.prototype.popup = window.open(this.link, this.title, 'resizable=1,width=' + this.width + ',height=' + this.height);
-        Backend.SelectPopup.prototype.popup.focus();
-                        
+        Backend.SelectPopup.prototype.popup.onunload = function()
+		{
+			window.selectPopupWindow = null;
+		}
+		
+		Backend.SelectPopup.prototype.popup.focus();
+               
+	    window.selectPopupWindow = Backend.SelectPopup.prototype.popup;
+		
+		Backend.SelectPopup.prototype.popup
+						
         Event.observe(window, 'unload', function() { Backend.SelectPopup.prototype.popup.close(); });
         
         window.selectProductPopup = this;

@@ -437,7 +437,7 @@ Backend.Shipment.prototype =
             
             new LiveCart.AjaxRequest(
                 Backend.Shipment.Links.getAvailableServices + "/" + this.nodes.form.elements.namedItem('ID').value, 
-                usps.up('li').down('.progressIndicator'),
+                usps.up().down('.progressIndicator'),
                 function(response) {
                     var response = eval("(" + response.responseText + ")");
                     
@@ -467,7 +467,7 @@ Backend.Shipment.prototype =
            {
                new LiveCart.AjaxRequest(
                    Backend.Shipment.Links.changeService + "/" + this.nodes.form.elements.namedItem('ID').value + "?serviceID=" + this.nodes.form.elements.namedItem('USPS').value,
-                   usps.up('li').down('.progressIndicator'),
+                   usps.up().down('.progressIndicator'),
                    function(response) {
                        var response = eval("(" + response.responseText + ")");
                       
