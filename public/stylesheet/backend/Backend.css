@@ -132,6 +132,11 @@ div.bugMessage div {
     padding: 15px;
 }
 
+div.yellowMessage .closeMessage
+{
+    display: none;
+}
+
 /*************************** 
 	Layout 
 ***************************/
