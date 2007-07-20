@@ -564,30 +564,32 @@ class CategoryController extends FrontendController
 			{
 			  	$pair = explode('-', $filter);
 
-			  	if (count($pair) != 2)
+			  	if (count($pair) < 2)
 			  	{
 				    continue;
 				}
 				
-				if (substr($pair[1], 0, 1) == 'v')
+				$id = array_pop($pair);
+				
+				if (substr($id, 0, 1) == 'v')
 				{
-					$selectorFilterIds[] = substr($pair[1], 1);
+					$selectorFilterIds[] = substr($id, 1);
 				}
-				else if (substr($pair[1], 0, 1) == 'm')
+				else if (substr($id, 0, 1) == 'm')
 				{
-					$manufacturerFilterIds[] = substr($pair[1], 1);
+					$manufacturerFilterIds[] = substr($id, 1);
 				}
-				else if (substr($pair[1], 0, 1) == 'p')
+				else if (substr($id, 0, 1) == 'p')
 				{
-					$priceFilterIds[] = substr($pair[1], 1);
+					$priceFilterIds[] = substr($id, 1);
 				}
-				else if ('s' == $pair[1])
+				else if ('s' == $id)
 				{
-					$searchFilters[] = $pair[0];
+					$searchFilters[] = implode('-', $pair);
 				}
 				else
 				{
-					$valueFilterIds[] = $pair[1];	
+					$valueFilterIds[] = $id;	
 				}				
 			}
 

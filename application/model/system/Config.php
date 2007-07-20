@@ -31,9 +31,9 @@ class Config
 		$this->application = $application;
 	}
 
-	public function isValueSet($key)
+	public function isValueSet($key, $updateIfNotFound = false)
 	{
-		if (!isset($this->values[$key]) && !$this->isUpdated)
+		if (!isset($this->values[$key]) && !$this->isUpdated && $updateIfNotFound)
 		{
 		  	$this->updateSettings();
 		}

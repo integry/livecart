@@ -14,9 +14,10 @@ class ProductController extends FrontendController
 	public function index()
 	{
         $product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer'));    	
+
         $product->loadSpecification();
         $product->loadPricing();
-		        
+
 		$this->category = $product->category->get();
 		$this->categoryID = $product->category->get()->getID();
 		

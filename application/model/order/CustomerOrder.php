@@ -348,7 +348,7 @@ class CustomerOrder extends ActiveRecordModel
             $isModified = false;
             foreach ($this->orderedItems as $item)
             {
-				if ($item->isModified() && !$item->isDeleted())
+				if ($item->isModified())
 				{                        
                     if ($item->save())
                     {
@@ -707,6 +707,11 @@ class CustomerOrder extends ActiveRecordModel
             }            
         }		        
     
+        if ($this->isFinalized->get()) 
+        { 
+            return $currency->convertAmount($this->currency->get(), $this->totalAmount->get());
+        }     
+    
         return round($total, 2);
     }
 		
@@ -768,6 +773,18 @@ class CustomerOrder extends ActiveRecordModel
 	        }
 		}
 		
+		// total for all currencies
+		$total = array();
+		$currencies = self::getApplication()->getCurrencySet();
+
+		if (is_array($currencies))
+		{
+	        foreach ($currencies as $id => $currency)
+	        {
+                $total[$id] = $this->getTotal($currency);
+	        }
+		}
+		
 		// taxes
 		$array['taxes'] = array();
 		foreach ($this->taxes as $currencyId => $taxes)
@@ -781,25 +798,6 @@ class CustomerOrder extends ActiveRecordModel
                 $array['taxes'][$currencyId][$taxId]['formattedAmount'] = $currency->getFormattedPrice($amount);
             }
         }
-		
-		// total for all currencies
-		$total = array();
-		$currencies = self::getApplication()->getCurrencySet();
-
-		if (is_array($currencies))
-		{
-	        foreach ($currencies as $id => $currency)
-	        {
-	            if ($this->isFinalized->get())
-	            {
-                    $total[$id] = $currency->convertAmount($this->currency->get(), $array['totalAmount']);
-                }
-                else
-                {
-                    $total[$id] = $this->getTotal($currency);
-                }
-	        }
-		}
         			
 		$array['total'] = $total;
 		
@@ -838,8 +836,25 @@ class CustomerOrder extends ActiveRecordModel
 			{
 				$array['amountDue'] = 0;	
 			}
-						
-			foreach (array('amountPaid', 'amountNotCaptured', 'amountDue') as $key)
+				
+            // items subtotal 
+            $array['itemSubtotal'] = 0; 
+            foreach ($this->getOrderedItems() as $item) 
+            { 
+                $array['itemSubtotal'] += $item->getSubtotal($currency); 
+            } 
+
+            // shipping subtotal 
+            $array['shippingSubtotal'] = 0; 
+            foreach ($this->shipments as $shipment) 
+            { 
+                $array['shippingSubtotal'] += 22; 
+                // $array['shippingSubtotal'] += $shipment->getSelectedRate()->getAmountByCurrency($currency); 
+            } 
+            
+            $array['subtotalBeforeTaxes'] = $array['itemSubtotal'] + $array['shippingSubtotal'];
+                		
+			foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes') as $key)
 			{
 				$array['formatted_' . $key] = $currency->getFormattedPrice($array[$key]);
 			}
@@ -924,7 +939,8 @@ class CustomerOrder extends ActiveRecordModel
     
     public function getPaidAmount()
     {
-		$filter = new ARSelectFilter(new InCond(new ARFieldHandle('Transaction', 'type'), array(Transaction::TYPE_AUTH, Transaction::TYPE_SALE)));
+        ClassLoader::import('application.model.order.Transaction');		
+        $filter = new ARSelectFilter(new InCond(new ARFieldHandle('Transaction', 'type'), array(Transaction::TYPE_AUTH, Transaction::TYPE_SALE)));
 		$filter->mergeCondition(new NotEqualsCond(new ARFieldHandle('Transaction', 'isVoided'), true));
 		
 		$transactions = $this->getTransactions($filter);

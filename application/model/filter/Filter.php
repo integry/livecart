@@ -31,7 +31,6 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 		$schema->registerField(new ARForeignKeyField("filterGroupID", "FilterGroup", "ID", "FilterGroup", ARInteger::instance()));
 		$schema->registerField(new ARField("name", ARArray::instance()));
 		$schema->registerField(new ARField("position", ARInteger::instance(2)));
-//		$schema->registerField(new ARField("type", ARInteger::instance(2)));
 		$schema->registerField(new ARField("rangeStart", ARFloat::instance(40)));
 		$schema->registerField(new ARField("rangeEnd", ARFloat::instance(40)));
 		$schema->registerField(new ARField("rangeDateStart", ARDate::instance()));

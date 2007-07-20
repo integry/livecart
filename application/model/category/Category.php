@@ -603,17 +603,10 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return SpecField::getRecordSet($this->getSpecificationFilter($includeParentFields), true);
 	}
 
-	public function getProductById($productId)
-	{
-	  	
-	}
-
 	public function getSpecificationFieldArray($includeParentFields = false, $loadReferencedRecords = false)
 	{
 		ClassLoader::import("application.model.category.SpecField");
-        $specFields = SpecField::getRecordSet($this->getSpecificationFilter($includeParentFields), array('SpecFieldGroup'))->toArray();
-
-        return $specFields;
+        return ActiveRecordModel::getRecordSetArray('SpecField', $this->getSpecificationFilter($includeParentFields), array('SpecFieldGroup'));
 	}
 	
 	public function getSpecFieldsWithGroupsArray()

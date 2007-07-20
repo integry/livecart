@@ -4,7 +4,7 @@
         {selectfield name="id" options=$categories}
         {textfield class="text searchQuery" name="q"}	    
         <input type="submit" class="submit" value="Search" />
-        <input type="hidden" name="cathandle" value="." />
+        <input type="hidden" name="cathandle" value="search" />
 	{/form}
 	<div style="float: right;">
 		{block CURRENCY}	

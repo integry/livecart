@@ -610,7 +610,7 @@ class LiveCart extends Application
     public function getCardTypes(CreditCardPayment $handler)
     {
 		$key = get_class($handler) . '_cardTypes';
-		if ($this->config->isValueSet($key))
+		if ($this->config->isValueSet($key, true))
 		{
 			$types = array_keys($this->config->get($key));
 			return array_combine($types, $types);			

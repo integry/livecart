@@ -40,7 +40,7 @@ function createCategoryUrl($params, LiveCart $application)
 	
     $parts = array_reverse($parts);	
 	
-    $handle = implode('.', $parts);
+    $handle = implode('-', $parts);
 	
 	$filters = array();
 
@@ -73,7 +73,7 @@ function createCategoryUrl($params, LiveCart $application)
 
 	if (empty($handle))
 	{
-		$handle = '.';
+		$handle = '-';
 	}
 
 	if (!isset($category['ID']))

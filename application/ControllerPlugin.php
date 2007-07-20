@@ -2,11 +2,11 @@
 
 abstract class ControllerPlugin
 {
-	private $response;
-
-	private $controllerInstance;
-	
 	private $mustStop;	
+	
+	protected $response;
+
+	protected $controller;
 	
 	protected $request;
 	
@@ -19,7 +19,7 @@ abstract class ControllerPlugin
 	public function __construct(Response $response, Controller $controller)
 	{
 		$this->response = $response;	
-		$this->controllerInstance = $controller;
+		$this->controller = $controller;
 		$this->request = $controller->getRequest();
 		$this->controllerName = $this->request->getControllerName();
 		$this->actionName = $this->request->getActionName();
