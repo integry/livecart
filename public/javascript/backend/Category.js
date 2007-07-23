@@ -250,7 +250,8 @@ Backend.Category = {
         var parentCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
         this.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
 
-        this.activateCategory(newCategory.ID);
+
+        this.tabControl.activateTab($('tabMainDetails'), newCategory.ID);
         Backend.ajaxNav.add('cat_' + newCategory.ID + '#tabMainDetails');
 	},
 
@@ -547,6 +548,12 @@ CategoryTabControl.prototype = {
 		Element.addClassName(this.activeTab, 'active');
 
 		this.loadTabContent(tabId, categoryId);
+		
+		$(this.sectionContainerName).immediateDescendants().each(function(container)
+		{
+			container.hide();
+		});
+		
 		Element.show(this.getContainerId(this.activeTab.id, categoryId));
 	},
 
@@ -565,7 +572,9 @@ CategoryTabControl.prototype = {
 									 this.getContainerId(tabId, categoryId),
 									 this.getIndicatorId(tabId),
                                      undefined,
-                                     function(){ Backend.Category.treeBrowser.hideFeedback(); }
+                                     function(){ 
+									   Backend.Category.treeBrowser.hideFeedback(); 
+									 }
                                      );
 		}
 	},
