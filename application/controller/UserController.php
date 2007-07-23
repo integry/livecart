@@ -120,8 +120,7 @@ class UserController extends FrontendController
         
         ClassLoader::import('application.model.order.OrderNote');
         
-        $f = new ARSelectFilter(new INCond(new ARFieldHandle('OrderNote', 'orderID'), array_keys($ids)));
-        $f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isRead'), 0));
+        $f = new ARSelectFilter(new INCond(new ARFieldHandle('OrderNote', 'orderID'), empty($ids) ? array(-1) : array_keys($ids)));
         $f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isRead'), 0));
         $f->setGrouping(new ARFieldHandle('OrderNote', 'orderID'));
         

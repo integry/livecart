@@ -349,7 +349,7 @@ class CustomerOrder extends ActiveRecordModel
             foreach ($this->orderedItems as $item)
             {
 				if ($item->isModified() && !$item->isDeleted())
-				{                        
+				{            
                     if ($item->save())
                     {
                         $isModified = true;                            
@@ -370,9 +370,10 @@ class CustomerOrder extends ActiveRecordModel
         
 		parent::save();
 		
+		
         if (!$this->isFinalized->get() && !$this->orderedItems)
-        {
-            $this->delete();
+        { 
+//            $this->delete();
         }
     }    
     
@@ -406,7 +407,8 @@ class CustomerOrder extends ActiveRecordModel
 					$mainItem->count->set($count);
 				}				
 			}	
-		}        
+		}  
+
     }
     
     public function getShoppingCartItems()

@@ -4,7 +4,12 @@ ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.Currency');
 
 class OrderController extends FrontendController
-{
+{   
+    /**
+     * @var CustomerOrder
+     */
+    protected $order;
+    
     /**
      *  View shopping cart contents
      */
@@ -12,7 +17,7 @@ class OrderController extends FrontendController
     {
     	$this->addBreadCrumb($this->translate('My Shopping Session'), $this->router->createUrlFromRoute($this->request->get('return')));
 		$this->addBreadCrumb($this->translate('My Shopping Basket'), '');
-		
+
 		$this->order->loadItemData();		
 		
         $currency = Currency::getValidInstanceByID($this->request->get('currency', $this->application->getDefaultCurrencyCode()), Currency::LOAD_DATA);                   
@@ -25,7 +30,7 @@ class OrderController extends FrontendController
 		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getSubTotal($currency)));
 		return $response;
     }   
-    
+
     /**
      *  Update product quantities
      */
