@@ -87,6 +87,8 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 
         foreach (self::getSchemaInstance($className)->getArrayFieldList() as $fieldName => $field)
 		{
+		    $fieldName = $field->getName();
+		    
 			if (!empty($array[$fieldName]))
 			{
 				$data = $array[$fieldName];
