@@ -302,11 +302,6 @@ class CustomerOrderController extends StoreManagementController
 	        $this->request->set('sort_col', 'CustomerOrder.ID');
 	    }
 	    
-	    if($this->request->get('sort_col') == 'User.fullName')
-	    {
-	        $this->request->set('sort_col', 'User.lastName');
-	    }
-	    
 	    if($filters = $this->request->get('filters'))
 	    {
 	        if(isset($filters['CustomerOrder.ID2']))
@@ -321,14 +316,38 @@ class CustomerOrderController extends StoreManagementController
 	    {
 	        if(isset($filters['User.fullName']))
 	        {
-	            $filters['User.lastName'] = $filters['User.fullName'];
+	            $nameParts = explode(' ', $filters['User.fullName']);
 	            unset($filters['User.fullName']);
 	            $this->request->set('filters', $filters);
-	        }
+	            
+	            if(count($nameParts) == 1)
+	            {
+	                $nameParts[1] = $nameParts[0];
+	            }
+	            
+	            $firstNameCond = new LikeCond(new ARFieldHandle('User', "firstName"), '%' . $nameParts[0] . '%');
+	            $firstNameCond->addOR(new LikeCond(new ARFieldHandle('User', "lastName"), '%' . $nameParts[1] . '%'));
+	            
+                $lastNameCond = new LikeCond(new ARFieldHandle('User', "firstName"), '%' . $nameParts[0] . '%');
+                $lastNameCond->addOR(new LikeCond(new ARFieldHandle('User', "lastName"), '%' . $nameParts[1] . '%'));
+                
+                $cond->addAND($firstNameCond);
+                $cond->addAND($lastNameCond);
+	         }
 	    }
 	    
+        if($this->request->get('sort_col') == 'User.fullName')
+        {
+            $this->request->remove('sort_col');
+            
+            $direction = ($this->request->get('sort_dir') == 'DESC') ? ARSelectFilter::ORDER_DESC : ARSelectFilter::ORDER_ASC;
+            
+            $filter->setOrder(new ARFieldHandle("User", "lastName"), $direction);
+            $filter->setOrder(new ARFieldHandle("User", "firstName"), $direction);
+        }
 	    
 	    $filter->setCondition($cond);
+	    
 	    new ActiveGrid($this->application, $filter);
 	    $orders = CustomerOrder::getRecordSet($filter, true)->toArray();
 	    
