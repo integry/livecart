@@ -14,7 +14,6 @@ _mass_action_succeed=Mass action succeed
 # Errors
 _err_user_has_no_billing_or_shipping_address=User has no default billing or shipping address
 
-_done_choosing_costumer=Done choosing costumer
 _all_users=All users
 _default_user_group=Default user group
 

@@ -27,7 +27,7 @@
 	<div id="userGroupsBrowserWithControlls" class="treeContainer maxHeight">
         <div style="margin-bottom: 5px; text-align: center;">
             <a class="menu" href="#" onclick="window.close(); return false;">
-                {t _done_choosing_costumer}
+                {t _cancel}
             </a>
         </div>
     	<div id="userGroupsBrowser" class="treeBrowser"></div>        

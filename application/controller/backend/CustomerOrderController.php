@@ -556,7 +556,11 @@ class CustomerOrderController extends StoreManagementController
 		    $existingRecord = $order->isExistingRecord();
 			$order->save();
 			
-			return new JSONResponse(false, 'success', $this->translate($existingRecord ? '_order_status_has_been_successfully_changed' : '_new_order_has_been_successfully_created'));
+			return new JSONResponse(
+			   array('order' => array( 'ID' => $order->getID())),
+			   'success', 
+			   $this->translate($existingRecord ? '_order_status_has_been_successfully_changed' : '_new_order_has_been_successfully_created')
+		    );
 		}
 		else
 		{

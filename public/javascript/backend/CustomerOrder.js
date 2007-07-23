@@ -74,9 +74,15 @@ Backend.CustomerOrder.prototype =
                 
                 if('success' == response.status)
                 {
-                    window.ordersActiveGrid[Backend.CustomerOrder.prototype.activeGroup].reloadGrid();
-                    
-                    new Backend.SelectPopup.prototype.popup.Backend.SaveConfirmationMessage(Backend.SelectPopup.prototype.popup.$("orderCreatedConfirmation")); // show message in the popup
+                    window.focus();
+					
+					setTimeout(function()
+					{
+						Backend.SelectPopup.prototype.popup.close();
+						
+						Backend.CustomerOrder.prototype.openOrder(response.order.ID);
+						window.ordersActiveGrid[Backend.CustomerOrder.prototype.activeGroup].reloadGrid();
+					}, 20);	
                 }
                 else
                 {
@@ -210,20 +216,23 @@ Backend.CustomerOrder.prototype =
 		}
     },
     
-    openOrder: function(id, e) 
+    openOrder: function(id, e, onComplete) 
     {
-        Event.stop(e);
+        if(e) 
+		{
+			Event.stop(e);
+            $('orderIndicator_' + id).style.visibility = 'visible';
+		}
         
         Backend.CustomerOrder.Editor.prototype.setCurrentId(id); 
-        $('orderIndicator_' + id).style.visibility = 'visible';
         
     	var tabControl = TabControl.prototype.getInstance(
             'orderManagerContainer',
             Backend.CustomerOrder.Editor.prototype.craftTabUrl, 
             Backend.CustomerOrder.Editor.prototype.craftContentId
         ); 
-        
-        tabControl.activateTab();
+        modifiedOnComplete = 
+        tabControl.activateTab(null, function(response){ onComplete(response); Backend.CustomerOrder.prototype.orderLoaded = true; }.bind(this) );
         
         if(Backend.CustomerOrder.Editor.prototype.hasInstance(id)) 
     	{
