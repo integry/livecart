@@ -247,8 +247,6 @@ Backend.SpecField.prototype = {
 		
         this.nodes.handle 				= document.getElementsByClassName(this.cssPrefix + "form_handle", this.nodes.parent)[0];
 		this.nodes.name 				= document.getElementsByClassName(this.cssPrefix + "form_name", this.nodes.parent)[0];
-		this.nodes.valueSuffix			= document.getElementsByClassName(this.cssPrefix + "form_valueSuffix", this.nodes.parent)[0];
-		this.nodes.valuePrefix			= document.getElementsByClassName(this.cssPrefix + "form_valuePrefix", this.nodes.parent)[0];
                 
 		this.nodes.valuePrefix          = document.getElementsByClassName(this.cssPrefix + "form_valuePrefix", this.nodes.parent)[0];
 		this.nodes.valueSuffix          = document.getElementsByClassName(this.cssPrefix + "form_valueSuffix", this.nodes.parent)[0];
@@ -338,7 +336,6 @@ Backend.SpecField.prototype = {
         this.type = this.nodes.type.value;
     
 		// if selected type is a selector type then show selector options fields (aka step 2)
-        
         var valuesTranslations = this.nodes.valuesTranslationsDiv; 
 		if(this.selectorValueTypes.indexOf(this.nodes.type.value) === -1)
 		{
@@ -352,7 +349,25 @@ Backend.SpecField.prototype = {
 			this.nodes.stateLinks[1].style.display = 'inline';
             this.nodes.multipleSelector.parentNode.style.display = 'block';
 		}
-        
+		
+		var prefixLabel = this.nodes.parent.down('.specField_form_valuePrefix_label')
+        var suffixLabel = this.nodes.parent.down('.specField_form_valueSuffix_label')
+		
+        if(this.isNumber(this.type))
+		{
+		    $(prefixLabel).show();
+	        $(suffixLabel).show();
+	        this.nodes.valuePrefix.show();
+	        this.nodes.valueSuffix.show();
+		}
+		else
+		{
+            $(prefixLabel).hide();
+            $(suffixLabel).hide();
+            this.nodes.valuePrefix.hide();
+            this.nodes.valueSuffix.hide();
+		}
+		
         this.nodes.advancedText.style.display = this.type == Backend.SpecField.prototype.TYPE_TEXT_SIMPLE ? 'block' : 'none';
 	},
 
