@@ -10,6 +10,12 @@
     width: 18em;
 }
 
+
+.logEntryDiff td
+{
+   vertical-align: top;
+}
+
 .logHistory .logEntryAuthor
 {
     font-weight: bold;

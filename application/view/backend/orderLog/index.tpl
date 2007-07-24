@@ -47,9 +47,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                
-                
-                    <table>
+                    <table class="logEntryDiff">
                         <tr>
                             <td>
                                 <div class="logEntryValueFrom">{t _from}:</div>
