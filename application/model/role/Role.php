@@ -129,7 +129,7 @@ class Role extends ActiveRecordModel
 	    $rolesCacheDir = ClassLoader::getRealPath('cache.roles');
 	    if(!is_dir($rolesCacheDir))
 	    {
-	        mkdir($rolesCacheDir);
+	        mkdir($rolesCacheDir, 0777, true);
 	    }
 	    
 	    $rolesDirectoryParser = new RolesDirectoryParser(ClassLoader::getRealPath('application.controller.backend'), $rolesCacheDir);

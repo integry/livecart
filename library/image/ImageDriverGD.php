@@ -32,7 +32,7 @@ class ImageDriverGD extends ImageDriver
 			  
 		    if(!is_dir(dirname($newPath)))
 		    {
-				mkdir(dirname($newPath));			  
+				mkdir(dirname($newPath), 0777, true);			  
 			}
 			
 			$pathInfo = pathinfo($newPath);

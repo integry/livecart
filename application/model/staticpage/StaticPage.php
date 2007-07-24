@@ -129,7 +129,6 @@ class StaticPage extends MultilingualObject
 		if (!file_exists($dir))
 		{
 			mkdir($dir, 0777, true);
-			chmod($dir, 0777);
 		}
 		
 		file_put_contents($this->getFileName(), '<?php $pageData = ' . var_export($fileData, true) . '; ?>');       

@@ -31,7 +31,10 @@ abstract class ObjectImage extends MultilingualObject
 	{
 		foreach ($this->getImageSizes() as $key => $value)
 	  	{
-			unlink($this->getPath($key));					
+	  	    if(is_file($this->getPath($key)))
+	  	    {
+			   unlink($this->getPath($key));
+	  	    }
 		}			
 	}
 

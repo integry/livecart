@@ -23,7 +23,7 @@
 		<legend>{t _add_new}</legend>
 		<p class="required">			
 			{err for="image"}
-                {label}{t _image_file}{label}
+                {{label {t _image_file}: }}
 				{filefield}
             {/err}
 		</p>

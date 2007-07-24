@@ -232,7 +232,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 		$rolesCacheDir = ClassLoader::getRealPath('cache.roles');
 		if(!is_dir($rolesCacheDir))
 		{
-		    mkdir($rolesCacheDir);
+		    mkdir($rolesCacheDir, 0777, true);
 		}
 		
 		$refl = new ReflectionClass($this);

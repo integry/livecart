@@ -116,7 +116,7 @@ abstract class ObjectFile extends MultilingualObject
     private function moveFile()
     {   
         $productFileCategoryPath = ClassLoader::getRealPath('storage.' . strtolower(get_class($this)));
-        if(!is_dir($productFileCategoryPath)) mkdir($productFileCategoryPath);
+        if(!is_dir($productFileCategoryPath)) mkdir($productFileCategoryPath, 0777, true);
         
         copy($this->sourceFilePath, $this->getPath());
     }

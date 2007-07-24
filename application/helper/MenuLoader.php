@@ -26,7 +26,7 @@ class MenuLoader {
 //			$this->sortMenu();
 			if (!is_dir(dirname($cache_file)))
 			{
-                mkdir(dirname($cache_file));
+                mkdir(dirname($cache_file), 0777, true);
             }
             file_put_contents($cache_file, serialize($this->mainMenu));
 		}
