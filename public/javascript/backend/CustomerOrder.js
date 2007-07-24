@@ -483,6 +483,9 @@ Backend.CustomerOrder.Editor.prototype =
 
     switchCancelled: function()
     {
+		var message = this.nodes.form.elements.namedItem('isCancelled').value ? Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToActivateThisOrder : Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToCancelThisOrder;
+		if(!confirm(message)) return;
+		
         new LiveCart.AjaxRequest(
             Backend.CustomerOrder.Editor.prototype.Links.switchCancelled + '/' + this.id, 
             this.nodes.isCanceledIndicator,
@@ -494,6 +497,7 @@ Backend.CustomerOrder.Editor.prototype =
 	                this.nodes.isCanceled.update(response.linkValue);
                     this.nodes.acceptanceStatusValue.update(response.value);
                     this.nodes.acceptanceStatusValue.style.color = response.isCanceled ? 'red' : 'green';
+					this.nodes.form.elements.namedItem('isCancelled').value = response.isCanceled;
 	            }
 	        }.bind(this)
         );
