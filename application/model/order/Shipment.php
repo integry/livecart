@@ -320,6 +320,12 @@ class Shipment extends ActiveRecordModel
     public function unserialize($serialized)
     {
         parent::unserialize($serialized);
+        
+        foreach($this->availableShippingRates as $rate)
+        {
+            $rate->setApplication($this->getApplication());
+        }
+        
         if ($this->itemIds)
         {
             $this->items = array();
