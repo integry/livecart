@@ -12,15 +12,21 @@ ClassLoader::import("application.model.system.MultilingualObjectInterface");
  */
 abstract class MultilingualObject extends ActiveRecordModel implements MultilingualObjectInterface
 {
-	private static $multilingualFieldList = array();
-
+    private static $defaultLanguageCode = null;
+    
+    private static $currentLanguageCode = null;
+    
 	const NO_DEFAULT_VALUE = false;
 
 	public function setValueByLang($fieldName, $langCode, $value)
 	{
 		if (is_null($langCode))
 		{
-			$langCode = self::getApplication()->getDefaultLanguageCode();
+			if (!self::$defaultLanguageCode)
+			{
+                self::loadLanguageCodes();
+            }
+            $langCode = self::$defaultLanguageCode;
 		}
 	
 		$valueArray = $this->getFieldValue($fieldName);
@@ -39,7 +45,11 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 
 		if (!isset($valueArray[$langCode]) && $returnDefaultIfEmpty)
 		{
-			$langCode = self::getApplication()->getDefaultLanguageCode();	
+			if (!self::$defaultLanguageCode)
+			{
+                self::loadLanguageCodes();
+            }
+            $langCode = self::$defaultLanguageCode;
 		}
 		
 		if (isset($valueArray[$langCode]))
@@ -81,14 +91,12 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	 * @todo cleanup
 	 * @return array
 	 */
-    public static function transformArray($array, $className = __CLASS__)
+    public static function transformArray($array, $className)
     {		
 		$array = parent::transformArray($array, $className);
 
         foreach (self::getSchemaInstance($className)->getArrayFieldList() as $fieldName => $field)
 		{
-		    $fieldName = $field->getName();
-		    
 			if (!empty($array[$fieldName]))
 			{
 				$data = $array[$fieldName];
@@ -98,11 +106,9 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 				    continue;
                 }					
 				
-                if (!isset($app))
-                {
-            		$app = self::getApplication();
-            		$defaultLangCode = $app->getDefaultLanguageCode();
-            		$currentLangCode = $app->getLocaleCode();                    
+    			if (!self::$defaultLanguageCode)
+    			{
+                    self::loadLanguageCodes();
                 }
 
 				foreach ($data as $lang => $value)
@@ -110,9 +116,9 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 				  	$array[$fieldName . '_' . $lang] = $value;					  	
 				}
 
-                $array[$fieldName] = !empty($data[$defaultLangCode]) ? $data[$defaultLangCode] : '';
+                $array[$fieldName] = !empty($data[self::$defaultLanguageCode]) ? $data[self::$defaultLanguageCode] : '';
 
-                $array[$fieldName . '_lang'] = !empty($data[$currentLangCode]) ? $data[$currentLangCode] : $array[$fieldName];
+                $array[$fieldName . '_lang'] = !empty($data[self::$currentLanguageCode]) ? $data[self::$currentLanguageCode] : $array[$fieldName];
 			}	    
 		}
 		
@@ -211,6 +217,14 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	 
 	  	return new ARExpressionHandle($expression);	
 	}
+	
+	private static function loadLanguageCodes()
+	{
+		$app = self::getApplication();
+
+        self::$currentLanguageCode = $app->getLocaleCode();
+        self::$defaultLanguageCode = $app->getDefaultLanguageCode();
+    }
 }
 
 ?>

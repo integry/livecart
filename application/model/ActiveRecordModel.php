@@ -68,9 +68,8 @@ abstract class ActiveRecordModel extends ActiveRecord
 	
 	protected static function transformArray($array, $className)
 	{
-		foreach (self::getSchemaInstance($className)->getFieldsByType('ARDateTime') as $field)
+		foreach (self::getSchemaInstance($className)->getFieldsByType('ARDateTime') as $name => $field)
 		{
-			$name = $field->getName();
 			$time = strtotime($array[$name]);
 			
 			if (!$time)

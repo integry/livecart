@@ -443,7 +443,7 @@ class Product extends MultilingualObject
 	
 	public static function transformArray($array)
 	{
-		$array = parent::transformArray($array, __CLASS__);
+		$array = parent::transformArray($array, 'Product');
 		
         $array['isTangible'] = $array['type'] == self::TYPE_TANGIBLE;
         $array['isDownloadable'] = $array['type'] == self::TYPE_DOWNLOADABLE;
