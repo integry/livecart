@@ -47,31 +47,36 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    {if $log.type == $TYPE_ORDER}
-                        <div class="logEntryValueFrom">{t _from}:</div>
-                        {include file="backend/orderLog/order.tpl" order=$log.oldValue otherOrder=$log.newValue}
-                        
-                        <div class="logEntryValueTo">{t _to}:</div>
-                        {include file="backend/orderLog/order.tpl" order=$log.newValue otherOrder=$log.oldValue}
-                    {elseif $log.type == $TYPE_SHIPMENT}
-                        <div class="logEntryValueFrom">{t _from}:</div>
-                        {include file="backend/orderLog/shipment.tpl" shipment=$log.oldValue otherShipment=$log.newValue}
-                        
-                        <div class="logEntryValueTo">{t _to}:</div>
-                        {include file="backend/orderLog/shipment.tpl" shipment=$log.newValue otherShipment=$log.oldValue}        
-                    {elseif $log.type == $TYPE_ORDERITEM}
-                        <div class="logEntryValueFrom">{t _from}:</div>
-                        {include file="backend/orderLog/orderedItem.tpl" orderedItem=$log.oldValue otherOrderedItem=$log.newValue}
-                        
-                        <div class="logEntryValueTo">{t _to}:</div>
-                        {include file="backend/orderLog/orderedItem.tpl" orderedItem=$log.newValue otherOrderedItem=$log.oldValue}
-                    {elseif $log.type == $TYPE_SHIPPINGADDRESS || $log.type == $TYPE_BILLINGADDRESS}
-                        <div class="logEntryValueFrom">{t _from}:</div>
-                        {include file="backend/orderLog/address.tpl" address=$log.oldValue otherAddress=$log.newValue}                        
-                        
-                        <div class="logEntryValueTo">{t _to}:</div>
-                        {include file="backend/orderLog/address.tpl" address=$log.newValue otherAddress=$log.oldValue}  
-                    {/if}
+                
+                
+                    <table>
+                        <tr>
+                            <td>
+                                <div class="logEntryValueFrom">{t _from}:</div>
+                                {if $log.type == $TYPE_ORDER}
+                                    {include file="backend/orderLog/order.tpl" order=$log.oldValue otherOrder=$log.newValue}
+                                {elseif $log.type == $TYPE_SHIPMENT}
+                                    {include file="backend/orderLog/shipment.tpl" shipment=$log.oldValue otherShipment=$log.newValue}      
+                                {elseif $log.type == $TYPE_ORDERITEM}
+                                    {include file="backend/orderLog/orderedItem.tpl" orderedItem=$log.oldValue otherOrderedItem=$log.newValue}
+                                {elseif $log.type == $TYPE_SHIPPINGADDRESS || $log.type == $TYPE_BILLINGADDRESS}
+                                    {include file="backend/orderLog/address.tpl" address=$log.oldValue otherAddress=$log.newValue} 
+                                {/if}
+                            </td>
+                            <td>
+                                <div class="logEntryValueTo">{t _to}:</div>
+                                {if $log.type == $TYPE_ORDER}
+                                    {include file="backend/orderLog/order.tpl" order=$log.newValue otherOrder=$log.oldValue}
+                                {elseif $log.type == $TYPE_SHIPMENT}
+                                    {include file="backend/orderLog/shipment.tpl" shipment=$log.newValue otherShipment=$log.oldValue}        
+                                {elseif $log.type == $TYPE_ORDERITEM}
+                                    {include file="backend/orderLog/orderedItem.tpl" orderedItem=$log.newValue otherOrderedItem=$log.oldValue}
+                                {elseif $log.type == $TYPE_SHIPPINGADDRESS || $log.type == $TYPE_BILLINGADDRESS}
+                                    {include file="backend/orderLog/address.tpl" address=$log.newValue otherAddress=$log.oldValue}  
+                                {/if}
+                            </td>
+                        </tr>
+                    </table>
                 </td>
                 <td></td>
             </tr>
