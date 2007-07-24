@@ -125,7 +125,10 @@ class UserController extends StoreManagementController
 				$user->delete();
 			}         
             
-			$user->save();
+			if ('delete' != $act)
+            {
+                $user->save();
+            }   
         }		
 		
 		return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_mass_action_succeed'));	

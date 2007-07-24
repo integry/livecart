@@ -12,9 +12,13 @@
     		</li>
     	</ul>  
         
-        <fieldset id="newUserForm_{$userGroupID}" style="display: none;" class="newUserForm">
+        <fieldset id="newUserForm_{$userGroupID}" style="display: none;" class="treeManagerContainer newUserForm">
             {include file="backend/user/info.tpl"}
         </fieldset>
+        
+        <script type="text/javascript">
+            $("fromUsersPage").appendChild($("newUserForm_{$userGroupID}"))
+        </script>
         
         {literal}
         <script type="text/javascript">
@@ -22,8 +26,8 @@
             {
                 Element.observe($("{/literal}userGroup_{$userGroupID}_addUser{literal}"), 'click', function(e)
                 {
-                    Backend.User.Add.prototype.getInstance({/literal}{$userGroupID}{literal}).showAddForm({/literal}{$userGroupID}{literal}); 
                     Event.stop(e);
+                    Backend.User.Add.prototype.getInstance({/literal}{$userGroupID}{literal}).showAddForm({/literal}{$userGroupID}{literal}); 
                 });
             }
             catch(e)

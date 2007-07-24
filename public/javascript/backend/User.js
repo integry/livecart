@@ -165,6 +165,15 @@ Backend.UserGroup.prototype =
 	
 	activateGroup: function(id)
 	{
+        
+        $$('.newUserForm').each(function(newForm)
+        {
+			if($('newUserForm_' + Backend.UserGroup.prototype.activeGroup))
+			{
+			    Backend.User.Add.prototype.getInstance(Backend.UserGroup.prototype.activeGroup).hideAddForm(); 
+			}
+        });
+		
         var activateTab = $('tabUsers');
         if(id < 0)
         {
@@ -201,8 +210,6 @@ Backend.UserGroup.prototype =
             
             $("activeUserPath").innerHTML = this.treeBrowser.getItemText(id);
         }
-        
-        
         
         Backend.UserGroup.prototype.activeGroup = id;
 	},
@@ -691,13 +698,15 @@ Backend.User.Add.prototype =
 	showAddForm: function()
 	{
         ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuCancelLink]);
-        ActiveForm.prototype.showNewItemForm(this.nodes.menuShowLink, this.nodes.menuForm); 
+        ActiveForm.prototype.showNewItemForm(this.nodes.menuShowLink, this.nodes.menuForm, false); 
+		$("userGroupsManagerContainer").hide();
 	},
    
 	hideAddForm: function()
 	{
         ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuShowLink]);
-        ActiveForm.prototype.hideNewItemForm(this.nodes.menuShowLink, this.nodes.menuForm); 
+        ActiveForm.prototype.hideNewItemForm(this.nodes.menuShowLink, this.nodes.menuForm, false); 
+		$("userGroupsManagerContainer").show();
 	},
 
     bindEvents: function(args)
