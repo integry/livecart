@@ -763,8 +763,15 @@ Backend.DeliveryZone.ShippingService.prototype =
        
        $A(document.getElementsByClassName('shippingService_rateFloatValue', this.nodes.root)).each(function(input)
        {
-           Event.observe(input, "keyup", function(e){ NumericFilter(this); }.bind(this));
+           Event.observe(input, "keyup", function(e){ NumericFilter(this); });
        }.bind(this));
+	   
+            
+        Event.observe(this.nodes.form, 'submit', function(e)
+        {
+            Event.stop(e);
+            this.save();
+        }.bind(this), false);
     },
     
     rangeTypeChanged: function()
@@ -778,7 +785,6 @@ Backend.DeliveryZone.ShippingService.prototype =
             document.getElementsByClassName(this.prefix + "subtotalPercentCharge").each(function(fieldset) { fieldset.up('fieldset').style.display = 'none'; });
             document.getElementsByClassName(this.prefix + "perKgCharge").each(function(fieldset) { fieldset.up('fieldset').style.display = 'block'; });
             document.getElementsByClassName(this.prefix + "weightRange").each(function(fieldset) { fieldset.style.display = 'block'; });
-            console.info('weight based');
         }
         else
         {
@@ -786,7 +792,6 @@ Backend.DeliveryZone.ShippingService.prototype =
             document.getElementsByClassName(this.prefix + "subtotalPercentCharge").each(function(fieldset) { fieldset.up('fieldset').style.display = 'block'; });
             document.getElementsByClassName(this.prefix + "perKgCharge").each(function(fieldset) { fieldset.up('fieldset').style.display = 'none'; });
             document.getElementsByClassName(this.prefix + "weightRange").each(function(fieldset) { fieldset.style.display = 'none'; });
-            console.info('subtotal based');
         }
     },
     
@@ -801,12 +806,7 @@ Backend.DeliveryZone.ShippingService.prototype =
     {
         ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuShowLink]);
         ActiveForm.prototype.hideNewItemForm(this.nodes.menuCancelLink, this.nodes.menuForm); 
-        
-        if(this.nodes.ratesNewForm.style.display == 'block')
-        {
-            Backend.DeliveryZone.ShippingRate.prototype.getInstance(this.nodes.ratesNewForm).hideNewForm();
-        }
-        
+                
         $A(this.nodes.ratesList.getElementsByTagName('li')).each(function(li) {
            Element.remove(li);
         });
@@ -987,6 +987,17 @@ Backend.DeliveryZone.ShippingRate.prototype =
     {
        if(!this.rate.ID)
        {
+	       $A(this.nodes.root.getElementsByTagName('input')).each(function(input)
+	       {
+	           Event.observe(input, 'keypress', function(e) { 
+                  if(e.keyCode == 13)
+                  {
+                      Event.stop(e);
+                      this.save(e);
+                  } 
+	           }.bind(this), false)
+	       }.bind(this)); 
+		
            Event.observe(this.nodes.save, 'click', function(e) { Event.stop(e); this.save(e); }.bind(this));
            Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel();}.bind(this));
            Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
@@ -1040,10 +1051,10 @@ Backend.DeliveryZone.ShippingRate.prototype =
                     'rate__perKgCharge=' + rate.perKgCharge + '&' +
                     'rangeType=' + rangeType,
                 false,
-                function(response) 
+                function(resp) 
                 { 
-                    var response = eval("(" + response.responseText + ")");
-                    this.afterAdd(response, rate) 
+                    var resp = eval("(" + resp.responseText + ")");
+                    this.afterAdd(resp, rate) 
                 }.bind(this)
             );
             
@@ -1258,7 +1269,6 @@ Backend.DeliveryZone.TaxRate.prototype =
     bindEvents: function()
     {
        Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
-       // Event.observe(this.nodes.form, 'submit', function(e) { Event.stop(e); this.save(); }.bind(this));
       
        Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
        if(!this.rate.ID)

@@ -41,11 +41,11 @@
             </ul>
             <fieldset class="container" {denied role='delivery.update'}style="display: none"{/denied}>
             	<ul class="menu" id="shippingService_rate_menu_{$service.DeliveryZone.ID}_{$service.ID}">
-            	    <li><a href="#new_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_show">{t _add_new_rate}</a></li>
-            	    <li><a href="#cencel_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_cancel" class="hidden">{t _cancel_adding_new_rate}</a></li>
+            	    <li><a href="#new_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_show" class="hidden">{t _add_new_rate}</a></li>
+            	    <li><a href="#cencel_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_cancel">{t _cancel_adding_new_rate}</a></li>
             	</ul>
             </fieldset>
-            <fieldset id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_form" style="display: none;">
+            <fieldset id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_form">
                 {include file="backend/shippingService/rate.tpl" rate=$newRate}
             </fieldset>
             
@@ -62,7 +62,14 @@
                         );
                         
                         newForm.showNewForm();
-                    });   
+                    });  
+                    
+                    var newForm = Backend.DeliveryZone.ShippingRate.prototype.getInstance(
+                        $("shippingService_new_rate_{/literal}{$service.DeliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}_form"),
+                        {/literal}{json array=$newRate}{literal}
+                    );
+                    
+                    newForm.showNewForm(); 
                 
                     console.info(Backend.DeliveryZone.ShippingRate.prototype.Callbacks);
                     ActiveList.prototype.getInstance("shippingService_ratesList_{/literal}{$service.DeliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}", Backend.DeliveryZone.ShippingRate.prototype.Callbacks, function() {});

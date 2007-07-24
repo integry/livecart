@@ -171,11 +171,11 @@ function MaxValueCheck(element, constraint)
 /*********************************************
 	Filters
 *********************************************/
-function NumericFilter(element, params)
+function NumericFilter(elm, params)
 {
-    element.focus();
+    elm.focus();
     
-	var value = element.value;
+	var value = elm.value;
 	value = value.replace(',' , '.');
 	
 	// only keep the last comma
@@ -197,7 +197,7 @@ function NumericFilter(element, params)
 	}
 	
 	//next remove all characters save 0 though 9
-	//in both elements of the array
+	//in both elms of the array
 	dollars = parts[0].replace(/^-?[^0-9]-/gi, '');
 
 	if ('' != dollars && '-' != dollars)
@@ -213,7 +213,7 @@ function NumericFilter(element, params)
 		dollars += '.' + cents;
 	}
 	
-	element.value = dollars;
+	elm.value = dollars;
 }
 
 function IntegerFilter(element, params)

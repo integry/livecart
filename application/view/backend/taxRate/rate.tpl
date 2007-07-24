@@ -2,12 +2,6 @@
     <input type="hidden" name="deliveryZoneID" value="{$taxRate.DeliveryZone.ID}" class="taxRate_deliveryZoneID" />
     <input type="hidden" name="taxRateID" value="{$taxRate.ID}" class="taxRate_tarRateID" />
     
-    <label for="taxRate_{$taxRate.DeliveryZone.ID}_{$taxRate.ID}_rate">{t _rate}</label>
-    <fieldset class="error">
-		{textfield name="rate" class="observed taxRate_rate number" id="taxRate_`$taxRate.DeliveryZone.ID`_`$taxRate.ID`_rate" role="delivery.update"} %
-		<span class="errorText hidden"> </span>
-    </fieldset>
-    
     <label for="taxRate_{$taxRate.DeliveryZone.ID}_{$taxRate.ID}_taxID">{t _tax}</label>
     {if !$taxRate.ID}
         <fieldset class="error">
@@ -18,6 +12,12 @@
         <fieldset class="taxRate_taxIDFieldset">{$taxRate.Tax.name}</fieldset>
         <input type="hidden" name="taxID" value="{$taxRate.Tax.ID}" />
     {/if}
+    
+    <label for="taxRate_{$taxRate.DeliveryZone.ID}_{$taxRate.ID}_rate">{t _rate}</label>
+    <fieldset class="error">
+        {textfield name="rate" class="observed taxRate_rate number" id="taxRate_`$taxRate.DeliveryZone.ID`_`$taxRate.ID`_rate" role="delivery.update"} %
+        <span class="errorText hidden"> </span>
+    </fieldset>
 
     <fieldset class="taxRate_controls" {denied role="delivery.update"}style="display: none;"{/denied}>
         <span class="progressIndicator" style="display: none;"></span>

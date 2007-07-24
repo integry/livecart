@@ -32,7 +32,7 @@ class ShippingServiceController extends StoreManagementController
 	    
 	      
 		$form = $this->createShippingServiceForm();
-		$form->setData(array('name_en' => 'test', 'rangeType' => 1));
+		$form->setData(array('rangeType' => 0));
 		
 		
 		$response = new ActionResponse();
