@@ -161,7 +161,6 @@ class ProductPrice extends ActiveRecordModel
 		{
 			$pricing[$price['productID']][$price['currencyID']] = $price['price'];
 		}			
-
 		foreach ($pricing as $productID => $productPricing)
 		{
 			$product = $products->get($ids[$productID]);

@@ -29,10 +29,10 @@ class ProductPricing
 	{
 		$this->product = $product;
 		$this->application = $application;
-		        
+
         if (is_null($prices))
 		{
-            $prices = $product->getRelatedRecordSet("ProductPrice", new ARSelectFilter());            
+            $prices = $product->getRelatedRecordSet("ProductPrice", new ARSelectFilter());    
         }
 
         if ($prices instanceof ARSet)

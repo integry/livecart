@@ -1,6 +1,6 @@
 <?php
 
-include_once('ShippingResultInterface.php');
+include_once(dirname(__file__) . '/ShippingResultInterface.php');
 
 class ShippingRateSet implements ShippingResultInterface, IteratorAggregate
 {

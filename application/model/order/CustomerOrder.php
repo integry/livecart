@@ -71,9 +71,7 @@ class CustomerOrder extends ActiveRecordModel
     
     public static function getInstanceById($id, $loadData = self::LOAD_DATA, $loadReferencedRecords = false)
     {
-        $instance = ActiveRecordModel::getInstanceById('CustomerOrder', $id, $loadData, $loadReferencedRecords);
-        $instance->loadItems();
-        return $instance;
+        return parent::getInstanceById('CustomerOrder', $id, $loadData, $loadReferencedRecords);
     }
     
     /**
@@ -742,18 +740,38 @@ class CustomerOrder extends ActiveRecordModel
 	 */
 	public function toArray($options = array())
 	{
+        if (is_array($this->orderedItems))
+		{
+			foreach ($this->orderedItems as $item)
+			{                
+                if (!$item->product->get()->isPricingLoaded())
+                {
+                    if (!isset($products))
+                    {
+                        $products = new ARSet();
+                    }
+                    $products->unshift($item->product->get());
+                }
+            }
+            
+            if (isset($products))
+            {
+                ProductPrice::loadPricesForRecordSet($products);
+            }
+        }
+
 		$array = parent::toArray();
 		
 		$array['cartItems']	= array();
 		$array['wishListItems']	= array();
-				
-		if(is_array($this->orderedItems))
+            
+		if (is_array($this->orderedItems))
 		{
 			foreach ($this->orderedItems as $item)
 			{
 				if ($item->isSavedForLater->get())
 				{
-					$array['wishListItems'][] = $item->toArray();
+                    $array['wishListItems'][] = $item->toArray();
 				}
 				else
 				{
@@ -861,6 +879,8 @@ class CustomerOrder extends ActiveRecordModel
 				$array['formatted_' . $key] = $currency->getFormattedPrice($array[$key]);
 			}
 		}
+
+        $this->setArrayData($array);
 
 		return $array;
 	}

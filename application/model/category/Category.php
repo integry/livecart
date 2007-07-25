@@ -21,6 +21,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	
 	private $specFieldArrayCache = array();
 	private $filterGroupArrayCache = array();
+	private $filterSetCache = null;
 	
 	/**
 	 * Define database schema used by this active record instance
@@ -181,7 +182,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 	public function getFilterSet()
 	{
-		Classloader::import('application.model.filter.Filter');
+		if ($this->filterSetCache)
+		{
+            return $this->filterSetCache;
+        }
+        
+        Classloader::import('application.model.filter.Filter');
 		Classloader::import('application.model.filter.SelectorFilter');
 			
 		// get filter groups
@@ -214,7 +220,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 			$filterFilter->setOrder(new ARFieldHandle('Filter', 'position'));
 			
 			$valueFilters = ActiveRecord::getRecordSet('Filter', $filterFilter, array('FilterGroup', 'SpecField'));	  	
-			
 			foreach ($valueFilters as $filter)
 			{
 				$ret[] = $filter;
@@ -235,6 +240,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 				$ret[] = new SelectorFilter($value);
 			}	
 		}
+		
+		$this->filterSetCache = $ret;
 		
 		return $ret;		
 	}

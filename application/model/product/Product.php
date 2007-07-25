@@ -319,7 +319,7 @@ class Product extends MultilingualObject
 
 	public function loadPricing($pricingData = null)
 	{
-  	  	$this->pricingHandlerInstance = new ProductPricing($this, $pricingData, self::getApplication());
+        $this->pricingHandlerInstance = new ProductPricing($this, $pricingData, self::getApplication());
 	}
 
 	public function loadRequestData(Request $request)
@@ -413,6 +413,9 @@ class Product extends MultilingualObject
 			self::sortAttributesByHandle($array);
     		$array = array_merge($array, $this->getPricesFields());                
         }
+        
+        $this->setArrayData($array);
+        
 	  	return $array;
 	}
 	
@@ -683,11 +686,16 @@ class Product extends MultilingualObject
 	{
 		if (!$this->pricingHandlerInstance)
 		{
-			$this->pricingHandlerInstance = new ProductPricing($this, null, self::getApplication());
+            $this->pricingHandlerInstance = new ProductPricing($this, null, self::getApplication());
 		}
 
 		return $this->pricingHandlerInstance;
 	}
+
+    public function isPricingLoaded()
+    {
+        return !is_null($this->pricingHandlerInstance);
+    }
 
 	public function setPrice($currencyCode, $price)
 	{

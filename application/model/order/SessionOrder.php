@@ -20,7 +20,10 @@ class SessionOrder
             try
             {
 				$instance = CustomerOrder::getInstanceById($id, true);
-                $instance->loadItems();
+                if (!$instance->getOrderedItems())
+                {
+                    $instance->loadItems();
+                }
 				$instance->isSyncedToSession = true;					
 			}
 			catch (ARNotFoundException $e)
