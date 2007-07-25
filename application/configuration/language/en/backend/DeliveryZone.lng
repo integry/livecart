@@ -27,5 +27,9 @@ _address_mask=Address mask
 _Add_mask=Add new mask
 _new_delivery_zone=New delivery zone
 
+_is_enabled=Enabled
+_is_free_shipping=Free shipping
+_is_real_time_disabled=Real time shipping disabled
+
 #errors
 _error_mask_is_empty=Mask is empty

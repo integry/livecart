@@ -279,7 +279,10 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 
         this.findNodes(root);
         this.bindEvents();
+		
+		Backend.DeliveryZone.prototype.treeBrowser.setItemText(Backend.DeliveryZone.prototype.activeZone, this.nodes.name.value)        
         
+		// I did't found out if sorting the fields realy matters, but they are slowing things down for sure
 //        this.sortSelect(this.nodes.inactiveCountries);
 //        this.sortSelect(this.nodes.activeCountries);
 //        this.sortSelect(this.nodes.inactiveStates);
@@ -400,8 +403,13 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         }.bind(this));
         
         $A(this.nodes.observedElements).each(function(element) {
-            Event.observe(element, 'blur', function(e) { this.save() }.bind(this));
+            Event.observe(element, 'change', function(e) { this.save() }.bind(this));
         }.bind(this));
+		
+		
+		
+        window.onunload = function(e) { this.save(); }.bind(this);
+		
         
         Event.observe(this.nodes.addressMaskNew, 'keyup', function(e) 
         {
@@ -449,7 +457,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
     save: function() {
         this.saving = true;
         
-        Backend.DeliveryZone.prototype.treeBrowser.setItemText(Backend.DeliveryZone.prototype.activeZone, this.nodes.name.value)        
+        Backend.DeliveryZone.prototype.treeBrowser.setItemText(Backend.DeliveryZone.prototype.activeZone, this.nodes.name.value)
         new LiveCart.AjaxRequest(this.nodes.form);
     
         this.saving = false;

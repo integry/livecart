@@ -36,6 +36,7 @@ class DeliveryZone extends MultilingualObject
 		$schema->registerField(new ARField("name", ARText::instance()));
 		$schema->registerField(new ARField("isEnabled", ARInteger::instance(1)));
 		$schema->registerField(new ARField("isFreeShipping", ARInteger::instance(1)));
+        $schema->registerField(new ARField("isRealTimeDisabled", ARInteger::instance(1)));
 	}
 
 	/**

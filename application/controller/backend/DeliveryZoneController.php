@@ -146,6 +146,10 @@ class DeliveryZoneController extends StoreManagementController
         $zone = DeliveryZone::getInstanceByID((int)$this->request->get('id'));
         $zone->name->set($this->request->get('name'));
         
+        $zone->isEnabled->set((int)$this->request->get('isEnabled'));
+        $zone->isFreeShipping->set((int)$this->request->get('isFreeShipping'));
+        $zone->isRealTimeDisabled->set((int)$this->request->get('isRealTimeDisabled'));
+        
         $zone->save();
 	    
 	    return new JSONResponse(false, 'success', $this->translate('_delivery_zone_name_was_updated'));

@@ -7,6 +7,23 @@
 		<span class="errorText hidden"> </span>
     </fieldset>
     
+    
+    <fieldset class="checkbox error">
+        {checkbox name="isEnabled" id="countriesAndStates_isEnabled_`$zoneID`" class="checkbox observed"} 
+        <label class="checkbox" for="countriesAndStates_isEnabled_{$zoneID}">{t _is_enabled}</label>
+    </fieldset>
+    
+    <fieldset class="checkbox error">
+        {checkbox name="isFreeShipping" id="countriesAndStates_isFreeShipping_`$zoneID`" class="checkbox observed"} 
+        <label class="checkbox" for="countriesAndStates_isFreeShipping_{$zoneID}">{t _is_free_shipping}</label>
+    </fieldset>
+    
+    <fieldset class="checkbox error">
+        {checkbox name="isRealTimeDisabled" id="countriesAndStates_isRealTimeDisabled_`$zoneID`" class="checkbox observed"} 
+        <label class="checkbox" for="countriesAndStates_isRealTimeDisabled_{$zoneID}">{t _is_real_time_disabled}</label>
+    </fieldset>
+    
+    
     <label>{t _country}</label>
     <fieldset class="error">
         {selectfield name="activeCountries" size="15" class="countriesAndStates_activeCountries" multiple="multiple" options=$selectedCountries}

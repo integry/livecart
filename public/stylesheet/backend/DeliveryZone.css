@@ -4,15 +4,9 @@
 #deliveryZoneContent label.setting 
 {
 	display: block;
-	float: auto;
 	float: none;
 	margin-bottom: 0px;
 	width: auto;
-}
-
-p.checkbox 
-{
-	padding-left: 0px;
 }
 
 #deliveryZoneManagerContainer .activeList .errorText 
