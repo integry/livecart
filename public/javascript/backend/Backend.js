@@ -887,6 +887,8 @@ Backend.SaveConfirmationMessage.prototype =
 Backend.UnitConventer = Class.create();
 Backend.UnitConventer.prototype = 
 {
+	Instances: {},
+	
 	initialize: function(root)
 	{
 		// Get all nodes
@@ -903,13 +905,28 @@ Backend.UnitConventer.prototype =
         new Insertion.After(this.nodes.loValue, '<span class="UnitConventer_LoUnit"> </span>');
 		
 		// Bind events
+		Event.observe(this.nodes.hiValue, "keyup", function(e){ NumericFilter(this); });
+        Event.observe(this.nodes.loValue, "keyup", function(e){ NumericFilter(this); });
+		
 		Event.observe(this.nodes.hiValue, 'keyup', function(e) { this.updateShippingWeight() }.bind(this));
         Event.observe(this.nodes.loValue, 'keyup', function(e) { this.updateShippingWeight() }.bind(this));
         Event.observe(this.nodes.switchUnits, 'click', function(e) { Event.stop(e); this.switchUnitTypes() }.bind(this));
 		
+		
+		
 		// Set units (Changing it two times should bring it to specified value)
 		this.switchUnitTypes();
         this.switchUnitTypes();
+	},
+	
+	getInstance: function(root)
+	{
+		if(!Backend.UnitConventer.prototype.Instances[$(root).id])
+		{
+			Backend.UnitConventer.prototype.Instances[$(root).id] = new Backend.UnitConventer(root);
+		}
+		
+		return Backend.UnitConventer.prototype.Instances[$(root).id];
 	},
 	
     switchUnitTypes: function()

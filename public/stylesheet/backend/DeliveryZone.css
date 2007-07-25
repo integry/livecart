@@ -50,3 +50,38 @@
 {
     font-weight: bold;
 }
+
+/* Weight range */
+.shippingService_weightRange
+{
+   position: relative !important;
+}
+
+.UnitConventer_SwitchUnits
+{
+    position: absolute;
+    
+    left: 30em;
+    top: 2.2em;
+}
+
+.UnitConventer_HiValue, .UnitConventer_LoValue
+{
+   width: 2.5em !important;
+}
+
+.UnitConventer_HiUnit, .UnitConventer_LoUnit
+{
+   padding-left: 3px !important;
+   padding-right: 10px !important;
+}
+
+.weightRangeEnd
+{
+   margin-left: 11em;
+}
+
+.weightDelimiter
+{
+   margin-left: 15em;
+}

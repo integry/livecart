@@ -9,36 +9,27 @@
 
 <fieldset class="error shippingService_weightRange">
     <label class="observe" for="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_weightRangeStart">{t _weight_range}</label>
+    
+    <div class="weightRangeStart">
+    {metricsfield name="rate__subtotalRangeStart" hideSwitch=1 value=$rate.weightRangeStart id="shippingService_`$rate.ShippingService.DeliveryZone.ID`_`$rate.ShippingService.ID`_`$rate.ID`_weightRangeStart" class="shippingService__weightRangeStart"}
+    </div>
+    <div class="weightDelimiter">
+    -
+    </div>
+    
+    <div class="weightRangeEnd">
+    {metricsfield name="rate__subtotalRangeEnd" value=$rate.weightRangeEnd id="shippingService_`$rate.ShippingService.DeliveryZone.ID`_`$rate.ShippingService.ID`_`$rate.ID`_weightRangeEnd" class="shippingService__weightRangeEnd"}
+    </div>
 
-    <span>
-        <input type="text" name="rate__weightRangeStartHiUnit" class="number" onkeyup="Backend.UnitConventer.prototype.updateShippingWeight(this);" {denied role='delivery.update'}readonly="readonly"{/denied} /> 
-        <span class="shippingUnit_hi">{t _units_kg}</span>
-        <input type="text" name="rate__weightRangeStartLoUnit" class="number" onkeyup="Backend.UnitConventer.prototype.updateShippingWeight(this);" {denied role='delivery.update'}readonly="readonly"{/denied} /> 
-        <span class="shippingUnit_lo">{t _units_g}</span>
-        <input type="text" name="rate__weightRangeStart" value="{$rate.weightRangeStart}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_weightRangeStart" class="shippingService_weightRangeStart shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} /> 
-    <span>
-    
-    - 
-    
-    <span>
-        <input type="text" name="rate__weightRangeStartHiUnit" class="number" onkeyup="Backend.UnitConventer.prototype.updateShippingWeight(this);" {denied role='delivery.update'}readonly="readonly"{/denied} /> 
-        <span class="shippingUnit_hi">{t _units_kg}</span>
-        <input type="text" name="rate__weightRangeStartLoUnit" class="number" onkeyup="Backend.UnitConventer.prototype.updateShippingWeight(this);" {denied role='delivery.update'}readonly="readonly"{/denied} /> 
-        <span class="shippingUnit_lo">{t _units_g}</span>
-        <input type="text" name="rate__weightRangeEnd" value="{$rate.weightRangeEnd}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_weightRangeEnd" class="shippingService_weightRangeEnd shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} />
-    </span>
-    
-    <span class="unitSwitch">
-        <span class="unitDef english_title" style="display: none;">{t _switch_to_english_units}</span>
-        <span class="unitDef metric_title" style="display: none;">{t _switch_to_metric_units}</span>
-        <span class="unitDef english_hi" style="display: none;">{t _units_kg}</span>
-        <span class="unitDef english_lo" style="display: none;">{t _units_g}</span>
-        <span class="unitDef metric_hi" style="display: none;">{t _units_pounds}</span>
-        <span class="unitDef metric_lo" style="display: none;">{t _units_ounces}</span>
-                                                
-        <a href="#" onclick="Backend.UnitConventer.prototype.switchUnitTypes(this); return false;">{t _switch_to_english_units}</a>
-    </span>
-    
+    <script type="text/javascript">
+        var switchMetricsEnd = Backend.UnitConventer.prototype.getInstance("UnitConventer_Root_shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_weightRangeEnd");
+        
+        Event.observe(switchMetricsEnd.nodes.switchUnits, 'click', function(e) {ldelim}
+            var switchMetricsStart = Backend.UnitConventer.prototype.getInstance("UnitConventer_Root_shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_weightRangeStart");
+            switchMetricsStart.switchUnitTypes();
+        {rdelim});
+    </script>
+
     <br />
     <span class="errorText hidden"> </span>
 </fieldset>
