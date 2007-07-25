@@ -9,9 +9,36 @@
 
 <fieldset class="error shippingService_weightRange">
     <label class="observe" for="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_weightRangeStart">{t _weight_range}</label>
-    <input type="text" name="rate__weightRangeStart" value="{$rate.weightRangeStart}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_weightRangeStart" class="shippingService_weightRangeStart shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} /> 
+
+    <span>
+        <input type="text" name="rate__weightRangeStartHiUnit" class="number" onkeyup="Backend.UnitConventer.prototype.updateShippingWeight(this);" {denied role='delivery.update'}readonly="readonly"{/denied} /> 
+        <span class="shippingUnit_hi">{t _units_kg}</span>
+        <input type="text" name="rate__weightRangeStartLoUnit" class="number" onkeyup="Backend.UnitConventer.prototype.updateShippingWeight(this);" {denied role='delivery.update'}readonly="readonly"{/denied} /> 
+        <span class="shippingUnit_lo">{t _units_g}</span>
+        <input type="text" name="rate__weightRangeStart" value="{$rate.weightRangeStart}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_weightRangeStart" class="shippingService_weightRangeStart shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} /> 
+    <span>
+    
     - 
-    <input type="text" name="rate__weightRangeEnd" value="{$rate.weightRangeEnd}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_weightRangeEnd" class="shippingService_weightRangeEnd shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} />
+    
+    <span>
+        <input type="text" name="rate__weightRangeStartHiUnit" class="number" onkeyup="Backend.UnitConventer.prototype.updateShippingWeight(this);" {denied role='delivery.update'}readonly="readonly"{/denied} /> 
+        <span class="shippingUnit_hi">{t _units_kg}</span>
+        <input type="text" name="rate__weightRangeStartLoUnit" class="number" onkeyup="Backend.UnitConventer.prototype.updateShippingWeight(this);" {denied role='delivery.update'}readonly="readonly"{/denied} /> 
+        <span class="shippingUnit_lo">{t _units_g}</span>
+        <input type="text" name="rate__weightRangeEnd" value="{$rate.weightRangeEnd}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_weightRangeEnd" class="shippingService_weightRangeEnd shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} />
+    </span>
+    
+    <span class="unitSwitch">
+        <span class="unitDef english_title" style="display: none;">{t _switch_to_english_units}</span>
+        <span class="unitDef metric_title" style="display: none;">{t _switch_to_metric_units}</span>
+        <span class="unitDef english_hi" style="display: none;">{t _units_kg}</span>
+        <span class="unitDef english_lo" style="display: none;">{t _units_g}</span>
+        <span class="unitDef metric_hi" style="display: none;">{t _units_pounds}</span>
+        <span class="unitDef metric_lo" style="display: none;">{t _units_ounces}</span>
+                                                
+        <a href="#" onclick="Backend.UnitConventer.prototype.switchUnitTypes(this); return false;">{t _switch_to_english_units}</a>
+    </span>
+    
     <br />
     <span class="errorText hidden"> </span>
 </fieldset>

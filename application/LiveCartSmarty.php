@@ -12,6 +12,11 @@ class LiveCartSmarty extends Smarty
         $this->register_modifier('config', array($this, 'config'));
     }
     
+    /**
+     * Get livecart application instance
+     *
+     * @return LiveCart
+     */
     public function getApplication()
     {
         return $this->application;

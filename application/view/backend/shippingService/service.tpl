@@ -40,7 +40,7 @@
                 {/foreach}
             </ul>
             <fieldset class="container" {denied role='delivery.update'}style="display: none"{/denied}>
-            	<ul class="menu" id="shippingService_rate_menu_{$service.DeliveryZone.ID}_{$service.ID}">
+            	<ul class="menu" id="shippingService_rate_menu_{$service.DeliveryZone.ID}_{$service.ID}" style="display: none;">
             	    <li><a href="#new_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_show" class="hidden">{t _add_new_rate}</a></li>
             	    <li><a href="#cencel_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_cancel">{t _cancel_adding_new_rate}</a></li>
             	</ul>

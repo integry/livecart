@@ -54,17 +54,6 @@ fieldset.specification .numeric
   	width: 400px;
 }
 
-.unitSwitch
-{
-	font-size: smaller;
-	margin-left: 20px;  
-}
-
-.unitDef 
-{
-	display: none;  
-}
-
 .productForm.intangible .shipping, .productForm.intangible .inventory
 {
     display: none;

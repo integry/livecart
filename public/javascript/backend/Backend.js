@@ -881,6 +881,82 @@ Backend.SaveConfirmationMessage.prototype =
     }
 }
 
+/**
+ * Unit conventer
+ */
+Backend.UnitConventer = Class.create();
+Backend.UnitConventer.prototype = 
+{
+	initialize: function(root)
+	{
+		// Get all nodes
+		this.nodes = {};
+		this.nodes.root = $(root);
+        this.nodes.normalizedWeightField = this.nodes.root.down(".UnitConventer_NormalizedWeight");
+        this.nodes.unitsTypeField = this.nodes.root.down(".UnitConventer_UnitsType");
+		this.nodes.hiValue = this.nodes.root.down('.UnitConventer_HiValue');
+		this.nodes.loValue = this.nodes.root.down('.UnitConventer_LoValue');
+        this.nodes.switchUnits = this.nodes.root.down('.UnitConventer_SwitchUnits');
+		
+		// Add units after fields
+		new Insertion.After(this.nodes.hiValue, '<span class="UnitConventer_HiUnit"> </span>');
+        new Insertion.After(this.nodes.loValue, '<span class="UnitConventer_LoUnit"> </span>');
+		
+		// Bind events
+		Event.observe(this.nodes.hiValue, 'keyup', function(e) { this.updateShippingWeight() }.bind(this));
+        Event.observe(this.nodes.loValue, 'keyup', function(e) { this.updateShippingWeight() }.bind(this));
+        Event.observe(this.nodes.switchUnits, 'click', function(e) { Event.stop(e); this.switchUnitTypes() }.bind(this));
+		
+		// Set units (Changing it two times should bring it to specified value)
+		this.switchUnitTypes();
+        this.switchUnitTypes();
+	},
+	
+    switchUnitTypes: function()
+    {
+        this.nodes.switchUnits.update(this.nodes.root.down('.UnitConventer_SwitcgTo' + this.nodes.unitsTypeField.value.capitalize() + 'Title').innerHTML);
+		
+        this.nodes.unitsTypeField.value = (this.nodes.unitsTypeField.value == 'ENGLISH') ? 'METRIC' : 'ENGLISH';
+
+        // Change captions
+        this.nodes.root.down('.UnitConventer_HiUnit').innerHTML = this.nodes.root.down('.UnitConventer_'  + this.nodes.unitsTypeField.value.capitalize() + 'HiUnit').innerHTML;
+        this.nodes.root.down('.UnitConventer_LoUnit').innerHTML = this.nodes.root.down('.UnitConventer_'  + this.nodes.unitsTypeField.value.capitalize() + 'LoUnit').innerHTML;
+
+        var multipliers = this.getWeightMultipliers();
+
+        var hiValue = Math.floor(this.nodes.normalizedWeightField.value / multipliers[0]);
+        var loValue = (this.nodes.normalizedWeightField.value - (hiValue * multipliers[0])) / multipliers[1];
+        loValue = Math.round(loValue * 1000) / 1000;
+
+        if ('english' == this.nodes.unitsTypeField.value)
+        {
+            loValue = loValue.toFixed(0);
+        }
+
+        this.nodes.hiValue.value = hiValue;
+        this.nodes.loValue.value = loValue;
+    },	
+	
+    getWeightMultipliers: function()
+    {
+        switch(this.nodes.unitsTypeField.value)
+        {
+            case 'ENGLISH': 
+                return [0.45359237, 0.0283495231];
+            
+            case 'METRIC': 
+            default:
+                return [1, 0.001]
+        }
+    },
+	
+    updateShippingWeight: function(field)
+    {
+        var multipliers = this.getWeightMultipliers();
+        this.nodes.normalizedWeightField.value = (this.nodes.hiValue.value * multipliers[0]) + (this.nodes.loValue.value * multipliers[1]);
+    }
+}
+
 /*************************************************
 	...
 *************************************************/

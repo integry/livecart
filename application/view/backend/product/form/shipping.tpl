@@ -3,25 +3,10 @@
 
 	<p>
 		<label for="product_shippingWeight_{$cat}_{$product.ID}">{t _shipping_weight}:</label>
-		<fieldset class="error">				
-			
-			{textfield name="shippingHiUnit" onkeyup="Backend.Product.updateShippingWeight(this);" class="number" id="product_shippingWeight_`$cat`_`$product.ID`"} <span class="shippingUnit_hi">{t _units_kg}</span>
-			{textfield name="shippingLoUnit" onkeyup="Backend.Product.updateShippingWeight(this);" class="number"} <span class="shippingUnit_lo">{t _units_g}</span>
-			
-			<span class="unitSwitch">
-				<span class="unitDef english_title">{t _switch_to_english_units}</span>
-				<span class="unitDef metric_title">{t _switch_to_metric_units}</span>
-				<span class="unitDef english_hi">{t _units_kg}</span>
-				<span class="unitDef english_lo">{t _units_g}</span>
-				<span class="unitDef metric_hi">{t _units_pounds}</span>
-				<span class="unitDef metric_lo">{t _units_ounces}</span>
-														
-				<a href="#" onclick="Backend.Product.switchUnitTypes(this); return false;">{t _switch_to_english_units}</a>
-			</span>
-			
-			{hidden name="shippingWeight"}
-			{hidden name="unitsType"}
-			
+		<fieldset class="error" >				
+		
+            {metricsfield name="shippingWeight"}
+
 			<div class="errorText hidden"></div>
 		</fieldset>
 	</p>

@@ -368,6 +368,11 @@ class LiveCart extends Application
 	  	return $this->locale;
 	}
 
+	/**
+	 * Get config instance
+	 * 
+	 * @return Config
+	 */
 	public function getConfig()
 	{
 	  	return $this->config;
