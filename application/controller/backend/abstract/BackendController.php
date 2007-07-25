@@ -14,7 +14,6 @@ abstract class BackendController extends BaseController
 	{
 	  	$this->setLayout('empty');
 		$this->addBlock('USER_MENU', 'boxUserMenu', 'block/backend/userMenu');
-		header('Content-type: text/javascript');
 	}
 	
 	public function boxUserMenuBlock()

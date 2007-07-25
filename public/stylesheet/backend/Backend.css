@@ -940,6 +940,21 @@ select.narrow
 }
 
 /*************************** 
+	Form types
+***************************/
+fieldset.addForm
+{
+	background-color: #FFFFDD;
+	border: 1px solid #FFFF55;
+	padding: 10px;
+}
+
+fieldset.addForm legend
+{
+	background-color: #FFFFAA;
+}
+
+/*************************** 
 	List styling
 ***************************/
 .odd

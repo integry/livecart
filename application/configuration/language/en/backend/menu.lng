@@ -3,7 +3,10 @@ _menu_products=Products
 _menu_orders=Orders
 
 _menu_users=Users
+
+_menu_content=Content
 _menu_pages=Pages
+_menu_news=Site News
 
 _menu_settings=Settings
 _menu_configuration=Configuration

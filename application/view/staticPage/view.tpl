@@ -1,6 +1,6 @@
 {pageTitle}{$page.title_lang}{/pageTitle}
 
-<div class="staticPageView">
+<div class="staticPageView staticPage_{$page.ID}">
 
 {include file="layout/frontend/header.tpl"}
 {include file="layout/frontend/leftSide.tpl"}

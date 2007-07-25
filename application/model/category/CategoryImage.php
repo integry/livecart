@@ -18,10 +18,16 @@ class CategoryImage extends ObjectImage
 		
 	public static function getImageSizes()
 	{
-	   return array(0 => array(50, 80),
-								1 => array(80, 150),
-								2 => array(300, 400),
-								);   
+        $config = self::getApplication()->getConfig();
+     
+        $sizes = array();
+        $k = 0;
+        while ($config->isValueSet('IMG_C_W_' . ++$k))
+        {
+            $sizes[$k] = array($config->get('IMG_C_W_' . $k), $config->get('IMG_C_H_' . $k));
+        }
+
+        return $sizes;
     }
     
     public function getOwner()

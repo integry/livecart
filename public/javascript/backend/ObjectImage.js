@@ -82,7 +82,9 @@ Backend.ObjectImage.prototype =
 					
 				 var handler = li.parentNode.handler;	
 				
-    			 var form = $(handler.prefix + 'ImgAdd_' + handler.ownerID).getElementsByTagName('form')[0].cloneNode(true);            
+    			 var uploadForm = $(handler.prefix + 'ImgAdd_' + handler.ownerID).getElementsByTagName('form')[0];
+    			 uploadForm.reset();
+				 var form = uploadForm.cloneNode(true);            
 				 
 				 form.action = handler.saveUrl;
 				 onsubm = function(e) {var form = Event.element(e); this.showProgressIndicator(form); }

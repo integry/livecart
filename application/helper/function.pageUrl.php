@@ -13,7 +13,7 @@ function smarty_function_pageUrl($params, LiveCartSmarty $smarty)
 {	
     if (isset($params['id']))
     {
-        $params['data'] = StaticPage::getInstanceById($params['id'])->toArray();        
+        $params['data'] = StaticPage::getInstanceById($params['id'], StaticPage::LOAD_DATA)->toArray();        
     }
     
 	$urlParams = array('controller' => 'staticPage', 

@@ -21,9 +21,20 @@
         	<Role>userGroup</Role>	
         </Menu>
         <Menu>
-        	<Title>_menu_pages</Title>	
-        	<Controller>backend.staticPage</Controller>
-        	<Role>page</Role>	
+        	<Title>_menu_content</Title>
+        	<Role>page,news</Role>
+        	<Items>
+        		<Menu>
+		        	<Title>_menu_pages</Title>	
+		        	<Controller>backend.staticPage</Controller>
+		        	<Role>page</Role>	
+		        </Menu>
+        		<Menu>
+		        	<Title>_menu_news</Title>	
+		        	<Controller>backend.siteNews</Controller>
+		        	<Role>news</Role>	
+		        </Menu>
+		    </Items>
         </Menu>
         <Menu>
         	<Title>_menu_settings</Title>	

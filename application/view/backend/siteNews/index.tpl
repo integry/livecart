@@ -1,0 +1,101 @@
+{includeJs file="library/ActiveList.js"}
+{includeCss file="library/ActiveList.css"}
+
+{includeJs file="backend/SiteNews.js"}
+{includeCss file="backend/SiteNews.css"}
+
+{includeJs file="library/form/ActiveForm.js"}
+{includeJs file="library/form/State.js"}
+{includeJs file="library/form/Validator.js"}
+
+{pageTitle help="sitenews"}{t _site_news}{/pageTitle}
+
+{include file="layout/backend/header.tpl"}
+
+<div id="confirmations" class="rightConfirmations"></div>
+
+<ul class="menu" id="newsMenu">
+	<li><a href="#" onclick="slideForm('addNews', 'newsMenu'); return false;">{t _add_news}</a></li>
+</ul>
+
+<fieldset id="addNews" class="slideForm addForm" style="display: none;">
+
+	<legend>{t _add_news}</legend>
+
+	{form action="controller=backend.siteNews action=save" method="POST" onsubmit="new Backend.SiteNews.Save(this); return false;" handle=$form}
+		<input type="hidden" name="id" />
+		<p>
+			{{err for="title"}}
+				<label class="wide">{t _title}:</label>
+				{textfield class="text"}
+			{/err}	
+		</p>
+		<p>
+			{{err for="text"}}
+				<label class="wide">{t _text}:</label>
+				{textarea}
+			{/err}	
+		</p>
+	
+		{language}
+			<p>
+				<label class="wide">{t _title}:</label>
+				{textfield class="text" name="title_`$lang.ID`"}
+			</p>
+			<p>
+				<label class="wide">{t _text}:</label>
+				{textarea name="text_`$lang.ID`"}
+			</p>
+		{/language}
+		
+		<fieldset class="controls" {denied role="news"}style="display: none;"{/denied}>
+			<span class="progressIndicator" style="display: none;"></span>
+			<input type="submit" class="submit save" value="{tn _save}" />
+			<input type="submit" class="submit add" value="{tn _add}" />
+			{t _or} <a class="cancel" href="#" onclick="restoreMenu('addNews', 'newsMenu'); return false;">{t _cancel}</a>
+		</fieldset>
+	{/form}
+	
+</fieldset>
+
+<ul id="newsList" class="activeList activeList_add_sort activeList_add_delete activeList_add_edit">
+</ul>
+
+<div style="display: none">
+	<span id="deleteUrl">{link controller=backend.currency action=delete}?id=</span>
+	<span id="confirmDelete">{t _del_conf}</span>
+</div>
+
+<ul style="display: none;">
+<li id="newsList_template" class="activeList_add_sort activeList_add_delete" style="position: relative;">
+	<div style="float: left; display: inline;">
+		<div class="newsListContainer">
+
+			<span class="newsCheckBox">
+				<input type="checkbox" class="checkbox" onclick="lng.setEnabled(this);" />
+			</span>	
+            
+		    <span class="progressIndicator" style="display: none;"></span>
+		
+			<span class="newsData">
+				<span class="newsTitle"></span> 
+				<span class="newsDate"></span> 
+				<br class="clear" />
+				<span class="newsText"></span> 
+			</span>
+						
+		</div>
+	</div>			
+	<div class="clear"></div>
+</li>
+</ul>
+
+
+
+{literal}
+<script type="text/javascript">
+{/literal}
+	new Backend.SiteNews({json array=$newsList}, $('newsList'), $('newsList_template'));
+</script>
+
+{include file="layout/backend/footer.tpl"}

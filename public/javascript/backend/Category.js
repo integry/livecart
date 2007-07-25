@@ -142,7 +142,13 @@ Backend.Category = {
 
     showControls: function()
     {
-        var categoryId = Backend.Category.treeBrowser.getSelectedItemId();
+        // popup window
+		if (!$("removeCategoryLink"))
+        {
+			return false;
+		}
+		
+		var categoryId = Backend.Category.treeBrowser.getSelectedItemId();
         
         if(categoryId == '1') 
         {
