@@ -4,6 +4,7 @@ syntax: regexp
 ^\.project$
 ^storage\/(?!configuration)(.*)
 Thumbs.db
+update\.bat
 
 syntax: glob
 storage/configuration/settings.php

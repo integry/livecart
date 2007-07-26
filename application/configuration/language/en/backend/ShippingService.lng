@@ -10,8 +10,11 @@ _cancel_adding_new_service=Cancel adding new service
 _add_new_rate=Add new rate
 _cancel_adding_new_rate=Cancel adding new rate
 
+_range_type=Range type
 _weight_based_calculations=Weight based calculation
 _subtotal_based_calculations=Subtotal based calculation
+
+
 _shipping_service_rates=Rates
 _subtotal_range=Subtotal range
 _flat_charge=Flat charge
@@ -21,6 +24,11 @@ _weight_range=Weight range
 _per_kg_charge=Per kg charge
 _name=Name
 
+_weight_based_rates=weight based rates
+_subtotal_based_rates=subtotal based rates
+
+_shipping_service_contains_no_rates=Shipping service contains no rates
+
 _error_range_start_should_be_a_float_value=Range start should be a float value
 _error_range_end_should_be_a_float_value=Range end should be a float value
 _error_flat_charge_should_be_a_float_value=Flat charge should be a float value
@@ -28,3 +36,4 @@ _error_per_item_charge_should_be_a_float_value=Per item charge should be a float
 _error_per_kg_charge_should_be_a_float_value=Per kg charge should be a float value
 _error_subtotal_percent_charge_should_be_a_float_value=Subtotal percent charge should be a float value
 _error_name_should_not_be_empty=Name should not be empty
+_error_range_start_should_be_less_end=Range start should be less than range end

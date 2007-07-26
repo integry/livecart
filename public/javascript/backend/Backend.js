@@ -911,6 +911,8 @@ Backend.UnitConventer.prototype =
             new Insertion.After(this.nodes.loValue, '<span class="UnitConventer_LoUnit"> </span>');
 		}
 		
+		this.reset();
+		
 		// Bind events
 		Event.observe(this.nodes.hiValue, "keyup", function(e){ NumericFilter(this); });
         Event.observe(this.nodes.loValue, "keyup", function(e){ NumericFilter(this); });
@@ -918,14 +920,18 @@ Backend.UnitConventer.prototype =
 		Event.observe(this.nodes.hiValue, 'keyup', function(e) { this.updateShippingWeight() }.bind(this));
         Event.observe(this.nodes.loValue, 'keyup', function(e) { this.updateShippingWeight() }.bind(this));
         Event.observe(this.nodes.switchUnits, 'click', function(e) { Event.stop(e); this.switchUnitTypes() }.bind(this));
-		
-		
-		
-		// Set units (Changing it two times should bring it to specified value)
-		this.switchUnitTypes();
-        this.switchUnitTypes();
 	},
 	
+	reset: function()
+	{
+        this.nodes.switchUnits.update(this.nodes.root.down('.UnitConventer_SwitcgTo' + (this.nodes.unitsTypeField.value == 'ENGLISH' ? 'METRIC' : 'ENGLISH').capitalize() + 'Title').innerHTML);
+        this.nodes.root.down('.UnitConventer_HiUnit').innerHTML = this.nodes.root.down('.UnitConventer_'  + this.nodes.unitsTypeField.value.capitalize() + 'HiUnit').innerHTML;
+        this.nodes.root.down('.UnitConventer_LoUnit').innerHTML = this.nodes.root.down('.UnitConventer_'  + this.nodes.unitsTypeField.value.capitalize() + 'LoUnit').innerHTML;
+    
+        this.nodes.hiValue.value = 0;
+        this.nodes.loValue.value = 0;
+	},
+		
 	getInstance: function(root)
 	{
 		if(!Backend.UnitConventer.prototype.Instances[$(root).id])

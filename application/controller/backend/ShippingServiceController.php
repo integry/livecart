@@ -20,23 +20,28 @@ class ShippingServiceController extends StoreManagementController
 	    if(($zoneID = (int)$this->request->get('id')) <= 0) 
 	    {
 	        $deliveryZoneArray = array('ID' => '');
-	        $shippingServices = ShippingService::getByDeliveryZone()->toArray();
+	        $shippingServices = ShippingService::getByDeliveryZone();
 	    }
 	    else
 	    {
 	        $deliveryZone = DeliveryZone::getInstanceByID($zoneID, true);
 	        $deliveryZoneArray = $deliveryZone->toArray();
-	        $shippingServices = $deliveryZone->getShippingServices()->toArray();
+	        $shippingServices = $deliveryZone->getShippingServices();
 	    }
-	    
-	    
-	      
+	
+	    $shippingServicesArray = array();
+        foreach($shippingServices as $service)
+        {
+            $shippingServicesArray[$service->getID()] = $service->toArray();
+            $shippingServicesArray[$service->getID()]['rangeTypeString'] = $this->translate($service->rangeType->get() == 0 ? '_weight_based_rates' : '_subtotal_based_rates');
+            $shippingServicesArray[$service->getID()]['ratesCount'] = $service->getRates()->getTotalRecordCount();
+        }
+        
 		$form = $this->createShippingServiceForm();
 		$form->setData(array('rangeType' => 0));
 		
-		
 		$response = new ActionResponse();
-		$response->set('shippingServices', $shippingServices);
+		$response->set('shippingServices', $shippingServicesArray);
 		$response->set('newService', array('DeliveryZone' => $deliveryZoneArray));
 		$response->set('newRate', array('ShippingService' => array('DeliveryZone' => $deliveryZoneArray, 'ID' => '')));
 		$response->set('deliveryZone', $deliveryZoneArray);
@@ -174,9 +179,14 @@ class ShippingServiceController extends StoreManagementController
         {
 	        $shippingService->setValueArrayByLang(array('name'), $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true, false), $this->request);      
 		    $shippingService->save();
+		    
+		    $shippingServiceArray = $shippingService->toArray();
             
+		    $shippingServiceArray['newRates'] = array();
             foreach($ratesData as $id => $data)
             {
+                if(!$id) continue;
+                
                 if(preg_match('/^new/', $id))
                 {
 	                if($shippingService->rangeType->get() == ShippingService::WEIGHT_BASED)
@@ -203,9 +213,14 @@ class ShippingServiceController extends StoreManagementController
                 }
                 
                 $rate->save();
+                
+                if(preg_match('/^new/', $id))
+                {
+                    $shippingServiceArray['newRates'][$id] = $rate->getID();
+                }
             }
             
-            return new JSONResponse(array('service' => $shippingService->toArray()), 'success', $this->translate('_shipping_service_was_successfully_saved'));
+            return new JSONResponse(array('service' => $shippingServiceArray), 'success', $this->translate('_shipping_service_was_successfully_saved'));
         }
         else
         {
@@ -233,12 +248,16 @@ class ShippingServiceController extends StoreManagementController
            if(!is_numeric($rate['weightRangeStart'])) $errors["rate_" . $id . "_weightRangeStart"] = $this->translate('_error_range_start_should_be_a_float_value');
            if(!is_numeric($rate['weightRangeEnd'])) $errors["rate_" . $id . "_weightRangeEnd"] = $this->translate('_error_range_end_should_be_a_float_value');   
            if(!empty($rate['perKgCharge']) && !is_numeric($rate['perKgCharge'])) $errors["rate_" . $id . "_perKgCharge"] = $this->translate('_error_per_kg_charge_should_be_a_float_Value');   
+           
+           if(empty($errors) && $rate['weightRangeStart'] > $rate['weightRangeEnd']) $errors["rate_" . $id . "_weightRangeStart"] = $this->translate('_error_range_start_should_be_less_end');
        }
        else
        {
            if(!is_numeric($rate['subtotalRangeStart'])) $errors["rate_" . $id . "_subtotalRangeStart"] = $this->translate('_error_range_start_should_be_a_float_value');
            if(!is_numeric($rate['subtotalRangeEnd'])) $errors["rate_" . $id . "_subtotalRangeEnd"] = $this->translate('_error_range_end_should_be_a_float_value');
-           if(!empty($rate['subtotalPercentCharge']) && !is_numeric($rate['subtotalPercentCharge'])) $errors["rate_" . $id . "_subtotalPercentCharge"] = $this->translate('_error_subtotal_percent_charge_should_be_a_float_value');   
+           if(!empty($rate['subtotalPercentCharge']) && !is_numeric($rate['subtotalPercentCharge'])) $errors["rate_" . $id . "_subtotalPercentCharge"] = $this->translate('_error_subtotal_percent_charge_should_be_a_float_value'); 
+
+           if(empty($errors) && $rate['subtotalRangeStart'] > $rate['subtotalRangeEnd']) $errors["rate_" . $id . "_weightRangeStart"] = $this->translate('_error_range_start_should_be_less_end');
        }
        
        if(!empty($rate['flatCharge']) && !is_numeric($rate['flatCharge'])) $errors["rate_" . $id . "_flatCharge"] = $this->translate('_error_flat_charge_should_be_a_float_value');

@@ -706,6 +706,9 @@ Backend.DeliveryZone.ShippingService.prototype =
             if(this.service.ID)
             {
                 Form.State.backup(this.nodes.form);
+				
+				this.nodes.root.down('.rangeTypeStatic').show();
+				document.getElementsByClassName('rangeType', this.nodes.root).each(function(rangeTypeField) { rangeTypeField.hide(); }.bind(this));
             }
         }
         catch(e)
@@ -849,13 +852,45 @@ Backend.DeliveryZone.ShippingService.prototype =
             ActiveForm.prototype.resetErrorMessages(this.nodes.form);
             if(!this.service.ID)
             {
-                var li = this.servicesActiveList.addRecord(response.service.ID, '<span class="' + this.prefix + 'servicesList_title">' + this.nodes.name.value + '</span>');
+                ratesCount = this.nodes.root.down(".activeList").getElementsByTagName("li").length;
+                rangeTypeString = response.service.rangeType == 0 ? Backend.DeliveryZone.TaxRate.prototype.Messages.weightBasedRates : Backend.DeliveryZone.TaxRate.prototype.Messages.subtotalBasedRates;
+				
+                var li = this.servicesActiveList.addRecord(response.service.ID, '<span class="' + this.prefix + 'servicesList_title">' + this.nodes.name.value + ' ( <b class="ratesCount">' + ratesCount + '</b>' + rangeTypeString  + ' )</span>');
                 this.hideNewForm();
             }
             else
             {
                 Form.State.backup(this.nodes.form);
+				
+				this.nodes.root.up('li').down('.ratesCount').innerHTML = this.nodes.root.down(".activeList").getElementsByTagName("li").length;
                 this.servicesActiveList.toggleContainer(this.nodes.root.up('li'), 'edit');
+				
+                if($H(response.service.newRates).size() > 0)
+                {
+                    var regexps = {};
+                    $H(response.service.newRates).each(function(id) { regexps[id.value] = new RegExp(id.key); }.bind(this));
+                    
+                    $A(this.nodes.root.down('.activeList').getElementsByTagName('*')).each(function(elem)
+                    {
+                        if(elem.id) 
+						{
+						    $H(regexps).each(function(id) { 
+							    if(elem.id.match(id.value))
+								{
+							        elem.id = elem.id.replace(id.value, id.key);
+									return;
+								} 
+							}.bind(this));
+						}
+						
+                        if(elem.name) 
+                        {
+                            $H(regexps).each(function(id) { 
+                                elem.name = elem.name.replace(id.value, id.key);
+                            }.bind(this));
+                        }
+                    }.bind(this));
+                }
             }
         }
         else
@@ -1100,10 +1135,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
             }.bind(this));
 			
             document.getElementsByClassName('UnitConventer_Root', li).each(function(el) {
-				var elId = el.id
                 el.id = el.id.replace(idStartRegexp, idStart + 'new' + newId);
-				elID = el.id
-				var test;
             }.bind(this));
 			
 			var startHi = li.down('.weightRangeStart').down('.UnitConventer_HiValue');
@@ -1120,20 +1152,20 @@ Backend.DeliveryZone.ShippingRate.prototype =
 			
 			var newForm = Backend.DeliveryZone.ShippingRate.prototype.getInstance(li, rate);
             
-            this.nodes.weightRangeStart.value = '';
-            this.nodes.weightRangeStartHiValue.value = 0;
-            this.nodes.weightRangeStartLoValue.value = 0;
+            this.nodes.weightRangeStart.value = '0';
+            this.nodes.weightRangeStartHiValue.value = '0';
+            this.nodes.weightRangeStartLoValue.value = '0';
 			
-            this.nodes.weightRangeEnd.value = '';
-            this.nodes.weightRangeEndHiValue.value = 0;
-            this.nodes.weightRangeEndLoValue.value = 0;
+            this.nodes.weightRangeEnd.value = '0';
+            this.nodes.weightRangeEndHiValue.value = '0';
+            this.nodes.weightRangeEndLoValue.value = '0';
             
-			this.nodes.subtotalRangeStart.value = '';
-            this.nodes.subtotalRangeEnd.value = '';
-            this.nodes.flatCharge.value = '';
-            this.nodes.perItemCharge.value = '';
-            this.nodes.subtotalPercentCharge.value = '';
-            this.nodes.perKgCharge.value = '';
+			this.nodes.subtotalRangeStart.value = '0';
+            this.nodes.subtotalRangeEnd.value = '0';
+            this.nodes.flatCharge.value = '0';
+            this.nodes.perItemCharge.value = '0';
+            this.nodes.subtotalPercentCharge.value = '0';
+            this.nodes.perKgCharge.value = '0';
 			
 			
             Backend.DeliveryZone.ShippingRate.prototype.newRateLastId++;
@@ -1161,7 +1193,12 @@ Backend.DeliveryZone.ShippingRate.prototype =
                 new LiveCart.AjaxRequest(Backend.DeliveryZone.ShippingService.prototype.Links.deleteRate + '/' + this.rate.ID);    
             }
             
+			var rates = this.nodes.root.up(".activeList")
+			var service = this.nodes.root.up('li');
+			
             Element.remove(this.nodes.root);
+			
+            service.down('.ratesCount').innerHTML = rates.getElementsByTagName('li').length;
         }
     }
 }

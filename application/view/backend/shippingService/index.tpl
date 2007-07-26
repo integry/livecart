@@ -15,13 +15,17 @@
 <ul class="activeList {allowed role='delivery.update'}activeList_add_delete{/allowed} activeList_add_sort activeList_add_edit shippingService_servicesList" id="shippingService_servicesList_{$deliveryZone.ID}">
 {foreach from=$shippingServices item="service"}
     <li id="shippingService_servicesList_{$deliveryZone.ID}_{$service.ID}">
-        <span class="shippingService_servicesList_title">{$service.name}</span>
+        <span class="shippingService_servicesList_title">{$service.name} (<b class="ratesCount">{$service.ratesCount}</b> {$service.rangeTypeString})</span>
     </li>
 {/foreach}
 </ul>
 
 {literal}
 <script type="text/jscript">
+
+    Backend.DeliveryZone.TaxRate.prototype.Messages.weightBasedRates = '{/literal}_weight_based_rates{literal}';
+    Backend.DeliveryZone.TaxRate.prototype.Messages.subtotalBasedRates = '{/literal}_subtotal_based_rates{literal}';
+
     try
     {
         Event.observe($("shippingService_new_{/literal}{$deliveryZone.ID}{literal}_show"), "click", function(e) 

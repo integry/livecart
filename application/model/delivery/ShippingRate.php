@@ -139,6 +139,19 @@ class ShippingRate extends MultilingualObject
 		
 		return self::getRecordSet($filter, $loadReferencedRecords);
 	}
+
+    public function toArray($forse = false)
+    {
+        $array = parent::toArray($forse);
+        return $array;
+//        $prices = $this->getPricingHandler()->toArray();
+//        foreach($prices['calculated'] as $code => $value)
+//        {
+//            $prices["price_$code"] = $value;
+//        }
+//
+//        return $prices;
+    }
 }
 
 ?>

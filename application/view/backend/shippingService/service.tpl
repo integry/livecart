@@ -9,16 +9,22 @@
     </fieldset>
     
     
-	<fieldset class="error">
+	<fieldset class="error rangeType">
 		<label ></label>
 		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_weight" class="checkbox shippingService_rangeType" value="0"}
 		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_weight" class="checkbox">{t _weight_based_calculations}</label>
-	</fieldset class="error">
-	<fieldset class="error">
+	</fieldset>
+	
+	<fieldset class="error rangeType">
 		<label></label>
 		{radio name="rangeType" id="shippingService_`$service.DeliveryZone.ID`_`$service.ID`_subtotal" class="checkbox shippingService_rangeType" value="1"}
 		<label for="shippingService_{$service.DeliveryZone.ID}_{$service.ID}_subtotal" class="checkbox">{t _subtotal_based_calculations}</label>
-	</fieldset class="error">
+	</fieldset>
+	
+    <fieldset class="error rangeTypeStatic">
+        <label>{t _range_type}</label>
+        <label>{if $service.rangeType == 0}{t _weight_based_calculations}{else}{t _subtotal_based_calculations}{/if}</label>
+    </fieldset>
  
     <fieldset class="shippingService_rates error">
     	<label>{t _shipping_service_rates}</label>
