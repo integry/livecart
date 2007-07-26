@@ -1,7 +1,10 @@
 <?php
 
 ClassLoader::import("application.model.specification.SpecificationItem");
+ClassLoader::import("application.model.specification.MultiValueSpecificationItem");
 ClassLoader::import("application.model.specification.SpecificationStringValue");
+ClassLoader::import("application.model.specification.SpecificationNumericValue");
+ClassLoader::import("application.model.specification.SpecificationDateValue");
 
 /**
  * Product specification wrapper class. Loads/modifies product specification data.
@@ -172,30 +175,35 @@ class ProductSpecification
         return ($a['SpecField']['SpecFieldGroup']['position'] < $b['SpecField']['SpecFieldGroup']['position']) ? -1 : 1;
     }
 
-	/**
-	 * Load product specification data for a whole recordset of products at once
-     */
-    public static function loadSpecificationForRecordSet(ARSet $products)
-	{
-        $ids = array();
-		foreach ($products as $key => $product)
-	  	{
-			$ids[$product['ID']] = $key;
-		}
-
-		$specificationArray = self::fetchSpecificationData(array_flip($ids));
-		
-		foreach ($specificationArray as &$spec)
-		{
-			$product = $products[$ids[$spec['productID']]];
-			$product->loadSpecification($spec);
-		}				
-	}
-
-	/**
+    public static function loadSpecificationForProductArray(&$productArray)
+	{        
+        $array = array(&$productArray);
+        self::loadSpecificationForRecordSetArray($array, true);
+        
+        $groupIds = array();
+        foreach ($productArray['attributes'] as $attr)
+        {
+            $groupIds[$attr['SpecField']['specFieldGroupID']] = true;
+        }
+        
+        $f = new ARSelectFilter(new INCond(new ARFieldHandle('SpecFieldGroup', 'ID'), array_keys($groupIds)));
+        $indexedGroups = array();
+        $res = ActiveRecordModel::getRecordSetArray('SpecFieldGroup', $f);
+        foreach ($res as $group)
+        {
+            $indexedGroups[$group['ID']] = $group;
+        }
+        
+        foreach ($productArray['attributes'] as &$attr)
+        {
+            $attr['SpecField']['SpecFieldGroup'] = $indexedGroups[$attr['SpecField']['specFieldGroupID']];
+        }
+    }
+	
+    /**
 	 * Load product specification data for a whole array of products at once
      */
-    public static function loadSpecificationForRecordSetArray(&$productArray)
+    public static function loadSpecificationForRecordSetArray(&$productArray, $fullSpecification = false)
 	{
         $ids = array();
 		foreach ($productArray as $key => $product)
@@ -203,7 +211,7 @@ class ProductSpecification
 			$ids[$product['ID']] = $key;
 		}
 		
-		$specificationArray = self::fetchSpecificationData(array_flip($ids));
+		$specificationArray = self::fetchSpecificationData(array_flip($ids), $fullSpecification);
 
         $specFieldSchema = ActiveRecordModel::getSchemaInstance('SpecField');
         $specStringSchema = ActiveRecordModel::getSchemaInstance('SpecificationStringValue');
@@ -250,7 +258,7 @@ class ProductSpecification
 		}
 	}
 
-	private static function fetchSpecificationData($productIDs)
+	private static function fetchSpecificationData($productIDs, $fullSpecification = false)
 	{
 		if (!$productIDs)
 		{
@@ -263,7 +271,7 @@ class ProductSpecification
 		LEFT JOIN 	
 			SpecFieldGroup ON SpecField.specFieldGroupID = SpecFieldGroup.ID 
 		WHERE 
-			productID IN (' . implode(', ', $productIDs) . ') AND SpecField.isDisplayedInList = 1';
+			productID IN (' . implode(', ', $productIDs) . ')' . ($fullSpecification ? '' : ' AND SpecField.isDisplayedInList = 1');
 
 	    $query = '
 		SELECT SpecificationDateValue.*, NULL AS specFieldValueID, NULL AS specFieldValuePosition, SpecFieldGroup.position AS SpecFieldGroupPosition, SpecField.* as valueID FROM SpecificationDateValue ' . $cond . '

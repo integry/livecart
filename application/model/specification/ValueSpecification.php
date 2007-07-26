@@ -1,5 +1,7 @@
 <?php
 
+include_once dirname(__file__) . '/Specification.php';
+
 /**
  * An attribute value that is assigned to a particular product.
  * Concrete attribute value types (string, number, date, etc.) are defined by subclasses.

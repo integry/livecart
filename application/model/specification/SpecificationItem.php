@@ -3,7 +3,7 @@
 ClassLoader::import("application.model.ActiveRecordModel");
 ClassLoader::import("application.model.product.*");
 
-include_once('Specification.php');
+include_once dirname(__file__) . '/Specification.php';
 
 /**
  * Links a pre-defined attribute value to a product

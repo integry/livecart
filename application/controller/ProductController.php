@@ -1,6 +1,8 @@
 <?php
 
 ClassLoader::import('application.model.product.Product');
+ClassLoader::import('application.controller.FrontendController');
+ClassLoader::import('application.controller.CategoryController');
 
 /**
  * 
@@ -14,19 +16,16 @@ class ProductController extends FrontendController
 	public function index()
 	{
         $product = Product::getInstanceByID($this->request->get('id'), Product::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer'));    	
-
-        $product->loadSpecification();
         $product->loadPricing();
 
 		$this->category = $product->category->get();
 		$this->categoryID = $product->category->get()->getID();
 		
         // get category path for breadcrumb
-		$path = $product->category->get()->getPathNodeSet();
+		$path = $product->category->get()->getPathNodeArray();
 		include_once(ClassLoader::getRealPath('application.helper') . '/function.categoryUrl.php');
-		foreach ($path as $node)
+		foreach ($path as $nodeArray)
 		{
-			$nodeArray = $node->toArray();
 			$url = createCategoryUrl(array('data' => $nodeArray), $this->application);
 			$this->addBreadCrumb($nodeArray['name_lang'], $url);
 		}
@@ -44,7 +43,8 @@ class ProductController extends FrontendController
 		}
 
         $productArray = $product->toArray();
-
+        ProductSpecification::loadSpecificationForProductArray($productArray);
+        
         // attribute summary
         $productArray['listAttributes'] = array();
         foreach ($productArray['attributes'] as $attr)
@@ -103,6 +103,10 @@ class ProductController extends FrontendController
 		foreach ($related as $r)
 		{
 			$p = $r['RelatedProduct'];
+			
+            // @todo: make ActiveRecord automatically recognize the correct parent object
+            $p['DefaultImage'] = $r['DefaultImage'];
+			
             if (isset($r['ProductRelationshipGroup']))
             {
                 $p['ProductRelationshipGroup'] = $r['ProductRelationshipGroup'];                
@@ -119,7 +123,7 @@ class ProductController extends FrontendController
             $groupID = isset($r['ProductRelationshipGroup']) ? $r['ProductRelationshipGroup']['ID'] : 0;
             $byGroup[$groupID][] = $r;
         }
-        
+
         return $byGroup;
     }
 }

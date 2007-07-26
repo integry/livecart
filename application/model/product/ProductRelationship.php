@@ -105,6 +105,17 @@ class ProductRelationship extends ActiveRecord
 	    return self::getRecordSet(self::getRelatedProductsSetFilter($product), $loadReferencedRecords);
 	}
 	
+	/**
+	 * Get product relationships
+	 *
+	 * @param Product $product
+	 * @return array
+	 */
+	public static function getRelationshipsArray(Product $product, $loadReferencedRecords = array('RelatedProduct' => 'Product'))
+	{
+	    return parent::getRecordSetArray(__CLASS__, self::getRelatedProductsSetFilter($product), $loadReferencedRecords);
+	}
+	
 	public static function hasRelationship(Product $product, Product $relatedToProduct)
 	{
 	    $recordID = array(

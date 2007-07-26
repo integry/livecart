@@ -1,5 +1,7 @@
 <?php
 
+include_once dirname(__file__) . '/iSpecification.php';
+
 /**
  * Links multiple pre-defined attribute values (of the same attribute) to a product
  *

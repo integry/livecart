@@ -738,24 +738,10 @@ class Product extends MultilingualObject
     {
         return $category->getProductSet(new ARSelectFilter(), false)->getTotalRecordCount();
     }
-
-/*
-    public function getPricesArray()
-    {
-        if(empty($this->priceData))
-        {
-            $this->priceData = array();
-            foreach(ProductPrice::getProductPricesSet($this)->toArray() as $price)
-            {
-                $this->priceData[$price['Currency']] = $price['price'];
-            }
-        }
-        return $this->priceData;
-    }
-*/
     
     private function loadRelationships($loadReferencedRecords)
     {       
+        ClassLoader::import('application.model.product.ProductRelationship');
         $this->relationships = ProductRelationship::getRelationships($this, $loadReferencedRecords);
     }
     
@@ -770,6 +756,15 @@ class Product extends MultilingualObject
         }
 
         return $this->relationships;
+    }
+    
+    /**
+     * @return ARSet
+     */
+    public function getRelationshipsArray($loadReferencedRecords = array('RelatedProduct' => 'Product', 'DefaultImage' => 'ProductImage', 'Manufacturer', 'ProductRelationshipGroup'))
+    {
+        ClassLoader::import('application.model.product.ProductRelationship');
+        return ProductRelationship::getRelationshipsArray($this, $loadReferencedRecords);
     }
     
     /**
@@ -873,13 +868,23 @@ class Product extends MultilingualObject
 	 */
 	public function getRelationshipGroups()
 	{
+	    ClassLoader::import('application.model.product.ProductRelationshipGroup');
 	    return ProductRelationshipGroup::getProductGroups($this);
 	}
 
+	/**
+	 * @return array
+	 */
+	public function getRelationshipGroupArray()
+	{
+	    ClassLoader::import('application.model.product.ProductRelationshipGroup');
+	    return ProductRelationshipGroup::getProductGroupArray($this);
+	}
 	
 	public function getRelatedProductsWithGroupsArray()
 	{
-	    return ProductRelationshipGroup::mergeGroupsWithFields($this->getRelationshipGroups()->toArray(), $this->getRelationships()->toArray());
+	    ClassLoader::import('application.model.product.ProductRelationshipGroup');
+        return ProductRelationshipGroup::mergeGroupsWithFields($this->getRelationshipGroupArray(), $this->getRelationshipsArray());
 	}
 	
 	/**
@@ -887,6 +892,7 @@ class Product extends MultilingualObject
 	 */
 	public function getFileGroups()
 	{
+	    ClassLoader::import('application.model.product.ProductFileGroup');
 	    return ProductFileGroup::getProductGroups($this);
 	}
 	
@@ -895,11 +901,13 @@ class Product extends MultilingualObject
 	 */
 	public function getFiles()
 	{
+	    ClassLoader::import('application.model.product.ProductFile');
 	    return ProductFile::getFilesByProduct($this);
 	}
 	
 	public function getFilesMergedWithGroupsArray()
 	{
+	    ClassLoader::import('application.model.product.ProductFileGroup');
 	    return ProductFileGroup::mergeGroupsWithFields($this->getFileGroups()->toArray(), $this->getFiles()->toArray());
 	}
 }

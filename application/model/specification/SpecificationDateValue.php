@@ -1,5 +1,7 @@
 <?php
 
+include_once dirname(__file__) . '/ValueSpecification.php';
+
 /**
  * Date attribute value assigned to a particular product.
  * 

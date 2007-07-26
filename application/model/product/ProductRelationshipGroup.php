@@ -71,6 +71,11 @@ class ProductRelationshipGroup extends ProductParametersGroup
 	    return self::getRecordSet(self::getProductGroupsFilter($product), !ActiveRecord::LOAD_REFERENCES);
 	}
 	
+	public static function getProductGroupArray(Product $product)
+	{
+	    return parent::getRecordSetArray(__CLASS__, self::getProductGroupsFilter($product), !ActiveRecord::LOAD_REFERENCES);
+	}
+
 	private static function getProductGroupsFilter(Product $product)
 	{
 	    $filter = new ARSelectFilter();
