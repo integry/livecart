@@ -62,9 +62,9 @@ class CategoryImage extends ObjectImage
         return 'upload/categoryimage/' . $categoryID. '-' . $imageID . '-' . $size . '.jpg';
     }
 	
-	public static function transformArray($array)
+	public static function transformArray($array, ARSchema $schema)
 	{
-		$array = parent::transformArray($array, __CLASS__);
+		$array = parent::transformArray($array, $schema);
         
         $array['paths'] = array();
 		foreach (self::getImageSizes() as $key => $value)

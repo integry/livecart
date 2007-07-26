@@ -1,5 +1,9 @@
 <?php
 
+ClassLoader::import('application.model.product.ProductSpecification');
+ClassLoader::import('application.model.product.ProductPricing');
+ClassLoader::import('application.model.product.ProductImage');
+ClassLoader::import('application.model.product.Manufacturer');
 ClassLoader::import("application.model.system.Language");
 ClassLoader::import("application.model.system.MultilingualObject");
 ClassLoader::import("application.model.category.*");
@@ -444,9 +448,9 @@ class Product extends MultilingualObject
 		}		
 	}
 	
-	public static function transformArray($array)
+	public static function transformArray($array, ARSchema $schema)
 	{
-		$array = parent::transformArray($array, 'Product');
+		$array = parent::transformArray($array, $schema);
 		
         $array['isTangible'] = $array['type'] == self::TYPE_TANGIBLE;
         $array['isDownloadable'] = $array['type'] == self::TYPE_DOWNLOADABLE;

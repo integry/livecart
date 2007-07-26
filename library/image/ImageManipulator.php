@@ -1,6 +1,6 @@
 <?php
 
-include_once('ImageException.php');
+include_once(dirname(__file__) . '/ImageException.php');
 
 class ImageManipulator
 {
@@ -20,7 +20,7 @@ class ImageManipulator
 	
 	public function __construct($imagePath = false)
 	{
-	  	require_once('ImageDriverGD.php');
+	  	include_once(dirname(__file__) . '/ImageDriverGD.php');
 		$this->driverInstance = new ImageDriverGD();
 	  	$this->validTypes = $this->driverInstance->getValidTypes();
 	  	

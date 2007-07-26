@@ -111,9 +111,9 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 		return $this->filterGroup->get()->specField->get();
 	}
 
-	public static function transformArray($array, $class = __CLASS__)
+	public static function transformArray($array, ARSchema $schema)
 	{		
-		$array = parent::transformArray($array, $class);
+		$array = parent::transformArray($array, $schema);
 		$array['handle'] = createHandleString($array['name_lang']);
 		return $array;
 	}

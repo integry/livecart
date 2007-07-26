@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import('framework.Application');
+ClassLoader::import('framework.response.ActionResponse');
 
 /**
  *  Implements LiveCart-specific application flow logic
@@ -89,7 +90,8 @@ class LiveCart extends Application
 		ActiveRecordModel::setApplicationInstance($this);
 		
 		$compileDir = $this->isCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
-		SmartyRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
+		ClassLoader::import('framework.renderer.SmartyRenderer');
+        SmartyRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
 	}
 	
 	/**
@@ -274,7 +276,7 @@ class LiveCart extends Application
 	
 	private function loadSession()
 	{
-	  	ClassLoader::import("application.model.system.Config");
+	  	ClassLoader::import("framework.request.Session");
     	$this->session = new Session();
     	return $this->session;
 	}
@@ -355,10 +357,6 @@ class LiveCart extends Application
 		    break;
 		}
 	}	
-	
-	
-
-
 
 	/**
 	 * @return Locale

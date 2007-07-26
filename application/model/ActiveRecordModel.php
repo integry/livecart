@@ -66,9 +66,9 @@ abstract class ActiveRecordModel extends ActiveRecord
 		}	
 	}
 	
-	protected static function transformArray($array, $className)
+	protected static function transformArray($array, ARSchema $schema)
 	{
-		foreach (self::getSchemaInstance($className)->getFieldsByType('ARDateTime') as $name => $field)
+		foreach ($schema->getFieldsByType('ARDateTime') as $name => $field)
 		{
 			$time = strtotime($array[$name]);
 			
@@ -82,40 +82,11 @@ abstract class ActiveRecordModel extends ActiveRecord
 				$locale = self::getApplication()->getLocale();
 			}
 			
-			$res = array();						
-
-            foreach (self::getDateFormats() as $format => $code)
-			{
-				$res[$format] = $locale->getFormattedTime($time, $code);
-			}
-				
-			$array['formatted_' . $name] = $res;
+			$array['formatted_' . $name] = $locale->getFormattedTime($time);
 		}	
 		
-		return parent::transformArray($array, $className);
+		return parent::transformArray($array, $schema);
 	}
-	
-	public static function getDateFormats()
-	{
-        static $dateTransform = null;
-        
-        if (!$dateTransform)
-        {
-        	$dateTransform = array
-        	(		
-        		'time_full' => Locale::FORMAT_TIME_FULL,
-        		'time_long' => Locale::FORMAT_TIME_LONG,
-        		'time_medium' => Locale::FORMAT_TIME_MEDIUM,
-        		'time_short' => Locale::FORMAT_TIME_SHORT,
-        		'date_full' => Locale::FORMAT_DATE_FULL,
-        		'date_long' => Locale::FORMAT_DATE_LONG,
-        		'date_medium' => Locale::FORMAT_DATE_MEDIUM,
-        		'date_short' => Locale::FORMAT_DATE_SHORT,		
-        	);            
-        }
-        
-        return $dateTransform;
-    }
 }
 
 ?>

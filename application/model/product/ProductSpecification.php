@@ -1,6 +1,7 @@
 <?php
 
 ClassLoader::import("application.model.specification.SpecificationItem");
+ClassLoader::import("application.model.specification.SpecificationStringValue");
 
 /**
  * Product specification wrapper class. Loads/modifies product specification data.
@@ -120,7 +121,6 @@ class ProductSpecification
 			$this->attributes[$field->getID()] = call_user_func_array(array($field->getSpecificationFieldClass(), 'getNewInstance'), $params);
 		}
 
-
 		return $this->attributes[$field->getID()];  	
 	}
 
@@ -205,18 +205,16 @@ class ProductSpecification
 		
 		$specificationArray = self::fetchSpecificationData(array_flip($ids));
 
-        $specFieldColumns = array();
-        foreach (ActiveRecordModel::getSchemaInstance('SpecField')->getFieldList() as $field)
-        {
-            $specFieldColumns[] = $field->getName();
-        }
+        $specFieldSchema = ActiveRecordModel::getSchemaInstance('SpecField');
+        $specStringSchema = ActiveRecordModel::getSchemaInstance('SpecificationStringValue');
+        $specFieldColumns = array_keys($specFieldSchema->getFieldList());
 
 		foreach ($specificationArray as &$spec)
 		{
 		    if ($spec['isMultiValue'])
 		    {
                 $value['value'] = $spec['value'];
-                $value = MultiLingualObject::transformArray($value, 'SpecificationStringValue');
+                $value = MultiLingualObject::transformArray($value, $specStringSchema);
                 
                 if (isset($productArray[$ids[$spec['productID']]]['attributes'][$spec['specFieldID']]))
                 {
@@ -234,7 +232,7 @@ class ProductSpecification
             }
             
             // transform for presentation
-			$spec['SpecField'] = MultiLingualObject::transformArray($spec['SpecField'], 'SpecField');
+			$spec['SpecField'] = MultiLingualObject::transformArray($spec['SpecField'], $specFieldSchema);
 
             if ($spec['SpecField']['isMultiValue'])
             {
@@ -243,7 +241,7 @@ class ProductSpecification
             }
             else
             {
-                $spec = MultiLingualObject::transformArray($spec, 'SpecificationStringValue');
+                $spec = MultiLingualObject::transformArray($spec, $specStringSchema);
             }
 
 			// append to product array

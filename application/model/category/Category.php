@@ -430,9 +430,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 *
 	 * @return array
 	 */
-    protected static function transformArray($array, $className = __CLASS__)
+    protected static function transformArray($array, ARSchema $schema)
 	{
-		return MultiLingualObject::transformArray($array, $className);
+		return MultiLingualObject::transformArray($array, $schema);
 	}	
 
 	/**

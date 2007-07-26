@@ -2,10 +2,10 @@
 
 ClassLoader::import("framework.controller.exception.*");
 ClassLoader::import("framework.controller.Controller");
-ClassLoader::import("framework.roles.*");
 ClassLoader::import("application.helper.*");
 ClassLoader::import("application.model.system.Language");
 ClassLoader::import("library.locale.*");
+ClassLoader::import("library.locale.LCiTranslator");
 
 /**
  * Base controller for the whole application
@@ -240,6 +240,8 @@ abstract class BaseController extends Controller implements LCiTranslator
 
 		$cachePath = $rolesCacheDir . DIRECTORY_SEPARATOR . md5($controllerPath) . '.php';
 
+        ClassLoader::import("framework.roles.RolesDirectoryParser");
+        ClassLoader::import("framework.roles.RolesParser");
         $this->roles = new RolesParser($controllerPath, $cachePath);
 	    if($this->roles->wereExpired())
 	    {

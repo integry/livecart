@@ -1,5 +1,9 @@
 <?php
 
+ClassLoader::import('application.model.filter.PriceFilter');
+ClassLoader::import('application.model.filter.ManufacturerFilter');
+ClassLoader::import('application.model.filter.SelectorFilter');
+
 /**
  * Calculates the number of products found in categories by filters, manufacturers, 
  * price intervals, search queries, etc.
