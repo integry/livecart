@@ -15,14 +15,14 @@
 <div id="confirmations" class="rightConfirmations"></div>
 
 <ul class="menu" id="newsMenu">
-	<li><a href="#" onclick="slideForm('addNews', 'newsMenu'); return false;">{t _add_news}</a></li>
+	<li><a href="#" onclick="Backend.SiteNews.prototype.showAddForm(); return false;">{t _add_news}</a></li>
 </ul>
 
 <fieldset id="addNews" class="slideForm addForm" style="display: none;">
 
 	<legend>{t _add_news}</legend>
 
-	{form action="controller=backend.siteNews action=save" method="POST" onsubmit="new Backend.SiteNews.Save(this); return false;" handle=$form}
+	{form action="controller=backend.siteNews action=save" method="POST" onsubmit="new Backend.SiteNews.Add(this); return false;" handle=$form id="newsForm"}
 		<input type="hidden" name="id" />
 		<p>
 			{{err for="title"}}
@@ -36,6 +36,10 @@
 				{textarea}
 			{/err}	
 		</p>
+		<p>
+			<label class="wide">{t _more_text}:</label>
+			{textarea name="moreText"}
+		</p>
 	
 		{language}
 			<p>
@@ -46,13 +50,17 @@
 				<label class="wide">{t _text}:</label>
 				{textarea name="text_`$lang.ID`"}
 			</p>
+			<p>
+				<label class="wide">{t _more_text}:</label>
+				{textarea name="moreText_`$lang.ID`"}
+			</p>
 		{/language}
 		
 		<fieldset class="controls" {denied role="news"}style="display: none;"{/denied}>
 			<span class="progressIndicator" style="display: none;"></span>
 			<input type="submit" class="submit save" value="{tn _save}" />
 			<input type="submit" class="submit add" value="{tn _add}" />
-			{t _or} <a class="cancel" href="#" onclick="restoreMenu('addNews', 'newsMenu'); return false;">{t _cancel}</a>
+			{t _or} <a class="cancel" href="#" onclick="Backend.SiteNews.prototype.hideAddForm(); return false;">{t _cancel}</a>
 		</fieldset>
 	{/form}
 	
@@ -62,8 +70,9 @@
 </ul>
 
 <div style="display: none">
-	<span id="deleteUrl">{link controller=backend.currency action=delete}?id=</span>
+	<span id="deleteUrl">{link controller=backend.siteNews action=delete}?id=</span>
 	<span id="confirmDelete">{t _del_conf}</span>
+	<span id="sortUrl">{link controller=backend.siteNews action=saveOrder}</span>
 </div>
 
 <ul style="display: none;">
@@ -85,12 +94,13 @@
 			</span>
 						
 		</div>
+		
+		<div class="formContainer"></div>
+		
 	</div>			
 	<div class="clear"></div>
 </li>
 </ul>
-
-
 
 {literal}
 <script type="text/javascript">

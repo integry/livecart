@@ -35,29 +35,7 @@ class SpecificationDateValue extends ValueSpecification
 		
 		if ($array['value'])
 		{
-	    	$dateTransform = array
-	    	(		
-	    		'time_full' => Locale::FORMAT_TIME_FULL,
-	    		'time_long' => Locale::FORMAT_TIME_LONG,
-	    		'time_medium' => Locale::FORMAT_TIME_MEDIUM,
-	    		'time_short' => Locale::FORMAT_TIME_SHORT,
-	    		'date_full' => Locale::FORMAT_DATE_FULL,
-	    		'date_long' => Locale::FORMAT_DATE_LONG,
-	    		'date_medium' => Locale::FORMAT_DATE_MEDIUM,
-	    		'date_short' => Locale::FORMAT_DATE_SHORT,		
-	    	);
-	
-			$locale = Locale::getCurrentLocale();
-
-			$time = strtotime($array['value']);
-	
-			$res = array();						
-			foreach ($dateTransform as $format => $code)
-			{
-				$res[$format] = $locale->getFormattedTime($time, $code);
-			}
-				
-			$array['formatted'] = $res;
+			$array['formatted'] = $this->getApplication()->getLocale()->getFormattedTime(strtotime($array['value']));
 		}
 			
 		return $array;

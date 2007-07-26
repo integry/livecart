@@ -9,67 +9,156 @@ Backend.SiteNews.prototype =
 		});
 		
 		ActiveList.prototype.getInstance('newsList', {
-	         beforeEdit:     function(li) { return '{/literal}{link controller=backend.currency action=edit}{literal}?id=' + this.getRecordId(li); 
+	         beforeEdit:     function(li) 
+			 { 
+				 li.handler.showEditForm();
+				 return false;
              },
 	         beforeSort:     function(li, order) 
 			 { 
-				 return '{/literal}{link controller=backend.currency action=saveorder}{literal}?draggedId=' + this.getRecordId(li) + '&' + order 
-			   },
+				 return $('sortUrl').innerHTML + '?draggedId=' + this.getRecordId(li) + '&' + order 
+			 },
 	         beforeDelete:   function(li)
 	         {
 	             if (confirm($('confirmDelete').innerHTML)) return $('deleteUrl').innerHTML + this.getRecordId(li)
 	         },
-	         afterEdit:      function(li, response) { document.getElementsByClassName('currEdit', li)[0].innerHTML = response; },
-	         afterSort:      function(li, response) { curr.resetRatesContainer(); },
+	         afterEdit:      function(li, response) { li.handler.update(response);},
+	         afterSort:      function(li, response) {  },
 	         afterDelete:    function(li, response)  { Element.remove(li); curr.resetRatesContainer(); }
 	     }, []);		
-	}
+	},
+	
+	showAddForm: function()
+	{
+		slideForm('addNews', 'newsMenu');
+		tinyMCE.idCounter = 0;
+		ActiveForm.prototype.initTinyMceFields($('addNews'));		
+	},
+	
+	hideAddForm: function()
+	{
+		if ('none' == $('addNews').style.display)
+		{
+			return false;
+		}
+		
+		restoreMenu('addNews', 'newsMenu');
+		ActiveForm.prototype.destroyTinyMceFields($('addNews'));		
+	},
 }
 
 Backend.SiteNews.PostEntry = Class.create();
 Backend.SiteNews.PostEntry.prototype = 
 {	
-	var data: null,
+	data: null,
+	
+	node: null,
 	
 	initialize: function(container, template, data)
 	{
-		var newNode = template.cloneNode(true);
-		container.appendChild(newNode);
-		newNode.down('.newsTitle').innerHTML = data.title;
-		newNode.down('.newsDate').innerHTML = data.time;
-		newNode.down('.newsText').innerHTML = data.text;
-		newNode.id = 'newsEntry_' + data.ID;
-		newNode.handler = this;
 		this.data = data;
+		this.node = template.cloneNode(true);		
+		container.appendChild(this.node);
+		this.updateHtml();
+		
+		this.node.handler = this;
 
-		Element.show(newNode);
+		Element.show(this.node);
 	},
 	
-	update: function()
+	showEditForm: function()
+	{
+		Backend.SiteNews.prototype.hideAddForm();
+		
+		var nodes = this.node.parentNode.getElementsByTagName('li');
+		$H(nodes).each(function(li)
+		{
+			if (li && li[1] && li[1].handler && li != this.node)
+			{
+				li[1].handler.cancelEditForm();				
+			}
+		});
+	
+		var form = $('newsForm').cloneNode(true);
+
+		$H(this.data).each(function(el) 
+		{ 
+			if (form.elements.namedItem(el[0])) 
+		 	{
+				form.elements.namedItem(el[0]).value = el[1];
+			}
+		});
+		form.elements.namedItem('id').value = this.data['ID'];
+
+		this.node.down('div.formContainer').appendChild(form);
+
+		tinyMCE.idCounter = 0;
+		ActiveForm.prototype.initTinyMceFields(this.node.down('div.formContainer'));
+		
+		form.down('a.cancel').onclick = this.cancelEditForm.bindAsEventListener(this);
+		form.onsubmit = this.save.bindAsEventListener(this);
+		
+		new Backend.LanguageForm();
+	},
+	
+	cancelEditForm: function(e)
+	{		
+		var formContainer = this.node.down('div.formContainer');
+		
+		if (!formContainer.firstChild)
+		{
+			return;
+		}
+		
+		ActiveForm.prototype.destroyTinyMceFields(formContainer);
+	
+		formContainer.innerHTML = '';		
+			
+		if (e)
+		{
+			Event.stop(e);
+		}
+	},
+	
+	save: function(e)
+	{
+		new LiveCart.AjaxRequest(this.node.down('form'), null, this.update.bind(this));		
+		Event.stop(e);
+	},
+	
+	update: function(originalRequest)
+	{
+		this.data = originalRequest.responseData;
+		this.updateHtml();
+		this.cancelEditForm();
+	},
+	
+	del: function()
 	{
 		
 	},
-	
-	delete: function()
+
+	updateHtml: function()
 	{
-		
+		this.node.down('.newsTitle').innerHTML = this.data.title;
+		this.node.down('.newsDate').innerHTML = this.data.time;
+		this.node.down('.newsText').innerHTML = this.data.text;		
+		this.node.id = 'newsEntry_' + this.data.ID;
 	}
 }
 
-Backend.SiteNews.Save = Class.create();
-Backend.SiteNews.Save.prototype = 
+Backend.SiteNews.Add = Class.create();
+Backend.SiteNews.Add.prototype = 
 {
 	form: null,
 	
 	initialize: function(form)
 	{
-		this.form = form;
-		new LiveCart.AjaxRequest(this.form, null, this.onComplete.bind(this));
+		new LiveCart.AjaxRequest(form, null, this.onComplete.bind(this));
 	},
 	
 	onComplete: function(originalRequest)
 	{
-		console.log(originalRequest);
 		new Backend.SiteNews.PostEntry($('newsList'), $('newsList_template'), originalRequest.responseData);
 	}
 }

@@ -1144,6 +1144,7 @@ Translation tabs
     margin-bottom: 1em;
     border: 0px none;
     background-color: transparent;			
+    padding: 0;
 }
 
 .languageFormCaption

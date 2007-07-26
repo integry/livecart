@@ -39,6 +39,44 @@ class SiteNewsController extends StoreManagementController
 		return new JSONResponse($post->toArray());
 	}	
 	
+	/**
+	 * Remove a news entry
+	 *
+	 * @return JSONResponse
+	 */
+	public function delete()
+	{  	
+		try
+	  	{
+			ActiveRecordModel::deleteById('NewsPost', $this->request->get('id'));	
+			return new JSONResponse(true);		
+		}
+		catch (Exception $exc)
+		{			  	
+			return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_language'));
+		}
+	}
+		
+	/**
+	 * Save language order
+	 * @return RawResponse
+	 */
+	public function saveOrder()
+	{
+	  	$order = $this->request->get('newsList');
+		foreach ($order as $key => $value)
+		{
+			$update = new ARUpdateFilter();
+			$update->setCondition(new EqualsCond(new ARFieldHandle('NewsPost', 'ID'), $value));
+			$update->addModifier('position', $key);
+			ActiveRecord::updateRecordSet('NewsPost', $update);  	
+		}
+
+		$resp = new RawResponse();
+	  	$resp->setContent($this->request->get('draggedId'));
+		return $resp;		  	
+	}
+	
     private function buildForm()
     {
 		ClassLoader::import("framework.request.validator.Form");

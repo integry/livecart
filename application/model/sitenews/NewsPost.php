@@ -21,6 +21,7 @@ class NewsPost extends MultilingualObject
 		$schema->registerField(new ARField("time", ARDateTime::instance()));
 		$schema->registerField(new ARField("title", ARArray::instance()));
 		$schema->registerField(new ARField("text", ARArray::instance()));
+		$schema->registerField(new ARField("moreText", ARArray::instance()));
 	}
 }
 

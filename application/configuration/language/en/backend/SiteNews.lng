@@ -2,7 +2,8 @@ _site_news=Site News
 _add_news=Add news entry
 
 _title=Title
-_text=Text
+_text=Introductory text
+_more_text=Full text
 _err_enter_title=Please enter news post title
 _err_enter_text=Please enter news post text
 
