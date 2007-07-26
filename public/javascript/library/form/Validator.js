@@ -176,6 +176,11 @@ function NumericFilter(elm, params)
     elm.focus();
     
 	var value = elm.value;
+	
+	// Remove leading zeros
+	value = value.replace(/^0+/, '');
+	if(!value) value = "0";
+	
 	value = value.replace(',' , '.');
 	
 	// only keep the last comma
