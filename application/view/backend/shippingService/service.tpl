@@ -29,7 +29,7 @@
                         {include file="backend/shippingService/rate.tpl" rate=$rate}
                         <script type="text/jscript">
                         {literal}
-                            var list = Backend.DeliveryZone.ShippingRate.prototype.getInstance(
+                            Backend.DeliveryZone.ShippingRate.prototype.getInstance(
                                 "{/literal}shippingService_ratesList_{$service.DeliveryZone.ID}_{$service.ID}_{$rate.ID}{literal}",
                                 {/literal}{json array=$rate}{literal}
                             );

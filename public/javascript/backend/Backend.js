@@ -901,8 +901,15 @@ Backend.UnitConventer.prototype =
         this.nodes.switchUnits = this.nodes.root.down('.UnitConventer_SwitchUnits');
 		
 		// Add units after fields
-		new Insertion.After(this.nodes.hiValue, '<span class="UnitConventer_HiUnit"> </span>');
-        new Insertion.After(this.nodes.loValue, '<span class="UnitConventer_LoUnit"> </span>');
+		if(!this.nodes.root.down('.UnitConventer_HiUnit'))
+		{
+		   new Insertion.After(this.nodes.hiValue, '<span class="UnitConventer_HiUnit"> </span>');
+		}
+		
+        if(!this.nodes.root.down('.UnitConventer_LoUnit'))
+        {
+            new Insertion.After(this.nodes.loValue, '<span class="UnitConventer_LoUnit"> </span>');
+		}
 		
 		// Bind events
 		Event.observe(this.nodes.hiValue, "keyup", function(e){ NumericFilter(this); });

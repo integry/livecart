@@ -11,24 +11,15 @@
     <label class="observe" for="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_weightRangeStart">{t _weight_range}</label>
     
     <div class="weightRangeStart">
-    {metricsfield name="rate__subtotalRangeStart" hideSwitch=1 value=$rate.weightRangeStart id="shippingService_`$rate.ShippingService.DeliveryZone.ID`_`$rate.ShippingService.ID`_`$rate.ID`_weightRangeStart" class="shippingService__weightRangeStart"}
+    {metricsfield name="rate__subtotalRangeStart" hideSwitch=1 value=$rate.weightRangeStart id="shippingService_`$rate.ShippingService.DeliveryZone.ID`_`$rate.ShippingService.ID`_`$rate.ID`_weightRangeStart" class="shippingService_weightRangeStart"}
     </div>
     <div class="weightDelimiter">
     -
     </div>
     
     <div class="weightRangeEnd">
-    {metricsfield name="rate__subtotalRangeEnd" value=$rate.weightRangeEnd id="shippingService_`$rate.ShippingService.DeliveryZone.ID`_`$rate.ShippingService.ID`_`$rate.ID`_weightRangeEnd" class="shippingService__weightRangeEnd"}
+    {metricsfield name="rate__subtotalRangeEnd" value=$rate.weightRangeEnd id="shippingService_`$rate.ShippingService.DeliveryZone.ID`_`$rate.ShippingService.ID`_`$rate.ID`_weightRangeEnd" class="shippingService_weightRangeEnd"}
     </div>
-
-    <script type="text/javascript">
-        var switchMetricsEnd = Backend.UnitConventer.prototype.getInstance("UnitConventer_Root_shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_weightRangeEnd");
-        
-        Event.observe(switchMetricsEnd.nodes.switchUnits, 'click', function(e) {ldelim}
-            var switchMetricsStart = Backend.UnitConventer.prototype.getInstance("UnitConventer_Root_shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_weightRangeStart");
-            switchMetricsStart.switchUnitTypes();
-        {rdelim});
-    </script>
 
     <br />
     <span class="errorText hidden"> </span>

@@ -926,7 +926,10 @@ Backend.DeliveryZone.ShippingRate.prototype =
     {
         this.rate = rate;
         this.deliveryZoneId = this.rate.ShippingService.DeliveryZone ? this.rate.ShippingService.DeliveryZone.ID : '';
-        
+        this.switchMetricsEnd = Backend.UnitConventer.prototype.getInstance("UnitConventer_Root_shippingService_" + (this.deliveryZoneId ? this.deliveryZoneId : '') + "_" + (rate.ShippingService.ID ? rate.ShippingService.ID : '') + "_" + (this.rate.ID ? this.rate.ID : '') + "_weightRangeEnd");
+        this.switchMetricsStart = Backend.UnitConventer.prototype.getInstance("UnitConventer_Root_shippingService_" + (this.deliveryZoneId ? this.deliveryZoneId : '') + "_" + (rate.ShippingService.ID ? rate.ShippingService.ID : '') + "_" + (this.rate.ID ? this.rate.ID : '') + "_weightRangeStart");
+    
+ 
         this.findUsedNodes(root);
         this.bindEvents();
         
@@ -981,9 +984,16 @@ Backend.DeliveryZone.ShippingRate.prototype =
         
         this.nodes.ratesActiveList = $(this.prefix + 'ratesList_' + this.deliveryZoneId + '_' + this.rate.ShippingService.ID);
         
-        this.nodes.weightRangeStart = this.nodes.root.down('.' + this.prefix + 'weightRangeStart');
-        this.nodes.weightRangeEnd = this.nodes.root.down('.' + this.prefix + 'weightRangeEnd');
-        this.nodes.subtotalRangeStart = this.nodes.root.down('.' + this.prefix + 'subtotalRangeStart');
+        this.nodes.weightRangeStart = this.nodes.root.down('.weightRangeStart').down('.UnitConventer_NormalizedWeight');
+        this.nodes.weightRangeStartHiValue = this.nodes.root.down('.weightRangeStart').down('.UnitConventer_HiValue');
+        this.nodes.weightRangeStartLoValue = this.nodes.root.down('.weightRangeStart').down('.UnitConventer_LoValue');
+        
+		this.nodes.weightRangeEnd = this.nodes.root.down('.weightRangeEnd').down('.UnitConventer_NormalizedWeight');
+        this.nodes.weightRangeEndHiValue = this.nodes.root.down('.weightRangeEnd').down('.UnitConventer_HiValue');
+        this.nodes.weightRangeEndLoValue = this.nodes.root.down('.weightRangeEnd').down('.UnitConventer_LoValue');
+
+		
+		this.nodes.subtotalRangeStart = this.nodes.root.down('.' + this.prefix + 'subtotalRangeStart');
         this.nodes.subtotalRangeEnd = this.nodes.root.down('.' + this.prefix + 'subtotalRangeEnd');
         this.nodes.flatCharge = this.nodes.root.down('.' + this.prefix + 'flatCharge');
         this.nodes.perItemCharge = this.nodes.root.down('.' + this.prefix + 'perItemCharge');
@@ -1009,7 +1019,9 @@ Backend.DeliveryZone.ShippingRate.prototype =
            Event.observe(this.nodes.save, 'click', function(e) { Event.stop(e); this.save(e); }.bind(this));
            Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel();}.bind(this));
            Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
-       } 
+       }
+
+       Event.observe(this.switchMetricsEnd.nodes.switchUnits, 'click', function(e) { this.switchMetricsStart.switchUnitTypes(); }.bind(this));
     },
     
     showNewForm: function()
@@ -1075,29 +1087,56 @@ Backend.DeliveryZone.ShippingRate.prototype =
     {
         if(response.validation == 'success')
         {
-            Backend.DeliveryZone.ShippingRate.prototype.newRateLastId++;
             var newId = Backend.DeliveryZone.ShippingRate.prototype.newRateLastId;
             
-            var li = this.ratesActiveList.addRecord(newId, this.nodes.root);
+            var li = this.ratesActiveList.addRecord('new' + newId, this.nodes.root);
             
             var idStart = this.prefix + this.deliveryZoneId + '_' + this.rate.ShippingService.ID + "_";
             var idStartRegexp = new RegExp(idStart);
             document.getElementsByClassName(this.prefix + 'rateFloatValue', li).each(function(input) {
                 Event.observe(input, "keyup", function(e){ NumericFilter(this) });
                 input.id = input.id.replace(idStartRegexp, idStart + 'new' + newId);
-                input.up().down('label')['for'] = input.id;
+                Event.observe(input.up().down('label'), 'click', function(e) { Event.stop(e); input.focus(); });
             }.bind(this));
-            
-            var newForm = Backend.DeliveryZone.ShippingRate.prototype.getInstance(li, rate);
+			
+            document.getElementsByClassName('UnitConventer_Root', li).each(function(el) {
+				var elId = el.id
+                el.id = el.id.replace(idStartRegexp, idStart + 'new' + newId);
+				elID = el.id
+				var test;
+            }.bind(this));
+			
+			var startHi = li.down('.weightRangeStart').down('.UnitConventer_HiValue');
+            var startLo = li.down('.weightRangeStart').down('.UnitConventer_LoValue');
+            var endHi = li.down('.weightRangeEnd').down('.UnitConventer_HiValue');
+            var endLo = li.down('.weightRangeEnd').down('.UnitConventer_LoValue');
+			
+			startHi.id = startHi.id.replace(idStartRegexp, idStart + 'new' + newId)
+            Event.observe(startHi.up(2).down('label'), 'click', function(e) { Event.stop(e); startHi.focus(); });
+            startLo.id = startLo.id.replace(idStartRegexp, idStart + 'new' + newId)
+			
+            endHi.id = endHi.id.replace(idStartRegexp, idStart + 'new' + newId)
+            endLo.id = endLo.id.replace(idStartRegexp, idStart + 'new' + newId)	
+			
+			var newForm = Backend.DeliveryZone.ShippingRate.prototype.getInstance(li, rate);
             
             this.nodes.weightRangeStart.value = '';
+            this.nodes.weightRangeStartHiValue.value = 0;
+            this.nodes.weightRangeStartLoValue.value = 0;
+			
             this.nodes.weightRangeEnd.value = '';
-            this.nodes.subtotalRangeStart.value = '';
+            this.nodes.weightRangeEndHiValue.value = 0;
+            this.nodes.weightRangeEndLoValue.value = 0;
+            
+			this.nodes.subtotalRangeStart.value = '';
             this.nodes.subtotalRangeEnd.value = '';
             this.nodes.flatCharge.value = '';
             this.nodes.perItemCharge.value = '';
             this.nodes.subtotalPercentCharge.value = '';
             this.nodes.perKgCharge.value = '';
+			
+			
+            Backend.DeliveryZone.ShippingRate.prototype.newRateLastId++;
         }
         else
         {
