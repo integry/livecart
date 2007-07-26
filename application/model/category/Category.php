@@ -21,7 +21,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	
 	private $specFieldArrayCache = array();
 	private $filterGroupArrayCache = array();
-	private $filterSetCache = null;
+	private $filterSetCache;
+	private $subCategorySetCache;
 	
 	/**
 	 * Define database schema used by this active record instance
@@ -347,7 +348,12 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 */
 	public function getSubcategorySet($loadReferencedRecords = false)
 	{
-	  	return ActiveRecord::getRecordSet('Category', $this->getSubcategoryFilter(), $loadReferencedRecords);
+	  	if (!$this->subCategorySetCache)
+	  	{
+            $this->subCategorySetCache = ActiveRecord::getRecordSet('Category', $this->getSubcategoryFilter(), $loadReferencedRecords);
+        }
+        
+        return $this->subCategorySetCache;
 	}
 
 	/**

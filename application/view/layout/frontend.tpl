@@ -37,7 +37,7 @@
 </head>
 
 <body>
-	<div id="container lang_{localeCode}">
+	<div id="container" class="lang_{localeCode}">
 		{$ACTION_VIEW}
 	</div>	
 	{liveCustomization action="menu"}
