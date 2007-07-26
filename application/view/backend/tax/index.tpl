@@ -19,6 +19,7 @@
     Backend.Tax.prototype.Links.create = "{link controller=backend.tax action=create}";
     Backend.Tax.prototype.Links.edit = "{link controller=backend.tax action=edit}";
     Backend.Tax.prototype.Links.remove = "{link controller=backend.tax action=delete}";
+    Backend.Tax.prototype.Links.sort = "{link controller=backend.tax action=sort}";
     Backend.Tax.prototype.Messages.enabled = "{t _enabled}";
     Backend.Tax.prototype.Messages.disabled = "{t _disabled}";
     Backend.Tax.prototype.Messages.confirmRemove = "{t _are_you_sure_you_want_to_remove_ths_tax}";

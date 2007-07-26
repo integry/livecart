@@ -82,6 +82,7 @@ class TaxController extends StoreManagementController
     public function create()
     {
         $tax = Tax::getNewInstance($this->request->get('name'));
+        $tax->position->set(1000);
         
         return $this->saveTax($tax);
     }
@@ -128,6 +129,21 @@ class TaxController extends StoreManagementController
 		
 		return $validator;
 	}
+
+    /**
+     * @role update
+     */
+    public function sort()
+    {
+        foreach($this->request->get($this->request->get('target'), array()) as $position => $key)
+        {
+           $tax = Tax::getInstanceByID((int)$key);
+           $tax->position->set((int)$position);
+           $tax->save();
+        }
+
+        return new JSONResponse(false, 'success', $this->translate('_taxes_were_successfully_reordered'));
+    }
 }
 
 ?>

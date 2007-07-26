@@ -68,7 +68,14 @@ Backend.Tax.prototype =
             
             this.getContainer(li, 'edit').update(response);
             this.toggleContainer(li, 'edit');
-        }
+        },
+         
+        beforeSort:     function(li, order)
+        {
+            return Backend.Tax.prototype.Links.sort + '?target=tax_taxesList&' + order
+        },
+    
+        afterSort:      function(li, response) { }
     },
     
     initialize: function(root)

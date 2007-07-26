@@ -19,6 +19,7 @@ class Tax extends MultilingualObject
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
 		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("name", ARArray::instance()));
+        $schema->registerField(new ARField("position", ARInteger::instance(2)));
 	}
 
 	/**
@@ -60,6 +61,7 @@ class Tax extends MultilingualObject
 	 */
 	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
 	{
+        $filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
@@ -119,6 +121,7 @@ class Tax extends MultilingualObject
 	{
 	    return self::getRecordSet(new ARSelectFilter(), $loadReferencedRecords);
 	}
+
 }
 
 ?>
