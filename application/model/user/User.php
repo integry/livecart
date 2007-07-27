@@ -333,9 +333,9 @@ class User extends ActiveRecordModel
         return ActiveRecordModel::getRecordSetArray('ShippingAddress', $f, array('UserAddress', 'State'));
     }
     
-    public static function transformArray($array, $class = __CLASS__)
+    public static function transformArray($array, ARSchema $schema)
     {
-        $array = parent::transformArray($array, $class);
+        $array = parent::transformArray($array, $schema);
         $array['fullName'] = $array['firstName'] . ' ' . $array['lastName'];
         
         return $array;

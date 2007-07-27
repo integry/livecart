@@ -127,9 +127,9 @@ class Transaction extends ActiveRecordModel
         return parent::getInstanceById(__CLASS__, $id, self::LOAD_DATA, self::LOAD_REFERENCES);
     }
     
-    public static function transformArray($array)
+    public static function transformArray($array, ARSchema $schema)
     {
-		$array = parent::transformArray($array, __CLASS__);
+		$array = parent::transformArray($array, $schema);
         
         try
         {

@@ -37,7 +37,7 @@ class UserAddress extends ActiveRecordModel
 		return parent::getNewInstance(__CLASS__);
 	}
 	
-	public static function transformArray($array, $className)
+	public static function transformArray($array, ARSchema $schema)
 	{          
         $array['countryName'] = self::getApplication()->getLocale()->info()->getCountryName($array['countryID']);
         $array['fullName'] = $array['firstName'] . ' ' . $array['lastName'];

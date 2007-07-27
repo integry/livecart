@@ -125,9 +125,9 @@ class OrderedItem extends ActiveRecordModel
         }
     }
     
-    public static function transformArray($array, $className = __CLASS__)
+    public static function transformArray($array, ARSchema $schema)
     {
-        $array = parent::transformArray($array, $className);
+        $array = parent::transformArray($array, $schema);
         $subTotal = array();
 
         foreach ($array['Product']['calculated'] as $currency => $price)

@@ -39,7 +39,7 @@ abstract class ValueSpecification extends Specification
 		return $specItem;
 	}
 
-	public static function transformArray($array, $class = __CLASS__)
+	public static function transformArray($array, ARSchema $schema)
 	{
 		unset($array['Product']);
 		unset($array['SpecField']);

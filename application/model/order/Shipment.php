@@ -330,9 +330,8 @@ class Shipment extends ActiveRecordModel
         {
             $this->items = array();
             foreach ($this->itemIds as $id)    
-            {
-                $item = ActiveRecordModel::getInstanceById('OrderedItem', $id);
-                $this->items[] = $item;
+            {                
+                $this->items[] = ActiveRecordModel::getInstanceById('OrderedItem', $id);
             }
             
             $this->itemIds = array();
