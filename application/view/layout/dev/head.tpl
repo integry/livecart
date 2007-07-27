@@ -8,28 +8,27 @@
 	<base href="{baseUrl}" /> 
 
 	<!-- Css includes -->
-	<link href="stylesheet/backend/Backend.css" media="screen" rel="Stylesheet" type="text/css"/>
+	{includeCss file="backend/Backend.css" force=true}
 	{includeCss file="backend/stat.css"}
 
 	{$STYLESHEET}
-	{literal}
+	
 	<!--[if IE]>
-		<link href="stylesheet/backend/BackendIE.css" media="screen" rel="Stylesheet" type="text/css"/>
+        {includeCss file="backend/BackendIE.css" force=true}
 	<![endif]-->
 	<!--[if IE 6]>
-		<link href="stylesheet/backend/BackendIE6.css" media="screen" rel="Stylesheet" type="text/css"/>
+        {includeCss file="backend/BackendIE6.css" force=true}
 	<![endif]-->
 	<!--[if IE 7]>
-		<link href="stylesheet/backend/BackendIE7.css" media="screen" rel="Stylesheet" type="text/css"/>
+        {includeCss file="backend/BackendIE7.css" force=true}
 	<![endif]-->
-	{/literal}
 
-	<script type="text/javascript" src="javascript/library/tinymce/tiny_mce.js"></script>
-
-
-	<script type="text/javascript" src="javascript/library/prototype/prototype.js"></script>
-	<script type="text/javascript" src="javascript/library/scriptaculous/scriptaculous.js"></script>
-	<script type="text/javascript" src="javascript/backend/Backend.js"></script>
+    {includeJs file="library/tinymce/tiny_mce.js" force=true}
+    
+    {includeJs file="library/prototype/prototype.js" force=true}
+    {includeJs file="library/scriptaculous/scriptaculous.js" force=true}
+    {includeJs file="backend/Backend.js" force=true}
+    
 
 	<!-- JavaScript includes -->
 	{includeJs file=library/KeyboardEvent.js}

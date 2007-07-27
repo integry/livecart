@@ -1,5 +1,4 @@
 <?php
-
 /**
  * ...
  *
@@ -12,14 +11,26 @@
  */
 function smarty_function_includeCss($params, LiveCartSmarty $smarty) 
 {
-	$fileName = $params['file'];
+    // fix slashes
+    $fileName = str_replace('\\', '/', $params['file']);
+    $filePath = ClassLoader::getRealPath('public.stylesheet.') . str_replace('/', DIRECTORY_SEPARATOR, $fileName);
+    $currentContent = $smarty->get_template_vars("STYLESHEET");
 	
-	// fix slashes
-	$fileName = str_replace(chr(92),'/', $fileName);
-	
-	$code = '<link href="stylesheet/' . $fileName . '" media="screen" rel="Stylesheet" type="text/css"/>' . "\n";
-	$currentContent = $smarty->get_template_vars("STYLESHEET");
-	$smarty->assign("STYLESHEET", $currentContent . $code);
+    // Check to see if it is already included
+    if (strpos($currentContent, $fileName) === false && is_file($filePath))
+    {
+        $mtime = filemtime($filePath);
+    	$code = '<link href="stylesheet/' . $fileName . '?' . $mtime .  '" media="screen" rel="Stylesheet" type="text/css"/>' . "\n";
+    	
+        if(isset($params['force']))
+        {
+            return $code;
+        }
+        else
+        {
+    	   $smarty->assign("STYLESHEET", $currentContent . $code);
+        }
+    }
 }
 
 ?>

@@ -8,7 +8,6 @@
 
 {includeCss file="backend/Tax.css"}
 {includeCss file="library/ActiveList.css"}
-{includeCss file="backend/Tab.css"}
 {includeCss file="library/TabControl.css"}
 
 {pageTitle}{t _taxes}{/pageTitle}

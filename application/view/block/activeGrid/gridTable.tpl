@@ -122,10 +122,7 @@
     </table>
 </div>
 
-{literal}
 <script type="text/javascript">
-{/literal}
-	console.log('starting');
 	grid = new ActiveGrid($('{$prefix}_{$id}'), '{$url}{$filters}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"), {$rowCount});
 	console.log(grid);
 	{foreach from=$displayedColumns item=index key=column name="columns"}

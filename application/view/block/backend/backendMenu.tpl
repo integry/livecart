@@ -15,8 +15,6 @@
 	</li>		
 </ul>
 
-{literal}
 <script type="text/javascript">
-{/literal}	
 	new Backend.NavMenu({$menuArray}, '{$controller}', '{$action}');
 </script>

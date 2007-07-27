@@ -1,5 +1,4 @@
 <?php
-
 /**
  * ...
  *
@@ -12,16 +11,25 @@
  */
 function smarty_function_includeJs($params, LiveCartSmarty $smarty) 
 {
-	$fileName = $params['file'];
-	
 	// fix slashes
-	$fileName = str_replace(chr(92),'/', $fileName);
-
+    $fileName = str_replace('\\', '/', $params['file']);
+    $filePath = ClassLoader::getRealPath('public.javascript.') . str_replace('/', DIRECTORY_SEPARATOR, $fileName);
 	$currentContent = $smarty->get_template_vars("JAVASCRIPT");
-	if (strpos($currentContent, $fileName) === false)
+	
+    // Check to see if it is already included
+	if (strpos($currentContent, $fileName) === false && is_file($filePath))
 	{
-		$code = '<script src="javascript/' . $fileName . '" type="text/javascript"></script>' . "\n";
-		$smarty->assign("JAVASCRIPT", $currentContent . $code);
+        $mtime = filemtime($filePath);
+		$code = '<script src="javascript/' . $fileName . '?' . $mtime . '" type="text/javascript"></script>' . "\n";
+
+		if(isset($params['force']))
+		{
+		    return $code;
+		}
+		else
+		{
+		   $smarty->assign("JAVASCRIPT", $currentContent . $code);
+		}
 	}
 }
 
