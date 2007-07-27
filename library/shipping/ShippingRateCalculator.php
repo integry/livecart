@@ -56,10 +56,19 @@ abstract class ShippingRateCalculator
         }
 	}    
     
+    /**
+     *  Return shipping rates for the particular service
+     */
     public abstract function getRates();
 
+    /**
+     *  Return all available shipping rates for all available services
+     */
     public abstract function getAllRates();
 
+    /**
+     *  Return shipping company name (for example: "USPS")
+     */
     public abstract function getProviderName();
 }
 

@@ -868,8 +868,7 @@ class CustomerOrder extends ActiveRecordModel
             $array['shippingSubtotal'] = 0; 
             foreach ($this->shipments as $shipment) 
             { 
-                $array['shippingSubtotal'] += 22; 
-                // $array['shippingSubtotal'] += $shipment->getSelectedRate()->getAmountByCurrency($currency); 
+                $array['shippingSubtotal'] += $shipment->shippingAmount->get();
             } 
             
             $array['subtotalBeforeTaxes'] = $array['itemSubtotal'] + $array['shippingSubtotal'];

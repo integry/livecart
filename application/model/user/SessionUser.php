@@ -28,7 +28,7 @@ class SessionUser
             catch (ARNotFoundException $e)
             {
                 $session->unsetValue('User');
-                return User::getAnonymousUser();
+                return self::getAnonymousUser();
             }
 		}
     }

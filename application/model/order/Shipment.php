@@ -104,8 +104,6 @@ class Shipment extends ActiveRecordModel
 				break;
             }
         }
-        
-        
     }
     
     public function getChargeableWeight(DeliveryZone $zone = null)
@@ -237,6 +235,10 @@ class Shipment extends ActiveRecordModel
         }
         $array['subTotal'] = $subTotal;
                
+        // total amount
+        $array['totalAmount'] = $this->amount->get() + $this->shippingAmount->get();
+        $array['formatted_totalAmount'] = $this->amountCurrency->get()->getFormattedPrice($array['totalAmount']);
+        
         // formatted subtotal
         $formattedSubTotal = array();
         foreach ($subTotal as $id => $price)

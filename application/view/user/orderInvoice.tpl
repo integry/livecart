@@ -108,7 +108,7 @@
                         <td colspan="3" class="subTotalCaption">
                             {t _shipment_total}:
                         </td>
-                        <td class="amount subTotal">{$shipment.formattedSubTotal[$order.Currency.ID]}</td>
+                        <td class="amount subTotal">{$shipment.formatted_totalAmount}</td>
                     </tr>
                                             
                 </tbody>

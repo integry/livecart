@@ -72,7 +72,7 @@
                                 {t _order_total}:                        
                             {/if}
                         </td>
-                        <td class="subTotal">{$shipment.formattedSubTotal[$order.Currency.ID]}</td>                        
+                        <td class="subTotal">{$shipment.formatted_totalAmount}</td>            
                     </tr>
                                             
                 </tbody>
