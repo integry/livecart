@@ -11,26 +11,36 @@
  */
 function smarty_function_includeCss($params, LiveCartSmarty $smarty) 
 {
-    // fix slashes
-    $fileName = str_replace('\\', '/', $params['file']);
-    $filePath = ClassLoader::getRealPath('public.stylesheet.') . str_replace('/', DIRECTORY_SEPARATOR, $fileName);
-    $currentContent = $smarty->get_template_vars("STYLESHEET");
-	
-    // Check to see if it is already included
-    if (strpos($currentContent, $fileName) === false && is_file($filePath))
+    $includedStylesheetTimestamp = $smarty->get_template_vars("INCLUDED_STYLESHEET_TIMESTAMP");
+    if(!($includedStylesheetFiles = $smarty->get_template_vars("INCLUDED_STYLESHEET_FILES")))
     {
-        $mtime = filemtime($filePath);
-    	$code = '<link href="stylesheet/' . $fileName . '?' . $mtime .  '" media="screen" rel="Stylesheet" type="text/css"/>' . "\n";
-    	
-        if(isset($params['force']))
+       $includedStylesheetFiles = array();
+    }
+    
+    // fix slashes
+    $fileName = str_replace('\\', DIRECTORY_SEPARATOR, $params['file']);
+    $fileName = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
+    $filePath = ClassLoader::getRealPath('public.stylesheet.') .  $fileName;
+    
+    if(!in_array($filePath, $includedStylesheetFiles) && is_file($filePath))
+    {        
+        $fileMTime = filemtime($filePath);
+        if($fileMTime > (int)$includedStylesheetTimestamp)
         {
-            return $code;
+            $smarty->assign("INCLUDED_STYLESHEET_TIMESTAMP", $fileMTime);
+            
+        }
+        
+        if(isset($params['front']))
+        {
+            array_unshift($includedStylesheetFiles, $filePath);
         }
         else
         {
-    	   $smarty->assign("STYLESHEET", $currentContent . $code);
+            array_push($includedStylesheetFiles, $filePath);
         }
+        
+        $smarty->assign("INCLUDED_STYLESHEET_FILES", $includedStylesheetFiles);
     }
 }
-
 ?>

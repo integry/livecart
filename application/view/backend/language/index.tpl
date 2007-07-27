@@ -52,7 +52,7 @@
 		    <span class="progressIndicator" style="display: none;"></span>
 		
 			<span class="langData">
-				<img src="" />
+				{img src=""}
 				<span class="langTitle"></span> 
 				<span class="langInactive">({t _inactive})</span>
 			</span>

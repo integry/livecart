@@ -29,11 +29,11 @@ which currencies your store will support.</p>
 
 <ol>
 	<li>Click the <strong>Add currency</strong> link:</li>
-	<img src="image/doc/currency/add_currency.bmp">
+	{img src="image/doc/currency/add_currency.bmp"}
 	<li>Then choose a currency from the pulldown menu:</li>
-	<img src="image/doc/currency/menu_add.bmp">
+	{img src="image/doc/currency/menu_add.bmp"}
 	<li>Finally click the <strong>Add Currency</strong> button:</li>
-	<img src="image/doc/currency/add_button.bmp">
+	{img src="image/doc/currency/add_button.bmp"}
 </ol>
 
 <br \>
@@ -44,24 +44,24 @@ which currencies your store will support.</p>
  in respect with the base currency.    
 
 If you want to change the base currency click the <strong>Set as base currency</strong> link under the currency name.</p>
-<img src="image/doc/currency/set_base.bmp">
+{img src="image/doc/currency/set_base.bmp"}
 <p class="note"><strong>Note</strong>: Once you change the base currency all prices have to be recalculated and re-set for all the products.</p>
 <br \><br \>
 
 <h3 id="adjust_rates">Adjust Exchange Rates</h3>
 <p>To adjust exchange rates of your (active) currencies click on the <strong>Adjust Exchange Rates</strong> 
 tab (to proceed to manual exchange rates setting page):</p>
-<img src="image/doc/currency/adjust_exchange_rates.bmp">
-<img src="image/doc/currency/adjust_exchange_rates_highlight_red.bmp">
-<img src="image/doc/currency/adjust_exchange_rates_highlight_blue.bmp">
-<img src="image/doc/currency/adjust_exchange_rates_highlight_green.bmp">
+{img src="image/doc/currency/adjust_exchange_rates.bmp"}
+{img src="image/doc/currency/adjust_exchange_rates_highlight_red.bmp"}
+{img src="image/doc/currency/adjust_exchange_rates_highlight_blue.bmp"}
+{img src="image/doc/currency/adjust_exchange_rates_highlight_green.bmp"}
 
 <p>To set the currency exchange rates simply enter currency's value in the appropriate field. For instance, if 
 one United Kingdom Pound is worth 1.96475 US Dollars, enter this value:</p>
-<img src="image/doc/currency/adjust_exchange_rates_blink.bmp">
+{img src="image/doc/currency/adjust_exchange_rates_blink.bmp"}
 
 <p>and click <strong>Save</strong> to set the rates:</p>
-<img src="image/doc/currency/save.bmp">
+{img src="image/doc/currency/save.bmp"}
 
 <p class="note"><strong>Note</strong>: rates always have to be calculated in relation to the <strong>base</strong>
  currency.</p>
@@ -91,7 +91,7 @@ up-to-date. To do that:
 <h3 id="enable_disable">Enable or Disable Currencies</h3>
 <p>All the currencies are disabled by default. To enable a currency click it's checkbox on the 
 left of the currency name.</p>
-<img src="image/doc/currency/enable.bmp">
+{img src="image/doc/currency/enable.bmp"}
 
 <p>Clear the mark to disable it.</p>
 
@@ -104,12 +104,12 @@ store with a particular price. To set price formatting:</p>
 
 <ol>
 	<li>Hover your mouse cursor over the currency and click the "pen" icon on the left:</li>
-	<img src="image/doc/currency/edit.bmp">
+	{img src="image/doc/currency/edit.bmp"}
 	<li>In the <strong>Price Formatting</strong> you can enter the prefix and suffix (prefix before the price,
 	suffix - after) that will be displayed with the price:</li>
-	<img src="image/doc/currency/prefix_suffix.bmp">
+	{img src="image/doc/currency/prefix_suffix.bmp"}
 	<li>Click <strong>Save</strong> to set formatting:</li>
-	<img src="image/doc/currency/save.bmp">
+	{img src="image/doc/currency/save.bmp"}
 </ol>
 
 <br \>
@@ -118,14 +118,14 @@ store with a particular price. To set price formatting:</p>
 <h3 id="sort">Sort Currencies</h3>
 <p>Sorting currencies determines the order in which the active currencies are be displayed to your customers in 
 the currency switching menu. To set the appropriate currency order, click on the currency and drag it up or down.</p>
-<img src="image/doc/currency/sort.bmp">
+{img src="image/doc/currency/sort.bmp"}
 
 <br \>
 <br \>
 
 <h3 id="delete">Delete</h3>
 <p>To delete a currency, move your mouse over the currency and click the <strong>Delete</strong> icon on the left.</p>
-<img src="image/doc/currency/delete.bmp">
+{img src="image/doc/currency/delete.bmp"}
 
 <br \>
 <br \>

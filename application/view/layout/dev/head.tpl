@@ -8,28 +8,17 @@
 	<base href="{baseUrl}" /> 
 
 	<!-- Css includes -->
+    {includeCss file="backend/stat.css" force=true}
 	{includeCss file="backend/Backend.css" force=true}
-	{includeCss file="backend/stat.css"}
 
-	{$STYLESHEET}
-	
-	<!--[if IE]>
-        {includeCss file="backend/BackendIE.css" force=true}
-	<![endif]-->
-	<!--[if IE 6]>
-        {includeCss file="backend/BackendIE6.css" force=true}
-	<![endif]-->
-	<!--[if IE 7]>
-        {includeCss file="backend/BackendIE7.css" force=true}
-	<![endif]-->
+	{compiledCss}
 
+    
+    {includeJs file="backend/Backend.js" force=true}
+    {includeJs file="library/scriptaculous/scriptaculous.js" force=true}
+    {includeJs file="library/prototype/prototype.js" force=true}
     {includeJs file="library/tinymce/tiny_mce.js" force=true}
     
-    {includeJs file="library/prototype/prototype.js" force=true}
-    {includeJs file="library/scriptaculous/scriptaculous.js" force=true}
-    {includeJs file="backend/Backend.js" force=true}
-    
-
 	<!-- JavaScript includes -->
 	{includeJs file=library/KeyboardEvent.js}
 	{includeJs file=library/json.js}
@@ -39,7 +28,7 @@
 	
 	{includeJs file=backend/Customize.js}
     
-	{$JAVASCRIPT}
+	{compiledJs}
 
 	{literal}
 	<script language="javascript" type="text/javascript">

@@ -23,7 +23,7 @@
 				<div style="float: left;">
 					<div id="homeButtonWrapper">
 						<a href="{link controller=backend.index action=index}">
-							<img src="image/backend/layout/top_home_button.jpg" id="homeButton">
+							{img src="image/backend/layout/top_home_button.jpg" id="homeButton"}
 						</a>
 					</div>
 
@@ -42,7 +42,7 @@
 
 					<div id="topLogoImageContainer">
 					 	<a href="{link controller=backend.index action=index}">
-						 	<img src="image/backend/layout/logo_tr.png" id="topLogoImage">
+						 	{img src="image/backend/layout/logo_tr.png" id="topLogoImage"}
 						</a>
 					</div>
 

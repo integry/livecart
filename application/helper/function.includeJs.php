@@ -11,26 +11,35 @@
  */
 function smarty_function_includeJs($params, LiveCartSmarty $smarty) 
 {
+    $includedJavascriptTimestamp = $smarty->get_template_vars("INCLUDED_JAVASCRIPT_TIMESTAMP");
+    if(!($includedJavascriptFiles = $smarty->get_template_vars("INCLUDED_JAVASCRIPT_FILES")))
+    {
+       $includedJavascriptFiles = array();
+    }
+    
 	// fix slashes
-    $fileName = str_replace('\\', '/', $params['file']);
-    $filePath = ClassLoader::getRealPath('public.javascript.') . str_replace('/', DIRECTORY_SEPARATOR, $fileName);
-	$currentContent = $smarty->get_template_vars("JAVASCRIPT");
-	
-    // Check to see if it is already included
-	if (strpos($currentContent, $fileName) === false && is_file($filePath))
-	{
-        $mtime = filemtime($filePath);
-		$code = '<script src="javascript/' . $fileName . '?' . $mtime . '" type="text/javascript"></script>' . "\n";
-
-		if(isset($params['force']))
-		{
-		    return $code;
-		}
-		else
-		{
-		   $smarty->assign("JAVASCRIPT", $currentContent . $code);
-		}
-	}
+    $fileName = str_replace('\\', DIRECTORY_SEPARATOR, $params['file']);
+    $fileName = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
+    $filePath = ClassLoader::getRealPath('public.javascript.') .  $fileName;
+    
+    if(!in_array($filePath, $includedJavascriptFiles) && is_file($filePath))
+    {        
+        $fileMTime = filemtime($filePath);
+        if($fileMTime > (int)$includedJavascriptTimestamp)
+        {
+            $smarty->assign("INCLUDED_JAVASCRIPT_TIMESTAMP", $fileMTime);
+        }
+        
+        if(isset($params['front']))
+        {
+            array_unshift($includedJavascriptFiles, $filePath);
+        }
+        else
+        {
+            array_push($includedJavascriptFiles, $filePath);
+        }
+        
+        $smarty->assign("INCLUDED_JAVASCRIPT_FILES", $includedJavascriptFiles);
+    }
 }
-
 ?>

@@ -6,7 +6,7 @@
 			<input type="hidden" name="translation" id="translation" />
 
 				{if $language.image}
-					<img src="{$language.image}" id="transFlag" />
+					{img src=$language.image id="transFlag"}
 				{/if}
 
 				<div>{$language.originalName}:</div>
@@ -19,6 +19,6 @@
 				<a class="cancel" href="#" onClick='return cust.cancelTransDialog();'>{t _cancel}</a>
 			</label>
 		</form>
-		<img src="image/indicator.gif" id="transSaveIndicator" style="display:none;">
+		{img src="image/indicator.gif" id="transSaveIndicator" style="display:none;"}
 	</div>
 </div>

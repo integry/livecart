@@ -32,7 +32,7 @@
                                                 
                         <div class="filterMenuContainer">
                         
-                            <img src="image/silk/zoom.png" class="filterIcon" />
+                            {img src="image/silk/zoom.png" class="filterIcon"}
                             
                             <div class="filterMenu">
                                 
@@ -96,7 +96,7 @@
 
 					{/if}
 					
-					<img src="image/silk/bullet_arrow_up.png" class="sortPreview" />
+					{img src="image/silk/bullet_arrow_up.png" class="sortPreview" }
                     					
 					</div>
 					

@@ -16,7 +16,7 @@
 			<td class="cartImage">
 			    {if $item.Product.DefaultImage.paths.1}
 				<a href="{productUrl product=$item.Product}">
-                    <img src="{$item.Product.DefaultImage.paths.1}" alt="{$item.Product.name_lang|escape}" />
+                    {img src=$item.Product.DefaultImage.paths.1 alt=$item.Product.name_lang|escape}
                 </a>	
                 {/if}
 			</td>

@@ -19,7 +19,7 @@ class CategoryController extends StoreManagementController
 		$categoryList->unshift(Category::getRootNode());
 		
 		$response = new ActionResponse();
-		$response->set('categoryList', $categoryList->toArray($this->application->getDefaultLanguageCode()));        
+		$response->set('categoryList', $categoryList->toArray());        
 		return $response;
 	}
 

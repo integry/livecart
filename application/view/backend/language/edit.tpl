@@ -1,5 +1,5 @@
 {pageTitle help="language.edit"}
-	{translate text=_language_definitons} (<img src="image/localeflag/{$id}.png" /> {$edit_language})
+	{translate text=_language_definitons} ({img src="image/localeflag/`$id`.png"} {$edit_language})
 {/pageTitle}
 
 {includeJs file="library/json.js"}

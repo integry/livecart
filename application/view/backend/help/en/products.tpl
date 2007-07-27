@@ -25,7 +25,7 @@ To start selling goods in your e-store you have to stock up your system with som
 		<li>Click <strong>Products</strong> in the main menu.</li>
 		<li>Then select a category on the category tree.</li>
 		<li>The Products tab opens on the right. Products are displayed in a table (similar to this):</li>
-		<img src="image/doc/products/products_table.bmp"/>
+		{img src="image/doc/products/products_table.bmp"}
 		By default products are displayed in the order they were added to your store (newest first, oldest - last).
 	</ol>
 </p> 
@@ -36,16 +36,16 @@ To start selling goods in your e-store you have to stock up your system with som
 	<p>LiveCart allows you to <strong>sort</strong> product's almost by any attribute: SKU, name, manufacturer, 
 	price, stock, status. 
 	To sort products in ascending order click the "up" arrow next to the attribute's name. To display products in descending order click the "down" arrow.</p>
-	<img src="image/doc/products/arrows.bmp"/>
+	{img src="image/doc/products/arrows.bmp"}
 
 	
 	You can add or remove products' attributes that are displayed in the toolbar:
 	<div id="columns">
 	<ol>
 		<li>Click <strong>Columns</strong> on the right:</li>
-		<img src="image/doc/products/columns.bmp"/>
+		{img src="image/doc/products/columns.bmp"}
 		<li>Select or remove attributes by checking or clearing a checkbox next to appropriate attribute:</li>
-		<img src="image/doc/products/checkbox.bmp"/>
+		{img src="image/doc/products/checkbox.bmp"}
 		<li>Click <strong>Change Columns</strong> to save changes.</li>
 	</ol>
 </p>
@@ -55,9 +55,9 @@ To start selling goods in your e-store you have to stock up your system with som
 <p>LC allows you to conduct a product search almost by any product's attribute. You can <a href="{self}#columns">changes attributes</a></small> (...)</p>
 <ul>
 		<li>Click an attribute to activate a search field:</li>
-		<img src="image/doc/products/name2.bmp"/>
+		{img src="image/doc/products/name2.bmp"}
 		<li>Enter search criteria and press Enter:</li>
-		<img src="image/doc/products/name_nokia2.bmp"/>
+		{img src="image/doc/products/name_nokia2.bmp"}
 		Only the products that match your criteria will remain.
 	
 	</ul>
@@ -78,16 +78,16 @@ most of the attributes by applying changes to several products at once.</p>
 
 <ol>
 <li>Select one or more products by marking a checkbox on the left:</li>
-<img src="image/doc/products/checkboxes.bmp"/>
+{img src="image/doc/products/checkboxes.bmp"}
 <li>Choose an action from the list:</li>
-<img src="image/doc/products/menu.bmp"/>
-<img src="image/doc/products/select.bmp"/>
+{img src="image/doc/products/menu.bmp"}
+{img src="image/doc/products/select.bmp"}
 <li>Click <strong>Save</strong> (for the changes to take place immediately).</li>
-<img src="image/doc/products/save.bmp"/>
+{img src="image/doc/products/save.bmp"}
 </ol>
 
 <p>To edit a <strong>single product</strong>, click product's name in the  list:</p>
-<img src="image/doc/products/click_product.bmp"/>
+{img src="image/doc/products/click_product.bmp"}
 Product's <a href="{help /products.define}">detailed page</a> opens. (Where you can edit any of the products properties)
 
 <br \>

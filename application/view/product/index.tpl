@@ -24,15 +24,15 @@
 	<div id="imageContainer" style="float: left; text-align: center;">
 		<div id="largeImage" class="{if !$product.DefaultImage.paths.3}missingImage{/if} {if $images|@count > 1}multipleImages{/if}">
 			{if $product.DefaultImage.paths.3}
-				<img src="{$product.DefaultImage.paths.3}" alt="{$product.DefaultImage.name_lang|escape}" id="mainImage" style="margin: 20px;" />
+				{img src=$product.DefaultImage.paths.3 alt=$product.DefaultImage.name_lang|escape id="mainImage" style="margin: 20px;"}
 			{else}
-				<img src="image/missing_large.jpg" alt="{$product.DefaultImage.name_lang|escape}" id="mainImage" style="margin: 20px;" />
+				{img src="image/missing_large.jpg" alt=$product.DefaultImage.name_lang|escape id="mainImage" style="margin: 20px;"}
 			{/if}
 		</div>
         {if $images|@count > 1}
 			<div id="moreImages">
                 {foreach from=$images item="image"}
-					<img src="{$image.paths.1}" id="img_{$image.ID}" alt="{$image.name_lang|escape}" />
+					{img src=$image.paths.1 id="img_`$image.ID`" alt=$image.name_lang|escape}
 				{/foreach}
 			</div>
 		{/if}

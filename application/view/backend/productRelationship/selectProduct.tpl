@@ -39,13 +39,13 @@
     <div id="confirmations">
         <div id="redZone">
             <div id="productRelationshipCreateFailure" class="redMessage" style="display: none;">
-                <img class="closeMessage" src="image/silk/cancel.png"/>
+                {img class="closeMessage" src="image/silk/cancel.png"}
                 <div>{t _could_not_create_product_relationship}</div>
             </div>
         </div>
         <div id="yellowZone">
             <div id="productRelationshipCreated" class="yellowMessage" style="display: none;">
-                <img class="closeMessage" src="image/silk/cancel.png"/>
+                {img class="closeMessage" src="image/silk/cancel.png"}
                 <div>{t _a_relationship_between_products_was_successfully_created}</div>
             </div>
         </div>

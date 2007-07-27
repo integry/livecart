@@ -25,7 +25,7 @@
         <div id="confirmations">
             <div id="yellowZone">
                 <div id="staticPageAdded" class="yellowMessage" style="display: none;">
-                    <img class="closeMessage" src="image/silk/cancel.png"/>
+                    {img class="closeMessage" src="image/silk/cancel.png"}
                     <div>{t _new_page_was_successfully_added}</div>
                 </div>
             </div>

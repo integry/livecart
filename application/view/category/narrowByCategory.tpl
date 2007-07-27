@@ -6,7 +6,7 @@
     <tr>
         <td class="subCatImage">
             <a href="{categoryUrl data=$sub query="q=`$searchQuery`"}">
-                <img src="{$sub.DefaultImage.paths.1}" alt="{$sub.name_lang|escape}" />            
+                {img src=$sub.DefaultImage.paths.1 alt=$sub.name_lang|escape }            
             </a>
         </td>
         <td class="details">

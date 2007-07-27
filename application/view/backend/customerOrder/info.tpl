@@ -59,7 +59,7 @@
         <fieldset class="error">
             <label for="order_{$order.ID}_status">{t _status}</label>
             {selectfield options=$statuses id="order_`$order.ID`_status" name="status" class="status"}
-            <img src="image/indicator.gif" id="order_{$order.ID}_status_feedback" style="display: none;"/> 
+            {img src="image/indicator.gif" id="order_`$order.ID`_status_feedback" style="display: none;"} 
     	</fieldset>  
     {/form}
     

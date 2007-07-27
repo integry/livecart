@@ -6,15 +6,6 @@
 {pageTitle}{t _add_credit_card_payment}{/pageTitle}
 {include file="layout/backend/meta.tpl"}
 
-{literal}
-<style>
-    body
-    {
-        background-image: none;    
-    }
-</style>
-{/literal}
-
 <div id="ccForm">
 
 {form action="controller=backend.payment action=processCreditCard id=`$order.ID`" onsubmit="new window.opener.Backend.Payment.AddCreditCard(this, window); return false;" handle=$ccForm method="POST"}

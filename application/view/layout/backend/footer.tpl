@@ -8,13 +8,13 @@
 			<table id="workareaBottomShadeContainer">
 				<tr>
 					<td>
-						<img src="image/backend/layout/spacer.gif" id="workareaBottomShadeLeft">
+						{img src="image/backend/layout/spacer.gif" id="workareaBottomShadeLeft"}
 					</td>
 					<td id="workareaBottomShade">
 						&nbsp;
 					</td>
 					<td id="workareaShadeCorner">
-						<img src="image/backend/layout/workarea_shade_corner.jpg" id="workareaShadeCornerImage">
+						{img src="image/backend/layout/workarea_shade_corner.jpg" id="workareaShadeCornerImage"}
 					</td>
 				</tr>
 			</table>

@@ -11,7 +11,7 @@
     
         <div style="text-align: center; border-bottom: 1px solid black; position: relative; margin-top: 20px;">
         
-            <img src="image/promo/logo_small.jpg" style="position: absolute; left: 0; top: 0;" />
+            {img src="image/promo/logo_small.jpg" style="position: absolute; left: 0; top: 0;"}
             
             <h1 style="padding-top: 20px;">{t Invoice} #{$order.ID}</h1>
             <div id="invoiceDate">{$order.formatted_dateCompleted.date_long}</div>
@@ -108,7 +108,7 @@
                         <td colspan="3" class="subTotalCaption">
                             {t _shipment_total}:
                         </td>
-                        <td class="amount subTotal">{$shipment.formatted_totalAmount}</td>
+                        <td class="amount subTotal">{$shipment.formattedSubTotal[$order.Currency.ID]}</td>
                     </tr>
                                             
                 </tbody>

@@ -33,23 +33,23 @@ you deal with interface translations (see <a href="{help /language.edit#translat
 
 <ol>
 <li>Click the <strong>Add New Language</strong> link:</li>
-<img src="image/doc/language/add_language.bmp"/>
+{img src="image/doc/language/add_language.bmp"}
 <li>Then select a language from the pulldown menu:</li>
-<img src="image/doc/language/menu.bmp"/>
+{img src="image/doc/language/menu.bmp"}
 <li>Click <strong>Add</strong> for the language to appear below in the language list.</li>
-<img src="image/doc/language/add_button.bmp"/>
+{img src="image/doc/language/add_button.bmp"}
 </ol>
 
 
 <h3 id="translate">Translate</h3>	
 <p>To translate languages, proceed to <a href="{help /language.edit}">Language translation</a> page by clicking the <strong>pen</strong> icon:</p>
-<img src="image/doc/language/edit.bmp"/>
+{img src="image/doc/language/edit.bmp"}
 
 
 <h3 id="reorder">Reorder Languages</h3>	
 
 <p>To reorder languages click on a language and then drag and drop it to set the appropriate order.</p>
-<img src="image/doc/language/sort.bmp"/>
+{img src="image/doc/language/sort.bmp"}
 
 <p>Language arrangement affects the order in which languages are displayed in language switching menus.</p>
 
@@ -57,7 +57,7 @@ you deal with interface translations (see <a href="{help /language.edit#translat
 
 <p>All the newly added languages are inactive by default. You might want to keep a language inactive while its
  translation is being carried out. To activate a language mark a box on the left.</p>
-<img src="image/doc/language/enable.bmp"/>
+{img src="image/doc/language/enable.bmp"}
 
 <p>To disable a language simply uncheck the box.</p>
 
@@ -79,14 +79,14 @@ The default language serves two main purposes:
 </p>
 
 <p>To change the default language click the <strong>Set as default</strong> link under the language name.</p>
-<img src="image/doc/language/set_base2.bmp"/>
+{img src="image/doc/language/set_base2.bmp"}
 
 
 <h3 id="remove">Remove a language</h3>	 
 
 <p>To delete a language, hover over it and click the <strong>delete</strong> icon on the left.</p>
 
-<img src="image/doc/language/delete.bmp"/>
+{img src="image/doc/language/delete.bmp"}
 
 <p class="note"><strong>Note</strong>: If you remove a language (accidently or not), none of translations of the 
 interface elements will be lost for good. If you removed a language by accident, just add it again and all your 

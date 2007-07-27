@@ -21,15 +21,17 @@ ErrorDocument 500 "<h2>Application error</h2>Application failed to start properl
 # Cache stylesheets and javascript
 # Add "LoadModule expires_module modules/mod_expires.so" to your httpd.conf to be able to use expires mode
 # Add "LoadModule mime_module modules/mod_mime.so" to be able to set mime type by extension
+<IfModule mod_expires.c>
+    ExpiresActive On
 
-<IfModule mime_module>
-AddType text/css css
-AddType text/javascript js
-
-ExpiresActive On
-ExpiresByType text/css "modification plus 10 years"
-ExpiresByType text/javascript "modification plus 10 years"
-
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType text/x-javascript "access plus 1 year"
+    ExpiresByType text/javascript "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
 </IfModule>
 
+#Disable Apache caching
+FileETag none
 
