@@ -1,3 +1,24 @@
+.dhx_tree_textSign {
+    background-image: url('../../image/backend/dhtmlxtree/leaf.gif');
+    background-image: url('../../image/backend/dhtmlxtree/line1.gif');
+    background-image: url('../../image/backend/dhtmlxtree/line2.gif');
+    background-image: url('../../image/backend/dhtmlxtree/line3.gif');
+    background-image: url('../../image/backend/dhtmlxtree/line4.gif');
+    background-image: url('../../image/backend/dhtmlxtree/blank.gif');
+    background-image: url('../../image/backend/dhtmlxtree/minus.gif');
+    background-image: url('../../image/backend/dhtmlxtree/minus2.gif');
+    background-image: url('../../image/backend/dhtmlxtree/minus3.gif');
+    background-image: url('../../image/backend/dhtmlxtree/minus4.gif');
+    background-image: url('../../image/backend/dhtmlxtree/minus5.gif');
+    background-image: url('../../image/backend/dhtmlxtree/plus.gif');
+    background-image: url('../../image/backend/dhtmlxtree/plus2.gif');
+    background-image: url('../../image/backend/dhtmlxtree/plus3.gif');
+    background-image: url('../../image/backend/dhtmlxtree/plus4.gif');
+    background-image: url('../../image/backend/dhtmlxtree/plus5.gif');
+    background-image: url('../../image/backend/dhtmlxtree/folderOpen.gif');
+    background-image: url('../../image/backend/dhtmlxtree/folderClosed.gif');
+}
+
 .defaultTreeTable{
 			margin : 0px;
 			padding : 0px;
@@ -30,6 +51,7 @@ background-color: #FFFFCC;
   width:100%; font-size:8pt; height:16px; border:1px solid silver; padding:0; margin:0;
   -moz-user-select:  text;   
 }
+
 .dhx_tree_textSign{
    font-size:8pt;
    font-family:monospace;
@@ -40,4 +62,3 @@ background-color: #FFFFCC;
    cursor:pointer;
    text-align: center;
 }
-

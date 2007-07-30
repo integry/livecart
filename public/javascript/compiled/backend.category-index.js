@@ -6755,7 +6755,6 @@ Backend.AjaxNavigationHandler.prototype =
 	{
 		if (true == this.ignoreNextAdd)
 		{
-			//addlog('ignoring ' + element);
 			this.ignoreNextAdd = false;
 			return false;
 		}
@@ -8475,8 +8474,8 @@ ActiveGrid.prototype =
 								{
 								  prefetchBuffer: true, 
 								  onscroll: this.onScroll.bind(this),  
-								  sortAscendImg: 'image/silk/bullet_arrow_up.png',
-						          sortDescendImg: 'image/silk/bullet_arrow_down.png' 
+								  sortAscendImg: $("bullet_arrow_up").src,
+						          sortDescendImg: $("bullet_arrow_down").src 
 								}
 							);	
 							
@@ -26421,73 +26420,6 @@ Backend.RegisterMVC(Backend.ProductFile.Group);
 
 
 /***************************************************
- * library\Debug.js
- ***************************************************/
-
-TimeTrack = Class.create();
-TimeTrack.prototype = 
-{
-  	start: false,
-  	
-	initialize: function()
-  	{
-		this.start = this.dateToSec(new Date());    
-	},
-	
-	track: function(pointName)
-	{
-	  	var curr = this.dateToSec(new Date());
-	 	console.log(pointName + ' - ' + (curr - this.start));
-		this.start = curr; 	
-	},
-	
-	dateToSec: function(dat)
-	{
-		var ret = (dat.getHours() * 3600) + (dat.getMinutes() * 60) + dat.getSeconds() + '.' + dat.getMilliseconds();
-	  	return ret;
-	}
-	
-}
-
-function print_r(input, _indent)
-{
-    if(typeof(_indent) == 'string') {
-        var indent = _indent + '    ';
-        var paren_indent = _indent + '  ';
-    } else {
-        var indent = '    ';
-        var paren_indent = '';
-    }
-    switch(typeof(input)) {
-        case 'boolean':
-            var output = (input ? 'true' : 'false') + "\n";
-            break;
-        case 'object':
-            if ( input===null ) {
-                var output = "null\n";
-                break;
-            }
-            var output = ((input.reverse) ? 'Array' : 'Object') + " (\n";
-            for(var i in input) {
-                output += indent + "[" + i + "] => " + print_r(input[i], indent);
-            }
-            output += paren_indent + ")\n";
-            break;
-        case 'number':
-        case 'string':
-        default:
-            var output = "" + input  + "\n";
-    }
-    return output;
-}
-
-function addlog(info)
-{
-	document.getElementById('log').innerHTML += info + '<br />';
-}
-
-
-/***************************************************
  * library\dhtmlHistory\dhtmlHistory.js
  ***************************************************/
 
@@ -27145,4 +27077,4 @@ window.historyStorage = {
    }   
 };
 
- console.info('All javascript files were glued together successfully in following order:\n  prototype.js\n  effects.js\n  builder.js\n  controls.js\n  slider.js\n  dragdrop.js\n  Backend.js\n  livecart.js\n  KeyboardEvent.js\n  ActiveGrid.js\n  ActiveList.js\n  ActiveForm.js\n  State.js\n  Validator.js\n  dhtmlXCommon.js\n  dhtmlXTree.js\n  TabControl.js\n  ricobase.js\n  ricoLiveGrid.js\n  calendar.js\n  calendar-en.js\n  calendar-setup.js\n  Category.js\n  SpecField.js\n  Filter.js\n  ObjectImage.js\n  Product.js\n  RelatedProduct.js\n  ProductFile.js\n  Debug.js\n  dhtmlHistory.js')
+ console.info('All javascript files were glued together successfully in following order:\n  prototype.js\n  effects.js\n  builder.js\n  controls.js\n  slider.js\n  dragdrop.js\n  Backend.js\n  livecart.js\n  KeyboardEvent.js\n  ActiveGrid.js\n  ActiveList.js\n  ActiveForm.js\n  State.js\n  Validator.js\n  dhtmlXCommon.js\n  dhtmlXTree.js\n  TabControl.js\n  ricobase.js\n  ricoLiveGrid.js\n  calendar.js\n  calendar-en.js\n  calendar-setup.js\n  Category.js\n  SpecField.js\n  Filter.js\n  ObjectImage.js\n  Product.js\n  RelatedProduct.js\n  ProductFile.js\n  dhtmlHistory.js')

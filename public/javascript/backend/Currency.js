@@ -204,7 +204,7 @@ Backend.Currency.prototype =
 		}
 		catch (e)
 		{
-			//addlog(e);
+			console.log(e);
 		}
 	},
 	

@@ -40,7 +40,7 @@ function smarty_function_compiledJs($params, LiveCartSmarty $smarty)
             $compiledFileContent .= "\n\n console.info('All javascript files were glued together successfully in following order:\\n  " 
                                  . implode("\\n  ", $compiledFilesList) 
                                  . "')\n";
-                                 
+                                
             file_put_contents($compiledFilePath, $compiledFileContent);
         }
         

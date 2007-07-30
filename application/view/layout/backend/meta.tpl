@@ -10,8 +10,9 @@
 	{liveCustomization}
 	
 	<!-- Css includes -->
-    {includeCss file="backend/stat.css" inline=true}
-    {includeCss file="backend/Backend.css" inline=true}
+    {includeCss file="../javascript/library/tinymce/themes/advanced/css/editor_ui.css" front=true}
+    {includeCss file="backend/stat.css" front=true}
+    {includeCss file="backend/Backend.css" front=true}
 	{compiledCss glue=true}
 	
     {includeJs file=library/tinymce/tiny_mce_src.js inline=true} 
@@ -20,7 +21,6 @@
     {includeJs file=library/livecart.js front=true}
     {includeJs file="backend/Backend.js" front=true}
     
-    {includeJs file=library/Debug.js}
     {includeJs file=library/dhtmlHistory/dhtmlHistory.js}
     
     {includeJs file="library/scriptaculous/dragdrop.js" front=true}
@@ -84,3 +84,7 @@
     }
 {/literal}
 </script>
+
+<!-- Preload images -->
+{img src="image/silk/bullet_arrow_up.png" style="display: none" id="bullet_arrow_up"}
+{img src="image/silk/bullet_arrow_down.png" style="display: none" id="bullet_arrow_down"}

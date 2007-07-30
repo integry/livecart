@@ -22,7 +22,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
         $baseDir = ClassLoader::getRealPath('public.stylesheet.');
         
         $compiledFileTimestamp = 0;
-        if(!is_file($compiledFileName) || filemtime($compiledFileName) < $includedStylesheetTimestamp)
+        if(!is_file($compiledFilePath) || filemtime($compiledFilePath) < $includedStylesheetTimestamp)
         {
             // compile
             $compiledFileContent = "";
@@ -34,6 +34,8 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
                 
                 $compiledFileContent .= file_get_contents($cssFile);
             }
+            
+            $compiledFileContent = preg_replace('/\.(jpg|png|gif|bmp)/', '.$1?' . time(), $compiledFileContent);
             
             file_put_contents($compiledFilePath, $compiledFileContent);
         }

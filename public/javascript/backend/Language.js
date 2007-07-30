@@ -46,7 +46,6 @@ Backend.LanguageIndex.prototype =
 	
 	renderList: function(data)
 	{
-	  	t = new TimeTrack();
 		var template = $('languageList_template');
 	  	var list = $('languageList');
 

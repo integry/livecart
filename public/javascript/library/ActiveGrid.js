@@ -64,8 +64,8 @@ ActiveGrid.prototype =
 								{
 								  prefetchBuffer: true, 
 								  onscroll: this.onScroll.bind(this),  
-								  sortAscendImg: 'image/silk/bullet_arrow_up.png',
-						          sortDescendImg: 'image/silk/bullet_arrow_down.png' 
+								  sortAscendImg: $("bullet_arrow_up").src,
+						          sortDescendImg: $("bullet_arrow_down").src 
 								}
 							);	
 							

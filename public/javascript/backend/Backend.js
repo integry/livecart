@@ -86,7 +86,6 @@ Backend.AjaxNavigationHandler.prototype =
 	{
 		if (true == this.ignoreNextAdd)
 		{
-			//addlog('ignoring ' + element);
 			this.ignoreNextAdd = false;
 			return false;
 		}
