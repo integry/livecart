@@ -111,8 +111,7 @@ class LiveCart extends Application
             ActiveRecord::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DIRECTORY_SEPARATOR . "activerecord.log");            
         }
 
-		include ClassLoader::getRealPath("storage.configuration.database") . '.php';
-        ActiveRecord::setDSN($dsn);
+        ActiveRecord::setDSN(include ClassLoader::getRealPath("storage.configuration.database") . '.php');
 		
 		$compileDir = $this->isCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
 		ClassLoader::import('framework.renderer.SmartyRenderer');

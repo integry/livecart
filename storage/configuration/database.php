@@ -1,1 +1,1 @@
-<?php $dsn = 'mysql://root@server/livecart_prex'; ?>
+<?php return 'mysql://root@server/livecart_prex'; ?>
