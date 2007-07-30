@@ -12,7 +12,7 @@
 	<!-- Css includes -->
     {includeCss file="backend/stat.css" force=true}
     {includeCss file="backend/Backend.css" force=true}
-	{compiledCss}
+	{compiledCss glue=true}
 	
 
     {includeJs file=library/KeyboardEvent.js front=true}
@@ -25,7 +25,7 @@
     {includeJs file=library/Debug.js}
     {includeJs file=library/dhtmlHistory/dhtmlHistory.js}
 	
-	{compiledJs}
+	{compiledJs glue=true}
 
 	{literal}
 	<script language="javascript" type="text/javascript">
