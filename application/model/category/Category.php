@@ -676,6 +676,41 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
         return parent::serialize(array('defaultImageID', 'parentNodeID'));  
     }
+    
+    public static function getAllTabsCount()
+    {
+        ClassLoader::import('application.model.category.*');
+        ClassLoader::import('application.model.filter.*');
+        ClassLoader::import('application.model.product.*');
+        
+        $allTabsCount = array();
+        foreach(Category::getRecordSet(new ARSelectFilter()) as $category)
+        {
+            $allTabsCount[$category->getID()] = array(
+                'tabProducts' => $category->totalProductCount->get(),
+                'tabFilters' => 0,
+                'tabFields' => 0,
+                'tabImages' => 0
+            );
+        }
+        
+        foreach(SpecField::getRecordSet(new ARSelectFilter()) as $specField)
+        {
+            $allTabsCount[$specField->category->get()->getID()]['tabFields']++;
+        }
+        
+        foreach(CategoryImage::getRecordSet('CategoryImage', new ARSelectFilter()) as $categoryImage)
+        {
+            $allTabsCount[$categoryImage->category->get()->getID()]['tabImages']++;
+        }
+        
+        foreach(FilterGroup::getRecordSet(new ARSelectFilter()) as $filterGroup)
+        {
+            $allTabsCount[$filterGroup->specField->get()->category->get()->getID()]['tabFilters']++;
+        }
+        
+        return $allTabsCount;
+    }
 }
 
 ?>

@@ -19,7 +19,9 @@ class CategoryController extends StoreManagementController
 		$categoryList->unshift(Category::getRootNode());
 		
 		$response = new ActionResponse();
-		$response->set('categoryList', $categoryList->toArray());        
+		$response->set('categoryList', $categoryList->toArray());
+		$response->set('allTabsCount', Category::getAllTabsCount());
+		
 		return $response;
 	}
 

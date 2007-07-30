@@ -44,7 +44,7 @@
 			{{err for="text"}}
 				<label class="wide">{t _text}:</label>
 				{textarea}
-			{/err}	
+			{/err}
 		</p>
 		<p>
 			<label class="wide">{t _more_text}:</label>

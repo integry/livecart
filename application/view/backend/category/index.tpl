@@ -190,6 +190,7 @@
                 
     	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading); 
         Backend.Category.addCategories({json array=$categoryList});
+        CategoryTabControl.prototype.loadCategoryTabsCount({json array=$allTabsCount});
         
     	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
     	Backend.Category.initPage();
@@ -197,6 +198,8 @@
         Backend.Category.loadBookmarkedCategory();
         
         Backend.Category.showControls();
+        
+        
     {rdelim}
     catch(e)
     {ldelim}

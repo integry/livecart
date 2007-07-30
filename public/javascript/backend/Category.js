@@ -633,6 +633,13 @@ CategoryTabControl.prototype = {
 			}
 		}
 	},
+	
+    loadCategoryTabsCount: function(categories) 
+    {
+        $H(categories).each(function(category) {         
+            CategoryTabControl.prototype.tabItemsCounts[category.key] = category.value;
+        });
+    },
     
     updateTabItemsCount: function(categoryID)
     {     

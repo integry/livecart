@@ -15,7 +15,7 @@
     {includeCss file="backend/Backend.css" front=true}
 	{compiledCss glue=true}
 	
-    {includeJs file=library/tinymce/tiny_mce_src.js inline=true} 
+    {includeJs file=library/tinymce/tiny_mce.js inline=true} 
     
     {includeJs file=library/KeyboardEvent.js front=true}
     {includeJs file=library/livecart.js front=true}
@@ -30,7 +30,7 @@
     {includeJs file="library/scriptaculous/effects.js" front=true}
     {includeJs file="library/prototype/prototype.js" front=true}
 	
-	{compiledJs glue=true}
+	{compiledJs }
 
 	{literal}
 	<script language="javascript" type="text/javascript">
