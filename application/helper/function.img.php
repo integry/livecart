@@ -11,10 +11,13 @@
  */
 function smarty_function_img($params, LiveCartSmarty $smarty) 
 {
-    if(isset($params['src']) && substr($params['src'], 0, 6) == 'image/')
+    if(isset($params['src']) && (substr($params['src'], 0, 6) == 'image/' || substr($params['src'], 0, 7) == 'upload/'))
     {
-        $imageTimestamp = filemtime(ClassLoader::getRealPath('public.') . str_replace('/',DIRECTORY_SEPARATOR, $params['src']));
-        $params['src'] .= '?' . $imageTimestamp;
+        if(is_file($params['src']))
+        {
+            $imageTimestamp = filemtime(ClassLoader::getRealPath('public.') . str_replace('/',DIRECTORY_SEPARATOR, $params['src']));
+            $params['src'] .= '?' . $imageTimestamp;
+        }
     }
     
     $content = "\n<img ";

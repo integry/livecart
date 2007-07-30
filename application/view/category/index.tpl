@@ -50,7 +50,6 @@
                 {/if}
                 &nbsp;
             </div>  
-            
             <div style="clear: both;"></div>
         </div>
         </fieldset>

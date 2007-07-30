@@ -25,9 +25,9 @@ ErrorDocument 500 "<h2>Application error</h2>Application failed to start properl
 <IfModule mod_mime.c>
     AddType text/css .css
     AddType text/javascript .js
-    AddType text/jpeg .jpg
-    AddType text/png .png
-    AddType text/gif .gif
+    AddType image/jpeg .jpg
+    AddType image/png .png
+    AddType image/gif .gif
 </IfModule>
 
 <IfModule mod_expires.c>

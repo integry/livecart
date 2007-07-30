@@ -1,6 +1,6 @@
 <ul style="display: none;">
 	<li class="imageTemplate">
-		<img class="image" src="" />
+		{img class="image" src=""}
 		<span class="imageTitle"></span>
 	</li>
 </ul>
