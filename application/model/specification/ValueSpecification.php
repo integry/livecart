@@ -43,7 +43,7 @@ abstract class ValueSpecification extends Specification
 	{
 		unset($array['Product']);
 		unset($array['SpecField']);
-		return MultiLingualObject::transformArray($array, $class);
+		return MultiLingualObject::transformArray($array, $schema);
 	}
 
 	public function toArray()

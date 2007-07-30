@@ -7,6 +7,11 @@
 {includeJs file="library/form/ActiveForm.js"}
 {includeJs file="library/form/State.js"}
 {includeJs file="library/form/Validator.js"}
+{includeJs file="library/dhtmlCalendar/calendar.js"}
+{includeJs file="library/dhtmlCalendar/lang/calendar-en.js"}
+{includeJs file="library/dhtmlCalendar/lang/calendar-`$curLanguageCode`.js"}
+{includeJs file="library/dhtmlCalendar/calendar-setup.js"}
+{includeCss file="library/dhtmlCalendar/calendar-win2k-cold-2.css"}
 
 {pageTitle help="sitenews"}{t _site_news}{/pageTitle}
 
@@ -24,6 +29,11 @@
 
 	{form action="controller=backend.siteNews action=save" method="POST" onsubmit="new Backend.SiteNews.Add(this); return false;" handle=$form id="newsForm"}
 		<input type="hidden" name="id" />
+
+		<p>
+			<label>{t _date}</label>
+			{calendar id="time" name="time"}		
+		</p>
 		<p>
 			{{err for="title"}}
 				<label class="wide">{t _title}:</label>
@@ -92,7 +102,7 @@
 				<br class="clear" />
 				<span class="newsText"></span> 
 			</span>
-						
+											
 		</div>
 		
 		<div class="formContainer"></div>

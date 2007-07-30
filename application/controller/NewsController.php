@@ -8,7 +8,7 @@ class NewsController extends FrontendController
 	{
 //		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
 		$f = new ARSelectFilter();
-		$f->setOrder(new ARFieldHandle('NewsPost', 'position'), 'DESC');
+		$f->setOrder(new ARFieldHandle('NewsPost', 'position'), 'ASC');
 		return new ActionResponse('news', ActiveRecordModel::getRecordSetArray('NewsPost', $f));
 	}	
 }

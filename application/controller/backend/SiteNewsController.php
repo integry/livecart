@@ -87,7 +87,6 @@ class SiteNewsController extends StoreManagementController
     {
 		ClassLoader::import("framework.request.validator.RequestValidator");        
         $validator = new RequestValidator("newspost", $this->request);
-        $validator->addCheck('title', new IsNotEmptyCheck($this->translate('_err_enter_title')));
         $validator->addCheck('text', new IsNotEmptyCheck($this->translate('_err_enter_text')));
      
         return $validator;

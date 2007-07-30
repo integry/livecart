@@ -90,7 +90,33 @@ Backend.SiteNews.PostEntry.prototype =
 		});
 		form.elements.namedItem('id').value = this.data['ID'];
 
+		form.elements.namedItem('time').value = this.data['time'];
 		this.node.down('div.formContainer').appendChild(form);
+
+		// set up calendar field
+		var time = this.node.down('#time');
+		var time_real = this.node.down('#time_real');
+		var time_button = this.node.down('#time_button');
+		
+		time_button.realInput = time_real;
+		time_button.showInput = time;
+		time.realInput = time_real;
+		time.showInput = time;
+
+		time_real.value = this.data['time'];
+		
+		Event.observe(time,        "keyup",     Calendar.updateDate );
+		Event.observe(time,        "blur",      Calendar.updateDate );
+		Event.observe(time_button, "mousedown", Calendar.updateDate );
+		
+		Calendar.setup({
+		    inputField:     time,
+		    inputFieldReal: time_real,    
+		    ifFormat:       "%d-%b-%Y",
+		    button:         time_button,
+		    align:          "BR",
+		    singleClick:    true
+		});
 
 		tinyMCE.idCounter = 0;
 		ActiveForm.prototype.initTinyMceFields(this.node.down('div.formContainer'));
@@ -122,6 +148,7 @@ Backend.SiteNews.PostEntry.prototype =
 	
 	save: function(e)
 	{
+		Element.saveTinyMceFields(this.node);
 		new LiveCart.AjaxRequest(this.node.down('form'), null, this.update.bind(this));		
 		Event.stop(e);
 	},

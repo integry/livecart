@@ -196,7 +196,10 @@ class ProductSpecification
         
         foreach ($productArray['attributes'] as &$attr)
         {
-            $attr['SpecField']['SpecFieldGroup'] = $indexedGroups[$attr['SpecField']['specFieldGroupID']];
+            if ($attr['SpecField']['specFieldGroupID'])
+            {
+				$attr['SpecField']['SpecFieldGroup'] = $indexedGroups[$attr['SpecField']['specFieldGroupID']];				
+			}
         }
     }
 	

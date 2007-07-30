@@ -1,4 +1,4 @@
-{pageTitle}{$category.name_lang}{/pageTitle}
+{pageTitle}{t _news}{/pageTitle}
 {assign var="metaDescription" value=$category.description_lang}
 {assign var="metaKeywords" value=$category.keywords_lang}
 
@@ -15,8 +15,10 @@
 		{foreach from=$news item=entry}
 			<li>
 				<fieldset class="container">
-					<h2 style="float: left;">{$entry.title_lang}</h2>
-					<span style="float: right;">{$entry.formatted_time.date_medium}</span>
+					{if $entry.title_lang}
+						<h2 style="float: left;">{$entry.title_lang}</h2>
+					{/if}
+					<span style="float: right;">{$entry.formatted_time.date_long}</span>
 				</fieldset>
 
 				{$entry.text_lang}
