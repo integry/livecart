@@ -10,20 +10,25 @@
 	{liveCustomization}
 	
 	<!-- Css includes -->
-    {includeCss file="backend/stat.css" force=true}
-    {includeCss file="backend/Backend.css" force=true}
+    {includeCss file="backend/stat.css" inline=true}
+    {includeCss file="backend/Backend.css" inline=true}
 	{compiledCss glue=true}
 	
-
+    {includeJs file=library/tinymce/tiny_mce_src.js inline=true} 
+    
     {includeJs file=library/KeyboardEvent.js front=true}
     {includeJs file=library/livecart.js front=true}
     {includeJs file="backend/Backend.js" front=true}
-    {includeJs file="library/scriptaculous/scriptaculous.js" front=true}
-    {includeJs file="library/prototype/prototype.js" front=true}
-    {includeJs file=library/tinymce/tiny_mce.js front=true} 
     
     {includeJs file=library/Debug.js}
     {includeJs file=library/dhtmlHistory/dhtmlHistory.js}
+    
+    {includeJs file="library/scriptaculous/dragdrop.js" front=true}
+    {includeJs file="library/scriptaculous/slider.js" front=true}
+    {includeJs file="library/scriptaculous/controls.js" front=true}
+    {includeJs file="library/scriptaculous/builder.js" front=true}
+    {includeJs file="library/scriptaculous/effects.js" front=true}
+    {includeJs file="library/prototype/prototype.js" front=true}
 	
 	{compiledJs glue=true}
 

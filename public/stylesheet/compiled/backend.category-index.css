@@ -1,0 +1,1299 @@
+
+
+
+/***************************************************
+ * library\dhtmlCalendar\calendar-win2k-cold-2.css
+ ***************************************************/
+
+/* The main calendar widget.  DIV containing a table. */
+
+.calendar {
+  position: relative;
+  display: none;
+  border-top: 2px solid #fff;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  border-left: 2px solid #fff;
+  font-size: 11px;
+  color: #000;
+  cursor: default;
+  background: #c8d4d0;
+  font-family: tahoma,verdana,sans-serif;
+}
+
+.calendar table {
+  border-top: 1px solid #000;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #000;
+  font-size: 11px;
+  color: #000;
+  cursor: default;
+  background: #c8d4d0;
+  font-family: tahoma,verdana,sans-serif;
+}
+
+/* Header part -- contains navigation buttons and day names. */
+
+.calendar .button { /* "<<", "<", ">", ">>" buttons have this class */
+  text-align: center;
+  padding: 1px;
+  border-top: 1px solid #fff;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #fff;
+}
+
+.calendar .nav {
+  background: transparent url(menuarrow.gif) no-repeat 100% 100%;
+}
+
+.calendar thead .title { /* This holds the current "month, year" */
+  font-weight: bold;
+  padding: 1px;
+  border: 1px solid #000;
+  background: #788480;
+  color: #fff;
+  text-align: center;
+}
+
+.calendar thead .headrow { /* Row <TR> containing navigation buttons */
+}
+
+.calendar thead .daynames { /* Row <TR> containing the day names */
+}
+
+.calendar thead .name { /* Cells <TD> containing the day names */
+  border-bottom: 1px solid #000;
+  padding: 2px;
+  text-align: center;
+  background: #e8f4f0;
+}
+
+.calendar thead .weekend { /* How a weekend day name shows in header */
+  color: #f00;
+}
+
+.calendar thead .hilite { /* How do the buttons in header appear when hover */
+  border-top: 2px solid #fff;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  border-left: 2px solid #fff;
+  padding: 0px;
+  background-color: #d8e4e0;
+}
+
+.calendar thead .active { /* Active (pressed) buttons in header */
+  padding: 2px 0px 0px 2px;
+  border-top: 1px solid #000;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #000;
+  background-color: #b8c4c0;
+}
+
+/* The body part -- contains all the days in month. */
+
+.calendar tbody .day { /* Cells <TD> containing month days dates */
+  width: 2em;
+  text-align: right;
+  padding: 2px 4px 2px 2px;
+}
+.calendar tbody .day.othermonth {
+  font-size: 80%;
+  color: #aaa;
+}
+.calendar tbody .day.othermonth.oweekend {
+  color: #faa;
+}
+
+.calendar table .wn {
+  padding: 2px 3px 2px 2px;
+  border-right: 1px solid #000;
+  background: #e8f4f0;
+}
+
+.calendar tbody .rowhilite td {
+  background: #d8e4e0;
+}
+
+.calendar tbody .rowhilite td.wn {
+  background: #c8d4d0;
+}
+
+.calendar tbody td.hilite { /* Hovered cells <TD> */
+  padding: 1px 3px 1px 1px;
+  border-top: 1px solid #fff;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #fff;
+}
+
+.calendar tbody td.active { /* Active (pressed) cells <TD> */
+  padding: 2px 2px 0px 2px;
+  border-top: 1px solid #000;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #000;
+}
+
+.calendar tbody td.selected { /* Cell showing selected date */
+  font-weight: bold;
+  border-top: 1px solid #000;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #000;
+  padding: 2px 2px 0px 2px;
+  background: #d8e4e0;
+}
+
+.calendar tbody td.weekend { /* Cells showing weekend days */
+  color: #f00;
+}
+
+.calendar tbody td.today { /* Cell showing today date */
+  font-weight: bold;
+  color: #00f;
+}
+
+.calendar tbody .disabled { color: #999; }
+
+.calendar tbody .emptycell { /* Empty cells (the best is to hide them) */
+  visibility: hidden;
+}
+
+.calendar tbody .emptyrow { /* Empty row (some months need less than 6 rows) */
+  display: none;
+}
+
+/* The footer part -- status bar and "Close" button */
+
+.calendar tfoot .footrow { /* The <TR> in footer (only one right now) */
+}
+
+.calendar tfoot .ttip { /* Tooltip (status bar) cell <TD> */
+  background: #e8f4f0;
+  padding: 1px;
+  border: 1px solid #000;
+  background: #788480;
+  color: #fff;
+  text-align: center;
+}
+
+.calendar tfoot .hilite { /* Hover style for buttons in footer */
+  border-top: 1px solid #fff;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #fff;
+  padding: 1px;
+  background: #d8e4e0;
+}
+
+.calendar tfoot .active { /* Active (pressed) style for buttons in footer */
+  padding: 2px 0px 0px 2px;
+  border-top: 1px solid #000;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #000;
+}
+
+/* Combo boxes (menus that display months/years for direct selection) */
+
+.calendar .combo {
+  position: absolute;
+  display: none;
+  width: 4em;
+  top: 0px;
+  left: 0px;
+  cursor: default;
+  border-top: 1px solid #fff;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #fff;
+  background: #d8e4e0;
+  font-size: 90%;
+  padding: 1px;
+  z-index: 100;
+}
+
+.calendar .combo .label,
+.calendar .combo .label-IEfix {
+  text-align: center;
+  padding: 1px;
+}
+
+.calendar .combo .label-IEfix {
+  width: 4em;
+}
+
+.calendar .combo .active {
+  background: #c8d4d0;
+  padding: 0px;
+  border-top: 1px solid #000;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  border-left: 1px solid #000;
+}
+
+.calendar .combo .hilite {
+  background: #048;
+  color: #aef;
+}
+
+.calendar td.time {
+  border-top: 1px solid #000;
+  padding: 1px 0px;
+  text-align: center;
+  background-color: #e8f0f4;
+}
+
+.calendar td.time .hour,
+.calendar td.time .minute,
+.calendar td.time .ampm {
+  padding: 0px 3px 0px 4px;
+  border: 1px solid #889;
+  font-weight: bold;
+  background-color: #fff;
+}
+
+.calendar td.time .ampm {
+  text-align: center;
+}
+
+.calendar td.time .colon {
+  padding: 0px 2px 0px 3px;
+  font-weight: bold;
+}
+
+.calendar td.time span.hilite {
+  border-color: #000;
+  background-color: #667;
+  color: #fff;
+}
+
+.calendar td.time span.active {
+  border-color: #f00;
+  background-color: #000;
+  color: #0f0;
+}
+
+
+
+/***************************************************
+ * library\ActiveList.css
+ ***************************************************/
+
+.activeList_icons
+{
+    width: 90px;
+}
+
+.activeList_icons_container
+{
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+	cursor: pointer;
+	cursor: hand;
+}
+
+ul.activeList
+{
+    list-style: none;
+    position: relative;
+}
+
+
+li.activeList_even, li.activeList_odd
+{
+    list-style: none;
+    margin: 5px 10px;
+    padding: 0;
+}
+
+.activeList_add_sort li {
+  	cursor: move;  	
+}
+
+/*
+ul li.activeList_odd
+{
+    background: #F0F0FF;
+}
+
+ul li.activeList_even
+{
+    background: #EFF4F6;
+}
+*/
+
+li.activeList_even, li.activeList_odd {
+  	border: 2px solid #EEEEEE;
+}
+
+
+/***************************************************
+ * library\ActiveGrid.css
+ ***************************************************/
+
+.activeGrid
+{
+    table-layout: fixed;   
+	width: 100%;  
+}
+
+.activeGrid_loadIndicator
+{
+	position: absolute; 
+	width: 100%; 
+	padding-top: 150px; 
+	text-align: center;
+}
+
+.activeGrid_loadIndicator div
+{
+	background-color: white; 
+	display: inline;
+	padding: 10px; 
+	border: 1px solid black;
+}
+
+.activeGrid td
+{
+    overflow: hidden;
+}
+
+.activeGrid_viewport
+{
+    margin-right: -17px;
+    width: 100%;
+}
+
+.activeGrid_highlight
+{
+  	background: #CCCCCC;
+}
+
+.readonlyGrid .cell_cb
+{
+  	display: none;
+}
+
+.activeGrid .cell_cb
+{
+    padding: 0;
+}
+
+.activeGrid .cell_cb input
+{
+    width: auto;
+    float: none;
+    padding: 0;
+    margin: 0;
+}
+
+.activeGrid th input, .activeGrid th select
+{
+    width: 70%; 
+    font-size: smaller; 
+    font-weight: bold;
+    border: 1px solid #888888;
+    float: left;
+}
+
+.activeGrid th.cellt_numeric input
+{
+    width: 50%;
+}
+
+.activeGrid th select
+{
+	width: 80%;
+}
+
+.activeGrid th 
+{
+	text-align: left;
+}
+
+.activeGrid th img
+{
+	vertical-align: middle;
+}
+
+.activeGrid_filter_blur
+{
+    background-color: #EEEEEE;
+    border: 0;
+}
+
+.activeGrid_filter_select
+{
+	font-weight: normal;	
+}
+
+.activeGrid th, .activeGrid td
+{
+  	height: 23px;
+  	padding: 2px;
+  	white-space: nowrap;
+}
+
+.activeGrid th .fieldName
+{
+	display: none;
+}
+
+.activeGrid th
+{
+	background-color: #DDDDDD;	  
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 0;
+    padding: 3px;
+}
+
+.activeGrid .headRow
+{
+    height: 23px;
+}
+
+.activeGrid select, .activeGrid input
+{
+    margin: 0;
+}
+
+.activeGrid .headRow .cell_cb
+{
+    text-align: center;
+    padding: 0;
+}
+
+.activeGrid .headRow .rangeTo
+{
+    font-weight: normal;
+    font-size: smaller;
+}
+
+.activeGrid th .filterIcon
+{
+    margin-top: 2px;
+    margin-right: 2px;
+    float: left;
+}
+
+.activeGrid th:hover
+{
+    background-color: #E5E5E5;   
+}
+
+/***********************
+    Sort preview icon
+***********************/
+.activeGrid th .sortPreview, .activeGrid th .sortImg
+{
+    position: absolute;
+    right: 5px;
+    margin-top: 2px;
+}
+
+.activeGrid th:hover .sortImg, .activeGrid th .sortPreview
+{
+    display: none;
+}
+
+.activeGrid th:hover .sortPreview
+{
+    display: block;
+}
+
+/***********************
+    Filter menu
+***********************/
+.activeGrid .filterMenuContainer
+{
+    float: left;
+    position: relative;
+    z-index: 65000;
+}
+
+.activeGrid .filterMenu
+{
+    display: none;
+    position: absolute; 
+    margin-top: 18px;
+    margin-left: -20px;
+    left: 0;
+    z-index: 50000;
+
+    border: 1px solid black; 
+    background-color: white;
+    padding: 5px;
+}
+
+.activeGrid .filterMenuContainer:hover .filterMenu, .filterMenu:hover
+{
+    display: block;
+}
+
+.activeGrid th .filterMenu li
+{
+    padding: 5px;    
+    list-style-type: none;
+    font-weight: normal;
+    padding-right: 25px;
+}
+
+.activeGrid th .filterMenu li:hover
+{
+    background-color: #eee;
+}
+
+.activeGrid th .filterMenu span.sign
+{
+    float: left;
+    width: 22px;
+    font-weight: bold;
+}
+
+/***********************
+    Range filter
+***********************/
+.activeGrid th .rangeFilter
+{
+    white-space: nowrap; 
+    float: left;
+}
+
+.activeGrid th .rangeFilter input
+{
+    width: 30px;    
+    font-weight: normal;
+}
+
+.activeGrid th .rangeFilter input, .activeGrid th .rangeFilter span
+{
+    float: left;   
+}
+
+.activeGrid th .rangeFilter .rangeTo
+{
+	padding: 2px;
+	padding-top: 6px;
+}
+
+
+/***************************************************
+ * backend\Category.css
+ ***************************************************/
+
+
+#categoryBrowser {
+
+}
+
+
+/***************************************************
+ * backend\Product.css
+ ***************************************************/
+
+#productManagerContainer span.tabCounter
+{
+    margin-left: 6px;
+}
+
+.doneProduct
+{
+    float: left;
+    margin-bottom: 8px !important;
+}
+
+#productPage
+{
+	padding-right: 22px;
+	background-image: url(../../image/silk/gif/resultset_next.gif);
+	background-position: center right;
+	background-repeat: no-repeat;    
+	float: right;
+}
+
+/*************************
+	Product form
+*************************/
+fieldset.specification
+{
+  	margin-top: 10px;
+}
+
+fieldset.specification .numeric
+{
+ 	width: 100px; 
+}
+
+.multiValueSelect p.selectMenu
+{
+	clear: both; 	 	
+	margin-bottom: 10px;
+	font-size: smaller;
+}
+
+.multiValueSelect label
+{
+
+}
+
+.multiValueSelect div.other label
+{
+  	width: auto;
+  	margin-right: 10px;        
+}
+
+.multiValueSelect div.other input, input.other
+{
+  	width: 400px;
+}
+
+.productForm.intangible .shipping, .productForm.intangible .inventory
+{
+    display: none;
+}
+
+/*************************
+	Product list
+*************************/
+.productsList
+{
+  	width: 100%;
+}
+
+.cell_cb
+{
+	width: 4% !important;  
+	text-align: center !important;
+}
+
+.cell_cb input
+{
+	float: none;
+	margin-right: 0;
+	width: auto;
+}
+
+.headRow .cell_cb span
+{
+	display: none;
+}
+
+.cellt_numeric, .cellt_bool
+{
+	width: 10%;
+	text-align: center;
+}
+
+.cell_Product_sku
+{
+	width: 10% !important;  
+}
+
+.cell_Product_name
+{
+	width: 38% !important;  
+}
+
+.cell_Manufacturer_name
+{
+	width: 15% !important;  
+}
+
+.cell_ProductPrice_price
+{
+	width: 13% !important;  
+	text-align: center;
+}
+
+.cell_Product_stockCount
+{
+	width: 10% !important;  
+	text-align: center;
+}
+
+.cell_Product_isEnabled
+{
+	width: 10% !important;   
+	text-align: center;
+}
+
+.lowStock
+{
+  	color: red;
+}
+
+.notEnabled
+{
+/*  	color: red;*/
+}
+
+
+/***************************************************
+ * backend\SpecField.css
+ ***************************************************/
+
+.specField legend, .specField_step_values, .specField_language_translation, .specField_group_language_translation {
+    display: none;
+    
+}
+
+.specField_step_lev1 {
+    background: white;
+}
+
+.specField .specField_step_translations_language legend {
+    cursor: pointer;
+    cursor: hand;
+    display: block;
+}
+
+.specField fieldset {
+    margin-right: 1em;
+}
+
+.specField_group_controls, .specField_group_translations {
+    background: #fff;
+}
+
+.specField_group_title {
+    font-size: 300%;
+    color: grey;
+    font-weight: bold;
+}
+
+.specFieldGroup_translations {
+    display: none;
+}
+
+.specField_title {
+    font-size: 200%;
+}
+
+.specField_group_title input {
+    width: 200px;
+    display: none;
+}
+
+.specField_new_group .specField_group_title input {
+    display: block;
+}
+
+
+.specFieldList .activeList_container {
+    padding-left: 80px;
+}
+
+.specFieldList li, .specFieldListGroup li {
+    padding: 5px;
+    margin-bottom: 10px;
+    background-color: #F7F7F7;  	
+}
+
+.specFieldList li li {
+    width: 100%;
+}
+
+.specFieldList {
+  	padding-bottom: 1em;
+  	padding-top: 1em;
+}
+
+.specField_form_values_group div input.specField_valueName, input.specField_update {
+    width: 30em;
+}
+
+.specField_language_link {
+    display: inline;
+    padding: 0 5px;
+}
+
+.specField_change_state {
+    padding: 0 5px;
+}
+
+.specField .specField_step_translations_language {
+    background: #ddd;
+}
+
+.specField_form_values_value .specField_form_values_default_checkbox {
+    width: auto;
+}
+
+.specField_mergeValuesLink
+{
+    display: block;
+    float: left;
+    margin-bottom: 10px;
+}
+
+.specField .specField_mergeCheckbox 
+{
+   float: none;
+}
+
+.specField_controls {
+    padding-left: 2em;
+}
+
+.specField_valueMergedLooser
+{
+    background-color: #FF8990 ! important;
+}
+
+.specField_valueMergedWinner
+{
+    background-color: #BBE5C1 ! important;
+}
+
+.specField_save {
+    margin: 0;
+}
+
+.specField_add_field {
+    white-space: nowrap;
+    margin-left: 56px;
+    color: red;
+}
+
+.specField_values_controls
+{
+    margin-bottom: 2em ! important;
+}
+
+.specField_values {
+    width: auto !important;
+    padding-bottom: 0px !important;
+    padding-left: 0px !important;
+}
+
+h2.specField_values_title {
+   width: 7em ! important;
+}
+
+.specFieldListGroup > li {
+	border: 2px solid grey;  
+}
+
+.specField_step_translations, .specField_step_values_translations {
+    margin-top: 20px;
+}
+
+/* START Values active list */
+fieldset.specField_step_values  .activeList_icons {
+    width: 77px;
+}
+
+fieldset.group h2 {
+    font-size: 1em;
+    font-weight: normal;
+}
+/* END Values active list */
+
+.specField ul {
+    list-style: none;
+}
+
+.specField_step_translations_language_active {
+    background: yellow;
+    padding: 5px;
+}
+
+/* IE */
+.specField_step_translations_language {
+    position: relative;
+}
+
+
+/***************************************************
+ * backend\ProductRelationship.css
+ ***************************************************/
+
+.productRelationshipGroup_title {
+    color: grey;
+    font-size: 300%;
+    font-weight: bold;
+}
+
+li.productRelationshipGroup_item {
+    border: 2px solid grey;
+    margin-bottom: 0.5em;   
+}
+
+li.productRelationshipGroup_item li {
+ 	margin-top: 0.5em;
+}
+
+.productRelationship_title {
+    font-size: 1.5em; 
+    font-weight: bold;
+    float: left;
+}
+
+.productRelationship_image
+{
+    width: 80px;
+    float: left;
+    text-align: center;
+}
+
+.productRelationship_list {
+    padding-bottom: 1em;
+}
+
+.productRelationship_list .activeList_icons 
+{
+    float: left;
+    width: 50px;
+}
+
+.productRelationship_list li
+{
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+
+/***************************************************
+ * backend\ProductFile.css
+ ***************************************************/
+
+.productFile_main
+{
+    border: 0;
+}
+
+.productFileGroup_title {
+    color: grey;
+    font-size:300%;
+    font-weight:bold;
+}
+
+li.productFileGroup_item {
+    border: 2px solid grey;
+    margin-bottom: 1em;   
+}
+
+li.productFileGroup_item li {
+ 	margin-top: 0.5em;
+}
+
+.productFile_item_title {
+    font-size: 1.5em; 
+    font-weight: bold;
+}
+
+.productFile_list {
+    padding-bottom: 1em;
+}
+
+.productFile_download_link {
+margin-left: 2em;
+}
+
+.productFile_fileName_div
+{
+    padding: 0 !important;
+}
+
+
+/***************************************************
+ * backend\Filter.css
+ ***************************************************/
+
+.filterList li
+{
+ 	padding: 5px;
+	margin-bottom: 10px; 
+  	background-color: #F7F7F7;  		
+}
+
+.filterList li.filtergroup_has_no_filters
+{
+  	background-color: #F7E0E0;  		
+}
+
+.filter_item_new {
+/*    margin-top: -25px; */
+}
+
+.filter_step_lev1 {
+    background: #fff;
+}
+
+.filter_range input
+{
+    width: 3em;
+}
+
+.filter_date_range input
+{
+    width: 6em;
+}
+
+.filter_step_main p {
+    position: relative;
+}
+
+.filter_step_filters li input
+{
+   margin: 0px;
+}
+
+.filter legend, 
+.filter_date_range
+{
+	display: none;
+}
+.filter .filter_step_translations_language
+{
+    background: #ccc;
+}
+
+.filter_step_translations
+{
+    margin-top: 20px !important;
+}
+
+.filter_step_translations_language legend
+{
+    display: block;
+    cursor: pointer;
+	cursor: hand;
+}
+
+.filter_step_filters li label
+{ 
+    cursor: default;
+}
+
+.filter_step_filters li p
+{
+   padding: 1px;
+   margin: 1px;
+}
+
+.filter_title, .filter_count
+{
+   font-size: 200%;
+}
+
+.filter ul
+{
+    list-style: none;
+}
+
+.filter_step_filters_translations li
+{
+   padding: 4px;
+}
+
+.filter_crate_filters a
+{
+   padding: 2px 10px;
+}
+
+.filter_form_specFieldText {
+    font-size: 16px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* IE */
+.filter_step_translations_language
+{
+    position: relative;
+}
+
+.filter_range .errorText, filter_date_range .errorText {
+    margin-left: 11em;
+}
+
+
+
+
+/***************************************************
+ * backend\CategoryImage.css
+ ***************************************************/
+
+.catImageList, .prodImageList 
+{
+  	width: 600px;
+}
+
+.catImageList li, .prodImageList li 
+{
+	padding: 5px;
+	margin-bottom: 10px; 
+  	background-color: #F7F7F7;  		
+}
+
+.catImageTemplate img, .prodImageTemplate img 
+{
+  	vertical-align: top;	  
+}
+
+.catImageEditForm iframe, .prodImageEditForm iframe
+{
+/*    display: none; */
+}
+
+.catImageEditContainer, .prodImageEditContainer 
+{
+  	margin-top: 10px;
+  	padding-left: 60px;
+}
+
+.imageTitle 
+{
+  	font-weight: bold;
+  	font-size: larger;
+	margin-left: 10px;
+	margin-top: 10px;  	
+}
+
+img.image 
+{
+    cursor: pointer;
+}
+
+.activeList_editContainer fieldset.container  
+{
+    padding: 10px;   
+}
+    
+.activeList_editContainer .container legend 
+{
+    display: none;
+}
+
+.activeList_editContainer .container fieldset legend 
+{
+    display: block;
+}
+
+.activeList_editContainer div.translations 
+{
+    margin-top: 20px;    
+}
+
+p.main, p.supplemental
+{
+    margin: 0;
+    padding: 0;
+    padding-bottom: 10px;
+    font-weight: bold;
+}
+
+div.translations 
+{
+	margin-top: 20px;
+}
+
+
+/***************************************************
+ * library\TabControl.css
+ ***************************************************/
+
+.managerContainer {
+	position: relative;
+}
+
+/* Category manager styling */
+.tabContainer ul.tabList
+{
+	list-style: none;
+	margin:0px;
+	padding: 0px;
+	height: 25px;
+	padding-top: 8px;
+}
+
+.tabContainer ul.tabList li
+{
+	margin-right: 2px;	
+	display: inline;
+}
+
+.tabContainer ul li.inactive, .tabContainer ul li.active, .tabContainer ul li.hover
+{
+	padding: 5px 15px 5px 15px;
+	border: 1px solid #ccc;
+	border-bottom: 0px;
+}
+.tabContainer ul li.active
+{
+	padding: 7px 17px 7px 17px;
+	background-color: #fff;
+	border-top: 2px solid red;
+}
+.tabContainer ul li.hover
+{
+	border-top: 2px solid red;
+}
+.tabContainer ul li.hover, .tabContainer ul li.inactive
+{
+	height: 15px;
+	background-color: #f5f5f5;
+}
+
+.sectionContainer
+{
+	padding: 20px 10px 10px 10px; 
+	border: 1px solid #b3d4ef;
+	background-color: #f5f5f5;
+}
+
+
+/***************************************************
+ * library\dhtmlxtree\dhtmlXTree.css
+ ***************************************************/
+
+.defaultTreeTable{
+			margin : 0px;
+			padding : 0px;
+			border : 0px;
+}
+.containerTableStyle { overflow : auto; position:relative; top:0; font-size : 12px;}
+.containerTableStyleRTL span { direction: rtl; unicode-bidi: bidi-override;  }
+.containerTableStyleRTL { direction: rtl; overflow : auto; position:relative; top:0; font-size : 12px;}
+.standartTreeRow{	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif; 	font-size : 12px; -moz-user-select: none;  }
+.selectedTreeRow{ background-color : navy; color:white; font-family : Verdana, Geneva, Arial, Helvetica, sans-serif; 		font-size : 12px;  -moz-user-select: none; }
+.standartTreeRow_lor{	text-decoration:underline; background-color : #FFFFF0; font-family : Verdana, Geneva, Arial, Helvetica, sans-serif; 	font-size : 12px; -moz-user-select: none; }
+.selectedTreeRow_lor{   text-decoration:underline; background-color : navy; color:white; font-family : Verdana, Geneva, Arial, Helvetica, sans-serif; 		font-size : 12px;  -moz-user-select: none; }
+
+.standartTreeImage{ width:18px; height:18px;  overflow:hidden; border:0; padding:0; margin:0; }
+.hiddenRow { width:1px;   overflow:hidden;  }
+.dragSpanDiv{ 	font-size : 12px; 	border: 1px gray solid; background-color:white; }
+.selectionBox{
+background-color: #FFFFCC;
+}
+.selectionBar {
+	top:0;
+	background-color: Black;
+	position:absolute;
+	overflow:hidden;
+	height: 2px;
+	z-index : 11;
+}
+
+.intreeeditRow{
+  width:100%; font-size:8pt; height:16px; border:1px solid silver; padding:0; margin:0;
+  -moz-user-select:  text;   
+}
+.dhx_tree_textSign{
+   font-size:8pt;
+   font-family:monospace;
+   width:21px;
+   color:black;
+   padding:0px;
+   margin:0px;
+   cursor:pointer;
+   text-align: center;
+}
+
