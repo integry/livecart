@@ -10,6 +10,16 @@ ClassLoader::import("library.json.json");
  */
 abstract class BackendController extends BaseController
 {
+    public function __construct(LiveCart $application)
+    {
+        if ($application->getConfig()->get('SSL_BACKEND'))
+        {
+            $application->getRouter()->setSslAction('');
+        }
+
+        parent::__construct($application);
+    }
+    
     public function init()
 	{
 	  	$this->setLayout('empty');

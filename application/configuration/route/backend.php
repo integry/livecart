@@ -31,9 +31,24 @@ $routes = array(
 
 					// product pages
                     array(":producthandle.:id", array('controller' => 'product', 'action' => 'index'), array("producthandle" => "[-A-Za-z0-9]+","id" => "[0-9]+")),
-                    
-                    
   			   );
+
+
+// SSL
+if ($this->config->get('SSL_PAYMENT'))
+{
+    $this->router->setSslAction('checkout', 'pay');
+}
+
+if ($this->config->get('SSL_CHECKOUT'))
+{
+    $this->router->setSslAction('checkout');
+}
+
+if ($this->config->get('SSL_CUSTOMER'))
+{
+    $this->router->setSslAction('user');
+}
 
 foreach ($routes as $route)
 {

@@ -1,10 +1,12 @@
 syntax: regexp
-^cache$
-^\.cache$
-^\.project$
 ^storage\/(?!configuration)(.*)
-Thumbs.db
-update\.bat
 
 syntax: glob
+.cache
+.project
+cache
+public/javascript/compiled/*.*
+public/stylesheet/compiled/*.*
 storage/configuration/settings.php
+Thumbs.db
+update.bat
