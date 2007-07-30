@@ -30,7 +30,7 @@
     {includeJs file="library/scriptaculous/effects.js" front=true}
     {includeJs file="library/prototype/prototype.js" front=true}
 	
-	{compiledJs }
+	{compiledJs glue=true}
 
 	{literal}
 	<script language="javascript" type="text/javascript">

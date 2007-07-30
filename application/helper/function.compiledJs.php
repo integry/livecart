@@ -18,12 +18,14 @@ function smarty_function_compiledJs($params, LiveCartSmarty $smarty)
     {
         $request = $smarty->getApplication()->getRequest();
         $compiledFileName = $request->getControllerName() . '-' . $request->getActionName() . '.js';
-        $compiledFilePath = ClassLoader::getRealPath('public.javascript.compiled.') .  $compiledFileName;
+        $compiledFilePath = ClassLoader::getRealPath('public.cache.javascript.') .  $compiledFileName;
         $baseDir = ClassLoader::getRealPath('public.javascript.');
         
         $compiledFileTimestamp = 0;
         if(!is_file($compiledFilePath) || filemtime($compiledFilePath) < $includedJavascriptTimestamp)
         {
+            if(!is_dir(ClassLoader::getRealPath('public.cache.javascript'))) mkdir(ClassLoader::getRealPath('public.cache.javascript'), 0777, true);
+            
             // compile
             $compiledFileContent = "";
             $compiledFilesList = array();
@@ -46,7 +48,7 @@ function smarty_function_compiledJs($params, LiveCartSmarty $smarty)
         
         $compiledFileTimestamp = filemtime($compiledFilePath);
         
-        return '<script src="javascript/compiled/' . $compiledFileName . '?' . $compiledFileTimestamp . '" type="text/javascript"></script>';
+        return '<script src="cache/javascript/' . $compiledFileName . '?' . $compiledFileTimestamp . '" type="text/javascript"></script>';
     }
     else
     {

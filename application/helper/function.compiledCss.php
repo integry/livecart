@@ -18,12 +18,14 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
     {
         $request = $smarty->getApplication()->getRequest();
         $compiledFileName = $request->getControllerName() . '-' . $request->getActionName() . '.css';
-        $compiledFilePath = ClassLoader::getRealPath('public.stylesheet.compiled.') .  $compiledFileName;
+        $compiledFilePath = ClassLoader::getRealPath('public.cache.stylesheet.') .  $compiledFileName;
         $baseDir = ClassLoader::getRealPath('public.stylesheet.');
         
         $compiledFileTimestamp = 0;
         if(!is_file($compiledFilePath) || filemtime($compiledFilePath) < $includedStylesheetTimestamp)
         {
+            if(!is_dir(ClassLoader::getRealPath('public.cache.stylesheet'))) mkdir(ClassLoader::getRealPath('public.cache.stylesheet'), 0777, true);
+            
             // compile
             $compiledFileContent = "";
             foreach($includedStylesheetFiles as $cssFile)
@@ -41,7 +43,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
         }
         $compiledFileTimestamp = filemtime($compiledFilePath);
         
-        return '<link href="stylesheet/compiled/' . $compiledFileName . '?' . $compiledFileTimestamp . '" media="screen" rel="Stylesheet" type="text/css"/>';
+        return '<link href="cache/stylesheet/' . $compiledFileName . '?' . $compiledFileTimestamp . '" media="screen" rel="Stylesheet" type="text/css"/>';
     }
     else
     {
