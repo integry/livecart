@@ -14,7 +14,7 @@ function smarty_function_compiledJs($params, LiveCartSmarty $smarty)
     $includedJavascriptTimestamp = $smarty->get_template_vars("INCLUDED_JAVASCRIPT_TIMESTAMP");
     $includedJavascriptFiles = $smarty->get_template_vars("INCLUDED_JAVASCRIPT_FILES");
     
-    if(isset($params['glue']) && $params['glue'] == 'true')
+    if(isset($params['glue']) && $params['glue'] == 'true' && !$smarty->getApplication()->isDevMode())
     {
         $request = $smarty->getApplication()->getRequest();
         $compiledFileName = $request->getControllerName() . '-' . $request->getActionName() . '.js';

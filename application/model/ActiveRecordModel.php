@@ -5,10 +5,6 @@ ClassLoader::import("application.model.*");
 
 ActiveRecord::$creolePath = ClassLoader::getRealPath("library");
 
-include ClassLoader::getRealPath("storage.configuration.database") . '.php';
-ActiveRecord::setDSN($GLOBALS['dsn']);
-ActiveRecord::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DIRECTORY_SEPARATOR . "activerecord.log");
-
 /**
  * Base class for all ActiveRecord based models of application (single entry point in
  * application specific model class hierarchy)

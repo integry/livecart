@@ -63,6 +63,18 @@ class LiveCart extends Application
 	
 	private $currencySet;
 	
+	/**
+	 *  Determines if the application is running in development mode
+	 *
+	 *  The development mode has the following changes:
+     *    * SQL query logger is turned on (/cache/activerecord.log) 
+     *    * JavaScript and CSS stylesheet files are unbundled (slower to download, but allows debugging)
+     *
+     *  The development mode can be turned on by creating a file named "dev" in the /cache directory.
+     *  It can be turned off by simply deleting the "dev" file.
+	 */
+    private $isDevMode;
+	
 	const EXCLUDE_DEFAULT_CURRENCY = false;
 
 	const INCLUDE_DEFAULT = true;	
@@ -89,10 +101,33 @@ class LiveCart extends Application
 		ClassLoader::import('application.model.ActiveRecordModel');
 		ActiveRecordModel::setApplicationInstance($this);
 		
+		if (file_exists(ClassLoader::getRealPath("cache.dev")))
+		{
+            $this->setDevMode(true);
+        }
+        
+        if ($this->isDevMode())
+        {
+            ActiveRecord::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DIRECTORY_SEPARATOR . "activerecord.log");            
+        }
+
+		include ClassLoader::getRealPath("storage.configuration.database") . '.php';
+        ActiveRecord::setDSN($dsn);
+		
 		$compileDir = $this->isCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
 		ClassLoader::import('framework.renderer.SmartyRenderer');
         SmartyRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
 	}
+	
+    public function setDevMode($devMode = true)
+    {
+        $this->isDevMode = $devMode;
+    }	
+
+    public function isDevMode()
+    {
+        return $this->isDevMode;
+    }	
 	
 	/**
 	 * Registers a new plugin directory (multiple plugin directories are supported)
@@ -695,7 +730,6 @@ class LiveCart extends Application
 		$this->config = new Config($this);
 		return $this->config;
 	}
-
 }
 
 ?>
