@@ -1,6 +1,6 @@
 {form action="controller=backend.currency action=save query=id=`$id`" onsubmit="Backend.Currency.prototype.saveFormat(this); return false;" handle=$form role="currency.update"}
 
-<fieldset style="width: 80%; margin-top: 15px;">
+<fieldset class="currencyPriceFormatting">
 
     <legend>{t Price Formatting}</legend>
 

@@ -17,21 +17,21 @@ $routes = array(
 					
                     // static pages
                     array(":handle.html", array('controller' => 'staticPage', 'action' => 'view'), array("handle" => "[a-zA-Z0-9\.]+")),
-
+                    
 					// default rules
-                    array(":controller", array("action" => "index"), array()),
-					array(":controller/:id", array("action" => "index"), array("id" => "-?[0-9]+")),
-					array(":controller/:action", array(), array()),
-					array(":controller/:action/:id", array(), array("id" => "-?[0-9]+")),
-					array(":controller/:action/:mode/:id", array(), array("id" => "[0-9]+", "mode" => "create|modify")),
+                    array(":controller", array("action" => "index"), array()),               
+                    array(":controller/:id", array("action" => "index"), array("id" => "-?[0-9]+")),				
+                    array(":controller/:action", array(), array()),			
+                    array(":controller/:action/:id", array(), array("id" => "-?[0-9]+")),			
+                    array(":controller/:action/:mode/:id", array(), array("id" => "[0-9]+", "mode" => "create|modify")),
 
 					// special case for passing a language code as an ID
 					array(":controller/:action/:id", array(), array('id' => "[a-zA-Z]{2}")),
 					array(":controller/:action/:id", array(), array("id" => "_id_")),
 
 					// product pages
-                    array(":producthandle.:id", array('controller' => 'product', 'action' => 'index'), array("producthandle" => "[-A-Za-z0-9]+","id" => "[0-9]+")),
-  			   );
+                    array(":producthandle.:id", array('controller' => 'product', 'action' => 'index'), array("producthandle" => "[-A-Za-z0-9]+","id" => "[0-9]+")), 
+                );
 
 
 // SSL

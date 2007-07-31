@@ -1,5 +1,3 @@
-{includeCss file="form.css"}
-
 {assign var="action" value="create"}
 {form id="categoryForm_$categoryId" handle=$catalogForm action="controller=backend.category action=update id=$categoryId" method="post" onsubmit="Backend.Category.updateBranch(this); return false;" role="category.update"}
 	<fieldset class="container">
@@ -20,7 +18,7 @@
 		
 		<p>
 			<label for="keywords_{$categoryId}">{t _keywords}:</label>
-			{textarea name="keywords" id="keywords_$categoryId" style="height: 3em;"}
+			{textarea name="keywords" id="keywords_$categoryId" class="categoryKeywords"}
 		</p>
 
 		{language}
@@ -34,7 +32,7 @@
 			</p>
 			<p>
 				<label>{t _keywords}:</label>
-				{textarea name="keywords_`$lang.ID`" style="height: 3em;"}
+				{textarea name="keywords_`$lang.ID`" class="categoryKeywords"}
 			</p>
 		{/language}
 
