@@ -50,7 +50,7 @@ function smarty_function_compiledJs($params, LiveCartSmarty $smarty)
         
         return '<script src="cache/javascript/' . $compiledFileName . '?' . $compiledFileTimestamp . '" type="text/javascript"></script>';
     }
-    else
+    else if ($includedJavascriptFiles)
     {
         $includeString = "";
         $publicPath = ClassLoader::getRealPath('public.');

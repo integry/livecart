@@ -29,11 +29,11 @@
     {includeCss file="custom/Custom.css"}
 
 	{* {includeCss file="backend/stat.css"} *}
-	{$STYLESHEET}
+	{compiledCss}
 
 	<!-- JavaScript includes -->
     {* <script type="text/javascript" src="firebug/firebug.js"></script> *}
-	{$JAVASCRIPT}
+	{compiledJs}
 </head>
 
 <body>

@@ -116,3 +116,10 @@ revision = tip
 
 [tree17.paths]
 default = ssh://mercurial@dev.integry.net/vendor/json
+
+[tree18]
+root = library/payment/method/library/paypal/phppaypalpro
+revision = tip
+
+[tree18.paths]
+default = ssh://mercurial@dev.integry.net/vendor/phppaypalpro

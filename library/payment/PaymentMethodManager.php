@@ -7,6 +7,11 @@ class PaymentMethodManager
 		return self::getPaymentHandlerList(dirname(__FILE__) . '/method/cc');
 	}
 	
+	public function getExpressPaymentHandlerList()
+	{
+		return self::getPaymentHandlerList(dirname(__FILE__) . '/method/express');
+	}
+	
 	private function getPaymentHandlerList($dir)
 	{
 		$ret = array();
@@ -15,7 +20,7 @@ class PaymentMethodManager
 		{
 			if (substr($method->getFileName(), 0, 1) != '.')
 			{
-				$ret[] = $method->getFileName();
+				$ret[] = basename($method->getFileName(), '.php');
 			}
 		}
 		

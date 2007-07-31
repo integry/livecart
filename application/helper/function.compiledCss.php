@@ -45,7 +45,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
         
         return '<link href="cache/stylesheet/' . $compiledFileName . '?' . $compiledFileTimestamp . '" media="screen" rel="Stylesheet" type="text/css"/>';
     }
-    else
+    else if ($includedStylesheetFiles)
     {
         $includeString = "";
         $publicPath = ClassLoader::getRealPath('public.');

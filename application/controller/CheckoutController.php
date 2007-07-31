@@ -2,6 +2,7 @@
 
 ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.Currency');
+ClassLoader::import('application.model.order.LiveCartTransaction');
 
 /**
  *  Handles order checkout process
@@ -100,6 +101,32 @@ class CheckoutController extends FrontendController
         {
             return new ActionRedirectResponse('user', 'checkout');
         }
+    }
+    
+    /**
+     *  Redirect to an external site to acquire customer information and initiate payment (express checkout)
+     */
+    public function express()
+    {        
+        // redirect to external site
+        $class = $this->request->get('id');
+
+        $handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
+        
+        $returnUrl = $this->router->createUrl(array('controller' => 'checkout', 'action' => 'expressReturn', 'id' => $class));
+        $cancelUrl = $this->router->createUrl(array('controller' => 'checkout', 'action' => 'expressCancel', 'id' => $class));
+                
+        $handler->redirect($returnUrl, $cancelUrl);
+
+    }
+    
+    public function expressReturn()
+    {
+        $class = $this->request->get('id');
+
+        $handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
+        $handler->getDetails($this->request->toArray());
+        
     }
     
     /**
@@ -370,8 +397,6 @@ class CheckoutController extends FrontendController
      */       
     public function payCreditCard()
 	{
-        ClassLoader::import('application.model.order.*');        
-
         if ($redirect = $this->validateOrder($this->order, self::STEP_PAYMENT))
         {
 			return $redirect;
@@ -390,13 +415,8 @@ class CheckoutController extends FrontendController
         
         ActiveRecordModel::beginTransaction();
         
-        $currency = Currency::getValidInstanceById($this->getRequestCurrency());
-        
-        // set up transaction details
-        $transaction = new LiveCartTransaction($this->order, $currency);
-        
         // process payment
-        $handler = $this->application->getCreditCardHandler($transaction);
+        $handler = $this->application->getCreditCardHandler($this->getTransaction());
         if ($this->request->isValueSet('ccType'))
         {
             $handler->setCardType($this->request->get('ccType'));
@@ -416,7 +436,7 @@ class CheckoutController extends FrontendController
         if ($result instanceof TransactionResult)
         {
             $this->order->isPaid->set(true);
-            $newOrder = $this->order->finalize($currency);
+            $newOrder = $this->order->finalize(Currency::getValidInstanceById($this->getRequestCurrency()));
 			            
             $this->session->set('completedOrderID', $this->order->getID());          
             
@@ -467,6 +487,11 @@ class CheckoutController extends FrontendController
 
 		return new ActionResponse();
 	}
+    
+    private function getTransaction()
+    {   
+        return new LiveCartTransaction($this->order, Currency::getValidInstanceById($this->getRequestCurrency()));
+    }
     
     /******************************* VALIDATION **********************************/
     

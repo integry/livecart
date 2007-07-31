@@ -609,13 +609,41 @@ class LiveCart extends Application
 	}
 
 	/**
+	 * Returns an array of available credit card handlers
+	 */
+	public function getExpressPaymentHandlerList($enabledOnly = false)
+	{
+		ClassLoader::import('library.payment.PaymentMethodManager');		
+		if (!$enabledOnly)
+		{
+            return PaymentMethodManager::getExpressPaymentHandlerList();
+        }
+        else
+        {
+            return array_keys($this->config->get('EXPRESS_HANDLERS'));
+        }
+	}
+
+    public function getExpressPaymentHandler($handlerName, TransactionDetails $details = null)
+    {
+        if (!in_array($handlerName, $this->getExpressPaymentHandlerList(true)))
+        {
+            throw new Exception('Invalid express checkout handler');
+        }
+        
+		ClassLoader::import('library.payment.method.express.' . $handlerName);
+		
+		return $this->getPaymentHandler($handlerName, $details);
+    }
+
+	/**
 	 * Returns an instance of the selected credit card handler
 	 */
 	public function getCreditCardHandler(TransactionDetails $details = null)
 	{
 		$handler = $this->config->get('CC_HANDLER');
 		
-		ClassLoader::import('library.payment.method.cc.' . $handler . '.' . $handler);
+		ClassLoader::import('library.payment.method.cc.' . $handler);
 
 		return $this->getPaymentHandler($handler, $details);
 	}
@@ -624,7 +652,7 @@ class LiveCart extends Application
     {
         if (!class_exists($className, false))
         {
-            ClassLoader::import('library.payment.method.' . $className . '.' . $className); 
+            ClassLoader::import('library.payment.method.' . $className); 
         }   
 
 		if (is_null($details))

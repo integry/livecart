@@ -622,7 +622,7 @@ class CustomerOrder extends ActiveRecordModel
 	{
         ClassLoader::import("application.model.delivery.DeliveryZone");
         
-        if ($this->isShippingRequired())
+        if ($this->isShippingRequired() && $this->shippingAddress->get())
         {
             return DeliveryZone::getZoneByAddress($this->shippingAddress->get()); 
         }

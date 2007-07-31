@@ -1,11 +1,77 @@
 <?php
 
-include_once(dirname(__file__) . '/../../../abstract/CreditCardPayment.php');
-include_once(dirname(__file__) . '/../../../method/library/paypal/PaypalCommon.php');
+include_once(dirname(__file__) . '/../../abstract/ExpressPayment.php');
+include_once(dirname(__file__) . '/../../method/library/paypal/PaypalCommon.php');
 
-class PaypalDirectPayment extends CreditCardPayment
+class PaypalExpressCheckout extends ExpressPayment
 {
-	public static function isCreditable()
+	public function redirect($returnUrl, $cancelUrl, $sale = true)
+	{
+        $paypal = $this->getHandler('SetExpressCheckout');
+        $paypal->setParams($this->details->amount->get(), $returnUrl, $cancelUrl, $sale ? 'Sale' : 'Order');
+        $paypal->execute();
+
+        $this->checkErrors($paypal);
+
+    	$response = $paypal->getAPIResponse();
+        $sandbox = substr($this->getConfigValue('username'), 0, 8) == 'sandbox_' ? 'sandbox.' : '';        
+        header('Location: https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $response->Token);
+    }
+    
+    public function getDetails($request)
+    {        
+        $paypal = $this->getHandler('GetExpressCheckoutDetails');
+        $paypal->setParams($request['token']);
+        $paypal->execute();
+
+        $this->checkErrors($paypal);
+
+        $response = $paypal->getAPIResponse();
+        $info = $response->GetExpressCheckoutDetailsResponseDetails->PayerInfo;
+        $valueMap = array(
+        
+        		'firstName' => $info->PayerName->FirstName,
+        		'lastName' => $info->PayerName->LastName,
+        		'companyName' => $info->PayerBusiness,
+        		
+        		'address' => $info->Address->Street1 . ($info->Address->Street2 ? ', ' . $info->Address->Street2 : ''),
+        		'city' => $info->Address->CityName,
+        		'state' => $info->Address->StateOrProvince,
+        		'country' => $info->Address->Country,
+        		'postalCode' => $info->Address->PostalCode,
+        	
+        		'email' => $info->Payer,	
+        		
+        		// customer data
+        		'clientID' => $info->PayerID,
+            );
+        
+        foreach ($valueMap as $key => $value)
+        {
+            $this->details->$key->set($value);
+        }
+        
+        print_r($this->details);
+        exit;
+    }
+    
+    private function checkErrors($paypal)
+    {
+        if ($paypal->success())
+        {
+        	$response = $paypal->getAPIResponse();
+            if (isset($response->Errors))
+            {
+                throw new PaymentException($response->Errors->LongMessage);
+            }
+        }         
+        else
+        {
+            throw new PaymentException($paypal->getAPIException()->getMessage());
+        }
+    }
+    
+    public static function isCreditable()
 	{
 		return false;
 	}
@@ -14,11 +80,6 @@ class PaypalDirectPayment extends CreditCardPayment
 	{
 		return true;
 	}
-	
-	public static function isCardTypeNeeded()
-	{
-        return true;
-    }
 	
 	public static function getSupportedCurrencies()
 	{

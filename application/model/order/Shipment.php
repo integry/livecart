@@ -237,7 +237,7 @@ class Shipment extends ActiveRecordModel
                
         // total amount
         $array['totalAmount'] = $this->amount->get() + $this->shippingAmount->get();
-        $array['formatted_totalAmount'] = $this->amountCurrency->get()->getFormattedPrice($array['totalAmount']);
+        $array['formatted_totalAmount'] = $this->order->get()->currency->get()->getFormattedPrice($array['totalAmount']);
         
         // formatted subtotal
         $formattedSubTotal = array();

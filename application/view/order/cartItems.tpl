@@ -64,3 +64,11 @@
 </table>
 <input type="hidden" name="return" value="{$return}" />	
 {/form}
+
+{if $expressMethods}
+    <div id="expressCheckoutMethods" style="padding: 20px; text-align: right;">
+        {foreach from=$expressMethods item=method}
+            <a href="{link controller=checkout action=express id=$method}"><img src="image/payment/{$method}.gif" /></a>
+        {/foreach}
+    </div>
+{/if}

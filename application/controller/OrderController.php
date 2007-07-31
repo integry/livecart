@@ -28,6 +28,7 @@ class OrderController extends FrontendController
 		$response->set('return', $this->request->get('return'));				
 		$response->set('currency', $currency->getID());
 		$response->set('orderTotal', $currency->getFormattedPrice($this->order->getSubTotal($currency)));
+		$response->set('expressMethods', $this->application->getExpressPaymentHandlerList(true));
 		return $response;
     }   
 

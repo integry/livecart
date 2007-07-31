@@ -1,26 +1,28 @@
 <?php
-include_once(dirname(__file__).'/../../../abstract/CreditCardPayment.php');
 
-class AuthorizeNet extends CreditCardPayment
+include_once(dirname(__file__) . '/../../abstract/CreditCardPayment.php');
+include_once(dirname(__file__) . '/../../method/library/paypal/PaypalCommon.php');
+
+class PaypalDirectPayment extends CreditCardPayment
 {
 	public static function isCreditable()
+	{
+		return false;
+	}
+	
+	public static function isVoidable()
 	{
 		return true;
 	}
 	
 	public static function isCardTypeNeeded()
 	{
-		return true;
-	}
-
-	public static function isVoidable()
-	{
-		return true;
-	}
+        return true;
+    }
 	
 	public static function getSupportedCurrencies()
 	{
-		return array('USD');
+		return array('AUD', 'CAD', 'EUR', 'GBP', 'JPY', 'USD');
 	}
 
 	/**
@@ -95,14 +97,7 @@ class AuthorizeNet extends CreditCardPayment
 		    
 		    if (isset($response->Errors))
 		    {
-				if (isset($response->Errors->LongMessage))
-				{
-					$error = $response->Errors;
-				}
-				else
-				{
-					$error = $response->Errors[0];
-				}
+				$error = isset($response->Errors->LongMessage) ? $response->Errors : $error = $response->Errors[0];
 			
 				return new TransactionError($error->LongMessage, $response);
 			}
@@ -120,7 +115,16 @@ class AuthorizeNet extends CreditCardPayment
 				$result->CVVmatch->set(PaypalCommon::getCVVByCode($response->CVV2Code));
 				
 				$result->rawResponse->set($response);
-												
+					
+                if ('Sale' == $type)
+                {
+                    $result->setTransactionType(TransactionResult::TYPE_SALE);
+                }
+                else
+                {
+                    $result->setTransactionType(TransactionResult::TYPE_AUTH);
+                }
+                    							
 				return $result;
 			}
 		}
@@ -133,7 +137,7 @@ class AuthorizeNet extends CreditCardPayment
 	protected function processCapture()
 	{
 		$paypal = $this->getHandler('DoCapture');
-		$paypal->setParams($this->details->gatewayTransactionID->get(), $this->details->amount->get(), $this->details->currency->get(), 'NotComplete', '', $this->details->invoiceID->get());
+		$paypal->setParams($this->details->gatewayTransactionID->get(), $this->details->amount->get(), $this->details->currency->get(), $this->details->isCompleted->get() ? 'Complete' : 'NotComplete', '', $this->details->invoiceID->get());
 		
 		$paypal->execute();
 		
@@ -156,6 +160,7 @@ class AuthorizeNet extends CreditCardPayment
 				$result->currency->set($details->GrossAmount->currencyID);
 
 				$result->rawResponse->set($response);
+                $result->setTransactionType(TransactionResult::TYPE_CAPTURE);
 
 				return $result;
 			}
@@ -186,6 +191,7 @@ class AuthorizeNet extends CreditCardPayment
 				$result = new TransactionResult();
 
 				$result->rawResponse->set($response);
+                $result->setTransactionType(TransactionResult::TYPE_VOID);
 
 				return $result;
 			}
@@ -202,9 +208,9 @@ class AuthorizeNet extends CreditCardPayment
 		
 		$handler = new WebsitePaymentsPro();
 		
-		$username = 'sandbox_api1.integry.net';		
-		$password = '9AURF7SPQCEYCDXV';		
-		$signature = 'AeQ618dBMNS1kVFZwUIitcve-k.dAT5pnzBekoPUhcIj1J5p65ZAR8Pu';
+		$username = $this->getConfigValue('username');		
+		$password = $this->getConfigValue('password');
+		$signature = $this->getConfigValue('signature');
 		
 		$handler->prepare($username, $password, $signature);		
 		

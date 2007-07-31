@@ -31,6 +31,10 @@ $routes = array(
 
 					// product pages
                     array(":producthandle.:id", array('controller' => 'product', 'action' => 'index'), array("producthandle" => "[-A-Za-z0-9]+","id" => "[0-9]+")), 
+                    
+                    // checkout
+                    array("checkout/:action/:id", array('controller' => 'checkout'), array("id" => "[-A-Za-z0-9]+")), 
+
                 );
 
 

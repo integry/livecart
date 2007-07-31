@@ -17,34 +17,39 @@ class LiveCartTransaction extends TransactionDetails
         $order->loadAll();
         
         // billing address
-        $address = $order->billingAddress->get();
-        $fields = array('firstName', 'lastName', 'companyName', 'phone', 'city', 'postalCode', 'countryID' => 'country');
-        foreach ($fields as $key => $field)
+        if ($address = $order->billingAddress->get())
         {
-            $addressField = is_numeric($key) ? $field : $key;            
-            $this->$field->set($address->$addressField->get());
+            $fields = array('firstName', 'lastName', 'companyName', 'phone', 'city', 'postalCode', 'countryID' => 'country');
+            foreach ($fields as $key => $field)
+            {
+                $addressField = is_numeric($key) ? $field : $key;            
+                $this->$field->set($address->$addressField->get());
+            }
+        
+            $this->state->set($this->getStateValue($address));    
+            $this->address->set($address->address1->get() . ' ' . $address->address2->get());    
         }
-    
-        $this->state->set($this->getStateValue($address));    
-        $this->address->set($address->address1->get() . ' ' . $address->address2->get());    
         
         // shipping address
-        $address = $order->shippingAddress->get();        
+        $address = $order->shippingAddress->get();   
         if (!$address)
         {
             $address = $order->billingAddress->get();
         }
         
-        foreach ($fields as $key => $field)
+        if ($address)
         {
-            $addressField = is_numeric($key) ? $field : $key;            
-            $field = 'shipping' . ucfirst($field);
-            $this->$field->set($address->$addressField->get());
+            foreach ($fields as $key => $field)
+            {
+                $addressField = is_numeric($key) ? $field : $key;            
+                $field = 'shipping' . ucfirst($field);
+                $this->$field->set($address->$addressField->get());
+            }
+
+            $this->shippingState->set($this->getStateValue($address));    
+            $this->shippingAddress->set($address->address1->get() . ' ' . $address->address2->get());    
         }
     
-        $this->shippingState->set($this->getStateValue($address));    
-        $this->shippingAddress->set($address->address1->get() . ' ' . $address->address2->get());    
-
         $this->shippingEmail->set($order->user->get()->email->get());
         $this->email->set($order->user->get()->email->get());
         
