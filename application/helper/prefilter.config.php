@@ -46,14 +46,21 @@ function smarty_prefilter_config($tplSource, $smarty)
             {textfield}
         {/err}            
 	*/	
-    $source = preg_replace('/{{err for="([a-zA-Z0-9_]+)"}}(.*){{label(.*)}}(.*){\/err}/msU', '{{err for="\\1"}}\\2<label for="\\1">\\3</label>\\4{/err}', $source);    
-    $source = preg_replace('/{err for="([a-zA-Z0-9_]+)"}(.*){{label(.*)}}(.*){\/err}/msU', '{{err for="\\1"}}\\2<label for="\\1">\\3</label>\\4{/err}', $source);    
+    $source = preg_replace('/{{1,2}err for="(.*)"}{1,2}(.*){{label(.*)}}(.*){\/err}/msU', '{{err for="\\1"}}\\2<label for="\\1">\\3</label>\\4{/err}', $source);    
+    
+    // replace `backticks` to {curly braces} for <label>
+    $source = preg_replace_callback('|<label for="(.*)">|', 'labelVars', $source);
 
-    $source = preg_replace('/{{err for="([a-zA-Z0-9_]+)"}}(.*){(calendar|checkbox|filefield|password|radio|selectfield|textfield|textarea)(.*)}(.*){\/err}/msU', '\\2<fieldset class="error">{\\3 name="\\1" \\4}\\5
+    $source = preg_replace('/{{err for="(.*)"}{2,3}+(.*){(calendar|checkbox|filefield|password|radio|selectfield|textfield|textarea)(.*)}(.*){\/err}/msU', '\\2<fieldset class="error">{\\3 name="\\1" \\4}\\5
     <div class="errorText hidden{error for="\\1"} visible{/error}">{error for="\\1"}{$msg}{/error}</div>
     </fieldset>', $source);
     	
 	return $source;
+}
+
+function labelVars($var)
+{
+    return preg_replace("/`(.*)`/", "{\\1}", $var[0]);
 }
 
 ?>

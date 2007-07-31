@@ -5,7 +5,7 @@
 		{foreach from=$currencies key=key item=item}
 			<div{if $item.isEnabled == 0} class="disabled"{/if}>
 				<div class="title">{$item.name}</div>
-				{{err for="rate_{$item.ID}"}}
+				{{err for="rate_`$item.ID`"}}
 				    {{label 1 {$item.ID} = }}
 					{textfield class="text"}
 				{/err}
