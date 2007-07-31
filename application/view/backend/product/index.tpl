@@ -18,11 +18,11 @@
 	</ul>  
 </fieldset>
 
-<fieldset class="container" style="vertical-align: middle;">
+<fieldset class="container" >
                 
-    <span style="float: left; text-align: right; {denied role="product.mass"}display: none;{/denied}" id="productMass_{$categoryID}" >
+    <span {denied role="product.mass"}style="display: none;"{/denied} id="productMass_{$categoryID}" class="activeGridMass">
 
-	    {form action="controller=backend.product action=processMass id=$categoryID" handle=$massForm style="vertical-align: middle;" onsubmit="return false;"}
+	    {form action="controller=backend.product action=processMass id=$categoryID" handle=$massForm onsubmit="return false;"}
 	    
 	    <input type="hidden" name="filters" value="" />
 	    <input type="hidden" name="selectedIDs" value="" />
@@ -85,26 +85,26 @@
         
     </span>
     
-    <span style="float: right; text-align: right; position: relative; padding-bottom: 10px;">
+    <span class="activeGridItemsCount">
 		<span id="productCount_{$categoryID}">
 			<span class="rangeCount">{t _listing_products_from} %from - %to {t _listing_products_count_of} %count</span>
 			<span class="notFound">{t _no_products_found}</span>
 		</span>    
 		<br />
-		<div style="padding-top: 5px;">
-			<a href="#" onclick="Element.show($('productColumnMenu_{$categoryID}')); return false;" style="margin-top: 15px;">{t _columns}</a>
+		<div >
+			<a href="#" onclick="Element.show($('productColumnMenu_{$categoryID}')); return false;">{t _columns}</a>
 		</div>
-		<div id="productColumnMenu_{$categoryID}" style="left: -250px; position: absolute; z-index: 5; width: auto; display: none;">
+		<div id="productColumnMenu_{$categoryID}" class="activeGridColumnsRoot" style="display: none;">
   		  <form action="{link controller=backend.product action=changeColumns}" onsubmit="new LiveCart.AjaxUpdater(this, this.parentNode.parentNode.parentNode.parentNode.parentNode, document.getElementsByClassName('progressIndicator', this)[0]); return false;" method="POST">
 			
 			<input type="hidden" name="category" value="{$categoryID}" />
 			
-			<div style="background-color: white; border: 1px solid black; float: right; text-align: center; white-space: nowrap; width: 250px;">
-				<div style="padding: 5px; position: static; width: 100%;">
+			<div class="activeGridColumnsSelect">
+				<div class="activeGridColumnsSelectControls">
 					<span class="progressIndicator" style="display: none;"></span>
 					<input type="submit" class="submit" name="sm" value="{tn Change columns}" /> {t _or} <a class="cancel" onclick="Element.hide($('productColumnMenu_{$categoryID}')); return false;" href="#cancel">{t _cancel}</a>
 				</div>
-			    <div style="padding: 10px; background-color: white; max-height: 300px; overflow: auto; text-align: left;">
+			    <div class="activeGridColumnsList">
 					{foreach from=$availableColumns item=item key=column}
 					<p>
 						<input type="checkbox" name="col[{$column}]" class="checkbox" id="column_{$column}"{if $displayedColumns.$column}checked="checked"{/if} />

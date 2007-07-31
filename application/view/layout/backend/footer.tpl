@@ -2,7 +2,6 @@
         </div>
 		
 		</div>
-
 		<div id="pageFooter">
 		
 			<table id="workareaBottomShadeContainer">
@@ -18,13 +17,12 @@
 					</td>
 				</tr>
 			</table>
-		
 			<table id="footerContainer">
 				<tr>
 					<td id="footerLeft">
 						&copy; UAB <a href="http://integry.com" target="_blank">Integry Systems</a>, 2007
 					</td>
-					<td id="footerStretch" style="text-align: right; padding-right: 15px;">
+					<td id="footerStretch">
 						&nbsp; 
 						<a href="{link}" target="_blank" id="frontendLink">{t Store Frontend}</a>
 					</td>

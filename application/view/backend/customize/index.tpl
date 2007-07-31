@@ -23,7 +23,7 @@
 {/if}
 </a>
 
-<div class="modeDescr" style="margin-bottom: 10px;">
+<div class="modeDescr">
 	{t _live_trans}
 </div>
 

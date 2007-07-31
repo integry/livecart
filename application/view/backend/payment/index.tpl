@@ -1,12 +1,10 @@
-<div style="float: left;">
+<div>
 <div class="menuContainer" id="paymentMenu_{$order.ID}">
 
-    <ul class="menu paymentMenu" style="margin: 0; {denied role='order.update'}display: none;{/denied}">
+    <ul class="menu paymentMenu" {denied role='order.update'}style="display: none;"{/denied}>
     	<li><a href="#addOfflinePayment" class="addOfflinePayment">{t _add_offline_payment}</a></li>
     	<li><a onclick="window.open('{link controller=backend.payment action=ccForm id=$order.ID}', 'creditCard', 'directories=no, height=440, width=500, resizable=yes, scrollbars=no, toolbar=no'); return false;" href="#" class="addCreditCardPayment">{t _add_credit_card_payment}</a></li>
     </ul>
-    
-    <div class="clear"></div>
     
     <div class="slideForm addOffline" style="display: none;">
         <fieldset class="addOfflinePayment">
@@ -42,11 +40,7 @@
 
 </div>
 
-<div class="clear"></div>
-
-<div style="height: 10px;">&nbsp;</div>
-
-<form class="paymentSummary" style="clear: both;">
+<form class="paymentSummary">
 
     {include file="backend/payment/totals.tpl"}
 

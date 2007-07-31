@@ -87,7 +87,7 @@
 
 <ul style="display: none;">
 <li id="newsList_template" class="activeList_add_sort activeList_add_delete" style="position: relative;">
-	<div style="float: left; display: inline;">
+	<div>
 		<div class="newsListContainer">
 
 			<span class="newsCheckBox">

@@ -195,6 +195,12 @@ html, body{
 	background-repeat: no-repeat;
     width: 100%;
 }
+
+#topHomeContainer
+{
+    float: left;
+}
+
 #topLogoContainer {
 	float: right;
 	width: 200px;
@@ -263,6 +269,8 @@ html, body{
 	color: #FFFFFF;  
 }
 #footerStretch {
+    text-align: right; 
+	padding-right: 15px;
   	background-image:url(../../image/backend/layout/footer_stretch.png);
 }
 
@@ -541,7 +549,7 @@ html, body{
     float: right; 
     width: 20px; 
     height: 100%; 
-    background-image:url(image/backend/layout/workarea_shade_vertical_wide.jpg);
+    background-image:url(../../image/backend/layout/workarea_shade_vertical_wide.jpg);
 	background-position: -8px 0px; 
     background-repeat: repeat-y;  
     background-color: #E6E6E6;
@@ -594,12 +602,12 @@ html, body{
 }
 
 ul.menu {
-	margin-bottom: 30px;
+    display: block;
 }
 
 ul.menu li {
   	list-style: none;
-  	float: left;
+  	display: inline;
   	margin-right: 10px;
 }
 

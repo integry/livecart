@@ -1,4 +1,4 @@
-<div style="float: left;">
+<div>
 <div class="menuContainer" id="orderNoteMenu_{$order.ID}">
 
     <ul class="menu orderNoteMenu" style="margin: 0; {denied role='order.update'}display: none;{/denied}">    	

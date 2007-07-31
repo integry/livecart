@@ -27,13 +27,13 @@
     <label>{t _country}</label>
     <fieldset class="error">
         {selectfield name="activeCountries" size="15" class="countriesAndStates_activeCountries" multiple="multiple" options=$selectedCountries}
-        <input type="button" value="&lt;&lt;" class="submit countriesAndStates_addCountry" style="{denied role='delivery.update'}display: none{/denied}" />
-        <input type="button" value="&gt;&gt;" class="submit countriesAndStates_removeCountry" style="{denied role='delivery.update'}display: none{/denied}" />
+        <input type="button" value="&lt;&lt;" class="submit countriesAndStates_addCountry" {denied role='delivery.update'}style="display: none"{/denied} />
+        <input type="button" value="&gt;&gt;" class="submit countriesAndStates_removeCountry" {denied role='delivery.update'}style="display: none"{/denied} />
         {selectfield name="inactiveCountries" size="15" options=$countries class="countriesAndStates_inactiveCountries" multiple="multiple"}
         
         <span class="errorText hidden"> </span>
         
-        <div class="countriesAndStates_regionsAndUnions" style="{denied role='delivery.update'}display: none{/denied}">
+        <div class="countriesAndStates_regionsAndUnions" {denied role='delivery.update'}style="display: none"{/denied}>
             {foreach key="groupName" item="group" from=$countryGroups}
                 <div><a href="#{$groupName}">{translate text=$groupName}</a></div>
             {/foreach}
@@ -43,8 +43,8 @@
     <label>{t _state}</label>
     <fieldset class="error">
         {selectfield name="activeStates" size="15" options=$selectedStates class="countriesAndStates_activeStates" multiple="multiple"}
-        <input type="button" value="&lt;&lt;" class="submit countriesAndStates_addState" style="{denied role='delivery.update'}display: none{/denied}" />
-        <input type="button" value="&gt;&gt;" class="submit countriesAndStates_removeState" style="{denied role='delivery.update'}display: none{/denied}" />
+        <input type="button" value="&lt;&lt;" class="submit countriesAndStates_addState" {denied role='delivery.update'}style="display: none"{/denied} />
+        <input type="button" value="&gt;&gt;" class="submit countriesAndStates_removeState" {denied role='delivery.update'}style="display: none"{/denied} />
         {selectfield name="inactiveStates" size="15" options=$states class="countriesAndStates_inactiveStates" multiple="multiple"}
 		<span class="errorText hidden"> </span>
     </fieldset>
@@ -65,7 +65,7 @@
                 {/literal}
             </script>
 
-            <fieldset style="{denied role='delivery.update'}display: none{/denied}">
+            <fieldset {denied role='delivery.update'}style="display: none"{/denied}>
                 {textfield name="mask_new" class="countriesAndStates_newMask"}<input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
                 <span class="errorText hidden"> </span>
             </fieldset>
@@ -87,7 +87,7 @@
                     ActiveList.prototype.getInstance("countriesAndStates_{/literal}{$zoneID}{literal}_zipMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksZip, function() {});
                 {/literal}
             </script>
-            <fieldset class="error" style="{denied role='delivery.update'}display: none{/denied}">
+            <fieldset class="error" {denied role='delivery.update'}style="display: none"{/denied}>
                 {textfield name="mask_new" class="countriesAndStates_newMask"}<input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
                 <span class="errorText hidden"> </span>
             </fieldset>
@@ -109,7 +109,7 @@
                     ActiveList.prototype.getInstance("countriesAndStates_{/literal}{$zoneID}{literal}_addressMasks", Backend.DeliveryZone.CountriesAndStates.prototype.CallbacksAddress, function() {});
                 {/literal}
             </script>
-            <fieldset class="error" style="{denied role='delivery.update'}display: none{/denied}">
+            <fieldset class="error" {denied role='delivery.update'}style="display: none"{/denied}>
                 {textfield name="mask_new" class="countriesAndStates_newMask"}<input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
                 <span class="errorText hidden"> </span>
             </fieldset>

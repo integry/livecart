@@ -10,9 +10,9 @@ fieldset.transactionContainer
     margin-top: 20px;
 }
 
-.paymentSummary
+.paymentMenu
 {
-	padding-top: 15px;
+	padding-bottom: 40px;
 }
 
 .amountSection

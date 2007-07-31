@@ -24,8 +24,8 @@
     	<div id="deliveryZoneBrowser" class="treeBrowser"></div>
         <div id="deliveryZoneBrowserControls">
             <ul class="verticalMenu">
-                <li class="addTreeNode"><a id="newZoneInputButton" href="#add" style="{denied role='delivery.create'}display: none{/denied}">{t _add_new_delivery_zone}</a></li>
-                <li class="removeTreeNode"><a id="deliveryZone_delete" href="#delete" style="{denied role='delivery.remove'}display: none{/denied}">{t _delete}</a></li>
+                <li class="addTreeNode"><a id="newZoneInputButton" href="#add" {denied role='delivery.create'}style="display: none"{/denied}>{t _add_new_delivery_zone}</a></li>
+                <li class="removeTreeNode"><a id="deliveryZone_delete" href="#delete" {denied role='delivery.remove'}style="display: none"{/denied}>{t _delete}</a></li>
             </ul>
             <div id="confirmations"></div>
         </div>

@@ -18,36 +18,35 @@
 <fieldset class="container" id="editContainer">
 	
 	<p>
-		<label for="title" class="wide">{t _title}:</label>
+		<label for="title_{$page.ID}" class="wide">{t _title}:</label>
 		<fieldset class="error">
 			{if $page.ID}
-				{textfield name="title" class="wider"}
+				{textfield name="title" class="wider" id="title_`$page.ID`"}
 			{else}
-				{textfield name="title" class="wider" onkeyup="$('handle').value = ActiveForm.prototype.generateHandle(this.value);"}			
+				{textfield name="title" class="wider" id="title_`$page.ID`" onkeyup="$('handle').value = ActiveForm.prototype.generateHandle(this.value);"}			
 			{/if}
 			<div class="errorText hidden"></div>
 		</fieldset>
 	</p>
 
-	<p style="margin-top: 7px; padding-bottom: 7px; clear: both;">
-		{checkbox name="isInformationBox" class="checkbox"}
-		<label for="isInformationBox" class="checkbox">{t _inf_menu}</label>
-	    <br class="clear" />
-    </p>
+	<fieldset class="isInformationBox error">
+		{checkbox name="isInformationBox" class="checkbox" id="isInformationBox_`$page.ID`"}
+		<label for="isInformationBox_{$page.ID}" class="checkbox">{t _inf_menu}</label>
+    </fieldset>
 
 	<p>
-		<label for="title" class="wide">{t _handle}:</label>
+		<label for="handle_{$page.ID}" class="wide">{t _handle}:</label>
 		<fieldset class="error">
-			{textfield name="handle"}
+			{textfield name="handle" id="handle_`$page.ID`"}
 			<div class="errorText hidden"></div>
 		</fieldset>
 	</p>
 	
 	<p>
-		<label for="text" class="wide">{t _text}:</label>
+		<label for="text_{$page.ID}" class="wide">{t _text}:</label>
 		<fieldset class="error">
 			<div class="textarea" id="textContainer">
-				{textarea class="longDescr" name="text" style="width: 100%;"}
+				{textarea class="longDescr" name="text" id="text_`$page.ID`" style="width: 100%;"}
 				<div class="errorText hidden" style="margin-top: 5px;"></div>
 			</div>			
 		</fieldset>
@@ -66,7 +65,7 @@
 			<label for="text_{$lang.ID}" class="wide">{t _text}:</label>
 			<fieldset class="error">
 				<div class="textarea" id="textContainer">
-					{textarea class="longDescr" name="text_`$lang.ID`" style="width: 100%;"}
+					{textarea class="longDescr" name="text_`$lang.ID`"}
 					<div class="errorText hidden" style="margin-top: 5px;"></div>
 				</div>			
 			</fieldset>

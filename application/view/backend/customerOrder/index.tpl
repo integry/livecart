@@ -42,7 +42,7 @@
 	<div id="orderGroupsBrowser" class="treeBrowser"></div>
 
 	<ul id="categoryBrowserActions" class="verticalMenu">
-		<li class="addTreeNode"><a href="#" id="createNewOrderLink" style="{denied role='order.create'}display: none{/denied}">{t _create_order}</a></li>
+		<li class="addTreeNode"><a href="#" id="createNewOrderLink" {denied role='order.create'}style="display: none"{/denied}>{t _create_order}</a></li>
 	</ul>	
 
     <div id="confirmations"></div>

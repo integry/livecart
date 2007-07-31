@@ -6,12 +6,12 @@
 
     <p>
         <label>{t Price display prefix}:</label>
-        {textfield name="pricePrefix" style="width: 100%;"}
+        {textfield name="pricePrefix" class="currencyPricePrefix"}
     </p>
 
     <p>
         <label>{t Price display suffix}:</label>
-        {textfield name="priceSuffix" style="width: 100%;"}
+        {textfield name="priceSuffix" class="currencyPriceSuffix"}
     </p>
     
     <fieldset class="controls">

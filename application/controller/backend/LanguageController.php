@@ -46,10 +46,10 @@ class LanguageController extends StoreManagementController
 		// get all English configuration files
 		$enLocale = Locale::getInstance('en');
 		$files = array();
-		foreach ($this->locale->getDefinitionFileDir() as $dir)
-		{
-			
-		}
+//		foreach ($this->locale->getDefinitionFileDir() as $dir)
+//		{
+//			
+//		}
 		$fileDir = ClassLoader::getRealPath('application.configuration.language.en');
 		$files = $enLocale->translationManager()->getDefinitionFiles($fileDir);
 

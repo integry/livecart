@@ -7,3 +7,13 @@
 {
 	height: 350px;
 }
+
+.isInformationBox
+{
+    margin: 10px 0px ! important;
+}
+
+.longDescr
+{
+    width: 100%;
+}

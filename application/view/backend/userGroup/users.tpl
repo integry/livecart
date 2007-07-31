@@ -39,18 +39,18 @@
     </fieldset>
 {/if}
 
-<fieldset class="container" style="vertical-align: middle;">
+<fieldset class="container">
                 
-    <span style="float: left; text-align: right; {denied role="user.mass"}visibility: hidden;{/denied}" id="userMass_{$userGroupID}" >
+    <span class="activeGridMass" {denied role="user.mass"}style="visibility: hidden;"{/denied} id="userMass_{$userGroupID}" >
 
-	    {form action="controller=backend.user action=processMass id=$userGroupID" handle=$massForm style="vertical-align: middle;" onsubmit="return false;"}
+	    {form action="controller=backend.user action=processMass id=$userGroupID" handle=$massForm onsubmit="return false;"}
 	    
 	    <input type="hidden" name="filters" value="" />
 	    <input type="hidden" name="selectedIDs" value="" />
 	    <input type="hidden" name="isInverse" value="" />
 	    
         {t _with_selected}:
-        <select name="act" class="select" style="width: auto;">
+        <select name="act" class="select">
             <option value="enable_isEnabled">Enable</option>
             <option value="disable_isEnabled">Disable</option>
             <option value="delete">Delete</option>
@@ -67,26 +67,26 @@
         
     </span>
     
-    <span style="float: right; text-align: right; position: relative; padding-bottom: 10px;">
+    <span class="activeGridItemsCount">
 		<span id="userCount_{$userGroupID}">
 			<span class="rangeCount">Listing users %from - %to of %count</span>
 			<span class="notFound">No users found</span>
 		</span>    
 		<br />
-		<div style="padding-top: 5px;">
-			<a href="#" onclick="Element.show($('userColumnMenu_{$userGroupID}')); return false;" style="margin-top: 15px;">{t Columns}</a>
+		<div>
+			<a href="#" onclick="Element.show($('userColumnMenu_{$userGroupID}')); return false;">{t Columns}</a>
 		</div>
-		<div id="userColumnMenu_{$userGroupID}" style="left: -250px; position: absolute; z-index: 5; width: auto; display: none;">
+		<div id="userColumnMenu_{$userGroupID}" class="activeGridColumnsRoot" style="display: none;">
   		  <form action="{link controller=backend.userGroup action=changeColumns}" onsubmit="new LiveCart.AjaxUpdater(this, this.parentNode.parentNode.parentNode.parentNode.parentNode, document.getElementsByClassName('progressIndicator', this)[0]); return false;" method="POST">
 			
 			<input type="hidden" name="group" value="{$userGroupID}" />
 			
-			<div style="background-color: white; border: 1px solid black; float: right; text-align: center; white-space: nowrap; width: 250px;">
-				<div style="padding: 5px; position: static; width: 100%;">
+			<div class="activeGridColumnsSelect">
+				<div class="activeGridColumnsSelectControls">
 					<span class="progressIndicator" style="display: none;"></span>
 					<input type="submit" class="submit" name="sm" value="{tn Change columns}" /> {t _or} <a class="cancel" onclick="Element.hide($('userColumnMenu_{$userGroupID}')); return false;" href="#cancel">{t _cancel}</a>
 				</div>
-			    <div style="padding: 10px; background-color: white; max-height: 300px; overflow: auto; text-align: left;">
+			    <div class="activeGridColumnsList error">
 					{foreach from=$availableColumns item=item key=column}
 					<p>
 						<input type="checkbox" name="col[{$column}]" class="checkbox" id="column_{$column}"{if $displayedColumns.$column}checked="checked"{/if} />

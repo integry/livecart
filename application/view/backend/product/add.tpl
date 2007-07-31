@@ -7,14 +7,6 @@
         
     {form handle=$productForm action="controller=backend.product action=create id=`$product.ID`" method="POST" onsubmit="Backend.Product.saveForm(this); return false;" onreset="Backend.Product.resetAddForm(this);"}
     	
-    	<div class="productSaveConf" style="margin-bottom: 10px; display: none;">
-    		<div class="yellowMessage">
-    			<div>
-    				{t _notification_product_was_successfuly}
-    			</div>
-    		</div>
-    	</div>
-    	
     	<input type="hidden" name="categoryID" value="{$product.Category.ID}" />
     	
         {include file="backend/product/form/main.tpl" product=$product cat=$cat productTypes=$productTypes}
@@ -34,12 +26,12 @@
     		<p>			
     			<label for="">{t _when_the_product_is_added}:</label> 
     			<fieldset class="container">
-    				<div style="clear: both;">
+    				<fieldset class="error">
     					{radio name="afterAdding" id="afAd_new" class="radio" value="new" checked="checked"}<label for="afAd_new" class="radio">{t _add_another_product}</label>
-    				</div>
-    				<div style="clear: both;">
+    				</fieldset>
+    				<fieldset class="error">
     					{radio name="afterAdding" id="afAd_det" class="radio"}<label for="afAd_det" class="radio"> {t _continue_with_more_details}</label>
-    				</div>
+    				</fieldset>
     			</fieldset>	
     		</p>	
     	

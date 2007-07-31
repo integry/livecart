@@ -61,7 +61,7 @@
 
             <fieldset>
             	<legend>{t _translation_filter}</legend>
-            	<form id="navLang" method="post" style="margin-bottom: 10px;" action="{link controller=backend.language action=edit id=$id}" class="">
+            	<form id="navLang" method="post" action="{link controller=backend.language action=edit id=$id}" class="">
             
             			<label>{t _show_words}:</label>
             		
@@ -97,7 +97,7 @@
             
             <br /><br />
             
-            <div id="translations" style="display: block; margin-bottom: 15px;"></div>
+            <div id="translations"></div>
             
             
             <form id="editLang" method="post" action="{link controller=backend.language action=save id=$id}" onSubmit="langPassDisplaySettings(this); $('saveProgress').style.display = 'inline';">

@@ -42,7 +42,7 @@
         <li>
             <a href="">Print invoice</a>
         </li>
-        <li style="{denied role='order.update'}display: none{/denied}">
+        <li {denied role='order.update'}style="display: none"{/denied}>
             <span style="display: none;" id="order_{$order.ID}_isCanceledIndicator" class="progressIndicator"></span>
             <a id="order_{$order.ID}_isCanceled" href="{link controller="backend.customerOrder" action="setIsCanceled" id=$order.ID}">
                 {if $order.isCancelled}{t _accept_order}{else}{t _cancel_order}{/if}

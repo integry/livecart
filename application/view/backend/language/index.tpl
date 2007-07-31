@@ -41,7 +41,7 @@
 </ul>
 
 <ul>
-<li id="languageList_template" class="{allowed role="language.sort"}activeList_add_sort{/allowed} {allowed role="language.remove"}activeList_remove_delete{/allowed} disabled default" style="position: relative;">
+<li id="languageList_template" class="{allowed role="language.sort"}activeList_add_sort{/allowed} {allowed role="language.remove"}activeList_remove_delete{/allowed} disabled default">
 	<div>
 		<div class="langListContainer" >
 

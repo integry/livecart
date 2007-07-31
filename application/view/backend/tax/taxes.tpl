@@ -11,7 +11,7 @@
 
 
 
-<ul class="activeList {allowed role="taxes.remove"}activeList_add_delete activeList_add_sort{/allowed} activeList_add_edit tax_taxesList" id="tax_taxesList" style="height: auto;" >
+<ul class="activeList {allowed role="taxes.remove"}activeList_add_delete activeList_add_sort{/allowed} activeList_add_edit tax_taxesList" id="tax_taxesList" >
 {foreach from=$taxesForms key="key" item="taxForm"}
     <li id="tax_taxesList_{$taxes[$key].ID}">
         

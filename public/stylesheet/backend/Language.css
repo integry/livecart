@@ -117,3 +117,14 @@ div.tip
     right: 0px ! important; 
     width: 600px ! important;
 }
+
+#navLang
+{
+    margin-bottom: 10px;
+}
+
+#translations
+{
+    display: block; 
+	margin-bottom: 15px;
+}

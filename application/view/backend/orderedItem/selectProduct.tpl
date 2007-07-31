@@ -22,7 +22,7 @@
 <a id="help" href="#" target="_blank" style="display: none;">Help</a>
 <div id="catgegoryContainer" class="treeContainer">
 	
-    <div style="margin-bottom: 5px; text-align: center;">
+    <div>
         <a class="menu" href="#" onclick="window.close(); return false;">
             {t _done_adding_products}
         </a>

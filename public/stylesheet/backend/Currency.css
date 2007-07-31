@@ -11,7 +11,7 @@
 }
 
 #currencyList {
-  	width: 300px;
+  	width: 30em;
 }
 
 #currencyList li {
@@ -112,6 +112,12 @@
     width: 80%; 
 	margin-top: 15px;
 }
+
+.currencyPriceSuffix, .currencyPricePrefix
+{
+    width: 100%;
+}
+
 /************************
 	Options
 ************************/

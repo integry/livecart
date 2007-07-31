@@ -4,7 +4,7 @@
 
 <div id="topShadeContainer">
 	<div id="topShadeContainerLeft"></div>
-	<div id="topShadeContainerRight" style="background-image:url(image/backend/layout/workarea_shade_vertical_wide.jpg);">
+	<div id="topShadeContainerRight">
 		<div></div>
 	</div>
 </div>
@@ -20,7 +20,7 @@
 		<div id="topBackground" >
 			<div id="topBackgroundLeft" >
 
-				<div style="float: left;">
+				<div id="topHomeContainer">
 					<div id="homeButtonWrapper">
 						<a href="{link controller=backend.index action=index}">
 							{img src="image/backend/layout/top_home_button.jpg" id="homeButton"}

@@ -25,7 +25,7 @@
 
 <div id="userGroupsWrapper" class="maxHeight h--50">
 	<div id="userGroupsBrowserWithControlls" class="treeContainer maxHeight">
-        <div style="margin-bottom: 5px; text-align: center;">
+        <div>
             <a class="menu" href="#" onclick="window.close(); return false;">
                 {t _cancel}
             </a>

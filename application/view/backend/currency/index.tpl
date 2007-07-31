@@ -25,8 +25,7 @@
 	</ul>
 	<div class="sectionContainer maxHeight h--95">
 		<div id="tabManageContent" class="maxHeight tabPageContainer">
-		
-			<ul class="menu" id="currPageMenu" style="float: left; margin-bottom: 0px; {denied role="currency.create"}display: none;{/denied}">
+			<ul class="menu" id="currPageMenu" {denied role="currency.create"}style="display: none;"{/denied}>
 				<li>
 					<a href="#" onClick="curr.showAddForm(); return false;">{t _add_currency}</a>
 					<span class="progressIndicator" id="currAddMenuLoadIndicator" style="display: none;"></span>

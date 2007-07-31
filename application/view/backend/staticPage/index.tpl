@@ -15,11 +15,11 @@
 		<div id="pageBrowser" class="treeBrowser"></div>
 
 		<ul class="verticalMenu">
-			<li id="addMenu" class="addTreeNode" style="{denied role="page.create"}display: none;{/denied}"><a href="" onclick="pageHandler.showAddForm(); return false;">{t _add_new}</a></li>
-			<li id="codeMenu" class="viewTreeNode" style="{denied role="page.create,page.update"}display: none;{/denied}"><a href="" onclick="pageHandler.showTemplateCode(); return false;">{t _show_template_code}</a></li>
-			<li id="moveUpMenu" class="moveUpTreeNode" style="{denied role="page.sort"}display: none;{/denied}"><a href="" onclick="pageHandler.moveUp(); return false;">{t _move_up}</a></li>
-			<li id="moveDownMenu" class="moveDownTreeNode" style="{denied role="page.sort"}display: none;{/denied}"><a href="" onclick="pageHandler.moveDown(); return false;">{t _move_down}</a></li>
-			<li id="removeMenu" class="removeTreeNode" style="{denied role="page.remove"}display: none;{/denied}"><a href="" onclick="pageHandler.deleteSelected(); return false;">{t _remove}</a></li>
+			<li id="addMenu" class="addTreeNode" {denied role="page.create"}style="display: none;"{/denied}><a href="" onclick="pageHandler.showAddForm(); return false;">{t _add_new}</a></li>
+			<li id="codeMenu" class="viewTreeNode" {denied role="page.create,page.update"}style="display: none;"{/denied}><a href="" onclick="pageHandler.showTemplateCode(); return false;">{t _show_template_code}</a></li>
+			<li id="moveUpMenu" class="moveUpTreeNode" {denied role="page.sort"}style="display: none;"{/denied}><a href="" onclick="pageHandler.moveUp(); return false;">{t _move_up}</a></li>
+			<li id="moveDownMenu" class="moveDownTreeNode" {denied role="page.sort"}style="display: none;"{/denied}><a href="" onclick="pageHandler.moveDown(); return false;">{t _move_down}</a></li>
+			<li id="removeMenu" class="removeTreeNode" {denied role="page.remove"}style="display: none;"{/denied}><a href="" onclick="pageHandler.deleteSelected(); return false;">{t _remove}</a></li>
 		</ul>
         
         <div id="confirmations">

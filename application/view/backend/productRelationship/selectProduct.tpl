@@ -32,10 +32,7 @@
     <div id="categoryBrowser" class="treeBrowser"> </div>
         
     <div id="confirmations"></div>
-    
-	<div id="relError" style="width: auto;"></div>
-    
-    
+        
     <div id="confirmations">
         <div id="redZone">
             <div id="productRelationshipCreateFailure" class="redMessage" style="display: none;">

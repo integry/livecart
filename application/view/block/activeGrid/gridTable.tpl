@@ -1,4 +1,4 @@
-<div style="width: 100%; position: relative;">
+<div>
 	<div style="display: none;" class="activeGrid_loadIndicator" id="{$prefix}LoadIndicator_{$id}">
 		<div>
 			{t _loading}<span class="progressIndicator"></span>
@@ -6,8 +6,8 @@
 	</div>
 </div>
 
-<div style="width: 100%;height: 100%;">
-    <table class="activeGrid {$prefix}List {denied role=$role}readonlyGrid{/denied}" id="{$prefix}_{$id}" style="height: 100%;">
+<div>
+    <table class="activeGrid {$prefix}List {denied role=$role}readonlyGrid{/denied}" id="{$prefix}_{$id}"=>
 
 <thead>
 	<tr class="headRow">
@@ -22,7 +22,7 @@
 					
                     {if 'bool' == $type}
 			    		
-                        <select style="width: auto;" id="filter_{$column}_{$id}">
+                        <select id="filter_{$column}_{$id}">
 							<option value="">{tn $column}</option>
 							<option value="1">{tn _yes}</option>
 							<option value="0">{tn _no}</option>
@@ -92,7 +92,7 @@
                     
 					{else}
 
-					   <input type="text" class="text {$type}" id="filter_{$column}_{$id}" value="{$availableColumns.$column.name|escape}" style="float: left;" />
+					   <input type="text" class="text {$type}" id="filter_{$column}_{$id}" value="{$availableColumns.$column.name|escape}"  />
 
 					{/if}
 					

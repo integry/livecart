@@ -32,7 +32,7 @@
 				<label class="checkbox" for="{$fieldName}">{t `$values.$fieldName.title`}</label>
 			{elseif is_array($values.$fieldName.type)}						
 				{if 'multi' == $values.$fieldName.extra}
-                    <div class="multi" style="padding: 10px;">
+                    <div class="multi">
                     {foreach from=$values.$fieldName.type item="value" key="key"}
 				        <p>
                         {checkbox name="`$fieldName`[`$key`]" class="checkbox" value=1}
