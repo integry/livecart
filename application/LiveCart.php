@@ -88,17 +88,21 @@ class LiveCart extends Application
 	 */
 	public function __construct()
 	{
+        ClassLoader::import('application.model.ActiveRecordModel');
+        ClassLoader::import('framework.renderer.SmartyRenderer');
+        
 		parent::__construct();
 		
 		unset($this->session);
 		unset($this->config);
 		unset($this->locale);
 		unset($this->localeName);
+
+        ActiveRecord::setDSN(include ClassLoader::getRealPath("storage.configuration.database") . '.php');
         		
         // LiveCart request routing rules
         include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';        		
         		
-		ClassLoader::import('application.model.ActiveRecordModel');
 		ActiveRecordModel::setApplicationInstance($this);
 		
 		if (file_exists(ClassLoader::getRealPath("cache.dev")))
@@ -111,10 +115,7 @@ class LiveCart extends Application
             ActiveRecord::getLogger()->setLogFileName(ClassLoader::getRealPath("cache") . DIRECTORY_SEPARATOR . "activerecord.log");            
         }
 
-        ActiveRecord::setDSN(include ClassLoader::getRealPath("storage.configuration.database") . '.php');
-		
 		$compileDir = $this->isCustomizationMode() ? 'cache.templates_c.customize' : 'cache.templates_c';
-		ClassLoader::import('framework.renderer.SmartyRenderer');
         SmartyRenderer::setCompileDir(ClassLoader::getRealPath($compileDir));
 	}
 	
