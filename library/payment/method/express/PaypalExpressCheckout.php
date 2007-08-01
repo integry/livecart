@@ -18,10 +18,15 @@ class PaypalExpressCheckout extends ExpressPayment
         header('Location: https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $response->Token);
     }
     
+    public function getToken($request)
+    {
+        return $request['token'];
+    }
+    
     public function getDetails($request)
     {        
         $paypal = $this->getHandler('GetExpressCheckoutDetails');
-        $paypal->setParams($request['token']);
+        $paypal->setParams(self::getToken($request));
         $paypal->execute();
 
         $this->checkErrors($paypal);
@@ -50,6 +55,8 @@ class PaypalExpressCheckout extends ExpressPayment
         {
             $this->details->$key->set($value);
         }
+        
+        return $this->details;
         
         print_r($this->details);
         exit;

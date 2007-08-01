@@ -30,7 +30,10 @@ function smarty_function_includeCss($params, LiveCartSmarty $smarty)
            $includedStylesheetFiles = array();
         }
         
-        if(in_array($filePath, $includedStylesheetFiles)) return;
+        if(isset($params['front']) && in_array($filePath, $includedStylesheetFiles))
+        {
+            unset($includedStylesheetFiles[array_search($filePath, $includedStylesheetFiles)]);
+        }
         
         $fileMTime = filemtime($filePath);
         if($fileMTime > (int)$includedStylesheetTimestamp)

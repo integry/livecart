@@ -175,7 +175,7 @@ class Transaction extends ActiveRecordModel
         {
             if (!$this->isOffline())
             {
-				ClassLoader::import('library.payment.method.' . ($this->isCreditCard() ? 'cc.' : '') . $className . '.' . $className);				
+				ClassLoader::import('library.payment.method.' . ($this->isCreditCard() ? 'cc.' : '') . $className);				
 			}
 			else
 			{

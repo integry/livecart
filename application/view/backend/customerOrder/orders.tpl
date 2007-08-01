@@ -52,7 +52,7 @@
 					<span class="progressIndicator" style="display: none;"></span>
 					<input type="submit" class="submit" name="sm" value="{tn Change columns}" /> {t _or} <a class="cancel" onclick="Element.hide($('orderColumnMenu_{$orderGroupID}')); return false;" href="#cancel">{t _cancel}</a>
 				</div>
-			    <div class="activeGridColumnsList error">
+			    <div class="activeGridColumnsList">
 					{foreach from=$availableColumns item=item key=column}
 					<p class="column_{$column|replace:'.':'_'}">
 						<input type="checkbox" name="col[{$column}]" class="checkbox" id="column_{$column}_{$orderGroupID}"{if $displayedColumns.$column}checked="checked"{/if} />

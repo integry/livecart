@@ -53,7 +53,7 @@ function smarty_function_compiledCss($params, LiveCartSmarty $smarty)
         foreach($includedStylesheetFiles as $cssFile)
         {
             $urlPath = str_replace('\\', '/', str_replace($publicPath, '', $cssFile));
-            $includeString .= '<link href="' . $urlPath . '?' . filemtime($cssFile) . '" media="screen" rel="Stylesheet" type="text/css"/>';
+            $includeString .= '<link href="' . $urlPath . '?' . filemtime($cssFile) . '" media="screen" rel="Stylesheet" type="text/css"/>' . "\n";
         }
         
         return $includeString;

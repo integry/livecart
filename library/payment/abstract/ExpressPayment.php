@@ -4,7 +4,7 @@ include_once(dirname(__file__) . '/../TransactionPayment.php');
 
 abstract class ExpressPayment extends TransactionPayment
 {
-	abstract public function redirect()
+	abstract public function redirect($returnUrl, $cancelUrl, $sale = true);
     
     /**
 	 *	Reserve funds on customers credit card

@@ -19,7 +19,7 @@ class Shipment extends ActiveRecordModel
      */
     protected $itemIds = array();
     
-	protected $availableShippingRates;   
+	protected $availableShippingRates = array();   
 	
 	protected $selectedRateId; 
     	
@@ -323,9 +323,12 @@ class Shipment extends ActiveRecordModel
     {
         parent::unserialize($serialized);
         
-        foreach($this->availableShippingRates as $rate)
+        if ($this->availableShippingRates)
         {
-            $rate->setApplication($this->getApplication());
+            foreach($this->availableShippingRates as $rate)
+            {
+                $rate->setApplication($this->getApplication());
+            }            
         }
         
         if ($this->itemIds)

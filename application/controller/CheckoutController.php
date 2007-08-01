@@ -1,7 +1,9 @@
 <?php
 
-ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.Currency');
+ClassLoader::import('application.model.order.CustomerOrder');
+ClassLoader::import('application.model.order.ExpressCheckout');
+ClassLoader::import('application.model.order.Transaction');
 ClassLoader::import('application.model.order.LiveCartTransaction');
 
 /**
@@ -113,20 +115,33 @@ class CheckoutController extends FrontendController
 
         $handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
         
-        $returnUrl = $this->router->createUrl(array('controller' => 'checkout', 'action' => 'expressReturn', 'id' => $class));
-        $cancelUrl = $this->router->createUrl(array('controller' => 'checkout', 'action' => 'expressCancel', 'id' => $class));
+        $returnUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'expressReturn', 'id' => $class)));
+        $cancelUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'order')));
                 
         $handler->redirect($returnUrl, $cancelUrl);
 
     }
     
     public function expressReturn()
-    {
+    {   
         $class = $this->request->get('id');
 
         $handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
-        $handler->getDetails($this->request->toArray());
+        $details = $handler->getDetails($this->request->toArray());
         
+        $address = UserAddress::getNewInstanceByTransaction($details);
+        $address->save();
+        
+        $express = ExpressCheckout::getNewInstance($this->order, $handler);
+        $express->address->set($address);
+        $express->token->set($handler->getToken($this->request->toArray()));
+        $express->save();
+        
+        $this->order->billingAddress->set($address);
+        $this->order->shippingAddress->set($address);
+        $this->order->save();
+        
+        return new ActionRedirectResponse('checkout', 'shipping');
     }
     
     /**

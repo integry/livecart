@@ -603,6 +603,7 @@ html, body{
 
 ul.menu {
     display: block;
+    padding-bottom: 5px;
 }
 
 ul.menu li {
