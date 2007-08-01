@@ -624,17 +624,17 @@ ActiveList.prototype = {
             iconImage.setOpacity(this.hiddenMenuOpacity);
             li[icon.action] = iconImage;
 
-            var self = this;
-            Event.observe(iconImage, "click", function() { self.bindAction(li, icon.action) });
+            Event.observe(iconImage, "mousedown", function(e) { Event.stop(e) }.bind(this));
+            Event.observe(iconImage, "click", function() { this.bindAction(li, icon.action) }.bind(this));
 
             // Append content container
             if('delete' != icon.action && !this.getContainer(li, icon.action))
             {
                 var contentContainer = document.createElement('div');
                 contentContainer.style.display = 'none';
-                Element.addClassName(contentContainer, self.cssPrefix + icon.action + 'Container');
-                Element.addClassName(contentContainer, self.cssPrefix + 'container');
-                contentContainer.id = self.cssPrefix + icon.action + 'Container_' + li.id;
+                Element.addClassName(contentContainer, this.cssPrefix + icon.action + 'Container');
+                Element.addClassName(contentContainer, this.cssPrefix + 'container');
+                contentContainer.id = this.cssPrefix + icon.action + 'Container_' + li.id;
                 li.appendChild(contentContainer);
                 li[icon.action + 'Container'] = contentContainer;
             }
@@ -664,7 +664,6 @@ ActiveList.prototype = {
 
             if(!url) return false;
 
-            var self = this;
             // display feedback
             this.onProgress(li);
 
@@ -676,8 +675,8 @@ ActiveList.prototype = {
                 // so the only way I could make it work is this
                 function(param)
                 {
-                    self.callUserCallback(action, param, li);
-                }
+                    this.callUserCallback(action, param, li);
+                }.bind(this)
             );
         }
     },
@@ -766,26 +765,24 @@ ActiveList.prototype = {
      */
     createSortable: function ()
     {
-        var self = this;
-
         Element.addClassName(this.ul, this.cssPrefix.substr(0, this.cssPrefix.length-1));
         
         if(Element.hasClassName(this.ul, this.cssPrefix + 'add_sort'))
-        {
-            Sortable.create(this.ul.id,
+        {	
+			Sortable.create(this.ul.id,
             {
                 dropOnEmpty:   true,
                 containment:   this.acceptFromLists,
                 onChange:      function(elementObj) 
                 { 
-                    self.dragged = elementObj;
-                },
+                    this.dragged = elementObj;
+                }.bind(this),
                 onUpdate:      function() { 
-                    self.saveSortOrder(); 
-                },
+                    this.saveSortOrder(); 
+                }.bind(this),
                 
-                starteffect: function(){ self.scrollStart() },
-                endeffect: function(){ self.scrollEnd() }
+                starteffect: function(){ this.scrollStart() }.bind(this),
+                endeffect: function(){ this.scrollEnd() }.bind(this)
             });
         }        
     },
