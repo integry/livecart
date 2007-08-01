@@ -49,9 +49,10 @@ class UserGroup extends ActiveRecordModel
 	{
 	    if(!$this->rolesLoaded || $force)
 	    {
-		    foreach(AccessControlAssociation::getRecordSetByUserGroup($this, new ARSelectFilter(), self::LOAD_REFERENCES) as $assoc)
+	        $associations = AccessControlAssociation::getRecordSetArrayByUserGroup($this, new ARSelectFilter(), self::LOAD_REFERENCES);
+		    foreach($associations as $assoc)
 		    {
-		        $this->appliedRoles[$assoc->role->get()->getID()] = $assoc->role->get();
+		        $this->appliedRoles[$assoc['roleID']] = $assoc['Role'];
 		    }
 		    
 		    $this->rolesLoaded = true;
@@ -72,7 +73,7 @@ class UserGroup extends ActiveRecordModel
 	    $appliedRoleNames = array();
 	    foreach($this->getAppliedRoles() as $role)
 	    {
-	        $appliedRoleNames[] = $role->name->get();
+	        $appliedRoleNames[] = $role['name'];
         }
         
 	    return count(array_intersect($actionRoleNames, $appliedRoleNames)) > 0;

@@ -94,6 +94,23 @@ class AccessControlAssociation extends ActiveRecordModel
 	    
 	    return self::getRecordSet($filter, $loadReferencedRecords);
 	}
+	
+    
+    /**
+     * Load groups to roles associations as array from database using specified group
+     *
+     * @param UserGroup $userGroup User group
+     * @param ARSelectFilter $filter
+     * @param bool $loadReferencedRecords
+     *
+     * @return Array
+     */
+    public static function getRecordSetArrayByUserGroup(UserGroup $userGroup, ARSelectFilter $filter, $loadReferencedRecords = false)
+    {
+        $filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "userGroupID"), $userGroup->getID()));
+        
+        return self::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
+    }
 }
 
 ?>
