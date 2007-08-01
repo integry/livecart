@@ -16,9 +16,12 @@ function smarty_function_zebra($params, LiveCartSmarty $smarty)
         return false;
     }
 	
-	$index = $smarty->_foreach[$params['loop']]['iteration'];
+	if (0 == $smarty->_foreach[$params['loop']]['iteration'] || !isset($smarty->zebra[$params['loop']]))
+	{
+		$smarty->zebra[$params['loop']] = 0;
+	}
 	
-	return ' class="' . ($index % 2 ? 'even' : 'odd') .'"';
+	return ' class="' . (++$smarty->zebra[$params['loop']] % 2 ? 'even' : 'odd') .'"';
 }
 
 ?>

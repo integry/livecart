@@ -28,8 +28,6 @@
 	}
 	catch (HTTPStatusException $e)
 	{
-	    echo $e;
-	    
 	    if($e->getController() instanceof BackendController) 
 	    {
 	        $route = 'backend.err/redirect/' . $e->getStatusCode();

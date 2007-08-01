@@ -20,7 +20,7 @@ function smarty_prefilter_config($tplSource, $smarty)
     $source = preg_replace('/{role ([\w.]+)}/', '{role name="$1"}', $source);
 
     // template customizations - allow to load from a different source
-	$source = preg_replace('/{include file="([-.a-zA-Z0-9\/]+)"}/', '{include file="custom:$1"}', $source);	
+	$source = preg_replace('/{include file="([-.a-zA-Z0-9\/]+)"(.*)}/msU', '{include file="custom:$1"\\2}', $source);	
 
 	$source = preg_replace('/{block (.+?)}/', '{foreach from=\$$1 item=item key=key}{$item}{/foreach}', $source);
 
