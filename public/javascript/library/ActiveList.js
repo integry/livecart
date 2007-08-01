@@ -486,6 +486,9 @@ ActiveList.prototype = {
             case 'red':
                 new Effect.Highlight(li, {startcolor:'#FFF1F1', endcolor:'#F5F5F5'});
                 break;
+            case 'pink':
+                new Effect.Highlight(li, {startcolor:'#FFF7F7', endcolor:'#FBFBFB'});
+                break;
             case 'yellow':
             default:
                 new Effect.Highlight(li, {startcolor:'#FBFF85', endcolor:'#F5F5F5'});
@@ -660,10 +663,19 @@ ActiveList.prototype = {
         {
             this._currentLi = li;
             
+			if(action == 'delete')
+			{
+                Element.addClassName(li, this.cssPrefix  + action + '_inProgress');
+			}
+			
             var url = this.callbacks[('before-'+action).camelize()].call(this, li);
 
-            if(!url) return false;
-
+            if(!url) 
+			{
+                Element.removeClassName(li, this.cssPrefix  + action + '_inProgress');
+				return false;
+            }
+    
             // display feedback
             this.onProgress(li);
 
@@ -733,6 +745,9 @@ ActiveList.prototype = {
     {
         this._currentLi = li;
         this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
+		
+        Element.removeClassName(li, this.cssPrefix  + action + '_inProgress');
+		
         this.offProgress(li);
     },
 

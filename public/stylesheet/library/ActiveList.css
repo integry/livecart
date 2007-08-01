@@ -45,3 +45,8 @@ ul li.activeList_even
 li.activeList_even, li.activeList_odd {
   	border: 2px solid #EEEEEE;
 }
+
+li.activeList_delete_inProgress 
+{
+    background-color: #FFE0E0;
+}
