@@ -52,7 +52,10 @@ class MultiValueSpecificationItem implements iSpecification
 	  	
 		foreach ($this->items as $item)
 	  	{
-		    $item->save();
+		    if ($item->isModified())
+		    {
+				$item->save();				
+			}
 		}
 	}
 
