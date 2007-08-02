@@ -20,6 +20,8 @@ class CustomerOrder extends ActiveRecordModel
 	public $shipments = array();	
 	
 	private $removedItems = array();
+	
+	private $removingItems = false;
 	    
     private $taxes = array();
     
@@ -204,9 +206,45 @@ class CustomerOrder extends ActiveRecordModel
                 $this->removedItems[] = $item;
                 unset($this->orderedItems[$key]);
                 $this->resetShipments(); 
+                break;
             }
         } 
     }
+    
+
+    /**
+     *  Remove a shipment from order
+     */
+    public function removeShipment(Shipment $removedShipment)
+    {
+        foreach ($this->shipments as $key => $shipment)
+        {
+            if ($removedShipment === $shipment)
+            {
+                for($i = 0; $i < count($this->orderedItems); $i++)
+                {
+                    if($this->orderedItems[$i]->shipment->get() && ($this->orderedItems[$i]->shipment->get() === $removedShipment))
+                    {
+                        $this->removeItem($this->orderedItems[$i]);
+                    }
+                }
+                
+                if($this->shipments instanceof ARSet)
+                {
+                    $this->shipments->remove($key);
+                }
+                else
+                {
+                    unset($this->shipments[$key]);
+                }
+                
+                $this->resetShipments(); 
+                break;
+            }
+        } 
+    }
+    
+    
     
     /**
      *	Move an item to a different order
@@ -318,6 +356,7 @@ class CustomerOrder extends ActiveRecordModel
 				$this->removeItem($item);
 			}
 		}
+		
 
         // delete removed items
         if ($this->removedItems)
@@ -327,7 +366,8 @@ class CustomerOrder extends ActiveRecordModel
                 $item->delete();
                 $isModified = true;
             }      
-
+            
+            $this->removingItems = true;
             $this->removedItems = array();
             $this->resetShipments();             
         }
@@ -339,8 +379,7 @@ class CustomerOrder extends ActiveRecordModel
                 $this->currency->set(self::getApplication()->getDefaultCurrency());
             }
             
-	        $this->totalAmount->set($this->getTotal($this->currency->get()));
-            
+	        $this->totalAmount->set($total = $this->getTotal($this->currency->get()));
             parent::save();
             
             $isModified = false;
@@ -364,6 +403,15 @@ class CustomerOrder extends ActiveRecordModel
             }                      
         
 	        $this->shipping->set(serialize($this->shipments));		
+		} 
+		else if($this->removingItems)
+		{
+            if(!$this->currency->get())
+            {
+                $this->currency->set(self::getApplication()->getDefaultCurrency());
+            }
+            
+            $this->totalAmount->set($this->getTotal($this->currency->get()));
 		}
         
 		parent::save();
@@ -704,13 +752,13 @@ class CustomerOrder extends ActiveRecordModel
             foreach ($this->getShoppingCartItems() as $item)
             {
                 $total += ($item->product->get()->getPrice($id) * $item->count->get());
-            }            
-        }		        
+            }
+        }	        	  
     
         if ($this->isFinalized->get()) 
         { 
-            return $currency->convertAmount($this->currency->get(), $this->totalAmount->get());
-        }     
+            return $currency->convertAmount($this->currency->get(), $total);
+        }    
     
         return round($total, 2);
     }
@@ -927,7 +975,10 @@ class CustomerOrder extends ActiveRecordModel
     
     public function resetShipments()
     {
-        $this->shipments = array();
+        if($this->isFinalized->get())
+        {
+            $this->shipments = array();
+        }
     }    
     
     public function getDownloadShipment()

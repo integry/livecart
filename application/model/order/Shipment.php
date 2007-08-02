@@ -407,7 +407,7 @@ class Shipment extends ActiveRecordModel
     public function save()
     {
         // make sure the shipment doesn't consist of downloadable files only
-        if (!$this->isShippable())
+        if (!$this->isShippable() && !$this->order->get()->isFinalized->get())
         {
             return false;
         }
@@ -509,23 +509,12 @@ class Shipment extends ActiveRecordModel
     public function delete()
     {
         $order = $this->order->get();
-        $orderedItems = $order->getOrderedItems();
-        for($i = 0; $i < count($orderedItems); $i++)
-        {
-            if($orderedItems[$i]->shipment->get() && ($orderedItems[$i]->shipment->get() === $this))
-            {
-                $order->removeItem($orderedItems[$i]);
-            }
-        }
         
-        reset($this->items);
-        while($item = current($this->items))
-        {
-            unset($item);
-            next($this->items);
-        }
+        $order->removeShipment($this);
         
         parent::delete();
+        
+        $order->save();
     }
 }
 

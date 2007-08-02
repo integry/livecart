@@ -13,11 +13,12 @@
 {assign var="ACTION_SHIPMENTCHANGE" value=6}
 {assign var="ACTION_ORDER" value=7}
 {assign var="ACTION_CANCELEDCHANGE" value=8}
+{assign var="ACTION_REMOVED_WITH_SHIPMENT" value=9}
 
 
 <ul class="logHistory">
-{foreach item='log' from=$logs}
-    <li>
+{foreach name="logs" item='log' from=$logs}
+    <li class="logEntry">
         <table>
             <tr>
                 <td class="logEntryAction">
@@ -49,28 +50,30 @@
                 <td colspan="2">
                     <table class="logEntryDiff">
                         <tr>
+                            <td class="logEntryValueFrom">{t _from}:</td>
+                            <td class="logEntryValueTo">{t _to}:</td>
+                        </tr>
+                        <tr>
                             <td>
-                                <div class="logEntryValueFrom">{t _from}:</div>
                                 {if $log.type == $TYPE_ORDER}
-                                    {include file="backend/orderLog/order.tpl" order=$log.oldValue otherOrder=$log.newValue}
+                                    {include file="backend/orderLog/order.tpl" order=$log.oldValue otherOrder=$log.newValue log=$log}
                                 {elseif $log.type == $TYPE_SHIPMENT}
-                                    {include file="backend/orderLog/shipment.tpl" shipment=$log.oldValue otherShipment=$log.newValue}      
+                                    {include file="backend/orderLog/shipment.tpl" shipment=$log.oldValue otherShipment=$log.newValue log=$log}      
                                 {elseif $log.type == $TYPE_ORDERITEM}
-                                    {include file="backend/orderLog/orderedItem.tpl" orderedItem=$log.oldValue otherOrderedItem=$log.newValue}
+                                    {include file="backend/orderLog/orderedItem.tpl" orderedItem=$log.oldValue otherOrderedItem=$log.newValue log=$log}
                                 {elseif $log.type == $TYPE_SHIPPINGADDRESS || $log.type == $TYPE_BILLINGADDRESS}
-                                    {include file="backend/orderLog/address.tpl" address=$log.oldValue otherAddress=$log.newValue} 
+                                    {include file="backend/orderLog/address.tpl" address=$log.oldValue otherAddress=$log.newValue log=$log} 
                                 {/if}
                             </td>
                             <td>
-                                <div class="logEntryValueTo">{t _to}:</div>
                                 {if $log.type == $TYPE_ORDER}
-                                    {include file="backend/orderLog/order.tpl" order=$log.newValue otherOrder=$log.oldValue}
+                                    {include file="backend/orderLog/order.tpl" order=$log.newValue otherOrder=$log.oldValue log=$log}
                                 {elseif $log.type == $TYPE_SHIPMENT}
-                                    {include file="backend/orderLog/shipment.tpl" shipment=$log.newValue otherShipment=$log.oldValue}        
+                                    {include file="backend/orderLog/shipment.tpl" shipment=$log.newValue otherShipment=$log.oldValue log=$log}        
                                 {elseif $log.type == $TYPE_ORDERITEM}
-                                    {include file="backend/orderLog/orderedItem.tpl" orderedItem=$log.newValue otherOrderedItem=$log.oldValue}
+                                    {include file="backend/orderLog/orderedItem.tpl" orderedItem=$log.newValue otherOrderedItem=$log.oldValue log=$log}
                                 {elseif $log.type == $TYPE_SHIPPINGADDRESS || $log.type == $TYPE_BILLINGADDRESS}
-                                    {include file="backend/orderLog/address.tpl" address=$log.newValue otherAddress=$log.oldValue}  
+                                    {include file="backend/orderLog/address.tpl" address=$log.newValue otherAddress=$log.oldValue log=$log}  
                                 {/if}
                             </td>
                         </tr>
@@ -85,9 +88,10 @@
                     {t _from_lowercase} 
                     <span class="logEntryOldTotalAmount">{$log.Order.Currency.pricePrefix}{$log.oldTotal}{$log.Order.Currency.priceSuffix}</span> 
                     {t _to_lowercase} 
-                    <span class="logEntryNewTotalAmount">{$log.Order.Currency.pricePrefix}{$log.oldTotal}{$log.Order.Currency.priceSuffix}</span>
+                    <span class="logEntryNewTotalAmount">{$log.Order.Currency.pricePrefix}{$log.newTotal}{$log.Order.Currency.priceSuffix}</span>
                 </td>
             </tr>
         </table>
     </li>
 {/foreach}
+</ul>

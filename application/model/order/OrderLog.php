@@ -22,6 +22,7 @@ class OrderLog extends ActiveRecordModel
 	   const ACTION_SHIPMENTCHANGE = 6;
 	   const ACTION_ORDER = 7;
 	   const ACTION_CANCELEDCHANGE = 8;
+       const ACTION_REMOVED_WITH_SHIPMENT = 9;
 	   
     /**
 	 * Define database schema used by this active record instance

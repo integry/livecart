@@ -13,7 +13,7 @@
     {includeCss file="../javascript/library/tinymce/themes/advanced/css/editor_ui.css" front=true}
     {includeCss file="backend/stat.css" front=true}
     {includeCss file="backend/Backend.css" front=true}
-	{compiledCss glue=true}
+	{compiledCss glue=false}
 	
     {includeJs file=library/tinymce/tiny_mce.js inline=true} 
     
@@ -30,7 +30,7 @@
     {includeJs file="library/scriptaculous/effects.js" front=true}
     {includeJs file="library/prototype/prototype.js" front=true}
 	
-	{compiledJs glue=true}
+	{compiledJs glue=false}
 
 	{literal}
 	<script language="javascript" type="text/javascript">

@@ -70,6 +70,7 @@ class OrderHistory
 				'ID' => $item->getID(), 
                 'shipmentID' => $item->shipment->get() ? $item->shipment->get()->getID() : null, 
 				'count' => (int)$item->count->get(), 
+				'price' => (int)$item->price->get(), 
 				'Product' => array(
 				    'ID' => (int)$item->product->get()->getID(),
                     'sku' =>$item->product->get()->sku->get(),
@@ -160,14 +161,14 @@ class OrderHistory
 		// Delete shipment
 		else if(count($this->oldOrder['shipments']) > count($currentOrder['shipments'])) // Delete shipment
 		{
-            foreach(array_diff_key($this->oldOrder['items'], $currentOrder['items']) as $item)
-            {
-                $this->logItem($item, null, $currentOrder);
-            }
-		    
             foreach(array_diff_key($this->oldOrder['shipments'], $currentOrder['shipments']) as $shipment)
             {
                 $this->logShipment($shipment, null, $currentOrder);
+            }
+            
+            foreach(array_diff_key($this->oldOrder['items'], $currentOrder['items']) as $item)
+            {
+                $this->logItem($item, null, $currentOrder, true);
             }
 		}
 		else
@@ -245,10 +246,15 @@ class OrderHistory
 		}       
     }
     
-    private function logItem($oldValue, $newValue, $orderArray)
+    private function logItem($oldValue, $newValue, $orderArray, $removedWithShipment = false)
     {
         $action = OrderLog::ACTION_COUNTCHANGE;
-        if(!$oldValue)
+        
+        if($removedWithShipment)
+        {
+            $action = OrderLog::ACTION_REMOVED_WITH_SHIPMENT;
+        }
+        else if(!$oldValue)
         {
             $action = OrderLog::ACTION_ADD;
         }

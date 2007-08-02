@@ -32,6 +32,7 @@ _to_lowercase=to
 _order_total_changed=Order total changed
 _no_data_available=No data available
 _status=Status
+_canceled=Canceled
 
 
 # Order
@@ -56,7 +57,7 @@ _shipment=Shipment
 
 
 # Shipment
-
+_products=Products
 _shipment_id=Shipment ID
 _shipment_new=New
 _shipment_pending=Pending

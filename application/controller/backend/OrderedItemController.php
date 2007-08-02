@@ -29,7 +29,7 @@ class OrderedItemController extends StoreManagementController
         }
         
         $history = new OrderHistory($shipment->order->get(), $this->user);
-        
+
         $product = Product::getInstanceById((int)$this->request->get('productID'), true);
         
         $existingItem = false;
@@ -47,7 +47,7 @@ class OrderedItemController extends StoreManagementController
 	        $item = $existingItem;
 	        if($downloadable)
 	        {
-	            $item->count->set(1);
+	            return new JSONResponse(false, 'failure', $this->translate('_downloadable_item_already_exists_in_this_order'));
 	        }
 	        else
 	        {
@@ -183,6 +183,7 @@ class OrderedItemController extends StoreManagementController
             $item = OrderedItem::getInstanceByID('OrderedItem', (int)$id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress', 'Product')); 
 	        $shipment = $item->shipment->get();
 	        $order = $shipment->order->get();
+	        
 	        $history = new OrderHistory($order, $this->user);
 	        
 	        $shipment->loadItems();
@@ -196,10 +197,10 @@ class OrderedItemController extends StoreManagementController
 			    $shipment->setRateId($shipment->getShippingService()->getID());
             }
             
-            $item->delete();
-            
             $shipment->recalculateAmounts();
             $shipment->save();
+            
+            $order->save();
             
             $history->saveLog();
             

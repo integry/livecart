@@ -6,6 +6,7 @@ _error_updating_item_quantity=Error updating item quantity
 _item_has_been_successfuly_saved=Item was successfully saved
 _item_was_successfully_removed_from_shipment=Item was successfully removed from shipment
 _error_removing_item_from_shipment=Error occurred removing item from shipment
+_downloadable_item_already_exists_in_this_order=This downloadable item already exist in this order
 
 
 _done_adding_products=Done adding products
