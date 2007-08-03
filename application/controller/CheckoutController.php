@@ -381,11 +381,17 @@ class CheckoutController extends FrontendController
 			return $redirect;
 		}       
         
+        // check for express checkout data for this order
+        if (ExpressCheckout::getInstanceByOrder($this->order))
+        {
+            return new ActionRedirectResponse('checkout', 'payExpress');
+        }        
+        
         $currency = $this->request->get('currency', $this->application->getDefaultCurrencyCode());
                 
         $response = new ActionResponse();
         $response->set('order', $this->order->toArray());
-		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode())); 
+		$response->set('currency', $this->getRequestCurrency());
         
         $ccHandler = $this->application->getCreditCardHandler();
         if ($ccHandler)
@@ -486,6 +492,24 @@ class CheckoutController extends FrontendController
     /**
      *	@role login
      */       
+	public function payExpress()
+	{
+        $res = $this->validateExpressCheckout();
+        if ($res instance of Response)
+        {
+            return $res;
+        }
+
+        $response = new ActionResponse;
+        $response->set('order', $this->order->toArray());        
+		$response->set('currency', $this->getRequestCurrency());        
+		$response->set('method', $res->toArray()); 
+        return $response;
+    }
+	
+    /**
+     *	@role login
+     */       
 	public function completed()
 	{
         $order = CustomerOrder::getInstanceByID((int)$this->session->get('completedOrderID'));
@@ -555,6 +579,33 @@ class CheckoutController extends FrontendController
 		
 		return false;		
 	}
+    
+    private function validateExpressCheckout()
+    {
+        if ($redirect = $this->validateOrder($this->order, self::STEP_PAYMENT))
+        {
+			return $redirect;
+		}
+
+        $expressInstance = ExpressCheckout::getInstanceByOrder($this->order);        
+        
+        if (!$expressInstance)
+        {
+            return new ActionRedirectResponse('order', 'index');
+        }
+        
+        try
+        {
+            $handler = $expressInstance->getTransactionDetails($this->getTransaction());
+        }
+        catch (PaymentException $e)
+        {
+            $expressInstance->delete();
+            return new ActionRedirectResponse('checkout', 'express', array('id' => $expressInstance->method->get()));
+        }
+        
+        return $expressInstance;
+    }
     
     private function buildShippingForm(/*ARSet */$shipments)
     {

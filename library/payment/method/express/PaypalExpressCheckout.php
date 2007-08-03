@@ -5,7 +5,9 @@ include_once(dirname(__file__) . '/../../method/library/paypal/PaypalCommon.php'
 
 class PaypalExpressCheckout extends ExpressPayment
 {
-	public function redirect($returnUrl, $cancelUrl, $sale = true)
+	protected $token;
+	
+    public function redirect($returnUrl, $cancelUrl, $sale = true)
 	{
         $paypal = $this->getHandler('SetExpressCheckout');
         $paypal->setParams($this->details->amount->get(), $returnUrl, $cancelUrl, $sale ? 'Sale' : 'Order');
@@ -23,10 +25,15 @@ class PaypalExpressCheckout extends ExpressPayment
         return $request['token'];
     }
     
-    public function getDetails($request)
+    public function setToken($token)
+    {
+        $this->token = $token;
+    }
+    
+    public function getDetails($request = null)
     {        
         $paypal = $this->getHandler('GetExpressCheckoutDetails');
-        $paypal->setParams(self::getToken($request));
+        $paypal->setParams($request ? self::getToken($request) : $this->token);
         $paypal->execute();
 
         $this->checkErrors($paypal);

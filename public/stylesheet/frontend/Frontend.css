@@ -1113,6 +1113,13 @@ a.cvv
 	margin-top: 30px;
 }
 
+#expressComplete
+{
+    display: block;
+    padding-top: 15px;
+    margin-left: 22px;
+}
+
 /*************************** 
 	User account
 ***************************/

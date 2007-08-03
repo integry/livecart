@@ -31,7 +31,7 @@ class ErrController extends FrontendController
 			case 403:
 			case 404:
 			    $params['id'] = $id;
-			    return new ActionRedirectResponse('err', 'index', $params);  
+			    return new ActionResponse('id', $id);  
 			default:
 				print_r($this->user->toArray());
 		       	echo 'error ' . $this->request->get('id');

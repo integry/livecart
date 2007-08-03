@@ -35,6 +35,23 @@ class ExpressCheckout extends ActiveRecordModel
 		return $instance;
 	}
 	
+	public static function getInstanceByOrder(CustomerOrder $order)
+	{
+        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'orderID'), $order->getID()));
+        $s = self::getRecordSet(__CLASS__, $f);
+        if ($s->size())
+        {
+            return $s->get(0);
+        }
+    }
+	
+	public function getTransactionDetails()
+	{
+        $handler = $this->getApplication()->getExpressPaymentHandler($this->method->get());
+        $handler->setToken($this->token->get());
+        return $handler->getDetails();
+    }
+	
 	protected function insert()
 	{
         // remove other ExpressCheckout instances for this order
