@@ -56,7 +56,7 @@ class TaxRateController extends StoreManagementController
         $tax = $taxRate->tax->get();
         $taxRate->delete();
         
-        return new JSONResponse(array('tax' => $tax->toArray()), 'success', $this->translate('_tax_rate_was_successfully_deleted'));
+        return new JSONResponse(array('tax' => $tax->toArray()), 'success');
     }
     
     public function edit()

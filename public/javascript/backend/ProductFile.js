@@ -15,11 +15,22 @@ Backend.ProductFile.Callbacks =
         }
     },
     afterDelete: function(li, response){
+        try 
+        { 
+            response = eval('(' + response + ')'); 
+        } 
+        catch(e) 
+        { 
+            return false; 
+        }
+		
         if(!response.error) {
-            this.remove(li);
             var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
             tabControl.setCounter('tabProductFiles', tabControl.getCounter('tabProductFiles') - 1);
+			return true;
         }
+		
+		return false;
     },
     beforeSort: function(li, order){ 
         return Backend.ProductFile.Links.sort + "?target=" + this.ul.id + "&" + order
@@ -458,11 +469,22 @@ Backend.ProductFile.Group.Callbacks =
         }
     },
     afterDelete: function(li, response) {
+        try 
+        { 
+            response = eval('(' + response + ')'); 
+        } 
+        catch(e) 
+        { 
+            return false; 
+        }
+		
         if(!response.error) {
             var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
             tabControl.setCounter('tabProductFiles', tabControl.getCounter('tabProductFiles') - li.getElementsByTagName('li').length);
-            this.remove(li);
-        }
+            return true;
+		}
+
+        return false;
     },
     beforeSort: function(li, order) { 
         return Backend.ProductFile.Group.Links.sort + '&' + order;

@@ -8,20 +8,24 @@ Backend.Tax.prototype =
     Instances: {},
     
     Callbacks: {
-        'beforeDelete': function(li) 
+        beforeDelete: function(li) 
         {
             if(confirm(Backend.Tax.prototype.Messages.confirmRemove))
             {
                 return Backend.Tax.prototype.Links.remove + "/" + this.getRecordId(li);
             }
         },
-        'afterDelete': function(li, response)
+		
+        afterDelete: function(li, response)
         {
-            var response = eval('(' + response + ')')
-            
-            if('success' == response.status) {
-                this.remove(li);     
-            }
+             try 
+             { 
+                 response = eval('(' + response + ')'); 
+             } 
+             catch(e) 
+             { 
+                 return false; 
+             }
         },
         
         beforeEdit:     function(li)

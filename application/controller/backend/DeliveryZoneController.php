@@ -191,7 +191,7 @@ class DeliveryZoneController extends StoreManagementController
 	{
 	    DeliveryZone::getInstanceByID((int)$this->request->get('id'))->delete();
 	    
-	    return new JSONResponse(false, 'success', $this->translate('_delivery_zone_was_successfully_removed'));
+	    return new JSONResponse(false, 'success');
 	}
 
 	/**
@@ -201,7 +201,7 @@ class DeliveryZoneController extends StoreManagementController
 	{
 	    DeliveryZoneCityMask::getInstanceByID((int)$this->request->get('id'))->delete();
 	    
-	    return new JSONResponse(false, 'success', $this->translate('_mask_was_successfully_removed'));
+	    return new JSONResponse(false, 'success');
 	}
 	
 	/**
@@ -240,7 +240,7 @@ class DeliveryZoneController extends StoreManagementController
 	{
 	    DeliveryZoneZipMask::getInstanceByID((int)$this->request->get('id'))->delete();
 	    
-	    return new JSONResponse(false, 'success', $this->translate('_mask_was_successfully_removed'));
+	    return new JSONResponse(false, 'success');
 	}
 	
 	/**
@@ -279,7 +279,7 @@ class DeliveryZoneController extends StoreManagementController
 	{    
 	    DeliveryZoneAddressMask::getInstanceByID((int)$this->request->get('id'))->delete();
 	    
-	    return new JSONResponse(false, 'success', $this->translate('_mask_was_successfully_removed'));
+	    return new JSONResponse(false, 'success');
 	}
 
 	private function createCountriesAndStatesForm(DeliveryZone $zone)

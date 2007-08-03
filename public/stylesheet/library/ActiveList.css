@@ -8,8 +8,8 @@
     width: 16px;
     height: 16px;
     margin: 2px;
-	cursor: pointer;
-	cursor: hand;
+    cursor: pointer;
+    cursor: hand;
 }
 
 ul.activeList
@@ -27,7 +27,7 @@ li.activeList_even, li.activeList_odd
 }
 
 .activeList_add_sort li {
-  	cursor: move;  	
+    cursor: move;   
 }
 
 /*
@@ -43,10 +43,10 @@ ul li.activeList_even
 */
 
 li.activeList_even, li.activeList_odd {
-  	border: 2px solid #EEEEEE;
+    border: 2px solid #EEEEEE;
 }
 
 li.activeList_delete_inProgress 
 {
-    background-color: #FFE0E0;
+    background-color: #FFE0E0 ! important;
 }

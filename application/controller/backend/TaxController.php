@@ -63,7 +63,7 @@ class TaxController extends StoreManagementController
         $service = Tax::getInstanceByID((int)$this->request->get('id'));
         $service->delete();
         
-        return new JSONResponse(false, 'success', $this->translate('_tax_entry_was_successfully_deleted'));
+        return new JSONResponse(false, 'success');
     }
 
 	/**

@@ -150,6 +150,8 @@ LiveCart.AjaxRequest.prototype = {
     
     showConfirmation: function(responseData)
     {       
+	    if(!responseData.message) return;
+		
         var color = null;
         if('success' == responseData.status) color = 'yellow';
         if('failure' == responseData.status) color = 'red';
@@ -173,7 +175,7 @@ LiveCart.AjaxRequest.prototype = {
 	        '</div>');
 			
             new win.Backend.SaveConfirmationMessage(win.$('confirmation_' + LiveCart.AjaxRequest.prototype.requestCount));  
-	}
+	    }
     },
     
     reportError: function(response)

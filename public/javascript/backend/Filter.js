@@ -70,16 +70,25 @@ Backend.Filter.prototype = {
              if(confirm('{/literal}{t _FilterGroup_remove_question|addslashes}{literal}'))  return Backend.Filter.prototype.links.deleteGroup + this.getRecordId(li)
          },
    
-         afterDelete:    function(li, jsonResponse)
+         afterDelete:    function(li, response)
          {
-             var response = eval("("+jsonResponse+")");
+             try 
+             { 
+                 response = eval('(' + response + ')'); 
+             } 
+             catch(e) 
+             { 
+                 return false; 
+             }
  
              if(response.status == 'success') 
              {
-                 this.remove(li);
                  CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 2));
+				 return true;
              }
-         },   
+         
+		     return false;
+		 },   
 
          beforeSort:     function(li, order)
          {
@@ -455,7 +464,19 @@ Backend.Filter.prototype = {
                     return Backend.Filter.prototype.links.deleteFilter + this.getRecordId(li);
                 }
             },
-            afterDelete: function(li, response){ self.deleteValueFieldAction(li, this) }
+            afterDelete: function(li, response)
+			{ 
+	            try 
+	            { 
+	                response = eval('(' + response + ')'); 
+	            } 
+	            catch(e) 
+	            { 
+	                return false; 
+	            }
+				
+			    self.deleteValueFieldAction(li, this)
+			}
         }, this.activeListMessages);
     },
    

@@ -40,7 +40,7 @@ class ProductRelationshipGroupController extends StoreManagementController
 	{
 	    ProductRelationshipGroup::getInstanceByID((int)$this->request->get('id'))->delete();
 	    
-        return new JSONResponse(false, 'success', $this->translate('_relationship_group_wes_deleted'));   
+        return new JSONResponse(false, 'success');   
 	}
 
     /**

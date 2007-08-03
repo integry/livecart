@@ -498,6 +498,7 @@ Backend.CustomerOrder.Editor.prototype =
                     this.nodes.acceptanceStatusValue.update(response.value);
                     this.nodes.acceptanceStatusValue.style.color = response.isCanceled ? 'red' : 'green';
 					this.nodes.form.elements.namedItem('isCancelled').value = response.isCanceled;
+                    Backend.CustomerOrder.prototype.updateLog(this.id);
 	            }
 	        }.bind(this)
         );
@@ -554,6 +555,8 @@ Backend.CustomerOrder.Editor.prototype =
 	{
 		if(response.status == 'success')
 		{
+            Backend.CustomerOrder.prototype.updateLog(this.id);
+			
 			Form.State.backup(this.nodes.form);
 		}
 		else

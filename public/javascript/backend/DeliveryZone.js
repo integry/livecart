@@ -212,11 +212,14 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         },
         'afterDelete': function(li, response)
         {
-            response = eval('(' + response + ')')
-            
-            if('success' == response.status) {
-                this.remove(li);     
-            }
+			 try 
+			 { 
+			     response = eval('(' + response + ')'); 
+			 } 
+			 catch(e) 
+			 { 
+			     return false; 
+			 }
         },
         'beforeEdit': function(li) 
         {
@@ -234,11 +237,14 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         },
         'afterDelete': function(li, response)
         {
-            response = eval('(' + response + ')')
-            
-            if('success' == response.status) {
-                this.remove(li);     
-            }
+             try 
+             { 
+                 response = eval('(' + response + ')'); 
+             } 
+             catch(e) 
+             { 
+                 return false; 
+             }
         },
         'beforeEdit': function(li) 
         {
@@ -256,11 +262,14 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         },
         'afterDelete': function(li, response)
         {
-            response = eval('(' + response + ')');
-            
-            if('success' == response.status) {
-                this.remove(li);     
-            }
+             try 
+             { 
+                 response = eval('(' + response + ')'); 
+             } 
+             catch(e) 
+             { 
+                 return false; 
+             }
         },
         'beforeEdit': function(li) 
         {
@@ -644,11 +653,14 @@ Backend.DeliveryZone.ShippingService.prototype =
         },
         'afterDelete': function(li, response)
         {
-            response = eval('(' + response + ')')
-            
-            if('success' == response.status) {
-                this.remove(li);     
-            }
+             try 
+             { 
+                 response = eval('(' + response + ')'); 
+             } 
+             catch(e) 
+             { 
+                 return false; 
+             }
         },
         
         beforeEdit:     function(li)
@@ -933,6 +945,14 @@ Backend.DeliveryZone.ShippingRate.prototype =
         },
         'afterDelete': function(li) 
         {
+             try 
+             { 
+                 response = eval('(' + response + ')'); 
+             } 
+             catch(e) 
+             { 
+                 return false; 
+             }
         },
         'beforeEdit': function(li) 
         {
@@ -1222,7 +1242,14 @@ Backend.DeliveryZone.TaxRate.prototype =
         },
         'afterDelete': function(li, response)
         {
-            var response = eval('(' + response + ')')
+             try 
+             { 
+                 response = eval('(' + response + ')'); 
+             } 
+             catch(e) 
+             { 
+                 return false; 
+             }
             
             if('success' == response.status) {
                 if(Backend.DeliveryZone.TaxRate.prototype.instances[$(Backend.DeliveryZone.TaxRate.prototype.prefix + "new_taxRate_" + this.getRecordId(li, 2) + "_form").down('form')])
@@ -1230,9 +1257,11 @@ Backend.DeliveryZone.TaxRate.prototype =
                     var taxForm = Backend.DeliveryZone.TaxRate.prototype.getInstance($(Backend.DeliveryZone.TaxRate.prototype.prefix + "new_taxRate_" + this.getRecordId(li, 2) + "_form").down('form'));
                     taxForm.addTaxOption(response.tax.ID, response.tax.name);
                 }
-                this.remove(li);     
-                
+
+                return true;
             }
+			
+			return false;
         },
         
         beforeEdit:     function(li)

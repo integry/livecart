@@ -111,7 +111,7 @@ class ProductFileController extends StoreManagementController
 	{
 	    ProductFile::getInstanceByID((int)$this->request->get('id'))->delete();
 	    
-	    return new JSONResponse(array('status' => 'success'));
+	    return new JSONResponse(false, 'success');
 	}
 	
 	/**

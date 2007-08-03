@@ -99,7 +99,7 @@ class ProductRelationshipController extends StoreManagementController
 	    $product->removeFromRelatedProducts($relatedProduct);
 	    $product->save();
 	    
-	    return new JSONResponse(false, 'success', $this->translate('_relationship_was_successfully_removed'));
+	    return new JSONResponse(false, 'success');
 	}
 
     /**

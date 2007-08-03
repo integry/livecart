@@ -218,7 +218,7 @@ class SpecFieldController extends StoreManagementController
         if($id = $this->request->get("id", false))
         {
             SpecField::deleteById($id);
-            return new JSONResponse(false, 'success', $this->translate('_attribute_was_successfully_removed'));
+            return new JSONResponse(false, 'success');
         }
         else
         {

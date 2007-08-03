@@ -24,7 +24,18 @@ Backend.SiteNews.prototype =
 	         },
 	         afterEdit:      function(li, response) { li.handler.update(response);},
 	         afterSort:      function(li, response) {  },
-	         afterDelete:    function(li, response)  { Element.remove(li); curr.resetRatesContainer(); }
+	         afterDelete:    function(li, response)  
+			 { 
+	             try 
+	             { 
+	                 response = eval('(' + response + ')'); 
+	             } 
+	             catch(e) 
+	             { 
+	                 return false; 
+	             }
+				 curr.resetRatesContainer(); 
+			 }
 	     }, []);		
 	},
 	

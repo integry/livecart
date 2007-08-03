@@ -303,7 +303,7 @@ class ShipmentController extends StoreManagementController
 	    
 	    $history->saveLog();
 	    
-	    return new JSONResponse(false, 'success', $this->translate('_shipment_was_successfully_removed'));
+	    return new JSONResponse(false, 'success');
 	}
 }
 

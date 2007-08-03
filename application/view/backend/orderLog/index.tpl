@@ -14,6 +14,8 @@
 {assign var="ACTION_ORDER" value=7}
 {assign var="ACTION_CANCELEDCHANGE" value=8}
 {assign var="ACTION_REMOVED_WITH_SHIPMENT" value=9}
+{assign var="ACTION_NEW_DOWNLOADABLE_ITEM_ADDED" value=10}
+{assign var="ACTION_NEW_DOWNLOADABLE_ITEM_REMOVED" value=11}
 
 
 <ul class="logHistory">
@@ -34,7 +36,9 @@
                         {if $log.action == $ACTION_ADD}{t _new_item_added}
                         {elseif $log.action == $ACTION_REMOVE}{t _item_removed}
                         {elseif $log.action == $ACTION_COUNTCHANGE}{t _item_quantity_updated}
-                        {elseif $log.action == $ACTION_SHIPMENTCHANGE}{t _item_moved_to_another_shipment}{/if}
+                        {elseif $log.action == $ACTION_SHIPMENTCHANGE}{t _item_moved_to_another_shipment}
+                        {elseif $log.action == $ACTION_NEW_DOWNLOADABLE_ITEM_ADDED}{t _new_downloadable_item_added}
+                        {elseif $log.action == $ACTION_NEW_DOWNLOADABLE_ITEM_REMOVED}{t _downloadable_item_removed}{/if}
                     {elseif $log.type == $TYPE_SHIPPINGADDRESS}
                         {t _shipping_address_changed}
                     {elseif $log.type == $TYPE_BILLINGADDRESS}

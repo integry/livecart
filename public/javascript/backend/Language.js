@@ -34,12 +34,16 @@ Backend.LanguageIndex.prototype =
 	         },
 	         afterEdit:      function(li, response) {  },
 	         afterSort:      function(li, response) {  },
-	         afterDelete:    function(li, response)  { 
-                 response = eval('(' + response + ')');
-                 if(response.status == 'success')
-                 {
-                     Element.remove(li); 
-                 }
+	         afterDelete:    function(li, response)  
+			 { 
+	             try 
+	             { 
+	                 response = eval('(' + response + ')'); 
+	             } 
+	             catch(e) 
+	             { 
+	                 return false; 
+	             }
              }
 	     },  this.activeListMessages);
 	},	

@@ -10,11 +10,23 @@ Backend.RelatedProduct = {
             }
         },
         afterDelete: function(li, response){
+            try 
+            { 
+                response = eval('(' + response + ')'); 
+            } 
+            catch(e) 
+            { 
+                return false; 
+            }
+			
             if(!response.error) {
-                this.remove(li);
                 var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
                 tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') - 1);
-            }
+            
+			    return true;
+			}
+			
+			return false;
         },
         beforeSort: function(li, order){ 
             return Backend.RelatedProduct.links.sort + "?target=" + this.ul.id + "&" + order
@@ -80,11 +92,23 @@ Backend.RelatedProduct.Group.Callbacks =
         }
     },
     afterDelete: function(li, response) {
+        try 
+        { 
+            response = eval('(' + response + ')'); 
+        } 
+        catch(e) 
+        { 
+            return false; 
+        }
+			 
         if(!response.error) {
-            this.remove(li);
             var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
             tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') - li.getElementsByTagName('li').length);
-        }
+        
+		    return true;
+		}
+		
+		return false;
     },
     beforeSort: function(li, order) { 
         return Backend.RelatedProduct.Group.Links.sort + '&' + order;

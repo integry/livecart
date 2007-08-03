@@ -25,7 +25,7 @@ class ShippingRateController extends StoreManagementController
             ShippingRate::getInstanceByID($id)->delete();
         }
         
-        return new JSONResponse(array('status' => 'success'));
+        return new JSONResponse(false, 'success');
     }
 }
 ?>

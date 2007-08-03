@@ -42,7 +42,7 @@ class CategoryImageController extends ObjectImageController
 	{
         if(parent::delete())
         {
-            return new JSONResponse(false, 'success', $this->translate('_category_image_was_successfully_removed'));
+            return new JSONResponse(false, 'success');
         }
         else
         {

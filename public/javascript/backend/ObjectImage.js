@@ -171,9 +171,15 @@ Backend.ObjectImage.prototype =
 	         afterSort:      function(li, response) { li.parentNode.handler.arrangeImages(); },
 	         afterDelete:    function(li, response)  
 			 { 
-    	 	 	
-				Element.remove(li); 
-				
+	             try 
+	             { 
+	                 response = eval('(' + response + ')'); 
+	             } 
+	             catch(e) 
+	             { 
+	                 return false; 
+	             }
+			 
 				//CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li.parentNode));
                 
 				li.parentNode.handler.showNoImagesMessage();			   	

@@ -58,7 +58,7 @@ class ShippingServiceController extends StoreManagementController
         $service = ShippingService::getInstanceByID((int)$this->request->get('id'));
         $service->delete();
         
-        return new JSONResponse(false, 'success', $this->translate('_shipping_service_was_successfully_deleted'));
+        return new JSONResponse(false, 'success');
     }
     
     public function edit()

@@ -22,6 +22,7 @@ class OrderedItemController extends StoreManagementController
         {
 	 	    $order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('ShippingAddress' => 'UserAddress', 'Currency'));		    
 	 	    $shipment = $order->getDownloadShipment();
+	 	    $shipment->save();
         }
         else
         {
@@ -221,8 +222,7 @@ class OrderedItemController extends StoreManagementController
 		                'priceCurrencyID' => $item->priceCurrencyID->get()
 		            )
 	            ), 
-	            'success',
-				$this->translate('_item_was_successfully_removed_from_shipment')
+	            'success'
 			);
         }
         else

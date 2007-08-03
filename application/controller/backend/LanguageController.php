@@ -210,7 +210,7 @@ class LanguageController extends StoreManagementController
 		try
 	  	{
 			Language::deleteById($langId);	
-			return new JSONResponse(false, 'success', $this->translate('_language_has_been_successfully_removed'));		
+			return new JSONResponse(false, 'success');		
 		}
 		catch (Exception $exc)
 		{			  	

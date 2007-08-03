@@ -8,14 +8,20 @@ Backend.OrderedItem = {
             }
         },
         afterDelete: function(li, response){
-            response = eval("(" + response + ")");
+            try 
+            { 
+                response = eval('(' + response + ')'); 
+            } 
+            catch(e) 
+            { 
+                return false; 
+            }
             
             if(!response.error) {
-                this.remove(li);
                 var orderID = this.getRecordId(li, 3);
                 Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
                 
-                var shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + response.item.Shipment.ID);
+                var shipment = Backend.Shipment.prototype.getInstance(li.up('li'));
                 
                 shipment.hideShippedStatus();
 
@@ -23,7 +29,11 @@ Backend.OrderedItem = {
                 shipment.setTaxAmount(response.item.Shipment.taxAmount);
                 shipment.setShippingAmount(response.item.Shipment.shippingAmount);
                 shipment.setTotal(response.item.Shipment.total);
+				
+				return true;
             }
+			
+			return false;
         },
         beforeSort: function(li, order){ 
             var oldShipmentId = this.getRecordId(li, 2);
@@ -577,7 +587,7 @@ Backend.Shipment.prototype =
                        firstItemsList.destroySortable();
                    }
                    
-                   Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
+                   setTimeout(function() { Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID)) }.bind(this), 50);
                }.bind(this)
             );
         }
@@ -687,10 +697,22 @@ Backend.Shipment.Callbacks =
         }
     },
     afterDelete: function(li, response) {
+        try 
+        { 
+            response = eval('(' + response + ')'); 
+        } 
+        catch(e) 
+        { 
+            return false; 
+        }
+		
         if(!response.error) {
-            this.remove(li);
             var orderID = this.getRecordId(li, 2);
             Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
+			
+			return true;
         }
+		
+		return false;
     }
 }

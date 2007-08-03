@@ -744,7 +744,14 @@ ActiveList.prototype = {
     callUserCallback: function(action, response, li)
     {
         this._currentLi = li;
-        this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
+        var success = this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
+		
+		if(action == 'delete' && success !== false)
+		{
+			var duration = 0.5;
+		    Effect.Fade(li, { duration: duration });
+			setTimeout( function() { Element.remove(li) }.bind(this), duration * 1000 );
+		}
 		
         Element.removeClassName(li, this.cssPrefix  + action + '_inProgress');
 		

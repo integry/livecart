@@ -23,14 +23,14 @@ class SpecFieldValueController extends StoreManagementController
         if($id = $this->request->get("id", false))
         {
             SpecFieldValue::deleteById($id);
-            return new JSONResponse(array('status' => 'success'));
+            return new JSONResponse(false, 'success');
         }
         else
         {
-            return new JSONResponse(array('status' => 'failure'));
+            return new JSONResponse(false, 'failure');
         }
     }
-
+ 
     /**
      * Sort specification field values
      * 

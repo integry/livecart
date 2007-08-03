@@ -63,14 +63,14 @@ class SpecFieldGroupController extends StoreManagementController
         if($id = $this->request->get("id", false))
         {
             SpecFieldGroup::deleteById($id);
-            return new JSONResponse(false, 'success', $this->translate('_specfield_group_was_successfully_removed'));
+            return new JSONResponse(false, 'success');
         }
         else
         {
             return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_specfield_group'));
         }
     }
-    
+   
     /**
      * Sort specification groups
      * 

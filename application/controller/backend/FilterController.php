@@ -26,7 +26,7 @@ class FilterController extends StoreManagementController
         if($id = $this->request->get("id", false))
         {
             Filter::deleteByID($id);
-            return new JSONResponse(false, 'success', $this->translate('_filter_group_was_successfully_removed'));
+            return new JSONResponse(false, 'success');
         }
         else
         {

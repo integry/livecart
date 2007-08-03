@@ -991,6 +991,8 @@ class CustomerOrder extends ActiveRecordModel
  	    $shipment = Shipment::getNewInstance($this);
 	    $shipment->amountCurrency->set($this->currency->get());
    		$shipment->save();
+   		
+   		$this->shipments->add($shipment);
    	
    		return $shipment;
     }

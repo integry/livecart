@@ -78,13 +78,26 @@ Backend.SpecField.prototype = {
             if(confirm(Backend.SpecField.prototype.msg.removeFieldQuestion))
             return Backend.SpecField.prototype.links.deleteField + this.getRecordId(li)
         },
-        afterDelete:    function(li, jsonResponse)
+        afterDelete:    function(li, response)
         {
-            var response = eval("("+jsonResponse+")");
-            if(response.status == 'success') {
-                this.remove(li);
-                CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 3));
+			var response = "";
+            try 
+            { 
+                response = eval('(' + response + ')'); 
+            } 
+            catch(e) 
+            { 
+                return false; 
             }
+			 
+            if(response.status == 'success') 
+			{
+                CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 3));
+				
+				return true;
+            }
+			
+			return false;
         },
         beforeSort:     function(li, order) {
             return Backend.SpecField.prototype.links.sortField + "?target=" + this.ul.id + "&" + order
@@ -428,7 +441,18 @@ Backend.SpecField.prototype = {
                     return Backend.SpecField.prototype.links.deleteValue + this.getRecordId(li);
                 }
 	        },
-	        afterDelete: function(li, response){ self.deleteValueFieldAction(li) }
+	        afterDelete: function(li, response){ 
+	            try 
+	            { 
+	                response = eval('(' + response + ')'); 
+	            } 
+	            catch(e) 
+	            { 
+	                return false; 
+	            }
+				
+				self.deleteValueFieldAction(li) 
+			}
 	    }, this.msg.activeListMessages);
 	},
 
@@ -1302,13 +1326,24 @@ Backend.SpecFieldGroup.prototype = {
             if(confirm(Backend.SpecField.prototype.msg.removeGroupQuestion))
             return Backend.SpecField.prototype.links.deleteGroup + this.getRecordId(li)
         },
-        afterDelete:    function(li, jsonResponse)
+        afterDelete:    function(li, response)
         {
-            var response = eval("("+jsonResponse+")");
-            if(response.status == 'success') {
-                this.remove(li);
-                CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 2));
+            try 
+            { 
+                response = eval('(' + response + ')'); 
+            } 
+            catch(e) 
+            { 
+                return false; 
             }
+			 
+            if(response.status == 'success') {
+                CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 2));
+				
+				return true;
+            }
+			
+			return false;
         },
         beforeSort:     function(li, order) {
             return Backend.SpecField.prototype.links.sortGroups + "?target=" + this.ul.id + "&" + order
