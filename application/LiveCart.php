@@ -438,16 +438,13 @@ class LiveCart extends Application
 	{
         $ret = $this->languageList->toArray();
         
-        if (!$includeDefaultLanguage)
+        $defLang = $this->getDefaultLanguageCode();
+        
+        foreach ($ret as $key => $data)
         {
-            $defLang = $this->getDefaultLanguageCode();
-            
-            foreach ($ret as $key => $data)
+            if ((($data['ID'] == $defLang) && !$includeDefaultLanguage) || (!$includeDisabledLanguages && $data['isEnabled'] == 0))
             {
-                if ($data['ID'] == $defLang || (!$includeDisabledLanguages && $data['isEnabled'] == 0))
-                {
-                    unset($ret[$key]);
-                }
+                unset($ret[$key]);
             }
         }
         

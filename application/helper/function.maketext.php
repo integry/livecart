@@ -16,7 +16,17 @@
  */
 function smarty_function_maketext($params, LiveCartSmarty $smarty) 
 {	
-	return $smarty->getApplication()->makeText($params['text'], $params['params']);
+	$application = $smarty->getApplication();
+	$translation = $application->makeText($params['text'], $params['params']);
+	
+	if ($application->isTranslationMode() && !isset($params['disableLiveTranslation']))
+	{
+		$file = $application->getLocale()->translationManager()->getFileByDefKey($params['text']);
+		$file = '__file_'.base64_encode($file);
+		$translation = '<span class="transMode __trans_' . $params['text'].' '. $file .'">'.$translation.'</span>';
+	}
+	
+	return $translation;
 }
 
 ?>

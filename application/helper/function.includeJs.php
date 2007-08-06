@@ -30,7 +30,17 @@ function smarty_function_includeJs($params, LiveCartSmarty $smarty)
            $includedJavascriptFiles = array();
         }
         
-        if(in_array($filePath, $includedJavascriptFiles)) return;
+        if(in_array($filePath, $includedJavascriptFiles))
+        {
+			if (!isset($params['front']))
+			{
+				return false;	
+			}
+			else
+			{
+				unset($includedJavascriptFiles[array_search($filePath, $includedJavascriptFiles)]);
+			}			
+		}
         
         $fileMTime = filemtime($filePath);
         if($fileMTime > (int)$includedJavascriptTimestamp)

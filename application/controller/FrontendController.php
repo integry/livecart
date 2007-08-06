@@ -23,8 +23,7 @@ abstract class FrontendController extends BaseController
 		unset($this->order);
         
         // variables to append automatically to all URLs
-        $autoAppend = array('currency', 'sort');
-        foreach ($autoAppend as $key)
+        foreach (array('currency', 'sort') as $key)
         {
             if ($this->request->isValueSet($key))
             {
@@ -47,8 +46,7 @@ abstract class FrontendController extends BaseController
 	
 	protected function getRequestCurrency()
     {
-        $instance = Currency::getValidInstanceById($this->request->get('currency', $this->application->getDefaultCurrencyCode()));
-        return $instance->getID();
+        return Currency::getValidInstanceById($this->request->get('currency', $this->application->getDefaultCurrencyCode()))->getID();
     }
 	
 	protected function addBreadCrumb($title, $url)
@@ -100,7 +98,7 @@ abstract class FrontendController extends BaseController
 	protected function boxLanguageSelectBlock()
 	{
         $response = new BlockResponse();			  	
-        $languages = $this->application->getLanguageList()->toArray();
+        $languages = $this->application->getLanguageSetArray(true, false);
         $current = $this->application->getLocaleCode();
         
         $returnRoute = $this->router->getRequestedRoute();

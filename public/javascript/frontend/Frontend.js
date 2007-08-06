@@ -6,13 +6,13 @@ Product = {}
 Product.ImageHandler = Class.create();
 Product.ImageHandler.prototype = 
 {
-	initialize: function(imageData)
+	initialize: function(imageData, imageDescr)
 	{
 		imageData.each(function(pair)
 		{
     		if ($('img_' + pair.key))
     		{
-    			new Product.ImageSwitcher(pair.key, pair.value);
+    			new Product.ImageSwitcher(pair.key, pair.value, imageDescr[pair.key]);
     		}
 		});
 	}
@@ -24,11 +24,13 @@ Product.ImageSwitcher.prototype =
 	id: 0,
 	
 	imageData: null,
+	imageDescr: null,
 	
-	initialize: function(id, imageData)
+	initialize: function(id, imageData, imageDescr)
 	{        
         this.id = id;
 		this.imageData = imageData;
+		this.imageDescr = imageDescr;
 			
 		$('img_' + id).onclick = this.switchImage.bind(this);
 	},
@@ -36,6 +38,7 @@ Product.ImageSwitcher.prototype =
 	switchImage: function()
 	{
 		$('mainImage').src = this.imageData[3];
+		$('imageDescr').innerHTML = this.imageDescr;
 	}
 }
 

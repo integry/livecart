@@ -128,16 +128,6 @@ class SpecField extends MultilingualObject
 		$value->specField->set($this);
 		$value->save();
     }
-    
-    public function save()
-    {
-        if($this->isModified() && !$this->isSelector())
-        {
-            $this->setFieldValue('isMultiValue', 0);
-        }
-        
-        parent::save();
-    }
 
     /**
      * Gets a related table name, where field values are stored

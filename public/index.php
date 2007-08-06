@@ -40,29 +40,25 @@
 	    $app->getRouter()->setRequestedRoute($route);
 		$app->run();
 	}
-	catch (ClassLoaderException $e)
-	{
-		echo "<br/><strong>CLASS LOADER ERROR:</strong> " . $e->getMessage()."\n\n";
-		echo "<br /><strong>FILE TRACE:</strong><br />\n\n";
-		echo ApplicationException::getFileTrace($e->getTrace());
-	}
-	catch (ApplicationException $e)
-	{
-		echo "<pre>"; print_r($_SERVER); echo "</pre>\n\n";
-		echo "<br/><strong>APPLICATION ERROR:</strong> " . $e->getMessage()."\n\n";
-		echo "<br /><strong>FILE TRACE:</strong><br />\n\n";
-		echo ApplicationException::getFileTrace($e->getTrace());
-	}
 	catch (Exception $e)
 	{
-		echo "<br/>\n<strong>UNKNOWN ERROR:</strong> " . $e->getMessage()."\n\n";
-		// echo "<pre>"; print_r($e); echo "</pre>";
-		echo ApplicationException::getFileTrace($e->getTrace());
+		if ($app->isDevMode())
+		{
+			echo "<br/><strong>" . get_class($e) . " ERROR:</strong> " . $e->getMessage()."\n\n";			
+			echo "<br /><strong>FILE TRACE:</strong><br />\n\n";
+			echo ApplicationException::getFileTrace($e->getTrace());
+		}
+		else
+		{
+	        $route = 'err/redirect/500';
+		    $app->getRouter()->setRequestedRoute($route);
+			$app->run();			
+		}
 	}
 
 	if (!empty($_GET['stat']))
 	{
 		$stat->display();
 	}
-	
+		
 ?>

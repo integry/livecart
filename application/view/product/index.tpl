@@ -181,10 +181,12 @@
 <script type="text/javascript">
 {/literal}
 	var imageData = $H();
+	var imageDescr = $H();
 	{foreach from=$images item="image"}
 		imageData[{$image.ID}] = {json array=$image.paths};
+		imageDescr[{$image.ID}] = {json array=$image.title_lang};
 	{/foreach}
-	new Product.ImageHandler(imageData);
+	new Product.ImageHandler(imageData, imageDescr);
 </script>
 
 {include file="layout/frontend/footer.tpl"}
