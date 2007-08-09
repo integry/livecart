@@ -49,18 +49,22 @@ class LiveCartTransaction extends TransactionDetails
             $this->shippingState->set($this->getStateValue($address));    
             $this->shippingAddress->set($address->address1->get() . ' ' . $address->address2->get());    
         }
-    
-        $this->shippingEmail->set($order->user->get()->email->get());
-        $this->email->set($order->user->get()->email->get());
-        
+            
         // amount
         $this->amount->set($order->getTotal($currency));
         $this->currency->set($currency->getID());
         
         // transaction identification
         $this->invoiceID->set($order->getID() . 'T' . rand(1, 1000));
-        $this->clientID->set($order->user->get()->getID());        
 		$this->ipAddress->set($_SERVER['REMOTE_ADDR']);        
+		
+		// customer identification
+		if ($order->user->get())
+		{
+            $this->shippingEmail->set($order->user->get()->email->get());
+            $this->email->set($order->user->get()->email->get());            
+            $this->clientID->set($order->user->get()->getID());
+        }
     }
     
     private function getStateValue(UserAddress $address)

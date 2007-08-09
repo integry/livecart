@@ -118,8 +118,7 @@ class CheckoutController extends FrontendController
         $returnUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'expressReturn', 'id' => $class)));
         $cancelUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'order')));
                 
-        $handler->redirect($returnUrl, $cancelUrl);
-
+        $handler->redirect($returnUrl, $cancelUrl, !$handler->getConfigValue('AUTHONLY'));
     }
     
     public function expressReturn()
@@ -127,15 +126,35 @@ class CheckoutController extends FrontendController
         $class = $this->request->get('id');
 
         $handler = $this->application->getExpressPaymentHandler($class, $this->getTransaction());
-        $details = $handler->getDetails($this->request->toArray());
+        $details = $handler->getTransactionDetails($this->request->toArray());
         
         $address = UserAddress::getNewInstanceByTransaction($details);
         $address->save();
         
+        $paymentData = array_diff_key($this->request->toArray(), array_flip(array('controller', 'action', 'id', 'route', 'PHPSESSID')));
+
         $express = ExpressCheckout::getNewInstance($this->order, $handler);
         $express->address->set($address);
-        $express->token->set($handler->getToken($this->request->toArray()));
+        $express->paymentData->set(serialize($paymentData));
         $express->save();
+        
+        // auto-login user if anonymous
+        if ($this->user->isAnonymous())
+        {
+            // create new user account if it doesn't exist
+            if (!($user = User::getInstanceByEmail($details->email->get())))
+            {
+                $user = User::getNewInstance($details->email->get());
+                $user->firstName->set($details->firstName->get());
+                $user->lastName->set($details->lastName->get());
+                $user->companyName->set($details->companyName->get());
+                $user->isEnabled->set(true);
+                $user->save();
+            }
+            
+            SessionUser::setUser($user);
+            $this->order->user->set($user);
+        }
         
         $this->order->billingAddress->set($address);
         $this->order->shippingAddress->set($address);
@@ -456,24 +475,12 @@ class CheckoutController extends FrontendController
         
         if ($result instanceof TransactionResult)
         {
-            $this->order->isPaid->set(true);
-            $newOrder = $this->order->finalize(Currency::getValidInstanceById($this->getRequestCurrency()));
-			            
-            $this->session->set('completedOrderID', $this->order->getID());          
-            
-            $transaction = Transaction::getNewInstance($this->order, $result);
-            $transaction->setHandler($handler);
-            $transaction->save();
-            
-            SessionOrder::save($newOrder);
-
-            $response = new ActionRedirectResponse('checkout', 'completed');
+            $response = $this->registerPayment($result, $handler);
         }
         elseif ($result instanceof TransactionError)
         {
-            $validator = $this->buildCreditCardValidator();
-//            var_dump($handler, $result, $result->getDetails()->Errors, $handler->getDetails()->getData()); exit;
             // set error message for credit card form
+            $validator = $this->buildCreditCardValidator();
             $validator->triggerError('creditCardError', $this->translate('_err_processing_cc'));
             $validator->saveState();
             
@@ -495,7 +502,7 @@ class CheckoutController extends FrontendController
 	public function payExpress()
 	{
         $res = $this->validateExpressCheckout();
-        if ($res instance of Response)
+        if ($res instanceof Response)
         {
             return $res;
         }
@@ -505,6 +512,48 @@ class CheckoutController extends FrontendController
 		$response->set('currency', $this->getRequestCurrency());        
 		$response->set('method', $res->toArray()); 
         return $response;
+    }
+	
+    /**
+     *	@role login
+     */       
+	public function payExpressComplete()
+	{
+        $res = $this->validateExpressCheckout();
+        if ($res instanceof Response)
+        {
+            return $res;
+        }
+    
+        $handler = $res->getHandler($this->getTransaction());
+        if ($handler->getConfigValue('AUTHONLY'))
+        {
+            $result = $handler->authorize();
+        }
+        else
+        {
+            $result = $handler->authorizeAndCapture();
+        }
+
+        if ($result instanceof TransactionResult)
+        {
+            return $this->registerPayment($result, $handler);
+        }
+        elseif ($result instanceof TransactionError)
+        {
+            ExpressCheckout::deleteInstancesByOrder($this->order);
+
+            // set error message for credit card form
+            $validator = $this->buildCreditCardValidator();
+            $validator->triggerError('creditCardError', $result->getMessage());
+            $validator->saveState();
+            
+            return new ActionRedirectResponse('checkout', 'pay');
+        }
+        else
+        {
+            throw new Exception('Unknown transaction result type: ' . get_class($result));
+        }
     }
 	
     /**
@@ -526,6 +575,22 @@ class CheckoutController extends FrontendController
 
 		return new ActionResponse();
 	}
+    
+    private function registerPayment(TransactionResult $result, TransactionPayment $handler)
+    {
+        $this->order->isPaid->set(true);
+        $newOrder = $this->order->finalize(Currency::getValidInstanceById($this->getRequestCurrency()));
+		            
+        $this->session->set('completedOrderID', $this->order->getID());          
+        
+        $transaction = Transaction::getNewInstance($this->order, $result);
+        $transaction->setHandler($handler);
+        $transaction->save();
+        
+        SessionOrder::save($newOrder);
+
+        return new ActionRedirectResponse('checkout', 'completed');        
+    }
     
     private function getTransaction()
     {   

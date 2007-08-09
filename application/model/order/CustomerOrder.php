@@ -921,7 +921,7 @@ class CustomerOrder extends ActiveRecordModel
             
             $array['subtotalBeforeTaxes'] = $array['itemSubtotal'] + $array['shippingSubtotal'];
                 		
-			foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes') as $key)
+			foreach (array('amountPaid', 'amountNotCaptured', 'amountDue', 'itemSubtotal', 'shippingSubtotal', 'subtotalBeforeTaxes', 'totalAmount') as $key)
 			{
 				$array['formatted_' . $key] = $currency->getFormattedPrice($array[$key]);
 			}

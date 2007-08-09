@@ -12,6 +12,8 @@
 	
 	<div id="userContent">
 	
+	<fieldset class="container">
+	
     <h2>{t _billing_addresses}</h2>
 
     <a href="{link controller=user action=addBillingAddress returnPath=true}" class="menu">
@@ -45,6 +47,8 @@
             <a href="{link controller=user action=deleteShippingAddress id=$item.ID returnPath=true}">{t _remove_address}</a>
         </div>
 	{/foreach}
+	
+	</fieldset>
 	
 	</div>
     

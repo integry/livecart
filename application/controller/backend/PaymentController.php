@@ -86,7 +86,7 @@ class PaymentController extends StoreManagementController
         }
         else
         {
-            return new JSONResponse(false, 'success', $captureTransaction->getMessage());
+            return new JSONResponse(false, 'failure', $captureTransaction->getMessage());
         }
     }
     

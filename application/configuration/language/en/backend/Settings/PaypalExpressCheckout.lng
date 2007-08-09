@@ -2,3 +2,4 @@ PaypalExpressCheckout=Paypal Express Checkout
 PaypalExpressCheckout_username=Username
 PaypalExpressCheckout_password=Password
 PaypalExpressCheckout_signature=Signature
+PaypalExpressCheckout_AUTHONLY=Only authorize payments without capturing them automatically

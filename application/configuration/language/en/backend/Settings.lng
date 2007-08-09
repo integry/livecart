@@ -162,6 +162,10 @@ _email_customer=Customer Notifications
 
 _payment=Payment Methods
 _cc_opts=Credit Card Options
+_express_payment=Express Checkout Methods
+_other_payment=Other Payment Options
+EXPRESS_HANDLERS=Enabled Express Checkout Payment Options
+PAYMENT_HANDLERS=Enabled Payment Options
 CC_ENABLE=Enable credit card payments
 CC_HANDLER=Credit card handler
 CC_AUTHONLY=Only authorize payments without capturing them automatically

@@ -5,7 +5,7 @@ include_once(dirname(__file__) . '/../../method/library/paypal/PaypalCommon.php'
 
 class PaypalExpressCheckout extends ExpressPayment
 {
-	protected $token;
+	protected $data;
 	
     public function redirect($returnUrl, $cancelUrl, $sale = true)
 	{
@@ -20,20 +20,15 @@ class PaypalExpressCheckout extends ExpressPayment
         header('Location: https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $response->Token);
     }
     
-    public function getToken($request)
+    public function setData($data)
     {
-        return $request['token'];
+        $this->data = $data;
     }
     
-    public function setToken($token)
-    {
-        $this->token = $token;
-    }
-    
-    public function getDetails($request = null)
+    public function getTransactionDetails($request = null)
     {        
         $paypal = $this->getHandler('GetExpressCheckoutDetails');
-        $paypal->setParams($request ? self::getToken($request) : $this->token);
+        $paypal->setParams($request ? $request['token'] : $this->data['token']);
         $paypal->execute();
 
         $this->checkErrors($paypal);
@@ -64,9 +59,6 @@ class PaypalExpressCheckout extends ExpressPayment
         }
         
         return $this->details;
-        
-        print_r($this->details);
-        exit;
     }
     
     private function checkErrors($paypal)
@@ -105,7 +97,7 @@ class PaypalExpressCheckout extends ExpressPayment
 	 */
 	public function authorize()
 	{
-		return $this->processAuth('DoDirectPayment', 'Authorization');
+		return $this->processAuth('DoExpressCheckoutPayment', 'Order');
 	}
 	
 	/**
@@ -137,7 +129,7 @@ class PaypalExpressCheckout extends ExpressPayment
 	 */
 	public function authorizeAndCapture()
 	{
-		return $this->processAuth('DoDirectPayment', 'Sale');
+		return $this->processAuth('DoExpressCheckoutPayment', 'Sale');
 	}
 	
 	protected function processAuth($api, $type)
@@ -158,11 +150,9 @@ class PaypalExpressCheckout extends ExpressPayment
 
 		$payerInfo = PayPalTypes::PayerInfoType($this->details->email->get(), $this->details->clientID->get(), 'verified', $personName, $this->details->country->get(), '', $address);
 
-		$creditCardDetails = PayPalTypes::CreditCardDetailsType($this->getCardType(), $this->getCardNumber(), $this->getExpirationMonth(), $this->getExpirationYear(), $payerInfo, $this->getCardCode());
+		$paymentDetails = PayPalTypes::PaymentDetailsType($this->details->amount->get(), $this->details->amount->get(), 0, 0, 0, $this->details->description->get(), $this->details->clientID->get(), $this->details->invoiceID->get(), '', 'ipn_notify.php', '', array(), $this->details->currency->get());
 
-		$paymentDetails = PayPalTypes::PaymentDetailsType($this->details->amount->get(), $this->details->amount->get(), 0, 0, 0, $this->details->description->get(), $this->details->clientID->get(), $this->details->invoiceID->get(), '', 'ipn_notify.php', $address, array(), $this->details->currency->get());
-
-		$paypal->setParams($type, $paymentDetails, $creditCardDetails, $this->details->ipAddress->get(), session_id());
+		$paypal->setParams($type, $this->data['token'], $this->data['PayerID'], $paymentDetails);
 
 		$paypal->execute($api);
 
@@ -178,17 +168,14 @@ class PaypalExpressCheckout extends ExpressPayment
 			}
 			else
 			{
-				$result = new TransactionResult();
-				$result->gatewayTransactionID->set($response->TransactionID);
-				$result->amount->set($response->Amount->_);
-				$result->currency->set($response->Amount->currencyID);
+				$response = $response->DoExpressCheckoutPaymentResponseDetails->PaymentInfo;
 				
-				$avs = PaypalCommon::getAVSbyCode($response->AVSCode);
-				$result->AVSaddr->set($avs[0]);
-				$result->AVSzip->set($avs[1]);
+                $result = new TransactionResult();
 
-				$result->CVVmatch->set(PaypalCommon::getCVVByCode($response->CVV2Code));
-				
+				$result->gatewayTransactionID->set($response->TransactionID);
+				$result->amount->set($response->GrossAmount->_);
+				$result->currency->set($response->GrossAmount->currencyID);
+								
 				$result->rawResponse->set($response);
 					
                 if ('Sale' == $type)

@@ -143,9 +143,12 @@ class SettingsController extends StoreManagementController
             {
                 $values = $this->config->get($value['title']);
 
-                foreach ($values as $key => $val)
+                if (is_array($values))
                 {
-                    $form->set($value['title'] . '[' . $key . ']', 1);                    
+                    foreach ($values as $key => $val)
+                    {
+                        $form->set($value['title'] . '[' . $key . ']', 1);                    
+                    }
                 }
             }   
         }

@@ -23,8 +23,8 @@ class ExpressCheckout extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("addressID", "address", "ID", 'UserAddress', ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("orderID", "order", "ID", 'CustomerOrder', ARInteger::instance()));
 
-		$schema->registerField(new ARField("token", ARVarchar::instance(100)));
 		$schema->registerField(new ARField("method", ARVarchar::instance(40)));
+		$schema->registerField(new ARField("paymentData", ARText::instance()));
 	}    
 	
 	public static function getNewInstance(CustomerOrder $order, ExpressPayment $handler)
@@ -45,19 +45,29 @@ class ExpressCheckout extends ActiveRecordModel
         }
     }
 	
+	public function getHandler(TransactionDetails $transaction = null)
+	{
+        $handler = $this->getApplication()->getExpressPaymentHandler($this->method->get(), $transaction);
+        $handler->setData(unserialize($this->paymentData->get()));
+        return $handler;        
+    }
+	
 	public function getTransactionDetails()
 	{
-        $handler = $this->getApplication()->getExpressPaymentHandler($this->method->get());
-        $handler->setToken($this->token->get());
-        return $handler->getDetails();
+        return $this->getHandler()->getDetails();
+    }
+    
+    public function deleteInstancesByOrder(CustomerOrder $order)
+    {
+        // remove other ExpressCheckout instances for this order
+        $f = new ARDeleteFilter();
+        $f->setCondition(new EqualsCond(new ARFieldHandle('ExpressCheckout', 'orderID'), $order->getID()));
+        ActiveRecordModel::deleteRecordSet('ExpressCheckout', $f);
     }
 	
 	protected function insert()
 	{
-        // remove other ExpressCheckout instances for this order
-        $f = new ARDeleteFilter();
-        $f->setCondition(new EqualsCond(new ARFieldHandle('ExpressCheckout', 'orderID'), $this->order->get()->getID()));
-        ActiveRecordModel::deleteRecordSet('ExpressCheckout', $f);
+        $this->deleteInstancesByOrder($this->order->get());
         
         return parent::insert();
     }

@@ -11,7 +11,6 @@
 		   	
 	<div style="font-size: 90%; width: 600px; margin-left: auto; margin-right: auto; border: 1px solid yellow; padding: 5px; background-color: #FFFCDA; margin-top: 25px; margin-bottom: 25px;">
 		Please do not enter real credit card numbers. You can enter any number in the credit card number field. This is not a real transaction. Enter <strong>000</strong> for CVV to test for failed transactions. 
-		<div style="margin-top: 5px;">Yes, this page will be under SSL in the product release.</div>
 	</div>	
 		   	
 	<div id="payTotal">

@@ -96,16 +96,15 @@ class CategoryController extends FrontendController
 				
 		$urlParams = array('controller' => 'category', 'action' => 'index', 
 						   'id' => $this->request->get('id'),
-						   'cathandle' => (int)$this->request->get('cathandle'),
-						   'page' => '_000_',
+						   'cathandle' => $this->request->get('cathandle'),
+						   'page' => '0',
 						   );
 		if ($this->request->get('filters'))
 		{
 			$urlParams['filters'] = $this->request->get('filters');
 		}
 		
-		$paginationUrl = str_replace('_000_', (int)$this->request->get('page'), $this->router->createURL($urlParams));
-					
+		$paginationUrl = $this->router->createURL($urlParams);
 		
 		$filterChainHandle = $this->setUpBreadCrumbAndReturnFilterChainHandle($currentPage);					
 					        
