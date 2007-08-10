@@ -91,11 +91,6 @@ abstract class CreditCardPayment extends TransactionPayment
 	abstract public function authorizeAndCapture();
 	
 	/**
-	 *	Refund a payment back to customers card
-	 */
-	abstract public function credit();
-	
-	/**
 	 *	Determines if credit card type needs to be passed to payment processor
 	 */
 	abstract public static function isCardTypeNeeded();

@@ -118,7 +118,7 @@ class CheckoutController extends FrontendController
         $returnUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'expressReturn', 'id' => $class)));
         $cancelUrl = $this->router->createFullUrl($this->router->createUrl(array('controller' => 'order')));
                 
-        $handler->redirect($returnUrl, $cancelUrl, !$handler->getConfigValue('AUTHONLY'));
+        return new RedirectResponse($handler->getInitUrl($returnUrl, $cancelUrl, !$handler->getConfigValue('AUTHONLY')));
     }
     
     public function expressReturn()
@@ -554,6 +554,29 @@ class CheckoutController extends FrontendController
         {
             throw new Exception('Unknown transaction result type: ' . get_class($result));
         }
+    }
+	
+	/**
+	 *  Redirect to a 3rd party payment processor website to complete the payment
+     *  (Paypal IPN, 2Checkout, Moneybookers, etc)
+	 */
+    public function redirect()
+	{
+        $class = $this->request->get('id');
+        $handler = $this->application->getPaymentHandler($class, $this->getTransaction());
+        $handler->setConfigValue('NOTIFY_URL', $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'notify', 'id' => $class))));
+        $handler->setConfigValue('RETURN_URL', $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'completed'))));
+        return new RedirectResponse($handler->getUrl());
+    }
+    
+	/**
+	 *  Payment confirmation post-back URL for 3rd party payment processors 
+     *  (Paypal IPN, 2Checkout, Moneybookers, etc)
+	 */
+    public function notify()
+	{
+        $handler = $this->application->getPaymentHandler($this->request->get('id'), $this->getTransaction());
+        $result = $handler->notify($this->request->toArray());
     }
 	
     /**

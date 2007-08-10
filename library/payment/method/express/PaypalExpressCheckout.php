@@ -7,7 +7,7 @@ class PaypalExpressCheckout extends ExpressPayment
 {
 	protected $data;
 	
-    public function redirect($returnUrl, $cancelUrl, $sale = true)
+    public function getInitUrl($returnUrl, $cancelUrl, $sale = true)
 	{
         $paypal = $this->getHandler('SetExpressCheckout');
         $paypal->setParams($this->details->amount->get(), $returnUrl, $cancelUrl, $sale ? 'Sale' : 'Order');
@@ -17,7 +17,7 @@ class PaypalExpressCheckout extends ExpressPayment
 
     	$response = $paypal->getAPIResponse();
         $sandbox = substr($this->getConfigValue('username'), 0, 8) == 'sandbox_' ? 'sandbox.' : '';        
-        header('Location: https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $response->Token);
+        return 'Location: https://www.' . $sandbox . 'paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' . $response->Token;
     }
     
     public function setData($data)
@@ -106,14 +106,6 @@ class PaypalExpressCheckout extends ExpressPayment
 	public function capture()
 	{
 		return $this->processCapture();
-	}
-	
-	/**
-	 *	Credit (a part) of customers payment
-	 */
-	public function credit()
-	{
-		return $this->process('');		
 	}
 
 	/**

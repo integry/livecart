@@ -1,4 +1,4 @@
-<div>
+<div style="position: relative;">
 	<div style="display: none;" class="activeGrid_loadIndicator" id="{$prefix}LoadIndicator_{$id}">
 		<div>
 			{t _loading}<span class="progressIndicator"></span>
@@ -7,7 +7,7 @@
 </div>
 
 <div>
-    <table class="activeGrid {$prefix}List {denied role=$role}readonlyGrid{/denied}" id="{$prefix}_{$id}"=>
+<table class="activeGrid {$prefix}List {denied role=$role}readonlyGrid{/denied}" id="{$prefix}_{$id}">
 
 <thead>
 	<tr class="headRow">

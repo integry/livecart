@@ -24,6 +24,7 @@ class TransactionResult
     const TYPE_AUTH = 1;
     const TYPE_CAPTURE = 2;
     const TYPE_VOID = 3;	
+    const TYPE_REFUND = 4;
     
     public function __construct()
 	{		

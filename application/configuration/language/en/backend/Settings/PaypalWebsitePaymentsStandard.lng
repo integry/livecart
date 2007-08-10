@@ -1,0 +1,4 @@
+PaypalWebsitePaymentsStandard=Paypal Website Payments Standard
+PaypalWebsitePaymentsStandard_EMAIL=Business e-mail address
+PaypalWebsitePaymentsStandard_SANDBOX=Use Paypal Sandbox (test environment)
+PaypalWebsitePaymentsStandard_ITEM_NAME=Shopping cart item description to display at Paypal
