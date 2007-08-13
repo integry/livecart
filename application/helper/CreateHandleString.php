@@ -13,7 +13,7 @@
  */
 function createHandleString($str)
 {
-	$str = str_replace(array('$', '&', '+', '/', ':', ';', '=', '?', '@', '.', ' '), '-', $str);
+	$str = str_replace(array('$', '&', '+', '/', ':', ';', '=', '?', '@', '.', ' ', '"', "'"), '-', $str);
 
 	$str = preg_replace('/-{2,}/', '-', $str);
 	$str = preg_replace('/^-/', '', $str);

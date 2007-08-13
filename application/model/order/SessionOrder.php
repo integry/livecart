@@ -34,6 +34,25 @@ class SessionOrder
         
         if (!isset($instance))
         {
+            $userId = SessionUser::getUser()->getID();
+            
+            // get the last unfinalized order by this user
+            if ($userId > 0)
+            {
+                $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $userId));
+                $f->mergeCondition(new NotEqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+                $f->setOrder(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
+                $f->setLimit(1);          
+                $orders = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
+                if ($orders->size())
+                {
+                    $instance = $orders->get(0);
+                }
+            }
+        }
+    
+        if (!isset($instance))
+        {
             $instance = CustomerOrder::getNewInstance(User::getNewInstance(0));
             $instance->user->set(NULL);
         }    

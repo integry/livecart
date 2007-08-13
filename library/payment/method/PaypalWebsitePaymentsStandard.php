@@ -29,21 +29,18 @@ class PaypalWebsitePaymentsStandard extends ExternalPayment
     
     public function notify($requestArray)
     {
-        file_put_contents('cache/ipn.txt', var_export($requestArray, true));
-        exit;
-        
         // assign posted variables to local variables
-        $paymentStatus = $_POST['payment_status'];
-        $paymentAmount = $_POST['mc_gross'];
-        $paymentCurrency = $_POST['mc_currency'];
-        $txn_id = $_POST['txn_id'];
-        $receiverEmail = $_POST['receiver_email'];
-        $payerEmail = $_POST['payer_email'];
+        $paymentStatus = $requestArray['payment_status'];
+        $paymentAmount = $requestArray['mc_gross'];
+        $paymentCurrency = $requestArray['mc_currency'];
+        $txn_id = $requestArray['txn_id'];
+        $receiverEmail = $requestArray['receiver_email'];
+        $payerEmail = $requestArray['payer_email'];
 
         // read the post from PayPal system and add 'cmd'
         $req = 'cmd=_notify-validate';
 
-        foreach ($_POST as $key => $value) 
+        foreach ($requestArray as $key => $value) 
         {
             $value = urlencode(stripslashes($value));
             $req .= "&".$key."=".$value;
@@ -61,8 +58,8 @@ class PaypalWebsitePaymentsStandard extends ExternalPayment
             throw new PaymentException('Payment currency does not match order currency');
         }
 
-        // post back to PayPal system to validate
-        $header .= "POST /cgi-bin/webscr HTTP/1.0\r\n";
+        // post back to PayPal system to validate        
+        $header = "POST /cgi-bin/webscr HTTP/1.0\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
         $header .= "Content-Length: " . strlen($req) . "\r\n\r\n";
         $fp = fsockopen ('www.' . ($this->getConfigValue('SANDBOX') ? 'sandbox.' : '') . 'paypal.com', 80, $errno, $errstr, 30);
@@ -94,7 +91,22 @@ class PaypalWebsitePaymentsStandard extends ExternalPayment
             fclose ($fp);
         }
         
-        return true;
+        $result = new TransactionResult();
+		$result->gatewayTransactionID->set($requestArray['txn_id']);
+		$result->amount->set($requestArray['mc_gross']);
+		$result->currency->set($requestArray['mc_currency']);						
+		$result->rawResponse->set($requestArray);        
+        
+        if ('Completed' == $requestArray['payment_status'])
+        {
+            $result->setTransactionType(TransactionResult::TYPE_SALE);
+        }
+        else
+        {
+            $result->setTransactionType(TransactionResult::TYPE_AUTH);
+        }
+        
+        return $result;
     }
     
     public static function isVoidable()

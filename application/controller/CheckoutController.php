@@ -5,6 +5,7 @@ ClassLoader::import('application.model.order.CustomerOrder');
 ClassLoader::import('application.model.order.ExpressCheckout');
 ClassLoader::import('application.model.order.Transaction');
 ClassLoader::import('application.model.order.LiveCartTransaction');
+ClassLoader::import('application.model.order.SessionOrder');
 
 /**
  *  Handles order checkout process
@@ -559,13 +560,20 @@ class CheckoutController extends FrontendController
 	/**
 	 *  Redirect to a 3rd party payment processor website to complete the payment
      *  (Paypal IPN, 2Checkout, Moneybookers, etc)
+     *
+     *	@role login
 	 */
     public function redirect()
 	{
+        if ($redirect = $this->validateOrder($this->order, self::STEP_PAYMENT))
+        {
+			return $redirect;
+		}
+
         $class = $this->request->get('id');
         $handler = $this->application->getPaymentHandler($class, $this->getTransaction());
         $handler->setConfigValue('NOTIFY_URL', $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'notify', 'id' => $class))));
-        $handler->setConfigValue('RETURN_URL', $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'completed'))));
+        $handler->setConfigValue('RETURN_URL', $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'completeExternal', 'id' => $this->order->getID()))));
         return new RedirectResponse($handler->getUrl());
     }
     
@@ -575,8 +583,34 @@ class CheckoutController extends FrontendController
 	 */
     public function notify()
 	{
+        $order = CustomerOrder::getInstanceById($this->request->get('custom'), CustomerOrder::LOAD_DATA);
+        $order->loadAll();
+        $this->order = $order;
+
         $handler = $this->application->getPaymentHandler($this->request->get('id'), $this->getTransaction());
+
         $result = $handler->notify($this->request->toArray());
+            
+        if ($result instanceof TransactionResult)
+        {
+            $this->registerPayment($result, $handler);
+        }
+    }
+	
+    /**
+     *	@role login
+     */       
+	public function completeExternal()
+	{
+        SessionOrder::destroy();
+        $order = CustomerOrder::getInstanceById($this->request->get('id'), CustomerOrder::LOAD_DATA);
+        if ($order->user->get() != $this->user)
+        {
+            throw new ApplicationException('Invalid order');
+        }
+        
+        $this->session->set('completedOrderID', $order->getID());        
+        return new ActionRedirectResponse('checkout', 'completed');
     }
 	
     /**
@@ -584,8 +618,7 @@ class CheckoutController extends FrontendController
      */       
 	public function completed()
 	{
-        $order = CustomerOrder::getInstanceByID((int)$this->session->get('completedOrderID'));
-        
+        $order = CustomerOrder::getInstanceByID((int)$this->session->get('completedOrderID'), CustomerOrder::LOAD_DATA);
         $response = new ActionResponse();
         $response->set('order', $order->toArray());    
         $response->set('url', $this->router->createUrl(array('controller' => 'user')));

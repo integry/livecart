@@ -55,7 +55,7 @@ class LiveCartTransaction extends TransactionDetails
         $this->currency->set($currency->getID());
         
         // transaction identification
-        $this->invoiceID->set($order->getID() . 'T' . rand(1, 1000));
+        $this->invoiceID->set($order->getID());
 		$this->ipAddress->set($_SERVER['REMOTE_ADDR']);        
 		
 		// customer identification
