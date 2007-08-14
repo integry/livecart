@@ -13,6 +13,21 @@ abstract class ExternalPayment extends TransactionPayment
 	 *	Payment confirmation post-back
 	 */
 	abstract public function notify($requestArray);
+	
+	public function setNotifyUrl($url)
+	{
+        $this->notifyUrl = $url;
+    }
+
+	public function setReturnUrl($url)
+	{
+        $this->returnUrl = $url;
+    }
+
+	public function setSiteUrl($url)
+	{
+        $this->siteUrl = $url;
+    }
 }
 
 ?>

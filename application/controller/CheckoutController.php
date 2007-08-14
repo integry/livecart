@@ -572,8 +572,9 @@ class CheckoutController extends FrontendController
 
         $class = $this->request->get('id');
         $handler = $this->application->getPaymentHandler($class, $this->getTransaction());
-        $handler->setConfigValue('NOTIFY_URL', $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'notify', 'id' => $class))));
-        $handler->setConfigValue('RETURN_URL', $this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'completeExternal', 'id' => $this->order->getID()))));
+        $handler->setNotifyUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'notify', 'id' => $class))));
+        $handler->setReturnUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'checkout', 'action' => 'completeExternal', 'id' => $this->order->getID()))));
+        $handler->setSiteUrl($this->router->createFullUrl($this->router->createUrl(array('controller' => 'index', 'action' => 'index'))));
         return new RedirectResponse($handler->getUrl());
     }
     

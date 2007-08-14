@@ -15,8 +15,8 @@ class PaypalWebsitePaymentsStandard extends ExternalPayment
         $params['amount'] = $this->details->amount->get();
         $params['mc_currency'] = $this->details->currency->get();
         $params['custom'] = $this->details->invoiceID->get();
-        $params['return'] = $this->getConfigValue('RETURN_URL');
-        $params['notify_url'] = $this->getConfigValue('NOTIFY_URL');
+        $params['return'] = $this->returnUrl;
+        $params['notify_url'] = $this->notifyUrl;
         
         $pairs = array();
         foreach ($params as $key => $value)
@@ -108,6 +108,11 @@ class PaypalWebsitePaymentsStandard extends ExternalPayment
         
         return $result;
     }
+    
+    public function getValidCurrency($currentCurrencyCode)
+    {
+        return PaypalCommon::getValidCurrency($currentCurrencyCode);
+    }    
     
     public static function isVoidable()
     {

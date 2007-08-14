@@ -20,10 +20,10 @@ class PaypalDirectPayment extends CreditCardPayment
         return true;
     }
 	
-	public static function getSupportedCurrencies()
-	{
-		return array('AUD', 'CAD', 'EUR', 'GBP', 'JPY', 'USD');
-	}
+    public function getValidCurrency($currentCurrencyCode)
+    {
+        return PaypalCommon::getValidCurrency($currentCurrencyCode);
+    }
 
 	/**
 	 *	Reserve funds on customers credit card
@@ -136,87 +136,17 @@ class PaypalDirectPayment extends CreditCardPayment
 	
 	protected function processCapture()
 	{
-		$paypal = $this->getHandler('DoCapture');
-		$paypal->setParams($this->details->gatewayTransactionID->get(), $this->details->amount->get(), $this->details->currency->get(), $this->details->isCompleted->get() ? 'Complete' : 'NotComplete', '', $this->details->invoiceID->get());
-		
-		$paypal->execute();
-		
-		if ($paypal->success())
-		{
-		    $response = $paypal->getAPIResponse();
-
-		    if (isset($response->Errors))
-		    {
-				return new TransactionError($response->Errors->LongMessage, $response);
-			}
-			else
-			{
-				$result = new TransactionResult();
-
-				$details = $response->DoCaptureResponseDetails->PaymentInfo;
-			
-				$result->gatewayTransactionID->set($details->TransactionID);
-				$result->amount->set($details->GrossAmount->_);
-				$result->currency->set($details->GrossAmount->currencyID);
-
-				$result->rawResponse->set($response);
-                $result->setTransactionType(TransactionResult::TYPE_CAPTURE);
-
-				return $result;
-			}
-		}
-		else
-		{
-		    return $paypal->getAPIException();
-		}			
+		return PaypalCommon::processCapture($this);
 	}
 	
 	protected function processVoid()
 	{
-		$paypal = $this->getHandler('DoVoid');
-		$paypal->setParams($this->details->gatewayTransactionID->get(), '');
-		
-		$paypal->execute();
-		
-		if ($paypal->success())
-		{
-		    $response = $paypal->getAPIResponse();
-
-		    if (isset($response->Errors))
-		    {
-				return new TransactionError($response->Errors->LongMessage, $response);
-			}
-			else
-			{
-				$result = new TransactionResult();
-
-				$result->rawResponse->set($response);
-                $result->setTransactionType(TransactionResult::TYPE_VOID);
-
-				return $result;
-			}
-		}
-		else
-		{
-		    return $paypal->getAPIException();
-		}		
+		return PaypalCommon::processVoid($this);
 	}
 	
-	protected function getHandler($api)
+	public function getHandler($api)
 	{
-		set_time_limit(0);
-		
-		$handler = new WebsitePaymentsPro();
-		
-		$username = $this->getConfigValue('username');		
-		$password = $this->getConfigValue('password');
-		$signature = $this->getConfigValue('signature');
-		
-		$handler->prepare($username, $password, $signature);		
-		
-		$paypal = $handler->selectOperation($api);
-		
-		return $paypal;		
+		return PaypalCommon::getHandler($this, $api);
 	}
 }
 	

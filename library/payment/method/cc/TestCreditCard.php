@@ -19,15 +19,13 @@ class TestCreditCard extends CreditCardPayment
         return true;
 	}
 	
-	public static function getSupportedCurrencies()
-	{
-		return array('AUD', 'CAD', 'EUR', 'GBP', 'JPY', 'USD');
-	}
-
-	public static function isCurrencySupported($currencyCode)
-	{
-		return true;
-	}
+	/**
+	 *	All currencies supported, except LTL
+	 */
+    public function getValidCurrency($currentCurrencyCode)
+    {
+        return 'LTL' != $currentCurrencyCode ? $currentCurrencyCode : 'USD';
+    }
 
 	/**
 	 *	Reserve funds on customers credit card

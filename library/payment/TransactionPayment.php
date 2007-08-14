@@ -51,6 +51,11 @@ abstract class TransactionPayment
 	public abstract static function isVoidable();
 
 	public abstract function void();
+
+	/**
+	 *	Return a valid currency code if the supplied currency is not supported by this payment method
+	 */
+    public abstract function getValidCurrency($currentCurrencyCode);
 }
 
 ?>

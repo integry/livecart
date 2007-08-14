@@ -89,18 +89,103 @@ class PaypalCommon
 		}		
 	}
 	
-	public static function getSupportedCurrencies()
+    public function getValidCurrency($currentCurrencyCode)
+    {
+        $currentCurrencyCode = strtoupper($currentCurrencyCode);
+        return in_array($currentCurrencyCode, array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD', 'NZD', 'CHF', 'HKD', 'SGD', 'SEK', 'DKK', 'PLN', 'NOK', 'HUF', 'CZK')) ? $currentCurrencyCode : 'USD';
+    }	
+    
+	/**
+	 *  DoCapture implementation for all PayPal payment classes
+	 */
+    public function processCapture(TransactionPayment $handler)
 	{
-		return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD', 'NZD', 'CHF', 'HKD', 'SGD', 'SEK', 'DKK', 'PLN', 'NOK', 'HUF', 'CZK');
-	}
-	
-	public static function isCurrencySupported($currencyCode)
-	{
-		if (array_search($currencyCode, self::getSupportedCurrencies()) !== false)
+		$details = $handler->getDetails();
+		$paypal = $handler->getHandler('DoCapture');
+		
+        $paypal->setParams($details->gatewayTransactionID->get(), $details->amount->get(), $details->currency->get(), $details->isCompleted->get() ? 'Complete' : 'NotComplete', '', $details->invoiceID->get());
+		
+		$paypal->execute();
+		
+		if ($paypal->success())
 		{
-			return true;
+		    $response = $paypal->getAPIResponse();
+
+		    if (isset($response->Errors))
+		    {
+				return new TransactionError($response->Errors->LongMessage, $response);
+			}
+			else
+			{
+				$result = new TransactionResult();
+
+				$details = $response->DoCaptureResponseDetails->PaymentInfo;
+			
+				$result->gatewayTransactionID->set($details->TransactionID);
+				$result->amount->set($details->GrossAmount->_);
+				$result->currency->set($details->GrossAmount->currencyID);
+
+				$result->rawResponse->set($response);
+                $result->setTransactionType(TransactionResult::TYPE_CAPTURE);
+
+				return $result;
+			}
 		}
+		else
+		{
+		    return $paypal->getAPIException();
+		}			
 	}
+
+	/**
+	 *  DoVoid implementation for all PayPal payment classes
+	 */
+	protected function processVoid(TransactionPayment $handler)
+	{
+		$details = $handler->getDetails();
+		$paypal = $handler->getHandler('DoVoid');
+		
+		$paypal->setParams($details->gatewayTransactionID->get(), '');
+		
+		$paypal->execute();
+		
+		if ($paypal->success())
+		{
+		    $response = $paypal->getAPIResponse();
+
+		    if (isset($response->Errors))
+		    {
+				return new TransactionError($response->Errors->LongMessage, $response);
+			}
+			else
+			{
+				$result = new TransactionResult();
+
+				$result->rawResponse->set($response);
+                $result->setTransactionType(TransactionResult::TYPE_VOID);
+
+				return $result;
+			}
+		}
+		else
+		{
+		    return $paypal->getAPIException();
+		}		
+	}	
+	
+    public function getHandler(TransactionPayment $handler, $api)
+    {
+	    set_time_limit(0);
+		
+		$username = $handler->getConfigValue('username');		
+		$password = $handler->getConfigValue('password');
+		$signature = $handler->getConfigValue('signature');
+		
+		$wpp = new WebsitePaymentsPro();
+		$wpp->prepare($username, $password, $signature);		
+		
+		return $wpp->selectOperation($api);
+    }
 }
 
 ?>
