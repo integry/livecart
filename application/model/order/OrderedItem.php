@@ -71,9 +71,12 @@ class OrderedItem extends ActiveRecordModel
     
     public function save()
     {
-        parent::save();
+        $ret = parent::save();        
         
+        // adjust inventory
         $this->product->get()->save();
+        
+        return $ret;
     }
     
     /**

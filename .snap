@@ -123,3 +123,17 @@ revision = tip
 
 [tree18.paths]
 default = ssh://mercurial@dev.integry.net/vendor/phppaypalpro
+
+[tree19]
+root = test/_library/simpletest
+revision = tip
+
+[tree19.paths]
+default = ssh://mercurial@dev.integry.net/vendor/simpletest
+
+[tree20]
+root = test/_library/unittest
+revision = tip
+
+[tree20.paths]
+default = ssh://mercurial@dev.integry.net/library/unittest

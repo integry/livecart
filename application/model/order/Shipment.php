@@ -61,14 +61,14 @@ class Shipment extends ActiveRecordModel
 	
 	public function loadItems()
 	{
-	    if(empty($this->items))
+	    if (empty($this->items) && $this->isExistingRecord())
 	    {
 		    $filter = new ARSelectFilter();
 			$filter->setCondition(new EqualsCond(new ARFieldHandle('OrderedItem', 'shipmentID'), $this->getID()));
 	    
 			foreach(OrderedItem::getRecordSet('OrderedItem', $filter, array('Product', 'Category', 'DefaultImage' => 'ProductImage')) as $item)
 			{
-			    $this->items[] = $item;
+                $this->items[] = $item;
 			}
 	    }
 	}
@@ -345,19 +345,38 @@ class Shipment extends ActiveRecordModel
 
     protected function update()
     {
-        $rate = $this->getSelectedRate();
-        if($rate)
+        parent::update();
+        $this->order->get()->save();
+    }
+    
+    public function isShippable()
+    {
+        $this->removeDeletedItems();
+        
+        foreach ($this->items as $item)
         {
-	        $serviceId = $rate->getServiceID();
-	        if (is_numeric($serviceId))
-	        {
-	            $this->shippingService->set(ShippingService::getInstanceByID($serviceId));
-	        }
-	        else
-	        {
-	            $this->shippingService->set(null);
-	            $this->shippingServiceData->set(serialize($rate));
-	        }
+            if (!$item->isLoaded())
+            {
+                continue;
+            }
+            
+            if ($item->product->get()->isDownloadable())
+            {
+                return false;
+            }   
+        }
+        
+        return true;
+    }
+    
+    public function save()
+    {
+        $this->removeDeletedItems();
+        
+        // make sure the shipment doesn't consist of downloadable files only
+        if (!$this->isShippable() && !$this->order->get()->isFinalized->get())
+        {
+            return false;
         }
 
         // reset amounts...
@@ -367,8 +386,25 @@ class Shipment extends ActiveRecordModel
                 
         // ... and recalculated them
         $this->recalculateAmounts();
+
+        // set shipping data
+        $rate = $this->getSelectedRate();
         
-        $ret = parent::update();
+        if ($rate)
+        {        
+	        $serviceId = $rate->getServiceID();
+	        if (is_numeric($serviceId))
+	        {
+	            $this->shippingService->set(ShippingService::getInstanceByID($serviceId));
+	        }
+	        else
+	        {
+	            $this->shippingService->set(null);
+	            $this->shippingServiceData->set(serialize($rate));
+	        }	
+        }
+
+        parent::save();
         
         // save ordered items
         foreach ($this->items as $item)
@@ -384,81 +420,14 @@ class Shipment extends ActiveRecordModel
         foreach ($this->getTaxes() as $tax)
         {
             $tax->save();
-        }
-        
-        $this->order->get()->save();
-        
-        return $ret;
-    }
-    
-    public function isShippable()
-    {
-        foreach ($this->items as $key => $value)
-        {
-            if ($value->product->get()->isDownloadable())
-            {
-                return false;
-            }   
-        }
-        
-        return true;
-    }
-    
-    public function save()
-    {
-        // make sure the shipment doesn't consist of downloadable files only
-        if (!$this->isShippable() && !$this->order->get()->isFinalized->get())
-        {
-            return false;
-        }
-
-        return parent::save();
+        }        
     }
     
     protected function insert()
-    {              
-        // set shipping data
-        $rate = $this->getSelectedRate();
-        
-        if($rate)
-        {        
-	        $serviceId = $rate->getServiceID();
-	        if (is_numeric($serviceId))
-	        {
-	            $this->shippingService->set(ShippingService::getInstanceByID($serviceId));
-	        }
-	        else
-	        {
-	            $this->shippingServiceData->set(serialize($rate));
-	        }
-	
-	        // reset amounts...
-	        $this->amount->set(0);
-	        $this->shippingAmount->set(0);
-	        $this->taxAmount->set(0);
-	                
-	        // ... and recalculated them
-	        $this->recalculateAmounts();
-        }
-        
+    {                    
         $this->status->set(self::STATUS_NEW);
         
-        $ret = parent::insert();
-        
-        // save ordered items
-        foreach ($this->items as $item)
-        {
-            $item->shipment->set($this);
-            $item->save();
-        }
-        
-        // save taxes
-        foreach ($this->getTaxes() as $tax)
-        {
-            $tax->save();
-        }
-                            
-        return $ret;
+        return parent::insert();
     }
     
     public function getItems()
@@ -515,6 +484,29 @@ class Shipment extends ActiveRecordModel
         parent::delete();
         
         $order->save();
+    }
+    
+    private function removeDeletedItems()
+    {
+        foreach ($this->items as $key => $item)
+        {
+            if ($item->isDeleted())
+            {
+                unset($this->items[$key]);
+            }
+            
+            if (!$item->isLoaded())
+            {
+                try
+                {
+                    $item->load(true);
+                }
+                catch (ARNotFoundException $e)
+                {
+                    unset($this->items[$key]); 
+                }
+            }
+        }
     }
 }
 

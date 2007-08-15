@@ -29,13 +29,16 @@ if (!defined('TEST_INITIALIZED'))
 	chdir($cd);
 	
 	define('TEST_INITIALIZED', true);
+	
+	ClassLoader::import('application.LiveCart');
+	new LiveCart;
 }
 
 ClassLoader::import('application.system.*');
 ClassLoader::import('library.locale.Locale');
 ClassLoader::import('test.mock.Swift_Connection_Fake');
 
-Email::$connection = new Swift_Connection_Fake();
+//Email::$connection = new Swift_Connection_Fake();
 
 require_once('UTStandalone.php');
 
