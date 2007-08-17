@@ -717,7 +717,12 @@ class Product extends MultilingualObject
 
 	public function getPrice($currencyCode, $recalculate = true)
 	{
-	  	$instance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
+	  	if ($currencyCode instanceof Currency)
+	  	{
+            $currencyCode = $currencyCode->getID();
+        }
+          
+        $instance = $this->getPricingHandler()->getPriceByCurrencyCode($currencyCode);
 	  	if (!$instance->price->get() && $recalculate)
 	  	{
 	  		return $instance->reCalculatePrice();

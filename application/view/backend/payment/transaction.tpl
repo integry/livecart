@@ -3,6 +3,11 @@
     <div class="transactionMainDetails">
         <div class="transactionAmount{if $transaction.isVoided} isVoided{/if}">
             {$transaction.formattedAmount}
+            {if $transaction.Currency.ID != $transaction.RealCurrency.ID}
+                <span class="transactionRealAmount">
+                ({$transaction.formattedRealAmount})
+                </span>
+            {/if}
         </div>
         
         <div class="transactionStatus">

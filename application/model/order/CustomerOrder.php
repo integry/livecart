@@ -328,6 +328,9 @@ class CustomerOrder extends ActiveRecordModel
         }
         $wishList->save();
                 
+        // set order total
+        $this->totalAmount->set($this->getTotal($currency));
+                
         $this->isFinalized->set(true);
         $this->dateCompleted->set(new ARSerializableDateTime());
 		$this->save();
@@ -411,11 +414,15 @@ class CustomerOrder extends ActiveRecordModel
             
             // reorder shipments when cart items are modified
             $this->resetShipments();        
-	        $this->shipping->set(serialize($this->shipments));		
 
             $this->totalAmount->set($this->calculateTotal($this->currency->get()));
 		}
 		
+		if ($this->isModified() || $isModified)
+		{
+	        $this->shipping->set(serialize($this->shipments));            
+        }
+
         if (!$this->isFinalized->get() && !$this->orderedItems && !$allowEmpty)
         { 
             $this->delete();
@@ -661,8 +668,10 @@ class CustomerOrder extends ActiveRecordModel
                 if (isset($downloadable))
                 {
                     $this->shipments->unshift($downloadable);
-                }                   
+                }                                  
             }                    
+
+            $this->shipping->set(serialize($this->shipments));               
         }
 
         return $this->shipments;
@@ -961,6 +970,19 @@ class CustomerOrder extends ActiveRecordModel
 		
 		$this->mergeItems();
 	}
+	
+	public function changeCurrency(Currency $currency)
+	{
+        $this->currency->set($currency);
+        foreach ($this->getOrderedItems() as $item)
+        {
+            $item->price->set($item->product->get()->getPrice($currency));
+            $item->priceCurrencyID->set($currency->getID());
+            $item->save();
+        }
+        
+        $this->save();
+    }
 	
 	public function serialize()
 	{

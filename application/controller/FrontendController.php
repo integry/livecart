@@ -325,6 +325,13 @@ abstract class FrontendController extends BaseController
 		    case 'order':
 		    	ClassLoader::import('application.model.order.SessionOrder');
 				$this->order = SessionOrder::getOrder();
+				
+        		// check if order currency matches the request currency
+        		if ($this->order->currency->get() != $this->getRequestCurrency())
+        		{
+                    $this->order->changeCurrency(Currency::getInstanceByID($this->getRequestCurrency()));
+                }
+				
 				return $this->order;
 		    break;
 		    

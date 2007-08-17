@@ -32,10 +32,10 @@
 				</div>
 			</td>
 			<td class="cartPrice">
-				{$item.formattedSubTotal.$currency}
+				{$item.formattedSubTotal}
 				{if $item.count != 1}
 					<div class="subTotalCalc">
-						{$item.count} x {$item.Product.formattedPrice.$currency}
+						{$item.count} x {$item.formattedPrice}
 					</div>
 				{/if}
 			</td>

@@ -398,7 +398,7 @@ class CheckoutController extends FrontendController
         
         if ($redirect = $this->validateOrder($this->order, self::STEP_PAYMENT))
         {
-			return $redirect;
+            return $redirect;
 		}       
         
         // check for express checkout data for this order
@@ -665,7 +665,7 @@ class CheckoutController extends FrontendController
 	 */
 	private function validateOrder(CustomerOrder $order, $step = 0)
     {
-		// no items in shopping cart
+        // no items in shopping cart
 		if (!count($order->getShoppingCartItems()))
 		{
 			if ($this->request->isValueSet('return'))

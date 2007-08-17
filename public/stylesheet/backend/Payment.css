@@ -64,6 +64,12 @@ ul.transactions li
     font-weight: bold;
 }
 
+.transactionRealAmount
+{
+    font-size: 50%;
+    font-weight: normal;
+}
+
 .transactionMainDetails
 {
     float: left;

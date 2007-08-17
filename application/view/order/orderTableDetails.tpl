@@ -1,9 +1,9 @@
 {foreach from=$shipment.items item="item" name="shipment"}
     <tr{zebra loop="shipment"}>                    
         <td class="productName"><a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a></td>
-        <td>{$item.Product.formattedPrice[$order.Currency.ID]}</td>
+        <td>{$item.formattedPrice}</td>
         <td>{$item.count}</td>
-        <td>{$item.formattedSubTotal[$order.Currency.ID]}</td>
+        <td>{$item.formattedSubTotal}</td>
     </tr>
 {/foreach}            
 

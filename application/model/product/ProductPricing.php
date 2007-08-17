@@ -68,8 +68,7 @@ class ProductPricing
 	{
 		if (!$this->isPriceSet($currency))
 		{
-			$inst = ProductPrice::getNewInstance($this->product, $currency);
-			$this->prices[$currency->getID()] = $inst;
+			return ProductPrice::getNewInstance($this->product, $currency);
 		}
 
 		return $this->prices[$currency->getID()];

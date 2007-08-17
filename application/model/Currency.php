@@ -104,7 +104,7 @@ class Currency extends ActiveRecordModel
         return $this->convertAmountFromDefaultCurrency($amount);        
     }
 	
-	public static function getInstanceById($id, $loadData = false)
+	public static function getInstanceById($id, $loadData = true)
 	{
 		return ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);
 	}
@@ -115,7 +115,7 @@ class Currency extends ActiveRecordModel
 	 *
 	 *  @return Currency
 	 */
-    public static function getValidInstanceById($id, $loadData = false)
+    public static function getValidInstanceById($id, $loadData = true)
 	{
         try
         {

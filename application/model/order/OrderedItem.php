@@ -69,6 +69,16 @@ class OrderedItem extends ActiveRecordModel
         return parent::serialize(array('customerOrderID', 'shipmentID', 'productID'));
     }
     
+    protected function insert()
+    {
+        $this->shipment->setNull();
+        
+        $this->priceCurrencyID->set($this->customerOrder->get()->currency->get()->getID());
+        $this->price->set($this->product->get()->getPrice($this->priceCurrencyID->get()));
+
+        return parent::insert();
+    }
+    
     public function save()
     {
         $ret = parent::save();        
@@ -131,24 +141,18 @@ class OrderedItem extends ActiveRecordModel
     public static function transformArray($array, ARSchema $schema)
     {
         $array = parent::transformArray($array, $schema);
-        $subTotal = array();
-
-        foreach ($array['Product']['calculated'] as $currency => $price)
-        {
-            $subTotal[$currency] = $price * $array['count'];
-        }  
         
-        $array['subTotal'] = $subTotal;
-        
-        $formattedSubTotal = array();
-        foreach ($subTotal as $currency => $price)
+        // always use OrderedItem stored prices for presentation, rather than Product's
+        // pricing data, as Product prices may change after the order is completed
+        if ($array['priceCurrencyID'])
         {
-            $formattedSubTotal[$currency] = Currency::getInstanceByID($currency)->getFormattedPrice($price);
+            $currency = Currency::getInstanceByID($array['priceCurrencyID']);
+            $array['formattedPrice'] = $currency->getFormattedPrice($array['price']);
+            $array['formattedSubTotal'] = $currency->getFormattedPrice($array['price'] * $array['count']);
         }
-        
-        $array['formattedSubTotal'] = $formattedSubTotal;
         
         return $array;
     }
-}    
+}
+
 ?>

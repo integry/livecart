@@ -9,6 +9,7 @@ ClassLoader::import("application.model.product.Product");
  *      b) authorization transaction to reserve funds on customers credit card
  *      c) capture transaction to request authorized funds
  *      d) void transaction to cancel an earlier transaction
+ *      e) @todo - refund transaction
  *
  * The transaction must be assigned to a concrete CustomerOrder
  *
@@ -46,9 +47,11 @@ class Transaction extends ActiveRecordModel
 		$schema->registerField(new ARForeignKeyField("parentTransactionID", "Transaction", "ID", "Transaction", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("orderID", "CustomerOrder", "ID", "CustomerOrder", ARInteger::instance()));
 		$schema->registerField(new ARForeignKeyField("currencyID", "currency", "ID", 'Currency', ARChar::instance(3)));
+		$schema->registerField(new ARForeignKeyField("realCurrencyID", "realCurrency", "ID", 'Currency', ARChar::instance(3)));
 		$schema->registerField(new ARForeignKeyField("userID", "user", "ID", 'User', ARInteger::instance()));
 		
 		$schema->registerField(new ARField("amount", ARFloat::instance()));
+		$schema->registerField(new ARField("realAmount", ARFloat::instance()));
 		$schema->registerField(new ARField("time", ARDateTime::instance()));
 		$schema->registerField(new ARField("method", ARVarchar::instance(40)));
 		$schema->registerField(new ARField("gatewayTransactionID", ARVarchar::instance(40)));
@@ -69,28 +72,29 @@ class Transaction extends ActiveRecordModel
 	{
         $instance = parent::getNewInstance(__CLASS__);
         $instance->order->set($order);
+        $instance->gatewayTransactionID->set($result->gatewayTransactionID->get());
         
-        foreach (array('amount', 'gatewayTransactionID') as $field)
-        {
-            $instance->$field->set($result->$field->get());
-        }
-        
+        // determine currency
         if ($result->currency->get())
         {
-            $instance->currency->set(Currency::getInstanceById($result->currency->get()));
+            $instance->realCurrency->set(Currency::getInstanceById($result->currency->get()));
         }
         else
         {
+            $instance->realCurrency->set($order->currency->get());
+        }
+        
+        // amount
+        $instance->realAmount->set($result->amount->get());
+                
+        // different currency than initial order currency?
+        if ($order->currency->get()->getID() != $result->currency->get())
+        {
+            $instance->amount->set($order->currency->get()->convertAmount($instance->realCurrency->get(), $instance->realAmount->get()));
             $instance->currency->set($order->currency->get());
         }
         
-        // different currency than initial order currency?
-        $amount = $result->amount->get();
-        if ($order->currency->get()->getID() != $result->currency->get())
-        {
-            $amount = $order->currency->get()->convertAmount($instance->currency->get(), $amount);
-        }
-        
+        // transaction type
         $instance->type->set($result->getTransactionType());
         
         if ($instance->type->get() != self::TYPE_AUTH)
@@ -113,11 +117,11 @@ class Transaction extends ActiveRecordModel
     {
         $instance = parent::getNewInstance(__CLASS__);
         $instance->order->set($order);
-        $instance->currency->set($order->currency->get());
+        $instance->realCurrency->set($order->currency->get());
         $instance->type->set(self::TYPE_SALE);
         $instance->methodType->set(self::METHOD_OFFLINE);
         $instance->isCompleted->set(true);
-        $instance->amount->set($amount);
+        $instance->realAmount->set($amount);
         
         return $instance;
     }
@@ -134,6 +138,7 @@ class Transaction extends ActiveRecordModel
         try
         {
             $array['formattedAmount'] = Currency::getInstanceByID($array['Currency']['ID'])->getFormattedPrice($array['amount']);
+            $array['formattedRealAmount'] = Currency::getInstanceByID($array['RealCurrency']['ID'])->getFormattedPrice($array['realAmount']);
         }
         catch (ARNotFoundException $e)
         {            
@@ -280,6 +285,9 @@ class Transaction extends ActiveRecordModel
         
         $instance = self::getNewSubTransaction($this, $result);       
         $instance->amount->set($this->amount->get() * -1);
+        $instance->realAmount->set($this->realAmount->get() * -1);
+        $instance->currency->set($this->currency->get());
+        $instance->realCurrency->set($this->realCurrency->get());
         $instance->save();
         
         $this->isVoided->set(true);
@@ -312,7 +320,7 @@ class Transaction extends ActiveRecordModel
         }
         
         $instance = self::getNewSubTransaction($this, $result);       
-        $instance->amount->set($amount);
+        $instance->realAmount->set($amount);
         $instance->save();
                 
         return $instance;
@@ -371,6 +379,17 @@ class Transaction extends ActiveRecordModel
         }
         
         return parent::insert();
+    }
+    
+    public function save()
+    {
+        if ($this->currency->isNull())
+        {
+            $this->currency->set($this->realCurrency->get());
+            $this->amount->set($this->realAmount->get());
+        }
+        
+        return parent::save();
     }
 }
 

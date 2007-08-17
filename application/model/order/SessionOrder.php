@@ -82,7 +82,10 @@ class SessionOrder
 
 	public static function save(CustomerOrder $order)
 	{
-		$order->save();
+		// mark shipment data as modified - to force saving
+        $order->getShipments();
+        
+        $order->save();
 		self::setOrder($order);
 	}
 
