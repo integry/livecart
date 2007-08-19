@@ -15,6 +15,10 @@
     	{include file="category/allFilters.tpl"}
 	{/if}
 
+	{if $foundCategories}
+    	{include file="category/foundCategories.tpl"}		
+	{/if}
+
 	{if $categoryNarrow}
     	{include file="category/narrowByCategory.tpl"}
 	{/if}

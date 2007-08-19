@@ -50,7 +50,21 @@ class CategoryController extends FrontendController
         $query = $this->request->get('q');
         if ($query)
       	{
-			$this->filters[] = new SearchFilter($query);    
+			$this->filters[] = new SearchFilter($query);
+			
+			// search by category names
+			$f = new ARSelectFilter();
+			foreach (array($this->locale->getLocaleCode(), $this->application->getDefaultLanguageCode()) as $handle)
+			{
+				$langHandle = MultiLingualObject::getLangSearchHandle(new ARFieldHandle('Category', 'name'), $handle);
+				$f->mergeCondition(new LikeCond($langHandle, '%' . $query . '%'));
+			}
+
+			$foundCategories = ActiveRecordModel::getRecordSet('Category', $f, Category::LOAD_REFERENCES);
+			foreach ($foundCategories as $category)
+			{
+				$category->getPathNodeSet();
+			}
         }
 
         // sorting
@@ -176,6 +190,11 @@ class CategoryController extends FrontendController
     		$response->set('searchQuery', $searchQuery);
         }		
 		
+		if (isset($foundCategories))
+        {
+    		$response->set('foundCategories', $foundCategories->toArray());
+        }		
+
 		return $response;
 	}        	
 	
@@ -333,6 +352,7 @@ class CategoryController extends FrontendController
 			$query->addField($case->toString(), null, 'ID');
 			$query->addField('COUNT(*)', null, 'cnt');
 			$query->joinTable('Category', 'Product', 'ID', 'categoryID');
+            $query->joinTable('ProductPrice', 'Product', 'productID AND (ProductPrice.currencyID = "' . $this->application->getDefaultCurrencyCode() . '")', 'ID');
 			
 			$count = ActiveRecordModel::getDataBySQL($query->createString());
 
@@ -410,6 +430,7 @@ class CategoryController extends FrontendController
 		$showAll = $this->request->get('showAll');
 		
 		$url = $this->router->createUrlFromRoute($this->router->getRequestedRoute());
+		$url = $this->router->addQueryParams($url);
 		foreach ($filterGroups as $key => $grp)
 		{
 			if (empty($grp['filters']))

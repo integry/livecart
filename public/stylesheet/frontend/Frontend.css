@@ -421,6 +421,12 @@ tr.even
 	padding-right: 20px;
 }
 
+.logout
+{
+	margin-top: 0.5em;
+	font-size: smaller;
+}
+
 /*****************************
 	Information menu
 *****************************/
@@ -574,6 +580,12 @@ ul.subSubCats
     background-position: 6px center;
     padding-left: 28px;    
     margin-left: 5px;
+}
+
+.foundCategories
+{
+	margin-bottom: 1em;
+	margin-left: 1em;
 }
 
 .page

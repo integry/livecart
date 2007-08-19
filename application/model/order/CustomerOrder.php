@@ -84,7 +84,12 @@ class CustomerOrder extends ActiveRecordModel
         
     public function loadItems()
     {
-        $this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'))->getData();
+        if (!$this->isExistingRecord())
+        {
+			return false;
+		}
+		
+		$this->orderedItems = $this->getRelatedRecordSet('OrderedItem', new ARSelectFilter(), array('Product', 'Category', 'DefaultImage' => 'ProductImage'))->getData();
         $this->shipments = $this->getRelatedRecordSet('Shipment', new ARSelectFilter(), self::LOAD_REFERENCES)->getData();
         
         if (!$this->shipments)
@@ -347,7 +352,12 @@ class CustomerOrder extends ActiveRecordModel
     
     public function save($allowEmpty = false)
     {
-        // remove zero-count items
+        if (!$this->orderedItems)
+        {
+         	$this->loadItems();
+		}
+		
+		// remove zero-count items
         foreach ($this->orderedItems as $item)
         {
             if (!$item->count->get())
