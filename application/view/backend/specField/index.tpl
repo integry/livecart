@@ -55,8 +55,9 @@
 </fieldset>
 
 <div>
-    <div id="specField_item_new_{$categoryID}_form" style="display: none;">
-        {literal}
+    <fieldset class="addForm" id="specField_item_new_{$categoryID}_form" style="display: none;">
+    	<legend>{t _add_new_field}</legend>
+		{literal}
         <script type="text/javascript">
         try
         {
@@ -71,13 +72,14 @@
         }
         </script>
         {/literal}
-    </div>
-    
-    <div id="specField_group_new_{$categoryID}_form" class="specField_new_group" style="display: none;">
+    </fieldset>
+		    
+    <fieldset class="addForm" id="specField_group_new_{$categoryID}_form" class="specField_new_group" style="display: none;">
+    	<legend>{t _add_new_group}</legend>
         <script type="text/javascript">
            new Backend.SpecFieldGroup($('specField_group_new_{$categoryID}_form'), {ldelim} Category: {ldelim} ID: {$categoryID} {rdelim} {rdelim});
         </script>
-    </div>
+    </fieldset>
 </div>
 
 {* No group *}

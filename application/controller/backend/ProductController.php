@@ -49,7 +49,7 @@ class ProductController extends StoreManagementController
 	{		
 		$columns = array_keys($this->request->get('col', array()));
 		$this->setSessionData('columns', $columns);
-		return new ActionRedirectResponse('backend.product', 'index', array('id' => $this->request->get('category')));
+		return new ActionRedirectResponse('backend.product', 'index', array('id' => $this->request->get('id')));
 	}
 	
 	public function lists()

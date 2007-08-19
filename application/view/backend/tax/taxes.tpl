@@ -5,8 +5,9 @@
 	</ul>
 </fieldset>
 
-<fieldset id="tax_new_form" style="display: none;">
-    {include file="backend/tax/tax.tpl" tax=$newTax taxForm=$newTaxForm}
+<fieldset id="tax_new_form" style="display: none;" class="addForm">
+    <legend>{t _add_new_tax}</legend>
+	{include file="backend/tax/tax.tpl" tax=$newTax taxForm=$newTaxForm}
 </fieldset>
 
 

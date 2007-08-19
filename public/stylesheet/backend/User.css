@@ -12,7 +12,6 @@
     display: none;
 }
 
-
 #userManagerContainer .activeList .errorText, #userGroupsManagerContainer .activeList .errorText 
 {
     float: none;
@@ -36,7 +35,6 @@
 
 .cell_cb 
 {
-    text-align: left;
     width:4%;
 }
 

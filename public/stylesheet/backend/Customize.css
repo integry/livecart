@@ -1,3 +1,22 @@
+#customizeMenu
+{
+	width: 500px;
+}
+
+#customizeMenu li
+{
+	list-style-type: none;
+	background-color: #F7F7F7;
+	border: 1px solid #B3D4EF;
+	margin-bottom: 15px;
+	padding: 5px;
+}
+
+#customizeMenu li.active
+{
+	border: 1px solid #58CB51;
+}
+
 .customizeControl 
 {
 	font-size: x-large;
@@ -17,13 +36,12 @@
 .modeDescr
 {
 	margin-top: 10px;
-	margin-bottom: 30px;
 }
 
 #goToFrontend
 {
 	float: left;
-	margin-top: 20px;
+	margin-top: 10px;
 	font-size: larger;
 
 	padding-right: 22px;

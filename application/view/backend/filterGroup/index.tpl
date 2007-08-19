@@ -37,8 +37,9 @@
 			</ul>
 		</fieldset>
 
-        <div id="filter_item_new_{$categoryID}_form" style="display: none;" class="filter_item_new">
-            <script type="text/javascript">
+        <fieldset class="addForm" id="filter_item_new_{$categoryID}_form" style="display: none;" class="filter_item_new">
+            <legend>{t _add_new_filter}</legend>
+			<script type="text/javascript">
                {literal}try{{/literal}
                     var newFilterForm = new Backend.Filter({json array=$blankFilter}, true);
                     newFilterForm.addFilter(null, "new" + Backend.Filter.prototype.countNewFilters, true);
@@ -46,12 +47,9 @@
                     Backend.Filter.prototype.countNewFilters++;
                {literal}} catch(e) { console.info(e) }{/literal}
             </script>
-        </div>
+        </fieldset>
     </div>
-    
-    
-    <br />
-    
+        
     <ul id="filter_items_list_{$categoryID}" class="filterList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit ">
     {foreach item="filter" from=$filters}
     	<li id="filter_items_list_{$categoryID}_{$filter.ID}" {if $filter.filtersCount == 0}class="filtergroup_has_no_filters"{/if}>

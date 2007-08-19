@@ -12,7 +12,8 @@
     		</li>
     	</ul>  
         
-        <fieldset id="newUserForm_{$userGroupID}" style="display: none;" class="treeManagerContainer newUserForm">
+        <fieldset id="newUserForm_{$userGroupID}" style="display: none;" class="addForm treeManagerContainer newUserForm">
+        	<legend>{t _add_new_user}</legend>
             {include file="backend/user/info.tpl"}
         </fieldset>
         
@@ -39,7 +40,7 @@
     </fieldset>
 {/if}
 
-<fieldset class="container">
+<fieldset class="container activeGridControls">
                 
     <span class="activeGridMass" {denied role="user.mass"}style="visibility: hidden;"{/denied} id="userMass_{$userGroupID}" >
 
@@ -72,38 +73,20 @@
 			<span class="rangeCount">Listing users %from - %to of %count</span>
 			<span class="notFound">No users found</span>
 		</span>    
-		<br />
-		<div>
-			<a href="#" onclick="Element.show($('userColumnMenu_{$userGroupID}')); return false;">{t Columns}</a>
-		</div>
-		<div id="userColumnMenu_{$userGroupID}" class="activeGridColumnsRoot" style="display: none;">
-  		  <form action="{link controller=backend.userGroup action=changeColumns}" onsubmit="new LiveCart.AjaxUpdater(this, this.parentNode.parentNode.parentNode.parentNode.parentNode, document.getElementsByClassName('progressIndicator', this)[0]); return false;" method="POST">
-			
-			<input type="hidden" name="group" value="{$userGroupID}" />
-			
-			<div class="activeGridColumnsSelect">
-				<div class="activeGridColumnsSelectControls">
-					<span class="progressIndicator" style="display: none;"></span>
-					<input type="submit" class="submit" name="sm" value="{tn Change columns}" /> {t _or} <a class="cancel" onclick="Element.hide($('userColumnMenu_{$userGroupID}')); return false;" href="#cancel">{t _cancel}</a>
-				</div>
-			    <div class="activeGridColumnsList">
-					{foreach from=$availableColumns item=item key=column}
-					<p>
-						<input type="checkbox" name="col[{$column}]" class="checkbox" id="column_{$column}"{if $displayedColumns.$column}checked="checked"{/if} />
-						<label for="column_{$column}" class="checkbox">
-							{$item.name}
-						</label>
-					</p>
-					{/foreach}
-				</div>
-			</div>
-		  </form>
-		</div>
 	</span>
     
 </fieldset>
 
-{activeGrid prefix="users" id=$userGroupID role="user.mass" controller="backend.userGroup" action="lists" displayedColumns=$displayedColumns availableColumns=$availableColumns totalCount=$totalCount}
+{activeGrid 
+	prefix="users" 
+	id=$userGroupID 
+	role="user.mass" 
+	controller="backend.userGroup" action="lists" 
+	displayedColumns=$displayedColumns 
+	availableColumns=$availableColumns 
+	totalCount=$totalCount
+	container="tabPageContainer"
+}
 
 </div>
 

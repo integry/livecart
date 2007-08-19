@@ -7,7 +7,7 @@
     </ul>
     
     <div class="slideForm addOffline" style="display: none;">
-        <fieldset class="addOfflinePayment">
+        <fieldset class="addForm addOfflinePayment">
         
             <legend>{t _add_offline_payment}</legend>
         

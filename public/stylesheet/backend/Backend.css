@@ -81,6 +81,11 @@ div.tip div {
 	margin-right: 10px;
 }
 
+div.noRecords
+{
+	margin-top: 10px;	
+}
+
 div.noRecords div {
     border: 2px solid #FF8600;
     background: #FFDDD5;
@@ -603,7 +608,15 @@ html, body{
 
 ul.menu {
     display: block;
-    padding-bottom: 5px;
+    
+	background-color: #FEFEFE;
+	border-bottom: 1px solid #B3D4EF;
+	border-top: 1px solid #B3D4EF;
+	
+	margin-bottom: 5px;
+	padding: 10px;
+	padding-top: 4px;    
+	padding-bottom: 6px;    
 }
 
 ul.menu li {
@@ -618,16 +631,19 @@ ul.menu li {
 
 ul.verticalMenu
 {
-	list-style-type: none;	
 	padding: 15px;
+	list-style-type: none;	
 }
 
 ul.verticalMenu li
 {
 	margin-bottom: 5px;
-	padding-left: 23px;
+	padding: 5px;
+	padding-left: 28px;
 	background-repeat: no-repeat;
-	background-position: left center;	
+	background-position: 5px center;	
+	border: 1px solid #ccc;
+	background-color: #F9F9F9;
 }
 
 /*************************** 
@@ -746,7 +762,7 @@ legend
 	color: #30A0F9;
 	padding-left: 10px;
 	padding-right: 10px;
-	background-color: #CCC;
+	background-color: #F0F9FF;
 	top: -22px; 
 }
 
@@ -948,19 +964,29 @@ select.narrow
     width: 5em;
 }
 
+.UnitConventer_HiUnit
+{
+	margin-right: 1em;
+}
+
 /*************************** 
 	Form types
 ***************************/
 fieldset.addForm
 {
+/*
 	background-color: #FFFFDD;
 	border: 1px solid #FFFF55;
+*/
 	padding: 10px;
 }
 
 fieldset.addForm legend
 {
-	background-color: #FFFFAA;
+	background-image: url(../../image/silk/bullet_add.png);
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 22px;
 }
 
 /*************************** 
@@ -1199,6 +1225,8 @@ ul.languageFormTabs li.active
 {
     background-color: #fff;
     font-weight: bold;
+	position: relative;
+	z-index: 50;    
 }
 
 .languageFormContent
@@ -1229,7 +1257,8 @@ ul.languageFormTabs li.active
     background: #f1f1f1;
     padding: 5px;
     padding-right: 0;
-  	height: 260px;
+    padding-top: 0px;
+  	height: 360px;
 }
 
 .treeContainer {
@@ -1239,9 +1268,10 @@ ul.languageFormTabs li.active
 
 .containerTableStyle
 {
-    height: 262px; 
-    width: 250px;
+    height: 360px; 
+/*    width: 250px; */
     overflow: auto;
+    padding-top: 5px;
 }
 
 .treeManagerContainer {
@@ -1312,7 +1342,7 @@ a.acronym:hover div
  **************************/
 .addTreeNode
 {
-	background-image: url('../../image/silk/page_white_add.png');
+	background-image: url('../../image/silk/add.png');
 	margin-bottom: 10px;
 }
 
@@ -1333,5 +1363,5 @@ a.acronym:hover div
 
 .removeTreeNode
 {
-	background-image: url('../../image/silk/page_white_delete.png');
+	background-image: url('../../image/silk/delete.png');
 }

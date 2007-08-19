@@ -152,23 +152,23 @@ Backend.Category = {
         
         if(categoryId == '1') 
         {
-            $("removeCategoryLink").hide();
-            $("moveCategoryUp").hide();
-            $("moveCategoryDown").hide();
+            $("removeCategoryLink").parentNode.hide();
+            $("moveCategoryUp").parentNode.hide();
+            $("moveCategoryDown").parentNode.hide();
         }
         else 
         {
-            $("removeCategoryLink").show();
+            $("removeCategoryLink").parentNode.show();
             
             parentId = Backend.Category.treeBrowser.getParentId(categoryId)
             categoryIndex = Backend.Category.treeBrowser.getIndexById(categoryId)
             nextCategoryId = Backend.Category.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1)
 
-            if(nextCategoryId) $("moveCategoryDown").show();
-            else $("moveCategoryDown").hide();
+            if(nextCategoryId) $("moveCategoryDown").parentNode.show();
+            else $("moveCategoryDown").parentNode.hide();
             
-            if(categoryIndex > 0) $("moveCategoryUp").show();
-            else $("moveCategoryUp").hide();
+            if(categoryIndex > 0) $("moveCategoryUp").parentNode.show();
+            else $("moveCategoryUp").parentNode.hide();
         }  
     },
 
@@ -569,7 +569,7 @@ CategoryTabControl.prototype = {
 
 		if ($(containerId) == undefined)
 		{
-			new Insertion.Bottom(this.sectionContainerName, '<div id="' + containerId + '"></div>');
+			new Insertion.Bottom(this.sectionContainerName, '<div class="' + tabId + '" id="' + containerId + '"></div>');
 		}
 		if (categoryId != "" && Element.empty(containerId))
 		{

@@ -32,7 +32,7 @@
                                                 
                         <div class="filterMenuContainer">
                         
-                            {img src="image/silk/zoom.png" class="filterIcon"}
+                            {img src="image/silk/zoom.png" class="filterIcon" onclick="Event.stop(event);"}
                             
                             <div class="filterMenu">
                                 
@@ -120,6 +120,34 @@
 </tbody>
 
     </table>
+</div>
+
+<div class="activeGridColumns" >
+	<a href="#" onclick="Element.show($('{$prefix}ColumnMenu_{$id}')); return false;">{t _columns}</a>
+</div>
+
+<div id="{$prefix}ColumnMenu_{$id}" class="activeGridColumnsRoot" style="display: none; position: relative;">
+  <form action="{link controller=$controller action=changeColumns}" onsubmit="new LiveCart.AjaxUpdater(this, this.up('.{$container}'), document.getElementsByClassName('progressIndicator', this)[0]); return false;" method="POST">
+	
+	<input type="hidden" name="id" value="{$id}" />
+	
+	<div class="activeGridColumnsSelect">
+		<div class="activeGridColumnsSelectControls">
+			<span class="progressIndicator" style="display: none;"></span>
+			<input type="submit" class="submit" name="sm" value="{tn Change columns}" /> {t _or} <a class="cancel" onclick="Element.hide($('{$prefix}ColumnMenu_{$id}')); return false;" href="#cancel">{t _cancel}</a>
+		</div>
+	    <div class="activeGridColumnsList">
+			{foreach from=$availableColumns item=item key=column}
+			<p>
+				<input type="checkbox" name="col[{$column}]" class="checkbox" id="column_{$column}"{if $displayedColumns.$column}checked="checked"{/if} />
+				<label for="column_{$column}" class="checkbox">
+					{$item.name}
+				</label>
+			</p>
+			{/foreach}
+		</div>
+	</div>
+  </form>
 </div>
 
 <script type="text/javascript">

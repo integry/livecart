@@ -1,6 +1,6 @@
 <div>
 
-<fieldset class="container">
+<fieldset class="container activeGridControls">
                 
     <span style="{if $orderGroupID == 8}visibility: hidden;{else}{denied role="order.mass"}visibility: hidden;{/denied}{/if}" id="orderMass_{$orderGroupID}" class="activeGridMass">
 
@@ -38,38 +38,22 @@
 			<span class="rangeCount">Listing orders %from - %to of %count</span>
 			<span class="notFound">No orders found</span>
 		</span>    
-		<br />
-		<div>
-			<a href="#" onclick="Element.show($('orderColumnMenu_{$orderGroupID}')); return false;">{t Columns}</a>
-		</div>
-		<div id="orderColumnMenu_{$orderGroupID}" class="activeGridColumnsRoot" style="display: none;">
-  		  <form action="{link controller=backend.customerOrder action=changeColumns}" onsubmit="new LiveCart.AjaxUpdater(this, this.parentNode.parentNode.parentNode.parentNode.parentNode, document.getElementsByClassName('progressIndicator', this)[0]); return false;" method="POST">
-			
-			<input type="hidden" name="group" value="{$orderGroupID}" />
-			
-			<div class="activeGridColumnsSelect">
-				<div class="activeGridColumnsSelectControls">
-					<span class="progressIndicator" style="display: none;"></span>
-					<input type="submit" class="submit" name="sm" value="{tn Change columns}" /> {t _or} <a class="cancel" onclick="Element.hide($('orderColumnMenu_{$orderGroupID}')); return false;" href="#cancel">{t _cancel}</a>
-				</div>
-			    <div class="activeGridColumnsList">
-					{foreach from=$availableColumns item=item key=column}
-					<p class="column_{$column|replace:'.':'_'}">
-						<input type="checkbox" name="col[{$column}]" class="checkbox" id="column_{$column}_{$orderGroupID}"{if $displayedColumns.$column}checked="checked"{/if} />
-						<label for="column_{$column}_{$orderGroupID}" class="checkbox">
-							{$item.name}
-						</label>
-					</p>
-					{/foreach}
-				</div>
-			</div>
-		  </form>
-		</div>
 	</span>
     
 </fieldset>
 
-{activeGrid prefix="orders" id=$orderGroupID role="order.mass" controller="backend.customerOrder" action="lists" displayedColumns=$displayedColumns availableColumns=$availableColumns totalCount=$totalCount rowCount=17 showID=true}
+{activeGrid 
+	prefix="orders" 
+	id=$orderGroupID 
+	role="order.mass" 
+	controller="backend.customerOrder" action="lists" 
+	displayedColumns=$displayedColumns 
+	availableColumns=$availableColumns 
+	totalCount=$totalCount 
+	rowCount=17 
+	showID=true
+	container="tabPageContainer"
+}
 
 </div>
 

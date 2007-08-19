@@ -141,14 +141,14 @@ Backend.DeliveryZone.prototype =
             }
             
             var activateTab = $('tabDeliveryZoneShipping');
-            $("tabDeliveryZoneCountry").hide();
-            $("deliveryZone_delete").hide();
+            $("tabDeliveryZoneCountry").parentNode.hide();
+            $("deliveryZone_delete").parentNode.hide();
         }
         else
         {
             var activateTab = $('tabDeliveryZoneCountry');
-            $("tabDeliveryZoneCountry").show();
-            $("deliveryZone_delete").show();
+            $("tabDeliveryZoneCountry").parentNode.show();
+            $("deliveryZone_delete").parentNode.show();
         }
         
         if(Backend.DeliveryZone.prototype.activeZone && Backend.DeliveryZone.prototype.activeZone != id)

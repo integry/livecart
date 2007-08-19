@@ -47,7 +47,7 @@ class UserGroupController extends StoreManagementController
 	{		
 		$columns = array_keys($this->request->get('col', array()));
 		$this->setSessionData('columns', $columns);
-		return new ActionRedirectResponse('backend.userGroup', 'users', array('id' => $this->request->get('group')));
+		return new ActionRedirectResponse('backend.userGroup', 'users', array('id' => $this->request->get('id')));
 	}
 
 	public function lists()

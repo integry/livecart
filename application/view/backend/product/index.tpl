@@ -18,7 +18,7 @@
 	</ul>  
 </fieldset>
 
-<fieldset class="container" >
+<fieldset class="container activeGridControls">
                 
     <span {denied role="product.mass"}style="display: none;"{/denied} id="productMass_{$categoryID}" class="activeGridMass">
 
@@ -90,38 +90,21 @@
 			<span class="rangeCount">{t _listing_products_from} %from - %to {t _listing_products_count_of} %count</span>
 			<span class="notFound">{t _no_products_found}</span>
 		</span>    
-		<br />
-		<div >
-			<a href="#" onclick="Element.show($('productColumnMenu_{$categoryID}')); return false;">{t _columns}</a>
-		</div>
-		<div id="productColumnMenu_{$categoryID}" class="activeGridColumnsRoot" style="display: none;">
-  		  <form action="{link controller=backend.product action=changeColumns}" onsubmit="new LiveCart.AjaxUpdater(this, this.parentNode.parentNode.parentNode.parentNode.parentNode, document.getElementsByClassName('progressIndicator', this)[0]); return false;" method="POST">
-			
-			<input type="hidden" name="category" value="{$categoryID}" />
-			
-			<div class="activeGridColumnsSelect">
-				<div class="activeGridColumnsSelectControls">
-					<span class="progressIndicator" style="display: none;"></span>
-					<input type="submit" class="submit" name="sm" value="{tn Change columns}" /> {t _or} <a class="cancel" onclick="Element.hide($('productColumnMenu_{$categoryID}')); return false;" href="#cancel">{t _cancel}</a>
-				</div>
-			    <div class="activeGridColumnsList">
-					{foreach from=$availableColumns item=item key=column}
-					<p>
-						<input type="checkbox" name="col[{$column}]" class="checkbox" id="column_{$column}"{if $displayedColumns.$column}checked="checked"{/if} />
-						<label for="column_{$column}" class="checkbox">
-							{$item.name}
-						</label>
-					</p>
-					{/foreach}
-				</div>
-			</div>
-		  </form>
-		</div>
 	</span>
     
 </fieldset>
 
-{activeGrid prefix="products" id=$categoryID role="product.mass" controller="backend.product" action="lists" displayedColumns=$displayedColumns availableColumns=$availableColumns totalCount=$totalCount filters=$filters}
+{activeGrid 
+	prefix="products" 
+	id=$categoryID 
+	role="product.mass" 
+	controller="backend.product" action="lists" 
+	displayedColumns=$displayedColumns 
+	availableColumns=$availableColumns 
+	totalCount=$totalCount 
+	filters=$filters
+	container="tabProducts"
+}
 
 </div>
 

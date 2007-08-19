@@ -18,9 +18,9 @@ class AuthorizeNet extends CreditCardPayment
 		return true;
 	}
 	
-	public static function getSupportedCurrencies()
+	public function getValidCurrency($currency)
 	{
-		return array('USD');
+		return 'USD';
 	}
 
 	/**

@@ -132,7 +132,11 @@ class ProductPriceController extends StoreManagementController
 		$pricesData = $product->toArray();
 		$pricesData['shippingHiUnit'] = (int)$pricesData['shippingWeight'];
 		$pricesData['shippingLoUnit'] = ($pricesData['shippingWeight'] - $pricesData['shippingHiUnit']) * 1000;
-		$pricesData = array_merge($pricesData, $product->getPricesFields());
+
+		foreach ($pricesData['calculated'] as $currency => $price)
+		{
+			$pricesData['price_' . $currency] = isset($pricesData['defined'][$currency]) ? $pricesData['defined'][$currency] : '';
+		}
 
 	    $form->setData($pricesData);
 

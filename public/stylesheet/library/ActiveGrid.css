@@ -3,13 +3,15 @@
     table-layout: fixed;   
 	width: 100%;  
 	height: 100%;
+	border: 2px solid #CCC;
+	border-right: 1px solid #CCC;
 }
 
 .activeGrid_loadIndicator
 {
 	position: absolute; 
 	width: 100%; 
-	padding-top: 150px; 
+	padding-top: 200px; 
 	text-align: center;
 }
 
@@ -45,6 +47,7 @@
 .activeGrid .cell_cb
 {
     padding: 0;
+    text-align: center;
 }
 
 .activeGrid .cell_cb input
@@ -245,14 +248,35 @@
 	padding-top: 6px;
 }
 
+/***************************************
+	Column selector
+***************************************/
+.activeGridColumns
+{
+	margin-bottom: -7px;
+	padding-top: 5px;	
+	text-align: right;
+}
+
+.activeGridColumns a
+{
+	background-image: url('../../image/silk/table_add.png');	
+	padding-left: 22px;
+	background-repeat: no-repeat;
+	top: 5px;
+}
+
 .activeGridColumnsSelect
 {
     background-color: white; 
 	border: 1px solid black; 
-	float: right; 
 	text-align: center; 
 	white-space: nowrap; 
 	width: 250px;
+	position: absolute;
+	right: -250px;
+	top: -385px;
+	min-height: 370px;
 }
 
 .activeGridColumnsSelectControls
@@ -271,7 +295,10 @@
 	text-align: left;
 }
 
-
+.activeGridControls
+{
+	position: relative !important;
+}
 
 .activeGridMass
 {
@@ -281,10 +308,10 @@
 
 .activeGridItemsCount
 {
-    float: right; 
+    position: absolute;
+    bottom: 4px;
+    right: 0;
     text-align: right; 
-    position: relative; 
-    padding-bottom: 10px;
 }
 
 .activeGridColumnsRoot

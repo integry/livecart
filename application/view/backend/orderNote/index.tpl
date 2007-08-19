@@ -8,7 +8,7 @@
     <div class="clear"></div>
     
     <div class="slideForm addResponse" style="display: none;">
-        <fieldset>
+        <fieldset class="addForm">
         
             <legend>{t _add_response}</legend>
         

@@ -188,11 +188,11 @@ Backend.UserGroup.prototype =
         
         if(id <= 0)
         {
-            $("userGroups_delete").hide();
+            $("userGroups_delete").parentNode.hide();
         }
         else
         {
-            $("userGroups_delete").show();  
+            $("userGroups_delete").parentNode.show();  
         }
         
         if(Backend.UserGroup.prototype.activeGroup && Backend.UserGroup.prototype.activeGroup != id)

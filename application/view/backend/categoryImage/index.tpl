@@ -19,7 +19,7 @@
 	<input type="hidden" name="ownerId" value="{$ownerId}" />
 	<input type="hidden" name="imageId" value="" />
 		
-	<fieldset>	
+	<fieldset class="addForm">	
 		<legend>{t _add_new}</legend>
 		<p class="required">
 			{err for="image"}
