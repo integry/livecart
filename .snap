@@ -137,3 +137,17 @@ revision = tip
 
 [tree20.paths]
 default = ssh://mercurial@dev.integry.net/library/unittest
+
+[tree21]
+root = library/payment/test/simpletest
+revision = tip
+
+[tree21.paths]
+default = ssh://mercurial@dev.integry.net/vendor/simpletest
+
+[tree20]
+root = library/payment/test/unittest
+revision = tip
+
+[tree20.paths]
+default = ssh://mercurial@dev.integry.net/library/unittest

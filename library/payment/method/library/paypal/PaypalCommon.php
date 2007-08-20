@@ -92,8 +92,13 @@ class PaypalCommon
     public function getValidCurrency($currentCurrencyCode)
     {
         $currentCurrencyCode = strtoupper($currentCurrencyCode);
-        return in_array($currentCurrencyCode, array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD', 'NZD', 'CHF', 'HKD', 'SGD', 'SEK', 'DKK', 'PLN', 'NOK', 'HUF', 'CZK')) ? $currentCurrencyCode : 'USD';
+        return in_array($currentCurrencyCode, self::getSupportedCurrencies()) ? $currentCurrencyCode : 'USD';
     }	
+    
+    public static function getSupportedCurrencies()
+    {
+        return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD', 'NZD', 'CHF', 'HKD', 'SGD', 'SEK', 'DKK', 'PLN', 'NOK', 'HUF', 'CZK');
+    }
     
 	/**
 	 *  DoCapture implementation for all PayPal payment classes
@@ -140,7 +145,7 @@ class PaypalCommon
 	/**
 	 *  DoVoid implementation for all PayPal payment classes
 	 */
-	protected function processVoid(TransactionPayment $handler)
+	public function processVoid(TransactionPayment $handler)
 	{
 		$details = $handler->getDetails();
 		$paypal = $handler->getHandler('DoVoid');

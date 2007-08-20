@@ -22,7 +22,13 @@ class PaypalDirectPayment extends CreditCardPayment
 	
     public function getValidCurrency($currentCurrencyCode)
     {
-        return PaypalCommon::getValidCurrency($currentCurrencyCode);
+        $currentCurrencyCode = strtoupper($currentCurrencyCode);
+        return in_array($currentCurrencyCode, self::getSupportedCurrencies()) ? $currentCurrencyCode : 'USD';
+    }
+
+    public static function getSupportedCurrencies()
+    {
+        return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD');
     }
 
 	/**

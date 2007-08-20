@@ -13,7 +13,7 @@ class TransactionResult
 	public $AVSzip;
 	
 	public $CVVmatch;
-	
+
 	public $rawResponse;
 	
 	protected $isCaptured;
@@ -51,6 +51,11 @@ class TransactionResult
     {
         return (self::TYPE_SALE == $this->type) || (self::TYPE_CAPTURE == $this->type);
     }    
+    
+    public function getDetails()
+    {
+        return $this->rawResponse;
+    }
 }
 
 ?>

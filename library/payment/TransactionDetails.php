@@ -48,7 +48,6 @@ class TransactionDetails
 		'description' => null,
 
 		'gatewayTransactionID' => null,
-	
 	);
 	
 	public function __construct()
