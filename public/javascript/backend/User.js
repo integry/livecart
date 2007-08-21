@@ -585,6 +585,16 @@ Backend.User.Editor.prototype =
     {
 		var self = this;
 		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
+        Event.observe("user_" + this.id +"_sameAddresses", "click", function(e) {  
+                Backend.User.Editor.prototype.showShippingAddress(
+		            $("user_" + this.id +"_sameAddresses"), 
+		            $("user_" + this.id +"_shippingAddress"), 
+		            $("user_" + this.id +"_billingAddress")
+		        );
+		}.bind(this));
+		
+        
+
     },
 
     init: function(args)
@@ -616,7 +626,13 @@ Backend.User.Editor.prototype =
     },
     
     submitForm: function()
-    {
+    {        
+	    Backend.User.Editor.prototype.cloneBillingFormValues(
+            $("user_" + this.id +"_sameAddresses"), 
+            $("user_" + this.id +"_shippingAddress"), 
+            $("user_" + this.id +"_billingAddress")
+        );
+		
         this.nodes.form.action = Backend.User.Editor.prototype.Links.update + "/" + this.id;
 		new LiveCart.AjaxRequest(
             this.nodes.form,
@@ -640,7 +656,42 @@ Backend.User.Editor.prototype =
 		{
 			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
 		}
-	}
+	}, 
+	
+    showShippingAddress: function(checkbox, shippingAddress, billingAddress) {
+        if(checkbox.checked) shippingAddress.hide(); 
+        else shippingAddress.show();
+    },
+    
+    cloneBillingFormValues: function(checkbox, shippingAddress, billingAddress) {        
+        if(checkbox.checked)
+        {
+            $A(['input', 'select', 'textarea']).each(function(field) 
+            {
+                $A($(shippingAddress).getElementsByTagName(field)).each(function(input) 
+                {
+                    if(input.id)
+                    {
+                        var prototypeInput = $(input.id.replace(/shippingAddress/, "billingAddress"));
+                        
+                        // Select fields
+                        if(input.options)
+                        {
+                            input.options.length = 0;
+                            $A(prototypeInput.options).each(function(option) {
+                                input.options[input.options.length] = new Option(option.text, option.value);
+                            }.bind(this));
+                            input.selectedIndex = prototypeInput.selectedIndex;
+                            input.style.display = prototypeInput.style.display;
+                        }
+                        
+                        input.style.display = prototypeInput.style.display;
+                        input.value = prototypeInput.value;
+                    }
+                }.bind(this));
+            }.bind(this));
+        }
+    }
 }
 
 
@@ -719,46 +770,12 @@ Backend.User.Add.prototype =
         Event.observe("user_0_sameAddresses", "click", function(e) { this.showShippingAddress() }.bind(this));
     },
 	
-	showShippingAddress: function(e) {
-        var shippingAddress = $("user_0_shippingAddress");
-        var checkbox = $("user_0_sameAddresses");
-		
-        if(checkbox.checked) shippingAddress.hide(); 
-        else shippingAddress.show();
-	},
-	
-	cloneBillingForm: function(e) {
+	showShippingAddress: function() {
         var shippingAddress = $("user_0_shippingAddress");
         var billingAddress = $("user_0_billingAddress");
         var checkbox = $("user_0_sameAddresses");
-        
-        if(checkbox.checked)
-        {
-            $A(['input', 'select', 'textarea']).each(function(field) 
-            {
-                $A($(shippingAddress).getElementsByTagName(field)).each(function(input) 
-                {
-					if(input.id)
-					{
-						var prototypeInput = $(input.id.replace(/shippingAddress/, "billingAddress"));
-						
-						// Select fields
-						if(input.options)
-						{
-							input.options.length = 0;
-							$A(prototypeInput.options).each(function(option) {
-								input.options[input.options.length] = new Option(option.text, option.value);
-							}.bind(this));
-	                        input.selectedIndex = prototypeInput.selectedIndex;
-	                        input.style.display = prototypeInput.style.display;
-						}
-						
-                        input.style.display = prototypeInput.style.display;
-                        input.value = prototypeInput.value;
-					}
-                }.bind(this));
-            }.bind(this));
-        }
+		
+        Backend.User.Editor.prototype.showShippingAddress(checkbox, shippingAddress, billingAddress);
 	},
 
     cancelForm: function()
@@ -775,7 +792,11 @@ Backend.User.Add.prototype =
             return false; 
         } 
 		
-		this.cloneBillingForm();
+        Backend.User.Editor.prototype.cloneBillingFormValues(
+            $("user_0_sameAddresses"), 
+            $("user_0_shippingAddress"), 
+            $("user_0_billingAddress")
+		);
         
         this.nodes.form.action = Backend.User.Editor.prototype.Links.create;
 		new LiveCart.AjaxRequest(
@@ -802,7 +823,9 @@ Backend.User.Add.prototype =
         {
         	ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
         }
-	}
+	},
+	
+	
 }
 
 
@@ -838,6 +861,7 @@ Backend.User.StateSwitcher.prototype =
     updateStates: function(e, onComplete)
     {
         var url = this.url + '/?country=' + this.countrySelector.value;
+				
         var self = this;
         new LiveCart.AjaxRequest(
             url, 

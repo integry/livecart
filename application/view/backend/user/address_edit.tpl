@@ -1,4 +1,4 @@
-{hidden name="ID"}
+{hidden name="`$namePrefix`ID"}
 
 <fieldset class="error">
     <label for="{$idPrefix}_firstName">{t _first_name}</label>
