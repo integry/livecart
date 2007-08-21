@@ -7,20 +7,30 @@ class AuthorizeNet extends CreditCardPayment
     
     private $gateway = "https://secure.authorize.net/gateway/transact.dll";    
     
-	public static function isCreditable()
+	public function isCreditable()
 	{
 		return true;
 	}
 	
-	public static function isCardTypeNeeded()
+	public function isCardTypeNeeded()
 	{
 		return true;
 	}
 
-	public static function isVoidable()
+	public function isVoidable()
 	{
 		return true;
 	}
+	
+	public function isMultiCapture()
+	{
+        return false;
+    }
+
+	public function isCapturedVoidable()
+	{
+        return true;
+    }	
 	
 	public function getValidCurrency($currency)
 	{
@@ -82,6 +92,7 @@ class AuthorizeNet extends CreditCardPayment
         $this->addField('x_tran_key', $this->getConfigValue('transactionKey'));
                                 
         $this->addField('x_amount', $this->details->amount->get());
+        $this->addField('x_currency_code', $this->details->currency->get());
         $this->addField('x_card_num', $this->getCardNumber());
         $this->addField('x_exp_date', $this->getExpirationMonth() . '/' . $this->getExpirationYear());
         
@@ -120,6 +131,8 @@ class AuthorizeNet extends CreditCardPayment
     
     private function process() 
     {  
+        set_time_limit(0);
+        
         $this->initHandler();
         
         if ($this->details->gatewayTransactionID->get())

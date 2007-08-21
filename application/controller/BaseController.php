@@ -97,7 +97,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 			$this->router->setAutoAppendVariables(array('requestLanguage' => $localeCode));
 		}
 		
-		// verify that the action is accessed via HTTPS if it is required
+        // verify that the action is accessed via HTTPS if it is required
 		if ($this->router->isSSL($this->request->getControllerName(), $this->request->getActionName()) && !$this->router->isHttps())
 		{
             header('Location: ' . $this->router->createFullUrl($_SERVER['REQUEST_URI'], true));

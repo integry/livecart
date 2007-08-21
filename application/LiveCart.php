@@ -669,7 +669,7 @@ class LiveCart extends Application
 		
 		// check if the currency is supported by the payment handler
         $currency = $inst->getValidCurrency($details->currency->get());
-		if ($details->currency->get() != $currency)
+		if (($details->currency->get() != $currency) && !is_null($details->currency->get()))
 		{
             $newAmount = Currency::getInstanceById($currency, Currency::LOAD_DATA)->convertAmount(Currency::getInstanceById($details->currency->get(), Currency::LOAD_DATA), $details->amount->get());
             $details->currency->set($currency);

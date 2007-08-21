@@ -48,7 +48,7 @@ abstract class TransactionPayment
 	/**
 	 *	Determine if the payment method supports crediting a refund payment back to customer
 	 */
-	public abstract static function isVoidable();
+	public abstract function isVoidable();
 
 	public abstract function void();
 

@@ -87,7 +87,7 @@
                 
         		<p>
 					{t Amount to capture}:<Br />
-					{textfield name="amount" class="text number"}
+					{textfield name="amount" class="text number"} {$transaction.Currency.ID}
 				</p>
 
         		<p class="captureComment">
@@ -95,11 +95,15 @@
 					<textarea name="comment"></textarea>
 				</p>
 
-				<p>
-					{checkbox name="complete" class="checkbox"}
-					<label for="complete">{t Finalize transaction}</label>
-					<div class="clear"></div>
-				</p>
+				{if $transaction.isMultiCapture}
+                    <p>
+    					{checkbox name="complete" class="checkbox"}
+    					<label for="complete">{t Finalize transaction}</label>
+    					<div class="clear"></div>
+    				</p>
+                {else}
+                    <input type="checkbox" name="complete" id="complete" value="ON" checked="checked" style="display: none;" />
+                {/if}
 
         		<fieldset class="controls">
 					<span class="progressIndicator" style="display: none;"></span>

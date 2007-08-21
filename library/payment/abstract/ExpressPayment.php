@@ -1,8 +1,8 @@
 <?php
 
-include_once(dirname(__file__) . '/../TransactionPayment.php');
+include_once(dirname(__file__) . '/OnlinePayment.php');
 
-abstract class ExpressPayment extends TransactionPayment
+abstract class ExpressPayment extends OnlinePayment
 {
 	abstract public function getInitUrl($returnUrl, $cancelUrl, $sale = true);
     

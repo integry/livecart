@@ -77,15 +77,25 @@ class PaypalExpressCheckout extends ExpressPayment
         }
     }
     
-    public static function isCreditable()
+    public function isCreditable()
 	{
 		return false;
 	}
 	
-	public static function isVoidable()
+	public function isVoidable()
 	{
 		return true;
 	}
+	
+	public function isMultiCapture()
+	{
+        return true;
+    }
+
+	public function isCapturedVoidable()
+	{
+        return false;
+    }	
 	
     public function getValidCurrency($currentCurrencyCode)
     {

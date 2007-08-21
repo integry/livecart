@@ -42,6 +42,9 @@ $routes = array(
 if ($this->config->get('SSL_PAYMENT'))
 {
     $this->router->setSslAction('checkout', 'pay');
+    $this->router->setSslAction('backend.payment', 'ccForm');
+    $this->router->setSslAction('backend.customerOrder');
+    $this->router->setSslAction('backend.CustomerOrder');
 }
 
 if ($this->config->get('SSL_CHECKOUT'))

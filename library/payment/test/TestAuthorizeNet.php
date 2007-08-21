@@ -18,7 +18,7 @@ class TestAuthorizeNet extends PaymentTest
 		
 		return $payment;
 	}
-	
+		
 	function testInvalidCard()
 	{
 		$payment = $this->getPaymentHandler();
@@ -106,7 +106,9 @@ class TestAuthorizeNet extends PaymentTest
 		$this->assertTrue($result instanceof TransactionResult);
 	}
     
-
+	/**
+	 *  Authorize.net only allows one capture per authorization
+	 */
 	function testAuthorizationWithTwoCaptures()
 	{		
 		$payment = $this->getPaymentHandler();
@@ -121,7 +123,7 @@ class TestAuthorizeNet extends PaymentTest
 
 		$capture = $this->getPaymentHandler();
 		$result = $capture->capture();
-		var_dump($result->getDetails());				
+
 		$this->assertTrue($result instanceof TransactionResult);
 		
 		// second capture - 25%
@@ -130,25 +132,71 @@ class TestAuthorizeNet extends PaymentTest
 		$capture = $this->getPaymentHandler();
 		$result = $capture->capture();
 
-		$this->assertTrue($result instanceof TransactionResult);
-		
-		// third capture - +17%
-		$this->details->amount->set(round($amount * 0.12, 2));		
-		
-		$capture = $this->getPaymentHandler();
-		$result = $capture->capture();
-
-		$this->assertTrue($result instanceof TransactionResult);
-
-		// fourth capture attempt should fail, because we have captured all allocated funds already
-		$this->details->amount->set(round($amount * 0.2, 2));		
-		
-		$capture = $this->getPaymentHandler();
-		$result = $capture->capture();
-
 		$this->assertTrue($result instanceof TransactionError);
-
 	}    	
+
+	function testVoidAuthorizedTransaction()
+	{
+		$payment = $this->getPaymentHandler();
+		
+		$result = $payment->authorize();
+		$this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());		
+		
+		$void = $this->getPaymentHandler();
+		$result = $void->void();
+
+		$this->assertTrue($result instanceof TransactionResult);
+    }	
+    
+	function testVoidCapturedTransaction()
+	{
+		$payment = $this->getPaymentHandler();
+		
+		$result = $payment->authorizeAndCapture();
+		$this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());		
+		
+		$void = $this->getPaymentHandler();
+		$result = $void->void();
+
+		$this->assertTrue($result instanceof TransactionResult);		
+	}    
+
+	function testVoidHalfCapturedTransaction()
+	{
+		$payment = $this->getPaymentHandler();
+		
+		$result = $payment->authorize();
+		
+		// first capture - 70%
+		$amount = $this->details->amount->get();
+		$this->details->amount->set(round($amount * 0.7, 2));		
+		$this->details->gatewayTransactionID->set($result->gatewayTransactionID->get());				
+		$capture = $this->getPaymentHandler();
+		$result = $capture->capture();		
+		
+		// void the whole transaction
+		$void = $this->getPaymentHandler();
+		$result = $void->void();
+		$this->assertTrue($result instanceof TransactionResult);
+
+		// attempt a second capture - 30%
+		$this->details->amount->set(round($amount * 0.3, 2));		
+		
+		$capture = $this->getPaymentHandler();
+		$result = $capture->capture();
+
+		$this->assertTrue($result instanceof TransactionError);		
+	}
+	
+	function testUnsupportedCurrency()
+	{
+		$this->details->currency->set('EUR');
+		$payment = $this->getPaymentHandler();
+		
+		$result = $payment->authorizeAndCapture();
+
+		$this->assertTrue($result instanceof TransactionError);		
+	}	
 }
 
 ?>

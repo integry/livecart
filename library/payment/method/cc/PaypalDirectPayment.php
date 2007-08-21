@@ -5,28 +5,38 @@ include_once(dirname(__file__) . '/../../method/library/paypal/PaypalCommon.php'
 
 class PaypalDirectPayment extends CreditCardPayment
 {
-	public static function isCreditable()
+	public function isCreditable()
 	{
 		return false;
 	}
 	
-	public static function isVoidable()
+	public function isVoidable()
 	{
 		return true;
 	}
 	
-	public static function isCardTypeNeeded()
+	public function isCardTypeNeeded()
 	{
         return true;
     }
 	
+	public function isMultiCapture()
+	{
+        return true;
+    }
+
+	public function isCapturedVoidable()
+	{
+        return false;
+    }
+
     public function getValidCurrency($currentCurrencyCode)
     {
         $currentCurrencyCode = strtoupper($currentCurrencyCode);
         return in_array($currentCurrencyCode, self::getSupportedCurrencies()) ? $currentCurrencyCode : 'USD';
     }
 
-    public static function getSupportedCurrencies()
+    public function getSupportedCurrencies()
     {
         return array('CAD', 'EUR', 'GBP', 'USD', 'JPY', 'AUD');
     }

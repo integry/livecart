@@ -19,6 +19,16 @@ class TestCreditCard extends CreditCardPayment
         return true;
 	}
 	
+	public function isMultiCapture()
+	{
+        return true;
+    }
+
+	public function isCapturedVoidable()
+	{
+        return true;
+    }	
+	
 	/**
 	 *	All currencies supported, except LTL
 	 */

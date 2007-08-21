@@ -5,10 +5,15 @@ ClassLoader::import('library.payment.TransactionResult');
 
 class OfflineTransactionHandler extends TransactionPayment
 {
-	public static function isVoidable()
+	public function isVoidable()
 	{
 		return true;
 	}
+	
+	public function getValidCurrency($currency)
+	{
+        return $currency;
+    }
 	
 	public function void()
 	{

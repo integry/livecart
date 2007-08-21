@@ -1,8 +1,8 @@
 <?php
 
-include_once(dirname(__file__) . '/../TransactionPayment.php');
+include_once(dirname(__file__) . '/OnlinePayment.php');
 
-abstract class CreditCardPayment extends TransactionPayment
+abstract class CreditCardPayment extends OnlinePayment
 {
 	/**
 	 *	Credit card number (without spaces)
@@ -93,7 +93,7 @@ abstract class CreditCardPayment extends TransactionPayment
 	/**
 	 *	Determines if credit card type needs to be passed to payment processor
 	 */
-	abstract public static function isCardTypeNeeded();
+	abstract public function isCardTypeNeeded();
 }
 
 ?>

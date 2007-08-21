@@ -155,6 +155,7 @@ class Transaction extends ActiveRecordModel
         
         $array['isVoidable'] = $this->isVoidable();
         $array['isCapturable'] = $this->isCapturable();
+        $array['isMultiCapture'] = $this->isMultiCapture();
 
         return $array;
     }    
@@ -245,10 +246,12 @@ class Transaction extends ActiveRecordModel
             }
             else
             {
-                if ((self::TYPE_AUTH == $this->type->get()) || (self::TYPE_SALE == $this->type->get()))
+                $class = $this->loadHandlerClass();
+                if ((self::TYPE_AUTH == $this->type->get()) || 
+                    ((self::TYPE_SALE == $this->type->get()) && call_user_func(array($class, 'isCapturedVoidable')))
+                   )
                 {
-                    $class = $this->loadHandlerClass();
-                    return call_user_func(array($class, 'isVoidable'));                     
+                    return call_user_func(array($class, 'isVoidable'));
                 }
             }            
         }
@@ -257,9 +260,23 @@ class Transaction extends ActiveRecordModel
     }
     
     public function isCapturable()
-    {
+    {        
         return (self::TYPE_AUTH == $this->type->get()) && !$this->isCompleted->get() && !$this->isOffline() && !$this->isVoided->get();
 	}
+    
+    /**
+     *  Determines if more than one capture transactions are possible
+     *  
+     *  @return bool
+     */
+    public function isMultiCapture()
+    {
+        if (!$this->isOffline())
+        {
+            $class = $this->loadHandlerClass();
+            return call_user_func(array($class, 'isMultiCapture'));
+        }
+    }
     
     /**
      *  Creates a new VOID transaction for this transaction
@@ -320,7 +337,7 @@ class Transaction extends ActiveRecordModel
         }
         
         $instance = self::getNewSubTransaction($this, $result);       
-        $instance->realAmount->set($amount);
+        $instance->realAmount->set($result->amount->get());
         $instance->save();
                 
         return $instance;
@@ -383,7 +400,7 @@ class Transaction extends ActiveRecordModel
     
     public function save()
     {
-        if ($this->currency->isNull())
+        if (!$this->currency->get())
         {
             $this->currency->set($this->realCurrency->get());
             $this->amount->set($this->realAmount->get());
