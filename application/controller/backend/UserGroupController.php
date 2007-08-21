@@ -169,6 +169,7 @@ class UserGroupController extends StoreManagementController
 	    $response->set('user', $userArray);
 	    $response->set('availableUserGroups', $availableUserGroups);
 	    $response->set('form', $form);
+        $response->set('countries', $this->application->getEnabledCountries());
 	    
         $response->set("massForm", $this->getMassForm());
         $response->set("displayedColumns", $displayedColumns);

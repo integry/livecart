@@ -1,5 +1,5 @@
 {form handle=$form action="controller=backend.user action=update" id="userInfo_`$user.ID`_form" onsubmit="Backend.User.Editor.prototype.getInstance(`$user.ID`, false).submitForm(); return false;" method="post" role="user.create(backend.userGroup/index),user.update(backend.user/info)"}
-    
+ 
     <label for="user_{$user.ID}_email">{t _email}</label>
     <fieldset class="error">
         {textfield name="email" id="user_`$user.ID`_email"}
@@ -52,10 +52,28 @@
         <div class="errorText" style="display: none" ></span>
 	</fieldset>
     
-
+    <fieldset class="error" style="padding: 20px;">
+        <input type="checkbox" class="checkbox" id="user_{$user.ID}_sameAddresses" checked="checked" />
+        <label>{t _same_billing_and_shipping_addresses?}</label>       
+    </fieldset>
+    
+    
+    <br class="clear" />
+    
+    <fieldset id="user_{$user.ID}_billingAddress" class="user_billingAddress">
+        <legend>{t _billing_address}</legend>
+        {include file=backend/user/address_edit.tpl namePrefix="billingAddress_" idPrefix="user_`$user.ID`_billingAddress" address=$address states=$states}
+    </fieldset>
+    
+    <fieldset id="user_{$user.ID}_shippingAddress" class="user_shippingAddress" style="display: none;">
+        <legend>{t _shipping_address}</legend>
+        {include file=backend/user/address_edit.tpl namePrefix="shippingAddress_" idPrefix="user_`$user.ID`_shippingAddress" address=$address states=$states}
+    </fieldset>
+    
+    
     <fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>
-    	<input type="submit" name="save" class="submit" value="Save"> 
+    	<input type="submit" name="save" class="submit" value="Save" id="user_{$user.ID}_submit"> 
         {t _or} 
         <a class="cancel" href="#">{t _cancel}</a>
     </fieldset>

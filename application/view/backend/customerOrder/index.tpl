@@ -57,7 +57,6 @@
 
 {literal}
 <script type="text/javascript">
-    Backend.CustomerOrder.Editor.prototype.Links.states = '{/literal}{link controller=backend.user action=states}{literal}';
     Backend.CustomerOrder.Editor.prototype.Links.switchCancelled = '{/literal}{link controller=backend.customerOrder action=switchCancelled}{literal}';
     
     Backend.CustomerOrder.Links.selectCustomer = '{/literal}{link controller=backend.customerOrder action=selectCustomer}{literal}';

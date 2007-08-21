@@ -77,3 +77,8 @@ th.cell_User_email
 {
     display: none;
 }
+
+/* Billing and shippind addresses */
+.user_billingAddress, .user_shippingAddress {
+  display: inline;
+}

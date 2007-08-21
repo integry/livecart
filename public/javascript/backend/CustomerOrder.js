@@ -690,12 +690,7 @@ Backend.CustomerOrder.Address.prototype =
             this.bindEvents();
             this.type = type;
 
-            this.stateSwitcher = new Backend.User.StateSwitcher(
-                this.nodes.form.elements.namedItem('countryID'), 
-                this.nodes.form.elements.namedItem('stateID'), 
-                this.nodes.form.elements.namedItem('stateName'),
-                Backend.CustomerOrder.Editor.prototype.Links.states
-            );
+            this.stateSwitcher = this.nodes.form.elements.namedItem('stateID').stateSwitcher;
       
             Form.State.backup(this.nodes.form);
             this.stateID = this.nodes.form.elements.namedItem('stateID').value;

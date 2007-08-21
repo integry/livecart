@@ -24,6 +24,7 @@ class UserController extends StoreManagementController
         }
         
 	    $response = new ActionResponse();	    
+        $response->set('countries', $this->application->getEnabledCountries());
 	    $response->set('user', $user->toFlatArray());
 	    $response->set('availableUserGroups', $availableUserGroups);
 	    $response->set('form', self::createUserForm($this, $user));
