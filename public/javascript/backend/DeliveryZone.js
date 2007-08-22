@@ -62,8 +62,6 @@ Backend.DeliveryZone.prototype =
     
     deleteZone: function()
     {
-        var $this = this;
-        
         if(confirm(Backend.DeliveryZone.prototype.Messages.confirmZoneDelete)) 
         {
 		    new LiveCart.AjaxRequest(
@@ -81,7 +79,7 @@ Backend.DeliveryZone.prototype =
                             Backend.DeliveryZone.prototype.treeBrowser.selectItem(firstId, true);
                         }
                     }
-                }
+                }.bind(this)
             );
         }
     },
@@ -101,7 +99,7 @@ Backend.DeliveryZone.prototype =
 	afterNewZoneAdded: function(response)
 	{
         Backend.DeliveryZone.prototype.treeBrowser.insertNewItem(0, response.zone.ID, response.zone.name, 0, 0, 0, 0, 'SELECT');
-        this.activateZone(response.ID);
+        this.activateZone(response.zone.ID);
 	},
     
     craftTabUrl: function(url)
