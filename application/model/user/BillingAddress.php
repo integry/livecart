@@ -33,7 +33,7 @@ class BillingAddress extends UserAddressType
         parent::save();
         
         $user = $this->user->get();
-        $user->load();        
+        $user->load();     
         if (!$user->defaultBillingAddress->get())
         {
             $user->defaultBillingAddress->set($this);

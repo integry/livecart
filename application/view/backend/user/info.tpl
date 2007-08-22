@@ -52,21 +52,21 @@
         <div class="errorText" style="display: none" ></span>
 	</fieldset>
     
-    <fieldset class="error" style="padding: 20px;">
+    <p class="sameAddress">
         {checkbox name="sameAddresses"  id="user_`$user.ID`_sameAddresses" class="checkbox"}
         <label>{t _same_billing_and_shipping_addresses?}</label>       
-    </fieldset>
+    </p>
     
     <br class="clear" />
     
     <fieldset id="user_{$user.ID}_billingAddress" class="user_billingAddress">
         <legend>{t _billing_address}</legend>
-        {include file=backend/user/address_edit.tpl namePrefix="billingAddress_" idPrefix="user_`$user.ID`_billingAddress" address=$user.defaultBillingAddress states=$states}
+        {include file=backend/user/address_edit.tpl namePrefix="billingAddress_" idPrefix="user_`$user.ID`_billingAddress" address=$user.defaultBillingAddress states=$billingAddressStates}
     </fieldset>
 
-    <fieldset id="user_{$user.ID}_shippingAddress" class="user_shippingAddress" style="{if $user.DefaultBillingAddress.UerAddress.ID == $user.DefaultShippingAddress.UserAddress.ID}display: none;{/if}">
+    <fieldset id="user_{$user.ID}_shippingAddress" class="user_shippingAddress">
         <legend>{t _shipping_address}</legend>
-        {include file=backend/user/address_edit.tpl namePrefix="shippingAddress_" idPrefix="user_`$user.ID`_shippingAddress" address=$user.defaultShippingAddress states=$states}
+        {include file=backend/user/address_edit.tpl namePrefix="shippingAddress_" idPrefix="user_`$user.ID`_shippingAddress" address=$user.defaultShippingAddress states=$shippingAddressStates}
     </fieldset>
     
     

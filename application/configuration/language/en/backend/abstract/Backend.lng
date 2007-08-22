@@ -35,12 +35,18 @@ _columns=Columns
 
 _translate_to=Translate to
 
+#################################################
+# Addresses                                     #
+#################################################
+_same_billing_and_shipping_addresses?=Same billing and shipping address?
 _billing_address=Billing Address
 _shipping_address=Shipping Address
 _address=Address
 _city=City
 _state=State
+_company=Company
 _country=Country
 _postal_code=Postal code
+_phone=Phone
 
 _loading=Loading data...

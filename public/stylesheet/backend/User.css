@@ -82,3 +82,11 @@ th.cell_User_email
 .user_billingAddress, .user_shippingAddress {
   display: inline;
 }
+
+.sameAddress label{
+    width: 90%;
+}
+
+#userManagerContainer .sameAddress {
+  margin-top: 2em;
+}

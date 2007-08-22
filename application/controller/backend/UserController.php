@@ -25,6 +25,10 @@ class UserController extends StoreManagementController
         
 	    $response = new ActionResponse();	    
         $response->set('countries', $this->application->getEnabledCountries());
+        $form = self::createUserForm($this, $user);
+        $response->set('form', $form);
+        $response->set('shippingAddressStates', State::getStatesByCountry($form->get('shippingAddress_countryID')));
+        $response->set('billingAddressStates', State::getStatesByCountry($form->get('billingAddress_countryID')));
         $user->loadAddresses();
 	    $response->set('user', $user->toArray());
 	    $response->set('availableUserGroups', $availableUserGroups);
@@ -89,38 +93,42 @@ class UserController extends StoreManagementController
 		$form = new Form(self::createUserFormValidator($controller));
 		
 		$userArray = array();
-        $userArray['sameAddresses'] = 1;
 		if($user)
 		{
 		    $userArray = array_merge($userArray, $user->toFlatArray());
 		    
-		    if($user->defaultShippingAddress->get())
-		    {
-                $user->defaultShippingAddress->get()->load(array('UserAddress'));
-                foreach($user->defaultShippingAddress->get()->userAddress->get()->toFlatArray() as $property => $value)
-                {
-                    $userArray["shippingAddress_" . $property] = $value;
-                }
-		    }
+		    $user->loadAddresses();
+		    
+            $user->defaultShippingAddress->get()->load(array('UserAddress'));
+            $shippingArray = $user->defaultShippingAddress->get()->userAddress->get()->toArray();
+            $shippingFlatArray = $user->defaultShippingAddress->get()->userAddress->get()->toFlatArray();
+            foreach($shippingFlatArray as $property => $value)
+            {
+                if($property == 'State') $property = 'stateID';
+                $userArray["shippingAddress_" . $property] = $value;
+            }
 
-		    if($user->defaultBillingAddress->get())
+            $user->defaultBillingAddress->get()->load(array('UserAddress'));
+            $billingArray = $user->defaultBillingAddress->get()->userAddress->get()->toArray();
+            $billingFlatArray = $user->defaultBillingAddress->get()->userAddress->get()->toFlatArray();
+            foreach($billingFlatArray as $property => $value)
+            {
+                if($property == 'State') $property = 'stateID';
+                $userArray["billingAddress_" . $property] = $value;
+            }
+            
+		    if(array_diff_key($shippingFlatArray, array('ID' => 0)) == array_diff_key($billingFlatArray, array('ID' => 0)))
 		    {
-                $user->defaultBillingAddress->get()->load(array('UserAddress'));
-                foreach($user->defaultBillingAddress->get()->userAddress->get()->toArray() as $property => $value)
-                {
-                    $userArray["billingAddress_" . $property] = $value;
-                }
+		        $userArray['sameAddresses'] = 1;
 		    }
 		    
-		    if($user->defaultShippingAddress->get()->userAddress->get()->getID() != $user->defaultBillingAddress->get()->userAddress->get()->getID())
-		    {
-		        $userArray['sameAddresses'] = 0;
-		    }
-		    
-		    $form->setData($userArray);
+		}
+		else
+		{
+            $userArray['sameAddresses'] = 1;
 		}
 		
-
+        $form->setData($userArray);
 		return $form;
 	}
 
@@ -223,76 +231,7 @@ class UserController extends StoreManagementController
 			
 			$user->save();
 			
-            $user->loadAddresses();
-            
-            // Billing address          
-            if(!$user->defaultBillingAddress->get())
-            {
-                $address = UserAddress::getNewInstance();
-            } 
-            else
-            {
-                $address = $user->defaultBillingAddress->get()->userAddress->get();
-            }
-            
-            $address->firstName->set($this->request->get("billingAddress_firstName"));
-            $address->lastName->set($this->request->get("billingAddress_lastName"));
-            $address->companyName->set($this->request->get("billingAddress_companyName"));
-            $address->countryID->set($this->request->get("billingAddress_countryID"));
-            $address->stateID->set($this->request->get("billingAddress_stateID"));
-            $address->stateName->set($this->request->get("billingAddress_stateName"));
-            $address->city->set($this->request->get("billingAddress_city"));
-            $address->address1->set($this->request->get("billingAddress_address1"));
-            $address->address2->set($this->request->get("billingAddress_address2"));
-            $address->postalCode->set($this->request->get("billingAddress_postalCode"));
-            $address->phone->set($this->request->get("billingAddress_phone"));
-            
-            $address->save();
-            
-            if(!$user->defaultBillingAddress->get())
-            {
-                $billingAddress = BillingAddress::getNewInstance($user, $address);
-                $billingAddress->save();
-            }
-            
-            // Shipping address   
-            if(!$user->defaultBillingAddress->get() && $this->request->get('sameAddresses'))
-            {
-                $address = clone $address;
-                $shippingAddress = BillingAddress::getNewInstance($user, $address);
-                $shippingAddress->save();
-            } 
-            else if(!$this->request->get('sameAddresses'))
-            {
-                if(!$user->defaultShippingAddress->get())
-                {
-                    $address = UserAddress::getNewInstance();
-                }
-                else
-                {
-                    $address = $user->defaultShippingAddress->get()->userAddress->get();
-                }
-
-                $address->firstName->set($this->request->get("shippingAddress_firstName"));
-                $address->lastName->set($this->request->get("shippingAddress_lastName"));
-                $address->companyName->set($this->request->get("shippingAddress_companyName"));
-                $address->countryID->set($this->request->get("shippingAddress_countryID"));
-                $address->stateID->set($this->request->get("shippingAddress_stateID"));
-                $address->stateName->set($this->request->get("shippingAddress_stateName"));
-                $address->city->set($this->request->get("shippingAddress_city"));
-                $address->address1->set($this->request->get("shippingAddress_address1"));
-                $address->address2->set($this->request->get("shippingAddress_address2"));
-                $address->postalCode->set($this->request->get("shippingAddress_postalCode"));
-                $address->phone->set($this->request->get("shippingAddress_phone"));
-                
-                $address->save();
-            
-                if(!$user->defaultShippingAddress->get())
-                {
-                    $shippingAddress = ShippingAddress::getNewInstance($user, $address);
-                    $shippingAddress->save();
-                }
-            }
+			$this->saveAddresses($user);
 			
 			return new JSONResponse(array('user' => $user->toArray()), 'success', $this->translate('_user_details_were_successfully_saved'));
 		}
@@ -300,6 +239,108 @@ class UserController extends StoreManagementController
 		{
 			return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_could_not_save_user_details'));
 		}
+	}
+	
+	function saveAddresses(User $user = null)
+	{
+	    $address1 = null;
+	    $address2 = null;
+	    
+        $user->loadAddresses();
+        // Billing address          
+        if(!$user->defaultBillingAddress->get())
+        {
+            $address1 = UserAddress::getNewInstance();
+        } 
+        else
+        {
+            $address1 = $user->defaultBillingAddress->get()->userAddress->get();
+        }
+        
+        $address1->firstName->set($this->request->get("billingAddress_firstName"));
+        $address1->lastName->set($this->request->get("billingAddress_lastName"));
+        $address1->companyName->set($this->request->get("billingAddress_companyName"));
+        $address1->countryID->set($this->request->get("billingAddress_countryID"));
+        $address1->city->set($this->request->get("billingAddress_city"));
+        $address1->address1->set($this->request->get("billingAddress_address1"));
+        $address1->address2->set($this->request->get("billingAddress_address2"));
+        $address1->postalCode->set($this->request->get("billingAddress_postalCode"));
+        $address1->phone->set($this->request->get("billingAddress_phone"));
+        
+        // get billing address state
+        if ($stateID = $this->request->get("billingAddress_stateID"))
+        {
+            $address1->state->set(ActiveRecordModel::getInstanceByID('State', $stateID, ActiveRecordModel::LOAD_DATA));
+            $address1->stateName->setNull();
+        } 
+        else
+        {
+            $address1->stateName->set($this->request->get("billingAddress_stateName"));
+            $address1->state->setNull();
+        }
+        
+        
+        if(!$user->defaultShippingAddress->get() && $this->request->get('sameAddresses'))
+        {
+            $address2 = clone $address1;
+        }
+        
+        $address1->save();
+        
+        if(!$user->defaultBillingAddress->get())
+        {
+            $billingAddress = BillingAddress::getNewInstance($user, $address1);
+            $billingAddress->save();
+        }
+        
+        // Shipping address
+        if(!$user->defaultShippingAddress->get() && $this->request->get('sameAddresses'))
+        {
+            $address2->save();
+            $shippingAddress = ShippingAddress::getNewInstance($user, $address2);
+            $shippingAddress->save();
+        } 
+        else
+        {
+            if(!$user->defaultShippingAddress->get() || ($user->defaultShippingAddress->get()->userAddress->get() == $user->defaultBillingAddress->get()->userAddress->get()))
+            {
+                $address2 = UserAddress::getNewInstance();
+            }
+            else
+            {
+                $address2 = $user->defaultShippingAddress->get()->userAddress->get();
+            }
+        
+            $address2->firstName->set($this->request->get("shippingAddress_firstName"));
+            $address2->lastName->set($this->request->get("shippingAddress_lastName"));
+            $address2->companyName->set($this->request->get("shippingAddress_companyName"));
+            $address2->countryID->set($this->request->get("shippingAddress_countryID"));   
+            $address2->city->set($this->request->get("shippingAddress_city"));
+            $address2->address1->set($this->request->get("shippingAddress_address1"));
+            $address2->address2->set($this->request->get("shippingAddress_address2"));
+            $address2->postalCode->set($this->request->get("shippingAddress_postalCode"));
+            $address2->phone->set($this->request->get("shippingAddress_phone"));
+                                
+            // get shipping address state
+            if ($stateID = $this->request->get("shippingAddress_stateID"))
+            {
+                $address2->state->set(ActiveRecordModel::getInstanceByID('State', $stateID, ActiveRecordModel::LOAD_DATA));
+                $address2->stateName->setNull();
+            } 
+            else
+            {
+                $address2->stateName->set($this->request->get("shippingAddress_stateName"));
+                $address2->state->setNull();
+            }
+            
+            $address2->save();
+        
+            if(!$user->defaultShippingAddress->get())
+            {
+                $shippingAddress = ShippingAddress::getNewInstance($user, $address2);
+                $shippingAddress->save();
+            }
+        }
 	}
 }
 ?>

@@ -561,9 +561,10 @@ Backend.User.Editor.prototype =
             this.findUsedNodes();
             this.bindEvents();
             
-            Form.State.backup(this.nodes.form);
+            if(this.nodes.sameAddress.checked) this.nodes.shippingAddress.hide();
+            else this.nodes.shippingAddress.show();
             
-            var self = this;
+            Form.State.backup(this.nodes.form);
         }
         catch(e)
         {
@@ -579,18 +580,18 @@ Backend.User.Editor.prototype =
         this.nodes.form = this.nodes.parent.down("form");
 		this.nodes.cancel = this.nodes.form.down('a.cancel');
 		this.nodes.submit = this.nodes.form.down('input.submit');
+		
+		this.nodes.sameAddress = $("user_" + this.id +"_sameAddresses");
+        this.nodes.shippingAddress = $("user_" + this.id +"_shippingAddress"), 
+        this.nodes.billingAddress = $("user_" + this.id +"_billingAddress")
     },
 
     bindEvents: function(args)
     {
 		var self = this;
 		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
-        Event.observe("user_" + this.id +"_sameAddresses", "click", function(e) {  
-                Backend.User.Editor.prototype.showShippingAddress(
-		            $("user_" + this.id +"_sameAddresses"), 
-		            $("user_" + this.id +"_shippingAddress"), 
-		            $("user_" + this.id +"_billingAddress")
-		        );
+        Event.observe(this.nodes.sameAddress, "click", function(e) {  
+            Backend.User.Editor.prototype.showShippingAddress(this.nodes.sameAddress, this.nodes.shippingAddress, this.nodes.billingAddress);
 		}.bind(this));
 		
         
@@ -627,11 +628,7 @@ Backend.User.Editor.prototype =
     
     submitForm: function()
     {        
-	    Backend.User.Editor.prototype.cloneBillingFormValues(
-            $("user_" + this.id +"_sameAddresses"), 
-            $("user_" + this.id +"_shippingAddress"), 
-            $("user_" + this.id +"_billingAddress")
-        );
+	    Backend.User.Editor.prototype.cloneBillingFormValues(this.nodes.sameAddress, this.nodes.shippingAddress, this.nodes.billingAddress);
 		
         this.nodes.form.action = Backend.User.Editor.prototype.Links.update + "/" + this.id;
 		new LiveCart.AjaxRequest(
@@ -649,7 +646,6 @@ Backend.User.Editor.prototype =
 	{
 		if(response.status == 'success')
 		{
-			new Backend.SaveConfirmationMessage($('userInfoSaveConf'));
 			Form.State.backup(this.nodes.form);
 		}
 		else
@@ -722,8 +718,10 @@ Backend.User.Add.prototype =
             this.findUsedNodes();
             this.bindEvents();
             
+            if(this.nodes.sameAddress.checked) this.nodes.shippingAddress.hide();
+            else this.nodes.shippingAddress.show();
+            
             Form.State.backup(this.nodes.form);
-            var self = this;
         }
         catch(e)
         {
@@ -744,6 +742,10 @@ Backend.User.Add.prototype =
         this.nodes.menu = $("userGroup_" + this.groupID + "_addUser_menu");
         this.nodes.menuCancelLink = $("userGroup_" + this.groupID + "_addUserCancel");
         this.nodes.menuForm = this.nodes.parent;
+		
+        this.nodes.sameAddress = $("user_0_sameAddresses");
+        this.nodes.shippingAddress = $("user_0_shippingAddress"), 
+        this.nodes.billingAddress = $("user_0_billingAddress")
     },
    
 	showAddForm: function()
@@ -771,11 +773,7 @@ Backend.User.Add.prototype =
     },
 	
 	showShippingAddress: function() {
-        var shippingAddress = $("user_0_shippingAddress");
-        var billingAddress = $("user_0_billingAddress");
-        var checkbox = $("user_0_sameAddresses");
-		
-        Backend.User.Editor.prototype.showShippingAddress(checkbox, shippingAddress, billingAddress);
+        Backend.User.Editor.prototype.showShippingAddress(this.nodes.sameAddress, this.nodes.shippingAddress, this.nodes.billingAddress);
 	},
 
     cancelForm: function()
@@ -792,11 +790,7 @@ Backend.User.Add.prototype =
             return false; 
         } 
 		
-        Backend.User.Editor.prototype.cloneBillingFormValues(
-            $("user_0_sameAddresses"), 
-            $("user_0_shippingAddress"), 
-            $("user_0_billingAddress")
-		);
+        Backend.User.Editor.prototype.cloneBillingFormValues(this.nodes.sameAddress, this.nodes.shippingAddress, this.nodes.billingAddress);
         
         this.nodes.form.action = Backend.User.Editor.prototype.Links.create;
 		new LiveCart.AjaxRequest(

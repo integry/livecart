@@ -164,7 +164,8 @@ class UserGroupController extends StoreManagementController
           
         $userArray = array('UserGroup' => $id, 'ID' => 0);
         $form = UserController::createUserForm($this, null);
-        $form->setData($userArray);
+        
+        $form->setData(array_merge($form->getData(), $userArray));
         
 	    $response->set('user', $userArray);
 	    $response->set('availableUserGroups', $availableUserGroups);
