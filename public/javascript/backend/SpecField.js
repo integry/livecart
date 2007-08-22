@@ -80,7 +80,6 @@ Backend.SpecField.prototype = {
         },
         afterDelete:    function(li, response)
         {
-			var response = "";
             try 
             { 
                 response = eval('(' + response + ')'); 

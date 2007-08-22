@@ -49,7 +49,7 @@ class SiteNewsController extends StoreManagementController
 		try
 	  	{
 			ActiveRecordModel::deleteById('NewsPost', $this->request->get('id'));	
-			return new JSONResponse(true);		
+			return new JSONResponse(false, 'success');		
 		}
 		catch (Exception $exc)
 		{			  	

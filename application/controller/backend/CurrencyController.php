@@ -152,13 +152,12 @@ class CurrencyController extends StoreManagementController
 		try
 	  	{
 			$success = Currency::deleteById($this->request->get('id'));
+			return new JSONResponse(false, 'success');
 		}
 		catch (Exception $exc)
 		{			  	
-		  	$success = false;
+            return new JSONResponse(false, 'failure');
 		}
-		  
-		return new RawResponse($success);
 	}
 
     public function edit()

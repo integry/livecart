@@ -129,7 +129,7 @@ class StaticPageController extends StoreManagementController
 			
 			$inst->delete();
 				
-			return new JSONResponse($inst->getID());
+			return new JSONResponse($inst->getID(), 'success');
 		}
 		catch (Exception $e)
 		{

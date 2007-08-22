@@ -40,7 +40,14 @@ class ProductImageController extends ObjectImageController
      */
 	public function delete()
 	{
-        return parent::delete();
+        if(parent::delete())
+        {
+            return new JSONResponse(false, 'success');
+        }
+        else
+        {
+            return new JSONResponse(false, 'failure');
+        }
     }
 
     /**

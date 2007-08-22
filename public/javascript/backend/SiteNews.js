@@ -34,7 +34,6 @@ Backend.SiteNews.prototype =
 	             { 
 	                 return false; 
 	             }
-				 curr.resetRatesContainer(); 
 			 }
 	     }, []);		
 	},
@@ -68,8 +67,10 @@ Backend.SiteNews.PostEntry.prototype =
 	initialize: function(container, template, data)
 	{
 		this.data = data;
-		this.node = template.cloneNode(true);		
-		container.appendChild(this.node);
+		var newsList = ActiveList.prototype.getInstance('newsList');
+
+        this.node = newsList.addRecord(data.ID, template.innerHTML, true);
+		
 		this.updateHtml();
 		
 		this.node.handler = this;
@@ -198,5 +199,7 @@ Backend.SiteNews.Add.prototype =
 	onComplete: function(originalRequest)
 	{
 		new Backend.SiteNews.PostEntry($('newsList'), $('newsList_template'), originalRequest.responseData);
+		Backend.SiteNews.prototype.hideAddForm();
+		Form.State.restore($("newsForm"));
 	}
 }

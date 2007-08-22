@@ -112,9 +112,8 @@
 </li>
 </ul>
 
-{literal}
 <script type="text/javascript">
-{/literal}
+    Form.State.backup($("newsForm"));
 	new Backend.SiteNews({json array=$newsList}, $('newsList'), $('newsList_template'));
 </script>
 
