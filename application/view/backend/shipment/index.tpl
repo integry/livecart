@@ -9,6 +9,10 @@
             <input type="submit" value="{t _yes}" class="submit" id="orderShipments_new_{$orderID}_submit"> 
             {t _or} <a href="#new" id="orderShipments_new_{$orderID}_cancel">{t _no}</a> 
         </li> 
+        <li>
+           <span {denied role='order.update'}style="display: none"{/denied}>
+               <a href="#newProduct" id="order{$orderID}_addProduct">{t _add_new_product}</a>
+           </span>
     </ul> 
 </fieldset> 
     
@@ -55,49 +59,63 @@
     </table>
 </div>
               
-              
-<h2 class="notShippedShipmentsTitle">{t _downloadable}</h2> 
-<div id="orderShipments_list_{$orderID}_downloadable" class="downloadableShipmetn"  {denied role='order.update'}style="display: none"{/denied}> 
-    <fieldset class="orderShipment_controls error"> 
-        <div class="orderShipment_addProduct">
-            <a href="#newProduct" id="orderShipment_addFile_{$orderID}" class="addNewProductLink">{t _add_new_file}</a>
-        </div > 
-    </fieldset > 
-    
-    <ul id="orderShipmentsItems_list_{$orderID}_downloadable" class="activeList_add_delete orderShipmentsItem activeList"> 
-        <li id="orderShipments_list_downloadable_{$orderID}_{$downloadableShipment.ID}" >
-            <form>
-                {include file="backend/shipment/shipment.tpl" shipment=$downloadableShipment notShippable=true downloadable=1}
-            </form>
-        </li>
-    </ul>
+      
+<div id="order{$orderID}_downloadableShipments" style="display: none">        
+    <h2 class="notShippedShipmentsTitle">{t _downloadable}</h2> 
+    <div id="orderShipments_list_{$orderID}_downloadable" class="downloadableShipmetn"  {denied role='order.update'}style="display: none"{/denied}> 
+        <fieldset class="orderShipment_controls error"> 
+            <div class="orderShipment_addProduct">
+                <a href="#newProduct" id="orderShipment_addFile_{$orderID}" class="addNewProductLink">{t _add_new_file}</a>
+            </div > 
+        </fieldset > 
+        
+        <ul id="orderShipmentsItems_list_{$orderID}_downloadable" class="activeList_add_delete orderShipmentsItem activeList"> 
+            <li id="orderShipments_list_downloadable_{$orderID}_{$downloadableShipment.ID}" >
+                <form>
+                    {include file="backend/shipment/shipment.tpl" shipment=$downloadableShipment notShippable=true downloadable=1}
+                    
+                    {literal}
+                    <script type="text/javascript">
+                        Element.show("{/literal}order{$orderID}_downloadableShipments{literal}");
+                    </script>
+                    {/literal}
+                </form>
+            </li>
+        </ul>
+    </div>
 </div>
 
 
 {* Not Shipped Shipments *}
-<h2 class="notShippedShipmentsTitle">{t _not_shipped}</h2>
-<ul id="orderShipments_list_{$orderID}" class="orderShipments">
-    {foreach item="shipment" from=$shipments}
-        {if $shipment.status != 3 && $shipment.isShippable} 
-            <li id="orderShipments_list_{$orderID}_{$shipment.ID}" class="orderShipment downloadableOrder">
-                {include file="backend/shipment/shipment.tpl"}
-            </li>
-        {/if}
-    {/foreach}
-</ul> 
+<div id="order{$orderID}_shippableShipments" style="display: none">
+    <h2 class="notShippedShipmentsTitle">{t _not_shipped}</h2>
+    <ul id="orderShipments_list_{$orderID}" class="orderShipments">
+        {foreach item="shipment" from=$shipments}
+            {if $shipment.status != 3 && $shipment.isShippable} 
+                <li id="orderShipments_list_{$orderID}_{$shipment.ID}" class="orderShipment downloadableOrder">
+                    {include file="backend/shipment/shipment.tpl"}
+                    <script type="text/javascript">Element.show("order{$orderID}_shippableShipments");</script>
+                </li>
+            {/if}
+        {/foreach}
+    </ul> 
+</div>
 
                                     
 {* Shipped Shipments *} 
-<h2 class="shippedShipmentsTitle">{t _shipped}</h2> 
-<ul id="orderShipments_list_{$orderID}_shipped" class="orderShippedShipments"> 
-    {foreach item="shipment" from=$shipments} 
-        {if $shipment.status == 3 && $shipment.isShippable} 
-            <li id="orderShipments_list_{$orderID}_shipped_{$shipment.ID}" class="orderShipment">
-                {include file="backend/shipment/shipment.tpl"}
-            </li> 
-        {/if} 
-    {/foreach}
-</ul> 
+<div id="order{$orderID}_shippedShipments" style="display: none">
+    <h2 class="shippedShipmentsTitle">{t _shipped}</h2> 
+    <ul id="orderShipments_list_{$orderID}_shipped" class="orderShippedShipments"> 
+        {foreach item="shipment" from=$shipments} 
+            {if $shipment.status == 3 && $shipment.isShippable} 
+                <li id="orderShipments_list_{$orderID}_shipped_{$shipment.ID}" class="orderShipment">
+                    {include file="backend/shipment/shipment.tpl"}
+                    <script type="text/javascript">Element.show("order{$orderID}_shippedShipments");</script>
+                </li> 
+            {/if} 
+        {/foreach}
+    </ul> 
+</div>
      
      
      
@@ -107,7 +125,7 @@
     Backend.OrderedItem.Links = {};
     Backend.OrderedItem.Links.remove = '{/literal}{link controller=backend.orderedItem action=delete}{literal}'; 
     Backend.OrderedItem.Links.changeShipment = '{/literal}{link controller=backend.orderedItem action=changeShipment}{literal}'; 
-    Backend.OrderedItem.Links.addProduct = '{/literal}{link controller=backend.orderedItem action=selectProduct}{literal}';
+    Backend.OrderedItem.Links.addProduct = '{/literal}{link controller=backend.orderedItem action=selectProduct}/{$orderID}{literal}';
     Backend.OrderedItem.Links.createNewItem = '{/literal}{link controller=backend.orderedItem action=create}{literal}'; 
     Backend.OrderedItem.Links.changeItemCount = '{/literal}{link controller=backend.orderedItem action=changeCount}{literal}'; 
     
@@ -169,6 +187,31 @@
  
     try 
     { 
+                        
+        Event.observe("{/literal}order{$orderID}_addProduct{literal}", 'click', function(e) 
+        { 
+            var orderID = {/literal}{$orderID}{literal};
+            var ulList = $("{/literal}orderShipments_list_{$orderID}{literal}").getElementsByTagName('li');
+            Event.stop(e); 
+            new Backend.SelectPopup( Backend.OrderedItem.Links.addProduct, Backend.OrderedItem.Messages.selectProductTitle, 
+            { 
+                onObjectSelect: function() 
+                { 
+                    var form = this.popup.document.getElementById("availableShipments");
+                    var shipmentID = 0;
+                    $A(form.getElementsByTagName('input')).each(function(element) {
+                        if(element.checked) shipmentID = element.value;
+                    }.bind(this)); 
+
+                    Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + shipmentID).addNewProductToShipment(this.objectID, orderID);
+                },
+                
+                location: 1,
+                toolbar: 1,
+                height: (500 + ($A(ulList).size() > 1 ? (40 + $A(ulList).size() * 20) : 0))
+            }); 
+        }); 
+                        
         Event.observe($("{/literal}orderShipments_new_{$orderID}_show{literal}"), "click", function(e) 
         { 
             Event.stop(e); 
@@ -200,7 +243,8 @@
                 onObjectSelect: function() 
                 { 
                     Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_downloadable_{$orderID}_{$downloadableShipment.ID}{literal}').addNewProductToShipment(this.objectID, {/literal}{$orderID}{literal}); 
-                } 
+                },
+                height: (500 + (parseInt({/literal}{$shipments|@count}{literal}) > 1 ? (50 + parseInt({/literal}{$shipments|@count}{literal}) * 30) : 0))
             }); 
         }); 
         
@@ -260,7 +304,8 @@
                         onObjectSelect: function() 
                         { 
                             Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').addNewProductToShipment(this.objectID, {/literal}{$orderID}{literal}); 
-                        } 
+                        },
+                        height: (500 + (parseInt({/literal}{$shipments|@count}{literal}) > 1 ? (50 + parseInt({/literal}{$shipments|@count}{literal}) * 30) : 0))
                     }); 
                 }); 
                 

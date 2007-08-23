@@ -154,6 +154,30 @@ class OrderedItemController extends StoreManagementController
 	    $response->set("filters", 'filters[Product.type]=' . (int)$this->request->get('downloadable'));
 		$response->set("categoryList", $categoryList->toArray($this->application->getDefaultLanguageCode()));
 		
+        $order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
+        $order->loadItems();
+        
+        $shipmentsArray = array();
+        foreach($order->getShipments() as $shipment)
+        {
+            $shipmentsArray[$shipment->getID()] = $shipment->toArray();
+            $rate = unserialize($shipment->shippingServiceData->get());
+            
+            if(is_object($rate))
+            {
+                $rate->setApplication($this->application);
+                $shipmentsArray[$shipment->getID()] = array_merge($shipmentsArray[$shipment->getID()], $rate->toArray());
+                $shipmentsArray[$shipment->getID()]['ShippingService']['ID'] = $shipmentsArray[$shipment->getID()]['serviceID'];
+            }
+            else
+            {
+                $shipmentsArray[$shipment->getID()]['ShippingService']['name_lang'] = $this->translate('_shipping_service_is_not_selected');
+            }
+        }
+        
+        $response->set("order", $order->toFlatArray());
+        $response->set("shipments", $shipmentsArray);
+		
 		return $response;
 	}
     

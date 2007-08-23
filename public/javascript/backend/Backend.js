@@ -1129,6 +1129,8 @@ Backend.SelectPopup = Class.create();
 Backend.SelectPopup.prototype = {
     height: 520,
     width:  1000,
+    location:  0,
+    toolbar:  0,
     onObjectSelect: function() {},
     
     initialize: function(link, title, options)
@@ -1139,6 +1141,10 @@ Backend.SelectPopup.prototype = {
             this.title = title;
             
             if(options.onObjectSelect) this.onObjectSelect = options.onObjectSelect;
+			this.height = options.height || this.height; 
+            this.width = options.width || this.width; 
+            this.location = options.location || this.location;
+            this.toolbar = options.toolbar || this.toolbar;
             
             this.createPopup();
         }
@@ -1150,7 +1156,7 @@ Backend.SelectPopup.prototype = {
     
     createPopup: function()
     {
-        Backend.SelectPopup.prototype.popup = window.open(this.link, this.title, 'resizable=1,width=' + this.width + ',height=' + this.height);
+        Backend.SelectPopup.prototype.popup = window.open(this.link, this.title, 'resizable=1,toolbar=' + this.toolbar + ',location=' + this.location + ',width=' + this.width + ',height=' + this.height);
         Backend.SelectPopup.prototype.popup.onunload = function()
 		{
 			window.selectPopupWindow = null;

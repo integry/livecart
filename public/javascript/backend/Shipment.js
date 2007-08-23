@@ -336,7 +336,9 @@ Backend.Shipment.prototype =
             
             
             Element.addClassName(li, 'orderShipment');
-
+			
+            $("order" + this.orderID + "_shippableShipments").show();
+			
             this.shipmentsActiveList.highlight(li);
         }
     },
@@ -617,6 +619,8 @@ Backend.Shipment.prototype =
                           countInput.hide(); 
                           countInput.up('.orderShipmentsItem_info_count').appendChild(document.createTextNode(countInput.value));
                        });
+            
+                        $("order" + this.nodes.form.elements.namedItem('orderID').value + "_shippedShipments").show();
                    }
                }.bind(this)
             );

@@ -490,6 +490,9 @@ class Shipment extends ActiveRecordModel
     {
         foreach ($this->items as $key => $item)
         {
+            // Don't try to delete new records
+            if(!$item->isExistingRecord()) continue;
+            
             if ($item->isDeleted())
             {
                 unset($this->items[$key]);
@@ -499,6 +502,7 @@ class Shipment extends ActiveRecordModel
             {
                 try
                 {
+                    die(" " . $item->getID());
                     $item->load(true);
                 }
                 catch (ARNotFoundException $e)

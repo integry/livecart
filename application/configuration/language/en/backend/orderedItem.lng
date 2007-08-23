@@ -10,4 +10,6 @@ _downloadable_item_already_exists_in_this_order=This downloadable item already e
 
 
 _done_adding_products=Done adding products
-
+_select_shippment=Select shippment:
+_shipping_service_is_not_selected=Shipping service is not selected
+_shipment=Shipment

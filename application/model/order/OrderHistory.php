@@ -90,6 +90,7 @@ class OrderHistory
     public function saveLog()
     {
 		$currentOrder = $this->serializeToArray($this->currentOrder);
+		$logEntry = false;
 			
 		// Billing address    
 		if($currentOrder['BillingAddress'] != $this->oldOrder['BillingAddress']) 

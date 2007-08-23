@@ -69,7 +69,25 @@
 	</ul>
 	</div>
 	<div id="sectionContainer" class="sectionContainer maxHeight  h--50"> </div>
-</div>
+
+<form id="availableShipments" style="display: none;">
+    <h2>{t _select_shippment}</h2>
+    {foreach name="shipments" item="shipment" from=$shipments}
+        {if $shipment.status != 3 && !$smarty.foreach.shipments.first && $shipment.ID}
+            {if $checked}
+            <script type="text/javascript">
+                Element.show("availableShipments");
+            </script>
+            {/if}
+            
+            <fieldset class="error">
+                <input name="shipment" type="radio" value="{$shipment.ID}" id="shipment{$shipment.ID}" class="checkbox" {if !$checked}checked="checked"{/if}>
+                <label for="shipment{$shipment.ID}" class="checkbox"><b>{t _shipment} #{$shipment.ID}</b> ({$shipment.ShippingService.name_lang} - {$shipment.formatted_totalAmount})</label>
+                {assign var="checked" value="true"}
+            </fieldset>
+        {/if}
+    {/foreach}
+</form>
 
 {literal}
 <script type="text/javascript">
