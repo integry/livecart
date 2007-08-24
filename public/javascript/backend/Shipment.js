@@ -248,7 +248,7 @@ Backend.Shipment.prototype =
     afterSave: function(response)
     {
         if(response.status == 'success')
-        {
+        {		
             var shipmentItems = document.getElementsByClassName("orderShipmentsItem", this.nodes.shipmentsList);
             if(shipmentItems.length >= 1)
             {
@@ -325,6 +325,11 @@ Backend.Shipment.prototype =
             $("order" + this.orderID + "_shippableShipments").show();
 			
             this.shipmentsActiveList.highlight(li);
+			
+            if(Backend.SelectPopup.prototype.popup)
+            {
+                Backend.SelectPopup.prototype.popup.location.reload();
+            }
         }
     },
     
@@ -547,7 +552,7 @@ Backend.Shipment.prototype =
         }
 		
         var orderID = this.nodes.form.elements.namedItem('orderID').value;
-        
+        		
         if("-1" == select.value)
         {
             new LiveCart.AjaxRequest(
@@ -614,6 +619,11 @@ Backend.Shipment.prototype =
         }
 		
         Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
+		
+        if(Backend.SelectPopup.prototype.popup)
+        {
+            Backend.SelectPopup.prototype.popup.location.reload();
+        }
     },
     
     recalculateTotal: function()

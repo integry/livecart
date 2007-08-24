@@ -585,7 +585,7 @@ Backend.CustomerOrder.Editor.prototype =
     {
 		if($("order" + this.id + "_downloadableShipments").style.display == 'none')
 		{
-		    return false;
+		  return false;
 	    }
 		
         var container = $("tabOrderProducts_" + this.id + "Content").down('.orderShipments');

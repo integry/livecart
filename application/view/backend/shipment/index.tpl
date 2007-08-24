@@ -246,6 +246,7 @@
             Event.stop(e); 
             $("{/literal}orderShipments_new_{$orderID}_show{literal}").hide(); 
             $("{/literal}orderShipments_new_{$orderID}_controls{literal}").show(); 
+            $("{/literal}order{$orderID}_addProduct{literal}").hide(); 
         }); 
         
         Event.observe($("{/literal}orderShipments_new_{$orderID}_cancel{literal}"), "click", function(e) 
@@ -253,6 +254,7 @@
             Event.stop(e); 
             $("{/literal}orderShipments_new_{$orderID}_show{literal}").show(); 
             $("{/literal}orderShipments_new_{$orderID}_controls{literal}").hide(); 
+            $("{/literal}order{$orderID}_addProduct{literal}").show(); 
         }); 
             
         Event.observe($("{/literal}orderShipments_new_{$orderID}_submit{literal}"), "click", function(e) 
@@ -260,6 +262,7 @@
             Event.stop(e); 
             $("{/literal}orderShipments_new_{$orderID}_show{literal}").show(); 
             $("{/literal}orderShipments_new_{$orderID}_controls{literal}").hide(); 
+            $("{/literal}order{$orderID}_addProduct{literal}").show(); 
             var newForm = Backend.Shipment.prototype.getInstance( $("{/literal}orderShipments_new_{$orderID}_form{literal}"), {/literal}{$orderID}{literal} ); 
             newForm.save(); 
         }); 
