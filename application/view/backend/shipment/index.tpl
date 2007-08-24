@@ -59,15 +59,9 @@
     </table>
 </div>
 
-<div id="order{$orderID}_downloadableShipments" style="display: none">        
+<div id="order{$orderID}_downloadableShipments" class="shipmentCategoty" style="display: none">        
     <h2 class="notShippedShipmentsTitle">{t _downloadable}</h2> 
-    <div id="orderShipments_list_{$orderID}_downloadable" class="downloadableShipmetn"  {denied role='order.update'}style="display: none"{/denied}> 
-        <fieldset class="orderShipment_controls error"> 
-            <div class="orderShipment_addProduct">
-                <a href="#newProduct" id="orderShipment_addFile_{$orderID}" class="addNewProductLink">{t _add_new_file}</a>
-            </div > 
-        </fieldset > 
-        
+    <div id="orderShipments_list_{$orderID}_downloadable" class="downloadableShipmetn"  {denied role='order.update'}style="display: none"{/denied}>        
         <ul id="orderShipmentsItems_list_{$orderID}_downloadable" class="activeList_add_delete orderShipmentsItem activeList"> 
             <li id="orderShipments_list_downloadable_{$orderID}_{$downloadableShipment.ID}" >
                 <form>
@@ -86,7 +80,7 @@
 
 
 {* Not Shipped Shipments *}
-<div id="order{$orderID}_shippableShipments" style="display: none">
+<div id="order{$orderID}_shippableShipments" class="shipmentCategoty" style="display: none">
     <h2 class="notShippedShipmentsTitle">{t _not_shipped}</h2>
     <ul id="orderShipments_list_{$orderID}" class="orderShipments">
         {foreach item="shipment" from=$shipments}
@@ -102,7 +96,7 @@
 
                                     
 {* Shipped Shipments *} 
-<div id="order{$orderID}_shippedShipments" style="display: none">
+<div id="order{$orderID}_shippedShipments" class="shipmentCategoty" style="display: none">
     <h2 class="shippedShipmentsTitle">{t _shipped}</h2> 
     <ul id="orderShipments_list_{$orderID}_shipped" class="orderShippedShipments"> 
         {foreach item="shipment" from=$shipments} 
@@ -229,7 +223,12 @@
                 if($A(ulList).size() == 0)
                 {
                     var newForm = Backend.Shipment.prototype.getInstance("orderShipments_new_" + orderID + "_form");
-                    newForm.save(showPopup);
+                    newForm.save(function()
+                    {
+                        console.info("order" + orderID + "_shippableShipments");
+                        showPopup();
+                        Element.hide("order" + orderID + "_shippableShipments");
+                    }.bind(this));
                 }
                 else
                 {

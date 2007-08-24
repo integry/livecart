@@ -296,7 +296,6 @@ Backend.Shipment.prototype =
             li.down("#orderShipment_USPS__submit").id  = "orderShipment_USPS_" + response.shipment.ID + "_submit";
             li.down("#orderShipment_USPS__cancel").id  = "orderShipment_USPS_" + response.shipment.ID + "_cancel";
             li.down("#orderShipment_USPS__select").id  = "orderShipment_USPS_" + response.shipment.ID + "_select";
-            li.down("#orderShipment_addProduct_").id   = "orderShipment_addProduct_" + response.shipment.ID;
             li.down("#orderShipment_status__feedback").id = "orderShipment_status_" + response.shipment.ID + "_feedback";
                         
                         
@@ -320,22 +319,7 @@ Backend.Shipment.prototype =
 
             $("orderShipment_status_" + response.shipment.ID).lastValue = $("orderShipment_status_" + response.shipment.ID).value;
             Event.observe("orderShipment_status_" + response.shipment.ID, 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + this.orderID + '_' + response.shipment.ID).changeStatus();  }.bind(this));
-
-            var self = this;
-            Event.observe($("orderShipment_addProduct_" + response.shipment.ID), 'click', function(e) {
-                Event.stop(e);
-                new Backend.SelectPopup(
-                    Backend.OrderedItem.Links.addProduct, 
-                    Backend.OrderedItem.Messages.selectProductTitle, 
-                    {
-                        onObjectSelect: function() { 
-                           Backend.Shipment.prototype.getInstance('orderShipments_list_' + self.orderID + '_' + response.shipment.ID).addNewProductToShipment(this.objectID, self.orderID); 
-                        }
-                    }
-                );
-            });
-            
-            
+ 
             Element.addClassName(li, 'orderShipment');
 			
             $("order" + this.orderID + "_shippableShipments").show();
@@ -368,6 +352,8 @@ Backend.Shipment.prototype =
            
                if(response.status == 'success')
                {
+			   	   this.nodes.root.up(".shipmentCategoty").show();
+				
                    var li = null;
                    
                    var itemsList = ActiveList.prototype.getInstance($("orderShipmentsItems_list_" + this.nodes.form.elements.namedItem('orderID').value + "_" + this.nodes.form.elements.namedItem('ID').value));

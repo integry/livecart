@@ -583,7 +583,12 @@ Backend.CustomerOrder.Editor.prototype =
     
     hasEmptyShipments: function()
     {
-        var container = $("tabOrderProducts_" + this.id + "Content").down('.orderShipments');;
+		if($("order" + this.id + "_downloadableShipments").style.display == 'none')
+		{
+		    return false;
+	    }
+		
+        var container = $("tabOrderProducts_" + this.id + "Content").down('.orderShipments');
         var hasEmptyShipments = false;
         document.getElementsByClassName('orderShipmentsItem', container).each(function(itemList)
         {
