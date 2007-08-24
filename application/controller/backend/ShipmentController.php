@@ -73,9 +73,7 @@ class ShipmentController extends StoreManagementController
 	    $response->set('shippingServiceIsNotSelected', $this->translate('_shipping_service_is_not_selected'));
 	    $response->set('shipments', $shipmentsArray);
 	    $response->set('subtotalAmount', $subtotalAmount);
-	    $response->set('shippingAmount', $shippingAmount);
-	    $downloadableShipment = $order->getDownloadShipment()->toArray();
-	    
+	    $response->set('shippingAmount', $shippingAmount);	    
 	    $response->set('downloadableShipment', $order->getDownloadShipment()->toArray());
 	    $response->set('taxAmount', $taxAmount);
 	    $response->set('totalAmount', $totalAmount);

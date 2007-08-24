@@ -1173,9 +1173,10 @@ Backend.SelectPopup.prototype = {
         window.selectProductPopup = this;
     },
     
-    getSelectedObject: function(objectID)
+    getSelectedObject: function(objectID, downloadable)
     {
         this.objectID = objectID;
-        this.onObjectSelect.call(this, objectID);
+        this.downloadable = downloadable;
+        this.onObjectSelect.call(this, objectID, downloadable);
     }
 }

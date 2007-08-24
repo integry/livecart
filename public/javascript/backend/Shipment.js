@@ -231,7 +231,7 @@ Backend.Shipment.prototype =
     {
     },
     
-    save: function()
+    save: function(afterCallback)
     {
         new LiveCart.AjaxRequest(
             Backend.Shipment.Links.create + '/?orderID=' + this.orderID,
@@ -239,7 +239,8 @@ Backend.Shipment.prototype =
             function(response) 
             { 
                 var response = eval("(" + response.responseText + ")");
-                this.afterSave(response);     
+                this.afterSave(response);  
+				afterCallback();   
             }.bind(this)
         );
     },

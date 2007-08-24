@@ -2,6 +2,7 @@
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.order.*");
 ClassLoader::import("application.model.Currency");
+ClassLoader::import("application.model.product.*");
 ClassLoader::import("library.*");
 ClassLoader::import("framework.request.validator.RequestValidator");
 ClassLoader::import("framework.request.validator.Form");
@@ -18,11 +19,12 @@ class OrderedItemController extends StoreManagementController
 {
     public function create()
     {
-        if($downloadable = (int)$this->request->get('downloadable'))
+        $product = Product::getInstanceById((int)$this->request->get('productID'), true);
+
+        if($product->isDownloadable())
         {
-	 	    $order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('ShippingAddress' => 'UserAddress', 'Currency'));		    
+            $order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('ShippingAddress' => 'UserAddress', 'Currency'));		    
 	 	    $shipment = $order->getDownloadShipment();
-	 	    $shipment->save();
         }
         else
         {
@@ -31,7 +33,6 @@ class OrderedItemController extends StoreManagementController
         
         $history = new OrderHistory($shipment->order->get(), $this->user);
 
-        $product = Product::getInstanceById((int)$this->request->get('productID'), true);
         
         $existingItem = false;
         foreach($shipment->getItems() as $item)
@@ -46,7 +47,7 @@ class OrderedItemController extends StoreManagementController
         if($existingItem)
         {
 	        $item = $existingItem;
-	        if($downloadable)
+	        if($product->isDownloadable())
 	        {
 	            return new JSONResponse(false, 'failure', $this->translate('_downloadable_item_already_exists_in_this_order'));
 	        }
@@ -151,7 +152,10 @@ class OrderedItemController extends StoreManagementController
 	    
 		$categoryList = Category::getRootNode()->getDirectChildNodes();
 		$categoryList->unshift(Category::getRootNode());
-	    $response->set("filters", 'filters[Product.type]=' . (int)$this->request->get('downloadable'));
+		
+		// Do not filter out downloadable items
+//	    $response->set("filters", 'filters[Product.type]=' . (int)$this->request->get('downloadable'));
+	    
 		$response->set("categoryList", $categoryList->toArray($this->application->getDefaultLanguageCode()));
 		
         $order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);

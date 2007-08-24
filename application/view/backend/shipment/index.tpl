@@ -58,8 +58,7 @@
         </tr> 
     </table>
 </div>
-              
-      
+
 <div id="order{$orderID}_downloadableShipments" style="display: none">        
     <h2 class="notShippedShipmentsTitle">{t _downloadable}</h2> 
     <div id="orderShipments_list_{$orderID}_downloadable" class="downloadableShipmetn"  {denied role='order.update'}style="display: none"{/denied}> 
@@ -73,12 +72,12 @@
             <li id="orderShipments_list_downloadable_{$orderID}_{$downloadableShipment.ID}" >
                 <form>
                     {include file="backend/shipment/shipment.tpl" shipment=$downloadableShipment notShippable=true downloadable=1}
-                    
-                    {literal}
+
+                    {if $downloadableShipment.items|@count > 0}
                     <script type="text/javascript">
-                        Element.show("{/literal}order{$orderID}_downloadableShipments{literal}");
+                        Element.show("order{$orderID}_downloadableShipments");
                     </script>
-                    {/literal}
+                    {/if}
                 </form>
             </li>
         </ul>
@@ -190,26 +189,57 @@
                         
         Event.observe("{/literal}order{$orderID}_addProduct{literal}", 'click', function(e) 
         { 
-            var orderID = {/literal}{$orderID}{literal};
-            var ulList = $("{/literal}orderShipments_list_{$orderID}{literal}").getElementsByTagName('li');
-            Event.stop(e); 
-            new Backend.SelectPopup( Backend.OrderedItem.Links.addProduct, Backend.OrderedItem.Messages.selectProductTitle, 
-            { 
-                onObjectSelect: function() 
-                { 
-                    var form = this.popup.document.getElementById("availableShipments");
-                    var shipmentID = 0;
-                    $A(form.getElementsByTagName('input')).each(function(element) {
-                        if(element.checked) shipmentID = element.value;
-                    }.bind(this)); 
-
-                    Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + shipmentID).addNewProductToShipment(this.objectID, orderID);
-                },
+            try
+            {
+                Event.stop(e); 
                 
-                location: 1,
-                toolbar: 1,
-                height: (500 + ($A(ulList).size() > 1 ? (40 + $A(ulList).size() * 20) : 0))
-            }); 
+                var orderID = {/literal}{$orderID}{literal};
+                var ulList = $("{/literal}orderShipments_list_{$orderID}{literal}").getElementsByTagName('li');
+                
+                var showPopup = function()
+                {
+                    new Backend.SelectPopup( Backend.OrderedItem.Links.addProduct, Backend.OrderedItem.Messages.selectProductTitle, 
+                    { 
+                        onObjectSelect: function() 
+                        { 
+                            var form = this.popup.document.getElementById("availableShipments");
+                            var downloadableShipmentID = {/literal}{$downloadableShipment.ID}{literal};
+                            var shipmentID = 0;
+                            
+                            $A(form.getElementsByTagName('input')).each(function(element) {
+                                if(element.checked) shipmentID = element.value;
+                            }.bind(this)); 
+        
+                            if(!this.downloadable)
+                            {
+                                Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + shipmentID).addNewProductToShipment(this.objectID, orderID);
+                            }
+                            else
+                            {
+                                Backend.Shipment.prototype.getInstance('orderShipments_list_downloadable_' + orderID + '_' + downloadableShipmentID).addNewProductToShipment(this.objectID, orderID);
+                            }
+                        },
+                        
+                        location: 1,
+                        toolbar: 1,
+                        height: (500 + ($A(ulList).size() > 1 ? (40 + $A(ulList).size() * 20) : 0))
+                    });
+                }.bind(this);
+                
+                if($A(ulList).size() == 0)
+                {
+                    var newForm = Backend.Shipment.prototype.getInstance("orderShipments_new_" + orderID + "_form");
+                    newForm.save(showPopup);
+                }
+                else
+                {
+                    showPopup();
+                }
+            } 
+            catch(error)
+            {
+                console.info(error)
+            }
         }); 
                         
         Event.observe($("{/literal}orderShipments_new_{$orderID}_show{literal}"), "click", function(e) 
@@ -234,21 +264,7 @@
             var newForm = Backend.Shipment.prototype.getInstance( $("{/literal}orderShipments_new_{$orderID}_form{literal}"), {/literal}{$orderID}{literal} ); 
             newForm.save(); 
         }); 
-        
-        Event.observe($("{/literal}orderShipment_addFile_{$orderID}{literal}"), 'click', function(e) 
-        { 
-            Event.stop(e); 
-            new Backend.SelectPopup( Backend.OrderedItem.Links.addProduct + '?downloadable=1', Backend.OrderedItem.Messages.selectProductTitle, 
-            { 
-                onObjectSelect: function() 
-                { 
-                    Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_downloadable_{$orderID}_{$downloadableShipment.ID}{literal}').addNewProductToShipment(this.objectID, {/literal}{$orderID}{literal}); 
-                },
-                height: (500 + (parseInt({/literal}{$shipments|@count}{literal}) > 1 ? (50 + parseInt({/literal}{$shipments|@count}{literal}) * 30) : 0))
-            }); 
-        }); 
-        
-        
+               
         ActiveList.prototype.getInstance("{/literal}orderShipmentsItems_list_{$orderID}_{$downloadableShipment.ID}{literal}", Backend.OrderedItem.activeListCallbacks); 
         
         var groupList = ActiveList.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{literal}', Backend.Shipment.Callbacks); 
@@ -296,19 +312,7 @@
                     Event.stop(e); 
                     Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').changeStatus(); 
                 }); 
-                 
-                Event.observe($("{/literal}orderShipment_addProduct_{$shipment.ID}{literal}"), 'click', function(e) 
-                { 
-                    Event.stop(e);
-                    new Backend.SelectPopup( Backend.OrderedItem.Links.addProduct, Backend.OrderedItem.Messages.selectProductTitle, { 
-                        onObjectSelect: function() 
-                        { 
-                            Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').addNewProductToShipment(this.objectID, {/literal}{$orderID}{literal}); 
-                        },
-                        height: (500 + (parseInt({/literal}{$shipments|@count}{literal}) > 1 ? (50 + parseInt({/literal}{$shipments|@count}{literal}) * 30) : 0))
-                    }); 
-                }); 
-                
+                                
                 {/literal}{foreach item="item" from=$shipment.items}{literal} 
                     $("{/literal}orderShipmentsItem_count_{$item.ID}{literal}").lastValue = $("{/literal}orderShipmentsItem_count_{$item.ID}{literal}").value; 
                     
