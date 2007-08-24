@@ -228,7 +228,7 @@
                         console.info("order" + orderID + "_shippableShipments");
                         showPopup();
                         Element.hide("order" + orderID + "_shippableShipments");
-                    }.bind(this));
+                    }.bind(this), true);
                 }
                 else
                 {

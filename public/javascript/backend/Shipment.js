@@ -231,11 +231,11 @@ Backend.Shipment.prototype =
     {
     },
     
-    save: function(afterCallback)
+    save: function(afterCallback, disableIndicator)
     {
         new LiveCart.AjaxRequest(
-            Backend.Shipment.Links.create + '/?orderID=' + this.orderID,
-            $("orderShipments_new_" + this.orderID + "_indicator"),
+            Backend.Shipment.Links.create + '/?orderID=' + this.orderID + (disableIndicator ? "&noStatus=1" : ""),
+            !disableIndicator ? $("orderShipments_new_" + this.orderID + "_indicator") : null,
             function(response) 
             { 
                 var response = eval("(" + response.responseText + ")");

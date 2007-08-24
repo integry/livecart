@@ -267,7 +267,7 @@ class ShipmentController extends StoreManagementController
 		            )
 	            ),
 	            'success',
-	            $this->translate('_new_shipment_has_been_successfully_created')
+	            ($this->request->get('noStatus') ? false : $this->translate('_new_shipment_has_been_successfully_created'))
             );
 		}
 		else
