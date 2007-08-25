@@ -20,6 +20,13 @@
 	</div>
 
 	{include file="category/subcategoriesColumns.tpl"}
+
+	{foreach from=$news item=newsItem}
+		<p>{$newsItem.text}</p>
+	{/foreach}
+	
+
+	
 </div>		
 
 {include file="layout/frontend/footer.tpl"}

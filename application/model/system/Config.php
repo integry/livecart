@@ -233,11 +233,12 @@ class Config
 		
 		$res = array();
 		$d = new DirectoryIterator($dir);
-		
+
 		foreach ($d as $file)
 		{
 			if ($file->isFile() && 'ini' == substr($file->getFileName(), -3))
 			{
+				
 				$ini = parse_ini_file($file->getPathName(), true);
 				$key = substr($file->getFileName(), 0, -4);
 				
@@ -259,6 +260,8 @@ class Config
 				$res[$key] = $out;
 			}  
 		}
+
+		ksort($res);
 		
 		return $res;
 	}
