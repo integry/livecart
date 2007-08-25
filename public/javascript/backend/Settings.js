@@ -38,6 +38,7 @@ Backend.Settings.prototype =
 			}
 		
     	this.insertTreeBranch(categories, 0);    
+		this.treeBrowser.closeAllItems(0);    	
 	},
 	
 	insertTreeBranch: function(treeBranch, rootId)
@@ -47,8 +48,8 @@ Backend.Settings.prototype =
 		  	if('function' != typeof treeBranch[k])
 		  	{
 				this.treeBrowser.insertNewItem(rootId, k, treeBranch[k].name, null, 0, 0, 0, '', 1);
-				this.treeBrowser.showItemSign(k, 0);
-				
+				this.treeBrowser.showItemSign(k, 1);
+								
 				if (treeBranch[k].subs)
 				{
 					this.insertTreeBranch(treeBranch[k].subs, k);

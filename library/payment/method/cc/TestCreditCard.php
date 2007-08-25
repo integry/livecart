@@ -4,17 +4,17 @@ include_once(dirname(__file__) . '/../../abstract/CreditCardPayment.php');
 
 class TestCreditCard extends CreditCardPayment
 {
-	public static function isCreditable()
+	public function isCreditable()
 	{
 		return true;
 	}
 	
-	public static function isCardTypeNeeded()
+	public function isCardTypeNeeded()
 	{
 		return false;
 	}
 	
-	public static function isVoidable()
+	public function isVoidable()
 	{
         return true;
 	}
