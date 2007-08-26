@@ -1,20 +1,20 @@
 <?php
 
-ClassLoader::import("application.controller.backend.abstract.BackendController");
+ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 
 /**
  * Main backend controller which stands as an entry point to administration functionality
  *
  * @package application.controller.backend
- * @author Saulius Rupainis <saulius@remo.lt>
+ * @author Integry Systems <http://integry.com>
+ *
+ * @role login
  */
-class IndexController extends BackendController
+class IndexController extends StoreManagementController
 {
 	public function index()
 	{
-		//echo "<pre>"; print_r($this->user); echo "</pre>";
-		echo $this->user->email->get();
-		//return new ActionResponse();
+		return new ActionResponse();
 	}
 }
 

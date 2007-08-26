@@ -157,6 +157,18 @@ abstract class BaseController extends Controller implements LCiTranslator
 	{
 		return $this->locale->translator()->makeText($key, $params);
 	}
+
+	public function getUser()
+	{
+		if (empty($this->user))
+		{
+			ClassLoader::import('application.model.user.SessionUser');
+			$sessionUser = new SessionUser();
+			$this->user = $sessionUser->getUser();
+		}
+		
+		return $this->user;
+	}
 	
 	protected function getSessionData($key = '')
 	{
@@ -215,10 +227,7 @@ abstract class BaseController extends Controller implements LCiTranslator
 		    break;
 
 		    case 'user':
-		    	ClassLoader::import('application.model.user.SessionUser');
-		    	$sessionUser = new SessionUser();
-				$this->user = $sessionUser->getUser();
-				return $this->user;
+				return $this->getUser();
 		    break;
 		    
 		    case 'session':

@@ -8,6 +8,9 @@
  */
 
 $routes = array(					
+					// backend
+                    array("backend", array('controller' => 'backend.index', 'action' => 'index'), array()),
+                    
                     // category URLs
                     array("shop/:cathandle.:id", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[-A-Za-z0-9]{0,}","id" => "[0-9]+")),
 					array("shop/:cathandle.:id/:page", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[-A-Za-z0-9]{0,}","id" => "[0-9]+","page" => "[0-9_]+")),

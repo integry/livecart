@@ -254,6 +254,11 @@ class LiveCart extends Application
 	protected function execute($controllerInstance, $actionName)
 	{
 		$response = parent::execute($controllerInstance, $actionName);
+
+		if ($response instanceof ActionResponse)
+		{
+			$response->set('user', $controllerInstance->getUser());
+		}
 		
 		$this->processPlugins($controllerInstance, $response);
 	

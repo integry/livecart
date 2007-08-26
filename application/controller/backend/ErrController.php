@@ -27,7 +27,7 @@ class ErrController extends BackendController
 		switch($id)
 		{
 			case 401:
-			    return new ActionRedirectResponse('user', 'login', $params);
+			    return new ActionRedirectResponse('backend.session', 'index', $params);
 			case 403:
 			case 404:
 			    $params['id'] = $id;
