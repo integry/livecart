@@ -72,8 +72,7 @@ abstract class FrontendController extends BaseController
 		
 		$response->set('order', $this->order->toArray()); 		
 		$response->set('currency', $this->request->get('currency', $this->application->getDefaultCurrencyCode()));
-		$response->set('user', $this->user->toArray());
-		
+
 		return $response; 	
 	}
 

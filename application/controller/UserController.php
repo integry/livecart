@@ -48,7 +48,7 @@ class UserController extends FrontendController
 		$f->setLimit(self::COUNT_RECENT_FILES);
 		
         $response = new ActionResponse();
-		$response->set('user', $this->user->toArray());
+        
 		$response->set('orders', $orderArray);
 		$response->set('files', $this->loadDownloadableItems(new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()))));
 		

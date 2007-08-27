@@ -30,7 +30,7 @@ class UserController extends StoreManagementController
         $response->set('shippingAddressStates', State::getStatesByCountry($form->get('shippingAddress_countryID')));
         $response->set('billingAddressStates', State::getStatesByCountry($form->get('billingAddress_countryID')));
         $user->loadAddresses();
-	    $response->set('user', $user->toArray());
+	    $response->set('someUser', $user->toArray());
 	    $response->set('availableUserGroups', $availableUserGroups);
 	    $response->set('form', self::createUserForm($this, $user));
 		

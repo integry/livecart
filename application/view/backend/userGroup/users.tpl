@@ -14,7 +14,7 @@
         
         <fieldset id="newUserForm_{$userGroupID}" style="display: none;" class="addForm treeManagerContainer newUserForm">
         	<legend>{t _add_new_user}</legend>
-            {include file="backend/user/info.tpl"}
+            {include file="backend/user/info.tpl" someUser=$newUser}
         </fieldset>
         
         <script type="text/javascript">

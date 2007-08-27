@@ -257,7 +257,7 @@ class LiveCart extends Application
 
 		if ($response instanceof ActionResponse)
 		{
-			$response->set('user', $controllerInstance->getUser());
+			$response->set('user', $controllerInstance->getUser()->toArray());
 		}
 		
 		$this->processPlugins($controllerInstance, $response);
