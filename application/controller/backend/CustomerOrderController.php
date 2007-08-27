@@ -38,7 +38,7 @@ class CustomerOrderController extends StoreManagementController
 	
 	public function info()
 	{
-	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State'));
+	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State', 'User'));
 	    
 	    $response = new ActionResponse();
 	    $response->set('statuses', array(
