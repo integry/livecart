@@ -31,6 +31,11 @@
 
 	{literal}
 	<script language="javascript" type="text/javascript">
+	if(window.opener)
+	{
+	   window.opener.selectPopupWindow = window;
+    }
+    	
     try
     {
         tinyMCE.init({

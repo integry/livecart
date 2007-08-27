@@ -27,9 +27,10 @@ class ShipmentController extends StoreManagementController
 	
 	    $statuses = array(
 		    Shipment::STATUS_NEW => $this->translate('_shipping_status_new'),
-		    Shipment::STATUS_PENDING => $this->translate('_shipping_status_pending'),
+		    Shipment::STATUS_PROCESSING => $this->translate('_shipping_status_pending'),
 		    Shipment::STATUS_AWAITING => $this->translate('_shipping_status_awaiting'),
-		    Shipment::STATUS_SHIPPED => $this->translate('_shipping_status_shipped')
+		    Shipment::STATUS_SHIPPED => $this->translate('_shipping_status_shipped'),
+            Shipment::STATUS_RETURNED => $this->translate('_shipping_status_returned')
 	    );
 	    
 	    $subtotalAmount = 0; 

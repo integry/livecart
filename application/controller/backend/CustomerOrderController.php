@@ -23,7 +23,7 @@ class CustomerOrderController extends StoreManagementController
 		    array('ID' => 1, 'name' => $this->translate('_all_orders'), 'rootID' => 0),
 		        array('ID' => 2, 'name' => $this->translate('_current_orders'), 'rootID' => 1),
 		            array('ID' => 3, 'name' => $this->translate('_new_orders'), 'rootID' => 2),
-		            array('ID' => 4, 'name' => $this->translate('_backordered_orders'), 'rootID' => 2),
+		            array('ID' => 4, 'name' => $this->translate('_processing_orders'), 'rootID' => 2),
 		            array('ID' => 5, 'name' => $this->translate('_awaiting_shipment_orders'), 'rootID' => 2),
 		        array('ID' => 6, 'name' => $this->translate('_shipped_orders'), 'rootID' => 1),
 		        array('ID' => 7, 'name' => $this->translate('_returned_orders'), 'rootID' => 1),
@@ -32,7 +32,6 @@ class CustomerOrderController extends StoreManagementController
 		
 		$response = new ActionResponse();
 		$response->set('orderGroups', $orderGroups);
-		$response->set('orderToShipmentStatusMigrations', CustomerOrder::getStatusToShipmentMigrations());
 		return $response;
 	    
 	}
@@ -43,11 +42,11 @@ class CustomerOrderController extends StoreManagementController
 	    
 	    $response = new ActionResponse();
 	    $response->set('statuses', array(
-	                                    CustomerOrder::STATUS_BACKORDERED  => $this->translate('_status_backordered'),
-	                                    CustomerOrder::STATUS_AWAITING_SHIPMENT  => $this->translate('_status_awaiting_shipment'),
+                                        CustomerOrder::STATUS_NEW => $this->translate('_status_new'),
+	                                    CustomerOrder::STATUS_PROCESSING  => $this->translate('_status_processing'),
+	                                    CustomerOrder::STATUS_AWAITING  => $this->translate('_status_awaiting'),
 	                                    CustomerOrder::STATUS_SHIPPED  => $this->translate('_status_shipped'),
 	                                    CustomerOrder::STATUS_RETURNED  => $this->translate('_status_returned'),
-	                                    CustomerOrder::STATUS_NEW => $this->translate('_status_new'),
 				            ));
 				            
         $response->set('countries', $this->application->getEnabledCountries());
@@ -129,6 +128,21 @@ class CustomerOrderController extends StoreManagementController
 	    if(isset($orderArray['BillingAddress']))
 	    {
 	        $response->set('formBillingAddress', $this->createUserAddressForm($orderArray['BillingAddress']));
+	    }
+	    
+	    $firstEmptyShipment = false;
+        $response->set('hideShipped', 0);
+	    foreach($order->getShipments() as $shipment)
+	    {
+            if(!$firstEmptyShipment && count($shipment->getItems()) == 0)
+            {
+                $firstEmptyShipment = true;
+            }
+            else if(!$shipment->isShipped())
+	        {
+	            $response->set('hideShipped', 1);
+	            break;
+	        }
 	    }
 	    
 		return $response;
@@ -217,11 +231,11 @@ class CustomerOrderController extends StoreManagementController
 		        case 'setNew':
 		            $order->status->set(CustomerOrder::STATUS_NEW);
 		            break;
-		        case 'setBackordered':
-		            $order->status->set(CustomerOrder::STATUS_BACKORDERED);
+		        case 'setProcessing':
+		            $order->status->set(CustomerOrder::STATUS_PROCESSING);
 		            break;
 		        case 'setAwaitingShipment':
-		            $order->status->set(CustomerOrder::STATUS_AWAITING_SHIPMENT);
+		            $order->status->set(CustomerOrder::STATUS_AWAITING);
 		            break;
 		        case 'setShipped':
 		            $order->status->set(CustomerOrder::STATUS_SHIPPED);
@@ -276,11 +290,11 @@ class CustomerOrderController extends StoreManagementController
 	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
 	            break;
 	        case 'orders_4': 
-	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_BACKORDERED);
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_PROCESSING);
 	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
 	            break;
 	        case 'orders_5': 
-	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_AWAITING_SHIPMENT);
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_AWAITING);
 	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
 	            break;
 	        case 'orders_6': 
@@ -385,10 +399,10 @@ class CustomerOrderController extends StoreManagementController
 				    switch($order[$field])
 				    {
 				        case 1: 
-				            $value = $this->translate('_status_backordered');
+				            $value = $this->translate('_status_processing');
 				            break;
 				        case 2: 
-				            $value = $this->translate('_status_awaiting_shipment');
+				            $value = $this->translate('_STATUS_AWAITING');
 				            break;
 				        case 3: 
 				            $value = $this->translate('_status_shipped');
@@ -453,7 +467,7 @@ class CustomerOrderController extends StoreManagementController
 	        {
 	            if($shipment->isShippable())
 	            {
-	                $shipment->status->set($order->getToShipmentMigratedStatus());
+	                $shipment->status->set($order->status->get());
 	                $shipment->save();
 	            }
 	        }
@@ -775,8 +789,8 @@ class CustomerOrderController extends StoreManagementController
     {
         $validator = new RequestValidator("CustomerOrder", $this->request);		            
 			
-		$validator->addCheck('status', new MinValueCheck($this->translate('_invalid_status'), 0));
-		$validator->addCheck('status', new MaxValueCheck($this->translate('_invalid_status'), 4));	
+		$validator->addCheck('status', new MinValueCheck($this->translate('_invalid_status'), 15));
+		$validator->addCheck('status', new MaxValueCheck($this->translate('_invalid_status'), 56));	
         
         return $validator;
     }

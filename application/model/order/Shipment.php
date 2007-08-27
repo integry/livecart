@@ -22,11 +22,14 @@ class Shipment extends ActiveRecordModel
 	protected $availableShippingRates = array();   
 	
 	protected $selectedRateId; 
-    	
+
     const STATUS_NEW = 0;
-    const STATUS_PENDING = 1;
+    const STATUS_PROCESSING = 1;
     const STATUS_AWAITING = 2;
     const STATUS_SHIPPED = 3;
+    const STATUS_RETURNED = 4;  
+    const STATUS_CONFIRMED_AS_DELIVERED = 5;
+    const STATUS_CONFIRMED_AS_LOST = 6;      
     
     const WITHOUT_TAXES = false;
     
@@ -515,6 +518,26 @@ class Shipment extends ActiveRecordModel
             }
         }
     }
+
+    public function isProcessing()
+    {
+        return $this->status->get() >= self::STATUS_PROCESSING; 
+    }
+
+    public function isAwaitingShipment()
+    {
+        return $this->status->get() >= self::STATUS_AWAITING; 
+    }
+
+    public function isShipped()
+    {
+        return $this->status->get() >= self::STATUS_SHIPPED; 
+    }
+    
+    public function isReturned()
+    {
+        return $this->status->get() >= self::STATUS_RETURNED; 
+    } 
 }
 
 ?>

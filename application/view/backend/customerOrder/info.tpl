@@ -60,6 +60,7 @@
             <label for="order_{$order.ID}_status">{t _status}</label>
             {selectfield options=$statuses id="order_`$order.ID`_status" name="status" class="status"}
             {img src="image/indicator.gif" id="order_`$order.ID`_status_feedback" style="display: none;"} 
+            <div class="errorText hidden"></div> 
     	</fieldset>  
     {/form}
     
@@ -101,7 +102,7 @@
     {literal}
     try
     {
-        var status = Backend.CustomerOrder.Editor.prototype.getInstance({/literal}{$order.ID}{literal});
+        var status = Backend.CustomerOrder.Editor.prototype.getInstance({/literal}{$order.ID}{literal}, true, {/literal}{$hideShipped}{literal});
         
         {/literal}{if $formShippingAddress}{literal}
             var shippingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_shippingAddress_form{literal}'), 'shippingAddress');

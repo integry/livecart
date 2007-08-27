@@ -28,9 +28,9 @@ class CustomerOrder extends ActiveRecordModel
      */
     private $history = null;
     
-    const STATUS_NEW = null;
-    const STATUS_BACKORDERED = 1;
-    const STATUS_AWAITING_SHIPMENT = 2;
+    const STATUS_NEW = 0;
+    const STATUS_PROCESSING = 1;
+    const STATUS_AWAITING = 2;
     const STATUS_SHIPPED = 3;
     const STATUS_RETURNED = 4;        
                 
@@ -799,14 +799,14 @@ class CustomerOrder extends ActiveRecordModel
         return round($total, 2);
     }
 		
-	public function isBackordered()
+	public function isProcessing()
 	{
-        return $this->status->get() > self::STATUS_BACKORDERED; 
+        return $this->status->get() > self::STATUS_PROCESSING; 
     }
 
 	public function isAwaitingShipment()
 	{
-        return $this->status->get() > self::STATUS_AWAITING_SHIPMENT; 
+        return $this->status->get() > self::STATUS_AWAITING; 
     }
 
 	public function isShipped()
@@ -921,7 +921,7 @@ class CustomerOrder extends ActiveRecordModel
         $array['isReturned'] = (int)$this->isReturned();;
         $array['isShipped'] = (int)$this->isShipped();
         $array['isAwaitingShipment'] = (int)$this->isAwaitingShipment();
-        $array['isBackordered'] = (int)$this->isBackordered();
+        $array['isProcessing'] = (int)$this->isProcessing();
 
 		// payments
 		if (isset($options['payments']))
@@ -1096,23 +1096,6 @@ class CustomerOrder extends ActiveRecordModel
         $f = new ARSelectFilter();
         $f->setOrder(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
         return $this->getRelatedRecordSet('OrderNote', $f, OrderNote::LOAD_REFERENCES);
-    }
-    
-    public static function getStatusToShipmentMigrations()
-    {
-        return array(
-            0 => 0, // New => New
-            1  => 2, // backordered => awaiting shipment
-            2  => 2, // Awayting shipment
-            3  => 3, // Shipped
-            4  => 1  // Returned => Pending
-        );
-    }
-    
-    public function getToShipmentMigratedStatus()
-    {
-        $migrations = self::getStatusToShipmentMigrations();
-        return $migrations[(int)$this->status->get()];
     }
 }
 	

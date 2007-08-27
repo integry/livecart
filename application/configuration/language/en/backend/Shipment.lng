@@ -9,6 +9,7 @@ _shipping_service_was_successfuly_changed=Shipping service was successfully chan
 _shipping_status_new=New
 _shipping_status_pending=Pending
 _shipping_status_awaiting=Awaiting
+_shipping_status_returned=Returned
 _shipping_status_shipped=Shipped
 
 _add_new_shipment=Add new shipment

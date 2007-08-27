@@ -1,7 +1,5 @@
 <form>
-    {if $shipment.status != 3 && !$notShippable}
-        {include file="backend/shipment/shipmentControls.tpl"}
-    {/if}
+    {include file="backend/shipment/shipmentControls.tpl" status=$shipment.status notShippable=$notShippable}
 
     <ul id="orderShipmentsItems_list_{$orderID}_{$shipment.ID}" class="{if $shipment.status != 3 && $shipableShipmentsCount > 1 && $shipment.isShippable}activeList_add_sort{/if} activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem">
     {foreach item="item" from=$shipment.items}

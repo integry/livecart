@@ -152,18 +152,22 @@ class OrderedItemController extends StoreManagementController
 	    
 		$categoryList = Category::getRootNode()->getDirectChildNodes();
 		$categoryList->unshift(Category::getRootNode());
-		
-		// Do not filter out downloadable items
-//	    $response->set("filters", 'filters[Product.type]=' . (int)$this->request->get('downloadable'));
-	    
+
 		$response->set("categoryList", $categoryList->toArray($this->application->getDefaultLanguageCode()));
 		
         $order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
         $order->loadItems();
         
         $shipmentsArray = array();
+        $firstEmptyShipment = false;
         foreach($order->getShipments() as $shipment)
         {
+            if(!$firstEmptyShipment && count($shipment->getItems()) == 0)
+            {
+                $firstEmptyShipment = true;
+                continue;
+            }
+            
             $shipmentsArray[$shipment->getID()] = $shipment->toArray();
             $rate = unserialize($shipment->shippingServiceData->get());
             
@@ -178,7 +182,6 @@ class OrderedItemController extends StoreManagementController
                 $shipmentsArray[$shipment->getID()]['ShippingService']['name_lang'] = $this->translate('_shipping_service_is_not_selected');
             }
         }
-        
         $response->set("order", $order->toFlatArray());
         $response->set("shipments", $shipmentsArray);
 		

@@ -1162,15 +1162,11 @@ Backend.SelectPopup.prototype = {
 			window.selectPopupWindow = null;
 		}
 		
-		Backend.SelectPopup.prototype.popup.focus();
-               
-	    window.selectPopupWindow = Backend.SelectPopup.prototype.popup;
-		
-		Backend.SelectPopup.prototype.popup
-						
-        Event.observe(window, 'unload', function() { Backend.SelectPopup.prototype.popup.close(); });
-        
-        window.selectProductPopup = this;
+		setTimeout(function() {
+			Backend.SelectPopup.prototype.popup.focus();
+		    window.selectPopupWindow = Backend.SelectPopup.prototype.popup;
+	        window.selectProductPopup = this;
+		}.bind(this), 100);
     },
     
     getSelectedObject: function(objectID, downloadable)

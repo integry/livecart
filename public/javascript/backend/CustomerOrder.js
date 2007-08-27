@@ -391,6 +391,12 @@ Backend.CustomerOrder.Editor.prototype =
     Messages: {},
     Instances: {},
     CurrentId: null,
+	
+    STATUS_NEW: 0,
+    STATUS_PROCESSING: 1,
+    STATUS_AWAITING: 2,
+    STATUS_SHIPPED: 3,
+    STATUS_RETURNED: 4,    
     
     getCurrentId: function()
     {
@@ -426,11 +432,11 @@ Backend.CustomerOrder.Editor.prototype =
         return tabId + '_' +  Backend.CustomerOrder.Editor.prototype.getCurrentId() + 'Content'
     },
 
-    getInstance: function(id, doInit)
+    getInstance: function(id, doInit, hideShipped)
     {
 		if(!Backend.CustomerOrder.Editor.prototype.Instances[id])
         {
-            Backend.CustomerOrder.Editor.prototype.Instances[id] = new Backend.CustomerOrder.Editor(id);
+            Backend.CustomerOrder.Editor.prototype.Instances[id] = new Backend.CustomerOrder.Editor(id, hideShipped);
         }
 
         if(doInit !== false) Backend.CustomerOrder.Editor.prototype.Instances[id].init();
@@ -445,15 +451,18 @@ Backend.CustomerOrder.Editor.prototype =
         return this.Instances[id] ? true : false;
     },
     
-    initialize: function(id)
+    initialize: function(id, hideShipped)
   	{
         try
         {
             this.id = id ? id : '';
+			this.hideShipped = hideShipped;
     
             this.findUsedNodes();
             this.bindEvents();
             
+			this.toggleStatuses();
+			
             Form.State.backup(this.nodes.form);
         }
         catch(e)
@@ -461,6 +470,55 @@ Backend.CustomerOrder.Editor.prototype =
             console.info(e);
         }
 
+	},
+
+    toggleStatuses: function()
+	{
+        var statusValue = parseInt(this.nodes.status.value);
+		
+		var migrations = {}
+		migrations[this.STATUS_NEW]         = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED]
+        migrations[this.STATUS_PROCESSING]  = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED]
+        migrations[this.STATUS_AWAITING]    = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED]
+        migrations[this.STATUS_SHIPPED]     = [this.STATUS_SHIPPED,this.STATUS_RETURNED]
+        migrations[this.STATUS_RETURNED]    = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_RETURNED]
+        
+		$A(this.nodes.status.options).each(function(option) {
+			if(migrations[statusValue].include(parseInt(option.value)))
+			{
+				Element.show(option);
+			}
+			else
+			{
+                Element.hide(option);
+			}
+		}.bind(this));
+		
+		// If one shipment
+		if($("tabOrderProducts_" + this.id + "Content"))
+		{
+	        if($("orderShipments_list_" + this.id).childElements().size() == 1)
+	        {
+				if(!$$("#orderShipments_list_" + this.id + " .orderShipment_USPS_select")[0].value)
+				{
+					Element.hide(this.nodes.status.options[this.STATUS_SHIPPED]);
+				}
+	        }
+	        // Don't allow to ship where more then one shipment. You should ship every shipment separately instead
+			else if($("orderShipments_list_" + this.id).childElements().size() > 1)
+			{
+				Element.hide(this.nodes.status.options[this.STATUS_SHIPPED]);
+			}
+	        // If there are no unshipped shipments allow to ship, but check if there are shipped ones first
+			else if($("#orderShipments_list_" + this.id + "_shipped").childElements().size() < 1)
+	        {
+	            Element.hide(this.nodes.status.options[this.STATUS_SHIPPED]);
+            }
+		}
+		else if(this.hideShipped)
+		{
+            Element.hide(this.nodes.status.options[this.STATUS_SHIPPED]);
+		}
 	},
 
 	findUsedNodes: function()
@@ -559,17 +617,18 @@ Backend.CustomerOrder.Editor.prototype =
 			
 			Form.State.backup(this.nodes.form);
 			
-			if($("orderShipments_list_" + this.id).childElements().size() == 1)
+			if($("orderShipments_list_" + this.id) && $("orderShipments_list_" + this.id).childElements().size() == 1)
 			{
-				var orderStatus = parseInt(this.nodes.form.elements.namedItem('status').value) || 0;
-				var shipmentStatus  = Backend.CustomerOrder.Editor.prototype.ORDER_TO_SHIPMENT_STATUS_MIGRATIONS[orderStatus]
-				$$("#orderShipments_list_" + this.id + " .orderShipment_status select")[0].value = shipmentStatus;
+				$$("#orderShipments_list_" + this.id + " .orderShipment_status select")[0].value = this.nodes.form.elements.namedItem('status').value;
 			}
 		}
 		else
 		{
+            Form.State.restore(this.nodes.form);
 			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
 		}
+            
+        this.toggleStatuses();
 	},
     
     removeEmptyShipmentsFromHTML: function()

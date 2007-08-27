@@ -623,6 +623,8 @@ Backend.Shipment.prototype =
 		
         Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
 		
+		Backend.CustomerOrder.Editor.prototype.getInstance(orderID, false).toggleStatuses();
+		
         if(window.selectPopupWindow)
         {
             Backend.SelectPopup.prototype.popup.location.reload();
@@ -691,11 +693,14 @@ Backend.Shipment.prototype =
     
     toggleControls: function(orderID) 
     {
-       var controls = $A(document.getElementsByClassName("orderShipment_controls", $("order" + orderID + "_shippableShipments")));
-       controls.each(function(otherControls)
-       {
-           if(controls.size() > 1) otherControls.show();
-		   else otherControls.hide();
+	    var shippableControls = document.getElementsByClassName("orderShipment_controls", $("order" + orderID + "_shippableShipments"));
+        var shippedControls = document.getElementsByClassName("orderShipment_controls", $("order" + orderID + "_shippedShipments"));
+		var allControls = $A(shippableControlsconcat(shippedControls));
+       
+	     shippableControls.each(function(otherControls)
+         {
+             if(allControls.size() == 1) otherControls.hide();
+		     else otherControls.show();
        }.bind(this));
     }
 }

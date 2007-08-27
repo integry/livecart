@@ -40,7 +40,7 @@ _canceled=Canceled
 # Order
 
 _order_id=Order ID
-_order_backordered=Backordered
+_order_processing=Processing
 _order_awaiting_shipment=Awaiting shipment
 _order_shipped=Shipped
 _order_returned=Returned

@@ -16,6 +16,7 @@ _are_you_sure_you_want_cancel_this_order=Are you sure you want to cancel this or
 
 # Errors
 _err_user_has_no_billing_or_shipping_address=User has no default billing or shipping address
+_invalid_status=Invalid status
 
 _all_users=All users
 _default_user_group=Default user group
@@ -33,7 +34,7 @@ _this_order_is=This order is
 _all_orders=All Orders
 _current_orders=Current
 _new_orders=New
-_backordered_orders=Backordered		
+_processing_orders=Processing		
 _awaiting_shipment_orders=Awaiting Shipment
 _shipped_orders=Shipped
 _returned_orders=Returned
@@ -79,7 +80,7 @@ User.fullName=Full name
 _with_selected=With selected
 _order_status=Order status
 _set_new=New
-_set_backordered=Backordered
+_set_processing=Processing
 _set_awaiting_shipment=Awaiting shipment
 _set_shipped=Shipped
 _set_returned=Returned
@@ -106,8 +107,8 @@ _view=View
 
 # Order status
 _status_new=New
-_status_backordered=Backordered
-_status_awaiting_shipment=Awaiting shipment
+_status_processing=Processing
+_status_awaiting=Awaiting shipment
 _status_shipped=Shipped
 _status_canceled=Canceled
 _status_returned=Returned
