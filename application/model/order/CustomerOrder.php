@@ -1045,6 +1045,21 @@ class CustomerOrder extends ActiveRecordModel
    	
    		return $shipment;
     }
+    
+    public function countShippableShipments()
+    {
+        // Caclulate number of shippable shipments
+        $shippableCount = 0;
+        foreach($this->getShipments() as $shipment) 
+        {
+            if($shipment->isShippable()) 
+            {
+                $shippableCount++; 
+            }
+        }
+        
+        return $shippableCount;
+    }
 
     /**
      *  Return all transactions that are related to this order
@@ -1081,6 +1096,23 @@ class CustomerOrder extends ActiveRecordModel
         $f = new ARSelectFilter();
         $f->setOrder(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
         return $this->getRelatedRecordSet('OrderNote', $f, OrderNote::LOAD_REFERENCES);
+    }
+    
+    public static function getStatusToShipmentMigrations()
+    {
+        return array(
+            0 => 0, // New => New
+            1  => 2, // backordered => awaiting shipment
+            2  => 2, // Awayting shipment
+            3  => 3, // Shipped
+            4  => 1  // Returned => Pending
+        );
+    }
+    
+    public function getToShipmentMigratedStatus()
+    {
+        $migrations = self::getStatusToShipmentMigrations();
+        return $migrations[(int)$this->status->get()];
     }
 }
 	

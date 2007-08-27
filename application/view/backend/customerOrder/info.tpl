@@ -98,7 +98,6 @@
 
 <script type="text/javascript">
     Backend.CustomerOrder.Editor.prototype.existingUserAddresses = {json array=$existingUserAddresses}
-    
     {literal}
     try
     {

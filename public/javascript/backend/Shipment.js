@@ -308,7 +308,8 @@ Backend.Shipment.prototype =
             li.down('form').elements.namedItem('orderID').value = this.orderID;
             li.down('form').elements.namedItem('shippingServiceID').value = "";
             $("orderShipment_status_" + response.shipment.ID + "_3").hide();
-
+			
+			$("orderShipment_status_" + response.shipment.ID ).value = response.shipment.status;
 
             Event.observe("orderShipment_change_usps_" + response.shipment.ID, 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + this.orderID + '_' + response.shipment.ID).toggleUSPS();  }.bind(this));
             Event.observe("orderShipment_USPS_" + response.shipment.ID + "_submit", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + this.orderID + '_' + response.shipment.ID).toggleUSPS();  }.bind(this));       
@@ -326,13 +327,15 @@ Backend.Shipment.prototype =
 			
             this.shipmentsActiveList.highlight(li);
 			
-            if(Backend.SelectPopup.prototype.popup)
+            if(window.selectPopupWindow)
             {
                 Backend.SelectPopup.prototype.popup.location.reload();
             }
+			
+			Backend.Shipment.prototype.toggleControls(this.orderID);
         }
     },
-    
+	
     cancel: function()
     {
         if(!this.nodes.form)
@@ -620,7 +623,7 @@ Backend.Shipment.prototype =
 		
         Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
 		
-        if(Backend.SelectPopup.prototype.popup)
+        if(window.selectPopupWindow)
         {
             Backend.SelectPopup.prototype.popup.location.reload();
         }
@@ -684,6 +687,16 @@ Backend.Shipment.prototype =
     getShippingAmount: function()
     {
         return  parseFloat(this.nodes.root.down(".shipment_shippingAmount").down('.price').innerHTML);
+    },
+    
+    toggleControls: function(orderID) 
+    {
+       var controls = $A(document.getElementsByClassName("orderShipment_controls", $("order" + orderID + "_shippableShipments")));
+       controls.each(function(otherControls)
+       {
+           if(controls.size() > 1) otherControls.show();
+		   else otherControls.hide();
+       }.bind(this));
     }
 }
 

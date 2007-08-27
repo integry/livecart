@@ -552,12 +552,19 @@ Backend.CustomerOrder.Editor.prototype =
     },
 	
 	afterSubmitForm: function(response)
-	{
+	{	
 		if(response.status == 'success')
 		{
             Backend.CustomerOrder.prototype.updateLog(this.id);
 			
 			Form.State.backup(this.nodes.form);
+			
+			if($("orderShipments_list_" + this.id).childElements().size() == 1)
+			{
+				var orderStatus = parseInt(this.nodes.form.elements.namedItem('status').value) || 0;
+				var shipmentStatus  = Backend.CustomerOrder.Editor.prototype.ORDER_TO_SHIPMENT_STATUS_MIGRATIONS[orderStatus]
+				$$("#orderShipments_list_" + this.id + " .orderShipment_status select")[0].value = shipmentStatus;
+			}
 		}
 		else
 		{
@@ -583,7 +590,8 @@ Backend.CustomerOrder.Editor.prototype =
     
     hasEmptyShipments: function()
     {
-		if($("order" + this.id + "_downloadableShipments").style.display == 'none')
+		//
+		if($("order" + this.id + "_shippableShipments").style.display == 'none')
 		{
 		  return false;
 	    }

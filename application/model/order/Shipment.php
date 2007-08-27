@@ -424,8 +424,11 @@ class Shipment extends ActiveRecordModel
     }
     
     protected function insert()
-    {                    
-        $this->status->set(self::STATUS_NEW);
+    {   
+        if(!$this->status->get())
+        {
+            $this->status->set(self::STATUS_NEW);
+        }
         
         return parent::insert();
     }

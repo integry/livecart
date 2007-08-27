@@ -66,6 +66,8 @@
     Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToActivateThisOrder = '{/literal}{t _are_you_sure_you_want_activate_this_order}{literal}';
     Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToCancelThisOrder = '{/literal}{t _are_you_sure_you_want_cancel_this_order}{literal}';
     
+    Backend.CustomerOrder.Editor.prototype.ORDER_TO_SHIPMENT_STATUS_MIGRATIONS = {/literal}{json array=$orderToShipmentStatusMigrations}{literal};
+    
     new Backend.CustomerOrder({/literal}{json array=$orderGroups}{literal});
     
     {/literal}

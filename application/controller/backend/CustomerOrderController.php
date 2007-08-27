@@ -32,6 +32,7 @@ class CustomerOrderController extends StoreManagementController
 		
 		$response = new ActionResponse();
 		$response->set('orderGroups', $orderGroups);
+		$response->set('orderToShipmentStatusMigrations', CustomerOrder::getStatusToShipmentMigrations());
 		return $response;
 	    
 	}
@@ -445,6 +446,18 @@ class CustomerOrderController extends StoreManagementController
 		$order->status->set($status);
 	    $isCancelled = (int)$this->request->get('isCancelled') ? true : false;
 		$order->isCancelled->set($isCancelled);
+		
+	    if($order->countShippableShipments() == 1)
+	    {
+	        foreach($order->getShipments() as $shipment)
+	        {
+	            if($shipment->isShippable())
+	            {
+	                $shipment->status->set($order->getToShipmentMigratedStatus());
+	                $shipment->save();
+	            }
+	        }
+	    }
 		
         $response = $this->save($order);
         $history->saveLog();

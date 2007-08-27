@@ -241,7 +241,6 @@ class ShipmentController extends StoreManagementController
 		    {
 			    $shippingService = ShippingService::getInstanceByID($shippingServiceID);
 			    
-			    $shipment->status->set((int)$this->request->get('status'));
 			    $shipment->shippingService->set($shippingService);
 			    $shipment->setAvailableRates($shipment->order->get()->getDeliveryZone()->getShippingRates($shipment));
 			    $shipment->setRateId($shippingService->getID());
@@ -250,6 +249,15 @@ class ShipmentController extends StoreManagementController
 		    {
 		        $shipment->amountCurrency->set($shipment->order->get()->currency->get());
 		    }
+		    
+            if($this->request->get('noStatus'))
+            {
+                $shipment->status->set($shipment->order->get()->status->get());
+            } 
+            else if($this->request->get('shippingServiceID') || ((int)$this->request->get('status') < 3)) 
+            {
+                $shipment->status->set((int)$this->request->get('status'));
+            }
 		    
     		$shipment->save();
     		
@@ -263,6 +271,7 @@ class ShipmentController extends StoreManagementController
 		                'taxAmount' => $shipment->taxAmount->get(),
 		                'total' => $shipment->shippingAmount->get() + $shipment->amount->get() + (float)$shipment->taxAmount->get(),
 		                'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
+		                'status' => $shipment->status->get(),
 		                'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
 		            )
 	            ),
