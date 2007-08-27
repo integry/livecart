@@ -2,18 +2,32 @@ body
 {
 	background-image: none;
 	height: auto;
+	background-color: #fff;
 }
 
 #loginContainer
 {
 	margin: 0pt auto;
-	width: 700px;
-	border: 1px solid black;
+	width: 430px;
+	border: 5px solid #eee;
+	padding: 20px;
+}
+
+#logoContainer
+{
+    text-align: center; 
+    padding: 30px;
 }
 
 #loginHeader
 {
 	margin-left: 30px;
 	margin-top: 30px;
-	margin-bottom: 100px;
+}
+
+.forgottenPassword
+{
+    font-size: smaller;
+    display: block;
+    margin-bottom: 1em;
 }

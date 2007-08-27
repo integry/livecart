@@ -344,7 +344,7 @@ Backend.NavMenu.prototype =
 {
 	initialize: function(menuArray, controller, action)
 	{	
-		var index = 0;
+		var index = -1;
 		var subIndex = 0;
         var subItemIndex = 0;
 		var match = false;
@@ -400,12 +400,14 @@ Backend.NavMenu.prototype =
 		}
 
 		// add current menu items to breadcrumb
-		breadcrumb.addItem(menuArray[index]['title'], menuArray[index]['url']);
+		/*
+        breadcrumb.addItem(menuArray[index]['title'], menuArray[index]['url']);
 		if (subItemIndex > 0)
 		{
 			breadcrumb.addItem(menuArray[index]['items'][subItemIndex]['title'], 
 					     	   menuArray[index]['items'][subItemIndex]['url']);							
 		}
+		*/
 
 		// build menu
 		var topItem = $('navTopItem-template');
@@ -432,7 +434,7 @@ Backend.NavMenu.prototype =
 									
 				if (topIndex == index)
 				{
-				  	menuItem.id = 'navSelected';
+                    menuItem.id = 'navSelected';
 				}
 				else
 				{
@@ -490,7 +492,7 @@ Backend.NavMenu.prototype =
 	
 	hideCurrentSubMenu: function()
 	{
-	  	if ($('navSelected').getElementsByTagName('ul')[0])
+	  	if ($('navSelected') && $('navSelected').getElementsByTagName('ul')[0])
 	  	{
             $('navSelected').getElementsByTagName('ul')[0].style.visibility = 'hidden';                
         }
@@ -498,7 +500,7 @@ Backend.NavMenu.prototype =
 	
 	showCurrentSubMenu: function()
 	{
-	  	if ($('navSelected').getElementsByTagName('ul')[0])
+	  	if ($('navSelected') && $('navSelected').getElementsByTagName('ul')[0])
 	  	{
     	  	$('navSelected').getElementsByTagName('ul')[0].style.visibility = 'visible';
     	}

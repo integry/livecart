@@ -5,6 +5,10 @@
 
 <h1 id="loginHeader">{t _backend_login}</h1>
 
+<div id="logoContainer">
+    <img src="image/promo/transparentlogo.png" />
+</div>
+
 <div id="loginContainer">
 <form action="{link controller=backend.session action=doLogin}" method="POST" />
     <p>
@@ -29,6 +33,16 @@
 	<input type="hidden" name="return" value="{$return}" />	
 	
 </form>
+
 </div>
+
+{literal}
+    <script type="text/javascript">
+        Event.observe(window, 'load', function() {$('email').focus()});    
+    </script>
+{/literal}
+
+</body>
+</html>
 
 {* include file="layout/backend/footer.tpl" *}

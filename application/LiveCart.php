@@ -243,7 +243,7 @@ class LiveCart extends Application
 		return parent::getControllerInstance($controllerName);
 	}
 		
-	/**
+    /**
 	 * Executes controllers action and returns response
 	 *
 	 * @param string $controllerName Controller name
@@ -254,17 +254,20 @@ class LiveCart extends Application
 	protected function execute($controllerInstance, $actionName)
 	{
 		$response = parent::execute($controllerInstance, $actionName);
-
-		if ($response instanceof ActionResponse)
-		{
-			$response->set('user', $controllerInstance->getUser()->toArray());
-		}
 		
 		$this->processPlugins($controllerInstance, $response);
 	
 		return $response;
 	}    
 	
+	protected function postProcessResponse(Response $response, Controller $controllerInstance)
+	{
+		if ($response instanceof BlockResponse)
+		{
+            $response->set('user', $controllerInstance->getUser()->toArray());
+		}        
+    }
+
 	/**
  `	 * Execute response post-processor plugins        
  	 *

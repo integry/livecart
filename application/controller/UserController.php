@@ -55,6 +55,7 @@ class UserController extends FrontendController
 		// get unread messages
 		ClassLoader::import('application.model.order.OrderNote');
 		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('OrderNote', 'userID'), $this->user->getID()));
+		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isAdmin'), 1));
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isRead'), 0));
 		$f->setOrder(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
 		$response->set('notes', ActiveRecordModel::getRecordSetArray('OrderNote', $f, array('User')));
@@ -122,6 +123,7 @@ class UserController extends FrontendController
         ClassLoader::import('application.model.order.OrderNote');
         
         $f = new ARSelectFilter(new INCond(new ARFieldHandle('OrderNote', 'orderID'), empty($ids) ? array(-1) : array_keys($ids)));
+        $f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isAdmin'), 1));
         $f->mergeCondition(new EqualsCond(new ARFieldHandle('OrderNote', 'isRead'), 0));
         $f->setGrouping(new ARFieldHandle('OrderNote', 'orderID'));
         
@@ -328,7 +330,7 @@ class UserController extends FrontendController
             $notes = $order->getNotes();
             foreach ($notes as $note)
             {
-                if (!$note->isRead->get())
+                if (!$note->isRead->get() && $note->isAdmin->get())
                 {
                     $note->isRead->set(true);
                     $note->save();
@@ -364,7 +366,6 @@ class UserController extends FrontendController
         $note = OrderNote::getNewInstance($order, $this->user);
         $note->text->set($this->request->get('text'));
         $note->isAdmin->set(false);
-        $note->isRead->set(true);
         $note->save();
         
         return new ActionRedirectResponse('user', 'viewOrder', array('id' => $order->getID()));

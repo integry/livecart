@@ -708,9 +708,6 @@ class CustomerOrderController extends StoreManagementController
         }
 
         unset($availableColumns['CustomerOrder.shipping']);
-
-        // @todo - does why enabling this column raise an error?
-        unset($availableColumns['CustomerOrder.dateCompleted']);
                                         
 		$availableColumns['CustomerOrder.status'] = 'text'; 
 		

@@ -18,10 +18,21 @@ class OrderNoteController extends StoreManagementController
     public function index()
     {
         $order = CustomerOrder::getInstanceById($this->request->get('id'));
+        
+        $notes = $order->getNotes();
+        foreach ($notes as $note)
+        {
+            if (!$note->isRead->get() && !$note->isAdmin->get())
+            {
+                $note->isRead->set(true);
+                $note->save();
+            }            
+        }        
+        
         $response = new ActionResponse();
         $response->set('form', $this->buildOrderNoteForm());
         $response->set('order', $order->toArray());
-        $response->set('notes', $order->getNotes()->toArray());
+        $response->set('notes', $notes->toArray());
         return $response;
     }
     

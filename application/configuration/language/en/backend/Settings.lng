@@ -129,6 +129,7 @@ USER_ORDERS_PER_PAGE=Number of orders per page
 _inventory=Inventory
 DISABLE_INVENTORY=Disable inventory tracking
 DISABLE_NOT_IN_STOCK=Disable products that are out of stock
+LOW_STOCK=Low-stock warning threshold (number of items left in stock)
 
 _checkout=Checkout
 _credit_card_options=Credit Card Options

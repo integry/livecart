@@ -432,7 +432,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 */
     protected static function transformArray($array, ARSchema $schema)
 	{
-		return MultiLingualObject::transformArray($array, $schema);
+		$array = MultiLingualObject::transformArray($array, $schema);
+		$array['unavailableProductCount'] = $array['totalProductCount'] - $array['availableProductCount'];
+		return $array;
 	}	
 
 	/**

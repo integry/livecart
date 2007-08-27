@@ -22,39 +22,49 @@
 	    include $custom;
 	}
 	
-	try
+	function runApp(LiveCart $app)
 	{
-		$app->run();
-	}
-	catch (HTTPStatusException $e)
-	{
-	    if($e->getController() instanceof BackendController) 
-	    {
-	        $route = 'backend.err/redirect/' . $e->getStatusCode();
-	    }
-	    else 
-	    {
-	        $route = 'err/redirect/' . $e->getStatusCode();
-	    }
-	    
-	    $app->getRouter()->setRequestedRoute($route);
-		$app->run();
-	}
-	catch (Exception $e)
-	{
-		if ($app->isDevMode())
-		{
-			echo "<br/><strong>" . get_class($e) . " ERROR:</strong> " . $e->getMessage()."\n\n";			
-			echo "<br /><strong>FILE TRACE:</strong><br />\n\n";
-			echo ApplicationException::getFileTrace($e->getTrace());
-		}
-		else
-		{
-	        $route = 'err/redirect/500';
-		    $app->getRouter()->setRequestedRoute($route);
-			$app->run();			
-		}
-	}
+        try
+    	{
+    		$app->run();
+    	}
+    	catch (HTTPStatusException $e)
+    	{
+    	    if($e->getController() instanceof BackendController) 
+    	    {
+    	        $route = 'backend.err/redirect/' . $e->getStatusCode();
+    	    }
+    	    else 
+    	    {
+    	        $route = 'err/redirect/' . $e->getStatusCode();
+    	    }
+    	    
+    	    $app->getRouter()->setRequestedRoute($route);
+    		runApp($app);
+    	}
+    	catch (UnsupportedBrowserException $e)
+    	{
+    	    header('Location: ' . $app->getRouter()->createUrl(array('controller' => 'err', 'action' =>'backendBrowser')));
+            exit;
+        }
+    	catch (Exception $e)
+    	{
+    		if ($app->isDevMode())
+    		{
+    			echo "<br/><strong>" . get_class($e) . " ERROR:</strong> " . $e->getMessage()."\n\n";			
+    			echo "<br /><strong>FILE TRACE:</strong><br />\n\n";
+    			echo ApplicationException::getFileTrace($e->getTrace());
+    		}
+    		else
+    		{
+    	        $route = 'err/redirect/500';
+    		    $app->getRouter()->setRequestedRoute($route);
+    			runApp($app);
+    		}
+    	}
+    }
+
+    runApp($app);
 
 	if (!empty($_GET['stat']))
 	{

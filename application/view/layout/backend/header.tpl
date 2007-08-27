@@ -1,7 +1,5 @@
 {include file="layout/backend/meta.tpl"}
 
-<div id="log"></div>
-
 <div id="topShadeContainer">
 	<div id="topShadeContainerLeft"></div>
 	<div id="topShadeContainerRight">

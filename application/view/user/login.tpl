@@ -35,6 +35,12 @@
 	
 </div>
 
+{literal}
+    <script type="text/javascript">
+        Event.observe(window, 'load', function() {$('email').focus()});    
+    </script>
+{/literal}
+
 {include file="layout/frontend/footer.tpl"}
 
 </div>

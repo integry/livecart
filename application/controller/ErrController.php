@@ -32,6 +32,11 @@ class ErrController extends FrontendController
 			    return new ActionResponse('id', $id);  
 		}
 	}
+	
+	public function backendBrowser()
+	{
+        return new ActionResponse();
+    }
 }
 
 ?>
