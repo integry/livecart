@@ -610,12 +610,14 @@ ul.menu {
     display: block;
     
 	background-color: #FEFEFE;
-	border-bottom: 1px solid #B3D4EF;
+/*
 	border-top: 1px solid #B3D4EF;
-	
+	border-bottom: 1px solid #B3D4EF;
+*/
 	margin-bottom: 5px;
+
 	padding: 10px;
-	padding-top: 4px;    
+    padding-top: 4px;    
 	padding-bottom: 6px;    
 	
 	font-size: smaller;
@@ -865,7 +867,6 @@ input.radio, input.checkbox
 {
     float: left;
     margin-right: 1em;
-    cursor: pointer;
 }
 
 input:focus, textarea:focus, select:focus

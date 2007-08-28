@@ -50,8 +50,8 @@ _group_permissions=Permissions
 _group_info=Group details
 _default_user_group=Defalut user group
 _all_users=All users
-_add=Add group
-_delete=Delete group
+_add_group=Add user group
+_delete_group=Delete user group
 
 _err_email_empty=E-mail field is empty
 _err_invalid_email=Invalid e-mail

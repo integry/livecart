@@ -26,6 +26,11 @@ fieldset.controls
 	margin-top: 15px;
 }
 
+#templateBrowser, .containerTableStyle
+{
+    height: 500px;
+}
+
 /***************
 	EditArea
 ****************/

@@ -8,7 +8,7 @@
 	list-style-type: none;
 	background-color: #F7F7F7;
 	border: 1px solid #B3D4EF;
-	margin-bottom: 15px;
+	margin: 20px;
 	padding: 5px;
 }
 
@@ -31,6 +31,7 @@
 .customizeControl.on
 {
 	background-image: url(../../image/silk/gif/go.gif);
+	font-weight: normal;
 }
 
 .modeDescr
@@ -40,9 +41,10 @@
 
 #goToFrontend
 {
-	float: left;
+	float: right;
 	margin-top: 10px;
 	font-size: larger;
+	font-weight: bold;
 
 	padding-right: 22px;
 	background-image: url(../../image/silk/gif/resultset_next.gif);

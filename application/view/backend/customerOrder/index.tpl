@@ -62,10 +62,10 @@
     Backend.CustomerOrder.Links.selectCustomer = '{/literal}{link controller=backend.customerOrder action=selectCustomer}{literal}';
     Backend.CustomerOrder.Links.createOrder = '{/literal}{link controller=backend.customerOrder action=create}{literal}';
     Backend.CustomerOrder.Messages.selecCustomerTitle = '{/literal}{t _select_customer_title}{literal}';
-    Backend.CustomerOrder.Messages.areYouSureYouWantToUpdateOrderStatus = '{/literal}{t _are_you_sure_you_want_to_update_order_status}{literal}';
+    Backend.CustomerOrder.Messages.areYouSureYouWantToUpdateOrderStatus = '{/literal}{t _are_you_sure_you_want_to_update_order_status|escape}{literal}';
     
-    Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToActivateThisOrder = '{/literal}{t _are_you_sure_you_want_activate_this_order}{literal}';
-    Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToCancelThisOrder = '{/literal}{t _are_you_sure_you_want_cancel_this_order}{literal}';
+    Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToActivateThisOrder = '{/literal}{t _are_you_sure_you_want_activate_this_order|escape}{literal}';
+    Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToCancelThisOrder = '{/literal}{t _are_you_sure_you_want_cancel_this_order|escape}{literal}';
     
     new Backend.CustomerOrder({/literal}{json array=$orderGroups}{literal});
     

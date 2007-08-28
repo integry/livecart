@@ -35,8 +35,8 @@
 	<div id="userGroupsBrowserWithControlls" class="treeContainer maxHeight">
     	<div id="userGroupsBrowser" class="treeBrowser"></div>
         <ul id="userGroupsBrowserControls" class="verticalMenu">
-            <li class="addTreeNode" {denied role="userGroup.create"}style="display: none;"{/denied}><a id="userGroups_add" href="#add">{t _add}</a></li>
-            <li class="removeTreeNode" {denied role="userGroup.remove"}style="display: none;"{/denied}><a id="userGroups_delete" href="#delete">{t _delete}</a></li>
+            <li class="addTreeNode" {denied role="userGroup.create"}style="display: none;"{/denied}><a id="userGroups_add" href="#add">{t _add_group}</a></li>
+            <li class="removeTreeNode" {denied role="userGroup.remove"}style="display: none;"{/denied}><a id="userGroups_delete" href="#delete">{t _delete_group}</a></li>
         </ul>
         
         <div id="confirmations"></div>

@@ -48,7 +48,7 @@ _billing_addresses=Billing Addresses
 _shipping_addresses=Shipping Addresses
 
 # Tabs
-_order_info=Overview
+_order_info=Info
 _order_shipments=Products
 _order_payments=Payments
 _order_communication=Communication

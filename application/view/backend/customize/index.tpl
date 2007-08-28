@@ -19,6 +19,11 @@
 			{t _live_locate}
 		</div>
 
+		{if $isCustomizationModeEnabled}
+            <a href="{link}" target="_blank" id="goToFrontend">{tn _go_frontend}</a>
+            <div class="clear"></div>
+        {/if}
+
 	</li>
 
 	<li{if $isTranslationModeEnabled} class="active"{/if}>
@@ -35,10 +40,13 @@
 			{t _live_trans}
 		</div>
 
+		{if $isTranslationModeEnabled}
+            <a href="{link}" target="_blank" id="goToFrontend">{tn _go_frontend}</a>
+            <div class="clear"></div>
+        {/if}
+
 	</li>
 
 </ul>
-
-<a href="{link}" target="_blank" id="goToFrontend">{tn _go_frontend}</a>
 
 {include file="layout/backend/footer.tpl"}

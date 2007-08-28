@@ -1,4 +1,7 @@
-<a href="#edit" class="orderAddress_showEdit" {denied role='order.update'}style="display: none"{/denied} >{t _edit}</a>
+<ul class="menu orderAddress_showEdit">
+    <a href="#edit" {denied role='order.update'}style="display: none"{/denied} >{t _edit}</a>
+</ul>
+<div class="clear"></div>
 
 <fieldset id="{$type}_edit" class="orderAddress_edit error" style="display: none">
     <input name="orderID" type="hidden" value="{$order.ID}" />
