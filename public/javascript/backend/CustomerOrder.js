@@ -638,7 +638,11 @@ Backend.CustomerOrder.Editor.prototype =
     
     submitForm: function()
     {
-		if(!confirm(Backend.CustomerOrder.Messages.areYouSureYouWantToUpdateOrderStatus)) return;
+		if(!confirm(Backend.CustomerOrder.Messages.areYouSureYouWantToUpdateOrderStatus)) 
+		{
+			Form.restore(this.nodes.form);
+		    return;	
+		}
 		
 		new LiveCart.AjaxRequest(
             this.nodes.form,
