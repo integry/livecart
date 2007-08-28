@@ -240,7 +240,7 @@ Backend.Shipment.prototype =
 		if(!this.options.isShipped && (
 		      this.nodes.itemsList.childElements().size() == 0 || 
 			 !this.nodes.form.elements.namedItem('USPS').value)
-		 ){
+		){
 			Element.hide(this.nodes.status.options[this.STATUS_SHIPPED]);
 		}
     },

@@ -142,6 +142,12 @@ Backend.CustomerOrder.prototype =
                     return;
                 }
             }
+			
+			// Close popups
+            if(window.selectPopupWindow) 
+            {
+                window.selectPopupWindow.close();
+            }
             
             Backend.CustomerOrder.prototype.activeGroup = id;
     		Backend.CustomerOrder.prototype.treeBrowser.showFeedback(id);
@@ -428,6 +434,12 @@ Backend.CustomerOrder.Editor.prototype =
                     return false;
                 }
             }
+			
+			// close popups
+            if(window.selectPopupWindow) 
+            {
+                window.selectPopupWindow.close();
+            }
         }
         
         return tabId + '_' +  Backend.CustomerOrder.Editor.prototype.getCurrentId() + 'Content'
@@ -616,10 +628,18 @@ Backend.CustomerOrder.Editor.prototype =
         
         Backend.hideContainer();
 		Form.restore(this.nodes.form);
+		
+		// hide popups
+        if(window.selectPopupWindow) 
+        {
+            window.selectPopupWindow.close();
+        }
     },
     
     submitForm: function()
     {
+		if(!confirm(Backend.CustomerOrder.Messages.areYouSureYouWantToUpdateOrderStatus)) return;
+		
 		new LiveCart.AjaxRequest(
             this.nodes.form,
             $("order_" + this.id + "_status_feedback"),

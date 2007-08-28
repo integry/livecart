@@ -27,7 +27,7 @@
                 {t _taxes}:
             </div>
         </td>
-        <td class="orderShipmentsItem_info_total_td">
+        <td class="orderShipmentsItem_info_tax_td">
             <div class="orderShipmentsItem_info_tax">
                 <span class="orderShipment_info_subtotal shipment_taxAmount">
                     <span class="pricePrefix">{$shipment.AmountCurrency.pricePrefix}</span>

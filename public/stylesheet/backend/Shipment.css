@@ -76,15 +76,17 @@
 .orderShipmentsItem_info_name_td { width: 100%;  }
 .orderShipmentsItem_info_name { width: 400px;  }
 
-.orderShipmentsItem_info_price_td { width: 90px;}
-.orderShipmentsItem_info_price { width: 80px;  }
+.orderShipmentsItem_info_price_td { width: 90px; text-align: right;}
+.orderShipmentsItem_info_price { width: 80px; text-align: right;  }
 
 .orderShipmentsItem_info_total_td { width: 90px; }
-.orderShipmentsItem_info_total { width: 80px; }
+.orderShipmentsItem_info_total { width: 80px; text-align: right; }
 
 .orderShipmentsItem_info_report_td { width: 100%;  }
 .orderShipmentsItem_info_report_td { width: 100%; text-align: right; }
 
+.orderShipmentsItem_info_tax_td { width: 90px;}
+.orderShipmentsItem_info_tax { width: 80px; text-align: right; }
 
 .orderShipmentsItem_info_count_td { width: 70px; }
 .orderShipmentsItem_info_count { width: 60px; text-align: right; position: relative; }

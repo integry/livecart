@@ -105,6 +105,15 @@ _is_finalized=Is finalized
 _edit=Edit
 _view=View
 
+# Order status
+_are_you_sure_you_want_to_update_order_status=Are you sure you want to update order status?
+_status_new=New
+_status_processing=Processing
+_status_awaiting=Awaiting shipment
+_status_shipped=Shipped
+_status_canceled=Canceled
+_status_returned=Returned
+
 _are_you_sure_you_want_to_delete_this_order=Are you sure you want to delete this order?
 
 _applied=Applied
