@@ -275,7 +275,7 @@ class CategoryController extends FrontendController
 		// get category path for breadcrumb
 		$path = $this->category->getPathNodeSet()->toArray();
 
-		include_once(ClassLoader::getRealPath('application.helper') . '/function.categoryUrl.php');
+		include_once(ClassLoader::getRealPath('application.helper.smarty') . '/function.categoryUrl.php');
 		foreach ($path as $nodeArray)
 		{
 			$url = createCategoryUrl(array('data' => $nodeArray), $this->application);

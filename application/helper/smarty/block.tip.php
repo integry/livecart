@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * Display a tip block
+ *
+ * @package application.helper.smarty
+ * @author Rinalds Uzkalns <rinalds@integry.net>
+ *
+ * @package application.helper.smarty
+ */
+function smarty_block_tip($params, $content, LiveCartSmarty $smarty, &$repeat)
+{
+	if (!$repeat)
+	{
+		$smarty->assign('tipContent', $content);
+		return $smarty->display('block/backend/tip.tpl');
+	}
+}
+
+?>

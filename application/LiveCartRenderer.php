@@ -13,7 +13,8 @@ class LiveCartRenderer extends SmartyRenderer
 	 */
 	public function __construct(LiveCart $application)
 	{
-		self::registerHelperDirectory(ClassLoader::getRealPath('application.helper'));
+		self::registerHelperDirectory(ClassLoader::getRealPath('application.helper.smarty'));
+		self::registerHelperDirectory(ClassLoader::getRealPath('application.helper.smarty.form'));
 		parent::__construct($application);		
 	}
 
