@@ -9,26 +9,31 @@
     <form>
         <p>
             <label>
-            <select name="period" style="width: 130px; font-size: smaller; margin: 0;">
-                <option value="-24 hours | now">Last 24 hours</option>
-                <option value="-3 days | now">Last 3 days</option>
-                <option value="Monday | now">This week</option>
-                <option value="last Monday | last Sunday">Last week</option>
-                <option value="0 this month | now">This month</option>
-                <option value="0 last month | now">Last month</option>
-                <option value="January 1st | now">This year</option>
-                <option value="January 1st last year | December 31 last year">Last year</option>
+            <select id="period" onchange="$('count').innerHTML = ''; new LiveCart.AjaxUpdater('{link controller=backend.index action=totalOrders}?period=' + this.value, $('count'), $('periodProgress'));">
+                <option value="-1 hours | now" selected="selected">{maketext text=_last_hours params=1}</option>
+                <option value="-3 hours | now" selected="selected">{maketext text=_last_hours params=3}</option>
+                <option value="-6 hours | now" selected="selected">{maketext text=_last_hours params=6}</option>
+                <option value="-12 hours | now" selected="selected">{maketext text=_last_hours params=12}</option>
+                <option value="-24 hours | now" selected="selected">{maketext text=_last_hours params=24}</option>
+                <option value="-3 days | now">{maketext text=_last_days params=3}</option>
+                <option value="w:Monday | now">{t _this_week}</option>                
+                <option value="w:Monday ~ -1 week | w:Monday">{t _last_week}</option>
+                <option value="{$thisMonth}/1 | now">{t _this_month}</option>
+                <option value="{$lastMonth}-1 | {$thisMonth}/1">{t _last_month}</option>
+                <option value="January 1 | now">{t _this_year}</option>
+                <option value="January 1 last year | January 1">{t _last_year}</option>
             </select>:</label>
-            <label>{$orderCount.last}</label>        
+            <label class="checkbox"><span class="progressIndicator" style="display: none;" id="periodProgress"></span></label>
+            <label id="count">{$orderCount.last}</label>
         </p>
     
         <p>
-            <label>New:</label>
+            <label>{t _status_new}:</label>
             <label>{$orderCount.new}</label>        
         </p>
     
         <p>
-            <label>Processing:</label>
+            <label>{t _status_processing}:</label>
             <label>{$orderCount.processing}</label>        
         </p>
     
@@ -71,7 +76,7 @@
         </p>
 
         <p>
-            <label>Orders:</label>
+            <label>Total orders:</label>
             <label>{$orderCount.total}</label>
         </p>
 

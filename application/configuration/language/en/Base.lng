@@ -8,3 +8,21 @@ _live_translate=Translate
 _err_numeric=Value must be numeric
 _err_specfield_required=This field cannot be left blank
 _err_negative=The value cannot be negative
+
+# Time ranges
+_last_hours=[quantf,_1,Last hour,Last %d hours]
+_last_days=[quantf,_1,Last 1 day,Last %d days]
+_this_week=This week
+_last_week=Last week
+_this_month=This month
+_last_month=Last month
+_this_year=This year
+_last_year=Last year
+
+# Order statuses
+_status_new=New
+_status_processing=Processing
+_status_awaiting=Awaiting shipment
+_status_shipped=Shipped
+_status_canceled=Canceled
+_status_returned=Returned

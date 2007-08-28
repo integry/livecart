@@ -4,3 +4,16 @@
     margin-left: 30px;
     margin-top: 20px;
 }
+
+#period
+{
+    width: 130px; 
+    font-size: smaller; 
+    margin: 0;
+}
+
+#periodProgress
+{
+    padding: 7px;
+    padding-top: 3px;
+}

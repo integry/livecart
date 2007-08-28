@@ -4,6 +4,7 @@ ClassLoader::import("application.controller.backend.abstract.StoreManagementCont
 ClassLoader::import("application.model.order.CustomerOrder");
 ClassLoader::import("application.model.order.OrderNote");
 ClassLoader::import("application.model.category.Category");
+ClassLoader::import("application.helper.getDateFromString");
 
 /**
  * Main backend controller which stands as an entry point to administration functionality
@@ -63,8 +64,30 @@ class IndexController extends StoreManagementController
 		$response->set('orderCount', $orderCount);
 		$response->set('inventoryCount', $inventoryCount);
 		$response->set('rootCat', $rootCat->toArray());
+		$response->set('thisMonth', date('m'));
+		$response->set('lastMonth', date('Y-m', strtotime(date('m') . '/15 -1 month')));
 		return $response;
 	}
+	
+	public function totalOrders()
+	{
+        // "January 1 | now" - this year
+        // or
+        // "w:Monday ~ -1 week | w:Monday" - last week
+        list($from, $to) = explode(' | ', $this->request->get('period'));
+                
+        $cond = new EqualsOrMoreCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), getDateFromString($from));
+        
+        if ('now' != $to)
+        {
+            $cond->addAnd(new EqualsOrLessCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), getDateFromString($to)));
+        }        
+        
+        $f = new ARSelectFilter($cond);
+        $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+        
+        return new RawResponse(ActiveRecordModel::getRecordCount('CustomerOrder', $f));
+    }
 }
 
 ?>

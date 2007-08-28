@@ -617,12 +617,16 @@ ul.menu {
 	padding: 10px;
 	padding-top: 4px;    
 	padding-bottom: 6px;    
+	
+	font-size: smaller;
+	float: left;
 }
 
 ul.menu li {
   	list-style: none;
   	display: inline;
   	margin-right: 10px;
+  	float: none;
 }
 
 .menu a {
