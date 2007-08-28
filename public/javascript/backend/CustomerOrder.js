@@ -269,14 +269,15 @@ Backend.CustomerOrder.GridFormatter =
 	
 	formatValue: function(field, value, id)
 	{
-		if ('User.fullName' == field && Backend.CustomerOrder.prototype.usersMiscPermission)
+		console.info(field);
+		if ('CustomerOrder.ID2' == field && Backend.CustomerOrder.prototype.usersMiscPermission)
 		{
 		    value = 
             '<span>' + 
             '    <span class="progressIndicator" id="orderIndicator_' + id + '" style="visibility: hidden;"></span>' + 
             '</span>' + 
             '<a href="#edit" id="order_' + id + '" onclick="try { Backend.CustomerOrder.prototype.openOrder(' + id + ', event); } catch(e) { console.info(e) }  return false;">' +
-                 value + 
+                 id + 
             '</a>'
 		}
 // Email lead to user's page
@@ -462,6 +463,7 @@ Backend.CustomerOrder.Editor.prototype =
             this.bindEvents();
             
 			this.toggleStatuses();
+			this.toggleNewProductAndShipmentLinks();
 			
             Form.State.backup(this.nodes.form);
         }
@@ -470,6 +472,22 @@ Backend.CustomerOrder.Editor.prototype =
             console.info(e);
         }
 
+	},
+
+    toggleNewProductAndShipmentLinks: function()
+	{
+        // Hide "Add new shipmkent" and "Add new product" links too
+		if($("orderShipments_menu_" + this.id))
+		{
+	        if(parseInt(this.nodes.status.value) == this.STATUS_SHIPPED && $("orderShipments_menu_" + this.id))
+	        {
+	            Element.hide("orderShipments_menu_" + this.id);
+	        }
+			else
+			{
+	            Element.show("orderShipments_menu_" + this.id);
+		  }
+		}
 	},
 
     toggleStatuses: function()
@@ -501,18 +519,18 @@ Backend.CustomerOrder.Editor.prototype =
 	        {
 				if(!$$("#orderShipments_list_" + this.id + " .orderShipment_USPS_select")[0].value)
 				{
-					Element.hide(this.nodes.status.options[this.STATUS_SHIPPED]);
+					this.hideShipmentStatus();
 				}
 	        }
 	        // Don't allow to ship where more then one shipment. You should ship every shipment separately instead
 			else if($("orderShipments_list_" + this.id).childElements().size() > 1)
 			{
-				Element.hide(this.nodes.status.options[this.STATUS_SHIPPED]);
+                this.hideShipmentStatus();
 			}
 	        // If there are no unshipped shipments allow to ship, but check if there are shipped ones first
-			else if($("#orderShipments_list_" + this.id + "_shipped").childElements().size() < 1)
+			else if($("orderShipments_list_" + this.id + "_shipped").childElements().size() < 1)
 	        {
-	            Element.hide(this.nodes.status.options[this.STATUS_SHIPPED]);
+                this.hideShipmentStatus();
             }
 		}
 		else if(this.hideShipped)
@@ -520,7 +538,12 @@ Backend.CustomerOrder.Editor.prototype =
             Element.hide(this.nodes.status.options[this.STATUS_SHIPPED]);
 		}
 	},
-
+	
+	hideShipmentStatus: function()
+	{
+        Element.hide(this.nodes.status.options[this.STATUS_SHIPPED]);
+    },
+	
 	findUsedNodes: function()
     {
         this.nodes = {};
@@ -629,6 +652,7 @@ Backend.CustomerOrder.Editor.prototype =
 		}
             
         this.toggleStatuses();
+        this.toggleNewProductAndShipmentLinks();
 	},
     
     removeEmptyShipmentsFromHTML: function()

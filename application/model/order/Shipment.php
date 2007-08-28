@@ -274,6 +274,14 @@ class Shipment extends ActiveRecordModel
 
         // consists of downloadable files only?
         $array['isShippable'] = $this->isShippable();
+        
+        // Statuses
+        $array['isReturned'] = (int)$this->isReturned();;
+        $array['isShipped'] = (int)$this->isShipped();
+        $array['isAwaitingShipment'] = (int)$this->isAwaitingShipment();
+        $array['isProcessing'] = (int)$this->isProcessing();
+        $array['isDelivered'] = (int)$this->isDelivered();
+        $array['isLost'] = (int)$this->isLost();
                 
         return $array;
     }
@@ -521,22 +529,32 @@ class Shipment extends ActiveRecordModel
 
     public function isProcessing()
     {
-        return $this->status->get() >= self::STATUS_PROCESSING; 
+        return $this->status->get() == self::STATUS_PROCESSING; 
     }
 
     public function isAwaitingShipment()
     {
-        return $this->status->get() >= self::STATUS_AWAITING; 
+        return $this->status->get() == self::STATUS_AWAITING; 
     }
 
     public function isShipped()
     {
-        return $this->status->get() >= self::STATUS_SHIPPED; 
+        return $this->status->get() == self::STATUS_SHIPPED; 
     }
     
     public function isReturned()
     {
-        return $this->status->get() >= self::STATUS_RETURNED; 
+        return $this->status->get() == self::STATUS_RETURNED; 
+    } 
+
+    public function isDelivered()
+    {
+        return $this->status->get() == self::STATUS_CONFIRMED_AS_DELIVERED; 
+    }
+    
+    public function isLost()
+    {
+        return $this->status->get() == self::STATUS_CONFIRMED_AS_LOST; 
     } 
 }
 

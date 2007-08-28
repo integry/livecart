@@ -1,4 +1,4 @@
-<fieldset class="container" {denied role='order.update'}style="display: none"{/denied}> 
+<fieldset class="container" {denied role='order.update'}style="display: none"{/denied} {if $order.isShipped}style="display: none"{/if}> 
     <ul class="menu" id="orderShipments_menu_{$orderID}"> 
         <li>
             <span id="orderShipments_new_{$orderID}_indicator" class="progressIndicator" style="display: none"> </span>
@@ -188,7 +188,7 @@
             customerOrder.removeEmptyShipmentsFromHTML(); 
         }
     }); 
- 
+
     try 
     { 
                         
@@ -199,7 +199,7 @@
                 Event.stop(e); 
                 
                 var orderID = {/literal}{$orderID}{literal};
-                var ulList = $("{/literal}orderShipments_list_{$orderID}{literal}").getElementsByTagName('li');
+                var ulList = $("{/literal}orderShipments_list_{$orderID}{literal}").childElements();
                 
                 var showPopup = function()
                 {
@@ -225,9 +225,7 @@
                             }
                         },
                         
-                        location: 1,
-                        toolbar: 1,
-                        height: (500 + ($A(ulList).size() > 1 ? (40 + $A(ulList).size() * 20) : 0))
+                        height: Backend.Shipment.prototype.getPopupHeight() - (ulList.size() > 0 ? 30 : 0)
                     });
                 }.bind(this);
                 
@@ -274,86 +272,40 @@
             $("{/literal}orderShipments_new_{$orderID}_show{literal}").show(); 
             $("{/literal}orderShipments_new_{$orderID}_controls{literal}").hide(); 
             $("{/literal}order{$orderID}_addProduct{literal}").show(); 
-            var newForm = Backend.Shipment.prototype.getInstance( $("{/literal}orderShipments_new_{$orderID}_form{literal}"), {/literal}{$orderID}{literal} ); 
-            newForm.save(); 
+            Backend.Shipment.prototype.getInstance( $("{/literal}orderShipments_new_{$orderID}_form{literal}"), {/literal}{$orderID}{literal} ).save(); ; 
         }); 
                
         ActiveList.prototype.getInstance("{/literal}orderShipmentsItems_list_{$orderID}_{$downloadableShipment.ID}{literal}", Backend.OrderedItem.activeListCallbacks); 
-        
         var groupList = ActiveList.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{literal}', Backend.Shipment.Callbacks); 
         
+        
         {/literal}{foreach item="shipment" from=$shipments}{literal} 
-            {/literal}{if $shipment.status != 3 && $shipment.isShippable}{literal} 
+            {/literal}{if $shipment.isShippable}{literal}
                 var shippedOption = $("{/literal}orderShipment_status_{$shipment.ID}_3{literal}"); 
                 var itemsList = $('{/literal}orderShipmentsItems_list_{$orderID}_{$shipment.ID}{literal}'); 
                 
+                {/literal}
+                    {if $shipment.isShipped}
+                        var shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_{$orderID}_shipped_{$shipment.ID}', {literal}{isShipped: true}{/literal});
+                    {else}
+                        var shipment = Backend.Shipment.prototype.getInstance('orderShipmentsItems_list_{$orderID}_{$shipment.ID}')
+                        ActiveList.prototype.getInstance(itemsList, Backend.OrderedItem.activeListCallbacks); 
+                    {/if}
+                {literal}
+                
+
                 if(!itemsList.down('li') || !shippedOption.form.elements.namedItem('shippingServiceID').value)
                 { 
                     shippedOption.hide(); 
                 } 
                 
-                ActiveList.prototype.getInstance(itemsList, Backend.OrderedItem.activeListCallbacks); 
+                Event.observe("{/literal}orderShipment_change_usps_{$shipment.ID}{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS(); }); 
+                Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_submit{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS(); }); 
+                Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_cancel{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS(true); }); 
+                Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_select{literal}", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').USPSChanged(); }); 
+                Event.observe("{/literal}orderShipment_status_{$shipment.ID}{literal}", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').changeStatus(); }); 
                 
-                Event.observe("{/literal}orderShipment_change_usps_{$shipment.ID}{literal}", 'click', function(e) 
-                { 
-                    Event.stop(e); 
-                    Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS(); 
-                }); 
-                
-                Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_submit{literal}", 'click', function(e) 
-                { 
-                    Event.stop(e); 
-                    Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS(); 
-                }); 
-                
-                Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_cancel{literal}", 'click', function(e) 
-                { 
-                    Event.stop(e); 
-                    Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS(true); 
-                }); 
-                
-                Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_select{literal}", 'change', function(e) 
-                { 
-                    Event.stop(e); 
-                    Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').USPSChanged(); 
-                }); 
-                
-                $("{/literal}orderShipment_status_{$shipment.ID}{literal}").lastValue = $("{/literal}orderShipment_status_{$shipment.ID}{literal}").value; 
-                 
-                Event.observe("{/literal}orderShipment_status_{$shipment.ID}{literal}", 'change', function(e) 
-                { 
-                    Event.stop(e); 
-                    Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').changeStatus(); 
-                }); 
-                                
-                {/literal}{foreach item="item" from=$shipment.items}{literal} 
-                    $("{/literal}orderShipmentsItem_count_{$item.ID}{literal}").lastValue = $("{/literal}orderShipmentsItem_count_{$item.ID}{literal}").value; 
-                    
-                    Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'focus', function(e) 
-                    { 
-                        window.lastFocusedItemCount = this; 
-                    }); 
-                    
-                    Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'keyup', function(e) 
-                    { 
-                        Backend.OrderedItem.updateProductCount({/literal}this, {$orderID}, {$item.ID}, {$shipment.ID}{literal}) 
-                    }); 
-                    
-                    Event.observe("{/literal}orderShipmentsItem_count_{$item.ID}{literal}", 'blur', function(e) 
-                    { 
-                        Backend.OrderedItem.changeProductCount({/literal}this, {$orderID}, {$item.ID}, {$shipment.ID}{literal}) 
-                    }, false); 
-                    
-                    Event.observe("{/literal}orderShipmentsItems_list_{$orderID}_{$shipment.ID}_{$item.ID}{literal}", 'click', function(e) 
-                    { 
-                        var input = window.lastFocusedItemCount; 
-                        if(input && input.value != input.lastValue) 
-                        { 
-                            input.blur(); 
-                        } 
-                    }); 
-                {/literal}{/foreach}{literal}
-                 
+                $("{/literal}orderShipment_status_{$shipment.ID}{literal}").lastValue = $("{/literal}orderShipment_status_{$shipment.ID}{literal}").value;                  
             {/literal}{/if}{literal} 
         {/literal}{/foreach}{literal} 
         

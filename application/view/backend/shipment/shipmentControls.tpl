@@ -1,4 +1,4 @@
-<fieldset class="orderShipment_controls error" {if $status == 3 || $notShippable}style="display: none;"{/if}>
+<fieldset class="orderShipment_controls error" {if $notShippable}style="display: none;"{/if}>
    <fieldset class="orderShipment_status error">
        <label>Status: </label>
        <select name="status" id="orderShipment_status_{$shipment.ID}" {denied role='order.update'}disabled="disabled"{/denied}">

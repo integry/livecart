@@ -786,8 +786,8 @@ class CustomerOrderController extends StoreManagementController
     {
         $validator = new RequestValidator("CustomerOrder", $this->request);		            
 			
-		$validator->addCheck('status', new MinValueCheck($this->translate('_invalid_status'), 15));
-		$validator->addCheck('status', new MaxValueCheck($this->translate('_invalid_status'), 56));	
+		$validator->addCheck('status', new MinValueCheck($this->translate('_invalid_status'), 0));
+		$validator->addCheck('status', new MaxValueCheck($this->translate('_invalid_status'), 4));	
         
         return $validator;
     }

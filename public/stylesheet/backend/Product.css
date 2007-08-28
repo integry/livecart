@@ -133,3 +133,8 @@ fieldset.specification .numeric
 {
 /*  	color: red;*/
 }
+
+/* Hide product type */   
+.cell_hiddenType, #column_hiddenType, #column_hiddenType_label {
+    display: none;
+}

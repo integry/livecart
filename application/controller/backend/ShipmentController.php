@@ -30,7 +30,9 @@ class ShipmentController extends StoreManagementController
 		    Shipment::STATUS_PROCESSING => $this->translate('_shipping_status_pending'),
 		    Shipment::STATUS_AWAITING => $this->translate('_shipping_status_awaiting'),
 		    Shipment::STATUS_SHIPPED => $this->translate('_shipping_status_shipped'),
-            Shipment::STATUS_RETURNED => $this->translate('_shipping_status_returned')
+            Shipment::STATUS_RETURNED => $this->translate('_shipping_status_returned'),
+            Shipment::STATUS_CONFIRMED_AS_DELIVERED => $this->translate('_shipping_status_confirmed_as_delivered'),
+            Shipment::STATUS_CONFIRMED_AS_LOST => $this->translate('_shipping_status_confirmed_as_lost')
 	    );
 	    
 	    $subtotalAmount = 0; 

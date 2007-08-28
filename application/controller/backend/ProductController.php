@@ -76,6 +76,8 @@ class ProductController extends StoreManagementController
         // load specification data
         foreach ($displayedColumns as $column => $type)
         {
+            if($column == 'hiddenType') continue;
+            
             list($class, $field) = explode('.', $column, 2);
             if ('specField' == $class)
             {
@@ -96,6 +98,12 @@ class ProductController extends StoreManagementController
             $record = array();
             foreach ($displayedColumns as $column => $type)
             {
+                if($column == 'hiddenType') 
+                {
+                    $record[] = $product['type'];
+                    continue;
+                }
+                
                 list($class, $field) = explode('.', $column, 2);
                 if ('Product' == $class)
                 {
@@ -122,7 +130,7 @@ class ProductController extends StoreManagementController
 				
 				$record[] = $value;
             }
-            
+
             $data[] = $record;
         }
     	
@@ -408,6 +416,7 @@ class ProductController extends StoreManagementController
 		
 		$availableColumns['Manufacturer.name'] = 'text';
 		$availableColumns['ProductPrice.price'] = 'numeric';
+        $availableColumns['hiddenType'] = 'numeric';
 
 		foreach ($availableColumns as $column => $type)
 		{
@@ -439,13 +448,14 @@ class ProductController extends StoreManagementController
 
 		if (!$displayedColumns)
 		{
-			$displayedColumns = array('Product.ID', 'Product.sku', 'Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');				
+			$displayedColumns = array('Product.ID', 'hiddenType','Product.sku', 'Product.name', 'Manufacturer.name', 'ProductPrice.price', 'Product.stockCount', 'Product.isEnabled');				
 		}
 		
 		$availableColumns = $this->getAvailableColumns($category);
 		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);	
 
 		// product ID is always passed as the first column
+        $displayedColumns = array_merge(array('hiddenType' => 'numeric'), $displayedColumns);
 		$displayedColumns = array_merge(array('Product.ID' => 'numeric'), $displayedColumns);
 				
 		// set field type as value

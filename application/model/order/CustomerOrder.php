@@ -801,22 +801,22 @@ class CustomerOrder extends ActiveRecordModel
 		
 	public function isProcessing()
 	{
-        return $this->status->get() > self::STATUS_PROCESSING; 
+        return $this->status->get() == self::STATUS_PROCESSING; 
     }
 
 	public function isAwaitingShipment()
 	{
-        return $this->status->get() > self::STATUS_AWAITING; 
+        return $this->status->get() == self::STATUS_AWAITING; 
     }
 
 	public function isShipped()
 	{
-        return $this->status->get() > self::STATUS_SHIPPED; 
+        return $this->status->get() == self::STATUS_SHIPPED; 
     }
     
 	public function isReturned()
 	{
-        return $this->status->get() > self::STATUS_RETURNED; 
+        return $this->status->get() == self::STATUS_RETURNED; 
     }    
     		
 	/**

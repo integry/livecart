@@ -11,6 +11,8 @@ _shipping_status_pending=Pending
 _shipping_status_awaiting=Awaiting
 _shipping_status_returned=Returned
 _shipping_status_shipped=Shipped
+_shipping_status_confirmed_as_delivered=Delivered
+_shipping_status_confirmed_as_lost=Lost
 
 _add_new_shipment=Add new shipment
 _cancel_adding_new_shipment=Cancel adding new shipment

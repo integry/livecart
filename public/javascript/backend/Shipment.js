@@ -19,16 +19,17 @@ Backend.OrderedItem = {
             
             if(!response.error) {
                 var orderID = this.getRecordId(li, 3);
-                Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
-                
                 var shipment = Backend.Shipment.prototype.getInstance(li.up('li'));
-                
-                shipment.hideShippedStatus();
-
+				
+                Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
+				
                 shipment.setAmount(response.item.Shipment.amount);
                 shipment.setTaxAmount(response.item.Shipment.taxAmount);
                 shipment.setShippingAmount(response.item.Shipment.shippingAmount);
                 shipment.setTotal(response.item.Shipment.total);
+				
+				Backend.CustomerOrder.Editor.prototype.getInstance(orderID, false).toggleStatuses();
+				shipment.toggleStatuses();
 				
 				return true;
             }
@@ -172,20 +173,35 @@ Backend.OrderedItem = {
 Backend.Shipment = Class.create();
 Backend.Shipment.prototype = 
 {
-    instances: {},
-    
-    initialize: function(root)
+    STATUS_NEW: 0,
+    STATUS_PROCESSING: 1,
+    STATUS_AWAITING: 2,
+    STATUS_SHIPPED: 3,
+    STATUS_RETURNED: 4,
+    STATUS_CONFIRMED_AS_DELIVERED: 5,
+    STATUS_CONFIRMED_AS_LOST: 6,
+    STATUS_DELETE: 6,
+	
+	instances: {},
+	    
+    initialize: function(root, options)
     {
         try
         {
+			this.options = options || {};
             this.findUsedNodes(root);
             this.bindEvents();
             this.shipmentsActiveList = ActiveList.prototype.getInstance(this.nodes.shipmentsList);
             
             if(this.nodes.form)
             {
-                this.itemsActiveList = ActiveList.prototype.getInstance(this.nodes.itemsList);
-                Form.State.backup(this.nodes.form);
+				if(!this.options['isShipped'])
+                {
+				    this.itemsActiveList = ActiveList.prototype.getInstance(this.nodes.itemsList);	
+				}
+				
+                this.toggleStatuses();
+				Form.State.backup(this.nodes.form);
             }
         }
         catch(e)
@@ -193,13 +209,48 @@ Backend.Shipment.prototype =
             console.info(e);
         }
     },
+
+    toggleStatuses: function()
+    {
+		if(!this.nodes.form) return;
+		
+        var statusValue = parseInt(this.nodes.status.value);
         
-    getInstance: function(rootNode)
+        var migrations = {}
+        migrations[this.STATUS_NEW]                     = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED,this.STATUS_DELETE]
+        migrations[this.STATUS_PROCESSING]              = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED,this.STATUS_DELETE]
+        migrations[this.STATUS_AWAITING]                = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED,this.STATUS_DELETE]
+        migrations[this.STATUS_SHIPPED]                 = [this.STATUS_SHIPPED,this.STATUS_RETURNED, this.STATUS_CONFIRMED_AS_DELIVERED,this.STATUS_CONFIRMED_AS_LOST,this.STATUS_DELETE]
+        migrations[this.STATUS_RETURNED]                = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_RETURNED,this.STATUS_DELETE]
+        migrations[this.STATUS_CONFIRMED_AS_DELIVERED]  = [this.STATUS_CONFIRMED_AS_DELIVERED,this.STATUS_DELETE]
+        migrations[this.STATUS_CONFIRMED_AS_LOST]       = [this.STATUS_RETURNED,this.STATUS_CONFIRMED_AS_DELIVERED,this.STATUS_CONFIRMED_AS_LOST,this.STATUS_DELETE]
+        migrations[this.STATUS_DELETE]                  = [];
+		
+        $A(this.nodes.status.options).each(function(option) {
+            if(migrations[statusValue].include(parseInt(option.value)))
+            {
+                Element.show(option);
+            }
+            else
+            {
+                Element.hide(option);
+            }
+        }.bind(this));
+		
+		if(!this.options.isShipped && (
+		      this.nodes.itemsList.childElements().size() == 0 || 
+			 !this.nodes.form.elements.namedItem('USPS').value)
+		 ){
+			Element.hide(this.nodes.status.options[this.STATUS_SHIPPED]);
+		}
+    },
+	
+    getInstance: function(rootNode, options)
     {
         var rootId = $(rootNode).id;
         if(!Backend.Shipment.prototype.instances[rootId])
         {
-            Backend.Shipment.prototype.instances[rootId] = new Backend.Shipment(rootId);
+            Backend.Shipment.prototype.instances[rootId] = new Backend.Shipment(rootId, options);
         }
         
         return Backend.Shipment.prototype.instances[rootId];
@@ -215,22 +266,49 @@ Backend.Shipment.prototype =
         var orderID = null;
         if(!this.nodes.form)
         {
-            this.orderID = orderID = root.match(/orderShipments_new_(\d+)_form/)[1];
-            
+            this.orderID = root.match(/orderShipments_new_(\d+)_form/)[1];  
+            this.ID = false;      
         }
         else
         {
-            this.nodes.itemsList = this.nodes.root.down('.activeList');
-            orderID = this.nodes.form.elements.namedItem('orderID').value;
+            this.nodes.itemsList = this.nodes.root.down('ul');
+            this.orderID = this.nodes.form.elements.namedItem('orderID').value;
+            this.ID = this.nodes.form.elements.namedItem('ID').value;
+            this.nodes.status = this.nodes.form.elements.namedItem('status');    
         }
                 
-        this.nodes.shipmentsList = $('orderShipments_list_' + orderID);
+		
+        this.nodes.shipmentsList = $(this.options.isShipped ? 'orderShipments_list_' + this.orderID + '_shipped' : 'orderShipments_list_' + this.orderID);
     },
     
     bindEvents: function()
     {
+		if(this.nodes.form)
+		{
+			// Bind Items events
+			this.nodes.itemsList.childElements().each(function(itemLi)
+			{
+				var itemID = itemLi.id.match(/\d+$/)[0];
+				
+				var countNode = $("orderShipmentsItem_count_" + itemID);
+                var itemTable = $("orderShipmentsItems_list_" + this.orderID + "_" + this.ID + "_" + itemID);
+				
+                countNode.lastValue = countNode.value; 
+		        Event.observe(countNode, 'focus', function(e) { window.lastFocusedItemCount = this; }); 
+		        Event.observe(countNode, 'keyup', function(e) {  Backend.OrderedItem.updateProductCount(this, this.orderID, itemID,  this.ID) }); 
+		        Event.observe(countNode, 'blur', function(e) { Backend.OrderedItem.changeProductCount(this, this.orderID, itemID,  this.ID) }, false); 
+		        Event.observe(itemTable, 'click', function(e) 
+		        { 
+		            var input = window.lastFocusedItemCount; 
+		            if(input && input.value != input.lastValue) 
+		            { 
+		                input.blur(); 
+		            } 
+		        }.bind(this)); 
+			}.bind(this));
+		}
     },
-    
+	
     save: function(afterCallback, disableIndicator)
     {
         new LiveCart.AjaxRequest(
@@ -330,9 +408,12 @@ Backend.Shipment.prototype =
             if(window.selectPopupWindow)
             {
                 Backend.SelectPopup.prototype.popup.location.reload();
+				Backend.SelectPopup.prototype.popup.outerHeight = Backend.Shipment.prototype.getPopupHeight();
             }
 			
 			Backend.Shipment.prototype.toggleControls(this.orderID);
+			
+			Backend.Shipment.prototype.getInstance(li);
         }
     },
 	
@@ -407,29 +488,10 @@ Backend.Shipment.prototype =
                    
                    itemsList.highlight(li)
                    
-                   this.hideShippedStatus();
-				   
                    Backend.OrderedItem.updateReport($("orderShipment_report_" + this.nodes.form.elements.namedItem('orderID').value));
                }
             }.bind(this)
         );
-    },
-    
-    hideShippedStatus: function()
-    {    
-        var shippedOption = $("orderShipment_status_" + this.nodes.form.elements.namedItem('ID').value + "_3");
-        
-        if(shippedOption)
-        {        
-            if(!this.nodes.itemsList.down('li') || !this.nodes.form.elements.namedItem('shippingServiceID').value)
-            {
-                shippedOption.hide();
-            }
-            else
-            {
-                shippedOption.show();
-            }
-        }
     },
     
     toggleUSPS: function(cancel)
@@ -490,8 +552,6 @@ Backend.Shipment.prototype =
                        usps.hide();   
 					   
                        Backend.OrderedItem.updateReport($("orderShipment_report_" + this.nodes.form.elements.namedItem('orderID').value));
-                        
-                       this.hideShippedStatus();
                   }.bind(this)
                );
            }
@@ -584,6 +644,12 @@ Backend.Shipment.prototype =
                        firstItemsList.destroySortable();
                    }
                    
+		            if(window.selectPopupWindow)
+		            {
+		                Backend.SelectPopup.prototype.popup.location.reload();
+		                Backend.SelectPopup.prototype.popup.outerHeight = Backend.Shipment.prototype.getPopupHeight();
+		            }
+					
                    setTimeout(function() { Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID)) }.bind(this), 50);
                }.bind(this)
             );
@@ -624,6 +690,7 @@ Backend.Shipment.prototype =
         Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
 		
 		Backend.CustomerOrder.Editor.prototype.getInstance(orderID, false).toggleStatuses();
+		this.toggleStatuses();
 		
         if(window.selectPopupWindow)
         {
@@ -695,14 +762,22 @@ Backend.Shipment.prototype =
     {
 	    var shippableControls = document.getElementsByClassName("orderShipment_controls", $("order" + orderID + "_shippableShipments"));
         var shippedControls = document.getElementsByClassName("orderShipment_controls", $("order" + orderID + "_shippedShipments"));
-		var allControls = $A(shippableControlsconcat(shippedControls));
+		var allControls = $A(shippableControls.concat(shippedControls));
        
 	     shippableControls.each(function(otherControls)
          {
              if(allControls.size() == 1) otherControls.hide();
 		     else otherControls.show();
        }.bind(this));
-    }
+    },
+	
+	getPopupHeight: function()
+	{
+        var orderID = Backend.CustomerOrder.Editor.prototype.getCurrentId();
+        var ulList = $("orderShipments_list_" + orderID).childElements();
+
+	    return (500 + ($A(ulList).size() > 1 ? (50 + $A(ulList).size() * 30) : 0) );
+	}
 }
 
 

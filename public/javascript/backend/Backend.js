@@ -1164,6 +1164,14 @@ Backend.SelectPopup.prototype = {
 			window.selectPopupWindow = null;
 		}
 		
+	    Event.observe(window, 'unload', function() 
+	    { 
+	        if(window.selectPopupWindow) 
+			{
+				window.selectPopupWindow.close();
+			}
+	    }); 
+		
 		setTimeout(function() {
 			Backend.SelectPopup.prototype.popup.focus();
 		    window.selectPopupWindow = Backend.SelectPopup.prototype.popup;

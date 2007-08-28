@@ -162,7 +162,7 @@ class OrderedItemController extends StoreManagementController
         $firstEmptyShipment = false;
         foreach($order->getShipments() as $shipment)
         {
-            if(!$firstEmptyShipment && count($shipment->getItems()) == 0)
+            if(!$shipment->isShippable() || (!$firstEmptyShipment && count($shipment->getItems()) == 0))
             {
                 $firstEmptyShipment = true;
                 continue;
@@ -182,6 +182,7 @@ class OrderedItemController extends StoreManagementController
                 $shipmentsArray[$shipment->getID()]['ShippingService']['name_lang'] = $this->translate('_shipping_service_is_not_selected');
             }
         }
+        
         $response->set("order", $order->toFlatArray());
         $response->set("shipments", $shipmentsArray);
 		
