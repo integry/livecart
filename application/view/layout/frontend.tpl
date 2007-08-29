@@ -12,8 +12,10 @@
         {if $PAGE_TITLE}
             {$PAGE_TITLE}
         {else}
-            {assign var="lastBreadcrumb" value=$breadCrumb|@end}
-            {$lastBreadcrumb.title}
+            {if $breadCrumb}
+                {assign var="lastBreadcrumb" value=$breadCrumb|@end}
+                {$lastBreadcrumb.title}
+            {/if}
         {/if}
         - LiveCart Demo
     </title>

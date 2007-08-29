@@ -801,7 +801,7 @@ Backend.Shipment.prototype =
         var orderID = Backend.CustomerOrder.Editor.prototype.getCurrentId();
         var ulList = $("orderShipments_list_" + orderID).childElements();
 
-	    return (500 + ($A(ulList).size() > 1 ? (50 + $A(ulList).size() * 30) : 0) );
+	    return (550 + ($A(ulList).size() > 1 ? (50 + $A(ulList).size() * 30) : 0) );
 	},
 	
 	initializePage: function(orderID, downloadableShipmentID)

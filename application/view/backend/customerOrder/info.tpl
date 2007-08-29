@@ -1,6 +1,13 @@
 <fieldset class="order_info">
     <legend>{t _order_info}</legend>
     
+    <ul class="menu">
+        <li class="order_printInvoice">
+            <a href="{link controller=backend.customerOrder action=printInvoice id=$order.ID}" target="_blank">{t _print_invoice}</a>
+        </li>
+    </ul>    
+    <div class="clear"></div>
+    
     <p>
         <label for="order_{$order.ID}_amount">{t _order_id}</label>
         <label>{$order.ID}</label>
@@ -37,27 +44,25 @@
     </p>
 </fieldset>
 
-<fieldset class="container">
+<fieldset class="order_status">
+    <legend>{t _order_status}</legend>
+
     <ul class="menu orderMenu">
-        <li>
-            <a href="">Print invoice</a>
-        </li>
-        <li {denied role='order.update'}style="display: none"{/denied}>
+        <li {denied role='order.update'}style="display: none"{/denied} 
+            class="{if $order.isCancelled}order_accept{else}order_cancel{/if}">
             <span style="display: none;" id="order_{$order.ID}_isCanceledIndicator" class="progressIndicator"></span>
             <a id="order_{$order.ID}_isCanceled" href="{link controller="backend.customerOrder" action="setIsCanceled" id=$order.ID}">
                 {if $order.isCancelled}{t _accept_order}{else}{t _cancel_order}{/if}
             </a>
         </li>
-    </ul>
-</fieldset>
+    </ul>    
+    <div class="clear"></div>
 
-<fieldset class="order_status">
-    <legend>{t _order_status}</legend>
     {form handle=$form action="controller=backend.customerOrder action=update" id="orderInfo_`$order.ID`_form" onsubmit="Backend.CustomerOrder.Editor.prototype.getInstance(`$order.ID`, false).submitForm(); return false;" method="post" role="order.update"}
         {hidden name="ID"} 
         {hidden name="isCancelled"}
-        <fieldset class="error">
-            <label for="order_{$order.ID}_status">{t _status}</label>
+        <fieldset class="error" style="text-align: center;">
+            <label for="order_{$order.ID}_status" style="width: auto; float: none;">{t _status}: </label>
             {selectfield options=$statuses id="order_`$order.ID`_status" name="status" class="status"}
             {img src="image/indicator.gif" id="order_`$order.ID`_status_feedback" style="display: none;"} 
             <div class="errorText hidden"></div> 
@@ -70,7 +75,6 @@
             {if $order.isCancelled}{t _canceled}{else}{t _accepted}{/if}
         </span>
     </div>
-    
     
 </fieldset>
 

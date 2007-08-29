@@ -8,7 +8,8 @@ _item_was_successfully_removed_from_shipment=Item was successfully removed from 
 _error_removing_item_from_shipment=Error occurred removing item from shipment
 _downloadable_item_already_exists_in_this_order=This downloadable item already exist in this order
 
-
+# Select a product
+_select_product=Add products to order
 _done_adding_products=Done adding products
 _select_shippment=Select shippment:
 _shipping_service_is_not_selected=Shipping service is not selected

@@ -29,13 +29,14 @@
 /******************
     overview
 ******************/
-.orderMenu
+.order_printInvoice
 {
-    margin-left: 20px;
+	background-image: url(../../image/silk/printer.png);
 }
 
 .order_acceptanceStatus
 {
+    font-size: 120%;
     text-align: center; 
     margin-top: 20px; 
 }
@@ -45,9 +46,29 @@
     font-weight: bold; 
 }
 
-.order_status
+.order_editAddress
 {
-    font-size: 120%;
+	background-image: url(../../image/silk/pencil.png);    
+}
+
+.order_accept
+{
+	background-image: url(../../image/silk/accept.png);    
+}
+
+.order_cancel
+{
+	background-image: url(../../image/silk/cancel.png);    
+}
+
+.order_addShipment
+{
+	background-image: url(../../image/silk/package_add.png);    
+}
+
+.order_addProduct
+{
+	background-image: url(../../image/silk/cart_put.png);    
 }
 
 .order_shippingAddress input, 

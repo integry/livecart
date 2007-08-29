@@ -594,6 +594,17 @@ class CustomerOrderController extends StoreManagementController
 	    }
 	}   
 	
+    public function printInvoice()
+    {
+        $order = CustomerOrder::getInstanceById($this->request->get('id'), CustomerOrder::LOAD_DATA, CustomerOrder::LOAD_REFERENCES);
+        $order->loadAll();
+          
+        $this->setLayout('frontend');
+        $this->loadLanguageFile('User');
+          
+        return new ActionResponse('order', $order->toArray(array('payments' => true)));
+    }	
+	
 	private function save(CustomerOrder $order)
 	{
    		$validator = self::createOrderFormValidator();

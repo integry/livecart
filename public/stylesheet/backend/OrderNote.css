@@ -1,3 +1,8 @@
+.orderNoteMenu li
+{
+    background-image: url(../../image/silk/note_add.png);    
+}
+
 ul.notes
 {
     list-style-type: none;   

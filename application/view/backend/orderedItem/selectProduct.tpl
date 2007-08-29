@@ -23,9 +23,13 @@
 <div id="catgegoryContainer" class="treeContainer">
 	
     <div>
-        <a class="menu" href="#" onclick="window.close(); return false;">
-            {t _done_adding_products}
-        </a>
+        <ul class="menu popup">
+            <li class="done">
+                <a class="menu" href="#" onclick="window.close(); return false;">
+                    {t _done_adding_products}
+                </a>
+            </li>
+        </ul>
     </div>
     <div id="categoryBrowser" class="treeBrowser"> </div>
         

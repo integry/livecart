@@ -1,6 +1,11 @@
 <fieldset class="container" {denied role='order.update'}style="display: none"{/denied} {if $order.isShipped}style="display: none"{/if}> 
     <ul class="menu" id="orderShipments_menu_{$orderID}"> 
-        <li>
+        <li class="order_addProduct">
+           <span {denied role='order.update'}style="display: none"{/denied}>
+               <a href="#newProduct" id="order{$orderID}_addProduct">{t _add_new_product}</a>
+           </span>
+        </li>
+        <li class="order_addShipment">
             <span id="orderShipments_new_{$orderID}_indicator" class="progressIndicator" style="display: none"> </span>
             <a href="#new" id="orderShipments_new_{$orderID}_show">{t _add_new_shipment}</a>
         </li> 
@@ -9,10 +14,6 @@
             <input type="submit" value="{t _yes}" class="submit" id="orderShipments_new_{$orderID}_submit"> 
             {t _or} <a href="#new" id="orderShipments_new_{$orderID}_cancel">{t _no}</a> 
         </li> 
-        <li>
-           <span {denied role='order.update'}style="display: none"{/denied}>
-               <a href="#newProduct" id="order{$orderID}_addProduct">{t _add_new_product}</a>
-           </span>
     </ul> 
 </fieldset> 
     

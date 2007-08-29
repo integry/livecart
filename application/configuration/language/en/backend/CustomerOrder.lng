@@ -28,8 +28,6 @@ _accept_order=Accept order
 _cancel_order=Cancel order
 _this_order_is=This order is
 
-
-
 # Tree
 _all_orders=All Orders
 _current_orders=Current
@@ -87,6 +85,7 @@ _set_returned=Returned
 _process=Process
 
 # Order summary
+_print_invoice=Print invoice
 _is_paid=Is paid
 _status=Status
 _date_completed=Date completed
@@ -122,3 +121,6 @@ _phone=Phone
 
 # Errors 
 _invalid_Status=Invalid status
+
+# Invoice
+_order_invoice=Invoice

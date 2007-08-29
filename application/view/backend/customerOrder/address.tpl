@@ -1,5 +1,7 @@
 <ul class="menu orderAddress_showEdit">
-    <a href="#edit" {denied role='order.update'}style="display: none"{/denied} >{t _edit}</a>
+    <li class="order_editAddress">
+        <a href="#edit" {denied role='order.update'}style="display: none"{/denied} >{t _edit}</a>
+    </li>
 </ul>
 <div class="clear"></div>
 

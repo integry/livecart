@@ -609,19 +609,15 @@ html, body{
 ul.menu {
     display: block;
     
-	background-color: #FEFEFE;
-/*
-	border-top: 1px solid #B3D4EF;
-	border-bottom: 1px solid #B3D4EF;
-*/
+	border-bottom: 1px solid #ddd;
 	margin-bottom: 5px;
 
 	padding: 10px;
     padding-top: 4px;    
 	padding-bottom: 6px;    
+	padding-left: 0px;
 	
-	font-size: smaller;
-	float: left;
+	font-size: smaller;	
 }
 
 ul.menu li {
@@ -629,6 +625,9 @@ ul.menu li {
   	display: inline;
   	margin-right: 10px;
   	float: none;
+    background-repeat: no-repeat;
+    background-position: center left;
+    padding-left: 22px;
 }
 
 .menu a {
@@ -650,6 +649,19 @@ ul.verticalMenu li
 	background-position: 5px center;	
 	border: 1px solid #ccc;
 	background-color: #F9F9F9;
+}
+
+ul.menu li.done
+{
+    background-position: right center;
+    padding-left: 0;
+}
+
+ul.menu.popup
+{
+    border: 0;
+    padding: 0;
+    margin-bottom: 3px;
 }
 
 /*************************** 
@@ -1289,6 +1301,11 @@ ul.languageFormTabs li.active
     padding-left: 275px;
 }
 
+.dragAndDropRow
+{
+    background-color: darkblue;
+    color: white;
+}
 
 /**************************
 	Glossary

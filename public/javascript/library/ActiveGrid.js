@@ -496,10 +496,11 @@ ActiveGridFilter.prototype =
 			this.initFilter(e);
 		}
 		
-    },
-    
-    rangeBlur: function(e)
-    {
-			
-	}
+    }
+}
+
+function RegexFilter(element, params)
+{
+	var regex = new RegExp(params['regex'], 'gi');
+	element.value = element.value.replace(regex, '');
 }

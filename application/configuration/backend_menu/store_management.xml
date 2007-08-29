@@ -12,7 +12,7 @@
         </Menu>
         <Menu>
         	<Title>_menu_orders</Title>		
-        	<Controller>backend.CustomerOrder</Controller>
+        	<Controller>backend.customerOrder</Controller>
         	<Role>order</Role>	
         </Menu>
         <Menu>

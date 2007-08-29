@@ -2,7 +2,9 @@
 	
     <fieldset class="container">
 		<ul class="menu">
-			<li><a href="#cancelEditing" id="cancel_order_edit" class="cancel">{t _cancel_editing_order_info}</a></li>
+			<li class="done">
+                <a href="#cancelEditing" id="cancel_order_edit" class="cancel">{t _cancel_editing_order_info}</a>
+            </li>
 		</ul>
 	</fieldset>
 	

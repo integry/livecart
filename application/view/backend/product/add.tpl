@@ -1,7 +1,7 @@
 <div class="productForm {if 1 == $product.type}intangible{/if}">
     <fieldset class="container">
 		<ul class="menu">
-	        <li><a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}, this.up('div.productForm')); return false;">Cancel adding new product</a></li>
+	        <li class="done"><a class="cancel" href="#" onclick="Backend.Product.cancelAddProduct({$product.Category.ID}, this.up('div.productForm')); return false;">Cancel adding new product</a></li>
 	    </ul>
 	</fieldset>
         

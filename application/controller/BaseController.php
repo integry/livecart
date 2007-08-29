@@ -170,6 +170,12 @@ abstract class BaseController extends Controller implements LCiTranslator
 		return $this->user;
 	}
 	
+	public function loadLanguageFile($langFile)
+	{
+		$this->configFiles[] = $langFile;
+		$this->application->setConfigFiles($this->configFiles);
+    }
+	
 	protected function getSessionData($key = '')
 	{
 		return $this->session->getControllerData($this, $key);

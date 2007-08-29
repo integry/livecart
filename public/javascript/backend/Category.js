@@ -48,6 +48,7 @@ Backend.Category = {
 				
 				this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
                 var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
+                img.originalSrc = img.src;
 				img.src = 'image/indicator.gif';
 			}
 		
@@ -61,7 +62,8 @@ Backend.Category = {
                         if(!parseInt(itemId)) continue;
             			this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
                         var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
-            			img.src = 'image/backend/dhtmlxtree/' + this.iconUrls[itemId];
+            			//img.src = 'image/backend/dhtmlxtree/' + this.iconUrls[itemId];
+                        img.src = img.originalSrc;
     				}
                     
                 }

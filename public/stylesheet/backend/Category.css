@@ -2,3 +2,8 @@
 {
    height: 3em;
 }
+
+#categoryBrowserActions .addTreeNode
+{
+    background-image:url(../../image/silk/folder_add.png);
+}

@@ -15,6 +15,16 @@ fieldset.transactionContainer
 	padding-bottom: 40px;
 }
 
+.ccPayment
+{
+    background-image: url(../../image/silk/creditcards.png);
+}
+
+.offlinePayment
+{
+    background-image: url(../../image/silk/money_add.png);
+}
+
 .amountSection
 {
 	border-bottom: 1px solid black;

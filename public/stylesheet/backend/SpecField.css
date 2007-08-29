@@ -1,6 +1,15 @@
+.addSpecField
+{
+    background-image: url(../../image/silk/tag_blue_add.png);
+}
+
+.addSpecFieldGroup
+{
+    background-image: url(../../image/silk/table_add.png);        
+}
+
 .specField legend, .specField_step_values, .specField_language_translation, .specField_group_language_translation {
-    display: none;
-    
+    display: none;    
 }
 
 .specField_step_lev1 {

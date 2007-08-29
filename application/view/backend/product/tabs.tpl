@@ -2,7 +2,9 @@
     
 	<fieldset class="container">
 		<ul class="menu doneProduct">
-			<li><a href="#cancelEditing" id="cancel_product_edit" class="cancel">{t Done editing product}</a></li>
+			<li class="done">
+                <a href="#cancelEditing" id="cancel_product_edit" class="cancel">{t Done editing product}</a>
+            </li>
 		</ul>
 		
 		<a id="productPage" onclick="Backend.Product.Editor.prototype.goToProductPage();" href="{link controller=product action=index id=_id_}" target="_blank">Product page</a>

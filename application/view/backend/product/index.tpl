@@ -9,7 +9,7 @@
 
 <fieldset class="container" {denied role="product.create"}style="display: none"{/denied}>
 	<ul class="menu">
-		<li>
+		<li class="addProduct">
 			<a href="#" onclick="Backend.Product.showAddForm(this.parentNode.parentNode.parentNode.parentNode, {$categoryID}); return false;">
 				Add New Product
 			</a>
