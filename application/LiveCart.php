@@ -625,7 +625,7 @@ class LiveCart extends Application
         }
         else
         {
-            return array_keys($this->config->get('EXPRESS_HANDLERS'));
+            return is_array($this->config->get('EXPRESS_HANDLERS')) ? array_keys($this->config->get('EXPRESS_HANDLERS')) : array();
         }
 	}
 
