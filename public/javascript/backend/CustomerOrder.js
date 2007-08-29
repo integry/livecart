@@ -45,20 +45,6 @@ Backend.CustomerOrder.prototype =
 	    this.tabControl = TabControl.prototype.getInstance('orderGroupsManagerContainer', this.craftTabUrl, this.craftContainerId, {}); 
 
         Backend.CustomerOrder.prototype.instance = this;
-        
-        var $this = this;
-        Event.observe($("createNewOrderLink"), "click", function(e) {
-            Event.stop(e);
-            Backend.CustomerOrder.prototype.customerPopup = new Backend.SelectPopup(
-                Backend.CustomerOrder.Links.selectCustomer, 
-                Backend.CustomerOrder.Messages.selecCustomerTitle, 
-                {
-                    onObjectSelect: function() { 
-                       $this.createNewOrder(this.objectID); 
-                    }
-                }
-            );
-        });
 	},
     
     createNewOrder: function(customerID)

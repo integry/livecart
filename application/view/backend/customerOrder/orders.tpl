@@ -1,6 +1,37 @@
 <div>
 
 <fieldset class="container activeGridControls">
+
+
+    <ul class="menu" {if !in_array($orderGroupID,range(3,5))}style="display: none"{/if}>
+        <li><a href="#" id="createNewOrderLink_{$orderGroupID}"  {denied role='order.create' }style="display: none"{/denied}>{t _create_order}</a></li>
+    </ul> 
+    <br class="clear" />
+    
+    {literal}
+    <script type="text/javascript">
+        Event.observe($("{/literal}createNewOrderLink_{$orderGroupID}{literal}"), "click", function(e) {
+            Event.stop(e);
+            
+            try
+            {
+                Backend.CustomerOrder.prototype.customerPopup = new Backend.SelectPopup(
+                    Backend.CustomerOrder.Links.selectCustomer, 
+                    Backend.CustomerOrder.Messages.selecCustomerTitle, 
+                    {
+                        onObjectSelect: function() { 
+                           Backend.CustomerOrder.prototype.instance.createNewOrder(this.objectID); 
+                        }
+                    }
+                );
+            }
+            catch(e)
+            {
+                console.info(e)
+            }
+        });
+    </script>  
+    {/literal}
                 
     <span style="{if $orderGroupID == 8}visibility: hidden;{else}{denied role="order.mass"}visibility: hidden;{/denied}{/if}" id="orderMass_{$orderGroupID}" class="activeGridMass">
 

@@ -41,10 +41,6 @@
 <div id="orderGroupsWrapper" class="treeContainer maxHeight h--50">
 	<div id="orderGroupsBrowser" class="treeBrowser"></div>
 
-	<ul id="categoryBrowserActions" class="verticalMenu">
-		<li class="addTreeNode"><a href="#" id="createNewOrderLink" {denied role='order.create'}style="display: none"{/denied}>{t _create_order}</a></li>
-	</ul>	
-
     <div id="confirmations"></div>
 </div>
 
