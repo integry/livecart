@@ -117,15 +117,6 @@
      
 {literal} 
 <script type="text/javascript"> 
-    try
-    {
-    Backend.Shipment.prototype.toggleControls('{/literal}{$orderID}{literal}');
-    }
-    catch(e)
-    {
-        console.info(e)
-    }
-
     Backend.OrderedItem.Links = {};
     Backend.OrderedItem.Links.remove = '{/literal}{link controller=backend.orderedItem action=delete}{literal}'; 
     Backend.OrderedItem.Links.changeShipment = '{/literal}{link controller=backend.orderedItem action=changeShipment}{literal}'; 
@@ -143,10 +134,7 @@
     Backend.Shipment.Links.changeStatus = '{/literal}{link controller=backend.shipment action=changeStatus}{literal}'; 
     Backend.Shipment.Links.removeEmptyShipments = '{/literal}{link controller=backend.customerOrder action=removeEmptyShipments}{literal}';
     
-    Backend.Shipment.Statuses = {}; 
-    {/literal}{foreach key="statusID" item="status" from=$statuses}{literal} 
-        Backend.Shipment.Statuses["{$statusID|html}"] = "{$status}"; 
-    {/literal}{/foreach}{literal} 
+    Backend.Shipment.Statuses = {/literal}{json array=$statuses}{literal}; 
 
     Backend.Shipment.Messages = {}; 
     Backend.Shipment.Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_group|addslashes}{literal}'; 
@@ -165,156 +153,25 @@
     Backend.OrderedItem.Messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}'; 
     Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount = '{/literal}{t _are_you_realy_want_to_update_items_count|addslashes}{literal}'; 
 
-    window.onbeforeunload = function() 
-    { 
-        var customerOrder = Backend.CustomerOrder.Editor.prototype.getInstance('{/literal}{$orderID}{literal}'); 
-        var shipmentsContainer = $('{/literal}tabOrderProducts_{$orderID}Content{literal}'); 
-        var ordersManagerContainer = $("orderManagerContainer"); 
-        
-        if(ordersManagerContainer.style.display != 'none' && shipmentsContainer && shipmentsContainer.style.display != 'none' && customerOrder.hasEmptyShipments()) 
-        { 
-            return Backend.Shipment.Messages.emptyShipmentsWillBeRemoved; 
-        } 
-    } 
-
-    Event.observe(window, 'unload', function() 
-    { 
-        var customerOrder = Backend.CustomerOrder.Editor.prototype.getInstance('{/literal}{$orderID}{literal}'); 
-        var shipmentsContainer = $('{/literal}tabOrderProducts_{$orderID}Content{literal}'); 
-        var ordersManagerContainer = $("orderManagerContainer"); 
-        
-        if(ordersManagerContainer.style.display != 'none' && shipmentsContainer && shipmentsContainer.style.display != 'none') 
-        { 
-            customerOrder.removeEmptyShipmentsFromHTML(); 
-        }
-    }); 
-
-    try 
-    { 
-                        
-        Event.observe("{/literal}order{$orderID}_addProduct{literal}", 'click', function(e) 
-        { 
-            try
-            {
-                Event.stop(e); 
-                
-                var orderID = {/literal}{$orderID}{literal};
-                var ulList = $("{/literal}orderShipments_list_{$orderID}{literal}").childElements();
-                
-                var showPopup = function()
-                {
-                    new Backend.SelectPopup( Backend.OrderedItem.Links.addProduct, Backend.OrderedItem.Messages.selectProductTitle, 
-                    { 
-                        onObjectSelect: function() 
-                        { 
-                            var form = this.popup.document.getElementById("availableShipments");
-                            var downloadableShipmentID = {/literal}{$downloadableShipment.ID}{literal};
-                            var shipmentID = 0;
-                            
-                            $A(form.getElementsByTagName('input')).each(function(element) {
-                                if(element.checked) shipmentID = element.value;
-                            }.bind(this)); 
-        
-                            if(!this.downloadable)
-                            {
-                                Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + shipmentID).addNewProductToShipment(this.objectID, orderID);
-                            }
-                            else
-                            {
-                                Backend.Shipment.prototype.getInstance('orderShipments_list_downloadable_' + orderID + '_' + downloadableShipmentID).addNewProductToShipment(this.objectID, orderID);
-                            }
-                        },
-                        
-                        height: Backend.Shipment.prototype.getPopupHeight() - (ulList.size() > 0 ? 30 : 0)
-                    });
-                }.bind(this);
-                
-                if($A(ulList).size() == 0)
-                {
-                    var newForm = Backend.Shipment.prototype.getInstance("orderShipments_new_" + orderID + "_form");
-                    newForm.save(function()
-                    {
-                        console.info("order" + orderID + "_shippableShipments");
-                        showPopup();
-                        Element.hide("order" + orderID + "_shippableShipments");
-                    }.bind(this), true);
-                }
-                else
-                {
-                    showPopup();
-                }
-            } 
-            catch(error)
-            {
-                console.info(error)
-            }
-        }); 
-                        
-        Event.observe($("{/literal}orderShipments_new_{$orderID}_show{literal}"), "click", function(e) 
-        { 
-            Event.stop(e); 
-            $("{/literal}orderShipments_new_{$orderID}_show{literal}").hide(); 
-            $("{/literal}orderShipments_new_{$orderID}_controls{literal}").show(); 
-            $("{/literal}order{$orderID}_addProduct{literal}").hide(); 
-        }); 
-        
-        Event.observe($("{/literal}orderShipments_new_{$orderID}_cancel{literal}"), "click", function(e) 
-        { 
-            Event.stop(e); 
-            $("{/literal}orderShipments_new_{$orderID}_show{literal}").show(); 
-            $("{/literal}orderShipments_new_{$orderID}_controls{literal}").hide(); 
-            $("{/literal}order{$orderID}_addProduct{literal}").show(); 
-        }); 
-            
-        Event.observe($("{/literal}orderShipments_new_{$orderID}_submit{literal}"), "click", function(e) 
-        { 
-            Event.stop(e); 
-            $("{/literal}orderShipments_new_{$orderID}_show{literal}").show(); 
-            $("{/literal}orderShipments_new_{$orderID}_controls{literal}").hide(); 
-            $("{/literal}order{$orderID}_addProduct{literal}").show(); 
-            Backend.Shipment.prototype.getInstance( $("{/literal}orderShipments_new_{$orderID}_form{literal}"), {/literal}{$orderID}{literal} ).save(); ; 
-        }); 
-               
+    try
+    {
+        Backend.Shipment.prototype.initializePage("{/literal}{$orderID}{literal}", "{/literal}{$downloadableShipment.ID}{literal}")
+                   
         ActiveList.prototype.getInstance("{/literal}orderShipmentsItems_list_{$orderID}_{$downloadableShipment.ID}{literal}", Backend.OrderedItem.activeListCallbacks); 
         var groupList = ActiveList.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{literal}', Backend.Shipment.Callbacks); 
         
-        
         {/literal}{foreach item="shipment" from=$shipments}{literal} 
             {/literal}{if $shipment.isShippable}{literal}
-                var shippedOption = $("{/literal}orderShipment_status_{$shipment.ID}_3{literal}"); 
-                var itemsList = $('{/literal}orderShipmentsItems_list_{$orderID}_{$shipment.ID}{literal}'); 
-                
-                {/literal}
-                    {if $shipment.isShipped}
-                        var shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_{$orderID}_shipped_{$shipment.ID}', {literal}{isShipped: true}{/literal});
-                    {else}
-                        var shipment = Backend.Shipment.prototype.getInstance('orderShipmentsItems_list_{$orderID}_{$shipment.ID}')
-                        ActiveList.prototype.getInstance(itemsList, Backend.OrderedItem.activeListCallbacks); 
-                    {/if}
-                {literal}
-                
-
-                if(!itemsList.down('li') || !shippedOption.form.elements.namedItem('shippingServiceID').value)
-                { 
-                    shippedOption.hide(); 
-                } 
-                
-                Event.observe("{/literal}orderShipment_change_usps_{$shipment.ID}{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS(); }); 
-                Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_submit{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS(); }); 
-                Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_cancel{literal}", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').toggleUSPS(true); }); 
-                Event.observe("{/literal}orderShipment_USPS_{$shipment.ID}_select{literal}", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').USPSChanged(); }); 
-                Event.observe("{/literal}orderShipment_status_{$shipment.ID}{literal}", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}_{$shipment.ID}{literal}').changeStatus(); }); 
-                
-                $("{/literal}orderShipment_status_{$shipment.ID}{literal}").lastValue = $("{/literal}orderShipment_status_{$shipment.ID}{literal}").value;                  
+                var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{if $shipment.isShipped}_shipped{/if}_{$shipment.ID}{literal}', {isShipped: {/literal}{if $shipment.isShipped}true{else}false{/if}{literal}});             
             {/literal}{/if}{literal} 
         {/literal}{/foreach}{literal} 
         
         groupList.createSortable(); 
-    } 
-    catch(e) 
-    { 
-        console.info(e); 
-    } 
+    }
+    catch(e)
+    {
+        console.info(e);
+    }
     </script> 
     {/literal}
     

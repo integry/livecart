@@ -54,7 +54,6 @@ Backend.CustomerOrder.prototype =
                 Backend.CustomerOrder.Messages.selecCustomerTitle, 
                 {
                     onObjectSelect: function() { 
-                       console.info('asdad');
                        $this.createNewOrder(this.objectID); 
                     }
                 }
@@ -275,7 +274,6 @@ Backend.CustomerOrder.GridFormatter =
 	
 	formatValue: function(field, value, id)
 	{
-		console.info(field);
 		if ('CustomerOrder.ID2' == field && Backend.CustomerOrder.prototype.usersMiscPermission)
 		{
 		    value = 
