@@ -219,6 +219,7 @@ Backend.SpecField.prototype = {
 		this.nodes.parent = $(this.rootId);
 
 		this.nodes.form 			    = this.nodes.parent.getElementsByTagName("form")[0];
+        this.nodes.tabsContainer       = this.nodes.parent.down('.tabs');
 
 		this.nodes.type 				= document.getElementsByClassName(this.cssPrefix + "form_type", this.nodes.parent)[0];
 		this.nodes.stateLinks 			= document.getElementsByClassName(this.cssPrefix + "change_state", this.nodes.parent);
@@ -275,8 +276,6 @@ Backend.SpecField.prototype = {
 		this.nodes.translationsLinks 	= document.getElementsByClassName(this.cssPrefix + "form_values_translations_language_links", this.nodes.parent)[0];
 		this.nodes.valuesAddFieldLink 	= this.nodes.parent.down("." + this.cssPrefix + "add_field");
 
-        this.nodes.valuesTranslations = {};
-        
         this.nodes.valuesTranslationsDiv = this.nodes.stepValues.down("." + this.cssPrefix + "step_values_translations");
 
 		var ul = this.nodes.valuesDefaultGroup.getElementsByTagName('ul')[0];
@@ -348,18 +347,15 @@ Backend.SpecField.prototype = {
         this.type = this.nodes.type.value;
     
 		// if selected type is a selector type then show selector options fields (aka step 2)
-        var valuesTranslations = this.nodes.valuesTranslationsDiv; 
 		if(this.selectorValueTypes.indexOf(this.nodes.type.value) === -1)
 		{
-			this.nodes.stateLinks[1].parentNode.style.display = 'none';
-			this.nodes.stateLinks[1].style.display = 'none';
-            this.nodes.multipleSelector.parentNode.style.display = 'none';
+			Element.hide(this.nodes.tabsContainer);
+            Element.hide(this.nodes.multipleSelector.up());
 		}
 		else
 		{
-			this.nodes.stateLinks[1].parentNode.style.display = 'inline';
-			this.nodes.stateLinks[1].style.display = 'inline';
-            this.nodes.multipleSelector.parentNode.style.display = 'block';
+            Element.show(this.nodes.tabsContainer);
+            Element.show(this.nodes.multipleSelector.up());
 		}
 		
 		var prefixLabel = this.nodes.parent.down('.specField_form_valuePrefix_label')
