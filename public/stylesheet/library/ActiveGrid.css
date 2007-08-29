@@ -153,6 +153,11 @@
     background-color: #E5E5E5;   
 }
 
+.activeGrid_searchHighlight
+{
+    background-color: yellow;
+}
+
 /***********************
     Sort preview icon
 ***********************/
@@ -225,6 +230,17 @@
 /***********************
     Range filter
 ***********************/
+.activeGrid th .rangeFilterReset
+{
+    font-weight: bold !important;
+    display: none;
+}
+
+.activeGrid th.activeGrid_filter_select .rangeFilterReset
+{
+    display: block;   
+}
+
 .activeGrid th .rangeFilter
 {
     white-space: nowrap; 

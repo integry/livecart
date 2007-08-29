@@ -99,7 +99,7 @@ ActiveGrid.prototype =
 		var rowHTML = '';
 				
 		var data = eval('(' + data + ')');
-				
+        		
 		for(k = 0; k < data['data'].length; k++)
 		{
 			var id = data['data'][k][0];
@@ -109,7 +109,12 @@ ActiveGrid.prototype =
 			{
 				for(i = 0; i < data['data'][k].length; i++)
 				{
-					data['data'][k][i] = this.dataFormatter.formatValue(data['columns'][i], data['data'][k][i], id);
+                    var filter = this.filters['filter_' + data['columns'][i]];
+                    if (filter)
+                    {
+                        data['data'][k][i] = data['data'][k][i].replace(new RegExp('(' + filter + ')', 'gi'), '<span class="activeGrid_searchHighlight">$1</span>');
+                    }
+                    data['data'][k][i] = this.dataFormatter.formatValue(data['columns'][i], data['data'][k][i], id);
 				}
 			}
 		}
@@ -376,6 +381,8 @@ ActiveGridFilter.prototype =
     	
   		Element.removeClassName(this.element, 'activeGrid_filter_blur');
 		Element.addClassName(this.element, 'activeGrid_filter_select');		
+
+		Element.addClassName(this.element.up('th'), 'activeGrid_filter_select');		
 		
 		Event.stop(e);
 	},
@@ -397,6 +404,7 @@ ActiveGridFilter.prototype =
 		{
     		Element.addClassName(this.element, 'activeGrid_filter_blur');
 			Element.removeClassName(this.element, 'activeGrid_filter_select');
+		    Element.removeClassName(this.element.up('th'), 'activeGrid_filter_select');
 		}
 	},
 	
@@ -462,7 +470,7 @@ ActiveGridFilter.prototype =
         if (element.up('div.filterMenu'))
         {
 			Element.hide(element.up('div.filterMenu'));
-	        window.setTimeout(function() { Element.show(this.up('div.filterMenu')); }.bind(element), 200);         
+	        window.setTimeout(function() { Element.show(this.up('div.filterMenu')); }.bind(element), 200);
 		}
     },
     

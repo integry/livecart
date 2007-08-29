@@ -2,7 +2,7 @@
     <label class="observe" for="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalRangeStart">{t _subtotal_range}</label>
     <input type="text" name="rate__subtotalRangeStart" value="{$rate.subtotalRangeStart|default:0}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalRangeStart" class="shippingService_subtotalRangeStart shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} /> 
     - 
-    <input type="text" name="rate__subtotalRangeEnd" value="{$rate.subtotalRangeEnd|default:0}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalRangeEnd" class="shippingService_subtotalRangeEnd shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} />
+    <input type="text" name="rate__subtotalRangeEnd" value="{$rate.subtotalRangeEnd|default:0}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalRangeEnd" class="shippingService_subtotalRangeEnd shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} /> {$defaultCurrencyCode}
     <br />
     <span class="errorText hidden"> </span>
 </fieldset>
@@ -44,7 +44,7 @@
     
 <fieldset class="error">
     <label for="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalPercentCharge">{t _subtotal_percent_charge}</label>
-	<input type="text" name="rate__subtotalPercentCharge" value="{$rate.subtotalPercentCharge|default:0}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalPercentCharge" class="shippingService_subtotalPercentCharge shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} />
+	<input type="text" name="rate__subtotalPercentCharge" value="{$rate.subtotalPercentCharge|default:0}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalPercentCharge" class="shippingService_subtotalPercentCharge shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} /> %
 	<br />
     <span class="errorText hidden"> </span>
 </fieldset>

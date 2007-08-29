@@ -23,7 +23,7 @@
 	
     <fieldset class="error rangeTypeStatic">
         <label>{t _range_type}</label>
-        <label>{if $service.rangeType == 0}{t _weight_based_calculations}{else}{t _subtotal_based_calculations}{/if}</label>
+        <label style="width: auto;">{if $service.rangeType == 0}{t _weight_based_calculations}{else}{t _subtotal_based_calculations}{/if}</label>
     </fieldset>
  
     <fieldset class="shippingService_rates error">

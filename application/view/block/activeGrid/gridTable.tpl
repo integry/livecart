@@ -37,9 +37,9 @@
                             <div class="filterMenu">
                                 
                                 <ul onclick="$('filter_{$column}_{$id}').filter.initFilter(event);">
-                                    <li symbol="">
+                                    <li class="rangeFilterReset" symbol="">
                                         <span class="sign">&nbsp;</span>
-                                        All
+                                        Show All
                                     </li>
                                     <li symbol="=">
                                         <span class="sign">=</span>
