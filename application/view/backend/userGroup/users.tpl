@@ -3,11 +3,11 @@
 {if $userGroupID >= -1}
     <fieldset class="container" {denied role="user.create"}style="display: none;"{/denied}>
     	<ul id="userGroup_{$userGroupID}_addUser_menu" class="menu">
-    		<li>
+    		<li class="addUser">
     			<a id="userGroup_{$userGroupID}_addUser" href="#addUser">{t _add_new_user}</a>
     			<span class="progressIndicator" style="display: none;"></span>
     		</li>
-    		<li>
+    		<li class="done">
     			<a id="userGroup_{$userGroupID}_addUserCancel" href="#cancelAddingUser" class="hidden">{t _cancel_adding_new_user} </a>
     		</li>
     	</ul>  

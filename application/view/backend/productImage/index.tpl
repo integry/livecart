@@ -7,7 +7,7 @@
 
 <fieldset class="container" {denied role="product.update"}style="display: none"{/denied}>
 	<ul class="menu" id="prodImgMenu_{$ownerId}">
-		<li>
+		<li class="prodImageAdd">
 			<a href="#" onclick="slideForm('prodImgAdd_{$ownerId}', 'prodImgMenu_{$ownerId}'); return false;" class="pageMenu">{t _add_new}</a>
 		</li>	
 	</ul>

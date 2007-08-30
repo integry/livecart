@@ -1,3 +1,8 @@
+.catImageAdd, .prodImageAdd
+{
+    background-image: url(../../image/silk/image_add.png);     
+}
+
 .catImageList, .prodImageList 
 {
   	width: 600px;

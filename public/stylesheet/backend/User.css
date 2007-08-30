@@ -1,3 +1,13 @@
+#userGroupsWrapper .addTreeNode
+{
+    background-image: url(../../image/silk/group_add.png) !important;
+}
+
+li.addUser
+{
+    background-image: url(../../image/silk/user_add.png) !important;    
+}
+
 #userGroupsContent label.setting 
 {
 	display: block;
@@ -5,6 +15,11 @@
 	float: none;
 	margin-bottom: 0px;
 	width: auto;
+}
+
+#userGroupsBrowser
+{
+    padding: 0;
 }
 
 .cell_User_ID

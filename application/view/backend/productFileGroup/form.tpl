@@ -1,7 +1,8 @@
-<div class="productFileGroup_form"  style="display: none;">
+<fieldset class="addForm productFileGroup_form"  style="display: none;">
+    <legend>{t _add_new_file_group}</legend>
     <form action="{link controller=backend.productFileGroup action=save}" method="post" {denied role="product.update"}class="formReadonly"{/denied}>
     	<!-- STEP 1 -->
-    	<fieldset>
+    	
     		<input type="hidden" name="ID" class="hidden productFileGroup_ID" />
     		<input type="hidden" name="productID" class="hidden productFileGroup_productID" />
     
@@ -20,7 +21,6 @@
             		<input type="text" value="" id="name_{$lang.ID}" name="name_{$lang.ID}"/>
             	</fieldset>
 		    {/language}
-    	</fieldset>
     
         <fieldset class="productFileGroup_controls controls">
         	<span class="progressIndicator" style="display: none;"></span>
@@ -29,4 +29,4 @@
             <a href="#cancel" class="productFileGroup_cancel cancel">{t _cancel}</a>
         </fieldset>
     </form>
-</div>
+</fieldset>

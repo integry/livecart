@@ -61,7 +61,7 @@
 
             <fieldset>
             	<legend>{t _translation_filter}</legend>
-            	<form id="navLang" method="post" action="{link controller=backend.language action=edit id=$id}" class="">
+            	<form id="navLang" onsubmit="return false;">
             
             			<label>{t _show_words}:</label>
             		

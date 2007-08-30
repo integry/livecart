@@ -1,3 +1,8 @@
+.addTax
+{
+    background-image: url(../../image/silk/coins.png);
+}
+
 #tax_new_form
 {
     width: 500px;

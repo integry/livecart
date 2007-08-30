@@ -17,7 +17,7 @@
 		<p class="required">
     		<label class="filter_form_name_label">{t _Filter_name}</label>
             <fieldset class="error">
-        		<input type="text" name="name" class="required filter_form_name" {denied role="category.update"}readonly="readonly"{/denied} />
+        		<input type="text" name="name" class="filter_form_name" {denied role="category.update"}readonly="readonly"{/denied} />
         		<span class="errorText hidden"> </span>
             </fieldset>
     	</p>
@@ -75,7 +75,7 @@
             			</ul>
                     </p>
                     <p class="filter_crate_filters">
-                        <a href="#add" class="filter_add_filter" {denied role="category.update"}style="display: none"{/denied}>{t _Filter_add_filter}</a> 
+                        <a href="#add" class="filter_add_filter menu" {denied role="category.update"}style="display: none"{/denied}>{t _Filter_add_filter}</a> 
                     </p>
     			</div>
     

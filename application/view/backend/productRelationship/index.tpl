@@ -32,10 +32,10 @@
 
 <fieldset class="container" {denied role="product.update"}style="display: none"{/denied}>
 	<ul class="menu" id="productRelationship_menu_{$productID}">
-	    <li><a href="#selectProduct" id="selectProduct_{$productID}">{t _select_product}</a></li>
-	    <li><a href="#cancelSelectProduct" id="selectProduct_{$productID}_cancel" class="hidden">{t _cancel_adding_new_related_product}</a></li>
-	    <li><a href="#new" id="productRelationshipGroup_new_{$productID}_show">{t _add_new_group}</a></li>
-	    <li><a href="#new" id="productRelationshipGroup_new_{$productID}_cancel" class="hidden">{t _cancel_adding_new_group}</a></li>
+	    <li class="productRelationship_add"><a href="#selectProduct" id="selectProduct_{$productID}">{t _select_product}</a></li>
+	    <li class="done"><a href="#cancelSelectProduct" id="selectProduct_{$productID}_cancel" class="hidden">{t _cancel_adding_new_related_product}</a></li>
+	    <li class="productRelationshipGroup_add"><a href="#new" id="productRelationshipGroup_new_{$productID}_show">{t _add_new_group}</a></li>
+	    <li class="done"><a href="#new" id="productRelationshipGroup_new_{$productID}_cancel" class="hidden">{t _cancel_adding_new_group}</a></li>
 	</ul>
 </fieldset>
 

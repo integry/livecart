@@ -1,3 +1,8 @@
+.filter_add
+{
+    background-image: url(../../image/silk/magnifier_zoom_in.png);    
+}
+
 .filterList li
 {
  	padding: 5px;

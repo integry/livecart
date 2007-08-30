@@ -1,3 +1,14 @@
+.productRelationship_add
+{
+    background-image: url(../../image/silk/link_add.png);
+}
+
+.productRelationshipGroup_add
+{
+    background-image: url(../../image/silk/table_add.png);
+}
+
+
 .productRelationshipGroup_title {
     color: grey;
     font-size: 300%;

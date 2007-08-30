@@ -1,8 +1,8 @@
 {* upper menu *}
 <fieldset class="container" {denied role='delivery.update'}style="display: none;"{/denied}>
 	<ul class="menu" id="shippingService_menu_{$deliveryZone.ID}">
-	    <li><a href="#new_service" id="shippingService_new_{$deliveryZone.ID}_show">{t _add_new_shipping_service}</a></li>
-	    <li><a href="#cencel_service" id="shippingService_new_{$deliveryZone.ID}_cancel" class="hidden">{t _cancel_adding_new_service}</a></li>
+	    <li class="shippingService_add"><a href="#new_service" id="shippingService_new_{$deliveryZone.ID}_show">{t _add_new_shipping_service}</a></li>
+	    <li class="done"><a href="#cencel_service" id="shippingService_new_{$deliveryZone.ID}_cancel" class="hidden">{t _cancel_adding_new_service}</a></li>
 	</ul>
 </fieldset>
 

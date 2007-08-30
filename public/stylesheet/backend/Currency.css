@@ -1,6 +1,11 @@
 /************************
 	Index
 ************************/
+#currPageMenu li
+{
+    background-image: url(../../image/silk/money_dollar.png);    
+}
+
 #addCurr {
 	margin-bottom: 10px;  
 }

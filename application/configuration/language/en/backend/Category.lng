@@ -75,6 +75,7 @@ _productFile_description=File description
 _days=days
 _upload_file=Select a file
 _product_file_group_title=Title
+_add_new_file_group=Add new file group
 
 # Product relationship
 _product_relationship_group_title=Title

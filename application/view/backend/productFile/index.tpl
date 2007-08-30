@@ -3,16 +3,16 @@
 {* upper menu *}
 <fieldset class="container" {denied role="product.update"}style="dispaly: none"{/denied}>
 	<ul class="menu" id="productFile_menu_{$productID}">
-	    <li><a href="#new_file" id="productFile_new_{$productID}_show">{t _add_new_file}</a></li>
-	    <li><a href="#cancel_group" id="productFile_new_{$productID}_cancel" class="hidden">{t _cancel_adding_new_file}</a></li>
-	    <li><a href="#new_group" id="productFileGroup_new_{$productID}_show">{t _add_new_group}</a></li>
-	    <li><a href="#cancel_group" id="productFileGroup_new_{$productID}_cancel" class="hidden">{t _cancel_adding_file_group}</a></li>
+	    <li class="productFile_add"><a href="#new_file" id="productFile_new_{$productID}_show">{t _add_new_file}</a></li>
+	    <li class="done"><a href="#cancel_group" id="productFile_new_{$productID}_cancel" class="hidden">{t _cancel_adding_new_file}</a></li>
+	    <li class="productFileGroup_add"><a href="#new_group" id="productFileGroup_new_{$productID}_show">{t _add_new_group}</a></li>
+	    <li class="done"><a href="#cancel_group" id="productFileGroup_new_{$productID}_cancel" class="hidden">{t _cancel_adding_file_group}</a></li>
 	</ul>
 </fieldset>
 
 {* new form *}
 <div id="productFileGroup_new_{$productID}_form"></div>
-<div id="productFile_new_{$productID}_form"></div>
+<div class="addForm" id="productFile_new_{$productID}_form"></div>
 
 {* Files with no group *}
 <ul id="productFile_list_{$productID}_" class="productFile_list {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeList_accept_productFile_list">

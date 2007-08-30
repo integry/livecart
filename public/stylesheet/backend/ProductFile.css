@@ -1,3 +1,13 @@
+.productFile_add
+{
+    background-image: url(../../image/silk/add.png);
+}
+
+.productFileGroup_add
+{
+    background-image: url(../../image/silk/folder_add.png);
+}
+
 .productFile_main
 {
     border: 0;

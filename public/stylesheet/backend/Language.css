@@ -12,6 +12,11 @@ label.radio {
 
 /* index */
 
+#langPageMenu li
+{
+    background-image: url(../../image/silk/world_add.png);    
+}
+
 #languageList_template
 {
   	display: none;
