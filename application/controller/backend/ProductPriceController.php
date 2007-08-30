@@ -39,6 +39,9 @@ class ProductPriceController extends StoreManagementController
 		$validator = $this->buildPricingFormValidator($product);
 		if ($validator->isValid())
 		{
+    		$product->loadSpecification();
+    		$product->loadPricing();
+
 		    // Save prices
     		foreach ($this->application->getCurrencyArray() as $currency)
     		{
@@ -49,8 +52,6 @@ class ProductPriceController extends StoreManagementController
     		}
 
     		// Save shipping
-    		$product->loadSpecification();
-    		$product->loadPricing();
     		$product->setFieldValue('stockCount', (int)$this->request->get('stockCount'));
             $product->setFieldValue('shippingWeight', (float)$this->request->get('shippingWeight'));
             $product->setFieldValue('shippingSurchargeAmount', (float)$this->request->get('shippingSurchargeAmount'));

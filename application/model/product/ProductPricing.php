@@ -55,7 +55,7 @@ class ProductPricing
 
 	public function setPrice(ProductPrice $price)
 	{
-		$this->prices[$price->currency->get()->getID()] = $price;
+        $this->prices[$price->currency->get()->getID()] = $price;
 	}
 
 	/**
@@ -108,7 +108,7 @@ class ProductPricing
 
 	public function save()
 	{	    
-	    foreach ($this->prices as $price)
+        foreach ($this->prices as $price)
 		{
 		    $price->save();
 		}

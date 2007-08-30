@@ -230,6 +230,7 @@ class CategoryController extends StoreManagementController
 
 		$validator = new RequestValidator("category", $this->request);
 		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("Catgory name should not be empty")));
+		$validator->addFilter("name", new StripHtmlFilter());
 		return $validator;
 	}
 

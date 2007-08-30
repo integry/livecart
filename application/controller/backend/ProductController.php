@@ -345,6 +345,18 @@ class ProductController extends StoreManagementController
 	    
 	    $response = $this->save($product);
 	    
+	    // save prices
+		foreach ($this->application->getCurrencyArray() as $currency)
+		{
+			if ($this->request->isValueSet('price_' . $currency))
+			{
+//				var_dump($this->request->get('price_' . $currency));
+                $product->setPrice($currency, $this->request->get('price_' . $currency));
+			}
+		}
+
+        $product->save();
+	    
 	    if ($response instanceOf ActionResponse)
 	    {
             $response->get('productForm')->clearData();
@@ -699,6 +711,7 @@ class ProductController extends StoreManagementController
 		$validator = new RequestValidator("productFormValidator", $this->request);
 		
 		$validator->addCheck('name', new IsNotEmptyCheck($this->translate('_err_name_empty')));		    
+		$validator->addFilter('name', new StripHtmlFilter());
 				
 		// check if SKU is entered if not autogenerating
 		if ($this->request->get('save') && !$product->isExistingRecord() && !$this->request->get('autosku'))

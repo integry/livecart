@@ -202,6 +202,7 @@ class Product extends MultilingualObject
 		{
 			$this->manufacturer->get()->save();
 		}
+		
 		parent::save();
 				
 		$this->getSpecification()->save();
@@ -713,6 +714,8 @@ class Product extends MultilingualObject
 		{
 		    $instance->price->set($price);
 		}
+		
+		$this->getPricingHandler()->setPrice($instance);
 	}
 
 	public function getPrice($currencyCode, $recalculate = true)

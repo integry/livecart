@@ -109,6 +109,8 @@ ActiveGrid.prototype =
 			{
 				for(i = 0; i < data['data'][k].length; i++)
 				{
+                    data['data'][k][i] = stripHtml(data['data'][k][i]);
+                    
                     var filter = this.filters['filter_' + data['columns'][i]];
                     if (filter)
                     {
@@ -503,4 +505,14 @@ function RegexFilter(element, params)
 {
 	var regex = new RegExp(params['regex'], 'gi');
 	element.value = element.value.replace(regex, '');
+}
+
+function stripHtml(value)
+{
+	if (!value.replace)
+	{
+        return value;
+    }
+
+    return value.replace(/<[ \/]*?\w+((\s+\w+(\s*=\s*(?:".*?"|'.*?'|[^'">\s]+))?)+\s*|\s*)[ \/]*>/g, '');
 }
