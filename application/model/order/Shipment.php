@@ -307,9 +307,12 @@ class Shipment extends ActiveRecordModel
     {
         $subTotal = 0;
         foreach ($this->items as $item)
-        {            
-            $subTotal += $item->getSubTotal($currency);
-        }            
+        {
+            if(!$item->isDeleted())
+            {    
+                $subTotal += $item->getSubTotal($currency);
+            }
+        }       
         
         if ($applyTaxes)
         {
@@ -431,7 +434,7 @@ class Shipment extends ActiveRecordModel
         foreach ($this->getTaxes() as $tax)
         {
             $tax->save();
-        }        
+        }   
     }
     
     protected function insert()

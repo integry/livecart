@@ -183,7 +183,7 @@ class ProductSpecification
         $groupIds = array();
         foreach ($productArray['attributes'] as $attr)
         {
-            $groupIds[$attr['SpecField']['specFieldGroupID']] = true;
+            $groupIds[$attr['SpecField']['specFieldGroupID'] != '' ? $attr['SpecField']['specFieldGroupID'] : 'NULL'] = true;
         }
         
         $f = new ARSelectFilter(new INCond(new ARFieldHandle('SpecFieldGroup', 'ID'), array_keys($groupIds)));

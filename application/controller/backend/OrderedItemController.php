@@ -94,12 +94,12 @@ class OrderedItemController extends StoreManagementController
 	        }
 	        
 	        $shipment->loadItems();
-        
+	        
 	        if(!$existingItem)
 	        {
 	            $shipment->addItem($item);
 	        }
-	        
+
 	        if($shipment->getShippingService())
 	        {
 	            $shipmentRates = $shipment->order->get()->getDeliveryZone()->getShippingRates($shipment);
@@ -107,10 +107,7 @@ class OrderedItemController extends StoreManagementController
 			    $shipment->setRateId($shipment->getShippingService()->getID());
 	        }
 	        
-	        $item->save();
-	        
             $shipment->recalculateAmounts();
-            
             $shipment->save();
             
             return new JSONResponse(array(
@@ -216,6 +213,7 @@ class OrderedItemController extends StoreManagementController
             $item = OrderedItem::getInstanceByID('OrderedItem', (int)$id, true, array('Shipment', 'Order' => 'CustomerOrder', 'ShippingService', 'AmountCurrency' => 'Currency', 'ShippingAddress' => 'UserAddress', 'Product')); 
 	        $shipment = $item->shipment->get();
 	        $order = $shipment->order->get();
+	        $order->loadItems();
 	        
 	        $history = new OrderHistory($order, $this->user);
 	        
@@ -232,8 +230,6 @@ class OrderedItemController extends StoreManagementController
             
             $shipment->recalculateAmounts();
             $shipment->save();
-            
-            $order->save();
             
             $history->saveLog();
             

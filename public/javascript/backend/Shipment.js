@@ -195,15 +195,11 @@ Backend.Shipment.prototype =
             
             if(this.nodes.form)
             {
-				if(!this.options['isShipped'])
+				if(!this.options.isShipped)
                 {
-				    this.itemsActiveList = ActiveList.prototype.getInstance(this.nodes.itemsList);	
+				    this.itemsActiveList = ActiveList.prototype.getInstance(this.nodes.itemsList, Backend.OrderedItem.activeListCallbacks);	
 				}
 				
-                if(!this.options.isShipped)
-				{
-					ActiveList.prototype.getInstance(this.nodes.itemsList, Backend.OrderedItem.activeListCallbacks); 
-				}
 		        // Remember last status value
 		        this.nodes.status.lastValue = this.nodes.status.value; 
                 this.toggleStatuses();
@@ -403,17 +399,8 @@ Backend.Shipment.prototype =
             $("orderShipment_status_" + response.shipment.ID + "_3").hide();
 			
 			$("orderShipment_status_" + response.shipment.ID ).value = response.shipment.status;
-
-            Event.observe("orderShipment_change_usps_" + response.shipment.ID, 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + this.orderID + '_' + response.shipment.ID).toggleUSPS();  }.bind(this));
-            Event.observe("orderShipment_USPS_" + response.shipment.ID + "_submit", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + this.orderID + '_' + response.shipment.ID).toggleUSPS();  }.bind(this));       
-            Event.observe("orderShipment_USPS_" + response.shipment.ID + "_cancel", 'click', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + this.orderID + '_' + response.shipment.ID).toggleUSPS(true);  }.bind(this));
-            Event.observe("orderShipment_USPS_" + response.shipment.ID + "_select", 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + this.orderID + '_' + response.shipment.ID).USPSChanged();  }.bind(this));
-
             $("orderShipment_change_usps_" + response.shipment.ID).innerHTML = Backend.Shipment.Messages.shippingServiceIsNotSelected;
 
-            $("orderShipment_status_" + response.shipment.ID).lastValue = $("orderShipment_status_" + response.shipment.ID).value;
-            Event.observe("orderShipment_status_" + response.shipment.ID, 'change', function(e) { Event.stop(e); Backend.Shipment.prototype.getInstance('orderShipments_list_' + this.orderID + '_' + response.shipment.ID).changeStatus();  }.bind(this));
- 
             Element.addClassName(li, 'orderShipment');
 			
             $("order" + this.orderID + "_shippableShipments").show();
