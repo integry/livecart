@@ -21,8 +21,6 @@ Backend.OrderedItem = {
                 var orderID = this.getRecordId(li, 3);
                 var shipment = Backend.Shipment.prototype.getInstance(li.up('li'));
 				
-                Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
-				
                 shipment.setAmount(response.item.Shipment.amount);
                 shipment.setTaxAmount(response.item.Shipment.taxAmount);
                 shipment.setShippingAmount(response.item.Shipment.shippingAmount);
@@ -30,6 +28,7 @@ Backend.OrderedItem = {
 				
 				Backend.CustomerOrder.Editor.prototype.getInstance(orderID, false).toggleStatuses();
 				shipment.toggleStatuses();
+                Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
 				
 				return true;
             }
@@ -144,20 +143,28 @@ Backend.OrderedItem = {
                function(response) 
                { 
                     var response = eval("(" + response.responseText + ")");
-                    var shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + shipmentID);
-                    
-                    shipment.itemsActiveList.highlight($('orderShipmentsItems_list_' + orderID + '_' + shipmentID + '_' + itemID));
-                    
-                    shipment.setAmount(response.shipment.amount);
-                    shipment.setTaxAmount(response.shipment.taxAmount);
-                    shipment.setShippingAmount(response.shipment.shippingAmount);
-                    shipment.setTotal(response.shipment.total);
-                    
-                    input.lastValue = input.value;
-                   
-                    Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
-                    
-                    ActiveList.prototype.getInstance(input.up('.activeList')).highlight(input.up('li'));
+                    var shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_' + response.Shipment.Order.ID + '_' + response.Shipment.ID);
+                    var li = $('orderShipmentsItems_list_' + response.Shipment.Order.ID + '_' + response.Shipment.ID + '_' + response.ID);
+					
+					if(!response.Shipment.isDeleted)
+					{
+	                    shipment.itemsActiveList.highlight(li);
+	                    
+	                    shipment.setAmount(response.Shipment.amount);
+	                    shipment.setTaxAmount(response.Shipment.taxAmount);
+	                    shipment.setShippingAmount(response.Shipment.shippingAmount);
+	                    shipment.setTotal(response.Shipment.total);
+	                    
+	                    input.lastValue = input.value;
+	                    
+	                    ActiveList.prototype.getInstance(input.up('.activeList')).highlight(input.up('li'));
+					}
+					else
+					{
+                        shipment.itemsActiveList.remove(li);
+					}
+                       
+                    Backend.OrderedItem.updateReport($("orderShipment_report_" + response.Shipment.Order.ID));
                 }.bind(this)
            );
        }
@@ -341,12 +348,9 @@ Backend.Shipment.prototype =
             var shipmentItems = document.getElementsByClassName("orderShipmentsItem", this.nodes.shipmentsList);
             if(shipmentItems.length >= 1)
             {
-				shipmentItems.each(function(item) 
-				{
-	                var firstShipmentItems = ActiveList.prototype.getInstance(item);
-	                Element.addClassName(firstShipmentItems.ul, 'activeList_add_sort');
-	                firstShipmentItems.createSortable();
-				}.bind(this));
+                var firstShipment = ActiveList.prototype.getInstance(shipmentItems.first());
+                Element.addClassName(firstShipment.ul, 'activeList_add_sort');
+                firstShipment.createSortable();
             }
             
             var controls = $("orderShipment_" + this.orderID + "_controls_empty").innerHTML;
@@ -488,7 +492,8 @@ Backend.Shipment.prototype =
                    this.setShippingAmount(response.item.Shipment.shippingAmount);
                    this.setTotal(response.item.Shipment.total);
                    
-                   itemsList.highlight(li)
+                   itemsList.highlight(li);
+				   itemsList.touch();
                    
                    Backend.OrderedItem.updateReport($("orderShipment_report_" + this.nodes.form.elements.namedItem('orderID').value));
                }
@@ -873,25 +878,25 @@ Backend.Shipment.prototype =
         Event.observe("orderShipments_new_" + orderID + "_show", "click", function(e) 
         { 
             Event.stop(e); 
-            Element.hide("orderShipments_new_" + orderID + "_show"); 
+            Element.hide("order" + orderID + "_addShipment_li"); 
             Element.show("orderShipments_new_" + orderID + "_controls"); 
-            Element.hide("order" + orderID + "_addProduct"); 
+            Element.hide("order" + orderID + "_addProduct_li"); 
         }.bind(this)); 
         
         Event.observe("orderShipments_new_" + orderID + "_cancel", "click", function(e) 
         { 
             Event.stop(e); 
-            Element.show("orderShipments_new_" + orderID + "_show"); 
+            Element.show("order" + orderID + "_addShipment_li"); 
             Element.hide("orderShipments_new_" + orderID + "_controls"); 
-            Element.show("order" + orderID + "_addProduct"); 
+            Element.show("order" + orderID + "_addProduct_li"); 
         }.bind(this)); 
             
         Event.observe("orderShipments_new_" + orderID + "_submit", "click", function(e) 
         { 
             Event.stop(e); 
-            Element.show("orderShipments_new_" + orderID + "_show"); 
+            Element.show("order" + orderID + "_addShipment_li"); 
             Element.hide("orderShipments_new_" + orderID + "_controls"); 
-            Element.show("order" + orderID + "_addProduct"); 
+            Element.show("order" + orderID + "_addProduct_li"); 
             Backend.Shipment.prototype.getInstance("orderShipments_new_" + orderID + "_form").save(); ; 
         }.bind(this)); 
 	}

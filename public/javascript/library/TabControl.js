@@ -186,7 +186,7 @@ TabControl.prototype = {
             return;
         }
         
-        if(!$(contentId)) new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '" class="tabPageContainer"></div>');		
+        if(!$(contentId)) new Insertion.Top(this.nodes.sectionContainer, '<div id="' + contentId + '" class="tabPageContainer ' + targetTab.id + 'Content"></div>');		
 
         var self = this;
         $A(this.nodes.tabListElements).each(function(tab) {

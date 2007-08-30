@@ -1,11 +1,11 @@
 <fieldset class="container" {denied role='order.update'}style="display: none"{/denied} {if $order.isShipped}style="display: none"{/if}> 
     <ul class="menu" id="orderShipments_menu_{$orderID}"> 
-        <li class="order_addProduct">
+        <li class="order_addProduct" id="order{$orderID}_addProduct_li">
            <span {denied role='order.update'}style="display: none"{/denied}>
                <a href="#newProduct" id="order{$orderID}_addProduct">{t _add_new_product}</a>
            </span>
         </li>
-        <li class="order_addShipment">
+        <li class="order_addShipment"  id="order{$orderID}_addShipment_li">
             <span id="orderShipments_new_{$orderID}_indicator" class="progressIndicator" style="display: none"> </span>
             <a href="#new" id="orderShipments_new_{$orderID}_show">{t _add_new_shipment}</a>
         </li> 

@@ -3,6 +3,11 @@
    padding-bottom: 3em;
 }
 
+.tabOrderProductsContent .activeList li
+{
+    width: auto;
+}
+
 .orderShipment_report
 {
    padding-left: 50px;

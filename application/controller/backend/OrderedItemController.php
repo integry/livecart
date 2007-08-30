@@ -388,8 +388,11 @@ class OrderedItemController extends StoreManagementController
 		    $history->saveLog();
 		    
 		    return new JSONResponse(array(
-				'shipment' => array(
+		        'ID' => $item->getID(),
+				'Shipment' => array(
 				    'ID' => $shipment->getID(),
+				    'Order' => array('ID' => $item->customerOrder->get()->getID()),
+				    'isDeleted' => $item->isDeleted(),
 				    'amount' => $shipment->amount->get(),
 				    'shippingAmount' => $shipment->shippingAmount->get(),
 				    'total' =>((float)$shipment->shippingAmount->get() + (float)$shipment->amount->get() + (float)$shipment->taxAmount->get()),
