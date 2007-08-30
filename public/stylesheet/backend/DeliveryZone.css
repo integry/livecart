@@ -3,6 +3,11 @@
     background-image: url(../../image/silk/lorry_add.png);
 }
 
+.shippingService_servicesList li
+{
+    width: auto;
+}
+
 #newZoneInput {
     width: 135px;
 }

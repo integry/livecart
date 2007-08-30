@@ -116,7 +116,7 @@ class ProductController extends StoreManagementController
                 }
                 else if ('specField' == $class)
                 {
-					$value = $product['attributes'][$field]['value_lang'];
+					$value = isset($product['attributes'][$field]['value_lang']) ? $product['attributes'][$field]['value_lang'] : '';
 				}
                 else
                 {

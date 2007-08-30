@@ -59,9 +59,9 @@
 }
 
 .specFieldList li, .specFieldListGroup li {
-    padding: 5px;
     margin-bottom: 10px;
     background-color: #F7F7F7;  	
+    width: auto;
 }
 
 .specFieldList li li {

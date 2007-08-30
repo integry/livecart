@@ -12,9 +12,8 @@
 #tax_taxesList li.activeList_even
 {
     margin: 5px;
-    padding: 10px;
   	background-color: #F7F7F7;
-  	width: 500px;
+  	width: 30em;
 }
 
 

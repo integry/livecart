@@ -33,6 +33,10 @@ li.productFileGroup_item li {
     font-weight: bold;
 }
 
+.productFile_list li {
+    width: auto;
+}
+
 .productFile_list {
     padding-bottom: 1em;
 }

@@ -49,7 +49,7 @@ function smarty_function_textfield($params, LiveCartSmarty $smarty)
 		$content .= ' ' . $name . '="' . $param . '"'; 
 	}
 
-	$content .= ' value="' . htmlspecialchars($formHandler->get($fieldName), ENT_QUOTES, 'UTF-8') . '"';
+    $content .= ' value="' . htmlspecialchars($formHandler->get($fieldName), ENT_QUOTES, 'UTF-8') . '"';
 	$content .= '/>';
 	if (isset($params['autocomplete']))
 	{

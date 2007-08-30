@@ -29,7 +29,7 @@
 	    <input type="hidden" name="isInverse" value="" />
 	    
         With selected: 
-        <select name="act" class="select" style="width: auto;">
+        <select name="act" class="select">
     
             <option value="enable_isEnabled">{t _enable}</option>
             <option value="disable_isEnabled">{t _disable}</option>

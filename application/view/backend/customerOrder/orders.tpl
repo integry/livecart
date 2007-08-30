@@ -45,7 +45,7 @@
         <select name="act" class="select">
             <optgroup label="{t _order_status}">
                 <option value="setNew">{t _set_new}</option>
-                <option value="setBackordered">{t _set_backordered}</option>
+                <option value="setProcessing">{t _set_processing}</option>
                 <option value="setAwaitingShipment">{t _set_awaiting_shipment}</option>
                 <option value="setShipped">{t _set_shipped}</option>
                 <option value="setReturned">{t _set_returned}</option>

@@ -322,6 +322,11 @@
     text-align: right; 
 }
 
+.activeGridMass select
+{
+    width: 150px;
+}
+
 .activeGridItemsCount
 {
     position: absolute;

@@ -115,7 +115,11 @@ Backend.ObjectImage.prototype =
 					{
 					  	if (form.elements.namedItem(k))
 					  	{
-							form.elements.namedItem(k).value = imageData[k];    
+							if (!imageData[k])
+							{
+                                imageData[k] = '';
+                            }
+                            form.elements.namedItem(k).value = imageData[k];    
 						}
 					}   
 				 }

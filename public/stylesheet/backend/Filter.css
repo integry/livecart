@@ -5,7 +5,7 @@
 
 .filterList li
 {
- 	padding: 5px;
+ 	width: auto;
 	margin-bottom: 10px; 
   	background-color: #F7F7F7;  		
 }
