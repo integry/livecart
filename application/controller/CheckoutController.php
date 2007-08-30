@@ -271,6 +271,8 @@ class CheckoutController extends FrontendController
                 
                 $this->order->shippingAddress->set($shipping->userAddress->get());            
             }
+            
+            $this->order->resetShipments();
         }
         catch (Exception $e)
         {

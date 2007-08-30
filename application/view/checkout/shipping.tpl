@@ -7,7 +7,9 @@
 
 <div id="content" class="left right checkoutShipping">
 	
-	<h1>{t _shipping}</h1>
+	<h1 style="float: left;">{t _shipping}</h1>
+	
+    {include file="checkout/checkoutProgress.tpl" progress="progressShipping"}	
 	
 	{if $shipments|@count > 1}
 		<div class="message">
@@ -15,6 +17,8 @@
 		</div>
 	{/if}
 	
+	<div style="margin-top: 1.5em;"></div>
+    
     {form action="controller=checkout action=doSelectShippingMethod" method="POST" handle=$form}
         {foreach from=$shipments key="key" item="shipment"}
             

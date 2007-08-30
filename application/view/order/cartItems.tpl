@@ -56,7 +56,8 @@
 		</tr>
 		<tr>
 			<td colspan="5" style="text-align: right;">
-				<a href="{link route=$return}" class="continueShopping">Continue Shopping</a>
+				<h2></h2>
+                <a href="{link route=$return}" class="continueShopping">Continue Shopping</a>
 				<a href="{link controller=checkout}" class="proceedToCheckout">Proceed to Checkout</a>
 			</td>
 		</tr>

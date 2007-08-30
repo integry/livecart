@@ -6,20 +6,22 @@
 {* include file="layout/frontend/rightSide.tpl" *}
 
 <div id="content" class="left right">
-	
-	<h1>{t _pay}</h1>
-		   	
-	<div style="font-size: 90%; width: 600px; margin-left: auto; margin-right: auto; border: 1px solid yellow; padding: 5px; background-color: #FFFCDA; margin-top: 25px; margin-bottom: 25px;">
-		Please do not enter real credit card numbers. You can enter any number in the credit card number field. This is not a real transaction. Enter <strong>000</strong> for CVV to test for failed transactions. 
-	</div>	
-		   	
+
+	<h1 style="float: left;">{t _pay}</h1>
+
+	{include file="checkout/checkoutProgress.tpl" progress="progressPayment"}
+    	   			   	
 	<div id="payTotal">
         <div>
 			Order total: <span class="subTotal">{$order.formattedTotal.$currency}</span>
 		</div>
     </div>
 		   	
-    <h2>Pay with a credit card</h2>
+    <h2>Pay securely with a credit card</h2>
+        
+	<div style="font-size: 90%; width: 600px; margin-left: auto; margin-right: auto; border: 1px solid yellow; padding: 5px; background-color: #FFFCDA; margin-top: 15px; margin-bottom: 15px;">
+		Please do not enter real credit card numbers. You can enter any number in the credit card number field. This is not a real transaction. Enter <strong>000</strong> for CVV to test for failed transactions. 
+	</div>	       
         
 	{form action="controller=checkout action=payCreditCard" handle=$ccForm method="POST"}
     

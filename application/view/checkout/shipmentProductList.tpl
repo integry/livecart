@@ -13,7 +13,7 @@
                 <td class="productName"><a href="{productUrl product=$item.Product}">{$item.Product.name_lang}</a></td>
                 <td>{$item.Product.formattedPrice.$currency}</td>
                 <td>{$item.count}</td>
-                <td>{$item.formattedSubTotal.$currency}</td>
+                <td>{$item.formattedSubTotal}</td>
             </tr>
         {/foreach}            
     

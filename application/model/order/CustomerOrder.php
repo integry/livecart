@@ -207,7 +207,6 @@ class CustomerOrder extends ActiveRecordModel
             if ($item === $orderedItem)
             {
                 $this->removedItems[] = $item;
-                $item->markAsDeleted();
                 unset($this->orderedItems[$key]);
                 $this->resetShipments(); 
                 break;
@@ -400,14 +399,14 @@ class CustomerOrder extends ActiveRecordModel
             foreach ($this->orderedItems as $item)
             {
 				if ($item->isModified())
-				{       
+				{            
                     if (!$this->isExistingRecord())
                     {
                         parent::save();
                     }
                     
                     if ($item->save())
-                    {
+                    {                        
                         $isModified = true;                            
                     }
                 }
@@ -416,20 +415,8 @@ class CustomerOrder extends ActiveRecordModel
             }                            
 		} 
 		
-		// If shipment is modified
-        $count = 0;
-        foreach($this->shipments as $shipment)
-        {
-            if($shipment->isModified()) 
-            {
-                $isModified = true;
-                break;
-            }
-        }		
-		
-        
         if ($isModified)
-		{ 
+		{
             if (!$this->currency->get())
             {
                 $this->currency->set(self::getApplication()->getDefaultCurrency());
@@ -626,6 +613,7 @@ class CustomerOrder extends ActiveRecordModel
             $filter->setOrder(new ARFieldHandle('Shipment', 'status'));
             
             $this->shipments = $this->getRelatedRecordSet('Shipment', $filter, array('ShippingService')); 
+                        
             foreach($this->shipments as $shipment)
             {
                 $shipment->loadItems();
@@ -731,7 +719,7 @@ class CustomerOrder extends ActiveRecordModel
 	
 	public function isShippingSelected()
 	{
-        $selected = true;
+        $selected = count($this->shipments);
         
         foreach ($this->shipments as $shipment)
         {
@@ -767,18 +755,9 @@ class CustomerOrder extends ActiveRecordModel
 		if ($this->shipments)
 		{
     		$this->taxes[$id] = array();
-    		$zone = $this->getDeliveryZone();
             foreach ($this->shipments as $shipment)
     		{
-    		    if($shipment->getShippingService())
-                {
-                    $shipmentRates = $zone->getShippingRates($shipment);
-                    $shipment->setAvailableRates($shipmentRates);
-                    $shipment->setRateId($shipment->getShippingService()->getID());
-                }
-                
                 $total += $shipment->getSubTotal($currency);
-                
 	            if ($rate = $shipment->getSelectedRate())
 	            {
 	                $amount = $rate->getCostAmount();
@@ -983,6 +962,12 @@ class CustomerOrder extends ActiveRecordModel
 				$array['formatted_' . $key] = $currency->getFormattedPrice($array[$key]);
 			}
 		}
+
+        if (!$array['isFinalized'])
+        {
+            $array['isShippingSelected'] = $this->isShippingSelected();
+            $array['isAddressSelected'] = ($this->shippingAddress->get() && $this->billingAddress->get());
+        }
 
         $this->setArrayData($array);
 

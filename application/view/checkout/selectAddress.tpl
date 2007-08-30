@@ -6,8 +6,10 @@
 {* include file="layout/frontend/rightSide.tpl" *}
 
 <div id="content" class="left right">
-	
-	<h1>{t _select_addresses}</h1>
+
+	<h1 style="float: left;">{t _select_addresses}</h1>
+
+    {include file="checkout/checkoutProgress.tpl" progress="progressAddress"}	
 	
 	{form action="controller=checkout action=doSelectAddress" method="POST" handle=$form}
 
