@@ -11,6 +11,9 @@ $routes = array(
 					// backend
                     array("backend", array('controller' => 'backend.index', 'action' => 'index'), array()),
                     
+					// product pages
+                    array(":producthandle.:id", array('controller' => 'product', 'action' => 'index'), array("producthandle" => "[-A-Za-z0-9]+","id" => "[0-9]+")), 
+
                     // category URLs
                     array("shop/:cathandle.:id", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[-A-Za-z0-9]{0,}","id" => "[0-9]+")),
 					array("shop/:cathandle.:id/:page", array('controller' => 'category', 'action' => 'index'), array("cathandle" => "[-A-Za-z0-9]{0,}","id" => "[0-9]+","page" => "[0-9_]+")),
@@ -31,9 +34,6 @@ $routes = array(
 					// special case for passing a language code as an ID
 					array(":controller/:action/:id", array(), array('id' => "[a-zA-Z]{2}")),
 					array(":controller/:action/:id", array(), array("id" => "_id_")),
-
-					// product pages
-                    array(":producthandle.:id", array('controller' => 'product', 'action' => 'index'), array("producthandle" => "[-A-Za-z0-9]+","id" => "[0-9]+")), 
                     
                     // checkout
                     array("checkout/:action/:id", array('controller' => 'checkout'), array("id" => "[-A-Za-z0-9]+")), 

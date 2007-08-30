@@ -39,7 +39,7 @@
 	    <p>
             {err for="ccNum"}
                 {{label {t Card number}:}}
-	            {textfield class="text"}
+	            {textfield class="text" autoComplete="off"}
             {/err}
         </p>
         
