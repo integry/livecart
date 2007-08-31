@@ -791,7 +791,7 @@ Backend.Filter.prototype = {
                 var rangeDateEnd = rangeDateStart.next("input");                
                 
                 var rangeDateStartButton = paragraph.down("img.calendar_button");
-                var rangeDateEndButton   = rangeDateStartButton.next("img.calendar_button");
+                var rangeDateEndButton   = paragraph.down("img.calendar_button", 1);
                 
                 var rangeDateStartReal   = paragraph.down("input." + self.cssPrefix + "date_start_real");
                 var rangeDateEndReal     = paragraph.down("input." + self.cssPrefix + "date_end_real");
