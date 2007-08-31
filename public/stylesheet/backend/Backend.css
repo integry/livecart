@@ -32,7 +32,7 @@ a img
 
 a, a:visited
 {
-  	color: blue;
+  	color: darkblue;
 }
 
 h1
@@ -581,6 +581,8 @@ html, body{
   	font-weight: bold;
 	padding-left: 20px;
     float: left;
+    overflow: hidden;
+    white-space: nowrap;
 }
 #titleHelpButton {
 	position: relative;
@@ -1168,7 +1170,6 @@ fieldset.group p
     font-weight: bold;
 }
 
-
 .tabs li.active
 {
     background: #fff !important;
@@ -1185,6 +1186,11 @@ fieldset.group p
 .tab
 {
   	cursor: pointer;
+}
+
+.tab span
+{
+    font-size: smaller;
 }
 
 /**************************

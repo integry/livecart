@@ -13,6 +13,8 @@
         {/if}
     </div>
 	
+	<div class="clear"></div>
+	
 	<p id="cartStats" style="display: none;">
 		{maketext text="There are [quant,_1,item,items,no items] in your shopping basket." params=$cart.basketCount}
 	</p>
