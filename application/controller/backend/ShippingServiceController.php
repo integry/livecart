@@ -129,7 +129,7 @@ class ShippingServiceController extends StoreManagementController
            $shippingService->save();
         }
 
-        return new JSONResponse(false, 'success', $this->translate('_shipping_services_were_successfully_reordered'));
+        return new JSONResponse(false, 'success');
     }
 
     private function isNotValid($name, $rates = array())

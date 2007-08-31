@@ -54,7 +54,7 @@ class FilterController extends StoreManagementController
             }
         }
 
-        return new JSONResponse(false, 'success', $this->translate('_filter_groups_were_successfully_reordered'));
+        return new JSONResponse(false, 'success');
     }
     
     /**

@@ -124,7 +124,7 @@ class ProductRelationshipController extends StoreManagementController
             $relationship->save();
         }
         
-        return new JSONResponse(false, 'success', $this->translate('_relationships_were_successfully_reordered'));
+        return new JSONResponse(false, 'success');
     }
 }
 

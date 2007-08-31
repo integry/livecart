@@ -56,7 +56,7 @@ class ProductRelationshipGroupController extends StoreManagementController
             $relationship->save();
         }
         
-        return new JSONResponse(false, 'success', $this->translate('_relationship_groups_were_reordered'));   
+        return new JSONResponse(false, 'success');   
     }
 
     public function edit()

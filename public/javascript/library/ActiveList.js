@@ -746,11 +746,14 @@ ActiveList.prototype = {
         this._currentLi = li;
         var success = this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
 		
-		if(action == 'delete' && success !== false)
+		if(success !== false)
 		{
-			var duration = 0.5;
-		    Effect.Fade(li, { duration: duration });
-			setTimeout( function() { Element.remove(li) }.bind(this), duration * 1000 );
+			if(action == 'delete')
+			{
+				var duration = 0.5;
+			    Effect.Fade(li, { duration: duration });
+				setTimeout( function() { Element.remove(li) }.bind(this), duration * 1000 );
+			}
 		}
 		
         Element.removeClassName(li, this.cssPrefix  + action + '_inProgress');
@@ -970,10 +973,15 @@ ActiveList.prototype = {
 
         this._currentLi = this.dragged;
         
-        var url = this.callbacks.afterSort.call(this, this.dragged, item);
+        var success = this.callbacks.afterSort.call(this, this.dragged, item);
         this.colorizeItems();
         this.dragged.prevParentId = this.ul.id;
         this.offProgress(this.dragged);
+
+        if(success !== false)
+        {
+            this.highlight(this.dragged, 'yellow');
+        }
 
         this.dragged = false;
     },

@@ -50,7 +50,7 @@ class SpecFieldValueController extends StoreManagementController
             }
         }
 
-        return new JSONResponse(array('status' => 'success'));
+        return new JSONResponse(false, 'success');
     }
     
 	/**

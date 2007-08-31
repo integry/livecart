@@ -1179,7 +1179,6 @@ Backend.SelectPopup.prototype = {
 		        if(window.selectPopupWindow) 
 				{
 					window.selectPopupWindow.close();
-					window.selectPopupWindow = null;
 				}
 		    }); 
 			

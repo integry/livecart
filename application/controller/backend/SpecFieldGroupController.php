@@ -88,7 +88,7 @@ class SpecFieldGroupController extends StoreManagementController
             $group->save();
         }
 
-        return new JSONResponse(false, 'success', $this->translate('_specfield_groups_were_successfully_reordered'));
+        return new JSONResponse(false, 'success');
     }
     
     /**

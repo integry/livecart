@@ -76,7 +76,7 @@ class ProductFileGroupController extends StoreManagementController
             $fileGroup->save();
         }
         
-        return new JSONResponse(array('status' => 'success'));
+        return new JSONResponse(false, 'success');
     }
 
     public function edit()

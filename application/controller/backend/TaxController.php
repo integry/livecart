@@ -142,7 +142,7 @@ class TaxController extends StoreManagementController
            $tax->save();
         }
 
-        return new JSONResponse(false, 'success', $this->translate('_taxes_were_successfully_reordered'));
+        return new JSONResponse(false, 'success');
     }
 }
 

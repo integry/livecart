@@ -251,7 +251,7 @@ class SpecFieldController extends StoreManagementController
             }
         }
 
-        return new JSONResponse(false, 'success', $this->translate('_attributes_were_successfully_reordered'));
+        return new JSONResponse(false, 'success');
     }
     
 

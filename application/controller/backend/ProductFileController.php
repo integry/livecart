@@ -145,7 +145,7 @@ class ProductFileController extends StoreManagementController
             $file->save();
         }
         
-        return new JSONResponse(array('status' => 'success'));
+        return new JSONResponse(false, 'success');
 	}
 
 	/**
