@@ -417,15 +417,18 @@ class CustomerOrder extends ActiveRecordModel
 		} 
 		
 		// If shipment is modified
-        $count = 0;
-        foreach($this->shipments as $shipment)
+        if($this->isFinalized->get())
         {
-            if($shipment->isModified()) 
+            $count = 0;
+            foreach($this->shipments as $shipment)
             {
-                $isModified = true;
-                break;
+                if($shipment->isModified()) 
+                {
+                    $isModified = true;
+                    break;
+                }
             }
-        }		
+        }
 		
         
         if ($isModified)
@@ -677,10 +680,9 @@ class CustomerOrder extends ActiveRecordModel
                         {
                             $main = Shipment::getNewInstance($this);                            
                         }
-                        
                         $main->addItem($item);
                     }
-                }   
+                }
                 
                 if (isset($main))
                 {
@@ -691,8 +693,8 @@ class CustomerOrder extends ActiveRecordModel
                 {
                     $this->shipments->unshift($downloadable);
                 }                                  
-            }                    
-
+            }                
+            
             $this->shipping->set(serialize($this->shipments));               
         }
 
