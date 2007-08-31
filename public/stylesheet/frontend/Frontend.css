@@ -994,12 +994,14 @@ div.checkout a
 
 .proceedToCheckout
 {
-    float: right; 
-    font-weight: bold;
+    background-color: #DDEEFF;
     background-image: url(../../image/silk/gif/cart_go.gif);
+    background-position: 97% center;
     background-repeat: no-repeat;
-    background-position: center right;
-    padding-right: 22px;      
+    border: 1px solid #DDDDDD;
+    float: right;
+    font-weight: bold;
+    padding: 5px 27px 5px 5px;
 }
 
 .cartImage
@@ -1023,10 +1025,65 @@ div.checkout a
 /*****************************
 	Checkout
 ***************************/
-.addressSelector
+
+/* Progress bar */
+
+.checkoutHeader
 {
-    
+    line-height: 2em;
 }
+
+.checkoutHeader h1
+{
+    float: left;
+    line-height: 2em;
+}
+
+#checkoutProgress
+{
+    width: auto;
+    text-align: center;
+    padding-top: 1em;
+    float: right;    
+}
+
+#checkoutProgress a
+{
+    padding: 10px;
+    border: 3px solid #ccc;
+    background-color: #eee;
+    margin-right: 20px;
+}
+
+/* completed steps */
+#checkoutProgress a.completed, 
+.progressPayment a,
+#progressCart,
+.progressShipping #progressAddress,
+.shippingSelected,
+.addressSelected
+{
+    border: 3px solid lightgreen !important;            
+    background-color: #FFFCAC !important;
+}
+
+/* current step */
+.progressPayment #progressPayment,
+.progressCart #progressCart,
+.progressAddress #progressAddress,
+.progressShipping #progressShipping        
+{
+    border: 3px solid lightblue !important;
+    background-color: yellow !important;
+}
+
+.progressOrder
+{
+    font-size: smaller;
+    margin-right: 5px;
+}
+
+/* Select address */
 
 .addressSelector .selector
 {
@@ -1049,10 +1106,17 @@ div.checkout a
     margin: 3px;
 }
 
+/* Shipping method */
+
 .shipment
 {
     width: 70%;    
     border: 1px solid #DDDDDD;
+}
+
+.userViewOrder .shipment
+{
+    width: 90%;    
 }
 
 .shipment td
@@ -1071,6 +1135,7 @@ div.checkout a
 {
     font-weight: bold;
 	white-space: nowrap;
+	text-align: center;
 }
 
 .subTotalCaption, .shipment td.tax
@@ -1122,7 +1187,7 @@ a.cvv
 
 #payItems
 {
-	margin-top: 30px;
+	margin-top: 5px;
 }
 
 #expressComplete
@@ -1130,6 +1195,12 @@ a.cvv
     display: block;
     padding-top: 15px;
     margin-left: 22px;
+}
+
+#overviewAddresses
+{
+    padding-top: 2em;
+    padding-bottom: 2em;
 }
 
 /*************************** 

@@ -7,9 +7,11 @@
 
 <div id="content" class="left right">
 
-	<h1 style="float: left;">{t _pay}</h1>
-
-	{include file="checkout/checkoutProgress.tpl" progress="progressPayment"}
+    <div class="checkoutHeader">
+    	<h1>{t _pay}</h1>
+    
+    	{include file="checkout/checkoutProgress.tpl" progress="progressPayment"}
+    </div>
     	   			   	
 	<div id="payTotal">
         <div>
@@ -85,8 +87,54 @@
 
     {* <h2>Other payment methods</h2> *}
 
+    <h2>Order Overview</h2>
+    
     {include file="checkout/orderOverview.tpl"}
     
+    {defun name="address"}
+        {if $address}
+            <p>
+                {$address.fullName}                
+            </p>
+            <p>
+                {$address.companyName}                
+            </p>
+            <p>
+                {$address.address1}
+            </p>
+            <p>
+                {$address.address2}
+            </p>
+            <p>
+                {$address.city}
+            </p>
+            <p>
+                {if $address.stateName}{$address.stateName}, {/if}{$address.postalCode}
+            </p>
+            <p>
+                {$address.countryName}
+            </p>
+        {/if}
+    {/defun}
+    
+    <div id="overviewAddresses">
+    
+        <div style="width: 50%; float: left;">
+            <h3>{t Order will be shipped to}:</h3>
+            {fun name="address" address=$order.ShippingAddress}
+            <a href="{link controller=checkout action=selectAddress}">Change</a>
+        </div>    
+        
+        <div style="width: 50%; float: left;">
+            <h3>{t Order will be billed to}:</h3>
+            {fun name="address" address=$order.BillingAddress}
+            <a href="{link controller=checkout action=selectAddress}">Change</a>
+        </div>    
+    
+        <div class="clear"></div>
+    
+    </div>
+
 </div>
 
 {include file="layout/frontend/footer.tpl"}

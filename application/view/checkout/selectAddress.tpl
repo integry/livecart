@@ -7,9 +7,11 @@
 
 <div id="content" class="left right">
 
-	<h1 style="float: left;">{t _select_addresses}</h1>
-
-    {include file="checkout/checkoutProgress.tpl" progress="progressAddress"}	
+    <div class="checkoutHeader">
+    	<h1>{t _select_addresses}</h1>
+    
+        {include file="checkout/checkoutProgress.tpl" progress="progressAddress"}	
+    </div>
 	
 	{form action="controller=checkout action=doSelectAddress" method="POST" handle=$form}
 

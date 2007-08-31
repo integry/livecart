@@ -5,11 +5,13 @@
 
 <div id="content" class="left right orderIndex">
 	
-	<h1 style="float: left;">Your Shopping Basket</h1>
-	
-	{if $cart.cartItems}
-    	{include file="checkout/checkoutProgress.tpl" progress="progressCart"}
-    {/if}
+    <div class="checkoutHeader">
+    	<h1>Your Shopping Basket</h1>
+    	
+    	{if $cart.cartItems}
+        	{include file="checkout/checkoutProgress.tpl" progress="progressCart"}
+        {/if}
+    </div>
 	
 	<p id="cartStats" style="display: none;">
 		{maketext text="There are [quant,_1,item,items,no items] in your shopping basket." params=$cart.basketCount}

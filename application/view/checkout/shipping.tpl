@@ -7,9 +7,11 @@
 
 <div id="content" class="left right checkoutShipping">
 	
-	<h1 style="float: left;">{t _shipping}</h1>
-	
-    {include file="checkout/checkoutProgress.tpl" progress="progressShipping"}	
+    <div class="checkoutHeader">
+    	<h1>{t _shipping}</h1>
+    	
+        {include file="checkout/checkoutProgress.tpl" progress="progressShipping"}	
+    </div>
 	
 	{if $shipments|@count > 1}
 		<div class="message">

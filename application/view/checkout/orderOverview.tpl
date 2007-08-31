@@ -1,3 +1,6 @@
+<div style="width: 70%; text-align: right;">
+    <a href="{link controller=order}" style="margin-bottom: -25px;">Any changes needed?</a>
+</div>
 <table class="table shipment" id="payItems">            
     <thead>
         <tr>
@@ -26,4 +29,4 @@
     </tr>
 
     </tbody>        
-</table>    
+</table>

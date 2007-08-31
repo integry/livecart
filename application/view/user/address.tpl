@@ -27,7 +27,7 @@
         <p>
             {if $item.State.name}
                 {$item.State.name},
-            {else}
+            {elseif $item.UserAddress.stateName}
                 {$item.UserAddress.stateName},
             {/if}
             {$item.UserAddress.postalCode}

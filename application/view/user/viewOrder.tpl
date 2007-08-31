@@ -81,6 +81,50 @@
     	
     	{/foreach}
     	
+        {defun name="address"}
+            {if $address}
+                <p>
+                    {$address.fullName}                
+                </p>
+                <p>
+                    {$address.companyName}                
+                </p>
+                <p>
+                    {$address.address1}
+                </p>
+                <p>
+                    {$address.address2}
+                </p>
+                <p>
+                    {$address.city}
+                </p>
+                <p>
+                    {if $address.stateName}{$address.stateName}, {/if}{$address.postalCode}
+                </p>
+                <p>
+                    {$address.countryName}
+                </p>
+            {/if}
+        {/defun}    	
+    	
+        <div id="overviewAddresses">
+        
+            <div style="width: 50%; float: left;">
+                <h3>{t Order is shipped to}:</h3>
+                {fun name="address" address=$order.ShippingAddress}
+                <a href="{link controller=checkout action=selectAddress}">Change</a>
+            </div>    
+            
+            <div style="width: 50%; float: left;">
+                <h3>{t Order is billed to}:</h3>
+                {fun name="address" address=$order.BillingAddress}
+                <a href="{link controller=checkout action=selectAddress}">Change</a>
+            </div>    
+        
+            <div class="clear"></div>
+        
+        </div>    	
+    	
     	</fieldset>
     	
     	<h2 id="msg">Support</h2>
