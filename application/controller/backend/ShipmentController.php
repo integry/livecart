@@ -57,7 +57,11 @@ class ShipmentController extends StoreManagementController
 	            $shipmentsArray[$shipment->getID()] = array_merge($shipmentsArray[$shipment->getID()], $rate->toArray());
 	            $shipmentsArray[$shipment->getID()]['ShippingService']['ID'] = $shipmentsArray[$shipment->getID()]['serviceID'];
             }
-            else
+            else if($shipment->shippingService->get())
+            {
+                $shipmentsArray[$shipment->getID()]['ShippingService']['name_lang'] = $shipmentsArray[$shipment->getID()]['ShippingService']['name'];
+            }
+            else 
             {
                 $shipmentsArray[$shipment->getID()]['ShippingService']['name_lang'] = $this->translate('_shipping_service_is_not_selected');
             }	
@@ -172,7 +176,7 @@ class ShipmentController extends StoreManagementController
 	    if($shipmentID = (int)$this->request->get('id'))
 	    {
 	        $shipment = Shipment::getInstanceByID('Shipment', $shipmentID, true, array('Order' => 'CustomerOrder', 'ShippingAddress' => 'UserAddress'));
-            $shipment->loadItems();
+            $shipment->order->get()->loadAll();
             
             $zone = $shipment->order->get()->getDeliveryZone();
             $shipmentRates = $zone->getShippingRates($shipment);
