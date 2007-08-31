@@ -1158,25 +1158,42 @@ Backend.SelectPopup.prototype = {
     
     createPopup: function()
     {
-        Backend.SelectPopup.prototype.popup = window.open(this.link, this.title, 'resizable=1,toolbar=' + this.toolbar + ',location=' + this.location + ',width=' + this.width + ',height=' + this.height);
-        Backend.SelectPopup.prototype.popup.onunload = function()
-		{
-			window.selectPopupWindow = null;
-		}
+        var createWindow = true;
 		
-	    Event.observe(window, 'unload', function() 
-	    { 
-	        if(window.selectPopupWindow) 
+        try
+        {
+			if(window.selectPopupWindow && this.link == window.selectPopupWindow.location.pathname)
 			{
-				window.selectPopupWindow.close();
+			   window.selectPopupWindow.focus();
+			   createWindow = false;
 			}
-	    }); 
+        } 
+        catch(e) { }
 		
-		setTimeout(function() {
-			Backend.SelectPopup.prototype.popup.focus();
-		    window.selectPopupWindow = Backend.SelectPopup.prototype.popup;
-	        window.selectProductPopup = this;
-		}.bind(this), 100);
+		if(createWindow)
+		{
+	        Backend.SelectPopup.prototype.popup = window.open(this.link, this.title, 'resizable=1,toolbar=' + this.toolbar + ',location=' + this.location + ',width=' + this.width + ',height=' + this.height);
+	        			
+		    Event.observe(window, 'unload', function() 
+		    { 
+		        if(window.selectPopupWindow) 
+				{
+					window.selectPopupWindow.close();
+					window.selectPopupWindow = null;
+				}
+		    }); 
+			
+			setTimeout(function() {
+	            Backend.SelectPopup.prototype.popup.onunload = function()
+	            {
+	                window.selectPopupWindow = null;
+	            }
+				
+				Backend.SelectPopup.prototype.popup.focus();
+			    window.selectPopupWindow = Backend.SelectPopup.prototype.popup;
+		        window.selectProductPopup = this;
+			}.bind(this), 100);
+		}
     },
     
     getSelectedObject: function(objectID, downloadable)

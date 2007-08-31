@@ -805,6 +805,8 @@ Backend.Shipment.prototype =
 		
 	    window.onbeforeunload = function() 
 	    { 
+		    window.opener.selectPopupWindow = null;
+			
 	        var customerOrder = Backend.CustomerOrder.Editor.prototype.getInstance(orderID); 
 	        var shipmentsContainer = $('tabOrderProducts_' + orderID + 'Content'); 
 	        var ordersManagerContainer = $("orderManagerContainer"); 
