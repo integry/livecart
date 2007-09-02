@@ -42,17 +42,6 @@ class SpecificationItem extends Specification
 		return $inst;
 	}
 
-	public function set(SpecFieldValue $value)
-	{
-	  	// test whether the value belongs to the same field
-		if ($value->specField->get()->getID() != $this->specField->get()->getID())
-	  	{
-		    throw new Exception('Cannot assign SpecField:' . $value->specField->get()->getID() . ' value to SpecField:' . $this->specField->get()->getID());
-		}
-		
-		if($value !== $this->specFieldValue->get()) $this->specFieldValue->set($value);
-	}
-
 	public static function getRecordCount(ARSelectFilter $filter)
 	{
 	    return parent::getRecordCount(__CLASS__, $filter);
@@ -66,6 +55,17 @@ class SpecificationItem extends Specification
 	    return parent::getRecordSet(__CLASS__, $filter, $loadReferencedData);
 	}
 	
+	public function set(SpecFieldValue $value)
+	{
+	  	// test whether the value belongs to the same field
+		if ($value->specField->get()->getID() != $this->specField->get()->getID())
+	  	{
+		    throw new Exception('Cannot assign SpecField:' . $value->specField->get()->getID() . ' value to SpecField:' . $this->specField->get()->getID());
+		}
+		
+		if($value !== $this->specFieldValue->get()) $this->specFieldValue->set($value);
+	}
+	
 	public function save()
 	{
 		parent::save();
@@ -75,7 +75,6 @@ class SpecificationItem extends Specification
 	{
 		return $this->specFieldValue->get()->toArray();
 	}
-
 }
 
 ?>

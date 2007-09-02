@@ -21,6 +21,18 @@ class Manufacturer extends ActiveRecordModel
 		$schema->registerField(new ARField("name", ARVarchar::instance(60)));
 	}
 	
+	public static function getNewInstance($name)
+	{
+		$instance = parent::getNewInstance(__CLASS__);
+		$instance->name->set($name);
+		return $instance;	
+	}
+
+	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
+	{
+		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData = false, $loadReferencedRecords = false);
+	}
+	
 	public static function getInstanceByName($name)
 	{
 		$filter = new ARSelectFilter();
@@ -35,19 +47,7 @@ class Manufacturer extends ActiveRecordModel
 		{
 			return self::getNewInstance($name);
 		}
-	}
-	
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData = false, $loadReferencedRecords = false);
-	}
-	
-	public static function getNewInstance($name)
-	{
-		$instance = parent::getNewInstance(__CLASS__);
-		$instance->name->set($name);
-		return $instance;	
-	}
+	}	
 }
 
 ?>

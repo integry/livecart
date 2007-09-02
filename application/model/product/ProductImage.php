@@ -15,7 +15,28 @@ class ProductImage extends ObjectImage
 		$schema = parent::defineSchema($className);
 		$schema->registerField(new ARForeignKeyField("productID", "Product", "ID", "Product", ARInteger::instance()));
 	}
-		
+			
+	/*####################  Static method implementations ####################*/					
+			
+	public static function getNewInstance(Product $product)
+	{
+	  	$image = ActiveRecord::getNewInstance(__CLASS__);
+	  	$image->product->set($product);
+	  	return $image;
+	}
+	
+	/*####################  Value retrieval and manipulation ####################*/		
+	
+    public function getPath($size = 0)
+	{
+		if (!$this->isLoaded)
+		{
+            $this->load(array('Product'));    
+        }   
+        
+		return self::getImagePath($this->getID(), $this->product->get()->getID(), $size);
+	}
+	
 	public static function getImageSizes()
 	{
         $config = self::getApplication()->getConfig();
@@ -29,39 +50,26 @@ class ProductImage extends ObjectImage
 
         return $sizes;
     }
-		
-    public function getOwner()
-    {
-		return $this->product->get();
-	}	
-		
-	public static function getNewInstance(Product $product)
+	
+	protected static function getImagePath($imageID, $productID, $size)
 	{
-	  	$image = ActiveRecord::getNewInstance(__CLASS__);
-	  	$image->product->set($product);
-	  	return $image;
-	}
+        return 'upload/productimage/' . $productID. '-' . $imageID . '-' . $size . '.jpg';
+    }
+				
+	/*####################  Saving ####################*/		
 	
 	public static function deleteByID($id)
 	{
         parent::deleteByID(__CLASS__, $id, 'productID');
     }
 	
-    public function getPath($size = 0)
-	{
-		if (!$this->isLoaded)
-		{
-            $this->load(array('Product'));    
-        }   
-        
-		return self::getImagePath($this->getID(), $this->product->get()->getID(), $size);
-	}
-		
-	protected static function getImagePath($imageID, $productID, $size)
-	{
-        return 'upload/productimage/' . $productID. '-' . $imageID . '-' . $size . '.jpg';
+    protected function insert()
+    {
+        return parent::insert('productID');
     }
-	
+
+	/*####################  Data array transformation ####################*/	
+
 	public static function transformArray($array, ARSchema $schema)
 	{
 		$array = parent::transformArray($array, $schema);
@@ -80,19 +88,14 @@ class ProductImage extends ObjectImage
 		}
 
 		return $array;	  	
-	}
+	}	
 	
-    protected function insert()
-    {
-        return parent::insert('productID');
-    }
+	/*####################  Get related objects ####################*/    	
 
-/*
-	public static function countItems(Product $category)
-	{
-        return $category->getCategoryImagesSet()->getTotalRecordCount();
-	}
-*/
+    public function getOwner()
+    {
+		return $this->product->get();
+	}		
 }
 
 ?>

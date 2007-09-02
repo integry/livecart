@@ -68,6 +68,8 @@ class Transaction extends ActiveRecordModel
 		$schema->registerField(new ARField("comment", ARText::instance()));
 	}
 	
+	/*####################  Static method implementations ####################*/		
+	
 	public static function getNewInstance(CustomerOrder $order, TransactionResult $result)
 	{
         $instance = parent::getNewInstance(__CLASS__);
@@ -131,34 +133,7 @@ class Transaction extends ActiveRecordModel
         return parent::getInstanceById(__CLASS__, $id, self::LOAD_DATA, self::LOAD_REFERENCES);
     }
     
-    public static function transformArray($array, ARSchema $schema)
-    {
-		$array = parent::transformArray($array, $schema);
-        
-        try
-        {
-            $array['formattedAmount'] = Currency::getInstanceByID($array['Currency']['ID'])->getFormattedPrice($array['amount']);
-            $array['formattedRealAmount'] = Currency::getInstanceByID($array['RealCurrency']['ID'])->getFormattedPrice($array['realAmount']);
-        }
-        catch (ARNotFoundException $e)
-        {            
-        }
-        
-        $array['methodName'] = self::getApplication()->getLocale()->translator()->translate($array['method']);
-        
-        return $array;        
-    }
-    
-    public function toArray()
-    {
-        $array = parent::toArray();
-        
-        $array['isVoidable'] = $this->isVoidable();
-        $array['isCapturable'] = $this->isCapturable();
-        $array['isMultiCapture'] = $this->isMultiCapture();
-
-        return $array;
-    }    
+	/*####################  Value retrieval and manipulation ####################*/        
     
     public function setHandler(TransactionPayment $handler)
     {
@@ -361,6 +336,19 @@ class Transaction extends ActiveRecordModel
         return self::getApplication()->getPaymentHandler($className, $details);
     }
     
+	/*####################  Saving ####################*/        
+        
+    public function save()
+    {
+        if (!$this->currency->get())
+        {
+            $this->currency->set($this->realCurrency->get());
+            $this->amount->set($this->realAmount->get());
+        }
+        
+        return parent::save();
+    }
+    
     protected function insert()
     {
         if (self::TYPE_CAPTURE == $this->type->get() || self::TYPE_SALE == $this->type->get())
@@ -397,17 +385,37 @@ class Transaction extends ActiveRecordModel
         
         return parent::insert();
     }
+
+	/*####################  Data array transformation ####################*/    
     
-    public function save()
+    public static function transformArray($array, ARSchema $schema)
     {
-        if (!$this->currency->get())
+		$array = parent::transformArray($array, $schema);
+        
+        try
         {
-            $this->currency->set($this->realCurrency->get());
-            $this->amount->set($this->realAmount->get());
+            $array['formattedAmount'] = Currency::getInstanceByID($array['Currency']['ID'])->getFormattedPrice($array['amount']);
+            $array['formattedRealAmount'] = Currency::getInstanceByID($array['RealCurrency']['ID'])->getFormattedPrice($array['realAmount']);
+        }
+        catch (ARNotFoundException $e)
+        {            
         }
         
-        return parent::save();
+        $array['methodName'] = self::getApplication()->getLocale()->translator()->translate($array['method']);
+        
+        return $array;        
     }
+    
+    public function toArray()
+    {
+        $array = parent::toArray();
+        
+        $array['isVoidable'] = $this->isVoidable();
+        $array['isCapturable'] = $this->isCapturable();
+        $array['isMultiCapture'] = $this->isMultiCapture();
+
+        return $array;
+    } 
 }
 
 ?>

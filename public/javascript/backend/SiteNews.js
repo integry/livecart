@@ -2,12 +2,7 @@ Backend.SiteNews = Class.create();
 Backend.SiteNews.prototype = 
 {
 	initialize: function(newsList, container, template)
-	{
-		newsList.each(function(el)
-		{
-			new Backend.SiteNews.PostEntry(container, template, el);
-		});
-		
+	{		
 		ActiveList.prototype.getInstance('newsList', {
 	         beforeEdit:     function(li) 
 			 { 
@@ -36,6 +31,12 @@ Backend.SiteNews.prototype =
 	             }
 			 }
 	     }, []);		
+	
+		newsList.each(function(el)
+		{
+			new Backend.SiteNews.PostEntry(container, template, el);
+		});
+	
 	},
 	
 	showAddForm: function()

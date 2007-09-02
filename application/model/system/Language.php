@@ -36,39 +36,6 @@ class Language extends ActiveRecordModel
 		return ActiveRecord::getInstanceByID("Language", $ID, true);
 	}
 
-	public static function deleteById($id)
-	{
-		// make sure the currency record exists
-		$inst = ActiveRecord::getInstanceById('Language', $id, true);
-		
-		// make sure it's not the default currency
-		if (true != $inst->isDefault->get())			
-		{
-			ActiveRecord::deleteByID('Language', $id);
-			return true;
-		}
-		else
-		{
-		  	return false;
-		}
-	}
-
-	public function toArray()
-	{
-	  	$array = parent::toArray();
-	  	
-	  	$info = self::getApplication()->getLocale()->info();
-        $array['name'] = $info->getLanguageName($array['ID']);
-	  	$array['originalName'] = $info->getOriginalLanguageName($array['ID']);
-	  	
-		if (file_exists(ClassLoader::getRealPath('public.image.localeflag') . '/' . $array['ID'] . '.png'))
-		{
-		  	$array['image'] = 'image/localeflag/' . $array['ID'] . '.png';
-		}	  	
-		
-		return $array;
-	}
-
 	/**
 	 * Checks whether the language is systems default language
 	 * @return bool
@@ -97,6 +64,23 @@ class Language extends ActiveRecordModel
 	  	$this->isEnabled->set($isEnabled == 1 ? 1 : 0);
 	  	return true;
 	}
+
+	public static function deleteById($id)
+	{
+		// make sure the currency record exists
+		$inst = ActiveRecord::getInstanceById('Language', $id, true);
+		
+		// make sure it's not the default currency
+		if (true != $inst->isDefault->get())			
+		{
+			ActiveRecord::deleteByID('Language', $id);
+			return true;
+		}
+		else
+		{
+		  	return false;
+		}
+	}
 	
 	protected function insert()
 	{
@@ -113,6 +97,22 @@ class Language extends ActiveRecordModel
 		$this->position->set($position);	  	
 		
 		parent::insert();
+	}
+	
+	public function toArray()
+	{
+	  	$array = parent::toArray();
+	  	
+	  	$info = self::getApplication()->getLocale()->info();
+        $array['name'] = $info->getLanguageName($array['ID']);
+	  	$array['originalName'] = $info->getOriginalLanguageName($array['ID']);
+	  	
+		if (file_exists(ClassLoader::getRealPath('public.image.localeflag') . '/' . $array['ID'] . '.png'))
+		{
+		  	$array['image'] = 'image/localeflag/' . $array['ID'] . '.png';
+		}	  	
+		
+		return $array;
 	}
 }
 

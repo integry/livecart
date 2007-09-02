@@ -53,8 +53,6 @@ abstract class ValueSpecification extends Specification
 		
 		return $arr;
 	}	
-
-
 }
 
 ?>

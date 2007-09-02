@@ -17,6 +17,35 @@ class MultiValueSpecificationItem implements iSpecification
 	protected $productInstance = null;
 	
 	protected $specFieldInstance = null;
+		
+	public static function getNewInstance(Product $product, SpecField $field, $value = false)
+	{
+		$specItem = new MultiValueSpecificationItem($product, $field);
+		
+		if ($value)
+		{
+			$specItem->set($value); 	  	
+		}		
+		
+		return $specItem;
+	}
+	
+	public static function restoreInstance(Product $product, SpecField $field, $specValues)
+	{
+		$specItem = new MultiValueSpecificationItem($product, $field);
+
+		if (is_array($specValues))
+		{
+			foreach ($specValues as $id => $value)
+			{
+				$specFieldValue = SpecFieldValue::restoreInstance($field, $id, $value);
+				$item = SpecificationItem::restoreInstance($product, $field, $specFieldValue);				
+				$specItem->setItem($item);
+			}			
+		}		
+
+		return $specItem;
+	}
 	
 	protected function __construct(Product $product, SpecField $field)
 	{
@@ -46,6 +75,26 @@ class MultiValueSpecificationItem implements iSpecification
 	  	unset($this->items[$value->getID()]);
 	}
 	
+	public function getSpecField()
+	{
+		return $this->specFieldInstance;  
+	}
+	
+	protected function setItem(SpecificationItem $item)
+	{
+        $this->items[$item->specFieldValue->get()->getID()] = $item;
+	}
+
+	protected function deleteRemovedValues()
+	{
+	  	foreach ($this->removedItems as $item)
+	  	{
+		    $item->delete();
+		}
+		
+		$this->removedItems = array();
+	}	
+	
 	public function save()
 	{
 	  	$this->deleteRemovedValues();
@@ -68,11 +117,6 @@ class MultiValueSpecificationItem implements iSpecification
 		    $item->delete();
 		    unset($this->items[$key]);
 		}  
-	}
-
-	public function getSpecField()
-	{
-		return $this->specFieldInstance;  
 	}
 	
 	public function toArray()
@@ -115,50 +159,6 @@ class MultiValueSpecificationItem implements iSpecification
 		$ret['values'] = $values;		
 			
 		return $ret;
-	}
-	
-	public static function getNewInstance(Product $product, SpecField $field, $value = false)
-	{
-		$specItem = new MultiValueSpecificationItem($product, $field);
-		
-		if ($value)
-		{
-			$specItem->set($value); 	  	
-		}		
-		
-		return $specItem;
-	}
-	
-	public static function restoreInstance(Product $product, SpecField $field, $specValues)
-	{
-		$specItem = new MultiValueSpecificationItem($product, $field);
-
-		if (is_array($specValues))
-		{
-			foreach ($specValues as $id => $value)
-			{
-				$specFieldValue = SpecFieldValue::restoreInstance($field, $id, $value);
-				$item = SpecificationItem::restoreInstance($product, $field, $specFieldValue);				
-				$specItem->setItem($item);
-			}			
-		}		
-
-		return $specItem;
-	}
-
-	protected function setItem(SpecificationItem $item)
-	{
-        $this->items[$item->specFieldValue->get()->getID()] = $item;
-	}
-
-	protected function deleteRemovedValues()
-	{
-	  	foreach ($this->removedItems as $item)
-	  	{
-		    $item->delete();
-		}
-		
-		$this->removedItems = array();
 	}	
 }
 

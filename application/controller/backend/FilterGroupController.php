@@ -43,7 +43,7 @@ class FilterGroupController extends StoreManagementController
             'specFields' => $this->getSpecFieldOptions($category->getSpecificationFieldArray())
         );
         
-        $response->set('filters', Filter::createFiltersInGroupsCountArray($category->getFilterGroupSet()));
+        $response->set('filters', $this->createFiltersInGroupsCountArray($category->getFilterGroupSet()));
         $response->set('blankFilter', $blankFilter);
         $response->set('categoryID', $categoryID);
         $response->set('configuration', $this->getConfig());
@@ -86,7 +86,7 @@ class FilterGroupController extends StoreManagementController
     {
         $this->getConfig();
         
-        $errors = FilterGroup::validate($this->request->getValueArray(array('name', 'filters', 'specFieldID', 'ID')), $this->filtersConfig['languageCodes']);
+        $errors = $this->validate($this->request->getValueArray(array('name', 'filters', 'specFieldID', 'ID')), $this->filtersConfig['languageCodes']);
         
         if(!$errors)
         {
@@ -253,5 +253,127 @@ class FilterGroupController extends StoreManagementController
             
         return $this->filtersConfig;
     }
+    
+    private function createFiltersInGroupsCountArray(ARSet $filtersGroupsSet)
+	{
+	    $filterGroupIds = array();
+	    $filtersGroupsArray = array();
+	    foreach($filtersGroupsSet as $filterGroup)
+	    {
+	        $filterGroupIds[] = $filterGroup->getID();
+	    }
+	    
+		if(!empty($filterGroupIds))
+		{
+		    $db = ActiveRecord::getDBConnection();
+			
+			$filterGroupIdsString = implode(',',  $filterGroupIds);
+			
+			$filtersResultArray = array();
+			$filtersResultSet = $db->executeQuery("SELECT filterGroupID, COUNT(*) AS filtersCount FROM Filter WHERE filterGroupID IN ($filterGroupIdsString) GROUP BY filterGroupID");
+			while ($filtersResultSet->next()) $filtersResultArray[] = $filtersResultSet->getRow();
+			$filtersResultCount = count($filtersResultArray);
+			
+			$specFieldValuesResultArray = array();
+			
+			$specFieldValuesResultSet = $db->executeQuery("SELECT specFieldID, COUNT(specFieldID) AS filtersCount FROM SpecFieldValue WHERE specFieldID IN (SELECT specFieldID FROM FilterGroup WHERE ID in ($filterGroupIdsString)) GROUP BY specFieldID");
+			while ($specFieldValuesResultSet->next()) $specFieldValuesResultArray[] = $specFieldValuesResultSet->getRow();
+			$specFieldValuesResultCount = count($specFieldValuesResultArray);
+	
+		    foreach($filtersGroupsSet as $filterGroup)
+		    {
+	            $filterGroupArray = $filterGroup->toArray();
+	            $filterGroupArray['filtersCount'] = 0;
+	            
+		        if($filterGroup->specField->get()->allowManageFilters())
+		        {
+		            for($i = 0; $i < $filtersResultCount; $i++)
+		            {
+		                if($filtersResultArray[$i]['filterGroupID'] == $filterGroupArray['ID'])
+		                {
+		                    $filterGroupArray['filtersCount'] = $filtersResultArray[$i]['filtersCount'];
+		                }
+		            }
+		        }
+		        else
+		        {
+		            
+	   	            for($i = 0; $i < $specFieldValuesResultCount; $i++)
+		            {
+		                if($specFieldValuesResultArray[$i]['specFieldID'] == $filterGroupArray['SpecField']['ID'])
+		                {
+		                    $filterGroupArray['filtersCount'] = $specFieldValuesResultArray[$i]['filtersCount'];
+		                }
+		            }
+		            
+		        }
+		        
+	            $filtersGroupsArray[] = $filterGroupArray;
+		    }
+		}
+        
+        return $filtersGroupsArray;
+	}
+	
+    /**
+     * Validates filter group form
+     *
+     * @param array $values List of values to validate.
+     * @return array List of all errors
+     */
+    private function validate($values = array(), $languageCodes)
+    {
+        $errors = array();
+        
+        if(!isset($values['name']) || $values['name'][$languageCodes[0]] == '')
+        {
+            $errors['name['.$languageCodes[0].']'] = '_error_name_empty';
+        }
+
+        $specField = SpecField::getInstanceByID((int)$values['specFieldID']);
+        if(!$specField->isLoaded()) $specField->load();
+        
+        if(isset($values['filters']) && !$specField->isSelector())
+        {                 
+            $filtersCount = count($values['filters']);
+            $i = 0;
+            foreach ($values['filters'] as $key => $v)
+            {                
+                $i++;
+                // If emty last new filter, ignore it
+                if($filtersCount == $i && $v['name'][$languageCodes[0]] == '' && preg_match("/new/", $key)) continue;
+
+                switch($specField->getFieldValue('type'))
+                {
+                    case SpecField::TYPE_NUMBERS_SIMPLE:
+                        if(!isset($v['rangeStart']) || !is_numeric($v['rangeStart']) | !isset($v['rangeEnd']) || !is_numeric($v['rangeEnd']))
+                        {
+                            $errors['filters['.$key.'][rangeStart]'] = '_error_filter_value_is_not_a_number';
+                        }
+                    break;
+                    case SpecField::TYPE_TEXT_DATE: 
+                        if(
+                                !isset($v['rangeDateStart'])
+                             || !isset($v['rangeDateEnd']) 
+                             || count($sdp = explode('-', $v['rangeDateStart'])) != 3 
+                             || count($edp = explode('-', $v['rangeDateEnd'])) != 3
+                             || !checkdate($edp[1], $edp[2], $edp[0]) 
+                             || !checkdate($sdp[1], $sdp[2], $sdp[0])
+                        ){
+                            $errors['filters['.$key.'][rangeDateStart_show]'] = '_error_illegal_date';
+                        }
+                    break;
+                }
+
+                if($v['name'][$languageCodes[0]] == '')
+                {
+                    $errors['filters['.$key.'][name]['.$languageCodes[0].']'] = '_error_filter_name_empty';
+                }
+            }
+        }
+        
+        return $errors;
+    }	
 }
+
 ?>

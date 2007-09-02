@@ -30,6 +30,8 @@ class SpecFieldValue extends MultilingualObject
 		$schema->registerField(new ARField("position", ARInteger::instance(2)));
 	}
 
+	/*####################  Static method implementations ####################*/
+
 	/**
 	 *  Get new instance of specification field value
 	 *
@@ -92,16 +94,6 @@ class SpecFieldValue extends MultilingualObject
         return parent::getRecordSetArray(__CLASS__, $filter, false);
 	}
 
-	/**
-	 * Delete value from database
-	 * 
-	 * @param integer $id Specifiaction field value's id
-	 */
-	public static function deleteById($id)
-	{
-	    parent::deleteByID(__CLASS__, (int)$id);
-	}
-	
 	public static function restoreInstance(SpecField $field, $valueId, $value)
 	{	    
 		$instance = self::getNewInstance($field);
@@ -112,9 +104,47 @@ class SpecFieldValue extends MultilingualObject
 		return $instance;
 	}
 	
+	/*####################  Value retrieval and manipulation ####################*/	
+	
 	public function getFormFieldName()
 	{
 	  	return 'specItem_' . $this->getID();
+	}
+
+	public function mergeWith(SpecFieldValue $specFieldValue)
+	{
+	    if(!$specFieldValue->isExistingRecord()) 
+		{
+			throw new ApplicationException('SpecFieldValue should be an existing record');			
+		}
+
+	    if ($this === $specFieldValue) 
+		{
+			return;
+		}
+	    
+	    if (!in_array($specFieldValue, $this->mergedFields))
+	    {
+	        $this->mergedFields[] = $specFieldValue;
+	    }
+	}	
+	
+	/*####################  Saving ####################*/	
+	
+	/**
+	 * Delete value from database
+	 * 
+	 * @param integer $id Specifiaction field value's id
+	 */
+	public static function deleteById($id)
+	{
+	    parent::deleteByID(__CLASS__, (int)$id);
+	}
+
+	public function save($forceOperation = false)
+	{
+	    parent::save($forceOperation);
+	    $this->mergeFields();
 	}
 
 	protected function insert()
@@ -143,19 +173,23 @@ class SpecFieldValue extends MultilingualObject
 			
 		return parent::insert();		
 	}	
-
-	public function mergeWith(SpecFieldValue $specFieldValue)
-	{
-	    if(!($specFieldValue instanceof SpecFieldValue)) throw new ApplicationException('SpecFieldValue should be an instance of SpecFieldValue');
-	    if(!$specFieldValue->isExistingRecord()) throw new ApplicationException('SpecFieldValue should be an existing record');
-	    if($this === $specFieldValue) return;
-	    
-	    if(!in_array($specFieldValue, $this->mergedFields))
-	    {
-	        $this->mergedFields[] = $specFieldValue;
-	    }
-	}
 	
+	/**
+	 *	@todo Rewrite this to use ARUpdateFilter or simply an SQL query to update all values
+			
+		As in the original bug report:
+			
+			The update query for merging value 799 into 808 would look something like this:
+			
+			UPDATE SpecificationItem
+			LEFT JOIN SpecificationItem AS SecondItem ON SpecificationItem.productID=SecondItem.productID AND SecondItem.specFieldValueID=808
+			SET SpecificationItem.specFieldValueID=808
+			WHERE SpecificationItem.specFieldValueID=799 AND SecondItem.specFieldValueID IS NULL
+			
+			- it would only update products that do not have value 808 already set (otherwise the query would error because of duplicate SpecificationItem records).
+			
+			The remaining records with value 799 will be automatically removed (cascade) when SpecFieldValue 799 is deleted.	 
+	 */
 	private function mergeFields()
 	{
 	    if(empty($this->mergedFields)) return true;
@@ -193,7 +227,6 @@ class SpecFieldValue extends MultilingualObject
 	    
 	    $mergedSpecFieldValuesDeleteFilter = new ARDeleteFilter();
 	    $mergedSpecFieldValuesDeleteFilter->setCondition($inAllItemsExceptThisCondition);
-	    
 
 	    $products = array();
 	    $specificationItems = SpecificationItem::getRecordSet($mergedSpecificationItemsFilter, false);
@@ -211,12 +244,6 @@ class SpecFieldValue extends MultilingualObject
 	    }
 	    
 	    ActiveRecord::deleteRecordSet('SpecFieldValue', $mergedSpecFieldValuesDeleteFilter);
-	}
-	
-	public function save($forceOperation = false)
-	{
-	    parent::save($forceOperation);
-	    $this->mergeFields();
 	}
 }
 ?>

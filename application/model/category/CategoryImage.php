@@ -16,6 +16,27 @@ class CategoryImage extends ObjectImage
 		$schema->registerField(new ARForeignKeyField("categoryID", "Category", "ID", "Category", ARInteger::instance()));
 	}
 		
+	/*####################  Static method implementations ####################*/		
+		
+	public static function getNewInstance(Category $category)
+	{
+	  	$catImage = ActiveRecord::getNewInstance(__CLASS__);
+	  	$catImage->category->set($category);
+	  	return $catImage;
+	}
+	
+	/*####################  Value retrieval and manipulation ####################*/	
+	
+    public function getPath($size = 0)
+	{
+		if (!$this->isLoaded)
+		{
+            $this->load();    
+        }   
+        
+	  	return self::getImagePath($this->getID(), $this->category->get()->getID(), $size);
+	}			
+			
 	public static function getImageSizes()
 	{
         $config = self::getApplication()->getConfig();
@@ -29,38 +50,25 @@ class CategoryImage extends ObjectImage
 
         return $sizes;
     }
-    
-    public function getOwner()
-    {
-		return $this->category->get();
-	}
-		
-	public static function getNewInstance(Category $category)
+    	
+	protected static function getImagePath($imageID, $categoryID, $size)
 	{
-	  	$catImage = ActiveRecord::getNewInstance(__CLASS__);
-	  	$catImage->category->set($category);
-	  	return $catImage;
-	}
+        return 'upload/categoryimage/' . $categoryID. '-' . $imageID . '-' . $size . '.jpg';
+    }
+    
+	/*####################  Saving ####################*/	
 	
 	public static function deleteByID($id)
 	{
         parent::deleteByID(__CLASS__, $id, 'categoryID');
     }
 	
-    public function getPath($size = 0)
-	{
-		if (!$this->isLoaded)
-		{
-            $this->load();    
-        }   
-        
-	  	return self::getImagePath($this->getID(), $this->category->get()->getID(), $size);
-	}
-		
-	protected static function getImagePath($imageID, $categoryID, $size)
-	{
-        return 'upload/categoryimage/' . $categoryID. '-' . $imageID . '-' . $size . '.jpg';
+    protected function insert()
+    {
+        return parent::insert('categoryID');
     }
+	
+	/*####################  Data array transformation ####################*/	
 	
 	public static function transformArray($array, ARSchema $schema)
 	{
@@ -81,16 +89,13 @@ class CategoryImage extends ObjectImage
 
 		return $array;	  	
 	}
-	
-    protected function insert()
-    {
-        return parent::insert('categoryID');
-    }
 
-	public static function countItems(Category $category)
-	{
-        return $category->getCategoryImagesSet()->getTotalRecordCount();
-	}
+	/*####################  Get related objects ####################*/    
+    
+    public function getOwner()
+    {
+		return $this->category->get();
+	}			
 }
 
 ?>

@@ -27,6 +27,8 @@ class FilterGroup extends MultilingualObject
 		$schema->registerField(new ARField("isEnabled", ARInteger::instance(1)));
 	}
 
+	/*####################  Static method implementations ####################*/	
+
 	/**
 	 * Get new instance of FilterGroup record
 	 *
@@ -50,28 +52,6 @@ class FilterGroup extends MultilingualObject
 	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
-	}
-	
-	/**
-	 * This method is checking if SpecField record with passed id exist in the database
-	 *
-	 * @param int $id Record id
-	 * @return boolean
-	 */
-	public static function exists($id)
-	{
-	    return ActiveRecord::objectExists(__CLASS__, (int)$id);
-	}
-	
-	/**
-	 * Add new filter to filter group
-	 *
-	 * @param Filter $filter
-	 */
-	public function addFilter(Filter $filter)
-	{
-		$filter->filterGroup->set($this);
-		$filter->save();
 	}
 
 	/**
@@ -106,20 +86,32 @@ class FilterGroup extends MultilingualObject
 	{
 	    return parent::getRecordSet(__CLASS__, $filter);
 	}
-
+	
+	/*####################  Value retrieval and manipulation ####################*/	
+	
 	/**
-	 * Loads a set of spec field records in current category
+	 * Add new filter to filter group
 	 *
-	 * @return ARSet
+	 * @param Filter $filter
 	 */
-	public function getFiltersList()
+	public function addFilter(Filter $filter)
 	{
-		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle("Filter", "position"));
-		$filter->setCondition(new EqualsCond(new ARFieldHandle("Filter", "filterGroupID"), $this->getID()));
-
-		return Filter::getRecordSet($filter);
+		$filter->filterGroup->set($this);
+		$filter->save();
+	}	
+	
+	/**
+	 * This method is checking if SpecField record with passed id exist in the database
+	 *
+	 * @param int $id Record id
+	 * @return boolean
+	 */
+	public static function exists($id)
+	{
+	    return ActiveRecord::objectExists(__CLASS__, (int)$id);
 	}
+
+	/*####################  Saving ####################*/	
 	
 	/**
 	 * Save group filters in database
@@ -185,78 +177,23 @@ class FilterGroup extends MultilingualObject
 	{
 		$this->position->set(100000);  			
 		return parent::insert();
-	}
+	}	
+	
+	/*####################  Get related objects ####################*/
 
 	/**
-	 * Count filter groups in this category
+	 * Loads a set of spec field records in current category
 	 *
-	 * @param Category $category Category active record
-	 * @return integer
+	 * @return ARSet
 	 */
-    public static function countItems(Category $category)
-    {
-        return $category->getFilterGroupSet(false)->getTotalRecordCount();
-    }	
+	public function getFiltersList()
+	{
+		$filter = new ARSelectFilter();
+		$filter->setOrder(new ARFieldHandle("Filter", "position"));
+		$filter->setCondition(new EqualsCond(new ARFieldHandle("Filter", "filterGroupID"), $this->getID()));
 
-    /**
-     * Validates filter group form
-     *
-     * @param array $values List of values to validate.
-     * @return array List of all errors
-     */
-    public static function validate($values = array(), $languageCodes)
-    {
-        $errors = array();
-        
-        if(!isset($values['name']) || $values['name'][$languageCodes[0]] == '')
-        {
-            $errors['name['.$languageCodes[0].']'] = '_error_name_empty';
-        }
-
-        $specField = SpecField::getInstanceByID((int)$values['specFieldID']);
-        if(!$specField->isLoaded()) $specField->load();
-        
-        if(isset($values['filters']) && !$specField->isSelector())
-        {                 
-            $filtersCount = count($values['filters']);
-            $i = 0;
-            foreach ($values['filters'] as $key => $v)
-            {                
-                $i++;
-                // If emty last new filter, ignore it
-                if($filtersCount == $i && $v['name'][$languageCodes[0]] == '' && preg_match("/new/", $key)) continue;
-
-                switch($specField->getFieldValue('type'))
-                {
-                    case SpecField::TYPE_NUMBERS_SIMPLE:
-                        if(!isset($v['rangeStart']) || !is_numeric($v['rangeStart']) | !isset($v['rangeEnd']) || !is_numeric($v['rangeEnd']))
-                        {
-                            $errors['filters['.$key.'][rangeStart]'] = '_error_filter_value_is_not_a_number';
-                        }
-                    break;
-                    case SpecField::TYPE_TEXT_DATE: 
-                        if(
-                                !isset($v['rangeDateStart'])
-                             || !isset($v['rangeDateEnd']) 
-                             || count($sdp = explode('-', $v['rangeDateStart'])) != 3 
-                             || count($edp = explode('-', $v['rangeDateEnd'])) != 3
-                             || !checkdate($edp[1], $edp[2], $edp[0]) 
-                             || !checkdate($sdp[1], $sdp[2], $sdp[0])
-                        ){
-                            $errors['filters['.$key.'][rangeDateStart_show]'] = '_error_illegal_date';
-                        }
-                    break;
-                }
-
-                if($v['name'][$languageCodes[0]] == '')
-                {
-                    $errors['filters['.$key.'][name]['.$languageCodes[0].']'] = '_error_filter_name_empty';
-                }
-            }
-        }
-        
-        return $errors;
-    }
+		return Filter::getRecordSet($filter);
+	}	
 }
 
 ?>

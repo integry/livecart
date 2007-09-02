@@ -53,6 +53,20 @@ class ProductFile extends ObjectFile
 	{
 	    return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
+	
+	/**
+	 * Loads a set of ProductFile instances
+	 *
+	 * @param ARSelectFilter $filter
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
+	{
+	    return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+	}
+		
 	/**
 	 *
 	 * @param Product $product
@@ -74,19 +88,6 @@ class ProductFile extends ObjectFile
 	    $filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
 	    
 	    return $filter;
-	}
-	
-	/**
-	 * Loads a set of ProductFile instances
-	 *
-	 * @param ARSelectFilter $filter
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return ARSet
-	 */
-	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-	    return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 }
 

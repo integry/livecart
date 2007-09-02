@@ -53,6 +53,8 @@ class SpecField extends MultilingualObject
 		$schema->registerField(new ARField("valueSuffix", ARArray::instance()));
 	}    
     
+	/*####################  Static method implementations ####################*/		    
+    
     /**
 	 * Get instance SpecField record by id
 	 *
@@ -116,6 +118,8 @@ class SpecField extends MultilingualObject
 		return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
+	/*####################  Value retrieval and manipulation ####################*/	
+
     /**
      * Adds a "choice" value to this field
      *
@@ -161,32 +165,6 @@ class SpecField extends MultilingualObject
 		}			
 	  	
 	}
-
-	public function getFiltersGroupsListArray()
-	{
-		$filter = new ARSelectFilter();
-		$filter->setOrder(new ARFieldHandle("FilterGroup", "position"));
-		$filter->setCondition(new EqualsCond(new ARFieldHandle("FilterGroup", "specFieldID"), $this->getID()));
-
-        $filterGroups = FilterGroup::getRecordSet($filter);
-        $filterGroupsArray = array();
-        $i = 0;
-        foreach($filterGroups as $filter)
-        {
-            $filterGroupsArray[$i] = $filter->toArray(false);
-            if($this->isSelector())
-            {
-                $filterGroupsArray[$i]['filtersCount'] = $this->getValuesSet()->getTotalRecordCount();
-            }
-            else
-            {
-                $filterGroupsArray[$i]['filtersCount'] = $filter->getFiltersList()->getTotalRecordCount();
-            }
-            $i++;
-        }
-        
-		return $filterGroupsArray;
-	}
 	
 	public function getSpecificationFieldClass()
 	{
@@ -211,34 +189,6 @@ class SpecField extends MultilingualObject
 	public static function exists($id)
 	{
 		return ActiveRecord::objectExists(__CLASS__, (int)$id);
-	}
-
-	/**
-	 * Delete spec field from database
-	 */
-	public static function deleteById($id)
-	{
-	    return parent::deleteByID(__CLASS__, (int)$id);
-	}
-
-	/**
-	 * Loads a set of spec field records in current category
-	 *
-	 * @return array
-	 */
-	public function getValuesList()
-	{
-	    return SpecFieldValue::getRecordSetArray($this->getID());
-	}
-
-	/**
-	 * Loads a set of spec field records in current category
-	 *
-	 * @return ARSet
-	 */
-	public function getValuesSet()
-	{
-		return SpecFieldValue::getRecordSet($this->getID());
 	}
 
 	/**
@@ -317,99 +267,21 @@ class SpecField extends MultilingualObject
 	    else return self::DATATYPE_NUMBERS;
 	}
 
-	/**
-	 *	Returns SpecField array representations
-	 *
-	 *	@return array
-	 */
-	public function toArray()
-    {
-	  	$array = parent::toArray();
-	  	$array['fieldName'] = $this->getFormFieldName();
-	  	
-	  	return $array;
-	}
-
 	public function getFormFieldName($language = false)
 	{
 	  	return 'specField_' . $this->getID() . ($language && (self::getApplication()->getDefaultLanguageCode() != $language) ? '_' . $language : '');
 	}
 
+	/*####################  Saving ####################*/	
+
 	/**
-	 * Count specification fields in this category
-	 *
-	 * @param Category $category Category active record
-	 * @return integer
+	 * Delete spec field from database
 	 */
-    public static function countItems(Category $category)
-    {
-        return $category->getSpecificationFieldSet()->getTotalRecordCount();
-    }
-	
-    /**
-     * Validates specification field form
-     *
-     * @param array $values List of values to validate.
-     * @param array $config 
-     * @return array List of all errors
-     */
-    public static function validate($values = array(), $languageCodes)
-    {
-        $errors = array();
-        
-        if(!isset($values['name_' . $languageCodes[0]]) || $values['name_' . $languageCodes[0]] == '')
-        {
-            $errors["name_" + $languageCodes[0]] = '_error_name_empty';
-        }
-
-        if(!isset($values['handle']) || $values['handle'] == '' || preg_match('/[^\w\d_.]/', $values['handle']))
-        {
-            $errors['handle'] = '_error_handle_invalid';
-        }
-        else
-        {
-            $values['ID'] = !isset($values['ID']) ? -1 : $values['ID'];
-            $filter = new ARSelectFilter();
-                $handleCond = new EqualsCond(new ARFieldHandle('SpecField', 'handle'), $values['handle']);
-                $handleCond->addAND(new EqualsCond(new ARFieldHandle('SpecField', 'categoryID'), (int)$values['categoryID']));
-                $handleCond->addAND(new NotEqualsCond(new ARFieldHandle('SpecField', 'ID'), (int)$values['ID']));
-            $filter->setCondition($handleCond);
-            if(count(SpecField::getRecordSetArray($filter)) > 0)
-            {
-                $errors['handle'] =  '_error_handle_exists';
-            }
-        }
-
-        if(!isset($values['handle']) || $values['handle'] == '')
-        {
-            $errors['handle'] = '_error_handle_empty';
-        }
-
-        if(in_array($values['type'], self::getSelectorValueTypes()) && isset($values['values']) && is_array($values['values']))
-        {
-            $countValues = count($values['values']);
-            $i = 0;
-            foreach ($values['values'] as $key => $v)
-            {
-                $i++;
-                if($countValues == $i && preg_match('/new/', $key) && empty($v[$languageCodes[0]]))
-                {
-                    continue;
-                }
-                else if(empty($v[$languageCodes[0]]))
-                {
-                    $errors["values[$key][{$languageCodes[0]}]"] = '_error_value_empty';
-                } 
-                else if(SpecField::getDataTypeFromType($values['type']) == 2 && !is_numeric($v[$languageCodes[0]]))
-                {
-                    $errors["values[$key][{$languageCodes[0]}]"] = '_error_value_is_not_a_number';
-                }
-            }
-        }
-
-        return $errors;
-    }
-    
+	public static function deleteById($id)
+	{
+	    return parent::deleteByID(__CLASS__, (int)$id);
+	}	
+ 
     protected function insert()
     {
 		// get max position
@@ -423,6 +295,70 @@ class SpecField extends MultilingualObject
 		$this->position->set($position);
 
 		return parent::insert();
+	}	
+	
+	/*####################  Data array transformation ####################*/	
+
+	/**
+	 *	Returns SpecField array representations
+	 *
+	 *	@return array
+	 */
+	public function toArray()
+    {
+	  	$array = parent::toArray();
+	  	$array['fieldName'] = $this->getFormFieldName();
+	  	
+	  	return $array;
+	}
+
+	/*####################  Get related objects ####################*/    
+
+	public function getFiltersGroupsListArray()
+	{
+		$filter = new ARSelectFilter();
+		$filter->setOrder(new ARFieldHandle("FilterGroup", "position"));
+		$filter->setCondition(new EqualsCond(new ARFieldHandle("FilterGroup", "specFieldID"), $this->getID()));
+
+        $filterGroups = FilterGroup::getRecordSet($filter);
+        $filterGroupsArray = array();
+        $i = 0;
+        foreach($filterGroups as $filter)
+        {
+            $filterGroupsArray[$i] = $filter->toArray(false);
+            if($this->isSelector())
+            {
+                $filterGroupsArray[$i]['filtersCount'] = $this->getValuesSet()->getTotalRecordCount();
+            }
+            else
+            {
+                $filterGroupsArray[$i]['filtersCount'] = $filter->getFiltersList()->getTotalRecordCount();
+            }
+            $i++;
+        }
+        
+		return $filterGroupsArray;
+	}
+	
+	/**
+	 * Loads a set of spec field records in current category
+	 *
+	 * @return array
+	 */
+	public function getValuesList()
+	{
+	    return SpecFieldValue::getRecordSetArray($this->getID());
+	}
+
+	/**
+	 * Loads a set of spec field records in current category
+	 *
+	 * @return ARSet
+	 */
+	public function getValuesSet()
+	{
+		return SpecFieldValue::getRecordSet($this->getID());
 	}
 }
+
 ?>

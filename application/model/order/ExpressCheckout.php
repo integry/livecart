@@ -27,6 +27,8 @@ class ExpressCheckout extends ActiveRecordModel
 		$schema->registerField(new ARField("paymentData", ARText::instance()));
 	}    
 	
+	/*####################  Static method implementations ####################*/	
+	
 	public static function getNewInstance(CustomerOrder $order, ExpressPayment $handler)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
@@ -45,17 +47,7 @@ class ExpressCheckout extends ActiveRecordModel
         }
     }
 	
-	public function getHandler(TransactionDetails $transaction = null)
-	{
-        $handler = $this->getApplication()->getExpressPaymentHandler($this->method->get(), $transaction);
-        $handler->setData(unserialize($this->paymentData->get()));
-        return $handler;        
-    }
-	
-	public function getTransactionDetails()
-	{
-        return $this->getHandler()->getDetails();
-    }
+	/*####################  Saving ####################*/    
     
     public function deleteInstancesByOrder(CustomerOrder $order)
     {
@@ -71,6 +63,20 @@ class ExpressCheckout extends ActiveRecordModel
         
         return parent::insert();
     }
+	
+	/*####################  Get related objects ####################*/	
+	
+	public function getHandler(TransactionDetails $transaction = null)
+	{
+        $handler = $this->getApplication()->getExpressPaymentHandler($this->method->get(), $transaction);
+        $handler->setData(unserialize($this->paymentData->get()));
+        return $handler;        
+    }
+	
+	public function getTransactionDetails()
+	{
+        return $this->getHandler()->getDetails();
+    }    
 }
 
 ?>

@@ -26,6 +26,8 @@ class UserGroup extends ActiveRecordModel
 		$schema->registerField(new ARField("description", ARVarchar::instance(100)));
 	}
 	
+	/*####################  Static method implementations ####################*/	
+	
 	/**
 	 * Gets an existing record instance (persisted on a database).
 	 * @param mixed $recordID
@@ -40,10 +42,38 @@ class UserGroup extends ActiveRecordModel
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
 	
-	public function load($loadReferencedRecords = false)
+	/**
+	 * Create new user group
+	 * 
+	 * @param DeliveryZone $deliveryZone Delivery zone instance
+	 * @param Tax $tax Tax type
+	 * @param float $rate Rate in percents
+	 * @return TaxRate
+	 */
+	public static function getNewInstance($name, $description = '')
 	{
-	    parent::load($loadReferencedRecords);
+	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
+
+	  	$instance->name->set($name);
+	  	$instance->description->set($description);
+	  	
+	  	return $instance;
 	}
+
+	/**
+	 * Load service rates record set
+	 *
+	 * @param ARSelectFilter $filter
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
+	{
+		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+	}	
+	
+    /*####################  Value retrieval and manipulation ####################*/		
 	
 	public function loadRoles($force = false)
 	{
@@ -77,67 +107,6 @@ class UserGroup extends ActiveRecordModel
         }
         
 	    return count(array_intersect($actionRoleNames, $appliedRoleNames)) > 0;
-	}
-
-	/**
-	 * Create new user group
-	 * 
-	 * @param DeliveryZone $deliveryZone Delivery zone instance
-	 * @param Tax $tax Tax type
-	 * @param float $rate Rate in percents
-	 * @return TaxRate
-	 */
-	public static function getNewInstance($name, $description = '')
-	{
-	  	$instance = ActiveRecord::getNewInstance(__CLASS__);
-
-	  	$instance->name->set($name);
-	  	$instance->description->set($description);
-	  	
-	  	return $instance;
-	}
-
-	/**
-	 * Load service rates record set
-	 *
-	 * @param ARSelectFilter $filter
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return ARSet
-	 */
-	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
-	}
-
-	/**
-	 * Load users in this group
-	 *
-	 * @param DeliveryZone $deliveryZone 
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return ARSet
-	 */
-	public function getUsersRecordSet(ARSelectFilter $filter = null, $loadReferencedRecords = array('UserGroup'))
-	{
-		return User::getRecordSetByGroup($this, $filter, $loadReferencedRecords);
-	}
-
-	public function getRolesRecordSet(ARSelectFilter $filter = null, $loadReferencedRecords = false)
-	{
-	    if(!$filter) 
-        {
-            $filter = new ARSelectFilter();
-        }
-        
-        $rolesRecordSet = new ARSet();
-        
-        foreach(AccessControlAssociation::getRecordSetByUserGroup($this, $filter) as $association)
-        {
-            $rolesRecordSet->add($association->role->get());
-        }
-        
-        return $rolesRecordSet;
 	}
 
 	public function applyRole(Role $role)
@@ -247,6 +216,38 @@ class UserGroup extends ActiveRecordModel
 	{
 	    return $this->appliedRoles;
 	}
+	
+	/*####################  Get related objects ####################*/        	
+	
+	/**
+	 * Load users in this group
+	 *
+	 * @param DeliveryZone $deliveryZone 
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+	public function getUsersRecordSet(ARSelectFilter $filter = null, $loadReferencedRecords = array('UserGroup'))
+	{
+		return User::getRecordSetByGroup($this, $filter, $loadReferencedRecords);
+	}
+
+	public function getRolesRecordSet(ARSelectFilter $filter = null, $loadReferencedRecords = false)
+	{
+	    if(!$filter) 
+        {
+            $filter = new ARSelectFilter();
+        }
+        
+        $rolesRecordSet = new ARSet();
+        
+        foreach(AccessControlAssociation::getRecordSetByUserGroup($this, $filter) as $association)
+        {
+            $rolesRecordSet->add($association->role->get());
+        }
+        
+        return $rolesRecordSet;
+	}	
 }
 
 ?>

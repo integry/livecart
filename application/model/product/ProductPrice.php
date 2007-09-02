@@ -22,6 +22,8 @@ class ProductPrice extends ActiveRecordModel
 		$schema->registerField(new ARField("price", ARFloat::instance(16)));
 	}
 
+	/*####################  Static method implementations ####################*/		
+
 	public static function getNewInstance(Product $product, Currency $currency)
 	{
 		$instance = parent::getNewInstance(__CLASS__);
@@ -30,49 +32,7 @@ class ProductPrice extends ActiveRecordModel
 
 		return $instance;
 	}
-
-	/**
-	 * Loads a set of active record product price by using a filter
-	 *
-	 * @param ARSelectFilter $filter
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return ARSet
-	 */
-	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
-	}
-
-	/**
-	 * Get record set of product prices
-	 *
-	 * @param Product $product
-	 *
-	 * @return ARSet
-	 */
-	public static function getProductPricesSet(Product $product)
-	{	    
-		// preload currency data (otherwise prices would have to be loaded with referenced records)
-		self::getApplication()->getCurrencySet();
-		
-		return self::getRecordSet(self::getProductPricesFilter($product));
-	}
-
-	/**
-	 * Get product prices filter
-	 *
-	 * @param Product $product
-	 *
-	 * @return ARSelectFilter
-	 */
-	private static function getProductPricesFilter(Product $product)
-	{
-	    ClassLoader::import("application.model.Currency");
-
-	    return new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
-	}
-
+	
 	public static function getInstance(Product $product, Currency $currency)
 	{
 		$filter = new ARSelectFilter();
@@ -92,7 +52,22 @@ class ProductPrice extends ActiveRecordModel
 		}
 
 		return $instance;
+	}	
+
+	/**
+	 * Loads a set of active record product price by using a filter
+	 *
+	 * @param ARSelectFilter $filter
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
+	{
+		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
+
+	/*####################  Value retrieval and manipulation ####################*/	
 
 	public function reCalculatePrice()
 	{
@@ -142,31 +117,8 @@ class ProductPrice extends ActiveRecordModel
 
 		return round($price, 2);       
     }
-	
-	/**
-	 * Load product pricing data for a whole array of products at once
-     */
-	public static function loadPricesForRecordSet(ARSet $products)	
-	{
-        $ids = array();
-		foreach ($products as $key => $product)
-	  	{
-			$ids[$product->getID()] = $key;
-		}
 
-		$priceArray = self::fetchPriceData(array_flip($ids));
-							
-		$pricing = array();
-		foreach ($priceArray as $price)
-		{
-			$pricing[$price['productID']][$price['currencyID']] = $price['price'];
-		}			
-		foreach ($pricing as $productID => $productPricing)
-		{
-			$product = $products->get($ids[$productID]);
-			$product->loadPricing($productPricing);
-		}
-	}
+	/*####################  Instance retrieval ####################*/
 
 	/**
 	 * Load product pricing data for a whole array of products at once
@@ -221,6 +173,60 @@ class ProductPrice extends ActiveRecordModel
         $filter = new ARSelectFilter(new INCond(new ARFieldHandle('ProductPrice', 'productID'), $productIDs));
         $filter->setOrder(new ARExpressionHandle('currencyID = "' . $baseCurrency . '"'), 'DESC');
         return ActiveRecordModel::getRecordSetArray('ProductPrice', $filter);		
+	}
+		
+	/**
+	 * Load product pricing data for a whole array of products at once
+     */
+	public static function loadPricesForRecordSet(ARSet $products)	
+	{
+        $ids = array();
+		foreach ($products as $key => $product)
+	  	{
+			$ids[$product->getID()] = $key;
+		}
+
+		$priceArray = self::fetchPriceData(array_flip($ids));
+							
+		$pricing = array();
+		foreach ($priceArray as $price)
+		{
+			$pricing[$price['productID']][$price['currencyID']] = $price['price'];
+		}			
+		foreach ($pricing as $productID => $productPricing)
+		{
+			$product = $products->get($ids[$productID]);
+			$product->loadPricing($productPricing);
+		}
+	}
+
+	/**
+	 * Get record set of product prices
+	 *
+	 * @param Product $product
+	 *
+	 * @return ARSet
+	 */
+	public static function getProductPricesSet(Product $product)
+	{	    
+		// preload currency data (otherwise prices would have to be loaded with referenced records)
+		self::getApplication()->getCurrencySet();
+		
+		return self::getRecordSet(self::getProductPricesFilter($product));
+	}
+
+	/**
+	 * Get product prices filter
+	 *
+	 * @param Product $product
+	 *
+	 * @return ARSelectFilter
+	 */
+	private static function getProductPricesFilter(Product $product)
+	{
+	    ClassLoader::import("application.model.Currency");
+
+	    return new ARSelectFilter(new EqualsCond(new ARFieldHandle(__CLASS__, 'productID'), $product->getID()));
 	}
 }
 

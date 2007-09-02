@@ -19,6 +19,8 @@ class ProductRelationship extends ActiveRecord
 		$schema->registerField(new ARField("position",  ARInteger::instance()));
 	}
 	
+	/*####################  Static method implementations ####################*/			
+	
 	/**
 	 * Get related product active record by ID
 	 *
@@ -94,6 +96,37 @@ class ProductRelationship extends ActiveRecord
 	    return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
 	
+	/*####################  Value retrieval and manipulation ####################*/		
+	
+	public static function hasRelationship(Product $product, Product $relatedToProduct)
+	{
+	    $recordID = array(
+			'productID' => $product->getID(), 
+			'relatedProductID' => $relatedToProduct->getID()
+	    );
+	    	    
+	    if(self::retrieveFromPool(__CLASS__, $recordID)) return true;
+	    if(self::objectExists(__CLASS__, $recordID)) return true;
+	    
+	    return false;
+	}
+	
+	/*####################  Saving ####################*/		
+	
+	protected function insert()
+	{
+	  	// get max position
+	  	$f = self::getRelatedProductsSetFilter($this->product->get());
+	  	$f->setLimit(1);
+	  	$rec = ActiveRecord::getRecordSetArray('ProductRelationship', $f);
+		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 0;
+		$this->position->set($position);	
+		
+		return parent::insert();
+	}		
+
+	/*####################  Get related objects ####################*/    	
+	
 	/**
 	 * Get product relationships
 	 *
@@ -116,19 +149,6 @@ class ProductRelationship extends ActiveRecord
 	    return parent::getRecordSetArray(__CLASS__, self::getRelatedProductsSetFilter($product), $loadReferencedRecords);
 	}
 	
-	public static function hasRelationship(Product $product, Product $relatedToProduct)
-	{
-	    $recordID = array(
-			'productID' => $product->getID(), 
-			'relatedProductID' => $relatedToProduct->getID()
-	    );
-	    	    
-	    if(self::retrieveFromPool(__CLASS__, $recordID)) return true;
-	    if(self::objectExists(__CLASS__, $recordID)) return true;
-	    
-	    return false;
-	}
-	
 	private static function getRelatedProductsSetFilter(Product $product)
 	{
 	    $filter = new ARSelectFilter();
@@ -139,18 +159,6 @@ class ProductRelationship extends ActiveRecord
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("ProductRelationship", "productID"), $product->getID()));
 		
 		return $filter;
-	}
-	
-	protected function insert()
-	{
-	  	// get max position
-	  	$f = self::getRelatedProductsSetFilter($this->product->get());
-	  	$f->setLimit(1);
-	  	$rec = ActiveRecord::getRecordSetArray('ProductRelationship', $f);
-		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 0;
-		$this->position->set($position);	
-		
-		return parent::insert();
 	}	
 }
 

@@ -61,6 +61,8 @@ class CustomerOrder extends ActiveRecordModel
 		$schema->registerField(new ARField("shipping", ARText::instance()));
 	}
 		
+	/*####################  Static method implementations ####################*/		
+		
 	public static function getNewInstance(User $user)	
 	{
         $instance = parent::getNewInstance(__CLASS__);
@@ -81,7 +83,9 @@ class CustomerOrder extends ActiveRecordModel
     {
         return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
     }
-        
+     
+	/*####################  Value retrieval and manipulation ####################*/		 
+	    
     public function loadItems()
     {
         if (!$this->isExistingRecord())
@@ -349,7 +353,43 @@ class CustomerOrder extends ActiveRecordModel
     public function addCapturedAmount($amount)
     {
         $this->capturedAmount->set($this->capturedAmount->get() + $amount);
+    }   
+    
+    /**
+     *  Merge OrderedItem instances of the same product into one instance
+     */
+    public function mergeItems()
+    {
+		$byProduct = array();
+		
+		foreach ($this->orderedItems as $item)
+		{
+			$byProduct[$item->product->get()->getID()][$item->isSavedForLater->get()][] = $item;
+		}
+		
+		foreach ($byProduct as $productID => $itemsByStatus)
+		{
+			foreach ($itemsByStatus as $status => $items)
+			{
+				if (count($items) > 1)
+				{
+					$mainItem = array_shift($items);
+					$count = $mainItem->count->get();
+					
+					foreach ($items as $item)
+					{
+						$count += $item->count->get();
+						$this->removeItem($item);
+					}
+					
+					$mainItem->count->set($count);
+				}				
+			}	
+		}  
+
     }
+    
+	/*####################  Saving ####################*/    
     
     public function save($allowEmpty = false)
     {
@@ -456,120 +496,7 @@ class CustomerOrder extends ActiveRecordModel
         }
         
         return parent::save();
-    }    
-    
-    /**
-     *  Merge OrderedItem instances of the same product into one instance
-     */
-    public function mergeItems()
-    {
-		$byProduct = array();
-		
-		foreach ($this->orderedItems as $item)
-		{
-			$byProduct[$item->product->get()->getID()][$item->isSavedForLater->get()][] = $item;
-		}
-		
-		foreach ($byProduct as $productID => $itemsByStatus)
-		{
-			foreach ($itemsByStatus as $status => $items)
-			{
-				if (count($items) > 1)
-				{
-					$mainItem = array_shift($items);
-					$count = $mainItem->count->get();
-					
-					foreach ($items as $item)
-					{
-						$count += $item->count->get();
-						$this->removeItem($item);
-					}
-					
-					$mainItem->count->set($count);
-				}				
-			}	
-		}  
-
-    }
-    
-    public function getShoppingCartItems()
-    {
-		$items = array();
-
-        foreach ($this->orderedItems as $item)
-		{
-			if (!$item->isSavedForLater->get())
-			{
-				$items[] = $item;
-			}
-		}        
-		
-		return $items;
-    }
-    
-    public function getWishListItems()
-    {
-		$items = array();
-        foreach ($this->orderedItems as $item)
-		{
-			if ($item->isSavedForLater->get())
-			{
-				$items[] = $item;
-			}
-		}        
-		
-		return $items;
-    }
-    
-	public function getOrderedItems()
-	{
-		return $this->orderedItems;
-	}
-    
-    public function getShoppingCartItemCount()
-	{
-		$count = 0;
-
-		foreach ($this->getShoppingCartItems() as $item)
-		{
-        	$count += $item->count->get();
-		}
-		
-		return $count;
-	}    
-    
-    public function getWishListItemCount()
-	{
-		return count($this->getWishListItems());
-	}    
-
-	public function getItemsByProduct(Product $product)
-	{
-		$items = array();
-        foreach ($this->orderedItems as $item)
-		{
-			if ($item->product->get()->getID() == $product->getID())
-			{
-				$items[] = $item;
-			}
-		}        
-		
-		return $items;		
-	}
-
-    /**
-     *  Return OrderedItem instance by ID
-     */
-	public function getItemByID($id)
-	{
-        foreach ($this->orderedItems as $item)
-		{
-			if ($item->getID() == $id)
-			{
-				return $item;
-			}
-		}			
-	}
+    }     
 
 	public function getSubTotal(Currency $currency)
 	{
@@ -583,175 +510,7 @@ class CustomerOrder extends ActiveRecordModel
         }
         
         return $subTotal;	
-	}
-
-    /**
-     *  Loads ordered item/product info from database
-     */
-    public function loadItemData()
-    {
-        $productIDs = array();
-        
-        foreach ($this->orderedItems as $item)
-        {
-			$productIDs[] = $item->product->get()->getID();
-		}
-		
-		$products = ActiveRecordModel::getInstanceArray('Product', $productIDs);
-		
-        foreach ($this->orderedItems as $item)
-        {
-			$id = $item->product->get()->getID();
-			
-			if (isset($products[$id]))
-			{
-				$item->product->set($products[$id]);
-			}
-			else
-			{
-				$this->removeProduct($item->product->get());
-			}
-		}		
-    }
-    
-    /**
-     *  Separate items into shipments (if any item needs to be shipped separately)
-     *
-     *  @return Shipment[]
-     */
-    public function getShipments()
-    {
-        if ($this->isFinalized->get())
-        {
-            $this->loadItems();
-            
-            $filter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Shipment', 'orderID'), $this->getID()));
-            $filter->setOrder(new ARFieldHandle('Shipment', 'status'));
-            
-            $this->shipments = $this->getRelatedRecordSet('Shipment', $filter, array('ShippingService')); 
-            foreach($this->shipments as $shipment)
-            {
-                $shipment->loadItems();
-            }
-            
-            // get downloadable items
-            foreach ($this->getShoppingCartItems() as $item)
-            {
-                if ($item->product->get()->isDownloadable())
-                {
-                    if (!isset($downloadable))
-                    {
-                        $downloadable = Shipment::getNewInstance($this);
-                        $this->shipments->add($downloadable);
-                    }
-
-                    $downloadable->addItem($item);
-                }
-            }            
-        }
-        else
-        {
-            if (!$this->shipments)
-            {
-                ClassLoader::import("application.model.order.Shipment");
-
-                $this->shipments = new ARSet();
-                
-                foreach ($this->getShoppingCartItems() as $item)
-                {
-                    if ($item->product->get()->isDownloadable())
-                    {
-                        if (!isset($downloadable))
-                        {
-                            $downloadable = Shipment::getNewInstance($this);                            
-                        }
-                        
-                        $downloadable->addItem($item);
-                    }
-                    else if ($item->product->get()->isSeparateShipment->get())
-                    {
-                        $shipment = Shipment::getNewInstance($this);
-                        $shipment->addItem($item);
-                        $this->shipments->add($shipment);
-                    }
-                    else
-                    {
-                        if (!isset($main))
-                        {
-                            $main = Shipment::getNewInstance($this);                            
-                        }
-                        $main->addItem($item);
-                    }
-                }
-                
-                if (isset($main))
-                {
-                    $this->shipments->unshift($main); 
-                }                   
-
-                if (isset($downloadable))
-                {
-                    $this->shipments->unshift($downloadable);
-                }                                  
-            }                
-            
-            $this->shipping->set(serialize($this->shipments));               
-        }
-
-        return $this->shipments;
-    }
-	
-	public function getDeliveryZone()
-	{
-        ClassLoader::import("application.model.delivery.DeliveryZone");
-        
-        if ($this->isShippingRequired() && $this->shippingAddress->get())
-        {
-            return DeliveryZone::getZoneByAddress($this->shippingAddress->get()); 
-        }
-        else
-        {
-            return DeliveryZone::getDefaultZoneInstance();   
-        }
-    }
-	
-	/**
-	 * No shipping is required for orders consisting of downloadable items only
-	 */
-    public function isShippingRequired()
-	{
-	    if($this->isFinalized->get())
-	    {
-            foreach ($this->getShoppingCartItems() as $item)
-            {
-                if (!$item->product->get()->isDownloadable())
-                {
-                    return true;
-                }
-            }
-            
-            return false;
-	    }
-	    else
-	    {
-	        return true;
-	    }
-    }
-	
-	public function isShippingSelected()
-	{
-        $selected = count($this->shipments);
-        
-        foreach ($this->shipments as $shipment)
-        {
-            if (!$shipment->getSelectedRate())
-            {
-                $selected = false;
-            }    
-        }
-        
-        return $selected;
-    }
+	}    
 	
 	/**
 	 *	Get total amount for order, including shipping costs
@@ -847,8 +606,90 @@ class CustomerOrder extends ActiveRecordModel
 	public function isReturned()
 	{
         return $this->status->get() == self::STATUS_RETURNED; 
+    }    	
+    
+	/**
+	 * No shipping is required for orders consisting of downloadable items only
+	 */
+    public function isShippingRequired()
+	{
+	    if($this->isFinalized->get())
+	    {
+            foreach ($this->getShoppingCartItems() as $item)
+            {
+                if (!$item->product->get()->isDownloadable())
+                {
+                    return true;
+                }
+            }
+            
+            return false;
+	    }
+	    else
+	    {
+	        return true;
+	    }
+    }
+	
+	public function isShippingSelected()
+	{
+        $selected = count($this->shipments);
+        
+        foreach ($this->shipments as $shipment)
+        {
+            if (!$shipment->getSelectedRate())
+            {
+                $selected = false;
+            }    
+        }
+        
+        return $selected;
     }    
-    		
+	
+	/**
+	 *	Merge two orders into one
+	 */
+	public function merge(CustomerOrder $order)
+	{
+		foreach ($order->getOrderedItems() as $item)
+		{
+			$order->moveItem($item, $this);
+		}
+		
+		$this->mergeItems();
+	}
+	
+	public function changeCurrency(Currency $currency)
+	{
+        $this->currency->set($currency);
+        foreach ($this->getOrderedItems() as $item)
+        {
+            $item->price->set($item->product->get()->getPrice($currency));
+            $item->priceCurrencyID->set($currency->getID());
+            $item->save();
+        }
+        
+        $this->save();
+    }	
+	
+    public function getPaidAmount()
+    {
+        ClassLoader::import('application.model.order.Transaction');		
+        $filter = new ARSelectFilter(new InCond(new ARFieldHandle('Transaction', 'type'), array(Transaction::TYPE_AUTH, Transaction::TYPE_SALE)));
+		$filter->mergeCondition(new NotEqualsCond(new ARFieldHandle('Transaction', 'isVoided'), true));
+		
+		$transactions = $this->getTransactions($filter);
+		$paid = 0;
+		foreach ($transactions as $transaction)
+		{
+			$paid += $transaction->amount->get();
+		}
+		
+		return $paid;
+	}	
+	
+	/*####################  Data array transformation ####################*/
+	
 	/**
 	 *	Creates an array representation of the shopping cart
 	 */
@@ -1002,62 +843,240 @@ class CustomerOrder extends ActiveRecordModel
         $this->setArrayData($array);
 
 		return $array;
-	}
+	}	
 	
-	/**
-	 *	Merge two orders into one
-	 */
-	public function merge(CustomerOrder $order)
-	{
-		foreach ($order->getOrderedItems() as $item)
+	/*####################  Get related objects ####################*/
+    
+    public function getShoppingCartItems()
+    {
+		$items = array();
+
+        foreach ($this->orderedItems as $item)
 		{
-			$order->moveItem($item, $this);
+			if (!$item->isSavedForLater->get())
+			{
+				$items[] = $item;
+			}
+		}        
+		
+		return $items;
+    }
+    
+    public function getWishListItems()
+    {
+		$items = array();
+        foreach ($this->orderedItems as $item)
+		{
+			if ($item->isSavedForLater->get())
+			{
+				$items[] = $item;
+			}
+		}        
+		
+		return $items;
+    }
+    
+	public function getOrderedItems()
+	{
+		return $this->orderedItems;
+	}
+    
+    public function getShoppingCartItemCount()
+	{
+		$count = 0;
+
+		foreach ($this->getShoppingCartItems() as $item)
+		{
+        	$count += $item->count->get();
 		}
 		
-		$this->mergeItems();
-	}
-	
-	public function changeCurrency(Currency $currency)
-	{
-        $this->currency->set($currency);
-        foreach ($this->getOrderedItems() as $item)
-        {
-            $item->price->set($item->product->get()->getPrice($currency));
-            $item->priceCurrencyID->set($currency->getID());
-            $item->save();
-        }
-        
-        $this->save();
-    }
-	
-	public function serialize()
-	{
-        return parent::serialize(array('userID'), array('orderedItems', 'shipments'));        
-    }
+		return $count;
+	}    
     
-    public function unserialize($serialized)
+    public function getWishListItemCount()
+	{
+		return count($this->getWishListItems());
+	}    
+
+	public function getItemsByProduct(Product $product)
+	{
+		$items = array();
+        foreach ($this->orderedItems as $item)
+		{
+			if ($item->product->get()->getID() == $product->getID())
+			{
+				$items[] = $item;
+			}
+		}        
+		
+		return $items;		
+	}
+
+    /**
+     *  Return OrderedItem instance by ID
+     */
+	public function getItemByID($id)
+	{
+        foreach ($this->orderedItems as $item)
+		{
+			if ($item->getID() == $id)
+			{
+				return $item;
+			}
+		}			
+	}
+
+    /**
+     *  Loads ordered item/product info from database
+     */
+    public function loadItemData()
     {
-        parent::unserialize($serialized);
+        $productIDs = array();
         
-        // load products
-        $productIds = array();
         foreach ($this->orderedItems as $item)
         {
-            $productIds[] = $item->product->get()->getID();
-        }
-        
-        $products = ActiveRecordModel::getInstanceArray('Product', $productIds, Product::LOAD_REFERENCES);
-        
-        // load product prices
-        $set = new ARSet();
-        foreach ($products as $product)
+			$productIDs[] = $item->product->get()->getID();
+		}
+		
+		$products = ActiveRecordModel::getInstanceArray('Product', $productIDs);
+		
+        foreach ($this->orderedItems as $item)
         {
-            $set->add($product);
-        }
-        
-        ProductPrice::loadPricesForRecordSet($set);
+			$id = $item->product->get()->getID();
+			
+			if (isset($products[$id]))
+			{
+				$item->product->set($products[$id]);
+			}
+			else
+			{
+				$this->removeProduct($item->product->get());
+			}
+		}		
     }
     
+    /**
+     *  Separate items into shipments (if any item needs to be shipped separately)
+     *
+     *  @return Shipment[]
+     */
+    public function getShipments()
+    {
+        if ($this->isFinalized->get())
+        {
+            $this->loadItems();
+            
+            $filter = new ARSelectFilter(new EqualsCond(new ARFieldHandle('Shipment', 'orderID'), $this->getID()));
+            $filter->setOrder(new ARFieldHandle('Shipment', 'status'));
+            
+            $this->shipments = $this->getRelatedRecordSet('Shipment', $filter, array('ShippingService')); 
+            foreach($this->shipments as $shipment)
+            {
+                $shipment->loadItems();
+            }
+            
+            // get downloadable items
+            foreach ($this->getShoppingCartItems() as $item)
+            {
+                if ($item->product->get()->isDownloadable())
+                {
+                    if (!isset($downloadable))
+                    {
+                        $downloadable = Shipment::getNewInstance($this);
+                        $this->shipments->add($downloadable);
+                    }
+
+                    $downloadable->addItem($item);
+                }
+            }            
+        }
+        else
+        {
+            if (!$this->shipments)
+            {
+                ClassLoader::import("application.model.order.Shipment");
+
+                $this->shipments = new ARSet();
+                
+                foreach ($this->getShoppingCartItems() as $item)
+                {
+                    if ($item->product->get()->isDownloadable())
+                    {
+                        if (!isset($downloadable))
+                        {
+                            $downloadable = Shipment::getNewInstance($this);                            
+                        }
+                        
+                        $downloadable->addItem($item);
+                    }
+                    else if ($item->product->get()->isSeparateShipment->get())
+                    {
+                        $shipment = Shipment::getNewInstance($this);
+                        $shipment->addItem($item);
+                        $this->shipments->add($shipment);
+                    }
+                    else
+                    {
+                        if (!isset($main))
+                        {
+                            $main = Shipment::getNewInstance($this);                            
+                        }
+                        $main->addItem($item);
+                    }
+                }
+                
+                if (isset($main))
+                {
+                    $this->shipments->unshift($main); 
+                }                   
+
+                if (isset($downloadable))
+                {
+                    $this->shipments->unshift($downloadable);
+                }                                  
+            }                
+            
+            $this->shipping->set(serialize($this->shipments));               
+        }
+
+        return $this->shipments;
+    }
+	
+	public function getDeliveryZone()
+	{
+        ClassLoader::import("application.model.delivery.DeliveryZone");
+        
+        if ($this->isShippingRequired() && $this->shippingAddress->get())
+        {
+            return DeliveryZone::getZoneByAddress($this->shippingAddress->get()); 
+        }
+        else
+        {
+            return DeliveryZone::getDefaultZoneInstance();   
+        }
+    }
+
+    /**
+     *  Return all transactions that are related to this order
+     */
+    public function getTransactions(ARSelectFilter $filter = null)
+    {
+        ClassLoader::import('application.model.order.Transaction');
+        if (is_null($filter))
+        {
+			$filter = new ARSelectFilter();			
+		}
+        $filter->setOrder(new ARFieldHandle('Transaction', 'ID'), 'ASC');
+        return $this->getRelatedRecordSet('Transaction', $filter);
+    }
+    
+	public function getNotes()
+	{
+        $f = new ARSelectFilter();
+        $f->setOrder(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
+        return $this->getRelatedRecordSet('OrderNote', $f, OrderNote::LOAD_REFERENCES);
+    }
+
     public function resetShipments()
     {
         if (!$this->isFinalized->get())
@@ -1095,43 +1114,34 @@ class CustomerOrder extends ActiveRecordModel
         }
         
         return $shippableCount;
-    }
-
-    /**
-     *  Return all transactions that are related to this order
-     */
-    public function getTransactions(ARSelectFilter $filter = null)
-    {
-        ClassLoader::import('application.model.order.Transaction');
-        if (is_null($filter))
-        {
-			$filter = new ARSelectFilter();			
-		}
-        $filter->setOrder(new ARFieldHandle('Transaction', 'ID'), 'ASC');
-        return $this->getRelatedRecordSet('Transaction', $filter);
+    } 
+	
+	public function serialize()
+	{
+        return parent::serialize(array('userID'), array('orderedItems', 'shipments'));        
     }
     
-    public function getPaidAmount()
+    public function unserialize($serialized)
     {
-        ClassLoader::import('application.model.order.Transaction');		
-        $filter = new ARSelectFilter(new InCond(new ARFieldHandle('Transaction', 'type'), array(Transaction::TYPE_AUTH, Transaction::TYPE_SALE)));
-		$filter->mergeCondition(new NotEqualsCond(new ARFieldHandle('Transaction', 'isVoided'), true));
-		
-		$transactions = $this->getTransactions($filter);
-		$paid = 0;
-		foreach ($transactions as $transaction)
-		{
-			$paid += $transaction->amount->get();
-		}
-		
-		return $paid;
-	}
-	
-	public function getNotes()
-	{
-        $f = new ARSelectFilter();
-        $f->setOrder(new ARFieldHandle('OrderNote', 'ID'), 'DESC');
-        return $this->getRelatedRecordSet('OrderNote', $f, OrderNote::LOAD_REFERENCES);
+        parent::unserialize($serialized);
+        
+        // load products
+        $productIds = array();
+        foreach ($this->orderedItems as $item)
+        {
+            $productIds[] = $item->product->get()->getID();
+        }
+        
+        $products = ActiveRecordModel::getInstanceArray('Product', $productIds, Product::LOAD_REFERENCES);
+        
+        // load product prices
+        $set = new ARSet();
+        foreach ($products as $product)
+        {
+            $set->add($product);
+        }
+        
+        ProductPrice::loadPricesForRecordSet($set);
     }
 }
 	

@@ -48,7 +48,6 @@ class AccessControlAssociation extends ActiveRecordModel
 	  	return $instance;
 	}
 
-
 	/**
 	 * Load groups to roles associations from database
 	 *

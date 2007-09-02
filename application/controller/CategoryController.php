@@ -100,7 +100,7 @@ class CategoryController extends FrontendController
 			}
 		}
 
-        $products = $this->getProductsArray($productFilter);
+        $products = $this->getProductArray($productFilter);
 
 		// pagination
         $count = new ProductCount($this->productFilter, $this->application);

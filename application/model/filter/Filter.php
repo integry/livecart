@@ -37,6 +37,57 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 		$schema->registerField(new ARField("rangeDateEnd", ARDate::instance()));
 	}
 
+	/*####################  Static method implementations ####################*/	
+
+	/**
+	 * Get filter active record instance
+	 *
+	 * @param integer $recordID
+	 * @param boolean $loadRecordData
+	 * @param boolean $loadReferencedRecords
+	 * @return Filter
+	 */
+	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
+	{
+		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
+	}
+
+	/**
+	 * Get new instance of Filter active record
+	 *
+	 * @return Filter
+	 */
+	public static function getNewInstance(FilterGroup $filterGroup)
+	{
+		$inst = parent::getNewInstance(__CLASS__);
+		$inst->filterGroup->set($filterGroup);
+		return $inst;
+	}
+
+	/**
+	 * Get record set of filters using select filter 
+	 *
+	 * @param ARSelectFilter $filter
+	 * @return ARSet
+	 */
+	public static function getRecordSetArray(ARSelectFilter $filter, $loadReferencedRecords = false)
+	{
+	    return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
+	}
+
+	/**
+	 * Get record set as array of filters using select filter 
+	 *
+	 * @param ARSelectFilter $filter
+	 * @return array
+	 */
+	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
+	{
+		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+	}
+
+	/*####################  FilterInterface method implementations ####################*/	
+
 	/**
 	 * Create an ActiveRecord Condition object to use for product selection
 	 *
@@ -106,74 +157,22 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 		$filter->joinTable($field->getValueTableName(), 'Product', 'productID AND ' . $table . '.SpecFieldID = ' . $field->getID(), 'ID', $table);				  	  	
 	}
 
-	public function getSpecField()
-	{
-		return $this->filterGroup->get()->specField->get();
-	}
-
-	public static function transformArray($array, ARSchema $schema)
-	{		
-		$array = parent::transformArray($array, $schema);
-		$array['handle'] = createHandleString($array['name_lang']);
-		return $array;
-	}
-
 	protected function getJoinAlias()
 	{
 		return 'specField_' . $this->getSpecField()->getID(); 			 	  	
 	}
 
+	public function getSpecField()
+	{
+		return $this->filterGroup->get()->specField->get();
+	}
+
+	/*####################  Saving ####################*/	
+
 	protected function insert()
 	{
 		$this->position->set(100000);  	
 		return parent::insert();
-	}
-	
-	/**
-	 * Get filter active record instance
-	 *
-	 * @param integer $recordID
-	 * @param boolean $loadRecordData
-	 * @param boolean $loadReferencedRecords
-	 * @return Filter
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
-	}
-
-	/**
-	 * Get new instance of Filter active record
-	 *
-	 * @return Filter
-	 */
-	public static function getNewInstance(FilterGroup $filterGroup)
-	{
-		$inst = parent::getNewInstance(__CLASS__);
-		$inst->filterGroup->set($filterGroup);
-		return $inst;
-	}
-
-	/**
-	 * Get record set of filters using select filter 
-	 *
-	 * @param ARSelectFilter $filter
-	 * @return ARSet
-	 */
-	public static function getRecordSetArray(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-	    return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
-	}
-
-	/**
-	 * Get record set as array of filters using select filter 
-	 *
-	 * @param ARSelectFilter $filter
-	 * @return array
-	 */
-	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 
 	/**
@@ -183,66 +182,14 @@ class Filter extends MultilingualObject implements SpecificationFilterInterface
 	{
 	    parent::deleteByID(__CLASS__, (int)$id);
 	}
-
-	public static function createFiltersInGroupsCountArray(ARSet $filtersGroupsSet)
-	{
-	    $filterGroupIds = array();
-	    $filtersGroupsArray = array();
-	    foreach($filtersGroupsSet as $filterGroup)
-	    {
-	        $filterGroupIds[] = $filterGroup->getID();
-	    }
-	    
-		if(!empty($filterGroupIds))
-		{
-		    $db = self::getDBConnection();
-			
-			$filterGroupIdsString = implode(',',  $filterGroupIds);
-			
-			$filtersResultArray = array();
-			$filtersResultSet = $db->executeQuery("SELECT filterGroupID, COUNT(*) AS filtersCount FROM Filter WHERE filterGroupID IN ($filterGroupIdsString) GROUP BY filterGroupID");
-			while ($filtersResultSet->next()) $filtersResultArray[] = $filtersResultSet->getRow();
-			$filtersResultCount = count($filtersResultArray);
-			
-			$specFieldValuesResultArray = array();
-			
-			$specFieldValuesResultSet = $db->executeQuery("SELECT specFieldID, COUNT(specFieldID) AS filtersCount FROM SpecFieldValue WHERE specFieldID IN (SELECT specFieldID FROM FilterGroup WHERE ID in ($filterGroupIdsString)) GROUP BY specFieldID");
-			while ($specFieldValuesResultSet->next()) $specFieldValuesResultArray[] = $specFieldValuesResultSet->getRow();
-			$specFieldValuesResultCount = count($specFieldValuesResultArray);
 	
-		    foreach($filtersGroupsSet as $filterGroup)
-		    {
-	            $filterGroupArray = $filterGroup->toArray();
-	            $filterGroupArray['filtersCount'] = 0;
-	            
-		        if($filterGroup->specField->get()->allowManageFilters())
-		        {
-		            for($i = 0; $i < $filtersResultCount; $i++)
-		            {
-		                if($filtersResultArray[$i]['filterGroupID'] == $filterGroupArray['ID'])
-		                {
-		                    $filterGroupArray['filtersCount'] = $filtersResultArray[$i]['filtersCount'];
-		                }
-		            }
-		        }
-		        else
-		        {
-		            
-	   	            for($i = 0; $i < $specFieldValuesResultCount; $i++)
-		            {
-		                if($specFieldValuesResultArray[$i]['specFieldID'] == $filterGroupArray['SpecField']['ID'])
-		                {
-		                    $filterGroupArray['filtersCount'] = $specFieldValuesResultArray[$i]['filtersCount'];
-		                }
-		            }
-		            
-		        }
-		        
-	            $filtersGroupsArray[] = $filterGroupArray;
-		    }
-		}
-        
-        return $filtersGroupsArray;
+	/*####################  Data array transformation ####################*/	
+
+	public static function transformArray($array, ARSchema $schema)
+	{		
+		$array = parent::transformArray($array, $schema);
+		$array['handle'] = createHandleString($array['name_lang']);
+		return $array;
 	}
 }
 

@@ -81,6 +81,24 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 	}
 
 	/**
+     * Set a whole language field at a time. You can allways skip some language, but as long as it occurs in
+     * languages array it will be writen into the database as empty string. I spent 2 hours writing this feature =]
+     *
+     * @example $specField->setLanguageField('name', array('en' => 'Name', 'lt' => 'Vardas', 'de' => 'Name'), array('lt', 'en', 'de'))
+     *
+     * @param string $fieldName Field name in database schema
+     * @param array $fieldValue Field value in different languages
+     * @param array $langCodeArray Language codes
+     */
+	public function setLanguageField($fieldName, $fieldValue, $langCodeArray)
+	{
+	    foreach ($langCodeArray as $lang)
+	    {
+	        $this->setValueByLang($fieldName, $lang, isset($fieldValue[$lang]) ? $fieldValue[$lang] : '');
+	    }
+	}
+
+	/**
 	 * Tranforms object data to data array in the following format:
 	 *
 	 * simpleField => value,
@@ -123,24 +141,6 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 		}
 		
 		return $array;  	
-	}
-    
-	/**
-     * Set a whole language field at a time. You can allways skip some language, but as long as it occurs in
-     * languages array it will be writen into the database as empty string. I spent 2 hours writing this feature =]
-     *
-     * @example $specField->setLanguageField('name', array('en' => 'Name', 'lt' => 'Vardas', 'de' => 'Name'), array('lt', 'en', 'de'))
-     *
-     * @param string $fieldName Field name in database schema
-     * @param array $fieldValue Field value in different languages
-     * @param array $langCodeArray Language codes
-     */
-	public function setLanguageField($fieldName, $fieldValue, $langCodeArray)
-	{
-	    foreach ($langCodeArray as $lang)
-	    {
-	        $this->setValueByLang($fieldName, $lang, isset($fieldValue[$lang]) ? $fieldValue[$lang] : '');
-	    }
 	}
 	
 	/**

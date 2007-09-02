@@ -25,6 +25,8 @@ class StaticPage extends MultilingualObject
 		$schema->registerField(new ARField("position", ARInteger::instance()));
 	}
 
+	/*####################  Static method implementations ####################*/
+
 	/**
 	 * Gets an existing record instance (persisted on a database).
 	 * @param mixed $recordID

@@ -33,6 +33,8 @@ class OrderedItem extends ActiveRecordModel
 		$schema->registerField(new ARField("isSavedForLater", ARBool::instance()));
 	}
 	
+	/*####################  Static method implementations ####################*/		
+	
 	public static function getNewInstance(CustomerOrder $order, Product $product, $count = 1)	
 	{
         $instance = parent::getNewInstance(__CLASS__);
@@ -42,6 +44,8 @@ class OrderedItem extends ActiveRecordModel
 
         return $instance;
     }
+    
+	/*####################  Value retrieval and manipulation ####################*/    
     
     public function getSubTotal(Currency $currency)
     {
@@ -63,11 +67,20 @@ class OrderedItem extends ActiveRecordModel
         
     }
     
-    public function serialize()
+    /**
+     *  Determine if the file download period hasn't expired yet
+     *  
+     *  @return ProductFile
+     */
+    public function isDownloadable(ProductFile $file)
     {
-        $this->markAsLoaded();
-        return parent::serialize(array('customerOrderID', 'shipmentID', 'productID'));
-    }
+        $orderDate = $this->customerOrder->get()->dateCompleted->get();
+        
+        return (abs($orderDate->getDayDifference(new DateTime())) <= $file->allowDownloadDays->get()) ||
+                !$file->allowDownloadDays->get();
+    }    
+    
+  	/*####################  Saving ####################*/
     
     protected function insert()
     {
@@ -88,7 +101,45 @@ class OrderedItem extends ActiveRecordModel
         
         return $ret;
     }
+   
+    protected function update()
+    {                       
+        if (is_null($this->shipment->get()) || !$this->shipment->get()->getID())
+        {
+            $this->shipment->setNull(false);
+            $this->shipment->resetModifiedStatus();
+        }
+
+        if ($this->isModified())
+        {
+            return parent::update();
+        }
+        else
+        {
+            return false;
+        }
+    }
+	
+	/*####################  Data array transformation ####################*/    
     
+    public static function transformArray($array, ARSchema $schema)
+    {
+        $array = parent::transformArray($array, $schema);
+        
+        // always use OrderedItem stored prices for presentation, rather than Product's
+        // pricing data, as Product prices may change after the order is completed
+        if ($array['priceCurrencyID'])
+        {
+            $currency = Currency::getInstanceByID($array['priceCurrencyID']);
+            $array['formattedPrice'] = $currency->getFormattedPrice($array['price']);
+            $array['formattedSubTotal'] = $currency->getFormattedPrice($array['price'] * $array['count']);
+        }
+        
+        return $array;
+    }
+    	
+	/*####################  Get related objects ####################*/	
+	    
     /**
      *  @return ProductFile
      */
@@ -107,52 +158,11 @@ class OrderedItem extends ActiveRecordModel
         }
     }
     
-    /**
-     *  Determine if the file download period hasn't expired yet
-     *  
-     *  @return ProductFile
-     */
-    public function isDownloadable(ProductFile $file)
+    public function serialize()
     {
-        $orderDate = $this->customerOrder->get()->dateCompleted->get();
-        
-        return (abs($orderDate->getDayDifference(new DateTime())) <= $file->allowDownloadDays->get()) ||
-                !$file->allowDownloadDays->get();
-    }
-    
-    protected function update()
-    {                       
-        if (is_null($this->shipment->get()) || !$this->shipment->get()->getID())
-        {
-            $this->shipment->setNull(false);
-            $this->shipment->resetModifiedStatus();
-        }
-
-        if ($this->isModified())
-        {
-            return parent::update();
-        }
-        else
-        {
-            return false;
-        }
-    }
-    
-    public static function transformArray($array, ARSchema $schema)
-    {
-        $array = parent::transformArray($array, $schema);
-        
-        // always use OrderedItem stored prices for presentation, rather than Product's
-        // pricing data, as Product prices may change after the order is completed
-        if ($array['priceCurrencyID'])
-        {
-            $currency = Currency::getInstanceByID($array['priceCurrencyID']);
-            $array['formattedPrice'] = $currency->getFormattedPrice($array['price']);
-            $array['formattedSubTotal'] = $currency->getFormattedPrice($array['price'] * $array['count']);
-        }
-        
-        return $array;
-    }
+        $this->markAsLoaded();
+        return parent::serialize(array('customerOrderID', 'shipmentID', 'productID'));
+    }    
 }
 
 ?>

@@ -117,7 +117,7 @@ class SpecFieldController extends StoreManagementController
     private function save(SpecField $specField)
     {
         $this->getSpecFieldConfig();
-		$errors = SpecField::validate($this->request->getValueArray(array('handle', 'values', 'name_' . $this->specFieldConfig['languageCodes'][0], 'type', 'dataType', 'categoryID', 'ID')), $this->specFieldConfig['languageCodes']);
+		$errors = $this->validate($this->request->getValueArray(array('handle', 'values', 'name_' . $this->specFieldConfig['languageCodes'][0], 'type', 'dataType', 'categoryID', 'ID')), $this->specFieldConfig['languageCodes']);
 		
         if(!$errors)
         {
@@ -291,4 +291,69 @@ class SpecFieldController extends StoreManagementController
         return $this->specFieldConfig;
     }
     
+    /**
+     * Validates specification field form
+     *
+     * @param array $values List of values to validate.
+     * @param array $config 
+     * @return array List of all errors
+     */
+    private function validate($values = array(), $languageCodes)
+    {
+        $errors = array();
+        
+        if(!isset($values['name_' . $languageCodes[0]]) || $values['name_' . $languageCodes[0]] == '')
+        {
+            $errors["name_" + $languageCodes[0]] = '_error_name_empty';
+        }
+
+        if(!isset($values['handle']) || $values['handle'] == '' || preg_match('/[^\w\d_.]/', $values['handle']))
+        {
+            $errors['handle'] = '_error_handle_invalid';
+        }
+        else
+        {
+            $values['ID'] = !isset($values['ID']) ? -1 : $values['ID'];
+            $filter = new ARSelectFilter();
+                $handleCond = new EqualsCond(new ARFieldHandle('SpecField', 'handle'), $values['handle']);
+                $handleCond->addAND(new EqualsCond(new ARFieldHandle('SpecField', 'categoryID'), (int)$values['categoryID']));
+                $handleCond->addAND(new NotEqualsCond(new ARFieldHandle('SpecField', 'ID'), (int)$values['ID']));
+            $filter->setCondition($handleCond);
+            if(count(SpecField::getRecordSetArray($filter)) > 0)
+            {
+                $errors['handle'] =  '_error_handle_exists';
+            }
+        }
+
+        if(!isset($values['handle']) || $values['handle'] == '')
+        {
+            $errors['handle'] = '_error_handle_empty';
+        }
+
+        if(in_array($values['type'], SpecField::getSelectorValueTypes()) && isset($values['values']) && is_array($values['values']))
+        {
+            $countValues = count($values['values']);
+            $i = 0;
+            foreach ($values['values'] as $key => $v)
+            {
+                $i++;
+                if($countValues == $i && preg_match('/new/', $key) && empty($v[$languageCodes[0]]))
+                {
+                    continue;
+                }
+                else if(empty($v[$languageCodes[0]]))
+                {
+                    $errors["values[$key][{$languageCodes[0]}]"] = '_error_value_empty';
+                } 
+                else if(SpecField::getDataTypeFromType($values['type']) == 2 && !is_numeric($v[$languageCodes[0]]))
+                {
+                    $errors["values[$key][{$languageCodes[0]}]"] = '_error_value_is_not_a_number';
+                }
+            }
+        }
+
+        return $errors;
+    }        
 }
+
+?>

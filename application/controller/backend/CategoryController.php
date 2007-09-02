@@ -20,7 +20,7 @@ class CategoryController extends StoreManagementController
 		
 		$response = new ActionResponse();
 		$response->set('categoryList', $categoryList->toArray());
-		$response->set('allTabsCount', Category::getAllTabsCount());
+		$response->set('allTabsCount', $this->getAllTabsCount());
 		
 		return $response;
 	}
@@ -162,7 +162,8 @@ class CategoryController extends StoreManagementController
 		return new JSONResponse($status);
 	}
 
-	public function countTabsItems() {
+	public function countTabsItems() 
+	{
 	  	ClassLoader::import('application.model.category.*');
 	  	ClassLoader::import('application.model.filter.*');
 	  	ClassLoader::import('application.model.product.*');
@@ -170,9 +171,9 @@ class CategoryController extends StoreManagementController
 	    $category = Category::getInstanceByID((int)$this->request->get('id'), Category::LOAD_DATA);
 	    return new JSONResponse(array(
 	        'tabProducts' => $category->totalProductCount->get(),
-	        'tabFilters' => FilterGroup::countItems($category),
-	        'tabFields' => SpecField::countItems($category),
-	        'tabImages' => CategoryImage::countItems($category),
+	        'tabFilters' => $this->getFilterCount($category),
+	        'tabFields' => $this->getSpecFieldCount($category),
+	        'tabImages' => $this->getCategoryImageCount($category),
 	    ));
 	}
 	
@@ -244,6 +245,68 @@ class CategoryController extends StoreManagementController
 		$form = new Form($this->buildValidator());
 		return $form;
 	}
+	
+    private function getAllTabsCount()
+    {
+        ClassLoader::import('application.model.category.*');
+        ClassLoader::import('application.model.filter.*');
+        ClassLoader::import('application.model.product.*');
+        
+        $allTabsCount = array();
+        foreach(Category::getRecordSet(new ARSelectFilter()) as $category)
+        {
+            $allTabsCount[$category->getID()] = array(
+                'tabProducts' => $category->totalProductCount->get(),
+                'tabFilters' => 0,
+                'tabFields' => 0,
+                'tabImages' => 0
+            );
+        }
+        
+        foreach(SpecField::getRecordSet(new ARSelectFilter()) as $specField)
+        {
+            $allTabsCount[$specField->category->get()->getID()]['tabFields']++;
+        }
+        
+        foreach(CategoryImage::getRecordSet('CategoryImage', new ARSelectFilter()) as $categoryImage)
+        {
+            $allTabsCount[$categoryImage->category->get()->getID()]['tabImages']++;
+        }
+        
+        foreach(FilterGroup::getRecordSet(new ARSelectFilter()) as $filterGroup)
+        {
+            $allTabsCount[$filterGroup->specField->get()->category->get()->getID()]['tabFilters']++;
+        }
+        
+        return $allTabsCount;
+    }	
+    
+	private function getCategoryImageCount(Category $category)
+	{
+        return $category->getCategoryImagesSet()->getTotalRecordCount();
+	}   
+	
+	/**
+	 * Count specification fields in this category
+	 *
+	 * @param Category $category Category active record
+	 * @return integer
+	 */
+    private function getSpecFieldCount(Category $category)
+    {
+        return $category->getSpecificationFieldSet()->getTotalRecordCount();
+    }	 
+    
+	/**
+	 * Count filter groups in this category
+	 *
+	 * @param Category $category Category active record
+	 * @return integer
+	 */
+    private function getFilterCount(Category $category)
+    {
+        return $category->getFilterGroupSet(false)->getTotalRecordCount();
+    }    
 }
 
 ?>

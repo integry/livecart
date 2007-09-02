@@ -26,6 +26,21 @@ class SpecFieldGroup extends MultilingualObject
 		$schema->registerField(new ARField("position", ARInteger::instance(2)));
 	}
 	
+	/*####################  Static method implementations ####################*/
+
+	/**
+	 * Get new SpecFieldGroup active record instance
+	 *
+	 * @return SpecFieldGroup
+	 */
+	public static function getNewInstance(Category $category)
+	{
+		$inst = parent::getNewInstance(__CLASS__);
+		$inst->category->set($category);
+
+		return $inst;
+	}
+			
 	/**
 	 * Loads a set of active record instances of SpecFieldGroup by using a filter
 	 *
@@ -63,6 +78,43 @@ class SpecFieldGroup extends MultilingualObject
 		return parent::getRecordSetArray(__CLASS__, $filter, $loadReferencedRecords);
 	}
 	
+	/*####################  Value retrieval and manipulation ####################*/		
+	
+	public static function mergeGroupsWithFields($groups, $fields)
+	{
+	    return ActiveRecordGroup::mergeGroupsWithFields(__CLASS__, $groups, $fields);
+	}	
+	
+	/*####################  Saving ####################*/	
+
+	/**
+	 * Delete spec field group from database
+	 * 
+	 * @param integer $id Spec field id
+	 * @return boolean status
+	 */
+	public static function deleteById($id)
+	{
+	    return parent::deleteByID(__CLASS__, (int)$id);
+	}
+    
+    protected function insert()
+    {
+		// get max position
+	  	$f = new ARSelectFilter();
+	  	$f->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'categoryID'), $this->category->get()->getID()));
+	  	$f->setOrder(new ARFieldHandle(__CLASS__, 'position'), 'DESC');
+	  	$f->setLimit(1);
+	  	$rec = ActiveRecord::getRecordSetArray(__CLASS__, $f);
+		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;	  
+		
+		$this->position->set($position);
+		
+		return parent::insert();
+	}    	
+	
+	/*####################  Get related objects ####################*/ 	
+	
 	/**
 	 * Loads a set of spec field records for a group.
 	 *
@@ -88,19 +140,6 @@ class SpecFieldGroup extends MultilingualObject
 		ClassLoader::import("application.model.category.SpecField");
 		return SpecField::getRecordSetArray($this->getSpecificationFilter($includeParentFields), $loadReferencedRecords);
 	}
-
-	/**
-	 * Get new SpecFieldGroup active record instance
-	 *
-	 * @return SpecFieldGroup
-	 */
-	public static function getNewInstance(Category $category)
-	{
-		$inst = parent::getNewInstance(__CLASS__);
-		$inst->category->set($category);
-
-		return $inst;
-	}
 	
 	/**
 	 * Crates a select filter for specification fields related to group
@@ -115,56 +154,6 @@ class SpecFieldGroup extends MultilingualObject
 		$filter->setCondition(new EqualsCond(new ARFieldHandle("SpecField", "specFieldGroupID"), $this->getID()));
 
 		return $filter;
-	}
-
-	/**
-	 * Delete spec field group from database
-	 * 
-	 * @param integer $id Spec field id
-	 * @return boolean status
-	 */
-	public static function deleteById($id)
-	{
-	    return parent::deleteByID(__CLASS__, (int)$id);
-	}
-
-	/**
-	 * Validate submitted specification group
-	 *
-	 * @param unknown_type $values
-	 * @param unknown_type $config
-	 * @return unknown
-	 */
-    public static function validate($values = array(), $languageCodes)
-    {
-        $errors = array();
-        
-        if(!isset($values["name_{$languageCodes[0]}"]) || $values["name_{$languageCodes[0]}"] == '')
-        {
-            $errors["name_{$languageCodes[0]}"] = '_error_you_should_provide_default_group_name';
-        }
-        
-        return $errors;
-    }
-    
-    protected function insert()
-    {
-		// get max position
-	  	$f = new ARSelectFilter();
-	  	$f->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, 'categoryID'), $this->category->get()->getID()));
-	  	$f->setOrder(new ARFieldHandle(__CLASS__, 'position'), 'DESC');
-	  	$f->setLimit(1);
-	  	$rec = ActiveRecord::getRecordSetArray(__CLASS__, $f);
-		$position = (is_array($rec) && count($rec) > 0) ? $rec[0]['position'] + 1 : 1;	  
-		
-		$this->position->set($position);
-		
-		return parent::insert();
-	}    
-
-	public static function mergeGroupsWithFields($groups, $fields)
-	{
-	    return ActiveRecordGroup::mergeGroupsWithFields(__CLASS__, $groups, $fields);
 	}
 }
 ?>

@@ -26,6 +26,42 @@ class Currency extends ActiveRecordModel
 		$schema->registerField(new ARField("pricePrefix", ARText::instance(20)));
 		$schema->registerField(new ARField("priceSuffix", ARText::instance(20)));
 	}
+	
+	/*####################  Static method implementations ####################*/		
+
+	public static function getInstanceById($id, $loadData = true)
+	{
+		return ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);
+	}
+
+	/*####################  Instance retrieval ####################*/		
+	
+	/**
+	 *  Return Currency instance by ID and provide additional validation. If the currency doesn't exist
+	 *  or is not valid, instance of the default currency is returned.
+	 *
+	 *  @return Currency
+	 */
+    public static function getValidInstanceById($id, $loadData = true)
+	{
+        try
+        {
+            $instance = ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);    
+        }
+        catch (ARNotFoundException $e)
+        {
+            $instance = null;
+        }
+        
+        if (!$instance || !$instance->isEnabled->get())
+        {
+            $instance = self::getApplication()->getDefaultCurrency();    
+        }
+        
+        return $instance;
+	}
+
+    /*####################  Value retrieval and manipulation ####################*/		
 
 	public function setAsDefault($default = true)
 	{
@@ -35,14 +71,6 @@ class Currency extends ActiveRecordModel
 	public function isDefault()
 	{
 	  	return $this->isDefault->get();
-	}
-	
-	public function toArray()
-	{
-	  	$array = parent::toArray();
-		$array['name'] = self::getApplication()->getLocale()->info()->getCurrencyName($this->getId());	  	
-		
-		return $array;
 	}
 	
 	public function getFormattedPrice($price)
@@ -104,35 +132,17 @@ class Currency extends ActiveRecordModel
         return $this->convertAmountFromDefaultCurrency($amount);        
     }
 	
-	public static function getInstanceById($id, $loadData = true)
-	{
-		return ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);
-	}
+	/*####################  Data array transformation ####################*/		
 	
-	/**
-	 *  Return Currency instance by ID and provide additional validation. If the currency doesn't exist
-	 *  or is not valid, instance of the default currency is returned.
-	 *
-	 *  @return Currency
-	 */
-    public static function getValidInstanceById($id, $loadData = true)
+	public function toArray()
 	{
-        try
-        {
-            $instance = ActiveRecordModel::getInstanceById(__CLASS__, $id, $loadData);    
-        }
-        catch (ARNotFoundException $e)
-        {
-            $instance = null;
-        }
-        
-        if (!$instance || !$instance->isEnabled->get())
-        {
-            $instance = self::getApplication()->getDefaultCurrency();    
-        }
-        
-        return $instance;
-	}
+	  	$array = parent::toArray();
+		$array['name'] = self::getApplication()->getLocale()->info()->getCurrencyName($this->getId());	  	
+		
+		return $array;
+	}	
+
+	/*####################  Data array transformation ####################*/
 
 	public static function deleteById($id)
 	{

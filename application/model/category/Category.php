@@ -25,7 +25,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	private $subCategorySetCache;
 	
 	/**
-	 * Define database schema used by this active record instance
+	 * Define database schema for Category model
 	 *
 	 * @param string $className Schema name
 	 */
@@ -46,16 +46,68 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$schema->registerField(new ARField("totalProductCount", ARInteger::instance()));
 	}
 
-	public function getProducts(ProductFilter $productFilter, $loadReferencedRecords = false)
+	/*####################  Static method implementations ####################*/
+	
+	/**
+	 * Get catalog item instance
+	 *
+	 * @param int|array $recordID Record id
+	 * @param bool $loadRecordData If true loads record's structure and data
+	 * @param bool $loadReferencedRecords If true loads all referenced records
+	 * @return Category
+	 */
+	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
 	{
-		return ActiveRecordModel::getRecordSet('Product', $this->getProductsFilter($productFilter), $loadReferencedRecords);
+		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
+	}
+
+	/**
+	 * Loads a set of Category active records
+	 *
+	 * @param ARSelectFilter $filter
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
+	{
+		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
+	}
+
+	/**
+	 * Get new Category active record instance
+	 *
+	 * @param ActiveTreeNode $parent
+	 * @return Category
+	 */
+	public static function getNewInstance(Category $parent)
+	{
+		return parent::getNewInstance(__CLASS__, $parent);
 	}
 	
-	public function getProductsArray(ProductFilter $productFilter, $loadReferencedRecords = false)
+	/*####################  Value retrieval and manipulation ####################*/
+
+	public function setValueByLang($fieldName, $langCode, $value)
 	{
-		return ActiveRecordModel::getRecordSetArray('Product', $this->getProductsFilter($productFilter), $loadReferencedRecords);
+		return MultiLingualObject::setValueByLang($fieldName, $langCode, $value);
+	}
+
+	public function getValueByLang($fieldName, $langCode, $returnDefaultIfEmpty = true)
+	{
+		return MultiLingualObject::getValueByLang($fieldName, $langCode, $returnDefaultIfEmpty);
+	}
+
+	public function setValueArrayByLang($fieldNameArray, $defaultLangCode, $langCodeArray, Request $request)
+	{
+		return MultiLingualObject::setValueArrayByLang($fieldNameArray, $defaultLangCode, $langCodeArray, $request);
 	}
 	
+	public function isEnabled()
+	{
+		$this->load();
+		return $this->isEnabled->get();
+	}	
+
 	public function getActiveProductCount()
 	{
 		$config = self::getApplication()->getConfig();
@@ -86,6 +138,237 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	}
 
 	/**
+	 * Gets a subcategory count
+	 *
+	 * @return int
+	 */
+	public function getSubcategoryCount()
+	{
+		$this->load();
+		$productCount = ($this->rgt->get() - $this->lft->get() - 1) / 2;
+		return $productCount;
+	}
+
+	/*####################  Saving ####################*/
+	
+    /**
+	 *
+	 * @todo fix potential bug: when using $this->load() in method, it might
+	 * overwrite the data that was set during runtime
+	 */
+	protected function update()
+	{
+		ActiveRecordModel::beginTransaction();
+		try
+		{
+			parent::update();
+			$activeProductCount = $this->getFieldValue("activeProductCount");
+			if ($this->isEnabled->isModified())
+			{
+				if ($this->isEnabled())
+				{
+					$activeProductCountUpdateStr = "activeProductCount + " . $activeProductCount;
+				}
+				else
+				{
+					$activeProductCountUpdateStr = "activeProductCount - " . $activeProductCount;
+				}
+				$pathNodes = $this->getPathNodeSet(true);
+
+				foreach ($pathNodes as $node)
+				{
+					if ($node->getID() != $this->getID())
+					{
+						$node->setFieldValue("activeProductCount", $activeProductCountUpdateStr);
+						$node->save();						
+					}
+				}
+			}
+			ActiveRecordModel::commit();
+		}
+		catch (Exception $e)
+		{
+			ActiveRecordModel::rollback();
+			throw $e;
+		}
+	}	
+	
+	/**
+	 * Removes category by ID and fixes data in parent categories
+	 * (updates activeProductCount and totalProductCount)
+	 *
+	 * @param int $recordID
+	 */
+	public static function deleteByID($recordID)
+	{
+		ActiveRecordModel::beginTransaction();
+
+		try
+		{
+			$category = Category::getInstanceByID($recordID, Category::LOAD_DATA);
+			$activeProductCount = $category->getFieldValue("activeProductCount");
+			$totalProductCount = $category->getFieldValue("totalProductCount");
+
+			$pathNodes = $category->getPathNodeSet(true);
+
+			foreach ($pathNodes as $node)
+			{
+				$node->setFieldValue("activeProductCount", "activeProductCount - " . $activeProductCount);
+				$node->setFieldValue("totalProductCount", "totalProductCount - " . $totalProductCount);
+
+				$node->save();
+			}
+			ActiveRecordModel::commit();
+			parent::deleteByID(__CLASS__, $recordID);
+		}
+		catch (Exception $e)
+		{
+			ActiveRecordModel::rollback();
+			throw $e;
+		}
+	}	
+		
+	/*####################  Data array transformation ####################*/
+
+	/**
+	 * Creates array representation
+	 *
+	 * @return array
+	 */
+    protected static function transformArray($array, ARSchema $schema)
+	{
+		$array = MultiLingualObject::transformArray($array, $schema);
+		$array['unavailableProductCount'] = $array['totalProductCount'] - $array['availableProductCount'];
+		return $array;
+	}	
+
+	/*####################  Get related objects ####################*/
+	
+	/**
+	 * Returns a set of direct subcategories
+	 *
+	 * @param bool $loadReferencedRecords
+	 * @return ARSet
+	 */
+	public function getSubcategorySet($loadReferencedRecords = false)
+	{
+	  	if (!$this->subCategorySetCache)
+	  	{
+            $this->subCategorySetCache = ActiveRecord::getRecordSet('Category', $this->getSubcategoryFilter(), $loadReferencedRecords);
+        }
+        
+        return $this->subCategorySetCache;
+	}
+
+	/**
+	 * Returns an array of direct subcategories
+	 *
+	 * @param bool $loadReferencedRecords
+	 * @return ARSet
+	 */
+	public function getSubcategoryArray($loadReferencedRecords = false)
+	{
+	  	return ActiveRecord::getRecordSetArray('Category', $this->getSubcategoryFilter(), $loadReferencedRecords);
+	}
+
+	private function getSubcategoryFilter()
+	{
+	  	$filter = new ARSelectFilter();
+	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->getID());
+	  	$cond->addAND(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), 1));
+		$filter->setCondition($cond);
+	  	$filter->setOrder(new ARFieldHandle('Category', 'lft'), 'ASC');
+
+	  	return $filter;
+	}
+
+	/**
+	 * Returns a set of siblings (categories with the same parent)
+	 *
+	 * @param bool $loadSelf whether to include own instance
+	 * @param bool $loadReferencedRecords
+	 * @return ARSet
+	 */
+	public function getSiblingSet($loadSelf = true, $loadReferencedRecords = false)
+	{
+	  	return ActiveRecord::getRecordSet('Category', $this->getSiblingFilter($loadSelf), $loadReferencedRecords);
+	}
+
+	/**
+	 * Returns an array of siblings (categories with the same parent)
+	 *
+	 * @param bool $loadSelf whether to include own instance
+	 * @param bool $loadReferencedRecords
+	 * @return ARSet
+	 */
+	public function getSiblingArray($loadSelf = true, $loadReferencedRecords = false)
+	{
+	  	return ActiveRecord::getRecordSetArray('Category', $this->getSiblingFilter($loadSelf), $loadReferencedRecords);
+	}
+
+	/**
+	 *
+	 *
+	 * @param bool $loadSelf
+	 * @return ARSelectFilter
+	 */
+	private function getSiblingFilter($loadSelf)
+	{
+	  	$filter = new ARSelectFilter();
+	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->parentNode->get()->getID());
+	  	$cond->addAND(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), 1));
+
+		if (!$loadSelf)
+		{
+			$cond->addAND(new NotEqualsCond(new ARFieldHandle('Category', 'ID'), $this->getID()));
+		}
+
+		$filter->setCondition($cond);
+	  	$filter->setOrder(new ARFieldHandle('Category', 'lft'), 'ASC');
+
+	  	return $filter;
+	}	
+
+	/**
+	 * @return ActiveTreeNode
+	 */
+	public static function getRootNode()
+	{
+		return parent::getRootNode(__CLASS__);
+	}
+
+    public function getBranch() 
+	{
+        $filter = new ARSelectFilter();
+        $filter->setOrder(new ARFieldHandle("Category", "lft", 'ASC'));
+        $filter->setCondition(new OperatorCond(new ARFieldHandle("Category", "parentNodeID"), $this->getID(), "="));
+			
+		$categoryList = Category::getRecordSet($filter);
+    }
+    
+	/**
+	 * Gets a list of products assigned to this node
+	 *
+	 * @param bool $loadReferencedRecords
+	 * @return array
+	 */
+	public function getProductArray(ProductFilter $productFilter, $loadReferencedRecords = false)
+	{
+		return ActiveRecordModel::getRecordSetArray('Product', $this->getProductsFilter($productFilter), $loadReferencedRecords);
+	}
+
+	/**
+	 * Gets a list of products assigned to this node
+	 * @param bool $loadReferencedRecords
+	 *
+	 * @return ARSet
+	 */
+	public function getProductSet(ArSelectFilter $filter, $loadReferencedRecords = false)
+	{
+		return $this->getRelatedRecordSet("Product", $this->getProductFilter($filter), $loadReferencedRecords);
+	}
+	
+	/**
 	 *	Create a basic ARSelectFilter object to select category products
 	 */
 	public function getProductsFilter(ProductFilter $productFilter)
@@ -114,28 +397,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return $filter;
 	}
 
-	/**
-	 * Gets a list of products assigned to this node
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return ARSet
-	 */
-	public function getProductSet(ArSelectFilter $filter, $loadReferencedRecords = false)
-	{
-		return $this->getRelatedRecordSet("Product", $this->getProductFilter($filter), $loadReferencedRecords);
-	}
-
-	/**
-	 * Gets a list of products assigned to this node
-	 *
-	 * @param bool $loadReferencedRecords
-	 * @return array
-	 */
-	public function getProductArray($loadReferencedRecords = false)
-	{
-		return $this->getRelatedRecordSetArray("Product", $this->getProductFilter(new ARSelectFilter()), $loadReferencedRecords);
-	}
-
 	public function getProductFilter(ARSelectFilter $filter)
 	{
         $filter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), 1));
@@ -152,33 +413,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		}
 		
 		return $filter;
-	}
-
-	public function setValueByLang($fieldName, $langCode, $value)
-	{
-		return MultiLingualObject::setValueByLang($fieldName, $langCode, $value);
-	}
-
-	public function getValueByLang($fieldName, $langCode, $returnDefaultIfEmpty = true)
-	{
-		return MultiLingualObject::getValueByLang($fieldName, $langCode, $returnDefaultIfEmpty);
-	}
-
-	public function setValueArrayByLang($fieldNameArray, $defaultLangCode, $langCodeArray, Request $request)
-	{
-		return MultiLingualObject::setValueArrayByLang($fieldNameArray, $defaultLangCode, $langCodeArray, $request);
-	}
-
-	/**
-	 * Gets a subcategory count
-	 *
-	 * @return int
-	 */
-	public function getSubcategoryCount()
-	{
-		$this->load();
-		$productCount = ($this->rgt->get() - $this->lft->get() - 1) / 2;
-		return $productCount;
 	}
 
 	public function getFilterSet()
@@ -340,240 +574,6 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		return $filter;
 	}
 
-	/**
-	 * Returns a set of direct subcategories
-	 *
-	 * @param bool $loadReferencedRecords
-	 * @return ARSet
-	 */
-	public function getSubcategorySet($loadReferencedRecords = false)
-	{
-	  	if (!$this->subCategorySetCache)
-	  	{
-            $this->subCategorySetCache = ActiveRecord::getRecordSet('Category', $this->getSubcategoryFilter(), $loadReferencedRecords);
-        }
-        
-        return $this->subCategorySetCache;
-	}
-
-	/**
-	 * Returns an array of direct subcategories
-	 *
-	 * @param bool $loadReferencedRecords
-	 * @return ARSet
-	 */
-	public function getSubcategoryArray($loadReferencedRecords = false)
-	{
-	  	return ActiveRecord::getRecordSetArray('Category', $this->getSubcategoryFilter(), $loadReferencedRecords);
-	}
-
-	private function getSubcategoryFilter()
-	{
-	  	$filter = new ARSelectFilter();
-	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->getID());
-	  	$cond->addAND(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), 1));
-		$filter->setCondition($cond);
-	  	$filter->setOrder(new ARFieldHandle('Category', 'lft'), 'ASC');
-
-	  	return $filter;
-	}
-
-	/**
-	 * Returns a set of siblings (categories with the same parent)
-	 *
-	 * @param bool $loadSelf whether to include own instance
-	 * @param bool $loadReferencedRecords
-	 * @return ARSet
-	 */
-	public function getSiblingSet($loadSelf = true, $loadReferencedRecords = false)
-	{
-	  	return ActiveRecord::getRecordSet('Category', $this->getSiblingFilter($loadSelf), $loadReferencedRecords);
-	}
-
-	/**
-	 * Returns an array of siblings (categories with the same parent)
-	 *
-	 * @param bool $loadSelf whether to include own instance
-	 * @param bool $loadReferencedRecords
-	 * @return ARSet
-	 */
-	public function getSiblingArray($loadSelf = true, $loadReferencedRecords = false)
-	{
-	  	return ActiveRecord::getRecordSetArray('Category', $this->getSiblingFilter($loadSelf), $loadReferencedRecords);
-	}
-
-	/**
-	 *
-	 *
-	 * @param bool $loadSelf
-	 * @return ARSelectFilter
-	 */
-	private function getSiblingFilter($loadSelf)
-	{
-	  	$filter = new ARSelectFilter();
-	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->parentNode->get()->getID());
-	  	$cond->addAND(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), 1));
-
-		if (!$loadSelf)
-		{
-			$cond->addAND(new NotEqualsCond(new ARFieldHandle('Category', 'ID'), $this->getID()));
-		}
-
-		$filter->setCondition($cond);
-	  	$filter->setOrder(new ARFieldHandle('Category', 'lft'), 'ASC');
-
-	  	return $filter;
-	}
-
-	/**
-	 * Creates array representation
-	 *
-	 * @return array
-	 */
-    protected static function transformArray($array, ARSchema $schema)
-	{
-		$array = MultiLingualObject::transformArray($array, $schema);
-		$array['unavailableProductCount'] = $array['totalProductCount'] - $array['availableProductCount'];
-		return $array;
-	}	
-
-	/**
-	 * Get catalog item instance
-	 *
-	 * @param int|array $recordID Record id
-	 * @param bool $loadRecordData If true loads record's structure and data
-	 * @param bool $loadReferencedRecords If true loads all referenced records
-	 * @return Category
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false)
-	{
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords);
-	}
-
-	/**
-	 * Loads a set of Category active records
-	 *
-	 * @param ARSelectFilter $filter
-	 * @param bool $loadReferencedRecords
-	 *
-	 * @return ARSet
-	 */
-	public static function getRecordSet(ARSelectFilter $filter, $loadReferencedRecords = false)
-	{
-		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
-	}
-
-	/**
-	 * Get new Category active record instance
-	 *
-	 * @param ActiveTreeNode $parent
-	 * @return Category
-	 */
-	public static function getNewInstance(Category $parent)
-	{
-		return parent::getNewInstance(__CLASS__, $parent);
-	}
-
-	public function isEnabled()
-	{
-		$this->load();
-		return $this->isEnabled->get();
-	}
-
-    /**
-	 *
-	 * @todo fix potential bug: when using $this->load() in method, it might
-	 * overwrite the data that was set during runtime
-	 */
-	protected function update()
-	{
-		ActiveRecordModel::beginTransaction();
-		try
-		{
-			parent::update();
-			$activeProductCount = $this->getFieldValue("activeProductCount");
-			if ($this->isEnabled->isModified())
-			{
-				if ($this->isEnabled())
-				{
-					$activeProductCountUpdateStr = "activeProductCount + " . $activeProductCount;
-				}
-				else
-				{
-					$activeProductCountUpdateStr = "activeProductCount - " . $activeProductCount;
-				}
-				$pathNodes = $this->getPathNodeSet(true);
-
-				foreach ($pathNodes as $node)
-				{
-					if ($node->getID() != $this->getID())
-					{
-						$node->setFieldValue("activeProductCount", $activeProductCountUpdateStr);
-						$node->save();						
-					}
-				}
-			}
-			ActiveRecordModel::commit();
-		}
-		catch (Exception $e)
-		{
-			ActiveRecordModel::rollback();
-			throw $e;
-		}
-	}
-
-	/**
-	 * @return ActiveTreeNode
-	 */
-	public static function getRootNode()
-	{
-		return parent::getRootNode(__CLASS__);
-	}
-
-	/**
-	 * Removes category by ID and fixes data in parent categories
-	 * (updates activeProductCount and totalProductCount)
-	 *
-	 * @param int $recordID
-	 */
-	public static function deleteByID($recordID)
-	{
-		ActiveRecordModel::beginTransaction();
-
-		try
-		{
-			$category = Category::getInstanceByID($recordID, Category::LOAD_DATA);
-			$activeProductCount = $category->getFieldValue("activeProductCount");
-			$totalProductCount = $category->getFieldValue("totalProductCount");
-
-			$pathNodes = $category->getPathNodeSet(true);
-
-			foreach ($pathNodes as $node)
-			{
-				$node->setFieldValue("activeProductCount", "activeProductCount - " . $activeProductCount);
-				$node->setFieldValue("totalProductCount", "totalProductCount - " . $totalProductCount);
-
-				$node->save();
-			}
-			ActiveRecordModel::commit();
-			parent::deleteByID(__CLASS__, $recordID);
-		}
-		catch (Exception $e)
-		{
-			ActiveRecordModel::rollback();
-			throw $e;
-		}
-	}
-
-    public function getBranch() 
-	{
-        $filter = new ARSelectFilter();
-        $filter->setOrder(new ARFieldHandle("Category", "lft", 'ASC'));
-        $filter->setCondition(new OperatorCond(new ARFieldHandle("Category", "parentNodeID"), $this->getID(), "="));
-			
-		$categoryList = Category::getRecordSet($filter);
-    }
-
  	/**
 	 * Creates an array from active record instances of SpecFieldGroup by using a filter
 	 *
@@ -673,46 +673,11 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 		return $filter;
 	}
-	
+    
 	public function serialize()
 	{
         return parent::serialize(array('defaultImageID', 'parentNodeID'));  
-    }
-    
-    public static function getAllTabsCount()
-    {
-        ClassLoader::import('application.model.category.*');
-        ClassLoader::import('application.model.filter.*');
-        ClassLoader::import('application.model.product.*');
-        
-        $allTabsCount = array();
-        foreach(Category::getRecordSet(new ARSelectFilter()) as $category)
-        {
-            $allTabsCount[$category->getID()] = array(
-                'tabProducts' => $category->totalProductCount->get(),
-                'tabFilters' => 0,
-                'tabFields' => 0,
-                'tabImages' => 0
-            );
-        }
-        
-        foreach(SpecField::getRecordSet(new ARSelectFilter()) as $specField)
-        {
-            $allTabsCount[$specField->category->get()->getID()]['tabFields']++;
-        }
-        
-        foreach(CategoryImage::getRecordSet('CategoryImage', new ARSelectFilter()) as $categoryImage)
-        {
-            $allTabsCount[$categoryImage->category->get()->getID()]['tabImages']++;
-        }
-        
-        foreach(FilterGroup::getRecordSet(new ARSelectFilter()) as $filterGroup)
-        {
-            $allTabsCount[$filterGroup->specField->get()->category->get()->getID()]['tabFilters']++;
-        }
-        
-        return $allTabsCount;
-    }
+    }    
 }
 
 ?>

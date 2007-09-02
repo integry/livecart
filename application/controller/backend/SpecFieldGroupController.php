@@ -99,7 +99,7 @@ class SpecFieldGroupController extends StoreManagementController
     private function save(SpecFieldGroup $specFieldGroup)
     {          
         $this->createLanguageCodes();
-        if(count($errors = SpecFieldGroup::validate($this->request->getValueArray(array("name_{$this->languageCodes[0]}")), $this->languageCodes)) == 0)
+        if(count($errors = $this->validate($this->request->getValueArray(array("name_{$this->languageCodes[0]}")), $this->languageCodes)) == 0)
         {
 			foreach($this->application->getLanguageArray(true) as $langCode) 
 			{
@@ -132,5 +132,22 @@ class SpecFieldGroupController extends StoreManagementController
         }
     }
         
-    
+	/**
+	 * Validate submitted specification group
+	 *
+	 * @param unknown_type $values
+	 * @param unknown_type $config
+	 * @return unknown
+	 */
+    private function validate($values = array(), $languageCodes)
+    {
+        $errors = array();
+        
+        if(!isset($values["name_{$languageCodes[0]}"]) || $values["name_{$languageCodes[0]}"] == '')
+        {
+            $errors["name_{$languageCodes[0]}"] = '_error_you_should_provide_default_group_name';
+        }
+        
+        return $errors;
+    }    
 }

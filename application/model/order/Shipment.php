@@ -57,11 +57,17 @@ class Shipment extends ActiveRecordModel
 		$schema->registerField(new ARField("shippingServiceData", ARText::instance(50)));
 	}       
 	
-	public function load($loadReferencedRecords = false)
-	{
-	    parent::load($loadReferencedRecords);
-	}
+	/*####################  Static method implementations ####################*/	
 	
+	public static function getNewInstance(CustomerOrder $order)
+	{
+        $instance = parent::getNewInstance(__class__);
+        $instance->order->set($order);
+        return $instance;
+    }
+    
+	/*####################  Value retrieval and manipulation ####################*/    
+    
 	public function loadItems()
 	{
 	    if (empty($this->items) && $this->isExistingRecord())
@@ -75,13 +81,6 @@ class Shipment extends ActiveRecordModel
 			}
 	    }
 	}
-	
-	public static function getNewInstance(CustomerOrder $order)
-	{
-        $instance = parent::getNewInstance(__class__);
-        $instance->order->set($order);
-        return $instance;
-    }
 	
 	public function addItem(OrderedItem $item)
 	{
@@ -165,57 +164,220 @@ class Shipment extends ActiveRecordModel
         return $this->selectedRateId ;
     }
     
-    public function getSelectedRate()
+    public function isShippable()
     {
-        if($serializedRate = $this->shippingServiceData->get())
+        $this->removeDeletedItems();
+        
+        foreach ($this->items as $item)
         {
-            $rate = unserialize($serializedRate);
-            $rate->setApplication($this->getApplication());
-
-            if($this->getRateId() == $rate->getServiceId())
+            if (!$item->isLoaded())
             {
-                return $rate;
+                continue;
             }
+            
+            if ($item->product->get()->isDownloadable())
+            {
+                return false;
+            }   
         }
         
-        if (!$this->availableShippingRates)
+        return true;
+    }   
+	
+    public function getSubTotal(Currency $currency, $applyTaxes = true)
+    {
+        $subTotal = 0;
+        foreach ($this->items as $item)
         {
-            return null;
+            if(!$item->isDeleted())
+            {    
+                $subTotal += $item->getSubTotal($currency);
+            }
+        }       
+        
+        if ($applyTaxes)
+        {
+            $subTotal = $this->applyTaxesToAmount($subTotal);
         }
         
-        return $this->availableShippingRates->getByServiceId($this->selectedRateId);
+        return $subTotal;    
+    }	 
+    
+    public function isProcessing()
+    {
+        return $this->status->get() == self::STATUS_PROCESSING; 
+    }
+
+    public function isAwaitingShipment()
+    {
+        return $this->status->get() == self::STATUS_AWAITING; 
+    }
+
+    public function isShipped()
+    {
+        return $this->status->get() == self::STATUS_SHIPPED; 
     }
     
-    public function getTaxes()
+    public function isReturned()
     {
-        // no taxes are calculated for downloadable products
-        if (!$this->isShippable())
+        return $this->status->get() == self::STATUS_RETURNED; 
+    } 
+
+    public function isDelivered()
+    {
+        return $this->status->get() == self::STATUS_CONFIRMED_AS_DELIVERED; 
+    }
+    
+    public function isLost()
+    {
+        return $this->status->get() == self::STATUS_CONFIRMED_AS_LOST; 
+    }     
+    
+    public function applyTaxesToAmount($amount)
+    {
+        foreach ($this->getTaxes() as $tax)
         {
-            return new ARSet();
-        }
+            $amount = $tax->taxRate->get()->applyTax($amount);
+        }        
         
-        if (!$this->taxes)
+        return $amount;
+    }
+	        
+    public function recalculateAmounts()
+    {
+        $this->loadItems();
+        
+        $currency = $this->order->get()->currency->get();
+        $this->amountCurrency->set($currency);
+        $this->amount->set($this->getSubTotal($currency, self::WITHOUT_TAXES));
+        
+        // total taxes
+        $taxes = 0;
+        foreach ($this->getTaxes() as $tax)
         {
-            if ($this->isLoaded())
+            $tax->recalculateAmount(false);
+            $taxes += $tax->getAmountByCurrency($currency);   
+        }
+        $this->taxAmount->set($taxes);
+       
+        // shipping rate
+        if ($rate = $this->getSelectedRate())
+        {
+            $this->shippingAmount->set($rate->getAmountByCurrency($currency));            
+        }
+    }
+
+    private function removeDeletedItems()
+    {
+        foreach ($this->items as $key => $item)
+        {
+            // Don't try to delete new records
+            if(!$item->isExistingRecord()) continue;
+            
+            if ($item->isDeleted())
             {
-                $this->taxes = $this->getRelatedRecordSet('ShipmentTax', new ARSelectFilter(), array('Tax', 'TaxRate'));
+                unset($this->items[$key]);
             }
-            else
+            
+            if (!$item->isLoaded())
             {
-                $zone = $this->order->get()->getDeliveryZone();
-                $rates = $zone->getTaxRates(DeliveryZone::ENABLED_TAXES);
-                
-                $this->taxes = new ARSet();
-                
-                foreach ($rates as $rate)
+                try
                 {
-                    $this->taxes->unshift(ShipmentTax::getNewInstance($rate, $this));
-                }                
-            }        
+                    die(" " . $item->getID());
+                    $item->load(true);
+                }
+                catch (ARNotFoundException $e)
+                {
+                    unset($this->items[$key]); 
+                }
+            }
+        }
+    }
+    
+    /*####################  Saving ####################*/
+    	
+    public function save()
+    {
+        $this->removeDeletedItems();
+        
+        // make sure the shipment doesn't consist of downloadable files only
+        if (!$this->isShippable() && !$this->order->get()->isFinalized->get())
+        {
+            return false;
         }
 
-        return $this->taxes;
+        // reset amounts...
+        $this->amount->set(0);
+        $this->shippingAmount->set(0);
+        $this->taxAmount->set(0);
+                
+        // ... and recalculated them
+        $this->recalculateAmounts();
+
+        // set shipping data
+        $rate = $this->getSelectedRate();
+        
+        if ($rate)
+        {        
+	        $serviceId = $rate->getServiceID();
+	        if (is_numeric($serviceId))
+	        {
+	            $this->shippingService->set(ShippingService::getInstanceByID($serviceId));
+	        }
+	        else
+	        {
+	            $this->shippingService->set(null);
+	            $this->shippingServiceData->set(serialize($rate));
+	        }	
+        }
+
+        parent::save();
+        
+        // save ordered items
+        foreach ($this->items as $item)
+        {
+            if(!$item->isDeleted())
+            {
+                $item->shipment->set($this);
+                $item->save();
+            }
+        }
+        
+        // save taxes
+        foreach ($this->getTaxes() as $tax)
+        {
+            $tax->save();
+        }   
     }
+    
+    public function delete()
+    {
+        $order = $this->order->get();
+        
+        $order->removeShipment($this);
+        
+        parent::delete();
+        
+        $order->save();
+    }    
+    
+    protected function insert()
+    {   
+        if(!$this->status->get())
+        {
+            $this->status->set(self::STATUS_NEW);
+        }
+        
+        return parent::insert();
+    }
+
+    protected function update()
+    {
+        parent::update();
+        $this->order->get()->save();
+    }
+
+	/*####################  Data array transformation ####################*/
     
     public function toArray()
     {
@@ -286,6 +448,60 @@ class Shipment extends ActiveRecordModel
         return $array;
     }
     
+	/*####################  Get related objects ####################*/    
+    
+    public function getSelectedRate()
+    {
+        if($serializedRate = $this->shippingServiceData->get())
+        {
+            $rate = unserialize($serializedRate);
+            $rate->setApplication($this->getApplication());
+
+            if($this->getRateId() == $rate->getServiceId())
+            {
+                return $rate;
+            }
+        }
+        
+        if (!$this->availableShippingRates)
+        {
+            return null;
+        }
+        
+        return $this->availableShippingRates->getByServiceId($this->selectedRateId);
+    }
+    
+    public function getTaxes()
+    {
+        // no taxes are calculated for downloadable products
+        if (!$this->isShippable())
+        {
+            return new ARSet();
+        }
+        
+        if (!$this->taxes)
+        {
+            if ($this->isLoaded())
+            {
+                $this->taxes = $this->getRelatedRecordSet('ShipmentTax', new ARSelectFilter(), array('Tax', 'TaxRate'));
+            }
+            else
+            {
+                $zone = $this->order->get()->getDeliveryZone();
+                $rates = $zone->getTaxRates(DeliveryZone::ENABLED_TAXES);
+                
+                $this->taxes = new ARSet();
+                
+                foreach ($rates as $rate)
+                {
+                    $this->taxes->unshift(ShipmentTax::getNewInstance($rate, $this));
+                }                
+            }        
+        }
+
+        return $this->taxes;
+    }
+    
     public function getShippingService()
     {
         if($this->shippingService->get())
@@ -301,25 +517,12 @@ class Shipment extends ActiveRecordModel
         {
             return null;
         }
-    }
+    }    
     
-    public function getSubTotal(Currency $currency, $applyTaxes = true)
+    public function getItems()
     {
-        $subTotal = 0;
-        foreach ($this->items as $item)
-        {
-            if(!$item->isDeleted())
-            {    
-                $subTotal += $item->getSubTotal($currency);
-            }
-        }       
-        
-        if ($applyTaxes)
-        {
-            $subTotal = $this->applyTaxesToAmount($subTotal);
-        }
-        
-        return $subTotal;    
+	    $this->loadItems();
+        return $this->items;
     }
     
 	public function serialize()
@@ -355,210 +558,7 @@ class Shipment extends ActiveRecordModel
             
             $this->itemIds = array();
         }
-    }
-
-    protected function update()
-    {
-        parent::update();
-        $this->order->get()->save();
-    }
-    
-    public function isShippable()
-    {
-        $this->removeDeletedItems();
-        
-        foreach ($this->items as $item)
-        {
-            if (!$item->isLoaded())
-            {
-                continue;
-            }
-            
-            if ($item->product->get()->isDownloadable())
-            {
-                return false;
-            }   
-        }
-        
-        return true;
-    }
-    
-    public function save()
-    {
-        $this->removeDeletedItems();
-        
-        // make sure the shipment doesn't consist of downloadable files only
-        if (!$this->isShippable() && !$this->order->get()->isFinalized->get())
-        {
-            return false;
-        }
-
-        // reset amounts...
-        $this->amount->set(0);
-        $this->shippingAmount->set(0);
-        $this->taxAmount->set(0);
-                
-        // ... and recalculated them
-        $this->recalculateAmounts();
-
-        // set shipping data
-        $rate = $this->getSelectedRate();
-        
-        if ($rate)
-        {        
-	        $serviceId = $rate->getServiceID();
-	        if (is_numeric($serviceId))
-	        {
-	            $this->shippingService->set(ShippingService::getInstanceByID($serviceId));
-	        }
-	        else
-	        {
-	            $this->shippingService->set(null);
-	            $this->shippingServiceData->set(serialize($rate));
-	        }	
-        }
-
-        parent::save();
-        
-        // save ordered items
-        foreach ($this->items as $item)
-        {
-            if(!$item->isDeleted())
-            {
-                $item->shipment->set($this);
-                $item->save();
-            }
-        }
-        
-        // save taxes
-        foreach ($this->getTaxes() as $tax)
-        {
-            $tax->save();
-        }   
-    }
-    
-    protected function insert()
-    {   
-        if(!$this->status->get())
-        {
-            $this->status->set(self::STATUS_NEW);
-        }
-        
-        return parent::insert();
-    }
-    
-    public function getItems()
-    {
-	    $this->loadItems();
-        return $this->items;
-    }
-    
-    public function unloadItems()
-    {
-        $this->items = null;
     }    
-    
-    public function recalculateAmounts()
-    {
-        $this->loadItems();
-        
-        $currency = $this->order->get()->currency->get();
-        $this->amountCurrency->set($currency);
-        $this->amount->set($this->getSubTotal($currency, self::WITHOUT_TAXES));
-        
-        // total taxes
-        $taxes = 0;
-        foreach ($this->getTaxes() as $tax)
-        {
-            $tax->recalculateAmount(false);
-            $taxes += $tax->getAmountByCurrency($currency);   
-        }
-        $this->taxAmount->set($taxes);
-       
-        // shipping rate
-        if ($rate = $this->getSelectedRate())
-        {
-            $this->shippingAmount->set($rate->getAmountByCurrency($currency));            
-        }
-    }
-    
-    public function applyTaxesToAmount($amount)
-    {
-        foreach ($this->getTaxes() as $tax)
-        {
-            $amount = $tax->taxRate->get()->applyTax($amount);
-        }        
-        
-        return $amount;
-    }
-
-    public function delete()
-    {
-        $order = $this->order->get();
-        
-        $order->removeShipment($this);
-        
-        parent::delete();
-        
-        $order->save();
-    }
-    
-    private function removeDeletedItems()
-    {
-        foreach ($this->items as $key => $item)
-        {
-            // Don't try to delete new records
-            if(!$item->isExistingRecord()) continue;
-            
-            if ($item->isDeleted())
-            {
-                unset($this->items[$key]);
-            }
-            
-            if (!$item->isLoaded())
-            {
-                try
-                {
-                    die(" " . $item->getID());
-                    $item->load(true);
-                }
-                catch (ARNotFoundException $e)
-                {
-                    unset($this->items[$key]); 
-                }
-            }
-        }
-    }
-
-    public function isProcessing()
-    {
-        return $this->status->get() == self::STATUS_PROCESSING; 
-    }
-
-    public function isAwaitingShipment()
-    {
-        return $this->status->get() == self::STATUS_AWAITING; 
-    }
-
-    public function isShipped()
-    {
-        return $this->status->get() == self::STATUS_SHIPPED; 
-    }
-    
-    public function isReturned()
-    {
-        return $this->status->get() == self::STATUS_RETURNED; 
-    } 
-
-    public function isDelivered()
-    {
-        return $this->status->get() == self::STATUS_CONFIRMED_AS_DELIVERED; 
-    }
-    
-    public function isLost()
-    {
-        return $this->status->get() == self::STATUS_CONFIRMED_AS_LOST; 
-    } 
 }
 
 ?>

@@ -31,6 +31,8 @@ class ShippingService extends MultilingualObject
 		$schema->registerField(new ARField("rangeType", ARInteger::instance(1)));
 	}
 
+	/*####################  Static method implementations ####################*/
+
 	/**
 	 * Gets an existing record instance
 	 * 
@@ -80,6 +82,8 @@ class ShippingService extends MultilingualObject
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
 	
+	/*####################  Instance retrieval ####################*/		
+	
 	/**
 	 * Load delivery services record by Delivery zone
 	 *
@@ -105,6 +109,8 @@ class ShippingService extends MultilingualObject
 		
 		return self::getRecordSet($filter, $loadReferencedRecords);
 	}
+	
+	/*####################  Get related objects ####################*/ 	
 	
 	/**
 	 * Get active record set from current service

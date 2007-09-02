@@ -50,7 +50,6 @@ class Tax extends MultilingualObject
 	  	return $instance;
 	}
 
-
 	/**
 	 * Load taxes record set
 	 *
@@ -64,7 +63,6 @@ class Tax extends MultilingualObject
         $filter->setOrder(new ARFieldHandle(__CLASS__, 'position'), ARSelectFilter::ORDER_ASC);
 		return parent::getRecordSet(__CLASS__, $filter, $loadReferencedRecords);
 	}
-
 	
 	/**
 	 * Get a list of existing taxes
@@ -108,8 +106,7 @@ class Tax extends MultilingualObject
         }	
 	    return self::getRecordSet($filter, $loadReferencedRecords);
 	}
-	
-	
+
 	/**
 	 * Get a list of all existing taxes
 	 * 
@@ -121,7 +118,6 @@ class Tax extends MultilingualObject
 	{
 	    return self::getRecordSet(new ARSelectFilter(), $loadReferencedRecords);
 	}
-
 }
 
 ?>

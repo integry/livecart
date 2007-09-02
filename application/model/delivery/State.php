@@ -26,6 +26,24 @@ class State extends ActiveRecordModel
 		$schema->registerField(new ARField("subdivisionType", ARVarchar::instance(60)));
 	}    
 	
+	/*####################  Static method implementations ####################*/	
+	
+	/**
+	 * Gets an existing record instance (persisted on a database).
+	 * @param mixed $recordID
+	 * @param bool $loadRecordData
+	 * @param bool $loadReferencedRecords
+	 * @param array $data	Record data array (may include referenced record data)
+	 *
+	 * @return ActiveRecord
+	 */
+	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
+	{		    
+		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
+	}	
+	
+	/*####################  Instance retrieval ####################*/		
+	
 	public static function getStatesByCountry($countryCode)
 	{
         $f = new ARSelectFilter();
@@ -95,20 +113,6 @@ class State extends ActiveRecordModel
             return null;
         }
     }
-
-	/**
-	 * Gets an existing record instance (persisted on a database).
-	 * @param mixed $recordID
-	 * @param bool $loadRecordData
-	 * @param bool $loadReferencedRecords
-	 * @param array $data	Record data array (may include referenced record data)
-	 *
-	 * @return ActiveRecord
-	 */
-	public static function getInstanceByID($recordID, $loadRecordData = false, $loadReferencedRecords = false, $data = array())
-	{		    
-		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
-	}
 }
 	
 ?>

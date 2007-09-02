@@ -22,11 +22,6 @@ class DeliveryZone extends MultilingualObject
 {
     const ENABLED_TAXES = false;
     
-    public function __construct($data = array())
-    {
-        parent::__construct($data);
-    }
-    
 	public static function defineSchema($className = __CLASS__)
 	{
 		$schema = self::getSchemaInstance($className);
@@ -39,6 +34,16 @@ class DeliveryZone extends MultilingualObject
         $schema->registerField(new ARField("isRealTimeDisabled", ARInteger::instance(1)));
 	}
 
+	/*####################  Static method implementations ####################*/
+
+	/**
+	 * @return DeliveryZone
+	 */
+	public static function getNewInstance()
+	{
+	  	return ActiveRecord::getNewInstance(__CLASS__);
+	}
+	
 	/**
 	 * Gets an existing record instance (persisted on a database).
 	 * @param mixed $recordID
@@ -54,13 +59,7 @@ class DeliveryZone extends MultilingualObject
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
 	
-	/**
-	 * @return DeliveryZone
-	 */
-	public static function getNewInstance()
-	{
-	  	return ActiveRecord::getNewInstance(__CLASS__);
-	}
+	/*####################  Instance retrieval ####################*/		
 	
 	/**
 	 * @return ARSet
@@ -158,6 +157,8 @@ class DeliveryZone extends MultilingualObject
     {
         return self::getInstanceById(0);    
     }    
+    
+	/*####################  Get related objects ####################*/    
     
 	/**
 	 * Determine if the supplied UserAddress matches address masks
