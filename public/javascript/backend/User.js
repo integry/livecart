@@ -167,6 +167,7 @@ Backend.UserGroup.prototype =
 	
 	activateGroup: function(id)
 	{
+        Backend.Breadcrumb.display(id);
         
         $$('.newUserForm').each(function(newForm)
         {
@@ -620,7 +621,16 @@ Backend.User.Editor.prototype =
         Backend.showContainer('userManagerContainer');
 
         this.tabControl = TabControl.prototype.getInstance("userManagerContainer", false);
+		
+		this.setPath();
     }, 
+    
+    setPath: function() {
+        Backend.Breadcrumb.display(
+            Backend.UserGroup.prototype.activeGroup, 
+            this.nodes.form.elements.namedItem('email').value
+        );
+    },
 
     cancelForm: function()
     {      

@@ -33,8 +33,13 @@ Backend.showContainer = function(containerID)
 Backend.hideContainer = function()
 {       
     if(Backend.openedContainersStack.length  > 0) $(Backend.openedContainersStack[Backend.openedContainersStack.length - 1]).hide();
-    Backend.openedContainersStack.splice(Backend.openedContainersStack.length - 1, 1)
-    $(Backend.openedContainersStack[Backend.openedContainersStack.length - 1]).show();
+    Backend.openedContainersStack.splice(Backend.openedContainersStack.length - 1, 1);
+	
+	var lastContainer = $(Backend.openedContainersStack[Backend.openedContainersStack.length - 1]);
+	if(lastContainer)
+	{
+        lastContainer.show();
+    }
 }
 
 /*************************************************
@@ -96,10 +101,8 @@ Backend.AjaxNavigationHandler.prototype =
     
     getHash: function()
     {
-        with(document.location)
-        {
-            return ("#" == hash[0]) ? hash.substring(1, hash.length - 2) : hash.substring(0, hash.length - 1);
-        }
+		var hash = document.location.hash;
+        return ("#" == hash[0]) ? hash.substring(1, hash.length - 2) : hash.substring(0, hash.length - 1);
     },
 	
 	handle: function(element, params)
@@ -298,6 +301,7 @@ Backend.Breadcrumb =
 			link.innerHTML = nodeStr;
 			Event.observe(link, "click", function(e) {
 				Event.stop(e);
+				Backend.hideContainer();
                 Backend.Breadcrumb.treeBrowser.selectItem(this.catId, true);
 			});
 			
@@ -1082,12 +1086,12 @@ Backend.RegisterMVC = function(MVC)
         {
             this._data[name] = value;
         }
-    },
+    }
 
     MVC.Model.prototype.clear = MVC.View.prototype.clear = function()
     {
         this._data = {};
-    },
+    }
  
     MVC.Model.prototype.get = MVC.View.prototype.get = function(name, defaultValue)
     {

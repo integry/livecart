@@ -131,6 +131,7 @@ Backend.DeliveryZone.prototype =
 	
 	activateZone: function(id)
 	{
+        Backend.Breadcrumb.display(id);
         if(id == -1)
         {
             if(Backend.ajaxNav.getHash().match(/tabDeliveryZoneCountry/))

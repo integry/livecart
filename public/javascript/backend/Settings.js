@@ -61,6 +61,7 @@ Backend.Settings.prototype =
 	
 	activateCategory: function(id)
 	{
+        Backend.Breadcrumb.display(id);
 		//if (!this.treeBrowser.hasChildren(id))
 //		{
 			this.treeBrowser.showFeedback(id);

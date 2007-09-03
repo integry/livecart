@@ -90,7 +90,7 @@ class StaticPageController extends StoreManagementController
 			$inst->save();
 			$replace->save();
 			
-			return new JSONResponse(array('id' => $inst->getID(), 'order' => $this->request->get('order')), 'success', $this->translate('_pages_were_successfully_reordered'));	
+			return new JSONResponse(array('id' => $inst->getID(), 'order' => $this->request->get('order')), 'success');	
 		}
 		else
 		{
@@ -129,11 +129,11 @@ class StaticPageController extends StoreManagementController
 			
 			$inst->delete();
 				
-			return new JSONResponse($inst->getID(), 'success');
+			return new JSONResponse(array('id' => $inst->getID()), 'success');
 		}
 		catch (Exception $e)
 		{
-			return new JSONResponse(0);	
+			return new JSONResponse(false, 'failure');	
 		}		
 	}
 	

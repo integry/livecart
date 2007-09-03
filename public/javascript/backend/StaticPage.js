@@ -75,9 +75,7 @@ Backend.StaticPage.prototype =
 	
 	saveCompleted: function(originalRequest)
 	{
-		var r = originalRequest.responseText;
-		
-		eval('var item = ' + originalRequest.responseText);
+		var item = eval('(' + originalRequest.responseText + ')');
 		
 		if (!this.treeBrowser.getItemText(item.id))
 		{
@@ -88,12 +86,12 @@ Backend.StaticPage.prototype =
 		{
 			this.treeBrowser.setItemText(item.id, item.title);
 		}
-		
-		new Backend.SaveConfirmationMessage(document.getElementsByClassName('yellowMessage')[0]);		
 	},	
 	
 	activateCategory: function(id)
 	{
+        Backend.Breadcrumb.display(id);
+		
 		if (!this.treeBrowser.hasChildren(id))
 		{
 			this.treeBrowser.showFeedback(id);
@@ -127,12 +125,30 @@ Backend.StaticPage.prototype =
 	
 	deleteCompleted: function(originalRequest)
 	{
-		eval('var id = ' + originalRequest.responseText);
+		var response = eval('(' + originalRequest.responseText + ')');
 		
-		if (id != 0)
+		if (response.id != 0)
 		{
-			this.treeBrowser.deleteItem(id, true);
+            
+            parentId = this.treeBrowser.getParentId(response.id)
+            categoryIndex = this.treeBrowser.getIndexById(response.id)
+			if(parseInt(categoryIndex) - 1 > 0) { 
+                secondId = this.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) - 1)
+			} else {
+				secondId = this.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1)
+			}
+			
+			this.treeBrowser.deleteItem(response.id, true);
 			new LiveCart.AjaxUpdater(this.urls['empty'], 'pageContent', 'settingsIndicator');
+			
+			try 
+			{
+                this.treeBrowser.selectItem(secondId, true);
+			}
+			catch(e)
+			{
+				
+			}
 		}
 	},
 	

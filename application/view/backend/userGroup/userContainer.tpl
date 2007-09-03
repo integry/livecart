@@ -27,6 +27,7 @@
             var user = Backend.User.Editor.prototype.getInstance(Backend.User.Editor.prototype.getCurrentId(), false);   
             user.cancelForm();
             Backend.hideContainer();
+            Backend.Breadcrumb.display(Backend.UserGroup.prototype.activeGroup);
         });
     </script>
     {/literal}

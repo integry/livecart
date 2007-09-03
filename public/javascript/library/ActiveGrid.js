@@ -109,8 +109,11 @@ ActiveGrid.prototype =
 			{
 				for(i = 0; i < data['data'][k].length; i++)
 				{
-                    data['data'][k][i] = stripHtml(data['data'][k][i]);
-                    
+					if(i > 0) 
+					{
+                        data['data'][k][i] = stripHtml(data['data'][k][i]);
+                    }
+					
                     var filter = this.filters['filter_' + data['columns'][i]];
                     if (filter)
                     {
