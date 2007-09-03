@@ -12,18 +12,20 @@
 			<div class="errorText hidden"></div>
 		</fieldset>
 	</p>
-    <p class="required">
-    	<label for="product_{$cat}_{$product.ID}_sku"><a class="acronym">{t _sku_code}<div>{t _hint_sku}</div></a>:</label>
-    	<fieldset class="error">
-    		{textfield name="sku" id="product_`$cat`_`$product.ID`_sku" class="product_sku" autocomplete="controller=backend.product field=sku"} 
-    		<div class="errorText hidden"></div>
-    	</fieldset>			
-    </p>
-	<p>
+
+	<p style="position: relative; top: 5px;">
 		<label for=""></label>
 		{checkbox name="autosku" id="product_`$cat`_`$product.ID`_sku_auto" class="checkbox" value="on" onclick="Backend.Product.toggleSkuField(this);"}
 		<label for="product_{$cat}_{$product.ID}_sku_auto" class="checkbox">{t _generate_sku}</label>
 	</p>
+    <p class="required">
+    	<label for="product_{$cat}_{$product.ID}_sku"><a class="acronym">{t _sku_code}<div>{t _hint_sku}</div></a>:</label>
+    	<fieldset class="error" style="margin-bottom: 6px;">
+    		{textfield name="sku" id="product_`$cat`_`$product.ID`_sku" class="product_sku" autocomplete="controller=backend.product field=sku"} 
+    		<div class="errorText hidden"></div>
+    	</fieldset>			
+    </p>
+    
 	<p>
 		<label for="product_{$cat}_{$product.ID}_shortdes"><a class="acronym">{t _short_description}<div>{t _hint_shortdescr}</div></a>:</label>
 		<div class="textarea">

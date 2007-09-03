@@ -47,31 +47,25 @@ Backend.Category = {
 					this.iconUrls = new Object();	
 				}
 				
-				this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
-                var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
-                img.originalSrc = img.src;
-				img.src = 'image/indicator.gif';
+				if (!this.iconUrls[itemId])
+				{
+                    this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+                    var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
+                    img.originalSrc = img.src;
+    				img.src = 'image/indicator.gif';                    
+                }
 			}
 		
 		Backend.Category.treeBrowser.hideFeedback = 
-			function()
+			function(itemId)
 			{
-                try
+                if (null != this.iconUrls[itemId])
                 {
-    				for (var itemId in this.iconUrls)
-    				{
-                        if(!parseInt(itemId)) continue;
-            			this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
-                        var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
-            			//img.src = 'image/backend/dhtmlxtree/' + this.iconUrls[itemId];
-                        img.src = img.originalSrc;
-    				}
-                    
+        			this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+                    var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
+                    img.src = img.originalSrc;
+                    this.iconUrls[itemId] = null;                            
                 }
-                catch(e)
-                {
-                    console.info(e)
-                }				
 			}
 
 		var elements = window.location.hash.split('#');
@@ -244,7 +238,6 @@ Backend.Category = {
         var newCategory = eval('(' + response.responseText + ')');
         var parentCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
         this.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
-
 
         this.tabControl.activateTab($('tabMainDetails'), newCategory.ID);
         Backend.ajaxNav.add('cat_' + newCategory.ID + '#tabMainDetails');
@@ -575,7 +568,16 @@ CategoryTabControl.prototype = {
 									 this.getIndicatorId(tabId),
                                      undefined,
                                      function(){ 
-									   Backend.Category.treeBrowser.hideFeedback(); 
+									   Backend.Category.treeBrowser.hideFeedback(categoryId); 
+									   if ('tabMainDetails' == tabId)
+									   {
+                                          var nameField = $(containerId).down('form').elements.namedItem('name');
+                                          if ('New Category ' == nameField.value.substr(0, 13))
+                                          {
+                                            nameField.select();
+                                            nameField.focus();
+                                          }
+                                       }                                       
 									 }
                                      );
 		}

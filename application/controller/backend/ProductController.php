@@ -345,16 +345,6 @@ class ProductController extends StoreManagementController
 	    
 	    $response = $this->save($product);
 	    
-	    // save prices
-		foreach ($this->application->getCurrencyArray() as $currency)
-		{
-			if ($this->request->isValueSet('price_' . $currency))
-			{
-//				var_dump($this->request->get('price_' . $currency));
-                $product->setPrice($currency, $this->request->get('price_' . $currency));
-			}
-		}
-
         $product->save();
 	    
 	    if ($response instanceOf ActionResponse)

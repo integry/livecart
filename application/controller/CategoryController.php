@@ -385,6 +385,7 @@ class CategoryController extends FrontendController
         }
         
         $f = new ARSelectFilter(new INCond(new ARFieldHandle('Category', 'parentNodeID'), $ids));
+        $f->mergeCondition(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), true));
         $f->setOrder(new ARFieldHandle('Category', 'parentNodeID'));
         $f->setOrder(new ARFieldHandle('Category', 'lft'));            
         

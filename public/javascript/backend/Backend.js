@@ -914,6 +914,9 @@ Backend.UnitConventer.prototype =
 		Event.observe(this.nodes.hiValue, 'keyup', function(e) { this.updateShippingWeight() }.bind(this));
         Event.observe(this.nodes.loValue, 'keyup', function(e) { this.updateShippingWeight() }.bind(this));
         Event.observe(this.nodes.switchUnits, 'click', function(e) { Event.stop(e); this.switchUnitTypes() }.bind(this));
+        
+        this.switchUnitTypes();
+        this.switchUnitTypes();
 	},
 	
 	reset: function()
@@ -950,7 +953,11 @@ Backend.UnitConventer.prototype =
 
         var hiValue = Math.floor(this.nodes.normalizedWeightField.value / multipliers[0]);
         var loValue = (this.nodes.normalizedWeightField.value - (hiValue * multipliers[0])) / multipliers[1];
-        loValue = Math.round(loValue * 1000) / 1000;
+        
+        // allow to enter one decimal number for ounces
+        var precision = 'ENGLISH' == this.nodes.unitsTypeField.value ? 10 : 1;
+        
+        loValue = Math.round(loValue * precision) / precision;
 
         if ('english' == this.nodes.unitsTypeField.value)
         {

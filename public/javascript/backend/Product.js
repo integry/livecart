@@ -72,7 +72,9 @@ Backend.Product =
                     cont.removeClassName('intangible');                    
                 }
             }
-		
+            
+        // focus Product Name field
+        container.down('form').elements.namedItem('name').focus();		
 	},
 
     initSpecFieldControls: function(categoryID)

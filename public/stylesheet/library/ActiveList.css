@@ -28,6 +28,10 @@ li.activeList_even, li.activeList_odd
 {
     list-style: none;
     margin: 5px 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    background-color: #FAFAFA;
+    border: 2px solid #EEEEEE;
 }
 
 .activeList_add_sort li {
@@ -45,10 +49,6 @@ ul li.activeList_even
     background: #EFF4F6;
 }
 */
-
-li.activeList_even, li.activeList_odd {
-    border: 2px solid #EEEEEE;
-}
 
 li.activeList_delete_inProgress 
 {

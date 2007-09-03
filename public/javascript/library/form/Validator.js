@@ -47,16 +47,16 @@ function applyFilters(form, ev)
 	element = ev.target;	
 	elementFilters = filter[element.name];
 
-	if ('undefined' == 'elementFilters')
+	if ('undefined' == elementFilters)
 	{
 	  	return false;
 	}
 
 	for (k in elementFilters)
 	{
-		if(typeof elementFilters[k] == 'object')
+		if (typeof elementFilters[k] == 'object' && window[k])
 		{
-		  	eval(k + '(element, elementFilters[k]);');
+            eval(k + '(element, elementFilters[k]);');
 		}
 	}	
 }

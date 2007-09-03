@@ -789,7 +789,8 @@ legend
 label
 {
     float: left;
-    width: 11em;
+    width: 170px;
+    font-size: 14px;
     cursor: pointer;
 }
 
@@ -805,9 +806,14 @@ p.required label, fieldset.required label
   	font-weight: bold;
 }
 
+p.checkbox
+{
+    line-height: 1.5em;
+}
+
 p.radio, p.checkbox, fieldset.radio, fieldset.checkbox
 {
-   padding-left: 11em;
+   padding-left: 170px;
 }
 
 p.radio label, p.checkbox label, fieldset.radio label, fieldset.checkbox label
@@ -880,7 +886,7 @@ input.reset {
 input.radio, input.checkbox
 {
     float: left;
-    margin-right: 1em;
+    margin-right: 0.5em;
 }
 
 input:focus, textarea:focus, select:focus
@@ -1055,6 +1061,7 @@ img.calendar_button
     margin-left: 0.5em;
     cursor: pointer; 
     border: 0px none;   
+    vertical-align: middle;
 }
 
 img.calendar_button_hover
