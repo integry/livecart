@@ -36,6 +36,7 @@ Backend.Category = {
 		if (window.location.hash.length == 0)
         {
             window.location.hash = '#cat_1#tabProducts__';
+			Backend.Breadcrumb.display(1);
         }
 
 		Backend.Category.treeBrowser.showFeedback = 

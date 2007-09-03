@@ -14,6 +14,8 @@ _mass_action_succeed=Mass action succeed
 _are_you_sure_you_want_activate_this_order=Are you sure you want to activate this order?
 _are_you_sure_you_want_cancel_this_order=Are you sure you want to cancel this order?
 
+_order_number=Order #
+
 # Errors
 _err_user_has_no_billing_or_shipping_address=User has no default billing or shipping address
 _invalid_status=Invalid status

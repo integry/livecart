@@ -106,7 +106,9 @@ Backend.CustomerOrder.prototype =
 
 	activateGroup: function(id)
 	{
-        var self = Backend.CustomerOrder.prototype.instance;
+        Backend.Breadcrumb.display(id);
+		
+		var self = Backend.CustomerOrder.prototype.instance;
         
         if(id == 8)
         {
@@ -140,7 +142,6 @@ Backend.CustomerOrder.prototype =
     		Backend.CustomerOrder.prototype.treeBrowser.showFeedback(id);
             
             Backend.ajaxNav.add('group_' + id);
-			Element.update('pageTitle', Backend.CustomerOrder.prototype.getPath(id));
             
             self.tabControl.activateTab('tabOrders', function() { 
                 Backend.CustomerOrder.prototype.treeBrowser.hideFeedback(id);
@@ -151,27 +152,6 @@ Backend.CustomerOrder.prototype =
         
         Backend.CustomerOrder.prototype.activeGroup = id;
 	},
-
-    getPath: function(nodeId)
-    {
-        var path = new Array();
-        var parentId = nodeId;
-        var nodeStr = '';
-        do
-        {
-            nodeStr = Backend.CustomerOrder.prototype.treeBrowser.getItemText(parentId)
-            path.push(nodeStr);
-            parentId = this.treeBrowser.getParentId(parentId)
-        }
-        while(parentId != 0)
-
-        path = path.reverse();
-        var pathStr = path.join(' > ');
-        return pathStr;
-		
-		
-		setHelpContext
-    },
 	
 	displayCategory: function(response)
 	{
@@ -246,15 +226,14 @@ Backend.CustomerOrder.prototype =
             Backend.CustomerOrder.Editor.prototype.craftTabUrl, 
             Backend.CustomerOrder.Editor.prototype.craftContentId
         ); 
-        modifiedOnComplete = 
-        tabControl.activateTab(null, function(response){ onComplete(response); Backend.CustomerOrder.prototype.orderLoaded = true; }.bind(this) );
+        modifiedOnComplete = tabControl.activateTab(null, function(response){ onComplete(response); Backend.CustomerOrder.prototype.orderLoaded = true; }.bind(this) );
         
         if(Backend.CustomerOrder.Editor.prototype.hasInstance(id)) 
     	{
     		Backend.CustomerOrder.Editor.prototype.getInstance(id);			
     	}	
-    },
-    
+    },      
+	
     updateLog: function(orderID)
     {
 		// I had too :(
@@ -619,9 +598,17 @@ Backend.CustomerOrder.Editor.prototype =
             orderIndicator.style.visibility = 'hidden';
         }
 
-            
         Backend.showContainer("orderManagerContainer");
         this.tabControl = TabControl.prototype.getInstance("orderManagerContainer", false);
+		
+		this.setPath();
+    },
+	
+	setPath: function() {
+        Backend.Breadcrumb.display(
+            Backend.CustomerOrder.prototype.activeGroup, 
+            Backend.CustomerOrder.Editor.prototype.Messages.orderNum + this.id
+        );
     },
     
     cancelForm: function()

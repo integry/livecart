@@ -62,7 +62,7 @@
     
     Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToActivateThisOrder = '{/literal}{t _are_you_sure_you_want_activate_this_order|escape}{literal}';
     Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToCancelThisOrder = '{/literal}{t _are_you_sure_you_want_cancel_this_order|escape}{literal}';
-    
+    Backend.CustomerOrder.Editor.prototype.Messages.orderNum = '{/literal}{t _order_number|escape}{literal}';
     new Backend.CustomerOrder({/literal}{json array=$orderGroups}{literal});
     
     {/literal}

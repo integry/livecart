@@ -62,6 +62,7 @@
         product.removeTinyMce();     
         product.cancelForm();
         Backend.Product.Editor.prototype.showCategoriesContainer();
+        Backend.Breadcrumb.display(Backend.Category.activeCategoryId);
     });
 </script>
 {/literal}
