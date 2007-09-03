@@ -100,7 +100,7 @@ class CategoryController extends FrontendController
 			}
 		}
 
-        $products = $this->getProductArray($productFilter);
+        $products = $this->getProductsArray($productFilter);
 
 		// pagination
         $count = new ProductCount($this->productFilter, $this->application);
@@ -200,7 +200,7 @@ class CategoryController extends FrontendController
 	
 	private function getProductsArray(ProductFilter $filter)
 	{
-		$products = $this->category->getProductsArray($filter, array('Manufacturer', 'DefaultImage' => 'ProductImage', 'Category'));
+		$products = $this->category->getProductArray($filter, array('Manufacturer', 'DefaultImage' => 'ProductImage', 'Category'));
 
 		// get product specification and price data
 		ProductSpecification::loadSpecificationForRecordSetArray($products);
