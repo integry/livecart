@@ -53,9 +53,9 @@
 		<div id="pageTitleContainer">
 			<div id="pageTitle">{$PAGE_TITLE}</div>
 			<div id="breadcrumb_template" class="dom_template">
-				<span id="breadcrumb_item"><a href=""></a></span>
-				<span id="breadcrumb_separator"> &gt; </span>
-				<span id="breadcrumb_lastItem"></span>
+				<span class="breadcrumb_item"><a href=""></a></span>
+				<span class="breadcrumb_separator"> &gt; </span>
+				<span class="breadcrumb_lastItem"></span>
 			</div>
 			<div id="breadcrumb"></div>
 		</div>

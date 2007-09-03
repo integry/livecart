@@ -1,9 +1,3 @@
-{literal}
-<script type="text/javascript">
-{/literal}
-Backend.Product.Editor.prototype.setActiveProductName({json array=$product.name_lang}, {json array=$path});
-</script>
-
 <fieldset>
     <legend>{t _main_details}</legend>
     

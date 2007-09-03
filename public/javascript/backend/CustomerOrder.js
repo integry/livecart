@@ -11,6 +11,8 @@ Backend.CustomerOrder.prototype =
 	initialize: function(groups)
 	{
 		Backend.CustomerOrder.prototype.treeBrowser = new dhtmlXTreeObject("orderGroupsBrowser","","", false);
+        Backend.Breadcrumb.setTree(Backend.CustomerOrder.prototype.treeBrowser);
+		
 		Backend.CustomerOrder.prototype.treeBrowser.setOnClickHandler(this.activateGroup);
 		
 		Backend.CustomerOrder.prototype.treeBrowser.def_img_x = 'auto';
@@ -138,6 +140,7 @@ Backend.CustomerOrder.prototype =
     		Backend.CustomerOrder.prototype.treeBrowser.showFeedback(id);
             
             Backend.ajaxNav.add('group_' + id);
+			Element.update('pageTitle', Backend.CustomerOrder.prototype.getPath(id));
             
             self.tabControl.activateTab('tabOrders', function() { 
                 Backend.CustomerOrder.prototype.treeBrowser.hideFeedback(id);
@@ -148,6 +151,27 @@ Backend.CustomerOrder.prototype =
         
         Backend.CustomerOrder.prototype.activeGroup = id;
 	},
+
+    getPath: function(nodeId)
+    {
+        var path = new Array();
+        var parentId = nodeId;
+        var nodeStr = '';
+        do
+        {
+            nodeStr = Backend.CustomerOrder.prototype.treeBrowser.getItemText(parentId)
+            path.push(nodeStr);
+            parentId = this.treeBrowser.getParentId(parentId)
+        }
+        while(parentId != 0)
+
+        path = path.reverse();
+        var pathStr = path.join(' > ');
+        return pathStr;
+		
+		
+		setHelpContext
+    },
 	
 	displayCategory: function(response)
 	{

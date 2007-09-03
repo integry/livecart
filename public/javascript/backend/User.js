@@ -15,6 +15,8 @@ Backend.UserGroup.prototype =
         var self = this;      
         
 		Backend.UserGroup.prototype.treeBrowser = new dhtmlXTreeObject("userGroupsBrowser","","", false);
+        Backend.Breadcrumb.setTree(Backend.UserGroup.prototype.treeBrowser);
+		
 		Backend.UserGroup.prototype.treeBrowser.setOnClickHandler(this.activateGroup);
 		
 		Backend.UserGroup.prototype.treeBrowser.def_img_x = 'auto';
@@ -104,8 +106,8 @@ Backend.UserGroup.prototype =
                     if('success' == response.status)
                     {
                         Backend.UserGroup.prototype.treeBrowser.deleteItem(response.userGroup.ID, true);
-                        var firstId = false;
-                        if(firstId = parseInt(Backend.UserGroup.prototype.treeBrowser._globalIdStorage[1]))
+                        var firstId = parseInt(Backend.UserGroup.prototype.treeBrowser._globalIdStorage[1]);
+                        if(firstId)
                         {
                             Backend.UserGroup.prototype.treeBrowser.selectItem(firstId, true);
                         }
@@ -473,7 +475,7 @@ Backend.User.Group.prototype =
     save: function() 
     {   
         this.nodes.form.action = Backend.User.Group.prototype.Links.save + "/" + this.nodes.ID.value
-        new LiveCart.AjaxRequest(
+        var request = new LiveCart.AjaxRequest(
            this.nodes.form,
            false,
            function(response)
@@ -582,8 +584,8 @@ Backend.User.Editor.prototype =
 		this.nodes.submit = this.nodes.form.down('input.submit');
 		
 		this.nodes.sameAddress = $("user_" + this.id +"_sameAddresses");
-        this.nodes.shippingAddress = $("user_" + this.id +"_shippingAddress"), 
-        this.nodes.billingAddress = $("user_" + this.id +"_billingAddress")
+        this.nodes.shippingAddress = $("user_" + this.id +"_shippingAddress"); 
+        this.nodes.billingAddress = $("user_" + this.id +"_billingAddress");
     },
 
     bindEvents: function(args)
@@ -744,8 +746,8 @@ Backend.User.Add.prototype =
         this.nodes.menuForm = this.nodes.parent;
 		
         this.nodes.sameAddress = $("user_0_sameAddresses");
-        this.nodes.shippingAddress = $("user_0_shippingAddress"), 
-        this.nodes.billingAddress = $("user_0_billingAddress")
+        this.nodes.shippingAddress = $("user_0_shippingAddress");
+        this.nodes.billingAddress = $("user_0_billingAddress");
     },
    
 	showAddForm: function()
@@ -817,9 +819,7 @@ Backend.User.Add.prototype =
         {
         	ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
         }
-	},
-	
-	
+	}
 }
 
 

@@ -128,6 +128,8 @@ Backend.Category = {
 	initCategoryBrowser: function()
 	{
 		this.treeBrowser = new dhtmlXTreeObject("categoryBrowser","","", 0);
+		Backend.Breadcrumb.setTree(this.treeBrowser);
+		
 		this.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
 		this.treeBrowser.setOnClickHandler(this.activateCategory);
         if(Backend.Category.allowSorting)
@@ -158,19 +160,22 @@ Backend.Category = {
             $("moveCategoryUp").parentNode.hide();
             $("moveCategoryDown").parentNode.hide();
         }
-        else 
+        else
         {
             $("removeCategoryLink").parentNode.show();
             
             parentId = Backend.Category.treeBrowser.getParentId(categoryId)
             categoryIndex = Backend.Category.treeBrowser.getIndexById(categoryId)
-            nextCategoryId = Backend.Category.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1)
-
-            if(nextCategoryId) $("moveCategoryDown").parentNode.show();
-            else $("moveCategoryDown").parentNode.hide();
-            
-            if(categoryIndex > 0) $("moveCategoryUp").parentNode.show();
-            else $("moveCategoryUp").parentNode.hide();
+			if(parentId)
+			{
+	            nextCategoryId = Backend.Category.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1)
+	
+	            if(nextCategoryId) $("moveCategoryDown").parentNode.show();
+	            else $("moveCategoryDown").parentNode.hide();
+	            
+	            if(categoryIndex > 0) $("moveCategoryUp").parentNode.show();
+	            else $("moveCategoryUp").parentNode.hide();
+			}
         }  
     },
 
@@ -183,9 +188,8 @@ Backend.Category = {
 	 */
 	activateCategory: function(categoryId)
 	{
-		Element.show('activeCategoryPath');
-		Element.update('activeCategoryPath', Backend.Category.getPath(categoryId));
-              
+        Backend.Breadcrumb.display(categoryId);
+  
         Backend.Category.showControls();
 
 		if(Backend.Product) Backend.Product.Editor.prototype.showCategoriesContainer();
@@ -200,29 +204,11 @@ Backend.Category = {
 		// Backend.ajaxNav.add('cat_' + categoryId);
 		if(Backend.Category.tabControl.activeTab) Backend.Category.tabControl.activeTab.onclick();
 
-        var currentProductId;
-        if(currentProductId = Backend.Product.Editor.prototype.getCurrentProductId())
+        var currentProductId = Backend.Product.Editor.prototype.getCurrentProductId();
+        if(currentProductId)
         {
             Backend.Product.Editor.prototype.getInstance(currentProductId, false).removeTinyMce();
         }
-	},
-
-	getPath: function(nodeId)
-	{
-		var path = new Array();
-		var parentId = nodeId;
-		var nodeStr = '';
-		do
-		{
-			nodeStr = Backend.Category.treeBrowser.getItemText(parentId)
-			path.push(nodeStr);
-			parentId = this.treeBrowser.getParentId(parentId)
-		}
-		while(parentId != 0)
-
-		path = path.reverse();
-		var pathStr = path.join(' > ');
-		return pathStr;
 	},
 
 	createNewBranch: function()
@@ -365,30 +351,34 @@ Backend.Category = {
     
     loadBookmarkedCategory: function(categoryID) 
     {
-        var match;
-        if(match = window.location.hash.match(/cat_(\d+)/)) 
+        var match = window.location.hash.match(/cat_(\d+)/);
+        if(match) 
         {
             var alreadyLoaded = false;
             try
             {
                 $A(Backend.Category.treeBrowser._globalIdStorage).each(function(id) 
                 {
-                    if(id == match[1]) throw new Error('Already loaded')
+                    if(id == match[1]) 
+					{
+					   alreadyLoaded = true;
+					   throw $break;
+				    }
                 });
             }
-            catch(e)
-            {
-                alreadyLoaded = true;
-            }
-            
-            alreadyLoaded = true;
-            
-		    Element.update('activeCategoryPath', Backend.Category.getPath(match[1]));
-        
-            if(!alreadyLoaded) 
-            {
-                Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + match[1]);
-            }
+            catch(e) { }
+			
+			try
+			{
+	            if(!alreadyLoaded) 
+	            {
+	                Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + match[1]);
+	            }
+			}
+			catch(e) 
+			{
+				console.info(e);
+			}
         }
     }
 }
@@ -411,6 +401,8 @@ CategoryTabControl.prototype = {
 	initialize: function(treeBrowser, tabContainerName, sectionContainerName, indicatorImageName)
 	{
 		this.treeBrowser = treeBrowser;
+        Backend.Breadcrumb.setTree(this.treeBrowser);
+		
 		this.sectionContainerName = sectionContainerName;
 
 		if (indicatorImageName != undefined)

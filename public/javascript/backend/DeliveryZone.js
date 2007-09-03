@@ -12,6 +12,8 @@ Backend.DeliveryZone.prototype =
 	{
         
 		Backend.DeliveryZone.prototype.treeBrowser = new dhtmlXTreeObject("deliveryZoneBrowser","","", false);
+		Backend.Breadcrumb.setTree(Backend.DeliveryZone.prototype.treeBrowser);
+		
 		Backend.DeliveryZone.prototype.treeBrowser.setOnClickHandler(this.activateZone);
 		
 		Backend.DeliveryZone.prototype.treeBrowser.def_img_x = 'auto';
@@ -73,8 +75,8 @@ Backend.DeliveryZone.prototype =
                     if('success' == response.status)
                     {
                         Backend.DeliveryZone.prototype.treeBrowser.deleteItem(Backend.DeliveryZone.prototype.activeZone, true);
-                        var firstId = false;
-                        if(firstId = parseInt(Backend.DeliveryZone.prototype.treeBrowser._globalIdStorage[1]))
+                        var firstId = parseInt(Backend.DeliveryZone.prototype.treeBrowser._globalIdStorage[1]);
+                        if(firstId)
                         {
                             Backend.DeliveryZone.prototype.treeBrowser.selectItem(firstId, true);
                         }
@@ -353,16 +355,19 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         if(li.down('input').style.display == 'inline')
         {      
             var list = null;     
-            if(list = $(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'cityMasksList')) 
+            if(list) 
             {
+				list = $(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'cityMasksList');     
                 var url = Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveAddressMask;
             }
-            else if(list = $(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'zipMasksList'))
+            else if($(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'zipMasksList'))
             {
+				list = $(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'zipMasksList');
                 var url = Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveZipMask;
             }
-            else if(list = $(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'addressMasksList'))
+            else if($(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'addressMasksList'))
             {
+				list = $(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'addressMasksList')
                 var url = Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveCityMask;
             }
             
@@ -465,7 +470,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         this.saving = true;
         
         Backend.DeliveryZone.prototype.treeBrowser.setItemText(Backend.DeliveryZone.prototype.activeZone, this.nodes.name.value)
-        new LiveCart.AjaxRequest(this.nodes.form);
+        var request = new LiveCart.AjaxRequest(this.nodes.form);
     
         this.saving = false;
     },
@@ -625,7 +630,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
     {
         this.moveSelectedOptions(this.nodes.activeStates, this.nodes.inactiveStates);
         this.sendSelectsData(this.nodes.activeStates, this.nodes.inactiveStates, Backend.DeliveryZone.prototype.Links.saveStates);
-    },
+    }
 }
 
 

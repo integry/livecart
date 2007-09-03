@@ -546,12 +546,21 @@ Backend.Product.Editor.prototype =
         this.showProductForm();
         this.tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
 
+        this.setPath();
+
         this.addTinyMce();
 
         //this.setTabCounters();
 
         this.initSpecFieldControls();            
     },
+	
+	setPath: function() {
+		Backend.Breadcrumb.display(
+		    Backend.Category.activeCategoryId, 
+		    this.nodes.form.elements.namedItem("name").value
+	    );
+	},
     
     initSpecFieldControls: function()
     {
@@ -603,23 +612,6 @@ Backend.Product.Editor.prototype =
         {
             console.info(e);
         }
-    },
-    
-    setActiveProductName: function(name, path)
-    {
-        this.path = path;
-        
-        var productPath = '';
-        for (k = 0; k < path.length; k++)
-        {
-            productPath += path[k].name_lang + ' &gt; ';
-        }
-        
-        $('productCategoryPath').innerHTML = productPath;
-        $('activeProductName').innerHTML = name;
-        
-        Element.hide('activeCategoryPath');
-        Element.show('activeProductPath');
     },
 
     craftProductUrl: function(url)
@@ -729,8 +721,6 @@ Backend.Product.Editor.prototype =
     {       
         if($("productManagerContainer")) Element.hide($("productManagerContainer"));
         if($("managerContainer")) Element.show($("managerContainer"));
-        if($("activeProductPath")) Element.hide('activeProductPath');
-        Element.show('activeCategoryPath');       
     },
     
     removeTinyMce: function()

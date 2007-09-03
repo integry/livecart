@@ -9,6 +9,7 @@ Backend.Settings.prototype =
 	initialize: function(categories)
 	{
 		this.treeBrowser = new dhtmlXTreeObject("settingsBrowser","","", false);
+        Backend.Breadcrumb.setTree(this.treeBrowser);
 		
 		this.treeBrowser.def_img_x = 'auto';
 		this.treeBrowser.def_img_y = 'auto';
@@ -61,12 +62,12 @@ Backend.Settings.prototype =
 	activateCategory: function(id)
 	{
 		//if (!this.treeBrowser.hasChildren(id))
-		{
+//		{
 			this.treeBrowser.showFeedback(id);
 			var url = this.urls['edit'].replace('_id_', id);
 			var upd = new LiveCart.AjaxUpdater(url, 'settingsContent', 'settingsIndicator');
 			upd.onComplete = this.displayCategory.bind(this);
-		}
+//		}
 	},
 	
 	displayCategory: function(response)

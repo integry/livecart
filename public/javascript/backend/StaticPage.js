@@ -9,6 +9,7 @@ Backend.StaticPage.prototype =
 	initialize: function(pages)
 	{
 		this.treeBrowser = new dhtmlXTreeObject("pageBrowser","","", false);
+        Backend.Breadcrumb.setTree(this.treeBrowser);
 		
 		this.treeBrowser.def_img_x = 'auto';
 		this.treeBrowser.def_img_y = 'auto';

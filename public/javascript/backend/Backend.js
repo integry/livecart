@@ -275,62 +275,51 @@ Backend.LayoutManager.prototype =
 /*************************************************
 	Breadcrumb navigation
 **************************************************/
-Backend.Breadcrumb = Class.create();
-
-/**
- * Builds breadcrumb navigation menu
- */
-Backend.Breadcrumb.prototype = 
+Backend.Breadcrumb = 
 {
-	items: false,
-	
-	initialize: function()	
+    display: function(id, additional) 
 	{
-		this.items = new Array();
-		window.onload = this.display.bindAsEventListener(this);	  
-	},
-	
-	addItem: function(title, url)
-	{
-		this.items[this.items.length] = {"title": title, "url": url}		
-	},
-	
-	display: function()
-	{
-		// there must be at least 2 items added for the breadcrumb to be displayed
-		if (this.items.length < 2)
-		{
-			return false;  
-		}
-	
-		cont = $('breadcrumb');
-		itemTemplate = $('breadcrumb_item');
-		sepTemplate = $('breadcrumb_separator');
-		lastItemTemplate = $('breadcrumb_lastItem');
-										
-		for (k = 0; k < this.items.length; k++)
-		{
-			if (k + 1 < this.items.length)
-			{
-				it = itemTemplate.cloneNode(true);
-				it.firstChild.href = this.items[k].url;
-				it.firstChild.innerHTML = this.items[k].title;			  
-								
-				it.appendChild(sepTemplate.cloneNode(true));				
-			} 
-			else
-			{
-				it = lastItemTemplate.cloneNode(true);
-				it.innerHTML = this.items[k].title;			  
-				it.id = 'breadcrumbLast';
-			}
+        var path = new Array();
+        var parentId = id;
+		var pageTitle = $("pageTitle");
+		var template = $("breadcrumb_template");
+        var link = null;
+		
+        pageTitle.innerHTML = "";
+		
+        do
+        {		
+            nodeStr = Backend.Breadcrumb.treeBrowser.getItemText(parentId);
+			new Insertion.Top(pageTitle, "<span class=\"breadcrumb\">" + template.innerHTML + "</span>");
 			
-			cont.appendChild(it);	 	
-		}  
+			link = pageTitle.down().down("a")
+			link.href = "#cat_" + parentId;
+			link.catId = parentId;
+			link.innerHTML = nodeStr;
+			Event.observe(link, "click", function(e) {
+				Event.stop(e);
+                Backend.Breadcrumb.treeBrowser.selectItem(this.catId, true);
+			});
+			
+	        parentId = Backend.Breadcrumb.treeBrowser.getParentId(parentId);
+        }
+        while(parentId != 0);
+		
+		if(additional) {
+            new Insertion.Bottom(pageTitle, "<span class=\"breadcrumb\">" + template.innerHTML + "</span>");
+            $$("#pageTitle a").last().innerHTML = additional;
+		}
+		
+		$$("#pageTitle .breadcrumb_separator").last().hide();
+		link = $$("#pageTitle a").last();
+		new Insertion.After(link, link.innerHTML);
+		Element.remove(link);
+	},
+	
+	setTree: function(treeBrowser) {
+		Backend.Breadcrumb.treeBrowser = treeBrowser;
 	}
 }
-
-var breadcrumb = new Backend.Breadcrumb();
 
 /*************************************************
 	Backend menu 

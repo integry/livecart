@@ -11,6 +11,7 @@ Backend.Template.prototype =
 	initialize: function(categories)
 	{
 		this.treeBrowser = new dhtmlXTreeObject("templateBrowser","","", false);
+        Backend.Breadcrumb.setTree(this.treeBrowser);
 		
 		this.treeBrowser.def_img_x = 'auto';
 		this.treeBrowser.def_img_y = 'auto';
@@ -189,7 +190,7 @@ return _utf8_decode(out);
 function _utf8_decode(utftext) {  
      var string = "";  
      var i = 0;  
-     var c = c1 = c2 = 0;  
+     var c, c1, c2 = 0;  
 
      while ( i < utftext.length ) {  
 
