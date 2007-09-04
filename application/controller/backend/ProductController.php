@@ -345,8 +345,6 @@ class ProductController extends StoreManagementController
 	    
 	    $response = $this->save($product);
 	    
-        $product->save();
-	    
 	    if ($response instanceOf ActionResponse)
 	    {
             $response->get('productForm')->clearData();
@@ -645,6 +643,11 @@ class ProductController extends StoreManagementController
 			$languages[$lang] = $this->locale->info()->getOriginalLanguageName($lang);
 		}
 		
+		// status values
+		$status = array(0 => $this->translate('_disabled'),
+					    1 => $this->translate('_enabled'),	
+					  );
+		
 		// product types
 		$types = array(0 => $this->translate('_tangible'),
 					   1 => $this->translate('_intangible'),	
@@ -679,6 +682,7 @@ class ProductController extends StoreManagementController
 		$response->set("path", $product->category->get()->getPathNodeArray(true));
 		$response->set("multiLingualSpecFieldss", $multiLingualSpecFields);
 		$response->set("productTypes", $types);
+		$response->set("productStatuses", $status);
 		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());
 		$response->set("otherCurrencies", $this->application->getCurrencyArray(LiveCart::EXCLUDE_DEFAULT_CURRENCY));
 		$productData = $product->toArray();

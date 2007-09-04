@@ -24,6 +24,7 @@ abstract class ObjectImageController extends StoreManagementController
 				
 		$response = new ActionResponse();
 		$response->set('form', $this->buildForm($owner->getID()));
+		$response->set('maxSize', ini_get('upload_max_filesize'));
 		$response->set('ownerId', $owner->getID());
 		$response->set('images', json_encode($imageArray));
 		return $response;		  
@@ -198,7 +199,7 @@ abstract class ObjectImageController extends StoreManagementController
 
 		$validator = new RequestValidator($this->getModelClass() . "_" . $catId, $this->request);
 
-		$uploadCheck = new IsFileUploadedCheck($this->translate('_err_not_uploaded'));
+		$uploadCheck = new IsFileUploadedCheck($this->translate(!empty($_FILES['image']['name']) ? '_err_too_large' :'_err_not_uploaded'));
 		$uploadCheck->setFieldName('image');
 		$validator->addCheck('image', $uploadCheck);
 

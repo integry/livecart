@@ -222,7 +222,7 @@ Backend.Product =
 	        if(Backend.Product.Editor.prototype.hasInstance(id)) 
 			{
 				Backend.Product.Editor.prototype.getInstance(id);			
-			}			
+			}	
 		}
 		
         if (e)
@@ -234,6 +234,18 @@ Backend.Product =
     setPath: function(categoryID, path)
     {
         this.categoryPaths[categoryID] = path;
+    },
+    
+    resetEditors: function()
+    {
+        Backend.Product.productTabCopies = new Array();
+        Backend.Product.formTabCopies = new Array();
+        Backend.Product.Editor.prototype.__instances__ = {};
+        Backend.Product.Editor.prototype.__currentId__ = null;
+
+        $('productManagerContainer').down('.sectionContainer').innerHTML = '';
+        
+        TabControl.prototype.__instances__ = {};        
     }
 }
 
@@ -748,6 +760,14 @@ Backend.Product.Editor.prototype =
     }
 }
 
+
+
+
+Backend.ProductEditorPrototypeBackup = Backend.Product.Editor.prototype;
+
+
+
+
 Backend.Product.Prices = Class.create();
 Backend.Product.Prices.prototype =
 {
@@ -800,9 +820,7 @@ Backend.Product.Prices.prototype =
 
     submitForm: function()
     {
-        console.log('just a minute');
         new LiveCart.AjaxRequest(this.nodes.form, null, this.saveComplete.bind(this));
-        console.log('sending request');
     },
 
     resetForm: function(response)
@@ -813,13 +831,11 @@ Backend.Product.Prices.prototype =
 
     saveComplete: function(responseJSON)
     {
-		console.log(responseJSON);
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-		console.log(1);
+
 		var responseObject = eval("(" + responseJSON.responseText + ")");
-		console.log(2);
+
 		this.afterSubmitForm(responseObject);        
-		console.log(3);
     },
 
     afterSubmitForm: function(response)

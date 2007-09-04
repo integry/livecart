@@ -51,7 +51,8 @@ Backend.ObjectImage.prototype =
     	var firstli = images[0];
     		
         if (firstli)
-        {
+        {           
+                console.log(firstli, mainP.nextSibling);
             // move first image under "Main Image"
             if (mainP.nextSibling == supplementalP)
             {
@@ -84,7 +85,8 @@ Backend.ObjectImage.prototype =
 				
     			 var uploadForm = $(handler.prefix + 'ImgAdd_' + handler.ownerID).getElementsByTagName('form')[0];
     			 uploadForm.reset();
-				 var form = uploadForm.cloneNode(true);            
+				 var form = uploadForm.cloneNode(true);    
+                 ActiveForm.prototype.resetErrorMessages(form);
 				 
 				 form.action = handler.saveUrl;
 				 onsubm = function(e) {var form = Event.element(e); this.showProgressIndicator(form); }
@@ -166,7 +168,8 @@ Backend.ObjectImage.prototype =
 			 beforeDelete:   function(li)
 	         {				 	
 				 var recordId = this.getRecordId(li);	
-				 if(confirm(li.parentNode.handler.delConfirmMsg)) 
+				 li.handler = li.parentNode.handler;
+                 if(confirm(li.parentNode.handler.delConfirmMsg)) 
 				 {
 					 return li.parentNode.handler.deleteUrl + '/' + recordId;
 				 }
@@ -186,9 +189,9 @@ Backend.ObjectImage.prototype =
 			 
 				//CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li.parentNode));
                 
-				li.parentNode.handler.showNoImagesMessage();			   	
+				li.handler.showNoImagesMessage();			   	
 				
-				li.parentNode.handler.arrangeImages();		
+				li.handler.arrangeImages();		
 			 }
 	     },
          
@@ -310,6 +313,13 @@ Backend.ObjectImage.prototype =
 		return false;
 	},
 	
+	cancelAdd: function()
+	{
+        var form = this.addForm.down('form');
+        ActiveForm.prototype.resetErrorMessages(form);
+        form.reset();
+    },
+	
 	postUpload: function(result)
 	{
 		var errorElement = document.getElementsByClassName('errorText', this.addForm)[0];
@@ -331,6 +341,8 @@ Backend.ObjectImage.prototype =
             
             this.arrangeImages();
 		}
+		
+		this.cancelAdd();
 	},
 
 	postSave: function(imageId, result)

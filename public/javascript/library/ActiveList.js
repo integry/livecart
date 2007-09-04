@@ -762,17 +762,22 @@ ActiveList.prototype = {
     callUserCallback: function(action, response, li)
     {
         this._currentLi = li;
-        var success = this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
 		
-		if(success !== false)
+		if(action == 'delete')
 		{
-			if(action == 'delete')
-			{
-				var duration = 0.5;
-			    Effect.Fade(li, { duration: duration });
-				setTimeout( function() { Element.remove(li) }.bind(this), duration * 1000 );
-			}
+			var duration = 0.5;
+		    Effect.Fade(li, { duration: duration });
+			setTimeout( 
+            function() 
+            { 
+                Element.remove(li) 
+                this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
+            }.bind(this), duration * 1000 );
 		}
+		else
+		{
+            this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
+        }
 		
         Element.removeClassName(li, this.cssPrefix  + action + '_inProgress');
 		

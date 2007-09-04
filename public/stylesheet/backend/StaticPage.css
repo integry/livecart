@@ -1,9 +1,20 @@
 #pageBrowser
 {
 	width: 250px;	
+	padding-left: 0;
 }
 
-#text
+#pageBrowser .containerTableStyle table
+{
+    margin-left: -5px !important; 
+}
+
+#textContainer
+{
+    margin-left: 0;
+}
+
+#text, .longDescr
 {
 	height: 350px;
 }

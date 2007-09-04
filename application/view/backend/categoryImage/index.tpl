@@ -24,18 +24,19 @@
 		<p class="required">
 			{err for="image"}
                 {{label {t _image_file}: }}
-				{filefield}
-            {/err}
+				{filefield} 
+                <span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
+            {/err}            
 		</p>
 			
 		<p>
-			<label for="title">{t _image_title}</label>
+			<label for="title">{t _image_title}:</label>
 			{textfield name="title" id="title"}	
 		</p>		
 		
 		{language}
 			<p>
-				<label>{t _image_title}</label>
+				<label>{t _image_title}:</label>
 				{textfield name="title_`$lang.ID`"}
 			</p>
 		{/language}	
@@ -44,7 +45,7 @@
 			<span class="progressIndicator" style="display: none;"></span>
 			<input type="submit" name="upload" class="submit" value="{tn _upload}"> 
             {t _or} 
-            <a href="#" class="cancel" onclick="restoreMenu('catImgAdd_{$ownerId}', 'catImgMenu_{$ownerId}'); return false;">{t _cancel}</a>
+            <a href="#" class="cancel" onclick="restoreMenu('catImgAdd_{$ownerId}', 'catImgMenu_{$ownerId}'); $('catImageList_{$ownerId}').handler.cancelAdd(); return false;">{t _cancel}</a>
 	    </fieldset>
     </fieldset>
 

@@ -139,8 +139,8 @@
 	    <div class="activeGridColumnsList">
 			{foreach from=$availableColumns item=item key=column}
 			<p>
-				<input type="checkbox" name="col[{$column}]" class="checkbox" id="column_{$column}"{if $displayedColumns.$column}checked="checked"{/if} />
-				<label for="column_{$column}" class="checkbox" id="column_{$column}_label">
+				<input type="checkbox" name="col[{$column}]" class="checkbox" id="column_{$id}_{$column}"{if $displayedColumns.$column}checked="checked"{/if} />
+				<label for="column_{$id}_{$column}" class="checkbox" id="column_{$id}_{$column}_label">
 					{$item.name}
 				</label>
 			</p>

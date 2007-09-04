@@ -54,6 +54,7 @@ Backend.StaticPage.prototype =
 	
 	insertTreeBranch: function(treeBranch, rootId)
 	{
+		this.treeBrowser.showItemSign(rootId, 0);
 		for (k in treeBranch)
 		{
 		  	if('function' != typeof treeBranch[k])

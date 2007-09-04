@@ -9,7 +9,7 @@
         <td class="subCatImage">
             {if $sub.DefaultImage.paths.1}
                 <a href="{categoryUrl data=$sub}">
-                    {img src=$sub.DefaultImage.paths.1  alt=$sub.name_lang|escape}            
+                    {img src=$sub.DefaultImage.paths.1 alt=$sub.name_lang|escape}
                 </a>
             {/if}
         </td>
@@ -46,9 +46,9 @@
             <td colspan="2"><div></div></td>
         </tr>
     {/if}
-{if $smarty.foreach.subcats.iteration % $perColumn == 0 || $smarty.foreach.subcats.last}
-</table>
-{/if}
+    {if $smarty.foreach.subcats.iteration % $perColumn == 0 || $smarty.foreach.subcats.last}
+        </table>
+    {/if}
 {/foreach}    
 
 </fieldset>

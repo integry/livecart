@@ -76,7 +76,7 @@ function smarty_function_metricsfield($params, LiveCartSmarty $smarty)
     $content .= '<div class="errorText hidden"></div>';
     
     $content .= '   <a href="#" class="UnitConventer_SwitchUnits" ' . ($hideSwitch ? 'style="display: none;"' : '') . '>' . $application->translate($application->getConfig()->get('UNIT_SYSTEM') == 'ENGLISH' ? '_switch_to_english_units' : '_switch_to_metric_units') . '</a>';		
-    $content .= '   <script type="text/javascript">Backend.UnitConventer.prototype.getInstance("' . $rootID . '");console.log("starting");</script>';
+    $content .= '   <script type="text/javascript">Backend.UnitConventer.prototype.getInstance("' . $rootID . '");</script>';
     $content .= '</fieldset >';
     
     return $content; 

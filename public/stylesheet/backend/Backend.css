@@ -639,6 +639,8 @@ ul.menu li {
 ul.verticalMenu
 {
 	padding: 15px;
+	padding-top: 15px;
+	padding-bottom: 5px;
 	list-style-type: none;	
 }
 
@@ -956,6 +958,7 @@ p.checkbox label, fieldset.checkbox label {
 div.textarea 
 {
  	margin-bottom: 7px; 
+ 	margin-left: 170px;
 }
 
 input.wide 

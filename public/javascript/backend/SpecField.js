@@ -981,6 +981,9 @@ Backend.SpecField.prototype = {
         
         if(jsonResponse.status == 'success')
         {       
+            // reset product forms
+            Backend.Product.resetEditors();
+            
             if(this.nodes.parent.tagName.toLowerCase() == 'li')
             {
                 ActiveForm.prototype.updateNewFields('specField_update', $H(jsonResponse.newIDs), this.nodes.parent);
@@ -1490,7 +1493,7 @@ Backend.SpecFieldGroup.prototype = {
     afterSave: function(response)
     {
 		if(response.status == 'success')
-        {
+        {            
     		if(this.group.ID)
             {
                 var al = ActiveList.prototype.getInstance(this.cssPrefix + 'groups_list_' + this.group.Category.ID);

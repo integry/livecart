@@ -24,7 +24,7 @@ interface MultilingualObjectInterface
 	 * @param string $langCode
 	 * @param mixed $returnDefaultIfEmpty
 	 */
-	public function getValueByLang($fieldName, $langCode, $returnDefaultIfEmpty = true);
+	public function getValueByLang($fieldName, $langCode = null, $returnDefaultIfEmpty = true);
 
 	/**
 	 * "Shorthand" mothod for setting field

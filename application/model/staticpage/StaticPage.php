@@ -70,7 +70,7 @@ class StaticPage extends MultilingualObject
 		
 		if (!$this->handle->get())
 		{
-            $this->handle->set(createHandleString($this->getValueByLang('title', $lang)));		
+            $this->handle->set(createHandleString($this->getValueByLang('title')));
 		}
 	
 		parent::save();

@@ -447,7 +447,7 @@ ActiveGridFilter.prototype =
 		var cont = element.up('th');
 		var min = document.getElementsByClassName('min', cont)[0];
         var max = document.getElementsByClassName('max', cont)[0];
-	        
+
         // show/hide input fields
         if ('><' == this.element.value)
         {
@@ -470,7 +470,7 @@ ActiveGridFilter.prototype =
 	            this.setFilterValue();
 	        }        
 		}
-                      
+
         // hide menu
         if (element.up('div.filterMenu'))
         {
@@ -499,8 +499,7 @@ ActiveGridFilter.prototype =
 		if ('' == this.element.value)
 		{
 			this.initFilter(e);
-		}
-		
+		}		
     }
 }
 
@@ -512,7 +511,7 @@ function RegexFilter(element, params)
 
 function stripHtml(value)
 {
-	if (!value.replace)
+	if (!value || !value.replace)
 	{
         return value;
     }

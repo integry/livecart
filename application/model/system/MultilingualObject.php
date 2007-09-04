@@ -39,11 +39,11 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 		$this->setFieldValue($fieldName, $valueArray);
 	}
 
-	public function getValueByLang($fieldName, $langCode, $returnDefaultIfEmpty = true)
+	public function getValueByLang($fieldName, $langCode = null, $returnDefaultIfEmpty = true)
 	{
 		$valueArray = $this->getFieldValue($fieldName);
 
-		if (!isset($valueArray[$langCode]) && $returnDefaultIfEmpty)
+		if ((!isset($valueArray[$langCode]) && $returnDefaultIfEmpty) || is_null($langCode))
 		{
 			if (!self::$defaultLanguageCode)
 			{

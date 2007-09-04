@@ -92,8 +92,11 @@ TabControl.prototype = {
     {
         this.nodes.tabListElements.each(function(tab)
         {
-            var firstLink = tab.down('a');
-            new Insertion.After(firstLink, '<span class="tabCounter"> </span>');
+            if (!tab.down('.tabCounter'))
+            {
+                var firstLink = tab.down('a');
+                new Insertion.After(firstLink, '<span class="tabCounter"> </span>');
+            }
         });  
     },
 

@@ -1,10 +1,11 @@
 <fieldset>
     <legend>{t _main_details}</legend>
     
-	<p class="checkbox" class="container">
-		{checkbox name="isEnabled" class="checkbox" id="product_`$cat`_`$product.ID`_isEnabled" class="checkbox"}
-        <label for="product_{$cat}_{$product.ID}_isEnabled">{t _enabled}</label>
-	</p>   
+	<p class="required" style="border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 4px;">
+		<label for="product_{$cat}_{$product.ID}_isEnabled">{t Availability}:</label>
+		{selectfield name="isEnabled" options=$productStatuses}
+	</p>
+
 	<p class="required">
 		<label for="product_{$cat}_{$product.ID}_name">{t _product_name}:</label>
 		<fieldset class="error">

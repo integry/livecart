@@ -16,6 +16,7 @@
 #newsList li
 {
     padding: 5px;
+	width: 43em;
 }
 
 #newsList .activeList_icons 

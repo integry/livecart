@@ -67,7 +67,7 @@ Backend.Category = {
                     this.iconUrls[itemId] = null;                            
                 }
 			}
-
+			
 		var elements = window.location.hash.split('#');
 		if (elements[1].substr(0, 4) == 'cat_')
 		{
@@ -123,6 +123,13 @@ Backend.Category = {
 	initCategoryBrowser: function()
 	{
 		this.treeBrowser = new dhtmlXTreeObject("categoryBrowser","","", 0);
+
+		Backend.Category.treeBrowser.setCategoryStyle = 
+			function(category)
+			{		
+                this.setItemColor(category.ID, (category.isEnabled < 1 ? '#999' : '#000'), (category.isEnabled < 1 ? '#999' : '#fff'));
+            }
+
 		Backend.Breadcrumb.setTree(this.treeBrowser);
 		
 		this.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
@@ -238,7 +245,8 @@ Backend.Category = {
         var newCategory = eval('(' + response.responseText + ')');
         var parentCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
         this.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
-
+        Backend.Category.treeBrowser.setCategoryStyle(newCategory);
+            
         this.tabControl.activateTab($('tabMainDetails'), newCategory.ID);
         Backend.ajaxNav.add('cat_' + newCategory.ID + '#tabMainDetails');
 	},
@@ -259,6 +267,7 @@ Backend.Category = {
 		var categoryData = eval('(' + response.responseText + ')');
 
 		Backend.Category.treeBrowser.setItemText(categoryData.ID, categoryData.name);
+		Backend.Category.treeBrowser.setCategoryStyle(categoryData);
 	},
 
 	/**
@@ -339,6 +348,7 @@ Backend.Category = {
             }
 
             Backend.Category.treeBrowser.insertNewItem(category.parent,category.ID,category.name, null, 0, 0, 0, category.options, !category.childrenCount ? 0 : category.childrenCount);
+            Backend.Category.treeBrowser.setCategoryStyle(category);
         });
     },
     

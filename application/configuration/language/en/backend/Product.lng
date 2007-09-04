@@ -67,6 +67,9 @@ ProductPrice.price=Price
 # Main form
 
 _product=Product
+_availability=Availability
+_disabled=Disabled
+_enabled=Enabled (visible)
 
 _tangible=Tangible (shippable)
 _intangible=Intangible (downloadable)
@@ -74,11 +77,9 @@ _intangible=Intangible (downloadable)
 _inventory=Inventory
 _items_in_stock=Items in stock
 _main_details=Main Details
-_enabled=Enabled (visible)
 _product_name=Product name
 _handle=Handle
 _sku_code=SKU (code)
-_what_is_sku=Sku is sku
 _generate_sku=Generate SKU automatically
 _short_description=Short description
 _long_description=Long description

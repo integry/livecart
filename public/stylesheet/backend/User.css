@@ -1,3 +1,8 @@
+#userGroupsBrowserWithControlls
+{
+    overflow: hidden;
+}
+
 #userGroupsWrapper .addTreeNode
 {
     background-image: url(../../image/silk/group_add.png) !important;
