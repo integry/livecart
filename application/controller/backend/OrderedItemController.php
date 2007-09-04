@@ -128,7 +128,7 @@ class OrderedItemController extends StoreManagementController
 	                'priceCurrencyID' => $item->priceCurrencyID->get(),
 	                'isExisting'	  => $existingItem
 	            )
-            ), 'success', $this->translate('_item_has_been_successfuly_saved'));
+            ), 'success');
         }
         else
         {
@@ -400,8 +400,7 @@ class OrderedItemController extends StoreManagementController
 				    'prefix' => $shipment->amountCurrency->get()->pricePrefix->get(),
 				    'suffix' => $shipment->amountCurrency->get()->priceSuffix->get()
 				 )),
-				 'success',
-				 $this->translate('_ordered_item_quantity_was_updated')
+				 'success'
 			 );
         }
         else

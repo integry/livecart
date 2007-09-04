@@ -179,7 +179,7 @@ Backend.Tax.prototype =
                                     (this.nodes.form.elements.namedItem('isEnabled').checked ? Backend.Tax.prototype.Messages.enabled : Backend.Tax.prototype.Messages.disabled) +  
                                  "</strong>)" + 
                             "</span>";
-                 this.taxActiveList.addRecord(response.tax.ID, span);
+                 this.taxActiveList.addRecord(response.tax.ID, span, true);
                  
                  this.hideNewForm();
             }
@@ -189,7 +189,7 @@ Backend.Tax.prototype =
                 title.update(this.nodes.form.elements.namedItem('name').value + "(<strong>" + (this.nodes.form.elements.namedItem('isEnabled').checked ? Backend.Tax.prototype.Messages.enabled : Backend.Tax.prototype.Messages.disabled) +  "</strong>)")
                 title.style.display = (title.style.display != 'none') ? 'none' : 'inline';
                 
-                this.taxActiveList.toggleContainer(this.nodes.root.up('li'), 'edit');
+                this.taxActiveList.toggleContainer(this.nodes.root.up('li'), 'edit', 'yellow');
                 
                 Form.State.backup(this.nodes.form);
             }

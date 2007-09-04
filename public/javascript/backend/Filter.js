@@ -67,7 +67,7 @@ Backend.Filter.prototype = {
  
          beforeDelete:   function(li)
          {
-             if(confirm('{/literal}{t _FilterGroup_remove_question|addslashes}{literal}'))  return Backend.Filter.prototype.links.deleteGroup + this.getRecordId(li)
+             if(confirm(Backend.Filter.prototype.msg.removeQuestion))  return Backend.Filter.prototype.links.deleteGroup + this.getRecordId(li)
          },
    
          afterDelete:    function(li, response)
@@ -1007,7 +1007,7 @@ Backend.Filter.prototype = {
                     console.info(e);
                 }
 
-                ActiveList.prototype.getInstance(this.nodes.parent.parentNode).toggleContainer(this.nodes.parent, 'edit');
+                ActiveList.prototype.getInstance(this.nodes.parent.parentNode).toggleContainer(this.nodes.parent, 'edit', 'yellow');
             }
             else
             {

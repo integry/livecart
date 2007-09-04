@@ -270,7 +270,7 @@ Backend.ProductFile.Controller.prototype = {
                 this.createDownloadLink();
 
                 var activeList = ActiveList.prototype.getInstance(this.view.prefix + "list_" + this.model.get('Product.ID', '') + "_" + this.model.get('ProductFileGroup.ID', ''));
-                activeList.toggleContainer(this.view.nodes.root.up("li"), 'edit');
+                activeList.toggleContainer(this.view.nodes.root.up("li"), 'edit', 'yellow');
             }
             Form.State.restore(this.view.nodes.root);
         }
@@ -441,13 +441,13 @@ Backend.ProductFile.View.prototype = {
         this.clear();
     },
     
-    hideForm: function()
+    hideForm: function(highlight)
     {
         var li = this.nodes.root.up("li");
         var activeList = ActiveList.prototype.getInstance(li.up('ul'));
         
         this.nodes.title.show();
-        activeList.toggleContainer(li, 'edit');
+        activeList.toggleContainer(li, 'edit', highlight);
         
         this.clear();
     }   
@@ -501,11 +501,10 @@ Backend.ProductFile.Group.Callbacks =
         }
         else
         {
-            with(Backend.ProductFile.Group.Controller.prototype.getInstance(li.down('.productFileGroup_form')))
-            {
-                if(this.getContainer(li, 'edit').style.display != 'block') showForm();
-                else hideForm();
-            }
+			var object = Backend.ProductFile.Group.Controller.prototype.getInstance(li.down('.productFileGroup_form'));
+            
+			if(this.getContainer(li, 'edit').style.display != 'block') object.showForm();
+            else object.hideForm();
         }
     },
     afterEdit:      function(li, response) 
@@ -703,7 +702,7 @@ Backend.ProductFile.Group.Controller.prototype = {
             else
             {
                 this.view.nodes.title.update(this.view.nodes.name.value);
-                this.hideForm();
+                this.hideForm('yellow');
             }
             Form.State.restore(this.view.nodes.root);
         }
@@ -730,9 +729,9 @@ Backend.ProductFile.Group.Controller.prototype = {
         this.view.showForm();
     },
     
-    hideForm: function()
+    hideForm: function(highlight)
     {
-        this.view.hideForm();
+        this.view.hideForm(highlight);
     }
     
 }
@@ -832,12 +831,12 @@ Backend.ProductFile.Group.View.prototype = {
         this.clear();
     },
     
-    hideForm: function()
+    hideForm: function(highlight)
     {
         var li = this.nodes.root.up("li");
         var activeList = ActiveList.prototype.getInstance(li.up('ul'));
         
-        activeList.toggleContainerOff(activeList.getContainer(li, 'edit'));
+        activeList.toggleContainerOff(activeList.getContainer(li, 'edit', highlight));
         
         this.clear();
     }

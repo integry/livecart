@@ -497,7 +497,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                 if('success' == response.status)
                 {
                     var activeList = ActiveList.prototype.getInstance(this.nodes.cityMasksList);
-                    var li = activeList.addRecord(response.ID, '<span class="maskTitle">' + mask.value + '</span><input type="text" value="' + mask.value + '" style="display:none;" />');
+                    var li = activeList.addRecord(response.ID, '<span class="maskTitle">' + mask.value + '</span><input type="text" value="' + mask.value + '" style="display:none;" />', true);
 
                     mask.value = '';
                     this.bindMask(li.down('input'));
@@ -522,7 +522,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                 if('success' == response.status)
                 {
                     var activeList = ActiveList.prototype.getInstance(this.nodes.zipMasksList);
-                    var li = activeList.addRecord(response.ID, '<span class="maskTitle">' + mask.value + '</span><input type="text" value="' + mask.value + '" style="display:none;" />');
+                    var li = activeList.addRecord(response.ID, '<span class="maskTitle">' + mask.value + '</span><input type="text" value="' + mask.value + '" style="display:none;" />', true);
 
                     mask.value = '';
                     this.bindMask(li.down('input'));
@@ -547,7 +547,7 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                 if('success' == response.status)
                 {
                     var activeList = ActiveList.prototype.getInstance(this.nodes.addressMasksList);
-                    var li = activeList.addRecord(response.ID, '<span class="maskTitle">' + mask.value + '</span><input type="text" value="' + mask.value + '" style="display:none;" />');
+                    var li = activeList.addRecord(response.ID, '<span class="maskTitle">' + mask.value + '</span><input type="text" value="' + mask.value + '" style="display:none;" />', true);
     
                     mask.value = '';
                     this.bindMask(li.down('input'));
@@ -879,7 +879,7 @@ Backend.DeliveryZone.ShippingService.prototype =
                 Form.State.backup(this.nodes.form);
 				
 				this.nodes.root.up('li').down('.ratesCount').innerHTML = this.nodes.root.down(".activeList").getElementsByTagName("li").length;
-                this.servicesActiveList.toggleContainer(this.nodes.root.up('li'), 'edit');
+                this.servicesActiveList.toggleContainer(this.nodes.root.up('li'), 'edit', 'yellow');
 				
                 if($H(response.service.newRates).size() > 0)
                 {
@@ -1445,7 +1445,7 @@ Backend.DeliveryZone.TaxRate.prototype =
             else
             {
                 Form.State.backup(this.nodes.form);
-                this.ratesActiveList.toggleContainer(this.nodes.root.up('li'), 'edit');
+                this.ratesActiveList.toggleContainer(this.nodes.root.up('li'), 'edit', 'yellow');
             }
         }
         else

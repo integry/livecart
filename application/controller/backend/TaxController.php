@@ -98,7 +98,7 @@ class TaxController extends StoreManagementController
 		    
 	        $tax->save();
 	        
-	        return new JSONResponse(array('tax' => $tax->toArray()), 'success', $this->translate('_tax_entry_was_successfully_saved'));
+	        return new JSONResponse(array('tax' => $tax->toArray()), 'success');
         }
         else
         {

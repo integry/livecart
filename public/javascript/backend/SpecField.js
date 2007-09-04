@@ -988,7 +988,7 @@ Backend.SpecField.prototype = {
                 this.backupName = this.nodes.name.value;
                 
                 var activeList = ActiveList.prototype.getInstance(this.nodes.parent.parentNode);
-                activeList.toggleContainer(this.nodes.parent, 'edit');
+                activeList.toggleContainer(this.nodes.parent, 'edit', 'yellow');
                 activeList.highlight();
             }
             else
@@ -1493,8 +1493,12 @@ Backend.SpecFieldGroup.prototype = {
         {
     		if(this.group.ID)
             {
-                ActiveList.prototype.getInstance(this.cssPrefix + 'groups_list_' + this.group.Category.ID).toggleProgress(this.nodes.parent);
-                Form.backup(this.nodes.form);
+                var al = ActiveList.prototype.getInstance(this.cssPrefix + 'groups_list_' + this.group.Category.ID);
+                
+				al.highlight(this.nodes.parent, 'yellow');
+				al.toggleProgress(this.nodes.parent);
+				
+				Form.backup(this.nodes.form);
                 Backend.SpecFieldGroup.prototype.hideGroupTranslations(this.nodes.parent);
     		}
     		else

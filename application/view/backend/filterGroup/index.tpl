@@ -2,18 +2,18 @@
 <script type="text/javascript">
 //<[!CDATA[
     Backend.Filter.prototype.links = {};
-    Backend.Filter.prototype.links.deleteGroup = {/literal}'{link controller=backend.filterGroup action=delete}/'{literal};
-    Backend.Filter.prototype.links.editGroup = {/literal}'{link controller=backend.filterGroup action=item}/'{literal};
-    Backend.Filter.prototype.links.sortGroup = {/literal}'{link controller=backend.filterGroup action=sort}/'{literal};
-    Backend.Filter.prototype.links.updateGroup = {/literal}'{link controller=backend.filterGroup action=update}/'{literal};
-    Backend.Filter.prototype.links.createGroup = {/literal}'{link controller=backend.filterGroup action=create}/'{literal};
-    Backend.Filter.prototype.links.deleteFilter = {/literal}'{link controller=backend.filter action=delete}/'{literal};
-    Backend.Filter.prototype.links.sortFilter = {/literal}'{link controller=backend.filter action=sort}/'{literal};
-    Backend.Filter.prototype.links.generateFilters = {/literal}'{link controller=backend.filter action=generate}/'{literal};
+    Backend.Filter.prototype.links.deleteGroup = '{/literal}{link controller=backend.filterGroup action=delete}/{literal}';
+    Backend.Filter.prototype.links.editGroup = '{/literal}{link controller=backend.filterGroup action=item}/{literal}';
+    Backend.Filter.prototype.links.sortGroup = '{/literal}{link controller=backend.filterGroup action=sort}/{literal}';
+    Backend.Filter.prototype.links.updateGroup = '{/literal}{link controller=backend.filterGroup action=update}/{literal}';
+    Backend.Filter.prototype.links.createGroup = '{/literal}{link controller=backend.filterGroup action=create}/{literal}';
+    Backend.Filter.prototype.links.deleteFilter = '{/literal}{link controller=backend.filter action=delete}/{literal}';
+    Backend.Filter.prototype.links.sortFilter = '{/literal}{link controller=backend.filter action=sort}/{literal}';
+    Backend.Filter.prototype.links.generateFilters = '{/literal}{link controller=backend.filter action=generate}/{literal}';
 
     Backend.Filter.prototype.msg = {};
-    Backend.Filter.prototype.msg.translateTo = {/literal}'{t _translate_to}'{literal};
-    
+    Backend.Filter.prototype.msg.translateTo = '{/literal}{t _translate_to}{literal}';
+    Backend.Filter.prototype.msg.removeQuestion = '{/literal}{t _FilterGroup_remove_question|addslashes}{literal}';
     {/literal}
     {foreach from=$configuration item="configItem" key="configKey"}
         {if $configKey == 'types'}
@@ -64,8 +64,8 @@
     <script type="text/javascript">
          Backend.Filter.prototype.activeListMessages = 
          { 
-             _activeList_edit:    {/literal}'{t _activeList_edit|addslashes}'{literal},
-             _activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
+             _activeList_edit:    '{/literal}{t _activeList_edit|addslashes}{literal}',
+             _activeList_delete:  '{/literal}{t _activeList_delete|addslashes}{literal}'
          }
          
          Event.observe($("filter_item_new_{/literal}{$categoryID}{literal}_show"), "click", function(e) 

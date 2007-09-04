@@ -106,7 +106,7 @@ class DeliveryZoneController extends StoreManagementController
 	        $deliveryZoneState->save();
 	    }
 	    
-	    return new JSONResponse(false, 'success', $this->translate('_delivery_zone_was_successfully_saved'));
+	    return new JSONResponse(false, 'success');
 	}
 	
 	/**
@@ -152,7 +152,7 @@ class DeliveryZoneController extends StoreManagementController
         
         $zone->save();
 	    
-	    return new JSONResponse(false, 'success', $this->translate('_delivery_zone_name_was_updated'));
+	    return new JSONResponse(false, 'success');
 	}
 	
 	/**
@@ -176,7 +176,7 @@ class DeliveryZoneController extends StoreManagementController
 		    
 		    $mask->save();
 	    
-		    return new JSONResponse(array('ID' => $mask->getID()), 'success', $this->translate('_mask_was_successfully_saved'));
+		    return new JSONResponse(array('ID' => $mask->getID()), 'success');
 	    }
 	    else
 	    {
@@ -225,11 +225,11 @@ class DeliveryZoneController extends StoreManagementController
 		    
 		    $mask->save();
 		    
-		    return new JSONResponse(array('status' => 'success', 'ID' => $mask->getID()));
+		    return new JSONResponse(array('ID' => $mask->getID()), 'success');
 	    }
 	    else
 	    {
-		    return new JSONResponse(array('status' => 'failure', 'errors' => $errors));
+		    return new JSONResponse(false, 'failure', $this->translate('_could_not_save_mask'));
 	    }
 	}
 
@@ -264,11 +264,11 @@ class DeliveryZoneController extends StoreManagementController
 		    
 		    $mask->save();
 		    
-		    return new JSONResponse(array('status' => 'success', 'ID' => $mask->getID()));
+		    return new JSONResponse(array('ID' => $mask->getID()), 'success');
 	    }
 	    else
 	    {
-		    return new JSONResponse(array('status' => 'failure', 'errors' => $errors));
+		    return new JSONResponse(array('errors' => $errors), 'failure', $this->translate('_could_not_save_mask'));
 	    }
 	}
 

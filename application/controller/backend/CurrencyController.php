@@ -123,7 +123,7 @@ class CurrencyController extends StoreManagementController
 			ActiveRecord::updateRecordSet('Currency', $update);  	
 		}
 
-		return new JSONResponse(false, 'success', $this->translate('_currency_list_was_successfully_reordered'));
+		return new JSONResponse(false, 'success');
 	}
 
 	/**
@@ -186,7 +186,7 @@ class CurrencyController extends StoreManagementController
         $currency->priceSuffix->set($this->request->get('priceSuffix'));
         $currency->save();        
 
-        return new JSONResponse(false, 'success', $this->translate('_currency_was_successfully_saved'));
+        return new JSONResponse(false, 'success');
     }
 
 	/**

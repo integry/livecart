@@ -108,7 +108,7 @@ class SettingsController extends StoreManagementController
 			$this->config->save();
 			$this->config->setAutoSave(true);
 			  
-			return new JSONResponse(false, 'success', $this->translate('_section_was_successfully_saved'));		  	
+			return new JSONResponse(false, 'success');		  	
 		}
 	}  		  
 	

@@ -171,6 +171,7 @@ Backend.SiteNews.PostEntry.prototype =
 		this.data = originalRequest.responseData;
 		this.updateHtml();
 		this.cancelEditForm();
+		ActiveList.prototype.highlight(this.node, 'yellow');
 	},
 	
 	del: function()

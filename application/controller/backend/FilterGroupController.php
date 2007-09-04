@@ -107,7 +107,7 @@ class FilterGroupController extends StoreManagementController
 				$newIDs = $filterGroup->saveFilters($filters, $specFieldType, $this->filtersConfig['languageCodes']);
 			}
 
-            return new JSONResponse(array('id' => $filterGroup->getID(), 'newIDs' => $newIDs), 'success', $this->translate('_filter_group_was_successfully_saved'));
+            return new JSONResponse(array('id' => $filterGroup->getID(), 'newIDs' => $newIDs), 'success');
         }
         else
         {

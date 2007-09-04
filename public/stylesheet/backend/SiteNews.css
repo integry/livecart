@@ -5,50 +5,54 @@
 
 #addNews
 {
-	width: 650px;
+    width: 650px;
 }
 
 #newsList
 {
-	width: 700px;
+    width: 700px;
 }
 
 #newsList li
 {
-	padding: 5px;
+    padding: 5px;
 }
 
 #newsList .activeList_icons 
 {
-	left: 0px;
-	position: absolute;
-	width: auto;
+    left: 0px;
+    position: absolute;
+    width: auto;
 }
 
 #newsList li .checkbox
 {
-	margin-top: 3px;
-	margin-right: 5px;
+    margin-top: 3px;
+    margin-right: 5px;
 }
 
 .newsTitle
 {
-	font-weight: bold;
-	float: left;
+    font-weight: bold;
+    float: left;
 }
 
 .newsDate
 {
-	font-size: smaller;
-	float: right;
+    font-size: smaller;
+    float: right;
 }
 
 .newsListContainer
 {
-	padding-left: 60px;
+    padding-left: 60px;
 }
 
 .newsText
 {
-	display: block;
+    display: block;
+}
+
+#newsList textarea {
+   width: 30em;
 }

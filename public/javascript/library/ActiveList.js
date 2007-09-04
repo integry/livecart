@@ -289,12 +289,18 @@ ActiveList.prototype = {
      *
      * @access public
      */
-    toggleContainer: function(li, action)
+    toggleContainer: function(li, action, highlight)
     {
         var container = this.getContainer(li, action);
         
-        if(container.style.display == 'none') this.toggleContainerOn(container);
-        else this.toggleContainerOff(container);
+        if(container.style.display == 'none') 
+		{
+		    this.toggleContainerOn(container, highlight);
+        }
+		else 
+		{
+			this.toggleContainerOff(container, highlight);
+		}
     },
     
     /**
@@ -302,7 +308,7 @@ ActiveList.prototype = {
      * 
      * @param HTMLElementDiv container Reference to the container
      */
-    toggleContainerOn: function(container)
+    toggleContainerOn: function(container, highlight)
     {       
         container = $(container);
         ActiveList.prototype.collapseAll();
@@ -312,11 +318,17 @@ ActiveList.prototype = {
         {
             Effect.BlindDown(container, { duration: 0.5 });
             Effect.Appear(container, { duration: 1.0 });
-            setTimeout(function() { container.style.height = 'auto'; container.style.display = 'block'}, 300);
+            setTimeout(function() { 
+			    container.style.height = 'auto'; 
+			    container.style.display = 'block';
+				
+				if(highlight) this.highlight(container.up('li'), highlight);
+		    }.bind(this), 300);
         } 
         else
         {
             container.style.display = 'block';
+            if(highlight) this.highlight(container.up('li'), highlight);
         }
     },
 
@@ -325,18 +337,22 @@ ActiveList.prototype = {
      * 
      * @param HTMLElementDiv container Reference to the container
      */
-    toggleContainerOff: function(container)
+    toggleContainerOff: function(container, highlight)
     {
         var container = $(container);
         this.createSortable();
         if(BrowserDetect.browser != 'Explorer')
         {
             Effect.BlindUp(container, {duration: 0.2});
-            setTimeout(function() { container.style.display = 'none'}, 40);
+            setTimeout(function() { 
+				container.style.display = 'none';
+	            if(highlight) this.highlight(container.up('li'), highlight);
+			}.bind(this), 40);
         } 
         else
         {
             container.style.display = 'none';
+            if(highlight) this.highlight(container.up('li'), highlight);
         }
     },
     
@@ -465,13 +481,15 @@ ActiveList.prototype = {
             while(cloned_dom.childNodes.length > 0) li.appendChild(cloned_dom.childNodes[0]);
             li.className = dom.className;
         }
-        if(touch)
-        {
-            this.createSortable();
-	  	}
-        
+                
         this.decorateLi(li);
         this.colorizeItem(li, this.ul.childNodes.length);		    
+
+        if(touch !== false)
+        {
+            this.highlight(li, 'yellow');
+            this.touch();
+        }
 
         return li;
     },
@@ -498,8 +516,8 @@ ActiveList.prototype = {
 
 
     /***************************************************************************
-    /*           Private methods                                               *
-    /***************************************************************************
+     *           Private methods                                               *
+     ***************************************************************************/
 
     /**
      * Go throug all list elements and decorate them with icons, containers, etc
@@ -812,67 +830,89 @@ ActiveList.prototype = {
         }        
     },
 
-    getWindowScroll: function() {
-      var T, L, W, H;
-      var w = window;
-      with (w.document) {
-        if (w.document.documentElement && documentElement.scrollTop) {
-          T = documentElement.scrollTop;
-          L = documentElement.scrollLeft;
-        } else if (w.document.body) {
-          T = body.scrollTop;
-          L = body.scrollLeft;
+    getWindowScroll: function() 
+	{
+        var T, L, W, H;
+	  
+        if (w.document.document.document.documentElement && documentElement.scrollTop) 
+		{
+            T = documentElement.scrollTop;
+            L = documentElement.scrollLeft;
+        } 
+		else if (w.document.body) 
+		{
+            T = body.scrollTop;
+            L = body.scrollLeft;
         }
-        if (w.innerWidth) {
-          W = w.innerWidth;
-          H = w.innerHeight;
-        } else if (w.document.documentElement && documentElement.clientWidth) {
-          W = documentElement.clientWidth;
-          H = documentElement.clientHeight;
-        } else {
-          W = body.offsetWidth;
-          H = body.offsetHeight
+    
+	    if (w.innerWidth) 
+	    {
+	        W = w.innerWidth;
+	        H = w.innerHeight;
+        } 
+		else if (w.document.documentElement && documentElement.clientWidth) 
+		{
+	        W = documentElement.clientWidth;
+	        H = documentElement.clientHeight;
+        } 
+		else 
+		{
+		    W = body.offsetWidth;
+		    H = body.offsetHeight
         }
-      }
-      return { top: T, left: L, width: W, height: H };
+		
+        return { top: T, left: L, width: W, height: H };
     },
 
-    findTopY: function(obj) {
-      var curtop = 0;
-      if (obj.offsetParent) {
-        while (obj.offsetParent) {
-          curtop += obj.offsetTop;
-          obj = obj.offsetParent;
+    findTopY: function(obj) 
+	{
+        var curtop = 0;
+        if (obj.offsetParent) 
+	    {
+	        while (obj.offsetParent) 
+			{
+	            curtop += obj.offsetTop;
+	            obj = obj.offsetParent;
+	        }
         }
-      }
-      else if (obj.y)
-        curtop += obj.y;
-      return curtop;
+        else if (obj.y)
+	    {
+            curtop += obj.y;
+	    }
+	  
+        return curtop;
     },
     
-    findBottomY: function(obj) {
-      return this.findTopY(obj) + obj.offsetHeight;
+    findBottomY: function(obj) 
+	{
+        return this.findTopY(obj) + obj.offsetHeight;
     },
     
-    scrollSome: function() {
-      var scroller = this.getWindowScroll();
-      var yTop = this.findTopY(this.dragged);
-      var yBottom = this.findBottomY(this.dragged);
+    scrollSome: function() 
+	{
+        var scroller = this.getWindowScroll();
+        var yTop = this.findTopY(this.dragged);
+        var yBottom = this.findBottomY(this.dragged);
 
-      if (yBottom > scroller.top + scroller.height - 20)
-        window.scrollTo(0,scroller.top + 30);
-        else if (yTop < scroller.top + 20)
-        window.scrollTo(0,scroller.top - 30);
+        if (yBottom > scroller.top + scroller.height - 20)
+		{
+            window.scrollTo(0,scroller.top + 30);
+        }
+		else if (yTop < scroller.top + 20)
+        {
+		    window.scrollTo(0,scroller.top - 30);
+        }
     },
     
-    scrollStart: function(e) {
-      var $this = this;
-      this.dragged = e;
-  //    this.scrollPoll = setInterval(function() { $this.scrollSome() } , 10);
+    scrollStart: function(e) 
+	{
+        var $this = this;
+        this.dragged = e;
     },
     
-    scrollEnd: function(e) {
-      clearInterval(this.scrollPoll);
+    scrollEnd: function(e) 
+	{
+        clearInterval(this.scrollPoll);
     },
 
     /**

@@ -124,11 +124,9 @@ Backend.RelatedProduct.Group.Callbacks =
         }
         else
         {
-            with(Backend.RelatedProduct.Group.Controller.prototype.getInstance(li.down('.productRelationshipGroup_form')))
-            {
-                if('block' != view.nodes.root.style.display) showForm();
-                else hideForm();
-            }
+            var object = Backend.RelatedProduct.Group.Controller.prototype.getInstance(li.down('.productRelationshipGroup_form'));
+            if('block' != object.view.nodes.root.style.display) object.showForm();
+            else object.hideForm();
         }
     },
     afterEdit:      function(li, response) 
@@ -312,7 +310,7 @@ Backend.RelatedProduct.Group.Controller.prototype = {
             else
             {
                 this.view.nodes.title.update(this.view.nodes.name.value);
-                this.hideForm();
+                this.hideForm('yellow');
             }
             Form.State.restore(this.view.nodes.root);
         }
@@ -339,9 +337,9 @@ Backend.RelatedProduct.Group.Controller.prototype = {
         this.view.showForm();
     },
     
-    hideForm: function()
+    hideForm: function(highlight)
     {
-        this.view.hideForm();
+        this.view.hideForm(highlight);
     }
 }
 
@@ -436,13 +434,13 @@ Backend.RelatedProduct.Group.View.prototype = {
         this.clear();
     },
     
-    hideForm: function()
+    hideForm: function(highlight)
     {
         var li = this.nodes.root.up("li");
         var activeList = ActiveList.prototype.getInstance(li.up('ul'));
         
         this.nodes.title.show();
-        activeList.toggleContainerOff(li.down('.' + this.prefix + 'form'));
+        activeList.toggleContainerOff(li.down('.' + this.prefix + 'form'), highlight);
         
         this.clear();
     }

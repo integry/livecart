@@ -57,7 +57,7 @@ class CategoryImageController extends ObjectImageController
 	{
         parent::saveOrder();
         
-        return new JSONResponse(false, 'success', $this->translate('_category_images_were_successfully_reordered'));
+        return new JSONResponse(false, 'success');
     }    
 
 	protected function getModelClass()

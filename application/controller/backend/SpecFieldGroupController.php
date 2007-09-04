@@ -108,7 +108,7 @@ class SpecFieldGroupController extends StoreManagementController
             
             $specFieldGroup->save();
             
-            return new JSONResponse(array('id' => $specFieldGroup->getID()), 'success', $this->translate('_specfield_group_was_successfully_saved'));
+            return new JSONResponse(array('id' => $specFieldGroup->getID()), 'success');
         }
         else
         {

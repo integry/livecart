@@ -177,7 +177,9 @@ Backend.Currency.prototype =
 
     completeSaveFormat: function()
     {
-        this.parentNode.innerHTML = '';    
+		var li = this.parentNode.up('li');
+        this.parentNode.innerHTML = '';
+		ActiveList.prototype.highlight(li, 'yellow');    
     },
 
 /************************************

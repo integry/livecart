@@ -220,7 +220,7 @@ class ShippingServiceController extends StoreManagementController
                 }
             }
             
-            return new JSONResponse(array('service' => $shippingServiceArray), 'success', $this->translate('_shipping_service_was_successfully_saved'));
+            return new JSONResponse(array('service' => $shippingServiceArray), 'success');
         }
         else
         {

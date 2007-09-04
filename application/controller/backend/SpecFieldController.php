@@ -199,7 +199,7 @@ class SpecFieldController extends StoreManagementController
             
 			
 			
-            return new JSONResponse(array('id' => $specField->getID(), 'newIDs' => $newIDs), 'success', $this->translate('_attribute_was_successfully_saved'));
+            return new JSONResponse(array('id' => $specField->getID(), 'newIDs' => $newIDs), 'success');
         }
         else
         {

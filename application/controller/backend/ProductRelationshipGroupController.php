@@ -91,7 +91,7 @@ class ProductRelationshipGroupController extends StoreManagementController
     		
     		$relationshipGroup->save();
     		
-            return new JSONResponse(array('ID' => $relationshipGroup->getID()), 'success', $this->translate('_relationship_group_was_successfully_saved'));
+            return new JSONResponse(array('ID' => $relationshipGroup->getID()), 'success');
 		}
 		else
 		{
