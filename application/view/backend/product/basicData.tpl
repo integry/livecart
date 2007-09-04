@@ -18,7 +18,7 @@
     </fieldset>
     
     <script type="text/javascript">
-        var editor = Backend.Product.Editor.prototype.getInstance({$product.ID});
-        editor.tabControl.setAllCounters({$counters}, editor.id);        
+        var editor = Backend.Product.Editor.prototype.getInstance({$product.ID}, true, {json array=$path});
+        editor.tabControl.setAllCounters({$counters}, editor.id);
     </script>
 {/form}

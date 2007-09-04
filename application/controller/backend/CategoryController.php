@@ -205,6 +205,8 @@ class CategoryController extends StoreManagementController
         	    $xmlResponse->set("rootID", $categoriesList['children'][0]['parent']);
         	    $xmlResponse->set("categoryList", $categoriesList);
     	    }
+    	    
+    	    $xmlResponse->set("doNotTouch", $this->request->get("doNotTouch"));
 	    }
 	    catch(Exception $e) 
 	    {

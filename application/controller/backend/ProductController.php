@@ -676,7 +676,7 @@ class ProductController extends StoreManagementController
 		$response->set("cat", $product->category->get()->getID());
 		$response->set("specFieldList", $specFieldsByGroup);
 		$response->set("productForm", $form);
-		$response->set("path", $product->category->get()->getPathNodeArray());
+		$response->set("path", $product->category->get()->getPathNodeArray(true));
 		$response->set("multiLingualSpecFieldss", $multiLingualSpecFields);
 		$response->set("productTypes", $types);
 		$response->set("baseCurrency", $this->application->getDefaultCurrency()->getID());

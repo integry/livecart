@@ -502,11 +502,12 @@ Backend.Product.Editor.prototype =
     __currentId__: null,
     __instances__: {},
 
-    initialize: function(id)
+    initialize: function(id, path)
   	{
         try
         {
             this.id = id;
+            this.path = path;
     
             this.__nodes__();
             this.__bind__();
@@ -559,7 +560,7 @@ Backend.Product.Editor.prototype =
 	
 	setPath: function() {
 		Backend.Breadcrumb.display(
-		    Backend.Category.activeCategoryId, 
+		    this.path, 
 		    this.nodes.form.elements.namedItem("name").value
 	    );
 	},
@@ -636,11 +637,11 @@ Backend.Product.Editor.prototype =
         Backend.Product.Editor.prototype.__currentId__ = id;
     },
 
-    getInstance: function(id, doInit)
+    getInstance: function(id, doInit, path)
     {
         if(!Backend.Product.Editor.prototype.__instances__[id])
         {
-            Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id);
+            Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id, path);
         }
 
         if(doInit !== false) 
