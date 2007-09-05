@@ -60,6 +60,9 @@ if ($this->config->get('SSL_CUSTOMER'))
     $this->router->setSslAction('user');
 }
 
+// language index page
+$this->router->connect(':requestLanguage', array('controller' => 'index', 'action' => 'index'), array('requestLanguage' => "[a-zA-Z]{2}"));
+
 foreach ($routes as $route)
 {
 	$this->router->connect($route[0], $route[1], $route[2]);

@@ -41,7 +41,8 @@
 
 #goToFrontend
 {
-	float: right;
+	visibility: hidden;
+    float: right;
 	margin-top: 10px;
 	font-size: larger;
 	font-weight: bold;
@@ -50,4 +51,9 @@
 	background-image: url(../../image/silk/gif/resultset_next.gif);
 	background-position: center right;
 	background-repeat: no-repeat;
+}
+
+.active #goToFrontend
+{
+    visibility: visible;
 }

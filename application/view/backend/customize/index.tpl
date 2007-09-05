@@ -19,10 +19,8 @@
 			{t _live_locate}
 		</div>
 
-		{if $isCustomizationModeEnabled}
-            <a href="{link}" target="_blank" id="goToFrontend">{tn _go_frontend}</a>
-            <div class="clear"></div>
-        {/if}
+        <a href="{link}" target="_blank" id="goToFrontend">{tn _go_frontend}</a>
+        <div class="clear"></div>
 
 	</li>
 
@@ -40,10 +38,8 @@
 			{t _live_trans}
 		</div>
 
-		{if $isTranslationModeEnabled}
-            <a href="{link}" target="_blank" id="goToFrontend">{tn _go_frontend}</a>
-            <div class="clear"></div>
-        {/if}
+        <a href="{link}" target="_blank" id="goToFrontend">{tn _go_frontend}</a>
+        <div class="clear"></div>
 
 	</li>
 

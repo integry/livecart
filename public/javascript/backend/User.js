@@ -406,7 +406,7 @@ Backend.UserGroup.massActionHandler.prototype =
     },
     
     submit: function()
-    {
+    {        
         if ('delete' == this.actionSelector.value)
         {
 			if (!confirm(this.deleteConfirmMessage))
@@ -418,6 +418,13 @@ Backend.UserGroup.massActionHandler.prototype =
         var filters = Object.toJSON(this.grid.getFilters());
 		this.form.elements.namedItem('filters').value = filters ? filters : '';
         var selectedIDs = Object.toJSON(this.grid.getSelectedIDs());
+
+        if ((0 == this.grid.getSelectedIDs().length) && !this.grid.isInverseSelection())
+        {
+            alert(this.nothingSelectedMessage);
+            return false;
+        }
+        
         this.form.elements.namedItem('selectedIDs').value = selectedIDs ? selectedIDs : '';
         this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;
         new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('progressIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));

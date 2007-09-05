@@ -77,6 +77,7 @@ User.companyName=Company name
 User.fullName=Full name
 
 # Mass actions
+_nothing_selected=Please select at least one order first
 _with_selected=With selected
 _order_status=Order status
 _set_new=New

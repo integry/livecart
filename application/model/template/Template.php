@@ -144,6 +144,18 @@ class Template
 			return true;
 		}
 		
+		$cacheDir = ClassLoader::getRealPath('cache.templates_c.customize');
+		if (is_dir($cacheDir))
+		{
+            foreach (new DirectoryIterator($cacheDir) as $file)
+            {
+                if (!$file->isDot())
+                {
+                    unlink($file->getPathname());
+                }
+            }
+        }
+		
 		return unlink($path);
 	}
 

@@ -115,7 +115,7 @@ ActiveGrid.prototype =
                     }
 					
                     var filter = this.filters['filter_' + data['columns'][i]];
-                    if (filter)
+                    if (filter && data['data'][k][i].replace)
                     {
                         data['data'][k][i] = data['data'][k][i].replace(new RegExp('(' + filter + ')', 'gi'), '<span class="activeGrid_searchHighlight">$1</span>');
                     }

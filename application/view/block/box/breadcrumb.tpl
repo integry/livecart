@@ -16,4 +16,5 @@
     	{/foreach}
     	</ul>
     </div>
+    <div class="clear"></div>
 {/if}

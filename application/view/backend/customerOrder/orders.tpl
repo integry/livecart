@@ -102,6 +102,7 @@
     	
         var massHandler = new Backend.CustomerOrder.massActionHandler($('{/literal}orderMass_{$orderGroupID}{literal}'), grid);
         massHandler.deleteConfirmMessage = '{/literal}{t _are_you_sure_you_want_to_delete_this_order|addslashes}{literal}' ;
+        massHandler.nothingSelectedMessage = '{/literal}{t _nothing_selected|addslashes}{literal}' ;
         ordersActiveGrid['{/literal}{$orderGroupID}{literal}'] = grid;
     }
     catch(e)

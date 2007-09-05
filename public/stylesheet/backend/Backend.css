@@ -466,10 +466,11 @@ html, body{
   	position: absolute;
 	display: none;
 	z-index: 20;
-	width: auto;
+	width: 110px;
 	padding-top: 6px;
-	left: -20px;
+	left: -30px;
 	top: 13px;
+	overflow: hidden;
 }
 
 #langMenuIndicator {
@@ -794,6 +795,7 @@ label
     width: 170px;
     font-size: 14px;
     cursor: pointer;
+    overflow: hidden;
 }
 
 label.cancel

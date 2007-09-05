@@ -366,6 +366,12 @@ Backend.CustomerOrder.massActionHandler.prototype =
         this.form.elements.namedItem('selectedIDs').value = selectedIDs ? selectedIDs : '';
         this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;
 
+        if ((0 == this.grid.getSelectedIDs().length) && !this.grid.isInverseSelection())
+        {
+            alert(this.nothingSelectedMessage);
+            return false;
+        }
+
         new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('progressIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));
 
         this.grid.resetSelection();   

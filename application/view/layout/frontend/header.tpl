@@ -16,8 +16,10 @@
 			{* block LANGUAGE *}
         	{block CART}
 		</div>
-
-            {block BREADCRUMB}
+        
+        <div class="clear"></div>
+    
+        {block BREADCRUMB}
 	
 	</fieldset>
 		

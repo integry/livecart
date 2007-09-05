@@ -201,6 +201,11 @@ class LiveCart extends Application
 		return $renderer;
 	}	
 	
+	public function isBackend()
+	{
+        return $this->isBackend;
+    }
+	
 	public function templateLocator($tplSource, $smarty)
 	{
 		$file = $smarty->_current_file;

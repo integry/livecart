@@ -16,7 +16,7 @@ function smarty_function_translate($params, LiveCartSmarty $smarty)
 	$translation = $application->translate($params['text']);
 	$translation = preg_replace('/%([a-zA-Z]*)/e', 'smarty_replace_translation_var(\'\\1\', $smarty)', $translation);
 
-	if ($application->isTranslationMode() && !isset($params['disableLiveTranslation']))
+	if ($application->isTranslationMode() && !isset($params['disableLiveTranslation']) && !$application->isBackend())
 	{
 		$file = $application->getLocale()->translationManager()->getFileByDefKey($params['text']);
 		$file = '__file_'.base64_encode($file);

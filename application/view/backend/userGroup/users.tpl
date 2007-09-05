@@ -97,6 +97,7 @@
     
     var massHandler = new Backend.UserGroup.massActionHandler($('{/literal}userMass_{$userGroupID}{literal}'), grid);
     massHandler.deleteConfirmMessage = '{/literal}{t _are_you_sure_you_want_to_delete_this_user|addslashes}{literal}' ;
+    massHandler.nothingSelectedMessage = '{/literal}{t _nothing_selected|addslashes}{literal}' ;    
     
     usersActiveGrid[{/literal}{$userGroupID}{literal}] = grid;
 
