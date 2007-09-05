@@ -601,7 +601,14 @@ Backend.CustomerOrder.Editor.prototype =
         Backend.showContainer("orderManagerContainer");
         this.tabControl = TabControl.prototype.getInstance("orderManagerContainer", false);
 		
-		this.setPath();
+		try
+		{
+		    this.setPath();
+        }
+		catch(e)
+		{
+		
+		}
     },
 	
 	setPath: function() {

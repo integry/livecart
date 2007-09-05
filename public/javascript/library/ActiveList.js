@@ -236,15 +236,14 @@ ActiveList.prototype = {
 		   {
                if(ActiveList.prototype.activeListsUsers[ul.id])
 			   {
-			      ActiveList.prototype.activeListsUsers[ul.id].isSortable = false;
-				  var s = Sortable.options(ul);
-    
-				  if(s) {
-                      console.info('destroy');
-				      Draggables.removeObserver(s.element);
-//				      s.droppables.each(function(d){ Droppables.remove(d) });
-//				      s.draggables.invoke('destroy');
-				  }
+			       ActiveList.prototype.activeListsUsers[ul.id].isSortable = false;
+				   var s = Sortable.options(ul);
+     
+ 				   if(s) 
+				   { 
+                      Draggables.removeObserver(s.element);
+                      s.draggables.invoke('destroy');
+				   }
 			   }
 		   });
        }
@@ -1001,24 +1000,26 @@ ActiveList.prototype = {
         var order = Sortable.serialize(this.ul.id);
         if(order)
         {
-            // display feedback
-            this.onProgress(this.dragged);
-
             // execute the action
             this._currentLi = this.dragged;
             
-			this.destroySortable();
             var url = this.callbacks.beforeSort.call(this, this.dragged, order);
-            new LiveCart.AjaxRequest(
-                url + "&draggedID=" + this.dragged.id,
-                false,
-                // the object context mystically dissapears when onComplete function is called,
-                // so the only way I could make it work is this
-                function(param, uriObject)
-                {
-                    this.restoreDraggedItem(param.responseText, $(uriObject.query.draggedID));
-                }.bind(this)
-            );
+			if(url)
+			{
+	            // display feedback
+	            this.onProgress(this.dragged);
+                this.destroySortable();
+	            new LiveCart.AjaxRequest(
+	                url + "&draggedID=" + this.dragged.id,
+	                false,
+	                // the object context mystically dissapears when onComplete function is called,
+	                // so the only way I could make it work is this
+	                function(param, uriObject)
+	                {
+	                    this.restoreDraggedItem(param.responseText, $(uriObject.query.draggedID));
+	                }.bind(this)
+	            );
+			}
         }
     },
 

@@ -295,10 +295,11 @@ Backend.Breadcrumb =
     
     createPath: function(id, additional)
     {
+		if(!Backend.Breadcrumb.treeBrowser && Backend.Breadcrumb.treeBrowser.getSelectedItemId) return;
         var parentId = id;
         
         Backend.Breadcrumb.selectedItemId = Backend.Breadcrumb.treeBrowser.getSelectedItemId();
-        
+		
         Backend.Breadcrumb.pageTitle.innerHTML = "";
 
         if(typeof(id) != 'object')
@@ -1213,10 +1214,10 @@ Backend.SelectPopup.prototype = {
             }); 
             
             setTimeout(function() {
-                Backend.SelectPopup.prototype.popup.onunload = function()
+				Backend.SelectPopup.prototype.popup.Event.observe(Backend.SelectPopup.prototype.popup, "unload", function()
                 {
                     window.selectPopupWindow = null;
-                }
+                });
                 
                 Backend.SelectPopup.prototype.popup.focus();
                 window.selectPopupWindow = Backend.SelectPopup.prototype.popup;

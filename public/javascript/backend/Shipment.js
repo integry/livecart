@@ -79,7 +79,7 @@ Backend.OrderedItem = {
                 }
                 catch(e)
                 {
-                    console.info(e)
+                    alert(e)
                 }
             }
             else
@@ -798,8 +798,6 @@ Backend.Shipment.prototype =
 		
 	    window.onbeforeunload = function() 
 	    { 
-		    window.opener.selectPopupWindow = null;
-			
 	        var customerOrder = Backend.CustomerOrder.Editor.prototype.getInstance(orderID); 
 	        var shipmentsContainer = $('tabOrderProducts_' + orderID + 'Content'); 
 	        var ordersManagerContainer = $("orderManagerContainer"); 
@@ -808,20 +806,30 @@ Backend.Shipment.prototype =
 	        { 
 	            return Backend.Shipment.Messages.emptyShipmentsWillBeRemoved; 
 	        } 
-	    }.bind(this)
-	
-	    Event.observe(window, 'unload', function() 
-	    { 
-	        var customerOrder = Backend.CustomerOrder.Editor.prototype.getInstance(orderID); 
-	        var shipmentsContainer = $('tabOrderProducts_' + orderID + 'Content'); 
-	        var ordersManagerContainer = $("orderManagerContainer"); 
-	        
-	        if(ordersManagerContainer.style.display != 'none' && shipmentsContainer && shipmentsContainer.style.display != 'none') 
-	        { 
-	            customerOrder.removeEmptyShipmentsFromHTML(); 
+	    }.bind(this);
+	               
+        
+        Event.observe(window, "unload", function() 
+        { 
+			try
+			{
+				var orderID = Backend.CustomerOrder.Editor.prototype.getCurrentId();
+				
+	            var customerOrder = Backend.CustomerOrder.Editor.prototype.getInstance(orderID); 
+	            var shipmentsContainer = $('tabOrderProducts_' + orderID + 'Content'); 
+	            var ordersManagerContainer = $("orderManagerContainer"); 
+	            
+	            if(ordersManagerContainer.style.display != 'none' && shipmentsContainer && shipmentsContainer.style.display != 'none') 
+	            { 
+	                customerOrder.removeEmptyShipmentsFromHTML(); 
+	            }
 	        }
-	    }.bind(this)); 
-	                 
+			catch(e) 
+			{
+				alert(e);
+			}
+		}); 
+				     
         Event.observe("order" + orderID + "_addProduct", 'click', function(e) 
         { 
             Event.stop(e); 

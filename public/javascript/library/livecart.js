@@ -63,6 +63,8 @@ LiveCart.AjaxRequest.prototype = {
 	
 	parseURI: function(URI) 
 	{
+		if(!URI) return {};
+		
 		var splitedURI = URI.split("?");
         var URL = splitedURI[0];
 		var queryString = splitedURI[1];
