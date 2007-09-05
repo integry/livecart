@@ -52,7 +52,7 @@ LiveCart.AjaxRequest.prototype = {
         
         var updaterOptions = { method: method,
                                parameters: params,
-                               onComplete: this.postProcessResponse.bind(this),
+                               onComplete: this.postProcessResponse.bind(this, this.parseURI(url)),
                                onFailure: this.reportError
                                };
        
@@ -60,6 +60,44 @@ LiveCart.AjaxRequest.prototype = {
 
         new Ajax.Request(url, updaterOptions);
     },
+	
+	parseURI: function(URI) 
+	{
+		var splitedURI = URI.split("?");
+        var URL = splitedURI[0];
+		var queryString = splitedURI[1];
+        var query = {};
+		
+		if(queryString) 
+		{
+			$A(queryString.split("&")).each(function(paramString) {
+				var params = paramString.split("=");
+				
+				var match = params[0].match(/(.*)\[(\d*)\]$/);
+				if(match)
+				{
+					if(!query[match[1]]) query[match[1]] = $H({});
+					
+					if(match[2] == "") 
+					{
+						match[2] = query[match[1]].size();
+					}
+					
+					query[match[1]][match[2]] = params[1];
+				}
+				else
+				{
+				    query[params[0]] = params[1];
+				}
+			});
+		}
+		
+		return {
+            'url': URL,
+			'queryString': queryString,
+			'query': query
+        };
+	},
 
 	hideIndicator: function()
 	{
@@ -77,7 +115,7 @@ LiveCart.AjaxRequest.prototype = {
         }
 	},
 
-    postProcessResponse: function(response)
+    postProcessResponse: function(url, response)
     {
 		
 		this.hideIndicator();
@@ -118,7 +156,7 @@ LiveCart.AjaxRequest.prototype = {
 		document.body.style.cursor = 'default';
         if (this.onComplete)
         {
-		  	this.onComplete(response);
+		  	this.onComplete(response, url);
 		}
     },
     

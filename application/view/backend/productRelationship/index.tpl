@@ -129,7 +129,7 @@
         {/foreach}
         {literal}
         
-        groupList.createSortable();
+        groupList.createSortable(true);
 
     }
     catch(e)

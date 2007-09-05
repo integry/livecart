@@ -620,7 +620,6 @@ Backend.Filter.prototype = {
         this.changeFiltersCount(this.filtersCount+1);
         this.filtersList.touch();
         this.bindDefaultFields();
-        this.filtersList.highlight(li);
         
         Backend.Filter.prototype.countNewFilters++;
     },

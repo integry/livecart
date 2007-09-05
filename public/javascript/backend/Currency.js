@@ -109,8 +109,6 @@ Backend.Currency.prototype =
         var activeList = ActiveList.prototype.getInstance('currencyList');
         activeList.decorateItems();
         activeList.createSortable();
-        		
-		new Effect.Highlight(node, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
 	},	
 	
 	updateItem: function(originalRequest)

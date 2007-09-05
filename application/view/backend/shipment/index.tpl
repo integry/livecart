@@ -167,7 +167,7 @@
             {/literal}{/if}{literal} 
         {/literal}{/foreach}{literal} 
         
-        groupList.createSortable(); 
+        groupList.createSortable(true); 
     }
     catch(e)
     {

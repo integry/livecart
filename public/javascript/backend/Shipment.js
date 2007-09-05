@@ -74,9 +74,7 @@ Backend.OrderedItem = {
                             price.down('.price').innerHTML = parseFloat(response.newShipment[type]);
                             price.down('.priceSuffix').innerHTML = response.newShipment.suffix;
                     });
-
-                    shipmentsActiveList.highlight(newShipmentLi);
-                
+					
                     Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
                 }
                 catch(e)
@@ -156,8 +154,6 @@ Backend.OrderedItem = {
 	                    shipment.setTotal(response.Shipment.total);
 	                    
 	                    input.lastValue = input.value;
-	                    
-	                    ActiveList.prototype.getInstance(input.up('.activeList')).highlight(input.up('li'));
 					}
 					else
 					{
@@ -491,9 +487,6 @@ Backend.Shipment.prototype =
                    this.setTaxAmount(response.item.Shipment.taxAmount);
                    this.setShippingAmount(response.item.Shipment.shippingAmount);
                    this.setTotal(response.item.Shipment.total);
-                   
-                   itemsList.highlight(li);
-				   itemsList.touch();
                    
                    Backend.OrderedItem.updateReport($("orderShipment_report_" + this.nodes.form.elements.namedItem('orderID').value));
                }

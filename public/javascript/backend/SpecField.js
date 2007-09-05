@@ -165,22 +165,39 @@ Backend.SpecField.prototype = {
 	 */
 	recreate: function(specFieldJson, hash)
 	{
-        var self = this;
-	    var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ? ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
-        
-        $A(this.fieldsList.ul.getElementsByTagName('li')).each(function(li)
-        {
-           if(!Element.hasClassName(li, 'dom_template'))  
-           {
-               self.deleteValueFieldAction(li);
-           }   
-        });
-        
-		this.addField(null, "new" + Backend.SpecField.prototype.countNewValues, true);
-        this.bindDefaultFields();
-		Backend.SpecField.prototype.countNewValues++;
-        
-        Form.restore(this.nodes.form, ['type']);
+		try
+		{
+		    console.info('check');
+			var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ? ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
+	        
+            console.info('check');
+	        $A(this.fieldsList.ul.getElementsByTagName('li')).each(function(li)
+	        {
+            console.info('check');
+	           if(!Element.hasClassName(li, 'dom_template'))  
+	           {
+            console.info('check');
+	               this.deleteValueFieldAction(li);
+	           }   
+            console.info('check');
+	        }.bind(this));
+	        
+            console.info('check');
+			this.addField(null, "new" + Backend.SpecField.prototype.countNewValues, false);
+            console.info('check');
+	        this.bindDefaultFields();
+            console.info('check');
+			Backend.SpecField.prototype.countNewValues++;
+            console.info('check');
+	        
+	        Form.restore(this.nodes.form, ['type']);
+            console.info('check');
+		}
+		catch(e)
+		{
+			console
+		     console.info(e);
+		}
 	},
 
 
@@ -638,12 +655,15 @@ Backend.SpecField.prototype = {
         var activeList = this.fieldsList;
         
 		var splitedHref = li.id.split("_");
-		var isNew = splitedHref[splitedHref.length - 2] == 'new' ? true : false;
-		var id = (isNew ? 'new' : '') + splitedHref[splitedHref.length - 1];
+        var id = splitedHref.last();
+		var isNew = id ? true : false;
 
         activeList.remove(li);
-        CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
-
+		if(!isNew)
+		{
+            CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
+        }
+		
 		for(var i = 1; i < this.languageCodes.length; i++)
 		{
 			var translatedValue = $(this.cssPrefix + "form_values_" + this.languageCodes[i] + "_" + id);
@@ -828,7 +848,7 @@ Backend.SpecField.prototype = {
 	 * @access private
 	 *
 	 */
-	addField: function(value, id, isDefault)
+	addField: function(value, id, touch)
 	{
         var self = this;
 		if(!value) value = {};
@@ -837,7 +857,7 @@ Backend.SpecField.prototype = {
 		var ul = this.nodes.specFieldValuesUl;
 
         if(!this.fieldsList) this.bindDefaultFields();
-        var li = this.fieldsList.addRecord(id, values_template);
+        var li = this.fieldsList.addRecord(id, values_template, !!touch);
         Element.removeClassName(li, 'dom_template');
 
 		// The field itself
@@ -916,8 +936,6 @@ Backend.SpecField.prototype = {
         }
         
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-        
-        this.saving = false;
     },
 
     /**
@@ -944,9 +962,6 @@ Backend.SpecField.prototype = {
      */
     saveSpecField: function()
     {
-        if(this.saving) return false;
-        this.saving = true;
-
 		// Toggle progress won't work on new form
 		try
 		{
@@ -992,7 +1007,6 @@ Backend.SpecField.prototype = {
                 
                 var activeList = ActiveList.prototype.getInstance(this.nodes.parent.parentNode);
                 activeList.toggleContainer(this.nodes.parent, 'edit', 'yellow');
-                activeList.highlight();
             }
             else
             {
@@ -1007,7 +1021,6 @@ Backend.SpecField.prototype = {
     		    this.recreate(this.specField, true);
                 
                 activeRecord.touch();
-                activeRecord.highlight(liElement);
             }
             
             CategoryTabControl.prototype.resetTabItemsCount(this.categoryID);
@@ -1047,8 +1060,6 @@ Backend.SpecField.prototype = {
 		catch (e)
 		{
 		}
-        
-        this.saving = false;
     },
 
 
@@ -1461,9 +1472,6 @@ Backend.SpecFieldGroup.prototype = {
      */
     beforeSave: function()
     {
-		if(this.saving) return false;
-        this.saving = true;
-        
         try
 		{
             ActiveList.prototype.getInstance(this.cssPrefix + 'groups_list_' + this.group.Category.ID).toggleProgress(this.nodes.parent);
@@ -1545,8 +1553,6 @@ Backend.SpecFieldGroup.prototype = {
         {
             ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors);
         }
-        
-        this.saving = false;
     },
     
     /**
@@ -1570,8 +1576,6 @@ Backend.SpecFieldGroup.prototype = {
         }
         
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-        
-        this.saving = false;
     },
     
     

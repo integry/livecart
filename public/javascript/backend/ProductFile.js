@@ -424,8 +424,6 @@ Backend.ProductFile.View.prototype = {
         var li = activeList.addRecord(this.get('ID'), fileContainer)
         Element.addClassName(li, 'productFile_item');
                 
-        activeList.highlight(li);
-        activeList.touch();
         this.clear();
     },
     

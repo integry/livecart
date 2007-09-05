@@ -228,8 +228,26 @@ ActiveList.prototype = {
 
     destroySortable: function()
     {
-       Sortable.destroy(this.ul);
-       console.info('destroy sortable')
+	   if(this.isSortable)
+	   {
+	       Sortable.destroy(this.ul);
+           this.isSortable = false; 
+		   $A(this.acceptFromLists).each(function(ul) 
+		   {
+               if(ActiveList.prototype.activeListsUsers[ul.id])
+			   {
+			      ActiveList.prototype.activeListsUsers[ul.id].isSortable = false;
+				  var s = Sortable.options(ul);
+    
+				  if(s) {
+                      console.info('destroy');
+				      Draggables.removeObserver(s.element);
+//				      s.droppables.each(function(d){ Droppables.remove(d) });
+//				      s.draggables.invoke('destroy');
+				  }
+			   }
+		   });
+       }
     },
 
     makeStatic: function()
@@ -811,11 +829,11 @@ ActiveList.prototype = {
      *
      * @access private
      */
-    createSortable: function ()
+    createSortable: function (forse)
     {
         Element.addClassName(this.ul, this.cssPrefix.substr(0, this.cssPrefix.length-1));
         
-        if(Element.hasClassName(this.ul, this.cssPrefix + 'add_sort'))
+        if(Element.hasClassName(this.ul, this.cssPrefix + 'add_sort') && (forse || !this.isSortable))
         {	
 			Sortable.create(this.ul.id,
             {
@@ -828,9 +846,16 @@ ActiveList.prototype = {
                 onUpdate:      function() { 
                     this.saveSortOrder(); 
                 }.bind(this),
-                
+				
                 starteffect: function(){ this.scrollStart() }.bind(this),
                 endeffect: function(){ this.scrollEnd() }.bind(this)
+            });
+			
+            this.isSortable = true; 
+            $A(this.acceptFromLists).each(function(ul) {
+				if(ActiveList.prototype.activeListsUsers[ul.id]) {
+                    ActiveList.prototype.getInstance(ul).createSortable();
+				}
             });
         }        
     },
@@ -973,8 +998,6 @@ ActiveList.prototype = {
      */
     saveSortOrder: function()
     {
-        var self = this;
-        
         var order = Sortable.serialize(this.ul.id);
         if(order)
         {
@@ -983,17 +1006,18 @@ ActiveList.prototype = {
 
             // execute the action
             this._currentLi = this.dragged;
-          
+            
+			this.destroySortable();
             var url = this.callbacks.beforeSort.call(this, this.dragged, order);
             new LiveCart.AjaxRequest(
-                url,
+                url + "&draggedID=" + this.dragged.id,
                 false,
                 // the object context mystically dissapears when onComplete function is called,
                 // so the only way I could make it work is this
-                function(param)
+                function(param, uriObject)
                 {
-                    self.restoreDraggedItem(param.responseText);
-                }
+                    this.restoreDraggedItem(param.responseText, $(uriObject.query.draggedID));
+                }.bind(this)
             );
         }
     },
@@ -1005,30 +1029,32 @@ ActiveList.prototype = {
      *
      * @access private
      */
-    restoreDraggedItem: function(item)
+    restoreDraggedItem: function(item, li)
     {
         // if moving elements from one active list to another we should also change the id of the HTMLLElement 
-        if(this.dragged.prevParentId != this.dragged.parentNode.id && this.dragged.parentNode.id == this.ul.id)
+        if(li.prevParentId != li.parentNode.id && li.parentNode.id == this.ul.id)
         {
-            this.dragged.id = this.dragged.parentNode.id + "_" + this.dragged.id.substring(this.dragged.prevParentId.length + 1); 
+            li.id = li.parentNode.id + "_" + li.id.substring(li.prevParentId.length + 1); 
         }
         
-        this.rebindIcons(this.dragged);
-        this.hideMenu(this.dragged);
+        this.rebindIcons(li);
+        this.hideMenu(li);
 
-        this._currentLi = this.dragged;
+        this._currentLi = li;
         
-        var success = this.callbacks.afterSort.call(this, this.dragged, item);
+        var success = this.callbacks.afterSort.call(this, li, item);
+		this.createSortable();
+		
         this.colorizeItems();
-        this.dragged.prevParentId = this.ul.id;
-        this.offProgress(this.dragged);
+        li.prevParentId = this.ul.id;
+        this.offProgress(li);
 
-        if(success !== false)
+        if(success !== false && li.up('ul') == this.ul)
         {
-            this.highlight(this.dragged, 'yellow');
+            this.highlight(li, 'yellow');
         }
-
-        this.dragged = false;
+		
+		this.dragged = false;
     },
 
     /**

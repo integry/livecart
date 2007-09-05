@@ -417,8 +417,6 @@ Backend.RelatedProduct.Group.View.prototype = {
         ActiveList.prototype.getInstance($('productRelationship_list_' + this.get('productID') + '_' + this.get('ID')), Backend.RelatedProduct.activeListCallbacks);
         Element.addClassName(li, 'productRelationshipGroup_item');
         
-        activeList.highlight(li);
-        activeList.touch();
         this.clear();
     },
     

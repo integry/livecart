@@ -146,7 +146,7 @@
          {assign var="lastSpecFieldGroupID" value=$field.SpecFieldGroup.ID}
      {/foreach}
      
-     groupList.createSortable();
+     groupList.createSortable(true);
 </script>
 
 
