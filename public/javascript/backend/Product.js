@@ -760,14 +760,6 @@ Backend.Product.Editor.prototype =
     }
 }
 
-
-
-
-Backend.ProductEditorPrototypeBackup = Backend.Product.Editor.prototype;
-
-
-
-
 Backend.Product.Prices = Class.create();
 Backend.Product.Prices.prototype =
 {

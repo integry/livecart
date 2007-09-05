@@ -803,7 +803,7 @@ label.cancel
     padding-left: 0px;
 }
 
-p.required label, fieldset.required label
+p.required label, fieldset.required label, label.required
 {
   	font-weight: bold;
 }

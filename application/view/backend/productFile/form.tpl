@@ -7,16 +7,17 @@
 
 		<fieldset class="productFile_main">
 		
-    		<label class="productFile_uploadFile_label">{t _upload_file}</label>
+    		<label class="productFile_uploadFile_label required">{t _upload_file}</label>
             <fieldset class="error">
         		<input type="file" name="uploadFile" class="productFile_uploadFile" {denied role="product.update"}disabled="disabled"{/denied} />
+        		<span class="maxFileSize">{maketext text=_product_file_max_size params=$maxUploadSize}</span>
                 <span {denied role='product.download'}style="display: none"{/denied}>
                 <a class="productFile_download_link" href="" target="_blank" style="display: none"></a>
         		</span>
                 <span class="errorText hidden"> </span>
             </fieldset>
 
-    		<label class="productFile_title_label">{t _productFile_title}</label>
+    		<label class="productFile_title_label required">{t _productFile_title}</label>
             <fieldset  class="error">
         		<input type="text" name="title" class="productFile_title" {denied role="product.update"}readonly="readonly"{/denied} />
         		<span class="errorText hidden"> </span>

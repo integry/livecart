@@ -52,7 +52,6 @@ Backend.ObjectImage.prototype =
     		
         if (firstli)
         {           
-                console.log(firstli, mainP.nextSibling);
             // move first image under "Main Image"
             if (mainP.nextSibling == supplementalP)
             {
@@ -78,7 +77,13 @@ Backend.ObjectImage.prototype =
 	         
 			 beforeEdit:     function(li) 
 			 {
-				 var recordId = this.getRecordId(li);	
+                 if (!this.isContainerEmpty(li, 'edit'))
+                 {
+                     this.toggleContainer(li, 'edit');
+                     return;
+                 }
+                 
+                 var recordId = this.getRecordId(li);	
 				 var ownerId = this.getRecordId(li.parentNode);	
 					
 				 var handler = li.parentNode.handler;	
@@ -87,7 +92,7 @@ Backend.ObjectImage.prototype =
     			 uploadForm.reset();
 				 var form = uploadForm.cloneNode(true);    
                  ActiveForm.prototype.resetErrorMessages(form);
-				 
+        				 
 				 form.action = handler.saveUrl;
 				 onsubm = function(e) {var form = Event.element(e); this.showProgressIndicator(form); }
 				 form.onsubmit = onsubm.bindAsEventListener(handler);
@@ -154,7 +159,8 @@ Backend.ObjectImage.prototype =
 				// Effect.Appear(editCont, {duration: 0.2});
                  
                  this.toggleContainerOn(editCont);
-                 
+
+                 Backend.LanguageForm.prototype.closeTabs(form);                 
                  new Backend.LanguageForm();
 			 },
 	         
@@ -186,9 +192,9 @@ Backend.ObjectImage.prototype =
 	             { 
 	                 return false; 
 	             }
-			 
-				//CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li.parentNode));
-                
+			            
+                li.handler.updateTabCounters();
+                                             
 				li.handler.showNoImagesMessage();			   	
 				
 				li.handler.arrangeImages();		
@@ -198,6 +204,19 @@ Backend.ObjectImage.prototype =
          this.activeListMessages
          );
 	},
+	
+	updateTabCounters: function()
+	{
+        if (this.container.hasClassName('prodImageList'))
+        {
+            var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
+            tabControl.setCounter('tabProductImages', this.container.getElementsByTagName('li').length);
+        }
+        else
+        {
+            CategoryTabControl.prototype.resetTabItemsCount(this.ownerID);
+        }        
+    },
 	
 	showProgressIndicator: function(form)
 	{
@@ -270,12 +289,16 @@ Backend.ObjectImage.prototype =
 	{
 	  	// force image reload
 	  	var timeStamp = new Date().getTime();
-		for(k = 0; k < imageData['paths'].length; k++)
+		for(k = 1; k < 10; k++)
 	  	{
-			imageData['paths'][k] += '?' + timeStamp;
+            if (!imageData['paths'][k])
+			{
+                break;
+            }
+            imageData['paths'][k] +=  '?' + timeStamp + 'xyz';
 		}
 
-		var templ = this.createEntry(imageData);
+        var templ = this.createEntry(imageData);
 		var entry = $(this.__createElementID(imageData['ID']));
 	  	  	
 	  	entry.parentNode.replaceChild(templ, entry);
@@ -317,6 +340,7 @@ Backend.ObjectImage.prototype =
 	{
         var form = this.addForm.down('form');
         ActiveForm.prototype.resetErrorMessages(form);
+        Backend.LanguageForm.prototype.closeTabs(form);
         form.reset();
     },
 	
@@ -337,7 +361,7 @@ Backend.ObjectImage.prototype =
 			this.addMenu.style.display = 'block';
 			this.initActiveList();
             
-            CategoryTabControl.prototype.resetTabItemsCount(this.ownerID);
+            this.updateTabCounters(this.container.down('li'));
             
             this.arrangeImages();
 		}
@@ -352,7 +376,8 @@ Backend.ObjectImage.prototype =
 		errorElement = document.getElementsByClassName('errorText', entry)[0];
 		if (result['error'])  	
 		{
-			errorElement.innerHTML = result['error'];
+			errorElement.removeClassName('hidden');
+            errorElement.innerHTML = result['error'];
 			Effect.Appear(errorElement, {duration: 0.4});
 		}
 		else

@@ -300,6 +300,11 @@ Backend.Breadcrumb =
         
         Backend.Breadcrumb.selectedItemId = Backend.Breadcrumb.treeBrowser.getSelectedItemId();
 		
+        if (!Backend.Breadcrumb.pageTitle)
+        {
+            return false;
+        }
+        
         Backend.Breadcrumb.pageTitle.innerHTML = "";
 
         if(typeof(id) != 'object')
@@ -1085,6 +1090,23 @@ Backend.LanguageForm.prototype =
             var id = tab.className.match(/languageFormTabs_([a-z]{2})/)[1];
             Element.addClassName(tab.up('.languageForm').down('.languageFormContainer_' + id), 'active');
         }       
+    },
+    
+    closeTabs: function(container)
+    {
+        // make other tabs inactive
+        var tabs = container.getElementsByTagName('li');
+        for (var k = 0; k < tabs.length; k++)
+        {
+            Element.removeClassName(tabs[k], 'active');
+        }
+        
+        // hide tab contents
+        var cont = container.down('.languageFormContent').getElementsByClassName('languageFormContainer');
+        for (var k = 0; k < cont.length; k++)
+        {
+            Element.removeClassName(cont[k], 'active');     
+        }
     }
 }
 

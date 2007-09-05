@@ -21,7 +21,6 @@ class ProductFileController extends StoreManagementController
 		$languages = array();
 		foreach($this->application->getLanguageList()->toArray() as $language) $languages[$language['ID']] = $language;
 		$response->set('languages', $languages);
-		
 	    $response->set('productID', $product->getID());
 		$response->set('productFilesWithGroups', $product->getFilesMergedWithGroupsArray());
 	    

@@ -681,7 +681,6 @@ CategoryTabControl.prototype = {
         CategoryTabControl.prototype.tabItemsCounts[categoryID] = null;
         CategoryTabControl.prototype.updateTabItemsCount(categoryID);
     },
-    
 
 	getActiveTab: function()
 	{

@@ -21,7 +21,7 @@ class CategoryController extends StoreManagementController
 		$response = new ActionResponse();
 		$response->set('categoryList', $categoryList->toArray());
 		$response->set('allTabsCount', $this->getAllTabsCount());
-		
+		$response->set('maxUploadSize', ini_get('upload_max_filesize'));		
 		return $response;
 	}
 
