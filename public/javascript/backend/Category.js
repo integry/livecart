@@ -235,6 +235,7 @@ Backend.Category = {
         
         Backend.Category.treeBrowser.moveItem(categoryID, direction);
         Backend.Category.treeBrowser._reorderDirection = false;
+        Backend.Category.showControls();
         
         return;
 
@@ -244,11 +245,27 @@ Backend.Category = {
 	{
         var newCategory = eval('(' + response.responseText + ')');
         var parentCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
-        this.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
-        Backend.Category.treeBrowser.setCategoryStyle(newCategory);
+
+		if(Backend.Category.treeBrowser.hasChildren(parentCategoryId) === true)
+		{
+            Backend.Category.treeBrowser.openItem(parentCategoryId);
+			
+			this.createNewCatInterval = setInterval(function()
+			{
+			    if(Backend.Category.treeBrowser.getIndexById(newCategory.ID) !== null)
+				{
+                    Backend.Category.treeBrowser.selectItem(newCategory.ID, true);
+					clearInterval(this.createNewCatInterval);
+			    }
+			}.bind(this)
+			, 200);
+		}
+		else
+		{
+			 this.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
+		}
+		Backend.Category.treeBrowser.setCategoryStyle(newCategory);
             
-        this.tabControl.activateTab($('tabMainDetails'), newCategory.ID);
-        Backend.ajaxNav.add('cat_' + newCategory.ID + '#tabMainDetails');
 	},
 
 	/**
@@ -681,6 +698,7 @@ CategoryTabControl.prototype = {
         CategoryTabControl.prototype.tabItemsCounts[categoryID] = null;
         CategoryTabControl.prototype.updateTabItemsCount(categoryID);
     },
+    
 
 	getActiveTab: function()
 	{
