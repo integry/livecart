@@ -563,7 +563,7 @@ Backend.CustomerOrder.Editor.prototype =
 
     switchCancelled: function()
     {
-		var message = parseInt(this.nodes.form.elements.namedItem('isCancelled').value) ? Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToActivateThisOrder : Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToCancelThisOrder;
+		var message = this.nodes.form.elements.namedItem('isCancelled').value == 'true' ? Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToActivateThisOrder : Backend.CustomerOrder.Editor.prototype.Messages.areYouSureYouWantToCancelThisOrder;
 		if(!confirm(message)) return;
 		
         new LiveCart.AjaxRequest(
