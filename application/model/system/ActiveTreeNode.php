@@ -627,8 +627,34 @@ class ActiveTreeNode extends ActiveRecordModel
      */
     public static function reindex($className)
     {
-        
+       $tableName = self::getSchemaInstance($className)->getName();
+       
+       ActiveRecord::beginTransaction();
+          self::reindexBratch($className, $tableName, self::ROOT_ID, 1);
+       ActiveRecord::commit();
     }
+    
+
+    
+    protected static function reindexBratch($className, $tableName, $parentNodeID, $left) 
+    { 
+       $right = $left+1; 
+        
+       // Create a filter for selecting all child categories
+       $filter = new ARSelectFilter();
+       $filter->setCondition(new EqualsCond(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME), $parentNodeID));
+       $recordSet = ActiveRecord::getRecordSet($className, $filter);
+       
+       foreach($recordSet as $record) 
+       {
+           $right = self::reindexBratch($tableName, $tableName, $record->getID(), $right);
+       }
+    
+       
+       self::getDBConnection()->executeUpdate("UPDATE $tableName SET `" . self::LEFT_NODE_FIELD_NAME . "`=$left, `" . self::RIGHT_NODE_FIELD_NAME . "`=$right WHERE `ID`=$parentNodeID");
+    
+       return $right+1; 
+    } 
 
     /**
      * Creates an array representation of this node
@@ -716,14 +742,12 @@ class ActiveTreeNode extends ActiveRecordModel
         return null;
 	}
 	
-	public function debug()
+	public function toString()
 	{
-	    echo "<pre>\n\n";
-	    $this->debugRecursive($this, 0);
-	    echo "\n\n</pre>\n";
+	    return $this->toStringRecursive($this, 0, "");
 	}
 	
-	private function debugRecursive(ActiveTreeNode $node, $level)
+	private function toStringRecursive(ActiveTreeNode $node, $level, $output)
 	{
 	    $node->load();
 	    $parentID = $node->getFieldValue(self::PARENT_NODE_FIELD_NAME) ? $node->getFieldValue(self::PARENT_NODE_FIELD_NAME)->getID() : 'root';
@@ -732,13 +756,14 @@ class ActiveTreeNode extends ActiveRecordModel
 	    
 	    $name = $node->getFieldValue('name');
 	    $name = isset($name['en']) ? $name['en'] : '';
-	    
-	    echo str_repeat(" ", $level * 4) . $node->handle->get() . "(ID=".$node->getID()."; PID=$parentID; LFT=$lft; RGT=$rgt) - $name\n";
+	    $output .= str_repeat(" ", $level * 4) .  "$name                                                                                   [ID=".$node->getID()."; PID=$parentID; LFT=$lft; RGT=$rgt] \n";
 	    $childNodes = $node->getChildNodes(true, true);
 	    foreach($childNodes as $child)
 	    {
-	        $this->debugRecursive($child, $level + 1);
+	        $output = $this->toStringRecursive($child, $level + 1, $output);
 	    }
+	    
+	    return $output;
 	}
 
 	public function moveLeft($moveCircle = false)

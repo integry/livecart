@@ -105,10 +105,10 @@ class CategoryController extends StoreManagementController
 	 */
 	public function viewTree()
 	{
-		$rootNode = ActiveTreeNode::getRootNode("Category");
+		$response = new RawResponse(Category::getInstanceByID(ActiveTreeNode::ROOT_ID, true)->toString());
+        $response->setHeader('Content-type', 'text/plain');
 
-		$recordSet = $rootNode->getChildNodes(false, true);
-		echo "<pre>"; print_r($recordSet->toArray()); echo "</pre>";
+	    return $response;
 	}
 
 	/**
@@ -217,7 +217,7 @@ class CategoryController extends StoreManagementController
 	    return $xmlResponse;
 	}
 	
-	public function debug()
+	public function reindex()
 	{
 		ActiveTreeNode::reindex("Category");
 	}

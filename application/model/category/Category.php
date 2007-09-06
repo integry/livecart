@@ -678,6 +678,14 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
         return parent::serialize(array('defaultImageID', 'parentNodeID'));  
     }    
+    
+    /**
+     * Reindex the category tree
+     */
+    public static function reindex() 
+    {
+        parent::reindex(__CLASS__);
+    }
 }
 
 ?>
