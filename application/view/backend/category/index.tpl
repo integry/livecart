@@ -119,42 +119,46 @@
 </div>
 
 <div id="managerContainer" class="treeManagerContainer maxHeight h--60">
-	<div id="tabContainer" class="tabContainer">
-		<ul id="tabList" class="tabList tabs">
-
-			<li id="tabProducts" class="tab active">
-				<a href="{link controller=backend.product action=index id=_id_}">{t _products}</a>
-				<span> </span>
-				<span class="tabHelp">products</span>
-			</li>
-
-			<li id="tabMainDetails" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
-				<a href="{link controller=backend.category action=form id=_id_}">{t _category_details}</a>
-				<span> </span>
-				<span class="tabHelp">cat.details</span>
-			</li>
-			
-			<li id="tabFields" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
-				<a href="{link controller=backend.specField action=index id=_id_}">{t _attributes}</a>
-				<span> </span>
-				<span class="tabHelp">cat.attr</span>
-			</li>
-			
-			<li id="tabFilters" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
-				<a href="{link controller=backend.filterGroup action=index id=_id_}">{t _filters}</a>
-				<span> </span>
-				<span class="tabHelp">cat.filters</span>
-			</li>
-			
-			<li id="tabImages" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
-				<a href="{link controller=backend.categoryImage action=index id=_id_}">{t _images}</a>
-				<span> </span>
-				<span class="tabHelp">cat.images</span>
-			</li>
-		</ul>
-	</div>
-	<div id="sectionContainer" class="sectionContainer maxHeight  h--50">
-	</div>
+	<div id="categoryTabs">
+        <div id="tabContainer" class="tabContainer">
+    		<ul id="tabList" class="tabList tabs">
+    
+    			<li id="tabProducts" class="tab active">
+    				<a href="{link controller=backend.product action=index id=_id_}">{t _products}</a>
+    				<span> </span>
+    				<span class="tabHelp">products</span>
+    			</li>
+    
+    			<li id="tabMainDetails" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
+    				<a href="{link controller=backend.category action=form id=_id_}">{t _category_details}</a>
+    				<span> </span>
+    				<span class="tabHelp">cat.details</span>
+    			</li>
+    			
+    			<li id="tabFields" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
+    				<a href="{link controller=backend.specField action=index id=_id_}">{t _attributes}</a>
+    				<span> </span>
+    				<span class="tabHelp">cat.attr</span>
+    			</li>
+    			
+    			<li id="tabFilters" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
+    				<a href="{link controller=backend.filterGroup action=index id=_id_}">{t _filters}</a>
+    				<span> </span>
+    				<span class="tabHelp">cat.filters</span>
+    			</li>
+    			
+    			<li id="tabImages" class="tab inactive" {denied role="category"}style="display: none"{/denied}>
+    				<a href="{link controller=backend.categoryImage action=index id=_id_}">{t _images}</a>
+    				<span> </span>
+    				<span class="tabHelp">cat.images</span>
+    			</li>
+    		</ul>
+    	</div>
+    	<div id="sectionContainer" class="sectionContainer maxHeight  h--50">
+    	</div>
+    </div>
+    
+    <div id="addProductContainer" style="display: none;"></div>
 </div>
 
 <script type="text/javascript">

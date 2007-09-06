@@ -72,7 +72,8 @@ TabControl.prototype = {
                     }
                 }
 
-                self.handleTabClick({'target': li});                 
+                self.handleTabClick({'target': li});  
+                Backend.Product.hideAddForm();
             }
    
 			Event.observe(li, 'mouseover', function(e) { 

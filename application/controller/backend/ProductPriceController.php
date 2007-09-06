@@ -34,7 +34,7 @@ class ProductPriceController extends StoreManagementController
      */
     public function save()
     {
-        $product = Product::getInstanceByID((int)$this->request->get('id'));
+        $product = Product::getInstanceByID((int)$this->request->get('id'), Product::LOAD_DATA, Product::LOAD_REFERENCES);
 
 		$validator = $this->buildPricingFormValidator($product);
 		if ($validator->isValid())
@@ -42,23 +42,7 @@ class ProductPriceController extends StoreManagementController
     		$product->loadSpecification();
     		$product->loadPricing();
 
-		    // Save prices
-    		foreach ($this->application->getCurrencyArray() as $currency)
-    		{
-    			if ($this->request->isValueSet('price_' . $currency))
-    			{
-    				$product->setPrice($currency, $this->request->get('price_' . $currency));
-    			}
-    		}
-
-    		// Save shipping
-    		$product->setFieldValue('stockCount', (int)$this->request->get('stockCount'));
-            $product->setFieldValue('shippingWeight', (float)$this->request->get('shippingWeight'));
-            $product->setFieldValue('shippingSurchargeAmount', (float)$this->request->get('shippingSurchargeAmount'));
-            $product->setFieldValue('minimumQuantity', (int)$this->request->get('minimumQuantity'));
-            $product->setFieldValue('isSeparateShipment', $this->request->get('isSeparateShipment') ? 1 : 0);
-            $product->setFieldValue('isFreeShipping', $this->request->get('isFreeShipping') ? 1 : 0);
-            $product->setFieldValue('isBackOrderable', $this->request->get('isBackOrderable') ? 1 : 0);
+		    $product->loadRequestData($this->request);
             $product->save();
 
             return new JSONResponse(array('prices' => $product->getPricesFields()), 'success', $this->translate('_product_prices_were_successfully_updated'));

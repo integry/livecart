@@ -10,7 +10,7 @@
 <fieldset class="container" {denied role="product.create"}style="display: none"{/denied}>
 	<ul class="menu">
 		<li class="addProduct">
-			<a href="#" onclick="Backend.Product.showAddForm(this.parentNode.parentNode.parentNode.parentNode, {$categoryID}); return false;">
+			<a href="#" onclick="Backend.Product.showAddForm({$categoryID}, this); return false;">
 				Add New Product
 			</a>
 			<span class="progressIndicator" style="display: none;"></span>

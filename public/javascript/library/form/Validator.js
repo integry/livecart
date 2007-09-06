@@ -179,7 +179,7 @@ function NumericFilter(elm, params)
 	
 	// Remove leading zeros
 	value = value.replace(/^0+/, '');
-	if(!value) value = "0";
+	if(!value) return;
 	
 	value = value.replace(',' , '.');
 	

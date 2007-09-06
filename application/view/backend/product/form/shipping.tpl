@@ -25,15 +25,15 @@
 		</fieldset>
 	</p>
 	<p class="checkbox">			
-		{checkbox name="isSeparateShipment" class="checkbox" id="product_issep_`$cat`_`$product.ID`" value="on"}
+		{checkbox name="isSeparateShipment" class="checkbox" id="product_issep_`$cat`_`$product.ID`"}
 		<label for="product_issep_{$cat}_{$product.ID}" class="checkbox">{t _requires_separate_shipment}</label>
 	</p>
 	<p class="checkbox">			
-		{checkbox name="isFreeShipping" class="checkbox" id="product_isFreeShipping_`$cat`_`$product.ID`" value="on"}
+		{checkbox name="isFreeShipping" class="checkbox" id="product_isFreeShipping_`$cat`_`$product.ID`"}
 		<label class="checkbox" for="product_isFreeShipping_{$cat}_{$product.ID}">{t _qualifies_for_free_shipping}</label>
 	</p>
 	<p class="checkbox">			
-		{checkbox name="isBackOrderable" class="checkbox" value="on" id="product_isBackOrderable_`$cat`_`$product.ID`"}
+		{checkbox name="isBackOrderable" class="checkbox" id="product_isBackOrderable_`$cat`_`$product.ID`"}
         <label for="product_isBackOrderable_{$cat}_{$product.ID}">{t _allow_back_ordering}</label>
 	</p>
 </fieldset>

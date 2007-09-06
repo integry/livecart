@@ -228,10 +228,15 @@ class Product extends MultilingualObject
 		$currencies = self::getApplication()->getCurrencyArray();
 		foreach ($currencies as $currency)
 		{
-			if ($request->isValueSet('price_' . $currency))
+			$price = $request->get('price_' . $currency);
+            if (strlen($price))
 			{
-			  	$this->setPrice($currency, $request->get('price_' . $currency));
+                $this->setPrice($currency, $price);
 			}
+			else if ($request->isValueSet('price_' . $currency))
+			{
+                $this->getPricingHandler()->removePriceByCurrencyCode($currency);
+            }
 		}
 
 		// set SpecField's

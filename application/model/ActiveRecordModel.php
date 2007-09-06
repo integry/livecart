@@ -37,7 +37,9 @@ abstract class ActiveRecordModel extends ActiveRecord
 			if (!($field instanceof ARForeignKey || $field instanceof ARPrimaryKey))
 			{
 				$name = $field->getName();
-				if ($request->isValueSet($name))
+				if ($request->isValueSet($name) || 
+                   ($request->isValueSet('checkbox_' . $name) && ('ARBool' == get_class($field->getDataType())))
+                    )
 				{
 					switch (get_class($field->getDataType()))
 					{
@@ -46,7 +48,7 @@ abstract class ActiveRecordModel extends ActiveRecord
 						break;
 								
 						case 'ARBool':
-							$this->setFieldValue($name, in_array($request->get($name), array('on', 1)));
+                            $this->setFieldValue($name, in_array($request->get($name), array('on', 1)));
 						break;
 							
 						default:

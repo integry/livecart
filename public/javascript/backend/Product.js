@@ -5,17 +5,18 @@ Backend.Product =
 	formTabCopies: new Array(),
 	
 	categoryPaths: {},
+    
+    isAdding: false,
 
-	showAddForm: function(container, categoryID)
+	showAddForm: function(categoryID, caller)
 	{
-		this.productTabCopies[categoryID] = container;
-
-		tabContainer = container.parentNode;
-
+        var container = $('addProductContainer');
+        		
 		// product form has already been downloaded
 		if (this.formTabCopies[categoryID])
 		{
-			tabContainer.replaceChild(this.formTabCopies[categoryID], container);
+			container.update('');
+            container.appendChild(this.formTabCopies[categoryID]);
 		    this.initAddForm(categoryID);
 		}
 
@@ -23,18 +24,30 @@ Backend.Product =
 		else
 		{
 			var url = Backend.Category.links.addProduct.replace('_id_', categoryID);
-			new LiveCart.AjaxUpdater(url, container.parentNode, document.getElementsByClassName('progressIndicator', container)[0]);
+			new LiveCart.AjaxUpdater(url, container, caller.up('.menu').down('.progressIndicator'));
 		}
 	},
+	
+	hideAddForm: function()
+	{
+        Element.hide($('addProductContainer'));
+        Element.show($('categoryTabs'));        
+    },
 
-	cancelAddProduct: function(categoryID, container)
+	cancelAddProduct: function(categoryID, noHide)
 	{
 		try
         {
-            ActiveForm.prototype.destroyTinyMceFields(container);
-    		this.formTabCopies[categoryID] = container;
+            container = $('addProductContainer');
+            
+            if (!noHide)
+            {
+                Element.hide(container);
+                Element.show($('categoryTabs'));                
+            }
 
-    		container.parentNode.replaceChild(this.productTabCopies[categoryID], container);
+            ActiveForm.prototype.destroyTinyMceFields(container);
+    		this.formTabCopies[categoryID] = container.down('.productForm');
         }
         catch(e)
         {
@@ -49,12 +62,18 @@ Backend.Product =
 
 	initAddForm: function(categoryID)
 	{
-        var container = $('tabProductsContent_' + categoryID);
+        this.isAdding = true;
+        
+        container = $('addProductContainer');
+        
+        Element.hide($('categoryTabs'));
+        Element.show(container);
+                
         tinyMCE.idCounter = 0;
         ActiveForm.prototype.initTinyMceFields(container);
         this.toggleSkuField(container.down('form').elements.namedItem('autosku'));
 		
-		this.initSpecFieldControls(categoryID);
+		this.initSpecFieldControls(0);
 		
         // init type selector logic
         var typeSel = container.down('select.productType');
@@ -79,8 +98,11 @@ Backend.Product =
 
     initSpecFieldControls: function(categoryID)
     {
+        var container = (0 == categoryID) ? $('addProductContainer') : $('tabProductsContent_' + categoryID);
+            
 		// specField entry logic (multiple value select)
-		var containers = document.getElementsByClassName('multiValueSelect', $('tabProductsContent_' + categoryID));
+        var containers = document.getElementsByClassName('multiValueSelect', container);            
+
         try
         {
     		for (k = 0; k < containers.length; k++)
@@ -94,7 +116,7 @@ Backend.Product =
         }
 
         // single value select
-		var specFieldContainer = document.getElementsByClassName('specification', $('tabProductsContent_' + categoryID))[0];
+		var specFieldContainer = document.getElementsByClassName('specification', container)[0];
 
 		if (specFieldContainer)
 		{
@@ -343,6 +365,7 @@ Backend.Product.saveHandler.prototype =
 
 		if (response.errors)
 		{
+		    console.log('err');
 			ActiveForm.prototype.setErrorMessages(this.form, response.errors);
 		}
 		else
@@ -394,7 +417,7 @@ Backend.Product.saveHandler.prototype =
 			    this.form.reset();          
 
                 Backend.Product.openProduct(response.id);
-                Backend.Product.cancelAddProduct(categoryID, this.form.parentNode);
+                Backend.Product.cancelAddProduct(categoryID, true);
   			}
  		}
 	}

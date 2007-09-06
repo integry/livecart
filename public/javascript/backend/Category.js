@@ -190,6 +190,7 @@ Backend.Category = {
 	 */
 	activateCategory: function(categoryId)
 	{
+        Backend.Product.hideAddForm();
         Backend.Breadcrumb.display(categoryId);
   
         Backend.Category.showControls();
