@@ -16,7 +16,7 @@
         <td class="details" style="height: 140px; ">
             <div class="subCatName">
                 <a href="{categoryUrl data=$sub}">{$sub.name_lang}</a> 
-                <span class="count">({$sub.availableProductCount})</span>
+                <span class="count">({$sub.count})</span>
             </div>
             
             {if $sub.subCategories}
@@ -30,7 +30,7 @@
                     {/if}
                     <li>
                         <a href="{categoryUrl data=$subSub}">{$subSub.name_lang}</a>
-                        <span class="count">({$subSub.availableProductCount})</span>
+                        <span class="count">({$subSub.count})</span>
                     </li>
                 {/foreach}
             </ul>

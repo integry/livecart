@@ -124,6 +124,7 @@ class CategoryController extends FrontendController
 					        
 		// narrow by subcategories
 		$subCategories = $this->category->getSubCategoryArray(Category::LOAD_REFERENCES);
+		
 		$categoryNarrow = array();
 		if (!empty($searchQuery) && $products)
 		{

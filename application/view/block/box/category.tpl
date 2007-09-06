@@ -10,7 +10,7 @@
 					<a href="{categoryUrl data=$category filters=$category.filters}">{$category.name_lang}</a>
 			{/if}
 					{if 'DISPLAY_NUM_CAT'|config}
-                        <span class="count">({$category.activeProductCount})</span>
+                        <span class="count">({$category.count})</span>
                     {/if}
         			{if $category.subCategories}
            				{fun name="categoryTree" node=$category.subCategories}

@@ -80,7 +80,7 @@ class ProductCount
 	{
 		if (!$this->productFilter->getFilterCount())	
 		{
-			return $this->productFilter->getCategory()->activeProductCount->get();
+			return $this->productFilter->getCategory()->getActiveProductCount();
 		}
 		else
 		{

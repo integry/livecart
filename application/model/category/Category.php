@@ -162,7 +162,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		try
 		{
 			parent::update();
-			$activeProductCount = $this->getFieldValue("activeProductCount");
+			$activeProductCount = $this->activeProductCount->get();
 			if ($this->isEnabled->isModified())
 			{
 				if ($this->isEnabled())
@@ -237,6 +237,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
 		$array = MultiLingualObject::transformArray($array, $schema);
 		$array['unavailableProductCount'] = $array['totalProductCount'] - $array['availableProductCount'];
+		$c = self::getApplication()->getConfig();
+		
+		$array['count'] = ($c->get('DISABLE_INVENTORY') || $c->get('DISABLE_NOT_IN_STOCK')) ? $array['activeProductCount'] : $array['availableProductCount'];
 		return $array;
 	}	
 
@@ -683,6 +686,39 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
     public static function reindex() 
     {
         parent::reindex(__CLASS__);
+    }
+    
+    public static function recalculateProductsCount() 
+    {  
+        ClassLoader::import("application.model.product.Product");
+        
+        self::beginTransaction();     
+        // category product counts
+        $sql = 'UPDATE Category SET totalProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID),
+                                    activeProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID AND Product.isEnabled = 1),
+                                    availableProductCount = (SELECT COUNT(*) FROM Product WHERE categoryID = Category.ID AND Product.isEnabled = 1 AND (stockCount > 0 OR type = ' . Product::TYPE_DOWNLOADABLE .  '))';
+        self::getDBConnection()->executeUpdate($sql);
+       
+        self::updateProductCount(Category::getInstanceByID(Category::ROOT_ID, Category::LOAD_DATA));
+        self::commit();
+    }
+    
+    // subcategory counts
+    private static function updateProductCount(Category $category)
+    {
+        $countTotal = $countAvailable = $countActive = 0;
+        foreach ($category->getSubCategorySet() as $sub)
+        {
+            self::updateProductCount($sub);
+            $countTotal += $sub->totalProductCount->get();
+            $countAvailable += $sub->availableProductCount->get();
+            $countActive += $sub->activeProductCount->get();    
+        }
+        
+        $category->totalProductCount->set($category->totalProductCount->get() + $countTotal);
+        $category->activeProductCount->set($category->activeProductCount->get() + $countActive);
+        $category->availableProductCount->set($category->availableProductCount->get() + $countAvailable);
+        $category->save();
     }
 }
 

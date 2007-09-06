@@ -171,7 +171,7 @@ class Product extends MultilingualObject
             $this->load();    
         }
         
-    	return self::isAvailableForOrdering($this->isEnabled->get(), $this->stockCount->get(), $this->isBackOrderable->get());
+    	return self::isAvailableForOrdering($this->isEnabled->get(), $this->stockCount->get(), $this->isBackOrderable->get(), $this->type->get());
 	}
 
     /**
@@ -182,17 +182,17 @@ class Product extends MultilingualObject
         return $this->type->get() == self::TYPE_DOWNLOADABLE;
     }
     
-    protected static function isAvailableForOrdering($isEnabled, $stockCount, $isBackOrderable)
+    protected static function isAvailableForOrdering($isEnabled, $stockCount, $isBackOrderable, $type)
     {
         if ($isEnabled)
         {
     		$config = self::getApplication()->getConfig();
 		
-		    if ($config->get('DISABLE_INVENTORY'))
+		    if ($config->get('DISABLE_INVENTORY') || $type == Product::TYPE_DOWNLOADABLE)
 		    {
                 return true;
             }
-		
+            
             if (!$stockCount && !$isBackOrderable)
             {
                 return false;
@@ -210,13 +210,13 @@ class Product extends MultilingualObject
 
 	public function loadRequestData(Request $request)
 	{
+        // basic data
+        parent::loadRequestData($request);
+        
 	  	if(!$this->isExistingRecord()) 
 		{
 			$this->save();	
 		}
-
-		// basic data
-		parent::loadRequestData($request);
 
 		// set manufacturer
 		if ($request->isValueSet('manufacturer'))
@@ -509,7 +509,7 @@ class Product extends MultilingualObject
             {
                 $catUpdate->addModifier('activeProductCount', new ARExpressionHandle('activeProductCount ' . ($this->isEnabled->get() ? '+' : '-') . ' 1'));
 
-                if (!$this->stockCount->isModified() && $this->stockCount->get() > 0)
+                if ($this->isDownloadable() || (!$this->stockCount->isModified() && $this->stockCount->get() > 0))
                 {
                     $catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount ' . ($this->isEnabled->get() ? '+' : '-') . ' 1'));                    
                 }
@@ -724,7 +724,7 @@ class Product extends MultilingualObject
             }
             else
             {
-                $array['isAvailable'] = self::isAvailableForOrdering($array['isEnabled'], $array['stockCount'], $array['isBackOrderable']);                
+                $array['isAvailable'] = self::isAvailableForOrdering($array['isEnabled'], $array['stockCount'], $array['isBackOrderable'], $array['type']);                
             }
         }
         else
