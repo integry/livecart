@@ -239,7 +239,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$array['unavailableProductCount'] = $array['totalProductCount'] - $array['availableProductCount'];
 		$c = self::getApplication()->getConfig();
 		
-		$array['count'] = ($c->get('DISABLE_INVENTORY') || $c->get('DISABLE_NOT_IN_STOCK')) ? $array['activeProductCount'] : $array['availableProductCount'];
+		$array['count'] = ($c->get('DISABLE_INVENTORY') || !$c->get('DISABLE_NOT_IN_STOCK')) ? $array['activeProductCount'] : $array['availableProductCount'];
 		return $array;
 	}	
 
@@ -277,6 +277,14 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	  	$filter = new ARSelectFilter();
 	  	$cond = new EqualsCond(new ARFieldHandle('Category', 'parentNodeID'), $this->getID());
 	  	$cond->addAND(new EqualsCond(new ARFieldHandle('Category', 'isEnabled'), 1));
+	  	
+        // Hide empty categories
+        $config = self::getApplication()->getConfig();
+        if ($config->get('HIDE_EMPTY_DIRECTORIES') && !$config->get('DISABLE_INVENTORY'))
+        {
+            $cond->addAND(new MoreThanCond(new ARFieldHandle('Category', 'availableProductCount'), 0));
+        }        
+	  	
 		$filter->setCondition($cond);
 	  	$filter->setOrder(new ARFieldHandle('Category', 'lft'), 'ASC');
 

@@ -105,7 +105,7 @@ class ProductPrice extends ActiveRecordModel
 	
 	protected static function convertPrice(Currency $currency, $basePrice)
 	{
-		$rate = $currency->rate->get();
+		$rate = (float)$currency->rate->get();
 		if ($rate)
 		{
 			$price = $basePrice / $rate;
