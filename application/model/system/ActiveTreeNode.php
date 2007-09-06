@@ -643,9 +643,9 @@ class ActiveTreeNode extends ActiveRecordModel
        // Create a filter for selecting all child categories
        $filter = new ARSelectFilter();
        $filter->setCondition(new EqualsCond(new ARFieldHandle($className, self::PARENT_NODE_FIELD_NAME), $parentNodeID));
-       $recordSet = ActiveRecord::getRecordSet($className, $filter);
-       
-       foreach($recordSet as $record) 
+       $filter->setOrder(new ArFieldHandle($className, self::LEFT_NODE_FIELD_NAME));
+
+       foreach(ActiveRecord::getRecordSet($className, $filter) as $record) 
        {
            $right = self::reindexBratch($tableName, $tableName, $record->getID(), $right);
        }
