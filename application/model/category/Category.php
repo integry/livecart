@@ -199,19 +199,16 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 *
 	 * @param int $recordID
 	 */
-	public static function deleteByID($recordID)
+	public function delete()
 	{
-		ActiveRecordModel::beginTransaction();
-
+        ActiveRecordModel::beginTransaction();
+	    
 		try
 		{
-			$category = Category::getInstanceByID($recordID, Category::LOAD_DATA);
-			$activeProductCount = $category->getFieldValue("activeProductCount");
-			$totalProductCount = $category->getFieldValue("totalProductCount");
+			$activeProductCount = $this->activeProductCount->get();
+			$totalProductCount = $this->totalProductCount->get();
 
-			$pathNodes = $category->getPathNodeSet(true);
-
-			foreach ($pathNodes as $node)
+			foreach ($this->getPathNodeSet(true) as $node)
 			{
 				$node->setFieldValue("activeProductCount", "activeProductCount - " . $activeProductCount);
 				$node->setFieldValue("totalProductCount", "totalProductCount - " . $totalProductCount);
@@ -219,7 +216,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 				$node->save();
 			}
 			ActiveRecordModel::commit();
-			parent::deleteByID(__CLASS__, $recordID);
+			
+            parent::delete();
 		}
 		catch (Exception $e)
 		{

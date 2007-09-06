@@ -120,7 +120,7 @@ class CategoryController extends StoreManagementController
 	{
 		try
         {
-            Category::deleteByID($this->request->get("id"), 0);   
+            Category::getInstanceByID($this->request->get("id"), true)->delete();
             return new JSONResponse(false, 'success', $this->translate('_category_was_successfully_removed'));
         }
         catch (Exception $e)
