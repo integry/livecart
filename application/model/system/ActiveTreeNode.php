@@ -526,7 +526,15 @@ class ActiveTreeNode extends ActiveRecordModel
                 
                 // Inserting new node
                 $parentNode = $this->getField(self::PARENT_NODE_FIELD_NAME)->get();
-                if(!$parentNode->isLoaded()) $parentNode->load();
+                if($parentNode)
+                {
+                    if(!$parentNode->isLoaded()) $parentNode->load();
+                }
+                else
+                {
+                    $parentNode = $this;
+                }
+                
                 $parentRightValue = $parentNode->getFieldValue(self::RIGHT_NODE_FIELD_NAME);
                 $nodeLeftValue = $parentRightValue;
                 $nodeRightValue = $nodeLeftValue + 1;

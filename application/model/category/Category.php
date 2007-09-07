@@ -82,7 +82,13 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	 */
 	public static function getNewInstance(Category $parent)
 	{
-		return parent::getNewInstance(__CLASS__, $parent);
+	    $category = parent::getNewInstance(__CLASS__, $parent);
+	    
+        $category->activeProductCount->set(0);
+        $category->availableProductCount->set(0);
+        $category->totalProductCount->set(0);
+                
+		return $category;
 	}
 	
 	/*####################  Value retrieval and manipulation ####################*/
@@ -207,11 +213,13 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		{
 			$activeProductCount = $this->activeProductCount->get();
 			$totalProductCount = $this->totalProductCount->get();
+            $availableProductCount = $this->availableProductCount->get();
 
 			foreach ($this->getPathNodeSet(true) as $node)
 			{
 				$node->setFieldValue("activeProductCount", "activeProductCount - " . $activeProductCount);
 				$node->setFieldValue("totalProductCount", "totalProductCount - " . $totalProductCount);
+                $node->setFieldValue("availableProductCount", "availableProductCount - " . $availableProductCount);
 
 				$node->save();
 			}

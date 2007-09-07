@@ -27,12 +27,7 @@ class TestCategory extends UnitTest
 	{
 	    parent::setUp();
 	    
-	    $this->root = Category::getInstanceByID(ActiveTreeNode::ROOT_ID);
-	    
-	    $newCategory = Category::getNewInstance($this->root);
-		$newCategory->setValueByLang("name", 'en', "dump");
-        $newCategory->save();
-        $newCategory->delete();
+	    $this->root = Category::getInstanceByID(ActiveTreeNode::ROOT_ID, true);
 	}
 	
 	public function testRootCategoryIsCategory()
