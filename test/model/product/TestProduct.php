@@ -33,6 +33,7 @@ class TestProduct extends UnitTest
 	    return array(
 			'Category', 
 			'Product', 
+			'ProductRelationship',
 			'ProductRelationshipGroup', 
 			'ProductFile', 
 			'ProductFileGroup'
@@ -301,17 +302,6 @@ class TestProduct extends UnitTest
 		$data = ActiveRecord::getDataBySQL($query);
 		$this->assertEqual(2, array_shift(array_shift($data)));		
 
-		// try to assign a value from a different selector
-		try
-		{
-			$this->product->setAttributeValue($multiSel, $this->avalue1); 
-			$this->assertTrue(0);
-		}
-		catch (Exception $e)
-		{
-			$this->assertTrue(1);
-		}
-
 		// remove the multiselect value altogether
 		$this->product->removeAttribute($multiSel);
 		$this->product->save();
@@ -349,14 +339,14 @@ class TestProduct extends UnitTest
 		}		
 		
 		// set prices
-		foreach (Store::getInstance()->getCurrencyArray() as $currency)
+		foreach ($this->product->getApplication()->getCurrencyArray() as $currency)
 		{
 			$this->product->setPrice($currency, 111);
 		}
 		$this->product->save();
 		
 		$arr = $this->product->toArray();
-		foreach (Store::getInstance()->getCurrencyArray() as $currency)
+		foreach ($this->product->getApplication()->getCurrencyArray() as $currency)
 		{
 			$this->assertEqual($arr['price_' . $currency], 111);
 		}
@@ -502,6 +492,7 @@ class TestProduct extends UnitTest
 	    }
 	    $this->assertEqual(0, $this->product->getRelatedProducts()->getTotalRecordCount());
 	}
+	
 
 	public function testIsRelatedTo()
 	{
@@ -553,10 +544,14 @@ class TestProduct extends UnitTest
 		    file_put_contents($productFiles[$i] = md5($i), 'All Your Base Are Belong To Us');
 		    $productFilesO[$i] = ProductFile::getNewInstance($this->product, $productFiles[$i], 'test_file.txt');
 		    $productFilesO[$i]->save();
-	    }	    
-	    
+	    }
+	    	    
 	    $this->assertEqual($this->product->getFiles()->getTotalRecordCount(), 2);
-	    foreach($productFilesO as $file) $file->delete();
+        
+	    foreach($productFilesO as $file) 
+	    {
+	       $file->delete();
+	    }
 	}
 	
 	public function testMergeGroupsWithFIlters()
