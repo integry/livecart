@@ -65,7 +65,7 @@ class testSpecFieldValue extends UnitTest
 	    foreach(range(1, 2) as $i) $specFieldValues[$i] = SpecFieldValue::getNewInstance($this->specField);
 	    
 	    try {
-            $specFieldValues[1]->mergeWith($this->rootCategory);
+            $specFieldValues[1]->mergeWith($specFieldValues[2]);
             $this->fail();
         } catch(ApplicationException $e) { 
             $this->swallowErrors();
@@ -113,7 +113,21 @@ class testSpecFieldValue extends UnitTest
 	    
 	    $specFieldValues[1]->mergeWith($specFieldValues[2]);
 	    $specFieldValues[1]->save();
-	   
+	
+        try {
+           $specificationItems[1]->reload();
+           $this->pass();
+        } catch(ARNotFoundException $e) {
+           $this->fail('The value into which other values are beind merged should be left alone');
+        }
+        
+	    try {
+	       $specificationItems[2]->reload();
+	       $this->fail('Merged value should be deleted');
+	    } catch(ARNotFoundException $e) {
+           $this->pass();
+	    }
+	    
 	    // After merging values specification item should point to other value
 	    $this->assertTrue($specificationItems[1]->specFieldValue->get() === $specFieldValues[1]);
 	    $this->assertTrue($specificationItems[2]->specFieldValue->get() === $specFieldValues[2]);

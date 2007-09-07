@@ -80,7 +80,7 @@ class TestProduct extends UnitTest
 	/**
 	 *  Disabled product, with some stock - the numbers shouldn't change again
 	 */
-    public function xtestCategoryCountsWhenDisabledProductWithSomeStockIsAdded()
+    public function testCategoryCountsWhenDisabledProductWithSomeStockIsAdded()
 	{
         $secondCategory = Category::getNewInstance($this->productCategory);
         $secondCategory->save();
@@ -115,7 +115,7 @@ class TestProduct extends UnitTest
 	/**
 	 *  Enabled product, with some stock - the numbers should increase by one
 	 */
-    public function xtestCategoryCountsWhenEnabledProductWithSomeStockIsAdded()
+    public function testCategoryCountsWhenEnabledProductWithSomeStockIsAdded()
 	{
         $secondCategory = Category::getNewInstance($this->productCategory);
         $secondCategory->save();
@@ -134,7 +134,7 @@ class TestProduct extends UnitTest
 	/**
 	 *  Enabled product, with some stock - the numbers should increase by one
 	 */
-    public function xtestCategoryCountsWhenEnabledProductWithNoStockIsAdded()
+    public function testCategoryCountsWhenEnabledProductWithNoStockIsAdded()
 	{
         $secondCategory = Category::getNewInstance($this->productCategory);
         $secondCategory->save();

@@ -167,35 +167,23 @@ Backend.SpecField.prototype = {
 	{
 		try
 		{
-		    console.info('check');
 			var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ? ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
-	        
-            console.info('check');
 	        $A(this.fieldsList.ul.getElementsByTagName('li')).each(function(li)
 	        {
-            console.info('check');
 	           if(!Element.hasClassName(li, 'dom_template'))  
-	           {
-            console.info('check');
+			   {
 	               this.deleteValueFieldAction(li);
 	           }   
-            console.info('check');
 	        }.bind(this));
 	        
-            console.info('check');
 			this.addField(null, "new" + Backend.SpecField.prototype.countNewValues, false);
-            console.info('check');
 	        this.bindDefaultFields();
-            console.info('check');
 			Backend.SpecField.prototype.countNewValues++;
-            console.info('check');
 	        
 	        Form.restore(this.nodes.form, ['type']);
-            console.info('check');
 		}
 		catch(e)
 		{
-			console
 		     console.info(e);
 		}
 	},

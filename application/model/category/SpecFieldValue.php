@@ -220,29 +220,16 @@ class SpecFieldValue extends MultilingualObject
 	    
 	    // Create filters
 	    $mergedSpecificationItemsFilter = new ARSelectFilter();
-	    $mergedSpecificationItemsFilter->setCondition($inAllItemsCondition);
-	    
-	    $mergedSpecificationItemsDeleteFilter = new ARDeleteFilter();
-	    $mergedSpecificationItemsDeleteFilter->setCondition($inAllItemsCondition);
-	    
-	    $mergedSpecFieldValuesDeleteFilter = new ARDeleteFilter();
-	    $mergedSpecFieldValuesDeleteFilter->setCondition($inAllItemsExceptThisCondition);
+	    $mergedSpecificationItemsFilter->setCondition($inAllItemsCondition);    
 
-	    $products = array();
-	    $specificationItems = SpecificationItem::getRecordSet($mergedSpecificationItemsFilter, false);
-	    foreach($specificationItems as $item)
-	    {
-	        if(!in_array($item->product->get(), $products, true)) $products[] = $item->product->get();
-	    }
-	    
-	    ActiveRecord::deleteRecordSet('SpecificationItem', $mergedSpecificationItemsDeleteFilter);
-	    
-	    foreach($products as $product)
-	    {
-	        $newSpecificationItem = SpecificationItem::getNewInstance($product, $this->specField->get(), $this);
-	        $newSpecificationItem->save();
-	    }
-	    
+	    // Using IGNORE I'm ignoring duplicate primary keys. Those rows that violate the uniqueness of the primary key are simply not saved
+        // Then later I just delete these records and the merge is complete. 
+        $sql = "UPDATE IGNORE SpecificationItem SET specFieldValueID = " . $this->getID() . " " . $mergedSpecificationItemsFilter->createString();
+        self::getLogger()->logQuery($sql);
+        $db->executeUpdate($sql);
+    
+        $mergedSpecFieldValuesDeleteFilter = new ARDeleteFilter();
+        $mergedSpecFieldValuesDeleteFilter->setCondition($inAllItemsExceptThisCondition);
 	    ActiveRecord::deleteRecordSet('SpecFieldValue', $mergedSpecFieldValuesDeleteFilter);
 	}
 }
