@@ -1,0 +1,11 @@
+checkPHPVersion=PHP version
+checkPHPVersion_error=<a href="http://php.net" target="_blank">PHP</a> version must be at least 5.2
+
+checkMySQL=Database support
+checkMySQL_error=<a href="http://php.net/mysqli" target="_blank">mysqli</a> extension must be installed for PHP
+
+checkGD=Image manipulation support
+checkGD_error=<a href="http://php.net/gd" target="_blank">GD</a> extension must be installed for PHP
+
+checkSession=PHP session configuration
+checkSession_error=PHP sessions are not being saved. Please make sure that the <a href="http://php.net/manual/en/ref.session.php#ini.session.save-path"><em>session.save_path</em></a> PHP configuration value is set correctly.
