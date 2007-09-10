@@ -47,7 +47,7 @@ function smarty_function_paginate($params, LiveCartSmarty $smarty)
 	$application = $smarty->getApplication();
 	
 	// get variable to replace - _page_ if defined, otherwise 0
-	$replace = strpos($params['url'], '_page_') ? '_page_' : 0;
+	$replace = strpos($params['url'], '_000_') ? '_000_' : 0;
     
     if ($params['current'] > 1)
 	{

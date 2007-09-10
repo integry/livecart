@@ -111,7 +111,7 @@ class CategoryController extends FrontendController
 		$urlParams = array('controller' => 'category', 'action' => 'index', 
 						   'id' => $this->request->get('id'),
 						   'cathandle' => $this->request->get('cathandle'),
-						   'page' => '0',
+						   'page' => '_000_',
 						   );
 		if ($this->request->get('filters'))
 		{
@@ -185,7 +185,7 @@ class CategoryController extends FrontendController
 		$response->set('subCatFeatured', $subCatFeatured);
 		$response->set('allFilters', $filters);
 		$response->set('showAll', $showAll);
-						
+
 		if (isset($searchQuery))
         {
     		$response->set('searchQuery', $searchQuery);
@@ -633,10 +633,10 @@ class CategoryController extends FrontendController
 				$f = new ARSelectFilter();
 				$c = new INCond(new ARFieldHandle('SpecFieldValue', 'ID'), $selectorFilterIds);
 				$f->setCondition($c);
-				$filters = ActiveRecordModel::getRecordSet('SpecFieldValue', $f, array('SpecField', 'Category'));
+                $filters = ActiveRecordModel::getRecordSet('SpecFieldValue', $f, array('SpecField', 'Category'));
                 foreach ($filters as $filter)
 				{
-					$this->filters[] = new SelectorFilter($filter);
+                    $this->filters[] = new SelectorFilter($filter);
 				}
             }	
             
