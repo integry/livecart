@@ -61,6 +61,7 @@
         {/allowed}
     {literal}    
     
+    
     Backend.UserGroup.prototype.Messages.confirmUserDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_user}{literal}';
     Backend.UserGroup.prototype.Messages.confirmUserGroupRemove = '{/literal}{t _are_you_sure_you_want_to_delete_this_user_group}{literal}';
     Backend.UserGroup.prototype.Messages.defaultUserName = '{/literal}{t _default_user}{literal}';
@@ -75,9 +76,9 @@
 
     Backend.User.Editor.prototype.Links.create = '{/literal}{link controller=backend.user action=create}{literal}';
     Backend.User.Editor.prototype.Links.update = '{/literal}{link controller=backend.user action=update}{literal}';
+    Backend.User.Editor.prototype.Links.generatePassword = '{/literal}{link controller=backend.user action=generatePassword}{literal}';
     
     Backend.UserGroup.prototype.usersMiscPermision = {/literal}{allowed role="user"}true{/allowed}{denied role="user"}false{/denied}{literal};
-
 
     var users = new Backend.UserGroup({/literal}{json array=$userGroups}{literal});
     window.usersActiveGrid = {};

@@ -60,6 +60,11 @@ _err_last_name_empty=Empty last name
 _err_first_name_empty=Empty first name
 _err_passwords_are_not_the_same=Passwords do not match
 _err_this_email_is_already_being_used_by_other_user=This e-mail is already being used by another user
+_err_password_lenght_should_be_in_interval=Password length should be in interval from %s to %s
+
+
+_show_password=Show password
+_generate_password=generate
 
 ########################
 # Active grid fields

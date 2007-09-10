@@ -117,6 +117,12 @@ function MinLengthCheck(element, params)
 	return (element.value.length >= params.minLength);
 }
 
+function IsLengthBetweenCheck(element, params)
+{
+	var len = element.value.length;
+    return ((len >= params.minLength && len <= params.minLength) || (len == 0 && params.allowEmpty));
+}
+
 function PasswordEqualityCheck(element, params)
 {
     return (element.value == element.form.elements.namedItem(params.secondPasswordFieldname).value);

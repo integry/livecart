@@ -100,7 +100,7 @@ th.cell_User_email
 
 /* Billing and shippind addresses */
 .user_billingAddress, .user_shippingAddress {
-  display: inline;
+  /* display: inline; */
 }
 
 .sameAddress label{
@@ -109,4 +109,16 @@ th.cell_User_email
 
 #userManagerContainer .sameAddress {
   margin-top: 2em;
+}
+
+.userPasswordBlock
+{
+    position: relative;
+}
+
+.generatePasswordProgressIndicator
+{
+    position: absolute; 
+	margin: 0; 
+	padding: 0.6em 0;
 }

@@ -60,7 +60,7 @@ class UserController extends StoreManagementController
 	/**
 	 * @return RequestValidator
 	 */
-    public static function createUserFormValidator(StoreManagementController $controller)
+    public static function createUserFormValidator(StoreManagementController $controller, $user = false)
     {
         $validator = new RequestValidator("UserForm", $controller->request);		            
 		
@@ -68,29 +68,35 @@ class UserController extends StoreManagementController
 		$validator->addCheck('email', new IsValidEmailCheck($controller->translate('_err_invalid_email')));  
 		$validator->addCheck('firstName', new IsNotEmptyCheck($controller->translate('_err_first_name_empty')));		
 		$validator->addCheck('lastName', new IsNotEmptyCheck($controller->translate('_err_last_name_empty')));
-		$validator->addCheck('password1', new PasswordEqualityCheck(
-						                        $controller->translate('_err_passwords_are_not_the_same'), 
-						                        $controller->request->get('password2'), 
-												'password2'
-					                        ));
-					                        
-		$validator->addCheck('password2', new PasswordEqualityCheck(
-		                                        $controller->translate('_err_passwords_are_not_the_same'), 
-		                                        $controller->request->get('password1'), 
-												'password1'
-	                                        ));
-
+		
+		
+        $passwordLengthStart = 6;
+        $passwordLengthEnd = 30;
+		$allowEmpty = $user;
+		
+        $validator->addCheck('password', 
+            new IsLengthBetweenCheck(
+                sprintf($controller->translate('_err_password_lenght_should_be_in_interval'), $passwordLengthStart, $passwordLengthEnd), 
+                $passwordLengthStart, $passwordLengthEnd, $allowEmpty
+            ));
+		
 		$validator->addCheck('userGroupID', new IsNumericCheck($controller->translate('_err_invalid_group')));
 		
 		return $validator;
     }
 
+    public function generatePassword()
+    {
+        ClassLoader::import("library.text.Password");
+        return new RawResponse(Password::create(10, Password::MIX));
+    }
+    
     /**
      * @return Form
      */
 	public static function createUserForm(StoreManagementController $controller, User $user = null)
 	{
-		$form = new Form(self::createUserFormValidator($controller));
+		$form = new Form(self::createUserFormValidator($controller, $user));
 		
 		$userArray = array();
 		if($user)
@@ -192,7 +198,7 @@ class UserController extends StoreManagementController
 		if ($validator->isValid())
 		{
 		    $email = $this->request->get('email');
-		    $password = $this->request->get('password1');
+		    $password = $this->request->get('password');
 		    $firstName = $this->request->get('firstName');
 		    $lastName = $this->request->get('lastName');
 		    $companyName = $this->request->get('companyName');

@@ -591,6 +591,10 @@ Backend.User.Editor.prototype =
 		this.nodes.sameAddress = $("user_" + this.id +"_sameAddresses");
         this.nodes.shippingAddress = $("user_" + this.id +"_shippingAddress"); 
         this.nodes.billingAddress = $("user_" + this.id +"_billingAddress");
+		
+        this.nodes.password = this.nodes.form.down('.user_password');
+        this.nodes.showPassword = this.nodes.form.down('.user_password_show');
+        this.nodes.generatePassword = this.nodes.form.down('.user_password_generate');
     },
 
     bindEvents: function(args)
@@ -600,11 +604,24 @@ Backend.User.Editor.prototype =
         Event.observe(this.nodes.sameAddress, "click", function(e) {  
             Backend.User.Editor.prototype.showShippingAddress(this.nodes.sameAddress, this.nodes.shippingAddress, this.nodes.billingAddress);
 		}.bind(this));
+
+        Event.observe(this.nodes.showPassword, "click", function(e) { 
+		    Backend.User.Add.prototype.togglePassword.apply(this, [this.nodes.showPassword.checked]) }.bind(this)
+	    );
+        Event.observe(this.nodes.generatePassword, "click", function(e) { 
+		    Event.stop(e); 
+	 	    Backend.User.Add.prototype.generatePassword.apply(this) 
+	    }.bind(this));
 		
-        
 
-    },
-
+        Event.observe(this.nodes.form.elements.namedItem("shippingAddress_firstName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
+        Event.observe(this.nodes.form.elements.namedItem("shippingAddress_lastName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
+        Event.observe(this.nodes.form.elements.namedItem("shippingAddress_companyName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
+        Event.observe(this.nodes.form.elements.namedItem("billingAddress_firstName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
+        Event.observe(this.nodes.form.elements.namedItem("billingAddress_lastName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
+        Event.observe(this.nodes.form.elements.namedItem("billingAddress_companyName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
+   },
+    
     init: function(args)
     {	
 		Backend.User.Editor.prototype.setCurrentId(this.id);
@@ -753,6 +770,10 @@ Backend.User.Add.prototype =
         this.nodes.form = this.nodes.parent.down("form");
 		this.nodes.cancel = this.nodes.form.down('a.cancel');
 		this.nodes.submit = this.nodes.form.down('input.submit');
+		
+        this.nodes.password = this.nodes.form.down('.user_password');
+        this.nodes.showPassword = this.nodes.form.down('.user_password_show');
+        this.nodes.generatePassword = this.nodes.form.down('.user_password_generate');
         
         this.nodes.menuShowLink = $("userGroup_" + this.groupID + "_addUser");
         this.nodes.menu = $("userGroup_" + this.groupID + "_addUser_menu");
@@ -785,8 +806,64 @@ Backend.User.Add.prototype =
 		Event.observe(this.nodes.submit, 'click', function(e) { Event.stop(e); self.submitForm()});
         Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); self.cancelForm();});
 		
-        Event.observe("user_0_sameAddresses", "click", function(e) { this.showShippingAddress() }.bind(this));
+		Event.observe("user_0_sameAddresses", "click", function(e) { this.showShippingAddress() }.bind(this));
+
+        Event.observe(this.nodes.showPassword, "click", function(e) { this.togglePassword(this.nodes.showPassword.checked) }.bind(this));
+        Event.observe(this.nodes.generatePassword, "click", function(e) { Event.stop(e); this.generatePassword() }.bind(this));
+
+        Event.observe(this.nodes.form.elements.namedItem("shippingAddress_firstName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
+        Event.observe(this.nodes.form.elements.namedItem("shippingAddress_lastName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
+        Event.observe(this.nodes.form.elements.namedItem("shippingAddress_companyName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
+        Event.observe(this.nodes.form.elements.namedItem("billingAddress_firstName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
+        Event.observe(this.nodes.form.elements.namedItem("billingAddress_lastName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
+        Event.observe(this.nodes.form.elements.namedItem("billingAddress_companyName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));		
     },
+	
+	generatePassword: function()
+	{
+		this.nodes.password.value = "";
+        new LiveCart.AjaxRequest(
+            Backend.User.Editor.prototype.Links.generatePassword,
+            this.nodes.parent.down(".generatePasswordProgressIndicator"),
+            function(response) 
+            {
+				setTimeout(function() 
+				{
+					Backend.User.Add.prototype.togglePassword.apply(this, [true]);
+	                this.nodes.password.value = response.responseText;
+				}.bind(this), 50);
+            }.bind(this)
+        );
+	},
+    
+    togglePassword: function(show)
+    {
+		this.nodes.showPassword.checked = show;
+        this.nodes.password.type = show ? 'text' : 'password';
+    },
+	
+	setDefaultValues: function()
+	{		
+	    $A(["billingAddress", "shippingAddress"]).each(function(type)
+		{
+			var allFieldsAreEmpty = true;
+			$A(this.nodes.parent.down(".user_" + type).getElementsByTagName("input")).each(function(input)
+			{
+				if(input.value && input.type != 'hidden')
+				{
+					allFieldsAreEmpty = false;
+					throw $break;
+				}
+			});
+			
+			if(allFieldsAreEmpty)
+			{
+				this.nodes.form.elements.namedItem(type + "_firstName").value = this.nodes.form.elements.namedItem("firstName").value;
+		        this.nodes.form.elements.namedItem(type + "_lastName").value = this.nodes.form.elements.namedItem("lastName").value
+		        this.nodes.form.elements.namedItem(type + "_companyName").value = this.nodes.form.elements.namedItem("companyName").value;
+			}
+		}.bind(this));
+	},
 	
 	showShippingAddress: function() {
         Backend.User.Editor.prototype.showShippingAddress(this.nodes.sameAddress, this.nodes.shippingAddress, this.nodes.billingAddress);

@@ -119,7 +119,6 @@ LiveCart.AjaxRequest.prototype = {
 
     postProcessResponse: function(url, response)
     {
-		
 		this.hideIndicator();
 		
 		if ('text/javascript' == response.getResponseHeader('Content-type') && $('confirmations'))
