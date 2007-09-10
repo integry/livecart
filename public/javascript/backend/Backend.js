@@ -1234,17 +1234,30 @@ Backend.SelectPopup.prototype = {
                     window.selectPopupWindow.close();
                 }
             }); 
+			
+            Backend.SelectPopup.prototype.popup.focus();
             
-            setTimeout(function() {
+            var interval = setInterval(function() 
+			{	
+			    if(!Backend.SelectPopup.prototype.popup || !Backend.SelectPopup.prototype.popup.Event || !Backend.SelectPopup.prototype.popup.Event.observe) 
+				{
+					return;
+				}
+				else
+				{
+				    clearInterval(interval)
+				}
+				
 				Backend.SelectPopup.prototype.popup.Event.observe(Backend.SelectPopup.prototype.popup, "unload", function()
                 {
                     window.selectPopupWindow = null;
-                });
+                }.bind(this));
                 
-                Backend.SelectPopup.prototype.popup.focus();
                 window.selectPopupWindow = Backend.SelectPopup.prototype.popup;
                 window.selectProductPopup = this;
-            }.bind(this), 100);
+				
+				
+            }.bind(this), 500);
         }
     },
     
