@@ -308,13 +308,20 @@ Backend.Product.massActionHandler.prototype =
         
         if (this.actionSelector.form.elements.namedItem(this.actionSelector.value))
         {
-            Element.show(this.form.elements.namedItem(this.actionSelector.value));
-            this.form.elements.namedItem(this.actionSelector.value).focus();
+            var el = this.form.elements.namedItem(this.actionSelector.value);
+            if (el)
+            {
+                Element.show(el);
+                this.form.elements.namedItem(this.actionSelector.value).focus();
+            }
         }    
         else if (document.getElementsByClassName(this.actionSelector.value, this.handlerMenu))
         {
 			var el = document.getElementsByClassName(this.actionSelector.value, this.handlerMenu)[0];
-			Element.show(el);
+			if (el)
+			{
+                Element.show(el);
+            }
 		}
     },
     

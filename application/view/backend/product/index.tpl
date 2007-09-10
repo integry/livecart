@@ -46,7 +46,7 @@
                 <option value="inc_price">{t _increase_price}</option>
                 <option value="inc_stock">{t _increase_stock}</option>
     
-                <option value="price">{t _set_price}</option>
+                <option value="price">{t _set_price} ({$currency})</option>
                 <option value="set_stockCount">{t _set_stock}</option>
             </optgroup>
                         
@@ -65,7 +65,7 @@
         
         <span class="bulkValues" style="display: none;">
         	<span class="addRelated">
-	            {t _enter_sku:} {textfield class="text number" name="related" autocomplete="controller=backend.product field=sku"}
+	            {t _enter_sku}: {textfield class="text number" name="related" autocomplete="controller=backend.product field=sku"}
         	</span>
             {textfield class="text number" name="inc_price"}
             {textfield class="text number" name="inc_stock"}

@@ -200,6 +200,8 @@ class DeliveryZone extends MultilingualObject
     {
         $maskString = str_replace('*', '.*', $maskString);
         $maskString = str_replace('?', '.{0,1}', $maskString);
+        $maskString = str_replace('/', '\/', $maskString);
+        $maskString = str_replace('\\', '\\\\', $maskString);
         return preg_match('/' . $maskString . '/im', $addressString);
     }
     
