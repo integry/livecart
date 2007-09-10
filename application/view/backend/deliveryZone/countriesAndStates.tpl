@@ -57,6 +57,9 @@
                     <li id="countriesAndStates_{$zoneID}_cityMasks_{$mask.ID}">
                         {include file="backend/deliveryZone/mask.tpl" mask=$mask}
                     </li>
+                    <script type="text/javascript">
+                        Backend.DeliveryZone.CountriesAndStates.prototype.bindExistingMask("countriesAndStates_{$zoneID}_cityMasks_{$mask.ID}");
+                    </script>
                 {/foreach}
             </ul>
             <script type="text/jscript">
@@ -65,9 +68,16 @@
                 {/literal}
             </script>
 
-            <fieldset {denied role='delivery.update'}style="display: none"{/denied}>
-                {textfield name="mask_new" class="countriesAndStates_newMask"}<input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
-                <span class="errorText hidden"> </span>
+            <fieldset class="error" {denied role='delivery.update'}style="display: none"{/denied}>
+                <div class="countriesAndStates_maskForm" style="display: none">
+                    {textfield name="mask_new" class="countriesAndStates_newMask"}
+                    <input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
+                    {t _or} 
+                    <a href="#cancel" class="countriesAndStates_cancelNewMask">{t _cancel}</a>
+                    <div class="countriesAndStates_exampleMask">{t _example}: Vilnius</div>
+                    <span class="errorText hidden"> </span>
+                </div>
+                <a href="#showMask" class="countriesAndStates_showNewMaskForm">{t _add_new_mask}</a>
             </fieldset>
         </fieldset>
     </fieldset>
@@ -80,6 +90,9 @@
                     <li id="countriesAndStates_{$zoneID}_zipMasks_{$mask.ID}">
                         {include file="backend/deliveryZone/mask.tpl" mask=$mask}
                     </li>
+                    <script type="text/javascript">
+                        Backend.DeliveryZone.CountriesAndStates.prototype.bindExistingMask("countriesAndStates_{$zoneID}_zipMasks_{$mask.ID}");
+                    </script>
                 {/foreach}
             </ul>
             <script type="text/jscript">
@@ -88,8 +101,15 @@
                 {/literal}
             </script>
             <fieldset class="error" {denied role='delivery.update'}style="display: none"{/denied}>
-                {textfield name="mask_new" class="countriesAndStates_newMask"}<input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
-                <span class="errorText hidden"> </span>
+                <div class="countriesAndStates_maskForm" style="display: none">
+                    {textfield name="mask_new" class="countriesAndStates_newMask"}
+                    <input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
+                    {t _or} 
+                    <a href="#cancel" class="countriesAndStates_cancelNewMask">{t _cancel}</a>
+                    <div class="countriesAndStates_exampleMask">{t _example}: LT-10666</div>
+                    <span class="errorText hidden"> </span>
+                </div>
+                <a href="#showMask" class="countriesAndStates_showNewMaskForm">{t _add_new_mask}</a>
             </fieldset>
         </fieldset>
     </fieldset>
@@ -102,6 +122,9 @@
                     <li id="countriesAndStates_{$zoneID}_addressMasks_{$mask.ID}">
                         {include file="backend/deliveryZone/mask.tpl" mask=$mask}
                     </li>
+                    <script type="text/javascript">
+                        Backend.DeliveryZone.CountriesAndStates.prototype.bindExistingMask("countriesAndStates_{$zoneID}_addressMasks_{$mask.ID}");
+                    </script>
                 {/foreach}
             </ul>
             <script type="text/jscript">
@@ -110,8 +133,15 @@
                 {/literal}
             </script>
             <fieldset class="error" {denied role='delivery.update'}style="display: none"{/denied}>
-                {textfield name="mask_new" class="countriesAndStates_newMask"}<input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
-                <span class="errorText hidden"> </span>
+                <div class="countriesAndStates_maskForm" style="display: none">
+                    {textfield name="mask_new" class="countriesAndStates_newMask"}
+                    <input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
+                    {t _or} 
+                    <a href="#cancel" class="countriesAndStates_cancelNewMask">{t _cancel}</a>
+                    <div class="countriesAndStates_exampleMask">{t _example}: Vitenio *</div>
+                    <span class="errorText hidden"> </span>
+                </div>
+                <a href="#showMask" class="countriesAndStates_showNewMaskForm">{t _add_new_mask}</a>
             </fieldset>
         </fieldset>
     </fieldset>

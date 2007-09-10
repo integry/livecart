@@ -214,7 +214,7 @@ class DeliveryZoneController extends StoreManagementController
 		    $maskValue = $this->request->get('mask');
 		    if($id = (int)$this->request->get('id'))
 		    {
-		        $mask = DeliveryZoneCityMask::getInstanceByID($id);
+		        $mask = DeliveryZoneZipMask::getInstanceByID($id);
 		        $mask->mask->set($maskValue);
 		    }
 		    else
@@ -253,7 +253,7 @@ class DeliveryZoneController extends StoreManagementController
 	        $maskValue = $this->request->get('mask');
 		    if($id = (int)$this->request->get('id'))
 		    {
-		        $mask = DeliveryZoneCityMask::getInstanceByID($id);
+		        $mask = DeliveryZoneAddressMask::getInstanceByID($id);
 		        $mask->mask->set($maskValue);
 		    }
 		    else

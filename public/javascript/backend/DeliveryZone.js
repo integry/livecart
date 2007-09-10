@@ -142,13 +142,15 @@ Backend.DeliveryZone.prototype =
             }
             
             var activateTab = $('tabDeliveryZoneShipping');
-            $("tabDeliveryZoneCountry").parentNode.hide();
+            $("tabDeliveryZoneCountry").hide();
+            $("tabDeliveryZoneTaxes").hide();
             $("deliveryZone_delete").parentNode.hide();
         }
         else
         {
             var activateTab = $('tabDeliveryZoneCountry');
-            $("tabDeliveryZoneCountry").parentNode.show();
+            $("tabDeliveryZoneCountry").show();
+            $("tabDeliveryZoneTaxes").show();
             $("deliveryZone_delete").parentNode.show();
         }
         
@@ -318,85 +320,124 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
 
         this.nodes.name = this.nodes.form.down('.' + this.prefix + 'name');
 
-        this.nodes.addCountryButton     = this.nodes.root.down('.' + this.prefix + 'addCountry');
-        this.nodes.removeCountryButton  = this.nodes.root.down('.' + this.prefix + 'removeCountry');
-        this.nodes.addStateButton       = this.nodes.root.down('.' + this.prefix + 'addState');
-        this.nodes.removeStateButton    = this.nodes.root.down('.' + this.prefix + 'removeState');
+        this.nodes.addCountryButton           = this.nodes.root.down('.' + this.prefix + 'addCountry');
+        this.nodes.removeCountryButton        = this.nodes.root.down('.' + this.prefix + 'removeCountry');
+        this.nodes.addStateButton             = this.nodes.root.down('.' + this.prefix + 'addState');
+        this.nodes.removeStateButton          = this.nodes.root.down('.' + this.prefix + 'removeState');
         
-        this.nodes.inactiveCountries    = this.nodes.root.down('.' + this.prefix + 'inactiveCountries');
-        this.nodes.activeCountries      = this.nodes.root.down('.' + this.prefix + 'activeCountries');
-        this.nodes.inactiveStates       = this.nodes.root.down('.' + this.prefix + 'inactiveStates');
-        this.nodes.activeStates         = this.nodes.root.down('.' + this.prefix + 'activeStates');
+        this.nodes.inactiveCountries          = this.nodes.root.down('.' + this.prefix + 'inactiveCountries');
+        this.nodes.activeCountries            = this.nodes.root.down('.' + this.prefix + 'activeCountries');
+        this.nodes.inactiveStates             = this.nodes.root.down('.' + this.prefix + 'inactiveStates');
+        this.nodes.activeStates               = this.nodes.root.down('.' + this.prefix + 'activeStates');
         
-        this.nodes.cityMasks            = this.nodes.root.down('.' + this.prefix + 'cityMasks');
-        this.nodes.cityMasksList        = this.nodes.cityMasks.down('.' + this.prefix + 'cityMasksList');
-        this.nodes.cityMaskNew          = this.nodes.cityMasks.down('.' + this.prefix + 'newMask');
-        this.nodes.cityMaskNewButton    = this.nodes.cityMasks.down('.' + this.prefix + 'newMaskButton');
-        
-        this.nodes.zipMasks            = this.nodes.root.down('.' + this.prefix + 'zipMasks');
-        this.nodes.zipMasksList        = this.nodes.zipMasks.down('.' + this.prefix + 'zipMasksList');
-        this.nodes.zipMaskNew          = this.nodes.zipMasks.down('.' + this.prefix + 'newMask');
-        this.nodes.zipMaskNewButton    = this.nodes.zipMasks.down('.' + this.prefix + 'newMaskButton');
-        
-        this.nodes.addressMasks            = this.nodes.root.down('.' + this.prefix + 'addressMasks');
-        this.nodes.addressMasksList        = this.nodes.addressMasks.down('.' + this.prefix + 'addressMasksList');
-        this.nodes.addressMaskNew          = this.nodes.addressMasks.down('.' + this.prefix + 'newMask');
-        this.nodes.addressMaskNewButton    = this.nodes.addressMasks.down('.' + this.prefix + 'newMaskButton');
-        
-        this.nodes.zonesAndUnions       = this.nodes.root.down('.' + this.prefix + 'regionsAndUnions').getElementsByTagName('a');
+        this.nodes.cityMasks                  = this.nodes.root.down('.' + this.prefix + 'cityMasks');
+        this.nodes.cityMasksList              = this.nodes.cityMasks.down('.' + this.prefix + 'cityMasksList');
+        this.nodes.cityMaskNew                = this.nodes.cityMasks.down('.' + this.prefix + 'newMask');
+        this.nodes.cityMaskNewButton          = this.nodes.cityMasks.down('.' + this.prefix + 'newMaskButton');
+        this.nodes.cityMaskNewCancelButton    = this.nodes.cityMasks.down('.' + this.prefix + 'cancelNewMask');
+        this.nodes.cityMaskNewShowButton      = this.nodes.cityMasks.down('.' + this.prefix + 'showNewMaskForm');
+        this.nodes.cityMaskNewForm            = this.nodes.cityMasks.down('.' + this.prefix + 'maskForm');
+		
+        this.nodes.zipMasks                   = this.nodes.root.down('.' + this.prefix + 'zipMasks');
+        this.nodes.zipMasksList               = this.nodes.zipMasks.down('.' + this.prefix + 'zipMasksList');
+        this.nodes.zipMaskNew                 = this.nodes.zipMasks.down('.' + this.prefix + 'newMask');
+        this.nodes.zipMaskNewButton           = this.nodes.zipMasks.down('.' + this.prefix + 'newMaskButton');
+        this.nodes.zipMaskNewCancelButton     = this.nodes.zipMasks.down('.' + this.prefix + 'cancelNewMask');
+        this.nodes.zipMaskNewShowButton       = this.nodes.zipMasks.down('.' + this.prefix + 'showNewMaskForm');
+        this.nodes.zipMaskNewForm             = this.nodes.zipMasks.down('.' + this.prefix + 'maskForm');
+		
+        this.nodes.addressMasks               = this.nodes.root.down('.' + this.prefix + 'addressMasks');
+        this.nodes.addressMasksList           = this.nodes.addressMasks.down('.' + this.prefix + 'addressMasksList');
+        this.nodes.addressMaskNew             = this.nodes.addressMasks.down('.' + this.prefix + 'newMask');
+        this.nodes.addressMaskNewButton       = this.nodes.addressMasks.down('.' + this.prefix + 'newMaskButton');
+        this.nodes.addressMaskNewCancelButton = this.nodes.addressMasks.down('.' + this.prefix + 'cancelNewMask');
+        this.nodes.addressMaskNewShowButton   = this.nodes.addressMasks.down('.' + this.prefix + 'showNewMaskForm');
+        this.nodes.addressMaskNewForm         = this.nodes.addressMasks.down('.' + this.prefix + 'maskForm');
+
+        this.nodes.zonesAndUnions             = this.nodes.root.down('.' + this.prefix + 'regionsAndUnions').getElementsByTagName('a');
         
         this.nodes.observedElements = document.getElementsByClassName("observed", this.nodes.form);
     },
+	
+	bindExistingMask: function(li)
+	{
+	    li = $(li);
+	    Event.observe(li.down(".countriesAndStates_saveMaskButton"), "click", function(e) 
+	    {
+	        Event.stop(e);
+	        Backend.DeliveryZone.CountriesAndStates.prototype.toggleMask(li)
+	    }.bind(this));
+	    
+	    Event.observe(li.down(".countriesAndStates_cancelMask"), "click", function(e) 
+	    {
+	        Event.stop(e);
+	        Backend.DeliveryZone.CountriesAndStates.prototype.toggleMask(li, true);
+	    }.bind(this));
+	},
     
-    toggleMask: function(li)
+    toggleMask: function(li, cancel)
     {
         var self = Backend.DeliveryZone.CountriesAndStates.prototype.getInstance(li.up('form'));
         var input = li.down('input');
+		var form  = li.down('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'existingMaskForm');
         var title = li.down('.maskTitle');
-        if(li.down('input').style.display == 'inline')
+        if(form.style.display != 'none')
         {      
-            var list = null;     
-            if(list) 
-            {
-				list = $(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'cityMasksList');     
-                var url = Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveAddressMask;
+		    if(cancel)
+			{
+				input.value = li.oldValue 
+			}
+			
+			var url = null;
+            var list = null;   
+  
+            if((list = $(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'cityMasksList')))
+            { 
+                url = Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveCityMask;
             }
-            else if($(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'zipMasksList'))
+            else if((list = $(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'zipMasksList')))
             {
-				list = $(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'zipMasksList');
-                var url = Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveZipMask;
+                url = Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveZipMask;
             }
-            else if($(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'addressMasksList'))
+            else if((list = $(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'addressMasksList')))
             {
-				list = $(input).up('.' + Backend.DeliveryZone.CountriesAndStates.prototype.prefix + 'addressMasksList')
-                var url = Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveCityMask;
+                url = Backend.DeliveryZone.CountriesAndStates.prototype.Links.saveAddressMask;
             }
             
             var activeList = ActiveList.prototype.getInstance(list);
-            new LiveCart.AjaxRequest(
-                url + "/" + activeList.getRecordId(li) + '&mask=' + li.down('input').value,
-                false,
-                function(response) {
-                    var response = eval('(' + response.responseText + ')');
-                    
-                    if(response.status == 'success') 
-                    {
-                        input.style.display = 'none';
-                        title.style.display = 'inline';
-                        title.update(input.value);
-                        ActiveForm.prototype.resetErrorMessage(input);
-                    }
-                    else
-                    {
-                        ActiveForm.prototype.setErrorMessage(input, response.errors.mask, true);
-                    }
-                }.bind(self)
-            );
+			if(!cancel)
+            {
+	            new LiveCart.AjaxRequest(
+	                url + "/" + activeList.getRecordId(li) + '&mask=' + li.down('input').value,
+	                false,
+	                function(response) {
+	                    var response = eval('(' + response.responseText + ')');
+	                    
+	                    if(response.status == 'success') 
+	                    {
+	                        form.style.display = 'none';
+	                        title.style.display = 'inline';
+	                        title.update(input.value);
+	                        ActiveForm.prototype.resetErrorMessage(input);
+	                    }
+	                    else
+	                    {
+	                        ActiveForm.prototype.setErrorMessage(input, response.errors.mask, true);
+	                    }
+	                }.bind(self)
+	            );
+			}
+			else
+			{
+                form.style.display = 'none';
+                title.style.display = 'inline';
+			}
         }
         else
         {
-            input.style.display = 'inline';
-            title.style.display = 'none';
+			li.oldValue = input.value;
+			form.style.display = 'inline';
+			title.style.display = 'none';
         }
     },
     
@@ -410,6 +451,15 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
         Event.observe(this.nodes.cityMaskNewButton, 'click', function(e) { Event.stop(e); this.addNewCityMask(this.nodes.cityMaskNew); }.bind(this));
         Event.observe(this.nodes.zipMaskNewButton, 'click', function(e) { Event.stop(e); this.addNewZipMask(this.nodes.zipMaskNew); }.bind(this));
         Event.observe(this.nodes.addressMaskNewButton, 'click', function(e) { Event.stop(e); this.addNewAddressMask(this.nodes.addressMaskNew); }.bind(this));
+
+        Event.observe(this.nodes.cityMaskNewCancelButton, 'click', function(e) { Event.stop(e); this.cancelNewMaskForm(this.nodes.cityMaskNewCancelButton.up("fieldset")); }.bind(this));
+        Event.observe(this.nodes.zipMaskNewCancelButton, 'click', function(e) { Event.stop(e); this.cancelNewMaskForm(this.nodes.zipMaskNewCancelButton.up("fieldset")); }.bind(this));
+        Event.observe(this.nodes.addressMaskNewCancelButton, 'click', function(e) { Event.stop(e); this.cancelNewMaskForm(this.nodes.addressMaskNewCancelButton.up("fieldset")); }.bind(this));
+
+        Event.observe(this.nodes.cityMaskNewShowButton, 'click', function(e) { Event.stop(e); this.showNewMaskForm(this.nodes.cityMaskNewShowButton.up("fieldset")); }.bind(this));
+        Event.observe(this.nodes.zipMaskNewShowButton, 'click', function(e) { Event.stop(e); this.showNewMaskForm(this.nodes.zipMaskNewShowButton.up("fieldset")); }.bind(this));
+        Event.observe(this.nodes.addressMaskNewShowButton, 'click', function(e) { Event.stop(e); this.showNewMaskForm(this.nodes.addressMaskNewShowButton.up("fieldset")); }.bind(this));
+
 
         $A(this.nodes.zonesAndUnions).each(function(zoneOrUnion) {
             Event.observe(zoneOrUnion, 'click', function(e) { Event.stop(e); this.selectZoneOrUnion(zoneOrUnion.hash.substring(0,1) == '#' ? zoneOrUnion.hash.substring(1) : zoneOrUnion.hash); }.bind(this));
@@ -466,6 +516,28 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
            }
        }.bind(this));
     },
+	
+	cancelNewMaskForm: function(maskRoot)
+	{
+        var input = maskRoot.down("input")
+        var form  = maskRoot.down('.' + this.prefix + 'maskForm');
+        var show  = maskRoot.down('.' + this.prefix + 'showNewMaskForm');
+		
+		input.value = "";
+		show.show();
+		form.hide();
+	}, 
+    
+    showNewMaskForm: function(maskRoot)
+    {
+        var input = maskRoot.down("input")
+        var form  = maskRoot.down('.' + this.prefix + 'maskForm');
+        var show  = maskRoot.down('.' + this.prefix + 'showNewMaskForm');
+        
+        input.focus();
+        show.hide();
+        form.show();
+    }, 
     
     save: function() {
         this.saving = true;
@@ -502,6 +574,8 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                     mask.value = '';
                     this.bindMask(li.down('input'));
                     ActiveForm.prototype.resetErrorMessage(mask);
+					
+                    this.cancelNewMaskForm(this.nodes.cityMaskNewCancelButton.up("fieldset"));
                 }
                 else
                 {
@@ -527,6 +601,8 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                     mask.value = '';
                     this.bindMask(li.down('input'));
                     ActiveForm.prototype.resetErrorMessage(mask);
+					
+			        this.cancelNewMaskForm(this.nodes.zipMaskNewCancelButton.up("fieldset"));
                 }
                 else
                 {
@@ -552,6 +628,8 @@ Backend.DeliveryZone.CountriesAndStates.prototype =
                     mask.value = '';
                     this.bindMask(li.down('input'));
                     ActiveForm.prototype.resetErrorMessage(mask);
+					
+                    this.cancelNewMaskForm(this.nodes.addressMaskNewCancelButton.up("fieldset"));
                 }
                 else
                 {
@@ -1468,3 +1546,4 @@ Backend.DeliveryZone.TaxRate.prototype =
         }
     }
 }
+

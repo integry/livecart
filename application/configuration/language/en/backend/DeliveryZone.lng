@@ -24,8 +24,10 @@ _name=Zone Name
 _city_mask=City mask
 _zip_mask=Zip mask
 _address_mask=Address mask
-_Add_mask=Add new mask
+_add_mask=Add
+_add_new_mask=Add new mask
 _new_delivery_zone=New delivery zone
+_example=Example
 
 _is_enabled=Enabled
 _is_free_shipping=Free shipping

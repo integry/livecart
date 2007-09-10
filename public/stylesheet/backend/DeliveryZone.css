@@ -100,3 +100,10 @@
 {
     padding: 5px 0pt 12px 0pt ! important;
 }
+
+.countriesAndStates_exampleMask
+{
+    font-weight: bold; 
+	color: #777; 
+	font-size: 0.8em;
+}
