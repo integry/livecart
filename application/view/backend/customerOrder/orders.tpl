@@ -3,7 +3,7 @@
 <fieldset class="container activeGridControls">
 
 
-    <ul class="menu" {if !in_array($orderGroupID,range(3,5))}style="display: none"{/if}>
+    <ul class="menu" >
         <li><a href="#" id="createNewOrderLink_{$orderGroupID}"  {denied role='order.create' }style="display: none"{/denied}>{t _create_order}</a></li>
     </ul> 
     <br class="clear" />

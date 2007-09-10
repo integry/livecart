@@ -282,11 +282,11 @@ class CustomerOrderController extends StoreManagementController
 	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1);
 	            $cond2 = new NotEqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_SHIPPED);
 	            $cond2->addOR(new NotEqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_RETURNED));
-	            $cond2->addOR(new IsNullCond(new ARFieldHandle('CustomerOrder', "status")));
+	            $cond2->addOR(new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW));
 	            $cond2->addAND($cond);
 	            break;
 	        case 'orders_3':
-	            $cond = new IsNullCond(new ARFieldHandle('CustomerOrder', "status")); 
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW); 
 	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
 	            break;
 	        case 'orders_4': 
@@ -439,6 +439,7 @@ class CustomerOrderController extends StoreManagementController
             
             $data[] = $record;
         }
+        
         
         
     	return new JSONResponse(array(

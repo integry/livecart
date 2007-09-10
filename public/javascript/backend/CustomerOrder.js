@@ -68,7 +68,10 @@ Backend.CustomerOrder.prototype =
 						Backend.SelectPopup.prototype.popup.close();
 						
 						Backend.CustomerOrder.prototype.openOrder(response.order.ID);
-						window.ordersActiveGrid[Backend.CustomerOrder.prototype.activeGroup].reloadGrid();
+						if(window.ordersActiveGrid[3])
+						{
+						    window.ordersActiveGrid[3].reloadGrid();
+						}
 					}, 20);	
                 }
                 else
@@ -218,7 +221,9 @@ Backend.CustomerOrder.prototype =
 			Event.stop(e);
             $('orderIndicator_' + id).style.visibility = 'visible';
 		}
+		
         
+        Backend.CustomerOrder.prototype.treeBrowser.selectItem(3, true, true);
         Backend.CustomerOrder.Editor.prototype.setCurrentId(id); 
         
     	var tabControl = TabControl.prototype.getInstance(
