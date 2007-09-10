@@ -229,6 +229,22 @@ TabControl.prototype = {
         }
        
         this.addHistory();
+		
+		// Hide tabs if only one is visible
+        this.nodes.tabList.show();
+		this.hideAllTabs = true;
+		this.nodes.tabListElements.each(function(tab) {
+			if(targetTab != tab && tab.style.display != 'none')
+			{
+				this.hideAllTabs = false;
+				throw $break;
+			}
+		}.bind(this));
+		
+		if(this.hideAllTabs)
+		{
+			this.nodes.tabList.hide();
+		}
 	},
 
 	/**

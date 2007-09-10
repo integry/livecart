@@ -44,8 +44,6 @@
     <div id="confirmations"></div>
 </div>
 
-<div id="activeUserPath" class="treePath">All users</div>
-
 {include file="backend/customerOrder/orderContainer.tpl"}
 {include file="backend/customerOrder/groupContainer.tpl"}
 {include file="backend/userGroup/userContainer.tpl"}

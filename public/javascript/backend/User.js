@@ -60,7 +60,6 @@ Backend.UserGroup.prototype =
         }
         
 	    self.tabControl = TabControl.prototype.getInstance('userGroupsManagerContainer', self.craftTabUrl, self.craftContainerId, {}); 
-        $("activeUserPath").innerHTML = this.treeBrowser.getItemText(id);
         
         this.bindEvents();
 	},
@@ -210,8 +209,6 @@ Backend.UserGroup.prototype =
             });
             
             Backend.showContainer("userGroupsManagerContainer");
-            
-            $("activeUserPath").innerHTML = this.treeBrowser.getItemText(id);
         }
         
         Backend.UserGroup.prototype.activeGroup = id;

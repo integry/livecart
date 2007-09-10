@@ -42,8 +42,6 @@
         <div class="redMessage" id="userHasNoAddressError" style="display: none;"><div>{t _err_user_has_no_billing_or_shipping_address}</div></div>
 	</div>
     
-    <div id="activeUserPath" class="treePath">All users</div>
-
     <span id="fromUsersPage">
         {include file="backend/userGroup/groupContainer.tpl"}
     </span>
