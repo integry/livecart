@@ -1291,9 +1291,7 @@ ul.languageFormTabs li.active
 {
     border: 1px solid #ccc; 
     background: #f1f1f1;
-    padding: 5px;
-    padding-right: 0;
-    padding-top: 0px;
+    padding-bottom: 5px;
   	height: 360px;
 }
 

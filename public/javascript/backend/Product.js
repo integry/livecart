@@ -5,8 +5,6 @@ Backend.Product =
 	formTabCopies: new Array(),
 	
 	categoryPaths: {},
-    
-    isAdding: false,
 
 	showAddForm: function(categoryID, caller)
 	{
@@ -62,8 +60,6 @@ Backend.Product =
 
 	initAddForm: function(categoryID)
 	{
-        this.isAdding = true;
-        
         container = $('addProductContainer');
         
         Element.hide($('categoryTabs'));
@@ -80,7 +76,7 @@ Backend.Product =
         typeSel.onchange = 
             function(e)
             {
-                var el = Event.element(e);
+                var el = e ? Event.element(e) : this;
                 var cont = el.up('div.productForm');
                 if (1 == el.value)
                 {
@@ -92,9 +88,18 @@ Backend.Product =
                 }
             }
             
-        // focus Product Name field
-        container.down('form').elements.namedItem('name').focus();		
+        this.reInitAddForm();
 	},
+
+    reInitAddForm: function()
+    {
+        container = $('addProductContainer');
+        var typeSel = container.down('select.productType');        
+        typeSel.onchange();
+            
+        // focus Product Name field
+        container.down('form').elements.namedItem('name').focus();        
+    },
 
     initSpecFieldControls: function(categoryID)
     {
@@ -212,7 +217,7 @@ Backend.Product =
 		}
     },
     
-    openProduct: function(id, e) 
+    openProduct: function(id, e, onComplete) 
     {
 		if (window.opener) 
 		{
@@ -239,7 +244,7 @@ Backend.Product =
                 }
             }); 
             
-            tabControl.activateTab();
+            tabControl.activateTab(null, onComplete);
             
 	        if(Backend.Product.Editor.prototype.hasInstance(id)) 
 			{
@@ -392,20 +397,23 @@ Backend.Product.saveHandler.prototype =
   		
             // reload product grids
             var path = Backend.Product.categoryPaths[categoryID] 			
-            for (var k = 0; k <= path.length; k++)
+            if (path)
             {
-                var category = path[k] ? path[k].ID : 1;
-                var table = $('products_' + category);
-                
-                if (!table && Backend.Product.productTabCopies[categoryID])
+                for (var k = 0; k <= path.length; k++)
                 {
-                    table = Backend.Product.productTabCopies[categoryID].getElementsByTagName('table')[0];
-                }
-                
-                if (table)
-                {
-                    table.gridInstance.reloadGrid();
-                }
+                    var category = path[k] ? path[k].ID : 1;
+                    var table = $('products_' + category);
+                    
+                    if (!table && Backend.Product.productTabCopies[categoryID])
+                    {
+                        table = Backend.Product.productTabCopies[categoryID].getElementsByTagName('table')[0];
+                    }
+                    
+                    if (table)
+                    {
+                        table.gridInstance.reloadGrid();
+                    }
+                }                
             }
 
 			// reset form and add more products
@@ -415,16 +423,23 @@ Backend.Product.saveHandler.prototype =
 			    $('afAd_new').checked = true;
 			    
                 document.getElementsByClassName('product_sku', this.form)[0].disabled = false;
-				Form.focusFirstElement(this.form);
+
+				Backend.Product.reInitAddForm();
 			}
 
 			// continue to edit the newly added product
 			else
 			{
-			    this.form.reset();          
-
-                Backend.Product.openProduct(response.id);
-                Backend.Product.cancelAddProduct(categoryID, true);
+                Element.show($('loadingProduct'));
+                Backend.Product.openProduct(response.id, 
+                                            null, 
+                                            function() 
+                                            { 
+                                                Element.hide($('loadingProduct'));
+                                                Backend.Product.cancelAddProduct(categoryID); 
+                                                this.form.reset();
+                                            }.bind(this)
+                                            );
   			}
  		}
 	}

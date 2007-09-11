@@ -59,6 +59,17 @@ fieldset.specification .numeric
     display: none;
 }
 
+.autoSKU
+{
+    position: relative; 
+    top: 5px;
+}
+
+.tabProductBasicContent .autoSKU
+{
+    display: none;
+}
+
 /*************************
 	Product list
 *************************/

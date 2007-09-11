@@ -347,9 +347,10 @@ Backend.ObjectImage.prototype =
 	postUpload: function(result)
 	{
 		var errorElement = document.getElementsByClassName('errorText', this.addForm)[0];
+
 		if (result['error'])  	
 		{
-			errorElement.innerHTML = result['error'];
+            errorElement.innerHTML = result['error'];
 			Element.removeClassName(errorElement, 'hidden');
 			Effect.Appear(errorElement, {duration: 0.4});
 		}
@@ -364,9 +365,8 @@ Backend.ObjectImage.prototype =
             this.updateTabCounters(this.container.down('li'));
             
             this.arrangeImages();
+		    this.cancelAdd();
 		}
-		
-		this.cancelAdd();
 	},
 
 	postSave: function(imageId, result)

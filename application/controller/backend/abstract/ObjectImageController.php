@@ -41,7 +41,7 @@ abstract class ObjectImageController extends StoreManagementController
 		if (!$validator->isValid())
 		{
 		  	$errors = $validator->getErrorList();
-			$result = array('status' => 'failure', 'error' => $errors['image']);
+			$result = array('error' => $errors['image']);
 		}
 		else
 		{
@@ -62,11 +62,9 @@ abstract class ObjectImageController extends StoreManagementController
 			{
 			  	ActiveRecord::commit();
 			  	$result = $catImage->toArray();
-			  	$result['status'] = 'success';
 			}
 			else
 			{
-			  	$result['status'] = 'failure';
 			  	$result = array('error' => $this->translate('_err_resize'));
 				ActiveRecord::rollback();
 			}	  			  		  	
@@ -130,7 +128,6 @@ abstract class ObjectImageController extends StoreManagementController
 		{
 			ActiveRecord::commit();
 		  	$result = $image->toArray();
-		  	$result['status'] = 'success';
 		}		
 		
 		$this->setLayout('iframeJs');

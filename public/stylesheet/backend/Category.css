@@ -12,3 +12,8 @@
 {
     background-image:url(../../image/silk/folder_add.png);
 }
+
+#managerContainer
+{
+    position: relative;
+}

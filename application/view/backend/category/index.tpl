@@ -119,6 +119,11 @@
 </div>
 
 <div id="managerContainer" class="treeManagerContainer maxHeight h--60">
+    
+    <div id="loadingProduct" style="display: none; position: absolute; text-align: center; width: 100%; padding-top: 200px; z-index: 50000;">
+        <span style="padding: 40px; background-color: white; border: 1px solid black;">Loading product...<span class="progressIndicator"></span></span>
+    </div>
+    
 	<div id="categoryTabs">
         <div id="tabContainer" class="tabContainer">
     		<ul id="tabList" class="tabList tabs">

@@ -9,12 +9,12 @@
 	<p class="required">
 		<label for="product_{$cat}_{$product.ID}_name">{t _product_name}:</label>
 		<fieldset class="error">
-			{textfield name="name" id="product_`$cat`_`$product.ID`_name" class="wide"}
+			{textfield name="name" id="product_`$cat`_`$product.ID`_name" class="wide" autocomplete="controller=backend.product field=name"}
 			<div class="errorText hidden"></div>
 		</fieldset>
 	</p>
 
-	<p style="position: relative; top: 5px;">
+	<p class="autoSKU">
 		<label for=""></label>
 		{checkbox name="autosku" id="product_`$cat`_`$product.ID`_sku_auto" class="checkbox" value="on" onclick="Backend.Product.toggleSkuField(this);"}
 		<label for="product_{$cat}_{$product.ID}_sku_auto" class="checkbox">{t _generate_sku}</label>

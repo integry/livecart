@@ -423,7 +423,8 @@ class ProductController extends StoreManagementController
 			$availableColumns[$column] = array('name' => $this->translate($column), 'type' => $type);	
 		}
 
-		// specField columns
+		/*
+        // specField columns
 		$fields = $category->getSpecificationFieldSet(Category::INCLUDE_PARENT);
 		foreach ($fields as $field)
 		{
@@ -437,6 +438,7 @@ class ProductController extends StoreManagementController
 					);				
 			}
 		}		
+        */
 
 		return $availableColumns;
 	}

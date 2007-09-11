@@ -510,13 +510,19 @@ class Product extends MultilingualObject
             // modify product counters for categories
             $catUpdate = new ARUpdateFilter();
     
+            // determines the changes for activeProductCount and availableProductCount fields
+            $activeChange = 0;
+            $availableChange = 0;
+    
+            // when isEnabled flag is modified the activeProductCount will always either increase or decrease
             if ($this->isEnabled->isModified())
             {
-                $catUpdate->addModifier('activeProductCount', new ARExpressionHandle('activeProductCount ' . ($this->isEnabled->get() ? '+' : '-') . ' 1'));
-
+                $activeChange = $this->isEnabled->get() ? 1 : -1;
+                
+                // when the stock count is larger than 0, the availableProductCount should also change by one
                 if ($this->isDownloadable() || (!$this->stockCount->isModified() && $this->stockCount->get() > 0))
                 {
-                    $catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount ' . ($this->isEnabled->get() ? '+' : '-') . ' 1'));                    
+                    $availableChange = $this->isEnabled->get() ? 1 : -1;
                 }
             }
             
@@ -525,14 +531,24 @@ class Product extends MultilingualObject
                 // decrease available product count
                 if ($this->stockCount->get() == 0 && $this->stockCount->getInitialValue() > 0)
                 {
-                    $catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount - 1'));  
+                    $availableChange = -1;
                 }
     
                 // increase available product count
                 else if ($this->stockCount->get() > 0 && $this->stockCount->getInitialValue() == 0)
                 {
-                    $catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount + 1'));
+                    $availableChange = 1;
                 }
+            }
+
+            if ($activeChange != 0)
+            {
+                $catUpdate->addModifier('activeProductCount', new ARExpressionHandle('activeProductCount ' . (($activeChange > 0) ? '+' : '-') . ' 1'));                
+            }
+
+            if ($availableChange != 0)
+            {
+                $catUpdate->addModifier('availableProductCount', new ARExpressionHandle('activeProductCount ' . (($availableChange > 0) ? '+' : '-') . ' 1'));                
             }
 
             $this->updateCategoryCounters($catUpdate);

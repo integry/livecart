@@ -42,7 +42,7 @@ class CategoryImageController extends ObjectImageController
 	{
         if(parent::delete())
         {
-            return new JSONResponse(false, 'success');
+            return new JSONResponse(false);
         }
         else
         {
@@ -57,7 +57,7 @@ class CategoryImageController extends ObjectImageController
 	{
         parent::saveOrder();
         
-        return new JSONResponse(false, 'success');
+        return new JSONResponse(true);
     }    
 
 	protected function getModelClass()

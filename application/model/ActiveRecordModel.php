@@ -29,7 +29,12 @@ abstract class ActiveRecordModel extends ActiveRecord
 		return self::$application;
 	}
 	
-	public function loadRequestData(Request $request)
+	/**
+	 *  Note that the form may not always contain all the fields of the model, so we must always
+	 *  make sure that the data for the particular field has actually been submitted to avoid
+	 *  setting empty values for fields that weren't included in the form
+	 */
+    public function loadRequestData(Request $request)
 	{
 		$schema = ActiveRecordModel::getSchemaInstance(get_class($this));
 		foreach ($schema->getFieldList() as $field)
@@ -55,10 +60,6 @@ abstract class ActiveRecordModel extends ActiveRecord
 							$this->setFieldValue($name, $request->get($name));	
 						break;	
 					}
-				}
-				else if('ARBool' == get_class($field->getDataType()))
-				{
-					if($this->getField($name)) $this->setFieldValue($name, 0);
 				}
 			}
 		}	
