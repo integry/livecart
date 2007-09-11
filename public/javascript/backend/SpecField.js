@@ -349,7 +349,6 @@ Backend.SpecField.prototype = {
 		this.bindTranslationValues();
 		this.typeWasChangedAction();
 		
-        console.info('aadadad')
         if(!this.id.match(/new$/))
         {
             new Insertion.After(this.nodes.type.up('fieldset'), '<span class="specField_form_type_static">' + this.nodes.type.fullText + '</span>')
@@ -391,9 +390,6 @@ Backend.SpecField.prototype = {
 		{
 			this.nodes.type.fullText = this.nodes.type.selectedOption.text;
 		}
-		
-		console.info(this.nodes.type.fullText);
-		
 		this.nodes.type.hiddenOption.value = this.nodes.type.selectedOption.value;
 		this.nodes.type.hiddenOption.text = this.nodes.type.fullText;
 		this.nodes.type.selectedIndex = this.nodes.type.hiddenIndex;
@@ -1491,7 +1487,6 @@ Backend.SpecFieldGroup.prototype = {
 
             translationInput.id = self.cssPrefix + "group_name_" + self.group.ID + "_" + language.key;
             translationLabel.forID = translationInput;
-            console.info(translationLabel, $(translationLabel['forID']))
             Element.observe(translationLabel, 'click', function() { this.forID.focus(); });
         });
     },

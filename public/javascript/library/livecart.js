@@ -103,13 +103,14 @@ LiveCart.AjaxRequest.prototype = {
 
 	hideIndicator: function()
 	{
+		console.info(this.indicatorContainerId);
         if(this.indicatorContainerId)
         {
             Element.hide(this.indicatorContainerId);
         }
 	},
 
-	showIndocator: function()
+	showIndicator: function()
 	{
 		if(this.indicatorContainerId)
         {
@@ -310,22 +311,25 @@ LiveCart.AjaxUpdater.prototype = {
 
 	hideIndicator: function()
 	{
-		if ($(LiveCart.ajaxUpdaterInstance.indicatorContainerId))
+		if (this.indicatorContainerId)
 		{
-			Element.hide(LiveCart.ajaxUpdaterInstance.indicatorContainerId);			
+			this.indicatorContainerId.hide();
 		}
 	},
 
-	showIndocator: function()
+	showIndicator: function()
 	{
-		Element.show(this.indicatorContainerId);
+        if (this.indicatorContainerId)
+        {
+		    Element.show(this.indicatorContainerId);
+		}
 	},
 
     postProcessResponse: function(response)
     {
         document.body.style.cursor = 'default';
         response.responseText.evalScripts();  
-        LiveCart.ajaxUpdaterInstance.hideIndicator();
+        this.hideIndicator();
 
         if (this.onComplete)
         {
