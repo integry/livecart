@@ -1008,12 +1008,6 @@ Backend.DeliveryZone.ShippingService.prototype =
 }
 
 
-
-
-
-
-
-
 Backend.DeliveryZone.ShippingRate = Class.create();
 Backend.DeliveryZone.ShippingRate.prototype = 
 {

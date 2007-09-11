@@ -57,16 +57,16 @@
     		</p>
       
     		<p>
-        		<label  class="specField_form_valuePrefix_label">{t _SpecField_valuePrefix}</label>
-                <fieldset class="error">
+        		<label  class="specField_form_valuePrefix_label sufixAndPrefix">{t _SpecField_valuePrefix}</label>
+                <fieldset class="error sufixAndPrefix">
             		<input type="text" name="valuePrefix" class="specField_form_valuePrefix" {denied role="category.update"}readonly="readonly"{/denied} />
             		<span class="errorText hidden"> </span>
                 </fieldset>
     		</p>
             
     		<p>
-        		<label  class="specField_form_valueSuffix_label">{t _SpecField_valueSuffix}</label>
-                <fieldset class="error">
+        		<label  class="specField_form_valueSuffix_label sufixAndPrefix">{t _SpecField_valueSuffix}</label>
+                <fieldset class="error sufixAndPrefix">
             		<input type="text" name="valueSuffix" class="specField_form_valueSuffix" {denied role="category.update"}readonly="readonly"{/denied} />
             		<span class="errorText hidden"> </span>
                 </fieldset>
@@ -105,12 +105,12 @@
 				<input type="text" name="name_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
 			</p>
 	        <p>
-				<label class="translation_valuePrefix_label">{t _SpecField_valuePrefix}</label>
-				<input type="text" name="valuePrefix_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
+				<label class="translation_valuePrefix_label sufixAndPrefix">{t _SpecField_valuePrefix}</label>
+				<input type="text" class="sufixAndPrefix" name="valuePrefix_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
 			</p>
 	        <p>
-				<label class="translation_valueSuffix_label">{t _SpecField_valueSuffix}</label>
-				<input type="text" name="valueSuffix_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
+				<label class="translation_valueSuffix_label sufixAndPrefix">{t _SpecField_valueSuffix}</label>
+				<input type="text" class="sufixAndPrefix" name="valueSuffix_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
 			</p>
 	        <p>
 				<label class="translation_description_label">{t _SpecField_description}</label>

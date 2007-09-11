@@ -68,11 +68,18 @@ Backend.SpecField.prototype = {
             else this.toggleContainer(li, 'edit');
         },
         afterEdit:      function(li, response) {
-            var specField = eval("(" + response + ")" );
-            specField.rootId = li.id;
-            new Backend.SpecField(specField, true);
-            this.createSortable();
-            this.toggleContainer(li, 'edit');
+			try
+			{
+	            var specField = eval("(" + response + ")" );
+	            specField.rootId = li.id;
+	            new Backend.SpecField(specField, true);
+	            this.createSortable();
+	            this.toggleContainer(li, 'edit');
+            }
+			catch(e)
+			{
+				console.info(e)
+			}
         },
         beforeDelete:   function(li) {
             if(confirm(Backend.SpecField.prototype.msg.removeFieldQuestion))
@@ -226,7 +233,12 @@ Backend.SpecField.prototype = {
 		this.nodes.form 			    = this.nodes.parent.getElementsByTagName("form")[0];
         this.nodes.tabsContainer       = this.nodes.parent.down('.tabs');
 
-		this.nodes.type 				= document.getElementsByClassName(this.cssPrefix + "form_type", this.nodes.parent)[0];
+		this.nodes.type 				                      = document.getElementsByClassName(this.cssPrefix + "form_type", this.nodes.parent)[0];
+		this.nodes.type.hiddenIndex                           = this.nodes.type.options.length;
+		this.nodes.type.options[this.nodes.type.hiddenIndex]  = new Option('hidden option', -2);
+		this.nodes.type.hiddenOption                          = this.nodes.type.options[this.nodes.type.hiddenIndex];
+		this.nodes.type.hiddenOption.style.display            = "none";
+		
 		this.nodes.stateLinks 			= document.getElementsByClassName(this.cssPrefix + "change_state", this.nodes.parent);
 		this.nodes.stepTranslations 	= document.getElementsByClassName(this.cssPrefix + "step_translations", this.nodes.parent)[0];
 		this.nodes.stepMain 			= document.getElementsByClassName(this.cssPrefix + "step_main", this.nodes.parent)[0];
@@ -321,6 +333,7 @@ Backend.SpecField.prototype = {
         Event.observe(this.nodes.name, "keyup", function(e) { self.generateHandleAndTitleAction(e) } );
         Event.observe(this.nodes.valuesAddFieldLink, "click", function(e) { Event.stop(e); self.addValueFieldAction(); } );
         Event.observe(this.nodes.type, "change", function(e) { self.typeWasChangedAction(e) } );
+        Event.observe(this.nodes.type, "focus", function(e) { self.fucusType(e) } );
         Event.observe(this.nodes.cancel, "click", function(e) { Event.stop(e); self.cancelAction() } );
         if(this.id.match('new')) Event.observe(this.nodes.cancelLink, "click", function(e) { Event.stop(e); self.cancelAction() } );
         Event.observe(this.nodes.save, "click", function(e) { self.saveAction(e) } );
@@ -335,9 +348,24 @@ Backend.SpecField.prototype = {
 		this.loadValueFieldsAction();
 		this.bindTranslationValues();
 		this.typeWasChangedAction();
+		
+        console.info('aadadad')
+        if(!this.id.match(/new$/))
+        {
+            new Insertion.After(this.nodes.type.up('fieldset'), '<span class="specField_form_type_static">' + this.nodes.type.fullText + '</span>')
+            this.nodes.type.up('fieldset').style.display = 'none';
+        }
 
 		new Form.EventObserver(this.nodes.form, function() { self.formChanged = true; } );
 		Form.backup(this.nodes.form);
+	},
+
+    fucusType: function(e)
+	{
+		if(this.nodes.type.realIndex)
+		{
+			this.nodes.type.selectedIndex = this.nodes.type.realIndex;
+		}
 	},
 
 	/**
@@ -350,16 +378,35 @@ Backend.SpecField.prototype = {
 	typeWasChangedAction: function()
 	{        
         this.type = this.nodes.type.value;
-    
-		// if selected type is a selector type then show selector options fields (aka step 2)
-		if(this.selectorValueTypes.indexOf(this.nodes.type.value) === -1)
+		
+		this.nodes.type.selectedOption = this.nodes.type.options[this.nodes.type.selectedIndex];
+		this.nodes.type.selectedGroup  = this.nodes.type.selectedOption.up("optgroup");
+        this.nodes.type.realIndex      = this.nodes.type.selectedIndex;
+		
+		if(this.nodes.type.selectedGroup)
 		{
-			Element.hide(this.nodes.tabsContainer);
+		    this.nodes.type.fullText = this.nodes.type.selectedGroup.label + " " + this.nodes.type.selectedOption.text.toLowerCase();
+		}
+		else
+		{
+			this.nodes.type.fullText = this.nodes.type.selectedOption.text;
+		}
+		
+		console.info(this.nodes.type.fullText);
+		
+		this.nodes.type.hiddenOption.value = this.nodes.type.selectedOption.value;
+		this.nodes.type.hiddenOption.text = this.nodes.type.fullText;
+		this.nodes.type.selectedIndex = this.nodes.type.hiddenIndex;
+		
+		// if selected type is a selector type then show selector options fields (aka step 2)
+		if(this.selectorValueTypes.indexOf(this.type) === -1)
+		{
+			this.nodes.tabsContainer.style.visibility = 'hidden';
             Element.hide(this.nodes.multipleSelector.up());
 		}
 		else
 		{
-            Element.show(this.nodes.tabsContainer);
+            this.nodes.tabsContainer.style.visibility = 'visible';
             Element.show(this.nodes.multipleSelector.up());
 		}
 		
@@ -368,17 +415,11 @@ Backend.SpecField.prototype = {
 		
         if(this.isNumber(this.type))
 		{
-		    $(prefixLabel).show();
-	        $(suffixLabel).show();
-	        this.nodes.valuePrefix.show();
-	        this.nodes.valueSuffix.show();
+			document.getElementsByClassName("sufixAndPrefix", this.nodes.parent).invoke("show");
 		}
 		else
 		{
-            $(prefixLabel).hide();
-            $(suffixLabel).hide();
-            this.nodes.valuePrefix.hide();
-            this.nodes.valueSuffix.hide();
+            document.getElementsByClassName("sufixAndPrefix", this.nodes.parent).invoke("hide");
 		}
 		
         this.nodes.advancedText.style.display = this.type == Backend.SpecField.prototype.TYPE_TEXT_SIMPLE ? 'block' : 'none';
@@ -549,7 +590,7 @@ Backend.SpecField.prototype = {
         
 		if(!this.id.match(/new$/))
 		{
-		    this.nodes.type.up('fieldset').style.display = this.nodes.labels.type.up('p').style.display = 'none';
+		    this.nodes.type.up('fieldset').style.display = 'none';
 		}
         this.changeMainTitleAction(this.nodes.name.value);
 
