@@ -794,7 +794,6 @@ label
     float: left;
     width: 170px;
     font-size: 14px;
-    cursor: pointer;
     overflow: hidden;
 }
 
@@ -824,6 +823,7 @@ p.radio label, p.checkbox label, fieldset.radio label, fieldset.checkbox label
 {
     white-space: nowrap;
     margin-top: 3px;
+    cursor: pointer;
 }
 
 input, select, file, form.other
@@ -838,6 +838,7 @@ label.checkbox, label.radio
 {
   	margin-top: 3px;
   	width: auto;
+    cursor: pointer;
 }
 
 optgroup option 

@@ -142,7 +142,7 @@ class Currency extends ActiveRecordModel
 		return $array;
 	}	
 
-	/*####################  Data array transformation ####################*/
+	/*####################  Saving ####################*/
 
 	public static function deleteById($id)
 	{
@@ -161,7 +161,18 @@ class Currency extends ActiveRecordModel
 		}
 	}
 	
-	protected function insert()
+	public function save()
+	{
+        // do not allow 0 rates
+        if (!$this->rate->get())
+        {
+            $this->rate->set(1);
+        }
+        
+        return parent::save();
+    }
+    
+    protected function insert()
 	{
 	  	// check if default currency exists
 		$filter = new ARSelectFilter();

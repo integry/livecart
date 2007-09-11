@@ -109,6 +109,8 @@ Backend.Currency.prototype =
         var activeList = ActiveList.prototype.getInstance('currencyList');
         activeList.decorateItems();
         activeList.createSortable();
+        
+        this.resetRatesContainer();
 	},	
 	
 	updateItem: function(originalRequest)
@@ -129,6 +131,7 @@ Backend.Currency.prototype =
         activeList.createSortable();
 
 		new Effect.Highlight(cl, {startcolor:'#FBFF85', endcolor:'#EFF4F6'})
+        this.resetRatesContainer();
 	},
 	
 	setEnabled: function(node) 
@@ -153,16 +156,12 @@ Backend.Currency.prototype =
 	
 	resetRatesContainer: function()
 	{
-		rateCont = $('tabRatesContent');
-		while (rateCont.firstChild)
-		{
-			rateCont.removeChild(rateCont.firstChild);  	
-		}  	
+		TabControl.prototype.getInstance('tabContainer').resetContent($('tabRates'));
 	},
 	
 	showNoCurrencyMessage: function()
 	{
-		$('noCurrencies').style.display = ($('currencyList').childNodes.length > 0) ? 'none' : 'block';	 	 	  	
+		$('noCurrencies').style.display = ($('currencyList').childNodes.length > 0) ? 'none' : 'block';
 	},
 	
 /************************************
@@ -193,8 +192,8 @@ Backend.Currency.prototype =
 	{		
 		try 
 		{
-			var rates = eval('(' + request.responseText + ')');
-			for (k in rates)
+			var rates = request.responseData.values;
+			for (k in request.responseData.values)
 			{
 			  	if ($('rate_' + k))
 			  	{

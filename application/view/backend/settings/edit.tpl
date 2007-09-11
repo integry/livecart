@@ -16,7 +16,8 @@
 		{/if}
 	
 	{foreach from=$fields key="fieldName" item="foo"}	
-		<p{if 'bool' == $values.$fieldName.type} class="checkbox"{/if}>
+		<div class="setting" {if 'bool' != $values.$fieldName.type}style="margin-top: 7px; margin-bottom: 7px;"{/if}>
+        <p{if 'bool' == $values.$fieldName.type} class="checkbox"{/if}>
 			
 			{if 'bool' != $values.$fieldName.type}
 				<label for="{$fieldName}" class="setting">{t `$values.$fieldName.title`}:</label>
@@ -47,7 +48,8 @@
 			{/if}
 			<div class="errorText hidden"></div>
 		</fieldset>
-		</p>	
+		</p>
+        </div>	
 	{foreachelse}
 		{assign var="subsections" value=true}	
 	{/foreach}

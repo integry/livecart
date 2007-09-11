@@ -57,7 +57,7 @@
 							<a href="{link controller=backend.currency action=setDefault}?id=" class="setDefault listLink" {denied role="currency.status"}style="display: none;"{/denied}>{t _set_as_default}</a>
 							<span class="currDefault">{t _default_currency}</span>
 						</div>
-						<div class="currEdit"></div>
+						<div class="currEdit activeList_editContainer activeList_container"></div>
 					</div>
 				</div>			
 				</li>
@@ -87,7 +87,15 @@
     {	
 		curr.showNoCurrencyMessage();
 		ActiveList.prototype.getInstance('currencyList', {
-	         beforeEdit:     function(li) { return '{/literal}{link controller=backend.currency action=edit}{literal}?id=' + this.getRecordId(li); 
+	         beforeEdit:     function(li) 
+             { 
+                 if (!this.isContainerEmpty(li, 'edit'))
+                 {
+                     this.toggleContainer(li, 'edit');
+                     return;
+                 }                    
+                 
+                 return '{/literal}{link controller=backend.currency action=edit}{literal}?id=' + this.getRecordId(li); 
              },
 	         beforeSort:     function(li, order) 
 			 { 
