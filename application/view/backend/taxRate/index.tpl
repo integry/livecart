@@ -1,5 +1,5 @@
 {* upper menu *}
-<fieldset class="container" {denied role='delivery.update'}style="display: none;"{/denied}>
+<fieldset class="container" {if $taxRatesArray|@count}{denied role='delivery.update'}style="display: none;"{/denied}{/if}>
 	<ul class="menu" id="taxRate_menu_{$deliveryZone.ID}">
 	    <li><a href="#new_taxRate" id="taxRate_new_{$deliveryZone.ID}_show">{t _add_new_tax_rate}</a></li>
 	    <li><a href="#cencel_taxRate" id="taxRate_new_{$deliveryZone.ID}_cancel" class="hidden">{t _cancel_adding_new_tax_rate}</a></li>

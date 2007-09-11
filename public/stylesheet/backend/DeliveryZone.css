@@ -8,6 +8,16 @@
     width: auto;
 }
 
+.shippingService_new_rate
+{
+    background-color: white;
+}
+.shippingService_ratesList li
+{
+    width: auto;
+	margin: 5px 0px;
+}
+
 #newZoneInput {
     width: 135px;
 }
@@ -65,12 +75,26 @@
 .shippingService_weightRange
 {
    position: relative !important;
+   display: block; 
+   height: 8em;
+}
+
+.weightRange
+{
+    position: absolute; 
+	top: 0px;
+}
+
+
+.shippingService_weightRange label
+{
+    float: none;
 }
 
 .UnitConventer_SwitchUnits
 {
     position: absolute;
-    
+    width: 10em;
     left: 30em;
     top: 2.2em;
 }
@@ -86,7 +110,7 @@
    padding-right: 10px !important;
 }
 
-.weightRangeEnd
+.weightRangeEnd, .weightRangeStart
 {
    margin-left: 11em;
 }

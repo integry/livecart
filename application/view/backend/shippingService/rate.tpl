@@ -1,8 +1,11 @@
 <fieldset class="error shippingService_subtotalRange">
     <label class="observe" for="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalRangeStart">{t _subtotal_range}</label>
+    <b>{t _from}</b>
     <input type="text" name="rate__subtotalRangeStart" value="{$rate.subtotalRangeStart|default:0}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalRangeStart" class="shippingService_subtotalRangeStart shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} /> 
-    - 
+
+    <b>{t _to}</b>
     <input type="text" name="rate__subtotalRangeEnd" value="{$rate.subtotalRangeEnd|default:0}" id="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_subtotalRangeEnd" class="shippingService_subtotalRangeEnd shippingService_rateFloatValue" {denied role='delivery.update'}readonly="readonly"{/denied} /> {$defaultCurrencyCode}
+    
     <br />
     <span class="errorText hidden"> </span>
 </fieldset>
@@ -10,19 +13,19 @@
 <fieldset class="error shippingService_weightRange">
     <label class="observe" for="shippingService_{$rate.ShippingService.DeliveryZone.ID}_{$rate.ShippingService.ID}_{$rate.ID}_weightRangeStart">{t _weight_range}</label>
     
-    <div class="weightRangeStart">
-    {metricsfield name="rate__weightRangeStart" hideSwitch=1 value=$rate.weightRangeStart|default:0 id="shippingService_`$rate.ShippingService.DeliveryZone.ID`_`$rate.ShippingService.ID`_`$rate.ID`_weightRangeStart" class="shippingService_weightRangeStart"}
-    </div>
-    <div class="weightDelimiter">
-    -
-    </div>
+    <div class="weightRange">
+        <div class="weightRangeStart">
+            <b>{t _from}</b>
+            {metricsfield name="rate__weightRangeStart" hideSwitch=1 value=$rate.weightRangeStart|default:0 id="shippingService_`$rate.ShippingService.DeliveryZone.ID`_`$rate.ShippingService.ID`_`$rate.ID`_weightRangeStart" class="shippingService_weightRangeStart"}
+        </div>
+        <div class="weightRangeEnd">
+            <b>{t _to}</b>
+            {metricsfield name="rate__weightRangeEnd" value=$rate.weightRangeEnd|default:0 id="shippingService_`$rate.ShippingService.DeliveryZone.ID`_`$rate.ShippingService.ID`_`$rate.ID`_weightRangeEnd" class="shippingService_weightRangeEnd"}
+        </div>
     
-    <div class="weightRangeEnd">
-    {metricsfield name="rate__weightRangeEnd" value=$rate.weightRangeEnd|default:0 id="shippingService_`$rate.ShippingService.DeliveryZone.ID`_`$rate.ShippingService.ID`_`$rate.ID`_weightRangeEnd" class="shippingService_weightRangeEnd"}
+        <br />
+        <span class="errorText hidden"> </span>
     </div>
-
-    <br />
-    <span class="errorText hidden"> </span>
 </fieldset>
 
 <fieldset class="error">
@@ -60,6 +63,8 @@
 <fieldset class="error controls shippingService_rate_controls">
     <span class="progressIndicator" style="display: none;"></span>
     <input type="button" class="shippingService_rate_save button submit" value="{if $rate.ID > 0}{t _save}{else}{t _add}{/if}" />
+    {*
     {t _or}
     <a href="#cancel" class="shippingService_rate_cancel cancel">{t _cancel}</a>
+    *}
 </fieldset>

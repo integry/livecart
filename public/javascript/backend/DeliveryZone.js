@@ -1109,7 +1109,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
 
         this.nodes.controls = this.nodes.root.down('.' + this.prefix +     'rate_controls');
         this.nodes.save     = this.nodes.controls.down('.' + this.prefix + 'rate_save');
-        this.nodes.cancel   = this.nodes.controls.down('.' + this.prefix + 'rate_cancel');
+        // this.nodes.cancel   = this.nodes.controls.down('.' + this.prefix + 'rate_cancel');
         
         if(!this.rate.ID)
         {
@@ -1154,7 +1154,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
 	       }.bind(this)); 
 		
            Event.observe(this.nodes.save, 'click', function(e) { Event.stop(e); this.save(e); }.bind(this));
-           Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel();}.bind(this));
+//           Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancel();}.bind(this));
            Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); this.cancel(); }.bind(this));
        }
 
@@ -1226,7 +1226,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
         {
             var newId = Backend.DeliveryZone.ShippingRate.prototype.newRateLastId;
             
-            var li = this.ratesActiveList.addRecord('new' + newId, this.nodes.root);
+            var li = this.ratesActiveList.addRecord('new' + newId, this.nodes.root, false);
             
             var idStart = this.prefix + this.deliveryZoneId + '_' + this.rate.ShippingService.ID + "_";
             var idStartRegexp = new RegExp(idStart);
@@ -1246,7 +1246,7 @@ Backend.DeliveryZone.ShippingRate.prototype =
             var endLo = li.down('.weightRangeEnd').down('.UnitConventer_LoValue');
 			
 			startHi.id = startHi.id.replace(idStartRegexp, idStart + 'new' + newId)
-            Event.observe(startHi.up(2).down('label'), 'click', function(e) { Event.stop(e); startHi.focus(); });
+            Event.observe(startHi.up('.shippingService_weightRange').down('label'), 'click', function(e) { Event.stop(e); startHi.focus(); });
             startLo.id = startLo.id.replace(idStartRegexp, idStart + 'new' + newId)
 			
             endHi.id = endHi.id.replace(idStartRegexp, idStart + 'new' + newId)
@@ -1269,8 +1269,11 @@ Backend.DeliveryZone.ShippingRate.prototype =
             this.nodes.subtotalPercentCharge.value = '0';
             this.nodes.perKgCharge.value = '0';
 			
-			
             Backend.DeliveryZone.ShippingRate.prototype.newRateLastId++;
+			
+			this.ratesActiveList.highlight(li);
+			
+			this.hideNewForm();
         }
         else
         {
@@ -1334,9 +1337,10 @@ Backend.DeliveryZone.TaxRate.prototype =
              }
             
             if('success' == response.status) {
-                if(Backend.DeliveryZone.TaxRate.prototype.instances[$(Backend.DeliveryZone.TaxRate.prototype.prefix + "new_taxRate_" + this.getRecordId(li, 2) + "_form").down('form')])
+				var formId = $(Backend.DeliveryZone.TaxRate.prototype.prefix + "new_taxRate_" + this.getRecordId(li, 2) + "_form").down('form').id
+                if(Backend.DeliveryZone.TaxRate.prototype.instances[formId])
                 {
-                    var taxForm = Backend.DeliveryZone.TaxRate.prototype.getInstance($(Backend.DeliveryZone.TaxRate.prototype.prefix + "new_taxRate_" + this.getRecordId(li, 2) + "_form").down('form'));
+                    var taxForm = Backend.DeliveryZone.TaxRate.prototype.getInstance(formId);
                     taxForm.addTaxOption(response.tax.ID, response.tax.name);
                 }
 
@@ -1414,24 +1418,38 @@ Backend.DeliveryZone.TaxRate.prototype =
         var formBackupId = this.nodes.form.backupId;
         Form.State.backups[formBackupId]['taxID'][0]['options'][id] = name;
         this.nodes.taxID.options[this.nodes.taxID.options.length] = new Option(name, id);
+		
+		if(this.nodes.taxID.options.length > 0) 
+		{
+			this.nodes.noAwailableTaxes.hide();
+		}
+		else 
+		{
+		    this.nodes.noAwailableTaxes.show();
+        }
     },
     
     removeTaxOption: function(id)
     {
-        try
+        $A(this.nodes.taxID.options).each(function(option)
         {
-            $A(this.nodes.taxID.options).each(function(option)
+            if(option.value == id)
             {
-                if(option.value == id)
-                {
-                    var formBackupId = this.nodes.form.backupId;
-                    delete Form.State.backups[formBackupId]['taxID'][0]['options'][id];
-                    Element.remove(option);
-                    throw new Error('Found');
-                }
-            }.bind(this));
+                var formBackupId = this.nodes.form.backupId;
+                delete Form.State.backups[formBackupId]['taxID'][0]['options'][id];
+                Element.remove(option);
+                throw $break;
+            }
+        }.bind(this));
+		
+        if(this.nodes.taxID.options.length > 0) 
+        {
+            this.nodes.noAwailableTaxes.hide();
         }
-        catch(e) { }
+        else 
+        {
+            this.nodes.noAwailableTaxes.show();
+        }
     },
     
     findUsedNodes: function(root)
@@ -1449,6 +1467,7 @@ Backend.DeliveryZone.TaxRate.prototype =
         this.nodes.taxID = this.nodes.root.down('.' + this.prefix + 'taxID');
         this.nodes.deliveryZoneID = this.nodes.root.down('.' + this.prefix + 'deliveryZoneID');
         this.nodes.taxRateID = this.nodes.root.down('.' + this.prefix + 'taxRateID');
+		this.nodes.noAwailableTaxes = this.nodes.root.down(".noAwailableTaxes");
         
         this.nodes.ratesList = $(this.prefix + "taxRatesList_" + this.deliveryZoneId)
         

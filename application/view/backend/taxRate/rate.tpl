@@ -7,6 +7,10 @@
         <fieldset class="error">
     		{selectfield name="taxID" options=$enabledTaxes class="taxRate_taxID" id="taxRate_`$taxRate.DeliveryZone.ID`_`$taxRate.ID`_taxID" role="delivery.update"}
     		<span class="errorText hidden"> </span>
+            <div class="noAwailableTaxes" {if $enabledTaxes|@count > 0}style="display: none"{/if}>
+                {t _more_taxes_can_be_added} 
+                <a href="{link controller=backend.tax action=index}">{t _here}</a>
+            </div>
         </fieldset>  
     {else}
         <fieldset class="taxRate_taxIDFieldset">{$taxRate.Tax.name}</fieldset>
