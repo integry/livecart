@@ -437,10 +437,20 @@ class LiveCart extends Application
 		if ($this->languageList == null)
 		{
 			ClassLoader::import("application.model.system.Language");
-
-			$langFilter = new ARSelectFilter();
-    	  	$langFilter->setOrder(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);
-			$this->languageList = ActiveRecordModel::getRecordSet("Language", $langFilter);
+			
+			$langCache = ClassLoader::getRealPath('cache') . '/languages.php';
+			
+			if (file_exists($langCache))
+			{
+				$this->languageList = include $langCache;
+			}
+			else
+			{
+				$langFilter = new ARSelectFilter();
+	    	  	$langFilter->setOrder(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);
+				$this->languageList = ActiveRecordModel::getRecordSet("Language", $langFilter);
+				file_put_contents($langCache, '<?php return unserialize(' . var_export(serialize($this->languageList), true) . '); ?>');
+			}			
 		}
 		return $this->languageList;
 	}

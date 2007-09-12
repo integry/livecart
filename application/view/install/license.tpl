@@ -2,7 +2,7 @@
 
 <div id="license">{$license|nl2br}</div>
 
-<div style="margin-left: 50px;">
+<div>
 
     {form action="controller=install action=acceptLicense" method="POST" handle=$form}
 {literal}

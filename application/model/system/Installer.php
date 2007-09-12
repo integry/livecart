@@ -4,13 +4,12 @@ class Installer
 {
 	public function checkRequirements(LiveCart $application)
 	{
-		$requirements = array(
-		
+		$requirements = array(		
 				'checkPHPVersion',
 				'checkMySQL',
 				'checkGD',
 				'checkSession',
-			
+				'checkWritePermissions',
 			);
 			
 		$res = array();
@@ -29,7 +28,7 @@ class Installer
                 'cache',
                 'storage',
                 'public.cache',
-                'public.upload',        
+                'public.upload',     
                 
             );
             
@@ -37,13 +36,35 @@ class Installer
         foreach ($writable as $dir)
         {
             $path = ClassLoader::getRealPath($dir);
-            $testFile = $path . 'test.txt';
-            $res = file_put_contents($testFile, 'test');
-            if (!file_exists($res))
+            $testFile = $path . '/test.txt';
+            
+			// try a couple of permissions
+			foreach (array(0, '0755', '0777') as $mode)
+            {
+				if ($mode)
+				{
+					@chmod($path, $mode);
+				}
+				
+				$res = @file_put_contents($testFile, 'test');
+            	
+				if ($res)
+				{
+					break;
+				}
+			}
+
+            if (!file_exists($testFile))
             {
                 $failed[] = $path;
             }
+            else
+            {
+				unlink($testFile);
+			}
         }
+        
+        return 0 == count($failed) ? true : $failed;
     }
 
 	public function checkPHPVersion()

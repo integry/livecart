@@ -31,7 +31,9 @@
 		<div id="header">
 			LiveCart Installer			
 		</div>
-		{$ACTION_VIEW}
+		<div id="installContent">
+			{$ACTION_VIEW}
+		</div>
 	</div>	
 </body>
 

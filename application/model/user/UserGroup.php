@@ -89,6 +89,11 @@ class UserGroup extends ActiveRecordModel
 	    }
 	}
 	
+	public function setAllRoles()
+	{
+		
+	}
+	
 	/**
 	 * Array(string) of applied roles
 	 * 

@@ -9,10 +9,10 @@ ClassLoader::import("framework.request.validator.check.Check");
  */
 class IsUniqueEmailCheck extends Check
 {
-	var $product;
-	
 	public function isValid($value)
 	{
+		ClassLoader::import('application.model.user.User');
+		
 		$filter = new ARSelectFilter();
 		$cond = new EqualsCond(new ARFieldHandle('User', 'email'), $value);
 		$filter->setCondition($cond);

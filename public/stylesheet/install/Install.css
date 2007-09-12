@@ -35,6 +35,7 @@ h1
 {
 	font-size: 200%;
 	margin: 1em;
+	margin-left: -1em;
 }
 
 h2
@@ -429,15 +430,31 @@ input.date
 }
 
 /*************************
+	Layout
+*************************/
+#installContent
+{
+	padding-left: 50px;
+}
+
+/*************************
 	Requirements check
 *************************/
 .requirements
 {
 	margin: 20px;
+	margin-left: 0;
 }
 
 .requirements div
 {
+	padding: 10px;
+}
+
+div.fail
+{
+	background-color: #FDD;
+    border: 1px solid #FBB;
 	padding: 10px;
 }
 
@@ -447,12 +464,23 @@ dt
 	width: 250px;
 }
 
+dd
+{
+	margin-left: 250px;
+}
+
+#notWritable
+{
+	margin: 10px;
+}
+
 /*************************
 	License review
 *************************/
 #license
 {
     margin: 50px;
+    margin-left: 0;
     margin-top: 1em;
     margin-bottom: 1em;
     height: 450px;
