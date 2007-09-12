@@ -321,21 +321,15 @@ ActiveForm.prototype = {
 				{
                     try
                     {
-//						console.info(tinyMCEField);
-//						console.info('0')
-//						console.info(tinyMCEField.tinyMCEId)
 					    if(!tinyMCEField || 0 >= tinyMCEField.offsetHeight) return;
-//                        console.info('1')
 						window.clearInterval(ActiveForm.prototype.idleTinyMCEFields[tinyMCEField.id]);
-//	                    console.info('2')
 						tinyMCE.execCommand('mceAddControl', true, tinyMCEField.id);
-//						console.info('3')
                     }
 					catch(e)
 					{
 						console.info(e);
 					}
-				}.bind(this, textareas[k]), 500);
+				}.bind(this, textareas[k]), 1000);
             }
 		}
     },
@@ -357,8 +351,8 @@ ActiveForm.prototype = {
             }
             else
             {
-                if (!textareas[k].id) textareas[k].id = 'tinyMceControll_' + (this.lastTinyMceId++);
     			tinyMCE.execCommand('mceRemoveControl', true, textareas[k].id);
+                window.clearInterval(ActiveForm.prototype.idleTinyMCEFields[textareas[k].id]);
             }
 		}
     },
