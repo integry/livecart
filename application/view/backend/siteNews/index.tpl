@@ -33,7 +33,7 @@
 
 		<p>
 			<label>{t _date}</label>
-			{calendar id="time" name="time"}		
+			{calendar name="time" id="time"}		
 		</p>
 		<p>
 			{{err for="title"}}

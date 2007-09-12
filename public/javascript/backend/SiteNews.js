@@ -46,7 +46,7 @@ Backend.SiteNews.prototype =
 	
 		newsList.each(function(el)
 		{
-			new Backend.SiteNews.PostEntry(container, template, el);
+			new Backend.SiteNews.PostEntry(container, template, el, false);
 		});
 	
 	},
@@ -71,12 +71,12 @@ Backend.SiteNews.PostEntry.prototype =
 	
 	node: null,
 	
-	initialize: function(container, template, data)
+	initialize: function(container, template, data, highlight)
 	{
 		this.data = data;
 		var newsList = ActiveList.prototype.getInstance('newsList');
 
-        this.node = newsList.addRecord(data.ID, template.innerHTML, true);
+        this.node = newsList.addRecord(data.ID, template.innerHTML, highlight);
 		
 		this.updateHtml();
 		

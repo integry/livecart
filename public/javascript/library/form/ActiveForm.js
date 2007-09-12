@@ -268,14 +268,16 @@ ActiveForm.prototype = {
     
     disabledTextareas: {},
     lastDisabledTextareaId: 1,
-    
+    idleTinyMCEFields: {},
+	
     initTinyMceFields: function(container) 
     {
 		var textareas = $(container).getElementsBySelector('textarea.tinyMCE');
 		for (k = 0; k < textareas.length; k++)
 		{
-            if (textareas[k].readOnly)
+			if (textareas[k].readOnly)
             {
+				setInterval
                 textareas[k].style.display = 'none';
                 new Insertion.After(textareas[k], '<div class="disabledTextarea" id="disabledTextareas_' + (ActiveForm.prototype.lastDisabledTextareaId++) + '">' + textareas[k].value + '</div>'); 
                 var disabledTextarea = textareas[k].up().down('.disabledTextarea');
@@ -309,11 +311,31 @@ ActiveForm.prototype = {
             }
             else
             {
-                if (!textareas[k].id) 
+                textareas[k].tinyMCEId = (this.lastTinyMceId++);
+				if (!textareas[k].id) 
                 {    
-                    textareas[k].id = 'tinyMceControll_' + (this.lastTinyMceId++);
+                    textareas[k].id = 'tinyMceControll_' + textareas[k].tinyMCEId;
                 }
-                tinyMCE.execCommand('mceAddControl', true, textareas[k].id);
+				
+				ActiveForm.prototype.idleTinyMCEFields[textareas[k].id] = window.setInterval(function(tinyMCEField)
+				{
+                    try
+                    {
+//						console.info(tinyMCEField);
+//						console.info('0')
+//						console.info(tinyMCEField.tinyMCEId)
+					    if(!tinyMCEField || 0 >= tinyMCEField.offsetHeight) return;
+//                        console.info('1')
+						window.clearInterval(ActiveForm.prototype.idleTinyMCEFields[tinyMCEField.id]);
+//	                    console.info('2')
+						tinyMCE.execCommand('mceAddControl', true, tinyMCEField.id);
+//						console.info('3')
+                    }
+					catch(e)
+					{
+						console.info(e);
+					}
+				}.bind(this, textareas[k]), 500);
             }
 		}
     },

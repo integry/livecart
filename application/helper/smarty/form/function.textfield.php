@@ -28,10 +28,16 @@ function smarty_function_textfield($params, LiveCartSmarty $smarty)
 		throw new HelperException('Element must be placed in {form} block');
 	}
 
-	if (!isset($params['id']))
-	{
-	  	$params['id'] = $params['name'];
-	}
+    
+    // this should never be done. ID is should always be unique value. 
+    // Doing so breaks lots of javascript traversing. It misleads prototype
+    // And I found it also introduces some errors in tinyMCE. If you
+    // realy want such functionality come up with some clever way to generate
+    // unique id.
+//  if (!isset($params['id']))
+//  {
+//      $params['id'] = $params['name'];
+//  }
 	
 	if (!isset($params['type']))
 	{
