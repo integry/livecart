@@ -22,6 +22,30 @@ class Installer
 		return $res;
 	}
 
+    public function checkWritePermissions()
+    {
+        $writable = array(
+        
+                'cache',
+                'storage',
+                'public.cache',
+                'public.upload',        
+                
+            );
+            
+        $failed = array();
+        foreach ($writable as $dir)
+        {
+            $path = ClassLoader::getRealPath($dir);
+            $testFile = $path . 'test.txt';
+            $res = file_put_contents($testFile, 'test');
+            if (!file_exists($res))
+            {
+                $failed[] = $path;
+            }
+        }
+    }
+
 	public function checkPHPVersion()
 	{
 		return 1 == version_compare(phpversion(), '5.2', '>=');
