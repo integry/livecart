@@ -8,10 +8,31 @@
 <fieldset class="container" {denied role="category.update"}style="display: none"{/denied}>
 	<ul class="menu" id="catImgMenu_{$ownerId}">
 		<li class="catImageAdd">
-			<a href="#" onclick="slideForm('catImgAdd_{$ownerId}', 'catImgMenu_{$ownerId}'); return false;" class="pageMenu">{t _add_new}</a>
-		</li>	
+			<a href="#" id="catImgMenu_{$ownerId}_add" class="pageMenu">{t _add_new}</a>
+		</li>
+        <li class="catImageAddCancel" style="display: none">
+            <a href="#" id="catImgMenu_{$ownerId}_cancel" class="pageMenu">{t _cancel_new}</a>
+        </li>   
 	</ul>
 </fieldset>
+
+{literal}
+<script type="text/javascript">
+    Event.observe("{/literal}catImgMenu_{$ownerId}_add{literal}", "click", function(e)
+    {
+        Event.stop(e);
+        var form = new ActiveForm.Slide(this.up("ul"));
+        form.show("catImageAdd", "{/literal}catImgAdd_{$ownerId}{literal}");
+    });
+    
+    Event.observe("{/literal}catImgMenu_{$ownerId}_cancel{literal}", "click", function(e)
+    {
+        Event.stop(e);
+        var form = new ActiveForm.Slide(this.up("ul"));
+        form.hide("catImageAdd", "{/literal}catImgAdd_{$ownerId}{literal}");
+    });
+</script>
+{/literal}
 
 <div id="catImgAdd_{$ownerId}" class="catImageEditForm" style="display: none;">
 {form handle=$form action="controller=backend.categoryImage action=upload" method="post" onsubmit="$('catImageList_`$ownerId`').handler.upload(this);" target="catImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="category.update"}
@@ -45,10 +66,24 @@
 			<span class="progressIndicator" style="display: none;"></span>
 			<input type="submit" name="upload" class="submit" value="{tn _upload}"> 
             {t _or} 
-            <a href="#" class="cancel" onclick="restoreMenu('catImgAdd_{$ownerId}', 'catImgMenu_{$ownerId}'); $('catImageList_{$ownerId}').handler.cancelAdd(); return false;">{t _cancel}</a>
+            <a href="#" class="cancel">{t _cancel}</a>
 	    </fieldset>
     </fieldset>
-
+    
+    {literal}
+    <script type="text/javascript">
+        Element.observe($('{/literal}catImgAdd_{$ownerId}{literal}').down("a.cancel"), "click", function(e) 
+        {
+            Event.stop(e);
+            var form = ('{/literal}catImgAdd_{$ownerId}{literal}');
+            
+            $("{/literal}catImageList_{$ownerId}{literal}").handler.cancelAdd();
+            
+            var menu = new ActiveForm.Slide('{/literal}catImgMenu_{$ownerId}{literal}');
+            menu.hide("catImageAdd", form);
+        });
+    </script>
+    {/literal}
 {/form}
 <script>console.info('{$ownerId}')</script>
 <iframe name="catImgUpload_{$ownerId}" id="catImgUpload_{$ownerId}" style="display: none"></iframe>

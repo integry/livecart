@@ -283,21 +283,14 @@ Backend.ProductFile.Controller.prototype = {
     
     hideNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems($(this.view.prefix + "menu_" + this.model.get('Product.ID')), [$(this.view.prefix + "new_" +this.model.get('Product.ID') + "_show"), $("productFileGroup_new_" + this.model.get('Product.ID') + "_show")]);
-        ActiveForm.prototype.hideNewItemForm($(this.view.prefix + "new_" + this.model.get('Product.ID') + "_show"), this.view.nodes.root);
-        
-        ActiveForm.prototype.destroyTinyMceFields(this.view.nodes.root); 
+        var menu = new ActiveForm.Slide(this.view.prefix + "menu_" + this.model.get('Product.ID'));
+        menu.hide(this.view.prefix + "add", this.view.nodes.root);
     },
     
     showNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems($(this.view.prefix + "menu_" + this.model.get('Product.ID')), [$(this.view.prefix + "new_" + this.model.get('Product.ID') + "_cancel"), $("selectProduct_" + this.model.get('Product.ID')) + "_cancel"]);
-        ActiveForm.prototype.showNewItemForm($(this.view.prefix + "new_" + this.model.get('Product.ID') + "_show"), this.view.nodes.root); 
-        
-        var self = this;
-        setTimeout(function() { 
-            ActiveForm.prototype.initTinyMceFields(self.view.nodes.root); 
-        }, 500);
+		var menu = new ActiveForm.Slide(this.view.prefix + "menu_" + this.model.get('Product.ID'));
+		menu.show(this.view.prefix + "add", this.view.nodes.root);
     }
 }
 
@@ -712,14 +705,14 @@ Backend.ProductFile.Group.Controller.prototype = {
     
     hideNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems($("productFile_menu_" + this.model.get('Product.ID')), [$(this.view.prefix + "new_" +this.model.get('Product.ID') + "_show"), $("productFile_new_" + this.model.get('Product.ID') + "_show")]);
-        ActiveForm.prototype.hideNewItemForm($(this.view.prefix + "new_" + this.model.get('Product.ID') + "_show"), this.view.nodes.root); 
+        var menu = new ActiveForm.Slide("productFile_menu_" + this.model.get('Product.ID'));
+        menu.hide(this.view.prefix + "add", this.view.nodes.root);
     },
     
     showNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems($("productFile_menu_" + this.model.get('Product.ID')), [$(this.view.prefix + "new_" + this.model.get('Product.ID') + "_cancel"), $("productFileGroup_new_" + this.model.get('Product.ID')) + "_cancel"]);
-        ActiveForm.prototype.showNewItemForm($(this.view.prefix + "new_" + this.model.get('Product.ID') + "_show"), this.view.nodes.root); 
+        var menu = new ActiveForm.Slide("productFile_menu_" + this.model.get('Product.ID'));
+        menu.show(this.view.prefix + "add", this.view.nodes.root);
     }, 
     
     showForm: function()

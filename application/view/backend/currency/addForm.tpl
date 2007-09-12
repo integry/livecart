@@ -8,7 +8,7 @@
 			<span class="progressIndicator" id="addCurrIndicator" style="display: none;"></span>
 			<input type="submit" value="{t _add_curr_button}" name="sm" class="submit" />
 			<span>{t _or} </span>
-			<a href="#" class="cancel" onClick="restoreMenu('addCurr', 'currPageMenu'); return false;">{t _cancel}</a>
+			<a href="#" class="cancel" onClick="Backend.Currency.prototype.hideNewForm(); return false;">{t _cancel}</a>
 		</form>	
 	</fieldset>
 </div>

@@ -127,9 +127,19 @@ Backend.LanguageIndex.prototype =
 	doShowAddForm: function(request)
 	{
 		Element.hide($('langAddMenuLoadIndicator'));
-		$('addLang').innerHTML = request.responseText;
-		slideForm('addLang', 'langPageMenu');
+		
+        var menu = new ActiveForm.Slide("langPageMenu");
+        menu.show("addNewLanguage", 'addLang');
 	},
+	
+    
+    hideAddForm: function(request)
+    {
+        Element.hide($('langAddMenuLoadIndicator'));
+        
+        var menu = new ActiveForm.Slide("langPageMenu");
+        menu.hide("addNewLanguage", 'addLang');
+    },
 	
 	add: function(form)
 	{
@@ -153,8 +163,10 @@ Backend.LanguageIndex.prototype =
         list.decorateItems();
         list.createSortable();
         		
-		restoreMenu('addLang', 'langPageMenu');
+		Backend.laanguage.prototype.hideAddForm();
+		
 		Element.hide($('addLangFeedback'));
+		
 						
         new Effect.Highlight(node, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
 	},

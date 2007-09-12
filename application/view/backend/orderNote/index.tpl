@@ -2,12 +2,13 @@
 <div class="menuContainer" id="orderNoteMenu_{$order.ID}">
 
     <ul class="menu orderNoteMenu" style="margin: 0; {denied role='order.update'}display: none;{/denied}">    	
-    	<li><a href="#addResponse" class="addResponse" >{t _add_response}</a></li>
+    	<li class="addResponse"><a href="#addResponse" class="addResponse" >{t _add_response}</a></li>
+        <li class="addResponseCancel" style="display: none"><a href="#cancelResponse" class="addResponseCancel" >{t _cancel_response}</a></li>
     </ul>
     
     <div class="clear"></div>
     
-    <div class="slideForm addResponse" style="display: none;">
+    <div class="addResponseForm" style="display: none;">
         <fieldset class="addForm">
         
             <legend>{t _add_response}</legend>

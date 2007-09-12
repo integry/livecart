@@ -3,6 +3,18 @@ Backend.SiteNews.prototype =
 {
 	initialize: function(newsList, container, template)
 	{		
+	    Element.observe("addNewsLink", "click", function(e)
+	    {
+	        Event.stop(e);
+	        Backend.SiteNews.prototype.showAddForm();
+	    });
+	    
+	    Element.observe("addNewsCancelLink", "click", function(e)
+	    {
+	        Event.stop(e);
+	        Backend.SiteNews.prototype.hideAddForm();
+	    });
+	
 		ActiveList.prototype.getInstance('newsList', {
 	         beforeEdit:     function(li) 
 			 { 
@@ -41,21 +53,15 @@ Backend.SiteNews.prototype =
 	
 	showAddForm: function()
 	{
-		slideForm('addNews', 'newsMenu');
-		tinyMCE.idCounter = 0;
-		ActiveForm.prototype.initTinyMceFields($('addNews'));		
+		var menu = new ActiveForm.Slide('newsMenu');
+		menu.show("addNews", 'addNews');	
 	},
 	
 	hideAddForm: function()
 	{
-		if ('none' == $('addNews').style.display)
-		{
-			return false;
-		}
-		
-		restoreMenu('addNews', 'newsMenu');
-		ActiveForm.prototype.destroyTinyMceFields($('addNews'));		
-	},
+        var menu = new ActiveForm.Slide('newsMenu');
+        menu.hide("addNews", 'addNews');    	
+	}
 }
 
 Backend.SiteNews.PostEntry = Class.create();

@@ -48,9 +48,10 @@
 <fieldset class="container" {denied role="category.update"}style="display: none"{/denied}>
 	<ul class="menu" id="specField_menu_{$categoryID}">
 	    <li class="addSpecField"><a href="#new" id="specField_item_new_{$categoryID}_show">{t _add_new_field}</a></li>
-	    <li class="done"><a href="#new" id="specField_item_new_{$categoryID}_cancel" class="hidden">{t _cancel_adding_new_field}</a></li>
+	    <li class="done addSpecFieldCancel" style="display: none;"><a href="#new" id="specField_item_new_{$categoryID}_cancel">{t _cancel_adding_new_field}</a></li>
+	    
 	    <li class="addSpecFieldGroup"><a href="#new" id="specField_group_new_{$categoryID}_show">{t _add_new_group}</a></li>
-	    <li class="done"><a href="#new" id="specField_group_new_{$categoryID}_cancel" class="hidden">{t _cancel_adding_new_group}</a></li>
+	    <li class="done addSpecFieldGroupCancel" style="display: none;"><a href="#new" id="specField_group_new_{$categoryID}_cancel">{t _cancel_adding_new_group}</a></li>
 	</ul>
 </fieldset>
 

@@ -219,9 +219,8 @@ Backend.Tax.prototype =
     
     showNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuCancelLink]);
-        ActiveForm.prototype.showNewItemForm(this.nodes.menuShowLink, this.nodes.menuForm); 
-        ActiveList.prototype.collapseAll();
+		var menu = new ActiveForm.Slide(this.nodes.menu);
+		menu.show("addTax", this.nodes.menuForm);
         
         document.getElementsByClassName("tax_viewMode", $("tabManageContent")).each(function(title) {
             title.style.display = 'inline';
@@ -230,8 +229,8 @@ Backend.Tax.prototype =
     
     hideNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuShowLink]);
-        ActiveForm.prototype.hideNewItemForm(this.nodes.menuCancelLink, this.nodes.menuForm); 
+        var menu = new ActiveForm.Slide(this.nodes.menu);
+        menu.hide("addTax", this.nodes.menuForm);
         
         Form.State.restore(this.nodes.form);
     }

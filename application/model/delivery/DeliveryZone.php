@@ -95,13 +95,16 @@ class DeliveryZone extends MultilingualObject
         }
         
         $zones = array();
-		    
+		            
     	// get zones by state
     	if ($address->state->get())
     	{
             $f = new ARSelectFilter();
 		    $f->setCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneState', 'stateID'), $address->state->get()->getID()));
 		    $s = ActiveRecordModel::getRecordSet('DeliveryZoneState', $f, ActiveRecordModel::LOAD_REFERENCES);
+		    
+		    print_r($zoneState);
+		    die();
 		    
             foreach ($s as $zoneState)
             {

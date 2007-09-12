@@ -264,17 +264,6 @@ ActiveForm.prototype = {
         });
     },
     
-    hideMenuItems: function(menu, except)
-    {
-        menu = $(menu);
-        
-        $A(menu.getElementsByTagName('li')).each(function(li) {
-            a = $(li).down('a');
-            a.hide();
-            $A(except).each(function(el) { if (a == $(el)) a.style.display = 'inline';  });
-        });
-    },
-    
     lastTinyMceId: 0,
     
     disabledTextareas: {},
@@ -282,7 +271,7 @@ ActiveForm.prototype = {
     
     initTinyMceFields: function(container) 
     {
-		var textareas = container.getElementsByTagName('textarea');
+		var textareas = $(container).getElementsBySelector('textarea.tinyMCE');
 		for (k = 0; k < textareas.length; k++)
 		{
             if (textareas[k].readOnly)
@@ -330,7 +319,7 @@ ActiveForm.prototype = {
     },
     
     destroyTinyMceFields: function(container) {
-        var textareas = container.getElementsByTagName('textarea');
+        var textareas = container.getElementsBySelector('textarea.tinyMCE');
 		for (k = 0; k < textareas.length; k++)
 		{
             if (textareas[k].readOnly)
@@ -354,7 +343,7 @@ ActiveForm.prototype = {
     
 	resetTinyMceFields: function(container)
 	{
-		var textareas = container.getElementsByTagName('textarea');
+		var textareas = container.getElementsBySelector('textarea.tinyMCE');
 		for(k = 0; k < textareas.length; k++)
 		{
             if (textareas[k].readonly) 
@@ -365,6 +354,71 @@ ActiveForm.prototype = {
 		}
 	}
 }
+
+
+ActiveForm.Slide = Class.create();
+ActiveForm.Slide.prototype = {
+	initialize: function(ul)
+	{
+		this.ul = $(ul);
+	},
+
+    show: function(className, form)
+	{
+		var form = $(form);
+		var cancel = this.ul.down("." + className + 'Cancel');
+		
+		Form.State.backup(form);
+		ActiveList.prototype.collapseAll();
+		
+		this.ul.childElements().invoke("hide");
+		if(cancel)
+		{
+		    Element.show(this.ul.down("." + className + 'Cancel'));
+		}
+		
+		$A(form.getElementsByTagName("input")).each(function(input)
+		{
+			if(input.type == 'text')
+			{
+				input.focus();
+				throw $break;
+			}
+		});
+		
+		if(form)
+		{
+            Element.show(form);
+		}
+		
+		ActiveForm.prototype.initTinyMceFields(form); 
+	},
+
+    hide: function(className, form)
+    {
+		var form = $(form);
+        Form.State.restore(form);
+		
+		this.ul.childElements().each(function(element) {
+			if(!element.className.match(/Cancel/))
+			{
+				Element.show(element);
+			}
+			else
+			{
+                Element.hide(element);
+			}
+		});
+		
+		if(form)
+		{
+            Element.hide(form);
+		}
+		
+        ActiveForm.prototype.destroyTinyMceFields(form); 
+    }   
+}
+
 
 /**
  * Extend focus to use it with TinyMce fields. 

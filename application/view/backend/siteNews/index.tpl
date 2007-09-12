@@ -20,7 +20,8 @@
 <div id="confirmations" class="rightConfirmations"></div>
 
 <ul class="menu" id="newsMenu">
-	<li><a href="#" onclick="Backend.SiteNews.prototype.showAddForm(); return false;">{t _add_news}</a></li>
+	<li class="addNews"><a href="#add" id="addNewsLink">{t _add_news}</a></li>
+	<li class="addNewsCancel" style="display: none;"><a href="#cancel" id="addNewsCancelLink">{t _cancel_adding_news}</a></li>
 </ul>
 
 <fieldset id="addNews" class="slideForm addForm" style="display: none;">
@@ -43,12 +44,12 @@
 		<p>
 			{{err for="text"}}
 				<label class="wide">{t _text}:</label>
-				{textarea}
+				{textarea class="tinyMCE"}
 			{/err}
 		</p>
 		<p>
 			<label class="wide">{t _more_text}:</label>
-			{textarea name="moreText"}
+			{textarea name="moreText" class="tinyMCE"}
 		</p>
 	
 		{language}
@@ -58,11 +59,11 @@
 			</p>
 			<p>
 				<label class="wide">{t _text}:</label>
-				{textarea name="text_`$lang.ID`"}
+				{textarea name="text_`$lang.ID`" class="tinyMCE"}
 			</p>
 			<p>
 				<label class="wide">{t _more_text}:</label>
-				{textarea name="moreText_`$lang.ID`"}
+				{textarea name="moreText_`$lang.ID`" class="tinyMCE"}
 			</p>
 		{/language}
 		

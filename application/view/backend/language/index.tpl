@@ -28,7 +28,7 @@
 
 <fieldset class="container" {denied role="language.create"}style="display: none;"{/denied}>
 	<ul class="menu" id="langPageMenu">
-		<li>
+		<li class="addNewLanguage">
 			<a href="#" onClick="lng.showAddForm(); return false;">{t _add_language}</a>
 			<span class="progressIndicator" id="langAddMenuLoadIndicator" style="display: none;"></span>
 		</li>

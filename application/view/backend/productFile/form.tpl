@@ -36,7 +36,7 @@
             
     		<label class="productFile_description_label">{t _productFile_description}</label>
             <fieldset class="error">
-        		<textarea type="text" name="description" class="productFile_description" {denied role="product.update"}readonly="readonly"{/denied}></textarea>
+        		<textarea type="text" name="description" class="productFile_description tinyMCE" {denied role="product.update"}readonly="readonly"{/denied}></textarea>
         		<span class="errorText hidden"> </span>
             </fieldset>
             
@@ -57,7 +57,7 @@
                 </fieldset>
                 <fieldset class="error">
         			<label class="productFile_description_label">{t _productFile_description}</label>
-                    <textarea type="text" name="description_{$lang.ID}" class="productFile_description" {denied role="product.update"}readonly="readonly"{/denied} ></textarea>
+                    <textarea type="text" name="description_{$lang.ID}" class="tinyMCE productFile_description" {denied role="product.update"}readonly="readonly"{/denied} ></textarea>
                 </fieldset>
 		    {/language}
     

@@ -32,10 +32,8 @@
     <div>
         <fieldset class="container" {denied role="category.update"}style="display: none"{/denied}>
 			<ul class="menu" id="filter_new_{$categoryID}_menu">
-				<li class="filter_add">
-                    <a href="#new" id="filter_item_new_{$categoryID}_show">{t _add_new_filter}</a>
-                </li>
-				<li><a href="#new" id="filter_item_new_{$categoryID}_cancel" class="hidden">{t _cancel_adding_new_filter}</a></li>
+				<li class="filter_add"><a href="#new" id="filter_item_new_{$categoryID}_show">{t _add_new_filter}</a></li>
+				<li class="filter_addCancel" style="display: none"><a href="#new" id="filter_item_new_{$categoryID}_cancel">{t _cancel_adding_new_filter}</a></li>
 			</ul>
 		</fieldset>
 

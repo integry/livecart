@@ -881,25 +881,23 @@ Backend.Shipment.prototype =
         Event.observe("orderShipments_new_" + orderID + "_show", "click", function(e) 
         { 
             Event.stop(e); 
-            Element.hide("order" + orderID + "_addShipment_li"); 
-            Element.show("orderShipments_new_" + orderID + "_controls"); 
-            Element.hide("order" + orderID + "_addProduct_li"); 
+			
+			var menu = new ActiveForm.Slide("orderShipments_menu_" + orderID);
+			menu.show(null, "orderShipments_new_" + orderID + "_controls");
         }.bind(this)); 
         
         Event.observe("orderShipments_new_" + orderID + "_cancel", "click", function(e) 
         { 
             Event.stop(e); 
-            Element.show("order" + orderID + "_addShipment_li"); 
-            Element.hide("orderShipments_new_" + orderID + "_controls"); 
-            Element.show("order" + orderID + "_addProduct_li"); 
+            var menu = new ActiveForm.Slide("orderShipments_menu_" + orderID);
+            menu.hide(null, "orderShipments_new_" + orderID + "_controls");
         }.bind(this)); 
             
         Event.observe("orderShipments_new_" + orderID + "_submit", "click", function(e) 
         { 
             Event.stop(e); 
-            Element.show("order" + orderID + "_addShipment_li"); 
-            Element.hide("orderShipments_new_" + orderID + "_controls"); 
-            Element.show("order" + orderID + "_addProduct_li"); 
+            var menu = new ActiveForm.Slide("orderShipments_menu_" + orderID);
+            menu.hide(null, "orderShipments_new_" + orderID + "_controls");
             Backend.Shipment.prototype.getInstance("orderShipments_new_" + orderID + "_form").save(); ; 
         }.bind(this)); 
 	}

@@ -1032,13 +1032,11 @@ function slideForm(id, menuId)
 {
     Effect.Appear(id, {duration: 0.50});        
     Element.hide($(menuId));
-//  setTimeout('$("' +  id + '").focus()', 100);
 }
 
 function restoreMenu(blockId, menuId)
 {
-    Element.hide($(blockId));
-//  Effect.Fade(blockId, {duration: 0.15});     
+    Element.hide($(blockId)); 
     Element.show($(menuId));    
 }
 

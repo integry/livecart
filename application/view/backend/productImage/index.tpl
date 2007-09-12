@@ -7,11 +7,28 @@
 
 <fieldset class="container" {denied role="product.update"}style="display: none"{/denied}>
 	<ul class="menu" id="prodImgMenu_{$ownerId}">
-		<li class="prodImageAdd">
-			<a href="#" onclick="slideForm('prodImgAdd_{$ownerId}', 'prodImgMenu_{$ownerId}'); return false;" class="pageMenu">{t _add_new}</a>
-		</li>	
+		<li class="prodImageAdd"><a href="#" id="prodImageAdd_{$ownerId}_add" class="pageMenu">{t _add_new}</a></li>	
+        <li class="prodImageAddCancel" style="display: none;"><a href="#" id="prodImageAdd_{$ownerId}_cancel">{t _cancel_new}</a></li>   
 	</ul>
 </fieldset>
+
+{literal}
+<script type="text/javascript">
+    Event.observe("{/literal}prodImageAdd_{$ownerId}_add{literal}", "click", function(e)
+    {
+        Event.stop(e);
+        var form = new ActiveForm.Slide(this.up("ul"));
+        form.show("prodImageAdd", "{/literal}prodImgAdd_{$ownerId}{literal}");
+    });
+    
+    Event.observe("{/literal}prodImageAdd_{$ownerId}_cancel{literal}", "click", function(e)
+    {
+        Event.stop(e);
+        var form = new ActiveForm.Slide(this.up("ul"));
+        form.hide("prodImageAdd", "{/literal}prodImgAdd_{$ownerId}{literal}");
+    });
+</script>
+{/literal}
 
 <div id="prodImgAdd_{$ownerId}" class="prodImageEditForm" style="display: none;">
 {form handle=$form action="controller=backend.productImage action=upload" method="post" onsubmit="$('prodImageList_`$ownerId`').handler.upload(this);" target="prodImgUpload_`$ownerId`" method="POST" enctype="multipart/form-data" role="product.update"}
@@ -46,10 +63,25 @@
 			<span class="progressIndicator" style="display: none;"></span>
 			<input type="submit" name="upload" class="submit" value="{tn _upload}"> 
             {t _or} 
-            <a href="#" class="cancel" onclick="restoreMenu('prodImgAdd_{$ownerId}', 'prodImgMenu_{$ownerId}');$('prodImageList_{$ownerId}').handler.cancelAdd(); return false;">{t _cancel}</a>
+            <a href="#" class="cancel" >{t _cancel}</a>
         </fieldset>
 	</fieldset>
-
+	
+    {literal}
+    <script type="text/javascript">
+        Element.observe($('{/literal}prodImgAdd_{$ownerId}{literal}').down("a.cancel"), "click", function(e) 
+        {
+            Event.stop(e);
+            var form = ('{/literal}prodImgAdd_{$ownerId}{literal}');
+            
+            $("{/literal}prodImageList_{$ownerId}{literal}").handler.cancelAdd();
+            
+            var menu = new ActiveForm.Slide('{/literal}prodImgMenu_{$ownerId}{literal}');
+            menu.hide("prodImageAdd", form);
+        });
+    </script>
+    {/literal}
+    
 {/form}
 <iframe name="prodImgUpload_{$ownerId}" id="prodImgUpload_{$ownerId}" style="display: none;"></iframe>
 </div>

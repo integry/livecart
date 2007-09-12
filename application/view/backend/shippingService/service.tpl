@@ -48,8 +48,8 @@
 
             <fieldset class="container" {denied role='delivery.update'}style="display: none"{/denied}>
             	<ul class="menu" id="shippingService_rate_menu_{$service.DeliveryZone.ID}_{$service.ID}">
-            	    <li><a href="#new_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_show">{t _add_new_rate}</a></li>
-            	    <li><a href="#cencel_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_cancel" class="hidden">{t _cancel_adding_new_rate}</a></li>
+            	    <li class="addNewRate"><a href="#new_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_show">{t _add_new_rate}</a></li>
+            	    <li class="addNewRateCancel" style="display: none"><a href="#cencel_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_cancel">{t _cancel_adding_new_rate}</a></li>
             	</ul>
             </fieldset>
             <fieldset class="shippingService_new_rate" id="shippingService_new_rate_{$service.DeliveryZone.ID}_{$service.ID}_form" style="display: none">

@@ -488,6 +488,7 @@ class Shipment extends ActiveRecordModel
             else
             {
                 $zone = $this->order->get()->getDeliveryZone();
+                
                 $rates = $zone->getTaxRates(DeliveryZone::ENABLED_TAXES);
                 
                 $this->taxes = new ARSet();

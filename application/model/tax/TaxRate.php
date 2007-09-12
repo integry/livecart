@@ -85,13 +85,11 @@ class TaxRate extends MultilingualObject
 	{
  	    $filter = new ARSelectFilter();
 
-	    
 	    if(!$includeDisabled)
 	    {
    		    $filter->setCondition(new EqualsCond(new ARFieldHandle('Tax', "isEnabled"), 1));
 	    }
-	    
- 	    
+	     	    
 		if(!$deliveryZone)
 		{
 		    $filter->setCondition(new IsNullCond(new ARFieldHandle(__CLASS__, "deliveryZoneID")));

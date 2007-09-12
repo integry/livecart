@@ -1075,11 +1075,8 @@ Backend.Filter.prototype = {
      */
     hideNewFilterAction: function(categoryID)
     {
-        var link = $(this.cssPrefix + "item_new_"+categoryID+"_show");
-        var form = $(this.cssPrefix + "item_new_"+categoryID+"_form");
-
-        ActiveForm.prototype.hideNewItemForm(link, form);
-        ActiveForm.prototype.hideMenuItems($(this.cssPrefix + "new_" + categoryID + "_menu"), [$(this.cssPrefix + "item_new_" + categoryID + "_show")]);
+        var form = new ActiveForm.Slide(this.cssPrefix + "new_" + categoryID + "_menu");
+        form.hide("filter_add", this.cssPrefix + "item_new_" + categoryID + "_form");
     },
 
 
@@ -1133,8 +1130,7 @@ Backend.Filter.prototype = {
      */
     createNewAction: function(categoryID)
     {
-        ActiveList.prototype.collapseAll();        
-        ActiveForm.prototype.showNewItemForm($(this.cssPrefix + "item_new_" + categoryID + "_show"), $(this.cssPrefix + "item_new_"+categoryID+"_form"));  
-        ActiveForm.prototype.hideMenuItems($(this.cssPrefix + "new_" + categoryID + "_menu"), [$(this.cssPrefix + "item_new_" + categoryID + "_cancel")]);
+        var form = new ActiveForm.Slide(this.cssPrefix + "new_" + categoryID + "_menu");
+		form.show("filter_add", this.cssPrefix + "item_new_" + categoryID + "_form");
     }
 }

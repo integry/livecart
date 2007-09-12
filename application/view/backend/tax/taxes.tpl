@@ -1,7 +1,7 @@
 <fieldset class="container" {denied role="taxes.create"}style="display: none"{/denied}>
 	<ul class="menu" id="tax_new_menu">
 	    <li class="addTax"><a href="#new_tax" id="tax_new_show">{t _add_new_tax}</a></li>
-	    <li class="done"><a href="#cencel_tax" id="tax_new_cancel" class="hidden">{t _cancel_adding_new_tax}</a></li>
+	    <li class="done addTaxCancel" style="display: none"><a href="#cencel_tax" id="tax_new_cancel">{t _cancel_adding_new_tax}</a></li>
 	</ul>
 </fieldset>
 

@@ -3,6 +3,7 @@ Backend.OrderNote =
     init: function(container)
     {
         Event.observe(container.down('a.addResponse'), 'click', this.showForm);
+        Event.observe(container.down('a.addResponseCancel'), 'click', this.hideForm);
         Event.observe(container.down('a.responseCancel'), 'click', this.hideForm);
     },
     
@@ -10,14 +11,18 @@ Backend.OrderNote =
     {
 	 	Event.stop(e);
         var element = Event.element(e);
-        slideForm(element.up('div.menuContainer').down('div.addResponse'), element.up('ul.orderNoteMenu'));
+		
+        var menu = new ActiveForm.Slide(element.up('div.menuContainer').down('ul.orderNoteMenu'));
+        menu.show("addResponse", element.up('div.menuContainer').down('div.addResponseForm'));
     },
 
     hideForm: function(e)
     {
 	 	Event.stop(e);
         var element = Event.element(e);
-        restoreMenu(element.up('div.addResponse'), element.up('div.menuContainer').down('ul.orderNoteMenu'));
+        
+        var menu = new ActiveForm.Slide(element.up('div.menuContainer').down('ul.orderNoteMenu'));
+        menu.hide("addResponse", element.up('div.menuContainer').down('div.addResponseForm'));
     },
     
     submitForm: function(e)

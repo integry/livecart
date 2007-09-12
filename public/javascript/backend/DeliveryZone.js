@@ -902,15 +902,14 @@ Backend.DeliveryZone.ShippingService.prototype =
     
     showNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuCancelLink]);
-        ActiveForm.prototype.showNewItemForm(this.nodes.menuShowLink, this.nodes.menuForm); 
-        ActiveList.prototype.collapseAll();
+		var menu = new ActiveForm.Slide(this.nodes.menu);
+		menu.show("shippingService_add", this.nodes.menuForm);
     },
     
     hideNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuShowLink]);
-        ActiveForm.prototype.hideNewItemForm(this.nodes.menuCancelLink, this.nodes.menuForm); 
+        var menu = new ActiveForm.Slide(this.nodes.menu);
+        menu.hide("shippingService_add", this.nodes.menuForm);
                 
         $A(this.nodes.ratesList.getElementsByTagName('li')).each(function(li) {
            Element.remove(li);
@@ -1157,14 +1156,14 @@ Backend.DeliveryZone.ShippingRate.prototype =
     
     showNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuCancelLink ]);
-        ActiveForm.prototype.showNewItemForm(this.nodes.menuShowLink, this.nodes.menuForm); 
+		var manu = new ActiveForm.Slide(this.nodes.menu);
+		manu.show("addNewRate", this.nodes.menuForm);
     },
     
     hideNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuShowLink]);
-        ActiveForm.prototype.hideNewItemForm(this.nodes.menuCancelLink, this.nodes.menuForm); 
+        var manu = new ActiveForm.Slide(this.nodes.menu);
+        manu.hide("addNewRate", this.nodes.menuForm);
     },
     
     save: function(event)
@@ -1492,15 +1491,14 @@ Backend.DeliveryZone.TaxRate.prototype =
     
     showNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuCancelLink]);
-        ActiveForm.prototype.showNewItemForm(this.nodes.menuShowLink, this.nodes.menuForm); 
-        ActiveList.prototype.collapseAll();
+		var menu = new ActiveForm.Slide(this.nodes.menu);
+		menu.show("addNewTaxRate", this.nodes.menuForm);
     },
     
     hideNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuShowLink]);
-        ActiveForm.prototype.hideNewItemForm(this.nodes.menuCancelLink, this.nodes.menuForm); 
+        var menu = new ActiveForm.Slide(this.nodes.menu);
+        menu.hide("addNewTaxRate", this.nodes.menuForm);
         
         Form.State.restore(this.nodes.form);
     },

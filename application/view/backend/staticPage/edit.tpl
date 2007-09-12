@@ -46,7 +46,7 @@
 		<label for="text_{$page.ID}" class="wide">{t _text}:</label>
 		<fieldset class="error">
 			<div class="textarea" id="textContainer">
-				{textarea class="longDescr" name="text" id="text_`$page.ID`" style="width: 100%;"}
+				{textarea class="tinyMCE longDescr" name="text" id="text_`$page.ID`" style="width: 100%;"}
 				<div class="errorText hidden" style="margin-top: 5px;"></div>
 			</div>			
 		</fieldset>
@@ -65,7 +65,7 @@
 			<label for="text_{$lang.ID}" class="wide">{t _text}:</label>
 			<fieldset class="error">
 				<div class="textarea" id="textContainer">
-					{textarea class="longDescr" name="text_`$lang.ID`" style="width: 100%;"}
+					{textarea class="tinyMCE longDescr" name="text_`$lang.ID`" style="width: 100%;"}
 					<div class="errorText hidden" style="margin-top: 5px;"></div>
 				</div>			
 			</fieldset>

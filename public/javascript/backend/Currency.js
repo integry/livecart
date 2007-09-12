@@ -27,11 +27,18 @@ Backend.Currency.prototype =
 		new LiveCart.AjaxRequest(this.formUrl, 'currAddMenuLoadIndicator', this.doShowAddForm);		  
 	},
 	
+	hideNewForm: function()
+	{
+        var menu = new ActiveForm.Slide("currPageMenu");
+        menu.hide("addNewCurrency", 'addCurr')     
+	},
+	
 	doShowAddForm: function(request)
 	{
-		Element.hide($('currAddMenuLoadIndicator'));
 		$('addCurr').innerHTML = request.responseText;
-		slideForm('addCurr', 'currPageMenu');	  	
+		
+		var menu = new ActiveForm.Slide("currPageMenu");
+		menu.show("addNewCurrency", 'addCurr') 	
 	},	
 	
 	renderList: function(data)
@@ -95,7 +102,7 @@ Backend.Currency.prototype =
 	  	button.disabled = false;
 
 		// hide menu..
-		restoreMenu('addCurr', 'currPageMenu');
+		Backend.Currency.prototype.hideNewForm();
 
  	    eval('var itemData = ' + originalRequest.responseText);
 		

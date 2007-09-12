@@ -8,7 +8,7 @@
 			<span class="progressIndicator" id="addLangFeedback" style="display: none;"></span>
 			<input type="submit" value="{t _add_lang_button}" name="sm" class="submit" />
 			<span>{t _or} </span>
-			<a href="#" class="cancel" onClick="restoreMenu('addLang', 'langPageMenu'); return false;">{t _cancel}</a>
+			<a href="#" class="cancel" onClick="Backend.Language.prototype.hideNewForm(); return false;">{t _cancel}</a>
 		</form>	
 	</fieldset>
 </div>

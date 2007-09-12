@@ -322,14 +322,14 @@ Backend.RelatedProduct.Group.Controller.prototype = {
     
     hideNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems($("productRelationship_menu_" + this.model.get('Product.ID')), [$(this.view.prefix + "new_" +this.model.get('Product.ID') + "_show"), $("selectProduct_" + this.model.get('Product.ID'))]);
-        ActiveForm.prototype.hideNewItemForm($(this.view.prefix + "new_" + this.model.get('Product.ID') + "_show"), this.view.nodes.root); 
+		var menu = new ActiveForm.Slide("productRelationship_menu_" + this.model.get('Product.ID'));
+		menu.hide(this.view.prefix + "add", this.view.nodes.root);
     },
     
     showNewForm: function()
     {
-        ActiveForm.prototype.hideMenuItems($("productRelationship_menu_" + this.model.get('Product.ID')), [$(this.view.prefix + "new_" + this.model.get('Product.ID') + "_cancel"), $("selectProduct_" + this.model.get('Product.ID')) + "_cancel"]);
-        ActiveForm.prototype.showNewItemForm($(this.view.prefix + "new_" + this.model.get('Product.ID') + "_show"), this.view.nodes.root); 
+        var menu = new ActiveForm.Slide("productRelationship_menu_" + this.model.get('Product.ID'));
+        menu.show(this.view.prefix + "add", this.view.nodes.root);
     }, 
     
     showForm: function()

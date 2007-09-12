@@ -6,13 +6,13 @@
 	<p>
 		<label for="product_{$cat}_{$product.ID}_shortdes_{$lang.ID}">{t _short_description}:</label>
 		<div class="textarea">
-			{textarea class="shortDescr" name="shortDescription_`$lang.ID`" id="product_`$cat`_`$product.ID`_shortdes_`$lang.ID`"}
+			{textarea class="shortDescr tinyMCE" name="shortDescription_`$lang.ID`" id="product_`$cat`_`$product.ID`_shortdes_`$lang.ID`"}
 		</div>
 	</p>
 	<p>
 		<label for="product_{$cat}_{$product.ID}_longdes_{$lang.ID}">{t _long_description}:</label>
 		<div class="textarea">
-			{textarea class="longDescr" name="longDescription_`$lang.ID`" id="product_`$cat`_`$product.ID`_longdes_`$lang.ID`"}
+			{textarea class="longDescr tinyMCE" name="longDescription_`$lang.ID`" id="product_`$cat`_`$product.ID`_longdes_`$lang.ID`"}
 		</div>
 	</p>
 	

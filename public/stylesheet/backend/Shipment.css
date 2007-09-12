@@ -189,7 +189,7 @@
     margin-bottom: 0;
 }
 
-.orderShipments .activeList_odd, .orderShipments .activeList_even 
+.shipmentCategoty .activeList_odd, .shipmentCategoty .activeList_even 
 {
     background-color: transparent ! important;
     overflow: visible ! important;

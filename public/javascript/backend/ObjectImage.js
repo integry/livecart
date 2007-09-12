@@ -277,12 +277,7 @@ Backend.ObjectImage.prototype =
 	addToList: function(imageData, highLight)
 	{
 		var templ = this.createEntry(imageData);
-		this.container.appendChild(templ);
-	  	
-	  	if (highLight)
-	  	{
-			new Effect.Highlight(templ, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});		    
-		}
+		ActiveList.prototype.getInstance(this.container).addRecord(imageData['ID'], templ.innerHTML, 'yellow');
 	},
 	
 	updateEntry: function(imageData, highLight)
@@ -358,8 +353,10 @@ Backend.ObjectImage.prototype =
 		{
 			errorElement.style.display = 'none';
 			this.addToList(result, true);		  
-			this.addForm.style.display = 'none';
-			this.addMenu.style.display = 'block';
+			
+			var menu = new ActiveForm.Slide(this.addMenu);
+			menu.hide("prodImageAdd", this.addForm)
+			
 			this.initActiveList();
             
             this.updateTabCounters(this.container.down('li'));

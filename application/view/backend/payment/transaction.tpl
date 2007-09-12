@@ -47,7 +47,7 @@
 
         <ul class="transactionMenu" {denied role='order.update'}style="display: none;"{/denied}>
             {if $transaction.isCapturable}
-                <li>
+                <li class="captureMenu">
                     <a href="" onclick="Backend.Payment.showCaptureForm({$transaction.ID}, event);">{t Capture}</a>
                 </li>
             {/if}

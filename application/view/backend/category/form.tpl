@@ -13,7 +13,7 @@
 
 		<p>
 			<label for="details_{$categoryId}">{t _descr}:</label>
-			{textarea name="description" id="details_$categoryId"}
+			{textarea name="description" id="details_$categoryId" class="tinyMCE"}
 		</p>
 		
 		<p>
@@ -28,7 +28,7 @@
 			</p>
 			<p>
 				<label>{t _descr}:</label>
-				{textarea name="description_`$lang.ID`"}
+				{textarea name="description_`$lang.ID`" class="tinyMCE"}
 			</p>
 			<p>
 				<label>{t _keywords}:</label>

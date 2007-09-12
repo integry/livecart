@@ -3,6 +3,7 @@ Backend.Payment =
     init: function(container)
     {
         Event.observe(container.down('a.addOfflinePayment'), 'click', this.showOfflinePaymentForm);
+        Event.observe(container.down('a.cancelOfflinePayment'), 'click', this.hideOfflinePaymentForm);
         Event.observe(container.down('a.offlinePaymentCancel'), 'click', this.hideOfflinePaymentForm);
     },
     
@@ -10,14 +11,18 @@ Backend.Payment =
     {
 	 	Event.stop(e);
         var element = Event.element(e);
-        slideForm(element.up('div.menuContainer').down('div.addOffline'), element.up('ul.paymentMenu'));
+		
+		var menu = new ActiveForm.Slide(element.up(".menuContainer").down('ul.paymentMenu'));
+		menu.show("offlinePayment", element.up('div.menuContainer').down('div.addOffline'));
     },
 
     hideOfflinePaymentForm: function(e)
     {
 	 	Event.stop(e);
         var element = Event.element(e);
-        restoreMenu(element.up('div.addOffline'), element.up('div.menuContainer').down('ul.paymentMenu'));
+		
+        var menu = new ActiveForm.Slide(element.up(".menuContainer").down('ul.paymentMenu'));
+        menu.hide("offlinePayment", element.up('div.menuContainer').down('div.addOffline'));
     },
     
     submitOfflinePaymentForm: function(e)
@@ -29,16 +34,19 @@ Backend.Payment =
     showVoidForm: function(transactionID, event)
     {
 	 	Event.stop(event);
-		var cont = $('transaction_' + transactionID);		
-		slideForm(cont.down('.voidForm'), cont.down('.transactionMenu')); 
-		window.setTimeout(function(){ this.down('.voidForm').down('textarea').focus() }.bind(cont), 200);		
+		var cont = $('transaction_' + transactionID);	
+
+		var menu = new ActiveForm.Slide(cont.down('.transactionMenu'));
+		menu.show("voidMenu", cont.down('.voidForm'));
 	},
 	
 	hideVoidForm: function(transactionID, event)
     {
 	 	Event.stop(event);
 		var cont = $('transaction_' + transactionID);		
-		restoreMenu(cont.down('.voidForm'), cont.down('.transactionMenu')); 
+		
+        var menu = new ActiveForm.Slide(cont.down('.transactionMenu'));
+        menu.hide("voidMenu", cont.down('.voidForm')); 
 	},
 	
 	voidTransaction: function(transactionID, form, event)
@@ -50,16 +58,19 @@ Backend.Payment =
     showCaptureForm: function(transactionID, event)
     {
 	 	Event.stop(event);
-		var cont = $('transaction_' + transactionID);		
-		slideForm(cont.down('.captureForm'), cont.down('.transactionMenu')); 
-		window.setTimeout(function(){ this.down('.captureForm').down('textarea').focus() }.bind(cont), 200);		
+		var cont = $('transaction_' + transactionID);	
+		
+		var menu = new ActiveForm.Slide(cont.down('.transactionMenu'));
+		menu.show("captureMenu", cont.down('.captureForm'));
 	},
 	
 	hideCaptureForm: function(transactionID, event)
     {
-	 	Event.stop(event);		
-        var cont = $('transaction_' + transactionID);		
-		restoreMenu(cont.down('.captureForm'), cont.down('.transactionMenu')); 
+	 	Event.stop(event);	
+        var cont = $('transaction_' + transactionID);   
+			
+        var menu = new ActiveForm.Slide(cont.down('.transactionMenu'));
+        menu.hide("captureMenu", cont.down('.captureForm'));
 	},
 	
 	captureTransaction: function(transactionID, form, event)

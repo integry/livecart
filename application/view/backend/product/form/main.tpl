@@ -30,13 +30,13 @@
 	<p>
 		<label for="product_{$cat}_{$product.ID}_shortdes"><a class="acronym">{t _short_description}<div>{t _hint_shortdescr}</div></a>:</label>
 		<div class="textarea">
-			{textarea class="shortDescr" id="product_`$cat`_`$product.ID`_shortdes" name="shortDescription"}
+			{textarea class="shortDescr tinyMCE" id="product_`$cat`_`$product.ID`_shortdes" name="shortDescription"}
 		</div>
 	</p>
 	<p>
 		<label for="product_{$cat}_{$product.ID}_longdes"><a class="acronym">{t _long_description}<div>{t _hint_longdescr}</div></a>:</label>
 		<div class="textarea">
-			{textarea class="longDescr" id="product_`$cat`_`$product.ID`_longdes" name="longDescription"}
+			{textarea class="longDescr tinyMCE" id="product_`$cat`_`$product.ID`_longdes" name="longDescription"}
 		</div>
 	</p>
 	<p>
