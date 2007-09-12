@@ -93,7 +93,7 @@ class ProductPriceController extends StoreManagementController
     
 	public function addInventoryValidator(RequestValidator $validator)
 	{
-		if (!$this->config->get('DISABLE_INVENTORY'))
+		if ($this->config->get('INVENTORY_TRACKING') != 'DISABLE')
 		{    
 			$validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required')));  
 			$validator->addCheck('stockCount', new IsNumericCheck($this->translate('_err_stock_not_numeric')));		  
@@ -137,7 +137,7 @@ class ProductPriceController extends StoreManagementController
 		self::addShippingValidator($validator);
 		self::addInventoryValidator($validator);
         		
-		if (!$this->config->get('DISABLE_INVENTORY'))
+		if ($this->config->get('INVENTORY_TRACKING') != 'DISABLE')
 		{
             $validator->addCheck('stockCount', new IsNotEmptyCheck($this->translate('_err_stock_required'))); 
         }

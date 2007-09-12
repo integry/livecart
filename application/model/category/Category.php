@@ -93,7 +93,13 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	
 	/*####################  Value retrieval and manipulation ####################*/
 
-	public function setValueByLang($fieldName, $langCode, $value)
+    public function getProductCountField()
+    {
+		$config = self::getApplication()->getConfig();
+		return ($config->get('INVENTORY_TRACKING') != 'ENABLE_AND_HIDE') ? 'activeProductCount' :'availableProductCount';
+    }
+	
+    public function setValueByLang($fieldName, $langCode, $value)
 	{
 		return MultiLingualObject::setValueByLang($fieldName, $langCode, $value);
 	}
@@ -116,19 +122,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
 	public function getActiveProductCount()
 	{
-		$config = self::getApplication()->getConfig();
-		
-		// all enabled products are available
-		if ($config->get('DISABLE_INVENTORY') || !$config->get('DISABLE_NOT_IN_STOCK'))
-		{
-			return $this->activeProductCount->get();
-		}
-		
-		// only enabled products that are in stock
-		else
-		{
-			return $this->availableProductCount->get();
-		}
+		$field = $this->getProductCountField();
+	
+		return $this->$field->get();
 	}
 	
 	public function getProductCount(ProductFilter $productFilter)
@@ -247,7 +243,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 		$array['unavailableProductCount'] = $array['totalProductCount'] - $array['availableProductCount'];
 		$c = self::getApplication()->getConfig();
 		
-		$array['count'] = ($c->get('DISABLE_INVENTORY') || !$c->get('DISABLE_NOT_IN_STOCK')) ? $array['activeProductCount'] : $array['availableProductCount'];
+		$array['count'] = ('ENABLE_AND_HIDE' == $c->get('INVENTORY_TRACKING')) ? $array['availableProductCount'] : $array['activeProductCount'];
 		return $array;
 	}	
 
@@ -288,9 +284,9 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	  	
         // Hide empty categories
         $config = self::getApplication()->getConfig();
-        if ($config->get('HIDE_EMPTY_DIRECTORIES') && !$config->get('DISABLE_INVENTORY'))
+        if ($config->get('HIDE_EMPTY_DIRECTORIES'))
         {
-            $cond->addAND(new MoreThanCond(new ARFieldHandle('Category', 'availableProductCount'), 0));
+            $cond->addAND(new MoreThanCond(new ARFieldHandle('Category', $this->getProductCountField()), 0));
         }        
 	  	
 		$filter->setCondition($cond);
@@ -403,14 +399,8 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 
         $filter->mergeCondition($cond);
             
-		$config = self::getApplication()->getConfig();
-		if ($config->get('DISABLE_NOT_IN_STOCK') && !$config->get('DISABLE_INVENTORY'))
-		{
-			$cond = new MoreThanCond(new ARFieldHandle('Product', 'stockCount'), 0);
-			$cond->addOR(new EqualsCond(new ARFieldHandle('Product', 'isBackOrderable'), 1));
-			$filter->mergeCondition($cond);
-		}
-
+		$this->applyInventoryFilter($filter);
+		
 		return $filter;
 	}
 
@@ -418,19 +408,21 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	{
         $filter->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'isEnabled'), 1));
 		
-		$c = self::getApplication()->getConfig();
-		if (!$c->get('DISABLE_INVENTORY'))
-		{
-			if ($c->get('DISABLE_NOT_IN_STOCK'))
-			{
-				$cond = new MoreThanCond(new ARFieldHandle('Product', 'stockCount'), 0);
-				$cond->addOr(new EqualsCond(new ARFieldHandle('Product', 'isBackOrderable'), 1));
-				$filter->mergeCondition($cond);					
-			}
-		}
+		$this->applyInventoryFilter($filter);
 		
 		return $filter;
 	}
+
+    private function applyInventoryFilter(ARSelectFilter $filter)
+    {
+		$c = self::getApplication()->getConfig();
+		if ($c->get('INVENTORY_TRACKING') == 'ENABLE_AND_HIDE')
+		{
+			$cond = new MoreThanCond(new ARFieldHandle('Product', 'stockCount'), 0);
+			$cond->addOr(new EqualsCond(new ARFieldHandle('Product', 'isBackOrderable'), 1));
+			$filter->mergeCondition($cond);					
+		}        
+    }
 
 	public function getFilterSet()
 	{

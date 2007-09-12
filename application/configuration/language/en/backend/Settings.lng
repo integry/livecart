@@ -127,10 +127,12 @@ USER_COUNT_RECENT_ORDERS=Number of recent orders to display in account homepage
 USER_ORDERS_PER_PAGE=Number of orders per page
 
 _inventory=Inventory
-DISABLE_INVENTORY=Disable inventory tracking
-DISABLE_NOT_IN_STOCK=Disable products that are out of stock
+INVENTORY_TRACKING=Inventory tracking
+DISABLE=Do not track inventory
+ENABLE_AND_DISPLAY=Track inventory, but display out-of-stock products
+ENABLE_AND_HIDE=Track inventory, and hide out-of-stock products
 LOW_STOCK=Low-stock warning threshold (number of items left in stock)
-HIDE_EMPTY_DIRECTORIES=Hide empty directories
+HIDE_EMPTY_DIRECTORIES=Hide categories without active products
 
 _checkout=Checkout
 _credit_card_options=Credit Card Options

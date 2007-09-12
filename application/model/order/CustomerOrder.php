@@ -302,7 +302,7 @@ class CustomerOrder extends ActiveRecordModel
         
         if (!is_null($reserveProducts))
         {
-            $reserveProducts = !self::getApplication()->getConfig()->get('DISABLE_INVENTORY');            
+            $reserveProducts = ($c->get('INVENTORY_TRACKING') != 'DISABLE');
         }
         
         foreach ($this->getShoppingCartItems() as $item)

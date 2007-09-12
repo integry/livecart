@@ -188,7 +188,7 @@ class Product extends MultilingualObject
         {
     		$config = self::getApplication()->getConfig();
 		
-		    if ($config->get('DISABLE_INVENTORY') || $type == Product::TYPE_DOWNLOADABLE)
+		    if (($config->get('INVENTORY_TRACKING') == 'DISABLE') || $type == Product::TYPE_DOWNLOADABLE)
 		    {
                 return true;
             }
@@ -548,7 +548,7 @@ class Product extends MultilingualObject
 
             if ($availableChange != 0)
             {
-                $catUpdate->addModifier('availableProductCount', new ARExpressionHandle('activeProductCount ' . (($availableChange > 0) ? '+' : '-') . ' 1'));                
+                $catUpdate->addModifier('availableProductCount', new ARExpressionHandle('availableProductCount ' . (($availableChange > 0) ? '+' : '-') . ' 1'));                
             }
 
             $this->updateCategoryCounters($catUpdate);

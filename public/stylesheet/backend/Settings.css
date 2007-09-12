@@ -7,6 +7,11 @@
 	width: auto;
 }
 
+#settingsContent select
+{
+    width: auto;
+}
+
 p.checkbox 
 {
 	padding-left: 0px;
