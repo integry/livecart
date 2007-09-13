@@ -7,7 +7,8 @@
 	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />	
 
     <title>
-        LiveCart Installer - {$PAGE_TITLE}
+        LiveCart Installer
+        {* $PAGE_TITLE *}
     </title>
 	<base href="{baseUrl}" />
 	
@@ -56,6 +57,9 @@
 		<div id="installContent" class="action_{$request.action}">
 			{$ACTION_VIEW}
 			<div class="clear"></div>
+		</div>
+		<div id="installFooter">
+		  &copy; <a href="http://livecart.com" target="_blank">UAB Integry Systems</a>, 2007
 		</div>
 	</div>	
 </body>

@@ -4,6 +4,11 @@
   	padding: 0;
 }
 
+html, body 
+{
+	height:100%; /* needed for container min-height */
+}
+
 body, h4
 {
     font-family: Verdana;
@@ -111,6 +116,12 @@ div.confirmationMsg div
 *****************************/
 #container 
 {
+	position:relative; /* needed for footer positioning*/
+	
+	height:auto !important; /* real browsers */
+	height:100%; /* IE6: treaded as min-height*/
+
+	min-height:100%; /* real browsers */
 }
 
 #header 
@@ -443,13 +454,31 @@ input.date
 	background-image: url(../../image/promo/logo_large_install.png);
 	background-repeat: no-repeat;
 	background-position: top right;
-	min-height: 600px;
+	padding-bottom: 5em;
 }
 
 #installContent.action_license
 {
     background-image: none;
 }
+
+#installFooter
+{
+	position:absolute;
+	width:100%;
+	bottom:0; /* stick to bottom */
+	background:#183583;
+	border-top:1px #1835B3;    
+	padding-top: 1em;
+	padding-bottom: 1em;
+	text-align: center;
+}
+
+#installFooter, #installFooter a
+{
+	color: white;    
+}
+
 
 /*************************
 	Requirements check

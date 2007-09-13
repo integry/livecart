@@ -14,5 +14,5 @@
     <li><a href="{link controller=backend.index}" target="_blank">Start to prepare your store</a></li>
     <li>Read <a href="http://doc.livecart.com" target="_blank">user documentation</a></li>
     <li>Visit <a href="http://forums.livecart.com" target="_blank">LiveCart customer forums</a></li>
-    <li><a href="http://support.livecart.com" target="_blank">Contact support</a></li>
+    <li><a href="http://support.livecart.com" target="_blank">Contact support team</a> if you need assistance</li>
 </ul>
