@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2007-05-21 16:30                                #
+# Created on:            2007-09-13 17:11                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -111,6 +111,8 @@ ALTER TABLE Transaction DROP FOREIGN KEY CustomerOrder_Transaction;
 
 ALTER TABLE Transaction DROP FOREIGN KEY Transaction_Transaction;
 
+ALTER TABLE Transaction DROP FOREIGN KEY User_Transaction;
+
 ALTER TABLE Shipment DROP FOREIGN KEY CustomerOrder_Shipment;
 
 ALTER TABLE Shipment DROP FOREIGN KEY ShippingService_Shipment;
@@ -144,6 +146,16 @@ ALTER TABLE ShippingRate DROP FOREIGN KEY ShippingService_ShippingRate;
 ALTER TABLE ProductFileGroup DROP FOREIGN KEY Product_ProductFileGroup;
 
 ALTER TABLE ShippingService DROP FOREIGN KEY DeliveryZone_ShippingService;
+
+ALTER TABLE ShipmentTax DROP FOREIGN KEY TaxRate_ShipmentTax;
+
+ALTER TABLE ShipmentTax DROP FOREIGN KEY Shipment_ShipmentTax;
+
+ALTER TABLE OrderLog DROP FOREIGN KEY User_OrderLog;
+
+ALTER TABLE OrderLog DROP FOREIGN KEY CustomerOrder_OrderLog;
+
+ALTER TABLE DeliveryZoneRealTimeService DROP FOREIGN KEY DeliveryZone_DeliveryZoneRealTimeService;
 
 # ---------------------------------------------------------------------- #
 # Drop table "Product"                                                   #
@@ -645,6 +657,8 @@ DROP TABLE OrderNote;
 
 # Drop constraints #
 
+ALTER TABLE DeliveryZone ALTER COLUMN position DROP DEFAULT;
+
 ALTER TABLE DeliveryZone DROP PRIMARY KEY;
 
 # Drop table #
@@ -716,6 +730,8 @@ DROP TABLE DeliveryZoneAddressMask;
 # ---------------------------------------------------------------------- #
 
 # Drop constraints #
+
+ALTER TABLE Tax ALTER COLUMN position DROP DEFAULT;
 
 ALTER TABLE Tax DROP PRIMARY KEY;
 
@@ -790,3 +806,53 @@ ALTER TABLE StaticPage DROP PRIMARY KEY;
 # Drop table #
 
 DROP TABLE StaticPage;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ShipmentTax"                                               #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ShipmentTax DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ShipmentTax;
+
+# ---------------------------------------------------------------------- #
+# Drop table "OrderLog"                                                  #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE OrderLog DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE OrderLog;
+
+# ---------------------------------------------------------------------- #
+# Drop table "NewsPost"                                                  #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE NewsPost ALTER COLUMN position DROP DEFAULT;
+
+ALTER TABLE NewsPost DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE NewsPost;
+
+# ---------------------------------------------------------------------- #
+# Drop table "DeliveryZoneRealTimeService"                               #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE DeliveryZoneRealTimeService DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE DeliveryZoneRealTimeService;
