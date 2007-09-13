@@ -339,18 +339,23 @@ Backend.Breadcrumb =
         link.href = "#cat_" + parentId;
         link.catId = parentId;
         link.innerHTML = nodeStr;
+		
+
         Event.observe(link, "click", function(e) {
             Event.stop(e);
             Backend.hideContainer();
-            Backend.Breadcrumb.treeBrowser.selectItem(this.catId, true);
+            
+	        if(Backend.Breadcrumb.treeBrowser.getIndexById(this.catId) == null)
+	        {
+	            Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + this.catId);  
+	        }
+			else
+			{
+			    Backend.Breadcrumb.treeBrowser.selectItem(this.catId, true);
+			}
         });
-		
-		if(Backend.Breadcrumb.treeBrowser.getIndexById(parentId) == null)
-        {
-		    Backend.Breadcrumb.convertLinkToText(link);
-	    }
     },
-    
+    	
     setTree: function(treeBrowser) {
         Backend.Breadcrumb.treeBrowser = treeBrowser;
     }, 
