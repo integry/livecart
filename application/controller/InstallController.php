@@ -84,6 +84,10 @@ class InstallController extends FrontendController
 			$dsnArray = array('production' => $dsn, 'development' => $dsn, 'test' => $dsn);
 			file_put_contents($dsnFile, '<?php return ' . var_export($dsnArray, true) . '; ?>');
 			
+			// import schema
+            
+            // initial data			
+			
 			return new ActionRedirectResponse('install', 'admin');
 		}
 		catch (SQLException $e)
@@ -98,9 +102,7 @@ class InstallController extends FrontendController
 
 	public function admin()
 	{
-		$response = new ActionResponse('form', $this->buildAdminForm());
-		
-		return $response;
+		return new ActionResponse('form', $this->buildAdminForm());
 	}
     
     public function setAdmin()
@@ -114,6 +116,8 @@ class InstallController extends FrontendController
 		ClassLoader::import('application.model.user.User');
 		ClassLoader::import('application.model.user.SessionUser');
 		
+		ActiveRecordModel::beginTransaction();
+		
 		// create user group for administrators
 		$group = UserGroup::getNewInstance('Administrators');
 		$group->setAllRoles();
@@ -124,11 +128,29 @@ class InstallController extends FrontendController
 		$user->loadRequestData($this->request);
 		$user->save();
 		
+		ActiveRecordModel::commit();		
+		
 		// log in
 		SessionUser::setUser($user);
 		
 		return new ActionRedirectResponse('install', 'config');
 	}
+    
+    public function config()
+    {
+        $form = $this->buildConfigForm();
+        $form->set('language', 'en');
+        $form->set('currency', 'USD');
+        
+		// get all Locale languages
+		$languages = $this->locale->info()->getAllLanguages();
+		asort($languages);
+                
+        $response = new ActionResponse('form', $form);
+        $response->set('languages', $languages);
+        $response->set('currencies', $this->locale->info()->getAllCurrencies());
+        return $response;
+    }
     
 	/**
 	 * @return RequestValidator
@@ -193,6 +215,27 @@ class InstallController extends FrontendController
 	{
 		return new Form($this->buildAdminValidator());
 	}    
+
+	/**
+	 * @return RequestValidator
+	 */
+	private function buildConfigValidator()
+	{
+		$validator = new RequestValidator("installConfig", $this->request);
+		$validator->addCheck("sitename", new IsNotEmptyCheck($this->translate("Please enter the name of your store")));
+		$validator->addCheck("language", new IsNotEmptyCheck($this->translate("Please select the base language of your store")));
+		$validator->addCheck("currency", new IsNotEmptyCheck($this->translate("Please select the base currency of your store")));
+
+		return $validator;
+	}
+
+	/**
+	 * @return Form
+	 */
+	private function buildConfigForm()
+	{
+		return new Form($this->buildConfigValidator());
+	} 
 }
 
 ?>

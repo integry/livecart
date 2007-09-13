@@ -91,7 +91,13 @@ class UserGroup extends ActiveRecordModel
 	
 	public function setAllRoles()
 	{
-		
+		// add Roles to database
+        Role::cleanUp();
+        
+        foreach (Role::getRecordSet(new ARSelectFilter()) as $role)
+        {
+            $this->applyRole($role);
+        }
 	}
 	
 	/**

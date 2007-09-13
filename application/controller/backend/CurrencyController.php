@@ -13,8 +13,7 @@ ClassLoader::import("application.model.Currency");
  */
 class CurrencyController extends StoreManagementController
 {
-
-	/**
+    /**
 	 * List all system currencies
 	 * @return ActionResponse
 	 */
@@ -39,7 +38,7 @@ class CurrencyController extends StoreManagementController
 	 */
 	public function addForm()
 	{
-		$currencies = $this->locale->info()->getAllCurrencies();  	
+		$currencies = $this->locale->info()->getAllCurrencies();
 		
 		foreach ($currencies as $key => $currency)
 		{

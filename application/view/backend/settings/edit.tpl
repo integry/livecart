@@ -1,6 +1,6 @@
 <h1>{$title}</h1>
 
-{form action="controller=backend.settings action=save" handle=$form onsubmit="settings.save(this); return false;" role="settings.update"}
+{form action="controller=backend.settings action=save" method="post" handle=$form onsubmit="settings.save(this); return false;" role="settings.update"}
 
 {foreach from=$layout key=groupName item=fields name="groups"}
 
