@@ -925,7 +925,7 @@ Backend.DeliveryZone.ShippingService.prototype =
 		var lastLi = this.nodes.ratesList.childElements().last();
 		
 		// Remove last rate if it is new and empty
-		if(lastLi.id.match(/new/))
+		if(lastLi && lastLi.id.match(/new/))
 		{
 			var emptyValues = true;
             lastLi.getElementsBySelector("input").each(function(input)
