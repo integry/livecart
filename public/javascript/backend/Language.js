@@ -131,7 +131,7 @@ Backend.LanguageIndex.prototype =
 		try
 		{
 	        var menu = new ActiveForm.Slide("langPageMenu");
-	        menu.show("addNewLanguage", 'addLang');
+	        menu.show("addNewLanguage", 'addLang', ['id']);
         }
 		catch(e)
 		{
@@ -145,7 +145,7 @@ Backend.LanguageIndex.prototype =
         Element.hide($('langAddMenuLoadIndicator'));
         
         var menu = new ActiveForm.Slide("langPageMenu");
-        menu.hide("addNewLanguage", 'addLang');
+        menu.hide("addNewLanguage", 'addLang', ['id']);
     },
 	
 	add: function(form)
@@ -170,7 +170,7 @@ Backend.LanguageIndex.prototype =
         list.decorateItems();
         list.createSortable();
         		
-		Backend.laanguage.prototype.hideAddForm();
+		Backend.LanguageIndex.prototype.hideAddForm();
 		
 		Element.hide($('addLangFeedback'));
 		

@@ -794,15 +794,17 @@ Backend.User.Add.prototype =
    
 	showAddForm: function()
 	{
-        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuCancelLink]);
-        ActiveForm.prototype.showNewItemForm(this.nodes.menuShowLink, this.nodes.menuForm, false); 
+		var menu = new ActiveForm.Slide(this.nodes.menu);
+        menu.show("addUser", this.nodes.menuForm);
+		
 		$("userGroupsManagerContainer").hide();
 	},
    
 	hideAddForm: function()
 	{
-        ActiveForm.prototype.hideMenuItems(this.nodes.menu, [this.nodes.menuShowLink]);
-        ActiveForm.prototype.hideNewItemForm(this.nodes.menuShowLink, this.nodes.menuForm, false); 
+        var menu = new ActiveForm.Slide(this.nodes.menu);
+        menu.hide("addUser", this.nodes.menuForm);
+        
 		$("userGroupsManagerContainer").show();
 	},
 

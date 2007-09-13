@@ -66,8 +66,9 @@ Form.State = {
      * @access public
      * @static
      */
-    backup: function(form)
+    backup: function(form, ignoreFields)
     {
+		ignoreFields = ignoreFields || $A([]);
         if(!this.hasBackup(form))
         {
             form.backupId = this.getNewId();
@@ -79,7 +80,8 @@ Form.State = {
         for(var i = 0; i < elements.length; i++)
         {
             if(elements[i].name == '') continue;
-
+            if(ignoreFields.member(elements[i].name)) continue;
+			
             var name = elements[i].name;
 
             var value = {}

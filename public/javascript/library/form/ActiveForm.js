@@ -257,8 +257,8 @@ ActiveForm.Slide.prototype = {
 		var form = $(form);
 		var cancel = this.ul.down("." + className + 'Cancel');
 		
-		Form.State.backup(form, ignoreFields);
-		ActiveList.prototype.collapseAll();
+		if(window.Form.State) Form.State.backup(form, ignoreFields);
+		if(window.ActiveList) ActiveList.prototype.collapseAll();
 		
 		this.ul.childElements().invoke("hide");
 		if(cancel)
@@ -293,7 +293,7 @@ ActiveForm.Slide.prototype = {
     {
         ignoreFields = ignoreFields || [];
 		var form = $(form);
-        Form.State.restore(form, ignoreFields);
+        if(window.Form.State) Form.State.restore(form, ignoreFields);
 		
 		this.ul.childElements().each(function(element) {
 			if(!element.className.match(/Cancel/))

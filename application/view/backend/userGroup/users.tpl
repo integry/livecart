@@ -7,7 +7,7 @@
     			<a id="userGroup_{$userGroupID}_addUser" href="#addUser">{t _add_new_user}</a>
     			<span class="progressIndicator" style="display: none;"></span>
     		</li>
-    		<li class="done">
+    		<li class="done addUserCancel">
     			<a id="userGroup_{$userGroupID}_addUserCancel" href="#cancelAddingUser" class="hidden">{t _cancel_adding_new_user} </a>
     		</li>
     	</ul>  
@@ -92,14 +92,19 @@
 
 {literal}
 <script type="text/javascript">
-
-	grid.setDataFormatter(Backend.UserGroup.GridFormatter);
+try
+{
+	window.activeGrids['{/literal}users_{$userGroupID}{literal}'].setDataFormatter(Backend.UserGroup.GridFormatter);
     
-    var massHandler = new Backend.UserGroup.massActionHandler($('{/literal}userMass_{$userGroupID}{literal}'), grid);
+    var massHandler = new Backend.UserGroup.massActionHandler($('{/literal}userMass_{$userGroupID}{literal}'), window.activeGrids['{/literal}users_{$userGroupID}{literal}']);
     massHandler.deleteConfirmMessage = '{/literal}{t _are_you_sure_you_want_to_delete_this_user|addslashes}{literal}' ;
     massHandler.nothingSelectedMessage = '{/literal}{t _nothing_selected|addslashes}{literal}' ;    
     
-    usersActiveGrid[{/literal}{$userGroupID}{literal}] = grid;
-
+    usersActiveGrid[{/literal}{$userGroupID}{literal}] = window.activeGrids['{/literal}users_{$userGroupID}{literal}'];
+}
+catch(e)
+{
+    console.info(e)
+}
 </script>
 {/literal}
