@@ -105,25 +105,33 @@ class UserController extends StoreManagementController
 		    
 		    $user->loadAddresses();
 		    
-            $user->defaultShippingAddress->get()->load(array('UserAddress'));
-            $shippingArray = $user->defaultShippingAddress->get()->userAddress->get()->toArray();
-            $shippingFlatArray = $user->defaultShippingAddress->get()->userAddress->get()->toFlatArray();
-            foreach($shippingFlatArray as $property => $value)
-            {
-                if($property == 'State') $property = 'stateID';
-                $userArray["shippingAddress_" . $property] = $value;
-            }
-
-            $user->defaultBillingAddress->get()->load(array('UserAddress'));
-            $billingArray = $user->defaultBillingAddress->get()->userAddress->get()->toArray();
-            $billingFlatArray = $user->defaultBillingAddress->get()->userAddress->get()->toFlatArray();
-            foreach($billingFlatArray as $property => $value)
-            {
-                if($property == 'State') $property = 'stateID';
-                $userArray["billingAddress_" . $property] = $value;
-            }
-            
-		    if(array_diff_key($shippingFlatArray, array('ID' => 0)) == array_diff_key($billingFlatArray, array('ID' => 0)))
+		    if($user->defaultShippingAddress->get())
+		    {
+                $user->defaultShippingAddress->get()->load(array('UserAddress'));
+                $shippingArray = $user->defaultShippingAddress->get()->userAddress->get()->toArray();
+                $shippingFlatArray = $user->defaultShippingAddress->get()->userAddress->get()->toFlatArray();
+                foreach($shippingFlatArray as $property => $value)
+                {
+                    if($property == 'State') $property = 'stateID';
+                    $userArray["shippingAddress_" . $property] = $value;
+                }
+		    }
+		    
+		    if($user->defaultBillingAddress->get())
+		    {
+                $user->defaultBillingAddress->get()->load(array('UserAddress'));
+                $billingArray = $user->defaultBillingAddress->get()->userAddress->get()->toArray();
+                $billingFlatArray = $user->defaultBillingAddress->get()->userAddress->get()->toFlatArray();
+                foreach($billingFlatArray as $property => $value)
+                {
+                    if($property == 'State') $property = 'stateID';
+                    $userArray["billingAddress_" . $property] = $value;
+                }
+		    }
+		    
+		    if($user->defaultBillingAddress->get() || 
+		    $user->defaultBillingAddress->get() || 
+		    (array_diff_key($shippingFlatArray, array('ID' => 0)) == array_diff_key($billingFlatArray, array('ID' => 0))))
 		    {
 		        $userArray['sameAddresses'] = 1;
 		    }
