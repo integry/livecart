@@ -1,5 +1,7 @@
 {includeJs file="library/ActiveList.js"}
 {includeJs file="library/KeyboardEvent.js"}
+{includeJs file="library/form/ActiveForm.js"}
+{includeJs file="library/form/State.js"}
 {includeJs file="backend/Language.js"}
 {includeCss file="library/ActiveList.css"}
 {includeCss file="backend/Language.css"}

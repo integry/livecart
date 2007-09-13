@@ -529,6 +529,15 @@ ActiveList.prototype = {
                 new Effect.Highlight(li, {startcolor:'#FBFF85', endcolor:'#F5F5F5'});
                 break;
         }
+		
+	   setTimeout(function(li)
+	   {
+		   var textInput = li.down("input[@type=text]"); 
+		   if(textInput)
+		   {
+		   	   textInput.focus();
+		   }
+	   }.bind(this, li), 600);
     },
 
 

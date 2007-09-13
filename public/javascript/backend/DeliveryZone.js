@@ -922,6 +922,27 @@ Backend.DeliveryZone.ShippingService.prototype =
     
     save: function()
     {
+		var lastLi = this.nodes.ratesList.childElements().last();
+		
+		// Remove last rate if it is new and empty
+		if(lastLi.id.match(/new/))
+		{
+			var emptyValues = true;
+            lastLi.getElementsBySelector("input").each(function(input)
+			{
+				if(parseFloat(input.value)) 
+				{
+					emptyValues = false;
+					throw $break;
+				}
+			}.bind(this));
+			
+			if(emptyValues)
+			{
+				Element.remove(lastLi);
+			}
+		}
+		
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
         var action = this.service.ID 
             ? Backend.DeliveryZone.ShippingService.prototype.Links.update
@@ -964,12 +985,17 @@ Backend.DeliveryZone.ShippingService.prototype =
                     $H(response.service.newRates).each(function(id) { regexps[id.value] = new RegExp(id.key); }.bind(this));
                     
                     $A(this.nodes.root.down('.activeList').getElementsByTagName('*')).each(function(elem)
-                    {
+                    {						
                         if(elem.id) 
 						{
 						    $H(regexps).each(function(id) { 
 							    if(elem.id.match(id.value))
 								{
+			                        if(elem.tagName == 'LI')
+			                        {
+			                            Backend.DeliveryZone.ShippingRate.prototype.instances[elem.id.replace(id.value, id.key)] = Backend.DeliveryZone.ShippingRate.prototype.instances[elem.id]
+			                        }
+									
 							        elem.id = elem.id.replace(id.value, id.key);
 									return;
 								} 
@@ -1156,20 +1182,6 @@ Backend.DeliveryZone.ShippingRate.prototype =
     
     showNewForm: function()
     {
-		var manu = new ActiveForm.Slide(this.nodes.menu);
-		manu.show("addNewRate", this.nodes.menuForm);
-    },
-    
-    hideNewForm: function()
-    {
-        var manu = new ActiveForm.Slide(this.nodes.menu);
-        manu.hide("addNewRate", this.nodes.menuForm);
-    },
-    
-    save: function(event)
-    {
-        if(!this.rate.ID)
-        {
             var rate = {
                 'weightRangeStart': this.nodes.weightRangeStart.value,
                 'weightRangeEnd': this.nodes.weightRangeEnd.value,
@@ -1182,37 +1194,16 @@ Backend.DeliveryZone.ShippingRate.prototype =
                 'ShippingService': this.rate.ShippingService,
                 'ID': 'new' + Backend.DeliveryZone.ShippingRate.prototype.newRateLastId
             };
-            
-            var rangeTypeRadio = this.nodes.root.up('form').down('.' + this.prefix + 'rangeType');
-            if(!rangeTypeRadio.checked) rangeTypeRadio = this.nodes.root.up('form').down('.' + this.prefix + 'rangeType', 1);
-            
-            var rangeType = rangeTypeRadio.value;
-            
-            ActiveForm.prototype.resetErrorMessages(this.nodes.root.up('form'));
-            new LiveCart.AjaxRequest(
-                Backend.DeliveryZone.ShippingService.prototype.Links.validateRates + "?" + 
-                    'rate__weightRangeStart=' + rate.weightRangeStart + '&' +
-                    'rate__weightRangeEnd=' + rate.weightRangeEnd + '&' +
-                    'rate__subtotalRangeStart=' + rate.subtotalRangeStart + '&' +
-                    'rate__subtotalRangeEnd=' + rate.subtotalRangeEnd + '&' +
-                    'rate__flatCharge=' + rate.flatCharge + '&' +
-                    'rate__perItemCharge=' + rate.perItemCharge + '&' +
-                    'rate__subtotalPercentCharge=' + rate.subtotalPercentCharge + '&' +
-                    'rate__perKgCharge=' + rate.perKgCharge + '&' +
-                    'rangeType=' + rangeType,
-                false,
-                function(resp) 
-                { 
-                    var resp = eval("(" + resp.responseText + ")");
-                    this.afterAdd(resp, rate) 
-                }.bind(this)
-            );
-            
-
-            
-        }
+			
+			this.afterAdd({validation: 'success'}, rate);
     },
     
+    hideNewForm: function()
+    {
+        var manu = new ActiveForm.Slide(this.nodes.menu);
+        manu.hide("addNewRate", this.nodes.menuForm);
+    },
+  
     afterAdd: function(response, rate)
     {
         if(response.validation == 'success')
@@ -1265,8 +1256,6 @@ Backend.DeliveryZone.ShippingRate.prototype =
             Backend.DeliveryZone.ShippingRate.prototype.newRateLastId++;
 			
 			this.ratesActiveList.highlight(li);
-			
-			this.hideNewForm();
         }
         else
         {

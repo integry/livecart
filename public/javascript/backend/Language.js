@@ -126,10 +126,17 @@ Backend.LanguageIndex.prototype =
 	
 	doShowAddForm: function(request)
 	{
-		Element.hide($('langAddMenuLoadIndicator'));
+		$('addLang').innerHTML = request.responseText;
 		
-        var menu = new ActiveForm.Slide("langPageMenu");
-        menu.show("addNewLanguage", 'addLang');
+		try
+		{
+	        var menu = new ActiveForm.Slide("langPageMenu");
+	        menu.show("addNewLanguage", 'addLang');
+        }
+		catch(e)
+		{
+			console.info(e)
+		}
 	},
 	
     
