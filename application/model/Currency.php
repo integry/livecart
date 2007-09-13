@@ -169,12 +169,31 @@ class Currency extends ActiveRecordModel
             $this->rate->set(1);
         }
         
+//        file_put_contents(ClassLoader::getRealPath('installdata.currency.test') . '.php', var_export($this->priceSuffix->get(), true));
+        
         return parent::save($forceOperation);
     }
     
     protected function insert()
 	{
-	  	// check if default currency exists
+	  	// check currency symbol
+	  	if (!$this->pricePrefix->get() && !$this->priceSuffix->get())
+	  	{
+            $prefixes = include ClassLoader::getRealPath('installdata.currency.signs') . '.php';
+            if (isset($prefixes[$this->getID()]))
+            {
+                $signs = $prefixes[$this->getID()];
+                
+                $this->pricePrefix->set($signs[0]);
+                    
+                if (isset($signs[1]))
+                {
+                    $this->priceSuffix->set($signs[1]);
+                }
+            }
+        }
+          
+        // check if default currency exists
 		$filter = new ARSelectFilter();
 		$filter->setCondition(new EqualsCond(new ARFieldHandle('Currency', 'isDefault'), 1));
 		

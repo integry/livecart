@@ -116,6 +116,7 @@ div.confirmationMsg div
 #header 
 {
   	padding: 15px;
+  	padding-bottom: 10px;
   	background-color: #183583;
   	color: #fff;
 }
@@ -547,6 +548,7 @@ form
     padding: 0.8em;
     border: 1px solid white;
     margin-right: 1em;
+    margin-bottom: 5px;
     text-align: center;
 }
 
