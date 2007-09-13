@@ -65,8 +65,8 @@
     Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmAddressDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_address_mask}{literal}';
     Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmCityDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_city_mask}{literal}';
     Backend.DeliveryZone.CountriesAndStates.prototype.Messages.confirmZipDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_zip_mask}{literal}';
-    Backend.DeliveryZone.ShippingService.prototype.Messages.confirmDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_rate}{literal}';
-    Backend.DeliveryZone.ShippingRate.prototype.Messages.confirmDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_service}{literal}';
+    Backend.DeliveryZone.ShippingService.prototype.Messages.confirmDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_service}{literal}';
+    Backend.DeliveryZone.ShippingRate.prototype.Messages.confirmDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_rate}{literal}';
     Backend.DeliveryZone.TaxRate.prototype.Messages.confirmDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_tax_rate}{literal}';
     
     Backend.DeliveryZone.prototype.Links.edit = '{/literal}{link controller=backend.deliveryZone action=edit}?id=_id_{literal}';

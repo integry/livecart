@@ -18,6 +18,13 @@ Backend.SiteNews.prototype =
 		ActiveList.prototype.getInstance('newsList', {
 	         beforeEdit:     function(li) 
 			 { 
+                 if (!this.isContainerEmpty(li, 'edit'))
+                 {
+                     li.handler.cancelEditForm();
+                     //this.toggleContainer(li, 'edit');
+                     return;
+                 }
+
 				 li.handler.showEditForm();
 				 return false;
              },
@@ -53,6 +60,14 @@ Backend.SiteNews.prototype =
 	
 	showAddForm: function()
 	{
+		$H($('newsList').getElementsByTagName('li')).each(function(li)
+		{
+			if (li && li[1] && li[1].handler)
+			{
+				li[1].handler.cancelEditForm();				
+			}
+		});
+		
 		var menu = new ActiveForm.Slide('newsMenu');
 		menu.show("addNews", 'addNews');	
 	},
@@ -71,12 +86,15 @@ Backend.SiteNews.PostEntry.prototype =
 	
 	node: null,
 	
+	list: null,
+	
 	initialize: function(container, template, data, highlight)
 	{
 		this.data = data;
-		var newsList = ActiveList.prototype.getInstance('newsList');
+		
+        this.list = ActiveList.prototype.getInstance('newsList');
 
-        this.node = newsList.addRecord(data.ID, template.innerHTML, highlight);
+        this.node = this.list.addRecord(data.ID, template.innerHTML, highlight);
 		
 		this.updateHtml();
 		
@@ -144,10 +162,17 @@ Backend.SiteNews.PostEntry.prototype =
 		form.onsubmit = this.save.bindAsEventListener(this);
 		
 		new Backend.LanguageForm();
+		
+		this.list.toggleContainerOn(this.list.getContainer(this.node, 'edit'));
 	},
 	
 	cancelEditForm: function(e)
 	{		
+		if (!this.list.isContainerEmpty(this.node, 'edit'))
+		{
+            this.list.toggleContainerOff(this.list.getContainer(this.node, 'edit'));
+        }
+			
 		var formContainer = this.node.down('div.formContainer');
 		
 		if (!formContainer.firstChild)
@@ -156,7 +181,7 @@ Backend.SiteNews.PostEntry.prototype =
 		}
 		
 		ActiveForm.prototype.destroyTinyMceFields(formContainer);
-	
+
 		formContainer.innerHTML = '';		
 			
 		if (e)
@@ -177,6 +202,7 @@ Backend.SiteNews.PostEntry.prototype =
 		this.data = originalRequest.responseData;
 		this.updateHtml();
 		this.cancelEditForm();
+		Element.show(this.node.down('.checkbox'));
 		ActiveList.prototype.highlight(this.node, 'yellow');
 	},
 	
@@ -189,9 +215,17 @@ Backend.SiteNews.PostEntry.prototype =
 	{
 		this.node.down('.newsTitle').innerHTML = this.data.title;
 		this.node.down('.newsDate').innerHTML = this.data.time;
-		this.node.down('.newsText').innerHTML = this.data.text;		
+		this.node.down('.newsText').innerHTML = this.data.text;	
+        this.node.down('.checkbox').checked = (this.data.isEnabled == true);
 		this.node.id = 'newsEntry_' + this.data.ID;
-	}
+	},
+	
+	setEnabled: function(checkbox) 
+	{
+        url = $('statusUrl').innerHTML + "?status=" + (checkbox.checked - 1 + 1) + '&id=' + this.list.getRecordId(this.node);
+        Element.hide(checkbox);
+		new LiveCart.AjaxRequest(url, this.node.down('.progressIndicator'), this.update.bind(this));
+	}	
 }
 
 Backend.SiteNews.Add = Class.create();

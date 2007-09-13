@@ -73,7 +73,7 @@ Backend.ObjectImage.prototype =
 		// display message if no images are uploaded
 		this.showNoImagesMessage();
 
-		new ActiveList(this.container, {
+		ActiveList.prototype.getInstance(this.container, {
 	         
 			 beforeEdit:     function(li) 
 			 {
@@ -277,7 +277,7 @@ Backend.ObjectImage.prototype =
 	addToList: function(imageData, highLight)
 	{
 		var templ = this.createEntry(imageData);
-		ActiveList.prototype.getInstance(this.container).addRecord(imageData['ID'], templ.innerHTML, 'yellow');
+		ActiveList.prototype.getInstance(this.container).addRecord(imageData['ID'], templ.innerHTML, highLight ? 'yellow' : null);
 	},
 	
 	updateEntry: function(imageData, highLight)

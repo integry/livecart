@@ -32,7 +32,7 @@
 		<input type="hidden" name="id" />
 
 		<p>
-			<label>{t _date}</label>
+			<label class="wide">{t _date}</label>
 			{calendar name="time" id="time"}		
 		</p>
 		<p>
@@ -84,6 +84,7 @@
 	<span id="deleteUrl">{link controller=backend.siteNews action=delete}?id=</span>
 	<span id="confirmDelete">{t _del_conf}</span>
 	<span id="sortUrl">{link controller=backend.siteNews action=saveOrder}</span>
+	<span id="statusUrl">{link controller=backend.siteNews action=setEnabled}</span>
 </div>
 
 <ul style="display: none;">
@@ -92,10 +93,11 @@
 		<div class="newsListContainer">
 
 			<span class="newsCheckBox">
-				<input type="checkbox" class="checkbox" onclick="lng.setEnabled(this);" />
+				<input type="checkbox" class="checkbox" name="isEnabled" onclick="this.up('li').handler.setEnabled(this);" />
+				<span class="progressIndicator" style="float: left; padding: 0; display: none;"></span>
 			</span>	
             
-		    <span class="progressIndicator" style="display: none;"></span>
+		    <span class="progressIndicator" style="display: none; "></span>
 		
 			<span class="newsData">
 				<span class="newsTitle"></span> 
@@ -106,7 +108,7 @@
 											
 		</div>
 		
-		<div class="formContainer"></div>
+		<div class="formContainer activeList_editContainer" style="display: none;"></div>
 		
 	</div>			
 	<div class="clear"></div>

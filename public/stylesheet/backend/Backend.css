@@ -757,6 +757,7 @@ fieldset.controls
     border: 1px solid #DDD;
     padding: 0.5em;
     padding-left: 1em;
+    margin-top: 1em;
 }
 
 fieldset.group
@@ -1212,7 +1213,7 @@ Translation tabs
 .languageForm
 {
     margin-top: 1em;
-    margin-bottom: 1em;
+    margin-bottom: 0;
     border: 0px none;
     background-color: transparent;			
     padding: 0;

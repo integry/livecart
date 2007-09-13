@@ -21,7 +21,7 @@
 
 #newsList .activeList_icons 
 {
-    left: 0px;
+    left: 5px;
     position: absolute;
     width: auto;
 }
@@ -54,6 +54,18 @@
     display: block;
 }
 
-#newsList textarea {
-   width: 30em;
+#newsList textarea 
+{
+    width: 30em;
+}
+
+#newsList input.add, #addNews input.save
+{
+    display: none;
+}
+
+.formContainer
+{
+    padding-left: 60px;
+    padding-top: 1em;
 }

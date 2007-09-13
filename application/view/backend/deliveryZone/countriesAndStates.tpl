@@ -71,13 +71,13 @@
             <fieldset class="error" {denied role='delivery.update'}style="display: none"{/denied}>
                 <div class="countriesAndStates_maskForm" style="display: none">
                     {textfield name="mask_new" class="countriesAndStates_newMask"}
-                    <input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
+                    <input class="submit button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
                     {t _or} 
-                    <a href="#cancel" class="countriesAndStates_cancelNewMask">{t _cancel}</a>
+                    <a href="#cancel" class="cancel countriesAndStates_cancelNewMask">{t _cancel}</a>
                     <div class="countriesAndStates_exampleMask">{t _example}: Vilnius</div>
                     <span class="errorText hidden"> </span>
                 </div>
-                <a href="#showMask" class="countriesAndStates_showNewMaskForm">{t _add_new_mask}</a>
+                <a href="#showMask" class="menu countriesAndStates_showNewMaskForm">{t _add_new_mask}</a>
             </fieldset>
         </fieldset>
     </fieldset>
@@ -103,13 +103,13 @@
             <fieldset class="error" {denied role='delivery.update'}style="display: none"{/denied}>
                 <div class="countriesAndStates_maskForm" style="display: none">
                     {textfield name="mask_new" class="countriesAndStates_newMask"}
-                    <input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
+                    <input class="submit button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
                     {t _or} 
-                    <a href="#cancel" class="countriesAndStates_cancelNewMask">{t _cancel}</a>
-                    <div class="countriesAndStates_exampleMask">{t _example}: LT-10666</div>
+                    <a href="#cancel" class="cancel countriesAndStates_cancelNewMask">{t _cancel}</a>
+                    <div class="countriesAndStates_exampleMask">{t _example}: 902?? or 902* or 90210</div>
                     <span class="errorText hidden"> </span>
                 </div>
-                <a href="#showMask" class="countriesAndStates_showNewMaskForm">{t _add_new_mask}</a>
+                <a href="#showMask" class="menu countriesAndStates_showNewMaskForm">{t _add_new_mask}</a>
             </fieldset>
         </fieldset>
     </fieldset>
@@ -135,13 +135,13 @@
             <fieldset class="error" {denied role='delivery.update'}style="display: none"{/denied}>
                 <div class="countriesAndStates_maskForm" style="display: none">
                     {textfield name="mask_new" class="countriesAndStates_newMask"}
-                    <input class="button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
+                    <input class="submit button countriesAndStates_newMaskButton" type="button"  value="{t _add_mask}" />
                     {t _or} 
-                    <a href="#cancel" class="countriesAndStates_cancelNewMask">{t _cancel}</a>
-                    <div class="countriesAndStates_exampleMask">{t _example}: Vitenio *</div>
+                    <a href="#cancel" class="cancel countriesAndStates_cancelNewMask">{t _cancel}</a>
+                    <div class="countriesAndStates_exampleMask">{t _example}: Vytenio *</div>
                     <span class="errorText hidden"> </span>
                 </div>
-                <a href="#showMask" class="countriesAndStates_showNewMaskForm">{t _add_new_mask}</a>
+                <a href="#showMask" class="menu countriesAndStates_showNewMaskForm">{t _add_new_mask}</a>
             </fieldset>
         </fieldset>
     </fieldset>

@@ -10,7 +10,7 @@
  */
 function smarty_block_language($params, $content, LiveCartSmarty $smarty, &$repeat)
 {
-	if (!$smarty->getApplication()->getLanguageSetArray())
+    if (!$smarty->getApplication()->getLanguageSetArray())
 	{
         return false;
     }

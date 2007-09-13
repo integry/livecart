@@ -77,6 +77,19 @@ class SiteNewsController extends StoreManagementController
 		return $resp;		  	
 	}
 	
+	/**
+	 * @role status
+	 * @return JSONResponse
+	 */
+	public function setEnabled()
+	{
+		$post = ActiveRecordModel::getInstanceById('NewsPost', $this->request->get('id'), NewsPost::LOAD_DATA);
+		$post->isEnabled->set($this->request->get("status"));
+		$post->save();
+		
+		return new JSONResponse($post->toArray());
+	}
+		
     private function buildForm()
     {
 		ClassLoader::import("framework.request.validator.Form");

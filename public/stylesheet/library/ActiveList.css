@@ -28,6 +28,7 @@ li.activeList_even, li.activeList_odd
 {
     list-style: none;
     margin: 5px 10px;
+    margin-left: 0;
     white-space: nowrap;
     overflow: hidden;
     background-color: #FAFAFA;

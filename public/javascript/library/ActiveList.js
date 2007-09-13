@@ -502,7 +502,7 @@ ActiveList.prototype = {
         this.decorateLi(li);
         this.colorizeItem(li, this.ul.childNodes.length);		    
 
-        if(touch !== false)
+        if(touch)
         {
             this.highlight(li, 'yellow');
             this.touch();
