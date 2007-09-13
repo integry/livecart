@@ -8,67 +8,7 @@
  */
 ActiveForm = Class.create();
 ActiveForm.prototype = {
-    /**
-     * Show form and hide "Show this form" link
-     * @param HTMLElement link
-     * @param HTMLElement form Form should have display block set to use animation. In other case you should pass div instead of form.
-     * @param boolean animate If true or not passed then try to animate this action, else just hide link and show form
-     */
-    showNewItemForm: function(link, form, animate) 
-    {
-        animate = animate !== false ? true : animate;
-        
-        if (link) $(link).addClassName('hidden');  
-        if (animate && BrowserDetect.browser != 'Explorer')
-        {             
-            if (form) 
-            {
-                Effect.BlindDown(form, {duration: 0.3});
-                Effect.Appear(form, {duration: 0.66});
-                
-                setTimeout(function() { 
-                    form.style.display = 'block'; 
-                    form.style.height = 'auto';
-                }, 700);
-            }
-        }
-        else
-        {
-            if (form) form.style.display = 'block'; 
-        }
-    },
-    
-    /**
-     * Show "Show this form" link and hide form
-     * 
-     * @param HTMLElement link
-     * @param HTMLElement form Form should have display block set to use animation. In other case you should pass div instead of form.
-     * @param boolean animate If true or not passed then try to animate this action, else just hide link and show form
-     */
-    hideNewItemForm: function(link, form, animate)
-    {
-        animate = animate !== false ? true : animate;
-        
-        if (animate && BrowserDetect.browser != 'Explorer')
-        {
-            if (form) 
-            {
-                Effect.Fade(form, {duration: 0.2});
-                Effect.BlindUp(form, {duration: 0.3});
-                setTimeout(function() { form.style.display = 'none'; }, 300);   
-            }
-            
-            if (link) 
-            {
-                setTimeout(function() { $(link).removeClassName('hidden'); }, 300);   
-            }
-        }
-        else
-        {
-            if (link) $(link).removeClassName('hidden');
-            if (form) form.style.display = 'none';
-        }
-    },
+ 
     
     /**
      * Generate valid handle from item title
@@ -98,74 +38,6 @@ ActiveForm.prototype = {
 		handle = handle.replace(/\.$/g, "");
 				       
         return handle;
-    },
-    
-    /**
-     * Show translations
-     * 
-     * To use this method you must have appropriate HTML structure shown bellow
-     * 
-     * <code>
-     *   <fieldset class="dom_template specField_step_translations_language specField_step_translations_language_">
-     *       <legend>
-     *           <span class="expandIcon">[+]</span>
-     *           <span class="specField_legend_text">Language</span>
-     *       </legend>
-     *       <div class="activeForm_translation_values">
-     *           <p>
-     *               <label>Title</label>
-     *               <input type="text" name="name" />
-     *           </p>
-     *          
-     *           ...
-     *       </div>
-     *   </fieldset>
-     * </code>
-     * 
-     * @param HTMLFieldsetElement fieldst
-     */
-    showTranslations: function(fieldset) 
-    {
-        var values = document.getElementsByClassName("activeForm_translation_values", fieldset)[0];
-        var legend = fieldset.getElementsByTagName('legend')[0];     
-        values.style.display = 'block';
-        document.getElementsByClassName("expandIcon", legend)[0].innerHTML = '[-] ';    
-    },
-    
-    /**
-     * Hide translations
-     * 
-     * To use this method you must have appropriate HTML structure shown bellow
-     * 
-     * @see ActiveForm.prototype.showTranslations
-     * @param HTMLFieldsetElement form
-     */
-    hideTranslations: function(fieldset) 
-    {
-        var values = document.getElementsByClassName("activeForm_translation_values", fieldset)[0];
-        var legend = fieldset.getElementsByTagName('legend')[0];     
-        values.style.display = 'none';
-        document.getElementsByClassName("expandIcon", legend)[0].innerHTML = '[+] ';    
-    },
-    
-    /**
-     * Toggle translations
-     * 
-     * To use this method you must have appropriate HTML structure shown bellow
-     * 
-     * @see ActiveForm.prototype.showTranslations
-     * @param HTMLFieldsetElement form
-     */
-    toggleTranslations: function(fieldset) 
-    {
-        if ('block' != document.getElementsByClassName("activeForm_translation_values", fieldset)[0].style.display)
-        {
-            ActiveForm.prototype.showTranslations(fieldset);
-        }
-        else
-        {
-            ActiveForm.prototype.hideTranslations(fieldset);
-        } 
     },
     
     resetErrorMessages: function(form)
@@ -405,7 +277,13 @@ ActiveForm.Slide.prototype = {
 		
 		if(form)
 		{
-            Element.show(form);
+            Effect.BlindDown(form, {duration: 0.3});
+            Effect.Appear(form, {duration: 0.66});
+            
+            setTimeout(function() { 
+                form.style.display = 'block'; 
+                form.style.height = 'auto';
+            }, 700);
 		}
 		
 		ActiveForm.prototype.initTinyMceFields(form); 
@@ -430,7 +308,9 @@ ActiveForm.Slide.prototype = {
 		
 		if(form)
 		{
-            Element.hide(form);
+			Effect.Fade(form, {duration: 0.2});
+            Effect.BlindUp(form, {duration: 0.3});
+            setTimeout(function() { form.style.display = 'none'; }, 300);   
 		}
 		
         ActiveForm.prototype.destroyTinyMceFields(form); 
