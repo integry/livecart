@@ -9,5 +9,6 @@ public/javascript/compiled/*.*
 public/stylesheet/compiled/*.*
 public/upload/*
 storage/configuration/settings.php
+storage/configuration/database.php
 Thumbs.db
 update.bat
