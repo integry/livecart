@@ -150,13 +150,24 @@
   </form>
 </div>
 
+{literal}
 <script type="text/javascript">
-	grid = new ActiveGrid($('{$prefix}_{$id}'), '{$url}{$filters}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"), {$rowCount});
-	console.log(grid);
+try
+{
+    if(!window.activeGrids) window.activeGrids = {};
+    {/literal};
+ 	
+ 	window.activeGrids['{$prefix}_{$id}'] = new ActiveGrid($('{$prefix}_{$id}'), '{$url}{$filters}', {$totalCount}, $("{$prefix}LoadIndicator_{$id}"), {$rowCount});
+    
 	{foreach from=$displayedColumns item=index key=column name="columns"}
 		{if !$smarty.foreach.columns.first}
-		    new ActiveGridFilter($('filter_{$column}_{$id}'), grid);
+		    new ActiveGridFilter($('filter_{$column}_{$id}'), window.activeGrids['products_{$categoryID}']);
 		{/if}
 	{/foreach}
-	
+{literal}}
+catch(e)
+{
+console.info(e);
+}	
 </script>
+{/literal}

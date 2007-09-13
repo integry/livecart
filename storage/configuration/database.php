@@ -1,5 +1,5 @@
 <?php return array (
-  'production' => 'mysql://root@localhost/livecart_prex',
-  'development' => 'mysql://root@localhost/livecart_development',
-  'test' => 'mysql://root@localhost/livecart_test',
+  'production' => 'mysql://root@server/livecart_prex',
+  'development' => 'mysql://root@server/livecart_prex',
+  'test' => 'mysql://root@server/livecart_test',
 ); ?>

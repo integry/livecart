@@ -65,17 +65,17 @@
         
         <span class="bulkValues" style="display: none;">
         	<span class="addRelated">
-	            {t _enter_sku}: {textfield class="text number" name="related" autocomplete="controller=backend.product field=sku"}
+	            {t _enter_sku}: {textfield class="text number" id="massForm_related_`$categoryID`" name="related" autocomplete="controller=backend.product field=sku"}
         	</span>
-            {textfield class="text number" name="inc_price"}
-            {textfield class="text number" name="inc_stock"}
-            {textfield class="text number" name="set_stockCount"}
-            {textfield class="text number" name="price"}  
-            {textfield class="text number" name="set_minimumQuantity"}
-            {textfield class="text number" name="set_shippingSurchargeAmount"}
-   			{textfield name="manufacturer" class="text" autocomplete="controller=backend.manufacturer field=manufacturer" id="set_manufacturer_`$categoryID`"}
-			{textfield name="set_keywords" class="text" id="set_keywords_`$categoryID`" autocomplete="controller=backend.product field=keywords"}
-			{textfield name="set_URL" class="text" id="set_url_`$categoryID`" autocomplete="controller=backend.product field=URL"}
+            {textfield id="massForm_inc_price_`$categoryID`" class="text number" name="inc_price"}
+            {textfield id="massForm_inc_stock_`$categoryID`" class="text number" name="inc_stock"}
+            {textfield id="massForm_set_stockCount_`$categoryID`" class="text number" name="set_stockCount"}
+            {textfield id="massForm_price_`$categoryID`" class="text number" name="price"}  
+            {textfield id="massForm_set_minimumQuantity_`$categoryID`" class="text number" name="set_minimumQuantity"}
+            {textfield id="massForm_shippingSurchargeAmount_`$categoryID`" class="text number" name="set_shippingSurchargeAmount"}
+   			{textfield id="massForm_manufacturer_`$categoryID`" name="manufacturer" class="text" autocomplete="controller=backend.manufacturer field=manufacturer" id="set_manufacturer_`$categoryID`"}
+			{textfield id="massForm_set_keywords_`$categoryID`" name="set_keywords" class="text" id="set_keywords_`$categoryID`" autocomplete="controller=backend.product field=keywords"}
+			{textfield id="massForm_set_URL_`$categoryID`" name="set_URL" class="text" id="set_url_`$categoryID`" autocomplete="controller=backend.product field=URL"}
         </span>
         
         <input type="submit" value="{tn _process}" class="submit" />
@@ -93,7 +93,6 @@
 	</span>
     
 </fieldset>
-
 {activeGrid 
 	prefix="products" 
 	id=$categoryID 
@@ -110,12 +109,19 @@
 
 {literal}
 <script type="text/javascript">
+try
+{
 {/literal}
-
-	grid.setDataFormatter(Backend.Product.GridFormatter);
+	window.activeGrids['products_{$categoryID}'].setDataFormatter(Backend.Product.GridFormatter);
     
-    var massHandler = new Backend.Product.massActionHandler($('productMass_{$categoryID}'), grid);
+    var massHandler = new Backend.Product.massActionHandler($('productMass_{$categoryID}'), window.activeGrids['products_{$categoryID}']);
     massHandler.deleteConfirmMessage = '{t _delete_conf|addslashes}' ;
     massHandler.nothingSelectedMessage = '{t _nothing_selected|addslashes}' ;
-
+{literal}
+}
+catch(e)
+{
+    console.info(e)
+}
 </script>
+{/literal}
