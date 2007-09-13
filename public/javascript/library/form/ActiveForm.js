@@ -379,12 +379,13 @@ ActiveForm.Slide.prototype = {
 		this.ul = $(ul);
 	},
 
-    show: function(className, form)
+    show: function(className, form, ignoreFields)
 	{
+		ignoreFields = ignoreFields || [];
 		var form = $(form);
 		var cancel = this.ul.down("." + className + 'Cancel');
 		
-		Form.State.backup(form);
+		Form.State.backup(form, ignoreFields);
 		ActiveList.prototype.collapseAll();
 		
 		this.ul.childElements().invoke("hide");
@@ -410,10 +411,11 @@ ActiveForm.Slide.prototype = {
 		ActiveForm.prototype.initTinyMceFields(form); 
 	},
 
-    hide: function(className, form)
+    hide: function(className, form, ignoreFields)
     {
+        ignoreFields = ignoreFields || [];
 		var form = $(form);
-        Form.State.restore(form);
+        Form.State.restore(form, ignoreFields);
 		
 		this.ul.childElements().each(function(element) {
 			if(!element.className.match(/Cancel/))

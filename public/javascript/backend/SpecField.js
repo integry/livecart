@@ -1097,7 +1097,7 @@ Backend.SpecField.prototype = {
     hideNewSpecFieldAction: function(categoryID)
     {
         var form = new ActiveForm.Slide("specField_menu_" + categoryID);
-        form.hide("addSpecField", this.cssPrefix + "item_new_" + categoryID + "_form");
+        form.hide("addSpecField", this.cssPrefix + "item_new_" + categoryID + "_form", ['type']);
     },
 
 
@@ -1152,7 +1152,7 @@ Backend.SpecField.prototype = {
     createNewAction: function(categoryID)
     {
 		var form = new ActiveForm.Slide("specField_menu_" + categoryID);
-		form.show("addSpecField", this.cssPrefix + "item_new_"+categoryID+"_form");
+		form.show("addSpecField", this.cssPrefix + "item_new_"+categoryID+"_form", ['type']);
     },
     
     toggleValuesMerging: function()
