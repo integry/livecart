@@ -27,7 +27,7 @@
 
     <p>
         {err for="username"}
-            {{label User name:}}
+            {{label Database user name:}}
             {textfield class="text"}
         {/err}    
     </p>

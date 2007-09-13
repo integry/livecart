@@ -161,7 +161,7 @@ class Currency extends ActiveRecordModel
 		}
 	}
 	
-	public function save()
+	public function save($forceOperation = 0)
 	{
         // do not allow 0 rates
         if (!$this->rate->get())
@@ -169,7 +169,7 @@ class Currency extends ActiveRecordModel
             $this->rate->set(1);
         }
         
-        return parent::save();
+        return parent::save($forceOperation);
     }
     
     protected function insert()

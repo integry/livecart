@@ -13,10 +13,23 @@
 	
 	<!-- Css includes -->
 	<link href="stylesheet/install/Install.css" rel="Stylesheet" type="text/css"/>
-	<!--[if IE]>
+
+	{literal}
+    <!--[if IE]>
 		<link href="stylesheet/frontend/InstallIE.css" rel="Stylesheet" type="text/css"/>
+		<style>
+            #header
+    		{
+                padding-bottom: 0;
+            }
+            #form
+            {
+                width: 430px;
+            }
+        </style>
 	<![endif]-->
-	
+	{/literal}
+    	
     {includeJs file="library/prototype/prototype.js"}
     {includeJs file="library/livecart.js"}
     {includeJs file="library/form/Validator.js"}
@@ -27,12 +40,22 @@
 </head>
 
 <body>
-	<div id="container" class="lang_{localeCode}">
+	<div id="container" class="lang_{localeCode} action_{$request.action}">
 		<div id="header">
-			LiveCart Installer			
+			<span id="title" style="float: left">LiveCart Installer</span>
+			<ul id="installProgress">
+                <li id="progressRequirements">Requirements</li>
+                <li id="progressLicense">License</li>
+                <li id="progressDatabase">Database</li>
+                <li id="progressAdmin">Admin</li>
+                <li id="progressConfig">Config</li>
+                <li id="progressFinish">Finish</li>
+			</ul>
+			<div class="clear"></div>
 		</div>
-		<div id="installContent">
+		<div id="installContent" class="action_{$request.action}">
 			{$ACTION_VIEW}
+			<div class="clear"></div>
 		</div>
 	</div>	
 </body>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Display a tip block
  *
@@ -9,7 +10,12 @@
  */
 function smarty_block_language($params, $content, LiveCartSmarty $smarty, &$repeat)
 {
-	if ($repeat)
+	if (!$smarty->getApplication()->getLanguageSetArray())
+	{
+        return false;
+    }
+    
+    if ($repeat)
 	{
 		$smarty->languageBlock = $smarty->getApplication()->getLanguageSetArray();		
 		$smarty->assign('languageBlock', $smarty->languageBlock);

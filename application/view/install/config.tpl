@@ -1,7 +1,7 @@
-<h1>Site Configuration</h1>
+<h1>Store Configuration</h1>
 
 <p>
-    This step allows you to configure the most important aspects of your store. More configuration options will be available after the installation is completed.
+    This step allows you to configure the most important aspects of your store. <Br />More configuration options will be available after the installation is completed.
 </p>
 
 {form action="controller=install action=setConfig" method="POST" handle=$form}
@@ -21,7 +21,7 @@
     </p>
 
     <p>
-        {err for="currency"}
+        {err for="curr"}
             {{label Base currency:}}
             {selectfield options=$currencies}
         {/err}

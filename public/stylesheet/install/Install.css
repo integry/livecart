@@ -43,7 +43,6 @@ h2
 	margin-top: 20px;
 	margin-bottom: 12px;
 	padding-top: 7px;
-	border-top: 1px dashed #AAAAAA;
     font-size: 150%;
 }
 
@@ -117,9 +116,14 @@ div.confirmationMsg div
 #header 
 {
   	padding: 15px;
-  	font-size: 30px;
   	background-color: #183583;
   	color: #fff;
+}
+
+#header #title
+{
+  	font-size: 30px;    
+  	margin-right: 2em;
 }
 
 #footer 
@@ -242,8 +246,8 @@ p.required label
 
 p.radio, p.checkbox
 {
-   padding-left: 11em;
-   line-height: 1.7em;
+    padding-left: 11em;
+    line-height: 1.7em;
 }
 
 p.radio label, p.checkbox label
@@ -435,6 +439,15 @@ input.date
 #installContent
 {
 	padding-left: 50px;
+	background-image: url(../../image/promo/logo_large_install.png);
+	background-repeat: no-repeat;
+	background-position: top right;
+	min-height: 600px;
+}
+
+#installContent.action_license
+{
+    background-image: none;
 }
 
 /*************************
@@ -498,4 +511,51 @@ dd
     float: left; 
     padding: 0.6em; 
     cursor: pointer;
+}
+
+/*************************
+	Finish
+*************************/
+#whatsNext li
+{
+    margin-bottom: 1em;
+    margin-left: 1em;
+}
+
+form
+{
+    padding-left: 0; 
+    border: 1px solid #BFB;
+    background-color: #EFE;
+    float: left; 
+    padding: 0.6em; 
+    white-space: nowrap;
+    margin: 0pt auto;
+}
+
+#installProgress
+{
+    float: left;
+    margin: 0;
+}
+
+#installProgress li
+{
+    float: left;
+    list-style-type: none;
+    width: 80px;
+    padding: 0.8em;
+    border: 1px solid white;
+    margin-right: 1em;
+    text-align: center;
+}
+
+.action_index #progressRequirements,
+.action_license #progressLicense,
+.action_database #progressDatabase,
+.action_admin #progressAdmin,
+.action_config #progressConfig,
+.action_finish #progressFinish
+{
+    background-color: #11f !important;
 }

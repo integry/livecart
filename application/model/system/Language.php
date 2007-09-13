@@ -65,16 +65,18 @@ class Language extends ActiveRecordModel
 	  	return true;
 	}
 
-	public function save()
+	public function save($forceOperation = 0)
 	{
 		@unlink(ClassLoader::getRealPath('cache') . '/languages.php');
 		
-		return parent::save();
+		return parent::save($forceOperation);
 	}
 	
 	public static function deleteById($id)
 	{
-		// make sure the currency record exists
+		@unlink(ClassLoader::getRealPath('cache') . '/languages.php');
+
+		// make sure the language record exists
 		$inst = ActiveRecord::getInstanceById('Language', $id, true);
 		
 		// make sure it's not the default currency

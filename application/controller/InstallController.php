@@ -9,9 +9,6 @@ class InstallController extends FrontendController
     public function init()
 	{
 	  	$this->setLayout('install');
-	    
-		
-//	  	$this->addBlock('CATEGORY_BOX', 'boxCategory', 'block/box/category');
 	}
 
 	public function index()
@@ -33,6 +30,11 @@ class InstallController extends FrontendController
 	
 	public function license()
 	{
+        if ($lastStep = $this->verifyStep())
+        {
+            return $lastStep;
+        }
+        
         $response = new ActionResponse('license', file_get_contents(ClassLoader::getRealPath('.') . 'license.txt'));
         $response->set('form', $this->buildLicenseForm());
         return $response;
@@ -50,6 +52,11 @@ class InstallController extends FrontendController
     
     public function database()
     {
+        if ($lastStep = $this->verifyStep())
+        {
+            return $lastStep;
+        }
+
         $response = new ActionResponse('form', $this->buildDatabaseForm());
         
         return $response;
@@ -69,6 +76,7 @@ class InstallController extends FrontendController
 				   				'/' . $this->request->get('name');
 		
 		ClassLoader::import('library.activerecord.ActiveRecord');
+		ActiveRecord::resetDBConnection();
 		ActiveRecord::setDSN($dsn);
 		
 		try
@@ -84,10 +92,16 @@ class InstallController extends FrontendController
 			$dsnArray = array('production' => $dsn, 'development' => $dsn, 'test' => $dsn);
 			file_put_contents($dsnFile, '<?php return ' . var_export($dsnArray, true) . '; ?>');
 			
+            ActiveRecord::beginTransaction();
+        
 			// import schema
+            Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql') . '/create.sql'));
             
-            // initial data			
-			
+            // create root category
+            Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql') . '/initialData.sql'));
+		
+            ActiveRecord::commit();
+        	
 			return new ActionRedirectResponse('install', 'admin');
 		}
 		catch (SQLException $e)
@@ -102,6 +116,11 @@ class InstallController extends FrontendController
 
 	public function admin()
 	{
+        if ($lastStep = $this->verifyStep())
+        {
+            return $lastStep;
+        }
+
 		return new ActionResponse('form', $this->buildAdminForm());
 	}
     
@@ -138,9 +157,15 @@ class InstallController extends FrontendController
     
     public function config()
     {
+        if ($lastStep = $this->verifyStep())
+        {
+            return $lastStep;
+        }
+
         $form = $this->buildConfigForm();
+        $form->set('name', $this->config->get('siteName'));
         $form->set('language', 'en');
-        $form->set('currency', 'USD');
+        $form->set('curr', 'USD');
         
 		// get all Locale languages
 		$languages = $this->locale->info()->getAllLanguages();
@@ -150,6 +175,91 @@ class InstallController extends FrontendController
         $response->set('languages', $languages);
         $response->set('currencies', $this->locale->info()->getAllCurrencies());
         return $response;
+    }
+    
+    public function setConfig()
+    {
+		if (!$this->buildConfigValidator()->isValid())
+		{
+			return new ActionRedirectResponse('install', 'config');
+		}
+        
+        // site name
+        $this->config->set('siteName', $this->request->get('name'));
+        $this->config->save();
+        
+        ClassLoader::import('application.model.Currency');
+        
+        // create currency
+        try
+        {
+            $currency = Currency::getInstanceByID($this->request->get('curr'), Currency::LOAD_DATA);
+        }
+        catch (ARNotFoundException $e)
+        {
+            $currency = ActiveRecord::getNewInstance('Currency');
+            $currency->setID($this->request->get('curr'));
+            $currency->isEnabled->set(true);
+            $currency->isDefault->set(true);
+            $currency->save(ActiveRecord::PERFORM_INSERT);
+        }
+        
+        ClassLoader::import('application.model.system.Language');
+        
+        // create language
+        try
+        {
+            $language = Language::getInstanceByID($this->request->get('language'), Language::LOAD_DATA);
+        }
+        catch (ARNotFoundException $e)
+        {
+            $language = ActiveRecord::getNewInstance('Language');
+            $language->setID($this->request->get('language'));
+            $language->save(ActiveRecord::PERFORM_INSERT);
+
+            $language->isEnabled->set(true);
+            $language->isDefault->set(true);
+            $language->save();
+        }
+     
+        // set root category name to "LiveCart"
+        ClassLoader::import('application.model.category.Category');
+        $root = Category::getInstanceById(Category::ROOT_ID, Category::LOAD_DATA);
+        $root->setValueByLang('name', $language->getID(), 'LiveCart');
+        $root->save();
+     
+        return new ActionRedirectResponse('install', 'finish');
+    }
+    
+    public function finish()
+    {
+        if ($lastStep = $this->verifyStep())
+        {
+            return $lastStep;
+        }
+
+        $response = new ActionResponse();
+        
+        return $response;
+    }
+    
+    private function verifyStep()
+    {
+        $steps = array('index', 'license', 'database', 'admin', 'config', 'finish');
+        $steps = array_flip($steps);
+        
+        $lastStepFile = ClassLoader::getRealPath('cache') . '/installStep.php';
+        
+        if (file_exists($lastStepFile))
+        {
+            $lastStep = include $lastStepFile;
+            if ($steps[$lastStep] > $steps[$this->request->getActionName()])
+            {
+                return new ActionRedirectResponse('install', $lastStep);
+            }
+        }
+        
+        file_put_contents($lastStepFile, '<?php return ' . var_export($this->request->getActionName(), true) . '; ?>');
     }
     
 	/**
@@ -222,9 +332,9 @@ class InstallController extends FrontendController
 	private function buildConfigValidator()
 	{
 		$validator = new RequestValidator("installConfig", $this->request);
-		$validator->addCheck("sitename", new IsNotEmptyCheck($this->translate("Please enter the name of your store")));
+		$validator->addCheck("name", new IsNotEmptyCheck($this->translate("Please enter the name of your store")));
 		$validator->addCheck("language", new IsNotEmptyCheck($this->translate("Please select the base language of your store")));
-		$validator->addCheck("currency", new IsNotEmptyCheck($this->translate("Please select the base currency of your store")));
+		$validator->addCheck("curr", new IsNotEmptyCheck($this->translate("Please select the base currency of your store")));
 
 		return $validator;
 	}

@@ -109,11 +109,26 @@ class Installer
 		return 1 == version_compare($mainVersion . '.' . $minorVersion . '.' . $subVersion, '4.1', '>=');
 	}
 
-	public function checkApache()
-	{
-		
-	}
-
+    public function loadDatabaseDump($dump)
+    {
+        // newlines
+        $dump = str_replace("\r", '', $dump);
+        
+        // clear comments
+        $dump = preg_replace('/#.*#/', '', $dump);
+        
+        // get queries
+        $queries = preg_split('/;\n/', $dump);        
+        
+        foreach ($queries as $query)
+        {
+            $query = trim($query);
+            if (!empty($query))
+            {
+                ActiveRecord::executeUpdate($query);
+            }
+        }
+    }
 }
 
 ?>
