@@ -84,7 +84,7 @@
             <p class="required">
                 {err for="billing_country"}
                     {{label {t _country}:}}        		
-                    {selectfield options=$countries}
+                    {selectfield options=$countries id="billing_country"}
                     <span class="progressIndicator" style="display: none;"></span>        			
         		{/err}
             </p>
@@ -92,8 +92,8 @@
             <p class="required">
                 {err for="billing_state_select"}
                     {{label {t _state}:}}
-                    {selectfield style="display: none;" options=$states}
-                    {textfield name="billing_state_text" class="text"}
+                    {selectfield style="display: none;" options=$states id="billing_state_select"}
+                    {textfield name="billing_state_text" class="text" id="billing_state_text"}
         		{/err}
 
                 {literal}
@@ -142,7 +142,7 @@
                 <p class="required">
                     {err for="shipping_country"}
                         {{label {t _country}:}}            		
-                        {selectfield options=$countries}
+                        {selectfield options=$countries id="shipping_country"}
             			<span class="progressIndicator" style="display: none;"></span>
             		{/err}
                 </p>
@@ -150,8 +150,8 @@
                 <p class="required">
                     {err for="shipping_state_select"}
                         {{label {t _state}:}}
-                        {selectfield style="display: none;" options=$states}
-                        {textfield name="shipping_state_text" class="text"}
+                        {selectfield style="display: none;" options=$states id="shipping_state_select"}
+                        {textfield name="shipping_state_text" class="text" id="shipping_state_text"}
             		{/err}
     
                     {literal}
