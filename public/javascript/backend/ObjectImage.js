@@ -24,6 +24,8 @@ Backend.ObjectImage.prototype =
 		this.container = container;
 		this.container.handler = this;
 		
+		this.initActiveList();
+		
 		this.ownerID = ActiveList.prototype.getRecordId(container);
 		this.prefix = prefix;
 		

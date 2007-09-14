@@ -21,7 +21,6 @@ Backend.SiteNews.prototype =
                  if (!this.isContainerEmpty(li, 'edit'))
                  {
                      li.handler.cancelEditForm();
-                     //this.toggleContainer(li, 'edit');
                      return;
                  }
 
