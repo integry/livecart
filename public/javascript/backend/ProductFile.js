@@ -798,15 +798,14 @@ Backend.ProductFile.Group.View.prototype = {
             + '</ul>'
         );
         
-        li = activeList.addRecord(this.get('ID'), containerDiv);
-        ActiveList.prototype.getInstance($('productFile_list_' + this.get('productID') + '_' + this.get('ID')), Backend.ProductFile.Callbacks, Backend.ProductFile.Messages);
+        var li = activeList.addRecord(this.get('ID'), containerDiv);
         Element.addClassName(li, this.prefix  + 'item');
-                
-        activeList.highlight(li);
-        activeList.touch();
         
+        var newGroupProductsList = ActiveList.prototype.getInstance(li.down('.productFile_list'), Backend.ProductFile.Callbacks);
         ActiveList.prototype.recreateVisibleLists();
-        
+
+		activeList.touch(true)
+		
         this.clear();
     },
     

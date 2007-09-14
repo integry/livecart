@@ -412,11 +412,20 @@ Backend.RelatedProduct.Group.View.prototype = {
             + '<ul id="productRelationship_list_' + this.get('productID') + '_' + this.get('ID') + '" class="productRelationship_list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_productRelationship_list">'
             + '</ul>'
         );
-        
-        li = activeList.addRecord(this.get('ID'), containerDiv);
-        ActiveList.prototype.getInstance($('productRelationship_list_' + this.get('productID') + '_' + this.get('ID')), Backend.RelatedProduct.activeListCallbacks);
-        Element.addClassName(li, 'productRelationshipGroup_item');
-        
+        try
+		{
+	        var li = activeList.addRecord(this.get('ID'), containerDiv);
+	        Element.addClassName(li, 'productRelationshipGroup_item');
+	        
+			var newGroupProductsList = ActiveList.prototype.getInstance(li.down('.productRelationship_list'), Backend.RelatedProduct.activeListCallbacks);
+	        ActiveList.prototype.recreateVisibleLists();
+			
+			activeList.touch(true)
+		}
+		catch(e)
+		{
+			console.info(e)
+		}
         this.clear();
     },
     

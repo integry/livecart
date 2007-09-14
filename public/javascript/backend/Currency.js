@@ -104,19 +104,12 @@ Backend.Currency.prototype =
 		// hide menu..
 		Backend.Currency.prototype.hideNewForm();
 
- 	    eval('var itemData = ' + originalRequest.responseText);
+ 	    var itemData = eval('(' + originalRequest.responseText + ")");
 		
 	  	var template = $('currencyList_template');
 	  	
-	  	var list = $('currencyList');
-		var node = template.cloneNode(true);
-		node = this.renderItem(itemData, node);
-		list.appendChild(node);
-  	
         var activeList = ActiveList.prototype.getInstance('currencyList');
-        activeList.decorateItems();
-        activeList.createSortable();
-        
+		activeList.addRecord(itemData['ID'], this.renderItem(itemData, template.cloneNode(true)));
         this.resetRatesContainer();
 	},	
 	

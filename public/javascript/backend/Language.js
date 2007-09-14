@@ -156,23 +156,16 @@ Backend.LanguageIndex.prototype =
 	addToList: function(originalRequest)
 	{		
  	    var response = eval('(' + originalRequest.responseText + ')');
-		var itemData = response.language;
         
 	  	var template = $('languageList_template');
-	  	
-	  	var list = $('languageList');
-		var node = template.cloneNode(true);
-		node = this.renderItem(itemData, node);
-
-		list.appendChild(node);
-
+        
         var list = this.initLangList();
-        list.decorateItems();
-        list.createSortable();
+		var node = this.renderItem(response.language, template.cloneNode(true));
+		list.addRecord(response.language['ID'], node);
         		
 		Backend.LanguageIndex.prototype.hideAddForm();
 		
-		Element.hide($('addLangFeedback'));
+		Element.hide('addLangFeedback');
 		
 						
         new Effect.Highlight(node, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});

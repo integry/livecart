@@ -24,8 +24,6 @@ Backend.ObjectImage.prototype =
 		this.container = container;
 		this.container.handler = this;
 		
-		this.initActiveList();
-		
 		this.ownerID = ActiveList.prototype.getRecordId(container);
 		this.prefix = prefix;
 		
@@ -34,14 +32,16 @@ Backend.ObjectImage.prototype =
 	},
 	
 	initList: function(imageList)
-	{
+	{             
+        this.initActiveList();
+		
 		for (k = 0; k < imageList.length; k++)
 		{
-		  	this.addToList(imageList[k]);
+		  	this.addToList(imageList[k], false);
 		}  
 		                
-        this.arrangeImages();                
-        this.initActiveList();
+        this.arrangeImages(); 
+		this.activeList.touch(true);  
 	},
     
     arrangeImages: function()
@@ -75,7 +75,7 @@ Backend.ObjectImage.prototype =
 		// display message if no images are uploaded
 		this.showNoImagesMessage();
 
-		ActiveList.prototype.getInstance(this.container, {
+		this.activeList = ActiveList.prototype.getInstance(this.container, {
 	         
 			 beforeEdit:     function(li) 
 			 {
@@ -279,7 +279,7 @@ Backend.ObjectImage.prototype =
 	addToList: function(imageData, highLight)
 	{
 		var templ = this.createEntry(imageData);
-		ActiveList.prototype.getInstance(this.container).addRecord(imageData['ID'], templ.innerHTML, highLight ? 'yellow' : null);
+		ActiveList.prototype.getInstance(this.container).addRecord(imageData['ID'], templ.innerHTML, highLight);
 	},
 	
 	updateEntry: function(imageData, highLight)

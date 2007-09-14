@@ -27,7 +27,7 @@
 </ul>
 
 {* Files in groups *}
-<ul id="productFileGroup_list_{$productID}" class="{allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit productFileGroup_list">
+<ul id="productFileGroup_list_{$productID}" class="activeListGroup{allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit productFileGroup_list">
 {foreach item="productFile" from=$productFilesWithGroups}
     {if !$productFile.ProductFileGroup.ID}{php}continue;{/php}{/if}
     

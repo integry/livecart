@@ -240,7 +240,7 @@ ActiveList.prototype = {
 				   var s = Sortable.options(ul);
      
  				   if(s) 
-				   { 
+				   {
                       Draggables.removeObserver(s.element);
                       s.draggables.invoke('destroy');
 				   }
@@ -331,6 +331,13 @@ ActiveList.prototype = {
         ActiveList.prototype.collapseAll();
         
         Sortable.destroy(this.ul);
+        // Destroy parent sortable as well
+        var parentList = this.ul.up(".activeList");
+        if(parentList && ActiveList.prototype.activeListsUsers[parentList.id])
+        {
+           ActiveList.prototype.activeListsUsers[parentList.id].destroySortable(true);
+        }
+		
         if(BrowserDetect.browser != 'Explorer')
         {
             Effect.BlindDown(container, { duration: 0.5 });
@@ -357,7 +364,15 @@ ActiveList.prototype = {
     toggleContainerOff: function(container, highlight)
     {
         var container = $(container);
-        this.createSortable();
+        this.createSortable(true);
+		
+        // Create parent sortable as well
+        var parentList = this.ul.up(".activeList");
+        if(parentList && ActiveList.prototype.activeListsUsers[parentList.id])
+        {
+           ActiveList.prototype.activeListsUsers[parentList.id].createSortable(true);
+        }
+		
         if(BrowserDetect.browser != 'Explorer')
         {
             Effect.BlindUp(container, {duration: 0.2});
@@ -502,10 +517,10 @@ ActiveList.prototype = {
         this.decorateLi(li);
         this.colorizeItem(li, this.ul.childNodes.length);		    
 
-        if(touch)
+        if(touch || touch === undefined)
         {
             this.highlight(li, 'yellow');
-            this.touch();
+            this.touch(true);
         }
 
         return li;
@@ -852,7 +867,7 @@ ActiveList.prototype = {
                     this.dragged = elementObj;
                 }.bind(this),
                 onUpdate:      function() { 
-                    this.saveSortOrder(); 
+			        setTimeout(function() { this.saveSortOrder(); }.bind(this), 1);
                 }.bind(this),
 				
                 starteffect: function(){ this.scrollStart() }.bind(this),
@@ -860,9 +875,11 @@ ActiveList.prototype = {
             });
 			
             this.isSortable = true; 
-            $A(this.acceptFromLists).each(function(ul) {
-				if(ActiveList.prototype.activeListsUsers[ul.id]) {
-                    ActiveList.prototype.getInstance(ul).createSortable();
+            $A(this.acceptFromLists).each(function(ul) 
+			{
+				if(ActiveList.prototype.activeListsUsers[ul.id]) 
+				{
+					ActiveList.prototype.activeListsUsers[ul.id].createSortable();
 				}
             });
         }        
@@ -1011,13 +1028,22 @@ ActiveList.prototype = {
         {
             // execute the action
             this._currentLi = this.dragged;
-            
             var url = this.callbacks.beforeSort.call(this, this.dragged, order);
+                
+            this.destroySortable();
+
+            // Destroy parent sortable as well
+            var parentList = this.ul.up(".activeList");
+            if(parentList && ActiveList.prototype.activeListsUsers[parentList.id])
+            {
+                ActiveList.prototype.activeListsUsers[parentList.id].destroySortable(true);
+            }
+				
 			if(url)
 			{
 	            // display feedback
 	            this.onProgress(this.dragged);
-                this.destroySortable();
+				
 	            new LiveCart.AjaxRequest(
 	                url + "&draggedID=" + this.dragged.id,
 	                false,
@@ -1051,9 +1077,16 @@ ActiveList.prototype = {
         this.hideMenu(li);
 
         this._currentLi = li;
-        
+		console.info(li)
         var success = this.callbacks.afterSort.call(this, li, item);
-		this.createSortable();
+		this.createSortable(true);
+		
+		// Recreate parent list sortable as well
+		var parentList = this.ul.up(".activeList");
+		if(parentList && ActiveList.prototype.activeListsUsers[parentList.id])
+		{
+			ActiveList.prototype.activeListsUsers[parentList.id].createSortable(true);
+		}
 		
         this.colorizeItems();
         li.prevParentId = this.ul.id;
@@ -1261,9 +1294,9 @@ ActiveList.prototype = {
     /**
      * Make list work again
      */
-    touch: function()
+    touch: function(force)
     {
-        this.generateAcceptFromArray();
-        this.createSortable();
+        this.generateAcceptFromArray(force);
+        this.createSortable(force);
     }
 }

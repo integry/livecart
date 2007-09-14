@@ -71,7 +71,7 @@
 </ul>
 
 
-<ul id="productRelationshipGroup_list_{$productID}" class="{allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit productRelationshipGroup_list">
+<ul id="productRelationshipGroup_list_{$productID}" class="activeListGroup {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit productRelationshipGroup_list">
 {foreach item="relationship" from=$relationshipsWithGroups}
     {if !$relationship.ProductRelationshipGroup.ID}{php}continue;{/php}{/if}
     

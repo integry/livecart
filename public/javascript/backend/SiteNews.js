@@ -21,6 +21,7 @@ Backend.SiteNews.prototype =
                  if (!this.isContainerEmpty(li, 'edit'))
                  {
                      li.handler.cancelEditForm();
+                     //this.toggleContainer(li, 'edit');
                      return;
                  }
 
@@ -54,7 +55,8 @@ Backend.SiteNews.prototype =
 		{
 			new Backend.SiteNews.PostEntry(container, template, el, false);
 		});
-	
+		
+		ActiveList.prototype.getInstance('newsList').touch(true);
 	},
 	
 	showAddForm: function()

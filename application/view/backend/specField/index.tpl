@@ -99,7 +99,7 @@
 
 {* Grouped specification fields *}
 {assign var="lastSpecFieldGroup" value="-1"}
-<ul id="specField_groups_list_{$categoryID}" class="specFieldListGroup {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit">
+<ul id="specField_groups_list_{$categoryID}" class="specFieldListGroup {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit activeListGroup">
 {foreach name="specFieldForeach" item="field" from=$specFieldsWithGroups}
     {if !$field.SpecFieldGroup.ID}{php}continue;{/php}{/if}
     

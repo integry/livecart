@@ -184,6 +184,8 @@ Backend.SpecField.prototype = {
 	        }.bind(this));
 	        
 			this.addField(null, "new" + Backend.SpecField.prototype.countNewValues, false);
+			this.fieldsList.touch(true);
+			
 	        this.bindDefaultFields();
 			Backend.SpecField.prototype.countNewValues++;
 	        
@@ -627,7 +629,7 @@ Backend.SpecField.prototype = {
 			});
 
             this.bindDefaultFields();
-            this.fieldsList.touch();
+            this.fieldsList.touch(true);
 		}
 	},
 
@@ -1556,10 +1558,11 @@ Backend.SpecFieldGroup.prototype = {
                 
                 var groupsList = ActiveList.prototype.getInstance(this.cssPrefix + "groups_list_" + this.group.Category.ID);
                 groupsList.addRecord(response.id, titleDiv);
-                groupsList.touch();
                 
                 var newGroupFieldsList = ActiveList.prototype.getInstance(ul, Backend.SpecField.prototype.callbacks, Backend.SpecField.prototype.msg.activeListMessages);
                 ActiveList.prototype.recreateVisibleLists();
+				
+				groupsList.touch(true);
                 
                 Form.restore(this.nodes.form);
                 

@@ -12,13 +12,13 @@
     cursor: hand;
 }
 
-ul.activeList
+ul.activeList, .activeListGroup
 {
     list-style: none;
     position: relative;
 }
 
-.activeList li
+.activeList li, .activeListGroup li
 {
     padding: 5px;
     width: 30em;    
@@ -35,21 +35,14 @@ li.activeList_even, li.activeList_odd
     border: 2px solid #EEEEEE;
 }
 
+ul.activeListGroup > li
+{
+    overflow: visible;
+}
+
 .activeList_add_sort li {
     cursor: move;   
 }
-
-/*
-ul li.activeList_odd
-{
-    background: #F0F0FF;
-}
-
-ul li.activeList_even
-{
-    background: #EFF4F6;
-}
-*/
 
 li.activeList_delete_inProgress 
 {
