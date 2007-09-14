@@ -413,7 +413,7 @@ class UserController extends FrontendController
 		}
 		
 		$user = $this->createUser($this->request->get('password'));
-		$user->setAsCurrentUser();
+        SessionUser::setUser($user);
 		
 		if ($this->request->isValueSet('return'))
 		{
