@@ -618,7 +618,8 @@ class UserController extends FrontendController
         $this->order->user->set($user);
         SessionOrder::save($this->order);
         
-        $user->setAsCurrentUser();       
+        // login
+        SessionUser::setUser($user);
 
         ActiveRecordModel::commit();
 
