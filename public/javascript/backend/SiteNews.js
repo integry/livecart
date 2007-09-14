@@ -3,17 +3,20 @@ Backend.SiteNews.prototype =
 {
 	initialize: function(newsList, container, template)
 	{		
-	    Element.observe("addNewsLink", "click", function(e)
+	    if ($("addNewsLink"))
 	    {
-	        Event.stop(e);
-	        Backend.SiteNews.prototype.showAddForm();
-	    });
-	    
-	    Element.observe("addNewsCancelLink", "click", function(e)
-	    {
-	        Event.stop(e);
-	        Backend.SiteNews.prototype.hideAddForm();
-	    });
+            Element.observe("addNewsLink", "click", function(e)
+    	    {
+    	        Event.stop(e);
+    	        Backend.SiteNews.prototype.showAddForm();
+    	    });
+    	    
+    	    Element.observe("addNewsCancelLink", "click", function(e)
+    	    {
+    	        Event.stop(e);
+    	        Backend.SiteNews.prototype.hideAddForm();
+    	    });
+        }
 	
 		ActiveList.prototype.getInstance('newsList', {
 	         beforeEdit:     function(li) 
@@ -193,7 +196,9 @@ Backend.SiteNews.PostEntry.prototype =
 	save: function(e)
 	{
 		Element.saveTinyMceFields(this.node);
-		new LiveCart.AjaxRequest(this.node.down('form'), null, this.update.bind(this));		
+		var form = this.node.down('form');
+		form.action = $('saveUrl').innerHTML;
+        new LiveCart.AjaxRequest(form, null, this.update.bind(this));		
 		Event.stop(e);
 	},
 	

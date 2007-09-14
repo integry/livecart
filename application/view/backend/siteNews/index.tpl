@@ -19,16 +19,20 @@
 
 <div id="confirmations" class="rightConfirmations"></div>
 
-<ul class="menu" id="newsMenu">
-	<li class="addNews"><a href="#add" id="addNewsLink">{t _add_news}</a></li>
-	<li class="addNewsCancel" style="display: none;"><a href="#cancel" id="addNewsCancelLink">{t _cancel_adding_news}</a></li>
-</ul>
+{allowed role="news.create"}
+
+    <ul class="menu" id="newsMenu">
+    	<li class="addNews"><a href="#add" id="addNewsLink">{t _add_news}</a></li>
+    	<li class="addNewsCancel" style="display: none;"><a href="#cancel" id="addNewsCancelLink">{t _cancel_adding_news}</a></li>
+    </ul>
+
+{/allowed}
 
 <fieldset id="addNews" class="slideForm addForm" style="display: none;">
 
 	<legend>{t _add_news}</legend>
 
-	{form action="controller=backend.siteNews action=save" method="POST" onsubmit="new Backend.SiteNews.Add(this); return false;" handle=$form id="newsForm"}
+	{form action="controller=backend.siteNews action=add" method="POST" onsubmit="new Backend.SiteNews.Add(this); return false;" handle=$form id="newsForm"}
 		<input type="hidden" name="id" />
 
 		<p>
@@ -77,7 +81,7 @@
 	
 </fieldset>
 
-<ul id="newsList" class="activeList activeList_add_sort activeList_add_delete activeList_add_edit">
+<ul id="newsList" class="activeList {allowed role="news.sort"}activeList_add_sort{/allowed} {allowed role="news.delete"}activeList_add_delete{/allowed} {allowed role="news.update"}activeList_add_edit{/allowed}">
 </ul>
 
 <div style="display: none">
@@ -85,14 +89,15 @@
 	<span id="confirmDelete">{t _del_conf}</span>
 	<span id="sortUrl">{link controller=backend.siteNews action=saveOrder}</span>
 	<span id="statusUrl">{link controller=backend.siteNews action=setEnabled}</span>
+	<span id="saveUrl">{link controller=backend.siteNews action=save}</span>
 </div>
 
 <ul style="display: none;">
-<li id="newsList_template" class="activeList_add_sort activeList_add_delete" style="position: relative;">
+<li id="newsList_template" style="position: relative;">
 	<div>
 		<div class="newsListContainer">
-
-			<span class="newsCheckBox">
+			
+            <span class="newsCheckBox"{denied role="news.status"} style="display: none;"{/denied}>
 				<input type="checkbox" class="checkbox" name="isEnabled" onclick="this.up('li').handler.setEnabled(this);" />
 				<span class="progressIndicator" style="float: left; padding: 0; display: none;"></span>
 			</span>	

@@ -17,13 +17,19 @@ class SiteNewsController extends StoreManagementController
 		return $response;
 	}	
 
-	public function edit()
+	/**
+	 * @role update
+	 */
+    public function edit()
 	{		
 		$form = $this->buildForm();
 		$form->loadData(NewsPost::getInstanceById($this->request->get('id'), NewsPost::LOAD_DATA)->toArray());
 		return new ActionResponse('form', $form);
 	}
 
+	/**
+	 * @role update
+	 */
 	public function save()
 	{
 		$validator = $this->buildValidator();
@@ -40,8 +46,18 @@ class SiteNewsController extends StoreManagementController
 	}	
 	
 	/**
+	 * Create new record
+     * @role create
+	 */
+    public function add()
+    {        
+        return $this->save();
+    }	
+	
+	/**
 	 * Remove a news entry
 	 *
+	 * @role delete
 	 * @return JSONResponse
 	 */
 	public function delete()
@@ -53,17 +69,18 @@ class SiteNewsController extends StoreManagementController
 		}
 		catch (Exception $exc)
 		{			  	
-			return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_language'));
+			return new JSONResponse(false, 'failure', $this->translate('_could_not_remove_news'));
 		}
 	}
 		
 	/**
-	 * Save language order
+	 * Save news entry order
+	 * @role sort
 	 * @return RawResponse
 	 */
 	public function saveOrder()
 	{
-	  	$order = $this->request->get('newsList');
+	  	$order = array_reverse($this->request->get('newsList'));
 		foreach ($order as $key => $value)
 		{
 			$update = new ARUpdateFilter();
@@ -89,7 +106,7 @@ class SiteNewsController extends StoreManagementController
 		
 		return new JSONResponse($post->toArray());
 	}
-		
+    	
     private function buildForm()
     {
 		ClassLoader::import("framework.request.validator.Form");

@@ -63,8 +63,7 @@ class RolesController extends StoreManagementController
         {
             $activeRolesIDs[] = $role->getID();
         }
-        
-        
+                
 		$form = $this->createRolesForm($userGroup, $activeRoles);
 				
 		$response = new ActionResponse();

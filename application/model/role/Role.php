@@ -83,7 +83,13 @@ class Role extends ActiveRecordModel
 	
 	public static function addNewRolesNames($roleNames, $deleteOther = false)
 	{
-	    if(!is_array($roleNames) || empty($roleNames)) return;
+	    // unset meta- roles
+        if ($i = array_search('login', $roleNames))
+	    {
+            unset($roleNames[$i]);
+        }
+        
+        if(!is_array($roleNames) || empty($roleNames)) return;
 
 	    $filter = new ARSelectFilter();
 	    $deleteFilter = new ARDeleteFilter();

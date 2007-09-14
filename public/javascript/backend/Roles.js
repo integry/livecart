@@ -135,7 +135,7 @@ Backend.Roles.prototype =
         var self = this;
         new LiveCart.AjaxRequest(
             this.nodes.form.action + '?checked=' + this.rolesTree.getAllChecked() + '&unchecked=' + this.rolesTree.getAllUnchecked(),
-            false,
+            this.nodes.form.down('.progressIndicator'),
             function(response)
             {
                response = eval("(" + response.responseText + ")");
