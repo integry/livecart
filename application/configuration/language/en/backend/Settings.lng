@@ -13,6 +13,9 @@ STORE_NAME=Store name
 
 _display=Display
 
+_homepage=Home Page
+NUM_NEWS_INDEX=Number of news entries to display
+
 _general=General
 NUM_PRODUCTS_PER_CAT=Number of products per category page
 NUM_PRODUCTS_PER_SEARCH=Number of products per search page

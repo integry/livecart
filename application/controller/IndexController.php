@@ -20,8 +20,10 @@ class IndexController extends FrontendController
         $controller = new CategoryController($this->application);		
 		$response = $controller->index();
 		
-		$f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
-		$f->setOrder(new ARFieldHandle('NewsPost', 'time'), 'DESC');
+		// load site news
+        $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
+		$f->setOrder(new ARFieldHandle('NewsPost', 'position'), 'DESC');
+		$f->setLimit($this->config->get('NUM_NEWS_INDEX') + 1);
 		$response->set('news', ActiveRecordModel::getRecordSetArray('NewsPost', $f));
 
 		return $response;

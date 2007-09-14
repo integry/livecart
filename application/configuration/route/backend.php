@@ -21,8 +21,11 @@ $routes = array(
 					array("shop/:cathandle.:id/:filters/:page", array('controller' => 'category', 'action' => 'index'), array("cathandle" => $handle, "id" => "[0-9]+","page" => "[0-9_]+", "filters" => "[0-9A-Za-z\-.,_]+?")),
 					
                     // static pages
-                    array(":handle.html", array('controller' => 'staticPage', 'action' => 'view'), array("handle" => "[a-zA-Z0-9\.]+")),
+                    array(":handle.html", array('controller' => 'staticPage', 'action' => 'view'), array("handle" => $handle)),
                     
+					// news pages
+                    array("news/:handle.:id", array('controller' => 'news', 'action' => 'view'), array("handle" => $handle, "id" => "[0-9]+")), 
+
 					// product pages
                     array(":producthandle.:id", array('controller' => 'product', 'action' => 'index'), array("producthandle" => $handle, "id" => "[0-9]+")), 
 
