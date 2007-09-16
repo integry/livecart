@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database creation script                        #
-# Created on:            2007-09-13 17:11                                #
+# Created on:            2007-09-16 23:19                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -809,7 +809,7 @@ CREATE TABLE OrderLog (
 # ---------------------------------------------------------------------- #
 
 CREATE TABLE NewsPost (
-    ID INTEGER UNSIGNED NOT NULL,
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     isEnabled BOOL,
     position INTEGER UNSIGNED DEFAULT 0,
     time TIMESTAMP,
@@ -828,6 +828,19 @@ CREATE TABLE DeliveryZoneRealTimeService (
     deliveryZoneID INTEGER UNSIGNED,
     serviceClassName VARCHAR(100),
     CONSTRAINT PK_DeliveryZoneRealTimeService PRIMARY KEY (ID)
+);
+
+# ---------------------------------------------------------------------- #
+# Add table "ExpressCheckout"                                            #
+# ---------------------------------------------------------------------- #
+
+CREATE TABLE ExpressCheckout (
+    ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    addressID INTEGER UNSIGNED,
+    orderID INTEGER UNSIGNED NOT NULL,
+    method VARCHAR(40),
+    paymentData TEXT,
+    CONSTRAINT PK_ExpressCheckout PRIMARY KEY (ID)
 );
 
 # ---------------------------------------------------------------------- #
@@ -1049,3 +1062,9 @@ ALTER TABLE OrderLog ADD CONSTRAINT CustomerOrder_OrderLog
 
 ALTER TABLE DeliveryZoneRealTimeService ADD CONSTRAINT DeliveryZone_DeliveryZoneRealTimeService 
     FOREIGN KEY (deliveryZoneID) REFERENCES DeliveryZone (ID) ON DELETE CASCADE;
+
+ALTER TABLE ExpressCheckout ADD CONSTRAINT UserAddress_ExpressCheckout 
+    FOREIGN KEY (addressID) REFERENCES UserAddress (ID) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE ExpressCheckout ADD CONSTRAINT CustomerOrder_ExpressCheckout 
+    FOREIGN KEY (orderID) REFERENCES CustomerOrder (ID) ON DELETE CASCADE ON UPDATE CASCADE;

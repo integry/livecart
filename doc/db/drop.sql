@@ -5,7 +5,7 @@
 # Project name:          LiveCart                                        #
 # Author:                Integry Systems                                 #
 # Script type:           Database drop script                            #
-# Created on:            2007-09-13 17:11                                #
+# Created on:            2007-09-16 23:19                                #
 # ---------------------------------------------------------------------- #
 
 
@@ -156,6 +156,10 @@ ALTER TABLE OrderLog DROP FOREIGN KEY User_OrderLog;
 ALTER TABLE OrderLog DROP FOREIGN KEY CustomerOrder_OrderLog;
 
 ALTER TABLE DeliveryZoneRealTimeService DROP FOREIGN KEY DeliveryZone_DeliveryZoneRealTimeService;
+
+ALTER TABLE ExpressCheckout DROP FOREIGN KEY UserAddress_ExpressCheckout;
+
+ALTER TABLE ExpressCheckout DROP FOREIGN KEY CustomerOrder_ExpressCheckout;
 
 # ---------------------------------------------------------------------- #
 # Drop table "Product"                                                   #
@@ -856,3 +860,15 @@ ALTER TABLE DeliveryZoneRealTimeService DROP PRIMARY KEY;
 # Drop table #
 
 DROP TABLE DeliveryZoneRealTimeService;
+
+# ---------------------------------------------------------------------- #
+# Drop table "ExpressCheckout"                                           #
+# ---------------------------------------------------------------------- #
+
+# Drop constraints #
+
+ALTER TABLE ExpressCheckout DROP PRIMARY KEY;
+
+# Drop table #
+
+DROP TABLE ExpressCheckout;
