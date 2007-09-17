@@ -438,7 +438,11 @@ Backend.UserGroup.massActionHandler.prototype =
     
     submitCompleted: function()
     {
-        this.grid.reloadGrid();   
+        this.grid.reloadGrid();
+		if(window.activeGrids['users_-2'])
+		{
+		    window.activeGrids['users_-2'].reloadGrid();
+		}
     }
 }
 

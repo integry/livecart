@@ -154,6 +154,20 @@ class UserController extends StoreManagementController
     {        
 		$filter = new ARSelectFilter();
 		
+        $id = (int)$this->request->get('id');
+        if($id > 0)
+        {
+            $filter->setCondition(new EqualsCond(new ARFieldHandle('User', 'userGroupID'), $id));   
+        }
+        else if($id == -1)
+        {
+            $filter->setCondition(new IsNullCond(new ARFieldHandle('User', 'userGroupID')));  
+        }
+        else if($id != -2)
+        {
+            return;
+        }
+		
 		$filters = (array)json_decode($this->request->get('filters'));
 		$this->request->set('filters', $filters);
 		
@@ -164,7 +178,7 @@ class UserController extends StoreManagementController
 		
         $act = $this->request->get('act');
 		$field = array_pop(explode('_', $act, 2));           
-
+		
         foreach ($users as $user)
 		{
             if (substr($act, 0, 7) == 'enable_')
