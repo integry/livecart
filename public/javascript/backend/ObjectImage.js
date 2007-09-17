@@ -119,7 +119,7 @@ Backend.ObjectImage.prototype =
 					} 
 				 }
 				 
-				 imageData = document.getElementsByClassName('image', li)[0].imageData;
+				 var imageData = document.getElementsByClassName('image', li)[0].imageData;
 				 for (k in imageData)
 				 {
 					if (k.substr(0, 5) == 'title')
@@ -134,34 +134,18 @@ Backend.ObjectImage.prototype =
 						}
 					}   
 				 }
-				 
-				 form.getElementsByTagName('a')[0].onclick = 
-					function()
-					{
-						var formNode = this.parentNode;
-						while (formNode.tagName != 'FORM')
-						{
-							formNode = formNode.parentNode;							  
-						}
-						
-						formNode.reset();
-						Effect.SlideUp(formNode, {duration: 0.1});
 
-						return false;
-					}
+                 var editCont = li.down('.activeList_editContainer');
+				 editCont.innerHTML = '';
+                 editCont.style.display = 'none';
+                 editCont.appendChild(form);
 				 
-				 var editCont = document.getElementsByClassName('activeList_editContainer', li)[0];
-				 
-				 while (editCont.firstChild)
+				 Event.observe(form.down('a'), "click", function(e) 
 				 {
-				 	editCont.removeChild(editCont.firstChild);
-				 }
-				 			 
-				 editCont.style.display = 'none';
-				 editCont.appendChild(form);
+				     Event.stop(e);		
+                     this.toggleContainerOff(e.target.up('li').down(".activeList_editContainer"));
+				 }.bind(this));
 				 
-				// Effect.Appear(editCont, {duration: 0.2});
-                 
                  this.toggleContainerOn(editCont);
 
                  Backend.LanguageForm.prototype.closeTabs(form);                 
@@ -246,66 +230,62 @@ Backend.ObjectImage.prototype =
 	  		  	
 	  	image = templ.getElementsByTagName('img')[0];
 		image.src = imageData['paths'][1];
-	  	image.imageData = imageData;
-	  	image.onclick = 
-			function() 
-			{ 
-                for (k in this.imageData['paths']) 
-				{ 
-                    if (this.src.substr(this.src.length - this.imageData['paths'][k].length, this.imageData['paths'][k].length) == this.imageData['paths'][k])
-					{
-						var currentImg = k;
-					}  
-       			}
-
-				var nextImg = parseInt(currentImg) + 1;
-
-				if (!this.imageData['paths'][nextImg])
-				{
-					nextImg = 1;  	
-				} 
-
-				this.src = this.imageData['paths'][nextImg];
-			}
-
-	  	templ.id = this.__createElementID(imageData['ID']);
-
+	  	
 		if (imageData['title'])
 		{
 			document.getElementsByClassName('imageTitle', templ)[0].innerHTML = imageData['title'];		  
 		}
-		
 		return templ;	  
 	},
 	
 	addToList: function(imageData, highLight)
 	{
 		var templ = this.createEntry(imageData);
-		ActiveList.prototype.getInstance(this.container).addRecord(imageData['ID'], templ.innerHTML, highLight);
+		var li = ActiveList.prototype.getInstance(this.container).addRecord(imageData['ID'], templ.innerHTML, highLight);
+        li.id = this.__createElementID(imageData['ID']);
+		li.down('.image').imageData = imageData;
+		
+        Event.observe(li.down('.image'), "click", function(e) 
+        { 
+            for (k in e.target.imageData['paths']) 
+            { 
+                if (e.target.src.substr(e.target.src.length - e.target.imageData['paths'][k].length, e.target.imageData['paths'][k].length) == e.target.imageData['paths'][k])
+                {
+                    var currentImg = k;
+                }  
+            }
+
+            var nextImg = parseInt(currentImg) + 1;
+
+            if (!e.target.imageData['paths'][nextImg])
+            {
+                nextImg = 1;    
+            } 
+
+            e.target.src = e.target.imageData['paths'][nextImg];
+        }.bind(this));
 	},
 	
 	updateEntry: function(imageData, highLight)
 	{
 	  	// force image reload
 	  	var timeStamp = new Date().getTime();
-		for(k = 1; k < 10; k++)
+        var li = $(this.__createElementID(imageData['ID']));
+		var imageChanged = false;
+		for(var k = 1; k < 10; k++)
 	  	{
-            if (!imageData['paths'][k])
-			{
-                break;
-            }
+			if (!imageData['paths'][k]) break;
             imageData['paths'][k] +=  '?' + timeStamp + 'xyz';
+            if(!imageChanged) {
+				li.down('.image').src = imageData['paths'][k];
+				imageChanged = true;
+            }
 		}
-
-        var templ = this.createEntry(imageData);
-		var entry = $(this.__createElementID(imageData['ID']));
-	  	  	
-	  	entry.parentNode.replaceChild(templ, entry);
+		
+		li.down('.image').imageData = imageData;
+		li.down('.imageTitle').innerHTML = li.down('form').elements.namedItem("title").value;
 	  	
-	  	if (highLight)
-	  	{
-			new Effect.Highlight(templ, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});		    
-		}
+		ActiveList.prototype.highlight(li);
 	},
 
 	upload: function(form)
@@ -372,9 +352,9 @@ Backend.ObjectImage.prototype =
 
 	postSave: function(imageId, result)
 	{
-		var entry = $(this.__createElementID(imageData['ID']));
+		var entry = $(this.__createElementID(result['ID']));
 		this.hideProgressIndicator(entry);
-		errorElement = document.getElementsByClassName('errorText', entry)[0];
+		var errorElement = document.getElementsByClassName('errorText', entry)[0];
 		if (result['error'])  	
 		{
 			errorElement.removeClassName('hidden');
@@ -384,8 +364,11 @@ Backend.ObjectImage.prototype =
 		else
 		{
 			errorElement.style.display = 'none';
+			console.info(result);
 			this.updateEntry(result, true);		  
-			entry.getElementsByTagName('form')[0].style.display = 'none';
+			
+            ActiveList.prototype.getInstance(this.container).toggleContainerOff(entry.down(".activeList_editContainer"))
+			
 			this.initActiveList();
 		}
 	},

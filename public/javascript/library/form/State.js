@@ -95,7 +95,7 @@ Form.State = {
                 for(var j = 0; j < elements[i].options.length; j++)
                 {
                     var oval = elements[i].options[j].firstChild ? elements[i].options[j].firstChild.nodeValue : elements[i].options[j].value;
-                    value.options[elements[i].options[j].value] = oval;
+					value.options[elements[i].options[j].value + "_marker_" + $H(value.options).size()] = oval;
                 }
             }
 
@@ -207,7 +207,8 @@ Form.State = {
                     {
                         element.options.length = 0;
                         $H(value.options).each(function(option) {
-                            element.options[element.options.length] = new Option(option.value, option.key);
+							var key = option.key.match(/([\w\W]+)_marker_\d+/)[1];
+                            element.options[element.options.length] = new Option(option.value, key);
                         });
                     }
 

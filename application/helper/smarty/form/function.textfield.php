@@ -49,6 +49,12 @@ function smarty_function_textfield($params, LiveCartSmarty $smarty)
 	{	
 	    $params['readonly'] = 'readonly'; 
 	}
+
+    if(!isset($params['autocomplete']))
+    {   
+        $params['autocomplete'] = 'off'; 
+    }
+	
 	
 	$content = '<input';
 	foreach ($params as $name => $param) {
@@ -57,7 +63,7 @@ function smarty_function_textfield($params, LiveCartSmarty $smarty)
 
     $content .= ' value="' . htmlspecialchars($formHandler->get($fieldName), ENT_QUOTES, 'UTF-8') . '"';
 	$content .= '/>';
-	if (isset($params['autocomplete']))
+	if (isset($params['autocomplete']) && $params['autocomplete'] != 'off')
 	{
 	  	$acparams = array();
 		foreach (explode(' ', $params['autocomplete']) as $param)

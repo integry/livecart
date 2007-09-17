@@ -80,7 +80,7 @@ abstract class ObjectImageController extends StoreManagementController
 	public function save()
 	{
 		ActiveRecord::beginTransaction();	  
-		
+		$image = null;
 	  	try
 		{  
 			$image = ActiveRecord::getInstanceById($this->getModelClass(), $this->request->get('imageId'), true);

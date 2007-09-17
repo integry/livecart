@@ -79,7 +79,7 @@ class ImageManipulator
 		}  	
 		else
 		{
-		  	return isset($this->validTypes[$this->type]);
+		  	return in_array($this->type, $this->validTypes);
 		}
 	}
 	

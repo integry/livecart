@@ -1328,7 +1328,7 @@ Backend.SpecFieldGroup.prototype = {
                 }
                 else
                 {
-                    if('block' != li.down('.specField_group_form_node').style.display)
+                    if('none' == li.down('.specField_group_form_node').style.display)
                     {
                          Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);
                     }
@@ -1346,8 +1346,14 @@ Backend.SpecFieldGroup.prototype = {
         afterEdit:      function(li, response) { 
             try
             {
-                new Backend.SpecFieldGroup(li, eval("(" + response + ")"));
-                Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);  
+				var response = eval("(" + response + ")");
+                li.down('.' + Backend.SpecFieldGroup.prototype.cssPrefix + 'group_title').hide();
+                
+				// Wait a little before opening the group
+				setTimeout(function(li, response) {
+					new Backend.SpecFieldGroup(li, response);
+	                Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);  
+				}.bind(this, li, response), 50);
             } 
             catch(e) 
             {  
@@ -1623,6 +1629,7 @@ Backend.SpecFieldGroup.prototype = {
      */
     hideGroupTranslations: function(root)
     {
+		root.down('.specField_group_title').innerHTML = root.down('input[type=text]').value;
         root.down('.specField_group_title').show();
         root.down('form').hide();
     },

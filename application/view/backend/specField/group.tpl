@@ -5,7 +5,7 @@
 			<div class="specField_group_default_language">
         		<label class="specField_group_name_label">{t _specField_group_title}</label>
                 <fieldset class="error" style="display: block;">
-                    <input type="text" name="name" class="specField_group_name_label" {denied role="category.update"}readonly="readonly"{/denied} />
+                    <input type="text" name="name" class="specField_group_name_label" {denied role="category.update"}readonly="readonly"{/denied} autocomplete="off" />
             		<span class="errorText hidden"> </span>
                 </fieldset>
         	</div>
@@ -13,7 +13,7 @@
         	{language}
                 <fieldset class="error required">
         			<label>{t _specField_group_title}</label>
-        			<input type="text" name="name_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} />
+        			<input type="text" name="name_{$lang.ID}" {denied role="category.update"}readonly="readonly"{/denied} autocomplete="off" />
     			</fieldset>
             {/language}
         </fieldset>
