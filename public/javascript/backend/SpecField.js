@@ -73,7 +73,7 @@ Backend.SpecField.prototype = {
 	            var specField = eval("(" + response + ")" );
 	            specField.rootId = li.id;
 	            new Backend.SpecField(specField, true);
-	            this.createSortable();
+	            this.createSortable(true);
 	            this.toggleContainer(li, 'edit');
             }
 			catch(e)

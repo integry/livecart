@@ -138,7 +138,7 @@ class CurrencyController extends StoreManagementController
 		$curr->save();
 				
 
-		return new JSONResponse(array('currency' => $curr->toArray()), 'success', $this->translate('_currency_was_successfully_enabled'));
+		return new JSONResponse(array('currency' => $curr->toArray()), 'success');
 	}
 
 	/**

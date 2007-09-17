@@ -46,12 +46,13 @@ Backend.Currency.prototype =
 		var template = $('currencyList_template');
 	  	var list = $('currencyList');
 
-		for (k = 0; k < data.length; k++)
+		for (var k = 0; k < data.length; k++)
 	  	{			
-			z = template.cloneNode(true);
+			var z = template.cloneNode(true);
 			z = this.renderItem(data[k], z);
 			
 			list.appendChild(z);
+            Event.observe(list.childElements().last().down('.checkbox'), "click",  function(e) { this.setEnabled(e.target); }.bind(this));
 		}		 
 	},
 	
@@ -60,7 +61,7 @@ Backend.Currency.prototype =
 		node.id = 'currencyList_' + itemData.ID;
 		node.style.display = 'block';
 		
-		checkbox = node.getElementsByTagName('input')[0];
+		var checkbox = node.getElementsByTagName('input')[0];
 		
 		if (1 == itemData.isEnabled)
 		{
@@ -78,7 +79,6 @@ Backend.Currency.prototype =
 		  	node.removeClassName('default');		  
 		  	node.removeClassName('activeList_remove_delete');		  
 		  	checkbox.disabled = false;
-		  	checkbox.onclick = function() {curr.setEnabled(this); }
 		}
 		
 		node.getElementsByClassName('currTitle')[0].innerHTML = itemData.name;
@@ -89,7 +89,7 @@ Backend.Currency.prototype =
 	add: function(form)
 	{
 	  	// deactivate submit button and display feedback
-	  	button = $('addCurr').getElementsByTagName('input')[0];
+	  	var button = $('addCurr').getElementsByTagName('input')[0];
 	  	button.disabled = true;
 		  
 		new LiveCart.AjaxRequest(form, 'addCurrIndicator', this.addToList.bind(this));
@@ -98,7 +98,7 @@ Backend.Currency.prototype =
 	addToList: function(originalRequest)
 	{
 		// activate submit button and hide feedback
-	  	button = $('addCurr').getElementsByTagName('input')[0];
+	  	var button = $('addCurr').getElementsByTagName('input')[0];
 	  	button.disabled = false;
 
 		// hide menu..
@@ -109,7 +109,9 @@ Backend.Currency.prototype =
 	  	var template = $('currencyList_template');
 	  	
         var activeList = ActiveList.prototype.getInstance('currencyList');
-		activeList.addRecord(itemData['ID'], this.renderItem(itemData, template.cloneNode(true)));
+		var li = activeList.addRecord(itemData['ID'], this.renderItem(itemData, template.cloneNode(true)));
+		Event.observe(li.down('.checkbox'), "click",  function(e) { this.setEnabled(e.target); }.bind(this));
+		
         this.resetRatesContainer();
 	},	
 	
@@ -128,24 +130,21 @@ Backend.Currency.prototype =
 
         var activeList = ActiveList.prototype.getInstance('currencyList');
         activeList.decorateItems();
-        activeList.createSortable();
-
-		new Effect.Highlight(cl, {startcolor:'#FBFF85', endcolor:'#EFF4F6'})
+        activeList.createSortable(true);
+		
+        Event.observe(cl.down('.checkbox'), "click",  function(e) { this.setEnabled(e.target); }.bind(this));
+        ActiveList.prototype.highlight(cl);
         this.resetRatesContainer();
 	},
 	
 	setEnabled: function(node) 
 	{
-		p = node;
-		while (p.tagName != 'LI')
-		{
-		  	p = p.parentNode;
-		}
-		currId = p.id.substr(p.id.length - 3, 3);
+		var p = node.up('li');
+		var currId = p.id.substr(p.id.length - 3, 3);
 		
-		url = this.statusUrl + "?id=" + currId + "&status=" + (node.checked - 1 + 1);
+		var url = this.statusUrl + "?id=" + currId + "&status=" + (node.checked - 1 + 1);
 
-		img = document.createElement('img');
+		var img = document.createElement('img');
 		img.src = 'image/indicator.gif';
 		img.className = 'activateIndicator';
 										
@@ -209,14 +208,14 @@ Backend.Currency.prototype =
 	
 	checkDisabledFields: function()
 	{
-		form = $('options');
+		var form = $('options');
 		
 		if (form.onchange != null)
 		{
 			form.onchange = curr.checkDisabledFields;
 
-			formElements = form.getElementsByTagName('input');
-			for (k = 0; k < formElements.length; k++)
+			var formElements = form.getElementsByTagName('input');
+			for (var k = 0; k < formElements.length; k++)
 			{
 			  	formElements[k].onclick = form.onchange;
 			}
@@ -234,7 +233,7 @@ Backend.Currency.prototype =
 			$('feedOptions').addClassName('disabled');  			  
 		}
 		
-		for (k = 0; k < form.elements.length; k++)
+		for (var k = 0; k < form.elements.length; k++)
 		{
 			if ((form.elements[k].name != null) && (form.elements[k].name.substr(0, 5) == 'curr_'))
 		  	{

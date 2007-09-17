@@ -114,7 +114,7 @@ Backend.LanguageIndex.prototype =
 
         var list = this.initLangList();
         list.decorateItems();
-        list.createSortable();
+        list.createSortable(true);
         
 		new Effect.Highlight(cl, {startcolor:'#FBFF85', endcolor:'#EFF4F6'})
 	},

@@ -281,7 +281,7 @@ class LanguageController extends StoreManagementController
 		$lang->setAsEnabled($this->request->get("status"));
 		$lang->save();
 		
-		return new JSONResponse(array('language' => $lang->toArray()), 'success', $this->translate($this->request->get("status") ? '_language_status_has_been_changed_to_enabled' : '_language_status_has_been_changed_to_disabled'));
+		return new JSONResponse(array('language' => $lang->toArray()), 'success');
 	}
 
 	/**

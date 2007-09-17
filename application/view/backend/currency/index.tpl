@@ -107,7 +107,7 @@
 	         },
 	         afterEdit:      function(li, response) { document.getElementsByClassName('currEdit', li)[0].innerHTML = response; },
 	         afterSort:      function(li, response) { curr.resetRatesContainer(); },
-	         afterDelete:    function(li, response)  { Element.remove(li); curr.resetRatesContainer(); }
+	         afterDelete:    function(li, response)  { curr.resetRatesContainer(); }
 	     }, messages);
 	}	
 	
