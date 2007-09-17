@@ -99,8 +99,7 @@ class LiveCart extends Application
 		unset($this->localeName);
 
 		ActiveRecord::setDSN(include(ClassLoader::getRealPath("storage.configuration.database") . '.php'));
-        		
-		
+
         // LiveCart request routing rules
         include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';        		
         		
