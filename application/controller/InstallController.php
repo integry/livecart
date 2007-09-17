@@ -89,8 +89,7 @@ class InstallController extends FrontendController
 				mkdir(dirname($dsnFile), 0777, true);
 			}
 			
-			$dsnArray = array('production' => $dsn, 'development' => $dsn, 'test' => $dsn);
-			file_put_contents($dsnFile, '<?php return ' . var_export($dsnArray, true) . '; ?>');
+			file_put_contents($dsnFile, '<?php return ' . var_export($dsn, true) . '; ?>');
 			
             ActiveRecord::beginTransaction();
         
@@ -191,6 +190,8 @@ class InstallController extends FrontendController
 		{
 			return new ActionRedirectResponse('install', 'config');
 		}
+        
+        Language::deleteCache();
         
         // site name
         $this->config->set('siteName', $this->request->get('name'));

@@ -99,7 +99,8 @@ class LiveCart extends Application
 		unset($this->localeName);
 
 		ActiveRecord::setDSN(include(ClassLoader::getRealPath("storage.configuration.database") . '.php'));
-
+        		
+		
         // LiveCart request routing rules
         include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';        		
         		
@@ -448,12 +449,15 @@ class LiveCart extends Application
                     $langFilter = new ARSelectFilter();
     	    	  	$langFilter->setOrder(new ARFieldHandle("Language", "position"), ARSelectFilter::ORDER_ASC);
     				$this->languageList = ActiveRecordModel::getRecordSet("Language", $langFilter);
+    				if (!$this->languageList->size())
+    				{
+                        throw new ApplicationException('No languages have been added');
+                    }
     				file_put_contents($langCache, '<?php return unserialize(' . var_export(serialize($this->languageList), true) . '); ?>');
     			}
-    			catch (SQLException $e)
+    			catch (Exception $e)
     			{
                     // if the database hasn't yet been created
-//                    var_dump($this->locale);
                     $this->languageList = new ARSet();
                     $lang = ActiveRecordModel::getNewInstance('Language');
                     $lang->setID('en');
@@ -463,6 +467,7 @@ class LiveCart extends Application
                 }
 			}			
 		}
+		
 		return $this->languageList;
 	}
 

@@ -67,14 +67,14 @@ class Language extends ActiveRecordModel
 
 	public function save($forceOperation = 0)
 	{
-		@unlink(ClassLoader::getRealPath('cache') . '/languages.php');
+        self::deleteCache();
 		
 		return parent::save($forceOperation);
 	}
 	
 	public static function deleteById($id)
 	{
-		@unlink(ClassLoader::getRealPath('cache') . '/languages.php');
+        self::deleteCache();
 
 		// make sure the language record exists
 		$inst = ActiveRecord::getInstanceById('Language', $id, true);
@@ -90,6 +90,11 @@ class Language extends ActiveRecordModel
 		  	return false;
 		}
 	}
+	
+	public static function deleteCache()
+	{
+		@unlink(ClassLoader::getRealPath('cache') . '/languages.php');        
+    }
 	
 	protected function insert()
 	{
