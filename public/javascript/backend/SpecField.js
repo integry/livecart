@@ -1033,6 +1033,16 @@ Backend.SpecField.prototype = {
                 this.backupName = this.nodes.name.value;
                 
                 var activeList = ActiveList.prototype.getInstance(this.nodes.parent.parentNode);
+				
+				this.nodes.specFieldValuesUl.childElements().each(function(li) 
+				{
+				    if(li.id.match(/new/))
+					{
+						this.deleteValueFieldAction(li)
+						console.info(li.id)
+					}
+				}.bind(this))
+				
                 activeList.toggleContainer(this.nodes.parent, 'edit', 'yellow');
             }
             else
