@@ -24,8 +24,10 @@ class IndexController extends FrontendController
         $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('NewsPost', 'isEnabled'), true));
 		$f->setOrder(new ARFieldHandle('NewsPost', 'position'), 'DESC');
 		$f->setLimit($this->config->get('NUM_NEWS_INDEX') + 1);
-		$response->set('news', ActiveRecordModel::getRecordSetArray('NewsPost', $f));
-
+		$news = ActiveRecordModel::getRecordSetArray('NewsPost', $f);
+		$response->set('news', $news);
+		$response->set('isNewsArchive', count($news) > $this->config->get('NUM_NEWS_INDEX'));
+		
 		return $response;
 	}
 

@@ -25,7 +25,7 @@
         <h2>{t Latest news}</h2>
         <ul class="news">
         {foreach from=$news item=newsItem name="news"}
-    		{if !$smarty.foreach.news.last}
+    		{if !$smarty.foreach.news.last || !$isNewsArchive}
                 <li class="newsEntry">
                     {include file="news/newsEntry.tpl" entry=$newsItem}
                 </li>

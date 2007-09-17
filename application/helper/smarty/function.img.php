@@ -15,7 +15,7 @@ function smarty_function_img($params, LiveCartSmarty $smarty)
     {
         if(is_file($params['src']))
         {
-            $imageTimestamp = filemtime(ClassLoader::getRealPath('public.') . str_replace('/',DIRECTORY_SEPARATOR, $params['src']));
+            $imageTimestamp = @filemtime(ClassLoader::getRealPath('public.') . str_replace('/',DIRECTORY_SEPARATOR, $params['src']));
             $params['src'] .= '?' . $imageTimestamp;
         }
     }

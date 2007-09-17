@@ -613,27 +613,25 @@ class CustomerOrder extends ActiveRecordModel
 	 */
     public function isShippingRequired()
 	{
-	    if($this->isFinalized->get())
-	    {
-            foreach ($this->getShoppingCartItems() as $item)
+        foreach ($this->getShoppingCartItems() as $item)
+        {
+            if (!$item->product->get()->isDownloadable())
             {
-                if (!$item->product->get()->isDownloadable())
-                {
-                    return true;
-                }
+                return true;
             }
-            
-            return false;
-	    }
-	    else
-	    {
-	        return true;
-	    }
+        }
+        
+        return false;
     }
 	
 	public function isShippingSelected()
 	{
         $selected = count($this->shipments);
+        
+        if (!$this->shipments)
+        {
+			return false;
+		}
         
         foreach ($this->shipments as $shipment)
         {

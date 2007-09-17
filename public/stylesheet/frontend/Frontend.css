@@ -765,6 +765,12 @@ ul.productList a.addToCart
 
 .returnToCategory
 {
+	padding: 10px; 
+	padding-left: 0px;
+}
+
+.returnToCategory a
+{
     background-image: url(../../image/silk/gif/resultset_previous.gif);
     background-repeat: no-repeat;
     background-position: center left;

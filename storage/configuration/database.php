@@ -1,5 +1,5 @@
-<?php return array (
-  'production' => 'mysql://root@server/livecart_prex',
-  'development' => 'mysql://root@server/livecart_prex',
-  'test' => 'mysql://root@server/livecart_test',
-); ?>
+<?php 
+
+return defined("TEST_INITIALIZED") ? 'mysql://root@server/livecart_test' : 'mysql://root@server/livecart_prex';
+
+?>

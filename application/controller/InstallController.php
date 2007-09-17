@@ -145,6 +145,7 @@ class InstallController extends FrontendController
 		// create administrator account
 		$user = User::getNewInstance($this->request->get('email'), null, $group);
 		$user->loadRequestData($this->request);
+		$user->setPassword($this->request->get('password'));
 		$user->save();
 		
 		ActiveRecordModel::commit();		
@@ -163,7 +164,14 @@ class InstallController extends FrontendController
         }
 
         $form = $this->buildConfigForm();
-        $form->set('name', $this->config->get('siteName'));
+        
+        try
+        {
+			$form->set('name', $this->config->get('siteName'));
+		}
+		catch (Exception $e)
+		{}
+
         $form->set('language', 'en');
         $form->set('curr', 'USD');
         

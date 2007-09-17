@@ -99,9 +99,7 @@ class LiveCart extends Application
 		unset($this->localeName);
 
         // Probably we would need some better inveronment detection later
-		$dnses = include(ClassLoader::getRealPath("storage.configuration.database") . '.php');
-		ActiveRecord::setDSN(defined("TEST_INITIALIZED") ? $dnses['test'] : $dnses['development']);
-        		
+		ActiveRecord::setDSN(include(ClassLoader::getRealPath("storage.configuration.database") . '.php'));		
 		
         // LiveCart request routing rules
         include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';        		
@@ -263,8 +261,10 @@ class LiveCart extends Application
 	{
 		$response = parent::execute($controllerInstance, $actionName);
 		
-		$this->processPlugins($controllerInstance, $response);
-	
+		$response = $this->processPlugins($controllerInstance, $response);
+
+		$this->processResponse($response);
+		$this->postProcessResponse($response, $controllerInstance);
 		return $response;
 	}    
 	
@@ -310,9 +310,13 @@ class LiveCart extends Application
 	                $class = substr($file->getFileName(), 0, -4);
 	                $plugin = new $class($response, $controllerInstance);
 	                $plugin->process();
+	                
+	                $response = $plugin->getResponse();
 	            }
 	        }
 		}
+
+		return $response;
     }
     
 	public function isCustomizationMode()

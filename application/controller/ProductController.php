@@ -33,6 +33,12 @@ class ProductController extends FrontendController
 		// add filters to breadcrumb
 		CategoryController::getAppliedFilters();
 
+		// for root category products
+		if (!isset($nodeArray))
+		{
+			$nodeArray = array();
+		}
+
 		$params = array('data' => $nodeArray, 'filters' => array());
 		foreach ($this->filters as $filter)
 		{

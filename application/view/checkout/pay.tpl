@@ -119,11 +119,13 @@
     
     <div id="overviewAddresses">
     
-        <div style="width: 50%; float: left;">
+        {if $order.ShippingAddress}
+		<div style="width: 50%; float: left;">
             <h3>{t Order will be shipped to}:</h3>
             {fun name="address" address=$order.ShippingAddress}
             <a href="{link controller=checkout action=selectAddress}">Change</a>
         </div>    
+        {/if}
         
         <div style="width: 50%; float: left;">
             <h3>{t Order will be billed to}:</h3>

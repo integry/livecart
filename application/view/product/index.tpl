@@ -12,7 +12,7 @@
 
 <div id="content" style="margin-left: 0;">
     
-    <div style="padding: 10px; padding-left: 0px;">
+    <div class="returnToCategory">
         {assign var="lastBreadcrumb" value=$breadCrumb|@end}
         {assign var="lastBreadcrumb" value=$breadCrumb|@prev}
         <a href="{$lastBreadcrumb.url}" class="returnToCategory">{$product.Category.name_lang}</a>

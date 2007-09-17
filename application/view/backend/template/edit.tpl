@@ -2,8 +2,8 @@
 
 {form handle=$form action="controller=backend.template action=save" method="POST" id="templateForm"}
 
-	{textarea name="code"}
-	{hidden name="file"}
+	{textarea name="code" id="code"}
+	{hidden name="file" id="file"}
     
 	<fieldset class="controls">
 		<span class="progressIndicator" style="display: none;"></span>
