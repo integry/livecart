@@ -11,7 +11,12 @@
  */
 function smarty_function_backendLangMenu($params, LiveCartSmarty $smarty) 
 {
-  	$smarty->assign('returnRoute', base64_encode($smarty->getApplication()->getRouter()->getRequestedRoute()));
+  	if (!$smarty->getApplication()->getLanguageArray())
+  	{
+        return false;
+    }
+    
+    $smarty->assign('returnRoute', base64_encode($smarty->getApplication()->getRouter()->getRequestedRoute()));
 	return $smarty->display('block/backend/langMenu.tpl');
 }
 

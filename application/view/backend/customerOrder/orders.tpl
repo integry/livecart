@@ -4,7 +4,7 @@
 
 
     <ul class="menu" >
-        <li><a href="#" id="createNewOrderLink_{$orderGroupID}"  {denied role='order.create' }style="display: none"{/denied}>{t _create_order}</a></li>
+        <li class="createNewOrder"><a href="#" id="createNewOrderLink_{$orderGroupID}"  {denied role='order.create' }style="display: none"{/denied}>{t _create_order}</a></li>
     </ul> 
     <br class="clear" />
     
@@ -100,7 +100,7 @@
     
     	window.activeGrids['{/literal}orders_{$orderGroupID}{literal}'].setDataFormatter(Backend.CustomerOrder.GridFormatter);
     	
-        var massHandler = new Backend.CustomerOrder.massActionHandler($('{/literal}orderMass_{$orderGroupID}{literal}'), window.activeGrids['{/literal}orders_{$orderGroupID}{literal}']);
+        var massHandler = new ActiveGrid.MassActionHandler($('{/literal}orderMass_{$orderGroupID}{literal}'), window.activeGrids['{/literal}orders_{$orderGroupID}{literal}']);
         massHandler.deleteConfirmMessage = '{/literal}{t _are_you_sure_you_want_to_delete_this_order|addslashes}{literal}' ;
         massHandler.nothingSelectedMessage = '{/literal}{t _nothing_selected|addslashes}{literal}' ;
         ordersActiveGrid['{/literal}{$orderGroupID}{literal}'] = window.activeGrids['{/literal}orders_{$orderGroupID}{literal}'];

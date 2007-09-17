@@ -7,7 +7,7 @@
             </li>
 		</ul>
 		
-		<a id="productPage" onclick="Backend.Product.Editor.prototype.goToProductPage();" href="{link controller=product action=index id=_id_}" target="_blank">Product page</a>
+		<a id="productPage" onclick="Backend.Product.Editor.prototype.goToProductPage();" href="{link controller=product action=index id=_id_}" target="_blank" class="external">Product page</a>
 		
 	</fieldset>
 	

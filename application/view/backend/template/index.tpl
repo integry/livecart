@@ -14,7 +14,7 @@
 {pageTitle help="template"}Edit Templates{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
-<div id="pageContainer">
+<div id="templatePageContainer">
 	<div class="treeContainer">
 		<div id="templateBrowser" class="treeBrowser"></div>
     	<div id="confirmations"></div>

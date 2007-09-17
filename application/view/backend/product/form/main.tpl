@@ -20,7 +20,7 @@
 		<label for="product_{$cat}_{$product.ID}_sku_auto" class="checkbox">{t _generate_sku}</label>
 	</p>
     <p class="required">
-    	<label for="product_{$cat}_{$product.ID}_sku"><a class="acronym">{t _sku_code}<div>{t _hint_sku}</div></a>:</label>
+    	<label for="product_{$cat}_{$product.ID}_sku" class="acronym"><a>{t _sku_code}<div>{t _hint_sku}</div></a>:</label>
     	<fieldset class="error" style="margin-bottom: 6px;">
     		{textfield name="sku" id="product_`$cat`_`$product.ID`_sku" class="product_sku" autocomplete="controller=backend.product field=sku"} 
     		<div class="errorText hidden"></div>
@@ -28,13 +28,13 @@
     </p>
     
 	<p>
-		<label for="product_{$cat}_{$product.ID}_shortdes"><a class="acronym">{t _short_description}<div>{t _hint_shortdescr}</div></a>:</label>
+		<label for="product_{$cat}_{$product.ID}_shortdes" class="acronym"><a>{t _short_description}<div>{t _hint_shortdescr}</div></a>:</label>
 		<div class="textarea">
 			{textarea class="shortDescr tinyMCE" id="product_`$cat`_`$product.ID`_shortdes" name="shortDescription"}
 		</div>
 	</p>
 	<p>
-		<label for="product_{$cat}_{$product.ID}_longdes"><a class="acronym">{t _long_description}<div>{t _hint_longdescr}</div></a>:</label>
+		<label for="product_{$cat}_{$product.ID}_longdes" class="acronym"><a>{t _long_description}<div>{t _hint_longdescr}</div></a>:</label>
 		<div class="textarea">
 			{textarea class="longDescr tinyMCE" id="product_`$cat`_`$product.ID`_longdes" name="longDescription"}
 		</div>
@@ -61,7 +61,7 @@
 		</fieldset>			
 	</p>
 	<p>
-		<label for="product_{$cat}_{$product.ID}_keywords"><a class="acronym">{t _keywords}<div>{t _hint_keywords}</div></a>:</label>
+		<label for="product_{$cat}_{$product.ID}_keywords" class="acronym"><a>{t _keywords}<div>{t _hint_keywords}</div></a>:</label>
 		<fieldset class="error">
 			{textfield name="keywords" class="wide" id="product_`$cat`_`$product.ID`_keywords" autocomplete="controller=backend.product field=keywords"}
 			<div class="errorText hidden"></div>
@@ -71,7 +71,7 @@
 	<p>
 		<label></label>
         {checkbox name="isFeatured" class="checkbox" id="product_`$cat`_`$product.ID`_isfeatured"}
-		<label for="product_{$cat}_{$product.ID}_isfeatured"><a class="acronym">{t _mark_as_featured_product}<div>{t _hint_featured}</div></a></label>
+		<label for="product_{$cat}_{$product.ID}_isfeatured" class="acronym"><a>{t _mark_as_featured_product}<div>{t _hint_featured}</div></a></label>
 	</p>
 
 	<p>

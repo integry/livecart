@@ -153,6 +153,7 @@ html, body{
 
 #pageContainer {
 	position:relative; /* needed for footer positioning*/
+	overflow: hidden;  /* to avoid drag&drop items to be dragged out of page boundaries */
 }
 
 
@@ -250,6 +251,8 @@ html, body{
 	z-index: 7000;
 	position: relative;
 	float: right;
+	margin-top: 3px;
+	margin-right: 10px;
 }
 
 /***************************
@@ -1043,6 +1046,7 @@ div.autocomplete
 	background-color: #ffc !important;  
 	color: black !important;
 	z-index: 1;
+	text-align: left;
 }
 
 div.autocomplete ul
@@ -1052,7 +1056,7 @@ div.autocomplete ul
 
 div.autocomplete .selected
 {
-  	background-color: yellow;
+  	background-color: #ff9;
 }
 
 /*************************** 
@@ -1328,7 +1332,12 @@ ul.languageFormTabs li.active
 /**************************
 	Glossary
 **************************/
-a.acronym
+label.acronym
+{
+    overflow: visible;
+}
+
+label.acronym a
 {
     border-bottom: 1px dotted black;    
     cursor: help;
@@ -1337,20 +1346,20 @@ a.acronym
     position: relative;
 }
 
-a.acronym div
+label.acronym a div
 {
     display: none;
 	background-color: #EEEFFF;
 	font-weight: normal;
 }
 
-a.acronym:hover
+label.acronym a:hover
 {
 /*    display: inline; */
     text-decoration: none;
 }
 
-a.acronym:hover div
+label.acronym a:hover div
 {
     display: block;
     position: absolute;
@@ -1404,4 +1413,15 @@ a.acronym:hover div
 .removeTreeNode
 {
 	background-image: url('../../image/silk/delete.png');
+}
+
+/***************************
+ * Misc
+ **************************/
+a.external
+{
+  	background-image: url(../../image/silk/link_go.png) !important;
+  	background-repeat: no-repeat;
+	background-position: right center;
+	padding-right: 22px;    
 }

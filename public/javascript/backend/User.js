@@ -354,97 +354,17 @@ Backend.UserGroup.GridFormatter =
 }
 
 
-
-Backend.UserGroup.massActionHandler = Class.create();
-Backend.UserGroup.massActionHandler.prototype = 
-{
-    handlerMenu: null,    
-    actionSelector: null,
-    valueEntryContainer: null,
-    form: null,
-        
-    grid: null,
-    
-    initialize: function(handlerMenu, activeGrid)
-    {
-        this.handlerMenu = handlerMenu;     
-        this.actionSelector = handlerMenu.getElementsByTagName('select')[0];
-        this.valueEntryContainer = handlerMenu.down('.bulkValues');
-        this.form = this.actionSelector.form;
-
-        this.actionSelector.onchange = this.actionSelectorChange.bind(this);
-        Event.observe(this.actionSelector.form, 'submit', this.submit.bind(this));
-            
-        this.grid = activeGrid;
-    },
-    
-    actionSelectorChange: function()
-    {
-		for (k = 0; k < this.valueEntryContainer.childNodes.length; k++)
-        {
-            if (this.valueEntryContainer.childNodes[k].style)
-            {
-                Element.hide(this.valueEntryContainer.childNodes[k]);
-            }
-        }
-        
-        Element.show(this.valueEntryContainer);
-        
-        if (this.actionSelector.form.elements.namedItem(this.actionSelector.value))
-        {
-            var el = this.form.elements.namedItem(this.actionSelector.value);
-            if (el)
-            {
-                Element.show(el);
-                this.form.elements.namedItem(this.actionSelector.value).focus();
-            }
-        }    
-        else if (document.getElementsByClassName(this.actionSelector.value, this.handlerMenu))
-        {
-			var el = document.getElementsByClassName(this.actionSelector.value, this.handlerMenu)[0];
-			if (el)
-			{
-                Element.show(el);
-            }
-		}
-    },
-    
-    submit: function()
-    {        
-        if ('delete' == this.actionSelector.value)
-        {
-			if (!confirm(this.deleteConfirmMessage))
-			{
-				return false;
-			}
-		}
-		
-        var filters = Object.toJSON(this.grid.getFilters());
-		this.form.elements.namedItem('filters').value = filters ? filters : '';
-        var selectedIDs = Object.toJSON(this.grid.getSelectedIDs());
-
-        if ((0 == this.grid.getSelectedIDs().length) && !this.grid.isInverseSelection())
-        {
-            alert(this.nothingSelectedMessage);
-            return false;
-        }
-        
-        this.form.elements.namedItem('selectedIDs').value = selectedIDs ? selectedIDs : '';
-        this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;
-        new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('progressIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));
-
-        this.grid.resetSelection();   
-    },
-    
-    submitCompleted: function()
+Backend.UserGroup.massActionHandler = ActiveGrid.MassActionHandler;
+Backend.UserGroup.massActionHandler.prototype.submitCompleted = 
+    function()
     {
         this.grid.reloadGrid();
 		if(window.activeGrids['users_-2'])
 		{
 		    window.activeGrids['users_-2'].reloadGrid();
 		}
+        this.blurButton();		
     }
-}
 
 
 Backend.User.Group = Class.create();

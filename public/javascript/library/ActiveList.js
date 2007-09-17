@@ -485,7 +485,7 @@ ActiveList.prototype = {
      *
      * @return HTMLElementLi Reference to new active list record
      */
-    addRecord: function(id, dom, touch)
+    addRecord: function(id, dom, touch, noClone)
     {
         var li = document.createElement('li');
         li.id = this.ul.id + "_" + id;
@@ -509,7 +509,7 @@ ActiveList.prototype = {
         }
         else
         {
-            var cloned_dom = dom.cloneNode(true);
+            var cloned_dom = noClone ? dom : dom.cloneNode(true);
             while(cloned_dom.childNodes.length > 0) li.appendChild(cloned_dom.childNodes[0]);
             li.className = dom.className;
         }
@@ -524,6 +524,17 @@ ActiveList.prototype = {
         }
 
         return li;
+    },
+    
+    updateRecord: function(oldLi, newLi)
+    {
+	  	oldLi.parentNode.replaceChild(newLi, oldLi);
+        this.decorateLi(newLi);
+        this.colorizeItem(newLi, this.ul.childNodes.length);
+        this.rebindIcons(newLi);        
+
+        this.highlight(newLi, 'yellow');
+        this.touch(true);
     },
     
     highlight: function(li, color)
@@ -1077,7 +1088,7 @@ ActiveList.prototype = {
         this.hideMenu(li);
 
         this._currentLi = li;
-		console.info(li)
+
         var success = this.callbacks.afterSort.call(this, li, item);
 		this.createSortable(true);
 		

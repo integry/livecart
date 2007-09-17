@@ -9,7 +9,7 @@ Backend.StaticPage.prototype =
 	initialize: function(pages)
 	{
 		this.treeBrowser = new dhtmlXTreeObject("pageBrowser","","", false);
-        Backend.Breadcrumb.setTree(this.treeBrowser);
+//        Backend.Breadcrumb.setTree(this.treeBrowser);
 		
 		this.treeBrowser.def_img_x = 'auto';
 		this.treeBrowser.def_img_y = 'auto';
@@ -39,11 +39,15 @@ Backend.StaticPage.prototype =
 			}
 		
     	this.insertTreeBranch(pages, 0);    
+    	
+    	this.showControls();
 	},
 	
 	showAddForm: function()
 	{
-		new LiveCart.AjaxUpdater(this.urls['add'], $('pageContent'), $('settingsIndicator'), null, this.displayPage.bind(this));			
+		this.treeBrowser.clearSelection();
+		this.showControls();
+        new LiveCart.AjaxUpdater(this.urls['add'], $('pageContent'), $('settingsIndicator'), null, this.displayPage.bind(this));			
 	},
 	
 	initForm: function()
@@ -91,7 +95,7 @@ Backend.StaticPage.prototype =
 	
 	activateCategory: function(id)
 	{
-        Backend.Breadcrumb.display(id);
+//        Backend.Breadcrumb.display(id);
 		
 		if (!this.treeBrowser.hasChildren(id))
 		{
@@ -179,13 +183,16 @@ Backend.StaticPage.prototype =
 			var direction = ('up' == result.order) ? 'up_strict' : 'down_strict';
 			this.treeBrowser.moveItem(result.id, direction);				
 		}
+		
+		this.showControls();
 	},
 	
 	showTemplateCode: function()
 	{
         if ($('templateCode'))
         {
-            Element.show($('templateCode'));            
+            Element.show($('templateCode'));  
+            Element.hide($('staticPageMenu'));
         }
     },
 
@@ -195,13 +202,36 @@ Backend.StaticPage.prototype =
         
         parentId = this.treeBrowser.getParentId(categoryId)
         categoryIndex = this.treeBrowser.getIndexById(categoryId)
-        nextCategoryId = this.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1)
-
-        if(nextCategoryId) $("moveDownMenu").show();
-        else $("moveDownMenu").hide();
         
-        if(categoryIndex > 0) $("moveUpMenu").show();
-        else $("moveUpMenu").hide();
+        nextCategoryId = categoryId ? this.treeBrowser.getChildItemIdByIndex(parentId, parseInt(categoryIndex) + 1) : 0;
+
+        if(nextCategoryId && categoryId) 
+        {
+            $("moveDownMenu").show();            
+        }
+        else 
+        {
+            $("moveDownMenu").hide();
+        }
+        
+        if(categoryId && categoryIndex > 0) 
+        {
+            $("moveUpMenu").show();
+        }
+        else
+        {
+            $("moveUpMenu").hide();
+        }
+
+        if(categoryId) 
+        {
+            $("removeMenu").show();
+        }
+        else
+        {
+            $("removeMenu").hide();
+        }
+
     },
     
     cancel: function()

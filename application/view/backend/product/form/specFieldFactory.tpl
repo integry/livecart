@@ -41,8 +41,8 @@
 	{textfield id="product_`$cat`_`$product.ID`_`$fieldName`" name=$fieldName class="text wide" autocomplete="controller=backend.product field=`$fieldName`"}
 
 {elseif $field.type == 4}
-	<div class="textarea">
-		{textarea id="product_`$cat`_`$product.ID`_`$fieldName`" name=$fieldName}
+	<div class="textarea" style="margin-left: 0;">
+		{textarea id="product_`$cat`_`$product.ID`_`$fieldName`" name=$fieldName class="tinyMCE"}
         <div class="errorText hidden"></div> 
 	</div>
 

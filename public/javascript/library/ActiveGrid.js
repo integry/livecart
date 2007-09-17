@@ -503,6 +503,102 @@ ActiveGridFilter.prototype =
     }
 }
 
+ActiveGrid.MassActionHandler = Class.create();
+ActiveGrid.MassActionHandler.prototype = 
+{
+    handlerMenu: null,    
+    actionSelector: null,
+    valueEntryContainer: null,
+    form: null,
+    button: null,
+        
+    grid: null,
+    
+    initialize: function(handlerMenu, activeGrid)
+    {
+        this.handlerMenu = handlerMenu;     
+        this.actionSelector = handlerMenu.getElementsByTagName('select')[0];
+        this.valueEntryContainer = document.getElementsByClassName('bulkValues', handlerMenu)[0];
+        this.form = this.actionSelector.form;
+        this.button = this.form.down('.submit');
+
+        this.actionSelector.onchange = this.actionSelectorChange.bind(this);
+        Event.observe(this.actionSelector.form, 'submit', this.submit.bind(this));
+            
+        this.grid = activeGrid;
+    },
+    
+    actionSelectorChange: function()
+    {
+		for (k = 0; k < this.valueEntryContainer.childNodes.length; k++)
+        {
+            if (this.valueEntryContainer.childNodes[k].style)
+            {
+                Element.hide(this.valueEntryContainer.childNodes[k]);
+            }
+        }
+        
+        Element.show(this.valueEntryContainer);
+        
+        if (this.actionSelector.form.elements.namedItem(this.actionSelector.value))
+        {
+            var el = this.form.elements.namedItem(this.actionSelector.value);
+            if (el)
+            {
+                Element.show(el);
+                this.form.elements.namedItem(this.actionSelector.value).focus();
+            }
+        }    
+        else if (document.getElementsByClassName(this.actionSelector.value, this.handlerMenu))
+        {
+			var el = document.getElementsByClassName(this.actionSelector.value, this.handlerMenu)[0];
+			if (el)
+			{
+                Element.show(el);
+            }
+		}
+    },
+    
+    submit: function()
+    {
+        if ('delete' == this.actionSelector.value)
+        {
+			if (!confirm(this.deleteConfirmMessage))
+			{
+				return false;
+			}
+		}
+		
+        var filters = this.grid.getFilters();
+		this.form.elements.namedItem('filters').value = filters ? Object.toJSON(filters) : '';
+        this.form.elements.namedItem('selectedIDs').value = Object.toJSON(this.grid.getSelectedIDs());
+        this.form.elements.namedItem('isInverse').value = this.grid.isInverseSelection() ? 1 : 0;
+
+        if ((0 == this.grid.getSelectedIDs().length) && !this.grid.isInverseSelection())
+        {
+            this.blurButton();
+            alert(this.nothingSelectedMessage);
+            return false;
+        }
+
+        new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('progressIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));
+
+        this.grid.resetSelection();   
+    },
+    
+    submitCompleted: function()
+    {
+        this.grid.reloadGrid();   
+        this.blurButton();
+    },
+    
+    blurButton: function()
+    {
+        this.button.disable();
+        this.button.enable();
+    }
+}
+
 function RegexFilter(element, params)
 {
 	var regex = new RegExp(params['regex'], 'gi');

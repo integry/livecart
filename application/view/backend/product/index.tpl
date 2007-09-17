@@ -114,7 +114,7 @@ try
 {/literal}
 	window.activeGrids['products_{$categoryID}'].setDataFormatter(Backend.Product.GridFormatter);
     
-    var massHandler = new Backend.Product.massActionHandler($('productMass_{$categoryID}'), window.activeGrids['products_{$categoryID}']);
+    var massHandler = new ActiveGrid.MassActionHandler($('productMass_{$categoryID}'), window.activeGrids['products_{$categoryID}']);
     massHandler.deleteConfirmMessage = '{t _delete_conf|addslashes}' ;
     massHandler.nothingSelectedMessage = '{t _nothing_selected|addslashes}' ;
 {literal}

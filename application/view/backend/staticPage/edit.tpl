@@ -2,6 +2,11 @@
 	<h1>{t _add_new_title}</h1>
 {else}
 	<h1>{$page.title_lang}</h1>
+	<ul class="menu" id="staticPageMenu">
+        <li id="codeMenu" class="viewTreeNode">
+            <a href="#" class="menu" onclick="pageHandler.showTemplateCode(); return false;">{t _show_template_code}</a>
+        </li>
+    </ul>
 {/if}
 
 <fieldset id="templateCode" style="display: none;">
@@ -35,9 +40,9 @@
     </fieldset>
 
 	<p>
-		<label for="handle_{$page.ID}" class="wide">{t _handle}:</label>
+		<label for="handle" class="wide">{t _handle}:</label>
 		<fieldset class="error">
-			{textfield name="handle" id="handle_`$page.ID`"}
+			{textfield name="handle" id="handle"}
 			<div class="errorText hidden"></div>
 		</fieldset>
 	</p>

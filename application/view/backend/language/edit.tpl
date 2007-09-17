@@ -46,7 +46,7 @@
 	{maketext text="_tip_live_trans" params="$tipUrl"}
 {/tip}
 
-<div id="pageContainer">
+<div id="languagePageContainer">
 		
 	<div class="treeContainer">
 		<div id="langBrowser" class="treeBrowser"></div>
