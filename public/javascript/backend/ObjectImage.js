@@ -55,7 +55,7 @@ Backend.ObjectImage.prototype =
         if (first)
         {           
             this.container.insertBefore(supplemental, first);  
-			this.container.insertBefore(first, supplemental);
+			this.container.insertBefore(first(this.ul), supplemental);
         }
         
         supplemental.style.display = images.size() <= 1 ? 'none' : '';

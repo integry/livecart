@@ -207,7 +207,7 @@ class UserGroup extends ActiveRecordModel
 		    
 		    $condition->addAND($roleConditions);
 	        $appliedRolesFilter->setCondition($condition);
-		    
+	        		    
 		    // Unset already applied nodes
 		    foreach(AccessControlAssociation::getRecordSetByUserGroup($this, $appliedRolesFilter, self::LOAD_REFERENCES) as $assoc)
 		    {
