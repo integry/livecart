@@ -84,12 +84,7 @@ class TaxRate extends MultilingualObject
 	public static function getRecordSetByDeliveryZone(DeliveryZone $deliveryZone = null, $includeDisabled = true, $loadReferencedRecords = array('Tax'))
 	{
  	    $filter = new ARSelectFilter();
-
-	    if(!$includeDisabled)
-	    {
-   		    $filter->setCondition(new EqualsCond(new ARFieldHandle('Tax', "isEnabled"), 1));
-	    }
-	     	    
+  
 		if(!$deliveryZone)
 		{
 		    $filter->setCondition(new IsNullCond(new ARFieldHandle(__CLASS__, "deliveryZoneID")));
