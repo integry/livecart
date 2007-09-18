@@ -161,7 +161,7 @@ try
     
 	{foreach from=$displayedColumns item=index key=column name="columns"}
 		{if !$smarty.foreach.columns.first}
-		    new ActiveGridFilter($('filter_{$column}_{$id}'), window.activeGrids['products_{$categoryID}']);
+		    new ActiveGridFilter($('filter_{$column}_{$id}'), window.activeGrids['{$prefix}_{$id}']);
 		{/if}
 	{/foreach}
 {literal}}

@@ -117,11 +117,11 @@ class User extends ActiveRecordModel
 	    
 		if(!$userGroup)
 		{
-		    $filter->setCondition(new IsNullCond(new ARFieldHandle(__CLASS__, "userGroupID")));
+		    $filter->mergeCondition(new IsNullCond(new ARFieldHandle(__CLASS__, "userGroupID")));
 		}
 		else
 		{
-		    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "userGroupID"), $userGroup->getID()));
+		    $filter->mergeCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "userGroupID"), $userGroup->getID()));
 		}
 		
 		return self::getRecordSet($filter, $loadReferencedRecords);
@@ -138,7 +138,8 @@ class User extends ActiveRecordModel
 	{
 		$loginCond = new EqualsCond(new ARFieldHandle('User', 'email'), $email);
 		$loginCond->addAND(new EqualsCond(new ARFieldHandle('User', 'password'), md5($password)));
-		
+		$loginCond->addAND(new EqualsCond(new ARFieldHandle('User', 'isEnabled'), true));
+        		
 		$recordSet = ActiveRecordModel::getRecordSet(__CLASS__, new ARSelectFilter($loginCond));
 
 		if (!$recordSet->size())

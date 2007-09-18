@@ -823,6 +823,12 @@ ul.productList a.addToCart
 	font-size: larger;
 }
 
+.noStock, .lowStock
+{
+    text-align: center; 
+    font-size: smaller;
+}
+
 #productSpecification table
 {
 	border: 1px solid #AAAAAA;

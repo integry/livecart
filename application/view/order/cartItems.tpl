@@ -58,7 +58,9 @@
 			<td colspan="5" style="text-align: right;">
 				<h2></h2>
                 <a href="{link route=$return}" class="continueShopping">Continue Shopping</a>
-				<a href="{link controller=checkout}" class="proceedToCheckout">Proceed to Checkout</a>
+				{if $order.isOrderable}
+                    <a href="{link controller=checkout}" class="proceedToCheckout">Proceed to Checkout</a>
+                {/if}
 			</td>
 		</tr>
 	</tbody>
@@ -66,7 +68,7 @@
 <input type="hidden" name="return" value="{$return}" />	
 {/form}
 
-{if $expressMethods}
+{if $expressMethods && $order.isOrderable}
     <div id="expressCheckoutMethods" style="padding: 20px; text-align: right;">
         {foreach from=$expressMethods item=method}
             <a href="{link controller=checkout action=express id=$method}"><img src="image/payment/{$method}.gif" /></a>

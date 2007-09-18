@@ -1,3 +1,4 @@
+{if $order.isOrderable}
 <div id="checkoutProgress" class="{$progress}">
 
     <span class="progressOrder">1</span><a href="{link controller=order}" id="progressCart">Cart</a>
@@ -6,5 +7,6 @@
     <span class="progressOrder">4</span><a href="{link controller=checkout action=pay}" id="progressPayment">Payment</a>
                 
 </div>
+{/if}
 	   	
 <div class="clear"></div>

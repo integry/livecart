@@ -52,10 +52,11 @@ Backend.ObjectImage.prototype =
         var images = this.container.getElementsBySelector('.imageTemplate');
 
         var first = images.first();
+        console.log(first);
         if (first)
         {           
             this.container.insertBefore(supplemental, first);  
-			this.container.insertBefore(first(this.ul), supplemental);
+			this.container.insertBefore(first, supplemental);
         }
         
         supplemental.style.display = images.size() <= 1 ? 'none' : '';

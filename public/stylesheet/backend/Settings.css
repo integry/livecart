@@ -39,6 +39,11 @@ div.multi
 	padding-left: 5px;
 }
 
+.setting
+{
+    position: relative;
+}
+
 .multi
 {
     padding: 10px;

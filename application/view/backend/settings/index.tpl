@@ -35,4 +35,10 @@
 </script>
 {/literal}
 
+<div id="handlers" style="display: none;">
+    <div id="handler_ENABLED_COUNTRIES" style="position: absolute; right: 0; z-index: 10; padding-right: 5px;">
+        <a href="#" class="countrySelect">{t _select_all}</a> | <a href="#" class="countryDeselect">{t _deselect_all}</a>
+    </div>
+</div>
+
 {include file="layout/backend/footer.tpl"}

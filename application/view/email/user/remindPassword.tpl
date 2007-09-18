@@ -1,4 +1,4 @@
-Another Attempt: Your password at {$config.STORE_NAME}!
+Your password at {$config.STORE_NAME}!
 Dear {$user.fullName},
 
 Here are your customer account access information at {$config.STORE_NAME}:

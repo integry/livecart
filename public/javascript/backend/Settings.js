@@ -103,3 +103,82 @@ Backend.Settings.prototype =
 		new Backend.SaveConfirmationMessage(document.getElementsByClassName('yellowMessage')[0]);			
 	}
 }
+
+Backend.Settings.Editor = Class.create();
+Backend.Settings.Editor.prototype = 
+{
+    handlers: 
+    {
+        'ENABLED_COUNTRIES':
+            function()
+            {
+                var cont = $('setting_ENABLED_COUNTRIES');
+                var menu = cont.insertBefore($('handler_ENABLED_COUNTRIES').cloneNode(true), cont.firstChild);
+                
+                var select = 
+                    function(e)
+                    {
+                		Event.stop(e);
+                		
+                		var state = Event.element(e).hasClassName('countrySelect');
+                		
+                        checkboxes = $('setting_ENABLED_COUNTRIES').getElementsByTagName('input');
+                
+                		for (k = 0; k < checkboxes.length; k++)
+                		{
+                		  	checkboxes[k].checked = state;
+                		}                        
+                    }
+                                
+                Event.observe(menu.down('.countrySelect'), 'click', select);                
+                Event.observe(menu.down('.countryDeselect'), 'click', select);
+            },
+            
+        'ALLOWED_SORT_ORDER':
+            function()
+            {
+                var values = $('SORT_ORDER').getElementsBySelector('option');
+                var change = 
+                    function(e)
+                    {
+                        var el = Event.element(e);
+                        
+                        if (!el)
+                        {
+                            el = e;
+                        }
+                        
+                        if (el.checked)
+                        {
+                            Element.show(el.param);
+                        }
+                        else
+                        {
+                            Element.hide(el.param);                            
+                        }
+                    }
+                    
+                for (k = 0; k < values.length; k++)
+                {
+                    var el = $('ALLOWED_SORT_ORDER[' + values[k].value + ']');
+                    el.param = values[k];
+                    
+                    Event.observe(el, 'change', change);
+                    change(el);
+                }
+            }
+    },
+    
+    initialize: function(container)
+    {
+        var settings = container.getElementsBySelector('div.setting');
+        for (k = 0; k < settings.length; k++)
+        {
+            var id = settings[k].id.substr(8);
+            if (this.handlers[id])
+            {
+                this.handlers[id]();
+            }
+        }
+    }
+}

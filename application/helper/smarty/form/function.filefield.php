@@ -16,16 +16,6 @@ function smarty_function_filefield($params, $smarty)
 	$formHandler = $formParams['handle'];
 	$fieldName = $params['name'];
 	
-	// this should never be done. ID is should always be unique value. 
-    // Doing so breaks lots of javascript traversing. It misleads prototype
-    // And I found it also introduces some errors in tinyMCE. If you
-    // realy want such functionality come up with some clever way to generate
-    // unique id.
-//	if (!isset($params['id']))
-//	{
-//	  	$params['id'] = $params['name'];
-//	}
-	
 	// Check permissions
 	if($formParams['readonly'])
 	{	

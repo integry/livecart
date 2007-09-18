@@ -95,13 +95,27 @@
 				<td class="value">{$product.sku}</td>
 			</tr>
 
-			{if $product.stockCount}
+			{if $product.stockCount && 'PRODUCT_DISPLAY_STOCK'|config}
 			<tr>
 				<td class="param">{t In Stock}:</td>
 				<td class="value">{$product.stockCount}</td>
 			</tr>
 			{/if}
 
+			{if !$product.isDownloadable}
+                {if !$product.stockCount && 'PRODUCT_DISPLAY_NO_STOCK'|config}
+    			<tr>
+    				<td colspan="2" class="noStock"><span>{t _no_stock}</span></td>
+    			</tr>
+    			{/if}
+
+                {if $product.stockCount && 'PRODUCT_DISPLAY_LOW_STOCK'|config}
+    			<tr>
+    				<td colspan="2" class="lowStock"><span>{t _low_stock}</span></td>
+    			</tr>
+    			{/if}
+    		{/if}
+    			
 			{if $product.URL}
             <tr>
                 <td colspan="2" class="websiteUrl"><a href="{$product.URL}" target="_blank">{t _product_website}</a></td>            

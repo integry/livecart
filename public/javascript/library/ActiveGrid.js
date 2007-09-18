@@ -362,7 +362,6 @@ ActiveGridFilter.prototype =
     {
         this.element = element;
         this.activeGridInstance = activeGridInstance;
-
         this.element.onclick = Event.stop.bindAsEventListener(this);
         this.element.onfocus = this.filterFocus.bindAsEventListener(this);
         this.element.onblur = this.filterBlur.bindAsEventListener(this);        

@@ -77,6 +77,13 @@ IMG_C_W_4=Width (pixels)
 IMG_C_H_4=Height (pixels)
 IMG_C_Q_4=Quality (0 - 100)
 
+
+_product_page=Product Page
+_inventory_status=Inventory Status
+PRODUCT_DISPLAY_STOCK=Display the amount of products in stock
+PRODUCT_DISPLAY_LOW_STOCK=Display low-stock warning
+PRODUCT_DISPLAY_NO_STOCK=Display notification if a product is out of stock
+
 _filters=Product Filters
 
 _general_filter=General Options
@@ -124,11 +131,11 @@ PRICE_FILTER_TO_8=Price To
 PRICE_FILTER_TO_9=Price To
 PRICE_FILTER_TO_10=Price To
 
-_users=Users
+_users=User Accounts
 USER_COUNT_RECENT_ORDERS=Number of recent orders to display in account homepage
 USER_ORDERS_PER_PAGE=Number of orders per page
 
-_inventory=Inventory
+_inventory=Inventory Tracking
 INVENTORY_TRACKING=Inventory tracking
 DISABLE=Do not track inventory
 ENABLE_AND_DISPLAY=Track inventory, but display out-of-stock products
@@ -139,12 +146,13 @@ _checkout=Checkout
 _credit_card_options=Credit Card Options
 REQUIRE_CVV=Require Card Verification Code (CVV) to be entered
 
-_purchase=Purchase
+_purchase=Orders
 MIN_TOTAL=Minimum order total
 MAX_TOTAL=Maximum order total (0 - no limit)
+MIN_QUANT=Minimum quantity of products per order
 MAX_QUANT=Maximum quantity of products per order (0 - no limit)
 
-_shipping=Shipping
+_shipping=Shipping Methods
 _store_loc_add=Store Location Address
 STORE_COUNTRY=Store country
 STORE_STATE=Store state

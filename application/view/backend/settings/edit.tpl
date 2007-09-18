@@ -1,6 +1,6 @@
 <h1>{$title}</h1>
 
-{form action="controller=backend.settings action=save" method="post" handle=$form onsubmit="settings.save(this); return false;" role="settings.update"}
+{form action="controller=backend.settings action=save" method="post" handle=$form onsubmit="settings.save(this); return false;" role="settings.update" id="settings"}
 
 {foreach from=$layout key=groupName item=fields name="groups"}
 
@@ -16,7 +16,7 @@
 		{/if}
 	
 	{foreach from=$fields key="fieldName" item="foo"}	
-		<div class="setting" {if 'bool' != $values.$fieldName.type}style="margin-top: 7px; margin-bottom: 7px;"{/if}>
+		<div class="setting" id="setting_{$fieldName}" {if 'bool' != $values.$fieldName.type}style="margin-top: 7px; margin-bottom: 7px;"{/if}>
         <p{if 'bool' == $values.$fieldName.type} class="checkbox"{/if}>
 			
 			{if 'bool' != $values.$fieldName.type}
@@ -86,3 +86,9 @@
     <a class="cancel" href="#" onclick="return false;">{t _cancel}</a>
 </fieldset>
 {/form}
+
+{literal}
+<script type="text/javascript">
+    new Backend.Settings.Editor($('settings'));
+</script>
+{/literal}

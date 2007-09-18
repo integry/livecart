@@ -643,6 +643,54 @@ class CustomerOrder extends ActiveRecordModel
         
         return $selected;
     }    
+
+	/**
+	 *	Determines if the order matches defined requirements/constraints (min/max total, etc.)
+	 */
+	public function isOrderable()
+	{
+        ClassLoader::import('application.model.order.OrderException');
+        
+        $app = $this->getApplication();
+        $c = $app->getConfig();
+        
+        // check product quantity
+        $maxQuant = $c->get('MAX_QUANT');
+        $minQuant = $c->get('MIN_QUANT');
+        $quant = $this->getShoppingCartItemCount();
+
+        if (!$quant)
+        {
+            return false;
+        }
+
+        if ($maxQuant && ($quant > $maxQuant))
+        {
+            return new OrderException(OrderException::MAX_QUANT, $quant, $maxQuant, $app);
+        }
+
+        if ($minQuant && ($quant < $minQuant))
+        {
+            return new OrderException(OrderException::MIN_QUANT, $quant, $minQuant, $app);
+        }
+
+        // check order total
+        $maxTotal = $c->get('MAX_TOTAL');
+        $minTotal = $c->get('MIN_TOTAL');
+        $total = $this->getSubTotal($this->getApplication()->getDefaultCurrency());
+        
+        if ($maxTotal && ($total > $maxTotal))
+        {
+            return new OrderException(OrderException::MAX_TOTAL, $total, $maxTotal, $app);
+        }
+
+        if ($minTotal && ($total < $minTotal))
+        {
+            return new OrderException(OrderException::MIN_TOTAL, $total, $minTotal, $app);
+        }
+                
+        return true;
+    }
 	
 	/**
 	 *	Merge two orders into one
@@ -834,6 +882,15 @@ class CustomerOrder extends ActiveRecordModel
 
         if (!$array['isFinalized'])
         {
+            $isOrderable = $this->isOrderable();
+            if ($isOrderable instanceof OrderException)
+            {
+                $array['error'] = $isOrderable->toArray();
+            }
+            
+            $array['isOrderable'] = !($isOrderable instanceof OrderException) && $isOrderable;
+            
+            $array['isShippingSelected'] = $this->isShippingSelected();
             $array['isShippingSelected'] = $this->isShippingSelected();
             $array['isAddressSelected'] = ($this->shippingAddress->get() && $this->billingAddress->get());
         }

@@ -7,7 +7,7 @@
 		{/if}
 	</div>
 	| <a href="{link controller=order returnPath=true}">Shopping Cart</a> (<strong>{$order.basketCount}</strong> items)
-	{if $order.basketCount > 0}
+	{if $order.isOrderable}
         | <a href="{link controller=checkout returnPath=true}" class="checkout">{t Checkout}</a>    
 	{/if}
 

@@ -680,6 +680,13 @@ class CheckoutController extends FrontendController
 			}
 		}
 		
+		// order is not orderable (too few/many items, etc.)
+		$isOrderable = $order->isOrderable();
+        if (!$isOrderable || $isOrderable instanceof OrderException)
+        {
+            return new ActionRedirectResponse('order', 'index');
+        }
+		
         // shipping address selected
         if ($step >= self::STEP_SHIPPING)
         {            
