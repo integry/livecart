@@ -175,9 +175,6 @@ Backend.Tax.prototype =
             {
                 var span = '<span class="tax_viewMode error">' + 
                                  this.nodes.form.elements.namedItem('name').value + 
-                                 "(<strong>" + 
-                                    (this.nodes.form.elements.namedItem('isEnabled').checked ? Backend.Tax.prototype.Messages.enabled : Backend.Tax.prototype.Messages.disabled) +  
-                                 "</strong>)" + 
                             "</span>";
                  this.taxActiveList.addRecord(response.tax.ID, span, true);
                  
@@ -186,7 +183,7 @@ Backend.Tax.prototype =
             else
             {
                 var title = this.nodes.root.up('li').down(".tax_viewMode");
-                title.update(this.nodes.form.elements.namedItem('name').value + "(<strong>" + (this.nodes.form.elements.namedItem('isEnabled').checked ? Backend.Tax.prototype.Messages.enabled : Backend.Tax.prototype.Messages.disabled) +  "</strong>)")
+                title.update(this.nodes.form.elements.namedItem('name').value)
                 title.style.display = (title.style.display != 'none') ? 'none' : 'inline';
                 
                 this.taxActiveList.toggleContainer(this.nodes.root.up('li'), 'edit', 'yellow');

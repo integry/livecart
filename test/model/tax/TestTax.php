@@ -49,8 +49,7 @@ class TestTax extends UnitTest
 
     public function testGetAllTaxes()
     {
-        $enabledTaxesCount = Tax::getTaxes(false)->getTotalRecordCount();
-        $allTaxesCount = Tax::getTaxes(true)->getTotalRecordCount();
+        $allTaxesCount = Tax::getTaxes()->getTotalRecordCount();
         
         $taxEnabled = Tax::getNewInstance('testing');
         $taxEnabled->isEnabled->set(1);
@@ -60,8 +59,7 @@ class TestTax extends UnitTest
         $taxDisabled->isEnabled->set(0);
         $taxDisabled->save();
         
-        $this->assertEqual(Tax::getTaxes(false)->getTotalRecordCount(), $enabledTaxesCount + 1);
-        $this->assertEqual(Tax::getTaxes(true)->getTotalRecordCount(), $allTaxesCount + 2);
+        $this->assertEqual(Tax::getTaxes()->getTotalRecordCount(), $allTaxesCount + 2);
     }
 }
 ?>

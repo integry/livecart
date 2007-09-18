@@ -17,7 +17,6 @@ class Tax extends MultilingualObject
 		$schema->setName("Tax");
 		
 		$schema->registerField(new ARPrimaryKeyField("ID", ARInteger::instance()));
-		$schema->registerField(new ARField("isEnabled", ARBool::instance()));
 		$schema->registerField(new ARField("name", ARArray::instance()));
         $schema->registerField(new ARField("position", ARInteger::instance(2)));
 	}
@@ -73,17 +72,10 @@ class Tax extends MultilingualObject
 	 * 
 	 * @return ARSet
 	 */
-	public static function getTaxes($includeDisabled = false, DeliveryZone $notUsedInThisZone = null, $loadReferencedRecords = false)
+	public static function getTaxes(DeliveryZone $notUsedInThisZone = null, $loadReferencedRecords = false)
 	{
 	    $filter = new ARSelectFilter();
-	    
-	    if(!$includeDisabled)
-	    {
-	        $includeDisabledCond = new EqualsCond(new ARFieldHandle(__CLASS__, "isEnabled"), 1);
-   		    $filter->setCondition($includeDisabledCond);
-	    }
-	    
-        $rates = TaxRate::getRecordSetByDeliveryZone($notUsedInThisZone, true);
+	    $rates = TaxRate::getRecordSetByDeliveryZone($notUsedInThisZone, true);
 
         if($rates->getTotalRecordCount() > 0)
         {
@@ -94,16 +86,9 @@ class Tax extends MultilingualObject
             }
             
             $notInCond = new NotINCond(new ARFieldHandle(__CLASS__, "ID"), $taxIDs);
-            
-            if(isset($includeDisabledCond))
-            {
-                $includeDisabledCond->addAND($notInCond);
-            }
-            else
-            {
-                $filter->setCondition($notInCond);
-            }
+            $filter->setCondition($notInCond);
         }	
+        
 	    return self::getRecordSet($filter, $loadReferencedRecords);
 	}
 

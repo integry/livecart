@@ -18,7 +18,6 @@
         
 	<span class="error tax_viewMode">
 	    {$taxes[$key].name}
-        (<strong>{if $taxes[$key].isEnabled}{t _enabled}{else}{t _disabled}{/if}</strong>)
 	</span>
      
     </li>

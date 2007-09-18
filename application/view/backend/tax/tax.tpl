@@ -14,15 +14,6 @@
         <span class="errorText" style="display: none" />
 	</fieldset>
     
-    <p>
-        <fieldset class="error">
-            <label></label>
-        	{checkbox name="isEnabled" class="checkbox"}
-            <label for="isEnabled" class="checkbox">{t _enabled}</label>
-            <span class="errorText" style="display: none" />
-    	</fieldset>
-	</p>
-    
     {language}
         <label>{t _name}</label>
         <fieldset class="error">

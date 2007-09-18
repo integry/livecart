@@ -32,7 +32,7 @@ class TaxRateController extends StoreManagementController
 	      
 		$form = $this->createTaxRateForm();
 		$enabledTaxes = array();
-		foreach(Tax::getTaxes(false, $deliveryZone)->toArray() as $tax)
+		foreach(Tax::getTaxes($deliveryZone)->toArray() as $tax)
 		{
 		    $enabledTaxes[$tax['ID']] = $tax['name'];
 		}

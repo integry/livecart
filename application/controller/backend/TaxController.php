@@ -93,7 +93,6 @@ class TaxController extends StoreManagementController
         
         if($validator->isValid())
         {            
-            $tax->isEnabled->set($this->request->get("isEnabled", 0));
             $tax->setValueArrayByLang(array('name'), $this->application->getDefaultLanguageCode(), $this->application->getLanguageArray(true, false), $this->request);      
 		    
 	        $tax->save();
