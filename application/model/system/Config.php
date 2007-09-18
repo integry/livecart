@@ -294,7 +294,7 @@ class Config
 			}  
 			elseif (is_numeric($value))
 			{
-			  	$type = 'num';
+			  	$type = (strpos($value, '.') !== false) ? 'float' : 'num';
 			}
 			elseif (('/' == substr($value, 0, 1)) || ('+/' == substr($value, 0, 2)) && '/' == substr($value, -1))
 			{

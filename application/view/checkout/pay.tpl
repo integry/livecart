@@ -50,16 +50,16 @@
         {if $ccTypes}
         <p>
             <label for="ccType">Card type:</label>
-            {selectfield name="ccType" options=$ccTypes}
+            {selectfield name="ccType" id="ccType" options=$ccTypes}
         </p>
         {/if}
     
         <p>
             <label for="ccExpiryMonth">Card expiration:</label>
             <fieldset class="error">
-	            {selectfield name="ccExpiryMonth" options=$months}
+	            {selectfield name="ccExpiryMonth" id="ccExpiryMonth" options=$months}
 	            /
-	            {selectfield name="ccExpiryYear" options=$years}
+	            {selectfield name="ccExpiryYear" id="ccExpiryYear" options=$years}
 				<div class="errorText hidden{error for="ccExpiryYear"} visible{/error}">{error for="ccExpiryYear"}{$msg}{/error}</div>
 			</fieldset>
         </p>
@@ -67,7 +67,7 @@
         <p>
             {err for="ccCVV"}
                 {{label {t 3 or 4 digit code after card # on back of card}:}}
-	            {textfield maxlength="4" class="text"}
+	            {textfield maxlength="4" class="text" id="ccCVV"}
 				<a class="cvv" href="{link controller=checkout action=cvv}" onclick="Element.show($('cvvHelp')); return false;">{t What Is It?}</a>
             {/err}
         </p>

@@ -284,7 +284,7 @@ class Category extends ActiveTreeNode implements MultilingualObjectInterface
 	  	
         // Hide empty categories
         $config = self::getApplication()->getConfig();
-        if ($config->get('HIDE_EMPTY_DIRECTORIES'))
+        if ('ENABLE_AND_HIDE' == $config->get('INVENTORY_TRACKING'))
         {
             $cond->addAND(new MoreThanCond(new ARFieldHandle('Category', $this->getProductCountField()), 0));
         }        

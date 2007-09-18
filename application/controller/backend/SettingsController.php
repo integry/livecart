@@ -43,6 +43,11 @@ class SettingsController extends StoreManagementController
 		$form = $this->getForm($values, $validation);
 		$multiLingualValues = array();
 		
+		if (!$values)
+		{
+            return new RawResponse();
+        }
+		
 		foreach ($values as $key => $value)
 		{
     		if ($this->config->isMultiLingual($key) && 'string' == $value['type'])
@@ -161,12 +166,17 @@ class SettingsController extends StoreManagementController
 		$val = new RequestValidator('settings', $this->request);
 		foreach ($settings as $key => $value)
 		{
-			if ('num' == $value['type'])
+			if (('num' == $value['type']) || ('float' == $value['type']))
 			{
 				$val->addCheck($key, new IsNumericCheck($this->translate('_err_numeric')));
 				$val->addCheck($key, new MinValueCheck($this->translate('_err_negative'), 0));
 				$val->addFilter($key, new NumericFilter());
 			}	
+			
+			if ('num' == $value['type'])
+			{
+				$val->addFilter($key, new RegexFilter('\.'));
+            }
 		}
 		
 		// apply custom validation rules

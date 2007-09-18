@@ -62,18 +62,22 @@ Backend.Settings.prototype =
 	activateCategory: function(id)
 	{
         Backend.Breadcrumb.display(id);
-		//if (!this.treeBrowser.hasChildren(id))
-//		{
-			this.treeBrowser.showFeedback(id);
-			var url = this.urls['edit'].replace('_id_', id);
-			var upd = new LiveCart.AjaxUpdater(url, 'settingsContent', 'settingsIndicator');
-			upd.onComplete = this.displayCategory.bind(this);
-//		}
+		this.treeBrowser.showFeedback(id);
+		var url = this.urls['edit'].replace('_id_', id);
+		var upd = new LiveCart.AjaxRequest(url, 'settingsIndicator', this.displayCategory.bind(this));
 	},
 	
 	displayCategory: function(response)
 	{
-		this.treeBrowser.hideFeedback();	
+        this.treeBrowser.hideFeedback();	
+
+		if (!response.responseText)
+		{
+            return false;
+        }
+
+        $('settingsContent').update(response.responseText);
+
 		var cancel = document.getElementsByClassName('cancel', $('settingsContent'))[0];
 		Event.observe(cancel, 'click', this.resetForm.bindAsEventListener(this));
 	},

@@ -218,7 +218,16 @@ Backend.SiteNews.PostEntry.prototype =
 
 	updateHtml: function()
 	{
-		this.node.down('.newsTitle').innerHTML = this.data.title;
+		if (1 == this.data.isEnabled)
+		{
+            Element.removeClassName(this.node, 'disabled');
+        }
+        else
+        {
+            Element.addClassName(this.node, 'disabled');
+        }
+        
+        this.node.down('.newsTitle').innerHTML = this.data.title;
 		this.node.down('.newsDate').innerHTML = this.data.time;
 		this.node.down('.newsText').innerHTML = this.data.text;	
         this.node.down('.checkbox').checked = (this.data.isEnabled == true);

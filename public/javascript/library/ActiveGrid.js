@@ -514,7 +514,7 @@ ActiveGrid.MassActionHandler.prototype =
         
     grid: null,
     
-    initialize: function(handlerMenu, activeGrid)
+    initialize: function(handlerMenu, activeGrid, params)
     {
         this.handlerMenu = handlerMenu;     
         this.actionSelector = handlerMenu.getElementsByTagName('select')[0];
@@ -526,6 +526,7 @@ ActiveGrid.MassActionHandler.prototype =
         Event.observe(this.actionSelector.form, 'submit', this.submit.bind(this));
             
         this.grid = activeGrid;
+        this.params = params;
     },
     
     actionSelectorChange: function()
@@ -581,7 +582,13 @@ ActiveGrid.MassActionHandler.prototype =
             return false;
         }
 
-        new LiveCart.AjaxRequest(this.form, document.getElementsByClassName('progressIndicator', this.handlerMenu)[0], this.submitCompleted.bind(this));
+        var indicator = document.getElementsByClassName('massIndicator', this.handlerMenu)[0];
+        if (!indicator)
+        {
+            indicator = this.handlerMenu.down('.progressIndicator');
+        }
+        
+        new LiveCart.AjaxRequest(this.form, indicator , this.submitCompleted.bind(this));
 
         this.grid.resetSelection();   
     },
@@ -590,6 +597,11 @@ ActiveGrid.MassActionHandler.prototype =
     {
         this.grid.reloadGrid();   
         this.blurButton();
+        
+        if (this.params && this.params.onComplete)
+        {
+            this.params.onComplete();
+        }
     },
     
     blurButton: function()

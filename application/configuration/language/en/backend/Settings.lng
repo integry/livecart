@@ -134,7 +134,6 @@ DISABLE=Do not track inventory
 ENABLE_AND_DISPLAY=Track inventory, but display out-of-stock products
 ENABLE_AND_HIDE=Track inventory, and hide out-of-stock products
 LOW_STOCK=Low-stock warning threshold (number of items left in stock)
-HIDE_EMPTY_DIRECTORIES=Hide categories without active products
 
 _checkout=Checkout
 _credit_card_options=Credit Card Options

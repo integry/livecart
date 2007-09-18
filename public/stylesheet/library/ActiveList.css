@@ -21,7 +21,7 @@ ul.activeList, .activeListGroup
 .activeList li, .activeListGroup li
 {
     padding: 5px;
-    width: 30em;    
+    width: auto;    
 }
 
 li.activeList_even, li.activeList_odd

@@ -63,6 +63,7 @@ function smarty_function_calendar($params, $smarty)
 	$("{$params['id']}").realInput = $("{$params['id']}_real");
 	$("{$params['id']}").showInput = $("{$params['id']}");
 
+    Event.observe($("{$params['id']}"),        "dbclick",   Calendar.updateDate );
     Event.observe($("{$params['id']}"),        "keyup",     Calendar.updateDate );
     Event.observe($("{$params['id']}"),        "blur",      Calendar.updateDate );
     Event.observe($("{$params['id']}_button"), "mousedown", Calendar.updateDate );
@@ -75,6 +76,8 @@ function smarty_function_calendar($params, $smarty)
         align:          "BR",
         singleClick:    true
     });
+    
+    $("{$params['id']}").ondblclick = $("{$params['id']}_button").onclick;
 </script>
 JAVASCRIPT;
 

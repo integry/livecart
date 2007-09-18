@@ -26,7 +26,7 @@
 		<fieldset class="error">
 			{if 'string' == $values.$fieldName.type}
 				{textfield class="text wide" name="$fieldName" id="$fieldName"}
-			{elseif 'num' == $values.$fieldName.type}
+			{elseif 'num' == $values.$fieldName.type || 'float' == $values.$fieldName.type}
 				{textfield class="text number" name="$fieldName" id="$fieldName"}			
 			{elseif 'bool' == $values.$fieldName.type}
 				{checkbox class="checkbox" name="$fieldName" id="$fieldName" value="1"}			

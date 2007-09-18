@@ -1,7 +1,6 @@
 # Confirmations
 _tax_entry_was_successfully_saved=Tax entry was successfully saved
 _could_not_save_tax_entry=Could not save tax entry
-_tax_entry_was_successfully_deleted=Tax entry was successfully deleted
 
 _add_new_tax=Add new tax
 _cancel_adding_new_tax=Cancel adding new tax
@@ -11,8 +10,6 @@ _disabled=Disabled
 _name=Name
 _manage=Manage
 _taxes=Taxes
-
-_taxes_were_successfully_reordered=Taxes were successfully reordered
 
 _error_the_name_should_not_be_empty=The name should not be empty
 _are_you_sure_you_want_to_remove_ths_tax=Are you sure you want to remove this tax?

@@ -1,8 +1,6 @@
 # Confirmations
-_shipping_service_was_successfully_deleted=Shipping service was successfully deleted
 _shipping_service_was_successfully_saved=Shipping service was successfully saved
 _could_note_save_shipping_service=Could not save shipping service
-_shipping_services_were_successfully_reordered=Shipping services were successfully reordered
 
 _add_new_shipping_service=Add new shipping service
 _cancel_adding_new_service=Cancel adding new service

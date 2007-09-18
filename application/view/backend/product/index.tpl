@@ -79,7 +79,7 @@
         </span>
         
         <input type="submit" value="{tn _process}" class="submit" />
-        <span class="progressIndicator massIndicator" style="display: none;"></span>
+        <span class="massIndicator progressIndicator" style="display: none;"></span>
         
         {/form}
         
@@ -114,7 +114,19 @@ try
 {/literal}
 	window.activeGrids['products_{$categoryID}'].setDataFormatter(Backend.Product.GridFormatter);
     
-    var massHandler = new ActiveGrid.MassActionHandler($('productMass_{$categoryID}'), window.activeGrids['products_{$categoryID}']);
+    var massHandler = new ActiveGrid.MassActionHandler(
+                        $('productMass_{$categoryID}'), 
+                        window.activeGrids['products_{$categoryID}'],
+{literal}
+                        {
+                            'onComplete':
+                                function()
+                                {
+                                    Backend.Product.resetEditors();                                    
+                                }
+                        }                        
+{/literal}
+                        );
     massHandler.deleteConfirmMessage = '{t _delete_conf|addslashes}' ;
     massHandler.nothingSelectedMessage = '{t _nothing_selected|addslashes}' ;
 {literal}
