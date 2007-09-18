@@ -2,7 +2,7 @@
 <div id="userManagerContainer" class="treeManagerContainer" style="display: none;">
 	<fieldset class="container">
 		<ul class="menu">
-			<li><a href="#cancelEditing" id="cancel_user_edit" class="cancel">{t _cancel_editing_user_info}</a></li>
+			<li class="done"><a href="#cancelEditing" id="cancel_user_edit" class="cancel">{t _cancel_editing_user_info}</a></li>
 		</ul>
 	</fieldset>
 	

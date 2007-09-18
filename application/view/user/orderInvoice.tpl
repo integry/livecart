@@ -104,12 +104,14 @@
                         </tr>
                     {/foreach}        
                       
+                    {if $shipment.isShippable}
                     <tr>
                         <td colspan="3" class="subTotalCaption">
                             {t _shipment_total}:
                         </td>
                         <td class="amount subTotal">{$shipment.formatted_totalAmount}</td>
                     </tr>
+                    {/if}
                                             
                 </tbody>
             

@@ -192,7 +192,7 @@ class UserController extends FrontendController
 		$f->mergeCondition(new EqualsCond(new ARFieldHandle('Product', 'type'), Product::TYPE_DOWNLOADABLE));
 		$f->setOrder(new ARFieldHandle('CustomerOrder', 'ID'), 'DESC');
         
-        $downloadable = ActiveRecordModel::getRecordSet('OrderedItem', $f, ActiveRecordModel::LOAD_REFERENCES);
+        $downloadable = ActiveRecordModel::getRecordSet('OrderedItem', $f, array('Product', 'CustomerOrder'));
         $fileArray = array();
         foreach ($downloadable as &$item)
         {

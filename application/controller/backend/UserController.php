@@ -129,6 +129,16 @@ class UserController extends StoreManagementController
                 }
 		    }
 		    
+		    if (!isset($shippingFlatArray))
+		    {
+				$shippingFlatArray = array();
+			}
+		    
+		    if (!isset($billingFlatArray))
+		    {
+				$billingFlatArray = array();
+			}
+
 		    if(!$user->defaultBillingAddress->get() || 
 		    !$user->defaultBillingAddress->get() || 
 		    (array_diff_key($shippingFlatArray, array('ID' => 0)) == array_diff_key($billingFlatArray, array('ID' => 0))))

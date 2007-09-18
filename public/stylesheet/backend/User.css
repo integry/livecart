@@ -58,13 +58,6 @@ li.addUser
     width:4%;
 }
 
-th.cell_User_email
-{
-    padding-left: 30px;
-}
-
-
-
 #userGroupsManagerContainer .containerTableStyle
 {
     height: auto ! important; 
