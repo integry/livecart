@@ -347,7 +347,7 @@ class ProductController extends StoreManagementController
 	    
 	    if ($response instanceOf ActionResponse)
 	    {
-            $response->get('productForm')->clearData();
+	        $response->get('productForm')->clearData();
             $response->set('id', $product->getID());
             return $response;
         }
@@ -544,7 +544,7 @@ class ProductController extends StoreManagementController
 		    $response->setHeader('Cache-Control', 'no-cache, must-revalidate');
 		    $response->setHeader('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
 		    $response->setHeader('Content-type', 'text/javascript');
-							
+		    
 			return $response;
 		}
 		else
@@ -678,7 +678,8 @@ class ProductController extends StoreManagementController
 		}		
 
 		$response = new ActionResponse();
-		$response->set("cat", $product->category->get()->getID());
+        $response->set("cat", $product->category->get()->getID());
+		$response->set("hideFeedbackMessage", $this->request->get("afterAdding") == 'on');
 		$response->set("specFieldList", $specFieldsByGroup);
 		$response->set("productForm", $form);
 		$response->set("path", $product->category->get()->getPathNodeArray(true));

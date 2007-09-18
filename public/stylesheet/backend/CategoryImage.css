@@ -9,40 +9,12 @@
     background-image: url(../../image/silk/image_add.png);     
 }
 
-.catImageList, .prodImageList 
-{
-  	width: 600px;
-}
-
-.catImageList li, .prodImageList li 
-{
-	padding: 5px;
-	margin-bottom: 10px; 
-  	width: 47em;
-}
-
-.catImageTemplate img, .prodImageTemplate img 
-{
-  	vertical-align: top;	  
-}
-
-.catImageEditForm iframe, .prodImageEditForm iframe
-{
-/*    display: none; */
-}
-
-.catImageEditContainer, .prodImageEditContainer 
-{
-  	margin-top: 10px;
-  	padding-left: 60px;
-}
 
 .imageTitle 
 {
-  	font-weight: bold;
-  	font-size: larger;
-	margin-left: 10px;
-	margin-top: 10px;  	
+    font-weight: bold;
+    font-size: larger;
+    margin: 0 10px;
 }
 
 img.image 
@@ -50,11 +22,6 @@ img.image
     cursor: pointer;
 }
 
-.activeList_editContainer fieldset.container  
-{
-    padding: 10px;   
-}
-    
 .activeList_editContainer .container legend 
 {
     display: none;
@@ -65,20 +32,9 @@ img.image
     display: block;
 }
 
-.activeList_editContainer div.translations 
-{
-    margin-top: 20px;    
-}
 
-p.main, p.supplemental
+.main, .supplemental
 {
-    margin-top: 10px;
-    padding: 0;
-    padding-bottom: 10px;
     font-weight: bold;
 }
 
-div.translations 
-{
-	margin-top: 20px;
-}

@@ -42,7 +42,7 @@
 			<label for="image">{t _image_file}</label>
 			<fieldset class="error">
 				{filefield name="image" id="image"}
-				 <span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
+				<div class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</div>
 				<div class="errorText" style="display: none;"></div>
 			</fieldset>
 		</p>
@@ -87,33 +87,43 @@
 </div>
 
 <ul id="prodImageList_{$ownerId}" class="prodImageList {allowed role="product.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit">
-    <p class="main">{t _main_image}</p><p class="supplemental">{t _supplemental_images}</p>
+    <li class="activeList_remove_sort activeList_remove_delete activeList_remove_edit ignore main">
+        {t _main_image}
+    </li>
+    <li class="activeList_remove_sort activeList_remove_delete activeList_remove_edit ignore supplemental">
+        {t _supplemental_images}
+    </li>
 </ul>
 
 <div class="noRecords">
 	<div>{t _no_images}</div>
 </div>
 
+{literal}
 <script type="text/javascript">
-
-    var handler = new Backend.ObjectImage($("prodImageList_{$ownerId}"), 'prod');    
-	handler.initList({$images});
+try
+{
+    var handler = new Backend.ObjectImage($("{/literal}prodImageList_{$ownerId}{literal}"), 'prod');    
+	handler.initList({/literal}{$images}{literal});
 	
-	handler.setDeleteUrl('{link controller=backend.productImage action=delete}');	
-	handler.setSortUrl('{link controller=backend.productImage action=saveOrder}');	
-	handler.setEditUrl('{link controller=backend.productImage action=edit}');		
-	handler.setSaveUrl('{link controller=backend.productImage action=save}');		
+	handler.setDeleteUrl('{/literal}{link controller=backend.productImage action=delete}{literal}');	
+	handler.setSortUrl('{/literal}{link controller=backend.productImage action=saveOrder}{literal}');	
+	handler.setEditUrl('{/literal}{link controller=backend.productImage action=edit}{literal}');		
+	handler.setSaveUrl('{/literal}{link controller=backend.productImage action=save}{literal}');		
 	   
-	handler.setDeleteMessage('{t _delete_confirm|addslashes}');	
-	handler.setEditCaption('{t _edit_image|addslashes}');	
-	handler.setSaveCaption('{t _save|addslashes}');	
+	handler.setDeleteMessage('{/literal}{t _delete_confirm|addslashes}{literal}');	
+	handler.setEditCaption('{/literal}{t _edit_image|addslashes}{literal}');	
+	handler.setSaveCaption('{/literal}{t _save|addslashes}{literal}');	
     
-    {literal}
     handler.activeListMessages = 
     { 
-        _activeList_edit:    {/literal}'{t _activeList_edit|addslashes}'{literal},
-        _activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
+        _activeList_edit:    '{/literal}{t _activeList_edit|addslashes}{literal}',
+        _activeList_delete:  '{/literal}{t _activeList_delete|addslashes}{literal}'
     }
-    {/literal}
-	
+}
+catch(e)
+{
+    console.info(e)
+}
 </script>
+{/literal}

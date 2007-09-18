@@ -1,6 +1,5 @@
 # Confirmation
 _could_not_save_product_information=Could not save product information
-_product_information_was_successfully_saved=Product detailes were successfully saved
 _new_product_was_successfully_created=New product was successfully created
 _mass_action_succeed=Mass action succeed
 
@@ -9,7 +8,7 @@ _mass_action_succeed=Mass action succeed
 _process=Save
 _nothing_selected=Please select at least one product first
 _delete_conf=Really delete the selected products?
-
+_product_information_was_successfully_saved=Product information was successfully saved
 _with_selected=With selected
 _new_product=New Product
 

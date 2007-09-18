@@ -46,7 +46,7 @@
 			{err for="image"}
                 {{label {t _image_file}: }}
 				{filefield} 
-                <span class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</span>
+                <div class="maxFileSize">{maketext text=_max_file_size params=$maxSize}</div>
             {/err}            
 		</p>
 			
@@ -90,33 +90,45 @@
 </div>
 
 <ul id="catImageList_{$ownerId}" class="catImageList {allowed role="category.update"}activeList_add_sort activeList_add_delete{/allowed} activeList_add_edit">
-    <p class="main">{t _main_image}</p><p class="supplemental">{t _supplemental_images}</p>
+    <li class="activeList_remove_sort activeList_remove_delete activeList_remove_edit ignore main">
+        {t _main_image}
+    </li>
+    <li class="supplemental activeList_remove_sort activeList_remove_delete activeList_remove_edit ignore">
+        {t _supplemental_images}
+    </li>
 </ul>
 
 <div class="noRecords">
 	<div>{t _no_images}</div>
 </div>
 
+{literal}
 <script type="text/javascript">
-
-    var handler = new Backend.ObjectImage($("catImageList_{$ownerId}"), 'cat');    
-	handler.initList({$images});
+try
+{
+    var handler = new Backend.ObjectImage($("{/literal}catImageList_{$ownerId}{literal}"), 'cat');    
+	handler.initList({/literal}{$images}{literal});
 	
-	handler.setDeleteUrl('{link controller=backend.categoryImage action=delete}');	
-	handler.setSortUrl('{link controller=backend.categoryImage action=saveOrder}');	
-	handler.setEditUrl('{link controller=backend.categoryImage action=edit}');		
-	handler.setSaveUrl('{link controller=backend.categoryImage action=save}');		
+	handler.setDeleteUrl('{/literal}{link controller=backend.categoryImage action=delete}{literal}');	
+	handler.setSortUrl('{/literal}{link controller=backend.categoryImage action=saveOrder}{literal}');	
+	handler.setEditUrl('{/literal}{link controller=backend.categoryImage action=edit}{literal}');		
+	handler.setSaveUrl('{/literal}{link controller=backend.categoryImage action=save}{literal}');		
 	   
-	handler.setDeleteMessage('{t _delete_confirm|addslashes}');	
-	handler.setEditCaption('{t _edit_image|addslashes}');	
-	handler.setSaveCaption('{t _save|addslashes}');	
+	handler.setDeleteMessage('{/literal}{t _delete_confirm|addslashes}{literal}');	
+	handler.setEditCaption('{/literal}{t _edit_image|addslashes}{literal}');	
+	handler.setSaveCaption('{/literal}{t _save|addslashes}{literal}');	
     
-    {literal}
+    
     handler.activeListMessages = 
     { 
-        _activeList_edit:    {/literal}'{t _activeList_edit|addslashes}'{literal},
-        _activeList_delete:  {/literal}'{t _activeList_delete|addslashes}'{literal}
+        _activeList_edit:    '{/literal}{t _activeList_edit|addslashes}{literal}',
+        _activeList_delete:  '{/literal}{t _activeList_delete|addslashes}{literal}'
     }
-    {/literal}
-	
+    
+}
+catch(e)
+{
+   console.info(e);
+}
 </script>
+{/literal}

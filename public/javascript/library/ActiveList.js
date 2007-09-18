@@ -884,7 +884,17 @@ ActiveList.prototype = {
                 starteffect: function(){ this.scrollStart() }.bind(this),
                 endeffect: function(){ this.scrollEnd() }.bind(this)
             });
-			
+            
+			// Undraggable items
+            Sortable.options(this.ul).draggables.each(function(draggable)
+			{
+				if(draggable.element.hasClassName("activeList_remove_sort"))
+				{
+					draggable.destroy();
+				}
+			});
+            
+
             this.isSortable = true; 
             $A(this.acceptFromLists).each(function(ul) 
 			{

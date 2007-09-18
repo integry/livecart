@@ -34,42 +34,32 @@ Backend.ObjectImage.prototype =
 	},
 	
 	initList: function(imageList)
-	{             
-        this.initActiveList();
-		
+	{             		
 		for (k = 0; k < imageList.length; k++)
 		{
 		  	this.addToList(imageList[k], false);
 		}  
 		                
         this.arrangeImages(); 
+        this.initActiveList();
 		this.activeList.touch(true);  
 	},
     
     arrangeImages: function()
     {
-        var images = this.container.getElementsByTagName('li');
-        var mainP = this.container.getElementsByTagName('p')[0];
-		var supplementalP = this.container.getElementsByTagName('p')[1];
-                
-    	var firstli = images[0];
-    		
-        if (firstli)
+        var main = this.container.down('.main');
+        var supplemental = this.container.down('.supplemental');
+        var images = this.container.getElementsBySelector('.imageTemplate');
+
+        var first = images.first();
+        if (first)
         {           
-            // move first image under "Main Image"
-            if (mainP.nextSibling == supplementalP)
-            {
-                firstli.parentNode.insertBefore(firstli, mainP.nextSibling);            
-            }    
-            
-            while ('LI' == firstli.nextSibling.tagName)
-            {
-                firstli.parentNode.insertBefore(firstli.nextSibling, supplementalP.nextSibling);   
-            }            
+            this.container.insertBefore(supplemental, first);  
+			this.container.insertBefore(first, supplemental);
         }
         
-        supplementalP.style.display = images.length < 2 ? 'none' : '';
-        mainP.style.display = images.length == 0 ? 'none' : '';
+        supplemental.style.display = images.size() <= 1 ? 'none' : '';
+        main.style.display = images.size() == 0 ? 'none' : '';
     },    
         
 	initActiveList: function()
@@ -198,9 +188,7 @@ Backend.ObjectImage.prototype =
 	             }
 			            
                 li.handler.updateTabCounters();
-                                             
-				li.handler.showNoImagesMessage();			   	
-				
+				li.handler.showNoImagesMessage();	
 				li.handler.arrangeImages();		
 			 }
 	     },

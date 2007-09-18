@@ -256,6 +256,7 @@ Backend.Category = {
 			    if(Backend.Category.treeBrowser.getIndexById(newCategory.ID) !== null)
 				{
                     Backend.Category.treeBrowser.selectItem(newCategory.ID, true);
+                    this.tabControl.activateTab("tabMainDetails", newCategory.ID);
 					clearInterval(this.createNewCatInterval);
 			    }
 			}.bind(this)
@@ -264,6 +265,7 @@ Backend.Category = {
 		else
 		{
 			 this.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
+		     this.tabControl.activateTab("tabMainDetails", newCategory.ID);
 		}
 		Backend.Category.treeBrowser.setCategoryStyle(newCategory);
             
@@ -527,11 +529,16 @@ CategoryTabControl.prototype = {
 	 */
 	activateTab: function(targetTab, categoryIdToActivate)
 	{
+		targetTab = $(targetTab);
+		
         var tab = targetTab;
         var id = categoryIdToActivate;
         
 		var categoryId = (categoryIdToActivate == undefined ? this.treeBrowser.getSelectedItemId() : categoryIdToActivate);
         this.updateTabItemsCount(categoryId);
+
+        $(this.sectionContainerName).childElements().invoke("hide");
+
 
 		// get help context
 		var helpContext = document.getElementsByClassName('tabHelp', targetTab);

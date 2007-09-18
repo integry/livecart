@@ -65,15 +65,8 @@ class CategoryController extends StoreManagementController
 		$categoryNode->setValueByLang("name", $this->application->getDefaultLanguageCode(), $this->translate("_new_category") . " " . $categoryNode->getID() );
 
         $categoryNode->save();
-
-		try 
-		{
-			return new JSONResponse($categoryNode->toArray(), 'success', $this->translate('_new_category_was_successfully_created'));
-		}
-		catch(Exception $e)
-		{
-		    return new JSONResponse(false, 'failure', $this->translate('_could_not_create_a_category'));
-		}
+        
+		return new JSONResponse($categoryNode->toArray(), 'success');
 	}
 
 	/**
