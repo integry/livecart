@@ -85,6 +85,7 @@
                 </td>
                 <td></td>
             </tr>
+            {if $log.oldTotal != $log.newTotal}
             <tr>
                 <td>&nbsp;</td>
                 <td class="logEntryTotalAmount">
@@ -95,6 +96,7 @@
                     <span class="logEntryNewTotalAmount">{$log.Order.Currency.pricePrefix}{$log.newTotal}{$log.Order.Currency.priceSuffix}</span>
                 </td>
             </tr>
+            {/if}
         </table>
     </li>
 {/foreach}
