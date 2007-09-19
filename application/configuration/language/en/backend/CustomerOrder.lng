@@ -34,7 +34,7 @@ _this_order_is=This order is
 _all_orders=All Orders
 _current_orders=Current
 _new_orders=New
-_processing_orders=Processing		
+_processing_orders=Processing
 _awaiting_shipment_orders=Awaiting Shipment
 _shipped_orders=Shipped
 _returned_orders=Returned
@@ -88,6 +88,7 @@ _set_returned=Returned
 _process=Process
 
 # Order summary
+_overview=Overview
 _print_invoice=Print invoice
 _is_paid=Is paid
 _status=Status
@@ -122,7 +123,7 @@ _last_name=Last name
 _other_state=Other state
 _phone=Phone
 
-# Errors 
+# Errors
 _invalid_Status=Invalid status
 
 # Invoice

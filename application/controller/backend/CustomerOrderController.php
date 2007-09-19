@@ -3,7 +3,7 @@
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.controller.backend.*");
 ClassLoader::import("application.model.order.*");
-ClassLoader::import("application.model.currency");
+ClassLoader::import("application.model.Currency");
 ClassLoader::import("framework.request.validator.Form");
 ClassLoader::import("framework.request.validator.RequestValidator");
 
@@ -29,17 +29,17 @@ class CustomerOrderController extends StoreManagementController
 		        array('ID' => 7, 'name' => $this->translate('_returned_orders'), 'rootID' => 1),
 		    array('ID' => 8, 'name' => $this->translate('_shopping_carts'), 'rootID' => 0),
 		);
-		
+
 		$response = new ActionResponse();
 		$response->set('orderGroups', $orderGroups);
 		return $response;
-	    
+
 	}
-	
+
 	public function info()
 	{
 	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State', 'User'));
-	    
+
 	    $response = new ActionResponse();
 	    $response->set('statuses', array(
                                         CustomerOrder::STATUS_NEW => $this->translate('_status_new'),
@@ -48,9 +48,9 @@ class CustomerOrderController extends StoreManagementController
 	                                    CustomerOrder::STATUS_SHIPPED  => $this->translate('_status_shipped'),
 	                                    CustomerOrder::STATUS_RETURNED  => $this->translate('_status_returned'),
 				            ));
-				            
+
         $response->set('countries', $this->application->getEnabledCountries());
-        
+
         $orderArray = $order->toArray();
         if($order->isFinalized->get())
         {
@@ -64,7 +64,7 @@ class CustomerOrderController extends StoreManagementController
                 $shippingAddress->load(true);
                 $orderArray['ShippingAddress'] = $shippingAddress->toArray();
             }
-            
+
             if($order->billingAddress->get())
             {
 	            $billingStates = State::getStatesByCountry($order->billingAddress->get()->countryID->get());
@@ -72,7 +72,7 @@ class CustomerOrderController extends StoreManagementController
 	            asort($billingStates);
 		        $response->set('billingStates',  $billingStates);
             }
-            
+
             if($order->shippingAddress->get())
             {
 	            $shippingStates = State::getStatesByCountry($order->shippingAddress->get()->countryID->get());
@@ -81,24 +81,33 @@ class CustomerOrderController extends StoreManagementController
 		        $response->set('shippingStates',  $shippingStates);
             }
         }
-        else
+        elseif ($order->user->get())
         {
             $order->user->get()->loadAddresses();
-            
+
             $shippingStates = State::getStatesByCountry($order->user->get()->defaultShippingAddress->get()->userAddress->get()->countryID->get());
             $shippingStates[''] = '';
-            
+
             $billingStates = State::getStatesByCountry($order->user->get()->defaultBillingAddress->get()->userAddress->get()->countryID->get());
             $billingStates[''] = '';
-            
+
 	        $response->set('shippingStates',  $shippingStates);
 	        $response->set('billingStates',  $billingStates);
-            
+
 	        $orderArray['BillingAddress'] = $order->user->get()->defaultBillingAddress->get()->userAddress->get()->toArray();
 	        $orderArray['ShippingAddress'] = $order->user->get()->defaultShippingAddress->get()->userAddress->get()->toArray();
         }
-       
+
+	    $response->set('order', $orderArray);
+	    $response->set('form', $this->createOrderForm($orderArray));
+
         $user = $order->user->get();
+
+        if (!$user)
+        {
+			return $response;
+        }
+
         $addressOptions = array('' => '');
         $addressOptions['optgroup_0'] = $this->translate('_shipping_addresses');
         $addresses = array();
@@ -107,29 +116,27 @@ class CustomerOrderController extends StoreManagementController
             $addressOptions[$address['ID']] = $this->createAddressString($address);
             $addresses[$address['ID']] = $address;
         }
-        
+
         $addressOptions['optgroup_1'] = $this->translate('_billing_addresses');
         foreach($user->getShippingAddressArray() as $address)
         {
             $addressOptions[$address['ID']] = $this->createAddressString($address);
             $addresses[$address['ID']] = $address;
         }
-        
-	    $response->set('order', $orderArray);
-	    $response->set('form', $this->createOrderForm($orderArray));
+
 	    $response->set('existingUserAddressOptions', $addressOptions);
 	    $response->set('existingUserAddresses', $addresses);
-	    
+
 	    if(isset($orderArray['ShippingAddress']))
 	    {
 	        $response->set('formShippingAddress', $this->createUserAddressForm($orderArray['ShippingAddress']));
 	    }
-	    
+
 	    if(isset($orderArray['BillingAddress']))
 	    {
 	        $response->set('formBillingAddress', $this->createUserAddressForm($orderArray['BillingAddress']));
 	    }
-	    
+
 	    $firstEmptyShipment = false;
         $response->set('hideShipped', 0);
 	    foreach($order->getShipments() as $shipment)
@@ -144,37 +151,37 @@ class CustomerOrderController extends StoreManagementController
 	            break;
 	        }
 	    }
-	    
+
 		return $response;
 	}
-	
+
 	public function selectCustomer()
 	{
 		$userGroups = array();
 		$userGroups[] = array('ID' => -2, 'name' => $this->translate('_all_users'), 'rootID' => 0);
 		$userGroups[] = array('ID' => -1, 'name' => $this->translate('_default_user_group'), 'rootID' => -2);
-		
-		foreach(UserGroup::getRecordSet(new ARSelectFilter())->toArray() as $group) 
+
+		foreach(UserGroup::getRecordSet(new ARSelectFilter())->toArray() as $group)
 		{
 		    $userGroups[] = array('ID' => $group['ID'], 'name' => $group['name'], 'rootID' => -2);
 		}
-		    
+
 		$response = new ActionResponse();
 		$response->set('userGroups', $userGroups);
-		
+
 		return $response;
 	}
 
 	public function orders()
-	{        
+	{
 		$availableColumns = $this->getAvailableColumns();
 		$displayedColumns = $this->getDisplayedColumns();
-		
+
 		// sort available columns by display state (displayed columns first)
 		$displayedAvailable = array_intersect_key($availableColumns, $displayedColumns);
-		$notDisplayedAvailable = array_diff_key($availableColumns, $displayedColumns);		
+		$notDisplayedAvailable = array_diff_key($availableColumns, $displayedColumns);
 		$availableColumns = array_merge($displayedAvailable, $notDisplayedAvailable);
-		
+
 		$response = new ActionResponse();
         $response->set("massForm", $this->getMassForm());
         $response->set("orderGroupID", $this->request->get('id'));
@@ -182,10 +189,10 @@ class CustomerOrderController extends StoreManagementController
         $response->set("availableColumns", $availableColumns);
 		$response->set("offset", $this->request->get('offset'));
 		$response->set("userID", $this->request->get('userID'));
-		$response->set("totalCount", '0');	
+		$response->set("totalCount", '0');
 		return $response;
 	}
-	
+
 	/**
 	 * @role update
 	 */
@@ -196,34 +203,34 @@ class CustomerOrderController extends StoreManagementController
 	    $order->isCancelled->set(!$order->isCancelled->get());
 	    $order->save();
 	    $history->saveLog();
-	    
+
 	    return new JSONResponse(array(
 		        'isCanceled' => $order->isCancelled->get(),
 		        'linkValue' => $this->translate($order->isCancelled->get() ? '_accept_order' : '_cancel_order'),
 		        'value' => $this->translate($order->isCancelled->get() ? '_canceled' : '_accepted')
-	        ), 
-	        'success', 
+	        ),
+	        'success',
 	        $this->translate($order->isCancelled->get() ? '_order_is_accepted' : '_order_is_canceled')
         );
 	}
-	
+
 	/**
 	 * @role mass
 	 */
     public function processMass()
-    {        
+    {
 		$filter = new ARSelectFilter();
-		
+
 		$filters = (array)json_decode($this->request->get('filters'));
 		$this->request->set('filters', $filters);
         $grid = new ActiveGrid($this->application, $filter, 'CustomerOrder');
         $filter->setLimit(0);
-        					
+
 		$orders = CustomerOrder::getRecordSet($filter);
-		
+
         $act = $this->request->get('act');
-		$field = array_pop(explode('_', $act, 2));           
-		
+		$field = array_pop(explode('_', $act, 2));
+
         foreach ($orders as $order)
 		{
 		    switch($act)
@@ -258,13 +265,13 @@ class CustomerOrderController extends StoreManagementController
 		    {
 			    $order->save();
 		    }
-        }		
-		
-		return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_mass_action_succeed'));	
-    } 
-    
+        }
+
+		return new JSONResponse(array('act' => $this->request->get('act')), 'success', $this->translate('_mass_action_succeed'));
+    }
+
 	public function changeColumns()
-	{		
+	{
 		$columns = array_keys($this->request->get('col', array()));
 		$this->setSessionData('columns', $columns);
 		return new ActionRedirectResponse('backend.customerOrder', 'orders', array('id' => $this->request->get('id')));
@@ -275,10 +282,10 @@ class CustomerOrderController extends StoreManagementController
 	    $filter = new ARSelectFilter();
 	    switch($id = $this->request->get('id'))
 	    {
-	        case 'orders_1': 
+	        case 'orders_1':
 	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1);
 	            break;
-	        case 'orders_2': 
+	        case 'orders_2':
 	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1);
 	            $cond2 = new NotEqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_SHIPPED);
 	            $cond2->addOR(new NotEqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_RETURNED));
@@ -286,37 +293,37 @@ class CustomerOrderController extends StoreManagementController
 	            $cond2->addAND($cond);
 	            break;
 	        case 'orders_3':
-	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW); 
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW);
 	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
 	            break;
-	        case 'orders_4': 
+	        case 'orders_4':
 	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_PROCESSING);
 	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
 	            break;
-	        case 'orders_5': 
+	        case 'orders_5':
 	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_AWAITING);
 	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
 	            break;
-	        case 'orders_6': 
+	        case 'orders_6':
 	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_SHIPPED);
 	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
 	            break;
-	        case 'orders_7': 
+	        case 'orders_7':
 	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_RETURNED);
 	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
 	            break;
-	        case 'orders_8': 
+	        case 'orders_8':
 	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 0);
 	            break;
-	        default: 
+	        default:
 	            return;
 	    }
-	    
+
 	    if($this->request->get('sort_col') == 'CustomerOrder.ID2')
 	    {
 	        $this->request->set('sort_col', 'CustomerOrder.ID');
 	    }
-	    
+
 	    if($filters = $this->request->get('filters'))
 	    {
 	        if(isset($filters['CustomerOrder.ID2']))
@@ -326,7 +333,7 @@ class CustomerOrderController extends StoreManagementController
 	            $this->request->set('filters', $filters);
 	        }
 	    }
-	    
+
 	    if($filters = $this->request->get('filters'))
 	    {
 	        if(isset($filters['User.fullName']))
@@ -334,38 +341,38 @@ class CustomerOrderController extends StoreManagementController
 	            $nameParts = explode(' ', $filters['User.fullName']);
 	            unset($filters['User.fullName']);
 	            $this->request->set('filters', $filters);
-	            
+
 	            if(count($nameParts) == 1)
 	            {
 	                $nameParts[1] = $nameParts[0];
 	            }
-	            
+
 	            $firstNameCond = new LikeCond(new ARFieldHandle('User', "firstName"), '%' . $nameParts[0] . '%');
 	            $firstNameCond->addOR(new LikeCond(new ARFieldHandle('User', "lastName"), '%' . $nameParts[1] . '%'));
-	            
+
                 $lastNameCond = new LikeCond(new ARFieldHandle('User', "firstName"), '%' . $nameParts[0] . '%');
                 $lastNameCond->addOR(new LikeCond(new ARFieldHandle('User', "lastName"), '%' . $nameParts[1] . '%'));
-                
+
                 $cond->addAND($firstNameCond);
                 $cond->addAND($lastNameCond);
 	         }
 	    }
-	    
+
         if($this->request->get('sort_col') == 'User.fullName')
         {
             $this->request->remove('sort_col');
-            
+
             $direction = ($this->request->get('sort_dir') == 'DESC') ? ARSelectFilter::ORDER_DESC : ARSelectFilter::ORDER_ASC;
-            
+
             $filter->setOrder(new ARFieldHandle("User", "lastName"), $direction);
             $filter->setOrder(new ARFieldHandle("User", "firstName"), $direction);
         }
-	    
+
 	    $filter->setCondition($cond);
-	    
+
 	    new ActiveGrid($this->application, $filter);
 	    $orders = CustomerOrder::getRecordSet($filter, true)->toArray();
-	    
+
 		$displayedColumns = $this->getDisplayedColumns();
 
     	$data = array();
@@ -373,7 +380,7 @@ class CustomerOrderController extends StoreManagementController
     	{
     	    $record = array();
             foreach ($displayedColumns as $column => $type)
-            {                
+            {
                 list($class, $field) = explode('.', $column, 2);
                 if ('CustomerOrder' == $class)
                 {
@@ -383,72 +390,72 @@ class CustomerOrderController extends StoreManagementController
                 {
 					$value = isset($order['User'][$field]) ? $order['User'][$field] : '';
                 }
-				
+
                 if ('ShippingAddress' == $class)
                 {
 					$value = isset($order['ShippingAddress'][$field]) ? $order['ShippingAddress'][$field] : '';
                 }
-                
+
 				if ('bool' == $type)
 				{
 					$value = $value ? $this->translate('_yes') : $this->translate('_no');
 				}
-				
+
 				if('status' == $field)
 				{
 				    switch($order[$field])
 				    {
-				        case 1: 
+				        case 1:
 				            $value = $this->translate('_status_processing');
 				            break;
-				        case 2: 
+				        case 2:
 				            $value = $this->translate('_STATUS_AWAITING');
 				            break;
-				        case 3: 
+				        case 3:
 				            $value = $this->translate('_status_shipped');
 				            break;
-				        case 4:  
+				        case 4:
 				            $value = $this->translate('_status_canceled');
 				            break;
-				        default: 
-				            $value = $this->translate('_status_new');   
+				        default:
+				            $value = $this->translate('_status_new');
 				            break;
 				    }
 				}
-				
+
 				if('totalAmount' == $field || 'capturedAmount' == $field)
 				{
 				    if(empty($value))
 				    {
 				        $value = '0';
 				    }
-				    
+
 				    if(isset($order['Currency']))
 				    {
 				        $value .= ' ' . $order['Currency']["ID"];
 				    }
 				}
-				
+
 				if('dateCompleted' == $field && !$value)
 				{
 				    $value = '-';
 				}
-				
+
 				$record[] = $value;
             }
-            
+
             $data[] = $record;
         }
-        
-        
-        
+
+
+
     	return new JSONResponse(array(
 	    	'columns' => array_keys($displayedColumns),
 	    	'totalCount' => count($orders),
 	    	'data' => $data
-    	));	  	  	
+    	));
 	}
-    
+
     /**
      * @role update
      */
@@ -456,12 +463,12 @@ class CustomerOrderController extends StoreManagementController
     {
         $order = CustomerOrder::getInstanceByID((int)$this->request->get('ID'), true);
 	    $history = new OrderHistory($order, $this->user);
-        
+
         $status = (int)$this->request->get('status');
 		$order->status->set($status);
 	    $isCancelled = (int)$this->request->get('isCancelled') ? true : false;
 		$order->isCancelled->set($isCancelled);
-		
+
 	    if($order->countShippableShipments() == 1)
 	    {
 	        foreach($order->getShipments() as $shipment)
@@ -473,13 +480,13 @@ class CustomerOrderController extends StoreManagementController
 	            }
 	        }
 	    }
-		
+
         $response = $this->save($order);
         $history->saveLog();
-        
+
         return $response;
     }
-    
+
     /**
      * @role create
      */
@@ -494,21 +501,21 @@ class CustomerOrderController extends StoreManagementController
 		$order->totalAmount->set(0);
 		$order->dateCompleted->set(new ARSerializableDateTime());
 		$order->currency->set($this->application->getDefaultCurrency());
-		
+
 		if($user->defaultShippingAddress->get() && $user->defaultBillingAddress->get())
 		{
 		    $user->defaultBillingAddress->get()->load(array('UserAddress'));
 		    $user->defaultShippingAddress->get()->load(array('UserAddress'));
-		    
+
 		    $billingAddress = clone $user->defaultBillingAddress->get()->userAddress->get();
 		    $shippingAddress = clone $user->defaultShippingAddress->get()->userAddress->get();
-		    
+
 		    $billingAddress->save();
 		    $shippingAddress->save();
-		    
+
 			$order->billingAddress->set($billingAddress);
 			$order->shippingAddress->set($shippingAddress);
-		
+
 		    return $this->save($order);
 		}
 		else
@@ -516,48 +523,48 @@ class CustomerOrderController extends StoreManagementController
 		    return new JSONResponse(array('noaddress' => true), 'failure', $this->translate('_err_user_has_no_billing_or_shipping_address'));
 		}
     }
-    
+
     /**
      * @role update
      */
     public function updateAddress()
     {
         $validator = $this->createUserAddressFormValidator();
-        
+
         if($validator->isValid())
-        {		
+        {
             $order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State'));
             $address = UserAddress::getInstanceByID('UserAddress', (int)$this->request->get('ID'), true, array('State'));
-            
+
             $history = new OrderHistory($order, $this->user);
-            
-	        $address->address1->set($this->request->get('address1'));        
+
+	        $address->address1->set($this->request->get('address1'));
 	        $address->address2->set($this->request->get('address2'));
 	        $address->city->set($this->request->get('city'));
-	        
-	        
+
+
 	        if($this->request->get('stateID'))
 	        {
 	            $address->state->set(State::getInstanceByID((int)$this->request->get('stateID'), true));
-	            $address->stateName->set(null);       
+	            $address->stateName->set(null);
 	        }
 	        else
 	        {
 	            $address->stateName->set($this->request->get('stateName'));
-                $address->state->set(null); 
+                $address->state->set(null);
                 echo get_class($address->state->get());
 	        }
-	        
+
 	        $address->postalCode->set($this->request->get('postalCode'));
 	        $address->countryID->set($this->request->get('countryID'));
 	        $address->phone->set($this->request->get('phone'));
 	        $address->companyName->set($this->request->get('companyName'));
 	        $address->firstName->set($this->request->get('firstName'));
 	        $address->lastName->set($this->request->get('lastName'));
-	        
+
 	        $address->save();
 	        $history->saveLog();
-	        
+
 	        return new JSONResponse(array('address' => $address->toArray()), 'success', $this->translate('_order_address_was_successfully_updated'));
         }
         else
@@ -569,7 +576,7 @@ class CustomerOrderController extends StoreManagementController
 	public function removeEmptyShipments()
 	{
 	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
-	    
+
 	    $recordsCount = 0;
 	    foreach($order->getShipments() as $shipment)
 	    {
@@ -577,35 +584,35 @@ class CustomerOrderController extends StoreManagementController
 	        {
 	            $recordsCount++;
 	        }
-	        
+
 	        if(count($shipment->getItems()) == 0)
 	        {
 	            $shipment->delete();
 	        }
 	    }
-	    
+
 	    if($recordsCount > 1) // One for downloadable
 	    {
 	        return new RawResponse();
 //	        return new JSONResponse(array('status' => 'success', 'message' => $this->translate('_empty_shipments_were_removed')));
-	    } 
+	    }
 	    else
 	    {
 	        return new RawResponse();
 	    }
-	}   
-	
+	}
+
     public function printInvoice()
     {
         $order = CustomerOrder::getInstanceById($this->request->get('id'), CustomerOrder::LOAD_DATA, CustomerOrder::LOAD_REFERENCES);
         $order->loadAll();
-          
+
         $this->setLayout('frontend');
         $this->loadLanguageFile('User');
-          
+
         return new ActionResponse('order', $order->toArray(array('payments' => true)));
-    }	
-	
+    }
+
 	private function save(CustomerOrder $order)
 	{
    		$validator = self::createOrderFormValidator();
@@ -613,10 +620,10 @@ class CustomerOrderController extends StoreManagementController
 		{
 		    $existingRecord = $order->isExistingRecord();
 			$order->save();
-			
+
 			return new JSONResponse(
 			   array('order' => array( 'ID' => $order->getID())),
-			   'success', 
+			   'success',
 			   $this->translate($existingRecord ? '_order_status_has_been_successfully_changed' : '_new_order_has_been_successfully_created')
 		    );
 		}
@@ -625,133 +632,131 @@ class CustomerOrderController extends StoreManagementController
 		    return new JSONResponse(array('errors' => $validator->getErrorList()), 'failure', $this->translate('_error_updating_order_status'));
 		}
 	}
-	
+
 	private function createAddressString($addressArray)
 	{
-          $addressString = '';
-          
-          if(!empty($addressArray['UserAddress']['fullName']))
-          {
-              $addressString .= $addressArray['UserAddress']['fullName'] . ', ';
-          }
-          
-          if(!empty($addressArray['UserAddress']['countryName']))
-          {
-              $addressString .= $addressArray['UserAddress']['countryName'] . ', ';
-          }
-      
-          if(!empty($addressArray['UserAddress']['stateName']))
-          {
-              $addressString .= $addressArray['UserAddress']['stateName'] . ', ';
-          }
-      
-          if(!empty($addressArray['State']['code']))
-          {
-              $addressString .= $addressArray['State']['code'] . ', ';
-          }
-      
-          if(!empty($addressArray['UserAddress']['city']))
-          {
-              $addressString .= $addressArray['UserAddress']['city'] . ', ';
-          }
-          
-          if(strlen($addressString) > 2)
-          {
-              $addressString = substr($addressString, 0, -2);
-          }
-          
-          return $addressString;
+		if(!empty($addressArray['UserAddress']['fullName']))
+		{
+			$address[] = $addressArray['UserAddress']['fullName'];
+		}
+
+		if(!empty($addressArray['UserAddress']['countryName']))
+		{
+			$address[] = $addressArray['UserAddress']['countryName'];
+		}
+
+		if(!empty($addressArray['UserAddress']['stateName']))
+		{
+			$address[] = $addressArray['UserAddress']['stateName'];
+		}
+
+		if(!empty($addressArray['State']['code']))
+		{
+			$address[] = $addressArray['State']['code'];
+		}
+
+		if(!empty($addressArray['UserAddress']['city']))
+		{
+			$address[] = $addressArray['UserAddress']['city'];
+		}
+
+		return implode(', ', array_filter($address, array($this, 'filterAddress')));
 	}
-	
+
+	private function filterAddress($item)
+	{
+		return trim($item);
+	}
+
 	protected function getDisplayedColumns()
-	{	
+	{
 		// get displayed columns
-		$displayedColumns = $this->getSessionData('columns');		
+		$displayedColumns = $this->getSessionData('columns');
 
 		if (!$displayedColumns)
 		{
 			$displayedColumns = array(
 				'CustomerOrder.dateCompleted',
 				'CustomerOrder.totalAmount',
-				'CustomerOrder.status', 
-			);				
+				'CustomerOrder.status',
+			);
 		}
-		
+
 		$availableColumns = $this->getAvailableColumns();
-		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);	
-		
+		$displayedColumns = array_intersect_key(array_flip($displayedColumns), $availableColumns);
+
 		$displayedColumns = array_merge(array('User.email' => 'text'), $displayedColumns);
 		$displayedColumns = array_merge(array('User.ID' => 'number'), $displayedColumns); // user id must go after user email here
 		$displayedColumns = array_merge(array('User.fullName' => 'text'), $displayedColumns);
 		$displayedColumns = array_merge(array('CustomerOrder.ID2' => 'numeric'), $displayedColumns);
 		$displayedColumns = array_merge(array('CustomerOrder.ID' => 'numeric'), $displayedColumns);
-				
+
 		// set field type as value
 		foreach ($displayedColumns as $column => $foo)
 		{
 			if (is_numeric($displayedColumns[$column]))
 			{
-				$displayedColumns[$column] = $availableColumns[$column]['type'];					
+				$displayedColumns[$column] = $availableColumns[$column]['type'];
 			}
 		}
-		return $displayedColumns;		
+		return $displayedColumns;
 	}
-	
+
 	protected function getAvailableColumns()
 	{
 		// get available columns
 		$availableColumns = array();
-		
-		$availableColumns['User.email'] = 'text'; 
-		$availableColumns['User.ID'] = 'text'; 
-		$availableColumns['CustomerOrder.ID2'] = 'numeric'; 
-		$availableColumns['User.fullName'] = 'text'; 
+
+		$availableColumns['User.email'] = 'text';
+		$availableColumns['User.ID'] = 'text';
+		$availableColumns['CustomerOrder.ID2'] = 'numeric';
+		$availableColumns['User.fullName'] = 'text';
 
 		foreach (ActiveRecordModel::getSchemaInstance('CustomerOrder')->getFieldList() as $field)
 		{
 			$type = ActiveGrid::getFieldType($field);
-			
+
 			if (!$type)
 			{
 			    continue;
-			}		
-            
-			$availableColumns['CustomerOrder.' . $field->getName()] = $type;            			
+			}
+
+			$availableColumns['CustomerOrder.' . $field->getName()] = $type;
         }
 
         unset($availableColumns['CustomerOrder.shipping']);
-                                        
-		$availableColumns['CustomerOrder.status'] = 'text'; 
-		
+
+		$availableColumns['CustomerOrder.status'] = 'text';
+
 		// Address
-		$availableColumns['ShippingAddress.countryID'] = 'text';  
-		$availableColumns['ShippingAddress.city'] = 'text';  
-		$availableColumns['ShippingAddress.address1'] = 'text'; 
-		$availableColumns['ShippingAddress.postalCode'] = 'numeric'; 
-	 	
+		$availableColumns['ShippingAddress.countryID'] = 'text';
+		$availableColumns['ShippingAddress.city'] = 'text';
+		$availableColumns['ShippingAddress.address1'] = 'text';
+		$availableColumns['ShippingAddress.postalCode'] = 'numeric';
+
 		// User
-		$availableColumns['User.firstName'] = 'text';  
-		$availableColumns['User.lastName'] = 'text'; 
-		$availableColumns['User.companyName'] = 'text'; 
+		$availableColumns['User.firstName'] = 'text';
+		$availableColumns['User.lastName'] = 'text';
+		$availableColumns['User.companyName'] = 'text';
 
 		foreach ($availableColumns as $column => $type)
 		{
 			$availableColumns[$column] = array(
-				'name' => $this->translate($column), 
+				'name' => $this->translate($column),
 				'type' => $type
-			);	
+			);
 		}
-		
+
 		unset($availableColumns['CustomerOrder.isFinalized']);
 
 		return $availableColumns;
 	}
-	
+
     protected function getMassForm()
     {
-		$validator = new RequestValidator("OrdersMassFormValidator", $this->request);		
-		
-        return new Form($validator);                
+		$validator = new RequestValidator("OrdersMassFormValidator", $this->request);
+
+        return new Form($validator);
     }
 
 
@@ -760,14 +765,14 @@ class CustomerOrderController extends StoreManagementController
 	 */
     private function createUserAddressFormValidator()
     {
-        $validator = new RequestValidator("userAddress", $this->request);		            
-			
+        $validator = new RequestValidator("userAddress", $this->request);
+
 		$validator->addCheck('countryID', new IsNotEmptyCheck($this->translate('_country_empty')));
 		$validator->addCheck('city',      new IsNotEmptyCheck($this->translate('_city_empty')));
 		$validator->addCheck('address1',  new IsNotEmptyCheck($this->translate('_address_empty')));
 		$validator->addCheck('firstName', new IsNotEmptyCheck($this->translate('_first_name_is_empty')));
 		$validator->addCheck('lastName',  new IsNotEmptyCheck($this->translate('_last_name_is_empty')));
-        
+
         return $validator;
     }
 
@@ -776,7 +781,7 @@ class CustomerOrderController extends StoreManagementController
      */
 	private function createUserAddressForm($addressArray = array())
 	{
-		$form = new Form($this->createUserAddressFormValidator());	
+		$form = new Form($this->createUserAddressFormValidator());
 
 		if(!empty($addressArray))
 	    {
@@ -784,23 +789,23 @@ class CustomerOrderController extends StoreManagementController
 			{
 			    $addressArray['stateID'] = $addressArray['State']['ID'];
 			}
-			
+
 	        $form->setData($addressArray);
 	    }
-	    
+
 		return $form;
 	}
-	
+
 	/**
 	 * @return RequestValidator
 	 */
     private function createOrderFormValidator()
     {
-        $validator = new RequestValidator("CustomerOrder", $this->request);		            
-			
+        $validator = new RequestValidator("CustomerOrder", $this->request);
+
 		$validator->addCheck('status', new MinValueCheck($this->translate('_invalid_status'), 0));
-		$validator->addCheck('status', new MaxValueCheck($this->translate('_invalid_status'), 4));	
-        
+		$validator->addCheck('status', new MaxValueCheck($this->translate('_invalid_status'), 4));
+
         return $validator;
     }
 
@@ -809,9 +814,9 @@ class CustomerOrderController extends StoreManagementController
      */
 	private function createOrderForm($orderArray)
 	{
-		$form = new Form($this->createOrderFormValidator());	
+		$form = new Form($this->createOrderFormValidator());
 	    $form->setData($orderArray);
-		
+
 		return $form;
 	}
 }
