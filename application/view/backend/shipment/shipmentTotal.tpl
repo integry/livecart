@@ -46,7 +46,11 @@
                 <a href="#change" class="orderShipment_change_usps" id="orderShipment_change_usps_{$shipment.ID}"  style="{if $shipment.status == 3}display: none;{/if} {denied role='order.update'}display: none{/denied}">{$shipment.ShippingService.name_lang|default:$shippingServiceIsNotSelected}</a>
                 {denied role='order.update'}<b>{$shipment.ShippingService.name_lang|default:$shippingServiceIsNotSelected}</b>{/denied}
                 <span class="controls" id="orderShipment_USPS_{$shipment.ID}" style="display: none">
-                    <select name="USPS" id="orderShipment_USPS_{$shipment.ID}_select" class="orderShipment_USPS_select"> </select>
+                    <select name="USPS" id="orderShipment_USPS_{$shipment.ID}_select" class="orderShipment_USPS_select">
+                        {if $shipment.ShippingService.ID|default:$shippingServiceID}
+                        <option value="{$shipment.ShippingService.ID|default:$shippingServiceID}" selected="selected">{$shipment.ShippingService.name_lang|default:$shippingServiceIsNotSelected}</option>
+                        {/if}
+                    </select>
                 
                     <span class="progressIndicator" style="display: none;"></span>
                     <input type="submit" value="Save" class="button submit"  id="orderShipment_USPS_{$shipment.ID}_submit" />
