@@ -499,9 +499,8 @@ Backend.User.Editor.prototype =
             this.findUsedNodes();
             this.bindEvents();
             
-            if(this.nodes.sameAddress.checked) this.nodes.shippingAddress.hide();
-            else this.nodes.shippingAddress.show();
-            
+            Backend.User.Editor.prototype.showShippingAddress.apply(this);
+			
             Form.State.backup(this.nodes.form);
         }
         catch(e)
@@ -519,9 +518,9 @@ Backend.User.Editor.prototype =
 		this.nodes.cancel = this.nodes.form.down('a.cancel');
 		this.nodes.submit = this.nodes.form.down('input.submit');
 		
-		this.nodes.sameAddress = $("user_" + this.id +"_sameAddresses");
-        this.nodes.shippingAddress = $("user_" + this.id +"_shippingAddress"); 
-        this.nodes.billingAddress = $("user_" + this.id +"_billingAddress");
+		this.nodes.sameAddress = $("user_" + Backend.UserGroup.prototype.activeGroup + "_" + this.id +"_sameAddresses");
+        this.nodes.shippingAddress = $("user_" + Backend.UserGroup.prototype.activeGroup + "_" + this.id +"_shippingAddress"); 
+        this.nodes.billingAddress = $("user_" + Backend.UserGroup.prototype.activeGroup + "_" + this.id +"_billingAddress");
 		
         this.nodes.password = this.nodes.form.down('.user_password');
         this.nodes.showPassword = this.nodes.form.down('.user_password_show');
@@ -533,7 +532,7 @@ Backend.User.Editor.prototype =
 		var self = this;
 		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
         Event.observe(this.nodes.sameAddress, "click", function(e) {  
-            Backend.User.Editor.prototype.showShippingAddress(this.nodes.sameAddress, this.nodes.shippingAddress, this.nodes.billingAddress);
+            Backend.User.Editor.prototype.showShippingAddress.apply(this);
 		}.bind(this));
 
         Event.observe(this.nodes.showPassword, "click", function(e) { 
@@ -618,9 +617,18 @@ Backend.User.Editor.prototype =
 		}
 	}, 
 	
-    showShippingAddress: function(checkbox, shippingAddress, billingAddress) {
-        if(checkbox.checked) shippingAddress.hide(); 
-        else shippingAddress.show();
+    showShippingAddress: function() 
+	{
+        if(this.nodes.sameAddress.checked) 
+		{
+			this.nodes.billingAddress.style.display = 'block';
+		    this.nodes.shippingAddress.hide(); 
+		}
+        else 
+		{
+            this.nodes.billingAddress.style.display = 'inline';
+		    this.nodes.shippingAddress.show();
+		}
     },
     
     cloneBillingFormValues: function(checkbox, shippingAddress, billingAddress) {        
@@ -682,9 +690,8 @@ Backend.User.Add.prototype =
             this.findUsedNodes();
             this.bindEvents();
             
-            if(this.nodes.sameAddress.checked) this.nodes.shippingAddress.hide();
-            else this.nodes.shippingAddress.show();
-            
+			Backend.User.Editor.prototype.showShippingAddress.apply(this);
+			
             Form.State.backup(this.nodes.form);
         }
         catch(e)
@@ -711,9 +718,9 @@ Backend.User.Add.prototype =
         this.nodes.menuCancelLink = $("userGroup_" + this.groupID + "_addUserCancel");
         this.nodes.menuForm = this.nodes.parent;
 		
-        this.nodes.sameAddress = $("user_0_sameAddresses");
-        this.nodes.shippingAddress = $("user_0_shippingAddress");
-        this.nodes.billingAddress = $("user_0_billingAddress");
+        this.nodes.sameAddress = $("user_" + this.groupID + "_0_sameAddresses");
+        this.nodes.shippingAddress = $("user_" + this.groupID + "_0_shippingAddress");
+        this.nodes.billingAddress = $("user_" + this.groupID + "_0_billingAddress");
     },
    
 	showAddForm: function()
@@ -731,16 +738,12 @@ Backend.User.Add.prototype =
 
     bindEvents: function(args)
     {
-		var self = this;
-		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
-		Event.observe(this.nodes.submit, 'click', function(e) { Event.stop(e); self.submitForm()});
-        Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); self.cancelForm();});
-		
-		Event.observe("user_0_sameAddresses", "click", function(e) { this.showShippingAddress() }.bind(this));
-
+		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancelForm()}.bind(this));
+		Event.observe(this.nodes.submit, 'click', function(e) { Event.stop(e); this.submitForm()}.bind(this));
+        Event.observe(this.nodes.menuCancelLink, 'click', function(e) { Event.stop(e); this.cancelForm();}.bind(this));
+		Event.observe(this.nodes.sameAddress, "click", function(e) { Backend.User.Editor.prototype.showShippingAddress.apply(this) }.bind(this));
         Event.observe(this.nodes.showPassword, "click", function(e) { this.togglePassword(this.nodes.showPassword.checked) }.bind(this));
         Event.observe(this.nodes.generatePassword, "click", function(e) { Event.stop(e); this.generatePassword() }.bind(this));
-
         Event.observe(this.nodes.form.elements.namedItem("shippingAddress_firstName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
         Event.observe(this.nodes.form.elements.namedItem("shippingAddress_lastName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
         Event.observe(this.nodes.form.elements.namedItem("shippingAddress_companyName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
@@ -796,7 +799,7 @@ Backend.User.Add.prototype =
 	},
 	
 	showShippingAddress: function() {
-        Backend.User.Editor.prototype.showShippingAddress(this.nodes.sameAddress, this.nodes.shippingAddress, this.nodes.billingAddress);
+        Backend.User.Editor.prototype.showShippingAddress.apply(this);
 	},
 
     cancelForm: function()

@@ -3,19 +3,17 @@ function validateForm(form)
 	Element.saveTinyMceFields(form);
     ActiveForm.prototype.resetErrorMessages(form);
 
-    var validatorData = form._validator.value;
-	var validator = validatorData.evalJSON();   
     var isFormValid = true;
-    var focus = true;
+    var focusField = true;
 
-	$H(validator).each(function(field)
+	$H(form._validator.value.evalJSON()).each(function(checks)
 	{
-		if (!form[field.key]) return;
+        var formElement = form[checks.key];
+		if (!formElement) return;
         
-		var formElement = form[field.key];
-        $H(field.value).each(function(func) 
+        $H(checks.value).each(function(formElement, check) 
 		{                
-			if (window[func.key] && !window[func.key](formElement, func.value.param)) // If element is not valid
+			if (window[check.key] && !window[check.key](formElement, check.value.param)) // If element is not valid
 			{
                 // radio button group
                 if (!formElement.parentNode && formElement.length)
@@ -23,12 +21,12 @@ function validateForm(form)
                     formElement = formElement[formElement.length - 1];
                 }
                 
-                ActiveForm.prototype.setErrorMessage(formElement, func.value.error, focus);
+                ActiveForm.prototype.setErrorMessage(formElement, check.value.error, focusField);
 				isFormValid = false;
-                focus = false;
+                focusField = false;
 			}
-	    });
-	});
+	    }.bind(this, formElement));
+	}.bind(this));
     
 	return isFormValid;
 }
@@ -44,7 +42,7 @@ function applyFilters(form, ev)
 	var filterData = form.elements.namedItem('_filter').value;
 	var filter = filterData.evalJSON();
 
-	element = ev.target;	
+	var element = ev.target;	
 	elementFilters = filter[element.name];
 
 	if ('undefined' == elementFilters)
@@ -120,7 +118,7 @@ function MinLengthCheck(element, params)
 function IsLengthBetweenCheck(element, params)
 {
 	var len = element.value.length;
-    return ((len >= params.minLength && len <= params.minLength) || (len == 0 && params.allowEmpty));
+    return ((len >= params.minLength && len <= params.maxLength) || (len == 0 && params.allowEmpty));
 }
 
 function PasswordEqualityCheck(element, params)
@@ -133,10 +131,10 @@ function MaxLengthCheck(element, params)
 	return (element.value.length <= params.maxLength);
 }
 
-function IsValidEmailCheck(element, params)
+function IsValidEmailCheck(el, params)
 {
-	re = new RegExp(/^[a-zA-Z0-9][a-zA-Z0-9\._\-]+@[a-zA-Z0-9_\-][a-zA-Z0-9\._\-]+\.[a-zA-Z]{2,}$/);
-	return (re.exec(element.value));
+	var pattern = /^[a-zA-Z0-9][a-zA-Z0-9\._\-]+@[a-zA-Z0-9_\-][a-zA-Z0-9\._\-]+\.[a-zA-Z]{2,}$/;
+	return el.value.match(pattern);
 }
 
 function IsValueInSetCheck(element, params)

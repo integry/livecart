@@ -1,44 +1,42 @@
 <div>
 
-{if $userGroupID >= -1}
-    <fieldset class="container" {denied role="user.create"}style="display: none;"{/denied}>
-    	<ul id="userGroup_{$userGroupID}_addUser_menu" class="menu">
-    		<li class="addUser">
-    			<a id="userGroup_{$userGroupID}_addUser" href="#addUser">{t _add_new_user}</a>
-    			<span class="progressIndicator" style="display: none;"></span>
-    		</li>
-    		<li class="done addUserCancel">
-    			<a id="userGroup_{$userGroupID}_addUserCancel" href="#cancelAddingUser" class="hidden">{t _cancel_adding_new_user} </a>
-    		</li>
-    	</ul>  
-        
-        <fieldset id="newUserForm_{$userGroupID}" style="display: none;" class="addForm treeManagerContainer newUserForm">
-        	<legend>{t _add_new_user}</legend>
-            {include file="backend/user/info.tpl" someUser=$newUser}
-        </fieldset>
-        
-        <script type="text/javascript">
-            $("fromUsersPage").appendChild($("newUserForm_{$userGroupID}"))
-        </script>
-        
-        {literal}
-        <script type="text/javascript">
-            try
-            {
-                Element.observe($("{/literal}userGroup_{$userGroupID}_addUser{literal}"), 'click', function(e)
-                {
-                    Event.stop(e);
-                    Backend.User.Add.prototype.getInstance({/literal}{$userGroupID}{literal}).showAddForm({/literal}{$userGroupID}{literal}); 
-                });
-            }
-            catch(e)
-            {
-                console.info(e);
-            }
-        </script>
-        {/literal}
+<fieldset class="container" {denied role="user.create"}style="display: none;"{/denied}>
+	<ul id="userGroup_{$userGroupID}_addUser_menu" class="menu">
+		<li class="addUser">
+			<a id="userGroup_{$userGroupID}_addUser" href="#addUser">{t _add_new_user}</a>
+			<span class="progressIndicator" style="display: none;"></span>
+		</li>
+		<li class="done addUserCancel">
+			<a id="userGroup_{$userGroupID}_addUserCancel" href="#cancelAddingUser" class="hidden">{t _cancel_adding_new_user} </a>
+		</li>
+	</ul>  
+    
+    <fieldset id="newUserForm_{$userGroupID}" style="display: none;" class="addForm treeManagerContainer newUserForm">
+    	<legend>{t _add_new_user}</legend>
+        {include file="backend/user/info.tpl" someUser=$newUser}
     </fieldset>
-{/if}
+    
+    <script type="text/javascript">
+        $("fromUsersPage").appendChild($("newUserForm_{$userGroupID}"))
+    </script>
+    
+    {literal}
+    <script type="text/javascript">
+        try
+        {
+            Element.observe($("{/literal}userGroup_{$userGroupID}_addUser{literal}"), 'click', function(e)
+            {
+                Event.stop(e);
+                Backend.User.Add.prototype.getInstance({/literal}{$userGroupID}{literal}).showAddForm({/literal}{$userGroupID}{literal}); 
+            });
+        }
+        catch(e)
+        {
+            console.info(e);
+        }
+    </script>
+    {/literal}
+</fieldset>
 
 <fieldset class="container activeGridControls">
                 

@@ -156,13 +156,13 @@ class UserGroupController extends StoreManagementController
 			
 		$response = new ActionResponse();
 		
-		$availableUserGroups = array('' => '');
+		$availableUserGroups = array('' => $this->translate('_default_user_group'));
         foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
         {
             $availableUserGroups[$group->getID()] = $group->name->get();
         }
           
-        $userArray = array('UserGroup' => $id, 'ID' => 0, 'isEnabled' => 1);
+        $userArray = array('UserGroup' => array('ID' => $id), 'ID' => 0, 'isEnabled' => 1);
         $form = UserController::createUserForm($this, null);
         
         $form->setData(array_merge($form->getData(), $userArray));
@@ -332,11 +332,6 @@ class UserGroupController extends StoreManagementController
 		
         return new Form($validator);                
     }
-	
 
-    
-
-
-    
 }
 ?>

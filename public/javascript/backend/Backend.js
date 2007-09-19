@@ -196,7 +196,7 @@ Backend.LayoutManager.prototype =
      */
     collapseAll: function(cont)
     {
-        el = document.getElementsByClassName("maxHeight", document);
+        var el = document.getElementsByClassName("maxHeight", document);
 
         for (k = 0; k < el.length; k++)
         {
@@ -254,7 +254,7 @@ Backend.LayoutManager.prototype =
 
     setMaxHeight: function(parent)
     {
-        el = document.getElementsByClassName('maxHeight', parent);
+        var el = document.getElementsByClassName('maxHeight', parent);
         for (k = 0; k < el.length; k++)
         {
             var parentHeight = el[k].parentNode.offsetHeight;
