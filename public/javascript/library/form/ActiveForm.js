@@ -251,69 +251,96 @@ ActiveForm.Slide.prototype = {
 		this.ul = $(ul);
 	},
 
-    show: function(className, form, ignoreFields)
+    show: function(className, form, ignoreFields, onCompleteCallback)
 	{
-		ignoreFields = ignoreFields || [];
-		var form = $(form);
-		var cancel = this.ul.down("." + className + 'Cancel');
+		// Show progress indicator
+        this.ul.getElementsBySelector(".progressIndicator").invoke("show");
 		
-		if(window.Form.State) Form.State.backup(form, ignoreFields);
-		if(window.ActiveList) ActiveList.prototype.collapseAll();
-		
-		this.ul.childElements().invoke("hide");
-		if(cancel)
+		setTimeout(function(className, form, ignoreFields, onCompleteCallback) 
 		{
-		    Element.show(this.ul.down("." + className + 'Cancel'));
-		}
-		
-		$A(form.getElementsByTagName("input")).each(function(input)
-		{
-			if(input.type == 'text')
+			if(typeof(ignoreFields) == 'function')
 			{
-				input.focus();
-				throw $break;
+				onCompleteCallback = ignoreFields;
+				ignoreFields = [];
 			}
-		});
-		
-		if(form)
-		{
-            Effect.BlindDown(form, {duration: 0.3});
-            Effect.Appear(form, {duration: 0.66});
-            
-            setTimeout(function() { 
-                form.style.display = 'block'; 
-                form.style.height = 'auto';
-            }, 700);
-		}
-		
-		ActiveForm.prototype.initTinyMceFields(form); 
+			
+			if(form)
+	        {
+	            Effect.BlindDown(form, {duration: 0.3});
+	            Effect.Appear(form, {duration: 0.66});
+	            
+	            setTimeout(function() { 
+	                form.style.display = 'block'; 
+	                form.style.height = 'auto';
+	            }, 700);
+	        }
+			
+			ignoreFields = ignoreFields || [];
+			var form = $(form);
+			var cancel = this.ul.down("." + className + 'Cancel');
+			
+			this.ul.childElements().invoke("hide");
+			if(cancel)
+			{
+			    Element.show(this.ul.down("." + className + 'Cancel'));
+			}
+			
+			$A(form.getElementsByTagName("input")).each(function(input)
+			{
+				if(input.type == 'text')
+				{
+					input.focus();
+					throw $break;
+				}
+			});
+			
+	        if(window.Form.State && !Form.State.hasBackup(form)) Form.State.backup(form, ignoreFields);
+	        if(window.ActiveList) ActiveList.prototype.collapseAll();
+			ActiveForm.prototype.initTinyMceFields(form); 
+			
+			onCompleteCallback();
+		}.bind(this, className, form, ignoreFields, onCompleteCallback), 10);
 	},
 
-    hide: function(className, form, ignoreFields)
+    hide: function(className, form, ignoreFields, onCompleteCallback)
     {
-        ignoreFields = ignoreFields || [];
-		var form = $(form);
-        if(window.Form.State) Form.State.restore(form, ignoreFields);
+        // Hide progress indicator
+        this.ul.getElementsBySelector(".progressIndicator").invoke("hide");
 		
-		this.ul.childElements().each(function(element) {
-			if(!element.className.match(/Cancel/))
-			{
-				Element.show(element);
-			}
-			else
-			{
-                Element.hide(element);
-			}
-		});
+        setTimeout(function(className, form, ignoreFields, onCompleteCallback) 
+        {
+	        if(typeof(ignoreFields) == 'function')
+	        {
+	            onCompleteCallback = ignoreFields;
+                ignoreFields = [];
+	        }
+			
+	        ignoreFields = ignoreFields || [];
+			var form = $(form);
+			
+            if(window.Form.State) Form.State.restore(form, ignoreFields);
+            ActiveForm.prototype.destroyTinyMceFields(form); 
+			
+	        if(form)
+	        {
+	            Effect.Fade(form, {duration: 0.2});
+	            Effect.BlindUp(form, {duration: 0.3});
+	            setTimeout(function() { form.style.display = 'none'; }, 300);   
+	        }
+			
+			this.ul.childElements().each(function(element) {
+				if(!element.className.match(/Cancel/))
+				{
+					Element.show(element);
+				}
+				else
+				{
+	                Element.hide(element);
+				}
+			});
 		
-		if(form)
-		{
-			Effect.Fade(form, {duration: 0.2});
-            Effect.BlindUp(form, {duration: 0.3});
-            setTimeout(function() { form.style.display = 'none'; }, 300);   
-		}
-		
-        ActiveForm.prototype.destroyTinyMceFields(form); 
+            onCompleteCallback();
+        }.bind(this, className, form, ignoreFields, onCompleteCallback), 10);
     }   
 }
 

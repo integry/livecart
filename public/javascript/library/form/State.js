@@ -76,39 +76,37 @@ Form.State = {
 
         this.backups[form.backupId] = {};
 
-        var elements = Form.getElements(form);
-        for(var i = 0; i < elements.length; i++)
+        Form.getElements(form).each(function(form, ignoreFields, element)
         {
-            if(elements[i].name == '') continue;
-            if(ignoreFields.member(elements[i].name)) continue;
+            if(element.name == '') return;
+            if(ignoreFields.member(element.name)) return;
 			
-            var name = elements[i].name;
+            var name = element.name;
 
             var value = {}
-            value.value = elements[i].value;
-            value.selectedIndex = elements[i].selectedIndex;
-            value.checked = elements[i].checked;
+            value.value = element.value;
+            value.selectedIndex = element.selectedIndex;
+            value.checked = element.checked;
 
-            if(elements[i].options)
+            if(element.options)
             {
-                value.options = {};
-                for(var j = 0; j < elements[i].options.length; j++)
-                {
-                    var oval = elements[i].options[j].firstChild ? elements[i].options[j].firstChild.nodeValue : elements[i].options[j].value;
-					value.options[elements[i].options[j].value + "_marker_" + $H(value.options).size()] = oval;
-                }
+                value.options = $H({});
+				$A(element.options).each(function(value, option)
+				{
+                    value.options[option.value + "_marker_" + value.options.size()] = option.text ? option.text : option.value;
+				}.bind(this, value));
             }
 
-            if(!this.backups[form.backupId][elements[i].name])
+            if(!this.backups[form.backupId][element.name])
             {
-                this.backups[form.backupId][elements[i].name] = [];
-                this.backups[form.backupId][elements[i].name][0] = value;
+                this.backups[form.backupId][element.name] = [];
+                this.backups[form.backupId][element.name][0] = value;
             }
             else
             {
-                this.backups[form.backupId][elements[i].name][this.backups[form.backupId][elements[i].name].length] = value;
+                this.backups[form.backupId][element.name][this.backups[form.backupId][element.name].length] = value;
             }
-        }
+        }.bind(this, form, ignoreFields));
     },
 
 
@@ -183,43 +181,34 @@ Form.State = {
         if(!ignoreFields) ignoreFields = [];
         ignoreFields = $A(ignoreFields);
         if(!this.hasBackup(form)) return;
-        self = this;
-
         var occurencies = {};
-        var elements = $A(Form.getElements(form));
-        try
+		
+        $A(Form.getElements(form)).each(function(form, ignoreFields, occurencies, element)
         {
-            $A(Form.getElements(form)).each(function(element)
+            if(ignoreFields.member(element.name)) return;
+            if(element.name == '' || !this.backups[form.backupId][element.name]) return;
+
+            occurencies[element.name] = (occurencies[element.name] == undefined) ? 0 : occurencies[element.name] + 1;
+
+            var value = this.backups[form.backupId][element.name][occurencies[element.name]];
+
+            if(value)
             {
-                if(ignoreFields.member(element.name)) return;
-                if(element.name == '' || !self.backups[form.backupId][element.name]) return;
+                element.value = value.value;
+                element.checked = value.checked;
 
-                occurencies[element.name] = (occurencies[element.name] == undefined) ? 0 : occurencies[element.name] + 1;
-
-                var value = self.backups[form.backupId][element.name][occurencies[element.name]];
-
-                if(value)
+                if(element.options && value.options)
                 {
-                    element.value = value.value;
-                    element.checked = value.checked;
-
-                    if(element.options && value.options)
-                    {
-                        element.options.length = 0;
-                        $H(value.options).each(function(option) {
-							var key = option.key.match(/([\w\W]+)_marker_\d+/)[1];
-                            element.options[element.options.length] = new Option(option.value, key);
-                        });
-                    }
-
-                    element.selectedIndex = value.selectedIndex;
+                    element.options.length = 0;
+                    $H(value.options).each(function(element, option) {
+						var key = option.key.match(/([\w\W]*)_marker_\d+/)[1];
+                        element.options[element.options.length] = new Option(option.value, key);
+                    }.bind(this, element));
                 }
-            });
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
+
+                element.selectedIndex = value.selectedIndex;
+            }
+        }.bind(this, form, ignoreFields, occurencies));
     }
 }
 
