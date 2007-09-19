@@ -21,11 +21,6 @@
    width: 50%;
 }
 
-.logHistory .logEntryAuthor
-{
-    font-weight: bold;
-}
-
 .logHistory
 {
     width: 100%;
@@ -47,7 +42,7 @@
 
 .logHistory .logEntryAction
 {
-    font-size: 300%;
+    font-size: 150%;
     font-weight: bold;
 }
 

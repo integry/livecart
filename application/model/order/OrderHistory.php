@@ -26,8 +26,8 @@ class OrderHistory
     
     private function serializeToArray(CustomerOrder $order)
     {	
-		$array = array();
-		
+        $array = array();
+
 		$array['ID'] = $order->getID();
 		$array['totalAmount'] = $order->totalAmount->get();
 		$array['isCancelled'] = (int)$order->isCancelled->get();
@@ -81,6 +81,17 @@ class OrderHistory
 			);
 		}
 		
+		// @todo: dirty fix
+        if ($order->shippingAddress->get()->state->get())
+        {
+            $order->shippingAddress->get()->state->get()->load();
+        }
+        
+        if ($order->billingAddress->get()->state->get())
+        {
+            $order->billingAddress->get()->state->get()->load();
+        }
+                        
         $array['ShippingAddress'] = $order->shippingAddress->get()->toArray(true);
 		$array['BillingAddress'] = $order->billingAddress->get()->toArray(true);
 		
@@ -95,7 +106,7 @@ class OrderHistory
 		// Billing address    
 		if($currentOrder['BillingAddress'] != $this->oldOrder['BillingAddress']) 
 		{
-			OrderLog::getNewInstance(
+            OrderLog::getNewInstance(
 				OrderLog::TYPE_BILLINGADDRESS, 
 				OrderLog::ACTION_CHANGE, 
 				$this->oldOrder['BillingAddress'], 
