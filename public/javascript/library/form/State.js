@@ -66,9 +66,12 @@ Form.State = {
      * @access public
      * @static
      */
-    backup: function(form, ignoreFields)
+    backup: function(form, ignoreFields, backupOptions)
     {
-		ignoreFields = ignoreFields || $A([]);
+		ignoreFields = $A(ignoreFields || []);
+		backupOptions = backupOptions === undefined ? true : backupOptions;
+		
+		
         if(!this.hasBackup(form))
         {
             form.backupId = this.getNewId();
@@ -88,7 +91,7 @@ Form.State = {
             value.selectedIndex = element.selectedIndex;
             value.checked = element.checked;
 
-            if(element.options)
+            if(element.options && backupOptions)
             {
                 value.options = $H({});
 				$A(element.options).each(function(value, option)
@@ -176,10 +179,12 @@ Form.State = {
      * @access public
      * @static
      */
-    restore: function(form, ignoreFields)
+    restore: function(form, ignoreFields, restoreOptions)
     {
-        if(!ignoreFields) ignoreFields = [];
-        ignoreFields = $A(ignoreFields);
+        ignoreFields = $A(ignoreFields || []);
+        backupOptions = restoreOptions === undefined ? true : restoreOptions;
+		
+		
         if(!this.hasBackup(form)) return;
         var occurencies = {};
 		
@@ -197,7 +202,7 @@ Form.State = {
                 element.value = value.value;
                 element.checked = value.checked;
 
-                if(element.options && value.options)
+                if(element.options && value.options && restoreOptions)
                 {
                     element.options.length = 0;
                     $H(value.options).each(function(element, option) {
