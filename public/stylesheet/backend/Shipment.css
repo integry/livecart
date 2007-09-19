@@ -1,4 +1,4 @@
-.orderShipments, .orderShipment_report
+.orderShipments
 {
    padding-bottom: 3em;
 }
@@ -8,20 +8,29 @@
     width: auto;
 }
 
-.orderShipment_report
+.tabOrderProductsContent h2
 {
-   padding-left: 50px;
-}
-
-.orderShipment_report_values
-{
-    width: 100%;
+    margin-top: 1em;
 }
 
 .orderShipment_report_values td
 {
-    border: 1px solid;  
-    padding: 2px; 
+    padding: 2px;
+}
+
+.orderShipment_report_total
+{
+    border-top: 1px solid #bbb;
+}
+
+.orderShipment_report_total td
+{
+    padding-top: 4px;
+}
+
+.orderShipment_report_total .orderShipment_report_value, .orderShipment_info_total
+{
+    font-weight: bold;
 }
 
 .orderShipment_report_value
@@ -45,29 +54,10 @@
     padding-bottom: 20px;
 }
 
-/* Product table */
-.orderShipmentsItem_info
+li.orderShipment
 {
-    width: 100%;
-    display: inline;
-}
-
-.orderShipment_info
-{
-    display: block;
-    padding-left: 40px;
-    margin-top: -3px;
-}
-
-.orderShipment_info_first_row
-{
-    border-top: 3px solid black;
-}
-
-.orderShipmentsItem_info td
-{
-    padding: 2px 4px;
-    border: 1px solid;
+    margin: 0;
+    padding: 0;
 }
 
 .orderShipments li
@@ -75,23 +65,83 @@
     border: 0px none;
 }
 
-.orderShipmentsItem_info_sku_td { width: 80px; }
+.orderShipmentsItem li
+{
+    border-bottom: 1px solid #bbb;
+}
+
+.downloadableShipment li
+{
+    border: 0;
+}
+
+.downloadableItems li
+{
+    border-bottom: 1px solid #bbb;    
+}
+
+.downloadableItems .activeList_icons
+{
+    padding-top: 0 !important;
+}
+
+.shipmentContainer
+{
+    padding-top: 0;
+    margin-top: 10px;
+}
+
+.downloadableShipment .shipmentContainer
+{
+    margin-top: 0;
+}
+
+/* Product table */
+.orderShipmentsItem_info
+{
+    margin-top: 4px;
+    display: inline;
+}
+
+.orderShipment_info
+{
+    display: block;
+    float: right;
+    background-color: #FDFDFD;
+    border: 1px solid #EEEEEE;
+}
+
+.orderShipment_info_first_row
+{
+
+}
+
+.orderShipmentsItem_info td
+{
+    padding: 2px 4px;    
+}
+
+.orderShipment_info td
+{
+    padding: 4px;
+}
+
+.orderShipmentsItem_info_sku_td { width: 80px; padding-left: 40px !important; }
 .orderShipmentsItem_info_sku { width: 70px; }
 
 .orderShipmentsItem_info_name_td { width: 100%;  }
-.orderShipmentsItem_info_name { width: 400px;  }
+.orderShipmentsItem_info_name { width: 350px;  }
 
-.orderShipmentsItem_info_price_td { width: 90px; text-align: right;}
-.orderShipmentsItem_info_price { width: 80px; text-align: right;  }
+.orderShipmentsItem_info_price_td { width: 80px; text-align: center;}
+.orderShipmentsItem_info_price { width: 80px; text-align: center;  }
 
-.orderShipmentsItem_info_total_td { width: 90px; }
-.orderShipmentsItem_info_total { width: 80px; text-align: right; }
+.orderShipmentsItem_info_total_td { width: 80px; text-align: center; white-space: nowrap; }
+.orderShipmentsItem_info_total { width: 80px; }
 
-.orderShipmentsItem_info_report_td { width: 100%;  }
-.orderShipmentsItem_info_report_td { width: 100%; text-align: right; }
+.orderShipmentsItem_info_report_td { text-align: right; }
 
-.orderShipmentsItem_info_tax_td { width: 90px;}
-.orderShipmentsItem_info_tax { width: 80px; text-align: right; }
+.orderShipmentsItem_info_tax_td { width: 80px; text-align: center; white-space: nowrap;}
+.orderShipmentsItem_info_tax { width: 80px; }
 
 .orderShipmentsItem_info_count_td { width: 70px; }
 .orderShipmentsItem_info_count { width: 60px; text-align: right; position: relative; }
@@ -99,10 +149,8 @@
 
 .orderShipmentsItem li
 {
-    border: 0px none;
     padding: 0px;
     margin: 0px;
-    margin-top: -3px;
 }
 
 .orderShipmentsItem_count
@@ -139,9 +187,10 @@
 .orderShipmentsItem .activeList_icons
 {
     vertical-align: top;
-    padding-top: 1em;
+    padding-top: 10px;
     padding-right: 0px;
     display: inline;
+    position: absolute;
 }
 
 
@@ -166,7 +215,7 @@
 .orderShipment_controls
 {
     position: relative ! important;
-    padding: 20px 0 0px 0 ! important;
+    padding: 0 ! important;
 }
 
 
@@ -175,16 +224,16 @@
    padding-top: 15px;
 }
 
-.downloadableShipmetn .orderShipmentsItem_info_count_td,
-.downloadableShipmetn .orderShipmentsItem_info_price_td,
-.downloadableShipmetn .orderShipment_info_shipping_row,
-.downloadableShipmetn .orderShipment_info_total_row,
-.downloadableShipmetn .orderShipment_info_tax_row
+.downloadableShipment .orderShipmentsItem_info_count_td,
+.downloadableShipment .orderShipmentsItem_info_price_td,
+.downloadableShipment .orderShipment_info_shipping_row,
+.downloadableShipment .orderShipment_info_total_row,
+.downloadableShipment .orderShipment_info_tax_row
 {
     display: none;
 }
 
-.downloadableShipmetn .orderShipmentsItem .activeList_icons img
+.downloadableShipment .orderShipmentsItem .activeList_icons img
 {    
     margin-bottom: 0;
 }

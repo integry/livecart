@@ -16,7 +16,7 @@ _shipping_status_confirmed_as_lost=Lost
 
 _add_new_shipment=Add new shipment
 _cancel_adding_new_shipment=Cancel adding new shipment
-_report=Report
+_report=Order Totals
 _shipments=Shipments
 
 _shipment_status=Status
@@ -36,13 +36,13 @@ _add_new_file=Add new file
 _do_you_want_to_create_new_shipment=Do you want to create new shipment?
 _shipping_service_is_not_selected=Shipping service is not selected
 
-_price=Price
+_price=Total
 
-_subtotal_price=Subtotal price
+_subtotal_price=Subtotal
 _taxes=Taxes
 
-_shipping_price=Shipping price
-_total_price=Total price
+_shipping_price=Shipping
+_total_price=Total
 
 _are_you_sure_you_want_to_change_shipment_status_to_awaiting=Are you sure you want to change shipment status to awaiting?
 _are_you_sure_you_want_to_change_shipment_status_to_pending=Are you sure you want to change shipment status to pending?

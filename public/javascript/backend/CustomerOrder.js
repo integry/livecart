@@ -231,7 +231,15 @@ Backend.CustomerOrder.prototype =
             Backend.CustomerOrder.Editor.prototype.craftTabUrl, 
             Backend.CustomerOrder.Editor.prototype.craftContentId
         ); 
-        modifiedOnComplete = tabControl.activateTab(null, function(response){ onComplete(response); Backend.CustomerOrder.prototype.orderLoaded = true; }.bind(this) );
+        modifiedOnComplete = tabControl.activateTab(null, 
+                                                        function(response)
+                                                        { 
+                                                            if (onComplete)
+                                                            {
+                                                                onComplete(response);
+                                                            }
+                                                            Backend.CustomerOrder.prototype.orderLoaded = true; 
+                                                        }.bind(this) );
         
         if(Backend.CustomerOrder.Editor.prototype.hasInstance(id)) 
     	{

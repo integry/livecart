@@ -22,9 +22,8 @@
 <div id="orderShipment_{$orderID}_total_empty" style="display: none">{include file="backend/shipment/shipmentTotal.tpl"}</div> 
 <div id="orderShipmentItem_{$orderID}_empty" style="display: none">{include file="backend/shipment/itemAmount.tpl"}</div> 
 
-
-<h2 class="orderReportTitle">{t _report}</h2> 
-<div id="orderShipment_report_{$orderID}" class="orderShipment_report"> 
+<fieldset id="orderShipment_report_{$orderID}" class="orderShipment_report"> 
+    <legend>{t _report}</legend>
     <table class="orderShipment_report_values"> 
         <tr> 
             <td class="orderShipment_report_description">{t _subtotal_price}</td> 
@@ -49,7 +48,7 @@
                 <span class="price">{$taxAmount}</span> <span class="priceSuffix">{$order.Currency.priceSuffix}</span>
             </td> 
         </tr> 
-        <tr> 
+        <tr class="orderShipment_report_total"> 
             <td class="orderShipment_report_description">{t _total_price}</td>
             <td class="orderShipment_report_total orderShipment_report_value"> 
                 <span class="pricePrefix">{$order.Currency.pricePrefix}</span>
@@ -58,13 +57,13 @@
             </td> 
         </tr> 
     </table>
-</div>
+</fieldset>
 
 <div id="order{$orderID}_downloadableShipments" class="shipmentCategoty" style="display: none">        
     <h2 class="notShippedShipmentsTitle">{t _downloadable}</h2> 
-    <div id="orderShipments_list_{$orderID}_downloadable" class="downloadableShipmetn"  {denied role='order.update'}style="display: none"{/denied}>        
+    <div id="orderShipments_list_{$orderID}_downloadable" class="downloadableShipment"  {denied role='order.update'}style="display: none"{/denied}>        
         <ul id="orderShipmentsItems_list_{$orderID}_downloadable" class="activeList_add_delete orderShipmentsItem activeList"> 
-            <li id="orderShipments_list_downloadable_{$orderID}_{$downloadableShipment.ID}" >
+            <li id="orderShipments_list_downloadable_{$orderID}_{$downloadableShipment.ID}" class="downloadableItems" >
                 <form>
                     {include file="backend/shipment/shipment.tpl" shipment=$downloadableShipment notShippable=true downloadable=1}
 

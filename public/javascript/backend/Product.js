@@ -28,8 +28,15 @@ Backend.Product =
 	
 	hideAddForm: function()
 	{
-        Element.hide($('addProductContainer'));
-        Element.show($('categoryTabs'));        
+        if ($('addProductContainer'))
+        {
+            Element.hide($('addProductContainer'));
+        }
+
+        if ($('categoryTabs'))
+        {
+            Element.show($('categoryTabs'));
+        }
     },
 
 	cancelAddProduct: function(categoryID, noHide)
