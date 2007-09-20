@@ -1,56 +1,56 @@
 Backend.User = {};
 
 Backend.UserGroup = Class.create();
-Backend.UserGroup.prototype = 
+Backend.UserGroup.prototype =
 {
   	Links: {},
     Messages: {},
-    
+
     treeBrowser: null,
-  	
+
   	urls: new Array(),
-	  
+
 	initialize: function(groups)
 	{
-        var self = this;      
-        
+        var self = this;
+
 		Backend.UserGroup.prototype.treeBrowser = new dhtmlXTreeObject("userGroupsBrowser","","", false);
         Backend.Breadcrumb.setTree(Backend.UserGroup.prototype.treeBrowser);
-		
+
 		Backend.UserGroup.prototype.treeBrowser.setOnClickHandler(this.activateGroup);
-		
+
 		Backend.UserGroup.prototype.treeBrowser.def_img_x = 'auto';
 		Backend.UserGroup.prototype.treeBrowser.def_img_y = 'auto';
-				
+
 		Backend.UserGroup.prototype.treeBrowser.setImagePath("image/backend/dhtmlxtree/");
 		Backend.UserGroup.prototype.treeBrowser.setOnClickHandler(this.activateGroup.bind(this));
-       
-		Backend.UserGroup.prototype.treeBrowser.showFeedback = 
-			function(itemId) 
+
+		Backend.UserGroup.prototype.treeBrowser.showFeedback =
+			function(itemId)
 			{
 				if (!this.iconUrls)
 				{
-					this.iconUrls = new Object();	
+					this.iconUrls = new Object();
 				}
-				
+
 				this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
 				this.setItemImage(itemId, '../../../image/indicator.gif');
 			}
-		
-		Backend.UserGroup.prototype.treeBrowser.hideFeedback = 
+
+		Backend.UserGroup.prototype.treeBrowser.hideFeedback =
 			function()
 			{
 				for (var itemId in this.iconUrls)
 				{
-					this.setItemImage(itemId, this.iconUrls[itemId]);	
-				}				
+					this.setItemImage(itemId, this.iconUrls[itemId]);
+				}
 			}
-		
-    	this.insertTreeBranch(groups, 0); 
-        
+
+    	this.insertTreeBranch(groups, 0);
+
         var id = -2
         var match = null;
-        if(!(match = Backend.ajaxNav.getHash().match(/group_(-?\d+)#\w+/))) 
+        if(!(match = Backend.ajaxNav.getHash().match(/group_(-?\d+)#\w+/)))
         {
             window.location.hash = '#group_' + id + '#tabUsers__';
         }
@@ -58,24 +58,24 @@ Backend.UserGroup.prototype =
         {
             id = match[1];
         }
-        
-	    self.tabControl = TabControl.prototype.getInstance('userGroupsManagerContainer', self.craftTabUrl, self.craftContainerId, {}); 
-        
+
+	    self.tabControl = TabControl.prototype.getInstance('userGroupsManagerContainer', self.craftTabUrl, self.craftContainerId, {});
+
         this.bindEvents();
 	},
 
     bindEvents: function()
-    {        
+    {
         var self = this;
-    
+
         if($("userGroups_add"))
         {
             Event.observe($("userGroups_add"), "click", function(e) {
                 Event.stop(e);
-                self.createNewGroup(); 
+                self.createNewGroup();
             });
         }
-        
+
         if($("userGroups_delete"))
         {
             Event.observe($("userGroups_delete"), "click", function(e) {
@@ -84,23 +84,23 @@ Backend.UserGroup.prototype =
             });
         }
     },
-    
+
     deleteGroup: function()
     {
         var $this = this;
-        
+
         if(Backend.UserGroup.prototype.activeGroup < 0)
         {
              return alert(Backend.UserGroup.prototype.Messages.youCanntoDeleteThisGroup)
         }
-        
-        if (confirm(Backend.UserGroup.prototype.Messages.confirmUserGroupRemove)) 
+
+        if (confirm(Backend.UserGroup.prototype.Messages.confirmUserGroupRemove))
         {
 		    new LiveCart.AjaxRequest(
     			Backend.User.Group.prototype.Links.removeNewGroup + '/' + Backend.UserGroup.prototype.activeGroup,
     			false,
-                function(response) 
-                { 
+                function(response)
+                {
                     response = eval("(" + response.responseText + ")");
                     if('success' == response.status)
                     {
@@ -121,13 +121,13 @@ Backend.UserGroup.prototype =
 		new LiveCart.AjaxRequest(
             Backend.User.Group.prototype.Links.createNewUserGroup,
             false,
-            function(response) 
-            { 
+            function(response)
+            {
                 this.afterGroupAdded(response, this)
             }.bind(this)
 		);
 	},
-    
+
 	afterGroupAdded: function(response, self)
 	{
         var newGroup = eval('(' + response.responseText + ')');
@@ -144,12 +144,12 @@ Backend.UserGroup.prototype =
     {
         return tabId + '_' +  Backend.UserGroup.prototype.treeBrowser.getSelectedItemId() + 'Content';
     },
-	
+
 	insertTreeBranch: function(treeBranch, rootId)
 	{
 		var self = this;
-        
-            
+
+
         $A(treeBranch).each(function(node)
 		{
             Backend.UserGroup.prototype.treeBrowser.insertNewItem(node.rootID, node.ID, node.name, null, 0, 0, 0, '', 1);
@@ -162,19 +162,19 @@ Backend.UserGroup.prototype =
             }
 		});
 	},
-	
+
 	activateGroup: function(id, activateTab)
 	{
         Backend.Breadcrumb.display(id);
-        
+
         $$('.newUserForm').each(function(newForm)
         {
 			if($('newUserForm_' + Backend.UserGroup.prototype.activeGroup))
 			{
-			    Backend.User.Add.prototype.getInstance(Backend.UserGroup.prototype.activeGroup).hideAddForm(); 
+			    Backend.User.Add.prototype.getInstance(Backend.UserGroup.prototype.activeGroup).hideAddForm();
 			}
         });
-		
+
 		if(!activateTab)
 		{
 	        activateTab = $('tabUsers');
@@ -190,40 +190,43 @@ Backend.UserGroup.prototype =
             $("tabUserGroup").show();
             $("tabRoles").show();
         }
-        
-        if(id <= 0)
-        {
-            $("userGroups_delete").parentNode.hide();
-        }
-        else
-        {
-            $("userGroups_delete").parentNode.show();  
-        }
-        
+
+		if ($("userGroups_delete"))
+		{
+			if(id <= 0)
+			{
+				$("userGroups_delete").parentNode.hide();
+			}
+			else
+			{
+				$("userGroups_delete").parentNode.show();
+			}
+		}
+
         if(Backend.UserGroup.prototype.activeGroup && Backend.UserGroup.prototype.activeGroup != id)
         {
             Backend.UserGroup.prototype.activeGroup = id;
     		Backend.UserGroup.prototype.treeBrowser.showFeedback(id);
-            
+
             Backend.ajaxNav.add('group_' + id);
-            
-            this.tabControl.activateTab(activateTab, function() { 
+
+            this.tabControl.activateTab(activateTab, function() {
                 Backend.UserGroup.prototype.treeBrowser.hideFeedback(id);
             });
-            
+
             Backend.showContainer("userGroupsManagerContainer");
         }
-        
+
         Backend.UserGroup.prototype.activeGroup = id;
 	},
-	
+
 	displayCategory: function(response)
 	{
-		Backend.UserGroup.prototype.treeBrowser.hideFeedback();	
+		Backend.UserGroup.prototype.treeBrowser.hideFeedback();
 		var cancel = document.getElementsByClassName('cancel', $('userGroupsContent'))[0];
 		Event.observe(cancel, 'click', this.resetForm.bindAsEventListener(this));
 	},
-	
+
 	resetForm: function(e)
 	{
 		var el = Event.element(e);
@@ -231,26 +234,26 @@ Backend.UserGroup.prototype =
 		{
 			el = el.parentNode;
 		}
-		
-		el.reset();		
+
+		el.reset();
 	},
-	
+
 	save: function(form)
 	{
 		var indicator = document.getElementsByClassName('progressIndicator', form)[0];
-		new LiveCart.AjaxRequest(form, indicator, this.displaySaveConfirmation.bind(this));	
+		new LiveCart.AjaxRequest(form, indicator, this.displaySaveConfirmation.bind(this));
 	},
-	
+
 	displaySaveConfirmation: function()
 	{
-		new Backend.SaveConfirmationMessage(document.getElementsByClassName('yellowMessage')[0]);			
+		new Backend.SaveConfirmationMessage(document.getElementsByClassName('yellowMessage')[0]);
 	},
-    
-    
-    openUser: function(id, e) 
+
+
+    openUser: function(id, e)
     {
         Event.stop(e);
-        
+
 		if(!e.target)
 		{
             e.target = e.srcElement
@@ -258,62 +261,62 @@ Backend.UserGroup.prototype =
 
         var userIndicator = e.target.up('td').down('.progressIndicator');
         Backend.User.Editor.prototype.setCurrentId(id);
-        
+
         Element.show(userIndicator);
-        
+
     	var tabControl = TabControl.prototype.getInstance(
             'userManagerContainer',
-            Backend.User.Editor.prototype.craftTabUrl, 
+            Backend.User.Editor.prototype.craftTabUrl,
             Backend.User.Editor.prototype.craftContentId
-        ); 
-        
+        );
+
         tabControl.activateTab();
-        
-        if(Backend.User.Editor.prototype.hasInstance(id)) 
+
+        if(Backend.User.Editor.prototype.hasInstance(id))
     	{
-    		Backend.User.Editor.prototype.getInstance(id);			
-    	}	
+    		Backend.User.Editor.prototype.getInstance(id);
+    	}
     },
-   
-   
-	updateHeader: function ( activeGrid, offset ) 
+
+
+	updateHeader: function ( activeGrid, offset )
 	{
 		var liveGrid = activeGrid.ricoGrid;
-		
+
 		var totalCount = liveGrid.metaData.getTotalRows();
 		var from = offset + 1;
 		var to = offset + liveGrid.metaData.getPageSize();
-		
+
 		if (to > totalCount)
 		{
-			to = totalCount;		
+			to = totalCount;
 		}
-		  
-		var categoryID = activeGrid.tableInstance.id.split('_')[1];		
+
+		var categoryID = activeGrid.tableInstance.id.split('_')[1];
 		var cont = $('productCount_' + categoryID);
 		var countElement = document.getElementsByClassName('rangeCount', cont)[0];
 		var notFound = document.getElementsByClassName('notFound', cont)[0];
-								
+
 		if (totalCount > 0)
 		{
 			if (!countElement.strTemplate)
 			{
-				countElement.strTemplate = countElement.innerHTML;	
-			}		
-			
+				countElement.strTemplate = countElement.innerHTML;
+			}
+
 			var str = countElement.strTemplate;
 			str = str.replace(/%from/, from);
 			str = str.replace(/%to/, to);
 			str = str.replace(/%count/, totalCount);
-									
+
 			countElement.innerHTML = str;
 			notFound.style.display = 'none';
-			countElement.style.display = '';					
+			countElement.style.display = '';
 		}
 		else
 		{
 			notFound.style.display = '';
-			countElement.style.display = 'none';					
+			countElement.style.display = 'none';
 		}
     }
 }
@@ -321,44 +324,44 @@ Backend.UserGroup.prototype =
 
 
 
-Backend.UserGroup.GridFormatter = 
+Backend.UserGroup.GridFormatter =
 {
 	getClassName: function(field, value)
 	{
-		
+
 	},
-	
+
 	formatValue: function(field, value, id)
 	{
 		if ('User.email' == field && Backend.UserGroup.prototype.usersMiscPermision)
 		{
-		    value = '<span>' + 
-                    '<span class="progressIndicator userIndicator" id="userIndicator_' + id + '" style="display: none;">' + 
-                    '</span>' + 
-                '</span>' + 
-                '<a href="#edit" id="user_' + id + '" onclick="Backend.UserGroup.prototype.openUser(' + id + ', event); return false;">' + 
-                     value + 
-                '</a>';	
+		    value = '<span>' +
+                    '<span class="progressIndicator userIndicator" id="userIndicator_' + id + '" style="display: none;">' +
+                    '</span>' +
+                '</span>' +
+                '<a href="#edit" id="user_' + id + '" onclick="Backend.UserGroup.prototype.openUser(' + id + ', event); return false;">' +
+                     value +
+                '</a>';
 		}
         else if('User.email' == field && window.opener)
         {
-		    value = '<a href="#edit" onclick="window.opener.Backend.CustomerOrder.prototype.customerPopup.getSelectedObject(' + id + '); return false;">' + value + '</a>';	
+		    value = '<a href="#edit" onclick="window.opener.Backend.CustomerOrder.prototype.customerPopup.getSelectedObject(' + id + '); return false;">' + value + '</a>';
                 // asdasd'
         }
-        
+
         if(value == '-')
         {
-            value = "<center>" + value + "</center>";   
+            value = "<center>" + value + "</center>";
         }
-		
-		
+
+
 		return value;
 	}
 }
 
 
 Backend.UserGroup.massActionHandler = ActiveGrid.MassActionHandler;
-Backend.UserGroup.massActionHandler.prototype.submitCompleted = 
+Backend.UserGroup.massActionHandler.prototype.submitCompleted =
     function()
     {
         this.grid.reloadGrid();
@@ -366,33 +369,33 @@ Backend.UserGroup.massActionHandler.prototype.submitCompleted =
 		{
 		    window.activeGrids['users_-2'].reloadGrid();
 		}
-        this.blurButton();		
+        this.blurButton();
     }
 
 
 Backend.User.Group = Class.create();
-Backend.User.Group.prototype = 
+Backend.User.Group.prototype =
 {
     Links: {},
     Messages: {},
     Instances: {},
-    
-    initialize: function(root) 
+
+    initialize: function(root)
     {
         this.findNodes(root);
         this.bindEvents();
     },
-    
-    getInstance: function(root) 
+
+    getInstance: function(root)
     {
         if(!Backend.User.Group.prototype.Instances[$(root).id])
         {
             Backend.User.Group.prototype.Instances[$(root).id] = new Backend.User.Group(root);
         }
-        
+
         return Backend.User.Group.prototype.Instances[$(root).id];
     },
-    
+
     findNodes: function(root)
     {
         this.nodes = {};
@@ -404,15 +407,15 @@ Backend.User.Group.prototype =
         this.nodes.description = $(this.nodes.form).elements.namedItem('description');
         this.nodes.ID = $(this.nodes.form).elements.namedItem('ID');
     },
-        
+
     bindEvents: function()
     {
         var self = this;
-        
+
     },
-    
-    save: function() 
-    {   
+
+    save: function()
+    {
         this.nodes.form.action = Backend.User.Group.prototype.Links.save + "/" + this.nodes.ID.value
         var request = new LiveCart.AjaxRequest(
            this.nodes.form,
@@ -423,10 +426,10 @@ Backend.User.Group.prototype =
                this.afterSave(response);
            }.bind(this)
         );
-    
+
         this.saving = false;
     },
-    
+
     afterSave: function(response)
     {
         if(response.status == 'success')
@@ -444,13 +447,13 @@ Backend.User.Group.prototype =
 
 
 Backend.User.Editor = Class.create();
-Backend.User.Editor.prototype = 
+Backend.User.Editor.prototype =
 {
     Links: {},
     Messages: {},
     Instances: {},
     CurrentId: null,
-    
+
     getCurrentId: function()
     {
         return Backend.User.Editor.prototype.CurrentId;
@@ -479,10 +482,10 @@ Backend.User.Editor.prototype =
         }
 
         if(doInit !== false) Backend.User.Editor.prototype.Instances[id].init();
-        
+
         return Backend.User.Editor.prototype.Instances[id];
     },
-   
+
 	showAddForm: function(groupID)
 	{
         console.info('add form');
@@ -492,7 +495,7 @@ Backend.User.Editor.prototype =
     {
         return this.Instances[id] ? true : false;
     },
-    
+
     initialize: function(id)
   	{
         try
@@ -512,6 +515,12 @@ Backend.User.Editor.prototype =
             console.info(e);
         }
 
+		this.findUsedNodes();
+		this.bindEvents();
+
+		Backend.User.Editor.prototype.showShippingAddress.apply(this);
+
+		Form.State.backup(this.nodes.form);
 	},
 
 	findUsedNodes: function()
@@ -521,11 +530,11 @@ Backend.User.Editor.prototype =
         this.nodes.form = this.nodes.parent.down("form");
 		this.nodes.cancel = this.nodes.form.down('a.cancel');
 		this.nodes.submit = this.nodes.form.down('input.submit');
-		
+
 		this.nodes.sameAddress = $("user_" + this.nodes.form.elements.namedItem("UserGroup").value + "_" + this.id +"_sameAddresses");
         this.nodes.shippingAddress = $("user_" + this.nodes.form.elements.namedItem("UserGroup").value + "_" + this.id +"_shippingAddress"); 
         this.nodes.billingAddress = $("user_" + this.nodes.form.elements.namedItem("UserGroup").value + "_" + this.id +"_billingAddress");
-		
+
         this.nodes.password = this.nodes.form.down('.user_password');
         this.nodes.showPassword = this.nodes.form.down('.user_password_show');
         this.nodes.generatePassword = this.nodes.form.down('.user_password_generate');
@@ -535,18 +544,18 @@ Backend.User.Editor.prototype =
     {
 		var self = this;
 		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
-        Event.observe(this.nodes.sameAddress, "click", function(e) {  
+        Event.observe(this.nodes.sameAddress, "click", function(e) {
             Backend.User.Editor.prototype.showShippingAddress.apply(this);
 		}.bind(this));
 
-        Event.observe(this.nodes.showPassword, "click", function(e) { 
+        Event.observe(this.nodes.showPassword, "click", function(e) {
 		    Backend.User.Add.prototype.togglePassword.apply(this, [this.nodes.showPassword.checked]) }.bind(this)
 	    );
-        Event.observe(this.nodes.generatePassword, "click", function(e) { 
-		    Event.stop(e); 
-	 	    Backend.User.Add.prototype.generatePassword.apply(this) 
+        Event.observe(this.nodes.generatePassword, "click", function(e) {
+		    Event.stop(e);
+	 	    Backend.User.Add.prototype.generatePassword.apply(this)
 	    }.bind(this));
-		
+
 
         Event.observe(this.nodes.form.elements.namedItem("shippingAddress_firstName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
         Event.observe(this.nodes.form.elements.namedItem("shippingAddress_lastName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
@@ -555,9 +564,9 @@ Backend.User.Editor.prototype =
         Event.observe(this.nodes.form.elements.namedItem("billingAddress_lastName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
         Event.observe(this.nodes.form.elements.namedItem("billingAddress_companyName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
    },
-    
+
     init: function(args)
-    {	
+    {
 		Backend.User.Editor.prototype.setCurrentId(this.id);
         var userIndicator = $('userIndicator_' + this.id);
         document.getElementsByClassName('UserIndicator').each(function(span)
@@ -568,35 +577,35 @@ Backend.User.Editor.prototype =
                throw $break;
            }
         });
-        
-        if(userIndicator) 
+
+        if(userIndicator)
         {
             Element.hide(userIndicator);
         }
         Backend.showContainer('userManagerContainer');
 
         this.tabControl = TabControl.prototype.getInstance("userManagerContainer", false);
-		
+
 		this.setPath();
-    }, 
-    
+    },
+
     setPath: function() {
         Backend.Breadcrumb.display(
-            Backend.UserGroup.prototype.activeGroup, 
+            Backend.UserGroup.prototype.activeGroup,
             this.nodes.form.elements.namedItem('email').value
         );
     },
 
     cancelForm: function()
-    {      
+    {
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		Form.restore(this.nodes.form, false, false);
     },
-    
+
     submitForm: function()
-    {        
+    {
 	    Backend.User.Editor.prototype.cloneBillingFormValues(this.nodes.sameAddress, this.nodes.shippingAddress, this.nodes.billingAddress);
-		
+
         this.nodes.form.action = Backend.User.Editor.prototype.Links.update + "/" + this.id;
 		new LiveCart.AjaxRequest(
             this.nodes.form,
@@ -608,7 +617,7 @@ Backend.User.Editor.prototype =
 		   }.bind(this)
 		);
     },
-	
+
 	afterSubmitForm: function(response)
 	{
 		if(response.status == 'success')
@@ -643,33 +652,33 @@ Backend.User.Editor.prototype =
 		{
 			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
 		}
-	}, 
-	
-    showShippingAddress: function() 
+	},
+
+    showShippingAddress: function()
 	{
-        if(this.nodes.sameAddress.checked) 
+        if(this.nodes.sameAddress.checked)
 		{
 			this.nodes.billingAddress.style.display = 'block';
-		    this.nodes.shippingAddress.hide(); 
+		    this.nodes.shippingAddress.hide();
 		}
-        else 
+        else
 		{
             this.nodes.billingAddress.style.display = 'inline';
 		    this.nodes.shippingAddress.show();
 		}
     },
-    
-    cloneBillingFormValues: function(checkbox, shippingAddress, billingAddress) {        
+
+    cloneBillingFormValues: function(checkbox, shippingAddress, billingAddress) {
         if(checkbox.checked)
         {
-            $A(['input', 'select', 'textarea']).each(function(field) 
+            $A(['input', 'select', 'textarea']).each(function(field)
             {
-                $A($(shippingAddress).getElementsByTagName(field)).each(function(input) 
+                $A($(shippingAddress).getElementsByTagName(field)).each(function(input)
                 {
                     if(input.id)
                     {
                         var prototypeInput = $(input.id.replace(/shippingAddress/, "billingAddress"));
-                        
+
                         // Select fields
                         if(input.options)
                         {
@@ -680,7 +689,7 @@ Backend.User.Editor.prototype =
                             input.selectedIndex = prototypeInput.selectedIndex;
                             input.style.display = prototypeInput.style.display;
                         }
-                        
+
                         input.style.display = prototypeInput.style.display;
                         input.value = prototypeInput.value;
                     }
@@ -695,20 +704,20 @@ Backend.User.Editor.prototype =
 
 
 Backend.User.Add = Class.create();
-Backend.User.Add.prototype = 
+Backend.User.Add.prototype =
 {
     Instances: {},
-    
+
     getInstance: function(groupID, grid)
     {
 		if(!Backend.User.Add.prototype.Instances[groupID])
         {
             Backend.User.Add.prototype.Instances[groupID] = new Backend.User.Add(groupID, grid);
         }
-        
+
         return Backend.User.Add.prototype.Instances[groupID];
     },
-    
+
     initialize: function(groupID, grid)
   	{
         try
@@ -727,6 +736,12 @@ Backend.User.Add.prototype =
             console.info(e);
         }
 
+		this.findUsedNodes();
+		this.bindEvents();
+
+		Backend.User.Editor.prototype.showShippingAddress.apply(this);
+
+		Form.State.backup(this.nodes.form);
 	},
 
 	findUsedNodes: function()
@@ -736,32 +751,35 @@ Backend.User.Add.prototype =
         this.nodes.form = this.nodes.parent.down("form");
 		this.nodes.cancel = this.nodes.form.down('a.cancel');
 		this.nodes.submit = this.nodes.form.down('input.submit');
-		
+
         this.nodes.password = this.nodes.form.down('.user_password');
         this.nodes.showPassword = this.nodes.form.down('.user_password_show');
         this.nodes.generatePassword = this.nodes.form.down('.user_password_generate');
-        
+
         this.nodes.menuShowLink = $("userGroup_" + this.groupID + "_addUser");
         this.nodes.menu = $("userGroup_" + this.groupID + "_addUser_menu");
         this.nodes.menuCancelLink = $("userGroup_" + this.groupID + "_addUserCancel");
         this.nodes.menuForm = this.nodes.parent;
-		
+
         this.nodes.sameAddress = $("user_" + this.groupID + "_0_sameAddresses");
         this.nodes.shippingAddress = $("user_" + this.groupID + "_0_shippingAddress");
         this.nodes.billingAddress = $("user_" + this.groupID + "_0_billingAddress");
     },
-   
+
 	showAddForm: function()
 	{
 		var menu = new ActiveForm.Slide(this.nodes.menu);
         menu.show("addUser", this.nodes.menuForm, function(){ Element.hide("userGroupsManagerContainer") });
 	},
-   
+
 	hideAddForm: function()
-	{		
-        var menu = new ActiveForm.Slide(this.nodes.menu);
-		this.nodes.menuForm.hide();
-        menu.hide("addUser", this.nodes.menuForm, function(){ Element.show("userGroupsManagerContainer") });
+	{
+		if (window.ActiveForm)
+		{
+			var menu = new ActiveForm.Slide(this.nodes.menu);
+			this.nodes.menuForm.hide();
+			menu.hide("addUser", this.nodes.menuForm, function(){ Element.show("userGroupsManagerContainer") });
+		}
 	},
 
     bindEvents: function(args)
@@ -777,18 +795,18 @@ Backend.User.Add.prototype =
         Event.observe(this.nodes.form.elements.namedItem("shippingAddress_companyName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
         Event.observe(this.nodes.form.elements.namedItem("billingAddress_firstName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
         Event.observe(this.nodes.form.elements.namedItem("billingAddress_lastName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
-        Event.observe(this.nodes.form.elements.namedItem("billingAddress_companyName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));		
+        Event.observe(this.nodes.form.elements.namedItem("billingAddress_companyName"), "focus", function(e) { Backend.User.Add.prototype.setDefaultValues.apply(this); }.bind(this));
     },
-	
+
 	generatePassword: function()
 	{
 		this.nodes.password.value = "";
         new LiveCart.AjaxRequest(
             Backend.User.Editor.prototype.Links.generatePassword,
             this.nodes.parent.down(".generatePasswordProgressIndicator"),
-            function(response) 
+            function(response)
             {
-				setTimeout(function() 
+				setTimeout(function()
 				{
 					Backend.User.Add.prototype.togglePassword.apply(this, [true]);
 	                this.nodes.password.value = response.responseText;
@@ -796,15 +814,15 @@ Backend.User.Add.prototype =
             }.bind(this)
         );
 	},
-    
+
     togglePassword: function(show)
     {
 		this.nodes.showPassword.checked = show;
         this.nodes.password.type = show ? 'text' : 'password';
     },
-	
+
 	setDefaultValues: function()
-	{		
+	{
 	    $A(["billingAddress", "shippingAddress"]).each(function(type)
 		{
 			var allFieldsAreEmpty = true;
@@ -816,7 +834,7 @@ Backend.User.Add.prototype =
 					throw $break;
 				}
 			});
-			
+
 			if(allFieldsAreEmpty)
 			{
 				this.nodes.form.elements.namedItem(type + "_firstName").value = this.nodes.form.elements.namedItem("firstName").value;
@@ -825,32 +843,32 @@ Backend.User.Add.prototype =
 			}
 		}.bind(this));
 	},
-	
+
 	showShippingAddress: function() {
         Backend.User.Editor.prototype.showShippingAddress.apply(this);
 	},
 
     cancelForm: function()
-    {      
+    {
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		Form.restore(this.nodes.form, false, false);
         this.hideAddForm();
     },
-    
+
     submitForm: function()
     {
-        if (!validateForm(this.nodes.form)) 
-        { 
-            return false; 
-        } 
-		
+        if (!validateForm(this.nodes.form))
+        {
+            return false;
+        }
+
         Backend.User.Editor.prototype.cloneBillingFormValues(this.nodes.sameAddress, this.nodes.shippingAddress, this.nodes.billingAddress);
-        
+
         this.nodes.form.action = Backend.User.Editor.prototype.Links.create;
 		new LiveCart.AjaxRequest(
             this.nodes.form,
             false,
-            function(responseJSON) 
+            function(responseJSON)
             {
              	ActiveForm.prototype.resetErrorMessages(this.nodes.form);
              	var responseObject = eval("(" + responseJSON.responseText + ")");
@@ -858,7 +876,7 @@ Backend.User.Add.prototype =
 		    }.bind(this)
 		);
     },
-	
+
 	afterSubmitForm: function(response)
 	{
         if(response.status == 'success')
@@ -876,94 +894,94 @@ Backend.User.Add.prototype =
 
 
 Backend.User.StateSwitcher = Class.create();
-Backend.User.StateSwitcher.prototype = 
+Backend.User.StateSwitcher.prototype =
 {
-    countrySelector: null, 
-    stateSelector: null, 
+    countrySelector: null,
+    stateSelector: null,
     stateTextInput: null,
     url: '',
-    
+
     initialize: function(countrySelector, stateSelector, stateTextInput, url)
     {
         this.countrySelector = countrySelector;
         this.stateSelector = stateSelector;
-        this.stateTextInput = stateTextInput;        
+        this.stateTextInput = stateTextInput;
         this.url = url;
-        
+
         if (this.stateSelector.length > 0)
         {
-            Element.show(this.stateSelector);            
-            Element.hide(this.stateTextInput);               
+            Element.show(this.stateSelector);
+            Element.hide(this.stateTextInput);
         }
         else
         {
-            Element.hide(this.stateSelector);            
-            Element.show(this.stateTextInput);  
+            Element.hide(this.stateSelector);
+            Element.show(this.stateTextInput);
         }
 
-        Event.observe(countrySelector, 'change', this.updateStates.bind(this)); 
+        Event.observe(countrySelector, 'change', this.updateStates.bind(this));
     },
-    
+
     updateStates: function(e, onComplete)
     {
         var url = this.url + '/?country=' + this.countrySelector.value;
-				
+
         var self = this;
         new LiveCart.AjaxRequest(
-            url, 
+            url,
         	false,
-            function(response) 
+            function(response)
             {
                 var states = $H(eval('(' + response.responseText + ')'));
-                
+
                 self.updateStatesComplete(states, onComplete)
-            }    
-        );  
-        
+            }
+        );
+
         var indicator = document.getElementsByClassName('progressIndicator', this.countrySelector.parentNode);
         if (indicator.length > 0)
         {
             this.indicator = indicator[0];
-            Element.show(this.indicator);  
-        }    
-        
+            Element.show(this.indicator);
+        }
+
         this.stateSelector.length = 0;
-        this.stateTextInput.value = '';    
+        this.stateTextInput.value = '';
     },
-    
+
     updateStatesComplete: function(states, onComplete)
     {
         if (!states.size())
         {
-            Element.hide(this.stateSelector);   
-            Element.show(this.stateTextInput);               
+            Element.hide(this.stateSelector);
+            Element.show(this.stateTextInput);
             this.stateTextInput.focus();
 			this.stateSelector.options.length = 0;
         }
         else
         {
-            this.stateSelector.options[this.stateSelector.length] = new Option('', '', true);  
-                
+            this.stateSelector.options[this.stateSelector.length] = new Option('', '', true);
+
             states.each(function(state)
             {
-                this.stateSelector.options[this.stateSelector.length] = new Option(state.value, state.key, false);  
+                this.stateSelector.options[this.stateSelector.length] = new Option(state.value, state.key, false);
             }.bind(this));
-            Element.show(this.stateSelector);            
+            Element.show(this.stateSelector);
             Element.hide(this.stateTextInput);
-			
+
 			this.stateTextInput.value = ''
-            
+
             this.stateSelector.focus();
         }
 
         if (this.indicator)
         {
-            Element.hide(this.indicator);              
-        }       
-        
+            Element.hide(this.indicator);
+        }
+
         if(onComplete)
         {
             onComplete();
         }
     }
-}   
+}
