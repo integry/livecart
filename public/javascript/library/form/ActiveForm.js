@@ -434,3 +434,23 @@ Element.saveTinyMceFields = function(element)
          tinyMCE.getInstanceById(mceControl.id).triggerSave();
     });
 }
+
+Form.focus = function(form)
+{
+	form = $(form);
+
+    if(form.tagName != 'FORM')
+	{
+		form = form.down('form');
+	}
+	
+	if(form)
+	{
+	    var firstElement = form.down('input[type=text]');   
+	    
+	    if(firstElement)
+	    {
+	        firstElement.focus();
+	    }
+	}
+}

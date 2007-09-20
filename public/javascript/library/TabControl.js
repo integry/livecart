@@ -221,12 +221,21 @@ TabControl.prototype = {
 		if (!this.loadedContents[this.urlParserCallback(targetTab.down('a').href) + contentId] && Element.empty($(contentId)))
 		{
             this.loadedContents[this.urlParserCallback(targetTab.down('a').href) + contentId] = true;
-            new LiveCart.AjaxUpdater(this.urlParserCallback(targetTab.down('a').href), contentId, targetTab.down('.tabIndicator'), 'bottom',  onComplete);
+            new LiveCart.AjaxUpdater(this.urlParserCallback(targetTab.down('a').href), contentId, targetTab.down('.tabIndicator'), 'bottom', function(activeContent, onComplete, response)
+			{ 
+			   setTimeout(function() { Form.focus(activeContent) }.bind(this, activeContent), 20);
+			   onComplete(response);
+		    }.bind(this, this.activeContent, onComplete));
 		}
         else if(onComplete)
         {
+            Form.focus(this.activeContent);
             onComplete();
         }
+		else
+		{
+			Form.focus(this.activeContent);
+		}
        
         this.addHistory();
 		
