@@ -35,7 +35,6 @@ Backend.RelatedProduct = {
     },
     addProductToList: function(productID, relatedProductID, popup)
     {
-        console.log(popup);
         var self = this;
         new LiveCart.AjaxRequest(
             this.links.related + "/?relatedProductID=" + relatedProductID,
@@ -43,7 +42,10 @@ Backend.RelatedProduct = {
             function(response) 
             {                
                 var evaluatedResponse = response.responseData;;
-                
+               
+                console.log(popup.getElementById('productIndicator_' + productID));
+                popup.getElementById('productIndicator_' + relatedProductID).hide();
+                               
                 if(evaluatedResponse && evaluatedResponse.error && evaluatedResponse.error.length > 0)
                 {
                     // error
