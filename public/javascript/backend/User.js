@@ -167,13 +167,10 @@ Backend.UserGroup.prototype =
 	{
         Backend.Breadcrumb.display(id);
 
-        $$('.newUserForm').each(function(newForm)
-        {
-			if($('newUserForm_' + Backend.UserGroup.prototype.activeGroup))
-			{
-			    Backend.User.Add.prototype.getInstance(Backend.UserGroup.prototype.activeGroup).hideAddForm();
-			}
-        });
+		if($('newUserForm_' + Backend.UserGroup.prototype.activeGroup) && Element.visible('newUserForm_' + Backend.UserGroup.prototype.activeGroup))
+		{
+		    Backend.User.Add.prototype.getInstance(Backend.UserGroup.prototype.activeGroup).hideAddForm();
+		}
 
 		if(!activateTab)
 		{
@@ -390,6 +387,8 @@ Backend.User.Group.prototype =
     {
         this.findNodes(root);
         this.bindEvents();
+		
+        Form.State.backup(this.nodes.form);
     },
 
     getInstance: function(root)
@@ -412,12 +411,12 @@ Backend.User.Group.prototype =
         this.nodes.name = $(this.nodes.form).elements.namedItem('name');
         this.nodes.description = $(this.nodes.form).elements.namedItem('description');
         this.nodes.ID = $(this.nodes.form).elements.namedItem('ID');
+        this.nodes.cancel = this.nodes.root.down('.userGroup_cancel');
     },
 
     bindEvents: function()
     {
-        var self = this;
-
+        Event.observe(this.nodes.cancel, "click", function(e) { Event.stop(e); this.cancel() }.bind(this));
     },
 
     save: function()
@@ -440,14 +439,24 @@ Backend.User.Group.prototype =
     {
         if(response.status == 'success')
         {
-            new Backend.SaveConfirmationMessage($('groupConfirmation'));
             Backend.UserGroup.prototype.treeBrowser.setItemText(Backend.UserGroup.prototype.activeGroup, this.nodes.name.value);
+			$$(".user_userGroup > select option[value=" + Backend.UserGroup.prototype.activeGroup + "]").each(function(option)
+			{
+				option.text = this.nodes.name.value;
+			}.bind(this));
+			
+            Form.State.backup(this.nodes.form);
         }
         else
         {
             ActiveForm.prototype.serErrorMessages(this.nodes.form, response.errors);
         }
-    }
+    }, 
+	
+	cancel: function()
+	{
+        Form.State.restore(this.nodes.form);
+	}
 }
 
 
@@ -741,13 +750,6 @@ Backend.User.Add.prototype =
         {
             console.info(e);
         }
-
-		this.findUsedNodes();
-		this.bindEvents();
-
-		Backend.User.Editor.prototype.showShippingAddress.apply(this);
-
-		Form.State.backup(this.nodes.form);
 	},
 
 	findUsedNodes: function()
@@ -775,7 +777,7 @@ Backend.User.Add.prototype =
 	showAddForm: function()
 	{
 		var menu = new ActiveForm.Slide(this.nodes.menu);
-        menu.show("addUser", this.nodes.menuForm, function(){ Element.hide("userGroupsManagerContainer") });
+        menu.show("addUser", this.nodes.menuForm, ['billingAddress_countryID', 'shippingAddress_countryID'], function(){ Element.hide("userGroupsManagerContainer") });
 	},
 
 	hideAddForm: function()

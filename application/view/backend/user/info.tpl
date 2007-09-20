@@ -93,13 +93,11 @@
         {
             if({/literal}{$someUser.ID}{literal} > 0)
             {
-                console.info('edit');
                 Backend.User.Editor.prototype.getInstance({/literal}{$someUser.ID}{literal});
             }
             else
             {
-                console.info('add');
-                Backend.User.Add.prototype.getInstance({/literal}{$someUser.UserGroup.ID}{literal});
+//                Backend.User.Add.prototype.getInstance({/literal}{$someUser.UserGroup.ID}{literal});
             }
         }
         catch(e)

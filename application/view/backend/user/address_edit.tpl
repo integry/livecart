@@ -20,13 +20,13 @@
 
 <fieldset class="error">
     <label for="{$idPrefix}_countryID">{t _country}</label>
-    {selectfield name="`$namePrefix`countryID" options=$countries id="`$idPrefix`_countryID"}
+    {selectfield name="`$namePrefix`countryID" options=$countries id="`$idPrefix`_countryID" class="country"}
     <div class="errorText" style="display: none" ></span>
 </fieldset>
 
 <fieldset class="error">
     <label for="{$idPrefix}_stateID">{t _state}</label>
-    {selectfield name="`$namePrefix`stateID" options=$states id="`$idPrefix`_stateID"}
+    {selectfield name="`$namePrefix`stateID" options=$states id="`$idPrefix`_stateID" class="state"}
     {textfield name="`$namePrefix`stateName" id="`$idPrefix`_stateName"}
 </fieldset>
 

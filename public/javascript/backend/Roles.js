@@ -20,6 +20,7 @@ Backend.Roles.prototype =
         var self = this;
         
 		this.rolesTree = new dhtmlXTreeObject(this.nodes.rolesTree.id, "", "", 0);
+		this.rolesTree.setOnClickHandler(function(id) { this.enableRole(id); }.bind(this));
 		this.rolesTree.def_img_x = 'auto';
 		this.rolesTree.def_img_y = 'auto';	
 		this.rolesTree.setImagePath("image/backend/dhtmlxtree/");
@@ -50,6 +51,11 @@ Backend.Roles.prototype =
         this.backedUpRoles = this.roles;
         this.restoreTree();
     },
+	
+	enableRole: function(id)
+	{
+		this.rolesTree.setCheck(id, !this.rolesTree.isItemChecked(id));
+	},
     
     restoreTree: function()
     {

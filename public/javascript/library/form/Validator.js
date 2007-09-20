@@ -24,6 +24,7 @@ function validateForm(form)
                 ActiveForm.prototype.setErrorMessage(formElement, check.value.error, focusField);
 				isFormValid = false;
                 focusField = false;
+				throw $break;
 			}
 	    }.bind(this, formElement));
 	}.bind(this));

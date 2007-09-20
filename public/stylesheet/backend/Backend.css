@@ -838,6 +838,16 @@ input, select, file, form.other
     vertical-align: middle;
 }
 
+select
+{
+    width: 15.5em;
+}
+
+select.country option, select.state option
+{
+   width: 15em;
+}
+
 label.checkbox, label.radio
 {
   	margin-top: 3px;

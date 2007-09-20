@@ -73,7 +73,7 @@ ActiveForm.prototype = {
 
         try
         {
-            var focus = true;
+            var focusField = true;
     		$H(errorMessages).each(function(error)
     		{
     			if (form.elements.namedItem(error.key))
@@ -81,8 +81,8 @@ ActiveForm.prototype = {
                     var formElement = form.elements.namedItem(error.key);
                     var errorMessage = error.value;
 
-                    ActiveForm.prototype.setErrorMessage(formElement, errorMessage, focus);
-                    focus = false;
+                    ActiveForm.prototype.setErrorMessage(formElement, errorMessage, focusField);
+                    focusField = false;
     			}
     		});
         } catch(e) {
@@ -90,11 +90,11 @@ ActiveForm.prototype = {
         }
 	},
 
-    setErrorMessage: function(formElement, errorMessage, focus)
+    setErrorMessage: function(formElement, errorMessage, focusField)
     {
         try
         {
-            if (focus)
+            if (focusField)
             {
                 alert(errorMessage);
                 Element.focus(formElement);
@@ -293,9 +293,9 @@ ActiveForm.Slide.prototype = {
 					throw $break;
 				}
 			});
-
+            
 	        if(window.Form.State && !Form.State.hasBackup(form)) Form.State.backup(form, ignoreFields);
-	        if(window.ActiveList) ActiveList.prototype.collapseAll();
+            if(window.ActiveList) ActiveList.prototype.collapseAll();
 			ActiveForm.prototype.initTinyMceFields(form);
 
 			if(onCompleteCallback)

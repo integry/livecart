@@ -90,13 +90,17 @@ Form.State = {
             value.value = element.value;
             value.selectedIndex = element.selectedIndex;
             value.checked = element.checked;
+			value.style = {}
+            value.style.display = element.style.display;
+            value.style.visibility = element.style.visibility;
 
             if(element.options && backupOptions)
             {
                 value.options = $H({});
+				var size = 0;
 				$A(element.options).each(function(value, option)
 				{
-                    value.options[option.value + "_marker_" + value.options.size()] = option.text ? option.text : option.value;
+                    value.options[option.value + "_marker_" + (size++)] = option.text ? option.text : option.value;
 				}.bind(this, value));
             }
 
@@ -201,6 +205,8 @@ Form.State = {
             {
                 element.value = value.value;
                 element.checked = value.checked;
+	            element.style.display = value.style.display;
+	            element.style.visibility = value.style.visibility;
 
                 if(element.options && value.options && restoreOptions)
                 {

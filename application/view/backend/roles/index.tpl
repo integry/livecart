@@ -20,12 +20,9 @@
 
 <script type="text/javascript">    	
     Backend.Roles.prototype.Links.xmlBranch  = '{link controller=backend.roles action=xmlBranch}';
-      
     var roles = Backend.Roles.prototype.getInstance('roles_form_{$userGroup.ID}', {json array=$roles}, {json array=$activeRolesIDs});
-    
-    
+
 {denied role="userGroup.update"}{literal}
-    console.info('asdasd')
     $A($("{/literal}userGroupsRolesTree_{$userGroup.ID}{literal}").getElementsByTagName('img')).each(function(img)
     {
         img.onclick = function() { return false; };

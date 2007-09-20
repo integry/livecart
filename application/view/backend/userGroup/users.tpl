@@ -27,6 +27,7 @@
             Element.observe($("{/literal}userGroup_{$userGroupID}_addUser{literal}"), 'click', function(e)
             {
                 Event.stop(e);
+                console.info("1")
                 Backend.User.Add.prototype.getInstance({/literal}{$userGroupID}{literal}).showAddForm({/literal}{$userGroupID}{literal}); 
             });
         }
