@@ -17,7 +17,7 @@ class CustomerOrder extends ActiveRecordModel
 {
 	public $orderedItems = array();
 	
-	//public $shipments = null;	
+	//public $shipments = new ARSet();	
 	
 	private $removedItems = array();
 	

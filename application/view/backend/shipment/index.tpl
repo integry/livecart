@@ -9,7 +9,7 @@
             <span id="orderShipments_new_{$orderID}_indicator" class="progressIndicator" style="display: none"> </span>
             <a href="#new" id="orderShipments_new_{$orderID}_show">{t _add_new_shipment}</a>
         </li> 
-        <li class="controls" id="orderShipments_new_{$orderID}_controls" style="display:none"> 
+        <li class="controls" id="orderShipments_new_{$orderID}_controls" style="display:none; padding: 0; margin: 0;"> 
             <fieldset class="controls">
 				{t _do_you_want_to_create_new_shipment} 
 	            <input type="submit" value="{t _yes}" class="submit" id="orderShipments_new_{$orderID}_submit"> 

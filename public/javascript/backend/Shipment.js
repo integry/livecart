@@ -343,7 +343,7 @@ Backend.Shipment.prototype =
             var inputServiceID = '<input type="hidden" name="shippingServiceID" value="' + response.shipment.ShippingService.ID + '" />';
 
             var ul = '<ul id="orderShipmentsItems_list_' + this.orderID + '_' + response.shipment.ID + '" class="activeList_add_sort activeList_add_delete orderShipmentsItem activeList_accept_orderShipmentsItem"></ul>'
-            var li = this.shipmentsActiveList.addRecord(response.shipment.ID, '<form>' + inputID + inputOrderID + inputServiceID + controls + ul + stats + '</form>');
+            var li = this.shipmentsActiveList.addRecord(response.shipment.ID, '<fieldset class="shipmentContainer"><form>' + inputID + inputOrderID + inputServiceID + controls + ul + stats + '</form></fieldset>');
 
             var newShipmentActiveList = ActiveList.prototype.getInstance($('orderShipmentsItems_list_' + this.orderID + '_' + response.shipment.ID), Backend.OrderedItem.activeListCallbacks);
             Element.addClassName(li, this.prefix  + 'item');

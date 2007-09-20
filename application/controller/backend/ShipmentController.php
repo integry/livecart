@@ -24,7 +24,6 @@ class ShipmentController extends StoreManagementController
 	    $shipments = $order->getShipments();
         $zone = $order->getDeliveryZone();
 	
-	
 	    $statuses = array(
 		    Shipment::STATUS_NEW => $this->translate('_shipping_status_new'),
 		    Shipment::STATUS_PROCESSING => $this->translate('_shipping_status_pending'),
@@ -42,8 +41,7 @@ class ShipmentController extends StoreManagementController
 	    
 	    $shipableShipmentsCount = 0;
 	    foreach($shipments as $shipment)
-	    {
-	        
+	    {	        
 	        $subtotalAmount += $shipment->amount->get();
 	        $shippingAmount += $shipment->shippingAmount->get();
 	        $taxAmount += $shipment->taxAmount->get();
@@ -219,7 +217,21 @@ class ShipmentController extends StoreManagementController
     public function create()
     {
 	    $order = CustomerOrder::getInstanceByID((int)$this->request->get('orderID'), true, array('BillingAddress' => 'UserAddress', 'ShippingAddress' => 'UserAddress'));
-	    $shipment = Shipment::getNewInstance($order);
+	    
+	    /*
+        $order->loadAll();
+	    
+        // check if there are no empty shipments already created
+        foreach ($order->getShipments() as $shipment)
+        {
+            if ($shipment->isShippable() && !count($shipment->getItems()))
+            {
+                return $this->save($shipment);
+            }
+        }
+        */
+        
+        $shipment = Shipment::getNewInstance($order);
 	    
 	    $history = new OrderHistory($order, $this->user);
 	    

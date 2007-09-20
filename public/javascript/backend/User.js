@@ -338,17 +338,14 @@ Backend.UserGroup.GridFormatter =
 	{
 		if ('User.email' == field && Backend.UserGroup.prototype.usersMiscPermision)
 		{
-		    value = '<span>' +
-                    '<span class="progressIndicator userIndicator" id="userIndicator_' + id + '" style="display: none;">' +
-                    '</span>' +
-                '</span>' +
+		    value = '<span><span class="progressIndicator userIndicator" id="userIndicator_' + id + '" style="display: none;"></span></span>' +
                 '<a href="#edit" id="user_' + id + '" onclick="Backend.UserGroup.prototype.openUser(' + id + ', event); return false;">' +
                      value +
                 '</a>';
 		}
         else if('User.email' == field && window.opener)
         {
-		    value = '<a href="#edit" onclick="window.opener.Backend.CustomerOrder.prototype.customerPopup.getSelectedObject(' + id + '); return false;">' + value + '</a>';
+		    value = '<span><span class="progressIndicator userIndicator" id="userIndicator_' + id + '" style="display: none;"></span></span>' + '<a href="#edit" onclick="window.opener.Backend.CustomerOrder.prototype.customerPopup.getSelectedObject(' + id + '); return false;">' + value + '</a>';
                 // asdasd'
         }
 

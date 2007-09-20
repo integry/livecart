@@ -25,11 +25,13 @@
 
 <div id="userGroupsWrapper" class="maxHeight h--50">
 	<div id="userGroupsBrowserWithControlls" class="treeContainer maxHeight">
-        <div>
-            <a class="menu" href="#" onclick="window.close(); return false;">
-                {t _cancel}
-            </a>
-        </div>
+        <ul class="menu popup">
+            <li class="done">
+                <a href="#" onclick="window.close(); return false;">
+                    {t _cancel}
+                </a>
+            </li>
+        </ul>
     	<div id="userGroupsBrowser" class="treeBrowser"></div>
         <ul id="userGroupsBrowserControls" class="verticalMenu">
             <li class="addTreeNode" style="display: none;"><a id="userGroups_add" href="#add">{t _add}</a></li>
@@ -42,6 +44,7 @@
 	</div>
 
     <span id="fromUsersPage">
+        <h2 style="margin-left: 280px;">{t _select_customer}:</h2>
         {include file="backend/userGroup/groupContainer.tpl"}
     </span>
 </div>

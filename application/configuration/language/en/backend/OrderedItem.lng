@@ -1,12 +1,12 @@
 # Confirmations
-_ordered_item_was_successfully_moved=Ordered item was successfully moved to another shipment
+_ordered_item_was_successfully_moved=Product was successfully moved to another shipment
 _this_shipping_service_has_no_available_rates=This service is not available for user zone and order price
 _ordered_item_quantity_was_updated=Item quantity was updated
 _error_updating_item_quantity=Error updating item quantity
-_item_has_been_successfuly_saved=Item was successfully saved
+_item_has_been_successfuly_saved=Item was successfully added to order
 _item_was_successfully_removed_from_shipment=Item was successfully removed from shipment
 _error_removing_item_from_shipment=Error occurred removing item from shipment
-_downloadable_item_already_exists_in_this_order=This downloadable item already exist in this order
+_downloadable_item_already_exists_in_this_order=This downloadable item already exists in this order
 
 # Select a product
 _select_product=Add products to order

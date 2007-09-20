@@ -2,6 +2,9 @@
     <li class="order_editAddress">
         <a href="#edit" {denied role='order.update'}style="display: none"{/denied} >{t _edit}</a>
     </li>
+    <li class="done order_cancelEditAddress" style="display: none;">
+        <a href="#cancel">{t _cancel}</a>
+    </li>
 </ul>
 <div class="clear"></div>
 

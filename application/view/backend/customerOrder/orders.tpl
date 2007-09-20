@@ -9,25 +9,21 @@
     <br class="clear" />
     {literal}
     <script type="text/javascript">
-        Event.observe($("{/literal}createNewOrderLink_{$orderGroupID}{literal}"), "click", function(e) {
+        Event.observe($("{/literal}createNewOrderLink_{$orderGroupID}{literal}"), "click", function(e) 
+        {
             Event.stop(e);
             
-            try
-            {
-                Backend.CustomerOrder.prototype.customerPopup = new Backend.SelectPopup(
-                    Backend.CustomerOrder.Links.selectCustomer, 
-                    Backend.CustomerOrder.Messages.selecCustomerTitle, 
-                    {
-                        onObjectSelect: function() { 
-                           Backend.CustomerOrder.prototype.instance.createNewOrder(this.objectID); 
-                        }
+            Backend.CustomerOrder.prototype.customerPopup = new Backend.SelectPopup(
+                Backend.CustomerOrder.Links.selectCustomer, 
+                Backend.CustomerOrder.Messages.selecCustomerTitle, 
+                {
+                    onObjectSelect: function() 
+                    { 
+                       this.popup.document.getElementById('userIndicator_' + this.objectID).show();
+                       Backend.CustomerOrder.prototype.instance.createNewOrder(this.objectID); 
                     }
-                );
-            }
-            catch(e)
-            {
-                console.info(e)
-            }
+                }
+            );
         });
     </script>  
     {/literal}

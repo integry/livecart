@@ -236,7 +236,7 @@ class CustomerOrderController extends StoreManagementController
 
 		$filter->mergeCondition($this->getTypeCondition($this->request->get('id')));
 
-		$orders = CustomerOrder::getRecordSet($filter);
+		$orders = CustomerOrder::getRecordSet($filter, CustomerOrder::LOAD_REFERENCES);
 
         $act = $this->request->get('act');
 		$field = array_pop(explode('_', $act, 2));

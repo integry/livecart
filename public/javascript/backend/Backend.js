@@ -1187,29 +1187,22 @@ Backend.SelectPopup = Class.create();
 Backend.SelectPopup.prototype = {
     height: 520,
     width:  1000,
-    location:  1,
+    location:  0,
     toolbar:  0,
     onObjectSelect: function() {},
     
     initialize: function(link, title, options)
     {
-        try
-        {
-            this.link = link;
-            this.title = title;
-            
-            if(options.onObjectSelect) this.onObjectSelect = options.onObjectSelect;
-            this.height = options.height || this.height; 
-            this.width = options.width || this.width; 
-            this.location = options.location || this.location;
-            this.toolbar = options.toolbar || this.toolbar;
-            
-            this.createPopup();
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
+        this.link = link;
+        this.title = title;
+        
+        if(options.onObjectSelect) this.onObjectSelect = options.onObjectSelect;
+        this.height = options.height || this.height; 
+        this.width = options.width || this.width; 
+        this.location = options.location || this.location;
+        this.toolbar = options.toolbar || this.toolbar;
+        
+        this.createPopup();
     },
     
     createPopup: function()

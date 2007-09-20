@@ -71,10 +71,12 @@ class ActiveGrid
             {
                 $fieldInst = $this->getFieldInstance($field);
                 
-                if ($fieldInst && $fieldInst->getDataType() instanceof ARNumeric)
+                if ($fieldInst && ($fieldInst->getDataType() instanceof ARNumeric || $fieldInst->getDataType() instanceof ARPeriod))
                 {
                     $value = preg_replace('/[ ]{2,}/', ' ', $value);
-                    $constraints = explode(' ', $value);
+                    
+                    $constraints = ($fieldInst->getDataType() instanceof ARNumeric) ? explode(' ', $value) : array($value);
+                    
                     foreach ($constraints as $c)
                     {
                         if (in_array(substr($c, 0, 2), array('<>', '<=', '>=')))
@@ -93,7 +95,7 @@ class ActiveGrid
                             $value = $c;
                         }
                         
-                        if (!is_numeric($value))
+                        if (!is_numeric($value) && ($fieldInst->getDataType() instanceof ARNumeric))
                         {
                             continue;
                         }
