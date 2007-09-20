@@ -157,12 +157,10 @@ class OrderedItemController extends StoreManagementController
         $order->loadItems();
         
         $shipmentsArray = array();
-        $firstEmptyShipment = false;
         foreach($order->getShipments() as $shipment)
         {
-            if(!$shipment->isShippable() || (!$firstEmptyShipment && count($shipment->getItems()) == 0))
+            if(!$shipment->isShippable())
             {
-                $firstEmptyShipment = true;
                 continue;
             }
             

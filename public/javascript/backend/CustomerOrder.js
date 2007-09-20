@@ -67,6 +67,7 @@ Backend.CustomerOrder.prototype =
 					{
 						Backend.SelectPopup.prototype.popup.close();
 						
+						Backend.CustomerOrder.prototype.treeBrowser.selectItem(3, true, true);
 						Backend.CustomerOrder.prototype.openOrder(response.order.ID);
 						if(window.ordersActiveGrid[3])
 						{
@@ -220,10 +221,8 @@ Backend.CustomerOrder.prototype =
 		{
 			Event.stop(e);
             $('orderIndicator_' + id).style.visibility = 'visible';
-		}
-		
+		}		        
         
-        Backend.CustomerOrder.prototype.treeBrowser.selectItem(3, true, true);
         Backend.CustomerOrder.Editor.prototype.setCurrentId(id); 
         
     	var tabControl = TabControl.prototype.getInstance(

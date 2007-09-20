@@ -307,7 +307,7 @@ class CheckoutController extends FrontendController
         $zone = $this->order->getDeliveryZone();
         
         $needSelecting = false;
-        
+
         foreach ($shipments as $key => $shipment)
         {
             $shipmentRates = $zone->getShippingRates($shipment);
@@ -348,6 +348,7 @@ class CheckoutController extends FrontendController
         }
 
         $response = new ActionResponse();
+
         $response->set('shipments', $shipments->toArray());
         $response->set('rates', $rateArray);
 		$response->set('currency', $this->getRequestCurrency()); 

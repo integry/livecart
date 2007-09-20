@@ -33,19 +33,16 @@ Backend.RelatedProduct = {
         },
         afterSort: function(li, response){ }
     },
-    addProductToList: function(productID, relatedProductID)
+    addProductToList: function(productID, relatedProductID, popup)
     {
+        console.log(popup);
         var self = this;
         new LiveCart.AjaxRequest(
             this.links.related + "/?relatedProductID=" + relatedProductID,
             false,
-            function(response) {
-                var evaluatedResponse;
-                try
-                {
-                    evaluatedResponse = eval("(" + response.responseText + ")");
-                }
-                catch(e) {}
+            function(response) 
+            {                
+                var evaluatedResponse = response.responseData;;
                 
                 if(evaluatedResponse && evaluatedResponse.error && evaluatedResponse.error.length > 0)
                 {
@@ -72,8 +69,7 @@ Backend.RelatedProduct = {
                     {
                         console.info(e);
                     }
-                }
-               
+                }               
             }
         );
     }

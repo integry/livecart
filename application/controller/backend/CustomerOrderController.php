@@ -243,6 +243,8 @@ class CustomerOrderController extends StoreManagementController
 
         foreach ($orders as $order)
 		{
+	       $history = new OrderHistory($order, $this->user);
+	    
 		    switch($act)
 		    {
 		        case 'setNew':
@@ -266,6 +268,9 @@ class CustomerOrderController extends StoreManagementController
 		        case 'setUnfinalized':
 		            $order->isFinalized->set(0);
 		            break;
+		        case 'setCancel':
+		            $order->isCancelled->set(true);
+		            break;
 		        case 'delete':
 		            $order->delete();
 		            break;
@@ -274,6 +279,7 @@ class CustomerOrderController extends StoreManagementController
 		    if($act != 'delete')
 		    {
 			    $order->save();
+			    $history->saveLog();
 		    }
         }
 

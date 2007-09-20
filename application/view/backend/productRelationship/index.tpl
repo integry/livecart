@@ -109,7 +109,7 @@
                 Backend.RelatedProduct.links.selectProduct, 
                 Backend.RelatedProduct.messages.selectProductTitle, 
                 {
-                    onObjectSelect: function() { Backend.RelatedProduct.addProductToList({/literal}{$productID}{literal}, this.objectID) }
+                    onObjectSelect: function() { Backend.RelatedProduct.addProductToList({/literal}{$productID}{literal}, this.objectID, this) }
                 }
             );
           

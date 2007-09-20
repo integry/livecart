@@ -1054,7 +1054,7 @@ class CustomerOrder extends ActiveRecordModel
         }
         else
         {
-            if (!$this->shipments)
+            if (!$this->shipments || !$this->shipments->size())
             {
                 ClassLoader::import("application.model.order.Shipment");
 

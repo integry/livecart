@@ -418,7 +418,7 @@ Backend.Shipment.prototype =
         }
     },
     
-    addNewProductToShipment: function(productID)
+    addNewProductToShipment: function(productID, orderID, popup)
     {
         new LiveCart.AjaxRequest(
             Backend.OrderedItem.Links.createNewItem + "/?productID=" + productID + "&shipmentID=" + this.nodes.form.elements.namedItem('ID').value + "&orderID=" + this.nodes.form.elements.namedItem('orderID').value + "&downloadable=" + this.nodes.form.elements.namedItem('downloadable').value,
@@ -426,6 +426,8 @@ Backend.Shipment.prototype =
             function(response) 
             {
                response = eval("(" + response.responseText + ")");
+     
+               popup.getElementById('productIndicator_' + productID).hide();
            
                if(response.status == 'success')
                {
@@ -754,17 +756,21 @@ Backend.Shipment.prototype =
         return  parseFloat(this.nodes.root.down(".shipment_shippingAmount").down('.price').innerHTML);
     },
     
+    /**
+     *  Do not display shipment status controls for orders that have only one shipment
+     */ 
     toggleControls: function(orderID) 
     {
 	    var shippableControls = document.getElementsByClassName("orderShipment_controls", $("order" + orderID + "_shippableShipments"));
         var shippedControls = document.getElementsByClassName("orderShipment_controls", $("order" + orderID + "_shippedShipments"));
 		var allControls = $A(shippableControls.concat(shippedControls));
        
-	     shippableControls.each(function(otherControls)
+         shippableControls.each(function(otherControls)
          {
              if(allControls.size() == 1) otherControls.hide();
 		     else otherControls.show();
        }.bind(this));
+
     },
 	
 	getPopupHeight: function()
@@ -822,19 +828,18 @@ Backend.Shipment.prototype =
                     onObjectSelect: function() 
                     { 
                         var form = this.popup.document.getElementById("availableShipments");
-                        var shipmentID = 0;
                         
                         $A(form.getElementsByTagName('input')).each(function(element) {
-                            if(element.checked) shipmentID = element.value;
+                            if(element.checked || !shipmentID) shipmentID = element.value;
                         }.bind(this)); 
     
                         if(!this.downloadable)
                         {
-                            Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + shipmentID).addNewProductToShipment(this.objectID, orderID);
+                            Backend.Shipment.prototype.getInstance('orderShipments_list_' + orderID + '_' + shipmentID).addNewProductToShipment(this.objectID, orderID, this.popup.document);
                         }
                         else
                         {
-                            Backend.Shipment.prototype.getInstance('orderShipments_list_downloadable_' + orderID + '_' + downloadableShipmentID).addNewProductToShipment(this.objectID, orderID);
+                            Backend.Shipment.prototype.getInstance('orderShipments_list_downloadable_' + orderID + '_' + downloadableShipmentID).addNewProductToShipment(this.objectID, orderID, this.popup.document);
                         }
                     },
                     

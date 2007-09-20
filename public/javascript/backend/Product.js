@@ -226,21 +226,21 @@ Backend.Product =
     
     openProduct: function(id, e, onComplete) 
     {
+        if ($('productIndicator_' + id))
+        {
+            Element.show($('productIndicator_' + id));
+        }
+
 		if (window.opener) 
 		{
 			var downloadable = parseInt(e.target.up('tr').down(".cell_hiddenType").innerHTML) == 1;
-			
+		
 			window.opener.selectProductPopup.getSelectedObject(id, downloadable);	
 		}
 		else
 		{   
             Backend.Product.Editor.prototype.setCurrentProductId(id); 
 	           
-            if ($('productIndicator_' + id))
-            {
-                Element.show($('productIndicator_' + id));
-            }
-
 			var tabControl = TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId, {
                 afterClick: function()
                 {
