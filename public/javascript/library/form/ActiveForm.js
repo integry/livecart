@@ -331,7 +331,8 @@ ActiveForm.Slide.prototype = {
 	            setTimeout(function() { form.style.display = 'none'; }, 300);
 	        }
 
-			this.ul.childElements().each(function(element) {
+			this.ul.childElements().each(function(element) 
+			{
 				if(!element.className.match(/Cancel/))
 				{
 					Element.show(element);
@@ -347,8 +348,7 @@ ActiveForm.Slide.prototype = {
 				onCompleteCallback();
 			}
 
-			}
-        }.bind(this, className, form, ignoreFields, onCompleteCallback), 10);
+		}.bind(this, className, form, ignoreFields, onCompleteCallback), 10);
     }
 }
 

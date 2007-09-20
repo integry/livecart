@@ -191,6 +191,12 @@ Backend.UserGroup.prototype =
             $("tabRoles").show();
         }
 
+        if(Backend.User.Editor.prototype.getCurrentId())
+		{
+	        var user = Backend.User.Editor.prototype.getInstance(Backend.User.Editor.prototype.getCurrentId(), false);
+	        user.cancelForm();
+        }
+		
 		if ($("userGroups_delete"))
 		{
 			if(id <= 0)
@@ -629,9 +635,9 @@ Backend.User.Editor.prototype =
 			
 			if(response.user.UserGroup.ID != this.oldUserGroup) 
 			{
-                if(window.activeGrids["users_" + Backend.UserGroup.prototype.activeGroup])
+                if(window.activeGrids["users_-2"])
                 {
-                    window.activeGrids["users_" + Backend.UserGroup.prototype.activeGroup].reloadGrid();
+                    window.activeGrids["users_-2"].reloadGrid();
                 }
 				
 				if(window.activeGrids["users_" + this.oldUserGroup])
