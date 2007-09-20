@@ -46,7 +46,7 @@ class CustomerOrderController extends StoreManagementController
 
 	public function info()
 	{
-	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State', 'User'));
+	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State', 'User', 'Currency'));
 
 	    $response = new ActionResponse();
 	    $response->set('statuses', array(
@@ -218,7 +218,7 @@ class CustomerOrderController extends StoreManagementController
 		        'value' => $this->translate($order->isCancelled->get() ? '_canceled' : '_accepted')
 	        ),
 	        'success',
-	        $this->translate($order->isCancelled->get() ? '_order_is_accepted' : '_order_is_canceled')
+	        $this->translate($order->isCancelled->get() ? '_order_is_canceled' : '_order_is_accepted')
         );
 	}
 
@@ -243,6 +243,8 @@ class CustomerOrderController extends StoreManagementController
 
         foreach ($orders as $order)
 		{
+	       $history = new OrderHistory($order, $this->user);
+	    
 		    switch($act)
 		    {
 		        case 'setNew':
@@ -266,6 +268,9 @@ class CustomerOrderController extends StoreManagementController
 		        case 'setUnfinalized':
 		            $order->isFinalized->set(0);
 		            break;
+		        case 'setCancel':
+		            $order->isCancelled->set(true);
+		            break;
 		        case 'delete':
 		            $order->delete();
 		            break;
@@ -274,6 +279,7 @@ class CustomerOrderController extends StoreManagementController
 		    if($act != 'delete')
 		    {
 			    $order->save();
+			    $history->saveLog();
 		    }
         }
 
@@ -475,6 +481,11 @@ class CustomerOrderController extends StoreManagementController
 	        default:
 	            return;
 	    }		
+	
+	    if (self::TYPE_CANCELLED != $type)
+	    {
+            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isCancelled"), 0));
+        }
 	
 		return $cond;
 	}

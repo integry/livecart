@@ -49,6 +49,7 @@
                 <option value="setShipped">{t _set_shipped}</option>
                 <option value="setReturned">{t _set_returned}</option>
             </optgroup>
+            <option value="setCancel">{t _cancel}</option>
             <option value="delete">{t _delete}</option>
         </select>
         
