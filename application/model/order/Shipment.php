@@ -302,7 +302,7 @@ class Shipment extends ActiveRecordModel
         // make sure the shipment doesn't consist of downloadable files only
         if (!$this->isShippable() && !$this->order->get()->isFinalized->get())
         {
-            return false;
+            //return false;
         }
 
         // reset amounts...
@@ -485,7 +485,12 @@ class Shipment extends ActiveRecordModel
                 $this->taxes = $this->getRelatedRecordSet('ShipmentTax', new ARSelectFilter(), array('Tax', 'TaxRate'));
             }
             else
-            {
+            {                
+                if (!$this->isLoaded())
+                {
+                    $this->load();
+                }
+                
                 $zone = $this->order->get()->getDeliveryZone();
                 
                 $rates = $zone->getTaxRates(DeliveryZone::ENABLED_TAXES);

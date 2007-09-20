@@ -82,18 +82,33 @@ class OrderHistory
 		}
 		
 		// @todo: dirty fix
-        if ($order->shippingAddress->get()->state->get())
+        if ($order->shippingAddress->get())
         {
-            $order->shippingAddress->get()->state->get()->load();
+            if ($order->shippingAddress->get()->state->get())
+            {
+                $order->shippingAddress->get()->state->get()->load();
+            }            
+            
+            $array['ShippingAddress'] = $order->shippingAddress->get()->toArray(true);
+        }
+        else
+        {
+            $array['ShippingAddress'] = array();
         }
         
-        if ($order->billingAddress->get()->state->get())
+        if ($order->billingAddress->get())
         {
-            $order->billingAddress->get()->state->get()->load();
+            if ($order->billingAddress->get()->state->get())
+            {
+                $order->billingAddress->get()->state->get()->load();
+            }            
+            
+            $array['BillingAddress'] = $order->billingAddress->get()->toArray(true);
         }
-                        
-        $array['ShippingAddress'] = $order->shippingAddress->get()->toArray(true);
-		$array['BillingAddress'] = $order->billingAddress->get()->toArray(true);
+        else
+        {
+            $array['BillingAddress'] = array();
+        }
 		
         return $array;
     }

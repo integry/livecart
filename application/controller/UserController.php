@@ -860,7 +860,7 @@ class UserController extends FrontendController
         $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('OrderedItem', 'ID'), $this->request->get('id')));
 	    $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID())); 
 	    
-	    $s = ActiveRecordModel::getRecordSet('OrderedItem', $f, ActiveRecordModel::LOAD_REFERENCES);
+	    $s = ActiveRecordModel::getRecordSet('OrderedItem', $f, array('CustomerOrder', 'Product'));
 	    
 	    // OrderedItem does not exist
         if (!$s->size())

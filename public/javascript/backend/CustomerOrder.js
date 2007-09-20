@@ -278,12 +278,19 @@ Backend.CustomerOrder.GridFormatter =
 	{
 		if ('CustomerOrder.ID2' == field && Backend.CustomerOrder.prototype.usersMiscPermission)
 		{
-		    value = 
+		    var displayedID = id;
+		    
+		    while (displayedID.length < 4)
+		    {
+                displayedID = '0' + displayedID;
+            }
+            
+            value = 
             '<span>' + 
             '    <span class="progressIndicator" id="orderIndicator_' + id + '" style="visibility: hidden;"></span>' + 
             '</span>' + 
-            '<a href="#edit" id="order_' + id + '" onclick="try { Backend.CustomerOrder.prototype.openOrder(' + id + ', event); } catch(e) { console.info(e) }  return false;">' +
-                 id + 
+            '<a href="#edit" id="order_' + id + '" onclick="Backend.CustomerOrder.prototype.openOrder(' + id + ', event); return false;">' +
+                 displayedID + 
             '</a>'
 		}
 // Email lead to user's page

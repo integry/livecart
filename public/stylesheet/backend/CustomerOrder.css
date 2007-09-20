@@ -31,6 +31,23 @@
 {
     display: none;   
 }
+
+/* no mass processing for shopping carts */
+#orders_8 .cell_cb
+{
+    display: none;
+}
+
+#orderMass_8
+{
+    display: none;
+}
+
+#tabOrders_8Content .activeGridControls ul.menu
+{
+    margin-bottom: 1em;
+}
+
 /******************
     overview
 ******************/
