@@ -53,7 +53,7 @@
             <span class="progressIndicator generatePasswordProgressIndicator" style="display: none;"></span>
             {password name="password" id="user_`$someUser.UserGroup.ID`_`$someUser.ID`_password" class="user_password"}
             <a href="#generate" class="user_password_generate">{t _generate_password}</a>
-            <fieldset class="error">
+            <fieldset class="error showPassword">
                 <input type="checkbox" id="user_{$someUser.UserGroup.ID}_{$someUser.ID}_password_show" class="checkbox user_password_show"/>
                 <label for="user_{$someUser.UserGroup.ID}_{$someUser.ID}_password_show">{t _show_password}</label>
             </fieldset >

@@ -17,7 +17,7 @@ class UserController extends StoreManagementController
 	{
 	    $user = User::getInstanceById((int)$this->request->get('id'), ActiveRecord::LOAD_DATA, array('UserGroup'));
 		
-        $availableUserGroups = array('' => '');
+        $availableUserGroups = array('' => $this->translate('_default_user_group'));
         foreach(UserGroup::getRecordSet(new ARSelectFilter()) as $group)
         {
             $availableUserGroups[$group->getID()] = $group->name->get();

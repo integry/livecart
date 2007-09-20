@@ -956,10 +956,6 @@ a.cancel, a.menu
 	clear: none;
 }
 
-p.checkbox label, fieldset.checkbox label {
-    float: none;
-    clear: both;
-}
 
 /* textarea container */
 div.textarea 

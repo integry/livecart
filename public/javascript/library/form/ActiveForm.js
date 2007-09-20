@@ -344,7 +344,7 @@ ActiveForm.Slide.prototype = {
 		
 		    if(onCompleteCallback)
 			{
-                onCompleteCallback();
+            onCompleteCallback();
 			}
         }.bind(this, className, form, ignoreFields, onCompleteCallback), 10);
     }   

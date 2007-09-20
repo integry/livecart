@@ -5,6 +5,8 @@ _could_not_save_user_details=Could not save user details
 
 _backToUsersList=Back to users list
 
+_default_user_group=Customers
+
 _user=User
 _password=Password
 _repeat_password=Repeat password
