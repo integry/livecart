@@ -49,9 +49,17 @@ class OrderedItem extends ActiveRecordModel
     
     public function getSubTotal(Currency $currency)
     {
-        $itemPrice = $this->product->get()->getPrice($currency->getID());
-        return $itemPrice * $this->count->get();    
+        return $this->getPrice($currency) * $this->count->get();    
     }
+    
+    public function getPrice(Currency $currency)
+    {
+		$itemCurrency = $this->priceCurrencyID->get() ? Currency::getInstanceById($this->priceCurrencyID->get()) : $currency;
+		
+		$price = $this->price->get() ? $this->price->get() : $this->product->get()->getPrice($currency->getID());
+		
+		return $itemCurrency->convertAmount($currency, $price);
+	}
     
     public function reserve()
     {

@@ -167,6 +167,7 @@ class OrderHistory
 
 		
 		$newShipment = false;
+		
 		// Create shippment
 		if(count($this->oldOrder['shipments']) < count($currentOrder['shipments'])) 
 		{
@@ -177,7 +178,7 @@ class OrderHistory
 		}
 		
 		// Delete shipment
-		else if(count($this->oldOrder['shipments']) > count($currentOrder['shipments'])) // Delete shipment
+		else if(count($this->oldOrder['shipments']) > count($currentOrder['shipments']))
 		{
 		    $isDownloadable = false;
             foreach(array_diff_key($this->oldOrder['items'], $currentOrder['items']) as $item)

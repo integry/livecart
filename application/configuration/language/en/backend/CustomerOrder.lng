@@ -38,7 +38,8 @@ _processing_orders=Processing
 _awaiting_shipment_orders=Awaiting Shipment
 _shipped_orders=Shipped
 _returned_orders=Returned
-_shopping_carts=Shoping Carts
+_cancelled_orders=Cancelled
+_shopping_carts=Shopping Carts
 _orders=Orders
 _livecart_orders=Orders
 
@@ -59,7 +60,7 @@ _order_report=Report
 # Grid columns
 CustomerOrder.ID2=Order ID
 CustomerOrder.status=Status
-CustomerOrder.totalAmount=Total cost
+CustomerOrder.totalAmount=Order total
 CustomerOrder.capturedAmount=Captured amount
 CustomerOrder.isFinalized=Finalized
 CustomerOrder.isPaid=Paid
@@ -98,7 +99,7 @@ _amount=Amount
 _email=Email
 _user=User
 
-_cancel_editing_user_info=Done editing user
+_livecart_users=Please select an user account
 _cancel_editing_order_info=Done editing order
 _user_info=User info
 _is_canceled=Is canceled

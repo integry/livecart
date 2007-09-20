@@ -224,9 +224,9 @@ class ShipmentController extends StoreManagementController
 	    $history = new OrderHistory($order, $this->user);
 	    
 	    $response = $this->save($shipment);
-	    
-	    $history->saveLog();
-	    
+
+		$history->saveLog();
+	    	    
 	    return $response;
     }
     

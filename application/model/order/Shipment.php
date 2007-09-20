@@ -283,7 +283,6 @@ class Shipment extends ActiveRecordModel
             {
                 try
                 {
-                    die(" " . $item->getID());
                     $item->load(true);
                 }
                 catch (ARNotFoundException $e)

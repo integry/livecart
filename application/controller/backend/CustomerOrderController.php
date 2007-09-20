@@ -13,6 +13,16 @@ ClassLoader::import("framework.request.validator.RequestValidator");
  */
 class CustomerOrderController extends StoreManagementController
 {
+	const TYPE_ALL = 1;
+	const TYPE_CURRENT = 2;
+	const TYPE_NEW = 3;
+	const TYPE_PROCESSING = 4;
+	const TYPE_AWAITING = 5;
+	const TYPE_SHIPPED = 6;
+	const TYPE_RETURNED = 7;
+	const TYPE_CARTS = 8;
+	const TYPE_CANCELLED = 9;
+								
 	/**
 	 * Action shows filters and datagrid.
 	 * @return ActionResponse
@@ -20,20 +30,18 @@ class CustomerOrderController extends StoreManagementController
 	public function index()
 	{
 		$orderGroups = array(
-		    array('ID' => 1, 'name' => $this->translate('_all_orders'), 'rootID' => 0),
-		        array('ID' => 2, 'name' => $this->translate('_current_orders'), 'rootID' => 1),
-		            array('ID' => 3, 'name' => $this->translate('_new_orders'), 'rootID' => 2),
-		            array('ID' => 4, 'name' => $this->translate('_processing_orders'), 'rootID' => 2),
-		            array('ID' => 5, 'name' => $this->translate('_awaiting_shipment_orders'), 'rootID' => 2),
-		        array('ID' => 6, 'name' => $this->translate('_shipped_orders'), 'rootID' => 1),
-		        array('ID' => 7, 'name' => $this->translate('_returned_orders'), 'rootID' => 1),
-		    array('ID' => 8, 'name' => $this->translate('_shopping_carts'), 'rootID' => 0),
+		    array('ID' => self::TYPE_ALL, 'name' => $this->translate('_all_orders'), 'rootID' => 0),
+		        array('ID' => self::TYPE_CURRENT, 'name' => $this->translate('_current_orders'), 'rootID' => 1),
+		            array('ID' => self::TYPE_NEW, 'name' => $this->translate('_new_orders'), 'rootID' => 2),
+		            array('ID' => self::TYPE_PROCESSING, 'name' => $this->translate('_processing_orders'), 'rootID' => 2),
+		            array('ID' => self::TYPE_AWAITING, 'name' => $this->translate('_awaiting_shipment_orders'), 'rootID' => 2),
+		        array('ID' => self::TYPE_SHIPPED, 'name' => $this->translate('_shipped_orders'), 'rootID' => 1),
+		        array('ID' => self::TYPE_RETURNED, 'name' => $this->translate('_returned_orders'), 'rootID' => 1),
+		        array('ID' => self::TYPE_CANCELLED, 'name' => $this->translate('_cancelled_orders'), 'rootID' => 1),
+		    array('ID' => self::TYPE_CARTS, 'name' => $this->translate('_shopping_carts'), 'rootID' => 0),
 		);
 
-		$response = new ActionResponse();
-		$response->set('orderGroups', $orderGroups);
-		return $response;
-
+		return new ActionResponse('orderGroups', $orderGroups);
 	}
 
 	public function info()
@@ -226,6 +234,8 @@ class CustomerOrderController extends StoreManagementController
         $grid = new ActiveGrid($this->application, $filter, 'CustomerOrder');
         $filter->setLimit(0);
 
+		$filter->mergeCondition($this->getTypeCondition($this->request->get('id')));
+
 		$orders = CustomerOrder::getRecordSet($filter);
 
         $act = $this->request->get('act');
@@ -280,44 +290,6 @@ class CustomerOrderController extends StoreManagementController
 	public function lists()
 	{
 	    $filter = new ARSelectFilter();
-	    switch($id = $this->request->get('id'))
-	    {
-	        case 'orders_1':
-	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1);
-	            break;
-	        case 'orders_2':
-	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1);
-	            $cond2 = new NotEqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_SHIPPED);
-	            $cond2->addOR(new NotEqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_RETURNED));
-	            $cond2->addOR(new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW));
-	            $cond2->addAND($cond);
-	            break;
-	        case 'orders_3':
-	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW);
-	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
-	            break;
-	        case 'orders_4':
-	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_PROCESSING);
-	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
-	            break;
-	        case 'orders_5':
-	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_AWAITING);
-	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
-	            break;
-	        case 'orders_6':
-	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_SHIPPED);
-	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
-	            break;
-	        case 'orders_7':
-	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_RETURNED);
-	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
-	            break;
-	        case 'orders_8':
-	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 0);
-	            break;
-	        default:
-	            return;
-	    }
 
 	    if($this->request->get('sort_col') == 'CustomerOrder.ID2')
 	    {
@@ -333,6 +305,9 @@ class CustomerOrderController extends StoreManagementController
 	            $this->request->set('filters', $filters);
 	        }
 	    }
+
+		list ($foo, $id) = explode('_', $this->request->get('id'));
+		$cond = $this->getTypeCondition($id);
 
 	    if($filters = $this->request->get('filters'))
 	    {
@@ -456,6 +431,54 @@ class CustomerOrderController extends StoreManagementController
     	));
 	}
 
+	private function getTypeCondition($type)
+	{
+	    switch($type)
+	    {
+	        case self::TYPE_ALL:
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1);
+	            break;
+	        case self::TYPE_CURRENT:
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1);
+	            $cond2 = new NotEqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_SHIPPED);
+	            $cond2->addOR(new NotEqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_RETURNED));
+	            $cond2->addOR(new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW));
+	            $cond2->addAND($cond);
+	            break;
+	        case self::TYPE_NEW:
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_NEW);
+	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
+	            break;
+	        case self::TYPE_PROCESSING:
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_PROCESSING);
+	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
+	            break;
+	        case self::TYPE_AWAITING:
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_AWAITING);
+	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
+	            break;
+	        case self::TYPE_SHIPPED:
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_SHIPPED);
+	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
+	            break;
+	        case self::TYPE_RETURNED:
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "status"), CustomerOrder::STATUS_RETURNED);
+	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
+	            break;
+	        case self::TYPE_CANCELLED:
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isCancelled"), true);
+	            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 1));
+	            break;
+	        case self::TYPE_CARTS:
+	            $cond = new EqualsCond(new ARFieldHandle('CustomerOrder', "isFinalized"), 0);
+	            break;
+	        default:
+	            return;
+	    }		
+	
+		return $cond;
+	}
+
     /**
      * @role update
      */
@@ -576,30 +599,17 @@ class CustomerOrderController extends StoreManagementController
 	public function removeEmptyShipments()
 	{
 	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, true);
+	    $order->loadAll();
 
-	    $recordsCount = 0;
 	    foreach($order->getShipments() as $shipment)
 	    {
-	        if($shipment->isShippable() && count($shipment->getItems()) == 0)
-	        {
-	            $recordsCount++;
-	        }
-
 	        if(count($shipment->getItems()) == 0)
 	        {
 	            $shipment->delete();
 	        }
 	    }
 
-	    if($recordsCount > 1) // One for downloadable
-	    {
-	        return new RawResponse();
-//	        return new JSONResponse(array('status' => 'success', 'message' => $this->translate('_empty_shipments_were_removed')));
-	    }
-	    else
-	    {
-	        return new RawResponse();
-	    }
+        return new RawResponse();
 	}
 
     public function printInvoice()

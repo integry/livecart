@@ -273,6 +273,69 @@ class TestOrder extends UnitTestCase
 		$this->assertEqual($items[0]->count->get(), 3);
 	}
 
+	function testDigitalItems()
+	{
+		$order = CustomerOrder::getNewInstance($this->user);		
+		
+		$price = 400;
+		
+        $product = Product::getNewInstance(Category::getInstanceById(Category::ROOT_ID), 'test3');   
+        $product->save();
+        $product->setPrice('USD', $price);
+        $product->type->set(Product::TYPE_DOWNLOADABLE);
+        $product->isEnabled->set(true);
+        $product->save();		
+        
+        $order->addProduct($product, 1);
+        $order->save();
+        
+        $this->assertTrue($order->getSubTotal($this->usd), $price);
+
+		$order->finalize($this->usd);
+        $this->assertTrue($order->getSubTotal($this->usd), $price);
+		        
+		ActiveRecord::clearPool();
+		
+		$loadedOrder = CustomerOrder::getInstanceById($order->getID());
+		$loadedOrder->loadAll();
+        $this->assertTrue($loadedOrder->getSubTotal($this->usd), $price);		
+	}
+
+	function testDigitalItemsAddedThroughShipment()
+	{
+		$order = CustomerOrder::getNewInstance($this->user);		
+		
+		$price = 400;
+		
+        $product = Product::getNewInstance(Category::getInstanceById(Category::ROOT_ID), 'test3');   
+        $product->save();
+        $product->setPrice('USD', $price);
+        $product->type->set(Product::TYPE_DOWNLOADABLE);
+        $product->isEnabled->set(true);
+        $product->save();		
+        
+        $order->addProduct($product, 1);
+        
+        $item = array_shift($order->getItemsByProduct($product));
+
+		$shipment = Shipment::getNewInstance($order);
+		$shipment->addItem($item);
+		
+		$order->save();
+		$shipment->recalculateAmounts();
+		$shipment->save();
+		$order->save();        
+        
+        $this->assertTrue($order->getSubTotal($this->usd), $price);
+
+		ActiveRecord::clearPool();
+		
+		$loadedOrder = CustomerOrder::getInstanceById($order->getID());
+		$loadedOrder->loadAll();
+        $this->assertTrue($loadedOrder->getSubTotal($this->usd), $price);		
+
+	}
+
     function test_SuiteTearDown()
     {
         ActiveRecordModel::rollback();

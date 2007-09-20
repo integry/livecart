@@ -317,7 +317,17 @@ class CustomerOrder extends ActiveRecordModel
             $item->price->set($item->product->get()->getPrice($currency->getID()));
             $item->save();
         }
+
+		if (!$this->shippingAddress->get() && $this->user->get()->defaultShippingAddress->get())
+        {
+			$this->shippingAddress->set($this->user->get()->defaultShippingAddress->get()->userAddress->get());
+		}
         
+        if (!$this->billingAddress->get() && $this->user->get()->defaultBillingAddress->get())
+        {
+			$this->billingAddress->set($this->user->get()->defaultBillingAddress->get()->userAddress->get());
+		}
+
         // clone billing/shipping addresses
         if ($this->shippingAddress->get())
         {
@@ -531,6 +541,11 @@ class CustomerOrder extends ActiveRecordModel
 	{
         $total = 0;
         $id = $currency->getID();        
+
+		if ($this->shipments instanceof ARSet && !$this->shipments->size())
+		{
+			$this->shipments = null;
+		}
         
 		if ($this->shipments)
 		{
@@ -566,26 +581,16 @@ class CustomerOrder extends ActiveRecordModel
                     $this->taxes[$id][$taxId] += $tax->getAmountByCurrency($currency);
                 }
             }
-/*            
-            // items without a shipment
-            foreach ($this->getShoppingCartItems() as $item)
-            {
-                if (!$item->shipment->get())
-                {
-                    $total += ($item->product->get()->getPrice($id) * $item->count->get()); 
-                }
-            }
-*/
 		}
 		else
 		{
             foreach ($this->getShoppingCartItems() as $item)
             {
-                $total += ($item->product->get()->getPrice($id) * $item->count->get());
+				$total += $item->getSubTotal($currency);
             }
         }        
         
-        return round($total, 2);
+	    return round($total, 2);
     }
 		
 	public function isProcessing()
@@ -1030,7 +1035,8 @@ class CustomerOrder extends ActiveRecordModel
                 $shipment->loadItems();
             }
             
-            // get downloadable items
+            /*
+			// get downloadable items
             foreach ($this->getShoppingCartItems() as $item)
             {
                 if ($item->product->get()->isDownloadable())
@@ -1044,6 +1050,7 @@ class CustomerOrder extends ActiveRecordModel
                     $downloadable->addItem($item);
                 }
             }            
+            */
         }
         else
         {
