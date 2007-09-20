@@ -81,6 +81,7 @@
     Backend.UserGroup.prototype.usersMiscPermision = {/literal}{allowed role="user"}true{/allowed}{denied role="user"}false{/denied}{literal};
 
     var users = new Backend.UserGroup({/literal}{json array=$userGroups}{literal});
+    window.ordersActiveGrid = {};
     window.usersActiveGrid = {};
 </script>
 {/literal}

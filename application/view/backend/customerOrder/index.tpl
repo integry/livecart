@@ -10,7 +10,6 @@
 {includeJs file="library/TabControl.js"}
 {includeJs file="library/SectionExpander.js"}
 {includeJs file="library/ActiveList.js"}
-
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 {includeCss file="library/TabControl.css"}
 {includeCss file="library/ActiveList.css"}

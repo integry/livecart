@@ -46,7 +46,7 @@ class CustomerOrderController extends StoreManagementController
 
 	public function info()
 	{
-	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State', 'User', 'Currency'));
+	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State', 'User'));
 
 	    $response = new ActionResponse();
 	    $response->set('statuses', array(
@@ -196,7 +196,7 @@ class CustomerOrderController extends StoreManagementController
         $response->set("displayedColumns", $displayedColumns);
         $response->set("availableColumns", $availableColumns);
 		$response->set("offset", $this->request->get('offset'));
-		$response->set("userID", $this->request->get('userID'));
+		$response->set("filters", ((int)$this->request->get('userID') ? array('User.ID' => $this->request->get('userID')) : false));
 		$response->set("totalCount", '0');
 		return $response;
 	}
@@ -218,7 +218,7 @@ class CustomerOrderController extends StoreManagementController
 		        'value' => $this->translate($order->isCancelled->get() ? '_canceled' : '_accepted')
 	        ),
 	        'success',
-	        $this->translate($order->isCancelled->get() ? '_order_is_canceled' : '_order_is_accepted')
+	        $this->translate($order->isCancelled->get() ? '_order_is_accepted' : '_order_is_canceled')
         );
 	}
 
@@ -243,8 +243,6 @@ class CustomerOrderController extends StoreManagementController
 
         foreach ($orders as $order)
 		{
-	       $history = new OrderHistory($order, $this->user);
-	    
 		    switch($act)
 		    {
 		        case 'setNew':
@@ -268,9 +266,6 @@ class CustomerOrderController extends StoreManagementController
 		        case 'setUnfinalized':
 		            $order->isFinalized->set(0);
 		            break;
-		        case 'setCancel':
-		            $order->isCancelled->set(true);
-		            break;
 		        case 'delete':
 		            $order->delete();
 		            break;
@@ -279,7 +274,6 @@ class CustomerOrderController extends StoreManagementController
 		    if($act != 'delete')
 		    {
 			    $order->save();
-			    $history->saveLog();
 		    }
         }
 
@@ -481,11 +475,6 @@ class CustomerOrderController extends StoreManagementController
 	        default:
 	            return;
 	    }		
-	
-	    if (self::TYPE_CANCELLED != $type)
-	    {
-            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isCancelled"), 0));
-        }
 	
 		return $cond;
 	}
