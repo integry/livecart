@@ -77,7 +77,7 @@ class OrderHistory
 				    'name' => isset($name[$lng]) ? $name[$lng] : reset($name),
                     'isDownloadable' => (int)$item->product->get()->isDownloadable(), 
 		        ),
-				'Shipment' => $array['shipments'][$item->shipment->get()->getID()]
+				'Shipment' => $item->shipment->get() ? $array['shipments'][$item->shipment->get()->getID()] : array('ID' => 0)
 			);
 		}
 		

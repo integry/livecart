@@ -110,8 +110,7 @@
     width: 45%;
 }
 
-
-.order_billingAddress,  .order_status
+.order_status
 {   
     margin-left: 10px;
 }
@@ -132,4 +131,27 @@
     padding: 0;
     border: 0; 
     background-color: transparent;
+}
+
+/************************
+    Cancelled orders
+************************/
+#orderManagerContainer.cancelled .order_billingAddress ul.menu,
+#orderManagerContainer.cancelled .order_shippingAddress ul.menu,
+#orderManagerContainer.cancelled .tabOrderProductsContent ul.menu,
+#orderManagerContainer.cancelled .tabOrderProductsContent .activeList_icons,
+#orderManagerContainer.cancelled .tabOrderPaymentsContent ul.menu
+{
+    display: none;
+}
+
+/************************
+    Shopping carts
+************************/
+#orderManagerContainer.unfinalized #tabOrderPayments,
+#orderManagerContainer.unfinalized #tabOrderCommunication,
+#orderManagerContainer.unfinalized .order_status,
+#orderManagerContainer.unfinalized .order_info .menu
+{
+    display: none;
 }

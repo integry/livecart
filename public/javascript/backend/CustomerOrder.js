@@ -377,45 +377,55 @@ Backend.CustomerOrder.Editor.prototype =
         return tabId + '_' +  Backend.CustomerOrder.Editor.prototype.getCurrentId() + 'Content'
     },
 
-    getInstance: function(id, doInit, hideShipped)
+    getInstance: function(id, doInit, hideShipped, isCancelled, isFinalized)
     {
 		if(!Backend.CustomerOrder.Editor.prototype.Instances[id])
         {
-            Backend.CustomerOrder.Editor.prototype.Instances[id] = new Backend.CustomerOrder.Editor(id, hideShipped);
+            Backend.CustomerOrder.Editor.prototype.Instances[id] = new Backend.CustomerOrder.Editor(id, hideShipped, isCancelled, isFinalized);
         }
+
+        if (Backend.CustomerOrder.Editor.prototype.Instances[id].isCancelled)
+        {
+            $('orderManagerContainer').addClassName('cancelled');            
+        }
+        else
+        {
+            $('orderManagerContainer').removeClassName('cancelled');
+        }        
+
+        if (Backend.CustomerOrder.Editor.prototype.Instances[id].isFinalized)
+        {
+            $('orderManagerContainer').removeClassName('unfinalized');
+        }
+        else
+        {
+            $('orderManagerContainer').addClassName('unfinalized');
+        }        
 
         if(doInit !== false) Backend.CustomerOrder.Editor.prototype.Instances[id].init();
         
         return Backend.CustomerOrder.Editor.prototype.Instances[id];
     },
     
-    
-    
     hasInstance: function(id)
     {
         return this.Instances[id] ? true : false;
     },
     
-    initialize: function(id, hideShipped)
+    initialize: function(id, hideShipped, isCancelled, isFinalized)
   	{
-        try
-        {
-            this.id = id ? id : '';
-			this.hideShipped = hideShipped;
-    
-            this.findUsedNodes();
-            this.bindEvents();
-            
-			this.toggleStatuses();
-			this.toggleNewProductAndShipmentLinks();
-			
-            Form.State.backup(this.nodes.form);
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
-
+        this.id = id ? id : '';
+		this.hideShipped = hideShipped;
+		this.isCancelled = isCancelled;
+		this.isFinalized = isFinalized;
+		
+        this.findUsedNodes();
+        this.bindEvents();
+        
+		this.toggleStatuses();
+		this.toggleNewProductAndShipmentLinks();
+		
+        Form.State.backup(this.nodes.form);
 	},
 
     toggleNewProductAndShipmentLinks: function()
@@ -515,11 +525,23 @@ Backend.CustomerOrder.Editor.prototype =
             Backend.CustomerOrder.Editor.prototype.Links.switchCancelled + '/' + this.id, 
             this.nodes.isCanceledIndicator,
             function(response) {
-	            response = eval("(" + response.responseText + ")");
-                
+	            response = response.responseData;
+	                            
 	            if(response.status == 'success')
-	            {
-	                this.nodes.isCanceled.update(response.linkValue);
+	            {	                
+                    if (0 != response.isCanceled)
+	                {
+                        $('orderManagerContainer').addClassName('cancelled');
+                    }
+                    else
+                    {
+                        $('orderManagerContainer').removeClassName('cancelled');
+                    }
+                
+                    Backend.CustomerOrder.Editor.prototype.Instances[this.id].isCancelled = response.isCanceled;
+                    
+                    this.nodes.isCanceled.up('li').className = response.isCanceled ? 'order_accept' : 'order_cancel';
+                    this.nodes.isCanceled.update(response.linkValue);
                     this.nodes.acceptanceStatusValue.update(response.value);
                     this.nodes.acceptanceStatusValue.style.color = response.isCanceled ? 'red' : 'green';
 					this.nodes.form.elements.namedItem('isCancelled').value = response.isCanceled;
@@ -546,14 +568,7 @@ Backend.CustomerOrder.Editor.prototype =
         Backend.showContainer("orderManagerContainer");
         this.tabControl = TabControl.prototype.getInstance("orderManagerContainer", false);
 		
-		try
-		{
-		    this.setPath();
-        }
-		catch(e)
-		{
-		
-		}
+		this.setPath();
     },
 	
 	setPath: function() {
@@ -751,22 +766,14 @@ Backend.CustomerOrder.Address.prototype =
     
     initialize: function(root, type)
   	{
-        try
-        {
-            this.findUsedNodes(root);
-            this.bindEvents();
-            this.type = type;
+        this.findUsedNodes(root);
+        this.bindEvents();
+        this.type = type;
 
-            this.stateSwitcher = this.nodes.form.elements.namedItem('stateID').stateSwitcher;
-      
-            Form.State.backup(this.nodes.form);
-            this.stateID = this.nodes.form.elements.namedItem('stateID').value;
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
-
+        this.stateSwitcher = this.nodes.form.elements.namedItem('stateID').stateSwitcher;
+  
+        Form.State.backup(this.nodes.form);
+        this.stateID = this.nodes.form.elements.namedItem('stateID').value;
 	},
     
 	findUsedNodes: function(root)

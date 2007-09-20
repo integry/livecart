@@ -17,7 +17,7 @@ class CustomerOrder extends ActiveRecordModel
 {
 	public $orderedItems = array();
 	
-	public $shipments = array();	
+	//public $shipments = null;	
 	
 	private $removedItems = array();
 	
@@ -1143,7 +1143,7 @@ class CustomerOrder extends ActiveRecordModel
     {
         if (!$this->isFinalized->get())
         {
-            $this->shipments = array();
+            $this->shipments = new ARSet();
         }
     }    
     
@@ -1157,8 +1157,8 @@ class CustomerOrder extends ActiveRecordModel
  	    $shipment = Shipment::getNewInstance($this);
 	    $shipment->amountCurrency->set($this->currency->get());
    		$shipment->save();
-   		
-   		$this->shipments->add($shipment);
+   		        
+        $this->shipments->add($shipment);
    	
    		return $shipment;
     }
@@ -1205,6 +1205,20 @@ class CustomerOrder extends ActiveRecordModel
         
         ProductPrice::loadPricesForRecordSet($set);
     }
+    
+	protected function __get($name)
+	{
+		switch ($name)
+	  	{
+		    case 'shipments':
+		    	$this->shipments = new ARSet();
+				return $this->shipments;
+		    break;
+		    
+			default:
+		    break;
+		}
+	}    
 }
 	
 ?>

@@ -55,32 +55,25 @@ Backend.OrderedItem = {
 
             if('success' == response.status)
             {
-                try
+                // Old shipment changes
+                $A(["amount", 'shippingAmount', 'taxAmount', 'total']).each(function(type)
                 {
-                    // Old shipment changes
-                    $A(["amount", 'shippingAmount', 'taxAmount', 'total']).each(function(type)
-                    {
-                        var price = oldShipmentLi.down(".shipment_" + type);
-                            price.down('.pricePrefix').innerHTML = response.oldShipment.prefix;
-                            price.down('.price').innerHTML = parseFloat(response.oldShipment[type]);
-                            price.down('.priceSuffix').innerHTML = response.oldShipment.suffix;
-                    });
-               
-                    // New shipment changes
-                    $A(["amount", 'shippingAmount', 'taxAmount', 'total']).each(function(type)
-                    {
-                        var price = newShipmentLi.down(".shipment_" + type);
-                            price.down('.pricePrefix').innerHTML = response.newShipment.prefix;
-                            price.down('.price').innerHTML = parseFloat(response.newShipment[type]);
-                            price.down('.priceSuffix').innerHTML = response.newShipment.suffix;
-                    });
-					
-                    Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
-                }
-                catch(e)
+                    var price = oldShipmentLi.down(".shipment_" + type);
+                        price.down('.pricePrefix').innerHTML = response.oldShipment.prefix;
+                        price.down('.price').innerHTML = parseFloat(response.oldShipment[type]);
+                        price.down('.priceSuffix').innerHTML = response.oldShipment.suffix;
+                });
+           
+                // New shipment changes
+                $A(["amount", 'shippingAmount', 'taxAmount', 'total']).each(function(type)
                 {
-                    alert(e)
-                }
+                    var price = newShipmentLi.down(".shipment_" + type);
+                        price.down('.pricePrefix').innerHTML = response.newShipment.prefix;
+                        price.down('.price').innerHTML = parseFloat(response.newShipment[type]);
+                        price.down('.priceSuffix').innerHTML = response.newShipment.suffix;
+                });
+				
+                Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
             }
             else
             {
@@ -189,29 +182,22 @@ Backend.Shipment.prototype =
 	    
     initialize: function(root, options)
     {
-        try
+		this.options = options || {};
+        this.findUsedNodes(root);
+        this.bindEvents();
+        this.shipmentsActiveList = ActiveList.prototype.getInstance(this.nodes.shipmentsList);
+        
+        if(this.nodes.form)
         {
-			this.options = options || {};
-            this.findUsedNodes(root);
-            this.bindEvents();
-            this.shipmentsActiveList = ActiveList.prototype.getInstance(this.nodes.shipmentsList);
-            
-            if(this.nodes.form)
+			if(!this.options.isShipped)
             {
-				if(!this.options.isShipped)
-                {
-				    this.itemsActiveList = ActiveList.prototype.getInstance(this.nodes.itemsList, Backend.OrderedItem.activeListCallbacks);	
-				}
-				
-		        // Remember last status value
-		        this.nodes.status.lastValue = this.nodes.status.value; 
-                this.toggleStatuses();
-				Form.State.backup(this.nodes.form);
-            }
-        }
-        catch(e)
-        {
-            console.info(e);
+			    this.itemsActiveList = ActiveList.prototype.getInstance(this.nodes.itemsList, Backend.OrderedItem.activeListCallbacks);	
+			}
+			
+	        // Remember last status value
+	        this.nodes.status.lastValue = this.nodes.status.value; 
+            this.toggleStatuses();
+			Form.State.backup(this.nodes.form);
         }
     },
 
@@ -811,23 +797,16 @@ Backend.Shipment.prototype =
         
         Event.observe(window, "unload", function() 
         { 
-			try
-			{
-				var orderID = Backend.CustomerOrder.Editor.prototype.getCurrentId();
-				
-	            var customerOrder = Backend.CustomerOrder.Editor.prototype.getInstance(orderID); 
-	            var shipmentsContainer = $('tabOrderProducts_' + orderID + 'Content'); 
-	            var ordersManagerContainer = $("orderManagerContainer"); 
-	            
-	            if(ordersManagerContainer.style.display != 'none' && shipmentsContainer && shipmentsContainer.style.display != 'none') 
-	            { 
-	                customerOrder.removeEmptyShipmentsFromHTML(); 
-	            }
-	        }
-			catch(e) 
-			{
-				alert(e);
-			}
+			var orderID = Backend.CustomerOrder.Editor.prototype.getCurrentId();
+			
+            var customerOrder = Backend.CustomerOrder.Editor.prototype.getInstance(orderID); 
+            var shipmentsContainer = $('tabOrderProducts_' + orderID + 'Content'); 
+            var ordersManagerContainer = $("orderManagerContainer"); 
+            
+            if(ordersManagerContainer.style.display != 'none' && shipmentsContainer && shipmentsContainer.style.display != 'none') 
+            { 
+                customerOrder.removeEmptyShipmentsFromHTML(); 
+            }
 		}); 
 				     
         Event.observe("order" + orderID + "_addProduct", 'click', function(e) 

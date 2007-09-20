@@ -13,6 +13,7 @@
         <label>{$order.ID}</label>
     </p>
 
+    {if $order.User}
     <p>
         <label for="order_{$order.ID}_user">{t _user}</label>
         <label>
@@ -21,22 +22,27 @@
             </a>
         </label>
     </p>
+    {/if}
 
     <p>
         <label for="order_{$order.ID}_amount">{t _amount}</label>
         <label>
+            {*
             {$order.Currency.pricePrefix}<span class="order_capturedAmount">{$order.capturedAmount|default:0}</span>{$order.Currency.priceSuffix}
 
             /
-
+            *}
+            
             {$order.Currency.pricePrefix}<span class="order_totalAmount">{$order.totalAmount|default:0}</span>{$order.Currency.priceSuffix}
         </label>
     </p>
 
+    {if $order.dateCompleted}
     <p>
         <label for="order_{$order.ID}_dateCreated">{t _date_created}</label>
         <label>{$order.dateCompleted}</label>
     </p>
+    {/if}
 
     <p>
         <label for="order_{$order.ID})_isPaid">{t _is_paid}</label>
@@ -104,21 +110,15 @@
 <script type="text/javascript">
     Backend.CustomerOrder.Editor.prototype.existingUserAddresses = {json array=$existingUserAddresses}
     {literal}
-    try
-    {
-        var status = Backend.CustomerOrder.Editor.prototype.getInstance({/literal}{$order.ID}{literal}, true, {/literal}{$hideShipped}{literal});
+    var status = Backend.CustomerOrder.Editor.prototype.getInstance({/literal}{$order.ID}, true, {json array=$hideShipped}, {$order.isCancelled}, {$order.isFinalized}{literal});
 
-        {/literal}{if $formShippingAddress}{literal}
-            var shippingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_shippingAddress_form{literal}'), 'shippingAddress');
-        {/literal}{/if}{literal}
+    {/literal}{if $formShippingAddress}{literal}
+        var shippingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_shippingAddress_form{literal}'), 'shippingAddress');
+    {/literal}{/if}{literal}
 
-        {/literal}{if $formBillingAddress}{literal}
-            var billingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_billingAddress_form{literal}'), 'billingAddress');
-        {/literal}{/if}{literal}
-    }
-    catch(e)
-    {
-        console.info(e);
-    }
+    {/literal}{if $formBillingAddress}{literal}
+        var billingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_billingAddress_form{literal}'), 'billingAddress');
+    {/literal}{/if}{literal}
+
     {/literal}
 </script>

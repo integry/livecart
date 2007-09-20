@@ -46,7 +46,7 @@ class CustomerOrderController extends StoreManagementController
 
 	public function info()
 	{
-	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State', 'User'));
+	    $order = CustomerOrder::getInstanceById((int)$this->request->get('id'), true, array('ShippingAddress' => 'UserAddress', 'BillingAddress' => 'UserAddress', 'State', 'User', 'Currency'));
 
 	    $response = new ActionResponse();
 	    $response->set('statuses', array(
@@ -218,7 +218,7 @@ class CustomerOrderController extends StoreManagementController
 		        'value' => $this->translate($order->isCancelled->get() ? '_canceled' : '_accepted')
 	        ),
 	        'success',
-	        $this->translate($order->isCancelled->get() ? '_order_is_accepted' : '_order_is_canceled')
+	        $this->translate($order->isCancelled->get() ? '_order_is_canceled' : '_order_is_accepted')
         );
 	}
 
@@ -475,6 +475,11 @@ class CustomerOrderController extends StoreManagementController
 	        default:
 	            return;
 	    }		
+	
+	    if (self::TYPE_CANCELLED != $type)
+	    {
+            $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isCancelled"), 0));
+        }
 	
 		return $cond;
 	}

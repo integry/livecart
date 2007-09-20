@@ -248,6 +248,11 @@ class Shipment extends ActiveRecordModel
         $this->loadItems();
         
         $currency = $this->order->get()->currency->get();
+        if (!$currency)
+        {
+            $currency = $this->getApplication()->getDefaultCurrency();
+        }
+        
         $this->amountCurrency->set($currency);
         $this->amount->set($this->getSubTotal($currency, self::WITHOUT_TAXES));
         
