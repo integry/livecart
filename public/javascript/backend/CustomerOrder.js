@@ -28,44 +28,23 @@ Backend.CustomerOrder.prototype =
 					this.iconUrls = new Object();	
 				}
 				
-				if (!this.iconUrls[itemId])
-				{
-                    this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
-                    var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
-                    img.originalSrc = img.src;
-    				img.src = 'image/indicator.gif';                    
-                }
+				this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+				this.setItemImage(itemId, '../../../image/indicator.gif');
 			}
 		
 		Backend.CustomerOrder.prototype.treeBrowser.hideFeedback = 
-			function(itemId)
+			function()
 			{
-                if (null != this.iconUrls[itemId])
-                {
-        			this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
-                    var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
-                    img.src = img.originalSrc;
-                    this.iconUrls[itemId] = null;                            
-                }
+				for (var itemId in this.iconUrls)
+				{
+					this.setItemImage(itemId, this.iconUrls[itemId]);	
+				}				
 			}
 		
     	this.insertTreeBranch(groups, 0); 
         
-        var orderID = window.location.hash.match(/order_(\d+)/);
-        if (orderID && orderID[1])
-        {
-            Element.show($('loadingOrder'));
-            Backend.CustomerOrder.prototype.openOrder(orderID[1], null, function() { Element.hide($('loadingOrder')); });
-        }       
-        else
-        {
-			if(!Backend.ajaxNav.getHash().match(/group_\d+#\w+/)) 
-			{
-				window.location.hash = '#group_1#tabOrders__';
-			}
-		}
-	    
-		this.tabControl = TabControl.prototype.getInstance('orderGroupsManagerContainer', this.craftTabUrl, this.craftContainerId, {}); 
+        if(!Backend.ajaxNav.getHash().match(/group_\d+#\w+/)) window.location.hash = '#group_1#tabOrders__';
+	    this.tabControl = TabControl.prototype.getInstance('orderGroupsManagerContainer', this.craftTabUrl, this.craftContainerId, {}); 
 
         Backend.CustomerOrder.prototype.instance = this;
 	},
@@ -144,7 +123,7 @@ Backend.CustomerOrder.prototype =
             $("tabOrderProducts").show();
         }
         
-        if(/*Backend.CustomerOrder.prototype.activeGroup && */Backend.CustomerOrder.prototype.activeGroup != id)
+        if(Backend.CustomerOrder.prototype.activeGroup && Backend.CustomerOrder.prototype.activeGroup != id)
         {           
             // Remove empty shippments
             var productsContainer = $("orderManagerContainer");
@@ -251,8 +230,7 @@ Backend.CustomerOrder.prototype =
             Backend.CustomerOrder.Editor.prototype.craftTabUrl, 
             Backend.CustomerOrder.Editor.prototype.craftContentId
         ); 
-        
-		modifiedOnComplete = tabControl.activateTab(null, 
+        modifiedOnComplete = tabControl.activateTab(null, 
                                                         function(response)
                                                         { 
                                                             if (onComplete)
@@ -270,6 +248,7 @@ Backend.CustomerOrder.prototype =
 	
     updateLog: function(orderID)
     {
+		// I had too :(
 		var url = $("tabOrderLog").down('a').href.replace(/_id_/, orderID);
 		var container = "tabOrderLog_" + orderID + "Content";
 		var identificator = url + container;
@@ -285,16 +264,10 @@ Backend.CustomerOrder.prototype =
 Backend.CustomerOrder.Links = {}; 
 Backend.CustomerOrder.Messages = {}; 
 
-Backend.CustomerOrder.GridFormatter = Class.create();
-Backend.CustomerOrder.GridFormatter.prototype = 
+Backend.CustomerOrder.GridFormatter = 
 {
     lastUserID: 0,
     
-	initialize: function()
-	{
-		
-	},
-
 	getClassName: function(field, value)
 	{
 		
@@ -319,6 +292,17 @@ Backend.CustomerOrder.GridFormatter.prototype =
                  displayedID + 
             '</a>'
 		}
+// Email lead to user's page
+//      else if ('User.email' == field && Backend.CustomerOrder.prototype.usersMiscPermission)
+//		{
+//		    value = 
+//          '<span>' + 
+//          '    <span class="progressIndicator UserIndicator" id="orderUserIndicator_' + id + '_' + Backend.CustomerOrder.GridFormatter.lastUserID + '" style="visibility: hidden;"></span>' + 
+//          '</span>' + 
+//          '<a href="#edit" id="user_' + Backend.CustomerOrder.GridFormatter.lastUserID + '" onclick="Backend.UserGroup.prototype.openUser(' + Backend.CustomerOrder.GridFormatter.lastUserID + ', event); } catch(e) { console.info(e) }  return false;">' + 
+//              value + 
+//          '</a>';	
+//		}
 		else if ('CustomerOrder.ID2' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
 		{
 		    value = id;
@@ -336,33 +320,6 @@ Backend.CustomerOrder.GridFormatter.prototype =
 		return value;
 	}
 }
-
-if (!Backend.User)
-{
-	Backend.User = {};
-}
-
-Backend.User.OrderGridFormatter = new Backend.CustomerOrder.GridFormatter();
-Backend.User.OrderGridFormatter.parentFormatValue = Backend.User.OrderGridFormatter.formatValue;
-Backend.User.OrderGridFormatter.formatValue = 
-	function(field, value, id)
-	{
-		if ('CustomerOrder.ID2' == field)
-		{
-		    var displayedID = id;
-		    
-		    while (displayedID.length < 4)
-		    {
-                displayedID = '0' + displayedID;
-            }
-            
-            return '<a href="' + this.orderUrl + id + '">' + displayedID + '</a>';
-		}
-		else
-		{
-			return this.parentFormatValue(field, value, id);
-		}
-	}
 
 
 Backend.CustomerOrder.Editor = Class.create();
@@ -614,37 +571,67 @@ Backend.CustomerOrder.Editor.prototype =
     },
 	
 	setPath: function() {
-        Backend.Breadcrumb.display(
-            Backend.CustomerOrder.prototype.treeBrowser.getSelectedItemId(), 
-            Backend.CustomerOrder.Editor.prototype.Messages.orderNum + this.id
-        );
+		if(Backend.UserGroup.prototype.treeBrowser)
+		{
+            var currentUser = Backend.User.Editor.prototype.getInstance(Backend.User.Editor.prototype.CurrentId, false)
+	        Backend.Breadcrumb.display(
+	            Backend.UserGroup.prototype.activeGroup, 
+				[
+				    [currentUser.nodes.form.elements.namedItem("email").value, function(e) 
+					{ 
+					   Event.stop(e); 
+					   Backend.hideContainer(); 
+					   setTimeout(function()
+					   { 
+					       Backend.Breadcrumb.display(
+							   Backend.UserGroup.prototype.activeGroup,
+							   this.nodes.form.elements.namedItem('email').value
+						   );
+					   }.bind(this), 20);
+					   
+				    }.bind(currentUser)],
+					Backend.CustomerOrder.Editor.prototype.Messages.orderNum + this.id
+				]
+	            
+	        );
+        }
+		else
+		{	
+            Backend.Breadcrumb.display(
+                Backend.CustomerOrder.prototype.activeGroup, 
+                Backend.CustomerOrder.Editor.prototype.Messages.orderNum + this.id
+            );	
+		}
     },
     
     cancelForm: function()
     {      
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
         
-		if(!Backend.CustomerOrder.Editor.prototype.getInstance(Backend.CustomerOrder.Editor.prototype.getCurrentId()).removeEmptyShipmentsConfirmation()) 
-        {       
-            Backend.CustomerOrder.prototype.treeBrowser.selectItem(Backend.CustomerOrder.prototype.activeGroup, true);
+        if(!Backend.CustomerOrder.Editor.prototype.getInstance(Backend.CustomerOrder.Editor.prototype.getCurrentId(), false).removeEmptyShipmentsConfirmation()) 
+        {
+            Backend.CustomerOrder.prototype.treeBrowser.selectItem(Backend.CustomerOrder.prototype.activeGroup, false);
             return;
         }
-                
+        
         Backend.hideContainer();
 		Form.restore(this.nodes.form);
+		
+		if(Backend.UserGroup.prototype.treeBrowser)
+		{
+            var currentUser = Backend.User.Editor.prototype.getInstance(Backend.User.Editor.prototype.CurrentId, false)
+		    currentUser.setPath();
+		}
+		else
+		{
+            Backend.Breadcrumb.display(Backend.CustomerOrder.prototype.activeGroup);
+		}
 		
 		// hide popups
         if(window.selectPopupWindow) 
         {
             window.selectPopupWindow.close();
         }
-        
-        if (!Backend.CustomerOrder.prototype.activeGroup)
-        {
-			Backend.CustomerOrder.prototype.activeGroup = -1;
-			Backend.CustomerOrder.prototype.treeBrowser.selectItem(1, true);
-            Backend.CustomerOrder.prototype.instance.activateGroup(1);
-        }                 
     },
     
     submitForm: function()
@@ -833,8 +820,7 @@ Backend.CustomerOrder.Address.prototype =
 		this.nodes.cancel = this.nodes.form.down('a.cancel');
 		this.nodes.submit = this.nodes.form.down('input.submit');
         
-		this.nodes.showEdit = this.nodes.form.down('.order_editAddress');
-		this.nodes.cancelEdit = this.nodes.form.down('.order_cancelEditAddress');
+		this.nodes.showEdit = this.nodes.form.down('.orderAddress_showEdit');
 		this.nodes.view = this.nodes.form.down('.orderAddress_view');
 		this.nodes.edit = this.nodes.form.down('.orderAddress_edit');
     },
@@ -844,13 +830,11 @@ Backend.CustomerOrder.Address.prototype =
 		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancelForm()}.bind(this));
         Event.observe(this.nodes.form.elements.namedItem('existingUserAddress'), 'change', function(e) { this.useExistingAddress()}.bind(this));
         Element.observe(this.nodes.showEdit, 'click', function(e) { Event.stop(e); this.showForm(); }.bind(this));
-        Element.observe(this.nodes.cancelEdit, 'click', function(e) { Event.stop(e); this.hideForm(); }.bind(this));
     },
     
     showForm: function()
     {
         this.nodes.showEdit.hide(); 
-        this.nodes.cancelEdit.show(); 
         this.nodes.view.hide();
         this.nodes.edit.show();
     },
@@ -858,7 +842,6 @@ Backend.CustomerOrder.Address.prototype =
     hideForm: function()
     {
         this.nodes.showEdit.show(); 
-        this.nodes.cancelEdit.hide(); 
         this.nodes.view.show();
         this.nodes.edit.hide();
     },

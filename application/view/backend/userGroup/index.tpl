@@ -17,10 +17,24 @@
 {includeJs file="backend/User.js"}
 {includeCss file="backend/User.css"}
 
+{includeJs file="backend/Shipment.js"}
+{includeCss file="backend/Shipment.css"}
+
+{includeJs file="backend/Payment.js"}
+{includeCss file="backend/Payment.css"}
+
 {includeCss file="backend/CustomerOrder.css"}
 {includeJs file="backend/CustomerOrder.js"}
 
+{includeJs file="backend/OrderNote.js"}
+{includeCss file="backend/OrderNote.css"}
+
+{includeCss file="backend/OrderLog.css"}
+
 {includeJs file="backend/Roles.js"}
+
+{includeJs file="library/ActiveList.js"}
+{includeCss file="library/ActiveGrid.css"}
 
 
 {pageTitle help="userGroups"}{t _livecart_users}{/pageTitle}
@@ -66,6 +80,8 @@
     Backend.UserGroup.prototype.Messages.defaultUserName = '{/literal}{t _default_user}{literal}';
     Backend.UserGroup.prototype.Messages.youCanntoDeleteThisGroup = '{/literal}{t _you_cannot_delete_this_group}{literal}';
     Backend.User.Group.prototype.Messages.savedMessage = '{/literal}{t _form_has_been_successfully_saved}{literal}';
+
+    Backend.CustomerOrder.Editor.prototype.Messages.orderNum = '{/literal}{t _order_number|escape}{literal}';
 
     Backend.User.Group.prototype.Links.save = '{/literal}{link controller=backend.userGroup action=save}{literal}';
     Backend.User.Group.prototype.Links.remove = '{/literal}{link controller=backend.userGroup action=delete}{literal}';

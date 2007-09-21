@@ -102,7 +102,7 @@ Backend.AjaxNavigationHandler.prototype =
     getHash: function()
     {
         var hash = document.location.hash;
-        return ("#" == hash[0]) ? ('__' == hash.substring(-2) ? hash.substring(1, hash.length - 2) : hash) : hash.substring(0, hash.length - 1);
+        return ("#" == hash[0]) ? hash.substring(1, hash.length - 2) : hash.substring(0, hash.length - 1);
     },
     
     handle: function(element, params)
@@ -128,8 +128,6 @@ Backend.AjaxNavigationHandler.prototype =
                     $(hashElements[hashPart]).onclick();    
                 }                
             }   
-
-            /*
             // This is in case element is not yet loaded. If so we wait for all requests to finish and the continue.
             else if(Ajax.activeRequestCount > 0)
             {
@@ -143,8 +141,6 @@ Backend.AjaxNavigationHandler.prototype =
 
                 return;
             } 
-            */
-
         }
     },
     
@@ -193,12 +189,6 @@ Backend.LayoutManager.prototype =
         window.onresize = this.onresize.bindAsEventListener(this);
         this.onresize();    
     },  
-    
-    redraw: function()
-    {
-		document.body.hide();
-		document.body.show();
-	},
     
     /**
      * Set the minimum possible height to all involved elements, so that 
@@ -308,11 +298,6 @@ Backend.Breadcrumb =
 		if(!Backend.Breadcrumb.treeBrowser && Backend.Breadcrumb.treeBrowser.getSelectedItemId) return;
         var parentId = id;
         
-        if (!Backend.Breadcrumb.treeBrowser)
-        {
-            return false;            
-        }
-        
         Backend.Breadcrumb.selectedItemId = Backend.Breadcrumb.treeBrowser.getSelectedItemId();
 		
         if (!Backend.Breadcrumb.pageTitle)
@@ -326,49 +311,94 @@ Backend.Breadcrumb =
         {     
             do
             {       
-                Backend.Breadcrumb.addCrumb(Backend.Breadcrumb.treeBrowser.getItemText(parentId), parentId);
+                Backend.Breadcrumb.addCrumb(Backend.Breadcrumb.treeBrowser.getItemText(parentId), parentId, true);
                 parentId = Backend.Breadcrumb.treeBrowser.getParentId(parentId);
             }
             while(parentId != 0);
         }
         else
         {
-            $A(id).reverse().each(function(node) {
+            $A(id).each(function(node) {
                 Backend.Breadcrumb.addCrumb(node.name, node.ID);
             });
         }
         
-        if(additional) {
-            new Insertion.Bottom(Backend.Breadcrumb.pageTitle, "<span class=\"breadcrumb\">" + Backend.Breadcrumb.template.innerHTML + "</span>");
-            $$("#pageTitle a").last().innerHTML = additional;
-        }
-        
-        $$("#pageTitle .breadcrumb_separator").last().hide();
-        Backend.Breadcrumb.convertLinkToText($$("#pageTitle a").last());
-    },
-    
-    addCrumb: function(nodeStr, parentId) {
-        new Insertion.Top(Backend.Breadcrumb.pageTitle, "<span class=\"breadcrumb\">" + Backend.Breadcrumb.template.innerHTML + "</span>");
-        
-        var link = Backend.Breadcrumb.pageTitle.down().down("a")
-        link.href = "#cat_" + parentId;
-        link.catId = parentId;
-        link.innerHTML = nodeStr;
-		
-
-        Event.observe(link, "click", function(e) {
-            Event.stop(e);
-            Backend.hideContainer();
-            
-	        if(Backend.Breadcrumb.treeBrowser.getIndexById(this.catId) == null)
-	        {
-	            Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + this.catId);  
-	        }
+        if(additional) 
+		{
+			if(typeof(additional) != "object")
+			{
+	            new Insertion.Bottom(Backend.Breadcrumb.pageTitle, "<span class=\"breadcrumb\">" + Backend.Breadcrumb.template.innerHTML + "</span>");
+	            $$("#pageTitle a").last().innerHTML = additional;
+			}
 			else
 			{
-			    Backend.Breadcrumb.treeBrowser.selectItem(this.catId, true);
+				$A(additional).each(function(crumb)
+				{
+                    if(typeof(crumb) == "string")
+                    {
+						Backend.Breadcrumb.addCrumb(crumb, false)
+                    }
+	                else
+                    {		
+					   Backend.Breadcrumb.addCrumb(crumb[0], crumb[1])
+					}
+				});
 			}
-        });
+        }
+        
+		var lastSeparator = $$("#pageTitle .breadcrumb").last().down('.breadcrumb_separator');
+		if(lastSeparator)
+		{
+            lastSeparator.hide();
+		}
+		
+		var lastLink = $$("#pageTitle .breadcrumb").last().down('a');
+		if(lastLink)
+		{
+            Backend.Breadcrumb.convertLinkToText(lastLink);
+		}
+    },
+    
+    addCrumb: function(nodeStr, parentId, reverse) {
+		var template = "<span class=\"breadcrumb\">" + Backend.Breadcrumb.template.innerHTML + "</span>";
+	    var link = null;
+		
+		if(reverse)
+		{
+            new Insertion.Top(Backend.Breadcrumb.pageTitle, template);
+			link = Backend.Breadcrumb.pageTitle.childElements().first().down('a');
+        }
+		else
+		{
+			new Insertion.Bottom(Backend.Breadcrumb.pageTitle, template);
+			link = Backend.Breadcrumb.pageTitle.childElements().last().down('a');
+		}
+		
+        
+        link.innerHTML = nodeStr;
+		
+		if(typeof(parentId) == "function")
+		{
+			Event.observe(link, "click", parentId);
+		}
+		else if(parentId !== false)
+		{
+            link.catId = parentId;
+            link.href = "#cat_" + parentId;
+            Event.observe(link, "click", function(e) {
+                Event.stop(e);
+                Backend.hideContainer();
+                
+                if(Backend.Breadcrumb.treeBrowser.getIndexById(this.catId) == null)
+                {
+                    Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + this.catId);  
+                }
+                else
+                {
+                    Backend.Breadcrumb.treeBrowser.selectItem(this.catId, true);
+                }
+            });
+		}
     },
     	
     setTree: function(treeBrowser) {

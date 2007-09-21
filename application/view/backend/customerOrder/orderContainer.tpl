@@ -41,7 +41,6 @@
             Event.stop(e); 
             var order = Backend.CustomerOrder.Editor.prototype.getInstance(Backend.CustomerOrder.Editor.prototype.getCurrentId(), false);   
             order.cancelForm();
-            Backend.Breadcrumb.display(Backend.CustomerOrder.prototype.activeGroup);
         });
     </script>
     {/literal}
