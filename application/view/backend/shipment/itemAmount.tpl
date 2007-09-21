@@ -7,7 +7,7 @@
         </td>
         <td class="orderShipmentsItem_info_name_td">
             <div class="orderShipmentsItem_info_name">
-                {$item.Product.name}
+                <a href="{backendProductUrl product=$item.Product}">{$item.Product.name_lang}</a>
             </div>
         </td>
         <td class="orderShipmentsItem_info_price_td">

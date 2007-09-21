@@ -102,7 +102,7 @@ Backend.AjaxNavigationHandler.prototype =
     getHash: function()
     {
         var hash = document.location.hash;
-        return ("#" == hash[0]) ? hash.substring(1, hash.length - 2) : hash.substring(0, hash.length - 1);
+        return ("#" == hash[0]) ? ('__' == hash.substring(-2) ? hash.substring(1, hash.length - 2) : hash) : hash.substring(0, hash.length - 1);
     },
     
     handle: function(element, params)
@@ -128,6 +128,8 @@ Backend.AjaxNavigationHandler.prototype =
                     $(hashElements[hashPart]).onclick();    
                 }                
             }   
+
+            /*
             // This is in case element is not yet loaded. If so we wait for all requests to finish and the continue.
             else if(Ajax.activeRequestCount > 0)
             {
@@ -137,10 +139,12 @@ Backend.AjaxNavigationHandler.prototype =
                     {
                         this.handle(element, { recoverFromIndex: hashPart });
                     }
-                }.bind(this), 200);
+                }.bind(this), 10);
 
                 return;
             } 
+            */
+
         }
     },
     
@@ -297,6 +301,11 @@ Backend.Breadcrumb =
     {
 		if(!Backend.Breadcrumb.treeBrowser && Backend.Breadcrumb.treeBrowser.getSelectedItemId) return;
         var parentId = id;
+        
+        if (!Backend.Breadcrumb.treeBrowser)
+        {
+            return false;            
+        }
         
         Backend.Breadcrumb.selectedItemId = Backend.Breadcrumb.treeBrowser.getSelectedItemId();
 		

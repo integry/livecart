@@ -712,6 +712,12 @@ Backend.Product.Editor.prototype =
     {       
         if($("productManagerContainer")) Element.hide($("productManagerContainer"));
         if($("managerContainer")) Element.show($("managerContainer"));
+        
+        if (!Backend.Category.treeBrowser.getSelectedItemId())
+        {
+            Backend.Category.treeBrowser.selectItem(1, false);
+            Backend.Category.activateCategory(1);
+        }        
     },
     
     removeTinyMce: function()

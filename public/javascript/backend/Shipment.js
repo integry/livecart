@@ -447,7 +447,8 @@ Backend.Shipment.prototype =
                    }
                    
                    li.down('.orderShipmentsItem_info_sku').innerHTML = response.item.Product.sku;
-                   li.down('.orderShipmentsItem_info_name').innerHTML = response.item.Product.name;
+                   li.down('.orderShipmentsItem_info_name').down('a').innerHTML = response.item.Product.name_lang;
+                   li.down('.orderShipmentsItem_info_name').down('a').href += response.item.Product.ID;
                    li.down('.orderShipmentsItem_count').value = response.item.count;
                    
                    var price = li.down('.orderShipmentsItem_info_price');

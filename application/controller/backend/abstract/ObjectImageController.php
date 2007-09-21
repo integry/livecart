@@ -162,11 +162,11 @@ abstract class ObjectImageController extends StoreManagementController
 	{
 	  	$ownerId = $this->request->get('ownerId');
 	  	
-		$order = $this->request->get('catImageList_' . $ownerId, $this->request->get('prodImageList_' . $ownerId));
+		$order = array_filter($this->request->get('catImageList_' . $ownerId, $this->request->get('prodImageList_' . $ownerId)), array($this, 'filterOrder'));
 			
 		foreach ($order as $key => $value)
 		{
-			$update = new ARUpdateFilter();
+            $update = new ARUpdateFilter();
 			$update->setCondition(new EqualsCond(new ARFieldHandle($this->getModelClass(), 'ID'), $value));
 			$update->addModifier('position', $key);
 			ActiveRecord::updateRecordSet($this->getModelClass(), $update);  	
@@ -184,6 +184,11 @@ abstract class ObjectImageController extends StoreManagementController
 	  	$resp->setContent($this->request->get('draggedId'));
 		return $resp;		  	
 	}				
+	
+    private function filterOrder($item)
+    {
+        return trim($item);
+    }
 	
 	/**
 	 * Builds an image upload form validator

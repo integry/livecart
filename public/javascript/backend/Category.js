@@ -400,11 +400,11 @@ Backend.Category = {
     
     loadBookmarkedProduct: function()
     {
-        if (window.location.hash.match(/product_(\d+)/))
+        var productID = window.location.hash.match(/product_(\d+)/);
+        if (productID && productID[1])
         {
-            Backend.Product.openProduct(6730);
-            console.log('product');
-            return;
+            Element.show($('loadingProduct'));
+            Backend.Product.openProduct(productID[1], null, function() { Element.hide($('loadingProduct')); });
         }        
     }
 }

@@ -8,6 +8,12 @@
     width: auto;
 }
 
+.tabOrderProductsContent .downloadableItems .activeList li
+{
+    padding-bottom: 4px;
+    padding-top: 8px;
+}
+
 .tabOrderProductsContent h2
 {
     margin-top: 1em;

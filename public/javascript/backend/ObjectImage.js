@@ -48,6 +48,9 @@ Backend.ObjectImage.prototype =
     arrangeImages: function()
     {
         var main = this.container.down('.main');
+        
+        main.parentNode.insertBefore(main, main.parentNode.firstChild);
+        
         var supplemental = this.container.down('.supplemental');
         var images = this.container.getElementsBySelector('.imageTemplate');
 

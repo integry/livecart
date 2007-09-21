@@ -48,22 +48,33 @@ Backend.UserGroup.prototype =
 
     	this.insertTreeBranch(groups, 0);
 
-        var id = -2
-        var match = null;
-        if(!(match = Backend.ajaxNav.getHash().match(/group_(-?\d+)#\w+/)))
+        var userID = window.location.hash.match(/user_(\d+)/);
+        if (userID && userID[1])
         {
-            window.location.hash = '#group_' + id + '#tabUsers__';
-        }
+            //Element.show($('loadingUser'));
+            Backend.UserGroup.prototype.openUser(userID[1], null, function() { Element.hide($('loadingUser')); });
+        }       
         else
         {
-            id = match[1];
-        }
+            var id = -2
+            var match = null;
+            if(!(match = Backend.ajaxNav.getHash().match(/group_(-?\d+)#\w+/)))
+            {
+                window.location.hash = '#group_' + id + '#tabUsers__';
+            }
+            else
+            {
+                id = match[1];
+            }            
+        } 
 
 	    self.tabControl = TabControl.prototype.getInstance('userGroupsManagerContainer', self.craftTabUrl, self.craftContainerId, {});
 
+        window.currentUserGroup = self;
+
         this.bindEvents();
 	},
-
+    
     bindEvents: function()
     {
         var self = this;
@@ -212,7 +223,8 @@ Backend.UserGroup.prototype =
     		Backend.UserGroup.prototype.treeBrowser.showFeedback(id);
 
             Backend.ajaxNav.add('group_' + id);
-
+console.log(this.tabControl);
+console.log(activateTab);
             this.tabControl.activateTab(activateTab, function() {
                 Backend.UserGroup.prototype.treeBrowser.hideFeedback(id);
             });
@@ -255,17 +267,19 @@ Backend.UserGroup.prototype =
 
     openUser: function(id, e)
     {
-        Event.stop(e);
-
-		if(!e.target)
-		{
-            e.target = e.srcElement
-		}
-
-        var userIndicator = e.target.up('td').down('.progressIndicator');
+        if (e)
+        {
+            Event.stop(e);
+    
+    		if(!e.target)
+    		{
+                e.target = e.srcElement
+    		}
+    
+            Element.show(e.target.up('td').down('.progressIndicator'));
+        }
+        
         Backend.User.Editor.prototype.setCurrentId(id);
-
-        Element.show(userIndicator);
 
     	var tabControl = TabControl.prototype.getInstance(
             'userManagerContainer',

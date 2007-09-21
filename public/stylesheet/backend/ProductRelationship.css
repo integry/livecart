@@ -53,3 +53,12 @@ li.productRelationshipGroup_item li {
     padding: 5px;
     width: auto;
 }
+
+a.openRelatedProduct
+{
+    background-image: url(../../image/silk/application_go.png);
+    background-repeat: no-repeat;
+    padding-left: 22px;
+    margin-left: 10px;
+    line-height: 2em;    
+}
