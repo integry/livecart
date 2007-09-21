@@ -150,7 +150,7 @@ class ShippingService extends MultilingualObject
         {
             $weight = $shipment->getChargeableWeight($this->deliveryZone->get());
             $cond = new EqualsOrLessCond(new ARFieldHandle('ShippingRate', 'weightRangeStart'), $weight);
-            $cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'weightRangeStart'), $weight));
+            $cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('ShippingRate', 'weightRangeEnd'), $weight));
         }    
         else
         {
