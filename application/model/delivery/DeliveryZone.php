@@ -104,7 +104,7 @@ class DeliveryZone extends MultilingualObject
     	// get zones by state
     	if ($address->state->get())
     	{
-            $f = new ARSelectFilter();
+            $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('DeliveryZone', 'isEnabled'), true));
 		    $f->setCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneState', 'stateID'), $address->state->get()->getID()));
 		    $s = ActiveRecordModel::getRecordSet('DeliveryZoneState', $f, ActiveRecordModel::LOAD_REFERENCES);
 		    		    
@@ -117,7 +117,7 @@ class DeliveryZone extends MultilingualObject
 		// get zones by country
 		if (!$zones)
 		{
-            $f = new ARSelectFilter();
+            $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('DeliveryZone', 'isEnabled'), true));
 		    $f->setCondition(new EqualsCond(new ARFieldHandle('DeliveryZoneCountry', 'countryCode'), $address->countryID->get()));
 		    $s = ActiveRecordModel::getRecordSet('DeliveryZoneCountry', $f, ActiveRecordModel::LOAD_REFERENCES);
 
@@ -256,7 +256,10 @@ class DeliveryZone extends MultilingualObject
     public function getShippingRates(Shipment $shipment)
     {
         $defined = $this->getDefinedShippingRates($shipment);
-        $defined->merge($this->getRealTimeRates($shipment));  
+        if (!$this->isRealTimeDisabled->get())
+        {
+            $defined->merge($this->getRealTimeRates($shipment));
+        }
         
         // apply taxes
         foreach ($defined as $rate)
