@@ -48,8 +48,9 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
         $handler->setSourceZip($config->get('STORE_ZIP'));
         
         $rates = new ShippingRateSet();
+
         foreach ($handler->getAllRates() as $k => $rate)        
-        {            
+        {   
             $newRate = new ShipmentDeliveryRate();
             $newRate->setApplication($shipment->getApplication());
             $newRate->setCost($rate->getCostAmount(), $rate->getCostCurrency()); 
@@ -100,8 +101,15 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
         $id = $this->getServiceID();
         if (is_numeric($id))
         {
-            $service = ShippingService::getInstanceById($id, ShippingService::LOAD_DATA);   
-            $array['ShippingService'] = $service->toArray();
+            try
+            {
+                $service = ShippingService::getInstanceById($id, ShippingService::LOAD_DATA);   
+                $array['ShippingService'] = $service->toArray();                
+            }
+            catch (ARNotFoundException $e)
+            {
+                return array();
+            }
         }
         else
         {

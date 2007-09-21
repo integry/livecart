@@ -108,7 +108,12 @@ class ProductController extends FrontendController
 		$rel = array();
 		foreach ($related as $r)
 		{
-			$p = $r['RelatedProduct'];
+			if (!isset($r['RelatedProduct']))
+			{
+                continue;
+            }
+
+            $p = $r['RelatedProduct'];			
 			
             // @todo: make ActiveRecord automatically recognize the correct parent object
             $p['DefaultImage'] = $r['DefaultImage'];

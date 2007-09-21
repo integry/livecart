@@ -122,8 +122,7 @@ class Shipment extends ActiveRecordModel
             if (!$item->product->get()->isFreeShipping->get() || !$zone->isFreeShipping->get())
             {
                 $weight += $item->product->get()->shippingWeight->get();
-            }
-            
+            }            
         }   
         
         return $weight;
@@ -420,7 +419,14 @@ class Shipment extends ActiveRecordModel
         if ($selected = $this->getSelectedRate())
         {
             $array['selectedRate'] = $selected->toArray();    
-            $array['ShippingService'] = $array['selectedRate']['ShippingService'];
+            if (!$array['selectedRate'])
+            {
+                unset($array['selectedRate']);
+            }
+            else
+            {
+                $array['ShippingService'] = $array['selectedRate']['ShippingService'];
+            }
         }
         
         // shipping rate for a saved shipment
@@ -456,7 +462,7 @@ class Shipment extends ActiveRecordModel
     
     public function getSelectedRate()
     {
-        if($serializedRate = $this->shippingServiceData->get())
+        if ($serializedRate = $this->shippingServiceData->get())
         {
             $rate = unserialize($serializedRate);
             $rate->setApplication($this->getApplication());

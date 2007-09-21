@@ -1,8 +1,8 @@
 <?php
 
-include_once('simpletest/unit_tester.php');
-include_once('unittest/UnitTest.php');
-include_once('simpletest/reporter.php');
+include_once(dirname(__file__) . '/../../payment/test/simpletest/unit_tester.php');
+include_once(dirname(__file__) . '/../../payment/test/unittest/UnitTest.php');
+include_once(dirname(__file__) . '/../../payment/test/simpletest/reporter.php');
 
 class ShippingTest extends UnitTest
 {
