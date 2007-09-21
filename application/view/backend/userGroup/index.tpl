@@ -17,9 +17,19 @@
 {includeJs file="backend/User.js"}
 {includeCss file="backend/User.css"}
 
+{includeJs file="backend/Shipment.js"}
+{includeCss file="backend/Shipment.css"}
+
+{includeJs file="backend/Payment.js"}
+{includeCss file="backend/Payment.css"}
+
 {includeCss file="backend/CustomerOrder.css"}
 {includeJs file="backend/CustomerOrder.js"}
 
+{includeJs file="backend/OrderNote.js"}
+{includeCss file="backend/OrderNote.css"}
+
+{includeCss file="backend/OrderLog.css"}
 
 {includeJs file="backend/Roles.js"}
 

@@ -61,7 +61,7 @@
     </span>
     
     <span class="activeGridItemsCount">
-		<span id="orderCount_{$orderGroupID}" >
+		<span class="orderCount" id="orderCount_{$orderGroupID}" >
 			<span class="rangeCount">Listing orders %from - %to of %count</span>
 			<span class="notFound">No orders found</span>
 		</span>    

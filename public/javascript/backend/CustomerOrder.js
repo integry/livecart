@@ -275,7 +275,7 @@ Backend.CustomerOrder.GridFormatter =
 	
 	formatValue: function(field, value, id)
 	{
-		if ('CustomerOrder.ID2' == field && Backend.CustomerOrder.prototype.usersMiscPermission)
+		if ('CustomerOrder.ID2' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
 		{
 		    var displayedID = id;
 		    

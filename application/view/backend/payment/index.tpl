@@ -54,9 +54,18 @@
     {include file="backend/payment/transactions.tpl" transactions=$transactions}
 </fieldset>
 
+{literal}
 <script type="text/javascript">
-    Backend.Payment.init($('paymentMenu_{$order.ID}'));
+try
+{
+    Backend.Payment.init($('{/literal}paymentMenu_{$order.ID}{literal}'));
+}
+catch(e)
+{
+    console.info(e);
+}
 </script>
+{/literal}
 
 <div class="clear"></div>
 
