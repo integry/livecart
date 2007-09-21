@@ -59,6 +59,11 @@ class DeliveryZone extends MultilingualObject
 		return parent::getInstanceByID(__CLASS__, $recordID, $loadRecordData, $loadReferencedRecords, $data);
 	}
 	
+	public function isDefault()
+	{
+        return 0 == $this->getID();
+    }
+	
 	/*####################  Instance retrieval ####################*/		
 	
 	/**
@@ -213,7 +218,6 @@ class DeliveryZone extends MultilingualObject
 	public function getDefinedShippingRates(Shipment $shipment)
     {
 		$rates = new ShippingRateSet();
-		
 		foreach ($this->getShippingServices() as $service)
 		{
             $rate = $service->getDeliveryRate($shipment);
@@ -253,6 +257,7 @@ class DeliveryZone extends MultilingualObject
     {
         $defined = $this->getDefinedShippingRates($shipment);
         $defined->merge($this->getRealTimeRates($shipment));  
+        
         // apply taxes
         foreach ($defined as $rate)
         {

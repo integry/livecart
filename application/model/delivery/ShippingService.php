@@ -98,7 +98,12 @@ class ShippingService extends MultilingualObject
 
 		$filter->setOrder(new ARFieldHandle(__CLASS__, "position"), 'ASC');
 		
-		if(!$deliveryZone)
+		if (!$deliveryZone)
+		{
+            $deliveryZone = DeliveryZone::getDefaultZoneInstance();
+        }
+        
+        if ($deliveryZone->isDefault())
 		{
 		    $filter->setCondition(new IsNullCond(new ARFieldHandle(__CLASS__, "deliveryZoneID")));
 		}
@@ -107,7 +112,17 @@ class ShippingService extends MultilingualObject
 		    $filter->setCondition(new EqualsCond(new ARFieldHandle(__CLASS__, "deliveryZoneID"), $deliveryZone->getID()));
 		}
 		
-		return self::getRecordSet($filter, $loadReferencedRecords);
+        $services = self::getRecordSet($filter, $loadReferencedRecords);
+		
+        if ($deliveryZone->isDefault())
+        {
+            foreach ($services as $service)
+            {
+                $service->deliveryZone->set($deliveryZone);
+            }
+        }
+		
+		return $services;		
 	}
 	
 	/*####################  Get related objects ####################*/ 	
