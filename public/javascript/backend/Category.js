@@ -371,10 +371,9 @@ Backend.Category = {
             Backend.Category.treeBrowser.setCategoryStyle(category);
         });
     },
-    
-    
+        
     loadBookmarkedCategory: function(categoryID) 
-    {
+    {       
         var match = window.location.hash.match(/cat_(\d+)/);
         if(match) 
         {
@@ -392,18 +391,21 @@ Backend.Category = {
             }
             catch(e) { }
 			
-			try
-			{
-	            if(!alreadyLoaded) 
-	            {
-	                Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + match[1]);
-	            }
-			}
-			catch(e) 
-			{
-				console.info(e);
-			}
+            if(!alreadyLoaded) 
+            {
+                Backend.Category.treeBrowser.loadXML(Backend.Category.links.categoryRecursiveAutoloading + "?id=" + match[1]);
+            }
         }
+    },
+    
+    loadBookmarkedProduct: function()
+    {
+        if (window.location.hash.match(/product_(\d+)/))
+        {
+            Backend.Product.openProduct(6730);
+            console.log('product');
+            return;
+        }        
     }
 }
 

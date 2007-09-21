@@ -244,12 +244,15 @@ Backend.Product =
 			var tabControl = TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId, {
                 afterClick: function()
                 {
-                    if(Backend.SelectPopup.prototype.popup) {
+                    if (Backend.SelectPopup.prototype.popup) 
+                    {
                         Backend.SelectPopup.prototype.popup.opener.focus();    
                         Backend.SelectPopup.prototype.popup.close();
                     }
                 }
             }); 
+            
+            console.log(tabControl);
             
             tabControl.activateTab(null, onComplete);
             

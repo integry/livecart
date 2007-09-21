@@ -1,4 +1,4 @@
-{form id="taxRate_`$taxRate.DeliveryZone.ID`_`$taxRate.ID`" handle=$form  action="controller=backend.TaxRate action=save id=`$taxRate.ID`" method="post" onsubmit="Backend.DeliveryZone.TaxRate.prototype.getInstance(this).save(); return false;"}
+{form id="taxRate_`$taxRate.DeliveryZone.ID`_`$taxRate.ID`" handle=$form  action="controller=backend.taxRate action=save id=`$taxRate.ID`" method="post" onsubmit="Backend.DeliveryZone.TaxRate.prototype.getInstance(this).save(); return false;"}
     <input type="hidden" name="deliveryZoneID" value="{$taxRate.DeliveryZone.ID}" class="taxRate_deliveryZoneID" />
     <input type="hidden" name="taxRateID" value="{$taxRate.ID}" class="taxRate_tarRateID" />
     

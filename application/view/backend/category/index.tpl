@@ -167,57 +167,51 @@
 </div>
 
 <script type="text/javascript">
-    try
-    {ldelim}
-        {allowed role="category.sort"}
-            Backend.Category.allowSorting = true;
-        {/allowed} 
-        
-        {allowed role="product"}
-            Backend.Product.productsMiscPermision = true;
-        {/allowed}
-        
-        Backend.showContainer('managerContainer');
+    {allowed role="category.sort"}
+        Backend.Category.allowSorting = true;
+    {/allowed} 
     
-    	/**
-    	 * URL assigment for internal javascript requests
-    	 */
-        Backend.Category.links = {literal}{}{/literal};
-    	Backend.Category.links.create  = '{link controller=backend.category action=create id=_id_}';
-    	Backend.Category.links.remove  = '{link controller=backend.category action=remove id=_id_}';
-    	Backend.Category.links.countTabsItems = '{link controller=backend.category action=countTabsItems id=_id_}';
-    	Backend.Category.links.reorder = '{link controller=backend.category action=reorder id=_id_}/?parentId=_pid_&direction=_direction_';
-    	Backend.Category.links.categoryAutoloading = '{link controller=backend.category action=xmlBranch}';
-    	Backend.Category.links.categoryRecursiveAutoloading = '{link controller=backend.category action=xmlRecursivePath}';
-    	Backend.Category.links.addProduct  = '{link controller=backend.product action=add id=_id_}';
-    	    
-        Backend.Category.messages = {literal}{}{/literal};
-        Backend.Category.messages._reorder_failed = '{t _reorder_failed|addslashes}';
-        Backend.Category.messages._confirm_category_remove = '{t _confirm_category_remove|addslashes}';
+    {allowed role="product"}
+        Backend.Product.productsMiscPermision = true;
+    {/allowed}
     
-    	Backend.Category.init(); 
-                
-    	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading); 
-        Backend.Category.addCategories({json array=$categoryList});
-        CategoryTabControl.prototype.loadCategoryTabsCount({json array=$allTabsCount});
-        
-    	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
-    	Backend.Category.initPage();
-        
-        Backend.Category.loadBookmarkedCategory();
-        
-        Backend.Category.showControls();
-        
-        
-    {rdelim}
-    catch(e)
-    {ldelim}
-        console.info(e);
-    {rdelim}
+    Backend.showContainer('managerContainer');
+
+	/**
+	 * URL assigment for internal javascript requests
+	 */
+    Backend.Category.links = {literal}{}{/literal};
+	Backend.Category.links.create  = '{link controller=backend.category action=create id=_id_}';
+	Backend.Category.links.remove  = '{link controller=backend.category action=remove id=_id_}';
+	Backend.Category.links.countTabsItems = '{link controller=backend.category action=countTabsItems id=_id_}';
+	Backend.Category.links.reorder = '{link controller=backend.category action=reorder id=_id_}/?parentId=_pid_&direction=_direction_';
+	Backend.Category.links.categoryAutoloading = '{link controller=backend.category action=xmlBranch}';
+	Backend.Category.links.categoryRecursiveAutoloading = '{link controller=backend.category action=xmlRecursivePath}';
+	Backend.Category.links.addProduct  = '{link controller=backend.product action=add id=_id_}';
+	    
+    Backend.Category.messages = {literal}{}{/literal};
+    Backend.Category.messages._reorder_failed = '{t _reorder_failed|addslashes}';
+    Backend.Category.messages._confirm_category_remove = '{t _confirm_category_remove|addslashes}';
+
+	Backend.Category.init(); 
+            
+	Backend.Category.treeBrowser.setXMLAutoLoading(Backend.Category.links.categoryAutoloading); 
+    Backend.Category.addCategories({json array=$categoryList});
+    CategoryTabControl.prototype.loadCategoryTabsCount({json array=$allTabsCount});
+    
+	Backend.Category.activeCategoryId = Backend.Category.treeBrowser.getSelectedItemId();
+	Backend.Category.initPage();
+    
+    Backend.Category.loadBookmarkedCategory();
+    
+    Backend.Category.showControls();
 </script>
 
 {include file="backend/product/tabs.tpl"}
 
+<script>
+    Backend.Category.loadBookmarkedProduct();
+</script>
 
 <div id="specFieldSection"></div>
 

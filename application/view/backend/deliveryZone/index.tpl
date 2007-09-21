@@ -91,10 +91,10 @@
     Backend.DeliveryZone.ShippingService.prototype.Links.create = '{/literal}{link controller=backend.shippingService action=create}{literal}';
     Backend.DeliveryZone.ShippingService.prototype.Links.validateRates = '{/literal}{link controller=backend.shippingService action=validateRates}{literal}';
     
-    Backend.DeliveryZone.TaxRate.prototype.Links.update = '{/literal}{link controller=backend.TaxRate action=update}{literal}';
-    Backend.DeliveryZone.TaxRate.prototype.Links.create = '{/literal}{link controller=backend.TaxRate action=create}{literal}';
-    Backend.DeliveryZone.TaxRate.prototype.Links.remove = '{/literal}{link controller=backend.TaxRate action=delete}{literal}';
-    Backend.DeliveryZone.TaxRate.prototype.Links.edit = '{/literal}{link controller=backend.TaxRate action=edit}{literal}';
+    Backend.DeliveryZone.TaxRate.prototype.Links.update = '{/literal}{link controller=backend.taxRate action=update}{literal}';
+    Backend.DeliveryZone.TaxRate.prototype.Links.create = '{/literal}{link controller=backend.taxRate action=create}{literal}';
+    Backend.DeliveryZone.TaxRate.prototype.Links.remove = '{/literal}{link controller=backend.taxRate action=delete}{literal}';
+    Backend.DeliveryZone.TaxRate.prototype.Links.edit = '{/literal}{link controller=backend.taxRate action=edit}{literal}';
     
     var zones = new Backend.DeliveryZone({/literal}{$zones}{literal});
 

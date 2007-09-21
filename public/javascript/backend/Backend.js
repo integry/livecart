@@ -137,7 +137,7 @@ Backend.AjaxNavigationHandler.prototype =
                     {
                         this.handle(element, { recoverFromIndex: hashPart });
                     }
-                }.bind(this), 10);
+                }.bind(this), 200);
 
                 return;
             } 
