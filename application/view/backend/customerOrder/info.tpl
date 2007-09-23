@@ -17,8 +17,8 @@
     <p>
         <label for="order_{$order.ID}_user">{t _user}</label>
         <label>
-            <a href="#" onclick="Backend.UserGroup.prototype.openUser({$order.User.ID}, event); return false;">
-                {$order.User.firstName} {$order.User.lastName}
+            <a href="{backendUserUrl user=$order.User}">
+                {$order.User.fullName}
             </a>
         </label>
     </p>
@@ -108,6 +108,8 @@
 
 
 <script type="text/javascript">
+    Backend.CustomerOrder.prototype.treeBrowser.selectItem({$type|default:0}, false);
+    
     Backend.CustomerOrder.Editor.prototype.existingUserAddresses = {json array=$existingUserAddresses}
     {literal}
     var status = Backend.CustomerOrder.Editor.prototype.getInstance({/literal}{$order.ID}, true, {json array=$hideShipped}, {$order.isCancelled}, {$order.isFinalized}{literal});
@@ -118,7 +120,6 @@
 
     {/literal}{if $formBillingAddress}{literal}
         var billingAddress = Backend.CustomerOrder.Address.prototype.getInstance($('{/literal}orderInfo_{$order.ID}_billingAddress_form{literal}'), 'billingAddress');
-    {/literal}{/if}{literal}
-
-    {/literal}
+    {/literal}{/if}
+    
 </script>

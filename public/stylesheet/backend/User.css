@@ -1,3 +1,19 @@
+#loadingUser
+{
+	position: absolute; 
+	text-align: center; 
+	width: 100%; 
+	padding-top: 200px; 
+	z-index: 50000;	
+}
+
+#loadingUserMsg
+{
+	padding: 40px; 
+	background-color: white; 
+	border: 1px solid black;
+}
+
 #userGroupsBrowserWithControlls
 {
     overflow: hidden;
@@ -30,6 +46,11 @@ li.addUser
 .cell_User_ID
 {
     display: none;
+}
+
+#userGroupsManagerContainer
+{
+	position: relative;
 }
 
 #userManagerContainer .activeList .errorText, #userGroupsManagerContainer .activeList .errorText 

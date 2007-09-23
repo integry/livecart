@@ -30,7 +30,7 @@
         <div class="transactionUser">
 
     		{if $transaction.User}
-                {t Processed by}: {$transaction.User.fullName}
+                {t Processed by}: <a href="{backendUserUrl user=$transaction.User}">{$transaction.User.fullName}</a>
             {/if}
     		
     		{if $transaction.comment}
@@ -117,7 +117,9 @@
 
         <fieldset class="transactionMethod">
         
-            <legend>{$transaction.methodName}</legend>
+            {if $transaction.methodName}
+				<legend>{$transaction.methodName}</legend>
+            {/if}
             
             {if $transaction.ccLastDigits}
                 <div class="ccDetails">

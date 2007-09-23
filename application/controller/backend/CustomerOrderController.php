@@ -160,7 +160,33 @@ class CustomerOrderController extends StoreManagementController
 	        }
 	    }
 
+		$response->set('type', $this->getOrderType($order));
+
 		return $response;
+	}
+
+	private function getOrderType(CustomerOrder $order)
+	{
+		if (!$order->isFinalized->get())
+		{
+			return self::TYPE_CARTS;
+		}
+		else if ($order->isCancelled->get())
+		{
+			return self::TYPE_CANCELLED;
+		}
+		else
+		{
+			switch ($order->status->get())
+			{
+				case CustomerOrder::STATUS_NEW: return self::TYPE_NEW;
+				case CustomerOrder::STATUS_PROCESSING: return self::TYPE_PROCESSING;
+				case CustomerOrder::STATUS_AWAITING: return self::TYPE_AWAITING;
+				case CustomerOrder::STATUS_SHIPPED: return self::TYPE_SHIPPED;
+				case CustomerOrder::STATUS_RETURNED: return self::TYPE_RETURNED;
+				default: return 0;												
+			}
+		}
 	}
 
 	public function selectCustomer()
@@ -174,10 +200,7 @@ class CustomerOrderController extends StoreManagementController
 		    $userGroups[] = array('ID' => $group['ID'], 'name' => $group['name'], 'rootID' => -2);
 		}
 
-		$response = new ActionResponse();
-		$response->set('userGroups', $userGroups);
-
-		return $response;
+		return new ActionResponse('userGroups', $userGroups);
 	}
 
 	public function orders()
@@ -197,6 +220,10 @@ class CustomerOrderController extends StoreManagementController
         $response->set("availableColumns", $availableColumns);
 		$response->set("offset", $this->request->get('offset'));
 		$response->set("filters", ((int)$this->request->get('userID') ? array('User.ID' => $this->request->get('userID')) : false));
+		if ($this->request->get('userID'))
+		{
+			$response->set('userID', $this->request->get('userID'));
+		}
 		$response->set("totalCount", '0');
 		return $response;
 	}
@@ -482,7 +509,8 @@ class CustomerOrderController extends StoreManagementController
 	            return;
 	    }		
 	
-	    if (self::TYPE_CANCELLED != $type)
+	    $filters = $this->request->get('filters');
+		if (!in_array($type, array(self::TYPE_CANCELLED, self::TYPE_ALL, self::TYPE_SHIPPED, self::TYPE_RETURNED)))
 	    {
             $cond->addAND(new EqualsCond(new ARFieldHandle('CustomerOrder', "isCancelled"), 0));
         }

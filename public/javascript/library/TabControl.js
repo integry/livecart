@@ -20,24 +20,17 @@ TabControl.prototype = {
 
 	initialize: function(tabContainerName, urlParserCallback, idParserCallback, callbacks)
 	{
-        try
-        {  
-            this.tabContainerName = tabContainerName;
-            this.urlParserCallback = urlParserCallback;
-            this.idParserCallback = idParserCallback;
-            this.callbacks = callbacks ? callbacks : {};
-            this.loadedContents = {};
-            
-            this.__nodes__();
-            this.__bind__();
+        this.tabContainerName = tabContainerName;
+        this.urlParserCallback = urlParserCallback;
+        this.idParserCallback = idParserCallback;
+        this.callbacks = callbacks ? callbacks : {};
+        this.loadedContents = {};
+        
+        this.__nodes__();
+        this.__bind__();
 
-            this.decorateTabs();
-            this.countersCache = {};
-        }
-        catch(e)
-        {
-            console.info(e)
-        }
+        this.decorateTabs();
+        this.countersCache = {};
 	},
     
     __nodes__: function()
@@ -220,7 +213,7 @@ TabControl.prototype = {
         
 		if (!this.loadedContents[this.urlParserCallback(targetTab.down('a').href) + contentId] && Element.empty($(contentId)))
 		{
-            this.loadedContents[this.urlParserCallback(targetTab.down('a').href) + contentId] = true;
+			this.loadedContents[this.urlParserCallback(targetTab.down('a').href) + contentId] = true;
             new LiveCart.AjaxUpdater(this.urlParserCallback(targetTab.down('a').href), contentId, targetTab.down('.tabIndicator'), 'bottom', function(activeContent, onComplete, response)
 			{ 
                 if (Form.focus)

@@ -260,7 +260,7 @@ class Product extends MultilingualObject
 					
 					foreach ($values as $value)
 					{
-					  	if ($request->isValueSet($value->getFormFieldName()))
+					  	if ($request->isValueSet($value->getFormFieldName()) || $request->isValueSet('checkbox_' . $value->getFormFieldName()))
 					  	{
 						  	if ($request->get($value->getFormFieldName()))
 						  	{

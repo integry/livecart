@@ -6,6 +6,11 @@
 /******************
     order list
 ******************/
+#orderGroupsManagerContainer
+{
+	position: relative;
+}
+
 #orderGroupsManagerContainer .cell_cb
 {
     width: 20px !important;

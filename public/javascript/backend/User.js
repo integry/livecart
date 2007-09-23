@@ -26,24 +26,32 @@ Backend.UserGroup.prototype =
 		Backend.UserGroup.prototype.treeBrowser.setOnClickHandler(this.activateGroup.bind(this));
 
 		Backend.UserGroup.prototype.treeBrowser.showFeedback =
-			function(itemId)
+			function(itemId) 
 			{
 				if (!this.iconUrls)
 				{
-					this.iconUrls = new Object();
+					this.iconUrls = new Object();	
 				}
-
-				this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
-				this.setItemImage(itemId, '../../../image/indicator.gif');
+				
+				if (!this.iconUrls[itemId])
+				{
+                    this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+                    var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
+                    img.originalSrc = img.src;
+    				img.src = 'image/indicator.gif';                    
+                }
 			}
 
 		Backend.UserGroup.prototype.treeBrowser.hideFeedback =
-			function()
+			function(itemId)
 			{
-				for (var itemId in this.iconUrls)
-				{
-					this.setItemImage(itemId, this.iconUrls[itemId]);
-				}
+                if (null != this.iconUrls[itemId])
+                {
+        			this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+                    var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
+                    img.src = img.originalSrc;
+                    this.iconUrls[itemId] = null;                            
+                }
 			}
 
     	this.insertTreeBranch(groups, 0);
@@ -51,7 +59,7 @@ Backend.UserGroup.prototype =
         var userID = window.location.hash.match(/user_(\d+)/);
         if (userID && userID[1])
         {
-            //Element.show($('loadingUser'));
+            Element.show($('loadingUser'));
             Backend.UserGroup.prototype.openUser(userID[1], null, function() { Element.hide($('loadingUser')); });
         }       
         else
@@ -66,6 +74,9 @@ Backend.UserGroup.prototype =
             {
                 id = match[1];
             }            
+            
+            // a hackish solution to hide tree feedback after the first/initial list has been loaded
+			Backend.UserGroup.prototype.activeGroup = -3;
         } 
 
 	    self.tabControl = TabControl.prototype.getInstance('userGroupsManagerContainer', self.craftTabUrl, self.craftContainerId, {});
@@ -176,7 +187,7 @@ Backend.UserGroup.prototype =
 
 	activateGroup: function(id, activateTab)
 	{
-        Backend.Breadcrumb.display(id);
+		Backend.Breadcrumb.display(id);
 
 		if($('newUserForm_' + Backend.UserGroup.prototype.activeGroup) && Element.visible('newUserForm_' + Backend.UserGroup.prototype.activeGroup))
 		{
@@ -217,16 +228,15 @@ Backend.UserGroup.prototype =
 			}
 		}
 
-        if(Backend.UserGroup.prototype.activeGroup && Backend.UserGroup.prototype.activeGroup != id)
+        if(/*Backend.UserGroup.prototype.activeGroup && */Backend.UserGroup.prototype.activeGroup != id)
         {
             Backend.UserGroup.prototype.activeGroup = id;
     		Backend.UserGroup.prototype.treeBrowser.showFeedback(id);
 
             Backend.ajaxNav.add('group_' + id);
-console.log(this.tabControl);
-console.log(activateTab);
+
             this.tabControl.activateTab(activateTab, function() {
-                Backend.UserGroup.prototype.treeBrowser.hideFeedback(id);
+				Backend.UserGroup.prototype.treeBrowser.hideFeedback(id);
             });
 
             Backend.showContainer("userGroupsManagerContainer");
@@ -265,7 +275,7 @@ console.log(activateTab);
 	},
 
 
-    openUser: function(id, e)
+    openUser: function(id, e, onComplete)
     {
         if (e)
         {
@@ -287,7 +297,14 @@ console.log(activateTab);
             Backend.User.Editor.prototype.craftContentId
         );
 
-        tabControl.activateTab();
+        tabControl.activateTab(null, 
+								   function(response)
+								   {
+										if (onComplete)
+										{
+											onComplete(response);
+										}
+								   });
 
         if(Backend.User.Editor.prototype.hasInstance(id))
     	{
@@ -470,8 +487,6 @@ Backend.User.Group.prototype =
 	}
 }
 
-
-
 Backend.User.Editor = Class.create();
 Backend.User.Editor.prototype =
 {
@@ -617,15 +632,19 @@ Backend.User.Editor.prototype =
 
     setPath: function() {
         Backend.Breadcrumb.display(
-            Backend.UserGroup.prototype.activeGroup,
+			Backend.UserGroup.prototype.treeBrowser.getSelectedItemId(),
             this.nodes.form.elements.namedItem('email').value
         );
     },
 
     cancelForm: function()
     {
-        ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		Form.restore(this.nodes.form, false, false);
+
+		Backend.User.Editor.prototype.setCurrentId(0);
+		Backend.UserGroup.prototype.activeGroup = -333;
+		window.currentUserGroup.activateGroup(window.currentUserGroup.treeBrowser.getSelectedItemId());
     },
 
     submitForm: function()

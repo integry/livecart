@@ -813,11 +813,6 @@ p.required label, fieldset.required label, label.required
   	font-weight: bold;
 }
 
-p.checkbox
-{
-    line-height: 1.5em;
-}
-
 p.radio, p.checkbox, fieldset.radio, fieldset.checkbox
 {
    padding-left: 170px;
@@ -848,11 +843,12 @@ select.country option, select.state option
    width: 15em;
 }
 
-label.checkbox, label.radio
+label.checkbox, label.radio, p.checkbox label
 {
   	margin-top: 3px;
   	width: auto;
     cursor: pointer;
+    width: auto;
 }
 
 optgroup option 

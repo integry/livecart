@@ -26,16 +26,6 @@
             Event.stop(e); 
             var user = Backend.User.Editor.prototype.getInstance(Backend.User.Editor.prototype.getCurrentId(), false);   
             user.cancelForm();
-            Backend.hideContainer();
-            
-            if (!Backend.UserGroup.prototype.treeBrowser.getSelectedItemId())
-            {
-                Backend.UserGroup.prototype.treeBrowser.selectItem(-2, true);
-                Backend.UserGroup.prototype.activeGroup = -333;
-                window.currentUserGroup.activateGroup(-2);
-            }
-            
-            Backend.Breadcrumb.display(Backend.UserGroup.prototype.activeGroup);
         });
     </script>
     {/literal}

@@ -9,7 +9,7 @@
         {/if}
         </span>
         
-        {$note.User.fullName}
+        <a href="{backendUserUrl user=$note.User}">{$note.User.fullName}</a>
     </div>
         
     <div class="noteDate">

@@ -1,5 +1,8 @@
 {* User groups container *}
 <div id="userGroupsManagerContainer" class="treeManagerContainer maxHeight">   
+	<div id="loadingUser" style="display: none;">
+	    <span id="loadingUserMsg">{t Loading user...}<span class="progressIndicator"></span></span>
+	</div>
 	<div class="tabContainer">
 		<ul class="tabList tabs">
 			<li id="tabUsers" class="tab inactive">

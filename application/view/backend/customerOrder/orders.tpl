@@ -62,8 +62,8 @@
     
     <span class="activeGridItemsCount">
 		<span class="orderCount" id="orderCount_{$orderGroupID}" >
-			<span class="rangeCount">Listing orders %from - %to of %count</span>
-			<span class="notFound">No orders found</span>
+			<span class="rangeCount">{t Listing orders %from - %to of %count}</span>
+			<span class="notFound">{t No orders found}</span>
 		</span>    
 	</span>
     
@@ -87,18 +87,18 @@
 
 {literal}
 <script type="text/javascript">
-    try
-    {    
-    	window.activeGrids['{/literal}orders_{$orderGroupID}{literal}'].setDataFormatter(Backend.CustomerOrder.GridFormatter);
-    	
-        var massHandler = new ActiveGrid.MassActionHandler($('{/literal}orderMass_{$orderGroupID}{literal}'), window.activeGrids['{/literal}orders_{$orderGroupID}{literal}']);
-        massHandler.deleteConfirmMessage = '{/literal}{t _are_you_sure_you_want_to_delete_this_order|addslashes}{literal}' ;
-        massHandler.nothingSelectedMessage = '{/literal}{t _nothing_selected|addslashes}{literal}' ;
-        ordersActiveGrid['{/literal}{$orderGroupID}{literal}'] = window.activeGrids['{/literal}orders_{$orderGroupID}{literal}'];
-    }
-    catch(e)
-    {
-        console.info(e);
-    }
+	window.activeGrids['{/literal}orders_{$orderGroupID}{literal}'].setDataFormatter(new Backend.CustomerOrder.GridFormatter());
+
+	if ({/literal}{json array=$userID}{literal} != null)
+	{
+		Backend.User.OrderGridFormatter.orderUrl = '{/literal}{backendOrderUrl}{literal}';
+		window.activeGrids['{/literal}orders_{$orderGroupID}{literal}'].setDataFormatter(Backend.User.OrderGridFormatter);
+	}
+	
+    var massHandler = new ActiveGrid.MassActionHandler($('{/literal}orderMass_{$orderGroupID}{literal}'), window.activeGrids['{/literal}orders_{$orderGroupID}{literal}']);
+    massHandler.deleteConfirmMessage = '{/literal}{t _are_you_sure_you_want_to_delete_this_order|addslashes}{literal}' ;
+    massHandler.nothingSelectedMessage = '{/literal}{t _nothing_selected|addslashes}{literal}' ;
+    ordersActiveGrid['{/literal}{$orderGroupID}{literal}'] = window.activeGrids['{/literal}orders_{$orderGroupID}{literal}'];
+
 </script>
 {/literal}

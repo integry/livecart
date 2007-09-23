@@ -71,7 +71,12 @@ class MultiValueSpecificationItem implements iSpecification
 	
 	public function removeValue(SpecFieldValue $value)
 	{
-	  	$this->removedItems[$value->getID()] = $this->items[$value->getID()];
+	  	if (!isset($this->items[$value->getID()]))
+	  	{
+			return;
+		}
+		  
+		$this->removedItems[$value->getID()] = $this->items[$value->getID()];
 	  	unset($this->items[$value->getID()]);
 	}
 	

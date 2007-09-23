@@ -1,4 +1,7 @@
 <div id="orderGroupsManagerContainer" class="treeManagerContainer maxHeight h--20">   
+	<div id="loadingOrder" style="display: none; position: absolute; text-align: center; width: 100%; padding-top: 200px; z-index: 50000;">
+	    <span style="padding: 40px; background-color: white; border: 1px solid black;">{t Loading order...}<span class="progressIndicator"></span></span>
+	</div>
 	<div class="tabContainer" id="orderGroupsTabContainer">
 		<ul class="tabList tabs">
 			<li id="tabOrders" class="tab inactive">

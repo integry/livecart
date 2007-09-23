@@ -86,23 +86,16 @@
         <a class="cancel" href="#">{t _cancel}</a>
     </fieldset>
     
-    
     <script type="text/javascript">
         {literal}
-        try
+        if({/literal}{$someUser.ID}{literal} > 0)
         {
-            if({/literal}{$someUser.ID}{literal} > 0)
-            {
-                Backend.User.Editor.prototype.getInstance({/literal}{$someUser.ID}{literal});
-            }
-            else
-            {
-//                Backend.User.Add.prototype.getInstance({/literal}{$someUser.UserGroup.ID}{literal});
-            }
+            Backend.UserGroup.prototype.treeBrowser.selectItem({/literal}{$someUser.UserGroup.ID|default:-1}{literal}, false);
+            Backend.User.Editor.prototype.getInstance({/literal}{$someUser.ID}{literal});
         }
-        catch(e)
+        else
         {
-            console.info(e);
+//                Backend.User.Add.prototype.getInstance({/literal}{$someUser.UserGroup.ID}{literal});
         }
         {/literal}
     </script>

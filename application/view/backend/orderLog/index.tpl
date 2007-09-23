@@ -47,7 +47,7 @@
                 </td>
                 <td class="logEntryAuthor">
                     <div class="logEntryDate">{$log.formatted_time.date_long} {$log.formatted_time.time_long}</div>
-                    <div class="logEntryUser">{$log.User.fullName} (ID: {$log.User.ID})</div>
+                    <div class="logEntryUser"><a href="{backendUserUrl user=$log.User}">{$log.User.fullName}</a></div>
                 </td>
             </tr>
             <tr>

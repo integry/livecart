@@ -194,6 +194,12 @@ Backend.LayoutManager.prototype =
         this.onresize();    
     },  
     
+    redraw: function()
+    {
+		document.body.hide();
+		document.body.show();
+	},
+    
     /**
      * Set the minimum possible height to all involved elements, so that 
      * their height could be enlarged to necessary size

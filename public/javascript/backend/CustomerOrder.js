@@ -28,23 +28,44 @@ Backend.CustomerOrder.prototype =
 					this.iconUrls = new Object();	
 				}
 				
-				this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
-				this.setItemImage(itemId, '../../../image/indicator.gif');
+				if (!this.iconUrls[itemId])
+				{
+                    this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+                    var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
+                    img.originalSrc = img.src;
+    				img.src = 'image/indicator.gif';                    
+                }
 			}
 		
 		Backend.CustomerOrder.prototype.treeBrowser.hideFeedback = 
-			function()
+			function(itemId)
 			{
-				for (var itemId in this.iconUrls)
-				{
-					this.setItemImage(itemId, this.iconUrls[itemId]);	
-				}				
+                if (null != this.iconUrls[itemId])
+                {
+        			this.iconUrls[itemId] = this.getItemImage(itemId, 0, 0);
+                    var img = this._globalIdStorageFind(itemId).htmlNode.down('img', 2);
+                    img.src = img.originalSrc;
+                    this.iconUrls[itemId] = null;                            
+                }
 			}
 		
     	this.insertTreeBranch(groups, 0); 
         
-        if(!Backend.ajaxNav.getHash().match(/group_\d+#\w+/)) window.location.hash = '#group_1#tabOrders__';
-	    this.tabControl = TabControl.prototype.getInstance('orderGroupsManagerContainer', this.craftTabUrl, this.craftContainerId, {}); 
+        var orderID = window.location.hash.match(/order_(\d+)/);
+        if (orderID && orderID[1])
+        {
+            Element.show($('loadingOrder'));
+            Backend.CustomerOrder.prototype.openOrder(orderID[1], null, function() { Element.hide($('loadingOrder')); });
+        }       
+        else
+        {
+			if(!Backend.ajaxNav.getHash().match(/group_\d+#\w+/)) 
+			{
+				window.location.hash = '#group_1#tabOrders__';
+			}
+		}
+	    
+		this.tabControl = TabControl.prototype.getInstance('orderGroupsManagerContainer', this.craftTabUrl, this.craftContainerId, {}); 
 
         Backend.CustomerOrder.prototype.instance = this;
 	},
@@ -123,7 +144,7 @@ Backend.CustomerOrder.prototype =
             $("tabOrderProducts").show();
         }
         
-        if(Backend.CustomerOrder.prototype.activeGroup && Backend.CustomerOrder.prototype.activeGroup != id)
+        if(/*Backend.CustomerOrder.prototype.activeGroup && */Backend.CustomerOrder.prototype.activeGroup != id)
         {           
             // Remove empty shippments
             var productsContainer = $("orderManagerContainer");
@@ -230,7 +251,8 @@ Backend.CustomerOrder.prototype =
             Backend.CustomerOrder.Editor.prototype.craftTabUrl, 
             Backend.CustomerOrder.Editor.prototype.craftContentId
         ); 
-        modifiedOnComplete = tabControl.activateTab(null, 
+        
+		modifiedOnComplete = tabControl.activateTab(null, 
                                                         function(response)
                                                         { 
                                                             if (onComplete)
@@ -248,7 +270,6 @@ Backend.CustomerOrder.prototype =
 	
     updateLog: function(orderID)
     {
-		// I had too :(
 		var url = $("tabOrderLog").down('a').href.replace(/_id_/, orderID);
 		var container = "tabOrderLog_" + orderID + "Content";
 		var identificator = url + container;
@@ -264,10 +285,16 @@ Backend.CustomerOrder.prototype =
 Backend.CustomerOrder.Links = {}; 
 Backend.CustomerOrder.Messages = {}; 
 
-Backend.CustomerOrder.GridFormatter = 
+Backend.CustomerOrder.GridFormatter = Class.create();
+Backend.CustomerOrder.GridFormatter.prototype = 
 {
     lastUserID: 0,
     
+	initialize: function()
+	{
+		
+	},
+
 	getClassName: function(field, value)
 	{
 		
@@ -292,17 +319,6 @@ Backend.CustomerOrder.GridFormatter =
                  displayedID + 
             '</a>'
 		}
-// Email lead to user's page
-//      else if ('User.email' == field && Backend.CustomerOrder.prototype.usersMiscPermission)
-//		{
-//		    value = 
-//          '<span>' + 
-//          '    <span class="progressIndicator UserIndicator" id="orderUserIndicator_' + id + '_' + Backend.CustomerOrder.GridFormatter.lastUserID + '" style="visibility: hidden;"></span>' + 
-//          '</span>' + 
-//          '<a href="#edit" id="user_' + Backend.CustomerOrder.GridFormatter.lastUserID + '" onclick="Backend.UserGroup.prototype.openUser(' + Backend.CustomerOrder.GridFormatter.lastUserID + ', event); } catch(e) { console.info(e) }  return false;">' + 
-//              value + 
-//          '</a>';	
-//		}
 		else if ('CustomerOrder.ID2' == field && Backend.CustomerOrder.prototype.ordersMiscPermission)
 		{
 		    value = id;
@@ -320,6 +336,33 @@ Backend.CustomerOrder.GridFormatter =
 		return value;
 	}
 }
+
+if (!Backend.User)
+{
+	Backend.User = {};
+}
+
+Backend.User.OrderGridFormatter = new Backend.CustomerOrder.GridFormatter();
+Backend.User.OrderGridFormatter.parentFormatValue = Backend.User.OrderGridFormatter.formatValue;
+Backend.User.OrderGridFormatter.formatValue = 
+	function(field, value, id)
+	{
+		if ('CustomerOrder.ID2' == field)
+		{
+		    var displayedID = id;
+		    
+		    while (displayedID.length < 4)
+		    {
+                displayedID = '0' + displayedID;
+            }
+            
+            return '<a href="' + this.orderUrl + id + '">' + displayedID + '</a>';
+		}
+		else
+		{
+			return this.parentFormatValue(field, value, id);
+		}
+	}
 
 
 Backend.CustomerOrder.Editor = Class.create();
@@ -572,7 +615,7 @@ Backend.CustomerOrder.Editor.prototype =
 	
 	setPath: function() {
         Backend.Breadcrumb.display(
-            Backend.CustomerOrder.prototype.activeGroup, 
+            Backend.CustomerOrder.prototype.treeBrowser.getSelectedItemId(), 
             Backend.CustomerOrder.Editor.prototype.Messages.orderNum + this.id
         );
     },
@@ -581,12 +624,12 @@ Backend.CustomerOrder.Editor.prototype =
     {      
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
         
-        if(!Backend.CustomerOrder.Editor.prototype.getInstance(Backend.CustomerOrder.Editor.prototype.getCurrentId()).removeEmptyShipmentsConfirmation()) 
-        {
-            Backend.CustomerOrder.prototype.treeBrowser.selectItem(Backend.CustomerOrder.prototype.activeGroup, false);
+		if(!Backend.CustomerOrder.Editor.prototype.getInstance(Backend.CustomerOrder.Editor.prototype.getCurrentId()).removeEmptyShipmentsConfirmation()) 
+        {       
+            Backend.CustomerOrder.prototype.treeBrowser.selectItem(Backend.CustomerOrder.prototype.activeGroup, true);
             return;
         }
-        
+                
         Backend.hideContainer();
 		Form.restore(this.nodes.form);
 		
@@ -595,6 +638,13 @@ Backend.CustomerOrder.Editor.prototype =
         {
             window.selectPopupWindow.close();
         }
+        
+        if (!Backend.CustomerOrder.prototype.activeGroup)
+        {
+			Backend.CustomerOrder.prototype.activeGroup = -1;
+			Backend.CustomerOrder.prototype.treeBrowser.selectItem(1, true);
+            Backend.CustomerOrder.prototype.instance.activateGroup(1);
+        }                 
     },
     
     submitForm: function()

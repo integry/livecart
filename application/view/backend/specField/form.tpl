@@ -98,6 +98,8 @@
     		<label class="specField_form_isDisplayedInList_label">{t _SpecField_displayed_in_product_list}</label>
 		</p>        
         
+        <div class="clear"></div>
+        
     	{language}
 
 	        <p>
