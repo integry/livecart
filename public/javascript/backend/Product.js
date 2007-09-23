@@ -254,7 +254,15 @@ Backend.Product =
             
             console.log(tabControl);
             
-            tabControl.activateTab(null, onComplete);
+            tabControl.activateTab(null, function(response)
+			{
+				if(onComplete)
+				{
+			        onComplete(response);
+				}
+				
+				Backend.ajaxNav.add("#product_" + id);
+			}.bind(this));
             
 	        if(Backend.Product.Editor.prototype.hasInstance(id)) 
 			{

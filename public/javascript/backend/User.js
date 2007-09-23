@@ -243,6 +243,7 @@ Backend.UserGroup.prototype =
         }
 
         Backend.UserGroup.prototype.activeGroup = id;
+       // Backend.ajaxNav.add('group_' + Backend.UserGroup.prototype.activeGroup + "#tabUsers");
 	},
 
 	displayCategory: function(response)
@@ -304,6 +305,8 @@ Backend.UserGroup.prototype =
 										{
 											onComplete(response);
 										}
+                                                    
+                                        Backend.ajaxNav.add("#user_" + id);
 								   });
 
         if(Backend.User.Editor.prototype.hasInstance(id))

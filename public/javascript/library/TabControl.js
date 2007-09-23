@@ -142,25 +142,28 @@ TabControl.prototype = {
     
     addHistory: function()
     {
-        var self = this;
         setTimeout(function()
         {
             var locationHash = "#" + Backend.ajaxNav.getHash();
-            try
+			var updateHistory = false;
+            this.nodes.tabListElements.each(function(tab)
             {
-                self.nodes.tabListElements.each(function(tab)
+                if(locationHash.indexOf("#" + tab.id) !== -1)
                 {
-                    if(locationHash.indexOf("#" + tab.id) !== -1)
-                    {
-                        locationHash = locationHash.substring(0, locationHash.indexOf(tab.id) - 1);
-                        throw new Error('stop');
-                    }
-                });
-            }
-            catch(e) { }
+                    console.info(locationHash);
+                    locationHash = locationHash.substring(0, locationHash.indexOf(tab.id) - 1);
+					updateHistory = true;
+                    throw $break;
+                }
+            });
             
-            Backend.ajaxNav.add(locationHash.substring(1) + "#" + self.activeTab.id);
-        }, dhtmlHistory.currentWaitTime);
+            if(locationHash.match(/__/))
+			{
+				locationHash = locationHash.substr(0, locationHash.length - 2);
+			}
+			
+            Backend.ajaxNav.add(locationHash.substring(1) + "#" + this.activeTab.id);
+        }.bind(this), dhtmlHistory.currentWaitTime * 2);
     },
 
 	activateTab: function(targetTab, onComplete)
