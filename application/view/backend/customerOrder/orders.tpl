@@ -4,27 +4,40 @@
 
 
     <ul class="menu" >
-        <li class="createNewOrder"><a href="#" id="createNewOrderLink_{$orderGroupID}"  {denied role='order.create' }style="display: none"{/denied}>{t _create_order}</a></li>
+        <li class="createNewOrder"><a href="#" id="createNewOrderLink_{$orderGroupID}"  {denied role='order.create' }style="display: none"{/denied}>{t _create_order}</a><span class="progressIndicator" style="display: none;"></span></li>
     </ul> 
     <br class="clear" />
     {literal}
     <script type="text/javascript">
-        Event.observe($("{/literal}createNewOrderLink_{$orderGroupID}{literal}"), "click", function(e) 
-        {
-            Event.stop(e);
-            
-            Backend.CustomerOrder.prototype.customerPopup = new Backend.SelectPopup(
-                Backend.CustomerOrder.Links.selectCustomer, 
-                Backend.CustomerOrder.Messages.selecCustomerTitle, 
-                {
-                    onObjectSelect: function() 
-                    { 
-                       this.popup.document.getElementById('userIndicator_' + this.objectID).show();
-                       Backend.CustomerOrder.prototype.instance.createNewOrder(this.objectID); 
-                    }
-                }
-            );
-        });
+		if ({/literal}{json array=$userID}{literal} != null)
+		{
+			Backend.CustomerOrder.Links.createOrder = '{/literal}{link controller=backend.customerOrder action=create}{literal}';
+			Event.observe($("{/literal}createNewOrderLink_{$orderGroupID}{literal}"), "click", function(e) 
+	        {
+	            Backend.CustomerOrder.prototype.createUserOrder('{/literal}{$userID}{literal}', $("{/literal}createNewOrderLink_{$orderGroupID}"), '{link controller=backend.customerOrder}');
+				{literal}
+				Event.stop(e);	            
+			});
+		}
+		else
+		{
+			Event.observe($("{/literal}createNewOrderLink_{$orderGroupID}{literal}"), "click", function(e) 
+	        {
+	            Event.stop(e);
+	            
+	            Backend.CustomerOrder.prototype.customerPopup = new Backend.SelectPopup(
+	                Backend.CustomerOrder.Links.selectCustomer, 
+	                Backend.CustomerOrder.Messages.selecCustomerTitle, 
+	                {
+	                    onObjectSelect: function() 
+	                    { 
+	                       this.popup.document.getElementById('userIndicator_' + this.objectID).show();
+	                       Backend.CustomerOrder.prototype.instance.createNewOrder(this.objectID); 
+	                    }
+	                }
+	            );
+	        });			
+		}
     </script>  
     {/literal}
                 
@@ -62,8 +75,8 @@
     
     <span class="activeGridItemsCount">
 		<span class="orderCount" id="orderCount_{$orderGroupID}" >
-			<span class="rangeCount">{t Listing orders %from - %to of %count}</span>
-			<span class="notFound">{t No orders found}</span>
+			<span class="rangeCount">{t _listing_orders}</span>
+			<span class="notFound">{t _no_orders}</span>
 		</span>    
 	</span>
     
@@ -94,11 +107,10 @@
 		Backend.User.OrderGridFormatter.orderUrl = '{/literal}{backendOrderUrl}{literal}';
 		window.activeGrids['{/literal}orders_{$orderGroupID}{literal}'].setDataFormatter(Backend.User.OrderGridFormatter);
 	}
-	
+
     var massHandler = new ActiveGrid.MassActionHandler($('{/literal}orderMass_{$orderGroupID}{literal}'), window.activeGrids['{/literal}orders_{$orderGroupID}{literal}']);
     massHandler.deleteConfirmMessage = '{/literal}{t _are_you_sure_you_want_to_delete_this_order|addslashes}{literal}' ;
     massHandler.nothingSelectedMessage = '{/literal}{t _nothing_selected|addslashes}{literal}' ;
     ordersActiveGrid['{/literal}{$orderGroupID}{literal}'] = window.activeGrids['{/literal}orders_{$orderGroupID}{literal}'];
-
 </script>
 {/literal}

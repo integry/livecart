@@ -150,7 +150,6 @@ TabControl.prototype = {
             {
                 if(locationHash.indexOf("#" + tab.id) !== -1)
                 {
-                    console.info(locationHash);
                     locationHash = locationHash.substring(0, locationHash.indexOf(tab.id) - 1);
 					updateHistory = true;
                     throw $break;

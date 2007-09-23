@@ -106,6 +106,30 @@ Backend.CustomerOrder.prototype =
         );
     },
     
+    createUserOrder: function(customerID, feedbackElement, orderUrl)
+    {
+        var feedbackElement = feedbackElement.up('li').down('.progressIndicator');
+        feedbackElement.show();
+        
+		new LiveCart.AjaxRequest(
+            Backend.CustomerOrder.Links.createOrder + "?customerID=" + customerID,
+            false,
+            function(response)
+            {
+                response = response.responseData;
+                
+                if('success' == response.status)
+                {
+                     window.location.href = orderUrl + '#order_' + response.order.ID;
+                }
+                else
+                {
+                     feedbackElement.hide();
+                }
+            } 
+        );		
+	},
+    
     craftTabUrl: function(url)
     {
         return url.replace(/_id_/, Backend.CustomerOrder.prototype.treeBrowser.getSelectedItemId());
@@ -135,8 +159,6 @@ Backend.CustomerOrder.prototype =
 	{
         Backend.Breadcrumb.display(id);
 		
-		var self = Backend.CustomerOrder.prototype.instance;
-        
         if(id == 8)
         {
             $("tabOrderProducts").hide();
@@ -170,7 +192,7 @@ Backend.CustomerOrder.prototype =
             
             Backend.ajaxNav.add('group_' + id);
             
-            self.tabControl.activateTab('tabOrders', function() { 
+			Backend.CustomerOrder.prototype.instance.tabControl.activateTab('tabOrders', function() { 
                 Backend.CustomerOrder.prototype.treeBrowser.hideFeedback(id);
             });
             
@@ -224,9 +246,9 @@ Backend.CustomerOrder.prototype =
 			}		
 			
 			var str = countElement.strTemplate;
-			str = str.replace(/%from/, from);
-			str = str.replace(/%to/, to);
-			str = str.replace(/%count/, totalCount);
+			str = str.replace(/\$from/, from);
+			str = str.replace(/\$to/, to);
+			str = str.replace(/\$count/, totalCount);
 									
 			countElement.innerHTML = str;
 			notFound.style.display = 'none';
@@ -429,17 +451,11 @@ Backend.CustomerOrder.Editor.prototype =
 
     getInstance: function(id, doInit, hideShipped, isCancelled, isFinalized)
     {
-		try
-		{
-			if(!Backend.CustomerOrder.Editor.prototype.Instances[id])
-	        {
-	            Backend.CustomerOrder.Editor.prototype.Instances[id] = new Backend.CustomerOrder.Editor(id, hideShipped, isCancelled, isFinalized);
-	        }
+		if(!Backend.CustomerOrder.Editor.prototype.Instances[id])
+        {
+            Backend.CustomerOrder.Editor.prototype.Instances[id] = new Backend.CustomerOrder.Editor(id, hideShipped, isCancelled, isFinalized);
         }
-		catch(e)
-		{
-			console.info(e);
-		}
+
         if (Backend.CustomerOrder.Editor.prototype.Instances[id].isCancelled)
         {
             $('orderManagerContainer').addClassName('cancelled');            

@@ -77,6 +77,9 @@ User.lastName=Last name
 User.companyName=Company name
 User.fullName=Full name
 
+_listing_orders=Listing orders $from - to $of $count
+_no_orders=No orders found
+
 # Mass actions
 _nothing_selected=Please select at least one order first
 _with_selected=With selected

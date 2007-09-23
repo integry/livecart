@@ -342,9 +342,9 @@ Backend.UserGroup.prototype =
 			}
 
 			var str = countElement.strTemplate;
-			str = str.replace(/%from/, from);
-			str = str.replace(/%to/, to);
-			str = str.replace(/%count/, totalCount);
+			str = str.replace(/\$from/, from);
+			str = str.replace(/\$to/, to);
+			str = str.replace(/\$count/, totalCount);
 
 			countElement.innerHTML = str;
 			notFound.style.display = 'none';

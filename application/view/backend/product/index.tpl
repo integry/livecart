@@ -87,7 +87,7 @@
     
     <span class="activeGridItemsCount">
 		<span id="productCount_{$categoryID}">
-			<span class="rangeCount">{t _listing_products_from} %from - %to {t _listing_products_count_of} %count</span>
+			<span class="rangeCount">{t _listing_products}</span>
 			<span class="notFound">{t _no_products_found}</span>
 		</span>    
 	</span>

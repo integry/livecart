@@ -69,7 +69,7 @@
     
     <span class="activeGridItemsCount">
 		<span id="userCount_{$userGroupID}">
-			<span class="rangeCount">Listing users %from - %to of %count</span>
+			<span class="rangeCount">Listing users $from - $to of $count</span>
 			<span class="notFound">No users found</span>
 		</span>    
 	</span>
