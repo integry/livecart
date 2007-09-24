@@ -1051,17 +1051,18 @@ ActiveList.prototype = {
             this._currentLi = this.dragged;
             var url = this.callbacks.beforeSort.call(this, this.dragged, order);
                 
-            this.destroySortable();
-
-            // Destroy parent sortable as well
-            var parentList = this.ul.up(".activeList");
-            if(parentList && ActiveList.prototype.activeListsUsers[parentList.id])
-            {
-                ActiveList.prototype.activeListsUsers[parentList.id].destroySortable(true);
-            }
 				
 			if(url)
 			{
+                this.destroySortable();
+			
+	            // Destroy parent sortable as well
+	            var parentList = this.ul.up(".activeList");
+	            if(parentList && ActiveList.prototype.activeListsUsers[parentList.id])
+	            {
+	                ActiveList.prototype.activeListsUsers[parentList.id].destroySortable(true);
+	            }
+			
 	            // display feedback
 	            this.onProgress(this.dragged);
 				
