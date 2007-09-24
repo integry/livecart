@@ -224,12 +224,18 @@ li.orderShipment
     padding: 0 ! important;
 }
 
-
-.orderShipmentsItem
+.downloadableShipment
 {
-   padding-top: 15px;
+    margin-top: 15px;
 }
 
+.downloadableShipment .shipmentContainer
+{
+    padding-top: 10px;    
+}
+
+.downloadableShipment .orderShipmentsItem_info_count_td,
+.downloadableShipment .orderShipmentsItem_info_price_td,
 .downloadableShipment .orderShipment_info_shipping_row,
 .downloadableShipment .orderShipment_info_total_row,
 .downloadableShipment .orderShipment_info_tax_row

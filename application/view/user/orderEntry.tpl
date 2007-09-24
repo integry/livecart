@@ -12,25 +12,7 @@
 
 <div class="orderStatus">
     {t Status}: 
-	{if $order.isCancelled}
-    	<span class="cancelled">{t Cancelled}</span>
-    {elseif !$order.isPaid}
-		<span class="awaitingPayment">{t Awaiting payment} 
-        <strong>{$order.formattedTotal[$order.Currency.ID]}</strong></span>.
-		{t Make payment for this order}.	    
-    {else}
-    	{if $order.isReturned}
-    	    <span class="returned">{t Returned}</span>
-    	{elseif $order.isShipped}
-    	    <span class="mailed">{t Shipped}</span>
-    	{elseif $order.isAwaitingShipment}
-    	    <span class="mailed">{t Awaiting Shipment}</span>
-    	{elseif $order.isBackordered}
-    	    <span class="mailed">{t The products you ordered are being backordered now and will be shipped to you as soon as they become available.}</span>
-    	{else}
-    	    <span class="processing">{t The order is being processed}</span>
-    	{/if}
-    {/if}
+    {include file="user/orderStatus.tpl" order=$order}
 </div>
 
 <div class="orderDetails">
@@ -39,7 +21,9 @@
    
        <ul>
            <li><a href="{link controller=user action=viewOrder id=$order.ID}" class="viewOrder">{t View Details}</a></li>
+           {if !$order.isCancelled}
            <li><a href="{link controller=user action=orderInvoice id=$order.ID}" class="invoice">{t _order_invoice}</a></li>
+           {/if}
        </ul>
        
        <div>

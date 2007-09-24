@@ -904,7 +904,8 @@ Backend.CustomerOrder.Address.prototype =
 		this.nodes.cancel = this.nodes.form.down('a.cancel');
 		this.nodes.submit = this.nodes.form.down('input.submit');
         
-		this.nodes.showEdit = this.nodes.form.down('.orderAddress_showEdit');
+		this.nodes.cancelEdit = this.nodes.form.down('.order_cancelEditAddress');
+        this.nodes.showEdit = this.nodes.form.down('.order_editAddress');
 		this.nodes.view = this.nodes.form.down('.orderAddress_view');
 		this.nodes.edit = this.nodes.form.down('.orderAddress_edit');
     },
@@ -914,18 +915,21 @@ Backend.CustomerOrder.Address.prototype =
 		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); this.cancelForm()}.bind(this));
         Event.observe(this.nodes.form.elements.namedItem('existingUserAddress'), 'change', function(e) { this.useExistingAddress()}.bind(this));
         Element.observe(this.nodes.showEdit, 'click', function(e) { Event.stop(e); this.showForm(); }.bind(this));
+        Element.observe(this.nodes.cancelEdit, 'click', function(e) { Event.stop(e); this.hideForm(); }.bind(this)); 
     },
     
     showForm: function()
     {
         this.nodes.showEdit.hide(); 
+        this.nodes.cancelEdit.show();
         this.nodes.view.hide();
         this.nodes.edit.show();
     },
     
     hideForm: function()
     {
-        this.nodes.showEdit.show(); 
+        this.nodes.showEdit.show();
+        this.nodes.cancelEdit.hide();
         this.nodes.view.show();
         this.nodes.edit.hide();
     },

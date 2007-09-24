@@ -75,6 +75,10 @@ class UserController extends FrontendController
 		$this->addBreadCrumb($this->translate('_your_orders'), '');
 
         $perPage = $this->config->get('USER_ORDERS_PER_PAGE');
+        if (!$perPage)
+        {
+            $perPage = 100000;
+        }
         $page = $this->request->get('id', 1);
         
 		$f = new ARSelectFilter();
@@ -161,7 +165,7 @@ class UserController extends FrontendController
      */
 	public function item()
     {				
-        $item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA, ActiveRecordModel::LOAD_REFERENCES)->toArray();
+        $item = ActiveRecordModel::getInstanceById('OrderedItem', $this->request->get('id'), ActiveRecordModel::LOAD_DATA, array('CustomerOrder', 'Product'))->toArray();
 
 		$this->addAccountBreadcrumb();		
 		$this->addFilesBreadcrumb();
@@ -381,6 +385,7 @@ class UserController extends FrontendController
         $f = new ARSelectFilter(new EqualsCond(new ARFieldHandle('CustomerOrder', 'ID'), $this->request->get('id')));
         $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'userID'), $this->user->getID()));
         $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+        $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isCancelled'), 0));
         
         $s = ActiveRecordModel::getRecordSet('CustomerOrder', $f);
         if ($s->size())

@@ -265,6 +265,7 @@ class Shipment extends ActiveRecordModel
         $this->taxAmount->set($taxes);
        
         // shipping rate
+//        var_dump($this->getSelectedRate());
         if ($rate = $this->getSelectedRate())
         {
             $this->shippingAmount->set($rate->getAmountByCurrency($currency));            
@@ -310,15 +311,16 @@ class Shipment extends ActiveRecordModel
         }
 
         // reset amounts...
-        $this->amount->set(0);
-        $this->shippingAmount->set(0);
-        $this->taxAmount->set(0);
+//        $this->amount->set(0);
+//        $this->shippingAmount->set(0);
+//        $this->taxAmount->set(0);
                 
         // ... and recalculated them
         $this->recalculateAmounts();
 
         // set shipping data
         $rate = $this->getSelectedRate();
+//        var_dump($rate);
         
         if ($rate)
         {        
@@ -404,7 +406,7 @@ class Shipment extends ActiveRecordModel
         $array['subTotal'] = $subTotal;
                
         // total amount
-        $array['totalAmount'] = $this->amount->get() + $this->shippingAmount->get();
+        $array['totalAmount'] = $this->amount->get() + $this->shippingAmount->get() + $this->taxAmount->get();
         $array['formatted_totalAmount'] = $this->order->get()->currency->get()->getFormattedPrice($array['totalAmount']);
         
         // formatted subtotal

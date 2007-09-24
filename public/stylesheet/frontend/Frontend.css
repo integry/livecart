@@ -1418,6 +1418,12 @@ p.messages
 {    
 }
 
+.cancelled
+{
+    color: red;
+    font-weight: bold;
+}
+
 /*************************** 
 	File downloads
 ***************************/
@@ -1518,7 +1524,7 @@ ul.notes li.responder_1 .noteText
 
 td.amount
 {
-    text-align: right;
+    text-align: center;
 }
 
 #invoicePaymentInfo td.amount
@@ -1825,6 +1831,11 @@ p.checkbox label {
 label.title
 {
     font-weight: bold;
+}
+
+label.text
+{
+    width: auto;
 }
 
 /* textarea container */

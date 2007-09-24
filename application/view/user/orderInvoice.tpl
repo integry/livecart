@@ -5,6 +5,32 @@
 {* include file="layout/frontend/leftSide.tpl" *}
 {* include file="layout/frontend/rightSide.tpl" *}
 
+{defun name="address"}
+{if $address}
+    <p>
+        {$address.fullName}                
+    </p>
+    <p>
+        {$address.companyName}                
+    </p>
+    <p>
+        {$address.address1}
+    </p>
+    <p>
+        {$address.address2}
+    </p>
+    <p>
+        {$address.city}
+    </p>
+    <p>
+        {if $address.stateName}{$address.stateName}, {/if}{$address.postalCode}
+    </p>
+    <p>
+        {$address.countryName}
+    </p>
+{/if}
+{/defun}  
+
 <div id="content" class="left right">
 
     <div id="invoice">
@@ -22,27 +48,7 @@
         
             <div style="width: 50%; float: left;">
                 <h2>{t Buyer}</h2>
-                <p>
-                    {$order.BillingAddress.fullName}                
-                </p>
-                <p>
-                    {$order.BillingAddress.companyName}                
-                </p>
-                <p>
-                    {$order.BillingAddress.address1}
-                </p>
-                <p>
-                    {$order.BillingAddress.address2}
-                </p>
-                <p>
-                    {$order.BillingAddress.city}
-                </p>
-                <p>
-                    {$order.BillingAddress.stateName}, {$order.BillingAddress.postalCode}
-                </p>
-                <p>
-                    {$order.BillingAddress.countryName}
-                </p>
+                {fun name="address" address=$order.BillingAddress}
             </div>
 
             <div style="width: 50%; float: left;">
@@ -58,10 +64,12 @@
     
     	{foreach from=$order.shipments item="shipment" name="shipments"}
     	   
+    	    {if $shipment.items}
+    	   
             {if !$shipment.isShippable}
                 <h2>{t _downloads}</h2>        
             {else}
-                <h2>{t Shipment} #{$smarty.foreach.shipments.iteration}</h2>        
+                <h2>{t Shipment} #{$smarty.foreach.shipments.iteration}</h2>
             {/if}
     	
             <table class="table shipment">
@@ -116,6 +124,8 @@
                 </tbody>
             
             </table>
+            
+            {/if}
     	
     	{/foreach}    
     	
@@ -155,8 +165,6 @@
                 <td class="amount">{$order.formatted_amountDue}</td>
             </tr>    	
     	</table>
-    	
-    	{*$order|@var_dump*}
     
     </div>    
 

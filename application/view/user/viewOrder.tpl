@@ -17,27 +17,38 @@
         <fieldset class="container">
     
         <label class="title">{t Order ID}:</label>
-        <label>{$order.ID}</label>
+        <label class="text">{$order.ID}</label>
         <div class="clear"></div>       
     
         <label class="title">{t Order placed}:</label>
-        <label>{$order.formatted_dateCompleted.date_long}</label>
+        <label class="text">{$order.formatted_dateCompleted.date_long}</label>
         <div class="clear"></div>   
     
         <label class="title">{t Order total}:</label>
-        <label>{$order.formattedTotal[$order.Currency.ID]}</label>
+        <label class="text">{$order.formattedTotal[$order.Currency.ID]}</label>
         <div class="clear"></div>   
     
+        <label class="title">{t Order status}:</label>
+        <label class="text">{include file="user/orderStatus.tpl" order=$order}</label>
+        <div class="clear"></div>   
+
+        {if !$order.isCancelled}
         <p>
             <a href="{link controller=user action=orderInvoice id=`$order.ID`}" target="_blank" class="invoice">{t _order_invoice}</a>
         </p>
+        {/if}
     
     	{foreach from=$order.shipments item="shipment" name="shipments"}
     	   
+            {if $shipment.items}
+            
             {if !$shipment.isShippable}
                 <h2>{t _downloads}</h2>        
             {elseif $smarty.foreach.shipments.total > 1}
                 <h2>{t Shipment} #{$smarty.foreach.shipments.iteration}</h2>        
+                <p>
+                    {t Status}: {include file="user/shipmentStatus.tpl" shipment=$shipment}
+                </p>
             {else}
                 <h2>{t _ordered_products}</h2>
             {/if}
@@ -78,6 +89,8 @@
                 </tbody>
             
             </table>
+            
+            {/if}
     	
     	{/foreach}
     	
@@ -109,19 +122,17 @@
     	
         <div id="overviewAddresses">
         
+            {if $order.ShippingAddress}
             <div style="width: 50%; float: left;">
                 <h3>{t Order is shipped to}:</h3>
                 {fun name="address" address=$order.ShippingAddress}
-                <a href="{link controller=checkout action=selectAddress}">Change</a>
             </div>    
+            {/if}
             
             <div style="width: 50%; float: left;">
                 <h3>{t Order is billed to}:</h3>
                 {fun name="address" address=$order.BillingAddress}
-                <a href="{link controller=checkout action=selectAddress}">Change</a>
             </div>    
-        
-            <div class="clear"></div>
         
         </div>    	
     	

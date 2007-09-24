@@ -64,7 +64,7 @@ CustomerOrder.totalAmount=Order total
 CustomerOrder.capturedAmount=Captured amount
 CustomerOrder.isFinalized=Finalized
 CustomerOrder.isPaid=Paid
-CustomerOrder.isCanceled=Canceled
+CustomerOrder.isCanceled=Cancelled
 CustomerOrder.dateCreated=Created
 CustomerOrder.dateCompleted=Completed
 ShippingAddress.countryID=Country
@@ -77,8 +77,9 @@ User.lastName=Last name
 User.companyName=Company name
 User.fullName=Full name
 
-_listing_orders=Listing orders $from - to $of $count
+_listing_orders=Listing orders $from - $to of $count
 _no_orders=No orders found
+_STATUS_AWAITING=Awaiting Shipment
 
 # Mass actions
 _nothing_selected=Please select at least one order first
