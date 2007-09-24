@@ -247,7 +247,8 @@ class OrderedItemController extends StoreManagementController
 		                                     ),
 		                'count'           => $item->count->get(),
 		                'price'           => $item->price->get(),
-		                'priceCurrencyID' => $item->priceCurrencyID->get()
+		                'priceCurrencyID' => $item->priceCurrencyID->get(),
+		                'downloadable' => $item->product->get()->isDownloadable()
 		            )
 	            ), 
 	            'success'
