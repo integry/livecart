@@ -19,7 +19,8 @@ abstract class BackendController extends BaseController
 
         parent::__construct($application);
         
-        if (!preg_match('/Firefox/', $_SERVER['HTTP_USER_AGENT']))
+        // Firefox 3 alpha codename
+        if (!preg_match('/Firefox|Minefield/', $_SERVER['HTTP_USER_AGENT']))
         {
             ClassLoader::import('application.controller.backend.UnsupportedBrowserException');
             throw new UnsupportedBrowserException();
