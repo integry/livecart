@@ -2,7 +2,7 @@
 
 ClassLoader::import("application.controller.backend.abstract.StoreManagementController");
 ClassLoader::import("application.model.order.*");
-ClassLoader::import("application.model.currency");
+ClassLoader::import("application.model.Currency");
 ClassLoader::import("framework.request.validator.Form");
 ClassLoader::import("framework.request.validator.RequestValidator");
 

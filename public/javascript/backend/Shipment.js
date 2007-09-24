@@ -814,28 +814,31 @@ Backend.Shipment.prototype =
         Backend.Shipment.prototype.toggleControls(orderID);
 		
 	    window.onbeforeunload = function() 
-	    { 
-	        var customerOrder = Backend.CustomerOrder.Editor.prototype.getInstance(orderID); 
+	    { 	        
 	        var shipmentsContainer = $('tabOrderProducts_' + orderID + 'Content'); 
 	        var ordersManagerContainer = $("orderManagerContainer"); 
 	        
-	        if(ordersManagerContainer.style.display != 'none' && shipmentsContainer && shipmentsContainer.style.display != 'none' && customerOrder.hasEmptyShipments()) 
+	        if(ordersManagerContainer.style.display != 'none' && shipmentsContainer && shipmentsContainer.style.display != 'none') 
 	        { 
-	            return Backend.Shipment.Messages.emptyShipmentsWillBeRemoved; 
+	            var customerOrder = Backend.CustomerOrder.Editor.prototype.getInstance(orderID); 
+	            if (customerOrder.hasEmptyShipments())
+	            {
+                    return Backend.Shipment.Messages.emptyShipmentsWillBeRemoved; 
+                }                
 	        } 
 	    }.bind(this);
 	               
         
         Event.observe(window, "unload", function() 
         { 
-			var orderID = Backend.CustomerOrder.Editor.prototype.getCurrentId();
-			
-            var customerOrder = Backend.CustomerOrder.Editor.prototype.getInstance(orderID); 
+			var orderID = Backend.CustomerOrder.Editor.prototype.getCurrentId();			
+            
             var shipmentsContainer = $('tabOrderProducts_' + orderID + 'Content'); 
             var ordersManagerContainer = $("orderManagerContainer"); 
             
             if(ordersManagerContainer.style.display != 'none' && shipmentsContainer && shipmentsContainer.style.display != 'none') 
             { 
+                var customerOrder = Backend.CustomerOrder.Editor.prototype.getInstance(orderID); 
                 customerOrder.removeEmptyShipmentsFromHTML(); 
             }
 		}); 

@@ -257,6 +257,10 @@ Backend.Category = {
 				{
                     Backend.Category.treeBrowser.selectItem(newCategory.ID, true);
                     this.tabControl.activateTab("tabMainDetails", newCategory.ID);
+                    
+                    Backend.Breadcrumb.display(newCategory.ID);  
+                    Backend.Category.showControls();
+                    
 					clearInterval(this.createNewCatInterval);
 			    }
 			}.bind(this)
@@ -266,6 +270,10 @@ Backend.Category = {
 		{
 			 this.treeBrowser.insertNewItem(parentCategoryId, newCategory.ID, newCategory.name, 0, 0, 0, 0, 'SELECT');
 		     this.tabControl.activateTab("tabMainDetails", newCategory.ID);
+
+            Backend.Breadcrumb.display(newCategory.ID);  
+            Backend.Category.showControls();
+
 		}
 		Backend.Category.treeBrowser.setCategoryStyle(newCategory);
             
