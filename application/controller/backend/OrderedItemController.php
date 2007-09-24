@@ -395,6 +395,7 @@ class OrderedItemController extends StoreManagementController
 				    'Order' => array('ID' => $item->customerOrder->get()->getID()),
 				    'isDeleted' => $item->isDeleted(),
 				    'amount' => $shipment->amount->get(),
+                    'downloadable' => !$shipment->isShippable(),
 				    'shippingAmount' => $shipment->shippingAmount->get(),
 				    'total' =>((float)$shipment->shippingAmount->get() + (float)$shipment->amount->get() + (float)$shipment->taxAmount->get()),
 	                'taxAmount' => $shipment->taxAmount->get(),

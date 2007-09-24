@@ -148,9 +148,19 @@ Backend.OrderedItem = {
                function(response) 
                { 
                     var response = eval("(" + response.responseText + ")");
-                    var shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_' + response.Shipment.Order.ID + '_' + response.Shipment.ID);
-                    var li = $('orderShipmentsItems_list_' + response.Shipment.Order.ID + '_' + response.Shipment.ID + '_' + response.ID);
+                    var shipment = null;
+
+	                if(response.Shipment.downloadable)
+	                {
+	                    var parent = $$("#tabOrderProducts_" + response.Shipment.Order.ID + "Content .downloadableShipment li").first();
+	                    shipment = Backend.Shipment.prototype.getInstance(parent);
+	                }
+	                else
+	                {
+	                    shipment = Backend.Shipment.prototype.getInstance('orderShipments_list_' + response.Shipment.Order.ID + '_' + response.Shipment.ID);
+	                }
 					
+                    var li = $('orderShipmentsItems_list_' + response.Shipment.Order.ID + '_' + response.Shipment.ID + '_' + response.ID);
 					if(!response.Shipment.isDeleted)
 					{
 	                    shipment.itemsActiveList.highlight(li);

@@ -165,6 +165,8 @@
         {/literal}{foreach item="shipment" from=$shipments}{literal} 
             {/literal}{if $shipment.isShippable}{literal}
                 var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{if $shipment.isShipped}_shipped{/if}_{$shipment.ID}{literal}', {isShipped: {/literal}{if $shipment.isShipped}true{else}false{/if}{literal}});             
+            {/literal}{else}{literal} 
+                var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_downloadable_{$orderID}_{$shipment.ID}{literal}');       
             {/literal}{/if}{literal} 
         {/literal}{/foreach}{literal} 
         
