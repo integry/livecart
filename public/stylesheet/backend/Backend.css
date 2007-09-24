@@ -1,4 +1,4 @@
-* 
+*
 {
   	margin: 0;
 	padding: 0;
@@ -20,12 +20,12 @@ body {
 	background-repeat: repeat-y;
 }
 
-table 
+table
 {
   	border-collapse: collapse;
 }
 
-a img 
+a img
 {
   	border: 0;
 }
@@ -40,8 +40,8 @@ h1
 	margin-bottom: 3px;
 }
 
-/*************************** 
-	Common classes 
+/***************************
+	Common classes
 ***************************/
 .disabled, .disabled * {
   	color: #AAAAAA;
@@ -65,7 +65,7 @@ div.tip {
 }
 
 div.tip img {
-	vertical-align: middle; 
+	vertical-align: middle;
 	cursor: pointer;
 }
 
@@ -83,7 +83,7 @@ div.tip div {
 
 div.noRecords
 {
-	margin-top: 10px;	
+	margin-top: 10px;
 }
 
 div.noRecords div {
@@ -105,8 +105,8 @@ div.yellowMessage, div.redMessage, div.bugMessage {
 }
 
 div.yellowMessage .closeMessage, div.redMessage .closeMessage, div.bugMessage .closeMessage {
-    position: absolute; 
-    right: 18px; 
+    position: absolute;
+    right: 18px;
     top: 18px;
     cursor: pointer;
 	cursor: hand;
@@ -142,8 +142,8 @@ div.yellowMessage .closeMessage
     display: none;
 }
 
-/*************************** 
-	Layout 
+/***************************
+	Layout
 ***************************/
 /* commented backslash hack v2 \*/
 html, body{
@@ -170,11 +170,11 @@ html, body{
 }
 
 .maxHeight {
-  	height: 95%; 
+  	height: 95%;
 }
 
-/*************************** 
-	Page header 
+/***************************
+	Page header
 ***************************/
 #pageHeader {
   	background-color: #30a0f9;
@@ -274,10 +274,10 @@ html, body{
 	vertical-align: bottom;
 }
 #footerLeft a {
-	color: #FFFFFF;  
+	color: #FFFFFF;
 }
 #footerStretch {
-    text-align: right; 
+    text-align: right;
 	padding-right: 15px;
   	background-image:url(../../image/backend/layout/footer_stretch.png);
 }
@@ -289,15 +289,15 @@ html, body{
 
 #frontendLink
 {
-    color: white; 
-    padding-right: 22px; 
-    background-image:url(../../image/silk/gif/house.gif); 
-    background-repeat: no-repeat;    
+    color: white;
+    padding-right: 22px;
+    background-image:url(../../image/silk/gif/house.gif);
+    background-repeat: no-repeat;
     background-position: center right;
 }
 
-/*************************** 
- 	Navigation menu 
+/***************************
+ 	Navigation menu
 ****************************/
 #navContainer {
   	padding-left: 110px;
@@ -357,19 +357,20 @@ html, body{
 
 #nav li div div {
   	padding: 0px;
- 	background-image: url(../../image/backend/menu/menu_item_right.gif); 
+ 	background-image: url(../../image/backend/menu/menu_item_right.gif);
   	background-repeat: no-repeat;
 	background-position: top right;
 }
 
 #nav li div div div {
- 	background-image: url(../../image/backend/menu/menu_item_middle.jpg); 
+ 	background-image: url(../../image/backend/menu/menu_item_middle.jpg);
 	background-repeat: repeat-x;
 	background-position: 0px 0px;
 	margin: 0px;
 	margin-right: 10px;
 	text-align: center;
 	padding: 5px;
+	height: 18px;
 }
 
 #nav #navSelected div {
@@ -393,7 +394,7 @@ html, body{
 }
 
 #nav li ul {
-  	margin-top: 5px;
+  	margin-top: 4px;
   	left: 10px;
   	border: 1px solid #999999;
   	background-image: url(../../image/backend/menu/menu_commands_bg.jpg);
@@ -445,25 +446,25 @@ html, body{
 #nav li ul li:hover a, .menuCommandHover a {
 }
 
-/*************************** 
+/***************************
 	Breadcrumb navigation
 ***************************/
 #breadcrumb {
-	position: absolute; 
-	left: 350px; 
+	position: absolute;
+	left: 350px;
 	top: 0px;
 	font-size: smaller;
 	font-size: smaller;
 	height: 20px;
 	padding-top: 5px;
-} 
+}
 
 #breadcrumbLast {
   	font-weight: bold;
 }
 
-/*************************** 
-	Language switch menu 
+/***************************
+	Language switch menu
 ***************************/
 #langMenuContainer {
   	position: absolute;
@@ -511,8 +512,8 @@ html, body{
   	font-weight: bold;
 }
 
-/*************************** 
-	Work area styling 
+/***************************
+	Work area styling
 ***************************/
 #rightWorkareaShadeTop {
 	background-color: #E6E6E6;
@@ -541,37 +542,37 @@ html, body{
 }
 
 #topShadeContainer {
-    position: absolute; 
-    width: 100%; 
-    height: 100%; 
+    position: absolute;
+    width: 100%;
+    height: 100%;
     background-color: white;
 }
 
 #topShadeContainerLeft {
-    float: left; 
-    width: 15px; 
-    height: 100%; 
+    float: left;
+    width: 15px;
+    height: 100%;
     background-color: #E6E6E6;
 }
 
 #topShadeContainerRight {
-    float: right; 
-    width: 20px; 
-    height: 100%; 
+    float: right;
+    width: 20px;
+    height: 100%;
     background-image:url(../../image/backend/layout/workarea_shade_vertical_wide.jpg);
-	background-position: -8px 0px; 
-    background-repeat: repeat-y;  
+	background-position: -8px 0px;
+    background-repeat: repeat-y;
     background-color: #E6E6E6;
 }
 
 #topShadeContainerRight div {
-    height:110px; 
-    width: 20px; 
+    height:110px;
+    width: 20px;
     background-color: #E6E6E6;
 }
 
-/*************************** 
-	Work area content 
+/***************************
+	Work area content
 ***************************/
 #pageTitleContainer {
 	height:20px;
@@ -598,8 +599,8 @@ html, body{
 	padding: 10px;
 }
 
-/*************************** 
-	Menus 
+/***************************
+	Menus
 ***************************/
 .menuLoadIndicator {
 	border: 1px solid black;
@@ -614,16 +615,16 @@ html, body{
 
 ul.menu {
     display: block;
-    
+
 	border-bottom: 1px solid #ddd;
 	margin-bottom: 5px;
 
 	padding: 10px;
-    padding-top: 4px;    
-	padding-bottom: 6px;    
+    padding-top: 4px;
+	padding-bottom: 6px;
 	padding-left: 0px;
-	
-	font-size: smaller;	
+
+	font-size: smaller;
 }
 
 ul.menu li {
@@ -637,7 +638,7 @@ ul.menu li {
 }
 
 .menu a {
-  	color: red;  	
+  	color: red;
 }
 
 ul.verticalMenu
@@ -645,7 +646,7 @@ ul.verticalMenu
 	padding: 15px;
 	padding-top: 15px;
 	padding-bottom: 5px;
-	list-style-type: none;	
+	list-style-type: none;
 }
 
 ul.verticalMenu li
@@ -654,7 +655,7 @@ ul.verticalMenu li
 	padding: 5px;
 	padding-left: 28px;
 	background-repeat: no-repeat;
-	background-position: 5px center;	
+	background-position: 5px center;
 	border: 1px solid #ccc;
 	background-color: #F9F9F9;
 }
@@ -672,7 +673,7 @@ ul.menu.popup
     margin-bottom: 3px;
 }
 
-/*************************** 
+/***************************
 	Handy classes
 ***************************/
 br.clear, div.clear
@@ -695,7 +696,7 @@ br.clear, div.clear
 	white-space: nowrap;
 }
 
-/*************************** 
+/***************************
 	Form styling
 ***************************/
 form
@@ -718,7 +719,7 @@ fieldset.error, div.error, fieldset.container
 {
 	padding: 0px;
 	margin: 0px;
-	position: static; 
+	position: static;
 	border: 0;
 	background-color: transparent;
 	/* @todo: let's see how this works for IE */
@@ -728,7 +729,7 @@ fieldset.error, div.error, fieldset.container
 .errorText /* , fieldset.error div */
 {
 	background-color: red;
-	float: left; 
+	float: left;
 	width: auto;
 	margin-bottom: 4px;
 	margin-top: 0px;
@@ -790,7 +791,7 @@ legend
 	padding-left: 10px;
 	padding-right: 10px;
 	background-color: #F0F9FF;
-	top: -22px; 
+	top: -22px;
 }
 
 label
@@ -851,14 +852,14 @@ label.checkbox, label.radio, p.checkbox label
     width: auto;
 }
 
-optgroup option 
+optgroup option
 {
    padding-left: 1em;
    color: black;
    background-color: #ffc;
 }
 
-optgroup  
+optgroup
 {
    font-style: normal;
    font-weight: bold;
@@ -909,7 +910,7 @@ input:focus, textarea:focus, select:focus
     background: #ffc;
 }
 
-input.submit:focus 
+input.submit:focus
 {
 	color: #008cff;
 }
@@ -947,9 +948,9 @@ a.cancel, a.menu
  	color: red;
 }
 
-.hidden 
+.hidden
 {
-	display: none;	
+	display: none;
 }
 
 .progressIndicator {
@@ -964,13 +965,13 @@ a.cancel, a.menu
 
 
 /* textarea container */
-div.textarea 
+div.textarea
 {
- 	margin-bottom: 7px; 
+ 	margin-bottom: 7px;
  	margin-left: 170px;
 }
 
-input.wide 
+input.wide
 {
   	width: 35em;
 }
@@ -987,7 +988,7 @@ input.money, input.number
 
 input.date
 {
-  	width: 6em;  
+  	width: 6em;
 }
 
 label.wide
@@ -1006,7 +1007,7 @@ select.narrow
 	margin-right: 1em;
 }
 
-/*************************** 
+/***************************
 	Form types
 ***************************/
 fieldset.addForm
@@ -1026,7 +1027,7 @@ fieldset.addForm legend
 	padding-left: 22px;
 }
 
-/*************************** 
+/***************************
 	List styling
 ***************************/
 .odd
@@ -1036,16 +1037,16 @@ fieldset.addForm legend
 
 .even
 {
-  	
+
 }
 
-/*************************** 
+/***************************
 	Autocomplete
 ***************************/
 div.autocomplete
 {
 	border: 1px solid #AAAAAA;
-	background-color: #ffc !important;  
+	background-color: #ffc !important;
 	color: black !important;
 	z-index: 1;
 	text-align: left;
@@ -1061,7 +1062,7 @@ div.autocomplete .selected
   	background-color: #ff9;
 }
 
-/*************************** 
+/***************************
 	Calendar
 ***************************/
 input.calendar
@@ -1072,8 +1073,8 @@ input.calendar
 img.calendar_button
 {
     margin-left: 0.5em;
-    cursor: pointer; 
-    border: 0px none;   
+    cursor: pointer;
+    border: 0px none;
     vertical-align: middle;
 }
 
@@ -1082,7 +1083,7 @@ img.calendar_button_hover
     background: red;
 }
 
-/*************************** 
+/***************************
 	Multicolumn groups
 ***************************/
 fieldset.group
@@ -1116,7 +1117,7 @@ fieldset.group p
     margin: 0.3em 0;
 }
 
-/*************************** 
+/***************************
 	Expanding sections
 ***************************/
 .expandingSection
@@ -1156,7 +1157,7 @@ fieldset.group p
     display: block;
 }
 
-/*************************** 
+/***************************
 	Tabs
 ***************************/
 .tabs
@@ -1168,7 +1169,7 @@ fieldset.group p
 
 .tabs li img
 {
-	vertical-align: middle;	
+	vertical-align: middle;
 }
 
 .tabs li
@@ -1221,26 +1222,26 @@ Translation tabs
     margin-top: 1em;
     margin-bottom: 0;
     border: 0px none;
-    background-color: transparent;			
+    background-color: transparent;
     padding: 0;
 }
 
 .languageFormCaption
 {
     height: 100%;
-    margin-right: 10px;		
+    margin-right: 10px;
     display: inline;
     padding: 0.5em 1em 0.5em 1em ! important;
     vertical-align: middle;
 }
 
-.languageTabsContainer	
+.languageTabsContainer
 {
    height: 1.5em;
 }
 
 ul.languageFormTabs
-{	
+{
     height: 100%;
     width: 300px;
     display: inline;
@@ -1256,11 +1257,11 @@ ul.languageFormTabs li
     background-color: #f5f5f5;
     margin-left: 2px;
     padding: 0.5em 1em 0.5em 1em ! important;
-}	
+}
 
 ul.languageFormTabs li:hover, ul.languageFormTabs li.active
 {
-    border-top: 2px solid red;		
+    border-top: 2px solid red;
     background-color: #fafafa;
 }
 
@@ -1269,12 +1270,12 @@ ul.languageFormTabs li.active
     background-color: #fff;
     font-weight: bold;
 	position: relative;
-	z-index: 50;    
+	z-index: 50;
 }
 
 .languageFormContent
 {
-    padding: 10px; 
+    padding: 10px;
     border: 1px solid #b3d4ef;
     background-color: #f5f5f5;
     position: relative;
@@ -1283,20 +1284,20 @@ ul.languageFormTabs li.active
 .languageFormContainer
 {
      display: none;
-}	
+}
 
 .languageFormContainer.active
 {
  	display: block;
-}	
+}
 
 
-/*************************** 
+/***************************
 	Tree browser
 ***************************/
 .treeBrowser
 {
-    border: 1px solid #ccc; 
+    border: 1px solid #ccc;
     background: #f1f1f1;
     padding-bottom: 5px;
   	height: 360px;
@@ -1309,7 +1310,7 @@ ul.languageFormTabs li.active
 
 .containerTableStyle
 {
-    height: 360px; 
+    height: 360px;
 /*    width: 250px; */
     overflow: auto;
     padding-top: 5px;
@@ -1320,8 +1321,8 @@ ul.languageFormTabs li.active
 }
 
 .treePath {
-    font-weight: normal; 
-    padding-bottom: 5px; 
+    font-weight: normal;
+    padding-bottom: 5px;
     padding-left: 275px;
 }
 
@@ -1341,7 +1342,7 @@ label.acronym
 
 label.acronym a
 {
-    border-bottom: 1px dotted black;    
+    border-bottom: 1px dotted black;
     cursor: help;
 /*    margin-right: 5px; /* IE */
     color: black !important;
@@ -1376,13 +1377,13 @@ label.acronym a:hover div
 /**************************
  * Debuging
  *************************/
-#log { 
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    z-index: 10000; 
+#log {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10000;
     background-color: white;
-} 
+}
 
 .activeForm_progress {
     padding-right: 20px;
@@ -1425,5 +1426,5 @@ a.external
   	background-image: url(../../image/silk/link_go.png) !important;
   	background-repeat: no-repeat;
 	background-position: right center;
-	padding-right: 22px;    
+	padding-right: 22px;
 }

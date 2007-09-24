@@ -89,13 +89,13 @@ _attributes=Attributes
 _filters=Filters
 _images=Images
 _articles=Articles
-_create_subcategory=Create a new sub-category
-_remove_category=Remove selected category
+_create_subcategory=Create new sub-category
+_remove_category=Remove
 _new_category=New Category
 _reorder_failed=Could not move category
 _confirm_category_remove=Are you sure you want to remove this category?
-_move_category_up=Move category up
-_move_category_down=Move category down
+_move_category_up=Move up
+_move_category_down=Move down
 _with_selected_category=With selected category
 
 #form

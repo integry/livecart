@@ -1,5 +1,5 @@
 {pageTitle help="language.edit"}
-	{translate text=_language_definitons} ({img src="image/localeflag/`$id`.png"} {$edit_language})
+	<a href="{link controller=backend.language}">{t _languages}</a> &gt; {translate text=_language_definitons} ({img src="image/localeflag/`$id`.png"} {$edit_language})
 {/pageTitle}
 
 {includeJs file="library/json.js"}
@@ -12,8 +12,8 @@
 
 {include file="layout/backend/header.tpl"}
 
-{literal} 	
-<script type="text/javascript"> 
+{literal}
+<script type="text/javascript">
 	var translations = {/literal}{$translations}{literal}
 	var english = {/literal}{$english}{literal}
 </script>
@@ -21,15 +21,15 @@
 
 <div style="display: none;">
 	<div id="fileTemplate">
-	
+
 	    <h1>_name_</h1>
-	
+
 	    <div>
-	        _edit_        
+	        _edit_
 	    </div>
-	
+
 	</div>
-	
+
 	<div id="transTemplate" class="lang-trans-template">
 		<div style="margin-bottom: 10px;">
 			<label class="lang-key">_key_</label>
@@ -38,7 +38,7 @@
 				<span>_english_</span>
 			</fieldset>
 		</div>
-	</div>	
+	</div>
 </div>
 
 {tip}
@@ -47,69 +47,69 @@
 {/tip}
 
 <div id="languagePageContainer">
-		
+
 	<div class="treeContainer">
 		<div id="langBrowser" class="treeBrowser"></div>
         <div id="confirmations"></div>
 	</div>
 
 	<div class="treeManagerContainer">
-		
+
 		<span id="langIndicator" class="progressIndicator" style="display: none;"></span>
-				
+
 		<div id="langContent">
 
             <fieldset>
             	<legend>{t _translation_filter}</legend>
             	<form id="navLang" onsubmit="return false;">
-            
+
             			<label>{t _show_words}:</label>
-            		
+
             			<input type="hidden" name="langFileSel" value='{$langFileSel|escape:"quotes"}' />
-            
+
             			<input type="radio" class="radio" name="show" value="all" id="show-all" />
             			<label class="radio" for="show-all">{t _all}</label>
-            						
+
             			<input type="radio" class="radio" name="show" value="notDefined" id="show-undefined" />
             			<label class="radio" for="show-undefined">{t _not_defined}</label>
-            			
+
             			<input type="radio" class="radio" name="show" value="defined" id="show-defined" />
             			<label class="radio" for="show-defined">{t _defined}</label>
-            
-            			<br />			
+
             			<br />
-            
+            			<br />
+
             			<label>{t _search_trans}:</label>
-            
+
             			<fieldset class="container">
-                            <input type="text" id="filter" />			
-                            
+                            <input type="text" id="filter" />
+
                             <input type="checkbox" class="checkbox" id="allFiles" />
                             <label for="allFiles">{t _all_files}</label>
-                            
+
                         </fieldset>
-            			
+
             			<div id="langNotFound" style="display: none;">{t _no_translations_found}</div>
             			<div id="foundMany" style="display: none;">{t _found_many}</div>
-                                    
-            	</form>	
+
+            	</form>
             </fieldset>
-            
+
             <br /><br />
-            
+
             <div id="translations"></div>
-            
-            
+
+
             <form id="editLang" method="post" action="{link controller=backend.language action=save id=$id}" onSubmit="langPassDisplaySettings(this); $('saveProgress').style.display = 'inline';">
-            
+
                 <fieldset class="controls" {denied role='language.update'}style="display: none"{/denied}>
                 	<input type="hidden" name="translations" />
             		<span class="progressIndicator" id="saveProgress" style="display: none;"></span>
-                    <input type="submit" class="submit" value="{t _save}"> 
-                    {t _or} 
+                    <input type="submit" class="submit" value="{t _save}">
+                    {t _or}
                     <a href="#" onClick="window.location.reload(); return false;" class="cancel">{t _cancel}</a>
                 </fieldset>
-            	
+
             </form>
 
 		</div>

@@ -3,13 +3,13 @@ Backend.Product =
 	productTabCopies: new Array(),
 
 	formTabCopies: new Array(),
-	
+
 	categoryPaths: {},
 
 	showAddForm: function(categoryID, caller)
 	{
         var container = $('addProductContainer');
-        		
+
 		// product form has already been downloaded
 		if (this.formTabCopies[categoryID])
 		{
@@ -25,7 +25,7 @@ Backend.Product =
 			new LiveCart.AjaxUpdater(url, container, caller.up('.menu').down('.progressIndicator'));
 		}
 	},
-	
+
 	hideAddForm: function()
 	{
         if ($('addProductContainer'))
@@ -44,11 +44,11 @@ Backend.Product =
 		try
         {
             container = $('addProductContainer');
-            
+
             if (!noHide)
             {
                 Element.hide(container);
-                Element.show($('categoryTabs'));                
+                Element.show($('categoryTabs'));
             }
 
             ActiveForm.prototype.destroyTinyMceFields(container);
@@ -68,19 +68,19 @@ Backend.Product =
 	initAddForm: function(categoryID)
 	{
         container = $('addProductContainer');
-        
+
         Element.hide($('categoryTabs'));
         Element.show(container);
-                
+
         tinyMCE.idCounter = 0;
         ActiveForm.prototype.initTinyMceFields(container);
         this.toggleSkuField(container.down('form').elements.namedItem('autosku'));
-		
+
 		this.initSpecFieldControls(0);
-		
+
         // init type selector logic
         var typeSel = container.down('select.productType');
-        typeSel.onchange = 
+        typeSel.onchange =
             function(e)
             {
                 var el = e ? Event.element(e) : this;
@@ -91,29 +91,29 @@ Backend.Product =
                 }
                 else
                 {
-                    cont.removeClassName('intangible');                    
+                    cont.removeClassName('intangible');
                 }
             }
-            
+
         this.reInitAddForm();
 	},
 
     reInitAddForm: function()
     {
         container = $('addProductContainer');
-        var typeSel = container.down('select.productType');        
+        var typeSel = container.down('select.productType');
         typeSel.onchange();
-            
+
         // focus Product Name field
-        container.down('form').elements.namedItem('name').focus();        
+        container.down('form').elements.namedItem('name').focus();
     },
 
     initSpecFieldControls: function(categoryID)
     {
         var container = (0 == categoryID) ? $('addProductContainer') : $('tabProductsContent_' + categoryID);
-            
+
 		// specField entry logic (multiple value select)
-        var containers = document.getElementsByClassName('multiValueSelect', container);            
+        var containers = document.getElementsByClassName('multiValueSelect', container);
 
         try
         {
@@ -137,7 +137,7 @@ Backend.Product =
 			{
 				new Backend.Product.specFieldEntrySingleSelect(selects[k]);
 			}
-		} 		        
+		}
     },
 
 	toggleSkuField: function(checkbox)
@@ -178,109 +178,107 @@ Backend.Product =
 		new LiveCart.AjaxRequest(form, null, saveHandler.saveComplete.bind(saveHandler));
 	},
 
-	updateHeader: function ( activeGrid, offset ) 
+	updateHeader: function ( activeGrid, offset )
 	{
 		var liveGrid = activeGrid.ricoGrid;
-		
+
 		var totalCount = liveGrid.metaData.getTotalRows();
 		var from = offset + 1;
 		var to = offset + liveGrid.metaData.getPageSize();
-		
+
 		if (to > totalCount)
 		{
-			to = totalCount;		
+			to = totalCount;
 		}
-		  
-		var categoryID = activeGrid.tableInstance.id.split('_')[1];		
+
+		var categoryID = activeGrid.tableInstance.id.split('_')[1];
 		var cont = $('productCount_' + categoryID);
 		var countElement = document.getElementsByClassName('rangeCount', cont)[0];
 		var notFound = document.getElementsByClassName('notFound', cont)[0];
-						
+
         if (!countElement)
         {
             return false;
         }
-                        		
+
 		if (totalCount > 0)
 		{
 			if (!countElement.strTemplate)
 			{
-				countElement.strTemplate = countElement.innerHTML;	
-			}		
-						
+				countElement.strTemplate = countElement.innerHTML;
+			}
+
 			var str = countElement.strTemplate;
 			str = str.replace(/\$from/, from);
 			str = str.replace(/\$to/, to);
 			str = str.replace(/\$count/, totalCount);
-									
+
 			countElement.innerHTML = str;
 			notFound.style.display = 'none';
-			countElement.style.display = '';					
+			countElement.style.display = '';
 		}
 		else
 		{
 			notFound.style.display = '';
-			countElement.style.display = 'none';					
+			countElement.style.display = 'none';
 		}
     },
-    
-    openProduct: function(id, e, onComplete) 
+
+    openProduct: function(id, e, onComplete)
     {
         if ($('productIndicator_' + id))
         {
             Element.show($('productIndicator_' + id));
         }
 
-		if (window.opener) 
+		if (window.opener)
 		{
 			var downloadable = parseInt(e.target.up('tr').down(".cell_hiddenType").innerHTML) == 1;
-		
-			window.opener.selectProductPopup.getSelectedObject(id, downloadable);	
+
+			window.opener.selectProductPopup.getSelectedObject(id, downloadable);
 		}
 		else
-		{   
-            Backend.Product.Editor.prototype.setCurrentProductId(id); 
-	           
+		{
+            Backend.Product.Editor.prototype.setCurrentProductId(id);
+
 			var tabControl = TabControl.prototype.getInstance('productManagerContainer', Backend.Product.Editor.prototype.craftProductUrl, Backend.Product.Editor.prototype.craftProductId, {
                 afterClick: function()
                 {
-                    if (Backend.SelectPopup.prototype.popup) 
+                    if (Backend.SelectPopup.prototype.popup)
                     {
-                        Backend.SelectPopup.prototype.popup.opener.focus();    
+                        Backend.SelectPopup.prototype.popup.opener.focus();
                         Backend.SelectPopup.prototype.popup.close();
                     }
                 }
-            }); 
-            
-            console.log(tabControl);
-            
+            });
+
             tabControl.activateTab(null, function(response)
 			{
 				if(onComplete)
 				{
 			        onComplete(response);
 				}
-				
+
 				Backend.ajaxNav.add("#product_" + id);
 			}.bind(this));
-            
-	        if(Backend.Product.Editor.prototype.hasInstance(id)) 
+
+	        if(Backend.Product.Editor.prototype.hasInstance(id))
 			{
-				Backend.Product.Editor.prototype.getInstance(id);			
-			}	
+				Backend.Product.Editor.prototype.getInstance(id);
+			}
 		}
-		
+
         if (e)
         {
-            Event.stop(e);           
+            Event.stop(e);
         }
      },
-     
+
     setPath: function(categoryID, path)
     {
         this.categoryPaths[categoryID] = path;
     },
-    
+
     resetEditors: function()
     {
         Backend.Product.productTabCopies = new Array();
@@ -289,8 +287,8 @@ Backend.Product =
         Backend.Product.Editor.prototype.__currentId__ = null;
 
         $('productManagerContainer').down('.sectionContainer').innerHTML = '';
-        
-        TabControl.prototype.__instances__ = {};        
+
+        TabControl.prototype.__instances__ = {};
     }
 }
 
@@ -315,45 +313,45 @@ Backend.Product.saveHandler.prototype =
 		else
 		{
 		    var categoryID = this.form.elements.namedItem('categoryID').value;
-            
+
             if (response.specFieldHtml)
 			{
                 var specFieldContainer = this.form.down('div.specFieldContainer');
                 if (specFieldContainer)
                 {
                     specFieldContainer.innerHTML = response.specFieldHtml;
-                    Backend.Product.initSpecFieldControls(categoryID); 
-                    response.specFieldHtml.evalScripts();                    
+                    Backend.Product.initSpecFieldControls(categoryID);
+                    response.specFieldHtml.evalScripts();
                 }
             }
-  		
+
             // reload product grids
-            var path = Backend.Product.categoryPaths[categoryID] 			
+            var path = Backend.Product.categoryPaths[categoryID]
             if (path)
             {
                 for (var k = 0; k <= path.length; k++)
                 {
                     var category = path[k] ? path[k].ID : 1;
                     var table = $('products_' + category);
-                    
+
                     if (!table && Backend.Product.productTabCopies[categoryID])
                     {
                         table = Backend.Product.productTabCopies[categoryID].getElementsByTagName('table')[0];
                     }
-                    
+
                     if (table)
                     {
                         table.gridInstance.reloadGrid();
                     }
-                }                
+                }
             }
 
 			// reset form and add more products
 			if ($('afAd_new').checked)
-			{				
+			{
 			    this.form.reset();
 			    $('afAd_new').checked = true;
-			    
+
                 document.getElementsByClassName('product_sku', this.form)[0].disabled = false;
 
 				Backend.Product.reInitAddForm();
@@ -363,12 +361,12 @@ Backend.Product.saveHandler.prototype =
 			else
 			{
                 Element.show($('loadingProduct'));
-                Backend.Product.openProduct(response.id, 
-                                            null, 
-                                            function() 
-                                            { 
+                Backend.Product.openProduct(response.id,
+                                            null,
+                                            function()
+                                            {
                                                 Element.hide($('loadingProduct'));
-                                                Backend.Product.cancelAddProduct(categoryID); 
+                                                Backend.Product.cancelAddProduct(categoryID);
                                                 this.form.reset();
                                             }.bind(this)
                                             );
@@ -504,12 +502,12 @@ Backend.Product.Editor.prototype =
         {
             this.id = id;
             this.path = path;
-    
+
             this.__nodes__();
             this.__bind__();
-            
+
             Form.State.backup(this.nodes.form);
-            
+
             var self = this;
         }
         catch(e)
@@ -534,7 +532,7 @@ Backend.Product.Editor.prototype =
     },
 
     __init__: function(args)
-    {	
+    {
         Backend.Product.Editor.prototype.setCurrentProductId(this.id);
 
         if ($('productIndicator_' + this.id))
@@ -551,16 +549,16 @@ Backend.Product.Editor.prototype =
 
         //this.setTabCounters();
 
-        this.initSpecFieldControls();            
+        this.initSpecFieldControls();
     },
-	
+
 	setPath: function() {
 		Backend.Breadcrumb.display(
-		    this.path, 
+		    this.path,
 		    this.nodes.form.elements.namedItem("name").value
 	    );
 	},
-    
+
     initSpecFieldControls: function()
     {
 		// specField entry logic (multiple value select)
@@ -587,9 +585,9 @@ Backend.Product.Editor.prototype =
 			{
 				new Backend.Product.specFieldEntrySingleSelect(selects[k]);
 			}
-		}        
+		}
     },
-    
+
     setTabCounters: function()
     {
         try
@@ -597,16 +595,16 @@ Backend.Product.Editor.prototype =
             if(!this.tabControl.restoreAllCounters(this.id))
             {
                 new LiveCart.AjaxRequest(
-                    Backend.Product.Editor.prototype.links.countTabsItems + "/" + this.id, 
+                    Backend.Product.Editor.prototype.links.countTabsItems + "/" + this.id,
                     false,
-                    function(reply) 
+                    function(reply)
                     {
                         var counters = eval("(" + reply.responseText + ")");
                         this.tabControl.setAllCounters(counters, this.id);
                     }.bind(this)
                 );
             }
-        } 
+        }
         catch(e)
         {
             console.info(e);
@@ -640,7 +638,7 @@ Backend.Product.Editor.prototype =
             Backend.Product.Editor.prototype.__instances__[id] = new Backend.Product.Editor(id, path);
         }
 
-        if(doInit !== false) 
+        if(doInit !== false)
         {
             Backend.Product.Editor.prototype.__instances__[id].__init__();
         }
@@ -659,24 +657,24 @@ Backend.Product.Editor.prototype =
     },
 
     cancelForm: function()
-    {      
+    {
         ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		Form.restore(this.nodes.form);
-        ActiveForm.prototype.resetTinyMceFields(this.nodes.form);        
+        ActiveForm.prototype.resetTinyMceFields(this.nodes.form);
     },
 
     submitForm: function()
     {
         new LiveCart.AjaxRequest(this.nodes.form, null, this.formSaved.bind(this));
     },
-    
-    formSaved: function(responseJSON) 
+
+    formSaved: function(responseJSON)
     {
 		ActiveForm.prototype.resetErrorMessages(this.nodes.form);
 		var responseObject = eval("(" + responseJSON.responseText + ")");
 		this.afterSubmitForm(responseObject);
     },
-	
+
 	afterSubmitForm: function(response)
 	{
 		if(!response.errors || 0 == response.errors.length)
@@ -689,10 +687,10 @@ Backend.Product.Editor.prototype =
                 {
                     specFieldContainer.innerHTML = response.specFieldHtml;
                     this.initSpecFieldControls();
-                    response.specFieldHtml.evalScripts();                    
+                    response.specFieldHtml.evalScripts();
                 }
             }
-            
+
             for (var k = 0; k <= this.path.length; k++)
             {
                 var category = this.path[k] ? this.path[k].ID : 1;
@@ -700,14 +698,22 @@ Backend.Product.Editor.prototype =
 
                 if (table)
                 {
-                    table.gridInstance.reloadGrid();   
+                    table.gridInstance.reloadGrid();
                 }
             }
+
+            this.resetPricingTab();
+
 		}
 		else
 		{
 			ActiveForm.prototype.setErrorMessages(this.nodes.form, response.errors)
 		}
+	},
+
+	resetPricingTab: function()
+	{
+		this.tabControl.resetContent($('tabProductDiscounts'));
 	},
 
     hideCategoriesContainer: function(args)
@@ -717,35 +723,35 @@ Backend.Product.Editor.prototype =
     },
 
     showCategoriesContainer: function(args)
-    {       
+    {
         if($("productManagerContainer")) Element.hide($("productManagerContainer"));
         if($("managerContainer")) Element.show($("managerContainer"));
-        
+
         if (!Backend.Category.treeBrowser.getSelectedItemId())
         {
             Backend.Category.treeBrowser.selectItem(1, false);
             Backend.Category.activateCategory(1);
-        }        
+        }
     },
-    
+
     removeTinyMce: function()
     {
         ActiveForm.prototype.destroyTinyMceFields(this.nodes.parent);
     },
-    
+
     addTinyMce: function()
-    {		
+    {
         ActiveForm.prototype.initTinyMceFields(this.nodes.parent);
     },
-    
+
     goToProductPage: function()
     {
         var node = $('productPage');
         if (!node.urlTemplate)
         {
-            node.urlTemplate = node.href;   
+            node.urlTemplate = node.href;
         }
-        
+
         node.href = node.urlTemplate.replace('_id_', Backend.Product.Editor.prototype.getCurrentProductId());
     }
 }
@@ -817,7 +823,7 @@ Backend.Product.Prices.prototype =
 
 		var responseObject = eval("(" + responseJSON.responseText + ")");
 
-		this.afterSubmitForm(responseObject);        
+		this.afterSubmitForm(responseObject);
     },
 
     afterSubmitForm: function(response)
@@ -838,25 +844,25 @@ Backend.Product.Prices.prototype =
     }
 }
 
-Backend.Product.GridFormatter = 
+Backend.Product.GridFormatter =
 {
 	getClassName: function(field, value)
 	{
-		
+
 	},
-	
+
 	formatValue: function(field, value, id)
 	{
 		if ('Product.name' == field && Backend.Product.productsMiscPermision)
 		{
-			value = '<span>' + 
-                        '<span class="progressIndicator" id="productIndicator_' + id + '" style="display: none;"></span>' + 
-                    '</span>' + 
-                    '<a href="#edit" id="product_' + id + '" onclick="Backend.Product.openProduct(' + id + ', event); return false;">' + 
-                        value + 
-                    '</a>';	
+			value = '<span>' +
+                        '<span class="progressIndicator" id="productIndicator_' + id + '" style="display: none;"></span>' +
+                    '</span>' +
+                    '<a href="#edit" id="product_' + id + '" onclick="Backend.Product.openProduct(' + id + ', event); return false;">' +
+                        value +
+                    '</a>';
 		}
-		
+
 		return value;
 	}
 }

@@ -1,4 +1,4 @@
-#settingsContent label.setting 
+#settingsContent label.setting
 {
 	display: block;
 	float: auto;
@@ -12,7 +12,7 @@
     width: auto;
 }
 
-p.checkbox 
+p.checkbox
 {
 	padding-left: 0px;
 }
@@ -31,7 +31,7 @@ div.multi
 
 #settingsBrowser, #settingsBrowser .containerTableStyle
 {
-    height: 500px;
+    height: 300px;
 }
 
 #settingsBrowser .containerTableStyle
