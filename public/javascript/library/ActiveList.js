@@ -822,7 +822,7 @@ ActiveList.prototype = {
 			setTimeout( 
             function() 
             { 
-                Element.remove(li) 
+                Element.remove(li);
                 this.callbacks[('after-'+action).camelize()].call(this, li, response.responseText);
             }.bind(this), duration * 1000 );
 		}

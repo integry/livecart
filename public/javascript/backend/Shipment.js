@@ -19,7 +19,8 @@ Backend.OrderedItem = {
             
             if(!response.error) {
                 var orderID = this.getRecordId(li, 3);
-                var shipment = Backend.Shipment.prototype.getInstance(li.up('li'));
+				var parent = $(li.id.replace(/orderShipmentsItems_list_([\w\W]+)_\d+/, "orderShipments_list_$1"));
+                var shipment = Backend.Shipment.prototype.getInstance(parent);
 				
                 shipment.setAmount(response.item.Shipment.amount);
                 shipment.setTaxAmount(response.item.Shipment.taxAmount);
@@ -29,8 +30,6 @@ Backend.OrderedItem = {
 				Backend.CustomerOrder.Editor.prototype.getInstance(orderID, false).toggleStatuses();
 				shipment.toggleStatuses();
                 Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID));
-				
-				return true;
             }
 			
 			return false;
