@@ -260,6 +260,21 @@ class DeliveryZone extends MultilingualObject
         {
             $defined->merge($this->getRealTimeRates($shipment));
         }
+     
+        // calculate surcharge
+        $surcharge = 0;
+        foreach ($shipment->getItems() as $item)
+        {           
+            $surcharge += $item->product->get()->shippingSurchargeAmount->get();
+        }
+        
+        $currency = self::getApplication()->getDefaultCurrency();
+        
+        // apply to rates
+        foreach ($defined as $rate)
+        {
+            $rate->setAmountByCurrency($currency, $rate->getAmountByCurrency($currency) + $surcharge);
+        }        
         
         // apply taxes
         foreach ($defined as $rate)

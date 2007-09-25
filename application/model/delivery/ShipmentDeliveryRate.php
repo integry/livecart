@@ -72,6 +72,12 @@ class ShipmentDeliveryRate extends ShippingRateResult implements Serializable
         return round($amount, 2);
     }
     
+    public function setAmountByCurrency(Currency $currency, $amount)
+    {
+        $amountCurrency = Currency::getInstanceById($this->getCostCurrency());
+        $this->setCost($amountCurrency->convertAmount($currency, $amount));
+    }
+
     public function setAmountWithTax($amount)
     {
         $this->amountWithTax = $amount;
