@@ -33,7 +33,15 @@
 	<script language="javascript" type="text/javascript">
 	if(window.opener)
 	{
-	   window.opener.selectPopupWindow = window;
+	   try
+	   {
+			window.opener.selectPopupWindow = window;	
+	   }
+	   catch (e)
+	   {
+			window.opener = null;
+			// Permission denied to set property Window.selectPopupWindow
+	   }	   
     }
     	
     try

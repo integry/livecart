@@ -203,12 +203,12 @@ abstract class MultilingualObject extends ActiveRecordModel implements Multiling
 		$expression = "
 			SUBSTRING(
 				SUBSTRING_INDEX(" . $field->toString() . ",'\"" . $language . "\";s:',-1), 
-				LOG10(
+				CEIL(LOG10(
 					SUBSTRING_INDEX(
 						SUBSTRING_INDEX(" . $field->toString() . ",'\"" . $language . "\";s:',-1), 
 						':',
 						1) + 1
-					) + 4,
+					)) + 3,
 				SUBSTRING_INDEX(
 					SUBSTRING_INDEX(" . $field->toString() . ",'\"" . $language . "\";s:',-1), 
 					':',
