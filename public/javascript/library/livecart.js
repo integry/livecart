@@ -157,7 +157,7 @@ LiveCart.AjaxRequest.prototype = {
 		document.body.style.cursor = 'default';
         if (this.onComplete)
         {
-		  	this.onComplete(response, url);
+            this.onComplete(response, url);
 		}
     },
     

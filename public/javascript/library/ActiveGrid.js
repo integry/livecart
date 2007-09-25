@@ -526,6 +526,7 @@ ActiveGrid.MassActionHandler.prototype =
             
         this.grid = activeGrid;
         this.params = params;
+        this.paramz = params;
     },
     
     actionSelectorChange: function()

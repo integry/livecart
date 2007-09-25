@@ -307,7 +307,6 @@ Backend.Product.saveHandler.prototype =
 
 		if (response.errors)
 		{
-		    console.log('err');
 			ActiveForm.prototype.setErrorMessages(this.form, response.errors);
 		}
 		else

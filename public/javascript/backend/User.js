@@ -394,18 +394,22 @@ Backend.UserGroup.GridFormatter =
 }
 
 
-Backend.UserGroup.massActionHandler = ActiveGrid.MassActionHandler;
-Backend.UserGroup.massActionHandler.prototype.submitCompleted =
-    function()
+Backend.UserGroup.massActionHandler = Class.create();
+Object.extend(Object.extend(Backend.UserGroup.massActionHandler.prototype, ActiveGrid.MassActionHandler.prototype),
     {
-        this.grid.reloadGrid();
-		if(window.activeGrids['users_-2'])
-		{
-		    window.activeGrids['users_-2'].reloadGrid();
-		}
-        this.blurButton();
+        submitCompleted:
+            function()
+            {
+                Backend.User.Editor.prototype.resetEditors();
+                this.grid.reloadGrid();
+        		if(window.activeGrids['users_-2'])
+        		{
+        		    window.activeGrids['users_-2'].reloadGrid();
+        		}
+                this.blurButton();
+            }        
     }
-
+);
 
 Backend.User.Group = Class.create();
 Backend.User.Group.prototype =
@@ -744,7 +748,17 @@ Backend.User.Editor.prototype =
                 }.bind(this));
             }.bind(this));
         }
-    }
+    },
+    
+    resetEditors: function()
+    {
+        Backend.User.Editor.prototype.Instances = {};
+        Backend.User.Editor.prototype.CurrentId = null;
+
+        $('userManagerContainer').down('.sectionContainer').innerHTML = '';
+
+        TabControl.prototype.__instances__ = {};
+    }        
 }
 
 
