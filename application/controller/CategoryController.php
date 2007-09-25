@@ -166,6 +166,13 @@ class CategoryController extends FrontendController
 			}
 		}
         
+        // search redirects
+        // no products found, but found one category name - redirect to this category
+        if (isset($foundCategories) && (1 == $foundCategories->size()) && !$products)
+        {
+            return new RedirectResponse(createCategoryUrl(array('data' => $foundCategories->get(0)->toArray()), $this->application));
+        }
+        
 		$response = new ActionResponse();
 		$response->set('id', $this->categoryID);
 		$response->set('url', $paginationUrl);
