@@ -162,12 +162,12 @@ class UserGroupController extends StoreManagementController
             $availableUserGroups[$group->getID()] = $group->name->get();
         }
           
-        $userArray = array('UserGroup' => array('ID' => $id), 'ID' => 0, 'isEnabled' => 1);
         $form = UserController::createUserForm($this, null);
         
-        $form->setData(array_merge($form->getData(), $userArray));
+        $form->setData(array_merge($form->getData(), array('UserGroup' => $id, 'ID' => 0, 'isEnabled' => 1)));
         
-	    $response->set('newUser', $userArray);
+        
+	    $response->set('newUser', array('UserGroup' => array('ID' => $id), 'ID' => 0, 'isEnabled' => 1));
 	    $response->set('availableUserGroups', $availableUserGroups);
 	    $response->set('form', $form);
         $response->set('countries', $this->application->getEnabledCountries());
