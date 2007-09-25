@@ -45,6 +45,8 @@ class OrderController extends FrontendController
 			}
 		}		 
 		
+		$this->order->mergeItems();
+		
         SessionOrder::save($this->order);
 		
         return new ActionRedirectResponse('order', 'index', array('query' => 'return=' . $this->request->get('return')));	      
@@ -85,7 +87,7 @@ class OrderController extends FrontendController
 	{
         $item = $this->order->getItemByID($this->request->get('id'));
         $item->isSavedForLater->set(false);
-        $this->order->mergeItems();        
+        $this->order->mergeItems();
         $this->order->resetShipments();
         SessionOrder::save($this->order);
 		

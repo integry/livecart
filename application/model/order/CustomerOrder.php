@@ -374,9 +374,9 @@ class CustomerOrder extends ActiveRecordModel
 		
 		foreach ($this->orderedItems as $item)
 		{
-			$byProduct[$item->product->get()->getID()][$item->isSavedForLater->get()][] = $item;
+			$byProduct[$item->product->get()->getID()][(int)$item->isSavedForLater->get()][] = $item;
 		}
-		
+				
 		foreach ($byProduct as $productID => $itemsByStatus)
 		{
 			foreach ($itemsByStatus as $status => $items)
@@ -393,10 +393,9 @@ class CustomerOrder extends ActiveRecordModel
 					}
 					
 					$mainItem->count->set($count);
-				}				
-			}	
-		}  
-
+				}
+			}
+		}
     }
     
 	/*####################  Saving ####################*/    
