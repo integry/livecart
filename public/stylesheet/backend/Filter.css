@@ -3,6 +3,11 @@
     background-image: url(../../image/silk/magnifier_zoom_in.png);    
 }
 
+.filter_filters
+{
+    padding-left: 170px !important;
+}
+
 .filterList li
 {
  	width: auto;
@@ -105,8 +110,3 @@
 {
     position: relative;
 }
-
-.filter_range .errorText, filter_date_range .errorText {
-    margin-left: 11em;
-}
-

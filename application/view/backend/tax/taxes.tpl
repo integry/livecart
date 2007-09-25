@@ -16,9 +16,7 @@
 {foreach from=$taxesForms key="key" item="taxForm"}
     <li id="tax_taxesList_{$taxes[$key].ID}">
         
-	<span class="error tax_viewMode">
-	    {$taxes[$key].name}
-	</span>
+	<span class="error tax_viewMode">{$taxes[$key].name}</span>
      
     </li>
 {/foreach}

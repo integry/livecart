@@ -1,6 +1,7 @@
 # Payment menu
 _add_offline_payment=Add offline payment
 _add_credit_card_payment=Add credit card payment
+_cancel_offline_payment=Cancel adding payment
 
 # Credit card payment
 _comment=Comment

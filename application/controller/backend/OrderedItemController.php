@@ -157,10 +157,11 @@ class OrderedItemController extends StoreManagementController
         $order->loadItems();
         
         $shipmentsArray = array();
-        foreach($order->getShipments() as $key => $shipment)
+        $shipments = $order->getShipments();
+        foreach($shipments as $key => $shipment)
         {
             // one shipment is reserved for downloadable items
-            if(!$shipment->isShippable() || (!$key && !count($shipment->getItems())))
+            if(!$shipment->isShippable() || ((!$key && !count($shipment->getItems())) && count($shipments) > 1))
             {
                 continue;
             }

@@ -98,6 +98,8 @@ Backend.Payment.AddOffline.prototype =
     {
         Backend.Payment.hideOfflinePaymentForm(this.event);    
         
+//        console.log(originalRequest);
+        
         var cont = this.form.up('div.tabPageContainer');
         
         // update totals
@@ -129,9 +131,7 @@ Backend.Payment.AddCreditCard.prototype =
         {
             return;
         }        
-     
-        this.window.close();
-        
+        // console.log(originalRequest);
         var cont = this.window.opener.document.getElementById('orderManagerContainer').down('div.tabPageContainer');     
         
         // update totals
@@ -140,6 +140,8 @@ Backend.Payment.AddCreditCard.prototype =
         var ul = cont.down('ul.transactions');
         ul.innerHTML += originalRequest.responseData.transaction;
         new Effect.Highlight(ul.lastChild, {startcolor:'#FBFF85', endcolor:'#EFF4F6'});
+
+        this.window.close();
     }
 }
 

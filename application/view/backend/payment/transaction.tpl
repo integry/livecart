@@ -87,7 +87,7 @@
                 
         		<p>
 					{t Amount to capture}:<Br />
-					{textfield name="amount" class="text number"} {$transaction.Currency.ID}
+					{textfield name="amount" class="text number" value=$transaction.amount} {$transaction.Currency.ID}
 				</p>
 
         		<p class="captureComment">
