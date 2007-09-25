@@ -44,6 +44,10 @@
             {foreach from=$orders item="order"}    
         	    {include file="user/orderEntry.tpl" order=$order}
             {/foreach}
+        {else}
+            <p>
+                {t You haven't placed any orders yet}
+            </p>
         {/if}
     
     </fieldset>
