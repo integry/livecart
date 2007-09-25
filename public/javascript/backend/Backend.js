@@ -896,10 +896,14 @@ Backend.SaveConfirmationMessage.prototype =
             Element.addClassName(this.element, options.type + 'Message')
         }
         
-        if(options && options.message) 
-        {
-            if(this.innerElement.firstChild) this.innerElement.firstChild.value = options.message;
-            else this.innerElement.appendChild(document.createTextNode(options.message));
+        try {
+            if(options && options.message) 
+            {
+                if(this.innerElement.firstChild) this.innerElement.firstChild.value = options.message;
+                else this.innerElement.appendChild(document.createTextNode(options.message));
+            }
+        } catch(e) { 
+            console.info(e);
         }
         
         var closeButton = this.element.down('.closeMessage');
@@ -1243,8 +1247,8 @@ Backend.SelectPopup = Class.create();
 Backend.SelectPopup.prototype = {
     height: 520,
     width:  1000,
-    location:  0,
-    toolbar:  0,
+    location:  1,
+    toolbar:  1,
     onObjectSelect: function() {},
     
     initialize: function(link, title, options)

@@ -136,6 +136,7 @@
     Backend.Shipment.Links.changeStatus = '{/literal}{link controller=backend.shipment action=changeStatus}{literal}'; 
     Backend.Shipment.Links.removeEmptyShipments = '{/literal}{link controller=backend.customerOrder action=removeEmptyShipments}{literal}';
     
+    
     Backend.Shipment.Statuses = {/literal}{json array=$statuses}{literal}; 
 
     Backend.Shipment.Messages = {}; 
@@ -149,27 +150,34 @@
     Backend.Shipment.Messages.youWontBeAbleToUndelete = '{/literal}{t _you_wont_be_able_to_undelete_this_shipment|addslashes}{literal}'; 
     Backend.Shipment.Messages.areYouSureYouWantToDeleteThisShipment = '{/literal}{t _are_you_sure_you_want_to_delete_this_shipment|addslashes}{literal}'; 
     Backend.Shipment.Messages.emptyShipmentsWillBeRemoved = '{/literal}{t _you_have_count_empty_shipments_do_you_want_to_proceed_to_the_next_page|addslashes}{literal}' 
+    Backend.Shipment.Messages.shipment = '{/literal}{t Shipment}{literal}';
 
     Backend.OrderedItem.Messages = {}; 
     Backend.OrderedItem.Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_item|addslashes}{literal}'; 
     Backend.OrderedItem.Messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}'; 
     Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount = '{/literal}{t _are_you_realy_want_to_update_items_count|addslashes}{literal}'; 
 
-    Backend.Shipment.prototype.initializePage("{/literal}{$orderID}{literal}", "{/literal}{$downloadableShipment.ID}{literal}")
-               
-    ActiveList.prototype.getInstance("{/literal}orderShipmentsItems_list_{$orderID}_{$downloadableShipment.ID}{literal}", Backend.OrderedItem.activeListCallbacks); 
-    var groupList = ActiveList.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{literal}', Backend.Shipment.Callbacks); 
-    
-    {/literal}{foreach item="shipment" from=$shipments}{literal} 
-        {/literal}{if $shipment.isShippable}{literal}
-            var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{if $shipment.isShipped}_shipped{/if}_{$shipment.ID}{literal}', {isShipped: {/literal}{if $shipment.isShipped}true{else}false{/if}{literal}});             
-        {/literal}{else}{literal} 
-            var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_downloadable_{$orderID}_{$shipment.ID}{literal}');       
-        {/literal}{/if}{literal} 
-    {/literal}{/foreach}{literal} 
-    
-    groupList.createSortable(true); 
-
+    try
+    {
+        Backend.Shipment.prototype.initializePage("{/literal}{$orderID}{literal}", "{/literal}{$downloadableShipment.ID}{literal}")
+                   
+        ActiveList.prototype.getInstance("{/literal}orderShipmentsItems_list_{$orderID}_{$downloadableShipment.ID}{literal}", Backend.OrderedItem.activeListCallbacks); 
+        var groupList = ActiveList.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{literal}', Backend.Shipment.Callbacks); 
+        
+        {/literal}{foreach item="shipment" from=$shipments}{literal} 
+            {/literal}{if $shipment.isShippable}{literal}
+                var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{if $shipment.isShipped}_shipped{/if}_{$shipment.ID}{literal}', {isShipped: {/literal}{if $shipment.isShipped}true{else}false{/if}{literal}});             
+            {/literal}{else}{literal} 
+                var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_downloadable_{$orderID}_{$shipment.ID}{literal}');       
+            {/literal}{/if}{literal} 
+        {/literal}{/foreach}{literal} 
+        
+        groupList.createSortable(true); 
+    }
+    catch(e)
+    {
+        console.info(e);
+    }
     </script> 
     {/literal}
     
