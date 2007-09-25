@@ -72,7 +72,8 @@ class SpecFieldController extends StoreManagementController
 		
 		$specFieldList['categoryID'] = $specFieldList['Category']['ID'];
 		unset($specFieldList['Category']);
-        
+		unset($specFieldList['SpecFieldGroup']['Category']);
+		
 		return new JSONResponse($specFieldList);
     }
     

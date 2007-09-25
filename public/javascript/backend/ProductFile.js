@@ -695,7 +695,8 @@ Backend.ProductFile.Group.Controller.prototype = {
                 this.view.nodes.title.update(this.view.nodes.name.value);
                 this.hideForm('yellow');
             }
-            Form.State.restore(this.view.nodes.root);
+			
+            Form.State.backup(this.view.nodes.root);
         }
         else
         {
@@ -722,7 +723,9 @@ Backend.ProductFile.Group.Controller.prototype = {
     
     hideForm: function(highlight)
     {
+		this.view.nodes.title.update(this.view.nodes.name.value); 
         this.view.hideForm(highlight);
+		
     }
     
 }
