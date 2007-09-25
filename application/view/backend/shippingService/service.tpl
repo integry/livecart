@@ -58,31 +58,23 @@
             
             <script type="text/jscript">
                 {literal}
-                try
+                Event.observe($("shippingService_new_rate_{/literal}{$service.DeliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}_show"), "click", function(e) 
                 {
-                    Event.observe($("shippingService_new_rate_{/literal}{$service.DeliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}_show"), "click", function(e) 
-                    {
-                        Event.stop(e);
-                        var newForm = Backend.DeliveryZone.ShippingRate.prototype.getInstance(
-                            $("shippingService_new_rate_{/literal}{$service.DeliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}_form"),
-                            {/literal}{json array=$newRate}{literal}
-                        );
-                        
-                        newForm.showNewForm();
-                    });  
-                    
+                    Event.stop(e);
                     var newForm = Backend.DeliveryZone.ShippingRate.prototype.getInstance(
                         $("shippingService_new_rate_{/literal}{$service.DeliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}_form"),
                         {/literal}{json array=$newRate}{literal}
                     );
+                    
+                    newForm.showNewForm();
+                });  
                 
-                    console.info(Backend.DeliveryZone.ShippingRate.prototype.Callbacks);
-                    ActiveList.prototype.getInstance("shippingService_ratesList_{/literal}{$service.DeliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}", Backend.DeliveryZone.ShippingRate.prototype.Callbacks, function() {});
-                }
-                catch(e)
-                {
-                    console.info(e);
-                }
+                var newForm = Backend.DeliveryZone.ShippingRate.prototype.getInstance(
+                    $("shippingService_new_rate_{/literal}{$service.DeliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}_form"),
+                    {/literal}{json array=$newRate}{literal}
+                );
+            
+                ActiveList.prototype.getInstance("shippingService_ratesList_{/literal}{$service.DeliveryZone.ID}{literal}_{/literal}{$service.ID}{literal}", Backend.DeliveryZone.ShippingRate.prototype.Callbacks, function() {});
                 
                 {/literal}
                 

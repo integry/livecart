@@ -36,15 +36,8 @@
 
 <script type="text/javascript">
     Backend.internalErrorMessage = '{t _internal_error_have_accurred}';
-    
-    try
-    {ldelim}
-    	new Backend.LayoutManager();
-    {rdelim}
-    catch(e)
-    {ldelim}
-        console.info(e);
-    {rdelim}
+
+    new Backend.LayoutManager();
 </script>
 
 {liveCustomization action="menu"}

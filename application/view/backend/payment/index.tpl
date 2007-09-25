@@ -56,14 +56,7 @@
 
 {literal}
 <script type="text/javascript">
-try
-{
     Backend.Payment.init($('{/literal}paymentMenu_{$order.ID}{literal}'));
-}
-catch(e)
-{
-    console.info(e);
-}
 </script>
 {/literal}
 

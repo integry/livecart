@@ -101,8 +101,6 @@
 
 {literal}
 <script type="text/javascript">
-try
-{
     var handler = new Backend.ObjectImage($("{/literal}prodImageList_{$ownerId}{literal}"), 'prod');    
 	handler.initList({/literal}{$images}{literal});
 	
@@ -120,10 +118,5 @@ try
         _activeList_edit:    '{/literal}{t _activeList_edit|addslashes}{literal}',
         _activeList_delete:  '{/literal}{t _activeList_delete|addslashes}{literal}'
     }
-}
-catch(e)
-{
-    console.info(e)
-}
 </script>
 {/literal}

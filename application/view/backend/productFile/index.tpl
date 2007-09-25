@@ -78,52 +78,38 @@
             Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_group|addslashes}{literal}'
         }
     }    
-    // create empty form
+    // create empty form   
+    $("productFileGroup_new_{/literal}{$productID}{literal}_form").update($("productFileGroup_item_blank").innerHTML);
+    $("productFile_new_{/literal}{$productID}{literal}_form").update($("productFile_item_blank").innerHTML);
+    var emptyModel = new Backend.ProductFile.Model({Product: {ID: {/literal}{$productID}{literal}}}, Backend.availableLanguages);
+    var emptyController = new Backend.ProductFile.Controller($("productFile_new_{/literal}{$productID}{literal}_form").down('.productFile_form'), emptyModel);
+    var emptyGroupModel = new Backend.ProductFile.Group.Model({Product: {ID: {/literal}{$productID}{literal}}}, Backend.availableLanguages);
+    new Backend.ProductFile.Group.Controller($("productFileGroup_new_{/literal}{$productID}{literal}_form").down('.productFileGroup_form'), emptyGroupModel);
     
-    try
+    Event.observe($("productFileGroup_new_{/literal}{$productID}{literal}_show"), "click", function(e) 
     {
-        $("productFileGroup_new_{/literal}{$productID}{literal}_form").update($("productFileGroup_item_blank").innerHTML);
-        $("productFile_new_{/literal}{$productID}{literal}_form").update($("productFile_item_blank").innerHTML);
-        var emptyModel = new Backend.ProductFile.Model({Product: {ID: {/literal}{$productID}{literal}}}, Backend.availableLanguages);
-        var emptyController = new Backend.ProductFile.Controller($("productFile_new_{/literal}{$productID}{literal}_form").down('.productFile_form'), emptyModel);
-        var emptyGroupModel = new Backend.ProductFile.Group.Model({Product: {ID: {/literal}{$productID}{literal}}}, Backend.availableLanguages);
-        new Backend.ProductFile.Group.Controller($("productFileGroup_new_{/literal}{$productID}{literal}_form").down('.productFileGroup_form'), emptyGroupModel);
-    }
-    catch(e)
-    {
-        console.info(e);
-    }
+        var newForm = Backend.ProductFile.Group.Controller.prototype.getInstance($("productFileGroup_new_{/literal}{$productID}{literal}_form").down('.productFileGroup_form')).showNewForm();
+        Event.stop(e);
+    });
+
+    Event.observe($("productFile_new_{/literal}{$productID}{literal}_show"), 'click', function(e) {
+        Event.stop(e);
+        var newForm = Backend.ProductFile.Controller.prototype.getInstance($("productFile_new_{/literal}{$productID}{literal}_form").down('.productFile_form')).showNewForm();
+    });
+
+    {/literal}    
+    var groupList = ActiveList.prototype.getInstance('productFileGroup_list_{$productID}', Backend.ProductFile.Group.Callbacks);  
+    ActiveList.prototype.getInstance("productFile_list_{$productID}_", Backend.ProductFile.Callbacks);
+    {assign var="lastFileGroup" value="-1"}
+    {foreach item="file" from=$productFilesWithGroups}
+        {if $file.ProductFileGroup && $lastFileGroup != $file.ProductFileGroup.ID}
+             ActiveList.prototype.getInstance('productFile_list_{$productID}_{$file.ProductFileGroup.ID}', Backend.ProductFile.Callbacks);
+        {/if}
+        {assign var="lastFileGroup" value=$file.ProductFileGroup.ID}
+    {/foreach}
+    {literal}
     
-    try
-    {
-        Event.observe($("productFileGroup_new_{/literal}{$productID}{literal}_show"), "click", function(e) 
-        {
-            var newForm = Backend.ProductFile.Group.Controller.prototype.getInstance($("productFileGroup_new_{/literal}{$productID}{literal}_form").down('.productFileGroup_form')).showNewForm();
-            Event.stop(e);
-        });
+    groupList.createSortable(true);
 
-        Event.observe($("productFile_new_{/literal}{$productID}{literal}_show"), 'click', function(e) {
-            Event.stop(e);
-            var newForm = Backend.ProductFile.Controller.prototype.getInstance($("productFile_new_{/literal}{$productID}{literal}_form").down('.productFile_form')).showNewForm();
-        });
-
-        {/literal}    
-        var groupList = ActiveList.prototype.getInstance('productFileGroup_list_{$productID}', Backend.ProductFile.Group.Callbacks);  
-        ActiveList.prototype.getInstance("productFile_list_{$productID}_", Backend.ProductFile.Callbacks);
-        {assign var="lastFileGroup" value="-1"}
-        {foreach item="file" from=$productFilesWithGroups}
-            {if $file.ProductFileGroup && $lastFileGroup != $file.ProductFileGroup.ID}
-                 ActiveList.prototype.getInstance('productFile_list_{$productID}_{$file.ProductFileGroup.ID}', Backend.ProductFile.Callbacks);
-            {/if}
-            {assign var="lastFileGroup" value=$file.ProductFileGroup.ID}
-        {/foreach}
-        {literal}
-        
-        groupList.createSortable(true);
-    }
-    catch(e)
-    {
-        console.info(e);
-    }
 </script>
 {/literal}

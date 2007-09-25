@@ -44,38 +44,32 @@
 	   }	   
     }
     	
-    try
-    {
-        tinyMCE.init({
-			theme : "advanced",
-			mode : "exact",
-			elements : "",
-			auto_reset_designmode : true,
-			theme_advanced_resizing_use_cookie : false,
-			theme_advanced_toolbar_location : "top",
-			theme_advanced_resizing : true,
-			theme_advanced_path_location : "bottom",
-			document_base_url : "{/literal}{baseUrl}{literal}",
-			remove_script_host : "true",
-			theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,styleselect,formatselect",
-			theme_advanced_buttons2 : "bullist,numlist,separator,outdent,indent,separator,undo,redo,separator,link,unlink,anchor,image,cleanup,separator,code,removeformat,visualaid,separator,sub,sup,separator,charmap",
-			theme_advanced_buttons3 : "",
-			content_css: "{/literal}{baseUrl}{literal}stylesheet/library/TinyMCE.css",
-			relative_urls : true
-        });
+    tinyMCE.init({
+		theme : "advanced",
+		mode : "exact",
+		elements : "",
+		auto_reset_designmode : true,
+		theme_advanced_resizing_use_cookie : false,
+		theme_advanced_toolbar_location : "top",
+		theme_advanced_resizing : true,
+		theme_advanced_path_location : "bottom",
+		document_base_url : "{/literal}{baseUrl}{literal}",
+		remove_script_host : "true",
+		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,styleselect,formatselect",
+		theme_advanced_buttons2 : "bullist,numlist,separator,outdent,indent,separator,undo,redo,separator,link,unlink,anchor,image,cleanup,separator,code,removeformat,visualaid,separator,sub,sup,separator,charmap",
+		theme_advanced_buttons3 : "",
+		content_css: "{/literal}{baseUrl}{literal}stylesheet/library/TinyMCE.css",
+		relative_urls : true
+    });
 
-    	function onLoad()
-    	{
-    		Backend.locale = '{/literal}{localeCode}{literal}';
-    		Backend.onLoad();
-    	}
-        
-    	window.onload = onLoad;
-    } 
-    catch(e)
-    {
-        console.info(e);
-    }
+	function onLoad()
+	{
+		Backend.locale = '{/literal}{localeCode}{literal}';
+		Backend.onLoad();
+	}
+    
+	window.onload = onLoad;
+
 	</script>
 	{/literal}
 
@@ -83,16 +77,11 @@
 <body>
 <script type="text/javascript">
 {literal}
-    try
-    {
-        /** Initialize all of our objects now. */
-        window.historyStorage.init();
-        window.dhtmlHistory.create();
-    }
-    catch(e)
-    {
-        console.info(e);
-    }
+
+    /** Initialize all of our objects now. */
+    window.historyStorage.init();
+    window.dhtmlHistory.create();
+
 {/literal}
 </script>
 

@@ -71,48 +71,38 @@ ActiveForm.prototype = {
     {
         if ('form' != form.tagName.toLowerCase()) form = form.down('form');
 
-        try
-        {
-            var focusField = true;
-    		$H(errorMessages).each(function(error)
-    		{
-    			if (form.elements.namedItem(error.key))
-    		  	{
-                    var formElement = form.elements.namedItem(error.key);
-                    var errorMessage = error.value;
+        var focusField = true;
+		$H(errorMessages).each(function(error)
+		{
+			if (form.elements.namedItem(error.key))
+		  	{
+                var formElement = form.elements.namedItem(error.key);
+                var errorMessage = error.value;
 
-                    ActiveForm.prototype.setErrorMessage(formElement, errorMessage, focusField);
-                    focusField = false;
-    			}
-    		});
-        } catch(e) {
-            console.info(e);
-        }
+                ActiveForm.prototype.setErrorMessage(formElement, errorMessage, focusField);
+                focusField = false;
+			}
+		});
 	},
 
     setErrorMessage: function(formElement, errorMessage, focusField)
     {
-        try
+        if (focusField)
         {
-            if (focusField)
-            {
-                alert(errorMessage);
-                Element.focus(formElement);
-            }
+            alert(errorMessage);
+            Element.focus(formElement);
+        }
 
-            var errorContainer = formElement.up().down(".errorText");
-            if (errorContainer)
-            {
-        		errorContainer.innerHTML = errorMessage;
-        	  	Element.removeClassName(errorContainer, 'hidden');
-        		Effect.Appear(errorContainer);
-            }
-            else
-            {
-                console.info("Please add \n...\n <div class=\"errorText hidden\"></div> \n...\n after " + formElement.name);
-            }
-        } catch(e) {
-            console.info(e);
+        var errorContainer = formElement.up().down(".errorText");
+        if (errorContainer)
+        {
+    		errorContainer.innerHTML = errorMessage;
+    	  	Element.removeClassName(errorContainer, 'hidden');
+    		Effect.Appear(errorContainer);
+        }
+        else
+        {
+            console.info("Please add \n...\n <div class=\"errorText hidden\"></div> \n...\n after " + formElement.name);
         }
     },
 
@@ -157,19 +147,12 @@ ActiveForm.prototype = {
 
                 var hoverFunction = function()
                 {
-                    try
+                    $H(ActiveForm.prototype.disabledTextareas).each(function(iter)
                     {
-                        $H(ActiveForm.prototype.disabledTextareas).each(function(iter)
-                        {
-                            iter.value.style.backgroundColor = '';
-                            iter.value.style.borderStyle = '';
-                            iter.value.style.borderWidth = '';
-                        });
-                    }
-                    catch(e)
-                    {
-                        console.info(e)
-                    }
+                        iter.value.style.backgroundColor = '';
+                        iter.value.style.borderStyle = '';
+                        iter.value.style.borderWidth = '';
+                    });
                 }
 
                 Event.observe(document.body, 'mousedown', hoverFunction, true);
@@ -191,16 +174,9 @@ ActiveForm.prototype = {
 
 				ActiveForm.prototype.idleTinyMCEFields[textareas[k].id] = window.setInterval(function(tinyMCEField)
 				{
-                    try
-                    {
-					    if(!tinyMCEField || 0 >= tinyMCEField.offsetHeight) return;
-						window.clearInterval(ActiveForm.prototype.idleTinyMCEFields[tinyMCEField.id]);
-						tinyMCE.execCommand('mceAddControl', true, tinyMCEField.id);
-                    }
-					catch(e)
-					{
-						console.info(e);
-					}
+				    if(!tinyMCEField || 0 >= tinyMCEField.offsetHeight) return;
+					window.clearInterval(ActiveForm.prototype.idleTinyMCEFields[tinyMCEField.id]);
+					tinyMCE.execCommand('mceAddControl', true, tinyMCEField.id); 
 				}.bind(this, textareas[k]), 1000);
             }
 		}

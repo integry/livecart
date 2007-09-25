@@ -189,21 +189,14 @@ Backend.Currency.prototype =
 	
 	updateRatesForm: function(request)
 	{		
-		try 
+		var rates = request.responseData.values;
+		for (k in request.responseData.values)
 		{
-			var rates = request.responseData.values;
-			for (k in request.responseData.values)
-			{
-			  	if ($('rate_' + k))
-			  	{
-					$('rate_' + k).value = rates[k];
-				}
-			}	
-		}
-		catch (e)
-		{
-			console.log(e);
-		}
+		  	if ($('rate_' + k))
+		  	{
+				$('rate_' + k).value = rates[k];
+			}
+		}	
 	},
 	
 	checkDisabledFields: function()

@@ -152,8 +152,6 @@
 
 {literal}
 <script type="text/javascript">
-try
-{
     if(!window.activeGrids) window.activeGrids = {};
     {/literal};
  	
@@ -164,10 +162,6 @@ try
 		    new ActiveGridFilter($('filter_{$column}_{$id}'), window.activeGrids['{$prefix}_{$id}']);
 		{/if}
 	{/foreach}
-{literal}}
-catch(e)
-{
-console.info(e);
-}	
+{literal}
 </script>
 {/literal}

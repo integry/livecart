@@ -27,20 +27,13 @@
 
 {literal}
 <script type="text/javascript">
-    try
+    Event.observe($("tax_new_show"), "click", function(e) 
     {
-        Event.observe($("tax_new_show"), "click", function(e) 
-        {
-            Event.stop(e);
-            var newForm = Backend.Tax.prototype.getInstance( $("tax_new_form").down('form') );
-            newForm.showNewForm();
-        });   
-    }
-    catch(e)
-    {
-        console.info(e);
-    }
+        Event.stop(e);
+        var newForm = Backend.Tax.prototype.getInstance( $("tax_new_form").down('form') );
+        newForm.showNewForm();
+    });   
     
-ActiveList.prototype.getInstance("tax_taxesList", Backend.Tax.prototype.Callbacks, function() {});
+    ActiveList.prototype.getInstance("tax_taxesList", Backend.Tax.prototype.Callbacks, function() {});
 </script>
 {/literal}

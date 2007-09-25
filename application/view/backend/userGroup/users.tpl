@@ -22,19 +22,11 @@
     
     {literal}
     <script type="text/javascript">
-        try
+        Element.observe($("{/literal}userGroup_{$userGroupID}_addUser{literal}"), 'click', function(e)
         {
-            Element.observe($("{/literal}userGroup_{$userGroupID}_addUser{literal}"), 'click', function(e)
-            {
-                Event.stop(e);
-                console.info("1")
-                Backend.User.Add.prototype.getInstance({/literal}{$userGroupID}{literal}).showAddForm({/literal}{$userGroupID}{literal}); 
-            });
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
+            Event.stop(e);
+            Backend.User.Add.prototype.getInstance({/literal}{$userGroupID}{literal}).showAddForm({/literal}{$userGroupID}{literal}); 
+        });
     </script>
     {/literal}
 </fieldset>
@@ -91,8 +83,6 @@
 
 {literal}
 <script type="text/javascript">
-try
-{
 	window.activeGrids['{/literal}users_{$userGroupID}{literal}'].setDataFormatter(Backend.UserGroup.GridFormatter);
     
     var massHandler = new Backend.UserGroup.massActionHandler($('{/literal}userMass_{$userGroupID}{literal}'), window.activeGrids['{/literal}users_{$userGroupID}{literal}']);
@@ -100,10 +90,5 @@ try
     massHandler.nothingSelectedMessage = '{/literal}{t _nothing_selected|addslashes}{literal}' ;    
     
     usersActiveGrid[{/literal}{$userGroupID}{literal}] = window.activeGrids['{/literal}users_{$userGroupID}{literal}'];
-}
-catch(e)
-{
-    console.info(e)
-}
 </script>
 {/literal}

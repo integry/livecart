@@ -85,7 +85,7 @@
     </script>
     {/literal}
 {/form}
-<script>console.info('{$ownerId}')</script>
+
 <iframe name="catImgUpload_{$ownerId}" id="catImgUpload_{$ownerId}" style="display: none"></iframe>
 </div>
 
@@ -104,19 +104,17 @@
 
 {literal}
 <script type="text/javascript">
-try
-{
     var handler = new Backend.ObjectImage($("{/literal}catImageList_{$ownerId}{literal}"), 'cat');    
-	handler.initList({/literal}{$images}{literal});
-	
-	handler.setDeleteUrl('{/literal}{link controller=backend.categoryImage action=delete}{literal}');	
-	handler.setSortUrl('{/literal}{link controller=backend.categoryImage action=saveOrder}{literal}');	
-	handler.setEditUrl('{/literal}{link controller=backend.categoryImage action=edit}{literal}');		
-	handler.setSaveUrl('{/literal}{link controller=backend.categoryImage action=save}{literal}');		
-	   
-	handler.setDeleteMessage('{/literal}{t _delete_confirm|addslashes}{literal}');	
-	handler.setEditCaption('{/literal}{t _edit_image|addslashes}{literal}');	
-	handler.setSaveCaption('{/literal}{t _save|addslashes}{literal}');	
+    handler.initList({/literal}{$images}{literal});
+    
+    handler.setDeleteUrl('{/literal}{link controller=backend.categoryImage action=delete}{literal}');	
+    handler.setSortUrl('{/literal}{link controller=backend.categoryImage action=saveOrder}{literal}');	
+    handler.setEditUrl('{/literal}{link controller=backend.categoryImage action=edit}{literal}');		
+    handler.setSaveUrl('{/literal}{link controller=backend.categoryImage action=save}{literal}');		
+       
+    handler.setDeleteMessage('{/literal}{t _delete_confirm|addslashes}{literal}');	
+    handler.setEditCaption('{/literal}{t _edit_image|addslashes}{literal}');	
+    handler.setSaveCaption('{/literal}{t _save|addslashes}{literal}');	
     
     
     handler.activeListMessages = 
@@ -124,11 +122,5 @@ try
         _activeList_edit:    '{/literal}{t _activeList_edit|addslashes}{literal}',
         _activeList_delete:  '{/literal}{t _activeList_delete|addslashes}{literal}'
     }
-    
-}
-catch(e)
-{
-   console.info(e);
-}
 </script>
 {/literal}

@@ -109,8 +109,6 @@
 
 {literal}
 <script type="text/javascript">
-try
-{
 {/literal}
 	window.activeGrids['products_{$categoryID}'].setDataFormatter(Backend.Product.GridFormatter);
     
@@ -130,10 +128,5 @@ try
     massHandler.deleteConfirmMessage = '{t _delete_conf|addslashes}' ;
     massHandler.nothingSelectedMessage = '{t _nothing_selected|addslashes}' ;
 {literal}
-}
-catch(e)
-{
-    console.info(e)
-}
 </script>
 {/literal}

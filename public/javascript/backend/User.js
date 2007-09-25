@@ -536,7 +536,7 @@ Backend.User.Editor.prototype =
 
 	showAddForm: function(groupID)
 	{
-        console.info('add form');
+
 	},
 
     hasInstance: function(id)
@@ -546,22 +546,15 @@ Backend.User.Editor.prototype =
 
     initialize: function(id)
   	{
-        try
-        {
-            this.id = id ? id : '';
-    
-            this.findUsedNodes();
-            this.bindEvents();
-			this.oldUserGroup = this.nodes.form.elements.namedItem("UserGroup").value;
-            
-            Backend.User.Editor.prototype.showShippingAddress.apply(this);
-			
-            Form.State.backup(this.nodes.form, false, false);
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
+        this.id = id ? id : '';
+
+        this.findUsedNodes();
+        this.bindEvents();
+		this.oldUserGroup = this.nodes.form.elements.namedItem("UserGroup").value;
+        
+        Backend.User.Editor.prototype.showShippingAddress.apply(this);
+		
+        Form.State.backup(this.nodes.form, false, false);
 
 		this.findUsedNodes();
 		this.bindEvents();
@@ -782,21 +775,14 @@ Backend.User.Add.prototype =
 
     initialize: function(groupID, grid)
   	{
-        try
-        {
-            this.groupID = groupID;
-            
-            this.findUsedNodes();
-            this.bindEvents();
-            
-			Backend.User.Editor.prototype.showShippingAddress.apply(this);
-			
-            Form.State.backup(this.nodes.form, false, false);
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
+        this.groupID = groupID;
+        
+        this.findUsedNodes();
+        this.bindEvents();
+        
+		Backend.User.Editor.prototype.showShippingAddress.apply(this);
+		
+        Form.State.backup(this.nodes.form, false, false);
 	},
 
 	findUsedNodes: function()

@@ -27,24 +27,17 @@
     Backend.DeliveryZone.TaxRate.prototype.Messages.weightBasedRates = '{/literal}_weight_based_rates{literal}';
     Backend.DeliveryZone.TaxRate.prototype.Messages.subtotalBasedRates = '{/literal}_subtotal_based_rates{literal}';
 
-    try
+    Event.observe($("shippingService_new_{/literal}{$deliveryZone.ID}{literal}_show"), "click", function(e) 
     {
-        Event.observe($("shippingService_new_{/literal}{$deliveryZone.ID}{literal}_show"), "click", function(e) 
-        {
-            Event.stop(e);
-            
-            var newForm = Backend.DeliveryZone.ShippingService.prototype.getInstance(
-                $("shippingService_new_service_{/literal}{$deliveryZone.ID}{literal}_form").down('form'),
-                {/literal}{json array=$newService}{literal}
-            );
-            
-            newForm.showNewForm();
-        });   
-    }
-    catch(e)
-    {
-        console.info(e);
-    }
+        Event.stop(e);
+        
+        var newForm = Backend.DeliveryZone.ShippingService.prototype.getInstance(
+            $("shippingService_new_service_{/literal}{$deliveryZone.ID}{literal}_form").down('form'),
+            {/literal}{json array=$newService}{literal}
+        );
+        
+        newForm.showNewForm();
+    });   
 
     ActiveList.prototype.getInstance("shippingService_servicesList_{/literal}{$deliveryZone.ID}{literal}", Backend.DeliveryZone.ShippingService.prototype.Callbacks, function() {});
 </script>

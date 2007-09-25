@@ -41,23 +41,16 @@ Backend.Product =
 
 	cancelAddProduct: function(categoryID, noHide)
 	{
-		try
-        {
-            container = $('addProductContainer');
+        container = $('addProductContainer');
 
-            if (!noHide)
-            {
-                Element.hide(container);
-                Element.show($('categoryTabs'));
-            }
-
-            ActiveForm.prototype.destroyTinyMceFields(container);
-    		this.formTabCopies[categoryID] = container.down('.productForm');
-        }
-        catch(e)
+        if (!noHide)
         {
-            console.info(e);
+            Element.hide(container);
+            Element.show($('categoryTabs'));
         }
+
+        ActiveForm.prototype.destroyTinyMceFields(container);
+		this.formTabCopies[categoryID] = container.down('.productForm');
 	},
 
 	resetAddForm: function(form)
@@ -115,17 +108,10 @@ Backend.Product =
 		// specField entry logic (multiple value select)
         var containers = document.getElementsByClassName('multiValueSelect', container);
 
-        try
-        {
-    		for (k = 0; k < containers.length; k++)
-    		{
-    			new Backend.Product.specFieldEntryMultiValue(containers[k]);
-    		}
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
+		for (k = 0; k < containers.length; k++)
+		{
+			new Backend.Product.specFieldEntryMultiValue(containers[k]);
+		}
 
         // single value select
 		var specFieldContainer = document.getElementsByClassName('specification', container)[0];
@@ -497,22 +483,15 @@ Backend.Product.Editor.prototype =
 
     initialize: function(id, path)
   	{
-        try
-        {
-            this.id = id;
-            this.path = path;
+        this.id = id;
+        this.path = path;
 
-            this.__nodes__();
-            this.__bind__();
+        this.__nodes__();
+        this.__bind__();
 
-            Form.State.backup(this.nodes.form);
+        Form.State.backup(this.nodes.form);
 
-            var self = this;
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
+        var self = this;
 	},
 
 	__nodes__: function()
@@ -569,17 +548,10 @@ Backend.Product.Editor.prototype =
     {
 		// specField entry logic (multiple value select)
 		var containers = document.getElementsByClassName('multiValueSelect', $('tabProductsContent_' + this.id));
-        try
-        {
-    		for (k = 0; k < containers.length; k++)
-    		{
-    			new Backend.Product.specFieldEntryMultiValue(containers[k]);
-    		}
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
+		for (k = 0; k < containers.length; k++)
+		{
+			new Backend.Product.specFieldEntryMultiValue(containers[k]);
+		}
 
 		// single value select
 		var specFieldContainer = document.getElementsByClassName('specification', $('tabProductsContent_' + this.id))[0];
@@ -596,24 +568,17 @@ Backend.Product.Editor.prototype =
 
     setTabCounters: function()
     {
-        try
-        {
-			if(!this.tabControl.restoreAllCounters(this.id))
-            {		
-                new LiveCart.AjaxRequest(
-                    Backend.Product.Editor.prototype.links.countTabsItems + "/" + this.id,
-                    false,
-                    function(reply)
-                    {
-                        var counters = eval("(" + reply.responseText + ")");
-                        this.tabControl.setAllCounters(counters, this.id);
-                    }.bind(this)
-                );
-            }
-        }
-        catch(e)
-        {
-            console.info(e);
+		if(!this.tabControl.restoreAllCounters(this.id))
+        {		
+            new LiveCart.AjaxRequest(
+                Backend.Product.Editor.prototype.links.countTabsItems + "/" + this.id,
+                false,
+                function(reply)
+                {
+                    var counters = eval("(" + reply.responseText + ")");
+                    this.tabControl.setAllCounters(counters, this.id);
+                }.bind(this)
+            );
         }
     },
 

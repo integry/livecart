@@ -60,17 +60,10 @@
     	<legend>{t _add_new_field}</legend>
 		{literal}
         <script type="text/javascript">
-        try
-        {
            var newSpecFieldForm = new Backend.SpecField('{/literal}{json array=$specFieldsList}{literal}');
            newSpecFieldForm.addField(null, "new" + Backend.SpecField.prototype.countNewFilters, true);
            newSpecFieldForm.bindDefaultFields();
            Backend.SpecField.prototype.countNewFilters++;
-        }
-        catch(e)
-        {
-            console.info(e)
-        }
         </script>
         {/literal}
     </fieldset>

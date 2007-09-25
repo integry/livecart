@@ -35,17 +35,10 @@ Backend.Roles.prototype =
         this.roles = {};
         $A(roles).each(function(node)
 		{
-            try
-            {
-                self.rolesTree.insertNewItem(node.parent, node.ID, node.translation, null, 0, 0, 0, "", 1);
-                self.rolesTree.showItemSign(node.ID, 0);
-                self.roles[node.ID] = ($A(activeRoles).indexOf(node.ID) >= 0);
-                self.rolesTree.setCheck(parseInt(node.ID), self.roles[node.ID]);
-            }
-            catch(e)
-            {
-                console.info(e);
-            }
+            self.rolesTree.insertNewItem(node.parent, node.ID, node.translation, null, 0, 0, 0, "", 1);
+            self.rolesTree.showItemSign(node.ID, 0);
+            self.roles[node.ID] = ($A(activeRoles).indexOf(node.ID) >= 0);
+            self.rolesTree.setCheck(parseInt(node.ID), self.roles[node.ID]);
 		});
         
         this.backedUpRoles = this.roles;

@@ -44,15 +44,8 @@
     
     <script type="text/javascript">
     {literal}
-    try
-    {
         var emptyGroupModel = new Backend.RelatedProduct.Group.Model({Product: {ID: {/literal}{$productID}{literal}}}, Backend.availableLanguages);
         new Backend.RelatedProduct.Group.Controller($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('.productRelationshipGroup_form'), emptyGroupModel);
-    }
-    catch(e)
-    {
-        console.info(e)   
-    }
     {/literal}
     </script>
 </div>
@@ -95,46 +88,39 @@
 
 {literal}
 <script type="text/javascript">
-    try
+    Event.observe($("productRelationshipGroup_new_{/literal}{$productID}{literal}_show"), "click", function(e) 
     {
-        Event.observe($("productRelationshipGroup_new_{/literal}{$productID}{literal}_show"), "click", function(e) 
-        {
-            Event.stop(e);
-            var newForm = Backend.RelatedProduct.Group.Controller.prototype.getInstance($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('.productRelationshipGroup_form')).showNewForm();
-        });
+        Event.stop(e);
+        var newForm = Backend.RelatedProduct.Group.Controller.prototype.getInstance($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('.productRelationshipGroup_form')).showNewForm();
+    });
 
-        Event.observe($("selectProduct_{/literal}{$productID}{literal}"), 'click', function(e) {
-            Event.stop(e);
-            new Backend.SelectPopup(
-                Backend.RelatedProduct.links.selectProduct, 
-                Backend.RelatedProduct.messages.selectProductTitle, 
-                {
-                    onObjectSelect: function() { Backend.RelatedProduct.addProductToList({/literal}{$productID}{literal}, this.objectID, this.popup.document) }
-                }
-            );
-          
-            Backend.RelatedProduct.Group.Controller.prototype.getInstance($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('form')).hideNewForm();
-        });
-        
-        {/literal}    
-        var groupList = ActiveList.prototype.getInstance('productRelationshipGroup_list_{$productID}', Backend.RelatedProduct.Group.Callbacks);  
-        ActiveList.prototype.getInstance("productRelationship_list_{$productID}_", Backend.RelatedProduct.activeListCallbacks);
-        
-        {assign var="lastRelationshipGroup" value="-1"}
-        {foreach item="relationship" from=$relationshipsWithGroups}
-            {if $relationship.ProductRelationshipGroup && $lastRelationshipGroup != $relationship.ProductRelationshipGroup.ID}
-                 ActiveList.prototype.getInstance('productRelationship_list_{$productID}_{$relationship.ProductRelationshipGroup.ID}', Backend.RelatedProduct.activeListCallbacks);
-            {/if}
-            {assign var="lastRelationshipGroup" value=$relationship.ProductRelationshipGroup.ID}
-        {/foreach}
-        {literal}
-        
-        groupList.createSortable(true);
+    Event.observe($("selectProduct_{/literal}{$productID}{literal}"), 'click', function(e) {
+        Event.stop(e);
+        new Backend.SelectPopup(
+            Backend.RelatedProduct.links.selectProduct, 
+            Backend.RelatedProduct.messages.selectProductTitle, 
+            {
+                onObjectSelect: function() { Backend.RelatedProduct.addProductToList({/literal}{$productID}{literal}, this.objectID, this.popup.document) }
+            }
+        );
+      
+        Backend.RelatedProduct.Group.Controller.prototype.getInstance($("productRelationshipGroup_new_{/literal}{$productID}{literal}_form").down('form')).hideNewForm();
+    });
+    
+    {/literal}    
+    var groupList = ActiveList.prototype.getInstance('productRelationshipGroup_list_{$productID}', Backend.RelatedProduct.Group.Callbacks);  
+    ActiveList.prototype.getInstance("productRelationship_list_{$productID}_", Backend.RelatedProduct.activeListCallbacks);
+    
+    {assign var="lastRelationshipGroup" value="-1"}
+    {foreach item="relationship" from=$relationshipsWithGroups}
+        {if $relationship.ProductRelationshipGroup && $lastRelationshipGroup != $relationship.ProductRelationshipGroup.ID}
+             ActiveList.prototype.getInstance('productRelationship_list_{$productID}_{$relationship.ProductRelationshipGroup.ID}', Backend.RelatedProduct.activeListCallbacks);
+        {/if}
+        {assign var="lastRelationshipGroup" value=$relationship.ProductRelationshipGroup.ID}
+    {/foreach}
+    {literal}
+    
+    groupList.createSortable(true);
 
-    }
-    catch(e)
-    {
-        console.info(e);
-    }
 </script>
 {/literal}

@@ -896,14 +896,10 @@ Backend.SaveConfirmationMessage.prototype =
             Element.addClassName(this.element, options.type + 'Message')
         }
         
-        try {
-            if(options && options.message) 
-            {
-                if(this.innerElement.firstChild) this.innerElement.firstChild.value = options.message;
-                else this.innerElement.appendChild(document.createTextNode(options.message));
-            }
-        } catch(e) { 
-            console.info(e);
+        if(options && options.message) 
+        {
+            if(this.innerElement.firstChild) this.innerElement.firstChild.value = options.message;
+            else this.innerElement.appendChild(document.createTextNode(options.message));
         }
         
         var closeButton = this.element.down('.closeMessage');

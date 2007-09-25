@@ -35,7 +35,7 @@ Backend.ProductFile.Callbacks =
     beforeSort: function(li, order){ 
         return Backend.ProductFile.Links.sort + "?target=" + this.ul.id + "&" + order
     },
-    afterSort: function(li, response){ console.info('afterSort') },
+    afterSort: function(li, response){  },
 
     
     beforeEdit: function(li) {
@@ -276,7 +276,6 @@ Backend.ProductFile.Controller.prototype = {
         }
         else
         {
-            console.info(this.model.errors)
             ActiveForm.prototype.setErrorMessages(this.view.nodes.root, this.model.errors);
         }
     },
@@ -481,7 +480,7 @@ Backend.ProductFile.Group.Callbacks =
         return Backend.ProductFile.Group.Links.sort + '&' + order;
     },
     afterSort: function(li, response) { 
-        console.info('afterSort') 
+
     },
     
     beforeEdit:     function(li) 
@@ -500,14 +499,7 @@ Backend.ProductFile.Group.Callbacks =
     },
     afterEdit:      function(li, response) 
     { 
-        try
-        {
-            response = eval("(" + response + ")");
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
+        response = eval("(" + response + ")");
         
         var model = new Backend.ProductFile.Group.Model(response, Backend.availableLanguages);
         var group = new Backend.ProductFile.Group.Controller(li.down('.productFileGroup_form'), model);
@@ -537,8 +529,6 @@ Backend.ProductFile.Group.Model.prototype = {
         
         var self = this;
         
-        
-        console.info(form)
         form.action = this.isNew ? Backend.ProductFile.Group.Links.create : Backend.ProductFile.Group.Links.update;
         
         new LiveCart.AjaxRequest(

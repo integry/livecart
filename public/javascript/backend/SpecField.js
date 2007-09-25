@@ -68,18 +68,11 @@ Backend.SpecField.prototype = {
             else this.toggleContainer(li, 'edit');
         },
         afterEdit:      function(li, response) {
-			try
-			{
-	            var specField = eval("(" + response + ")" );
-	            specField.rootId = li.id;
-	            new Backend.SpecField(specField, true);
-	            this.createSortable(true);
-	            this.toggleContainer(li, 'edit');
-            }
-			catch(e)
-			{
-				console.info(e)
-			}
+            var specField = eval("(" + response + ")" );
+            specField.rootId = li.id;
+            new Backend.SpecField(specField, true);
+            this.createSortable(true);
+            this.toggleContainer(li, 'edit');
         },
         beforeDelete:   function(li) {
             if(confirm(Backend.SpecField.prototype.msg.removeFieldQuestion))
@@ -127,38 +120,33 @@ Backend.SpecField.prototype = {
 	 */
 	initialize: function(specFieldJson, hash)
 	{
-        try 
-        {
-    	    this.specField = !hash ? eval("(" + specFieldJson + ")" ) : specFieldJson;
-    	    this.cloneForm('specField_item_blank');
-    
-    	    this.id                    = this.specField.ID;
-    	    this.categoryID            = this.specField.categoryID;
-    	    this.rootId                = this.specField.rootId;
-    
-    		this.type                  = this.specField.type;
-    		this.values                = this.specField.values;
-    		this.name                  = this.specField.name_lang;
-    		this.backupName            = this.name;
-            
-    		this.valuePrefix           = this.specField.valuePrefix ? this.specField.valuePrefix : '';
-    		this.valueSuffix           = this.specField.valueSuffix ? this.specField.valueSuffix : '';
-    
-    		this.description           = this.specField.description;
-    
-    		this.handle                = this.specField.handle;
-    		this.isMultiValue          = this.specField.isMultiValue == 1 ? true : false;
-    		this.isRequired            = this.specField.isRequired == 1 ? true : false;
-    		this.isDisplayed           = this.specField.isDisplayed == 1 ? true : false;
-    		this.isDisplayedInList     = this.specField.isDisplayedInList == 1 ? true : false;
-            
-    		this.loadLanguagesAction();
-    		this.findUsedNodes();
-    
-    	    this.bindFields();
-        } catch(e) {
-            console.info(e);
-        }
+	    this.specField = !hash ? eval("(" + specFieldJson + ")" ) : specFieldJson;
+	    this.cloneForm('specField_item_blank');
+
+	    this.id                    = this.specField.ID;
+	    this.categoryID            = this.specField.categoryID;
+	    this.rootId                = this.specField.rootId;
+
+		this.type                  = this.specField.type;
+		this.values                = this.specField.values;
+		this.name                  = this.specField.name_lang;
+		this.backupName            = this.name;
+        
+		this.valuePrefix           = this.specField.valuePrefix ? this.specField.valuePrefix : '';
+		this.valueSuffix           = this.specField.valueSuffix ? this.specField.valueSuffix : '';
+
+		this.description           = this.specField.description;
+
+		this.handle                = this.specField.handle;
+		this.isMultiValue          = this.specField.isMultiValue == 1 ? true : false;
+		this.isRequired            = this.specField.isRequired == 1 ? true : false;
+		this.isDisplayed           = this.specField.isDisplayed == 1 ? true : false;
+		this.isDisplayedInList     = this.specField.isDisplayedInList == 1 ? true : false;
+        
+		this.loadLanguagesAction();
+		this.findUsedNodes();
+
+	    this.bindFields();
 	},
 
     /**
@@ -172,29 +160,22 @@ Backend.SpecField.prototype = {
 	 */
 	recreate: function(specFieldJson, hash)
 	{
-		try
-		{
-			var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ? ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
-	        $A(this.fieldsList.ul.getElementsByTagName('li')).each(function(li)
-	        {
-	           if(!Element.hasClassName(li, 'dom_template'))  
-			   {
-	               this.deleteValueFieldAction(li);
-	           }   
-	        }.bind(this));
-	        
-			this.addField(null, "new" + Backend.SpecField.prototype.countNewValues, false);
-			this.fieldsList.touch(true);
-			
-	        this.bindDefaultFields();
-			Backend.SpecField.prototype.countNewValues++;
-	        
-	        Form.restore(this.nodes.form, ['type']);
-		}
-		catch(e)
-		{
-		     console.info(e);
-		}
+		var root = ($(this.specField.rootId).tagName.toLowerCase() == 'li') ? ActiveList.prototype.getInstance("specField_items_list_" + this.categoryID).getContainer($(this.specField.rootId), 'edit') : $(this.specField.rootId);
+        $A(this.fieldsList.ul.getElementsByTagName('li')).each(function(li)
+        {
+           if(!Element.hasClassName(li, 'dom_template'))  
+		   {
+               this.deleteValueFieldAction(li);
+           }   
+        }.bind(this));
+        
+		this.addField(null, "new" + Backend.SpecField.prototype.countNewValues, false);
+		this.fieldsList.touch(true);
+		
+        this.bindDefaultFields();
+		Backend.SpecField.prototype.countNewValues++;
+        
+        Form.restore(this.nodes.form, ['type']);
 	},
 
 
@@ -481,14 +462,7 @@ Backend.SpecField.prototype = {
                 }
 	        },
 	        afterDelete: function(li, response){ 
-	            try 
-	            { 
-	                response = eval('(' + response + ')'); 
-	            } 
-	            catch(e) 
-	            { 
-	                return false; 
-	            }
+                response = eval('(' + response + ')'); 
 				
 				self.deleteValueFieldAction(li) 
 			}
@@ -1039,7 +1013,6 @@ Backend.SpecField.prototype = {
 				    if(li.id.match(/new/))
 					{
 						this.deleteValueFieldAction(li)
-						console.info(li.id)
 					}
 				}.bind(this))
 				
@@ -1078,16 +1051,9 @@ Backend.SpecField.prototype = {
         }
         else if(jsonResponse.errors) 
         {
-            try
-            {
-                var firstError; for(firstError in jsonResponse.errors) break;               
-                this.showState('specField_step_' + (firstError.match(/^values/) ? 'values' : 'main'));
-                ActiveForm.prototype.setErrorMessages(this.nodes.form, jsonResponse.errors);
-            }
-            catch(e)
-            {
-                console.info(e);
-            }
+            var firstError; for(firstError in jsonResponse.errors) break;               
+            this.showState('specField_step_' + (firstError.match(/^values/) ? 'values' : 'main'));
+            ActiveForm.prototype.setErrorMessages(this.nodes.form, jsonResponse.errors);
         }
 
 		try
@@ -1242,28 +1208,21 @@ Backend.SpecField.prototype = {
     {
         if('success' == response.status)
         {
-            try
-            {
-                var self = this;
-                $H(this.mergedValues).each(function(mergedValue) {
-                    if(Element.hasClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner"))
-                    {
-                        Element.removeClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner");
-                        mergedValue.value.down("." + self.cssPrefix + "mergeCheckbox").checked = false;
-                        ActiveList.prototype.highlight(mergedValue.value);
-                    }
-                    else
-                    {
-                        self.deleteValueFieldAction(mergedValue.value);
-                    }
-                    
-                    delete self.mergedValues[mergedValue.key];
+            var self = this;
+            $H(this.mergedValues).each(function(mergedValue) {
+                if(Element.hasClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner"))
+                {
+                    Element.removeClassName(mergedValue.value, self.cssPrefix + "valueMergedWinner");
+                    mergedValue.value.down("." + self.cssPrefix + "mergeCheckbox").checked = false;
+                    ActiveList.prototype.highlight(mergedValue.value);
+                }
+                else
+                {
+                    self.deleteValueFieldAction(mergedValue.value);
+                }
+                
+                delete self.mergedValues[mergedValue.key];
             });
-            } 
-            catch(e)
-            {
-                console.info(e);
-            }
         }
         else
         {
@@ -1330,45 +1289,31 @@ Backend.SpecFieldGroup.prototype = {
      callbacks: {
         beforeEdit:     function(li) 
         {
-            try
+            if(!Backend.SpecFieldGroup.prototype.isGroupTranslated(li))
             {
-                if(!Backend.SpecFieldGroup.prototype.isGroupTranslated(li))
+                return Backend.SpecField.prototype.links.getGroup + this.getRecordId(li);
+            }
+            else
+            {
+                if('none' == li.down('.specField_group_form_node').style.display)
                 {
-                    return Backend.SpecField.prototype.links.getGroup + this.getRecordId(li);
+                     Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);
                 }
                 else
                 {
-                    if('none' == li.down('.specField_group_form_node').style.display)
-                    {
-                         Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);
-                    }
-                    else
-                    {
-                         Backend.SpecFieldGroup.prototype.hideGroupTranslations(li);
-                    }   
-                }
-            } 
-            catch(e) 
-            {  
-                console.info(e) 
+                     Backend.SpecFieldGroup.prototype.hideGroupTranslations(li);
+                }   
             }
         },
         afterEdit:      function(li, response) { 
-            try
-            {
-				var response = eval("(" + response + ")");
-                li.down('.' + Backend.SpecFieldGroup.prototype.cssPrefix + 'group_title').hide();
-                
-				// Wait a little before opening the group
-				setTimeout(function(li, response) {
-					new Backend.SpecFieldGroup(li, response);
-	                Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);  
-				}.bind(this, li, response), 50);
-            } 
-            catch(e) 
-            {  
-                console.info(e) 
-            }
+			var response = eval("(" + response + ")");
+            li.down('.' + Backend.SpecFieldGroup.prototype.cssPrefix + 'group_title').hide();
+            
+			// Wait a little before opening the group
+			setTimeout(function(li, response) {
+				new Backend.SpecFieldGroup(li, response);
+                Backend.SpecFieldGroup.prototype.displayGroupTranslations(li);  
+			}.bind(this, li, response), 50);
         },
         beforeDelete:   function(li) {
             if(confirm(Backend.SpecField.prototype.msg.removeGroupQuestion))
@@ -1376,14 +1321,7 @@ Backend.SpecFieldGroup.prototype = {
         },
         afterDelete:    function(li, response)
         {
-            try 
-            { 
-                response = eval('(' + response + ')'); 
-            } 
-            catch(e) 
-            { 
-                return false; 
-            }
+            response = eval('(' + response + ')'); 
 			 
             if(response.status == 'success') {
                 CategoryTabControl.prototype.resetTabItemsCount(this.getRecordId(li, 2));
@@ -1407,18 +1345,11 @@ Backend.SpecFieldGroup.prototype = {
       */
      initialize: function(parent, group)
      {
-         try
-         {
-             this.group = group;
-             this.findNodes(parent);
-             this.generateGroupTranslations();
-             this.bindEvents(); 
-             Form.backup(this.nodes.form);
-         }
-         catch(e)
-         {
-             console.info(e);
-         }
+         this.group = group;
+         this.findNodes(parent);
+         this.generateGroupTranslations();
+         this.bindEvents(); 
+         Form.backup(this.nodes.form);
      },
      
      /**
@@ -1432,8 +1363,8 @@ Backend.SpecFieldGroup.prototype = {
 
         this.nodes.parent              = parent;
         this.nodes.form                = document.getElementsByClassName(this.cssPrefix + 'group_form', this.nodes.template)[0].down('form').cloneNode(true);
-        this.nodes.mainTitle           = document.getElementsByClassName(this.cssPrefix + 'group_title', this.nodes.parent)[0];
-        
+        this.nodes.mainTitle           = document.getElementsByClassName(this.cssPrefix + 'group_title', this.nodes.parent)[0];        
+
         try
         {
             this.nodes.parent.insertBefore(this.nodes.form, this.nodes.mainTitle.nextSibling);

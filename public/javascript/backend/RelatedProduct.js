@@ -43,7 +43,6 @@ Backend.RelatedProduct = {
             {                
                 var evaluatedResponse = response.responseData;;
                
-                console.log(popup.getElementById('productIndicator_' + productID));
                 popup.getElementById('productIndicator_' + relatedProductID).hide();
                                
                 if(evaluatedResponse && evaluatedResponse.error && evaluatedResponse.error.length > 0)
@@ -56,21 +55,14 @@ Backend.RelatedProduct = {
                 }
                 else
                 {
-                    try
-                    {
-                        var relatedList = ActiveList.prototype.getInstance($("productRelationship_list_" + productID + "_"));
-                        relatedList.addRecord(relatedProductID, response.responseText, true);
+                    var relatedList = ActiveList.prototype.getInstance($("productRelationship_list_" + productID + "_"));
+                    relatedList.addRecord(relatedProductID, response.responseText, true);
 
-                        var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
-                        tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') + 1);
+                    var tabControl = TabControl.prototype.getInstance("productManagerContainer", false);
+                    tabControl.setCounter('tabProductRelationship', tabControl.getCounter('tabProductRelationship') + 1);
 
-                        new Backend.SelectPopup.prototype.popup.Backend.SaveConfirmationMessage('productRelationshipCreated');
-                        new Backend.SaveConfirmationMessage('productRelationshipCreated');
-                    } 
-                    catch(e)
-                    {
-                        console.info(e);
-                    }
+                    new Backend.SelectPopup.prototype.popup.Backend.SaveConfirmationMessage('productRelationshipCreated');
+                    new Backend.SaveConfirmationMessage('productRelationshipCreated');
                 }               
             }
         );
@@ -129,14 +121,7 @@ Backend.RelatedProduct.Group.Callbacks =
     },
     afterEdit:      function(li, response) 
     { 
-        try
-        {
-            response = eval("(" + response + ")");
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
+        response = eval("(" + response + ")");
         
         var model = new Backend.RelatedProduct.Group.Model(response, Backend.availableLanguages);
         var group = new Backend.RelatedProduct.Group.Controller(li.down('.productRelationshipGroup_form'), model);
@@ -410,20 +395,15 @@ Backend.RelatedProduct.Group.View.prototype = {
             + '<ul id="productRelationship_list_' + this.get('productID') + '_' + this.get('ID') + '" class="productRelationship_list activeList_add_sort activeList_add_edit activeList_add_delete activeList_accept_productRelationship_list">'
             + '</ul>'
         );
-        try
-		{
-	        var li = activeList.addRecord(this.get('ID'), containerDiv);
-	        Element.addClassName(li, 'productRelationshipGroup_item');
-	        
-			var newGroupProductsList = ActiveList.prototype.getInstance(li.down('.productRelationship_list'), Backend.RelatedProduct.activeListCallbacks);
-	        ActiveList.prototype.recreateVisibleLists();
-			
-			activeList.touch(true)
-		}
-		catch(e)
-		{
-			console.info(e)
-		}
+
+        var li = activeList.addRecord(this.get('ID'), containerDiv);
+        Element.addClassName(li, 'productRelationshipGroup_item');
+        
+		var newGroupProductsList = ActiveList.prototype.getInstance(li.down('.productRelationship_list'), Backend.RelatedProduct.activeListCallbacks);
+        ActiveList.prototype.recreateVisibleLists();
+		
+		activeList.touch(true)
+
         this.clear();
     },
     

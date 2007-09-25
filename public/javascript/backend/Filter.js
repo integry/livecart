@@ -109,36 +109,29 @@ Backend.Filter.prototype = {
      */
     initialize: function(filterJson, hash)
     {
-        try
-        {
-			this.filter = !hash ? eval("(" + filterJson + ")" ) : filterJson;
-            
-            this.cloneForm('filter_item_blank', this.filter.rootId);
-    
-            this.id = this.filter.ID;
-            
-            this.categoryID = this.filter.categoryID;
-            this.rootId = this.filter.rootId;
-            this.filtersCount = this.filter.filtersCount ? this.filter.filtersCount : 0;
-            this.specFields = this.filter.specFields;
-            this.name = this.filter.name;
-            this.filters = this.filter.filters;
-            this.backupName = this.name;
-            this.filterCalendars = {};
+		this.filter = !hash ? eval("(" + filterJson + ")" ) : filterJson;
+        
+        this.cloneForm('filter_item_blank', this.filter.rootId);
 
-            this.loadLanguagesAction();
-            this.findUsedNodes();
-            new Backend.LanguageForm(this.nodes.form);
-            this.bindFields();
-            this.generateTitleFromSpecField();
-            
-            this.hideSpecField();
-            this.toggleFilters();
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
+        this.id = this.filter.ID;
+        
+        this.categoryID = this.filter.categoryID;
+        this.rootId = this.filter.rootId;
+        this.filtersCount = this.filter.filtersCount ? this.filter.filtersCount : 0;
+        this.specFields = this.filter.specFields;
+        this.name = this.filter.name;
+        this.filters = this.filter.filters;
+        this.backupName = this.name;
+        this.filterCalendars = {};
+
+        this.loadLanguagesAction();
+        this.findUsedNodes();
+        new Backend.LanguageForm(this.nodes.form);
+        this.bindFields();
+        this.generateTitleFromSpecField();
+        
+        this.hideSpecField();
+        this.toggleFilters();
     },
 
     getSpecField: function()
@@ -990,20 +983,13 @@ Backend.Filter.prototype = {
 
             if(this.nodes.parent.tagName.toLowerCase() == 'li')
             {
-                try
+                var specField = this.getSpecField();
+                if(this.selectorValueTypes.indexOf(specField.type) === -1)
                 {
-                    var specField = this.getSpecField();
-                    if(this.selectorValueTypes.indexOf(specField.type) === -1)
-                    {
-                        var filters = document.getElementsByClassName(this.cssPrefix + "default_filter_li", this.nodes.filtersDefaultGroup);
-                        var filterCount = filters.length;
-                        if(filters[filterCount - 1].down(".filter_name").down("input").value == '') filterCount--;
-                        this.changeFiltersCount(filterCount);
-                    }
-                }
-                catch(e)
-                {
-                    console.info(e);
+                    var filters = document.getElementsByClassName(this.cssPrefix + "default_filter_li", this.nodes.filtersDefaultGroup);
+                    var filterCount = filters.length;
+                    if(filters[filterCount - 1].down(".filter_name").down("input").value == '') filterCount--;
+                    this.changeFiltersCount(filterCount);
                 }
 
                 ActiveList.prototype.getInstance(this.nodes.parent.parentNode).toggleContainer(this.nodes.parent, 'edit', 'yellow');

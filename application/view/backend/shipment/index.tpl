@@ -155,27 +155,21 @@
     Backend.OrderedItem.Messages.selectProductTitle = '{/literal}{t _select_product|addslashes}{literal}'; 
     Backend.OrderedItem.Messages.areYouRealyWantToUpdateItemsCount = '{/literal}{t _are_you_realy_want_to_update_items_count|addslashes}{literal}'; 
 
-    try
-    {
-        Backend.Shipment.prototype.initializePage("{/literal}{$orderID}{literal}", "{/literal}{$downloadableShipment.ID}{literal}")
-                   
-        ActiveList.prototype.getInstance("{/literal}orderShipmentsItems_list_{$orderID}_{$downloadableShipment.ID}{literal}", Backend.OrderedItem.activeListCallbacks); 
-        var groupList = ActiveList.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{literal}', Backend.Shipment.Callbacks); 
-        
-        {/literal}{foreach item="shipment" from=$shipments}{literal} 
-            {/literal}{if $shipment.isShippable}{literal}
-                var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{if $shipment.isShipped}_shipped{/if}_{$shipment.ID}{literal}', {isShipped: {/literal}{if $shipment.isShipped}true{else}false{/if}{literal}});             
-            {/literal}{else}{literal} 
-                var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_downloadable_{$orderID}_{$shipment.ID}{literal}');       
-            {/literal}{/if}{literal} 
-        {/literal}{/foreach}{literal} 
-        
-        groupList.createSortable(true); 
-    }
-    catch(e)
-    {
-        console.info(e);
-    }
+    Backend.Shipment.prototype.initializePage("{/literal}{$orderID}{literal}", "{/literal}{$downloadableShipment.ID}{literal}")
+               
+    ActiveList.prototype.getInstance("{/literal}orderShipmentsItems_list_{$orderID}_{$downloadableShipment.ID}{literal}", Backend.OrderedItem.activeListCallbacks); 
+    var groupList = ActiveList.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{literal}', Backend.Shipment.Callbacks); 
+    
+    {/literal}{foreach item="shipment" from=$shipments}{literal} 
+        {/literal}{if $shipment.isShippable}{literal}
+            var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_{$orderID}{if $shipment.isShipped}_shipped{/if}_{$shipment.ID}{literal}', {isShipped: {/literal}{if $shipment.isShipped}true{else}false{/if}{literal}});             
+        {/literal}{else}{literal} 
+            var shipment = Backend.Shipment.prototype.getInstance('{/literal}orderShipments_list_downloadable_{$orderID}_{$shipment.ID}{literal}');       
+        {/literal}{/if}{literal} 
+    {/literal}{/foreach}{literal} 
+    
+    groupList.createSortable(true); 
+
     </script> 
     {/literal}
     

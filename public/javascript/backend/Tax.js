@@ -84,17 +84,10 @@ Backend.Tax.prototype =
     
     initialize: function(root)
     {
-        try
-        {
-            this.findUsedNodes(root);
-            this.taxActiveList = ActiveList.prototype.getInstance(this.nodes.taxList);
-            Form.State.backup(this.nodes.form);
-            this.bindEvents();
-        }
-        catch(e)
-        {
-            console.info(e)
-        }
+        this.findUsedNodes(root);
+        this.taxActiveList = ActiveList.prototype.getInstance(this.nodes.taxList);
+        Form.State.backup(this.nodes.form);
+        this.bindEvents();
     },
     
     findUsedNodes: function(root)

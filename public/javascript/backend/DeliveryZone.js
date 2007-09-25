@@ -788,26 +788,19 @@ Backend.DeliveryZone.ShippingService.prototype =
     
     initialize: function(root, service)
     {
-        try
+        this.service = service;
+        this.deliveryZoneId = this.service.DeliveryZone ? this.service.DeliveryZone.ID : '';
+        this.findUsedNodes(root);
+        this.bindEvents();
+        this.rangeTypeChanged();
+        this.servicesActiveList = ActiveList.prototype.getInstance(this.nodes.servicesList);
+        
+        if(this.service.ID)
         {
-            this.service = service;
-            this.deliveryZoneId = this.service.DeliveryZone ? this.service.DeliveryZone.ID : '';
-            this.findUsedNodes(root);
-            this.bindEvents();
-            this.rangeTypeChanged();
-            this.servicesActiveList = ActiveList.prototype.getInstance(this.nodes.servicesList);
-            
-            if(this.service.ID)
-            {
-                Form.State.backup(this.nodes.form);
-				
-				this.nodes.root.down('.rangeTypeStatic').show();
-				document.getElementsByClassName('rangeType', this.nodes.root).each(function(rangeTypeField) { rangeTypeField.hide(); }.bind(this));
-            }
-        }
-        catch(e)
-        {
-            console.info(e);
+            Form.State.backup(this.nodes.form);
+			
+			this.nodes.root.down('.rangeTypeStatic').show();
+			document.getElementsByClassName('rangeType', this.nodes.root).each(function(rangeTypeField) { rangeTypeField.hide(); }.bind(this));
         }
     },
         
@@ -1057,11 +1050,11 @@ Backend.DeliveryZone.ShippingRate.prototype =
         },
         'beforeEdit': function(li) 
         {
-            console.info('before edit');
+
         },
         'afterEdit': function(li, response) 
         {
-            console.info('after edit');
+
         },
 
         'beforeSort':     function(li, order)
@@ -1368,20 +1361,13 @@ Backend.DeliveryZone.TaxRate.prototype =
     
     initialize: function(root, rate)
     {
-        try
-        {
-            this.rate = rate;
-            this.deliveryZoneId = this.rate.DeliveryZone ? this.rate.DeliveryZone.ID : '';
-            this.findUsedNodes(root);
-            this.bindEvents();
-            this.ratesActiveList = ActiveList.prototype.getInstance(this.nodes.ratesList);
+        this.rate = rate;
+        this.deliveryZoneId = this.rate.DeliveryZone ? this.rate.DeliveryZone.ID : '';
+        this.findUsedNodes(root);
+        this.bindEvents();
+        this.ratesActiveList = ActiveList.prototype.getInstance(this.nodes.ratesList);
 
-            Form.State.backup(this.nodes.form);
-        }
-        catch(e)
-        {
-            console.info(e);
-        }
+        Form.State.backup(this.nodes.form);
     },
         
     getInstance: function(rootNode, rate)

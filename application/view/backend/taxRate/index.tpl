@@ -21,23 +21,16 @@
 
 {literal}
 <script type="text/jscript">
-    try
+    Event.observe($("taxRate_new_{/literal}{$deliveryZone.ID}{literal}_show"), "click", function(e) 
     {
-        Event.observe($("taxRate_new_{/literal}{$deliveryZone.ID}{literal}_show"), "click", function(e) 
-        {
-            Event.stop(e);
-            var newForm = Backend.DeliveryZone.TaxRate.prototype.getInstance(
-                $("taxRate_new_taxRate_{/literal}{$deliveryZone.ID}{literal}_form").down('form'),
-                {/literal}{json array=$newTaxRate}{literal}
-            );
-            
-            newForm.showNewForm();
-        });   
-    }
-    catch(e)
-    {
-        console.info(e);
-    }
+        Event.stop(e);
+        var newForm = Backend.DeliveryZone.TaxRate.prototype.getInstance(
+            $("taxRate_new_taxRate_{/literal}{$deliveryZone.ID}{literal}_form").down('form'),
+            {/literal}{json array=$newTaxRate}{literal}
+        );
+        
+        newForm.showNewForm();
+    });   
 
     ActiveList.prototype.getInstance("taxRate_taxRatesList_{/literal}{$deliveryZone.ID}{literal}", Backend.DeliveryZone.TaxRate.prototype.Callbacks, function() {});
 </script>

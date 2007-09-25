@@ -97,9 +97,7 @@ Backend.Payment.AddOffline.prototype =
     complete: function(originalRequest)
     {
         Backend.Payment.hideOfflinePaymentForm(this.event);    
-        
-//        console.log(originalRequest);
-        
+                
         var cont = this.form.up('div.tabPageContainer');
         
         // update totals
@@ -131,7 +129,7 @@ Backend.Payment.AddCreditCard.prototype =
         {
             return;
         }        
-        // console.log(originalRequest);
+
         var cont = this.window.opener.document.getElementById('orderManagerContainer').down('div.tabPageContainer');     
         
         // update totals

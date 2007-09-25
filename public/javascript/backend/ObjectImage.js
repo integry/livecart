@@ -55,7 +55,7 @@ Backend.ObjectImage.prototype =
         var images = this.container.getElementsBySelector('.imageTemplate');
 
         var first = images.first();
-        console.log(first);
+
         if (first)
         {           
             this.container.insertBefore(supplemental, first);  
@@ -254,7 +254,6 @@ Backend.ObjectImage.prototype =
 	
 	imageClick: function()
 	{
-        console.log('clicked');
         for (k in this.imageData['paths']) 
 		{ 
             if (this.src.substr(this.src.length - this.imageData['paths'][k].length, this.imageData['paths'][k].length) == this.imageData['paths'][k])
