@@ -334,7 +334,7 @@ TabControl.prototype = {
     {
         tab = $(tab);
 
-        if(tab && this.countersCache[hashId][tab.id])
+        if(tab && this.countersCache[hashId][tab.id] !== undefined)
         {
             this.setCounter(tab.id, this.countersCache[hashId][tab.id]);
             return true;
@@ -345,13 +345,12 @@ TabControl.prototype = {
     
     restoreAllCounters: function(hashId)
     {
-        var self = this;
         var restored = false;
         if(this.countersCache[hashId])
         {
             $A(this.nodes.tabListElements).each(function(tab) {
-                restored = self.restoreCounter(tab, hashId) ? true : restored;    
-            });
+                restored = this.restoreCounter(tab, hashId) ? true : restored;    
+            }.bind(this));
         }
         
         return restored;  

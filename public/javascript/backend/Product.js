@@ -531,7 +531,7 @@ Backend.Product.Editor.prototype =
 		Event.observe(this.nodes.cancel, 'click', function(e) { Event.stop(e); self.cancelForm()});
     },
 
-    __init__: function(args)
+    __init__: function(tabs)
     {
         Backend.Product.Editor.prototype.setCurrentProductId(this.id);
 
@@ -547,7 +547,14 @@ Backend.Product.Editor.prototype =
 
         this.addTinyMce();
 
-        //this.setTabCounters();
+        if(tabs)
+		{
+            this.tabControl.setAllCounters(tabs, this.id);
+        }
+		else
+		{
+			this.setTabCounters()
+		}
 
         this.initSpecFieldControls();
     },
@@ -592,8 +599,8 @@ Backend.Product.Editor.prototype =
     {
         try
         {
-            if(!this.tabControl.restoreAllCounters(this.id))
-            {
+			if(!this.tabControl.restoreAllCounters(this.id))
+            {		
                 new LiveCart.AjaxRequest(
                     Backend.Product.Editor.prototype.links.countTabsItems + "/" + this.id,
                     false,
@@ -631,7 +638,7 @@ Backend.Product.Editor.prototype =
         Backend.Product.Editor.prototype.__currentId__ = id;
     },
 
-    getInstance: function(id, doInit, path)
+    getInstance: function(id, doInit, path, tabs)
     {
         if(!Backend.Product.Editor.prototype.__instances__[id])
         {
@@ -640,7 +647,7 @@ Backend.Product.Editor.prototype =
 
         if(doInit !== false)
         {
-            Backend.Product.Editor.prototype.__instances__[id].__init__();
+            Backend.Product.Editor.prototype.__instances__[id].__init__(tabs);
         }
 
         return Backend.Product.Editor.prototype.__instances__[id];
