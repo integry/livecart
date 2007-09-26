@@ -61,7 +61,7 @@
     </table>
 </fieldset>
 
-<div id="order{$orderID}_downloadableShipments" class="shipmentCategoty" style="display: none">        
+<div id="order{$orderID}_downloadableShipments" class="downloadableShipments shipmentCategoty" style="display: none">        
     <h2 class="notShippedShipmentsTitle">{t _downloadable}</h2> 
     <div id="orderShipments_list_{$orderID}_downloadable" class="downloadableShipment"  {denied role='order.update'}style="display: none"{/denied}>        
         <ul id="orderShipmentsItems_list_{$orderID}_downloadable" class="activeList_add_delete orderShipmentsItem activeList"> 
@@ -82,7 +82,7 @@
 
 
 {* Not Shipped Shipments *}
-<div id="order{$orderID}_shippableShipments" class="shipmentCategoty" style="display: none">
+<div id="order{$orderID}_shippableShipments" class="shippableShipments shipmentCategoty" style="display: none">
     <h2 class="notShippedShipmentsTitle">{t _not_shipped}</h2>
     <ul id="orderShipments_list_{$orderID}" class="orderShipments">
         {foreach item="shipment" from=$shipments}
@@ -100,7 +100,7 @@
 
                                     
 {* Shipped Shipments *} 
-<div id="order{$orderID}_shippedShipments" class="shipmentCategoty" style="display: none">
+<div id="order{$orderID}_shippedShipments" class="shippedShipments shipmentCategoty" style="display: none">
     <h2 class="shippedShipmentsTitle">{t _shipped}</h2> 
     <ul id="orderShipments_list_{$orderID}_shipped" class="orderShippedShipments"> 
         {foreach item="shipment" from=$shipments} 
@@ -146,6 +146,7 @@
     Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToPending = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_pending|addslashes}{literal}'; 
     Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToNew = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_new|addslashes}{literal}'; 
     Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToShipped = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_shipped|addslashes}{literal}'; 
+    Backend.Shipment.Messages.areYouSureYouWantToChangeShimentStatusToReturned = '{/literal}{t _are_you_sure_you_want_to_change_shipment_status_to_returned|addslashes}{literal}'; 
     Backend.Shipment.Messages.youWontBeAableToRevertStatusFromShipped = '{/literal}{t _you_wont_be_able_to_revert_status_from_shipped|addslashes}{literal}'; 
     Backend.Shipment.Messages.youWontBeAbleToUndelete = '{/literal}{t _you_wont_be_able_to_undelete_this_shipment|addslashes}{literal}'; 
     Backend.Shipment.Messages.areYouSureYouWantToDeleteThisShipment = '{/literal}{t _are_you_sure_you_want_to_delete_this_shipment|addslashes}{literal}'; 

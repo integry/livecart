@@ -136,47 +136,54 @@ ActiveList.prototype = {
      */
     initialize: function(ul, callbacks, messages)
     {
-        this.ul = $(ul);
-
-        if(!this.ul)
+        try
         {
-            throw Error('No list found');
-            return false;
-        }
-
-        this.messages = messages;
-                    
-        Element.addClassName(this.ul, this.ul.id);
-
-        // Check if ul has an id
-        if(!this.ul.id)
-        {
-            throw Error('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
-            return false;
-        }
-
-        // Check if all required callbacks are passed
-        var missedCallbacks = [];
-        for(var i = 0; i < this.requiredCallbacks.length; i++)
-        {
-            var before = ('before-' + this.requiredCallbacks[i]).camelize();
-            var after = ('after-' + this.requiredCallbacks[i]).camelize();
-
-            if(!callbacks[before]) missedCallbacks[missedCallbacks.length] = before;
-            if(!callbacks[after]) missedCallbacks[missedCallbacks.length] = after;
-        }
-        if(missedCallbacks.length > 0)
-        {
-                throw Error('Callback' + (missedCallbacks.length > 1 ? 's' : '') + ' are missing (' + missedCallbacks.join(', ') +')' );
+            this.ul = $(ul);
+    
+            if(!this.ul)
+            {
+                throw Error('No list found');
                 return false;
+            }
+    
+            this.messages = messages;
+                        
+            Element.addClassName(this.ul, this.ul.id);
+    
+            // Check if ul has an id
+            if(!this.ul.id)
+            {
+                throw Error('Active record main UL element is required to have an id. Also all list items should take that id plus "_"  as a prefix');
+                return false;
+            }
+    
+            // Check if all required callbacks are passed
+            var missedCallbacks = [];
+            for(var i = 0; i < this.requiredCallbacks.length; i++)
+            {
+                var before = ('before-' + this.requiredCallbacks[i]).camelize();
+                var after = ('after-' + this.requiredCallbacks[i]).camelize();
+    
+                if(!callbacks[before]) missedCallbacks[missedCallbacks.length] = before;
+                if(!callbacks[after]) missedCallbacks[missedCallbacks.length] = after;
+            }
+            if(missedCallbacks.length > 0)
+            {
+                    throw Error('Callback' + (missedCallbacks.length > 1 ? 's' : '') + ' are missing (' + missedCallbacks.join(', ') +')' );
+                    return false;
+            }
+    
+            this.callbacks = callbacks;
+            this.dragged = false;
+    
+            this.generateAcceptFromArray();
+            this.createSortable();
+            this.decorateItems();
+        } 
+        catch(e) 
+        {
+            console.info(e);
         }
-
-        this.callbacks = callbacks;
-        this.dragged = false;
-
-        this.generateAcceptFromArray();
-        this.createSortable();
-        this.decorateItems();
     },
     
     /**
@@ -252,6 +259,19 @@ ActiveList.prototype = {
            iconContainer.style.visibility = 'hidden';
        });
     },
+
+
+    makeActive: function()
+    {
+       Sortable.create(this.ul);
+       Element.addClassName(this.ul, 'activeList_add_sort')
+       document.getElementsByClassName('activeList_icons', this.ul).each(function(iconContainer)
+       {
+           iconContainer.show();
+           iconContainer.style.visibility = 'visible';
+       });
+    },
+                           
 
     /**
      * Split list by odd and even active records by adding ActiveList_odd or ActiveList_even to each element

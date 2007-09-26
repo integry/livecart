@@ -531,12 +531,38 @@ Backend.CustomerOrder.Editor.prototype =
 			if(migrations[statusValue].include(parseInt(option.value)))
 			{
 				Element.show(option);
+				
+		        $$("#tabOrderProducts_" + this.id + "Content .shippableShipments select[name=status]").each(function(select)
+		        {
+		            $A(select.options).each(function(shipmentOption)
+		            {
+		                if(shipmentOption.value == option.value && shipmentOption.style.display == 'none')
+		                {
+                            Element.hide(option);
+		                    throw $break;
+		                }
+		            }.bind(this));
+		        }.bind(this));
 			}
 			else
 			{
                 Element.hide(option);
 			}
+			
+			
 		}.bind(this));
+		
+
+        var allowChangingStatus = true;
+
+        
+        if(allowChangingStatus)
+        {
+        }
+        else
+        {
+            Alert("Some of the shipments can not be shipped. Revise shipments and try again.")
+        }
 		
 		// If one shipment
 		if($("orderShipments_list_" + this.id))
@@ -548,16 +574,6 @@ Backend.CustomerOrder.Editor.prototype =
 					this.hideShipmentStatus();
 				}
 	        }
-	        // Don't allow to ship where more then one shipment. You should ship every shipment separately instead
-			else if($("orderShipments_list_" + this.id).childElements().size() > 1)
-			{
-                this.hideShipmentStatus();
-			}
-	        // If there are no unshipped shipments allow to ship, but check if there are shipped ones first
-			else if($("orderShipments_list_" + this.id + "_shipped").childElements().size() < 1)
-	        {
-                this.hideShipmentStatus();
-            }
 		}
 		else if(this.hideShipped)
 		{
@@ -638,10 +654,12 @@ Backend.CustomerOrder.Editor.prototype =
         {
             orderIndicator.style.visibility = 'hidden';
         }
+		
 
         Backend.showContainer("orderManagerContainer");
         this.tabControl = TabControl.prototype.getInstance("orderManagerContainer", false);
 		
+        this.toggleStatuses();
 		this.setPath();
     },
 	
@@ -736,6 +754,13 @@ Backend.CustomerOrder.Editor.prototype =
 				this.afterSubmitForm(responseObject);
 		    }.bind(this)
         );
+		
+        $$("#tabOrderProducts_" + this.id + "Content .shippableShipments .orderShipment").each(function(li)
+        {
+            var instnace = Backend.Shipment.prototype.getInstance(li);
+            instnace.nodes.status.value = this.nodes.status.value;
+            instnace.changeStatus(true);
+        }.bind(this));
     },
 	
 	afterSubmitForm: function(response)
@@ -745,11 +770,6 @@ Backend.CustomerOrder.Editor.prototype =
             Backend.CustomerOrder.prototype.updateLog(this.id);
 			
 			Form.State.backup(this.nodes.form);
-			
-			if($("orderShipments_list_" + this.id) && $("orderShipments_list_" + this.id).childElements().size() == 1)
-			{
-				$$("#orderShipments_list_" + this.id + " .orderShipment_status select")[0].value = this.nodes.form.elements.namedItem('status').value;
-			}
 		}
 		else
 		{
@@ -846,17 +866,7 @@ Backend.CustomerOrder.Editor.prototype =
                 return false;
             }
         }
-    },
-    
-    resetEditors: function()
-    {
-        Backend.CustomerOrder.Editor.prototype.Instances = {};
-        Backend.CustomerOrder.Editor.prototype.CurrentId = null;
-
-        $('orderManagerContainer').down('.sectionContainer').innerHTML = '';
-
-        TabControl.prototype.__instances__ = {};
-    }    
+    }
 }
 
 

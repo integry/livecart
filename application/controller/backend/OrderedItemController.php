@@ -156,12 +156,18 @@ class OrderedItemController extends StoreManagementController
         $order = CustomerOrder::getInstanceById($this->request->get('id'), true, true);
         $order->loadItems();
         
+        // has downloadable group?
+        $downloadableGroup = null;
+        foreach($order->getShipments() as $key => $shipment)
+        {
+            if(!$shipment->isShippable()) $downloadableGroup = $shipment;
+        }
+        
         $shipmentsArray = array();
-        $shipments = $order->getShipments();
-        foreach($shipments as $key => $shipment)
+        foreach($order->getShipments() as $key => $shipment)
         {
             // one shipment is reserved for downloadable items
-            if(!$shipment->isShippable() || ((!$key && !count($shipment->getItems())) && count($shipments) > 1))
+            if(!$shipment->isShippable() || (!$downloadableGroup && !$key && !count($shipment->getItems())))
             {
                 continue;
             }

@@ -44,6 +44,7 @@ _taxes=Taxes
 _shipping_price=Shipping
 _total_price=Total
 
+_are_you_sure_you_want_to_change_shipment_status_to_returned=Are you sure you want to change shipment status to returned?
 _are_you_sure_you_want_to_change_shipment_status_to_awaiting=Are you sure you want to change shipment status to awaiting?
 _are_you_sure_you_want_to_change_shipment_status_to_pending=Are you sure you want to change shipment status to pending?
 _are_you_sure_you_want_to_change_shipment_status_to_new=Are you sure you want to change shipment status to new?

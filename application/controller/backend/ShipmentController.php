@@ -29,9 +29,7 @@ class ShipmentController extends StoreManagementController
 		    Shipment::STATUS_PROCESSING => $this->translate('_shipping_status_pending'),
 		    Shipment::STATUS_AWAITING => $this->translate('_shipping_status_awaiting'),
 		    Shipment::STATUS_SHIPPED => $this->translate('_shipping_status_shipped'),
-            Shipment::STATUS_RETURNED => $this->translate('_shipping_status_returned'),
-            Shipment::STATUS_CONFIRMED_AS_DELIVERED => $this->translate('_shipping_status_confirmed_as_delivered'),
-            Shipment::STATUS_CONFIRMED_AS_LOST => $this->translate('_shipping_status_confirmed_as_lost')
+            Shipment::STATUS_RETURNED => $this->translate('_shipping_status_returned')
 	    );
 	    
 	    $subtotalAmount = 0; 
@@ -143,8 +141,7 @@ class ShipmentController extends StoreManagementController
 		               'ShippingService' => $shipmentArray['ShippingService']
 		           )
 			),
-			'success',
-			$this->translate('_shipping_service_was_successfuly_changed')
+			'success'
 		);
 	}
 	
@@ -166,7 +163,7 @@ class ShipmentController extends StoreManagementController
 	    
 	    $history->saveLog();
 	    
-	    return new JSONResponse(false, 'success', $this->translate('_shipment_status_has_been_successfully_updated'));
+	    return new JSONResponse(false, 'success');
 	}
 	
 	public function getAvailableServices()
