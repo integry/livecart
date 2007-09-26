@@ -21,7 +21,7 @@
 						{/foreach}
 						</ul>		
 						<p>
-							<strong>Recommended action:</strong> using an FTP client, change the access permissions (chmod) for these directories to 777 (full write access).
+							{t _writePermissionsFix}                            
 						</p>				
 					{else}
 						<img src="image/silk/gif/delete.gif" />

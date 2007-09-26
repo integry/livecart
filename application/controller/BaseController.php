@@ -75,13 +75,19 @@ abstract class BaseController extends Controller implements LCiTranslator
 	public function __construct(LiveCart $application)
 	{
 		parent::__construct($application);
-
+        
 		unset($this->locale);
 		unset($this->config);
 		unset($this->user);
 		unset($this->session);
 
 		$this->router = $this->application->getRouter();
+
+        if (!$application->isInstalled() && !($this instanceof InstallController))
+        {
+            header('Location: ' . $this->router->createUrl(array('controller' => 'install', 'action' => 'index')));
+            exit;            
+        }
 	    
 	    $this->checkAccess();
 		
@@ -174,6 +180,11 @@ abstract class BaseController extends Controller implements LCiTranslator
 	{
 		$this->configFiles[] = $langFile;
 		$this->application->setConfigFiles($this->configFiles);
+    }
+	
+	public function getApplication()
+	{
+        return $this->application;
     }
 	
 	protected function getSessionData($key = '')

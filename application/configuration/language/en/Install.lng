@@ -1,3 +1,6 @@
+checkWritePermissions=Directory write permissions
+_writePermissionsFix=<strong>Recommended action:</strong> using an FTP client, change the access permissions (chmod) for these directories to 777 (full write access). If the directory doesn't exit yet, please create it.
+
 checkPHPVersion=PHP version
 checkPHPVersion_error=<a href="http://php.net" target="_blank">PHP</a> version must be at least 5.2
 

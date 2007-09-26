@@ -74,6 +74,11 @@ class LiveCart extends Application
      *  It can be turned off by simply deleting the "dev" file.
 	 */
     private $isDevMode;
+    
+	/**
+	 *  Determines if the application is installed
+	 */
+    private $isInstalled;
 	
 	const EXCLUDE_DEFAULT_CURRENCY = false;
 
@@ -98,7 +103,13 @@ class LiveCart extends Application
 		unset($this->locale);
 		unset($this->localeName);
 
-		ActiveRecord::setDSN(include(ClassLoader::getRealPath("storage.configuration.database") . '.php'));
+		$dsnPath = ClassLoader::getRealPath("storage.configuration.database") . '.php';
+		$this->isInstalled = file_exists($dsnPath);
+		
+        if ($this->isInstalled)
+        {
+            ActiveRecord::setDSN(include $dsnPath);
+        }
 
         // LiveCart request routing rules
         include ClassLoader::getRealPath('application.configuration.route.backend') . '.php';        		
@@ -127,6 +138,11 @@ class LiveCart extends Application
     public function isDevMode()
     {
         return $this->isDevMode;
+    }	
+	
+    public function isInstalled()
+    {
+        return $this->isInstalled;
     }	
 	
 	/**

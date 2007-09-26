@@ -12,7 +12,7 @@ ClassLoader::import("application.helper.getDateFromString");
  * @package application.controller.backend
  * @author Integry Systems <http://integry.com>
  *
- * @role login
+ * @role backend
  */
 class IndexController extends StoreManagementController
 {
