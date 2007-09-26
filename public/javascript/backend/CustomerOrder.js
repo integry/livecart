@@ -866,7 +866,17 @@ Backend.CustomerOrder.Editor.prototype =
                 return false;
             }
         }
-    }
+    },
+    
+    resetEditors: function()
+    {
+        Backend.CustomerOrder.Editor.prototype.Instances = {};
+        Backend.CustomerOrder.Editor.prototype.CurrentId = null;
+
+        $('orderManagerContainer').down('.sectionContainer').innerHTML = '';
+
+        TabControl.prototype.__instances__ = {};
+    }    
 }
 
 
