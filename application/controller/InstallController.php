@@ -98,7 +98,7 @@ class InstallController extends FrontendController
             
             // create root category
             Installer::loadDatabaseDump(file_get_contents(ClassLoader::getRealPath('installdata.sql') . '/initialData.sql'));
-		
+		            
             ActiveRecord::commit();
         	
 			return new ActionRedirectResponse('install', 'admin');
@@ -164,13 +164,6 @@ class InstallController extends FrontendController
 
         $form = $this->buildConfigForm();
         
-        try
-        {
-			$form->set('name', $this->config->getValueByLang('siteName', 'en'));
-		}
-		catch (Exception $e)
-		{}
-
         $form->set('language', 'en');
         $form->set('curr', 'USD');
         
@@ -194,7 +187,7 @@ class InstallController extends FrontendController
         Language::deleteCache();
         
         // site name
-        $this->config->setValueByLang('siteName', $this->request->get('language'), $this->request->get('name'));
+        $this->config->setValueByLang('STORE_NAME', $this->request->get('language'), $this->request->get('name'));
         $this->config->save();
         
         ClassLoader::import('application.model.Currency');
@@ -237,6 +230,20 @@ class InstallController extends FrontendController
         $root->setValueByLang('name', $language->getID(), 'LiveCart');
         $root->save();
      
+        // create a couple of blank static pages
+        ClassLoader::import('application.model.staticpage.StaticPage');
+        $page = StaticPage::getNewInstance();
+        $page->setValueByLang('title', $language->getID(), 'Contact Info');
+        $page->setValueByLang('text', $language->getID(), 'Enter your contact information here');
+        $page->isInformationBox->set(true);
+        $page->save();
+     
+        $page = StaticPage::getNewInstance();
+        $page->setValueByLang('title', $language->getID(), 'Shipping Policy');
+        $page->setValueByLang('text', $language->getID(), 'Enter your shipping rate & policy information here');
+        $page->isInformationBox->set(true);
+        $page->save();
+
         return new ActionRedirectResponse('install', 'finish');
     }
     
