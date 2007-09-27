@@ -15,11 +15,11 @@
     	   			   	
 	<div id="payTotal">
         <div>
-			Order total: <span class="subTotal">{$order.formattedTotal.$currency}</span>
+			{t _order_total}: <span class="subTotal">{$order.formattedTotal.$currency}</span>
 		</div>
     </div>
 		   	
-    <h2>Pay securely with a credit card</h2>
+    <h2>{t _pay_securely}</h2>
         
 	<div style="font-size: 90%; width: 600px; margin-left: auto; margin-right: auto; border: 1px solid yellow; padding: 5px; background-color: #FFFCDA; margin-top: 15px; margin-bottom: 15px;">
 		Please do not enter real credit card numbers. You can enter any number in the credit card number field. This is not a real transaction. Enter <strong>000</strong> for CVV to test for failed transactions. 
@@ -36,26 +36,26 @@
 	    {/error}
 
 	    <p>
-			<label for="ccNum">Cardholder name:</label>
+			<label for="ccNum">{t _cc_name}:</label>
             <label>{$order.BillingAddress.fullName}</label>
         </p>
 
 	    <p>
             {err for="ccNum"}
-                {{label {t Card number}:}}
+                {{label {t _cc_number}:}}
 	            {textfield class="text" autoComplete="off"}
             {/err}
         </p>
         
         {if $ccTypes}
         <p>
-            <label for="ccType">Card type:</label>
+            <label for="ccType">{t _cc_type}:</label>
             {selectfield name="ccType" id="ccType" options=$ccTypes}
         </p>
         {/if}
     
         <p>
-            <label for="ccExpiryMonth">Card expiration:</label>
+            <label for="ccExpiryMonth">{t _card_exp}:</label>
             <fieldset class="error">
 	            {selectfield name="ccExpiryMonth" id="ccExpiryMonth" options=$months}
 	            /
@@ -66,13 +66,13 @@
     
         <p>
             {err for="ccCVV"}
-                {{label {t 3 or 4 digit code after card # on back of card}:}}
+                {{label {t _cvv_descr}:}}
 	            {textfield maxlength="4" class="text" id="ccCVV"}
-				<a class="cvv" href="{link controller=checkout action=cvv}" onclick="Element.show($('cvvHelp')); return false;">{t What Is It?}</a>
+				<a class="cvv" href="{link controller=checkout action=cvv}" onclick="Element.show($('cvvHelp')); return false;">{t _what_is_cvv}</a>
             {/err}
         </p>
         
-        <input type="submit" class="submit" value="{tn Complete Order Now}" />
+        <input type="submit" class="submit" value="{tn _complete_now}" />
         
         </div>
 
@@ -87,7 +87,7 @@
 
     {* <h2>Other payment methods</h2> *}
 
-    <h2>Order Overview</h2>
+    <h2>{t _order_overview}</h2>
     
     {include file="checkout/orderOverview.tpl"}
     
@@ -121,16 +121,16 @@
     
         {if $order.ShippingAddress}
 		<div style="width: 50%; float: left;">
-            <h3>{t Order will be shipped to}:</h3>
+            <h3>{t _will_ship_to}:</h3>
             {fun name="address" address=$order.ShippingAddress}
-            <a href="{link controller=checkout action=selectAddress}">Change</a>
+            <a href="{link controller=checkout action=selectAddress}">{t _change}</a>
         </div>    
         {/if}
         
         <div style="width: 50%; float: left;">
-            <h3>{t Order will be billed to}:</h3>
+            <h3>{t _will_bill_to}:</h3>
             {fun name="address" address=$order.BillingAddress}
-            <a href="{link controller=checkout action=selectAddress}">Change</a>
+            <a href="{link controller=checkout action=selectAddress}">{t _change}</a>
         </div>    
     
         <div class="clear"></div>

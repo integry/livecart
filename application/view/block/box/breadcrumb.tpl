@@ -1,7 +1,7 @@
 {if $breadCrumb|@count > 1}
     <div id="breadCrumb">
     	<div id="breadCrumbCaption">
-            {t You are here:}
+            {t _you_are_here}:
         </div>
         <ul style="float: left;">			
     	{foreach from=$breadCrumb item="item" name="breadCrumb"}		

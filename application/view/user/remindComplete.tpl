@@ -1,3 +1,4 @@
+{pageTitle}{t _password_sent}{/pageTitle}
 <div class="userRemindComplete">
 
 {include file="layout/frontend/header.tpl"}
@@ -6,14 +7,14 @@
 
 <div id="content" class="left right">
 	
-	<h1>{t Password Sent}</h1>
+	<h1>{t _password_sent}</h1>
 	
 	<p>
-	   Your new password has been sent to <strong>{$email}</strong>.
+	   {maketext text=_has_been_sent_to params=$email}
 	</p>
 	
 	<p>
-	   <span style="color:red; font-weight: bold;">Note:</span> for security reasons this message is displayed even if the email address was not found in our database.
+	   {t _pass_security_warning}       
 	</p>
 	
 </div>

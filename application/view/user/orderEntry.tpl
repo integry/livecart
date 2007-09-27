@@ -11,7 +11,7 @@
 {/if}
 
 <div class="orderStatus">
-    {t Status}: 
+    {t _status}: 
     {include file="user/orderStatus.tpl" order=$order}
 </div>
 
@@ -20,24 +20,24 @@
    <div class="orderMenu" style="float: left; width: 200px;">
    
        <ul>
-           <li><a href="{link controller=user action=viewOrder id=$order.ID}" class="viewOrder">{t View Details}</a></li>
+           <li><a href="{link controller=user action=viewOrder id=$order.ID}" class="viewOrder">{t _view_details}</a></li>
            {if !$order.isCancelled}
            <li><a href="{link controller=user action=orderInvoice id=$order.ID}" class="invoice">{t _order_invoice}</a></li>
            {/if}
        </ul>
        
        <div>
-           {t Order ID}: {$order.ID}
+           {t _order_id}: {$order.ID}
        </div>
        
        {if $order.ShippingAddress}
            <div>
-               {t Recipient}: {$order.ShippingAddress.fullName}
+               {t _recipient}: {$order.ShippingAddress.fullName}
            </div>
        {/if}
 
        <div class="orderTotal">
-           {t Total}: <strong>{$order.formattedTotal[$order.Currency.ID]}</strong>
+           {t _total}: <strong>{$order.formattedTotal[$order.Currency.ID]}</strong>
        </div>
    
    </div>

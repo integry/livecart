@@ -1,9 +1,9 @@
 {if $shipment.isReturned}
-    <span class="returned">{t Returned}</span>
+    <span class="returned">{t _returned}</span>
 {elseif $shipment.isShipped}
-    <span class="mailed">{t Shipped}</span>
+    <span class="mailed">{t _shipped}</span>
 {elseif $shipment.isAwaitingShipment}
-    <span class="mailed">{t Awaiting Shipment}</span>
+    <span class="mailed">{t _awaiting}</span>
 {else}
-    <span class="processing">{t Processing}</span>
+    <span class="processing">{t _processing}</span>
 {/if}

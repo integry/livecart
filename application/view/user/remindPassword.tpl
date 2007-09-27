@@ -1,4 +1,5 @@
 {loadJs form=true}
+{pageTitle}{t _remind_pass}{/pageTitle}
 
 <div class="userRemindPassword">
 
@@ -8,11 +9,11 @@
 
 <div id="content" class="left right">
 	
-	<h1>{t Remind Password}</h1>
+	<h1>{t _remind_pass}</h1>
 	
     {form action="controller=user action=doRemindPassword" method="post" handle=$form}
         <p>
-            <label for="email">Your e-mail address:</label>
+            <label for="email">{t _your_email}:</label>
             {textfield class="text" name="email"}
         </p>
         

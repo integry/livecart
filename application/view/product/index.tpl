@@ -68,36 +68,36 @@
 
         <table>
 			<tr id="productPrice">
-				<td class="param">{t Price}:</td>
+				<td class="param">{t _price}:</td>
 				<td class="value price">{$product.formattedPrice.$currency}</td>
 			</tr>
 			<tr>
 				<td colspan="2" class="cartLinks">
 					{form action="controller=order action=addToCart id=`$product.ID`" handle=$cartForm}
-						{t Quantity}: {selectfield name="count" style="width: auto;" options=$quantity}
-						<input type="submit" class="submit" value="{tn Add to Cart}" />							
+						{t _quantity}: {selectfield name="count" style="width: auto;" options=$quantity}
+						<input type="submit" class="submit" value="{tn _add_to_cart}" />							
     					{hidden name="return" value=$catRoute}
 					{/form}
 				</td>
 			</tr>
 			<tr>
 				<td colspan="2" class="cartLinks addToWishList">
-					<a href="{link controller=order action=addToWishList id=$product.ID query="return=`$catRoute`"}">{t Add to Wishlist}</a>			
+					<a href="{link controller=order action=addToWishList id=$product.ID query="return=`$catRoute`"}">{t _add_to_wishlist}</a>			
 				</td>
 			</tr>
 
 			<tr>
-				<td class="param">{t Manufacturer}:</td>
+				<td class="param">{t _manufacturer}:</td>
 				<td class="value"><a href="{categoryUrl data=$product.Category addFilter=$manufacturerFilter}">{$product.Manufacturer.name}</a></td>
 			</tr>
 			<tr>
-				<td class="param">{t SKU}:</td>
+				<td class="param">{t _sku}:</td>
 				<td class="value">{$product.sku}</td>
 			</tr>
 
 			{if $product.stockCount && 'PRODUCT_DISPLAY_STOCK'|config}
 			<tr>
-				<td class="param">{t In Stock}:</td>
+				<td class="param">{t _in_stock}:</td>
 				<td class="value">{$product.stockCount}</td>
 			</tr>
 			{/if}
@@ -128,14 +128,14 @@
    	<div class="clear"></div>
    
    	{if $product.longDescription_lang}
-    <h2>{t Description}</h2>
+    <h2>{t _description}</h2>
     <div id="productDescription">
         {$product.longDescription_lang}    
     </div>
 	{/if}
 
     {if $product.attributes}
-    <h2>{t Product Specification}</h2>
+    <h2>{t _spec}</h2>
     <div id="productSpecification">
         <table>
             {foreach from=$product.attributes item="attr" name="attributes"}
@@ -169,7 +169,7 @@
     {/if}
     
     {if $related}
-	<h2>{t Recommended Products}</h2>
+	<h2>{t _recommended}</h2>
 	<div id="relatedProducts">
 		
 		{foreach from=$related item=group}
@@ -186,7 +186,7 @@
 	{/if}
 	
 	{if $reviews}
-	<h2>{t Customer Reviews}</h2>
+	<h2>{t _reviews}</h2>
     {/if}    
     
 </div>

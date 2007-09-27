@@ -599,6 +599,10 @@ html, body{
 	padding: 10px;
 }
 
+#pageTitle a 
+{
+    font-size: 0.9em;
+}
 /***************************
 	Menus
 ***************************/

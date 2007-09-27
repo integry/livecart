@@ -16,19 +16,19 @@
     
         <fieldset class="container">
     
-        <label class="title">{t Order ID}:</label>
+        <label class="title">{t _order_id}:</label>
         <label class="text">{$order.ID}</label>
         <div class="clear"></div>       
     
-        <label class="title">{t Order placed}:</label>
+        <label class="title">{t _placed}:</label>
         <label class="text">{$order.formatted_dateCompleted.date_long}</label>
         <div class="clear"></div>   
     
-        <label class="title">{t Order total}:</label>
+        <label class="title">{t _order_total}:</label>
         <label class="text">{$order.formattedTotal[$order.Currency.ID]}</label>
         <div class="clear"></div>   
     
-        <label class="title">{t Order status}:</label>
+        <label class="title">{t _order_status}:</label>
         <label class="text">{include file="user/orderStatus.tpl" order=$order}</label>
         <div class="clear"></div>   
 
@@ -45,9 +45,9 @@
             {if !$shipment.isShippable}
                 <h2>{t _downloads}</h2>        
             {elseif $smarty.foreach.shipments.total > 1}
-                <h2>{t Shipment} #{$smarty.foreach.shipments.iteration}</h2>        
+                <h2>{t _shipment} #{$smarty.foreach.shipments.iteration}</h2>        
                 <p>
-                    {t Status}: {include file="user/shipmentStatus.tpl" shipment=$shipment}
+                    {t _status}: {include file="user/shipmentStatus.tpl" shipment=$shipment}
                 </p>
             {else}
                 <h2>{t _ordered_products}</h2>
@@ -57,10 +57,10 @@
             
                 <thead>
                     <tr>
-                        <th class="productName">Product</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Subtotal</th>
+                        <th class="productName">{t _product}</th>
+                        <th>{t _price}</th>
+                        <th>{t _quantity}</th>
+                        <th>{t _subtotal}</th>
                     </tr>                            
                 </thead>
                 
@@ -124,13 +124,13 @@
         
             {if $order.ShippingAddress}
             <div style="width: 50%; float: left;">
-                <h3>{t Order is shipped to}:</h3>
+                <h3>{t _is_shipped_to}:</h3>
                 {fun name="address" address=$order.ShippingAddress}
             </div>    
             {/if}
             
             <div style="width: 50%; float: left;">
-                <h3>{t Order is billed to}:</h3>
+                <h3>{t _is_billed_to}:</h3>
                 {fun name="address" address=$order.BillingAddress}
             </div>    
         
@@ -138,9 +138,9 @@
     	
     	</fieldset>
     	
-    	<h2 id="msg">Support</h2>
+    	<h2 id="msg">{t _support}</h2>
     	
-    	<p class="noteAbout">Have questions regarding your order? Here is the place to ask them and get answers.</p>
+    	<p class="noteAbout">{t _have_questions}</p>
         
         {if $notes}    	
            <ul class="notes">
@@ -152,7 +152,7 @@
     	
     	{form action="controller=user action=addNote id=`$order.ID`" method=POST id="noteForm" handle=$noteForm}
     	   {err for="text"}
-    	       {{label {t Enter your question or response}:}}
+    	       {{label {t _enter_question}:}}
     	       {textarea}
     	   {/err}    	
            <input type="submit" class="submit" value="{tn _submit_response}" />

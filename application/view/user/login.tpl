@@ -10,26 +10,26 @@
 	
 	<h1>{t _login}</h1>
 	
-	<h2>{t Returning Customer}</h2>
+	<h2>{t _returning}</h2>
 	
 	<p>
         {if $failed}           
             <div class="errorMsg" style="margin: 0;">
-                {t Login failed. Please make sure that your e-mail and password are entered correctly.}
+                {t _login_failed}
             </div>                
         {else}
             <label></label>
-            {t Please sign in}
+            {t _please_sign_in}
         {/if}
     </p>
 	
 	{capture assign="return"}{link controller=user}{/capture}
 	{include file="user/loginForm.tpl"}
 		
-	<h2>{t New Customer}</h2>
+	<h2>{t _new_cust}</h2>
 
         <label></label>
-    	Not registered yet?
+    	{t _not_registered}
 	
 	{include file="user/regForm.tpl"}
 	

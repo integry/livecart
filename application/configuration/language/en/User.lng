@@ -2,6 +2,18 @@
 # Log in
 ######################## 
 _login=Sign In
+_your_pass=Your password
+_password_sent=Password Sent
+_has_been_sent_to=Your new password has been sent to <strong>[_1]</strong>.
+_pass_security_warning=<span style="color:red; font-weight: bold;">Note:</span> for security reasons this message is displayed even if the email address was not found in our database.
+_remind_pass=Remind Password
+
+_returning=Returning Customer
+_new_cust=New Customer
+_please_login=Please log in to complete your purchase.
+_please_sign_in=Please sign in
+_login_failed=Login failed. Please make sure that your e-mail and password are entered correctly.
+_not_registered=Not registered yet?
 
 ######################## 
 # Create new account
@@ -51,6 +63,16 @@ _continue=Continue
 # Manage user account
 ######################## 
 _your_account=Your Account
+_acc_home=Your Account Home
+_orders=Orders
+_downloads=Downloads
+_addresses=Addresses
+_change_email_address=Change E-mail
+
+_unread_msg=Unread Messages
+_download_recent=Download Recently Purchased Files
+_recent_orders=Your Recent Orders
+_no_orders_placed=You haven't placed any orders yet
 
 ######################## 
 # Change password
@@ -103,6 +125,33 @@ _order_total=Order Total
 _shipment_total=Shipment Total
 _shipping=Shipping
 
+_view_details=View Details
+_order_id=Order ID
+_recipient=Recipient
+
+######################## 
+# Invoice
+######################## 
+_invoice=Invoice
+_buyer=Buyer
+_seller=Seller
+_shipment=Shipment
+_product=Product
+_payment_info=Payment Information
+_item_subtotal=Item(s) Subtotal
+_shipping_handling=Shipping & Handling
+_before_tax=Total Before Tax
+_grand_total=Grand Total
+_amount_paid=Amount Paid
+_amount_due=Amount Due
+_placed=Order placed
+_order_status=Order status
+_is_shipped_to=Order is shipped to
+_is_billed_to=Order is billed to
+_support=Support
+_have_questions=Have questions regarding your order? Here is the place to ask them and get answers.
+_enter_question=Enter your question or response
+
 ######################## 
 # Order notes
 ######################## 
@@ -114,5 +163,19 @@ _submit_response=Submit response
 ######################## 
 # Download files
 ######################## 
+_files_found=[quant,_1,file,files] found
 _your_files=Download Files
 _no_files_found=No files found
+
+######################## 
+# Shipment statuses
+######################## 
+_status=Status
+_returned=Returned
+_shipped=Shipped
+_awaiting=Awaiting Shipment
+_processing=Processing
+_cancelled=Cancelled
+_awaiting_payment=Awaiting payment
+_make_payment=Make payment for this order
+_order_processing=The order is being processed

@@ -263,6 +263,9 @@ Backend.LangEdit.prototype =
 			};
 		
 		form.handler = this;
+		
+		this.activateCategory('Base.lng');
+		this.treeBrowser.selectItem('Base.lng');
     },
     
 	saveCompleted: function(originalRequest)
@@ -332,7 +335,7 @@ Backend.LangEdit.prototype =
 	{
         if (!this.treeBrowser.hasChildren(id))
 		{
-			this.treeBrowser.showFeedback(id);
+            this.treeBrowser.showFeedback(id);
 			$('translations').innerHTML = '';
             this.displayFile(id);
 		}

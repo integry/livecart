@@ -1,4 +1,5 @@
 {loadJs form=true}
+{pageTitle}{t _order_checkout}{/pageTitle}
 
 <div class="userCheckout">
 
@@ -10,16 +11,16 @@
 	
 	<h1>{t _order_checkout}</h1>
 	
-	<h2>{t Returning Customer}</h2>
+	<h2>{t _returning}</h2>
 	
 	<p>
-        Please log in to complete your purchase.
+        {t _please_login}
     </p>
 	
 	{capture assign="return"}{link controller=checkout action=selectAddress}{/capture}
 	{include file="user/loginForm.tpl" return=$return}
 		
-	<h2>{t New Customer}</h2>
+	<h2>{t _new_cust}</h2>
 
     {form handle=$form action="controller=user action=processCheckoutRegistration" method="POST"}
         
@@ -173,7 +174,7 @@
             </div>
             
             <p>            
-                <input type="submit" class="submit" value="{tn Continue}" />
+                <input type="submit" class="submit" value="{tn _continue}" />
             </p>
     
     {/form}   

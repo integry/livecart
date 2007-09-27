@@ -60,3 +60,6 @@ _postal_code=Postal code
 _phone=Phone
 
 _loading=Loading data...
+
+# Backend error message
+_internal_error_have_accurred=Internal error has occurred

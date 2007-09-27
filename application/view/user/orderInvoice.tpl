@@ -39,7 +39,7 @@
         
             {img src="image/promo/logo_small.jpg" style="position: absolute; left: 0; top: 0;"}
             
-            <h1 style="padding-top: 20px;">{t Invoice} #{$order.ID}</h1>
+            <h1 style="padding-top: 20px;">{t _invoice} #{$order.ID}</h1>
             <div id="invoiceDate">{$order.formatted_dateCompleted.date_long}</div>
         
         </div>
@@ -47,12 +47,12 @@
         <div id="invoiceContacts">
         
             <div style="width: 50%; float: left;">
-                <h2>{t Buyer}</h2>
+                <h2>{t _buyer}</h2>
                 {fun name="address" address=$order.BillingAddress}
             </div>
 
             <div style="width: 50%; float: left;">
-                <h2>{t Seller}</h2>
+                <h2>{t _seller}</h2>
                 <p>
                     Seller's contact information goes here
                 </p>
@@ -69,17 +69,17 @@
             {if !$shipment.isShippable}
                 <h2>{t _downloads}</h2>        
             {else}
-                <h2>{t Shipment} #{$smarty.foreach.shipments.iteration}</h2>
+                <h2>{t _shipment} #{$smarty.foreach.shipments.iteration}</h2>
             {/if}
     	
             <table class="table shipment">
             
                 <thead>
                     <tr>
-                        <th class="productName">Product</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Subtotal</th>
+                        <th class="productName">{t _product}</th>
+                        <th>{t _price}</th>
+                        <th>{t _quantity}</th>
+                        <th>{t _subtotal}</th>
                     </tr>                            
                 </thead>
                 
@@ -94,7 +94,7 @@
                         </tr>
                     {/foreach}            
                     
-                    {if $order.isShippingRequired && $shipment.isShippable}
+                    {if $order.isShippingRequired && $shipment.isShippable && $shipment.selectedRate.formattedPrice[$order.Currency.ID]}
                         <tr>
                             <td colspan="3" class="subTotalCaption">
                                 {t _shipping} ({$shipment.ShippingService.name_lang}):
@@ -129,20 +129,20 @@
     	
     	{/foreach}    
     	
-    	<h2>{t Payment Information}</h2>
+    	<h2>{t _payment_info}</h2>
     	
     	<table id="invoicePaymentInfo">    	
             <tr class="itemSubtotal">
-                <td>{t Item(s) Subtotal}:</td>
+                <td>{t _item_subtotal}:</td>
                 <td class="amount">{$order.formatted_itemSubtotal}</td>
             </tr>
             <tr class="shippingSubtotal">
-                <td>{t Shipping & Handling}:</td>
+                <td>{t _shipping_handling}:</td>
                 <td class="amount">{$order.formatted_shippingSubtotal}</td>
             </tr>
             {if $order.taxes}
                 <tr class="beforeTaxSubtotal">
-                    <td>{t Total Before Tax}:</td>
+                    <td>{t _before_tax}:</td>
                     <td class="amount">{$order.formatted_subtotalBeforeTaxes}</td>
                 </tr>
                 {foreach from=$order.taxes[$order.Currency.ID] item=tax}
@@ -153,15 +153,15 @@
                 {/foreach}
             {/if}
             <tr class="grandTotal">
-                <td>{t Grand Total}:</td>
+                <td>{t _grand_total}:</td>
                 <td class="amount">{$order.formatted_totalAmount}</td>
             </tr>
             <tr class="amountPaid">
-                <td>{t Amount Paid}:</td>
+                <td>{t _amount_paid}:</td>
                 <td class="amount">{$order.formatted_amountPaid}</td>
             </tr>
             <tr class="amountDue">
-                <td>{t Amount Due}:</td>
+                <td>{t _amount_due}:</td>
                 <td class="amount">{$order.formatted_amountDue}</td>
             </tr>    	
     	</table>

@@ -10,7 +10,7 @@
 
 {/defun}
 
-<div class="resultStats">{t Found categories}</div>
+<div class="resultStats">{t _found_cats}</div>
 <ul class="foundCategories">
 	{foreach from=$foundCategories item=category}
 	

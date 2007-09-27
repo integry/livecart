@@ -1,19 +1,19 @@
 {form action="controller=order action=update" method="POST" handle=$form}
-<h2 style="margin: 0;">Shopping Cart items - to buy now</h2>
+<h2 style="margin: 0;">{t _cart_items}</h2>
 <table id="cart">
 	<thead>
 		<tr>
 			<th colspan="3" class="cartListTitle"></th>
-			<th class="cartPrice">{t Price}</th>
-			<th class="cartQuant">{t Quantity}</th>
+			<th class="cartPrice">{t _price}</th>
+			<th class="cartQuant">{t _quantity}</th>
 		</tr>
 	</thead>
 	<tbody>
 	{foreach from=$cart.cartItems item="item" name="cart"}
 		<tr {zebra loop="cart"}>
 			<td class="cartControl">
-				<a href="{link controller=order action=moveToWishList id=$item.ID query="return=`$return`"}">{t Move to Wish List}</a>
-				<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t Remove}</a>
+				<a href="{link controller=order action=moveToWishList id=$item.ID query="return=`$return`"}">{t _move_to_wishlist}</a>
+				<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t _remove}</a>
 			</td>
 			
 			<td class="cartImage">
@@ -47,7 +47,7 @@
 			<tr>
 			    <td colspan="3" class="subTotalCaption">{t _subtotal}:</td>
 			    <td class="subTotal">{$orderTotal}</td>
-			    <td id="cartUpdate"><input type="submit" class="submit" value="{tn Update}" /></td>
+			    <td id="cartUpdate"><input type="submit" class="submit" value="{tn _update}" /></td>
 			</tr>
 
 		<tr>
@@ -57,9 +57,9 @@
 		<tr>
 			<td colspan="5" style="text-align: right;">
 				<h2></h2>
-                <a href="{link route=$return}" class="continueShopping">Continue Shopping</a>
+                <a href="{link route=$return}" class="continueShopping">{t _continue_shopping}</a>
 				{if $order.isOrderable}
-                    <a href="{link controller=checkout}" class="proceedToCheckout">Proceed to Checkout</a>
+                    <a href="{link controller=checkout}" class="proceedToCheckout">{t _proceed_checkout}</a>
                 {/if}
 			</td>
 		</tr>

@@ -17,6 +17,7 @@ _select_billing_address=Please select the billing address!
 ######################## 
 # Select shipping methods
 ######################## 
+_select_shipping=Select shipping method
 _err_select_shipping=Please select a shipping method for this shipment
 _info_multi_shipments=One or more of your ordered products requires a separate shipment.
 
@@ -25,6 +26,19 @@ _info_multi_shipments=One or more of your ordered products requires a separate s
 ######################## 
 _pay=Complete Your Order
 _total=Order Total
+_pay_securely=Pay securely with a credit card
+_cc_name=Cardholder name
+_cc_number=Card number
+_cc_type=Card type
+_card_exp=Card expiration
+_cvv_descr=3 or 4 digit code after card # on back of card
+_what_is_cvv=What Is It?
+_complete_now=Complete Order Now
+_order_overview=Order Overview
+_will_ship_to=Order will be shipped to
+_will_bill_to=Order will be billed to
+_change=Change
+
 _err_enter_cc_num=Please enter credit card number
 _err_select_cc_type=Please select credit card type
 _err_select_cc_expiry_month=Please select card expiration month

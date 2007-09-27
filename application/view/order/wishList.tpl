@@ -1,17 +1,17 @@
-<h2>Wish List items - to buy later</h2>
+<h2>{t _wish_list_items}</h2>
 <table id="wishList">
 	<thead>
 		<tr>
 			<th colspan="3" class="cartListTitle"></th>
-			<th class="cartPrice">{t Price}</th>
+			<th class="cartPrice">{t _price}</th>
 		</tr>
 	</thead>
 	<tbody>
 	{foreach from=$cart.wishListItems item="item" name="wishList"}
 		<tr {zebra loop="wishList"}>
 			<td class="cartControl">
-				<a href="{link controller=order action=moveToCart id=$item.ID query="return=`$return`"}">{t Move to Cart}</a>
-				<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t Remove}</a>
+				<a href="{link controller=order action=moveToCart id=$item.ID query="return=`$return`"}">{t _move_to_cart}</a>
+				<a href="{link controller=order action=delete id=$item.ID query="return=`$return`"}">{t _remove}</a>
 			</td>
 			<td class="cartImage">
 			    {if $item.Product.DefaultImage.paths.1}
@@ -30,4 +30,4 @@
 	{/foreach}
 	</tbody>
 </table>
-<a href="{link route=$return}" class="continueShopping">Continue Shopping</a>
+<a href="{link route=$return}" class="continueShopping">{t _continue_shopping}</a>

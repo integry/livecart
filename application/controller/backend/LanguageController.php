@@ -90,7 +90,7 @@ class LanguageController extends StoreManagementController
 		{
             foreach ($enDefs as $key => $value)
             {
-                if (substr($key, 0, 7) == 'backend')
+                if (substr($key, 0, 7) == 'backend' || 'Install.lng' == $key)
                 {
                     unset($enDefs[$key]);                    
                 }

@@ -1,5 +1,5 @@
 <p>
-    {t Select shipping method}:
+    {t _select_shipping}:
 </p>
 
 <div class="shippingMethods">

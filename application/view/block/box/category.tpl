@@ -23,7 +23,7 @@
 
 <div class="box categories">
 	<div class="title">
-		<div>Categories {$currentID}</div>
+		<div>{t _categories}</div>
 	</div>
 
 	<div class="content">

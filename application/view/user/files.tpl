@@ -12,7 +12,7 @@
 
         <div class="resultStats">
             {if $files}
-                {maketext text="[quant,_1,file,files] found" params=$files|@count}
+                {maketext text=_files_found params=$files|@count}
             {else}
                 {t _no_files_found}
             {/if}

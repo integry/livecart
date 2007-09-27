@@ -17,9 +17,12 @@ class TemplateController extends StoreManagementController
 	{        
 		$files = Template::getTree();
 		
+        unset($files['install']);
+                    
 		if (!$this->config->get('SHOW_BACKEND_TEMPLATE_FILES'))
 		{
             unset($files['backend']);
+            unset($files['customize']);
             unset($files['block']['subs']['backend']);
             unset($files['block']['subs']['activeGrid']);
             unset($files['layout']['subs']['backend']);

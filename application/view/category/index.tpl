@@ -29,12 +29,12 @@
 
     {if $searchQuery && !$products}
         <p class="notFound">
-            {t <span class='notFoundMain'>No products were found.</span> Please try different keywords for your search query.}
+            {t _not_found}
         </p>    
     {/if}
 
 	{if $subCatFeatured}
-		<h2>{t Featured Products}</h2>
+		<h2>{t _featured_products}</h2>
         {include file="category/productList.tpl" products=$subCatFeatured}	
 	{/if}
 
@@ -42,12 +42,12 @@
         <fieldset class="container">
         <div class="resultStats">
         	<div class="pagingInfo">
-                Showing {$offsetStart} to {$offsetEnd} of {$count} found products.
+                {maketext text=_showing_products params=$offsetStart,$offsetEnd,$count}
             </div>
             
             <div style="float: right;">
                 {if $sortOptions}
-                    Sort by
+                    {t _sort_by}
                     {form handle=$sortForm action="self" method="get"}
                     {selectfield id="productSort" name="sort" options=$sortOptions onchange="this.form.submit();"}
                     {/form}
@@ -62,7 +62,7 @@
     
         {if $count > $perPage}
         	<div class="resultPages">
-        		Pages: {paginate current=$currentPage count=$count perPage=$perPage url=$url}
+        		{t _pages}: {paginate current=$currentPage count=$count perPage=$perPage url=$url}
         	</div>
         {/if}
     {/if}

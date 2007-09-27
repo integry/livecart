@@ -1,5 +1,7 @@
 _information=Information
 
+_you_are_here=You are here
+
 # Filters
 _show_all=Show All
 _show_all_brands=Show All Brands
@@ -17,22 +19,38 @@ _switch_currency=Switch Currency
 
 # Shopping basket
 _shopping_basket=Shopping Basket
+_shopping_cart=Shopping Cart
+_add_to_cart=Add to Cart
+_add_to_wishlist=Add to Wishlist
 
 # Orders
+_total=Total
 _subtotal=Subtotal
 _shipping=Shipping
+_order_total=Order total
+_price=Price
+_quantity=Quantity
 
 # Checkout
+_checkout=Checkout
 _order_checkout=Order Checkout
 _the_same_as_shipping_address=My shipping address is the same as my billing address
 _edit_address=Edit Address
 
+_cart=Cart
+_address=Address
+_shipping=Shipping
+_payment=Payment
+
 # Users
+_your_account=Your Account
+_sign_out=Sign out
 _remind_password=I have forgotten my password
 
 # Common words
 _or=or
 _cancel=Cancel
 
+_pages=Pages
 _next=Next
 _previous=Previous
