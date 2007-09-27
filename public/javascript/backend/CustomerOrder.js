@@ -287,10 +287,7 @@ Backend.CustomerOrder.prototype =
 															
                                                             Backend.CustomerOrder.prototype.orderLoaded = true; 
 													
-												            if (!window.location.hash.match(/order_(\d+)/))
-												            {
-                                                                Backend.ajaxNav.add("order_" + id);
-                                                            }
+												            Backend.ajaxNav.add("order_" + id);
                                                         }.bind(this) );
         
         if(Backend.CustomerOrder.Editor.prototype.hasInstance(id)) 
@@ -323,8 +320,6 @@ Backend.CustomerOrder.GridFormatter.prototype =
 {
     lastUserID: 0,
     
-    orderUrl: '',
-    
 	initialize: function()
 	{
 		
@@ -350,7 +345,7 @@ Backend.CustomerOrder.GridFormatter.prototype =
             '<span>' + 
             '    <span class="progressIndicator" id="orderIndicator_' + id + '" style="visibility: hidden;"></span>' + 
             '</span>' + 
-            '<a href="' + this.orderUrl + id + '#tabOrderInfo__" id="order_' + id + '" onclick="Backend.CustomerOrder.prototype.openOrder(' + id + ', event); return false;">' +
+            '<a href="#edit" id="order_' + id + '" onclick="Backend.CustomerOrder.prototype.openOrder(' + id + ', event); return false;">' +
                  displayedID + 
             '</a>'
 		}
@@ -391,7 +386,7 @@ Backend.User.OrderGridFormatter.formatValue =
                 displayedID = '0' + displayedID;
             }
             
-            return '<a href="' + this.orderUrl + id + '#tabOrderInfo__">' + displayedID + '</a>';
+            return '<a href="' + this.orderUrl + id + '">' + displayedID + '</a>';
 		}
 		else
 		{
@@ -759,13 +754,6 @@ Backend.CustomerOrder.Editor.prototype =
 				this.afterSubmitForm(responseObject);
 		    }.bind(this)
         );
-		
-        $$("#tabOrderProducts_" + this.id + "Content .shippableShipments .orderShipment").each(function(li)
-        {
-            var instnace = Backend.Shipment.prototype.getInstance(li);
-            instnace.nodes.status.value = this.nodes.status.value;
-            instnace.changeStatus(true);
-        }.bind(this));
     },
 	
 	afterSubmitForm: function(response)
@@ -774,6 +762,24 @@ Backend.CustomerOrder.Editor.prototype =
 		{
             Backend.CustomerOrder.prototype.updateLog(this.id);
 			
+			var shippableShipments = $$("#tabOrderProducts_" + this.id + "Content .shippableShipments .orderShipment");
+			var shippedShipments = $$("#tabOrderProducts_" + this.id + "Content .shippedShipments .orderShipment");
+			var updateStatuses = function(li)
+			{
+                var instnace = Backend.Shipment.prototype.getInstance(li);
+                instnace.nodes.status.value = this.nodes.status.value;
+                
+                instnace.afterChangeStatus({status: "success"});
+			}.bind(this)
+			
+			if(this.nodes.status.value != Backend.CustomerOrder.Editor.prototype.STATUS_RETURNED)
+		    {
+			    shippableShipments.each(function(li){ updateStatuses(li); }.bind(this));
+		    }
+			else if(shippableShipments.size() == 0)
+			{
+                shippedShipments.each(function(li) { updateStatuses(li); }.bind(this));
+			}
 			Form.State.backup(this.nodes.form);
 		}
 		else
@@ -790,12 +796,11 @@ Backend.CustomerOrder.Editor.prototype =
     {
         new LiveCart.AjaxRequest(Backend.Shipment.Links.removeEmptyShipments + "/" + this.id);
         
-        var container = $("tabOrderProducts_" + this.id + "Content").down('.orderShipments');
-        document.getElementsByClassName('orderShipmentsItem', container).each(function(itemList)
+        $$("#tabOrderProducts_" + this.id + "Content .shippableShipments .orderShipment").each(function(shipemnt)
         {
-             if(!itemList.down('li'))
+             if(!shipemnt.down('li'))
              {
-                 Element.remove(itemList.up('.orderShipment'));
+                 Element.remove(shipemnt);
              }
         });
         
@@ -810,9 +815,8 @@ Backend.CustomerOrder.Editor.prototype =
 		  return false;
 	    }
 		
-        var container = $("tabOrderProducts_" + this.id + "Content").down('.orderShipments');
         var hasEmptyShipments = false;
-        document.getElementsByClassName('orderShipmentsItem', container).each(function(itemList)
+        $$("#tabOrderProducts_" + this.id + "Content .shippableShipments .orderShipment").each(function(itemList)
         {
              if(!itemList.down('li'))
              {
@@ -828,11 +832,7 @@ Backend.CustomerOrder.Editor.prototype =
     {
         if(!Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime) Backend.Shipment.removeEmptyShipmentsConfirmationLastCallTime = 0;
     
-        var container = null;
-        if($("tabOrderProducts_" + this.id + "Content"))
-        {
-            container = $("tabOrderProducts_" + this.id + "Content").down('.orderShipments');;
-        }
+        var container = $$("#tabOrderProducts_" + this.id + "Content .orderShipments").first();
            
         if($("orderManagerContainer").style.display == 'none' || !container || (container.style.display == 'none'))
         {

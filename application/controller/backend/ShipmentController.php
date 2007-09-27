@@ -326,7 +326,7 @@ class ShipmentController extends StoreManagementController
 	    
 	    $history->saveLog();
 	    
-	    return new JSONResponse(false, 'success');
+	    return new JSONResponse(array('deleted' => true), 'success');
 	}
 }
 

@@ -261,10 +261,10 @@ window.dhtmlHistory = {
       // dynamic updates to the page, which can break some of our 
       // logic related to testing whether this is the first instance
       // a page has loaded or whether it is being pulled from the cache
-      var self = this;
-      window.onunload = function() {
-         self.firstLoad = null;
-      };
+      //var self = this;
+      //window.onunload = function() {
+      //   self.firstLoad = null;
+      //};
       
       // determine if this is our first page load;
       // for Internet Explorer, we do this in 
