@@ -817,7 +817,9 @@ Backend.Product.Prices.prototype =
 
 Backend.Product.GridFormatter =
 {
-	getClassName: function(field, value)
+	productUrl: '',
+	
+    getClassName: function(field, value)
 	{
 
 	},
@@ -829,7 +831,7 @@ Backend.Product.GridFormatter =
 			value = '<span>' +
                         '<span class="progressIndicator" id="productIndicator_' + id + '" style="display: none;"></span>' +
                     '</span>' +
-                    '<a href="#edit" id="product_' + id + '" onclick="Backend.Product.openProduct(' + id + ', event); return false;">' +
+                    '<a href="' + this.productUrl + id + '" id="product_' + id + '" onclick="Backend.Product.openProduct(' + id + ', event); return false;">' +
                         value +
                     '</a>';
 		}

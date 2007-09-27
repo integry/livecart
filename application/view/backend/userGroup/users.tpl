@@ -83,6 +83,7 @@
 
 {literal}
 <script type="text/javascript">
+    Backend.UserGroup.GridFormatter.userUrl = '{/literal}{backendUserUrl}{literal}';
 	window.activeGrids['{/literal}users_{$userGroupID}{literal}'].setDataFormatter(Backend.UserGroup.GridFormatter);
     
     var massHandler = new Backend.UserGroup.massActionHandler($('{/literal}userMass_{$userGroupID}{literal}'), window.activeGrids['{/literal}users_{$userGroupID}{literal}']);

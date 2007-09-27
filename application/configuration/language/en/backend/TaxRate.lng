@@ -1,3 +1,6 @@
+_no_taxes=No taxes have been created yet.
+_add_tax=Add new tax
+
 # Confirmations
 _tax_rate_has_been_successfully_saved=Tax rate has been successfully saved
 _could_not_save_tax_rate=Could not save tax rate

@@ -102,6 +102,8 @@
 <script type="text/javascript">
 	window.activeGrids['{/literal}orders_{$orderGroupID}{literal}'].setDataFormatter(new Backend.CustomerOrder.GridFormatter());
 
+    Backend.CustomerOrder.GridFormatter.prototype.orderUrl = '{/literal}{backendOrderUrl}{literal}';
+
 	if ({/literal}{json array=$userID}{literal} != null)
 	{
 		Backend.User.OrderGridFormatter.orderUrl = '{/literal}{backendOrderUrl}{literal}';

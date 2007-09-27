@@ -363,7 +363,9 @@ Backend.UserGroup.prototype =
 
 Backend.UserGroup.GridFormatter =
 {
-	getClassName: function(field, value)
+	userUrl: '',
+	
+    getClassName: function(field, value)
 	{
 
 	},
@@ -373,13 +375,13 @@ Backend.UserGroup.GridFormatter =
 		if ('User.email' == field && Backend.UserGroup.prototype.usersMiscPermision)
 		{
 		    value = '<span><span class="progressIndicator userIndicator" id="userIndicator_' + id + '" style="display: none;"></span></span>' +
-                '<a href="#edit" id="user_' + id + '" onclick="Backend.UserGroup.prototype.openUser(' + id + ', event); return false;">' +
+                '<a href="' + this.userUrl + id + '" id="user_' + id + '" onclick="Backend.UserGroup.prototype.openUser(' + id + ', event); return false;">' +
                      value +
                 '</a>';
 		}
         else if('User.email' == field && window.opener)
         {
-		    value = '<span><span class="progressIndicator userIndicator" id="userIndicator_' + id + '" style="display: none;"></span></span>' + '<a href="#edit" onclick="window.opener.Backend.CustomerOrder.prototype.customerPopup.getSelectedObject(' + id + '); return false;">' + value + '</a>';
+		    value = '<span><span class="progressIndicator userIndicator" id="userIndicator_' + id + '" style="display: none;"></span></span>' + '<a href="#select" onclick="window.opener.Backend.CustomerOrder.prototype.customerPopup.getSelectedObject(' + id + '); return false;">' + value + '</a>';
                 // asdasd'
         }
 

@@ -287,7 +287,10 @@ Backend.CustomerOrder.prototype =
 															
                                                             Backend.CustomerOrder.prototype.orderLoaded = true; 
 													
-												            Backend.ajaxNav.add("order_" + id);
+												            if (!window.location.hash.match(/order_(\d+)/))
+												            {
+                                                                Backend.ajaxNav.add("order_" + id);
+                                                            }
                                                         }.bind(this) );
         
         if(Backend.CustomerOrder.Editor.prototype.hasInstance(id)) 
@@ -320,6 +323,8 @@ Backend.CustomerOrder.GridFormatter.prototype =
 {
     lastUserID: 0,
     
+    orderUrl: '',
+    
 	initialize: function()
 	{
 		
@@ -345,7 +350,7 @@ Backend.CustomerOrder.GridFormatter.prototype =
             '<span>' + 
             '    <span class="progressIndicator" id="orderIndicator_' + id + '" style="visibility: hidden;"></span>' + 
             '</span>' + 
-            '<a href="#edit" id="order_' + id + '" onclick="Backend.CustomerOrder.prototype.openOrder(' + id + ', event); return false;">' +
+            '<a href="' + this.orderUrl + id + '#tabOrderInfo__" id="order_' + id + '" onclick="Backend.CustomerOrder.prototype.openOrder(' + id + ', event); return false;">' +
                  displayedID + 
             '</a>'
 		}
@@ -386,7 +391,7 @@ Backend.User.OrderGridFormatter.formatValue =
                 displayedID = '0' + displayedID;
             }
             
-            return '<a href="' + this.orderUrl + id + '">' + displayedID + '</a>';
+            return '<a href="' + this.orderUrl + id + '#tabOrderInfo__">' + displayedID + '</a>';
 		}
 		else
 		{

@@ -110,6 +110,7 @@
 {literal}
 <script type="text/javascript">
 {/literal}
+    Backend.Product.GridFormatter.productUrl = '{backendProductUrl}';
 	window.activeGrids['products_{$categoryID}'].setDataFormatter(Backend.Product.GridFormatter);
     
     var massHandler = new ActiveGrid.MassActionHandler(

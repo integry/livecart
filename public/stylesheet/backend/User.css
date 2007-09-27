@@ -122,10 +122,6 @@ fieldset.showPassword
     margin-bottom: 1em;
 }
 
-#userManagerContainer .sameAddress {
-  margin-top: 2em;
-}
-
 .userPasswordBlock
 {
     position: relative;
