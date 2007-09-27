@@ -50,7 +50,7 @@
                 <option value="set_stockCount">{t _set_stock}</option>
             </optgroup>
                         
-            <optgroup label="{t _shipping_opts=Shipping Options}">
+            <optgroup label="{t _shipping_opts}">
                 <option value="set_minimumQuantity">{t _set_minimum_quantity}</option>
                 <option value="set_shippingSurchargeAmount">{t _set_shipping_surcharge}</option>
                 <option value="enable_isFreeShipping">{t _enable_free_shipping}</option>

@@ -581,6 +581,16 @@ form
     text-align: center;
 }
 
+#progressRequirements
+{
+    display: none;
+}
+
+.action_index #progressRequirements
+{
+    display: block;
+}
+
 .action_index #progressRequirements,
 .action_license #progressLicense,
 .action_database #progressDatabase,

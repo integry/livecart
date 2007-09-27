@@ -166,7 +166,7 @@ class InstallController extends FrontendController
         
         try
         {
-			$form->set('name', $this->config->get('siteName'));
+			$form->set('name', $this->config->getValueByLang('siteName', 'en'));
 		}
 		catch (Exception $e)
 		{}
@@ -194,7 +194,7 @@ class InstallController extends FrontendController
         Language::deleteCache();
         
         // site name
-        $this->config->set('siteName', $this->request->get('name'));
+        $this->config->setValueByLang('siteName', $this->request->get('language'), $this->request->get('name'));
         $this->config->save();
         
         ClassLoader::import('application.model.Currency');
