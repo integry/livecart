@@ -625,6 +625,11 @@ Backend.Shipment.prototype =
 		        select.lastValue = select.value;
 		        this.shipmentsActiveList.remove(this.nodes.root);
 		                        
+				if(this.shipmentsActiveList.ul.childElements().size())
+				{
+					this.shipmentsActiveList.ul.up('.shipmentCategoty').hide();
+				}
+								
 		        if(shipmentItems.length == 1)
 		        {
 		            var firstItemsList = ActiveList.prototype.getInstance(shipmentItems[0]);
@@ -638,7 +643,13 @@ Backend.Shipment.prototype =
            
                if(3 == select.value)
                {
-                   $(this.nodes.root.up('ul').id + '_shipped').appendChild(this.nodes.root);
+                   var newList = $(this.nodes.root.up('ul').id + '_shipped');
+                   var oldList = this.nodes.root.up('ul');
+				   
+                   newList.appendChild(this.nodes.root);
+                   
+                   if(!oldList.childElements().size()) oldList.up('.shipmentCategoty').hide();
+                   if(newList.childElements().size()) newList.up('.shipmentCategoty').show();
                    
                    this.itemsActiveList.makeStatic();
                    this.nodes.root.style.paddingLeft = '0px';
@@ -654,28 +665,25 @@ Backend.Shipment.prototype =
                }
                else if(4 == select.value)
                {
-                   $(this.nodes.root.up('ul').id.replace(/_shipped/, "")).appendChild(this.nodes.root);
-                   
+			   	   var newList = $(this.nodes.root.up('ul').id.replace(/_shipped/, ""));
+				   var oldList = this.nodes.root.up('ul');
+				   
+                   newList.appendChild(this.nodes.root);
+				   
+                   if(!oldList.childElements().size()) oldList.up('.shipmentCategoty').hide();
+                   if(newList.childElements().size()) newList.up('.shipmentCategoty').show();
+				   
                    this.itemsActiveList.makeActive();
-                   this.nodes.root.className = 'orderShipment';
                    
                    this.nodes.root.down('a.orderShipment_change_usps').show();
                    document.getElementsByClassName("orderShipmentsItem_count", this.nodes.root).each(function(countInput)
                    {
                       countInput.show(); 
                    });
-        
-                   var shippedSector = $("order" + this.nodes.form.elements.namedItem('orderID').value + "_shippedShipments");
-                   if(shippedSector)
-                   {
-                       shippedSector.show();
-                   }
 
                    Backend.Shipment.prototype.toggleControls(orderID);
                }
-               
-               Backend.Shipment.prototype.updateOrderStatus(orderID);
-    
+                   
                select.lastValue = select.value;
 		   }
 		   

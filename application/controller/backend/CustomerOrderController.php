@@ -526,23 +526,13 @@ class CustomerOrderController extends StoreManagementController
         $order = CustomerOrder::getInstanceByID((int)$this->request->get('ID'), true);
 	    $history = new OrderHistory($order, $this->user);
 
+	    $oldStatus = $order->status->get();
+	    
         $status = (int)$this->request->get('status');
 		$order->status->set($status);
 	    $isCancelled = (int)$this->request->get('isCancelled') ? true : false;
 		$order->isCancelled->set($isCancelled);
-
-	    if($order->countShippableShipments() == 1)
-	    {
-	        foreach($order->getShipments() as $shipment)
-	        {
-	            if($shipment->isShippable())
-	            {
-	                $shipment->status->set($order->status->get());
-	                $shipment->save();
-	            }
-	        }
-	    }
-
+	    
         $response = $this->save($order);
         $history->saveLog();
 

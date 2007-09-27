@@ -398,7 +398,7 @@ class CustomerOrder extends ActiveRecordModel
 		}
     }
     
-	/*####################  Saving ####################*/    
+    /*####################  Saving ####################*/    
     
     public function save($allowEmpty = false)
     {
@@ -506,6 +506,22 @@ class CustomerOrder extends ActiveRecordModel
         
         return parent::save();
     }     
+    
+    public function update($force = false)
+    {       
+        $filter = new ARUpdateFilter();
+        $filter->setCondition(new EqualsCond(new ARFieldHandle('Shipment', 'orderID'), $this->getID()));
+        
+        if(!$this->isReturned())
+        {
+            $filter->setCondition(new NotEqualsCond(new ARFieldHandle('Shipment', 'status'), self::STATUS_SHIPPED));
+        }
+        
+        $filter->addModifier('status', $this->status->get());
+        ActiveRecord::updateRecordSet('Shipment', $filter);  
+
+        return parent::update($force);
+    }
 
 	public function getSubTotal(Currency $currency)
 	{

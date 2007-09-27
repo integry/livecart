@@ -525,7 +525,7 @@ Backend.CustomerOrder.Editor.prototype =
         migrations[this.STATUS_PROCESSING]  = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED]
         migrations[this.STATUS_AWAITING]    = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_SHIPPED]
         migrations[this.STATUS_SHIPPED]     = [this.STATUS_SHIPPED,this.STATUS_RETURNED]
-        migrations[this.STATUS_RETURNED]    = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_RETURNED]
+        migrations[this.STATUS_RETURNED]    = [this.STATUS_NEW,this.STATUS_PROCESSING,this.STATUS_AWAITING,this.STATUS_RETURNED,this.STATUS_SHIPPED]
         
 		$A(this.nodes.status.options).each(function(option) {
 			if(migrations[statusValue].include(parseInt(option.value)))
@@ -749,8 +749,15 @@ Backend.CustomerOrder.Editor.prototype =
             $("order_" + this.id + "_status_feedback"),
             function(responseJSON) 
             {
-				ActiveForm.prototype.resetErrorMessages(this.nodes.form);
-				var responseObject = eval("(" + responseJSON.responseText + ")");
+				try
+				{
+				    var responseObject = eval("(" + responseJSON.responseText + ")");
+				}
+				catch(e)
+				{
+					var responseObject = {status: 'failure', response : {}};
+				}
+				
 				this.afterSubmitForm(responseObject);
 		    }.bind(this)
         );
@@ -758,6 +765,8 @@ Backend.CustomerOrder.Editor.prototype =
 	
 	afterSubmitForm: function(response)
 	{	
+	    ActiveForm.prototype.resetErrorMessages(this.nodes.form);
+	
 		if(response.status == 'success')
 		{
             Backend.CustomerOrder.prototype.updateLog(this.id);
@@ -766,10 +775,12 @@ Backend.CustomerOrder.Editor.prototype =
 			var shippedShipments = $$("#tabOrderProducts_" + this.id + "Content .shippedShipments .orderShipment");
 			var updateStatuses = function(li)
 			{
+				var statusValue = this.nodes.status.value;
                 var instnace = Backend.Shipment.prototype.getInstance(li);
-                instnace.nodes.status.value = this.nodes.status.value;
+                instnace.nodes.status.value = statusValue;
                 
                 instnace.afterChangeStatus({status: "success"});
+                this.nodes.status.value = statusValue;
 			}.bind(this)
 			
 			if(this.nodes.status.value != Backend.CustomerOrder.Editor.prototype.STATUS_RETURNED)
