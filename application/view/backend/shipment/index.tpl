@@ -151,7 +151,7 @@
     Backend.Shipment.Messages.youWontBeAbleToUndelete = '{/literal}{t _you_wont_be_able_to_undelete_this_shipment|addslashes}{literal}'; 
     Backend.Shipment.Messages.areYouSureYouWantToDeleteThisShipment = '{/literal}{t _are_you_sure_you_want_to_delete_this_shipment|addslashes}{literal}'; 
     Backend.Shipment.Messages.emptyShipmentsWillBeRemoved = '{/literal}{t _you_have_count_empty_shipments_do_you_want_to_proceed_to_the_next_page|addslashes}{literal}' 
-    Backend.Shipment.Messages.shipment = '{/literal}{t Shipment}{literal}';
+    Backend.Shipment.Messages.shipment = '{/literal}{t _shipment}{literal}';
 
     Backend.OrderedItem.Messages = {}; 
     Backend.OrderedItem.Messages.areYouSureYouWantToDelete = '{/literal}{t _are_you_sure_you_want_to_delete_this_item|addslashes}{literal}'; 

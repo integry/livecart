@@ -1,6 +1,9 @@
 _home=Home
 _base_help=Help
 _change_language=Language
+_logged_as=Logged in as
+_frontend=Store Frontend
+_logout=logout
 
 # Common translations
 
@@ -17,6 +20,13 @@ _activeList_delete=Delete
 
 _yes=Yes
 _no=No
+
+# ActiveGrid
+_change_columns=Change columns
+_with_selected=With selected
+
+# Language forms
+_langform_translate=Translate
 
 # Units
 _switch_to_english_units=Switch to English units

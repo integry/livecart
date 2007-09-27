@@ -39,7 +39,7 @@
 {includeCss file="library/TabControl.css"}
 {includeCss file="library/dhtmlxtree/dhtmlXTree.css"}
 
-{pageTitle help="cat"}<span id="activeCategoryPath"></span><span id="activeProductPath" style="display: none;"><span id="productCategoryPath"></span><span id="activeProductName"></span></span><span style="display: none;">{t Products and Categories}</span>{/pageTitle}
+{pageTitle help="cat"}<span id="activeCategoryPath"></span><span id="activeProductPath" style="display: none;"><span id="productCategoryPath"></span><span id="activeProductName"></span></span><span style="display: none;">{t _products_and_categories}</span>{/pageTitle}
 {include file="layout/backend/header.tpl"}
 
 <div id="specField_item_blank" class="dom_template">{include file="backend/specField/form.tpl"}</div>
@@ -121,7 +121,7 @@
 <div id="managerContainer" class="treeManagerContainer maxHeight h--60">
     
     <div id="loadingProduct" style="display: none; position: absolute; text-align: center; width: 100%; padding-top: 200px; z-index: 50000;">
-        <span style="padding: 40px; background-color: white; border: 1px solid black;">{t Loading product...}<span class="progressIndicator"></span></span>
+        <span style="padding: 40px; background-color: white; border: 1px solid black;">{t _loading_product}<span class="progressIndicator"></span></span>
     </div>
     
 	<div id="categoryTabs">

@@ -12,11 +12,11 @@
 <div id="loginContainer">
 <form action="{link controller=backend.session action=doLogin}" method="POST" />
     <p>
-       <label for="email">{t Your e-mail address}:</label>
+       <label for="email">{t _email}:</label>
        <input type="text" class="text" id="email" name="email" value="{$email|escape}" />
     </p>
     <p>
-        <label for="password">{t Your password}:</label>
+        <label for="password">{t _password}:</label>
         <fieldset class="container">
             <input type="password" class="text" id="password" name="password" />
             <a href="{link controller=user action="remindPassword" query="return=$return"}" class="forgottenPassword">
@@ -27,7 +27,7 @@
 
    	<p>
 		<label></label>
-		<input type="submit" class="submit" value="{tn Login}" />
+		<input type="submit" class="submit" value="{tn _login}" />
 	</p>
     
 	<input type="hidden" name="return" value="{$return}" />	

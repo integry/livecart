@@ -21,7 +21,7 @@
         
                 <fieldset class="controls">
                     <span class="progressIndicator" style="display: none;"></span>
-                    <input type="submit" class="submit" value="{tn Add Response}" />
+                    <input type="submit" class="submit" value="{tn _add_response}" />
                     {t _or} <a class="cancel responseCancel" href="#">{t _cancel}</a>
                 </fieldset>
         

@@ -3,50 +3,50 @@
 	<fieldset class="container">
 		<ul class="menu doneProduct">
 			<li class="done">
-                <a href="#cancelEditing" id="cancel_product_edit" class="cancel">{t Done editing product}</a>
+                <a href="#cancelEditing" id="cancel_product_edit" class="cancel">{t _done_editing_product}</a>
             </li>
 		</ul>
 		
-		<a id="productPage" onclick="Backend.Product.Editor.prototype.goToProductPage();" href="{link controller=product action=index id=_id_}" target="_blank" class="external">Product page</a>
+		<a id="productPage" onclick="Backend.Product.Editor.prototype.goToProductPage();" href="{link controller=product action=index id=_id_}" target="_blank" class="external">{t _product_page}</a>
 		
 	</fieldset>
 	
 	<div class="tabContainer">
 		<ul class="tabList tabs">
 			<li id="tabProductBasic" class="tab active">
-				<a href="{link controller=backend.product action=basicData id=_id_}?categoryID=_categoryID_}">{t Basic data}</a>
+				<a href="{link controller=backend.product action=basicData id=_id_}?categoryID=_categoryID_}">{t _basic_data}</a>
 				<span class="tabHelp">products.edit</span>
 			</li>
 			
 			<li id="tabProductDiscounts" class="tab inactive">
-				<a href="{link controller=backend.productPrice action=index id=_id_}?categoryID=_categoryID_">{t Stock & Pricing}</a>
+				<a href="{link controller=backend.productPrice action=index id=_id_}?categoryID=_categoryID_">{t _stock_pricing}</a>
 				<span class="tabHelp">products.edit.pricing</span>
 			</li>
 			
 			<li id="tabProductImages" class="tab inactive">
-				<a href="{link controller=backend.productImage action=index id=_id_}?categoryID=_categoryID_">{t Images}</a>
+				<a href="{link controller=backend.productImage action=index id=_id_}?categoryID=_categoryID_">{t _images}</a>
 				<span class="tabHelp">products.edit.images</span>
 			</li>
 			
 			<li id="tabProductRelationship" class="tab inactive">
-				<a href="{link   controller=backend.productRelationship action=index id=_id_}?categoryID=_categoryID_">{t Related products}</a>
+				<a href="{link   controller=backend.productRelationship action=index id=_id_}?categoryID=_categoryID_">{t _related}</a>
 				<span class="tabHelp">products.edit.related</span>
 			</li>
 			
 			<li id="tabProductFiles" class="tab inactive">
-				<a href="{link controller=backend.productFile action=index id=_id_}?categoryID=_categoryID_">{t Files}</a>
+				<a href="{link controller=backend.productFile action=index id=_id_}?categoryID=_categoryID_">{t _files}</a>
 				<span class="tabHelp">products.edit.files</span>
 			</li>
 
 {*
 			<li id="tabOperations" class="tab inactive">
-				<a href="{link controller=backend.product action=operation id=_id_}?categoryID=_categoryID_">{t Operations}</a>
+				<a href="{link controller=backend.product action=operation id=_id_}?categoryID=_categoryID_">{t _operations}</a>
 				<span class="tabHelp">products.edit.operations</span>
 			</li>
 *}
 
 			<li id="tabInfo" class="tab inactive">
-				<a href="{link controller=backend.product action=info id=_id_}?categoryID=_categoryID_">{t Info}</a>
+				<a href="{link controller=backend.product action=info id=_id_}?categoryID=_categoryID_">{t _info}</a>
 				<span class="tabHelp">products.edit.info</span>
 			</li>
 

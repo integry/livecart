@@ -1,6 +1,6 @@
 <fieldset class="shipmentContainer">
 {if $shipment.isShippable}
-    <legend>{t Shipment} #{$shipment.ID}</legend>
+    <legend>{t _shipment} #{$shipment.ID}</legend>
 {/if}
 
     <form>
@@ -15,17 +15,17 @@
                 </td>
                 <td class="orderShipmentsItem_info_price_td">
                     <div class="orderShipmentsItem_info_price">
-                        {t Price}
+                        {t _price}
                     </div>
                 </td>
                 <td class="orderShipmentsItem_info_count_td">
                     <div class="orderShipmentsItem_info_count">
-                        {t Quantity}
+                        {t _quantity}
                     </div>
                 </td>
                 <td class="orderShipmentsItem_info_total_td">
                     <div class="orderShipmentsItem_info_total item_subtotal">
-                        {t Subtotal}
+                        {t _subtotal}
                     </div>
                 </td>
               </tr>

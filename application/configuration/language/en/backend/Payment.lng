@@ -4,6 +4,14 @@ _add_credit_card_payment=Add credit card payment
 _cancel_offline_payment=Cancel adding payment
 
 # Credit card payment
+_amount_charge=Amount to charge
+_cc_name=Cardholder name
+_cc_num=Card number
+_cc_type=Card type
+_cc_exp=Card expiration
+_cc_cvv=CVV code
+_process=Process Payment
+
 _comment=Comment
 _err_enter_amount=Enter transaction amount
 _err_amount_negative=Amount cannot be negative
@@ -11,3 +19,30 @@ _err_enter_cc_num=Enter credit card number
 _err_select_cc_expiry_month=Select card expiration year
 _err_select_cc_expiry_year=Select card expiration month
 _err_processing_cc=Could not process credit card. Please make sure that all the data have been entered correctly.
+
+# Offline payment
+_add_payment=Add payment
+_amount=Amount
+
+# Order totals
+_order_total=Order total
+_amount_paid=Amount paid
+_not_captured=Amount not captured
+_amount_due=Amount due
+
+# Transaction details
+_type_sale=Sale
+_type_authorization=Authorization
+_type_capture=Capture
+_type_void=Void
+_processed_by=Processed by
+_capture=Capture
+_process_capture=Process Capture
+_void=Void
+_void_conf=Really void this transaction?
+_void_button=Void Transaction
+_void_reason=Reason for voiding
+_capture_conf=Really capture this payment?
+_capture_amount=Amount to capture
+_finalize=Finalize transaction
+_transaction_id=Transaction ID

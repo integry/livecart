@@ -1,3 +1,15 @@
+# Tabs
+_done_editing_product=Done editing product
+_product_page=Product page
+_basic_data=Basic data
+_stock_pricing=Stock & Pricing
+_images=Images
+_related=Related products
+_files=Files
+_info=Info
+
+_add_product=Add New Product
+
 # Confirmation
 _could_not_save_product_information=Could not save product information
 _new_product_was_successfully_created=New product was successfully created
@@ -27,6 +39,7 @@ _increase_price=Increase price (percent)
 _increase_stock=Increase stock (count)
 _unset_featured_product=Unset featured product
 _inventory_and_pricing=Inventory &amp; Pricing
+_shipping_opts=Shipping Options
 _enable_free_shipping=Enable free shipping
 _disable_free_shipping=Disable free shipping
 _disable_back_ordering=Disable back-ordering
@@ -142,3 +155,6 @@ _hint_keywords=Supply words or phrases here that may assist users in searching p
 _hint_featured=Featured products are displayed above all other products, so marking a product as featured will provide extra exposure to this product.
 
 _hint_surcharge=Define additional shipping charges for this particular product
+
+# Info tab
+_date_created=Date created

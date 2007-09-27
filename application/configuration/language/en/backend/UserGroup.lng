@@ -78,6 +78,9 @@ User.dateCreated=Date Created
 User.isEnabled=Enabled
 UserGroup.name=Group Name
 
+_no_users=No users found
+_listing_users=Listing users $from - $to of $count
+
 _nothing_selected=Please select at least one user account first
 
 _are_you_sure_you_want_to_delete_this_user_group=Are you sure you want to delete this user group?

@@ -11,7 +11,7 @@
 	<ul class="menu">
 		<li class="addProduct">
 			<a href="#" onclick="Backend.Product.showAddForm({$categoryID}, this); return false;">
-				Add New Product
+				{t _add_product}
 			</a>
 			<span class="progressIndicator" style="display: none;"></span>
 		</li>
@@ -28,7 +28,7 @@
 	    <input type="hidden" name="selectedIDs" value="" />
 	    <input type="hidden" name="isInverse" value="" />
 	    
-        With selected: 
+        {t _with_selected}: 
         <select name="act" class="select">
     
             <option value="enable_isEnabled">{t _enable}</option>
@@ -50,7 +50,7 @@
                 <option value="set_stockCount">{t _set_stock}</option>
             </optgroup>
                         
-            <optgroup label="Shipping Options">
+            <optgroup label="{t _shipping_opts=Shipping Options}">
                 <option value="set_minimumQuantity">{t _set_minimum_quantity}</option>
                 <option value="set_shippingSurchargeAmount">{t _set_shipping_surcharge}</option>
                 <option value="enable_isFreeShipping">{t _enable_free_shipping}</option>

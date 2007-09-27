@@ -74,7 +74,7 @@
 			<tr>
 				<td colspan="2" class="cartLinks">
 					{form action="controller=order action=addToCart id=`$product.ID`" handle=$cartForm}
-						Quantity: {selectfield name="count" style="width: auto;" options=$quantity}
+						{t Quantity}: {selectfield name="count" style="width: auto;" options=$quantity}
 						<input type="submit" class="submit" value="{tn Add to Cart}" />							
     					{hidden name="return" value=$catRoute}
 					{/form}

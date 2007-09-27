@@ -34,7 +34,7 @@
 				</td>
 				<td id="footerStretch">
 					&nbsp; 
-					<a href="{link}" target="_blank" id="frontendLink">{t Store Frontend}</a>
+					<a href="{link}" target="_blank" id="frontendLink">{t _frontend}</a>
 				</td>
 			</tr>
 		</table>

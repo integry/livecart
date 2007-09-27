@@ -28,7 +28,7 @@
 {/error}
 
 <p>
-	<label for="ccNum">{t Amount to charge}:</label>   
+	<label for="ccNum">{t _amount_charge}:</label>   
     <fieldset class="error">
         {textfield name="amount" class="text number"} {$order.Currency.ID}
         <div class="errorText hidden"></div> 
@@ -36,7 +36,7 @@
 </p>
 
 <p>
-	<label for="ccNum">{t Cardholder name}:</label>
+	<label for="ccNum">{t _cc_name}:</label>
     <fieldset class="error">
         {textfield name="name" class="text"}
         <div class="errorText hidden"></div> 
@@ -44,7 +44,7 @@
 </p>
 
 <p>
-	<label for="ccNum">{t Card number}:</label>
+	<label for="ccNum">{t _cc_num}:</label>
     <fieldset class="error">
         {textfield name="ccNum" class="text"}
 		<div class="errorText hidden{error for="ccNum"} visible{/error}">{error for="ccNum"}{$msg}{/error}</div>
@@ -53,13 +53,13 @@
 
 {if $ccTypes}
     <p>
-        <label for="ccType">{t Card type}:</label>
+        <label for="ccType">{t _cc_type}:</label>
         {selectfield name="ccType" options=$ccTypes}
     </p>
 {/if}
 
 <p>
-    <label for="ccExpiryMonth">{t Card expiration}:</label>
+    <label for="ccExpiryMonth">{t _cc_exp}:</label>
     <fieldset class="error">
         {selectfield name="ccExpiryMonth" class="narrow" options=$months}
         /
@@ -69,7 +69,7 @@
 </p>
 
 <p>
-    <label for="ccCVV">{t CVV code}:</label>
+    <label for="ccCVV">{t _cc_cvv}:</label>
     <fieldset class="error">
         {textfield name="ccCVV" maxlength="4" class="text number"} 
 		<div class="errorText hidden{error for="ccCVV"} visible{/error}">{error for="ccCVV"}{$msg}{/error}</div>
@@ -87,7 +87,7 @@
 <fieldset class="controls">
     <label></label>
     <span class="progressIndicator" style="display: none;"></span>
-    <input type="submit" class="submit" value="{tn Process Payment}" />
+    <input type="submit" class="submit" value="{tn _process}" />
     {t _or} <a href="#cancel" onclick="window.close(); return false;" class="cancel">{t _cancel}</a>
 </fieldset>
 

@@ -1,1 +1,1 @@
-{t Please select a template file to edit}
+{t _please_select}

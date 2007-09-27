@@ -1,3 +1,7 @@
+_countries_and_states=Countries and States
+_shipping_rates=Shipping Rates
+_tax_rates=Tax Rates
+
 # Confirmations
 _delivery_zone_was_successfully_saved=Delivery zone was successfully saved
 _new_delivery_zone_was_successfully_created=New delivery zone was successfully created

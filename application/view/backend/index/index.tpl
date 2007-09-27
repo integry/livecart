@@ -1,11 +1,11 @@
-{pageTitle help=""}{t LiveCart Backend}{/pageTitle}
+{pageTitle help=""}{t _livecart_backend}{/pageTitle}
 
 {includeCss file="backend/Index.css"}
 
 {include file="layout/backend/header.tpl"}
 
 <fieldset class="stats">
-    <legend>{t Order Overview}</legend>
+    <legend>{t _order_overview}</legend>
     <form>
         <p>
             <label>
@@ -38,7 +38,7 @@
         </p>
     
         <p>
-            <label>Unread messages:</label>
+            <label>{t _unread_msg}:</label>
             <label>{$orderCount.messages}</label>        
         </p>
     
@@ -46,37 +46,37 @@
 </fieldset>
 
 <fieldset class="stats">
-    <legend>{t Inventory}</legend>
+    <legend>{t _inventory}</legend>
     
     <form>
         <p>
-            <label>Low on stock:</label>
-            <label>{$inventoryCount.lowStock}</label>        
+            <label>{t _low_stock}:</label>
+            <label>{$inventoryCount.lowStock}:</label>        
         </p>
     
         <p>
-            <label>Out of stock:</label>
+            <label>{t _out_stock}:</label>
             <label>{$inventoryCount.outOfStock}</label>
         </p>
     </form>
 </fieldset>
 
 <fieldset class="stats">
-    <legend>{t Overall}</legend>
+    <legend>{t _overall}</legend>
     
     <form>
         <p>
-            <label>Active products:</label>
+            <label>{t _active_pr}:</label>
             <label>{$rootCat.availableProductCount}</label>        
         </p>
     
         <p>
-            <label>Inactive products:</label>
+            <label>{t _inactive_pr}:</label>
             <label>{$rootCat.unavailableProductCount}</label>
         </p>
 
         <p>
-            <label>Total orders:</label>
+            <label>{t _total_orders}:</label>
             <label>{$orderCount.total}</label>
         </p>
 

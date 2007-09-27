@@ -2,7 +2,7 @@
 	
     <div class="languageTabsContainer">
     	<span class="languageFormCaption">
-    		Translate: 
+    		{t _langform_translate}: 
     	</span>
     	
     	<ul class="languageFormTabs">

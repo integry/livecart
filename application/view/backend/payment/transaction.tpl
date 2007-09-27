@@ -13,16 +13,16 @@
         <div class="transactionStatus">
 
             {if 0 == $transaction.type}
-                {t Sale}
+                {t _type_sale}
 
             {elseif 1 == $transaction.type}
-                {t Authorization}
+                {t _type_authorization}
 
             {elseif 2 == $transaction.type}
-                {t Capture}
+                {t _type_capture}
 
             {elseif 3 == $transaction.type}
-                {t Void}
+                {t _type_void}
                 
             {/if}
         </div>
@@ -30,7 +30,7 @@
         <div class="transactionUser">
 
     		{if $transaction.User}
-                {t Processed by}: <a href="{backendUserUrl user=$transaction.User}">{$transaction.User.fullName}</a>
+                {t _processed_by}: <a href="{backendUserUrl user=$transaction.User}">{$transaction.User.fullName}</a>
             {/if}
     		
     		{if $transaction.comment}
@@ -48,12 +48,12 @@
         <ul class="transactionMenu" {denied role='order.update'}style="display: none;"{/denied}>
             {if $transaction.isCapturable}
                 <li class="captureMenu">
-                    <a href="" onclick="Backend.Payment.showCaptureForm({$transaction.ID}, event);">{t Capture}</a>
+                    <a href="" onclick="Backend.Payment.showCaptureForm({$transaction.ID}, event);">{t _capture}</a>
                 </li>
             {/if}
             {if $transaction.isVoidable}
                 <li class="voidMenu">
-                    <a href="#void" onclick="Backend.Payment.showVoidForm({$transaction.ID}, event);">{t Void}</a>
+                    <a href="#void" onclick="Backend.Payment.showVoidForm({$transaction.ID}, event);">{t _void}</a>
                 </li>
             {/if}
         </ul>
@@ -63,16 +63,16 @@
         <div class="transactionForm voidForm" style="display: none;">
         	<form action="{link controller=backend.payment action=void id=$transaction.ID}" method="POST" onsubmit="Backend.Payment.voidTransaction({$transaction.ID}, this, event);">
 
-                <span class="confirmation" style="display: none">{t Really void this transaction?}</span>
+                <span class="confirmation" style="display: none">{t _void_conf}</span>
                 
         		<p>
-					{t Reason for voiding}:
+					{t _void_reason}:
 				</p>
 				<textarea name="comment"></textarea>
 
         		<fieldset class="controls">
 					<span class="progressIndicator" style="display: none;"></span>
-					<input type="submit" class="submit" value="{tn Void Transaction}" />
+					<input type="submit" class="submit" value="{tn _void_button}" />
 	        		{t _or} <a class="menu" href="#" onclick="Backend.Payment.hideVoidForm({$transaction.ID}, event);">{t _cancel}</a>
 	        	</fieldset>
 	        	
@@ -83,22 +83,22 @@
         <div class="transactionForm captureForm" style="display: none;">
         	{form action="controller=backend.payment action=capture id=`$transaction.ID`" method="POST" onsubmit="Backend.Payment.captureTransaction(`$transaction.ID`, this, event);" handle=$capture}
 
-                <span class="confirmation" style="display: none">{t Really capture this payment?}</span>
+                <span class="confirmation" style="display: none">{t _capture_conf}</span>
                 
         		<p>
-					{t Amount to capture}:<Br />
+					{t _capture_amount}:<Br />
 					{textfield name="amount" class="text number" value=$transaction.amount} {$transaction.Currency.ID}
 				</p>
 
         		<p class="captureComment">
-					{t Comment}:
+					{t _comment}:
 					<textarea name="comment"></textarea>
 				</p>
 
 				{if $transaction.isMultiCapture}
                     <p>
     					{checkbox name="complete" class="checkbox"}
-    					<label for="complete">{t Finalize transaction}</label>
+    					<label for="complete">{t _finalize}</label>
     					<div class="clear"></div>
     				</p>
                 {else}
@@ -107,7 +107,7 @@
 
         		<fieldset class="controls">
 					<span class="progressIndicator" style="display: none;"></span>
-					<input type="submit" class="submit" value="{tn Process Capture}" />
+					<input type="submit" class="submit" value="{tn _process_capture}" />
 	        		{t _or} <a class="menu" href="#" onclick="Backend.Payment.hideCaptureForm({$transaction.ID}, event);">{t _cancel}</a>
 	        	</fieldset>
 	        	
@@ -131,7 +131,7 @@
 
             {if $transaction.gatewayTransactionID}
             	<div class="gatewayTransactionID">
-				    {t Transaction ID}: {$transaction.gatewayTransactionID}
+				    {t _transaction_id}: {$transaction.gatewayTransactionID}
 				</div>
             {/if}
 

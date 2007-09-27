@@ -134,7 +134,7 @@
 	<div class="activeGridColumnsSelect">
 		<div class="activeGridColumnsSelectControls">
 			<span class="progressIndicator" style="display: none;"></span>
-			<input type="submit" class="submit" name="sm" value="{tn Change columns}" /> {t _or} <a class="cancel" onclick="Element.hide($('{$prefix}ColumnMenu_{$id}')); return false;" href="#cancel">{t _cancel}</a>
+			<input type="submit" class="submit" name="sm" value="{tn _change_columns}" /> {t _or} <a class="cancel" onclick="Element.hide($('{$prefix}ColumnMenu_{$id}')); return false;" href="#cancel">{t _cancel}</a>
 		</div>
 	    <div class="activeGridColumnsList">
 			{foreach from=$availableColumns item=item key=column}

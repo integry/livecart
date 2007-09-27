@@ -1,1 +1,1 @@
-{t Date created}: {$product.formatted_dateCreated.date_long} {$product.formatted_dateCreated.time_long}
+{t _date_created}: {$product.formatted_dateCreated.date_long} {$product.formatted_dateCreated.time_long}

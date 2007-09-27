@@ -22,6 +22,10 @@ _default_currency=Base currency
 
 _confirm_delete=Are you sure you wish to delete this currency?
 
+_pr_form=Price Formatting
+_pr_prefix=Price display prefix
+_pr_suffix=Price display suffix
+
 # rates
 
 _err_empty=Please enter the currency exchange rate

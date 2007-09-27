@@ -2,7 +2,7 @@
     <legend>{t _main_details}</legend>
 
 	<p class="required" style="border-bottom: 1px solid #ccc; padding-bottom: 4px; margin-bottom: 4px;">
-		<label for="product_{$cat}_{$product.ID}_isEnabled">{t Availability}:</label>
+		<label for="product_{$cat}_{$product.ID}_isEnabled">{t _availability}:</label>
 		{selectfield name="isEnabled" options=$productStatuses}
 	</p>
 

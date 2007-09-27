@@ -2,15 +2,15 @@
 
 <fieldset class="currencyPriceFormatting">
 
-    <legend>{t Price Formatting}</legend>
+    <legend>{t _pr_form}</legend>
 
     <p>
-        <label>{t Price display prefix}:</label>
+        <label>{t _pr_prefix}:</label>
         {textfield name="pricePrefix" class="currencyPricePrefix"}
     </p>
 
     <p>
-        <label>{t Price display suffix}:</label>
+        <label>{t _pr_suffix}:</label>
         {textfield name="priceSuffix" class="currencyPriceSuffix"}
     </p>
     

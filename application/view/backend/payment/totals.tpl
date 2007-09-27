@@ -1,10 +1,10 @@
 <p>
-    <label>{t Order total}:</label>
+    <label>{t _order_total}:</label>
     <label>{$order.formattedTotal[$order.Currency.ID]}</label>
 </p>
 
 <p>
-    <label>{t Amount paid}:</label>
+    <label>{t _amount_paid}:</label>
     <label>{$order.formatted_amountPaid}</label>
 </p>
 
@@ -12,14 +12,14 @@
 
 {if $order.amountNotCaptured != 0}
     <p>
-        <label>{t Amount not captured}:</label>
+        <label>{t _not_captured}:</label>
         <label>{$order.formatted_amountNotCaptured}</label>
     </p>
 {/if}
 
 {if $order.amountDue > 0}    
 	<p>
-        <label>{t Amount due}:</label>
+        <label>{t _amount_due}:</label>
         <label>{$order.formatted_amountDue}</label>
     </p>
 {/if}

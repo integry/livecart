@@ -1,4 +1,4 @@
-{pageTitle}{t Edit Template File}: {$fileName}{/pageTitle}
+{pageTitle}{t _edit_template}: {$fileName}{/pageTitle}
 {includeCss file="backend/Template.css"}
 {includeJs file="backend/Template.js"}
 {includeJs file="library/form/ActiveForm.js"}
@@ -31,7 +31,7 @@
 		
 		<div style="float: left;">
 			<span class="progressIndicator" style="display: none;"></span>
-			<input type="submit" class="submit" value="{tn Save Template}" /> 
+			<input type="submit" class="submit" value="{tn _save_template}" /> 
 			{t _or} 
 			<a class="cancel" href="#" onclick="window.close();">{t _cancel}</a>
 		</div>
@@ -39,12 +39,12 @@
 		<div style="float: right;">
 			<div class="yellowMessage" style="display: none;">
 				<div>
-					{t Template saved successfuly}
+					{t _template_has_been_successfully_updated}
 				</div>
 			</div>
 			<div class="redMessage" style="display: none;">
 				<div>
-					{t Template could not be saved}
+					{t _could_not_update_template}
 				</div>
 			</div>
 		</div>		
