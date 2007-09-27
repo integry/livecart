@@ -865,26 +865,30 @@ Backend.Shipment.prototype =
      */ 
     toggleControls: function(orderID) 
     {
-		// Wait the element is deleted
-		setTimeout(function()
-		{
-		    var shippableControls = document.getElementsByClassName("orderShipment_controls", $("order" + orderID + "_shippableShipments"));
-	        var shippedControls = document.getElementsByClassName("orderShipment_controls", $("order" + orderID + "_shippedShipments"));
-			var allControls = $A(shippableControls.concat(shippedControls));
-	       
-		    var size = shippableControls.size();
-	        shippableControls.each(function(otherControls)
-	        {
-	            if(size == 1) 
-				{
-					otherControls.hide();
-				}
-		        else 
-				{
-				    otherControls.show();
-				}
-	        }.bind(this));
-		}.bind(this), 100);
+	    var shippableControls = document.getElementsByClassName("orderShipment_controls", $("order" + orderID + "_shippableShipments"));
+        var shippedControls = document.getElementsByClassName("orderShipment_controls", $("order" + orderID + "_shippedShipments"));
+		var allControls = $A(shippableControls.concat(shippedControls));
+       
+	    var size = shippableControls.size();
+        shippableControls.each(function(otherControls)
+        {
+			if(otherControls.down("select[name=status]").value == -1)
+			{
+				size--;
+			}
+			
+			console.info(size);
+			
+            if(size <= 1) 
+			{
+				shippableControls.invoke("hide");
+				throw $break;
+			}
+	        else 
+			{
+				otherControls.show();
+			}
+        }.bind(this));
     },
 	
 	getPopupHeight: function()
