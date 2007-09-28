@@ -65,7 +65,7 @@
     <h2 class="notShippedShipmentsTitle">{t _downloadable}</h2> 
     <div id="orderShipments_list_{$orderID}_downloadable" class="downloadableShipment"  {denied role='order.update'}style="display: none"{/denied}>        
         <ul id="orderShipmentsItems_list_{$orderID}_downloadable" class="activeList_add_delete orderShipmentsItem activeList"> 
-            <li id="orderShipments_list_downloadable_{$orderID}_{$downloadableShipment.ID}" class="downloadableItems" >
+            <li id="orderShipments_list_downloadable_{$orderID}_{$downloadableShipment.ID}" class="orderShipment" >
                 <form>
                     {include file="backend/shipment/shipment.tpl" shipment=$downloadableShipment notShippable=true downloadable=1}
 

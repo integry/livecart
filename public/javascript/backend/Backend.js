@@ -1243,8 +1243,8 @@ Backend.SelectPopup = Class.create();
 Backend.SelectPopup.prototype = {
     height: 520,
     width:  1000,
-    location:  1,
-    toolbar:  1,
+    location:  0,
+    toolbar:  0,
     onObjectSelect: function() {},
     
     initialize: function(link, title, options)

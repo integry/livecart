@@ -145,21 +145,28 @@ class CustomerOrderController extends StoreManagementController
 	        $response->set('formBillingAddress', $this->createUserAddressForm($orderArray['BillingAddress']));
 	    }
 
-	    $firstEmptyShipment = false;
-        $response->set('hideShipped', 0);
+	    $shipableShipmentsCount = 0;
+        $hideShipped = 0;
+        $downloadableShipment = $order->getDownloadShipment();
 	    foreach($order->getShipments() as $shipment)
 	    {
-            if(!$firstEmptyShipment && count($shipment->getItems()) == 0)
+	        if($shipment === $downloadableShipment) continue;
+	        if($shipment->isShipped()) continue;
+	        
+            if($shipment->status->get() != Shipment::STATUS_SHIPPED && $shipment->isShippable()) 
             {
-                $firstEmptyShipment = true;
+                $shipableShipmentsCount++;
             }
-            else if(!$shipment->isShipped())
+            
+            $rate = unserialize($shipment->shippingServiceData->get());
+	        if((count($shipment->getItems()) == 0) || (!is_object($rate) && !$shipment->shippingService->get()))
 	        {
-	            $response->set('hideShipped', 1);
-	            break;
+                $hideShipped = 1;
+                break;
 	        }
 	    }
-
+	    
+        $response->set('hideShipped', $shipableShipmentsCount > 0 ? $hideShipped : 1);
 		$response->set('type', $this->getOrderType($order));
 
 		return $response;

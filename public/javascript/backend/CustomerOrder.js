@@ -556,18 +556,6 @@ Backend.CustomerOrder.Editor.prototype =
 			
 		}.bind(this));
 		
-
-        var allowChangingStatus = true;
-
-        
-        if(allowChangingStatus)
-        {
-        }
-        else
-        {
-            Alert("Some of the shipments can not be shipped. Revise shipments and try again.")
-        }
-		
 		// If one shipment
 		if($("orderShipments_list_" + this.id))
 		{

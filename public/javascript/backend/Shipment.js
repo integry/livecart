@@ -770,29 +770,36 @@ Backend.Shipment.prototype =
        {
             var orderStatus = $("order_" + orderID + "_status");
             var orderForm = $("orderInfo_" + orderID + "_form");
-            var statuses = $$("#tabOrderProducts_" + orderID + "Content .shippableShipments select[name=status], #tabOrderProducts_" + orderID + "Content .shippedShipments select[name=status]")
-            
-            var lowestStatus = 100;
-            var isNew = true;
-            statuses.each(function(statusElement)
-            {
-                if(statusElement.value < lowestStatus)
-                {
-                    
-                    lowestStatus = statusElement.value;
-                }
-
-                if(statusElement.value > Backend.Shipment.prototype.STATUS_NEW)
-                {
-                    isNew = false
-                }
-            });
-            
-            var newOrderStatus = (!isNew && lowestStatus == Backend.Shipment.prototype.STATUS_NEW) ? Backend.Shipment.prototype.STATUS_PROCESSING : lowestStatus;
-            if(newOrderStatus != orderStatus.value)
-            {
-                orderStatus.value = newOrderStatus;
+            var statuses = $$("#tabOrderProducts_" + orderID + "Content .shippableShipments select[name=status]");
+			
+			if(statuses.size() == 0)
+			{
+				statuses = $$("#tabOrderProducts_" + orderID + "Content .shippedShipments select[name=status]");
             }
+			
+			if(orderStatus)
+			{
+	            var lowestStatus = 100;
+	            var isNew = true;
+	            statuses.each(function(statusElement)
+	            {
+	                if(statusElement.value < lowestStatus)
+	                {
+	                    lowestStatus = statusElement.value;
+	                }
+	
+	                if(statusElement.value > Backend.Shipment.prototype.STATUS_NEW)
+	                {
+	                    isNew = false
+	                }
+	            });
+	            
+	            var newOrderStatus = (!isNew && lowestStatus == Backend.Shipment.prototype.STATUS_NEW) ? Backend.Shipment.prototype.STATUS_PROCESSING : lowestStatus;
+	            if(newOrderStatus != orderStatus.value)
+	            {
+	                orderStatus.value = newOrderStatus;
+	            }
+			}
        }.bind(this), 100);
 	},
 	

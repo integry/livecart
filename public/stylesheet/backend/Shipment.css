@@ -8,7 +8,7 @@
     width: auto;
 }
 
-.tabOrderProductsContent .downloadableItems .activeList li
+.tabOrderProductsContent .orderShipment .activeList li
 {
     padding-bottom: 4px;
     padding-top: 8px;
@@ -71,22 +71,17 @@ li.orderShipment
     border: 0px none;
 }
 
-.orderShipmentsItem li
-{
-    border-bottom: 1px solid #bbb;
-}
-
 .downloadableShipment li
 {
     border: 0;
 }
 
-.downloadableItems li
+.orderShipment li
 {
     border-bottom: 1px solid #bbb;    
 }
 
-.downloadableItems .activeList_icons
+.orderShipment .activeList_icons
 {
     padding-top: 0 !important;
 }

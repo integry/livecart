@@ -535,6 +535,7 @@ class CustomerOrder extends ActiveRecordModel
         foreach($this->getShipments() as $shipment)
         {
             if($shipment === $downloadableShipment) continue;
+            if($shipment->isShipped()) continue;
             
             $countShipments++;
 
@@ -548,8 +549,7 @@ class CustomerOrder extends ActiveRecordModel
             if($shipmentStatus > Shipment::STATUS_NEW)
             {
                 $isNew = false;
-            }
-            
+            }   
         }
 
         if($countShipments > 0)
