@@ -145,6 +145,7 @@ class InstallController extends FrontendController
 		$user = User::getNewInstance($this->request->get('email'), null, $group);
 		$user->loadRequestData($this->request);
 		$user->setPassword($this->request->get('password'));
+		$user->isEnabled->set(true);
 		$user->save();
 		
 		ActiveRecordModel::commit();		
