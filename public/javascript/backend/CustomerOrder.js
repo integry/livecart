@@ -818,7 +818,9 @@ Backend.CustomerOrder.Editor.prototype =
                  Element.remove(shipemnt);
              }
         });
-        
+		
+        Backend.CustomerOrder.Editor.prototype.getInstance(this.id, false).toggleStatuses();
+        Backend.Shipment.prototype.updateOrderStatus(this.id);
     },
     
     

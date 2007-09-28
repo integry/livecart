@@ -320,10 +320,15 @@ class ShipmentController extends StoreManagementController
 	public function delete()
 	{
 	    $shipment = Shipment::getInstanceByID('Shipment', (int)$this->request->get('id'), true, array('Order' => 'CustomerOrder'));
+	    $shipment->order->get()->loadAll();
+	    
 	    $history = new OrderHistory($shipment->order->get(), $this->user);
 	    
 	    $shipment->delete();
 	    
+        $shipment->order->get()->updateStatusFromShipments();
+        $shipment->order->get()->save();
+        	    
 	    $history->saveLog();
 	    
 	    return new JSONResponse(array('deleted' => true), 'success');

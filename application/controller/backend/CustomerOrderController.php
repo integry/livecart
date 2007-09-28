@@ -533,6 +533,7 @@ class CustomerOrderController extends StoreManagementController
 	    $isCancelled = (int)$this->request->get('isCancelled') ? true : false;
 		$order->isCancelled->set($isCancelled);
 	    
+		$order->updateShipmentStatuses();
         $response = $this->save($order);
         $history->saveLog();
 
@@ -637,7 +638,10 @@ class CustomerOrderController extends StoreManagementController
 	            $shipment->delete();
 	        }
 	    }
-
+	    
+        $order->updateStatusFromShipments();
+        $order->save();
+        
         return new RawResponse();
 	}
 

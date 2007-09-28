@@ -335,7 +335,14 @@ class Shipment extends ActiveRecordModel
 	            $this->shippingServiceData->set(serialize($rate));
 	        }	
         }
-
+        
+            
+        // Update order status if to reflect it's shipments statuses
+        if ($this->isShippable() && $this->order->get()->isFinalized->get())
+        {
+            $this->order->get()->updateStatusFromShipments(!$this->isExistingRecord());
+        }
+        
         parent::save();
         
         // save ordered items
@@ -368,6 +375,12 @@ class Shipment extends ActiveRecordModel
     
     protected function insert()
     {   
+        // Save updated order status
+        if ($this->order->get()->isFinalized->get())
+        {
+            $this->order->get()->save();
+        }
+            
         if(!$this->status->get())
         {
             $this->status->set(self::STATUS_NEW);
@@ -379,6 +392,7 @@ class Shipment extends ActiveRecordModel
     protected function update()
     {
         parent::update();
+        
         $this->order->get()->save();
     }
 

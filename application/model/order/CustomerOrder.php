@@ -509,6 +509,11 @@ class CustomerOrder extends ActiveRecordModel
     
     public function update($force = false)
     {       
+        return parent::update($force);
+    }
+
+    public function updateShipmentStatuses()
+    {
         $filter = new ARUpdateFilter();
         $filter->setCondition(new EqualsCond(new ARFieldHandle('Shipment', 'orderID'), $this->getID()));
         
@@ -518,11 +523,45 @@ class CustomerOrder extends ActiveRecordModel
         }
         
         $filter->addModifier('status', $this->status->get());
-        ActiveRecord::updateRecordSet('Shipment', $filter);  
-
-        return parent::update($force);
+        ActiveRecord::updateRecordSet('Shipment', $filter);      
     }
+    
+    public function updateStatusFromShipments($creatingNewRecord = false)
+    {
+        $lowestStatus = $creatingNewRecord ? Shipment::STATUS_NEW : 100;
+        $isNew = true;
+        $downloadableShipment = $this->getDownloadShipment();
+        $countShipments = 0;
+        foreach($this->getShipments() as $shipment)
+        {
+            if($shipment === $downloadableShipment) continue;
+            
+            $countShipments++;
 
+            $shipmentStatus = $shipment->status->get();
+            
+            if($shipmentStatus < $lowestStatus)
+            {
+                $lowestStatus = $shipmentStatus;
+            }
+            
+            if($shipmentStatus > Shipment::STATUS_NEW)
+            {
+                $isNew = false;
+            }
+            
+        }
+
+        if($countShipments > 0)
+        {
+            $newOrderStatus = (!$isNew && $lowestStatus == Shipment::STATUS_NEW) ? Shipment::STATUS_PROCESSING : $lowestStatus;
+            if($newOrderStatus != $this->status->get())
+            {
+                $this->status->set($newOrderStatus);    
+            }
+        }
+    }
+    
 	public function getSubTotal(Currency $currency)
 	{
         $subTotal = 0;

@@ -612,27 +612,17 @@ Backend.Shipment.prototype =
         {  
 			if(response.deleted)
 			{
-				var shipmentItems = document.getElementsByClassName("orderShipmentsItem", this.nodes.shipmentsList);
-		        for(var i = 0; i < shipmentItems.length; i++)
-		        {
-		            if(shipmentItems[i] == this.nodes.root.down('.orderShipmentsItem'))
-		            {
-		                shipmentItems.splice(i, 1);
-		                break;
-		            }
-		        }
-		       
-		        select.lastValue = select.value;
-		        this.shipmentsActiveList.remove(this.nodes.root);
+				this.shipmentsActiveList.remove(this.nodes.root);
 		                        
-				if(this.shipmentsActiveList.ul.childElements().size())
+                var shipments = this.nodes.shipmentsList.childElements();
+				if(shipments.size() == 0)
 				{
-					this.shipmentsActiveList.ul.up('.shipmentCategoty').hide();
+					this.nodes.shipmentsList.up('.shipmentCategoty').hide();
 				}
 								
-		        if(shipmentItems.length == 1)
+		        if(shipments.size() == 1)
 		        {
-		            var firstItemsList = ActiveList.prototype.getInstance(shipmentItems[0]);
+		            var firstItemsList = ActiveList.prototype.getInstance(shipments.first());
 		            Element.removeClassName(firstItemsList.ul, 'activeList_add_sort');
 		            firstItemsList.destroySortable();
 		        }            
@@ -699,7 +689,7 @@ Backend.Shipment.prototype =
 				
 		   setTimeout(function() { Backend.OrderedItem.updateReport($("orderShipment_report_" + orderID)) }.bind(this), 50);
 	       Backend.CustomerOrder.Editor.prototype.getInstance(orderID, false).toggleStatuses();
-           Backend.Shipment.prototype.updateOrderStatus(this.orderID);
+           Backend.Shipment.prototype.updateOrderStatus(orderID);
 	       this.toggleStatuses();
 	   }
        else
