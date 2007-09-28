@@ -12,8 +12,7 @@
         </div> 	
 	
 		<div style="float: right; text-align: center;">
-
-			{* block LANGUAGE *}
+			
         	{block CART}
 		</div>
         

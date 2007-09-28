@@ -439,15 +439,17 @@ tr.even
 /*****************************
 	Currency switch
 *****************************/
-.currency 
+#currency, #language
 {
 	font-size: smaller;
 	text-align: center;
 	margin-top: 12px;	
 	margin-right: 12px;
+	float: right;
+	font-size: smaller;
 }
 
-.currency a
+#currency a, #language a
 {
 	margin-left: 3px;	
 }

@@ -6,8 +6,9 @@
         <input type="submit" class="submit" value="Search" />
         <input type="hidden" name="cathandle" value="search" />
 	{/form}
-	<div style="float: right;">
-		{block CURRENCY}	
-	</div>
+
+	{block CURRENCY}	
+    {block LANGUAGE}
+
 	<div class="clear"></div>		
 </div>

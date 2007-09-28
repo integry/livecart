@@ -1,5 +1,5 @@
 {if $currencies|@count > 1}
-    <div class="currency">
+    <div id="currency">
         {foreach from=$currencies item="currency"}
             <a href="{$currency.url}">{$currency.ID}</a>
         {/foreach}

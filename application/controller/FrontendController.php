@@ -97,7 +97,6 @@ abstract class FrontendController extends BaseController
 
 	protected function boxLanguageSelectBlock()
 	{
-        $response = new BlockResponse();			  	
         $languages = $this->application->getLanguageSetArray(true, false);
         $current = $this->application->getLocaleCode();
         
@@ -116,10 +115,17 @@ abstract class FrontendController extends BaseController
             }   
             else
             {
+                // changing language from the index page
+                if (strlen($returnRoute) == 2)
+                {
+                    $returnRoute = '';
+                }
+
                 $languages[$key]['url'] = $this->router->createUrlFromRoute($lang['ID'] . '/' . $returnRoute);
             }
         }
 
+        $response = new BlockResponse();
         $response->set('languages', $languages);
         return $response;
 	}
