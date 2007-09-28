@@ -392,12 +392,21 @@ Backend.SpecField.prototype = {
 		var prefixLabel = this.nodes.parent.down('.specField_form_valuePrefix_label')
         var suffixLabel = this.nodes.parent.down('.specField_form_valueSuffix_label')
 		
+		
         if(this.isNumber(this.type))
 		{
+			this.nodes.stepValues.down(".languageForm").hide();
 			document.getElementsByClassName("sufixAndPrefix", this.nodes.parent).invoke("show");
-		}
+			
+		    this.nodes.valuesDefaultGroup.down('ul').childElements().each(function(li)
+			{
+				if(li.hasClassName("dom_template")) return;
+				NumericFilter(li.down('input[type=text]'));
+			});
+        }
 		else
 		{
+            this.nodes.stepValues.down(".languageForm").show();
             document.getElementsByClassName("sufixAndPrefix", this.nodes.parent).invoke("hide");
 		}
 		
@@ -771,6 +780,11 @@ Backend.SpecField.prototype = {
 		{
             $(this.cssPrefix + "form_values_" +  this.languageCodes[i] + "_" + id).getElementsByTagName("label")[0].innerHTML = e.target.value;
 		}
+		
+        if(this.isNumber(this.type))
+		{
+		    NumericFilter(e.target);
+        }
 	},
 
 	/**
@@ -896,7 +910,7 @@ Backend.SpecField.prototype = {
             translationLabel['for'] = inputTranslation.id;
             translationLabel.onclick = function() { $(this['for']).focus(); }
 		}
-        
+		
         this.bindOneValue(li);
 	},
 
