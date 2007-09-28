@@ -390,9 +390,94 @@ class ProductController extends StoreManagementController
 	
 	public function info()
 	{
+        ClassLoader::import("application.helper.getDateFromString");
+        ClassLoader::import("application.model.order.OrderedItem");
+                
 	    $product = Product::getInstanceById($this->request->get('id'), ActiveRecord::LOAD_DATA, array('DefaultImage' => 'ProductImage', 'Manufacturer', 'Category'));
+
+		$thisMonth = date('m');
+		$lastMonth = date('Y-m', strtotime(date('m') . '/15 -1 month'));
+
+        $periods = array(
+
+            '_last_1_h' => "-1 hours | now",
+            '_last_3_h' => "-3 hours | now",
+            '_last_6_h' => "-6 hours | now",
+            '_last_12_h' => "-12 hours | now",
+            '_last_24_h' => "-24 hours | now",
+            '_last_3_d' => "-3 days | now",
+            '_this_week' => "w:Monday | now",
+            '_last_week' => "w:Monday ~ -1 week | w:Monday",
+            '_this_month' => $thisMonth . "/1 | now",
+            '_last_month' => $lastMonth . "-1 | " . $lastMonth . "/1",
+            '_this_year' => "January 1 | now",
+            '_last_year' => "January 1 last year | January 1",
+            '_overall' => "now | now"            
+            
+        );
+
+        $purchaseStats = array();
+        $prevCount = 0;
+        foreach ($periods as $key => $period)
+        {
+            list($from, $to) = explode(' | ', $period);
+                
+            $cond = new EqualsCond(new ARFieldHandle('OrderedItem', 'productID'), $product->getID());
+
+            if ('now' != $from)
+            {
+                $cond->addAND(new EqualsOrMoreCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), getDateFromString($from)));                
+            }
+
+            if ('now' != $to)
+            {
+                $cond->addAnd(new EqualsOrLessCond(new ARFieldHandle('CustomerOrder', 'dateCompleted'), getDateFromString($to)));
+            }        
+    
+            $f = new ARSelectFilter($cond);
+            $f->mergeCondition(new EqualsCond(new ARFieldHandle('CustomerOrder', 'isFinalized'), true));
+            $f->removeFieldList();
+            $f->addField('SUM(OrderedItem.count)');
+            
+            $query = new ARSelectQueryBuilder();
+            $query->setFilter($f);
+            $query->includeTable('OrderedItem');
+            $query->joinTable('CustomerOrder', 'OrderedItem', 'ID', 'customerOrderID');
+            
+            if (($count = array_shift(array_shift(ActiveRecordModel::getDataBySql($query->createString())))) && ($count > $prevCount || '_overall' == $key))
+            {
+                $purchaseStats[$key] = $count;
+            }            
+            
+            if ($count > $prevCount)
+            {
+                $prevCount = $count;
+            }
+        }
+
+        // purchased together with...
+        $sql = 'SELECT COUNT(*) AS cnt, OtherItem.productID AS ID FROM OrderedItem LEFT JOIN CustomerOrder ON OrderedItem.customerOrderID=CustomerOrder.ID LEFT JOIN OrderedItem AS OtherItem ON OtherItem.customerOrderID=CustomerOrder.ID WHERE CustomerOrder.isFinalized=1 AND OrderedItem.productID=' . $product->getID() . ' AND OtherItem.productID!=' . $product->getID() . ' GROUP BY OtherItem.productID ORDER BY cnt DESC LIMIT 10';
+        
+        $products = ActiveRecord::getDataBySql($sql);
+
+        $ids = array();
+        $cnt = array();
+        foreach ($products as $prod)
+        {
+            $ids[] = $prod['ID'];
+            $cnt[$prod['ID']] = $prod['cnt'];
+        }
+
         $response = new ActionResponse();
+        
+        if ($ids)
+        {
+            $response->set('together', ActiveRecord::getRecordSetArray('Product', new ARSelectFilter(new INCond(new ARFieldHandle('Product', 'ID'), $ids)), array('DefaultImage' => 'ProductImage')));
+        }        
+
         $response->set('product', $product->toArray());
+        $response->set('togetherCnt', $cnt);
+        $response->set('purchaseStats', $purchaseStats);
         return $response;        
     }
 

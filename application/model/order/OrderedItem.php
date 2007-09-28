@@ -1,6 +1,8 @@
 <?php
 
 ClassLoader::import("application.model.product.Product");
+ClassLoader::import("application.model.order.CustomerOrder");
+ClassLoader::import("application.model.order.Shipment");
 
 /**
  * Represents a shopping basket item (one or more instances of the same product)

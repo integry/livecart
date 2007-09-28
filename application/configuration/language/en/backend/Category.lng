@@ -1,6 +1,16 @@
 _products_and_categories=Products and Categories
 _loading_product=Loading product...
 
+# Product tabs
+_done_editing_product=Done editing product
+_product_page=Product page
+_basic_data=Basic data
+_stock_pricing=Stock & Pricing
+_images=Images
+_related=Related products
+_files=Files
+_info=Info
+
 # Confirmations
 _new_category_was_successfully_created=New category was successfully created
 _could_not_create_a_category=Could not create a category

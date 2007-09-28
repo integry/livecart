@@ -1,13 +1,3 @@
-# Tabs
-_done_editing_product=Done editing product
-_product_page=Product page
-_basic_data=Basic data
-_stock_pricing=Stock & Pricing
-_images=Images
-_related=Related products
-_files=Files
-_info=Info
-
 _add_product=Add New Product
 
 # Confirmation
@@ -158,3 +148,20 @@ _hint_surcharge=Define additional shipping charges for this particular product
 
 # Info tab
 _date_created=Date created
+_purchase_stats=Number of items purchased
+_no_purchases=This product has never been purchased yet
+_together_with=Purchased together with
+
+_last_1_h=Last hour
+_last_3_h=Last 3 hours
+_last_6_h=Last 6 hours
+_last_12_h=Last 12 hours
+_last_24_h=Last 24 hours
+_last_3_d=Last 3 days
+_this_week=This week
+_last_week=Last week
+_this_month=This month
+_last_month=Last month
+_this_year=This year
+_last_year=Last year
+_overall=Overall

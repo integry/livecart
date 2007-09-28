@@ -599,7 +599,7 @@ html, body{
 	padding: 10px;
 }
 
-#pageTitle a 
+#pageTitle a , #pageTitle .breadcrumb_separator
 {
     font-size: 0.9em;
 }

@@ -47,12 +47,17 @@
 
 .orderShippedShipments .orderShipmentsItem 
 {
-    padding-left: 40px;
+    padding-left: 0;
 }
 
 .orderShippedShipments .orderShipmentsItem
 {
     padding-top: 0px;
+}
+
+.orderShippedShipments .activeList_icons
+{
+    display: none !important;
 }
 
 .orderShippedShipments .orderShipment_info
@@ -78,6 +83,7 @@ li.orderShipment
 
 .orderShipment li
 {
+    border: 0;    
     border-bottom: 1px solid #bbb;    
 }
 
